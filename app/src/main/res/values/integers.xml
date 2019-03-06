@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="button_exit_fade_duration">200</integer>
+	<integer name="dialog_enter_duration">280</integer>
+	<integer name="dialog_exit_duration">150</integer>
+</resources>

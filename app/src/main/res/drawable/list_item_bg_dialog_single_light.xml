@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:drawable="@drawable/list_item_bg_dialog_single_pressed_light" android:state_pressed="true" />
+	<item android:drawable="@drawable/list_item_bg_dialog_single_normal_light" />
+</selector>

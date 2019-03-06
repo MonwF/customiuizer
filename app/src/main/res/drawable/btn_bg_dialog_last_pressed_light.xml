@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+	<item>
+		<shape android:shape="rectangle">
+			<corners android:bottomRightRadius="@dimen/dialog_bg_corner_radius" />
+			<solid android:color="@color/button_bg_color_pressed_light" />
+			<size android:height="@dimen/dialog_button_height" />
+		</shape>
+	</item>
+	<item
+		android:drawable="@drawable/divider_line_light"
+		android:gravity="left" />
+	<item
+		android:drawable="@drawable/divider_line_light"
+		android:gravity="top" />
+</layer-list>

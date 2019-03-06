@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:animateLayoutChanges="true"
+	android:fitsSystemWindows="true"
+	android:orientation="vertical">
+
+	<miui.widget.ClearableEditText
+		android:id="@+id/contact_info"
+		android:tag="acra.user.email"
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:inputType="textMultiLine" />
+
+</LinearLayout>
+

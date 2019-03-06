@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" android:exitFadeDuration="@integer/button_exit_fade_duration">
+	<item android:drawable="@drawable/action_mode_title_default_button_bg_pressed_light" android:state_pressed="true" />
+	<item android:drawable="@drawable/action_mode_title_default_button_bg_disable_light" android:state_enabled="false" />
+	<item android:drawable="@drawable/action_mode_title_default_button_bg_normal_light" />
+</selector>

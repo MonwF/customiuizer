@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+	<item
+		android:bottom="@dimen/button_vertical_padding"
+		android:top="@dimen/button_vertical_padding">
+		<shape android:shape="rectangle">
+			<solid android:color="@color/button_bg_color_pressed_light" />
+			<stroke
+				android:width="1px"
+				android:color="@color/divider_line_light" />
+			<corners
+				android:bottomLeftRadius="@dimen/button_background_corner_radius"
+				android:topLeftRadius="@dimen/button_background_corner_radius" />
+			<size android:height="@dimen/button_height" />
+		</shape>
+	</item>
+</layer-list>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" android:exitFadeDuration="@integer/button_exit_fade_duration" android:variablePadding="true">
+	<item android:drawable="@drawable/btn_bg_first_pressed_light" android:state_pressed="true" />
+	<item android:drawable="@drawable/btn_bg_first_pressed_light" android:state_checked="true" />
+	<item android:drawable="@drawable/btn_bg_first_pressed_light" android:state_selected="true" />
+	<item android:drawable="@drawable/btn_bg_first_pressed_light" android:state_activated="true" />
+	<item android:drawable="@drawable/btn_bg_first_normal_light" />
+	<item android:drawable="@drawable/btn_bg_middle_pressed_light" android:state_pressed="true" />
+	<item android:drawable="@drawable/btn_bg_middle_pressed_light" android:state_checked="true" />
+	<item android:drawable="@drawable/btn_bg_middle_pressed_light" android:state_selected="true" />
+	<item android:drawable="@drawable/btn_bg_middle_pressed_light" android:state_activated="true" />
+	<item android:drawable="@drawable/btn_bg_middle_normal_light" />
+	<item android:drawable="@drawable/btn_bg_last_pressed_light" android:state_pressed="true" />
+	<item android:drawable="@drawable/btn_bg_last_pressed_light" android:state_checked="true" />
+	<item android:drawable="@drawable/btn_bg_last_pressed_light" android:state_selected="true" />
+	<item android:drawable="@drawable/btn_bg_last_pressed_light" android:state_activated="true" />
+	<item android:drawable="@drawable/btn_bg_last_normal_light" />
+	<item android:drawable="@drawable/btn_bg_single_pressed_light" android:state_pressed="true" />
+	<item android:drawable="@drawable/btn_bg_single_pressed_light" android:state_checked="true" />
+	<item android:drawable="@drawable/btn_bg_single_pressed_light" android:state_selected="true" />
+	<item android:drawable="@drawable/btn_bg_single_pressed_light" android:state_activated="true" />
+	<item android:drawable="@drawable/btn_bg_single_normal_light" />
+	<item android:drawable="@drawable/btn_bg_single_pressed_light" android:state_pressed="true" />
+	<item android:drawable="@drawable/btn_bg_single_pressed_light" android:state_checked="true" />
+	<item android:drawable="@drawable/btn_bg_single_pressed_light" android:state_selected="true" />
+	<item android:drawable="@drawable/btn_bg_single_pressed_light" android:state_activated="true" />
+	<item android:drawable="@drawable/btn_bg_single_normal_light" />
+</selector>

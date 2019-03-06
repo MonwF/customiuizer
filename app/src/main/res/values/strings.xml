@@ -1,0 +1,157 @@
+<resources>
+    <string name="app_name">CustoMIUIzer</string>
+	<string name="app_about">About</string>
+    <string name="title_activity_main">@string/app_name</string>
+
+	<string name="mods">Mods</string>
+	<string name="system_mods">System mods</string>
+	<string name="launcher_mods">Launcher mods</string>
+	<string name="controls_mods">Controls mods</string>
+	<string name="various_mods">Various mods</string>
+
+	<string name="launcher_gestures">Gestures</string>
+	<string name="launcher_gestures_action">Action</string>
+	<string name="launcher_gestures_toggle">Toggle</string>
+	<string name="launcher_gestures_launch">App to launch</string>
+	<string name="launcher_swipedownaction_title">Swipe down action</string>
+	<string name="launcher_swipedownaction_summ">Action for swipe down gesture on any home screen</string>
+	<string name="launcher_swipeupaction_title">Swipe up action</string>
+	<string name="launcher_swipeupaction_summ">Action for swipe up gesture on any home screen</string>
+	<string name="launcher_swiperightaction_title">Swipe right action</string>
+	<string name="launcher_swiperightaction_summ">Action for swipe right gesture on launcher dock</string>
+	<string name="launcher_swipeleftaction_title">Swipe left action</string>
+	<string name="launcher_swipeleftaction_summ">Action for swipe left gesture on launcher dock</string>
+	<string name="launcher_shakeaction_title">Shake action</string>
+	<string name="launcher_shakeaction_summ">Action for shaking the device on any home screen</string>
+
+	<string name="array_global_actions_none">No action</string>
+	<string name="array_global_actions_notif">Expand notifications drawer</string>
+	<string name="array_global_actions_eqs">Expand EQS panel</string>
+	<string name="array_global_actions_lock">Lock device</string>
+	<string name="array_global_actions_sleep">Go to sleep</string>
+	<string name="array_global_actions_screenshot">Take screenshot</string>
+	<string name="array_global_actions_recents">Open recents</string>
+	<string name="array_global_actions_clock">Default clock app</string>
+	<string name="array_global_actions_calendar">Default calendar app</string>
+	<string name="array_global_actions_launch">Launch app</string>
+	<string name="array_global_actions_shortcut">Launch shortcut</string>
+	<string name="array_global_actions_toggle">Toggle settings</string>
+	<string name="array_global_actions_appdrawer">Open app drawer</string>
+	<string name="array_global_toggle_wifi">Wi-Fi</string>
+	<string name="array_global_toggle_bt">Bluetooth</string>
+	<string name="array_global_toggle_gps">GPS</string>
+	<string name="array_global_toggle_nfc">NFC</string>
+	<string name="array_global_toggle_sound">Sound profile</string>
+	<string name="array_global_toggle_brightness">Auto brightness</string>
+	<string name="array_global_toggle_rotation">Auto rotation</string>
+	<string name="array_global_toggle_torch">Flashlight</string>
+	<string name="array_global_toggle_mobiledata">Mobile data</string>
+
+	<string name="toggle_wifi_on">Wi-Fi enabled</string>
+	<string name="toggle_wifi_off">Wi-Fi disabled</string>
+	<string name="toggle_bt_on">Bluetooth enabled</string>
+	<string name="toggle_bt_off">Bluetooth disabled</string>
+	<string name="toggle_gps_on">GPS enabled</string>
+	<string name="toggle_gps_off">GPS disabled</string>
+	<string name="toggle_nfc_on">NFC enabled</string>
+	<string name="toggle_nfc_off">NFC disabled</string>
+	<string name="toggle_sound_normal">Sound profile: Normal</string>
+	<string name="toggle_sound_silent">Sound profile: Silent</string>
+	<string name="toggle_sound_vibrate">Sound profile: Vibrate</string>
+	<string name="toggle_autobright_on">Auto brightness enabled</string>
+	<string name="toggle_autobright_off">Auto brightness disabled</string>
+	<string name="toggle_autorotate_on">Auto rotation enabled</string>
+	<string name="toggle_autorotate_off">Auto rotation disabled</string>
+	<string name="toggle_flash_low">Flashlight: low</string>
+	<string name="toggle_flash_med">Flashlight: medium</string>
+	<string name="toggle_flash_high">Flashlight: high</string>
+	<string name="toggle_flash_off">Flashlight: off</string>
+	<string name="toggle_flash_on">Flashlight: on</string>
+	<string name="toggle_mobiledata_on">Mobile data enabled</string>
+	<string name="toggle_mobiledata_off">Mobile data disabled</string>
+
+	<string name="download_current_ver">Installed update:</string>
+	<string name="download_update">No translations found\nTap Update to download</string>
+	<string name="download_title">Localization</string>
+	<string name="download_desc">Downloading translations&#8230;</string>
+	<string name="download_failed">Download failed, check connection</string>
+	<string name="download_succeeded">Language pack was downloaded and installed, CustoMIUIzer will be restarted now</string>
+	<string name="download_unzip_failed">Unable to unzip language files</string>
+	<string name="download_same_version">You already have the latest version</string>
+	<string name="download_version_problem">Failed to read update version</string>
+	<string name="download_removed">Language files were removed,\nCustoMIUIzer will be restarted now</string>
+
+	<string name="miuizer_l10n_title">Localization</string>
+	<string name="miuizer_l10n_summ">Download and update language pack</string>
+	<string name="miuizer_l10n_btn">Update</string>
+	<string name="miuizer_l10n_ready">Translated strings</string>
+
+	<string name="miuizer">CustoMIUIzer settings</string>
+	<string name="miuizer_show_icon_title">Fast access icon</string>
+	<string name="miuizer_show_icon_summ">Show icon in Settings</string>
+	<string name="miuizer_material_background_title">Theme</string>
+	<string name="miuizer_material_background_summ">Change app\'s background and text colors</string>
+
+	<string name="troubleshoot">Troubleshooting</string>
+	<string name="miuizer_acrasend_title">Send detailed report</string>
+	<string name="miuizer_acrasend_summ">Collect device and environment info, logcat and Xposed log, and send them to developer.\nInternet connection is required</string>
+	<string name="miuizer_acramail_title">Contact info</string>
+	<string name="miuizer_acramail_summ">Enter your contact information and it will be included in detailed and crash reports</string>
+	<string name="your_contact_info">Your contact info</string>
+	<string name="miuizer_acramail_tip_title">Contact information</string>
+	<string name="miuizer_acramail_tip">It\'s absolutely necessary to fill this in if you expect to receive replies to your crash reports. Use e-mail, ICQ, XDA or 4PDA nickname.\nTap Feedback below to do it now.</string>
+
+	<string name="support">Support</string>
+	<string name="support_version">Support (app version: %1$s)</string>
+	<string name="support_repo_title">CustoMIUIzer repo</string>
+	<string name="support_repo_summ">Git repo with module sources and distributions</string>
+	<string name="support_bug_title">Report a bug</string>
+	<string name="support_bug_summ">Send us a bug report or a feature request via official issue tracker</string>
+	<string name="support_donate_title">Donate</string>
+	<string name="support_donate_summ">Best way to express your gratitude for this awesome module :)</string>
+
+	<string name="array_color_dark">Dark</string>
+	<string name="array_color_light">Light</string>
+
+	<string name="notselected">Not selected</string>
+	<string name="close">Close</string>
+	<string name="warning">Warning!</string>
+	<string name="info">Information</string>
+	<string name="soft_reboot_required">Soft reboot is required to apply changes</string>
+	<string name="open_xposed">Open Xposed Installer</string>
+	<string name="soft_reboot">Soft reboot</string>
+	<string name="soft_reboot_ask">Perform soft reboot?</string>
+	<string name="backup_restore">Settings management</string>
+	<string name="backup_restore_choose">Choose the desired routine</string>
+	<string name="backup_restore_tip">\nBackup and restore Sense Toolbox settings using internal storage or SDCard</string>
+	<string name="do_backup">Backup</string>
+	<string name="do_restore">Restore</string>
+	<string name="storage_read_only">Your external storage is read-only</string>
+	<string name="storage_unavailable">Unable to get access to any suitable storage</string>
+	<string name="storage_cannot_mkdir">Failed to create backup directory</string>
+	<string name="storage_cannot_backup">Failed to create backup file</string>
+	<string name="storage_cannot_restore">No settings backup found</string>
+	<string name="backup_ok">Settings were backed up successfully!</string>
+	<string name="restore_ok">Settings were successfully restored!</string>
+	<string name="backup_restore_info">Your settings have been restored via Google Cloud Backup. Please do a soft reboot after enabling the Xposed module.</string>
+	<string name="update_available">Update is available! Tap here to download</string>
+	<string name="not_yet">No mods here yet :)</string>
+	<string name="select_app">Select app</string>
+	<string name="select_shortcut">Select shortcut</string>
+	<string name="search_input_description">Search</string>
+
+	<string name="xposed_not_found">Xposed Installer not found</string>
+	<string name="xposed_not_found_explain">It looks like you don\'t have Xposed Installed.\n\nPlease note that the mods on this page will only work with Xposed!\n\nXposed is available in the ARHD installer.</string>
+	<string name="module_not_active">CustoMIUIzer module is not active!\nOpen Xposed Installer, activate module and reboot.</string>
+	<string name="no_browser">Browser app is required to open URLs</string>
+	<string name="okay">Okay</string>
+	<string name="cancel">Cancel</string>
+	<string name="remove">Remove</string>
+	<string name="delete">Delete</string>
+	<string name="yes">Yes</string>
+	<string name="no">No</string>
+	<string name="success">Success</string>
+	<string name="loading">Loading…</string>
+	<string name="dummy"></string>
+
+</resources>

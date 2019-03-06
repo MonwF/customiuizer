@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:paddingLeft="19dp"
+	android:paddingRight="15dp"
+	android:paddingTop="10dp"
+	android:paddingBottom="0dp"
+	android:descendantFocusability="blocksDescendants" >
+		<ImageView
+			android:id="@android:id/icon"
+			android:contentDescription="@string/dummy"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true"
+			android:layout_centerVertical="true"
+			android:minWidth="50dp"
+			android:minHeight="50dp" />
+		<TextView
+			android:id="@android:id/text1"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_toRightOf="@android:id/icon"
+			android:layout_toLeftOf="@android:id/checkbox"
+			android:paddingRight="5dp"
+			android:paddingLeft="15dp"
+			android:layout_centerVertical="true"
+			android:textSize="16sp" />
+		<RadioButton
+			android:id="@android:id/checkbox"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentRight="true"
+			android:layout_centerVertical="true"
+			android:focusable="false"
+			android:focusableInTouchMode="false"
+			android:clickable="false" />
+</RelativeLayout>

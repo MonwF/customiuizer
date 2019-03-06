@@ -1,0 +1,82 @@
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:key="prefs">
+
+	<PreferenceCategory
+		android:title="@string/mods"
+		android:key="prefs_cat">
+
+		<Preference
+			android:title="@string/system_mods"
+			android:key="pref_key_system" />
+
+		<Preference
+			android:title="@string/launcher_mods"
+			android:key="pref_key_launcher" />
+
+		<Preference
+			android:title="@string/controls_mods"
+			android:key="pref_key_controls" />
+
+		<Preference
+			android:title="@string/various_mods"
+			android:key="pref_key_other" />
+	</PreferenceCategory>
+
+	<PreferenceCategory
+		android:title="@string/miuizer"
+		android:key="pref_key_miuizer">
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_miuizer_icon"
+			android:summary="@string/miuizer_show_icon_summ"
+			android:title="@string/miuizer_show_icon_title"
+			android:defaultValue="true" />
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:enabled="false"
+			android:layout="@layout/preference_list_with_title"
+			android:key="pref_key_miuizer_material_background"
+			android:summary=""
+			android:title="@string/miuizer_material_background_title"
+			android:entries="@array/material_background"
+			android:entryValues="@array/material_background_val"
+			android:defaultValue="1" />
+<!--
+		<Preference
+			android:key="pref_key_miuizer_lang"
+			android:summary="@string/miuizer_l10n_summ"
+			android:title="@string/miuizer_l10n_title" />
+-->
+	</PreferenceCategory>
+
+	<PreferenceCategory
+		android:title="@string/troubleshoot"
+		android:key="pref_key_troubleshoot">
+		<Preference
+			android:title="@string/support_bug_title"
+			android:summary="@string/support_bug_summ"
+			android:key="pref_key_issuetracker" />
+		<Preference
+			android:key="pref_key_miuizer_sendreport"
+			android:title="@string/miuizer_acrasend_title"
+			android:summary="@string/miuizer_acrasend_summ" />
+		<Preference
+			android:key="pref_key_miuizer_feedback"
+			android:title="@string/miuizer_acramail_title"
+			android:summary="@string/miuizer_acramail_summ"	/>
+	</PreferenceCategory>
+
+	<PreferenceCategory
+		android:title="@string/support"
+		android:key="pref_key_support">
+		<Preference
+			android:title="@string/support_repo_title"
+			android:summary="@string/support_repo_summ"
+			android:key="pref_key_website" />
+		<Preference
+			android:title="@string/support_donate_title"
+			android:summary="@string/support_donate_summ"
+			android:key="pref_key_donatepage" />
+	</PreferenceCategory>
+</PreferenceScreen>

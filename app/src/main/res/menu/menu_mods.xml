@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item
+		android:id="@+id/softreboot"
+		android:showAsAction="never"
+		android:title="@string/soft_reboot" />
+	<item
+		android:id="@+id/xposedinstaller"
+		android:showAsAction="never"
+		android:title="@string/open_xposed" />
+	<item
+		android:id="@+id/backuprestore"
+		android:showAsAction="never"
+		android:title="@string/backup_restore" />
+	<item
+		android:id="@+id/about"
+		android:showAsAction="never"
+		android:title="@string/app_about" />
+</menu>

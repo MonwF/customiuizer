@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:miuizer="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/fields"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:animateLayoutChanges="false"
+	android:orientation="vertical">
+
+	<TextView
+		android:id="@android:id/title"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="left|center_vertical|center_horizontal|center|start"
+		android:text="@string/launcher_gestures_action"
+		style="@style/Widget.InputCategory.First" />
+
+	<name.mikanoshi.customiuizer.prefs.SpinnerEx
+		android:id="@+id/swipe_gesture_action"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:prompt="@string/launcher_gestures_action"
+		android:entries="@array/global_actions"
+		miuizer:entryValues="@array/global_actions_val"
+		android:spinnerMode="dialog" />
+
+	<LinearLayout
+		android:id="@+id/apps_group"
+		android:orientation="vertical"
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:visibility="gone">
+
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="left|center_vertical|center_horizontal|center|start"
+			android:text="@string/launcher_gestures_launch"
+			style="@style/Widget.InputCategory.Middle" />
+
+		<name.mikanoshi.customiuizer.prefs.SpinnerExFake
+			android:id="@+id/app_to_launch"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:entries="@array/placeholder_array"
+			miuizer:entryValues="@array/placeholder_array_val"
+			android:defaultValue="0" />
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:id="@+id/shortcuts_group"
+		android:orientation="vertical"
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:visibility="gone">
+
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="left|center_vertical|center_horizontal|center|start"
+			android:text="@string/array_global_actions_shortcut"
+			style="@style/Widget.InputCategory.Middle" />
+
+		<name.mikanoshi.customiuizer.prefs.SpinnerExFake
+			android:id="@+id/shortcut_to_launch"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:entries="@array/placeholder_array"
+			miuizer:entryValues="@array/placeholder_array_val"
+			android:defaultValue="0" />
+
+		<ImageView
+			android:id="@+id/shortcut_icon"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:layout_gravity="center_vertical"
+			style="@style/Widget.InputCategory.Middle" />
+	</LinearLayout>
+
+	<LinearLayout
+		android:id="@+id/toggles_group"
+		android:orientation="vertical"
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:visibility="gone">
+
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="left|center_vertical|center_horizontal|center|start"
+			android:text="@string/array_global_actions_toggle"
+			style="@style/Widget.InputCategory.Middle" />
+
+		<name.mikanoshi.customiuizer.prefs.SpinnerEx
+			android:id="@+id/swipe_gesture_toggle"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:prompt="@string/launcher_gestures_toggle"
+			android:entries="@array/global_toggles"
+			miuizer:entryValues="@array/global_toggles_val"
+			android:spinnerMode="dialog" />
+	</LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+	android:paddingLeft="@dimen/preference_item_padding_left"
+	android:paddingRight="@dimen/preference_item_padding_right">
+	<item>
+		<shape android:shape="rectangle">
+			<solid android:color="@color/list_item_bg_color_pressed_light" />
+			<size android:height="@dimen/preference_item_min_height" />
+		</shape>
+	</item>
+	<item
+		android:drawable="@drawable/divider_line_light"
+		android:gravity="bottom" />
+</layer-list>

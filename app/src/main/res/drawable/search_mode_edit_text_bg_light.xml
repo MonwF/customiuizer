@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+	<size android:height="@dimen/search_mode_bg_size" />
+	<corners android:radius="@dimen/search_mode_bg_radius" />
+	<solid android:color="@color/edit_text_search_bg_color_light" />
+</shape>

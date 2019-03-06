@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:paddingLeft="20dp"
+	android:paddingRight="15dp"
+	android:paddingTop="10dp"
+	android:paddingBottom="10dp">
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+		<ImageView
+			android:id="@android:id/icon1"
+			android:contentDescription="@string/dummy"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true"
+			android:layout_centerVertical="true"
+			android:adjustViewBounds="true"
+			android:maxWidth="40dp" />
+		<TextView
+			android:id="@android:id/text1"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_toRightOf="@android:id/icon1"
+			android:layout_toLeftOf="@android:id/checkbox"
+			android:layout_centerVertical="true"
+			android:paddingRight="5dp"
+			android:paddingLeft="17dp"
+			android:textSize="16sp" />
+		<RadioButton
+			android:id="@android:id/checkbox"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentRight="true"
+			android:layout_centerVertical="true"
+			android:focusable="false"
+			android:focusableInTouchMode="false"
+			android:clickable="false" />
+	</RelativeLayout>
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:id="@android:id/hint">
+		<ImageView
+			android:id="@android:id/icon"
+			android:contentDescription="@string/dummy"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true"
+			android:layout_centerVertical="true"
+			android:layout_marginRight="10dp" />
+		<ImageView
+			android:id="@android:id/icon2"
+			android:contentDescription="@string/dummy"
+			android:layout_width="40dp"
+			android:layout_height="40dp"
+			android:layout_centerVertical="true"
+			android:layout_toRightOf="@android:id/icon"
+			android:layout_marginRight="15dp"
+			android:adjustViewBounds="true"
+			android:minHeight="40dp"
+			android:minWidth="40dp" />
+		<TextView
+			android:id="@android:id/text2"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_toRightOf="@android:id/icon2"
+			android:layout_centerVertical="true"
+			android:textSize="16sp" />
+	</RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/fields"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	android:animateLayoutChanges="true">
+
+	<FrameLayout
+		android:id="@+id/am_search_view"
+		style="@style/Widget.SearchActionMode"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:clickable="false">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@drawable/search_mode_edit_text_bg_light">
+
+			<ImageView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_vertical"
+				android:src="@drawable/edit_text_search" />
+
+			<TextView
+				android:id="@android:id/input"
+				style="@style/TextAppearance.Widget.EditText.Search"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_vertical"
+				android:contentDescription="@string/search_input_description"
+				android:gravity="left|center_vertical|center_horizontal|center|start"
+				android:singleLine="true" />
+		</LinearLayout>
+	</FrameLayout>
+
+	<ListView
+		android:id="@android:id/list"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_below="@+id/am_search_view"
+		android:overScrollMode="never"
+		android:scrollbars="none" />
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_centerInParent="true"
+		android:gravity="center"
+		android:orientation="vertical">
+
+		<miui.widget.ProgressBar
+			android:id="@+id/am_progressBar"
+			style="@style/Widget.ProgressBar"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" />
+
+	</LinearLayout>
+</RelativeLayout>

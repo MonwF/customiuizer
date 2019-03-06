@@ -1,0 +1,67 @@
+<resources>
+	<string-array name="material_background">
+		<item>@string/array_color_light</item>
+		<item>@string/array_color_dark</item>
+	</string-array>
+	<string-array name="material_background_val">
+		<item>1</item>
+		<item>2</item>
+	</string-array>
+
+	<string-array name="global_actions">
+		<item>@string/array_global_actions_none</item>
+		<item>@string/array_global_actions_notif</item>
+		<item>@string/array_global_actions_eqs</item>
+		<item>@string/array_global_actions_lock</item>
+		<item>@string/array_global_actions_sleep</item>
+		<item>@string/array_global_actions_screenshot</item>
+		<item>@string/array_global_actions_recents</item>
+		<item>@string/array_global_actions_launch</item>
+		<item>@string/array_global_actions_shortcut</item>
+		<item>@string/array_global_actions_toggle</item>
+	</string-array>
+	<integer-array name="global_actions_val">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+		<item>4</item>
+		<item>5</item>
+		<item>6</item>
+		<item>7</item>
+		<item>8</item>
+		<item>9</item>
+		<item>10</item>
+	</integer-array>
+
+	<string-array name="global_toggles">
+		<item>@string/array_global_toggle_wifi</item>
+		<item>@string/array_global_toggle_bt</item>
+		<item>@string/array_global_toggle_gps</item>
+		<item>@string/array_global_toggle_nfc</item>
+		<item>@string/array_global_toggle_sound</item>
+		<item>@string/array_global_toggle_brightness</item>
+		<item>@string/array_global_toggle_rotation</item>
+		<item>@string/array_global_toggle_torch</item>
+		<item>@string/array_global_toggle_mobiledata</item>
+	</string-array>
+	<integer-array name="global_toggles_val">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+		<item>4</item>
+		<item>5</item>
+		<item>6</item>
+		<item>7</item>
+		<item>8</item>
+		<item>9</item>
+	</integer-array>
+
+	<string-array name="placeholder_array">
+		<item>@string/dummy</item>
+	</string-array>
+	<integer-array name="placeholder_array_val">
+		<item>1</item>
+	</integer-array>
+
+	<string-array name="empty_array"/>
+</resources>

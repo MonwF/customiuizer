@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:background="@drawable/am_list_item_background"
+	android:minHeight="73.3dp"
+	android:orientation="horizontal"
+	android:paddingStart="10.3dp"
+	android:paddingEnd="@dimen/am_app_list_padding_end">
+
+	<ImageView
+		android:id="@+id/am_icon"
+		android:layout_width="@android:dimen/app_icon_size"
+		android:layout_height="@android:dimen/app_icon_size"
+		android:layout_gravity="center_vertical" />
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center_vertical"
+		android:layout_marginStart="11dp"
+		android:orientation="horizontal">
+
+		<TextView
+			android:id="@+id/am_label"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:singleLine="true"
+			android:textColor="@color/app_manager_text_color"
+			android:textSize="15sp" />
+
+		<ImageView
+			android:id="@+id/am_isDisable_icon"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_marginStart="5dp"
+			android:src="@drawable/am_card_item_disabled" />
+	</LinearLayout>
+</LinearLayout>
