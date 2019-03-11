@@ -46,11 +46,11 @@ public class AppSelector extends SubFragmentWithSearch {
 		new Thread() {
 			@Override
 			public void run() {
-				try { sleep(animDur); } catch (Exception e) {};
+				try { sleep(animDur); } catch (Throwable e) {};
 				try {
 					if (Helpers.launchableAppsList == null) Helpers.getLaunchableApps(getActivity());
 					getActivity().runOnUiThread(process);
-				} catch (Exception e) {
+				} catch (Throwable e) {
 					e.printStackTrace();
 				}
 			}

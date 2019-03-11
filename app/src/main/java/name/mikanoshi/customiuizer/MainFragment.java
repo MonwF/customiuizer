@@ -3,16 +3,13 @@ package name.mikanoshi.customiuizer;
 import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
@@ -20,7 +17,6 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,21 +25,29 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.jetbrains.annotations.NotNull;
+import org.acra.ACRA;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Arrays;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 
 import miui.app.ActionBar;
 import miui.app.AlertDialog;
 
-import name.mikanoshi.customiuizer.R;
+import name.mikanoshi.customiuizer.subs.Controls;
 import name.mikanoshi.customiuizer.subs.Launcher;
+import name.mikanoshi.customiuizer.subs.System;
+import name.mikanoshi.customiuizer.subs.Various;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class MainFragment extends PreferenceFragmentBase {
@@ -59,11 +63,11 @@ public class MainFragment extends PreferenceFragmentBase {
 		@Override
 		public void run() {
 			if (isFragmentReady(getActivity())) try {
-				TextView update = (TextView)getActivity().findViewById(R.id.update);
-				update.setText(Helpers.l10n(getActivity(), R.string.update_available));
-				update.setTextColor(getResources().getColor(android.R.color.background_light));
+				TextView update = getActivity().findViewById(R.id.update);
+				update.setText(R.string.update_available);
+				update.setTextColor(getResources().getColor(android.R.color.background_light, getActivity().getTheme()));
 
-				FrameLayout updateFrame = (FrameLayout)getActivity().findViewById(R.id.updateFrame);
+				FrameLayout updateFrame = getActivity().findViewById(R.id.updateFrame);
 				updateFrame.setLayoutTransition(new LayoutTransition());
 				updateFrame.setVisibility(View.VISIBLE);
 				updateFrame.setBackgroundColor(0xff252525);
@@ -75,12 +79,12 @@ public class MainFragment extends PreferenceFragmentBase {
 							detailsIntent.setComponent(new ComponentName("de.robv.android.xposed.installer", "de.robv.android.xposed.installer.DownloadDetailsActivity"));
 							detailsIntent.setData(Uri.fromParts("package", "com.sensetoolbox.six", null));
 							startActivity(detailsIntent);
-						} catch (Exception e) {
+						} catch (Throwable e) {
 							Helpers.openURL(getActivity(), "http://sensetoolbox.com/6/download");
 						}
 					}
 				});
-			} catch (Exception e) {}
+			} catch (Throwable e) {}
 		}
 	};
 
@@ -90,7 +94,7 @@ public class MainFragment extends PreferenceFragmentBase {
 			if (isFragmentReady(getActivity())) try {
 				FrameLayout updateFrame = getActivity().findViewById(R.id.updateFrame);
 				updateFrame.setVisibility(View.GONE);
-			} catch (Exception e) {}
+			} catch (Throwable e) {}
 		}
 	};
 
@@ -101,8 +105,8 @@ public class MainFragment extends PreferenceFragmentBase {
 	@Override
 	@SuppressLint("MissingSuperCall")
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState, R.xml.preferences);
-		addPreferencesFromResource(R.xml.preferences);
+		super.onCreate(savedInstanceState, R.xml.prefs_main);
+		addPreferencesFromResource(R.xml.prefs_main);
 	}
 
 	private void setupImmersiveMenu() {
@@ -132,9 +136,9 @@ public class MainFragment extends PreferenceFragmentBase {
 					@Override
 					public void run() {
 						AlertDialog.Builder builder = new AlertDialog.Builder(act);
-						builder.setTitle(Helpers.l10n(act, R.string.xposed_not_found));
-						builder.setMessage(Helpers.l10n(act, R.string.xposed_not_found_explain));
-						builder.setNeutralButton(Helpers.l10n(act, R.string.okay), null);
+						builder.setTitle(R.string.xposed_not_found);
+						builder.setMessage(R.string.xposed_not_found_explain);
+						builder.setNeutralButton(R.string.okay, null);
 						AlertDialog dlg = builder.create();
 						if (isFragmentReady(act)) dlg.show();
 					}
@@ -147,10 +151,8 @@ public class MainFragment extends PreferenceFragmentBase {
 						}
 					});
 				}
-/*
-				String miuizerPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/SenseToolbox/";
-				HttpURLConnection connection = null;
 
+				HttpURLConnection connection = null;
 				try {
 					URL url = new URL("http://sensetoolbox.com/last_build");
 					connection = (HttpURLConnection)url.openConnection();
@@ -168,9 +170,9 @@ public class MainFragment extends PreferenceFragmentBase {
 							last_build = reader.readLine().trim();
 						} catch (Exception e) { e.printStackTrace(); }
 
-						File tmp = new File(miuizerPath);
+						File tmp = new File(Helpers.externalPath);
 						if (!tmp.exists()) tmp.mkdirs();
-						try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(miuizerPath + "last_build", false))) {
+						try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(Helpers.externalPath + "last_build", false))) {
 							writer.write(last_build);
 						} catch (Exception e) { e.printStackTrace(); }
 					}
@@ -180,7 +182,7 @@ public class MainFragment extends PreferenceFragmentBase {
 					if (connection != null) connection.disconnect();
 				} catch (Exception e) {}
 
-				try (InputStream inputFile = new FileInputStream(miuizerPath + "last_build")) {
+				try (InputStream inputFile = new FileInputStream(Helpers.externalPath + "last_build")) {
 					BufferedReader reader = new BufferedReader(new InputStreamReader(inputFile));
 					int last_build = 0;
 					try {
@@ -192,22 +194,12 @@ public class MainFragment extends PreferenceFragmentBase {
 					else
 						handler.post(hideUpdateNotification);
 				} catch (Exception e) {}
-*/
 			}
 		}).start();
 
 		if (Helpers.prefs.getBoolean("pref_key_was_restore", false)) {
 			Helpers.prefs.edit().putBoolean("pref_key_was_restore", false).apply();
 			showRestoreInfoDialog();
-		}
-
-		//Add version name to support title
-		try {
-			PreferenceCategory supportCat = (PreferenceCategory) findPreference("pref_key_support");
-			supportCat.setTitle(String.format(Helpers.l10n(act, R.string.support_version), act.getPackageManager().getPackageInfo(act.getPackageName(), 0).versionName));
-		} catch (NameNotFoundException e) {
-			//Shouldn't happen...
-			e.printStackTrace();
 		}
 
 		CheckBoxPreference.OnPreferenceChangeListener toggleIcon = new CheckBoxPreference.OnPreferenceChangeListener() {
@@ -230,18 +222,10 @@ public class MainFragment extends PreferenceFragmentBase {
 			}
 		};
 
-		CheckBoxPreference.OnPreferenceClickListener openLang = new CheckBoxPreference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				Helpers.openLangDialog(getActivity());
-				return true;
-			}
-		};
-
 		CheckBoxPreference.OnPreferenceClickListener sendCrashReport = new CheckBoxPreference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				//ACRA.getErrorReporter().handleException(null);
+				ACRA.getErrorReporter().handleException(null);
 				return true;
 			}
 		};
@@ -260,9 +244,6 @@ public class MainFragment extends PreferenceFragmentBase {
 		Preference miuizerBackgroundColorPreference = findPreference("pref_key_miuizer_material_background");
 		if (miuizerBackgroundColorPreference != null)
 		miuizerBackgroundColorPreference.setOnPreferenceChangeListener(changeBackgroundColor);
-		Preference miuizerLanguagePreference = findPreference("pref_key_miuizer_lang");
-		if (miuizerLanguagePreference != null)
-		miuizerLanguagePreference.setOnPreferenceClickListener(openLang);
 		Preference miuizerCrashReportPreference = findPreference("pref_key_miuizer_sendreport");
 		if (miuizerCrashReportPreference != null)
 		miuizerCrashReportPreference.setOnPreferenceClickListener(sendCrashReport);
@@ -274,28 +255,12 @@ public class MainFragment extends PreferenceFragmentBase {
 		issueTrackerPreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference pref) {
-				Helpers.openURL(act, "https://bitbucket.org/langerhans/sense-toolbox/issues/");
-				return true;
-			}
-		});
-		Preference miuizerSitePreference = findPreference("pref_key_website");
-		miuizerSitePreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference pref) {
-				Helpers.openURL(act, "http://sensetoolbox.com/");
-				return true;
-			}
-		});
-		Preference donatePagePreference = findPreference("pref_key_donatepage");
-		donatePagePreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference pref) {
-				Helpers.openURL(act, "http://sensetoolbox.com/donate");
+				Helpers.openURL(act, "https://code.highspec.ru/Mikanoshi/CustoMIUIzer/issues");
 				return true;
 			}
 		});
 
-		Helpers.removePref(this, "pref_key_miuizer_force_material", "pref_key_miuizer");
+		//Helpers.removePref(this, "pref_key_miuizer_force_material", "pref_key_miuizer");
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -308,7 +273,7 @@ public class MainFragment extends PreferenceFragmentBase {
 		switch (item.getItemId()) {
 			case R.id.xposedinstaller:
 				if (!Helpers.isXposedInstallerInstalled(getContext())) {
-					Toast.makeText(getContext(), Helpers.l10n(getContext(), R.string.xposed_not_found), Toast.LENGTH_LONG).show();
+					Toast.makeText(getContext(), R.string.xposed_not_found, Toast.LENGTH_LONG).show();
 					return true;
 				}
 
@@ -317,7 +282,7 @@ public class MainFragment extends PreferenceFragmentBase {
 					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 					getContext().startActivity(intent);
 					return true;
-				} catch (Exception e1) {
+				} catch (Throwable e1) {
 					intent = new Intent("de.robv.android.xposed.installer.OPEN_SECTION");
 					intent.setPackage("de.robv.android.xposed.installer");
 					intent.putExtra("section", "modules");
@@ -325,8 +290,8 @@ public class MainFragment extends PreferenceFragmentBase {
 					try {
 						getContext().startActivity(intent);
 						return true;
-					} catch (Exception e2) {
-						Toast.makeText(getContext(), Helpers.l10n(getContext(), R.string.xposed_not_found), Toast.LENGTH_LONG).show();;
+					} catch (Throwable e2) {
+						Toast.makeText(getContext(), R.string.xposed_not_found, Toast.LENGTH_LONG).show();;
 					}
 					return false;
 				}
@@ -334,9 +299,14 @@ public class MainFragment extends PreferenceFragmentBase {
 				showBackupRestoreDialog();
 				return true;
 			case R.id.softreboot:
+				if (!miuizerModuleActive) {
+					showXposedDialog(getActivity());
+					return true;
+				}
+
 				AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-				alert.setTitle(Helpers.l10n(getContext(), R.string.soft_reboot));
-				alert.setMessage(Helpers.l10n(getContext(), R.string.soft_reboot_ask));
+				alert.setTitle(R.string.soft_reboot);
+				alert.setMessage(R.string.soft_reboot_ask);
 				alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						getContext().sendBroadcast(new Intent("name.mikanoshi.customiuizer.mods.action.FastReboot"));
@@ -346,13 +316,14 @@ public class MainFragment extends PreferenceFragmentBase {
 					public void onClick(DialogInterface dialog, int whichButton) {}
 				});
 				alert.show();
-
+				return true;
 			case R.id.about:
-				//Intent intent = new Intent(act, MAboutScreen.class);
-				//act.startActivity(intent);
+				Bundle args = new Bundle();
+				args.putInt("baseResId", R.layout.fragment_about);
+				openSubFragment(new AboutFragment(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.app_about, R.xml.prefs_about);
 				return true;
 		};
-		return false;
+		return super.onOptionsItemSelected(item);
 	}
 
 	public void backupSettings(Activity act) {
@@ -363,16 +334,16 @@ public class MainFragment extends PreferenceFragmentBase {
 			output.writeObject(Helpers.prefs.getAll());
 
 			AlertDialog.Builder alert = new AlertDialog.Builder(act);
-			alert.setTitle(Helpers.l10n(act, R.string.do_backup));
-			alert.setMessage(Helpers.l10n(act, R.string.backup_ok));
+			alert.setTitle(R.string.do_backup);
+			alert.setMessage(R.string.backup_ok);
 			alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {}
 			});
 			alert.show();
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(act);
-			alert.setTitle(Helpers.l10n(act, R.string.warning));
-			alert.setMessage(Helpers.l10n(act, R.string.storage_cannot_backup));
+			alert.setTitle(R.string.warning);
+			alert.setMessage(R.string.storage_cannot_backup);
 			alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {}
 			});
@@ -385,7 +356,7 @@ public class MainFragment extends PreferenceFragmentBase {
 					output.flush();
 					output.close();
 				}
-			} catch (Exception ex) {
+			} catch (Throwable ex) {
 				ex.printStackTrace();
 			}
 		}
@@ -396,7 +367,7 @@ public class MainFragment extends PreferenceFragmentBase {
 		try {
 			input = new ObjectInputStream(new FileInputStream(Helpers.backupPath + Helpers.backupFile));
 			Map<String, ?> entries = (Map<String, ?>)input.readObject();
-			if (entries == null || entries.isEmpty()) throw new Exception("Cannot read entries");
+			if (entries == null || entries.isEmpty()) throw new RuntimeException("Cannot read entries");
 
 			SharedPreferences.Editor prefEdit = Helpers.prefs.edit();
 			prefEdit.clear();
@@ -420,8 +391,8 @@ public class MainFragment extends PreferenceFragmentBase {
 			prefEdit.apply();
 
 			AlertDialog.Builder alert = new AlertDialog.Builder(act);
-			alert.setTitle(Helpers.l10n(act, R.string.do_restore));
-			alert.setMessage(Helpers.l10n(act, R.string.restore_ok));
+			alert.setTitle(R.string.do_restore);
+			alert.setMessage(R.string.restore_ok);
 			alert.setCancelable(false);
 			alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
@@ -430,10 +401,10 @@ public class MainFragment extends PreferenceFragmentBase {
 				}
 			});
 			alert.show();
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(act);
-			alert.setTitle(Helpers.l10n(act, R.string.warning));
-			alert.setMessage(Helpers.l10n(act, R.string.storage_cannot_restore));
+			alert.setTitle(R.string.warning);
+			alert.setMessage(R.string.storage_cannot_restore);
 			alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {}
 			});
@@ -441,7 +412,7 @@ public class MainFragment extends PreferenceFragmentBase {
 		} finally {
 			try {
 				if (input != null) input.close();
-			} catch (Exception ex) {
+			} catch (Throwable ex) {
 				ex.printStackTrace();
 			}
 		}
@@ -451,16 +422,16 @@ public class MainFragment extends PreferenceFragmentBase {
 		final Activity act = getActivity();
 
 		AlertDialog.Builder alert = new AlertDialog.Builder(act);
-		alert.setTitle(Helpers.l10n(act, R.string.backup_restore));
-		alert.setMessage(Helpers.l10n(act, R.string.backup_restore_choose));
-		alert.setPositiveButton(Helpers.l10n(act, R.string.do_restore), new DialogInterface.OnClickListener() {
+		alert.setTitle(R.string.backup_restore);
+		alert.setMessage(R.string.backup_restore_choose);
+		alert.setPositiveButton(R.string.do_restore, new DialogInterface.OnClickListener() {
 			@SuppressWarnings("unchecked")
 			public void onClick(DialogInterface dialog, int whichButton) {
 				if (!Helpers.checkStorageReadable(act)) return;
 				restoreSettings(act);
 			}
 		});
-		alert.setNegativeButton(Helpers.l10n(act, R.string.do_backup), new DialogInterface.OnClickListener() {
+		alert.setNegativeButton(R.string.do_backup, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				backupSettings(act);
 			}
@@ -477,16 +448,16 @@ public class MainFragment extends PreferenceFragmentBase {
 
 				switch (preference.getKey()) {
 					case "pref_key_system":
-						showNotYetDialog();
+						openSubFragment(new System(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_mods, R.xml.prefs_system);
 						break;
 					case "pref_key_launcher":
 						openSubFragment(new Launcher(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.launcher_mods, R.xml.prefs_launcher);
 						return true;
 					case "pref_key_controls":
-						showNotYetDialog();
+						openSubFragment(new Controls(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.controls_mods, R.xml.prefs_controls);
 						break;
-					case "pref_key_other":
-						showNotYetDialog();
+					case "pref_key_various":
+						openSubFragment(new Various(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.various_mods, R.xml.prefs_various);
 						break;
 				}
 			}
@@ -497,8 +468,8 @@ public class MainFragment extends PreferenceFragmentBase {
 	public void showXposedDialog(Activity act) {
 		try {
 			AlertDialog.Builder builder = new AlertDialog.Builder(act);
-			builder.setTitle(Helpers.l10n(act, R.string.warning));
-			builder.setMessage(Helpers.l10n(act, R.string.module_not_active));
+			builder.setTitle(R.string.warning);
+			builder.setMessage(R.string.module_not_active);
 			builder.setCancelable(true);
 			builder.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton){}
@@ -513,8 +484,8 @@ public class MainFragment extends PreferenceFragmentBase {
 	private void showRestoreInfoDialog() {
 		try {
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			builder.setTitle(Helpers.l10n(getActivity(), R.string.warning));
-			builder.setMessage(Helpers.l10n(getActivity(), R.string.backup_restore_info));
+			builder.setTitle(R.string.warning);
+			builder.setMessage(R.string.backup_restore_info);
 			builder.setCancelable(true);
 			builder.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton){}
@@ -529,8 +500,8 @@ public class MainFragment extends PreferenceFragmentBase {
 	private void showNotYetDialog() {
 		try {
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			builder.setTitle(Helpers.l10n(getActivity(), R.string.info));
-			builder.setMessage(Helpers.l10n(getActivity(), R.string.not_yet));
+			builder.setTitle(R.string.info);
+			builder.setMessage(R.string.not_yet);
 			builder.setCancelable(true);
 			builder.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton){}

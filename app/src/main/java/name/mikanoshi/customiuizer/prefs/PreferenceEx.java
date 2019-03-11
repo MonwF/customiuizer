@@ -2,7 +2,7 @@ package name.mikanoshi.customiuizer.prefs;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.preference.CheckBoxPreference;
+import android.preference.Preference;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,18 +10,10 @@ import android.widget.TextView;
 
 import name.mikanoshi.customiuizer.R;
 
-public class CheckBoxPreferenceEx extends CheckBoxPreference {
+public class PreferenceEx extends Preference {
 
-	public CheckBoxPreferenceEx(Context context) {
-		super(context);
-	}
-
-	public CheckBoxPreferenceEx(Context context, AttributeSet attrs) {
+	public PreferenceEx(Context context, AttributeSet attrs) {
 		super(context, attrs);
-	}
-
-	public CheckBoxPreferenceEx(Context context, AttributeSet attrs, int defStyleAttr) {
-		super(context, attrs, defStyleAttr);
 	}
 
 	@Override

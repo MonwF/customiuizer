@@ -4,30 +4,38 @@
 	android:layout_height="match_parent"
 	android:key="pref_key_launcher">
 
-		<PreferenceCategory
-			android:title="@string/launcher_gestures"
-			android:key="pref_key_launcher_gestures">
+	<PreferenceCategory
+		android:title="@string/launcher_gestures"
+		android:key="pref_key_launcher_gestures">
 
-			<Preference
-				android:key="pref_key_launcher_swipedown"
-				android:summary="@string/launcher_swipedownaction_summ"
-				android:title="@string/launcher_swipedownaction_title" />
-			<Preference
-				android:key="pref_key_launcher_swipeup"
-				android:summary="@string/launcher_swipeupaction_summ"
-				android:title="@string/launcher_swipeupaction_title" />
-			<Preference
-				android:key="pref_key_launcher_swiperight"
-				android:summary="@string/launcher_swiperightaction_summ"
-				android:title="@string/launcher_swiperightaction_title" />
-			<Preference
-				android:key="pref_key_launcher_swipeleft"
-				android:summary="@string/launcher_swipeleftaction_summ"
-				android:title="@string/launcher_swipeleftaction_title" />
-			<Preference
-				android:key="pref_key_launcher_shake"
-				android:summary="@string/launcher_shakeaction_summ"
-				android:title="@string/launcher_shakeaction_title" />
-		</PreferenceCategory>
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_launcher_swipedown"
+			android:summary="@string/launcher_swipedownaction_summ"
+			android:title="@string/launcher_swipedownaction_title" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_launcher_swipedown2"
+			android:summary="@string/launcher_swipedownaction2_summ"
+			android:title="@string/launcher_swipedownaction2_title" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_launcher_swipeup"
+			android:summary="@string/launcher_swipeupaction_summ"
+			android:title="@string/launcher_swipeupaction_title" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_launcher_swipeup2"
+			android:summary="@string/launcher_swipeupaction2_summ"
+			android:title="@string/launcher_swipeupaction2_title" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_launcher_swiperight"
+			android:summary="@string/launcher_swiperightaction_summ"
+			android:title="@string/launcher_swiperightaction_title" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_launcher_swipeleft"
+			android:summary="@string/launcher_swipeleftaction_summ"
+			android:title="@string/launcher_swipeleftaction_title" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_launcher_shake"
+			android:summary="@string/launcher_shakeaction_summ"
+			android:title="@string/launcher_shakeaction_title" />
+	</PreferenceCategory>
 
 </PreferenceScreen>

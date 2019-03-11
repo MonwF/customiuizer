@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 
+def acraVersion = '5.3.0-rc02'
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -9,6 +11,11 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath true
+            }
+        }
     }
     buildTypes {
         release {
@@ -16,11 +23,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "ch.acra:acra-core:$acraVersion"
+    implementation "ch.acra:acra-dialog:$acraVersion"
+    compileOnly "com.google.auto.service:auto-service:1.0-rc4"
     compileOnly 'de.robv.android.xposed:api:82'
     compileOnly files('lib/miui.jar')
-    implementation 'org.jetbrains:annotations-java5:15.0'
 }

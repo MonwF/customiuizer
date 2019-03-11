@@ -27,15 +27,19 @@ public class Launcher extends SubFragment {
 
 		Preference swipePref;
 		swipePref = findPreference("pref_key_launcher_swipedown");
-		if (swipePref != null) swipePref.setOnPreferenceClickListener(openSwipeEdit);
+		swipePref.setOnPreferenceClickListener(openSwipeEdit);
+		swipePref = findPreference("pref_key_launcher_swipedown2");
+		swipePref.setOnPreferenceClickListener(openSwipeEdit);
 		swipePref = findPreference("pref_key_launcher_swipeup");
-		if (swipePref != null) swipePref.setOnPreferenceClickListener(openSwipeEdit);
+		swipePref.setOnPreferenceClickListener(openSwipeEdit);
+		swipePref = findPreference("pref_key_launcher_swipeup2");
+		swipePref.setOnPreferenceClickListener(openSwipeEdit);
 		swipePref = findPreference("pref_key_launcher_swiperight");
-		if (swipePref != null) swipePref.setOnPreferenceClickListener(openSwipeEdit);
+		swipePref.setOnPreferenceClickListener(openSwipeEdit);
 		swipePref = findPreference("pref_key_launcher_swipeleft");
-		if (swipePref != null) swipePref.setOnPreferenceClickListener(openSwipeEdit);
+		swipePref.setOnPreferenceClickListener(openSwipeEdit);
 		swipePref = findPreference("pref_key_launcher_shake");
-		if (swipePref != null) swipePref.setOnPreferenceClickListener(openSwipeEdit);
+		swipePref.setOnPreferenceClickListener(openSwipeEdit);
 	}
 
 }

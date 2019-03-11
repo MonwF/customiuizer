@@ -1,46 +1,28 @@
 package name.mikanoshi.customiuizer.utils;
 
 import android.annotation.SuppressLint;
-import android.app.ActivityManager;
 import android.app.Instrumentation;
-import android.app.KeyguardManager;
-import android.app.admin.DevicePolicyManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.content.res.XModuleResources;
-import android.graphics.Color;
-import android.location.LocationManager;
+import android.content.res.Resources;
 import android.media.AudioManager;
-import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.PowerManager;
 import android.os.SystemClock;
-import android.os.Vibrator;
+import android.preference.PreferenceActivity;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
-import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.View;
-import android.view.Window;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Map;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
@@ -48,34 +30,37 @@ import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
 import miui.os.SystemProperties;
-import miui.view.ViewPager;
-import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
 
-import static android.content.Context.ACTIVITY_SERVICE;
+import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
+import static de.robv.android.xposed.XposedHelpers.findClass;
 
+@SuppressWarnings("WeakerAccess")
 public class GlobalActions {
 
 	public static Object mGlobal = null;
-//	public static Object mDeviceManager = null;
 	public static Object mStatusBar = null;
 //	public static FloatingSelector floatSel = null;
-//	//public static Handler mHandler = null;
-	private static int mCurrentLEDLevel = 0;
-//
-//	private static BroadcastReceiver mDMReceiver = new BroadcastReceiver() {
-//		public void onReceive(final Context context, Intent intent) {
-//			try {
-//				if (mDeviceManager != null) XposedHelpers.callMethod(mDeviceManager, "lockNow");
-//			} catch (Throwable t) {
-//				XposedBridge.log(t);
-//			}
-//		}
-//	};
+
+	public static boolean handleAction(int action, int extraLaunch, int extraToggle, Context helperContext) {
+		switch (action) {
+			case 2: return expandNotifications(helperContext);
+			case 3: return expandEQS(helperContext);
+			case 4: return lockDevice(helperContext);
+			case 5: return goToSleep(helperContext);
+			case 6: return takeScreenshot(helperContext);
+			case 7: return openRecents(helperContext);
+			case 8: return launchApp(helperContext, extraLaunch);
+			case 9: return launchShortcut(helperContext, extraLaunch);
+			case 10: return toggleThis(helperContext, extraToggle);
+			default: return false;
+		}
+	}
 
 	private static BroadcastReceiver mSBReceiver = new BroadcastReceiver() {
 		public void onReceive(final Context context, Intent intent) {
 			try {
+				Resources modRes = Helpers.getModuleRes(context);
 				String action = intent.getAction();
 
 //				if (action.equals("name.mikanoshi.customiuizer.mods.action.ShowQuickRecents")) {
@@ -91,17 +76,17 @@ public class GlobalActions {
 					if (action.equals("name.mikanoshi.customiuizer.mods.action.ToggleGPS")) {
 						boolean mGpsEnable = (boolean)XposedHelpers.getObjectField(mToggleManager, "mGpsEnable");
 						if (mGpsEnable)
-							Toast.makeText(context, MainModule.langForHooks.get("toggle_gps_off"), Toast.LENGTH_SHORT).show();
+							Toast.makeText(context, modRes.getString(R.string.toggle_gps_off), Toast.LENGTH_SHORT).show();
 						else
-							Toast.makeText(context, MainModule.langForHooks.get("toggle_gps_on"), Toast.LENGTH_SHORT).show();
+							Toast.makeText(context, modRes.getString(R.string.toggle_gps_on), Toast.LENGTH_SHORT).show();
 						XposedHelpers.callMethod(mToggleManager, "toggleGps");
 					}
 					if (action.equals("name.mikanoshi.customiuizer.mods.action.ToggleFlashlight")) {
 						boolean mTorchEnable = (boolean)XposedHelpers.getObjectField(mToggleManager, "mTorchEnable");
 						if (mTorchEnable)
-							Toast.makeText(context, MainModule.langForHooks.get("toggle_flash_off"), Toast.LENGTH_SHORT).show();
+							Toast.makeText(context, modRes.getString(R.string.toggle_flash_off), Toast.LENGTH_SHORT).show();
 						else
-							Toast.makeText(context, MainModule.langForHooks.get("toggle_flash_on"), Toast.LENGTH_SHORT).show();
+							Toast.makeText(context, modRes.getString(R.string.toggle_flash_on), Toast.LENGTH_SHORT).show();
 						XposedHelpers.callMethod(mToggleManager, "toggleTorch");
 					}
 				}
@@ -116,6 +101,7 @@ public class GlobalActions {
 		public void onReceive(final Context context, Intent intent) {
 			try {
 
+			Resources modRes = Helpers.getModuleRes(context);
 			String action = intent.getAction();
 			// Actions
 			XposedBridge.log("Global receiver got action: " + action);
@@ -217,40 +203,27 @@ public class GlobalActions {
 //				}
 //			}
 //
-//			final XModuleResources modRes = XModuleResources.createInstance(MainModule.MODULE_PATH, null);
-//			Helpers.xl10n(modRes, R.string.toggle_wifi_off)
-
 			// Toggles
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.ToggleWiFi")) {
 				WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
 				if (wifiManager.isWifiEnabled()) {
 					wifiManager.setWifiEnabled(false);
-					Toast.makeText(context, MainModule.langForHooks.get("toggle_wifi_off"), Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, modRes.getString(R.string.toggle_wifi_off), Toast.LENGTH_SHORT).show();
 				} else {
 					wifiManager.setWifiEnabled(true);
-					Toast.makeText(context, MainModule.langForHooks.get("toggle_wifi_on"), Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, modRes.getString(R.string.toggle_wifi_on), Toast.LENGTH_SHORT).show();
 				}
 			}
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.ToggleBluetooth")) {
 				BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 				if (mBluetoothAdapter.isEnabled()) {
 					mBluetoothAdapter.disable();
-					Toast.makeText(context, MainModule.langForHooks.get("toggle_bt_off"), Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, modRes.getString(R.string.toggle_bt_off), Toast.LENGTH_SHORT).show();
 				} else {
 					mBluetoothAdapter.enable();
-					Toast.makeText(context, MainModule.langForHooks.get("toggle_bt_on"), Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, modRes.getString(R.string.toggle_bt_on), Toast.LENGTH_SHORT).show();
 				}
 			}
-//			if (action.equals("name.mikanoshi.customiuizer.mods.action.ToggleGPS")) {
-//				LocationManager locManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
-//				if (locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-//					turnGPSOff(context);
-//					Toast.makeText(context, MainModule.langForHooks.get("toggle_gps_off"), Toast.LENGTH_SHORT).show();
-//				} else {
-//					turnGPSOn(context);
-//					Toast.makeText(context, MainModule.langForHooks.get("toggle_gps_on"), Toast.LENGTH_SHORT).show();
-//				}
-//			}
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.ToggleNFC")) {
 				Class<?> clsNfcAdapter = XposedHelpers.findClass("android.nfc.NfcAdapter", null);
 				NfcAdapter mNfcAdapter = (NfcAdapter) XposedHelpers.callStaticMethod(clsNfcAdapter, "getNfcAdapter", context);
@@ -263,10 +236,10 @@ public class GlobalActions {
 
 				if (mNfcAdapter.isEnabled()) {
 					disableNFC.invoke(mNfcAdapter);
-					Toast.makeText(context, MainModule.langForHooks.get("toggle_nfc_off"), Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, modRes.getString(R.string.toggle_nfc_off), Toast.LENGTH_SHORT).show();
 				} else {
 					enableNFC.invoke(mNfcAdapter);
-					Toast.makeText(context, MainModule.langForHooks.get("toggle_nfc_on"), Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, modRes.getString(R.string.toggle_nfc_on), Toast.LENGTH_SHORT).show();
 				}
 			}
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.ToggleSoundProfile")) {
@@ -274,46 +247,47 @@ public class GlobalActions {
 				int currentMode = am.getRingerMode();
 				if (currentMode == 0) {
 					am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-					Toast.makeText(context, MainModule.langForHooks.get("toggle_sound_vibrate"), Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, modRes.getString(R.string.toggle_sound_vibrate), Toast.LENGTH_SHORT).show();
 				} else if (currentMode == 1) {
 					am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-					Toast.makeText(context, MainModule.langForHooks.get("toggle_sound_normal"), Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, modRes.getString(R.string.toggle_sound_normal), Toast.LENGTH_SHORT).show();
 				} else if (currentMode == 2) {
 					am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-					Toast.makeText(context, MainModule.langForHooks.get("toggle_sound_silent"), Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, modRes.getString(R.string.toggle_sound_silent), Toast.LENGTH_SHORT).show();
 				}
 			}
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.ToggleAutoBrightness")) {
 				if (Settings.System.getInt(context.getContentResolver(), "screen_brightness_mode", 0) == 0) {
 					Settings.System.putInt(context.getContentResolver(), "screen_brightness_mode", 1);
-					Toast.makeText(context, MainModule.langForHooks.get("toggle_autobright_on"), Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, modRes.getString(R.string.toggle_autobright_on), Toast.LENGTH_SHORT).show();
 				} else {
 					Settings.System.putInt(context.getContentResolver(), "screen_brightness_mode", 0);
-					Toast.makeText(context, MainModule.langForHooks.get("toggle_autobright_off"), Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, modRes.getString(R.string.toggle_autobright_off), Toast.LENGTH_SHORT).show();
 				}
 			}
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.ToggleAutoRotation")) {
 				if (Settings.System.getInt(context.getContentResolver(), "accelerometer_rotation", 0) == 0) {
 					Settings.System.putInt(context.getContentResolver(), "accelerometer_rotation", 1);
-					Toast.makeText(context, MainModule.langForHooks.get("toggle_autorotate_on"), Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, modRes.getString(R.string.toggle_autorotate_on), Toast.LENGTH_SHORT).show();
 				} else {
 					Settings.System.putInt(context.getContentResolver(), "accelerometer_rotation", 0);
-					Toast.makeText(context, MainModule.langForHooks.get("toggle_autorotate_off"), Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, modRes.getString(R.string.toggle_autorotate_off), Toast.LENGTH_SHORT).show();
 				}
 			}
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.ToggleMobileData")) {
 				TelephonyManager telManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
 				Method setMTE = TelephonyManager.class.getDeclaredMethod("setDataEnabled", boolean.class);
+				@SuppressWarnings("ALL")
 				Method getMTE = TelephonyManager.class.getDeclaredMethod("getDataEnabled");
 				setMTE.setAccessible(true);
 				getMTE.setAccessible(true);
 
 				if ((Boolean)getMTE.invoke(telManager)) {
 					setMTE.invoke(telManager, false);
-					Toast.makeText(context, MainModule.langForHooks.get("toggle_mobiledata_off"), Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, modRes.getString(R.string.toggle_mobiledata_off), Toast.LENGTH_SHORT).show();
 				} else {
 					setMTE.invoke(telManager, true);
-					Toast.makeText(context, MainModule.langForHooks.get("toggle_mobiledata_on"), Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, modRes.getString(R.string.toggle_mobiledata_on), Toast.LENGTH_SHORT).show();
 				}
 			}
 
@@ -398,51 +372,6 @@ public class GlobalActions {
 //		}
 //	}
 
-//	private static String beforeEnable;
-//
-//	@SuppressWarnings("deprecation")
-//	private static void turnGPSOn(Context context) {
-//		beforeEnable = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-//		String newSet;
-//		if (beforeEnable.equals(""))
-//			newSet = LocationManager.GPS_PROVIDER;
-//		else
-//			newSet = String.format("%s,%s", beforeEnable, LocationManager.GPS_PROVIDER);
-//		try {
-//			Settings.Secure.putString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED, newSet);
-//		} catch(Throwable t) {
-//			XposedBridge.log(t);
-//		}
-//	}
-//
-//	@SuppressWarnings("deprecation")
-//	private static void turnGPSOff(Context context) {
-//		if (beforeEnable == null) {
-//			String str = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-//			if (str == null)
-//				str = "";
-//			else {
-//				String[] list = str.split(",");
-//				str = "";
-//
-//				int j = 0;
-//				for (int i = 0; i < list.length; i++) {
-//					if (!list[i].equals(LocationManager.GPS_PROVIDER)) {
-//						if (j > 0) str += ",";
-//						str += list[i];
-//						j++;
-//					}
-//				}
-//				beforeEnable = str;
-//			}
-//		}
-//		try {
-//			Settings.Secure.putString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED, beforeEnable);
-//		} catch(Throwable t) {
-//			XposedBridge.log(t);
-//		}
-//	}
-	
 	public static void miuizerInit(LoadPackageParam lpparam) {
 		try {
 			XposedHelpers.findAndHookMethod(Helpers.modulePkg + ".MainFragment", lpparam.classLoader, "onActivityCreated", Bundle.class, new XC_MethodHook() {
@@ -456,6 +385,157 @@ public class GlobalActions {
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
+	}
+
+	public static void miuizerSettingsInit(LoadPackageParam lpparam) {
+		findAndHookMethod("com.android.settings.MiuiSettings", lpparam.classLoader, "onCreate", Bundle.class, new XC_MethodHook() {
+			@Override
+			@SuppressWarnings("unchecked")
+			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+				Map<String, Integer> map = (Map<String, Integer>)XposedHelpers.getStaticObjectField(findClass("com.android.settings.MiuiSettings", lpparam.classLoader), "CATEGORY_MAP");
+				PreferenceActivity act = (PreferenceActivity)param.thisObject;
+				map.put("com.android.settings.category.customiuizer", act.getApplicationContext().getResources().getIdentifier("ic_miui_lab_settings", "drawable", "com.android.settings"));
+				XposedHelpers.setStaticObjectField(findClass("com.android.settings.MiuiSettings", lpparam.classLoader), "CATEGORY_MAP", map);
+				//XposedBridge.log(map.toString());
+			}
+		});
+/*
+		findAndHookMethod("com.android.settingslib.drawer.l", lpparam.classLoader, "a", Context.class, Map.class, boolean.class, String.class, String.class, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				Map<Pair<String, String>, Object> map = (Map<Pair<String, String>, Object>)param.args[1];
+				boolean bool = (boolean)param.args[2];
+				String str1 = (String)param.args[3];
+				String str2 = (String)param.args[4];
+
+				XposedBridge.log("Tile with Map:");
+				XposedBridge.log("Map:");
+				for (Map.Entry<Pair<String, String>, Object> entry: map.entrySet())
+				XposedBridge.log(entry.getKey().first + " = " + entry.getKey().second);
+				XposedBridge.log("- - - - - - - - - -");
+				XposedBridge.log(String.valueOf(bool));
+				XposedBridge.log("Str1: " + str1);
+				XposedBridge.log("Str2: " + str2);
+				XposedBridge.log("- - - - - - - - - -");
+			}
+		});
+
+		findAndHookMethod("com.android.settingslib.drawer.l", lpparam.classLoader, "a", Context.class, UserHandle.class, String.class, Map.class, String.class, ArrayList.class, boolean.class, boolean.class, String.class, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				UserHandle uh = (UserHandle)param.args[1];
+				String str1 = (String)param.args[2];
+				Map<Pair<String, String>, Object> map = (Map<Pair<String, String>, Object>)param.args[3];
+				String str2 = (String)param.args[4];
+				ArrayList list = (ArrayList)param.args[5];
+				boolean bool1 = (boolean)param.args[6];
+				boolean bool2 = (boolean)param.args[7];
+				String str3 = (String)param.args[8];
+
+				XposedBridge.log("Tile with ArrayList:");
+				XposedBridge.log(uh.toString());
+				XposedBridge.log("Str1: " + str1);
+				XposedBridge.log("Map:");
+				for (Map.Entry<Pair<String, String>, Object> entry: map.entrySet())
+				XposedBridge.log(entry.getKey().first + " = " + entry.getKey().second);
+				XposedBridge.log("- - - - - - - - - -");
+				XposedBridge.log("Str2: " + str2);
+				XposedBridge.log("ArrayList:");
+				for (Object entry: list)
+				XposedBridge.log(entry.toString());
+				XposedBridge.log("- - - - - - - - - -");
+				XposedBridge.log(String.valueOf(bool1));
+				XposedBridge.log(String.valueOf(bool2));
+				XposedBridge.log("Str3: " + str3);
+				XposedBridge.log("= = = = = = = = = =");
+			}
+		});
+
+		findAndHookMethod("com.android.settingslib.drawer.l", lpparam.classLoader, "a", Context.class, UserHandle.class, Intent.class, Map.class, String.class, List.class, boolean.class, boolean.class, boolean.class, boolean.class, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				UserHandle uh = (UserHandle)param.args[1];
+				Intent intent = (Intent)param.args[2];
+				Map<Pair<String, String>, Object> map = (Map<Pair<String, String>, Object>)param.args[3];
+				String str = (String)param.args[4];
+				List list = (List)param.args[5];
+				boolean bool1 = (boolean)param.args[6];
+				boolean bool2 = (boolean)param.args[7];
+				boolean bool3 = (boolean)param.args[8];
+				boolean bool4 = (boolean)param.args[9];
+
+				XposedBridge.log("Tile with List:");
+				XposedBridge.log(uh.toString());
+				XposedBridge.log(intent.toString());
+				XposedBridge.log("Map:");
+				for (Map.Entry<Pair<String, String>, Object> entry: map.entrySet())
+				XposedBridge.log(entry.getKey().first + " = " + entry.getKey().second);
+				XposedBridge.log("- - - - - - - - - -");
+				XposedBridge.log("Str: " + str);
+				XposedBridge.log("List:");
+				for (Object entry: list)
+				XposedBridge.log(entry.toString());
+				XposedBridge.log("- - - - - - - - - -");
+				XposedBridge.log(String.valueOf(bool1));
+				XposedBridge.log(String.valueOf(bool2));
+				XposedBridge.log(String.valueOf(bool3));
+				XposedBridge.log(String.valueOf(bool4));
+				XposedBridge.log("= = = = = = = = = =");
+			}
+		});
+
+		findAndHookMethod("com.android.settingslib.drawer.l", lpparam.classLoader, "a", Context.class, "com.android.settingslib.drawer.Tile", ActivityInfo.class, ApplicationInfo.class, PackageManager.class, Map.class, boolean.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+				ApplicationInfo ai = (ApplicationInfo)param.args[3];
+				if (ai.packageName.equalsIgnoreCase(modulePkg) && !(boolean)XposedHelpers.callMethod(ai, "isSystemApp")) ai.flags |= 1;
+			}
+
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				Object tile = param.args[1];
+				ActivityInfo ai = (ActivityInfo)param.args[2];
+				ApplicationInfo ai2 = (ApplicationInfo)param.args[3];
+				Map<Pair<String, String>, Object> map = (Map<Pair<String, String>, Object>)param.args[5];
+				boolean bool = (boolean)param.args[6];
+
+				if (ai2.packageName.equalsIgnoreCase(modulePkg)) {
+					XposedBridge.log("Result: " + String.valueOf((boolean)param.getResult()));
+					XposedBridge.log("Title: " + XposedHelpers.getObjectField(tile, "title"));
+					XposedBridge.log("Summary: " + XposedHelpers.getObjectField(tile, "summary"));
+					XposedBridge.log("Cat: " + XposedHelpers.getObjectField(tile, "category"));
+					XposedBridge.log("Key: " + XposedHelpers.getObjectField(tile, "key"));
+					XposedBridge.log("Priority: " + String.valueOf((int)XposedHelpers.getObjectField(tile, "priority")));
+					XposedBridge.log("cCN: " + ((ArrayList)XposedHelpers.getObjectField(tile, "cCN")).toString());
+					XposedBridge.log("cCM: " + String.valueOf((boolean)XposedHelpers.getObjectField(tile, "cCM")));
+					XposedBridge.log("Icon: " + ((Icon)XposedHelpers.getObjectField(tile, "icon")).toString());
+					XposedBridge.log(ai.toString());
+					XposedBridge.log(ai2.toString());
+					//XposedBridge.log("Map:");
+					//for (Map.Entry<Pair<String, String>, Object> entry : map.entrySet())
+					//XposedBridge.log(entry.getKey().first + " = " + entry.getKey().second);
+					XposedBridge.log(String.valueOf(bool));
+					XposedBridge.log("= = = = = = = = = =");
+				}
+			}
+		});
+
+		findAndHookMethod("com.android.settingslib.drawer.l", lpparam.classLoader, "a", Context.class, Map.class, "com.android.settingslib.drawer.Tile", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				Map map = (Map)param.args[1];
+				Object tile = (Object)param.args[2];
+
+				XposedBridge.log("Tile:");
+				XposedBridge.log(tile.toString());
+				XposedBridge.log(XposedHelpers.getObjectField(tile, "title").toString());
+				XposedBridge.log(XposedHelpers.getObjectField(tile, "summary").toString());
+				XposedBridge.log(String.valueOf((int)XposedHelpers.getObjectField(tile, "priority")));
+				XposedBridge.log(map.toString());
+				XposedBridge.log("- - - - - - - - - -");
+			}
+		});
+*/
 	}
 	
 //	private static BroadcastReceiver mBRTools = new BroadcastReceiver() {
@@ -533,10 +613,7 @@ public class GlobalActions {
 				@Override
 				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 					Context mGlobalContext = (Context)param.args[0];
-					//if (!mWindowManagerContext.getPackageName().equals("com.android.systemui")) return;
-
 					mGlobal = param.thisObject;
-					//mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
 
 					IntentFilter intentfilter = new IntentFilter();
 
@@ -564,7 +641,6 @@ public class GlobalActions {
 					//APM
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.FastReboot");
 
-					XposedBridge.log("Global receiver created!");
 					mGlobalContext.registerReceiver(mGlobalReceiver, intentfilter);
 				}
 			});
@@ -663,11 +739,13 @@ public class GlobalActions {
 		try {
 			String pkgAppName = null;
 			switch (action) {
-				case 1: pkgAppName = MainModule.pref.getString("pref_key_launcher_swipedown_app", null); break;
-				case 2: pkgAppName = MainModule.pref.getString("pref_key_launcher_swipeup_app", null); break;
-				case 3: pkgAppName = MainModule.pref.getString("pref_key_launcher_swiperight_app", null); break;
-				case 4: pkgAppName = MainModule.pref.getString("pref_key_launcher_swipeleft_app", null); break;
-				case 5: pkgAppName = MainModule.pref.getString("pref_key_launcher_shake_app", null); break;
+				case 1: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_launcher_swipedown_app", null); break;
+				case 2: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_launcher_swipedown2_app", null); break;
+				case 3: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_launcher_swipeup_app", null); break;
+				case 4: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_launcher_swipeup2_app", null); break;
+				case 5: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_launcher_swiperight_app", null); break;
+				case 6: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_launcher_swipeleft_app", null); break;
+				case 7: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_launcher_shake_app", null); break;
 //				case 3: pkgAppName = MainModule.pref.getString("pref_key_controls_backlongpress_app", null); break;
 //				case 4: pkgAppName = MainModule.pref.getString("pref_key_controls_homeassist_app", null); break;
 //				case 8: pkgAppName = MainModule.pref.getString("pref_key_launcher_appslongpress_app", null); break;
@@ -678,7 +756,7 @@ public class GlobalActions {
 //				case 13: pkgAppName = MainModule.pref.getString("pref_key_controls_clock_app", null); break;
 //				case 14: pkgAppName = MainModule.pref.getString("pref_key_controls_date_app", null); break;
 			}
-			XposedBridge.log("launchApp: " + String.valueOf(pkgAppName));
+
 			if (pkgAppName != null) {
 				String[] pkgAppArray = pkgAppName.split("\\|");
 
@@ -701,11 +779,13 @@ public class GlobalActions {
 		try {
 			String intentString = null;
 			switch (action) {
-				case 1: intentString = MainModule.pref.getString("pref_key_launcher_swipedown_shortcut_intent", null); break;
-				case 2: intentString = MainModule.pref.getString("pref_key_launcher_swipeup_shortcut_intent", null); break;
-				case 3: intentString = MainModule.pref.getString("pref_key_launcher_swiperight_shortcut_intent", null); break;
-				case 4: intentString = MainModule.pref.getString("pref_key_launcher_swipeleft_shortcut_intent", null); break;
-				case 5: intentString = MainModule.pref.getString("pref_key_launcher_shake_shortcut_intent", null); break;
+				case 1: intentString = Helpers.getSharedStringPref(context, "pref_key_launcher_swipedown_shortcut_intent", null); break;
+				case 2: intentString = Helpers.getSharedStringPref(context, "pref_key_launcher_swipedown2_shortcut_intent", null); break;
+				case 3: intentString = Helpers.getSharedStringPref(context, "pref_key_launcher_swipeup_shortcut_intent", null); break;
+				case 4: intentString = Helpers.getSharedStringPref(context, "pref_key_launcher_swipeup2_shortcut_intent", null); break;
+				case 5: intentString = Helpers.getSharedStringPref(context, "pref_key_launcher_swiperight_shortcut_intent", null); break;
+				case 6: intentString = Helpers.getSharedStringPref(context, "pref_key_launcher_swipeleft_shortcut_intent", null); break;
+				case 7: intentString = Helpers.getSharedStringPref(context, "pref_key_launcher_shake_shortcut_intent", null); break;
 //				case 3: intentString = MainModule.pref.getString("pref_key_controls_backlongpressaction_shortcut_intent", null); break;
 //				case 4: intentString = MainModule.pref.getString("pref_key_controls_homeassistaction_shortcut_intent", null); break;
 //				case 8: intentString = MainModule.pref.getString("pref_key_launcher_appslongpressaction_shortcut_intent", null); break;
@@ -800,7 +880,7 @@ public class GlobalActions {
 
 	public static boolean toggleThis(Context context, int what) {
 		try {
-			String whatStr = "WiFi";
+			String whatStr;
 			switch (what) {
 				case 1: whatStr = "WiFi"; break;
 				case 2: whatStr = "Bluetooth"; break;

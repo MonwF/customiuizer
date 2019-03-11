@@ -3,7 +3,6 @@ package name.mikanoshi.customiuizer.utils;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ResolveInfo;
-import android.os.Bundle;
 
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import static de.robv.android.xposed.XposedHelpers.getObjectField;
@@ -17,7 +16,6 @@ import de.robv.android.xposed.XC_MethodHook.MethodHookParam;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
-import name.mikanoshi.customiuizer.MainModule;
 
 public class PackagePermissions {
 
@@ -31,10 +29,8 @@ public class PackagePermissions {
 
 			String pkgName = (String)getObjectField(param.args[0], "packageName");
 			if (pkgName.equalsIgnoreCase(Helpers.modulePkg)) {
-				//requestedPermissions.add("com.htc.permission.APP_DEFAULT");
-				//requestedPermissionsRequired.add(true);
-				//requestedPermissions.add("com.htc.permission.APP_PLATFORM");
-				//requestedPermissionsRequired.add(true);
+				requestedPermissions.add("miui.permission.READ_LOGS");
+				requestedPermissions.add("miui.permission.DUMP_CACHED_LOG");
 			}
 
 			setObjectField(param.args[0], "requestedPermissions", requestedPermissions);
@@ -115,6 +111,7 @@ public class PackagePermissions {
 			findAndHookMethod("com.android.server.pm.PackageManagerService", lpparam.classLoader, "queryIntentActivitiesInternal", Intent.class, String.class, int.class, int.class, int.class, boolean.class, boolean.class,
 				new XC_MethodHook() {
 					@Override
+					@SuppressWarnings("unchecked")
 					protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 						List<ResolveInfo> infos = (List<ResolveInfo>)param.getResult();
 						if (infos != null)
@@ -149,4 +146,5 @@ public class PackagePermissions {
 			XposedBridge.log(t);
 		}
 	}
+
 }

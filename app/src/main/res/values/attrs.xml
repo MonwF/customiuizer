@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<declare-styleable name="ListPreferenceEx">
+		<attr name="valueAsSummary" format="boolean" />
+	</declare-styleable>
+
 	<declare-styleable name="SpinnerEx">
 		<attr name="entryValues" format="reference" />
-	</declare-styleable>>
+	</declare-styleable>
+
+	<declare-styleable name="SeekBarPreference">
+		<attr name="android:defaultValue" />
+		<attr name="minValue" format="integer" />
+		<attr name="maxValue" format="integer" />
+		<attr name="stepValue" format="integer" />
+		<attr name="displayDividerValue" format="integer" />
+		<attr name="format" format="string" />
+		<attr name="note" format="string" />
+		<attr name="offtext" format="string" />
+	</declare-styleable>
+
+	<attr name="preferenceSecondaryTextColor" format="reference|color" />
+
 </resources>

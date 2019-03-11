@@ -96,7 +96,7 @@ public class ShortcutSelector extends SubFragmentWithSearch {
 
 			intent.putExtra("shortcut_contents", keyContents);
 			intent.putExtra("shortcut_name", data.getStringExtra(Intent.EXTRA_SHORTCUT_NAME));
-			intent.putExtra("shortcut_intent", data.getParcelableExtra(Intent.EXTRA_SHORTCUT_INTENT));
+			intent.putExtra("shortcut_intent", (Intent)data.getParcelableExtra(Intent.EXTRA_SHORTCUT_INTENT));
 			getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
 			finish();
 		}

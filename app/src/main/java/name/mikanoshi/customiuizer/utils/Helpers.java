@@ -1,35 +1,24 @@
 package name.mikanoshi.customiuizer.utils;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -37,54 +26,54 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.content.res.TypedArray;
-import android.content.res.XModuleResources;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.database.ContentObserver;
+import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
-import android.preference.ListPreference;
-import android.preference.MultiSelectListPreference;
+import android.os.Handler;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceScreen;
 import android.os.PowerManager.WakeLock;
+import android.provider.Settings;
 import android.util.Log;
 import android.util.LruCache;
 import android.util.SparseArray;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.NumberPicker;
-import android.widget.TextView;
 
+import de.robv.android.xposed.XposedBridge;
+import name.mikanoshi.customiuizer.BuildConfig;
 import name.mikanoshi.customiuizer.MainActivity;
+import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.PreferenceFragmentBase;
 import name.mikanoshi.customiuizer.R;
-import name.mikanoshi.customiuizer.prefs.ListPreferenceEx;
+import name.mikanoshi.customiuizer.SharedPrefsProvider;
 
 public class Helpers {
 
-	public static String modulePkg = "name.mikanoshi.customiuizer";
-	public static String prefsName = "customiuizer_prefs";
+	public static final String modulePkg = "name.mikanoshi.customiuizer";
+	public static final String prefsName = "customiuizer_prefs";
 	public static SharedPreferences prefs = null;
 	public static ArrayList<AppData> installedAppsList = null;
 	public static ArrayList<AppData> launchableAppsList = null;
-	public static Map<String, String> l10n = null;
-	public static String cLang = "";
 	public static float strings_total = 806.0f;
 	public static int buildVersion = 289;
 	public static String dataPath;
-	public static String backupPath = null;
+	public static String externalPath = null;
 	public static String backupFile = "settings_backup";
 	public static LruCache<String, Bitmap> memoryCache = new LruCache<String, Bitmap>((int)(Runtime.getRuntime().maxMemory() / 1024) / 2) {
 		@Override
@@ -97,7 +86,7 @@ public class Helpers {
 	};
 	public static ArrayList<Integer> allStyles;
 	public static SparseArray<Object[]> colors = new SparseArray<Object[]>();
-	public static int mFlashlightLevel = 0;
+	//public static int mFlashlightLevel = 0;
 	public static WakeLock mWakeLock;
 	public static LinkedHashMap<String, Integer> colorValues = new LinkedHashMap<String, Integer>();
 	public static LinkedHashMap<String, Integer> colorValuesHeader = new LinkedHashMap<String, Integer>();
@@ -110,122 +99,6 @@ public class Helpers {
 		HomeUp, Edit
 	}
 
-	private static synchronized boolean preloadLang(String lang) {
-		try {
-			if (l10n == null) {
-				FileInputStream in_s = new FileInputStream(dataPath + "values-" + lang.replace("_", "-r") + "/strings.xml");
-				XmlPullParser parser = XmlPullParserFactory.newInstance().newPullParser();
-				l10n = new HashMap<String, String>();
-				parser.setInput(in_s, null);
-				int eventType = parser.getEventType();
-				
-				while ((eventType = parser.next()) != XmlPullParser.END_DOCUMENT)
-				if (eventType == XmlPullParser.START_TAG && parser.getName().equalsIgnoreCase("string"))
-				l10n.put(parser.getAttributeValue(null, "name"), parser.nextText().replace("\\'", "'").replace("\\\"", "\"").replace("\\n", "\n"));
-				
-				cLang = lang;
-			}
-			return true;
-		} catch (Exception e) {
-			cLang = "not_found";
-			//e.printStackTrace();
-		}
-		return false;
-	}
-	
-	public static String l10n(Context mContext, int resId) {
-		if (mContext != null && resId != 0)
-			return l10n(mContext, mContext.getResources().getResourceEntryName(resId));
-		else
-			return "???";
-	}
-
-	public static String l10n(Context mContext, String resName) {
-		String lang_full = Locale.getDefault().toString();
-		String lang = Locale.getDefault().getLanguage();
-		boolean allowFallback = true;
-		if (lang_full.equals("zh_HK")) allowFallback = false;
-		String newStr = null;
-		if (!lang.equals("") && !lang.equals("en") && !lang_full.contains("en_") && !cLang.equals("not_found"))
-		if (preloadLang(lang_full))
-			newStr = l10n.get(resName);
-		else if (allowFallback && preloadLang(lang))
-			newStr = l10n.get(resName);
-		if (newStr != null) return newStr;
-		
-		int resId = mContext.getResources().getIdentifier(resName, "string", mContext.getPackageName());
-		if (resId != 0)
-			return mContext.getResources().getString(resId);
-		else
-			return "???";
-	}
-	
-	public static String xl10n(XModuleResources modRes, int resId) {
-		try {
-			if (resId != 0)
-				return xl10n(modRes, modRes.getResourceEntryName(resId));
-			else
-				return "???";
-		} catch (Throwable t) {
-			return "???";
-		}
-	}
-	public static String xl10n(XModuleResources modRes, String resName) {
-		try {
-			String lang_full = Locale.getDefault().toString();
-			String lang = Locale.getDefault().getLanguage();
-			boolean allowFallback = true;
-			if (lang_full.equals("zh_HK")) allowFallback = false;
-			String newStr = null;
-			if (!lang.equals("") && !lang.equals("en") && !lang_full.contains("en_") && !cLang.equals("not_found"))
-			if (preloadLang(lang_full))
-				newStr = l10n.get(resName);
-			else if (allowFallback && preloadLang(lang))
-				newStr = l10n.get(resName);
-			if (newStr != null) return newStr;
-
-			int resId = modRes.getIdentifier(resName, "string", "com.sensetoolbox.six");
-			if (resId != 0)
-				return modRes.getString(resId);
-			else
-				return "???";
-		} catch (Throwable t) {
-			return "???";
-		}
-	}
-	
-	public static String[] l10n_array(Context mContext, int resId) {
-		TypedArray ids = mContext.getResources().obtainTypedArray(resId);
-		List<String> array = new ArrayList<String>();
-		for (int i = 0; i < ids.length(); i++) {
-			int id = ids.getResourceId(i, 0);
-			if (id != 0)
-				array.add(l10n(mContext, id));
-			else
-				array.add("???");
-		}
-		ids.recycle();
-		return array.toArray(new String[array.size()]);
-	}
-	
-//	public static String[] xl10n_array(XModuleResources modRes, int resId) {
-//		try {
-//			TypedArray ids = modRes.obtainTypedArray(resId);
-//			List<String> array = new ArrayList<String>();
-//			for (int i = 0; i < ids.length(); i++) {
-//				int id = ids.getResourceId(i, 0);
-//				if (id != 0)
-//					array.add(xl10n(modRes, id));
-//				else
-//					array.add("???");
-//			}
-//			ids.recycle();
-//			return array.toArray(new String[array.size()]);
-//		} catch (Throwable t) {
-//			return new String[0];
-//		}
-//	}
-	
 	private static ArrayList<Preference> getPreferenceList(Preference p, ArrayList<Preference> list) {
 		if (p instanceof PreferenceCategory || p instanceof PreferenceScreen) {
 			PreferenceGroup pGroup = (PreferenceGroup) p;
@@ -290,145 +163,68 @@ public class Helpers {
 //		}
 //	}
 
-
-	public static void applyLang(Activity act, PreferenceFragmentBase frag) {
-		ArrayList<Preference> list = getPreferenceList(frag.getPreferenceScreen(), new ArrayList<Preference>());
-		
-		for (Preference p: list) {
-			int titleResId = p.getTitleRes();
-			if (titleResId == 0) continue;
-			p.setTitle(l10n(act, titleResId));
-			
-			CharSequence summ = p.getSummary();
-
-			if (p.getClass() == ListPreferenceEx.class) {
-				ListPreferenceEx listPref = (ListPreferenceEx)p;
-				if (listPref.entriedRes == 0) continue;
-				TypedArray ar = act.getResources().obtainTypedArray(listPref.entriedRes);
-				int len = ar.length();
-				int[] resIds = new int[len];
-				for (int i = 0; i < len; i++)
-				resIds[i] = ar.getResourceId(i, 0);
-				ar.recycle();
-
-				int valPos = listPref.findIndexOfValue(listPref.getValue());
-				if (valPos < resIds.length)
-				p.setSummary(l10n(act, resIds[valPos]));
-			} else if (summ != null && summ != "") {
-				if (titleResId == R.string.array_global_actions_launch || titleResId == R.string.array_global_actions_toggle) {
-					p.setSummary(l10n(act, "notselected"));
-				} else {
-					String titleResName = act.getResources().getResourceEntryName(titleResId);
-					String summResName = titleResName.replace("_title", "_summ");
-					p.setSummary(l10n(act, summResName));
-				}
-			}
-			
-			if (p.getClass() == ListPreference.class /*|| p.getClass() == ListPreferenceEx.class || p.getClass() == ImageListPreference.class*/ || p.getClass() == MultiSelectListPreference.class) {
-				String titleResName = act.getResources().getResourceEntryName(titleResId);
-				String entriesResName = titleResName2EntriesResName(titleResName, titleResId);
-				int arrayId = act.getResources().getIdentifier(entriesResName, "array", act.getPackageName());
-				if (arrayId != 0) {
-					TypedArray ids = act.getResources().obtainTypedArray(arrayId);
-					List<String> newEntries = new ArrayList<String>();
-					for (int i = 0; i < ids.length(); i++) {
-						int id = ids.getResourceId(i, 0);
-						if (id != 0)
-							newEntries.add(l10n(act, id));
-						else
-							newEntries.add("???");
-					}
-					ids.recycle();
-					
-					if (p.getClass() == MultiSelectListPreference.class) {
-						MultiSelectListPreference lst = ((MultiSelectListPreference)p);
-						lst.setEntries(newEntries.toArray(new CharSequence[newEntries.size()]));
-						lst.setDialogTitle(l10n(act, titleResId));
-					} else {
-						ListPreference lst = ((ListPreference)p);
-						lst.setEntries(newEntries.toArray(new CharSequence[newEntries.size()]));
-						lst.setDialogTitle(l10n(act, titleResId));
-					}
-				}
-			}
-		}
-	}
-	
-	public static void openLangDialog(final Activity act) {
-		AlertDialog.Builder alert = new AlertDialog.Builder(act);
-		alert.setTitle(l10n(act, R.string.miuizer_l10n_title));
-		String buildId = "?";
-		int timeStamp = 0;
-		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dataPath + "version")))) {
-			buildId = br.readLine();
-			timeStamp = Integer.parseInt(br.readLine());
-			Date datetime = new Date((long)timeStamp * 1000);
-			SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy HH:mm:ss zzz", Locale.getDefault());
-			format.setTimeZone(TimeZone.getTimeZone("UTC"));
-			TextView center = createCenteredText(act, R.string.download_current_ver);
-			
-			DecimalFormatSymbols dotSep = new DecimalFormatSymbols(Locale.getDefault());
-			dotSep.setDecimalSeparator('.');
-			dotSep.setGroupingSeparator(' ');
-			DecimalFormat percentageFormat = new DecimalFormat("0.0", dotSep);
-			percentageFormat.setMinimumFractionDigits(0);
-			percentageFormat.setMaximumFractionDigits(1);
-			percentageFormat.setMinimumIntegerDigits(1);
-			percentageFormat.setMaximumIntegerDigits(3);
-			
-			String l10ncount = "";
-			if (l10n != null) {
-				float floatPercentage = (float)l10n.size() / strings_total * 100.0f;
-				if (floatPercentage > 100f) floatPercentage = 100f;
-				String percentage = percentageFormat.format(floatPercentage);
-				l10ncount = "\n" + l10n(act, R.string.miuizer_l10n_ready) + ": " + percentage + "%";
-			} else if (cLang.equals("not_found"))
-				l10ncount = "\n" + l10n(act, R.string.miuizer_l10n_ready) + ": 0%";
-			
-			center.setText(center.getText()  + " " + buildId + "\n" + format.format(datetime) + l10ncount);
-			alert.setView(center);
-		} catch (Exception e) {
-			alert.setView(createCenteredText(act, R.string.download_update));
-			if (!(e instanceof FileNotFoundException)) e.printStackTrace();
-		}
-		alert.setNeutralButton(l10n(act, R.string.cancel), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {}
-		});
-		alert.setNegativeButton(l10n(act, R.string.remove), new DialogInterface.OnClickListener() {
-			void deleteRecursive(File fileOrDirectory) {
-				if (fileOrDirectory.isDirectory()) for (File child: fileOrDirectory.listFiles()) deleteRecursive(child);
-				fileOrDirectory.delete();
-			}
-			
-			public void onClick(DialogInterface dialog, int whichButton) {
-				File tmp = new File(dataPath);
-				deleteRecursive(tmp);
-				
-				AlertDialog.Builder alert = new AlertDialog.Builder(act);
-				alert.setTitle(l10n(act, R.string.success));
-				alert.setView(createCenteredText(act, R.string.download_removed));
-				alert.setCancelable(false);
-				alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						l10n = null;
-						cLang = "";
-						act.startActivity(new Intent(act, MainActivity.class));
-						act.finish();
-					}
-				});
-				alert.show();
-			}
-		});
-		alert.setPositiveButton(l10n(act, R.string.miuizer_l10n_btn), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-				if (act != null) {
-					final DownloadAndUnZip downloadTask = new DownloadAndUnZip(act);
-					downloadTask.execute("http://sensetoolbox.com/l10n/strings_sense6.zip");
-				}
-			}
-		});
-		alert.show();
-	}
+//	public static void applyLang(Activity act, PreferenceFragmentBase frag) {
+//		ArrayList<Preference> list = getPreferenceList(frag.getPreferenceScreen(), new ArrayList<Preference>());
+//
+//		for (Preference p: list) {
+//			int titleResId = p.getTitleRes();
+//			if (titleResId == 0) continue;
+//			p.setTitle(l10n(act, titleResId));
+//
+//			CharSequence summ = p.getSummary();
+//
+//			if (p.getClass() == ListPreferenceEx.class) {
+//				ListPreferenceEx listPref = (ListPreferenceEx)p;
+//				if (listPref.entriedRes == 0) continue;
+//				TypedArray ar = act.getResources().obtainTypedArray(listPref.entriedRes);
+//				int len = ar.length();
+//				int[] resIds = new int[len];
+//				for (int i = 0; i < len; i++)
+//				resIds[i] = ar.getResourceId(i, 0);
+//				ar.recycle();
+//
+//				int valPos = listPref.findIndexOfValue(listPref.getValue());
+//				if (valPos < resIds.length)
+//				p.setSummary(l10n(act, resIds[valPos]));
+//			} else if (summ != null && summ != "") {
+//				if (titleResId == R.string.array_global_actions_launch || titleResId == R.string.array_global_actions_toggle) {
+//					p.setSummary(l10n(act, "notselected"));
+//				} else {
+//					String titleResName = act.getResources().getResourceEntryName(titleResId);
+//					String summResName = titleResName.replace("_title", "_summ");
+//					p.setSummary(l10n(act, summResName));
+//				}
+//			}
+//
+//			if (p.getClass() == ListPreference.class /*|| p.getClass() == ListPreferenceEx.class || p.getClass() == ImageListPreference.class*/ || p.getClass() == MultiSelectListPreference.class) {
+//				String titleResName = act.getResources().getResourceEntryName(titleResId);
+//				String entriesResName = titleResName2EntriesResName(titleResName, titleResId);
+//				int arrayId = act.getResources().getIdentifier(entriesResName, "array", act.getPackageName());
+//				if (arrayId != 0) {
+//					TypedArray ids = act.getResources().obtainTypedArray(arrayId);
+//					List<String> newEntries = new ArrayList<String>();
+//					for (int i = 0; i < ids.length(); i++) {
+//						int id = ids.getResourceId(i, 0);
+//						if (id != 0)
+//							newEntries.add(l10n(act, id));
+//						else
+//							newEntries.add("???");
+//					}
+//					ids.recycle();
+//
+//					if (p.getClass() == MultiSelectListPreference.class) {
+//						MultiSelectListPreference lst = ((MultiSelectListPreference)p);
+//						lst.setEntries(newEntries.toArray(new CharSequence[newEntries.size()]));
+//						lst.setDialogTitle(l10n(act, titleResId));
+//					} else {
+//						ListPreference lst = ((ListPreference)p);
+//						lst.setEntries(newEntries.toArray(new CharSequence[newEntries.size()]));
+//						lst.setDialogTitle(l10n(act, titleResId));
+//					}
+//				}
+//			}
+//		}
+//	}
 
 	public static boolean isXposedInstallerInstalled(Context mContext) {
 		PackageManager pm = mContext.getPackageManager();
@@ -445,17 +241,35 @@ public class Helpers {
 		return res;
 	}
 
-	public static TextView createCenteredText(Context mContext, int resId) {
-		TextView centerMsg = new TextView(mContext);
-		centerMsg.setText(l10n(mContext, resId));
-		centerMsg.setGravity(Gravity.CENTER_HORIZONTAL);
-		float density = mContext.getResources().getDisplayMetrics().density;
-		centerMsg.setPadding(Math.round(density * 20), Math.round(density * 20), Math.round(density * 20), Math.round(density * 15));
-		centerMsg.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
-		centerMsg.setTextColor(getThemePrimaryTextColor(mContext));
-		return centerMsg;
+	public static String getXposedInstallerErrorLog(Context mContext) {
+		String baseDir = null;
+
+		PackageManager pm = mContext.getPackageManager();
+		try {
+			pm.getPackageInfo("de.robv.android.xposed.installer", PackageManager.GET_ACTIVITIES);
+			baseDir = "/data/user_de/0/de.robv.android.xposed.installer/";
+		} catch (PackageManager.NameNotFoundException e) {}
+
+		try {
+			pm.getPackageInfo("com.solohsu.android.edxp.manager", PackageManager.GET_ACTIVITIES);
+			baseDir = "/data/user_de/0/com.solohsu.android.edxp.manager/";
+		} catch (PackageManager.NameNotFoundException e) {}
+		if (baseDir == null)
+			return null;
+		else
+			return baseDir + "log/error.log";
 	}
-	
+
+	public static boolean isSysAppUpdaterInstalled(Context mContext) {
+		PackageManager pm = mContext.getPackageManager();
+		boolean res = false;
+		try {
+			pm.getPackageInfo("com.xiaomi.discover", PackageManager.GET_ACTIVITIES);
+			res = true;
+		} catch (PackageManager.NameNotFoundException e) {}
+		return res;
+	}
+
 	public static int getThemePrimaryTextColor(Context mContext) {
 		TypedValue tv = new TypedValue();
 		mContext.getTheme().resolveAttribute(mContext.getResources().getIdentifier("colorPrimaryDark", "attr", "android"), tv, true);
@@ -475,7 +289,7 @@ public class Helpers {
 			mContext.getTheme().resolveAttribute(android.R.attr.colorAccent, typedValue, true);
 			pf.set(picker, new ColorDrawable(typedValue.data));
 			break;
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 		
@@ -500,7 +314,7 @@ public class Helpers {
 					txt.setTextColor(sColor);
 				}
 				picker.invalidate();
-			} catch(Exception e){
+			} catch(Throwable e){
 				e.printStackTrace();
 			}
 		}
@@ -571,8 +385,8 @@ public class Helpers {
 
 	public static void showOKDialog(Context mContext, int title, int text) {
 		AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-		alert.setTitle(l10n(mContext, title));
-		alert.setView(createCenteredText(mContext, text));
+		alert.setTitle(title);
+		alert.setMessage(text);
 		alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {}
 		});
@@ -629,8 +443,8 @@ public class Helpers {
 			try (FileOutputStream fOut = new FileOutputStream(f, false)) {
 				try (OutputStreamWriter output = new OutputStreamWriter(fOut)) {
 					output.write("");
-				} catch (Exception e) {}
-			} catch (Exception e) {}
+				} catch (Throwable e) {}
+			} catch (Throwable e) {}
 		}
 	}
 	
@@ -680,7 +494,7 @@ public class Helpers {
 			app.pkgName = pack.packageName;
 			app.actName = "-";
 			installedAppsList.add(app);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 		Collections.sort(installedAppsList, new Comparator<AppData>() {
@@ -707,7 +521,7 @@ public class Helpers {
 			else
 				app.label = pack.loadLabel(pm).toString();
 			launchableAppsList.add(app);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 		Collections.sort(launchableAppsList, new Comparator<AppData>() {
@@ -719,7 +533,7 @@ public class Helpers {
 	
 	public static CharSequence getAppName(Context mContext, String pkgActName) {
 		PackageManager pm = mContext.getPackageManager();
-		String not_selected = l10n(mContext, R.string.notselected);
+		String not_selected = mContext.getResources().getString(R.string.notselected);
 		String[] pkgActArray = pkgActName.split("\\|");
 		ApplicationInfo ai = null;
 
@@ -731,7 +545,7 @@ public class Helpers {
 				ai = pm.getApplicationInfo(pkgActArray[0], 0);
 				return (ai != null ? pm.getApplicationLabel(ai) : null);
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -752,7 +566,102 @@ public class Helpers {
 			pref.setSummary(reasonText);
 		}
 	}
-/*
+
+	public static synchronized Resources getModuleRes(Context context) throws Throwable {
+		Configuration config = context.getResources().getConfiguration();
+		Context moduleContext = context.createPackageContext(modulePkg, Context.CONTEXT_IGNORE_SECURITY);
+		return (config == null ? moduleContext.getResources() : moduleContext.createConfigurationContext(config).getResources());
+	}
+
+	public static Uri stringPrefToUri(String name, String defValue) {
+		return Uri.parse("content://" + SharedPrefsProvider.AUTHORITY + "/string/" + name + "/" + defValue);
+	}
+
+	public static Uri intPrefToUri(String name, int defValue) {
+		return Uri.parse("content://" + SharedPrefsProvider.AUTHORITY + "/integer/" + name + "/" + String.valueOf(defValue));
+	}
+
+	public static String getSharedStringPref(Context context, String name, String defValue) {
+		Uri uri = stringPrefToUri(name, defValue);
+		Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			String prefValue = cursor.getString(0);
+			cursor.close();
+			return prefValue;
+		} else if (MainModule.pref != null)
+			return MainModule.pref.getString(name, defValue);
+		else
+			return defValue;
+	}
+
+	public static int getSharedIntPref(Context context, String name, int defValue) {
+		Uri uri = intPrefToUri(name, defValue);
+		Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			int prefValue = cursor.getInt(0);
+			cursor.close();
+			return prefValue;
+		} else if (MainModule.pref != null)
+			return MainModule.pref.getInt(name, defValue);
+		else
+			return defValue;
+	}
+
+	public static class SharedPrefObserver extends ContentObserver {
+
+		enum PrefType {
+			String, Integer
+		}
+
+		PrefType prefType;
+		Context ctx;
+		String prefName;
+		String prefDefValueString;
+		int prefDefValueInt;
+
+		public SharedPrefObserver(Context context, Handler handler, String name, String defValue) {
+			super(handler);
+			ctx = context;
+			prefName = name;
+			prefType = PrefType.String;
+			prefDefValueString = defValue;
+			registerObserver();
+		}
+
+		public SharedPrefObserver(Context context, Handler handler, String name, int defValue) {
+			super(handler);
+			ctx = context;
+			prefType = PrefType.Integer;
+			prefName = name;
+			prefDefValueInt = defValue;
+			registerObserver();
+		}
+
+		void registerObserver() {
+			Uri uri = null;
+			if (prefType == PrefType.String)
+				uri = stringPrefToUri(prefName, prefDefValueString);
+			else if (prefType == PrefType.Integer)
+				uri = intPrefToUri(prefName, prefDefValueInt);
+			if (uri != null) ctx.getContentResolver().registerContentObserver(uri, false, this);
+		}
+
+		@Override
+		public void onChange(boolean selfChange) {
+			if (selfChange) return;
+			if (prefType == PrefType.String)
+				onChange(prefName, prefDefValueString);
+			else if (prefType == PrefType.Integer)
+				onChange(prefName, prefDefValueInt);
+		}
+
+		public void onChange(String name, String defValue) {}
+		public void onChange(String name, int defValue) {}
+	}
+
+	/*
 	public static int[][] cellArray = {
 		{ 0, 0, 0 },
 		{ R.id.cell1, R.id.cell1img, R.id.cell1txt },

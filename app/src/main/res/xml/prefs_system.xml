@@ -1,0 +1,57 @@
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:miuizer="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:key="pref_key_system">
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_nolightuponcharge"
+		android:summary="@string/system_nolightuponcharge_summ"
+		android:title="@string/system_nolightuponcharge_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_system_iconlabletoasts"
+		android:summary="@string/system_iconlabletoasts_summ"
+		android:title="@string/system_iconlabletoasts_title"
+		android:entries="@array/system_iconlabletoasts"
+		android:entryValues="@array/system_iconlabletoasts_val"
+		android:defaultValue="1"/>
+
+	<PreferenceCategory
+		android:title="@string/system_mods_lockscreen"
+		android:key="pref_various_mods_lockscreen">
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_securelock"
+			android:summary="@string/system_securelock_summ"
+			android:title="@string/system_securelock_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_scramblepin"
+			android:summary="@string/system_scramblepin_summ"
+			android:title="@string/system_scramblepin_title"
+			android:defaultValue="false" />
+
+	</PreferenceCategory>
+
+	<PreferenceCategory
+		android:title="@string/system_mods_screenanim">
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_screenanim_duration"
+			android:title="@string/system_screenanim_duration_title"
+			android:summary="@string/system_screenanim_duration_summ"
+			android:defaultValue="0"
+			miuizer:minValue="0"
+			miuizer:maxValue="1500"
+			miuizer:stepValue="50"
+			miuizer:format="%d ms"
+			miuizer:offtext="@string/default_value"
+			miuizer:note="@string/system_screenanim_desc" />
+
+	</PreferenceCategory>
+
+</PreferenceScreen>

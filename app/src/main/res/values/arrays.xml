@@ -56,6 +56,35 @@
 		<item>9</item>
 	</integer-array>
 
+	<string-array name="appsort">
+		<item>@string/appsort_running</item>
+		<item>@string/appsort_name</item>
+		<item>@string/appsort_frequency</item>
+		<item>@string/appsort_storage</item>
+		<item>@string/appsort_install</item>
+	</string-array>
+	<string-array name="appsort_val">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+		<item>4</item>
+	</string-array>
+
+	<string-array name="system_iconlabletoasts">
+		<item >@string/array_default</item>
+		<item >@string/array_toasts_icon</item>
+		<item >@string/array_toasts_label</item>
+		<item >@string/array_toasts_both</item>
+	</string-array>
+
+	<string-array name="system_iconlabletoasts_val">
+		<item >1</item>
+		<item >2</item>
+		<item >3</item>
+		<item >4</item>
+	</string-array>
+
 	<string-array name="placeholder_array">
 		<item>@string/dummy</item>
 	</string-array>

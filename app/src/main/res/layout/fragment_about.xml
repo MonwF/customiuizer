@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:gravity="center"
+			android:orientation="vertical">
+
+			<ImageView
+				android:id="@+id/miuizer_icon"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="43.7dp"
+				android:contentDescription="@null"
+				android:gravity="center"
+				android:src="@drawable/ic_launcher" />
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="9dp"
+				android:gravity="center"
+				android:text="@string/app_name"
+				android:textSize="19.3sp" />
+
+			<TextView
+				android:id="@+id/about_version"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="3dp"
+				android:layout_marginBottom="46.7dp"
+				android:gravity="center"
+				android:maxLines="2"
+				android:text="@string/about_version"
+				android:textColor="@color/color_not_selected"
+				android:textSize="12sp" />
+		</LinearLayout>
+
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="0.3dp"
+			android:background="@color/about_divider" />
+
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="0.3dp"
+			android:layout_marginTop="6.7dp"
+			android:background="@color/about_divider" />
+
+		<ListView
+			android:id="@android:id/list"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent" />
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="left"
+			android:orientation="horizontal"
+			android:paddingStart="20dp"
+			android:paddingEnd="20dp">
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="left"
+				android:text="@string/about_dynamic"
+				android:textColor="@color/color_not_selected"
+				android:textSize="14sp" />
+		</LinearLayout>
+	</LinearLayout>
+</LinearLayout>

@@ -3,7 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="name.mikanoshi.customiuizer">
 
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" />
+	<uses-permission android:name="android.permission.READ_LOGS" />
+	<uses-permission android:name="android.permission.DUMP" />
 
 	<application
         android:allowBackup="false"
@@ -13,6 +18,8 @@
 		android:roundIcon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        android:name=".MainApplication"
+		android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
 
         <activity
@@ -41,6 +48,19 @@
 			<meta-data android:name="com.android.settings.icon_tintable" android:value="true" />
 			<meta-data android:name="com.android.settings.title" android:resource="@string/app_name" />
 		</activity-alias>
+
+		<activity android:name=".CrashReportDialog"
+			android:theme="@style/Invisible"
+			android:launchMode="singleTask"
+			android:excludeFromRecents="true"
+			android:finishOnTaskLaunch="true"
+			android:configChanges="keyboardHidden|orientation|screenSize" />
+
+		<provider
+			android:name=".SharedPrefsProvider"
+			android:authorities="name.mikanoshi.customiuizer.provider.sharedprefs"
+			android:grantUriPermissions="true"
+			android:exported="true" />
 
         <meta-data android:name="xposedmodule" android:value="true" />
         <meta-data android:name="xposedminversion" android:value="82+" />

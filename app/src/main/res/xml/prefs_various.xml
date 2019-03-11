@@ -1,0 +1,32 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:miui="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:key="pref_key_various">
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:key="pref_key_various_sysappsupdater"
+		android:summary="@string/various_sysappsupdater_summ"
+		android:title="@string/various_sysappsupdater_title" />
+
+	<PreferenceCategory
+		android:title="@string/settings"
+		android:key="pref_various_mods_settings" >
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_various_appdetails"
+			android:summary="@string/various_apps_summ"
+			android:title="@string/various_apps_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_various_appsort"
+			android:summary=""
+			android:title="@string/various_appsort_title"
+			android:entries="@array/appsort"
+			android:entryValues="@array/appsort_val"
+			android:defaultValue="0"
+			miui:valueAsSummary="true" />
+
+	</PreferenceCategory>
+
+</PreferenceScreen>

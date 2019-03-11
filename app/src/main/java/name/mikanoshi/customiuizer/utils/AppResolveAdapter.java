@@ -60,7 +60,7 @@ public class AppResolveAdapter extends BaseAdapter implements Filterable {
 		if (convertView != null)
 			row = convertView;
 		else
-			row = mInflater.inflate(R.layout.app_manager_card_layout, parent, false);
+			row = mInflater.inflate(R.layout.applist_item, parent, false);
 
 		ImageView itemIsDis = row.findViewById(R.id.am_isDisable_icon);
 		TextView itemTitle = row.findViewById(R.id.am_label);

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -22,6 +21,7 @@ import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class SubFragment extends PreferenceFragmentBase {
 
+	private int baseResId = 0;
 	private int resId = 0;
 	private int titleId = 0;
 	private float order = 100.0f;
@@ -38,6 +38,7 @@ public class SubFragment extends PreferenceFragmentBase {
 	public void onCreate(Bundle savedInstanceState) {
 		settingsType = Helpers.SettingsType.values()[getArguments().getInt("settingsType")];
 		abType = Helpers.ActionBarType.values()[getArguments().getInt("abType")];
+		baseResId = getArguments().getInt("baseResId");
 		resId = getArguments().getInt("contentResId");
 		titleId = getArguments().getInt("titleResId");
 		order = getArguments().getFloat("order") + 10.0f;
@@ -63,35 +64,6 @@ public class SubFragment extends PreferenceFragmentBase {
 		ActionBar actionBar = getActionBar();
 		if (actionBar != null)
 		if (abType == Helpers.ActionBarType.Edit) {
-//			startActionMode(new ActionMode.Callback() {
-//				@Override
-//				public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-//					return true;
-//				}
-//
-//				@Override
-//				public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-//					LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE );
-//					mode.setCustomView(inflater.inflate(getResources().getIdentifier("edit_mode_title", "layout", "miui"), null));
-//
-//					EditActionMode editMode = ((EditActionMode)mode);
-//					editMode.setButton(EditActionMode.BUTTON1, "FUCK");
-//					editMode.setButton(EditActionMode.BUTTON2, "SHIT");
-//					return true;
-//				}
-//
-//				@Override
-//				public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-//					Log.e("am", "itemclicked");
-//					return true;
-//				}
-//
-//				@Override
-//				public void onDestroyActionMode(ActionMode mode) {
-//					finish();
-//				}
-//			});
-
 			actionBar.setCustomView(getResources().getIdentifier("edit_mode_title", "layout", "miui"));
 			actionBar.setDisplayShowCustomEnabled(true);
 
@@ -126,28 +98,17 @@ public class SubFragment extends PreferenceFragmentBase {
 
 	public View onInflateView(LayoutInflater inflater, ViewGroup group, Bundle bundle) {
 		if (settingsType == Helpers.SettingsType.Preference)
-		return super.onInflateView(inflater, group, bundle);
+		return baseResId != 0 ? inflater.inflate(baseResId, group, false) : super.onInflateView(inflater, group, bundle);
 
 		View view = inflater.inflate(padded ? R.layout.prefs_common_padded : R.layout.prefs_common, group, false);
 		inflater.inflate(resId, (FrameLayout)view);
 		return view;
 	}
 
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		onCreateOptionsMenu(menu, getMenuInflater());
-//		return true;
-//	}
-
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		view.setTranslationZ(order);
-	}
-
-	@Override
-	public void onDestroyView() {
-//		getView().setTranslationZ(0.0f);
-		super.onDestroyView();
 	}
 
 	public void saveSharedPrefs() {
@@ -162,7 +123,7 @@ public class SubFragment extends PreferenceFragmentBase {
 				((SpinnerExFake)nView).applyOthers();
 			} else if (nView instanceof SpinnerEx)
 				Helpers.prefs.edit().putInt((String)nView.getTag(), ((SpinnerEx)nView).getSelectedArrayValue()).apply();
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			Log.e("miuizer", "Cannot save sub preference!");
 		}
 	}
@@ -176,7 +137,7 @@ public class SubFragment extends PreferenceFragmentBase {
 				((TextView)nView).setText(Helpers.prefs.getString((String)nView.getTag(), ""));
 				if (nView instanceof ClearableEditText) nView.setBackgroundResource(getResources().getIdentifier("edit_text_bg_light", "drawable", "miui"));
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			Log.e("miuizer", "Cannot load sub preference!");
 		}
 	}

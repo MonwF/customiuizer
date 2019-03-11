@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_gravity="center_vertical"
+	android:gravity="center_vertical">
+
+	<RelativeLayout
+		style="@style/Widget.PreferenceItem"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center_vertical"
+		android:layout_weight="1"
+		android:gravity="center_vertical">
+
+		<TextView
+			android:id="@android:id/title"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:ellipsize="end"
+			android:fadingEdge="horizontal"
+			android:maxLines="2"
+			style="@style/TextAppearance.PreferenceList" />
+
+		<TextView
+			android:id="@android:id/summary"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@android:id/title"
+			android:layout_alignStart="@android:id/title"
+			android:maxLines="10"
+			style="@style/TextAppearance.List.Secondary.Preference" />
+
+		<RelativeLayout
+			android:id="@+id/seekbar_group"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="6dip"
+			android:layout_marginTop="10dip"
+			android:layout_below="@android:id/summary">
+
+			<SeekBar
+				android:id="@+id/seekbar"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginRight="@dimen/seekbar_margin_right"
+				android:layout_alignParentLeft="true" />
+
+			<TextView
+				android:id="@+id/seekbar_value"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:layout_alignParentRight="true"
+				android:layout_centerVertical="true"
+				android:maxLines="1"
+				tools:text="Value"
+				style="@style/TextAppearance.List.Secondary.Preference" />
+
+		</RelativeLayout>
+
+		<TextView
+			android:id="@android:id/text1"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/seekbar_group"
+			android:layout_marginTop="10dip"
+			android:layout_alignStart="@id/seekbar_group"
+			style="@style/TextAppearance.List.Secondary.Preference" />
+
+	</RelativeLayout>
+</LinearLayout>

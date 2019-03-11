@@ -1,18 +1,11 @@
 package name.mikanoshi.customiuizer;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.widget.Toast;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Arrays;
-
-import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class MainActivity extends ActivityEx {
@@ -24,14 +17,14 @@ public class MainActivity extends ActivityEx {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Helpers.dataPath = getFilesDir().getPath();
-		Helpers.backupPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/CustoMIUIzer/";
+		Helpers.externalPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/CustoMIUIzer/";
 		if (!launch) return;
 		mainFrag = new MainFragment();
 		getFragmentManager().beginTransaction().replace(R.id.fragment_container, mainFrag).commit();
 	}
 
 	@Override
-	public void onRequestPermissionsResult(int requestCode, @NotNull String[] permissions, @NotNull int[] grantResults) {
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 		switch (requestCode) {
 			case REQUEST_BACKUP_PERMISSIONS:
 				if (grantResults[0] == PackageManager.PERMISSION_GRANTED)

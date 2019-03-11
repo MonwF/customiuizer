@@ -95,6 +95,6 @@ public class ShakeManager implements SensorEventListener {
 	
 	private void executeShakeAction() {
 		//MainModule.pref.reload();
-		Launcher.handleAction(MainModule.pref.getInt("pref_key_launcher_shake_action", 1), 5, MainModule.pref.getInt("pref_key_launcher_shake_toggle", 0), helperContext);
+		GlobalActions.handleAction(MainModule.pref.getInt("pref_key_launcher_shake_action", 1), 7, MainModule.pref.getInt("pref_key_launcher_shake_toggle", 0), helperContext);
 	}
 }

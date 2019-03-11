@@ -3,14 +3,13 @@ package name.mikanoshi.customiuizer;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
@@ -157,17 +156,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 			act.startActivity(intent);
 		}
 */
-		return true;
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.clear();
-		//getMenuInflater().inflate(R.menu.menu_mods, menu);
-		//menu.getItem(0).setTitle(Helpers.l10n(getActivity(), R.string.open_xposed));
-		//menu.getItem(1).setTitle(Helpers.l10n(getActivity(), R.string.backup_restore));
-		//menu.getItem(2).setTitle(Helpers.l10n(getActivity(), R.string.app_about));
-		return true;
+		return super.onOptionsItemSelected(item);
 	}
 /*
 	// Wake gestures
@@ -372,7 +361,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 
 		boolean showBack = false;
 		if (this instanceof MainFragment) {
-			ActivityInfo appInfo = null;
+			ActivityInfo appInfo;
 			try {
 				appInfo = getActivity().getPackageManager().getActivityInfo(getActivity().getComponentName(), PackageManager.GET_META_DATA);
 				showBack = appInfo != null && appInfo.metaData != null && appInfo.metaData.containsKey("com.android.settings.category");
@@ -381,7 +370,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 			}
 		} else showBack = true;
 
-		getActionBar().setTitle(Helpers.l10n(getActivity(), R.string.app_name));
+		getActionBar().setTitle(R.string.app_name);
 		getActionBar().setDisplayHomeAsUpEnabled(showBack);
 	}
 
@@ -399,18 +388,12 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 	}
 
 	@Override
-	public void addPreferencesFromResource(int resId) {
-		super.addPreferencesFromResource(resId);
-		Helpers.applyLang(this.getActivity(), this);
-	}
-
-	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		view.setBackgroundResource(getResources().getIdentifier("settings_window_bg_light", "drawable", "miui"));
 	}
 
-	public void openSubFragment(SubFragment fragment, Bundle args, Helpers.SettingsType settingsType, Helpers.ActionBarType abType, int titleResId, int contentResId) {
+	public void openSubFragment(Fragment fragment, Bundle args, Helpers.SettingsType settingsType, Helpers.ActionBarType abType, int titleResId, int contentResId) {
 		if (args == null) args = new Bundle();
 		args.putInt("settingsType", settingsType.ordinal());
 		args.putInt("abType", abType.ordinal());
@@ -418,12 +401,12 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 		args.putInt("contentResId", contentResId);
 		float order = 100.0f;
 		try {
-			order = getView().getTranslationZ();
-		} catch (Exception e) {}
+			if (getView() != null) order = getView().getTranslationZ();
+		} catch (Throwable e) {}
 		args.putFloat("order", order);
 		fragment.setArguments(args);
 		getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fragment_open_enter, R.animator.fragment_open_exit, R.animator.fragment_close_enter, R.animator.fragment_close_exit)
-		.replace(R.id.fragment_container, fragment).addToBackStack(null).commitAllowingStateLoss();
+				.replace(R.id.fragment_container, fragment).addToBackStack(null).commitAllowingStateLoss();
 		getFragmentManager().executePendingTransactions();
 	}
 
@@ -435,6 +418,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 		final float scrWidth = config.screenWidthDp * density;
 
 		final View top = getView();
+		if (top == null) return null;
 		final View content = top.findViewById(android.R.id.content);
 
 		ValueAnimator valAnimator = new ValueAnimator();
@@ -469,7 +453,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 		valAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 			@Override
 			public void onAnimationUpdate(ValueAnimator animation) {
-				if (top == null || content == null) return;
+				if (content == null) return;
 				float val = (float)animation.getAnimatedValue();
 				if (nextAnim == R.animator.fragment_open_enter) {
 					top.setX(scrWidth * (1.0f - val));

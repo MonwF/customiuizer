@@ -1,0 +1,19 @@
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:key="pref_key_various">
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_controls_powerflash"
+		android:summary="@string/controls_powerflash_summ"
+		android:title="@string/controls_powerflash_title"
+		android:defaultValue="false" />
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_controls_powerflash_delay"
+		android:summary="@string/controls_powerflash_delay_summ"
+		android:title="@string/controls_powerflash_delay_title"
+		android:defaultValue="false"
+		android:dependency="pref_key_controls_powerflash" />
+
+</PreferenceScreen>

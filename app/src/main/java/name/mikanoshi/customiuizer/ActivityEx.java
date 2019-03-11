@@ -1,21 +1,25 @@
 package name.mikanoshi.customiuizer;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.backup.BackupManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
 import name.mikanoshi.customiuizer.utils.Helpers;
 
+@SuppressLint("Registered")
 public class ActivityEx extends Activity {
 	public int mThemeBackground = 1;
 	public boolean launch = true;
 	SharedPreferences.OnSharedPreferenceChangeListener prefsChanged;
 
+	@SuppressWarnings("ConstantConditions")
 	protected void onCreate(Bundle savedInstanceState) {
 		setTheme(getResources().getIdentifier("Theme.Light.Settings", "style", "miui"));
 		getTheme().applyStyle(R.style.MIUIPrefs, true);
@@ -23,9 +27,16 @@ public class ActivityEx extends Activity {
 		Helpers.prefs = getSharedPreferences(Helpers.prefsName, Context.MODE_PRIVATE);
 		prefsChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
 			@Override
-			public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+			public void onSharedPreferenceChanged(SharedPreferences sharedPrefs, String key) {
 				Log.w("prefs", "Changed: " + key);
 				requestBackup();
+				Object val = sharedPrefs.getAll().get(key);
+				String path = "/";
+				if (val instanceof String)
+					path = "/string/";
+				else if (val instanceof Integer)
+					path = "/integer/";
+				getContentResolver().notifyChange(Uri.parse("content://" + SharedPrefsProvider.AUTHORITY + path + key), null);
 			}
 		};
 		Helpers.prefs.registerOnSharedPreferenceChangeListener(prefsChanged);
@@ -49,6 +60,7 @@ public class ActivityEx extends Activity {
 		super.onDestroy();
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	public void updateTheme(int newBkg) {
 		int newThemeBackground;
 		if (newBkg == 0)

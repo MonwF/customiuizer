@@ -1,41 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<color name="color_not_selected">#99000000</color>
+	<color name="about_divider">#33808080</color>
 	<color name="warning_background">#ffe74457</color>
-	<color name="note_background">#ff546e7a</color>
 	<color name="update_background">#FF252525</color>
 
-    <color name="foreground_color">#ffdfdfdf</color>
-    <color name="divider_color">#ff232323</color>
-    <color name="material_blue">#ff48818a</color>
-	<color name="material_background_dark">#ff303030</color>
-	<color name="material_primary_dark">#ff212121</color>
-	<color name="material_accent">#ff62b1bd</color>
-	<color name="material_switch_background">#20ffffff</color>
-	<color name="material_text_primary">#ff000000</color>
-	<color name="material_text_disabled">#80000000</color>
-	<color name="material_text_primary_dark">#deffffff</color>
 	<color name="material_text_secondary_dark">#ccffffff</color>
-	<color name="material_text_disabled_dark">#42ffffff</color>
 
 	<color name="divider_line_light">#27000000</color>
-	<color name="divider_line_dark">#27ffffff</color>
 
 	<color name="highlight_normal_light">#ff0099ff</color>
 	<color name="checked_text_light">@color/highlight_normal_light</color>
-	<color name="disabled_text_light">#4d000000</color>
-
-	<color name="button_text_color_light">#b3000000</color>
-	<color name="button_bg_color_pressed_light">#0d000000</color>
-	<color name="button_text_color_negative_light">#b3ec2700</color>
-	<color name="button_text_color_positive_normal_light">#b34b8d0e</color>
-	<color name="button_text_color_positive_disabled_light">#7f4b8d0e</color>
-	<color name="button_text_color_dialog_light">#a5000000</color>
-	<color name="button_text_color_dialog_disabled_light">#4d000000</color>
-	<color name="button_text_color_guide_normal_light">#ff33aaff</color>
-	<color name="button_text_color_guide_disabled_light">#27000000</color>
 
 	<color name="preference_category_text_color_light">#80000000</color>
-	<color name="preference_first_last_divider_line_light">#1a000000</color>
 	<color name="preference_primary_text_color_light">#ff000000</color>
 	<color name="preference_primary_text_color_disable_light">#4d000000</color>
 	<color name="preference_primary_text_color_pressed_light">#ff000000</color>
@@ -46,31 +23,12 @@
 
 	<color name="app_manager_text_color">#cc000000</color>
 
-	<color name="list_item_bg_color_pressed_light">#0d000000</color>
 	<color name="list_text_color_disable_dark">#66ffffff</color>
 	<color name="list_text_color_normal_dark">#ccffffff</color>
 	<color name="list_text_color_pressed_dark">#ccffffff</color>
 	<color name="list_secondary_text_color_disable_dark">#33ffffff</color>
 	<color name="list_secondary_text_color_normal_dark">#73ffffff</color>
 	<color name="list_secondary_text_color_pressed_dark">#73ffffff</color>
-
-	<color name="action_bar_title_text_color_disabled_light">#4d000000</color>
-	<color name="action_bar_title_text_color_light">#ff000000</color>
-	<color name="action_bar_subtitle_text_light">#99000000</color>
-	<color name="action_mode_title_text_color_light">#ff000000</color>
-	<color name="action_mode_title_button_text_color_normal_light">#cc000000</color>
-	<color name="action_mode_title_button_text_color_pressed_light">#cc000000</color>
-	<color name="action_mode_title_button_text_color_disable_light">#cc000000</color>
-	<color name="action_mode_title_default_button_text_color_normal_light">#ffffffff</color>
-	<color name="action_mode_title_default_button_text_color_pressed_light">#ffffffff</color>
-	<color name="action_mode_title_default_button_text_color_disable_light">#ffffffff</color>
-
-	<color name="dialog_list_text_color_normal_light">#ff000000</color>
-	<color name="dialog_list_text_color_disabled_light">#4d000000</color>
-	<color name="dialog_list_text_color_pressed_light">#ff000000</color>
-	<color name="dialog_message_text_color_light">#cd000000</color>
-	<color name="dialog_checkbox_text_color_light">#99000000</color>
-	<color name="dialog_title_text_color">#ff000000</color>
 
 	<color name="edit_text_search_bg_color_light">#10000000</color>
 	<color name="hint_edit_text_color_light">#4c000000</color>

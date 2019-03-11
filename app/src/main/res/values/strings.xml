@@ -1,22 +1,42 @@
 <resources>
     <string name="app_name">CustoMIUIzer</string>
 	<string name="app_about">About</string>
-    <string name="title_activity_main">@string/app_name</string>
+	<string name="about_version">Version: %1$s</string>
+	<string name="about_dynamic">Generally, mods require soft reboot to be activated or deactivated, but those marked with * only require one soft reboot when their value is changed from default to custom one, subsequent changes are applied immediately.</string>
+	<string name="about_dev">Developer</string>
+	<string name="about_dev_name">Mikanoshi</string>
+	<string name="title_activity_main">@string/app_name</string>
 
 	<string name="mods">Mods</string>
-	<string name="system_mods">System mods</string>
-	<string name="launcher_mods">Launcher mods</string>
-	<string name="controls_mods">Controls mods</string>
-	<string name="various_mods">Various mods</string>
 
-	<string name="launcher_gestures">Gestures</string>
+	<string name="system_mods">System</string>
+	<string name="system_mods_screenanim">Screen animations</string>
+	<string name="system_nolightuponcharge_title">No screen light up on charge</string>
+	<string name="system_nolightuponcharge_summ">Do not turn screen on when you connect or disconnect a charger (beginning of wireless charge is still displayed)</string>
+	<string name="system_scramblepin_title">Scramble PIN</string>
+	<string name="system_scramblepin_summ">Randomly change PIN buttons order to improve security</string>
+	<string name="system_securelock_title">Enhanced screen lock</string>
+	<string name="system_securelock_summ">Disable power menu while screen lock is active</string>
+	<string name="system_screenanim_duration_title">Turning off animation *</string>
+	<string name="system_screenanim_duration_summ">Configure animation length</string>
+	<string name="system_screenanim_desc">Very low values will practically disable animation</string>
+	<string name="system_mods_lockscreen">Lock Screen</string>
+	<string name="system_iconlabletoasts_title">Enhanced toasts *</string>
+	<string name="system_iconlabletoasts_summ">Add application\'s icon and label to its toasts</string>
+
+	<string name="launcher_mods">MIUI Launcher</string>
+	<string name="launcher_gestures">Gestures *</string>
 	<string name="launcher_gestures_action">Action</string>
 	<string name="launcher_gestures_toggle">Toggle</string>
 	<string name="launcher_gestures_launch">App to launch</string>
-	<string name="launcher_swipedownaction_title">Swipe down action</string>
-	<string name="launcher_swipedownaction_summ">Action for swipe down gesture on any home screen</string>
-	<string name="launcher_swipeupaction_title">Swipe up action</string>
-	<string name="launcher_swipeupaction_summ">Action for swipe up gesture on any home screen</string>
+	<string name="launcher_swipedownaction_title">Swipe down action (1 finger)</string>
+	<string name="launcher_swipedownaction_summ">Action for swipe down gesture with 1 finger on any home screen</string>
+	<string name="launcher_swipedownaction2_title">Swipe down action (2 fingers)</string>
+	<string name="launcher_swipedownaction2_summ">Action for swipe down gesture with 2 fingers on any home screen</string>
+	<string name="launcher_swipeupaction_title">Swipe up action (1 finger)</string>
+	<string name="launcher_swipeupaction_summ">Action for swipe up gesture with 1 finger on any home screen</string>
+	<string name="launcher_swipeupaction2_title">Swipe up action (2 fingers)</string>
+	<string name="launcher_swipeupaction2_summ">Action for swipe up gesture with 2 fingers on any home screen</string>
 	<string name="launcher_swiperightaction_title">Swipe right action</string>
 	<string name="launcher_swiperightaction_summ">Action for swipe right gesture on launcher dock</string>
 	<string name="launcher_swipeleftaction_title">Swipe left action</string>
@@ -24,6 +44,36 @@
 	<string name="launcher_shakeaction_title">Shake action</string>
 	<string name="launcher_shakeaction_summ">Action for shaking the device on any home screen</string>
 
+	<string name="controls_mods">Controls</string>
+	<string name="controls_powerflash_title">Quick flashlight</string>
+	<string name="controls_powerflash_summ">Long press power button while screen is off to turn flashlight on</string>
+	<string name="controls_powerflash_delay_title">Longer quick flashlight delay</string>
+	<string name="controls_powerflash_delay_summ">Increases the power button long press delay</string>
+
+	<string name="various_mods">Various</string>
+	<string name="various_sysappsupdater_title">Open \"System app updater\"</string>
+	<string name="various_sysappsupdater_summ">App is no longer a part of some ROMs and has to be installed manually</string>
+	<string name="various_sysappsupdater_summ2">Be careful when updating modified system apps on custom ROMs, you might lose the added functionality</string>
+	<string name="various_apps_title">Show additional app details</string>
+	<string name="various_apps_summ">Add new fields to Settings > Installed apps > App info:\n- option to launch an app\n- full path to apk\n- data path\n- user id\n- target SDK version</string>
+	<string name="various_appsort_title">Installed apps initial sort order *</string>
+
+	<string name="appdetails_launch">Launch</string>
+	<string name="appdetails_nolaunch">App has no default launchable activity</string>
+	<string name="appdetails_apk_file">APK filename</string>
+	<string name="appdetails_data_path">Data path</string>
+	<string name="appdetails_app_uid">User id</string>
+	<string name="appdetails_sdk">Target SDK Version</string>
+	<string name="appsort_running">Status (Default)</string>
+	<string name="appsort_name">App name</string>
+	<string name="appsort_frequency">Usage frequency</string>
+	<string name="appsort_storage">Used storage</string>
+	<string name="appsort_install">Installation time</string>
+
+	<string name="settings">Settings</string>
+	<string name="default_value">Default</string>
+
+	<string name="array_default">Default</string>
 	<string name="array_global_actions_none">No action</string>
 	<string name="array_global_actions_notif">Expand notifications drawer</string>
 	<string name="array_global_actions_eqs">Expand EQS panel</string>
@@ -36,7 +86,6 @@
 	<string name="array_global_actions_launch">Launch app</string>
 	<string name="array_global_actions_shortcut">Launch shortcut</string>
 	<string name="array_global_actions_toggle">Toggle settings</string>
-	<string name="array_global_actions_appdrawer">Open app drawer</string>
 	<string name="array_global_toggle_wifi">Wi-Fi</string>
 	<string name="array_global_toggle_bt">Bluetooth</string>
 	<string name="array_global_toggle_gps">GPS</string>
@@ -46,6 +95,9 @@
 	<string name="array_global_toggle_rotation">Auto rotation</string>
 	<string name="array_global_toggle_torch">Flashlight</string>
 	<string name="array_global_toggle_mobiledata">Mobile data</string>
+	<string name="array_toasts_icon">Icon</string>
+	<string name="array_toasts_label">Label</string>
+	<string name="array_toasts_both">Icon and label</string>
 
 	<string name="toggle_wifi_on">Wi-Fi enabled</string>
 	<string name="toggle_wifi_off">Wi-Fi disabled</string>
@@ -62,29 +114,10 @@
 	<string name="toggle_autobright_off">Auto brightness disabled</string>
 	<string name="toggle_autorotate_on">Auto rotation enabled</string>
 	<string name="toggle_autorotate_off">Auto rotation disabled</string>
-	<string name="toggle_flash_low">Flashlight: low</string>
-	<string name="toggle_flash_med">Flashlight: medium</string>
-	<string name="toggle_flash_high">Flashlight: high</string>
 	<string name="toggle_flash_off">Flashlight: off</string>
 	<string name="toggle_flash_on">Flashlight: on</string>
 	<string name="toggle_mobiledata_on">Mobile data enabled</string>
 	<string name="toggle_mobiledata_off">Mobile data disabled</string>
-
-	<string name="download_current_ver">Installed update:</string>
-	<string name="download_update">No translations found\nTap Update to download</string>
-	<string name="download_title">Localization</string>
-	<string name="download_desc">Downloading translations&#8230;</string>
-	<string name="download_failed">Download failed, check connection</string>
-	<string name="download_succeeded">Language pack was downloaded and installed, CustoMIUIzer will be restarted now</string>
-	<string name="download_unzip_failed">Unable to unzip language files</string>
-	<string name="download_same_version">You already have the latest version</string>
-	<string name="download_version_problem">Failed to read update version</string>
-	<string name="download_removed">Language files were removed,\nCustoMIUIzer will be restarted now</string>
-
-	<string name="miuizer_l10n_title">Localization</string>
-	<string name="miuizer_l10n_summ">Download and update language pack</string>
-	<string name="miuizer_l10n_btn">Update</string>
-	<string name="miuizer_l10n_ready">Translated strings</string>
 
 	<string name="miuizer">CustoMIUIzer settings</string>
 	<string name="miuizer_show_icon_title">Fast access icon</string>
@@ -102,13 +135,27 @@
 	<string name="miuizer_acramail_tip">It\'s absolutely necessary to fill this in if you expect to receive replies to your crash reports. Use e-mail, ICQ, XDA or 4PDA nickname.\nTap Feedback below to do it now.</string>
 
 	<string name="support">Support</string>
-	<string name="support_version">Support (app version: %1$s)</string>
 	<string name="support_repo_title">CustoMIUIzer repo</string>
 	<string name="support_repo_summ">Git repo with module sources and distributions</string>
 	<string name="support_bug_title">Report a bug</string>
 	<string name="support_bug_summ">Send us a bug report or a feature request via official issue tracker</string>
 	<string name="support_donate_title">Donate</string>
 	<string name="support_donate_summ">Best way to express your gratitude for this awesome module :)</string>
+
+	<string name="crash_dialog">CustoMIUIzer has just crashed!</string>
+	<string name="crash_dialog_manual">All necessary data has beed collected</string>
+	<string name="crash_dialog_manual_size">Generated report size</string>
+	<string name="crash_dialog_manual_desc">Describe your problem (in English if possible):</string>
+	<string name="crash_dialog_manual_desc2">Describe your actions that led to this crash\n(in English if possible):</string>
+	<string name="crash_dialog_note">Feedback info is not provided, you won\'t get a response to this report!</string>
+	<string name="crash_needs_inet">Internet connection is required</string>
+	<string name="crash_needs_desc">Description cannot be blank</string>
+	<string name="crash_ignore">Ignore</string>
+	<string name="crash_send">Send report</string>
+	<string name="crash_result">Sending result</string>
+	<string name="crash_ok">Report was sent successfully!</string>
+	<string name="crash_error">Failed to send report</string>
+	<string name="crash_confirm">Confirmation</string>
 
 	<string name="array_color_dark">Dark</string>
 	<string name="array_color_light">Light</string>

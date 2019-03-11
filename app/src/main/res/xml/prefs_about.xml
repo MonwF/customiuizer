@@ -1,0 +1,19 @@
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<PreferenceCategory
+		android:title="@string/support"
+		android:key="pref_key_support">
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/support_repo_title"
+			android:summary="@string/support_repo_summ"
+			android:key="pref_key_website" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/support_donate_title"
+			android:summary="@string/support_donate_summ"
+			android:key="pref_key_donatepage" />
+	</PreferenceCategory>
+
+</PreferenceScreen>

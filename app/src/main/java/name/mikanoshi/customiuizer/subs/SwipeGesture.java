@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +44,7 @@ public class SwipeGesture extends SubFragment {
 		actionSpinner.setTag(key + "_action");
 		if (key.equals("pref_key_launcher_swipedown"))
 		actionSpinner.addDisabledItems(1);
-		actionSpinner.init(Helpers.prefs.getInt(key + "_action", 1), R.layout.simple_spinner_dropdown_item);
+		actionSpinner.init(Helpers.prefs.getInt(key + "_action", 1));
 		actionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -153,7 +152,7 @@ public class SwipeGesture extends SubFragment {
 
 		toggleSpinner = getView().findViewById(R.id.swipe_gesture_toggle);
 		toggleSpinner.setTag(key + "_toggle");
-		toggleSpinner.init(Helpers.prefs.getInt(key + "_toggle", 1), R.layout.simple_spinner_dropdown_item);
+		toggleSpinner.init(Helpers.prefs.getInt(key + "_toggle", 1));
 	}
 
 	void updateControls(SpinnerEx spinner, int position) {
