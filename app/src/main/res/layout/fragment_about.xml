@@ -33,13 +33,24 @@
 				android:textSize="19.3sp" />
 
 			<TextView
+				android:id="@+id/about_dev"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="3dp"
+				android:gravity="center"
+				android:maxLines="1"
+				android:text="@string/about_dev"
+				android:textColor="@color/color_not_selected"
+				android:textSize="12sp" />
+
+			<TextView
 				android:id="@+id/about_version"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="3dp"
 				android:layout_marginBottom="46.7dp"
 				android:gravity="center"
-				android:maxLines="2"
+				android:maxLines="1"
 				android:text="@string/about_version"
 				android:textColor="@color/color_not_selected"
 				android:textSize="12sp" />
@@ -64,18 +75,18 @@
 		<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:gravity="left"
+			android:gravity="start"
 			android:orientation="horizontal"
-			android:paddingStart="20dp"
-			android:paddingEnd="20dp">
+			android:paddingStart="25.5dp"
+			android:paddingEnd="25.5dp">
 
 			<TextView
+				style="@style/Widget.InputField"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:gravity="left"
+				android:gravity="start"
 				android:text="@string/about_dynamic"
-				android:textColor="@color/color_not_selected"
-				android:textSize="14sp" />
+				android:textColor="@color/color_not_selected" />
 		</LinearLayout>
 	</LinearLayout>
 </LinearLayout>

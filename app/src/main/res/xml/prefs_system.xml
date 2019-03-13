@@ -35,6 +35,12 @@
 			android:title="@string/system_scramblepin_title"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_nopassword"
+			android:summary="@string/system_nopassword_summ"
+			android:title="@string/system_nopassword_title"
+			android:defaultValue="false" />
+
 	</PreferenceCategory>
 
 	<PreferenceCategory
@@ -49,7 +55,7 @@
 			miuizer:maxValue="1500"
 			miuizer:stepValue="50"
 			miuizer:format="%d ms"
-			miuizer:offtext="@string/default_value"
+			miuizer:offtext="@string/array_default"
 			miuizer:note="@string/system_screenanim_desc" />
 
 	</PreferenceCategory>

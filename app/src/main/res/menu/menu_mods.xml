@@ -1,5 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item
+		android:id="@+id/get_update"
+		android:showAsAction="never"
+		android:title="@string/update_available"
+		android:visible="false" />
+	<item
 		android:id="@+id/softreboot"
 		android:showAsAction="never"
 		android:title="@string/soft_reboot" />

@@ -5,9 +5,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 
-import de.robv.android.xposed.XposedBridge;
-import name.mikanoshi.customiuizer.MainModule;
-import name.mikanoshi.customiuizer.mods.Launcher;
+import name.mikanoshi.customiuizer.mods.GlobalActions;
 
 public class ShakeManager implements SensorEventListener {
 	
@@ -94,7 +92,6 @@ public class ShakeManager implements SensorEventListener {
 	}
 	
 	private void executeShakeAction() {
-		//MainModule.pref.reload();
-		GlobalActions.handleAction(MainModule.pref.getInt("pref_key_launcher_shake_action", 1), 7, MainModule.pref.getInt("pref_key_launcher_shake_toggle", 0), helperContext);
+		GlobalActions.handleAction(Helpers.getSharedIntPref(helperContext, "pref_key_launcher_shake_action", 1), 7, Helpers.getSharedIntPref(helperContext, "pref_key_launcher_shake_toggle", 0), helperContext);
 	}
 }

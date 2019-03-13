@@ -2,13 +2,8 @@
 <resources>
 	<color name="color_not_selected">#99000000</color>
 	<color name="about_divider">#33808080</color>
-	<color name="warning_background">#ffe74457</color>
-	<color name="update_background">#FF252525</color>
-
-	<color name="material_text_secondary_dark">#ccffffff</color>
 
 	<color name="divider_line_light">#27000000</color>
-
 	<color name="highlight_normal_light">#ff0099ff</color>
 	<color name="checked_text_light">@color/highlight_normal_light</color>
 

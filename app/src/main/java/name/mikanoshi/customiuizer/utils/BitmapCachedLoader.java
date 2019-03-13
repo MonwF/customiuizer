@@ -2,31 +2,28 @@ package name.mikanoshi.customiuizer.utils;
 
 import java.lang.ref.WeakReference;
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import name.mikanoshi.customiuizer.R;
-
+@SuppressLint("StaticFieldLeak")
 public class BitmapCachedLoader extends AsyncTask<Void, Void, Bitmap> {
-	private final WeakReference<Object> targetRef;
-	private final WeakReference<Object> appInfo;
-	private final Context ctx;
+	private WeakReference<Object> targetRef;
+	private WeakReference<Object> appInfo;
+	private Context ctx;
 	private int theTag = -1;
 	
-	public BitmapCachedLoader(Object target, Object info, Context context) {
+	BitmapCachedLoader(Object target, Object info, Context context) {
 		targetRef = new WeakReference<Object>(target);
 		appInfo = new WeakReference<Object>(info);
-		ctx = context;
+		ctx = context.getApplicationContext();
 		Object tag = ((ImageView)target).getTag();
 		if (tag != null) theTag = (Integer)tag;
 	}
@@ -46,11 +43,11 @@ public class BitmapCachedLoader extends AsyncTask<Void, Void, Bitmap> {
 
 			if (ad.pkgName != null) cacheKey = ad.pkgName;
 			if (ad.actName != null) cacheKey += "|" + ad.actName;
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Throwable t) {
+			t.printStackTrace();
 		}
 		
-		if (cacheKey != null && icon != null && BitmapDrawable.class.isInstance(icon)) {
+		if (cacheKey != null && icon instanceof BitmapDrawable) {
 			bmp = ((BitmapDrawable)icon).getBitmap();
 			Matrix matrix = new Matrix();
 			matrix.postScale(((float)newIconSize) / bmp.getWidth(), ((float)newIconSize) / bmp.getHeight());

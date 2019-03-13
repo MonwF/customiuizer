@@ -3,7 +3,6 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:animateLayoutChanges="true"
-	android:fitsSystemWindows="true"
 	android:orientation="vertical">
 
 	<miui.widget.ClearableEditText
@@ -12,6 +11,13 @@
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:inputType="textMultiLine" />
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/miuizer_acramail_tip"
+		android:textColor="@color/color_not_selected"
+		style="@style/Widget.InputField" />
 
 </LinearLayout>
 

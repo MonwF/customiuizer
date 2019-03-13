@@ -1,0 +1,196 @@
+<resources>
+	<string name="app_name">CustoMIUIzer</string>
+	<string name="app_about">О приложении</string>
+	<string name="about_version">Версия %1$s</string>
+	<string name="soft_reboot">Быстрая перезагрузка</string>
+	<string name="soft_reboot_ask">Выполнить быструю перезагрузку?</string>
+	<string name="backup_restore">Управление настройками</string>
+	<string name="backup_restore_choose">Выберите желаемое дейстие</string>
+	<string name="do_backup">Сохранить</string>
+	<string name="do_restore">Восстановить</string>
+	<string name="storage_read_only">Внешнее хранилище доступно только для чтения</string>
+	<string name="storage_unavailable">Не удалось получить доступ к подходящему хранилищу</string>
+	<string name="storage_cannot_mkdir">Ошибка при создании каталога</string>
+	<string name="storage_cannot_backup">Ошибка при создании файла</string>
+	<string name="storage_cannot_restore">Не найдено сохранённых настроек</string>
+	<string name="backup_ok">Настройки успешно сохранены!</string>
+	<string name="restore_ok">Настройки успешно восстановлены!</string>
+
+	<string name="warning">Внимание!</string>
+	<string name="module_not_active">Модуль CustoMIUIzer не активен! Откройте Xposed Installer, активируйте модуль и перезагрузитесь.</string>
+	<string name="backup_restore_info">Ваши настройки были восстановлены из Google Cloud. Если мод Vol2wake был активен, отключите его и включите снова, после этого сделайте полную перезагрузку.</string>
+
+	<string name="mods">Моды</string>
+
+	<string name="xposed_not_found">Не найден Xposed Framework</string>
+	<string name="xposed_not_found_explain">Похоже, что у Вас не установлен Xposed Framework.\n\nВсе моды на данной вкладке работают только при наличии установленного Xposed Framework!\n\nЕго можно установить вместе с прошивкой ARHD.</string>
+	<string name="okay">Окей</string>
+
+	<string name="dummy">" "</string>
+
+	<string name="notselected">Не выбрано</string>
+
+	<string name="controls_mods">Управление</string>
+	<string name="controls_powerflash_title">Быстрый фонарик</string>
+	<string name="controls_powerflash_summ">Позволяет активировать фонарик при отключенном экране долгим нажатием на кнопку питания</string>
+
+	<string name="various_mods">Различное</string>
+	<string name="various_apps_title">Доп. сведения о приложении</string>
+	<string name="various_apps_summ">Добавляет новые элементы в Настройки &gt; Приложения:\n- кнопку запуска приложения\n- имя и путь до apk\n- путь до данных\n- имя процесса\n- номер пользователя\n- версию SDK</string>
+
+	<string name="support">Поддержка</string>
+
+	<string name="toggle_wifi_on">Wi-Fi включен</string>
+	<string name="toggle_wifi_off">Wi-Fi отключен</string>
+	<string name="toggle_bt_on">Bluetooth включен</string>
+	<string name="toggle_bt_off">Bluetooth отключен</string>
+	<string name="toggle_gps_on">GPS включен</string>
+	<string name="toggle_gps_off">GPS отключен</string>
+	<string name="toggle_nfc_on">NFC включен</string>
+	<string name="toggle_nfc_off">NFC отключен</string>
+	<string name="toggle_sound_normal">Профиль звука: обычный</string>
+	<string name="toggle_sound_silent">Профиль звука: тишина</string>
+	<string name="toggle_sound_vibrate">Профиль звука: вибрация</string>
+	<string name="toggle_autobright_on">Авторегулировка яркости включена</string>
+	<string name="toggle_autobright_off">Авторегулировка яркости отключена</string>
+	<string name="toggle_autorotate_on">Автопоповрот экрана включен</string>
+	<string name="toggle_autorotate_off">Автопоповрот экрана отключен</string>
+	<string name="toggle_flash_off">Фонарик выключен</string>
+	<string name="toggle_mobiledata_on">Мобильный Интернет включен</string>
+	<string name="toggle_mobiledata_off">Мобильный Интернет отключен</string>
+
+	<string name="appdetails_launch">Запустить</string>
+	<string name="appdetails_apk_file">Имя APK файла</string>
+	<string name="appdetails_data_path">Путь до данных</string>
+	<string name="appdetails_sdk">Версия SDK</string>
+
+	<string name="array_default">Стандарт</string>
+	<string name="array_global_actions_none">Нет действия</string>
+	<string name="array_global_actions_notif">Открыть панель уведомлений</string>
+	<string name="array_global_actions_eqs">Открыть панель Быстрых Настроек</string>
+	<string name="array_global_actions_lock">Заблокировать девайс</string>
+	<string name="array_global_actions_sleep">Выключить экран (режим сна)</string>
+	<string name="array_global_actions_screenshot">Сделать снимок экрана</string>
+	<string name="array_global_actions_launch">Запустить приложение</string>
+	<string name="array_global_actions_toggle">Включить/выключить настройку</string>
+	<string name="array_global_toggle_wifi">Wi-Fi</string>
+	<string name="array_global_toggle_bt">Bluetooth</string>
+	<string name="array_global_toggle_gps">GPS</string>
+	<string name="array_global_toggle_nfc">NFC</string>
+	<string name="array_global_toggle_sound">Профиль звука</string>
+	<string name="array_global_toggle_brightness">Автояркость</string>
+	<string name="array_global_toggle_rotation">Автоповорот</string>
+	<string name="array_global_toggle_torch">Фонарик</string>
+	<string name="array_global_toggle_mobiledata">Мобильный Интернет</string>
+
+	<string name="select_app">Выбрать приложение</string>
+
+	<string name="array_global_actions_shortcut">Запустить ярлык</string>
+
+	<string name="support_bug_title">Сообщить об ошибке</string>
+	<string name="support_bug_summ">Отправить сообщение об ошибке или предложить новую фичу</string>
+	<string name="support_donate_title">Пожертвования</string>
+	<string name="support_donate_summ">Лучший способ выразить признательность за этот замечательный модуль :)</string>
+
+	<string name="crash_dialog">В CustoMIUIzer произошла ошибка!</string>
+	<string name="crash_dialog_manual">Собраны все необходимые данные</string>
+	<string name="crash_dialog_manual_size">Размер созданного отчёта</string>
+	<string name="crash_dialog_manual_desc">Опишите проблему:</string>
+	<string name="crash_needs_inet">Необходимо активное интернет-соединение</string>
+	<string name="crash_ignore">Игнорировать</string>
+	<string name="crash_send">Отправить отчёт</string>
+	<string name="crash_result">Результат отправки</string>
+	<string name="crash_ok">Отчёт успешно отправлен!</string>
+	<string name="crash_error">Не удалось отправить отчёт</string>
+
+	<string name="troubleshoot">Решение проблем</string>
+
+	<string name="array_toasts_icon">Иконка</string>
+	<string name="array_toasts_label">Название</string>
+	<string name="array_toasts_both">Иконка и название</string>
+	<string name="crash_needs_desc">Описание проблемы обязательно</string>
+	<string name="no_browser">Для открытия ссылок необходим браузер</string>
+
+	<string name="crash_dialog_manual_desc2">Опишите действия, приведшие к проблеме:</string>
+
+	<string name="controls_powerflash_delay_title">Задержка активации фонарика *</string>
+	<string name="controls_powerflash_delay_summ">Увеличивает задержку при долгом нажатии на кнопку питания</string>
+	<string name="array_color_dark">Тёмная</string>
+	<string name="array_color_light">Светлая</string>
+
+	<string name="update_available">Доступно обновление! Нажмите здесь</string>
+
+	<string name="crash_dialog_note">Не заданы данные для обратной связи, Вы не сможете получить ответ на данный отчёт!</string>
+	<string name="about_dynamic">Обычно моды требуют быстрой перезагрузки для активации или деактивации, но те, что помечены *, требуют только одной перезагрузки (после смены значения со стандартного на модифицированное), последующие изменения будут применяться сразу.</string>
+	<string name="appdetails_app_uid">ID пользователя</string>
+	<string name="appdetails_nolaunch">Стандартный запуск данного приложения невозможен</string>
+	<string name="appsort_frequency">Частота использования</string>
+	<string name="appsort_install">Время установки</string>
+	<string name="appsort_name">Имя приложения</string>
+	<string name="appsort_running">Состояние (по умолчанию)</string>
+	<string name="appsort_storage">Занимаемое место</string>
+	<string name="array_global_actions_recents">Открыть последние приложения</string>
+	<string name="cancel">Отмена</string>
+	<string name="crash_confirm">Подтверждение</string>
+	<string name="launcher_gestures">Жесты *</string>
+	<string name="launcher_gestures_action">Действие</string>
+	<string name="launcher_gestures_launch">Приложение для запуска</string>
+	<string name="launcher_gestures_setting">Настройка для переключения</string>
+	<string name="launcher_mods">Рабочий стол MIUI</string>
+	<string name="launcher_shakeaction_title">Действие на встряхивание</string>
+	<string name="launcher_swipedownaction_summ">Присвоить действие жесту сверху вниз одним пальцем на любом домашнем экране</string>
+	<string name="launcher_swipedownaction_title">Действие на свайп вниз (1 пальцем)</string>
+	<string name="launcher_swipedownaction2_title">Действие на свайп вниз (2 пальцами)</string>
+	<string name="launcher_swipedownaction2_summ">Присвоить действие жесту сверху вниз двумя пальцами на любом домашнем экране</string>
+	<string name="launcher_shakeaction_summ">Присвоить действие на встряхивание устройства на любом домашнем экране</string>
+	<string name="launcher_swipeleftaction_summ">Присвоить действие жесту влево на доке рабочего стола</string>
+	<string name="launcher_swipeleftaction_title">Действие на свайп влево</string>
+	<string name="launcher_swiperightaction_summ">Присвоить действие жесту вправо на доке рабочего стола</string>
+	<string name="launcher_swiperightaction_title">Действие на свайп вправо</string>
+	<string name="launcher_swipeupaction_summ">Присвоить действие жесту снизу вверх одним пальцем на любом домашнем экране</string>
+	<string name="launcher_swipeupaction2_summ">Присвоить действие жесту снизу вверх двумя пальцами на любом домашнем экране</string>
+	<string name="launcher_swipeupaction_title">Действие на свайп вверх (1 пальцем)</string>
+	<string name="launcher_swipeupaction2_title">Действие на свайп вверх (2 пальцами)</string>
+	<string name="miuizer">Настройки CustoMIUIzer</string>
+	<string name="miuizer_acramail_summ">Укажите свои контактные данные, и они будут включены в отправляемые отчёты</string>
+	<string name="miuizer_acramail_tip">Если Вы хотите получать ответы на отправленные отчёты об ошибках, то необходимо заполнить данное поле. Используйте e-mail, ICQ, свой ник с XDA или 4PDA.</string>
+	<string name="miuizer_acramail_title">Контактная информация</string>
+	<string name="miuizer_acrasend_summ">Собрать данные об устройтве и переменных окружения, logcat и Xposed лог, и отправить их разработчику.\nДля отправки требуется интернет</string>
+	<string name="miuizer_acrasend_title">Отправить подробный отчёт</string>
+	<string name="miuizer_theme_title">Тема</string>
+	<string name="miuizer_show_icon_summ">Показывать иконку в Настройках</string>
+	<string name="miuizer_show_icon_title">Иконка быстрого доступа</string>
+	<string name="open_xposed">Открыть Xposed Installer</string>
+	<string name="search_input_description">Поиск</string>
+	<string name="select_shortcut">Выбрать ярлык</string>
+	<string name="launcher_gestures_shortcut">Ярлык для запуска</string>
+	<string name="settings">Настройки</string>
+	<string name="support_repo_summ">Git репозиторий с исходниками и дистрибутивами модуля</string>
+	<string name="support_repo_title">Репозиторий CustoMIUIzer</string>
+	<string name="system_iconlabletoasts_summ">Добавляет иконку и название приложения во всплывающие уведомления</string>
+	<string name="system_iconlabletoasts_title">Расширенные уведомления *</string>
+	<string name="system_mods">Система</string>
+	<string name="system_mods_lockscreen">Экран блокировки</string>
+	<string name="system_mods_screenanim">Экранная анимация</string>
+	<string name="system_nolightuponcharge_summ">Запрещает включение экрана при подключении или отключении зарядки (не влияет на отображение начала беспроводной зарядки)</string>
+	<string name="system_nolightuponcharge_title">Не включать экран при зарядке</string>
+	<string name="system_scramblepin_title">Усложнить PIN</string>
+	<string name="system_scramblepin_summ">Случайным образом переставляет кнопки ввода PIN</string>
+	<string name="system_screenanim_desc">Малые значения практически отключат анимацию</string>
+	<string name="system_screenanim_duration_summ">Задать длительность анимации</string>
+	<string name="system_screenanim_duration_title">Анимация при выключении *</string>
+	<string name="system_securelock_title">Улучшенная блокировка</string>
+	<string name="system_securelock_summ">Отключает меню управления питанием во время блокировки</string>
+	<string name="toggle_flash_on">Фонарик включен</string>
+	<string name="various_appsort_title">Порядок сортировки Всех приложений</string>
+	<string name="various_sysappsupdater_summ">Приложение больше не является частью некоторых прошивок и должно быть установлено вручную</string>
+	<string name="various_sysappsupdater_summ2">Будьте осторожны при обновлении модифицированных приложений на кастомных прошивках, это может привести к потере доп. функциональности</string>
+	<string name="various_sysappsupdater_title">Открыть \"Обновление компонентов\"</string>
+	<string name="your_contact_info">Ваши контактные данные</string>
+	<string name="storage_perm_denied_backup">Вы хотите создать резервную копию настроек или нет?</string>
+	<string name="storage_perm_denied_restore">Вы хотите восстановить настройки или нет?</string>
+	<string name="storage_perm_denied_final">Теперь Вам придётся искать где вручную дать разрешение для данной функции. Так держать!</string>
+	<string name="about_dev">от Mikanoshi</string>
+	<string name="system_nopassword_title">Не требовать пароль после загрузки</string>
+	<string name="system_nopassword_summ">Отключить требование пароля вместо отпечатка пальца первый раз после загрузки</string>
+</resources>

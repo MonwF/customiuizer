@@ -112,6 +112,7 @@ public class SubFragment extends PreferenceFragmentBase {
 	}
 
 	public void saveSharedPrefs() {
+		if (getView() == null) Log.e("miuizer", "View not yet ready!");
 		ArrayList<View> nViews = Helpers.getChildViewsRecursive(getView().findViewById(R.id.container), false);
 		for (View nView : nViews)
 		if (nView != null) try {
@@ -129,6 +130,7 @@ public class SubFragment extends PreferenceFragmentBase {
 	}
 
 	public void loadSharedPrefs() {
+		if (getView() == null) Log.e("miuizer", "View not yet ready!");
 		ArrayList<View> nViews = Helpers.getChildViewsRecursive(getView().findViewById(R.id.container), false);
 		for (View nView : nViews)
 		if (nView != null) try {

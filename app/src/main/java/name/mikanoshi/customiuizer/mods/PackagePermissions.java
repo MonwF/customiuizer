@@ -1,4 +1,4 @@
-package name.mikanoshi.customiuizer.utils;
+package name.mikanoshi.customiuizer.mods;
 
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -16,6 +16,7 @@ import de.robv.android.xposed.XC_MethodHook.MethodHookParam;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
+import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class PackagePermissions {
 

@@ -5,6 +5,7 @@
 	<dimen name="preference_item_padding_top">15.16dp</dimen>
 	<dimen name="preference_item_padding_bottom">15.19dp</dimen>
 	<dimen name="preference_summary_padding_right">15dp</dimen>
+	<dimen name="preference_text_size">14sp</dimen>
 	<dimen name="preference_category_text_size">12.36sp</dimen>
 
 	<dimen name="am_app_list_padding_end">13.3dp</dimen>

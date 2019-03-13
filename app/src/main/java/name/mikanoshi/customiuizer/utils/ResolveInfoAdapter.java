@@ -11,7 +11,6 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,23 +22,23 @@ import android.widget.TextView;
 
 import name.mikanoshi.customiuizer.R;
 
-public class AppResolveAdapter extends BaseAdapter implements Filterable {
+public class ResolveInfoAdapter extends BaseAdapter implements Filterable {
 
-	private Context ctx = null;
-	PackageManager pm = null;
+	private Context ctx;
+	private PackageManager pm;
 	private LayoutInflater mInflater;
 	private ThreadPoolExecutor pool;
-	private int cpuCount = Runtime.getRuntime().availableProcessors();
 	private ItemFilter mFilter = new ItemFilter();
-	private ArrayList<ResolveInfo> originalAppList = null;
-	private ArrayList<ResolveInfo> filteredAppList = null;
+	private ArrayList<ResolveInfo> originalAppList;
+	private ArrayList<ResolveInfo> filteredAppList;
 
-	public AppResolveAdapter(Context context, ArrayList<ResolveInfo> arr) {
+	public ResolveInfoAdapter(Context context, ArrayList<ResolveInfo> arr) {
 		ctx = context;
 		pm = ctx.getPackageManager();
 		mInflater = LayoutInflater.from(context);
 		originalAppList = arr;
 		filteredAppList = arr;
+		int cpuCount = Runtime.getRuntime().availableProcessors();
 		pool = new ThreadPoolExecutor(cpuCount + 1, cpuCount * 2 + 1, 2, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
 	}
 
@@ -73,10 +72,7 @@ public class AppResolveAdapter extends BaseAdapter implements Filterable {
 		ad.pkgName = ri.activityInfo.applicationInfo.packageName;
 		ad.actName = ri.activityInfo.name;
 		ad.enabled = ri.activityInfo.enabled;
-		if (ad.actName != null)
-			ad.label = (String)ri.activityInfo.loadLabel(pm);
-		else
-			ad.label = ri.loadLabel(pm).toString();
+		ad.label = ri.loadLabel(pm).toString();
 
 		itemTitle.setText(ad.label);
 		itemIsDis.setVisibility(ad.enabled ? View.INVISIBLE : View.VISIBLE);

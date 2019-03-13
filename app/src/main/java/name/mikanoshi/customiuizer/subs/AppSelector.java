@@ -39,6 +39,7 @@ public class AppSelector extends SubFragmentWithSearch {
 						finish();
 					}
 				});
+				if (getView() != null)
 				getView().findViewById(R.id.am_progressBar).setVisibility(View.GONE);
 			}
 		};
@@ -46,7 +47,7 @@ public class AppSelector extends SubFragmentWithSearch {
 		new Thread() {
 			@Override
 			public void run() {
-				try { sleep(animDur); } catch (Throwable e) {};
+				try { sleep(animDur); } catch (Throwable e) {}
 				try {
 					if (Helpers.launchableAppsList == null) Helpers.getLaunchableApps(getActivity());
 					getActivity().runOnUiThread(process);

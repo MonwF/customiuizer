@@ -1,26 +1,40 @@
 apply plugin: 'com.android.application'
 
 def acraVersion = '5.3.0-rc02'
+def keystorePropertiesFile = rootProject.file("../keystore.properties");
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
+    signingConfigs {
+        dev {
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            v1SigningEnabled true
+            v2SigningEnabled false
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "name.mikanoshi.customiuizer"
         minSdkVersion 24
         targetSdkVersion 28
         versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        javaCompileOptions {
-            annotationProcessorOptions {
-                includeCompileClasspath true
-            }
-        }
+        versionName "1.0.0"
+        signingConfig signingConfigs.dev
     }
     buildTypes {
         release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.dev
+        }
+        debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.dev
         }
     }
     compileOptions {
@@ -32,8 +46,6 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "ch.acra:acra-core:$acraVersion"
-    implementation "ch.acra:acra-dialog:$acraVersion"
-    compileOnly "com.google.auto.service:auto-service:1.0-rc4"
     compileOnly 'de.robv.android.xposed:api:82'
     compileOnly files('lib/miui.jar')
 }

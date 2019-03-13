@@ -1,43 +1,38 @@
-package name.mikanoshi.customiuizer;
+package name.mikanoshi.customiuizer.crashreport;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.TreeMap;
 
 import org.acra.ACRA;
 import org.acra.ReportField;
+import org.acra.config.CoreConfiguration;
 import org.acra.data.CrashReportData;
-import org.acra.dialog.BaseCrashReportDialog;
+import org.acra.file.BulkReportDeleter;
 import org.acra.file.CrashReportPersister;
-import org.acra.scheduler.SchedulerStarter;
 import org.acra.sender.ReportSenderException;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -53,14 +48,17 @@ import android.widget.EditText;
 import android.widget.FrameLayout.LayoutParams;
 
 import miui.app.AlertDialog;
+import name.mikanoshi.customiuizer.ActivityEx;
+import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
-import static org.acra.ACRA.LOG_TAG;
 import static org.acra.ReportField.USER_COMMENT;
 import static org.acra.ReportField.USER_EMAIL;
 
-public class CrashReportDialog extends BaseCrashReportDialog {
-	private File mReportFileName;
+public class Dialog extends Activity {
+
+	private CoreConfiguration config;
+	private File reportFile;
 	private String xposedLog;
 	private EditText desc;
 	
@@ -121,13 +119,12 @@ public class CrashReportDialog extends BaseCrashReportDialog {
 	}
 	
 	private void sendCrash(final String xposedLogStr) {
-		String exceptionsPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/CustoMIUIzer/";
 		CrashReportPersister persister = new CrashReportPersister();
 		SharedPreferences prefs = getSharedPreferences(Helpers.prefsName, Context.MODE_PRIVATE);
 		final CrashReportData crashData;
 		try {
-			Log.e("crash", mReportFileName.getAbsolutePath());
-			crashData = persister.load(mReportFileName);
+			Log.e("crash", reportFile.getAbsolutePath());
+			crashData = persister.load(reportFile);
 			crashData.put(USER_COMMENT, desc.getText().toString());
 			crashData.put(USER_EMAIL, prefs.getString("acra.user.email", ""));
 		} catch (Throwable t) {
@@ -151,7 +148,7 @@ public class CrashReportDialog extends BaseCrashReportDialog {
 			crashData.put("BUILD", buildData);
 
 			StringBuilder sb = new StringBuilder();
-			try (FileInputStream in = new FileInputStream(new File(exceptionsPath + "uncaught_exceptions"))) {
+			try (FileInputStream in = new FileInputStream(new File(getFilesDir().getAbsolutePath() + "/uncaught_exceptions"))) {
 				try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in))) {
 					String line;
 					while ((line = bufferedReader.readLine()) != null) sb.append(line).append("\n");
@@ -185,7 +182,7 @@ public class CrashReportDialog extends BaseCrashReportDialog {
 				@Override
 				public void run() {
 					if (finalRes) {
-						Helpers.emptyFile(exceptionsPath + "uncaught_exceptions", true);
+						Helpers.emptyFile(getFilesDir().getAbsolutePath() + "/uncaught_exceptions", true);
 						cancelReports();
 						showFinishDialog(true, null);
 					} else {
@@ -200,7 +197,7 @@ public class CrashReportDialog extends BaseCrashReportDialog {
 		try {
 			String json = report.toJSON();
 
-			//final String basicAuth = "Basic " + Base64.encodeToString("Sense6Toolbox:NotASecret".getBytes(), Base64.NO_WRAP);
+			//final String basicAuth = "Basic " + Base64.encodeToString("login:pass".getBytes(), Base64.NO_WRAP);
 			URL url = new URL("https://code.highspec.ru/crashreports/reporter.php");
 			HttpURLConnection conn = (HttpURLConnection)url.openConnection();
 			conn.setReadTimeout(10000);
@@ -229,7 +226,13 @@ public class CrashReportDialog extends BaseCrashReportDialog {
 			return false;
 		}
 	}
-	
+
+	protected final void cancelReports() {
+		(new Thread(() -> {
+			(new BulkReportDeleter(this)).deleteReports(false, 0);
+		})).start();
+	}
+
 	protected void cancelReportsAndFinish() {
 		cancelReports();
 		finish();
@@ -238,29 +241,35 @@ public class CrashReportDialog extends BaseCrashReportDialog {
 	int densify(int size) {
 		return Math.round(getResources().getDisplayMetrics().density * size);
 	}
-		
-	@SuppressLint("SetTextI18n")
+
 	@Override
-	protected void preInit(Bundle savedInstanceState) {
-		try {
-			setTheme(getResources().getIdentifier("Theme.Light.Settings", "style", "miui"));
-			getTheme().applyStyle(R.style.ApplyInvisible, true);
-		} catch (Throwable e) {}
+	@SuppressLint({"SetTextI18n", "ClickableViewAccessibility"})
+	protected final void onCreate(Bundle savedInstanceState) {
+		setTheme(getResources().getIdentifier("Theme.Light.Settings", "style", "miui"));
+		getTheme().applyStyle(R.style.ApplyInvisible, true);
+		super.onCreate(savedInstanceState);
 
 		if (getIntent().getBooleanExtra("FORCE_CANCEL", false)) {
 			cancelReportsAndFinish();
 			return;
 		}
 
-		if (getIntent().getExtras().get("REPORT_FILE") == null) finish();
-		mReportFileName = (File)getIntent().getExtras().get("REPORT_FILE");
+		Serializable sConfig = getIntent().getSerializableExtra(DialogInteraction.EXTRA_REPORT_CONFIG);
+		Serializable sReportFile = getIntent().getSerializableExtra(DialogInteraction.EXTRA_REPORT_FILE);
+		if (sConfig instanceof CoreConfiguration && sReportFile instanceof File) {
+			config = (CoreConfiguration) sConfig;
+			reportFile = (File)sReportFile;
+		} else {
+			ACRA.log.w(ACRA.LOG_TAG, "Illegal or incomplete call of CrashReportDialog.");
+			finish();
+		}
 
 		int title = R.string.warning;
 		int neutralText = R.string.crash_ignore;
 		int text = R.string.crash_dialog;
 		LinearLayout dialogView = new LinearLayout(this);
 		dialogView.setOrientation(LinearLayout.VERTICAL);
-		
+
 		int tries = 5;
 		xposedLog = null;
 		while (xposedLog == null && tries > 0) try {
@@ -268,10 +277,10 @@ public class CrashReportDialog extends BaseCrashReportDialog {
 			xposedLog = getXposedLog();
 			if (xposedLog == null) Thread.sleep(500);
 		} catch (Throwable e) {}
-		
+
 		try {
 			CrashReportPersister persister = new CrashReportPersister();
-			CrashReportData crashData = persister.load(mReportFileName);
+			CrashReportData crashData = persister.load(reportFile);
 			String payload = crashData.toJSON();
 			int payloadSize = payload.getBytes(StandardCharsets.UTF_8).length;
 			boolean isManualReport = crashData.getString(ReportField.STACK_TRACE).contains("Report requested by developer");
@@ -290,7 +299,7 @@ public class CrashReportDialog extends BaseCrashReportDialog {
 			descText.setPadding(0, 0, 0, densify(5));
 			descText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
 			descText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-			
+
 			desc = new EditText(this);
 			desc.setGravity(Gravity.TOP | Gravity.START);
 			desc.setInputType(EditorInfo.TYPE_TEXT_FLAG_MULTI_LINE);
@@ -302,13 +311,13 @@ public class CrashReportDialog extends BaseCrashReportDialog {
 				text = R.string.crash_dialog_manual;
 				neutralText = R.string.cancel;
 				descText.setText(R.string.crash_dialog_manual_desc);
-				
+
 				LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, densify(80));
 				lp.setMargins(0, densify(5), 0, densify(10));
 				desc.setLayoutParams(lp);
 			} else {
 				descText.setText(R.string.crash_dialog_manual_desc2);
-				
+
 				LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, densify(60));
 				lp.setMargins(0, densify(5), 0, densify(10));
 				desc.setLayoutParams(lp);
@@ -333,17 +342,17 @@ public class CrashReportDialog extends BaseCrashReportDialog {
 			feedbackNote.setPadding(0, 0, 0, 0);
 			feedbackNote.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
 			feedbackNote.setText(R.string.crash_dialog_note);
-			
+
 			dialogView.addView(mainText);
 			dialogView.addView(descText);
 			dialogView.addView(desc);
 
-			if (Helpers.prefs.getString("acra.user.email", "").isEmpty())
-			dialogView.addView(feedbackNote);
+			if (Helpers.prefs.getString("acra.user.email", null) == null)
+				dialogView.addView(feedbackNote);
 
 			mainText.setText(mainText.getText() + "\n" + getResources().getString(R.string.crash_dialog_manual_size) + ": " + String.valueOf(Math.round(payloadSize / 1024.0f)) + " KB");
 		} catch (Throwable e) {}
-		
+
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		alert.setTitle(title);
 		alert.setView(dialogView);
@@ -366,14 +375,18 @@ public class CrashReportDialog extends BaseCrashReportDialog {
 			@Override
 			public void onClick(View v) {
 				if (desc != null && desc.getText().toString().trim().equals("")) {
-					Toast.makeText(CrashReportDialog.this, R.string.crash_needs_desc, Toast.LENGTH_LONG).show();
+					Toast.makeText(Dialog.this, R.string.crash_needs_desc, Toast.LENGTH_LONG).show();
 				} else if (!isNetworkAvailable()) {
-					Toast.makeText(CrashReportDialog.this, R.string.crash_needs_inet, Toast.LENGTH_LONG).show();
+					Toast.makeText(Dialog.this, R.string.crash_needs_inet, Toast.LENGTH_LONG).show();
 				} else {
 					alertDlg.dismiss();
 					sendCrash(xposedLog);
 				}
 			}
 		});
+	}
+
+	protected final CoreConfiguration getConfig() {
+		return config;
 	}
 }

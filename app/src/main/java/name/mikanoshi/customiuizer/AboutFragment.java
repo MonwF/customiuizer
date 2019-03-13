@@ -26,6 +26,7 @@ public class AboutFragment extends SubFragment {
 		Preference donatePagePreference = findPreference("pref_key_donatepage");
 		donatePagePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
+			@SuppressWarnings("deprecation")
 			public boolean onPreferenceClick(Preference pref) {
 				if (getResources().getConfiguration().locale.getISO3Language().contains("ru"))
 					Helpers.openURL(act, "https://mikanoshi.name/donate/");
@@ -36,7 +37,7 @@ public class AboutFragment extends SubFragment {
 		});
 
 		//Add version name to support title
-		try {
+		if (getView() != null) try {
 			TextView version = getView().findViewById(R.id.about_version);
 			version.setText(String.format(getResources().getString(R.string.about_version), act.getPackageManager().getPackageInfo(act.getPackageName(), 0).versionName));
 		} catch (Throwable e) {

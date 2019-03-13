@@ -7,49 +7,9 @@
 	android:orientation="vertical">
 
 	<FrameLayout
-		android:id="@+id/experimentalFrame"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:background="@color/warning_background"
-		android:paddingLeft="10dp"
-		android:paddingTop="2dp"
-		android:paddingRight="10dp"
-		android:paddingBottom="5dp"
-		android:visibility="gone">
-
-		<TextView
-			android:id="@+id/experimental"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:fontFamily="sans-serif-condensed"
-			android:gravity="center"
-			android:textSize="16sp" />
-	</FrameLayout>
-
-	<FrameLayout
 		android:id="@+id/fragment_container"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:background="@android:color/black" />
-
-	<FrameLayout
-		android:id="@+id/updateFrame"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:background="@color/update_background"
-		android:paddingLeft="10dp"
-		android:paddingTop="14dp"
-		android:paddingRight="10dp"
-		android:paddingBottom="15dp"
-		android:visibility="gone">
-
-		<TextView
-			android:id="@+id/update"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:fontFamily="sans-serif-condensed"
-			android:gravity="center"
-			android:textSize="19sp" />
-	</FrameLayout>
 
 </LinearLayout>

@@ -1,6 +1,5 @@
 package name.mikanoshi.customiuizer;
 
-import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
@@ -10,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
@@ -17,12 +17,14 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.TextView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.acra.ACRA;
@@ -62,28 +64,9 @@ public class MainFragment extends PreferenceFragmentBase {
 	private Runnable showUpdateNotification = new Runnable() {
 		@Override
 		public void run() {
-			if (isFragmentReady(getActivity())) try {
-				TextView update = getActivity().findViewById(R.id.update);
-				update.setText(R.string.update_available);
-				update.setTextColor(getResources().getColor(android.R.color.background_light, getActivity().getTheme()));
-
-				FrameLayout updateFrame = getActivity().findViewById(R.id.updateFrame);
-				updateFrame.setLayoutTransition(new LayoutTransition());
-				updateFrame.setVisibility(View.VISIBLE);
-				updateFrame.setBackgroundColor(0xff252525);
-				updateFrame.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						try {
-							Intent detailsIntent = new Intent();
-							detailsIntent.setComponent(new ComponentName("de.robv.android.xposed.installer", "de.robv.android.xposed.installer.DownloadDetailsActivity"));
-							detailsIntent.setData(Uri.fromParts("package", "com.sensetoolbox.six", null));
-							startActivity(detailsIntent);
-						} catch (Throwable e) {
-							Helpers.openURL(getActivity(), "http://sensetoolbox.com/6/download");
-						}
-					}
-				});
+			if (getView() != null) try {
+				ImageView alert = getView().findViewById(R.id.update_alert);
+				if (alert != null) alert.setVisibility(View.VISIBLE);
 			} catch (Throwable e) {}
 		}
 	};
@@ -91,9 +74,9 @@ public class MainFragment extends PreferenceFragmentBase {
 	private Runnable hideUpdateNotification = new Runnable() {
 		@Override
 		public void run() {
-			if (isFragmentReady(getActivity())) try {
-				FrameLayout updateFrame = getActivity().findViewById(R.id.updateFrame);
-				updateFrame.setVisibility(View.GONE);
+			if (getView() != null) try {
+				ImageView alert = getView().findViewById(R.id.update_alert);
+				if (alert != null) alert.setVisibility(View.GONE);
 			} catch (Throwable e) {}
 		}
 	};
@@ -113,6 +96,24 @@ public class MainFragment extends PreferenceFragmentBase {
 		ActionBar actionBar = getActionBar();
 		if (actionBar != null) actionBar.showSplitActionBar(false, false);
 		setImmersionMenuEnabled(true);
+
+		if (getView() != null)
+		if (getView().findViewById(R.id.update_alert) == null) {
+			Button more = getView().findViewById(getResources().getIdentifier("more", "id", "miui"));
+			if (more == null) return;
+			float density = getResources().getDisplayMetrics().density;
+			FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+			lp.gravity = Gravity.END | Gravity.TOP;
+			ImageView alert = new ImageView(getContext());
+			alert.setImageResource(R.drawable.alert);
+			alert.setAdjustViewBounds(true);
+			alert.setMaxWidth(Math.round(16 * density));
+			alert.setMaxHeight(Math.round(16 * density));
+			alert.setLayoutParams(lp);
+			alert.setId(R.id.update_alert);
+			alert.setVisibility(View.GONE);
+			((ViewGroup)more.getParent()).addView(alert);
+		}
 	}
 
 	@Override
@@ -152,9 +153,11 @@ public class MainFragment extends PreferenceFragmentBase {
 					});
 				}
 
+				String backupPath = Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder;
 				HttpURLConnection connection = null;
 				try {
-					URL url = new URL("http://sensetoolbox.com/last_build");
+					URL url = new URL("https://code.highspec.ru/Mikanoshi/CustoMIUIzer/raw/branch/master/last_build");
+					//URL url = new URL("https://code.highspec.ru/last_build");
 					connection = (HttpURLConnection)url.openConnection();
 					connection.setDefaultUseCaches(false);
 					connection.setUseCaches(false);
@@ -168,32 +171,33 @@ public class MainFragment extends PreferenceFragmentBase {
 
 						try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
 							last_build = reader.readLine().trim();
-						} catch (Exception e) { e.printStackTrace(); }
+						} catch (Throwable t) { t.printStackTrace(); }
 
-						File tmp = new File(Helpers.externalPath);
-						if (!tmp.exists()) tmp.mkdirs();
-						try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(Helpers.externalPath + "last_build", false))) {
+						File tmp = new File(backupPath);
+						if (!tmp.exists()) //noinspection ResultOfMethodCallIgnored
+							tmp.mkdirs();
+						try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(backupPath + "last_build", false))) {
 							writer.write(last_build);
-						} catch (Exception e) { e.printStackTrace(); }
+						} catch (Throwable t) { t.printStackTrace(); }
 					}
-				} catch (Exception e) {}
+				} catch (Throwable t) {}
 
 				try {
 					if (connection != null) connection.disconnect();
-				} catch (Exception e) {}
+				} catch (Throwable t) {}
 
-				try (InputStream inputFile = new FileInputStream(Helpers.externalPath + "last_build")) {
+				try (InputStream inputFile = new FileInputStream(backupPath + "last_build")) {
 					BufferedReader reader = new BufferedReader(new InputStreamReader(inputFile));
 					int last_build = 0;
 					try {
 						last_build = Integer.parseInt(reader.readLine().trim());
-					} catch (Exception e) {}
+					} catch (Throwable t) {}
 
-					if (last_build != 0 && Helpers.buildVersion < last_build)
+					if (last_build != 0 && BuildConfig.VERSION_CODE < last_build)
 						handler.post(showUpdateNotification);
 					else
 						handler.post(hideUpdateNotification);
-				} catch (Exception e) {}
+				} catch (Throwable t) {}
 			}
 		}).start();
 
@@ -217,7 +221,7 @@ public class MainFragment extends PreferenceFragmentBase {
 		ListPreference.OnPreferenceChangeListener changeBackgroundColor = new ListPreference.OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				if (act != null & !act.isFinishing()) ((ActivityEx)act).updateTheme(Integer.parseInt((String)newValue));
+				if (act != null && !act.isFinishing()) ((ActivityEx)act).updateTheme(Integer.parseInt((String)newValue));
 				return true;
 			}
 		};
@@ -269,8 +273,26 @@ public class MainFragment extends PreferenceFragmentBase {
 	}
 
 	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		menu.getItem(0).setVisible(false);
+		if (getView() == null) return;
+		ImageView alert = getView().findViewById(R.id.update_alert);
+		if (alert != null && alert.isShown()) menu.getItem(0).setVisible(true);
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+			case R.id.get_update:
+				try {
+					Intent detailsIntent = new Intent("de.robv.android.xposed.installer.DOWNLOAD_DETAILS");
+					detailsIntent.addCategory(Intent.CATEGORY_DEFAULT);
+					detailsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+					detailsIntent.setData(Uri.fromParts("package", "name.mikanoshi.customiuizer", null));
+					startActivity(detailsIntent);
+				} catch (Throwable e) {
+					Helpers.openURL(getActivity(), "https://code.highspec.ru/Mikanoshi/CustoMIUIzer/releases");
+				}
 			case R.id.xposedinstaller:
 				if (!Helpers.isXposedInstallerInstalled(getContext())) {
 					Toast.makeText(getContext(), R.string.xposed_not_found, Toast.LENGTH_LONG).show();
@@ -279,19 +301,17 @@ public class MainFragment extends PreferenceFragmentBase {
 
 				Intent intent = getContext().getPackageManager().getLaunchIntentForPackage("com.solohsu.android.edxp.manager");
 				try {
-					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+					if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 					getContext().startActivity(intent);
 					return true;
 				} catch (Throwable e1) {
-					intent = new Intent("de.robv.android.xposed.installer.OPEN_SECTION");
-					intent.setPackage("de.robv.android.xposed.installer");
-					intent.putExtra("section", "modules");
-					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+					intent = getContext().getPackageManager().getLaunchIntentForPackage("de.robv.android.xposed.installer");
+					if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 					try {
 						getContext().startActivity(intent);
 						return true;
 					} catch (Throwable e2) {
-						Toast.makeText(getContext(), R.string.xposed_not_found, Toast.LENGTH_LONG).show();;
+						Toast.makeText(getContext(), R.string.xposed_not_found, Toast.LENGTH_LONG).show();
 					}
 					return false;
 				}
@@ -322,15 +342,16 @@ public class MainFragment extends PreferenceFragmentBase {
 				args.putInt("baseResId", R.layout.fragment_about);
 				openSubFragment(new AboutFragment(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.app_about, R.xml.prefs_about);
 				return true;
-		};
+		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	public void backupSettings(Activity act) {
-		if (!Helpers.preparePathForBackup(act, Helpers.backupPath)) return;
+		String backupPath = Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder;
+		if (!Helpers.preparePathForBackup(act, backupPath)) return;
 		ObjectOutputStream output = null;
 		try {
-			output = new ObjectOutputStream(new FileOutputStream(Helpers.backupPath + Helpers.backupFile));
+			output = new ObjectOutputStream(new FileOutputStream(backupPath + Helpers.backupFile));
 			output.writeObject(Helpers.prefs.getAll());
 
 			AlertDialog.Builder alert = new AlertDialog.Builder(act);
@@ -362,10 +383,13 @@ public class MainFragment extends PreferenceFragmentBase {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public void restoreSettings(final Activity act) {
+		if (!Helpers.checkStoragePerm(act, Helpers.REQUEST_PERMISSIONS_RESTORE)) return;
+		if (!Helpers.checkStorageReadable(act)) return;
 		ObjectInputStream input = null;
 		try {
-			input = new ObjectInputStream(new FileInputStream(Helpers.backupPath + Helpers.backupFile));
+			input = new ObjectInputStream(new FileInputStream(Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder + Helpers.backupFile));
 			Map<String, ?> entries = (Map<String, ?>)input.readObject();
 			if (entries == null || entries.isEmpty()) throw new RuntimeException("Cannot read entries");
 
@@ -401,7 +425,8 @@ public class MainFragment extends PreferenceFragmentBase {
 				}
 			});
 			alert.show();
-		} catch (Throwable e) {
+		} catch (Throwable t) {
+			t.printStackTrace();
 			AlertDialog.Builder alert = new AlertDialog.Builder(act);
 			alert.setTitle(R.string.warning);
 			alert.setMessage(R.string.storage_cannot_restore);
@@ -427,7 +452,6 @@ public class MainFragment extends PreferenceFragmentBase {
 		alert.setPositiveButton(R.string.do_restore, new DialogInterface.OnClickListener() {
 			@SuppressWarnings("unchecked")
 			public void onClick(DialogInterface dialog, int whichButton) {
-				if (!Helpers.checkStorageReadable(act)) return;
 				restoreSettings(act);
 			}
 		});
@@ -497,19 +521,19 @@ public class MainFragment extends PreferenceFragmentBase {
 		}
 	}
 
-	private void showNotYetDialog() {
-		try {
-			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			builder.setTitle(R.string.info);
-			builder.setMessage(R.string.not_yet);
-			builder.setCancelable(true);
-			builder.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int whichButton){}
-			});
-			AlertDialog dlg = builder.create();
-			dlg.show();
-		} catch (Throwable t) {
-			t.printStackTrace();
-		}
-	}
+//	private void showNotYetDialog() {
+//		try {
+//			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//			builder.setTitle(R.string.info);
+//			builder.setMessage(R.string.not_yet);
+//			builder.setCancelable(true);
+//			builder.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+//				public void onClick(DialogInterface dialog, int whichButton){}
+//			});
+//			AlertDialog dlg = builder.create();
+//			dlg.show();
+//		} catch (Throwable t) {
+//			t.printStackTrace();
+//		}
+//	}
 }

@@ -23,6 +23,7 @@ public class SharedPrefsProvider extends ContentProvider {
 	static {
 		uriMatcher.addURI(AUTHORITY, "string/*/*", 1);
 		uriMatcher.addURI(AUTHORITY, "integer/*/*", 2);
+		uriMatcher.addURI(AUTHORITY, "boolean/*/*", 3);
 	}
 
 	@Override
@@ -46,6 +47,10 @@ public class SharedPrefsProvider extends ContentProvider {
 			}
 			case 2: {
 				cursor.newRow().add("data", prefs.getInt(parts.get(1), Integer.parseInt(parts.get(2))));
+				return cursor;
+			}
+			case 3: {
+				cursor.newRow().add("data", prefs.getBoolean(parts.get(1), Integer.parseInt(parts.get(2)) == 1) ? 1 : 0);
 				return cursor;
 			}
 		}

@@ -91,6 +91,4 @@
 	<integer-array name="placeholder_array_val">
 		<item>1</item>
 	</integer-array>
-
-	<string-array name="empty_array"/>
 </resources>

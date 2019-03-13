@@ -9,7 +9,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,19 +21,19 @@ import android.widget.TextView;
 import name.mikanoshi.customiuizer.R;
 
 public class AppDataAdapter extends BaseAdapter implements Filterable {
-	private Context ctx = null;
+	private Context ctx;
 	private LayoutInflater mInflater;
 	private ThreadPoolExecutor pool;
-	private int cpuCount = Runtime.getRuntime().availableProcessors();
 	private ItemFilter mFilter = new ItemFilter();
-	private ArrayList<AppData> originalAppList = null;
-	private ArrayList<AppData> filteredAppList = null;
+	private ArrayList<AppData> originalAppList;
+	private ArrayList<AppData> filteredAppList;
 
 	public AppDataAdapter(Context context, ArrayList<AppData> arr) {
 		ctx = context;
 		mInflater = LayoutInflater.from(context);
 		originalAppList = arr;
 		filteredAppList = arr;
+		int cpuCount = Runtime.getRuntime().availableProcessors();
 		pool = new ThreadPoolExecutor(cpuCount + 1, cpuCount * 2 + 1, 2, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
 	}
 

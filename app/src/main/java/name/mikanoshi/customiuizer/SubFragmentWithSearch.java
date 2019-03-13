@@ -1,22 +1,24 @@
 package name.mikanoshi.customiuizer;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import miui.view.SearchActionMode;
 import name.mikanoshi.customiuizer.utils.AppDataAdapter;
+import name.mikanoshi.customiuizer.utils.ResolveInfoAdapter;
 
 public class SubFragmentWithSearch extends SubFragment {
 
@@ -29,6 +31,7 @@ public class SubFragmentWithSearch extends SubFragment {
 		super.onActivityCreated(savedInstanceState);
 
 		getActionBar().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+		if (getView() == null) return;
 
 		TextView search = getView().findViewById(android.R.id.input);
 		search.setOnClickListener(new View.OnClickListener() {
@@ -37,6 +40,7 @@ public class SubFragmentWithSearch extends SubFragment {
 				actionMode = startActionMode(new SearchActionMode.Callback() {
 					@Override
 					public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+						if (getView() == null) return false;
 
 						mode.getMenuInflater().inflate(R.menu.menu_mods, menu);
 
@@ -75,8 +79,7 @@ public class SubFragmentWithSearch extends SubFragment {
 
 							@Override
 							public void afterTextChanged(Editable s) {
-								String filter = s.toString().trim();
-								((AppDataAdapter)listView.getAdapter()).getFilter().filter(filter);
+								applyFilter(s.toString().trim());
 							}
 						});
 						return true;
@@ -94,7 +97,7 @@ public class SubFragmentWithSearch extends SubFragment {
 
 					@Override
 					public void onDestroyActionMode(ActionMode mode) {
-						listView.clearTextFilter();
+						applyFilter("");
 						getActionBar().show();
 						actionMode = null;
 					}
@@ -105,6 +108,7 @@ public class SubFragmentWithSearch extends SubFragment {
 		listView = getView().findViewById(android.R.id.list);
 		listView.setOnTouchListener(new View.OnTouchListener() {
 			@Override
+			@SuppressLint("ClickableViewAccessibility")
 			public boolean onTouch(View v, MotionEvent event) {
 				if (actionMode != null && isSearchFocused) {
 					isSearchFocused = false;
@@ -113,5 +117,15 @@ public class SubFragmentWithSearch extends SubFragment {
 				return false;
 			}
 		});
+	}
+
+	void applyFilter(String filter) {
+		if (listView == null) return;
+		ListAdapter adapter = listView.getAdapter();
+		if (adapter == null) return;
+		if (adapter instanceof AppDataAdapter)
+			((AppDataAdapter)listView.getAdapter()).getFilter().filter(filter);
+		else if (adapter instanceof ResolveInfoAdapter)
+			((ResolveInfoAdapter)listView.getAdapter()).getFilter().filter(filter);
 	}
 }

@@ -9,7 +9,6 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -19,8 +18,8 @@ import java.util.ArrayList;
 
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SubFragmentWithSearch;
-import name.mikanoshi.customiuizer.utils.AppResolveAdapter;
 import name.mikanoshi.customiuizer.utils.Helpers;
+import name.mikanoshi.customiuizer.utils.ResolveInfoAdapter;
 
 public class ShortcutSelector extends SubFragmentWithSearch {
 
@@ -46,18 +45,20 @@ public class ShortcutSelector extends SubFragmentWithSearch {
 		PackageManager pm = getActivity().getPackageManager();
 		shortcuts = new ArrayList<ResolveInfo>(pm.queryIntentActivities(shortcutIntent, 0));
 
-		listView.setAdapter(new AppResolveAdapter(getContext(), shortcuts));
+		listView.setAdapter(new ResolveInfoAdapter(getContext(), shortcuts));
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent createShortcutIntent = new Intent(Intent.ACTION_CREATE_SHORTCUT);
-				ComponentName cn = new ComponentName(shortcuts.get(position).activityInfo.packageName, shortcuts.get(position).activityInfo.name);
+				ResolveInfo app = (ResolveInfo)parent.getAdapter().getItem(position);
+				ComponentName cn = new ComponentName(app.activityInfo.packageName, app.activityInfo.name);
 				createShortcutIntent.setComponent(cn);
-				keyContents = shortcuts.get(position).activityInfo.packageName + "|" + shortcuts.get(position).activityInfo.name;
+				keyContents = app.activityInfo.packageName + "|" + app.activityInfo.name;
 				startActivityForResult(createShortcutIntent, 7350);
 			}
 		});
 
+		if (getView() != null)
 		getView().findViewById(R.id.am_progressBar).setVisibility(View.GONE);
 	}
 
@@ -71,8 +72,8 @@ public class ShortcutSelector extends SubFragmentWithSearch {
 			if (iconResId != null) try {
 				Context mContext = getActivity().createPackageContext(iconResId.packageName, Context.CONTEXT_IGNORE_SECURITY);
 				icon = BitmapFactory.decodeResource(mContext.getResources(), mContext.getResources().getIdentifier(iconResId.resourceName, "drawable", iconResId.packageName));
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (Throwable t) {
+				t.printStackTrace();
 			}
 			if (icon == null) icon = data.getParcelableExtra(Intent.EXTRA_SHORTCUT_ICON);
 
@@ -90,8 +91,8 @@ public class ShortcutSelector extends SubFragmentWithSearch {
 					if (icon.compress(Bitmap.CompressFormat.PNG, 100, shortcutOutStream))
 					intent.putExtra("shortcut_icon", fileName);
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (Throwable t) {
+				t.printStackTrace();
 			}
 
 			intent.putExtra("shortcut_contents", keyContents);

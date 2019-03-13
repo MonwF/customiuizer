@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
@@ -51,7 +52,6 @@ public class System {
 							if (mColorFadeOffAnimator == null) return;
 							int val = Helpers.getSharedIntPref(mContext, name, defValue);
 							if (val == 0) val = 250;
-							XposedBridge.log("mColorFadeOffAnimator set duration to " + String.valueOf(val));
 							mColorFadeOffAnimator.setDuration(val);
 						}
 					}.onChange(false);
@@ -89,7 +89,7 @@ public class System {
 				@Override
 				protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
 					if ((param.args[1]).equals("android.server.power:POWER")) param.setResult(false);
-					XposedBridge.log("wakeUpNoUpdateLocked: " + String.valueOf(param.args[0]) + " | " + String.valueOf(param.args[1]) + " | " + String.valueOf(param.args[2]) + " | " + String.valueOf(param.args[3]) + " | " + String.valueOf(param.args[4]));
+					//XposedBridge.log("wakeUpNoUpdateLocked: " + String.valueOf(param.args[0]) + " | " + String.valueOf(param.args[1]) + " | " + String.valueOf(param.args[2]) + " | " + String.valueOf(param.args[3]) + " | " + String.valueOf(param.args[4]));
 				}
 			});
 		} catch (Throwable t) {
@@ -146,6 +146,15 @@ public class System {
 					}
 				}
 			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void NoPasswordHook(XC_LoadPackage.LoadPackageParam lpparam) {
+		try {
+			XposedHelpers.findAndHookMethod("com.android.keyguard.KeyguardUpdateMonitor$StrongAuthTracker", lpparam.classLoader, "isUnlockingWithFingerprintAllowed", XC_MethodReplacement.returnConstant(true));
+			XposedHelpers.findAndHookMethod("com.android.keyguard.KeyguardUpdateMonitor$StrongAuthTracker", lpparam.classLoader, "isUnlockingWithFingerprintAllowed", int.class, XC_MethodReplacement.returnConstant(true));
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}

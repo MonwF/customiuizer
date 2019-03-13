@@ -4,13 +4,12 @@ import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
-import name.mikanoshi.customiuizer.mods.Launcher;
 import name.mikanoshi.customiuizer.mods.Controls;
-import name.mikanoshi.customiuizer.mods.System;
+import name.mikanoshi.customiuizer.mods.GlobalActions;
+import name.mikanoshi.customiuizer.mods.Launcher;
+import name.mikanoshi.customiuizer.mods.PackagePermissions;
 import name.mikanoshi.customiuizer.mods.Various;
-import name.mikanoshi.customiuizer.utils.GlobalActions;
 import name.mikanoshi.customiuizer.utils.Helpers;
-import name.mikanoshi.customiuizer.utils.PackagePermissions;
 
 @SuppressWarnings("WeakerAccess")
 public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage {
@@ -33,6 +32,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 	public static boolean pref_appdetails = false;
 	public static boolean pref_scramblepin = false;
 	public static boolean pref_securelock = false;
+	public static boolean pref_nopassword = false;
 
 	public void initZygote(StartupParam startParam) {
 		MODULE_PATH = startParam.modulePath;
@@ -50,12 +50,14 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		pref_powerflash = pref.getBoolean("pref_key_controls_powerflash", false);
 		pref_nolightup = pref.getBoolean("pref_key_system_nolightuponcharge", false);
 		pref_appdetails = pref.getBoolean("pref_key_various_appdetails", false);
-		pref_appsort = Integer.parseInt(MainModule.pref.getString("pref_key_various_appsort", "0"));
+		pref_appsort = Integer.parseInt(pref.getString("pref_key_various_appsort", "0"));
 		pref_scramblepin = pref.getBoolean("pref_key_system_scramblepin", false);
 		pref_securelock = pref.getBoolean("pref_key_system_securelock", false);
-		pref_etoasts = Integer.parseInt(MainModule.pref.getString("pref_key_system_iconlabletoasts", "1"));
+		pref_nopassword = pref.getBoolean("pref_key_system_nopassword", false);
+		pref_etoasts = Integer.parseInt(pref.getString("pref_key_system_iconlabletoasts", "1"));
 
 		if (pref_etoasts > 1) System.IconLabelToastsHook();
+		GlobalActions.setupUnhandledCatcher();
 	}
 
 	public void handleLoadPackage(final LoadPackageParam lpparam) {
@@ -79,6 +81,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			GlobalActions.setupStatusBar(lpparam);
 
 			if (pref_scramblepin) System.ScramblePINHook(lpparam);
+			if (pref_nopassword) System.NoPasswordHook(lpparam);
 		}
 
 //		if (pkg.equals("com.android.incallui")) {

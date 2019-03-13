@@ -101,20 +101,25 @@
 		<item name="android:layout_marginStart">?android:attr/listPreferredItemPaddingLeft</item>
 		<item name="android:layout_marginEnd">?android:attr/listPreferredItemPaddingRight</item>
 	</style>
-	<style name="Widget.InputCategory">
+	<style name="Widget.InputField">
 		<item name="android:gravity">top|center_vertical</item>
+		<item name="android:layout_marginTop">16dp</item>
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textSize">@dimen/preference_text_size</item>
+	</style>
+	<style name="Widget.InputField.Category">
 		<item name="android:paddingBottom">9dp</item>
 		<item name="android:layout_marginTop">8dp</item>
-		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">50dp</item>
 		<item name="android:textAllCaps">true</item>
 		<item name="android:textSize">@dimen/preference_category_text_size</item>
 		<item name="android:textColor">@color/preference_category_text_color_light</item>
 	</style>
-	<style name="Widget.InputCategory.First">
+	<style name="Widget.InputField.Category.First">
 		<item name="android:layout_marginTop">0dp</item>
 	</style>
-	<style name="Widget.InputCategory.Middle">
+	<style name="Widget.InputField.Category.Middle">
 		<item name="android:layout_marginTop">16dp</item>
 	</style>
 	<style name="Widget.SearchActionMode">

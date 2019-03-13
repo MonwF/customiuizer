@@ -1,5 +1,6 @@
 package name.mikanoshi.customiuizer.subs;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -24,7 +25,6 @@ public class SwipeGesture extends SubFragment {
 
 	private SpinnerExFake appLaunch = null;
 	private SpinnerExFake shortcutLaunch = null;
-	private SpinnerEx toggleSpinner = null;
 	private String key = null;
 	private String appValue = null;
 	private String shortcutValue = null;
@@ -34,6 +34,7 @@ public class SwipeGesture extends SubFragment {
 	private Intent shortcutIntent = null;
 
 	@Override
+	@SuppressWarnings("ConstantConditions")
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
@@ -85,6 +86,7 @@ public class SwipeGesture extends SubFragment {
 		});
 		appLaunch.setOnTouchListener(new View.OnTouchListener() {
 			@Override
+			@SuppressLint("ClickableViewAccessibility")
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_UP) {
 					AppSelector appSelect = new AppSelector();
@@ -138,6 +140,7 @@ public class SwipeGesture extends SubFragment {
 		});
 		shortcutLaunch.setOnTouchListener(new View.OnTouchListener() {
 			@Override
+			@SuppressLint("ClickableViewAccessibility")
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_UP) {
 					ShortcutSelector shortcutSelect = new ShortcutSelector();
@@ -150,12 +153,13 @@ public class SwipeGesture extends SubFragment {
 			}
 		});
 
-		toggleSpinner = getView().findViewById(R.id.swipe_gesture_toggle);
+		SpinnerEx toggleSpinner = getView().findViewById(R.id.swipe_gesture_toggle);
 		toggleSpinner.setTag(key + "_toggle");
 		toggleSpinner.init(Helpers.prefs.getInt(key + "_toggle", 1));
 	}
 
 	void updateControls(SpinnerEx spinner, int position) {
+		if (getView() == null) return;
 		View apps = getView().findViewById(R.id.apps_group);
 		View shortcuts = getView().findViewById(R.id.shortcuts_group);
 		View toggles = getView().findViewById(R.id.toggles_group);

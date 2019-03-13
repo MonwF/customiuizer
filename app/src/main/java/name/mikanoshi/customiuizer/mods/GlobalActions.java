@@ -1,6 +1,7 @@
-package name.mikanoshi.customiuizer.utils;
+package name.mikanoshi.customiuizer.mods;
 
 import android.annotation.SuppressLint;
+import android.app.Application;
 import android.app.Instrumentation;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
@@ -31,6 +32,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
 import miui.os.SystemProperties;
 import name.mikanoshi.customiuizer.R;
+import name.mikanoshi.customiuizer.utils.Helpers;
 
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import static de.robv.android.xposed.XposedHelpers.findClass;
@@ -103,9 +105,8 @@ public class GlobalActions {
 
 			Resources modRes = Helpers.getModuleRes(context);
 			String action = intent.getAction();
+			if (action == null) return;
 			// Actions
-			XposedBridge.log("Global receiver got action: " + action);
-
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.FastReboot")) {
 				SystemProperties.set("ctl.restart", "surfaceflinger");
 				SystemProperties.set("ctl.restart", "zygote");
@@ -380,8 +381,7 @@ public class GlobalActions {
 					XposedHelpers.setBooleanField(param.thisObject, "miuizerModuleActive", true);
 				}
 			});
-			
-			Helpers.emptyFile(Environment.getExternalStorageDirectory().getAbsolutePath() + "/SenseToolbox/uncaught_exceptions", false);
+			Helpers.emptyFile(lpparam.appInfo.dataDir + "/files/uncaught_exceptions", false);
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
@@ -562,50 +562,33 @@ public class GlobalActions {
 //			}
 //		}
 //	};
-//
-//	public static void toolboxStuff() {
-//		try {
-//			final Class<?> clsPWM = findClass("com.android.internal.policy.impl.PhoneWindowManager", null);
-//			findAndHookMethod(clsPWM, "init", Context.class, "android.view.IWindowManager", "android.view.WindowManagerPolicy.WindowManagerFuncs", new XC_MethodHook() {
-//				@Override
-//				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-//					Context mPWMContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-//					IntentFilter intentfilter = new IntentFilter();
-//					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.StartEasterEgg");
-//					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.RestartMessages");
-//					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.RestartLauncher");
-//					mPWMContext.registerReceiver(mBRTools, intentfilter);
-//				}
-//			});
-//		} catch (Throwable t) {
-//			XposedBridge.log(t);
-//		}
-//
-//		try {
-//			findAndHookMethod(Application.class, "onCreate", new XC_MethodHook() {
-//				@Override
-//				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-//					try {
-//						final Context ctx = (Application)param.thisObject;
-//						if (ctx == null || ctx.getPackageName().equals("name.mikanoshi.customiuizer")) return;
-//						Class<?> clsUEH = Thread.getDefaultUncaughtExceptionHandler().getClass();
-//						XposedHelpers.findAndHookMethod(clsUEH, "uncaughtException", Thread.class, Throwable.class, new XC_MethodHook() {
-//							@Override
-//							protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-//								if (param.args[1] != null) {
-//									Intent intent = new Intent("name.mikanoshi.customiuizer.SAVEEXCEPTION");
-//									intent.putExtra("throwable", (Throwable)param.args[1]);
-//									ctx.sendBroadcast(intent);
-//								}
-//							}
-//						});
-//					} catch (Throwable t) {}
-//				}
-//			});
-//		} catch (Throwable t) {
-//			XposedBridge.log(t);
-//		}
-//	}
+
+	public static void setupUnhandledCatcher() {
+		try {
+			findAndHookMethod(Application.class, "onCreate", new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+					try {
+						final Context ctx = (Application)param.thisObject;
+						if (ctx == null || ctx.getPackageName().equals("name.mikanoshi.customiuizer")) return;
+						Class<?> clsUEH = Thread.getDefaultUncaughtExceptionHandler().getClass();
+						XposedHelpers.findAndHookMethod(clsUEH, "uncaughtException", Thread.class, Throwable.class, new XC_MethodHook() {
+							@Override
+							protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+								if (param.args[1] != null) {
+									Intent intent = new Intent("name.mikanoshi.customiuizer.SAVEEXCEPTION");
+									intent.putExtra("throwable", (Throwable)param.args[1]);
+									ctx.sendBroadcast(intent);
+								}
+							}
+						});
+					} catch (Throwable t) {}
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
 
 	public static void setupGlobalActions(LoadPackageParam lpparam) {
 		try {

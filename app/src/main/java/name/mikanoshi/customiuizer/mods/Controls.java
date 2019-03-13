@@ -31,7 +31,6 @@ public class Controls {
 	}
 
 	private static void setTorch(Context mContext, boolean state) {
-		XposedBridge.log("Setting torch to " + String.valueOf(state));
 		Intent intent = new Intent("miui.intent.action.TOGGLE_TORCH");
 		intent.putExtra("miui.intent.extra.IS_ENABLE", state);
 		mContext.sendBroadcast(intent);
@@ -82,7 +81,8 @@ public class Controls {
 							isPowerLongPressed = false;
 
 							mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
-							int longPressDelay = (MainModule.pref.getBoolean("pref_key_controls_powerflash_delay", false) ? ViewConfiguration.getLongPressTimeout() * 3 : ViewConfiguration.getLongPressTimeout()) + 500;
+
+							int longPressDelay = (Helpers.getSharedBoolPref(mContext, "pref_key_controls_powerflash_delay", false) ? ViewConfiguration.getLongPressTimeout() * 3 : ViewConfiguration.getLongPressTimeout()) + 500;
 							// Post only one delayed runnable that waits for long press timeout
 							if (!isWaitingForPowerLongPressed)
 							mHandler.postDelayed(new Runnable() {
@@ -126,17 +126,6 @@ public class Controls {
 				}
 			}
 		});
-		} catch (Throwable t) {
-			XposedBridge.log(t);
-		}
-
-		try {
-			XposedHelpers.findAndHookMethod("com.android.server.policy.PhoneWindowManager$MyWakeGestureListener", lpparam.classLoader, "onWakeUp", new XC_MethodHook() {
-				@Override
-				protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
-					XposedBridge.log("onWakeUp!!!");
-				}
-			});
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}

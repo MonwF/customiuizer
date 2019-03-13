@@ -1,11 +1,10 @@
 <resources>
     <string name="app_name">CustoMIUIzer</string>
 	<string name="app_about">About</string>
-	<string name="about_version">Version: %1$s</string>
-	<string name="about_dynamic">Generally, mods require soft reboot to be activated or deactivated, but those marked with * only require one soft reboot when their value is changed from default to custom one, subsequent changes are applied immediately.</string>
-	<string name="about_dev">Developer</string>
-	<string name="about_dev_name">Mikanoshi</string>
-	<string name="title_activity_main">@string/app_name</string>
+	<string name="about_version">Version %1$s</string>
+	<string name="about_dev">by Mikanoshi</string>
+	<string name="about_dynamic">Generally, mods require soft reboot to be activated or deactivated, but those marked with * only require one soft reboot after their value was changed from default to custom one, subsequent changes are applied immediately.</string>
+	<string name="title_activity_main" translatable="false">@string/app_name</string>
 
 	<string name="mods">Mods</string>
 
@@ -14,9 +13,11 @@
 	<string name="system_nolightuponcharge_title">No screen light up on charge</string>
 	<string name="system_nolightuponcharge_summ">Do not turn screen on when you connect or disconnect a charger (beginning of wireless charge is still displayed)</string>
 	<string name="system_scramblepin_title">Scramble PIN</string>
-	<string name="system_scramblepin_summ">Randomly change PIN buttons order to improve security</string>
+	<string name="system_scramblepin_summ">Randomly change PIN buttons order</string>
 	<string name="system_securelock_title">Enhanced screen lock</string>
 	<string name="system_securelock_summ">Disable power menu while screen lock is active</string>
+	<string name="system_nopassword_title">No password after boot</string>
+	<string name="system_nopassword_summ">Do not require password instead of a fingerprint first time after boot</string>
 	<string name="system_screenanim_duration_title">Turning off animation *</string>
 	<string name="system_screenanim_duration_summ">Configure animation length</string>
 	<string name="system_screenanim_desc">Very low values will practically disable animation</string>
@@ -27,8 +28,9 @@
 	<string name="launcher_mods">MIUI Launcher</string>
 	<string name="launcher_gestures">Gestures *</string>
 	<string name="launcher_gestures_action">Action</string>
-	<string name="launcher_gestures_toggle">Toggle</string>
+	<string name="launcher_gestures_setting">Setting to toggle</string>
 	<string name="launcher_gestures_launch">App to launch</string>
+	<string name="launcher_gestures_shortcut">Shortcut to launch</string>
 	<string name="launcher_swipedownaction_title">Swipe down action (1 finger)</string>
 	<string name="launcher_swipedownaction_summ">Action for swipe down gesture with 1 finger on any home screen</string>
 	<string name="launcher_swipedownaction2_title">Swipe down action (2 fingers)</string>
@@ -47,7 +49,7 @@
 	<string name="controls_mods">Controls</string>
 	<string name="controls_powerflash_title">Quick flashlight</string>
 	<string name="controls_powerflash_summ">Long press power button while screen is off to turn flashlight on</string>
-	<string name="controls_powerflash_delay_title">Longer quick flashlight delay</string>
+	<string name="controls_powerflash_delay_title">Longer quick flashlight delay *</string>
 	<string name="controls_powerflash_delay_summ">Increases the power button long press delay</string>
 
 	<string name="various_mods">Various</string>
@@ -71,21 +73,18 @@
 	<string name="appsort_install">Installation time</string>
 
 	<string name="settings">Settings</string>
-	<string name="default_value">Default</string>
 
 	<string name="array_default">Default</string>
 	<string name="array_global_actions_none">No action</string>
 	<string name="array_global_actions_notif">Expand notifications drawer</string>
-	<string name="array_global_actions_eqs">Expand EQS panel</string>
+	<string name="array_global_actions_eqs">Expand Quick Settings panel</string>
 	<string name="array_global_actions_lock">Lock device</string>
 	<string name="array_global_actions_sleep">Go to sleep</string>
 	<string name="array_global_actions_screenshot">Take screenshot</string>
 	<string name="array_global_actions_recents">Open recents</string>
-	<string name="array_global_actions_clock">Default clock app</string>
-	<string name="array_global_actions_calendar">Default calendar app</string>
 	<string name="array_global_actions_launch">Launch app</string>
 	<string name="array_global_actions_shortcut">Launch shortcut</string>
-	<string name="array_global_actions_toggle">Toggle settings</string>
+	<string name="array_global_actions_toggle">Toggle feature</string>
 	<string name="array_global_toggle_wifi">Wi-Fi</string>
 	<string name="array_global_toggle_bt">Bluetooth</string>
 	<string name="array_global_toggle_gps">GPS</string>
@@ -122,21 +121,19 @@
 	<string name="miuizer">CustoMIUIzer settings</string>
 	<string name="miuizer_show_icon_title">Fast access icon</string>
 	<string name="miuizer_show_icon_summ">Show icon in Settings</string>
-	<string name="miuizer_material_background_title">Theme</string>
-	<string name="miuizer_material_background_summ">Change app\'s background and text colors</string>
+	<string name="miuizer_theme_title">Theme</string>
 
 	<string name="troubleshoot">Troubleshooting</string>
 	<string name="miuizer_acrasend_title">Send detailed report</string>
 	<string name="miuizer_acrasend_summ">Collect device and environment info, logcat and Xposed log, and send them to developer.\nInternet connection is required</string>
-	<string name="miuizer_acramail_title">Contact info</string>
 	<string name="miuizer_acramail_summ">Enter your contact information and it will be included in detailed and crash reports</string>
 	<string name="your_contact_info">Your contact info</string>
-	<string name="miuizer_acramail_tip_title">Contact information</string>
-	<string name="miuizer_acramail_tip">It\'s absolutely necessary to fill this in if you expect to receive replies to your crash reports. Use e-mail, ICQ, XDA or 4PDA nickname.\nTap Feedback below to do it now.</string>
+	<string name="miuizer_acramail_title">Contact information</string>
+	<string name="miuizer_acramail_tip">It\'s absolutely necessary to fill this in if you expect to receive replies to your crash reports. Use e-mail, ICQ, XDA or 4PDA nickname.</string>
 
 	<string name="support">Support</string>
 	<string name="support_repo_title">CustoMIUIzer repo</string>
-	<string name="support_repo_summ">Git repo with module sources and distributions</string>
+	<string name="support_repo_summ">Git repository with module sources and distributions</string>
 	<string name="support_bug_title">Report a bug</string>
 	<string name="support_bug_summ">Send us a bug report or a feature request via official issue tracker</string>
 	<string name="support_donate_title">Donate</string>
@@ -146,7 +143,7 @@
 	<string name="crash_dialog_manual">All necessary data has beed collected</string>
 	<string name="crash_dialog_manual_size">Generated report size</string>
 	<string name="crash_dialog_manual_desc">Describe your problem (in English if possible):</string>
-	<string name="crash_dialog_manual_desc2">Describe your actions that led to this crash\n(in English if possible):</string>
+	<string name="crash_dialog_manual_desc2">Describe actions that led to this crash\n(in English if possible):</string>
 	<string name="crash_dialog_note">Feedback info is not provided, you won\'t get a response to this report!</string>
 	<string name="crash_needs_inet">Internet connection is required</string>
 	<string name="crash_needs_desc">Description cannot be blank</string>
@@ -161,16 +158,12 @@
 	<string name="array_color_light">Light</string>
 
 	<string name="notselected">Not selected</string>
-	<string name="close">Close</string>
 	<string name="warning">Warning!</string>
-	<string name="info">Information</string>
-	<string name="soft_reboot_required">Soft reboot is required to apply changes</string>
 	<string name="open_xposed">Open Xposed Installer</string>
 	<string name="soft_reboot">Soft reboot</string>
-	<string name="soft_reboot_ask">Perform soft reboot?</string>
+	<string name="soft_reboot_ask">Perform soft reboot now?</string>
 	<string name="backup_restore">Settings management</string>
 	<string name="backup_restore_choose">Choose the desired routine</string>
-	<string name="backup_restore_tip">\nBackup and restore Sense Toolbox settings using internal storage or SDCard</string>
 	<string name="do_backup">Backup</string>
 	<string name="do_restore">Restore</string>
 	<string name="storage_read_only">Your external storage is read-only</string>
@@ -178,11 +171,13 @@
 	<string name="storage_cannot_mkdir">Failed to create backup directory</string>
 	<string name="storage_cannot_backup">Failed to create backup file</string>
 	<string name="storage_cannot_restore">No settings backup found</string>
+	<string name="storage_perm_denied_backup">Do you want to create settings backup or not?</string>
+	<string name="storage_perm_denied_restore">Do you want to restore settings or not?</string>
+	<string name="storage_perm_denied_final">You\'ll have to manually enable permission for this option now. Good job!</string>
 	<string name="backup_ok">Settings were backed up successfully!</string>
 	<string name="restore_ok">Settings were successfully restored!</string>
 	<string name="backup_restore_info">Your settings have been restored via Google Cloud Backup. Please do a soft reboot after enabling the Xposed module.</string>
-	<string name="update_available">Update is available! Tap here to download</string>
-	<string name="not_yet">No mods here yet :)</string>
+	<string name="update_available">Update is available ⚠</string>
 	<string name="select_app">Select app</string>
 	<string name="select_shortcut">Select shortcut</string>
 	<string name="search_input_description">Search</string>
@@ -193,12 +188,5 @@
 	<string name="no_browser">Browser app is required to open URLs</string>
 	<string name="okay">Okay</string>
 	<string name="cancel">Cancel</string>
-	<string name="remove">Remove</string>
-	<string name="delete">Delete</string>
-	<string name="yes">Yes</string>
-	<string name="no">No</string>
-	<string name="success">Success</string>
-	<string name="loading">Loading…</string>
-	<string name="dummy"></string>
-
+	<string name="dummy" translatable="false"></string>
 </resources>

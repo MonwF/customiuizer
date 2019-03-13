@@ -32,6 +32,7 @@ public class ListPreferenceEx extends ListPreference {
 	@Override
 	protected View onCreateView(ViewGroup parent) {
 		ViewGroup view = (ViewGroup)super.onCreateView(parent);
+		((TextView)view.findViewById(android.R.id.title)).setMaxLines(3);
 		TextView summary = view.findViewById(android.R.id.summary);
 
 		Resources res = getContext().getResources();
