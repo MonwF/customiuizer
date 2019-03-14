@@ -171,14 +171,14 @@
 	<string name="system_iconlabletoasts_title">Расширенные уведомления *</string>
 	<string name="system_mods">Система</string>
 	<string name="system_mods_lockscreen">Экран блокировки</string>
-	<string name="system_mods_screenanim">Экранная анимация</string>
+	<string name="system_mods_screenanim">Экранная анимация *</string>
 	<string name="system_nolightuponcharge_summ">Запрещает включение экрана при подключении или отключении зарядки (не влияет на отображение начала беспроводной зарядки)</string>
 	<string name="system_nolightuponcharge_title">Не включать экран при зарядке</string>
 	<string name="system_scramblepin_title">Усложнить PIN</string>
 	<string name="system_scramblepin_summ">Случайным образом переставляет кнопки ввода PIN</string>
 	<string name="system_screenanim_desc">Малые значения практически отключат анимацию</string>
 	<string name="system_screenanim_duration_summ">Задать длительность анимации</string>
-	<string name="system_screenanim_duration_title">Анимация при выключении *</string>
+	<string name="system_screenanim_duration_title">Анимация при выключении</string>
 	<string name="system_securelock_title">Улучшенная блокировка</string>
 	<string name="system_securelock_summ">Отключает меню управления питанием во время блокировки</string>
 	<string name="toggle_flash_on">Фонарик включен</string>
@@ -193,4 +193,7 @@
 	<string name="about_dev">от Mikanoshi</string>
 	<string name="system_nopassword_title">Не требовать пароль после загрузки</string>
 	<string name="system_nopassword_summ">Отключить требование пароля вместо отпечатка пальца первый раз после загрузки</string>
+	<string name="system_rotateanim_title">Анимация при повороте</string>
+	<string name="array_screen_anim_none">Без анимации</string>
+	<string name="array_screen_anim_fade">Затухание</string>
 </resources>

@@ -334,4 +334,46 @@ public class System {
 		}
 	}
 
+//	public static void RotationAnimationHook(XC_LoadPackage.LoadPackageParam lpparam) {
+//		try {
+//			findAndHookMethod("com.android.server.wm.ScreenRotationAnimation", lpparam.classLoader, "startAnimation", "android.view.SurfaceControl.Transaction", long.class, float.class, int.class, int.class, boolean.class, int.class, int.class, new XC_MethodHook() {
+//				@Override
+//				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+//					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+//					Context modContext = Helpers.getModuleContext(mContext);
+//					int mRotateOption = Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_system_rotateanim", "1"));
+//					if (mRotateOption <= 1) return;
+//
+//					long limit = (long)param.args[1];
+//					float scale = (float)param.args[2];
+//					int width = (int)param.args[3];
+//					int height = (int)param.args[4];
+//					int mOriginalWidth = (int)XposedHelpers.getObjectField(param.thisObject, "mOriginalWidth");
+//					int mOriginalHeight = (int)XposedHelpers.getObjectField(param.thisObject, "mOriginalHeight");
+//
+////					XposedBridge.log("limit: " + String.valueOf(limit));
+////					XposedBridge.log("scale: " + String.valueOf(scale));
+////					XposedBridge.log("width/height: " + String.valueOf(width) + "x" + String.valueOf(height));
+////					XposedBridge.log("mOriginalWidth/mOriginalHeight: " + String.valueOf(mOriginalWidth) + "x" + String.valueOf(mOriginalHeight));
+//
+//					Animation mRotateEnterAnimation = AnimationUtils.loadAnimation(modContext, R.anim.xfade_enter);
+//					mRotateEnterAnimation.initialize(width, height, mOriginalWidth, mOriginalHeight);
+//					mRotateEnterAnimation.scaleCurrentDuration(scale);
+//					mRotateEnterAnimation.restrictDuration(limit);
+//
+//					Animation mRotateExitAnimation = AnimationUtils.loadAnimation(modContext, R.anim.xfade_exit);
+//					mRotateExitAnimation.initialize(width, height, mOriginalWidth, mOriginalHeight);
+//					if (mRotateOption == 2)	mRotateExitAnimation.setDuration(10);
+//					mRotateExitAnimation.scaleCurrentDuration(scale);
+//					mRotateExitAnimation.restrictDuration(limit);
+//
+//					XposedHelpers.setObjectField(param.thisObject, "mRotateEnterAnimation", mRotateEnterAnimation);
+//					XposedHelpers.setObjectField(param.thisObject, "mRotateExitAnimation", mRotateExitAnimation);
+//				}
+//			});
+//		} catch (Throwable t) {
+//			XposedBridge.log(t);
+//		}
+//	}
+
 }

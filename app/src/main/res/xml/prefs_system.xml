@@ -15,8 +15,8 @@
 		android:key="pref_key_system_iconlabletoasts"
 		android:summary="@string/system_iconlabletoasts_summ"
 		android:title="@string/system_iconlabletoasts_title"
-		android:entries="@array/system_iconlabletoasts"
-		android:entryValues="@array/system_iconlabletoasts_val"
+		android:entries="@array/iconlabletoasts"
+		android:entryValues="@array/iconlabletoasts_val"
 		android:defaultValue="1"/>
 
 	<PreferenceCategory
@@ -57,7 +57,16 @@
 			miuizer:format="%d ms"
 			miuizer:offtext="@string/array_default"
 			miuizer:note="@string/system_screenanim_desc" />
-
+<!--
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_rotateanim"
+			android:summary=""
+			android:title="@string/system_rotateanim_title"
+			android:entries="@array/screenrotate"
+			android:entryValues="@array/screenrotate_val"
+			android:defaultValue="0"
+			miuizer:valueAsSummary="true" />
+-->
 	</PreferenceCategory>
 
 </PreferenceScreen>

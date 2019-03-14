@@ -153,7 +153,7 @@ public class MainFragment extends PreferenceFragmentBase {
 					});
 				}
 
-				String backupPath = Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder;
+				String dataPath = getActivity().getFilesDir().getAbsolutePath();
 				HttpURLConnection connection = null;
 				try {
 					URL url = new URL("https://code.highspec.ru/Mikanoshi/CustoMIUIzer/raw/branch/master/last_build");
@@ -173,10 +173,10 @@ public class MainFragment extends PreferenceFragmentBase {
 							last_build = reader.readLine().trim();
 						} catch (Throwable t) { t.printStackTrace(); }
 
-						File tmp = new File(backupPath);
+						File tmp = new File(dataPath);
 						if (!tmp.exists()) //noinspection ResultOfMethodCallIgnored
 							tmp.mkdirs();
-						try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(backupPath + "last_build", false))) {
+						try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(dataPath + "/last_build", false))) {
 							writer.write(last_build);
 						} catch (Throwable t) { t.printStackTrace(); }
 					}
@@ -186,7 +186,7 @@ public class MainFragment extends PreferenceFragmentBase {
 					if (connection != null) connection.disconnect();
 				} catch (Throwable t) {}
 
-				try (InputStream inputFile = new FileInputStream(backupPath + "last_build")) {
+				try (InputStream inputFile = new FileInputStream(dataPath + "/last_build")) {
 					BufferedReader reader = new BufferedReader(new InputStreamReader(inputFile));
 					int last_build = 0;
 					try {

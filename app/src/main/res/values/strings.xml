@@ -9,7 +9,7 @@
 	<string name="mods">Mods</string>
 
 	<string name="system_mods">System</string>
-	<string name="system_mods_screenanim">Screen animations</string>
+	<string name="system_mods_screenanim">Screen animations *</string>
 	<string name="system_nolightuponcharge_title">No screen light up on charge</string>
 	<string name="system_nolightuponcharge_summ">Do not turn screen on when you connect or disconnect a charger (beginning of wireless charge is still displayed)</string>
 	<string name="system_scramblepin_title">Scramble PIN</string>
@@ -18,12 +18,13 @@
 	<string name="system_securelock_summ">Disable power menu while screen lock is active</string>
 	<string name="system_nopassword_title">No password after boot</string>
 	<string name="system_nopassword_summ">Do not require password instead of a fingerprint first time after boot</string>
-	<string name="system_screenanim_duration_title">Turning off animation *</string>
+	<string name="system_screenanim_duration_title">Turning off animation</string>
 	<string name="system_screenanim_duration_summ">Configure animation length</string>
 	<string name="system_screenanim_desc">Very low values will practically disable animation</string>
 	<string name="system_mods_lockscreen">Lock Screen</string>
 	<string name="system_iconlabletoasts_title">Enhanced toasts *</string>
 	<string name="system_iconlabletoasts_summ">Add application\'s icon and label to its toasts</string>
+	<string name="system_rotateanim_title">Rotation animation</string>
 
 	<string name="launcher_mods">MIUI Launcher</string>
 	<string name="launcher_gestures">Gestures *</string>
@@ -97,6 +98,8 @@
 	<string name="array_toasts_icon">Icon</string>
 	<string name="array_toasts_label">Label</string>
 	<string name="array_toasts_both">Icon and label</string>
+	<string name="array_screen_anim_none">None</string>
+	<string name="array_screen_anim_fade">Fade</string>
 
 	<string name="toggle_wifi_on">Wi-Fi enabled</string>
 	<string name="toggle_wifi_off">Wi-Fi disabled</string>

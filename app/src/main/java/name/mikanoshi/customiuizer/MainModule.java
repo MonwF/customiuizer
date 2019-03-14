@@ -8,6 +8,7 @@ import name.mikanoshi.customiuizer.mods.Controls;
 import name.mikanoshi.customiuizer.mods.GlobalActions;
 import name.mikanoshi.customiuizer.mods.Launcher;
 import name.mikanoshi.customiuizer.mods.PackagePermissions;
+import name.mikanoshi.customiuizer.mods.System;
 import name.mikanoshi.customiuizer.mods.Various;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
@@ -27,6 +28,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 	public static int pref_screenanim = 0;
 	public static int pref_appsort = 0;
 	public static int pref_etoasts = 1;
+	//public static int pref_rotateanim = 1;
 	public static boolean pref_powerflash = false;
 	public static boolean pref_nolightup = false;
 	public static boolean pref_appdetails = false;
@@ -55,6 +57,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		pref_securelock = pref.getBoolean("pref_key_system_securelock", false);
 		pref_nopassword = pref.getBoolean("pref_key_system_nopassword", false);
 		pref_etoasts = Integer.parseInt(pref.getString("pref_key_system_iconlabletoasts", "1"));
+		//pref_rotateanim = Integer.parseInt(pref.getString("pref_key_system_rotateanim", "1"));
 
 		if (pref_etoasts > 1) System.IconLabelToastsHook();
 		GlobalActions.setupUnhandledCatcher();
@@ -71,6 +74,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (pref_screenanim > 0) System.ScreenAnimHook(lpparam);
 			if (pref_nolightup) System.NoLightUpOnChargeHook(lpparam);
 			if (pref_securelock) System.EnhancedSecurityHook(lpparam);
+			//if (pref_rotateanim > 1) System.RotationAnimationHook(lpparam);
 		}
 
 		if (pkg.equals(Helpers.modulePkg)) {

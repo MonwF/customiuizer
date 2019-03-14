@@ -44,7 +44,7 @@ public class MainApplication extends Application {
 	protected void attachBaseContext(Context base) {
 		super.attachBaseContext(base);
 
-		ACRA.DEV_LOGGING = true;
+		ACRA.DEV_LOGGING = false;
 		CoreConfigurationBuilder builder = new CoreConfigurationBuilder(this).setPluginLoader(new SimplePluginLoader(
 			ConfigurationCollector.class,
 			ApplicationStartupCollector.class,

@@ -1,4 +1,4 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:miui="http://schemas.android.com/apk/res-auto"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:miuizer="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:key="pref_key_various">
@@ -25,7 +25,7 @@
 			android:entries="@array/appsort"
 			android:entryValues="@array/appsort_val"
 			android:defaultValue="0"
-			miui:valueAsSummary="true" />
+			miuizer:valueAsSummary="true" />
 
 	</PreferenceCategory>
 

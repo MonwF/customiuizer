@@ -288,9 +288,13 @@ public class Helpers {
 //		}
 //	}
 
+	public static synchronized Context getModuleContext(Context context) throws Throwable {
+		return context.createPackageContext(modulePkg, Context.CONTEXT_IGNORE_SECURITY);
+	}
+
 	public static synchronized Resources getModuleRes(Context context) throws Throwable {
 		Configuration config = context.getResources().getConfiguration();
-		Context moduleContext = context.createPackageContext(modulePkg, Context.CONTEXT_IGNORE_SECURITY);
+		Context moduleContext = getModuleContext(context);
 		return (config == null ? moduleContext.getResources() : moduleContext.createConfigurationContext(config).getResources());
 	}
 

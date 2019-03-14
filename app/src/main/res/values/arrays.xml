@@ -71,14 +71,24 @@
 		<item>4</item>
 	</string-array>
 
-	<string-array name="system_iconlabletoasts">
+	<string-array name="screenrotate">
+		<item >@string/array_default</item>
+		<item >@string/array_screen_anim_none</item>
+		<item >@string/array_screen_anim_fade</item>
+	</string-array>
+	<string-array name="screenrotate_val">
+		<item >1</item>
+		<item >2</item>
+		<item >3</item>
+	</string-array>
+
+	<string-array name="iconlabletoasts">
 		<item >@string/array_default</item>
 		<item >@string/array_toasts_icon</item>
 		<item >@string/array_toasts_label</item>
 		<item >@string/array_toasts_both</item>
 	</string-array>
-
-	<string-array name="system_iconlabletoasts_val">
+	<string-array name="iconlabletoasts_val">
 		<item >1</item>
 		<item >2</item>
 		<item >3</item>

@@ -1,6 +1,7 @@
 package name.mikanoshi.customiuizer.mods;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Application;
 import android.app.Instrumentation;
 import android.bluetooth.BluetoothAdapter;
@@ -14,9 +15,7 @@ import android.media.AudioManager;
 import android.net.wifi.WifiManager;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.SystemClock;
-import android.preference.PreferenceActivity;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
@@ -388,17 +387,21 @@ public class GlobalActions {
 	}
 
 	public static void miuizerSettingsInit(LoadPackageParam lpparam) {
-		findAndHookMethod("com.android.settings.MiuiSettings", lpparam.classLoader, "onCreate", Bundle.class, new XC_MethodHook() {
-			@Override
-			@SuppressWarnings("unchecked")
-			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
-				Map<String, Integer> map = (Map<String, Integer>)XposedHelpers.getStaticObjectField(findClass("com.android.settings.MiuiSettings", lpparam.classLoader), "CATEGORY_MAP");
-				PreferenceActivity act = (PreferenceActivity)param.thisObject;
-				map.put("com.android.settings.category.customiuizer", act.getApplicationContext().getResources().getIdentifier("ic_miui_lab_settings", "drawable", "com.android.settings"));
-				XposedHelpers.setStaticObjectField(findClass("com.android.settings.MiuiSettings", lpparam.classLoader), "CATEGORY_MAP", map);
-				//XposedBridge.log(map.toString());
-			}
-		});
+		try {
+			findAndHookMethod("com.android.settings.MiuiSettings", lpparam.classLoader, "onCreate", Bundle.class, new XC_MethodHook() {
+				@Override
+				@SuppressWarnings("unchecked")
+				protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+					Map<String, Integer> map = (Map<String, Integer>)XposedHelpers.getStaticObjectField(findClass("com.android.settings.MiuiSettings", lpparam.classLoader), "CATEGORY_MAP");
+					Activity act = (Activity)param.thisObject;
+					map.put("com.android.settings.category.customiuizer", act.getApplicationContext().getResources().getIdentifier("ic_miui_lab_settings", "drawable", "com.android.settings"));
+					XposedHelpers.setStaticObjectField(findClass("com.android.settings.MiuiSettings", lpparam.classLoader), "CATEGORY_MAP", map);
+					//XposedBridge.log(map.toString());
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
 /*
 		findAndHookMethod("com.android.settingslib.drawer.l", lpparam.classLoader, "a", Context.class, Map.class, boolean.class, String.class, String.class, new XC_MethodHook() {
 			@Override
