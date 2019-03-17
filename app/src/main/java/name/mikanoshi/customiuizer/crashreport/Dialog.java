@@ -13,6 +13,7 @@ import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 import org.acra.ACRA;
 import org.acra.ReportField;
@@ -347,7 +348,8 @@ public class Dialog extends Activity {
 			dialogView.addView(descText);
 			dialogView.addView(desc);
 
-			if (Helpers.prefs.getString("acra.user.email", null) == null)
+			String email = Helpers.prefs.getString("acra.user.email", "");
+			if (Objects.equals(email, ""))
 				dialogView.addView(feedbackNote);
 
 			mainText.setText(mainText.getText() + "\n" + getResources().getString(R.string.crash_dialog_manual_size) + ": " + String.valueOf(Math.round(payloadSize / 1024.0f)) + " KB");

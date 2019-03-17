@@ -336,7 +336,19 @@ public class System {
 
 //	public static void RotationAnimationHook(XC_LoadPackage.LoadPackageParam lpparam) {
 //		try {
-//			findAndHookMethod("com.android.server.wm.ScreenRotationAnimation", lpparam.classLoader, "startAnimation", "android.view.SurfaceControl.Transaction", long.class, float.class, int.class, int.class, boolean.class, int.class, int.class, new XC_MethodHook() {
+//			XposedHelpers.findAndHookMethod("com.android.server.wm.ScreenRotationAnimation", lpparam.classLoader, "startAnimation", "android.view.SurfaceControl.Transaction", long.class, float.class, int.class, int.class, boolean.class, int.class, int.class, new XC_MethodHook() {
+//				@Override
+//				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+//					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+//					int mRotateOption = Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_system_rotateanim", "1"));
+//					if (mRotateOption == 2)
+//						param.args[2] = 0.01f;
+//					else if (mRotateOption == 3) {
+//						param.args[6] = mContext.getResources().getIdentifier("screen_rotate_0_exit", "anim", "android");
+//						param.args[7] = mContext.getResources().getIdentifier("screen_rotate_0_enter", "anim", "android");
+//					}
+//				}
+
 //				@Override
 //				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 //					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
