@@ -594,12 +594,25 @@ public class GlobalActions {
 	}
 
 	public static void setupGlobalActions(LoadPackageParam lpparam) {
+		Class<?> globalActionsCls = null;
 		try {
-			XposedBridge.hookAllConstructors(XposedHelpers.findClass("com.android.server.accessibility.GlobalActionPerformer", lpparam.classLoader), new XC_MethodHook() {
+			globalActionsCls = XposedHelpers.findClass("com.android.server.accessibility.GlobalActionPerformer", lpparam.classLoader);
+		} catch (Throwable t1) {
+			try {
+				globalActionsCls = XposedHelpers.findClass("com.android.server.accessibility.AccessibilityManagerService$Service", lpparam.classLoader);
+			} catch (Throwable t2) {
+				XposedBridge.log(t1);
+				XposedBridge.log(t2);
+			}
+		}
+
+		try {
+			XposedBridge.hookAllConstructors(globalActionsCls, new XC_MethodHook() {
 				@Override
 				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-					Context mGlobalContext = (Context)param.args[0];
 					mGlobal = param.thisObject;
+					boolean newClass = mGlobal.getClass().getSimpleName().equalsIgnoreCase("GlobalActionPerformer");
+					Context mGlobalContext = (Context)(newClass ? param.args[0] : XposedHelpers.getObjectField(XposedHelpers.getSurroundingThis(param.thisObject), "mContext"));
 
 					IntentFilter intentfilter = new IntentFilter();
 

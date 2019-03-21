@@ -1,2 +1,10 @@
+1.1.0
+[New] Double tap on lockscreen to sleep
+[Fixed][Android 7.0+] Module initialization, actions for toggles. Mods are not guaranteed to work.
+
+1.0.1
+[Fixed] Fast access icon on some devices
+[Fixed] Update check
+
 1.0.0
 Initial release

@@ -1,6 +1,7 @@
 package name.mikanoshi.customiuizer.mods;
 
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.graphics.Color;
@@ -9,6 +10,7 @@ import android.os.Looper;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -25,6 +27,8 @@ import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 import name.mikanoshi.customiuizer.utils.Helpers;
+
+import static java.lang.System.currentTimeMillis;
 
 public class System {
 
@@ -327,6 +331,55 @@ public class System {
 					} catch (Throwable t) {
 						XposedBridge.log(t);
 					}
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void DoubleTapToSleepHook(XC_LoadPackage.LoadPackageParam lpparam) {
+		try {
+			XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.phone.NotificationsQuickSettingsContainer", lpparam.classLoader, "onFinishInflate", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					View view = (View)param.thisObject;
+					XposedHelpers.setAdditionalInstanceField(view, "currentTouchTime", 0L);
+					XposedHelpers.setAdditionalInstanceField(view, "currentTouchX", 0F);
+					XposedHelpers.setAdditionalInstanceField(view, "currentTouchY", 0F);
+
+					view.setOnTouchListener(new View.OnTouchListener() {
+						@Override
+						@SuppressLint("ClickableViewAccessibility")
+						public boolean onTouch(View v, MotionEvent event) {
+							if (event.getAction() != MotionEvent.ACTION_DOWN) return false;
+
+							long currentTouchTime = (long)XposedHelpers.getAdditionalInstanceField(view, "currentTouchTime");
+							float currentTouchX = (float)XposedHelpers.getAdditionalInstanceField(view, "currentTouchX");
+							float currentTouchY = (float)XposedHelpers.getAdditionalInstanceField(view, "currentTouchY");
+
+							long lastTouchTime = currentTouchTime;
+							float lastTouchX = currentTouchX;
+							float lastTouchY = currentTouchY;
+							currentTouchTime = currentTimeMillis();
+							currentTouchX = event.getX();
+							currentTouchY = event.getY();
+
+							if (currentTouchTime - lastTouchTime < 250L && Math.abs(currentTouchX - lastTouchX) < 100F && Math.abs(currentTouchY - lastTouchY) < 100F) {
+								KeyguardManager keyguardMgr = (KeyguardManager)v.getContext().getSystemService(Context.KEYGUARD_SERVICE);
+								if (keyguardMgr.isKeyguardLocked()) GlobalActions.goToSleep(v.getContext());
+								currentTouchTime = 0L;
+								currentTouchX = 0F;
+								currentTouchY = 0F;
+							}
+
+							XposedHelpers.setAdditionalInstanceField(view, "currentTouchTime", currentTouchTime);
+							XposedHelpers.setAdditionalInstanceField(view, "currentTouchX", currentTouchX);
+							XposedHelpers.setAdditionalInstanceField(view, "currentTouchY", currentTouchY);
+
+							return false;
+						}
+					});
 				}
 			});
 		} catch (Throwable t) {

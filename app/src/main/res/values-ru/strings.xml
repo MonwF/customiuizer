@@ -192,8 +192,10 @@
 	<string name="storage_perm_denied_final">Теперь Вам придётся искать где вручную дать разрешение для данной функции. Так держать!</string>
 	<string name="about_dev">от Mikanoshi</string>
 	<string name="system_nopassword_title">Не требовать пароль после загрузки</string>
-	<string name="system_nopassword_summ">Отключить требование пароля вместо отпечатка пальца первый раз после загрузки</string>
+	<string name="system_nopassword_summ">Отключает требование пароля вместо отпечатка пальца первый раз после загрузки</string>
 	<string name="system_rotateanim_title">Анимация при повороте</string>
 	<string name="array_screen_anim_none">Без анимации</string>
 	<string name="array_screen_anim_fade">Затухание</string>
+	<string name="system_dttosleep_title">Сон по двойному нажатию</string>
+	<string name="system_dttosleep_summ">Выключает экран при двойном нажатии по пустому месту на экране блокировки</string>
 </resources>

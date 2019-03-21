@@ -41,6 +41,12 @@
 			android:title="@string/system_nopassword_title"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_dttosleep"
+			android:summary="@string/system_dttosleep_summ"
+			android:title="@string/system_dttosleep_title"
+			android:defaultValue="false" />
+
 	</PreferenceCategory>
 
 	<PreferenceCategory

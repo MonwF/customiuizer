@@ -35,6 +35,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 	public static boolean pref_scramblepin = false;
 	public static boolean pref_securelock = false;
 	public static boolean pref_nopassword = false;
+	public static boolean pref_dttosleep = false;
 
 	public void initZygote(StartupParam startParam) {
 		MODULE_PATH = startParam.modulePath;
@@ -57,6 +58,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		pref_securelock = pref.getBoolean("pref_key_system_securelock", false);
 		pref_nopassword = pref.getBoolean("pref_key_system_nopassword", false);
 		pref_etoasts = Integer.parseInt(pref.getString("pref_key_system_iconlabletoasts", "1"));
+		pref_dttosleep = pref.getBoolean("pref_key_system_dttosleep", false);
 		//pref_rotateanim = Integer.parseInt(pref.getString("pref_key_system_rotateanim", "1"));
 
 		if (pref_etoasts > 1) System.IconLabelToastsHook();
@@ -86,6 +88,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 
 			if (pref_scramblepin) System.ScramblePINHook(lpparam);
 			if (pref_nopassword) System.NoPasswordHook(lpparam);
+			if (pref_dttosleep) System.DoubleTapToSleepHook(lpparam);
 		}
 
 //		if (pkg.equals("com.android.incallui")) {

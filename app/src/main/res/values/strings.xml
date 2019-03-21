@@ -25,6 +25,8 @@
 	<string name="system_iconlabletoasts_title">Enhanced toasts *</string>
 	<string name="system_iconlabletoasts_summ">Add application\'s icon and label to its toasts</string>
 	<string name="system_rotateanim_title">Rotation animation</string>
+	<string name="system_dttosleep_title">Double tap to sleep</string>
+	<string name="system_dttosleep_summ">Turn screen off by double tapping on any empty space on lockscreen</string>
 
 	<string name="launcher_mods">MIUI Launcher</string>
 	<string name="launcher_gestures">Gestures *</string>
