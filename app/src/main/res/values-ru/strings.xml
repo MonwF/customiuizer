@@ -174,6 +174,12 @@
 	<string name="system_mods_screenanim">Экранная анимация *</string>
 	<string name="system_nolightuponcharge_summ">Запрещает включение экрана при подключении или отключении зарядки (не влияет на отображение начала беспроводной зарядки)</string>
 	<string name="system_nolightuponcharge_title">Не включать экран при зарядке</string>
+	<string name="system_separatevolume_title">Раздельные настройки громкости</string>
+	<string name="system_separatevolume_summ">Позволяет изменить громкость в Настройках отдельно для звонков/уведомлений/системных звуков</string>
+	<string name="system_volumecursor_title">Курсор ввода и кнопки громоксти</string>
+	<string name="system_volumecursor_summ">Перемещать курсор ввода текста при нажатии кнопок громкости</string>
+	<string name="notification_volume">Громкость уведомлений</string>
+	<string name="system_volume">Громкость системных звуков</string>
 	<string name="system_scramblepin_title">Усложнить PIN</string>
 	<string name="system_scramblepin_summ">Случайным образом переставляет кнопки ввода PIN</string>
 	<string name="system_screenanim_desc">Малые значения практически отключат анимацию</string>

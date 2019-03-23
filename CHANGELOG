@@ -1,3 +1,7 @@
+1.1.1
+[New] Configure separate volume for rings/notifications/system sounds in Settings
+[New] Move text input cursor using volume keys
+
 1.1.0
 [New] Double tap on lockscreen to sleep
 [Fixed][Android 7.0+] Module initialization, actions for toggles. Mods are not guaranteed to work.

@@ -12,6 +12,12 @@
 	<string name="system_mods_screenanim">Screen animations *</string>
 	<string name="system_nolightuponcharge_title">No screen light up on charge</string>
 	<string name="system_nolightuponcharge_summ">Do not turn screen on when you connect or disconnect a charger (beginning of wireless charge is still displayed)</string>
+	<string name="system_separatevolume_title">Separate volume controls</string>
+	<string name="system_separatevolume_summ">Allow to configure separate volume for rings/notifications/system sounds in Settings</string>
+	<string name="system_volumecursor_title">Volume keys control cursor</string>
+	<string name="system_volumecursor_summ">Move text input cursor using volume keys</string>
+	<string name="notification_volume">Notification volume</string>
+	<string name="system_volume">System sounds volume</string>
 	<string name="system_scramblepin_title">Scramble PIN</string>
 	<string name="system_scramblepin_summ">Randomly change PIN buttons order</string>
 	<string name="system_securelock_title">Enhanced screen lock</string>

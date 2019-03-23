@@ -6,6 +6,18 @@
 	android:key="pref_key_system">
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_separatevolume"
+		android:summary="@string/system_separatevolume_summ"
+		android:title="@string/system_separatevolume_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_volumecursor"
+		android:summary="@string/system_volumecursor_summ"
+		android:title="@string/system_volumecursor_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_nolightuponcharge"
 		android:summary="@string/system_nolightuponcharge_summ"
 		android:title="@string/system_nolightuponcharge_title"

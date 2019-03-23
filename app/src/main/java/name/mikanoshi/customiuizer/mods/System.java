@@ -4,9 +4,14 @@ import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.KeyguardManager;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.inputmethodservice.InputMethodService;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.Preference;
+import android.preference.PreferenceFragment;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -17,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -26,6 +32,7 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
+import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 import static java.lang.System.currentTimeMillis;
@@ -380,6 +387,93 @@ public class System {
 							return false;
 						}
 					});
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void NotificationVolumeServiceHook(XC_LoadPackage.LoadPackageParam lpparam) {
+		try {
+			XposedHelpers.findAndHookMethod("com.android.server.audio.AudioService", lpparam.classLoader, "updateStreamVolumeAlias", boolean.class, String.class, new XC_MethodHook() {
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					int[] streamVolumeAlias = (int[])XposedHelpers.getObjectField(param.thisObject, "mStreamVolumeAlias");
+					streamVolumeAlias[1] = 1;
+					streamVolumeAlias[5] = 5;
+					XposedHelpers.setObjectField(param.thisObject, "mStreamVolumeAlias", streamVolumeAlias);
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void NotificationVolumeSettingsHook(XC_LoadPackage.LoadPackageParam lpparam) {
+		try {
+			XposedHelpers.findAndHookMethod("com.android.settings.MiuiSoundSettings", lpparam.classLoader, "onCreate", Bundle.class, new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					PreferenceFragment fragment = (PreferenceFragment)param.thisObject;
+					Resources modRes = Helpers.getModuleRes(fragment.getActivity());
+					int iconRes = fragment.getResources().getIdentifier("ic_audio_notification", "drawable", "com.android.settings");
+					int order = 6;
+
+					Class<?> vsbCls = XposedHelpers.findClass("com.android.settings.sound.VolumeSeekBarPreference", lpparam.classLoader);
+					Method[] initSeekBar = XposedHelpers.findMethodsByExactParameters(fragment.getClass(), void.class, String.class, int.class, int.class);
+					if (vsbCls == null || initSeekBar.length == 0) {
+						XposedBridge.log("[CustoMIUIzer][Separate Volume Mod] Unable to find class/method in Settings to hook");
+						return;
+					} else {
+						initSeekBar[0].setAccessible(true);
+					}
+
+					Preference media = fragment.findPreference("media_volume");
+					if (media != null) order = media.getOrder();
+
+					Preference pref = (Preference)XposedHelpers.newInstance(vsbCls, fragment.getActivity());
+					pref.setKey("notification_volume");
+					pref.setTitle(modRes.getString(R.string.notification_volume));
+					pref.setPersistent(true);
+					fragment.getPreferenceScreen().addPreference(pref);
+					initSeekBar[0].invoke(fragment, "notification_volume", 5, iconRes);
+					pref.setOrder(order);
+
+					pref = (Preference)XposedHelpers.newInstance(vsbCls, fragment.getActivity());
+					pref.setKey("system_volume");
+					pref.setTitle(modRes.getString(R.string.system_volume));
+					pref.setPersistent(true);
+					fragment.getPreferenceScreen().addPreference(pref);
+					initSeekBar[0].invoke(fragment, "system_volume", 1, iconRes);
+					pref.setOrder(order);
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void VolumeCursorHook() {
+		try {
+			XposedHelpers.findAndHookMethod("android.inputmethodservice.InputMethodService", null, "onKeyDown", int.class, KeyEvent.class, new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+					InputMethodService ims = (InputMethodService)param.thisObject;
+					int code = (int)param.args[0];
+					if ((code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN) && ims.isInputViewShown()) {
+						ims.sendDownUpKeyEvents(code == KeyEvent.KEYCODE_VOLUME_UP ? KeyEvent.KEYCODE_DPAD_LEFT : KeyEvent.KEYCODE_DPAD_RIGHT);
+						param.setResult(true);
+					}
+				}
+			});
+
+			XposedHelpers.findAndHookMethod("android.inputmethodservice.InputMethodService", null, "onKeyUp", int.class, KeyEvent.class, new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+					InputMethodService ims = (InputMethodService)param.thisObject;
+					int code = (int)param.args[0];
+					if ((code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN) && ims.isInputViewShown())
+					param.setResult(true);
 				}
 			});
 		} catch (Throwable t) {

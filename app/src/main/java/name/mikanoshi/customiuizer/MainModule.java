@@ -36,6 +36,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 	public static boolean pref_securelock = false;
 	public static boolean pref_nopassword = false;
 	public static boolean pref_dttosleep = false;
+	public static boolean pref_separatevolume = false;
+	public static boolean pref_volumecursor = false;
 
 	public void initZygote(StartupParam startParam) {
 		MODULE_PATH = startParam.modulePath;
@@ -59,9 +61,13 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		pref_nopassword = pref.getBoolean("pref_key_system_nopassword", false);
 		pref_etoasts = Integer.parseInt(pref.getString("pref_key_system_iconlabletoasts", "1"));
 		pref_dttosleep = pref.getBoolean("pref_key_system_dttosleep", false);
+		pref_separatevolume = pref.getBoolean("pref_key_system_separatevolume", false);
+		pref_volumecursor = pref.getBoolean("pref_key_system_volumecursor", false);
 		//pref_rotateanim = Integer.parseInt(pref.getString("pref_key_system_rotateanim", "1"));
 
 		if (pref_etoasts > 1) System.IconLabelToastsHook();
+		if (pref_volumecursor) System.VolumeCursorHook();
+
 		GlobalActions.setupUnhandledCatcher();
 	}
 
@@ -76,6 +82,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (pref_screenanim > 0) System.ScreenAnimHook(lpparam);
 			if (pref_nolightup) System.NoLightUpOnChargeHook(lpparam);
 			if (pref_securelock) System.EnhancedSecurityHook(lpparam);
+			if (pref_separatevolume) System.NotificationVolumeServiceHook(lpparam);
 			//if (pref_rotateanim > 1) System.RotationAnimationHook(lpparam);
 		}
 
@@ -102,6 +109,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 
 		if (pkg.equals("com.android.settings")) {
 			GlobalActions.miuizerSettingsInit(lpparam);
+
+			if (pref_separatevolume) System.NotificationVolumeSettingsHook(lpparam);
 		}
 
 		if (pkg.equals("com.miui.home")) {
