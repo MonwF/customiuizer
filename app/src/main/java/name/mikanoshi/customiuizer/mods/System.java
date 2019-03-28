@@ -10,8 +10,10 @@ import android.inputmethodservice.InputMethodService;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.text.format.DateFormat;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -23,14 +25,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.lang.reflect.Method;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
-import de.robv.android.xposed.callbacks.XC_LoadPackage;
+import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
@@ -39,7 +44,7 @@ import static java.lang.System.currentTimeMillis;
 
 public class System {
 
-	public static void ScreenAnimHook(XC_LoadPackage.LoadPackageParam lpparam) {
+	public static void ScreenAnimHook(LoadPackageParam lpparam) {
 		try {
 			XposedHelpers.findAndHookMethod("com.android.server.display.DisplayPowerController", lpparam.classLoader, "initialize", new XC_MethodHook() {
 				@Override
@@ -94,7 +99,7 @@ public class System {
 //		}
 //	}
 
-	public static void NoLightUpOnChargeHook(XC_LoadPackage.LoadPackageParam lpparam) {
+	public static void NoLightUpOnChargeHook(LoadPackageParam lpparam) {
 		try {
 			XposedHelpers.findAndHookMethod("com.android.server.power.PowerManagerService", lpparam.classLoader, "wakeUpNoUpdateLocked", long.class, String.class, int.class, String.class, int.class, new XC_MethodHook() {
 				@Override
@@ -108,7 +113,7 @@ public class System {
 		}
 	}
 
-	public static void ScramblePINHook(XC_LoadPackage.LoadPackageParam lpparam) {
+	public static void ScramblePINHook(LoadPackageParam lpparam) {
 		try {
 			XposedHelpers.findAndHookMethod("com.android.keyguard.KeyguardPINView", lpparam.classLoader, "onFinishInflate", new XC_MethodHook() {
 				@Override
@@ -162,7 +167,7 @@ public class System {
 		}
 	}
 
-	public static void NoPasswordHook(XC_LoadPackage.LoadPackageParam lpparam) {
+	public static void NoPasswordHook(LoadPackageParam lpparam) {
 		try {
 			XposedHelpers.findAndHookMethod("com.android.keyguard.KeyguardUpdateMonitor$StrongAuthTracker", lpparam.classLoader, "isUnlockingWithFingerprintAllowed", XC_MethodReplacement.returnConstant(true));
 			XposedHelpers.findAndHookMethod("com.android.keyguard.KeyguardUpdateMonitor$StrongAuthTracker", lpparam.classLoader, "isUnlockingWithFingerprintAllowed", int.class, XC_MethodReplacement.returnConstant(true));
@@ -171,7 +176,7 @@ public class System {
 		}
 	}
 
-	public static void EnhancedSecurityHook(XC_LoadPackage.LoadPackageParam lpparam) {
+	public static void EnhancedSecurityHook(LoadPackageParam lpparam) {
 		try {
 			XposedHelpers.findAndHookMethod("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "interceptPowerKeyDown", KeyEvent.class, boolean.class, new XC_MethodHook() {
 				@Override
@@ -345,7 +350,7 @@ public class System {
 		}
 	}
 
-	public static void DoubleTapToSleepHook(XC_LoadPackage.LoadPackageParam lpparam) {
+	public static void DoubleTapToSleepHook(LoadPackageParam lpparam) {
 		try {
 			XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.phone.NotificationsQuickSettingsContainer", lpparam.classLoader, "onFinishInflate", new XC_MethodHook() {
 				@Override
@@ -394,7 +399,7 @@ public class System {
 		}
 	}
 
-	public static void NotificationVolumeServiceHook(XC_LoadPackage.LoadPackageParam lpparam) {
+	public static void NotificationVolumeServiceHook(LoadPackageParam lpparam) {
 		try {
 			XposedHelpers.findAndHookMethod("com.android.server.audio.AudioService", lpparam.classLoader, "updateStreamVolumeAlias", boolean.class, String.class, new XC_MethodHook() {
 				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
@@ -409,7 +414,7 @@ public class System {
 		}
 	}
 
-	public static void NotificationVolumeSettingsHook(XC_LoadPackage.LoadPackageParam lpparam) {
+	public static void NotificationVolumeSettingsHook(LoadPackageParam lpparam) {
 		try {
 			XposedHelpers.findAndHookMethod("com.android.settings.MiuiSoundSettings", lpparam.classLoader, "onCreate", Bundle.class, new XC_MethodHook() {
 				@Override
@@ -480,6 +485,132 @@ public class System {
 			XposedBridge.log(t);
 		}
 	}
+
+	private static String putSecondsIn(CharSequence clockChr) {
+		NumberFormat df = new DecimalFormat("00");
+		String clockStr = clockChr.toString();
+		if (clockStr.toLowerCase().endsWith("am") || clockStr.toLowerCase().endsWith("pm"))
+			return clockStr.replaceAll("(?i)(\\s?)(am|pm)", ":" + df.format(Calendar.getInstance().get(Calendar.SECOND)) + "$1$2").trim();
+		else
+			return clockStr.trim() + ":" + df.format(Calendar.getInstance().get(Calendar.SECOND));
+	}
+
+	public static void ClockSecondsHook(LoadPackageParam lpparam) {
+		try {
+			XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.policy.Clock", lpparam.classLoader, "updateClock", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					TextView clock = (TextView)param.thisObject;
+					if (clock.getId() == clock.getResources().getIdentifier("clock", "id", "com.android.systemui"))
+					clock.setText(putSecondsIn(clock.getText()));
+				}
+			});
+
+			XposedBridge.hookAllConstructors(XposedHelpers.findClass("com.android.systemui.statusbar.policy.Clock", lpparam.classLoader), new XC_MethodHook(10) {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) {
+					final TextView clock = (TextView)param.thisObject;
+					XposedHelpers.setAdditionalInstanceField(clock, "mLastUpdate", 0L);
+					if (clock.getId() != clock.getResources().getIdentifier("clock", "id", "com.android.systemui")) return;
+					final Handler mClockHandler = new Handler(clock.getContext().getMainLooper());
+					Runnable mTicker = new Runnable() {
+						public void run() {
+							mClockHandler.postDelayed(this, 499L);
+
+							long mElapsedSystem = SystemClock.elapsedRealtime();
+							long mLastUpdate = (Long)XposedHelpers.getAdditionalInstanceField(clock, "mLastUpdate");
+
+							if (mElapsedSystem - mLastUpdate >= 998L) {
+								XposedHelpers.callMethod(clock, "updateClock");
+								XposedHelpers.setAdditionalInstanceField(clock, "mLastUpdate", mElapsedSystem);
+							}
+						}
+					};
+					mClockHandler.post(mTicker);
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void ExpandNotificationsHook(LoadPackageParam lpparam) {
+		try {
+			XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "updateRowStates", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					ViewGroup mStackScroller = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mStackScroller");
+					for (int i = mStackScroller.getChildCount() - 1; i >= 0; i--) {
+						View notification = mStackScroller.getChildAt(i);
+						if (notification != null && notification.getClass().getSimpleName().equalsIgnoreCase("ExpandableNotificationRow"))
+						XposedHelpers.callMethod(notification, "setSystemExpanded", true);
+					}
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void RecentsBlurRatioHook(LoadPackageParam lpparam) {
+		try {
+			XposedBridge.hookAllConstructors(XposedHelpers.findClass("com.android.systemui.recents.views.RecentsView", lpparam.classLoader), new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					Context mContext = (Context)param.args[0];
+					Handler mHandler = new Handler(mContext.getMainLooper());
+
+					XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomBlurModifier", 100);
+					new Helpers.SharedPrefObserver(mContext, mHandler, "pref_key_system_recents_blur", 100) {
+						@Override
+						public void onChange(String name, int defValue) {
+							XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomBlurModifier", Helpers.getSharedIntPref(mContext, name, defValue));
+						}
+					}.onChange(false);
+				}
+			});
+
+			XposedHelpers.findAndHookMethod("com.android.systemui.recents.views.RecentsView", lpparam.classLoader, "updateBlurRatio", float.class, new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+					param.args[0] = (float)param.args[0] * (int)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mCustomBlurModifier") / 100f;
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void DrawerBlurRatioHook(LoadPackageParam lpparam) {
+		try {
+			XposedBridge.hookAllConstructors(XposedHelpers.findClass("com.android.systemui.statusbar.phone.StatusBarWindowManager", lpparam.classLoader), new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					Context mContext = (Context)param.args[0];
+					Handler mHandler = new Handler(mContext.getMainLooper());
+
+					XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomBlurModifier", 100);
+					new Helpers.SharedPrefObserver(mContext, mHandler, "pref_key_system_drawer_blur", 100) {
+						@Override
+						public void onChange(String name, int defValue) {
+							XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomBlurModifier", Helpers.getSharedIntPref(mContext, name, defValue));
+						}
+					}.onChange(false);
+				}
+			});
+
+			XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBarWindowManager", lpparam.classLoader, "setBlurRatio", float.class, new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+					param.args[0] = (float)param.args[0] * (int)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mCustomBlurModifier") / 100f;
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+
 
 //	public static void RotationAnimationHook(XC_LoadPackage.LoadPackageParam lpparam) {
 //		try {

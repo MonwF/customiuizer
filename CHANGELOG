@@ -1,3 +1,10 @@
+1.2.0
+[New] Display seconds in the status bar clock
+[New] Always show notifications fully expanded
+[New] Media actions for Volume Up/Down long press when screen is off
+[New] Background blur intensity in recent apps and notification drawer
+[Moved] "Control input cursor" mod was moved to Controls section, requires reactivation
+
 1.1.1
 [New] Configure separate volume for rings/notifications/system sounds in Settings
 [New] Move text input cursor using volume keys

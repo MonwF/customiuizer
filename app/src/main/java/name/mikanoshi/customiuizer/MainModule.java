@@ -28,6 +28,10 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 	public static int pref_screenanim = 0;
 	public static int pref_appsort = 0;
 	public static int pref_etoasts = 1;
+	public static int pref_recents_blur = 100;
+	public static int pref_drawer_blur = 100;
+	public static int pref_volumemedia_up = 0;
+	public static int pref_volumemedia_down = 0;
 	//public static int pref_rotateanim = 1;
 	public static boolean pref_powerflash = false;
 	public static boolean pref_nolightup = false;
@@ -38,6 +42,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 	public static boolean pref_dttosleep = false;
 	public static boolean pref_separatevolume = false;
 	public static boolean pref_volumecursor = false;
+	public static boolean pref_clockseconds = false;
+	public static boolean pref_expandnotif = false;
 
 	public void initZygote(StartupParam startParam) {
 		MODULE_PATH = startParam.modulePath;
@@ -62,11 +68,18 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		pref_etoasts = Integer.parseInt(pref.getString("pref_key_system_iconlabletoasts", "1"));
 		pref_dttosleep = pref.getBoolean("pref_key_system_dttosleep", false);
 		pref_separatevolume = pref.getBoolean("pref_key_system_separatevolume", false);
-		pref_volumecursor = pref.getBoolean("pref_key_system_volumecursor", false);
+		pref_volumecursor = pref.getBoolean("pref_key_controls_volumecursor", false);
+		pref_clockseconds = pref.getBoolean("pref_key_system_clockseconds", false);
+		pref_expandnotif = pref.getBoolean("pref_key_system_expandnotif", false);
+		pref_recents_blur = pref.getInt("pref_key_system_recents_blur", 100);
+		pref_drawer_blur = pref.getInt("pref_key_system_drawer_blur", 100);
+		pref_volumemedia_up = Integer.parseInt(pref.getString("pref_key_controls_volumemedia_up", "0"));
+		pref_volumemedia_down = Integer.parseInt(pref.getString("pref_key_controls_volumemedia_down", "0"));
 		//pref_rotateanim = Integer.parseInt(pref.getString("pref_key_system_rotateanim", "1"));
 
 		if (pref_etoasts > 1) System.IconLabelToastsHook();
 		if (pref_volumecursor) System.VolumeCursorHook();
+		if (pref_volumemedia_up > 0 || pref_volumemedia_down > 0) Controls.VolumeMediaPlayerHook();
 
 		GlobalActions.setupUnhandledCatcher();
 	}
@@ -83,6 +96,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (pref_nolightup) System.NoLightUpOnChargeHook(lpparam);
 			if (pref_securelock) System.EnhancedSecurityHook(lpparam);
 			if (pref_separatevolume) System.NotificationVolumeServiceHook(lpparam);
+			if (pref_volumemedia_up > 0 || pref_volumemedia_down > 0) Controls.VolumeMediaButtonsHook(lpparam);
 			//if (pref_rotateanim > 1) System.RotationAnimationHook(lpparam);
 		}
 
@@ -96,6 +110,10 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (pref_scramblepin) System.ScramblePINHook(lpparam);
 			if (pref_nopassword) System.NoPasswordHook(lpparam);
 			if (pref_dttosleep) System.DoubleTapToSleepHook(lpparam);
+			if (pref_clockseconds) System.ClockSecondsHook(lpparam);
+			if (pref_expandnotif) System.ExpandNotificationsHook(lpparam);
+			if (pref_recents_blur < 100) System.RecentsBlurRatioHook(lpparam);
+			if (pref_drawer_blur < 100) System.DrawerBlurRatioHook(lpparam);
 		}
 
 //		if (pkg.equals("com.android.incallui")) {

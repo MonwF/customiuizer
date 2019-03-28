@@ -10,6 +10,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
+import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -33,7 +34,6 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -41,6 +41,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -49,7 +50,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout.LayoutParams;
 
 import miui.app.AlertDialog;
-import name.mikanoshi.customiuizer.ActivityEx;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
@@ -229,9 +229,7 @@ public class Dialog extends Activity {
 	}
 
 	protected final void cancelReports() {
-		(new Thread(() -> {
-			(new BulkReportDeleter(this)).deleteReports(false, 0);
-		})).start();
+		(new Thread(() -> (new BulkReportDeleter(this)).deleteReports(false, 0))).start();
 	}
 
 	protected void cancelReportsAndFinish() {
@@ -390,5 +388,38 @@ public class Dialog extends Activity {
 
 	protected final CoreConfiguration getConfig() {
 		return config;
+	}
+
+	@SuppressWarnings({"deprecation", "JavaReflectionMemberAccess"})
+	private void updateBlurRatio() {
+		try {
+			View rootView = getWindow().getDecorView();
+			if (rootView.getLayoutParams() instanceof WindowManager.LayoutParams) {
+				WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams)rootView.getLayoutParams();
+				layoutParams.flags |= WindowManager.LayoutParams.FLAG_BLUR_BEHIND;
+				Field blurRatio = WindowManager.LayoutParams.class.getDeclaredField("blurRatio");
+				blurRatio.setAccessible(true);
+				blurRatio.set(layoutParams, 0.75f);
+				getWindowManager().updateViewLayout(rootView, layoutParams);
+			}
+		} catch (Throwable t) {}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		updateBlurRatio();
+	}
+
+	@Override
+	public void onAttachedToWindow() {
+		super.onAttachedToWindow();
+		updateBlurRatio();
+	}
+
+	@Override
+	public void finish() {
+		super.finish();
+		overridePendingTransition(0, 0);
 	}
 }

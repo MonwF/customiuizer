@@ -10,12 +10,14 @@
 
 	<string name="system_mods">System</string>
 	<string name="system_mods_screenanim">Screen animations *</string>
+	<string name="system_clockseconds_title">Show seconds</string>
+	<string name="system_clockseconds_summ">Display seconds in the status bar clock</string>
+	<string name="system_expandnotif_title">Expand notifications</string>
+	<string name="system_expandnotif_summ">Always show notifications fully expanded</string>
 	<string name="system_nolightuponcharge_title">No screen light up on charge</string>
 	<string name="system_nolightuponcharge_summ">Do not turn screen on when you connect or disconnect a charger (beginning of wireless charge is still displayed)</string>
 	<string name="system_separatevolume_title">Separate volume controls</string>
 	<string name="system_separatevolume_summ">Allow to configure separate volume for rings/notifications/system sounds in Settings</string>
-	<string name="system_volumecursor_title">Volume keys control cursor</string>
-	<string name="system_volumecursor_summ">Move text input cursor using volume keys</string>
 	<string name="notification_volume">Notification volume</string>
 	<string name="system_volume">System sounds volume</string>
 	<string name="system_scramblepin_title">Scramble PIN</string>
@@ -27,6 +29,11 @@
 	<string name="system_screenanim_duration_title">Turning off animation</string>
 	<string name="system_screenanim_duration_summ">Configure animation length</string>
 	<string name="system_screenanim_desc">Very low values will practically disable animation</string>
+	<string name="system_mods_blur">Blur intensity *</string>
+	<string name="system_recents_blur_title">Recent apps</string>
+	<string name="system_recents_blur_summ">Background blur intensity in recent apps</string>
+	<string name="system_drawer_blur_title">Notification drawer</string>
+	<string name="system_drawer_blur_summ">Background blur intensity in notification drawer</string>
 	<string name="system_mods_lockscreen">Lock Screen</string>
 	<string name="system_iconlabletoasts_title">Enhanced toasts *</string>
 	<string name="system_iconlabletoasts_summ">Add application\'s icon and label to its toasts</string>
@@ -60,6 +67,13 @@
 	<string name="controls_powerflash_summ">Long press power button while screen is off to turn flashlight on</string>
 	<string name="controls_powerflash_delay_title">Longer quick flashlight delay *</string>
 	<string name="controls_powerflash_delay_summ">Increases the power button long press delay</string>
+	<string name="controls_mods_volume">Volume keys *</string>
+	<string name="controls_volumecursor_title">Control input cursor</string>
+	<string name="controls_volumecursor_summ">Move text input cursor using volume keys</string>
+	<string name="controls_volumemedia_up_title">Volume Up long press action</string>
+	<string name="controls_volumemedia_up_summ">Action for Volume Up long press when screen is off</string>
+	<string name="controls_volumemedia_down_title">Volume Down long press action</string>
+	<string name="controls_volumemedia_down_summ">Action for Volume Down long press when screen is off</string>
 
 	<string name="various_mods">Various</string>
 	<string name="various_sysappsupdater_title">Open \"System app updater\"</string>
@@ -108,6 +122,10 @@
 	<string name="array_toasts_both">Icon and label</string>
 	<string name="array_screen_anim_none">None</string>
 	<string name="array_screen_anim_fade">Fade</string>
+	<string name="array_media_none">No change</string>
+	<string name="array_media_playpause">Play/Pause</string>
+	<string name="array_media_next">Next track</string>
+	<string name="array_media_prev">Previous track</string>
 
 	<string name="toggle_wifi_on">Wi-Fi enabled</string>
 	<string name="toggle_wifi_off">Wi-Fi disabled</string>

@@ -14,8 +14,11 @@ import android.content.res.Resources;
 import android.media.AudioManager;
 import android.net.wifi.WifiManager;
 import android.nfc.NfcAdapter;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
@@ -35,6 +38,7 @@ import name.mikanoshi.customiuizer.utils.Helpers;
 
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import static de.robv.android.xposed.XposedHelpers.findClass;
+import static java.lang.System.currentTimeMillis;
 
 @SuppressWarnings("WeakerAccess")
 public class GlobalActions {
@@ -973,17 +977,29 @@ public class GlobalActions {
 //		else
 //			XposedHelpers.callMethod(amn, "dismissKeyguardOnNextActivity");
 //	}
-//
-//	public static boolean isMediaActionsAllowed(Context mContext) {
-//		AudioManager am = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
-//		boolean isMusicActive = am.isMusicActive();
-//		boolean isMusicActiveRemotely  = (Boolean)XposedHelpers.callMethod(am, "isMusicActiveRemotely");
-//		boolean isAllowed = isMusicActive || isMusicActiveRemotely;
-//		if (!isAllowed) {
-//			long mCurrentTime = System.currentTimeMillis();
-//			long mLastPauseTime = Settings.System.getLong(mContext.getContentResolver(), "last_music_paused_time", mCurrentTime);
-//			if (mCurrentTime - mLastPauseTime < 10 * 60 * 1000) isAllowed = true;
-//		}
-//		return isAllowed;
-//	}
+
+	public static boolean isMediaActionsAllowed(Context mContext) {
+		AudioManager am = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
+		boolean isMusicActive = am.isMusicActive();
+		boolean isMusicActiveRemotely  = (Boolean)XposedHelpers.callMethod(am, "isMusicActiveRemotely");
+		boolean isAllowed = isMusicActive || isMusicActiveRemotely;
+		if (!isAllowed) {
+			long mCurrentTime = currentTimeMillis();
+			long mLastPauseTime = Settings.System.getLong(mContext.getContentResolver(), "last_music_paused_time", mCurrentTime);
+			if (mCurrentTime - mLastPauseTime < 10 * 60 * 1000) isAllowed = true;
+		}
+		return isAllowed;
+	}
+
+	@SuppressLint("MissingPermission")
+	public static void sendDownUpKeyEvent(Context mContext, int keyCode) {
+		AudioManager am = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
+		Vibrator v = (Vibrator)mContext.getSystemService(Context.VIBRATOR_SERVICE);
+		am.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, keyCode));
+		am.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, keyCode));
+		if (Build.VERSION.SDK_INT >= 26)
+			v.vibrate(VibrationEffect.createOneShot(30, VibrationEffect.DEFAULT_AMPLITUDE));
+		else
+			v.vibrate(30);
+	}
 }

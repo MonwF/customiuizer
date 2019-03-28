@@ -28,7 +28,7 @@ public class DialogInteraction implements ReportInteraction {
 		if (prefs.getBoolean(ACRA.PREF_ALWAYS_ACCEPT, false)) return true;
 		if (ACRA.DEV_LOGGING) ACRA.log.d(LOG_TAG, "Creating CrashReportDialog for " + reportFile);
 		final Intent dialogIntent = createCrashReportDialogIntent(context, config, reportFile);
-		dialogIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		dialogIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
 		context.startActivity(dialogIntent);
 		return false;
 	}

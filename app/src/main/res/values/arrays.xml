@@ -95,6 +95,20 @@
 		<item >4</item>
 	</string-array>
 
+	<string-array name="media_action">
+		<item >@string/array_media_none</item>
+		<item >@string/array_media_playpause</item>
+		<item >@string/array_media_next</item>
+		<item >@string/array_media_prev</item>
+	</string-array>
+	<string-array name="media_action_val">
+		<item >0</item>
+		<item >85</item>
+		<item >87</item>
+		<item >88</item>
+	</string-array>
+
+
 	<string-array name="placeholder_array">
 		<item>@string/dummy</item>
 	</string-array>

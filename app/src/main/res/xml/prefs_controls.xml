@@ -9,11 +9,39 @@
 		android:summary="@string/controls_powerflash_summ"
 		android:title="@string/controls_powerflash_title"
 		android:defaultValue="false" />
+
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_controls_powerflash_delay"
 		android:summary="@string/controls_powerflash_delay_summ"
 		android:title="@string/controls_powerflash_delay_title"
 		android:defaultValue="false"
 		android:dependency="pref_key_controls_powerflash" />
+
+	<PreferenceCategory
+		android:title="@string/controls_mods_volume">
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_controls_volumecursor"
+			android:summary="@string/controls_volumecursor_summ"
+			android:title="@string/controls_volumecursor_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_controls_volumemedia_up"
+			android:summary="@string/controls_volumemedia_up_summ"
+			android:title="@string/controls_volumemedia_up_title"
+			android:entries="@array/media_action"
+			android:entryValues="@array/media_action_val"
+			android:defaultValue="0" />
+
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_controls_volumemedia_down"
+			android:summary="@string/controls_volumemedia_down_summ"
+			android:title="@string/controls_volumemedia_down_title"
+			android:entries="@array/media_action"
+			android:entryValues="@array/media_action_val"
+			android:defaultValue="0" />
+
+	</PreferenceCategory>
 
 </PreferenceScreen>
