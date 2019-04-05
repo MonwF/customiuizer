@@ -41,7 +41,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 	public static int pref_navbarrightlong = 1;
 	//public static int pref_rotateanim = 1;
 	public static boolean pref_powerflash = false;
-	public static boolean pref_nolightup = false;
+	public static boolean pref_nolightup1 = false;
+	public static boolean pref_nolightup2 = false;
 	public static boolean pref_appdetails = false;
 	public static boolean pref_scramblepin = false;
 	public static boolean pref_securelock = false;
@@ -79,7 +80,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		pref_shake = pref.getInt("pref_key_launcher_shake_action", 1);
 		pref_screenanim = pref.getInt("pref_key_system_screenanim_duration", 0);
 		pref_powerflash = pref.getBoolean("pref_key_controls_powerflash", false);
-		pref_nolightup = pref.getBoolean("pref_key_system_nolightuponcharge", false);
+		pref_nolightup1 = pref.getBoolean("pref_key_system_nolightuponcharge", false);
+		pref_nolightup2 = pref.getBoolean("pref_key_system_nolightuponheadset", false);
 		pref_appdetails = pref.getBoolean("pref_key_various_appdetails", false);
 		pref_appsort = Integer.parseInt(pref.getString("pref_key_various_appsort", "0"));
 		pref_scramblepin = pref.getBoolean("pref_key_system_scramblepin", false);
@@ -105,8 +107,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 
 		if (pref_etoasts > 1) System.IconLabelToastsHook();
 		if (pref_volumecursor) Controls.VolumeCursorHook();
-		if (pref_volumemedia_up > 0 || pref_volumemedia_down > 0) Controls.VolumeMediaPlayerHook();
 
+		Controls.VolumeMediaPlayerHook();
 		GlobalActions.setupUnhandledCatcher();
 	}
 
@@ -119,7 +121,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 
 			if (pref_powerflash) Controls.PowerKeyHook(lpparam);
 			if (pref_screenanim > 0) System.ScreenAnimHook(lpparam);
-			if (pref_nolightup) System.NoLightUpOnChargeHook(lpparam);
+			if (pref_nolightup1) System.NoLightUpOnChargeHook(lpparam);
+			if (pref_nolightup2) System.NoLightUpOnHeadsetHook(lpparam);
 			if (pref_securelock) System.EnhancedSecurityHook(lpparam);
 			if (pref_separatevolume) System.NotificationVolumeServiceHook(lpparam);
 			if (pref_volumemedia_up > 0 || pref_volumemedia_down > 0) Controls.VolumeMediaButtonsHook(lpparam);

@@ -19,7 +19,9 @@
 	<string name="system_expandnotif_title">Expand notifications</string>
 	<string name="system_expandnotif_summ">Always show notifications fully expanded</string>
 	<string name="system_nolightuponcharge_title">No screen light up on charge</string>
-	<string name="system_nolightuponcharge_summ">Do not turn screen on when you connect or disconnect a charger (beginning of wireless charge is still displayed)</string>
+	<string name="system_nolightuponcharge_summ">Do not turn screen on when you connect or disconnect a charger</string>
+	<string name="system_nolightuponheadset_title">No screen light up on headset connection</string>
+	<string name="system_nolightuponheadset_summ">Do not turn screen on when you connect a headset</string>
 	<string name="system_separatevolume_title">Separate volume controls</string>
 	<string name="system_separatevolume_summ">Allow to configure separate volume for rings/notifications/system sounds in Settings</string>
 	<string name="notification_volume">Notification volume</string>

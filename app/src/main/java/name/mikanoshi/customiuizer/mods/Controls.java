@@ -154,24 +154,6 @@ public class Controls {
 
 		try {
 
-		XposedBridge.hookAllMethods(XposedHelpers.findClass("com.android.server.policy.PhoneWindowManager", lpparam.classLoader), "init", new XC_MethodHook() {
-			@Override
-			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-				IntentFilter intentfilter = new IntentFilter();
-				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.SaveLastMusicPausedTime");
-				mContext.registerReceiver(new BroadcastReceiver() {
-					public void onReceive(final Context context, Intent intent) {
-						try {
-							Settings.System.putLong(context.getContentResolver(), "last_music_paused_time", currentTimeMillis());
-						} catch (Throwable t) {
-							XposedBridge.log(t);
-						}
-					}
-				}, intentfilter);
-			}
-		});
-
 		XposedHelpers.findAndHookMethod("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "interceptKeyBeforeQueueing", KeyEvent.class, int.class, new XC_MethodHook() {
 			@Override
 			@SuppressLint("MissingPermission")
@@ -262,19 +244,23 @@ public class Controls {
 	}
 
 	public static void VolumeMediaPlayerHook() {
-		XposedHelpers.findAndHookMethod("android.media.MediaPlayer", null, "pause", new XC_MethodHook() {
-			@Override
-			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
-				try {
-					Application mContext = (Application)XposedHelpers.callStaticMethod(XposedHelpers.findClass("android.app.ActivityThread", null), "currentApplication");
-					int mStreamType = (int)XposedHelpers.findMethodExact(XposedHelpers.findClass("android.media.MediaPlayer", null), "getAudioStreamType").invoke(param.thisObject);
-					if (mContext != null && (mStreamType == AudioManager.STREAM_MUSIC || mStreamType == 0x80000000))
-					mContext.sendBroadcast(new Intent("name.mikanoshi.customiuizer.mods.action.SaveLastMusicPausedTime"));
-				} catch (Throwable t) {
-					XposedBridge.log(t);
+		try {
+			XposedHelpers.findAndHookMethod("android.media.MediaPlayer", null, "pause", new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+					try {
+						Application mContext = (Application)XposedHelpers.callStaticMethod(XposedHelpers.findClass("android.app.ActivityThread", null), "currentApplication");
+						int mStreamType = (int)XposedHelpers.findMethodExact(XposedHelpers.findClass("android.media.MediaPlayer", null), "getAudioStreamType").invoke(param.thisObject);
+						if (mContext != null && (mStreamType == AudioManager.STREAM_MUSIC || mStreamType == 0x80000000))
+							mContext.sendBroadcast(new Intent("name.mikanoshi.customiuizer.mods.action.SaveLastMusicPausedTime"));
+					} catch (Throwable t) {
+						XposedBridge.log(t);
+					}
 				}
-			}
-		});
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
 	}
 
 	public static void VolumeCursorHook() {

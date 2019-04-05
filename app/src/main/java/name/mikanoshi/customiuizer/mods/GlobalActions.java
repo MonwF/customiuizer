@@ -43,8 +43,6 @@ import static java.lang.System.currentTimeMillis;
 @SuppressWarnings("WeakerAccess")
 public class GlobalActions {
 
-	public static boolean mOwnImplementation = false;
-	public static Object mGlobal = null;
 	public static Object mStatusBar = null;
 //	public static FloatingSelector floatSel = null;
 
@@ -116,34 +114,26 @@ public class GlobalActions {
 				SystemProperties.set("ctl.restart", "zygote");
 			}
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.ExpandNotifications")) {
-				if (mOwnImplementation) {
-					long token = Binder.clearCallingIdentity();
-					XposedHelpers.callMethod(context.getSystemService("statusbar"), "expandNotificationsPanel");
-					Binder.restoreCallingIdentity(token);
-				} else if (mGlobal != null) XposedHelpers.callMethod(mGlobal, "expandNotifications");
+				long token = Binder.clearCallingIdentity();
+				XposedHelpers.callMethod(context.getSystemService("statusbar"), "expandNotificationsPanel");
+				Binder.restoreCallingIdentity(token);
 			}
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.ExpandSettings")) {
-				if (mOwnImplementation) {
-					long token = Binder.clearCallingIdentity();
-					XposedHelpers.callMethod(context.getSystemService("statusbar"), "expandSettingsPanel");
-					Binder.restoreCallingIdentity(token);
-				} else if (mGlobal != null) XposedHelpers.callMethod(mGlobal, "expandQuickSettings");
+				long token = Binder.clearCallingIdentity();
+				XposedHelpers.callMethod(context.getSystemService("statusbar"), "expandSettingsPanel");
+				Binder.restoreCallingIdentity(token);
 			}
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.GoToSleep")) {
 				XposedHelpers.callMethod(context.getSystemService(Context.POWER_SERVICE), "goToSleep", SystemClock.uptimeMillis(), 7, 0);
 			}
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.LockDevice")) {
-				if (mOwnImplementation) {
-					XposedHelpers.callMethod(context.getSystemService(Context.POWER_SERVICE), "goToSleep", SystemClock.uptimeMillis(), 7, 0);
-					Class<?> clsWMG = XposedHelpers.findClass("android.view.WindowManagerGlobal", null);
-					Object wms = XposedHelpers.callStaticMethod(clsWMG, "getWindowManagerService");
-					XposedHelpers.callMethod(wms, "lockNow", (Object)null);
-				} else if (mGlobal != null) XposedHelpers.callMethod(mGlobal, "lockScreen");
+				XposedHelpers.callMethod(context.getSystemService(Context.POWER_SERVICE), "goToSleep", SystemClock.uptimeMillis(), 7, 0);
+				Class<?> clsWMG = XposedHelpers.findClass("android.view.WindowManagerGlobal", null);
+				Object wms = XposedHelpers.callStaticMethod(clsWMG, "getWindowManagerService");
+				XposedHelpers.callMethod(wms, "lockNow", (Object)null);
 			}
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.TakeScreenshot")) {
-				if (mOwnImplementation) {
-					context.sendBroadcast(new Intent("android.intent.action.CAPTURE_SCREENSHOT"));
-				} else if (mGlobal != null) XposedHelpers.callMethod(mGlobal, "takeScreenshot");
+				context.sendBroadcast(new Intent("android.intent.action.CAPTURE_SCREENSHOT"));
 			}
 			/*
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.killForegroundAppShedule")) {
@@ -170,15 +160,10 @@ public class GlobalActions {
 //			}
 
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.OpenRecents")) {
-				if (mOwnImplementation) {
-					long token = Binder.clearCallingIdentity();
-					try {
-						Object mInternalService = XposedHelpers.getObjectField(context.getSystemService("statusbar"), "mInternalService");
-						XposedHelpers.callMethod(mInternalService, "toggleRecentApps");
-					} finally {
-						Binder.restoreCallingIdentity(token);
-					}
-				} else if (mGlobal != null) XposedHelpers.callMethod(mGlobal, "openRecents");
+				Intent recents = new Intent("com.android.systemui.recents.TOGGLE_RECENTS");
+				recents.setComponent(new ComponentName ("com.android.systemui", "com.android.systemui.recents.RecentsActivity"));
+				recents.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+				context.startActivity(recents);
 			}
 //
 //			if (action.equals("name.mikanoshi.customiuizer.mods.action.SwitchToPrevApp")) {
@@ -622,26 +607,10 @@ public class GlobalActions {
 	}
 
 	public static void setupGlobalActions(LoadPackageParam lpparam) {
-		Class<?> globalActionsCls;
 		try {
-			globalActionsCls = XposedHelpers.findClass("com.android.server.accessibility.GlobalActionPerformer", lpparam.classLoader);
-			mOwnImplementation = false;
-		} catch (Throwable t1) {
-			try {
-				globalActionsCls = XposedHelpers.findClass("com.android.server.accessibility.AccessibilityManagerService", lpparam.classLoader);
-				mOwnImplementation = true;
-			} catch (Throwable t2) {
-				XposedBridge.log(t1);
-				XposedBridge.log(t2);
-				return;
-			}
-		}
-
-		try {
-			XposedBridge.hookAllConstructors(globalActionsCls, new XC_MethodHook() {
+			XposedBridge.hookAllConstructors(XposedHelpers.findClass("com.android.server.accessibility.AccessibilityManagerService", lpparam.classLoader), new XC_MethodHook() {
 				@Override
 				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-					mGlobal = param.thisObject;
 					Context mGlobalContext = (Context)param.args[0];
 
 					IntentFilter intentfilter = new IntentFilter();
@@ -671,6 +640,24 @@ public class GlobalActions {
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.FastReboot");
 
 					mGlobalContext.registerReceiver(mGlobalReceiver, intentfilter);
+				}
+			});
+
+			XposedBridge.hookAllMethods(XposedHelpers.findClass("com.android.server.policy.PhoneWindowManager", lpparam.classLoader), "init", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					IntentFilter intentfilter = new IntentFilter();
+					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.SaveLastMusicPausedTime");
+					mContext.registerReceiver(new BroadcastReceiver() {
+						public void onReceive(final Context context, Intent intent) {
+							try {
+								Settings.System.putLong(context.getContentResolver(), "last_music_paused_time", currentTimeMillis());
+							} catch (Throwable t) {
+								XposedBridge.log(t);
+							}
+						}
+					}, intentfilter);
 				}
 			});
 		} catch (Throwable t) {

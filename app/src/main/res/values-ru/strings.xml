@@ -205,6 +205,8 @@
 	<string name="system_expandnotif_summ">Всегда показывать уведомления в полностью развёрнутом виде</string>
 	<string name="system_nolightuponcharge_summ">Запрещает включение экрана при подключении или отключении зарядки (не влияет на отображение начала беспроводной зарядки)</string>
 	<string name="system_nolightuponcharge_title">Не включать экран при зарядке</string>
+	<string name="system_nolightuponheadset_title">Не включать экран при подключении наушников</string>
+	<string name="system_nolightuponheadset_summ">Запрещает включение экрана при подключении наушников</string>
 	<string name="system_separatevolume_title">Раздельные настройки громкости</string>
 	<string name="system_separatevolume_summ">Позволяет изменить громкость в Настройках отдельно для звонков/уведомлений/системных звуков</string>
 	<string name="notification_volume">Громкость уведомлений</string>

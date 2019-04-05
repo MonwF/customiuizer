@@ -1,3 +1,9 @@
+1.3.1
+[Fixed][Compatibility] MIUI 10.3
+[Fixed] Screen off animation duration
+[Fixed] No screen light up on charge (including wireless)
+[New] No screen light up on headset connection
+
 1.3.0
 [Fixed][Compatibility] Loading module settings on devices with encrypted storage. Backup settings before updating to this version, they will be reset to defaults!
 [Fixed][Compatibility] Additional app details

@@ -60,15 +60,20 @@ public class System {
 					//mColorFadeOnAnimator.setDuration(250);
 					ObjectAnimator mColorFadeOffAnimator = (ObjectAnimator)XposedHelpers.getObjectField(param.thisObject, "mColorFadeOffAnimator");
 					//mColorFadeOffAnimator.setDuration(Helpers.getSharedIntPref(mContext, "pref_key_system_screenanim_duration", 0));
-					new Helpers.SharedPrefObserver(mContext, mHandler, "pref_key_system_screenanim_duration", 0) {
+					mHandler.postDelayed(new Runnable() {
 						@Override
-						public void onChange(String name, int defValue) {
-							if (mColorFadeOffAnimator == null) return;
-							int val = Helpers.getSharedIntPref(mContext, name, defValue);
-							if (val == 0) val = 250;
-							mColorFadeOffAnimator.setDuration(val);
+						public void run() {
+							new Helpers.SharedPrefObserver(mContext, mHandler, "pref_key_system_screenanim_duration", 0) {
+								@Override
+								public void onChange(String name, int defValue) {
+									if (mColorFadeOffAnimator == null) return;
+									int val = Helpers.getSharedIntPref(mContext, name, defValue);
+									if (val == 0) val = 250;
+									mColorFadeOffAnimator.setDuration(val);
+								}
+							}.onChange(false);
 						}
-					}.onChange(false);
+					}, 10000);
 				}
 			});
 		} catch (Throwable t) {
@@ -102,8 +107,25 @@ public class System {
 			XposedHelpers.findAndHookMethod("com.android.server.power.PowerManagerService", lpparam.classLoader, "wakeUpNoUpdateLocked", long.class, String.class, int.class, String.class, int.class, new XC_MethodHook() {
 				@Override
 				protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
-					if ((param.args[1]).equals("android.server.power:POWER")) param.setResult(false);
+					if (param.args[1].equals("android.server.power:POWER") ||
+						param.args[1].equals("com.android.systemui:RAPID_CHARGE") ||
+						param.args[1].equals("com.android.systemui:WIRELESS_CHARGE") ||
+						param.args[1].equals("com.android.systemui:WIRELESS_RAPID_CHARGE")
+					) param.setResult(false);
 					//XposedBridge.log("wakeUpNoUpdateLocked: " + String.valueOf(param.args[0]) + " | " + String.valueOf(param.args[1]) + " | " + String.valueOf(param.args[2]) + " | " + String.valueOf(param.args[3]) + " | " + String.valueOf(param.args[4]));
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void NoLightUpOnHeadsetHook(LoadPackageParam lpparam) {
+		try {
+			XposedHelpers.findAndHookMethod("com.android.server.power.PowerManagerService", lpparam.classLoader, "wakeUpNoUpdateLocked", long.class, String.class, int.class, String.class, int.class, new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+					if (param.args[1].equals("com.android.systemui:HEADSET")) param.setResult(false);
 				}
 			});
 		} catch (Throwable t) {

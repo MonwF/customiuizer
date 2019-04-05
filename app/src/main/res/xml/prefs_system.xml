@@ -17,6 +17,12 @@
 		android:title="@string/system_nolightuponcharge_title"
 		android:defaultValue="false" />
 
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_nolightuponheadset"
+		android:summary="@string/system_nolightuponheadset_summ"
+		android:title="@string/system_nolightuponheadset_title"
+		android:defaultValue="false" />
+
 	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_iconlabletoasts"
 		android:summary="@string/system_iconlabletoasts_summ"
