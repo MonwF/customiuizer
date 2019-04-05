@@ -7,11 +7,8 @@ import android.app.backup.BackupManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import name.mikanoshi.customiuizer.utils.Helpers;
-
 @SuppressLint("Registered")
 public class ActivityEx extends Activity {
-	public int mThemeBackground = 1;
 	public boolean launch = true;
 
 	@SuppressWarnings("ConstantConditions")
@@ -19,9 +16,6 @@ public class ActivityEx extends Activity {
 		setTheme(getResources().getIdentifier("Theme.Light.Settings", "style", "miui"));
 		getTheme().applyStyle(R.style.MIUIPrefs, true);
 		super.onCreate(savedInstanceState);
-		mThemeBackground = Integer.parseInt(Helpers.prefs.getString("pref_key_miuizer_material_background", "1"));
-		//if (mThemeBackground == 2) getTheme().applyStyle(R.style.MaterialThemeDark, true);
-
 		setContentView(R.layout.activity_main);
 	}
 
@@ -33,20 +27,9 @@ public class ActivityEx extends Activity {
 		super.onBackPressed();
 	}
 
-	@SuppressWarnings("ConstantConditions")
-	public void updateTheme(int newBkg) {
-		int newThemeBackground;
-		if (newBkg == 0)
-			newThemeBackground = Integer.parseInt(Helpers.prefs.getString("pref_key_miuizer_material_background", "1"));
-		else
-			newThemeBackground = newBkg;
-		if (newThemeBackground != mThemeBackground) recreate();
-	}
-	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (launch) updateTheme(0);
 	}
 	
 	@Override

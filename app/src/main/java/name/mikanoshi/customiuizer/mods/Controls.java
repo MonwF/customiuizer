@@ -6,6 +6,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
+import android.inputmethodservice.InputMethodService;
 import android.media.AudioManager;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -14,12 +17,18 @@ import android.os.SystemClock;
 import android.provider.Settings;
 import android.telecom.TelecomManager;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
+import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 import static java.lang.System.currentTimeMillis;
@@ -55,7 +64,7 @@ public class Controls {
 
 		try {
 
-		XposedHelpers.findAndHookMethod("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "init", Context.class, "android.view.IWindowManager", "com.android.server.policy.WindowManagerPolicy.WindowManagerFuncs", new XC_MethodHook() {
+		XposedBridge.hookAllMethods(XposedHelpers.findClass("com.android.server.policy.PhoneWindowManager", lpparam.classLoader), "init", new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
@@ -145,7 +154,7 @@ public class Controls {
 
 		try {
 
-		XposedHelpers.findAndHookMethod("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "init", Context.class, "android.view.IWindowManager", "com.android.server.policy.WindowManagerPolicy.WindowManagerFuncs", new XC_MethodHook() {
+		XposedBridge.hookAllMethods(XposedHelpers.findClass("com.android.server.policy.PhoneWindowManager", lpparam.classLoader), "init", new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
@@ -266,6 +275,225 @@ public class Controls {
 				}
 			}
 		});
+	}
+
+	public static void VolumeCursorHook() {
+		try {
+			XposedHelpers.findAndHookMethod("android.inputmethodservice.InputMethodService", null, "onKeyDown", int.class, KeyEvent.class, new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+					InputMethodService ims = (InputMethodService)param.thisObject;
+					int code = (int)param.args[0];
+					if ((code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN) && ims.isInputViewShown()) {
+						ims.sendDownUpKeyEvents(code == KeyEvent.KEYCODE_VOLUME_UP ? KeyEvent.KEYCODE_DPAD_LEFT : KeyEvent.KEYCODE_DPAD_RIGHT);
+						param.setResult(true);
+					}
+				}
+			});
+
+			XposedHelpers.findAndHookMethod("android.inputmethodservice.InputMethodService", null, "onKeyUp", int.class, KeyEvent.class, new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+					InputMethodService ims = (InputMethodService)param.thisObject;
+					int code = (int)param.args[0];
+					if ((code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN) && ims.isInputViewShown())
+					param.setResult(true);
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	private static boolean handleNavBarAction(int action, int launch, int toggle, Context context) {
+		if (action >= 85 && action <= 88) {
+			if (GlobalActions.isMediaActionsAllowed(context))
+			GlobalActions.sendDownUpKeyEvent(context, action);
+			return true;
+		} else if (action == 1) {
+			try {
+				Toast.makeText(Helpers.getModuleContext(context), R.string.controls_navbar_noaction, Toast.LENGTH_SHORT).show();
+			} catch (Throwable t) {}
+			return false;
+		} else {
+			return GlobalActions.handleAction(action, launch, toggle, context);
+		}
+	}
+
+	private static void addCustomNavBarKeys(boolean isVertical, Context mContext, LinearLayout navButtons, Class<?> kbrCls) {
+		String pkgName = "com.android.systemui";
+		float density = mContext.getResources().getDisplayMetrics().density;
+		int two = Math.round(2 * density);
+
+		Drawable dot;
+		try {
+			Context modCtx = Helpers.getModuleContext(mContext);
+			Resources modRes = Helpers.getModuleRes(mContext);
+			dot = modRes.getDrawable(R.drawable.ic_sysbar_dot, modCtx.getTheme());
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+			return;
+		}
+
+		LinearLayout leftbtn = new LinearLayout(mContext);
+		ImageView left = new ImageView(mContext);
+		LinearLayout.LayoutParams lpl;
+		if (isVertical)
+			lpl = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+		else
+			lpl = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+		leftbtn.setLayoutParams(lpl);
+		left.setLayoutParams(lpl);
+		left.setScaleType(ImageView.ScaleType.CENTER);
+		left.setImageDrawable(dot);
+		left.setScaleX(0.7f);
+		left.setScaleY(0.7f);
+		left.setAlpha(0.9f);
+		left.setPadding(two, 0, two, 0);
+		left.setTag("custom_left" + (isVertical ? "_vert" : "_horiz"));
+		if (kbrCls != null) try {
+			Drawable lripple = (Drawable)kbrCls.getConstructor(Context.class, View.class).newInstance(mContext, leftbtn);
+			leftbtn.setBackground(lripple);
+		} catch (Throwable t) {}
+		leftbtn.setClickable(true);
+		leftbtn.setHapticFeedbackEnabled(true);
+		leftbtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				int action = Helpers.getSharedIntPref(v.getContext(), "pref_key_controls_navbarleft_action", 1);
+				int launch = 8;
+				int toggle = Helpers.getSharedIntPref(v.getContext(), "pref_key_controls_navbarleft_toggle", 0);
+				handleNavBarAction(action, launch, toggle, v.getContext());
+			}
+		});
+		leftbtn.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				int action = Helpers.getSharedIntPref(v.getContext(), "pref_key_controls_navbarleftlong_action", 1);
+				int launch = 9;
+				int toggle = Helpers.getSharedIntPref(v.getContext(), "pref_key_controls_navbarleftlong_toggle", 0);
+				return handleNavBarAction(action, launch, toggle, v.getContext());
+			}
+		});
+		leftbtn.addView(left);
+
+		LinearLayout rightbtn = new LinearLayout(mContext);
+		ImageView right = new ImageView(mContext);
+		LinearLayout.LayoutParams lpr;
+		if (isVertical)
+			lpr = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+		else
+			lpr = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+		rightbtn.setLayoutParams(lpr);
+		right.setLayoutParams(lpr);
+		right.setScaleType(ImageView.ScaleType.CENTER);
+		right.setImageDrawable(dot);
+		right.setScaleX(0.7f);
+		right.setScaleY(0.7f);
+		right.setAlpha(0.9f);
+		right.setPadding(two, 0, two, 0);
+		right.setTag("custom_right" + (isVertical ? "_vert" : "_horiz"));
+		if (kbrCls != null) try {
+			Drawable rripple = (Drawable)kbrCls.getConstructor(Context.class, View.class).newInstance(mContext, rightbtn);
+			rightbtn.setBackground(rripple);
+		} catch (Throwable t) {}
+		rightbtn.setClickable(true);
+		rightbtn.setHapticFeedbackEnabled(true);
+		rightbtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				int action = Helpers.getSharedIntPref(v.getContext(), "pref_key_controls_navbarright_action", 1);
+				int launch = 10;
+				int toggle = Helpers.getSharedIntPref(v.getContext(), "pref_key_controls_navbarright_toggle", 0);
+				handleNavBarAction(action, launch, toggle, v.getContext());
+			}
+		});
+		rightbtn.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				int action = Helpers.getSharedIntPref(v.getContext(), "pref_key_controls_navbarrightlong_action", 1);
+				int launch = 11;
+				int toggle = Helpers.getSharedIntPref(v.getContext(), "pref_key_controls_navbarrightlong_toggle", 0);
+				return handleNavBarAction(action, launch, toggle, v.getContext());
+			}
+		});
+		rightbtn.addView(right);
+
+		if (isVertical) {
+			navButtons.addView(rightbtn, 0);
+			navButtons.addView(leftbtn, navButtons.getChildCount());
+		} else {
+			navButtons.addView(leftbtn, 0);
+			navButtons.addView(rightbtn, navButtons.getChildCount());
+		}
+
+		View startPadding = navButtons.findViewById(navButtons.getResources().getIdentifier("start_padding", "id", pkgName));
+		View sidePadding = navButtons.findViewById(navButtons.getResources().getIdentifier("side_padding", "id", pkgName));
+
+		LinearLayout.LayoutParams lp1 = (LinearLayout.LayoutParams)startPadding.getLayoutParams();
+		LinearLayout.LayoutParams lp2 = (LinearLayout.LayoutParams)sidePadding.getLayoutParams();
+		lp1.weight = Math.round(lp1.weight * 0.5f);
+		lp2.weight = Math.round(lp2.weight * 0.5f);
+		startPadding.setLayoutParams(lp1);
+		sidePadding.setLayoutParams(lp2);
+	}
+
+	public static void NavBarButtonsHook(LoadPackageParam lpparam) {
+		try {
+			XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "createNavigationBar", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+					Class<?> kbrCls = XposedHelpers.findClass("com.android.systemui.statusbar.policy.KeyButtonRipple", lpparam.classLoader);
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					if (mContext == null) {
+						XposedBridge.log("[CustoMIUIzer][NavBarKeys] Cannot find context");
+						return;
+					}
+					LinearLayout mNavigationBarView = (LinearLayout)XposedHelpers.getObjectField(param.thisObject, "mNavigationBarView");
+					if (mNavigationBarView == null) {
+						XposedBridge.log("[CustoMIUIzer][NavBarKeys] Cannot find navbar layout");
+						return;
+					}
+					ViewGroup rot0 = mNavigationBarView.findViewById(mNavigationBarView.getResources().getIdentifier("rot0", "id", lpparam.packageName));
+					ViewGroup rot90 = mNavigationBarView.findViewById(mNavigationBarView.getResources().getIdentifier("rot90", "id", lpparam.packageName));
+					LinearLayout navButtons0 = rot0.findViewById(mNavigationBarView.getResources().getIdentifier("nav_buttons", "id", lpparam.packageName));
+					LinearLayout navButtons90 = rot90.findViewById(mNavigationBarView.getResources().getIdentifier("nav_buttons", "id", lpparam.packageName));
+
+					addCustomNavBarKeys(false, mContext, navButtons0, kbrCls);
+					addCustomNavBarKeys(true, mContext, navButtons90, kbrCls);
+				}
+			});
+
+			XposedBridge.hookAllMethods(XposedHelpers.findClass("com.android.systemui.statusbar.phone.NavigationBarView", lpparam.classLoader), "switchSuit", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+					LinearLayout navbar = (LinearLayout)param.thisObject;
+					boolean isDark = (boolean)param.args[1];
+					ImageView hleft = navbar.findViewWithTag("custom_left_horiz");
+					ImageView vleft = navbar.findViewWithTag("custom_left_vert");
+					ImageView hright = navbar.findViewWithTag("custom_right_horiz");
+					ImageView vright = navbar.findViewWithTag("custom_right_vert");
+
+					Context modCtx = Helpers.getModuleContext(navbar.getContext());
+					Resources modRes = Helpers.getModuleRes(navbar.getContext());
+					if (isDark) {
+						Drawable darkImg = modRes.getDrawable(R.drawable.ic_sysbar_dot_dark, modCtx.getTheme());
+						if (hleft != null) hleft.setImageDrawable(darkImg);
+						if (vleft != null) vleft.setImageDrawable(darkImg);
+						if (hright != null) hright.setImageDrawable(darkImg);
+						if (vright != null) vright.setImageDrawable(darkImg);
+					} else {
+						Drawable lightImg = modRes.getDrawable(R.drawable.ic_sysbar_dot, modCtx.getTheme());
+						if (hleft != null) hleft.setImageDrawable(lightImg);
+						if (vleft != null) vleft.setImageDrawable(lightImg);
+						if (hright != null) hright.setImageDrawable(lightImg);
+						if (vright != null) vright.setImageDrawable(lightImg);
+					}
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
 	}
 
 //	public static void FingerprintHook(XC_LoadPackage.LoadPackageParam lpparam) {

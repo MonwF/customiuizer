@@ -30,6 +30,8 @@ public class HelperReceiver extends BroadcastReceiver {
 					}
 				}
 			} catch (Throwable t) {}
+		} else if (intent.getAction().equals(Intent.ACTION_LOCKED_BOOT_COMPLETED)) {
+			Helpers.fixPermissionsAsync(ctx);
 		}
 	}
 }

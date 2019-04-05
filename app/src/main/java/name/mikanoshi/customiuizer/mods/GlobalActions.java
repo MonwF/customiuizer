@@ -3,7 +3,6 @@ package name.mikanoshi.customiuizer.mods;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
-import android.app.Instrumentation;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -14,6 +13,7 @@ import android.content.res.Resources;
 import android.media.AudioManager;
 import android.net.wifi.WifiManager;
 import android.nfc.NfcAdapter;
+import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -43,6 +43,7 @@ import static java.lang.System.currentTimeMillis;
 @SuppressWarnings("WeakerAccess")
 public class GlobalActions {
 
+	public static boolean mOwnImplementation = false;
 	public static Object mGlobal = null;
 	public static Object mStatusBar = null;
 //	public static FloatingSelector floatSel = null;
@@ -102,7 +103,7 @@ public class GlobalActions {
 	};
 
 	private static BroadcastReceiver mGlobalReceiver = new BroadcastReceiver() {
-		@SuppressLint("MissingPermission")
+		@SuppressLint({"MissingPermission", "WrongConstant"})
 		public void onReceive(final Context context, Intent intent) {
 			try {
 
@@ -115,19 +116,34 @@ public class GlobalActions {
 				SystemProperties.set("ctl.restart", "zygote");
 			}
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.ExpandNotifications")) {
-				if (mGlobal != null) XposedHelpers.callMethod(mGlobal, "expandNotifications");
+				if (mOwnImplementation) {
+					long token = Binder.clearCallingIdentity();
+					XposedHelpers.callMethod(context.getSystemService("statusbar"), "expandNotificationsPanel");
+					Binder.restoreCallingIdentity(token);
+				} else if (mGlobal != null) XposedHelpers.callMethod(mGlobal, "expandNotifications");
 			}
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.ExpandSettings")) {
-				if (mGlobal != null) XposedHelpers.callMethod(mGlobal, "expandQuickSettings");
+				if (mOwnImplementation) {
+					long token = Binder.clearCallingIdentity();
+					XposedHelpers.callMethod(context.getSystemService("statusbar"), "expandSettingsPanel");
+					Binder.restoreCallingIdentity(token);
+				} else if (mGlobal != null) XposedHelpers.callMethod(mGlobal, "expandQuickSettings");
 			}
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.GoToSleep")) {
-				XposedHelpers.callMethod(context.getSystemService(Context.POWER_SERVICE), "goToSleep", SystemClock.uptimeMillis());
+				XposedHelpers.callMethod(context.getSystemService(Context.POWER_SERVICE), "goToSleep", SystemClock.uptimeMillis(), 7, 0);
 			}
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.LockDevice")) {
-				if (mGlobal != null) XposedHelpers.callMethod(mGlobal, "lockScreen");
+				if (mOwnImplementation) {
+					XposedHelpers.callMethod(context.getSystemService(Context.POWER_SERVICE), "goToSleep", SystemClock.uptimeMillis(), 7, 0);
+					Class<?> clsWMG = XposedHelpers.findClass("android.view.WindowManagerGlobal", null);
+					Object wms = XposedHelpers.callStaticMethod(clsWMG, "getWindowManagerService");
+					XposedHelpers.callMethod(wms, "lockNow", (Object)null);
+				} else if (mGlobal != null) XposedHelpers.callMethod(mGlobal, "lockScreen");
 			}
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.TakeScreenshot")) {
-				if (mGlobal != null) XposedHelpers.callMethod(mGlobal, "takeScreenshot");
+				if (mOwnImplementation) {
+					context.sendBroadcast(new Intent("android.intent.action.CAPTURE_SCREENSHOT"));
+				} else if (mGlobal != null) XposedHelpers.callMethod(mGlobal, "takeScreenshot");
 			}
 			/*
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.killForegroundAppShedule")) {
@@ -143,18 +159,26 @@ public class GlobalActions {
 //			if (action.equals("name.mikanoshi.customiuizer.mods.action.killForegroundApp")) {
 //				removeTask(context);
 //			}
-
-			if (action.equals("name.mikanoshi.customiuizer.mods.action.SimulateMenu")) {
-				new Thread(new Runnable() {
-					public void run() {
-						Instrumentation inst = new Instrumentation();
-						inst.sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
-					}
-				}).start();
-			}
+//
+//			if (action.equals("name.mikanoshi.customiuizer.mods.action.SimulateMenu")) {
+//				new Thread(new Runnable() {
+//					public void run() {
+//						Instrumentation inst = new Instrumentation();
+//						inst.sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
+//					}
+//				}).start();
+//			}
 
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.OpenRecents")) {
-				if (mGlobal != null) XposedHelpers.callMethod(mGlobal, "openRecents");
+				if (mOwnImplementation) {
+					long token = Binder.clearCallingIdentity();
+					try {
+						Object mInternalService = XposedHelpers.getObjectField(context.getSystemService("statusbar"), "mInternalService");
+						XposedHelpers.callMethod(mInternalService, "toggleRecentApps");
+					} finally {
+						Binder.restoreCallingIdentity(token);
+					}
+				} else if (mGlobal != null) XposedHelpers.callMethod(mGlobal, "openRecents");
 			}
 //
 //			if (action.equals("name.mikanoshi.customiuizer.mods.action.SwitchToPrevApp")) {
@@ -230,7 +254,7 @@ public class GlobalActions {
 			}
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.ToggleNFC")) {
 				Class<?> clsNfcAdapter = XposedHelpers.findClass("android.nfc.NfcAdapter", null);
-				NfcAdapter mNfcAdapter = (NfcAdapter) XposedHelpers.callStaticMethod(clsNfcAdapter, "getNfcAdapter", context);
+				NfcAdapter mNfcAdapter = (NfcAdapter)XposedHelpers.callStaticMethod(clsNfcAdapter, "getNfcAdapter", context);
 				if (mNfcAdapter == null) return;
 
 				Method enableNFC = clsNfcAdapter.getDeclaredMethod("enable");
@@ -261,20 +285,20 @@ public class GlobalActions {
 				}
 			}
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.ToggleAutoBrightness")) {
-				if (Settings.System.getInt(context.getContentResolver(), "screen_brightness_mode", 0) == 0) {
-					Settings.System.putInt(context.getContentResolver(), "screen_brightness_mode", 1);
+				if (Settings.System.getInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, 0) == 0) {
+					Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, 1);
 					Toast.makeText(context, modRes.getString(R.string.toggle_autobright_on), Toast.LENGTH_SHORT).show();
 				} else {
-					Settings.System.putInt(context.getContentResolver(), "screen_brightness_mode", 0);
+					Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, 0);
 					Toast.makeText(context, modRes.getString(R.string.toggle_autobright_off), Toast.LENGTH_SHORT).show();
 				}
 			}
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.ToggleAutoRotation")) {
-				if (Settings.System.getInt(context.getContentResolver(), "accelerometer_rotation", 0) == 0) {
-					Settings.System.putInt(context.getContentResolver(), "accelerometer_rotation", 1);
+				if (Settings.System.getInt(context.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0) == 0) {
+					Settings.System.putInt(context.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 1);
 					Toast.makeText(context, modRes.getString(R.string.toggle_autorotate_on), Toast.LENGTH_SHORT).show();
 				} else {
-					Settings.System.putInt(context.getContentResolver(), "accelerometer_rotation", 0);
+					Settings.System.putInt(context.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0);
 					Toast.makeText(context, modRes.getString(R.string.toggle_autorotate_off), Toast.LENGTH_SHORT).show();
 				}
 			}
@@ -598,15 +622,18 @@ public class GlobalActions {
 	}
 
 	public static void setupGlobalActions(LoadPackageParam lpparam) {
-		Class<?> globalActionsCls = null;
+		Class<?> globalActionsCls;
 		try {
 			globalActionsCls = XposedHelpers.findClass("com.android.server.accessibility.GlobalActionPerformer", lpparam.classLoader);
+			mOwnImplementation = false;
 		} catch (Throwable t1) {
 			try {
-				globalActionsCls = XposedHelpers.findClass("com.android.server.accessibility.AccessibilityManagerService$Service", lpparam.classLoader);
+				globalActionsCls = XposedHelpers.findClass("com.android.server.accessibility.AccessibilityManagerService", lpparam.classLoader);
+				mOwnImplementation = true;
 			} catch (Throwable t2) {
 				XposedBridge.log(t1);
 				XposedBridge.log(t2);
+				return;
 			}
 		}
 
@@ -615,8 +642,7 @@ public class GlobalActions {
 				@Override
 				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 					mGlobal = param.thisObject;
-					boolean newClass = mGlobal.getClass().getSimpleName().equalsIgnoreCase("GlobalActionPerformer");
-					Context mGlobalContext = (Context)(newClass ? param.args[0] : XposedHelpers.getObjectField(XposedHelpers.getSurroundingThis(param.thisObject), "mContext"));
+					Context mGlobalContext = (Context)param.args[0];
 
 					IntentFilter intentfilter = new IntentFilter();
 
@@ -628,7 +654,7 @@ public class GlobalActions {
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.TakeScreenshot");
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.killForegroundApp");
 					//intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.killForegroundAppShedule");
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.SimulateMenu");
+					//intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.SimulateMenu");
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.OpenRecents");
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.SwitchToPrevApp");
 
@@ -749,12 +775,10 @@ public class GlobalActions {
 				case 5: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_launcher_swiperight_app", null); break;
 				case 6: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_launcher_swipeleft_app", null); break;
 				case 7: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_launcher_shake_app", null); break;
-//				case 3: pkgAppName = MainModule.pref.getString("pref_key_controls_backlongpress_app", null); break;
-//				case 4: pkgAppName = MainModule.pref.getString("pref_key_controls_homeassist_app", null); break;
-//				case 8: pkgAppName = MainModule.pref.getString("pref_key_launcher_appslongpress_app", null); break;
-//				case 9: pkgAppName = MainModule.pref.getString("pref_key_controls_wiredheadseton_app", null); break;
-//				case 10: pkgAppName = MainModule.pref.getString("pref_key_controls_wiredheadsetoff_app", null); break;
-//				case 11: pkgAppName = MainModule.pref.getString("pref_key_controls_btheadseton_app", null); break;
+				case 8: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_navbarleft_app", null); break;
+				case 9: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_navbarleftlong_app", null); break;
+				case 10: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_navbarright_app", null); break;
+				case 11: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_navbarrightlong_app", null); break;
 //				case 12: pkgAppName = MainModule.pref.getString("pref_key_controls_btheadsetoff_app", null); break;
 //				case 13: pkgAppName = MainModule.pref.getString("pref_key_controls_clock_app", null); break;
 //				case 14: pkgAppName = MainModule.pref.getString("pref_key_controls_date_app", null); break;
@@ -789,12 +813,10 @@ public class GlobalActions {
 				case 5: intentString = Helpers.getSharedStringPref(context, "pref_key_launcher_swiperight_shortcut_intent", null); break;
 				case 6: intentString = Helpers.getSharedStringPref(context, "pref_key_launcher_swipeleft_shortcut_intent", null); break;
 				case 7: intentString = Helpers.getSharedStringPref(context, "pref_key_launcher_shake_shortcut_intent", null); break;
-//				case 3: intentString = MainModule.pref.getString("pref_key_controls_backlongpressaction_shortcut_intent", null); break;
-//				case 4: intentString = MainModule.pref.getString("pref_key_controls_homeassistaction_shortcut_intent", null); break;
-//				case 8: intentString = MainModule.pref.getString("pref_key_launcher_appslongpressaction_shortcut_intent", null); break;
-//				case 9: intentString = MainModule.pref.getString("pref_key_controls_wiredheadsetonaction_shortcut_intent", null); break;
-//				case 10: intentString = MainModule.pref.getString("pref_key_controls_wiredheadsetoffaction_shortcut_intent", null); break;
-//				case 11: intentString = MainModule.pref.getString("pref_key_controls_btheadsetonaction_shortcut_intent", null); break;
+				case 8: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_navbarleft_shortcut_intent", null); break;
+				case 9: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_navbarleftlong_shortcut_intent", null); break;
+				case 10: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_navbarright_shortcut_intent", null); break;
+				case 11: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_navbarrightlong_shortcut_intent", null); break;
 //				case 12: intentString = MainModule.pref.getString("pref_key_controls_btheadsetoffaction_shortcut_intent", null); break;
 //				case 13: intentString = MainModule.pref.getString("pref_key_controls_clockaction_shortcut_intent", null); break;
 			}

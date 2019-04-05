@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
@@ -218,14 +217,6 @@ public class MainFragment extends PreferenceFragmentBase {
 			}
 		};
 
-		ListPreference.OnPreferenceChangeListener changeBackgroundColor = new ListPreference.OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				if (act != null && !act.isFinishing()) ((ActivityEx)act).updateTheme(Integer.parseInt((String)newValue));
-				return true;
-			}
-		};
-
 		CheckBoxPreference.OnPreferenceClickListener sendCrashReport = new CheckBoxPreference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
@@ -245,9 +236,6 @@ public class MainFragment extends PreferenceFragmentBase {
 		CheckBoxPreference miuizerSettingsPreference = (CheckBoxPreference) findPreference("pref_key_miuizer_icon");
 		if (miuizerSettingsPreference != null)
 		miuizerSettingsPreference.setOnPreferenceChangeListener(toggleIcon);
-		Preference miuizerBackgroundColorPreference = findPreference("pref_key_miuizer_material_background");
-		if (miuizerBackgroundColorPreference != null)
-		miuizerBackgroundColorPreference.setOnPreferenceChangeListener(changeBackgroundColor);
 		Preference miuizerCrashReportPreference = findPreference("pref_key_miuizer_sendreport");
 		if (miuizerCrashReportPreference != null)
 		miuizerCrashReportPreference.setOnPreferenceClickListener(sendCrashReport);

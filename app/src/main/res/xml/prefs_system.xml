@@ -6,18 +6,6 @@
 	android:key="pref_key_system">
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_clockseconds"
-		android:summary="@string/system_clockseconds_summ"
-		android:title="@string/system_clockseconds_title"
-		android:defaultValue="false" />
-
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_expandnotif"
-		android:summary="@string/system_expandnotif_summ"
-		android:title="@string/system_expandnotif_title"
-		android:defaultValue="false" />
-
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_separatevolume"
 		android:summary="@string/system_separatevolume_summ"
 		android:title="@string/system_separatevolume_title"
@@ -38,8 +26,36 @@
 		android:defaultValue="1"/>
 
 	<PreferenceCategory
-		android:title="@string/system_mods_lockscreen"
-		android:key="pref_various_mods_lockscreen">
+		android:title="@string/system_mods_statusbar">
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_clockseconds"
+			android:summary="@string/system_clockseconds_summ"
+			android:title="@string/system_clockseconds_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_hidemobiletype"
+			android:summary="@string/system_hidemobiletype_summ"
+			android:title="@string/system_hidemobiletype_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_fixmeter"
+			android:summary="@string/system_fixmeter_summ"
+			android:title="@string/system_fixmeter_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_expandnotif"
+			android:summary="@string/system_expandnotif_summ"
+			android:title="@string/system_expandnotif_title"
+			android:defaultValue="false" />
+
+	</PreferenceCategory>
+
+	<PreferenceCategory
+		android:title="@string/system_mods_lockscreen">
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_securelock"
@@ -111,6 +127,17 @@
 			android:key="pref_key_system_drawer_blur"
 			android:title="@string/system_drawer_blur_title"
 			android:summary="@string/system_drawer_blur_summ"
+			android:defaultValue="100"
+			miuizer:minValue="0"
+			miuizer:maxValue="100"
+			miuizer:stepValue="1"
+			miuizer:format="%d%"
+			miuizer:offtext="@string/array_default" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_drawer_opacity"
+			android:title="@string/system_drawer_opacity_title"
+			android:summary="@string/system_drawer_opacity_summ"
 			android:defaultValue="100"
 			miuizer:minValue="0"
 			miuizer:maxValue="100"

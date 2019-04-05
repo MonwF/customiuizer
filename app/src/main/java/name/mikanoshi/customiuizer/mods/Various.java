@@ -2,13 +2,14 @@ package name.mikanoshi.customiuizer.mods;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.Loader;
 import android.content.pm.PackageInfo;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.widget.Toast;
+
+import java.lang.reflect.Method;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
@@ -22,17 +23,24 @@ public class Various {
 
 	public static void AppInfoHook(XC_LoadPackage.LoadPackageParam lpparam) {
 		try {
-			XposedHelpers.findAndHookMethod("com.miui.appmanager.AMAppInfomationActivity", lpparam.classLoader, "onLoadFinished", Loader.class, Object.class, new XC_MethodHook() {
+			XposedBridge.hookAllMethods(XposedHelpers.findClass("com.miui.appmanager.AMAppInfomationActivity", lpparam.classLoader), "onLoadFinished", new XC_MethodHook() {
 				@Override
 				protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
 					final PreferenceActivity act = (PreferenceActivity)param.thisObject;
-					final PackageInfo mPackageInfo = (PackageInfo)XposedHelpers.getObjectField(param.thisObject, "mPackageInfo");
+					final PackageInfo mPackageInfo = (PackageInfo)XposedHelpers.getObjectField(act, "mPackageInfo");
 					final Resources modRes = Helpers.getModuleRes(act);
-					XposedHelpers.callMethod(param.thisObject, "b", "apk_filename", modRes.getString(R.string.appdetails_apk_file), mPackageInfo.applicationInfo.sourceDir);
-					XposedHelpers.callMethod(param.thisObject, "b", "data_path", modRes.getString(R.string.appdetails_data_path), mPackageInfo.applicationInfo.dataDir);
-					XposedHelpers.callMethod(param.thisObject, "b", "app_uid", modRes.getString(R.string.appdetails_app_uid), String.valueOf(mPackageInfo.applicationInfo.uid));
-					XposedHelpers.callMethod(param.thisObject, "b", "target_sdk", modRes.getString(R.string.appdetails_sdk), String.valueOf(mPackageInfo.applicationInfo.targetSdkVersion));
-					XposedHelpers.callMethod(param.thisObject, "b", "launch_app", modRes.getString(R.string.appdetails_launch), "");
+					Method[] addPref = XposedHelpers.findMethodsByExactParameters(act.getClass(), void.class, String.class, String.class, String.class);
+					if (addPref.length == 0) {
+						XposedBridge.log("[CustoMIUIzer][AppInfo] Unable to find class/method in SecurityCenter to hook");
+						return;
+					} else {
+						addPref[0].setAccessible(true);
+					}
+					addPref[0].invoke(act, "apk_filename", modRes.getString(R.string.appdetails_apk_file), mPackageInfo.applicationInfo.sourceDir);
+					addPref[0].invoke(act, "data_path", modRes.getString(R.string.appdetails_data_path), mPackageInfo.applicationInfo.dataDir);
+					addPref[0].invoke(act, "app_uid", modRes.getString(R.string.appdetails_app_uid), String.valueOf(mPackageInfo.applicationInfo.uid));
+					addPref[0].invoke(act, "target_sdk", modRes.getString(R.string.appdetails_sdk), String.valueOf(mPackageInfo.applicationInfo.targetSdkVersion));
+					addPref[0].invoke(act, "launch_app", modRes.getString(R.string.appdetails_launch), "");
 
 					@SuppressWarnings("deprecation")
 					Preference pref = act.findPreference("launch_app");

@@ -32,15 +32,6 @@
 			android:summary="@string/miuizer_show_icon_summ"
 			android:title="@string/miuizer_show_icon_title"
 			android:defaultValue="true" />
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
-			android:enabled="false"
-			android:key="pref_key_miuizer_material_background"
-			android:summary=""
-			android:title="@string/miuizer_theme_title"
-			android:entries="@array/material_background"
-			android:entryValues="@array/material_background_val"
-			android:defaultValue="1"
-			miui:valueAsSummary="true" />
 	</PreferenceCategory>
 
 	<PreferenceCategory

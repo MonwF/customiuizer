@@ -29,8 +29,12 @@ public class SharedPrefsProvider extends ContentProvider {
 	@Override
 	@SuppressWarnings("ConstantConditions")
 	public boolean onCreate() {
-		prefs = getContext().getSharedPreferences(Helpers.prefsName, Context.MODE_PRIVATE);
-		return true;
+		try {
+			prefs = Helpers.getProtectedContext(getContext()).getSharedPreferences(Helpers.prefsName, Context.MODE_PRIVATE);
+			return true;
+		} catch (Throwable throwable) {
+			return false;
+		}
 	}
 
 	@Override

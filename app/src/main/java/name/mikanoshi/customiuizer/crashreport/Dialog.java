@@ -121,10 +121,15 @@ public class Dialog extends Activity {
 	
 	private void sendCrash(final String xposedLogStr) {
 		CrashReportPersister persister = new CrashReportPersister();
-		SharedPreferences prefs = getSharedPreferences(Helpers.prefsName, Context.MODE_PRIVATE);
+		SharedPreferences prefs = null;
+		try {
+			prefs = Helpers.getProtectedContext(this).getSharedPreferences(Helpers.prefsName, Context.MODE_PRIVATE);
+		} catch (Throwable t) {
+			Log.e("prefs", "Failed to use protected storage!");
+			return;
+		}
 		final CrashReportData crashData;
 		try {
-			Log.e("crash", reportFile.getAbsolutePath());
 			crashData = persister.load(reportFile);
 			crashData.put(USER_COMMENT, desc.getText().toString());
 			crashData.put(USER_EMAIL, prefs.getString("acra.user.email", ""));
@@ -283,7 +288,6 @@ public class Dialog extends Activity {
 			String payload = crashData.toJSON();
 			int payloadSize = payload.getBytes(StandardCharsets.UTF_8).length;
 			boolean isManualReport = crashData.getString(ReportField.STACK_TRACE).contains("Report requested by developer");
-			Log.e("ACRA", crashData.getString(ReportField.STACK_TRACE));
 
 			TextView mainText = new TextView(this);
 			mainText.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));

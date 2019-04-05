@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
+import android.os.FileObserver;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -16,18 +16,23 @@ public class MainActivity extends ActivityEx {
 
 	MainFragment mainFrag = null;
 	SharedPreferences.OnSharedPreferenceChangeListener prefsChanged;
+	FileObserver mFileObserver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		Helpers.dataPath = getFilesDir().getPath();
-		Helpers.prefs = getSharedPreferences(Helpers.prefsName, Context.MODE_PRIVATE);
+		try {
+			Helpers.fixPermissionsAsync(this);
+			Helpers.prefs = Helpers.getProtectedContext(this).getSharedPreferences(Helpers.prefsName, Context.MODE_PRIVATE);
+		} catch (Throwable t) {
+			Log.e("prefs", "Failed to use protected storage!");
+		}
 
 		super.onCreate(savedInstanceState);
 
 		prefsChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
 			@Override
 			public void onSharedPreferenceChanged(SharedPreferences sharedPrefs, String key) {
-				Log.w("prefs", "Changed: " + key);
+				Log.i("prefs", "Changed: " + key);
 				requestBackup();
 				Object val = sharedPrefs.getAll().get(key);
 				String path = "/";
@@ -39,6 +44,18 @@ public class MainActivity extends ActivityEx {
 			}
 		};
 		Helpers.prefs.registerOnSharedPreferenceChangeListener(prefsChanged);
+
+		try {
+			mFileObserver = new FileObserver(Helpers.getProtectedContext(this).getDataDir() + "/shared_prefs", FileObserver.CLOSE_WRITE) {
+				@Override
+				public void onEvent(int event, String path) {
+					Helpers.fixPermissionsAsync(MainActivity.this);
+				}
+			};
+			mFileObserver.startWatching();
+		} catch (Throwable t) {
+			Log.e("prefs", "Failed to start FileObserver!");
+		}
 
 		if (!launch) return;
 		mainFrag = new MainFragment();

@@ -1,3 +1,14 @@
+1.3.0
+[Fixed][Compatibility] Loading module settings on devices with encrypted storage. Backup settings before updating to this version, they will be reset to defaults!
+[Fixed][Compatibility] Additional app details
+[Fixed][Compatibility] Quick flashlight
+[Fixed][Compatibility] Volume keys media actions
+[Fixed][Compatibility] All mods with customizable actions/toggles
+[New] Two additional buttons on navigation bar with customizable actions
+[New] Themed notification drawer background opacity
+[New] Remove mobile network type icon from status bar
+[New] Increase right margin for traffic speed indicator
+
 1.2.0
 [New] Display seconds in the status bar clock
 [New] Always show notifications fully expanded

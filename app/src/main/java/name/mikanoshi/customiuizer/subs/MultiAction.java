@@ -21,7 +21,7 @@ import name.mikanoshi.customiuizer.prefs.SpinnerEx;
 import name.mikanoshi.customiuizer.prefs.SpinnerExFake;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
-public class SwipeGesture extends SubFragment {
+public class MultiAction extends SubFragment {
 
 	private SpinnerExFake appLaunch = null;
 	private SpinnerExFake shortcutLaunch = null;
@@ -41,7 +41,7 @@ public class SwipeGesture extends SubFragment {
 		Bundle args = getArguments();
 		key = args.getString("key");
 
-		SpinnerEx actionSpinner = getView().findViewById(R.id.swipe_gesture_action);
+		SpinnerEx actionSpinner = getView().findViewById(R.id.action);
 		actionSpinner.setTag(key + "_action");
 		if (key.equals("pref_key_launcher_swipedown"))
 		actionSpinner.addDisabledItems(1);
@@ -90,7 +90,7 @@ public class SwipeGesture extends SubFragment {
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_UP) {
 					AppSelector appSelect = new AppSelector();
-					appSelect.setTargetFragment(SwipeGesture.this, 0);
+					appSelect.setTargetFragment(MultiAction.this, 0);
 					openSubFragment(appSelect, null, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_app, R.layout.prefs_app_selector);
 				}
 				return false;
@@ -144,7 +144,7 @@ public class SwipeGesture extends SubFragment {
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_UP) {
 					ShortcutSelector shortcutSelect = new ShortcutSelector();
-					shortcutSelect.setTargetFragment(SwipeGesture.this, 1);
+					shortcutSelect.setTargetFragment(MultiAction.this, 1);
 					Bundle args = new Bundle();
 					args.putString("key", key + "_shortcut");
 					openSubFragment(shortcutSelect, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_shortcut, R.layout.prefs_app_selector);
@@ -153,7 +153,7 @@ public class SwipeGesture extends SubFragment {
 			}
 		});
 
-		SpinnerEx toggleSpinner = getView().findViewById(R.id.swipe_gesture_toggle);
+		SpinnerEx toggleSpinner = getView().findViewById(R.id.toggle);
 		toggleSpinner.setTag(key + "_toggle");
 		toggleSpinner.init(Helpers.prefs.getInt(key + "_toggle", 1));
 	}

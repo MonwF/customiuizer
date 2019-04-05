@@ -6,14 +6,12 @@ import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.inputmethodservice.InputMethodService;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.text.format.DateFormat;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -458,34 +456,6 @@ public class System {
 		}
 	}
 
-	public static void VolumeCursorHook() {
-		try {
-			XposedHelpers.findAndHookMethod("android.inputmethodservice.InputMethodService", null, "onKeyDown", int.class, KeyEvent.class, new XC_MethodHook() {
-				@Override
-				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-					InputMethodService ims = (InputMethodService)param.thisObject;
-					int code = (int)param.args[0];
-					if ((code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN) && ims.isInputViewShown()) {
-						ims.sendDownUpKeyEvents(code == KeyEvent.KEYCODE_VOLUME_UP ? KeyEvent.KEYCODE_DPAD_LEFT : KeyEvent.KEYCODE_DPAD_RIGHT);
-						param.setResult(true);
-					}
-				}
-			});
-
-			XposedHelpers.findAndHookMethod("android.inputmethodservice.InputMethodService", null, "onKeyUp", int.class, KeyEvent.class, new XC_MethodHook() {
-				@Override
-				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-					InputMethodService ims = (InputMethodService)param.thisObject;
-					int code = (int)param.args[0];
-					if ((code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN) && ims.isInputViewShown())
-					param.setResult(true);
-				}
-			});
-		} catch (Throwable t) {
-			XposedBridge.log(t);
-		}
-	}
-
 	private static String putSecondsIn(CharSequence clockChr) {
 		NumberFormat df = new DecimalFormat("00");
 		String clockStr = clockChr.toString();
@@ -605,12 +575,77 @@ public class System {
 					param.args[0] = (float)param.args[0] * (int)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mCustomBlurModifier") / 100f;
 				}
 			});
+
+			XposedBridge.hookAllConstructors(XposedHelpers.findClass("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader), new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					Context mContext = (Context)param.args[0];
+					Handler mHandler = new Handler(mContext.getMainLooper());
+
+					XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomOpacityModifier", 100);
+					new Helpers.SharedPrefObserver(mContext, mHandler, "pref_key_system_drawer_opacity", 100) {
+						@Override
+						public void onChange(String name, int defValue) {
+							XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomOpacityModifier", Helpers.getSharedIntPref(mContext, name, defValue));
+						}
+					}.onChange(false);
+				}
+			});
+
+			XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, "updateStatusBarWindowBlur", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+					View mThemeBackgroundView = (View)XposedHelpers.getObjectField(param.thisObject, "mThemeBackgroundView");
+					if (mThemeBackgroundView != null) mThemeBackgroundView.setAlpha(mThemeBackgroundView.getAlpha() * (int)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mCustomOpacityModifier") / 100f);
+				}
+			});
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
 	}
 
+	public static void HideNetworkTypeHook(LoadPackageParam lpparam) {
+		try {
+			XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.SignalClusterView$PhoneState", lpparam.classLoader, "updateMobileType", String.class, new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+					TextView mMobileType = (TextView)XposedHelpers.getObjectField(param.thisObject, "mMobileType");
+					TextView mSignalDualNotchMobileType = (TextView)XposedHelpers.getObjectField(XposedHelpers.getSurroundingThis(param.thisObject), "mSignalDualNotchMobileType");
+					try {
+						View parent = (View)((View)XposedHelpers.getSurroundingThis(param.thisObject)).getParent().getParent().getParent().getParent();
+						if (parent != null && parent.getId() != parent.getResources().getIdentifier("header_content", "id", lpparam.packageName)) {
+							mMobileType.setText("");
+							mSignalDualNotchMobileType.setText("");
+						}
+					} catch (Throwable t) {
+						XposedBridge.log(t);
+					}
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
 
+	public static void TrafficSpeedSpacingHook(LoadPackageParam lpparam) {
+		try {
+			XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.NetworkSpeedView", lpparam.classLoader, "onAttachedToWindow", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+					TextView meter = (TextView)param.thisObject;
+					if (meter != null) try {
+						LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)meter.getLayoutParams();
+						lp.rightMargin = Math.round(meter.getResources().getDisplayMetrics().density * 4);
+						meter.setLayoutParams(lp);
+					} catch (Throwable t) {
+						XposedBridge.log(t);
+					}
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
 
 //	public static void RotationAnimationHook(XC_LoadPackage.LoadPackageParam lpparam) {
 //		try {

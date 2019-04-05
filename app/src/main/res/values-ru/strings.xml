@@ -119,13 +119,23 @@
 
 	<string name="controls_powerflash_delay_title">Задержка активации фонарика *</string>
 	<string name="controls_powerflash_delay_summ">Увеличивает задержку при долгом нажатии на кнопку питания</string>
-	<string name="controls_mods_volume">Кнопки громкости *</string>
+	<string name="controls_mods_volume">Кнопки громкости</string>
 	<string name="controls_volumecursor_title">Управлять курсором ввода</string>
 	<string name="controls_volumecursor_summ">Перемещать курсор ввода текста при нажатии кнопок громкости</string>
-	<string name="controls_volumemedia_up_title">Долгое нажание на Повышение громкости</string>
+	<string name="controls_volumemedia_up_title">Долгое нажание на Повышение громкости *</string>
 	<string name="controls_volumemedia_up_summ">Действие на долгое нажатие клавиши повышения громкости при выключенном экране</string>
-	<string name="controls_volumemedia_down_title">Долгое нажание на Понижение громкости</string>
+	<string name="controls_volumemedia_down_title">Долгое нажание на Понижение громкости *</string>
 	<string name="controls_volumemedia_down_summ">Действие на долгое нажатие клавиши понижения громкости при выключенном экране</string>
+	<string name="controls_mods_navbar">Панель навигации *</string>
+	<string name="controls_navbarleft_summ">Присвоить действие на нажатие левой дополнительной кнопки</string>
+	<string name="controls_navbarleft_title">Действие на нажатие левой кнопки</string>
+	<string name="controls_navbarleftlong_summ">Присвоить действие на долгое левой дополнительной кнопки</string>
+	<string name="controls_navbarleftlong_title">Действие на долгое нажатие левой кнопки</string>
+	<string name="controls_navbarright_summ">Присвоить действие на нажатие правой дополнительной кнопки</string>
+	<string name="controls_navbarright_title">Действие на нажатие правой кнопки</string>
+	<string name="controls_navbarrightlong_summ">Присвоить действие на долгое нажатие правой дополнительной кнопки</string>
+	<string name="controls_navbarrightlong_title">Действие на долгое нажатие правой кнопки</string>
+	<string name="controls_navbar_noaction">Действие не задано</string>
 
 	<string name="array_color_dark">Тёмная</string>
 	<string name="array_color_light">Светлая</string>
@@ -184,8 +194,13 @@
 	<string name="system_mods">Система</string>
 	<string name="system_mods_lockscreen">Экран блокировки</string>
 	<string name="system_mods_screenanim">Экранная анимация *</string>
+	<string name="system_mods_statusbar">Строка состояния и панель уведомелний</string>
 	<string name="system_clockseconds_title">Показывать секунды</string>
-	<string name="system_clockseconds_summ">Отображать секунды на часах в статусбаре</string>
+	<string name="system_clockseconds_summ">Отображает секунды на часах в статусбаре</string>
+	<string name="system_hidemobiletype_title">Скрывать тип мобильной сети</string>
+	<string name="system_hidemobiletype_summ">Удаляет иконку типа мобильной сети из строки состояния</string>
+	<string name="system_fixmeter_title">Отступ скорости трафика</string>
+	<string name="system_fixmeter_summ">Увеличивает отступ справа для индикатора скорости трафика</string>
 	<string name="system_expandnotif_title">Разворачивать уведомления</string>
 	<string name="system_expandnotif_summ">Всегда показывать уведомления в полностью развёрнутом виде</string>
 	<string name="system_nolightuponcharge_summ">Запрещает включение экрана при подключении или отключении зарядки (не влияет на отображение начала беспроводной зарядки)</string>
@@ -204,6 +219,8 @@
 	<string name="system_recents_blur_summ">Уровень размытия фона на экране последних приложений</string>
 	<string name="system_drawer_blur_title">Панель уведомлений</string>
 	<string name="system_drawer_blur_summ">Уровень размытия фона в панели уведомлений</string>
+	<string name="system_drawer_opacity_title">Прозрачность фона из темы</string>
+	<string name="system_drawer_opacity_summ">Уровень прозрачности фона панели уведомлений из текущей темы</string>
 	<string name="system_securelock_title">Улучшенная блокировка</string>
 	<string name="system_securelock_summ">Отключает меню управления питанием во время блокировки</string>
 	<string name="toggle_flash_on">Фонарик включен</string>

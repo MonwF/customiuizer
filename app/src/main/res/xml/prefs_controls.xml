@@ -44,4 +44,26 @@
 
 	</PreferenceCategory>
 
+	<PreferenceCategory
+		android:title="@string/controls_mods_navbar">
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_controls_navbarleft"
+			android:summary="@string/controls_navbarleft_summ"
+			android:title="@string/controls_navbarleft_title" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_controls_navbarleftlong"
+			android:summary="@string/controls_navbarleftlong_summ"
+			android:title="@string/controls_navbarleftlong_title" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_controls_navbarright"
+			android:summary="@string/controls_navbarright_summ"
+			android:title="@string/controls_navbarright_title" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_controls_navbarrightlong"
+			android:summary="@string/controls_navbarrightlong_summ"
+			android:title="@string/controls_navbarrightlong_title" />
+
+	</PreferenceCategory>
+
 </PreferenceScreen>

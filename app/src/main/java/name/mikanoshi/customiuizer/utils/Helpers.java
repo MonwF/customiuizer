@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
@@ -25,6 +26,7 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.PowerManager.WakeLock;
@@ -46,7 +48,6 @@ public class Helpers {
 	public static SharedPreferences prefs = null;
 //	public static ArrayList<AppData> installedAppsList = null;
 	public static ArrayList<AppData> launchableAppsList = null;
-	public static String dataPath;
 	public static String backupFile = "settings_backup";
 	public static final int REQUEST_PERMISSIONS_BACKUP = 1;
 	public static final int REQUEST_PERMISSIONS_RESTORE = 2;
@@ -287,9 +288,47 @@ public class Helpers {
 //			pref.setSummary(reasonText);
 //		}
 //	}
+	@SuppressLint({"SetWorldReadable", "SetWorldWritable"})
+	public static void fixPermissionsAsync(Context context) {
+		AsyncTask.execute(() -> {
+			Context mContext;
+			try {
+				mContext = Helpers.getProtectedContext(context);
+			} catch (Throwable t) {
+				Log.e("prefs", "Failed to fix permissions on protected storage!");
+				mContext = context;
+			}
+
+			File pkgFolder = mContext.getDataDir();
+			if (pkgFolder.exists()) {
+				pkgFolder.setExecutable(true, false);
+				pkgFolder.setReadable(true, false);
+				File sharedPrefsFolder = new File(pkgFolder.getAbsolutePath() + "/shared_prefs");
+				if (sharedPrefsFolder.exists()) {
+					sharedPrefsFolder.setExecutable(true, false);
+					sharedPrefsFolder.setReadable(true, false);
+					File f = new File(sharedPrefsFolder.getAbsolutePath() + "/" + Helpers.prefsName + ".xml");
+					if (f.exists()) {
+						f.setReadable(true, false);
+						f.setExecutable(true, false);
+						f.setWritable(true, false);
+					}
+				}
+			}
+		});
+	}
 
 	public static synchronized Context getModuleContext(Context context) throws Throwable {
-		return context.createPackageContext(modulePkg, Context.CONTEXT_IGNORE_SECURITY);
+		return context.createPackageContext(modulePkg, Context.CONTEXT_IGNORE_SECURITY).createDeviceProtectedStorageContext();
+	}
+
+	public static synchronized Context getProtectedContext(Context context, Configuration config) throws Throwable {
+		Context mContext = context.isDeviceProtectedStorage() ? context : context.createDeviceProtectedStorageContext();
+		return (config == null ? mContext : mContext.createConfigurationContext(config));
+	}
+
+	public static synchronized Context getProtectedContext(Context context) throws Throwable {
+		return getProtectedContext(context, null);
 	}
 
 	public static synchronized Resources getModuleRes(Context context) throws Throwable {

@@ -1,8 +1,11 @@
 package name.mikanoshi.customiuizer;
 
+import java.io.File;
+
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XSharedPreferences;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 import name.mikanoshi.customiuizer.mods.Controls;
 import name.mikanoshi.customiuizer.mods.GlobalActions;
@@ -16,7 +19,7 @@ import name.mikanoshi.customiuizer.utils.Helpers;
 public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage {
 
 	public static String MODULE_PATH = null;
-	public static XSharedPreferences pref;
+	public static XSharedPreferences pref = null;
 
 	public static int pref_swipedown = 1;
 	public static int pref_swipeup = 1;
@@ -32,6 +35,10 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 	public static int pref_drawer_blur = 100;
 	public static int pref_volumemedia_up = 0;
 	public static int pref_volumemedia_down = 0;
+	public static int pref_navbarleft = 1;
+	public static int pref_navbarleftlong = 1;
+	public static int pref_navbarright = 1;
+	public static int pref_navbarrightlong = 1;
 	//public static int pref_rotateanim = 1;
 	public static boolean pref_powerflash = false;
 	public static boolean pref_nolightup = false;
@@ -44,12 +51,25 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 	public static boolean pref_volumecursor = false;
 	public static boolean pref_clockseconds = false;
 	public static boolean pref_expandnotif = false;
+	public static boolean pref_hidemobiletype = false;
+	public static boolean pref_fixmeter = false;
 
 	public void initZygote(StartupParam startParam) {
 		MODULE_PATH = startParam.modulePath;
 
-		pref = new XSharedPreferences(Helpers.modulePkg, Helpers.prefsName);
-		pref.makeWorldReadable();
+		try {
+			//pref = new XSharedPreferences(Helpers.modulePkg, Helpers.prefsName);
+			pref = new XSharedPreferences(new File("/data/user_de/0/" + Helpers.modulePkg + "/shared_prefs/" + Helpers.prefsName + ".xml"));
+			pref.makeWorldReadable();
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+
+		if (pref == null || pref.getAll().size() == 0) {
+			XposedBridge.log("[CustoMIUIzer] Cannot read module's SharedPreferences, mods won't work!");
+			return;
+		}
+
 		pref_swipedown = pref.getInt("pref_key_launcher_swipedown_action", 1);
 		pref_swipeup = pref.getInt("pref_key_launcher_swipeup_action", 1);
 		pref_swipedown2 = pref.getInt("pref_key_launcher_swipedown2_action", 1);
@@ -75,10 +95,16 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		pref_drawer_blur = pref.getInt("pref_key_system_drawer_blur", 100);
 		pref_volumemedia_up = Integer.parseInt(pref.getString("pref_key_controls_volumemedia_up", "0"));
 		pref_volumemedia_down = Integer.parseInt(pref.getString("pref_key_controls_volumemedia_down", "0"));
+		pref_navbarleft = pref.getInt("pref_key_controls_navbarleft_action", 1);
+		pref_navbarleftlong = pref.getInt("pref_key_controls_navbarleftlong_action", 1);
+		pref_navbarright = pref.getInt("pref_key_controls_navbarright_action", 1);
+		pref_navbarrightlong = pref.getInt("pref_key_controls_navbarrightlong_action", 1);
+		pref_hidemobiletype = pref.getBoolean("pref_key_system_hidemobiletype", false);
+		pref_fixmeter = pref.getBoolean("pref_key_system_fixmeter", false);
 		//pref_rotateanim = Integer.parseInt(pref.getString("pref_key_system_rotateanim", "1"));
 
 		if (pref_etoasts > 1) System.IconLabelToastsHook();
-		if (pref_volumecursor) System.VolumeCursorHook();
+		if (pref_volumecursor) Controls.VolumeCursorHook();
 		if (pref_volumemedia_up > 0 || pref_volumemedia_down > 0) Controls.VolumeMediaPlayerHook();
 
 		GlobalActions.setupUnhandledCatcher();
@@ -114,6 +140,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (pref_expandnotif) System.ExpandNotificationsHook(lpparam);
 			if (pref_recents_blur < 100) System.RecentsBlurRatioHook(lpparam);
 			if (pref_drawer_blur < 100) System.DrawerBlurRatioHook(lpparam);
+			if (pref_navbarleft > 1 || pref_navbarleftlong > 1 || pref_navbarright > 1 || pref_navbarrightlong > 1) Controls.NavBarButtonsHook(lpparam);
+			if (pref_hidemobiletype) System.HideNetworkTypeHook(lpparam);
+			if (pref_fixmeter) System.TrafficSpeedSpacingHook(lpparam);
 		}
 
 //		if (pkg.equals("com.android.incallui")) {
@@ -139,13 +168,5 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (pref_shake != 1)
 			Launcher.ShakeHook(lpparam);
 		}
-/*
-		if (pkg.equals("com.android.systemui"))
-		findAndHookMethod("com.android.keyguard.MiuiKeyguardClock", lpparam.classLoader, "onFinishInflate", new XC_MethodHook() {
-			@Override
-			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
-			}
-		});
-*/
 	}
 }

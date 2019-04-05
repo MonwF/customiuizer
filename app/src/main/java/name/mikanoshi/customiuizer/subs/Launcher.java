@@ -17,10 +17,9 @@ public class Launcher extends SubFragment {
 		CheckBoxPreference.OnPreferenceClickListener openSwipeEdit = new CheckBoxPreference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				SwipeGesture swipePref = new SwipeGesture();
 				Bundle args = new Bundle();
 				args.putString("key", preference.getKey());
-				openSubFragment(swipePref, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.Edit, preference.getTitleRes(), R.layout.prefs_swipe_gestures);
+				openSubFragment(new MultiAction(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.Edit, preference.getTitleRes(), R.layout.prefs_swipe_gestures);
 				return true;
 			}
 		};

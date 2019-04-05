@@ -1,13 +1,4 @@
 <resources>
-	<string-array name="material_background">
-		<item>@string/array_color_light</item>
-		<item>@string/array_color_dark</item>
-	</string-array>
-	<string-array name="material_background_val">
-		<item>1</item>
-		<item>2</item>
-	</string-array>
-
 	<string-array name="global_actions">
 		<item>@string/array_global_actions_none</item>
 		<item>@string/array_global_actions_notif</item>
@@ -31,6 +22,31 @@
 		<item>8</item>
 		<item>9</item>
 		<item>10</item>
+	</integer-array>
+
+	<string-array name="global_actions_ext">
+		<item>@string/array_global_actions_none</item>
+		<item>@string/array_global_actions_lock</item>
+		<item>@string/array_global_actions_sleep</item>
+		<item>@string/array_global_actions_screenshot</item>
+		<item>@string/array_global_actions_launch</item>
+		<item>@string/array_global_actions_shortcut</item>
+		<item>@string/array_global_actions_toggle</item>
+		<item>@string/array_media_playpause</item>
+		<item>@string/array_media_next</item>
+		<item>@string/array_media_prev</item>
+	</string-array>
+	<integer-array name="global_actions_ext_val">
+		<item>1</item>
+		<item>4</item>
+		<item>5</item>
+		<item>6</item>
+		<item>8</item>
+		<item>9</item>
+		<item>10</item>
+		<item>85</item>
+		<item>87</item>
+		<item>88</item>
 	</integer-array>
 
 	<string-array name="global_toggles">
@@ -72,40 +88,40 @@
 	</string-array>
 
 	<string-array name="screenrotate">
-		<item >@string/array_default</item>
-		<item >@string/array_screen_anim_none</item>
-		<item >@string/array_screen_anim_fade</item>
+		<item>@string/array_default</item>
+		<item>@string/array_screen_anim_none</item>
+		<item>@string/array_screen_anim_fade</item>
 	</string-array>
 	<string-array name="screenrotate_val">
-		<item >1</item>
-		<item >2</item>
-		<item >3</item>
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
 	</string-array>
 
 	<string-array name="iconlabletoasts">
-		<item >@string/array_default</item>
-		<item >@string/array_toasts_icon</item>
-		<item >@string/array_toasts_label</item>
-		<item >@string/array_toasts_both</item>
+		<item>@string/array_default</item>
+		<item>@string/array_toasts_icon</item>
+		<item>@string/array_toasts_label</item>
+		<item>@string/array_toasts_both</item>
 	</string-array>
 	<string-array name="iconlabletoasts_val">
-		<item >1</item>
-		<item >2</item>
-		<item >3</item>
-		<item >4</item>
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+		<item>4</item>
 	</string-array>
 
 	<string-array name="media_action">
-		<item >@string/array_media_none</item>
-		<item >@string/array_media_playpause</item>
-		<item >@string/array_media_next</item>
-		<item >@string/array_media_prev</item>
+		<item>@string/array_media_none</item>
+		<item>@string/array_media_playpause</item>
+		<item>@string/array_media_next</item>
+		<item>@string/array_media_prev</item>
 	</string-array>
 	<string-array name="media_action_val">
-		<item >0</item>
-		<item >85</item>
-		<item >87</item>
-		<item >88</item>
+		<item>0</item>
+		<item>85</item>
+		<item>87</item>
+		<item>88</item>
 	</string-array>
 
 

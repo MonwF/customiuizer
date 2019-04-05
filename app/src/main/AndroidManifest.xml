@@ -61,12 +61,17 @@
 			android:name=".SharedPrefsProvider"
 			android:authorities="name.mikanoshi.customiuizer.provider.sharedprefs"
 			android:grantUriPermissions="true"
-			android:exported="true" />
+			android:exported="true"
+			android:directBootAware="true" />
 
-		<receiver android:name=".utils.HelperReceiver" android:exported="true">
+		<receiver
+			android:name=".utils.HelperReceiver"
+			android:exported="true"
+			android:enabled="true"
+			android:directBootAware="true">
 			<intent-filter>
+				<action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
 				<action android:name="name.mikanoshi.customiuizer.SAVEEXCEPTION" />
-				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</receiver>
 

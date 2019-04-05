@@ -2,6 +2,7 @@ package name.mikanoshi.customiuizer;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 import org.acra.ACRA;
 import org.acra.collector.ApplicationStartupCollector;
@@ -42,7 +43,12 @@ public class MainApplication extends Application {
 
 	@Override
 	protected void attachBaseContext(Context base) {
-		super.attachBaseContext(base);
+		try {
+			super.attachBaseContext(Helpers.getProtectedContext(base));
+		} catch (Throwable t) {
+			super.attachBaseContext(base);
+			Log.e("prefs", "Failed to use protected storage!");
+		}
 
 		ACRA.DEV_LOGGING = false;
 		CoreConfigurationBuilder builder = new CoreConfigurationBuilder(this).setPluginLoader(new SimplePluginLoader(

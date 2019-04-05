@@ -12,6 +12,10 @@
 	<string name="system_mods_screenanim">Screen animations *</string>
 	<string name="system_clockseconds_title">Show seconds</string>
 	<string name="system_clockseconds_summ">Display seconds in the status bar clock</string>
+	<string name="system_hidemobiletype_title">Hide mobile network type</string>
+	<string name="system_hidemobiletype_summ">Remove mobile network type icon from status bar</string>
+	<string name="system_fixmeter_title">Traffic speed spacing</string>
+	<string name="system_fixmeter_summ">Increase right margin for traffic speed indicator</string>
 	<string name="system_expandnotif_title">Expand notifications</string>
 	<string name="system_expandnotif_summ">Always show notifications fully expanded</string>
 	<string name="system_nolightuponcharge_title">No screen light up on charge</string>
@@ -34,12 +38,15 @@
 	<string name="system_recents_blur_summ">Background blur intensity in recent apps</string>
 	<string name="system_drawer_blur_title">Notification drawer</string>
 	<string name="system_drawer_blur_summ">Background blur intensity in notification drawer</string>
+	<string name="system_drawer_opacity_title">Themed background opacity</string>
+	<string name="system_drawer_opacity_summ">Opacity of a themed notification drawer background</string>
 	<string name="system_mods_lockscreen">Lock Screen</string>
 	<string name="system_iconlabletoasts_title">Enhanced toasts *</string>
 	<string name="system_iconlabletoasts_summ">Add application\'s icon and label to its toasts</string>
 	<string name="system_rotateanim_title">Rotation animation</string>
 	<string name="system_dttosleep_title">Double tap to sleep</string>
 	<string name="system_dttosleep_summ">Turn screen off by double tapping on any empty space on lockscreen</string>
+	<string name="system_mods_statusbar">Status bar and notification drawer</string>
 
 	<string name="launcher_mods">MIUI Launcher</string>
 	<string name="launcher_gestures">Gestures *</string>
@@ -67,13 +74,23 @@
 	<string name="controls_powerflash_summ">Long press power button while screen is off to turn flashlight on</string>
 	<string name="controls_powerflash_delay_title">Longer quick flashlight delay *</string>
 	<string name="controls_powerflash_delay_summ">Increases the power button long press delay</string>
-	<string name="controls_mods_volume">Volume keys *</string>
+	<string name="controls_mods_volume">Volume keys</string>
 	<string name="controls_volumecursor_title">Control input cursor</string>
 	<string name="controls_volumecursor_summ">Move text input cursor using volume keys</string>
-	<string name="controls_volumemedia_up_title">Volume Up long press action</string>
+	<string name="controls_volumemedia_up_title">Volume Up long press action *</string>
 	<string name="controls_volumemedia_up_summ">Action for Volume Up long press when screen is off</string>
-	<string name="controls_volumemedia_down_title">Volume Down long press action</string>
+	<string name="controls_volumemedia_down_title">Volume Down long press action *</string>
 	<string name="controls_volumemedia_down_summ">Action for Volume Down long press when screen is off</string>
+	<string name="controls_mods_navbar">Navigation bar *</string>
+	<string name="controls_navbarleft_summ">Action on left additional navigation button press</string>
+	<string name="controls_navbarleft_title">Left button action</string>
+	<string name="controls_navbarleftlong_summ">Action on left additional navigation button long press</string>
+	<string name="controls_navbarleftlong_title">Left button long press action</string>
+	<string name="controls_navbarright_summ">Action on right additional navigation button press</string>
+	<string name="controls_navbarright_title">Right button action</string>
+	<string name="controls_navbarrightlong_summ">Action on right additional navigation button long press</string>
+	<string name="controls_navbarrightlong_title">Right button long press action</string>
+	<string name="controls_navbar_noaction">No action defined</string>
 
 	<string name="various_mods">Various</string>
 	<string name="various_sysappsupdater_title">Open \"System app updater\"</string>
@@ -217,5 +234,5 @@
 	<string name="no_browser">Browser app is required to open URLs</string>
 	<string name="okay">Okay</string>
 	<string name="cancel">Cancel</string>
-	<string name="dummy" translatable="false"></string>
+	<string name="dummy" translatable="false" />
 </resources>

@@ -262,9 +262,14 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 
 	public void onCreate(Bundle savedInstanceState, int pref_defaults) {
 		super.onCreate(savedInstanceState);
-		getPreferenceManager().setSharedPreferencesName(Helpers.prefsName);
-		getPreferenceManager().setSharedPreferencesMode(Context.MODE_PRIVATE);
-		PreferenceManager.setDefaultValues(getActivity(), pref_defaults, false);
+		try {
+			getPreferenceManager().setSharedPreferencesName(Helpers.prefsName);
+			getPreferenceManager().setSharedPreferencesMode(Context.MODE_PRIVATE);
+			getPreferenceManager().setStorageDeviceProtected();
+			PreferenceManager.setDefaultValues(getActivity(), pref_defaults, false);
+		} catch (Throwable throwable) {
+			throwable.printStackTrace();
+		}
 	}
 
 	@Override
