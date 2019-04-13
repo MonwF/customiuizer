@@ -1,3 +1,10 @@
+1.4.0
+[New] Customizable actions for single/double/long press on fingerprint scanner while screen is on
+[New] Option to disable screen light up on charge in all cases or only when there is no charging animation
+[New] Define how long screen should be kept on after charging animation starts
+[New] Actions to open notification drawer/quick settings/recent apps do toggle instead of just opening when possible
+[New] Volume steps multiplier
+
 1.3.1
 [Fixed][Compatibility] MIUI 10.3
 [Fixed] Screen off animation duration

@@ -5,24 +5,6 @@
 	android:layout_height="match_parent"
 	android:key="pref_key_system">
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_separatevolume"
-		android:summary="@string/system_separatevolume_summ"
-		android:title="@string/system_separatevolume_title"
-		android:defaultValue="false" />
-
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_nolightuponcharge"
-		android:summary="@string/system_nolightuponcharge_summ"
-		android:title="@string/system_nolightuponcharge_title"
-		android:defaultValue="false" />
-
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_nolightuponheadset"
-		android:summary="@string/system_nolightuponheadset_summ"
-		android:title="@string/system_nolightuponheadset_title"
-		android:defaultValue="false" />
-
 	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_iconlabletoasts"
 		android:summary="@string/system_iconlabletoasts_summ"
@@ -30,6 +12,80 @@
 		android:entries="@array/iconlabletoasts"
 		android:entryValues="@array/iconlabletoasts_val"
 		android:defaultValue="1"/>
+
+	<PreferenceCategory
+		android:title="@string/system_mods_screen">
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_nolightuponheadset"
+			android:summary="@string/system_nolightuponheadset_summ"
+			android:title="@string/system_nolightuponheadset_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_nolightuponcharges"
+			android:summary="@string/system_nolightuponcharges_summ"
+			android:title="@string/system_nolightuponcharges_title"
+			android:entries="@array/lightups"
+			android:entryValues="@array/lightups_val"
+			android:defaultValue="1" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_chargeanimtime"
+			android:title="@string/system_chargeanimtime_title"
+			android:summary="@string/system_chargeanimtime_summ"
+			android:defaultValue="20"
+			miuizer:minValue="3"
+			miuizer:maxValue="20"
+			miuizer:stepValue="1"
+			miuizer:format="%d s"
+			miuizer:offtext="@string/array_default" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_screenanim_duration"
+			android:title="@string/system_screenanim_duration_title"
+			android:summary="@string/system_screenanim_duration_summ"
+			android:defaultValue="0"
+			miuizer:minValue="0"
+			miuizer:maxValue="1500"
+			miuizer:stepValue="50"
+			miuizer:format="%d ms"
+			miuizer:offtext="@string/array_default"
+			miuizer:note="@string/system_screenanim_desc" />
+		<!--
+			<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+				android:key="pref_key_system_rotateanim"
+				android:summary=""
+				android:title="@string/system_rotateanim_title"
+				android:entries="@array/screenrotate"
+				android:entryValues="@array/screenrotate_val"
+				android:defaultValue="0"
+				miuizer:valueAsSummary="true" />
+		-->
+	</PreferenceCategory>
+
+	<PreferenceCategory
+		android:title="@string/system_mods_audio">
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_separatevolume"
+			android:title="@string/system_separatevolume_title"
+			android:summary="@string/system_separatevolume_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_volumesteps"
+			android:title="@string/system_volumesteps_title"
+			android:summary="@string/system_volumesteps_summ"
+			android:defaultValue="10"
+			miuizer:minValue="10"
+			miuizer:maxValue="30"
+			miuizer:stepValue="5"
+			miuizer:displayDividerValue="10"
+			miuizer:format="x%s"
+			miuizer:offtext="@string/array_default" />
+
+	</PreferenceCategory>
 
 	<PreferenceCategory
 		android:title="@string/system_mods_statusbar">
@@ -87,32 +143,6 @@
 			android:title="@string/system_dttosleep_title"
 			android:defaultValue="false" />
 
-	</PreferenceCategory>
-
-	<PreferenceCategory
-		android:title="@string/system_mods_screenanim">
-
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_screenanim_duration"
-			android:title="@string/system_screenanim_duration_title"
-			android:summary="@string/system_screenanim_duration_summ"
-			android:defaultValue="0"
-			miuizer:minValue="0"
-			miuizer:maxValue="1500"
-			miuizer:stepValue="50"
-			miuizer:format="%d ms"
-			miuizer:offtext="@string/array_default"
-			miuizer:note="@string/system_screenanim_desc" />
-<!--
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
-			android:key="pref_key_system_rotateanim"
-			android:summary=""
-			android:title="@string/system_rotateanim_title"
-			android:entries="@array/screenrotate"
-			android:entryValues="@array/screenrotate_val"
-			android:defaultValue="0"
-			miuizer:valueAsSummary="true" />
--->
 	</PreferenceCategory>
 
 	<PreferenceCategory

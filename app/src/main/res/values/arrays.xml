@@ -111,6 +111,17 @@
 		<item>4</item>
 	</string-array>
 
+	<string-array name="lightups">
+		<item>@string/array_default</item>
+		<item>@string/array_all</item>
+		<item>@string/array_allbutanim</item>
+	</string-array>
+	<string-array name="lightups_val">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+	</string-array>
+
 	<string-array name="media_action">
 		<item>@string/array_media_none</item>
 		<item>@string/array_media_playpause</item>

@@ -9,6 +9,8 @@
 	<string name="mods">Mods</string>
 
 	<string name="system_mods">System</string>
+	<string name="system_mods_screen">Screen</string>
+	<string name="system_mods_audio">Audio</string>
 	<string name="system_mods_screenanim">Screen animations *</string>
 	<string name="system_clockseconds_title">Show seconds</string>
 	<string name="system_clockseconds_summ">Display seconds in the status bar clock</string>
@@ -18,12 +20,16 @@
 	<string name="system_fixmeter_summ">Increase right margin for traffic speed indicator</string>
 	<string name="system_expandnotif_title">Expand notifications</string>
 	<string name="system_expandnotif_summ">Always show notifications fully expanded</string>
-	<string name="system_nolightuponcharge_title">No screen light up on charge</string>
-	<string name="system_nolightuponcharge_summ">Do not turn screen on when you connect or disconnect a charger</string>
+	<string name="system_chargeanimtime_title">Charge animation screen timeout *</string>
+	<string name="system_chargeanimtime_summ">How long screen should be kept on after charging animation starts</string>
+	<string name="system_nolightuponcharges_title">No screen light up on charge</string>
+	<string name="system_nolightuponcharges_summ">Do not turn screen on when you connect or disconnect a charger</string>
 	<string name="system_nolightuponheadset_title">No screen light up on headset connection</string>
 	<string name="system_nolightuponheadset_summ">Do not turn screen on when you connect a headset</string>
 	<string name="system_separatevolume_title">Separate volume controls</string>
 	<string name="system_separatevolume_summ">Allow to configure separate volume for rings/notifications/system sounds in Settings</string>
+	<string name="system_volumesteps_title">Volume steps multiplier</string>
+	<string name="system_volumesteps_summ">Increase number of volume steps for each stream type</string>
 	<string name="notification_volume">Notification volume</string>
 	<string name="system_volume">System sounds volume</string>
 	<string name="system_scramblepin_title">Scramble PIN</string>
@@ -32,7 +38,7 @@
 	<string name="system_securelock_summ">Disable power menu while screen lock is active</string>
 	<string name="system_nopassword_title">No password after boot</string>
 	<string name="system_nopassword_summ">Do not require password instead of a fingerprint first time after boot</string>
-	<string name="system_screenanim_duration_title">Turning off animation</string>
+	<string name="system_screenanim_duration_title">Turning off animation *</string>
 	<string name="system_screenanim_duration_summ">Configure animation length</string>
 	<string name="system_screenanim_desc">Very low values will practically disable animation</string>
 	<string name="system_mods_blur">Blur intensity *</string>
@@ -76,6 +82,13 @@
 	<string name="controls_powerflash_summ">Long press power button while screen is off to turn flashlight on</string>
 	<string name="controls_powerflash_delay_title">Longer quick flashlight delay *</string>
 	<string name="controls_powerflash_delay_summ">Increases the power button long press delay</string>
+	<string name="controls_mods_fingerprint">Fingerprint scanner *</string>
+	<string name="controls_fingerprint1_title">Single tap action</string>
+	<string name="controls_fingerprint1_summ">Action for a sinlge tap when screen is on</string>
+	<string name="controls_fingerprint2_title">Double tap action</string>
+	<string name="controls_fingerprint2_summ">Action for a double tap when screen is on</string>
+	<string name="controls_fingerprintlong_title">Long press action</string>
+	<string name="controls_fingerprintlong_summ">Action for a long press when screen is on</string>
 	<string name="controls_mods_volume">Volume keys</string>
 	<string name="controls_volumecursor_title">Control input cursor</string>
 	<string name="controls_volumecursor_summ">Move text input cursor using volume keys</string>
@@ -145,6 +158,8 @@
 	<string name="array_media_playpause">Play/Pause</string>
 	<string name="array_media_next">Next track</string>
 	<string name="array_media_prev">Previous track</string>
+	<string name="array_all">All charging events</string>
+	<string name="array_allbutanim">Only events without animation</string>
 
 	<string name="toggle_wifi_on">Wi-Fi enabled</string>
 	<string name="toggle_wifi_off">Wi-Fi disabled</string>

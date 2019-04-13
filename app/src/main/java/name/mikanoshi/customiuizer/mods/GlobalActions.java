@@ -25,6 +25,7 @@ import android.view.KeyEvent;
 import android.widget.Toast;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Map;
 
 import de.robv.android.xposed.XC_MethodHook;
@@ -33,6 +34,7 @@ import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
 import miui.os.SystemProperties;
+import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
@@ -62,10 +64,12 @@ public class GlobalActions {
 	}
 
 	private static BroadcastReceiver mSBReceiver = new BroadcastReceiver() {
+		@SuppressLint("WrongConstant")
 		public void onReceive(final Context context, Intent intent) {
 			try {
 				Resources modRes = Helpers.getModuleRes(context);
 				String action = intent.getAction();
+				if (action == null) return;
 
 //				if (action.equals("name.mikanoshi.customiuizer.mods.action.ShowQuickRecents")) {
 //					if (floatSel == null) floatSel = new FloatingSelector(context);
@@ -75,6 +79,61 @@ public class GlobalActions {
 //				}
 
 				if (mStatusBar != null) {
+					if (action.equals("name.mikanoshi.customiuizer.mods.action.ExpandNotifications")) {
+						try {
+							Object mNotificationPanel = XposedHelpers.getObjectField(mStatusBar, "mNotificationPanel");
+							boolean mPanelExpanded = (boolean)XposedHelpers.getObjectField(mNotificationPanel, "mPanelExpanded");
+							boolean mQsExpanded = (boolean)XposedHelpers.getObjectField(mNotificationPanel, "mQsExpanded");
+							if (mPanelExpanded) {
+								if (mQsExpanded)
+									XposedHelpers.callMethod(mStatusBar, "closeQs");
+								else
+									XposedHelpers.callMethod(mStatusBar, "animateCollapsePanels");
+							} else {
+								XposedHelpers.callMethod(mStatusBar, "animateExpandNotificationsPanel");
+							}
+						} catch (Throwable t) {
+							// Expand only
+							long token = Binder.clearCallingIdentity();
+							XposedHelpers.callMethod(context.getSystemService("statusbar"), "expandNotificationsPanel");
+							Binder.restoreCallingIdentity(token);
+						}
+					}
+
+					if (action.equals("name.mikanoshi.customiuizer.mods.action.ExpandSettings")) {
+						try {
+							Object mNotificationPanel = XposedHelpers.getObjectField(mStatusBar, "mNotificationPanel");
+							boolean mPanelExpanded = (boolean)XposedHelpers.getObjectField(mNotificationPanel, "mPanelExpanded");
+							boolean mQsExpanded = (boolean)XposedHelpers.getObjectField(mNotificationPanel, "mQsExpanded");
+							if (mPanelExpanded) {
+								if (mQsExpanded)
+									XposedHelpers.callMethod(mStatusBar, "animateCollapsePanels");
+								else
+									XposedHelpers.callMethod(mNotificationPanel, "setQsExpanded", true);
+							} else {
+								XposedHelpers.callMethod(mStatusBar, "animateExpandSettingsPanel", (Object)null);
+							}
+						} catch (Throwable t) {
+							// Expand only
+							long token = Binder.clearCallingIdentity();
+							XposedHelpers.callMethod(context.getSystemService("statusbar"), "expandSettingsPanel");
+							Binder.restoreCallingIdentity(token);
+						}
+					}
+
+					if (action.equals("name.mikanoshi.customiuizer.mods.action.OpenRecents")) {
+						try {
+							Object mRecents = XposedHelpers.getObjectField(mStatusBar, "mRecents");
+							XposedHelpers.callMethod(mRecents, "toggleRecentApps");
+						} catch (Throwable t) {
+							// Open only
+							Intent recents = new Intent("com.android.systemui.recents.TOGGLE_RECENTS");
+							recents.setComponent(new ComponentName ("com.android.systemui", "com.android.systemui.recents.RecentsActivity"));
+							recents.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+							context.startActivity(recents);
+						}
+					}
+
 					Object mToggleManager = XposedHelpers.getObjectField(mStatusBar, "mToggleManager");
 					if (mToggleManager == null) return;
 					if (action.equals("name.mikanoshi.customiuizer.mods.action.ToggleGPS")) {
@@ -113,16 +172,6 @@ public class GlobalActions {
 				SystemProperties.set("ctl.restart", "surfaceflinger");
 				SystemProperties.set("ctl.restart", "zygote");
 			}
-			if (action.equals("name.mikanoshi.customiuizer.mods.action.ExpandNotifications")) {
-				long token = Binder.clearCallingIdentity();
-				XposedHelpers.callMethod(context.getSystemService("statusbar"), "expandNotificationsPanel");
-				Binder.restoreCallingIdentity(token);
-			}
-			if (action.equals("name.mikanoshi.customiuizer.mods.action.ExpandSettings")) {
-				long token = Binder.clearCallingIdentity();
-				XposedHelpers.callMethod(context.getSystemService("statusbar"), "expandSettingsPanel");
-				Binder.restoreCallingIdentity(token);
-			}
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.GoToSleep")) {
 				XposedHelpers.callMethod(context.getSystemService(Context.POWER_SERVICE), "goToSleep", SystemClock.uptimeMillis(), 7, 0);
 			}
@@ -158,13 +207,6 @@ public class GlobalActions {
 //					}
 //				}).start();
 //			}
-
-			if (action.equals("name.mikanoshi.customiuizer.mods.action.OpenRecents")) {
-				Intent recents = new Intent("com.android.systemui.recents.TOGGLE_RECENTS");
-				recents.setComponent(new ComponentName ("com.android.systemui", "com.android.systemui.recents.RecentsActivity"));
-				recents.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-				context.startActivity(recents);
-			}
 //
 //			if (action.equals("name.mikanoshi.customiuizer.mods.action.SwitchToPrevApp")) {
 //				PackageManager pm = context.getPackageManager();
@@ -616,15 +658,12 @@ public class GlobalActions {
 					IntentFilter intentfilter = new IntentFilter();
 
 					// Actions
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ExpandNotifications");
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ExpandSettings");
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.GoToSleep");
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.LockDevice");
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.TakeScreenshot");
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.killForegroundApp");
 					//intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.killForegroundAppShedule");
 					//intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.SimulateMenu");
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.OpenRecents");
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.SwitchToPrevApp");
 
 					// Toggles
@@ -672,6 +711,11 @@ public class GlobalActions {
 				mStatusBar = param.thisObject;
 				Context mStatusBarContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 				IntentFilter intentfilter = new IntentFilter();
+
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ExpandNotifications");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ExpandSettings");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.OpenRecents");
+
 				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleGPS");
 				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleFlashlight");
 				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ShowQuickRecents");
@@ -766,9 +810,9 @@ public class GlobalActions {
 				case 9: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_navbarleftlong_app", null); break;
 				case 10: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_navbarright_app", null); break;
 				case 11: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_navbarrightlong_app", null); break;
-//				case 12: pkgAppName = MainModule.pref.getString("pref_key_controls_btheadsetoff_app", null); break;
-//				case 13: pkgAppName = MainModule.pref.getString("pref_key_controls_clock_app", null); break;
-//				case 14: pkgAppName = MainModule.pref.getString("pref_key_controls_date_app", null); break;
+				case 12: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_fingerprint1_app", null); break;
+				case 13: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_fingerprint2_app", null); break;
+				case 14: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_fingerprintlong_app", null); break;
 			}
 
 			if (pkgAppName != null) {
@@ -804,8 +848,9 @@ public class GlobalActions {
 				case 9: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_navbarleftlong_shortcut_intent", null); break;
 				case 10: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_navbarright_shortcut_intent", null); break;
 				case 11: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_navbarrightlong_shortcut_intent", null); break;
-//				case 12: intentString = MainModule.pref.getString("pref_key_controls_btheadsetoffaction_shortcut_intent", null); break;
-//				case 13: intentString = MainModule.pref.getString("pref_key_controls_clockaction_shortcut_intent", null); break;
+				case 12: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_fingerprint1_shortcut_intent", null); break;
+				case 13: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_fingerprint2_shortcut_intent", null); break;
+				case 14: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_fingerprintlong_shortcut_intent", null); break;
 			}
 
 			if (intentString != null) {

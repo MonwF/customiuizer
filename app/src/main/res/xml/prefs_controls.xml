@@ -18,6 +18,26 @@
 		android:dependency="pref_key_controls_powerflash" />
 
 	<PreferenceCategory
+		android:title="@string/controls_mods_fingerprint">
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_controls_fingerprint1"
+			android:summary="@string/controls_fingerprint1_summ"
+			android:title="@string/controls_fingerprint1_title" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_controls_fingerprint2"
+			android:summary="@string/controls_fingerprint2_summ"
+			android:title="@string/controls_fingerprint2_title" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_controls_fingerprintlong"
+			android:summary="@string/controls_fingerprintlong_summ"
+			android:title="@string/controls_fingerprintlong_title" />
+
+	</PreferenceCategory>
+
+	<PreferenceCategory
 		android:title="@string/controls_mods_volume">
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx

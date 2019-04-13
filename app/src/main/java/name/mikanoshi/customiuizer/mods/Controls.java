@@ -10,10 +10,13 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.inputmethodservice.InputMethodService;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.SystemClock;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.provider.Settings;
 import android.telecom.TelecomManager;
 import android.view.KeyEvent;
@@ -24,6 +27,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.util.Arrays;
+
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
@@ -31,6 +36,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
+import static de.robv.android.xposed.XposedHelpers.findClass;
 import static java.lang.System.currentTimeMillis;
 
 public class Controls {
@@ -56,7 +62,8 @@ public class Controls {
 	private static BroadcastReceiver mScreenOnReceiver = new BroadcastReceiver() {
 		public void onReceive(final Context context, Intent intent) {
 			if (isTorchEnabled(context)) setTorch(context, false);
-			if (Helpers.mWakeLock != null && Helpers.mWakeLock.isHeld()) Helpers.mWakeLock.release();
+			if (Helpers.mWakeLock != null && Helpers.mWakeLock.isHeld())
+				Helpers.mWakeLock.release();
 		}
 	};
 
@@ -64,86 +71,90 @@ public class Controls {
 
 		try {
 
-		XposedBridge.hookAllMethods(XposedHelpers.findClass("com.android.server.policy.PhoneWindowManager", lpparam.classLoader), "init", new XC_MethodHook() {
-			@Override
-			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-				mContext.registerReceiver(mScreenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
-			}
-		});
+			XposedBridge.hookAllMethods(XposedHelpers.findClass("com.android.server.policy.PhoneWindowManager", lpparam.classLoader), "init", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					mContext.registerReceiver(mScreenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
+				}
+			});
 
-		XposedHelpers.findAndHookMethod("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "interceptKeyBeforeQueueing", KeyEvent.class, int.class, new XC_MethodHook() {
-			@Override
-			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
-				// Power and volkeys are pressed at the same time
-				if (isVolumePressed) return;
+			XposedHelpers.findAndHookMethod("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "interceptKeyBeforeQueueing", KeyEvent.class, int.class, new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+					// Power and volkeys are pressed at the same time
+					if (isVolumePressed) return;
 
-				KeyEvent keyEvent = (KeyEvent)param.args[0];
+					KeyEvent keyEvent = (KeyEvent)param.args[0];
 
-				int keycode = keyEvent.getKeyCode();
-				int action = keyEvent.getAction();
-				int flags = keyEvent.getFlags();
+					int keycode = keyEvent.getKeyCode();
+					int action = keyEvent.getAction();
+					int flags = keyEvent.getFlags();
 
-				// Ignore repeated KeyEvents simulated on Power Key Up
-				if ((flags & KeyEvent.FLAG_VIRTUAL_HARD_KEY) == KeyEvent.FLAG_VIRTUAL_HARD_KEY) return;
-				if ((flags & KeyEvent.FLAG_FROM_SYSTEM) == KeyEvent.FLAG_FROM_SYSTEM && keycode == KeyEvent.KEYCODE_POWER) {
-					// Power long press
-					final Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-					final PowerManager mPowerManager = (PowerManager)XposedHelpers.getObjectField(param.thisObject, "mPowerManager");
-					final boolean isScreenOn = (boolean)XposedHelpers.callMethod(param.thisObject, "isScreenOn");
-					if (!isScreenOn) {
-						//XposedBridge.log("interceptKeyBeforeQueueing: KeyCode: " + String.valueOf(keyEvent.getKeyCode()) + " | Action: " + String.valueOf(keyEvent.getAction()) + " | RepeatCount: " + String.valueOf(keyEvent.getRepeatCount())+ " | Flags: " + String.valueOf(keyEvent.getFlags()));
-						if (action == KeyEvent.ACTION_DOWN) {
-							isPowerPressed = true;
-							isPowerLongPressed = false;
+					// Ignore repeated KeyEvents simulated on Power Key Up
+					if ((flags & KeyEvent.FLAG_VIRTUAL_HARD_KEY) == KeyEvent.FLAG_VIRTUAL_HARD_KEY)
+						return;
+					if ((flags & KeyEvent.FLAG_FROM_SYSTEM) == KeyEvent.FLAG_FROM_SYSTEM && keycode == KeyEvent.KEYCODE_POWER) {
+						// Power long press
+						final Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+						final PowerManager mPowerManager = (PowerManager)XposedHelpers.getObjectField(param.thisObject, "mPowerManager");
+						final boolean isScreenOn = (boolean)XposedHelpers.callMethod(param.thisObject, "isScreenOn");
+						if (!isScreenOn) {
+							//XposedBridge.log("interceptKeyBeforeQueueing: KeyCode: " + String.valueOf(keyEvent.getKeyCode()) + " | Action: " + String.valueOf(keyEvent.getAction()) + " | RepeatCount: " + String.valueOf(keyEvent.getRepeatCount())+ " | Flags: " + String.valueOf(keyEvent.getFlags()));
+							if (action == KeyEvent.ACTION_DOWN) {
+								isPowerPressed = true;
+								isPowerLongPressed = false;
 
-							mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
+								mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
 
-							int longPressDelay = (Helpers.getSharedBoolPref(mContext, "pref_key_controls_powerflash_delay", false) ? ViewConfiguration.getLongPressTimeout() * 3 : ViewConfiguration.getLongPressTimeout()) + 500;
-							// Post only one delayed runnable that waits for long press timeout
-							if (!isWaitingForPowerLongPressed)
-							mHandler.postDelayed(new Runnable() {
-								@Override
-								@SuppressLint("Wakelock")
-								public void run() {
-									if (isPowerPressed) {
-										isPowerLongPressed = true;
+								int longPressDelay = (Helpers.getSharedBoolPref(mContext, "pref_key_controls_powerflash_delay", false) ? ViewConfiguration.getLongPressTimeout() * 3 : ViewConfiguration.getLongPressTimeout()) + 500;
+								// Post only one delayed runnable that waits for long press timeout
+								if (!isWaitingForPowerLongPressed)
+									mHandler.postDelayed(new Runnable() {
+										@Override
+										@SuppressLint("Wakelock")
+										public void run() {
+											if (isPowerPressed) {
+												isPowerLongPressed = true;
 
-										if (Helpers.mWakeLock == null)
-										Helpers.mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "miuizer:flashlight");
+												if (Helpers.mWakeLock == null)
+													Helpers.mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "miuizer:flashlight");
 
-										if (!isTorchEnabled(mContext) || !Helpers.mWakeLock.isHeld()) {
-											setTorch(mContext, true);
-											if (!Helpers.mWakeLock.isHeld()) Helpers.mWakeLock.acquire(600000);
-										} else {
-											setTorch(mContext, true);
-											if (Helpers.mWakeLock.isHeld()) Helpers.mWakeLock.release();
+												if (!isTorchEnabled(mContext) || !Helpers.mWakeLock.isHeld()) {
+													setTorch(mContext, true);
+													if (!Helpers.mWakeLock.isHeld())
+														Helpers.mWakeLock.acquire(600000);
+												} else {
+													setTorch(mContext, true);
+													if (Helpers.mWakeLock.isHeld())
+														Helpers.mWakeLock.release();
+												}
+											}
+											isPowerPressed = false;
+											isWaitingForPowerLongPressed = false;
 										}
-									}
-									isPowerPressed = false;
-									isWaitingForPowerLongPressed = false;
-								}
-							}, longPressDelay);
+									}, longPressDelay);
 
-							isWaitingForPowerLongPressed = true;
-							param.setResult(0);
-						}
-						if (action == KeyEvent.ACTION_UP) {
-							if (isPowerPressed && !isPowerLongPressed) try {
-								if (isTorchEnabled(mContext)) setTorch(mContext, false);
-								if (Helpers.mWakeLock != null && Helpers.mWakeLock.isHeld()) Helpers.mWakeLock.release();
-								XposedHelpers.callMethod(mPowerManager, "wakeUp", SystemClock.uptimeMillis());
+								isWaitingForPowerLongPressed = true;
 								param.setResult(0);
-							} catch (Throwable t) {
-								XposedBridge.log(t);
 							}
-							isPowerPressed = false;
-							isWaitingForPowerLongPressed = false;
+							if (action == KeyEvent.ACTION_UP) {
+								if (isPowerPressed && !isPowerLongPressed) try {
+									if (isTorchEnabled(mContext)) setTorch(mContext, false);
+									if (Helpers.mWakeLock != null && Helpers.mWakeLock.isHeld())
+										Helpers.mWakeLock.release();
+									XposedHelpers.callMethod(mPowerManager, "wakeUp", SystemClock.uptimeMillis());
+									param.setResult(0);
+								} catch (Throwable t) {
+									XposedBridge.log(t);
+								}
+								isPowerPressed = false;
+								isWaitingForPowerLongPressed = false;
+							}
 						}
 					}
 				}
-			}
-		});
+			});
 
 		} catch (Throwable t) {
 			XposedBridge.log(t);
@@ -154,89 +165,93 @@ public class Controls {
 
 		try {
 
-		XposedHelpers.findAndHookMethod("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "interceptKeyBeforeQueueing", KeyEvent.class, int.class, new XC_MethodHook() {
-			@Override
-			@SuppressLint("MissingPermission")
-			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
-				// Power and volkeys are pressed at the same time
-				if (isPowerPressed) return;
+			XposedHelpers.findAndHookMethod("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "interceptKeyBeforeQueueing", KeyEvent.class, int.class, new XC_MethodHook() {
+				@Override
+				@SuppressLint("MissingPermission")
+				protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+					// Power and volkeys are pressed at the same time
+					if (isPowerPressed) return;
 
-				final KeyEvent keyEvent = (KeyEvent)param.args[0];
+					final KeyEvent keyEvent = (KeyEvent)param.args[0];
 
-				int keycode = keyEvent.getKeyCode();
-				int action = keyEvent.getAction();
-				int flags = keyEvent.getFlags();
+					int keycode = keyEvent.getKeyCode();
+					int action = keyEvent.getAction();
+					int flags = keyEvent.getFlags();
 
-				// Ignore repeated KeyEvents simulated on volume Key Up
-				if ((flags & KeyEvent.FLAG_VIRTUAL_HARD_KEY) == KeyEvent.FLAG_VIRTUAL_HARD_KEY) return;
-				if ((flags & KeyEvent.FLAG_FROM_SYSTEM) == KeyEvent.FLAG_FROM_SYSTEM && (keycode == KeyEvent.KEYCODE_VOLUME_UP || keycode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
-					// Volume long press
-					final Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-					final boolean isScreenOn = (boolean)XposedHelpers.callMethod(param.thisObject, "isScreenOn");
-					if (!isScreenOn) {
-						//XposedBridge.log("interceptKeyBeforeQueueing: KeyCode: " + String.valueOf(keyEvent.getKeyCode()) + " | Action: " + String.valueOf(keyEvent.getAction()) + " | RepeatCount: " + String.valueOf(keyEvent.getRepeatCount())+ " | Flags: " + String.valueOf(keyEvent.getFlags()));
-						if (action == KeyEvent.ACTION_DOWN) {
-							isVolumePressed = true;
-							isVolumeLongPressed = false;
+					// Ignore repeated KeyEvents simulated on volume Key Up
+					if ((flags & KeyEvent.FLAG_VIRTUAL_HARD_KEY) == KeyEvent.FLAG_VIRTUAL_HARD_KEY)
+						return;
+					if ((flags & KeyEvent.FLAG_FROM_SYSTEM) == KeyEvent.FLAG_FROM_SYSTEM && (keycode == KeyEvent.KEYCODE_VOLUME_UP || keycode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
+						// Volume long press
+						final Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+						final boolean isScreenOn = (boolean)XposedHelpers.callMethod(param.thisObject, "isScreenOn");
+						if (!isScreenOn) {
+							//XposedBridge.log("interceptKeyBeforeQueueing: KeyCode: " + String.valueOf(keyEvent.getKeyCode()) + " | Action: " + String.valueOf(keyEvent.getAction()) + " | RepeatCount: " + String.valueOf(keyEvent.getRepeatCount())+ " | Flags: " + String.valueOf(keyEvent.getFlags()));
+							if (action == KeyEvent.ACTION_DOWN) {
+								isVolumePressed = true;
+								isVolumeLongPressed = false;
 
-							mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
+								mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
 
-							// Post only one delayed runnable that waits for long press timeout
-							if (mHandler != null && !isWaitingForVolumeLongPressed)
-							mHandler.postDelayed(new Runnable() {
-								public void run() {
-									if (isVolumePressed && GlobalActions.isMediaActionsAllowed(mContext)) {
-										isVolumeLongPressed = true;
-										switch (keyEvent.getKeyCode()) {
-											case KeyEvent.KEYCODE_VOLUME_UP:
-												int pref_mediaUp = Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_controls_volumemedia_up", "0"));
-												if (pref_mediaUp == 0) break;
-												GlobalActions.sendDownUpKeyEvent(mContext, pref_mediaUp);
-												break;
-											case KeyEvent.KEYCODE_VOLUME_DOWN:
-												int pref_mediaDown = Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_controls_volumemedia_down", "0"));
-												if (pref_mediaDown == 0) break;
-												GlobalActions.sendDownUpKeyEvent(mContext, pref_mediaDown);
-												break;
-											default:
-												break;
+								// Post only one delayed runnable that waits for long press timeout
+								if (mHandler != null && !isWaitingForVolumeLongPressed)
+									mHandler.postDelayed(new Runnable() {
+										public void run() {
+											if (isVolumePressed && GlobalActions.isMediaActionsAllowed(mContext)) {
+												isVolumeLongPressed = true;
+												switch (keyEvent.getKeyCode()) {
+													case KeyEvent.KEYCODE_VOLUME_UP:
+														int pref_mediaUp = Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_controls_volumemedia_up", "0"));
+														if (pref_mediaUp == 0) break;
+														GlobalActions.sendDownUpKeyEvent(mContext, pref_mediaUp);
+														break;
+													case KeyEvent.KEYCODE_VOLUME_DOWN:
+														int pref_mediaDown = Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_controls_volumemedia_down", "0"));
+														if (pref_mediaDown == 0) break;
+														GlobalActions.sendDownUpKeyEvent(mContext, pref_mediaDown);
+														break;
+													default:
+														break;
+												}
+											}
+											isVolumePressed = false;
+											isWaitingForVolumeLongPressed = false;
 										}
-									}
-									isVolumePressed = false;
-									isWaitingForVolumeLongPressed = false;
-								}
-							}, ViewConfiguration.getLongPressTimeout());
+									}, ViewConfiguration.getLongPressTimeout());
 
-							isWaitingForVolumeLongPressed = true;
-							param.setResult(0);
-						}
-						if (action == KeyEvent.ACTION_UP) {
-							isVolumePressed = false;
-							// Kill all callbacks (removing only posted Runnable is not working... no idea)
-							if (mHandler != null) mHandler.removeCallbacksAndMessages(null);
-							if (!isVolumeLongPressed) {
-								AudioManager am = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
-								TelecomManager tm = (TelecomManager)mContext.getSystemService(Context.TELECOM_SERVICE);
-								WakeLock mBroadcastWakeLock = (WakeLock)XposedHelpers.getObjectField(param.thisObject, "mBroadcastWakeLock");
-								int k = AudioManager.ADJUST_RAISE;
-								if (keycode != KeyEvent.KEYCODE_VOLUME_UP) k = AudioManager.ADJUST_LOWER;
-								mBroadcastWakeLock.acquire(5000);
-								// If music stream is playing, adjust its volume
-								if (am.isMusicActive()) am.adjustStreamVolume(AudioManager.STREAM_MUSIC, k, 0);
-								// If voice call is active while screen off by proximity sensor, adjust its volume
-								else if (tm.isInCall()) am.adjustStreamVolume(AudioManager.STREAM_VOICE_CALL, k, 0);
-								// If volume keys to wake option active, wake the device
-								//else if (XposedHelpers.getBooleanField(param.thisObject, "mVolumeKeyWakeScreen"))
-								//XposedHelpers.callMethod(mPowerManager, "wakeUpFromPowerKey", SystemClock.uptimeMillis());
-								if (mBroadcastWakeLock.isHeld()) mBroadcastWakeLock.release();
+								isWaitingForVolumeLongPressed = true;
+								param.setResult(0);
 							}
-							param.setResult(0);
-							isWaitingForVolumeLongPressed = false;
+							if (action == KeyEvent.ACTION_UP) {
+								isVolumePressed = false;
+								// Kill all callbacks (removing only posted Runnable is not working... no idea)
+								if (mHandler != null) mHandler.removeCallbacksAndMessages(null);
+								if (!isVolumeLongPressed) {
+									AudioManager am = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
+									TelecomManager tm = (TelecomManager)mContext.getSystemService(Context.TELECOM_SERVICE);
+									WakeLock mBroadcastWakeLock = (WakeLock)XposedHelpers.getObjectField(param.thisObject, "mBroadcastWakeLock");
+									int k = AudioManager.ADJUST_RAISE;
+									if (keycode != KeyEvent.KEYCODE_VOLUME_UP)
+										k = AudioManager.ADJUST_LOWER;
+									mBroadcastWakeLock.acquire(5000);
+									// If music stream is playing, adjust its volume
+									if (am.isMusicActive())
+										am.adjustStreamVolume(AudioManager.STREAM_MUSIC, k, 0);
+										// If voice call is active while screen off by proximity sensor, adjust its volume
+									else if (tm.isInCall())
+										am.adjustStreamVolume(AudioManager.STREAM_VOICE_CALL, k, 0);
+									// If volume keys to wake option active, wake the device
+									//else if (XposedHelpers.getBooleanField(param.thisObject, "mVolumeKeyWakeScreen"))
+									//XposedHelpers.callMethod(mPowerManager, "wakeUpFromPowerKey", SystemClock.uptimeMillis());
+									if (mBroadcastWakeLock.isHeld()) mBroadcastWakeLock.release();
+								}
+								param.setResult(0);
+								isWaitingForVolumeLongPressed = false;
+							}
 						}
 					}
 				}
-			}
-		});
+			});
 
 		} catch (Throwable t) {
 			XposedBridge.log(t);
@@ -283,7 +298,7 @@ public class Controls {
 					InputMethodService ims = (InputMethodService)param.thisObject;
 					int code = (int)param.args[0];
 					if ((code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN) && ims.isInputViewShown())
-					param.setResult(true);
+						param.setResult(true);
 				}
 			});
 		} catch (Throwable t) {
@@ -294,12 +309,13 @@ public class Controls {
 	private static boolean handleNavBarAction(int action, int launch, int toggle, Context context) {
 		if (action >= 85 && action <= 88) {
 			if (GlobalActions.isMediaActionsAllowed(context))
-			GlobalActions.sendDownUpKeyEvent(context, action);
+				GlobalActions.sendDownUpKeyEvent(context, action);
 			return true;
 		} else if (action == 1) {
 			try {
 				Toast.makeText(Helpers.getModuleContext(context), R.string.controls_navbar_noaction, Toast.LENGTH_SHORT).show();
-			} catch (Throwable t) {}
+			} catch (Throwable t) {
+			}
 			return false;
 		} else {
 			return GlobalActions.handleAction(action, launch, toggle, context);
@@ -340,7 +356,8 @@ public class Controls {
 		if (kbrCls != null) try {
 			Drawable lripple = (Drawable)kbrCls.getConstructor(Context.class, View.class).newInstance(mContext, leftbtn);
 			leftbtn.setBackground(lripple);
-		} catch (Throwable t) {}
+		} catch (Throwable t) {
+		}
 		leftbtn.setClickable(true);
 		leftbtn.setHapticFeedbackEnabled(true);
 		leftbtn.setOnClickListener(new View.OnClickListener() {
@@ -382,7 +399,8 @@ public class Controls {
 		if (kbrCls != null) try {
 			Drawable rripple = (Drawable)kbrCls.getConstructor(Context.class, View.class).newInstance(mContext, rightbtn);
 			rightbtn.setBackground(rripple);
-		} catch (Throwable t) {}
+		} catch (Throwable t) {
+		}
 		rightbtn.setClickable(true);
 		rightbtn.setHapticFeedbackEnabled(true);
 		rightbtn.setOnClickListener(new View.OnClickListener() {
@@ -480,6 +498,102 @@ public class Controls {
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
+	}
+
+	@SuppressLint("StaticFieldLeak")
+	private static Context miuiPWMContext;
+	private static Handler miuiPWMHandler;
+	private static boolean wasScreenOn = false;
+	private static boolean isFingerprintPressed = false;
+	private static boolean isFingerprintLongPressed = false;
+	private static Runnable singlePressFingerprint = new Runnable() {
+		@Override
+		@SuppressLint("MissingPermission")
+		public void run() {
+			if (miuiPWMContext == null || miuiPWMHandler == null) return;
+			miuiPWMHandler.removeCallbacks(longPressFingerprint);
+			int action = Helpers.getSharedIntPref(miuiPWMContext, "pref_key_controls_fingerprint1_action", 1);
+			int launch = 12;
+			int toggle = Helpers.getSharedIntPref(miuiPWMContext, "pref_key_controls_fingerprint1_toggle", 0);
+			GlobalActions.handleAction(action, launch, toggle, miuiPWMContext);
+		}
+	};
+	private static Runnable longPressFingerprint = new Runnable() {
+		@Override
+		@SuppressLint("MissingPermission")
+		public void run() {
+			if (isFingerprintPressed && miuiPWMContext != null) {
+				isFingerprintLongPressed = true;
+				Vibrator v = (Vibrator)miuiPWMContext.getSystemService(Context.VIBRATOR_SERVICE);
+				if (Build.VERSION.SDK_INT >= 26)
+					v.vibrate(VibrationEffect.createOneShot(30, VibrationEffect.DEFAULT_AMPLITUDE));
+				else
+					v.vibrate(30);
+			}
+		}
+	};
+
+	public static void FingerprintEventsHook(LoadPackageParam lpparam) {
+		XposedHelpers.findAndHookMethod("com.android.server.policy.MiuiPhoneWindowManager", lpparam.classLoader, "processFingerprintNavigationEvent", KeyEvent.class, boolean.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+				miuiPWMContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				miuiPWMHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
+
+				KeyEvent keyEvent = (KeyEvent)param.args[0];
+				if (keyEvent.getKeyCode() != KeyEvent.KEYCODE_DPAD_CENTER || keyEvent.getAction() != KeyEvent.ACTION_DOWN)
+					return;
+
+				isFingerprintPressed = true;
+				wasScreenOn = (boolean)XposedHelpers.callMethod(param.thisObject, "isScreenOn");
+				if (Helpers.getSharedIntPref(miuiPWMContext, "pref_key_controls_fingerprintlong_action", 1) > 1)
+					miuiPWMHandler.postDelayed(longPressFingerprint, ViewConfiguration.getLongPressTimeout());
+
+				if (XposedHelpers.getAdditionalInstanceField(param.thisObject, "touchTime") == null)
+					XposedHelpers.setAdditionalInstanceField(param.thisObject, "touchTime", 0L);
+			}
+
+			@Override
+			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				KeyEvent keyEvent = (KeyEvent)param.args[0];
+				if (keyEvent.getKeyCode() != KeyEvent.KEYCODE_DPAD_CENTER || keyEvent.getAction() != KeyEvent.ACTION_UP)
+					return;
+
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
+
+				long lastTouchTime = (long)XposedHelpers.getAdditionalInstanceField(param.thisObject, "touchTime");
+				long currentTouchTime = currentTimeMillis();
+				XposedHelpers.setAdditionalInstanceField(param.thisObject, "touchTime", currentTouchTime);
+
+				int dtaction = Helpers.getSharedIntPref(mContext, "pref_key_controls_fingerprint2_action", 1);
+				if (wasScreenOn)
+					if (dtaction > 1 && currentTouchTime - lastTouchTime < 250L) {
+						mHandler.removeCallbacks(singlePressFingerprint);
+						mHandler.removeCallbacks(longPressFingerprint);
+						int launch = 13;
+						int toggle = Helpers.getSharedIntPref(mContext, "pref_key_controls_fingerprint2_toggle", 0);
+						GlobalActions.handleAction(dtaction, launch, toggle, mContext);
+						wasScreenOn = false;
+					} else if (isFingerprintLongPressed) {
+						int action = Helpers.getSharedIntPref(mContext, "pref_key_controls_fingerprintlong_action", 1);
+						int launch = 14;
+						int toggle = Helpers.getSharedIntPref(mContext, "pref_key_controls_fingerprintlong_toggle", 0);
+						GlobalActions.handleAction(action, launch, toggle, mContext);
+						wasScreenOn = false;
+					} else {
+						mHandler.removeCallbacks(longPressFingerprint);
+						mHandler.removeCallbacks(singlePressFingerprint);
+						if (dtaction > 1)
+							mHandler.postDelayed(singlePressFingerprint, 250L);
+						else
+							mHandler.post(singlePressFingerprint);
+					}
+
+				isFingerprintLongPressed = false;
+				isFingerprintPressed = false;
+			}
+		});
 	}
 
 //	public static void FingerprintHook(XC_LoadPackage.LoadPackageParam lpparam) {

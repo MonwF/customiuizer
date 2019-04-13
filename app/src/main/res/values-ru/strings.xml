@@ -86,6 +86,8 @@
 	<string name="array_media_playpause">Старт/Пауза</string>
 	<string name="array_media_next">Следующий трек</string>
 	<string name="array_media_prev">Предыдущий трек</string>
+	<string name="array_all">Все события зарядки</string>
+	<string name="array_allbutanim">Только события без анимации</string>
 
 	<string name="select_app">Выбрать приложение</string>
 
@@ -119,6 +121,13 @@
 
 	<string name="controls_powerflash_delay_title">Задержка активации фонарика *</string>
 	<string name="controls_powerflash_delay_summ">Увеличивает задержку при долгом нажатии на кнопку питания</string>
+	<string name="controls_mods_fingerprint">Сканер отпечатка пальца *</string>
+	<string name="controls_fingerprint1_title">Действие на одиночное нажатие</string>
+	<string name="controls_fingerprint1_summ">Задаёт действие на одиночное нажатие при включенном экране</string>
+	<string name="controls_fingerprint2_title">Действие на двойное нажатие</string>
+	<string name="controls_fingerprint2_summ">Задаёт действие на двойное нажатие при включенном экране</string>
+	<string name="controls_fingerprintlong_title">Действие на долгое нажатие</string>
+	<string name="controls_fingerprintlong_summ">Задаёт действие на двойное нажатие при включенном экране</string>
 	<string name="controls_mods_volume">Кнопки громкости</string>
 	<string name="controls_volumecursor_title">Управлять курсором ввода</string>
 	<string name="controls_volumecursor_summ">Перемещать курсор ввода текста при нажатии кнопок громкости</string>
@@ -127,13 +136,13 @@
 	<string name="controls_volumemedia_down_title">Долгое нажание на Понижение громкости *</string>
 	<string name="controls_volumemedia_down_summ">Действие на долгое нажатие клавиши понижения громкости при выключенном экране</string>
 	<string name="controls_mods_navbar">Панель навигации *</string>
-	<string name="controls_navbarleft_summ">Присвоить действие на нажатие левой дополнительной кнопки</string>
+	<string name="controls_navbarleft_summ">Задаёт действие на нажатие левой дополнительной кнопки</string>
 	<string name="controls_navbarleft_title">Действие на нажатие левой кнопки</string>
-	<string name="controls_navbarleftlong_summ">Присвоить действие на долгое левой дополнительной кнопки</string>
+	<string name="controls_navbarleftlong_summ">Задаёт действие на долгое левой дополнительной кнопки</string>
 	<string name="controls_navbarleftlong_title">Действие на долгое нажатие левой кнопки</string>
-	<string name="controls_navbarright_summ">Присвоить действие на нажатие правой дополнительной кнопки</string>
+	<string name="controls_navbarright_summ">Задаёт действие на нажатие правой дополнительной кнопки</string>
 	<string name="controls_navbarright_title">Действие на нажатие правой кнопки</string>
-	<string name="controls_navbarrightlong_summ">Присвоить действие на долгое нажатие правой дополнительной кнопки</string>
+	<string name="controls_navbarrightlong_summ">Задаёт действие на долгое нажатие правой дополнительной кнопки</string>
 	<string name="controls_navbarrightlong_title">Действие на долгое нажатие правой кнопки</string>
 	<string name="controls_navbar_noaction">Действие не задано</string>
 
@@ -192,6 +201,8 @@
 	<string name="system_iconlabletoasts_summ">Добавляет иконку и название приложения во всплывающие уведомления</string>
 	<string name="system_iconlabletoasts_title">Расширенные уведомления *</string>
 	<string name="system_mods">Система</string>
+	<string name="system_mods_screen">Экран</string>
+	<string name="system_mods_audio">Аудио</string>
 	<string name="system_mods_lockscreen">Экран блокировки</string>
 	<string name="system_mods_screenanim">Экранная анимация *</string>
 	<string name="system_mods_statusbar">Строка состояния и панель уведомелний</string>
@@ -203,19 +214,23 @@
 	<string name="system_fixmeter_summ">Увеличивает отступ справа для индикатора скорости трафика</string>
 	<string name="system_expandnotif_title">Разворачивать уведомления</string>
 	<string name="system_expandnotif_summ">Всегда показывать уведомления в полностью развёрнутом виде</string>
-	<string name="system_nolightuponcharge_summ">Запрещает включение экрана при подключении или отключении зарядки (не влияет на отображение начала беспроводной зарядки)</string>
-	<string name="system_nolightuponcharge_title">Не включать экран при зарядке</string>
+	<string name="system_chargeanimtime_title">Таймаут экрана при анимации зарядки *</string>
+	<string name="system_chargeanimtime_summ">Как долго держать экран включенным после начала анимации зарядки</string>
+	<string name="system_nolightuponcharges_summ">Запрещает включение экрана при подключении или отключении зарядки</string>
+	<string name="system_nolightuponcharges_title">Не включать экран при зарядке</string>
 	<string name="system_nolightuponheadset_title">Не включать экран при подключении наушников</string>
 	<string name="system_nolightuponheadset_summ">Запрещает включение экрана при подключении наушников</string>
 	<string name="system_separatevolume_title">Раздельные настройки громкости</string>
 	<string name="system_separatevolume_summ">Позволяет изменить громкость в Настройках отдельно для звонков/уведомлений/системных звуков</string>
+	<string name="system_volumesteps_title">Множитель шагов громкости</string>
+	<string name="system_volumesteps_summ">Увеличить количество шагов громкости для всех типов потоков</string>
 	<string name="notification_volume">Громкость уведомлений</string>
 	<string name="system_volume">Громкость системных звуков</string>
 	<string name="system_scramblepin_title">Усложнить PIN</string>
 	<string name="system_scramblepin_summ">Случайным образом переставляет кнопки ввода PIN</string>
 	<string name="system_screenanim_desc">Малые значения практически отключат анимацию</string>
 	<string name="system_screenanim_duration_summ">Задать длительность анимации</string>
-	<string name="system_screenanim_duration_title">Анимация при выключении</string>
+	<string name="system_screenanim_duration_title">Анимация при выключении *</string>
 	<string name="system_mods_blur">Интенсивность размытия *</string>
 	<string name="system_recents_blur_title">Последние приложения</string>
 	<string name="system_recents_blur_summ">Уровень размытия фона на экране последних приложений</string>

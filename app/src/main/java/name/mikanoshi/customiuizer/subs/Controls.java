@@ -33,6 +33,23 @@ public class Controls extends SubFragment {
 		actionPref.setOnPreferenceClickListener(openActionEdit);
 		actionPref = findPreference("pref_key_controls_navbarrightlong");
 		actionPref.setOnPreferenceClickListener(openActionEdit);
+
+		CheckBoxPreference.OnPreferenceClickListener openActionEdit2 = new CheckBoxPreference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				Bundle args = new Bundle();
+				args.putString("key", preference.getKey());
+				openSubFragment(new MultiAction(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.Edit, preference.getTitleRes(), R.layout.prefs_swipe_gestures);
+				return true;
+			}
+		};
+
+		actionPref = findPreference("pref_key_controls_fingerprint1");
+		actionPref.setOnPreferenceClickListener(openActionEdit2);
+		actionPref = findPreference("pref_key_controls_fingerprint2");
+		actionPref.setOnPreferenceClickListener(openActionEdit2);
+		actionPref = findPreference("pref_key_controls_fingerprintlong");
+		actionPref.setOnPreferenceClickListener(openActionEdit2);
 	}
 
 }

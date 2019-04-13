@@ -288,6 +288,7 @@ public class Dialog extends Activity {
 			String payload = crashData.toJSON();
 			int payloadSize = payload.getBytes(StandardCharsets.UTF_8).length;
 			boolean isManualReport = crashData.getString(ReportField.STACK_TRACE).contains("Report requested by developer");
+			Log.e("miuizer", crashData.getString(ReportField.STACK_TRACE));
 
 			TextView mainText = new TextView(this);
 			mainText.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));

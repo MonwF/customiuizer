@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.preference.Preference;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
@@ -229,12 +230,13 @@ public class SeekBarPreference extends Preference {
 
 			try {
 				if (mUseDisplayDividerValue) {
-					float floatValue = (float) value / mDisplayDividerValue;
+					float floatValue = (float)value / (float)mDisplayDividerValue;
 					text = String.format(mFormat, floatValue);
 				} else {
 					text = String.format(mFormat, value);
 				}
 			} catch (IllegalFormatException e) {
+				e.printStackTrace();
 				text = Integer.toString(value);
 			}
 			mValue.setText(text);

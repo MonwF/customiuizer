@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.PowerManager.WakeLock;
 import android.os.SystemClock;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -26,6 +27,7 @@ import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 
@@ -35,9 +37,11 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
+import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
+import static de.robv.android.xposed.XposedHelpers.findClass;
 import static java.lang.System.currentTimeMillis;
 
 public class System {
@@ -47,8 +51,10 @@ public class System {
 			XposedHelpers.findAndHookMethod("com.android.server.display.DisplayPowerController", lpparam.classLoader, "initialize", new XC_MethodHook() {
 				@Override
 				protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
-					XposedHelpers.setObjectField(param.thisObject, "mColorFadeEnabled", true);
-					XposedHelpers.setObjectField(param.thisObject, "mColorFadeFadesConfig", true);
+					try {
+						XposedHelpers.setObjectField(param.thisObject, "mColorFadeEnabled", true);
+						XposedHelpers.setObjectField(param.thisObject, "mColorFadeFadesConfig", true);
+					} catch (Throwable t) {}
 				}
 
 				@Override
@@ -60,20 +66,20 @@ public class System {
 					//mColorFadeOnAnimator.setDuration(250);
 					ObjectAnimator mColorFadeOffAnimator = (ObjectAnimator)XposedHelpers.getObjectField(param.thisObject, "mColorFadeOffAnimator");
 					//mColorFadeOffAnimator.setDuration(Helpers.getSharedIntPref(mContext, "pref_key_system_screenanim_duration", 0));
-					mHandler.postDelayed(new Runnable() {
+					if (mColorFadeOffAnimator != null) {
+						int val = MainModule.mPrefs.getInt("system_screenanim_duration", 0);
+						if (val == 0) val = 250;
+						mColorFadeOffAnimator.setDuration(val);
+					}
+					new Helpers.SharedPrefObserver(mContext, mHandler, "pref_key_system_screenanim_duration", 0) {
 						@Override
-						public void run() {
-							new Helpers.SharedPrefObserver(mContext, mHandler, "pref_key_system_screenanim_duration", 0) {
-								@Override
-								public void onChange(String name, int defValue) {
-									if (mColorFadeOffAnimator == null) return;
-									int val = Helpers.getSharedIntPref(mContext, name, defValue);
-									if (val == 0) val = 250;
-									mColorFadeOffAnimator.setDuration(val);
-								}
-							}.onChange(false);
+						public void onChange(String name, int defValue) {
+							if (mColorFadeOffAnimator == null) return;
+							int val = Helpers.getSharedIntPref(mContext, name, defValue);
+							if (val == 0) val = 250;
+							mColorFadeOffAnimator.setDuration(val);
 						}
-					}, 10000);
+					};
 				}
 			});
 		} catch (Throwable t) {
@@ -107,11 +113,16 @@ public class System {
 			XposedHelpers.findAndHookMethod("com.android.server.power.PowerManagerService", lpparam.classLoader, "wakeUpNoUpdateLocked", long.class, String.class, int.class, String.class, int.class, new XC_MethodHook() {
 				@Override
 				protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
-					if (param.args[1].equals("android.server.power:POWER") ||
+					if (Integer.parseInt(MainModule.mPrefs.getString("system_nolightuponcharges", "1")) == 3 && param.args[1].equals("android.server.power:POWER")) {
+						param.setResult(false);
+						return;
+					}
+					if (Integer.parseInt(MainModule.mPrefs.getString("system_nolightuponcharges", "1")) == 2 && (
+						param.args[1].equals("android.server.power:POWER") ||
 						param.args[1].equals("com.android.systemui:RAPID_CHARGE") ||
 						param.args[1].equals("com.android.systemui:WIRELESS_CHARGE") ||
 						param.args[1].equals("com.android.systemui:WIRELESS_RAPID_CHARGE")
-					) param.setResult(false);
+					)) param.setResult(false);
 					//XposedBridge.log("wakeUpNoUpdateLocked: " + String.valueOf(param.args[0]) + " | " + String.valueOf(param.args[1]) + " | " + String.valueOf(param.args[2]) + " | " + String.valueOf(param.args[3]) + " | " + String.valueOf(param.args[4]));
 				}
 			});
@@ -639,6 +650,7 @@ public class System {
 							mMobileType.setText("");
 							mSignalDualNotchMobileType.setText("");
 						}
+						//XposedBridge.log("[CustoMIUIzer] " + String.valueOf(parent) + ", " + String.valueOf(parent.getId()) + " != " + String.valueOf(mMobileType.getResources().getIdentifier("header_content", "id", lpparam.packageName)));
 					} catch (Throwable t) {
 						XposedBridge.log(t);
 					}
@@ -667,6 +679,102 @@ public class System {
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
+	}
+
+	public static void ChargeAnimationHook(LoadPackageParam lpparam) {
+		Class<?> ccCls;
+		try {
+			ccCls = XposedHelpers.findClass("com.android.keyguard.charge.MiuiWirelessChargeController", lpparam.classLoader);
+		} catch (Throwable t1) {
+			try {
+				ccCls = XposedHelpers.findClass("com.android.keyguard.charge.MiuiChargeController", lpparam.classLoader);
+			} catch (Throwable t2) {
+				XposedBridge.log(t1);
+				XposedBridge.log(t2);
+				return;
+			}
+		}
+
+		try {
+			XposedHelpers.findAndHookMethod(ccCls, "showWirelessChargeAnimation", int.class, boolean.class, new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
+					Runnable mScreenOffRunnable = (Runnable)XposedHelpers.getObjectField(param.thisObject, "mScreenOffRunnable");
+					WakeLock mScreenOnWakeLock = (WakeLock)XposedHelpers.getObjectField(param.thisObject, "mScreenOnWakeLock");
+
+					if (mContext != null && mHandler != null && mScreenOffRunnable != null && mScreenOnWakeLock != null) {
+						if (mScreenOnWakeLock.isHeld()) {
+							int timeout = Helpers.getSharedIntPref(mContext, "pref_key_system_chargeanimtime", 20) * 1000;
+							mHandler.postDelayed(mScreenOnWakeLock::release, timeout);
+							mHandler.removeCallbacks(mScreenOffRunnable);
+							mHandler.postDelayed(mScreenOffRunnable, timeout);
+						}
+					} else XposedBridge.log("[CustoMIUIzer][ChargeAnimation1] Something is NULL! :)");
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+
+		try {
+			XposedHelpers.findAndHookMethod(ccCls, "showRapidChargeAnimation", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
+					Runnable mScreenOffRunnable = (Runnable)XposedHelpers.getObjectField(param.thisObject, "mScreenOffRunnable");
+					WakeLock mScreenOnWakeLock = (WakeLock)XposedHelpers.getObjectField(param.thisObject, "mScreenOnWakeLock");
+
+					if (mContext != null && mHandler != null && mScreenOffRunnable != null && mScreenOnWakeLock != null) {
+						if (mScreenOnWakeLock.isHeld()) {
+							int timeout = Helpers.getSharedIntPref(mContext, "pref_key_system_chargeanimtime", 20) * 1000;
+							mHandler.postDelayed(mScreenOnWakeLock::release, timeout);
+							mHandler.removeCallbacks(mScreenOffRunnable);
+							mHandler.postDelayed(mScreenOffRunnable, timeout);
+						}
+					} else XposedBridge.log("[CustoMIUIzer][ChargeAnimation2] Something is NULL! :)");
+				}
+			});
+		} catch (Throwable t) {}
+
+		try {
+			XposedHelpers.findAndHookMethod(ccCls, "showWirelessRapidChargeAnimation", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
+					Runnable mScreenOffRunnable = (Runnable)XposedHelpers.getObjectField(param.thisObject, "mScreenOffRunnable");
+					WakeLock mScreenOnWakeLock = (WakeLock)XposedHelpers.getObjectField(param.thisObject, "mScreenOnWakeLock");
+
+					if (mContext != null && mHandler != null && mScreenOffRunnable != null && mScreenOnWakeLock != null) {
+						if (mScreenOnWakeLock.isHeld()) {
+							int timeout = Helpers.getSharedIntPref(mContext, "pref_key_system_chargeanimtime", 20) * 1000;
+							mHandler.postDelayed(mScreenOnWakeLock::release, timeout);
+							mHandler.removeCallbacks(mScreenOffRunnable);
+							mHandler.postDelayed(mScreenOffRunnable, timeout);
+						}
+					} else XposedBridge.log("[CustoMIUIzer][ChargeAnimation3] Something is NULL! :)");
+				}
+			});
+		} catch (Throwable t) {}
+	}
+
+	public static void VolumeStepsHook(LoadPackageParam lpparam) {
+		Class<?> audioCls = findClass("com.android.server.audio.AudioService", lpparam.classLoader);
+		XposedHelpers.findAndHookMethod(audioCls, "createStreamStates", new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) {
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				if (mContext != null) {
+					int[] maxStreamVolume = (int[])XposedHelpers.getStaticObjectField(audioCls, "MAX_STREAM_VOLUME");
+					for (int i = 0; i < maxStreamVolume.length; i++)
+					maxStreamVolume[i] = Math.round(maxStreamVolume[i] * MainModule.mPrefs.getInt("system_volumesteps", 10) / 10.0f);
+					XposedHelpers.setStaticObjectField(audioCls, "MAX_STREAM_VOLUME", maxStreamVolume);
+				} else XposedBridge.log("[CustoMIUIzer][Volume Steps] Context is NULL!");
+			}
+		});
 	}
 
 //	public static void RotationAnimationHook(XC_LoadPackage.LoadPackageParam lpparam) {

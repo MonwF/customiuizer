@@ -357,8 +357,8 @@ public class Helpers {
 			String prefValue = cursor.getString(0);
 			cursor.close();
 			return prefValue;
-		} else if (MainModule.pref != null)
-			return MainModule.pref.getString(name, defValue);
+		} else if (MainModule.mPrefs != null)
+			return MainModule.mPrefs.getString(name, defValue);
 		else
 			return defValue;
 	}
@@ -371,8 +371,8 @@ public class Helpers {
 			int prefValue = cursor.getInt(0);
 			cursor.close();
 			return prefValue;
-		} else if (MainModule.pref != null)
-			return MainModule.pref.getInt(name, defValue);
+		} else if (MainModule.mPrefs != null)
+			return MainModule.mPrefs.getInt(name, defValue);
 		else
 			return defValue;
 	}
@@ -385,8 +385,8 @@ public class Helpers {
 			int prefValue = cursor.getInt(0);
 			cursor.close();
 			return prefValue == 1;
-		} else if (MainModule.pref != null)
-			return MainModule.pref.getBoolean(name, defValue);
+		} else if (MainModule.mPrefs != null)
+			return MainModule.mPrefs.getBoolean(name);
 		else
 			return defValue;
 	}
