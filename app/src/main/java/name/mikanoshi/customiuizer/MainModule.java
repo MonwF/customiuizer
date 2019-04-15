@@ -53,7 +53,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			PackagePermissions.init(lpparam);
 			GlobalActions.setupGlobalActions(lpparam);
 
-			if (mPrefs.getBoolean("pref_key_controls_powerflash")) Controls.PowerKeyHook(lpparam);
+			if (mPrefs.getBoolean("controls_powerflash")) Controls.PowerKeyHook(lpparam);
 			if (mPrefs.getInt("system_screenanim_duration", 0) > 0) System.ScreenAnimHook(lpparam);
 			if (Integer.parseInt(mPrefs.getString("system_nolightuponcharges", "1")) > 1) System.NoLightUpOnChargeHook(lpparam);
 			if (mPrefs.getBoolean("system_nolightuponheadset")) System.NoLightUpOnHeadsetHook(lpparam);
@@ -65,6 +65,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 				mPrefs.getInt("controls_fingerprint2_action", 1) > 1 ||
 				mPrefs.getInt("controls_fingerprintlong_action", 1) > 1) Controls.FingerprintEventsHook(lpparam);
 			if (mPrefs.getInt("system_volumesteps", 10) > 10) System.VolumeStepsHook(lpparam);
+			//System.AutoBrightnessHook(lpparam);
 			//if (Integer.parseInt(mPrefs.getString("system_rotateanim", "1")) > 1) System.RotationAnimationHook(lpparam);
 		}
 

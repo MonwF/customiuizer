@@ -73,6 +73,7 @@
 	<string name="array_global_actions_screenshot">Сделать снимок экрана</string>
 	<string name="array_global_actions_launch">Запустить приложение</string>
 	<string name="array_global_actions_toggle">Включить/выключить настройку</string>
+	<string name="array_global_actions_back">Предыдущее приложение</string>
 	<string name="array_global_toggle_wifi">Wi-Fi</string>
 	<string name="array_global_toggle_bt">Bluetooth</string>
 	<string name="array_global_toggle_gps">GPS</string>
@@ -135,6 +136,8 @@
 	<string name="controls_volumemedia_up_summ">Действие на долгое нажатие клавиши повышения громкости при выключенном экране</string>
 	<string name="controls_volumemedia_down_title">Долгое нажание на Понижение громкости *</string>
 	<string name="controls_volumemedia_down_summ">Действие на долгое нажатие клавиши понижения громкости при выключенном экране</string>
+	<string name="controls_volumemedia_vibrate_title">Вибрация при долгом нажатии *</string>
+	<string name="controls_volumemedia_vibrate_summ">Вибрировать при выполнении действия на долгое нажатие</string>
 	<string name="controls_mods_navbar">Панель навигации *</string>
 	<string name="controls_navbarleft_summ">Задаёт действие на нажатие левой дополнительной кнопки</string>
 	<string name="controls_navbarleft_title">Действие на нажатие левой кнопки</string>

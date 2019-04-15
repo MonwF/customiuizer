@@ -19,8 +19,8 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:prompt="@string/launcher_gestures_action"
-		android:entries="@array/global_actions_ext"
-		miuizer:entryValues="@array/global_actions_ext_val"
+		android:entries="@array/global_actions_navbar"
+		miuizer:entryValues="@array/global_actions_navbar_val"
 		android:spinnerMode="dialog" />
 
 	<LinearLayout

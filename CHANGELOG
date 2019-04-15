@@ -1,3 +1,8 @@
+1.4.1
+[Fixed] Quick flashlight
+[New] Action to switch to previous app for navbar buttons and fingerprint scanner
+[New] Optional vibration on volume keys long press action
+
 1.4.0
 [New] Customizable actions for single/double/long press on fingerprint scanner while screen is on
 [New] Option to disable screen light up on charge in all cases or only when there is no charging animation

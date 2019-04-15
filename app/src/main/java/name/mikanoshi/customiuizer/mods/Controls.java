@@ -203,12 +203,12 @@ public class Controls {
 													case KeyEvent.KEYCODE_VOLUME_UP:
 														int pref_mediaUp = Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_controls_volumemedia_up", "0"));
 														if (pref_mediaUp == 0) break;
-														GlobalActions.sendDownUpKeyEvent(mContext, pref_mediaUp);
+														GlobalActions.sendDownUpKeyEvent(mContext, pref_mediaUp, true);
 														break;
 													case KeyEvent.KEYCODE_VOLUME_DOWN:
 														int pref_mediaDown = Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_controls_volumemedia_down", "0"));
 														if (pref_mediaDown == 0) break;
-														GlobalActions.sendDownUpKeyEvent(mContext, pref_mediaDown);
+														GlobalActions.sendDownUpKeyEvent(mContext, pref_mediaDown, true);
 														break;
 													default:
 														break;
@@ -309,7 +309,7 @@ public class Controls {
 	private static boolean handleNavBarAction(int action, int launch, int toggle, Context context) {
 		if (action >= 85 && action <= 88) {
 			if (GlobalActions.isMediaActionsAllowed(context))
-				GlobalActions.sendDownUpKeyEvent(context, action);
+			GlobalActions.sendDownUpKeyEvent(context, action, false);
 			return true;
 		} else if (action == 1) {
 			try {

@@ -62,6 +62,12 @@
 			android:entryValues="@array/media_action_val"
 			android:defaultValue="0" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_controls_volumemedia_vibrate"
+			android:summary="@string/controls_volumemedia_vibrate_summ"
+			android:title="@string/controls_volumemedia_vibrate_title"
+			android:defaultValue="true" />
+
 	</PreferenceCategory>
 
 	<PreferenceCategory

@@ -96,6 +96,8 @@
 	<string name="controls_volumemedia_up_summ">Action for Volume Up long press when screen is off</string>
 	<string name="controls_volumemedia_down_title">Volume Down long press action *</string>
 	<string name="controls_volumemedia_down_summ">Action for Volume Down long press when screen is off</string>
+	<string name="controls_volumemedia_vibrate_title">Long press vibration *</string>
+	<string name="controls_volumemedia_vibrate_summ">Vibrate when long press action is executed</string>
 	<string name="controls_mods_navbar">Navigation bar *</string>
 	<string name="controls_navbarleft_summ">Action on left additional navigation button press</string>
 	<string name="controls_navbarleft_title">Left button action</string>
@@ -140,6 +142,7 @@
 	<string name="array_global_actions_launch">Launch app</string>
 	<string name="array_global_actions_shortcut">Launch shortcut</string>
 	<string name="array_global_actions_toggle">Toggle feature</string>
+	<string name="array_global_actions_back">Switch to previous app</string>
 	<string name="array_global_toggle_wifi">Wi-Fi</string>
 	<string name="array_global_toggle_bt">Bluetooth</string>
 	<string name="array_global_toggle_gps">GPS</string>

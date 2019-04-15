@@ -39,7 +39,7 @@ public class Controls extends SubFragment {
 			public boolean onPreferenceClick(Preference preference) {
 				Bundle args = new Bundle();
 				args.putString("key", preference.getKey());
-				openSubFragment(new MultiAction(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.Edit, preference.getTitleRes(), R.layout.prefs_swipe_gestures);
+				openSubFragment(new MultiAction(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.Edit, preference.getTitleRes(), R.layout.prefs_controls_gestures);
 				return true;
 			}
 		};

@@ -2,6 +2,8 @@ package name.mikanoshi.customiuizer.mods;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RecentTaskInfo;
 import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
@@ -9,6 +11,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.media.AudioManager;
 import android.net.wifi.WifiManager;
@@ -26,6 +30,7 @@ import android.widget.Toast;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import de.robv.android.xposed.XC_MethodHook;
@@ -34,7 +39,6 @@ import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
 import miui.os.SystemProperties;
-import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
@@ -59,6 +63,7 @@ public class GlobalActions {
 			case 8: return launchApp(helperContext, extraLaunch);
 			case 9: return launchShortcut(helperContext, extraLaunch);
 			case 10: return toggleThis(helperContext, extraToggle);
+			case 11: return switchToPrevApp(helperContext);
 			default: return false;
 		}
 	}
@@ -208,38 +213,35 @@ public class GlobalActions {
 //				}).start();
 //			}
 //
-//			if (action.equals("name.mikanoshi.customiuizer.mods.action.SwitchToPrevApp")) {
-//				PackageManager pm = context.getPackageManager();
-//				Intent intent_home = new Intent(Intent.ACTION_MAIN);
-//				intent_home.addCategory(Intent.CATEGORY_HOME);
-//				intent_home.addCategory(Intent.CATEGORY_DEFAULT);
-//				List<ResolveInfo> launcherList = pm.queryIntentActivities(intent_home, 0);
-//
-//				ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
-//				@SuppressWarnings("deprecation")
-//				List<RecentTaskInfo> rti = am.getRecentTasks(Integer.MAX_VALUE, 0);
-//
-//				Intent recentIntent;
-//				boolean isFirstRecent = true;
-//				for (RecentTaskInfo rtitem: rti) try {
-//					if (isFirstRecent) {
-//						isFirstRecent = false;
-//						continue;
-//					}
-//
-//					boolean isLauncher = false;
-//					recentIntent = new Intent(rtitem.baseIntent);
-//					if (rtitem.origActivity != null) recentIntent.setComponent(rtitem.origActivity);
-//					ComponentName resolvedAct = recentIntent.resolveActivity(pm);
-//
-//					if (resolvedAct != null)
-//					for (ResolveInfo launcher: launcherList)
-//					if (launcher.activityInfo.packageName.equals(resolvedAct.getPackageName())) {
-//						isLauncher = true;
-//						break;
-//					}
-//
-//					if (!isLauncher) {
+			if (action.equals("name.mikanoshi.customiuizer.mods.action.SwitchToPrevApp")) {
+				PackageManager pm = context.getPackageManager();
+				Intent intent_home = new Intent(Intent.ACTION_MAIN);
+				intent_home.addCategory(Intent.CATEGORY_HOME);
+				intent_home.addCategory(Intent.CATEGORY_DEFAULT);
+				List<ResolveInfo> launcherList = pm.queryIntentActivities(intent_home, 0);
+
+				ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+				@SuppressWarnings("deprecation")
+				List<RecentTaskInfo> rti = am.getRecentTasks(Integer.MAX_VALUE, 0);
+
+				Intent recentIntent;
+				for (RecentTaskInfo rtitem: rti) try {
+					//noinspection deprecation
+					if (am.getRunningTasks(1).get(0).topActivity == rtitem.topActivity) continue;
+
+					boolean isLauncher = false;
+					recentIntent = new Intent(rtitem.baseIntent);
+					if (rtitem.origActivity != null) recentIntent.setComponent(rtitem.origActivity);
+					ComponentName resolvedAct = recentIntent.resolveActivity(pm);
+
+					if (resolvedAct != null)
+					for (ResolveInfo launcher: launcherList)
+					if (!launcher.activityInfo.packageName.equals("com.android.settings") && launcher.activityInfo.packageName.equals(resolvedAct.getPackageName())) {
+						isLauncher = true;
+						break;
+					}
+
+					if (!isLauncher) {
 //						if (Helpers.getHtcHaptic(context)) {
 //							Vibrator vibe = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
 //							if (XMain.pref.getBoolean("pref_key_controls_longpresshaptic_enable", false))
@@ -247,17 +249,17 @@ public class GlobalActions {
 //							else
 //								vibe.vibrate(21);
 //						}
-//						if (rtitem.id >= 0)
-//							am.moveTaskToFront(rtitem.id, 0);
-//						else
-//							context.startActivity(recentIntent);
-//						break;
-//					}
-//				} catch (Throwable t) {
-//					XposedBridge.log(t);
-//				}
-//			}
-//
+						if (rtitem.id >= 0)
+							am.moveTaskToFront(rtitem.id, 0);
+						else
+							context.startActivity(recentIntent);
+						break;
+					}
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+
 			// Toggles
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.ToggleWiFi")) {
 				WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
@@ -662,9 +664,9 @@ public class GlobalActions {
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.LockDevice");
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.TakeScreenshot");
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.killForegroundApp");
+					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.SwitchToPrevApp");
 					//intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.killForegroundAppShedule");
 					//intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.SimulateMenu");
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.SwitchToPrevApp");
 
 					// Toggles
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleWiFi");
@@ -904,17 +906,17 @@ public class GlobalActions {
 			return false;
 		}
 	}
-//
-//	public static boolean switchToPrevApp(Context context) {
-//		try {
-//			context.sendBroadcast(new Intent("name.mikanoshi.customiuizer.mods.action.SwitchToPrevApp"));
-//			return true;
-//		} catch (Throwable t) {
-//			XposedBridge.log(t);
-//			return false;
-//		}
-//	}
-//
+
+	public static boolean switchToPrevApp(Context context) {
+		try {
+			context.sendBroadcast(new Intent("name.mikanoshi.customiuizer.mods.action.SwitchToPrevApp"));
+			return true;
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+			return false;
+		}
+	}
+
 //	public static boolean showQuickRecents(Context context) {
 //		try {
 //			context.sendBroadcast(new Intent("name.mikanoshi.customiuizer.mods.action.ShowQuickRecents"));
@@ -1046,14 +1048,17 @@ public class GlobalActions {
 	}
 
 	@SuppressLint("MissingPermission")
-	public static void sendDownUpKeyEvent(Context mContext, int keyCode) {
+	public static void sendDownUpKeyEvent(Context mContext, int keyCode, boolean vibrate) {
 		AudioManager am = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
-		Vibrator v = (Vibrator)mContext.getSystemService(Context.VIBRATOR_SERVICE);
 		am.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, keyCode));
 		am.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, keyCode));
-		if (Build.VERSION.SDK_INT >= 26)
-			v.vibrate(VibrationEffect.createOneShot(30, VibrationEffect.DEFAULT_AMPLITUDE));
-		else
-			v.vibrate(30);
+
+		if (vibrate && Helpers.getSharedBoolPref(mContext, "pref_key_controls_volumemedia_vibrate", true)) {
+			Vibrator v = (Vibrator)mContext.getSystemService(Context.VIBRATOR_SERVICE);
+			if (Build.VERSION.SDK_INT >= 26)
+				v.vibrate(VibrationEffect.createOneShot(30, VibrationEffect.DEFAULT_AMPLITUDE));
+			else
+				v.vibrate(30);
+		}
 	}
 }

@@ -777,6 +777,15 @@ public class System {
 		});
 	}
 
+	public static void AutoBrightnessHook(LoadPackageParam lpparam) {
+		XposedHelpers.findAndHookMethod("com.android.server.display.AutomaticBrightnessController", lpparam.classLoader, "updateAutoBrightness", boolean.class, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				XposedBridge.log("mScreenAutoBrightness: " + String.valueOf(XposedHelpers.getObjectField(param.thisObject, "mScreenAutoBrightness")));
+			}
+		});
+	}
+
 //	public static void RotationAnimationHook(XC_LoadPackage.LoadPackageParam lpparam) {
 //		try {
 //			XposedHelpers.findAndHookMethod("com.android.server.wm.ScreenRotationAnimation", lpparam.classLoader, "startAnimation", "android.view.SurfaceControl.Transaction", long.class, float.class, int.class, int.class, boolean.class, int.class, int.class, new XC_MethodHook() {
