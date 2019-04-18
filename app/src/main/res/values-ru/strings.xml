@@ -65,6 +65,7 @@
 	<string name="appdetails_sdk">Версия SDK</string>
 
 	<string name="array_default">Стандарт</string>
+	<string name="array_system_default">Система</string>
 	<string name="array_global_actions_none">Нет действия</string>
 	<string name="array_global_actions_notif">Открыть панель уведомлений</string>
 	<string name="array_global_actions_eqs">Открыть панель Быстрых Настроек</string>
@@ -98,6 +99,10 @@
 	<string name="support_bug_summ">Отправить сообщение об ошибке или предложить новую фичу</string>
 	<string name="support_donate_title">Пожертвования</string>
 	<string name="support_donate_summ">Лучший способ выразить признательность за этот замечательный модуль :)</string>
+	<string name="support_donate_crypto_title">Криптовалюты</string>
+	<string name="support_donate_crypto_summ">Деньги будущего :)</string>
+	<string name="support_donate_other_title">Устаревшие валюты</string>
+	<string name="support_donate_other_summ">Paypal, Webmoney, QIWI</string>
 
 	<string name="crash_dialog">В CustoMIUIzer произошла ошибка!</string>
 	<string name="crash_dialog_manual">Собраны все необходимые данные</string>
@@ -127,21 +132,24 @@
 	<string name="controls_fingerprint1_summ">Задаёт действие на одиночное нажатие при включенном экране</string>
 	<string name="controls_fingerprint2_title">Действие на двойное нажатие</string>
 	<string name="controls_fingerprint2_summ">Задаёт действие на двойное нажатие при включенном экране</string>
+	<string name="controls_fingerprint2_delay_title">Задержка между нажатиями</string>
+	<string name="controls_fingerprint2_delay_note">Действие на одиночное нажатие будет иметь данную задержку</string>
 	<string name="controls_fingerprintlong_title">Действие на долгое нажатие</string>
-	<string name="controls_fingerprintlong_summ">Задаёт действие на двойное нажатие при включенном экране</string>
+	<string name="controls_fingerprintlong_summ">Задаёт действие на долгое нажатие при включенном экране</string>
+	<string name="controls_fingerprintlong_delay_title">Время долгого нажатия</string>
 	<string name="controls_mods_volume">Кнопки громкости</string>
 	<string name="controls_volumecursor_title">Управлять курсором ввода</string>
 	<string name="controls_volumecursor_summ">Перемещать курсор ввода текста при нажатии кнопок громкости</string>
-	<string name="controls_volumemedia_up_title">Долгое нажание на Повышение громкости *</string>
+	<string name="controls_volumemedia_up_title">Долгое нажатие на Повышение громкости *</string>
 	<string name="controls_volumemedia_up_summ">Действие на долгое нажатие клавиши повышения громкости при выключенном экране</string>
-	<string name="controls_volumemedia_down_title">Долгое нажание на Понижение громкости *</string>
+	<string name="controls_volumemedia_down_title">Долгое нажатие на Понижение громкости *</string>
 	<string name="controls_volumemedia_down_summ">Действие на долгое нажатие клавиши понижения громкости при выключенном экране</string>
 	<string name="controls_volumemedia_vibrate_title">Вибрация при долгом нажатии *</string>
 	<string name="controls_volumemedia_vibrate_summ">Вибрировать при выполнении действия на долгое нажатие</string>
 	<string name="controls_mods_navbar">Панель навигации *</string>
 	<string name="controls_navbarleft_summ">Задаёт действие на нажатие левой дополнительной кнопки</string>
 	<string name="controls_navbarleft_title">Действие на нажатие левой кнопки</string>
-	<string name="controls_navbarleftlong_summ">Задаёт действие на долгое левой дополнительной кнопки</string>
+	<string name="controls_navbarleftlong_summ">Задаёт действие на долгое нажатие левой дополнительной кнопки</string>
 	<string name="controls_navbarleftlong_title">Действие на долгое нажатие левой кнопки</string>
 	<string name="controls_navbarright_summ">Задаёт действие на нажатие правой дополнительной кнопки</string>
 	<string name="controls_navbarright_title">Действие на нажатие правой кнопки</string>
@@ -208,7 +216,7 @@
 	<string name="system_mods_audio">Аудио</string>
 	<string name="system_mods_lockscreen">Экран блокировки</string>
 	<string name="system_mods_screenanim">Экранная анимация *</string>
-	<string name="system_mods_statusbar">Строка состояния и панель уведомелний</string>
+	<string name="system_mods_statusbar">Строка состояния и панель уведомлений</string>
 	<string name="system_clockseconds_title">Показывать секунды</string>
 	<string name="system_clockseconds_summ">Отображает секунды на часах в статусбаре</string>
 	<string name="system_hidemobiletype_title">Скрывать тип мобильной сети</string>
@@ -260,4 +268,6 @@
 	<string name="array_screen_anim_fade">Затухание</string>
 	<string name="system_dttosleep_title">Сон по двойному нажатию</string>
 	<string name="system_dttosleep_summ">Выключает экран при двойном нажатии по пустому месту на экране блокировки</string>
+	<string name="format_d_ms">%d мс</string>
+	<string name="format_d_s">%d сек</string>
 </resources>

@@ -27,8 +27,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import java.util.Arrays;
-
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
@@ -504,6 +502,7 @@ public class Controls {
 	private static Context miuiPWMContext;
 	private static Handler miuiPWMHandler;
 	private static boolean wasScreenOn = false;
+	private static boolean wasFingerprintUsed = false;
 	private static boolean isFingerprintPressed = false;
 	private static boolean isFingerprintLongPressed = false;
 	private static Runnable singlePressFingerprint = new Runnable() {
@@ -541,23 +540,26 @@ public class Controls {
 				miuiPWMHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
 
 				KeyEvent keyEvent = (KeyEvent)param.args[0];
-				if (keyEvent.getKeyCode() != KeyEvent.KEYCODE_DPAD_CENTER || keyEvent.getAction() != KeyEvent.ACTION_DOWN)
-					return;
+				if (keyEvent.getKeyCode() != KeyEvent.KEYCODE_DPAD_CENTER || keyEvent.getAction() != KeyEvent.ACTION_DOWN) return;
 
 				isFingerprintPressed = true;
 				wasScreenOn = (boolean)XposedHelpers.callMethod(param.thisObject, "isScreenOn");
-				if (Helpers.getSharedIntPref(miuiPWMContext, "pref_key_controls_fingerprintlong_action", 1) > 1)
-					miuiPWMHandler.postDelayed(longPressFingerprint, ViewConfiguration.getLongPressTimeout());
+				wasFingerprintUsed = Settings.System.getInt(miuiPWMContext.getContentResolver(), "is_fingerprint_active", 0) == 1;
+
+				if (wasScreenOn && !wasFingerprintUsed)
+				if (Helpers.getSharedIntPref(miuiPWMContext, "pref_key_controls_fingerprintlong_action", 1) > 1) {
+					int delay = Helpers.getSharedIntPref(miuiPWMContext, "pref_key_controls_fingerprintlong_delay", 0);
+					miuiPWMHandler.postDelayed(longPressFingerprint, delay < 200 ? ViewConfiguration.getLongPressTimeout() : delay);
+				}
 
 				if (XposedHelpers.getAdditionalInstanceField(param.thisObject, "touchTime") == null)
-					XposedHelpers.setAdditionalInstanceField(param.thisObject, "touchTime", 0L);
+				XposedHelpers.setAdditionalInstanceField(param.thisObject, "touchTime", 0L);
 			}
 
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				KeyEvent keyEvent = (KeyEvent)param.args[0];
-				if (keyEvent.getKeyCode() != KeyEvent.KEYCODE_DPAD_CENTER || keyEvent.getAction() != KeyEvent.ACTION_UP)
-					return;
+				if (keyEvent.getKeyCode() != KeyEvent.KEYCODE_DPAD_CENTER || keyEvent.getAction() != KeyEvent.ACTION_UP) return;
 
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 				Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
@@ -566,34 +568,56 @@ public class Controls {
 				long currentTouchTime = currentTimeMillis();
 				XposedHelpers.setAdditionalInstanceField(param.thisObject, "touchTime", currentTouchTime);
 
+				int delay = Helpers.getSharedIntPref(mContext, "pref_key_controls_fingerprint2_delay", 50);
+				int dttimeout = delay < 200 ? ViewConfiguration.getDoubleTapTimeout() : delay;
 				int dtaction = Helpers.getSharedIntPref(mContext, "pref_key_controls_fingerprint2_action", 1);
-				if (wasScreenOn)
-					if (dtaction > 1 && currentTouchTime - lastTouchTime < 250L) {
-						mHandler.removeCallbacks(singlePressFingerprint);
-						mHandler.removeCallbacks(longPressFingerprint);
-						int launch = 13;
-						int toggle = Helpers.getSharedIntPref(mContext, "pref_key_controls_fingerprint2_toggle", 0);
-						GlobalActions.handleAction(dtaction, launch, toggle, mContext);
-						wasScreenOn = false;
-					} else if (isFingerprintLongPressed) {
-						int action = Helpers.getSharedIntPref(mContext, "pref_key_controls_fingerprintlong_action", 1);
-						int launch = 14;
-						int toggle = Helpers.getSharedIntPref(mContext, "pref_key_controls_fingerprintlong_toggle", 0);
-						GlobalActions.handleAction(action, launch, toggle, mContext);
-						wasScreenOn = false;
-					} else {
-						mHandler.removeCallbacks(longPressFingerprint);
-						mHandler.removeCallbacks(singlePressFingerprint);
-						if (dtaction > 1)
-							mHandler.postDelayed(singlePressFingerprint, 250L);
-						else
-							mHandler.post(singlePressFingerprint);
-					}
+				if (wasScreenOn && !wasFingerprintUsed)
+				if (dtaction > 1 && currentTouchTime - lastTouchTime < dttimeout) {
+					mHandler.removeCallbacks(singlePressFingerprint);
+					mHandler.removeCallbacks(longPressFingerprint);
+					int launch = 13;
+					int toggle = Helpers.getSharedIntPref(mContext, "pref_key_controls_fingerprint2_toggle", 0);
+					GlobalActions.handleAction(dtaction, launch, toggle, mContext);
+					wasScreenOn = false;
+				} else if (isFingerprintLongPressed) {
+					int action = Helpers.getSharedIntPref(mContext, "pref_key_controls_fingerprintlong_action", 1);
+					int launch = 14;
+					int toggle = Helpers.getSharedIntPref(mContext, "pref_key_controls_fingerprintlong_toggle", 0);
+					GlobalActions.handleAction(action, launch, toggle, mContext);
+					wasScreenOn = false;
+				} else {
+					mHandler.removeCallbacks(longPressFingerprint);
+					mHandler.removeCallbacks(singlePressFingerprint);
+					if (dtaction > 1)
+						mHandler.postDelayed(singlePressFingerprint, dttimeout);
+					else
+						mHandler.post(singlePressFingerprint);
+				}
 
 				isFingerprintLongPressed = false;
 				isFingerprintPressed = false;
 			}
 		});
+
+		try {
+			XposedBridge.hookAllMethods(findClass("com.android.server.fingerprint.FingerprintService", lpparam.classLoader), "startClient", new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					Settings.System.putInt(mContext.getContentResolver(), "is_fingerprint_active", 1);
+				}
+			});
+
+			XposedBridge.hookAllMethods(findClass("com.android.server.fingerprint.FingerprintService", lpparam.classLoader), "removeClient", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					Settings.System.putInt(mContext.getContentResolver(), "is_fingerprint_active", 0);
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
 	}
 
 //	public static void FingerprintHook(XC_LoadPackage.LoadPackageParam lpparam) {

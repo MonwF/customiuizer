@@ -1,5 +1,6 @@
 <PreferenceScreen
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:miuizer="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:key="pref_key_various">
@@ -30,10 +31,31 @@
 			android:summary="@string/controls_fingerprint2_summ"
 			android:title="@string/controls_fingerprint2_title" />
 
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_controls_fingerprint2_delay"
+			android:title="@string/controls_fingerprint2_delay_title"
+			android:defaultValue="150"
+			miuizer:minValue="150"
+			miuizer:maxValue="1000"
+			miuizer:stepValue="50"
+			miuizer:format="@string/format_d_ms"
+			miuizer:note="@string/controls_fingerprint2_delay_note"
+			miuizer:offtext="@string/array_system_default" />
+
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_fingerprintlong"
 			android:summary="@string/controls_fingerprintlong_summ"
 			android:title="@string/controls_fingerprintlong_title" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_controls_fingerprintlong_delay"
+			android:title="@string/controls_fingerprintlong_delay_title"
+			android:defaultValue="100"
+			miuizer:minValue="100"
+			miuizer:maxValue="2000"
+			miuizer:stepValue="100"
+			miuizer:format="@string/format_d_ms"
+			miuizer:offtext="@string/array_system_default" />
 
 	</PreferenceCategory>
 

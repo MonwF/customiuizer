@@ -38,7 +38,7 @@
 			miuizer:minValue="3"
 			miuizer:maxValue="20"
 			miuizer:stepValue="1"
-			miuizer:format="%d s"
+			miuizer:format="@string/format_d_s"
 			miuizer:offtext="@string/array_default" />
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
@@ -49,7 +49,7 @@
 			miuizer:minValue="0"
 			miuizer:maxValue="1500"
 			miuizer:stepValue="50"
-			miuizer:format="%d ms"
+			miuizer:format="@string/format_d_ms"
 			miuizer:offtext="@string/array_default"
 			miuizer:note="@string/system_screenanim_desc" />
 		<!--

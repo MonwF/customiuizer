@@ -5,7 +5,6 @@ import android.content.res.TypedArray;
 import android.preference.Preference;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
@@ -16,6 +15,7 @@ import java.util.IllegalFormatException;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
+@SuppressWarnings("WeakerAccess")
 public class SeekBarPreference extends Preference {
 
 	private int mDefaultValue;
@@ -85,8 +85,8 @@ public class SeekBarPreference extends Preference {
 			mDefaultValue = 0;
 		}
 
-		mSteppedMinValue = Math.round(mMinValue / mStepValue);
-		mSteppedMaxValue = Math.round(mMaxValue / mStepValue);
+		mSteppedMinValue = Math.round((float)mMinValue / mStepValue);
+		mSteppedMaxValue = Math.round((float)mMaxValue / mStepValue);
 	}
 
 	@Override
@@ -173,7 +173,7 @@ public class SeekBarPreference extends Preference {
 		return mFormat;
 	}
 
-	public void setFormat(String format) {
+	private void setFormat(String format) {
 		mFormat = format;
 		updateDisplay();
 	}
@@ -182,11 +182,11 @@ public class SeekBarPreference extends Preference {
 		setFormat(getContext().getResources().getString(formatResId));
 	}
 
-	public int getValue() {
+	private int getValue() {
 		return (mSeekBar.getProgress() + mSteppedMinValue) * mStepValue;
 	}
 
-	public void setValue(int value) {
+	private void setValue(int value) {
 		value = getBoundedValue(value) - mSteppedMinValue;
 		mSeekBar.setProgress(value);
 		updateDisplay(value);
@@ -195,8 +195,8 @@ public class SeekBarPreference extends Preference {
 	private void updateAllValues() {
 		int currentValue = getValue();
 			if (mMaxValue <= mMinValue) mMaxValue = mMinValue + 1;
-			mSteppedMinValue = Math.round(mMinValue / mStepValue);
-			mSteppedMaxValue = Math.round(mMaxValue / mStepValue);
+			mSteppedMinValue = Math.round((float)mMinValue / mStepValue);
+			mSteppedMaxValue = Math.round((float)mMaxValue / mStepValue);
 
 			mSeekBar.setMax(mSteppedMaxValue - mSteppedMinValue);
 
@@ -207,7 +207,7 @@ public class SeekBarPreference extends Preference {
 		}
 
 	private int getBoundedValue(int value) {
-		value = Math.round(value / mStepValue);
+		value = Math.round((float)value / mStepValue);
 		if (value < mSteppedMinValue) value = mSteppedMinValue;
 		if (value > mSteppedMaxValue) value = mSteppedMaxValue;
 		return value;

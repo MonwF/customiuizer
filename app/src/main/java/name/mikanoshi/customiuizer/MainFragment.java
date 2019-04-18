@@ -252,6 +252,29 @@ public class MainFragment extends PreferenceFragmentBase {
 			}
 		});
 
+		Preference donateCryptoPagePreference = findPreference("pref_key_paycrypto");
+		donateCryptoPagePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference pref) {
+				Helpers.openURL(act, "https://code.highspec.ru/cryptodonate");
+				return true;
+			}
+		});
+
+		Preference donateOtherPagePreference = findPreference("pref_key_payother");
+		donateOtherPagePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			@SuppressWarnings("deprecation")
+			public boolean onPreferenceClick(Preference pref) {
+				if (getResources().getConfiguration().locale.getISO3Language().contains("ru"))
+					Helpers.openURL(act, "https://mikanoshi.name/donate/");
+				else
+					Helpers.openURL(act, "https://en.mikanoshi.name/donate/");
+				return true;
+			}
+		});
+
+
 		//Helpers.removePref(this, "pref_key_miuizer_force_material", "pref_key_miuizer");
 	}
 

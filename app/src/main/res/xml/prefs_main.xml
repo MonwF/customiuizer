@@ -27,7 +27,7 @@
 	<PreferenceCategory
 		android:title="@string/miuizer"
 		android:key="pref_key_miuizer">
-		<CheckBoxPreference
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_miuizer_icon"
 			android:summary="@string/miuizer_show_icon_summ"
 			android:title="@string/miuizer_show_icon_title"
@@ -49,6 +49,18 @@
 			android:key="pref_key_miuizer_feedback"
 			android:title="@string/miuizer_acramail_title"
 			android:summary="@string/miuizer_acramail_summ"	/>
+	</PreferenceCategory>
+
+	<PreferenceCategory
+		android:title="@string/support_donate_title">
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/support_donate_crypto_title"
+			android:summary="@string/support_donate_crypto_summ"
+			android:key="pref_key_paycrypto" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/support_donate_other_title"
+			android:summary="@string/support_donate_other_summ"
+			android:key="pref_key_payother" />
 	</PreferenceCategory>
 
 </PreferenceScreen>

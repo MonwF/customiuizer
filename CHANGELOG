@@ -1,3 +1,8 @@
+1.4.2
+[Fixed] Override swipe up action in launcher (search usually) with mod's action
+[Fixed] Additional check whether scanner is currently used or not in fingerprint actions mod
+[New] Customizable double tap and long press delays for fingerprint actions mod
+
 1.4.1
 [Fixed] Quick flashlight
 [New] Action to switch to previous app for navbar buttons and fingerprint scanner

@@ -23,19 +23,6 @@ public class AboutFragment extends SubFragment {
 			}
 		});
 
-		Preference donatePagePreference = findPreference("pref_key_donatepage");
-		donatePagePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			@SuppressWarnings("deprecation")
-			public boolean onPreferenceClick(Preference pref) {
-				if (getResources().getConfiguration().locale.getISO3Language().contains("ru"))
-					Helpers.openURL(act, "https://mikanoshi.name/donate/");
-				else
-					Helpers.openURL(act, "https://en.mikanoshi.name/donate/");
-				return true;
-			}
-		});
-
 		//Add version name to support title
 		if (getView() != null) try {
 			TextView version = getView().findViewById(R.id.about_version);

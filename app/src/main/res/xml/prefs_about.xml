@@ -10,10 +10,6 @@
 			android:title="@string/support_repo_title"
 			android:summary="@string/support_repo_summ"
 			android:key="pref_key_website" />
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
-			android:title="@string/support_donate_title"
-			android:summary="@string/support_donate_summ"
-			android:key="pref_key_donatepage" />
 	</PreferenceCategory>
 
 </PreferenceScreen>

@@ -87,8 +87,11 @@
 	<string name="controls_fingerprint1_summ">Action for a sinlge tap when screen is on</string>
 	<string name="controls_fingerprint2_title">Double tap action</string>
 	<string name="controls_fingerprint2_summ">Action for a double tap when screen is on</string>
+	<string name="controls_fingerprint2_delay_title">Double tap delay</string>
+	<string name="controls_fingerprint2_delay_note">Single tap action will be delayed by this amount</string>
 	<string name="controls_fingerprintlong_title">Long press action</string>
 	<string name="controls_fingerprintlong_summ">Action for a long press when screen is on</string>
+	<string name="controls_fingerprintlong_delay_title">Long press delay</string>
 	<string name="controls_mods_volume">Volume keys</string>
 	<string name="controls_volumecursor_title">Control input cursor</string>
 	<string name="controls_volumecursor_summ">Move text input cursor using volume keys</string>
@@ -132,6 +135,7 @@
 	<string name="settings">Settings</string>
 
 	<string name="array_default">Default</string>
+	<string name="array_system_default">System</string>
 	<string name="array_global_actions_none">No action</string>
 	<string name="array_global_actions_notif">Expand notifications drawer</string>
 	<string name="array_global_actions_eqs">Expand Quick Settings panel</string>
@@ -204,6 +208,10 @@
 	<string name="support_bug_summ">Send us a bug report or a feature request via official issue tracker</string>
 	<string name="support_donate_title">Donate</string>
 	<string name="support_donate_summ">Best way to express your gratitude for this awesome module :)</string>
+	<string name="support_donate_crypto_title">Cryptocurrencies</string>
+	<string name="support_donate_crypto_summ">Money of the future :)</string>
+	<string name="support_donate_other_title">Outdated currencies</string>
+	<string name="support_donate_other_summ">Paypal, Webmoney, QIWI</string>
 
 	<string name="crash_dialog">CustoMIUIzer has just crashed!</string>
 	<string name="crash_dialog_manual">All necessary data has beed collected</string>
@@ -254,5 +262,9 @@
 	<string name="no_browser">Browser app is required to open URLs</string>
 	<string name="okay">Okay</string>
 	<string name="cancel">Cancel</string>
+
+	<string name="format_d_ms">%d ms</string>
+	<string name="format_d_s">%d s</string>
+
 	<string name="dummy" translatable="false" />
 </resources>
