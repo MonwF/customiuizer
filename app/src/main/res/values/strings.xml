@@ -16,8 +16,12 @@
 	<string name="system_clockseconds_summ">Display seconds in the status bar clock</string>
 	<string name="system_hidemobiletype_title">Hide mobile network type</string>
 	<string name="system_hidemobiletype_summ">Remove mobile network type icon from status bar</string>
-	<string name="system_fixmeter_title">Traffic speed spacing</string>
-	<string name="system_fixmeter_summ">Increase right margin for traffic speed indicator</string>
+	<string name="system_detailednetspeed_title">Detailed network speed indicator</string>
+	<string name="system_detailednetspeed_summ">Show incoming and outgoing network speeds separately</string>
+	<string name="system_detailednetspeed_low_title">Hide low speed</string>
+	<string name="system_detailednetspeed_low_summ">Do not show indicator if speed is below 1KB/s</string>
+	<string name="system_fixmeter_title">Network speed spacing</string>
+	<string name="system_fixmeter_summ">Increase right margin for network speed indicator</string>
 	<string name="system_expandnotif_title">Expand notifications</string>
 	<string name="system_expandnotif_summ">Always show notifications fully expanded</string>
 	<string name="system_chargeanimtime_title">Charge animation screen timeout *</string>
@@ -38,6 +42,14 @@
 	<string name="system_securelock_summ">Disable power menu while screen lock is active</string>
 	<string name="system_nopassword_title">No password after boot</string>
 	<string name="system_nopassword_summ">Do not require password instead of a fingerprint first time after boot</string>
+	<string name="system_noscreenlock_act_title">Screen lock override</string>
+	<string name="system_noscreenlock_act_summ">Activates dynamic screen lock controls</string>
+	<string name="system_noscreenlock_title">Disable screen lock *</string>
+	<string name="system_noscreenlock_summ">Selectively disable screen lock (does not change security for any apps and does not remove fingerprint data)</string>
+	<string name="system_noscreenlock_scr_title">Skip lock screen *</string>
+	<string name="system_noscreenlock_scr_summ">Do not show lock screen at all when screen lock is disabled</string>
+	<string name="system_noscreenlock_wifi_title">Trusted Wi-Fi networks *</string>
+	<string name="system_noscreenlock_wifi_summ">Temporarily disable screen lock while connected to these networks</string>
 	<string name="system_screenanim_duration_title">Turning off animation *</string>
 	<string name="system_screenanim_duration_summ">Configure animation length</string>
 	<string name="system_screenanim_desc">Very low values will practically disable animation</string>
@@ -167,6 +179,10 @@
 	<string name="array_media_prev">Previous track</string>
 	<string name="array_all">All charging events</string>
 	<string name="array_allbutanim">Only events without animation</string>
+	<string name="array_screenlock_no">System default</string>
+	<string name="array_screenlock_none">Disable completely</string>
+	<string name="array_screenlock_bootonly">Require only once after boot</string>
+	<string name="array_screenlock_wifi">Disable on trusted Wi-Fi networks</string>
 
 	<string name="toggle_wifi_on">Wi-Fi enabled</string>
 	<string name="toggle_wifi_off">Wi-Fi disabled</string>
@@ -255,6 +271,11 @@
 	<string name="select_app">Select app</string>
 	<string name="select_shortcut">Select shortcut</string>
 	<string name="search_input_description">Search</string>
+	<string name="wifi_networks">Wi-Fi networks</string>
+	<string name="wifi_location_title">Location settings</string>
+	<string name="wifi_location_summ">Location access is required for apps to get a list of Wi-Fi networks on Android Pie</string>
+	<string name="wifi_category1">Trusted networks</string>
+	<string name="wifi_category2">Available networks</string>
 
 	<string name="xposed_not_found">Xposed Installer not found</string>
 	<string name="xposed_not_found_explain">It looks like you don\'t have Xposed Installed.\n\nPlease note that the mods on this page will only work with Xposed!\n\nXposed is available in the ARHD installer.</string>
@@ -262,6 +283,11 @@
 	<string name="no_browser">Browser app is required to open URLs</string>
 	<string name="okay">Okay</string>
 	<string name="cancel">Cancel</string>
+
+	<string name="permission_save">Do you want to write backup or not?</string>
+	<string name="permission_restore">Do you want to restore backup or not?</string>
+	<string name="permission_wifi">Do you want to get a list of Wi-Fi networks or not?</string>
+	<string name="permission_permanent">You\'ll have to manually enable permission for this option now. Good job!</string>
 
 	<string name="format_d_ms">%d ms</string>
 	<string name="format_d_s">%d s</string>

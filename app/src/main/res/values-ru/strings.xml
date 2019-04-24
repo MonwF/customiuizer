@@ -90,6 +90,10 @@
 	<string name="array_media_prev">Предыдущий трек</string>
 	<string name="array_all">Все события зарядки</string>
 	<string name="array_allbutanim">Только события без анимации</string>
+	<string name="array_screenlock_no">По умолчанию системы</string>
+	<string name="array_screenlock_none">Отключить полностью</string>
+	<string name="array_screenlock_bootonly">Потребовать только раз после загрузки</string>
+	<string name="array_screenlock_wifi">Отключать в доверенных Wi-Fi сетях</string>
 
 	<string name="select_app">Выбрать приложение</string>
 
@@ -204,6 +208,11 @@
 	<string name="miuizer_show_icon_title">Иконка быстрого доступа</string>
 	<string name="open_xposed">Открыть Xposed Installer</string>
 	<string name="search_input_description">Поиск</string>
+	<string name="wifi_networks">Wi-Fi сети</string>
+	<string name="wifi_location_title">Настройки местоположения</string>
+	<string name="wifi_location_summ">Для получения списка Wi-Fi сетей на Android Pie приложениям требуется доступ к местоположению</string>
+	<string name="wifi_category1">Доверенные сети</string>
+	<string name="wifi_category2">Доступные сети</string>
 	<string name="select_shortcut">Выбрать ярлык</string>
 	<string name="launcher_gestures_shortcut">Ярлык для запуска</string>
 	<string name="settings">Настройки</string>
@@ -221,8 +230,12 @@
 	<string name="system_clockseconds_summ">Отображает секунды на часах в статусбаре</string>
 	<string name="system_hidemobiletype_title">Скрывать тип мобильной сети</string>
 	<string name="system_hidemobiletype_summ">Удаляет иконку типа мобильной сети из строки состояния</string>
-	<string name="system_fixmeter_title">Отступ скорости трафика</string>
-	<string name="system_fixmeter_summ">Увеличивает отступ справа для индикатора скорости трафика</string>
+	<string name="system_detailednetspeed_title">Подробный индикатор скорости соединения</string>
+	<string name="system_detailednetspeed_summ">Показыает входящую и исходящую скорости передачи данных</string>
+	<string name="system_detailednetspeed_low_title">Скрыть низкие скорости</string>
+	<string name="system_detailednetspeed_low_summ">Скрывает индикатор, если скорость ниже 1КБ/с</string>
+	<string name="system_fixmeter_title">Отступ скорости соединения</string>
+	<string name="system_fixmeter_summ">Увеличивает отступ справа для индикатора скорости соединения</string>
 	<string name="system_expandnotif_title">Разворачивать уведомления</string>
 	<string name="system_expandnotif_summ">Всегда показывать уведомления в полностью развёрнутом виде</string>
 	<string name="system_chargeanimtime_title">Таймаут экрана при анимации зарядки *</string>
@@ -263,6 +276,14 @@
 	<string name="about_dev">от Mikanoshi</string>
 	<string name="system_nopassword_title">Не требовать пароль после загрузки</string>
 	<string name="system_nopassword_summ">Отключает требование пароля вместо отпечатка пальца первый раз после загрузки</string>
+	<string name="system_noscreenlock_act_title">Управление блокировкой</string>
+	<string name="system_noscreenlock_act_summ">Активирует динамическое управление блокировкой устройства</string>
+	<string name="system_noscreenlock_title">Отключить блокировку *</string>
+	<string name="system_noscreenlock_summ">Выборочно пропускает блокировку устройства (не влияет на безопасность приложений и не удаляет данные отпечатков пальцев)</string>
+	<string name="system_noscreenlock_scr_title">Пропустить экран блокировки *</string>
+	<string name="system_noscreenlock_scr_summ">Не показывать экран блокировки если блокировка устройства отключена</string>
+	<string name="system_noscreenlock_wifi_title">Доверенные Wi-Fi сети *</string>
+	<string name="system_noscreenlock_wifi_summ">При подключении к данным сетям блокировка будет временно отключена</string>
 	<string name="system_rotateanim_title">Анимация при повороте</string>
 	<string name="array_screen_anim_none">Без анимации</string>
 	<string name="array_screen_anim_fade">Затухание</string>
@@ -270,4 +291,8 @@
 	<string name="system_dttosleep_summ">Выключает экран при двойном нажатии по пустому месту на экране блокировки</string>
 	<string name="format_d_ms">%d мс</string>
 	<string name="format_d_s">%d сек</string>
+	<string name="permission_save">Вы хотите сохранить бэкап или нет?</string>
+	<string name="permission_restore">Вы хотите восстановить бэкап или нет?</string>
+	<string name="permission_wifi">Вы хотите получить список Wi-Fi сетей или нет?</string>
+	<string name="permission_permanent">Теперь Вам придётся вручную давать разрешение для данной опции. Отличная работа!</string>
 </resources>
