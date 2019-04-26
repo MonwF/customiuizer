@@ -19,7 +19,9 @@
 	<string name="system_detailednetspeed_title">Detailed network speed indicator</string>
 	<string name="system_detailednetspeed_summ">Show incoming and outgoing network speeds separately</string>
 	<string name="system_detailednetspeed_low_title">Hide low speed</string>
-	<string name="system_detailednetspeed_low_summ">Do not show indicator if speed is below 1KB/s</string>
+	<string name="system_detailednetspeed_low_summ">Do not show indicator if speed is low</string>
+	<string name="system_detailednetspeed_lowlevel_title">Low speed level</string>
+	<string name="system_detailednetspeed_lowlevel_summ">Speed values below this level will be considered low and will have a different indication icon</string>
 	<string name="system_fixmeter_title">Network speed spacing</string>
 	<string name="system_fixmeter_summ">Increase right margin for network speed indicator</string>
 	<string name="system_expandnotif_title">Expand notifications</string>
@@ -291,6 +293,10 @@
 
 	<string name="format_d_ms">%d ms</string>
 	<string name="format_d_s">%d s</string>
+	<string name="format_KBs">%d KB/s</string>
+	<string name="oneKBs">1 KB/s</string>
+	<string name="Bs">B/s</string>
+	<string name="speedunits">KMGTPE</string>
 
 	<string name="dummy" translatable="false" />
 </resources>
