@@ -1,3 +1,8 @@
+1.4.3
+[New] Dynamic screen lock (disable completely, require only once after boot, disable on trusted Wi-Fi networks; bypass lock screen too)
+[New] Detailed network speed indicator (incoming/outgoing traffic speeds and icons, low speed threshold for different indication)
+[New] Network speed update interval
+
 1.4.2
 [Fixed] Override swipe up action in launcher (search usually) with mod's action
 [Fixed] Additional check whether scanner is currently used or not in fingerprint actions mod

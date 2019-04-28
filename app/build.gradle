@@ -21,8 +21,8 @@ android {
         applicationId "name.mikanoshi.customiuizer"
         minSdkVersion 24
         targetSdkVersion 28
-        versionCode 9
-        versionName "1.4.2"
+        versionCode 10
+        versionName "1.4.3"
         signingConfig signingConfigs.dev
     }
     buildTypes {

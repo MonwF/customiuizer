@@ -91,6 +91,12 @@
 		android:title="@string/system_mods_statusbar">
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_expandnotif"
+			android:summary="@string/system_expandnotif_summ"
+			android:title="@string/system_expandnotif_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_clockseconds"
 			android:summary="@string/system_clockseconds_summ"
 			android:title="@string/system_clockseconds_title"
@@ -108,16 +114,59 @@
 			android:title="@string/system_fixmeter_title"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_netspeedinterval"
+			android:title="@string/system_netspeedinterval_title"
+			android:defaultValue="4"
+			miuizer:minValue="1"
+			miuizer:maxValue="10"
+			miuizer:stepValue="1"
+			miuizer:format="@string/format_d_s" />
+
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_expandnotif"
-			android:summary="@string/system_expandnotif_summ"
-			android:title="@string/system_expandnotif_title"
+			android:key="pref_key_system_detailednetspeed"
+			android:summary="@string/system_detailednetspeed_summ"
+			android:title="@string/system_detailednetspeed_title"
 			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_detailednetspeed_icon"
+			android:summary="@string/system_detailednetspeed_icon_summ"
+			android:title="@string/system_detailednetspeed_icon_title"
+			android:entries="@array/netspeedicons"
+			android:entryValues="@array/netspeedicons_val"
+			android:defaultValue="2"
+			android:dependency="pref_key_system_detailednetspeed" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_detailednetspeed_lowlevel"
+			android:title="@string/system_detailednetspeed_lowlevel_title"
+			android:summary="@string/system_detailednetspeed_lowlevel_summ"
+			android:dependency="pref_key_system_detailednetspeed"
+			android:defaultValue="1"
+			miuizer:minValue="1"
+			miuizer:maxValue="1024"
+			miuizer:stepValue="1"
+			miuizer:format="@string/format_KBs"
+			miuizer:offtext="@string/oneKBs" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_detailednetspeed_low"
+			android:summary="@string/system_detailednetspeed_low_summ"
+			android:title="@string/system_detailednetspeed_low_title"
+			android:defaultValue="false"
+			android:dependency="pref_key_system_detailednetspeed" />
 
 	</PreferenceCategory>
 
 	<PreferenceCategory
 		android:title="@string/system_mods_lockscreen">
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_dttosleep"
+			android:summary="@string/system_dttosleep_summ"
+			android:title="@string/system_dttosleep_title"
+			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_securelock"
@@ -138,10 +187,32 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_dttosleep"
-			android:summary="@string/system_dttosleep_summ"
-			android:title="@string/system_dttosleep_title"
+			android:key="pref_key_system_noscreenlock_act"
+			android:summary="@string/system_noscreenlock_act_summ"
+			android:title="@string/system_noscreenlock_act_title"
 			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_noscreenlock"
+			android:summary="@string/system_noscreenlock_summ"
+			android:title="@string/system_noscreenlock_title"
+			android:entries="@array/noscreenlock"
+			android:entryValues="@array/noscreenlock_val"
+			android:defaultValue="1"
+			android:dependency="pref_key_system_noscreenlock_act" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_noscreenlock_skip"
+			android:summary="@string/system_noscreenlock_scr_summ"
+			android:title="@string/system_noscreenlock_scr_title"
+			android:defaultValue="false"
+			android:dependency="pref_key_system_noscreenlock_act" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_noscreenlock_wifi_title"
+			android:summary="@string/system_noscreenlock_wifi_summ"
+			android:key="pref_key_system_noscreenlock_wifi"
+			android:dependency="pref_key_system_noscreenlock_act" />
 
 	</PreferenceCategory>
 
@@ -156,7 +227,7 @@
 			miuizer:minValue="0"
 			miuizer:maxValue="100"
 			miuizer:stepValue="1"
-			miuizer:format="%d%"
+			miuizer:format="%d%%"
 			miuizer:offtext="@string/array_default" />
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
@@ -167,7 +238,7 @@
 			miuizer:minValue="0"
 			miuizer:maxValue="100"
 			miuizer:stepValue="1"
-			miuizer:format="%d%"
+			miuizer:format="%d%%"
 			miuizer:offtext="@string/array_default" />
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
@@ -178,7 +249,7 @@
 			miuizer:minValue="0"
 			miuizer:maxValue="100"
 			miuizer:stepValue="1"
-			miuizer:format="%d%"
+			miuizer:format="%d%%"
 			miuizer:offtext="@string/array_default" />
 
 	</PreferenceCategory>

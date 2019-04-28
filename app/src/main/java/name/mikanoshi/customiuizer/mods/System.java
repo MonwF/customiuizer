@@ -3,9 +3,19 @@ package name.mikanoshi.customiuizer.mods;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.KeyguardManager;
+import android.app.admin.DevicePolicyManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.TrafficStats;
+import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -13,6 +23,8 @@ import android.os.PowerManager.WakeLock;
 import android.os.SystemClock;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.provider.Settings;
+import android.util.Pair;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -25,11 +37,13 @@ import android.widget.TextView;
 
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Locale;
+import java.util.Set;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
@@ -43,6 +57,7 @@ import name.mikanoshi.customiuizer.utils.Helpers;
 
 import static de.robv.android.xposed.XposedHelpers.findClass;
 import static java.lang.System.currentTimeMillis;
+import static java.lang.System.nanoTime;
 
 public class System {
 
@@ -273,6 +288,115 @@ public class System {
 				}
 			});
 		} catch (Throwable t) {}
+	}
+
+	private static boolean isTrustedNetwork(Context mContext) {
+		Set<String> trustedNetworks = Helpers.getSharedStringSetPref(mContext, "pref_key_system_noscreenlock_wifi");
+		WifiManager wifiManager = (WifiManager)mContext.getSystemService(Context.WIFI_SERVICE);
+		return Helpers.containsWifiPair(trustedNetworks, wifiManager.getConnectionInfo().getBSSID());
+	}
+
+	private static boolean isUnlockedOnce = false;
+	public static void NoScreenLockHook(LoadPackageParam lpparam) {
+		try {
+			XposedHelpers.findAndHookMethod("com.android.keyguard.KeyguardUpdateMonitor", lpparam.classLoader, "reportSuccessfulStrongAuthUnlockAttempt", new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+					isUnlockedOnce = true;
+				}
+			});
+
+			XposedHelpers.findAndHookMethod("android.app.admin.DevicePolicyManagerCompat", lpparam.classLoader, "reportSuccessfulFingerprintAttempt", DevicePolicyManager.class, int.class, new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+					isUnlockedOnce = true;
+				}
+			});
+
+//			XposedHelpers.findAndHookMethod("com.android.systemui.keyguard.KeyguardViewMediator", lpparam.classLoader, "onFinishedGoingToSleep", int.class, boolean.class, new XC_MethodHook() {
+//				@Override
+//				protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+//					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+//					if (Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_system_noscreenlock", "1")) == 3)
+//					XposedHelpers.callMethod(param.thisObject, "cancelPendingLock");
+//				}
+//			});
+
+			XposedHelpers.findAndHookMethod("com.android.systemui.keyguard.KeyguardViewMediator", lpparam.classLoader, "doKeyguardLocked", Bundle.class, new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					boolean skip = Helpers.getSharedBoolPref(mContext, "pref_key_system_noscreenlock_skip", false);
+					if (!skip) return;
+					int opt = Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_system_noscreenlock", "1"));
+					boolean isTrusted = false;
+					if (opt == 4) isTrusted = isTrustedNetwork(mContext);
+					if (opt == 2 || opt == 3 && isUnlockedOnce || opt == 4 && isTrusted) {
+						param.setResult(null);
+						XposedHelpers.callMethod(param.thisObject, "setShowingLocked", false);
+						XposedHelpers.callMethod(param.thisObject, "hideLocked");
+						XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mUpdateMonitor"), "reportSuccessfulStrongAuthUnlockAttempt");
+					}
+				}
+			});
+
+			XposedHelpers.findAndHookMethod("com.android.systemui.keyguard.KeyguardViewMediator", lpparam.classLoader, "setupLocked", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					mContext.registerReceiver(new BroadcastReceiver() {
+						@Override
+						public void onReceive(Context context, Intent intent) {
+							NetworkInfo netInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+							if (netInfo.isConnected() && Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_system_noscreenlock", "1")) == 4) {
+								boolean isShowing = (boolean)XposedHelpers.callMethod(param.thisObject, "isShowing");
+								if (!isShowing) return;
+								boolean isTrusted = isTrustedNetwork(mContext);
+								if (isTrusted) {
+									boolean skip = Helpers.getSharedBoolPref(mContext, "pref_key_system_noscreenlock_skip", false);
+									if (skip) {
+										XposedHelpers.callMethod(param.thisObject, "setShowingLocked", false);
+										XposedHelpers.callMethod(param.thisObject, "hideLocked");
+										XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mUpdateMonitor"), "reportSuccessfulStrongAuthUnlockAttempt");
+									}  else {
+										XposedHelpers.callMethod(param.thisObject, "resetStateLocked");
+									}
+								}
+							}
+						}
+					}, new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION));
+				}
+			});
+
+			XposedHelpers.findAndHookMethod("com.android.keyguard.KeyguardSecurityModel", lpparam.classLoader, "getSecurityMode", int.class, new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					boolean skip = Helpers.getSharedBoolPref(mContext, "pref_key_system_noscreenlock_skip", false);
+					if (skip) return;
+
+					int opt = Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_system_noscreenlock", "1"));
+
+					boolean isTrusted = false;
+					if (opt == 4) isTrusted = isTrustedNetwork(mContext);
+					if (opt == 1 || opt == 3 && !isUnlockedOnce || opt == 4 && !isTrusted) return;
+
+					Class<?> securityModeEnum = XposedHelpers.findClass("com.android.keyguard.KeyguardSecurityModel$SecurityMode", lpparam.classLoader);
+					Object securityModeNone = XposedHelpers.getStaticObjectField(securityModeEnum, "None");
+					Object securityModePassword = XposedHelpers.getStaticObjectField(securityModeEnum, "Password");
+					Object securityModePattern = XposedHelpers.getStaticObjectField(securityModeEnum, "Pattern");
+					Object securityModePin = XposedHelpers.getStaticObjectField(securityModeEnum, "PIN");
+
+					Object secModeResult = param.getResult();
+					if (securityModePassword.equals(secModeResult) ||
+						securityModePattern.equals(secModeResult) ||
+						securityModePin.equals(secModeResult))
+						param.setResult(securityModeNone);
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
 	}
 
 	private static ImageView createIcon(Context ctx, int baseSize) {
@@ -781,7 +905,152 @@ public class System {
 		XposedHelpers.findAndHookMethod("com.android.server.display.AutomaticBrightnessController", lpparam.classLoader, "updateAutoBrightness", boolean.class, new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
-				XposedBridge.log("mScreenAutoBrightness: " + String.valueOf(XposedHelpers.getObjectField(param.thisObject, "mScreenAutoBrightness")));
+				XposedBridge.log("mScreenAutoBrightness: " + XposedHelpers.getObjectField(param.thisObject, "mScreenAutoBrightness"));
+			}
+		});
+	}
+
+	private static long measureTime = 0;
+	private static long txBytesTotal = 0;
+	private static long rxBytesTotal = 0;
+	private static long txSpeed = 0;
+	private static long rxSpeed = 0;
+
+	private static Pair<Long, Long> getTrafficBytes(Object thisObject) {
+		Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
+		Uri mNetworkUri = (Uri)XposedHelpers.getObjectField(thisObject, "mNetworkUri");
+		Cursor query = mContext.getContentResolver().query(mNetworkUri, null, null, null, null);
+		long tx = -1L;
+		long rx = -1L;
+		if (query != null) {
+			try {
+				if (query.moveToFirst()) {
+					tx = query.getLong(query.getColumnIndex("total_tx_byte"));
+					rx = query.getLong(query.getColumnIndex("total_rx_byte"));
+				}
+			} catch (@SuppressWarnings("deprecation") Exception e) {
+				tx = 1L; rx = 1L;
+			} catch (Throwable th) {
+				query.close();
+			}
+			query.close();
+		} else {
+			tx = TrafficStats.getTotalTxBytes();
+			rx = TrafficStats.getTotalRxBytes();
+		}
+		return new Pair<Long, Long>(tx, rx);
+	}
+
+	@SuppressLint("DefaultLocale")
+	private static String humanReadableByteCount(Context ctx, long bytes) {
+		try {
+			Resources modRes = Helpers.getModuleRes(ctx);
+			if (bytes < 1024) return bytes + " " + modRes.getString(R.string.Bs);
+			int exp = (int) (Math.log(bytes) / Math.log(1024));
+			char pre = modRes.getString(R.string.speedunits).charAt(exp-1);
+			DecimalFormat df = new DecimalFormat("0.#", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+			df.setMinimumFractionDigits(0);
+			df.setMaximumFractionDigits(1);
+			return df.format(bytes / Math.pow(1024, exp)) + " " + String.format("%s" + modRes.getString(R.string.Bs), pre);
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+			return "";
+		}
+	}
+
+	public static void NetSpeedIntervalHook(LoadPackageParam lpparam) {
+		XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.NetworkSpeedView", lpparam.classLoader, "onAttachedToWindow", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				Settings.System.putInt(mContext.getContentResolver(), "status_bar_network_speed_interval", Helpers.getSharedIntPref(mContext, "pref_key_system_netspeedinterval", 4) * 1000);
+			}
+		});
+	}
+
+	public static void DetailedNetSpeedHook(LoadPackageParam lpparam) {
+		XposedBridge.hookAllConstructors(findClass("com.android.systemui.statusbar.NetworkSpeedView", lpparam.classLoader), new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				TextView meter = (TextView)param.thisObject;
+				meter.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 8.0f);
+				meter.setSingleLine(false);
+				meter.setLines(2);
+				meter.setMaxLines(2);
+				meter.setLineSpacing(0, 0.7f);
+			}
+		});
+
+		XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.NetworkSpeedView", lpparam.classLoader, "getTotalByte", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				Pair<Long, Long> bytes = getTrafficBytes(param.thisObject);
+				txBytesTotal = bytes.first;
+				rxBytesTotal = bytes.second;
+				measureTime = nanoTime();
+			}
+		});
+
+		XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.NetworkSpeedView", lpparam.classLoader, "updateNetworkSpeed", new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+				try {
+					boolean isConnected = false;
+					ConnectivityManager mConnectivityManager = (ConnectivityManager)XposedHelpers.getObjectField(param.thisObject, "mConnectivityManager");
+					NetworkInfo activeNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+					if (activeNetworkInfo != null)
+					if (activeNetworkInfo.isConnected()) isConnected = true;
+					if (isConnected) {
+						long nanoTime = nanoTime();
+						long newTime = nanoTime - measureTime;
+						measureTime = nanoTime;
+						if (newTime == 0) newTime = Math.round(4 * Math.pow(10, 9));
+						Pair<Long, Long> bytes = getTrafficBytes(param.thisObject);
+						long newTxBytes = bytes.first;
+						long newRxBytes = bytes.second;
+						long newTxBytesFixed = newTxBytes - txBytesTotal;
+						long newRxBytesFixed = newRxBytes - rxBytesTotal;
+						if (newTxBytesFixed < 0 || txBytesTotal == 0) newTxBytesFixed = 0;
+						if (newRxBytesFixed < 0 || rxBytesTotal == 0) newRxBytesFixed = 0;
+						txSpeed = Math.round(newTxBytesFixed / (newTime / Math.pow(10, 9)));
+						rxSpeed = Math.round(newRxBytesFixed / (newTime / Math.pow(10, 9)));
+						txBytesTotal = newTxBytes;
+						rxBytesTotal = newRxBytes;
+					} else {
+						txSpeed = 0;
+						rxSpeed = 0;
+					}
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
+
+		XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.NetworkSpeedView", lpparam.classLoader, "setTextToViewList", CharSequence.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				boolean hideLow = MainModule.mPrefs.getBoolean("system_detailednetspeed_low");
+				int lowLevel = MainModule.mPrefs.getInt("system_detailednetspeed_lowlevel", 1) * 1024;
+				int icons = Integer.parseInt(MainModule.mPrefs.getString("system_detailednetspeed_icon", "2"));
+
+				ArrayList<?> sViewList = (ArrayList<?>)XposedHelpers.getObjectField(param.thisObject, "sViewList");
+				String txarrow = "";
+				String rxarrow = "";
+				if (icons == 2) {
+					txarrow = txSpeed < lowLevel ? "△" : "▲";
+					rxarrow = rxSpeed < lowLevel ? "▽" : "▼";
+				} else if (icons == 3) {
+					txarrow = txSpeed < lowLevel ? " ☖" : " ☗";
+					rxarrow = rxSpeed < lowLevel ? " ⛉" : " ⛊";
+				}
+
+				String tx = hideLow && txSpeed < lowLevel ? "" : humanReadableByteCount(mContext, txSpeed) + txarrow;
+				String rx = hideLow && rxSpeed < lowLevel ? "" : humanReadableByteCount(mContext, rxSpeed) + rxarrow;
+				param.args[0] = tx + "\n" + rx;
+
+				for (Object tv: sViewList)
+				if (tv != null) ((TextView)tv).setAlpha(rxSpeed == 0 && txSpeed == 0 ? 0.3f: 1.0f);
 			}
 		});
 	}

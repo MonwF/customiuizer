@@ -6,7 +6,9 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -51,6 +53,7 @@ public class Helpers {
 	public static String backupFile = "settings_backup";
 	public static final int REQUEST_PERMISSIONS_BACKUP = 1;
 	public static final int REQUEST_PERMISSIONS_RESTORE = 2;
+	public static final int REQUEST_PERMISSIONS_WIFI = 3;
 	public static LruCache<String, Bitmap> memoryCache = new LruCache<String, Bitmap>((int)(Runtime.getRuntime().maxMemory() / 1024) / 2) {
 		@Override
 		protected int sizeOf(String key, Bitmap icon) {
@@ -137,6 +140,13 @@ public class Helpers {
 	public static boolean checkStoragePerm(Activity act, int action) {
 		if (act.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 			act.requestPermissions(new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE }, action);
+			return false;
+		} else return true;
+	}
+
+	public static boolean checkWiFiPerm(Activity act, int action) {
+		if (act.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+			act.requestPermissions(new String[]{ Manifest.permission.ACCESS_COARSE_LOCATION }, action);
 			return false;
 		} else return true;
 	}
@@ -318,6 +328,34 @@ public class Helpers {
 		});
 	}
 
+	public static boolean containsWifiPair(Set<String> stringSet, String BSSID) {
+		boolean res = false;
+		if (stringSet == null || stringSet.size() == 0) return res;
+		for (String pair: stringSet) {
+			String[] network = pair.split("\\|");
+			if (network[0].equals(BSSID)) {
+				res = true;
+				break;
+			}
+		}
+		return res;
+	}
+
+	public static void addWifiPair(Set<String> stringSet, String BSSID, String SSID) {
+		if (stringSet != null) stringSet.add(BSSID + "|" + SSID);
+	}
+
+	public static void removeWifiPair(Set<String> stringSet, String BSSID) {
+		if (stringSet != null)
+		for (String pair: stringSet) {
+			String[] network = pair.split("\\|", 2);
+			if (network[0].equals(BSSID)) {
+				stringSet.remove(pair);
+				return;
+			}
+		}
+	}
+
 	public static synchronized Context getModuleContext(Context context) throws Throwable {
 		return context.createPackageContext(modulePkg, Context.CONTEXT_IGNORE_SECURITY).createDeviceProtectedStorageContext();
 	}
@@ -341,6 +379,10 @@ public class Helpers {
 		return Uri.parse("content://" + SharedPrefsProvider.AUTHORITY + "/string/" + name + "/" + defValue);
 	}
 
+	public static Uri stringSetPrefToUri(String name) {
+		return Uri.parse("content://" + SharedPrefsProvider.AUTHORITY + "/stringset/" + name);
+	}
+
 	public static Uri intPrefToUri(String name, int defValue) {
 		return Uri.parse("content://" + SharedPrefsProvider.AUTHORITY + "/integer/" + name + "/" + String.valueOf(defValue));
 	}
@@ -361,6 +403,18 @@ public class Helpers {
 			return MainModule.mPrefs.getString(name, defValue);
 		else
 			return defValue;
+	}
+
+	public static Set<String> getSharedStringSetPref(Context context, String name) {
+		Uri uri = stringSetPrefToUri(name);
+		Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+		if (cursor != null) {
+			Set<String> prefValue = new LinkedHashSet<String>();
+			while (cursor.moveToNext()) prefValue.add(cursor.getString(0));
+			cursor.close();
+			return prefValue;
+		} else
+			return new LinkedHashSet<String>();
 	}
 
 	public static int getSharedIntPref(Context context, String name, int defValue) {

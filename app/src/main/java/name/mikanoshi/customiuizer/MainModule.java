@@ -87,9 +87,12 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 				mPrefs.getInt("controls_navbarleftlong_action", 1) > 1 ||
 				mPrefs.getInt("controls_navbarright_action", 1) > 1 ||
 				mPrefs.getInt("controls_navbarrightlong_action", 1) > 1) Controls.NavBarButtonsHook(lpparam);
-			if (mPrefs.getBoolean("system_hidemobiletype") ) System.HideNetworkTypeHook(lpparam);
-			if (mPrefs.getBoolean("system_fixmeter") ) System.TrafficSpeedSpacingHook(lpparam);
+			if (mPrefs.getBoolean("system_hidemobiletype")) System.HideNetworkTypeHook(lpparam);
+			if (mPrefs.getBoolean("system_fixmeter")) System.TrafficSpeedSpacingHook(lpparam);
 			if (mPrefs.getInt("system_chargeanimtime", 20) < 20) System.ChargeAnimationHook(lpparam);
+			if (mPrefs.getBoolean("system_noscreenlock_act")) System.NoScreenLockHook(lpparam);
+			if (mPrefs.getBoolean("system_detailednetspeed")) System.DetailedNetSpeedHook(lpparam);
+			if (mPrefs.getInt("system_netspeedinterval", 4) != 4) System.NetSpeedIntervalHook(lpparam);
 		}
 
 //		if (pkg.equals("com.android.incallui")) {

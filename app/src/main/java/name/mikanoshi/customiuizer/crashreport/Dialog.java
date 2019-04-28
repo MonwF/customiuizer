@@ -249,6 +249,7 @@ public class Dialog extends Activity {
 	@Override
 	@SuppressLint({"SetTextI18n", "ClickableViewAccessibility"})
 	protected final void onCreate(Bundle savedInstanceState) {
+		overridePendingTransition(0, 0);
 		setTheme(getResources().getIdentifier("Theme.Light.Settings", "style", "miui"));
 		getTheme().applyStyle(R.style.ApplyInvisible, true);
 		super.onCreate(savedInstanceState);

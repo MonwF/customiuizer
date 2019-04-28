@@ -223,7 +223,7 @@ public class SeekBarPreference extends Preference {
 			value = (value + mSteppedMinValue) * mStepValue;
 			String text;
 
-			if (value == mDefaultValue) {
+			if (value == mDefaultValue && mOffText != null) {
 				mValue.setText(mOffText);
 				return;
 			}

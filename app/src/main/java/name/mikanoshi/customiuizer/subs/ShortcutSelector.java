@@ -84,7 +84,6 @@ public class ShortcutSelector extends SubFragmentWithSearch {
 				String fileName = dir + "/tmp.png";
 
 				File shortcutsDir = new File(dir);
-				//noinspection ResultOfMethodCallIgnored
 				shortcutsDir.mkdirs();
 				File shortcutFileName = new File(fileName);
 				try (FileOutputStream shortcutOutStream = new FileOutputStream(shortcutFileName, false)) {

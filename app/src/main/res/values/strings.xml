@@ -16,8 +16,12 @@
 	<string name="system_clockseconds_summ">Display seconds in the status bar clock</string>
 	<string name="system_hidemobiletype_title">Hide mobile network type</string>
 	<string name="system_hidemobiletype_summ">Remove mobile network type icon from status bar</string>
+	<string name="system_netspeedinterval_title">Network speed update interval</string>
+	<string name="system_netspeedinterval_summ">System settings modification permission is required</string>
 	<string name="system_detailednetspeed_title">Detailed network speed indicator</string>
 	<string name="system_detailednetspeed_summ">Show incoming and outgoing network speeds separately</string>
+	<string name="system_detailednetspeed_icon_title">Indicator icons</string>
+	<string name="system_detailednetspeed_icon_summ">Incoming/outgoing traffic icons displayed next to speed value (not all custom fonts have every icon)</string>
 	<string name="system_detailednetspeed_low_title">Hide low speed</string>
 	<string name="system_detailednetspeed_low_summ">Do not show indicator if speed is low</string>
 	<string name="system_detailednetspeed_lowlevel_title">Low speed level</string>
@@ -185,6 +189,9 @@
 	<string name="array_screenlock_none">Disable completely</string>
 	<string name="array_screenlock_bootonly">Require only once after boot</string>
 	<string name="array_screenlock_wifi">Disable on trusted Wi-Fi networks</string>
+	<string name="array_netspeedicons_no">No icons</string>
+	<string name="array_netspeedicons_arrows" translatable="false">△▲▽▼</string>
+	<string name="array_netspeedicons_bullets" translatable="false">☖ ☗ ⛉ ⛊</string>
 
 	<string name="toggle_wifi_on">Wi-Fi enabled</string>
 	<string name="toggle_wifi_off">Wi-Fi disabled</string>

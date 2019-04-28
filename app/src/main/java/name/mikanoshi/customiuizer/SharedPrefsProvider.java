@@ -9,7 +9,9 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import name.mikanoshi.customiuizer.utils.Helpers;
 
@@ -24,10 +26,10 @@ public class SharedPrefsProvider extends ContentProvider {
 		uriMatcher.addURI(AUTHORITY, "string/*/*", 1);
 		uriMatcher.addURI(AUTHORITY, "integer/*/*", 2);
 		uriMatcher.addURI(AUTHORITY, "boolean/*/*", 3);
+		uriMatcher.addURI(AUTHORITY, "stringset/*", 4);
 	}
 
 	@Override
-	@SuppressWarnings("ConstantConditions")
 	public boolean onCreate() {
 		try {
 			prefs = Helpers.getProtectedContext(getContext()).getSharedPreferences(Helpers.prefsName, Context.MODE_PRIVATE);
@@ -55,6 +57,12 @@ public class SharedPrefsProvider extends ContentProvider {
 			}
 			case 3: {
 				cursor.newRow().add("data", prefs.getBoolean(parts.get(1), Integer.parseInt(parts.get(2)) == 1) ? 1 : 0);
+				return cursor;
+			}
+			case 4: {
+				Set<String> networks = prefs.getStringSet(parts.get(1), new LinkedHashSet<String>());
+				if (networks != null)
+				for (String data: networks) cursor.newRow().add("data", data);
 				return cursor;
 			}
 		}

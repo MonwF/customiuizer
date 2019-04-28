@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent" >
+
+<RelativeLayout
+	android:id="@+id/fields"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical"
+	android:animateLayoutChanges="true">
+
+	<include
+		layout="@layout/wifi_item"
+		android:id="@+id/location_settings"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" />
+
+	<TextView
+		android:id="@+id/wifi_category1"
+		android:layout_below="@id/location_settings"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="left|center_vertical|center_horizontal|center|start"
+		android:text="@string/wifi_category1"
+		style="@style/Widget.InputField.Category.First" />
+
+	<name.mikanoshi.customiuizer.prefs.ListViewEx
+		android:id="@android:id/text1"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/wifi_category1"
+		android:nestedScrollingEnabled="false"
+		android:overScrollMode="never"
+		android:scrollbars="none" />
+
+	<TextView
+		android:id="@+id/wifi_category2"
+		android:layout_below="@android:id/text1"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="left|center_vertical|center_horizontal|center|start"
+		android:text="@string/wifi_category2"
+		style="@style/Widget.InputField.Category.First" />
+
+	<name.mikanoshi.customiuizer.prefs.ListViewEx
+		android:id="@android:id/text2"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/wifi_category2"
+		android:nestedScrollingEnabled="false"
+		android:overScrollMode="never"
+		android:scrollbars="none" />
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:minHeight="?android:attr/listPreferredItemHeightLarge"
+		android:layout_centerInParent="true"
+		android:gravity="center"
+		android:orientation="vertical"
+		android:layout_below="@id/wifi_category2">
+
+		<miui.widget.ProgressBar
+			android:id="@+id/progress_bar"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			style="@style/Widget.ProgressBar" />
+
+	</LinearLayout>
+
+</RelativeLayout>
+
+</ScrollView>

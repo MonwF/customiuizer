@@ -94,6 +94,7 @@
 	<string name="array_screenlock_none">Отключить полностью</string>
 	<string name="array_screenlock_bootonly">Потребовать только раз после загрузки</string>
 	<string name="array_screenlock_wifi">Отключать в доверенных Wi-Fi сетях</string>
+	<string name="array_netspeedicons_no">Без иконок</string>
 
 	<string name="select_app">Выбрать приложение</string>
 
@@ -230,10 +231,16 @@
 	<string name="system_clockseconds_summ">Отображает секунды на часах в статусбаре</string>
 	<string name="system_hidemobiletype_title">Скрывать тип мобильной сети</string>
 	<string name="system_hidemobiletype_summ">Удаляет иконку типа мобильной сети из строки состояния</string>
+	<string name="system_netspeedinterval_title">Частота обновления индикатора скорости</string>
+	<string name="system_netspeedinterval_summ">Требуется разрешение на изменение системных настроек</string>
 	<string name="system_detailednetspeed_title">Подробный индикатор скорости соединения</string>
 	<string name="system_detailednetspeed_summ">Показыает входящую и исходящую скорости передачи данных</string>
+	<string name="system_detailednetspeed_icon_title">Иконки индикатора</string>
+	<string name="system_detailednetspeed_icon_summ">Набор иконок входящего/исходящего трафика для отображения рядом со значением скорости (есть не во всех кастомных шрифтах)</string>
 	<string name="system_detailednetspeed_low_title">Скрыть низкие скорости</string>
-	<string name="system_detailednetspeed_low_summ">Скрывает индикатор, если скорость ниже 1КБ/с</string>
+	<string name="system_detailednetspeed_low_summ">Полностью скрывает индикатор при низкой скорости</string>
+	<string name="system_detailednetspeed_lowlevel_title">Низкий уровень скорости</string>
+	<string name="system_detailednetspeed_lowlevel_summ">Задаёт уровень, ниже которого скорость будет считаться низкой и будет иметь другую иконку</string>
 	<string name="system_fixmeter_title">Отступ скорости соединения</string>
 	<string name="system_fixmeter_summ">Увеличивает отступ справа для индикатора скорости соединения</string>
 	<string name="system_expandnotif_title">Разворачивать уведомления</string>
@@ -289,10 +296,14 @@
 	<string name="array_screen_anim_fade">Затухание</string>
 	<string name="system_dttosleep_title">Сон по двойному нажатию</string>
 	<string name="system_dttosleep_summ">Выключает экран при двойном нажатии по пустому месту на экране блокировки</string>
-	<string name="format_d_ms">%d мс</string>
-	<string name="format_d_s">%d сек</string>
 	<string name="permission_save">Вы хотите сохранить бэкап или нет?</string>
 	<string name="permission_restore">Вы хотите восстановить бэкап или нет?</string>
 	<string name="permission_wifi">Вы хотите получить список Wi-Fi сетей или нет?</string>
 	<string name="permission_permanent">Теперь Вам придётся вручную давать разрешение для данной опции. Отличная работа!</string>
+	<string name="format_d_ms">%d мс</string>
+	<string name="format_d_s">%d сек</string>
+	<string name="format_KBs">%d КБ/с</string>
+	<string name="oneKBs">1 КБ/с</string>
+	<string name="Bs">Б/с</string>
+	<string name="speedunits">КМГТПЭ</string>
 </resources>

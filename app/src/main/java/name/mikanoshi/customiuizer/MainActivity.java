@@ -1,6 +1,7 @@
 package name.mikanoshi.customiuizer;
 
 import android.Manifest;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -74,17 +75,27 @@ public class MainActivity extends ActivityEx {
 				if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
 					mainFrag.backupSettings(this);
 				else if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE))
-					Toast.makeText(this, "Do you want to write backup or not?", Toast.LENGTH_SHORT).show();
+					Toast.makeText(this, R.string.permission_save, Toast.LENGTH_SHORT).show();
 				else
-					Toast.makeText(this, "You'll have to manually enable permission for this option now. Good job!", Toast.LENGTH_LONG).show();
+					Toast.makeText(this, R.string.permission_permanent, Toast.LENGTH_LONG).show();
 				break;
 			case Helpers.REQUEST_PERMISSIONS_RESTORE:
 				if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
 					mainFrag.restoreSettings(this);
 				else if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE))
-					Toast.makeText(this, "Do you want to restore backup or not?", Toast.LENGTH_SHORT).show();
+					Toast.makeText(this, R.string.permission_restore, Toast.LENGTH_SHORT).show();
 				else
-					Toast.makeText(this, "You'll have to manually enable permission for this option now. Good job!", Toast.LENGTH_LONG).show();
+					Toast.makeText(this, R.string.permission_permanent, Toast.LENGTH_LONG).show();
+				break;
+			case Helpers.REQUEST_PERMISSIONS_WIFI:
+				if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+					Fragment frag = getFragmentManager().findFragmentById(R.id.fragment_container);
+					if (frag instanceof name.mikanoshi.customiuizer.subs.System)
+					((name.mikanoshi.customiuizer.subs.System)frag).openWifiNetworks();
+				} else if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION))
+					Toast.makeText(this, R.string.permission_wifi, Toast.LENGTH_LONG).show();
+				else
+					Toast.makeText(this, R.string.permission_permanent, Toast.LENGTH_LONG).show();
 				break;
 			default:
 				super.onRequestPermissionsResult(requestCode, permissions, grantResults);

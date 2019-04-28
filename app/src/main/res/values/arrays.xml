@@ -151,6 +151,30 @@
 		<item>3</item>
 	</string-array>
 
+	<string-array name="noscreenlock">
+		<item>@string/array_screenlock_no</item>
+		<item>@string/array_screenlock_none</item>
+		<item>@string/array_screenlock_bootonly</item>
+		<item>@string/array_screenlock_wifi</item>
+	</string-array>
+	<string-array name="noscreenlock_val">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+		<item>4</item>
+	</string-array>
+
+	<string-array name="netspeedicons">
+		<item>@string/array_netspeedicons_no</item>
+		<item>@string/array_netspeedicons_arrows</item>
+		<item>@string/array_netspeedicons_bullets</item>
+	</string-array>
+	<string-array name="netspeedicons_val">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+	</string-array>
+
 	<string-array name="media_action">
 		<item>@string/array_media_none</item>
 		<item>@string/array_media_playpause</item>
