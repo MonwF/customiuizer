@@ -1,3 +1,14 @@
+1.5.0
+[New] Darken MIUI launcher folder background
+[New] Unlock MIUI launcher grids from 3x4 to 6x7
+[New] Number of columns in MIUI launcher folders
+[New] Screen rotation animation (none or fade)
+[New] Open notification drawer automatically on notifications from selected apps
+[New] Display album art of currently playing track as lock screen wallpaper
+[New][Better popup notifications] Do not dismiss popups automatically
+[New][Better popup notifications] Swipe down from popup to open notification drawer
+[Fixed][Disable screen lock] Selecting multiple trusted Wi-Fi networks
+
 1.4.3
 [New] Dynamic screen lock (disable completely, require only once after boot, disable on trusted Wi-Fi networks; bypass lock screen too)
 [New] Detailed network speed indicator (incoming/outgoing traffic speeds and icons, low speed threshold for different indication)

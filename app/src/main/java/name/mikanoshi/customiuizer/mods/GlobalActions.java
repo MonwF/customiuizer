@@ -88,7 +88,9 @@ public class GlobalActions {
 							Object mNotificationPanel = XposedHelpers.getObjectField(mStatusBar, "mNotificationPanel");
 							boolean mPanelExpanded = (boolean)XposedHelpers.getObjectField(mNotificationPanel, "mPanelExpanded");
 							boolean mQsExpanded = (boolean)XposedHelpers.getObjectField(mNotificationPanel, "mQsExpanded");
+							boolean expandOnly = intent.getBooleanExtra("expand_only", false);
 							if (mPanelExpanded) {
+								if (!expandOnly)
 								if (mQsExpanded)
 									XposedHelpers.callMethod(mStatusBar, "closeQs");
 								else
@@ -597,31 +599,6 @@ public class GlobalActions {
 */
 	}
 	
-//	private static BroadcastReceiver mBRTools = new BroadcastReceiver() {
-//		public void onReceive(final Context context, Intent intent) {
-//			try {
-//				String action = intent.getAction();
-//				ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
-//				Method forceStopPackage = am.getClass().getMethod("forceStopPackage", new Class[] { String.class });
-//				forceStopPackage.setAccessible(true);
-//
-//				if (action.equals("name.mikanoshi.customiuizer.mods.action.StartEasterEgg")) {
-//					Intent intentEgg = new Intent(Intent.ACTION_MAIN);
-//					intentEgg.setClassName("android", "com.android.internal.app.PlatLogoActivity");
-//					intentEgg.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-//					context.startActivity(intentEgg);
-//				} else if (action.equals("name.mikanoshi.customiuizer.mods.action.RestartMessages")) {
-//					forceStopPackage.invoke(am, "com.htc.sense.mms");
-//				} else if (action.equals("name.mikanoshi.customiuizer.mods.action.RestartLauncher")) {
-//					forceStopPackage.invoke(am, "com.htc.launcher");
-//					forceStopPackage.invoke(am, "com.htc.widget.weatherclock");
-//				}
-//			} catch (Throwable t) {
-//				XposedBridge.log(t);
-//			}
-//		}
-//	};
-
 	public static void setupUnhandledCatcher() {
 		try {
 			findAndHookMethod(Application.class, "onCreate", new XC_MethodHook() {
@@ -689,10 +666,21 @@ public class GlobalActions {
 					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 					IntentFilter intentfilter = new IntentFilter();
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.SaveLastMusicPausedTime");
+					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.RestartLauncher");
 					mContext.registerReceiver(new BroadcastReceiver() {
 						public void onReceive(final Context context, Intent intent) {
+							String action = intent.getAction();
+							if (action == null) return;
+
 							try {
-								Settings.System.putLong(context.getContentResolver(), "last_music_paused_time", currentTimeMillis());
+								if (action.equals("name.mikanoshi.customiuizer.mods.action.SaveLastMusicPausedTime")) {
+									Settings.System.putLong(context.getContentResolver(), "last_music_paused_time", currentTimeMillis());
+								} else if (action.equals("name.mikanoshi.customiuizer.mods.action.RestartLauncher")) {
+									ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+									Method forceStopPackage = am.getClass().getMethod("forceStopPackage", String.class);
+									forceStopPackage.setAccessible(true);
+									forceStopPackage.invoke(am, "com.miui.home");
+								}
 							} catch (Throwable t) {
 								XposedBridge.log(t);
 							}

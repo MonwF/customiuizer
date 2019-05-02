@@ -14,11 +14,26 @@ public class AboutFragment extends SubFragment {
 		super.onActivityCreated(savedInstanceState);
 		final Activity act = getActivity();
 
-		Preference miuizerSitePreference = findPreference("pref_key_website");
-		miuizerSitePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+		findPreference("pref_key_website").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference pref) {
 				Helpers.openURL(act, "https://code.highspec.ru/Mikanoshi/CustoMIUIzer");
+				return true;
+			}
+		});
+
+		findPreference("pref_key_xda").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference pref) {
+				Helpers.openURL(act, "https://forum.xda-developers.com/xposed/modules/mod-customiuizer-customize-miui-rom-t3910732");
+				return true;
+			}
+		});
+
+		findPreference("pref_key_4pda").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference pref) {
+				Helpers.openURL(act, "https://4pda.ru/forum/index.php?showtopic=945275");
 				return true;
 			}
 		});

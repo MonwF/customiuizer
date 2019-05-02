@@ -1,8 +1,32 @@
 <PreferenceScreen
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:miuizer="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:key="pref_key_launcher">
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_launcher_unlockgrids"
+		android:title="@string/launcher_unlockgrids_title"
+		android:summary="@string/launcher_unlockgrids_summ"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		android:key="pref_key_launcher_folder_cols"
+		android:title="@string/launcher_folder_cols_title"
+		android:defaultValue="3"
+		miuizer:minValue="2"
+		miuizer:maxValue="5"
+		miuizer:stepValue="1"
+		miuizer:format="%d" />
+
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_launcher_foldershade"
+		android:title="@string/launcher_foldershade_title"
+		android:summary="@string/launcher_foldershade_summ"
+		android:entries="@array/foldershade"
+		android:entryValues="@array/foldershade_val"
+		android:defaultValue="1" />
 
 	<PreferenceCategory
 		android:title="@string/launcher_gestures"

@@ -2,6 +2,7 @@ package name.mikanoshi.customiuizer.mods;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.KeyguardManager;
 import android.app.admin.DevicePolicyManager;
 import android.content.BroadcastReceiver;
@@ -9,13 +10,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
+import android.content.res.XModuleResources;
+import android.content.res.XResForwarder;
+import android.content.res.XResources;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.MediaMetadata;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.TrafficStats;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -31,10 +40,12 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -290,10 +301,11 @@ public class System {
 		} catch (Throwable t) {}
 	}
 
-	private static boolean isTrustedNetwork(Context mContext) {
-		Set<String> trustedNetworks = Helpers.getSharedStringSetPref(mContext, "pref_key_system_noscreenlock_wifi");
+	private static boolean isTrustedWiFi(Context mContext) {
 		WifiManager wifiManager = (WifiManager)mContext.getSystemService(Context.WIFI_SERVICE);
-		return Helpers.containsWifiPair(trustedNetworks, wifiManager.getConnectionInfo().getBSSID());
+		if (!wifiManager.isWifiEnabled()) return false;
+		Set<String> trustedNetworks = Helpers.getSharedStringSetPref(mContext, "pref_key_system_noscreenlock_wifi");
+		return Helpers.containsStringPair(trustedNetworks, wifiManager.getConnectionInfo().getBSSID());
 	}
 
 	private static boolean isUnlockedOnce = false;
@@ -330,11 +342,12 @@ public class System {
 					if (!skip) return;
 					int opt = Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_system_noscreenlock", "1"));
 					boolean isTrusted = false;
-					if (opt == 4) isTrusted = isTrustedNetwork(mContext);
+					if (opt == 4) isTrusted = isTrustedWiFi(mContext);
 					if (opt == 2 || opt == 3 && isUnlockedOnce || opt == 4 && isTrusted) {
 						param.setResult(null);
-						XposedHelpers.callMethod(param.thisObject, "setShowingLocked", false);
-						XposedHelpers.callMethod(param.thisObject, "hideLocked");
+						XposedHelpers.callMethod(param.thisObject, "keyguardDone");
+//						XposedHelpers.callMethod(param.thisObject, "setShowingLocked", false);
+//						XposedHelpers.callMethod(param.thisObject, "hideLocked");
 						XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mUpdateMonitor"), "reportSuccessfulStrongAuthUnlockAttempt");
 					}
 				}
@@ -347,20 +360,28 @@ public class System {
 					mContext.registerReceiver(new BroadcastReceiver() {
 						@Override
 						public void onReceive(Context context, Intent intent) {
-							NetworkInfo netInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
-							if (netInfo.isConnected() && Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_system_noscreenlock", "1")) == 4) {
-								boolean isShowing = (boolean)XposedHelpers.callMethod(param.thisObject, "isShowing");
-								if (!isShowing) return;
-								boolean isTrusted = isTrustedNetwork(mContext);
-								if (isTrusted) {
-									boolean skip = Helpers.getSharedBoolPref(mContext, "pref_key_system_noscreenlock_skip", false);
-									if (skip) {
-										XposedHelpers.callMethod(param.thisObject, "setShowingLocked", false);
-										XposedHelpers.callMethod(param.thisObject, "hideLocked");
-										XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mUpdateMonitor"), "reportSuccessfulStrongAuthUnlockAttempt");
-									}  else {
-										XposedHelpers.callMethod(param.thisObject, "resetStateLocked");
-									}
+							String action = intent.getAction();
+
+							boolean isShowing = (boolean)XposedHelpers.callMethod(param.thisObject, "isShowing");
+							if (!isShowing) return;
+
+							boolean isTrusted = false;
+							if (Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_system_noscreenlock", "1")) == 4)
+							if (action.equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
+								NetworkInfo netInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+								if (netInfo.isConnected())
+								isTrusted = isTrustedWiFi(mContext);
+							}
+
+							if (isTrusted) {
+								boolean skip = Helpers.getSharedBoolPref(mContext, "pref_key_system_noscreenlock_skip", false);
+								if (skip) {
+									XposedHelpers.callMethod(param.thisObject, "keyguardDone");
+//									XposedHelpers.callMethod(param.thisObject, "setShowingLocked", false);
+//									XposedHelpers.callMethod(param.thisObject, "hideLocked");
+									XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mUpdateMonitor"), "reportSuccessfulStrongAuthUnlockAttempt");
+								} else {
+									XposedHelpers.callMethod(param.thisObject, "resetStateLocked");
 								}
 							}
 						}
@@ -378,7 +399,7 @@ public class System {
 					int opt = Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_system_noscreenlock", "1"));
 
 					boolean isTrusted = false;
-					if (opt == 4) isTrusted = isTrustedNetwork(mContext);
+					if (opt == 4) isTrusted = isTrustedWiFi(mContext);
 					if (opt == 1 || opt == 3 && !isUnlockedOnce || opt == 4 && !isTrusted) return;
 
 					Class<?> securityModeEnum = XposedHelpers.findClass("com.android.keyguard.KeyguardSecurityModel$SecurityMode", lpparam.classLoader);
@@ -679,6 +700,71 @@ public class System {
 		}
 	}
 
+	public static void PopupNotificationsHook(LoadPackageParam lpparam) {
+		try {
+			XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "start", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					IntentFilter intentfilter = new IntentFilter("name.mikanoshi.customiuizer.mods.event.CHANGEFULLSCREEN");
+					final Object mStatusBar = param.thisObject;
+					mContext.registerReceiver(new BroadcastReceiver() {
+						public void onReceive(final Context context, Intent intent) {
+							String action = intent.getAction();
+							if (action.equals("name.mikanoshi.customiuizer.mods.event.CHANGEFULLSCREEN")) {
+								if (mStatusBar != null)
+								XposedHelpers.setAdditionalInstanceField(mStatusBar, "mIsFullscreenApp", intent.getBooleanExtra("fullscreen", false));
+							}
+						}
+					}, intentfilter);
+				}
+			});
+
+			XposedBridge.hookAllMethods(findClass("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader), "addNotification", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					if (param.args[0] == null) return;
+
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					Object mIsFullscreenApp = XposedHelpers.getAdditionalInstanceField(param.thisObject, "mIsFullscreenApp");
+					boolean respectFS = MainModule.mPrefs.getBoolean("system_popupnotif_fs");
+					if (respectFS && mIsFullscreenApp != null && (boolean)mIsFullscreenApp) return;
+
+					Set<String> selectedApps = Helpers.getSharedStringSetPref(mContext, "pref_key_system_popupnotif_apps");
+					String pkgName = (String)XposedHelpers.callMethod(param.args[0], "getPackageName");
+					if (selectedApps.contains(pkgName)) {
+						Intent expandNotif = new Intent("name.mikanoshi.customiuizer.mods.action.ExpandNotifications");
+						expandNotif.putExtra("expand_only", true);
+						mContext.sendBroadcast(expandNotif);
+					}
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void PopupNotificationsFSHook() {
+		try {
+			XposedHelpers.findAndHookMethod(Activity.class, "onResume", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					Activity act = (Activity)param.thisObject;
+					if (act == null) return;
+					int flags = act.getWindow().getAttributes().flags;
+					Intent fullscreenIntent = new Intent("name.mikanoshi.customiuizer.mods.event.CHANGEFULLSCREEN");
+					if (flags != 0 && (flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN && !act.getPackageName().equals("com.android.systemui"))
+						fullscreenIntent.putExtra("fullscreen", true);
+					else
+						fullscreenIntent.putExtra("fullscreen", false);
+					act.sendBroadcast(fullscreenIntent);
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
 	public static void RecentsBlurRatioHook(LoadPackageParam lpparam) {
 		try {
 			XposedBridge.hookAllConstructors(XposedHelpers.findClass("com.android.systemui.recents.views.RecentsView", lpparam.classLoader), new XC_MethodHook() {
@@ -963,7 +1049,7 @@ public class System {
 			@Override
 			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-				Settings.System.putInt(mContext.getContentResolver(), "status_bar_network_speed_interval", Helpers.getSharedIntPref(mContext, "pref_key_system_netspeedinterval", 4) * 1000);
+				Settings.System.putInt(mContext.getContentResolver(), "status_bar_network_speed_interval", MainModule.mPrefs.getInt("system_netspeedinterval", 4) * 1000);
 			}
 		});
 	}
@@ -996,7 +1082,8 @@ public class System {
 			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
 				try {
 					boolean isConnected = false;
-					ConnectivityManager mConnectivityManager = (ConnectivityManager)XposedHelpers.getObjectField(param.thisObject, "mConnectivityManager");
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					ConnectivityManager mConnectivityManager = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 					NetworkInfo activeNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
 					if (activeNetworkInfo != null)
 					if (activeNetworkInfo.isConnected()) isConnected = true;
@@ -1034,7 +1121,6 @@ public class System {
 				int lowLevel = MainModule.mPrefs.getInt("system_detailednetspeed_lowlevel", 1) * 1024;
 				int icons = Integer.parseInt(MainModule.mPrefs.getString("system_detailednetspeed_icon", "2"));
 
-				ArrayList<?> sViewList = (ArrayList<?>)XposedHelpers.getObjectField(param.thisObject, "sViewList");
 				String txarrow = "";
 				String rxarrow = "";
 				if (icons == 2) {
@@ -1049,64 +1135,150 @@ public class System {
 				String rx = hideLow && rxSpeed < lowLevel ? "" : humanReadableByteCount(mContext, rxSpeed) + rxarrow;
 				param.args[0] = tx + "\n" + rx;
 
+				ArrayList<?> sViewList = (ArrayList<?>)XposedHelpers.getObjectField(param.thisObject, "sViewList");
 				for (Object tv: sViewList)
 				if (tv != null) ((TextView)tv).setAlpha(rxSpeed == 0 && txSpeed == 0 ? 0.3f: 1.0f);
 			}
 		});
 	}
 
-//	public static void RotationAnimationHook(XC_LoadPackage.LoadPackageParam lpparam) {
-//		try {
-//			XposedHelpers.findAndHookMethod("com.android.server.wm.ScreenRotationAnimation", lpparam.classLoader, "startAnimation", "android.view.SurfaceControl.Transaction", long.class, float.class, int.class, int.class, boolean.class, int.class, int.class, new XC_MethodHook() {
-//				@Override
-//				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-//					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-//					int mRotateOption = Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_system_rotateanim", "1"));
-//					if (mRotateOption == 2)
-//						param.args[2] = 0.01f;
-//					else if (mRotateOption == 3) {
-//						param.args[6] = mContext.getResources().getIdentifier("screen_rotate_0_exit", "anim", "android");
-//						param.args[7] = mContext.getResources().getIdentifier("screen_rotate_0_enter", "anim", "android");
-//					}
-//				}
+	public static void LockScreenAlbumArtHook(LoadPackageParam lpparam) {
+		final String utilsClassName = Build.VERSION.SDK_INT <= Build.VERSION_CODES.N ? "com.android.keyguard.MiuiKeyguardUtils" : "com.android.keyguard.wallpaper.KeyguardWallpaperUtils";
+		final String getLockWallpaper = Build.VERSION.SDK_INT <= Build.VERSION_CODES.N ? "getLockWallpaperCache" : "getLockWallpaper";
 
-//				@Override
-//				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-//					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-//					Context modContext = Helpers.getModuleContext(mContext);
-//					int mRotateOption = Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_system_rotateanim", "1"));
-//					if (mRotateOption <= 1) return;
-//
-//					long limit = (long)param.args[1];
-//					float scale = (float)param.args[2];
-//					int width = (int)param.args[3];
-//					int height = (int)param.args[4];
-//					int mOriginalWidth = (int)XposedHelpers.getObjectField(param.thisObject, "mOriginalWidth");
-//					int mOriginalHeight = (int)XposedHelpers.getObjectField(param.thisObject, "mOriginalHeight");
-//
-////					XposedBridge.log("limit: " + String.valueOf(limit));
-////					XposedBridge.log("scale: " + String.valueOf(scale));
-////					XposedBridge.log("width/height: " + String.valueOf(width) + "x" + String.valueOf(height));
-////					XposedBridge.log("mOriginalWidth/mOriginalHeight: " + String.valueOf(mOriginalWidth) + "x" + String.valueOf(mOriginalHeight));
-//
-//					Animation mRotateEnterAnimation = AnimationUtils.loadAnimation(modContext, R.anim.xfade_enter);
-//					mRotateEnterAnimation.initialize(width, height, mOriginalWidth, mOriginalHeight);
-//					mRotateEnterAnimation.scaleCurrentDuration(scale);
-//					mRotateEnterAnimation.restrictDuration(limit);
-//
-//					Animation mRotateExitAnimation = AnimationUtils.loadAnimation(modContext, R.anim.xfade_exit);
-//					mRotateExitAnimation.initialize(width, height, mOriginalWidth, mOriginalHeight);
-//					if (mRotateOption == 2)	mRotateExitAnimation.setDuration(10);
-//					mRotateExitAnimation.scaleCurrentDuration(scale);
-//					mRotateExitAnimation.restrictDuration(limit);
-//
-//					XposedHelpers.setObjectField(param.thisObject, "mRotateEnterAnimation", mRotateEnterAnimation);
-//					XposedHelpers.setObjectField(param.thisObject, "mRotateExitAnimation", mRotateExitAnimation);
-//				}
-//			});
-//		} catch (Throwable t) {
-//			XposedBridge.log(t);
-//		}
-//	}
+		XposedHelpers.findAndHookMethod(utilsClassName, lpparam.classLoader, "getLockWallpaperPreview", Context.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				Bitmap mAlbumArt = (Bitmap)XposedHelpers.getAdditionalStaticField(findClass(utilsClassName, lpparam.classLoader), "mAlbumArt");
+				if (mAlbumArt != null) param.setResult(new BitmapDrawable(((Context)param.args[0]).getResources(), mAlbumArt));
+			}
+		});
+
+		XposedHelpers.findAndHookMethod(utilsClassName, lpparam.classLoader, getLockWallpaper, Context.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				Bitmap mAlbumArt = (Bitmap)XposedHelpers.getAdditionalStaticField(findClass(utilsClassName, lpparam.classLoader), "mAlbumArt");
+				if (mAlbumArt != null) param.setResult(new Pair<File, Drawable>(new File(""), new BitmapDrawable(((Context)param.args[0]).getResources(), mAlbumArt)));
+			}
+		});
+
+		XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "updateMediaMetaData", boolean.class, boolean.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				MediaMetadata mMediaMetadata = (MediaMetadata)XposedHelpers.getObjectField(param.thisObject, "mMediaMetadata");
+				Bitmap art = null;
+				if (mMediaMetadata != null) {
+					art = mMediaMetadata.getBitmap(MediaMetadata.METADATA_KEY_ART);
+					if (art == null) art = mMediaMetadata.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART);
+					if (art == null) art = mMediaMetadata.getBitmap(MediaMetadata.METADATA_KEY_DISPLAY_ICON);
+				}
+				Bitmap mAlbumArt = (Bitmap)XposedHelpers.getAdditionalStaticField(findClass(utilsClassName, lpparam.classLoader), "mAlbumArtSource");
+				try {
+					if (art == null && mAlbumArt == null) return;
+					if (art != null && art.sameAs(mAlbumArt)) return;
+				} catch (Throwable t) {}
+				XposedHelpers.setAdditionalStaticField(findClass(utilsClassName, lpparam.classLoader), "mAlbumArtSource", art);
+
+				int blur = Helpers.getSharedIntPref(mContext, "pref_key_system_albumartonlock_blur", 0);
+				if (art != null && blur > 0)
+					XposedHelpers.setAdditionalStaticField(findClass(utilsClassName, lpparam.classLoader), "mAlbumArt", Helpers.fastBlur(art, blur + 1));
+				else
+					XposedHelpers.setAdditionalStaticField(findClass(utilsClassName, lpparam.classLoader), "mAlbumArt", art);
+
+				Intent setWallpaper = new Intent("com.miui.keyguard.setwallpaper");
+				setWallpaper.putExtra("set_lock_wallpaper_result", true);
+				mContext.sendBroadcast(setWallpaper);
+			}
+		});
+
+//		XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, "setKeyguardOtherViewVisibility", int.class, new XC_MethodHook() {
+//			@Override
+//			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+//				(int)param.args[0] == 1 ? View.VISIBLE : View.GONE
+//			}
+//		});
+	}
+
+	public static void BetterPopupsNoHideHook(LoadPackageParam lpparam) {
+		XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.policy.HeadsUpManager", lpparam.classLoader, "removeHeadsUpNotification", XC_MethodReplacement.DO_NOTHING);
+		XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.policy.HeadsUpManager", lpparam.classLoader, "removeOldHeadsUpNotification", XC_MethodReplacement.DO_NOTHING);
+
+		XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.policy.HeadsUpManager$HeadsUpEntry", lpparam.classLoader, "updateEntry", boolean.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+				XposedHelpers.setObjectField(param.thisObject, "mRemoveHeadsUpRunnable", new Runnable() {
+					@Override
+					public void run() {}
+				});
+			}
+		});
+
+		XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.policy.HeadsUpManager", lpparam.classLoader, "onExpandingFinished", new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+				XposedHelpers.setBooleanField(param.thisObject, "mReleaseOnExpandFinish", true);
+			}
+		});
+
+//		XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.policy.HeadsUpManager", lpparam.classLoader, "onReorderingAllowed", new XC_MethodHook() {
+//			@Override
+//			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+//				XposedBridge.log("onReorderingAllowed");
+//			}
+//		});
+	}
+
+	public static void BetterPopupsSwipeDownHook(LoadPackageParam lpparam) {
+		XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.phone.HeadsUpTouchHelper", lpparam.classLoader, "onInterceptTouchEvent", MotionEvent.class, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				MotionEvent me = (MotionEvent)param.args[0];
+				if (me.getActionMasked() == 2) {
+					boolean mTouchingHeadsUpView = (boolean)XposedHelpers.getObjectField(param.thisObject, "mTouchingHeadsUpView");
+					if (!mTouchingHeadsUpView) return;
+					float mTouchSlop = (float)XposedHelpers.getObjectField(param.thisObject, "mTouchSlop");
+					float mInitialTouchY = (float)XposedHelpers.getObjectField(param.thisObject, "mInitialTouchY");
+					if (me.getY() - mInitialTouchY > mTouchSlop) {
+						XposedHelpers.setObjectField(param.thisObject, "mTouchingHeadsUpView", false);
+
+						ViewGroup mStackScroller = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mStackScroller");
+						Context mContext = mStackScroller != null ? mStackScroller.getContext() : null;
+						if (mContext == null) {
+							XposedBridge.log("[CustoMIUIzer][BetterPopupsSwipeDown] Cannot get context!");
+							return;
+						}
+
+						Intent expandNotif = new Intent("name.mikanoshi.customiuizer.mods.action.ExpandNotifications");
+						expandNotif.putExtra("expand_only", true);
+						mContext.sendBroadcast(expandNotif);
+					}
+				}
+			}
+		});
+	}
+
+	public static void RotationAnimationHook() {
+		int opt = Integer.parseInt(MainModule.mPrefs.getString("system_rotateanim", "1"));
+		int enter = 0;
+		int exit = 0;
+		if (opt == 2) {
+			enter = R.anim.no_enter;
+			exit = R.anim.no_exit;
+		} else if (opt == 3) {
+			enter = R.anim.xfade_enter;
+			exit = R.anim.xfade_exit;
+		}
+
+		XModuleResources modRes = XModuleResources.createInstance(MainModule.MODULE_PATH, null);
+		XResources.setSystemWideReplacement("android", "anim", "screen_rotate_0_enter", new XResForwarder(modRes, enter));
+		XResources.setSystemWideReplacement("android", "anim", "screen_rotate_0_exit", new XResForwarder(modRes, exit));
+		XResources.setSystemWideReplacement("android", "anim", "screen_rotate_180_enter", new XResForwarder(modRes, enter));
+		XResources.setSystemWideReplacement("android", "anim", "screen_rotate_180_exit", new XResForwarder(modRes, exit));
+		XResources.setSystemWideReplacement("android", "anim", "screen_rotate_minus_90_enter", new XResForwarder(modRes, enter));
+		XResources.setSystemWideReplacement("android", "anim", "screen_rotate_minus_90_exit", new XResForwarder(modRes, exit));
+		XResources.setSystemWideReplacement("android", "anim", "screen_rotate_plus_90_enter", new XResForwarder(modRes, enter));
+		XResources.setSystemWideReplacement("android", "anim", "screen_rotate_plus_90_exit", new XResForwarder(modRes, exit));
+	}
 
 }

@@ -76,7 +76,8 @@
 	<style name="TextAppearance.List.Secondary.Preference">
 		<item name="android:textColor">@color/preference_secondary_text_light</item>
 	</style>
-	<style name="TextAppearance.Widget"></style>
+
+	<style name="TextAppearance.Widget" />
 	<style name="TextAppearance.Widget.EditText">
 		<item name="android:textSize">@dimen/secondary_text_size</item>
 		<item name="android:textColor">?android:attr/editTextColor</item>
@@ -86,7 +87,7 @@
 		<item name="android:textColorHint">@color/edit_text_search_hint_color_light</item>
 	</style>
 
-	<style name="Widget"></style>
+	<style name="Widget" />
 	<style name="Widget.PreferenceItem">
 		<item name="android:paddingTop">@dimen/preference_item_padding_top</item>
 		<item name="android:paddingBottom">@dimen/preference_item_padding_bottom</item>

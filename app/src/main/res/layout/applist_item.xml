@@ -37,5 +37,16 @@
 			android:layout_gravity="center"
 			android:layout_marginStart="5dp"
 			android:src="@drawable/am_card_item_disabled" />
+
+		<CheckBox
+			android:id="@+id/am_checked_icon"
+			android:visibility="gone"
+			android:clickable="false"
+			android:focusable="false"
+			android:focusableInTouchMode="false"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_marginStart="5dp" />
 	</LinearLayout>
 </LinearLayout>

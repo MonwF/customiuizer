@@ -30,6 +30,11 @@
 	<string name="system_fixmeter_summ">Increase right margin for network speed indicator</string>
 	<string name="system_expandnotif_title">Expand notifications</string>
 	<string name="system_expandnotif_summ">Always show notifications fully expanded</string>
+	<string name="system_popupnotif_title">Auto open notification drawer</string>
+	<string name="system_popupnotif_summ">Open notification drawer automatically on notifications from selected apps</string>
+	<string name="system_popupnotif_fs_title">Respect fullscreen</string>
+	<string name="system_popupnotif_fs_summ">Do not open notification drawer when fullscreen app is active (does not apply to immersive apps with hidden status and navigation bars)</string>
+	<string name="system_popupnotif_apps_title">Selected apps *</string>
 	<string name="system_chargeanimtime_title">Charge animation screen timeout *</string>
 	<string name="system_chargeanimtime_summ">How long screen should be kept on after charging animation starts</string>
 	<string name="system_nolightuponcharges_title">No screen light up on charge</string>
@@ -48,6 +53,9 @@
 	<string name="system_securelock_summ">Disable power menu while screen lock is active</string>
 	<string name="system_nopassword_title">No password after boot</string>
 	<string name="system_nopassword_summ">Do not require password instead of a fingerprint first time after boot</string>
+	<string name="system_albumartonlock_title">Album art as wallpaper</string>
+	<string name="system_albumartonlock_summ">Display album art of currently playing track as lock screen wallpaper</string>
+	<string name="system_albumartonlock_blur_title">Album art blur *</string>
 	<string name="system_noscreenlock_act_title">Screen lock override</string>
 	<string name="system_noscreenlock_act_summ">Activates dynamic screen lock controls</string>
 	<string name="system_noscreenlock_title">Disable screen lock *</string>
@@ -73,6 +81,11 @@
 	<string name="system_dttosleep_title">Double tap to sleep</string>
 	<string name="system_dttosleep_summ">Turn screen off by double tapping on any empty space on lockscreen</string>
 	<string name="system_mods_statusbar">Status bar and notification drawer</string>
+	<string name="system_mods_betterpopups">Better popup notifications</string>
+	<string name="system_betterpopups_nohide_title">No auto hide</string>
+	<string name="system_betterpopups_nohide_summ">Do not dismiss popups automatically</string>
+	<string name="system_betterpopups_swipedown_title">Enable swipe down</string>
+	<string name="system_betterpopups_swipedown_summ">Open notification drawer on swipe down gesture</string>
 
 	<string name="launcher_mods">MIUI Launcher</string>
 	<string name="launcher_gestures">Gestures *</string>
@@ -80,6 +93,11 @@
 	<string name="launcher_gestures_setting">Setting to toggle</string>
 	<string name="launcher_gestures_launch">App to launch</string>
 	<string name="launcher_gestures_shortcut">Shortcut to launch</string>
+	<string name="launcher_unlockgrids_title">Unlock grid sizes</string>
+	<string name="launcher_unlockgrids_summ">Makes all grid sizes from 3x4 to 6x7 available in home screen layout setting</string>
+	<string name="launcher_folder_cols_title">Number of columns in folders</string>
+	<string name="launcher_foldershade_title">Folder background</string>
+	<string name="launcher_foldershade_summ">Darken folder background</string>
 	<string name="launcher_swipedownaction_title">Swipe down action (1 finger)</string>
 	<string name="launcher_swipedownaction_summ">Action for swipe down gesture with 1 finger on any home screen</string>
 	<string name="launcher_swipedownaction2_title">Swipe down action (2 fingers)</string>
@@ -155,7 +173,7 @@
 	<string name="array_default">Default</string>
 	<string name="array_system_default">System</string>
 	<string name="array_global_actions_none">No action</string>
-	<string name="array_global_actions_notif">Expand notifications drawer</string>
+	<string name="array_global_actions_notif">Expand notification drawer</string>
 	<string name="array_global_actions_eqs">Expand Quick Settings panel</string>
 	<string name="array_global_actions_lock">Lock device</string>
 	<string name="array_global_actions_sleep">Go to sleep</string>
@@ -188,10 +206,13 @@
 	<string name="array_screenlock_no">System default</string>
 	<string name="array_screenlock_none">Disable completely</string>
 	<string name="array_screenlock_bootonly">Require only once after boot</string>
-	<string name="array_screenlock_wifi">Disable on trusted Wi-Fi networks</string>
+	<string name="array_screenlock_trusted">Disable on trusted Wi-Fi networks</string>
+	<string name="array_noblur">No blur</string>
 	<string name="array_netspeedicons_no">No icons</string>
 	<string name="array_netspeedicons_arrows" translatable="false">△▲▽▼</string>
 	<string name="array_netspeedicons_bullets" translatable="false">☖ ☗ ⛉ ⛊</string>
+	<string name="array_foldershade_solid">Darken entire background</string>
+	<string name="array_foldershade_gradient">Darken only in the middle</string>
 
 	<string name="toggle_wifi_on">Wi-Fi enabled</string>
 	<string name="toggle_wifi_off">Wi-Fi disabled</string>
@@ -229,6 +250,11 @@
 	<string name="support">Support</string>
 	<string name="support_repo_title">CustoMIUIzer repo</string>
 	<string name="support_repo_summ">Git repository with module sources and distributions</string>
+	<string name="support_xda_title">XDA thread</string>
+	<string name="support_xda_summ">Module thread on XDA forums</string>
+	<string name="support_4pda_title">4PDA thread</string>
+	<string name="support_4pda_summ">Module thread on 4PDA forums</string>
+
 	<string name="support_bug_title">Report a bug</string>
 	<string name="support_bug_summ">Send us a bug report or a feature request via official issue tracker</string>
 	<string name="support_donate_title">Donate</string>
@@ -261,6 +287,7 @@
 	<string name="open_xposed">Open Xposed Installer</string>
 	<string name="soft_reboot">Soft reboot</string>
 	<string name="soft_reboot_ask">Perform soft reboot now?</string>
+	<string name="restart_launcher">Restart launcher</string>
 	<string name="backup_restore">Settings management</string>
 	<string name="backup_restore_choose">Choose the desired routine</string>
 	<string name="do_backup">Backup</string>

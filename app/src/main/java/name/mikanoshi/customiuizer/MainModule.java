@@ -1,11 +1,15 @@
 package name.mikanoshi.customiuizer;
 
+import android.content.res.XModuleResources;
+
 import java.io.File;
 
+import de.robv.android.xposed.IXposedHookInitPackageResources;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
+import de.robv.android.xposed.callbacks.XC_InitPackageResources;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 import name.mikanoshi.customiuizer.mods.Controls;
 import name.mikanoshi.customiuizer.mods.GlobalActions;
@@ -16,8 +20,7 @@ import name.mikanoshi.customiuizer.mods.Various;
 import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.PrefMap;
 
-@SuppressWarnings("WeakerAccess")
-public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage {
+public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage, IXposedHookInitPackageResources {
 
 	public static String MODULE_PATH = null;
 	public static PrefMap<String, Object> mPrefs = new PrefMap<String, Object>();
@@ -41,9 +44,30 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 
 		if (Integer.parseInt(mPrefs.getString("system_iconlabletoasts", "1")) > 1) System.IconLabelToastsHook();
 		if (mPrefs.getBoolean("controls_volumecursor")) Controls.VolumeCursorHook();
+		if (mPrefs.getBoolean("system_popupnotif_fs")) System.PopupNotificationsFSHook();
+		if (Integer.parseInt(mPrefs.getString("system_rotateanim", "1")) > 1) System.RotationAnimationHook();
 
 		Controls.VolumeMediaPlayerHook();
 		GlobalActions.setupUnhandledCatcher();
+	}
+
+	@Override
+	public void handleInitPackageResources(XC_InitPackageResources.InitPackageResourcesParam resparam) throws Throwable {
+		String pkg = resparam.packageName;
+
+		if (pkg.equals("com.miui.home")) {
+			if (mPrefs.getBoolean("launcher_unlockgrids")) {
+				resparam.res.setReplacement(pkg, "integer", "config_cell_count_x", 3);
+				resparam.res.setReplacement(pkg, "integer", "config_cell_count_y", 4);
+				resparam.res.setReplacement(pkg, "integer", "config_cell_count_x_min", 3);
+				resparam.res.setReplacement(pkg, "integer", "config_cell_count_y_min", 4);
+				resparam.res.setReplacement(pkg, "integer", "config_cell_count_x_max", 6);
+				resparam.res.setReplacement(pkg, "integer", "config_cell_count_y_max", 7);
+			}
+
+			if (mPrefs.getInt("launcher_folder_cols", 3) != 3)
+			resparam.res.setReplacement(pkg, "integer", "config_folder_columns_count", mPrefs.getInt("launcher_folder_cols", 3));
+		}
 	}
 
 	public void handleLoadPackage(final LoadPackageParam lpparam) {
@@ -66,7 +90,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 				mPrefs.getInt("controls_fingerprintlong_action", 1) > 1) Controls.FingerprintEventsHook(lpparam);
 			if (mPrefs.getInt("system_volumesteps", 10) > 10) System.VolumeStepsHook(lpparam);
 			//System.AutoBrightnessHook(lpparam);
-			//if (Integer.parseInt(mPrefs.getString("system_rotateanim", "1")) > 1) System.RotationAnimationHook(lpparam);
 		}
 
 		if (pkg.equals(Helpers.modulePkg)) {
@@ -93,6 +116,10 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_noscreenlock_act")) System.NoScreenLockHook(lpparam);
 			if (mPrefs.getBoolean("system_detailednetspeed")) System.DetailedNetSpeedHook(lpparam);
 			if (mPrefs.getInt("system_netspeedinterval", 4) != 4) System.NetSpeedIntervalHook(lpparam);
+			if (mPrefs.getBoolean("system_albumartonlock")) System.LockScreenAlbumArtHook(lpparam);
+			if (mPrefs.getBoolean("system_popupnotif")) System.PopupNotificationsHook(lpparam);
+			if (mPrefs.getBoolean("system_betterpopups_nohide")) System.BetterPopupsNoHideHook(lpparam);
+			if (mPrefs.getBoolean("system_betterpopups_swipedown")) System.BetterPopupsSwipeDownHook(lpparam);
 		}
 
 //		if (pkg.equals("com.android.incallui")) {
@@ -118,6 +145,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getInt("launcher_swipeleft_action", 1) != 1 ||
 				mPrefs.getInt("launcher_swiperight_action", 1) != 1) Launcher.HotSeatSwipesHook(lpparam);
 			if (mPrefs.getInt("launcher_shake_action", 1) != 1) Launcher.ShakeHook(lpparam);
+			if (Integer.parseInt(mPrefs.getString("launcher_foldershade", "1")) > 1) Launcher.FolderShadeHook(lpparam);
 		}
 	}
+
 }

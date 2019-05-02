@@ -52,16 +52,16 @@
 			miuizer:format="@string/format_d_ms"
 			miuizer:offtext="@string/array_default"
 			miuizer:note="@string/system_screenanim_desc" />
-		<!--
-			<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
-				android:key="pref_key_system_rotateanim"
-				android:summary=""
-				android:title="@string/system_rotateanim_title"
-				android:entries="@array/screenrotate"
-				android:entryValues="@array/screenrotate_val"
-				android:defaultValue="0"
-				miuizer:valueAsSummary="true" />
-		-->
+
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_rotateanim"
+			android:summary=""
+			android:title="@string/system_rotateanim_title"
+			android:entries="@array/screenrotate"
+			android:entryValues="@array/screenrotate_val"
+			android:defaultValue="1"
+			miuizer:valueAsSummary="true" />
+
 	</PreferenceCategory>
 
 	<PreferenceCategory
@@ -95,6 +95,24 @@
 			android:summary="@string/system_expandnotif_summ"
 			android:title="@string/system_expandnotif_title"
 			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_popupnotif"
+			android:summary="@string/system_popupnotif_summ"
+			android:title="@string/system_popupnotif_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_popupnotif_fs"
+			android:summary="@string/system_popupnotif_fs_summ"
+			android:title="@string/system_popupnotif_fs_title"
+			android:defaultValue="false"
+			android:dependency="pref_key_system_popupnotif" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_popupnotif_apps_title"
+			android:key="pref_key_system_popupnotif_apps"
+			android:dependency="pref_key_system_popupnotif" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_clockseconds"
@@ -160,6 +178,23 @@
 	</PreferenceCategory>
 
 	<PreferenceCategory
+		android:title="@string/system_mods_betterpopups">
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_betterpopups_nohide"
+			android:summary="@string/system_betterpopups_nohide_summ"
+			android:title="@string/system_betterpopups_nohide_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_betterpopups_swipedown"
+			android:summary="@string/system_betterpopups_swipedown_summ"
+			android:title="@string/system_betterpopups_swipedown_title"
+			android:defaultValue="false" />
+
+	</PreferenceCategory>
+
+	<PreferenceCategory
 		android:title="@string/system_mods_lockscreen">
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
@@ -185,6 +220,23 @@
 			android:summary="@string/system_nopassword_summ"
 			android:title="@string/system_nopassword_title"
 			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_albumartonlock"
+			android:summary="@string/system_albumartonlock_summ"
+			android:title="@string/system_albumartonlock_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_albumartonlock_blur"
+			android:title="@string/system_albumartonlock_blur_title"
+			android:defaultValue="0"
+			miuizer:minValue="0"
+			miuizer:maxValue="30"
+			miuizer:stepValue="1"
+			miuizer:format="%d"
+			miuizer:offtext="@string/array_noblur"
+			android:dependency="pref_key_system_albumartonlock" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_noscreenlock_act"
@@ -213,7 +265,13 @@
 			android:summary="@string/system_noscreenlock_wifi_summ"
 			android:key="pref_key_system_noscreenlock_wifi"
 			android:dependency="pref_key_system_noscreenlock_act" />
-
+<!--
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_noscreenlock_bt_title"
+			android:summary="@string/system_noscreenlock_bt_summ"
+			android:key="pref_key_system_noscreenlock_bt"
+			android:dependency="pref_key_system_noscreenlock_act" />
+-->
 	</PreferenceCategory>
 
 	<PreferenceCategory

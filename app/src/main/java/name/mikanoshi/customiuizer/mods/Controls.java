@@ -265,7 +265,7 @@ public class Controls {
 						Application mContext = (Application)XposedHelpers.callStaticMethod(XposedHelpers.findClass("android.app.ActivityThread", null), "currentApplication");
 						int mStreamType = (int)XposedHelpers.findMethodExact(XposedHelpers.findClass("android.media.MediaPlayer", null), "getAudioStreamType").invoke(param.thisObject);
 						if (mContext != null && (mStreamType == AudioManager.STREAM_MUSIC || mStreamType == 0x80000000))
-							mContext.sendBroadcast(new Intent("name.mikanoshi.customiuizer.mods.action.SaveLastMusicPausedTime"));
+						mContext.sendBroadcast(new Intent("name.mikanoshi.customiuizer.mods.action.SaveLastMusicPausedTime"));
 					} catch (Throwable t) {
 						XposedBridge.log(t);
 					}
@@ -312,8 +312,7 @@ public class Controls {
 		} else if (action == 1) {
 			try {
 				Toast.makeText(Helpers.getModuleContext(context), R.string.controls_navbar_noaction, Toast.LENGTH_SHORT).show();
-			} catch (Throwable t) {
-			}
+			} catch (Throwable t) {}
 			return false;
 		} else {
 			return GlobalActions.handleAction(action, launch, toggle, context);

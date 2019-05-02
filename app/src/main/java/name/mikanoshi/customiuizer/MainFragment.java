@@ -173,7 +173,7 @@ public class MainFragment extends PreferenceFragmentBase {
 						} catch (Throwable t) { t.printStackTrace(); }
 
 						File tmp = new File(dataPath);
-						if (!tmp.exists()) //noinspection ResultOfMethodCallIgnored
+						if (!tmp.exists())
 							tmp.mkdirs();
 						try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(dataPath + "/last_build", false))) {
 							writer.write(last_build);
@@ -192,6 +192,7 @@ public class MainFragment extends PreferenceFragmentBase {
 						last_build = Integer.parseInt(reader.readLine().trim());
 					} catch (Throwable t) {}
 
+					//noinspection ConditionCoveredByFurtherCondition
 					if (last_build != 0 && BuildConfig.VERSION_CODE < last_build)
 						handler.post(showUpdateNotification);
 					else
@@ -461,7 +462,6 @@ public class MainFragment extends PreferenceFragmentBase {
 		alert.setTitle(R.string.backup_restore);
 		alert.setMessage(R.string.backup_restore_choose);
 		alert.setPositiveButton(R.string.do_restore, new DialogInterface.OnClickListener() {
-			@SuppressWarnings("unchecked")
 			public void onClick(DialogInterface dialog, int whichButton) {
 				restoreSettings(act);
 			}

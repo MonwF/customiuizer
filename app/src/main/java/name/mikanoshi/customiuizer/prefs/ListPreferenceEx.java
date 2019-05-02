@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.preference.ListPreference;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -13,11 +14,11 @@ import name.mikanoshi.customiuizer.R;
 
 public class ListPreferenceEx extends ListPreference {
 
-	private boolean valueAsSummary = false;
+	private boolean valueAsSummary;
+	private CharSequence sValue;
 
 	public ListPreferenceEx(Context context, AttributeSet attrs) {
 		super(context, attrs);
-
 		final TypedArray xmlAttrs = context.obtainStyledAttributes(attrs, new int[] { R.attr.valueAsSummary } );
 		valueAsSummary = xmlAttrs.getBoolean(0, false);
 		xmlAttrs.recycle();
@@ -26,7 +27,18 @@ public class ListPreferenceEx extends ListPreference {
 	@Override
 	public void setValue(String value) {
 		super.setValue(value);
-		if (valueAsSummary) setSummary(getEntries()[findIndexOfValue(value)]);
+		sValue = getEntries()[findIndexOfValue(value)];
+	}
+
+	@Override
+	public View getView(View view, ViewGroup parent) {
+		View finalView = super.getView(view, parent);
+		TextView summary = finalView.findViewById(android.R.id.summary);
+		TextView valSummary = finalView.findViewById(android.R.id.hint);
+		summary.setVisibility(valueAsSummary ? View.GONE : View.VISIBLE);
+		valSummary.setVisibility(valueAsSummary ? View.VISIBLE : View.GONE);
+		valSummary.setText(valueAsSummary ? sValue : "");
+		return finalView;
 	}
 
 	@Override
@@ -37,11 +49,12 @@ public class ListPreferenceEx extends ListPreference {
 
 		Resources res = getContext().getResources();
 		summary.setTextColor(res.getColor(res.getIdentifier("preference_secondary_text_light", "color", "miui"), getContext().getTheme()));
-		if (valueAsSummary) {
-			summary.setPadding(summary.getPaddingLeft(), summary.getPaddingTop(), res.getDimensionPixelSize(R.dimen.preference_summary_padding_right), summary.getPaddingBottom());
-			((ViewGroup)summary.getParent()).removeView(summary);
-			view.addView(summary, 2);
-		}
+		TextView valSummary = new TextView(getContext());
+		valSummary.setTextSize(TypedValue.COMPLEX_UNIT_PX, summary.getTextSize());
+		valSummary.setTextColor(summary.getCurrentTextColor());
+		valSummary.setPadding(summary.getPaddingLeft(), summary.getPaddingTop(), res.getDimensionPixelSize(R.dimen.preference_summary_padding_right), summary.getPaddingBottom());
+		valSummary.setId(android.R.id.hint);
+		view.addView(valSummary, 2);
 		return view;
 	}
 }

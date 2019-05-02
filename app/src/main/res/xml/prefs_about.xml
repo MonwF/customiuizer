@@ -10,6 +10,14 @@
 			android:title="@string/support_repo_title"
 			android:summary="@string/support_repo_summ"
 			android:key="pref_key_website" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/support_xda_title"
+			android:summary="@string/support_xda_summ"
+			android:key="pref_key_xda" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/support_4pda_title"
+			android:summary="@string/support_4pda_summ"
+			android:key="pref_key_4pda" />
 	</PreferenceCategory>
 
 </PreferenceScreen>

@@ -3,7 +3,7 @@
 -dontpreverify
 -allowaccessmodification
 
--keepattributes SourceFile,LineNumberTable,*Annotation*
+-keepattributes Exceptions,LineNumberTable,Signature,SourceFile,EnclosingMethod,*Annotation*
 
 -keep public class * extends android.app.Activity
 -keep public class * extends android.app.Application

@@ -155,7 +155,7 @@
 		<item>@string/array_screenlock_no</item>
 		<item>@string/array_screenlock_none</item>
 		<item>@string/array_screenlock_bootonly</item>
-		<item>@string/array_screenlock_wifi</item>
+		<item>@string/array_screenlock_trusted</item>
 	</string-array>
 	<string-array name="noscreenlock_val">
 		<item>1</item>
@@ -175,6 +175,17 @@
 		<item>3</item>
 	</string-array>
 
+	<string-array name="foldershade">
+		<item>@string/array_default</item>
+		<item>@string/array_foldershade_solid</item>
+		<item>@string/array_foldershade_gradient</item>
+	</string-array>
+	<string-array name="foldershade_val">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+	</string-array>
+
 	<string-array name="media_action">
 		<item>@string/array_media_none</item>
 		<item>@string/array_media_playpause</item>
@@ -187,7 +198,6 @@
 		<item>87</item>
 		<item>88</item>
 	</string-array>
-
 
 	<string-array name="placeholder_array">
 		<item>@string/dummy</item>

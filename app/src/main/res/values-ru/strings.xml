@@ -4,6 +4,7 @@
 	<string name="about_version">Версия %1$s</string>
 	<string name="soft_reboot">Быстрая перезагрузка</string>
 	<string name="soft_reboot_ask">Выполнить быструю перезагрузку?</string>
+	<string name="restart_launcher">Перезагрузить рабочий стол</string>
 	<string name="backup_restore">Управление настройками</string>
 	<string name="backup_restore_choose">Выберите желаемое дейстие</string>
 	<string name="do_backup">Сохранить</string>
@@ -93,8 +94,11 @@
 	<string name="array_screenlock_no">По умолчанию системы</string>
 	<string name="array_screenlock_none">Отключить полностью</string>
 	<string name="array_screenlock_bootonly">Потребовать только раз после загрузки</string>
-	<string name="array_screenlock_wifi">Отключать в доверенных Wi-Fi сетях</string>
+	<string name="array_screenlock_trusted">Отключать в доверенных Wi-Fi сетях</string>
 	<string name="array_netspeedicons_no">Без иконок</string>
+	<string name="array_noblur">Без размытия</string>
+	<string name="array_foldershade_solid">Затемнить весь фон</string>
+	<string name="array_foldershade_gradient">Затемнить только в центре</string>
 
 	<string name="select_app">Выбрать приложение</string>
 
@@ -216,9 +220,18 @@
 	<string name="wifi_category2">Доступные сети</string>
 	<string name="select_shortcut">Выбрать ярлык</string>
 	<string name="launcher_gestures_shortcut">Ярлык для запуска</string>
+	<string name="launcher_unlockgrids_title">Разблокировать размеры сетки</string>
+	<string name="launcher_unlockgrids_summ">Делает все размеры от 3x4 до 6x7 доступными в настройках сетки рабочего стола</string>
+	<string name="launcher_folder_cols_title">Число колонок в папках</string>
+	<string name="launcher_foldershade_title">Фон папок</string>
+	<string name="launcher_foldershade_summ">Затемнённый фон папок</string>
 	<string name="settings">Настройки</string>
 	<string name="support_repo_summ">Git репозиторий с исходниками и дистрибутивами модуля</string>
 	<string name="support_repo_title">Репозиторий CustoMIUIzer</string>
+	<string name="support_xda_title">Тема на XDA</string>
+	<string name="support_xda_summ">Тема обсуждения модуля на форуме XDA</string>
+	<string name="support_4pda_title">Тема на 4PDA</string>
+	<string name="support_4pda_summ">Тема обсуждения модуля на форуме 4PDA</string>
 	<string name="system_iconlabletoasts_summ">Добавляет иконку и название приложения во всплывающие уведомления</string>
 	<string name="system_iconlabletoasts_title">Расширенные уведомления *</string>
 	<string name="system_mods">Система</string>
@@ -227,6 +240,11 @@
 	<string name="system_mods_lockscreen">Экран блокировки</string>
 	<string name="system_mods_screenanim">Экранная анимация *</string>
 	<string name="system_mods_statusbar">Строка состояния и панель уведомлений</string>
+	<string name="system_mods_betterpopups">Улучшенные всплывающие уведомления</string>
+	<string name="system_betterpopups_nohide_title">Не прятать автоматом</string>
+	<string name="system_betterpopups_nohide_summ">Отключает автоматическое скрытие</string>
+	<string name="system_betterpopups_swipedown_title">Активировать свайп вниз</string>
+	<string name="system_betterpopups_swipedown_summ">Открывает панель уведомлений по свайпу вниз</string>
 	<string name="system_clockseconds_title">Показывать секунды</string>
 	<string name="system_clockseconds_summ">Отображает секунды на часах в статусбаре</string>
 	<string name="system_hidemobiletype_title">Скрывать тип мобильной сети</string>
@@ -245,6 +263,11 @@
 	<string name="system_fixmeter_summ">Увеличивает отступ справа для индикатора скорости соединения</string>
 	<string name="system_expandnotif_title">Разворачивать уведомления</string>
 	<string name="system_expandnotif_summ">Всегда показывать уведомления в полностью развёрнутом виде</string>
+	<string name="system_popupnotif_title">Автооткрытие панели уведомлений</string>
+	<string name="system_popupnotif_summ">Открывает панель уведомлений автоматически при получении уведомлений от выбранных приложений</string>
+	<string name="system_popupnotif_fs_title">Определение полноэкранного режима</string>
+	<string name="system_popupnotif_fs_summ">Не открывать панель уведомлений, если запущено полноэкранное приложение (не распространяется на \"режим погружения\" со скрытыми панелями статуса и навигации)</string>
+	<string name="system_popupnotif_apps_title">Выбранные приложения *</string>
 	<string name="system_chargeanimtime_title">Таймаут экрана при анимации зарядки *</string>
 	<string name="system_chargeanimtime_summ">Как долго держать экран включенным после начала анимации зарядки</string>
 	<string name="system_nolightuponcharges_summ">Запрещает включение экрана при подключении или отключении зарядки</string>
@@ -283,6 +306,9 @@
 	<string name="about_dev">от Mikanoshi</string>
 	<string name="system_nopassword_title">Не требовать пароль после загрузки</string>
 	<string name="system_nopassword_summ">Отключает требование пароля вместо отпечатка пальца первый раз после загрузки</string>
+	<string name="system_albumartonlock_title">Обложка альбома на обоях</string>
+	<string name="system_albumartonlock_summ">Отображает обложку альбома текущего трека на обоях экрана блокировки</string>
+	<string name="system_albumartonlock_blur_title">Размытие обложки</string>
 	<string name="system_noscreenlock_act_title">Управление блокировкой</string>
 	<string name="system_noscreenlock_act_summ">Активирует динамическое управление блокировкой устройства</string>
 	<string name="system_noscreenlock_title">Отключить блокировку *</string>

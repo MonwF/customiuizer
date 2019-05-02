@@ -1,6 +1,8 @@
 package name.mikanoshi.customiuizer.utils;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -13,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
@@ -27,6 +30,8 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 	private ItemFilter mFilter = new ItemFilter();
 	private ArrayList<AppData> originalAppList;
 	private ArrayList<AppData> filteredAppList;
+	private String key = null;
+	private Set<String> selectedApps = new LinkedHashSet<String>();
 
 	public AppDataAdapter(Context context, ArrayList<AppData> arr) {
 		ctx = context;
@@ -35,6 +40,16 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 		filteredAppList = arr;
 		int cpuCount = Runtime.getRuntime().availableProcessors();
 		pool = new ThreadPoolExecutor(cpuCount + 1, cpuCount * 2 + 1, 2, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+	}
+
+	public AppDataAdapter(Context context, ArrayList<AppData> arr, String prefKey) {
+		this(context, arr);
+		key = prefKey;
+		selectedApps = Helpers.prefs.getStringSet(prefKey, new LinkedHashSet<String>());
+	}
+
+	public void updateSelectedApps() {
+		if (key != null) selectedApps = Helpers.prefs.getStringSet(key, new LinkedHashSet<String>());
 	}
 
 	public int getCount() {
@@ -57,6 +72,7 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 			row = mInflater.inflate(R.layout.applist_item, parent, false);
 
 		ImageView itemIsDis = row.findViewById(R.id.am_isDisable_icon);
+		CheckBox itemChecked = row.findViewById(R.id.am_checked_icon);
 		TextView itemTitle = row.findViewById(R.id.am_label);
 		ImageView itemIcon = row.findViewById(R.id.am_icon);
 
@@ -68,7 +84,7 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 		//int iconSize = getResources().getDimensionPixelSize(android.R.dimen.app_icon_size);
 
 		if (icon == null) {
-			Drawable dualIcon[] = new Drawable[1];
+			Drawable[] dualIcon = new Drawable[1];
 			dualIcon[0] = ctx.getResources().getDrawable(R.drawable.card_icon_default, ctx.getTheme());
 			TransitionDrawable crossfader = new TransitionDrawable(dualIcon);
 			crossfader.setCrossFadeEnabled(true);
@@ -76,6 +92,11 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 			(new BitmapCachedLoader(itemIcon, ad, ctx)).executeOnExecutor(pool);
 		} else {
 			itemIcon.setImageBitmap(icon);
+		}
+
+		if (key != null) {
+			itemChecked.setVisibility(View.VISIBLE);
+			itemChecked.setChecked(selectedApps.size() > 0 && selectedApps.contains(ad.pkgName));
 		}
 
 		//row.setEnabled(true);

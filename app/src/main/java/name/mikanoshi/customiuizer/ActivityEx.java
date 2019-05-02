@@ -11,7 +11,6 @@ import android.view.MenuItem;
 public class ActivityEx extends Activity {
 	public boolean launch = true;
 
-	@SuppressWarnings("ConstantConditions")
 	protected void onCreate(Bundle savedInstanceState) {
 		setTheme(getResources().getIdentifier("Theme.Light.Settings", "style", "miui"));
 		getTheme().applyStyle(R.style.MIUIPrefs, true);

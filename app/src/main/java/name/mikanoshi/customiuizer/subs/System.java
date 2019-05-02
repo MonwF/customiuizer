@@ -5,6 +5,7 @@ import android.preference.Preference;
 
 import java.util.Objects;
 
+import name.mikanoshi.customiuizer.MainFragment;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SubFragment;
 import name.mikanoshi.customiuizer.utils.Helpers;
@@ -23,11 +24,20 @@ public class System extends SubFragment {
 				return true;
 			}
 		});
+
 		findPreference("pref_key_system_noscreenlock_wifi").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				if (!Helpers.checkWiFiPerm(getActivity(), Helpers.REQUEST_PERMISSIONS_WIFI)) return false;
 				openWifiNetworks();
+				return true;
+			}
+		});
+
+		findPreference("pref_key_system_popupnotif_apps").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				openAutoApps();
 				return true;
 			}
 		});
@@ -37,6 +47,21 @@ public class System extends SubFragment {
 		Bundle args = new Bundle();
 		args.putString("key", "pref_key_system_noscreenlock_wifi");
 		openSubFragment(new WiFiList(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.wifi_networks, R.layout.prefs_wifi_networks);
+	}
+
+//	public void openBTNetworks() {
+//		Bundle args = new Bundle();
+//		args.putString("key", "pref_key_system_noscreenlock_bt");
+//		openSubFragment(new BTList(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.bt_devices, R.layout.prefs_bt_networks);
+//	}
+
+	public void openAutoApps() {
+		Bundle args = new Bundle();
+		args.putString("key", "pref_key_system_popupnotif_apps");
+		args.putBoolean("multi", true);
+		AppSelector appSelector = new AppSelector();
+		appSelector.setTargetFragment(System.this, 0);
+		openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_app, R.layout.prefs_app_selector);
 	}
 
 }

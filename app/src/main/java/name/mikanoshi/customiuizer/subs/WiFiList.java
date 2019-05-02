@@ -81,7 +81,7 @@ public class WiFiList extends SubFragment {
 
 		Bundle args = getArguments();
 		key = args.getString("key");
-		bssids = Helpers.prefs.getStringSet(key, new LinkedHashSet<String>());
+		bssids = new LinkedHashSet<String>(Helpers.prefs.getStringSet(key, new LinkedHashSet<String>()));
 
 		wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
 		wifiAdapter1 = new WiFiAdapter(getContext(), true);
@@ -113,10 +113,9 @@ public class WiFiList extends SubFragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Pair<String, String> sr = wifiAdapter1.getItem(position);
-				bssids = Helpers.prefs.getStringSet(key, new LinkedHashSet<String>());
-				Helpers.removeWifiPair(bssids, sr.first);
-				if (bssids.size() == 0) bssids = null;
-				Helpers.prefs.edit().putStringSet(key, bssids).apply();
+				bssids = new LinkedHashSet<String>(Helpers.prefs.getStringSet(key, new LinkedHashSet<String>()));
+				Helpers.removeStringPair(bssids, sr.first);
+				Helpers.prefs.edit().putStringSet(key, bssids.size() == 0 ? null : bssids).apply();
 				wifiAdapter1.notifyDataSetChanged();
 				wifiAdapter2.notifyDataSetChanged();
 			}
@@ -126,8 +125,8 @@ public class WiFiList extends SubFragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Pair<String, String> sr = wifiAdapter2.getItem(position);
-				bssids = Helpers.prefs.getStringSet(key, new LinkedHashSet<String>());
-				Helpers.addWifiPair(bssids, sr.first, sr.second);
+				bssids = new LinkedHashSet<String>(Helpers.prefs.getStringSet(key, new LinkedHashSet<String>()));
+				Helpers.addStringPair(bssids, sr.first, sr.second);
 				Helpers.prefs.edit().putStringSet(key, bssids).apply();
 				wifiAdapter1.notifyDataSetChanged();
 				wifiAdapter2.notifyDataSetChanged();
@@ -180,14 +179,14 @@ public class WiFiList extends SubFragment {
 
 		public int getCount() {
 			if (isSelected)
-				return bssids == null ? 0 : bssids.size();
+				return bssids.size();
 			else
 				return wifiList.size();
 		}
 
 		public Pair<String, String> getItem(int position) {
 			if (isSelected) {
-				if (bssids == null) return null;
+				if (bssids.size() == 0) return null;
 				String[] network = bssids.toArray(new String[0])[position].split("\\|", 2);
 				return new Pair<String, String>(network[0], network[1]);
 			} else {
@@ -201,7 +200,7 @@ public class WiFiList extends SubFragment {
 
 		@Override
 		public boolean isEnabled(int position) {
-			return isSelected || !Helpers.containsWifiPair(bssids, getItem(position).first);
+			return isSelected || !Helpers.containsStringPair(bssids, getItem(position).first);
 		}
 
 		public View getView(final int position, View convertView, ViewGroup parent) {
@@ -209,7 +208,7 @@ public class WiFiList extends SubFragment {
 			if (convertView != null)
 				row = convertView;
 			else
-				row = mInflater.inflate(R.layout.wifi_item, parent, false);
+				row = mInflater.inflate(R.layout.pref_item, parent, false);
 
 			TextView itemTitle = row.findViewById(android.R.id.title);
 			TextView itemSumm = row.findViewById(android.R.id.summary);

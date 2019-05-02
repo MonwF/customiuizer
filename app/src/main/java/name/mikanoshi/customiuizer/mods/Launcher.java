@@ -3,10 +3,17 @@ package name.mikanoshi.customiuizer.mods;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.graphics.LinearGradient;
+import android.graphics.Shader;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.PaintDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 
 import de.robv.android.xposed.XC_MethodHook;
@@ -15,6 +22,8 @@ import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.ShakeManager;
+
+import static de.robv.android.xposed.XposedHelpers.findClass;
 
 public class Launcher {
 
@@ -238,6 +247,28 @@ public class Launcher {
 				Activity launcherActivity = (Activity)param.thisObject;
 				SensorManager sensorMgr = (SensorManager)launcherActivity.getSystemService(Context.SENSOR_SERVICE);
 				sensorMgr.unregisterListener((ShakeManager)XposedHelpers.getAdditionalInstanceField(param.thisObject, shakeMgrKey));
+			}
+		});
+	}
+
+	public static void FolderShadeHook(final XC_LoadPackage.LoadPackageParam lpparam) {
+		XposedBridge.hookAllConstructors(findClass("com.miui.home.launcher.FolderCling", lpparam.classLoader), new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				int opt = Integer.parseInt(Helpers.getSharedStringPref((Context)param.args[0], "pref_key_launcher_foldershade", "1"));
+				if (opt == 2) {
+					((View)param.thisObject).setBackground(new ColorDrawable(0x99000000));
+				} else if (opt == 3) {
+					PaintDrawable pd = new PaintDrawable();
+					pd.setShape(new RectShape());
+					pd.setShaderFactory(new ShapeDrawable.ShaderFactory() {
+						@Override
+						public Shader resize(int width, int height) {
+							return new LinearGradient(0, 0, 0, height, new int[]{0x11000000, 0x99000000, 0x99000000, 0x11000000}, new float[]{0.0f, 0.25f, 0.65f, 1.0f}, Shader.TileMode.CLAMP);
+						}
+					});
+					((View)param.thisObject).setBackground(pd);
+				}
 			}
 		});
 	}

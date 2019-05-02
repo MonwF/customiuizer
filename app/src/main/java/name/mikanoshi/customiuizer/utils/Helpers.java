@@ -37,6 +37,7 @@ import android.util.LruCache;
 import android.view.View;
 import android.view.ViewGroup;
 
+import de.robv.android.xposed.XposedBridge;
 import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SharedPrefsProvider;
@@ -48,7 +49,7 @@ public class Helpers {
 	public static final String prefsName = "customiuizer_prefs";
 	public static final String externalFolder = "/CustoMIUIzer/";
 	public static SharedPreferences prefs = null;
-//	public static ArrayList<AppData> installedAppsList = null;
+	public static ArrayList<AppData> installedAppsList = null;
 	public static ArrayList<AppData> launchableAppsList = null;
 	public static String backupFile = "settings_backup";
 	public static final int REQUEST_PERMISSIONS_BACKUP = 1;
@@ -217,27 +218,27 @@ public class Helpers {
 		}
 	}
 
-//	public static void getInstalledApps(Context mContext) {
-//		final PackageManager pm = mContext.getPackageManager();
-//		List<ApplicationInfo> packs = pm.getInstalledApplications(PackageManager.GET_META_DATA | PackageManager.MATCH_DISABLED_COMPONENTS);
-//		installedAppsList = new ArrayList<AppData>();
-//		AppData app;
-//		for (ApplicationInfo pack: packs) try {
-//			app = new AppData();
-//			app.enabled = pack.enabled;
-//			app.label = pack.loadLabel(pm).toString();
-//			app.pkgName = pack.packageName;
-//			app.actName = "-";
-//			installedAppsList.add(app);
-//		} catch (Throwable e) {
-//			e.printStackTrace();
-//		}
-//		Collections.sort(installedAppsList, new Comparator<AppData>() {
-//			public int compare(AppData app1, AppData app2) {
-//				return app1.label.compareToIgnoreCase(app2.label);
-//			}
-//		});
-//	}
+	public static void getInstalledApps(Context mContext) {
+		final PackageManager pm = mContext.getPackageManager();
+		List<ApplicationInfo> packs = pm.getInstalledApplications(PackageManager.GET_META_DATA | PackageManager.MATCH_DISABLED_COMPONENTS);
+		installedAppsList = new ArrayList<AppData>();
+		AppData app;
+		for (ApplicationInfo pack: packs) try {
+			app = new AppData();
+			app.enabled = pack.enabled;
+			app.label = pack.loadLabel(pm).toString();
+			app.pkgName = pack.packageName;
+			app.actName = "-";
+			installedAppsList.add(app);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		Collections.sort(installedAppsList, new Comparator<AppData>() {
+			public int compare(AppData app1, AppData app2) {
+				return app1.label.compareToIgnoreCase(app2.label);
+			}
+		});
+	}
 	
 	public static void getLaunchableApps(Context mContext) {
 		PackageManager pm = mContext.getPackageManager();
@@ -328,12 +329,12 @@ public class Helpers {
 		});
 	}
 
-	public static boolean containsWifiPair(Set<String> stringSet, String BSSID) {
+	public static boolean containsStringPair(Set<String> hayStack, String needle) {
 		boolean res = false;
-		if (stringSet == null || stringSet.size() == 0) return res;
-		for (String pair: stringSet) {
-			String[] network = pair.split("\\|");
-			if (network[0].equals(BSSID)) {
+		if (hayStack == null || hayStack.size() == 0) return false;
+		for (String pair: hayStack) {
+			String[] needles = pair.split("\\|");
+			if (needles[0].equals(needle)) {
 				res = true;
 				break;
 			}
@@ -341,16 +342,16 @@ public class Helpers {
 		return res;
 	}
 
-	public static void addWifiPair(Set<String> stringSet, String BSSID, String SSID) {
-		if (stringSet != null) stringSet.add(BSSID + "|" + SSID);
+	public static void addStringPair(Set<String> hayStack, String needle1, String needle2) {
+		if (hayStack != null) hayStack.add(needle1 + "|" + needle2);
 	}
 
-	public static void removeWifiPair(Set<String> stringSet, String BSSID) {
-		if (stringSet != null)
-		for (String pair: stringSet) {
-			String[] network = pair.split("\\|", 2);
-			if (network[0].equals(BSSID)) {
-				stringSet.remove(pair);
+	public static void removeStringPair(Set<String> hayStack, String needle) {
+		if (hayStack != null)
+		for (String pair: hayStack) {
+			String[] needles = pair.split("\\|", 2);
+			if (needles[0].equals(needle)) {
+				hayStack.remove(pair);
 				return;
 			}
 		}
@@ -384,7 +385,7 @@ public class Helpers {
 	}
 
 	public static Uri intPrefToUri(String name, int defValue) {
-		return Uri.parse("content://" + SharedPrefsProvider.AUTHORITY + "/integer/" + name + "/" + String.valueOf(defValue));
+		return Uri.parse("content://" + SharedPrefsProvider.AUTHORITY + "/integer/" + name + "/" + defValue);
 	}
 
 	public static Uri boolPrefToUri(String name, boolean defValue) {
@@ -393,13 +394,18 @@ public class Helpers {
 
 	public static String getSharedStringPref(Context context, String name, String defValue) {
 		Uri uri = stringPrefToUri(name, defValue);
-		Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
-		if (cursor != null) {
-			cursor.moveToFirst();
-			String prefValue = cursor.getString(0);
-			cursor.close();
-			return prefValue;
-		} else if (MainModule.mPrefs != null)
+		try {
+			Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+			if (cursor != null && cursor.moveToFirst()) {
+				String prefValue = cursor.getString(0);
+				cursor.close();
+				return prefValue;
+			}
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+
+		if (MainModule.mPrefs.containsKey(name))
 			return MainModule.mPrefs.getString(name, defValue);
 		else
 			return defValue;
@@ -407,25 +413,35 @@ public class Helpers {
 
 	public static Set<String> getSharedStringSetPref(Context context, String name) {
 		Uri uri = stringSetPrefToUri(name);
-		Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
-		if (cursor != null) {
-			Set<String> prefValue = new LinkedHashSet<String>();
-			while (cursor.moveToNext()) prefValue.add(cursor.getString(0));
-			cursor.close();
-			return prefValue;
-		} else
-			return new LinkedHashSet<String>();
+		try {
+			Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+			if (cursor != null) {
+				Set<String> prefValue = new LinkedHashSet<String>();
+				while (cursor.moveToNext()) prefValue.add(cursor.getString(0));
+				cursor.close();
+				return prefValue;
+			}
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+
+		return new LinkedHashSet<String>();
 	}
 
 	public static int getSharedIntPref(Context context, String name, int defValue) {
 		Uri uri = intPrefToUri(name, defValue);
-		Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
-		if (cursor != null) {
-			cursor.moveToFirst();
-			int prefValue = cursor.getInt(0);
-			cursor.close();
-			return prefValue;
-		} else if (MainModule.mPrefs != null)
+		try {
+			Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+			if (cursor != null && cursor.moveToFirst()) {
+				int prefValue = cursor.getInt(0);
+				cursor.close();
+				return prefValue;
+			}
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+
+		if (MainModule.mPrefs.containsKey(name))
 			return MainModule.mPrefs.getInt(name, defValue);
 		else
 			return defValue;
@@ -433,13 +449,18 @@ public class Helpers {
 
 	public static boolean getSharedBoolPref(Context context, String name, boolean defValue) {
 		Uri uri = boolPrefToUri(name, defValue);
-		Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
-		if (cursor != null) {
-			cursor.moveToFirst();
-			int prefValue = cursor.getInt(0);
-			cursor.close();
-			return prefValue == 1;
-		} else if (MainModule.mPrefs != null)
+		try {
+			Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+			if (cursor != null && cursor.moveToFirst()) {
+				int prefValue = cursor.getInt(0);
+				cursor.close();
+				return prefValue == 1;
+			}
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+
+		if (MainModule.mPrefs.containsKey(name))
 			return MainModule.mPrefs.getBoolean(name);
 		else
 			return defValue;
@@ -495,6 +516,202 @@ public class Helpers {
 
 		public void onChange(String name, String defValue) {}
 		public void onChange(String name, int defValue) {}
+	}
+
+	public static Bitmap fastBlur(Bitmap sentBitmap, int radius) {
+		Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
+
+		if (radius < 1) return null;
+
+		int w = bitmap.getWidth();
+		int h = bitmap.getHeight();
+
+		int[] pix = new int[w * h];
+		bitmap.getPixels(pix, 0, w, 0, 0, w, h);
+
+		int wm = w - 1;
+		int hm = h - 1;
+		int wh = w * h;
+		int div = radius + radius + 1;
+
+		int[] r = new int[wh];
+		int[] g = new int[wh];
+		int[] b = new int[wh];
+		int rsum, gsum, bsum, x, y, i, p, yp, yi, yw;
+		int[] vmin = new int[Math.max(w, h)];
+
+		int divsum = (div + 1) >> 1;
+		divsum *= divsum;
+		int[] dv = new int[256 * divsum];
+		for (i = 0; i < 256 * divsum; i++) dv[i] = (i / divsum);
+
+		yw = yi = 0;
+
+		int[][] stack = new int[div][3];
+		int stackpointer;
+		int stackstart;
+		int[] sir;
+		int rbs;
+		int r1 = radius + 1;
+		int routsum, goutsum, boutsum;
+		int rinsum, ginsum, binsum;
+
+		for (y = 0; y < h; y++) {
+			rinsum = ginsum = binsum = routsum = goutsum = boutsum = rsum = gsum = bsum = 0;
+			for (i = -radius; i <= radius; i++) {
+				p = pix[yi + Math.min(wm, Math.max(i, 0))];
+				sir = stack[i + radius];
+				sir[0] = (p & 0xff0000) >> 16;
+				sir[1] = (p & 0x00ff00) >> 8;
+				sir[2] = (p & 0x0000ff);
+				rbs = r1 - Math.abs(i);
+				rsum += sir[0] * rbs;
+				gsum += sir[1] * rbs;
+				bsum += sir[2] * rbs;
+				if (i > 0) {
+					rinsum += sir[0];
+					ginsum += sir[1];
+					binsum += sir[2];
+				} else {
+					routsum += sir[0];
+					goutsum += sir[1];
+					boutsum += sir[2];
+				}
+			}
+			stackpointer = radius;
+
+			for (x = 0; x < w; x++) {
+				if (rsum < dv.length) r[yi] = dv[rsum];
+				if (gsum < dv.length) g[yi] = dv[gsum];
+				if (bsum < dv.length) b[yi] = dv[bsum];
+
+				rsum -= routsum;
+				gsum -= goutsum;
+				bsum -= boutsum;
+
+				stackstart = stackpointer - radius + div;
+				sir = stack[stackstart % div];
+
+				routsum -= sir[0];
+				goutsum -= sir[1];
+				boutsum -= sir[2];
+
+				if (y == 0) {
+					vmin[x] = Math.min(x + radius + 1, wm);
+				}
+				p = pix[yw + vmin[x]];
+
+				sir[0] = (p & 0xff0000) >> 16;
+				sir[1] = (p & 0x00ff00) >> 8;
+				sir[2] = (p & 0x0000ff);
+
+				rinsum += sir[0];
+				ginsum += sir[1];
+				binsum += sir[2];
+
+				rsum += rinsum;
+				gsum += ginsum;
+				bsum += binsum;
+
+				stackpointer = (stackpointer + 1) % div;
+				sir = stack[(stackpointer) % div];
+
+				routsum += sir[0];
+				goutsum += sir[1];
+				boutsum += sir[2];
+
+				rinsum -= sir[0];
+				ginsum -= sir[1];
+				binsum -= sir[2];
+
+				yi++;
+			}
+			yw += w;
+		}
+		for (x = 0; x < w; x++) {
+			rinsum = ginsum = binsum = routsum = goutsum = boutsum = rsum = gsum = bsum = 0;
+			yp = -radius * w;
+			for (i = -radius; i <= radius; i++) {
+				yi = Math.max(0, yp) + x;
+
+				sir = stack[i + radius];
+
+				sir[0] = r[yi];
+				sir[1] = g[yi];
+				sir[2] = b[yi];
+
+				rbs = r1 - Math.abs(i);
+
+				rsum += r[yi] * rbs;
+				gsum += g[yi] * rbs;
+				bsum += b[yi] * rbs;
+
+				if (i > 0) {
+					rinsum += sir[0];
+					ginsum += sir[1];
+					binsum += sir[2];
+				} else {
+					routsum += sir[0];
+					goutsum += sir[1];
+					boutsum += sir[2];
+				}
+
+				if (i < hm) {
+					yp += w;
+				}
+			}
+			yi = x;
+			stackpointer = radius;
+			for (y = 0; y < h; y++) {
+				// Preserve alpha channel: ( 0xff000000 & pix[yi] )
+				pix[yi] = ( 0xff000000 & pix[yi] ) | ( dv[rsum] << 16 ) | ( dv[gsum] << 8 ) | dv[bsum];
+
+				rsum -= routsum;
+				gsum -= goutsum;
+				bsum -= boutsum;
+
+				stackstart = stackpointer - radius + div;
+				sir = stack[stackstart % div];
+
+				routsum -= sir[0];
+				goutsum -= sir[1];
+				boutsum -= sir[2];
+
+				if (x == 0) {
+					vmin[y] = Math.min(y + r1, hm) * w;
+				}
+				p = x + vmin[y];
+
+				sir[0] = r[p];
+				sir[1] = g[p];
+				sir[2] = b[p];
+
+				rinsum += sir[0];
+				ginsum += sir[1];
+				binsum += sir[2];
+
+				rsum += rinsum;
+				gsum += ginsum;
+				bsum += binsum;
+
+				stackpointer = (stackpointer + 1) % div;
+				sir = stack[stackpointer];
+
+				routsum += sir[0];
+				goutsum += sir[1];
+				boutsum += sir[2];
+
+				rinsum -= sir[0];
+				ginsum -= sir[1];
+				binsum -= sir[2];
+
+				yi += w;
+			}
+		}
+
+		bitmap.setPixels(pix, 0, w, 0, 0, w, h);
+
+		return bitmap;
 	}
 
 	/*
