@@ -24,7 +24,7 @@
 	<string name="mods">Моды</string>
 
 	<string name="xposed_not_found">Не найден Xposed Framework</string>
-	<string name="xposed_not_found_explain">Похоже, что у Вас не установлен Xposed Framework.\n\nВсе моды на данной вкладке работают только при наличии установленного Xposed Framework!\n\nЕго можно установить вместе с прошивкой ARHD.</string>
+	<string name="xposed_not_found_explain">Похоже, что у Вас не установлен Xposed Framework.\n\nВсе моды работают только при наличии установленного Xposed Framework!</string>
 	<string name="okay">Окей</string>
 
 	<string name="dummy">" "</string>

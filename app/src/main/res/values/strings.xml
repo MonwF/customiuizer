@@ -328,7 +328,7 @@
 	<string name="wifi_category2">Available networks</string>
 
 	<string name="xposed_not_found">Xposed Installer not found</string>
-	<string name="xposed_not_found_explain">It looks like you don\'t have Xposed Installed.\n\nPlease note that the mods on this page will only work with Xposed!\n\nXposed is available in the ARHD installer.</string>
+	<string name="xposed_not_found_explain">It looks like you don\'t have Xposed Framework Installed.\n\nPlease note that mods will only work with Xposed!</string>
 	<string name="module_not_active">CustoMIUIzer module is not active!\nOpen Xposed Installer, activate module and reboot.</string>
 	<string name="no_browser">Browser app is required to open URLs</string>
 	<string name="okay">Okay</string>
