@@ -35,7 +35,7 @@ public class ListPreferenceEx extends ListPreference {
 		View finalView = super.getView(view, parent);
 		TextView summary = finalView.findViewById(android.R.id.summary);
 		TextView valSummary = finalView.findViewById(android.R.id.hint);
-		summary.setVisibility(valueAsSummary ? View.GONE : View.VISIBLE);
+		summary.setVisibility(valueAsSummary || summary.getText() == null || summary.getText().equals("") ? View.GONE : View.VISIBLE);
 		valSummary.setVisibility(valueAsSummary ? View.VISIBLE : View.GONE);
 		valSummary.setText(valueAsSummary ? sValue : "");
 		return finalView;

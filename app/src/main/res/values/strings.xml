@@ -14,8 +14,8 @@
 	<string name="system_mods_screenanim">Screen animations *</string>
 	<string name="system_clockseconds_title">Show seconds</string>
 	<string name="system_clockseconds_summ">Display seconds in the status bar clock</string>
-	<string name="system_hidemobiletype_title">Hide mobile network type</string>
-	<string name="system_hidemobiletype_summ">Remove mobile network type icon from status bar</string>
+	<string name="system_mobiletypeicon_title">Hide mobile network type</string>
+	<string name="system_mobiletypeicon_summ">Remove mobile network type icon from status bar</string>
 	<string name="system_netspeedinterval_title">Network speed update interval</string>
 	<string name="system_netspeedinterval_summ">System settings modification permission is required</string>
 	<string name="system_detailednetspeed_title">Detailed network speed indicator</string>
@@ -28,8 +28,11 @@
 	<string name="system_detailednetspeed_lowlevel_summ">Speed values below this level will be considered low and will have a different indication icon</string>
 	<string name="system_fixmeter_title">Network speed spacing</string>
 	<string name="system_fixmeter_summ">Increase right margin for network speed indicator</string>
-	<string name="system_expandnotif_title">Expand notifications</string>
-	<string name="system_expandnotif_summ">Always show notifications fully expanded</string>
+	<string name="system_colorizenotiftitle_title">Colorize notification title</string>
+	<string name="system_colorizenotiftitle_summ">Apply icon\'s color to title text (Android notification style only)</string>
+	<string name="system_expandnotifs_title">Expand notifications</string>
+	<string name="system_expandnotifs_summ">Show notifications fully expanded</string>
+	<string name="system_expandnotifs_apps_title">Black &amp; white list</string>
 	<string name="system_popupnotif_title">Auto open notification drawer</string>
 	<string name="system_popupnotif_summ">Open notification drawer automatically on notifications from selected apps</string>
 	<string name="system_popupnotif_fs_title">Respect fullscreen</string>
@@ -77,6 +80,8 @@
 	<string name="system_mods_lockscreen">Lock Screen</string>
 	<string name="system_iconlabletoasts_title">Enhanced toasts *</string>
 	<string name="system_iconlabletoasts_summ">Add application\'s icon and label to its toasts</string>
+	<string name="system_downgrade_title">Allow downgrade</string>
+	<string name="system_downgrade_summ">Make installing older app version on top of a newer one possible</string>
 	<string name="system_rotateanim_title">Rotation animation</string>
 	<string name="system_dttosleep_title">Double tap to sleep</string>
 	<string name="system_dttosleep_summ">Turn screen off by double tapping on any empty space on lockscreen</string>
@@ -93,6 +98,8 @@
 	<string name="launcher_gestures_setting">Setting to toggle</string>
 	<string name="launcher_gestures_launch">App to launch</string>
 	<string name="launcher_gestures_shortcut">Shortcut to launch</string>
+	<string name="launcher_noclockhide_title">No clock hide</string>
+	<string name="launcher_noclockhide_summ">Do not hide status bar clock on pages with clock widgets</string>
 	<string name="launcher_unlockgrids_title">Unlock grid sizes</string>
 	<string name="launcher_unlockgrids_summ">Makes all grid sizes from 3x4 to 6x7 available in home screen layout setting</string>
 	<string name="launcher_folder_cols_title">Number of columns in folders</string>
@@ -131,6 +138,8 @@
 	<string name="controls_mods_volume">Volume keys</string>
 	<string name="controls_volumecursor_title">Control input cursor</string>
 	<string name="controls_volumecursor_summ">Move text input cursor using volume keys</string>
+	<string name="controls_volumecursor_reverse_title">Change directions</string>
+	<string name="controls_volumecursor_reverse_summ">Swap directions of cursor movements</string>
 	<string name="controls_volumemedia_up_title">Volume Up long press action *</string>
 	<string name="controls_volumemedia_up_summ">Action for Volume Up long press when screen is off</string>
 	<string name="controls_volumemedia_down_title">Volume Down long press action *</string>
@@ -183,6 +192,7 @@
 	<string name="array_global_actions_shortcut">Launch shortcut</string>
 	<string name="array_global_actions_toggle">Toggle feature</string>
 	<string name="array_global_actions_back">Switch to previous app</string>
+	<string name="array_global_actions_powermenu">Open power menu</string>
 	<string name="array_global_toggle_wifi">Wi-Fi</string>
 	<string name="array_global_toggle_bt">Bluetooth</string>
 	<string name="array_global_toggle_gps">GPS</string>
@@ -213,6 +223,10 @@
 	<string name="array_netspeedicons_bullets" translatable="false">☖ ☗ ⛉ ⛊</string>
 	<string name="array_foldershade_solid">Darken entire background</string>
 	<string name="array_foldershade_gradient">Darken only in the middle</string>
+	<string name="array_expandnotifs_allbutblack">For all apps except the listed ones</string>
+	<string name="array_expandnotifs_whiteonly">For listed apps only</string>
+	<string name="array_mobiletypeicon_connected">Hide only when not connected</string>
+	<string name="array_mobiletypeicon_hide">Hide completely</string>
 
 	<string name="toggle_wifi_on">Wi-Fi enabled</string>
 	<string name="toggle_wifi_off">Wi-Fi disabled</string>

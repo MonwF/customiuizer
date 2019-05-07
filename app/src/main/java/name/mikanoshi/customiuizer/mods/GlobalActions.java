@@ -1,10 +1,10 @@
 package name.mikanoshi.customiuizer.mods;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RecentTaskInfo;
 import android.app.Application;
+import android.app.Notification;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -14,6 +14,8 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
+import android.content.res.XModuleResources;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.net.wifi.WifiManager;
 import android.nfc.NfcAdapter;
@@ -26,6 +28,7 @@ import android.os.Vibrator;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import java.lang.reflect.Method;
@@ -35,9 +38,11 @@ import java.util.Map;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
+import de.robv.android.xposed.callbacks.XC_InitPackageResources;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
 import miui.os.SystemProperties;
+import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
@@ -63,6 +68,7 @@ public class GlobalActions {
 			case 9: return launchShortcut(helperContext, extraLaunch);
 			case 10: return toggleThis(helperContext, extraToggle);
 			case 11: return switchToPrevApp(helperContext);
+			case 12: return openPowerMenu(helperContext);
 			default: return false;
 		}
 	}
@@ -261,6 +267,12 @@ public class GlobalActions {
 				}
 			}
 
+			if (action.equals("name.mikanoshi.customiuizer.mods.action.OpenPowerMenu")) {
+				Class<?> clsWMG = XposedHelpers.findClass("android.view.WindowManagerGlobal", null);
+				Object wms = XposedHelpers.callStaticMethod(clsWMG, "getWindowManagerService");
+				XposedHelpers.callMethod(wms, "showGlobalActions");
+			}
+
 			// Toggles
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.ToggleWiFi")) {
 				WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
@@ -444,6 +456,16 @@ public class GlobalActions {
 		}
 	}
 
+	private static int settingsIconResId;
+	public static void miuizerSettingsResInit(XC_InitPackageResources.InitPackageResourcesParam resparam) {
+		try {
+			XModuleResources modRes = XModuleResources.createInstance(MainModule.MODULE_PATH, resparam.res);
+			settingsIconResId = resparam.res.addResource(modRes, R.drawable.ic_miuizer_settings);
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
 	public static void miuizerSettingsInit(LoadPackageParam lpparam) {
 		try {
 			findAndHookMethod("com.android.settings.MiuiSettings", lpparam.classLoader, "onCreate", Bundle.class, new XC_MethodHook() {
@@ -451,8 +473,7 @@ public class GlobalActions {
 				@SuppressWarnings("unchecked")
 				protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
 					Map<String, Integer> map = (Map<String, Integer>)XposedHelpers.getStaticObjectField(findClass("com.android.settings.MiuiSettings", lpparam.classLoader), "CATEGORY_MAP");
-					Activity act = (Activity)param.thisObject;
-					map.put("com.android.settings.category.customiuizer", act.getApplicationContext().getResources().getIdentifier("ic_miui_lab_settings", "drawable", "com.android.settings"));
+					map.put("com.android.settings.category.customiuizer", settingsIconResId);
 					XposedHelpers.setStaticObjectField(findClass("com.android.settings.MiuiSettings", lpparam.classLoader), "CATEGORY_MAP", map);
 					//XposedBridge.log(map.toString());
 				}
@@ -641,6 +662,7 @@ public class GlobalActions {
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.TakeScreenshot");
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.killForegroundApp");
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.SwitchToPrevApp");
+					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.OpenPowerMenu");
 					//intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.killForegroundAppShedule");
 					//intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.SimulateMenu");
 
@@ -897,6 +919,16 @@ public class GlobalActions {
 	public static boolean switchToPrevApp(Context context) {
 		try {
 			context.sendBroadcast(new Intent("name.mikanoshi.customiuizer.mods.action.SwitchToPrevApp"));
+			return true;
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+			return false;
+		}
+	}
+
+	public static boolean openPowerMenu(Context context) {
+		try {
+			context.sendBroadcast(new Intent("name.mikanoshi.customiuizer.mods.action.OpenPowerMenu"));
 			return true;
 		} catch (Throwable t) {
 			XposedBridge.log(t);

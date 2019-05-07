@@ -76,6 +76,7 @@
 	<string name="array_global_actions_launch">Запустить приложение</string>
 	<string name="array_global_actions_toggle">Включить/выключить настройку</string>
 	<string name="array_global_actions_back">Предыдущее приложение</string>
+	<string name="array_global_actions_powermenu">Открыть меню управления питанием</string>
 	<string name="array_global_toggle_wifi">Wi-Fi</string>
 	<string name="array_global_toggle_bt">Bluetooth</string>
 	<string name="array_global_toggle_gps">GPS</string>
@@ -99,6 +100,10 @@
 	<string name="array_noblur">Без размытия</string>
 	<string name="array_foldershade_solid">Затемнить весь фон</string>
 	<string name="array_foldershade_gradient">Затемнить только в центре</string>
+	<string name="array_expandnotifs_allbutblack">Кроме тех приложений, что в списке</string>
+	<string name="array_expandnotifs_whiteonly">Только для приложений в списке</string>
+	<string name="array_mobiletypeicon_connected">Скрывать только при отсутствии подключения</string>
+	<string name="array_mobiletypeicon_hide">Скрыть полностью</string>
 
 	<string name="select_app">Выбрать приложение</string>
 
@@ -149,6 +154,8 @@
 	<string name="controls_mods_volume">Кнопки громкости</string>
 	<string name="controls_volumecursor_title">Управлять курсором ввода</string>
 	<string name="controls_volumecursor_summ">Перемещать курсор ввода текста при нажатии кнопок громкости</string>
+	<string name="controls_volumecursor_reverse_title">Сменить направления</string>
+	<string name="controls_volumecursor_reverse_summ">Поменять местами направления движения курсора</string>
 	<string name="controls_volumemedia_up_title">Долгое нажатие на Повышение громкости *</string>
 	<string name="controls_volumemedia_up_summ">Действие на долгое нажатие клавиши повышения громкости при выключенном экране</string>
 	<string name="controls_volumemedia_down_title">Долгое нажатие на Понижение громкости *</string>
@@ -220,6 +227,8 @@
 	<string name="wifi_category2">Доступные сети</string>
 	<string name="select_shortcut">Выбрать ярлык</string>
 	<string name="launcher_gestures_shortcut">Ярлык для запуска</string>
+	<string name="launcher_noclockhide_title">Не прятать часы</string>
+	<string name="launcher_noclockhide_summ">Отключает скрытие часов в статус баре на домашних экранах с виджетами часов</string>
 	<string name="launcher_unlockgrids_title">Разблокировать размеры сетки</string>
 	<string name="launcher_unlockgrids_summ">Делает все размеры от 3x4 до 6x7 доступными в настройках сетки рабочего стола</string>
 	<string name="launcher_folder_cols_title">Число колонок в папках</string>
@@ -234,6 +243,8 @@
 	<string name="support_4pda_summ">Тема обсуждения модуля на форуме 4PDA</string>
 	<string name="system_iconlabletoasts_summ">Добавляет иконку и название приложения во всплывающие уведомления</string>
 	<string name="system_iconlabletoasts_title">Расширенные уведомления *</string>
+	<string name="system_downgrade_title">Разрешить понижение версии</string>
+	<string name="system_downgrade_summ">Делает возможным установку старой версии приложения поверх новой</string>
 	<string name="system_mods">Система</string>
 	<string name="system_mods_screen">Экран</string>
 	<string name="system_mods_audio">Аудио</string>
@@ -247,8 +258,8 @@
 	<string name="system_betterpopups_swipedown_summ">Открывает панель уведомлений по свайпу вниз</string>
 	<string name="system_clockseconds_title">Показывать секунды</string>
 	<string name="system_clockseconds_summ">Отображает секунды на часах в статусбаре</string>
-	<string name="system_hidemobiletype_title">Скрывать тип мобильной сети</string>
-	<string name="system_hidemobiletype_summ">Удаляет иконку типа мобильной сети из строки состояния</string>
+	<string name="system_mobiletypeicon_title">Скрывать тип мобильной сети</string>
+	<string name="system_mobiletypeicon_summ">Удаляет иконку типа мобильной сети из строки состояния</string>
 	<string name="system_netspeedinterval_title">Частота обновления индикатора скорости</string>
 	<string name="system_netspeedinterval_summ">Требуется разрешение на изменение системных настроек</string>
 	<string name="system_detailednetspeed_title">Подробный индикатор скорости соединения</string>
@@ -261,8 +272,11 @@
 	<string name="system_detailednetspeed_lowlevel_summ">Задаёт уровень, ниже которого скорость будет считаться низкой и будет иметь другую иконку</string>
 	<string name="system_fixmeter_title">Отступ скорости соединения</string>
 	<string name="system_fixmeter_summ">Увеличивает отступ справа для индикатора скорости соединения</string>
-	<string name="system_expandnotif_title">Разворачивать уведомления</string>
-	<string name="system_expandnotif_summ">Всегда показывать уведомления в полностью развёрнутом виде</string>
+	<string name="system_colorizenotiftitle_title">Раскрасить заголовок уведомления</string>
+	<string name="system_colorizenotiftitle_summ">Применяет цвет иконки к заголовку (только для стиля уведомлений Android)</string>
+	<string name="system_expandnotifs_title">Разворачивать уведомления</string>
+	<string name="system_expandnotifs_summ">Показывать уведомления в полностью развёрнутом виде</string>
+	<string name="system_expandnotifs_apps_title">Чёрно-белый список</string>
 	<string name="system_popupnotif_title">Автооткрытие панели уведомлений</string>
 	<string name="system_popupnotif_summ">Открывает панель уведомлений автоматически при получении уведомлений от выбранных приложений</string>
 	<string name="system_popupnotif_fs_title">Определение полноэкранного режима</string>

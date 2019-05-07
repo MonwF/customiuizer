@@ -76,32 +76,54 @@ public class Helpers {
 
 	public static boolean isXposedInstallerInstalled(Context mContext) {
 		PackageManager pm = mContext.getPackageManager();
-		boolean res = false;
 		try {
-			pm.getPackageInfo("de.robv.android.xposed.installer", PackageManager.GET_ACTIVITIES);
-			res = true;
+			pm.getPackageInfo("org.meowcat.edxposed.manager", PackageManager.GET_ACTIVITIES);
+			return true;
 		} catch (PackageManager.NameNotFoundException e) {}
 
 		try {
 			pm.getPackageInfo("com.solohsu.android.edxp.manager", PackageManager.GET_ACTIVITIES);
-			res = true;
+			return true;
 		} catch (PackageManager.NameNotFoundException e) {}
-		return res;
+
+		try {
+			pm.getPackageInfo("de.robv.android.xposed.installer", PackageManager.GET_ACTIVITIES);
+			return true;
+		} catch (PackageManager.NameNotFoundException e) {}
+
+		return false;
 	}
 
 	public static String getXposedInstallerErrorLog(Context mContext) {
 		String baseDir = null;
-
+		File file;
 		PackageManager pm = mContext.getPackageManager();
+
 		try {
-			pm.getPackageInfo("de.robv.android.xposed.installer", PackageManager.GET_ACTIVITIES);
-			baseDir = "/data/user_de/0/de.robv.android.xposed.installer/";
+			pm.getPackageInfo("org.meowcat.edxposed.manager", PackageManager.GET_ACTIVITIES);
+			baseDir = "/data/user_de/0/org.meowcat.edxposed.manager/";
+			file = new File(baseDir + "log/all.log");
+			if (file.exists()) return baseDir + "log/all.log";
+			file = new File(baseDir + "log/error.log");
+			if (file.exists()) return baseDir + "log/error.log";
 		} catch (PackageManager.NameNotFoundException e) {}
 
 		try {
 			pm.getPackageInfo("com.solohsu.android.edxp.manager", PackageManager.GET_ACTIVITIES);
 			baseDir = "/data/user_de/0/com.solohsu.android.edxp.manager/";
+			file = new File(baseDir + "log/all.log");
+			if (file.exists()) return baseDir + "log/all.log";
+			file = new File(baseDir + "log/error.log");
+			if (file.exists()) return baseDir + "log/error.log";
 		} catch (PackageManager.NameNotFoundException e) {}
+
+		try {
+			pm.getPackageInfo("de.robv.android.xposed.installer", PackageManager.GET_ACTIVITIES);
+			baseDir = "/data/user_de/0/de.robv.android.xposed.installer/";
+			file = new File(baseDir + "log/error.log");
+			if (file.exists()) return baseDir + "log/error.log";
+		} catch (PackageManager.NameNotFoundException e) {}
+
 		if (baseDir == null)
 			return null;
 		else

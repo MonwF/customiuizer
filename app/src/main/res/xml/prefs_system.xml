@@ -13,6 +13,12 @@
 		android:entryValues="@array/iconlabletoasts_val"
 		android:defaultValue="1"/>
 
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_downgrade"
+		android:title="@string/system_downgrade_title"
+		android:summary="@string/system_downgrade_summ"
+		android:defaultValue="false" />
+
 	<PreferenceCategory
 		android:title="@string/system_mods_screen">
 
@@ -91,10 +97,37 @@
 		android:title="@string/system_mods_statusbar">
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_expandnotif"
-			android:summary="@string/system_expandnotif_summ"
-			android:title="@string/system_expandnotif_title"
+			android:key="pref_key_system_clockseconds"
+			android:summary="@string/system_clockseconds_summ"
+			android:title="@string/system_clockseconds_title"
 			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_colorizenotiftitle"
+			android:summary="@string/system_colorizenotiftitle_summ"
+			android:title="@string/system_colorizenotiftitle_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_expandnotifs"
+			android:summary="@string/system_expandnotifs_summ"
+			android:title="@string/system_expandnotifs_title"
+			android:entries="@array/expandnotifs"
+			android:entryValues="@array/expandnotifs_val"
+			android:defaultValue="1" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_expandnotifs_apps_title"
+			android:key="pref_key_system_expandnotifs_apps"
+			miuizer:countAsSummary="true" />
+
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_mobiletypeicon"
+			android:summary="@string/system_mobiletypeicon_summ"
+			android:title="@string/system_mobiletypeicon_title"
+			android:entries="@array/mobiletypeicon"
+			android:entryValues="@array/mobiletypeicon_val"
+			android:defaultValue="1" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_popupnotif"
@@ -112,19 +145,8 @@
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:title="@string/system_popupnotif_apps_title"
 			android:key="pref_key_system_popupnotif_apps"
-			android:dependency="pref_key_system_popupnotif" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_clockseconds"
-			android:summary="@string/system_clockseconds_summ"
-			android:title="@string/system_clockseconds_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_hidemobiletype"
-			android:summary="@string/system_hidemobiletype_summ"
-			android:title="@string/system_hidemobiletype_title"
-			android:defaultValue="false" />
+			android:dependency="pref_key_system_popupnotif"
+			miuizer:countAsSummary="true" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_fixmeter"

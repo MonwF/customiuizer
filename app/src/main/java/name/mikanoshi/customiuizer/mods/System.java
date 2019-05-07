@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.content.res.XModuleResources;
-import android.content.res.XResForwarder;
 import android.content.res.XResources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -20,6 +19,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadata;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.TrafficStats;
 import android.net.Uri;
@@ -43,6 +44,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import java.io.File;
@@ -450,79 +452,92 @@ public class System {
 		return tv;
 	}
 
+	private static void modifyIconLabelToast(XC_MethodHook.MethodHookParam param) {
+		try {
+			Context ctx = (Context)param.args[0];
+			float density = ctx.getResources().getDisplayMetrics().density;
+
+			int option = Integer.parseInt(Helpers.getSharedStringPref(ctx, "pref_key_system_iconlabletoasts", "1"));
+			if (option == 1) return;
+
+			Object res = param.getResult();
+			LinearLayout toast = (LinearLayout)XposedHelpers.getObjectField(res, "mNextView");
+			if (toast == null) return;
+			toast.setGravity(Gravity.START);
+			toast.setPadding(toast.getPaddingLeft() - Math.round(5 * density), toast.getPaddingTop(), toast.getPaddingRight(), toast.getPaddingBottom());
+
+			TextView toastText = toast.findViewById(android.R.id.message);
+			if (toastText == null) return;
+			LinearLayout.LayoutParams lpt = (LinearLayout.LayoutParams)toastText.getLayoutParams();
+			lpt.gravity = Gravity.START;
+
+			switch (option) {
+				case 2:
+					LinearLayout textOnly = new LinearLayout(ctx);
+					textOnly.setOrientation(LinearLayout.VERTICAL);
+					textOnly.setGravity(Gravity.START);
+					ImageView iv = createIcon(ctx, 21);
+
+					toast.removeAllViews();
+					textOnly.addView(toastText);
+					toast.setOrientation(LinearLayout.HORIZONTAL);
+					toast.addView(iv);
+					toast.addView(textOnly);
+					break;
+				case 3:
+					TextView tv = createLabel(ctx, toastText);
+					LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)tv.getLayoutParams();
+					lp.leftMargin = Math.round(5 * density);
+					lp.rightMargin = Math.round(5 * density);
+					tv.setLayoutParams(lp);
+					lp = (LinearLayout.LayoutParams)toastText.getLayoutParams();
+					lp.leftMargin = Math.round(5 * density);
+					lp.rightMargin = Math.round(5 * density);
+					toastText.setLayoutParams(lp);
+					toast.setOrientation(LinearLayout.VERTICAL);
+					toast.addView(tv, 0);
+					break;
+				case 4:
+					LinearLayout textLabel = new LinearLayout(ctx);
+					textLabel.setOrientation(LinearLayout.VERTICAL);
+					textLabel.setGravity(Gravity.START);
+					ImageView iv2 = createIcon(ctx, 42);
+					TextView tv2 = createLabel(ctx, toastText);
+
+					toast.removeAllViews();
+					textLabel.addView(tv2);
+					textLabel.addView(toastText);
+					toast.setOrientation(LinearLayout.HORIZONTAL);
+					toast.addView(iv2);
+					toast.addView(textLabel);
+					break;
+			}
+			XposedHelpers.setObjectField(res, "mNextView", toast);
+			param.setResult(res);
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
 	public static void IconLabelToastsHook() {
 		try {
 			XposedHelpers.findAndHookMethod("android.widget.Toast", null, "makeText", Context.class, Looper.class, CharSequence.class, int.class, new XC_MethodHook() {
 				@Override
 				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-					try {
-						Context ctx = (Context)param.args[0];
-						float density = ctx.getResources().getDisplayMetrics().density;
-
-						int option = Integer.parseInt(Helpers.getSharedStringPref(ctx, "pref_key_system_iconlabletoasts", "1"));
-						if (option == 1) return;
-
-						Object res = param.getResult();
-						LinearLayout toast = (LinearLayout)XposedHelpers.getObjectField(res, "mNextView");
-						if (toast == null) return;
-						toast.setGravity(Gravity.START);
-						toast.setPadding(toast.getPaddingLeft() - Math.round(5 * density), toast.getPaddingTop(), toast.getPaddingRight(), toast.getPaddingBottom());
-
-						TextView toastText = toast.findViewById(android.R.id.message);
-						if (toastText == null) return;
-						LinearLayout.LayoutParams lpt = (LinearLayout.LayoutParams)toastText.getLayoutParams();
-						lpt.gravity = Gravity.START;
-
-						switch (option) {
-							case 2:
-								LinearLayout textOnly = new LinearLayout(ctx);
-								textOnly.setOrientation(LinearLayout.VERTICAL);
-								textOnly.setGravity(Gravity.START);
-								ImageView iv = createIcon(ctx, 21);
-
-								toast.removeAllViews();
-								textOnly.addView(toastText);
-								toast.setOrientation(LinearLayout.HORIZONTAL);
-								toast.addView(iv);
-								toast.addView(textOnly);
-								break;
-							case 3:
-								TextView tv = createLabel(ctx, toastText);
-								LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)tv.getLayoutParams();
-								lp.leftMargin = Math.round(5 * density);
-								lp.rightMargin = Math.round(5 * density);
-								tv.setLayoutParams(lp);
-								lp = (LinearLayout.LayoutParams)toastText.getLayoutParams();
-								lp.leftMargin = Math.round(5 * density);
-								lp.rightMargin = Math.round(5 * density);
-								toastText.setLayoutParams(lp);
-								toast.setOrientation(LinearLayout.VERTICAL);
-								toast.addView(tv, 0);
-								break;
-							case 4:
-								LinearLayout textLabel = new LinearLayout(ctx);
-								textLabel.setOrientation(LinearLayout.VERTICAL);
-								textLabel.setGravity(Gravity.START);
-								ImageView iv2 = createIcon(ctx, 42);
-								TextView tv2 = createLabel(ctx, toastText);
-
-								toast.removeAllViews();
-								textLabel.addView(tv2);
-								textLabel.addView(toastText);
-								toast.setOrientation(LinearLayout.HORIZONTAL);
-								toast.addView(iv2);
-								toast.addView(textLabel);
-								break;
-						}
-						XposedHelpers.setObjectField(res, "mNextView", toast);
-						param.setResult(res);
-					} catch (Throwable t) {
-						XposedBridge.log(t);
-					}
+					modifyIconLabelToast(param);
 				}
 			});
-		} catch (Throwable t) {
-			XposedBridge.log(t);
+		} catch (Throwable t1) {
+			try {
+				XposedHelpers.findAndHookMethod("android.widget.Toast", null, "makeText", Context.class, CharSequence.class, int.class, new XC_MethodHook() {
+					@Override
+					protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+						modifyIconLabelToast(param);
+					}
+				});
+			} catch (Throwable t2) {
+				XposedBridge.log("[CustoMIUIzer][IconLableToasts] Failed to hook Toast.makeText()");
+			}
 		}
 	}
 
@@ -689,9 +704,17 @@ public class System {
 				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 					ViewGroup mStackScroller = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mStackScroller");
 					for (int i = mStackScroller.getChildCount() - 1; i >= 0; i--) {
-						View notification = mStackScroller.getChildAt(i);
-						if (notification != null && notification.getClass().getSimpleName().equalsIgnoreCase("ExpandableNotificationRow"))
-						XposedHelpers.callMethod(notification, "setSystemExpanded", true);
+						View enotificationrow = mStackScroller.getChildAt(i);
+						if (enotificationrow != null && enotificationrow.getClass().getSimpleName().equalsIgnoreCase("ExpandableNotificationRow")) try {
+							Object notification = XposedHelpers.getObjectField(XposedHelpers.callMethod(enotificationrow, "getEntry"), "notification");
+							String pkgName = (String)XposedHelpers.callMethod(notification, "getPackageName");
+							int opt = Integer.parseInt(MainModule.mPrefs.getString("system_expandnotifs", "1"));
+							boolean isSelected = MainModule.mPrefs.getStringSet("system_expandnotifs_apps").contains(pkgName);
+							if (opt == 2 && !isSelected || opt == 3 && isSelected)
+							XposedHelpers.callMethod(enotificationrow, "setSystemExpanded", true);
+						} catch (Throwable t) {
+							XposedBridge.log(t);
+						}
 					}
 				}
 			});
@@ -852,11 +875,22 @@ public class System {
 			XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.SignalClusterView$PhoneState", lpparam.classLoader, "updateMobileType", String.class, new XC_MethodHook() {
 				@Override
 				protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+					int opt = Integer.parseInt(MainModule.mPrefs.getString("system_mobiletypeicon", "1"));
 					TextView mMobileType = (TextView)XposedHelpers.getObjectField(param.thisObject, "mMobileType");
 					TextView mSignalDualNotchMobileType = (TextView)XposedHelpers.getObjectField(XposedHelpers.getSurroundingThis(param.thisObject), "mSignalDualNotchMobileType");
 					try {
-						View parent = (View)((View)XposedHelpers.getSurroundingThis(param.thisObject)).getParent().getParent().getParent().getParent();
-						if (parent != null && parent.getId() != parent.getResources().getIdentifier("header_content", "id", lpparam.packageName)) {
+						boolean isMobileConnected = false;
+						if (opt == 2) {
+							ConnectivityManager mgr = (ConnectivityManager)mMobileType.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+							Network net = mgr.getActiveNetwork();
+							if (net != null) {
+								NetworkCapabilities netCaps = mgr.getNetworkCapabilities(net);
+								isMobileConnected = netCaps.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR);
+							}
+						}
+						// View parent = (View)((View)XposedHelpers.getSurroundingThis(param.thisObject)).getParent().getParent().getParent().getParent();
+						// parent != null && parent.getId() != parent.getResources().getIdentifier("header_content", "id", lpparam.packageName)
+						if (opt == 3 || (opt == 2 && !isMobileConnected)) {
 							mMobileType.setText("");
 							mSignalDualNotchMobileType.setText("");
 						}
@@ -1259,26 +1293,54 @@ public class System {
 	}
 
 	public static void RotationAnimationHook() {
-		int opt = Integer.parseInt(MainModule.mPrefs.getString("system_rotateanim", "1"));
-		int enter = 0;
-		int exit = 0;
-		if (opt == 2) {
-			enter = R.anim.no_enter;
-			exit = R.anim.no_exit;
-		} else if (opt == 3) {
-			enter = R.anim.xfade_enter;
-			exit = R.anim.xfade_exit;
-		}
+		try {
+			int opt = Integer.parseInt(MainModule.mPrefs.getString("system_rotateanim", "1"));
+			int enter = 0;
+			int exit = 0;
+			if (opt == 2) {
+				enter = R.anim.no_enter;
+				exit = R.anim.no_exit;
+			} else if (opt == 3) {
+				enter = R.anim.xfade_enter;
+				exit = R.anim.xfade_exit;
+			}
 
-		XModuleResources modRes = XModuleResources.createInstance(MainModule.MODULE_PATH, null);
-		XResources.setSystemWideReplacement("android", "anim", "screen_rotate_0_enter", new XResForwarder(modRes, enter));
-		XResources.setSystemWideReplacement("android", "anim", "screen_rotate_0_exit", new XResForwarder(modRes, exit));
-		XResources.setSystemWideReplacement("android", "anim", "screen_rotate_180_enter", new XResForwarder(modRes, enter));
-		XResources.setSystemWideReplacement("android", "anim", "screen_rotate_180_exit", new XResForwarder(modRes, exit));
-		XResources.setSystemWideReplacement("android", "anim", "screen_rotate_minus_90_enter", new XResForwarder(modRes, enter));
-		XResources.setSystemWideReplacement("android", "anim", "screen_rotate_minus_90_exit", new XResForwarder(modRes, exit));
-		XResources.setSystemWideReplacement("android", "anim", "screen_rotate_plus_90_enter", new XResForwarder(modRes, enter));
-		XResources.setSystemWideReplacement("android", "anim", "screen_rotate_plus_90_exit", new XResForwarder(modRes, exit));
+			XModuleResources modRes = XModuleResources.createInstance(MainModule.MODULE_PATH, null);
+			XResources.setSystemWideReplacement("android", "anim", "screen_rotate_0_enter", modRes.fwd(enter));
+			XResources.setSystemWideReplacement("android", "anim", "screen_rotate_0_exit", modRes.fwd(exit));
+			XResources.setSystemWideReplacement("android", "anim", "screen_rotate_180_enter", modRes.fwd(enter));
+			XResources.setSystemWideReplacement("android", "anim", "screen_rotate_180_exit", modRes.fwd(enter));
+			XResources.setSystemWideReplacement("android", "anim", "screen_rotate_minus_90_enter", modRes.fwd(enter));
+			XResources.setSystemWideReplacement("android", "anim", "screen_rotate_minus_90_exit", modRes.fwd(enter));
+			XResources.setSystemWideReplacement("android", "anim", "screen_rotate_plus_90_enter", modRes.fwd(enter));
+			XResources.setSystemWideReplacement("android", "anim", "screen_rotate_plus_90_exit", modRes.fwd(enter));
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void NoVersionCheckHook(LoadPackageParam lpparam) {
+		try {
+			XposedBridge.hookAllMethods(findClass("com.android.server.pm.PackageManagerService", lpparam.classLoader), "checkDowngrade", XC_MethodReplacement.DO_NOTHING);
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void ColorizedNotificationTitlesHook() {
+		XposedBridge.hookAllMethods(findClass("android.app.Notification$Builder", null), "bindHeaderAppName", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				try {
+					RemoteViews rv = (RemoteViews)param.args[0];
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					if (rv != null && mContext != null)
+					rv.setTextColor(mContext.getResources().getIdentifier("app_name_text", "id", "android"), (int)XposedHelpers.callMethod(param.thisObject, "resolveContrastColor"));
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
 	}
 
 }

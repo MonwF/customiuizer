@@ -1,3 +1,14 @@
+1.5.1
+[New][Expand notifications] Black & white list
+[New][Control input cursor] Option to swap cursor moving directions
+[New][Hide mobile network type] Hide completely or only when not connected
+[New] Do not hide status bar clock on home screens with clock widgets
+[New] Allow installing older app version on top of a newer one
+[New] Action to open system power menu
+[New] Brand new fast access icon :)
+[Fixed][Android 7] Enhanced toasts
+[Fixed] EdXposed Manager detection
+
 1.5.0
 [New] Darken MIUI launcher folder background
 [New] Unlock MIUI launcher grids from 3x4 to 6x7

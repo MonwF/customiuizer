@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
@@ -102,14 +103,23 @@ public class Launcher {
 		});
 
 		try {
-			XposedHelpers.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "allowedSlidingUpToStartGolbalSearch", Context.class, new XC_MethodHook() {
+			XposedHelpers.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "isGlobalSearchEnable", Context.class, new XC_MethodHook() {
 				@Override
 				protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
 					if (Helpers.getSharedIntPref((Context)param.args[0], "pref_key_launcher_swipeup_action", 1) > 1) param.setResult(false);
 				}
 			});
-		} catch (Throwable t) {
-			XposedBridge.log(t);
+		} catch (Throwable t1) {
+			try {
+				XposedHelpers.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "allowedSlidingUpToStartGolbalSearch", Context.class, new XC_MethodHook() {
+					@Override
+					protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+						if (Helpers.getSharedIntPref((Context)param.args[0], "pref_key_launcher_swipeup_action", 1) > 1) param.setResult(false);
+					}
+				});
+			} catch (Throwable t2) {
+				XposedBridge.log("[CustoMIUIzer][Launcher actions] Cannot disable swipe up search");
+			}
 		}
 	}
 
@@ -271,6 +281,14 @@ public class Launcher {
 				}
 			}
 		});
+	}
+
+	public static void NoClockHideHook(final XC_LoadPackage.LoadPackageParam lpparam) {
+		try {
+			XposedHelpers.findAndHookMethod("com.miui.home.launcher.Workspace", lpparam.classLoader, "isScreenHasClockGadget", long.class, XC_MethodReplacement.returnConstant(false));
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
 	}
 
 }

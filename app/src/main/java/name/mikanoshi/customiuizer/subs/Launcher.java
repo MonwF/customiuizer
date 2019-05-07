@@ -1,18 +1,9 @@
 package name.mikanoshi.customiuizer.subs;
 
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
 
-import miui.app.ActionBar;
-import miui.app.AlertDialog;
-import name.mikanoshi.customiuizer.AboutFragment;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SubFragment;
 import name.mikanoshi.customiuizer.utils.Helpers;

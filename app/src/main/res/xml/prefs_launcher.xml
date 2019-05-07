@@ -6,6 +6,12 @@
 	android:key="pref_key_launcher">
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_launcher_noclockhide"
+		android:title="@string/launcher_noclockhide_title"
+		android:summary="@string/launcher_noclockhide_summ"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_launcher_unlockgrids"
 		android:title="@string/launcher_unlockgrids_title"
 		android:summary="@string/launcher_unlockgrids_summ"

@@ -68,6 +68,13 @@
 			android:title="@string/controls_volumecursor_title"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_controls_volumecursor_reverse"
+			android:summary="@string/controls_volumecursor_reverse_summ"
+			android:title="@string/controls_volumecursor_reverse_title"
+			android:defaultValue="false"
+			android:dependency="pref_key_controls_volumecursor" />
+
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_controls_volumemedia_up"
 			android:summary="@string/controls_volumemedia_up_summ"

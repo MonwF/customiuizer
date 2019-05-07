@@ -2,6 +2,7 @@
 <resources>
 	<declare-styleable name="ListPreferenceEx">
 		<attr name="valueAsSummary" format="boolean" />
+		<attr name="countAsSummary" format="boolean" />
 	</declare-styleable>
 
 	<declare-styleable name="SpinnerEx">

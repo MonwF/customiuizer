@@ -31,6 +31,7 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
+import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
@@ -284,7 +285,8 @@ public class Controls {
 					InputMethodService ims = (InputMethodService)param.thisObject;
 					int code = (int)param.args[0];
 					if ((code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN) && ims.isInputViewShown()) {
-						ims.sendDownUpKeyEvents(code == KeyEvent.KEYCODE_VOLUME_UP ? KeyEvent.KEYCODE_DPAD_LEFT : KeyEvent.KEYCODE_DPAD_RIGHT);
+						boolean swapDir = MainModule.mPrefs.getBoolean("controls_volumecursor_reverse");
+						ims.sendDownUpKeyEvents(code == (swapDir ? KeyEvent.KEYCODE_VOLUME_DOWN : KeyEvent.KEYCODE_VOLUME_UP) ? KeyEvent.KEYCODE_DPAD_LEFT : KeyEvent.KEYCODE_DPAD_RIGHT);
 						param.setResult(true);
 					}
 				}
@@ -296,7 +298,7 @@ public class Controls {
 					InputMethodService ims = (InputMethodService)param.thisObject;
 					int code = (int)param.args[0];
 					if ((code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN) && ims.isInputViewShown())
-						param.setResult(true);
+					param.setResult(true);
 				}
 			});
 		} catch (Throwable t) {

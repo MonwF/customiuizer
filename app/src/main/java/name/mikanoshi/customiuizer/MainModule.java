@@ -1,7 +1,5 @@
 package name.mikanoshi.customiuizer;
 
-import android.content.res.XModuleResources;
-
 import java.io.File;
 
 import de.robv.android.xposed.IXposedHookInitPackageResources;
@@ -46,6 +44,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getBoolean("controls_volumecursor")) Controls.VolumeCursorHook();
 		if (mPrefs.getBoolean("system_popupnotif_fs")) System.PopupNotificationsFSHook();
 		if (Integer.parseInt(mPrefs.getString("system_rotateanim", "1")) > 1) System.RotationAnimationHook();
+		if (mPrefs.getBoolean("system_colorizenotiftitle")) System.ColorizedNotificationTitlesHook();
 
 		Controls.VolumeMediaPlayerHook();
 		GlobalActions.setupUnhandledCatcher();
@@ -54,6 +53,10 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 	@Override
 	public void handleInitPackageResources(XC_InitPackageResources.InitPackageResourcesParam resparam) throws Throwable {
 		String pkg = resparam.packageName;
+
+		if (pkg.equals("com.android.settings")) {
+			GlobalActions.miuizerSettingsResInit(resparam);
+		}
 
 		if (pkg.equals("com.miui.home")) {
 			if (mPrefs.getBoolean("launcher_unlockgrids")) {
@@ -89,6 +92,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 				mPrefs.getInt("controls_fingerprint2_action", 1) > 1 ||
 				mPrefs.getInt("controls_fingerprintlong_action", 1) > 1) Controls.FingerprintEventsHook(lpparam);
 			if (mPrefs.getInt("system_volumesteps", 10) > 10) System.VolumeStepsHook(lpparam);
+			if (mPrefs.getBoolean("system_downgrade")) System.NoVersionCheckHook(lpparam);
 			//System.AutoBrightnessHook(lpparam);
 		}
 
@@ -103,14 +107,14 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_nopassword")) System.NoPasswordHook(lpparam);
 			if (mPrefs.getBoolean("system_dttosleep")) System.DoubleTapToSleepHook(lpparam);
 			if (mPrefs.getBoolean("system_clockseconds")) System.ClockSecondsHook(lpparam);
-			if (mPrefs.getBoolean("system_expandnotif")) System.ExpandNotificationsHook(lpparam);
+			if (Integer.parseInt(mPrefs.getString("system_expandnotifs", "1")) > 1) System.ExpandNotificationsHook(lpparam);
 			if (mPrefs.getInt("system_recents_blur", 100) < 100) System.RecentsBlurRatioHook(lpparam);
 			if (mPrefs.getInt("system_drawer_blur", 100) < 100) System.DrawerBlurRatioHook(lpparam);
 			if (mPrefs.getInt("controls_navbarleft_action", 1) > 1 ||
 				mPrefs.getInt("controls_navbarleftlong_action", 1) > 1 ||
 				mPrefs.getInt("controls_navbarright_action", 1) > 1 ||
 				mPrefs.getInt("controls_navbarrightlong_action", 1) > 1) Controls.NavBarButtonsHook(lpparam);
-			if (mPrefs.getBoolean("system_hidemobiletype")) System.HideNetworkTypeHook(lpparam);
+			if (Integer.parseInt(mPrefs.getString("system_mobiletypeicon", "1")) > 1) System.HideNetworkTypeHook(lpparam);
 			if (mPrefs.getBoolean("system_fixmeter")) System.TrafficSpeedSpacingHook(lpparam);
 			if (mPrefs.getInt("system_chargeanimtime", 20) < 20) System.ChargeAnimationHook(lpparam);
 			if (mPrefs.getBoolean("system_noscreenlock_act")) System.NoScreenLockHook(lpparam);
@@ -146,6 +150,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 				mPrefs.getInt("launcher_swiperight_action", 1) != 1) Launcher.HotSeatSwipesHook(lpparam);
 			if (mPrefs.getInt("launcher_shake_action", 1) != 1) Launcher.ShakeHook(lpparam);
 			if (Integer.parseInt(mPrefs.getString("launcher_foldershade", "1")) > 1) Launcher.FolderShadeHook(lpparam);
+			if (mPrefs.getBoolean("launcher_noclockhide")) Launcher.NoClockHideHook(lpparam);
 		}
 	}
 

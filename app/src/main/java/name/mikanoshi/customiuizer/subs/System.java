@@ -5,7 +5,6 @@ import android.preference.Preference;
 
 import java.util.Objects;
 
-import name.mikanoshi.customiuizer.MainFragment;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SubFragment;
 import name.mikanoshi.customiuizer.utils.Helpers;
@@ -34,10 +33,27 @@ public class System extends SubFragment {
 			}
 		});
 
+		findPreference("pref_key_system_expandnotifs_apps").setEnabled(!Objects.equals(Helpers.prefs.getString("pref_key_system_expandnotifs", "1"), "1"));
+		findPreference("pref_key_system_expandnotifs").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				findPreference("pref_key_system_expandnotifs_apps").setEnabled(!newValue.equals("1"));
+				return true;
+			}
+		});
+
+		findPreference("pref_key_system_expandnotifs_apps").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				openApps("pref_key_system_expandnotifs_apps");
+				return true;
+			}
+		});
+
 		findPreference("pref_key_system_popupnotif_apps").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				openAutoApps();
+				openApps("pref_key_system_popupnotif_apps");
 				return true;
 			}
 		});
@@ -55,9 +71,9 @@ public class System extends SubFragment {
 //		openSubFragment(new BTList(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.bt_devices, R.layout.prefs_bt_networks);
 //	}
 
-	public void openAutoApps() {
+	public void openApps(String key) {
 		Bundle args = new Bundle();
-		args.putString("key", "pref_key_system_popupnotif_apps");
+		args.putString("key", key);
 		args.putBoolean("multi", true);
 		AppSelector appSelector = new AppSelector();
 		appSelector.setTargetFragment(System.this, 0);
