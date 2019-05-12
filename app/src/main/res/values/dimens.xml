@@ -20,4 +20,6 @@
 	<dimen name="secondary_text_size">13.25sp</dimen>
 	<dimen name="normal_text_size">16sp</dimen>
 
+	<dimen name="notification_action_height">38dip</dimen>
+
 </resources>

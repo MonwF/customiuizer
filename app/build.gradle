@@ -21,8 +21,8 @@ android {
         applicationId "name.mikanoshi.customiuizer"
         minSdkVersion 24
         targetSdkVersion 28
-        versionCode 12
-        versionName "1.5.1"
+        versionCode 13
+        versionName "1.5.2"
         signingConfig signingConfigs.dev
     }
     buildTypes {
@@ -48,4 +48,5 @@ dependencies {
     implementation "ch.acra:acra-core:$acraVersion"
     compileOnly 'de.robv.android.xposed:api:82'
     compileOnly files('lib/miui.jar')
+    compileOnly files('lib/miuisystem.jar')
 }

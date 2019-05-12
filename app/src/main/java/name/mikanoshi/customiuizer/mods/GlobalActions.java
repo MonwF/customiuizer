@@ -4,18 +4,18 @@ import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RecentTaskInfo;
 import android.app.Application;
-import android.app.Notification;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ProviderInfo;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.content.res.XModuleResources;
-import android.graphics.Color;
 import android.media.AudioManager;
 import android.net.wifi.WifiManager;
 import android.nfc.NfcAdapter;
@@ -28,7 +28,6 @@ import android.os.Vibrator;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
-import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import java.lang.reflect.Method;
@@ -681,7 +680,11 @@ public class GlobalActions {
 					mGlobalContext.registerReceiver(mGlobalReceiver, intentfilter);
 				}
 			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
 
+		try {
 			XposedBridge.hookAllMethods(XposedHelpers.findClass("com.android.server.policy.PhoneWindowManager", lpparam.classLoader), "init", new XC_MethodHook() {
 				@Override
 				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
@@ -713,6 +716,18 @@ public class GlobalActions {
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
+
+//		try {
+//			XposedBridge.hookAllMethods(XposedHelpers.findClass("com.android.server.am.ActivityStackSupervisor", lpparam.classLoader), "getComponentRestrictionForCallingPackage", new XC_MethodHook() {
+//				@Override
+//				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+//					ActivityInfo ai = (ActivityInfo)param.args[0];
+//					if (ai != null && ai.name.equals("com.miui.privacyapps.ui.PrivacyAppsOperationTutorialActivity")) param.setResult(0);
+//				}
+//			});
+//		} catch (Throwable t) {
+//			XposedBridge.log(t);
+//		}
 	}
 
 	public static void setupStatusBar(LoadPackageParam lpparam) {
@@ -1066,18 +1081,12 @@ public class GlobalActions {
 		return isAllowed;
 	}
 
-	@SuppressLint("MissingPermission")
 	public static void sendDownUpKeyEvent(Context mContext, int keyCode, boolean vibrate) {
 		AudioManager am = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
 		am.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, keyCode));
 		am.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, keyCode));
 
-		if (vibrate && Helpers.getSharedBoolPref(mContext, "pref_key_controls_volumemedia_vibrate", true)) {
-			Vibrator v = (Vibrator)mContext.getSystemService(Context.VIBRATOR_SERVICE);
-			if (Build.VERSION.SDK_INT >= 26)
-				v.vibrate(VibrationEffect.createOneShot(30, VibrationEffect.DEFAULT_AMPLITUDE));
-			else
-				v.vibrate(30);
-		}
+		if (vibrate && Helpers.getSharedBoolPref(mContext, "pref_key_controls_volumemedia_vibrate", true))
+		Helpers.performVibration(mContext);
 	}
 }

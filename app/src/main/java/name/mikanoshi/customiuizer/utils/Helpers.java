@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import android.Manifest;
@@ -29,15 +30,21 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.PowerManager.WakeLock;
-import android.util.Log;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
+import android.provider.Settings;
 import android.util.LruCache;
+import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.ViewGroup;
 
 import de.robv.android.xposed.XposedBridge;
+import miui.util.HapticFeedbackUtil;
+import name.mikanoshi.customiuizer.GateWayLauncher;
 import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SharedPrefsProvider;
@@ -72,6 +79,10 @@ public class Helpers {
 
 	public enum ActionBarType {
 		HomeUp, Edit
+	}
+
+	public static boolean isLauncherIconVisible(Context context) {
+		return context.getPackageManager().getComponentEnabledSetting(new ComponentName(context, GateWayLauncher.class)) != PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
 	}
 
 	public static boolean isXposedInstallerInstalled(Context mContext) {
@@ -305,6 +316,32 @@ public class Helpers {
 		}
 		return null;
 	}
+
+	public static void performVibration(Context mContext) {
+		performVibration(mContext, false);
+	}
+
+	public static void performVibration(Context mContext, boolean ignoreOff) {
+		if (mContext == null) return;
+		HapticFeedbackUtil mHapticFeedbackUtil = new HapticFeedbackUtil(mContext, false);
+		mHapticFeedbackUtil.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, ignoreOff);
+
+//		int state = 1;
+//		int level = 1;
+//		try {
+//			state = Settings.System.getInt(mContext.getContentResolver(), "haptic_feedback_enabled");
+//			level = Settings.System.getInt(mContext.getContentResolver(), "haptic_feedback_level");
+//		} catch (Throwable t) {
+//			XposedBridge.log(t);
+//		}
+//		if (state == 0) return;
+//
+//		Vibrator v = (Vibrator)mContext.getSystemService(Context.VIBRATOR_SERVICE);
+//		if (Build.VERSION.SDK_INT >= 26)
+//			v.vibrate(VibrationEffect.createOneShot(30, VibrationEffect.DEFAULT_AMPLITUDE));
+//		else
+//			v.vibrate(30);
+	}
 	
 //	public static void removePref(PreferenceFragmentBase frag, String prefName, String catName) {
 //		if (frag.findPreference(prefName) != null) {
@@ -324,15 +361,7 @@ public class Helpers {
 	@SuppressLint({"SetWorldReadable", "SetWorldWritable"})
 	public static void fixPermissionsAsync(Context context) {
 		AsyncTask.execute(() -> {
-			Context mContext;
-			try {
-				mContext = Helpers.getProtectedContext(context);
-			} catch (Throwable t) {
-				Log.e("prefs", "Failed to fix permissions on protected storage!");
-				mContext = context;
-			}
-
-			File pkgFolder = mContext.getDataDir();
+			File pkgFolder = context.getDataDir();
 			if (pkgFolder.exists()) {
 				pkgFolder.setExecutable(true, false);
 				pkgFolder.setReadable(true, false);
@@ -379,13 +408,23 @@ public class Helpers {
 		}
 	}
 
+	public static synchronized Context getLocaleContext(Context context) throws Throwable {
+		if (prefs != null && prefs.getBoolean("pref_key_miuizer_forcelocale", false)) {
+			Configuration config = context.getResources().getConfiguration();
+			config.setLocale(Locale.ENGLISH);
+			return context.createConfigurationContext(config);
+		} else {
+			return context;
+		}
+	}
+
 	public static synchronized Context getModuleContext(Context context) throws Throwable {
 		return context.createPackageContext(modulePkg, Context.CONTEXT_IGNORE_SECURITY).createDeviceProtectedStorageContext();
 	}
 
 	public static synchronized Context getProtectedContext(Context context, Configuration config) throws Throwable {
 		Context mContext = context.isDeviceProtectedStorage() ? context : context.createDeviceProtectedStorageContext();
-		return (config == null ? mContext : mContext.createConfigurationContext(config));
+		return getLocaleContext(config == null ? mContext : mContext.createConfigurationContext(config));
 	}
 
 	public static synchronized Context getProtectedContext(Context context) throws Throwable {

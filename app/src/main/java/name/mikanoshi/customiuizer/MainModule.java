@@ -45,6 +45,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getBoolean("system_popupnotif_fs")) System.PopupNotificationsFSHook();
 		if (Integer.parseInt(mPrefs.getString("system_rotateanim", "1")) > 1) System.RotationAnimationHook();
 		if (mPrefs.getBoolean("system_colorizenotiftitle")) System.ColorizedNotificationTitlesHook();
+		if (mPrefs.getBoolean("system_compactnotif")) System.CompactNotificationsRes();
 
 		Controls.VolumeMediaPlayerHook();
 		GlobalActions.setupUnhandledCatcher();
@@ -93,6 +94,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 				mPrefs.getInt("controls_fingerprintlong_action", 1) > 1) Controls.FingerprintEventsHook(lpparam);
 			if (mPrefs.getInt("system_volumesteps", 10) > 10) System.VolumeStepsHook(lpparam);
 			if (mPrefs.getBoolean("system_downgrade")) System.NoVersionCheckHook(lpparam);
+			if (mPrefs.getBoolean("system_hidefromrecents")) System.HideFromRecentsHook(lpparam);
 			//System.AutoBrightnessHook(lpparam);
 		}
 
@@ -124,6 +126,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_popupnotif")) System.PopupNotificationsHook(lpparam);
 			if (mPrefs.getBoolean("system_betterpopups_nohide")) System.BetterPopupsNoHideHook(lpparam);
 			if (mPrefs.getBoolean("system_betterpopups_swipedown")) System.BetterPopupsSwipeDownHook(lpparam);
+			if (mPrefs.getBoolean("system_compactnotif")) System.CompactNotificationsHook(lpparam);
+			if (mPrefs.getBoolean("system_qshaptic")) System.QSHapticHook(lpparam);
 		}
 
 //		if (pkg.equals("com.android.incallui")) {

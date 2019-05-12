@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import miui.view.SearchActionMode;
 import name.mikanoshi.customiuizer.utils.AppDataAdapter;
+import name.mikanoshi.customiuizer.utils.PrivacyAppAdapter;
 import name.mikanoshi.customiuizer.utils.ResolveInfoAdapter;
 
 public class SubFragmentWithSearch extends SubFragment {
@@ -125,6 +126,8 @@ public class SubFragmentWithSearch extends SubFragment {
 		if (adapter == null) return;
 		if (adapter instanceof AppDataAdapter)
 			((AppDataAdapter)listView.getAdapter()).getFilter().filter(filter);
+		else if (adapter instanceof PrivacyAppAdapter)
+			((PrivacyAppAdapter)listView.getAdapter()).getFilter().filter(filter);
 		else if (adapter instanceof ResolveInfoAdapter)
 			((ResolveInfoAdapter)listView.getAdapter()).getFilter().filter(filter);
 	}

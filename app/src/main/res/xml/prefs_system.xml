@@ -5,6 +5,12 @@
 	android:layout_height="match_parent"
 	android:key="pref_key_system">
 
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_downgrade"
+		android:title="@string/system_downgrade_title"
+		android:summary="@string/system_downgrade_summ"
+		android:defaultValue="false" />
+
 	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_iconlabletoasts"
 		android:summary="@string/system_iconlabletoasts_summ"
@@ -14,10 +20,16 @@
 		android:defaultValue="1"/>
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_downgrade"
-		android:title="@string/system_downgrade_title"
-		android:summary="@string/system_downgrade_summ"
+		android:key="pref_key_system_hidefromrecents"
+		android:title="@string/system_hidefromrecents_title"
+		android:summary="@string/system_hidefromrecents_summ"
 		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/system_popupnotif_apps_title"
+		android:key="pref_key_system_hidefromrecents_apps"
+		android:dependency="pref_key_system_hidefromrecents"
+		miuizer:countAsSummary="true" />
 
 	<PreferenceCategory
 		android:title="@string/system_mods_screen">
@@ -97,9 +109,21 @@
 		android:title="@string/system_mods_statusbar">
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_qshaptic"
+			android:summary="@string/system_qshaptic_summ"
+			android:title="@string/system_qshaptic_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_clockseconds"
 			android:summary="@string/system_clockseconds_summ"
 			android:title="@string/system_clockseconds_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_compactnotif"
+			android:summary="@string/system_compactnotif_summ"
+			android:title="@string/system_compactnotif_title"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx

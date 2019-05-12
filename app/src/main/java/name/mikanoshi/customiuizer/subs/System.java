@@ -57,6 +57,14 @@ public class System extends SubFragment {
 				return true;
 			}
 		});
+
+		findPreference("pref_key_system_hidefromrecents_apps").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				openApps("pref_key_system_hidefromrecents_apps");
+				return true;
+			}
+		});
 	}
 
 	public void openWifiNetworks() {

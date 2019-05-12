@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CustoMIUIzer</string>
+    <string name="app_name" translatable="false">CustoMIUIzer</string>
 	<string name="app_about">About</string>
 	<string name="about_version">Version %1$s</string>
 	<string name="about_dev">by Mikanoshi</string>
@@ -12,6 +12,8 @@
 	<string name="system_mods_screen">Screen</string>
 	<string name="system_mods_audio">Audio</string>
 	<string name="system_mods_screenanim">Screen animations *</string>
+	<string name="system_qshaptic_title">Quick settings haptic feedback</string>
+	<string name="system_qshaptic_summ">Vibrate on Quick settings tile tap</string>
 	<string name="system_clockseconds_title">Show seconds</string>
 	<string name="system_clockseconds_summ">Display seconds in the status bar clock</string>
 	<string name="system_mobiletypeicon_title">Hide mobile network type</string>
@@ -28,6 +30,8 @@
 	<string name="system_detailednetspeed_lowlevel_summ">Speed values below this level will be considered low and will have a different indication icon</string>
 	<string name="system_fixmeter_title">Network speed spacing</string>
 	<string name="system_fixmeter_summ">Increase right margin for network speed indicator</string>
+	<string name="system_compactnotif_title">Compact notifications</string>
+	<string name="system_compactnotif_summ">Reduce notifications\' vertical paddings</string>
 	<string name="system_colorizenotiftitle_title">Colorize notification title</string>
 	<string name="system_colorizenotiftitle_summ">Apply icon\'s color to title text (Android notification style only)</string>
 	<string name="system_expandnotifs_title">Expand notifications</string>
@@ -82,6 +86,8 @@
 	<string name="system_iconlabletoasts_summ">Add application\'s icon and label to its toasts</string>
 	<string name="system_downgrade_title">Allow downgrade</string>
 	<string name="system_downgrade_summ">Make installing older app version on top of a newer one possible</string>
+	<string name="system_hidefromrecents_title">Hide from recents</string>
+	<string name="system_hidefromrecents_summ">Hide selected apps from recent tasks list</string>
 	<string name="system_rotateanim_title">Rotation animation</string>
 	<string name="system_dttosleep_title">Double tap to sleep</string>
 	<string name="system_dttosleep_summ">Turn screen off by double tapping on any empty space on lockscreen</string>
@@ -105,6 +111,12 @@
 	<string name="launcher_folder_cols_title">Number of columns in folders</string>
 	<string name="launcher_foldershade_title">Folder background</string>
 	<string name="launcher_foldershade_summ">Darken folder background</string>
+	<string name="launcher_privacyapps">Hidden apps</string>
+	<string name="launcher_privacyapps_fail">Required permissions are not granted</string>
+	<string name="launcher_privacyapps_gest_title">Hidden folder</string>
+	<string name="launcher_privacyapps_gest_summ">Spread two fingers on MIUI launcher to open hidden apps folder. No reboot is required.</string>
+	<string name="launcher_privacyapps_list_title">List of apps to hide</string>
+	<string name="launcher_privacyapps_list_summ">Enhanced version of Hidden apps option that allows to hide any installed app. No reboot is required.</string>
 	<string name="launcher_swipedownaction_title">Swipe down action (1 finger)</string>
 	<string name="launcher_swipedownaction_summ">Action for swipe down gesture with 1 finger on any home screen</string>
 	<string name="launcher_swipedownaction2_title">Swipe down action (2 fingers)</string>
@@ -249,8 +261,12 @@
 	<string name="toggle_mobiledata_off">Mobile data disabled</string>
 
 	<string name="miuizer">CustoMIUIzer settings</string>
-	<string name="miuizer_show_icon_title">Fast access icon</string>
-	<string name="miuizer_show_icon_summ">Show icon in Settings</string>
+	<string name="miuizer_show_launchericon_title">Launcher icon</string>
+	<string name="miuizer_show_launchericon_summ">Show icon in launchers</string>
+	<string name="miuizer_show_settingsicon_title">Fast access icon</string>
+	<string name="miuizer_show_settingsicon_summ">Show icon in Settings</string>
+	<string name="miuizer_forcelocale_title">English UI</string>
+	<string name="miuizer_forcelocale_summ">Always display module\'s interface in English</string>
 	<string name="miuizer_theme_title">Theme</string>
 
 	<string name="troubleshoot">Troubleshooting</string>

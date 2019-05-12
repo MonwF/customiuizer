@@ -9,9 +9,13 @@
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
+	<uses-permission android:name="android.permission.CHANGE_COMPONENT_ENABLED_STATE" />
 	<uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" />
 	<uses-permission android:name="android.permission.READ_LOGS" />
 	<uses-permission android:name="android.permission.DUMP" />
+
+	<uses-permission android:name="com.miui.securitycenter.permission.ACCESS_SECURITY_CENTER_PROVIDER" />
 
 	<application
         android:allowBackup="false"
@@ -30,15 +34,27 @@
         	android:label="@string/title_activity_main"
 			android:theme="@style/AppTheme"
 			android:configChanges="keyboardHidden|orientation|screenSize">
-            <intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN"/>
+				<category android:name="de.robv.android.xposed.category.MODULE_SETTINGS"/>
+			</intent-filter>
 		</activity>
 
 		<activity-alias
 			android:label="@string/title_activity_main"
-			android:name=".GateWay"
+			android:name=".GateWayLauncher"
+			android:targetActivity=".MainActivity"
+			android:enabled="true"
+			android:excludeFromRecents="true">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity-alias>
+
+		<activity-alias
+			android:label="@string/title_activity_main"
+			android:name=".GateWaySettings"
 			android:targetActivity=".MainActivity"
 			android:enabled="true"
 			android:excludeFromRecents="true">

@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.DecelerateInterpolator;
 
 import miui.preference.PreferenceFragment;
 import name.mikanoshi.customiuizer.utils.Helpers;
@@ -312,9 +311,9 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 		if (top == null) return null;
 		final View content = top.findViewById(android.R.id.content);
 
+		//ValueAnimator.setFrameDelay(17);
 		ValueAnimator valAnimator = new ValueAnimator();
 		valAnimator.setDuration(animDur);
-		valAnimator.setInterpolator(new DecelerateInterpolator());
 		valAnimator.setFloatValues(0.0f, 1.0f);
 
 		if (nextAnim == R.animator.fragment_open_enter || nextAnim == R.animator.fragment_open_exit)

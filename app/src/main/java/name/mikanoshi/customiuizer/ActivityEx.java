@@ -4,8 +4,13 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.backup.BackupManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
+
+import java.util.Locale;
+
+import name.mikanoshi.customiuizer.utils.Helpers;
 
 @SuppressLint("Registered")
 public class ActivityEx extends Activity {

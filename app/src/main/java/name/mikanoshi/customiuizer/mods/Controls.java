@@ -524,11 +524,7 @@ public class Controls {
 		public void run() {
 			if (isFingerprintPressed && miuiPWMContext != null) {
 				isFingerprintLongPressed = true;
-				Vibrator v = (Vibrator)miuiPWMContext.getSystemService(Context.VIBRATOR_SERVICE);
-				if (Build.VERSION.SDK_INT >= 26)
-					v.vibrate(VibrationEffect.createOneShot(30, VibrationEffect.DEFAULT_AMPLITUDE));
-				else
-					v.vibrate(30);
+				Helpers.performVibration(miuiPWMContext, true);
 			}
 		}
 	};

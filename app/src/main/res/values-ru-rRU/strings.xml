@@ -216,8 +216,12 @@
 	<string name="miuizer_acrasend_summ">Собрать данные об устройтве и переменных окружения, logcat и Xposed лог, и отправить их разработчику.\nДля отправки требуется интернет</string>
 	<string name="miuizer_acrasend_title">Отправить подробный отчёт</string>
 	<string name="miuizer_theme_title">Тема</string>
-	<string name="miuizer_show_icon_summ">Показывать иконку в Настройках</string>
-	<string name="miuizer_show_icon_title">Иконка быстрого доступа</string>
+	<string name="miuizer_show_launchericon_title">Иконка в ланчере</string>
+	<string name="miuizer_show_launchericon_summ">Показывать иконку в ланчерах</string>
+	<string name="miuizer_show_settingsicon_title">Иконка быстрого доступа</string>
+	<string name="miuizer_show_settingsicon_summ">Показывать иконку в Настройках</string>
+	<string name="miuizer_forcelocale_title">Интерфейс на английском</string>
+	<string name="miuizer_forcelocale_summ">Всегда отображать интерфейс модуля на английском языке</string>
 	<string name="open_xposed">Открыть Xposed Installer</string>
 	<string name="search_input_description">Поиск</string>
 	<string name="wifi_networks">Wi-Fi сети</string>
@@ -234,6 +238,12 @@
 	<string name="launcher_folder_cols_title">Число колонок в папках</string>
 	<string name="launcher_foldershade_title">Фон папок</string>
 	<string name="launcher_foldershade_summ">Затемнённый фон папок</string>
+	<string name="launcher_privacyapps">Скрытые приложения</string>
+	<string name="launcher_privacyapps_fail">Не получены необходимые разрешения</string>
+	<string name="launcher_privacyapps_gest_title">Скрытая папка</string>
+	<string name="launcher_privacyapps_gest_summ">Для открытия папки со скрытыми приложениями необходимо развести два пальца на рабочем столе MIUI. Перезагрузка не требуется.</string>
+	<string name="launcher_privacyapps_list_title">Список приложений для скрытия</string>
+	<string name="launcher_privacyapps_list_summ">Улучшенная версия функции Скрытые приложения, позволяющая скрыть любое установленное приложение. Перезагрузка не требуется.</string>
 	<string name="settings">Настройки</string>
 	<string name="support_repo_summ">Git репозиторий с исходниками и дистрибутивами модуля</string>
 	<string name="support_repo_title">Репозиторий CustoMIUIzer</string>
@@ -245,6 +255,8 @@
 	<string name="system_iconlabletoasts_title">Расширенные уведомления *</string>
 	<string name="system_downgrade_title">Разрешить понижение версии</string>
 	<string name="system_downgrade_summ">Делает возможным установку старой версии приложения поверх новой</string>
+	<string name="system_hidefromrecents_title">Скрыть в недавних</string>
+	<string name="system_hidefromrecents_summ">Убирает выбранные приложения из списка недавно использованных</string>
 	<string name="system_mods">Система</string>
 	<string name="system_mods_screen">Экран</string>
 	<string name="system_mods_audio">Аудио</string>
@@ -256,6 +268,8 @@
 	<string name="system_betterpopups_nohide_summ">Отключает автоматическое скрытие</string>
 	<string name="system_betterpopups_swipedown_title">Активировать свайп вниз</string>
 	<string name="system_betterpopups_swipedown_summ">Открывает панель уведомлений по свайпу вниз</string>
+	<string name="system_qshaptic_title">Виброотклик при переключении настроек</string>
+	<string name="system_qshaptic_summ">Включает вибрирование при нажатии на переключатели в Быстрых настройках</string>
 	<string name="system_clockseconds_title">Показывать секунды</string>
 	<string name="system_clockseconds_summ">Отображает секунды на часах в статусбаре</string>
 	<string name="system_mobiletypeicon_title">Скрывать тип мобильной сети</string>
@@ -272,6 +286,8 @@
 	<string name="system_detailednetspeed_lowlevel_summ">Задаёт уровень, ниже которого скорость будет считаться низкой и будет иметь другую иконку</string>
 	<string name="system_fixmeter_title">Отступ скорости соединения</string>
 	<string name="system_fixmeter_summ">Увеличивает отступ справа для индикатора скорости соединения</string>
+	<string name="system_compactnotif_title">Компактные уведомления</string>
+	<string name="system_compactnotif_summ">Уменьшает вертикальные отступы в уведомлениях</string>
 	<string name="system_colorizenotiftitle_title">Раскрасить заголовок уведомления</string>
 	<string name="system_colorizenotiftitle_summ">Применяет цвет иконки к заголовку (только для стиля уведомлений Android)</string>
 	<string name="system_expandnotifs_title">Разворачивать уведомления</string>

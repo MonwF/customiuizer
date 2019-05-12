@@ -5,11 +5,14 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.FileObserver;
 import android.util.Log;
 import android.widget.Toast;
+
+import java.util.Locale;
 
 import name.mikanoshi.customiuizer.utils.Helpers;
 
@@ -20,14 +23,16 @@ public class MainActivity extends ActivityEx {
 	FileObserver mFileObserver;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void attachBaseContext(Context base) {
 		try {
-			Helpers.fixPermissionsAsync(this);
-			Helpers.prefs = Helpers.getProtectedContext(this).getSharedPreferences(Helpers.prefsName, Context.MODE_PRIVATE);
+			super.attachBaseContext(Helpers.getLocaleContext(base));
 		} catch (Throwable t) {
-			Log.e("prefs", "Failed to use protected storage!");
+			t.printStackTrace();
 		}
+	}
 
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		prefsChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {

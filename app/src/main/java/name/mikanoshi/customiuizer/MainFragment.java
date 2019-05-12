@@ -54,6 +54,10 @@ import name.mikanoshi.customiuizer.utils.Helpers;
 public class MainFragment extends PreferenceFragmentBase {
 
 	public boolean miuizerModuleActive = false;
+	private System prefSystem = new System();
+	private Launcher prefLauncher = new Launcher();
+	private Controls prefControls = new Controls();
+	private Various prefVarious = new Various();
 
 	public MainFragment() {
 		super();
@@ -206,14 +210,34 @@ public class MainFragment extends PreferenceFragmentBase {
 			showRestoreInfoDialog();
 		}
 
-		CheckBoxPreference.OnPreferenceChangeListener toggleIcon = new CheckBoxPreference.OnPreferenceChangeListener() {
+		CheckBoxPreference.OnPreferenceChangeListener toggleLauncherIcon = new CheckBoxPreference.OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				PackageManager pm = act.getPackageManager();
 				if ((Boolean)newValue)
-					pm.setComponentEnabledSetting(new ComponentName(act, GateWay.class), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+					pm.setComponentEnabledSetting(new ComponentName(act, GateWayLauncher.class), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
 				else
-					pm.setComponentEnabledSetting(new ComponentName(act, GateWay.class), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+					pm.setComponentEnabledSetting(new ComponentName(act, GateWayLauncher.class), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+				return true;
+			}
+		};
+
+		CheckBoxPreference.OnPreferenceChangeListener toggleSettingsIcon = new CheckBoxPreference.OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				PackageManager pm = act.getPackageManager();
+				if ((Boolean)newValue)
+					pm.setComponentEnabledSetting(new ComponentName(act, GateWaySettings.class), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+				else
+					pm.setComponentEnabledSetting(new ComponentName(act, GateWaySettings.class), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+				return true;
+			}
+		};
+
+		CheckBoxPreference.OnPreferenceChangeListener toggleForceLocale = new CheckBoxPreference.OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				getActivity().recreate();
 				return true;
 			}
 		};
@@ -234,9 +258,16 @@ public class MainFragment extends PreferenceFragmentBase {
 			}
 		};
 
-		CheckBoxPreference miuizerSettingsPreference = (CheckBoxPreference) findPreference("pref_key_miuizer_icon");
+		CheckBoxPreference launcherIconPreference = (CheckBoxPreference)findPreference("pref_key_miuizer_launchericon");
+		if (launcherIconPreference != null)
+		launcherIconPreference.setOnPreferenceChangeListener(toggleLauncherIcon);
+		CheckBoxPreference miuizerSettingsPreference = (CheckBoxPreference) findPreference("pref_key_miuizer_settingsicon");
 		if (miuizerSettingsPreference != null)
-		miuizerSettingsPreference.setOnPreferenceChangeListener(toggleIcon);
+		miuizerSettingsPreference.setOnPreferenceChangeListener(toggleSettingsIcon);
+		CheckBoxPreference forceLocalePreference = (CheckBoxPreference) findPreference("pref_key_miuizer_forcelocale");
+		if (forceLocalePreference != null)
+		forceLocalePreference.setOnPreferenceChangeListener(toggleForceLocale);
+
 		Preference miuizerCrashReportPreference = findPreference("pref_key_miuizer_sendreport");
 		if (miuizerCrashReportPreference != null)
 		miuizerCrashReportPreference.setOnPreferenceClickListener(sendCrashReport);
@@ -483,16 +514,16 @@ public class MainFragment extends PreferenceFragmentBase {
 
 				switch (preference.getKey()) {
 					case "pref_key_system":
-						openSubFragment(new System(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_mods, R.xml.prefs_system);
+						openSubFragment(prefSystem, null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_mods, R.xml.prefs_system);
 						break;
 					case "pref_key_launcher":
-						openSubFragment(new Launcher(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.launcher_mods, R.xml.prefs_launcher);
+						openSubFragment(prefLauncher, null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.launcher_mods, R.xml.prefs_launcher);
 						return true;
 					case "pref_key_controls":
-						openSubFragment(new Controls(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.controls_mods, R.xml.prefs_controls);
+						openSubFragment(prefControls, null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.controls_mods, R.xml.prefs_controls);
 						break;
 					case "pref_key_various":
-						openSubFragment(new Various(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.various_mods, R.xml.prefs_various);
+						openSubFragment(prefVarious, null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.various_mods, R.xml.prefs_various);
 						break;
 				}
 			}

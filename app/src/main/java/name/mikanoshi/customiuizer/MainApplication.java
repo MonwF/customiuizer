@@ -24,6 +24,8 @@ import org.acra.config.CoreConfigurationBuilder;
 import org.acra.data.StringFormat;
 import org.acra.plugins.SimplePluginLoader;
 
+import java.util.Locale;
+
 import miui.core.SdkManager;
 import name.mikanoshi.customiuizer.crashreport.DialogInteraction;
 import name.mikanoshi.customiuizer.utils.Helpers;
@@ -44,7 +46,11 @@ public class MainApplication extends Application {
 	@Override
 	protected void attachBaseContext(Context base) {
 		try {
-			super.attachBaseContext(Helpers.getProtectedContext(base));
+			Context pContext = Helpers.getProtectedContext(base);
+			Helpers.fixPermissionsAsync(pContext);
+			Helpers.prefs = pContext.getSharedPreferences(Helpers.prefsName, Context.MODE_PRIVATE);
+			if (Helpers.prefs.getBoolean("pref_key_miuizer_forcelocale", false)) Locale.setDefault(Locale.ENGLISH);
+			super.attachBaseContext(pContext);
 		} catch (Throwable t) {
 			super.attachBaseContext(base);
 			Log.e("prefs", "Failed to use protected storage!");

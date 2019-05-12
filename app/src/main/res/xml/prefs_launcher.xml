@@ -35,8 +35,24 @@
 		android:defaultValue="1" />
 
 	<PreferenceCategory
-		android:title="@string/launcher_gestures"
-		android:key="pref_key_launcher_gestures">
+		android:title="@string/launcher_privacyapps"
+		android:key="pref_key_launcher_privacyapps">
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_launcher_privacyapps_list"
+			android:title="@string/launcher_privacyapps_list_title"
+			android:summary="@string/launcher_privacyapps_list_summ" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_launcher_privacyapps_gest"
+			android:title="@string/launcher_privacyapps_gest_title"
+			android:summary="@string/launcher_privacyapps_gest_summ"
+			android:defaultValue="false" />
+
+	</PreferenceCategory>
+
+	<PreferenceCategory
+		android:title="@string/launcher_gestures">
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_launcher_swipedown"
@@ -66,6 +82,7 @@
 			android:key="pref_key_launcher_shake"
 			android:summary="@string/launcher_shakeaction_summ"
 			android:title="@string/launcher_shakeaction_title" />
+
 	</PreferenceCategory>
 
 </PreferenceScreen>

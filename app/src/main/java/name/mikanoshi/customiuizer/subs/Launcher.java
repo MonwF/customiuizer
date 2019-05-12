@@ -1,8 +1,11 @@
 package name.mikanoshi.customiuizer.subs;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
+import android.provider.Settings;
 
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SubFragment;
@@ -15,7 +18,7 @@ public class Launcher extends SubFragment {
 		super.onActivityCreated(savedInstanceState);
 		//setupImmersiveMenu();
 
-		CheckBoxPreference.OnPreferenceClickListener openSwipeEdit = new CheckBoxPreference.OnPreferenceClickListener() {
+		Preference.OnPreferenceClickListener openSwipeEdit = new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				Bundle args = new Bundle();
@@ -25,21 +28,70 @@ public class Launcher extends SubFragment {
 			}
 		};
 
-		Preference swipePref;
-		swipePref = findPreference("pref_key_launcher_swipedown");
-		swipePref.setOnPreferenceClickListener(openSwipeEdit);
-		swipePref = findPreference("pref_key_launcher_swipedown2");
-		swipePref.setOnPreferenceClickListener(openSwipeEdit);
-		swipePref = findPreference("pref_key_launcher_swipeup");
-		swipePref.setOnPreferenceClickListener(openSwipeEdit);
-		swipePref = findPreference("pref_key_launcher_swipeup2");
-		swipePref.setOnPreferenceClickListener(openSwipeEdit);
-		swipePref = findPreference("pref_key_launcher_swiperight");
-		swipePref.setOnPreferenceClickListener(openSwipeEdit);
-		swipePref = findPreference("pref_key_launcher_swipeleft");
-		swipePref.setOnPreferenceClickListener(openSwipeEdit);
-		swipePref = findPreference("pref_key_launcher_shake");
-		swipePref.setOnPreferenceClickListener(openSwipeEdit);
+		CheckBoxPreference.OnPreferenceChangeListener switchPrivacyAppState = new CheckBoxPreference.OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				Settings.Secure.putInt(getActivity().getContentResolver(), "is_privacy_apps_enable", (boolean)newValue ? 1 : 0);
+				return true;
+			}
+		};
+
+		Preference.OnPreferenceClickListener openPrivacyAppEdit = new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				Bundle args = new Bundle();
+				args.putBoolean("privacy", true);
+				AppSelector appSelector = new AppSelector();
+				appSelector.setTargetFragment(Launcher.this, 0);
+				openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_app, R.layout.prefs_app_selector);
+				return true;
+			}
+		};
+
+		Preference pref;
+		pref = findPreference("pref_key_launcher_swipedown");
+		pref.setOnPreferenceClickListener(openSwipeEdit);
+		pref = findPreference("pref_key_launcher_swipedown2");
+		pref.setOnPreferenceClickListener(openSwipeEdit);
+		pref = findPreference("pref_key_launcher_swipeup");
+		pref.setOnPreferenceClickListener(openSwipeEdit);
+		pref = findPreference("pref_key_launcher_swipeup2");
+		pref.setOnPreferenceClickListener(openSwipeEdit);
+		pref = findPreference("pref_key_launcher_swiperight");
+		pref.setOnPreferenceClickListener(openSwipeEdit);
+		pref = findPreference("pref_key_launcher_swipeleft");
+		pref.setOnPreferenceClickListener(openSwipeEdit);
+		pref = findPreference("pref_key_launcher_shake");
+		pref.setOnPreferenceClickListener(openSwipeEdit);
+
+		pref = findPreference("pref_key_launcher_privacyapps_list");
+		pref.setOnPreferenceClickListener(openPrivacyAppEdit);
+		pref = findPreference("pref_key_launcher_privacyapps_gest");
+		pref.setOnPreferenceChangeListener(switchPrivacyAppState);
+
+		PackageManager pm = getActivity().getPackageManager();
+		if (!checkPermissions()) {
+			pref = findPreference("pref_key_launcher_privacyapps");
+			pref.setEnabled(false);
+			pref.setTitle(R.string.launcher_privacyapps_fail);
+		}
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		PackageManager pm = getActivity().getPackageManager();
+		if (checkPermissions()) {
+			Preference pref = findPreference("pref_key_launcher_privacyapps_gest");
+			((CheckBoxPreference)pref).setChecked(Settings.Secure.getInt(getActivity().getContentResolver(), "is_privacy_apps_enable", 0) == 1);
+		}
+	}
+
+	private boolean checkPermissions() {
+		PackageManager pm = getActivity().getPackageManager();
+		return pm.checkPermission(Manifest.permission.WRITE_SECURE_SETTINGS, Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED &&
+			   pm.checkPermission("com.miui.securitycenter.permission.ACCESS_SECURITY_CENTER_PROVIDER", Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED;
 	}
 
 //	public boolean onCreateOptionsMenu(Menu menu) {
