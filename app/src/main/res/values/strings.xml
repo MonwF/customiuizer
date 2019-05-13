@@ -3,15 +3,16 @@
 	<string name="app_about">About</string>
 	<string name="about_version">Version %1$s</string>
 	<string name="about_dev">by Mikanoshi</string>
-	<string name="about_dynamic">Generally, mods require soft reboot to be activated or deactivated, but those marked with * only require one soft reboot after their value was changed from default to custom one, subsequent changes are applied immediately.</string>
+	<string name="about_dynamic">Generally, mods require soft reboot to be activated or deactivated, but those marked with ⟲ only require one soft reboot after their value was changed from default to custom one, subsequent changes are applied immediately.</string>
 	<string name="title_activity_main" translatable="false">@string/app_name</string>
 
 	<string name="mods">Mods</string>
 
+	<string name="enable_mod">Enable mod</string>
 	<string name="system_mods">System</string>
 	<string name="system_mods_screen">Screen</string>
 	<string name="system_mods_audio">Audio</string>
-	<string name="system_mods_screenanim">Screen animations *</string>
+	<string name="system_mods_screenanim">Screen animations</string>
 	<string name="system_qshaptic_title">Quick settings haptic feedback</string>
 	<string name="system_qshaptic_summ">Vibrate on Quick settings tile tap</string>
 	<string name="system_clockseconds_title">Show seconds</string>
@@ -41,8 +42,8 @@
 	<string name="system_popupnotif_summ">Open notification drawer automatically on notifications from selected apps</string>
 	<string name="system_popupnotif_fs_title">Respect fullscreen</string>
 	<string name="system_popupnotif_fs_summ">Do not open notification drawer when fullscreen app is active (does not apply to immersive apps with hidden status and navigation bars)</string>
-	<string name="system_popupnotif_apps_title">Selected apps *</string>
-	<string name="system_chargeanimtime_title">Charge animation screen timeout *</string>
+	<string name="system_popupnotif_apps_title">Selected apps</string>
+	<string name="system_chargeanimtime_title">Charge animation screen timeout</string>
 	<string name="system_chargeanimtime_summ">How long screen should be kept on after charging animation starts</string>
 	<string name="system_nolightuponcharges_title">No screen light up on charge</string>
 	<string name="system_nolightuponcharges_summ">Do not turn screen on when you connect or disconnect a charger</string>
@@ -62,19 +63,19 @@
 	<string name="system_nopassword_summ">Do not require password instead of a fingerprint first time after boot</string>
 	<string name="system_albumartonlock_title">Album art as wallpaper</string>
 	<string name="system_albumartonlock_summ">Display album art of currently playing track as lock screen wallpaper</string>
-	<string name="system_albumartonlock_blur_title">Album art blur *</string>
+	<string name="system_albumartonlock_blur_title">Album art blur</string>
 	<string name="system_noscreenlock_act_title">Screen lock override</string>
 	<string name="system_noscreenlock_act_summ">Activates dynamic screen lock controls</string>
-	<string name="system_noscreenlock_title">Disable screen lock *</string>
+	<string name="system_noscreenlock_title">Disable screen lock</string>
 	<string name="system_noscreenlock_summ">Selectively disable screen lock (does not change security for any apps and does not remove fingerprint data)</string>
-	<string name="system_noscreenlock_scr_title">Skip lock screen *</string>
+	<string name="system_noscreenlock_scr_title">Skip lock screen</string>
 	<string name="system_noscreenlock_scr_summ">Do not show lock screen at all when screen lock is disabled</string>
-	<string name="system_noscreenlock_wifi_title">Trusted Wi-Fi networks *</string>
+	<string name="system_noscreenlock_wifi_title">Trusted Wi-Fi networks</string>
 	<string name="system_noscreenlock_wifi_summ">Temporarily disable screen lock while connected to these networks</string>
-	<string name="system_screenanim_duration_title">Turning off animation *</string>
+	<string name="system_screenanim_duration_title">Turning off animation</string>
 	<string name="system_screenanim_duration_summ">Configure animation length</string>
 	<string name="system_screenanim_desc">Very low values will practically disable animation</string>
-	<string name="system_mods_blur">Blur intensity *</string>
+	<string name="system_mods_blur">Blur intensity</string>
 	<string name="system_recents_blur_title">Recent apps</string>
 	<string name="system_recents_blur_summ">Background blur intensity in recent apps</string>
 	<string name="system_drawer_blur_title">Notification drawer</string>
@@ -82,7 +83,7 @@
 	<string name="system_drawer_opacity_title">Themed background opacity</string>
 	<string name="system_drawer_opacity_summ">Opacity of a themed notification drawer background</string>
 	<string name="system_mods_lockscreen">Lock Screen</string>
-	<string name="system_iconlabletoasts_title">Enhanced toasts *</string>
+	<string name="system_iconlabletoasts_title">Enhanced toasts</string>
 	<string name="system_iconlabletoasts_summ">Add application\'s icon and label to its toasts</string>
 	<string name="system_downgrade_title">Allow downgrade</string>
 	<string name="system_downgrade_summ">Make installing older app version on top of a newer one possible</string>
@@ -99,7 +100,7 @@
 	<string name="system_betterpopups_swipedown_summ">Open notification drawer on swipe down gesture</string>
 
 	<string name="launcher_mods">MIUI Launcher</string>
-	<string name="launcher_gestures">Gestures *</string>
+	<string name="launcher_gestures">Gestures</string>
 	<string name="launcher_gestures_action">Action</string>
 	<string name="launcher_gestures_setting">Setting to toggle</string>
 	<string name="launcher_gestures_launch">App to launch</string>
@@ -135,9 +136,9 @@
 	<string name="controls_mods">Controls</string>
 	<string name="controls_powerflash_title">Quick flashlight</string>
 	<string name="controls_powerflash_summ">Long press power button while screen is off to turn flashlight on</string>
-	<string name="controls_powerflash_delay_title">Longer quick flashlight delay *</string>
+	<string name="controls_powerflash_delay_title">Longer quick flashlight delay</string>
 	<string name="controls_powerflash_delay_summ">Increases the power button long press delay</string>
-	<string name="controls_mods_fingerprint">Fingerprint scanner *</string>
+	<string name="controls_mods_fingerprint">Fingerprint scanner</string>
 	<string name="controls_fingerprint1_title">Single tap action</string>
 	<string name="controls_fingerprint1_summ">Action for a sinlge tap when screen is on</string>
 	<string name="controls_fingerprint2_title">Double tap action</string>
@@ -152,13 +153,13 @@
 	<string name="controls_volumecursor_summ">Move text input cursor using volume keys</string>
 	<string name="controls_volumecursor_reverse_title">Change directions</string>
 	<string name="controls_volumecursor_reverse_summ">Swap directions of cursor movements</string>
-	<string name="controls_volumemedia_up_title">Volume Up long press action *</string>
+	<string name="controls_volumemedia_up_title">Volume Up long press action</string>
 	<string name="controls_volumemedia_up_summ">Action for Volume Up long press when screen is off</string>
-	<string name="controls_volumemedia_down_title">Volume Down long press action *</string>
+	<string name="controls_volumemedia_down_title">Volume Down long press action</string>
 	<string name="controls_volumemedia_down_summ">Action for Volume Down long press when screen is off</string>
-	<string name="controls_volumemedia_vibrate_title">Long press vibration *</string>
+	<string name="controls_volumemedia_vibrate_title">Long press vibration</string>
 	<string name="controls_volumemedia_vibrate_summ">Vibrate when long press action is executed</string>
-	<string name="controls_mods_navbar">Navigation bar *</string>
+	<string name="controls_mods_navbar">Navigation bar</string>
 	<string name="controls_navbarleft_summ">Action on left additional navigation button press</string>
 	<string name="controls_navbarleft_title">Left button action</string>
 	<string name="controls_navbarleftlong_summ">Action on left additional navigation button long press</string>
@@ -175,7 +176,7 @@
 	<string name="various_sysappsupdater_summ2">Be careful when updating modified system apps on custom ROMs, you might lose the added functionality</string>
 	<string name="various_apps_title">Show additional app details</string>
 	<string name="various_apps_summ">Add new fields to Settings > Installed apps > App info:\n- option to launch an app\n- full path to apk\n- data path\n- user id\n- target SDK version</string>
-	<string name="various_appsort_title">Installed apps initial sort order *</string>
+	<string name="various_appsort_title">Installed apps initial sort order</string>
 
 	<string name="appdetails_launch">Launch</string>
 	<string name="appdetails_nolaunch">App has no default launchable activity</string>
