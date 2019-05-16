@@ -45,7 +45,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getBoolean("system_popupnotif_fs")) System.PopupNotificationsFSHook();
 		if (Integer.parseInt(mPrefs.getString("system_rotateanim", "1")) > 1) System.RotationAnimationHook();
 		if (mPrefs.getBoolean("system_colorizenotiftitle")) System.ColorizedNotificationTitlesHook();
-		if (mPrefs.getBoolean("system_compactnotif")) System.CompactNotificationsRes();
+		if (mPrefs.getBoolean("system_compactnotif")) System.CompactNotificationsActionsRes();
 
 		Controls.VolumeMediaPlayerHook();
 		GlobalActions.setupUnhandledCatcher();
@@ -55,22 +55,32 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 	public void handleInitPackageResources(XC_InitPackageResources.InitPackageResourcesParam resparam) throws Throwable {
 		String pkg = resparam.packageName;
 
+		if (pkg.equals("com.android.systemui")) {
+			if (mPrefs.getBoolean("system_compactnotif")) System.CompactNotificationsPaddingRes(resparam);
+			if (mPrefs.getBoolean("system_notifrowmenu")) System.NotificationRowMenuRes(resparam);
+		}
+
 		if (pkg.equals("com.android.settings")) {
 			GlobalActions.miuizerSettingsResInit(resparam);
 		}
 
 		if (pkg.equals("com.miui.home")) {
-			if (mPrefs.getBoolean("launcher_unlockgrids")) {
+			if (mPrefs.getBoolean("launcher_unlockgrids")) try {
 				resparam.res.setReplacement(pkg, "integer", "config_cell_count_x", 3);
 				resparam.res.setReplacement(pkg, "integer", "config_cell_count_y", 4);
 				resparam.res.setReplacement(pkg, "integer", "config_cell_count_x_min", 3);
 				resparam.res.setReplacement(pkg, "integer", "config_cell_count_y_min", 4);
 				resparam.res.setReplacement(pkg, "integer", "config_cell_count_x_max", 6);
 				resparam.res.setReplacement(pkg, "integer", "config_cell_count_y_max", 7);
+			} catch (Throwable t) {
+				XposedBridge.log(t);
 			}
 
-			if (mPrefs.getInt("launcher_folder_cols", 3) != 3)
-			resparam.res.setReplacement(pkg, "integer", "config_folder_columns_count", mPrefs.getInt("launcher_folder_cols", 3));
+			if (mPrefs.getInt("launcher_folder_cols", 3) != 3) try {
+				resparam.res.setReplacement(pkg, "integer", "config_folder_columns_count", mPrefs.getInt("launcher_folder_cols", 3));
+			} catch (Throwable t) {
+				XposedBridge.log(t);
+			}
 		}
 	}
 
@@ -95,6 +105,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getInt("system_volumesteps", 10) > 10) System.VolumeStepsHook(lpparam);
 			if (mPrefs.getBoolean("system_downgrade")) System.NoVersionCheckHook(lpparam);
 			if (mPrefs.getBoolean("system_hidefromrecents")) System.HideFromRecentsHook(lpparam);
+			if (Integer.parseInt(mPrefs.getString("system_autogroupnotif", "1")) > 1) System.AutoGroupNotificationsHook(lpparam);
 			//System.AutoBrightnessHook(lpparam);
 		}
 
@@ -112,6 +123,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (Integer.parseInt(mPrefs.getString("system_expandnotifs", "1")) > 1) System.ExpandNotificationsHook(lpparam);
 			if (mPrefs.getInt("system_recents_blur", 100) < 100) System.RecentsBlurRatioHook(lpparam);
 			if (mPrefs.getInt("system_drawer_blur", 100) < 100) System.DrawerBlurRatioHook(lpparam);
+			if (mPrefs.getInt("system_drawer_opacity", 100) < 100) System.DrawerThemeBackgroundHook(lpparam);
 			if (mPrefs.getInt("controls_navbarleft_action", 1) > 1 ||
 				mPrefs.getInt("controls_navbarleftlong_action", 1) > 1 ||
 				mPrefs.getInt("controls_navbarright_action", 1) > 1 ||
@@ -126,8 +138,11 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_popupnotif")) System.PopupNotificationsHook(lpparam);
 			if (mPrefs.getBoolean("system_betterpopups_nohide")) System.BetterPopupsNoHideHook(lpparam);
 			if (mPrefs.getBoolean("system_betterpopups_swipedown")) System.BetterPopupsSwipeDownHook(lpparam);
-			if (mPrefs.getBoolean("system_compactnotif")) System.CompactNotificationsHook(lpparam);
-			if (mPrefs.getBoolean("system_qshaptic")) System.QSHapticHook(lpparam);
+			if (Integer.parseInt(mPrefs.getString("system_qshaptics", "1")) > 1) System.QSHapticHook(lpparam);
+			if (mPrefs.getInt("controls_fsg_coverage", 60) != 60) System.BackGestureAreaHook(lpparam);
+			if (mPrefs.getBoolean("system_hidemoreicon")) System.NoMoreIconHook(lpparam);
+			if (mPrefs.getBoolean("system_notifafterunlock")) System.ShowNotificationsAfterUnlockHook(lpparam);
+			if (mPrefs.getBoolean("system_notifrowmenu")) System.NotificationRowMenuHook(lpparam);
 		}
 
 //		if (pkg.equals("com.android.incallui")) {

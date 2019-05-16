@@ -1,5 +1,6 @@
 package name.mikanoshi.customiuizer.prefs;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -21,16 +22,19 @@ public class PreferenceEx extends Preference {
 	private int primary = res.getColor(res.getIdentifier("preference_primary_text_light", "color", "miui"), getContext().getTheme());
 	private int secondary = res.getColor(res.getIdentifier("preference_secondary_text_light", "color", "miui"), getContext().getTheme());
 
+	private boolean dynamic;
 	private boolean countAsSummary;
 
 	public PreferenceEx(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		final TypedArray xmlAttrs = context.obtainStyledAttributes(attrs, new int[] { R.attr.countAsSummary } );
-		countAsSummary = xmlAttrs.getBoolean(0, false);
+		final TypedArray xmlAttrs = context.obtainStyledAttributes(attrs, R.styleable.PreferenceEx);
+		dynamic = xmlAttrs.getBoolean(R.styleable.PreferenceEx_dynamic, false);
+		countAsSummary = xmlAttrs.getBoolean(R.styleable.PreferenceEx_countAsSummary, false);
 		xmlAttrs.recycle();
 	}
 
 	@Override
+	@SuppressLint("SetTextI18n")
 	@SuppressWarnings("ConstantConditions")
 	public View getView(View view, ViewGroup parent) {
 		View finalView = super.getView(view, parent);
@@ -38,10 +42,11 @@ public class PreferenceEx extends Preference {
 		TextView summary = finalView.findViewById(android.R.id.summary);
 		TextView valSummary = finalView.findViewById(android.R.id.hint);
 
-		summary.setVisibility(countAsSummary || summary.getText() == null || summary.getText().equals("") ? View.GONE : View.VISIBLE);
+		summary.setVisibility(countAsSummary || getSummary() == null || getSummary().equals("") ? View.GONE : View.VISIBLE);
 		valSummary.setVisibility(countAsSummary ? View.VISIBLE : View.GONE);
 		valSummary.setText(countAsSummary ? String.valueOf(Helpers.prefs.getStringSet(getKey(), new LinkedHashSet<String>()).size()) : null);
 		title.setTextColor(isEnabled() ? primary : secondary);
+		title.setText(getTitle() + (dynamic ? " ⟲" : ""));
 
 		return finalView;
 	}

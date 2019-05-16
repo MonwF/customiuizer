@@ -201,6 +201,17 @@
 		<item>3</item>
 	</string-array>
 
+	<string-array name="qshaptic">
+		<item>@string/array_default</item>
+		<item>@string/array_qshaptic_light</item>
+		<item>@string/array_qshaptic_strong</item>
+	</string-array>
+	<string-array name="qshaptic_val">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+	</string-array>
+
 	<string-array name="mobiletypeicon">
 		<item>@string/array_default</item>
 		<item>@string/array_mobiletypeicon_connected</item>
@@ -210,6 +221,31 @@
 		<item>1</item>
 		<item>2</item>
 		<item>3</item>
+	</string-array>
+
+	<string-array name="autogroupnotif">
+		<item>@string/array_system_default</item>
+		<item>@string/array_autogroupnotif_no</item>
+		<item>3</item>
+		<item>4</item>
+		<item>5</item>
+		<item>6</item>
+		<item>7</item>
+		<item>8</item>
+		<item>9</item>
+		<item>10</item>
+	</string-array>
+	<string-array name="autogroupnotif_val">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+		<item>4</item>
+		<item>5</item>
+		<item>6</item>
+		<item>7</item>
+		<item>8</item>
+		<item>9</item>
+		<item>10</item>
 	</string-array>
 
 	<string-array name="media_action">

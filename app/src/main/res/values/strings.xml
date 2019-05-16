@@ -4,6 +4,7 @@
 	<string name="about_version">Version %1$s</string>
 	<string name="about_dev">by Mikanoshi</string>
 	<string name="about_dynamic">Generally, mods require soft reboot to be activated or deactivated, but those marked with ⟲ only require one soft reboot after their value was changed from default to custom one, subsequent changes are applied immediately.</string>
+	<string name="about_unsupported">Mods marked with ⨯ are not supported on this device.</string>
 	<string name="title_activity_main" translatable="false">@string/app_name</string>
 
 	<string name="mods">Mods</string>
@@ -19,6 +20,8 @@
 	<string name="system_clockseconds_summ">Display seconds in the status bar clock</string>
 	<string name="system_mobiletypeicon_title">Hide mobile network type</string>
 	<string name="system_mobiletypeicon_summ">Remove mobile network type icon from status bar</string>
+	<string name="system_hidemoreicon_title">No hidden icons indicator</string>
+	<string name="system_hidemoreicon_summ">Do not show icon with 3 dots when notification icons are hidden</string>
 	<string name="system_netspeedinterval_title">Network speed update interval</string>
 	<string name="system_netspeedinterval_summ">System settings modification permission is required</string>
 	<string name="system_detailednetspeed_title">Detailed network speed indicator</string>
@@ -35,9 +38,13 @@
 	<string name="system_compactnotif_summ">Reduce notifications\' vertical paddings</string>
 	<string name="system_colorizenotiftitle_title">Colorize notification title</string>
 	<string name="system_colorizenotiftitle_summ">Apply icon\'s color to title text (Android notification style only)</string>
+	<string name="system_notifrowmenu_title">Extended notification menu</string>
+	<string name="system_notifrowmenu_summ">Open app info and force close app from notification menu (swipe notification to the left to open it)</string>
 	<string name="system_expandnotifs_title">Expand notifications</string>
 	<string name="system_expandnotifs_summ">Show notifications fully expanded</string>
 	<string name="system_expandnotifs_apps_title">Black &amp; white list</string>
+	<string name="system_autogroupnotif_title">Auto group notifications</string>
+	<string name="system_autogroupnotif_summ">Number of notifications from one app that triggers auto grouping</string>
 	<string name="system_popupnotif_title">Auto open notification drawer</string>
 	<string name="system_popupnotif_summ">Open notification drawer automatically on notifications from selected apps</string>
 	<string name="system_popupnotif_fs_title">Respect fullscreen</string>
@@ -90,8 +97,10 @@
 	<string name="system_hidefromrecents_title">Hide from recents</string>
 	<string name="system_hidefromrecents_summ">Hide selected apps from recent tasks list</string>
 	<string name="system_rotateanim_title">Rotation animation</string>
+	<string name="system_notifafterunlock_title">Keep notifications</string>
+	<string name="system_notifafterunlock_summ">Show notifications on lock screen even after it\'s dismissed and then opened again</string>
 	<string name="system_dttosleep_title">Double tap to sleep</string>
-	<string name="system_dttosleep_summ">Turn screen off by double tapping on any empty space on lockscreen</string>
+	<string name="system_dttosleep_summ">Turn screen off by double tapping on any empty space on lock screen</string>
 	<string name="system_mods_statusbar">Status bar and notification drawer</string>
 	<string name="system_mods_betterpopups">Better popup notifications</string>
 	<string name="system_betterpopups_nohide_title">No auto hide</string>
@@ -169,6 +178,8 @@
 	<string name="controls_navbarrightlong_summ">Action on right additional navigation button long press</string>
 	<string name="controls_navbarrightlong_title">Right button long press action</string>
 	<string name="controls_navbar_noaction">No action defined</string>
+	<string name="controls_mods_fsg">Full screen navigation gestures</string>
+	<string name="controls_fsg_coverage_title">Back gesture area height</string>
 
 	<string name="various_mods">Various</string>
 	<string name="various_sysappsupdater_title">Open \"System app updater\"</string>
@@ -240,6 +251,9 @@
 	<string name="array_expandnotifs_whiteonly">For listed apps only</string>
 	<string name="array_mobiletypeicon_connected">Hide only when not connected</string>
 	<string name="array_mobiletypeicon_hide">Hide completely</string>
+	<string name="array_autogroupnotif_no">Do not group</string>
+	<string name="array_qshaptic_light">Light vibration</string>
+	<string name="array_qshaptic_strong">Strong vibration</string>
 
 	<string name="toggle_wifi_on">Wi-Fi enabled</string>
 	<string name="toggle_wifi_off">Wi-Fi disabled</string>
@@ -343,6 +357,7 @@
 	<string name="wifi_location_summ">Location access is required for apps to get a list of Wi-Fi networks on Android Pie</string>
 	<string name="wifi_category1">Trusted networks</string>
 	<string name="wifi_category2">Available networks</string>
+	<string name="force_closed">Force closed %s</string>
 
 	<string name="xposed_not_found">Xposed Installer not found</string>
 	<string name="xposed_not_found_explain">It looks like you don\'t have Xposed Framework Installed.\n\nPlease note that mods will only work with Xposed!</string>

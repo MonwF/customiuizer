@@ -104,6 +104,9 @@
 	<string name="array_expandnotifs_whiteonly">Только для приложений в списке</string>
 	<string name="array_mobiletypeicon_connected">Скрывать только при отсутствии подключения</string>
 	<string name="array_mobiletypeicon_hide">Скрыть полностью</string>
+	<string name="array_autogroupnotif_no">Не группировать</string>
+	<string name="array_qshaptic_light">Лёгкая вибрация</string>
+	<string name="array_qshaptic_strong">Сильная вибрация</string>
 
 	<string name="select_app">Выбрать приложение</string>
 
@@ -172,6 +175,8 @@
 	<string name="controls_navbarrightlong_summ">Задаёт действие на долгое нажатие правой дополнительной кнопки</string>
 	<string name="controls_navbarrightlong_title">Действие на долгое нажатие правой кнопки</string>
 	<string name="controls_navbar_noaction">Действие не задано</string>
+	<string name="controls_mods_fsg">Полноэкранные жесты навигации</string>
+	<string name="controls_fsg_coverage_title">Высота области срабатывания жеста Назад</string>
 
 	<string name="array_color_dark">Тёмная</string>
 	<string name="array_color_light">Светлая</string>
@@ -180,6 +185,7 @@
 
 	<string name="crash_dialog_note">Не заданы данные для обратной связи, Вы не сможете получить ответ на данный отчёт!</string>
 	<string name="about_dynamic">Обычно моды требуют быстрой перезагрузки для активации или деактивации, но те, что помечены ⟲, требуют только одной перезагрузки (после смены значения со стандартного на модифицированное), последующие изменения будут применяться сразу.</string>
+	<string name="about_unsupported">Моды, помеченные ⨯, не совместимы с данным устройством.</string>
 	<string name="appdetails_app_uid">ID пользователя</string>
 	<string name="appdetails_nolaunch">Стандартный запуск данного приложения невозможен</string>
 	<string name="appsort_frequency">Частота использования</string>
@@ -229,6 +235,7 @@
 	<string name="wifi_location_summ">Для получения списка Wi-Fi сетей на Android Pie приложениям требуется доступ к местоположению</string>
 	<string name="wifi_category1">Доверенные сети</string>
 	<string name="wifi_category2">Доступные сети</string>
+	<string name="force_closed">Приложение \"%s\" закрыто</string>
 	<string name="select_shortcut">Выбрать ярлык</string>
 	<string name="launcher_gestures_shortcut">Ярлык для запуска</string>
 	<string name="launcher_noclockhide_title">Не прятать часы</string>
@@ -275,6 +282,8 @@
 	<string name="system_clockseconds_summ">Отображает секунды на часах в статусбаре</string>
 	<string name="system_mobiletypeicon_title">Скрывать тип мобильной сети</string>
 	<string name="system_mobiletypeicon_summ">Удаляет иконку типа мобильной сети из строки состояния</string>
+	<string name="system_hidemoreicon_title">Убрать индикатор скрытых иконок</string>
+	<string name="system_hidemoreicon_summ">Отключает показ иконки с 3 точками, когда активна опция скрытия иконок уведомлений</string>
 	<string name="system_netspeedinterval_title">Частота обновления индикатора скорости</string>
 	<string name="system_netspeedinterval_summ">Требуется разрешение на изменение системных настроек</string>
 	<string name="system_detailednetspeed_title">Подробный индикатор скорости соединения</string>
@@ -291,9 +300,13 @@
 	<string name="system_compactnotif_summ">Уменьшает вертикальные отступы в уведомлениях</string>
 	<string name="system_colorizenotiftitle_title">Раскрасить заголовок уведомления</string>
 	<string name="system_colorizenotiftitle_summ">Применяет цвет иконки к заголовку (только для стиля уведомлений Android)</string>
+	<string name="system_notifrowmenu_title">Расширенное меню уведомления</string>
+	<string name="system_notifrowmenu_summ">Добавляет новые действия в меню уведомления (открывается по свайпу влево) - открыть информацию о приложении и принудительно закрыть приложение</string>
 	<string name="system_expandnotifs_title">Разворачивать уведомления</string>
 	<string name="system_expandnotifs_summ">Показывать уведомления в полностью развёрнутом виде</string>
 	<string name="system_expandnotifs_apps_title">Чёрно-белый список</string>
+	<string name="system_autogroupnotif_title">Автогруппировка уведомлений</string>
+	<string name="system_autogroupnotif_summ">Число уведомлений от одного приложения при котором срабатывает их автоматическая группировка</string>
 	<string name="system_popupnotif_title">Автооткрытие панели уведомлений</string>
 	<string name="system_popupnotif_summ">Открывает панель уведомлений автоматически при получении уведомлений от выбранных приложений</string>
 	<string name="system_popupnotif_fs_title">Определение полноэкранного режима</string>
@@ -351,6 +364,8 @@
 	<string name="system_rotateanim_title">Анимация при повороте</string>
 	<string name="array_screen_anim_none">Без анимации</string>
 	<string name="array_screen_anim_fade">Затухание</string>
+	<string name="system_notifafterunlock_title">Не скрывать уведомления</string>
+	<string name="system_notifafterunlock_summ">Оставляет уведомления на экране блокировки даже после того как он был закрыт и потом открыт вновь</string>
 	<string name="system_dttosleep_title">Сон по двойному нажатию</string>
 	<string name="system_dttosleep_summ">Выключает экран при двойном нажатии по пустому месту на экране блокировки</string>
 	<string name="permission_save">Вы хотите сохранить бэкап или нет?</string>

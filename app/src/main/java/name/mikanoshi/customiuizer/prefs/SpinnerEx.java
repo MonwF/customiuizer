@@ -14,7 +14,6 @@ import name.mikanoshi.customiuizer.R;
 
 public class SpinnerEx extends Spinner {
 
-	private ArrayAdapterEx<CharSequence> mListAdapter;
 	private CharSequence[] entries;
 	private ArrayList<Integer> disabledItems = new ArrayList<Integer>();
 	public int[] entryValues;

@@ -17,6 +17,7 @@ import miui.app.ActionBar;
 import miui.widget.ClearableEditText;
 import name.mikanoshi.customiuizer.prefs.SpinnerEx;
 import name.mikanoshi.customiuizer.prefs.SpinnerExFake;
+import name.mikanoshi.customiuizer.subs.AppSelector;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class SubFragment extends PreferenceFragmentBase {
@@ -149,6 +150,15 @@ public class SubFragment extends PreferenceFragmentBase {
 		View currentFocusedView = getActivity().getCurrentFocus();
 		if (currentFocusedView != null)
 		inputManager.hideSoftInputFromWindow(currentFocusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+	}
+
+	public void openApps(String key) {
+		Bundle args = new Bundle();
+		args.putString("key", key);
+		args.putBoolean("multi", true);
+		AppSelector appSelector = new AppSelector();
+		appSelector.setTargetFragment(this, 0);
+		openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_app, R.layout.prefs_app_selector);
 	}
 
 	public void finish() {

@@ -1,5 +1,6 @@
 package name.mikanoshi.customiuizer.prefs;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -14,6 +15,8 @@ import name.mikanoshi.customiuizer.R;
 
 public class ListPreferenceEx extends ListPreference {
 
+	private boolean dynamic;
+	private boolean unsupported = false;
 	private boolean valueAsSummary;
 	private CharSequence sValue;
 	private Resources res = getContext().getResources();
@@ -22,8 +25,9 @@ public class ListPreferenceEx extends ListPreference {
 
 	public ListPreferenceEx(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		final TypedArray xmlAttrs = context.obtainStyledAttributes(attrs, new int[] { R.attr.valueAsSummary } );
-		valueAsSummary = xmlAttrs.getBoolean(0, false);
+		final TypedArray xmlAttrs = context.obtainStyledAttributes(attrs, R.styleable.ListPreferenceEx);
+		dynamic = xmlAttrs.getBoolean(R.styleable.ListPreferenceEx_dynamic, false);
+		valueAsSummary = xmlAttrs.getBoolean(R.styleable.ListPreferenceEx_valueAsSummary, false);
 		xmlAttrs.recycle();
 	}
 
@@ -33,17 +37,24 @@ public class ListPreferenceEx extends ListPreference {
 		sValue = getEntries()[findIndexOfValue(value)];
 	}
 
+	public void setUnsupported(boolean value) {
+		unsupported = value;
+		setEnabled(!value);
+	}
+
 	@Override
+	@SuppressLint("SetTextI18n")
 	public View getView(View view, ViewGroup parent) {
 		View finalView = super.getView(view, parent);
 		TextView title = finalView.findViewById(android.R.id.title);
 		TextView summary = finalView.findViewById(android.R.id.summary);
 		TextView valSummary = finalView.findViewById(android.R.id.hint);
 
-		summary.setVisibility(valueAsSummary || summary.getText() == null || summary.getText().equals("") ? View.GONE : View.VISIBLE);
+		summary.setVisibility(valueAsSummary || getSummary() == null || getSummary().equals("") ? View.GONE : View.VISIBLE);
 		valSummary.setVisibility(valueAsSummary ? View.VISIBLE : View.GONE);
 		valSummary.setText(valueAsSummary ? sValue : "");
 		title.setTextColor(isEnabled() ? primary : secondary);
+		title.setText(getTitle() + (unsupported ? " ⨯" : (dynamic ? " ⟲" : "")));
 
 		return finalView;
 	}

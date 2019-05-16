@@ -1,0 +1,45 @@
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:miuizer="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_noscreenlock_act"
+		android:title="@string/enable_mod"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_system_noscreenlock"
+		android:summary="@string/system_noscreenlock_summ"
+		android:title="@string/system_noscreenlock_title"
+		android:entries="@array/noscreenlock"
+		android:entryValues="@array/noscreenlock_val"
+		android:defaultValue="1"
+		android:dependency="pref_key_system_noscreenlock_act"
+		miuizer:dynamic="true" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_noscreenlock_skip"
+		android:summary="@string/system_noscreenlock_scr_summ"
+		android:title="@string/system_noscreenlock_scr_title"
+		android:defaultValue="false"
+		android:dependency="pref_key_system_noscreenlock_act"
+		miuizer:dynamic="true" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/system_noscreenlock_wifi_title"
+		android:summary="@string/system_noscreenlock_wifi_summ"
+		android:key="pref_key_system_noscreenlock_wifi"
+		android:dependency="pref_key_system_noscreenlock_act"
+		miuizer:dynamic="true" />
+<!--
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_noscreenlock_bt_title"
+			android:summary="@string/system_noscreenlock_bt_summ"
+			android:key="pref_key_system_noscreenlock_bt"
+			android:dependency="pref_key_system_noscreenlock_act"
+			miuizer:dynamic="true" />
+-->
+
+</PreferenceScreen>

@@ -50,6 +50,7 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 
 	public void updateSelectedApps() {
 		if (key != null) selectedApps = Helpers.prefs.getStringSet(key, new LinkedHashSet<String>());
+		notifyDataSetChanged();
 	}
 
 	public int getCount() {

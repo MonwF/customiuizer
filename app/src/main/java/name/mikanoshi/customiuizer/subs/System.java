@@ -1,5 +1,6 @@
 package name.mikanoshi.customiuizer.subs;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 
@@ -7,6 +8,7 @@ import java.util.Objects;
 
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SubFragment;
+import name.mikanoshi.customiuizer.prefs.ListPreferenceEx;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class System extends SubFragment {
@@ -14,24 +16,6 @@ public class System extends SubFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
-		findPreference("pref_key_system_noscreenlock_wifi").setEnabled(Objects.equals(Helpers.prefs.getString("pref_key_system_noscreenlock", "1"), "4"));
-		findPreference("pref_key_system_noscreenlock").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				findPreference("pref_key_system_noscreenlock_wifi").setEnabled(newValue.equals("4"));
-				return true;
-			}
-		});
-
-		findPreference("pref_key_system_noscreenlock_wifi").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				if (!Helpers.checkWiFiPerm(getActivity(), Helpers.REQUEST_PERMISSIONS_WIFI)) return false;
-				openWifiNetworks();
-				return true;
-			}
-		});
 
 		findPreference("pref_key_system_expandnotifs_apps").setEnabled(!Objects.equals(Helpers.prefs.getString("pref_key_system_expandnotifs", "1"), "1"));
 		findPreference("pref_key_system_expandnotifs").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -50,14 +34,6 @@ public class System extends SubFragment {
 			}
 		});
 
-		findPreference("pref_key_system_popupnotif_apps").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				openApps("pref_key_system_popupnotif_apps");
-				return true;
-			}
-		});
-
 		findPreference("pref_key_system_hidefromrecents_apps").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
@@ -65,27 +41,34 @@ public class System extends SubFragment {
 				return true;
 			}
 		});
-	}
 
-	public void openWifiNetworks() {
-		Bundle args = new Bundle();
-		args.putString("key", "pref_key_system_noscreenlock_wifi");
-		openSubFragment(new WiFiList(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.wifi_networks, R.layout.prefs_wifi_networks);
-	}
+		findPreference("pref_key_system_popupnotif_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				openSubFragment(new System_PopupNotif(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_popupnotif_title, R.xml.prefs_system_popupnotif);
+				return true;
+			}
+		});
 
-//	public void openBTNetworks() {
-//		Bundle args = new Bundle();
-//		args.putString("key", "pref_key_system_noscreenlock_bt");
-//		openSubFragment(new BTList(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.bt_devices, R.layout.prefs_bt_networks);
-//	}
+		findPreference("pref_key_system_detailednetspeed_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				openSubFragment(new SubFragment(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_detailednetspeed_title, R.xml.prefs_system_detailednetspeed);
+				return true;
+			}
+		});
 
-	public void openApps(String key) {
-		Bundle args = new Bundle();
-		args.putString("key", key);
-		args.putBoolean("multi", true);
-		AppSelector appSelector = new AppSelector();
-		appSelector.setTargetFragment(System.this, 0);
-		openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_app, R.layout.prefs_app_selector);
+		findPreference("pref_key_system_noscreenlock_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				openSubFragment(new System_NoScreenLock(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_noscreenlock_title, R.xml.prefs_system_noscreenlock);
+				return true;
+			}
+		});
+
+		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N) {
+			((ListPreferenceEx)findPreference("pref_key_system_autogroupnotif")).setUnsupported(true);
+		}
 	}
 
 }

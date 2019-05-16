@@ -51,8 +51,9 @@
 
 	</PreferenceCategory>
 
-	<PreferenceCategory
-		android:title="@string/launcher_gestures">
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:title="@string/launcher_gestures"
+		miuizer:dynamic="true">
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_launcher_swipedown"
@@ -83,6 +84,6 @@
 			android:summary="@string/launcher_shakeaction_summ"
 			android:title="@string/launcher_shakeaction_title" />
 
-	</PreferenceCategory>
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

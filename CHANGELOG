@@ -1,3 +1,16 @@
+1.5.3
+[New] Show notifications on lock screen even after it's dismissed and then opened again
+[New] Open app info and force close app from its notification menu
+[New] Do not show icon with 3 dots in system area when notification icons are hidden
+[New][Quick Settings haptic feedback] Light/strong vibration options
+[New][Full screen navigation gestures] Back gesture area height
+[New][Android 8+] Change number of notifications from one app that triggers auto grouping
+[Fixed][Theme background opacity] Separated from notification drawer background blur
+[Fixed][Detailed network speed indicator] Excessive left padding
+[Fixed][Compact notifications] Opacity bug after opening notification drawer
+[Fixed] Better handling of mods' errors
+Less cluttered module settings, new indication of dynamic mods
+
 1.5.2
 [New] Compact notifications
 [New] Enhanced Hidden apps

@@ -30,13 +30,9 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.PowerManager.WakeLock;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
-import android.provider.Settings;
 import android.util.LruCache;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
@@ -317,14 +313,26 @@ public class Helpers {
 		return null;
 	}
 
-	public static void performVibration(Context mContext) {
-		performVibration(mContext, false);
+	public static void performLightVibration(Context mContext) {
+		performLightVibration(mContext, false);
 	}
 
-	public static void performVibration(Context mContext, boolean ignoreOff) {
+	public static void performLightVibration(Context mContext, boolean ignoreOff) {
+		performVibration(mContext, false, ignoreOff);
+	}
+
+	public static void performStrongVibration(Context mContext) {
+		performVibration(mContext, true, false);
+	}
+
+	public static void performStrongVibration(Context mContext, boolean ignoreOff) {
+		performVibration(mContext, true, ignoreOff);
+	}
+
+	public static void performVibration(Context mContext, boolean isStrong, boolean ignoreOff) {
 		if (mContext == null) return;
 		HapticFeedbackUtil mHapticFeedbackUtil = new HapticFeedbackUtil(mContext, false);
-		mHapticFeedbackUtil.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, ignoreOff);
+		mHapticFeedbackUtil.performHapticFeedback(isStrong ? HapticFeedbackConstants.LONG_PRESS : HapticFeedbackConstants.VIRTUAL_KEY, ignoreOff);
 
 //		int state = 1;
 //		int level = 1;

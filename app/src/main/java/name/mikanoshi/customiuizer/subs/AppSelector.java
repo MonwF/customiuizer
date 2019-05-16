@@ -64,9 +64,7 @@ public class AppSelector extends SubFragmentWithSearch {
 							else
 								selectedApps.add(app.pkgName);
 							Helpers.prefs.edit().putStringSet(key, selectedApps).apply();
-							AppDataAdapter adapter = (AppDataAdapter)parent.getAdapter();
-							adapter.updateSelectedApps();
-							adapter.notifyDataSetChanged();
+							((AppDataAdapter)parent.getAdapter()).updateSelectedApps();
 						} else if (privacy) {
 							AppData app = (AppData)parent.getAdapter().getItem(position);
 							try {

@@ -5,14 +5,11 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.FileObserver;
 import android.util.Log;
 import android.widget.Toast;
-
-import java.util.Locale;
 
 import name.mikanoshi.customiuizer.utils.Helpers;
 
@@ -95,8 +92,8 @@ public class MainActivity extends ActivityEx {
 			case Helpers.REQUEST_PERMISSIONS_WIFI:
 				if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 					Fragment frag = getFragmentManager().findFragmentById(R.id.fragment_container);
-					if (frag instanceof name.mikanoshi.customiuizer.subs.System)
-					((name.mikanoshi.customiuizer.subs.System)frag).openWifiNetworks();
+					if (frag instanceof name.mikanoshi.customiuizer.subs.System_NoScreenLock)
+					((name.mikanoshi.customiuizer.subs.System_NoScreenLock)frag).openWifiNetworks();
 				} else if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION))
 					Toast.makeText(this, R.string.permission_wifi, Toast.LENGTH_LONG).show();
 				else

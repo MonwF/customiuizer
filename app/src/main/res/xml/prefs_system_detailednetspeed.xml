@@ -1,0 +1,40 @@
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:miuizer="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_detailednetspeed"
+		android:title="@string/enable_mod"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_system_detailednetspeed_icon"
+		android:summary="@string/system_detailednetspeed_icon_summ"
+		android:title="@string/system_detailednetspeed_icon_title"
+		android:entries="@array/netspeedicons"
+		android:entryValues="@array/netspeedicons_val"
+		android:defaultValue="2"
+		android:dependency="pref_key_system_detailednetspeed" />
+
+	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		android:key="pref_key_system_detailednetspeed_lowlevel"
+		android:title="@string/system_detailednetspeed_lowlevel_title"
+		android:summary="@string/system_detailednetspeed_lowlevel_summ"
+		android:dependency="pref_key_system_detailednetspeed"
+		android:defaultValue="1"
+		miuizer:minValue="1"
+		miuizer:maxValue="1024"
+		miuizer:stepValue="1"
+		miuizer:format="@string/format_KBs"
+		miuizer:offtext="@string/oneKBs" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_detailednetspeed_low"
+		android:summary="@string/system_detailednetspeed_low_summ"
+		android:title="@string/system_detailednetspeed_low_title"
+		android:defaultValue="false"
+		android:dependency="pref_key_system_detailednetspeed" />
+
+</PreferenceScreen>

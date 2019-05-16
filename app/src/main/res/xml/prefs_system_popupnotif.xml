@@ -1,0 +1,26 @@
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:miuizer="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_popupnotif"
+		android:title="@string/enable_mod"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_popupnotif_fs"
+		android:summary="@string/system_popupnotif_fs_summ"
+		android:title="@string/system_popupnotif_fs_title"
+		android:defaultValue="false"
+		android:dependency="pref_key_system_popupnotif" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/system_popupnotif_apps_title"
+		android:key="pref_key_system_popupnotif_apps"
+		android:dependency="pref_key_system_popupnotif"
+		miuizer:countAsSummary="true"
+		miuizer:dynamic="true" />
+
+</PreferenceScreen>

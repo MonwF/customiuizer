@@ -10,13 +10,10 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.inputmethodservice.InputMethodService;
 import android.media.AudioManager;
-import android.os.Build;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.SystemClock;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
 import android.provider.Settings;
 import android.telecom.TelecomManager;
 import android.view.KeyEvent;
@@ -524,77 +521,81 @@ public class Controls {
 		public void run() {
 			if (isFingerprintPressed && miuiPWMContext != null) {
 				isFingerprintLongPressed = true;
-				Helpers.performVibration(miuiPWMContext, true);
+				Helpers.performStrongVibration(miuiPWMContext, true);
 			}
 		}
 	};
 
 	public static void FingerprintEventsHook(LoadPackageParam lpparam) {
-		XposedHelpers.findAndHookMethod("com.android.server.policy.MiuiPhoneWindowManager", lpparam.classLoader, "processFingerprintNavigationEvent", KeyEvent.class, boolean.class, new XC_MethodHook() {
-			@Override
-			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-				miuiPWMContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-				miuiPWMHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
+		try {
+			XposedHelpers.findAndHookMethod("com.android.server.policy.MiuiPhoneWindowManager", lpparam.classLoader, "processFingerprintNavigationEvent", KeyEvent.class, boolean.class, new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+					miuiPWMContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					miuiPWMHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
 
-				KeyEvent keyEvent = (KeyEvent)param.args[0];
-				if (keyEvent.getKeyCode() != KeyEvent.KEYCODE_DPAD_CENTER || keyEvent.getAction() != KeyEvent.ACTION_DOWN) return;
+					KeyEvent keyEvent = (KeyEvent)param.args[0];
+					if (keyEvent.getKeyCode() != KeyEvent.KEYCODE_DPAD_CENTER || keyEvent.getAction() != KeyEvent.ACTION_DOWN) return;
 
-				isFingerprintPressed = true;
-				wasScreenOn = (boolean)XposedHelpers.callMethod(param.thisObject, "isScreenOn");
-				wasFingerprintUsed = Settings.System.getInt(miuiPWMContext.getContentResolver(), "is_fingerprint_active", 0) == 1;
+					isFingerprintPressed = true;
+					wasScreenOn = (boolean)XposedHelpers.callMethod(param.thisObject, "isScreenOn");
+					wasFingerprintUsed = Settings.System.getInt(miuiPWMContext.getContentResolver(), "is_fingerprint_active", 0) == 1;
 
-				if (wasScreenOn && !wasFingerprintUsed)
-				if (Helpers.getSharedIntPref(miuiPWMContext, "pref_key_controls_fingerprintlong_action", 1) > 1) {
-					int delay = Helpers.getSharedIntPref(miuiPWMContext, "pref_key_controls_fingerprintlong_delay", 0);
-					miuiPWMHandler.postDelayed(longPressFingerprint, delay < 200 ? ViewConfiguration.getLongPressTimeout() : delay);
+					if (wasScreenOn && !wasFingerprintUsed)
+					if (Helpers.getSharedIntPref(miuiPWMContext, "pref_key_controls_fingerprintlong_action", 1) > 1) {
+						int delay = Helpers.getSharedIntPref(miuiPWMContext, "pref_key_controls_fingerprintlong_delay", 0);
+						miuiPWMHandler.postDelayed(longPressFingerprint, delay < 200 ? ViewConfiguration.getLongPressTimeout() : delay);
+					}
+
+					if (XposedHelpers.getAdditionalInstanceField(param.thisObject, "touchTime") == null)
+					XposedHelpers.setAdditionalInstanceField(param.thisObject, "touchTime", 0L);
 				}
 
-				if (XposedHelpers.getAdditionalInstanceField(param.thisObject, "touchTime") == null)
-				XposedHelpers.setAdditionalInstanceField(param.thisObject, "touchTime", 0L);
-			}
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					KeyEvent keyEvent = (KeyEvent)param.args[0];
+					if (keyEvent.getKeyCode() != KeyEvent.KEYCODE_DPAD_CENTER || keyEvent.getAction() != KeyEvent.ACTION_UP) return;
 
-			@Override
-			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-				KeyEvent keyEvent = (KeyEvent)param.args[0];
-				if (keyEvent.getKeyCode() != KeyEvent.KEYCODE_DPAD_CENTER || keyEvent.getAction() != KeyEvent.ACTION_UP) return;
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
 
-				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-				Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
+					long lastTouchTime = (long)XposedHelpers.getAdditionalInstanceField(param.thisObject, "touchTime");
+					long currentTouchTime = currentTimeMillis();
+					XposedHelpers.setAdditionalInstanceField(param.thisObject, "touchTime", currentTouchTime);
 
-				long lastTouchTime = (long)XposedHelpers.getAdditionalInstanceField(param.thisObject, "touchTime");
-				long currentTouchTime = currentTimeMillis();
-				XposedHelpers.setAdditionalInstanceField(param.thisObject, "touchTime", currentTouchTime);
+					int delay = Helpers.getSharedIntPref(mContext, "pref_key_controls_fingerprint2_delay", 50);
+					int dttimeout = delay < 200 ? ViewConfiguration.getDoubleTapTimeout() : delay;
+					int dtaction = Helpers.getSharedIntPref(mContext, "pref_key_controls_fingerprint2_action", 1);
+					if (wasScreenOn && !wasFingerprintUsed)
+					if (dtaction > 1 && currentTouchTime - lastTouchTime < dttimeout) {
+						mHandler.removeCallbacks(singlePressFingerprint);
+						mHandler.removeCallbacks(longPressFingerprint);
+						int launch = 13;
+						int toggle = Helpers.getSharedIntPref(mContext, "pref_key_controls_fingerprint2_toggle", 0);
+						GlobalActions.handleAction(dtaction, launch, toggle, mContext);
+						wasScreenOn = false;
+					} else if (isFingerprintLongPressed) {
+						int action = Helpers.getSharedIntPref(mContext, "pref_key_controls_fingerprintlong_action", 1);
+						int launch = 14;
+						int toggle = Helpers.getSharedIntPref(mContext, "pref_key_controls_fingerprintlong_toggle", 0);
+						GlobalActions.handleAction(action, launch, toggle, mContext);
+						wasScreenOn = false;
+					} else {
+						mHandler.removeCallbacks(longPressFingerprint);
+						mHandler.removeCallbacks(singlePressFingerprint);
+						if (dtaction > 1)
+							mHandler.postDelayed(singlePressFingerprint, dttimeout);
+						else
+							mHandler.post(singlePressFingerprint);
+					}
 
-				int delay = Helpers.getSharedIntPref(mContext, "pref_key_controls_fingerprint2_delay", 50);
-				int dttimeout = delay < 200 ? ViewConfiguration.getDoubleTapTimeout() : delay;
-				int dtaction = Helpers.getSharedIntPref(mContext, "pref_key_controls_fingerprint2_action", 1);
-				if (wasScreenOn && !wasFingerprintUsed)
-				if (dtaction > 1 && currentTouchTime - lastTouchTime < dttimeout) {
-					mHandler.removeCallbacks(singlePressFingerprint);
-					mHandler.removeCallbacks(longPressFingerprint);
-					int launch = 13;
-					int toggle = Helpers.getSharedIntPref(mContext, "pref_key_controls_fingerprint2_toggle", 0);
-					GlobalActions.handleAction(dtaction, launch, toggle, mContext);
-					wasScreenOn = false;
-				} else if (isFingerprintLongPressed) {
-					int action = Helpers.getSharedIntPref(mContext, "pref_key_controls_fingerprintlong_action", 1);
-					int launch = 14;
-					int toggle = Helpers.getSharedIntPref(mContext, "pref_key_controls_fingerprintlong_toggle", 0);
-					GlobalActions.handleAction(action, launch, toggle, mContext);
-					wasScreenOn = false;
-				} else {
-					mHandler.removeCallbacks(longPressFingerprint);
-					mHandler.removeCallbacks(singlePressFingerprint);
-					if (dtaction > 1)
-						mHandler.postDelayed(singlePressFingerprint, dttimeout);
-					else
-						mHandler.post(singlePressFingerprint);
+					isFingerprintLongPressed = false;
+					isFingerprintPressed = false;
 				}
-
-				isFingerprintLongPressed = false;
-				isFingerprintPressed = false;
-			}
-		});
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
 
 		try {
 			XposedBridge.hookAllMethods(findClass("com.android.server.fingerprint.FingerprintService", lpparam.classLoader), "startClient", new XC_MethodHook() {

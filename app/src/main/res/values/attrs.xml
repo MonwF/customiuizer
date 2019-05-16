@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<declare-styleable name="ListPreferenceEx">
-		<attr name="valueAsSummary" format="boolean" />
+
+	<attr name="dynamic" format="boolean" />
+
+	<declare-styleable name="PreferenceCategoryEx">
+		<attr name="dynamic" />
+	</declare-styleable>
+
+	<declare-styleable name="PreferenceEx">
+		<attr name="dynamic" />
 		<attr name="countAsSummary" format="boolean" />
+	</declare-styleable>
+
+	<declare-styleable name="CheckBoxPreferenceEx">
+		<attr name="dynamic" />
+	</declare-styleable>
+
+	<declare-styleable name="ListPreferenceEx">
+		<attr name="dynamic" />
+		<attr name="valueAsSummary" format="boolean" />
 	</declare-styleable>
 
 	<declare-styleable name="SpinnerEx">
@@ -18,6 +34,7 @@
 		<attr name="format" format="string" />
 		<attr name="note" format="string" />
 		<attr name="offtext" format="string" />
+		<attr name="dynamic" />
 	</declare-styleable>
 
 	<attr name="preferenceSecondaryTextColor" format="reference|color" />

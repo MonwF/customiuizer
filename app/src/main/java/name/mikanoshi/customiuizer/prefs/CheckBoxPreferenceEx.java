@@ -1,12 +1,16 @@
 package name.mikanoshi.customiuizer.prefs;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.preference.CheckBoxPreference;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import name.mikanoshi.customiuizer.R;
 
 public class CheckBoxPreferenceEx extends CheckBoxPreference {
 
@@ -14,23 +18,22 @@ public class CheckBoxPreferenceEx extends CheckBoxPreference {
 	private int primary = res.getColor(res.getIdentifier("preference_primary_text_light", "color", "miui"), getContext().getTheme());
 	private int secondary = res.getColor(res.getIdentifier("preference_secondary_text_light", "color", "miui"), getContext().getTheme());
 
-	public CheckBoxPreferenceEx(Context context) {
-		super(context);
-	}
+	private boolean dynamic;
 
 	public CheckBoxPreferenceEx(Context context, AttributeSet attrs) {
 		super(context, attrs);
-	}
-
-	public CheckBoxPreferenceEx(Context context, AttributeSet attrs, int defStyleAttr) {
-		super(context, attrs, defStyleAttr);
+		final TypedArray xmlAttrs = context.obtainStyledAttributes(attrs, R.styleable.CheckBoxPreferenceEx);
+		dynamic = xmlAttrs.getBoolean(R.styleable.CheckBoxPreferenceEx_dynamic, false);
+		xmlAttrs.recycle();
 	}
 
 	@Override
+	@SuppressLint("SetTextI18n")
 	public View getView(View view, ViewGroup parent) {
 		View finalView = super.getView(view, parent);
 		TextView title = finalView.findViewById(android.R.id.title);
 		title.setTextColor(isEnabled() ? primary : secondary);
+		title.setText(getTitle() + (dynamic ? " ⟲" : ""));
 		return finalView;
 	}
 

@@ -1,5 +1,6 @@
 package name.mikanoshi.customiuizer.prefs;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.preference.Preference;
@@ -17,6 +18,8 @@ import name.mikanoshi.customiuizer.utils.Helpers;
 
 @SuppressWarnings("WeakerAccess")
 public class SeekBarPreference extends Preference {
+
+	private boolean dynamic;
 
 	private int mDefaultValue;
 	private int mMinValue;
@@ -50,6 +53,7 @@ public class SeekBarPreference extends Preference {
 		if (attrs != null) {
 			TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.SeekBarPreference);
 
+			dynamic = a.getBoolean(R.styleable.SeekBarPreference_dynamic, false);
 			mMinValue = a.getInt(R.styleable.SeekBarPreference_minValue, 0);
 			mMaxValue = a.getInt(R.styleable.SeekBarPreference_maxValue, 10);
 			mStepValue = a.getInt(R.styleable.SeekBarPreference_stepValue, 1);
@@ -90,13 +94,19 @@ public class SeekBarPreference extends Preference {
 	}
 
 	@Override
+	@SuppressLint("SetTextI18n")
+	public View getView(View view, ViewGroup parent) {
+		View finalView = super.getView(view, parent);
+		TextView title = finalView.findViewById(android.R.id.title);
+		title.setText(getTitle() + (dynamic ? " ⟲" : ""));
+		return finalView;
+	}
+
+	@Override
 	protected View onCreateView(ViewGroup parent) {
 		setLayoutResource(R.layout.preference_seekbar);
 
 		View view = super.onCreateView(parent);
-
-		TextView mTitleView = view.findViewById(android.R.id.title);
-		mTitleView.setText(getTitle());
 
 		TextView mSummaryView = view.findViewById(android.R.id.summary);
 		if (!TextUtils.isEmpty(getSummary()))

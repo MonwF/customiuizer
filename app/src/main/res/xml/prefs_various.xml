@@ -25,7 +25,8 @@
 			android:entries="@array/appsort"
 			android:entryValues="@array/appsort_val"
 			android:defaultValue="0"
-			miuizer:valueAsSummary="true" />
+			miuizer:valueAsSummary="true"
+			miuizer:dynamic="true" />
 
 	</PreferenceCategory>
 

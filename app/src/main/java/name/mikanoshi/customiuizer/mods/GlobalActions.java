@@ -10,9 +10,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.ProviderInfo;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.content.res.XModuleResources;
@@ -20,11 +18,8 @@ import android.media.AudioManager;
 import android.net.wifi.WifiManager;
 import android.nfc.NfcAdapter;
 import android.os.Binder;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
@@ -731,24 +726,28 @@ public class GlobalActions {
 	}
 
 	public static void setupStatusBar(LoadPackageParam lpparam) {
-		XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "start", new XC_MethodHook() {
-			@Override
-			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-				mStatusBar = param.thisObject;
-				Context mStatusBarContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-				IntentFilter intentfilter = new IntentFilter();
+		try {
+			XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "start", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					mStatusBar = param.thisObject;
+					Context mStatusBarContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					IntentFilter intentfilter = new IntentFilter();
 
-				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ExpandNotifications");
-				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ExpandSettings");
-				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.OpenRecents");
+					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ExpandNotifications");
+					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ExpandSettings");
+					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.OpenRecents");
 
-				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleGPS");
-				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleFlashlight");
-				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ShowQuickRecents");
-				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.HideQuickRecents");
-				mStatusBarContext.registerReceiver(mSBReceiver, intentfilter);
-			}
-		});
+					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleGPS");
+					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleFlashlight");
+					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ShowQuickRecents");
+					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.HideQuickRecents");
+					mStatusBarContext.registerReceiver(mSBReceiver, intentfilter);
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
 
 //		XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.HeaderView", lpparam.classLoader, "onFinishInflate", new XC_MethodHook() {
 //			@Override
@@ -1087,6 +1086,6 @@ public class GlobalActions {
 		am.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, keyCode));
 
 		if (vibrate && Helpers.getSharedBoolPref(mContext, "pref_key_controls_volumemedia_vibrate", true))
-		Helpers.performVibration(mContext);
+		Helpers.performStrongVibration(mContext);
 	}
 }

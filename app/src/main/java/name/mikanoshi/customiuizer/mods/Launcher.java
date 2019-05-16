@@ -58,49 +58,53 @@ public class Launcher {
 //			}
 //		});
 
-		XposedHelpers.findAndHookMethod(Application.class, "attach", Context.class, new XC_MethodHook() {
-			@Override
-			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-				XposedHelpers.findAndHookMethod("com.miui.home.launcher.Workspace", lpparam.classLoader, "onVerticalGesture", int.class, MotionEvent.class, new XC_MethodHook() {
-					@Override
-					protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
-						int action = 1;
-						int launch = 0;
-						int toggle = 0;
-						Context helperContext = ((ViewGroup)param.thisObject).getContext();
-						int numOfFingers = 1;
-						if (param.args[1] != null) numOfFingers = ((MotionEvent)param.args[1]).getPointerCount();
-						if ((int)param.args[0] == 11) {
-							if (numOfFingers == 1) {
-								action = Helpers.getSharedIntPref(helperContext, "pref_key_launcher_swipedown_action", 1);
-								launch = 1;
-								toggle = Helpers.getSharedIntPref(helperContext, "pref_key_launcher_swipedown_toggle", 0);
-							} else if (numOfFingers == 2) {
-								action = Helpers.getSharedIntPref(helperContext, "pref_key_launcher_swipedown2_action", 1);
-								launch = 2;
-								toggle = Helpers.getSharedIntPref(helperContext, "pref_key_launcher_swipedown2_toggle", 0);
+		try {
+			XposedHelpers.findAndHookMethod(Application.class, "attach", Context.class, new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					XposedHelpers.findAndHookMethod("com.miui.home.launcher.Workspace", lpparam.classLoader, "onVerticalGesture", int.class, MotionEvent.class, new XC_MethodHook() {
+						@Override
+						protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+							int action = 1;
+							int launch = 0;
+							int toggle = 0;
+							Context helperContext = ((ViewGroup)param.thisObject).getContext();
+							int numOfFingers = 1;
+							if (param.args[1] != null) numOfFingers = ((MotionEvent)param.args[1]).getPointerCount();
+							if ((int)param.args[0] == 11) {
+								if (numOfFingers == 1) {
+									action = Helpers.getSharedIntPref(helperContext, "pref_key_launcher_swipedown_action", 1);
+									launch = 1;
+									toggle = Helpers.getSharedIntPref(helperContext, "pref_key_launcher_swipedown_toggle", 0);
+								} else if (numOfFingers == 2) {
+									action = Helpers.getSharedIntPref(helperContext, "pref_key_launcher_swipedown2_action", 1);
+									launch = 2;
+									toggle = Helpers.getSharedIntPref(helperContext, "pref_key_launcher_swipedown2_toggle", 0);
+								}
+								if (action <= 1) return;
+								boolean res = GlobalActions.handleAction(action, launch, toggle, helperContext);
+								if (res) param.setResult(true);
+							} else if ((int)param.args[0] == 10) {
+								if (numOfFingers == 1) {
+									action = Helpers.getSharedIntPref(helperContext, "pref_key_launcher_swipeup_action", 1);
+									launch = 3;
+									toggle = Helpers.getSharedIntPref(helperContext, "pref_key_launcher_swipeup_toggle", 0);
+								} else if (numOfFingers == 2) {
+									action = Helpers.getSharedIntPref(helperContext, "pref_key_launcher_swipeup2_action", 1);
+									launch = 4;
+									toggle = Helpers.getSharedIntPref(helperContext, "pref_key_launcher_swipeup2_toggle", 0);
+								}
+								if (action <= 1) return;
+								boolean res = GlobalActions.handleAction(action, launch, toggle, helperContext);
+								if (res) param.setResult(true);
 							}
-							if (action <= 1) return;
-							boolean res = GlobalActions.handleAction(action, launch, toggle, helperContext);
-							if (res) param.setResult(true);
-						} else if ((int)param.args[0] == 10) {
-							if (numOfFingers == 1) {
-								action = Helpers.getSharedIntPref(helperContext, "pref_key_launcher_swipeup_action", 1);
-								launch = 3;
-								toggle = Helpers.getSharedIntPref(helperContext, "pref_key_launcher_swipeup_toggle", 0);
-							} else if (numOfFingers == 2) {
-								action = Helpers.getSharedIntPref(helperContext, "pref_key_launcher_swipeup2_action", 1);
-								launch = 4;
-								toggle = Helpers.getSharedIntPref(helperContext, "pref_key_launcher_swipeup2_toggle", 0);
-							}
-							if (action <= 1) return;
-							boolean res = GlobalActions.handleAction(action, launch, toggle, helperContext);
-							if (res) param.setResult(true);
 						}
-					}
-				});
-			}
-		});
+					});
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
 
 		try {
 			XposedHelpers.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "isGlobalSearchEnable", Context.class, new XC_MethodHook() {
@@ -162,19 +166,23 @@ public class Launcher {
 //	}
 
 	public static void HotSeatSwipesHook(final XC_LoadPackage.LoadPackageParam lpparam) {
-		XposedHelpers.findAndHookMethod("com.miui.home.launcher.HotSeats", lpparam.classLoader, "dispatchTouchEvent", MotionEvent.class, new XC_MethodHook() {
-			@Override
-			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
-				MotionEvent ev = (MotionEvent)param.args[0];
-				if (ev == null) return;
+		try {
+			XposedHelpers.findAndHookMethod("com.miui.home.launcher.HotSeats", lpparam.classLoader, "dispatchTouchEvent", MotionEvent.class, new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+					MotionEvent ev = (MotionEvent)param.args[0];
+					if (ev == null) return;
 
-				ViewGroup hotSeat = (ViewGroup)param.thisObject;
-				Context helperContext = hotSeat.getContext();
-				if (helperContext == null) return;
-				if (mDetectorHorizontal == null) mDetectorHorizontal = new GestureDetector(helperContext, new SwipeListenerHorizontal(hotSeat));
-				mDetectorHorizontal.onTouchEvent(ev);
-			}
-		});
+					ViewGroup hotSeat = (ViewGroup)param.thisObject;
+					Context helperContext = hotSeat.getContext();
+					if (helperContext == null) return;
+					if (mDetectorHorizontal == null) mDetectorHorizontal = new GestureDetector(helperContext, new SwipeListenerHorizontal(hotSeat));
+					mDetectorHorizontal.onTouchEvent(ev);
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
 
 //		XposedHelpers.findAndHookMethod("com.htc.launcher.DragLayer", lpparam.classLoader, "onInterceptTouchEvent", MotionEvent.class, new XC_MethodHook() {
 //			@Override
@@ -235,52 +243,61 @@ public class Launcher {
 
 	public static void ShakeHook(final XC_LoadPackage.LoadPackageParam lpparam) {
 		final String shakeMgrKey = "MIUIZER_SHAKE_MGR";
-		XposedHelpers.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.classLoader, "onResume", new XC_MethodHook() {
-			@Override
-			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
-				ShakeManager shakeMgr = (ShakeManager)XposedHelpers.getAdditionalInstanceField(param.thisObject, shakeMgrKey);
-				if (shakeMgr == null) {
-					shakeMgr = new ShakeManager((Context)param.thisObject);
-					XposedHelpers.setAdditionalInstanceField(param.thisObject, shakeMgrKey, shakeMgr);
-				}
-				Activity launcherActivity = (Activity)param.thisObject;
-				SensorManager sensorMgr = (SensorManager)launcherActivity.getSystemService(Context.SENSOR_SERVICE);
-				shakeMgr.reset();
-				sensorMgr.registerListener(shakeMgr, sensorMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
-			}
-		});
 
-		XposedHelpers.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.classLoader, "onPause", new XC_MethodHook() {
-			@Override
-			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
-				if (XposedHelpers.getAdditionalInstanceField(param.thisObject, shakeMgrKey) == null) return;
-				Activity launcherActivity = (Activity)param.thisObject;
-				SensorManager sensorMgr = (SensorManager)launcherActivity.getSystemService(Context.SENSOR_SERVICE);
-				sensorMgr.unregisterListener((ShakeManager)XposedHelpers.getAdditionalInstanceField(param.thisObject, shakeMgrKey));
-			}
-		});
+		try {
+			XposedHelpers.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.classLoader, "onResume", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+					ShakeManager shakeMgr = (ShakeManager)XposedHelpers.getAdditionalInstanceField(param.thisObject, shakeMgrKey);
+					if (shakeMgr == null) {
+						shakeMgr = new ShakeManager((Context)param.thisObject);
+						XposedHelpers.setAdditionalInstanceField(param.thisObject, shakeMgrKey, shakeMgr);
+					}
+					Activity launcherActivity = (Activity)param.thisObject;
+					SensorManager sensorMgr = (SensorManager)launcherActivity.getSystemService(Context.SENSOR_SERVICE);
+					shakeMgr.reset();
+					sensorMgr.registerListener(shakeMgr, sensorMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+				}
+			});
+
+			XposedHelpers.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.classLoader, "onPause", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+					if (XposedHelpers.getAdditionalInstanceField(param.thisObject, shakeMgrKey) == null) return;
+					Activity launcherActivity = (Activity)param.thisObject;
+					SensorManager sensorMgr = (SensorManager)launcherActivity.getSystemService(Context.SENSOR_SERVICE);
+					sensorMgr.unregisterListener((ShakeManager)XposedHelpers.getAdditionalInstanceField(param.thisObject, shakeMgrKey));
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
 	}
 
 	public static void FolderShadeHook(final XC_LoadPackage.LoadPackageParam lpparam) {
-		XposedBridge.hookAllConstructors(findClass("com.miui.home.launcher.FolderCling", lpparam.classLoader), new XC_MethodHook() {
-			@Override
-			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
-				int opt = Integer.parseInt(Helpers.getSharedStringPref((Context)param.args[0], "pref_key_launcher_foldershade", "1"));
-				if (opt == 2) {
-					((View)param.thisObject).setBackground(new ColorDrawable(0x99000000));
-				} else if (opt == 3) {
-					PaintDrawable pd = new PaintDrawable();
-					pd.setShape(new RectShape());
-					pd.setShaderFactory(new ShapeDrawable.ShaderFactory() {
-						@Override
-						public Shader resize(int width, int height) {
-							return new LinearGradient(0, 0, 0, height, new int[]{0x11000000, 0x99000000, 0x99000000, 0x11000000}, new float[]{0.0f, 0.25f, 0.65f, 1.0f}, Shader.TileMode.CLAMP);
-						}
-					});
-					((View)param.thisObject).setBackground(pd);
+		try {
+			XposedBridge.hookAllConstructors(findClass("com.miui.home.launcher.FolderCling", lpparam.classLoader), new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+					int opt = Integer.parseInt(Helpers.getSharedStringPref((Context)param.args[0], "pref_key_launcher_foldershade", "1"));
+					if (opt == 2) {
+						((View)param.thisObject).setBackground(new ColorDrawable(0x99000000));
+					} else if (opt == 3) {
+						PaintDrawable pd = new PaintDrawable();
+						pd.setShape(new RectShape());
+						pd.setShaderFactory(new ShapeDrawable.ShaderFactory() {
+							@Override
+							public Shader resize(int width, int height) {
+								return new LinearGradient(0, 0, 0, height, new int[]{0x11000000, 0x99000000, 0x99000000, 0x11000000}, new float[]{0.0f, 0.25f, 0.65f, 1.0f}, Shader.TileMode.CLAMP);
+							}
+						});
+						((View)param.thisObject).setBackground(pd);
+					}
 				}
-			}
-		});
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
 	}
 
 	public static void NoClockHideHook(final XC_LoadPackage.LoadPackageParam lpparam) {
