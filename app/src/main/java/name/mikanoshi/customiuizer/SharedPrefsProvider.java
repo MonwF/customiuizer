@@ -23,6 +23,7 @@ public class SharedPrefsProvider extends ContentProvider {
 	SharedPreferences prefs;
 
 	static {
+		uriMatcher.addURI(AUTHORITY, "string/*/", 0);
 		uriMatcher.addURI(AUTHORITY, "string/*/*", 1);
 		uriMatcher.addURI(AUTHORITY, "integer/*/*", 2);
 		uriMatcher.addURI(AUTHORITY, "boolean/*/*", 3);
@@ -47,6 +48,10 @@ public class SharedPrefsProvider extends ContentProvider {
 		MatrixCursor cursor = new MatrixCursor(new String[]{"data"});
 
 		switch (uriMatcher.match(uri)) {
+			case 0: {
+				cursor.newRow().add("data", prefs.getString(parts.get(1), ""));
+				return cursor;
+			}
 			case 1: {
 				cursor.newRow().add("data", prefs.getString(parts.get(1), parts.get(2)));
 				return cursor;

@@ -33,10 +33,12 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.PowerManager.WakeLock;
+import android.text.InputType;
 import android.util.LruCache;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import de.robv.android.xposed.XposedBridge;
 import miui.util.HapticFeedbackUtil;
@@ -71,6 +73,10 @@ public class Helpers {
 
 	public enum SettingsType {
 		Preference, Edit
+	}
+
+	public enum AppAdapterType {
+		Default, Mutli, CustomTitles
 	}
 
 	public enum ActionBarType {
@@ -156,6 +162,32 @@ public class Helpers {
 		});
 		alert.show();
 	}
+
+	public interface InputCallback {
+		void onInputFinished(String key, String text);
+	}
+
+	public static void showInputDialog(Context mContext, final String key, int titleRes, InputCallback callback) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+		builder.setTitle(titleRes);
+		final EditText input = new EditText(mContext);
+		input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
+		input.setText(prefs.getString(key, ""));
+		builder.setView(input);
+		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				callback.onInputFinished(key, input.getText().toString());
+			}
+		});
+		builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		});
+		builder.show();
+	}
 	
 	public static boolean checkStorageReadable(Context mContext) {
 		String state = Environment.getExternalStorageState();
@@ -174,9 +206,16 @@ public class Helpers {
 		} else return true;
 	}
 
-	public static boolean checkWiFiPerm(Activity act, int action) {
+	public static boolean checkCoarsePerm(Activity act, int action) {
 		if (act.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 			act.requestPermissions(new String[]{ Manifest.permission.ACCESS_COARSE_LOCATION }, action);
+			return false;
+		} else return true;
+	}
+
+	public static boolean checkFinePerm(Activity act, int action) {
+		if (act.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+			act.requestPermissions(new String[]{ Manifest.permission.ACCESS_FINE_LOCATION }, action);
 			return false;
 		} else return true;
 	}
@@ -373,6 +412,7 @@ public class Helpers {
 			if (pkgFolder.exists()) {
 				pkgFolder.setExecutable(true, false);
 				pkgFolder.setReadable(true, false);
+				pkgFolder.setWritable(true, false);
 				File sharedPrefsFolder = new File(pkgFolder.getAbsolutePath() + "/shared_prefs");
 				if (sharedPrefsFolder.exists()) {
 					sharedPrefsFolder.setExecutable(true, false);
@@ -393,7 +433,7 @@ public class Helpers {
 		if (hayStack == null || hayStack.size() == 0) return false;
 		for (String pair: hayStack) {
 			String[] needles = pair.split("\\|");
-			if (needles[0].equals(needle)) {
+			if (needles[0].equalsIgnoreCase(needle)) {
 				res = true;
 				break;
 			}
@@ -461,6 +501,10 @@ public class Helpers {
 		return Uri.parse("content://" + SharedPrefsProvider.AUTHORITY + "/boolean/" + name + "/" + (defValue ? '1' : '0'));
 	}
 
+	public static Uri anyPrefToUri() {
+		return Uri.parse("content://" + SharedPrefsProvider.AUTHORITY + "/pref/");
+	}
+
 	public static String getSharedStringPref(Context context, String name, String defValue) {
 		Uri uri = stringPrefToUri(name, defValue);
 		try {
@@ -469,13 +513,13 @@ public class Helpers {
 				String prefValue = cursor.getString(0);
 				cursor.close();
 				return prefValue;
-			}
+			} else XposedBridge.log("[CustoMIUIzer][ContentResolver][" + name + "] Cursor fail: " + cursor);
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
 
 		if (MainModule.mPrefs.containsKey(name))
-			return MainModule.mPrefs.getString(name, defValue);
+			return (String)MainModule.mPrefs.getObject(name, defValue);
 		else
 			return defValue;
 	}
@@ -489,7 +533,7 @@ public class Helpers {
 				while (cursor.moveToNext()) prefValue.add(cursor.getString(0));
 				cursor.close();
 				return prefValue;
-			}
+			} else XposedBridge.log("[CustoMIUIzer][ContentResolver][" + name + "] Cursor fail: null");
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
@@ -505,13 +549,13 @@ public class Helpers {
 				int prefValue = cursor.getInt(0);
 				cursor.close();
 				return prefValue;
-			}
+			} else XposedBridge.log("[CustoMIUIzer][ContentResolver][" + name + "] Cursor fail: " + cursor);
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
 
 		if (MainModule.mPrefs.containsKey(name))
-			return MainModule.mPrefs.getInt(name, defValue);
+			return (int)MainModule.mPrefs.getObject(name, defValue);
 		else
 			return defValue;
 	}
@@ -524,13 +568,13 @@ public class Helpers {
 				int prefValue = cursor.getInt(0);
 				cursor.close();
 				return prefValue == 1;
-			}
+			} else XposedBridge.log("[CustoMIUIzer][ContentResolver][" + name + "] Cursor fail: " + cursor);
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
 
 		if (MainModule.mPrefs.containsKey(name))
-			return MainModule.mPrefs.getBoolean(name);
+			return (boolean)MainModule.mPrefs.getObject(name, false);
 		else
 			return defValue;
 	}
@@ -538,7 +582,7 @@ public class Helpers {
 	public static class SharedPrefObserver extends ContentObserver {
 
 		enum PrefType {
-			String, Integer
+			Any, String, StringSet, Integer
 		}
 
 		PrefType prefType;
@@ -547,12 +591,27 @@ public class Helpers {
 		String prefDefValueString;
 		int prefDefValueInt;
 
+		public SharedPrefObserver(Context context, Handler handler) {
+			super(handler);
+			ctx = context;
+			prefType = PrefType.Any;
+			registerObserver();
+		}
+
 		public SharedPrefObserver(Context context, Handler handler, String name, String defValue) {
 			super(handler);
 			ctx = context;
 			prefName = name;
 			prefType = PrefType.String;
 			prefDefValueString = defValue;
+			registerObserver();
+		}
+
+		public SharedPrefObserver(Context context, Handler handler, String name) {
+			super(handler);
+			ctx = context;
+			prefName = name;
+			prefType = PrefType.StringSet;
 			registerObserver();
 		}
 
@@ -569,9 +628,21 @@ public class Helpers {
 			Uri uri = null;
 			if (prefType == PrefType.String)
 				uri = stringPrefToUri(prefName, prefDefValueString);
+			else if (prefType == PrefType.StringSet)
+				uri = stringSetPrefToUri(prefName);
 			else if (prefType == PrefType.Integer)
 				uri = intPrefToUri(prefName, prefDefValueInt);
-			if (uri != null) ctx.getContentResolver().registerContentObserver(uri, false, this);
+			else if (prefType == PrefType.Any)
+				uri = anyPrefToUri();
+			if (uri != null) ctx.getContentResolver().registerContentObserver(uri, prefType == PrefType.Any, this);
+		}
+
+		@Override
+		public void onChange(boolean selfChange, Uri uri) {
+			if (prefType == PrefType.Any)
+				onChange(uri);
+			else
+				onChange(selfChange);
 		}
 
 		@Override
@@ -579,10 +650,14 @@ public class Helpers {
 			if (selfChange) return;
 			if (prefType == PrefType.String)
 				onChange(prefName, prefDefValueString);
+			else if (prefType == PrefType.StringSet)
+				onChange(prefName);
 			else if (prefType == PrefType.Integer)
 				onChange(prefName, prefDefValueInt);
 		}
 
+		public void onChange(Uri uri) {}
+		public void onChange(String name) {}
 		public void onChange(String name, String defValue) {}
 		public void onChange(String name, int defValue) {}
 	}

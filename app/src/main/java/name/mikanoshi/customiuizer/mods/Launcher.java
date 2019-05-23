@@ -3,6 +3,7 @@ package name.mikanoshi.customiuizer.mods;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.graphics.drawable.ColorDrawable;
@@ -11,16 +12,23 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.HashSet;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
+import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.ShakeManager;
 
@@ -303,6 +311,89 @@ public class Launcher {
 	public static void NoClockHideHook(final XC_LoadPackage.LoadPackageParam lpparam) {
 		try {
 			XposedHelpers.findAndHookMethod("com.miui.home.launcher.Workspace", lpparam.classLoader, "isScreenHasClockGadget", long.class, XC_MethodReplacement.returnConstant(false));
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	private static void modifyTitle(Object thisObject) {
+		try {
+			boolean isApplicatoin = (boolean)XposedHelpers.callMethod(thisObject, "isApplicatoin");
+			if (!isApplicatoin) return;
+			String pkgName = (String)XposedHelpers.callMethod(thisObject, "getPackageName");
+			String actName = (String)XposedHelpers.callMethod(thisObject, "getClassName");
+			String newTitle = MainModule.mPrefs.getString("launcher_renameapps_list:" + pkgName + "|" + actName, "");
+			if (!TextUtils.isEmpty(newTitle)) XposedHelpers.setObjectField(thisObject, "mLabel", newTitle);
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void RenameShortcutsHook(final XC_LoadPackage.LoadPackageParam lpparam) {
+		try {
+			XposedHelpers.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.classLoader, "onCreate", Bundle.class, new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+					Activity act = (Activity)param.thisObject;
+					Handler mHandler = (Handler)XposedHelpers.getObjectField(act, "mHandler");
+					new Helpers.SharedPrefObserver(act, mHandler) {
+						@Override
+						public void onChange(Uri uri) {
+							try {
+								String type = uri.getPathSegments().get(1);
+								String key = uri.getPathSegments().get(2);
+								String newTitle = Helpers.getSharedStringPref(act, key, "");
+								if (type.equals("string")) MainModule.mPrefs.put(key, newTitle);
+								HashSet<?> mAllLoadedApps = (HashSet<?>)XposedHelpers.getObjectField(param.thisObject, "mAllLoadedApps");
+								if (mAllLoadedApps != null)
+								for (Object shortcut : mAllLoadedApps) {
+									boolean isApplicatoin = (boolean)XposedHelpers.callMethod(shortcut, "isApplicatoin");
+									if (!isApplicatoin) continue;
+									String pkgName = (String)XposedHelpers.callMethod(shortcut, "getPackageName");
+									String actName = (String)XposedHelpers.callMethod(shortcut, "getClassName");
+									if (("pref_key_launcher_renameapps_list:" + pkgName + "|" + actName).equals(key)) {
+										XposedHelpers.setObjectField(shortcut, "mLabel", TextUtils.isEmpty(newTitle) ? XposedHelpers.getObjectField(shortcut, "title") : newTitle);
+										XposedHelpers.callMethod(shortcut, "updateLabelInDatabases", newTitle, act);
+										XposedHelpers.callMethod(shortcut, "updateBuddyIconView", act);
+										break;
+									}
+								}
+							} catch (Throwable t) {
+								XposedBridge.log(t);
+							}
+						}
+					};
+				}
+			});
+
+			XposedBridge.hookAllConstructors(findClass("com.miui.home.launcher.ShortcutInfo", lpparam.classLoader), new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+					if (param.args.length > 0) modifyTitle(param.thisObject);
+				}
+			});
+
+			XposedHelpers.findAndHookMethod("com.miui.home.launcher.ShortcutInfo", lpparam.classLoader, "loadSettingsInfo", Context.class, new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+					XposedBridge.log("loadSettingsInfo: " + XposedHelpers.getObjectField(param.thisObject, "mLabel"));
+					modifyTitle(param.thisObject);
+				}
+			});
+
+			XposedHelpers.findAndHookMethod("com.miui.home.launcher.ShortcutInfo", lpparam.classLoader, "setLabel", CharSequence.class, new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+					modifyTitle(param.thisObject);
+				}
+			});
+
+			XposedHelpers.findAndHookMethod("com.miui.home.launcher.ShortcutInfo", lpparam.classLoader, "load", Context.class, Cursor.class, new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+					modifyTitle(param.thisObject);
+				}
+			});
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}

@@ -13,6 +13,7 @@
 	<string name="system_mods">System</string>
 	<string name="system_mods_screen">Screen</string>
 	<string name="system_mods_audio">Audio</string>
+	<string name="system_mods_vibration">Vibration</string>
 	<string name="system_mods_screenanim">Screen animations</string>
 	<string name="system_qshaptic_title">Quick settings haptic feedback</string>
 	<string name="system_qshaptic_summ">Vibrate on Quick settings tile tap</string>
@@ -60,6 +61,8 @@
 	<string name="system_separatevolume_summ">Allow to configure separate volume for rings/notifications/system sounds in Settings</string>
 	<string name="system_volumesteps_title">Volume steps multiplier</string>
 	<string name="system_volumesteps_summ">Increase number of volume steps for each stream type</string>
+	<string name="system_vibration_title">Block vibration</string>
+	<string name="system_vibration_summ">Prevent selected apps from using vibration</string>
 	<string name="notification_volume">Notification volume</string>
 	<string name="system_volume">System sounds volume</string>
 	<string name="system_scramblepin_title">Scramble PIN</string>
@@ -71,6 +74,8 @@
 	<string name="system_albumartonlock_title">Album art as wallpaper</string>
 	<string name="system_albumartonlock_summ">Display album art of currently playing track as lock screen wallpaper</string>
 	<string name="system_albumartonlock_blur_title">Album art blur</string>
+	<string name="system_credentials_title">Unlock credentials</string>
+	<string name="system_credentials_summ">Authentication in some apps requires access to credentials, but they remain locked if PIN/password/pattern is skipped after boot. Current option adds launcher icon that allows to unlock credentials.</string>
 	<string name="system_noscreenlock_act_title">Screen lock override</string>
 	<string name="system_noscreenlock_act_summ">Activates dynamic screen lock controls</string>
 	<string name="system_noscreenlock_title">Disable screen lock</string>
@@ -79,6 +84,8 @@
 	<string name="system_noscreenlock_scr_summ">Do not show lock screen at all when screen lock is disabled</string>
 	<string name="system_noscreenlock_wifi_title">Trusted Wi-Fi networks</string>
 	<string name="system_noscreenlock_wifi_summ">Temporarily disable screen lock while connected to these networks</string>
+	<string name="system_noscreenlock_bt_title">Trusted Bluetooth devices</string>
+	<string name="system_noscreenlock_bt_summ">Temporarily disable screen lock while these devices are connected</string>
 	<string name="system_screenanim_duration_title">Turning off animation</string>
 	<string name="system_screenanim_duration_summ">Configure animation length</string>
 	<string name="system_screenanim_desc">Very low values will practically disable animation</string>
@@ -121,6 +128,9 @@
 	<string name="launcher_folder_cols_title">Number of columns in folders</string>
 	<string name="launcher_foldershade_title">Folder background</string>
 	<string name="launcher_foldershade_summ">Darken folder background</string>
+	<string name="launcher_renameapps_title">Custom app titles</string>
+	<string name="launcher_renameapps_list_title">Modified titles</string>
+	<string name="launcher_renameapps_modified">Modified title</string>
 	<string name="launcher_privacyapps">Hidden apps</string>
 	<string name="launcher_privacyapps_fail">Required permissions are not granted</string>
 	<string name="launcher_privacyapps_gest_title">Hidden folder</string>
@@ -240,7 +250,7 @@
 	<string name="array_screenlock_no">System default</string>
 	<string name="array_screenlock_none">Disable completely</string>
 	<string name="array_screenlock_bootonly">Require only once after boot</string>
-	<string name="array_screenlock_trusted">Disable on trusted Wi-Fi networks</string>
+	<string name="array_screenlock_trusted">Disable on trusted networks/devices</string>
 	<string name="array_noblur">No blur</string>
 	<string name="array_netspeedicons_no">No icons</string>
 	<string name="array_netspeedicons_arrows" translatable="false">△▲▽▼</string>
@@ -344,7 +354,6 @@
 	<string name="storage_cannot_restore">No settings backup found</string>
 	<string name="storage_perm_denied_backup">Do you want to create settings backup or not?</string>
 	<string name="storage_perm_denied_restore">Do you want to restore settings or not?</string>
-	<string name="storage_perm_denied_final">You\'ll have to manually enable permission for this option now. Good job!</string>
 	<string name="backup_ok">Settings were backed up successfully!</string>
 	<string name="restore_ok">Settings were successfully restored!</string>
 	<string name="backup_restore_info">Your settings have been restored via Google Cloud Backup. Please do a soft reboot after enabling the Xposed module.</string>
@@ -357,7 +366,19 @@
 	<string name="wifi_location_summ">Location access is required for apps to get a list of Wi-Fi networks on Android Pie</string>
 	<string name="wifi_category1">Trusted networks</string>
 	<string name="wifi_category2">Available networks</string>
+	<string name="bt_fetch_devices_title">Fetch device list</string>
+	<string name="bt_fetch_devices_summ">Retrieve cached Bluetooth devices list from the system</string>
+	<string name="bt_category1">Trusted devices</string>
+	<string name="bt_category2">Available devices</string>
+	<string name="bt_devices">Bluetooth devices</string>
+	<string name="bt_not_supported">Bluetooth is not supported on this device</string>
+	<string name="request_bt">Turn on Bluetooth first</string>
+	<string name="request_wifi">Turn on Wi-Fi first</string>
+	<string name="request_location">Cannot scan without Location access</string>
 	<string name="force_closed">Force closed %s</string>
+	<string name="credentials_ok">Credentials are already unlocked</string>
+	<string name="credentials_unlock">Unlock credentials</string>
+	<string name="credentials_success">Credentials unlocked!</string>
 
 	<string name="xposed_not_found">Xposed Installer not found</string>
 	<string name="xposed_not_found_explain">It looks like you don\'t have Xposed Framework Installed.\n\nPlease note that mods will only work with Xposed!</string>
@@ -368,7 +389,7 @@
 
 	<string name="permission_save">Do you want to write backup or not?</string>
 	<string name="permission_restore">Do you want to restore backup or not?</string>
-	<string name="permission_wifi">Do you want to get a list of Wi-Fi networks or not?</string>
+	<string name="permission_scan">Do you want to get a list of networks/devices or not?</string>
 	<string name="permission_permanent">You\'ll have to manually enable permission for this option now. Good job!</string>
 
 	<string name="format_d_ms">%d ms</string>

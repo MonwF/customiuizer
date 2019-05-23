@@ -46,6 +46,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (Integer.parseInt(mPrefs.getString("system_rotateanim", "1")) > 1) System.RotationAnimationHook();
 		if (mPrefs.getBoolean("system_colorizenotiftitle")) System.ColorizedNotificationTitlesHook();
 		if (mPrefs.getBoolean("system_compactnotif")) System.CompactNotificationsActionsRes();
+		if (mPrefs.getBoolean("system_nopassword")) System.NoPasswordHook();
 
 		Controls.VolumeMediaPlayerHook();
 		GlobalActions.setupUnhandledCatcher();
@@ -58,6 +59,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (pkg.equals("com.android.systemui")) {
 			if (mPrefs.getBoolean("system_compactnotif")) System.CompactNotificationsPaddingRes(resparam);
 			if (mPrefs.getBoolean("system_notifrowmenu")) System.NotificationRowMenuRes(resparam);
+			//System.QSGridRes(resparam);
 		}
 
 		if (pkg.equals("com.android.settings")) {
@@ -106,6 +108,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_downgrade")) System.NoVersionCheckHook(lpparam);
 			if (mPrefs.getBoolean("system_hidefromrecents")) System.HideFromRecentsHook(lpparam);
 			if (Integer.parseInt(mPrefs.getString("system_autogroupnotif", "1")) > 1) System.AutoGroupNotificationsHook(lpparam);
+			if (Integer.parseInt(mPrefs.getString("system_vibration", "1")) > 1) System.SelectiveVibrationHook(lpparam);
 			//System.AutoBrightnessHook(lpparam);
 		}
 
@@ -117,7 +120,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			GlobalActions.setupStatusBar(lpparam);
 
 			if (mPrefs.getBoolean("system_scramblepin")) System.ScramblePINHook(lpparam);
-			if (mPrefs.getBoolean("system_nopassword")) System.NoPasswordHook(lpparam);
 			if (mPrefs.getBoolean("system_dttosleep")) System.DoubleTapToSleepHook(lpparam);
 			if (mPrefs.getBoolean("system_clockseconds")) System.ClockSecondsHook(lpparam);
 			if (Integer.parseInt(mPrefs.getString("system_expandnotifs", "1")) > 1) System.ExpandNotificationsHook(lpparam);
@@ -170,6 +172,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getInt("launcher_shake_action", 1) != 1) Launcher.ShakeHook(lpparam);
 			if (Integer.parseInt(mPrefs.getString("launcher_foldershade", "1")) > 1) Launcher.FolderShadeHook(lpparam);
 			if (mPrefs.getBoolean("launcher_noclockhide")) Launcher.NoClockHideHook(lpparam);
+			if (mPrefs.getBoolean("launcher_renameapps")) Launcher.RenameShortcutsHook(lpparam);
 		}
 	}
 

@@ -11,6 +11,8 @@ import android.os.FileObserver;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.Set;
+
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class MainActivity extends ActivityEx {
@@ -41,6 +43,8 @@ public class MainActivity extends ActivityEx {
 				String path = "/";
 				if (val instanceof String)
 					path = "/string/";
+				else if (val instanceof Set<?>)
+					path = "/stringset/";
 				else if (val instanceof Integer)
 					path = "/integer/";
 				getContentResolver().notifyChange(Uri.parse("content://" + SharedPrefsProvider.AUTHORITY + path + key), null);
@@ -95,7 +99,7 @@ public class MainActivity extends ActivityEx {
 					if (frag instanceof name.mikanoshi.customiuizer.subs.System_NoScreenLock)
 					((name.mikanoshi.customiuizer.subs.System_NoScreenLock)frag).openWifiNetworks();
 				} else if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION))
-					Toast.makeText(this, R.string.permission_wifi, Toast.LENGTH_LONG).show();
+					Toast.makeText(this, R.string.permission_scan, Toast.LENGTH_LONG).show();
 				else
 					Toast.makeText(this, R.string.permission_permanent, Toast.LENGTH_LONG).show();
 				break;

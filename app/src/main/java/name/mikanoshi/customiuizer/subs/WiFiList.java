@@ -4,9 +4,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.LocationManager;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -18,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -49,9 +52,10 @@ public class WiFiList extends SubFragment {
 				wifiList = wifiManager.getScanResults();
 				wifiAdapter1.notifyDataSetChanged();
 				wifiAdapter2.notifyDataSetChanged();
-				if (getView() != null) getView().findViewById(R.id.progress_bar).setVisibility(View.GONE);
+				updateProgressBar();
 			} else if (action.equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
 				NetworkInfo netInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+				if (netInfo.getDetailedState() == NetworkInfo.DetailedState.CONNECTED ) isWiFiReady();
 				if (netInfo.getDetailedState() == NetworkInfo.DetailedState.CONNECTED || netInfo.getDetailedState() == NetworkInfo.DetailedState.DISCONNECTED) {
 					handler.removeCallbacks(getScanResults);
 					handler.postDelayed(getScanResults, 1000);
@@ -63,9 +67,9 @@ public class WiFiList extends SubFragment {
 	Runnable getScanResults = new Runnable() {
 		@Override
 		public void run() {
-			if (getView() != null && wifiAdapter2.getCount() == 0) getView().findViewById(R.id.progress_bar).setVisibility(View.VISIBLE);
 			wifiManager.startScan();
 			handler.postDelayed(getScanResults, scanInterval);
+			updateProgressBar();
 		}
 	};
 
@@ -83,7 +87,7 @@ public class WiFiList extends SubFragment {
 		key = args.getString("key");
 		bssids = new LinkedHashSet<String>(Helpers.prefs.getStringSet(key, new LinkedHashSet<String>()));
 
-		wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
+		wifiManager = (WifiManager)getActivity().getSystemService(Context.WIFI_SERVICE);
 		wifiAdapter1 = new WiFiAdapter(getContext(), true);
 		wifiAdapter2 = new WiFiAdapter(getContext(), false);
 		handler = new Handler();
@@ -132,10 +136,38 @@ public class WiFiList extends SubFragment {
 				wifiAdapter2.notifyDataSetChanged();
 			}
 		});
+
+		isWiFiReady();
+		updateProgressBar();
+	}
+
+	void updateProgressBar() {
+		if (getView() != null) getView().findViewById(R.id.progress_bar).setVisibility(!wifiManager.isWifiEnabled() || !isLocationServicesEnabled() || wifiList.size() > 0 ? View.GONE : View.VISIBLE);
+	}
+
+	public boolean isLocationServicesEnabled() {
+		LocationManager locationManager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
+		try {
+			return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+		} catch (Throwable t) {
+			return false;
+		}
+	}
+
+	public void isWiFiReady() {
+		if (!wifiManager.isWifiEnabled()) {
+			Toast.makeText(getActivity(), R.string.request_wifi, Toast.LENGTH_SHORT).show();
+			return;
+		}
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+		if (!isLocationServicesEnabled())
+		Toast.makeText(getActivity(), R.string.request_location, Toast.LENGTH_LONG).show();
 	}
 
 	void registerReceivers() {
 		unregisterReceivers();
+		isWiFiReady();
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
 		intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);

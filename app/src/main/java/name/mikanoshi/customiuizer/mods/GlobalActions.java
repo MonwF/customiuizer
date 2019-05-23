@@ -697,9 +697,7 @@ public class GlobalActions {
 									Settings.System.putLong(context.getContentResolver(), "last_music_paused_time", currentTimeMillis());
 								} else if (action.equals("name.mikanoshi.customiuizer.mods.action.RestartLauncher")) {
 									ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
-									Method forceStopPackage = am.getClass().getMethod("forceStopPackage", String.class);
-									forceStopPackage.setAccessible(true);
-									forceStopPackage.invoke(am, "com.miui.home");
+									XposedHelpers.callMethod(am, "forceStopPackage", "com.miui.home");
 								}
 							} catch (Throwable t) {
 								XposedBridge.log(t);
@@ -1040,31 +1038,6 @@ public class GlobalActions {
 //		}  catch (Throwable t) {
 //			XposedBridge.log(t);
 //		}
-//	}
-//
-//	public static void collapseDrawer(Context mContext) {
-//		try {
-//			Object sbservice = mContext.getSystemService("statusbar");
-//			Class<?> statusbarManager = Class.forName("android.app.StatusBarManager");
-//			Method hidesb;
-//			if (Build.VERSION.SDK_INT >= 17) {
-//				hidesb = statusbarManager.getMethod("collapsePanels");
-//			} else {
-//				hidesb = statusbarManager.getMethod("collapse");
-//			}
-//			hidesb.setAccessible(true);
-//			hidesb.invoke(sbservice);
-//		} catch (Throwable t) {
-//			XposedBridge.log(t);
-//		}
-//	}
-//
-//	public static void dismissKeyguard() {
-//		Object amn = XposedHelpers.callStaticMethod(findClass("android.app.ActivityManagerNative", null), "getDefault");
-//		if (Helpers.isLP())
-//			XposedHelpers.callMethod(amn, "keyguardWaitingForActivityDrawn");
-//		else
-//			XposedHelpers.callMethod(amn, "dismissKeyguardOnNextActivity");
 //	}
 
 	public static boolean isMediaActionsAllowed(Context mContext) {

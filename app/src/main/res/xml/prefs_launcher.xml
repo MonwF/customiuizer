@@ -34,6 +34,17 @@
 		android:entryValues="@array/foldershade_val"
 		android:defaultValue="1" />
 
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_launcher_renameapps"
+		android:title="@string/launcher_renameapps_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:key="pref_key_launcher_renameapps_list"
+		android:title="@string/launcher_renameapps_list_title"
+		android:dependency="pref_key_launcher_renameapps"
+		miuizer:dynamic="true" />
+
 	<PreferenceCategory
 		android:title="@string/launcher_privacyapps"
 		android:key="pref_key_launcher_privacyapps">

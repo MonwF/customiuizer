@@ -10,6 +10,7 @@
     <string name="system_mods">系统</string>
     <string name="system_mods_screen">屏幕</string>
     <string name="system_mods_audio">音频</string>
+    <string name="system_mods_vibration">振动</string>
     <string name="system_mods_screenanim">屏幕动画</string>
     <string name="system_qshaptic_title">快速设置触觉反馈</string>
     <string name="system_qshaptic_summ">点击快速设置瓷砖时振动</string>
@@ -57,6 +58,8 @@
     <string name="system_separatevolume_summ">允许单独配置设置中的铃声/通知/系统声音的音量</string>
     <string name="system_volumesteps_title">音量级数倍增器</string>
     <string name="system_volumesteps_summ">增加每种流类型的音量级数</string>
+    <string name="system_vibration_title">阻止振动</string>
+    <string name="system_vibration_summ">阻止已选应用使用振动</string>
     <string name="notification_volume">通知音量</string>
     <string name="system_volume">系统声音音量</string>
     <string name="system_scramblepin_title">乱序PIN</string>
@@ -68,6 +71,8 @@
     <string name="system_albumartonlock_title">专辑封面设为壁纸</string>
     <string name="system_albumartonlock_summ">将当前播放曲目的专辑封面显示为壁纸</string>
     <string name="system_albumartonlock_blur_title">专辑封面模糊</string>
+    <string name="system_credentials_title">解锁证书</string>
+    <string name="system_credentials_summ">某些应用中的身份验证需要访问证书，但如果在开机后跳过PIN/密码/图案,它们仍会保持锁定.当前选项添加允许解锁证书的启动器图标。</string>
     <string name="system_noscreenlock_act_title">屏幕锁覆盖</string>
     <string name="system_noscreenlock_act_summ">激活动态屏幕锁控制</string>
     <string name="system_noscreenlock_title">禁用屏幕锁</string>
@@ -76,6 +81,8 @@
     <string name="system_noscreenlock_scr_summ">屏幕锁禁用时不再显示锁屏</string>
     <string name="system_noscreenlock_wifi_title">受信任的Wi-Fi网络</string>
     <string name="system_noscreenlock_wifi_summ">连接到这些网络时暂时禁用屏幕锁</string>
+    <string name="system_noscreenlock_bt_title">受信任的蓝牙设备</string>
+    <string name="system_noscreenlock_bt_summ">连接到这些设备时临时禁用屏幕锁</string>
     <string name="system_screenanim_duration_title">关闭动画</string>
     <string name="system_screenanim_duration_summ">配置动画长度</string>
     <string name="system_screenanim_desc">值太低会禁用动画</string>
@@ -117,6 +124,9 @@
     <string name="launcher_folder_cols_title">文件夹排列数量</string>
     <string name="launcher_foldershade_title">文件夹背景</string>
     <string name="launcher_foldershade_summ">加深文件夹背景</string>
+    <string name="launcher_renameapps_title">自定义应用标题</string>
+    <string name="launcher_renameapps_list_title">已修改标题</string>
+    <string name="launcher_renameapps_modified">已修改标题</string>
     <string name="launcher_privacyapps">隐藏应用</string>
     <string name="launcher_privacyapps_fail">未授予所需要的权限</string>
     <string name="launcher_privacyapps_gest_title">隐藏文件夹</string>
@@ -231,7 +241,7 @@
     <string name="array_screenlock_no">系统默认</string>
     <string name="array_screenlock_none">完全禁用</string>
     <string name="array_screenlock_bootonly">仅开机</string>
-    <string name="array_screenlock_trusted">在受信任的Wi-Fi网络上禁用</string>
+    <string name="array_screenlock_trusted">在受信任的Wi-Fi网络/设备上禁用</string>
     <string name="array_noblur">不模糊</string>
     <string name="array_netspeedicons_no">无图标</string>
     <string name="array_foldershade_solid">加深整个背景</string>
@@ -325,7 +335,6 @@
     <string name="storage_cannot_restore">没有找到设置备份</string>
     <string name="storage_perm_denied_backup">您是否要创建设置备份？</string>
     <string name="storage_perm_denied_restore">您是否要恢复设置？</string>
-    <string name="storage_perm_denied_final">现在您必须手动启用此选项的权限。很好！</string>
     <string name="backup_ok">设置备份成功！</string>
     <string name="restore_ok">设置恢复成功！</string>
     <string name="backup_restore_info">您的设置已通过Google Cloud Backup恢复。请在启用Xposed模块后进行软重启。</string>
@@ -338,7 +347,19 @@
     <string name="wifi_location_summ">在Android Pie上，应用程序需要位置权限才能获取Wi-Fi网络列表</string>
     <string name="wifi_category1">受信任的网络</string>
     <string name="wifi_category2">可用的网络</string>
+    <string name="bt_fetch_devices_title">获取设备列表</string>
+    <string name="bt_fetch_devices_summ">从系统中检索缓存的蓝牙设备列表</string>
+    <string name="bt_category1">受信任的设备</string>
+    <string name="bt_category2">可用设备</string>
+    <string name="bt_devices">蓝牙设备</string>
+    <string name="bt_not_supported">此设备不支持蓝牙</string>
+    <string name="request_bt">首先打开蓝牙</string>
+    <string name="request_wifi">首先打开Wi-Fi</string>
+    <string name="request_location">没有授予位置权限，无法扫描</string>
     <string name="force_closed">强制关闭%s</string>
+    <string name="credentials_ok">证书已解锁</string>
+    <string name="credentials_unlock">解锁证书</string>
+    <string name="credentials_success">证书已解锁！</string>
     <string name="xposed_not_found">没有找到Xposed Installer</string>
     <string name="xposed_not_found_explain">您似乎没有安装Xposed。\n\n请注意，此页面上的模块仅适用于Xposed！\n\nXposed可在ARHD安装程序中使用。</string>
     <string name="module_not_active">CustoMIUIzer模块没有激活！\n请打开Xposed Installer，激活模块并重启。</string>
@@ -347,7 +368,7 @@
     <string name="cancel">取消</string>
     <string name="permission_save">您是否要写入备份？</string>
     <string name="permission_restore">您是否要恢复备份？</string>
-    <string name="permission_wifi">您是否要获取Wi-Fi网络列表？</string>
+    <string name="permission_scan">您是否要获取网络/设备列表?</string>
     <string name="permission_permanent">现在您必须手动启用此选项的权限。很好！</string>
     <string name="format_d_ms">%d ms</string>
     <string name="format_d_s">%d s</string>

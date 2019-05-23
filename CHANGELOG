@@ -1,3 +1,9 @@
+1.5.4
+[New] Restrict vibration usage for selected apps
+[New] Modify app titles in MIUI Launcher
+[New][Disable screen lock] Use trusted Bluetooth devices
+[New] Create launcher icon or use shortcut to unlock device credentials (they remain locked if you skip PIN/password/pattern after boot, but are required for authentication in some apps)
+
 1.5.3
 [New] Show notifications on lock screen even after it's dismissed and then opened again
 [New] Open app info and force close app from its notification menu

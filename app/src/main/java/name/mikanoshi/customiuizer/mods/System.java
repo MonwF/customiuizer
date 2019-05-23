@@ -6,6 +6,8 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.KeyguardManager;
 import android.app.admin.DevicePolicyManager;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -60,6 +62,7 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -236,14 +239,25 @@ public class System {
 		}
 	}
 
-	public static void NoPasswordHook(LoadPackageParam lpparam) {
+	public static void NoPasswordHook() {
 		try {
-			XposedHelpers.findAndHookMethod("com.android.keyguard.KeyguardUpdateMonitor$StrongAuthTracker", lpparam.classLoader, "isUnlockingWithFingerprintAllowed", XC_MethodReplacement.returnConstant(true));
-			XposedHelpers.findAndHookMethod("com.android.keyguard.KeyguardUpdateMonitor$StrongAuthTracker", lpparam.classLoader, "isUnlockingWithFingerprintAllowed", int.class, XC_MethodReplacement.returnConstant(true));
+			//XposedHelpers.findAndHookMethod("com.android.internal.widget.LockPatternUtils$StrongAuthTracker", null, "handleStrongAuthRequiredChanged", int.class, int.class, XC_MethodReplacement.DO_NOTHING);
+			XposedHelpers.findAndHookMethod("com.android.internal.widget.LockPatternUtils$StrongAuthTracker", null, "isFingerprintAllowedForUser", int.class, XC_MethodReplacement.returnConstant(true));
+			XposedHelpers.findAndHookMethod("com.android.internal.widget.LockPatternUtils", null, "isFingerprintAllowedForUser", int.class, XC_MethodReplacement.returnConstant(true));
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
 	}
+
+//	public static void NoPasswordKeyguardHook(LoadPackageParam lpparam) {
+//		try {
+//			XposedHelpers.findAndHookMethod("com.android.keyguard.KeyguardUpdateMonitor$StrongAuthTracker", lpparam.classLoader, "isUnlockingWithFingerprintAllowed", XC_MethodReplacement.returnConstant(true));
+//			XposedHelpers.findAndHookMethod("com.android.keyguard.KeyguardUpdateMonitor$StrongAuthTracker", lpparam.classLoader, "isUnlockingWithFingerprintAllowed", int.class, XC_MethodReplacement.returnConstant(true));
+//			XposedHelpers.findAndHookMethod("com.android.keyguard.KeyguardUpdateMonitor", lpparam.classLoader, "isUnlockWithFingerprintPossible", int.class, XC_MethodReplacement.returnConstant(true));
+//		} catch (Throwable t) {
+//			XposedBridge.log(t);
+//		}
+//	}
 
 	public static void EnhancedSecurityHook(LoadPackageParam lpparam) {
 		try {
@@ -317,11 +331,36 @@ public class System {
 		} catch (Throwable t) {}
 	}
 
+	private static boolean isTrusted(Context mContext, ClassLoader classLoader) {
+		return isTrustedWiFi(mContext) || isTrustedBt(mContext, classLoader);
+	}
+
 	private static boolean isTrustedWiFi(Context mContext) {
 		WifiManager wifiManager = (WifiManager)mContext.getSystemService(Context.WIFI_SERVICE);
 		if (!wifiManager.isWifiEnabled()) return false;
 		Set<String> trustedNetworks = Helpers.getSharedStringSetPref(mContext, "pref_key_system_noscreenlock_wifi");
 		return Helpers.containsStringPair(trustedNetworks, wifiManager.getConnectionInfo().getBSSID());
+	}
+
+	private static boolean isTrustedBt(Context mContext, ClassLoader classLoader) {
+		try {
+			BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+			if (!mBluetoothAdapter.isEnabled()) return false;
+			Set<String> trustedDevices = Helpers.getSharedStringSetPref(mContext, "pref_key_system_noscreenlock_bt");
+			Object mController = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", classLoader), "get", findClass("com.android.systemui.statusbar.policy.BluetoothController", classLoader));
+			Collection cachedDevices = (Collection)XposedHelpers.callMethod(mController, "getCachedDevicesCopy");
+			if (cachedDevices != null)
+			for (Object device: cachedDevices) {
+				BluetoothDevice mDevice = (BluetoothDevice)XposedHelpers.getObjectField(device, "mDevice");
+				if (mDevice == null) continue;
+				if (mDevice.getBondState() == BluetoothDevice.BOND_BONDED &&
+					(boolean)XposedHelpers.callMethod(device, "isConnected") &&
+					Helpers.containsStringPair(trustedDevices, mDevice.getAddress())) return true;
+			}
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+		return false;
 	}
 
 //	private static void setLockScreenDisabled(ClassLoader classLoader, Object thisObject, boolean state) {
@@ -353,30 +392,41 @@ public class System {
 				}
 			});
 
-//			XposedHelpers.findAndHookMethod("com.android.systemui.keyguard.KeyguardViewMediator", lpparam.classLoader, "onFinishedGoingToSleep", int.class, boolean.class, new XC_MethodHook() {
-//				@Override
-//				protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
-//					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-//					if (Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_system_noscreenlock", "1")) == 3)
-//					XposedHelpers.callMethod(param.thisObject, "cancelPendingLock");
-//				}
-//			});
+			XposedHelpers.findAndHookMethod("com.android.keyguard.KeyguardHostView", lpparam.classLoader, "onFinishInflate", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					mContext.registerReceiver(new BroadcastReceiver() {
+						@Override
+						public void onReceive(Context context, Intent intent) {
+							try {
+								Object mSecurityContainer = XposedHelpers.getObjectField(param.thisObject, "mSecurityContainer");
+								Object mCallback = XposedHelpers.getObjectField(mSecurityContainer, "mCallback");
+								XposedHelpers.callMethod(mCallback, "reportUnlockAttempt", 0, true, 0);
+							} catch (Throwable t) {
+								XposedBridge.log(t);
+							}
+						}
+					}, new IntentFilter("name.mikanoshi.customiuizer.mods.action.UnlockStrongAuth"));
+				}
+			});
 
 			XposedHelpers.findAndHookMethod("com.android.systemui.keyguard.KeyguardViewMediator", lpparam.classLoader, "doKeyguardLocked", Bundle.class, new XC_MethodHook() {
 				@Override
 				protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
 					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-					boolean skip = Helpers.getSharedBoolPref(mContext, "pref_key_system_noscreenlock_skip", false);
-					if (!skip) return;
 					int opt = Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_system_noscreenlock", "1"));
 					boolean isTrusted = false;
-					if (opt == 4) isTrusted = isTrustedWiFi(mContext);
+					if (opt == 4) isTrusted = isTrusted(mContext, lpparam.classLoader);
 					if (opt == 2 || opt == 3 && isUnlockedOnce || opt == 4 && isTrusted) {
-						param.setResult(null);
-						XposedHelpers.callMethod(param.thisObject, "keyguardDone");
-//						XposedHelpers.callMethod(param.thisObject, "setShowingLocked", false);
-//						XposedHelpers.callMethod(param.thisObject, "hideLocked");
+						boolean skip = Helpers.getSharedBoolPref(mContext, "pref_key_system_noscreenlock_skip", false);
+						if (skip) {
+							param.setResult(null);
+							XposedHelpers.callMethod(param.thisObject, "keyguardDone");
+						}
 						XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mUpdateMonitor"), "reportSuccessfulStrongAuthUnlockAttempt");
+						Intent unlockIntent = new Intent("name.mikanoshi.customiuizer.mods.action.UnlockStrongAuth");
+						mContext.sendBroadcast(unlockIntent);
 					}
 				}
 			});
@@ -402,14 +452,13 @@ public class System {
 
 							if (isTrusted) {
 								boolean skip = Helpers.getSharedBoolPref(mContext, "pref_key_system_noscreenlock_skip", false);
-								if (skip) {
+								if (skip)
 									XposedHelpers.callMethod(param.thisObject, "keyguardDone");
-//									XposedHelpers.callMethod(param.thisObject, "setShowingLocked", false);
-//									XposedHelpers.callMethod(param.thisObject, "hideLocked");
-									XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mUpdateMonitor"), "reportSuccessfulStrongAuthUnlockAttempt");
-								} else {
+								else
 									XposedHelpers.callMethod(param.thisObject, "resetStateLocked");
-								}
+								XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mUpdateMonitor"), "reportSuccessfulStrongAuthUnlockAttempt");
+								Intent unlockIntent = new Intent("name.mikanoshi.customiuizer.mods.action.UnlockStrongAuth");
+								mContext.sendBroadcast(unlockIntent);
 							}
 						}
 					}, new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION));
@@ -426,7 +475,7 @@ public class System {
 					int opt = Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_system_noscreenlock", "1"));
 
 					boolean isTrusted = false;
-					if (opt == 4) isTrusted = isTrustedWiFi(mContext);
+					if (opt == 4) isTrusted = isTrusted(mContext, lpparam.classLoader);
 					if (opt == 1 || opt == 3 && !isUnlockedOnce || opt == 4 && !isTrusted) return;
 
 					Class<?> securityModeEnum = XposedHelpers.findClass("com.android.keyguard.KeyguardSecurityModel$SecurityMode", lpparam.classLoader);
@@ -440,6 +489,27 @@ public class System {
 						securityModePattern.equals(secModeResult) ||
 						securityModePin.equals(secModeResult))
 						param.setResult(securityModeNone);
+				}
+			});
+
+			XposedBridge.hookAllConstructors(XposedHelpers.findClass("com.android.systemui.statusbar.policy.BluetoothControllerImpl", lpparam.classLoader), new XC_MethodHook(10) {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) {
+					Context mContext = (Context)param.args[0];
+					mContext.registerReceiver(new BroadcastReceiver() {
+						public void onReceive(final Context context, Intent intent) {
+							ArrayList<BluetoothDevice> deviceList = new ArrayList<BluetoothDevice>();
+							Intent updateIntent = new Intent("name.mikanoshi.customiuizer.mods.event.CACHEDDEVICESUPDATE");
+							Collection cachedDevices = (Collection)XposedHelpers.callMethod(param.thisObject, "getCachedDevicesCopy");
+							if (cachedDevices != null)
+							for (Object device: cachedDevices) {
+								BluetoothDevice mDevice = (BluetoothDevice)XposedHelpers.getObjectField(device, "mDevice");
+								if (mDevice != null) deviceList.add(mDevice);
+							}
+							updateIntent.putParcelableArrayListExtra("device_list", deviceList);
+							mContext.sendBroadcast(updateIntent);
+						}
+					}, new IntentFilter("name.mikanoshi.customiuizer.mods.action.FetchCachedDevices"));
 				}
 			});
 		} catch (Throwable t) {
@@ -1703,6 +1773,64 @@ public class System {
 					}
 				}
 			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void SelectiveVibrationHook(LoadPackageParam lpparam) {
+		try {
+			XposedHelpers.findAndHookMethod("com.android.server.VibratorService", lpparam.classLoader, "systemReady", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					Handler mHandler = new Handler(mContext.getMainLooper());
+
+					XposedHelpers.setAdditionalInstanceField(param.thisObject, "mVibrationMode", Integer.parseInt(MainModule.mPrefs.getString("system_vibration", "1")));
+					new Helpers.SharedPrefObserver(mContext, mHandler, "pref_key_system_vibration", "1") {
+						@Override
+						public void onChange(String name, String defValue) {
+							XposedHelpers.setAdditionalInstanceField(param.thisObject, "mVibrationMode", Integer.parseInt(Helpers.getSharedStringPref(mContext, name, defValue)));
+						}
+					};
+
+					XposedHelpers.setAdditionalInstanceField(param.thisObject, "mVibrationApps", MainModule.mPrefs.getStringSet("system_vibration_apps"));
+					new Helpers.SharedPrefObserver(mContext, mHandler, "pref_key_system_vibration_apps") {
+						@Override
+						public void onChange(String name) {
+							XposedHelpers.setAdditionalInstanceField(param.thisObject, "mVibrationApps", Helpers.getSharedStringSetPref(mContext, name));
+						}
+					};
+				}
+			});
+
+			XposedBridge.hookAllMethods(findClass("com.android.server.VibratorService", lpparam.classLoader), "vibrate", new XC_MethodHook() {
+				@Override
+				@SuppressWarnings("unchecked")
+				protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+					String pkgName = (String)param.args[1];
+					if (pkgName == null) return;
+
+					try {
+						int opt = (int)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mVibrationMode");
+						Set<String> selectedApps = (Set<String>)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mVibrationApps");
+						boolean isSelected = selectedApps != null && selectedApps.contains(pkgName);
+						if (opt == 2 && !isSelected || opt == 3 && isSelected) param.setResult(null);
+					} catch (Throwable t) {
+						XposedBridge.log(t);
+					}
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void QSGridRes(XC_InitPackageResources.InitPackageResourcesParam resparam) {
+		try {
+			resparam.res.setReplacement(resparam.packageName, "integer", "quick_settings_num_columns", 8);
+			resparam.res.setReplacement(resparam.packageName, "integer", "quick_settings_num_rows", 2);
+			resparam.res.setReplacement(resparam.packageName, "integer", "quick_settings_max_rows", 2);
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}

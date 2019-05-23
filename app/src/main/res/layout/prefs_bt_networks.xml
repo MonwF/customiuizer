@@ -12,42 +12,42 @@
 
 	<include
 		layout="@layout/pref_item"
-		android:id="@+id/location_settings"
+		android:id="@+id/fetch_devices"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content" />
 
 	<TextView
-		android:id="@+id/wifi_category1"
-		android:layout_below="@id/location_settings"
+		android:id="@+id/bt_category1"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_gravity="left|center_vertical|center_horizontal|center|start"
-		android:text="@string/wifi_category1"
+		android:layout_below="@+id/fetch_devices"
+		android:text="@string/bt_category1"
 		style="@style/Widget.InputField.Category.First" />
 
 	<name.mikanoshi.customiuizer.prefs.ListViewEx
 		android:id="@android:id/text1"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/wifi_category1"
+		android:layout_below="@id/bt_category1"
 		android:nestedScrollingEnabled="false"
 		android:overScrollMode="never"
 		android:scrollbars="none" />
 
 	<TextView
-		android:id="@+id/wifi_category2"
+		android:id="@+id/bt_category2"
 		android:layout_below="@android:id/text1"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_gravity="left|center_vertical|center_horizontal|center|start"
-		android:text="@string/wifi_category2"
+		android:text="@string/bt_category2"
 		style="@style/Widget.InputField.Category.First" />
 
 	<name.mikanoshi.customiuizer.prefs.ListViewEx
 		android:id="@android:id/text2"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/wifi_category2"
+		android:layout_below="@id/bt_category2"
 		android:nestedScrollingEnabled="false"
 		android:overScrollMode="never"
 		android:scrollbars="none" />
@@ -59,7 +59,7 @@
 		android:layout_centerInParent="true"
 		android:gravity="center"
 		android:orientation="vertical"
-		android:layout_below="@id/wifi_category2">
+		android:layout_below="@id/bt_category2">
 
 		<miui.widget.ProgressBar
 			android:id="@+id/progress_bar"

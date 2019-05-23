@@ -6,8 +6,10 @@
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.BLUETOOTH" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
 	<uses-permission android:name="android.permission.CHANGE_COMPONENT_ENABLED_STATE" />
@@ -67,6 +69,42 @@
 			<meta-data android:name="com.android.settings.icon_tintable" android:value="true" />
 			<meta-data android:name="com.android.settings.title" android:resource="@string/app_name" />
 		</activity-alias>
+
+		<activity
+			android:name=".Credentials"
+			android:label="@string/credentials_unlock"
+			android:theme="@style/Invisible"
+			android:icon="@drawable/ic_credentials"
+			android:launchMode="singleInstance"
+			android:excludeFromRecents="true"
+			android:finishOnTaskLaunch="true"
+			android:configChanges="keyboardHidden|orientation|screenSize">
+		</activity>
+
+		<activity-alias
+			android:name=".CredentialsLauncher"
+			android:targetActivity=".Credentials"
+			android:enabled="false">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity-alias>
+
+		<activity
+			android:name=".CredentialsShortcut"
+			android:label="@string/credentials_unlock"
+			android:theme="@style/Invisible"
+			android:icon="@drawable/ic_credentials"
+			android:launchMode="singleInstance"
+			android:finishOnTaskLaunch="true"
+			android:taskAffinity=""
+			android:excludeFromRecents="true">
+			<intent-filter android:label="@string/credentials_unlock">
+				<action android:name="android.intent.action.CREATE_SHORTCUT"/>
+				<category android:name="android.intent.category.DEFAULT"/>
+			</intent-filter>
+		</activity>
 
 		<activity
 			android:name=".crashreport.Dialog"

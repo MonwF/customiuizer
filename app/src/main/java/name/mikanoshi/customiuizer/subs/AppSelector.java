@@ -5,7 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -14,6 +14,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import name.mikanoshi.customiuizer.R;
+import name.mikanoshi.customiuizer.SharedPrefsProvider;
 import name.mikanoshi.customiuizer.SubFragmentWithSearch;
 import name.mikanoshi.customiuizer.utils.AppData;
 import name.mikanoshi.customiuizer.utils.AppDataAdapter;
@@ -24,6 +25,7 @@ public class AppSelector extends SubFragmentWithSearch {
 
 	boolean multi = false;
 	boolean privacy = false;
+	boolean customTitles = false;
 	String key = null;
 
 	@Override
@@ -38,6 +40,7 @@ public class AppSelector extends SubFragmentWithSearch {
 
 		multi = getArguments().getBoolean("multi");
 		privacy = getArguments().getBoolean("privacy");
+		customTitles = getArguments().getBoolean("custom_titles");
 		key = getArguments().getString("key");
 
 		final Runnable process = new Runnable() {
@@ -45,10 +48,13 @@ public class AppSelector extends SubFragmentWithSearch {
 			public void run() {
 				if (multi && key != null) {
 					if (Helpers.installedAppsList == null) return;
-					listView.setAdapter(new AppDataAdapter(getContext(), Helpers.installedAppsList, key));
+					listView.setAdapter(new AppDataAdapter(getContext(), Helpers.installedAppsList, Helpers.AppAdapterType.Mutli, key));
 				} else if (privacy) {
 					if (Helpers.installedAppsList == null) return;
 					listView.setAdapter(new PrivacyAppAdapter(getContext(), Helpers.installedAppsList));
+				} else if (customTitles) {
+					if (Helpers.launchableAppsList == null) return;
+					listView.setAdapter(new AppDataAdapter(getContext(), Helpers.launchableAppsList, Helpers.AppAdapterType.CustomTitles, key));
 				} else {
 					if (Helpers.launchableAppsList == null) return;
 					listView.setAdapter(new AppDataAdapter(getContext(), Helpers.launchableAppsList));
@@ -80,6 +86,19 @@ public class AppSelector extends SubFragmentWithSearch {
 							} catch (Throwable t) {
 								t.printStackTrace();
 							}
+						} else if (customTitles) {
+							AppData app = (AppData)parent.getAdapter().getItem(position);
+							Helpers.showInputDialog(getActivity(), key + ":" + app.pkgName + "|" + app.actName, R.string.launcher_renameapps_modified, new Helpers.InputCallback() {
+								@Override
+								public void onInputFinished(String key, String text){
+									if (TextUtils.isEmpty(text))
+										Helpers.prefs.edit().remove(key).apply();
+									else
+										Helpers.prefs.edit().putString(key, text).apply();
+									((AppDataAdapter)parent.getAdapter()).notifyDataSetChanged();
+									getActivity().getContentResolver().notifyChange(Uri.parse("content://" + SharedPrefsProvider.AUTHORITY + "/pref/string/" + key), null);
+								}
+							});
 						} else {
 							Intent intent = new Intent(getContext(), this.getClass());
 							AppData app = (AppData)parent.getAdapter().getItem(position);

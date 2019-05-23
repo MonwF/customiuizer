@@ -48,6 +48,19 @@ public class Launcher extends SubFragment {
 			}
 		};
 
+		Preference.OnPreferenceClickListener openLaunchableList = new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				Bundle args = new Bundle();
+				args.putString("key", preference.getKey());
+				args.putBoolean("custom_titles", true);
+				AppSelector appSelector = new AppSelector();
+				appSelector.setTargetFragment(Launcher.this, 0);
+				openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.launcher_renameapps_list_title, R.layout.prefs_app_selector);
+				return true;
+			}
+		};
+
 		Preference pref;
 		pref = findPreference("pref_key_launcher_swipedown");
 		pref.setOnPreferenceClickListener(openSwipeEdit);
@@ -69,7 +82,9 @@ public class Launcher extends SubFragment {
 		pref = findPreference("pref_key_launcher_privacyapps_gest");
 		pref.setOnPreferenceChangeListener(switchPrivacyAppState);
 
-		PackageManager pm = getActivity().getPackageManager();
+		pref = findPreference("pref_key_launcher_renameapps_list");
+		pref.setOnPreferenceClickListener(openLaunchableList);
+
 		if (!checkPermissions()) {
 			pref = findPreference("pref_key_launcher_privacyapps");
 			pref.setEnabled(false);
@@ -81,7 +96,6 @@ public class Launcher extends SubFragment {
 	public void onResume() {
 		super.onResume();
 
-		PackageManager pm = getActivity().getPackageManager();
 		if (checkPermissions()) {
 			Preference pref = findPreference("pref_key_launcher_privacyapps_gest");
 			((CheckBoxPreference)pref).setChecked(Settings.Secure.getInt(getActivity().getContentResolver(), "is_privacy_apps_enable", 0) == 1);

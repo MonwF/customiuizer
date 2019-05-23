@@ -11,6 +11,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 	private ArrayList<AppData> filteredAppList;
 	private String key = null;
 	private Set<String> selectedApps = new LinkedHashSet<String>();
+	private Helpers.AppAdapterType aType = Helpers.AppAdapterType.Default;
 
 	public AppDataAdapter(Context context, ArrayList<AppData> arr) {
 		ctx = context;
@@ -42,14 +44,17 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 		pool = new ThreadPoolExecutor(cpuCount + 1, cpuCount * 2 + 1, 2, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
 	}
 
-	public AppDataAdapter(Context context, ArrayList<AppData> arr, String prefKey) {
+	public AppDataAdapter(Context context, ArrayList<AppData> arr, Helpers.AppAdapterType adapterType, String prefKey) {
 		this(context, arr);
 		key = prefKey;
+		aType = adapterType;
+		if (aType == Helpers.AppAdapterType.Mutli)
 		selectedApps = Helpers.prefs.getStringSet(prefKey, new LinkedHashSet<String>());
 	}
 
 	public void updateSelectedApps() {
-		if (key != null) selectedApps = Helpers.prefs.getStringSet(key, new LinkedHashSet<String>());
+		if (aType == Helpers.AppAdapterType.Mutli)
+		selectedApps = Helpers.prefs.getStringSet(key, new LinkedHashSet<String>());
 		notifyDataSetChanged();
 	}
 
@@ -75,6 +80,7 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 		ImageView itemIsDis = row.findViewById(R.id.am_isDisable_icon);
 		CheckBox itemChecked = row.findViewById(R.id.am_checked_icon);
 		TextView itemTitle = row.findViewById(R.id.am_label);
+		TextView itemSummary = row.findViewById(R.id.am_summary);
 		ImageView itemIcon = row.findViewById(R.id.am_icon);
 
 		AppData ad = getItem(position);
@@ -95,9 +101,15 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 			itemIcon.setImageBitmap(icon);
 		}
 
-		if (key != null) {
+		if (aType == Helpers.AppAdapterType.Mutli) {
+			itemSummary.setVisibility(View.GONE);
 			itemChecked.setVisibility(View.VISIBLE);
 			itemChecked.setChecked(selectedApps.size() > 0 && selectedApps.contains(ad.pkgName));
+		} else if (aType == Helpers.AppAdapterType.CustomTitles) {
+			itemSummary.setText(Helpers.prefs.getString(key + ":" + ad.pkgName + "|" + ad.actName, ""));
+			itemSummary.setVisibility(TextUtils.isEmpty(itemSummary.getText()) ? View.GONE : View.VISIBLE);
+		} else {
+			itemSummary.setVisibility(View.GONE);
 		}
 
 		//row.setEnabled(true);

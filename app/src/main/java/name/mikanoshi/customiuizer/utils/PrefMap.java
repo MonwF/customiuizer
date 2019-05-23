@@ -7,6 +7,10 @@ import java.util.Set;
 @SuppressWarnings("ConstantConditions")
 public class PrefMap<K, V> extends HashMap<K, V> {
 
+	public Object getObject(String key, Object defValue) {
+		return get(key) == null ? defValue : get(key);
+	}
+
 	public int getInt(String key, int defValue) {
 		key = "pref_key_" + key;
 		return get(key) == null ? defValue : (Integer)get(key);

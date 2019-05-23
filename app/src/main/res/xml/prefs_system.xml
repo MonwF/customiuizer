@@ -109,6 +109,25 @@
 
 	</PreferenceCategory>
 
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:title="@string/system_mods_vibration"
+		miuizer:dynamic="true">
+
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_vibration"
+			android:summary="@string/system_vibration_summ"
+			android:title="@string/system_vibration_title"
+			android:entries="@array/expandnotifs"
+			android:entryValues="@array/expandnotifs_val"
+			android:defaultValue="1" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_expandnotifs_apps_title"
+			android:key="pref_key_system_vibration_apps"
+			miuizer:countAsSummary="true" />
+
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+
 	<PreferenceCategory
 		android:title="@string/system_mods_statusbar">
 
@@ -257,6 +276,18 @@
 			android:title="@string/system_nopassword_title"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_noscreenlock_cat"
+			android:summary="@string/system_noscreenlock_summ"
+			android:title="@string/system_noscreenlock_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_credentials"
+			android:summary="@string/system_credentials_summ"
+			android:title="@string/system_credentials_title"
+			android:defaultValue="false" />
+
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_albumartonlock"
 			android:summary="@string/system_albumartonlock_summ"
@@ -267,19 +298,13 @@
 			android:key="pref_key_system_albumartonlock_blur"
 			android:title="@string/system_albumartonlock_blur_title"
 			android:defaultValue="0"
+			android:dependency="pref_key_system_albumartonlock"
 			miuizer:minValue="0"
 			miuizer:maxValue="30"
 			miuizer:stepValue="1"
 			miuizer:format="%d"
 			miuizer:offtext="@string/array_noblur"
-			android:dependency="pref_key_system_albumartonlock"
 			miuizer:dynamic="true" />
-
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
-			android:key="pref_key_system_noscreenlock_cat"
-			android:summary="@string/system_noscreenlock_summ"
-			android:title="@string/system_noscreenlock_title"
-			android:defaultValue="false" />
 
 	</PreferenceCategory>
 
