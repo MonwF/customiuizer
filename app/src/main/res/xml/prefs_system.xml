@@ -30,11 +30,16 @@
 		android:title="@string/system_popupnotif_apps_title"
 		android:key="pref_key_system_hidefromrecents_apps"
 		android:dependency="pref_key_system_hidefromrecents"
-		miuizer:countAsSummary="true"
-		miuizer:dynamic="true" />
+		miuizer:countAsSummary="true" />
 
 	<PreferenceCategory
 		android:title="@string/system_mods_screen">
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_orientationlock"
+			android:title="@string/system_orientationlock_title"
+			android:summary="@string/system_orientationlock_summ"
+			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_nolightuponheadset"
@@ -88,6 +93,12 @@
 
 	<PreferenceCategory
 		android:title="@string/system_mods_audio">
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_noducking"
+			android:title="@string/system_noducking_title"
+			android:summary="@string/system_noducking_summ"
+			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_separatevolume"
@@ -229,11 +240,24 @@
 	<PreferenceCategory
 		android:title="@string/system_mods_betterpopups">
 
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_betterpopups_delay"
+			android:title="@string/system_betterpopups_delay_title"
+			android:defaultValue="0"
+			android:dependency="pref_key_system_betterpopups_nohide"
+			miuizer:minValue="0"
+			miuizer:maxValue="60"
+			miuizer:stepValue="1"
+			miuizer:format="@string/format_d_s"
+			miuizer:offtext="@string/array_default"
+			miuizer:dynamic="true" />
+
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_betterpopups_nohide"
 			android:summary="@string/system_betterpopups_nohide_summ"
 			android:title="@string/system_betterpopups_nohide_title"
-			android:defaultValue="false" />
+			android:defaultValue="false"
+			android:disableDependentsState="true" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_betterpopups_swipedown"

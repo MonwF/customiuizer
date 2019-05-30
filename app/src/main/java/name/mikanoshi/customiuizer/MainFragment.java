@@ -146,7 +146,18 @@ public class MainFragment extends PreferenceFragmentBase {
 						AlertDialog dlg = builder.create();
 						if (isFragmentReady(act)) dlg.show();
 					}
-				}); else {
+				}); else if (Helpers.areXposedResourceHooksDisabled())
+				act.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						AlertDialog.Builder builder = new AlertDialog.Builder(act);
+						builder.setTitle(R.string.xposed_not_reshooks);
+						builder.setMessage(R.string.xposed_not_reshooks_explain);
+						builder.setNeutralButton(R.string.okay, null);
+						AlertDialog dlg = builder.create();
+						if (isFragmentReady(act)) dlg.show();
+					}
+				});	else {
 					final Activity act = getActivity();
 					if (isFragmentReady(act) && !miuizerModuleActive)
 					act.runOnUiThread(new Runnable() {
@@ -306,8 +317,8 @@ public class MainFragment extends PreferenceFragmentBase {
 			}
 		});
 
-
 		//Helpers.removePref(this, "pref_key_miuizer_force_material", "pref_key_miuizer");
+		Helpers.prefs.edit().putString("test", "step1").apply();
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -317,6 +328,7 @@ public class MainFragment extends PreferenceFragmentBase {
 
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
+		if (menu.size() == 0) return;
 		menu.getItem(0).setVisible(false);
 		if (getView() == null) return;
 		ImageView alert = getView().findViewById(R.id.update_alert);

@@ -54,6 +54,8 @@
     <string name="system_nolightuponcharges_summ">当您连接或者断开充电器时不打开屏幕</string>
     <string name="system_nolightuponheadset_title">连接耳机时不亮起屏幕</string>
     <string name="system_nolightuponheadset_summ">当您连接耳机时不打开屏幕</string>
+    <string name="system_noducking_title">禁用闪避</string>
+    <string name="system_noducking_summ">播放通知声音时不降低当前播放音乐的音量</string>
     <string name="system_separatevolume_title">独立音量控制</string>
     <string name="system_separatevolume_summ">允许单独配置设置中的铃声/通知/系统声音的音量</string>
     <string name="system_volumesteps_title">音量级数倍增器</string>
@@ -72,7 +74,7 @@
     <string name="system_albumartonlock_summ">将当前播放曲目的专辑封面显示为壁纸</string>
     <string name="system_albumartonlock_blur_title">专辑封面模糊</string>
     <string name="system_credentials_title">解锁证书</string>
-    <string name="system_credentials_summ">某些应用中的身份验证需要访问证书，但如果在开机后跳过PIN/密码/图案,它们仍会保持锁定.当前选项添加允许解锁证书的启动器图标。</string>
+    <string name="system_credentials_summ">某些应用中的身份验证需要访问证书，但如果在开机后跳过PIN/密码/图案，它们仍会保持锁定。当前选项添加允许解锁证书的启动器图标。</string>
     <string name="system_noscreenlock_act_title">屏幕锁覆盖</string>
     <string name="system_noscreenlock_act_summ">激活动态屏幕锁控制</string>
     <string name="system_noscreenlock_title">禁用屏幕锁</string>
@@ -101,12 +103,15 @@
     <string name="system_hidefromrecents_title">隐藏最近</string>
     <string name="system_hidefromrecents_summ">隐藏最近任务列表中的所选应用</string>
     <string name="system_rotateanim_title">旋转动画</string>
+    <string name="system_orientationlock_title">方向锁定</string>
+    <string name="system_orientationlock_summ">添加快速设置瓷砖，允许以竖屏或者横屏模式锁定方向</string>
     <string name="system_notifafterunlock_title">保留通知</string>
     <string name="system_notifafterunlock_summ">在锁屏上显示通知，如果通知已关闭，则再次打开。</string>
     <string name="system_dttosleep_title">双击熄屏</string>
     <string name="system_dttosleep_summ">双击锁屏任意空白处关闭屏幕</string>
     <string name="system_mods_statusbar">状态栏和通知抽屉</string>
     <string name="system_mods_betterpopups">改进弹窗通知</string>
+    <string name="system_betterpopups_delay_title">自动隐藏延迟</string>
     <string name="system_betterpopups_nohide_title">不自动隐藏</string>
     <string name="system_betterpopups_nohide_summ">不自动关闭弹窗</string>
     <string name="system_betterpopups_swipedown_title">启用下滑手势</string>
@@ -124,6 +129,8 @@
     <string name="launcher_folder_cols_title">文件夹排列数量</string>
     <string name="launcher_foldershade_title">文件夹背景</string>
     <string name="launcher_foldershade_summ">加深文件夹背景</string>
+    <string name="launcher_closefolder_title">自动关闭文件夹</string>
+    <string name="launcher_closefolder_summ">启动后关闭应用的文件夹</string>
     <string name="launcher_renameapps_title">自定义应用标题</string>
     <string name="launcher_renameapps_list_title">已修改标题</string>
     <string name="launcher_renameapps_modified">已修改标题</string>
@@ -162,6 +169,8 @@
     <string name="controls_fingerprintlong_title">长按动作</string>
     <string name="controls_fingerprintlong_summ">屏幕打开时长按的动作</string>
     <string name="controls_fingerprintlong_delay_title">长按延迟</string>
+    <string name="controls_fingerprintskip_title">相机中无动作</string>
+    <string name="controls_fingerprintskip_summ">如果您使用指纹拍摄选项请启用此项</string>
     <string name="controls_mods_volume">音量键</string>
     <string name="controls_volumecursor_title">控制输入法光标</string>
     <string name="controls_volumecursor_summ">使用音量键移动文本输入法光标</string>
@@ -272,6 +281,10 @@
     <string name="toggle_flash_on">手电筒：开</string>
     <string name="toggle_mobiledata_on">移动数据已启用</string>
     <string name="toggle_mobiledata_off">移动数据已禁用</string>
+    <string name="qs_toggle_autorotate">旋转锁定</string>
+    <string name="qs_toggle_autorotate_off">无限制</string>
+    <string name="qs_toggle_autorotate_portrait">竖屏</string>
+    <string name="qs_toggle_autorotate_landscape">横屏</string>
     <string name="miuizer">CustoMIUIzer设置</string>
     <string name="miuizer_show_launchericon_title">启动器图标</string>
     <string name="miuizer_show_launchericon_summ">在启动器中显示图标</string>
@@ -353,8 +366,8 @@
     <string name="bt_category2">可用设备</string>
     <string name="bt_devices">蓝牙设备</string>
     <string name="bt_not_supported">此设备不支持蓝牙</string>
-    <string name="request_bt">首先打开蓝牙</string>
-    <string name="request_wifi">首先打开Wi-Fi</string>
+    <string name="request_bt">请先打开蓝牙</string>
+    <string name="request_wifi">请先打开Wi-Fi</string>
     <string name="request_location">没有授予位置权限，无法扫描</string>
     <string name="force_closed">强制关闭%s</string>
     <string name="credentials_ok">证书已解锁</string>
@@ -362,6 +375,8 @@
     <string name="credentials_success">证书已解锁！</string>
     <string name="xposed_not_found">没有找到Xposed Installer</string>
     <string name="xposed_not_found_explain">您似乎没有安装Xposed。\n\n请注意，此页面上的模块仅适用于Xposed！\n\nXposed可在ARHD安装程序中使用。</string>
+    <string name="xposed_not_reshooks">资源钩子已禁用</string>
+    <string name="xposed_not_reshooks_explain">您在Xposed Installer设置中禁用了资源钩子，模块将不会激活！</string>
     <string name="module_not_active">CustoMIUIzer模块没有激活！\n请打开Xposed Installer，激活模块并重启。</string>
     <string name="no_browser">打开网址需要浏览器应用</string>
     <string name="okay">好的</string>

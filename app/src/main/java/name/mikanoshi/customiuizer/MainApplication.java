@@ -47,7 +47,6 @@ public class MainApplication extends Application {
 	protected void attachBaseContext(Context base) {
 		try {
 			Context pContext = Helpers.getProtectedContext(base);
-			Helpers.fixPermissionsAsync(pContext);
 			Helpers.prefs = pContext.getSharedPreferences(Helpers.prefsName, Context.MODE_PRIVATE);
 			if (Helpers.prefs.getBoolean("pref_key_miuizer_forcelocale", false)) Locale.setDefault(Locale.ENGLISH);
 			super.attachBaseContext(pContext);

@@ -528,9 +528,19 @@ public class Controls {
 
 	public static void FingerprintEventsHook(LoadPackageParam lpparam) {
 		try {
+			boolean skipInCamera = MainModule.mPrefs.getBoolean("controls_fingerprintskip");
+
 			XposedHelpers.findAndHookMethod("com.android.server.policy.MiuiPhoneWindowManager", lpparam.classLoader, "processFingerprintNavigationEvent", KeyEvent.class, boolean.class, new XC_MethodHook() {
 				@Override
 				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+					if (skipInCamera) {
+						Object mFocusedWindow = XposedHelpers.getObjectField(param.thisObject, "mFocusedWindow");
+						if ((boolean)param.args[1] && mFocusedWindow != null) {
+							String ownPkg = (String)XposedHelpers.callMethod(mFocusedWindow, "getOwningPackage");
+							if ("com.android.camera".equals(ownPkg)) return;
+						}
+					}
+
 					miuiPWMContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 					miuiPWMHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
 
@@ -553,6 +563,14 @@ public class Controls {
 
 				@Override
 				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					if (skipInCamera) {
+						Object mFocusedWindow = XposedHelpers.getObjectField(param.thisObject, "mFocusedWindow");
+						if ((boolean)param.args[1] && mFocusedWindow != null) {
+							String ownPkg = (String)XposedHelpers.callMethod(mFocusedWindow, "getOwningPackage");
+							if ("com.android.camera".equals(ownPkg)) return;
+						}
+					}
+
 					KeyEvent keyEvent = (KeyEvent)param.args[0];
 					if (keyEvent.getKeyCode() != KeyEvent.KEYCODE_DPAD_CENTER || keyEvent.getAction() != KeyEvent.ACTION_UP) return;
 

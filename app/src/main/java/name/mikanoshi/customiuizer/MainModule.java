@@ -47,6 +47,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getBoolean("system_colorizenotiftitle")) System.ColorizedNotificationTitlesHook();
 		if (mPrefs.getBoolean("system_compactnotif")) System.CompactNotificationsActionsRes();
 		if (mPrefs.getBoolean("system_nopassword")) System.NoPasswordHook();
+		if (mPrefs.getInt("system_betterpopups_delay", 0) > 0 && !mPrefs.getBoolean("system_betterpopups_nohide")) System.BetterPopupsHideDelaySysHook();
 
 		Controls.VolumeMediaPlayerHook();
 		GlobalActions.setupUnhandledCatcher();
@@ -109,6 +110,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_hidefromrecents")) System.HideFromRecentsHook(lpparam);
 			if (Integer.parseInt(mPrefs.getString("system_autogroupnotif", "1")) > 1) System.AutoGroupNotificationsHook(lpparam);
 			if (Integer.parseInt(mPrefs.getString("system_vibration", "1")) > 1) System.SelectiveVibrationHook(lpparam);
+			if (mPrefs.getBoolean("system_orientationlock")) System.OrientationLockHook(lpparam);
+			if (mPrefs.getBoolean("system_noducking")) System.NoDuckingHook(lpparam);
 			//System.AutoBrightnessHook(lpparam);
 		}
 
@@ -139,6 +142,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_albumartonlock")) System.LockScreenAlbumArtHook(lpparam);
 			if (mPrefs.getBoolean("system_popupnotif")) System.PopupNotificationsHook(lpparam);
 			if (mPrefs.getBoolean("system_betterpopups_nohide")) System.BetterPopupsNoHideHook(lpparam);
+			if (mPrefs.getInt("system_betterpopups_delay", 0) > 0 && !mPrefs.getBoolean("system_betterpopups_nohide")) System.BetterPopupsHideDelayHook(lpparam);
 			if (mPrefs.getBoolean("system_betterpopups_swipedown")) System.BetterPopupsSwipeDownHook(lpparam);
 			if (Integer.parseInt(mPrefs.getString("system_qshaptics", "1")) > 1) System.QSHapticHook(lpparam);
 			if (mPrefs.getInt("controls_fsg_coverage", 60) != 60) System.BackGestureAreaHook(lpparam);
@@ -154,6 +158,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (pkg.equals("com.miui.securitycenter")) {
 			if (mPrefs.getBoolean("various_appdetails")) Various.AppInfoHook(lpparam);
 			if (Integer.parseInt(mPrefs.getString("various_appsort", "0")) > 0) Various.AppsDefaultSortHook(lpparam);
+			//Various.AppsDisableHook(lpparam);
 		}
 
 		if (pkg.equals("com.android.settings")) {
@@ -173,6 +178,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (Integer.parseInt(mPrefs.getString("launcher_foldershade", "1")) > 1) Launcher.FolderShadeHook(lpparam);
 			if (mPrefs.getBoolean("launcher_noclockhide")) Launcher.NoClockHideHook(lpparam);
 			if (mPrefs.getBoolean("launcher_renameapps")) Launcher.RenameShortcutsHook(lpparam);
+			if (mPrefs.getBoolean("launcher_closefolder")) Launcher.CloseFolderOnLaunchHook(lpparam);
 		}
 	}
 

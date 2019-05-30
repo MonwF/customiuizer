@@ -10,6 +10,7 @@
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.BLUETOOTH" />
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
 	<uses-permission android:name="android.permission.CHANGE_COMPONENT_ENABLED_STATE" />
@@ -38,6 +39,7 @@
 			android:configChanges="keyboardHidden|orientation|screenSize">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
+				<action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES"/>
 				<category android:name="de.robv.android.xposed.category.MODULE_SETTINGS"/>
 			</intent-filter>
 		</activity>
@@ -106,6 +108,17 @@
 			</intent-filter>
 		</activity>
 
+		<service
+			android:name=".qs.QuickSettingsService"
+			android:icon="@drawable/ic_qs_autorotate_disabled"
+			android:label="@string/qs_toggle_autorotate"
+			android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+			android:enabled="false">
+			<intent-filter>
+				<action android:name="android.service.quicksettings.action.QS_TILE" />
+			</intent-filter>
+		</service>
+
 		<activity
 			android:name=".crashreport.Dialog"
 			android:theme="@style/Invisible"
@@ -119,7 +132,8 @@
 			android:authorities="name.mikanoshi.customiuizer.provider.sharedprefs"
 			android:grantUriPermissions="true"
 			android:exported="true"
-			android:directBootAware="true" />
+			android:directBootAware="true"
+			tools:ignore="ExportedContentProvider" />
 
 		<receiver
 			android:name=".utils.HelperReceiver"

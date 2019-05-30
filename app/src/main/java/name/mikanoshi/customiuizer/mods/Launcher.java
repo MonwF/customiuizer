@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.HashSet;
+import java.util.Map;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
@@ -342,11 +343,12 @@ public class Launcher {
 							try {
 								String type = uri.getPathSegments().get(1);
 								String key = uri.getPathSegments().get(2);
+								if (!type.equals("string") || !key.contains("pref_key_launcher_renameapps_list")) return;
 								String newTitle = Helpers.getSharedStringPref(act, key, "");
-								if (type.equals("string")) MainModule.mPrefs.put(key, newTitle);
+								MainModule.mPrefs.put(key, newTitle);
 								HashSet<?> mAllLoadedApps = (HashSet<?>)XposedHelpers.getObjectField(param.thisObject, "mAllLoadedApps");
 								if (mAllLoadedApps != null)
-								for (Object shortcut : mAllLoadedApps) {
+								for (Object shortcut: mAllLoadedApps) {
 									boolean isApplicatoin = (boolean)XposedHelpers.callMethod(shortcut, "isApplicatoin");
 									if (!isApplicatoin) continue;
 									String pkgName = (String)XposedHelpers.callMethod(shortcut, "getPackageName");
@@ -369,7 +371,7 @@ public class Launcher {
 			XposedBridge.hookAllConstructors(findClass("com.miui.home.launcher.ShortcutInfo", lpparam.classLoader), new XC_MethodHook() {
 				@Override
 				protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
-					if (param.args.length > 0) modifyTitle(param.thisObject);
+					if (param.args != null && param.args.length > 0) modifyTitle(param.thisObject);
 				}
 			});
 
@@ -399,4 +401,17 @@ public class Launcher {
 		}
 	}
 
+	public static void CloseFolderOnLaunchHook(XC_LoadPackage.LoadPackageParam lpparam) {
+		try {
+			XposedBridge.hookAllMethods(findClass("com.miui.home.launcher.Launcher", lpparam.classLoader), "launch", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+					boolean mHasLaunchedAppFromFolder = XposedHelpers.getBooleanField(param.thisObject, "mHasLaunchedAppFromFolder");
+					if (mHasLaunchedAppFromFolder) XposedHelpers.callMethod(param.thisObject, "closeFolder");
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
 }

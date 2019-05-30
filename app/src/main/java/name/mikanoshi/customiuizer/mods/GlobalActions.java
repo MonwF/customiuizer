@@ -622,8 +622,8 @@ public class GlobalActions {
 					try {
 						final Context ctx = (Application)param.thisObject;
 						if (ctx == null || ctx.getPackageName().equals("name.mikanoshi.customiuizer")) return;
-						Class<?> clsUEH = Thread.getDefaultUncaughtExceptionHandler().getClass();
-						XposedHelpers.findAndHookMethod(clsUEH, "uncaughtException", Thread.class, Throwable.class, new XC_MethodHook() {
+						if (Thread.getDefaultUncaughtExceptionHandler() != null)
+						XposedHelpers.findAndHookMethod(Thread.getDefaultUncaughtExceptionHandler().getClass(), "uncaughtException", Thread.class, Throwable.class, new XC_MethodHook() {
 							@Override
 							protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 								if (param.args[1] != null) {

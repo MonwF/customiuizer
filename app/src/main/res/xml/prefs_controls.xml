@@ -59,6 +59,12 @@
 			miuizer:format="@string/format_d_ms"
 			miuizer:offtext="@string/array_system_default" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_controls_fingerprintskip"
+			android:title="@string/controls_fingerprintskip_title"
+			android:summary="@string/controls_fingerprintskip_summ"
+			android:defaultValue="false" />
+
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 	<PreferenceCategory

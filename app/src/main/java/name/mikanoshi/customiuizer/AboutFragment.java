@@ -46,6 +46,8 @@ public class AboutFragment extends SubFragment {
 			//Shouldn't happen...
 			e.printStackTrace();
 		}
+
+		Helpers.prefs.edit().putString("test", "step2").apply();
 	}
 
 }

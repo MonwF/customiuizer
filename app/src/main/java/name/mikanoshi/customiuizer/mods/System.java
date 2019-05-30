@@ -21,6 +21,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
 import android.media.MediaMetadata;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -559,10 +560,11 @@ public class System {
 			LinearLayout toast = (LinearLayout)XposedHelpers.getObjectField(res, "mNextView");
 			if (toast == null) return;
 			toast.setGravity(Gravity.START);
-			toast.setPadding(toast.getPaddingLeft() - Math.round(5 * density), toast.getPaddingTop(), toast.getPaddingRight(), toast.getPaddingBottom());
+			toast.setPadding(toast.getPaddingLeft() - Math.round(5 * density), toast.getPaddingTop() - Math.round(3 * density), toast.getPaddingRight(), toast.getPaddingBottom() - Math.round(3 * density));
 
 			TextView toastText = toast.findViewById(android.R.id.message);
 			if (toastText == null) return;
+			toastText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
 			LinearLayout.LayoutParams lpt = (LinearLayout.LayoutParams)toastText.getLayoutParams();
 			lpt.gravity = Gravity.START;
 
@@ -891,13 +893,13 @@ public class System {
 					Context mContext = (Context)param.args[0];
 					Handler mHandler = new Handler(mContext.getMainLooper());
 
-					XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomBlurModifier", 100);
+					XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomBlurModifier", MainModule.mPrefs.getInt("system_recents_blur", 100));
 					new Helpers.SharedPrefObserver(mContext, mHandler, "pref_key_system_recents_blur", 100) {
 						@Override
 						public void onChange(String name, int defValue) {
 							XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomBlurModifier", Helpers.getSharedIntPref(mContext, name, defValue));
 						}
-					}.onChange(false);
+					};
 				}
 			});
 
@@ -920,13 +922,13 @@ public class System {
 					Context mContext = (Context)param.args[0];
 					Handler mHandler = new Handler(mContext.getMainLooper());
 
-					XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomBlurModifier", 100);
+					XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomBlurModifier", MainModule.mPrefs.getInt("system_drawer_blur", 100));
 					new Helpers.SharedPrefObserver(mContext, mHandler, "pref_key_system_drawer_blur", 100) {
 						@Override
 						public void onChange(String name, int defValue) {
 							XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomBlurModifier", Helpers.getSharedIntPref(mContext, name, defValue));
 						}
-					}.onChange(false);
+					};
 				}
 			});
 
@@ -960,13 +962,13 @@ public class System {
 					Context mContext = (Context)param.args[0];
 					Handler mHandler = new Handler(mContext.getMainLooper());
 
-					XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomOpacityModifier", 100);
+					XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomOpacityModifier", MainModule.mPrefs.getInt("system_drawer_opacity", 100));
 					new Helpers.SharedPrefObserver(mContext, mHandler, "pref_key_system_drawer_opacity", 100) {
 						@Override
 						public void onChange(String name, int defValue) {
 							XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomOpacityModifier", Helpers.getSharedIntPref(mContext, name, defValue));
 						}
-					}.onChange(false);
+					};
 				}
 			});
 
@@ -1305,22 +1307,54 @@ public class System {
 	}
 
 	public static void LockScreenAlbumArtHook(LoadPackageParam lpparam) {
-		final String utilsClassName = Build.VERSION.SDK_INT <= Build.VERSION_CODES.N ? "com.android.keyguard.MiuiKeyguardUtils" : "com.android.keyguard.wallpaper.KeyguardWallpaperUtils";
-		final String getLockWallpaper = Build.VERSION.SDK_INT <= Build.VERSION_CODES.N ? "getLockWallpaperCache" : "getLockWallpaper";
+		Method getLockWallpaperPreview = null;
+		Class<?> utilClsTmp = XposedHelpers.findClassIfExists("com.android.keyguard.wallpaper.KeyguardWallpaperUtils", lpparam.classLoader);
+		if (utilClsTmp != null)
+		getLockWallpaperPreview = XposedHelpers.findMethodExactIfExists(utilClsTmp, "getLockWallpaperPreview", Context.class);
+		if (getLockWallpaperPreview == null) {
+			utilClsTmp = XposedHelpers.findClassIfExists("com.android.keyguard.MiuiKeyguardUtils", lpparam.classLoader);
+			if (utilClsTmp != null)
+			getLockWallpaperPreview = XposedHelpers.findMethodExactIfExists(utilClsTmp, "getLockWallpaperPreview", Context.class);
+		}
+
+		if (utilClsTmp == null || getLockWallpaperPreview == null) {
+			XposedBridge.log("[CustoMIUIzer][LockScreenAlbumArt] Method getLockWallpaperPreview not found");
+			return;
+		}
+
+		Method getLockWallpaper = XposedHelpers.findMethodExactIfExists(utilClsTmp, "getLockWallpaper", Context.class);
+		Method getLockWallpaperCache = XposedHelpers.findMethodExactIfExists(utilClsTmp, "getLockWallpaperCache", Context.class);
+
+		if (getLockWallpaper == null && getLockWallpaperCache == null) {
+			XposedBridge.log("[CustoMIUIzer][LockScreenAlbumArt] No getLockWallpaper(Cache) methods found");
+			return;
+		}
+
+		final Class<?> utilCls = utilClsTmp;
 
 		try {
-			XposedHelpers.findAndHookMethod(utilsClassName, lpparam.classLoader, "getLockWallpaperPreview", Context.class, new XC_MethodHook() {
+			XposedBridge.hookMethod(getLockWallpaperPreview, new XC_MethodHook() {
 				@Override
 				protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
-					Bitmap mAlbumArt = (Bitmap)XposedHelpers.getAdditionalStaticField(findClass(utilsClassName, lpparam.classLoader), "mAlbumArt");
+					Bitmap mAlbumArt = (Bitmap)XposedHelpers.getAdditionalStaticField(utilCls, "mAlbumArt");
 					if (mAlbumArt != null) param.setResult(new BitmapDrawable(((Context)param.args[0]).getResources(), mAlbumArt));
 				}
 			});
 
-			XposedHelpers.findAndHookMethod(utilsClassName, lpparam.classLoader, getLockWallpaper, Context.class, new XC_MethodHook() {
+			if (getLockWallpaper != null)
+			XposedBridge.hookMethod(getLockWallpaper, new XC_MethodHook() {
 				@Override
 				protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
-					Bitmap mAlbumArt = (Bitmap)XposedHelpers.getAdditionalStaticField(findClass(utilsClassName, lpparam.classLoader), "mAlbumArt");
+					Bitmap mAlbumArt = (Bitmap)XposedHelpers.getAdditionalStaticField(utilCls, "mAlbumArt");
+					if (mAlbumArt != null) param.setResult(new Pair<File, Drawable>(new File(""), new BitmapDrawable(((Context)param.args[0]).getResources(), mAlbumArt)));
+				}
+			});
+
+			if (getLockWallpaperCache != null)
+			XposedBridge.hookMethod(getLockWallpaperCache, new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+					Bitmap mAlbumArt = (Bitmap)XposedHelpers.getAdditionalStaticField(utilCls, "mAlbumArt");
 					if (mAlbumArt != null) param.setResult(new Pair<File, Drawable>(new File(""), new BitmapDrawable(((Context)param.args[0]).getResources(), mAlbumArt)));
 				}
 			});
@@ -1336,18 +1370,18 @@ public class System {
 						if (art == null) art = mMediaMetadata.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART);
 						if (art == null) art = mMediaMetadata.getBitmap(MediaMetadata.METADATA_KEY_DISPLAY_ICON);
 					}
-					Bitmap mAlbumArt = (Bitmap)XposedHelpers.getAdditionalStaticField(findClass(utilsClassName, lpparam.classLoader), "mAlbumArtSource");
+					Bitmap mAlbumArt = (Bitmap)XposedHelpers.getAdditionalStaticField(utilCls, "mAlbumArtSource");
 					try {
 						if (art == null && mAlbumArt == null) return;
 						if (art != null && art.sameAs(mAlbumArt)) return;
 					} catch (Throwable t) {}
-					XposedHelpers.setAdditionalStaticField(findClass(utilsClassName, lpparam.classLoader), "mAlbumArtSource", art);
+					XposedHelpers.setAdditionalStaticField(utilCls, "mAlbumArtSource", art);
 
 					int blur = Helpers.getSharedIntPref(mContext, "pref_key_system_albumartonlock_blur", 0);
 					if (art != null && blur > 0)
-						XposedHelpers.setAdditionalStaticField(findClass(utilsClassName, lpparam.classLoader), "mAlbumArt", Helpers.fastBlur(art, blur + 1));
+						XposedHelpers.setAdditionalStaticField(utilCls, "mAlbumArt", Helpers.fastBlur(art, blur + 1));
 					else
-						XposedHelpers.setAdditionalStaticField(findClass(utilsClassName, lpparam.classLoader), "mAlbumArt", art);
+						XposedHelpers.setAdditionalStaticField(utilCls, "mAlbumArt", art);
 
 					Intent setWallpaper = new Intent("com.miui.keyguard.setwallpaper");
 					setWallpaper.putExtra("set_lock_wallpaper_result", true);
@@ -1364,6 +1398,42 @@ public class System {
 //				(int)param.args[0] == 1 ? View.VISIBLE : View.GONE
 //			}
 //		});
+	}
+
+	public static void BetterPopupsHideDelaySysHook() {
+		try {
+			XposedHelpers.findAndHookMethod("android.app.MiuiNotification", null, "getFloatTime", XC_MethodReplacement.returnConstant(0));
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void BetterPopupsHideDelayHook(LoadPackageParam lpparam) {
+		try {
+			XposedBridge.hookAllConstructors(findClass("com.android.systemui.statusbar.policy.HeadsUpManager", lpparam.classLoader), new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
+
+					int delay = MainModule.mPrefs.getInt("system_betterpopups_delay", 0) * 1000;
+					if (delay == 0) delay = 5000;
+					XposedHelpers.setIntField(param.thisObject, "mMinimumDisplayTime", delay);
+					XposedHelpers.setIntField(param.thisObject, "mHeadsUpNotificationDecay", delay);
+					new Helpers.SharedPrefObserver(mContext, mHandler, "pref_key_system_betterpopups_delay", 0) {
+						@Override
+						public void onChange(String name, int defValue) {
+							int delay = Helpers.getSharedIntPref(mContext, name, defValue) * 1000;
+							if (delay == 0) delay = 5000;
+							XposedHelpers.setIntField(param.thisObject, "mMinimumDisplayTime", delay);
+							XposedHelpers.setIntField(param.thisObject, "mHeadsUpNotificationDecay", delay);
+						}
+					};
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
 	}
 
 	public static void BetterPopupsNoHideHook(LoadPackageParam lpparam) {
@@ -1512,22 +1582,30 @@ public class System {
 				@Override
 				@SuppressLint("WrongConstant")
 				protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
-					String pkgName = null;
-					ComponentName origActivity = (ComponentName)XposedHelpers.getObjectField(param.thisObject, "origActivity");
-					ComponentName realActivity = (ComponentName)XposedHelpers.getObjectField(param.thisObject, "realActivity");
-					String mCallingPackage = (String)XposedHelpers.getObjectField(param.thisObject, "mCallingPackage");
+					try {
+						//boolean mBooted = XposedHelpers.getBooleanField(param.args[0], "mBooted");
+						//if (!mBooted) return;
 
-					if (realActivity != null) pkgName = realActivity.getPackageName();
-					if (pkgName == null && origActivity != null) pkgName = origActivity.getPackageName();
-					if (pkgName == null) pkgName = mCallingPackage;
+						String pkgName = null;
+						ComponentName origActivity = (ComponentName)XposedHelpers.getObjectField(param.thisObject, "origActivity");
+						ComponentName realActivity = (ComponentName)XposedHelpers.getObjectField(param.thisObject, "realActivity");
+						String mCallingPackage = (String)XposedHelpers.getObjectField(param.thisObject, "mCallingPackage");
 
-					Context mContext = (Context)XposedHelpers.getObjectField(param.args[0], "mContext");
-					Set<String> selectedApps = Helpers.getSharedStringSetPref(mContext, "pref_key_system_hidefromrecents_apps");
-					if (selectedApps.contains(pkgName)) {
-						Intent intent = (Intent)XposedHelpers.getObjectField(param.thisObject, "intent");
-						Intent affinityIntent = (Intent)XposedHelpers.getObjectField(param.thisObject, "affinityIntent");
-						if (intent != null) intent.addFlags(8388608);
-						if (affinityIntent != null) affinityIntent.addFlags(8388608);
+						if (realActivity != null) pkgName = realActivity.getPackageName();
+						if (pkgName == null && origActivity != null) pkgName = origActivity.getPackageName();
+						if (pkgName == null) pkgName = mCallingPackage;
+
+						//Context mContext = (Context)XposedHelpers.getObjectField(param.args[0], "mContext");
+						//Set<String> selectedApps = Helpers.getSharedStringSetPref(mContext, "pref_key_system_hidefromrecents_apps");
+						Set<String> selectedApps = MainModule.mPrefs.getStringSet("system_hidefromrecents_apps");
+						if (selectedApps.contains(pkgName)) {
+							Intent intent = (Intent)XposedHelpers.getObjectField(param.thisObject, "intent");
+							Intent affinityIntent = (Intent)XposedHelpers.getObjectField(param.thisObject, "affinityIntent");
+							if (intent != null) intent.addFlags(8388608);
+							if (affinityIntent != null) affinityIntent.addFlags(8388608);
+						}
+					} catch (Throwable t) {
+						XposedBridge.log(t);
 					}
 				}
 			});
@@ -1678,13 +1756,29 @@ public class System {
 						Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 						ArrayList<Object> mMenuItems = (ArrayList<Object>)XposedHelpers.getObjectField(param.thisObject, "mMenuItems");
 						Class<?> nmiCls = findClass("com.android.systemui.statusbar.NotificationMenuRow$NotificationMenuItem", lpparam.classLoader);
-						Constructor<?> nmiCtr = nmiCls.getConstructor(Context.class, String.class, findClass("com.android.systemui.statusbar.NotificationGuts.GutsContent", lpparam.classLoader), int.class);
-						Object infoBtn = nmiCtr.newInstance(mContext, "Application info",
-								LayoutInflater.from(mContext).inflate(mContext.getResources().getIdentifier("notification_info", "layout", lpparam.packageName), null, false),
-								appInfoIconResId);
-						Object forceCloseBtn = nmiCtr.newInstance(mContext, "Force close",
-								LayoutInflater.from(mContext).inflate(mContext.getResources().getIdentifier("notification_info", "layout", lpparam.packageName), null, false),
-								forceCloseIconResId);
+						Constructor<?> nmiCtr;
+						Object infoBtn = null;
+						Object forceCloseBtn = null;
+						try {
+							nmiCtr = nmiCls.getConstructor(Context.class, String.class, int.class, int.class);
+							infoBtn = nmiCtr.newInstance(mContext, "Application info",
+									mContext.getResources().getIdentifier("notification_info", "layout", lpparam.packageName), appInfoIconResId);
+							forceCloseBtn = nmiCtr.newInstance(mContext, "Force close",
+									mContext.getResources().getIdentifier("notification_info", "layout", lpparam.packageName), forceCloseIconResId);
+						} catch (Throwable t1) {
+							try {
+								nmiCtr = nmiCls.getConstructor(Context.class, String.class, findClass("com.android.systemui.statusbar.NotificationGuts.GutsContent", lpparam.classLoader), int.class);
+								infoBtn = nmiCtr.newInstance(mContext, "Application info",
+										LayoutInflater.from(mContext).inflate(mContext.getResources().getIdentifier("notification_info", "layout", lpparam.packageName), null, false),
+										appInfoIconResId);
+								forceCloseBtn = nmiCtr.newInstance(mContext, "Force close",
+										LayoutInflater.from(mContext).inflate(mContext.getResources().getIdentifier("notification_info", "layout", lpparam.packageName), null, false),
+										forceCloseIconResId);
+							} catch (Throwable t2) {
+								XposedBridge.log(t2);
+							}
+						}
+						if (infoBtn == null || forceCloseBtn == null) return;
 						mMenuItems.add(infoBtn);
 						mMenuItems.add(forceCloseBtn);
 						FrameLayout mMenuContainer = (FrameLayout)XposedHelpers.getObjectField(param.thisObject, "mMenuContainer");
@@ -1778,6 +1872,19 @@ public class System {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	private static boolean checkVibration(String pkgName, Object thisObject) {
+		try {
+			int opt = (int)XposedHelpers.getAdditionalInstanceField(thisObject, "mVibrationMode");
+			Set<String> selectedApps = (Set<String>)XposedHelpers.getAdditionalInstanceField(thisObject, "mVibrationApps");
+			boolean isSelected = selectedApps != null && selectedApps.contains(pkgName);
+			return opt == 2 && !isSelected || opt == 3 && isSelected;
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+			return false;
+		}
+	}
+
 	public static void SelectiveVibrationHook(LoadPackageParam lpparam) {
 		try {
 			XposedHelpers.findAndHookMethod("com.android.server.VibratorService", lpparam.classLoader, "systemReady", new XC_MethodHook() {
@@ -1806,19 +1913,20 @@ public class System {
 
 			XposedBridge.hookAllMethods(findClass("com.android.server.VibratorService", lpparam.classLoader), "vibrate", new XC_MethodHook() {
 				@Override
-				@SuppressWarnings("unchecked")
 				protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
 					String pkgName = (String)param.args[1];
 					if (pkgName == null) return;
+					if (checkVibration(pkgName, param.thisObject)) param.setResult(null);
+				}
+			});
 
-					try {
-						int opt = (int)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mVibrationMode");
-						Set<String> selectedApps = (Set<String>)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mVibrationApps");
-						boolean isSelected = selectedApps != null && selectedApps.contains(pkgName);
-						if (opt == 2 && !isSelected || opt == 3 && isSelected) param.setResult(null);
-					} catch (Throwable t) {
-						XposedBridge.log(t);
-					}
+			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
+			XposedBridge.hookAllMethods(findClass("com.android.server.VibratorService", lpparam.classLoader), "vibratePattern", new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+					String pkgName = (String)param.args[1];
+					if (pkgName == null) return;
+					if (checkVibration(pkgName, param.thisObject)) param.setResult(null);
 				}
 			});
 		} catch (Throwable t) {
@@ -1831,6 +1939,68 @@ public class System {
 			resparam.res.setReplacement(resparam.packageName, "integer", "quick_settings_num_columns", 8);
 			resparam.res.setReplacement(resparam.packageName, "integer", "quick_settings_num_rows", 2);
 			resparam.res.setReplacement(resparam.packageName, "integer", "quick_settings_max_rows", 2);
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void NoDuckingHook(LoadPackageParam lpparam) {
+		try {
+			//XposedBridge.hookAllMethods(findClass("com.android.server.audio.PlaybackActivityMonitor", lpparam.classLoader), "duckPlayers", XC_MethodReplacement.returnConstant(true));
+			//XposedBridge.hookAllMethods(findClass("com.android.server.audio.PlaybackActivityMonitor$DuckingManager", lpparam.classLoader), "addDuck", XC_MethodReplacement.DO_NOTHING);
+			XposedBridge.hookAllMethods(findClass("com.android.server.audio.FocusRequester", lpparam.classLoader), "handleFocusLoss", new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+					if ((int)param.args[0] == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) param.setResult(null);
+
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void OrientationLockHook(LoadPackageParam lpparam) {
+		try {
+			XposedHelpers.findAndHookMethod("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "systemReady", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
+
+					XposedHelpers.setAdditionalInstanceField(param.thisObject, "mOrientationLockState", MainModule.mPrefs.getInt("qs_autorotate_state", 0));
+					new Helpers.SharedPrefObserver(mContext, mHandler, "pref_key_qs_autorotate_state", 0) {
+						@Override
+						public void onChange(String name, int defValue) {
+							XposedHelpers.setAdditionalInstanceField(param.thisObject, "mOrientationLockState", Helpers.getSharedIntPref(mContext, name, defValue));
+						}
+					};
+				}
+			});
+
+			XposedBridge.hookAllMethods(findClass("com.android.server.policy.PhoneWindowManager", lpparam.classLoader), "rotationForOrientationLw", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+					try {
+						//Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+						//XposedBridge.log("rotationForOrientationLw: " + param.args[0] + ", " + param.args[1]);
+						//XposedBridge.log("rotationForOrientationLw: " + param.getResult());
+						if ((int)param.args[0] == -1) {
+							int opt = (int)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mOrientationLockState");
+							int prevOrient = (int)param.args[1];
+							if (opt == 1) {
+								if (prevOrient != 0 && prevOrient != 2) prevOrient = 0;
+								if ((int)param.getResult() == 1 || (int)param.getResult() == 3) param.setResult(prevOrient);
+							} else if (opt == 2) {
+								if (prevOrient != 1 && prevOrient != 3) prevOrient = 1;
+								if ((int)param.getResult() == 0 || (int)param.getResult() == 2) param.setResult(prevOrient);
+							}
+						}
+					} catch (Throwable t) {
+						XposedBridge.log(t);
+					}
+				}
+			});
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}

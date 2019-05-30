@@ -57,6 +57,8 @@
 	<string name="system_nolightuponcharges_summ">Do not turn screen on when you connect or disconnect a charger</string>
 	<string name="system_nolightuponheadset_title">No screen light up on headset connection</string>
 	<string name="system_nolightuponheadset_summ">Do not turn screen on when you connect a headset</string>
+	<string name="system_noducking_title">Disable ducking</string>
+	<string name="system_noducking_summ">Do not lower volume of currently playing music to play notification sound</string>
 	<string name="system_separatevolume_title">Separate volume controls</string>
 	<string name="system_separatevolume_summ">Allow to configure separate volume for rings/notifications/system sounds in Settings</string>
 	<string name="system_volumesteps_title">Volume steps multiplier</string>
@@ -104,12 +106,15 @@
 	<string name="system_hidefromrecents_title">Hide from recents</string>
 	<string name="system_hidefromrecents_summ">Hide selected apps from recent tasks list</string>
 	<string name="system_rotateanim_title">Rotation animation</string>
+	<string name="system_orientationlock_title">Orientation lock</string>
+	<string name="system_orientationlock_summ">Add Quick Settings tile that can lock orientation in portrait or landscape mode</string>
 	<string name="system_notifafterunlock_title">Keep notifications</string>
 	<string name="system_notifafterunlock_summ">Show notifications on lock screen even after it\'s dismissed and then opened again</string>
 	<string name="system_dttosleep_title">Double tap to sleep</string>
 	<string name="system_dttosleep_summ">Turn screen off by double tapping on any empty space on lock screen</string>
 	<string name="system_mods_statusbar">Status bar and notification drawer</string>
 	<string name="system_mods_betterpopups">Better popup notifications</string>
+	<string name="system_betterpopups_delay_title">Auto hide delay</string>
 	<string name="system_betterpopups_nohide_title">No auto hide</string>
 	<string name="system_betterpopups_nohide_summ">Do not dismiss popups automatically</string>
 	<string name="system_betterpopups_swipedown_title">Enable swipe down</string>
@@ -128,6 +133,8 @@
 	<string name="launcher_folder_cols_title">Number of columns in folders</string>
 	<string name="launcher_foldershade_title">Folder background</string>
 	<string name="launcher_foldershade_summ">Darken folder background</string>
+	<string name="launcher_closefolder_title">Auto close folders</string>
+	<string name="launcher_closefolder_summ">Close app\'s folder after launch</string>
 	<string name="launcher_renameapps_title">Custom app titles</string>
 	<string name="launcher_renameapps_list_title">Modified titles</string>
 	<string name="launcher_renameapps_modified">Modified title</string>
@@ -167,6 +174,8 @@
 	<string name="controls_fingerprintlong_title">Long press action</string>
 	<string name="controls_fingerprintlong_summ">Action for a long press when screen is on</string>
 	<string name="controls_fingerprintlong_delay_title">Long press delay</string>
+	<string name="controls_fingerprintskip_title">No actions in Camera</string>
+	<string name="controls_fingerprintskip_summ">Enable this if you use fingerprint shutter option</string>
 	<string name="controls_mods_volume">Volume keys</string>
 	<string name="controls_volumecursor_title">Control input cursor</string>
 	<string name="controls_volumecursor_summ">Move text input cursor using volume keys</string>
@@ -198,6 +207,10 @@
 	<string name="various_apps_title">Show additional app details</string>
 	<string name="various_apps_summ">Add new fields to Settings > Installed apps > App info:\n- option to launch an app\n- full path to apk\n- data path\n- user id\n- target SDK version</string>
 	<string name="various_appsort_title">Installed apps initial sort order</string>
+	<string name="disable_app_title">Disable app?</string>
+	<string name="disable_app_text">If this is an essential system app, disabling it can break things :)</string>
+	<string name="disable_app_settings">That\'s a bad idea! :)</string>
+	<string name="disable_app_fail">Failed to change app state</string>
 
 	<string name="appdetails_launch">Launch</string>
 	<string name="appdetails_nolaunch">App has no default launchable activity</string>
@@ -284,6 +297,10 @@
 	<string name="toggle_flash_on">Flashlight: on</string>
 	<string name="toggle_mobiledata_on">Mobile data enabled</string>
 	<string name="toggle_mobiledata_off">Mobile data disabled</string>
+	<string name="qs_toggle_autorotate">Rotation lock</string>
+	<string name="qs_toggle_autorotate_off">Unrestricted</string>
+	<string name="qs_toggle_autorotate_portrait">Portrait</string>
+	<string name="qs_toggle_autorotate_landscape">Landscape</string>
 
 	<string name="miuizer">CustoMIUIzer settings</string>
 	<string name="miuizer_show_launchericon_title">Launcher icon</string>
@@ -382,6 +399,8 @@
 
 	<string name="xposed_not_found">Xposed Installer not found</string>
 	<string name="xposed_not_found_explain">It looks like you don\'t have Xposed Framework Installed.\n\nPlease note that mods will only work with Xposed!</string>
+	<string name="xposed_not_reshooks">Resource hooks are disabled</string>
+	<string name="xposed_not_reshooks_explain">You have resource hooks disabled in Xposed Installer settings, module will not be activated!</string>
 	<string name="module_not_active">CustoMIUIzer module is not active!\nOpen Xposed Installer, activate module and reboot.</string>
 	<string name="no_browser">Browser app is required to open URLs</string>
 	<string name="okay">Okay</string>

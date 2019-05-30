@@ -1,3 +1,17 @@
+1.5.5
+[New] Quick Settings tile to lock orientation in portrait or landscape positions
+[New] Disable music ducking (lowering volume during notifications)
+[New] Disable fingerprint actions in Camera app
+[New] Auto close MIUI launcher folders after app launch
+[New][Better popup notifications] Auto hide delay
+[Improved] All multiselection lists in module settings display selected apps on top
+[Improved] Check if Xposed resource hooks are disabled
+[Fixed][Extended notification menu] Latest stable MIUI support
+[Fixed][Block vibration] Android 7 support
+[Fixed][Album art as wallpaper] Better support for different Android versions
+[Fixed][Hide from recents] Switched from dynamic to static to prevent bootloops
+[Fixed][Custom app titles] Bug fixes
+
 1.5.4
 [New] Restrict vibration usage for selected apps
 [New] Modify app titles in MIUI Launcher

@@ -1,6 +1,8 @@
 package name.mikanoshi.customiuizer.utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -50,12 +52,31 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 		aType = adapterType;
 		if (aType == Helpers.AppAdapterType.Mutli)
 		selectedApps = Helpers.prefs.getStringSet(prefKey, new LinkedHashSet<String>());
+		sortList();
 	}
 
 	public void updateSelectedApps() {
 		if (aType == Helpers.AppAdapterType.Mutli)
 		selectedApps = Helpers.prefs.getStringSet(key, new LinkedHashSet<String>());
 		notifyDataSetChanged();
+	}
+
+	private void sortList() {
+		Collections.sort(filteredAppList, new Comparator<AppData>() {
+			public int compare(AppData app1, AppData app2) {
+				if (aType == Helpers.AppAdapterType.Mutli && selectedApps.size() > 0) {
+					boolean app1checked = selectedApps.contains(app1.pkgName);
+					boolean app2checked = selectedApps.contains(app2.pkgName);
+					if (app1checked && app2checked)
+						return 0;
+					else if (app1checked)
+						return -1;
+					else if (app2checked)
+						return 1;
+					return 0;
+				} else return 0;
+			}
+		});
 	}
 
 	public int getCount() {
@@ -140,6 +161,7 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 		@SuppressWarnings("unchecked")
 		protected void publishResults(CharSequence constraint, FilterResults results) {
 			filteredAppList = (ArrayList<AppData>)results.values;
+			sortList();
 			notifyDataSetChanged();
 		}
 	}

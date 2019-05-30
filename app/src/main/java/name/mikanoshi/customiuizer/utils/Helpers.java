@@ -90,12 +90,12 @@ public class Helpers {
 	public static boolean isXposedInstallerInstalled(Context mContext) {
 		PackageManager pm = mContext.getPackageManager();
 		try {
-			pm.getPackageInfo("org.meowcat.edxposed.manager", PackageManager.GET_ACTIVITIES);
+			pm.getPackageInfo("com.solohsu.android.edxp.manager", PackageManager.GET_ACTIVITIES);
 			return true;
 		} catch (PackageManager.NameNotFoundException e) {}
 
 		try {
-			pm.getPackageInfo("com.solohsu.android.edxp.manager", PackageManager.GET_ACTIVITIES);
+			pm.getPackageInfo("org.meowcat.edxposed.manager", PackageManager.GET_ACTIVITIES);
 			return true;
 		} catch (PackageManager.NameNotFoundException e) {}
 
@@ -107,14 +107,21 @@ public class Helpers {
 		return false;
 	}
 
+	public static boolean areXposedResourceHooksDisabled() {
+		File d1 = new File("/data/user_de/0/com.solohsu.android.edxp.manager/conf/disable_resources");
+		File d2 = new File("/data/user_de/0/org.meowcat.edxposed.manager/conf/disable_resources");
+		File d3 = new File("/data/user_de/0/de.robv.android.xposed.installer/conf/disable_resources");
+		return d1.exists() || d2.exists() || d3.exists();
+	}
+
 	public static String getXposedInstallerErrorLog(Context mContext) {
 		String baseDir = null;
 		File file;
 		PackageManager pm = mContext.getPackageManager();
 
 		try {
-			pm.getPackageInfo("org.meowcat.edxposed.manager", PackageManager.GET_ACTIVITIES);
-			baseDir = "/data/user_de/0/org.meowcat.edxposed.manager/";
+			pm.getPackageInfo("com.solohsu.android.edxp.manager", PackageManager.GET_ACTIVITIES);
+			baseDir = "/data/user_de/0/com.solohsu.android.edxp.manager/";
 			file = new File(baseDir + "log/all.log");
 			if (file.exists()) return baseDir + "log/all.log";
 			file = new File(baseDir + "log/error.log");
@@ -122,8 +129,8 @@ public class Helpers {
 		} catch (PackageManager.NameNotFoundException e) {}
 
 		try {
-			pm.getPackageInfo("com.solohsu.android.edxp.manager", PackageManager.GET_ACTIVITIES);
-			baseDir = "/data/user_de/0/com.solohsu.android.edxp.manager/";
+			pm.getPackageInfo("org.meowcat.edxposed.manager", PackageManager.GET_ACTIVITIES);
+			baseDir = "/data/user_de/0/org.meowcat.edxposed.manager/";
 			file = new File(baseDir + "log/all.log");
 			if (file.exists()) return baseDir + "log/all.log";
 			file = new File(baseDir + "log/error.log");
@@ -408,6 +415,7 @@ public class Helpers {
 	@SuppressLint({"SetWorldReadable", "SetWorldWritable"})
 	public static void fixPermissionsAsync(Context context) {
 		AsyncTask.execute(() -> {
+			try { Thread.sleep(500); } catch (Throwable t) {}
 			File pkgFolder = context.getDataDir();
 			if (pkgFolder.exists()) {
 				pkgFolder.setExecutable(true, false);
@@ -417,6 +425,7 @@ public class Helpers {
 				if (sharedPrefsFolder.exists()) {
 					sharedPrefsFolder.setExecutable(true, false);
 					sharedPrefsFolder.setReadable(true, false);
+					sharedPrefsFolder.setWritable(true, false);
 					File f = new File(sharedPrefsFolder.getAbsolutePath() + "/" + Helpers.prefsName + ".xml");
 					if (f.exists()) {
 						f.setReadable(true, false);
@@ -524,6 +533,7 @@ public class Helpers {
 			return defValue;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static Set<String> getSharedStringSetPref(Context context, String name) {
 		Uri uri = stringSetPrefToUri(name);
 		try {
@@ -538,7 +548,11 @@ public class Helpers {
 			XposedBridge.log(t);
 		}
 
-		return new LinkedHashSet<String>();
+		LinkedHashSet<String> empty = new LinkedHashSet<String>();
+		if (MainModule.mPrefs.containsKey(name))
+			return (Set<String>)MainModule.mPrefs.getObject(name, empty);
+		else
+			return empty;
 	}
 
 	public static int getSharedIntPref(Context context, String name, int defValue) {

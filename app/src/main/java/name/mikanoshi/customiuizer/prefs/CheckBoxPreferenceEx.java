@@ -14,6 +14,7 @@ import name.mikanoshi.customiuizer.R;
 
 public class CheckBoxPreferenceEx extends CheckBoxPreference {
 
+	private boolean unsupported = false;
 	private Resources res = getContext().getResources();
 	private int primary = res.getColor(res.getIdentifier("preference_primary_text_light", "color", "miui"), getContext().getTheme());
 	private int secondary = res.getColor(res.getIdentifier("preference_secondary_text_light", "color", "miui"), getContext().getTheme());
@@ -33,7 +34,7 @@ public class CheckBoxPreferenceEx extends CheckBoxPreference {
 		View finalView = super.getView(view, parent);
 		TextView title = finalView.findViewById(android.R.id.title);
 		title.setTextColor(isEnabled() ? primary : secondary);
-		title.setText(getTitle() + (dynamic ? " ⟲" : ""));
+		title.setText(getTitle() + (unsupported ? " ⨯" : (dynamic ? " ⟲" : "")));
 		return finalView;
 	}
 
@@ -49,5 +50,10 @@ public class CheckBoxPreferenceEx extends CheckBoxPreference {
 		summary.setTextColor(secondary);
 
 		return view;
+	}
+
+	public void setUnsupported(boolean value) {
+		unsupported = value;
+		setEnabled(!value);
 	}
 }

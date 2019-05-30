@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -49,6 +51,28 @@ public class PrivacyAppAdapter extends BaseAdapter implements Filterable {
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
+
+		sortList();
+	}
+
+	private void sortList() {
+		Collections.sort(filteredAppList, new Comparator<AppData>() {
+			public int compare(AppData app1, AppData app2) {
+				try {
+					boolean app1checked = (boolean)isPrivacyApp.invoke(mSecurityManager, app1.pkgName, 0);
+					boolean app2checked = (boolean)isPrivacyApp.invoke(mSecurityManager, app2.pkgName, 0);
+					if (app1checked && app2checked)
+						return 0;
+					else if (app1checked)
+						return -1;
+					else if (app2checked)
+						return 1;
+					return 0;
+				} catch (Throwable t) {
+					return 0;
+				}
+			}
+		});
 	}
 
 	public int getCount() {
@@ -127,6 +151,7 @@ public class PrivacyAppAdapter extends BaseAdapter implements Filterable {
 		@SuppressWarnings("unchecked")
 		protected void publishResults(CharSequence constraint, FilterResults results) {
 			filteredAppList = (ArrayList<AppData>)results.values;
+			sortList();
 			notifyDataSetChanged();
 		}
 	}

@@ -65,9 +65,9 @@ public class SharedPrefsProvider extends ContentProvider {
 				return cursor;
 			}
 			case 4: {
-				Set<String> networks = prefs.getStringSet(parts.get(1), new LinkedHashSet<String>());
-				if (networks != null)
-				for (String data: networks) cursor.newRow().add("data", data);
+				Set<String> strings = prefs.getStringSet(parts.get(1), new LinkedHashSet<String>());
+				if (strings != null)
+				for (String str: strings) cursor.newRow().add("data", str);
 				return cursor;
 			}
 		}

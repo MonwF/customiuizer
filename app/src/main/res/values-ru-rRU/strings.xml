@@ -25,6 +25,8 @@
 
 	<string name="xposed_not_found">Не найден Xposed Framework</string>
 	<string name="xposed_not_found_explain">Похоже, что у Вас не установлен Xposed Framework.\n\nВсе моды работают только при наличии установленного Xposed Framework!</string>
+	<string name="xposed_not_reshooks">Модификация ресурсов невозможна</string>
+	<string name="xposed_not_reshooks_explain">Изменение ресурсов отключено в настройках Xposed Installer, модуль не будет активирован!</string>
 	<string name="okay">Окей</string>
 
 	<string name="dummy">" "</string>
@@ -59,6 +61,10 @@
 	<string name="toggle_flash_off">Фонарик выключен</string>
 	<string name="toggle_mobiledata_on">Мобильный Интернет включен</string>
 	<string name="toggle_mobiledata_off">Мобильный Интернет отключен</string>
+	<string name="qs_toggle_autorotate">Закрепить ориентацию</string>
+	<string name="qs_toggle_autorotate_off">Отключено</string>
+	<string name="qs_toggle_autorotate_portrait">Портрет</string>
+	<string name="qs_toggle_autorotate_landscape">Ландшафт</string>
 
 	<string name="appdetails_launch">Запустить</string>
 	<string name="appdetails_apk_file">Имя APK файла</string>
@@ -154,6 +160,8 @@
 	<string name="controls_fingerprintlong_title">Действие на долгое нажатие</string>
 	<string name="controls_fingerprintlong_summ">Задаёт действие на долгое нажатие при включенном экране</string>
 	<string name="controls_fingerprintlong_delay_title">Время долгого нажатия</string>
+	<string name="controls_fingerprintskip_title">Не активировать действия в Камере</string>
+	<string name="controls_fingerprintskip_summ">Включите данную опцию для правильной работы съёмки отпечатком пальца</string>
 	<string name="controls_mods_volume">Кнопки громкости</string>
 	<string name="controls_volumecursor_title">Управлять курсором ввода</string>
 	<string name="controls_volumecursor_summ">Перемещать курсор ввода текста при нажатии кнопок громкости</string>
@@ -257,6 +265,8 @@
 	<string name="launcher_folder_cols_title">Число колонок в папках</string>
 	<string name="launcher_foldershade_title">Фон папок</string>
 	<string name="launcher_foldershade_summ">Затемнённый фон папок</string>
+	<string name="launcher_closefolder_title">Закрывать папки автоматом</string>
+	<string name="launcher_closefolder_summ">Закрывает папку приложения после его запуска</string>
 	<string name="launcher_renameapps_title">Модификация названий приложений</string>
 	<string name="launcher_renameapps_list_title">Изменённые названия</string>
 	<string name="launcher_renameapps_modified">Изменённое название</string>
@@ -288,12 +298,13 @@
 	<string name="system_mods_screenanim">Экранная анимация</string>
 	<string name="system_mods_statusbar">Строка состояния и панель уведомлений</string>
 	<string name="system_mods_betterpopups">Улучшенные всплывающие уведомления</string>
+	<string name="system_betterpopups_delay_title">Задержка перед скрытием</string>
 	<string name="system_betterpopups_nohide_title">Не прятать автоматом</string>
 	<string name="system_betterpopups_nohide_summ">Отключает автоматическое скрытие</string>
 	<string name="system_betterpopups_swipedown_title">Активировать свайп вниз</string>
 	<string name="system_betterpopups_swipedown_summ">Открывает панель уведомлений по свайпу вниз</string>
 	<string name="system_qshaptic_title">Виброотклик при переключении настроек</string>
-	<string name="system_qshaptic_summ">Включает вибрирование при нажатии на переключатели в Быстрых настройках</string>
+	<string name="system_qshaptic_summ">Включает вибрирование при нажатии на переключатели в Быстрых Настройках</string>
 	<string name="system_clockseconds_title">Показывать секунды</string>
 	<string name="system_clockseconds_summ">Отображает секунды на часах в статусбаре</string>
 	<string name="system_mobiletypeicon_title">Скрывать тип мобильной сети</string>
@@ -334,6 +345,8 @@
 	<string name="system_nolightuponcharges_title">Не включать экран при зарядке</string>
 	<string name="system_nolightuponheadset_title">Не включать экран при подключении наушников</string>
 	<string name="system_nolightuponheadset_summ">Запрещает включение экрана при подключении наушников</string>
+	<string name="system_noducking_title">Отключить заглушение</string>
+	<string name="system_noducking_summ">Не понижать громкость играющей в данный момент музыки для проигрывания звука уведомления</string>
 	<string name="system_separatevolume_title">Раздельные настройки громкости</string>
 	<string name="system_separatevolume_summ">Позволяет изменить громкость в Настройках отдельно для звонков/уведомлений/системных звуков</string>
 	<string name="system_volumesteps_title">Множитель шагов громкости</string>
@@ -361,6 +374,10 @@
 	<string name="various_sysappsupdater_summ">Приложение больше не является частью некоторых прошивок и должно быть установлено вручную</string>
 	<string name="various_sysappsupdater_summ2">Будьте осторожны при обновлении модифицированных приложений на кастомных прошивках, это может привести к потере доп. функциональности</string>
 	<string name="various_sysappsupdater_title">Открыть \"Обновление компонентов\"</string>
+	<string name="disable_app_title">Отключить приложение?</string>
+	<string name="disable_app_text">Если данное приложение является важным системным, то его отключение может что-нибудь поломать :)</string>
+	<string name="disable_app_settings">Это плохая идея! :)</string>
+	<string name="disable_app_fail">Не удалось изменить статус приложения</string>
 	<string name="your_contact_info">Ваши контактные данные</string>
 	<string name="storage_perm_denied_backup">Вы хотите создать резервную копию настроек или нет?</string>
 	<string name="storage_perm_denied_restore">Вы хотите восстановить настройки или нет?</string>
@@ -383,6 +400,8 @@
 	<string name="system_noscreenlock_bt_title">Доверенные Bluetooth устройства</string>
 	<string name="system_noscreenlock_bt_summ">Блокировка будет временно отключена, пока подключены данные устройства</string>
 	<string name="system_rotateanim_title">Анимация при повороте</string>
+	<string name="system_orientationlock_title">Закрепление ориентации</string>
+	<string name="system_orientationlock_summ">Добавляет переключатель в Быстрые Настройки для закрепления портретной или ландшафтной ориентации</string>
 	<string name="array_screen_anim_none">Без анимации</string>
 	<string name="array_screen_anim_fade">Затухание</string>
 	<string name="system_notifafterunlock_title">Не скрывать уведомления</string>

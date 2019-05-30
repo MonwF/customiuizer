@@ -13,6 +13,7 @@ import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SubFragment;
 import name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx;
 import name.mikanoshi.customiuizer.prefs.ListPreferenceEx;
+import name.mikanoshi.customiuizer.qs.QuickSettingsService;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class System extends SubFragment {
@@ -101,7 +102,19 @@ public class System extends SubFragment {
 
 		((CheckBoxPreferenceEx)findPreference("pref_key_system_credentials")).setChecked(getActivity().getPackageManager().getComponentEnabledSetting(new ComponentName(getActivity(), CredentialsLauncher.class)) == PackageManager.COMPONENT_ENABLED_STATE_ENABLED);
 
-		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N) {
+		findPreference("pref_key_system_orientationlock").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				PackageManager pm = getActivity().getPackageManager();
+				if ((Boolean)newValue)
+					pm.setComponentEnabledSetting(new ComponentName(getActivity(), QuickSettingsService.class), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+				else
+					pm.setComponentEnabledSetting(new ComponentName(getActivity(), QuickSettingsService.class), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+				return true;
+			}
+		});
+
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
 			((ListPreferenceEx)findPreference("pref_key_system_autogroupnotif")).setUnsupported(true);
 		}
 	}
