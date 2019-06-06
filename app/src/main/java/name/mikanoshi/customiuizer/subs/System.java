@@ -5,6 +5,8 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.provider.Settings;
+import android.widget.SeekBar;
 
 import java.util.Objects;
 
@@ -13,6 +15,7 @@ import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SubFragment;
 import name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx;
 import name.mikanoshi.customiuizer.prefs.ListPreferenceEx;
+import name.mikanoshi.customiuizer.prefs.SeekBarPreference;
 import name.mikanoshi.customiuizer.qs.QuickSettingsService;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
@@ -113,6 +116,22 @@ public class System extends SubFragment {
 				return true;
 			}
 		});
+
+		((SeekBarPreference)findPreference("pref_key_system_qqsgridcolumns")).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				if (!fromUser) return;
+				if (progress < 3) progress = 5;
+				Settings.Secure.putInt(getActivity().getContentResolver(), "sysui_qqs_count", progress);
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {}
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {}
+		});
+
 
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
 			((ListPreferenceEx)findPreference("pref_key_system_autogroupnotif")).setUnsupported(true);

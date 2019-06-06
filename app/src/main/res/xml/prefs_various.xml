@@ -10,7 +10,13 @@
 
 	<PreferenceCategory
 		android:title="@string/settings"
-		android:key="pref_various_mods_settings" >
+		android:key="pref_various_mods_settings">
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_various_disableapp"
+			android:summary="@string/various_disableapp_summ"
+			android:title="@string/various_disableapp_title"
+			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_various_appdetails"

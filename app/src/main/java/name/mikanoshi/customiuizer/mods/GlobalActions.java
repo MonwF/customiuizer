@@ -63,6 +63,8 @@ public class GlobalActions {
 			case 10: return toggleThis(helperContext, extraToggle);
 			case 11: return switchToPrevApp(helperContext);
 			case 12: return openPowerMenu(helperContext);
+			case 13: return clearMemory(helperContext);
+			case 14: return toggleColorInversion(helperContext);
 			default: return false;
 		}
 	}
@@ -140,6 +142,13 @@ public class GlobalActions {
 						}
 					}
 
+					if (action.equals("name.mikanoshi.customiuizer.mods.action.ClearMemory")) {
+						Intent clearIntent = new Intent("com.android.systemui.taskmanager.Clear");
+						clearIntent.putExtra("show_toast", true);
+						//clearIntent.putExtra("clean_type", -1);
+						context.sendBroadcast(clearIntent);
+					}
+
 					Object mToggleManager = XposedHelpers.getObjectField(mStatusBar, "mToggleManager");
 					if (mToggleManager == null) return;
 					if (action.equals("name.mikanoshi.customiuizer.mods.action.ToggleGPS")) {
@@ -191,7 +200,7 @@ public class GlobalActions {
 				context.sendBroadcast(new Intent("android.intent.action.CAPTURE_SCREENSHOT"));
 			}
 			/*
-			if (action.equals("name.mikanoshi.customiuizer.mods.action.killForegroundAppShedule")) {
+			if (action.equals("name.mikanoshi.customiuizer.mods.action.KillForegroundAppShedule")) {
 				if (mHandler == null) return;
 				mHandler.postDelayed(new Runnable() {
 					@Override
@@ -201,7 +210,7 @@ public class GlobalActions {
 				}, 1000);
 			}
 			*/
-//			if (action.equals("name.mikanoshi.customiuizer.mods.action.killForegroundApp")) {
+//			if (action.equals("name.mikanoshi.customiuizer.mods.action.KillForegroundApp")) {
 //				removeTask(context);
 //			}
 //
@@ -265,6 +274,11 @@ public class GlobalActions {
 				Class<?> clsWMG = XposedHelpers.findClass("android.view.WindowManagerGlobal", null);
 				Object wms = XposedHelpers.callStaticMethod(clsWMG, "getWindowManagerService");
 				XposedHelpers.callMethod(wms, "showGlobalActions");
+			}
+
+			if (action.equals("name.mikanoshi.customiuizer.mods.action.ToggleColorInversion")) {
+				int opt = Settings.Secure.getInt(context.getContentResolver(), "accessibility_display_inversion_enabled");
+				Settings.Secure.putInt(context.getContentResolver(), "accessibility_display_inversion_enabled", opt == 0 ? 1 : 0);
 			}
 
 			// Toggles
@@ -654,10 +668,11 @@ public class GlobalActions {
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.GoToSleep");
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.LockDevice");
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.TakeScreenshot");
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.killForegroundApp");
+					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.KillForegroundApp");
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.SwitchToPrevApp");
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.OpenPowerMenu");
-					//intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.killForegroundAppShedule");
+					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleColorInversion");
+					//intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.KillForegroundAppShedule");
 					//intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.SimulateMenu");
 
 					// Toggles
@@ -669,7 +684,7 @@ public class GlobalActions {
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleAutoRotation");
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleMobileData");
 
-					//APM
+					// Tools
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.FastReboot");
 
 					mGlobalContext.registerReceiver(mGlobalReceiver, intentfilter);
@@ -740,6 +755,9 @@ public class GlobalActions {
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleFlashlight");
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ShowQuickRecents");
 					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.HideQuickRecents");
+
+					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ClearMemory");
+
 					mStatusBarContext.registerReceiver(mSBReceiver, intentfilter);
 				}
 			});
@@ -836,10 +854,14 @@ public class GlobalActions {
 				case 12: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_fingerprint1_app", null); break;
 				case 13: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_fingerprint2_app", null); break;
 				case 14: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_fingerprintlong_app", null); break;
+				case 15: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_backlong_app", null); break;
+				case 16: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_homelong_app", null); break;
+				case 17: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_menulong_app", null); break;
 			}
 
 			if (pkgAppName != null) {
 				String[] pkgAppArray = pkgAppName.split("\\|");
+				if (pkgAppArray.length < 2) return false;
 
 				ComponentName name = new ComponentName(pkgAppArray[0], pkgAppArray[1]);
 				Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -874,6 +896,9 @@ public class GlobalActions {
 				case 12: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_fingerprint1_shortcut_intent", null); break;
 				case 13: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_fingerprint2_shortcut_intent", null); break;
 				case 14: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_fingerprintlong_shortcut_intent", null); break;
+				case 15: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_backlong_shortcut_intent", null); break;
+				case 16: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_homelong_shortcut_intent", null); break;
+				case 17: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_menulong_shortcut_intent", null); break;
 			}
 
 			if (intentString != null) {
@@ -900,7 +925,7 @@ public class GlobalActions {
 
 //	public static boolean killForegroundApp(Context context) {
 //		try {
-//			context.sendBroadcast(new Intent("name.mikanoshi.customiuizer.mods.action.killForegroundApp"));
+//			context.sendBroadcast(new Intent("name.mikanoshi.customiuizer.mods.action.KillForegroundApp"));
 //			return true;
 //		} catch (Throwable t) {
 //			XposedBridge.log(t);
@@ -941,6 +966,26 @@ public class GlobalActions {
 	public static boolean openPowerMenu(Context context) {
 		try {
 			context.sendBroadcast(new Intent("name.mikanoshi.customiuizer.mods.action.OpenPowerMenu"));
+			return true;
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+			return false;
+		}
+	}
+
+	public static boolean toggleColorInversion(Context context) {
+		try {
+			context.sendBroadcast(new Intent("name.mikanoshi.customiuizer.mods.action.ToggleColorInversion"));
+			return true;
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+			return false;
+		}
+	}
+
+	public static boolean clearMemory(Context context) {
+		try {
+			context.sendBroadcast(new Intent("name.mikanoshi.customiuizer.mods.action.ClearMemory"));
 			return true;
 		} catch (Throwable t) {
 			XposedBridge.log(t);

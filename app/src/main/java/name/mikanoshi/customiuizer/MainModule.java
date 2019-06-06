@@ -1,12 +1,17 @@
 package name.mikanoshi.customiuizer;
 
+import android.app.Application;
+import android.content.Context;
+
 import java.io.File;
 
 import de.robv.android.xposed.IXposedHookInitPackageResources;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
+import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
+import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_InitPackageResources;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 import name.mikanoshi.customiuizer.mods.Controls;
@@ -48,6 +53,10 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getBoolean("system_compactnotif")) System.CompactNotificationsActionsRes();
 		if (mPrefs.getBoolean("system_nopassword")) System.NoPasswordHook();
 		if (mPrefs.getInt("system_betterpopups_delay", 0) > 0 && !mPrefs.getBoolean("system_betterpopups_nohide")) System.BetterPopupsHideDelaySysHook();
+		if (mPrefs.getInt("system_statusbarheight", 19) > 19) System.StatusBarHeightRes();
+		if (mPrefs.getBoolean("controls_fsg_horiz")) Controls.FSGesturesHook();
+		if (mPrefs.getBoolean("system_epm")) System.ExtendedPowerMenuHook();
+		if (mPrefs.getBoolean("system_pocketmode")) System.PocketModeHook();
 
 		Controls.VolumeMediaPlayerHook();
 		GlobalActions.setupUnhandledCatcher();
@@ -60,7 +69,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (pkg.equals("com.android.systemui")) {
 			if (mPrefs.getBoolean("system_compactnotif")) System.CompactNotificationsPaddingRes(resparam);
 			if (mPrefs.getBoolean("system_notifrowmenu")) System.NotificationRowMenuRes(resparam);
-			//System.QSGridRes(resparam);
+			if (mPrefs.getInt("system_qsgridcolumns", 2) > 2 || mPrefs.getInt("system_qsgridrows", 3) > 3) System.QSGridRes(resparam);
+			if (mPrefs.getInt("system_qqsgridcolumns", 2) > 2) System.QQSGridRes(resparam);
 		}
 
 		if (pkg.equals("com.android.settings")) {
@@ -112,6 +122,12 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (Integer.parseInt(mPrefs.getString("system_vibration", "1")) > 1) System.SelectiveVibrationHook(lpparam);
 			if (mPrefs.getBoolean("system_orientationlock")) System.OrientationLockHook(lpparam);
 			if (mPrefs.getBoolean("system_noducking")) System.NoDuckingHook(lpparam);
+			if (mPrefs.getInt("controls_backlong_action", 1) > 1 ||
+				mPrefs.getInt("controls_homelong_action", 1) > 1 ||
+				mPrefs.getInt("controls_menulong_action", 1) > 1) Controls.NavBarActionsHook(lpparam);
+			if (mPrefs.getBoolean("system_epm")) System.ExtendedPowerMenuHook(lpparam);
+
+			//Controls.AIButtonHook(lpparam);
 			//System.AutoBrightnessHook(lpparam);
 		}
 
@@ -149,6 +165,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_hidemoreicon")) System.NoMoreIconHook(lpparam);
 			if (mPrefs.getBoolean("system_notifafterunlock")) System.ShowNotificationsAfterUnlockHook(lpparam);
 			if (mPrefs.getBoolean("system_notifrowmenu")) System.NotificationRowMenuHook(lpparam);
+			if (mPrefs.getInt("system_qsgridrows", 3) > 3 || mPrefs.getBoolean("system_qsnolabels")) System.QSGridLabels(lpparam);
+			if (mPrefs.getBoolean("system_removecleaner")) System.HideMemoryCleanHook(lpparam);
+			if (mPrefs.getBoolean("system_removedismiss")) System.HideDismissViewHook(lpparam);
 		}
 
 //		if (pkg.equals("com.android.incallui")) {
@@ -158,28 +177,34 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (pkg.equals("com.miui.securitycenter")) {
 			if (mPrefs.getBoolean("various_appdetails")) Various.AppInfoHook(lpparam);
 			if (Integer.parseInt(mPrefs.getString("various_appsort", "0")) > 0) Various.AppsDefaultSortHook(lpparam);
-			//Various.AppsDisableHook(lpparam);
+			if (mPrefs.getBoolean("various_disableapp")) Various.AppsDisableHook(lpparam);
 		}
 
 		if (pkg.equals("com.android.settings")) {
 			GlobalActions.miuizerSettingsInit(lpparam);
 
 			if (mPrefs.getBoolean("system_separatevolume")) System.NotificationVolumeSettingsHook(lpparam);
+			if (mPrefs.getBoolean("system_pocketmode")) System.PocketModeSettingHook(lpparam);
 		}
 
-		if (pkg.equals("com.miui.home")) {
-			if (mPrefs.getInt("launcher_swipedown_action", 1) != 1 ||
-				mPrefs.getInt("launcher_swipeup_action", 1) != 1 ||
-				mPrefs.getInt("launcher_swipedown2_action", 1) != 1 ||
-				mPrefs.getInt("launcher_swipeup2_action", 1) != 1) Launcher.HomescreenSwipesHook(lpparam);
-			if (mPrefs.getInt("launcher_swipeleft_action", 1) != 1 ||
-				mPrefs.getInt("launcher_swiperight_action", 1) != 1) Launcher.HotSeatSwipesHook(lpparam);
-			if (mPrefs.getInt("launcher_shake_action", 1) != 1) Launcher.ShakeHook(lpparam);
-			if (Integer.parseInt(mPrefs.getString("launcher_foldershade", "1")) > 1) Launcher.FolderShadeHook(lpparam);
-			if (mPrefs.getBoolean("launcher_noclockhide")) Launcher.NoClockHideHook(lpparam);
-			if (mPrefs.getBoolean("launcher_renameapps")) Launcher.RenameShortcutsHook(lpparam);
-			if (mPrefs.getBoolean("launcher_closefolder")) Launcher.CloseFolderOnLaunchHook(lpparam);
-		}
+		if (pkg.equals("com.miui.home"))
+		XposedHelpers.findAndHookMethod(Application.class, "attach", Context.class, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				if (mPrefs.getInt("launcher_swipedown_action", 1) != 1 ||
+					mPrefs.getInt("launcher_swipeup_action", 1) != 1 ||
+					mPrefs.getInt("launcher_swipedown2_action", 1) != 1 ||
+					mPrefs.getInt("launcher_swipeup2_action", 1) != 1) Launcher.HomescreenSwipesHook(lpparam);
+				if (mPrefs.getInt("launcher_swipeleft_action", 1) != 1 ||
+					mPrefs.getInt("launcher_swiperight_action", 1) != 1) Launcher.HotSeatSwipesHook(lpparam);
+				if (mPrefs.getInt("launcher_shake_action", 1) != 1) Launcher.ShakeHook(lpparam);
+				if (Integer.parseInt(mPrefs.getString("launcher_foldershade", "1")) > 1) Launcher.FolderShadeHook(lpparam);
+				if (mPrefs.getBoolean("launcher_noclockhide")) Launcher.NoClockHideHook(lpparam);
+				if (mPrefs.getBoolean("launcher_renameapps")) Launcher.RenameShortcutsHook(lpparam);
+				if (mPrefs.getBoolean("launcher_closefolder")) Launcher.CloseFolderOnLaunchHook(lpparam);
+				if (mPrefs.getBoolean("controls_fsg_horiz")) Launcher.FSGesturesHook(lpparam);
+			}
+		});
 	}
 
 }

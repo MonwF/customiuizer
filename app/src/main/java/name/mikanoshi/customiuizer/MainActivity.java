@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.backup.BackupManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -21,7 +20,6 @@ import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class MainActivity extends Activity {
 
-	//public boolean launch = true;
 	MainFragment mainFrag = null;
 	SharedPreferences.OnSharedPreferenceChangeListener prefsChanged;
 	FileObserver mFileObserver;
@@ -48,14 +46,16 @@ public class MainActivity extends Activity {
 				Log.i("prefs", "Changed: " + key);
 				requestBackup();
 				Object val = sharedPrefs.getAll().get(key);
-				String path = "/";
+				String path = "";
 				if (val instanceof String)
-					path = "/string/";
+					path = "string/";
 				else if (val instanceof Set<?>)
-					path = "/stringset/";
+					path = "stringset/";
 				else if (val instanceof Integer)
-					path = "/integer/";
-				getContentResolver().notifyChange(Uri.parse("content://" + SharedPrefsProvider.AUTHORITY + path + key), null);
+					path = "integer/";
+				getContentResolver().notifyChange(Uri.parse("content://" + SharedPrefsProvider.AUTHORITY + "/" + path + key), null);
+				if (!path.equals(""))
+				getContentResolver().notifyChange(Uri.parse("content://" + SharedPrefsProvider.AUTHORITY + "/pref/" + path + key), null);
 			}
 		};
 		Helpers.prefs.registerOnSharedPreferenceChangeListener(prefsChanged);
@@ -73,7 +73,9 @@ public class MainActivity extends Activity {
 			Log.e("prefs", "Failed to start FileObserver!");
 		}
 
-		//if (!launch) return;
+		if (!((MainApplication)getApplication()).mStarted)
+		throw new RuntimeException("Failed to use MIUI SDK");
+
 		mainFrag = new MainFragment();
 		getFragmentManager().beginTransaction().replace(R.id.fragment_container, mainFrag).commit();
 	}

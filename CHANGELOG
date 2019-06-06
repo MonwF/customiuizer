@@ -1,3 +1,16 @@
+1.5.6
+[New] Extended power menu (Fastboot/Recovery/Soft Reboot/Restart System UI/Restart Launcher)
+[New] Bring back Pocket mode option on devices with ultrasonic proximity sensor
+[New] Change status bar height
+[New] Customizable Quick Settings grids (both collapsed and expanded)
+[New] Hide labels in Quick Settings
+[New] Remove cleaner button from recent apps list
+[New] Remove button that clears all notifications
+[New] Disable (almost) any app from its info page
+[New] Combine horizontal full screen gestures and navigation bar
+[New] Actions: Clear memory, Invert colors
+[New] Long press actions for Back, Home and Menu navbar buttons
+
 1.5.5
 [New] Quick Settings tile to lock orientation in portrait or landscape positions
 [New] Disable music ducking (lowering volume during notifications)

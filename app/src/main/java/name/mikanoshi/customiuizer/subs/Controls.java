@@ -25,6 +25,13 @@ public class Controls extends SubFragment {
 		};
 
 		Preference actionPref;
+		actionPref = findPreference("pref_key_controls_backlong");
+		actionPref.setOnPreferenceClickListener(openActionEdit);
+		actionPref = findPreference("pref_key_controls_homelong");
+		actionPref.setOnPreferenceClickListener(openActionEdit);
+		actionPref = findPreference("pref_key_controls_menulong");
+		actionPref.setOnPreferenceClickListener(openActionEdit);
+
 		actionPref = findPreference("pref_key_controls_navbarleft");
 		actionPref.setOnPreferenceClickListener(openActionEdit);
 		actionPref = findPreference("pref_key_controls_navbarleftlong");

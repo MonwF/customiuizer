@@ -6,6 +6,12 @@
 	android:key="pref_key_system">
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_epm"
+		android:title="@string/system_epm_title"
+		android:summary="@string/system_epm_summ"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_downgrade"
 		android:title="@string/system_downgrade_title"
 		android:summary="@string/system_downgrade_summ"
@@ -19,18 +25,6 @@
 		android:entryValues="@array/iconlabletoasts_val"
 		android:defaultValue="1"
 		miuizer:dynamic="true" />
-
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_hidefromrecents"
-		android:title="@string/system_hidefromrecents_title"
-		android:summary="@string/system_hidefromrecents_summ"
-		android:defaultValue="false" />
-
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
-		android:title="@string/system_popupnotif_apps_title"
-		android:key="pref_key_system_hidefromrecents_apps"
-		android:dependency="pref_key_system_hidefromrecents"
-		miuizer:countAsSummary="true" />
 
 	<PreferenceCategory
 		android:title="@string/system_mods_screen">
@@ -142,14 +136,15 @@
 	<PreferenceCategory
 		android:title="@string/system_mods_statusbar">
 
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
-			android:key="pref_key_system_qshaptics"
-			android:summary="@string/system_qshaptic_summ"
-			android:title="@string/system_qshaptic_title"
-			android:entries="@array/qshaptic"
-			android:entryValues="@array/qshaptic_val"
-			android:defaultValue="1"
-			miuizer:dynamic="true" />
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_statusbarheight"
+			android:title="@string/system_statusbarheight_title"
+			android:defaultValue="19"
+			miuizer:offtext="@string/array_default"
+			miuizer:minValue="19"
+			miuizer:maxValue="35"
+			miuizer:stepValue="1"
+			miuizer:format="%d dip" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_clockseconds"
@@ -167,6 +162,12 @@
 			android:key="pref_key_system_colorizenotiftitle"
 			android:summary="@string/system_colorizenotiftitle_summ"
 			android:title="@string/system_colorizenotiftitle_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_removedismiss"
+			android:summary="@string/system_removedismiss_summ"
+			android:title="@string/system_removedismiss_title"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
@@ -238,6 +239,81 @@
 	</PreferenceCategory>
 
 	<PreferenceCategory
+		android:title="@string/system_mods_qs">
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_qsgridrows"
+			android:title="@string/system_qsgridrows_title"
+			android:defaultValue="3"
+			miuizer:note="@string/system_qsgridrows_note"
+			miuizer:offtext="@string/array_default"
+			miuizer:minValue="3"
+			miuizer:maxValue="5"
+			miuizer:stepValue="1"
+			miuizer:format="%d" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_qsgridcolumns"
+			android:title="@string/system_qsgridcolumns_title"
+			android:defaultValue="2"
+			miuizer:note="@string/system_qsgridcolumns_note"
+			miuizer:offtext="@string/array_default"
+			miuizer:minValue="2"
+			miuizer:maxValue="6"
+			miuizer:stepValue="1"
+			miuizer:format="%d" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_qqsgridcolumns"
+			android:title="@string/system_qqsgridcolumns_title"
+			android:defaultValue="2"
+			miuizer:note="@string/system_qqsgridcolumns_note"
+			miuizer:offtext="@string/array_default"
+			miuizer:minValue="2"
+			miuizer:maxValue="6"
+			miuizer:stepValue="1"
+			miuizer:format="%d" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_qsnolabels"
+			android:title="@string/system_qsnolabels_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_qshaptics"
+			android:summary="@string/system_qshaptic_summ"
+			android:title="@string/system_qshaptic_title"
+			android:entries="@array/qshaptic"
+			android:entryValues="@array/qshaptic_val"
+			android:defaultValue="1"
+			miuizer:dynamic="true" />
+
+	</PreferenceCategory>
+
+	<PreferenceCategory
+		android:title="@string/system_mods_recents">
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_removecleaner"
+			android:title="@string/system_removecleaner_title"
+			android:summary="@string/system_removecleaner_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_hidefromrecents"
+			android:title="@string/system_hidefromrecents_title"
+			android:summary="@string/system_hidefromrecents_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_popupnotif_apps_title"
+			android:key="pref_key_system_hidefromrecents_apps"
+			android:dependency="pref_key_system_hidefromrecents"
+			miuizer:countAsSummary="true" />
+
+	</PreferenceCategory>
+
+	<PreferenceCategory
 		android:title="@string/system_mods_betterpopups">
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
@@ -298,6 +374,12 @@
 			android:key="pref_key_system_nopassword"
 			android:summary="@string/system_nopassword_summ"
 			android:title="@string/system_nopassword_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_pocketmode"
+			android:summary="@string/system_pocketmode_summ"
+			android:title="@string/system_pocketmode_title"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx

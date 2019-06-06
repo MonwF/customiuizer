@@ -38,8 +38,10 @@
 	<string name="controls_powerflash_summ">Позволяет активировать фонарик при отключенном экране долгим нажатием на кнопку питания</string>
 
 	<string name="various_mods">Различное</string>
+	<string name="various_disableapp_title">Контроль состояния приложений</string>
+	<string name="various_disableapp_summ">Позволяет отключить почти любое приложение с его страницы \"О приложении\"</string>
 	<string name="various_apps_title">Доп. сведения о приложении</string>
-	<string name="various_apps_summ">Добавляет новые элементы в Настройки &gt; Приложения:\n- кнопку запуска приложения\n- имя и путь до apk\n- путь до данных\n- имя процесса\n- номер пользователя\n- версию SDK</string>
+	<string name="various_apps_summ">Добавляет новые элементы в Настройки &gt; Все приложения &gt; О приложении:\n- кнопку запуска приложения\n- имя и путь до apk\n- путь до данных\n- имя процесса\n- номер пользователя\n- версию SDK</string>
 
 	<string name="support">Поддержка</string>
 
@@ -83,6 +85,8 @@
 	<string name="array_global_actions_toggle">Включить/выключить настройку</string>
 	<string name="array_global_actions_back">Предыдущее приложение</string>
 	<string name="array_global_actions_powermenu">Открыть меню управления питанием</string>
+	<string name="array_global_actions_clearmemory">Очистить память</string>
+	<string name="array_global_actions_invertcolors">Инвертировать цвета</string>
 	<string name="array_global_toggle_wifi">Wi-Fi</string>
 	<string name="array_global_toggle_bt">Bluetooth</string>
 	<string name="array_global_toggle_gps">GPS</string>
@@ -174,6 +178,9 @@
 	<string name="controls_volumemedia_vibrate_title">Вибрация при долгом нажатии</string>
 	<string name="controls_volumemedia_vibrate_summ">Вибрировать при выполнении действия на долгое нажатие</string>
 	<string name="controls_mods_navbar">Панель навигации</string>
+	<string name="controls_backlong_title">Действие на долгое нажатие кнопки Назад</string>
+	<string name="controls_homelong_title">Действие на долгое нажатие кнопки Домой</string>
+	<string name="controls_menulong_title">Действие на долгое нажатие кнопки Меню</string>
 	<string name="controls_navbarleft_summ">Задаёт действие на нажатие левой дополнительной кнопки</string>
 	<string name="controls_navbarleft_title">Действие на нажатие левой кнопки</string>
 	<string name="controls_navbarleftlong_summ">Задаёт действие на долгое нажатие левой дополнительной кнопки</string>
@@ -185,6 +192,8 @@
 	<string name="controls_navbar_noaction">Действие не задано</string>
 	<string name="controls_mods_fsg">Полноэкранные жесты навигации</string>
 	<string name="controls_fsg_coverage_title">Высота области срабатывания жеста Назад</string>
+	<string name="controls_fsg_horiz_title">Горизонтальные жесты</string>
+	<string name="controls_fsg_horiz_summ">Активировать вместе горизонтальные жесты и панель навигации</string>
 
 	<string name="array_color_dark">Тёмная</string>
 	<string name="array_color_light">Светлая</string>
@@ -286,6 +295,8 @@
 	<string name="enable_mod">Активировать мод</string>
 	<string name="system_iconlabletoasts_summ">Добавляет иконку и название приложения во всплывающие уведомления</string>
 	<string name="system_iconlabletoasts_title">Расширенные уведомления</string>
+	<string name="system_epm_title">Расширенное меню питания</string>
+	<string name="system_epm_summ">Добавляет новые опции презагрузки в меню питания (Режим Fastboot, Режим Recovery, Быстрая перезагрузка, Перезапуск интерфейса, Перезапуск ланчера)</string>
 	<string name="system_downgrade_title">Разрешить понижение версии</string>
 	<string name="system_downgrade_summ">Делает возможным установку старой версии приложения поверх новой</string>
 	<string name="system_hidefromrecents_title">Скрыть в недавних</string>
@@ -297,12 +308,24 @@
 	<string name="system_mods_lockscreen">Экран блокировки</string>
 	<string name="system_mods_screenanim">Экранная анимация</string>
 	<string name="system_mods_statusbar">Строка состояния и панель уведомлений</string>
+	<string name="system_mods_recents">Список последних приложений</string>
+	<string name="system_removecleaner_title">Убрать кнопку очистки</string>
+	<string name="system_removecleaner_summ">Скрывает кнопку для очистки списка последних приложений и памяти</string>
 	<string name="system_mods_betterpopups">Улучшенные всплывающие уведомления</string>
 	<string name="system_betterpopups_delay_title">Задержка перед скрытием</string>
 	<string name="system_betterpopups_nohide_title">Не прятать автоматом</string>
 	<string name="system_betterpopups_nohide_summ">Отключает автоматическое скрытие</string>
 	<string name="system_betterpopups_swipedown_title">Активировать свайп вниз</string>
 	<string name="system_betterpopups_swipedown_summ">Открывает панель уведомлений по свайпу вниз</string>
+	<string name="system_statusbarheight_title">Высота строки состояния</string>
+	<string name="system_mods_qs">Быстрые Настройки</string>
+	<string name="system_qsgridrows_title">Число рядов</string>
+	<string name="system_qsgridrows_note">Подписи к переключателям будут скрыты для 5 рядов в портретной ориентации. Число рядов ограничено 3-я в ландшафтной ориентации, подписи также будут скрыты.</string>
+	<string name="system_qsgridcolumns_title">Число колонок</string>
+	<string name="system_qsgridcolumns_note">В ландшафтной ориентации будет одна дополнительная колонка. Если в прошивке есть опция компактных Быстрых Настроек, то она добавит ещё одну колонку во всех ориентациях.</string>
+	<string name="system_qqsgridcolumns_title">Число колонок в свёрнутой панели</string>
+	<string name="system_qqsgridcolumns_note">В ландшафтной ориентации будет одна дополнительная колонка.</string>
+	<string name="system_qsnolabels_title">Всегда скрывать подписи</string>
 	<string name="system_qshaptic_title">Виброотклик при переключении настроек</string>
 	<string name="system_qshaptic_summ">Включает вибрирование при нажатии на переключатели в Быстрых Настройках</string>
 	<string name="system_clockseconds_title">Показывать секунды</string>
@@ -327,6 +350,8 @@
 	<string name="system_compactnotif_summ">Уменьшает вертикальные отступы в уведомлениях</string>
 	<string name="system_colorizenotiftitle_title">Раскрасить заголовок уведомления</string>
 	<string name="system_colorizenotiftitle_summ">Применяет цвет иконки к заголовку (только для стиля уведомлений Android)</string>
+	<string name="system_removedismiss_title">Скрыть кнопку удаления</string>
+	<string name="system_removedismiss_summ">Убирает из шторки кнопку для удаления всех уведомлений</string>
 	<string name="system_notifrowmenu_title">Расширенное меню уведомления</string>
 	<string name="system_notifrowmenu_summ">Добавляет новые действия в меню уведомления (открывается по свайпу влево) - открыть информацию о приложении и принудительно закрыть приложение</string>
 	<string name="system_expandnotifs_title">Разворачивать уведомления</string>
@@ -389,6 +414,8 @@
 	<string name="system_albumartonlock_blur_title">Размытие обложки</string>
 	<string name="system_credentials_title">Разблокировать учётные данные</string>
 	<string name="system_credentials_summ">Авторизация в некоторых приложениях требует доступа к учётным данным, но при пропуске ПИН-кода/пароля/графического ключа они остаются заблокированными. Данная опция добавляет иконку в ланчере для разблокировки учётных данных.</string>
+	<string name="system_pocketmode_title">Режим \"В кармане\"</string>
+	<string name="system_pocketmode_summ">Вернуть Режим \"В кармане\" в расширенные настройки экрана блокировки на устройствах с ультразвуковым датчиком приближения</string>
 	<string name="system_noscreenlock_act_title">Управление блокировкой</string>
 	<string name="system_noscreenlock_act_summ">Активирует динамическое управление блокировкой устройства</string>
 	<string name="system_noscreenlock_title">Отключить блокировку</string>

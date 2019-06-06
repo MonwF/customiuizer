@@ -24,4 +24,24 @@
 	<dimen name="notification_action_height">38dip</dimen>
 	<dimen name="notification_menu_icon_size">36dp</dimen>
 	<dimen name="notification_menu_icon_padding">0dp</dimen>
+
+	<dimen name="status_bar_height_20">20.0dp</dimen>
+	<dimen name="status_bar_height_21">21.0dp</dimen>
+	<dimen name="status_bar_height_22">22.0dp</dimen>
+	<dimen name="status_bar_height_23">23.0dp</dimen>
+	<dimen name="status_bar_height_24">24.0dp</dimen>
+	<dimen name="status_bar_height_25">25.0dp</dimen>
+	<dimen name="status_bar_height_26">26.0dp</dimen>
+	<dimen name="status_bar_height_27">27.0dp</dimen>
+	<dimen name="status_bar_height_28">28.0dp</dimen>
+	<dimen name="status_bar_height_29">29.0dp</dimen>
+	<dimen name="status_bar_height_30">30.0dp</dimen>
+	<dimen name="status_bar_height_31">31.0dp</dimen>
+	<dimen name="status_bar_height_32">32.0dp</dimen>
+	<dimen name="status_bar_height_33">33.0dp</dimen>
+	<dimen name="status_bar_height_34">34.0dp</dimen>
+	<dimen name="status_bar_height_35">35.0dp</dimen>
+
+	<dimen name="qs_tile_label_padding_top">2dp</dimen>
+
 </resources>

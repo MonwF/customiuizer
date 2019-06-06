@@ -15,8 +15,7 @@
 	<string name="system_mods_audio">Audio</string>
 	<string name="system_mods_vibration">Vibration</string>
 	<string name="system_mods_screenanim">Screen animations</string>
-	<string name="system_qshaptic_title">Quick settings haptic feedback</string>
-	<string name="system_qshaptic_summ">Vibrate on Quick settings tile tap</string>
+	<string name="system_statusbarheight_title">Status bar height</string>
 	<string name="system_clockseconds_title">Show seconds</string>
 	<string name="system_clockseconds_summ">Display seconds in the status bar clock</string>
 	<string name="system_mobiletypeicon_title">Hide mobile network type</string>
@@ -39,6 +38,8 @@
 	<string name="system_compactnotif_summ">Reduce notifications\' vertical paddings</string>
 	<string name="system_colorizenotiftitle_title">Colorize notification title</string>
 	<string name="system_colorizenotiftitle_summ">Apply icon\'s color to title text (Android notification style only)</string>
+	<string name="system_removedismiss_title">Hide clear button</string>
+	<string name="system_removedismiss_summ">Remove button that clears all notifications</string>
 	<string name="system_notifrowmenu_title">Extended notification menu</string>
 	<string name="system_notifrowmenu_summ">Open app info and force close app from notification menu (swipe notification to the left to open it)</string>
 	<string name="system_expandnotifs_title">Expand notifications</string>
@@ -78,6 +79,8 @@
 	<string name="system_albumartonlock_blur_title">Album art blur</string>
 	<string name="system_credentials_title">Unlock credentials</string>
 	<string name="system_credentials_summ">Authentication in some apps requires access to credentials, but they remain locked if PIN/password/pattern is skipped after boot. Current option adds launcher icon that allows to unlock credentials.</string>
+	<string name="system_pocketmode_title">Pocket mode</string>
+	<string name="system_pocketmode_summ">Bring back Pocket mode option in advanced lock screen settings on devices with ultrasonic proximity sensor</string>
 	<string name="system_noscreenlock_act_title">Screen lock override</string>
 	<string name="system_noscreenlock_act_summ">Activates dynamic screen lock controls</string>
 	<string name="system_noscreenlock_title">Disable screen lock</string>
@@ -101,10 +104,10 @@
 	<string name="system_mods_lockscreen">Lock Screen</string>
 	<string name="system_iconlabletoasts_title">Enhanced toasts</string>
 	<string name="system_iconlabletoasts_summ">Add application\'s icon and label to its toasts</string>
+	<string name="system_epm_title">Extended power menu</string>
+	<string name="system_epm_summ">Add new restart options to power menu (Fastboot mode, Recovery mode, Soft reboot, Restart System UI, Restart Launcher)</string>
 	<string name="system_downgrade_title">Allow downgrade</string>
 	<string name="system_downgrade_summ">Make installing older app version on top of a newer one possible</string>
-	<string name="system_hidefromrecents_title">Hide from recents</string>
-	<string name="system_hidefromrecents_summ">Hide selected apps from recent tasks list</string>
 	<string name="system_rotateanim_title">Rotation animation</string>
 	<string name="system_orientationlock_title">Orientation lock</string>
 	<string name="system_orientationlock_summ">Add Quick Settings tile that can lock orientation in portrait or landscape mode</string>
@@ -113,12 +116,27 @@
 	<string name="system_dttosleep_title">Double tap to sleep</string>
 	<string name="system_dttosleep_summ">Turn screen off by double tapping on any empty space on lock screen</string>
 	<string name="system_mods_statusbar">Status bar and notification drawer</string>
+	<string name="system_mods_recents">Recent apps list</string>
+	<string name="system_removecleaner_title">Remove cleaner button</string>
+	<string name="system_removecleaner_summ">Hide button that clears recent apps and cleans memory</string>
+	<string name="system_hidefromrecents_title">Hide from recents</string>
+	<string name="system_hidefromrecents_summ">Hide selected apps from recent tasks list</string>
 	<string name="system_mods_betterpopups">Better popup notifications</string>
 	<string name="system_betterpopups_delay_title">Auto hide delay</string>
 	<string name="system_betterpopups_nohide_title">No auto hide</string>
 	<string name="system_betterpopups_nohide_summ">Do not dismiss popups automatically</string>
 	<string name="system_betterpopups_swipedown_title">Enable swipe down</string>
 	<string name="system_betterpopups_swipedown_summ">Open notification drawer on swipe down gesture</string>
+	<string name="system_mods_qs">Quick Settings</string>
+	<string name="system_qsgridrows_title">Number of rows</string>
+	<string name="system_qsgridrows_note">Labels will be hidden for 5 rows in a portrait orientation. Number of rows is limited to 3 with hidden labels in a landscape orientation.</string>
+	<string name="system_qsgridcolumns_title">Number of columns</string>
+	<string name="system_qsgridcolumns_note">Landscape orientation will have one additional column. If your ROM has a compact Quick Settings layout option, it will add another column in both orientations.</string>
+	<string name="system_qqsgridcolumns_title">Number of columns in collapsed panel</string>
+	<string name="system_qqsgridcolumns_note">Landscape orientation will have one additional column.</string>
+	<string name="system_qsnolabels_title">Remove labels completely</string>
+	<string name="system_qshaptic_title">Quick settings haptic feedback</string>
+	<string name="system_qshaptic_summ">Vibrate on Quick settings tile tap</string>
 
 	<string name="launcher_mods">MIUI Launcher</string>
 	<string name="launcher_gestures">Gestures</string>
@@ -188,6 +206,9 @@
 	<string name="controls_volumemedia_vibrate_title">Long press vibration</string>
 	<string name="controls_volumemedia_vibrate_summ">Vibrate when long press action is executed</string>
 	<string name="controls_mods_navbar">Navigation bar</string>
+	<string name="controls_backlong_title">Back long press action</string>
+	<string name="controls_homelong_title">Home long press action</string>
+	<string name="controls_menulong_title">Menu long press action</string>
 	<string name="controls_navbarleft_summ">Action on left additional navigation button press</string>
 	<string name="controls_navbarleft_title">Left button action</string>
 	<string name="controls_navbarleftlong_summ">Action on left additional navigation button long press</string>
@@ -199,11 +220,15 @@
 	<string name="controls_navbar_noaction">No action defined</string>
 	<string name="controls_mods_fsg">Full screen navigation gestures</string>
 	<string name="controls_fsg_coverage_title">Back gesture area height</string>
+	<string name="controls_fsg_horiz_title">Horizontal gestures</string>
+	<string name="controls_fsg_horiz_summ">Enable both horizontal gestures and navigation bar</string>
 
 	<string name="various_mods">Various</string>
 	<string name="various_sysappsupdater_title">Open \"System app updater\"</string>
 	<string name="various_sysappsupdater_summ">App is no longer a part of some ROMs and has to be installed manually</string>
 	<string name="various_sysappsupdater_summ2">Be careful when updating modified system apps on custom ROMs, you might lose the added functionality</string>
+	<string name="various_disableapp_title">App state control</string>
+	<string name="various_disableapp_summ">Allows to disable almost any app from its info page</string>
 	<string name="various_apps_title">Show additional app details</string>
 	<string name="various_apps_summ">Add new fields to Settings > Installed apps > App info:\n- option to launch an app\n- full path to apk\n- data path\n- user id\n- target SDK version</string>
 	<string name="various_appsort_title">Installed apps initial sort order</string>
@@ -240,6 +265,8 @@
 	<string name="array_global_actions_toggle">Toggle feature</string>
 	<string name="array_global_actions_back">Switch to previous app</string>
 	<string name="array_global_actions_powermenu">Open power menu</string>
+	<string name="array_global_actions_clearmemory">Clear memory</string>
+	<string name="array_global_actions_invertcolors">Invert colors</string>
 	<string name="array_global_toggle_wifi">Wi-Fi</string>
 	<string name="array_global_toggle_bt">Bluetooth</string>
 	<string name="array_global_toggle_gps">GPS</string>

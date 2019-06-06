@@ -3,6 +3,7 @@ package name.mikanoshi.customiuizer.mods;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -10,12 +11,14 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.inputmethodservice.InputMethodService;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.telecom.TelecomManager;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -23,6 +26,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import java.lang.reflect.Method;
+import java.util.HashSet;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
@@ -649,6 +655,168 @@ public class Controls {
 //			XposedBridge.log(t);
 //		}
 //	}
+
+	public static void FSGesturesHook() {
+		try {
+			XposedHelpers.findAndHookMethod("android.provider.MiuiSettings$Global", null, "getBoolean", ContentResolver.class, String.class, new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					try {
+						if (!"force_fsg_nav_bar".equals(param.args[1])) return;
+
+						ContentResolver resolver = (ContentResolver)param.args[0];
+						Context mContext = (Context)XposedHelpers.getObjectField(resolver, "mContext");
+
+						if ("com.android.systemui".equals(mContext.getPackageName()))
+						for (StackTraceElement el: Thread.currentThread().getStackTrace())
+						if ("com.android.systemui.recents.BaseRecentsImpl".equals(el.getClassName())) {
+							param.setResult(true);
+							return;
+						}
+					} catch (Throwable t) {
+						XposedBridge.log(t);
+					}
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	@SuppressLint("StaticFieldLeak")
+	private static Context basePWMContext;
+	private static Object basePWMObject;
+	private static Method markShortcutTriggered;
+
+	private static Runnable mBackLongPressAction = new Runnable() {
+		@Override
+		public void run() {
+			try {
+				if (basePWMContext == null || basePWMObject == null) return;
+				int action = Helpers.getSharedIntPref(basePWMContext, "pref_key_controls_backlong_action", 1);
+				int launch = 15;
+				int toggle = Helpers.getSharedIntPref(basePWMContext, "pref_key_controls_backlong_toggle", 0);
+				if (GlobalActions.handleAction(action, launch, toggle, basePWMContext)) Helpers.performStrongVibration(basePWMContext);
+				if (action != 1) markShortcutTriggered.invoke(basePWMObject);
+			} catch (Throwable t) {
+				XposedBridge.log(t);
+			}
+		}
+	};
+	private static Runnable mHomeLongPressAction = new Runnable() {
+		@Override
+		public void run() {
+			try {
+				if (basePWMContext == null || basePWMObject == null) return;
+				int action = Helpers.getSharedIntPref(basePWMContext, "pref_key_controls_homelong_action", 1);
+				int launch = 16;
+				int toggle = Helpers.getSharedIntPref(basePWMContext, "pref_key_controls_homelong_toggle", 0);
+				if (GlobalActions.handleAction(action, launch, toggle, basePWMContext)) Helpers.performStrongVibration(basePWMContext);
+				if (action != 1) markShortcutTriggered.invoke(basePWMObject);
+			} catch (Throwable t) {
+				XposedBridge.log(t);
+			}
+		}
+	};
+	private static Runnable mMenuLongPressAction = new Runnable() {
+		@Override
+		public void run() {
+			try {
+				if (basePWMContext == null || basePWMObject == null) return;
+				int action = Helpers.getSharedIntPref(basePWMContext, "pref_key_controls_menulong_action", 1);
+				int launch = 17;
+				int toggle = Helpers.getSharedIntPref(basePWMContext, "pref_key_controls_menulong_toggle", 0);
+				if (GlobalActions.handleAction(action, launch, toggle, basePWMContext)) Helpers.performStrongVibration(basePWMContext);
+				if (action != 1) markShortcutTriggered.invoke(basePWMObject);
+			} catch (Throwable t) {
+				XposedBridge.log(t);
+			}
+		}
+	};
+
+	public static void NavBarActionsHook(LoadPackageParam lpparam) {
+		try {
+			XposedBridge.hookAllMethods(findClass("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader), "initInternal", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
+
+					new Helpers.SharedPrefObserver(mContext, mHandler) {
+						@Override
+						public void onChange(Uri uri) {
+							try {
+								String type = uri.getPathSegments().get(1);
+								if (!type.equals("integer")) return;
+								String key = uri.getPathSegments().get(2);
+								if (key.contains("pref_key_controls_backlong") || key.contains("pref_key_controls_homelong") || key.contains("pref_key_controls_menulong")) {
+									if (key.contains("_action"))
+										MainModule.mPrefs.put(key, Helpers.getSharedIntPref(mContext, key, 1));
+									else if (key.contains("_toggle"))
+										MainModule.mPrefs.put(key, Helpers.getSharedIntPref(mContext, key, 0));
+								}
+							} catch (Throwable t) {
+								XposedBridge.log(t);
+							}
+						}
+					};
+				}
+			});
+
+			XposedHelpers.findAndHookMethod("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "postKeyLongPress", int.class, boolean.class, new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+					if (basePWMObject == null) basePWMObject = param.thisObject;
+					if (basePWMContext == null) basePWMContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					if (markShortcutTriggered == null) markShortcutTriggered = XposedHelpers.findMethodExact("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "markShortcutTriggered");
+
+					int key = (int)param.args[0];
+					if (key == KeyEvent.KEYCODE_BACK && MainModule.mPrefs.getInt("controls_backlong_action", 1) > 1) {
+						((Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler")).postDelayed(mBackLongPressAction, ViewConfiguration.getLongPressTimeout());
+						param.setResult(null);
+					} else if (key == KeyEvent.KEYCODE_HOME && MainModule.mPrefs.getInt("controls_homelong_action", 1) > 1) {
+						((Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler")).postDelayed(mHomeLongPressAction, ViewConfiguration.getLongPressTimeout());
+						param.setResult(null);
+					} else if (key == KeyEvent.KEYCODE_APP_SWITCH && MainModule.mPrefs.getInt("controls_menulong_action", 1) > 1) {
+						((Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler")).postDelayed(mMenuLongPressAction, ViewConfiguration.getLongPressTimeout());
+						param.setResult(null);
+					}
+				}
+			});
+
+			XposedHelpers.findAndHookMethod("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "removeKeyLongPress", int.class, boolean.class, new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+					try {
+						int key = (int)param.args[0];
+						if (key == KeyEvent.KEYCODE_BACK)
+							((Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler")).removeCallbacks(mBackLongPressAction);
+						else if (key == KeyEvent.KEYCODE_HOME)
+							((Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler")).removeCallbacks(mHomeLongPressAction);
+						else if (key == KeyEvent.KEYCODE_APP_SWITCH)
+							((Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler")).removeCallbacks(mMenuLongPressAction);
+					} catch (Throwable t) {
+						XposedBridge.log(t);
+					}
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void AIButtonHook(LoadPackageParam lpparam) {
+		try {
+			XposedHelpers.findAndHookMethod("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "startAiKeyService", String.class, new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+					XposedBridge.log("startAiKeyService: " + param.args[0]);
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
 
 //	public static void SwapVolumeKeysHook(XC_LoadPackage.LoadPackageParam lpparam) {
 //		try {

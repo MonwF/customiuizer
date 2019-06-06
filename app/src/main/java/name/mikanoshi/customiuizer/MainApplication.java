@@ -24,6 +24,7 @@ import org.acra.config.CoreConfigurationBuilder;
 import org.acra.data.StringFormat;
 import org.acra.plugins.SimplePluginLoader;
 
+import java.util.HashMap;
 import java.util.Locale;
 
 import miui.core.SdkManager;
@@ -34,26 +35,45 @@ import static org.acra.ReportField.*;
 
 public class MainApplication extends Application {
 
-	public MainApplication() {
-		SdkManager.initialize(this, null);
-	}
+	private boolean mInitialized;
+	public boolean mStarted = false;
 
-	public void onCreate() {
-		super.onCreate();
-		SdkManager.start(null);
+	public MainApplication() {
+		try {
+			mInitialized = SdkManager.initialize(this, new HashMap<String, Object>()) == 0;
+		} catch (Throwable t) {
+			mInitialized = false;
+			t.printStackTrace();
+		}
 	}
 
 	@Override
 	protected void attachBaseContext(Context base) {
+		Context pContext;
 		try {
-			Context pContext = Helpers.getProtectedContext(base);
+			pContext = Helpers.getProtectedContext(base);
 			Helpers.prefs = pContext.getSharedPreferences(Helpers.prefsName, Context.MODE_PRIVATE);
 			if (Helpers.prefs.getBoolean("pref_key_miuizer_forcelocale", false)) Locale.setDefault(Locale.ENGLISH);
-			super.attachBaseContext(pContext);
 		} catch (Throwable t) {
-			super.attachBaseContext(base);
+			pContext = base;
 			Log.e("prefs", "Failed to use protected storage!");
 		}
+		super.attachBaseContext(pContext);
+
+		if (mInitialized) try {
+			int res = SdkManager.start(new HashMap<String, Object>());
+			if (res == 1) {
+				Log.e("miuizer", "MIUI SDK version is too low");
+				mStarted = false;
+			} else if (res == 0) {
+				mStarted = true;
+			} else {
+				Log.e("miuizer", "Failed to start MIUI SDK Manager");
+				mStarted = false;
+			}
+		} catch (Throwable t) {
+			t.printStackTrace();
+		} else Log.e("miuizer", "Failed to init MIUI SDK Manager");
 
 		ACRA.DEV_LOGGING = false;
 		CoreConfigurationBuilder builder = new CoreConfigurationBuilder(this).setPluginLoader(new SimplePluginLoader(

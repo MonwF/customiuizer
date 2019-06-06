@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.KeyguardManager;
+import android.app.WallpaperManager;
 import android.app.admin.DevicePolicyManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -13,6 +14,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.XModuleResources;
 import android.content.res.XResources;
@@ -21,6 +24,10 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.MediaMetadata;
 import android.net.ConnectivityManager;
@@ -34,6 +41,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.SystemClock;
 import android.preference.Preference;
@@ -49,6 +57,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RemoteViews;
@@ -56,6 +65,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
@@ -78,6 +90,7 @@ import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_InitPackageResources;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
+import miui.os.SystemProperties;
 import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
@@ -1934,11 +1947,65 @@ public class System {
 		}
 	}
 
+	public static void QQSGridRes(XC_InitPackageResources.InitPackageResourcesParam resparam) {
+		try {
+			int cols = MainModule.mPrefs.getInt("system_qqsgridcolumns", 2);
+			resparam.res.setReplacement(resparam.packageName, "integer", "quick_settings_qqs_count_portrait", cols);
+			resparam.res.setReplacement(resparam.packageName, "integer", "quick_settings_qqs_count", cols + 1);
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
 	public static void QSGridRes(XC_InitPackageResources.InitPackageResourcesParam resparam) {
 		try {
-			resparam.res.setReplacement(resparam.packageName, "integer", "quick_settings_num_columns", 8);
-			resparam.res.setReplacement(resparam.packageName, "integer", "quick_settings_num_rows", 2);
-			resparam.res.setReplacement(resparam.packageName, "integer", "quick_settings_max_rows", 2);
+			int cols = MainModule.mPrefs.getInt("system_qsgridcolumns", 2);
+			int rows = MainModule.mPrefs.getInt("system_qsgridrows", 3);
+			int colsRes = R.integer.quick_settings_num_columns_3;
+			int rowsRes = R.integer.quick_settings_num_rows_4;
+
+			switch (cols) {
+				case 3: colsRes = R.integer.quick_settings_num_columns_3; break;
+				case 4: colsRes = R.integer.quick_settings_num_columns_4; break;
+				case 5: colsRes = R.integer.quick_settings_num_columns_5; break;
+				case 6: colsRes = R.integer.quick_settings_num_columns_6; break;
+			}
+
+			switch (rows) {
+				case 4: rowsRes = R.integer.quick_settings_num_rows_4; break;
+				case 5: rowsRes = R.integer.quick_settings_num_rows_5; break;
+			}
+
+			XModuleResources modRes = XModuleResources.createInstance(MainModule.MODULE_PATH, resparam.res);
+			if (cols > 2) resparam.res.setReplacement(resparam.packageName, "integer", "quick_settings_num_columns", modRes.fwd(colsRes));
+			if (rows > 3) resparam.res.setReplacement(resparam.packageName, "integer", "quick_settings_num_rows", modRes.fwd(rowsRes));
+			if (rows == 4) resparam.res.setReplacement(resparam.packageName, "dimen", "qs_tile_label_padding_top", modRes.fwd(R.dimen.qs_tile_label_padding_top));
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void QSGridLabels(LoadPackageParam lpparam) {
+		try {
+			XposedBridge.hookAllMethods(findClass("com.android.systemui.qs.TileLayout", lpparam.classLoader), "addTile", new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+					int orientation = ((ViewGroup)param.thisObject).getResources().getConfiguration().orientation;
+					int mRows = XposedHelpers.getIntField(param.thisObject, "mRows");
+					Object mRecord = param.args[0];
+					if (mRecord != null) {
+						Object tileView = XposedHelpers.getObjectField(mRecord, "tileView");
+						if (tileView != null) {
+							ViewGroup mLabelContainer = (ViewGroup)XposedHelpers.getObjectField(tileView, "mLabelContainer");
+							if (mLabelContainer != null)
+							mLabelContainer.setVisibility(
+								MainModule.mPrefs.getBoolean("system_qsnolabels") ||
+								orientation == Configuration.ORIENTATION_PORTRAIT && mRows >= 5 ||
+								orientation == Configuration.ORIENTATION_LANDSCAPE && mRows >= 3 ? View.GONE : View.VISIBLE);
+						}
+					}
+				}
+			});
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
@@ -2001,6 +2068,231 @@ public class System {
 					}
 				}
 			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void StatusBarHeightRes() {
+		try {
+			int opt = MainModule.mPrefs.getInt("system_statusbarheight", 19);
+			int heightRes = R.dimen.status_bar_height_27;
+			switch (opt) {
+				case 20: heightRes = R.dimen.status_bar_height_20; break;
+				case 21: heightRes = R.dimen.status_bar_height_21; break;
+				case 22: heightRes = R.dimen.status_bar_height_22; break;
+				case 23: heightRes = R.dimen.status_bar_height_23; break;
+				case 24: heightRes = R.dimen.status_bar_height_24; break;
+				case 25: heightRes = R.dimen.status_bar_height_25; break;
+				case 26: heightRes = R.dimen.status_bar_height_26; break;
+				case 27: heightRes = R.dimen.status_bar_height_27; break;
+				case 28: heightRes = R.dimen.status_bar_height_28; break;
+				case 29: heightRes = R.dimen.status_bar_height_29; break;
+				case 30: heightRes = R.dimen.status_bar_height_30; break;
+				case 31: heightRes = R.dimen.status_bar_height_31; break;
+				case 32: heightRes = R.dimen.status_bar_height_32; break;
+				case 33: heightRes = R.dimen.status_bar_height_33; break;
+				case 34: heightRes = R.dimen.status_bar_height_34; break;
+				case 35: heightRes = R.dimen.status_bar_height_35; break;
+			}
+			XModuleResources modRes = XModuleResources.createInstance(MainModule.MODULE_PATH, null);
+			XResources.setSystemWideReplacement("android", "dimen", "status_bar_height", modRes.fwd(heightRes));
+			XResources.setSystemWideReplacement("android", "dimen", "status_bar_height_landscape", modRes.fwd(heightRes));
+			XResources.setSystemWideReplacement("android", "dimen", "status_bar_height_portrait", modRes.fwd(heightRes));
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void HideMemoryCleanHook(LoadPackageParam lpparam) {
+		try {
+			XposedHelpers.findAndHookMethod("com.android.systemui.recents.RecentsActivity", lpparam.classLoader, "setupVisible", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+					ViewGroup mMemoryAndClearContainer = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mMemoryAndClearContainer");
+					if (mMemoryAndClearContainer != null) mMemoryAndClearContainer.setVisibility(View.GONE);
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void ExtendedPowerMenuHook(LoadPackageParam lpparam) {
+		try {
+			XposedBridge.hookAllConstructors(findClass("com.android.server.policy.MiuiGlobalActions", lpparam.classLoader), new XC_MethodHook() {
+				@Override
+				@SuppressWarnings("ResultOfMethodCallIgnored")
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					try {
+						Context mContext = (Context)param.args[0];
+						File powermenu = new File("/cache/extended_power_menu");
+						if (powermenu.exists()) powermenu.delete();
+
+						InputStream inputStream;
+						FileOutputStream outputStream;
+						byte[] fileBytes;
+						Context context = Helpers.getModuleContext(mContext);
+						inputStream = context.getResources().openRawResource(context.getResources().getIdentifier("extended_power_menu", "raw", "name.mikanoshi.customiuizer"));
+						fileBytes = new byte[inputStream.available()];
+						inputStream.read(fileBytes);
+						outputStream = new FileOutputStream(powermenu);
+						outputStream.write(fileBytes);
+						outputStream.close();
+						inputStream.close();
+
+						if (!powermenu.exists()) {
+							XposedBridge.log("[CustoMIUIzer][Extended Power Menu] MAML file not found in cache");
+							return;
+						}
+
+						Class<?> ResourceManager = XposedHelpers.findClass("miui.maml.ResourceManager", lpparam.classLoader);
+						Class<?> ZipResourceLoader = XposedHelpers.findClass("miui.maml.util.ZipResourceLoader", lpparam.classLoader);
+						Class<?> ScreenContext = XposedHelpers.findClass("miui.maml.ScreenContext", lpparam.classLoader);
+						Class<?> ScreenElementRoot = XposedHelpers.findClass("miui.maml.ScreenElementRoot", lpparam.classLoader);
+
+						XposedHelpers.setObjectField(param.thisObject, "mResourceManager", XposedHelpers.newInstance(ResourceManager, XposedHelpers.newInstance(ZipResourceLoader, powermenu.getPath())));
+						Object mResourceManager = XposedHelpers.getObjectField(param.thisObject, "mResourceManager");
+						Object mScreenElementRoot = XposedHelpers.newInstance(ScreenElementRoot, XposedHelpers.newInstance(ScreenContext, mContext, mResourceManager));
+						XposedHelpers.setObjectField(param.thisObject, "mScreenElementRoot", mScreenElementRoot);
+						XposedHelpers.callMethod(mScreenElementRoot, "setOnExternCommandListener", XposedHelpers.getObjectField(param.thisObject, "mCommandListener"));
+						XposedHelpers.callMethod(mScreenElementRoot, "setKeepResource", true);
+						XposedHelpers.callMethod(mScreenElementRoot, "load");
+						XposedHelpers.callMethod(mScreenElementRoot, "init");
+					} catch (Throwable t) {
+						XposedBridge.log(t);
+					}
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void ExtendedPowerMenuHook() {
+		try {
+			XposedHelpers.findAndHookMethod("miui.maml.ScreenElementRoot", null, "issueExternCommand", String.class, Double.class, String.class, new XC_MethodHook() {
+				@Override
+				@SuppressLint("MissingPermission")
+				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+					try {
+						String cmd = (String)param.args[0];
+						Object scrContext = XposedHelpers.getObjectField(param.thisObject, "mContext");
+						Context mContext = (Context)XposedHelpers.getObjectField(scrContext, "mContext");
+						Handler mHandler = (Handler)XposedHelpers.getObjectField(scrContext, "mHandler");
+						PowerManager pm = (PowerManager)mContext.getSystemService(Context.POWER_SERVICE);
+						Object mService = XposedHelpers.getObjectField(pm, "mService");
+						Object mSystemExternCommandListener = XposedHelpers.getObjectField(param.thisObject, "mSystemExternCommandListener");
+
+						boolean custom = false;
+						if ("recovery".equals(cmd)) {
+							XposedHelpers.callMethod(mService, "reboot", false, "recovery", false);
+							custom = true;
+						} else if ("bootloader".equals(cmd)) {
+							XposedHelpers.callMethod(mService, "reboot", false, "bootloader", false);
+							custom = true;
+						} else if ("softreboot".equals(cmd)) {
+							SystemProperties.set("ctl.restart", "surfaceflinger");
+							SystemProperties.set("ctl.restart", "zygote");
+							custom = true;
+						} else if ("killsysui".equals(cmd)) {
+							final WallpaperManager wm = (WallpaperManager)mContext.getSystemService(Context.WALLPAPER_SERVICE);
+							Drawable drawable = wm.getDrawable();
+							ActivityManager am = (ActivityManager)mContext.getSystemService(Context.ACTIVITY_SERVICE);
+							XposedHelpers.callMethod(am, "forceStopPackage", "com.android.systemui");
+							mHandler.postDelayed(new Runnable() {
+								@Override
+								public void run() {
+									if (drawable != null && drawable.getClass() == BitmapDrawable.class) try {
+										wm.setBitmap(((BitmapDrawable)drawable).getBitmap());
+									} catch (Throwable t) {
+										XposedBridge.log(t);
+									}
+								}
+							}, 1000);
+							custom = true;
+						} else if ("killlauncher".equals(cmd)) {
+							ActivityManager am = (ActivityManager)mContext.getSystemService(Context.ACTIVITY_SERVICE);
+							Intent intent = new Intent(Intent.ACTION_MAIN);
+							intent.addCategory(Intent.CATEGORY_HOME);
+							String pkgName = mContext.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY).activityInfo.packageName;
+							if (pkgName != null) XposedHelpers.callMethod(am, "forceStopPackage", pkgName);
+							custom = true;
+						}
+
+						if (custom) {
+							if (mSystemExternCommandListener != null) XposedHelpers.callMethod(mSystemExternCommandListener, "onCommand", param.args[0], param.args[1], param.args[2]);
+							param.setResult(null);
+						}
+					} catch (Throwable t) {
+						XposedBridge.log(t);
+					}
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void HideDismissViewHook(LoadPackageParam lpparam) {
+		try {
+			XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "inflateDismissView", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+					ImageButton mDismissView = (ImageButton)XposedHelpers.getObjectField(param.thisObject, "mDismissView");
+					if (mDismissView != null) mDismissView.setVisibility(View.GONE);
+				}
+			});
+
+			XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, "updateDismissView", boolean.class, new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+					ImageButton mDismissView = (ImageButton)XposedHelpers.getObjectField(param.thisObject, "mDismissView");
+					if (mDismissView != null) mDismissView.setVisibility(View.GONE);
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void PocketModeHook() {
+		try {
+			XposedBridge.hookAllMethods(findClass("miui.util.ProximitySensorWrapper", null), "registerListener", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+					Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
+					SensorManager mSensorManager = (SensorManager)XposedHelpers.getObjectField(param.thisObject, "mSensorManager");
+					Sensor mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+					mSensorManager.registerListener(new SensorEventListener() {
+						public void onAccuracyChanged(Sensor sensor, int i) {}
+						public void onSensorChanged(SensorEvent sensorEvent) {
+							float f = sensorEvent.values[0];
+							boolean isCovered = f < mSensor.getMaximumRange();
+							if (isCovered) {
+								if (XposedHelpers.getIntField(param.thisObject, "mProximitySensorState") != 1) {
+									XposedHelpers.setIntField(param.thisObject, "mProximitySensorState", 1);
+									mHandler.removeMessages(1);
+									mHandler.sendEmptyMessageDelayed(0, 300);
+								}
+							} else if (XposedHelpers.getIntField(param.thisObject, "mProximitySensorState") != 0) {
+								XposedHelpers.setIntField(param.thisObject, "mProximitySensorState", 0);
+								mHandler.removeMessages(0);
+								mHandler.sendEmptyMessageDelayed(1, 300);
+							}
+						}
+					}, mSensor, SensorManager.SENSOR_DELAY_FASTEST);
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void PocketModeSettingHook(LoadPackageParam lpparam) {
+		try {
+			XposedHelpers.findAndHookMethod("com.android.settings.KeyguardAdvancedSettings", lpparam.classLoader, "isEllipticProximity", Context.class, XC_MethodReplacement.returnConstant(false));
+			XposedHelpers.findAndHookMethod("com.android.settings.search.SecurityUpdateHelper", lpparam.classLoader, "isEllipticProximity", Context.class, XC_MethodReplacement.returnConstant(false));
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}

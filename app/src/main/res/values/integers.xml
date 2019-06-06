@@ -1,3 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+	<integer name="quick_settings_num_columns_3">3</integer>
+	<integer name="quick_settings_num_columns_4">4</integer>
+	<integer name="quick_settings_num_columns_5">5</integer>
+	<integer name="quick_settings_num_columns_6">6</integer>
+
+	<integer name="quick_settings_num_rows_4">4</integer>
+	<integer name="quick_settings_num_rows_5">5</integer>
+
 </resources>

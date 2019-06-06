@@ -115,6 +115,16 @@
 		miuizer:dynamic="true">
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_controls_backlong"
+			android:title="@string/controls_backlong_title" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_controls_homelong"
+			android:title="@string/controls_homelong_title" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_controls_menulong"
+			android:title="@string/controls_menulong_title" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_navbarleft"
 			android:summary="@string/controls_navbarleft_summ"
 			android:title="@string/controls_navbarleft_title" />
@@ -135,6 +145,12 @@
 
 	<PreferenceCategory
 		android:title="@string/controls_mods_fsg">
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_controls_fsg_horiz"
+			android:summary="@string/controls_fsg_horiz_summ"
+			android:title="@string/controls_fsg_horiz_title"
+			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_controls_fsg_coverage"
