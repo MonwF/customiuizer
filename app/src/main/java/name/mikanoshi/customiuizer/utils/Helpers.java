@@ -40,7 +40,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
+import de.robv.android.xposed.XposedHelpers;
 import miui.util.HapticFeedbackUtil;
 import name.mikanoshi.customiuizer.GateWayLauncher;
 import name.mikanoshi.customiuizer.MainModule;
@@ -522,7 +524,7 @@ public class Helpers {
 				String prefValue = cursor.getString(0);
 				cursor.close();
 				return prefValue;
-			} else XposedBridge.log("[CustoMIUIzer][ContentResolver][" + name + "] Cursor fail: " + cursor);
+			} else log("ContentResolver", "[" + name + "] Cursor fail: " + cursor);
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
@@ -543,7 +545,7 @@ public class Helpers {
 				while (cursor.moveToNext()) prefValue.add(cursor.getString(0));
 				cursor.close();
 				return prefValue;
-			} else XposedBridge.log("[CustoMIUIzer][ContentResolver][" + name + "] Cursor fail: null");
+			} else log("ContentResolver", "[" + name + "] Cursor fail: null");
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
@@ -563,7 +565,7 @@ public class Helpers {
 				int prefValue = cursor.getInt(0);
 				cursor.close();
 				return prefValue;
-			} else XposedBridge.log("[CustoMIUIzer][ContentResolver][" + name + "] Cursor fail: " + cursor);
+			} else log("ContentResolver", "[" + name + "] Cursor fail: " + cursor);
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
@@ -582,7 +584,7 @@ public class Helpers {
 				int prefValue = cursor.getInt(0);
 				cursor.close();
 				return prefValue == 1;
-			} else XposedBridge.log("[CustoMIUIzer][ContentResolver][" + name + "] Cursor fail: " + cursor);
+			} else log("ContentResolver", "[" + name + "] Cursor fail: " + cursor);
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
@@ -674,6 +676,76 @@ public class Helpers {
 		public void onChange(String name) {}
 		public void onChange(String name, String defValue) {}
 		public void onChange(String name, int defValue) {}
+	}
+
+	private static String getCallerMethod() {
+		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+		for (StackTraceElement el: stackTrace)
+		if (el != null && el.getClassName().startsWith(Helpers.modulePkg + ".mods")) return el.getMethodName();
+		return stackTrace[4].getMethodName();
+	}
+
+	public static void log(String line) {
+		XposedBridge.log("[CustoMIUIzer] " + line);
+	}
+
+	public static void log(String mod, String line) {
+		XposedBridge.log("[CustoMIUIzer][" + mod + "] " + line);
+	}
+
+	public static void findAndHookMethod(String className, ClassLoader classLoader, String methodName, Object... parameterTypesAndCallback) {
+		try {
+			XposedHelpers.findAndHookMethod(className, classLoader, methodName, parameterTypesAndCallback);
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void findAndHookMethod(Class<?> clazz, String methodName, Object... parameterTypesAndCallback) {
+		try {
+			XposedHelpers.findAndHookMethod(clazz, methodName, parameterTypesAndCallback);
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static boolean findAndHookMethodSilently(String className, ClassLoader classLoader, String methodName, Object... parameterTypesAndCallback) {
+		try {
+			XposedHelpers.findAndHookMethod(className, classLoader, methodName, parameterTypesAndCallback);
+			return true;
+		} catch (Throwable t) {
+			return false;
+		}
+	}
+
+	@SuppressWarnings("UnusedReturnValue")
+	public static boolean findAndHookMethodSilently(Class<?> clazz, String methodName, Object... parameterTypesAndCallback) {
+		try {
+			XposedHelpers.findAndHookMethod(clazz, methodName, parameterTypesAndCallback);
+			return true;
+		} catch (Throwable t) {
+			return false;
+		}
+	}
+
+	public static void hookAllConstructors(String className, ClassLoader classLoader, XC_MethodHook callback) {
+		try {
+			Class<?> hookClass = XposedHelpers.findClassIfExists(className, classLoader);
+			if (hookClass == null || XposedBridge.hookAllConstructors(hookClass, callback).size() == 0)
+			log(getCallerMethod(), "Failed to hook " + className + " constructor");
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void hookAllMethods(String className, ClassLoader classLoader, String methodName, XC_MethodHook callback) {
+		try {
+			Class<?> hookClass = XposedHelpers.findClassIfExists(className, classLoader);
+			if (hookClass == null || XposedBridge.hookAllMethods(hookClass, methodName, callback).size() == 0)
+			log(getCallerMethod(), "Failed to hook " + methodName + " method in " + className);
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
 	}
 
 	public static Bitmap fastBlur(Bitmap sentBitmap, int radius) {

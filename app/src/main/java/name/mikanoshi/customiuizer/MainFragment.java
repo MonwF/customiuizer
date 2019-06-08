@@ -343,7 +343,7 @@ public class MainFragment extends PreferenceFragmentBase {
 					Intent detailsIntent = new Intent("de.robv.android.xposed.installer.DOWNLOAD_DETAILS");
 					detailsIntent.addCategory(Intent.CATEGORY_DEFAULT);
 					detailsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-					detailsIntent.setData(Uri.fromParts("package", "name.mikanoshi.customiuizer", null));
+					detailsIntent.setData(Uri.fromParts("package", Helpers.modulePkg, null));
 					startActivity(detailsIntent);
 				} catch (Throwable e) {
 					Helpers.openURL(getActivity(), "https://code.highspec.ru/Mikanoshi/CustoMIUIzer/releases");

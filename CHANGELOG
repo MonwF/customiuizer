@@ -1,3 +1,9 @@
+1.5.7
+[Fixed][Extended power menu] Power off button animation bug
+[Fixed][Extended power menu] Localization 
+[Fixed] Unlock credentials
+[Improved] Error handling and logging
+
 1.5.6
 [New] Extended power menu (Fastboot/Recovery/Soft Reboot/Restart System UI/Restart Launcher)
 [New] Bring back Pocket mode option on devices with ultrasonic proximity sensor

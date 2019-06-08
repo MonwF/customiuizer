@@ -33,7 +33,7 @@
 	<string name="system_detailednetspeed_lowlevel_title">Low speed level</string>
 	<string name="system_detailednetspeed_lowlevel_summ">Speed values below this level will be considered low and will have a different indication icon</string>
 	<string name="system_fixmeter_title">Network speed spacing</string>
-	<string name="system_fixmeter_summ">Increase right margin for network speed indicator</string>
+	<string name="system_fixmeter_summ">Increase horizontal margins for network speed indicator</string>
 	<string name="system_compactnotif_title">Compact notifications</string>
 	<string name="system_compactnotif_summ">Reduce notifications\' vertical paddings</string>
 	<string name="system_colorizenotiftitle_title">Colorize notification title</string>

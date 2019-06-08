@@ -79,6 +79,7 @@
 			android:icon="@drawable/ic_credentials"
 			android:launchMode="singleInstance"
 			android:excludeFromRecents="true"
+			android:exported="true"
 			android:finishOnTaskLaunch="true"
 			android:configChanges="keyboardHidden|orientation|screenSize">
 		</activity>
@@ -86,7 +87,8 @@
 		<activity-alias
 			android:name=".CredentialsLauncher"
 			android:targetActivity=".Credentials"
-			android:enabled="false">
+			android:enabled="false"
+			android:exported="true">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
@@ -101,7 +103,8 @@
 			android:launchMode="singleInstance"
 			android:finishOnTaskLaunch="true"
 			android:taskAffinity=""
-			android:excludeFromRecents="true">
+			android:excludeFromRecents="true"
+			android:exported="true">
 			<intent-filter android:label="@string/credentials_unlock">
 				<action android:name="android.intent.action.CREATE_SHORTCUT"/>
 				<category android:name="android.intent.category.DEFAULT"/>

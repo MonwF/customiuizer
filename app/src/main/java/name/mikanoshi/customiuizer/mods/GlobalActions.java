@@ -40,7 +40,6 @@ import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
-import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import static de.robv.android.xposed.XposedHelpers.findClass;
 import static java.lang.System.currentTimeMillis;
 
@@ -451,17 +450,13 @@ public class GlobalActions {
 //	}
 
 	public static void miuizerInit(LoadPackageParam lpparam) {
-		try {
-			XposedHelpers.findAndHookMethod(Helpers.modulePkg + ".MainFragment", lpparam.classLoader, "onActivityCreated", Bundle.class, new XC_MethodHook() {
-				@Override
-				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-					XposedHelpers.setBooleanField(param.thisObject, "miuizerModuleActive", true);
-				}
-			});
-			Helpers.emptyFile(lpparam.appInfo.dataDir + "/files/uncaught_exceptions", false);
-		} catch (Throwable t) {
-			XposedBridge.log(t);
-		}
+		Helpers.findAndHookMethod(Helpers.modulePkg + ".MainFragment", lpparam.classLoader, "onActivityCreated", Bundle.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+				XposedHelpers.setBooleanField(param.thisObject, "miuizerModuleActive", true);
+			}
+		});
+		Helpers.emptyFile(lpparam.appInfo.dataDir + "/files/uncaught_exceptions", false);
 	}
 
 	private static int settingsIconResId;
@@ -475,22 +470,18 @@ public class GlobalActions {
 	}
 
 	public static void miuizerSettingsInit(LoadPackageParam lpparam) {
-		try {
-			findAndHookMethod("com.android.settings.MiuiSettings", lpparam.classLoader, "onCreate", Bundle.class, new XC_MethodHook() {
-				@Override
-				@SuppressWarnings("unchecked")
-				protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
-					Map<String, Integer> map = (Map<String, Integer>)XposedHelpers.getStaticObjectField(findClass("com.android.settings.MiuiSettings", lpparam.classLoader), "CATEGORY_MAP");
-					map.put("com.android.settings.category.customiuizer", settingsIconResId);
-					XposedHelpers.setStaticObjectField(findClass("com.android.settings.MiuiSettings", lpparam.classLoader), "CATEGORY_MAP", map);
-					//XposedBridge.log(map.toString());
-				}
-			});
-		} catch (Throwable t) {
-			XposedBridge.log(t);
-		}
+		Helpers.findAndHookMethod("com.android.settings.MiuiSettings", lpparam.classLoader, "onCreate", Bundle.class, new XC_MethodHook() {
+			@Override
+			@SuppressWarnings("unchecked")
+			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+				Map<String, Integer> map = (Map<String, Integer>)XposedHelpers.getStaticObjectField(findClass("com.android.settings.MiuiSettings", lpparam.classLoader), "CATEGORY_MAP");
+				map.put("com.android.settings.category.customiuizer", settingsIconResId);
+				XposedHelpers.setStaticObjectField(findClass("com.android.settings.MiuiSettings", lpparam.classLoader), "CATEGORY_MAP", map);
+				//XposedBridge.log(map.toString());
+			}
+		});
 /*
-		findAndHookMethod("com.android.settingslib.drawer.l", lpparam.classLoader, "a", Context.class, Map.class, boolean.class, String.class, String.class, new XC_MethodHook() {
+		Helpers.findAndHookMethod("com.android.settingslib.drawer.l", lpparam.classLoader, "a", Context.class, Map.class, boolean.class, String.class, String.class, new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
 				Map<Pair<String, String>, Object> map = (Map<Pair<String, String>, Object>)param.args[1];
@@ -510,7 +501,7 @@ public class GlobalActions {
 			}
 		});
 
-		findAndHookMethod("com.android.settingslib.drawer.l", lpparam.classLoader, "a", Context.class, UserHandle.class, String.class, Map.class, String.class, ArrayList.class, boolean.class, boolean.class, String.class, new XC_MethodHook() {
+		Helpers.findAndHookMethod("com.android.settingslib.drawer.l", lpparam.classLoader, "a", Context.class, UserHandle.class, String.class, Map.class, String.class, ArrayList.class, boolean.class, boolean.class, String.class, new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
 				UserHandle uh = (UserHandle)param.args[1];
@@ -541,7 +532,7 @@ public class GlobalActions {
 			}
 		});
 
-		findAndHookMethod("com.android.settingslib.drawer.l", lpparam.classLoader, "a", Context.class, UserHandle.class, Intent.class, Map.class, String.class, List.class, boolean.class, boolean.class, boolean.class, boolean.class, new XC_MethodHook() {
+		Helpers.findAndHookMethod("com.android.settingslib.drawer.l", lpparam.classLoader, "a", Context.class, UserHandle.class, Intent.class, Map.class, String.class, List.class, boolean.class, boolean.class, boolean.class, boolean.class, new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
 				UserHandle uh = (UserHandle)param.args[1];
@@ -574,7 +565,7 @@ public class GlobalActions {
 			}
 		});
 
-		findAndHookMethod("com.android.settingslib.drawer.l", lpparam.classLoader, "a", Context.class, "com.android.settingslib.drawer.Tile", ActivityInfo.class, ApplicationInfo.class, PackageManager.class, Map.class, boolean.class, new XC_MethodHook() {
+		Helpers.findAndHookMethod("com.android.settingslib.drawer.l", lpparam.classLoader, "a", Context.class, "com.android.settingslib.drawer.Tile", ActivityInfo.class, ApplicationInfo.class, PackageManager.class, Map.class, boolean.class, new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
 				ApplicationInfo ai = (ApplicationInfo)param.args[3];
@@ -610,7 +601,7 @@ public class GlobalActions {
 			}
 		});
 
-		findAndHookMethod("com.android.settingslib.drawer.l", lpparam.classLoader, "a", Context.class, Map.class, "com.android.settingslib.drawer.Tile", new XC_MethodHook() {
+		Helpers.findAndHookMethod("com.android.settingslib.drawer.l", lpparam.classLoader, "a", Context.class, Map.class, "com.android.settingslib.drawer.Tile", new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
 				Map map = (Map)param.args[1];
@@ -629,143 +620,122 @@ public class GlobalActions {
 	}
 	
 	public static void setupUnhandledCatcher() {
-		try {
-			findAndHookMethod(Application.class, "onCreate", new XC_MethodHook() {
-				@Override
-				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-					try {
-						final Context ctx = (Application)param.thisObject;
-						if (ctx == null || ctx.getPackageName().equals("name.mikanoshi.customiuizer")) return;
-						if (Thread.getDefaultUncaughtExceptionHandler() != null)
-						XposedHelpers.findAndHookMethod(Thread.getDefaultUncaughtExceptionHandler().getClass(), "uncaughtException", Thread.class, Throwable.class, new XC_MethodHook() {
-							@Override
-							protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-								if (param.args[1] != null) {
-									Intent intent = new Intent("name.mikanoshi.customiuizer.SAVEEXCEPTION");
-									intent.putExtra("throwable", (Throwable)param.args[1]);
-									ctx.sendBroadcast(intent);
-								}
-							}
-						});
-					} catch (Throwable t) {}
-				}
-			});
-		} catch (Throwable t) {
-			XposedBridge.log(t);
-		}
+		Helpers.findAndHookMethod(Application.class, "onCreate", new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+				final Context ctx = (Application)param.thisObject;
+				if (ctx == null || ctx.getPackageName().equals(Helpers.modulePkg)) return;
+				if (Thread.getDefaultUncaughtExceptionHandler() != null)
+				//noinspection ResultOfMethodCallIgnored
+				Helpers.findAndHookMethodSilently(Thread.getDefaultUncaughtExceptionHandler().getClass(), "uncaughtException", Thread.class, Throwable.class, new XC_MethodHook() {
+					@Override
+					protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+						if (param.args[1] != null) {
+							Intent intent = new Intent("name.mikanoshi.customiuizer.SAVEEXCEPTION");
+							intent.putExtra("throwable", (Throwable)param.args[1]);
+							ctx.sendBroadcast(intent);
+						}
+					}
+				});
+			}
+		});
 	}
 
 	public static void setupGlobalActions(LoadPackageParam lpparam) {
-		try {
-			XposedBridge.hookAllConstructors(XposedHelpers.findClass("com.android.server.accessibility.AccessibilityManagerService", lpparam.classLoader), new XC_MethodHook() {
-				@Override
-				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-					Context mGlobalContext = (Context)param.args[0];
+		Helpers.hookAllConstructors("com.android.server.accessibility.AccessibilityManagerService", lpparam.classLoader, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				Context mGlobalContext = (Context)param.args[0];
 
-					IntentFilter intentfilter = new IntentFilter();
+				IntentFilter intentfilter = new IntentFilter();
 
-					// Actions
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.GoToSleep");
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.LockDevice");
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.TakeScreenshot");
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.KillForegroundApp");
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.SwitchToPrevApp");
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.OpenPowerMenu");
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleColorInversion");
-					//intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.KillForegroundAppShedule");
-					//intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.SimulateMenu");
+				// Actions
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.GoToSleep");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.LockDevice");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.TakeScreenshot");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.KillForegroundApp");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.SwitchToPrevApp");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.OpenPowerMenu");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleColorInversion");
+				//intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.KillForegroundAppShedule");
+				//intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.SimulateMenu");
 
-					// Toggles
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleWiFi");
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleBluetooth");
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleNFC");
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleSoundProfile");
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleAutoBrightness");
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleAutoRotation");
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleMobileData");
+				// Toggles
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleWiFi");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleBluetooth");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleNFC");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleSoundProfile");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleAutoBrightness");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleAutoRotation");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleMobileData");
 
-					// Tools
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.FastReboot");
+				// Tools
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.FastReboot");
 
-					mGlobalContext.registerReceiver(mGlobalReceiver, intentfilter);
-				}
-			});
-		} catch (Throwable t) {
-			XposedBridge.log(t);
-		}
+				mGlobalContext.registerReceiver(mGlobalReceiver, intentfilter);
+			}
+		});
 
-		try {
-			XposedBridge.hookAllMethods(XposedHelpers.findClass("com.android.server.policy.PhoneWindowManager", lpparam.classLoader), "init", new XC_MethodHook() {
-				@Override
-				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-					IntentFilter intentfilter = new IntentFilter();
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.SaveLastMusicPausedTime");
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.RestartLauncher");
-					mContext.registerReceiver(new BroadcastReceiver() {
-						public void onReceive(final Context context, Intent intent) {
-							String action = intent.getAction();
-							if (action == null) return;
+		Helpers.hookAllMethods("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "init", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				IntentFilter intentfilter = new IntentFilter();
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.SaveLastMusicPausedTime");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.RestartLauncher");
+				mContext.registerReceiver(new BroadcastReceiver() {
+					public void onReceive(final Context context, Intent intent) {
+						String action = intent.getAction();
+						if (action == null) return;
 
-							try {
-								if (action.equals("name.mikanoshi.customiuizer.mods.action.SaveLastMusicPausedTime")) {
-									Settings.System.putLong(context.getContentResolver(), "last_music_paused_time", currentTimeMillis());
-								} else if (action.equals("name.mikanoshi.customiuizer.mods.action.RestartLauncher")) {
-									ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
-									XposedHelpers.callMethod(am, "forceStopPackage", "com.miui.home");
-								}
-							} catch (Throwable t) {
-								XposedBridge.log(t);
+						try {
+							if (action.equals("name.mikanoshi.customiuizer.mods.action.SaveLastMusicPausedTime")) {
+								Settings.System.putLong(context.getContentResolver(), "last_music_paused_time", currentTimeMillis());
+							} else if (action.equals("name.mikanoshi.customiuizer.mods.action.RestartLauncher")) {
+								ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+								XposedHelpers.callMethod(am, "forceStopPackage", "com.miui.home");
 							}
+						} catch (Throwable t) {
+							XposedBridge.log(t);
 						}
-					}, intentfilter);
-				}
-			});
-		} catch (Throwable t) {
-			XposedBridge.log(t);
-		}
+					}
+				}, intentfilter);
+			}
+		});
 
-//		try {
-//			XposedBridge.hookAllMethods(XposedHelpers.findClass("com.android.server.am.ActivityStackSupervisor", lpparam.classLoader), "getComponentRestrictionForCallingPackage", new XC_MethodHook() {
-//				@Override
-//				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-//					ActivityInfo ai = (ActivityInfo)param.args[0];
-//					if (ai != null && ai.name.equals("com.miui.privacyapps.ui.PrivacyAppsOperationTutorialActivity")) param.setResult(0);
-//				}
-//			});
-//		} catch (Throwable t) {
-//			XposedBridge.log(t);
-//		}
+//		Helpers.hookAllMethods("com.android.server.am.ActivityStackSupervisor", lpparam.classLoader, "getComponentRestrictionForCallingPackage", new XC_MethodHook() {
+//			@Override
+//			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+//				ActivityInfo ai = (ActivityInfo)param.args[0];
+//				if (ai != null && ai.name.equals("com.miui.privacyapps.ui.PrivacyAppsOperationTutorialActivity")) param.setResult(0);
+//			}
+//		});
 	}
 
 	public static void setupStatusBar(LoadPackageParam lpparam) {
-		try {
-			XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "start", new XC_MethodHook() {
-				@Override
-				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-					mStatusBar = param.thisObject;
-					Context mStatusBarContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-					IntentFilter intentfilter = new IntentFilter();
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "start", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				mStatusBar = param.thisObject;
+				Context mStatusBarContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				IntentFilter intentfilter = new IntentFilter();
 
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ExpandNotifications");
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ExpandSettings");
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.OpenRecents");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ExpandNotifications");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ExpandSettings");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.OpenRecents");
 
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleGPS");
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleFlashlight");
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ShowQuickRecents");
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.HideQuickRecents");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleGPS");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleFlashlight");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ShowQuickRecents");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.HideQuickRecents");
 
-					intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ClearMemory");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ClearMemory");
 
-					mStatusBarContext.registerReceiver(mSBReceiver, intentfilter);
-				}
-			});
-		} catch (Throwable t) {
-			XposedBridge.log(t);
-		}
+				mStatusBarContext.registerReceiver(mSBReceiver, intentfilter);
+			}
+		});
 
-//		XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.HeaderView", lpparam.classLoader, "onFinishInflate", new XC_MethodHook() {
+//		Helpers.findAndHookMethod("com.android.systemui.statusbar.HeaderView", lpparam.classLoader, "onFinishInflate", new XC_MethodHook() {
 //			@Override
 //			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 //				TextView mClock = (TextView)XposedHelpers.getObjectField(param.thisObject, "mClock");
@@ -787,7 +757,7 @@ public class GlobalActions {
 //			}
 //		});
 //
-//		XposedHelpers.findAndHookMethod("com.android.systemui.CustomizedUtils", lpparam.classLoader, "getNotchExpandedHeaderViewHeight", Context.class, int.class, new XC_MethodHook() {
+//		Helpers.findAndHookMethod("com.android.systemui.CustomizedUtils", lpparam.classLoader, "getNotchExpandedHeaderViewHeight", Context.class, int.class, new XC_MethodHook() {
 //			@Override
 //			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 //				param.setResult((int)param.getResult() + 65);

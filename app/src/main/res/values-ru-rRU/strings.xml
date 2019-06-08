@@ -345,7 +345,7 @@
 	<string name="system_detailednetspeed_lowlevel_title">Низкий уровень скорости</string>
 	<string name="system_detailednetspeed_lowlevel_summ">Задаёт уровень, ниже которого скорость будет считаться низкой и будет иметь другую иконку</string>
 	<string name="system_fixmeter_title">Отступ скорости соединения</string>
-	<string name="system_fixmeter_summ">Увеличивает отступ справа для индикатора скорости соединения</string>
+	<string name="system_fixmeter_summ">Увеличивает горизонтальные отступы для индикатора скорости соединения</string>
 	<string name="system_compactnotif_title">Компактные уведомления</string>
 	<string name="system_compactnotif_summ">Уменьшает вертикальные отступы в уведомлениях</string>
 	<string name="system_colorizenotiftitle_title">Раскрасить заголовок уведомления</string>

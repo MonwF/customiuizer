@@ -11,7 +11,6 @@ import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
-import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_InitPackageResources;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 import name.mikanoshi.customiuizer.mods.Controls;
@@ -41,7 +40,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		}
 
 		if (pref == null || pref.getAll().size() == 0) {
-			XposedBridge.log("[CustoMIUIzer] Cannot read module's SharedPreferences, mods won't work!");
+			Helpers.log("Cannot read module's SharedPreferences, mods won't work!");
 			return;
 		} else mPrefs.putAll(pref.getAll());
 
@@ -165,7 +164,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_hidemoreicon")) System.NoMoreIconHook(lpparam);
 			if (mPrefs.getBoolean("system_notifafterunlock")) System.ShowNotificationsAfterUnlockHook(lpparam);
 			if (mPrefs.getBoolean("system_notifrowmenu")) System.NotificationRowMenuHook(lpparam);
-			if (mPrefs.getInt("system_qsgridrows", 3) > 3 || mPrefs.getBoolean("system_qsnolabels")) System.QSGridLabels(lpparam);
+			if (mPrefs.getInt("system_qsgridrows", 3) > 3 || mPrefs.getBoolean("system_qsnolabels")) System.QSGridLabelsHook(lpparam);
 			if (mPrefs.getBoolean("system_removecleaner")) System.HideMemoryCleanHook(lpparam);
 			if (mPrefs.getBoolean("system_removedismiss")) System.HideDismissViewHook(lpparam);
 		}
@@ -188,7 +187,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		}
 
 		if (pkg.equals("com.miui.home"))
-		XposedHelpers.findAndHookMethod(Application.class, "attach", Context.class, new XC_MethodHook() {
+		Helpers.findAndHookMethod(Application.class, "attach", Context.class, new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				if (mPrefs.getInt("launcher_swipedown_action", 1) != 1 ||
