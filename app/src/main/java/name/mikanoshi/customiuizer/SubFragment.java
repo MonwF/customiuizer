@@ -72,7 +72,7 @@ public class SubFragment extends PreferenceFragmentBase {
 			((TextView)customView.findViewById(android.R.id.title)).setText(titleId);
 
 			TextView cancelBtn = customView.findViewById(android.R.id.button1);
-			cancelBtn.setBackgroundResource(getResources().getIdentifier("action_mode_title_button_cancel_light", "drawable", "miui"));
+			cancelBtn.setBackgroundResource(getResources().getIdentifier(Helpers.isNightMode(getContext()) ? "action_mode_title_button_cancel_dark" : "action_mode_title_button_cancel_light", "drawable", "miui"));
 			cancelBtn.setText(null);
 			cancelBtn.setContentDescription(getText(android.R.string.cancel));
 			cancelBtn.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +82,7 @@ public class SubFragment extends PreferenceFragmentBase {
 				}
 			});
 			TextView applyBtn = customView.findViewById(android.R.id.button2);
-			applyBtn.setBackgroundResource(getResources().getIdentifier("action_mode_title_button_confirm_light", "drawable", "miui"));
+			applyBtn.setBackgroundResource(getResources().getIdentifier(Helpers.isNightMode(getContext()) ? "action_mode_title_button_confirm_dark" : "action_mode_title_button_confirm_light", "drawable", "miui"));
 			applyBtn.setText(null);
 			applyBtn.setContentDescription(getText(android.R.string.ok));
 			applyBtn.setOnClickListener(new View.OnClickListener() {
@@ -138,7 +138,7 @@ public class SubFragment extends PreferenceFragmentBase {
 			if (nView.getTag() != null)
 			if (nView instanceof TextView) {
 				((TextView)nView).setText(Helpers.prefs.getString((String)nView.getTag(), ""));
-				if (nView instanceof ClearableEditText) nView.setBackgroundResource(getResources().getIdentifier("edit_text_bg_light", "drawable", "miui"));
+				if (nView instanceof ClearableEditText) nView.setBackgroundResource(getResources().getIdentifier(Helpers.isNightMode(getContext()) ? "edit_text_bg_dark" : "edit_text_bg_light", "drawable", "miui"));
 			}
 		} catch (Throwable e) {
 			Log.e("miuizer", "Cannot load sub preference!");

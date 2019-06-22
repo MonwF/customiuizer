@@ -16,6 +16,15 @@
 	<string name="system_mods_vibration">Vibration</string>
 	<string name="system_mods_screenanim">Screen animations</string>
 	<string name="system_statusbarheight_title">Status bar height</string>
+	<string name="system_statusbarcolor_title">Status bar background color</string>
+	<string name="system_statusbarcolor_summ">Make status bar and app\'s action bar background colors the same where possible</string>
+	<string name="system_statusbarcolor_apps_title">Black list</string>
+	<string name="system_shortcut_app_title">Shortcut app</string>
+	<string name="system_shortcut_app_summ">Open selected app when shortcut icon in notification drawer\'s header is tapped</string>
+	<string name="system_clock_app_title">Clock app</string>
+	<string name="system_clock_app_summ">Open selected app when clock in notification drawer\'s header is tapped</string>
+	<string name="system_calendar_app_title">Calendar app</string>
+	<string name="system_calendar_app_summ">Open selected app when date in notification drawer\'s header is tapped</string>
 	<string name="system_clockseconds_title">Show seconds</string>
 	<string name="system_clockseconds_summ">Display seconds in the status bar clock</string>
 	<string name="system_mobiletypeicon_title">Hide mobile network type</string>
@@ -138,17 +147,22 @@
 	<string name="system_qshaptic_title">Quick settings haptic feedback</string>
 	<string name="system_qshaptic_summ">Vibrate on Quick settings tile tap</string>
 
+	<string name="poco_mods">POCO Launcher</string>
 	<string name="launcher_mods">MIUI Launcher</string>
 	<string name="launcher_gestures">Gestures</string>
 	<string name="launcher_gestures_action">Action</string>
 	<string name="launcher_gestures_setting">Setting to toggle</string>
 	<string name="launcher_gestures_launch">App to launch</string>
 	<string name="launcher_gestures_shortcut">Shortcut to launch</string>
+	<string name="launcher_title">Launcher</string>
+	<string name="launcher_summ">Display mods for selected launcher</string>
 	<string name="launcher_noclockhide_title">No clock hide</string>
 	<string name="launcher_noclockhide_summ">Do not hide status bar clock on pages with clock widgets</string>
 	<string name="launcher_unlockgrids_title">Unlock grid sizes</string>
-	<string name="launcher_unlockgrids_summ">Makes all grid sizes from 3x4 to 6x7 available in home screen layout setting</string>
+	<string name="launcher_unlockgrids_summ">Make all grid sizes from 3x4 to 6x7 available in home screen layout setting</string>
 	<string name="launcher_folder_cols_title">Number of columns in folders</string>
+	<string name="launcher_fixstatusbarmode_title">Fix status bar mode</string>
+	<string name="launcher_fixstatusbarmode_summ">Adjust status bar contents color for light/dark wallpapers on developer launcher version</string>
 	<string name="launcher_foldershade_title">Folder background</string>
 	<string name="launcher_foldershade_summ">Darken folder background</string>
 	<string name="launcher_closefolder_title">Auto close folders</string>
@@ -267,6 +281,7 @@
 	<string name="array_global_actions_powermenu">Open power menu</string>
 	<string name="array_global_actions_clearmemory">Clear memory</string>
 	<string name="array_global_actions_invertcolors">Invert colors</string>
+	<string name="array_global_actions_goback">Go back</string>
 	<string name="array_global_toggle_wifi">Wi-Fi</string>
 	<string name="array_global_toggle_bt">Bluetooth</string>
 	<string name="array_global_toggle_gps">GPS</string>

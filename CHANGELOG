@@ -1,3 +1,13 @@
+1.6.0
+[New] POCO Launcher support for a number of mods
+[New] MIUI Launcher support up to 4.9.5-dev
+[New] Fix status bar contents color for light/dark wallpapers on dev launcher version
+[New] Make status bar background color the same as app's action bar background color where possible
+[New] Define apps that will be launched when clock, date and shortcut icon in notification drawer's header are tapped
+[New] Action: Go back
+[New] Dark mode support for module settings (some popup dialogs still have wrong text color)
+[Improved][Additional navbar buttons] Left and right buttons appear independently if actions are assigned to them
+
 1.5.7
 [Fixed][Extended power menu] Power off button animation bug
 [Fixed][Extended power menu] Localization 

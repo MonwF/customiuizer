@@ -147,6 +147,36 @@
 			miuizer:format="%d dip" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_statusbarcolor"
+			android:title="@string/system_statusbarcolor_title"
+			android:summary="@string/system_statusbarcolor_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_statusbarcolor_apps_title"
+			android:key="pref_key_system_statusbarcolor_apps"
+			android:dependency="pref_key_system_statusbarcolor"
+			miuizer:countAsSummary="true" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_shortcut_app_title"
+			android:summary="@string/system_shortcut_app_summ"
+			android:key="pref_key_system_shortcut_app"
+			miuizer:dynamic="true" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_clock_app_title"
+			android:summary="@string/system_clock_app_summ"
+			android:key="pref_key_system_clock_app"
+			miuizer:dynamic="true" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_calendar_app_title"
+			android:summary="@string/system_calendar_app_summ"
+			android:key="pref_key_system_calendar_app"
+			miuizer:dynamic="true" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_clockseconds"
 			android:summary="@string/system_clockseconds_summ"
 			android:title="@string/system_clockseconds_title"

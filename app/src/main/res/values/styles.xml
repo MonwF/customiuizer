@@ -36,6 +36,7 @@
 		<item name="android:statusBarColor">?attr/statusBarColor</item>
 		<item name="android:windowTranslucentStatus">true</item>
 		<item name="android:windowTranslucentNavigation">false</item>
+		<item name="android:windowActionBarOverlay">false</item>
 	</style>
 
 	<style name="ApplyInvisible">
@@ -61,30 +62,30 @@
 	<style name="TextAppearance.PreferenceList">
 		<item name="android:textSize">@dimen/normal_text_size</item>
 		<item name="android:textStyle">normal</item>
-		<item name="android:textColor">@color/preference_primary_text_light</item>
+		<item name="android:textColor">@color/preference_primary_text</item>
 	</style>
 	<style name="TextAppearance.List">
 		<item name="android:textSize">@dimen/normal_text_size</item>
 		<item name="android:textStyle">normal</item>
-		<item name="android:textColor">@color/list_text_dark</item>
+		<item name="android:textColor">@color/list_text</item>
 	</style>
 	<style name="TextAppearance.List.Secondary">
 		<item name="android:textSize">@dimen/secondary_text_size</item>
 		<item name="android:textStyle">normal</item>
-		<item name="android:textColor">@color/list_secondary_text_dark</item>
+		<item name="android:textColor">@color/list_secondary_text</item>
 	</style>
 	<style name="TextAppearance.List.Secondary.Preference">
-		<item name="android:textColor">@color/preference_secondary_text_light</item>
+		<item name="android:textColor">@color/preference_secondary_text</item>
 	</style>
 
 	<style name="TextAppearance.Widget" />
 	<style name="TextAppearance.Widget.EditText">
 		<item name="android:textSize">@dimen/secondary_text_size</item>
 		<item name="android:textColor">?android:attr/editTextColor</item>
-		<item name="android:textColorHint">@color/hint_edit_text_color_light</item>
+		<item name="android:textColorHint">@color/hint_edit_text_color</item>
 	</style>
 	<style name="TextAppearance.Widget.EditText.Search">
-		<item name="android:textColorHint">@color/edit_text_search_hint_color_light</item>
+		<item name="android:textColorHint">@color/edit_text_search_hint_color</item>
 	</style>
 
 	<style name="Widget" />
@@ -115,7 +116,7 @@
 		<item name="android:layout_height">50dp</item>
 		<item name="android:textAllCaps">true</item>
 		<item name="android:textSize">@dimen/preference_category_text_size</item>
-		<item name="android:textColor">@color/preference_category_text_color_light</item>
+		<item name="android:textColor">@color/preference_category_text_color</item>
 	</style>
 	<style name="Widget.InputField.Category.First">
 		<item name="android:layout_marginTop">0dp</item>
@@ -125,7 +126,7 @@
 	</style>
 	<style name="Widget.SearchActionMode">
 		<item name="android:gravity">right|center_horizontal|clip_horizontal</item>
-		<item name="android:background">@drawable/search_mode_bg_light</item>
+		<item name="android:background">@drawable/search_mode_bg</item>
 		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">wrap_content</item>
 	</style>
@@ -133,7 +134,7 @@
 		<item name="android:background">@android:color/transparent</item>
 		<item name="android:maxWidth">@dimen/progressbar_size</item>
 		<item name="android:maxHeight">@dimen/progressbar_size</item>
-		<item name="android:indeterminateDrawable">@drawable/progressbar_indeterminate_light</item>
+		<item name="android:indeterminateDrawable">@drawable/progressbar_indeterminate</item>
 		<item name="android:minWidth">@dimen/progressbar_size</item>
 		<item name="android:minHeight">@dimen/progressbar_size</item>
 <!--

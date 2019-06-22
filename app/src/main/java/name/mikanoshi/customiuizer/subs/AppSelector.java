@@ -23,6 +23,7 @@ import name.mikanoshi.customiuizer.utils.PrivacyAppAdapter;
 
 public class AppSelector extends SubFragmentWithSearch {
 
+	boolean standalone = false;
 	boolean multi = false;
 	boolean privacy = false;
 	boolean customTitles = false;
@@ -38,6 +39,7 @@ public class AppSelector extends SubFragmentWithSearch {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
+		standalone = getArguments().getBoolean("standalone");
 		multi = getArguments().getBoolean("multi");
 		privacy = getArguments().getBoolean("privacy");
 		customTitles = getArguments().getBoolean("custom_titles");
@@ -55,6 +57,9 @@ public class AppSelector extends SubFragmentWithSearch {
 				} else if (customTitles) {
 					if (Helpers.launchableAppsList == null) return;
 					listView.setAdapter(new AppDataAdapter(getContext(), Helpers.launchableAppsList, Helpers.AppAdapterType.CustomTitles, key));
+				} else if (standalone && key != null) {
+					if (Helpers.launchableAppsList == null) return;
+					listView.setAdapter(new AppDataAdapter(getContext(), Helpers.launchableAppsList, Helpers.AppAdapterType.Standalone, key));
 				} else {
 					if (Helpers.launchableAppsList == null) return;
 					listView.setAdapter(new AppDataAdapter(getContext(), Helpers.launchableAppsList));
@@ -62,7 +67,7 @@ public class AppSelector extends SubFragmentWithSearch {
 				listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-						if (multi) {
+						if (multi && key != null) {
 							AppData app = (AppData)parent.getAdapter().getItem(position);
 							Set<String> selectedApps = new LinkedHashSet<String>(Helpers.prefs.getStringSet(key, new LinkedHashSet<String>()));
 							if (selectedApps.contains(app.pkgName))
@@ -102,7 +107,10 @@ public class AppSelector extends SubFragmentWithSearch {
 						} else {
 							Intent intent = new Intent(getContext(), this.getClass());
 							AppData app = (AppData)parent.getAdapter().getItem(position);
-							intent.putExtra("activity", app.pkgName + "|" + app.actName);
+							if (app.pkgName.equals("") && app.actName.equals(""))
+								intent.putExtra("activity", "");
+							else
+								intent.putExtra("activity", app.pkgName + "|" + app.actName);
 							getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
 							finish();
 						}

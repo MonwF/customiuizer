@@ -18,6 +18,14 @@ public class Launcher extends SubFragment {
 		super.onActivityCreated(savedInstanceState);
 		//setupImmersiveMenu();
 
+		findPreference("pref_key_launcher_mods").setOnPreferenceChangeListener(new CheckBoxPreference.OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				updateLauncherMods((String)newValue);
+				return true;
+			}
+		});
+
 		Preference.OnPreferenceClickListener openSwipeEdit = new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
@@ -90,6 +98,8 @@ public class Launcher extends SubFragment {
 			pref.setEnabled(false);
 			pref.setTitle(R.string.launcher_privacyapps_fail);
 		}
+
+		updateLauncherMods(Helpers.prefs.getString("pref_key_launcher_mods", "1"));
 	}
 
 	@Override
@@ -106,6 +116,15 @@ public class Launcher extends SubFragment {
 		PackageManager pm = getActivity().getPackageManager();
 		return pm.checkPermission(Manifest.permission.WRITE_SECURE_SETTINGS, Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED &&
 			   pm.checkPermission("com.miui.securitycenter.permission.ACCESS_SECURITY_CENTER_PROVIDER", Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED;
+	}
+
+	private void updateLauncherMods(String value) {
+		int opt = Integer.parseInt(value);
+		findPreference("pref_key_launcher_fixstatusbarmode").setEnabled(opt == 1);
+		findPreference("pref_key_launcher_unlockgrids").setEnabled(opt == 1);
+		findPreference("pref_key_launcher_foldershade").setEnabled(opt == 1);
+		findPreference("pref_key_launcher_privacyapps").setEnabled(opt == 1);
+		findPreference("pref_key_launcher_swipeup").setEnabled(opt == 1);
 	}
 
 //	public boolean onCreateOptionsMenu(Menu menu) {

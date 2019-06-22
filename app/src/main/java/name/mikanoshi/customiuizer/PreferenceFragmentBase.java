@@ -280,7 +280,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		view.setBackgroundResource(getResources().getIdentifier("settings_window_bg_light", "drawable", "miui"));
+		view.setBackgroundResource(getResources().getIdentifier(Helpers.isNightMode(getContext()) ? "settings_window_bg_dark" : "settings_window_bg_light", "drawable", "miui"));
 	}
 
 	public void openSubFragment(Fragment fragment, Bundle args, Helpers.SettingsType settingsType, Helpers.ActionBarType abType, int titleResId, int contentResId) {

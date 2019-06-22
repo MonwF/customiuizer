@@ -121,7 +121,7 @@ public class Dialog extends Activity {
 	
 	private void sendCrash(final String xposedLogStr) {
 		CrashReportPersister persister = new CrashReportPersister();
-		SharedPreferences prefs = null;
+		SharedPreferences prefs;
 		try {
 			prefs = Helpers.getProtectedContext(this).getSharedPreferences(Helpers.prefsName, Context.MODE_PRIVATE);
 		} catch (Throwable t) {
@@ -250,8 +250,7 @@ public class Dialog extends Activity {
 	@SuppressLint({"SetTextI18n", "ClickableViewAccessibility"})
 	protected final void onCreate(Bundle savedInstanceState) {
 		overridePendingTransition(0, 0);
-		setTheme(getResources().getIdentifier("Theme.Light.Settings", "style", "miui"));
-		getTheme().applyStyle(R.style.ApplyInvisible, true);
+		Helpers.setMiuiTheme(this, R.style.ApplyInvisible);
 		super.onCreate(savedInstanceState);
 
 		if (getIntent().getBooleanExtra("FORCE_CANCEL", false)) {
@@ -356,7 +355,7 @@ public class Dialog extends Activity {
 			if (Objects.equals(email, ""))
 				dialogView.addView(feedbackNote);
 
-			mainText.setText(mainText.getText() + "\n" + getResources().getString(R.string.crash_dialog_manual_size) + ": " + String.valueOf(Math.round(payloadSize / 1024.0f)) + " KB");
+			mainText.setText(mainText.getText() + "\n" + getResources().getString(R.string.crash_dialog_manual_size) + ": " + Math.round(payloadSize / 1024.0f) + " KB");
 		} catch (Throwable e) {}
 
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);

@@ -45,7 +45,7 @@
 				android:layout_gravity="center_vertical"
 				android:singleLine="true"
 				android:visibility="gone"
-				android:textColor="@color/preference_secondary_text_color_light"
+				android:textColor="@color/preference_secondary_text_color"
 				android:textSize="15sp" />
 
 		</LinearLayout>

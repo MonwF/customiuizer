@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 
-def acraVersion = '5.3.0'
+def acraVersion = '5.4.0'
 def keystorePropertiesFile = rootProject.file("../keystore.properties")
 def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
@@ -21,8 +21,8 @@ android {
         applicationId "name.mikanoshi.customiuizer"
         minSdkVersion 24
         targetSdkVersion 28
-        versionCode 18
-        versionName "1.5.7"
+        versionCode 19
+        versionName "1.6.0"
         signingConfig signingConfigs.dev
     }
     buildTypes {

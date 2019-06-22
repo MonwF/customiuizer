@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RecentTaskInfo;
 import android.app.Application;
+import android.app.Instrumentation;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -23,6 +24,7 @@ import android.os.SystemClock;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.widget.Toast;
 
 import java.lang.reflect.Method;
@@ -64,6 +66,7 @@ public class GlobalActions {
 			case 12: return openPowerMenu(helperContext);
 			case 13: return clearMemory(helperContext);
 			case 14: return toggleColorInversion(helperContext);
+			case 15: return goBack(helperContext);
 			default: return false;
 		}
 	}
@@ -221,7 +224,16 @@ public class GlobalActions {
 //					}
 //				}).start();
 //			}
-//
+
+			if (action.equals("name.mikanoshi.customiuizer.mods.action.GoBack")) {
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						new Instrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_BACK);
+					}
+				}).start();
+			}
+
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.SwitchToPrevApp")) {
 				PackageManager pm = context.getPackageManager();
 				Intent intent_home = new Intent(Intent.ACTION_MAIN);
@@ -655,6 +667,7 @@ public class GlobalActions {
 				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.TakeScreenshot");
 				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.KillForegroundApp");
 				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.SwitchToPrevApp");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.GoBack");
 				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.OpenPowerMenu");
 				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleColorInversion");
 				//intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.KillForegroundAppShedule");
@@ -916,6 +929,16 @@ public class GlobalActions {
 	public static boolean openRecents(Context context) {
 		try {
 			context.sendBroadcast(new Intent("name.mikanoshi.customiuizer.mods.action.OpenRecents"));
+			return true;
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+			return false;
+		}
+	}
+
+	public static boolean goBack(Context context) {
+		try {
+			context.sendBroadcast(new Intent("name.mikanoshi.customiuizer.mods.action.GoBack"));
 			return true;
 		} catch (Throwable t) {
 			XposedBridge.log(t);

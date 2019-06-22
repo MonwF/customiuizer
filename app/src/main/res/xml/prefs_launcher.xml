@@ -5,6 +5,14 @@
 	android:layout_height="match_parent"
 	android:key="pref_key_launcher">
 
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_launcher_mods"
+		android:title="@string/launcher_title"
+		android:summary="@string/launcher_summ"
+		android:entries="@array/launchers"
+		android:entryValues="@array/launchers_val"
+		android:defaultValue="1" />
+
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_launcher_noclockhide"
 		android:title="@string/launcher_noclockhide_title"
@@ -38,6 +46,12 @@
 		android:key="pref_key_launcher_closefolder"
 		android:title="@string/launcher_closefolder_title"
 		android:summary="@string/launcher_closefolder_summ"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_launcher_fixstatusbarmode"
+		android:title="@string/launcher_fixstatusbarmode_title"
+		android:summary="@string/launcher_fixstatusbarmode_summ"
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx

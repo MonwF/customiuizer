@@ -529,7 +529,7 @@ public class MainFragment extends PreferenceFragmentBase {
 						openSubFragment(prefSystem, null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_mods, R.xml.prefs_system);
 						break;
 					case "pref_key_launcher":
-						openSubFragment(prefLauncher, null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.launcher_mods, R.xml.prefs_launcher);
+						openSubFragment(prefLauncher, null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.launcher_title, R.xml.prefs_launcher);
 						return true;
 					case "pref_key_controls":
 						openSubFragment(prefControls, null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.controls_mods, R.xml.prefs_controls);

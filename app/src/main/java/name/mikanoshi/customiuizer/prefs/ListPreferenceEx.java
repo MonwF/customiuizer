@@ -20,8 +20,8 @@ public class ListPreferenceEx extends ListPreference {
 	private boolean valueAsSummary;
 	private CharSequence sValue;
 	private Resources res = getContext().getResources();
-	private int primary = res.getColor(res.getIdentifier("preference_primary_text_light", "color", "miui"), getContext().getTheme());
-	private int secondary = res.getColor(res.getIdentifier("preference_secondary_text_light", "color", "miui"), getContext().getTheme());
+	private int primary = res.getColor(R.color.preference_primary_text, getContext().getTheme());
+	private int secondary = res.getColor(R.color.preference_secondary_text, getContext().getTheme());
 
 	public ListPreferenceEx(Context context, AttributeSet attrs) {
 		super(context, attrs);

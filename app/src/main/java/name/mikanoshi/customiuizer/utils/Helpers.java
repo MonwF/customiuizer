@@ -3,6 +3,7 @@ package name.mikanoshi.customiuizer.utils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,6 +16,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.UiModeManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -78,11 +80,25 @@ public class Helpers {
 	}
 
 	public enum AppAdapterType {
-		Default, Mutli, CustomTitles
+		Default, Standalone, Mutli, CustomTitles
 	}
 
 	public enum ActionBarType {
 		HomeUp, Edit
+	}
+
+	public static void setMiuiTheme(Activity act, int overrideTheme) {
+		int themeResId = 0;
+		try {
+			themeResId = act.getResources().getIdentifier("Theme.DayNight.Settings", "style", "miui");
+		} catch (Throwable t) {}
+		if (themeResId == 0) themeResId = act.getResources().getIdentifier(Helpers.isNightMode(act) ? "Theme.Dark.Settings" : "Theme.Light.Settings", "style", "miui");
+		act.setTheme(themeResId);
+		act.getTheme().applyStyle(overrideTheme, true);
+	}
+
+	public static boolean isNightMode(Context context) {
+		return (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
 	}
 
 	public static boolean isLauncherIconVisible(Context context) {
@@ -693,6 +709,14 @@ public class Helpers {
 		XposedBridge.log("[CustoMIUIzer][" + mod + "] " + line);
 	}
 
+	public static void hookMethod(Method method, XC_MethodHook callback) {
+		try {
+			XposedBridge.hookMethod(method, callback);
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
 	public static void findAndHookMethod(String className, ClassLoader classLoader, String methodName, Object... parameterTypesAndCallback) {
 		try {
 			XposedHelpers.findAndHookMethod(className, classLoader, methodName, parameterTypesAndCallback);
@@ -709,6 +733,7 @@ public class Helpers {
 		}
 	}
 
+	@SuppressWarnings("UnusedReturnValue")
 	public static boolean findAndHookMethodSilently(String className, ClassLoader classLoader, String methodName, Object... parameterTypesAndCallback) {
 		try {
 			XposedHelpers.findAndHookMethod(className, classLoader, methodName, parameterTypesAndCallback);

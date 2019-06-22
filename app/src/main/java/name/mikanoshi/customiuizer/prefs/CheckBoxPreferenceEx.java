@@ -16,8 +16,8 @@ public class CheckBoxPreferenceEx extends CheckBoxPreference {
 
 	private boolean unsupported = false;
 	private Resources res = getContext().getResources();
-	private int primary = res.getColor(res.getIdentifier("preference_primary_text_light", "color", "miui"), getContext().getTheme());
-	private int secondary = res.getColor(res.getIdentifier("preference_secondary_text_light", "color", "miui"), getContext().getTheme());
+	private int primary = res.getColor(R.color.preference_primary_text, getContext().getTheme());
+	private int secondary = res.getColor(R.color.preference_secondary_text, getContext().getTheme());
 
 	private boolean dynamic;
 

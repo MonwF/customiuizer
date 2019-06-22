@@ -12,7 +12,7 @@
 			android:key="pref_key_system" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
-			android:title="@string/launcher_mods"
+			android:title="@string/launcher_title"
 			android:key="pref_key_launcher" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx

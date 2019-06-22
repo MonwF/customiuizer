@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import miui.view.SearchActionMode;
 import name.mikanoshi.customiuizer.utils.AppDataAdapter;
+import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.PrivacyAppAdapter;
 import name.mikanoshi.customiuizer.utils.ResolveInfoAdapter;
 
@@ -31,7 +32,7 @@ public class SubFragmentWithSearch extends SubFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		getActionBar().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+		getActionBar().setBackgroundDrawable(new ColorDrawable(Helpers.isNightMode(getContext()) ? Color.BLACK : Color.WHITE));
 		if (getView() == null) return;
 
 		TextView search = getView().findViewById(android.R.id.input);

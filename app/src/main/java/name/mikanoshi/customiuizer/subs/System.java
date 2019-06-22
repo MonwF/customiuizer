@@ -1,6 +1,8 @@
 package name.mikanoshi.customiuizer.subs;
 
+import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -132,10 +134,68 @@ public class System extends SubFragment {
 			public void onStopTrackingTouch(SeekBar seekBar) {}
 		});
 
+		findPreference("pref_key_system_shortcut_app").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				Bundle args = new Bundle();
+				args.putString("key", "pref_key_system_shortcut_app");
+				args.putBoolean("standalone", true);
+				AppSelector appSelector = new AppSelector();
+				appSelector.setTargetFragment(System.this, 0);
+				openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_app, R.layout.prefs_app_selector);
+				return true;
+			}
+		});
+
+		findPreference("pref_key_system_clock_app").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				Bundle args = new Bundle();
+				args.putString("key", "pref_key_system_clock_app");
+				args.putBoolean("standalone", true);
+				AppSelector appSelector = new AppSelector();
+				appSelector.setTargetFragment(System.this, 1);
+				openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_app, R.layout.prefs_app_selector);
+				return true;
+			}
+		});
+
+		findPreference("pref_key_system_calendar_app").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				Bundle args = new Bundle();
+				args.putString("key", "pref_key_system_calendar_app");
+				args.putBoolean("standalone", true);
+				AppSelector appSelector = new AppSelector();
+				appSelector.setTargetFragment(System.this, 2);
+				openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_app, R.layout.prefs_app_selector);
+				return true;
+			}
+		});
+
+		findPreference("pref_key_system_statusbarcolor_apps").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				openApps("pref_key_system_statusbarcolor_apps");
+				return true;
+			}
+		});
 
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
 			((ListPreferenceEx)findPreference("pref_key_system_autogroupnotif")).setUnsupported(true);
 		}
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, final Intent data) {
+		if (resultCode == Activity.RESULT_OK) {
+			String key = null;
+			if (requestCode == 0) key = "pref_key_system_shortcut_app";
+			else if (requestCode == 1) key = "pref_key_system_clock_app";
+			else if (requestCode == 2) key = "pref_key_system_calendar_app";
+			if (key != null) Helpers.prefs.edit().putString(key, data.getStringExtra("activity")).apply();
+		}
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 }

@@ -16,7 +16,7 @@
 		<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:background="@drawable/search_mode_edit_text_bg_light">
+			android:background="@drawable/search_mode_edit_text_bg">
 
 			<ImageView
 				android:layout_width="wrap_content"

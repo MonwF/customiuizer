@@ -87,6 +87,7 @@
 	<string name="array_global_actions_powermenu">Открыть меню управления питанием</string>
 	<string name="array_global_actions_clearmemory">Очистить память</string>
 	<string name="array_global_actions_invertcolors">Инвертировать цвета</string>
+	<string name="array_global_actions_goback">Вернуться назад</string>
 	<string name="array_global_toggle_wifi">Wi-Fi</string>
 	<string name="array_global_toggle_bt">Bluetooth</string>
 	<string name="array_global_toggle_gps">GPS</string>
@@ -217,7 +218,10 @@
 	<string name="launcher_gestures_action">Действие</string>
 	<string name="launcher_gestures_launch">Приложение для запуска</string>
 	<string name="launcher_gestures_setting">Настройка для переключения</string>
+	<string name="poco_mods">Рабочий стол POCO</string>
 	<string name="launcher_mods">Рабочий стол MIUI</string>
+	<string name="launcher_title">Рабочий стол</string>
+	<string name="launcher_summ">Отображать моды для выбранного ланчера</string>
 	<string name="launcher_shakeaction_title">Действие на встряхивание</string>
 	<string name="launcher_swipedownaction_summ">Присвоить действие жесту сверху вниз одним пальцем на любом домашнем экране</string>
 	<string name="launcher_swipedownaction_title">Действие на свайп вниз (1 пальцем)</string>
@@ -272,6 +276,8 @@
 	<string name="launcher_unlockgrids_title">Разблокировать размеры сетки</string>
 	<string name="launcher_unlockgrids_summ">Делает все размеры от 3x4 до 6x7 доступными в настройках сетки рабочего стола</string>
 	<string name="launcher_folder_cols_title">Число колонок в папках</string>
+	<string name="launcher_fixstatusbarmode_title">Исправить режим строки состояния</string>
+	<string name="launcher_fixstatusbarmode_summ">Изменяет цвет содержимого строки состояния в зависимости от светлых/тёмных обоев на версии ланчера для разработчиков</string>
 	<string name="launcher_foldershade_title">Фон папок</string>
 	<string name="launcher_foldershade_summ">Затемнённый фон папок</string>
 	<string name="launcher_closefolder_title">Закрывать папки автоматом</string>
@@ -318,6 +324,9 @@
 	<string name="system_betterpopups_swipedown_title">Активировать свайп вниз</string>
 	<string name="system_betterpopups_swipedown_summ">Открывает панель уведомлений по свайпу вниз</string>
 	<string name="system_statusbarheight_title">Высота строки состояния</string>
+	<string name="system_statusbarcolor_title">Фоновый цвет строки состояния</string>
+	<string name="system_statusbarcolor_summ">Делает одинаковыми цвета фона строки состояния и панели действий приложения, где это возможно</string>
+	<string name="system_statusbarcolor_apps_title">Чёрный список</string>
 	<string name="system_mods_qs">Быстрые Настройки</string>
 	<string name="system_qsgridrows_title">Число рядов</string>
 	<string name="system_qsgridrows_note">Подписи к переключателям будут скрыты для 5 рядов в портретной ориентации. Число рядов ограничено 3-я в ландшафтной ориентации, подписи также будут скрыты.</string>
@@ -328,6 +337,12 @@
 	<string name="system_qsnolabels_title">Всегда скрывать подписи</string>
 	<string name="system_qshaptic_title">Виброотклик при переключении настроек</string>
 	<string name="system_qshaptic_summ">Включает вибрирование при нажатии на переключатели в Быстрых Настройках</string>
+	<string name="system_shortcut_app_title">Приложение быстрого доступа</string>
+	<string name="system_shortcut_app_summ">Открывает выбранное приложение при клике по иконке над батареей в панели уведомлений</string>
+	<string name="system_clock_app_title">Приложение часов</string>
+	<string name="system_clock_app_summ">Открывает выбранное приложение при клике по часам в панели уведомлений</string>
+	<string name="system_calendar_app_title">Приложение Календаря</string>
+	<string name="system_calendar_app_summ">Открывает выбранное приложение при клике по дате в панели уведомлений</string>
 	<string name="system_clockseconds_title">Показывать секунды</string>
 	<string name="system_clockseconds_summ">Отображает секунды на часах в статусбаре</string>
 	<string name="system_mobiletypeicon_title">Скрывать тип мобильной сети</string>

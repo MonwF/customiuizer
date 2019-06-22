@@ -17,12 +17,15 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.content.res.XModuleResources;
 import android.content.res.XResources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -55,6 +58,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -67,6 +71,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
@@ -96,6 +101,8 @@ import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 import static de.robv.android.xposed.XposedHelpers.findClass;
+import static de.robv.android.xposed.XposedHelpers.findClassIfExists;
+import static de.robv.android.xposed.XposedHelpers.findMethodExactIfExists;
 import static java.lang.System.currentTimeMillis;
 import static java.lang.System.nanoTime;
 
@@ -1913,8 +1920,8 @@ public class System {
 			}
 			XModuleResources modRes = XModuleResources.createInstance(MainModule.MODULE_PATH, null);
 			XResources.setSystemWideReplacement("android", "dimen", "status_bar_height", modRes.fwd(heightRes));
-			XResources.setSystemWideReplacement("android", "dimen", "status_bar_height_landscape", modRes.fwd(heightRes));
 			XResources.setSystemWideReplacement("android", "dimen", "status_bar_height_portrait", modRes.fwd(heightRes));
+			XResources.setSystemWideReplacement("android", "dimen", "status_bar_height_landscape", modRes.fwd(heightRes));
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
@@ -2066,7 +2073,6 @@ public class System {
 				mSensorManager.registerListener(new SensorEventListener() {
 					public void onAccuracyChanged(Sensor sensor, int i) {}
 					public void onSensorChanged(SensorEvent sensorEvent) {
-//Helpers.log("PocketModeHook", "Proximity: " + Arrays.toString(sensorEvent.values));
 						float f = sensorEvent.values[0];
 						boolean isCovered = f < mSensor.getMaximumRange();
 						if (isCovered) {
@@ -2089,6 +2095,243 @@ public class System {
 	public static void PocketModeSettingHook(LoadPackageParam lpparam) {
 		Helpers.findAndHookMethod("com.android.settings.KeyguardAdvancedSettings", lpparam.classLoader, "isEllipticProximity", Context.class, XC_MethodReplacement.returnConstant(false));
 		Helpers.findAndHookMethod("com.android.settings.search.SecurityUpdateHelper", lpparam.classLoader, "isEllipticProximity", Context.class, XC_MethodReplacement.returnConstant(false));
+	}
+
+	public static void ReplaceShortcutAppHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.HeaderView", lpparam.classLoader, "onFinishInflate", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				View mShortcut = (View)XposedHelpers.getObjectField(param.thisObject, "mShortcut");
+				mShortcut.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						String pkgAppName = Helpers.getSharedStringPref(v.getContext(), "pref_key_system_shortcut_app", "");
+						if (pkgAppName == null || pkgAppName.equals("")) {
+							View.OnClickListener mOnClickListener = (View.OnClickListener)XposedHelpers.getObjectField(param.thisObject, "mOnClickListener");
+							if (mOnClickListener != null) mOnClickListener.onClick(v);
+						}
+
+						String[] pkgAppArray = pkgAppName.split("\\|");
+						if (pkgAppArray.length < 2) return;
+
+						ComponentName name = new ComponentName(pkgAppArray[0], pkgAppArray[1]);
+						Intent intent = new Intent(Intent.ACTION_MAIN);
+						intent.addCategory(Intent.CATEGORY_LAUNCHER);
+						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+						intent.setComponent(name);
+
+						Object mActStarter = XposedHelpers.getObjectField(param.thisObject, "mActStarter");
+						XposedHelpers.callMethod(mActStarter, "startActivity", intent, true);
+					}
+				});
+			}
+		});
+	}
+
+	public static void ReplaceClockAppHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.HeaderView", lpparam.classLoader, "onFinishInflate", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				View mClock = (View)XposedHelpers.getObjectField(param.thisObject, "mClock");
+				mClock.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						String pkgAppName = Helpers.getSharedStringPref(v.getContext(), "pref_key_system_clock_app", "");
+						if (pkgAppName == null || pkgAppName.equals("")) {
+							View.OnClickListener mOnClickListener = (View.OnClickListener)XposedHelpers.getObjectField(param.thisObject, "mOnClickListener");
+							if (mOnClickListener != null) mOnClickListener.onClick(v);
+						}
+
+						String[] pkgAppArray = pkgAppName.split("\\|");
+						if (pkgAppArray.length < 2) return;
+
+						ComponentName name = new ComponentName(pkgAppArray[0], pkgAppArray[1]);
+						Intent intent = new Intent(Intent.ACTION_MAIN);
+						intent.addCategory(Intent.CATEGORY_LAUNCHER);
+						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+						intent.setComponent(name);
+
+						Object mActStarter = XposedHelpers.getObjectField(param.thisObject, "mActStarter");
+						XposedHelpers.callMethod(mActStarter, "startActivity", intent, true);
+					}
+				});
+			}
+		});
+	}
+
+	public static void ReplaceCalendarAppHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.HeaderView", lpparam.classLoader, "onFinishInflate", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				View mDateView = (View)XposedHelpers.getObjectField(param.thisObject, "mDateView");
+				mDateView.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						String pkgAppName = Helpers.getSharedStringPref(v.getContext(), "pref_key_system_calendar_app", "");
+						if (pkgAppName == null || pkgAppName.equals("")) {
+							View.OnClickListener mOnClickListener = (View.OnClickListener)XposedHelpers.getObjectField(param.thisObject, "mOnClickListener");
+							if (mOnClickListener != null) mOnClickListener.onClick(v);
+						}
+
+						String[] pkgAppArray = pkgAppName.split("\\|");
+						if (pkgAppArray.length < 2) return;
+
+						ComponentName name = new ComponentName(pkgAppArray[0], pkgAppArray[1]);
+						Intent intent = new Intent(Intent.ACTION_MAIN);
+						intent.addCategory(Intent.CATEGORY_LAUNCHER);
+						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+						intent.setComponent(name);
+
+						Object mActStarter = XposedHelpers.getObjectField(param.thisObject, "mActStarter");
+						XposedHelpers.callMethod(mActStarter, "startActivity", intent, true);
+					}
+				});
+			}
+		});
+	}
+
+	private static final int NOCOLOR = 0x01010101;
+	private static int actionBarColor = NOCOLOR;
+
+	private static boolean isIgnored(Context context) {
+		return MainModule.mPrefs.getStringSet("system_statusbarcolor_apps").contains(context.getPackageName());
+	}
+
+	private static int getActionBarColor(Window window, int oldColor) {
+		if (actionBarColor != NOCOLOR) return actionBarColor;
+
+		TypedValue outValue = new TypedValue();
+		window.getContext().getTheme().resolveAttribute(android.R.attr.actionBarStyle, outValue, true);
+		TypedArray abStyle = window.getContext().getTheme().obtainStyledAttributes(outValue.resourceId, new int[] { android.R.attr.background });
+		Drawable bg = abStyle.getDrawable(0);
+		abStyle.recycle();
+
+		if (bg instanceof ColorDrawable)
+			return ((ColorDrawable)bg).getColor();
+		else
+			return oldColor;
+	}
+
+	@SuppressWarnings("unchecked")
+	private static void hookToolbar(Object thisObject, Drawable bg) {
+		if (bg instanceof ColorDrawable) try {
+			actionBarColor = ((ColorDrawable)bg).getColor();
+			Object mDecorToolbar = XposedHelpers.getObjectField(thisObject, "mDecorToolbar");
+			ViewGroup mToolbar = (ViewGroup)XposedHelpers.getObjectField(mDecorToolbar, "mToolbar");
+			Context mDecorContext = mToolbar.getRootView().getContext();
+			if (mDecorContext != null) {
+				WeakReference<Context> mActivityContext = (WeakReference<Context>)XposedHelpers.getObjectField(mDecorContext, "mActivityContext");
+				Context mContext = mActivityContext.get();
+				if (mContext != null && !isIgnored(mContext))
+				((Activity)mContext).getWindow().setStatusBarColor(actionBarColor);
+			}
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	private static void hookWindowDecor(Object thisObject, Drawable bg) {
+		if (bg instanceof ColorDrawable) try {
+			actionBarColor = ((ColorDrawable)bg).getColor();
+			Activity mActivity = (Activity)XposedHelpers.getObjectField(thisObject, "mActivity");
+			if (mActivity != null && !isIgnored(mActivity))
+			mActivity.getWindow().setStatusBarColor(actionBarColor);
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void StatusBarBackgroundHook() {
+		Helpers.findAndHookMethod("com.android.internal.policy.PhoneWindow", null, "generateLayout", "com.android.internal.policy.DecorView", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				Window wnd = (Window)param.thisObject;
+				if (isIgnored(wnd.getContext())) return;
+				int mStatusBarColor = XposedHelpers.getIntField(param.thisObject, "mStatusBarColor");
+				if (mStatusBarColor == -16777216) return;
+				int newColor = getActionBarColor(wnd, mStatusBarColor);
+				if (newColor != mStatusBarColor)
+				XposedHelpers.callMethod(param.thisObject, "setStatusBarColor", newColor);
+			}
+		});
+
+		Helpers.findAndHookMethod("com.android.internal.policy.PhoneWindow", null, "setStatusBarColor", int.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				Window wnd = (Window)param.thisObject;
+				if (isIgnored(wnd.getContext())) return;
+				if (actionBarColor != NOCOLOR) param.args[0] = actionBarColor;
+				else if (Color.alpha((int)param.args[0]) < 255) param.args[0] = Color.TRANSPARENT;
+			}
+		});
+
+		Helpers.findAndHookMethod("com.android.internal.app.ToolbarActionBar", null, "setBackgroundDrawable", Drawable.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				hookToolbar(param.thisObject, (Drawable)param.args[0]);
+			}
+		});
+
+		Helpers.findAndHookMethod("com.android.internal.app.WindowDecorActionBar", null, "setBackgroundDrawable", Drawable.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				hookWindowDecor(param.thisObject, (Drawable)param.args[0]);
+			}
+		});
+	}
+
+	public static void StatusBarBackgroundCompatHook(LoadPackageParam lpparam) {
+		boolean androidx = false;
+
+		// androidx
+		Method sbdMethod = null;
+		Class<?> tabCls = findClassIfExists("androidx.appcompat.app.ToolbarActionBar", lpparam.classLoader);
+		if (tabCls != null) sbdMethod = findMethodExactIfExists(tabCls, "setBackgroundDrawable", Drawable.class);
+		if (sbdMethod != null) androidx = true;
+		if (sbdMethod != null)
+		Helpers.hookMethod(sbdMethod, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				hookToolbar(param.thisObject, (Drawable)param.args[0]);
+			}
+		});
+
+		sbdMethod = null;
+		Class<?> wdabCls = findClassIfExists("androidx.appcompat.app.WindowDecorActionBar", lpparam.classLoader);
+		if (wdabCls != null) sbdMethod = findMethodExactIfExists(wdabCls, "setBackgroundDrawable", Drawable.class);
+		if (sbdMethod != null) androidx = true;
+		if (sbdMethod != null)
+		Helpers.hookMethod(sbdMethod, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				hookWindowDecor(param.thisObject, (Drawable)param.args[0]);
+			}
+		});
+
+		// old appcompat lib
+		if (!androidx) {
+			sbdMethod = null;
+			Class<?> tabv7Cls = findClassIfExists("android.support.v7.internal.app.ToolbarActionBar", lpparam.classLoader);
+			if (tabv7Cls != null) sbdMethod = findMethodExactIfExists(tabv7Cls, "setBackgroundDrawable", Drawable.class);
+			if (sbdMethod != null)
+			Helpers.hookMethod(sbdMethod, new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+					hookToolbar(param.thisObject, (Drawable)param.args[0]);
+				}
+			});
+
+			sbdMethod = null;
+			Class<?> wdabv7Cls = findClassIfExists("android.support.v7.internal.app.WindowDecorActionBar", lpparam.classLoader);
+			if (wdabv7Cls != null) sbdMethod = findMethodExactIfExists(wdabv7Cls, "setBackgroundDrawable", Drawable.class);
+			if (sbdMethod != null)
+			Helpers.hookMethod(sbdMethod, new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+					hookWindowDecor(param.thisObject, (Drawable)param.args[0]);
+				}
+			});
+		}
 	}
 
 }

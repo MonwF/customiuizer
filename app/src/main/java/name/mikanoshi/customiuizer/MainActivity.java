@@ -35,8 +35,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		setTheme(getResources().getIdentifier("Theme.Light.Settings", "style", "miui"));
-		getTheme().applyStyle(R.style.MIUIPrefs, true);
+		Helpers.setMiuiTheme(this, R.style.MIUIPrefs);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 

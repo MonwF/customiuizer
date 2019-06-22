@@ -31,17 +31,18 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 	private LayoutInflater mInflater;
 	private ThreadPoolExecutor pool;
 	private ItemFilter mFilter = new ItemFilter();
-	private ArrayList<AppData> originalAppList;
-	private ArrayList<AppData> filteredAppList;
+	private ArrayList<AppData> originalAppList = new ArrayList<AppData>();
+	private ArrayList<AppData> filteredAppList = new ArrayList<AppData>();
 	private String key = null;
+	private String selectedApp;
 	private Set<String> selectedApps = new LinkedHashSet<String>();
 	private Helpers.AppAdapterType aType = Helpers.AppAdapterType.Default;
 
 	public AppDataAdapter(Context context, ArrayList<AppData> arr) {
 		ctx = context;
 		mInflater = LayoutInflater.from(context);
-		originalAppList = arr;
-		filteredAppList = arr;
+		originalAppList.addAll(arr);
+		filteredAppList.addAll(arr);
 		int cpuCount = Runtime.getRuntime().availableProcessors();
 		pool = new ThreadPoolExecutor(cpuCount + 1, cpuCount * 2 + 1, 2, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
 	}
@@ -51,13 +52,25 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 		key = prefKey;
 		aType = adapterType;
 		if (aType == Helpers.AppAdapterType.Mutli)
-		selectedApps = Helpers.prefs.getStringSet(prefKey, new LinkedHashSet<String>());
+			selectedApps = Helpers.prefs.getStringSet(key, new LinkedHashSet<String>());
+		else if (aType == Helpers.AppAdapterType.Standalone) {
+			selectedApp = Helpers.prefs.getString(key, "");
+			AppData noApp = new AppData();
+			noApp.pkgName = "";
+			noApp.actName = "";
+			noApp.label = ctx.getResources().getString(R.string.array_default);
+			noApp.enabled = true;
+			originalAppList.add(0, noApp);
+			filteredAppList.add(0, noApp);
+		}
 		sortList();
 	}
 
 	public void updateSelectedApps() {
 		if (aType == Helpers.AppAdapterType.Mutli)
-		selectedApps = Helpers.prefs.getStringSet(key, new LinkedHashSet<String>());
+			selectedApps = Helpers.prefs.getStringSet(key, new LinkedHashSet<String>());
+		else if (aType == Helpers.AppAdapterType.Standalone)
+			selectedApp = Helpers.prefs.getString(key, "");
 		notifyDataSetChanged();
 	}
 
@@ -67,6 +80,18 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 				if (aType == Helpers.AppAdapterType.Mutli && selectedApps.size() > 0) {
 					boolean app1checked = selectedApps.contains(app1.pkgName);
 					boolean app2checked = selectedApps.contains(app2.pkgName);
+					if (app1checked && app2checked)
+						return 0;
+					else if (app1checked)
+						return -1;
+					else if (app2checked)
+						return 1;
+					return 0;
+				} else if (aType == Helpers.AppAdapterType.Standalone) {
+					if (app1.pkgName.equals("") && app1.actName.equals("")) return -1;
+					if (app2.pkgName.equals("") && app2.actName.equals("")) return 1;
+					boolean app1checked = selectedApp.equals(app1.pkgName + "|" + app1.actName);
+					boolean app2checked = selectedApp.equals(app2.pkgName + "|" + app2.actName);
 					if (app1checked && app2checked)
 						return 0;
 					else if (app1checked)
@@ -129,6 +154,9 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 		} else if (aType == Helpers.AppAdapterType.CustomTitles) {
 			itemSummary.setText(Helpers.prefs.getString(key + ":" + ad.pkgName + "|" + ad.actName, ""));
 			itemSummary.setVisibility(TextUtils.isEmpty(itemSummary.getText()) ? View.GONE : View.VISIBLE);
+		} else if (aType == Helpers.AppAdapterType.Standalone) {
+			itemChecked.setVisibility(View.VISIBLE);
+			itemChecked.setChecked((selectedApp.equals("") && ad.pkgName.equals("") && ad.actName.equals("")) || (ad.pkgName + "|" + ad.actName).equals(selectedApp));
 		} else {
 			itemSummary.setVisibility(View.GONE);
 		}
@@ -149,7 +177,7 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 
 			for (int i = 0; i < count; i++) {
 				filterableData = originalAppList.get(i);
-				if (filterableData.label.toLowerCase().contains(filterString)) nlist.add(filterableData);
+				if ((aType == Helpers.AppAdapterType.Standalone && filterableData.pkgName.equals("") && filterableData.actName.equals("")) || filterableData.label.toLowerCase().contains(filterString)) nlist.add(filterableData);
 			}
 
 			results.values = nlist;

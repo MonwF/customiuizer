@@ -3,17 +3,11 @@
 	android:paddingMode="stack">
 	<item>
 		<shape>
-			<solid android:color="@android:color/white" />
+			<solid android:color="@android:color/black" />
 			<padding
 				android:bottom="@dimen/search_mode_bg_padding"
 				android:left="@dimen/search_mode_bg_padding"
 				android:right="@dimen/search_mode_bg_padding" />
-		</shape>
-	</item>
-	<item android:gravity="bottom">
-		<shape>
-			<size android:height="1px" />
-			<solid android:color="@color/divider_line_light" />
 		</shape>
 	</item>
 </layer-list>

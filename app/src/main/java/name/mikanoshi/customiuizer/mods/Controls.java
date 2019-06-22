@@ -95,7 +95,6 @@ public class Controls {
 			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
 				// Power and volkeys are pressed at the same time
 				if (isVolumePressed) return;
-
 				KeyEvent keyEvent = (KeyEvent)param.args[0];
 
 				int keycode = keyEvent.getKeyCode();
@@ -110,7 +109,7 @@ public class Controls {
 					final PowerManager mPowerManager = (PowerManager)XposedHelpers.getObjectField(param.thisObject, "mPowerManager");
 					final boolean isScreenOn = (boolean)XposedHelpers.callMethod(param.thisObject, "isScreenOn");
 					if (!isScreenOn) {
-						//Helpers.log("PowerKeyHook", "interceptKeyBeforeQueueing: KeyCode: " + keyEvent.getKeyCode() + " | Action: " + keyEvent.getAction() + " | RepeatCount: " + keyEvent.getRepeatCount()+ " | Flags: " + keyEvent.getFlags());
+						//Helpers.log("PowerKeyHook", "interceptKeyBeforeQueueing: " + param.args[1] + ", isTracking: " + keyEvent.isTracking() + " | Source: " + keyEvent.getSource() + " | KeyCode: " + keyEvent.getKeyCode() + " | Action: " + keyEvent.getAction() + " | RepeatCount: " + keyEvent.getRepeatCount()+ " | Flags: " + keyEvent.getFlags());
 						if (action == KeyEvent.ACTION_DOWN) {
 							isPowerPressed = true;
 							isPowerLongPressed = false;
@@ -321,6 +320,7 @@ public class Controls {
 			return;
 		}
 
+		int diff = (dot.getIntrinsicWidth() - dot.getIntrinsicHeight()) / 2;
 		LinearLayout leftbtn = new LinearLayout(mContext);
 		ImageView left = new ImageView(mContext);
 		LinearLayout.LayoutParams lpl;
@@ -335,7 +335,7 @@ public class Controls {
 		left.setScaleX(0.7f);
 		left.setScaleY(0.7f);
 		left.setAlpha(0.9f);
-		left.setPadding(two, 0, two, 0);
+		left.setPadding(isVertical ? 0 : two, isVertical ? two + diff : 0, isVertical ? 0 : two, isVertical ? two + diff : 0);
 		left.setTag("custom_left" + (isVertical ? "_vert" : "_horiz"));
 		if (kbrCls != null) try {
 			Drawable lripple = (Drawable)kbrCls.getConstructor(Context.class, View.class).newInstance(mContext, leftbtn);
@@ -377,7 +377,7 @@ public class Controls {
 		right.setScaleX(0.7f);
 		right.setScaleY(0.7f);
 		right.setAlpha(0.9f);
-		right.setPadding(two, 0, two, 0);
+		right.setPadding(isVertical ? 0 : two, isVertical ? two + diff : 0, isVertical ? 0 : two, isVertical ? two + diff : 0);
 		right.setTag("custom_right" + (isVertical ? "_vert" : "_horiz"));
 		if (kbrCls != null) try {
 			Drawable rripple = (Drawable)kbrCls.getConstructor(Context.class, View.class).newInstance(mContext, rightbtn);
@@ -405,23 +405,38 @@ public class Controls {
 		});
 		rightbtn.addView(right);
 
-		if (isVertical) {
-			navButtons.addView(rightbtn, 0);
-			navButtons.addView(leftbtn, navButtons.getChildCount());
-		} else {
-			navButtons.addView(leftbtn, 0);
-			navButtons.addView(rightbtn, navButtons.getChildCount());
-		}
-
 		View startPadding = navButtons.findViewById(navButtons.getResources().getIdentifier("start_padding", "id", pkgName));
 		View sidePadding = navButtons.findViewById(navButtons.getResources().getIdentifier("side_padding", "id", pkgName));
 
 		LinearLayout.LayoutParams lp1 = (LinearLayout.LayoutParams)startPadding.getLayoutParams();
 		LinearLayout.LayoutParams lp2 = (LinearLayout.LayoutParams)sidePadding.getLayoutParams();
-		lp1.weight = Math.round(lp1.weight * 0.5f);
-		lp2.weight = Math.round(lp2.weight * 0.5f);
-		startPadding.setLayoutParams(lp1);
-		sidePadding.setLayoutParams(lp2);
+
+		boolean hasLeftAction = MainModule.mPrefs.getInt("controls_navbarleft_action", 1) > 1 || MainModule.mPrefs.getInt("controls_navbarleftlong_action", 1) > 1;
+		boolean hasRightAction = MainModule.mPrefs.getInt("controls_navbarright_action", 1) > 1 || MainModule.mPrefs.getInt("controls_navbarrightlong_action", 1) > 1;
+
+		if (isVertical) {
+			if (hasRightAction) {
+				navButtons.addView(rightbtn, 0);
+				lp2.weight = Math.round(lp2.weight * 0.5f);
+				sidePadding.setLayoutParams(lp2);
+			}
+			if (hasLeftAction) {
+				navButtons.addView(leftbtn, navButtons.getChildCount());
+				lp1.weight = Math.round(lp1.weight * 0.5f);
+				startPadding.setLayoutParams(lp1);
+			}
+		} else {
+			if (hasLeftAction) {
+				navButtons.addView(leftbtn, 0);
+				lp1.weight = Math.round(lp1.weight * 0.5f);
+				startPadding.setLayoutParams(lp1);
+			}
+			if (hasRightAction) {
+				navButtons.addView(rightbtn, navButtons.getChildCount());
+				lp2.weight = Math.round(lp2.weight * 0.5f);
+				sidePadding.setLayoutParams(lp2);
+			}
+		}
 	}
 
 	public static void NavBarButtonsHook(LoadPackageParam lpparam) {

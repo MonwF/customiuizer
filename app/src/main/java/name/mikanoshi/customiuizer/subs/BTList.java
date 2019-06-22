@@ -231,12 +231,12 @@ public class BTList extends SubFragment {
 				if (isBonded)
 					itemTitle.setTextColor(getResources().getColor(R.color.highlight_normal_light, getActivity().getTheme()));
 				else
-					itemTitle.setTextColor(getResources().getColor(R.color.preference_primary_text_color_light, getActivity().getTheme()));
+					itemTitle.setTextColor(getResources().getColor(R.color.preference_primary_text_color, getActivity().getTheme()));
 				itemTitle.setAlpha(1.0f);
 				itemSumm.setAlpha(1.0f);
 			} else {
 				row.setEnabled(false);
-				itemTitle.setTextColor(getResources().getColor(R.color.preference_secondary_text_color_light, getActivity().getTheme()));
+				itemTitle.setTextColor(getResources().getColor(R.color.preference_secondary_text_color, getActivity().getTheme()));
 				itemTitle.setAlpha(0.5f);
 				itemSumm.setAlpha(0.5f);
 			}

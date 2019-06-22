@@ -3,30 +3,30 @@
 	<color name="color_not_selected">#99000000</color>
 	<color name="about_divider">#33808080</color>
 
-	<color name="divider_line_light">#27000000</color>
+	<color name="divider_line">#27000000</color>
 	<color name="highlight_normal_light">#ff0099ff</color>
-	<color name="checked_text_light">@color/highlight_normal_light</color>
+	<color name="checked_text">@color/highlight_normal_light</color>
 
-	<color name="preference_category_text_color_light">#80000000</color>
-	<color name="preference_primary_text_color_light">#ff000000</color>
-	<color name="preference_primary_text_color_disable_light">#4d000000</color>
-	<color name="preference_primary_text_color_pressed_light">#ff000000</color>
-	<color name="preference_secondary_text_color_light">#66000000</color>
-	<color name="preference_secondary_text_color_disable_light">#4d000000</color>
-	<color name="preference_secondary_text_color_pressed_light">#66000000</color>
-	<color name="preference_secondary_text_color_checked_light">#260091dc</color>
+	<color name="preference_category_text_color">#80000000</color>
+	<color name="preference_primary_text_color">#ff000000</color>
+	<color name="preference_primary_text_color_disable">#4d000000</color>
+	<color name="preference_primary_text_color_pressed">#ff000000</color>
+	<color name="preference_secondary_text_color">#66000000</color>
+	<color name="preference_secondary_text_color_disable">#4d000000</color>
+	<color name="preference_secondary_text_color_pressed">#66000000</color>
+	<color name="preference_secondary_text_color_checked">#260091dc</color>
 
 	<color name="app_manager_text_color">#cc000000</color>
 
-	<color name="list_text_color_disable_dark">#66ffffff</color>
-	<color name="list_text_color_normal_dark">#ccffffff</color>
-	<color name="list_text_color_pressed_dark">#ccffffff</color>
-	<color name="list_secondary_text_color_disable_dark">#33ffffff</color>
-	<color name="list_secondary_text_color_normal_dark">#73ffffff</color>
-	<color name="list_secondary_text_color_pressed_dark">#73ffffff</color>
+	<color name="list_text_color_disable">#66ffffff</color>
+	<color name="list_text_color_normal">#ccffffff</color>
+	<color name="list_text_color_pressed">#ccffffff</color>
+	<color name="list_secondary_text_color_disable">#33ffffff</color>
+	<color name="list_secondary_text_color_normal">#73ffffff</color>
+	<color name="list_secondary_text_color_pressed">#73ffffff</color>
 
-	<color name="edit_text_search_bg_color_light">#10000000</color>
-	<color name="hint_edit_text_color_light">#4c000000</color>
-	<color name="edit_text_search_hint_color_light">#66000000</color>
+	<color name="edit_text_search_bg_color">#10000000</color>
+	<color name="hint_edit_text_color">#4c000000</color>
+	<color name="edit_text_search_hint_color">#66000000</color>
 
 </resources>

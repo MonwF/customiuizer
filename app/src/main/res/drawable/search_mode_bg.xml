@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+	android:paddingMode="stack">
+	<item>
+		<shape>
+			<solid android:color="@android:color/white" />
+			<padding
+				android:bottom="@dimen/search_mode_bg_padding"
+				android:left="@dimen/search_mode_bg_padding"
+				android:right="@dimen/search_mode_bg_padding" />
+		</shape>
+	</item>
+	<item android:gravity="bottom">
+		<shape>
+			<size android:height="1px" />
+			<solid android:color="@color/divider_line" />
+		</shape>
+	</item>
+</layer-list>

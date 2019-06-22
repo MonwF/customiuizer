@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="color_not_selected">#99ffffff</color>
+	<color name="about_divider">#337f7f7f</color>
+
+	<color name="divider_line">#0dffffff</color>
+
+	<color name="checked_text">#ff0099ff</color>
+
+	<color name="preference_category_text_color">#80ffffff</color>
+	<color name="preference_primary_text_color">#e6ffffff</color>
+	<color name="preference_primary_text_color_disable">#4dffffff</color>
+	<color name="preference_primary_text_color_pressed">#e6ffffff</color>
+	<color name="preference_secondary_text_color">#72ffffff</color>
+	<color name="preference_secondary_text_color_disable">#33ffffff</color>
+	<color name="preference_secondary_text_color_pressed">#72ffffff</color>
+	<color name="preference_secondary_text_color_checked">#ff0099ff</color>
+
+	<color name="app_manager_text_color">#e6ffffff</color>
+
+	<color name="list_text_color_disable">#4d000000</color>
+	<color name="list_text_color_normal">#ff000000</color>
+	<color name="list_text_color_pressed">#ff000000</color>
+	<color name="list_secondary_text_color_disable">#4d000000</color>
+	<color name="list_secondary_text_color_normal">#99000000</color>
+	<color name="list_secondary_text_color_pressed">#99000000</color>
+
+	<color name="edit_text_search_bg_color">#1fffffff</color>
+	<color name="hint_edit_text_color">#4cffffff</color>
+	<color name="edit_text_search_hint_color">#4cffffff</color>
+
+</resources>

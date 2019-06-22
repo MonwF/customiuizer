@@ -37,6 +37,7 @@ public class BitmapCachedLoader extends AsyncTask<Void, Void, Bitmap> {
 
 		AppData ad = ((AppData)appInfo.get());
 		if (ad != null) try {
+			if ((ad.pkgName == null || ad.pkgName.equals("")) && (ad.actName == null || ad.actName.equals(""))) return null;
 			if (ad.actName != null && !ad.actName.equals("-"))
 			icon = ctx.getPackageManager().getActivityIcon(new ComponentName(ad.pkgName, ad.actName));
 			if (icon == null) icon = ctx.getPackageManager().getApplicationIcon(ad.pkgName);

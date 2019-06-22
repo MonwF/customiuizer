@@ -112,7 +112,7 @@ public class Launcher {
 			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
 				if (Helpers.getSharedIntPref((Context)param.args[0], "pref_key_launcher_swipeup_action", 1) > 1) param.setResult(false);
 			}
-		})) Helpers.log("HomescreenSwipesHook", "Cannot disable swipe up search");
+		})) if (lpparam.packageName.equals("com.miui.home")) Helpers.log("HomescreenSwipesHook", "Cannot disable swipe up search");
 	}
 
 //	// Listener for vertical swipe gestures
@@ -307,9 +307,13 @@ public class Launcher {
 							if (!type.equals("string")) return;
 							String key = uri.getPathSegments().get(2);
 							if (!key.contains("pref_key_launcher_renameapps_list")) return;
-							String newTitle = Helpers.getSharedStringPref(act, key, "");
+							CharSequence newTitle = Helpers.getSharedStringPref(act, key, "");
 							MainModule.mPrefs.put(key, newTitle);
-							HashSet<?> mAllLoadedApps = (HashSet<?>)XposedHelpers.getObjectField(param.thisObject, "mAllLoadedApps");
+							HashSet<?> mAllLoadedApps;
+							if (XposedHelpers.findFieldIfExists(param.thisObject.getClass(), "mAllLoadedApps") != null)
+								mAllLoadedApps = (HashSet<?>)XposedHelpers.getObjectField(param.thisObject, "mAllLoadedApps");
+							else
+								mAllLoadedApps= (HashSet<?>)XposedHelpers.getObjectField(param.thisObject, "mLoadedAppsAndShortcut");
 							if (mAllLoadedApps != null)
 							for (Object shortcut: mAllLoadedApps) {
 								boolean isApplicatoin = (boolean)XposedHelpers.callMethod(shortcut, "isApplicatoin");
@@ -317,9 +321,14 @@ public class Launcher {
 								String pkgName = (String)XposedHelpers.callMethod(shortcut, "getPackageName");
 								String actName = (String)XposedHelpers.callMethod(shortcut, "getClassName");
 								if (("pref_key_launcher_renameapps_list:" + pkgName + "|" + actName).equals(key)) {
-									XposedHelpers.setObjectField(shortcut, "mLabel", TextUtils.isEmpty(newTitle) ? XposedHelpers.getObjectField(shortcut, "title") : newTitle);
-									XposedHelpers.callMethod(shortcut, "updateLabelInDatabases", newTitle, act);
-									XposedHelpers.callMethod(shortcut, "updateBuddyIconView", act);
+									CharSequence newStr = TextUtils.isEmpty(newTitle) ? (CharSequence)XposedHelpers.getAdditionalInstanceField(shortcut, "mLabelOrig") : newTitle;
+									XposedHelpers.setObjectField(shortcut, "mLabel", newStr);
+									if (lpparam.packageName.equals("com.miui.home")) {
+										XposedHelpers.callMethod(shortcut, "updateBuddyIconView", act);
+									} else {
+										Object buddyIconView = XposedHelpers.callMethod(shortcut, "getBuddyIconView");
+										if (buddyIconView != null) XposedHelpers.callMethod(buddyIconView, "updateInfo", param.thisObject, shortcut);
+									}
 									break;
 								}
 							}
@@ -334,21 +343,30 @@ public class Launcher {
 		Helpers.hookAllConstructors("com.miui.home.launcher.ShortcutInfo", lpparam.classLoader, new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				XposedHelpers.setAdditionalInstanceField(param.thisObject, "mLabelOrig", XposedHelpers.getObjectField(param.thisObject, "mLabel"));
 				if (param.args != null && param.args.length > 0) modifyTitle(param.thisObject);
 			}
 		});
 
-		Helpers.findAndHookMethod("com.miui.home.launcher.ShortcutInfo", lpparam.classLoader, "loadSettingsInfo", Context.class, new XC_MethodHook() {
+		//noinspection ResultOfMethodCallIgnored
+		Helpers.findAndHookMethodSilently("com.miui.home.launcher.ShortcutInfo", lpparam.classLoader, "loadSettingsInfo", Context.class, new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
-				XposedBridge.log("loadSettingsInfo: " + XposedHelpers.getObjectField(param.thisObject, "mLabel"));
+				XposedHelpers.setAdditionalInstanceField(param.thisObject, "mLabelOrig", XposedHelpers.getObjectField(param.thisObject, "mLabel"));
 				modifyTitle(param.thisObject);
 			}
 		});
 
-		Helpers.findAndHookMethod("com.miui.home.launcher.ShortcutInfo", lpparam.classLoader, "setLabel", CharSequence.class, new XC_MethodHook() {
+		if (!Helpers.findAndHookMethodSilently("com.miui.home.launcher.ShortcutInfo", lpparam.classLoader, "setLabel", CharSequence.class, new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				XposedHelpers.setAdditionalInstanceField(param.thisObject, "mLabelOrig", param.args[0]);
+				modifyTitle(param.thisObject);
+			}
+		})) Helpers.findAndHookMethod("com.miui.home.launcher.ShortcutInfo", lpparam.classLoader, "setLabel", CharSequence.class, Context.class, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				XposedHelpers.setAdditionalInstanceField(param.thisObject, "mLabelOrig", param.args[0]);
 				modifyTitle(param.thisObject);
 			}
 		});
@@ -374,4 +392,89 @@ public class Launcher {
 	public static void FSGesturesHook(LoadPackageParam lpparam) {
 		Helpers.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "usingFsGesture", XC_MethodReplacement.returnConstant(true));
 	}
+
+	public static void FixStatusBarModeHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.classLoader, "changeStatusBarMode", new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+				try {
+					Activity act = (Activity)param.thisObject;
+					boolean mDuringMinusOneStartActivityForResult = XposedHelpers.getBooleanField(act, "mDuringMinusOneStartActivityForResult");
+					boolean isMinusScreenShowing = (boolean)XposedHelpers.callMethod(act, "isMinusScreenShowing");
+					if (!mDuringMinusOneStartActivityForResult) {
+						if (isMinusScreenShowing) {
+							XposedHelpers.setBooleanField(act, "mNeedChangeStatusBarMode", true);
+						} else {
+							XposedHelpers.callStaticMethod(XposedHelpers.findClass("com.miui.launcher.utils.MiuiWindowManagerUtils", lpparam.classLoader),
+								"changeStatusBarMode",
+								act.getWindow(),
+								XposedHelpers.callStaticMethod(XposedHelpers.findClass("com.miui.home.launcher.WallpaperUtils", lpparam.classLoader), "hasLightBgForStatusBar")
+							);
+							XposedHelpers.setBooleanField(act, "mNeedChangeStatusBarMode", false);
+						}
+					}
+					param.setResult(null);
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
+	}
+
+//	public static void ReplaceClockAppHook(LoadPackageParam lpparam) {
+//		Helpers.findAndHookMethod("com.miui.home.launcher.common.Utilities", lpparam.classLoader, "startActivity", Context.class, String.class, View.class, new XC_MethodHook() {
+//			@Override
+//			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+//				if (param.args[1] == null || !((String)param.args[1]).contains("DeskClockTabActivity")) return;
+//
+//				Context mContext = (Context)param.args[0];
+//				String pkgAppName = Helpers.getSharedStringPref(mContext, "pref_key_system_clock_app", "");
+//				if (pkgAppName == null || pkgAppName.equals("")) return;
+//
+//				String[] pkgAppArray = pkgAppName.split("\\|");
+//				if (pkgAppArray.length < 2) return;
+//
+//				ComponentName name = new ComponentName(pkgAppArray[0], pkgAppArray[1]);
+//				Intent intent = new Intent(Intent.ACTION_MAIN);
+//				intent.addCategory(Intent.CATEGORY_LAUNCHER);
+//				intent.setComponent(name);
+//
+//				param.args[1] = intent.toUri(0);
+//			}
+//		});
+//
+//		Helpers.findAndHookMethod("com.miui.home.launcher.common.Utilities", lpparam.classLoader, "getDeskClockTabActivityIntent", new XC_MethodHook() {
+//			@Override
+//			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+//			}
+//		});
+//	}
+
+//	public static void ReplaceCalendarAppHook(LoadPackageParam lpparam) {
+//		Class<?> seCls = findClassIfExists("miui.maml.elements.ScreenElement", lpparam.classLoader);
+//		if (seCls == null) {
+//			Helpers.log("ReplaceCalendarAppHook", "Cannot find ScreenElement class");
+//			return;
+//		}
+//		Helpers.findAndHookMethod("miui.maml.ActionCommand", lpparam.classLoader, "create", Element.class, seCls, new XC_MethodHook() {
+//			@Override
+//			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+//				Element el = (Element)param.args[0];
+//				if (el == null || !el.getNodeName().equals("IntentCommand")) return;
+//				if (el.getAttribute("package").equals("com.android.calendar") && el.getAttribute("class").contains("AllInOneActivity")) try {
+//					Context mContext = (Context)XposedHelpers.getObjectField(XposedHelpers.callMethod(param.args[1], "getContext"), "mContext");
+//					String pkgAppName = Helpers.getSharedStringPref(mContext, "pref_key_system_calendar_app", "");
+//					if (pkgAppName == null || pkgAppName.equals("")) return;
+//
+//					String[] pkgAppArray = pkgAppName.split("\\|");
+//					if (pkgAppArray.length < 2) return;
+//
+//					el.setAttribute("package", pkgAppArray[0]);
+//					el.setAttribute("class", pkgAppArray[1]);
+//				} catch (Throwable t) {
+//					XposedBridge.log(t);
+//				}
+//			}
+//		});
+//	}
 }
