@@ -3,6 +3,7 @@ package name.mikanoshi.customiuizer.mods;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.graphics.drawable.ColorDrawable;
@@ -14,10 +15,12 @@ import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 
 import java.util.HashSet;
@@ -66,6 +69,7 @@ public class Launcher {
 		Helpers.findAndHookMethod("com.miui.home.launcher.Workspace", lpparam.classLoader, "onVerticalGesture", int.class, MotionEvent.class, new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+				if ((boolean)XposedHelpers.callMethod(param.thisObject, "isInNormalEditingMode")) return;
 				int action = 1;
 				int launch = 0;
 				int toggle = 0;
@@ -417,6 +421,111 @@ public class Launcher {
 				} catch (Throwable t) {
 					XposedBridge.log(t);
 				}
+			}
+		});
+	}
+
+	public static class DoubleTapController {
+		private final long MAX_DURATION = 500;
+		private float mActionDownRawX;
+		private float mActionDownRawY;
+		private int mClickCount;
+		private final Context mContext;
+		private float mFirstClickRawX;
+		private float mFirstClickRawY;
+		private long mLastClickTime;
+		private int mTouchSlop;
+
+		DoubleTapController(Context context) {
+			this.mContext = context;
+			this.mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop() * 2;
+		}
+
+		boolean isDoubleTapEvent(MotionEvent motionEvent) {
+			int action = motionEvent.getActionMasked();
+			if (action == MotionEvent.ACTION_DOWN) {
+				this.mActionDownRawX = motionEvent.getRawX();
+				this.mActionDownRawY = motionEvent.getRawY();
+				return false;
+			} else if (action != MotionEvent.ACTION_UP) {
+				return false;
+			} else {
+				float rawX = motionEvent.getRawX();
+				float rawY = motionEvent.getRawY();
+				if (Math.abs(rawX - this.mActionDownRawX) <= ((float) this.mTouchSlop) && Math.abs(rawY - this.mActionDownRawY) <= ((float) this.mTouchSlop)) {
+					if (SystemClock.elapsedRealtime() - this.mLastClickTime > MAX_DURATION || rawY - this.mFirstClickRawY > (float)this.mTouchSlop || rawX - this.mFirstClickRawX > (float)this.mTouchSlop) {
+						this.mClickCount = 0;
+					}
+					this.mClickCount++;
+					if (this.mClickCount == 1) {
+						this.mFirstClickRawX = rawX;
+						this.mFirstClickRawY = rawY;
+						this.mLastClickTime = SystemClock.elapsedRealtime();
+						return false;
+					} else if (Math.abs(rawY - this.mFirstClickRawY) <= ((float) this.mTouchSlop) && Math.abs(rawX - this.mFirstClickRawX) <= ((float) this.mTouchSlop) && SystemClock.elapsedRealtime() - this.mLastClickTime <= MAX_DURATION) {
+						this.mClickCount = 0;
+						return true;
+					}
+				}
+				this.mClickCount = 0;
+				return false;
+			}
+		}
+
+		void onDoubleTapEvent() {
+			GlobalActions.handleAction(
+				Helpers.getSharedIntPref(mContext, "pref_key_launcher_doubletap_action", 1), 18,
+				Helpers.getSharedIntPref(mContext, "pref_key_launcher_doubletap_toggle", 0), mContext
+			);
+		}
+	}
+
+	public static void LauncherDoubleTapHook(LoadPackageParam lpparam) {
+		Helpers.hookAllConstructors("com.miui.home.launcher.Workspace", lpparam.classLoader, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				Object mDoubleTapControllerEx = XposedHelpers.getAdditionalInstanceField(param.thisObject, "mDoubleTapControllerEx");
+				if (mDoubleTapControllerEx != null) return;
+				mDoubleTapControllerEx = new DoubleTapController((Context)param.args[0]);
+				XposedHelpers.setAdditionalInstanceField(param.thisObject, "mDoubleTapControllerEx", mDoubleTapControllerEx);
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.home.launcher.Workspace", lpparam.classLoader, "dispatchTouchEvent", MotionEvent.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+				try {
+					DoubleTapController mDoubleTapControllerEx = (DoubleTapController)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mDoubleTapControllerEx");
+					if (mDoubleTapControllerEx == null) return;
+					if (!mDoubleTapControllerEx.isDoubleTapEvent((MotionEvent)param.args[0])) return;
+					int mCurrentScreenIndex = XposedHelpers.getIntField(param.thisObject, lpparam.packageName.equals("com.miui.home") ? "mCurrentScreenIndex" : "mCurrentScreen");
+					Object cellLayout = XposedHelpers.callMethod(param.thisObject, "getCellLayout", mCurrentScreenIndex);
+					if ((boolean)XposedHelpers.callMethod(cellLayout, "lastDownOnOccupiedCell")) return;
+					if ((boolean)XposedHelpers.callMethod(param.thisObject, "isInNormalEditingMode")) return;
+					mDoubleTapControllerEx.onDoubleTapEvent();
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
+	}
+
+	public static void TitleShadowHook(LoadPackageParam lpparam) {
+		if (lpparam.packageName.equals("com.miui.home"))
+		Helpers.findAndHookMethod("com.miui.home.launcher.WallpaperUtils", lpparam.classLoader, "getIconTitleShadowColor", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				int color = (int)param.getResult();
+				if (color == Color.TRANSPARENT) return;
+				param.setResult(Color.argb(Math.round(Color.alpha(color) + (255 - Color.alpha(color)) / 1.9f), Color.red(color), Color.green(color), Color.blue(color)));
+			}
+		}); else
+		Helpers.findAndHookMethod("com.miui.home.launcher.WallpaperUtils", lpparam.classLoader, "getTitleShadowColor", int.class, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				int color = (int)param.getResult();
+				if (color == Color.TRANSPARENT) return;
+				param.setResult(Color.argb(Math.round(Color.alpha(color) + (255 - Color.alpha(color)) / 1.9f), Color.red(color), Color.green(color), Color.blue(color)));
 			}
 		});
 	}

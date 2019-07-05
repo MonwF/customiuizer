@@ -25,45 +25,61 @@
 		android:summary="@string/launcher_unlockgrids_summ"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-		android:key="pref_key_launcher_folder_cols"
-		android:title="@string/launcher_folder_cols_title"
-		android:defaultValue="3"
-		miuizer:minValue="2"
-		miuizer:maxValue="5"
-		miuizer:stepValue="1"
-		miuizer:format="%d" />
-
-	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
-		android:key="pref_key_launcher_foldershade"
-		android:title="@string/launcher_foldershade_title"
-		android:summary="@string/launcher_foldershade_summ"
-		android:entries="@array/foldershade"
-		android:entryValues="@array/foldershade_val"
-		android:defaultValue="1" />
-
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_launcher_closefolder"
-		android:title="@string/launcher_closefolder_title"
-		android:summary="@string/launcher_closefolder_summ"
-		android:defaultValue="false" />
-
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_launcher_fixstatusbarmode"
 		android:title="@string/launcher_fixstatusbarmode_title"
 		android:summary="@string/launcher_fixstatusbarmode_summ"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_launcher_renameapps"
-		android:title="@string/launcher_renameapps_title"
-		android:defaultValue="false" />
+	<PreferenceCategory
+		android:title="@string/launcher_folders">
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
-		android:key="pref_key_launcher_renameapps_list"
-		android:title="@string/launcher_renameapps_list_title"
-		android:dependency="pref_key_launcher_renameapps"
-		miuizer:dynamic="true" />
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_launcher_closefolder"
+			android:title="@string/launcher_closefolder_title"
+			android:summary="@string/launcher_closefolder_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_launcher_foldershade"
+			android:title="@string/launcher_foldershade_title"
+			android:summary="@string/launcher_foldershade_summ"
+			android:entries="@array/foldershade"
+			android:entryValues="@array/foldershade_val"
+			android:defaultValue="1" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_launcher_folder_cols"
+			android:title="@string/launcher_folder_cols_title"
+			android:defaultValue="3"
+			miuizer:minValue="2"
+			miuizer:maxValue="5"
+			miuizer:stepValue="1"
+			miuizer:format="%d" />
+
+	</PreferenceCategory>
+
+	<PreferenceCategory
+		android:title="@string/launcher_titles">
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_launcher_darkershadow"
+			android:title="@string/launcher_darkershadow_title"
+			android:summary="@string/launcher_darkershadow_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_launcher_renameapps"
+			android:title="@string/launcher_renameapps_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_launcher_renameapps_list"
+			android:title="@string/launcher_renameapps_list_title"
+			android:dependency="pref_key_launcher_renameapps"
+			miuizer:dynamic="true" />
+
+	</PreferenceCategory>>
 
 	<PreferenceCategory
 		android:title="@string/launcher_privacyapps"
@@ -114,6 +130,10 @@
 			android:key="pref_key_launcher_shake"
 			android:summary="@string/launcher_shakeaction_summ"
 			android:title="@string/launcher_shakeaction_title" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_launcher_doubletap"
+			android:summary="@string/launcher_doubletap_summ"
+			android:title="@string/launcher_doubletap_title" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 

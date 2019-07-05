@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.FileObserver;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -89,7 +90,7 @@ public class MainActivity extends Activity {
 	public void onBackPressed() {
 		Fragment fragment = getFragmentManager().findFragmentById(R.id.fragment_container);
 		if (fragment != null)
-			if (((PreferenceFragmentBase)fragment).isAnimating) return;
+		if (((PreferenceFragmentBase)fragment).isAnimating) return;
 		super.onBackPressed();
 	}
 
@@ -100,6 +101,18 @@ public class MainActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_MENU) {
+			PreferenceFragmentBase fragment = (PreferenceFragmentBase)getFragmentManager().findFragmentById(R.id.fragment_container);
+			if (fragment != null && fragment.getView() != null) try {
+				fragment.getView().post(fragment::showImmersionMenu);
+				return true;
+			} catch (Throwable t) {}
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	public void requestBackup() {

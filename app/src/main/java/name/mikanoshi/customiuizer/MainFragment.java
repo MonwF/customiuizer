@@ -3,10 +3,13 @@ package name.mikanoshi.customiuizer;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,14 +19,26 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.ActionMode;
 import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.acra.ACRA;
@@ -37,6 +52,7 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
@@ -45,11 +61,14 @@ import java.util.Set;
 import miui.app.ActionBar;
 import miui.app.AlertDialog;
 
+import miui.view.SearchActionMode;
 import name.mikanoshi.customiuizer.subs.Controls;
 import name.mikanoshi.customiuizer.subs.Launcher;
 import name.mikanoshi.customiuizer.subs.System;
 import name.mikanoshi.customiuizer.subs.Various;
 import name.mikanoshi.customiuizer.utils.Helpers;
+import name.mikanoshi.customiuizer.utils.ModData;
+import name.mikanoshi.customiuizer.utils.ModSearchAdapter;
 
 public class MainFragment extends PreferenceFragmentBase {
 
@@ -58,6 +77,75 @@ public class MainFragment extends PreferenceFragmentBase {
 	private Launcher prefLauncher = new Launcher();
 	private Controls prefControls = new Controls();
 	private Various prefVarious = new Various();
+	private ListView listView = null;
+	private ListView resultView = null;
+	private LinearLayout search = null;
+	boolean isSearchFocused = false;
+	ActionMode actionMode = null;
+	SearchActionMode.Callback actionModeCallback = new SearchActionMode.Callback() {
+		@Override
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			return true;
+		}
+
+		@Override
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			if (getView() == null) return false;
+
+			SearchActionMode samode = (SearchActionMode)mode;
+			samode.setAnchorView(getView().findViewById(R.id.am_search_view));
+			samode.setAnimateView(listView);
+			samode.getSearchInput().setOnFocusChangeListener(new View.OnFocusChangeListener() {
+				@Override
+				public void onFocusChange(View v, boolean hasFocus) {
+					isSearchFocused = hasFocus;
+				}
+			});
+			samode.getSearchInput().setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					isSearchFocused = v.hasFocus();
+				}
+			});
+			samode.getSearchInput().setOnEditorActionListener(new TextView.OnEditorActionListener() {
+				@Override
+				public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+					if (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+						hideKeyboard();
+						resultView.requestFocus();
+						return true;
+					}
+					return false;
+				}
+			});
+			samode.getSearchInput().addTextChangedListener(new TextWatcher() {
+				@Override
+				public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+				@Override
+				public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+				@Override
+				public void afterTextChanged(Editable s) {
+					findMod(s.toString().trim());
+				}
+			});
+			return true;
+		}
+
+		@Override
+		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+			return true;
+		}
+
+		@Override
+		public void onDestroyActionMode(ActionMode mode) {
+			((TextView)search.findViewById(android.R.id.input)).setText("");
+			findMod("");
+			getActionBar().show();
+			actionMode = null;
+		}
+	};
 
 	public MainFragment() {
 		super();
@@ -93,44 +181,9 @@ public class MainFragment extends PreferenceFragmentBase {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState, R.xml.prefs_main);
 		addPreferencesFromResource(R.xml.prefs_main);
-	}
 
-	private void setupImmersiveMenu() {
-		ActionBar actionBar = getActionBar();
-		if (actionBar != null) actionBar.showSplitActionBar(false, false);
-		setImmersionMenuEnabled(true);
-
-		if (getView() != null)
-		if (getView().findViewById(R.id.update_alert) == null) {
-			Button more = getView().findViewById(getResources().getIdentifier("more", "id", "miui"));
-			if (more == null) return;
-			float density = getResources().getDisplayMetrics().density;
-			FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-			lp.gravity = Gravity.END | Gravity.TOP;
-			ImageView alert = new ImageView(getContext());
-			alert.setImageResource(R.drawable.alert);
-			alert.setAdjustViewBounds(true);
-			alert.setMaxWidth(Math.round(16 * density));
-			alert.setMaxHeight(Math.round(16 * density));
-			alert.setLayoutParams(lp);
-			alert.setId(R.id.update_alert);
-			alert.setVisibility(View.GONE);
-			((ViewGroup)more.getParent()).addView(alert);
-		}
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		setupImmersiveMenu();
-	}
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		setupImmersiveMenu();
 		final Activity act = getActivity();
-		final Handler handler = new Handler();
+		final Handler handler = new Handler(act.getMainLooper());
 
 		// Preventing launch delay
 		new Thread(new Runnable() {
@@ -158,7 +211,6 @@ public class MainFragment extends PreferenceFragmentBase {
 						if (isFragmentReady(act)) dlg.show();
 					}
 				});	else {
-					final Activity act = getActivity();
 					if (isFragmentReady(act) && !miuizerModuleActive)
 					act.runOnUiThread(new Runnable() {
 						public void run() {
@@ -167,7 +219,7 @@ public class MainFragment extends PreferenceFragmentBase {
 					});
 				}
 
-				String dataPath = getActivity().getFilesDir().getAbsolutePath();
+				String dataPath = act.getFilesDir().getAbsolutePath();
 				HttpURLConnection connection = null;
 				try {
 					URL url = new URL("https://code.highspec.ru/Mikanoshi/CustoMIUIzer/raw/branch/master/last_build");
@@ -213,6 +265,8 @@ public class MainFragment extends PreferenceFragmentBase {
 					else
 						handler.post(hideUpdateNotification);
 				} catch (Throwable t) {}
+
+				Helpers.getAllMods(act);
 			}
 		}).start();
 
@@ -318,7 +372,111 @@ public class MainFragment extends PreferenceFragmentBase {
 		});
 
 		//Helpers.removePref(this, "pref_key_miuizer_force_material", "pref_key_miuizer");
-		Helpers.prefs.edit().putString("test", "step1").apply();
+	}
+
+	public View onInflateView(LayoutInflater inflater, ViewGroup group, Bundle bundle) {
+		return inflater.inflate(R.layout.prefs_main, group, false);
+	}
+
+	private void setupImmersiveMenu() {
+		ActionBar actionBar = getActionBar();
+		if (actionBar != null) actionBar.showSplitActionBar(false, false);
+		setImmersionMenuEnabled(true);
+
+		if (getView() != null)
+		if (getView().findViewById(R.id.update_alert) == null) {
+			Button more = getView().findViewById(getResources().getIdentifier("more", "id", "miui"));
+			if (more == null) return;
+			float density = getResources().getDisplayMetrics().density;
+			FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+			lp.gravity = Gravity.END | Gravity.TOP;
+			ImageView alert = new ImageView(getContext());
+			alert.setImageResource(R.drawable.alert);
+			alert.setAdjustViewBounds(true);
+			alert.setMaxWidth(Math.round(16 * density));
+			alert.setMaxHeight(Math.round(16 * density));
+			alert.setLayoutParams(lp);
+			alert.setId(R.id.update_alert);
+			alert.setVisibility(View.GONE);
+			((ViewGroup)more.getParent()).addView(alert);
+		}
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		setupImmersiveMenu();
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		setupImmersiveMenu();
+
+		getActionBar().setBackgroundDrawable(new ColorDrawable(Helpers.isNightMode(getContext()) ? Color.BLACK : Color.WHITE));
+		if (getView() == null) return;
+
+		resultView = getView().findViewById(android.R.id.custom);
+		resultView.setAdapter(new ModSearchAdapter(getActivity()));
+		resultView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				ModData mod = (ModData)parent.getAdapter().getItem(position);
+				openModCat(mod.cat.name(), mod.key);
+			}
+		});
+		resultView.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			@SuppressLint("ClickableViewAccessibility")
+			public boolean onTouch(View v, MotionEvent event) {
+				if (actionMode != null && isSearchFocused) {
+					isSearchFocused = false;
+					hideKeyboard();
+				}
+				return false;
+			}
+		});
+		setViewBackground(resultView);
+
+		listView = getView().findViewById(android.R.id.list);
+		search = getView().findViewById(android.R.id.inputArea);
+		((TextView)search.findViewById(android.R.id.input)).setHint(android.R.string.search_go);
+		search.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (actionMode != null)
+					actionMode.invalidate();
+				else
+					actionMode = startActionMode(actionModeCallback);
+				// Hide stupid auto split actionbar
+				try {
+					ActionBar actionBar = getActionBar();
+					Field mSplitViewField = actionBar.getClass().getDeclaredField("mSplitView");
+					mSplitViewField.setAccessible(true);
+					View mSplitView = (View)mSplitViewField.get(actionBar);
+					mSplitView.setVisibility(View.GONE);
+				} catch (Throwable t) {
+					t.printStackTrace();
+				}
+			}
+		});
+
+		if (actionMode != null) actionMode.invalidate();
+	}
+
+	void findMod(String filter) {
+		resultView.setVisibility(filter.equals("") ? View.GONE : View.VISIBLE);
+		listView.setEnabled(filter.equals(""));
+		ListAdapter adapter = resultView.getAdapter();
+		if (adapter == null) return;
+		((ModSearchAdapter)resultView.getAdapter()).getFilter().filter(filter);
+	}
+
+	public void hideKeyboard() {
+		InputMethodManager inputManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+		View currentFocusedView = getActivity().getCurrentFocus();
+		if (currentFocusedView != null)
+		inputManager.hideSoftInputFromWindow(currentFocusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -518,27 +676,40 @@ public class MainFragment extends PreferenceFragmentBase {
 	}
 
 	// PreferenceScreens management
+	private boolean openModCat(String cat) {
+		return openModCat(cat, null);
+	}
+
+	private boolean openModCat(String cat, String key) {
+		Bundle bundle = null;
+		if (key != null) {
+			bundle = new Bundle();
+			bundle.putString("scrollToKey", key);
+		}
+		switch (cat) {
+			case "pref_key_system":
+				openSubFragment(prefSystem, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_mods, R.xml.prefs_system);
+				return false;
+			case "pref_key_launcher":
+				openSubFragment(prefLauncher, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.launcher_title, R.xml.prefs_launcher);
+				return true;
+			case "pref_key_controls":
+				openSubFragment(prefControls, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.controls_mods, R.xml.prefs_controls);
+				return false;
+			case "pref_key_various":
+				openSubFragment(prefVarious, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.various_mods, R.xml.prefs_various);
+				return false;
+			default:
+				return false;
+		}
+	}
+
 	@Override
 	public boolean onPreferenceTreeClick(PreferenceScreen parentPreferenceScreen, Preference preference) {
 		if (preference != null) {
 			PreferenceCategory modsCat = (PreferenceCategory)findPreference("prefs_cat");
-			if (modsCat.findPreference(preference.getKey()) != null) {
-
-				switch (preference.getKey()) {
-					case "pref_key_system":
-						openSubFragment(prefSystem, null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_mods, R.xml.prefs_system);
-						break;
-					case "pref_key_launcher":
-						openSubFragment(prefLauncher, null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.launcher_title, R.xml.prefs_launcher);
-						return true;
-					case "pref_key_controls":
-						openSubFragment(prefControls, null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.controls_mods, R.xml.prefs_controls);
-						break;
-					case "pref_key_various":
-						openSubFragment(prefVarious, null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.various_mods, R.xml.prefs_various);
-						break;
-				}
-			}
+			if (modsCat.findPreference(preference.getKey()) != null)
+			if (openModCat(preference.getKey())) return true;
 		}
 		return super.onPreferenceTreeClick(parentPreferenceScreen, preference);
 	}

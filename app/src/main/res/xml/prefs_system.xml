@@ -17,14 +17,31 @@
 		android:summary="@string/system_downgrade_summ"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
-		android:key="pref_key_system_iconlabletoasts"
-		android:summary="@string/system_iconlabletoasts_summ"
-		android:title="@string/system_iconlabletoasts_title"
-		android:entries="@array/iconlabletoasts"
-		android:entryValues="@array/iconlabletoasts_val"
-		android:defaultValue="1"
-		miuizer:dynamic="true" />
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_unblockthird"
+		android:title="@string/system_unblockthird_title"
+		android:summary="@string/system_unblockthird_summ"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_cleanshare"
+		android:title="@string/system_cleanshare_title"
+		android:summary="@string/system_cleanshare_summ"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/system_popupnotif_apps_title"
+		android:key="pref_key_system_cleanshare_apps"
+		android:dependency="pref_key_system_cleanshare"
+		miuizer:dynamic="true"
+		miuizer:child="true"
+		miuizer:countAsSummary="true" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/system_cleanshare_test"
+		android:key="pref_key_system_cleanshare_test"
+		android:dependency="pref_key_system_cleanshare"
+		miuizer:child="true" />
 
 	<PreferenceCategory
 		android:title="@string/system_mods_screen">
@@ -100,6 +117,12 @@
 			android:summary="@string/system_separatevolume_summ"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_volumetimer"
+			android:title="@string/system_volumetimer_title"
+			android:summary="@string/system_volumetimer_summ"
+			android:defaultValue="false" />
+
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_system_volumesteps"
 			android:title="@string/system_volumesteps_title"
@@ -129,6 +152,35 @@
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:title="@string/system_expandnotifs_apps_title"
 			android:key="pref_key_system_vibration_apps"
+			miuizer:child="true"
+			miuizer:countAsSummary="true" />
+
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:title="@string/system_mods_toasts"
+		miuizer:dynamic="true">
+
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_iconlabletoasts"
+			android:summary="@string/system_iconlabletoasts_summ"
+			android:title="@string/system_iconlabletoasts_title"
+			android:entries="@array/iconlabletoasts"
+			android:entryValues="@array/iconlabletoasts_val"
+			android:defaultValue="1" />
+
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_blocktoasts"
+			android:summary="@string/system_blocktoasts_summ"
+			android:title="@string/system_blocktoasts_title"
+			android:entries="@array/expandnotifs"
+			android:entryValues="@array/expandnotifs_val"
+			android:defaultValue="1" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_expandnotifs_apps_title"
+			android:key="pref_key_system_blocktoasts_apps"
+			miuizer:child="true"
 			miuizer:countAsSummary="true" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
@@ -156,6 +208,7 @@
 			android:title="@string/system_statusbarcolor_apps_title"
 			android:key="pref_key_system_statusbarcolor_apps"
 			android:dependency="pref_key_system_statusbarcolor"
+			miuizer:child="true"
 			miuizer:countAsSummary="true" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
@@ -217,6 +270,7 @@
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:title="@string/system_expandnotifs_apps_title"
 			android:key="pref_key_system_expandnotifs_apps"
+			miuizer:child="true"
 			miuizer:countAsSummary="true" />
 
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
@@ -339,7 +393,32 @@
 			android:title="@string/system_popupnotif_apps_title"
 			android:key="pref_key_system_hidefromrecents_apps"
 			android:dependency="pref_key_system_hidefromrecents"
+			miuizer:child="true"
 			miuizer:countAsSummary="true" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_recommended_first_title"
+			android:summary="@string/system_recommended_first_summ"
+			android:key="pref_key_system_recommended_first"
+			miuizer:dynamic="true" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_recommended_second_title"
+			android:summary="@string/system_recommended_second_summ"
+			android:key="pref_key_system_recommended_second"
+			miuizer:dynamic="true" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_recommended_third_title"
+			android:summary="@string/system_recommended_third_summ"
+			android:key="pref_key_system_recommended_third"
+			miuizer:dynamic="true" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_recommended_fourth_title"
+			android:summary="@string/system_recommended_fourth_summ"
+			android:key="pref_key_system_recommended_fourth"
+			miuizer:dynamic="true" />
 
 	</PreferenceCategory>
 

@@ -7,6 +7,8 @@
 		<item>@string/array_global_actions_sleep</item>
 		<item>@string/array_global_actions_screenshot</item>
 		<item>@string/array_global_actions_recents</item>
+		<item>@string/array_global_actions_volume</item>
+		<item>@string/array_global_actions_powermenu</item>
 		<item>@string/array_global_actions_launch</item>
 		<item>@string/array_global_actions_shortcut</item>
 		<item>@string/array_global_actions_toggle</item>
@@ -21,6 +23,8 @@
 		<item>5</item>
 		<item>6</item>
 		<item>7</item>
+		<item>17</item>
+		<item>12</item>
 		<item>8</item>
 		<item>9</item>
 		<item>10</item>
@@ -36,6 +40,10 @@
 		<item>@string/array_global_actions_sleep</item>
 		<item>@string/array_global_actions_screenshot</item>
 		<item>@string/array_global_actions_recents</item>
+		<item>@string/array_global_actions_volume</item>
+		<item>@string/array_global_actions_volume_up</item>
+		<item>@string/array_global_actions_volume_down</item>
+		<item>@string/array_global_actions_menu</item>
 		<item>@string/array_global_actions_goback</item>
 		<item>@string/array_global_actions_back</item>
 		<item>@string/array_global_actions_powermenu</item>
@@ -56,6 +64,10 @@
 		<item>5</item>
 		<item>6</item>
 		<item>7</item>
+		<item>17</item>
+		<item>18</item>
+		<item>19</item>
+		<item>16</item>
 		<item>15</item>
 		<item>11</item>
 		<item>12</item>
@@ -77,6 +89,8 @@
 		<item>@string/array_global_actions_sleep</item>
 		<item>@string/array_global_actions_screenshot</item>
 		<item>@string/array_global_actions_recents</item>
+		<item>@string/array_global_actions_volume</item>
+		<item>@string/array_global_actions_menu</item>
 		<item>@string/array_global_actions_goback</item>
 		<item>@string/array_global_actions_back</item>
 		<item>@string/array_global_actions_powermenu</item>
@@ -94,10 +108,33 @@
 		<item>5</item>
 		<item>6</item>
 		<item>7</item>
+		<item>17</item>
+		<item>16</item>
 		<item>15</item>
 		<item>11</item>
 		<item>12</item>
 		<item>13</item>
+		<item>14</item>
+		<item>8</item>
+		<item>9</item>
+		<item>10</item>
+	</integer-array>
+
+	<string-array name="global_actions_recents">
+		<item>@string/array_global_actions_none</item>
+		<item>@string/array_global_actions_lock</item>
+		<item>@string/array_global_actions_sleep</item>
+		<item>@string/array_global_actions_powermenu</item>
+		<item>@string/array_global_actions_invertcolors</item>
+		<item>@string/array_global_actions_launch</item>
+		<item>@string/array_global_actions_shortcut</item>
+		<item>@string/array_global_actions_toggle</item>
+	</string-array>
+	<integer-array name="global_actions_recents_val">
+		<item>1</item>
+		<item>4</item>
+		<item>5</item>
+		<item>12</item>
 		<item>14</item>
 		<item>8</item>
 		<item>9</item>
@@ -291,6 +328,35 @@
 		<item>87</item>
 		<item>88</item>
 	</string-array>
+
+	<array name="miui_volume_timer_segments">
+		<item>@null</item>
+		<item>@null</item>
+		<item>1800</item>
+		<item>3600</item>
+		<item>7200</item>
+		<item>10800</item>
+		<item>14400</item>
+		<item>18000</item>
+		<item>21600</item>
+		<item>28800</item>
+		<item>36000</item>
+		<item>43200</item>
+	</array>
+	<array name="miui_volume_timer_segments_title">
+		<item>@string/off</item>
+		<item>@string/off</item>
+		<item>@string/time_30m</item>
+		<item>@string/time_1h</item>
+		<item>@string/time_2h</item>
+		<item>@string/time_3h</item>
+		<item>@string/time_4h</item>
+		<item>@string/time_5h</item>
+		<item>@string/time_6h</item>
+		<item>@string/time_8h</item>
+		<item>@string/time_10h</item>
+		<item>@string/time_12h</item>
+	</array>
 
 	<string-array name="placeholder_array">
 		<item>@string/dummy</item>

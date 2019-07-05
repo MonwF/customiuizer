@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.KeyguardManager;
+import android.app.TaskStackBuilder;
 import android.app.WallpaperManager;
 import android.app.admin.DevicePolicyManager;
 import android.bluetooth.BluetoothAdapter;
@@ -15,6 +16,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -23,7 +25,6 @@ import android.content.res.XResources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -40,7 +41,7 @@ import android.net.NetworkInfo;
 import android.net.TrafficStats;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
-import android.os.Build;
+import android.os.BadParcelableException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -50,6 +51,9 @@ import android.os.SystemClock;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.provider.Settings;
+import android.text.Layout;
+import android.text.TextUtils;
+import android.util.AttributeSet;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -78,15 +82,16 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
@@ -1115,6 +1120,7 @@ public class System {
 	}
 
 	public static void DetailedNetSpeedHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethods("com.android.systemui.statusbar.NetworkSpeedView", lpparam.classLoader, "onTextChanged", XC_MethodReplacement.DO_NOTHING);
 		Helpers.hookAllConstructors("com.android.systemui.statusbar.NetworkSpeedView", lpparam.classLoader, new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
@@ -1129,7 +1135,10 @@ public class System {
 			}
 		});
 
-		Helpers.findAndHookMethod("com.android.systemui.statusbar.NetworkSpeedView", lpparam.classLoader, "getTotalByte", new XC_MethodHook() {
+		Class<?> nscCls = XposedHelpers.findClassIfExists("com.android.systemui.statusbar.NetworkSpeedController", lpparam.classLoader);
+		if (nscCls == null) nscCls = XposedHelpers.findClassIfExists("com.android.systemui.statusbar.NetworkSpeedView", lpparam.classLoader);
+
+		Helpers.findAndHookMethod(nscCls, "getTotalByte", new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
 				Pair<Long, Long> bytes = getTrafficBytes(param.thisObject);
@@ -1139,7 +1148,7 @@ public class System {
 			}
 		});
 
-		Helpers.findAndHookMethod("com.android.systemui.statusbar.NetworkSpeedView", lpparam.classLoader, "updateNetworkSpeed", new XC_MethodHook() {
+		Helpers.findAndHookMethod(nscCls, "updateNetworkSpeed", new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
 				try {
@@ -1175,7 +1184,7 @@ public class System {
 			}
 		});
 
-		Helpers.findAndHookMethod("com.android.systemui.statusbar.NetworkSpeedView", lpparam.classLoader, "setTextToViewList", CharSequence.class, new XC_MethodHook() {
+		Helpers.findAndHookMethod(nscCls, "setTextToViewList", CharSequence.class, new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
@@ -1197,14 +1206,17 @@ public class System {
 				String rx = hideLow && rxSpeed < lowLevel ? "" : humanReadableByteCount(mContext, rxSpeed) + rxarrow;
 				param.args[0] = tx + "\n" + rx;
 
-				ArrayList<?> sViewList = (ArrayList<?>)XposedHelpers.getObjectField(param.thisObject, "sViewList");
-				for (Object tv : sViewList)
-					if (tv != null)
-						((TextView)tv).setAlpha(rxSpeed == 0 && txSpeed == 0 ? 0.3f : 1.0f);
+				if (param.thisObject.getClass().getSimpleName().equals("NetworkSpeedController")) {
+					CopyOnWriteArrayList mViewList = (CopyOnWriteArrayList)XposedHelpers.getObjectField(param.thisObject, "mViewList");
+					for (Object tv: mViewList)
+					if (tv != null) ((TextView)tv).setAlpha(rxSpeed == 0 && txSpeed == 0 ? 0.3f : 1.0f);
+				} else {
+					ArrayList<?> sViewList = (ArrayList<?>)XposedHelpers.getObjectField(param.thisObject, "sViewList");
+					for (Object tv: sViewList)
+					if (tv != null) ((TextView)tv).setAlpha(rxSpeed == 0 && txSpeed == 0 ? 0.3f : 1.0f);
+				}
 			}
 		});
-
-		Helpers.hookAllMethods("com.android.systemui.statusbar.NetworkSpeedView", lpparam.classLoader, "onTextChanged", XC_MethodReplacement.DO_NOTHING);
 	}
 
 	public static void LockScreenAlbumArtHook(LoadPackageParam lpparam) {
@@ -1768,7 +1780,7 @@ public class System {
 			}
 		});
 
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
+		if (Helpers.isNougat())
 		Helpers.hookAllMethods("com.android.server.VibratorService", lpparam.classLoader, "vibratePattern", new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
@@ -2333,5 +2345,237 @@ public class System {
 			});
 		}
 	}
+
+	private static boolean checkToast(Context mContext, String pkgName) {
+		try {
+			int opt = Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_system_blocktoasts", "1"));
+			Set<String> selectedApps = Helpers.getSharedStringSetPref(mContext, "pref_key_system_blocktoasts_apps");
+			boolean isSelected = selectedApps != null && selectedApps.contains(pkgName);
+			return opt == 2 && !isSelected || opt == 3 && isSelected;
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+			return false;
+		}
+	}
+
+	public static void SelectiveToastsHook() {
+		Helpers.findAndHookMethod("android.widget.Toast", null, "show", new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+				try {
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					String pkgName = (String)XposedHelpers.callMethod(mContext, "getOpPackageName");
+					if (pkgName == null) return;
+					if (checkToast(mContext, pkgName)) param.setResult(null);
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
+	}
+
+	public static void CustomRecommendedHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookConstructor("com.android.systemui.recents.views.RecentsRecommendView", lpparam.classLoader, Context.class, AttributeSet.class, int.class, int.class, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				Handler mHandler = new Handler(mContext.getMainLooper());
+
+				new Helpers.SharedPrefObserver(mContext, mHandler) {
+					@Override
+					public void onChange(Uri uri) {
+						try {
+							String key = uri.getPathSegments().get(2);
+							if (key.contains("pref_key_system_recommended"))
+							XposedHelpers.callMethod(param.thisObject, "onFinishInflate");
+						} catch (Throwable t) {
+							XposedBridge.log(t);
+						}
+					}
+				};
+			}
+		});
+
+		Helpers.findAndHookMethod("com.android.systemui.recents.views.RecentsRecommendView", lpparam.classLoader, "initItem", int.class, int.class, int.class, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				LinearLayout view = (LinearLayout)param.thisObject;
+				Context context = view.getContext();
+				Resources resources = view.getResources();
+				Resources modRes = Helpers.getModuleRes(context);
+				int itemFirstResId = resources.getIdentifier("first_item", "id", lpparam.packageName);
+				int itemSecondResId = resources.getIdentifier("second_item", "id", lpparam.packageName);
+				int itemThirdResId = resources.getIdentifier("third_item", "id", lpparam.packageName);
+				int itemFourthResId = resources.getIdentifier("fourth_item", "id", lpparam.packageName);
+				int itemIconResId = resources.getIdentifier("item_icon", "id", lpparam.packageName);
+				int itemTitleResId = resources.getIdentifier("item_title", "id", lpparam.packageName);
+
+				int action = 1;
+				String title = null;
+				if ((int)param.args[0] == itemFirstResId) {
+					action = Helpers.getSharedIntPref(context, "pref_key_system_recommended_first_action", 1);
+					title = Helpers.getActionName(context, action, "pref_key_system_recommended_first");
+				} else if ((int)param.args[0] == itemSecondResId) {
+					action = Helpers.getSharedIntPref(context, "pref_key_system_recommended_second_action", 1);
+					title = Helpers.getActionName(context, action, "pref_key_system_recommended_second");
+				} else if ((int)param.args[0] == itemThirdResId) {
+					action = Helpers.getSharedIntPref(context, "pref_key_system_recommended_third_action", 1);
+					title = Helpers.getActionName(context, action, "pref_key_system_recommended_third");
+				} else if ((int)param.args[0] == itemFourthResId) {
+					action = Helpers.getSharedIntPref(context, "pref_key_system_recommended_fourth_action", 1);
+					title = Helpers.getActionName(context, action, "pref_key_system_recommended_fourth");
+				}
+				if (action <= 1) return;
+
+				int icon = R.drawable.recents_icon_custom;
+				if (action == 8 || action == 9) icon = R.drawable.recents_icon_launch;
+				else if (action == 10) icon = R.drawable.recents_icon_toggle;
+
+				View item = view.findViewById((int)param.args[0]);
+				ImageView item_icon = item.findViewById(itemIconResId);
+				item_icon.setMinimumWidth(item_icon.getDrawable().getIntrinsicWidth());
+				item_icon.setMinimumHeight(item_icon.getDrawable().getIntrinsicHeight());
+				item_icon.setImageDrawable(modRes.getDrawable(icon, view.getContext().getTheme()));
+				TextView item_title = item.findViewById(itemTitleResId);
+				item_title.setText(title == null ? "-" : title);
+				if (((String)item_title.getText()).contains(" ")) {
+					item_title.setSingleLine(false);
+					item_title.setMaxLines(2);
+				} else {
+					item_title.setMaxLines(1);
+					item_title.setSingleLine(true);
+				}
+				item_title.setBreakStrategy(Layout.BREAK_STRATEGY_HIGH_QUALITY);
+				item_title.setEllipsize(TextUtils.TruncateAt.END);
+			}
+		});
+
+		Helpers.findAndHookMethod("com.android.systemui.recents.views.RecentsRecommendView", lpparam.classLoader, "onClick", View.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				View view = ((View)param.args[0]);
+				if (view == null) return;
+
+				Context context = view.getContext();
+				Resources resources = view.getResources();
+				int itemFirstResId = resources.getIdentifier("first_item", "id", lpparam.packageName);
+				int itemSecondResId = resources.getIdentifier("second_item", "id", lpparam.packageName);
+				int itemThirdResId = resources.getIdentifier("third_item", "id", lpparam.packageName);
+				int itemFourthResId = resources.getIdentifier("fourth_item", "id", lpparam.packageName);
+
+				int action = 1;
+				int launch = 0;
+				int toggle = 0;
+				if (view.getId() == itemFirstResId) {
+					action = Helpers.getSharedIntPref(context, "pref_key_system_recommended_first_action", 1);
+					launch = 19;
+					toggle = Helpers.getSharedIntPref(context, "pref_key_system_recommended_first_toggle", 0);
+				} else if (view.getId() == itemSecondResId) {
+					action = Helpers.getSharedIntPref(context, "pref_key_system_recommended_second_action", 1);
+					launch = 20;
+					toggle = Helpers.getSharedIntPref(context, "pref_key_system_recommended_second_toggle", 0);
+				} else if (view.getId() == itemThirdResId) {
+					action = Helpers.getSharedIntPref(context, "pref_key_system_recommended_third_action", 1);
+					launch = 21;
+					toggle = Helpers.getSharedIntPref(context, "pref_key_system_recommended_third_toggle", 0);
+				} else if (view.getId() == itemFourthResId) {
+					action = Helpers.getSharedIntPref(context, "pref_key_system_recommended_fourth_action", 1);
+					launch = 22;
+					toggle = Helpers.getSharedIntPref(context, "pref_key_system_recommended_fourth_toggle", 0);
+				}
+				if (action <= 1) return;
+
+				// Close recents after app/shortcut launch
+				if (action == 8 || action == 9) {
+					Intent intent = action == 8 ? GlobalActions.getAppIntent(context, launch) : GlobalActions.getShortcutIntent(context, launch);
+					if (intent != null) {
+						param.setResult(null);
+						TaskStackBuilder.create(context.getApplicationContext()).addNextIntentWithParentStack(intent).startActivities();
+						return;
+					}
+				}
+
+				// Do not close after other actions
+				boolean res = GlobalActions.handleAction(action, launch, toggle, context);
+				if (res) param.setResult(null);
+			}
+		});
+	}
+
+	public static void UnblockThirdLaunchersHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethods("com.miui.securitycenter.provider.ThirdDesktopProvider", lpparam.classLoader, "call", new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				Bundle bundle = new Bundle();
+				bundle.putInt("mode", 1);
+				bundle.putStringArrayList("list", new ArrayList<String>());
+				param.setResult(bundle);
+			}
+		});
+	}
+
+	public static void CleanShareMenuHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.server.pm.PackageManagerService", lpparam.classLoader, "systemReady", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
+
+				new Helpers.SharedPrefObserver(mContext, mHandler, "pref_key_system_cleanshare_apps") {
+					@Override
+					public void onChange(String name) {
+						MainModule.mPrefs.put(name, Helpers.getSharedStringSetPref(mContext, name));
+					}
+				};
+			}
+		});
+
+		XC_MethodHook hook = new XC_MethodHook() {
+			@Override
+			@SuppressWarnings("unchecked")
+			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				try {
+					if (param.args[0] == null) return;
+					Intent origIntent = (Intent)param.args[0];
+					Intent intent = (Intent)origIntent.clone();
+					if (intent.hasExtra("CustoMIUIzer") && intent.getBooleanExtra("CustoMIUIzer", false)) return;
+					String action = intent.getAction();
+					if (action == null) return;
+					if (!action.equals(Intent.ACTION_SEND) && !action.equals(Intent.ACTION_SENDTO) && !action.equals(Intent.ACTION_SEND_MULTIPLE)) return;
+					Set<String> selectedApps = MainModule.mPrefs.getStringSet("system_cleanshare_apps");
+					List<ResolveInfo> resolved = (List<ResolveInfo>)param.getResult();
+					Iterator itr = resolved.iterator();
+					while (itr.hasNext())
+					if (selectedApps.contains(((ResolveInfo)itr.next()).activityInfo.packageName)) itr.remove();
+					param.setResult(resolved);
+				} catch (Throwable t) {
+					if (!(t instanceof BadParcelableException)) XposedBridge.log(t);
+				}
+			}
+		};
+
+		Object[] argsAndHook = { Intent.class, String.class, int.class, int.class, int.class, boolean.class, boolean.class, hook };
+		if (Helpers.isNougat()) argsAndHook = new Object[] { Intent.class, String.class, int.class, int.class, hook };
+		Helpers.findAndHookMethod("com.android.server.pm.PackageManagerService", lpparam.classLoader, "queryIntentActivitiesInternal", argsAndHook);
+	}
+
+	public static void VolumeTimerValuesRes(XC_InitPackageResources.InitPackageResourcesParam resparam) {
+		try {
+			XModuleResources modRes = XModuleResources.createInstance(MainModule.MODULE_PATH, resparam.res);
+			resparam.res.setReplacement(resparam.packageName, "array", "miui_volume_timer_segments", modRes.fwd(R.array.miui_volume_timer_segments));
+			resparam.res.setReplacement(resparam.packageName, "array", "miui_volume_timer_segments_title", modRes.fwd(R.array.miui_volume_timer_segments_title));
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+//	public static void VolumeDialogTimeoutHook(LoadPackageParam lpparam) {
+//		Helpers.findAndHookMethod("com.android.systemui.miui.volume.MiuiVolumeDialogImpl", lpparam.classLoader, "computeTimeoutH", new XC_MethodHook() {
+//			@Override
+//			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+//				param.setResult(Math.max((int)param.getResult(), 10000));
+//			}
+//		});
+//	}
 
 }

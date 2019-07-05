@@ -1,3 +1,17 @@
+1.6.1
+[New] More intervals for Silent/Do Not Disturb timers
+[New] Remove apps from share menu
+[New] Restrict toasts for selected apps
+[New] Darker app title shadow in launcher
+[New] Unblock 3rd party launchers on China ROMs
+[New] Define actions for 4 shortcuts in suggestion box in recents list
+[New] Define action for double tap on empty space in launcher
+[New] Actions: Open menu, Open volume dialog, Raise volume, Lower volume
+[New] Shortcut to unlock credentials (long press CustoMIUIzer icon in launcher that supports shortcuts)
+[New] Mod searching function in module settings
+[Fixed][Detailed network speed indicator] Better compatibility with new ROMs
+[Fixed] Disable launcher gestures during icons reorder
+
 1.6.0
 [New] POCO Launcher support for a number of mods
 [New] MIUI Launcher support up to 4.9.5-dev

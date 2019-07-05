@@ -26,16 +26,6 @@ public class Launcher extends SubFragment {
 			}
 		});
 
-		Preference.OnPreferenceClickListener openSwipeEdit = new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				Bundle args = new Bundle();
-				args.putString("key", preference.getKey());
-				openSubFragment(new MultiAction(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.Edit, preference.getTitleRes(), R.layout.prefs_swipe_gestures);
-				return true;
-			}
-		};
-
 		CheckBoxPreference.OnPreferenceChangeListener switchPrivacyAppState = new CheckBoxPreference.OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -47,11 +37,7 @@ public class Launcher extends SubFragment {
 		Preference.OnPreferenceClickListener openPrivacyAppEdit = new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				Bundle args = new Bundle();
-				args.putBoolean("privacy", true);
-				AppSelector appSelector = new AppSelector();
-				appSelector.setTargetFragment(Launcher.this, 0);
-				openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_app, R.layout.prefs_app_selector);
+				openPrivacyAppEdit(Launcher.this, 0);
 				return true;
 			}
 		};
@@ -59,31 +45,28 @@ public class Launcher extends SubFragment {
 		Preference.OnPreferenceClickListener openLaunchableList = new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				Bundle args = new Bundle();
-				args.putString("key", preference.getKey());
-				args.putBoolean("custom_titles", true);
-				AppSelector appSelector = new AppSelector();
-				appSelector.setTargetFragment(Launcher.this, 0);
-				openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.launcher_renameapps_list_title, R.layout.prefs_app_selector);
+				openLaunchableList(preference, Launcher.this, 0);
 				return true;
 			}
 		};
 
 		Preference pref;
 		pref = findPreference("pref_key_launcher_swipedown");
-		pref.setOnPreferenceClickListener(openSwipeEdit);
+		pref.setOnPreferenceClickListener(openLauncherActions);
 		pref = findPreference("pref_key_launcher_swipedown2");
-		pref.setOnPreferenceClickListener(openSwipeEdit);
+		pref.setOnPreferenceClickListener(openLauncherActions);
 		pref = findPreference("pref_key_launcher_swipeup");
-		pref.setOnPreferenceClickListener(openSwipeEdit);
+		pref.setOnPreferenceClickListener(openLauncherActions);
 		pref = findPreference("pref_key_launcher_swipeup2");
-		pref.setOnPreferenceClickListener(openSwipeEdit);
+		pref.setOnPreferenceClickListener(openLauncherActions);
 		pref = findPreference("pref_key_launcher_swiperight");
-		pref.setOnPreferenceClickListener(openSwipeEdit);
+		pref.setOnPreferenceClickListener(openLauncherActions);
 		pref = findPreference("pref_key_launcher_swipeleft");
-		pref.setOnPreferenceClickListener(openSwipeEdit);
+		pref.setOnPreferenceClickListener(openLauncherActions);
 		pref = findPreference("pref_key_launcher_shake");
-		pref.setOnPreferenceClickListener(openSwipeEdit);
+		pref.setOnPreferenceClickListener(openLauncherActions);
+		pref = findPreference("pref_key_launcher_doubletap");
+		pref.setOnPreferenceClickListener(openLauncherActions);
 
 		pref = findPreference("pref_key_launcher_privacyapps_list");
 		pref.setOnPreferenceClickListener(openPrivacyAppEdit);

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -27,6 +28,7 @@ public class AppSelector extends SubFragmentWithSearch {
 	boolean multi = false;
 	boolean privacy = false;
 	boolean customTitles = false;
+	boolean share = false;
 	String key = null;
 
 	@Override
@@ -43,14 +45,20 @@ public class AppSelector extends SubFragmentWithSearch {
 		multi = getArguments().getBoolean("multi");
 		privacy = getArguments().getBoolean("privacy");
 		customTitles = getArguments().getBoolean("custom_titles");
+		share = getArguments().getBoolean("share");
 		key = getArguments().getString("key");
 
 		final Runnable process = new Runnable() {
 			@Override
 			public void run() {
 				if (multi && key != null) {
-					if (Helpers.installedAppsList == null) return;
-					listView.setAdapter(new AppDataAdapter(getContext(), Helpers.installedAppsList, Helpers.AppAdapterType.Mutli, key));
+					if (share) {
+						if (Helpers.shareAppsList == null) return;
+						listView.setAdapter(new AppDataAdapter(getContext(), Helpers.shareAppsList, Helpers.AppAdapterType.Mutli, key));
+					} else {
+						if (Helpers.installedAppsList == null) return;
+						listView.setAdapter(new AppDataAdapter(getContext(), Helpers.installedAppsList, Helpers.AppAdapterType.Mutli, key));
+					}
 				} else if (privacy) {
 					if (Helpers.installedAppsList == null) return;
 					listView.setAdapter(new PrivacyAppAdapter(getContext(), Helpers.installedAppsList));
@@ -125,8 +133,12 @@ public class AppSelector extends SubFragmentWithSearch {
 			public void run() {
 				try { sleep(animDur); } catch (Throwable e) {}
 				try {
-					if (privacy || multi && key != null) {
-						if (Helpers.installedAppsList == null) Helpers.getInstalledApps(getActivity());
+					if (privacy || (multi && key != null)) {
+						if (share) {
+							if (Helpers.shareAppsList == null) Helpers.getShareApps(getActivity());
+						} else {
+							if (Helpers.installedAppsList == null) Helpers.getInstalledApps(getActivity());
+						}
 					} else {
 						if (Helpers.launchableAppsList == null) Helpers.getLaunchableApps(getActivity());
 					}

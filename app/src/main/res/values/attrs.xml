@@ -9,6 +9,7 @@
 
 	<declare-styleable name="PreferenceEx">
 		<attr name="dynamic" />
+		<attr name="child" format="boolean" />
 		<attr name="countAsSummary" format="boolean" />
 	</declare-styleable>
 

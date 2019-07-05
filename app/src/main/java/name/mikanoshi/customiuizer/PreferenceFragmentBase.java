@@ -280,6 +280,10 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		setViewBackground(view);
+	}
+
+	public void setViewBackground(View view) {
 		view.setBackgroundResource(getResources().getIdentifier(Helpers.isNightMode(getContext()) ? "settings_window_bg_dark" : "settings_window_bg_light", "drawable", "miui"));
 	}
 

@@ -14,6 +14,7 @@
 	<string name="system_mods_screen">Screen</string>
 	<string name="system_mods_audio">Audio</string>
 	<string name="system_mods_vibration">Vibration</string>
+	<string name="system_mods_toasts">Toasts</string>
 	<string name="system_mods_screenanim">Screen animations</string>
 	<string name="system_statusbarheight_title">Status bar height</string>
 	<string name="system_statusbarcolor_title">Status bar background color</string>
@@ -71,6 +72,8 @@
 	<string name="system_noducking_summ">Do not lower volume of currently playing music to play notification sound</string>
 	<string name="system_separatevolume_title">Separate volume controls</string>
 	<string name="system_separatevolume_summ">Allow to configure separate volume for rings/notifications/system sounds in Settings</string>
+	<string name="system_volumetimer_title">Extended timers</string>
+	<string name="system_volumetimer_summ">Add more intervals to timers for Silent and Do Not Disturb modes</string>
 	<string name="system_volumesteps_title">Volume steps multiplier</string>
 	<string name="system_volumesteps_summ">Increase number of volume steps for each stream type</string>
 	<string name="system_vibration_title">Block vibration</string>
@@ -111,12 +114,19 @@
 	<string name="system_drawer_opacity_title">Themed background opacity</string>
 	<string name="system_drawer_opacity_summ">Opacity of a themed notification drawer background</string>
 	<string name="system_mods_lockscreen">Lock Screen</string>
-	<string name="system_iconlabletoasts_title">Enhanced toasts</string>
+	<string name="system_iconlabletoasts_title">Additional elements</string>
 	<string name="system_iconlabletoasts_summ">Add application\'s icon and label to its toasts</string>
+	<string name="system_blocktoasts_title">Block toasts</string>
+	<string name="system_blocktoasts_summ">Prevent selected apps from showing toasts</string>
 	<string name="system_epm_title">Extended power menu</string>
 	<string name="system_epm_summ">Add new restart options to power menu (Fastboot mode, Recovery mode, Soft reboot, Restart System UI, Restart Launcher)</string>
 	<string name="system_downgrade_title">Allow downgrade</string>
 	<string name="system_downgrade_summ">Make installing older app version on top of a newer one possible</string>
+	<string name="system_unblockthird_title">Unblock launchers</string>
+	<string name="system_unblockthird_summ">Remove restriction of 3rd party launchers on Chinese ROMs</string>
+	<string name="system_cleanshare_title">Clean share menu</string>
+	<string name="system_cleanshare_summ">Remove selected apps from share menu</string>
+	<string name="system_cleanshare_test">Test share menu</string>
 	<string name="system_rotateanim_title">Rotation animation</string>
 	<string name="system_orientationlock_title">Orientation lock</string>
 	<string name="system_orientationlock_summ">Add Quick Settings tile that can lock orientation in portrait or landscape mode</string>
@@ -130,6 +140,14 @@
 	<string name="system_removecleaner_summ">Hide button that clears recent apps and cleans memory</string>
 	<string name="system_hidefromrecents_title">Hide from recents</string>
 	<string name="system_hidefromrecents_summ">Hide selected apps from recent tasks list</string>
+	<string name="system_recommended_first_title">First shortcut action</string>
+	<string name="system_recommended_first_summ">Action for the first suggestion shortcut</string>
+	<string name="system_recommended_second_title">Second shortcut action</string>
+	<string name="system_recommended_second_summ">Action for the second suggestion shortcut</string>
+	<string name="system_recommended_third_title">Third shortcut action</string>
+	<string name="system_recommended_third_summ">Action for the third suggestion shortcut</string>
+	<string name="system_recommended_fourth_title">Fourth shortcut action</string>
+	<string name="system_recommended_fourth_summ">Action for the fourth suggestion shortcut</string>
 	<string name="system_mods_betterpopups">Better popup notifications</string>
 	<string name="system_betterpopups_delay_title">Auto hide delay</string>
 	<string name="system_betterpopups_nohide_title">No auto hide</string>
@@ -160,6 +178,7 @@
 	<string name="launcher_noclockhide_summ">Do not hide status bar clock on pages with clock widgets</string>
 	<string name="launcher_unlockgrids_title">Unlock grid sizes</string>
 	<string name="launcher_unlockgrids_summ">Make all grid sizes from 3x4 to 6x7 available in home screen layout setting</string>
+	<string name="launcher_folders">Folders</string>
 	<string name="launcher_folder_cols_title">Number of columns in folders</string>
 	<string name="launcher_fixstatusbarmode_title">Fix status bar mode</string>
 	<string name="launcher_fixstatusbarmode_summ">Adjust status bar contents color for light/dark wallpapers on developer launcher version</string>
@@ -167,6 +186,9 @@
 	<string name="launcher_foldershade_summ">Darken folder background</string>
 	<string name="launcher_closefolder_title">Auto close folders</string>
 	<string name="launcher_closefolder_summ">Close app\'s folder after launch</string>
+	<string name="launcher_titles">App titles</string>
+	<string name="launcher_darkershadow_title">Darker shadow</string>
+	<string name="launcher_darkershadow_summ">Makes title shadow less transparent</string>
 	<string name="launcher_renameapps_title">Custom app titles</string>
 	<string name="launcher_renameapps_list_title">Modified titles</string>
 	<string name="launcher_renameapps_modified">Modified title</string>
@@ -190,6 +212,8 @@
 	<string name="launcher_swipeleftaction_summ">Action for swipe left gesture on launcher dock</string>
 	<string name="launcher_shakeaction_title">Shake action</string>
 	<string name="launcher_shakeaction_summ">Action for shaking the device on any home screen</string>
+	<string name="launcher_doubletap_title">Double tap action</string>
+	<string name="launcher_doubletap_summ">Action for double tap on empty space of any home screen</string>
 
 	<string name="controls_mods">Controls</string>
 	<string name="controls_powerflash_title">Quick flashlight</string>
@@ -273,12 +297,17 @@
 	<string name="array_global_actions_lock">Lock device</string>
 	<string name="array_global_actions_sleep">Go to sleep</string>
 	<string name="array_global_actions_screenshot">Take screenshot</string>
+	<string name="array_global_actions_menu">Open menu</string>
 	<string name="array_global_actions_recents">Open recents</string>
+	<string name="array_global_actions_volume">Open volume dialog</string>
+	<string name="array_global_actions_volume_up">Raise volume</string>
+	<string name="array_global_actions_volume_down">Lower volume</string>
 	<string name="array_global_actions_launch">Launch app</string>
 	<string name="array_global_actions_shortcut">Launch shortcut</string>
 	<string name="array_global_actions_toggle">Toggle feature</string>
 	<string name="array_global_actions_back">Switch to previous app</string>
 	<string name="array_global_actions_powermenu">Open power menu</string>
+	<string name="array_global_actions_powermenu_short">Power menu</string>
 	<string name="array_global_actions_clearmemory">Clear memory</string>
 	<string name="array_global_actions_invertcolors">Invert colors</string>
 	<string name="array_global_actions_goback">Go back</string>
@@ -459,6 +488,18 @@
 	<string name="oneKBs">1 KB/s</string>
 	<string name="Bs">B/s</string>
 	<string name="speedunits">KMGTPE</string>
+
+	<string name="off">Off</string>
+	<string name="time_30m">30 minutes</string>
+	<string name="time_1h">1 hour</string>
+	<string name="time_2h">2 hours</string>
+	<string name="time_3h">3 hours</string>
+	<string name="time_4h">4 hours</string>
+	<string name="time_5h">5 hours</string>
+	<string name="time_6h">6 hours</string>
+	<string name="time_8h">8 hours</string>
+	<string name="time_10h">10 hours</string>
+	<string name="time_12h">12 hours</string>
 
 	<string name="dummy" translatable="false" />
 </resources>

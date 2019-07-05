@@ -11,13 +11,7 @@ public class System_PopupNotif extends SubFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		findPreference("pref_key_system_popupnotif_apps").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				openApps("pref_key_system_popupnotif_apps");
-				return true;
-			}
-		});
+		findPreference("pref_key_system_popupnotif_apps").setOnPreferenceClickListener(openAppsEdit);
 	}
 
 }

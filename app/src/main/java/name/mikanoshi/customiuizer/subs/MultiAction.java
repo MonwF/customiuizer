@@ -60,7 +60,7 @@ public class MultiAction extends SubFragment {
 
 		appLaunch = getView().findViewById(R.id.app_to_launch);
 		appLaunch.setTag(key + "_app");
-		appLaunch.setValue(appValue != null ? appValue : Helpers.prefs.getString(key+ "_app", null));
+		appLaunch.setValue(appValue != null ? appValue : Helpers.prefs.getString(key + "_app", null));
 		appLaunch.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
 			@Override
 			public void onChildViewAdded(View parent, View child) {

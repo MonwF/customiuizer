@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.provider.Settings;
@@ -36,13 +35,18 @@ public class System extends SubFragment {
 			}
 		});
 
-		findPreference("pref_key_system_vibration_apps").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+		findPreference("pref_key_system_vibration_apps").setOnPreferenceClickListener(openAppsEdit);
+
+		findPreference("pref_key_system_blocktoasts_apps").setEnabled(!Objects.equals(Helpers.prefs.getString("pref_key_system_blocktoasts", "1"), "1"));
+		findPreference("pref_key_system_blocktoasts").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
 			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				openApps("pref_key_system_vibration_apps");
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				findPreference("pref_key_system_blocktoasts_apps").setEnabled(!newValue.equals("1"));
 				return true;
 			}
 		});
+
+		findPreference("pref_key_system_blocktoasts_apps").setOnPreferenceClickListener(openAppsEdit);
 
 		findPreference("pref_key_system_expandnotifs_apps").setEnabled(!Objects.equals(Helpers.prefs.getString("pref_key_system_expandnotifs", "1"), "1"));
 		findPreference("pref_key_system_expandnotifs").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -53,21 +57,13 @@ public class System extends SubFragment {
 			}
 		});
 
-		findPreference("pref_key_system_expandnotifs_apps").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				openApps("pref_key_system_expandnotifs_apps");
-				return true;
-			}
-		});
+		findPreference("pref_key_system_expandnotifs_apps").setOnPreferenceClickListener(openAppsEdit);
+		findPreference("pref_key_system_hidefromrecents_apps").setOnPreferenceClickListener(openAppsEdit);
 
-		findPreference("pref_key_system_hidefromrecents_apps").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				openApps("pref_key_system_hidefromrecents_apps");
-				return true;
-			}
-		});
+		findPreference("pref_key_system_recommended_first").setOnPreferenceClickListener(openRecentsActions);
+		findPreference("pref_key_system_recommended_second").setOnPreferenceClickListener(openRecentsActions);
+		findPreference("pref_key_system_recommended_third").setOnPreferenceClickListener(openRecentsActions);
+		findPreference("pref_key_system_recommended_fourth").setOnPreferenceClickListener(openRecentsActions);
 
 		findPreference("pref_key_system_popupnotif_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
@@ -137,12 +133,7 @@ public class System extends SubFragment {
 		findPreference("pref_key_system_shortcut_app").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				Bundle args = new Bundle();
-				args.putString("key", "pref_key_system_shortcut_app");
-				args.putBoolean("standalone", true);
-				AppSelector appSelector = new AppSelector();
-				appSelector.setTargetFragment(System.this, 0);
-				openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_app, R.layout.prefs_app_selector);
+				openStandaloneApp(preference, System.this, 0);
 				return true;
 			}
 		});
@@ -150,12 +141,7 @@ public class System extends SubFragment {
 		findPreference("pref_key_system_clock_app").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				Bundle args = new Bundle();
-				args.putString("key", "pref_key_system_clock_app");
-				args.putBoolean("standalone", true);
-				AppSelector appSelector = new AppSelector();
-				appSelector.setTargetFragment(System.this, 1);
-				openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_app, R.layout.prefs_app_selector);
+				openStandaloneApp(preference, System.this, 1);
 				return true;
 			}
 		});
@@ -163,25 +149,27 @@ public class System extends SubFragment {
 		findPreference("pref_key_system_calendar_app").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				Bundle args = new Bundle();
-				args.putString("key", "pref_key_system_calendar_app");
-				args.putBoolean("standalone", true);
-				AppSelector appSelector = new AppSelector();
-				appSelector.setTargetFragment(System.this, 2);
-				openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_app, R.layout.prefs_app_selector);
+				openStandaloneApp(preference, System.this, 2);
 				return true;
 			}
 		});
 
-		findPreference("pref_key_system_statusbarcolor_apps").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+		findPreference("pref_key_system_statusbarcolor_apps").setOnPreferenceClickListener(openAppsEdit);
+
+		findPreference("pref_key_system_cleanshare_apps").setOnPreferenceClickListener(openShareEdit);
+		findPreference("pref_key_system_cleanshare_test").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				openApps("pref_key_system_statusbarcolor_apps");
+				Intent sendIntent = new Intent();
+				sendIntent.setAction(Intent.ACTION_SEND);
+				sendIntent.putExtra(Intent.EXTRA_TEXT, "CustoMIUIzer is the best!");
+				sendIntent.setType("*/*");
+				getContext().startActivity(Intent.createChooser(sendIntent, null));
 				return true;
 			}
 		});
 
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+		if (Helpers.isNougat()) {
 			((ListPreferenceEx)findPreference("pref_key_system_autogroupnotif")).setUnsupported(true);
 		}
 	}

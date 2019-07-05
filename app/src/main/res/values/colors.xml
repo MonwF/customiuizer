@@ -29,4 +29,8 @@
 	<color name="hint_edit_text_color">#4c000000</color>
 	<color name="edit_text_search_hint_color">#66000000</color>
 
+	<color name="icon_shadow">#FF0000FF</color>
+	<color name="icon_title_text_shadow">#FFFF0000</color>
+	<color name="icon_title_text_shadow_light">#FF00FF00</color>
+
 </resources>

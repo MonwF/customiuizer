@@ -45,6 +45,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		} else mPrefs.putAll(pref.getAll());
 
 		if (Integer.parseInt(mPrefs.getString("system_iconlabletoasts", "1")) > 1) System.IconLabelToastsHook();
+		if (Integer.parseInt(mPrefs.getString("system_blocktoasts", "1")) > 1) System.SelectiveToastsHook();
 		if (mPrefs.getBoolean("controls_volumecursor")) Controls.VolumeCursorHook();
 		if (mPrefs.getBoolean("system_popupnotif_fs")) System.PopupNotificationsFSHook();
 		if (Integer.parseInt(mPrefs.getString("system_rotateanim", "1")) > 1) System.RotationAnimationHook();
@@ -71,7 +72,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_notifrowmenu")) System.NotificationRowMenuRes(resparam);
 			if (mPrefs.getInt("system_qsgridcolumns", 2) > 2 || mPrefs.getInt("system_qsgridrows", 3) > 3) System.QSGridRes(resparam);
 			if (mPrefs.getInt("system_qqsgridcolumns", 2) > 2) System.QQSGridRes(resparam);
-		}
+			if (mPrefs.getBoolean("system_volumetimer")) System.VolumeTimerValuesRes(resparam);
+	}
 
 		if (pkg.equals("com.android.settings")) {
 			GlobalActions.miuizerSettingsResInit(resparam);
@@ -126,6 +128,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 				mPrefs.getInt("controls_homelong_action", 1) > 1 ||
 				mPrefs.getInt("controls_menulong_action", 1) > 1) Controls.NavBarActionsHook(lpparam);
 			if (mPrefs.getBoolean("system_epm")) System.ExtendedPowerMenuHook(lpparam);
+			if (mPrefs.getBoolean("system_cleanshare")) System.CleanShareMenuHook(lpparam);
 
 			//Controls.AIButtonHook(lpparam);
 			//System.AutoBrightnessHook(lpparam);
@@ -171,6 +174,10 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (!mPrefs.getString("system_shortcut_app", "").equals("")) System.ReplaceShortcutAppHook(lpparam);
 			if (!mPrefs.getString("system_clock_app", "").equals("")) System.ReplaceClockAppHook(lpparam);
 			if (!mPrefs.getString("system_calendar_app", "").equals("")) System.ReplaceCalendarAppHook(lpparam);
+			if (mPrefs.getInt("pref_key_system_recommended_first_action", 1) > 1 ||
+				mPrefs.getInt("pref_key_system_recommended_second_action", 1) > 1 ||
+				mPrefs.getInt("pref_key_system_recommended_third_action", 1) > 1 ||
+				mPrefs.getInt("pref_key_system_recommended_fourth_action", 1) > 1) System.CustomRecommendedHook(lpparam);
 		}
 
 //		if (pkg.equals("com.android.incallui")) {
@@ -181,6 +188,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("various_appdetails")) Various.AppInfoHook(lpparam);
 			if (Integer.parseInt(mPrefs.getString("various_appsort", "0")) > 0) Various.AppsDefaultSortHook(lpparam);
 			if (mPrefs.getBoolean("various_disableapp")) Various.AppsDisableHook(lpparam);
+			if (mPrefs.getBoolean("system_unblockthird")) System.UnblockThirdLaunchersHook(lpparam);
 		}
 
 		if (pkg.equals("com.android.settings")) {
@@ -201,9 +209,11 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 				if (mPrefs.getInt("launcher_swipeleft_action", 1) != 1 ||
 					mPrefs.getInt("launcher_swiperight_action", 1) != 1) Launcher.HotSeatSwipesHook(lpparam);
 				if (mPrefs.getInt("launcher_shake_action", 1) != 1) Launcher.ShakeHook(lpparam);
+				if (mPrefs.getInt("launcher_doubletap_action", 1) != 1) Launcher.LauncherDoubleTapHook(lpparam);
 				if (mPrefs.getBoolean("launcher_noclockhide")) Launcher.NoClockHideHook(lpparam);
 				if (mPrefs.getBoolean("launcher_renameapps")) Launcher.RenameShortcutsHook(lpparam);
 				if (mPrefs.getBoolean("launcher_closefolder")) Launcher.CloseFolderOnLaunchHook(lpparam);
+				if (mPrefs.getBoolean("launcher_darkershadow")) Launcher.TitleShadowHook(lpparam);
 				if (lpparam.packageName.equals("com.miui.home")) {
 					if (mPrefs.getBoolean("controls_fsg_horiz")) Launcher.FSGesturesHook(lpparam);
 					if (Integer.parseInt(mPrefs.getString("launcher_foldershade", "1")) > 1) Launcher.FolderShadeHook(lpparam);

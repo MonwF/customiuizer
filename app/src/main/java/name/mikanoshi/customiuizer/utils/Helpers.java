@@ -16,7 +16,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.UiModeManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -27,20 +26,25 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.content.res.XmlResourceParser;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.PowerManager.WakeLock;
+import android.preference.PreferenceCategory;
 import android.text.InputType;
 import android.util.LruCache;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+
+import org.xmlpull.v1.XmlPullParser;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
@@ -50,6 +54,7 @@ import name.mikanoshi.customiuizer.GateWayLauncher;
 import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SharedPrefsProvider;
+import name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx;
 
 @SuppressWarnings("WeakerAccess")
 public class Helpers {
@@ -57,9 +62,13 @@ public class Helpers {
 	public static final String modulePkg = "name.mikanoshi.customiuizer";
 	public static final String prefsName = "customiuizer_prefs";
 	public static final String externalFolder = "/CustoMIUIzer/";
+	public static final String ANDROID_NS = "http://schemas.android.com/apk/res/android";
+	public static final String MIUIZER_NS = "http://schemas.android.com/apk/res-auto";
 	public static SharedPreferences prefs = null;
+	public static ArrayList<AppData> shareAppsList = null;
 	public static ArrayList<AppData> installedAppsList = null;
 	public static ArrayList<AppData> launchableAppsList = null;
+	public static ArrayList<ModData> allModsList = new ArrayList<ModData>();
 	public static String backupFile = "settings_backup";
 	public static final int REQUEST_PERMISSIONS_BACKUP = 1;
 	public static final int REQUEST_PERMISSIONS_RESTORE = 2;
@@ -92,13 +101,17 @@ public class Helpers {
 		try {
 			themeResId = act.getResources().getIdentifier("Theme.DayNight.Settings", "style", "miui");
 		} catch (Throwable t) {}
-		if (themeResId == 0) themeResId = act.getResources().getIdentifier(Helpers.isNightMode(act) ? "Theme.Dark.Settings" : "Theme.Light.Settings", "style", "miui");
+		if (themeResId == 0) themeResId = act.getResources().getIdentifier(isNightMode(act) ? "Theme.Dark.Settings" : "Theme.Light.Settings", "style", "miui");
 		act.setTheme(themeResId);
 		act.getTheme().applyStyle(overrideTheme, true);
 	}
 
 	public static boolean isNightMode(Context context) {
 		return (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+	}
+
+	public static boolean isNougat() {
+		return Build.VERSION.SDK_INT < Build.VERSION_CODES.O;
 	}
 
 	public static boolean isLauncherIconVisible(Context context) {
@@ -311,6 +324,13 @@ public class Helpers {
 		}
 	}
 
+	private static String getModTitle(Resources res, String title) {
+		if (title == null) return null;
+		int titleResId = Integer.parseInt(title.substring(1));
+		if (titleResId <= 0) return null;
+		return res.getString(titleResId);
+	}
+
 	public static void getInstalledApps(Context mContext) {
 		final PackageManager pm = mContext.getPackageManager();
 		List<ApplicationInfo> packs = pm.getInstalledApplications(PackageManager.GET_META_DATA | PackageManager.MATCH_DISABLED_COMPONENTS);
@@ -356,7 +376,35 @@ public class Helpers {
 			}
 		});
 	}
-	
+
+	public static void getShareApps(Context mContext) {
+		PackageManager pm = mContext.getPackageManager();
+		final Intent mainIntent = new Intent(Intent.ACTION_SEND, null);
+		mainIntent.setType("*/*");
+		mainIntent.putExtra("CustoMIUIzer", true);
+		List<ResolveInfo> packs = pm.queryIntentActivities(mainIntent, PackageManager.MATCH_ALL);
+		shareAppsList = new ArrayList<AppData>();
+		AppData app;
+		for (ResolveInfo pack: packs) try {
+			for (AppData shareApp: shareAppsList)
+			if (shareApp.pkgName.equals(pack.activityInfo.applicationInfo.packageName)) return;
+
+			app = new AppData();
+			app.pkgName = pack.activityInfo.applicationInfo.packageName;
+			app.actName = "-";
+			app.enabled = pack.activityInfo.applicationInfo.enabled;
+			app.label = pack.activityInfo.applicationInfo.loadLabel(pm).toString();
+			shareAppsList.add(app);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		Collections.sort(shareAppsList, new Comparator<AppData>() {
+			public int compare(AppData app1, AppData app2) {
+				return app1.label.compareToIgnoreCase(app2.label);
+			}
+		});
+	}
+
 	public static CharSequence getAppName(Context mContext, String pkgActName) {
 		PackageManager pm = mContext.getPackageManager();
 		String not_selected = mContext.getResources().getString(R.string.notselected);
@@ -375,6 +423,111 @@ public class Helpers {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public static String getActionName(Context context, int action, String key) {
+		try {
+			Resources modRes = getModuleRes(context);
+			if (action == 4)
+				return modRes.getString(R.string.array_global_actions_lock);
+			else if (action == 5)
+				return modRes.getString(R.string.array_global_actions_sleep);
+			else if (action == 8)
+				return (String)Helpers.getAppName(getModuleContext(context), Helpers.getSharedStringPref(context, key + "_app", ""));
+			else if (action == 9)
+				return Helpers.getSharedStringPref(context, key + "_shortcut_name", "");
+			else if (action == 10) {
+				int what = getSharedIntPref(context, key + "_toggle", 0);
+				switch (what) {
+					case 1: return modRes.getString(R.string.array_global_toggle_wifi);
+					case 2: return modRes.getString(R.string.array_global_toggle_bt);
+					case 3: return modRes.getString(R.string.array_global_toggle_gps);
+					case 4: return modRes.getString(R.string.array_global_toggle_nfc);
+					case 5: return modRes.getString(R.string.array_global_toggle_sound);
+					case 6: return modRes.getString(R.string.array_global_toggle_brightness);
+					case 7: return modRes.getString(R.string.array_global_toggle_rotation);
+					case 8: return modRes.getString(R.string.array_global_toggle_torch);
+					case 9: return modRes.getString(R.string.array_global_toggle_mobiledata);
+					default: return null;
+				}
+			} else if (action == 12)
+				return modRes.getString(R.string.array_global_actions_powermenu_short);
+			else if (action == 14)
+				return modRes.getString(R.string.array_global_actions_invertcolors);
+			else
+				return null;
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+			return null;
+		}
+	}
+
+	private static void parsePrefXml(Context mContext, int xmlResId) {
+		Resources res = mContext.getResources();
+		String lastPrefScreen = null;
+		int catResId = 0;
+		ModData.ModCat catPrefKey = null;
+
+		switch(xmlResId) {
+			case R.xml.prefs_system:
+				catResId = R.string.system_mods;
+				catPrefKey = ModData.ModCat.pref_key_system;
+				break;
+			case R.xml.prefs_launcher:
+				catResId = R.string.launcher_title;
+				catPrefKey = ModData.ModCat.pref_key_launcher;
+				break;
+			case R.xml.prefs_controls:
+				catResId = R.string.controls_mods;
+				catPrefKey = ModData.ModCat.pref_key_controls;
+				break;
+			case R.xml.prefs_various:
+				catResId = R.string.various_mods;
+				catPrefKey = ModData.ModCat.pref_key_various;
+				break;
+		}
+
+		try (XmlResourceParser xml = res.getXml(xmlResId)) {
+			int eventType = xml.getEventType();
+			int order = 0;
+			while (eventType != XmlPullParser.END_DOCUMENT) {
+				if (eventType == XmlPullParser.START_TAG) try {
+					if (xml.getName().equals(PreferenceCategory.class.getSimpleName()) || xml.getName().equals(PreferenceCategoryEx.class.getCanonicalName())) {
+						lastPrefScreen = getModTitle(res, xml.getAttributeValue(ANDROID_NS, "title"));
+						eventType = xml.next();
+						order++;
+						continue;
+					}
+
+					ModData modData = new ModData();
+					boolean isChild = xml.getAttributeBooleanValue(MIUIZER_NS, "child", false);
+					if (!isChild) {
+						modData.title = getModTitle(res, xml.getAttributeValue(ANDROID_NS, "title"));
+						if (modData.title != null) {
+							modData.breadcrumbs = res.getString(catResId) + (lastPrefScreen == null ? "" : "/" + lastPrefScreen);
+							modData.key = xml.getAttributeValue(ANDROID_NS, "key");
+							modData.cat = catPrefKey;
+							modData.order = order - 1;
+							allModsList.add(modData);
+						}
+					}
+					order++;
+				} catch (Throwable t) {
+					t.printStackTrace();
+				}
+				eventType = xml.next();
+			}
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+	}
+
+	public static void getAllMods(Context mContext) {
+		if (allModsList.size() > 0) return;
+		parsePrefXml(mContext, R.xml.prefs_system);
+		parsePrefXml(mContext, R.xml.prefs_launcher);
+		parsePrefXml(mContext, R.xml.prefs_controls);
+		parsePrefXml(mContext, R.xml.prefs_various);
 	}
 
 	public static void performLightVibration(Context mContext) {
@@ -444,7 +597,7 @@ public class Helpers {
 					sharedPrefsFolder.setExecutable(true, false);
 					sharedPrefsFolder.setReadable(true, false);
 					sharedPrefsFolder.setWritable(true, false);
-					File f = new File(sharedPrefsFolder.getAbsolutePath() + "/" + Helpers.prefsName + ".xml");
+					File f = new File(sharedPrefsFolder.getAbsolutePath() + "/" + prefsName + ".xml");
 					if (f.exists()) {
 						f.setReadable(true, false);
 						f.setExecutable(true, false);
@@ -697,7 +850,7 @@ public class Helpers {
 	private static String getCallerMethod() {
 		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 		for (StackTraceElement el: stackTrace)
-		if (el != null && el.getClassName().startsWith(Helpers.modulePkg + ".mods")) return el.getMethodName();
+		if (el != null && el.getClassName().startsWith(modulePkg + ".mods")) return el.getMethodName();
 		return stackTrace[4].getMethodName();
 	}
 
@@ -750,6 +903,14 @@ public class Helpers {
 			return true;
 		} catch (Throwable t) {
 			return false;
+		}
+	}
+
+	public static void findAndHookConstructor(String className, ClassLoader classLoader, Object... parameterTypesAndCallback) {
+		try {
+			XposedHelpers.findAndHookConstructor(className, classLoader, parameterTypesAndCallback);
+		} catch (Throwable t) {
+			XposedBridge.log(t);
 		}
 	}
 

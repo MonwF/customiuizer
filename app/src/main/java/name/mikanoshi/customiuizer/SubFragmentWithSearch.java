@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ import name.mikanoshi.customiuizer.utils.ResolveInfoAdapter;
 public class SubFragmentWithSearch extends SubFragment {
 
 	public ListView listView = null;
+	View searchView = null;
 	ActionMode actionMode = null;
 	boolean isSearchFocused = false;
 
@@ -35,78 +37,83 @@ public class SubFragmentWithSearch extends SubFragment {
 		getActionBar().setBackgroundDrawable(new ColorDrawable(Helpers.isNightMode(getContext()) ? Color.BLACK : Color.WHITE));
 		if (getView() == null) return;
 
-		TextView search = getView().findViewById(android.R.id.input);
+		SearchActionMode.Callback actionModeCallback = new SearchActionMode.Callback() {
+			@Override
+			public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+				return true;
+			}
+
+			@Override
+			public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+				if (getView() == null) return false;
+
+				SearchActionMode samode = (SearchActionMode)mode;
+				samode.setAnchorView(searchView);
+				samode.setAnimateView(listView);
+				samode.getSearchInput().setOnFocusChangeListener(new View.OnFocusChangeListener() {
+					@Override
+					public void onFocusChange(View v, boolean hasFocus) {
+						isSearchFocused = hasFocus;
+					}
+				});
+				samode.getSearchInput().setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						isSearchFocused = v.hasFocus();
+					}
+				});
+				samode.getSearchInput().setOnEditorActionListener(new TextView.OnEditorActionListener() {
+					@Override
+					public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+						if (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+							hideKeyboard();
+							listView.requestFocus();
+							return true;
+						}
+						return false;
+					}
+				});
+				samode.getSearchInput().addTextChangedListener(new TextWatcher() {
+					@Override
+					public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+					@Override
+					public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+					@Override
+					public void afterTextChanged(Editable s) {
+						applyFilter(s.toString().trim());
+					}
+				});
+
+				return true;
+			}
+
+			@Override
+			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+				return true;
+			}
+
+			@Override
+			public void onDestroyActionMode(ActionMode mode) {
+				applyFilter("");
+				getActionBar().show();
+				actionMode = null;
+			}
+		};
+
+		LinearLayout search = getView().findViewById(android.R.id.inputArea);
 		search.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				actionMode = startActionMode(new SearchActionMode.Callback() {
-					@Override
-					public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-						if (getView() == null) return false;
-
-						mode.getMenuInflater().inflate(R.menu.menu_mods, menu);
-
-						SearchActionMode samode = (SearchActionMode)mode;
-						samode.setAnchorView(getView().findViewById(R.id.am_search_view));
-						samode.setAnimateView(getView().findViewById(android.R.id.list));
-						samode.getSearchInput().setOnFocusChangeListener(new View.OnFocusChangeListener() {
-							@Override
-							public void onFocusChange(View v, boolean hasFocus) {
-								isSearchFocused = hasFocus;
-							}
-						});
-						samode.getSearchInput().setOnClickListener(new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								isSearchFocused = v.hasFocus();
-							}
-						});
-						samode.getSearchInput().setOnEditorActionListener(new TextView.OnEditorActionListener() {
-							@Override
-							public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-								if (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-									hideKeyboard();
-									listView.requestFocus();
-									return true;
-								}
-								return false;
-							}
-						});
-						samode.getSearchInput().addTextChangedListener(new TextWatcher() {
-							@Override
-							public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-							@Override
-							public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-							@Override
-							public void afterTextChanged(Editable s) {
-								applyFilter(s.toString().trim());
-							}
-						});
-						return true;
-					}
-
-					@Override
-					public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-						return true;
-					}
-
-					@Override
-					public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-						return true;
-					}
-
-					@Override
-					public void onDestroyActionMode(ActionMode mode) {
-						applyFilter("");
-						getActionBar().show();
-						actionMode = null;
-					}
-				});
+				if (actionMode != null)
+					actionMode.invalidate();
+				else
+					actionMode = startActionMode(actionModeCallback);
 			}
 		});
 
+		searchView = getView().findViewById(R.id.am_search_view);
 		listView = getView().findViewById(android.R.id.list);
 		listView.setOnTouchListener(new View.OnTouchListener() {
 			@Override

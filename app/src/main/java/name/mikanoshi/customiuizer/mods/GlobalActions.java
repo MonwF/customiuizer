@@ -20,11 +20,13 @@ import android.net.wifi.WifiManager;
 import android.nfc.NfcAdapter;
 import android.os.Binder;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.Toast;
 
 import java.lang.reflect.Method;
@@ -67,6 +69,10 @@ public class GlobalActions {
 			case 13: return clearMemory(helperContext);
 			case 14: return toggleColorInversion(helperContext);
 			case 15: return goBack(helperContext);
+			case 16: return simulateMenu(helperContext);
+			case 17: return openVolumeDialog(helperContext);
+			case 18: return volumeUp(helperContext);
+			case 19: return volumeDown(helperContext);
 			default: return false;
 		}
 	}
@@ -87,61 +93,88 @@ public class GlobalActions {
 //				}
 
 				if (mStatusBar != null) {
-					if (action.equals("name.mikanoshi.customiuizer.mods.action.ExpandNotifications")) {
-						try {
-							Object mNotificationPanel = XposedHelpers.getObjectField(mStatusBar, "mNotificationPanel");
-							boolean mPanelExpanded = (boolean)XposedHelpers.getObjectField(mNotificationPanel, "mPanelExpanded");
-							boolean mQsExpanded = (boolean)XposedHelpers.getObjectField(mNotificationPanel, "mQsExpanded");
-							boolean expandOnly = intent.getBooleanExtra("expand_only", false);
-							if (mPanelExpanded) {
-								if (!expandOnly)
-								if (mQsExpanded)
-									XposedHelpers.callMethod(mStatusBar, "closeQs");
-								else
-									XposedHelpers.callMethod(mStatusBar, "animateCollapsePanels");
-							} else {
-								XposedHelpers.callMethod(mStatusBar, "animateExpandNotificationsPanel");
-							}
-						} catch (Throwable t) {
-							// Expand only
-							long token = Binder.clearCallingIdentity();
-							XposedHelpers.callMethod(context.getSystemService("statusbar"), "expandNotificationsPanel");
-							Binder.restoreCallingIdentity(token);
+					if (action.equals("name.mikanoshi.customiuizer.mods.action.ExpandNotifications")) try {
+						Object mNotificationPanel = XposedHelpers.getObjectField(mStatusBar, "mNotificationPanel");
+						boolean mPanelExpanded = (boolean)XposedHelpers.getObjectField(mNotificationPanel, "mPanelExpanded");
+						boolean mQsExpanded = (boolean)XposedHelpers.getObjectField(mNotificationPanel, "mQsExpanded");
+						boolean expandOnly = intent.getBooleanExtra("expand_only", false);
+						if (mPanelExpanded) {
+							if (!expandOnly)
+							if (mQsExpanded)
+								XposedHelpers.callMethod(mStatusBar, "closeQs");
+							else
+								XposedHelpers.callMethod(mStatusBar, "animateCollapsePanels");
+						} else {
+							XposedHelpers.callMethod(mStatusBar, "animateExpandNotificationsPanel");
 						}
+					} catch (Throwable t) {
+						// Expand only
+						long token = Binder.clearCallingIdentity();
+						XposedHelpers.callMethod(context.getSystemService("statusbar"), "expandNotificationsPanel");
+						Binder.restoreCallingIdentity(token);
 					}
 
-					if (action.equals("name.mikanoshi.customiuizer.mods.action.ExpandSettings")) {
-						try {
-							Object mNotificationPanel = XposedHelpers.getObjectField(mStatusBar, "mNotificationPanel");
-							boolean mPanelExpanded = (boolean)XposedHelpers.getObjectField(mNotificationPanel, "mPanelExpanded");
-							boolean mQsExpanded = (boolean)XposedHelpers.getObjectField(mNotificationPanel, "mQsExpanded");
-							if (mPanelExpanded) {
-								if (mQsExpanded)
-									XposedHelpers.callMethod(mStatusBar, "animateCollapsePanels");
-								else
-									XposedHelpers.callMethod(mNotificationPanel, "setQsExpanded", true);
-							} else {
-								XposedHelpers.callMethod(mStatusBar, "animateExpandSettingsPanel", (Object)null);
-							}
-						} catch (Throwable t) {
-							// Expand only
-							long token = Binder.clearCallingIdentity();
-							XposedHelpers.callMethod(context.getSystemService("statusbar"), "expandSettingsPanel");
-							Binder.restoreCallingIdentity(token);
+					if (action.equals("name.mikanoshi.customiuizer.mods.action.ExpandSettings")) try {
+						Object mNotificationPanel = XposedHelpers.getObjectField(mStatusBar, "mNotificationPanel");
+						boolean mPanelExpanded = (boolean)XposedHelpers.getObjectField(mNotificationPanel, "mPanelExpanded");
+						boolean mQsExpanded = (boolean)XposedHelpers.getObjectField(mNotificationPanel, "mQsExpanded");
+						if (mPanelExpanded) {
+							if (mQsExpanded)
+								XposedHelpers.callMethod(mStatusBar, "animateCollapsePanels");
+							else
+								XposedHelpers.callMethod(mNotificationPanel, "setQsExpanded", true);
+						} else {
+							XposedHelpers.callMethod(mStatusBar, "animateExpandSettingsPanel", (Object)null);
 						}
+					} catch (Throwable t) {
+						// Expand only
+						long token = Binder.clearCallingIdentity();
+						XposedHelpers.callMethod(context.getSystemService("statusbar"), "expandSettingsPanel");
+						Binder.restoreCallingIdentity(token);
 					}
 
-					if (action.equals("name.mikanoshi.customiuizer.mods.action.OpenRecents")) {
-						try {
-							Object mRecents = XposedHelpers.getObjectField(mStatusBar, "mRecents");
-							XposedHelpers.callMethod(mRecents, "toggleRecentApps");
-						} catch (Throwable t) {
-							// Open only
-							Intent recents = new Intent("com.android.systemui.recents.TOGGLE_RECENTS");
-							recents.setComponent(new ComponentName ("com.android.systemui", "com.android.systemui.recents.RecentsActivity"));
-							recents.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-							context.startActivity(recents);
+					if (action.equals("name.mikanoshi.customiuizer.mods.action.OpenRecents")) try {
+						Object mRecents = XposedHelpers.getObjectField(mStatusBar, "mRecents");
+						XposedHelpers.callMethod(mRecents, "toggleRecentApps");
+					} catch (Throwable t) {
+						// Open only
+						Intent recents = new Intent("com.android.systemui.recents.TOGGLE_RECENTS");
+						recents.setComponent(new ComponentName ("com.android.systemui", "com.android.systemui.recents.RecentsActivity"));
+						recents.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+						context.startActivity(recents);
+					}
+
+					if (action.equals("name.mikanoshi.customiuizer.mods.action.OpenVolumeDialog")) try {
+						Object mVolumeComponent = XposedHelpers.getObjectField(mStatusBar, "mVolumeComponent");
+						Object mExtension = XposedHelpers.getObjectField(mVolumeComponent, "mExtension");
+						Object miuiVolumeDialog = XposedHelpers.callMethod(mExtension, "get");
+
+						if (miuiVolumeDialog == null) {
+							Helpers.log("OpenVolumeDialog", "MIUI volume dialog is NULL!");
+							return;
 						}
+
+						Handler mHandler = (Handler)XposedHelpers.getObjectField(miuiVolumeDialog, "mHandler");
+						mHandler.post(new Runnable() {
+							@Override
+							public void run() {
+								boolean mShowing = XposedHelpers.getBooleanField(miuiVolumeDialog, "mShowing");
+								boolean mExpanded = XposedHelpers.getBooleanField(miuiVolumeDialog, "mExpanded");
+								View mExpandButton = (View)XposedHelpers.getObjectField(miuiVolumeDialog, "mExpandButton");
+								View.OnClickListener mClickExpand = (View.OnClickListener)XposedHelpers.getObjectField(miuiVolumeDialog, "mClickExpand");
+
+								if (mShowing) {
+									if (mExpanded)
+										XposedHelpers.callMethod(miuiVolumeDialog, "dismissH", 1);
+									else
+										mClickExpand.onClick(mExpandButton);
+								} else {
+									XposedHelpers.callMethod(miuiVolumeDialog, "showH", 1);
+								}
+							}
+						});
+					} catch (Throwable t) {
+						XposedBridge.log(t);
 					}
 
 					if (action.equals("name.mikanoshi.customiuizer.mods.action.ClearMemory")) {
@@ -169,6 +202,10 @@ public class GlobalActions {
 							Toast.makeText(context, modRes.getString(R.string.toggle_flash_on), Toast.LENGTH_SHORT).show();
 						XposedHelpers.callMethod(mToggleManager, "toggleTorch");
 					}
+
+					//Intent intent = new Intent("com.miui.app.ExtraStatusBarManager.action_TRIGGER_TOGGLE");
+					//intent.putExtra("com.miui.app.ExtraStatusBarManager.extra_TOGGLE_ID", 10);
+					//mContext.sendBroadcast(intent);
 				}
 			} catch (Throwable t) {
 				XposedBridge.log(t);
@@ -214,15 +251,6 @@ public class GlobalActions {
 			*/
 //			if (action.equals("name.mikanoshi.customiuizer.mods.action.KillForegroundApp")) {
 //				removeTask(context);
-//			}
-//
-//			if (action.equals("name.mikanoshi.customiuizer.mods.action.SimulateMenu")) {
-//				new Thread(new Runnable() {
-//					public void run() {
-//						Instrumentation inst = new Instrumentation();
-//						inst.sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
-//					}
-//				}).start();
 //			}
 
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.GoBack")) {
@@ -279,6 +307,16 @@ public class GlobalActions {
 				} catch (Throwable t) {
 					XposedBridge.log(t);
 				}
+			}
+
+			if (action.equals("name.mikanoshi.customiuizer.mods.action.VolumeUp")) {
+				AudioManager audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+				audioManager.adjustVolume(AudioManager.ADJUST_RAISE, 1 << 12 /* FLAG_FROM_KEY */ | AudioManager.FLAG_SHOW_UI | AudioManager.FLAG_ALLOW_RINGER_MODES | AudioManager.FLAG_PLAY_SOUND | AudioManager.FLAG_VIBRATE);
+			}
+
+			if (action.equals("name.mikanoshi.customiuizer.mods.action.VolumeDown")) {
+				AudioManager audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+				audioManager.adjustVolume(AudioManager.ADJUST_LOWER, 1 << 12 /* FLAG_FROM_KEY */ | AudioManager.FLAG_SHOW_UI | AudioManager.FLAG_ALLOW_RINGER_MODES | AudioManager.FLAG_PLAY_SOUND | AudioManager.FLAG_VIBRATE);
 			}
 
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.OpenPowerMenu")) {
@@ -462,7 +500,7 @@ public class GlobalActions {
 //	}
 
 	public static void miuizerInit(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod(Helpers.modulePkg + ".MainFragment", lpparam.classLoader, "onActivityCreated", Bundle.class, new XC_MethodHook() {
+		Helpers.findAndHookMethod(Helpers.modulePkg + ".MainFragment", lpparam.classLoader, "onCreate", Bundle.class, new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 				XposedHelpers.setBooleanField(param.thisObject, "miuizerModuleActive", true);
@@ -670,8 +708,10 @@ public class GlobalActions {
 				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.GoBack");
 				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.OpenPowerMenu");
 				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleColorInversion");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.SimulateMenu");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.VolumeUp");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.VolumeDown");
 				//intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.KillForegroundAppShedule");
-				//intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.SimulateMenu");
 
 				// Toggles
 				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleWiFi");
@@ -716,6 +756,29 @@ public class GlobalActions {
 			}
 		});
 
+		Helpers.hookAllMethods("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "initInternal", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				IntentFilter intentfilter = new IntentFilter();
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.SimulateMenu");
+				final Object thisObject = param.thisObject;
+				mContext.registerReceiver(new BroadcastReceiver() {
+					public void onReceive(final Context context, Intent intent) {
+						String action = intent.getAction();
+						if (action == null) return;
+
+						try {
+							Handler mHandler = (Handler)XposedHelpers.getObjectField(thisObject, "mHandler");
+							mHandler.sendMessageDelayed(mHandler.obtainMessage(1, "show_menu"), (long)ViewConfiguration.getLongPressTimeout());
+						} catch (Throwable t) {
+							XposedBridge.log(t);
+						}
+					}
+				}, intentfilter);
+			}
+		});
+
 //		Helpers.hookAllMethods("com.android.server.am.ActivityStackSupervisor", lpparam.classLoader, "getComponentRestrictionForCallingPackage", new XC_MethodHook() {
 //			@Override
 //			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
@@ -736,6 +799,7 @@ public class GlobalActions {
 				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ExpandNotifications");
 				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ExpandSettings");
 				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.OpenRecents");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.OpenVolumeDialog");
 
 				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleGPS");
 				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.ToggleFlashlight");
@@ -819,7 +883,7 @@ public class GlobalActions {
 		}
 	}
 
-	public static boolean launchApp(Context context, int action) {
+	public static Intent getAppIntent(Context context, int action) {
 		try {
 			String pkgAppName = null;
 			switch (action) {
@@ -840,28 +904,38 @@ public class GlobalActions {
 				case 15: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_backlong_app", null); break;
 				case 16: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_homelong_app", null); break;
 				case 17: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_menulong_app", null); break;
+				case 18: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_launcher_doubltap_app", null); break;
+				case 19: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_system_recommended_first_app", null); break;
+				case 20: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_system_recommended_second_app", null); break;
+				case 21: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_system_recommended_third_app", null); break;
+				case 22: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_system_recommended_fourth_app", null); break;
 			}
 
 			if (pkgAppName != null) {
 				String[] pkgAppArray = pkgAppName.split("\\|");
-				if (pkgAppArray.length < 2) return false;
+				if (pkgAppArray.length < 2) return null;
 
 				ComponentName name = new ComponentName(pkgAppArray[0], pkgAppArray[1]);
 				Intent intent = new Intent(Intent.ACTION_MAIN);
 				intent.addCategory(Intent.CATEGORY_LAUNCHER);
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 				intent.setComponent(name);
-				context.startActivity(intent);
 
-				return true;
-			} else return false;
+				return intent;
+			} else return null;
 		} catch (Throwable t) {
 			XposedBridge.log(t);
-			return false;
+			return null;
 		}
 	}
 
-	public static boolean launchShortcut(Context context, int action) {
+	public static boolean launchApp(Context context, int action) {
+		Intent intent = getAppIntent(context, action);
+		if (intent != null) context.startActivity(intent);
+		return intent != null;
+	}
+
+	public static Intent getShortcutIntent(Context context, int action) {
 		try {
 			String intentString = null;
 			switch (action) {
@@ -882,18 +956,28 @@ public class GlobalActions {
 				case 15: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_backlong_shortcut_intent", null); break;
 				case 16: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_homelong_shortcut_intent", null); break;
 				case 17: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_menulong_shortcut_intent", null); break;
+				case 18: intentString = Helpers.getSharedStringPref(context, "pref_key_launcher_doubltap_shortcut_intent", null); break;
+				case 19: intentString = Helpers.getSharedStringPref(context, "pref_key_system_recommended_first_shortcut_intent", null); break;
+				case 20: intentString = Helpers.getSharedStringPref(context, "pref_key_system_recommended_second_shortcut_intent", null); break;
+				case 21: intentString = Helpers.getSharedStringPref(context, "pref_key_system_recommended_third_shortcut_intent", null); break;
+				case 22: intentString = Helpers.getSharedStringPref(context, "pref_key_system_recommended_fourth_shortcut_intent", null); break;
 			}
 
 			if (intentString != null) {
 				Intent shortcutIntent = Intent.parseUri(intentString, 0);
 				shortcutIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-				context.startActivity(shortcutIntent);
-				return true;
-			} else return false;
+				return shortcutIntent;
+			} else return null;
 		} catch (Throwable t) {
 			XposedBridge.log(t);
-			return false;
+			return null;
 		}
+	}
+
+	public static boolean launchShortcut(Context context, int action) {
+		Intent intent = getShortcutIntent(context, action);
+		if (intent != null) context.startActivity(intent);
+		return intent != null;
 	}
 
 	public static boolean takeScreenshot(Context context) {
@@ -915,20 +999,50 @@ public class GlobalActions {
 //			return false;
 //		}
 //	}
-//
-//	public static boolean simulateMenu(Context context) {
-//		try {
-//			context.sendBroadcast(new Intent("name.mikanoshi.customiuizer.mods.action.SimulateMenu"));
-//			return true;
-//		} catch (Throwable t) {
-//			XposedBridge.log(t);
-//			return false;
-//		}
-//	}
-//
+
+	public static boolean simulateMenu(Context context) {
+		try {
+			context.sendBroadcast(new Intent("name.mikanoshi.customiuizer.mods.action.SimulateMenu"));
+			return true;
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+			return false;
+		}
+	}
+
 	public static boolean openRecents(Context context) {
 		try {
 			context.sendBroadcast(new Intent("name.mikanoshi.customiuizer.mods.action.OpenRecents"));
+			return true;
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+			return false;
+		}
+	}
+
+	public static boolean openVolumeDialog(Context context) {
+		try {
+			context.sendBroadcast(new Intent("name.mikanoshi.customiuizer.mods.action.OpenVolumeDialog"));
+			return true;
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+			return false;
+		}
+	}
+
+	public static boolean volumeUp(Context context) {
+		try {
+			context.sendBroadcast(new Intent("name.mikanoshi.customiuizer.mods.action.VolumeUp"));
+			return true;
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+			return false;
+		}
+	}
+
+	public static boolean volumeDown(Context context) {
+		try {
+			context.sendBroadcast(new Intent("name.mikanoshi.customiuizer.mods.action.VolumeDown"));
 			return true;
 		} catch (Throwable t) {
 			XposedBridge.log(t);

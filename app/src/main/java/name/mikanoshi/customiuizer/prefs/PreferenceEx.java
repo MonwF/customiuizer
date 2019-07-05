@@ -23,12 +23,14 @@ public class PreferenceEx extends Preference {
 	private int secondary = res.getColor(R.color.preference_secondary_text, getContext().getTheme());
 
 	private boolean dynamic;
+	private boolean child;
 	private boolean countAsSummary;
 
 	public PreferenceEx(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		final TypedArray xmlAttrs = context.obtainStyledAttributes(attrs, R.styleable.PreferenceEx);
 		dynamic = xmlAttrs.getBoolean(R.styleable.PreferenceEx_dynamic, false);
+		child = xmlAttrs.getBoolean(R.styleable.PreferenceEx_child, false);
 		countAsSummary = xmlAttrs.getBoolean(R.styleable.PreferenceEx_countAsSummary, false);
 		xmlAttrs.recycle();
 	}
@@ -46,7 +48,7 @@ public class PreferenceEx extends Preference {
 		valSummary.setVisibility(countAsSummary ? View.VISIBLE : View.GONE);
 		valSummary.setText(countAsSummary ? String.valueOf(Helpers.prefs.getStringSet(getKey(), new LinkedHashSet<String>()).size()) : null);
 		title.setTextColor(isEnabled() ? primary : secondary);
-		title.setText(getTitle() + (dynamic ? " ⟲" : ""));
+		title.setText((child ? "			" : "") + getTitle() + (dynamic ? " ⟲" : ""));
 
 		return finalView;
 	}
