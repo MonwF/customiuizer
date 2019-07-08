@@ -379,16 +379,21 @@ public class Helpers {
 
 	public static void getShareApps(Context mContext) {
 		PackageManager pm = mContext.getPackageManager();
-		final Intent mainIntent = new Intent(Intent.ACTION_SEND, null);
+		final Intent mainIntent = new Intent();
+		mainIntent.setAction(Intent.ACTION_SEND);
 		mainIntent.setType("*/*");
 		mainIntent.putExtra("CustoMIUIzer", true);
 		List<ResolveInfo> packs = pm.queryIntentActivities(mainIntent, PackageManager.MATCH_ALL);
 		shareAppsList = new ArrayList<AppData>();
 		AppData app;
 		for (ResolveInfo pack: packs) try {
+			boolean exists = false;
 			for (AppData shareApp: shareAppsList)
-			if (shareApp.pkgName.equals(pack.activityInfo.applicationInfo.packageName)) return;
-
+			if (shareApp.pkgName.equals(pack.activityInfo.applicationInfo.packageName)) {
+				exists = true;
+				break;
+			}
+			if (exists) continue;
 			app = new AppData();
 			app.pkgName = pack.activityInfo.applicationInfo.packageName;
 			app.actName = "-";

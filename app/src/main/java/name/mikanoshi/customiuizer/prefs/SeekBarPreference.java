@@ -193,7 +193,7 @@ public class SeekBarPreference extends Preference {
 	}
 
 	private int getValue() {
-		return (mSeekBar.getProgress() + mSteppedMinValue) * mStepValue;
+		return mSeekBar == null ? mDefaultValue : (mSeekBar.getProgress() + mSteppedMinValue) * mStepValue;
 	}
 
 	private void setValue(int value) {
@@ -204,17 +204,19 @@ public class SeekBarPreference extends Preference {
 
 	private void updateAllValues() {
 		int currentValue = getValue();
-			if (mMaxValue <= mMinValue) mMaxValue = mMinValue + 1;
-			mSteppedMinValue = Math.round((float)mMinValue / mStepValue);
-			mSteppedMaxValue = Math.round((float)mMaxValue / mStepValue);
+		if (mMaxValue <= mMinValue) mMaxValue = mMinValue + 1;
+		mSteppedMinValue = Math.round((float)mMinValue / mStepValue);
+		mSteppedMaxValue = Math.round((float)mMaxValue / mStepValue);
 
-			mSeekBar.setMax(mSteppedMaxValue - mSteppedMinValue);
+		if (mSeekBar != null) mSeekBar.setMax(mSteppedMaxValue - mSteppedMinValue);
 
-			currentValue = getBoundedValue(currentValue) - mSteppedMinValue;
+		currentValue = getBoundedValue(currentValue) - mSteppedMinValue;
 
+		if (mSeekBar != null) {
 			mSeekBar.setProgress(currentValue);
 			updateDisplay(currentValue);
 		}
+	}
 
 	private int getBoundedValue(int value) {
 		value = Math.round((float)value / mStepValue);

@@ -65,6 +65,9 @@
     <string name="system_nolightuponcharges_summ">当您连接或者断开充电器时不打开屏幕</string>
     <string name="system_nolightuponheadset_title">连接耳机时不亮起屏幕</string>
     <string name="system_nolightuponheadset_summ">当您连接耳机时不打开屏幕</string>
+    <string name="system_minbrightness_title">自动亮度最小值</string>
+    <string name="system_minbrightness_summ">设置自动模式下的最小亮度值</string>
+    <string name="system_minbrightness_note">在包含指数亮度范围的最新Android版本上，滑块将不会对应系统亮度滑块</string>
     <string name="system_noducking_title">禁用闪避</string>
     <string name="system_noducking_summ">播放通知声音时不降低当前播放音乐的音量</string>
     <string name="system_separatevolume_title">独立音量控制</string>
@@ -120,7 +123,11 @@
     <string name="system_downgrade_title">允许降级</string>
     <string name="system_downgrade_summ">可以在新版本应用上安装旧版本应用</string>
     <string name="system_unblockthird_title">解锁启动器</string>
-    <string name="system_unblockthird_summ">取消中国版ROM对第三方启动器的限制</string>
+    <string name="system_unblockthird_summ">解除中国版ROM对第三方启动器的限制</string>
+    <string name="system_applock_title">不严格的应用锁</string>
+    <string name="system_applock_summ">如果选择了退出后应用锁定的选项，设备锁定时不要锁定应用</string>
+    <string name="system_applock_timeout_title">应用锁超时</string>
+    <string name="system_applock_timeout_summ">应用退出后保持解锁状态的时间间隔</string>
     <string name="system_cleanshare_title">清理共享菜单</string>
     <string name="system_cleanshare_summ">从共享菜单移除所选应用</string>
     <string name="system_cleanshare_test">测试共享菜单</string>
@@ -141,9 +148,9 @@
     <string name="system_recommended_first_summ">第一个快捷方式方案的动作</string>
     <string name="system_recommended_second_title">第二个快捷方式动作</string>
     <string name="system_recommended_second_summ">第二个快捷方式方案的动作</string>
-    <string name="system_recommended_third_title">第三个快捷方式</string>
+    <string name="system_recommended_third_title">第三个快捷方式动作</string>
     <string name="system_recommended_third_summ">第三个快捷方式方案的动作</string>
-    <string name="system_recommended_fourth_title">第四个快捷方式</string>
+    <string name="system_recommended_fourth_title">第四个快捷方式动作</string>
     <string name="system_recommended_fourth_summ">第四个快捷方式方案的动作</string>
     <string name="system_mods_betterpopups">改进弹窗通知</string>
     <string name="system_betterpopups_delay_title">自动隐藏延迟</string>
@@ -239,6 +246,7 @@
     <string name="controls_volumemedia_vibrate_title">长按振动</string>
     <string name="controls_volumemedia_vibrate_summ">执行长按动作时振动</string>
     <string name="controls_mods_navbar">导航栏</string>
+    <string name="controls_navbarheight_title">导航栏高度</string>
     <string name="controls_backlong_title">长按返回键动作</string>
     <string name="controls_homelong_title">长按Home键动作</string>
     <string name="controls_menulong_title">长按菜单键动作</string>
@@ -337,6 +345,10 @@
     <string name="array_autogroupnotif_no">不分组</string>
     <string name="array_qshaptic_light">轻微振动</string>
     <string name="array_qshaptic_strong">强烈振动</string>
+    <string name="array_disable">禁用</string>
+    <string name="array_top">靠近顶部</string>
+    <string name="array_middle">中间</string>
+    <string name="array_bottom">靠近底部</string>
     <string name="toggle_wifi_on">Wi-Fi已启用</string>
     <string name="toggle_wifi_off">Wi-Fi已禁用</string>
     <string name="toggle_bt_on">蓝牙已启用</string>
@@ -462,6 +474,7 @@
     <string name="permission_permanent">现在您必须手动启用此选项的权限。很好！</string>
     <string name="format_d_ms">%d ms</string>
     <string name="format_d_s">%d s</string>
+    <string name="format_d_m">%d m</string>
     <string name="format_KBs">%d KB/s</string>
     <string name="oneKBs">1 KB/s</string>
     <string name="Bs">B/s</string>

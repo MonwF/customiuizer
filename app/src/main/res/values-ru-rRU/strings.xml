@@ -125,6 +125,10 @@
 	<string name="array_autogroupnotif_no">Не группировать</string>
 	<string name="array_qshaptic_light">Лёгкая вибрация</string>
 	<string name="array_qshaptic_strong">Сильная вибрация</string>
+	<string name="array_disable">Отключить</string>
+	<string name="array_top">Ближе к началу</string>
+	<string name="array_middle">В середине списка</string>
+	<string name="array_bottom">В самом низу</string>
 
 	<string name="select_app">Выбрать приложение</string>
 
@@ -184,6 +188,7 @@
 	<string name="controls_volumemedia_vibrate_title">Вибрация при долгом нажатии</string>
 	<string name="controls_volumemedia_vibrate_summ">Вибрировать при выполнении действия на долгое нажатие</string>
 	<string name="controls_mods_navbar">Панель навигации</string>
+	<string name="controls_navbarheight_title">Высота панели</string>
 	<string name="controls_backlong_title">Действие на долгое нажатие кнопки Назад</string>
 	<string name="controls_homelong_title">Действие на долгое нажатие кнопки Домой</string>
 	<string name="controls_menulong_title">Действие на долгое нажатие кнопки Меню</string>
@@ -319,6 +324,10 @@
 	<string name="system_downgrade_summ">Делает возможным установку старой версии приложения поверх новой</string>
 	<string name="system_unblockthird_title">Разблокировать ланчеры</string>
 	<string name="system_unblockthird_summ">Отключает ограничение на использование сторонних ланчеров на китайских прошивках</string>
+	<string name="system_applock_title">Менее строгая защита приложений</string>
+	<string name="system_applock_summ">Отключает блокировку приложений при блокировке устройства, если выбрана опция её активации при выходе из приложения</string>
+	<string name="system_applock_timeout_title">Задержка блокировки приложений</string>
+	<string name="system_applock_timeout_summ">Временной интервал между закрытием приложения и его блокировкой</string>
 	<string name="system_cleanshare_title">Очистка меню \"Поделиться\"</string>
 	<string name="system_cleanshare_summ">Скрыть выбранные приложения в списке отправки данных</string>
 	<string name="system_cleanshare_test">Проверка меню</string>
@@ -411,6 +420,9 @@
 	<string name="system_nolightuponcharges_title">Не включать экран при зарядке</string>
 	<string name="system_nolightuponheadset_title">Не включать экран при подключении наушников</string>
 	<string name="system_nolightuponheadset_summ">Запрещает включение экрана при подключении наушников</string>
+	<string name="system_minbrightness_title">Минимальная автояркость</string>
+	<string name="system_minbrightness_summ">Задаёт минимальное значение яркости в автоматическом режиме</string>
+	<string name="system_minbrightness_note">Слайдер не соответствует системному слайдеру громкости на последних версиях Андроида с экспоненциальной шкалой яркости</string>
 	<string name="system_noducking_title">Отключить заглушение</string>
 	<string name="system_noducking_summ">Не понижать громкость играющей в данный момент музыки для проигрывания звука уведомления</string>
 	<string name="system_separatevolume_title">Раздельные настройки громкости</string>
@@ -484,6 +496,7 @@
 	<string name="permission_permanent">Теперь Вам придётся искать где вручную дать разрешение для данной функции. Так держать!</string>
 	<string name="format_d_ms">%d мс</string>
 	<string name="format_d_s">%d сек</string>
+	<string name="format_d_m">%d мин</string>
 	<string name="format_KBs">%d КБ/с</string>
 	<string name="oneKBs">1 КБ/с</string>
 	<string name="Bs">Б/с</string>

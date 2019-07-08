@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
+import android.content.res.XModuleResources;
+import android.content.res.XResources;
 import android.graphics.drawable.Drawable;
 import android.inputmethodservice.InputMethodService;
 import android.media.AudioManager;
@@ -774,6 +776,19 @@ public class Controls {
 				}
 			}
 		});
+	}
+
+	public static void NavbarHeightRes() {
+		try {
+			XModuleResources modRes = XModuleResources.createInstance(MainModule.MODULE_PATH, null);
+			int opt = MainModule.mPrefs.getInt("controls_navbarheight", 26);
+			int heightRes = opt == 26 ? R.dimen.navigation_bar_height_47 : modRes.getIdentifier("navigation_bar_height_" + opt, "dimen", Helpers.modulePkg);
+			XResources.setSystemWideReplacement("android", "dimen", "navigation_bar_height", modRes.fwd(heightRes));
+			XResources.setSystemWideReplacement("android", "dimen", "navigation_bar_height_landscape", modRes.fwd(heightRes));
+			XResources.setSystemWideReplacement("android", "dimen", "navigation_bar_width", modRes.fwd(heightRes));
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
 	}
 
 	public static void AIButtonHook(LoadPackageParam lpparam) {

@@ -63,14 +63,6 @@
 			android:targetActivity=".MainActivity"
 			android:enabled="true"
 			android:excludeFromRecents="true">
-			<intent-filter>
-				<action android:name="com.android.settings.action.EXTRA_SETTINGS"/>
-				<category android:name="android.intent.category.DEFAULT"/>
-			</intent-filter>
-			<meta-data android:name="com.android.settings.category" android:value="com.android.settings.category.customiuizer" />
-			<meta-data android:name="com.android.settings.icon" android:resource="@drawable/ic_launcher" />
-			<meta-data android:name="com.android.settings.icon_tintable" android:value="true" />
-			<meta-data android:name="com.android.settings.title" android:resource="@string/app_name" />
 		</activity-alias>
 
 		<activity

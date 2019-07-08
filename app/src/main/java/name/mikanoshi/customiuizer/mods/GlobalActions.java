@@ -1,6 +1,7 @@
 package name.mikanoshi.customiuizer.mods;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RecentTaskInfo;
 import android.app.Application;
@@ -22,6 +23,8 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.os.UserHandle;
+import android.preference.PreferenceActivity.Header;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
@@ -30,8 +33,9 @@ import android.view.ViewConfiguration;
 import android.widget.Toast;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
@@ -40,6 +44,7 @@ import de.robv.android.xposed.callbacks.XC_InitPackageResources;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
 import miui.os.SystemProperties;
+import name.mikanoshi.customiuizer.GateWaySettings;
 import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
@@ -520,153 +525,46 @@ public class GlobalActions {
 	}
 
 	public static void miuizerSettingsInit(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.android.settings.MiuiSettings", lpparam.classLoader, "onCreate", Bundle.class, new XC_MethodHook() {
+		Method[] methods = XposedHelpers.findMethodsByExactParameters(findClass("com.android.settings.MiuiSettings", lpparam.classLoader), void.class, List.class);
+		for (Method method: methods)
+		if (Modifier.isPublic(method.getModifiers()))
+		Helpers.hookMethod(method, new XC_MethodHook() {
 			@Override
 			@SuppressWarnings("unchecked")
-			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
-				Map<String, Integer> map = (Map<String, Integer>)XposedHelpers.getStaticObjectField(findClass("com.android.settings.MiuiSettings", lpparam.classLoader), "CATEGORY_MAP");
-				map.put("com.android.settings.category.customiuizer", settingsIconResId);
-				XposedHelpers.setStaticObjectField(findClass("com.android.settings.MiuiSettings", lpparam.classLoader), "CATEGORY_MAP", map);
-				//XposedBridge.log(map.toString());
-			}
-		});
-/*
-		Helpers.findAndHookMethod("com.android.settingslib.drawer.l", lpparam.classLoader, "a", Context.class, Map.class, boolean.class, String.class, String.class, new XC_MethodHook() {
-			@Override
 			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
-				Map<Pair<String, String>, Object> map = (Map<Pair<String, String>, Object>)param.args[1];
-				boolean bool = (boolean)param.args[2];
-				String str1 = (String)param.args[3];
-				String str2 = (String)param.args[4];
+				if (param.args[0] != null) try {
+					Context mContext = ((Activity)param.thisObject).getBaseContext();
+					int opt = Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_miuizer_settingsiconpos", "2"));
+					if (opt == 0) return;
 
-				XposedBridge.log("Tile with Map:");
-				XposedBridge.log("Map:");
-				for (Map.Entry<Pair<String, String>, Object> entry: map.entrySet())
-				XposedBridge.log(entry.getKey().first + " = " + entry.getKey().second);
-				XposedBridge.log("- - - - - - - - - -");
-				XposedBridge.log(String.valueOf(bool));
-				XposedBridge.log("Str1: " + str1);
-				XposedBridge.log("Str2: " + str2);
-				XposedBridge.log("- - - - - - - - - -");
-			}
-		});
+					Resources modRes = Helpers.getModuleRes(mContext);
+					Header header = new Header();
+					header.id = 666;
+					header.intent = new Intent().setClassName(Helpers.modulePkg, GateWaySettings.class.getCanonicalName());
+					header.iconRes = settingsIconResId;
+					header.title = modRes.getString(R.string.app_name);
+					Bundle bundle = new Bundle();
+					ArrayList<UserHandle> users = new ArrayList<UserHandle>();
+					users.add((UserHandle)XposedHelpers.newInstance(UserHandle.class, 0));
+					bundle.putParcelableArrayList("header_user", users);
+					header.extras = bundle;
 
-		Helpers.findAndHookMethod("com.android.settingslib.drawer.l", lpparam.classLoader, "a", Context.class, UserHandle.class, String.class, Map.class, String.class, ArrayList.class, boolean.class, boolean.class, String.class, new XC_MethodHook() {
-			@Override
-			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
-				UserHandle uh = (UserHandle)param.args[1];
-				String str1 = (String)param.args[2];
-				Map<Pair<String, String>, Object> map = (Map<Pair<String, String>, Object>)param.args[3];
-				String str2 = (String)param.args[4];
-				ArrayList list = (ArrayList)param.args[5];
-				boolean bool1 = (boolean)param.args[6];
-				boolean bool2 = (boolean)param.args[7];
-				String str3 = (String)param.args[8];
-
-				XposedBridge.log("Tile with ArrayList:");
-				XposedBridge.log(uh.toString());
-				XposedBridge.log("Str1: " + str1);
-				XposedBridge.log("Map:");
-				for (Map.Entry<Pair<String, String>, Object> entry: map.entrySet())
-				XposedBridge.log(entry.getKey().first + " = " + entry.getKey().second);
-				XposedBridge.log("- - - - - - - - - -");
-				XposedBridge.log("Str2: " + str2);
-				XposedBridge.log("ArrayList:");
-				for (Object entry: list)
-				XposedBridge.log(entry.toString());
-				XposedBridge.log("- - - - - - - - - -");
-				XposedBridge.log(String.valueOf(bool1));
-				XposedBridge.log(String.valueOf(bool2));
-				XposedBridge.log("Str3: " + str3);
-				XposedBridge.log("= = = = = = = = = =");
-			}
-		});
-
-		Helpers.findAndHookMethod("com.android.settingslib.drawer.l", lpparam.classLoader, "a", Context.class, UserHandle.class, Intent.class, Map.class, String.class, List.class, boolean.class, boolean.class, boolean.class, boolean.class, new XC_MethodHook() {
-			@Override
-			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
-				UserHandle uh = (UserHandle)param.args[1];
-				Intent intent = (Intent)param.args[2];
-				Map<Pair<String, String>, Object> map = (Map<Pair<String, String>, Object>)param.args[3];
-				String str = (String)param.args[4];
-				List list = (List)param.args[5];
-				boolean bool1 = (boolean)param.args[6];
-				boolean bool2 = (boolean)param.args[7];
-				boolean bool3 = (boolean)param.args[8];
-				boolean bool4 = (boolean)param.args[9];
-
-				XposedBridge.log("Tile with List:");
-				XposedBridge.log(uh.toString());
-				XposedBridge.log(intent.toString());
-				XposedBridge.log("Map:");
-				for (Map.Entry<Pair<String, String>, Object> entry: map.entrySet())
-				XposedBridge.log(entry.getKey().first + " = " + entry.getKey().second);
-				XposedBridge.log("- - - - - - - - - -");
-				XposedBridge.log("Str: " + str);
-				XposedBridge.log("List:");
-				for (Object entry: list)
-				XposedBridge.log(entry.toString());
-				XposedBridge.log("- - - - - - - - - -");
-				XposedBridge.log(String.valueOf(bool1));
-				XposedBridge.log(String.valueOf(bool2));
-				XposedBridge.log(String.valueOf(bool3));
-				XposedBridge.log(String.valueOf(bool4));
-				XposedBridge.log("= = = = = = = = = =");
-			}
-		});
-
-		Helpers.findAndHookMethod("com.android.settingslib.drawer.l", lpparam.classLoader, "a", Context.class, "com.android.settingslib.drawer.Tile", ActivityInfo.class, ApplicationInfo.class, PackageManager.class, Map.class, boolean.class, new XC_MethodHook() {
-			@Override
-			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
-				ApplicationInfo ai = (ApplicationInfo)param.args[3];
-				if (ai.packageName.equalsIgnoreCase(modulePkg) && !(boolean)XposedHelpers.callMethod(ai, "isSystemApp")) ai.flags |= 1;
-			}
-
-			@Override
-			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
-				Object tile = param.args[1];
-				ActivityInfo ai = (ActivityInfo)param.args[2];
-				ApplicationInfo ai2 = (ApplicationInfo)param.args[3];
-				Map<Pair<String, String>, Object> map = (Map<Pair<String, String>, Object>)param.args[5];
-				boolean bool = (boolean)param.args[6];
-
-				if (ai2.packageName.equalsIgnoreCase(modulePkg)) {
-					XposedBridge.log("Result: " + String.valueOf((boolean)param.getResult()));
-					XposedBridge.log("Title: " + XposedHelpers.getObjectField(tile, "title"));
-					XposedBridge.log("Summary: " + XposedHelpers.getObjectField(tile, "summary"));
-					XposedBridge.log("Cat: " + XposedHelpers.getObjectField(tile, "category"));
-					XposedBridge.log("Key: " + XposedHelpers.getObjectField(tile, "key"));
-					XposedBridge.log("Priority: " + String.valueOf((int)XposedHelpers.getObjectField(tile, "priority")));
-					XposedBridge.log("cCN: " + ((ArrayList)XposedHelpers.getObjectField(tile, "cCN")).toString());
-					XposedBridge.log("cCM: " + String.valueOf((boolean)XposedHelpers.getObjectField(tile, "cCM")));
-					XposedBridge.log("Icon: " + ((Icon)XposedHelpers.getObjectField(tile, "icon")).toString());
-					XposedBridge.log(ai.toString());
-					XposedBridge.log(ai2.toString());
-					//XposedBridge.log("Map:");
-					//for (Map.Entry<Pair<String, String>, Object> entry : map.entrySet())
-					//XposedBridge.log(entry.getKey().first + " = " + entry.getKey().second);
-					XposedBridge.log(String.valueOf(bool));
-					XposedBridge.log("= = = = = = = = = =");
+					int security = mContext.getResources().getIdentifier("security_status", "id", mContext.getPackageName());
+					int advanced = mContext.getResources().getIdentifier("other_advanced_settings", "id", mContext.getPackageName());
+					int feedback = mContext.getResources().getIdentifier("bug_report_settings", "id", mContext.getPackageName());
+					List<Header> headers = (List<Header>)param.args[0];
+					int position = 0;
+					for (Header head: headers) {
+						if (opt == 2 && head.id == advanced) { headers.add(position, header); return; }
+						if (opt == 3 && head.id == feedback) { headers.add(position, header); return; }
+						position++;
+						if (opt == 1 && head.id == security) { headers.add(position, header); return; }
+					}
+				} catch (Throwable t) {
+					XposedBridge.log(t);
 				}
 			}
 		});
-
-		Helpers.findAndHookMethod("com.android.settingslib.drawer.l", lpparam.classLoader, "a", Context.class, Map.class, "com.android.settingslib.drawer.Tile", new XC_MethodHook() {
-			@Override
-			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
-				Map map = (Map)param.args[1];
-				Object tile = (Object)param.args[2];
-
-				XposedBridge.log("Tile:");
-				XposedBridge.log(tile.toString());
-				XposedBridge.log(XposedHelpers.getObjectField(tile, "title").toString());
-				XposedBridge.log(XposedHelpers.getObjectField(tile, "summary").toString());
-				XposedBridge.log(String.valueOf((int)XposedHelpers.getObjectField(tile, "priority")));
-				XposedBridge.log(map.toString());
-				XposedBridge.log("- - - - - - - - - -");
-			}
-		});
-*/
 	}
 	
 	public static void setupUnhandledCatcher() {

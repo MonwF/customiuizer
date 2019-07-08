@@ -1,3 +1,11 @@
+1.6.2
+[New] Navigation bar height
+[New] Minimum auto brightness value
+[New] Do not lock apps when device is locked (when option with locking after exit is selected)
+[New] Change app lock timeout after exit
+[Fixed][Clean share menu] Not all apps were available for removal
+[Fixed][Fast access icon] Better compatibility, new position options
+
 1.6.1
 [New] More intervals for Silent/Do Not Disturb timers
 [New] Remove apps from share menu
@@ -9,8 +17,8 @@
 [New] Actions: Open menu, Open volume dialog, Raise volume, Lower volume
 [New] Shortcut to unlock credentials (long press CustoMIUIzer icon in launcher that supports shortcuts)
 [New] Mod searching function in module settings
-[Fixed][Detailed network speed indicator] Better compatibility with new ROMs
 [Fixed] Disable launcher gestures during icons reorder
+[Improved][Detailed network speed indicator] Compatibility with new ROMs
 
 1.6.0
 [New] POCO Launcher support for a number of mods

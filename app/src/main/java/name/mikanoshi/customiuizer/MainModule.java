@@ -54,6 +54,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getBoolean("system_nopassword")) System.NoPasswordHook();
 		if (mPrefs.getInt("system_betterpopups_delay", 0) > 0 && !mPrefs.getBoolean("system_betterpopups_nohide")) System.BetterPopupsHideDelaySysHook();
 		if (mPrefs.getInt("system_statusbarheight", 19) > 19) System.StatusBarHeightRes();
+		if (mPrefs.getInt("controls_navbarheight", 26) > 26) Controls.NavbarHeightRes();
 		if (mPrefs.getBoolean("controls_fsg_horiz")) Controls.FSGesturesHook();
 		if (mPrefs.getBoolean("system_epm")) System.ExtendedPowerMenuHook();
 		if (mPrefs.getBoolean("system_pocketmode")) System.PocketModeHook();
@@ -73,7 +74,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getInt("system_qsgridcolumns", 2) > 2 || mPrefs.getInt("system_qsgridrows", 3) > 3) System.QSGridRes(resparam);
 			if (mPrefs.getInt("system_qqsgridcolumns", 2) > 2) System.QQSGridRes(resparam);
 			if (mPrefs.getBoolean("system_volumetimer")) System.VolumeTimerValuesRes(resparam);
-	}
+		}
 
 		if (pkg.equals("com.android.settings")) {
 			GlobalActions.miuizerSettingsResInit(resparam);
@@ -129,9 +130,11 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 				mPrefs.getInt("controls_menulong_action", 1) > 1) Controls.NavBarActionsHook(lpparam);
 			if (mPrefs.getBoolean("system_epm")) System.ExtendedPowerMenuHook(lpparam);
 			if (mPrefs.getBoolean("system_cleanshare")) System.CleanShareMenuHook(lpparam);
+			if (mPrefs.getBoolean("system_limitminbrightness")) System.MinAutoBrightnessHook(lpparam);
+			if (mPrefs.getBoolean("system_applock")) System.AppLockHook(lpparam);
+			if (mPrefs.getInt("system_applock_timeout", 1) > 1) System.AppLockTimeoutHook(lpparam);
 
 			//Controls.AIButtonHook(lpparam);
-			//System.AutoBrightnessHook(lpparam);
 		}
 
 		if (pkg.equals(Helpers.modulePkg)) {
@@ -193,7 +196,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 
 		if (pkg.equals("com.android.settings")) {
 			GlobalActions.miuizerSettingsInit(lpparam);
-
 			if (mPrefs.getBoolean("system_separatevolume")) System.NotificationVolumeSettingsHook(lpparam);
 			if (mPrefs.getBoolean("system_pocketmode")) System.PocketModeSettingHook(lpparam);
 		}

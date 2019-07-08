@@ -358,6 +358,19 @@
 		<item>@string/time_12h</item>
 	</array>
 
+	<string-array name="settingsicon">
+		<item>@string/array_disable</item>
+		<item>@string/array_top</item>
+		<item>@string/array_middle</item>
+		<item>@string/array_bottom</item>
+	</string-array>
+	<string-array name="settingsicon_val">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+	</string-array>
+
 	<string-array name="placeholder_array">
 		<item>@string/dummy</item>
 	</string-array>

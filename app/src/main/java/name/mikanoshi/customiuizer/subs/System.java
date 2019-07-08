@@ -169,6 +169,13 @@ public class System extends SubFragment {
 			}
 		});
 
+		int min = getResources().getInteger(getResources().getIdentifier("config_screenBrightnessSettingMinimum", "integer", "android"));
+		int max = getResources().getInteger(getResources().getIdentifier("config_screenBrightnessSettingMaximum", "integer", "android"));
+		SeekBarPreference minBrightness = (SeekBarPreference)findPreference("pref_key_system_minbrightness");
+		minBrightness.setDefaultValue(Math.round((max - min) / 2.0));
+		minBrightness.setMinValue(min);
+		minBrightness.setMaxValue(max);
+
 		if (Helpers.isNougat()) {
 			((ListPreferenceEx)findPreference("pref_key_system_autogroupnotif")).setUnsupported(true);
 		}

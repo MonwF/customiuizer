@@ -53,6 +53,7 @@ import android.preference.PreferenceFragment;
 import android.provider.Settings;
 import android.text.Layout;
 import android.text.TextUtils;
+import android.util.ArrayMap;
 import android.util.AttributeSet;
 import android.util.Pair;
 import android.util.TypedValue;
@@ -1052,11 +1053,30 @@ public class System {
 		});
 	}
 
-	public static void AutoBrightnessHook(LoadPackageParam lpparam) {
+	public static void MinAutoBrightnessHook(LoadPackageParam lpparam) {
+		if (Helpers.isNougat())
 		Helpers.findAndHookMethod("com.android.server.display.AutomaticBrightnessController", lpparam.classLoader, "updateAutoBrightness", boolean.class, new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
-				Helpers.log("AutoBrightnessHook", "mScreenAutoBrightness: " + XposedHelpers.getObjectField(param.thisObject, "mScreenAutoBrightness"));
+				int val = XposedHelpers.getIntField(param.thisObject, "mScreenAutoBrightness");
+				int opt = MainModule.mPrefs.getInt("system_minbrightness", 44);
+				int newVal = Math.max(val, opt);
+				if (val >= 0 && val != newVal) {
+					XposedHelpers.setIntField(param.thisObject, "mScreenAutoBrightness", newVal);
+					if ((boolean)param.args[0]) {
+						Object mCallbacks = XposedHelpers.getObjectField(param.thisObject, "mCallbacks");
+						XposedHelpers.callMethod(mCallbacks, "updateBrightness");
+					}
+				}
+			}
+		});
+		else
+		Helpers.findAndHookMethod("com.android.server.display.AutomaticBrightnessControllerInjector", lpparam.classLoader, "changeBrightness", float.class, int.class, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				int val = (int)param.getResult();
+				int opt = MainModule.mPrefs.getInt("system_minbrightness", 44);
+				if (val >= 0) param.setResult(Math.max(val, opt));
 			}
 		});
 	}
@@ -1132,6 +1152,7 @@ public class System {
 				meter.setMaxLines(2);
 				meter.setLineSpacing(0, 0.7f);
 				meter.setPadding(Math.round(meter.getPaddingLeft() + 3 * density), meter.getPaddingTop(), meter.getPaddingRight(), meter.getPaddingBottom());
+//Helpers.log("DetailedNetSpeedHook", "NetworkSpeedView constructor");
 			}
 		});
 
@@ -1145,6 +1166,7 @@ public class System {
 				txBytesTotal = bytes.first;
 				rxBytesTotal = bytes.second;
 				measureTime = nanoTime();
+//Helpers.log("DetailedNetSpeedHook", "getTotalByte: " + txBytesTotal + ", " + rxBytesTotal);
 			}
 		});
 
@@ -1205,7 +1227,8 @@ public class System {
 				String tx = hideLow && txSpeed < lowLevel ? "" : humanReadableByteCount(mContext, txSpeed) + txarrow;
 				String rx = hideLow && rxSpeed < lowLevel ? "" : humanReadableByteCount(mContext, rxSpeed) + rxarrow;
 				param.args[0] = tx + "\n" + rx;
-
+//Helpers.log("DetailedNetSpeedHook", "setTextToViewList: " + tx + ", " + rx);
+//Helpers.log("DetailedNetSpeedHook", "class: " + param.thisObject.getClass().getSimpleName());
 				if (param.thisObject.getClass().getSimpleName().equals("NetworkSpeedController")) {
 					CopyOnWriteArrayList mViewList = (CopyOnWriteArrayList)XposedHelpers.getObjectField(param.thisObject, "mViewList");
 					for (Object tv: mViewList)
@@ -1888,8 +1911,7 @@ public class System {
 			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
 				try {
 					//Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-					//Helpers.log("rotationForOrientationLw: " + param.args[0] + ", " + param.args[1]);
-					//Helpers.log("rotationForOrientationLw: " + param.getResult());
+					//Helpers.log("rotationForOrientationLw: " + param.args[0] + ", " + param.args[1] + " = " + param.getResult());
 					if ((int)param.args[0] == -1) {
 						int opt = (int)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mOrientationLockState");
 						int prevOrient = (int)param.args[1];
@@ -1910,27 +1932,9 @@ public class System {
 
 	public static void StatusBarHeightRes() {
 		try {
-			int opt = MainModule.mPrefs.getInt("system_statusbarheight", 19);
-			int heightRes = R.dimen.status_bar_height_27;
-			switch (opt) {
-				case 20: heightRes = R.dimen.status_bar_height_20; break;
-				case 21: heightRes = R.dimen.status_bar_height_21; break;
-				case 22: heightRes = R.dimen.status_bar_height_22; break;
-				case 23: heightRes = R.dimen.status_bar_height_23; break;
-				case 24: heightRes = R.dimen.status_bar_height_24; break;
-				case 25: heightRes = R.dimen.status_bar_height_25; break;
-				case 26: heightRes = R.dimen.status_bar_height_26; break;
-				case 27: heightRes = R.dimen.status_bar_height_27; break;
-				case 28: heightRes = R.dimen.status_bar_height_28; break;
-				case 29: heightRes = R.dimen.status_bar_height_29; break;
-				case 30: heightRes = R.dimen.status_bar_height_30; break;
-				case 31: heightRes = R.dimen.status_bar_height_31; break;
-				case 32: heightRes = R.dimen.status_bar_height_32; break;
-				case 33: heightRes = R.dimen.status_bar_height_33; break;
-				case 34: heightRes = R.dimen.status_bar_height_34; break;
-				case 35: heightRes = R.dimen.status_bar_height_35; break;
-			}
 			XModuleResources modRes = XModuleResources.createInstance(MainModule.MODULE_PATH, null);
+			int opt = MainModule.mPrefs.getInt("system_statusbarheight", 19);
+			int heightRes = opt == 19 ? R.dimen.status_bar_height_27 : modRes.getIdentifier("status_bar_height_" + opt, "dimen", Helpers.modulePkg);
 			XResources.setSystemWideReplacement("android", "dimen", "status_bar_height", modRes.fwd(heightRes));
 			XResources.setSystemWideReplacement("android", "dimen", "status_bar_height_portrait", modRes.fwd(heightRes));
 			XResources.setSystemWideReplacement("android", "dimen", "status_bar_height_landscape", modRes.fwd(heightRes));
@@ -2567,6 +2571,113 @@ public class System {
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
+	}
+
+	public static void AppLockHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.miui.server.SecurityManagerService", lpparam.classLoader, "removeAccessControlPassLocked", "com.miui.server.SecurityManagerService$UserState", String.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				try {
+					if (!"*".equals(param.args[1])) return;
+					int mode = (int)XposedHelpers.callMethod(param.thisObject, "getAccessControlLockMode", param.args[0]);
+					if (mode != 1) param.setResult(null);
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
+	}
+
+	@SuppressWarnings("unchecked")
+	private static void saveLastCheck(Object thisObject, String pkgName, int userId) {
+		try {
+			boolean enabled = false;
+			if (pkgName != null && !"com.miui.home".equals(pkgName)) enabled = (boolean)XposedHelpers.callMethod(thisObject, "getApplicationAccessControlEnabledAsUser", pkgName, userId);
+			Object userState = XposedHelpers.callMethod(thisObject, "getUserStateLocked", userId);
+			XposedHelpers.setAdditionalInstanceField(userState, "mAccessControlLastCheckSaved",
+				enabled ? new ArrayMap<String, Long>((ArrayMap<String, Long>)XposedHelpers.getObjectField(userState, "mAccessControlLastCheck")) : null
+			);
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	@SuppressWarnings({"unchecked"})
+	private static void checkLastCheck(Object thisObject, int userId) {
+		try {
+			Object userState = XposedHelpers.callMethod(thisObject, "getUserStateLocked", userId);
+			ArrayMap<String, Long> mAccessControlLastCheckSaved = (ArrayMap<String, Long>)XposedHelpers.getAdditionalInstanceField(userState, "mAccessControlLastCheckSaved");
+			if (mAccessControlLastCheckSaved == null) return;
+			ArrayMap<String, Long> mAccessControlLastCheck = (ArrayMap<String, Long>)XposedHelpers.getObjectField(userState, "mAccessControlLastCheck");
+			if (mAccessControlLastCheck.size() == 0) return;
+			long timeout = MainModule.mPrefs.getInt("system_applock_timeout", 1) * 60L * 1000L;
+			for (Map.Entry<String, Long> pair: mAccessControlLastCheck.entrySet()) {
+				String pkg = pair.getKey();
+				Long time = pair.getValue();
+				if (mAccessControlLastCheckSaved.containsKey(pkg)) {
+					Long oldTime = mAccessControlLastCheckSaved.get(pkg);
+					if (!time.equals(oldTime)) {
+						mAccessControlLastCheck.put(pkg, time + (timeout - 60000L));
+						XposedHelpers.setObjectField(userState, "mAccessControlLastCheck", mAccessControlLastCheck);
+					}
+				} else {
+					mAccessControlLastCheck.put(pkg, time + (timeout - 60000L));
+					XposedHelpers.setObjectField(userState, "mAccessControlLastCheck", mAccessControlLastCheck);
+				}
+			}
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void AppLockTimeoutHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.miui.server.SecurityManagerService", lpparam.classLoader, "addAccessControlPassForUser", String.class, int.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				saveLastCheck(param.thisObject, (String)param.args[0], (int)param.args[1]);
+			}
+
+			@Override
+			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				checkLastCheck(param.thisObject, (int)param.args[1]);
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.server.SecurityManagerService", lpparam.classLoader, "checkAccessControlPassLocked", String.class, Intent.class, int.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				saveLastCheck(param.thisObject, (String)param.args[0], (int)param.args[2]);
+			}
+
+			@Override
+			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				checkLastCheck(param.thisObject, (int)param.args[2]);
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.server.SecurityManagerService", lpparam.classLoader, "activityResume", Intent.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				try {
+					Intent intent = (Intent)param.args[0];
+					if (intent.getComponent() != null)
+					saveLastCheck(param.thisObject, intent.getComponent().getPackageName(), 0);
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+
+			@Override
+			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				try {
+					Intent intent = (Intent)param.args[0];
+					if (intent.getComponent() != null)
+					checkLastCheck(param.thisObject, 0);
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
 	}
 
 //	public static void VolumeDialogTimeoutHook(LoadPackageParam lpparam) {

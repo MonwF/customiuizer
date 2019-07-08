@@ -23,15 +23,17 @@
 	<PreferenceCategory
 		android:title="@string/miuizer"
 		android:key="pref_key_miuizer">
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_miuizer_settingsiconpos"
+			android:title="@string/miuizer_show_settingsicon_title"
+			android:summary="@string/miuizer_show_settingsicon_summ"
+			android:entries="@array/settingsicon"
+			android:entryValues="@array/settingsicon_val"
+			android:defaultValue="2" />
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_miuizer_launchericon"
 			android:summary="@string/miuizer_show_launchericon_summ"
 			android:title="@string/miuizer_show_launchericon_title"
-			android:defaultValue="true" />
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_miuizer_settingsicon"
-			android:summary="@string/miuizer_show_settingsicon_summ"
-			android:title="@string/miuizer_show_settingsicon_title"
 			android:defaultValue="true" />
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_miuizer_forcelocale"

@@ -114,6 +114,16 @@
 		android:title="@string/controls_mods_navbar"
 		miuizer:dynamic="true">
 
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_controls_navbarheight"
+			android:title="@string/controls_navbarheight_title"
+			android:defaultValue="26"
+			miuizer:offtext="@string/array_default"
+			miuizer:minValue="26"
+			miuizer:maxValue="60"
+			miuizer:stepValue="1"
+			miuizer:format="%d dip" />
+
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_backlong"
 			android:title="@string/controls_backlong_title" />
