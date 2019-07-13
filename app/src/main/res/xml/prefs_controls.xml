@@ -114,6 +114,12 @@
 		android:title="@string/controls_mods_navbar"
 		miuizer:dynamic="true">
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_controls_nonavbar"
+			android:title="@string/controls_nonavbar_title"
+			android:defaultValue="false"
+			android:disableDependentsState="true" />
+
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_controls_navbarheight"
 			android:title="@string/controls_navbarheight_title"
@@ -122,34 +128,42 @@
 			miuizer:minValue="26"
 			miuizer:maxValue="60"
 			miuizer:stepValue="1"
-			miuizer:format="%d dip" />
+			miuizer:format="%d dip"
+			android:dependency="pref_key_controls_nonavbar" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_backlong"
-			android:title="@string/controls_backlong_title" />
+			android:title="@string/controls_backlong_title"
+			android:dependency="pref_key_controls_nonavbar" />
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_homelong"
-			android:title="@string/controls_homelong_title" />
+			android:title="@string/controls_homelong_title"
+			android:dependency="pref_key_controls_nonavbar" />
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_menulong"
-			android:title="@string/controls_menulong_title" />
+			android:title="@string/controls_menulong_title"
+			android:dependency="pref_key_controls_nonavbar" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_navbarleft"
 			android:summary="@string/controls_navbarleft_summ"
-			android:title="@string/controls_navbarleft_title" />
+			android:title="@string/controls_navbarleft_title"
+			android:dependency="pref_key_controls_nonavbar" />
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_navbarleftlong"
 			android:summary="@string/controls_navbarleftlong_summ"
-			android:title="@string/controls_navbarleftlong_title" />
+			android:title="@string/controls_navbarleftlong_title"
+			android:dependency="pref_key_controls_nonavbar" />
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_navbarright"
 			android:summary="@string/controls_navbarright_summ"
-			android:title="@string/controls_navbarright_title" />
+			android:title="@string/controls_navbarright_title"
+			android:dependency="pref_key_controls_nonavbar" />
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_navbarrightlong"
 			android:summary="@string/controls_navbarrightlong_summ"
-			android:title="@string/controls_navbarrightlong_title" />
+			android:title="@string/controls_navbarrightlong_title"
+			android:dependency="pref_key_controls_nonavbar" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 

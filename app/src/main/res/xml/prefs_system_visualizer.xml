@@ -1,0 +1,58 @@
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:miuizer="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_visualizer"
+		android:title="@string/enable_mod"
+		android:summary="@string/system_visualizer_lockscreen_summ"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_visualizer_drawer"
+		android:title="@string/system_visualizer_drawer_title"
+		android:summary="@string/system_visualizer_drawer_summ"
+		android:dependency="pref_key_system_visualizer"
+		android:defaultValue="false"
+		miuizer:dynamic="true" />
+
+	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		android:key="pref_key_system_visualizer_transp"
+		android:title="@string/system_visualizer_transp_title"
+		android:dependency="pref_key_system_visualizer"
+		android:defaultValue="40"
+		miuizer:minValue="0"
+		miuizer:maxValue="95"
+		miuizer:stepValue="5"
+		miuizer:format="%d%%"
+		miuizer:dynamic="true" />
+
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_system_visualizer_style"
+		android:title="@string/system_visualizer_style_title"
+		android:entries="@array/visualizerstyle"
+		android:entryValues="@array/visualizerstyle_val"
+		android:dependency="pref_key_system_visualizer"
+		android:defaultValue="1"
+		miuizer:dynamic="true"
+		miuizer:valueAsSummary="true" />
+
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_system_visualizer_color"
+		android:title="@string/system_visualizer_color_title"
+		android:entries="@array/visualizercolor"
+		android:entryValues="@array/visualizercolor_val"
+		android:dependency="pref_key_system_visualizer"
+		android:defaultValue="1"
+		miuizer:dynamic="true"
+		miuizer:valueAsSummary="true" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:key="pref_key_system_visualizer_colorval"
+		android:title="@string/system_visualizer_colorval_title"
+		android:dependency="pref_key_system_visualizer"
+		miuizer:dynamic="true" />
+
+</PreferenceScreen>

@@ -11,7 +11,7 @@ import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SharedPrefsProvider;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
-public class QuickSettingsService extends TileService {
+public class AutoRotateService extends TileService {
 
 	void updateTile() {
 		Tile tile = this.getQsTile();

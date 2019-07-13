@@ -232,10 +232,10 @@ public class GlobalActions {
 				SystemProperties.set("ctl.restart", "zygote");
 			}
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.GoToSleep")) {
-				XposedHelpers.callMethod(context.getSystemService(Context.POWER_SERVICE), "goToSleep", SystemClock.uptimeMillis(), 7, 0);
+				XposedHelpers.callMethod(context.getSystemService(Context.POWER_SERVICE), "goToSleep", SystemClock.uptimeMillis());
 			}
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.LockDevice")) {
-				XposedHelpers.callMethod(context.getSystemService(Context.POWER_SERVICE), "goToSleep", SystemClock.uptimeMillis(), 7, 0);
+				XposedHelpers.callMethod(context.getSystemService(Context.POWER_SERVICE), "goToSleep", SystemClock.uptimeMillis());
 				Class<?> clsWMG = XposedHelpers.findClass("android.view.WindowManagerGlobal", null);
 				Object wms = XposedHelpers.callStaticMethod(clsWMG, "getWindowManagerService");
 				XposedHelpers.callMethod(wms, "lockNow", (Object)null);
@@ -560,6 +560,7 @@ public class GlobalActions {
 						position++;
 						if (opt == 1 && head.id == security) { headers.add(position, header); return; }
 					}
+					headers.add(25, header);
 				} catch (Throwable t) {
 					XposedBridge.log(t);
 				}

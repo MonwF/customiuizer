@@ -36,6 +36,7 @@
 	<string name="system_netspeedinterval_summ">System settings modification permission is required</string>
 	<string name="system_detailednetspeed_title">Detailed network speed indicator</string>
 	<string name="system_detailednetspeed_summ">Show incoming and outgoing network speeds separately</string>
+	<string name="system_detailednetspeed_font_title">Font size</string>
 	<string name="system_detailednetspeed_icon_title">Indicator icons</string>
 	<string name="system_detailednetspeed_icon_summ">Incoming/outgoing traffic icons displayed next to speed value (not all custom fonts have every icon)</string>
 	<string name="system_detailednetspeed_low_title">Hide low speed</string>
@@ -79,6 +80,15 @@
 	<string name="system_volumetimer_summ">Add more intervals to timers for Silent and Do Not Disturb modes</string>
 	<string name="system_volumesteps_title">Volume steps multiplier</string>
 	<string name="system_volumesteps_summ">Increase number of volume steps for each stream type</string>
+	<string name="system_visualizer_title">Music visualizer</string>
+	<string name="system_visualizer_summ">Display spectral density of discreet audio frequency bands</string>
+	<string name="system_visualizer_lockscreen_summ">Visualizer is drawn on top of lock screen wallpaper</string>
+	<string name="system_visualizer_drawer_title">Show in notification drawer</string>
+	<string name="system_visualizer_drawer_summ">Additionally draw visualizer in an expanded notification drawer</string>
+	<string name="system_visualizer_transp_title">Transparency</string>
+	<string name="system_visualizer_style_title">Style</string>
+	<string name="system_visualizer_color_title">Color</string>
+	<string name="system_visualizer_colorval_title">Select custom color</string>
 	<string name="system_vibration_title">Block vibration</string>
 	<string name="system_vibration_summ">Prevent selected apps from using vibration</string>
 	<string name="notification_volume">Notification volume</string>
@@ -251,6 +261,7 @@
 	<string name="controls_volumemedia_vibrate_title">Long press vibration</string>
 	<string name="controls_volumemedia_vibrate_summ">Vibrate when long press action is executed</string>
 	<string name="controls_mods_navbar">Navigation bar</string>
+	<string name="controls_nonavbar_title">Hide navbar</string>
 	<string name="controls_navbarheight_title">Navbar height</string>
 	<string name="controls_backlong_title">Back long press action</string>
 	<string name="controls_homelong_title">Home long press action</string>
@@ -360,6 +371,19 @@
 	<string name="array_top">Closer to the top</string>
 	<string name="array_middle">In the middle</string>
 	<string name="array_bottom">Near the bottom</string>
+	<string name="array_max">Maximum</string>
+	<string name="array_large">Large</string>
+	<string name="array_normal">Normal</string>
+	<string name="array_small">Small</string>
+	<string name="array_match">Match album art or wallpaper</string>s
+	<string name="array_static">Custom color</string>
+	<string name="array_rainbowh">Rainbow colors (horizontal)</string>
+	<string name="array_rainbowv">Rainbow colors (vertical)</string>
+	<string name="array_bars_solid">Solid bars</string>
+	<string name="array_bars_solid_rounded">Solid rounded bars</string>
+	<string name="array_bars_dashed">Dashed bars</string>
+	<string name="array_bars_circles">Cirles</string>
+	<string name="array_line">Line</string>
 
 	<string name="toggle_wifi_on">Wi-Fi enabled</string>
 	<string name="toggle_wifi_off">Wi-Fi disabled</string>

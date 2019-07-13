@@ -33,6 +33,7 @@
     <string name="system_netspeedinterval_summ">需要修改系统设置权限</string>
     <string name="system_detailednetspeed_title">详细的网速指示器</string>
     <string name="system_detailednetspeed_summ">分别显示传入和传出的网络速度</string>
+    <string name="system_detailednetspeed_font_title">字体大小</string>
     <string name="system_detailednetspeed_icon_title">指示器图标</string>
     <string name="system_detailednetspeed_icon_summ">网速旁显示传入/传出流量图标 (并非所有的自定义字体都含有对应图标)</string>
     <string name="system_detailednetspeed_low_title">隐藏慢速</string>
@@ -76,6 +77,15 @@
     <string name="system_volumetimer_summ">添加更多间隔到静音和勿扰模式的定时器</string>
     <string name="system_volumesteps_title">音量级数倍增器</string>
     <string name="system_volumesteps_summ">增加每种流类型的音量级数</string>
+    <string name="system_visualizer_title">音乐可视化</string>
+    <string name="system_visualizer_summ">显示音频频段的频谱密度</string>
+    <string name="system_visualizer_lockscreen_summ">锁屏壁纸顶部绘制可视化</string>
+    <string name="system_visualizer_drawer_title">在通知抽屉中显示</string>
+    <string name="system_visualizer_drawer_summ">展开通知抽屉时绘制可视化</string>
+    <string name="system_visualizer_transp_title">透明度</string>
+    <string name="system_visualizer_style_title">样式</string>
+    <string name="system_visualizer_color_title">颜色</string>
+    <string name="system_visualizer_colorval_title">选择自定义颜色</string>
     <string name="system_vibration_title">阻止振动</string>
     <string name="system_vibration_summ">阻止已选应用使用振动</string>
     <string name="notification_volume">通知音量</string>
@@ -246,6 +256,7 @@
     <string name="controls_volumemedia_vibrate_title">长按振动</string>
     <string name="controls_volumemedia_vibrate_summ">执行长按动作时振动</string>
     <string name="controls_mods_navbar">导航栏</string>
+    <string name="controls_nonavbar_title">隐藏导航栏</string>
     <string name="controls_navbarheight_title">导航栏高度</string>
     <string name="controls_backlong_title">长按返回键动作</string>
     <string name="controls_homelong_title">长按Home键动作</string>
@@ -349,6 +360,20 @@
     <string name="array_top">靠近顶部</string>
     <string name="array_middle">中间</string>
     <string name="array_bottom">靠近底部</string>
+    <string name="array_max">最大</string>
+    <string name="array_large">大</string>
+    <string name="array_normal">标准</string>
+    <string name="array_small">小</string>
+    <string name="array_match">匹配专辑封面或壁纸</string>s
+	
+    <string name="array_static">自定义颜色</string>
+    <string name="array_rainbowh">彩虹色(水平)</string>
+    <string name="array_rainbowv">彩虹色(垂直)</string>
+    <string name="array_bars_solid">实心</string>
+    <string name="array_bars_solid_rounded">实心圆</string>
+    <string name="array_bars_dashed">虚线</string>
+    <string name="array_bars_circles">圆形</string>
+    <string name="array_line">直线</string>
     <string name="toggle_wifi_on">Wi-Fi已启用</string>
     <string name="toggle_wifi_off">Wi-Fi已禁用</string>
     <string name="toggle_bt_on">蓝牙已启用</string>

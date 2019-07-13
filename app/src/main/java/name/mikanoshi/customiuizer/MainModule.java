@@ -81,9 +81,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		}
 
 		if (pkg.equals("com.miui.home") || pkg.equals("com.mi.android.globallauncher")) {
-			if (mPrefs.getBoolean("launcher_unlockgrids")) try {
-				resparam.res.setReplacement(pkg, "integer", "config_cell_count_x", 3);
-				resparam.res.setReplacement(pkg, "integer", "config_cell_count_y", 4);
+			if (mPrefs.getBoolean("launcher_unlockgrids") && pkg.equals("com.miui.home")) try {
+				resparam.res.setReplacement(pkg, "integer", "config_cell_count_x", 4);
+				resparam.res.setReplacement(pkg, "integer", "config_cell_count_y", 6);
 				resparam.res.setReplacement(pkg, "integer", "config_cell_count_x_min", 3);
 				resparam.res.setReplacement(pkg, "integer", "config_cell_count_y_min", 4);
 				resparam.res.setReplacement(pkg, "integer", "config_cell_count_x_max", 6);
@@ -181,6 +181,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 				mPrefs.getInt("pref_key_system_recommended_second_action", 1) > 1 ||
 				mPrefs.getInt("pref_key_system_recommended_third_action", 1) > 1 ||
 				mPrefs.getInt("pref_key_system_recommended_fourth_action", 1) > 1) System.CustomRecommendedHook(lpparam);
+			if (mPrefs.getBoolean("controls_nonavbar")) System.HideNavBarHook(lpparam);
+			if (mPrefs.getBoolean("system_visualizer")) System.AudioVisualizerHook(lpparam);
 		}
 
 //		if (pkg.equals("com.android.incallui")) {
@@ -199,11 +201,12 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_separatevolume")) System.NotificationVolumeSettingsHook(lpparam);
 			if (mPrefs.getBoolean("system_pocketmode")) System.PocketModeSettingHook(lpparam);
 		}
-
-		if (pkg.equals("com.miui.home") || pkg.equals("com.mi.android.globallauncher"))
+		if (pkg.equals("com.miui.home") || pkg.equals("com.mi.android.globallauncher")) {
+		Helpers.log("Launcher", "Loading com.miui.home");
 		Helpers.findAndHookMethod(Application.class, "attach", Context.class, new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				Helpers.log("Launcher", "Application attached");
 				if (mPrefs.getInt("launcher_swipedown_action", 1) != 1 ||
 					mPrefs.getInt("launcher_swipeup_action", 1) != 1 ||
 					mPrefs.getInt("launcher_swipedown2_action", 1) != 1 ||
@@ -216,6 +219,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 				if (mPrefs.getBoolean("launcher_renameapps")) Launcher.RenameShortcutsHook(lpparam);
 				if (mPrefs.getBoolean("launcher_closefolder")) Launcher.CloseFolderOnLaunchHook(lpparam);
 				if (mPrefs.getBoolean("launcher_darkershadow")) Launcher.TitleShadowHook(lpparam);
+				if (mPrefs.getBoolean("controls_nonavbar")) Launcher.HideNavBarHook(lpparam);
+				//Launcher.HideSeekPointsHook(lpparam);
+				//Launcher.InfiniteScrollHook(lpparam);
 				if (lpparam.packageName.equals("com.miui.home")) {
 					if (mPrefs.getBoolean("controls_fsg_horiz")) Launcher.FSGesturesHook(lpparam);
 					if (Integer.parseInt(mPrefs.getString("launcher_foldershade", "1")) > 1) Launcher.FolderShadeHook(lpparam);
@@ -224,7 +230,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 				//if (!mPrefs.getString("system_clock_app", "").equals("")) Launcher.ReplaceClockAppHook(lpparam);
 				//if (!mPrefs.getString("system_calendar_app", "").equals("")) Launcher.ReplaceCalendarAppHook(lpparam);
 			}
-		});
+		});}
 
 		if (mPrefs.getBoolean("system_statusbarcolor") && !mPrefs.getStringSet("system_statusbarcolor_apps").contains(pkg))
 		Helpers.findAndHookMethod(Application.class, "attach", Context.class, new XC_MethodHook() {

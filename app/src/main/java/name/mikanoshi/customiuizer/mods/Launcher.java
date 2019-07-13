@@ -2,6 +2,7 @@ package name.mikanoshi.customiuizer.mods;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
@@ -15,7 +16,9 @@ import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -526,6 +529,134 @@ public class Launcher {
 				int color = (int)param.getResult();
 				if (color == Color.TRANSPARENT) return;
 				param.setResult(Color.argb(Math.round(Color.alpha(color) + (255 - Color.alpha(color)) / 1.9f), Color.red(color), Color.green(color), Color.blue(color)));
+			}
+		});
+	}
+
+	public static void HideNavBarHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "loadScreenSize", Context.class, Resources.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+				Settings.Global.putInt(((Context)param.args[0]).getContentResolver(), "force_immersive_nav_bar", 1);
+			}
+		});
+	}
+
+	private static void showSeekBar(View workspace) {
+		try {
+			if (!"Workspace".equals(workspace.getClass().getSimpleName())) return;
+			boolean isInEditingMode = (boolean)XposedHelpers.callMethod(workspace, "isInNormalEditingMode");
+			View mScreenSeekBar = (View)XposedHelpers.getObjectField(workspace, "mScreenSeekBar");
+			if (mScreenSeekBar == null) {
+				Helpers.log("HideSeekPointsHook", "Cannot find seekbar");
+				return;
+			}
+			Context mContext = workspace.getContext();
+			Handler mHandler = (Handler)XposedHelpers.getAdditionalInstanceField(workspace, "mHandlerEx");
+			if (mHandler == null) {
+				mHandler = new Handler(mContext.getMainLooper()) {
+					@Override
+					public void handleMessage(Message msg) {
+						View seekBar = (View)msg.obj;
+						if (seekBar != null)
+						seekBar.animate().alpha(0.0f).setDuration(600).withEndAction(new Runnable() {
+							@Override
+							public void run() {
+								seekBar.setVisibility(View.GONE);
+							}
+						});
+					}
+				};
+				XposedHelpers.setAdditionalInstanceField(workspace, "mHandlerEx", mHandler);
+			}
+			if (mHandler == null) {
+				Helpers.log("HideSeekPointsHook", "Cannot create handler");
+				return;
+			}
+			if (mHandler.hasMessages(666)) mHandler.removeMessages(666);
+			mScreenSeekBar.animate().cancel();
+			mScreenSeekBar.setVisibility(View.VISIBLE);
+			mScreenSeekBar.animate().alpha(1.0f).setDuration(300);
+			if (!isInEditingMode) {
+				Message msg = Message.obtain(mHandler, 666);
+				msg.obj = mScreenSeekBar;
+				mHandler.sendMessageDelayed(msg, 1500);
+			}
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void HideSeekPointsHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.miui.home.launcher.ScreenView", lpparam.classLoader, "updateSeekPoints", int.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+				showSeekBar((View)param.thisObject);
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.home.launcher.ScreenView", lpparam.classLoader, "setSeekBarVisibility", int.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+				XposedBridge.log("setSeekBarVisibility: " + param.args[0]);
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.home.launcher.ScreenView", lpparam.classLoader, "addView", View.class, int.class, ViewGroup.LayoutParams.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+				showSeekBar((View)param.thisObject);
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.home.launcher.ScreenView", lpparam.classLoader, "removeScreen", int.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+				showSeekBar((View)param.thisObject);
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.home.launcher.ScreenView", lpparam.classLoader, "removeScreensInLayout", int.class, int.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+				showSeekBar((View)param.thisObject);
+			}
+		});
+	}
+
+	public static void InfiniteScrollHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.miui.home.launcher.Workspace", lpparam.classLoader, "snapToScreen", int.class, int.class, boolean.class, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				//XposedBridge.log("snapToScreen: " + param.args[0] + ", " + param.args[1] + ", " + param.args[2]);
+				//XposedBridge.log(new Throwable());
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.home.launcher.ScreenView", lpparam.classLoader, "getSnapToScreenIndex", int.class, int.class, int.class, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				if (param.args[0] == param.getResult()) {
+					int screenCount = (int)XposedHelpers.callMethod(param.thisObject, "getScreenCount");
+					if ((int)param.args[2] == -1 && (int)param.args[0] == 0)
+						param.setResult(screenCount);
+					else if ((int)param.args[2] == 1 && (int)param.args[0] == screenCount - 1)
+						param.setResult(0);
+				}
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.home.launcher.ScreenView", lpparam.classLoader, "getSnapUnitIndex", int.class, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				int mCurrentScreenIndex = XposedHelpers.getIntField(param.thisObject, lpparam.packageName.equals("com.miui.home") ? "mCurrentScreenIndex" : "mCurrentScreen");
+				if (mCurrentScreenIndex == (int)param.getResult()) {
+					int screenCount = (int)XposedHelpers.callMethod(param.thisObject, "getScreenCount");
+					if ((int)param.getResult() == 0)
+						param.setResult(screenCount);
+					else if ((int)param.getResult() == screenCount - 1)
+						param.setResult(0);
+				}
 			}
 		});
 	}

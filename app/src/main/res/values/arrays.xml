@@ -238,6 +238,19 @@
 		<item>3</item>
 	</string-array>
 
+	<string-array name="netspeedfonts">
+		<item>@string/array_max</item>
+		<item>@string/array_large</item>
+		<item>@string/array_normal</item>
+		<item>@string/array_small</item>
+	</string-array>
+	<string-array name="netspeedfonts_val">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+		<item>4</item>
+	</string-array>
+
 	<string-array name="launchers">
 		<item>@string/launcher_mods</item>
 		<item>@string/poco_mods</item>
@@ -369,6 +382,34 @@
 		<item>1</item>
 		<item>2</item>
 		<item>3</item>
+	</string-array>
+
+	<string-array name="visualizercolor">
+		<item>@string/array_match</item>
+		<item>@string/array_static</item>
+		<item>@string/array_rainbowh</item>
+		<item>@string/array_rainbowv</item>
+	</string-array>
+	<string-array name="visualizercolor_val">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+		<item>4</item>
+	</string-array>
+
+	<string-array name="visualizerstyle">
+		<item>@string/array_bars_solid</item>
+		<item>@string/array_bars_solid_rounded</item>
+		<item>@string/array_bars_dashed</item>
+		<item>@string/array_bars_circles</item>
+		<item>@string/array_line</item>
+	</string-array>
+	<string-array name="visualizerstyle_val">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+		<item>4</item>
+		<item>5</item>
 	</string-array>
 
 	<string-array name="placeholder_array">

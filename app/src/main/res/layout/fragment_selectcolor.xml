@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
+
+	<name.mikanoshi.customiuizer.utils.ColorCircle
+		android:id="@+id/color_circle"
+		android:layout_width="@dimen/screen_color_preview_diameter"
+		android:layout_height="@dimen/screen_color_preview_diameter"
+		android:layout_centerHorizontal="true"
+		android:layout_gravity="center_horizontal"
+		android:layout_marginTop="@dimen/screen_color_preview_margin_top"
+		android:scaleType="fitCenter"
+		android:src="@drawable/palette" />
+
+	<FrameLayout
+		android:id="@+id/selected_color"
+		android:layout_width="200dp"
+		android:layout_height="100dp"
+		android:layout_below="@id/color_circle"
+		android:layout_centerHorizontal="true"
+		android:layout_marginTop="50dp" />
+
+</RelativeLayout>

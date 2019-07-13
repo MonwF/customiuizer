@@ -10,6 +10,15 @@
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_system_detailednetspeed_font"
+		android:title="@string/system_detailednetspeed_font_title"
+		android:entries="@array/netspeedfonts"
+		android:entryValues="@array/netspeedfonts_val"
+		android:defaultValue="3"
+		android:dependency="pref_key_system_detailednetspeed"
+		miuizer:valueAsSummary="true" />
+
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_detailednetspeed_icon"
 		android:summary="@string/system_detailednetspeed_icon_summ"
 		android:title="@string/system_detailednetspeed_icon_title"

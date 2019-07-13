@@ -1,3 +1,13 @@
+1.6.3
+[New] Hide navigation bar
+[New] Music visualizer on lock screen and notification drawer
+[New][Detailed network speed indicator] Font size options
+[Fixed] Detailed network speed indicator
+[Fixed] Go to sleep action was preventing screen from turning on again on some devices
+[Fixed][Clean share menu] Removing messaging apps was breaking their functionality
+[Improved][Keep notifications] Compatibility with new ROMs
+[Improved] Open EdXposed Manager from module settings menu
+
 1.6.2
 [New] Navigation bar height
 [New] Minimum auto brightness value

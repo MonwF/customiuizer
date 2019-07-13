@@ -22,6 +22,7 @@ import name.mikanoshi.customiuizer.prefs.SpinnerEx;
 import name.mikanoshi.customiuizer.prefs.SpinnerExFake;
 import name.mikanoshi.customiuizer.subs.AppSelector;
 import name.mikanoshi.customiuizer.subs.MultiAction;
+import name.mikanoshi.customiuizer.utils.ColorCircle;
 import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.ModData;
 
@@ -154,6 +155,10 @@ public class SubFragment extends PreferenceFragmentBase {
 				((SpinnerExFake)nView).applyOthers();
 			} else if (nView instanceof SpinnerEx)
 				Helpers.prefs.edit().putInt((String)nView.getTag(), ((SpinnerEx)nView).getSelectedArrayValue()).apply();
+			else if (nView instanceof ColorCircle) {
+				Helpers.prefs.edit().putInt((String)nView.getTag(), ((ColorCircle)nView).getColor()).apply();
+				((ColorCircle)nView).saveCirclePosition();
+			}
 		} catch (Throwable e) {
 			Log.e("miuizer", "Cannot save sub preference!");
 		}

@@ -17,7 +17,7 @@ import name.mikanoshi.customiuizer.SubFragment;
 import name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx;
 import name.mikanoshi.customiuizer.prefs.ListPreferenceEx;
 import name.mikanoshi.customiuizer.prefs.SeekBarPreference;
-import name.mikanoshi.customiuizer.qs.QuickSettingsService;
+import name.mikanoshi.customiuizer.qs.AutoRotateService;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class System extends SubFragment {
@@ -89,6 +89,14 @@ public class System extends SubFragment {
 			}
 		});
 
+		findPreference("pref_key_system_visualizer_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				openSubFragment(new System_Visualizer(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_visualizer_title, R.xml.prefs_system_visualizer);
+				return true;
+			}
+		});
+
 		findPreference("pref_key_system_credentials").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -108,9 +116,9 @@ public class System extends SubFragment {
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				PackageManager pm = getActivity().getPackageManager();
 				if ((Boolean)newValue)
-					pm.setComponentEnabledSetting(new ComponentName(getActivity(), QuickSettingsService.class), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+					pm.setComponentEnabledSetting(new ComponentName(getActivity(), AutoRotateService.class), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
 				else
-					pm.setComponentEnabledSetting(new ComponentName(getActivity(), QuickSettingsService.class), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+					pm.setComponentEnabledSetting(new ComponentName(getActivity(), AutoRotateService.class), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
 				return true;
 			}
 		});

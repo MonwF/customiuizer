@@ -507,24 +507,26 @@ public class MainFragment extends PreferenceFragmentBase {
 					Helpers.openURL(getActivity(), "https://code.highspec.ru/Mikanoshi/CustoMIUIzer/releases");
 				}
 			case R.id.xposedinstaller:
-				if (!Helpers.isXposedInstallerInstalled(getContext())) {
-					Toast.makeText(getContext(), R.string.xposed_not_found, Toast.LENGTH_LONG).show();
-					return true;
-				}
-
 				Intent intent = getContext().getPackageManager().getLaunchIntentForPackage("com.solohsu.android.edxp.manager");
+				if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 				try {
-					if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 					getContext().startActivity(intent);
 					return true;
 				} catch (Throwable e1) {
-					intent = getContext().getPackageManager().getLaunchIntentForPackage("de.robv.android.xposed.installer");
+					intent = getContext().getPackageManager().getLaunchIntentForPackage("org.meowcat.edxposed.manager");
 					if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 					try {
 						getContext().startActivity(intent);
 						return true;
 					} catch (Throwable e2) {
-						Toast.makeText(getContext(), R.string.xposed_not_found, Toast.LENGTH_LONG).show();
+						intent = getContext().getPackageManager().getLaunchIntentForPackage("de.robv.android.xposed.installer");
+						if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+						try {
+							getContext().startActivity(intent);
+							return true;
+						} catch (Throwable e3) {
+							Toast.makeText(getContext(), R.string.xposed_not_found, Toast.LENGTH_LONG).show();
+						}
 					}
 					return false;
 				}

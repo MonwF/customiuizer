@@ -168,6 +168,11 @@
 			miuizer:format="x%s"
 			miuizer:offtext="@string/array_default" />
 
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_visualizer_cat"
+			android:summary="@string/system_visualizer_summ"
+			android:title="@string/system_visualizer_title" />
+
 	</PreferenceCategory>
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx

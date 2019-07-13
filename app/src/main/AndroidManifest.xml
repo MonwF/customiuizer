@@ -105,7 +105,7 @@
 		</activity>
 
 		<service
-			android:name=".qs.QuickSettingsService"
+			android:name=".qs.AutoRotateService"
 			android:icon="@drawable/ic_qs_autorotate_disabled"
 			android:label="@string/qs_toggle_autorotate"
 			android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"

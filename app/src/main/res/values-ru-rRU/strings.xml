@@ -129,8 +129,19 @@
 	<string name="array_top">Ближе к началу</string>
 	<string name="array_middle">В середине списка</string>
 	<string name="array_bottom">В самом низу</string>
-
-	<string name="select_app">Выбрать приложение</string>
+	<string name="array_max">Максимальный</string>
+	<string name="array_large">Большой</string>
+	<string name="array_normal">Нормальный</string>
+	<string name="array_small">Мелкий</string>
+	<string name="array_match">Взять из обложки или обоев</string>s
+	<string name="array_static">Задать вручную</string>
+	<string name="array_rainbowh">Цвета радуги (горизонтально)</string>
+	<string name="array_rainbowv">Цвета радуги (вертикально)</string>
+	<string name="array_bars_solid">Сплошные полоски</string>
+	<string name="array_bars_solid_rounded">Скруглённые сплошные полоски</string>
+	<string name="array_bars_dashed">Пунктирные полоски</string>
+	<string name="array_bars_circles">Круги</string>
+	<string name="array_line">Линия</string>
 
 	<string name="support_bug_title">Сообщить об ошибке</string>
 	<string name="support_bug_summ">Отправить сообщение об ошибке или предложить новую фичу</string>
@@ -188,6 +199,7 @@
 	<string name="controls_volumemedia_vibrate_title">Вибрация при долгом нажатии</string>
 	<string name="controls_volumemedia_vibrate_summ">Вибрировать при выполнении действия на долгое нажатие</string>
 	<string name="controls_mods_navbar">Панель навигации</string>
+	<string name="controls_nonavbar_title">Скрыть панель</string>
 	<string name="controls_navbarheight_title">Высота панели</string>
 	<string name="controls_backlong_title">Действие на долгое нажатие кнопки Назад</string>
 	<string name="controls_homelong_title">Действие на долгое нажатие кнопки Домой</string>
@@ -280,6 +292,7 @@
 	<string name="credentials_ok">Учётные данные уже разблокированы</string>
 	<string name="credentials_unlock">Разблокировать учётные данные</string>
 	<string name="credentials_success">Учётные данные разблокированы!</string>
+	<string name="select_app">Выбрать приложение</string>
 	<string name="select_shortcut">Выбрать ярлык</string>
 	<string name="launcher_gestures_shortcut">Ярлык для запуска</string>
 	<string name="launcher_noclockhide_title">Не прятать часы</string>
@@ -388,6 +401,7 @@
 	<string name="system_netspeedinterval_summ">Требуется разрешение на изменение системных настроек</string>
 	<string name="system_detailednetspeed_title">Подробный индикатор скорости соединения</string>
 	<string name="system_detailednetspeed_summ">Показыает входящую и исходящую скорости передачи данных</string>
+	<string name="system_detailednetspeed_font_title">Размер шрифта</string>
 	<string name="system_detailednetspeed_icon_title">Иконки индикатора</string>
 	<string name="system_detailednetspeed_icon_summ">Набор иконок входящего/исходящего трафика для отображения рядом со значением скорости (есть не во всех кастомных шрифтах)</string>
 	<string name="system_detailednetspeed_low_title">Скрыть низкие скорости</string>
@@ -431,6 +445,15 @@
 	<string name="system_volumetimer_summ">Добавляет больше интервалов в таймеры режимов Без звука и Не беспокоить</string>
 	<string name="system_volumesteps_title">Множитель шагов громкости</string>
 	<string name="system_volumesteps_summ">Увеличивает количество шагов громкости для всех типов потоков</string>
+	<string name="system_visualizer_title">Визуализация музыки</string>
+	<string name="system_visualizer_summ">Отображает спектральную плотность дискретных звуковых частотных диапазонов</string>
+	<string name="system_visualizer_lockscreen_summ">Визуализация по умолчанию рисуется на обоях экрана блокировки</string>
+	<string name="system_visualizer_drawer_title">Отображать в панели уведомлений</string>
+	<string name="system_visualizer_drawer_summ">Рисует визуализацию также и в раскрытой панели уведомлений</string>
+	<string name="system_visualizer_transp_title">Уровень прозрачности</string>
+	<string name="system_visualizer_style_title">Стиль</string>
+	<string name="system_visualizer_color_title">Цвет</string>
+	<string name="system_visualizer_colorval_title">Задать цвет</string>
 	<string name="system_vibration_title">Блокировка вибрации</string>
 	<string name="system_vibration_summ">Запрещает выбранным приложениям использовать вибрацию</string>
 	<string name="notification_volume">Громкость уведомлений</string>

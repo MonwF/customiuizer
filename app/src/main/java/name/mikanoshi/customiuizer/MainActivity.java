@@ -53,6 +53,8 @@ public class MainActivity extends Activity {
 					path = "stringset/";
 				else if (val instanceof Integer)
 					path = "integer/";
+				else if (val instanceof Boolean)
+					path = "boolean/";
 				getContentResolver().notifyChange(Uri.parse("content://" + SharedPrefsProvider.AUTHORITY + "/" + path + key), null);
 				if (!path.equals(""))
 				getContentResolver().notifyChange(Uri.parse("content://" + SharedPrefsProvider.AUTHORITY + "/pref/" + path + key), null);

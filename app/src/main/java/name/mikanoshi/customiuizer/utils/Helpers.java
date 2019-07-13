@@ -772,7 +772,7 @@ public class Helpers {
 	public static class SharedPrefObserver extends ContentObserver {
 
 		enum PrefType {
-			Any, String, StringSet, Integer
+			Any, String, StringSet, Integer//, Boolean
 		}
 
 		PrefType prefType;
@@ -780,6 +780,7 @@ public class Helpers {
 		String prefName;
 		String prefDefValueString;
 		int prefDefValueInt;
+//		boolean prefDefValueBool;
 
 		public SharedPrefObserver(Context context, Handler handler) {
 			super(handler);
@@ -814,6 +815,15 @@ public class Helpers {
 			registerObserver();
 		}
 
+//		public SharedPrefObserver(Context context, Handler handler, String name, boolean defValue) {
+//			super(handler);
+//			ctx = context;
+//			prefType = PrefType.Boolean;
+//			prefName = name;
+//			prefDefValueBool = defValue;
+//			registerObserver();
+//		}
+
 		void registerObserver() {
 			Uri uri = null;
 			if (prefType == PrefType.String)
@@ -822,6 +832,8 @@ public class Helpers {
 				uri = stringSetPrefToUri(prefName);
 			else if (prefType == PrefType.Integer)
 				uri = intPrefToUri(prefName, prefDefValueInt);
+//			else if (prefType == PrefType.Boolean)
+//				uri = boolPrefToUri(prefName, prefDefValueBool);
 			else if (prefType == PrefType.Any)
 				uri = anyPrefToUri();
 			if (uri != null) ctx.getContentResolver().registerContentObserver(uri, prefType == PrefType.Any, this);
@@ -844,12 +856,15 @@ public class Helpers {
 				onChange(prefName);
 			else if (prefType == PrefType.Integer)
 				onChange(prefName, prefDefValueInt);
+//			else if (prefType == PrefType.Boolean)
+//				onChange(prefName, prefDefValueBool);
 		}
 
 		public void onChange(Uri uri) {}
 		public void onChange(String name) {}
 		public void onChange(String name, String defValue) {}
 		public void onChange(String name, int defValue) {}
+//		public void onChange(String name, boolean defValue) {}
 	}
 
 	private static String getCallerMethod() {
