@@ -23,6 +23,8 @@ import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
+import java.io.File;
+
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import name.mikanoshi.customiuizer.MainModule;
@@ -46,6 +48,7 @@ public class AudioVisualizer extends View {
 	public boolean isScreenOn = false;
 	private boolean isOnKeyguard = false;
 	private boolean isExpandedPanel = false;
+	private boolean isOnCustomLockScreen = false;
 	private boolean mPlaying;
 	private boolean mDisplaying;
 	private int mColor;
@@ -55,6 +58,7 @@ public class AudioVisualizer extends View {
 	private int[] mRainbowVertical = new int[31];
 	private float[] mPositions = new float[31];
 	private Path mLinePath = new Path();
+	public boolean showOnCustom;
 	private int transparency;
 	public int colorMode;
 	public int barStyle;
@@ -175,6 +179,7 @@ public class AudioVisualizer extends View {
 			mPositions[i] = (i + 1) / 31f;
 		}
 
+		showOnCustom = MainModule.mPrefs.getBoolean("system_visualizer_custom");
 		transparency = Math.round(255f - 255f * MainModule.mPrefs.getInt("system_visualizer_transp", 40) / 100f);
 		colorMode = Integer.parseInt(MainModule.mPrefs.getString("system_visualizer_color", "1"));
 		barStyle = Integer.parseInt(MainModule.mPrefs.getString("system_visualizer_style", "1"));
@@ -190,6 +195,9 @@ public class AudioVisualizer extends View {
 				try {
 					String key = uri.getPathSegments().get(2);
 					switch (key) {
+						case "pref_key_system_visualizer_custom":
+							showOnCustom = Helpers.getSharedBoolPref(context, key, false);
+							break;
 						case "pref_key_system_visualizer_transp":
 							transparency = Math.round(255f - 255f * Helpers.getSharedIntPref(context, key, 40) / 100f);
 							setColor(mColor);
@@ -431,6 +439,7 @@ public class AudioVisualizer extends View {
 	public void updateState(boolean isKeyguard, boolean isExpanded) {
 		isOnKeyguard = isKeyguard;
 		isExpandedPanel = showInDrawer && !isOnKeyguard && isExpanded;
+		isOnCustomLockScreen = new File("/data/system/theme/lockscreen").exists();
 		updatePlaying();
 	}
 
@@ -447,7 +456,7 @@ public class AudioVisualizer extends View {
 	}
 
 	public void updatePlaying() {
-		setPlaying(isScreenOn && isMusicPlaying && (isOnKeyguard || isExpandedPanel));
+		setPlaying(isScreenOn && isMusicPlaying && ((isOnKeyguard && (!isOnCustomLockScreen || showOnCustom)) || isExpandedPanel));
 	}
 
 	private void checkStateChanged() {

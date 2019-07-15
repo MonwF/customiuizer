@@ -560,7 +560,10 @@ public class GlobalActions {
 						position++;
 						if (opt == 1 && head.id == security) { headers.add(position, header); return; }
 					}
-					headers.add(25, header);
+					if (headers.size() > 25 )
+						headers.add(25, header);
+					else
+						headers.add(header);
 				} catch (Throwable t) {
 					XposedBridge.log(t);
 				}

@@ -448,6 +448,8 @@
 	<string name="system_visualizer_title">Визуализация музыки</string>
 	<string name="system_visualizer_summ">Отображает спектральную плотность дискретных звуковых частотных диапазонов</string>
 	<string name="system_visualizer_lockscreen_summ">Визуализация по умолчанию рисуется на обоях экрана блокировки</string>
+	<string name="system_visualizer_custom_title">Отображать на стороннем локскрине</string>
+	<string name="system_visualizer_custom_summ">Рисует визуализацию поверх стороннего экрана блокировки</string>
 	<string name="system_visualizer_drawer_title">Отображать в панели уведомлений</string>
 	<string name="system_visualizer_drawer_summ">Рисует визуализацию также и в раскрытой панели уведомлений</string>
 	<string name="system_visualizer_transp_title">Уровень прозрачности</string>

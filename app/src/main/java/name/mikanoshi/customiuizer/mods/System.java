@@ -59,6 +59,7 @@ import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.AttributeSet;
 import android.util.Pair;
+import android.util.SparseIntArray;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -659,6 +660,38 @@ public class System {
 				XposedHelpers.setObjectField(param.thisObject, "mStreamVolumeAlias", streamVolumeAlias);
 			}
 		});
+
+		Helpers.findAndHookMethod("com.android.server.audio.AudioService$VolumeStreamState", lpparam.classLoader, "readSettings", new XC_MethodHook() {
+			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+				try {
+					int mStreamType = XposedHelpers.getIntField(param.thisObject, "mStreamType");
+					if (mStreamType != 1) return;
+					synchronized (param.method.getDeclaringClass()) {
+						Class<?> audioSystem = findClass("android.media.AudioSystem", null);
+						int DEVICE_OUT_ALL = XposedHelpers.getStaticIntField(audioSystem, "DEVICE_OUT_ALL");
+						int DEVICE_OUT_DEFAULT = XposedHelpers.getStaticIntField(audioSystem, "DEVICE_OUT_DEFAULT");
+						int[] DEFAULT_STREAM_VOLUME = (int[])XposedHelpers.getStaticObjectField(audioSystem, "DEFAULT_STREAM_VOLUME");
+						int remainingDevices = DEVICE_OUT_ALL;
+						for (int i = 0; remainingDevices != 0; i++) {
+							int device = 1 << i;
+							if ((device & remainingDevices) == 0) continue;
+							remainingDevices &= ~device;
+							String name = (String)XposedHelpers.callMethod(param.thisObject, "getSettingNameForDevice", device);
+							Object mContentResolver = XposedHelpers.getObjectField(XposedHelpers.getSurroundingThis(param.thisObject), "mContentResolver");
+							int index = (int)XposedHelpers.callStaticMethod(Settings.System.class, "getIntForUser", mContentResolver, name, device == DEVICE_OUT_DEFAULT ? DEFAULT_STREAM_VOLUME[mStreamType] : -1, -2);
+							if (index != -1) {
+								SparseIntArray mIndexMap = (SparseIntArray)XposedHelpers.getObjectField(param.thisObject, "mIndexMap");
+								mIndexMap.put(device, (Integer)XposedHelpers.callMethod(param.thisObject, "getValidIndex", 10 * index));
+								XposedHelpers.setObjectField(param.thisObject, "mIndexMap", mIndexMap);
+							}
+						}
+					}
+					param.setResult(null);
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
 	}
 
 	public static void NotificationVolumeSettingsHook(LoadPackageParam lpparam) {
@@ -1170,7 +1203,19 @@ public class System {
 				meter.setMaxLines(2);
 				meter.setLineSpacing(0, spacing);
 				meter.setPadding(Math.round(meter.getPaddingLeft() + 3 * density), meter.getPaddingTop() - top, meter.getPaddingRight(), meter.getPaddingBottom());
+			}
+		});
 
+		Class<?> nscCls = XposedHelpers.findClassIfExists("com.android.systemui.statusbar.NetworkSpeedController", lpparam.classLoader);
+		if (nscCls == null) nscCls = XposedHelpers.findClassIfExists("com.android.systemui.statusbar.NetworkSpeedView", lpparam.classLoader);
+		if (nscCls == null) {
+			Helpers.log("DetailedNetSpeedHook", "No NetworkSpeed view or controller");
+			return;
+		}
+
+		Helpers.hookAllConstructors(nscCls, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
 				Handler mHandler = new Handler(Looper.getMainLooper()) {
 					public void handleMessage(Message message) {
 						if (message.what == 200000) try {
@@ -1185,13 +1230,6 @@ public class System {
 				XposedHelpers.setObjectField(param.thisObject, "mHandler", mHandler);
 			}
 		});
-
-		Class<?> nscCls = XposedHelpers.findClassIfExists("com.android.systemui.statusbar.NetworkSpeedController", lpparam.classLoader);
-		if (nscCls == null) nscCls = XposedHelpers.findClassIfExists("com.android.systemui.statusbar.NetworkSpeedView", lpparam.classLoader);
-		if (nscCls == null) {
-			Helpers.log("DetailedNetSpeedHook", "No NetworkSpeed view or controller");
-			return;
-		}
 
 		Helpers.findAndHookMethod(nscCls, "getTotalByte", new XC_MethodHook() {
 			@Override
@@ -1335,6 +1373,13 @@ public class System {
 			Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "updateMediaMetaData", boolean.class, boolean.class, new XC_MethodHook() {
 				@Override
 				protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+					// com.miui.internal.policy.impl.AwesomeLockScreenImp.WallpaperScreenElement
+					if (new File("/data/system/theme/lockscreen").exists()) {
+						XposedHelpers.setAdditionalStaticField(utilCls, "mAlbumArtSource", null);
+						XposedHelpers.setAdditionalStaticField(utilCls, "mAlbumArt", null);
+						return;
+					}
+
 					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 					MediaMetadata mMediaMetadata = (MediaMetadata)XposedHelpers.getObjectField(param.thisObject, "mMediaMetadata");
 					Bitmap art = null;
@@ -1893,29 +1938,42 @@ public class System {
 		}
 	}
 
+	private static void updateLabelsVisibility(Object mRecord, int mRows, int orientation) {
+		if (mRecord == null) return;
+		Object tileView = XposedHelpers.getObjectField(mRecord, "tileView");
+		if (tileView != null) {
+			ViewGroup mLabelContainer = (ViewGroup)XposedHelpers.getObjectField(tileView, "mLabelContainer");
+			if (mLabelContainer != null)
+			mLabelContainer.setVisibility(
+				MainModule.mPrefs.getBoolean("system_qsnolabels") ||
+				orientation == Configuration.ORIENTATION_PORTRAIT && mRows >= 5 ||
+				orientation == Configuration.ORIENTATION_LANDSCAPE && mRows >= 3 ? View.GONE : View.VISIBLE
+			);
+		}
+	}
+
 	public static void QSGridLabelsHook(LoadPackageParam lpparam) {
 		Helpers.hookAllMethods("com.android.systemui.qs.TileLayout", lpparam.classLoader, "addTile", new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 				try {
-					int orientation = ((ViewGroup)param.thisObject).getResources().getConfiguration().orientation;
-					int mRows = XposedHelpers.getIntField(param.thisObject, "mRows");
-					Object mRecord = param.args[0];
-//Helpers.log("QSGridLabelsHook", "mRecord: " + mRecord);
-					if (mRecord != null) {
-						Object tileView = XposedHelpers.getObjectField(mRecord, "tileView");
-//Helpers.log("QSGridLabelsHook", "tileView: " + tileView);
-						if (tileView != null) {
-							ViewGroup mLabelContainer = (ViewGroup)XposedHelpers.getObjectField(tileView, "mLabelContainer");
-//Helpers.log("QSGridLabelsHook", "mLabelContainer: " + mLabelContainer);
-							if (mLabelContainer != null)
-							mLabelContainer.setVisibility(
-								MainModule.mPrefs.getBoolean("system_qsnolabels") ||
-								orientation == Configuration.ORIENTATION_PORTRAIT && mRows >= 5 ||
-								orientation == Configuration.ORIENTATION_LANDSCAPE && mRows >= 3 ? View.GONE : View.VISIBLE
-							);
-						}
-					}
+					updateLabelsVisibility(param.args[0], XposedHelpers.getIntField(param.thisObject, "mRows"), ((ViewGroup)param.thisObject).getResources().getConfiguration().orientation);
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
+
+		Helpers.hookAllMethods("com.android.systemui.qs.PagedTileLayout", lpparam.classLoader, "addTile", new XC_MethodHook() {
+			@Override
+			@SuppressWarnings("unchecked")
+			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+				try {
+					ArrayList<Object> mPages = (ArrayList<Object>)XposedHelpers.getObjectField(param.thisObject, "mPages");
+					if (mPages == null) return;
+					int mRows = 0;
+					if (mPages.size() > 0) mRows = XposedHelpers.getIntField(mPages.get(0), "mRows");
+					updateLabelsVisibility(param.args[0], mRows, ((ViewGroup)param.thisObject).getResources().getConfiguration().orientation);
 				} catch (Throwable t) {
 					XposedBridge.log(t);
 				}
@@ -2754,18 +2812,26 @@ public class System {
 					return;
 				}
 
-				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-				ViewGroup visFrame = new FrameLayout(mContext);
-				visFrame.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-				audioViz = new AudioVisualizer(mContext);
-				audioViz.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.BOTTOM));
-				audioViz.setClickable(false);
-				visFrame.addView(audioViz);
-				visFrame.setClickable(false);
-				View wallpaper = mNotificationPanel.findViewById(mContext.getResources().getIdentifier("wallpaper", "id", lpparam.packageName));
-				int order = 0;
-				if (wallpaper != null) order = mNotificationPanel.indexOfChild(wallpaper);
-				mNotificationPanel.addView(visFrame, order + 1);
+				try {
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					ViewGroup visFrame = new FrameLayout(mContext);
+					visFrame.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+					audioViz = new AudioVisualizer(mContext);
+					audioViz.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.BOTTOM));
+					audioViz.setClickable(false);
+					visFrame.addView(audioViz);
+					visFrame.setClickable(false);
+					View wallpaper = mNotificationPanel.findViewById(mContext.getResources().getIdentifier("wallpaper", "id", lpparam.packageName));
+					View themebkg = mNotificationPanel.findViewById(mContext.getResources().getIdentifier("theme_background", "id", lpparam.packageName));
+					View awesome = mNotificationPanel.findViewById(mContext.getResources().getIdentifier("awesome_lock_screen_container", "id", lpparam.packageName));
+					int order = 0;
+					if (awesome != null) order = Math.max(order, mNotificationPanel.indexOfChild(awesome));
+					if (themebkg != null) order = Math.max(order, mNotificationPanel.indexOfChild(themebkg));
+					if (wallpaper != null) order = Math.max(order, mNotificationPanel.indexOfChild(wallpaper));
+					mNotificationPanel.addView(visFrame, order + 1);
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
 			}
 		});
 

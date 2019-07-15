@@ -80,6 +80,8 @@
     <string name="system_visualizer_title">音乐可视化</string>
     <string name="system_visualizer_summ">显示音频频段的频谱密度</string>
     <string name="system_visualizer_lockscreen_summ">锁屏壁纸顶部绘制可视化</string>
+    <string name="system_visualizer_custom_title">在自定义锁屏上显示</string>
+    <string name="system_visualizer_custom_summ">在自定义锁屏顶部绘制可视化</string>
     <string name="system_visualizer_drawer_title">在通知抽屉中显示</string>
     <string name="system_visualizer_drawer_summ">展开通知抽屉时绘制可视化</string>
     <string name="system_visualizer_transp_title">透明度</string>

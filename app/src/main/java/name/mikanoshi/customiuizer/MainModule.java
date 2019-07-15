@@ -82,8 +82,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 
 		if (pkg.equals("com.miui.home") || pkg.equals("com.mi.android.globallauncher")) {
 			if (mPrefs.getBoolean("launcher_unlockgrids") && pkg.equals("com.miui.home")) try {
-				resparam.res.setReplacement(pkg, "integer", "config_cell_count_x", 4);
-				resparam.res.setReplacement(pkg, "integer", "config_cell_count_y", 6);
+				resparam.res.setReplacement(pkg, "integer", "config_cell_count_x", 3);
+				resparam.res.setReplacement(pkg, "integer", "config_cell_count_y", 4);
 				resparam.res.setReplacement(pkg, "integer", "config_cell_count_x_min", 3);
 				resparam.res.setReplacement(pkg, "integer", "config_cell_count_y_min", 4);
 				resparam.res.setReplacement(pkg, "integer", "config_cell_count_x_max", 6);
@@ -201,12 +201,11 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_separatevolume")) System.NotificationVolumeSettingsHook(lpparam);
 			if (mPrefs.getBoolean("system_pocketmode")) System.PocketModeSettingHook(lpparam);
 		}
-		if (pkg.equals("com.miui.home") || pkg.equals("com.mi.android.globallauncher")) {
-		Helpers.log("Launcher", "Loading com.miui.home");
+
+		if (pkg.equals("com.miui.home") || pkg.equals("com.mi.android.globallauncher"))
 		Helpers.findAndHookMethod(Application.class, "attach", Context.class, new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-				Helpers.log("Launcher", "Application attached");
 				if (mPrefs.getInt("launcher_swipedown_action", 1) != 1 ||
 					mPrefs.getInt("launcher_swipeup_action", 1) != 1 ||
 					mPrefs.getInt("launcher_swipedown2_action", 1) != 1 ||
@@ -230,7 +229,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 				//if (!mPrefs.getString("system_clock_app", "").equals("")) Launcher.ReplaceClockAppHook(lpparam);
 				//if (!mPrefs.getString("system_calendar_app", "").equals("")) Launcher.ReplaceCalendarAppHook(lpparam);
 			}
-		});}
+		});
 
 		if (mPrefs.getBoolean("system_statusbarcolor") && !mPrefs.getStringSet("system_statusbarcolor_apps").contains(pkg))
 		Helpers.findAndHookMethod(Application.class, "attach", Context.class, new XC_MethodHook() {

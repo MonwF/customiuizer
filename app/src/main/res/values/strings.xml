@@ -83,6 +83,8 @@
 	<string name="system_visualizer_title">Music visualizer</string>
 	<string name="system_visualizer_summ">Display spectral density of discreet audio frequency bands</string>
 	<string name="system_visualizer_lockscreen_summ">Visualizer is drawn on top of lock screen wallpaper</string>
+	<string name="system_visualizer_custom_title">Show on custom lock screen</string>
+	<string name="system_visualizer_custom_summ">Draw visualizer on top of custom lock screen</string>
 	<string name="system_visualizer_drawer_title">Show in notification drawer</string>
 	<string name="system_visualizer_drawer_summ">Additionally draw visualizer in an expanded notification drawer</string>
 	<string name="system_visualizer_transp_title">Transparency</string>

@@ -944,6 +944,15 @@ public class Helpers {
 		}
 	}
 
+	public static void hookAllConstructors(Class<?> hookClass, XC_MethodHook callback) {
+		try {
+			if (XposedBridge.hookAllConstructors(hookClass, callback).size() == 0)
+			log(getCallerMethod(), "Failed to hook " + hookClass + " constructor");
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
 	public static void hookAllMethods(String className, ClassLoader classLoader, String methodName, XC_MethodHook callback) {
 		try {
 			Class<?> hookClass = XposedHelpers.findClassIfExists(className, classLoader);

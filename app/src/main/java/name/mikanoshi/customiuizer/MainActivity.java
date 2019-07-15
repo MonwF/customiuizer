@@ -109,7 +109,7 @@ public class MainActivity extends Activity {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_MENU) {
 			PreferenceFragmentBase fragment = (PreferenceFragmentBase)getFragmentManager().findFragmentById(R.id.fragment_container);
-			if (fragment != null && fragment.getView() != null) try {
+			if (fragment instanceof MainFragment && fragment.getView() != null) try {
 				fragment.getView().post(fragment::showImmersionMenu);
 				return true;
 			} catch (Throwable t) {}

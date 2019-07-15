@@ -1,3 +1,11 @@
+1.6.4
+[New][Music visualizer] Option to draw on top of custom lock screen
+[Improved][Music visualizer] Draw on top of themed background in notification drawer
+[Fixed][Album art as wallpaper] Disable on custom lock screens
+[Fixed][Separate volume controls] Keep system volume between reboots
+[Fixed] Remove labels of Quick Settings tiles
+[Fixed again] Detailed network speed indicator
+
 1.6.3
 [New] Hide navigation bar
 [New] Music visualizer on lock screen and notification drawer

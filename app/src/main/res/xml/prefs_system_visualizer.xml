@@ -11,6 +11,14 @@
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_visualizer_custom"
+		android:title="@string/system_visualizer_custom_title"
+		android:summary="@string/system_visualizer_custom_summ"
+		android:dependency="pref_key_system_visualizer"
+		android:defaultValue="false"
+		miuizer:dynamic="true" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_visualizer_drawer"
 		android:title="@string/system_visualizer_drawer_title"
 		android:summary="@string/system_visualizer_drawer_summ"
