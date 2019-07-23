@@ -8,6 +8,19 @@
 		android:summary="@string/various_sysappsupdater_summ"
 		android:title="@string/various_sysappsupdater_title" />
 
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_various_alarmcompat"
+		android:title="@string/various_alarmcompat_title"
+		android:summary="@string/various_alarmcompat_summ"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/system_popupnotif_apps_title"
+		android:key="pref_key_various_alarmcompat_apps"
+		android:dependency="pref_key_various_alarmcompat"
+		miuizer:child="true"
+		miuizer:countAsSummary="true" />
+
 	<PreferenceCategory
 		android:title="@string/settings"
 		android:key="pref_various_mods_settings">

@@ -21,8 +21,8 @@ android {
         applicationId "name.mikanoshi.customiuizer"
         minSdkVersion 24
         targetSdkVersion 28
-        versionCode 23
-        versionName "1.6.4"
+        versionCode 24
+        versionName "1.6.5"
         signingConfig signingConfigs.dev
     }
     buildTypes {
@@ -46,6 +46,7 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "ch.acra:acra-core:$acraVersion"
+    implementation 'com.android.billingclient:billing:2.0.2'
     compileOnly 'de.robv.android.xposed:api:82'
     compileOnly files('lib/miui.jar')
     compileOnly files('lib/miuisystem.jar')

@@ -50,36 +50,25 @@ public class Launcher extends SubFragment {
 			}
 		};
 
-		Preference pref;
-		pref = findPreference("pref_key_launcher_swipedown");
-		pref.setOnPreferenceClickListener(openLauncherActions);
-		pref = findPreference("pref_key_launcher_swipedown2");
-		pref.setOnPreferenceClickListener(openLauncherActions);
-		pref = findPreference("pref_key_launcher_swipeup");
-		pref.setOnPreferenceClickListener(openLauncherActions);
-		pref = findPreference("pref_key_launcher_swipeup2");
-		pref.setOnPreferenceClickListener(openLauncherActions);
-		pref = findPreference("pref_key_launcher_swiperight");
-		pref.setOnPreferenceClickListener(openLauncherActions);
-		pref = findPreference("pref_key_launcher_swipeleft");
-		pref.setOnPreferenceClickListener(openLauncherActions);
-		pref = findPreference("pref_key_launcher_shake");
-		pref.setOnPreferenceClickListener(openLauncherActions);
-		pref = findPreference("pref_key_launcher_doubletap");
-		pref.setOnPreferenceClickListener(openLauncherActions);
+		findPreference("pref_key_launcher_swipedown").setOnPreferenceClickListener(openLauncherActions);
+		findPreference("pref_key_launcher_swipedown2").setOnPreferenceClickListener(openLauncherActions);
+		findPreference("pref_key_launcher_swipeup").setOnPreferenceClickListener(openLauncherActions);
+		findPreference("pref_key_launcher_swipeup2").setOnPreferenceClickListener(openLauncherActions);
+		findPreference("pref_key_launcher_swiperight").setOnPreferenceClickListener(openLauncherActions);
+		findPreference("pref_key_launcher_swipeleft").setOnPreferenceClickListener(openLauncherActions);
+		findPreference("pref_key_launcher_shake").setOnPreferenceClickListener(openLauncherActions);
+		findPreference("pref_key_launcher_doubletap").setOnPreferenceClickListener(openLauncherActions);
 
-		pref = findPreference("pref_key_launcher_privacyapps_list");
-		pref.setOnPreferenceClickListener(openPrivacyAppEdit);
-		pref = findPreference("pref_key_launcher_privacyapps_gest");
-		pref.setOnPreferenceChangeListener(switchPrivacyAppState);
-
-		pref = findPreference("pref_key_launcher_renameapps_list");
-		pref.setOnPreferenceClickListener(openLaunchableList);
+		findPreference("pref_key_launcher_privacyapps_list").setOnPreferenceClickListener(openPrivacyAppEdit);
+		findPreference("pref_key_launcher_privacyapps_gest").setOnPreferenceChangeListener(switchPrivacyAppState);
+		findPreference("pref_key_launcher_renameapps_list").setOnPreferenceClickListener(openLaunchableList);
 
 		if (!checkPermissions()) {
-			pref = findPreference("pref_key_launcher_privacyapps");
+			Preference pref = findPreference("pref_key_launcher_privacyapps");
 			pref.setEnabled(false);
 			pref.setTitle(R.string.launcher_privacyapps_fail);
+			findPreference("pref_key_launcher_privacyapps_list").setEnabled(false);
+			findPreference("pref_key_launcher_privacyapps_gest").setEnabled(false);
 		}
 
 		updateLauncherMods(Helpers.prefs.getString("pref_key_launcher_mods", "1"));
@@ -98,7 +87,7 @@ public class Launcher extends SubFragment {
 	private boolean checkPermissions() {
 		PackageManager pm = getActivity().getPackageManager();
 		return pm.checkPermission(Manifest.permission.WRITE_SECURE_SETTINGS, Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED &&
-			   pm.checkPermission("com.miui.securitycenter.permission.ACCESS_SECURITY_CENTER_PROVIDER", Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED;
+			   pm.checkPermission(Helpers.ACCESS_SECURITY_CENTER, Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED;
 	}
 
 	private void updateLauncherMods(String value) {
@@ -108,6 +97,7 @@ public class Launcher extends SubFragment {
 		findPreference("pref_key_launcher_foldershade").setEnabled(opt == 1);
 		findPreference("pref_key_launcher_privacyapps").setEnabled(opt == 1);
 		findPreference("pref_key_launcher_swipeup").setEnabled(opt == 1);
+		findPreference("pref_key_launcher_hideseekpoints").setEnabled(opt == 1);
 	}
 
 //	public boolean onCreateOptionsMenu(Menu menu) {

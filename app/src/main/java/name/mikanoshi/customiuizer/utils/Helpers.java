@@ -64,6 +64,7 @@ public class Helpers {
 	public static final String externalFolder = "/CustoMIUIzer/";
 	public static final String ANDROID_NS = "http://schemas.android.com/apk/res/android";
 	public static final String MIUIZER_NS = "http://schemas.android.com/apk/res-auto";
+	public static final String ACCESS_SECURITY_CENTER = "com.miui.securitycenter.permission.ACCESS_SECURITY_CENTER_PROVIDER";
 	public static SharedPreferences prefs = null;
 	public static ArrayList<AppData> shareAppsList = null;
 	public static ArrayList<AppData> installedAppsList = null;

@@ -324,24 +324,18 @@ public class MainFragment extends PreferenceFragmentBase {
 		};
 
 		CheckBoxPreference launcherIconPreference = (CheckBoxPreference)findPreference("pref_key_miuizer_launchericon");
-		if (launcherIconPreference != null)
-		launcherIconPreference.setOnPreferenceChangeListener(toggleLauncherIcon);
-		CheckBoxPreference miuizerSettingsPreference = (CheckBoxPreference) findPreference("pref_key_miuizer_settingsicon");
-		if (miuizerSettingsPreference != null)
-		miuizerSettingsPreference.setOnPreferenceChangeListener(toggleSettingsIcon);
-		CheckBoxPreference forceLocalePreference = (CheckBoxPreference) findPreference("pref_key_miuizer_forcelocale");
-		if (forceLocalePreference != null)
-		forceLocalePreference.setOnPreferenceChangeListener(toggleForceLocale);
+		if (launcherIconPreference != null) launcherIconPreference.setOnPreferenceChangeListener(toggleLauncherIcon);
+		CheckBoxPreference miuizerSettingsPreference = (CheckBoxPreference)findPreference("pref_key_miuizer_settingsicon");
+		if (miuizerSettingsPreference != null) miuizerSettingsPreference.setOnPreferenceChangeListener(toggleSettingsIcon);
+		CheckBoxPreference forceLocalePreference = (CheckBoxPreference)findPreference("pref_key_miuizer_forcelocale");
+		if (forceLocalePreference != null) forceLocalePreference.setOnPreferenceChangeListener(toggleForceLocale);
 
 		Preference miuizerCrashReportPreference = findPreference("pref_key_miuizer_sendreport");
-		if (miuizerCrashReportPreference != null)
-		miuizerCrashReportPreference.setOnPreferenceClickListener(sendCrashReport);
+		if (miuizerCrashReportPreference != null) miuizerCrashReportPreference.setOnPreferenceClickListener(sendCrashReport);
 		Preference feedbackPreference = findPreference("pref_key_miuizer_feedback");
-		if (feedbackPreference != null)
-		feedbackPreference.setOnPreferenceClickListener(openFeedbackEdit);
+		if (feedbackPreference != null) feedbackPreference.setOnPreferenceClickListener(openFeedbackEdit);
 
-		Preference issueTrackerPreference = findPreference("pref_key_issuetracker");
-		issueTrackerPreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+		findPreference("pref_key_issuetracker").setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference pref) {
 				Helpers.openURL(act, "https://code.highspec.ru/Mikanoshi/CustoMIUIzer/issues");
@@ -349,8 +343,17 @@ public class MainFragment extends PreferenceFragmentBase {
 			}
 		});
 
-		Preference donateCryptoPagePreference = findPreference("pref_key_paycrypto");
-		donateCryptoPagePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+		findPreference("pref_key_payinapp").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference pref) {
+				Bundle args = new Bundle();
+				args.putInt("baseResId", R.layout.fragment_inapp);
+				openSubFragment(new InAppFragment(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.support_donate_title, R.xml.prefs_inapp);
+				return true;
+			}
+		});
+
+		findPreference("pref_key_paycrypto").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference pref) {
 				Helpers.openURL(act, "https://code.highspec.ru/cryptodonate");
@@ -358,8 +361,7 @@ public class MainFragment extends PreferenceFragmentBase {
 			}
 		});
 
-		Preference donateOtherPagePreference = findPreference("pref_key_payother");
-		donateOtherPagePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+		findPreference("pref_key_payother").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			@SuppressWarnings("deprecation")
 			public boolean onPreferenceClick(Preference pref) {

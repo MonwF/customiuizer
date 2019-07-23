@@ -1,7 +1,9 @@
 package name.mikanoshi.customiuizer.mods;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,27 +11,37 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.database.ContentObserver;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.provider.Settings;
+import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
-import de.robv.android.xposed.callbacks.XC_LoadPackage;
+import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
+import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
 
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class Various {
 
-	public static void AppInfoHook(XC_LoadPackage.LoadPackageParam lpparam) {
+	public static void AppInfoHook(LoadPackageParam lpparam) {
 		Helpers.hookAllMethods("com.miui.appmanager.AMAppInfomationActivity", lpparam.classLoader, "onLoadFinished", new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
@@ -68,7 +80,7 @@ public class Various {
 		});
 	}
 
-	public static void AppsDefaultSortHook(XC_LoadPackage.LoadPackageParam lpparam) {
+	public static void AppsDefaultSortHook(LoadPackageParam lpparam) {
 		Helpers.findAndHookMethod("com.miui.appmanager.AppManagerMainActivity", lpparam.classLoader, "onCreate", Bundle.class, new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
@@ -111,7 +123,7 @@ public class Various {
 		}
 	}
 
-	public static void AppsDisableHook(XC_LoadPackage.LoadPackageParam lpparam) {
+	public static void AppsDisableHook(LoadPackageParam lpparam) {
 		Helpers.findAndHookMethod("com.miui.appmanager.ApplicationsDetailsActivity", lpparam.classLoader, "onCreateOptionsMenu", Menu.class, new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
@@ -173,7 +185,75 @@ public class Various {
 		});
 	}
 
-//	public static void LargeCallerPhotoHook(XC_LoadPackage.LoadPackageParam lpparam) {
+	public static void AlarmCompatHook() {
+		Helpers.findAndHookMethod("android.provider.Settings$System", null, "getStringForUser", ContentResolver.class, String.class, int.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+				try {
+					ContentResolver resolver = (ContentResolver)param.args[0];
+					String pkgName = (String)XposedHelpers.callMethod(resolver, "getPackageName");
+					String key = (String)param.args[1];
+					if ("next_alarm_formatted".equals(key) && MainModule.mPrefs.getStringSet("various_alarmcompat_apps").contains(pkgName))
+					param.args[1] = "next_alarm_clock_formatted";
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
+	}
+
+	public static void AlarmCompatServiceHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.server.AlarmManagerService", lpparam.classLoader, "onBootPhase", int.class, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				if ((int)param.args[0] != 500 /*PHASE_SYSTEM_SERVICES_READY*/) return;
+
+				Context mContext = (Context)XposedHelpers.callMethod(param.thisObject, "getContext");
+				if (mContext == null) {
+					Helpers.log("AlarmCompatServiceHook", "Context is NULL");
+					return;
+				}
+				ContentResolver resolver = mContext.getContentResolver();
+				ContentObserver alarmObserver = new ContentObserver(new Handler()) {
+					@Override
+					public void onChange(boolean selfChange) {
+						if (selfChange) return;
+						String nextAlarm = Settings.System.getString(resolver, "next_alarm_clock_formatted");
+						long nextTime = 0;
+						if (!TextUtils.isEmpty(nextAlarm)) try {
+							Calendar cal = Calendar.getInstance();
+							cal.set(Calendar.HOUR_OF_DAY, 0);
+							cal.clear(Calendar.MINUTE);
+							cal.clear(Calendar.SECOND);
+							cal.clear(Calendar.MILLISECOND);
+
+							SimpleDateFormat dateFormat = new SimpleDateFormat(DateFormat.getBestDateTimePattern(Locale.getDefault(), DateFormat.is24HourFormat(mContext) ? "EHm" : "Ehma"), Locale.getDefault());
+							dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+							nextTime = cal.getTimeInMillis() + dateFormat.parse(nextAlarm).getTime();
+						} catch (Throwable t) {
+							XposedBridge.log(t);
+						}
+						XposedHelpers.setAdditionalInstanceField(param.thisObject, "mNextAlarmTime", nextTime);
+					}
+				};
+				alarmObserver.onChange(false);
+				resolver.registerContentObserver(Settings.System.getUriFor("next_alarm_clock_formatted"), false, alarmObserver);
+			}
+		});
+
+		Helpers.findAndHookMethod("com.android.server.AlarmManagerService", lpparam.classLoader, "getNextAlarmClockImpl", int.class, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				Context mContext = (Context)XposedHelpers.callMethod(param.thisObject, "getContext");
+				String pkgName = mContext.getPackageManager().getNameForUid(Binder.getCallingUid());
+				Object mNextAlarmTime = XposedHelpers.getAdditionalInstanceField(param.thisObject, "mNextAlarmTime");
+				if (mNextAlarmTime != null && MainModule.mPrefs.getStringSet("various_alarmcompat_apps").contains(pkgName))
+				param.setResult((long)mNextAlarmTime == 0 ? null : new AlarmManager.AlarmClockInfo((long)mNextAlarmTime, null));
+			}
+		});
+	}
+
+//	public static void LargeCallerPhotoHook(LoadPackageParam lpparam) {
 //		Helpers.findAndHookMethod("com.android.incallui.CallCardFragment", lpparam.classLoader, "setCallCardImage", Drawable.class, boolean.class, new XC_MethodHook() {
 //			@Override
 //			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {

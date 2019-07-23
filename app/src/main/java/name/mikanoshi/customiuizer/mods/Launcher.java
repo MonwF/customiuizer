@@ -595,13 +595,6 @@ public class Launcher {
 			}
 		});
 
-		Helpers.findAndHookMethod("com.miui.home.launcher.ScreenView", lpparam.classLoader, "setSeekBarVisibility", int.class, new XC_MethodHook() {
-			@Override
-			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
-				XposedBridge.log("setSeekBarVisibility: " + param.args[0]);
-			}
-		});
-
 		Helpers.findAndHookMethod("com.miui.home.launcher.ScreenView", lpparam.classLoader, "addView", View.class, int.class, ViewGroup.LayoutParams.class, new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
@@ -625,24 +618,15 @@ public class Launcher {
 	}
 
 	public static void InfiniteScrollHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.miui.home.launcher.Workspace", lpparam.classLoader, "snapToScreen", int.class, int.class, boolean.class, new XC_MethodHook() {
-			@Override
-			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
-				//XposedBridge.log("snapToScreen: " + param.args[0] + ", " + param.args[1] + ", " + param.args[2]);
-				//XposedBridge.log(new Throwable());
-			}
-		});
-
 		Helpers.findAndHookMethod("com.miui.home.launcher.ScreenView", lpparam.classLoader, "getSnapToScreenIndex", int.class, int.class, int.class, new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
-				if (param.args[0] == param.getResult()) {
-					int screenCount = (int)XposedHelpers.callMethod(param.thisObject, "getScreenCount");
-					if ((int)param.args[2] == -1 && (int)param.args[0] == 0)
-						param.setResult(screenCount);
-					else if ((int)param.args[2] == 1 && (int)param.args[0] == screenCount - 1)
-						param.setResult(0);
-				}
+				if (param.args[0] != param.getResult()) return;
+				int screenCount = (int)XposedHelpers.callMethod(param.thisObject, "getScreenCount");
+				if ((int)param.args[2] == -1 && (int)param.args[0] == 0)
+					param.setResult(screenCount);
+				else if ((int)param.args[2] == 1 && (int)param.args[0] == screenCount - 1)
+					param.setResult(0);
 			}
 		});
 
@@ -650,13 +634,12 @@ public class Launcher {
 			@Override
 			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
 				int mCurrentScreenIndex = XposedHelpers.getIntField(param.thisObject, lpparam.packageName.equals("com.miui.home") ? "mCurrentScreenIndex" : "mCurrentScreen");
-				if (mCurrentScreenIndex == (int)param.getResult()) {
-					int screenCount = (int)XposedHelpers.callMethod(param.thisObject, "getScreenCount");
-					if ((int)param.getResult() == 0)
-						param.setResult(screenCount);
-					else if ((int)param.getResult() == screenCount - 1)
-						param.setResult(0);
-				}
+				if (mCurrentScreenIndex != (int)param.getResult()) return;
+				int screenCount = (int)XposedHelpers.callMethod(param.thisObject, "getScreenCount");
+				if ((int)param.getResult() == 0)
+					param.setResult(screenCount);
+				else if ((int)param.getResult() == screenCount - 1)
+					param.setResult(0);
 			}
 		});
 	}

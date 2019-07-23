@@ -32,7 +32,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 
 		XSharedPreferences pref = null;
 		try {
-			//pref = new XSharedPreferences(Helpers.modulePkg, Helpers.prefsName);
 			pref = new XSharedPreferences(new File("/data/user_de/0/" + Helpers.modulePkg + "/shared_prefs/" + Helpers.prefsName + ".xml"));
 			pref.makeWorldReadable();
 		} catch (Throwable t) {
@@ -59,6 +58,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getBoolean("system_epm")) System.ExtendedPowerMenuHook();
 		if (mPrefs.getBoolean("system_pocketmode")) System.PocketModeHook();
 		if (mPrefs.getBoolean("system_statusbarcolor")) System.StatusBarBackgroundHook();
+		if (mPrefs.getBoolean("various_alarmcompat")) Various.AlarmCompatHook();
 
 		Controls.VolumeMediaPlayerHook();
 		GlobalActions.setupUnhandledCatcher();
@@ -133,6 +133,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_limitminbrightness")) System.MinAutoBrightnessHook(lpparam);
 			if (mPrefs.getBoolean("system_applock")) System.AppLockHook(lpparam);
 			if (mPrefs.getInt("system_applock_timeout", 1) > 1) System.AppLockTimeoutHook(lpparam);
+			if (mPrefs.getBoolean("various_alarmcompat")) Various.AlarmCompatServiceHook(lpparam);
+			if (mPrefs.getBoolean("system_ignorecalls")) System.NoCallInterruptionHook(lpparam);
 
 			//Controls.AIButtonHook(lpparam);
 		}
@@ -219,12 +221,12 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 				if (mPrefs.getBoolean("launcher_closefolder")) Launcher.CloseFolderOnLaunchHook(lpparam);
 				if (mPrefs.getBoolean("launcher_darkershadow")) Launcher.TitleShadowHook(lpparam);
 				if (mPrefs.getBoolean("controls_nonavbar")) Launcher.HideNavBarHook(lpparam);
-				//Launcher.HideSeekPointsHook(lpparam);
-				//Launcher.InfiniteScrollHook(lpparam);
+				if (mPrefs.getBoolean("launcher_infinitescroll")) Launcher.InfiniteScrollHook(lpparam);
 				if (lpparam.packageName.equals("com.miui.home")) {
 					if (mPrefs.getBoolean("controls_fsg_horiz")) Launcher.FSGesturesHook(lpparam);
 					if (Integer.parseInt(mPrefs.getString("launcher_foldershade", "1")) > 1) Launcher.FolderShadeHook(lpparam);
 					if (mPrefs.getBoolean("launcher_fixstatusbarmode")) Launcher.FixStatusBarModeHook(lpparam);
+					if (mPrefs.getBoolean("launcher_hideseekpoints")) Launcher.HideSeekPointsHook(lpparam);
 				}
 				//if (!mPrefs.getString("system_clock_app", "").equals("")) Launcher.ReplaceClockAppHook(lpparam);
 				//if (!mPrefs.getString("system_calendar_app", "").equals("")) Launcher.ReplaceCalendarAppHook(lpparam);

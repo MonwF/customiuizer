@@ -15,6 +15,7 @@ public class AutoRotateService extends TileService {
 
 	void updateTile() {
 		Tile tile = this.getQsTile();
+		if (tile == null) return;
 		int state = getTileState();
 
 		Icon newIcon = Icon.createWithResource(getApplicationContext(),	R.drawable.ic_qs_autorotate_disabled);

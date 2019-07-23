@@ -71,7 +71,7 @@
 	<string name="system_nolightuponheadset_summ">Do not turn screen on when you connect a headset</string>
 	<string name="system_minbrightness_title">Minimum auto brightness</string>
 	<string name="system_minbrightness_summ">Set the minimum brightness value in automatic mode</string>
-	<string name="system_minbrightness_note">Slider will not correspond to system brightness slider on latest Android versions with exponential brightness scale</string>
+	<string name="system_minbrightness_note">Slider will not correspond to system brightness slider on latest Android versions with non-linear brightness scale</string>
 	<string name="system_noducking_title">Disable ducking</string>
 	<string name="system_noducking_summ">Do not lower volume of currently playing music to play notification sound</string>
 	<string name="system_separatevolume_title">Separate volume controls</string>
@@ -91,6 +91,8 @@
 	<string name="system_visualizer_style_title">Style</string>
 	<string name="system_visualizer_color_title">Color</string>
 	<string name="system_visualizer_colorval_title">Select custom color</string>
+	<string name="system_ignorecalls_title">Ignore calls</string>
+	<string name="system_ignorecalls_summ">Prevent incoming calls from stealing audio focus when it\'s on selected apps and stop notifying them about call state changes</string>
 	<string name="system_vibration_title">Block vibration</string>
 	<string name="system_vibration_summ">Prevent selected apps from using vibration</string>
 	<string name="notification_volume">Notification volume</string>
@@ -139,10 +141,6 @@
 	<string name="system_downgrade_summ">Make installing older app version on top of a newer one possible</string>
 	<string name="system_unblockthird_title">Unblock launchers</string>
 	<string name="system_unblockthird_summ">Remove restriction of 3rd party launchers on Chinese ROMs</string>
-	<string name="system_applock_title">Less strict app lock</string>
-	<string name="system_applock_summ">Do not lock apps when device is locked if option with app locking after exit is selected</string>
-	<string name="system_applock_timeout_title">App lock timeout</string>
-	<string name="system_applock_timeout_summ">Time interval during which app remains unlocked after exit</string>
 	<string name="system_cleanshare_title">Clean share menu</string>
 	<string name="system_cleanshare_summ">Remove selected apps from share menu</string>
 	<string name="system_cleanshare_test">Test share menu</string>
@@ -173,6 +171,13 @@
 	<string name="system_betterpopups_nohide_summ">Do not dismiss popups automatically</string>
 	<string name="system_betterpopups_swipedown_title">Enable swipe down</string>
 	<string name="system_betterpopups_swipedown_summ">Open notification drawer on swipe down gesture</string>
+	<string name="system_mods_applock">App lock</string>
+	<string name="system_applock_title">Less strict app lock</string>
+	<string name="system_applock_summ">Do not lock apps when device is locked if option with app locking after exit is selected</string>
+	<string name="system_applock_timeout_title">App lock timeout</string>
+	<string name="system_applock_timeout_summ">Time interval during which app remains unlocked after exit</string>
+	<string name="system_applock_list_title">List of apps to lock</string>
+	<string name="system_applock_list_summ">Enhanced version of App lock option that allows to lock any installed app. No reboot is required.</string>
 	<string name="system_mods_qs">Quick Settings</string>
 	<string name="system_qsgridrows_title">Number of rows</string>
 	<string name="system_qsgridrows_note">Labels will be hidden for 5 rows in a portrait orientation. Number of rows is limited to 3 with hidden labels in a landscape orientation.</string>
@@ -193,8 +198,12 @@
 	<string name="launcher_gestures_shortcut">Shortcut to launch</string>
 	<string name="launcher_title">Launcher</string>
 	<string name="launcher_summ">Display mods for selected launcher</string>
+	<string name="launcher_infinitescroll_title">Infinite scrolling</string>
+	<string name="launcher_infinitescroll_summ">Jump from the last page to the first one and vice versa</string>
 	<string name="launcher_noclockhide_title">No clock hide</string>
 	<string name="launcher_noclockhide_summ">Do not hide status bar clock on pages with clock widgets</string>
+	<string name="launcher_hideseekpoints_title">Dynamic page indicator</string>
+	<string name="launcher_hideseekpoints_summ">Show page indicator only during scrolling</string>
 	<string name="launcher_unlockgrids_title">Unlock grid sizes</string>
 	<string name="launcher_unlockgrids_summ">Make all grid sizes from 3x4 to 6x7 available in home screen layout setting</string>
 	<string name="launcher_folders">Folders</string>
@@ -251,6 +260,8 @@
 	<string name="controls_fingerprintlong_delay_title">Long press delay</string>
 	<string name="controls_fingerprintskip_title">No actions in Camera</string>
 	<string name="controls_fingerprintskip_summ">Enable this if you use fingerprint shutter option</string>
+	<string name="controls_fingerprintskip2_title">No actions during calls</string>
+	<string name="controls_fingerprintskip2_summ">Do not execute actions when call is active</string>
 	<string name="controls_mods_volume">Volume keys</string>
 	<string name="controls_volumecursor_title">Control input cursor</string>
 	<string name="controls_volumecursor_summ">Move text input cursor using volume keys</string>
@@ -286,6 +297,8 @@
 	<string name="various_sysappsupdater_title">Open \"System app updater\"</string>
 	<string name="various_sysappsupdater_summ">App is no longer a part of some ROMs and has to be installed manually</string>
 	<string name="various_sysappsupdater_summ2">Be careful when updating modified system apps on custom ROMs, you might lose the added functionality</string>
+	<string name="various_alarmcompat_title">Alarm clock compatibility</string>
+	<string name="various_alarmcompat_summ">Make selected apps display correct next alarm time set by stock MIUI Clock app</string>
 	<string name="various_disableapp_title">App state control</string>
 	<string name="various_disableapp_summ">Allows to disable almost any app from its info page</string>
 	<string name="various_apps_title">Show additional app details</string>
@@ -438,12 +451,21 @@
 
 	<string name="support_bug_title">Report a bug</string>
 	<string name="support_bug_summ">Send us a bug report or a feature request via official issue tracker</string>
+	<string name="support_donate">Donate $%1$d</string>
 	<string name="support_donate_title">Donate</string>
 	<string name="support_donate_summ">Best way to express your gratitude for this awesome module :)</string>
+	<string name="support_donate_inapp_title">In-app</string>
+	<string name="support_donate_inapp_summ">Let Google handle everything</string>
 	<string name="support_donate_crypto_title">Cryptocurrencies</string>
 	<string name="support_donate_crypto_summ">Money of the future :)</string>
 	<string name="support_donate_other_title">Outdated currencies</string>
-	<string name="support_donate_other_summ">Paypal, Webmoney, QIWI</string>
+	<string name="support_donate_other_summ">Webmoney, QIWI</string>
+
+	<string name="donate_level1">Thanks for your donation!</string>
+	<string name="donate_level2">Thanks for your generous donation!</string>
+	<string name="donate_level3">Thanks for your insanely generous donation! 😮</string>
+	<string name="billing_error">Failed to get billing information, check your internet connection</string>
+	<string name="billing_canceled">Changed your mind? ;)</string>
 
 	<string name="crash_dialog">CustoMIUIzer has just crashed!</string>
 	<string name="crash_dialog_manual">All necessary data has beed collected</string>

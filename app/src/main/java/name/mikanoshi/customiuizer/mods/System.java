@@ -54,6 +54,7 @@ import android.os.SystemClock;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.provider.Settings;
+import android.telephony.PhoneStateListener;
 import android.text.Layout;
 import android.text.TextUtils;
 import android.util.ArrayMap;
@@ -2038,9 +2039,9 @@ public class System {
 			XModuleResources modRes = XModuleResources.createInstance(MainModule.MODULE_PATH, null);
 			int opt = MainModule.mPrefs.getInt("system_statusbarheight", 19);
 			int heightRes = opt == 19 ? R.dimen.status_bar_height_27 : modRes.getIdentifier("status_bar_height_" + opt, "dimen", Helpers.modulePkg);
-			XResources.setSystemWideReplacement("android", "dimen", "status_bar_height", modRes.fwd(heightRes));
-			XResources.setSystemWideReplacement("android", "dimen", "status_bar_height_portrait", modRes.fwd(heightRes));
-			XResources.setSystemWideReplacement("android", "dimen", "status_bar_height_landscape", modRes.fwd(heightRes));
+			try { XResources.setSystemWideReplacement("android", "dimen", "status_bar_height", modRes.fwd(heightRes)); } catch (Throwable t) {}
+			try { XResources.setSystemWideReplacement("android", "dimen", "status_bar_height_portrait", modRes.fwd(heightRes)); } catch (Throwable t) {}
+			try { XResources.setSystemWideReplacement("android", "dimen", "status_bar_height_landscape", modRes.fwd(heightRes)); } catch (Throwable t) {}
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
@@ -2899,6 +2900,58 @@ public class System {
 				} catch (Throwable t) {
 					XposedBridge.log(t);
 				}
+			}
+		});
+	}
+
+	private static String audioFocusPkg = null;
+
+	@SuppressWarnings("unchecked")
+	private static void removeListener(Object thisObject) {
+		ArrayList<Object> mRecords = (ArrayList<Object>)XposedHelpers.getObjectField(thisObject, "mRecords");
+		if (mRecords == null) return;
+		for (Object record: mRecords) {
+			String callingPackage = (String)XposedHelpers.getObjectField(record, "callingPackage");
+			int events = XposedHelpers.getIntField(record, "events");
+			if ((events & PhoneStateListener.LISTEN_CALL_STATE) == PhoneStateListener.LISTEN_CALL_STATE &&
+				callingPackage != null && MainModule.mPrefs.getStringSet("system_ignorecalls_apps").contains(callingPackage)) {
+				events &= ~PhoneStateListener.LISTEN_CALL_STATE;
+				XposedHelpers.setIntField(record, "events", events);
+			}
+		}
+	}
+
+	public static void NoCallInterruptionHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethods("com.android.server.audio.AudioService", lpparam.classLoader, "requestAudioFocus", new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				try {
+					if ("AudioFocus_For_Phone_Ring_And_Calls".equals(param.args[4]) && audioFocusPkg != null && MainModule.mPrefs.getStringSet("system_ignorecalls_apps").contains(audioFocusPkg))
+					param.setResult(1);
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+
+			@Override
+			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				int res = (int)param.getResult();
+				if (res != AudioManager.AUDIOFOCUS_REQUEST_FAILED && !"AudioFocus_For_Phone_Ring_And_Calls".equals(param.args[4]))
+				audioFocusPkg = (String)param.args[5];
+			}
+		});
+
+		Helpers.findAndHookMethod("com.android.server.TelephonyRegistry", lpparam.classLoader, "notifyCallState", int.class, String.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				removeListener(param.thisObject);
+			}
+		});
+
+		Helpers.findAndHookMethod("com.android.server.TelephonyRegistry", lpparam.classLoader, "notifyCallStateForPhoneId", int.class, int.class, int.class, String.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				removeListener(param.thisObject);
 			}
 		});
 	}

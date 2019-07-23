@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -20,6 +19,7 @@ import name.mikanoshi.customiuizer.SubFragmentWithSearch;
 import name.mikanoshi.customiuizer.utils.AppData;
 import name.mikanoshi.customiuizer.utils.AppDataAdapter;
 import name.mikanoshi.customiuizer.utils.Helpers;
+import name.mikanoshi.customiuizer.utils.LockedAppAdapter;
 import name.mikanoshi.customiuizer.utils.PrivacyAppAdapter;
 
 public class AppSelector extends SubFragmentWithSearch {
@@ -27,6 +27,7 @@ public class AppSelector extends SubFragmentWithSearch {
 	boolean standalone = false;
 	boolean multi = false;
 	boolean privacy = false;
+	boolean applock = false;
 	boolean customTitles = false;
 	boolean share = false;
 	String key = null;
@@ -44,6 +45,7 @@ public class AppSelector extends SubFragmentWithSearch {
 		standalone = getArguments().getBoolean("standalone");
 		multi = getArguments().getBoolean("multi");
 		privacy = getArguments().getBoolean("privacy");
+		applock = getArguments().getBoolean("applock");
 		customTitles = getArguments().getBoolean("custom_titles");
 		share = getArguments().getBoolean("share");
 		key = getArguments().getString("key");
@@ -62,6 +64,9 @@ public class AppSelector extends SubFragmentWithSearch {
 				} else if (privacy) {
 					if (Helpers.installedAppsList == null) return;
 					listView.setAdapter(new PrivacyAppAdapter(getContext(), Helpers.installedAppsList));
+				} else if (applock) {
+					if (Helpers.installedAppsList == null) return;
+					listView.setAdapter(new LockedAppAdapter(getContext(), Helpers.installedAppsList));
 				} else if (customTitles) {
 					if (Helpers.launchableAppsList == null) return;
 					listView.setAdapter(new AppDataAdapter(getContext(), Helpers.launchableAppsList, Helpers.AppAdapterType.CustomTitles, key));
@@ -99,6 +104,20 @@ public class AppSelector extends SubFragmentWithSearch {
 							} catch (Throwable t) {
 								t.printStackTrace();
 							}
+						} else if (applock) {
+							AppData app = (AppData)parent.getAdapter().getItem(position);
+							try {
+								@SuppressLint("WrongConstant") Object mSecurityManager = getActivity().getSystemService("security");
+								Method getApplicationAccessControlEnabled = mSecurityManager.getClass().getDeclaredMethod("getApplicationAccessControlEnabled", String.class);
+								getApplicationAccessControlEnabled.setAccessible(true);
+								Method setApplicationAccessControlEnabled = mSecurityManager.getClass().getDeclaredMethod("setApplicationAccessControlEnabled", String.class, boolean.class);
+								setApplicationAccessControlEnabled.setAccessible(true);
+								setApplicationAccessControlEnabled.invoke(mSecurityManager, app.pkgName, !(boolean)getApplicationAccessControlEnabled.invoke(mSecurityManager, app.pkgName));
+								LockedAppAdapter adapter = (LockedAppAdapter)parent.getAdapter();
+								adapter.notifyDataSetChanged();
+							} catch (Throwable t) {
+								t.printStackTrace();
+							}
 						} else if (customTitles) {
 							AppData app = (AppData)parent.getAdapter().getItem(position);
 							Helpers.showInputDialog(getActivity(), key + ":" + app.pkgName + "|" + app.actName, R.string.launcher_renameapps_modified, new Helpers.InputCallback() {
@@ -133,7 +152,7 @@ public class AppSelector extends SubFragmentWithSearch {
 			public void run() {
 				try { sleep(animDur); } catch (Throwable e) {}
 				try {
-					if (privacy || (multi && key != null)) {
+					if (privacy || applock || (multi && key != null)) {
 						if (share) {
 							if (Helpers.shareAppsList == null) Helpers.getShareApps(getActivity());
 						} else {

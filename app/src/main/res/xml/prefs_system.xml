@@ -24,23 +24,6 @@
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_applock"
-		android:title="@string/system_applock_title"
-		android:summary="@string/system_applock_summ"
-		android:defaultValue="false" />
-
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-		android:key="pref_key_system_applock_timeout"
-		android:title="@string/system_applock_timeout_title"
-		android:summary="@string/system_applock_timeout_summ"
-		android:defaultValue="1"
-		miuizer:minValue="1"
-		miuizer:maxValue="60"
-		miuizer:stepValue="1"
-		miuizer:offtext="@string/array_default"
-		miuizer:format="@string/format_d_m"/>
-
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_cleanshare"
 		android:title="@string/system_cleanshare_title"
 		android:summary="@string/system_cleanshare_summ"
@@ -172,6 +155,19 @@
 			android:key="pref_key_system_visualizer_cat"
 			android:summary="@string/system_visualizer_summ"
 			android:title="@string/system_visualizer_title" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_ignorecalls"
+			android:title="@string/system_ignorecalls_title"
+			android:summary="@string/system_ignorecalls_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_popupnotif_apps_title"
+			android:key="pref_key_system_ignorecalls_apps"
+			android:dependency="pref_key_system_ignorecalls"
+			miuizer:child="true"
+			miuizer:countAsSummary="true" />
 
 	</PreferenceCategory>
 
@@ -487,6 +483,33 @@
 			android:summary="@string/system_betterpopups_swipedown_summ"
 			android:title="@string/system_betterpopups_swipedown_title"
 			android:defaultValue="false" />
+
+	</PreferenceCategory>
+
+	<PreferenceCategory
+		android:title="@string/system_mods_applock">
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_applock"
+			android:title="@string/system_applock_title"
+			android:summary="@string/system_applock_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_applock_timeout"
+			android:title="@string/system_applock_timeout_title"
+			android:summary="@string/system_applock_timeout_summ"
+			android:defaultValue="1"
+			miuizer:minValue="1"
+			miuizer:maxValue="60"
+			miuizer:stepValue="1"
+			miuizer:offtext="@string/array_default"
+			miuizer:format="@string/format_d_m"/>
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_applock_list"
+			android:title="@string/system_applock_list_title"
+			android:summary="@string/system_applock_list_summ" />
 
 	</PreferenceCategory>
 

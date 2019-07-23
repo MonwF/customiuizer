@@ -276,6 +276,14 @@ public class SubFragment extends PreferenceFragmentBase {
 		openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_app, R.layout.prefs_app_selector);
 	}
 
+	public void openLockedAppEdit(Fragment targetFrag, int resultId) {
+		Bundle args = new Bundle();
+		args.putBoolean("applock", true);
+		AppSelector appSelector = new AppSelector();
+		appSelector.setTargetFragment(targetFrag, resultId);
+		openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_app, R.layout.prefs_app_selector);
+	}
+
 	public void openLaunchableList(Preference pref, Fragment targetFrag, int resultId) {
 		Bundle args = new Bundle();
 		args.putString("key", pref.getKey());

@@ -17,6 +17,7 @@ import android.graphics.Shader;
 import android.media.audiofx.Visualizer;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
@@ -54,10 +55,12 @@ public class AudioVisualizer extends View {
 	private int mColor;
 	private Bitmap mArt;
 	private Bitmap mProcessedArt;
-	private int[] mRainbow = new int[31];
-	private int[] mRainbowVertical = new int[31];
-	private float[] mPositions = new float[31];
+	private final int mBandsNum = 31;
+	private int[] mRainbow = new int[mBandsNum];
+	private int[] mRainbowVertical = new int[mBandsNum];
+	private float[] mPositions = new float[mBandsNum];
 	private Path mLinePath = new Path();
+	private int sdk = Build.VERSION.SDK_INT;
 	public boolean showOnCustom;
 	private int transparency;
 	public int colorMode;
@@ -89,7 +92,7 @@ public class AudioVisualizer extends View {
 				int i = 1;
 				float maxHeight = Math.min(maxDp * mDensity, mHeight / 2.0f);
 
-				while (band < 31 && i < fft.length / 2) {
+				while (band < mBandsNum && i < fft.length / 2) {
 					//int n = 0;
 					magnitude = 0;
 
@@ -167,8 +170,8 @@ public class AudioVisualizer extends View {
 		mPaint.setColor(mColor);
 
 		mFFTPoints = new float[128];
-		mValueAnimators = new ValueAnimator[31];
-		for (int i = 0; i < 31; i++) {
+		mValueAnimators = new ValueAnimator[mBandsNum];
+		for (int i = 0; i < mBandsNum; i++) {
 			final int j = i * 4 + 3;
 			mValueAnimators[i] = new ValueAnimator();
 			mValueAnimators[i].setDuration(133);
@@ -176,7 +179,7 @@ public class AudioVisualizer extends View {
 				mFFTPoints[j] = (float)animation.getAnimatedValue();
 				postInvalidate();
 			});
-			mPositions[i] = (i + 1) / 31f;
+			mPositions[i] = (i + 1) / (float)mBandsNum;
 		}
 
 		showOnCustom = MainModule.mPrefs.getBoolean("system_visualizer_custom");
@@ -252,14 +255,14 @@ public class AudioVisualizer extends View {
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		super.onSizeChanged(w, h, oldw, oldh);
 
-		float barUnit = w / 31f;
+		float barUnit = w / (float)mBandsNum;
 		float barWidth = barUnit * 0.80f;
 		mHeight = h;
 		mWidth = w;
 		mPaint.setStrokeWidth(barWidth);
 		updateBarStyle();
 
-		for (int i = 0; i < 31; i++) {
+		for (int i = 0; i < mBandsNum; i++) {
 			mFFTPoints[i * 4] = mFFTPoints[i * 4 + 2] = i * barUnit + (barWidth / 2);
 			mFFTPoints[i * 4 + 1] = h;
 			mFFTPoints[i * 4 + 3] = h;
@@ -282,17 +285,27 @@ public class AudioVisualizer extends View {
 		if (barStyle == 5) {
 			mLinePath.reset();
 			mLinePath.moveTo(0, mFFTPoints[3]);
-			for (int i = 1; i < 31; i++)
-			mLinePath.lineTo(i == 30 ? mWidth : mFFTPoints[i * 4 + 2], mFFTPoints[i * 4 + 3]);
+			for (int i = 1; i < mBandsNum; i++)
+			mLinePath.lineTo(i == mBandsNum - 1 ? mWidth : mFFTPoints[i * 4 + 2], mFFTPoints[i * 4 + 3]);
 			canvas.drawPath(mLinePath, mPaint);
 		} else {
-			if (colorMode == 3) {
-				for (int i = 0; i < mRainbow.length; i++) {
-					mPaint.setColor(mRainbow[i]);
-					canvas.drawLine(mFFTPoints[i * 4], mFFTPoints[i * 4 + 1], mFFTPoints[i * 4 + 2], mFFTPoints[i * 4 + 3], mPaint);
+			if (sdk >= Build.VERSION_CODES.P || (barStyle != 3 && barStyle != 4)) {
+				if (colorMode == 3) {
+					for (int i = 0; i < mRainbow.length; i++) {
+						mPaint.setColor(mRainbow[i]);
+						canvas.drawLine(mFFTPoints[i * 4], mFFTPoints[i * 4 + 1], mFFTPoints[i * 4 + 2], mFFTPoints[i * 4 + 3], mPaint);
+					}
+				} else {
+					canvas.drawLines(mFFTPoints, mPaint);
 				}
 			} else {
-				canvas.drawLines(mFFTPoints, mPaint);
+				mLinePath.reset();
+				for (int i = 0; i < mBandsNum; i++) {
+					if (colorMode == 3) mPaint.setColor(mRainbow[i]);
+					mLinePath.moveTo(mFFTPoints[i * 4], mFFTPoints[i * 4 + 1]);
+					mLinePath.lineTo(mFFTPoints[i * 4], mFFTPoints[i * 4 + 3]);
+				}
+				canvas.drawPath(mLinePath, mPaint);
 			}
 		}
 	}
@@ -392,7 +405,7 @@ public class AudioVisualizer extends View {
 	}
 
 	private void updateRainbowColors() {
-		float jump = 300f / 31f;
+		float jump = 300f / (float)mBandsNum;
 		for (int i = 0; i < mRainbow.length; i++)
 		mRainbow[i] = Color.HSVToColor(transparency, new float[]{jump * i, 1.0f, 1.0f});
 

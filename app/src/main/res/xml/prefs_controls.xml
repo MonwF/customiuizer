@@ -65,6 +65,12 @@
 			android:summary="@string/controls_fingerprintskip_summ"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_controls_fingerprintskip2"
+			android:title="@string/controls_fingerprintskip2_title"
+			android:summary="@string/controls_fingerprintskip2_summ"
+			android:defaultValue="false" />
+
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 	<PreferenceCategory

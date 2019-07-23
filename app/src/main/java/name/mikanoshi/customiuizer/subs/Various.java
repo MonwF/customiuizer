@@ -43,6 +43,7 @@ public class Various extends SubFragment {
 			}
 		});
 
+		findPreference("pref_key_various_alarmcompat_apps").setOnPreferenceClickListener(openAppsEdit);
 	}
 
 }

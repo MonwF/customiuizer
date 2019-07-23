@@ -1,3 +1,14 @@
+1.6.5
+[New] Make selected apps display correct next alarm time set by stock MIUI Clock app
+[New] Make selected apps ignore incoming calls and keep playing audio
+[New] Enhanced App lock option to lock any app
+[New] Infinite page scroll in MIUI/POCO Launcher - jump from the last page to the first one and vice versa
+[New] Autohide page indicator in MIUI Launcher
+[New][Fingerprint actions] Option to disable actions during calls
+[Improved] Open volume dialog action opens dialog that changes appropriate volume during calls
+[Fixed][Music visualizer] Drawing of dashed bars and circles on Android versions below 9
+[Fixed] Some bugs and crashes
+
 1.6.4
 [New][Music visualizer] Option to draw on top of custom lock screen
 [Improved][Music visualizer] Draw on top of themed background in notification drawer

@@ -47,6 +47,7 @@ public class System extends SubFragment {
 		});
 
 		findPreference("pref_key_system_blocktoasts_apps").setOnPreferenceClickListener(openAppsEdit);
+		findPreference("pref_key_system_ignorecalls_apps").setOnPreferenceClickListener(openAppsEdit);
 
 		findPreference("pref_key_system_expandnotifs_apps").setEnabled(!Objects.equals(Helpers.prefs.getString("pref_key_system_expandnotifs", "1"), "1"));
 		findPreference("pref_key_system_expandnotifs").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -128,7 +129,11 @@ public class System extends SubFragment {
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 				if (!fromUser) return;
 				if (progress < 3) progress = 5;
-				Settings.Secure.putInt(getActivity().getContentResolver(), "sysui_qqs_count", progress);
+				try {
+					Settings.Secure.putInt(getActivity().getContentResolver(), "sysui_qqs_count", progress);
+				} catch (Throwable t) {
+					t.printStackTrace();
+				}
 			}
 
 			@Override
@@ -177,6 +182,14 @@ public class System extends SubFragment {
 			}
 		});
 
+		findPreference("pref_key_system_applock_list").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				openLockedAppEdit(System.this, 0);
+				return true;
+			}
+		});
+
 		int min = getResources().getInteger(getResources().getIdentifier("config_screenBrightnessSettingMinimum", "integer", "android"));
 		int max = getResources().getInteger(getResources().getIdentifier("config_screenBrightnessSettingMaximum", "integer", "android"));
 		SeekBarPreference minBrightness = (SeekBarPreference)findPreference("pref_key_system_minbrightness");
@@ -186,6 +199,12 @@ public class System extends SubFragment {
 
 		if (Helpers.isNougat()) {
 			((ListPreferenceEx)findPreference("pref_key_system_autogroupnotif")).setUnsupported(true);
+		}
+
+		if (!checkPermission()) {
+			Preference pref = findPreference("pref_key_system_applock_list");
+			pref.setEnabled(false);
+			pref.setSummary(R.string.launcher_privacyapps_fail);
 		}
 	}
 
@@ -199,6 +218,11 @@ public class System extends SubFragment {
 			if (key != null) Helpers.prefs.edit().putString(key, data.getStringExtra("activity")).apply();
 		}
 		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	private boolean checkPermission() {
+		PackageManager pm = getActivity().getPackageManager();
+		return pm.checkPermission(Helpers.ACCESS_SECURITY_CENTER, Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED;
 	}
 
 }

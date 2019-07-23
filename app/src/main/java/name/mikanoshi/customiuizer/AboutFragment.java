@@ -1,8 +1,10 @@
 package name.mikanoshi.customiuizer;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.view.View;
 import android.widget.TextView;
 
 import name.mikanoshi.customiuizer.utils.Helpers;
@@ -46,6 +48,13 @@ public class AboutFragment extends SubFragment {
 			//Shouldn't happen...
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		if (getView() == null) return;
+		getView().findViewById(R.id.miuizer_icon).setVisibility(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE ? View.GONE : View.VISIBLE);
+		super.onConfigurationChanged(newConfig);
 	}
 
 }

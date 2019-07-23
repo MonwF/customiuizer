@@ -38,6 +38,8 @@
 	<string name="controls_powerflash_summ">Позволяет активировать фонарик при отключенном экране долгим нажатием на кнопку питания</string>
 
 	<string name="various_mods">Различное</string>
+	<string name="various_alarmcompat_title">Совместимость будильника</string>
+	<string name="various_alarmcompat_summ">Позволяет выбранным приложениям правильно показывать время следующего будильника, установленного стандартным приложением часов MIUI</string>
 	<string name="various_disableapp_title">Контроль состояния приложений</string>
 	<string name="various_disableapp_summ">Позволяет отключить почти любое приложение с его страницы \"О приложении\"</string>
 	<string name="various_apps_title">Доп. сведения о приложении</string>
@@ -145,12 +147,21 @@
 
 	<string name="support_bug_title">Сообщить об ошибке</string>
 	<string name="support_bug_summ">Отправить сообщение об ошибке или предложить новую фичу</string>
+	<string name="support_donate">Задонатить $%1$d</string>
 	<string name="support_donate_title">Пожертвования</string>
 	<string name="support_donate_summ">Лучший способ выразить признательность за этот замечательный модуль :)</string>
+	<string name="support_donate_inapp_title">В приложении</string>
+	<string name="support_donate_inapp_summ">Пусть всё делает Google</string>
 	<string name="support_donate_crypto_title">Криптовалюты</string>
 	<string name="support_donate_crypto_summ">Деньги будущего :)</string>
 	<string name="support_donate_other_title">Устаревшие валюты</string>
-	<string name="support_donate_other_summ">Paypal, Webmoney, QIWI</string>
+	<string name="support_donate_other_summ">Webmoney, QIWI</string>
+
+	<string name="donate_level1">Спасибо за пожертвование!</string>
+	<string name="donate_level2">Спасибо за щедрое пожертвование!</string>
+	<string name="donate_level3">Спасибо за безумно щедрое пожертвование! 😮</string>
+	<string name="billing_error">Не удалось получить данные биллинга, проверьте доступен ли интернет</string>
+	<string name="billing_canceled">Передумали? ;)</string>
 
 	<string name="crash_dialog">В CustoMIUIzer произошла ошибка!</string>
 	<string name="crash_dialog_manual">Собраны все необходимые данные</string>
@@ -187,6 +198,8 @@
 	<string name="controls_fingerprintlong_delay_title">Время долгого нажатия</string>
 	<string name="controls_fingerprintskip_title">Не активировать действия в Камере</string>
 	<string name="controls_fingerprintskip_summ">Включите данную опцию для правильной работы съёмки отпечатком пальца</string>
+	<string name="controls_fingerprintskip2_title">Отключить действия во время звонка</string>
+	<string name="controls_fingerprintskip2_summ">Не выполнять дейстия при активном звонке</string>
 	<string name="controls_mods_volume">Кнопки громкости</string>
 	<string name="controls_volumecursor_title">Управлять курсором ввода</string>
 	<string name="controls_volumecursor_summ">Перемещать курсор ввода текста при нажатии кнопок громкости</string>
@@ -295,8 +308,12 @@
 	<string name="select_app">Выбрать приложение</string>
 	<string name="select_shortcut">Выбрать ярлык</string>
 	<string name="launcher_gestures_shortcut">Ярлык для запуска</string>
+	<string name="launcher_infinitescroll_title">Бесконечная прокрутка</string>
+	<string name="launcher_infinitescroll_summ">Позволяет переходить с последнего экрана на первый и обратно</string>
 	<string name="launcher_noclockhide_title">Не прятать часы</string>
 	<string name="launcher_noclockhide_summ">Отключает скрытие часов в статус баре на домашних экранах с виджетами часов</string>
+	<string name="launcher_hideseekpoints_title">Динамический индикатор экранов</string>
+	<string name="launcher_hideseekpoints_summ">Показывает индикатор только во время прокрутки</string>
 	<string name="launcher_unlockgrids_title">Разблокировать размеры сетки</string>
 	<string name="launcher_unlockgrids_summ">Делает все размеры от 3x4 до 6x7 доступными в настройках сетки рабочего стола</string>
 	<string name="launcher_folders">Папки</string>
@@ -337,10 +354,6 @@
 	<string name="system_downgrade_summ">Делает возможным установку старой версии приложения поверх новой</string>
 	<string name="system_unblockthird_title">Разблокировать ланчеры</string>
 	<string name="system_unblockthird_summ">Отключает ограничение на использование сторонних ланчеров на китайских прошивках</string>
-	<string name="system_applock_title">Менее строгая защита приложений</string>
-	<string name="system_applock_summ">Отключает блокировку приложений при блокировке устройства, если выбрана опция её активации при выходе из приложения</string>
-	<string name="system_applock_timeout_title">Задержка блокировки приложений</string>
-	<string name="system_applock_timeout_summ">Временной интервал между закрытием приложения и его блокировкой</string>
 	<string name="system_cleanshare_title">Очистка меню \"Поделиться\"</string>
 	<string name="system_cleanshare_summ">Скрыть выбранные приложения в списке отправки данных</string>
 	<string name="system_cleanshare_test">Проверка меню</string>
@@ -371,6 +384,13 @@
 	<string name="system_betterpopups_nohide_summ">Отключает автоматическое скрытие</string>
 	<string name="system_betterpopups_swipedown_title">Активировать свайп вниз</string>
 	<string name="system_betterpopups_swipedown_summ">Открывает панель уведомлений по свайпу вниз</string>
+	<string name="system_mods_applock">Защита приложений</string>
+	<string name="system_applock_title">Менее строгая защита приложений</string>
+	<string name="system_applock_summ">Отключает блокировку приложений при блокировке устройства, если выбрана опция её активации при выходе из приложения</string>
+	<string name="system_applock_timeout_title">Задержка блокировки приложений</string>
+	<string name="system_applock_timeout_summ">Временной интервал между закрытием приложения и его блокировкой</string>
+	<string name="system_applock_list_title">Список приложений для защиты</string>
+	<string name="system_applock_list_summ">Улучшенная версия функции Защита приложений, позволяющая заблокировать любое установленное приложение. Перезагрузка не требуется.</string>
 	<string name="system_statusbarheight_title">Высота строки состояния</string>
 	<string name="system_statusbarcolor_title">Фоновый цвет строки состояния</string>
 	<string name="system_statusbarcolor_summ">Делает одинаковыми цвета фона строки состояния и панели действий приложения, где это возможно</string>
@@ -436,7 +456,7 @@
 	<string name="system_nolightuponheadset_summ">Запрещает включение экрана при подключении наушников</string>
 	<string name="system_minbrightness_title">Минимальная автояркость</string>
 	<string name="system_minbrightness_summ">Задаёт минимальное значение яркости в автоматическом режиме</string>
-	<string name="system_minbrightness_note">Слайдер не соответствует системному слайдеру громкости на последних версиях Андроида с экспоненциальной шкалой яркости</string>
+	<string name="system_minbrightness_note">Слайдер не соответствует системному слайдеру громкости на последних версиях Андроида с нелинейной шкалой яркости</string>
 	<string name="system_noducking_title">Отключить заглушение</string>
 	<string name="system_noducking_summ">Не понижать громкость играющей в данный момент музыки для проигрывания звука уведомления</string>
 	<string name="system_separatevolume_title">Раздельные настройки громкости</string>
@@ -456,6 +476,8 @@
 	<string name="system_visualizer_style_title">Стиль</string>
 	<string name="system_visualizer_color_title">Цвет</string>
 	<string name="system_visualizer_colorval_title">Задать цвет</string>
+	<string name="system_ignorecalls_title">Игнорировать звонки</string>
+	<string name="system_ignorecalls_summ">Предотвращает передачу аудио фокуса с выбранных приложения на входящий звонок, также перестаёт уведомлять их об изменениях состояния звонков</string>
 	<string name="system_vibration_title">Блокировка вибрации</string>
 	<string name="system_vibration_summ">Запрещает выбранным приложениям использовать вибрацию</string>
 	<string name="notification_volume">Громкость уведомлений</string>

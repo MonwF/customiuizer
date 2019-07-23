@@ -14,9 +14,21 @@
 		android:defaultValue="1" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_launcher_infinitescroll"
+		android:title="@string/launcher_infinitescroll_title"
+		android:summary="@string/launcher_infinitescroll_summ"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_launcher_noclockhide"
 		android:title="@string/launcher_noclockhide_title"
 		android:summary="@string/launcher_noclockhide_summ"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_launcher_hideseekpoints"
+		android:title="@string/launcher_hideseekpoints_title"
+		android:summary="@string/launcher_hideseekpoints_summ"
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx

@@ -1,0 +1,5 @@
+Known bugs:
+
+- Module settings might crash on Android 8-8.1, seems to be a bug in EdXposed resourse hooks that breaks all the module's resources. Module must be deactivated (and device rebooted) to change any settings. You can also install module's APK on top and it should be able to open settings until next reboot.
+
+- Text color in some popup lists and menus is too dark when dark mode is active on device.

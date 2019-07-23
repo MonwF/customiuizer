@@ -504,7 +504,6 @@ public class Controls {
 	private static boolean isFingerprintLongPressed = false;
 	private static Runnable singlePressFingerprint = new Runnable() {
 		@Override
-		@SuppressLint("MissingPermission")
 		public void run() {
 			if (miuiPWMContext == null || miuiPWMHandler == null) return;
 			miuiPWMHandler.removeCallbacks(longPressFingerprint);
@@ -516,7 +515,6 @@ public class Controls {
 	};
 	private static Runnable longPressFingerprint = new Runnable() {
 		@Override
-		@SuppressLint("MissingPermission")
 		public void run() {
 			if (isFingerprintPressed && miuiPWMContext != null) {
 				isFingerprintLongPressed = true;
@@ -527,9 +525,11 @@ public class Controls {
 
 	public static void FingerprintEventsHook(LoadPackageParam lpparam) {
 		boolean skipInCamera = MainModule.mPrefs.getBoolean("controls_fingerprintskip");
+		boolean skipInCall = MainModule.mPrefs.getBoolean("controls_fingerprintskip2");
 
 		Helpers.findAndHookMethod("com.android.server.policy.MiuiPhoneWindowManager", lpparam.classLoader, "processFingerprintNavigationEvent", KeyEvent.class, boolean.class, new XC_MethodHook() {
 			@Override
+			@SuppressLint("MissingPermission")
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 				if (skipInCamera) {
 					Object mFocusedWindow = XposedHelpers.getObjectField(param.thisObject, "mFocusedWindow");
@@ -541,6 +541,11 @@ public class Controls {
 
 				miuiPWMContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 				miuiPWMHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
+
+				if (skipInCall && miuiPWMContext != null) {
+					TelecomManager tm = (TelecomManager)miuiPWMContext.getSystemService(Context.TELECOM_SERVICE);
+					if (tm.isInCall()) return;
+				}
 
 				KeyEvent keyEvent = (KeyEvent)param.args[0];
 				if (keyEvent.getKeyCode() != KeyEvent.KEYCODE_DPAD_CENTER || keyEvent.getAction() != KeyEvent.ACTION_DOWN) return;
@@ -560,6 +565,7 @@ public class Controls {
 			}
 
 			@Override
+			@SuppressLint("MissingPermission")
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				if (skipInCamera) {
 					Object mFocusedWindow = XposedHelpers.getObjectField(param.thisObject, "mFocusedWindow");
@@ -567,6 +573,11 @@ public class Controls {
 						String ownPkg = (String)XposedHelpers.callMethod(mFocusedWindow, "getOwningPackage");
 						if ("com.android.camera".equals(ownPkg)) return;
 					}
+				}
+
+				if (skipInCall && miuiPWMContext != null) {
+					TelecomManager tm = (TelecomManager)miuiPWMContext.getSystemService(Context.TELECOM_SERVICE);
+					if (tm.isInCall()) return;
 				}
 
 				KeyEvent keyEvent = (KeyEvent)param.args[0];

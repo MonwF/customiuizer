@@ -69,6 +69,10 @@
 			android:title="@string/support_donate_other_title"
 			android:summary="@string/support_donate_other_summ"
 			android:key="pref_key_payother" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/support_donate_inapp_title"
+			android:summary="@string/support_donate_inapp_summ"
+			android:key="pref_key_payinapp" />
 	</PreferenceCategory>
 
 </PreferenceScreen>

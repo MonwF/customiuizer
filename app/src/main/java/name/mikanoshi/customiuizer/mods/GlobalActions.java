@@ -22,10 +22,12 @@ import android.nfc.NfcAdapter;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.os.SystemClock;
 import android.os.UserHandle;
 import android.preference.PreferenceActivity.Header;
 import android.provider.Settings;
+import android.telecom.TelecomManager;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.View;
@@ -168,12 +170,22 @@ public class GlobalActions {
 								View mExpandButton = (View)XposedHelpers.getObjectField(miuiVolumeDialog, "mExpandButton");
 								View.OnClickListener mClickExpand = (View.OnClickListener)XposedHelpers.getObjectField(miuiVolumeDialog, "mClickExpand");
 
+								AudioManager am = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+								boolean isInCall = am.getMode() == AudioManager.MODE_IN_CALL || am.getMode() == AudioManager.MODE_IN_COMMUNICATION;
 								if (mShowing) {
-									if (mExpanded)
+									if (mExpanded || isInCall)
 										XposedHelpers.callMethod(miuiVolumeDialog, "dismissH", 1);
 									else
 										mClickExpand.onClick(mExpandButton);
 								} else {
+									Object mController = XposedHelpers.getObjectField(miuiVolumeDialog, "mController");
+									if (isInCall) {
+										XposedHelpers.callMethod(mController, "setActiveStream", 0);
+										XposedHelpers.setBooleanField(miuiVolumeDialog, "mNeedReInit", true);
+									} else if (am.isMusicActive()) {
+										XposedHelpers.callMethod(mController, "setActiveStream", 3);
+										XposedHelpers.setBooleanField(miuiVolumeDialog, "mNeedReInit", true);
+									}
 									XposedHelpers.callMethod(miuiVolumeDialog, "showH", 1);
 								}
 							}
