@@ -118,13 +118,24 @@ public class InAppFragment extends SubFragment implements PurchasesUpdatedListen
 			public void run() {
 				try {
 					Thread.sleep(350);
-					billingClient = BillingClient.newBuilder(act).enablePendingPurchases().setListener(InAppFragment.this).build();
-					billingClient.startConnection(billingClientState);
+					getActivity().runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							billingClient = BillingClient.newBuilder(act).enablePendingPurchases().setListener(InAppFragment.this).build();
+							billingClient.startConnection(billingClientState);
+						}
+					});
 				} catch (Throwable e) {
 					e.printStackTrace();
 				}
 			}
 		}).start();
+	}
+
+	@Override
+	public void onDestroy() {
+		if (billingClient != null) billingClient.endConnection();
+		super.onDestroy();
 	}
 
 	@Override
@@ -233,10 +244,14 @@ public class InAppFragment extends SubFragment implements PurchasesUpdatedListen
 		public void onAvailable(Network network) {
 			if (hasNetwork) return;
 			hasNetwork = true;
-			if (mIsServiceConnected) {
-				updatePurchases();
-				updateDetails();
-			}
+			if (mIsServiceConnected)
+			getActivity().runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					updatePurchases();
+					updateDetails();
+				}
+			});
 		}
 
 		@Override

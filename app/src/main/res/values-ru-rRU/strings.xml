@@ -234,7 +234,7 @@
 	<string name="array_color_dark">Тёмная</string>
 	<string name="array_color_light">Светлая</string>
 
-	<string name="update_available">Доступно обновление! Нажмите здесь</string>
+	<string name="update_available">Доступно обновление ⚠</string>
 
 	<string name="crash_dialog_note">Не заданы данные для обратной связи, Вы не сможете получить ответ на данный отчёт!</string>
 	<string name="about_dynamic">Обычно моды требуют быстрой перезагрузки для активации или деактивации, но те, что помечены ⟲, требуют только одной перезагрузки (после смены значения со стандартного на модифицированное), последующие изменения будут применяться сразу.</string>

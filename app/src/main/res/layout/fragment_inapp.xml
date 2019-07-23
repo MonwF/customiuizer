@@ -21,6 +21,8 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_marginBottom="30dp"
+				android:paddingStart="40dp"
+				android:paddingEnd="40dp"
 				android:gravity="center"
 				android:text="@string/support_donate_summ"
 				android:textColor="@color/color_not_selected"

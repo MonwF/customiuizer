@@ -75,6 +75,11 @@ public class LockedAppAdapter extends BaseAdapter implements Filterable {
 		});
 	}
 
+	public boolean isEnabled(int position) {
+		AppData ad = getItem(position);
+		return ad == null || !"com.miui.securitycenter".equals(ad.pkgName);
+	}
+
 	public int getCount() {
 		return filteredAppList.size();
 	}
@@ -123,6 +128,12 @@ public class LockedAppAdapter extends BaseAdapter implements Filterable {
 		} catch (Throwable t) {
 			itemChecked.setVisibility(View.GONE);
 		}
+
+		boolean enabled = !"com.miui.securitycenter".equals(ad.pkgName);
+		itemIcon.setAlpha(enabled ? 1.0f : 0.5f);
+		itemTitle.setAlpha(enabled ? 1.0f : 0.5f);
+		itemChecked.setVisibility(enabled ? View.VISIBLE : View.INVISIBLE);
+		row.setEnabled(enabled);
 
 		return row;
 	}
