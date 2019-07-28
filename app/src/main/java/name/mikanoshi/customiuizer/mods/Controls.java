@@ -31,6 +31,7 @@ import android.widget.Toast;
 import java.lang.reflect.Method;
 
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
@@ -802,14 +803,47 @@ public class Controls {
 		}
 	}
 
-	public static void AIButtonHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "startAiKeyService", String.class, new XC_MethodHook() {
+	public static void FingerprintHapticSuccessHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.server.fingerprint.AuthenticationClient", lpparam.classLoader, "onAuthenticated", int.class, int.class, new XC_MethodHook() {
 			@Override
-			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-				Helpers.log("AIButtonHook", "startAiKeyService: " + param.args[0]);
+			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				try {
+					if (!((boolean)param.getResult())) return;
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+//					boolean isScreenOn = (boolean)XposedHelpers.callMethod(param.thisObject, "isScreenOn");
+//					if (!isScreenOn) {
+//						WakeLock wl = ((PowerManager)mContext.getSystemService(Context.POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "miuizer:fingerprint_haptic_feedback");
+//						wl.acquire(2000);
+//					}
+
+					boolean ignoreSystem = MainModule.mPrefs.getBoolean("controls_fingerprintsuccess_ignore");
+					int opt = Integer.parseInt(MainModule.mPrefs.getString("controls_fingerprintsuccess", "1"));
+					if (opt == 2)
+						Helpers.performLightVibration(mContext, ignoreSystem);
+					else if (opt == 3)
+						Helpers.performStrongVibration(mContext, ignoreSystem);
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
 			}
 		});
 	}
+
+	public static void FingerprintHapticFailureHook(LoadPackageParam lpparam) {
+		if (Helpers.isNougat())
+			Helpers.findAndHookMethod("com.android.server.fingerprint.FingerprintUtils", lpparam.classLoader, "vibrateFingerprintError", Context.class, XC_MethodReplacement.returnConstant(null));
+		else
+			Helpers.findAndHookMethod("com.android.server.fingerprint.ClientMonitor", lpparam.classLoader, "vibrateError", XC_MethodReplacement.returnConstant(null));
+	}
+
+//	public static void AIButtonHook(LoadPackageParam lpparam) {
+//		Helpers.findAndHookMethod("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "startAiKeyService", String.class, new XC_MethodHook() {
+//			@Override
+//			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+//				Helpers.log("AIButtonHook", "startAiKeyService: " + param.args[0]);
+//			}
+//		});
+//	}
 
 //	public static void SwapVolumeKeysHook(XC_LoadPackage.LoadPackageParam lpparam) {
 //		Helpers.findAndHookMethod("com.android.server.audio.AudioService", lpparam.classLoader, "adjustSuggestedStreamVolume", int.class, int.class, int.class, String.class, String.class, int.class, new XC_MethodHook() {

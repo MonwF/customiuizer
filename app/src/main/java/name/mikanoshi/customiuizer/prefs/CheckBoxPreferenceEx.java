@@ -11,20 +11,26 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import name.mikanoshi.customiuizer.R;
+import name.mikanoshi.customiuizer.utils.Helpers;
 
-public class CheckBoxPreferenceEx extends CheckBoxPreference {
+public class CheckBoxPreferenceEx extends CheckBoxPreference implements PreferenceState {
 
-	private boolean unsupported = false;
 	private Resources res = getContext().getResources();
 	private int primary = res.getColor(R.color.preference_primary_text, getContext().getTheme());
 	private int secondary = res.getColor(R.color.preference_secondary_text, getContext().getTheme());
+	private int childpadding = res.getDimensionPixelSize(R.dimen.preference_item_child_padding);
+	private int[] paddings = new int[] {0, 0, 0, 0};
 
+	private boolean child;
 	private boolean dynamic;
+	private boolean newmod = false;
+	private boolean unsupported = false;
 
 	public CheckBoxPreferenceEx(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		final TypedArray xmlAttrs = context.obtainStyledAttributes(attrs, R.styleable.CheckBoxPreferenceEx);
 		dynamic = xmlAttrs.getBoolean(R.styleable.CheckBoxPreferenceEx_dynamic, false);
+		child = xmlAttrs.getBoolean(R.styleable.CheckBoxPreferenceEx_child, false);
 		xmlAttrs.recycle();
 	}
 
@@ -35,6 +41,14 @@ public class CheckBoxPreferenceEx extends CheckBoxPreference {
 		TextView title = finalView.findViewById(android.R.id.title);
 		title.setTextColor(isEnabled() ? primary : secondary);
 		title.setText(getTitle() + (unsupported ? " ⨯" : (dynamic ? " ⟲" : "")));
+		if (newmod) Helpers.applyNewMod(title);
+
+		if (paddings[0] == 0) paddings[0] = finalView.getPaddingLeft();
+		if (paddings[1] == 0) paddings[1] = finalView.getPaddingTop();
+		if (paddings[2] == 0) paddings[2] = finalView.getPaddingRight();
+		if (paddings[3] == 0) paddings[3] = finalView.getPaddingBottom();
+		finalView.setPadding(paddings[0] + (child ? childpadding : 0), paddings[1], paddings[2], paddings[3]);
+
 		return finalView;
 	}
 
@@ -55,5 +69,10 @@ public class CheckBoxPreferenceEx extends CheckBoxPreference {
 	public void setUnsupported(boolean value) {
 		unsupported = value;
 		setEnabled(!value);
+	}
+
+	@Override
+	public void markAsNew() {
+		newmod = true;
 	}
 }

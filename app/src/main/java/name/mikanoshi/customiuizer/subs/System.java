@@ -1,9 +1,12 @@
 package name.mikanoshi.customiuizer.subs;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.provider.Settings;
@@ -13,6 +16,7 @@ import java.util.Objects;
 
 import name.mikanoshi.customiuizer.CredentialsLauncher;
 import name.mikanoshi.customiuizer.R;
+import name.mikanoshi.customiuizer.SharedPrefsProvider;
 import name.mikanoshi.customiuizer.SubFragment;
 import name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx;
 import name.mikanoshi.customiuizer.prefs.ListPreferenceEx;
@@ -25,6 +29,15 @@ public class System extends SubFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+
+		findPreference("pref_key_system_qshaptics_ignore").setEnabled(!Objects.equals(Helpers.prefs.getString("pref_key_system_qshaptics", "1"), "1"));
+		findPreference("pref_key_system_qshaptics").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				findPreference("pref_key_system_qshaptics_ignore").setEnabled(!newValue.equals("1"));
+				return true;
+			}
+		});
 
 		findPreference("pref_key_system_vibration_apps").setEnabled(!Objects.equals(Helpers.prefs.getString("pref_key_system_vibration", "1"), "1"));
 		findPreference("pref_key_system_vibration").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -182,10 +195,55 @@ public class System extends SubFragment {
 			}
 		});
 
+		findPreference("pref_key_system_cleanopenwith_apps").setOnPreferenceClickListener(openOpenWithEdit);
+		findPreference("pref_key_system_cleanopenwith_test").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+				alert.setTitle(R.string.system_cleanopenwith_testdata);
+				alert.setSingleChoiceItems(R.array.openwithtest, -1, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						Intent viewIntent = new Intent();
+						viewIntent.setAction(Intent.ACTION_VIEW);
+						String type = "*/*";
+						if (which == 0)
+							type = "image/*";
+						else if (which == 1)
+							type = "audio/*";
+						else if (which == 2)
+							type = "video/*";
+						else if (which == 3)
+							type = "text/*";
+						else if (which == 4)
+							type = "application/zip";
+						viewIntent.setDataAndType(Uri.parse("content://" + SharedPrefsProvider.AUTHORITY + "/test/" + which), type);
+						getContext().startActivity(Intent.createChooser(viewIntent, null));
+					}
+				});
+				alert.setNeutralButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {}
+				});
+				alert.show();
+				return true;
+			}
+		});
+
 		findPreference("pref_key_system_applock_list").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				openLockedAppEdit(System.this, 0);
+				return true;
+			}
+		});
+
+		findPreference("pref_key_system_defaultusb_unsecure").setEnabled(!Objects.equals(Helpers.prefs.getString("pref_key_system_defaultusb", "none"), "none"));
+		ListPreferenceEx defaultUSB = (ListPreferenceEx)findPreference("pref_key_system_defaultusb");
+		defaultUSB.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				findPreference("pref_key_system_defaultusb_unsecure").setEnabled(!newValue.equals("none"));
 				return true;
 			}
 		});
@@ -201,10 +259,17 @@ public class System extends SubFragment {
 			((ListPreferenceEx)findPreference("pref_key_system_autogroupnotif")).setUnsupported(true);
 		}
 
-		if (!checkPermission()) {
+		if (!checkSecurityPermission()) {
 			Preference pref = findPreference("pref_key_system_applock_list");
 			pref.setEnabled(false);
 			pref.setSummary(R.string.launcher_privacyapps_fail);
+		}
+
+		if (!checkUSBPermission()) {
+			Preference pref = findPreference("pref_key_system_defaultusb");
+			pref.setEnabled(false);
+			pref.setSummary(R.string.launcher_privacyapps_fail);
+			findPreference("pref_key_system_defaultusb_unsecure").setEnabled(false);
 		}
 	}
 
@@ -220,9 +285,14 @@ public class System extends SubFragment {
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-	private boolean checkPermission() {
+	private boolean checkSecurityPermission() {
 		PackageManager pm = getActivity().getPackageManager();
 		return pm.checkPermission(Helpers.ACCESS_SECURITY_CENTER, Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED;
+	}
+
+	private boolean checkUSBPermission() {
+		PackageManager pm = getActivity().getPackageManager();
+		return pm.checkPermission("android.permission.MANAGE_USB", Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED;
 	}
 
 }

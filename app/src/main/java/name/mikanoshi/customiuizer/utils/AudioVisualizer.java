@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.CornerPathEffect;
@@ -36,8 +37,10 @@ public class AudioVisualizer extends View {
 	private int mWidth;
 	private float mDensity;
 	private final Paint mPaint;
+	private Paint mGlowPaint;
 	private Visualizer mVisualizer;
 	private ObjectAnimator mVisualizerColorAnimator;
+	private ObjectAnimator mVisualizerGlowColorAnimator;
 
 	private final ValueAnimator[] mValueAnimators;
 	private final float[] mFFTPoints;
@@ -52,6 +55,7 @@ public class AudioVisualizer extends View {
 	private boolean isOnCustomLockScreen = false;
 	private boolean mPlaying;
 	private boolean mDisplaying;
+	private int mOpaqueColor;
 	private int mColor;
 	private Bitmap mArt;
 	private Bitmap mProcessedArt;
@@ -63,13 +67,22 @@ public class AudioVisualizer extends View {
 	private int sdk = Build.VERSION.SDK_INT;
 	public boolean showOnCustom;
 	private int transparency;
-	public int colorMode;
-	public int barStyle;
+	public ColorMode colorMode;
+	public BarStyle barStyle;
+	public int glowLevel;
 	public int customColor;
 	public boolean showInDrawer;
 
 	AccelerateInterpolator accel = new AccelerateInterpolator();
 	DecelerateInterpolator decel = new DecelerateInterpolator();
+
+	enum BarStyle {
+		DUMMY, SOLID, SOLID_ROUNDED, DASHED, CIRCLES, LINE
+	}
+
+	enum ColorMode {
+		DUMMY, MATCH, STATIC, RAINBOW_H, RAINBOW_V
+	}
 
 	public static boolean allZeros(byte[] array) {
 		for (byte item: array) if (item != 0) return false;
@@ -155,6 +168,18 @@ public class AudioVisualizer extends View {
 		}
 	};
 
+	private void updateGlowPaint() {
+		mGlowPaint = new Paint(mPaint);
+		if (glowLevel == 0) return;
+		float scale = glowLevel / 100f;
+		mGlowPaint.setPathEffect(null);
+		mGlowPaint.setMaskFilter(new BlurMaskFilter(15 * mDensity * (1.25f + 0.25f * scale), BlurMaskFilter.Blur.NORMAL));
+		mGlowPaint.setAlpha(Math.min(transparency, 180));
+		mGlowPaint.setStrokeWidth((0.5f + 1.25f * scale) * mPaint.getStrokeWidth() * (barStyle == BarStyle.LINE ? 4f : (colorMode == ColorMode.RAINBOW_H ? 1.15f : 1.3f)));
+		if (barStyle == BarStyle.SOLID || barStyle == BarStyle.DASHED || mGlowPaint.getStrokeCap() == Paint.Cap.ROUND)
+		mGlowPaint.setStrokeCap(Paint.Cap.SQUARE);
+	}
+
 	public AudioVisualizer(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 
@@ -163,6 +188,8 @@ public class AudioVisualizer extends View {
 		mWidth = res.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? res.getDisplayMetrics().widthPixels : res.getDisplayMetrics().heightPixels;
 		mDensity = res.getDisplayMetrics().density;
 		mColor = Color.TRANSPARENT;
+		mOpaqueColor = Color.TRANSPARENT;
+
 		mPaint = new Paint();
 		mPaint.setAntiAlias(true);
 		mPaint.setStyle(Paint.Style.STROKE);
@@ -184,11 +211,13 @@ public class AudioVisualizer extends View {
 
 		showOnCustom = MainModule.mPrefs.getBoolean("system_visualizer_custom");
 		transparency = Math.round(255f - 255f * MainModule.mPrefs.getInt("system_visualizer_transp", 40) / 100f);
-		colorMode = Integer.parseInt(MainModule.mPrefs.getString("system_visualizer_color", "1"));
-		barStyle = Integer.parseInt(MainModule.mPrefs.getString("system_visualizer_style", "1"));
+		colorMode = ColorMode.values()[Integer.parseInt(MainModule.mPrefs.getString("system_visualizer_color", "1"))];
+		barStyle = BarStyle.values()[Integer.parseInt(MainModule.mPrefs.getString("system_visualizer_style", "1"))];
+		glowLevel = MainModule.mPrefs.getInt("system_visualizer_glowlevel", 50);
 		customColor = MainModule.mPrefs.getInt("system_visualizer_colorval", Color.WHITE);
 		showInDrawer = MainModule.mPrefs.getBoolean("system_visualizer_drawer");
 		updateBarStyle();
+		updateGlowPaint();
 		updateRainbowColors();
 
 		Handler handler = new Handler(context.getMainLooper());
@@ -203,17 +232,21 @@ public class AudioVisualizer extends View {
 							break;
 						case "pref_key_system_visualizer_transp":
 							transparency = Math.round(255f - 255f * Helpers.getSharedIntPref(context, key, 40) / 100f);
-							setColor(mColor);
+							setColor(mOpaqueColor);
 							updateRainbowColors();
 							break;
 						case "pref_key_system_visualizer_color":
-							colorMode = Integer.parseInt(Helpers.getSharedStringPref(context, key, "1"));
+							colorMode = ColorMode.values()[Integer.parseInt(Helpers.getSharedStringPref(context, key, "1"))];
 							updateBarStyle();
 							updateColorMode();
 							break;
 						case "pref_key_system_visualizer_style":
-							barStyle = Integer.parseInt(Helpers.getSharedStringPref(context, key, "1"));
+							barStyle = BarStyle.values()[Integer.parseInt(Helpers.getSharedStringPref(context, key, "1"))];
 							updateBarStyle();
+							break;
+						case "pref_key_system_visualizer_glowlevel":
+							glowLevel = Helpers.getSharedIntPref(context, key, 50);
+							updateGlowPaint();
 							break;
 						case "pref_key_system_visualizer_colorval":
 							customColor = Helpers.getSharedIntPref(context, key, Color.WHITE);
@@ -282,29 +315,49 @@ public class AudioVisualizer extends View {
 			if (mVisualizer == null || !mVisualizer.getEnabled()) return;
 		} catch (Throwable t) { return; }
 
-		if (barStyle == 5) {
+		if (barStyle == BarStyle.LINE) {
 			mLinePath.reset();
 			mLinePath.moveTo(0, mFFTPoints[3]);
 			for (int i = 1; i < mBandsNum; i++)
 			mLinePath.lineTo(i == mBandsNum - 1 ? mWidth : mFFTPoints[i * 4 + 2], mFFTPoints[i * 4 + 3]);
+			if (glowLevel > 0)
+			canvas.drawPath(mLinePath, mGlowPaint);
 			canvas.drawPath(mLinePath, mPaint);
-		} else {
-			if (sdk >= Build.VERSION_CODES.P || (barStyle != 3 && barStyle != 4)) {
-				if (colorMode == 3) {
-					for (int i = 0; i < mRainbow.length; i++) {
-						mPaint.setColor(mRainbow[i]);
-						canvas.drawLine(mFFTPoints[i * 4], mFFTPoints[i * 4 + 1], mFFTPoints[i * 4 + 2], mFFTPoints[i * 4 + 3], mPaint);
-					}
+			return;
+		}
+
+		boolean drawAsLines = sdk >= Build.VERSION_CODES.P || (barStyle != BarStyle.DASHED && barStyle != BarStyle.CIRCLES);
+		if (colorMode == ColorMode.RAINBOW_H) {
+			for (int i = 0; i < mBandsNum; i++) {
+				if (glowLevel > 0)
+				mGlowPaint.setColor(mRainbow[i]);
+				mPaint.setColor(mRainbow[i]);
+				if (drawAsLines) {
+					if (glowLevel > 0)
+					canvas.drawLine(mFFTPoints[i * 4], mFFTPoints[i * 4 + 1], mFFTPoints[i * 4 + 2], mFFTPoints[i * 4 + 3], mGlowPaint);
+					canvas.drawLine(mFFTPoints[i * 4], mFFTPoints[i * 4 + 1], mFFTPoints[i * 4 + 2], mFFTPoints[i * 4 + 3], mPaint);
 				} else {
-					canvas.drawLines(mFFTPoints, mPaint);
+					mLinePath.reset();
+					mLinePath.moveTo(mFFTPoints[i * 4], mFFTPoints[i * 4 + 1]);
+					mLinePath.lineTo(mFFTPoints[i * 4], mFFTPoints[i * 4 + 3]);
+					if (glowLevel > 0)
+					canvas.drawPath(mLinePath, mGlowPaint);
+					canvas.drawPath(mLinePath, mPaint);
 				}
+			}
+		} else {
+			if (drawAsLines) {
+				if (glowLevel > 0)
+				canvas.drawLines(mFFTPoints, mGlowPaint);
+				canvas.drawLines(mFFTPoints, mPaint);
 			} else {
 				mLinePath.reset();
 				for (int i = 0; i < mBandsNum; i++) {
-					if (colorMode == 3) mPaint.setColor(mRainbow[i]);
 					mLinePath.moveTo(mFFTPoints[i * 4], mFFTPoints[i * 4 + 1]);
 					mLinePath.lineTo(mFFTPoints[i * 4], mFFTPoints[i * 4 + 3]);
 				}
+				if (glowLevel > 0)
+				canvas.drawPath(mLinePath, mGlowPaint);
 				canvas.drawPath(mLinePath, mPaint);
 			}
 		}
@@ -365,11 +418,10 @@ public class AudioVisualizer extends View {
 			mProcessedArt = mArt;
 			if (mProcessedArt != null) {
 				Class<?> paletteCls = XposedHelpers.findClassIfExists("com.android.internal.graphics.palette.Palette", null);
-				if (paletteCls != null) {
+				if (paletteCls != null)
 					new PaletteTask(paletteResult).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mProcessedArt);
-				} else {
+				else
 					setColor(Color.TRANSPARENT);
-				}
 			} else {
 				setColor(Color.TRANSPARENT);
 			}
@@ -380,25 +432,35 @@ public class AudioVisualizer extends View {
 
 	public void setColor(int color) {
 		if (color == Color.TRANSPARENT) color = Color.WHITE;
-		color = Color.argb(transparency, Color.red(color), Color.green(color), Color.blue(color));
-		if (mColor == color) return;
-		mColor = color;
+		int newColor = Color.argb(transparency, Color.red(color), Color.green(color), Color.blue(color));
+		if (mColor == newColor) return;
+		mColor = newColor;
+		mOpaqueColor = color;
 		if (mVisualizer != null) {
 			if (mVisualizerColorAnimator != null) mVisualizerColorAnimator.cancel();
 			mVisualizerColorAnimator = ObjectAnimator.ofArgb(mPaint, "color", mPaint.getColor(), mColor);
 			mVisualizerColorAnimator.setStartDelay(600);
 			mVisualizerColorAnimator.setDuration(1200);
 			mVisualizerColorAnimator.start();
+
+			if (glowLevel > 0) {
+				if (mVisualizerGlowColorAnimator != null) mVisualizerGlowColorAnimator.cancel();
+				mVisualizerGlowColorAnimator = ObjectAnimator.ofArgb(mGlowPaint, "color", mGlowPaint.getColor(), mColor);
+				mVisualizerGlowColorAnimator.setStartDelay(600);
+				mVisualizerGlowColorAnimator.setDuration(1200);
+				mVisualizerGlowColorAnimator.start();
+			}
 		} else {
 			mPaint.setColor(mColor);
+			if (glowLevel > 0) mGlowPaint.setColor(mColor);
 		}
 	}
 
 	private void updateColorMode() {
 		if (!isMusicPlaying) return;
-		if (colorMode == 1)
+		if (colorMode == ColorMode.MATCH)
 			setBitmap();
-		else if (colorMode == 2)
+		else if (colorMode == ColorMode.STATIC)
 			setColor(customColor);
 		else
 			setColor(Color.WHITE);
@@ -417,36 +479,38 @@ public class AudioVisualizer extends View {
 	}
 
 	private void updateBarStyle() {
-		if (barStyle == 5) {
-			if (colorMode == 3)
+		if (barStyle == BarStyle.LINE) {
+			if (colorMode == ColorMode.RAINBOW_H)
 				mPaint.setShader(new LinearGradient(0, 0, mWidth, 0, mRainbow, mPositions, Shader.TileMode.MIRROR));
-			else if (colorMode == 4) {
+			else if (colorMode == ColorMode.RAINBOW_V) {
 				float maxHeight = Math.min(0.85f * maxDp * mDensity, mHeight / 2.0f);
 				mPaint.setShader(new LinearGradient(0, mHeight, 0, mHeight - maxHeight, mRainbowVertical, mPositions, Shader.TileMode.CLAMP));
 			} else
 				mPaint.setShader(null);
 		} else {
 			float maxHeight = Math.min(0.85f * maxDp * mDensity, mHeight / 2.0f);
-			mPaint.setShader(colorMode == 4 ? new LinearGradient(0, mHeight, 0, mHeight - maxHeight, mRainbowVertical, mPositions, Shader.TileMode.CLAMP) : null);
+			mPaint.setShader(colorMode == ColorMode.RAINBOW_V ? new LinearGradient(0, mHeight, 0, mHeight - maxHeight, mRainbowVertical, mPositions, Shader.TileMode.CLAMP) : null);
 		}
 
-		if (barStyle == 1) {
+		if (barStyle == BarStyle.SOLID) {
 			mPaint.setPathEffect(null);
 			mPaint.setStrokeCap(Paint.Cap.BUTT);
-		} else if (barStyle == 2) {
+		} else if (barStyle == BarStyle.SOLID_ROUNDED) {
 			mPaint.setPathEffect(null);
 			mPaint.setStrokeCap(Paint.Cap.ROUND);
-		} else if (barStyle == 3) {
+		} else if (barStyle == BarStyle.DASHED) {
 			mPaint.setPathEffect(new DashPathEffect(new float[]{4 * mDensity, 2 * mDensity}, 0));
 			mPaint.setStrokeCap(Paint.Cap.BUTT);
-		} else if (barStyle == 4) {
+		} else if (barStyle == BarStyle.CIRCLES) {
 			mPaint.setPathEffect(new DashPathEffect(new float[]{1.0f, mPaint.getStrokeWidth() + mDensity}, 0));
 			mPaint.setStrokeCap(Paint.Cap.ROUND);
-		} else if (barStyle == 5) {
+		} else if (barStyle == BarStyle.LINE) {
 			mPaint.setPathEffect(new CornerPathEffect(18 * mDensity));
 			mPaint.setStrokeCap(Paint.Cap.ROUND);
 			mPaint.setStrokeWidth(3 * mDensity);
 		}
+
+		updateGlowPaint();
 	}
 
 	public void updateState(boolean isKeyguard, boolean isExpanded) {

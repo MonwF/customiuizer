@@ -1,0 +1,5 @@
+<resources>
+
+	<dimen name="miui_volume_ringer_layout_width_expanded">-2px</dimen>
+
+</resources>

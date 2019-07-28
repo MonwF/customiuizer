@@ -59,6 +59,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getBoolean("system_pocketmode")) System.PocketModeHook();
 		if (mPrefs.getBoolean("system_statusbarcolor")) System.StatusBarBackgroundHook();
 		if (mPrefs.getBoolean("various_alarmcompat")) Various.AlarmCompatHook();
+		if (mPrefs.getBoolean("system_allrotations")) System.AllRotationsRes();
 
 		Controls.VolumeMediaPlayerHook();
 		GlobalActions.setupUnhandledCatcher();
@@ -74,6 +75,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getInt("system_qsgridcolumns", 2) > 2 || mPrefs.getInt("system_qsgridrows", 3) > 3) System.QSGridRes(resparam);
 			if (mPrefs.getInt("system_qqsgridcolumns", 2) > 2) System.QQSGridRes(resparam);
 			if (mPrefs.getBoolean("system_volumetimer")) System.VolumeTimerValuesRes(resparam);
+			if (mPrefs.getBoolean("system_separatevolume")) System.NotificationVolumeRes(resparam);
 		}
 
 		if (pkg.equals("com.android.settings")) {
@@ -130,11 +132,16 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 				mPrefs.getInt("controls_menulong_action", 1) > 1) Controls.NavBarActionsHook(lpparam);
 			if (mPrefs.getBoolean("system_epm")) System.ExtendedPowerMenuHook(lpparam);
 			if (mPrefs.getBoolean("system_cleanshare")) System.CleanShareMenuHook(lpparam);
+			if (mPrefs.getBoolean("system_cleanopenwith")) System.CleanOpenWithMenuHook(lpparam);
 			if (mPrefs.getBoolean("system_limitminbrightness")) System.MinAutoBrightnessHook(lpparam);
 			if (mPrefs.getBoolean("system_applock")) System.AppLockHook(lpparam);
 			if (mPrefs.getInt("system_applock_timeout", 1) > 1) System.AppLockTimeoutHook(lpparam);
 			if (mPrefs.getBoolean("various_alarmcompat")) Various.AlarmCompatServiceHook(lpparam);
 			if (mPrefs.getBoolean("system_ignorecalls")) System.NoCallInterruptionHook(lpparam);
+			if (mPrefs.getBoolean("controls_fingerprintfailure")) Controls.FingerprintHapticFailureHook(lpparam);
+			if (Integer.parseInt(mPrefs.getString("controls_fingerprintsuccess", "1")) > 1) Controls.FingerprintHapticSuccessHook(lpparam);
+			if (!mPrefs.getString("system_defaultusb", "none").equals("none")) System.USBConfigHook(lpparam);
+			if (mPrefs.getBoolean("system_allrotations")) System.AllRotationsHook(lpparam);
 
 			//Controls.AIButtonHook(lpparam);
 		}
@@ -179,12 +186,13 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (!mPrefs.getString("system_shortcut_app", "").equals("")) System.ReplaceShortcutAppHook(lpparam);
 			if (!mPrefs.getString("system_clock_app", "").equals("")) System.ReplaceClockAppHook(lpparam);
 			if (!mPrefs.getString("system_calendar_app", "").equals("")) System.ReplaceCalendarAppHook(lpparam);
-			if (mPrefs.getInt("pref_key_system_recommended_first_action", 1) > 1 ||
-				mPrefs.getInt("pref_key_system_recommended_second_action", 1) > 1 ||
-				mPrefs.getInt("pref_key_system_recommended_third_action", 1) > 1 ||
-				mPrefs.getInt("pref_key_system_recommended_fourth_action", 1) > 1) System.CustomRecommendedHook(lpparam);
+			if (mPrefs.getInt("system_recommended_first_action", 1) > 1 ||
+				mPrefs.getInt("system_recommended_second_action", 1) > 1 ||
+				mPrefs.getInt("system_recommended_third_action", 1) > 1 ||
+				mPrefs.getInt("system_recommended_fourth_action", 1) > 1) System.CustomRecommendedHook(lpparam);
 			if (mPrefs.getBoolean("controls_nonavbar")) System.HideNavBarHook(lpparam);
 			if (mPrefs.getBoolean("system_visualizer")) System.AudioVisualizerHook(lpparam);
+			if (mPrefs.getBoolean("system_separatevolume")) System.NotificationVolumeDialogHook(lpparam);
 		}
 
 //		if (pkg.equals("com.android.incallui")) {

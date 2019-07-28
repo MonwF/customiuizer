@@ -17,9 +17,10 @@ import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 @SuppressWarnings("WeakerAccess")
-public class SeekBarPreference extends Preference {
+public class SeekBarPreference extends Preference implements PreferenceState {
 
 	private boolean dynamic;
+	private boolean newmod = false;
 
 	private int mDefaultValue;
 	private int mMinValue;
@@ -99,6 +100,7 @@ public class SeekBarPreference extends Preference {
 		View finalView = super.getView(view, parent);
 		TextView title = finalView.findViewById(android.R.id.title);
 		title.setText(getTitle() + (dynamic ? " ⟲" : ""));
+		if (newmod) Helpers.applyNewMod(title);
 		return finalView;
 	}
 
@@ -259,5 +261,10 @@ public class SeekBarPreference extends Preference {
 
 	private void saveValue() {
 		Helpers.prefs.edit().putInt(getKey(), getValue()).apply();
+	}
+
+	@Override
+	public void markAsNew() {
+		newmod = true;
 	}
 }

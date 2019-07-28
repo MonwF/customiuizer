@@ -46,4 +46,11 @@
 		android:defaultValue="false"
 		android:dependency="pref_key_system_detailednetspeed" />
 
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_detailednetspeed_zero"
+		android:summary="@string/system_detailednetspeed_zero_summ"
+		android:title="@string/system_detailednetspeed_zero_title"
+		android:defaultValue="true"
+		android:dependency="pref_key_system_detailednetspeed" />
+
 </PreferenceScreen>

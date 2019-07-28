@@ -32,6 +32,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.hardware.usb.UsbManager;
 import android.media.AudioManager;
 import android.media.MediaMetadata;
 import android.media.session.MediaController;
@@ -44,6 +45,7 @@ import android.net.TrafficStats;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.BadParcelableException;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -652,6 +654,20 @@ public class System {
 		});
 	}
 
+	private static int notifVolumeOnResId;
+	private static int notifVolumeOffResId;
+	public static void NotificationVolumeRes(XC_InitPackageResources.InitPackageResourcesParam resparam) {
+		try {
+			XModuleResources modRes = XModuleResources.createInstance(MainModule.MODULE_PATH, resparam.res);
+			resparam.res.setReplacement(resparam.packageName, "dimen", "miui_volume_content_width_expanded", modRes.fwd(R.dimen.miui_volume_content_width_expanded));
+			resparam.res.setReplacement(resparam.packageName, "dimen", "miui_volume_ringer_layout_width_expanded", modRes.fwd(R.dimen.miui_volume_ringer_layout_width_expanded));
+			notifVolumeOnResId = resparam.res.addResource(modRes, R.drawable.ic_miui_volume_notification);
+			notifVolumeOffResId = resparam.res.addResource(modRes, R.drawable.ic_miui_volume_notification_mute);
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
 	public static void NotificationVolumeServiceHook(LoadPackageParam lpparam) {
 		Helpers.findAndHookMethod("com.android.server.audio.AudioService", lpparam.classLoader, "updateStreamVolumeAlias", boolean.class, String.class, new XC_MethodHook() {
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
@@ -688,6 +704,31 @@ public class System {
 						}
 					}
 					param.setResult(null);
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
+	}
+
+	public static void NotificationVolumeDialogHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.miui.volume.MiuiVolumeDialogImpl", lpparam.classLoader, "initDialog", new XC_MethodHook() {
+			@Override
+			@SuppressWarnings("unchecked")
+			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+				try {
+					List<Object> mColumns = (List<Object>)XposedHelpers.getObjectField(param.thisObject, "mColumns");
+					XposedHelpers.setAdditionalInstanceField(param.thisObject, "mNoColumns", mColumns == null || mColumns.isEmpty());
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+
+			@Override
+			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				try {
+					boolean mNoColumns = (boolean)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mNoColumns");
+					if (mNoColumns) XposedHelpers.callMethod(param.thisObject, "addColumn", 5, notifVolumeOnResId, notifVolumeOffResId, true);
 				} catch (Throwable t) {
 					XposedBridge.log(t);
 				}
@@ -1284,6 +1325,7 @@ public class System {
 				try {
 					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 					boolean hideLow = MainModule.mPrefs.getBoolean("system_detailednetspeed_low");
+					boolean reduceVis = MainModule.mPrefs.getBoolean("system_detailednetspeed_zero");
 					int lowLevel = MainModule.mPrefs.getInt("system_detailednetspeed_lowlevel", 1) * 1024;
 					int icons = Integer.parseInt(MainModule.mPrefs.getString("system_detailednetspeed_icon", "2"));
 
@@ -1303,11 +1345,11 @@ public class System {
 					if (param.thisObject.getClass().getSimpleName().equals("NetworkSpeedController")) {
 						CopyOnWriteArrayList mViewList = (CopyOnWriteArrayList)XposedHelpers.getObjectField(param.thisObject, "mViewList");
 						for (Object tv: mViewList)
-						if (tv != null) ((TextView)tv).setAlpha(rxSpeed == 0 && txSpeed == 0 ? 0.3f : 1.0f);
+						if (tv != null) ((TextView)tv).setAlpha(reduceVis && rxSpeed == 0 && txSpeed == 0 ? 0.3f : 1.0f);
 					} else {
 						ArrayList<?> sViewList = (ArrayList<?>)XposedHelpers.getObjectField(param.thisObject, "sViewList");
 						for (Object tv: sViewList)
-						if (tv != null) ((TextView)tv).setAlpha(rxSpeed == 0 && txSpeed == 0 ? 0.3f : 1.0f);
+						if (tv != null) ((TextView)tv).setAlpha(reduceVis && rxSpeed == 0 && txSpeed == 0 ? 0.3f : 1.0f);
 					}
 //Helpers.log("DetailedNetSpeedHook", "setTextToViewList: " + tx + ", " + rx);
 //Helpers.log("DetailedNetSpeedHook", "class: " + param.thisObject.getClass().getSimpleName());
@@ -1620,11 +1662,12 @@ public class System {
 					Helpers.findAndHookMethod(res.getClass().getCanonicalName(), lpparam.classLoader, "handleClick", new XC_MethodHook() {
 						@Override
 						protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+							boolean ignoreSystem = Helpers.getSharedBoolPref(qsCtx, "pref_key_system_qshaptics_ignore", false);
 							int opt = Integer.parseInt(Helpers.getSharedStringPref(qsCtx, "pref_key_system_qshaptics", "1"));
 							if (opt == 2)
-								Helpers.performLightVibration(qsCtx);
+								Helpers.performLightVibration(qsCtx, ignoreSystem);
 							else if (opt == 3)
-								Helpers.performStrongVibration(qsCtx);
+								Helpers.performStrongVibration(qsCtx, ignoreSystem);
 						}
 					});
 					hookedTiles.add(res.getClass().getCanonicalName());
@@ -2668,6 +2711,55 @@ public class System {
 		Helpers.findAndHookMethod("com.android.server.pm.PackageManagerService", lpparam.classLoader, "queryIntentActivitiesInternal", argsAndHook);
 	}
 
+	public static void CleanOpenWithMenuHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.server.pm.PackageManagerService", lpparam.classLoader, "systemReady", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
+
+				new Helpers.SharedPrefObserver(mContext, mHandler, "pref_key_system_cleanopenwith_apps") {
+					@Override
+					public void onChange(String name) {
+						MainModule.mPrefs.put(name, Helpers.getSharedStringSetPref(mContext, name));
+					}
+				};
+			}
+		});
+
+		XC_MethodHook hook = new XC_MethodHook() {
+			@Override
+			@SuppressWarnings("unchecked")
+			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				try {
+					if (param.args[0] == null) return;
+					Intent origIntent = (Intent)param.args[0];
+					Intent intent = (Intent)origIntent.clone();
+					String action = intent.getAction();
+//					XposedBridge.log(action + ": " + intent.getType() + " | " + intent.getDataString());
+					if (!Intent.ACTION_VIEW.equals(action)) return;
+					if (intent.hasExtra("CustoMIUIzer") && intent.getBooleanExtra("CustoMIUIzer", false)) return;
+					//boolean validSchemes = "http".equals(intent.getScheme()) || "https".equals(intent.getScheme());
+					//if (intent.getType() == null && !validSchemes) return;
+					if (intent.getType() == null) return;
+//					XposedBridge.log(intent.getPackage() + ": " + intent.getType() + " | " + intent.getDataString());
+					Set<String> selectedApps = MainModule.mPrefs.getStringSet("system_cleanopenwith_apps");
+					List<ResolveInfo> resolved = (List<ResolveInfo>)param.getResult();
+					Iterator itr = resolved.iterator();
+					while (itr.hasNext())
+					if (selectedApps.contains(((ResolveInfo)itr.next()).activityInfo.packageName)) itr.remove();
+					param.setResult(resolved);
+				} catch (Throwable t) {
+					if (!(t instanceof BadParcelableException)) XposedBridge.log(t);
+				}
+			}
+		};
+
+		Object[] argsAndHook = { Intent.class, String.class, int.class, int.class, int.class, boolean.class, boolean.class, hook };
+		if (Helpers.isNougat()) argsAndHook = new Object[] { Intent.class, String.class, int.class, int.class, hook };
+		Helpers.findAndHookMethod("com.android.server.pm.PackageManagerService", lpparam.classLoader, "queryIntentActivitiesInternal", argsAndHook);
+	}
+
 	public static void VolumeTimerValuesRes(XC_InitPackageResources.InitPackageResourcesParam resparam) {
 		try {
 			XModuleResources modRes = XModuleResources.createInstance(MainModule.MODULE_PATH, resparam.res);
@@ -2954,6 +3046,78 @@ public class System {
 				removeListener(param.thisObject);
 			}
 		});
+	}
+
+	public static void AllRotationsRes() {
+		try {
+			XResources.setSystemWideReplacement("android", "bool", "config_allowAllRotations", true);
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void AllRotationsHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethods("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "init", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				try {
+					XposedHelpers.setIntField(param.thisObject, "mAllowAllRotations", 1);
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
+	}
+
+	private static boolean mUSBConnected = false;
+	public static void USBConfigHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethods("com.android.server.power.PowerManagerService", lpparam.classLoader, "systemReady", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				if (mContext != null)
+				mContext.registerReceiver(new BroadcastReceiver() {
+					@Override
+					public void onReceive(Context context, Intent intent) {
+						try {
+							boolean mConnected = intent.getBooleanExtra("connected", false);
+							if (mConnected && mConnected != mUSBConnected) try {
+								int mPlugType = XposedHelpers.getIntField(param.thisObject, "mPlugType");
+								if (mPlugType != BatteryManager.BATTERY_PLUGGED_USB) return;
+								String func = MainModule.mPrefs.getString("system_defaultusb", "none");
+								if ("none".equals(func)) return;
+								UsbManager usbMgr = (UsbManager)mContext.getSystemService(Context.USB_SERVICE);
+								if ((boolean)XposedHelpers.callMethod(usbMgr, "isFunctionEnabled", func)) return;
+								XposedHelpers.callMethod(usbMgr, "setCurrentFunction", func, MainModule.mPrefs.getBoolean("system_defaultusb_unsecure"));
+							} catch (Throwable t) {
+								XposedBridge.log(t);
+							}
+							mUSBConnected = mConnected;
+						} catch (Throwable t) {
+							XposedBridge.log(t);
+						}
+					}
+				}, new IntentFilter("android.hardware.usb.action.USB_STATE"));
+			}
+		});
+
+		if (!Helpers.isNougat() && MainModule.mPrefs.getBoolean("system_defaultusb_unsecure")) {
+			Helpers.findAndHookMethod("com.android.server.usb.UsbDeviceManager$UsbHandler", lpparam.classLoader, "isUsbDataTransferActive", long.class, XC_MethodReplacement.returnConstant(true));
+			Helpers.findAndHookMethod("com.android.server.usb.UsbDeviceManager$UsbHandler", lpparam.classLoader, "handleMessage", Message.class, new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+					try {
+						Message msg = (Message)param.args[0];
+						if (msg.what == XposedHelpers.getStaticIntField(findClass("com.android.server.usb.UsbDeviceManager", lpparam.classLoader), "MSG_SET_SCREEN_UNLOCKED_FUNCTIONS")) {
+							msg.obj = 0L;
+							param.args[0] = msg;
+						}
+					} catch (Throwable t) {
+						XposedBridge.log(t);
+					}
+				}
+			});
+		}
 	}
 
 //	public static void VolumeDialogTimeoutHook(LoadPackageParam lpparam) {

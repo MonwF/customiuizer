@@ -118,7 +118,9 @@ public class InAppFragment extends SubFragment implements PurchasesUpdatedListen
 			public void run() {
 				try {
 					Thread.sleep(350);
-					getActivity().runOnUiThread(new Runnable() {
+					Activity act = getActivity();
+					if (act != null && !act.isFinishing())
+					act.runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
 							billingClient = BillingClient.newBuilder(act).enablePendingPurchases().setListener(InAppFragment.this).build();
@@ -155,6 +157,8 @@ public class InAppFragment extends SubFragment implements PurchasesUpdatedListen
 	}
 
 	boolean checkBillingError(BillingResult billingResult) {
+		Activity act = getActivity();
+		if (act == null || act.isFinishing()) return false;
 		int resp = billingResult.getResponseCode();
 		if (resp == BillingResponseCode.OK) return false;
 		if (resp == BillingResponseCode.SERVICE_UNAVAILABLE) return true;
@@ -198,7 +202,7 @@ public class InAppFragment extends SubFragment implements PurchasesUpdatedListen
 				}
 			}
 		} else if (billingResult.getResponseCode() == BillingResponseCode.USER_CANCELED) {
-			Toast.makeText(getActivity(), R.string.billing_canceled, Toast.LENGTH_SHORT).show();
+			if (getActivity() != null) Toast.makeText(getActivity(), R.string.billing_canceled, Toast.LENGTH_SHORT).show();
 		} else {
 			checkBillingError(billingResult);
 		}
@@ -244,14 +248,17 @@ public class InAppFragment extends SubFragment implements PurchasesUpdatedListen
 		public void onAvailable(Network network) {
 			if (hasNetwork) return;
 			hasNetwork = true;
-			if (mIsServiceConnected)
-			getActivity().runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					updatePurchases();
-					updateDetails();
-				}
-			});
+			if (mIsServiceConnected) {
+				Activity act = getActivity();
+				if (act != null && !act.isFinishing())
+				act.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						updatePurchases();
+						updateDetails();
+					}
+				});
+			}
 		}
 
 		@Override

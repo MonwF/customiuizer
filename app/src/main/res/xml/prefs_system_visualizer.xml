@@ -37,6 +37,17 @@
 		miuizer:format="%d%%"
 		miuizer:dynamic="true" />
 
+	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		android:key="pref_key_system_visualizer_glowlevel"
+		android:title="@string/system_visualizer_glowlevel_title"
+		android:dependency="pref_key_system_visualizer"
+		android:defaultValue="50"
+		miuizer:minValue="0"
+		miuizer:maxValue="100"
+		miuizer:stepValue="1"
+		miuizer:format="%d%%"
+		miuizer:dynamic="true" />
+
 	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_visualizer_style"
 		android:title="@string/system_visualizer_style_title"

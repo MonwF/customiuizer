@@ -12,16 +12,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import name.mikanoshi.customiuizer.R;
+import name.mikanoshi.customiuizer.utils.Helpers;
 
-public class ListPreferenceEx extends ListPreference {
+public class ListPreferenceEx extends ListPreference implements PreferenceState {
 
-	private boolean dynamic;
-	private boolean unsupported = false;
-	private boolean valueAsSummary;
 	private CharSequence sValue;
 	private Resources res = getContext().getResources();
 	private int primary = res.getColor(R.color.preference_primary_text, getContext().getTheme());
 	private int secondary = res.getColor(R.color.preference_secondary_text, getContext().getTheme());
+
+	private boolean dynamic;
+	private boolean newmod = false;
+	private boolean unsupported = false;
+	private boolean valueAsSummary;
 
 	public ListPreferenceEx(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -34,7 +37,9 @@ public class ListPreferenceEx extends ListPreference {
 	@Override
 	public void setValue(String value) {
 		super.setValue(value);
-		sValue = getEntries()[findIndexOfValue(value)];
+		int index = findIndexOfValue(value);
+		if (index < 0 || index > getEntries().length - 1) return;
+		sValue = getEntries()[index];
 	}
 
 	public void setUnsupported(boolean value) {
@@ -55,6 +60,7 @@ public class ListPreferenceEx extends ListPreference {
 		valSummary.setText(valueAsSummary ? sValue : "");
 		title.setTextColor(isEnabled() ? primary : secondary);
 		title.setText(getTitle() + (unsupported ? " ⨯" : (dynamic ? " ⟲" : "")));
+		if (newmod) Helpers.applyNewMod(title);
 
 		return finalView;
 	}
@@ -78,5 +84,10 @@ public class ListPreferenceEx extends ListPreference {
 		view.addView(valSummary, 2);
 
 		return view;
+	}
+
+	@Override
+	public void markAsNew() {
+		newmod = true;
 	}
 }

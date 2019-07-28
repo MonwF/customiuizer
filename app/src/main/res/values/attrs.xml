@@ -2,6 +2,7 @@
 <resources>
 
 	<attr name="dynamic" format="boolean" />
+	<attr name="child" format="boolean" />
 
 	<declare-styleable name="PreferenceCategoryEx">
 		<attr name="dynamic" />
@@ -9,12 +10,13 @@
 
 	<declare-styleable name="PreferenceEx">
 		<attr name="dynamic" />
-		<attr name="child" format="boolean" />
+		<attr name="child" />
 		<attr name="countAsSummary" format="boolean" />
 	</declare-styleable>
 
 	<declare-styleable name="CheckBoxPreferenceEx">
 		<attr name="dynamic" />
+		<attr name="child" />
 	</declare-styleable>
 
 	<declare-styleable name="ListPreferenceEx">

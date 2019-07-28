@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 import miui.app.ActionBar;
 import miui.widget.ClearableEditText;
+import name.mikanoshi.customiuizer.prefs.PreferenceState;
 import name.mikanoshi.customiuizer.prefs.SpinnerEx;
 import name.mikanoshi.customiuizer.prefs.SpinnerExFake;
 import name.mikanoshi.customiuizer.subs.AppSelector;
@@ -113,6 +114,12 @@ public class SubFragment extends PreferenceFragmentBase {
 				order = mod.order;
 				break;
 			}
+			if (order == 0)
+			for (ModData sub: Helpers.allSubsList)
+			if (sub.key.equals(scrollToKey)) {
+				order = sub.order;
+				break;
+			}
 			scrollToKey = null;
 			listView.clearFocus();
 			int fOrder = order;
@@ -124,6 +131,12 @@ public class SubFragment extends PreferenceFragmentBase {
 			});
 		} catch (Throwable t) {
 			t.printStackTrace();
+		}
+
+		if (Helpers.showNewMods)
+		for (String mod: Helpers.newMods) {
+			Preference pref = findPreference("pref_key_" + mod);
+			if (pref != null) ((PreferenceState)pref).markAsNew();
 		}
 	}
 
@@ -202,6 +215,14 @@ public class SubFragment extends PreferenceFragmentBase {
 		}
 	};
 
+	public Preference.OnPreferenceClickListener openOpenWithEdit = new Preference.OnPreferenceClickListener() {
+		@Override
+		public boolean onPreferenceClick(Preference preference) {
+			openOpenWith(preference.getKey());
+			return true;
+		}
+	};
+
 	public Preference.OnPreferenceClickListener openLauncherActions = new Preference.OnPreferenceClickListener() {
 		@Override
 		public boolean onPreferenceClick(Preference preference) {
@@ -240,7 +261,7 @@ public class SubFragment extends PreferenceFragmentBase {
 		args.putBoolean("multi", true);
 		AppSelector appSelector = new AppSelector();
 		appSelector.setTargetFragment(this, 0);
-		openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_app, R.layout.prefs_app_selector);
+		openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_apps, R.layout.prefs_app_selector);
 	}
 
 	void openShare(String key) {
@@ -250,7 +271,17 @@ public class SubFragment extends PreferenceFragmentBase {
 		args.putBoolean("share", true);
 		AppSelector appSelector = new AppSelector();
 		appSelector.setTargetFragment(this, 0);
-		openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_app, R.layout.prefs_app_selector);
+		openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_apps, R.layout.prefs_app_selector);
+	}
+
+	void openOpenWith(String key) {
+		Bundle args = new Bundle();
+		args.putString("key", key);
+		args.putBoolean("multi", true);
+		args.putBoolean("openwith", true);
+		AppSelector appSelector = new AppSelector();
+		appSelector.setTargetFragment(this, 0);
+		openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_apps, R.layout.prefs_app_selector);
 	}
 
 	void openMultiAction(Preference pref, int resId) {
@@ -273,7 +304,7 @@ public class SubFragment extends PreferenceFragmentBase {
 		args.putBoolean("privacy", true);
 		AppSelector appSelector = new AppSelector();
 		appSelector.setTargetFragment(targetFrag, resultId);
-		openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_app, R.layout.prefs_app_selector);
+		openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_apps, R.layout.prefs_app_selector);
 	}
 
 	public void openLockedAppEdit(Fragment targetFrag, int resultId) {
@@ -281,7 +312,7 @@ public class SubFragment extends PreferenceFragmentBase {
 		args.putBoolean("applock", true);
 		AppSelector appSelector = new AppSelector();
 		appSelector.setTargetFragment(targetFrag, resultId);
-		openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_app, R.layout.prefs_app_selector);
+		openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_apps, R.layout.prefs_app_selector);
 	}
 
 	public void openLaunchableList(Preference pref, Fragment targetFrag, int resultId) {

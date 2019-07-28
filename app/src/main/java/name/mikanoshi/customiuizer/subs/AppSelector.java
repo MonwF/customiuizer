@@ -30,6 +30,7 @@ public class AppSelector extends SubFragmentWithSearch {
 	boolean applock = false;
 	boolean customTitles = false;
 	boolean share = false;
+	boolean openwith = false;
 	String key = null;
 
 	@Override
@@ -48,13 +49,17 @@ public class AppSelector extends SubFragmentWithSearch {
 		applock = getArguments().getBoolean("applock");
 		customTitles = getArguments().getBoolean("custom_titles");
 		share = getArguments().getBoolean("share");
+		openwith = getArguments().getBoolean("openwith");
 		key = getArguments().getString("key");
 
 		final Runnable process = new Runnable() {
 			@Override
 			public void run() {
 				if (multi && key != null) {
-					if (share) {
+					if (openwith) {
+						if (Helpers.openWithAppsList == null) return;
+						listView.setAdapter(new AppDataAdapter(getContext(), Helpers.openWithAppsList, Helpers.AppAdapterType.Mutli, key));
+					} else if (share) {
 						if (Helpers.shareAppsList == null) return;
 						listView.setAdapter(new AppDataAdapter(getContext(), Helpers.shareAppsList, Helpers.AppAdapterType.Mutli, key));
 					} else {
@@ -153,7 +158,9 @@ public class AppSelector extends SubFragmentWithSearch {
 				try { sleep(animDur); } catch (Throwable e) {}
 				try {
 					if (privacy || applock || (multi && key != null)) {
-						if (share) {
+						if (openwith) {
+							if (Helpers.openWithAppsList == null) Helpers.getOpenWithApps(getActivity());
+						} else if (share) {
 							if (Helpers.shareAppsList == null) Helpers.getShareApps(getActivity());
 						} else {
 							if (Helpers.installedAppsList == null) Helpers.getInstalledApps(getActivity());

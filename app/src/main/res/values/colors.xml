@@ -33,4 +33,6 @@
 	<color name="icon_title_text_shadow">#FFFF0000</color>
 	<color name="icon_title_text_shadow_light">#FF00FF00</color>
 
+	<color name="guide_popup_text">#7fffffff</color>
+
 </resources>

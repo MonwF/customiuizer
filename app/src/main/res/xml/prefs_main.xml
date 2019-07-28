@@ -1,4 +1,4 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:miui="http://schemas.android.com/apk/res-auto"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:key="prefs">
@@ -23,6 +23,12 @@
 	<PreferenceCategory
 		android:title="@string/miuizer"
 		android:key="pref_key_miuizer">
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_miuizer_marknewmods"
+			android:title="@string/miuizer_show_newmods_title"
+			android:entries="@array/marknewmods"
+			android:entryValues="@array/marknewmods_val"
+			android:defaultValue="2" />
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_miuizer_settingsiconpos"
 			android:title="@string/miuizer_show_settingsicon_title"

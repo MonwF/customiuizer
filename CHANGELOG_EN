@@ -1,3 +1,18 @@
+1.6.6
+[New] Allow all screen rotations
+[New] Vibrate on successful fingerprint authentication
+[New] Do not vibrate on fingerprint authentication failure
+[New] Clean "Open with" menu
+[New] Default USB configuration when connected to another device
+[New][Music visualizer] Glow option
+[New][Detailed network speed indicator] Optionally reduce indicator visibility when both speeds are zero
+[New] Option to mark newly added mods for a number of days after update or forever
+[Improved][Quick settings haptic feedback] Option to not disable vibration when "Vibrate on tap" is off
+[Improved][Separate volume controls] Add notification volume slider to expanded volume dialog
+[Improved][Show additional app details] Open app in Play Store, copy APK filename and data path to clipboard
+[Fixed][Music visualizer] Horizontal rainbow colors on Android versions below 9
+[Fixed] Custom actions for shortcuts in recent apps list
+
 1.6.5
 [New] Make selected apps display correct next alarm time set by stock MIUI Clock app
 [New] Make selected apps ignore incoming calls and keep playing audio

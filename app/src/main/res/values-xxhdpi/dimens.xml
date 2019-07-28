@@ -1,0 +1,6 @@
+<resources>
+
+	<dimen name="miui_volume_content_width_expanded">337.77dp</dimen>
+	<dimen name="miui_volume_ringer_layout_width_expanded">337.77dp</dimen>
+
+</resources>

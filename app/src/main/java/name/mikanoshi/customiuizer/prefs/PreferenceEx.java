@@ -16,15 +16,16 @@ import java.util.LinkedHashSet;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
-public class PreferenceEx extends Preference {
+public class PreferenceEx extends Preference implements PreferenceState {
 
 	private Resources res = getContext().getResources();
 	private int primary = res.getColor(R.color.preference_primary_text, getContext().getTheme());
 	private int secondary = res.getColor(R.color.preference_secondary_text, getContext().getTheme());
 
-	private boolean dynamic;
 	private boolean child;
+	private boolean dynamic;
 	private boolean countAsSummary;
+	private boolean newmod = false;
 
 	public PreferenceEx(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -49,6 +50,7 @@ public class PreferenceEx extends Preference {
 		valSummary.setText(countAsSummary ? String.valueOf(Helpers.prefs.getStringSet(getKey(), new LinkedHashSet<String>()).size()) : null);
 		title.setTextColor(isEnabled() ? primary : secondary);
 		title.setText((child ? "			" : "") + getTitle() + (dynamic ? " ⟲" : ""));
+		if (newmod) Helpers.applyNewMod(title);
 
 		return finalView;
 	}
@@ -72,5 +74,10 @@ public class PreferenceEx extends Preference {
 		view.addView(valSummary, 2);
 
 		return view;
+	}
+
+	@Override
+	public void markAsNew() {
+		newmod = true;
 	}
 }

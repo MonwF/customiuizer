@@ -3,7 +3,10 @@ package name.mikanoshi.customiuizer.subs;
 import android.os.Bundle;
 import android.preference.Preference;
 
+import java.util.Objects;
+
 import name.mikanoshi.customiuizer.SubFragment;
+import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class Controls extends SubFragment {
 
@@ -11,29 +14,27 @@ public class Controls extends SubFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		Preference actionPref;
-		actionPref = findPreference("pref_key_controls_backlong");
-		actionPref.setOnPreferenceClickListener(openNavbarActions);
-		actionPref = findPreference("pref_key_controls_homelong");
-		actionPref.setOnPreferenceClickListener(openNavbarActions);
-		actionPref = findPreference("pref_key_controls_menulong");
-		actionPref.setOnPreferenceClickListener(openNavbarActions);
+		findPreference("pref_key_controls_backlong").setOnPreferenceClickListener(openNavbarActions);
+		findPreference("pref_key_controls_homelong").setOnPreferenceClickListener(openNavbarActions);
+		findPreference("pref_key_controls_menulong").setOnPreferenceClickListener(openNavbarActions);
 
-		actionPref = findPreference("pref_key_controls_navbarleft");
-		actionPref.setOnPreferenceClickListener(openNavbarActions);
-		actionPref = findPreference("pref_key_controls_navbarleftlong");
-		actionPref.setOnPreferenceClickListener(openNavbarActions);
-		actionPref = findPreference("pref_key_controls_navbarright");
-		actionPref.setOnPreferenceClickListener(openNavbarActions);
-		actionPref = findPreference("pref_key_controls_navbarrightlong");
-		actionPref.setOnPreferenceClickListener(openNavbarActions);
+		findPreference("pref_key_controls_navbarleft").setOnPreferenceClickListener(openNavbarActions);
+		findPreference("pref_key_controls_navbarleftlong").setOnPreferenceClickListener(openNavbarActions);
+		findPreference("pref_key_controls_navbarright").setOnPreferenceClickListener(openNavbarActions);
+		findPreference("pref_key_controls_navbarrightlong").setOnPreferenceClickListener(openNavbarActions);
 
-		actionPref = findPreference("pref_key_controls_fingerprint1");
-		actionPref.setOnPreferenceClickListener(openControlsActions);
-		actionPref = findPreference("pref_key_controls_fingerprint2");
-		actionPref.setOnPreferenceClickListener(openControlsActions);
-		actionPref = findPreference("pref_key_controls_fingerprintlong");
-		actionPref.setOnPreferenceClickListener(openControlsActions);
+		findPreference("pref_key_controls_fingerprint1").setOnPreferenceClickListener(openControlsActions);
+		findPreference("pref_key_controls_fingerprint2").setOnPreferenceClickListener(openControlsActions);
+		findPreference("pref_key_controls_fingerprintlong").setOnPreferenceClickListener(openControlsActions);
+
+		findPreference("pref_key_controls_fingerprintsuccess_ignore").setEnabled(!Objects.equals(Helpers.prefs.getString("pref_key_controls_fingerprintsuccess", "1"), "1"));
+		findPreference("pref_key_controls_fingerprintsuccess").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				findPreference("pref_key_controls_fingerprintsuccess_ignore").setEnabled(!newValue.equals("1"));
+				return true;
+			}
+		});
 	}
 
 }

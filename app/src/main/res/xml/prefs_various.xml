@@ -22,8 +22,8 @@
 		miuizer:countAsSummary="true" />
 
 	<PreferenceCategory
-		android:title="@string/settings"
-		android:key="pref_various_mods_settings">
+		android:key="pref_key_various_cat_settings"
+		android:title="@string/settings">
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_various_disableapp"

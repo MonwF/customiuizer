@@ -30,6 +30,8 @@ import android.content.res.XmlResourceParser;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -38,11 +40,17 @@ import android.os.Handler;
 import android.os.PowerManager.WakeLock;
 import android.preference.PreferenceCategory;
 import android.text.InputType;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.util.LruCache;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -67,10 +75,14 @@ public class Helpers {
 	public static final String ACCESS_SECURITY_CENTER = "com.miui.securitycenter.permission.ACCESS_SECURITY_CENTER_PROVIDER";
 	public static SharedPreferences prefs = null;
 	public static ArrayList<AppData> shareAppsList = null;
+	public static ArrayList<AppData> openWithAppsList = null;
 	public static ArrayList<AppData> installedAppsList = null;
 	public static ArrayList<AppData> launchableAppsList = null;
 	public static ArrayList<ModData> allModsList = new ArrayList<ModData>();
+	public static ArrayList<ModData> allSubsList = new ArrayList<ModData>();
 	public static String backupFile = "settings_backup";
+	public static final int markColor = Color.rgb(205, 73, 97);
+	public static final int markColorVibrant = Color.rgb(222, 45, 73);
 	public static final int REQUEST_PERMISSIONS_BACKUP = 1;
 	public static final int REQUEST_PERMISSIONS_RESTORE = 2;
 	public static final int REQUEST_PERMISSIONS_WIFI = 3;
@@ -84,6 +96,17 @@ public class Helpers {
 		}
 	};
 	public static WakeLock mWakeLock;
+	public static boolean showNewMods = true;
+	public static final String[] newMods = new String[] {
+		"system_detailednetspeed_zero",
+		"system_visualizer_glowlevel",
+		"system_allrotations",
+		"system_cleanopenwith",
+		"system_defaultusb",
+		"system_qshaptics_ignore",
+		"controls_fingerprintfailure",
+		"controls_fingerprintsuccess"
+	};
 
 	public enum SettingsType {
 		Preference, Edit
@@ -100,9 +123,9 @@ public class Helpers {
 	public static void setMiuiTheme(Activity act, int overrideTheme) {
 		int themeResId = 0;
 		try {
-			themeResId = act.getResources().getIdentifier("Theme.DayNight.Settings", "style", "miui");
+			themeResId = act.getResources().getIdentifier("Theme.DayNight", "style", "miui");
 		} catch (Throwable t) {}
-		if (themeResId == 0) themeResId = act.getResources().getIdentifier(isNightMode(act) ? "Theme.Dark.Settings" : "Theme.Light.Settings", "style", "miui");
+		if (themeResId == 0) themeResId = act.getResources().getIdentifier(isNightMode(act) ? "Theme.Dark" : "Theme.Light", "style", "miui");
 		act.setTheme(themeResId);
 		act.getTheme().applyStyle(overrideTheme, true);
 	}
@@ -290,7 +313,40 @@ public class Helpers {
 			} catch (Throwable e) {}
 		}
 	}
-	
+
+	@SuppressWarnings("ConstantConditions")
+	public static void updateNewModsMarking(Context mContext) {
+		updateNewModsMarking(mContext, Integer.parseInt(prefs.getString("pref_key_miuizer_marknewmods", "2")));
+	}
+
+	public static void updateNewModsMarking(Context mContext, int opt) {
+		try {
+			ApplicationInfo appInfo = mContext.getPackageManager().getApplicationInfo(Helpers.modulePkg, 0);
+			long appInstalled = System.currentTimeMillis() - new File(appInfo.sourceDir).lastModified();
+//			Log.e("miuizer", "installed: " + appInstalled + " msecs or " + appInstalled / (1000 * 60 * 60) + " hrs");
+			if (opt == 0)
+				showNewMods = false;
+			else if (opt == 4)
+				showNewMods = true;
+			else
+				showNewMods = appInstalled < (opt == 1 ? 1 : (opt == 2 ? 3 : 7)) * 24 * 60 * 60 * 1000;
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+	}
+
+	public static void applyNewMod(TextView title) {
+		CharSequence titleStr = title.getText();
+		String newModStr = title.getResources().getString(R.string.miuizer_new_mod) + " ";
+		int start = titleStr.length() + 3;
+		int end = start + newModStr.length();
+		SpannableStringBuilder ssb = new SpannableStringBuilder(title.getText() + "   " + newModStr);
+		ssb.setSpan(new ForegroundColorSpan(markColor), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		ssb.setSpan(new StyleSpan(Typeface.ITALIC), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		ssb.setSpan(new RelativeSizeSpan(0.75f), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		title.setText(ssb);
+	}
+
 	public static void openURL(Context mContext, String url) {
 		if (mContext == null) return;
 		Intent uriIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -411,6 +467,39 @@ public class Helpers {
 		});
 	}
 
+	public static void getOpenWithApps(Context mContext) {
+		PackageManager pm = mContext.getPackageManager();
+		final Intent mainIntent = new Intent();
+		mainIntent.setAction(Intent.ACTION_VIEW);
+		mainIntent.setDataAndType(Uri.parse("content://" + SharedPrefsProvider.AUTHORITY + "/test/5"), "*/*");
+		mainIntent.putExtra("CustoMIUIzer", true);
+		List<ResolveInfo> packs = pm.queryIntentActivities(mainIntent, PackageManager.MATCH_ALL);
+		openWithAppsList = new ArrayList<AppData>();
+		AppData app;
+		for (ResolveInfo pack: packs) try {
+			boolean exists = false;
+			for (AppData openWithApp: openWithAppsList)
+			if (openWithApp.pkgName.equals(pack.activityInfo.applicationInfo.packageName)) {
+				exists = true;
+				break;
+			}
+			if (exists) continue;
+			app = new AppData();
+			app.pkgName = pack.activityInfo.applicationInfo.packageName;
+			app.actName = "-";
+			app.enabled = pack.activityInfo.applicationInfo.enabled;
+			app.label = pack.activityInfo.applicationInfo.loadLabel(pm).toString();
+			openWithAppsList.add(app);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		Collections.sort(openWithAppsList, new Comparator<AppData>() {
+			public int compare(AppData app1, AppData app2) {
+				return app1.label.compareToIgnoreCase(app2.label);
+			}
+		});
+	}
+
 	public static CharSequence getAppName(Context mContext, String pkgActName) {
 		PackageManager pm = mContext.getPackageManager();
 		String not_selected = mContext.getResources().getString(R.string.notselected);
@@ -500,6 +589,12 @@ public class Helpers {
 				if (eventType == XmlPullParser.START_TAG) try {
 					if (xml.getName().equals(PreferenceCategory.class.getSimpleName()) || xml.getName().equals(PreferenceCategoryEx.class.getCanonicalName())) {
 						lastPrefScreen = getModTitle(res, xml.getAttributeValue(ANDROID_NS, "title"));
+						ModData modData = new ModData();
+						modData.title = lastPrefScreen;
+						modData.key = xml.getAttributeValue(ANDROID_NS, "key");
+						modData.cat = catPrefKey;
+						modData.order = order - 1;
+						allSubsList.add(modData);
 						eventType = xml.next();
 						order++;
 						continue;

@@ -38,6 +38,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +56,7 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
@@ -62,10 +64,12 @@ import miui.app.ActionBar;
 import miui.app.AlertDialog;
 
 import miui.view.SearchActionMode;
+import name.mikanoshi.customiuizer.prefs.PreferenceEx;
 import name.mikanoshi.customiuizer.subs.Controls;
 import name.mikanoshi.customiuizer.subs.Launcher;
 import name.mikanoshi.customiuizer.subs.System;
 import name.mikanoshi.customiuizer.subs.Various;
+import name.mikanoshi.customiuizer.utils.GuidePopup;
 import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.ModData;
 import name.mikanoshi.customiuizer.utils.ModSearchAdapter;
@@ -80,7 +84,10 @@ public class MainFragment extends PreferenceFragmentBase {
 	private ListView listView = null;
 	private ListView resultView = null;
 	private LinearLayout search = null;
+	private View modsCat = null;
+	private View markCat = null;
 	boolean isSearchFocused = false;
+	boolean areGuidesCleared = false;
 	ActionMode actionMode = null;
 	SearchActionMode.Callback actionModeCallback = new SearchActionMode.Callback() {
 		@Override
@@ -210,14 +217,12 @@ public class MainFragment extends PreferenceFragmentBase {
 						AlertDialog dlg = builder.create();
 						if (isFragmentReady(act)) dlg.show();
 					}
-				});	else {
-					if (isFragmentReady(act) && !miuizerModuleActive)
-					act.runOnUiThread(new Runnable() {
-						public void run() {
-							showXposedDialog(act);
-						}
-					});
-				}
+				});	else if (isFragmentReady(act) && !miuizerModuleActive)
+				act.runOnUiThread(new Runnable() {
+					public void run() {
+						showXposedDialog(act);
+					}
+				}); else areGuidesCleared = true;
 
 				String dataPath = act.getFilesDir().getAbsolutePath();
 				HttpURLConnection connection = null;
@@ -274,106 +279,6 @@ public class MainFragment extends PreferenceFragmentBase {
 			Helpers.prefs.edit().putBoolean("pref_key_was_restore", false).apply();
 			showRestoreInfoDialog();
 		}
-
-		CheckBoxPreference.OnPreferenceChangeListener toggleLauncherIcon = new CheckBoxPreference.OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				PackageManager pm = act.getPackageManager();
-				if ((Boolean)newValue)
-					pm.setComponentEnabledSetting(new ComponentName(act, GateWayLauncher.class), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-				else
-					pm.setComponentEnabledSetting(new ComponentName(act, GateWayLauncher.class), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-				return true;
-			}
-		};
-
-		CheckBoxPreference.OnPreferenceChangeListener toggleSettingsIcon = new CheckBoxPreference.OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				PackageManager pm = act.getPackageManager();
-				if ((Boolean)newValue)
-					pm.setComponentEnabledSetting(new ComponentName(act, GateWaySettings.class), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-				else
-					pm.setComponentEnabledSetting(new ComponentName(act, GateWaySettings.class), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-				return true;
-			}
-		};
-
-		CheckBoxPreference.OnPreferenceChangeListener toggleForceLocale = new CheckBoxPreference.OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				getActivity().recreate();
-				return true;
-			}
-		};
-
-		CheckBoxPreference.OnPreferenceClickListener sendCrashReport = new CheckBoxPreference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				ACRA.getErrorReporter().handleException(null);
-				return true;
-			}
-		};
-
-		CheckBoxPreference.OnPreferenceClickListener openFeedbackEdit = new CheckBoxPreference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				openSubFragment(new SubFragment(), null, Helpers.SettingsType.Edit, Helpers.ActionBarType.Edit, R.string.miuizer_acramail_title, R.layout.prefs_freedback);
-				return true;
-			}
-		};
-
-		CheckBoxPreference launcherIconPreference = (CheckBoxPreference)findPreference("pref_key_miuizer_launchericon");
-		if (launcherIconPreference != null) launcherIconPreference.setOnPreferenceChangeListener(toggleLauncherIcon);
-		CheckBoxPreference miuizerSettingsPreference = (CheckBoxPreference)findPreference("pref_key_miuizer_settingsicon");
-		if (miuizerSettingsPreference != null) miuizerSettingsPreference.setOnPreferenceChangeListener(toggleSettingsIcon);
-		CheckBoxPreference forceLocalePreference = (CheckBoxPreference)findPreference("pref_key_miuizer_forcelocale");
-		if (forceLocalePreference != null) forceLocalePreference.setOnPreferenceChangeListener(toggleForceLocale);
-
-		Preference miuizerCrashReportPreference = findPreference("pref_key_miuizer_sendreport");
-		if (miuizerCrashReportPreference != null) miuizerCrashReportPreference.setOnPreferenceClickListener(sendCrashReport);
-		Preference feedbackPreference = findPreference("pref_key_miuizer_feedback");
-		if (feedbackPreference != null) feedbackPreference.setOnPreferenceClickListener(openFeedbackEdit);
-
-		findPreference("pref_key_issuetracker").setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference pref) {
-				Helpers.openURL(act, "https://code.highspec.ru/Mikanoshi/CustoMIUIzer/issues");
-				return true;
-			}
-		});
-
-		findPreference("pref_key_payinapp").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference pref) {
-				Bundle args = new Bundle();
-				args.putInt("baseResId", R.layout.fragment_inapp);
-				openSubFragment(new InAppFragment(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.support_donate_title, R.xml.prefs_inapp);
-				return true;
-			}
-		});
-
-		findPreference("pref_key_paycrypto").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference pref) {
-				Helpers.openURL(act, "https://code.highspec.ru/cryptodonate");
-				return true;
-			}
-		});
-
-		findPreference("pref_key_payother").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			@SuppressWarnings("deprecation")
-			public boolean onPreferenceClick(Preference pref) {
-				if (getResources().getConfiguration().locale.getISO3Language().contains("ru"))
-					Helpers.openURL(act, "https://mikanoshi.name/donate/");
-				else
-					Helpers.openURL(act, "https://en.mikanoshi.name/donate/");
-				return true;
-			}
-		});
-
-		//Helpers.removePref(this, "pref_key_miuizer_force_material", "pref_key_miuizer");
 	}
 
 	public View onInflateView(LayoutInflater inflater, ViewGroup group, Bundle bundle) {
@@ -441,6 +346,48 @@ public class MainFragment extends PreferenceFragmentBase {
 		setViewBackground(resultView);
 
 		listView = getView().findViewById(android.R.id.list);
+		listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				Object item = parent.getAdapter().getItem(position);
+				if (!(item instanceof PreferenceEx)) return false;
+				PreferenceEx pref = (PreferenceEx)item;
+
+				String key = pref.getKey();
+				if (key.equals("pref_key_various")) {
+					openModCat(key);
+					return true;
+				}
+				boolean isCat = key.equals("pref_key_system") || key.equals("pref_key_launcher") || key.equals("pref_key_controls");
+				if (!isCat) return false;
+
+				ArrayList<ModData> subData = new ArrayList<ModData>();
+				ArrayList<CharSequence> subNames = new ArrayList<CharSequence>();
+				for (ModData sub: Helpers.allSubsList)
+				if (sub.cat == ModData.ModCat.valueOf(key)) {
+					subData.add(sub);
+					subNames.add(sub.title);
+				}
+
+				AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+				alert.setTitle(R.string.miuizer_jumptosub);
+				alert.setSingleChoiceItems(subNames.toArray(new CharSequence[0]), -1, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						ModData sub = subData.get(which);
+						openModCat(sub.cat.name(), sub.key);
+					}
+				});
+				alert.setNeutralButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {}
+				});
+				alert.show();
+
+				return true;
+			}
+		});
+
 		search = getView().findViewById(android.R.id.inputArea);
 		((TextView)search.findViewById(android.R.id.input)).setHint(android.R.string.search_go);
 		search.setOnClickListener(new View.OnClickListener() {
@@ -464,6 +411,172 @@ public class MainFragment extends PreferenceFragmentBase {
 		});
 
 		if (actionMode != null) actionMode.invalidate();
+		final Activity act = getActivity();
+
+		findPreference("pref_key_miuizer_launchericon").setOnPreferenceChangeListener(new CheckBoxPreference.OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				PackageManager pm = act.getPackageManager();
+				if ((Boolean)newValue)
+					pm.setComponentEnabledSetting(new ComponentName(act, GateWayLauncher.class), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+				else
+					pm.setComponentEnabledSetting(new ComponentName(act, GateWayLauncher.class), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+				return true;
+			}
+		});
+
+		findPreference("pref_key_miuizer_forcelocale").setOnPreferenceChangeListener(new CheckBoxPreference.OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				getActivity().recreate();
+				return true;
+			}
+		});
+
+		findPreference("pref_key_miuizer_sendreport").setOnPreferenceClickListener(new CheckBoxPreference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				ACRA.getErrorReporter().handleException(null);
+				return true;
+			}
+		});
+
+		findPreference("pref_key_miuizer_feedback").setOnPreferenceClickListener(new CheckBoxPreference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				openSubFragment(new SubFragment(), null, Helpers.SettingsType.Edit, Helpers.ActionBarType.Edit, R.string.miuizer_acramail_title, R.layout.prefs_freedback);
+				return true;
+			}
+		});
+
+		findPreference("pref_key_issuetracker").setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference pref) {
+				Helpers.openURL(act, "https://code.highspec.ru/Mikanoshi/CustoMIUIzer/issues");
+				return true;
+			}
+		});
+
+		findPreference("pref_key_payinapp").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference pref) {
+				Bundle args = new Bundle();
+				args.putInt("baseResId", R.layout.fragment_inapp);
+				openSubFragment(new InAppFragment(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.support_donate_title, R.xml.prefs_inapp);
+				return true;
+			}
+		});
+
+		findPreference("pref_key_paycrypto").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference pref) {
+				Helpers.openURL(act, "https://code.highspec.ru/cryptodonate");
+				return true;
+			}
+		});
+
+		findPreference("pref_key_payother").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			@SuppressWarnings("deprecation")
+			public boolean onPreferenceClick(Preference pref) {
+				if (getResources().getConfiguration().locale.getISO3Language().contains("ru"))
+					Helpers.openURL(act, "https://mikanoshi.name/donate/");
+				else
+					Helpers.openURL(act, "https://en.mikanoshi.name/donate/");
+				return true;
+			}
+		});
+
+		findPreference("pref_key_miuizer_marknewmods").setOnPreferenceChangeListener(new CheckBoxPreference.OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				Helpers.updateNewModsMarking(getActivity(), Integer.parseInt((String)newValue));
+				return true;
+			}
+		});
+
+		//Helpers.removePref(this, "pref_key_miuizer_force_material", "pref_key_miuizer");
+
+		modsCat = null; markCat = null;
+		listView.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
+			@Override
+			public void onChildViewAdded(View parent, View child) {
+				if (child == null) return;
+				CharSequence title = ((TextView)child.findViewById(android.R.id.title)).getText();
+				if (title.equals(getResources().getString(R.string.system_mods))) modsCat = child;
+				if (title.equals(getResources().getString(R.string.miuizer_show_newmods_title))) markCat = child;
+				if (modsCat != null && markCat != null) {
+					if (areGuidesCleared) showGuides();
+					listView.setOnHierarchyChangeListener(null);
+				}
+			}
+
+			@Override
+			public void onChildViewRemoved(View parent, View child) {}
+		});
+	}
+
+	void showGuides() {
+		if (getView() == null) return;
+		Button more = getView().findViewById(getResources().getIdentifier("more", "id", "miui"));
+		View search = getView().findViewById(android.R.id.inputArea);
+		View overlay = getActivity().findViewById(R.id.guide_overlay);
+		if (more == null || search == null || overlay == null) return;
+
+		if (Helpers.prefs.getBoolean("miuizer_guides_shown", false)) return;
+		Helpers.prefs.edit().putBoolean("miuizer_guides_shown", true).apply();
+
+		overlay.setBackgroundColor(Helpers.isNightMode(getActivity()) ? Color.argb(150, 0, 0, 0) : Color.argb(150, 255, 255, 255));
+		overlay.setVisibility(View.VISIBLE);
+		overlay.bringToFront();
+
+		showGuide(search, GuidePopup.ARROW_TOP_MODE, R.string.guide_search).setOnDismissListener(new PopupWindow.OnDismissListener() {
+			@Override
+			public void onDismiss() {
+				showGuide(modsCat, GuidePopup.ARROW_TOP_MODE, R.string.guide_longpress).setOnDismissListener(new PopupWindow.OnDismissListener() {
+					@Override
+					public void onDismiss() {
+						showGuide(markCat, GuidePopup.ARROW_BOTTOM_MODE, R.string.guide_marknew).setOnDismissListener(new PopupWindow.OnDismissListener() {
+							@Override
+							public void onDismiss() {
+								showImmersionMenu();
+								showGuide(more, GuidePopup.ARROW_TOP_MODE, R.string.guide_softreboot).setOnDismissListener(new PopupWindow.OnDismissListener() {
+									@Override
+									public void onDismiss() {
+										dismissImmersionMenu(true);
+										overlay.setVisibility(View.GONE);
+									}
+								});
+							}
+						});
+					}
+				});
+			}
+		});
+
+//		GuidePopupView popupView = new GuidePopupView(getActivity());
+//		((ViewGroup)getView().findViewById(android.R.id.content)).addView(popupView);
+//		popupView.setArrowMode(GuidePopupView.ARROW_TOP_MODE);
+//		popupView.setAnchor(child);
+//		popupView.setOffset(300, 0);
+//		popupView.setGuidePopupWindow(guidePopup);
+//		popupView.animateToShow();
+	}
+
+	@SuppressWarnings({"UnusedReturnValue", "SameParameterValue"})
+	GuidePopup showGuide(View anchor, int arrowMode, int textResId) {
+		return showGuide(anchor, arrowMode, textResId, 0,  0);
+	}
+
+	@SuppressWarnings({"UnusedReturnValue", "SameParameterValue"})
+	GuidePopup showGuide(View anchor, int arrowMode, int textResId, int x, int y) {
+		GuidePopup guidePopup = new GuidePopup(getActivity());
+		guidePopup.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+		guidePopup.setArrowMode(arrowMode);
+		guidePopup.setGuideText(textResId);
+		guidePopup.setOutsideTouchable(true);
+		guidePopup.show(anchor, x, y);
+		return guidePopup;
 	}
 
 	void findMod(String filter) {

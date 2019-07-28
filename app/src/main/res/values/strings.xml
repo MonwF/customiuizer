@@ -43,6 +43,8 @@
 	<string name="system_detailednetspeed_low_summ">Do not show indicator if speed is low</string>
 	<string name="system_detailednetspeed_lowlevel_title">Low speed level</string>
 	<string name="system_detailednetspeed_lowlevel_summ">Speed values below this level will be considered low and will have a different indication icon</string>
+	<string name="system_detailednetspeed_zero_title">Reduce visibility when inactive</string>
+	<string name="system_detailednetspeed_zero_summ">Make indicator semitransparent when both speeds are zero</string>
 	<string name="system_fixmeter_title">Network speed spacing</string>
 	<string name="system_fixmeter_summ">Increase horizontal margins for network speed indicator</string>
 	<string name="system_compactnotif_title">Compact notifications</string>
@@ -89,6 +91,7 @@
 	<string name="system_visualizer_drawer_summ">Additionally draw visualizer in an expanded notification drawer</string>
 	<string name="system_visualizer_transp_title">Transparency</string>
 	<string name="system_visualizer_style_title">Style</string>
+	<string name="system_visualizer_glowlevel_title">Glow</string>
 	<string name="system_visualizer_color_title">Color</string>
 	<string name="system_visualizer_colorval_title">Select custom color</string>
 	<string name="system_ignorecalls_title">Ignore calls</string>
@@ -143,8 +146,22 @@
 	<string name="system_unblockthird_summ">Remove restriction of 3rd party launchers on Chinese ROMs</string>
 	<string name="system_cleanshare_title">Clean share menu</string>
 	<string name="system_cleanshare_summ">Remove selected apps from share menu</string>
-	<string name="system_cleanshare_test">Test share menu</string>
+	<string name="system_clean_test">Test menu</string>
+	<string name="system_cleanopenwith_title">Clean Open with menu</string>
+	<string name="system_cleanopenwith_summ">Remove selected apps from Open with menu</string>
+	<string name="system_cleanopenwith_testdata">Select test data type</string>
+	<string name="system_defaultusb_title">Default USB configuration</string>
+	<string name="system_defaultusb_summ">Apply selected configuration when another device is connected</string>
+	<string name="system_defaultusb_unsecure_title">Ignore lock</string>
+	<string name="system_defaultusb_unsecure_summ">Apply even if device is still locked</string>
+	<string name="system_defaultusb_noconfigs">No USB configurations found</string>
+	<string name="system_defaultusb_config_rndis">RNDIS (USB Tethering)</string>
+	<string name="system_defaultusb_config_midi" translatable="false">MIDI</string>
+	<string name="system_defaultusb_config_mtp" translatable="false">MTP (Media Transfer Protocol)</string>
+	<string name="system_defaultusb_config_ptp" translatable="false">PTP (Picture Transfer Protocol)</string>
 	<string name="system_rotateanim_title">Rotation animation</string>
+	<string name="system_allrotations_title">All rotations</string>
+	<string name="system_allrotations_summ">Allow all screen rotations including reverse portrait</string>
 	<string name="system_orientationlock_title">Orientation lock</string>
 	<string name="system_orientationlock_summ">Add Quick Settings tile that can lock orientation in portrait or landscape mode</string>
 	<string name="system_notifafterunlock_title">Keep notifications</string>
@@ -262,6 +279,12 @@
 	<string name="controls_fingerprintskip_summ">Enable this if you use fingerprint shutter option</string>
 	<string name="controls_fingerprintskip2_title">No actions during calls</string>
 	<string name="controls_fingerprintskip2_summ">Do not execute actions when call is active</string>
+	<string name="controls_fingerprintsuccess_title">Vibrate on success</string>
+	<string name="controls_fingerprintsuccess_summ">Haptic feedback on successful authentication</string>
+	<string name="controls_fingerprintsuccess_ignore_title">Ignore system settings</string>
+	<string name="controls_fingerprintsuccess_ignore_summ">Do not disable haptic feedback when vibration on tap is disabled</string>
+	<string name="controls_fingerprintfailure_title">No vibrate on failure</string>
+	<string name="controls_fingerprintfailure_summ">Remove haptic feedback on authentication failure</string>
 	<string name="controls_mods_volume">Volume keys</string>
 	<string name="controls_volumecursor_title">Control input cursor</string>
 	<string name="controls_volumecursor_summ">Move text input cursor using volume keys</string>
@@ -309,6 +332,7 @@
 	<string name="disable_app_settings">That\'s a bad idea! :)</string>
 	<string name="disable_app_fail">Failed to change app state</string>
 
+	<string name="appdetails_playstore">Open in Play Store</string>
 	<string name="appdetails_launch">Launch</string>
 	<string name="appdetails_nolaunch">App has no default launchable activity</string>
 	<string name="appdetails_apk_file">APK filename</string>
@@ -399,6 +423,17 @@
 	<string name="array_bars_dashed">Dashed bars</string>
 	<string name="array_bars_circles">Cirles</string>
 	<string name="array_line">Line</string>
+	<string name="array_never">Never</string>
+	<string name="array_1day">For 1 day after update</string>
+	<string name="array_3days">For 3 days after update</string>
+	<string name="array_week">For a week after update</string>
+	<string name="array_always">Always</string>
+	<string name="array_image">Image</string>
+	<string name="array_audio">Audio</string>
+	<string name="array_video">Video</string>
+	<string name="array_doc">Document</string>
+	<string name="array_archive">Archive</string>
+	<string name="array_any">Any</string>
 
 	<string name="toggle_wifi_on">Wi-Fi enabled</string>
 	<string name="toggle_wifi_off">Wi-Fi disabled</string>
@@ -425,6 +460,9 @@
 	<string name="qs_toggle_autorotate_landscape">Landscape</string>
 
 	<string name="miuizer">CustoMIUIzer settings</string>
+	<string name="miuizer_jumptosub">Jump to subcategory</string>
+	<string name="miuizer_show_newmods_title">Mark new mods</string>
+	<string name="miuizer_new_mod">New!</string>
 	<string name="miuizer_show_launchericon_title">Launcher icon</string>
 	<string name="miuizer_show_launchericon_summ">Show icon in launchers</string>
 	<string name="miuizer_show_settingsicon_title">Fast access icon</string>
@@ -507,6 +545,7 @@
 	<string name="backup_restore_info">Your settings have been restored via Google Cloud Backup. Please do a soft reboot after enabling the Xposed module.</string>
 	<string name="update_available">Update is available ⚠</string>
 	<string name="select_app">Select app</string>
+	<string name="select_apps">Select apps</string>
 	<string name="select_shortcut">Select shortcut</string>
 	<string name="search_input_description">Search</string>
 	<string name="wifi_networks">Wi-Fi networks</string>
@@ -536,6 +575,11 @@
 	<string name="no_browser">Browser app is required to open URLs</string>
 	<string name="okay">Okay</string>
 	<string name="cancel">Cancel</string>
+
+	<string name="guide_longpress">Long press category to quickly jump to subcategory</string>
+	<string name="guide_search">Search mods by name</string>
+	<string name="guide_softreboot">Don\'t forget to apply mods by using soft reboot.\nDynamic ⟲ mods require it only once.\nMore information is on About page.</string>
+	<string name="guide_marknew">New mods since previous update\ncan be marked for better visibility</string>
 
 	<string name="permission_save">Do you want to write backup or not?</string>
 	<string name="permission_restore">Do you want to restore backup or not?</string>

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:animateLayoutChanges="true"
-	android:fitsSystemWindows="false"
-	android:orientation="vertical">
+	android:fitsSystemWindows="false">
 
 	<FrameLayout
 		android:id="@+id/fragment_container"
@@ -12,4 +11,11 @@
 		android:layout_height="match_parent"
 		android:background="@android:color/black" />
 
-</LinearLayout>
+	<View
+		android:id="@+id/guide_overlay"
+		android:visibility="gone"
+		android:background="@android:color/transparent"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent" />
+
+</RelativeLayout>

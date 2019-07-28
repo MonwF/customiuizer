@@ -64,7 +64,7 @@ public class Launcher extends SubFragment {
 		findPreference("pref_key_launcher_renameapps_list").setOnPreferenceClickListener(openLaunchableList);
 
 		if (!checkPermissions()) {
-			Preference pref = findPreference("pref_key_launcher_privacyapps");
+			Preference pref = findPreference("pref_key_launcher_cat_privacyapps");
 			pref.setEnabled(false);
 			pref.setTitle(R.string.launcher_privacyapps_fail);
 			findPreference("pref_key_launcher_privacyapps_list").setEnabled(false);
@@ -95,7 +95,7 @@ public class Launcher extends SubFragment {
 		findPreference("pref_key_launcher_fixstatusbarmode").setEnabled(opt == 1);
 		findPreference("pref_key_launcher_unlockgrids").setEnabled(opt == 1);
 		findPreference("pref_key_launcher_foldershade").setEnabled(opt == 1);
-		findPreference("pref_key_launcher_privacyapps").setEnabled(opt == 1);
+		findPreference("pref_key_launcher_cat_privacyapps").setEnabled(opt == 1);
 		findPreference("pref_key_launcher_swipeup").setEnabled(opt == 1);
 		findPreference("pref_key_launcher_hideseekpoints").setEnabled(opt == 1);
 	}

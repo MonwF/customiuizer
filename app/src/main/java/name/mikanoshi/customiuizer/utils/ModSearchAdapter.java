@@ -2,7 +2,6 @@ package name.mikanoshi.customiuizer.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -10,10 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -73,7 +70,7 @@ public class ModSearchAdapter extends BaseAdapter implements Filterable {
 		int start = ad.title.toLowerCase().indexOf(filterString);
 		if (start >= 0) {
 			Spannable spannable = new SpannableString(ad.title);
-			spannable.setSpan(new ForegroundColorSpan(Color.RED), start, start + filterString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			spannable.setSpan(new ForegroundColorSpan(Helpers.markColorVibrant), start, start + filterString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 			itemTitle.setText(spannable, TextView.BufferType.SPANNABLE);
 		} else {
 			itemTitle.setText(ad.title);

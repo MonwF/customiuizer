@@ -75,6 +75,8 @@ public class MainActivity extends Activity {
 			Log.e("prefs", "Failed to start FileObserver!");
 		}
 
+		Helpers.updateNewModsMarking(this);
+
 		if (!((MainApplication)getApplication()).mStarted)
 		throw new RuntimeException("Failed to use MIUI SDK");
 

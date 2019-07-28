@@ -384,6 +384,21 @@
 		<item>3</item>
 	</string-array>
 
+	<string-array name="marknewmods">
+		<item>@string/array_never</item>
+		<item>@string/array_1day</item>
+		<item>@string/array_3days</item>
+		<item>@string/array_week</item>
+		<item>@string/array_always</item>
+	</string-array>
+	<string-array name="marknewmods_val">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+		<item>4</item>
+	</string-array>
+
 	<string-array name="visualizercolor">
 		<item>@string/array_match</item>
 		<item>@string/array_static</item>
@@ -412,10 +427,37 @@
 		<item>5</item>
 	</string-array>
 
+	<string-array name="usbconfigs">
+		<item>@string/array_default</item>
+		<item>@string/system_defaultusb_config_mtp</item>
+		<item>@string/system_defaultusb_config_ptp</item>
+		<item>@string/system_defaultusb_config_rndis</item>
+		<item>@string/system_defaultusb_config_midi</item>
+	</string-array>
+	<string-array name="usbconfigs_val">
+		<item>none</item>
+		<item>mtp</item>
+		<item>ptp</item>
+		<item>rndis</item>
+		<item>midi</item>
+	</string-array>
+
+	<string-array name="openwithtest">
+		<item>@string/array_image</item>
+		<item>@string/array_audio</item>
+		<item>@string/array_video</item>
+		<item>@string/array_doc</item>
+		<item>@string/array_archive</item>
+		<item>@string/array_any</item>
+	</string-array>
+
 	<string-array name="placeholder_array">
 		<item>@string/dummy</item>
 	</string-array>
 	<integer-array name="placeholder_array_val">
 		<item>1</item>
 	</integer-array>
+	<string-array name="placeholder_array_strval">
+		<item>1</item>
+	</string-array>
 </resources>

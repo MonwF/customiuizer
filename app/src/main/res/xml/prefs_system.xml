@@ -38,13 +38,56 @@
 		miuizer:countAsSummary="true" />
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
-		android:title="@string/system_cleanshare_test"
+		android:title="@string/system_clean_test"
 		android:key="pref_key_system_cleanshare_test"
 		android:dependency="pref_key_system_cleanshare"
 		miuizer:child="true" />
 
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_cleanopenwith"
+		android:title="@string/system_cleanopenwith_title"
+		android:summary="@string/system_cleanopenwith_summ"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/system_popupnotif_apps_title"
+		android:key="pref_key_system_cleanopenwith_apps"
+		android:dependency="pref_key_system_cleanopenwith"
+		miuizer:dynamic="true"
+		miuizer:child="true"
+		miuizer:countAsSummary="true" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/system_clean_test"
+		android:key="pref_key_system_cleanopenwith_test"
+		android:dependency="pref_key_system_cleanopenwith"
+		miuizer:child="true" />
+
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_system_defaultusb"
+		android:title="@string/system_defaultusb_title"
+		android:summary="@string/system_defaultusb_summ"
+		android:entries="@array/usbconfigs"
+		android:entryValues="@array/usbconfigs_val"
+		android:defaultValue="1" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_defaultusb_unsecure"
+		android:title="@string/system_defaultusb_unsecure_title"
+		android:summary="@string/system_defaultusb_unsecure_summ"
+		android:defaultValue="false"
+		android:dependency="pref_key_system_defaultusb"
+		miuizer:child="true" />
+
 	<PreferenceCategory
+		android:key="pref_key_system_cat_screen"
 		android:title="@string/system_mods_screen">
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_allrotations"
+			android:title="@string/system_allrotations_title"
+			android:summary="@string/system_allrotations_summ"
+			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_orientationlock"
@@ -119,6 +162,7 @@
 	</PreferenceCategory>
 
 	<PreferenceCategory
+		android:key="pref_key_system_cat_audio"
 		android:title="@string/system_mods_audio">
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
@@ -172,6 +216,7 @@
 	</PreferenceCategory>
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:key="pref_key_system_cat_vibration"
 		android:title="@string/system_mods_vibration"
 		miuizer:dynamic="true">
 
@@ -192,6 +237,7 @@
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:key="pref_key_system_cat_toasts"
 		android:title="@string/system_mods_toasts"
 		miuizer:dynamic="true">
 
@@ -220,6 +266,7 @@
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 	<PreferenceCategory
+		android:key="pref_key_system_cat_statusbar"
 		android:title="@string/system_mods_statusbar">
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
@@ -357,6 +404,7 @@
 	</PreferenceCategory>
 
 	<PreferenceCategory
+		android:key="pref_key_system_cat_qs"
 		android:title="@string/system_mods_qs">
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
@@ -406,9 +454,18 @@
 			android:defaultValue="1"
 			miuizer:dynamic="true" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_qshaptics_ignore"
+			android:title="@string/controls_fingerprintsuccess_ignore_title"
+			android:summary="@string/controls_fingerprintsuccess_ignore_summ"
+			android:defaultValue="false"
+			miuizer:dynamic="true"
+			miuizer:child="true" />
+
 	</PreferenceCategory>
 
 	<PreferenceCategory
+		android:key="pref_key_system_cat_recents"
 		android:title="@string/system_mods_recents">
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
@@ -457,6 +514,7 @@
 	</PreferenceCategory>
 
 	<PreferenceCategory
+		android:key="pref_key_system_cat_betterpopups"
 		android:title="@string/system_mods_betterpopups">
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
@@ -487,6 +545,7 @@
 	</PreferenceCategory>
 
 	<PreferenceCategory
+		android:key="pref_key_system_cat_applock"
 		android:title="@string/system_mods_applock">
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
@@ -514,6 +573,7 @@
 	</PreferenceCategory>
 
 	<PreferenceCategory
+		android:key="pref_key_system_cat_lockscreen"
 		android:title="@string/system_mods_lockscreen">
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
@@ -585,6 +645,7 @@
 	</PreferenceCategory>
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:key="pref_key_system_cat_blur"
 		android:title="@string/system_mods_blur"
 		miuizer:dynamic="true">
 

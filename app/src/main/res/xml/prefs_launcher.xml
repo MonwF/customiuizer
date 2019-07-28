@@ -44,6 +44,7 @@
 		android:defaultValue="false" />
 
 	<PreferenceCategory
+		android:key="pref_key_launcher_cat_folders"
 		android:title="@string/launcher_folders">
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
@@ -72,6 +73,7 @@
 	</PreferenceCategory>
 
 	<PreferenceCategory
+		android:key="pref_key_launcher_cat_titles"
 		android:title="@string/launcher_titles">
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
@@ -94,8 +96,8 @@
 	</PreferenceCategory>>
 
 	<PreferenceCategory
-		android:title="@string/launcher_privacyapps"
-		android:key="pref_key_launcher_privacyapps">
+		android:key="pref_key_launcher_cat_privacyapps"
+		android:title="@string/launcher_privacyapps">
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_launcher_privacyapps_list"
@@ -111,6 +113,7 @@
 	</PreferenceCategory>
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:key="pref_key_launcher_cat_gestures"
 		android:title="@string/launcher_gestures"
 		miuizer:dynamic="true">
 

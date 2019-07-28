@@ -70,6 +70,7 @@
 	<string name="qs_toggle_autorotate_portrait">Портрет</string>
 	<string name="qs_toggle_autorotate_landscape">Ландшафт</string>
 
+	<string name="appdetails_playstore">Открыть в Play Маркет</string>
 	<string name="appdetails_launch">Запустить</string>
 	<string name="appdetails_apk_file">Имя APK файла</string>
 	<string name="appdetails_data_path">Путь до данных</string>
@@ -144,6 +145,17 @@
 	<string name="array_bars_dashed">Пунктирные полоски</string>
 	<string name="array_bars_circles">Круги</string>
 	<string name="array_line">Линия</string>
+	<string name="array_never">Никогда</string>
+	<string name="array_1day">1 день после обновления</string>
+	<string name="array_3days">3 дня после обновления</string>
+	<string name="array_week">Неделю после обновления</string>
+	<string name="array_always">Всегда</string>
+	<string name="array_image">Изображение</string>
+	<string name="array_audio">Аудио</string>
+	<string name="array_video">Видео</string>
+	<string name="array_doc">Документ</string>
+	<string name="array_archive">Архив</string>
+	<string name="array_any">Любой</string>
 
 	<string name="support_bug_title">Сообщить об ошибке</string>
 	<string name="support_bug_summ">Отправить сообщение об ошибке или предложить новую фичу</string>
@@ -200,6 +212,12 @@
 	<string name="controls_fingerprintskip_summ">Включите данную опцию для правильной работы съёмки отпечатком пальца</string>
 	<string name="controls_fingerprintskip2_title">Отключить действия во время звонка</string>
 	<string name="controls_fingerprintskip2_summ">Не выполнять дейстия при активном звонке</string>
+	<string name="controls_fingerprintsuccess_title">Вибрировать при успехе</string>
+	<string name="controls_fingerprintsuccess_summ">Виброотклик при успешной аутентификации</string>
+	<string name="controls_fingerprintsuccess_ignore_title">Игнорировать настройки системы</string>
+	<string name="controls_fingerprintsuccess_ignore_summ">Не отключать виброотклик, даже если вибрация при касании отключена</string>
+	<string name="controls_fingerprintfailure_title">Не вибрировать при неудаче</string>
+	<string name="controls_fingerprintfailure_summ">Убрать виброотклик при неудачной аутентификации</string>
 	<string name="controls_mods_volume">Кнопки громкости</string>
 	<string name="controls_volumecursor_title">Управлять курсором ввода</string>
 	<string name="controls_volumecursor_summ">Перемещать курсор ввода текста при нажатии кнопок громкости</string>
@@ -279,6 +297,9 @@
 	<string name="miuizer_acrasend_summ">Собрать данные об устройтве и переменных окружения, logcat и Xposed лог, и отправить их разработчику.\nДля отправки требуется интернет</string>
 	<string name="miuizer_acrasend_title">Отправить подробный отчёт</string>
 	<string name="miuizer_theme_title">Тема</string>
+	<string name="miuizer_jumptosub">Перейти к подкатегории</string>
+	<string name="miuizer_show_newmods_title">Отмечать новые моды</string>
+	<string name="miuizer_new_mod">Новый!</string>
 	<string name="miuizer_show_launchericon_title">Иконка в ланчере</string>
 	<string name="miuizer_show_launchericon_summ">Показывать иконку в ланчерах</string>
 	<string name="miuizer_show_settingsicon_title">Иконка быстрого доступа</string>
@@ -306,6 +327,7 @@
 	<string name="credentials_unlock">Разблокировать учётные данные</string>
 	<string name="credentials_success">Учётные данные разблокированы!</string>
 	<string name="select_app">Выбрать приложение</string>
+	<string name="select_apps">Выбрать приложения</string>
 	<string name="select_shortcut">Выбрать ярлык</string>
 	<string name="launcher_gestures_shortcut">Ярлык для запуска</string>
 	<string name="launcher_infinitescroll_title">Бесконечная прокрутка</string>
@@ -356,7 +378,16 @@
 	<string name="system_unblockthird_summ">Отключает ограничение на использование сторонних ланчеров на китайских прошивках</string>
 	<string name="system_cleanshare_title">Очистка меню \"Поделиться\"</string>
 	<string name="system_cleanshare_summ">Скрыть выбранные приложения в списке отправки данных</string>
-	<string name="system_cleanshare_test">Проверка меню</string>
+	<string name="system_clean_test">Проверка меню</string>
+	<string name="system_cleanopenwith_title">Очистка меню \"Открыть с помощью\"</string>
+	<string name="system_cleanopenwith_summ">Скрыть выбранные приложения в списке открытия данных сторонними приложениями</string>
+	<string name="system_cleanopenwith_testdata">Выберите тип данных для теста</string>
+	<string name="system_defaultusb_title">Конфигурация USB по умолчанию</string>
+	<string name="system_defaultusb_summ">Применять выбранную конфигурацию при подключении к другому устройству</string>
+	<string name="system_defaultusb_unsecure_title">Игнорировать блокировку</string>
+	<string name="system_defaultusb_unsecure_summ">Применять даже если устойство всё ещё заблокировано</string>
+	<string name="system_defaultusb_noconfigs">Не найдены конфигурации USB</string>
+	<string name="system_defaultusb_config_rndis">RNDIS (USB модем)</string>
 	<string name="system_hidefromrecents_title">Скрыть в недавних</string>
 	<string name="system_hidefromrecents_summ">Убирает выбранные приложения из списка недавно использованных</string>
 	<string name="system_recommended_first_title">Первое действие</string>
@@ -428,6 +459,8 @@
 	<string name="system_detailednetspeed_low_summ">Полностью скрывает индикатор при низкой скорости</string>
 	<string name="system_detailednetspeed_lowlevel_title">Низкий уровень скорости</string>
 	<string name="system_detailednetspeed_lowlevel_summ">Задаёт уровень, ниже которого скорость будет считаться низкой и будет иметь другую иконку</string>
+	<string name="system_detailednetspeed_zero_title">Понизить видимость при неактивности</string>
+	<string name="system_detailednetspeed_zero_summ">Делает индикатор полупрозрачным, если обе скорости равны нулю</string>
 	<string name="system_fixmeter_title">Отступ скорости соединения</string>
 	<string name="system_fixmeter_summ">Увеличивает горизонтальные отступы для индикатора скорости соединения</string>
 	<string name="system_compactnotif_title">Компактные уведомления</string>
@@ -474,6 +507,7 @@
 	<string name="system_visualizer_drawer_summ">Рисует визуализацию также и в раскрытой панели уведомлений</string>
 	<string name="system_visualizer_transp_title">Уровень прозрачности</string>
 	<string name="system_visualizer_style_title">Стиль</string>
+	<string name="system_visualizer_glowlevel_title">Свечение</string>
 	<string name="system_visualizer_color_title">Цвет</string>
 	<string name="system_visualizer_colorval_title">Задать цвет</string>
 	<string name="system_ignorecalls_title">Игнорировать звонки</string>
@@ -529,6 +563,8 @@
 	<string name="system_noscreenlock_bt_title">Доверенные Bluetooth устройства</string>
 	<string name="system_noscreenlock_bt_summ">Блокировка будет временно отключена, пока подключены данные устройства</string>
 	<string name="system_rotateanim_title">Анимация при повороте</string>
+	<string name="system_allrotations_title">Все ориентации</string>
+	<string name="system_allrotations_summ">Разрешает все ориентации экрана, включая обратную портретную</string>
 	<string name="system_orientationlock_title">Закрепление ориентации</string>
 	<string name="system_orientationlock_summ">Добавляет переключатель в Быстрые Настройки для закрепления портретной или ландшафтной ориентации</string>
 	<string name="array_screen_anim_none">Без анимации</string>
@@ -537,6 +573,12 @@
 	<string name="system_notifafterunlock_summ">Оставляет уведомления на экране блокировки даже после того как он был закрыт и потом открыт вновь</string>
 	<string name="system_dttosleep_title">Сон по двойному нажатию</string>
 	<string name="system_dttosleep_summ">Выключает экран при двойном нажатии по пустому месту на экране блокировки</string>
+
+	<string name="guide_longpress">Долгое нажатие на категорию позволит\nбыстро перейти к подкатегории</string>
+	<string name="guide_search">Поиск модов по названию</string>
+	<string name="guide_softreboot">Не забудьте перезагрузиться для применения модов.\nДинамические ⟲ моды требуют только одну перезагрузку.\nБолее подробно об этом на странице О приложении.</string>
+	<string name="guide_marknew">Новые моды с предыдушего обновления\nмогут быть выделены для лучшей видимости</string>
+
 	<string name="permission_save">Вы хотите сохранить бэкап или нет?</string>
 	<string name="permission_restore">Вы хотите восстановить бэкап или нет?</string>
 	<string name="permission_scan">Вы хотите получить список сетей/устройств или нет?</string>
