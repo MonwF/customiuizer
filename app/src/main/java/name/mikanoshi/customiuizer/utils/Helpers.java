@@ -4,17 +4,21 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.TimeZone;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -39,9 +43,12 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.PowerManager.WakeLock;
 import android.preference.PreferenceCategory;
+import android.provider.Settings;
 import android.text.InputType;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
@@ -98,14 +105,10 @@ public class Helpers {
 	public static WakeLock mWakeLock;
 	public static boolean showNewMods = true;
 	public static final String[] newMods = new String[] {
-		"system_detailednetspeed_zero",
-		"system_visualizer_glowlevel",
-		"system_allrotations",
-		"system_cleanopenwith",
-		"system_defaultusb",
-		"system_qshaptics_ignore",
-		"controls_fingerprintfailure",
-		"controls_fingerprintsuccess"
+		"system_statusbaricons_cat",
+		"system_batteryindicator_cat",
+		"system_magnifier",
+		"system_forceclose"
 	};
 
 	public enum SettingsType {
@@ -113,7 +116,7 @@ public class Helpers {
 	}
 
 	public enum AppAdapterType {
-		Default, Standalone, Mutli, CustomTitles
+		Default, Standalone, Mutli, CustomTitles, Activities
 	}
 
 	public enum ActionBarType {
@@ -136,6 +139,10 @@ public class Helpers {
 
 	public static boolean isNougat() {
 		return Build.VERSION.SDK_INT < Build.VERSION_CODES.O;
+	}
+
+	public static boolean isPiePlus() {
+		return Build.VERSION.SDK_INT >=  Build.VERSION_CODES.P;
 	}
 
 	public static boolean isLauncherIconVisible(Context context) {
@@ -312,6 +319,45 @@ public class Helpers {
 				} catch (Throwable e) {}
 			} catch (Throwable e) {}
 		}
+	}
+
+	public static long getNextMIUIAlarmTime(Context mContext) {
+		String nextAlarm = Settings.System.getString(mContext.getContentResolver(), "next_alarm_clock_formatted");
+		long nextTime = 0;
+		if (!TextUtils.isEmpty(nextAlarm)) try {
+			TimeZone timeZone = TimeZone.getTimeZone("UTC");
+			SimpleDateFormat dateFormat = new SimpleDateFormat(DateFormat.getBestDateTimePattern(Locale.getDefault(), DateFormat.is24HourFormat(mContext) ? "EHm" : "Ehma"), Locale.getDefault());
+			dateFormat.setTimeZone(timeZone);
+			long nextTimePart = dateFormat.parse(nextAlarm).getTime();
+
+			Calendar cal = Calendar.getInstance(timeZone);
+			cal.setFirstDayOfWeek(Calendar.MONDAY);
+			cal.setTimeInMillis(nextTimePart);
+			int targetDay = cal.get(Calendar.DAY_OF_WEEK);
+			int targetHour = cal.get(Calendar.HOUR_OF_DAY);
+			int targetMinute = cal.get(Calendar.MINUTE);
+
+			cal = Calendar.getInstance();
+			int diff = targetDay - cal.get(Calendar.DAY_OF_WEEK);
+			if (diff < 0) diff += 7;
+
+			cal.add(Calendar.DAY_OF_MONTH, diff);
+			cal.set(Calendar.HOUR_OF_DAY, targetHour);
+			cal.set(Calendar.MINUTE, targetMinute);
+			cal.clear(Calendar.SECOND);
+			cal.clear(Calendar.MILLISECOND);
+
+			nextTime = cal.getTimeInMillis();
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+		return nextTime;
+	}
+
+	public static long getNextStockAlarmTime(Context mContext) {
+		AlarmManager alarmMgr = (AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE);
+		AlarmManager.AlarmClockInfo aci = alarmMgr.getNextAlarmClock();
+		return aci == null ? 0 : aci.getTriggerTime();
 	}
 
 	@SuppressWarnings("ConstantConditions")
@@ -501,6 +547,10 @@ public class Helpers {
 	}
 
 	public static CharSequence getAppName(Context mContext, String pkgActName) {
+		return getAppName(mContext, pkgActName, false);
+	}
+
+	public static CharSequence getAppName(Context mContext, String pkgActName, boolean forcePkg) {
 		PackageManager pm = mContext.getPackageManager();
 		String not_selected = mContext.getResources().getString(R.string.notselected);
 		String[] pkgActArray = pkgActName.split("\\|");
@@ -508,7 +558,7 @@ public class Helpers {
 
 		if (!pkgActName.equals(not_selected))
 		if (pkgActArray.length >= 1 && pkgActArray[0] != null) try {
-			if (pkgActArray.length >= 2 && pkgActArray[1] != null && !pkgActArray[1].trim().equals("")) {
+			if (!forcePkg && pkgActArray.length >= 2 && pkgActArray[1] != null && !pkgActArray[1].trim().equals("")) {
 				return pm.getActivityInfo(new ComponentName(pkgActArray[0], pkgActArray[1]), 0).loadLabel(pm).toString();
 			} else if (!pkgActArray[0].trim().equals("")) {
 				ai = pm.getApplicationInfo(pkgActArray[0], 0);

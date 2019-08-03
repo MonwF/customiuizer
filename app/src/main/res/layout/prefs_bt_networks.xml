@@ -32,7 +32,7 @@
 		android:layout_below="@id/bt_category1"
 		android:nestedScrollingEnabled="false"
 		android:overScrollMode="never"
-		android:scrollbars="none" />
+		android:scrollbars="vertical" />
 
 	<TextView
 		android:id="@+id/bt_category2"
@@ -50,7 +50,7 @@
 		android:layout_below="@id/bt_category2"
 		android:nestedScrollingEnabled="false"
 		android:overScrollMode="never"
-		android:scrollbars="none" />
+		android:scrollbars="vertical" />
 
 	<LinearLayout
 		android:layout_width="match_parent"

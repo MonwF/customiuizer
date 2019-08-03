@@ -25,6 +25,7 @@ import name.mikanoshi.customiuizer.utils.PrefMap;
 public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage, IXposedHookInitPackageResources {
 
 	public static String MODULE_PATH = null;
+	private static boolean hideIconsActive = false;
 	public static PrefMap<String, Object> mPrefs = new PrefMap<String, Object>();
 
 	public void initZygote(StartupParam startParam) {
@@ -43,6 +44,15 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			return;
 		} else mPrefs.putAll(pref.getAll());
 
+		hideIconsActive =
+			mPrefs.getBoolean("system_statusbaricons_alarm") ||
+			mPrefs.getBoolean("system_statusbaricons_sound") ||
+			mPrefs.getBoolean("system_statusbaricons_dnd") ||
+			mPrefs.getBoolean("system_statusbaricons_headset") ||
+			mPrefs.getBoolean("system_statusbaricons_mute") ||
+			mPrefs.getBoolean("system_statusbaricons_speaker") ||
+			mPrefs.getBoolean("system_statusbaricons_record");
+
 		if (Integer.parseInt(mPrefs.getString("system_iconlabletoasts", "1")) > 1) System.IconLabelToastsHook();
 		if (Integer.parseInt(mPrefs.getString("system_blocktoasts", "1")) > 1) System.SelectiveToastsHook();
 		if (mPrefs.getBoolean("controls_volumecursor")) Controls.VolumeCursorHook();
@@ -60,6 +70,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getBoolean("system_statusbarcolor")) System.StatusBarBackgroundHook();
 		if (mPrefs.getBoolean("various_alarmcompat")) Various.AlarmCompatHook();
 		if (mPrefs.getBoolean("system_allrotations")) System.AllRotationsRes();
+		if (mPrefs.getBoolean("system_magnifier") && Helpers.isPiePlus()) System.TextMagnifierHook();
+		if (hideIconsActive) System.HideIconsSystemHook();
 
 		Controls.VolumeMediaPlayerHook();
 		GlobalActions.setupUnhandledCatcher();
@@ -142,6 +154,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (Integer.parseInt(mPrefs.getString("controls_fingerprintsuccess", "1")) > 1) Controls.FingerprintHapticSuccessHook(lpparam);
 			if (!mPrefs.getString("system_defaultusb", "none").equals("none")) System.USBConfigHook(lpparam);
 			if (mPrefs.getBoolean("system_allrotations")) System.AllRotationsHook(lpparam);
+			if (mPrefs.getBoolean("system_forceclose")) System.ForceCloseHook(lpparam);
 
 			//Controls.AIButtonHook(lpparam);
 		}
@@ -193,6 +206,14 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("controls_nonavbar")) System.HideNavBarHook(lpparam);
 			if (mPrefs.getBoolean("system_visualizer")) System.AudioVisualizerHook(lpparam);
 			if (mPrefs.getBoolean("system_separatevolume")) System.NotificationVolumeDialogHook(lpparam);
+			if (mPrefs.getBoolean("system_statusbaricons_battery1")) System.HideIconsBattery1Hook(lpparam);
+			if (mPrefs.getBoolean("system_statusbaricons_battery2")) System.HideIconsBattery2Hook(lpparam);
+			if (mPrefs.getBoolean("system_statusbaricons_battery3")) System.HideIconsBattery3Hook(lpparam);
+			if (!mPrefs.getBoolean("system_statusbaricons_alarm") && mPrefs.getInt("system_statusbaricons_alarmn", 0) > 0) System.HideIconsSelectiveAlarmHook(lpparam);
+			if (mPrefs.getBoolean("system_statusbaricons_signal")) System.HideIconsSignalHook(lpparam);
+			if (Integer.parseInt(mPrefs.getString("system_statusbaricons_bluetooth", "1")) > 1) System.HideIconsBluetoothHook(lpparam);
+			if (mPrefs.getBoolean("system_batteryindicator")) System.BatteryIndicatorHook(lpparam);
+			if (hideIconsActive) System.HideIconsHook(lpparam);
 		}
 
 //		if (pkg.equals("com.android.incallui")) {

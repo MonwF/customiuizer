@@ -14,6 +14,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import android.widget.CheckBox;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import name.mikanoshi.customiuizer.R;
@@ -99,6 +101,8 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 					else if (app2checked)
 						return 1;
 					return 0;
+				} else if (aType == Helpers.AppAdapterType.Activities) {
+					return app1.actName.toLowerCase().compareTo(app2.actName.toLowerCase());
 				} else return 0;
 			}
 		});
@@ -130,21 +134,29 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 		ImageView itemIcon = row.findViewById(R.id.am_icon);
 
 		AppData ad = getItem(position);
-		itemIcon.setTag(position);
 		itemTitle.setText(ad.label);
 		itemIsDis.setVisibility(ad.enabled ? View.INVISIBLE : View.VISIBLE);
-		Bitmap icon = Helpers.memoryCache.get(ad.pkgName + "|" + ad.actName);
-		//int iconSize = getResources().getDimensionPixelSize(android.R.dimen.app_icon_size);
 
-		if (icon == null) {
-			Drawable[] dualIcon = new Drawable[1];
-			dualIcon[0] = ctx.getResources().getDrawable(R.drawable.card_icon_default, ctx.getTheme());
-			TransitionDrawable crossfader = new TransitionDrawable(dualIcon);
-			crossfader.setCrossFadeEnabled(true);
-			itemIcon.setImageDrawable(crossfader);
-			(new BitmapCachedLoader(itemIcon, ad, ctx)).executeOnExecutor(pool);
+		if (aType == Helpers.AppAdapterType.Activities) {
+			itemIcon.setVisibility(View.GONE);
+			View container = row.findViewById(R.id.am_container);
+			LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)container.getLayoutParams();
+			lp.leftMargin = 0;
+			container.setLayoutParams(lp);
 		} else {
-			itemIcon.setImageBitmap(icon);
+			itemIcon.setTag(position);
+			Bitmap icon = Helpers.memoryCache.get(ad.pkgName + "|" + ad.actName);
+			//int iconSize = getResources().getDimensionPixelSize(android.R.dimen.app_icon_size);
+			if (icon == null) {
+				Drawable[] dualIcon = new Drawable[1];
+				dualIcon[0] = ctx.getResources().getDrawable(R.drawable.card_icon_default, ctx.getTheme());
+				TransitionDrawable crossfader = new TransitionDrawable(dualIcon);
+				crossfader.setCrossFadeEnabled(true);
+				itemIcon.setImageDrawable(crossfader);
+				(new BitmapCachedLoader(itemIcon, ad, ctx)).executeOnExecutor(pool);
+			} else {
+				itemIcon.setImageBitmap(icon);
+			}
 		}
 
 		if (aType == Helpers.AppAdapterType.Mutli) {
@@ -157,6 +169,12 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 		} else if (aType == Helpers.AppAdapterType.Standalone) {
 			itemChecked.setVisibility(View.VISIBLE);
 			itemChecked.setChecked((selectedApp.equals("") && ad.pkgName.equals("") && ad.actName.equals("")) || (ad.pkgName + "|" + ad.actName).equals(selectedApp));
+		} else if (aType == Helpers.AppAdapterType.Activities) {
+			itemSummary.setText(ad.actName.replace(".", ".\u200B"));
+			itemSummary.setVisibility(TextUtils.isEmpty(itemSummary.getText()) ? View.GONE : View.VISIBLE);
+			itemSummary.setSingleLine(false);
+			itemSummary.setMaxLines(Integer.MAX_VALUE);
+			itemSummary.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
 		} else {
 			itemSummary.setVisibility(View.GONE);
 		}
@@ -177,7 +195,8 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 
 			for (int i = 0; i < count; i++) {
 				filterableData = originalAppList.get(i);
-				if ((aType == Helpers.AppAdapterType.Standalone && filterableData.pkgName.equals("") && filterableData.actName.equals("")) || filterableData.label.toLowerCase().contains(filterString)) nlist.add(filterableData);
+				if (aType == Helpers.AppAdapterType.Activities && filterableData.actName.toLowerCase().contains(filterString)) nlist.add(filterableData);
+				else if ((aType == Helpers.AppAdapterType.Standalone && filterableData.pkgName.equals("") && filterableData.actName.equals("")) || filterableData.label.toLowerCase().contains(filterString)) nlist.add(filterableData);
 			}
 
 			results.values = nlist;

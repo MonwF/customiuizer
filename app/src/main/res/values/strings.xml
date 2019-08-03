@@ -16,6 +16,38 @@
 	<string name="system_mods_vibration">Vibration</string>
 	<string name="system_mods_toasts">Toasts</string>
 	<string name="system_mods_screenanim">Screen animations</string>
+	<string name="system_statusbaricons_title">Hide icons</string>
+	<string name="system_statusbaricons_summ">Manage status bar icons visibility</string>
+	<string name="system_statusbaricons_battery1_title">Battery image</string>
+	<string name="system_statusbaricons_battery2_title">Battery charge percentage</string>
+	<string name="system_statusbaricons_battery3_title">Charging indicator</string>
+	<string name="system_statusbaricons_battery_summ">Can be overlayed on top of battery image on some ROMs</string>
+	<string name="system_statusbaricons_alarm_title">Alarm</string>
+	<string name="system_statusbaricons_alarm_summ">Hide completely</string>
+	<string name="system_statusbaricons_alarmn_title">Selective alarm icon visibility</string>
+	<string name="system_statusbaricons_alarmn_summ">Show alarm icon only during the defined number of hours before next alarm</string>
+	<string name="system_statusbaricons_signal_title">Mobile network signal</string>
+	<string name="system_statusbaricons_sound_title">Sound profiles</string>
+	<string name="system_statusbaricons_dnd_title">Do not disturb mode</string>
+	<string name="system_statusbaricons_headset_title">Headset</string>
+	<string name="system_statusbaricons_sync_title">Running sync</string>
+	<string name="system_statusbaricons_mute_title">Call: muted mic</string>
+	<string name="system_statusbaricons_speaker_title">Call: speakerphone</string>
+	<string name="system_statusbaricons_record_title">Call: recording</string>
+	<string name="system_batteryindicator_title">Battery bar indicator</string>
+	<string name="system_batteryindicator_summ">Display battery charge level as a colored bar</string>
+	<string name="system_batteryindicator_rounded_title">Rounded ends</string>
+	<string name="system_batteryindicator_centered_title">Centered</string>
+	<string name="system_batteryindicator_centered_summ">Makes bar centered on screen instead of left aligned</string>
+	<string name="system_batteryindicator_height_title">Bar height</string>
+	<string name="system_batteryindicator_padding_title">Horizontal padding</string>
+	<string name="system_batteryindicator_colorval1_title">Full charge color</string>
+	<string name="system_batteryindicator_colorval2_title">Low charge color</string>
+	<string name="system_batteryindicator_colorval3_title">Battery saver color</string>
+	<string name="system_batteryindicator_colorval4_title">Charging color</string>
+	<string name="system_batteryindicator_lowlevel_title">Low charge level</string>
+	<string name="system_batteryindicator_test_title">Test</string>
+	<string name="system_batteryindicator_test_summ">Animate bar from 100% to 0% in discharging state</string>
 	<string name="system_statusbarheight_title">Status bar height</string>
 	<string name="system_statusbarcolor_title">Status bar background color</string>
 	<string name="system_statusbarcolor_summ">Make status bar and app\'s action bar background colors the same where possible</string>
@@ -142,6 +174,8 @@
 	<string name="system_epm_summ">Add new restart options to power menu (Fastboot mode, Recovery mode, Soft reboot, Restart System UI, Restart Launcher)</string>
 	<string name="system_downgrade_title">Allow downgrade</string>
 	<string name="system_downgrade_summ">Make installing older app version on top of a newer one possible</string>
+	<string name="system_magnifier_title">Text magnifier</string>
+	<string name="system_magnifier_summ">Display magnified text when moving an input cursor or making a selection</string>
 	<string name="system_unblockthird_title">Unblock launchers</string>
 	<string name="system_unblockthird_summ">Remove restriction of 3rd party launchers on Chinese ROMs</string>
 	<string name="system_cleanshare_title">Clean share menu</string>
@@ -159,6 +193,8 @@
 	<string name="system_defaultusb_config_midi" translatable="false">MIDI</string>
 	<string name="system_defaultusb_config_mtp" translatable="false">MTP (Media Transfer Protocol)</string>
 	<string name="system_defaultusb_config_ptp" translatable="false">PTP (Picture Transfer Protocol)</string>
+	<string name="system_forceclose_title">Prevent app force close</string>
+	<string name="system_forceclose_summ">Do not allow stock MIUI action to close selected apps</string>
 	<string name="system_rotateanim_title">Rotation animation</string>
 	<string name="system_allrotations_title">All rotations</string>
 	<string name="system_allrotations_summ">Allow all screen rotations including reverse portrait</string>
@@ -182,7 +218,7 @@
 	<string name="system_recommended_third_summ">Action for the third suggestion shortcut</string>
 	<string name="system_recommended_fourth_title">Fourth shortcut action</string>
 	<string name="system_recommended_fourth_summ">Action for the fourth suggestion shortcut</string>
-	<string name="system_mods_betterpopups">Better popup notifications</string>
+	<string name="system_mods_betterpopups">Popup notifications</string>
 	<string name="system_betterpopups_delay_title">Auto hide delay</string>
 	<string name="system_betterpopups_nohide_title">No auto hide</string>
 	<string name="system_betterpopups_nohide_summ">Do not dismiss popups automatically</string>
@@ -213,6 +249,7 @@
 	<string name="launcher_gestures_setting">Setting to toggle</string>
 	<string name="launcher_gestures_launch">App to launch</string>
 	<string name="launcher_gestures_shortcut">Shortcut to launch</string>
+	<string name="launcher_gestures_activity">Activity to launch</string>
 	<string name="launcher_title">Launcher</string>
 	<string name="launcher_summ">Display mods for selected launcher</string>
 	<string name="launcher_infinitescroll_title">Infinite scrolling</string>
@@ -362,6 +399,7 @@
 	<string name="array_global_actions_volume_down">Lower volume</string>
 	<string name="array_global_actions_launch">Launch app</string>
 	<string name="array_global_actions_shortcut">Launch shortcut</string>
+	<string name="array_global_actions_activity">Launch activity</string>
 	<string name="array_global_actions_toggle">Toggle feature</string>
 	<string name="array_global_actions_back">Switch to previous app</string>
 	<string name="array_global_actions_powermenu">Open power menu</string>
@@ -418,6 +456,9 @@
 	<string name="array_static">Custom color</string>
 	<string name="array_rainbowh">Rainbow colors (horizontal)</string>
 	<string name="array_rainbowv">Rainbow colors (vertical)</string>
+	<string name="array_rainbow">Rainbow</string>
+	<string name="array_discrete">Discrete</string>
+	<string name="array_gradual">Gradual</string>
 	<string name="array_bars_solid">Solid bars</string>
 	<string name="array_bars_solid_rounded">Solid rounded bars</string>
 	<string name="array_bars_dashed">Dashed bars</string>
@@ -523,6 +564,7 @@
 	<string name="array_color_dark">Dark</string>
 	<string name="array_color_light">Light</string>
 
+	<string name="sdk_failed">Cannot initialize MIUI SDK.\nNot a Xiaomi device?</string>
 	<string name="notselected">Not selected</string>
 	<string name="warning">Warning!</string>
 	<string name="open_xposed">Open Xposed Installer</string>
@@ -546,6 +588,8 @@
 	<string name="update_available">Update is available ⚠</string>
 	<string name="select_app">Select app</string>
 	<string name="select_apps">Select apps</string>
+	<string name="select_activity">Select activity</string>
+	<string name="no_activities_found">No activities found</string>
 	<string name="select_shortcut">Select shortcut</string>
 	<string name="search_input_description">Search</string>
 	<string name="wifi_networks">Wi-Fi networks</string>
@@ -605,6 +649,10 @@
 	<string name="time_8h">8 hours</string>
 	<string name="time_10h">10 hours</string>
 	<string name="time_12h">12 hours</string>
+
+	<string name="white_color">White</string>
+	<string name="black_color">Black</string>
+	<string name="auto_color">Statusbar color</string>
 
 	<string name="dummy" translatable="false" />
 </resources>

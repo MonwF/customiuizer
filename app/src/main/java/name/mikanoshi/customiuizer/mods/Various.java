@@ -21,17 +21,11 @@ import android.os.Handler;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.provider.Settings;
-import android.text.TextUtils;
-import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
@@ -49,70 +43,74 @@ public class Various {
 			@Override
 			@SuppressWarnings("deprecation")
 			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
-				final PreferenceActivity act = (PreferenceActivity)param.thisObject;
-				final PackageInfo mPackageInfo = (PackageInfo)XposedHelpers.getObjectField(act, "mPackageInfo");
-				final Resources modRes = Helpers.getModuleRes(act);
-				Method[] addPref = XposedHelpers.findMethodsByExactParameters(act.getClass(), void.class, String.class, String.class, String.class);
-				if (addPref.length == 0) {
-					Helpers.log("AppInfoHook", "Unable to find class/method in SecurityCenter to hook");
-					return;
-				} else {
-					addPref[0].setAccessible(true);
+				try {
+					final PreferenceActivity act = (PreferenceActivity)param.thisObject;
+					final PackageInfo mPackageInfo = (PackageInfo)XposedHelpers.getObjectField(act, "mPackageInfo");
+					final Resources modRes = Helpers.getModuleRes(act);
+					Method[] addPref = XposedHelpers.findMethodsByExactParameters(act.getClass(), void.class, String.class, String.class, String.class);
+					if (addPref.length == 0) {
+						Helpers.log("AppInfoHook", "Unable to find class/method in SecurityCenter to hook");
+						return;
+					} else {
+						addPref[0].setAccessible(true);
+					}
+					addPref[0].invoke(act, "apk_filename", modRes.getString(R.string.appdetails_apk_file), mPackageInfo.applicationInfo.sourceDir);
+					addPref[0].invoke(act, "data_path", modRes.getString(R.string.appdetails_data_path), mPackageInfo.applicationInfo.dataDir);
+					addPref[0].invoke(act, "app_uid", modRes.getString(R.string.appdetails_app_uid), String.valueOf(mPackageInfo.applicationInfo.uid));
+					addPref[0].invoke(act, "target_sdk", modRes.getString(R.string.appdetails_sdk), String.valueOf(mPackageInfo.applicationInfo.targetSdkVersion));
+					addPref[0].invoke(act, "open_in_store", modRes.getString(R.string.appdetails_playstore), "");
+					addPref[0].invoke(act, "launch_app", modRes.getString(R.string.appdetails_launch), "");
+
+					act.findPreference("apk_filename").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+						@Override
+						public boolean onPreferenceClick(Preference preference) {
+							((ClipboardManager)act.getSystemService(Context.CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText(preference.getTitle(), mPackageInfo.applicationInfo.sourceDir));
+							Toast.makeText(act, act.getResources().getIdentifier("app_manager_copy_pkg_to_clip", "string", act.getPackageName()), Toast.LENGTH_SHORT).show();
+							return true;
+						}
+					});
+
+					act.findPreference("data_path").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+						@Override
+						public boolean onPreferenceClick(Preference preference) {
+							((ClipboardManager)act.getSystemService(Context.CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText(preference.getTitle(), mPackageInfo.applicationInfo.dataDir));
+							Toast.makeText(act, act.getResources().getIdentifier("app_manager_copy_pkg_to_clip", "string", act.getPackageName()), Toast.LENGTH_SHORT).show();
+							return true;
+						}
+					});
+
+					act.findPreference("open_in_store").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+						@Override
+						public boolean onPreferenceClick(Preference preference) {
+							try {
+								Intent launchIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + mPackageInfo.packageName));
+								launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+								act.startActivity(launchIntent);
+							} catch (android.content.ActivityNotFoundException anfe) {
+								Intent launchIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + mPackageInfo.packageName));
+								launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+								act.startActivity(launchIntent);
+							}
+							return true;
+						}
+					});
+
+					act.findPreference("launch_app").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+						@Override
+						public boolean onPreferenceClick(Preference preference) {
+							Intent launchIntent = act.getPackageManager().getLaunchIntentForPackage(mPackageInfo.packageName);
+							if (launchIntent == null) {
+								Toast.makeText(act, modRes.getString(R.string.appdetails_nolaunch), Toast.LENGTH_SHORT).show();
+							} else {
+								launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+								act.startActivity(launchIntent);
+							}
+							return true;
+						}
+					});
+				} catch (Throwable t) {
+					XposedBridge.log(t);
 				}
-				addPref[0].invoke(act, "apk_filename", modRes.getString(R.string.appdetails_apk_file), mPackageInfo.applicationInfo.sourceDir);
-				addPref[0].invoke(act, "data_path", modRes.getString(R.string.appdetails_data_path), mPackageInfo.applicationInfo.dataDir);
-				addPref[0].invoke(act, "app_uid", modRes.getString(R.string.appdetails_app_uid), String.valueOf(mPackageInfo.applicationInfo.uid));
-				addPref[0].invoke(act, "target_sdk", modRes.getString(R.string.appdetails_sdk), String.valueOf(mPackageInfo.applicationInfo.targetSdkVersion));
-				addPref[0].invoke(act, "open_in_store", modRes.getString(R.string.appdetails_playstore), "");
-				addPref[0].invoke(act, "launch_app", modRes.getString(R.string.appdetails_launch), "");
-
-				act.findPreference("apk_filename").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-					@Override
-					public boolean onPreferenceClick(Preference preference) {
-						((ClipboardManager)act.getSystemService(Context.CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText(preference.getTitle(), mPackageInfo.applicationInfo.sourceDir));
-						Toast.makeText(act, act.getResources().getIdentifier("app_manager_copy_pkg_to_clip", "string", act.getPackageName()), Toast.LENGTH_SHORT).show();
-						return true;
-					}
-				});
-
-				act.findPreference("data_path").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-					@Override
-					public boolean onPreferenceClick(Preference preference) {
-						((ClipboardManager)act.getSystemService(Context.CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText(preference.getTitle(), mPackageInfo.applicationInfo.dataDir));
-						Toast.makeText(act, act.getResources().getIdentifier("app_manager_copy_pkg_to_clip", "string", act.getPackageName()), Toast.LENGTH_SHORT).show();
-						return true;
-					}
-				});
-
-				act.findPreference("open_in_store").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-					@Override
-					public boolean onPreferenceClick(Preference preference) {
-						try {
-							Intent launchIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + mPackageInfo.packageName));
-							launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-							act.startActivity(launchIntent);
-						} catch (android.content.ActivityNotFoundException anfe) {
-							Intent launchIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + mPackageInfo.packageName));
-							launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-							act.startActivity(launchIntent);
-						}
-						return true;
-					}
-				});
-
-				act.findPreference("launch_app").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-					@Override
-					public boolean onPreferenceClick(Preference preference) {
-						Intent launchIntent = act.getPackageManager().getLaunchIntentForPackage(mPackageInfo.packageName);
-						if (launchIntent == null) {
-							Toast.makeText(act, modRes.getString(R.string.appdetails_nolaunch), Toast.LENGTH_SHORT).show();
-						} else {
-							launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-							act.startActivity(launchIntent);
-						}
-						return true;
-					}
-				});
 			}
 		});
 	}
@@ -255,22 +253,7 @@ public class Various {
 					@Override
 					public void onChange(boolean selfChange) {
 						if (selfChange) return;
-						String nextAlarm = Settings.System.getString(resolver, "next_alarm_clock_formatted");
-						long nextTime = 0;
-						if (!TextUtils.isEmpty(nextAlarm)) try {
-							Calendar cal = Calendar.getInstance();
-							cal.set(Calendar.HOUR_OF_DAY, 0);
-							cal.clear(Calendar.MINUTE);
-							cal.clear(Calendar.SECOND);
-							cal.clear(Calendar.MILLISECOND);
-
-							SimpleDateFormat dateFormat = new SimpleDateFormat(DateFormat.getBestDateTimePattern(Locale.getDefault(), DateFormat.is24HourFormat(mContext) ? "EHm" : "Ehma"), Locale.getDefault());
-							dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-							nextTime = cal.getTimeInMillis() + dateFormat.parse(nextAlarm).getTime();
-						} catch (Throwable t) {
-							XposedBridge.log(t);
-						}
-						XposedHelpers.setAdditionalInstanceField(param.thisObject, "mNextAlarmTime", nextTime);
+						XposedHelpers.setAdditionalInstanceField(param.thisObject, "mNextAlarmTime", Helpers.getNextMIUIAlarmTime(mContext));
 					}
 				};
 				alarmObserver.onChange(false);

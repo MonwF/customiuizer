@@ -8,24 +8,25 @@
 		android:id="@+id/color_circle"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_centerHorizontal="true"
-		android:layout_gravity="center_horizontal"
-		android:layout_marginTop="25dp"
-		android:scaleType="fitCenter" />
+		android:layout_gravity="left"
+		android:layout_centerVertical="true"
+		android:layout_marginLeft="25dp"
+		android:scaleType="fitCenter"
+		tools:ignore="RtlHardcoded" />
 
 	<LinearLayout
 		android:layout_height="wrap_content"
-		android:layout_width="wrap_content"
-		android:layout_below="@id/color_circle"
-		android:layout_centerHorizontal="true"
-		android:gravity="center_horizontal"
-		android:orientation="vertical">
+		android:layout_width="match_parent"
+		android:layout_centerVertical="true"
+		android:gravity="center"
+		android:orientation="vertical"
+		android:layout_toRightOf="@id/color_circle"
+		tools:ignore="RtlHardcoded">
 
 		<FrameLayout
 			android:id="@+id/selected_color"
 			android:layout_width="200dp"
-			android:layout_height="100dp"
-			android:layout_marginTop="50dp" />
+			android:layout_height="100dp" />
 
 		<miui.widget.SeekBar
 			android:id="@+id/hsv_value"
@@ -70,8 +71,7 @@
 				android:textAlignment="center"
 				android:singleLine="true"
 				android:paddingStart="20dp"
-				android:paddingEnd="20dp"
-				tools:ignore="RtlHardcoded" />
+				android:paddingEnd="20dp" />
 
 			<TextView
 				android:id="@+id/auto_color"
@@ -88,8 +88,7 @@
 				android:textAlignment="center"
 				android:singleLine="true"
 				android:paddingStart="20dp"
-				android:paddingEnd="20dp"
-				tools:ignore="RtlHardcoded" />
+				android:paddingEnd="20dp" />
 
 		</LinearLayout>
 

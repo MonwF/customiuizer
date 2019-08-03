@@ -43,7 +43,7 @@
 		android:layout_height="match_parent"
 		android:layout_below="@+id/am_search_view"
 		android:overScrollMode="never"
-		android:scrollbars="none" />
+		android:scrollbars="vertical" />
 
 	<LinearLayout
 		android:layout_width="match_parent"

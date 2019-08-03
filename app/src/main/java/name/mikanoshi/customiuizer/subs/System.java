@@ -73,6 +73,7 @@ public class System extends SubFragment {
 
 		findPreference("pref_key_system_expandnotifs_apps").setOnPreferenceClickListener(openAppsEdit);
 		findPreference("pref_key_system_hidefromrecents_apps").setOnPreferenceClickListener(openAppsEdit);
+		findPreference("pref_key_system_forceclose_apps").setOnPreferenceClickListener(openAppsEdit);
 
 		findPreference("pref_key_system_recommended_first").setOnPreferenceClickListener(openRecentsActions);
 		findPreference("pref_key_system_recommended_second").setOnPreferenceClickListener(openRecentsActions);
@@ -107,6 +108,22 @@ public class System extends SubFragment {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				openSubFragment(new System_Visualizer(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_visualizer_title, R.xml.prefs_system_visualizer);
+				return true;
+			}
+		});
+
+		findPreference("pref_key_system_statusbaricons_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				openSubFragment(new SubFragment(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_statusbaricons_title, R.xml.prefs_system_hideicons);
+				return true;
+			}
+		});
+
+		findPreference("pref_key_system_batteryindicator_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				openSubFragment(new System_BatteryIndicator(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_batteryindicator_title, R.xml.prefs_system_batteryindicator);
 				return true;
 			}
 		});
@@ -257,6 +274,10 @@ public class System extends SubFragment {
 
 		if (Helpers.isNougat()) {
 			((ListPreferenceEx)findPreference("pref_key_system_autogroupnotif")).setUnsupported(true);
+		}
+
+		if (!Helpers.isPiePlus()) {
+			((CheckBoxPreferenceEx)findPreference("pref_key_system_magnifier")).setUnsupported(true);
 		}
 
 		if (!checkSecurityPermission()) {

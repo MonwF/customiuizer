@@ -22,6 +22,7 @@ import name.mikanoshi.customiuizer.prefs.PreferenceState;
 import name.mikanoshi.customiuizer.prefs.SpinnerEx;
 import name.mikanoshi.customiuizer.prefs.SpinnerExFake;
 import name.mikanoshi.customiuizer.subs.AppSelector;
+import name.mikanoshi.customiuizer.subs.ColorSelector;
 import name.mikanoshi.customiuizer.subs.MultiAction;
 import name.mikanoshi.customiuizer.utils.ColorCircle;
 import name.mikanoshi.customiuizer.utils.Helpers;
@@ -31,7 +32,7 @@ public class SubFragment extends PreferenceFragmentBase {
 
 	private int baseResId = 0;
 	private int resId = 0;
-	private int titleId = 0;
+	public int titleId = 0;
 	private float order = 100.0f;
 	private String scrollToKey = null;
 	public boolean padded = true;
@@ -168,10 +169,8 @@ public class SubFragment extends PreferenceFragmentBase {
 				((SpinnerExFake)nView).applyOthers();
 			} else if (nView instanceof SpinnerEx)
 				Helpers.prefs.edit().putInt((String)nView.getTag(), ((SpinnerEx)nView).getSelectedArrayValue()).apply();
-			else if (nView instanceof ColorCircle) {
+			else if (nView instanceof ColorCircle)
 				Helpers.prefs.edit().putInt((String)nView.getTag(), ((ColorCircle)nView).getColor()).apply();
-				((ColorCircle)nView).saveCirclePosition();
-			}
 		} catch (Throwable e) {
 			Log.e("miuizer", "Cannot save sub preference!");
 		}
@@ -180,7 +179,7 @@ public class SubFragment extends PreferenceFragmentBase {
 	public void loadSharedPrefs() {
 		if (getView() == null) Log.e("miuizer", "View not yet ready!");
 		ArrayList<View> nViews = Helpers.getChildViewsRecursive(getView().findViewById(R.id.container), false);
-		for (View nView : nViews)
+		for (View nView: nViews)
 		if (nView != null) try {
 			if (nView.getTag() != null)
 			if (nView instanceof TextView) {
@@ -255,6 +254,14 @@ public class SubFragment extends PreferenceFragmentBase {
 		}
 	};
 
+	public Preference.OnPreferenceClickListener openColorSelector = new Preference.OnPreferenceClickListener() {
+		@Override
+		public boolean onPreferenceClick(Preference preference) {
+			openColorSelector(preference);
+			return true;
+		}
+	};
+
 	void openApps(String key) {
 		Bundle args = new Bundle();
 		args.putString("key", key);
@@ -322,6 +329,12 @@ public class SubFragment extends PreferenceFragmentBase {
 		AppSelector appSelector = new AppSelector();
 		appSelector.setTargetFragment(targetFrag, resultId);
 		openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.launcher_renameapps_list_title, R.layout.prefs_app_selector);
+	}
+
+	public void openColorSelector(Preference pref) {
+		Bundle args = new Bundle();
+		args.putString("key", pref.getKey());
+		openSubFragment(new ColorSelector(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.Edit, pref.getTitleRes(), R.layout.fragment_selectcolor);
 	}
 
 	public void finish() {

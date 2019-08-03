@@ -31,6 +31,7 @@
 
 	<string name="dummy">" "</string>
 
+	<string name="sdk_failed">Не удалось инициализировать MIUI SDK.\nДевайс не Xiaomi?</string>
 	<string name="notselected">Не выбрано</string>
 
 	<string name="controls_mods">Управление</string>
@@ -91,6 +92,7 @@
 	<string name="array_global_actions_volume_down">Уменьшить громкость</string>
 	<string name="array_global_actions_launch">Запустить приложение</string>
 	<string name="array_global_actions_shortcut">Запустить ярлык</string>
+	<string name="array_global_actions_activity">Запустить компонент</string>
 	<string name="array_global_actions_toggle">Включить/выключить настройку</string>
 	<string name="array_global_actions_back">Предыдущее приложение</string>
 	<string name="array_global_actions_powermenu">Открыть меню управления питанием</string>
@@ -140,6 +142,9 @@
 	<string name="array_static">Задать вручную</string>
 	<string name="array_rainbowh">Цвета радуги (горизонтально)</string>
 	<string name="array_rainbowv">Цвета радуги (вертикально)</string>
+	<string name="array_rainbow">Цвета радуги</string>
+	<string name="array_discrete">Дискретный</string>
+	<string name="array_gradual">Постепенный</string>
 	<string name="array_bars_solid">Сплошные полоски</string>
 	<string name="array_bars_solid_rounded">Скруглённые сплошные полоски</string>
 	<string name="array_bars_dashed">Пунктирные полоски</string>
@@ -328,8 +333,11 @@
 	<string name="credentials_success">Учётные данные разблокированы!</string>
 	<string name="select_app">Выбрать приложение</string>
 	<string name="select_apps">Выбрать приложения</string>
+	<string name="select_activity">Выбрать компонент</string>
+	<string name="no_activities_found">Компоненты не найдены</string>
 	<string name="select_shortcut">Выбрать ярлык</string>
 	<string name="launcher_gestures_shortcut">Ярлык для запуска</string>
+	<string name="launcher_gestures_activity">Компонент для запуска</string>
 	<string name="launcher_infinitescroll_title">Бесконечная прокрутка</string>
 	<string name="launcher_infinitescroll_summ">Позволяет переходить с последнего экрана на первый и обратно</string>
 	<string name="launcher_noclockhide_title">Не прятать часы</string>
@@ -374,6 +382,8 @@
 	<string name="system_epm_summ">Добавляет новые опции презагрузки в меню питания (Режим Fastboot, Режим Recovery, Быстрая перезагрузка, Перезапуск интерфейса, Перезапуск ланчера)</string>
 	<string name="system_downgrade_title">Разрешить понижение версии</string>
 	<string name="system_downgrade_summ">Делает возможным установку старой версии приложения поверх новой</string>
+	<string name="system_magnifier_title">Лупа для текста</string>
+	<string name="system_magnifier_summ">Показывает увеличенный текст при передвижении указателя ввода и при выделении</string>
 	<string name="system_unblockthird_title">Разблокировать ланчеры</string>
 	<string name="system_unblockthird_summ">Отключает ограничение на использование сторонних ланчеров на китайских прошивках</string>
 	<string name="system_cleanshare_title">Очистка меню \"Поделиться\"</string>
@@ -388,6 +398,8 @@
 	<string name="system_defaultusb_unsecure_summ">Применять даже если устойство всё ещё заблокировано</string>
 	<string name="system_defaultusb_noconfigs">Не найдены конфигурации USB</string>
 	<string name="system_defaultusb_config_rndis">RNDIS (USB модем)</string>
+	<string name="system_forceclose_title">Предотвратить закрытие приложений</string>
+	<string name="system_forceclose_summ">Не даёт стандартному MIUI действию насильно закрывать указанные приложения</string>
 	<string name="system_hidefromrecents_title">Скрыть в недавних</string>
 	<string name="system_hidefromrecents_summ">Убирает выбранные приложения из списка недавно использованных</string>
 	<string name="system_recommended_first_title">Первое действие</string>
@@ -409,7 +421,7 @@
 	<string name="system_mods_recents">Список последних приложений</string>
 	<string name="system_removecleaner_title">Убрать кнопку очистки</string>
 	<string name="system_removecleaner_summ">Скрывает кнопку для очистки списка последних приложений и памяти</string>
-	<string name="system_mods_betterpopups">Улучшенные всплывающие уведомления</string>
+	<string name="system_mods_betterpopups">Всплывающие уведомления</string>
 	<string name="system_betterpopups_delay_title">Задержка перед скрытием</string>
 	<string name="system_betterpopups_nohide_title">Не прятать автоматом</string>
 	<string name="system_betterpopups_nohide_summ">Отключает автоматическое скрытие</string>
@@ -422,6 +434,38 @@
 	<string name="system_applock_timeout_summ">Временной интервал между закрытием приложения и его блокировкой</string>
 	<string name="system_applock_list_title">Список приложений для защиты</string>
 	<string name="system_applock_list_summ">Улучшенная версия функции Защита приложений, позволяющая заблокировать любое установленное приложение. Перезагрузка не требуется.</string>
+	<string name="system_statusbaricons_title">Скрытие иконок</string>
+	<string name="system_statusbaricons_summ">Управление видимостью иконок в строке состояния</string>
+	<string name="system_statusbaricons_battery1_title">Изображение батареи</string>
+	<string name="system_statusbaricons_battery2_title">Процент заряда батареи</string>
+	<string name="system_statusbaricons_battery3_title">Индикатор зарядки</string>
+	<string name="system_statusbaricons_battery_summ">На некоторых прошивках может быть наложен поверх изображения батареи</string>
+	<string name="system_statusbaricons_alarm_title">Будильник</string>
+	<string name="system_statusbaricons_alarm_summ">Скрыть полностью</string>
+	<string name="system_statusbaricons_alarmn_title">Избирательное отображение будильника</string>
+	<string name="system_statusbaricons_alarmn_summ">Начинает показывать иконку будильника только за указанное количество часов до его срабатывания</string>
+	<string name="system_statusbaricons_signal_title">Сигнал мобильной сети</string>
+	<string name="system_statusbaricons_sound_title">Профили звука</string>
+	<string name="system_statusbaricons_dnd_title">Режим Не беспокоить</string>
+	<string name="system_statusbaricons_headset_title">Наушники</string>
+	<string name="system_statusbaricons_sync_title">Синхронизация</string>
+	<string name="system_statusbaricons_mute_title">Звонок: отключенный микрофон</string>
+	<string name="system_statusbaricons_speaker_title">Звонок: громкая связь</string>
+	<string name="system_statusbaricons_record_title">Звонок: запись разговора</string>
+	<string name="system_batteryindicator_title">Индикатор батареи полоской</string>
+	<string name="system_batteryindicator_summ">Отображает уровень заряда батареи цветной полоской</string>
+	<string name="system_batteryindicator_rounded_title">Скруглённые концы</string>
+	<string name="system_batteryindicator_centered_title">По центру</string>
+	<string name="system_batteryindicator_centered_summ">Выравнивает полоску по центру экрана вместо левого края</string>
+	<string name="system_batteryindicator_height_title">Высота индикатора</string>
+	<string name="system_batteryindicator_padding_title">Отступ по горизонтали</string>
+	<string name="system_batteryindicator_colorval1_title">Цвет при полном заряде</string>
+	<string name="system_batteryindicator_colorval2_title">Цвет при низком заряде</string>
+	<string name="system_batteryindicator_colorval3_title">Цвет при экономии энергии</string>
+	<string name="system_batteryindicator_colorval4_title">Цвет при зарядке</string>
+	<string name="system_batteryindicator_lowlevel_title">Уровень низкого заряда</string>
+	<string name="system_batteryindicator_test_title">Тест</string>
+	<string name="system_batteryindicator_test_summ">Анимировать полоску от 100% до 0% в режиме разрядки</string>
 	<string name="system_statusbarheight_title">Высота строки состояния</string>
 	<string name="system_statusbarcolor_title">Фоновый цвет строки состояния</string>
 	<string name="system_statusbarcolor_summ">Делает одинаковыми цвета фона строки состояния и панели действий приложения, где это возможно</string>
@@ -601,4 +645,8 @@
 	<string name="time_8h">8 часов</string>
 	<string name="time_10h">10 часов</string>
 	<string name="time_12h">12 часов</string>
+
+	<string name="white_color">Белый</string>
+	<string name="black_color">Чёрный</string>
+	<string name="auto_color">Цвет статус бара</string>
 </resources>

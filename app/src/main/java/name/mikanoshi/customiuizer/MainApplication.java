@@ -56,7 +56,7 @@ public class MainApplication extends Application {
 			if (Helpers.prefs.getBoolean("pref_key_miuizer_forcelocale", false)) Locale.setDefault(Locale.ENGLISH);
 		} catch (Throwable t) {
 			pContext = base;
-			Log.e("prefs", "Failed to use protected storage!");
+			Log.e("miuizer", "Failed to use protected storage!");
 		}
 		super.attachBaseContext(pContext);
 

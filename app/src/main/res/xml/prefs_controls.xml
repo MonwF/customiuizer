@@ -137,6 +137,14 @@
 			android:defaultValue="true"
 			miuizer:dynamic="true" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_controls_volumemedia_vibrate_ignore"
+			android:title="@string/controls_fingerprintsuccess_ignore_title"
+			android:summary="@string/controls_fingerprintsuccess_ignore_summ"
+			android:dependency="pref_key_controls_volumemedia_vibrate"
+			android:defaultValue="false"
+			miuizer:child="true" />
+
 	</PreferenceCategory>
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx

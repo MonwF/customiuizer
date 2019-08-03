@@ -78,6 +78,39 @@
 	</LinearLayout>
 
 	<LinearLayout
+		android:id="@+id/activities_group"
+		android:orientation="vertical"
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:visibility="gone">
+
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="left|center_vertical|center_horizontal|center|start"
+			android:text="@string/launcher_gestures_activity"
+			style="@style/Widget.InputField.Category.Middle" />
+
+		<name.mikanoshi.customiuizer.prefs.SpinnerExFake
+			android:id="@+id/activity_to_launch"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:entries="@array/placeholder_array"
+			miuizer:entryValues="@array/placeholder_array_val"
+			android:defaultValue="0" />
+
+		<TextView
+			android:id="@+id/activity_class"
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_weight="1"
+			android:textColor="@color/preference_secondary_text_color"
+			android:textSize="13sp"
+			android:layout_marginTop="16dp" />
+
+	</LinearLayout>
+
+	<LinearLayout
 		android:id="@+id/toggles_group"
 		android:orientation="vertical"
 		android:layout_height="wrap_content"

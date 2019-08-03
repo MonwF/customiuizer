@@ -77,8 +77,11 @@ public class MainActivity extends Activity {
 
 		Helpers.updateNewModsMarking(this);
 
-		if (!((MainApplication)getApplication()).mStarted)
-		throw new RuntimeException("Failed to use MIUI SDK");
+		if (!((MainApplication)getApplication()).mStarted) {
+			Toast.makeText(this, R.string.sdk_failed, Toast.LENGTH_LONG).show();
+			finish();
+			return;
+		}
 
 		mainFrag = new MainFragment();
 		getFragmentManager().beginTransaction().replace(R.id.fragment_container, mainFrag).commit();

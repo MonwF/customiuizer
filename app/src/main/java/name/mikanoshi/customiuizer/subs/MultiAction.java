@@ -25,8 +25,10 @@ public class MultiAction extends SubFragment {
 
 	private SpinnerExFake appLaunch = null;
 	private SpinnerExFake shortcutLaunch = null;
+	private SpinnerExFake activityLaunch = null;
 	private String key = null;
 	private String appValue = null;
+	private String activityValue = null;
 	private String shortcutValue = null;
 	private String shortcutName = null;
 	private String shortcutIcon = null;
@@ -156,16 +158,61 @@ public class MultiAction extends SubFragment {
 		SpinnerEx toggleSpinner = getView().findViewById(R.id.toggle);
 		toggleSpinner.setTag(key + "_toggle");
 		toggleSpinner.init(Helpers.prefs.getInt(key + "_toggle", 1));
+
+		activityLaunch = getView().findViewById(R.id.activity_to_launch);
+		activityLaunch.setTag(key + "_activity");
+		activityLaunch.setValue(activityValue != null ? activityValue : Helpers.prefs.getString(key + "_activity", null));
+		String val = activityLaunch.getValue();
+		((TextView)getView().findViewById(R.id.activity_class)).setText(val != null && !val.equals("") ? val.replace("|", "/\u200B").replace(".", ".\u200B") : "");
+		activityLaunch.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
+			@Override
+			public void onChildViewAdded(View parent, View child) {
+				if (child instanceof TextView && child.getId() == android.R.id.text1) {
+					TextView appLaunchLabel = ((TextView)child);
+
+					String pkgAppName = activityLaunch.getValue();
+					if (pkgAppName != null) {
+						CharSequence label = Helpers.getAppName(getContext(), pkgAppName, true);
+						if (label != null) {
+							appLaunchLabel.setText(label);
+							return;
+						}
+					}
+
+					appLaunchLabel.setText(R.string.notselected);
+					appLaunchLabel.setAlpha(0.5f);
+				}
+			}
+
+			@Override
+			public void onChildViewRemoved(View parent, View child) {}
+		});
+		activityLaunch.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			@SuppressLint("ClickableViewAccessibility")
+			public boolean onTouch(View v, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_UP) {
+					Bundle args = new Bundle();
+					args.putBoolean("activity", true);
+					AppSelector activitySelect = new AppSelector();
+					activitySelect.setTargetFragment(MultiAction.this, 2);
+					openSubFragment(activitySelect, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_app, R.layout.prefs_app_selector);
+				}
+				return false;
+			}
+		});
 	}
 
 	void updateControls(SpinnerEx spinner, int position) {
 		if (getView() == null) return;
 		View apps = getView().findViewById(R.id.apps_group);
 		View shortcuts = getView().findViewById(R.id.shortcuts_group);
+		View activities = getView().findViewById(R.id.activities_group);
 		View toggles = getView().findViewById(R.id.toggles_group);
 
 		apps.setVisibility(View.GONE);
 		shortcuts.setVisibility(View.GONE);
+		activities.setVisibility(View.GONE);
 		toggles.setVisibility(View.GONE);
 		if (spinner.entryValues[position] == 8)
 			apps.setVisibility(View.VISIBLE);
@@ -173,18 +220,21 @@ public class MultiAction extends SubFragment {
 			shortcuts.setVisibility(View.VISIBLE);
 		else if (spinner.entryValues[position] == 10)
 			toggles.setVisibility(View.VISIBLE);
+		else if (spinner.entryValues[position] == 20)
+			activities.setVisibility(View.VISIBLE);
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, final Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
-			if (requestCode == 0) appValue = data.getStringExtra("activity");
+			if (requestCode == 0) appValue = data.getStringExtra("app");
 			if (requestCode == 1) {
 				shortcutValue = data.getStringExtra("shortcut_contents");
 				shortcutName = data.getStringExtra("shortcut_name");
 				shortcutIcon = data.getStringExtra("shortcut_icon");
 				shortcutIntent = data.getParcelableExtra("shortcut_intent");
 			}
+			if (requestCode == 2) activityValue = data.getStringExtra("activity");
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}

@@ -249,7 +249,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 			ActivityInfo appInfo;
 			try {
 				appInfo = getActivity().getPackageManager().getActivityInfo(getActivity().getComponentName(), PackageManager.GET_META_DATA);
-				showBack = appInfo != null && appInfo.metaData != null && appInfo.metaData.containsKey("com.android.settings.category");
+				showBack = appInfo != null && appInfo.metaData != null && appInfo.metaData.containsKey("from.settings");
 			} catch (PackageManager.NameNotFoundException e) {
 				e.printStackTrace();
 			}

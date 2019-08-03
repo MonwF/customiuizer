@@ -12,6 +12,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -22,9 +23,13 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.content.res.XModuleResources;
 import android.content.res.XResources;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -46,6 +51,7 @@ import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.BadParcelableException;
 import android.os.BatteryManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -56,6 +62,7 @@ import android.os.SystemClock;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.provider.Settings;
+import android.support.annotation.RequiresApi;
 import android.telephony.PhoneStateListener;
 import android.text.Layout;
 import android.text.TextUtils;
@@ -76,6 +83,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Magnifier;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -93,6 +101,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -112,6 +121,7 @@ import miui.os.SystemProperties;
 import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.AudioVisualizer;
+import name.mikanoshi.customiuizer.utils.BatteryIndicator;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 import static de.robv.android.xposed.XposedHelpers.findClass;
@@ -3120,6 +3130,487 @@ public class System {
 		}
 	}
 
+	public static void HideIconsBattery1Hook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.BatteryMeterView", lpparam.classLoader, "update", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				try {
+					ImageView mBatteryIconView = (ImageView)XposedHelpers.getObjectField(param.thisObject, "mBatteryIconView");
+					mBatteryIconView.setVisibility(View.GONE);
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
+	}
+
+	public static void HideIconsBattery2Hook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.BatteryMeterView", lpparam.classLoader, "update", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				try {
+					TextView mBatteryTextDigitView = (TextView)XposedHelpers.getObjectField(param.thisObject, "mBatteryTextDigitView");
+					mBatteryTextDigitView.setVisibility(View.GONE);
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
+	}
+
+	public static void HideIconsBattery3Hook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.BatteryMeterView", lpparam.classLoader, "updateChargingIconView", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				try {
+					ImageView mBatteryChargingView = (ImageView)XposedHelpers.getObjectField(param.thisObject, "mBatteryChargingView");
+					mBatteryChargingView.setVisibility(View.GONE);
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
+	}
+
+	private static boolean lastState = false;
+	private static void updateAlarmVisibility(Object thisObject, boolean state) {
+		try {
+			Object mIconController = XposedHelpers.getObjectField(thisObject, "mIconController");
+			if (!state) {
+				XposedHelpers.callMethod(mIconController, "setIconVisibility", "alarm_clock", false);
+				return;
+			}
+
+			Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
+			long nowTime = java.lang.System.currentTimeMillis();
+			long nextTime;
+			try {
+				nextTime = (long)XposedHelpers.getAdditionalInstanceField(thisObject, "mNextAlarmTime");
+			} catch (Throwable t) {
+				nextTime = Helpers.getNextMIUIAlarmTime(mContext);
+			}
+			if (nextTime == 0) nextTime = Helpers.getNextStockAlarmTime(mContext);
+
+			long diffMSec = nextTime - nowTime;
+			if (diffMSec < 0) diffMSec += 7 * 24 * 60 *60 * 1000;
+			float diffHours = (diffMSec - 59 * 1000) / (1000f * 60f * 60f);
+
+			XposedHelpers.callMethod(mIconController, "setIconVisibility", "alarm_clock", diffHours <= MainModule.mPrefs.getInt("system_statusbaricons_alarmn", 0));
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void HideIconsSelectiveAlarmHook(LoadPackageParam lpparam) {
+		Helpers.hookAllConstructors("com.android.systemui.statusbar.phone.PhoneStatusBarPolicy", lpparam.classLoader, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				try {
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					XposedHelpers.setAdditionalInstanceField(param.thisObject, "mNextAlarmTime", Helpers.getNextMIUIAlarmTime(mContext));
+					ContentResolver resolver = mContext.getContentResolver();
+					ContentObserver alarmObserver = new ContentObserver(new Handler()) {
+						@Override
+						public void onChange(boolean selfChange) {
+							if (selfChange) return;
+							XposedHelpers.setAdditionalInstanceField(param.thisObject, "mNextAlarmTime", Helpers.getNextMIUIAlarmTime(mContext));
+							updateAlarmVisibility(param.thisObject, lastState);
+						}
+					};
+					resolver.registerContentObserver(Settings.System.getUriFor("next_alarm_clock_formatted"), false, alarmObserver);
+
+					IntentFilter filter = new IntentFilter();
+					filter.addAction("android.intent.action.TIME_TICK");
+					filter.addAction("android.intent.action.TIME_SET");
+					filter.addAction("android.intent.action.TIMEZONE_CHANGED");
+					filter.addAction("android.intent.action.LOCALE_CHANGED");
+					final Object thisObject = param.thisObject;
+					mContext.registerReceiver(new BroadcastReceiver() {
+						@Override
+						public void onReceive(Context context, Intent intent) {
+							updateAlarmVisibility(thisObject, lastState);
+						}
+					}, filter);
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
+
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.PhoneStatusBarPolicy", lpparam.classLoader, "updateAlarm", boolean.class, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				lastState = (boolean)param.args[0];
+				updateAlarmVisibility(param.thisObject, lastState);
+			}
+		});
+	}
+
+	public static void HideIconsBluetoothHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.PhoneStatusBarPolicy", lpparam.classLoader, "updateBluetooth", String.class, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				try {
+					int opt = Integer.parseInt(MainModule.mPrefs.getString("system_statusbaricons_bluetooth", "1"));
+					boolean isBluetoothConnected = (boolean)XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mBluetooth"), "isBluetoothConnected");
+					if (opt == 3 || (opt == 2 && !isBluetoothConnected)) {
+						Object mIconController = XposedHelpers.getObjectField(param.thisObject, "mIconController");
+						XposedHelpers.callMethod(mIconController, "setIconVisibility", "bluetooth", false);
+					}
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
+	}
+
+	public static void HideIconsSignalHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.SignalClusterView", lpparam.classLoader, "apply", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				try {
+					View[] mMobileSignalGroup = (View[])XposedHelpers.getObjectField(param.thisObject, "mMobileSignalGroup");
+					for (View mMobileSignal: mMobileSignalGroup) mMobileSignal.setVisibility(View.GONE);
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
+	}
+
+	private static boolean checkSlot(String slotName) {
+		try {
+			return "headset".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_headset") ||
+				"volume".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_sound") ||
+				"quiet".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_dnd") ||
+				"mute".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_mute") ||
+				"speakerphone".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_speaker") ||
+				"call_record".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_record") ||
+				"alarm_clock".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_alarm");
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+			return false;
+		}
+	}
+
+	public static void HideIconsHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBarIconControllerImpl", lpparam.classLoader, "setIconVisibility", String.class, boolean.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+				if (checkSlot((String)param.args[0])) param.args[1] = false;
+			}
+		});
+	}
+
+	public static void HideIconsSystemHook() {
+		Helpers.findAndHookMethod("android.app.StatusBarManager", null, "setIconVisibility", String.class, boolean.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+				if (checkSlot((String)param.args[0])) param.args[1] = false;
+			}
+		});
+	}
+
+	public static void BatteryIndicatorHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "makeStatusBarView", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				try {
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					FrameLayout mStatusBarWindow = (FrameLayout)XposedHelpers.getObjectField(param.thisObject, "mStatusBarWindow");
+					BatteryIndicator indicator = new BatteryIndicator(mContext);
+					View panel = mStatusBarWindow.findViewById(mContext.getResources().getIdentifier("notification_panel", "id", lpparam.packageName));
+					mStatusBarWindow.addView(indicator, panel != null ? mStatusBarWindow.indexOfChild(panel) + 1 : Math.max(mStatusBarWindow.getChildCount() - 1, 8));
+					FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)indicator.getLayoutParams();
+					lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
+					lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+					lp.gravity = Gravity.TOP;
+					indicator.setAdjustViewBounds(false);
+					indicator.setLayoutParams(lp);
+					indicator.init(param.thisObject);
+					XposedHelpers.setAdditionalInstanceField(param.thisObject, "mBatteryIndicator", indicator);
+					Object mNotificationIconAreaController = XposedHelpers.getObjectField(param.thisObject, "mNotificationIconAreaController");
+					XposedHelpers.setAdditionalInstanceField(mNotificationIconAreaController, "mBatteryIndicator", indicator);
+					Object mBatteryController = XposedHelpers.getObjectField(param.thisObject, "mBatteryController");
+					XposedHelpers.setAdditionalInstanceField(mBatteryController, "mBatteryIndicator", indicator);
+					XposedHelpers.callMethod(mBatteryController, "fireBatteryLevelChanged");
+					XposedHelpers.callMethod(mBatteryController, "firePowerSaveChanged");
+					XposedHelpers.callMethod(mBatteryController, "fireExtremePowerSaveChanged");
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
+
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "setPanelExpanded", boolean.class, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				try {
+					boolean isKeyguardShowing = (boolean)XposedHelpers.callMethod(param.thisObject, "isKeyguardShowing");
+					BatteryIndicator indicator = (BatteryIndicator)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mBatteryIndicator");
+					if (indicator != null) indicator.onExpandingChanged(!isKeyguardShowing && (boolean)param.args[0]);
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
+
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "setQsExpanded", boolean.class, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				try {
+					boolean isKeyguardShowing = (boolean)XposedHelpers.callMethod(param.thisObject, "isKeyguardShowing");
+					if (!isKeyguardShowing) return;
+					BatteryIndicator indicator = (BatteryIndicator)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mBatteryIndicator");
+					if (indicator != null) indicator.onExpandingChanged((boolean)param.args[0]);
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
+
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.NotificationIconAreaController", lpparam.classLoader, "onDarkChanged", Rect.class, float.class, int.class, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				try {
+					BatteryIndicator indicator = (BatteryIndicator)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mBatteryIndicator");
+					if (indicator != null) indicator.onDarkModeChanged((float)param.args[1], (int)param.args[2]);
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
+
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BatteryControllerImpl", lpparam.classLoader, "fireBatteryLevelChanged", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				try {
+					BatteryIndicator indicator = (BatteryIndicator)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mBatteryIndicator");
+					int mLevel = XposedHelpers.getIntField(param.thisObject, "mLevel");
+					boolean mCharging = XposedHelpers.getBooleanField(param.thisObject, "mCharging");
+					boolean mCharged = XposedHelpers.getBooleanField(param.thisObject, "mCharged");
+					if (indicator != null) indicator.onBatteryLevelChanged(mLevel, mCharging, mCharged);
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
+
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BatteryControllerImpl", lpparam.classLoader, "firePowerSaveChanged", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				try {
+					BatteryIndicator indicator = (BatteryIndicator)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mBatteryIndicator");
+					if (indicator != null) indicator.onPowerSaveChanged(XposedHelpers.getBooleanField(param.thisObject, "mIsPowerSaveMode"));
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
+
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BatteryControllerImpl", lpparam.classLoader, "fireExtremePowerSaveChanged", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				try {
+					BatteryIndicator indicator = (BatteryIndicator)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mBatteryIndicator");
+					if (indicator != null) indicator.onExtremePowerSaveChanged(XposedHelpers.getBooleanField(param.thisObject, "mIsExtremePowerSaveMode"));
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
+	}
+
+	private static boolean obtainMagnifierShowCoordinates(Object mEditor, int type, final MotionEvent event, final PointF showPosInView) {
+		TextView mTextView = (TextView)XposedHelpers.getObjectField(mEditor, "mTextView");
+		final int offset;
+		final int otherHandleOffset;
+		switch (type) {
+			case 0:
+				offset = mTextView.getSelectionStart();
+				otherHandleOffset = -1;
+				break;
+			case 1:
+				offset = mTextView.getSelectionStart();
+				otherHandleOffset = mTextView.getSelectionEnd();
+				break;
+			case 2:
+				offset = mTextView.getSelectionEnd();
+				otherHandleOffset = mTextView.getSelectionStart();
+				break;
+			default:
+				offset = -1;
+				otherHandleOffset = -1;
+				break;
+		}
+
+		if (offset == -1) return false;
+
+		final Layout layout = mTextView.getLayout();
+		final int lineNumber = layout.getLineForOffset(offset);
+		final boolean sameLineSelection = otherHandleOffset != -1 && lineNumber == layout.getLineForOffset(otherHandleOffset);
+		final boolean rtl = sameLineSelection && (offset < otherHandleOffset) != (mTextView.getLayout().getPrimaryHorizontal(offset) < mTextView.getLayout().getPrimaryHorizontal(otherHandleOffset));
+
+		final int[] textViewLocationOnScreen = new int[2];
+		mTextView.getLocationOnScreen(textViewLocationOnScreen);
+		final float touchXInView = event.getRawX() - textViewLocationOnScreen[0];
+		float leftBound = mTextView.getTotalPaddingLeft() - mTextView.getScrollX();
+		float rightBound = mTextView.getTotalPaddingLeft() - mTextView.getScrollX();
+
+		if (sameLineSelection && ((type == 2) ^ rtl))
+			leftBound += mTextView.getLayout().getPrimaryHorizontal(otherHandleOffset);
+		else
+			leftBound += mTextView.getLayout().getLineLeft(lineNumber);
+
+		if (sameLineSelection && ((type == 1) ^ rtl))
+			rightBound += mTextView.getLayout().getPrimaryHorizontal(otherHandleOffset);
+		else
+			rightBound += mTextView.getLayout().getLineRight(lineNumber);
+
+		showPosInView.x = Math.max(leftBound - 1, Math.min(rightBound + 1, touchXInView));
+		showPosInView.y = (mTextView.getLayout().getLineTop(lineNumber)	+ mTextView.getLayout().getLineBottom(lineNumber)) / 2.0f + mTextView.getTotalPaddingTop() - mTextView.getScrollY();
+		return true;
+	}
+
+	@RequiresApi(api = Build.VERSION_CODES.P)
+	private static void processHandleMotionEvent(Object handleView, int type, MotionEvent ev) {
+		try {
+			int action = ev.getActionMasked();
+			if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_MOVE) {
+				Object mEditor = XposedHelpers.getSurroundingThis(handleView);
+				Magnifier mMagnifier = (Magnifier)XposedHelpers.getAdditionalInstanceField(mEditor, "mMagnifier");
+				if (mMagnifier == null) return;
+				PointF coords = new PointF();
+				if (obtainMagnifierShowCoordinates(mEditor, type, ev, coords))
+					mMagnifier.show(coords.x, coords.y);
+				else
+					mMagnifier.dismiss();
+			} else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
+				Magnifier mMagnifier = (Magnifier)XposedHelpers.getAdditionalInstanceField(XposedHelpers.getSurroundingThis(handleView), "mMagnifier");
+				if (mMagnifier != null) mMagnifier.dismiss();
+			}
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	@RequiresApi(api = Build.VERSION_CODES.P)
+	public static void TextMagnifierHook() {
+		Helpers.findAndHookMethod("android.widget.Magnifier", null, "obtainContentCoordinates", float.class, float.class, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				Point mCenterZoomCoords = (Point)XposedHelpers.getObjectField(param.thisObject, "mCenterZoomCoords");
+				Point mClampedCenterZoomCoords = (Point)XposedHelpers.getObjectField(param.thisObject, "mClampedCenterZoomCoords");
+				mClampedCenterZoomCoords.x = mCenterZoomCoords.x;
+			}
+		});
+
+		Helpers.findAndHookConstructor("android.widget.Editor", null, TextView.class, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				try {
+					TextView mTextView = (TextView)XposedHelpers.getObjectField(param.thisObject, "mTextView");
+					XposedHelpers.setAdditionalInstanceField(param.thisObject, "mMagnifier", new Magnifier(mTextView));
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
+
+		Helpers.findAndHookMethod("android.widget.Editor$InsertionHandleView", null, "onTouchEvent", MotionEvent.class, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				processHandleMotionEvent(param.thisObject, 0, (MotionEvent)param.args[0]);
+			}
+		});
+
+		Helpers.findAndHookMethod("android.widget.Editor$SelectionHandleView", null, "onTouchEvent", MotionEvent.class, new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				processHandleMotionEvent(param.thisObject, "SelectionEndHandleView".equals(param.thisObject.getClass().getSimpleName()) ? 2 : 1, (MotionEvent)param.args[0]);
+			}
+		});
+	}
+
+	public static void ForceCloseHook(LoadPackageParam lpparam) {
+		Helpers.hookAllConstructors("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, new XC_MethodHook() {
+			@Override
+			@SuppressWarnings("unchecked")
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				try {
+					HashSet<String> mSystemKeyPackages = (HashSet<String>)XposedHelpers.getObjectField(param.thisObject, "mSystemKeyPackages");
+					mSystemKeyPackages.addAll(MainModule.mPrefs.getStringSet("system_forceclose_apps"));
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
+	}
+
+//	public static void QSFooterHook(LoadPackageParam lpparam) {
+//		Helpers.findAndHookMethod("com.android.systemui.qs.QSContainerImpl", lpparam.classLoader, "onFinishInflate", new XC_MethodHook() {
+//			@Override
+//			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+//				try {
+//					FrameLayout qs = (FrameLayout)param.thisObject;
+//					Context context = qs.getContext();
+//					Resources res = context.getResources();
+//					LinearLayout mQSFooterContainer = (LinearLayout)XposedHelpers.getObjectField(param.thisObject, "mQSFooterContainer");
+//					LayoutInflater inflater = (LayoutInflater)Helpers.getModuleContext(context).getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//
+//					View dataView = inflater.inflate(R.layout.qs_footer, mQSFooterContainer, false);
+//					dataView.setTag("mydata");
+//					LinearLayout.LayoutParams lp0 = (LinearLayout.LayoutParams)dataView.getLayoutParams();
+//					int margin = res.getDimensionPixelSize(res.getIdentifier("qs_divider_margin_horizontal", "dimen", context.getPackageName()));
+//					int height = res.getDimensionPixelSize(res.getIdentifier("qs_footer_height", "dimen", context.getPackageName()));
+//					lp0.setMarginStart(margin);
+//					lp0.topMargin = - height / 6;
+//					lp0.bottomMargin = height / 4;
+//					dataView.setLayoutParams(lp0);
+//
+//					ImageView icon = dataView.findViewById(R.id.qs_icon);
+//					icon.setImageDrawable(Helpers.getModuleRes(context).getDrawable(R.drawable.ic_gps_task, context.getTheme()));
+//					ViewGroup.LayoutParams lp1 = icon.getLayoutParams();
+//					int iconSize = res.getDimensionPixelSize(res.getIdentifier("qs_footer_data_usage_icon_size", "dimen", context.getPackageName()));
+//					lp1.width = iconSize;
+//					lp1.height = iconSize;
+//					icon.setLayoutParams(lp1);
+//
+//					TextView data = dataView.findViewById(R.id.qs_data);
+//					LinearLayout.LayoutParams lp2 = (LinearLayout.LayoutParams)data.getLayoutParams();
+//					margin = res.getDimensionPixelSize(res.getIdentifier("qs_footer_line_margin_start", "dimen", context.getPackageName()));
+//					lp2.setMarginStart(margin);
+//					lp2.setMarginEnd(margin);
+//					data.setLayoutParams(lp2);
+//					data.setText("Some data...");
+//
+//					int textColor = res.getColor(res.getIdentifier("qs_footer_data_usage_text_color", "color", context.getPackageName()), context.getTheme());
+//					int textSize = res.getDimensionPixelSize(res.getIdentifier("qs_tile_label_text_size", "dimen", context.getPackageName()));
+//					data.setTextColor(textColor);
+//					data.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+//
+//					mQSFooterContainer.addView(dataView);
+//				} catch (Throwable t) {
+//					XposedBridge.log(t);
+//				}
+//			}
+//		});
+//
+//		Helpers.findAndHookMethod("com.android.systemui.qs.QSContainerImpl", lpparam.classLoader, "updateQSDataUsage", boolean.class, new XC_MethodHook() {
+//			@Override
+//			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+//				try {
+//					LinearLayout mQSFooterContainer = (LinearLayout)XposedHelpers.getObjectField(param.thisObject, "mQSFooterContainer");
+//					View dataView = mQSFooterContainer.findViewWithTag("mydata");
+//					mQSFooterContainer.removeView(dataView);
+//					mQSFooterContainer.addView(dataView);
+//				} catch (Throwable t) {
+//					XposedBridge.log(t);
+//				}
+//			}
+//		});
+//	}
+//
 //	public static void VolumeDialogTimeoutHook(LoadPackageParam lpparam) {
 //		Helpers.findAndHookMethod("com.android.systemui.miui.volume.MiuiVolumeDialogImpl", lpparam.classLoader, "computeTimeoutH", new XC_MethodHook() {
 //			@Override

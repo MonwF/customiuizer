@@ -80,11 +80,11 @@
 
 	<dimen name="qs_tile_label_padding_top">2dp</dimen>
 
-	<dimen name="screen_color_preview_diameter">288dp</dimen>
-	<dimen name="screen_color_preview_margin_top">45dp</dimen>
 	<dimen name="screen_color_preview_offset">11dp</dimen>
 
 	<dimen name="miui_volume_content_width_expanded">337.77dp</dimen>
 	<dimen name="miui_volume_ringer_layout_width_expanded">337.77dp</dimen>
+
+	<dimen name="screen_color_text_height">30dp</dimen>
 
 </resources>

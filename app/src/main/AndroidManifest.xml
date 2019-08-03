@@ -64,6 +64,7 @@
 			android:targetActivity=".MainActivity"
 			android:enabled="true"
 			android:excludeFromRecents="true">
+			<meta-data android:name="from.settings" android:value="true" />
 		</activity-alias>
 
 		<activity

@@ -13,6 +13,38 @@
     <string name="system_mods_vibration">Вібрація</string>
     <string name="system_mods_toasts">Спливаючі повідомлення</string>
     <string name="system_mods_screenanim">Екранна анімація</string>
+    <string name="system_statusbaricons_title">Приховування іконок</string>
+    <string name="system_statusbaricons_summ">Керування видимістю іконок в рядку стану</string>
+    <string name="system_statusbaricons_battery1_title">Зображення батареї</string>
+    <string name="system_statusbaricons_battery2_title">Відсоток заряду батареї</string>
+    <string name="system_statusbaricons_battery3_title">Індикатор заряду</string>
+    <string name="system_statusbaricons_battery_summ">На деяких прошивках може бути накладений поверх зображення батареї</string>
+    <string name="system_statusbaricons_alarm_title">Будильник</string>
+    <string name="system_statusbaricons_alarm_summ">Приховати повністю</string>
+    <string name="system_statusbaricons_alarmn_title">Вибіркове відображення будильника</string>
+    <string name="system_statusbaricons_alarmn_summ">Починає показувати іконку будильника лише за вказану кількість годин до його спрацювання</string>
+    <string name="system_statusbaricons_signal_title">Сигнал мобільної мережі</string>
+    <string name="system_statusbaricons_sound_title">Профілі звуку</string>
+    <string name="system_statusbaricons_dnd_title">Режим Не турбувати</string>
+    <string name="system_statusbaricons_headset_title">Навушники</string>
+    <string name="system_statusbaricons_sync_title">Синхронізація</string>
+    <string name="system_statusbaricons_mute_title">Дзвінок: вимкнений мікрофон</string>
+    <string name="system_statusbaricons_speaker_title">Дзвінок: гучномовець</string>
+    <string name="system_statusbaricons_record_title">Дзвінок: запис розмови</string>
+    <string name="system_batteryindicator_title">Індикатор батареї смужкою</string>
+    <string name="system_batteryindicator_summ">Відображає рівень заряду батареї кольоровою смужкою</string>
+    <string name="system_batteryindicator_rounded_title">Заокруглені кінці</string>
+    <string name="system_batteryindicator_centered_title">По центру</string>
+    <string name="system_batteryindicator_centered_summ">Вирівнює смужку по центру екрану замість лівого краю</string>
+    <string name="system_batteryindicator_height_title">Висота індикатора</string>
+    <string name="system_batteryindicator_padding_title">Відступ по горизонталі</string>
+    <string name="system_batteryindicator_colorval1_title">Колір при повному заряді</string>
+    <string name="system_batteryindicator_colorval2_title">Колір при низькому заряді</string>
+    <string name="system_batteryindicator_colorval3_title">Колір при економії енергії</string>
+    <string name="system_batteryindicator_colorval4_title">Колір при зарядці</string>
+    <string name="system_batteryindicator_lowlevel_title">Рівень низького заряду</string>
+    <string name="system_batteryindicator_test_title">Тест</string>
+    <string name="system_batteryindicator_test_summ">Анімувати смужку від 100% до 0% в режимі розрядки</string>
     <string name="system_statusbarheight_title">Висота рядка стану</string>
     <string name="system_statusbarcolor_title">Фоновий колір рядку стану</string>
     <string name="system_statusbarcolor_summ">Робить однаковими кольори фону рядка стану і панелі дій додатку, де це можливо</string>
@@ -139,6 +171,8 @@
     <string name="system_epm_summ">Додає нові опції в меню живлення (Режим Fastboot, Режим Recovery, Швидке перезавантаження, Перезапуск інтерфейсу, Перезапуск лаунчера)</string>
     <string name="system_downgrade_title">Дозволити пониження версії</string>
     <string name="system_downgrade_summ">Уможливлює установку старої версії програми поверх нової</string>
+    <string name="system_magnifier_title">Лупа для тексту</string>
+    <string name="system_magnifier_summ">Показує збільшений текст при переміщенні вказівника вводу і при виділенні</string>
     <string name="system_unblockthird_title">Розблокувати лаунчери</string>
     <string name="system_unblockthird_summ">Вимикає обмеження на використання сторонніх лаунчерів на китайських прошивках</string>
     <string name="system_cleanshare_title">Очистка меню \"Поділитися\"</string>
@@ -153,6 +187,8 @@
     <string name="system_defaultusb_unsecure_summ">Застосовувати навіть якщо пристрій усе ще заблокований</string>
     <string name="system_defaultusb_noconfigs">Конфігурації USB не знайдені</string>
     <string name="system_defaultusb_config_rndis">RNDIS (USB модем)</string>
+    <string name="system_forceclose_title">Запобігати закриттю програм</string>
+    <string name="system_forceclose_summ">Не дає стандартній дії MIUI примусово закривати вказані програми</string>
     <string name="system_rotateanim_title">Анімація при повороті</string>
     <string name="system_allrotations_title">Усі орієнтації</string>
     <string name="system_allrotations_summ">Дозволяє усі орієнтації екрану, включаючи обернену портретну</string>
@@ -176,7 +212,7 @@
     <string name="system_recommended_third_summ">Дія на третій ярлик віджета безпеки</string>
     <string name="system_recommended_fourth_title">Четверта дія</string>
     <string name="system_recommended_fourth_summ">Дія на четвертий ярлик віджета безпеки</string>
-    <string name="system_mods_betterpopups">Покращені спливаючі сповіщення</string>
+    <string name="system_mods_betterpopups">Спливаючі сповіщення</string>
     <string name="system_betterpopups_delay_title">Затримка перед приховуванням</string>
     <string name="system_betterpopups_nohide_title">Не ховати автоматом</string>
     <string name="system_betterpopups_nohide_summ">Вимикає автоматичне приховування</string>
@@ -206,6 +242,7 @@
     <string name="launcher_gestures_setting">Налаштування для перемикання</string>
     <string name="launcher_gestures_launch">Додаток для запуску</string>
     <string name="launcher_gestures_shortcut">Ярлик для запуску</string>
+    <string name="launcher_gestures_activity">Компонент для запуску</string>
     <string name="launcher_title">Робочий стіл</string>
     <string name="launcher_summ">Відображати моди для обраного лаунчера</string>
     <string name="launcher_infinitescroll_title">Нескінченна прокрутка</string>
@@ -350,6 +387,7 @@
     <string name="array_global_actions_volume_down">Зменшити гучність</string>
     <string name="array_global_actions_launch">Запустити програму</string>
     <string name="array_global_actions_shortcut">Запустити ярлик</string>
+    <string name="array_global_actions_activity">Запустити компонент</string>
     <string name="array_global_actions_toggle">Увімкнути/вимкнути настройку</string>
     <string name="array_global_actions_back">Попередній додаток</string>
     <string name="array_global_actions_powermenu">Відкрити меню управління живленням</string>
@@ -405,6 +443,9 @@
     <string name="array_static">Задати вручну</string>
     <string name="array_rainbowh">Кольори веселки (горизонтально)</string>
     <string name="array_rainbowv">Кольори веселки (вертикально)</string>
+    <string name="array_rainbow">Кольори веселки</string>
+    <string name="array_discrete">Дискретний</string>
+    <string name="array_gradual">Поступовий</string>
     <string name="array_bars_solid">Суцільні смуги</string>
     <string name="array_bars_solid_rounded">Заокруглені суцільні смуги</string>
     <string name="array_bars_dashed">Пунктирні смуги</string>
@@ -446,7 +487,7 @@
     <string name="qs_toggle_autorotate_landscape">Ландшафт</string>
     <string name="miuizer">Налаштування CustoMIUIzer</string>
     <string name="miuizer_jumptosub">Перейти до підкатегорії</string>
-    <string name="miuizer_show_newmods_title">Помічати нові моди</string>
+    <string name="miuizer_show_newmods_title">Виділяти нові моди</string>
     <string name="miuizer_new_mod">Новий!</string>
     <string name="miuizer_show_launchericon_title">Іконка в лаунчері</string>
     <string name="miuizer_show_launchericon_summ">Показувати іконку в лаунчерах</string>
@@ -501,6 +542,7 @@
     <string name="crash_confirm">Підтвердження</string>
     <string name="array_color_dark">Темна</string>
     <string name="array_color_light">Світла</string>
+    <string name="sdk_failed">Не вдалося ініціалізувати MIUI SDK. Пристрій не Xiaomi?</string>
     <string name="notselected">Не вибрано</string>
     <string name="warning">Увага!</string>
     <string name="open_xposed">Відкрити Xposed Installer</string>
@@ -524,6 +566,8 @@
     <string name="update_available">Доступне оновлення! Натисніть тут</string>
     <string name="select_app">Вибрати додаток</string>
     <string name="select_apps">Вибрати додатки</string>
+    <string name="select_activity">Вибрати компонент</string>
+    <string name="no_activities_found">Компоненти не знайдені</string>
     <string name="select_shortcut">Вибрати ярлик</string>
     <string name="search_input_description">Пошук</string>
     <string name="wifi_networks">Wi-Fi мережі</string>
@@ -578,4 +622,7 @@
     <string name="time_8h">8 годин</string>
     <string name="time_10h">10 годин</string>
     <string name="time_12h">12 годин</string>
+    <string name="white_color">Білий</string>
+    <string name="black_color">Чорний</string>
+    <string name="auto_color">Колір рядку стану</string>
 </resources>

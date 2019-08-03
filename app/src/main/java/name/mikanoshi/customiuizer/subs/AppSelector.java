@@ -24,6 +24,7 @@ import name.mikanoshi.customiuizer.utils.PrivacyAppAdapter;
 
 public class AppSelector extends SubFragmentWithSearch {
 
+	boolean initialized = false;
 	boolean standalone = false;
 	boolean multi = false;
 	boolean privacy = false;
@@ -31,17 +32,14 @@ public class AppSelector extends SubFragmentWithSearch {
 	boolean customTitles = false;
 	boolean share = false;
 	boolean openwith = false;
+	boolean activity = false;
 	String key = null;
+	Runnable process = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		this.padded = false;
 		super.onCreate(savedInstanceState);
-	}
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
 
 		standalone = getArguments().getBoolean("standalone");
 		multi = getArguments().getBoolean("multi");
@@ -50,9 +48,10 @@ public class AppSelector extends SubFragmentWithSearch {
 		customTitles = getArguments().getBoolean("custom_titles");
 		share = getArguments().getBoolean("share");
 		openwith = getArguments().getBoolean("openwith");
+		activity = getArguments().getBoolean("activity");
 		key = getArguments().getString("key");
 
-		final Runnable process = new Runnable() {
+		process = new Runnable() {
 			@Override
 			public void run() {
 				if (multi && key != null) {
@@ -78,6 +77,9 @@ public class AppSelector extends SubFragmentWithSearch {
 				} else if (standalone && key != null) {
 					if (Helpers.launchableAppsList == null) return;
 					listView.setAdapter(new AppDataAdapter(getContext(), Helpers.launchableAppsList, Helpers.AppAdapterType.Standalone, key));
+				} else if (activity) {
+					if (Helpers.installedAppsList == null) return;
+					listView.setAdapter(new AppDataAdapter(getContext(), Helpers.installedAppsList, Helpers.AppAdapterType.Default, key));
 				} else {
 					if (Helpers.launchableAppsList == null) return;
 					listView.setAdapter(new AppDataAdapter(getContext(), Helpers.launchableAppsList));
@@ -94,6 +96,14 @@ public class AppSelector extends SubFragmentWithSearch {
 								selectedApps.add(app.pkgName);
 							Helpers.prefs.edit().putStringSet(key, selectedApps).apply();
 							((AppDataAdapter)parent.getAdapter()).updateSelectedApps();
+						} else if (activity) {
+							AppData app = (AppData)parent.getAdapter().getItem(position);
+							Bundle args = new Bundle();
+							args.putString("key", key);
+							args.putString("package", app.pkgName);
+							ActivitySelector activitySelect = new ActivitySelector();
+							activitySelect.setTargetFragment(AppSelector.this, getTargetRequestCode());
+							openSubFragment(activitySelect, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_activity, R.layout.prefs_app_selector);
 						} else if (privacy) {
 							AppData app = (AppData)parent.getAdapter().getItem(position);
 							try {
@@ -140,15 +150,16 @@ public class AppSelector extends SubFragmentWithSearch {
 							Intent intent = new Intent(getContext(), this.getClass());
 							AppData app = (AppData)parent.getAdapter().getItem(position);
 							if (app.pkgName.equals("") && app.actName.equals(""))
-								intent.putExtra("activity", "");
+								intent.putExtra("app", "");
 							else
-								intent.putExtra("activity", app.pkgName + "|" + app.actName);
+								intent.putExtra("app", app.pkgName + "|" + app.actName);
 							getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
 							finish();
 						}
 					}
 				});
 				if (getView() != null) getView().findViewById(R.id.am_progressBar).setVisibility(View.GONE);
+				initialized = true;
 			}
 		};
 
@@ -157,7 +168,7 @@ public class AppSelector extends SubFragmentWithSearch {
 			public void run() {
 				try { sleep(animDur); } catch (Throwable e) {}
 				try {
-					if (privacy || applock || (multi && key != null)) {
+					if (activity || privacy || applock || (multi && key != null)) {
 						if (openwith) {
 							if (Helpers.openWithAppsList == null) Helpers.getOpenWithApps(getActivity());
 						} else if (share) {
@@ -174,6 +185,21 @@ public class AppSelector extends SubFragmentWithSearch {
 				}
 			}
 		}.start();
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		if (initialized) process.run();
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, final Intent data) {
+		if (resultCode == Activity.RESULT_OK && requestCode == getTargetRequestCode()) {
+			getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, data);
+			finish();
+		}
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 }

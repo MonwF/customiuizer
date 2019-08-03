@@ -11,6 +11,7 @@
 		<item>@string/array_global_actions_powermenu</item>
 		<item>@string/array_global_actions_launch</item>
 		<item>@string/array_global_actions_shortcut</item>
+		<item>@string/array_global_actions_activity</item>
 		<item>@string/array_global_actions_toggle</item>
 		<item>@string/array_global_actions_clearmemory</item>
 		<item>@string/array_global_actions_invertcolors</item>
@@ -27,6 +28,7 @@
 		<item>12</item>
 		<item>8</item>
 		<item>9</item>
+		<item>20</item>
 		<item>10</item>
 		<item>13</item>
 		<item>14</item>
@@ -51,6 +53,7 @@
 		<item>@string/array_global_actions_invertcolors</item>
 		<item>@string/array_global_actions_launch</item>
 		<item>@string/array_global_actions_shortcut</item>
+		<item>@string/array_global_actions_activity</item>
 		<item>@string/array_global_actions_toggle</item>
 		<item>@string/array_media_playpause</item>
 		<item>@string/array_media_next</item>
@@ -75,6 +78,7 @@
 		<item>14</item>
 		<item>8</item>
 		<item>9</item>
+		<item>20</item>
 		<item>10</item>
 		<item>85</item>
 		<item>87</item>
@@ -98,6 +102,7 @@
 		<item>@string/array_global_actions_invertcolors</item>
 		<item>@string/array_global_actions_launch</item>
 		<item>@string/array_global_actions_shortcut</item>
+		<item>@string/array_global_actions_activity</item>
 		<item>@string/array_global_actions_toggle</item>
 	</string-array>
 	<integer-array name="global_actions_controls_val">
@@ -117,6 +122,7 @@
 		<item>14</item>
 		<item>8</item>
 		<item>9</item>
+		<item>20</item>
 		<item>10</item>
 	</integer-array>
 
@@ -128,6 +134,7 @@
 		<item>@string/array_global_actions_invertcolors</item>
 		<item>@string/array_global_actions_launch</item>
 		<item>@string/array_global_actions_shortcut</item>
+		<item>@string/array_global_actions_activity</item>
 		<item>@string/array_global_actions_toggle</item>
 	</string-array>
 	<integer-array name="global_actions_recents_val">
@@ -138,6 +145,7 @@
 		<item>14</item>
 		<item>8</item>
 		<item>9</item>
+		<item>20</item>
 		<item>10</item>
 	</integer-array>
 
@@ -412,6 +420,17 @@
 		<item>4</item>
 	</string-array>
 
+	<string-array name="indicatorcolor">
+		<item>@string/array_discrete</item>
+		<item>@string/array_gradual</item>
+		<item>@string/array_rainbow</item>
+	</string-array>
+	<string-array name="indicatorcolor_val">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+	</string-array>
+
 	<string-array name="visualizerstyle">
 		<item>@string/array_bars_solid</item>
 		<item>@string/array_bars_solid_rounded</item>
@@ -449,6 +468,17 @@
 		<item>@string/array_doc</item>
 		<item>@string/array_archive</item>
 		<item>@string/array_any</item>
+	</string-array>
+
+	<string-array name="selectivebt">
+		<item>@string/array_default</item>
+		<item>@string/array_mobiletypeicon_connected</item>
+		<item>@string/array_always</item>
+	</string-array>
+	<string-array name="selectivebt_val">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
 	</string-array>
 
 	<string-array name="placeholder_array">

@@ -1,3 +1,15 @@
+1.6.7
+[New] Customizable battery bar indicator
+[New] Hide statusbar icons
+[New] Show alarm icon only during the defined number of hours before next alarm
+[New] Hide Bluetooth icon when no devices are connected
+[New] Prevent stock MIUI action from closing selected apps
+[New] Actions: Launch any activity of any package
+[New][Android 9+] Display text magnifier during selection (for TextView-based elements only)
+[Improved] Color pickers in module settings (darker colors selection and landscape layout support)
+[Fixed][Alarm clock compatibility] Incorrect alarm time
+[Fixed] Some UI bugs
+
 1.6.6
 [New] Allow all screen rotations
 [New] Vibrate on successful fingerprint authentication

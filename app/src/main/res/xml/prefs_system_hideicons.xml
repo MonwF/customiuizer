@@ -1,0 +1,84 @@
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:miuizer="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_battery1"
+		android:title="@string/system_statusbaricons_battery1_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_battery2"
+		android:title="@string/system_statusbaricons_battery2_title"
+		android:summary="@string/system_statusbaricons_battery_summ"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_battery3"
+		android:title="@string/system_statusbaricons_battery3_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_alarm"
+		android:title="@string/system_statusbaricons_alarm_title"
+		android:summary="@string/system_statusbaricons_alarm_summ"
+		android:defaultValue="false"
+		android:disableDependentsState="true" />
+
+	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		android:key="pref_key_system_statusbaricons_alarmn"
+		android:title="@string/system_statusbaricons_alarmn_title"
+		android:summary="@string/system_statusbaricons_alarmn_summ"
+		android:dependency="pref_key_system_statusbaricons_alarm"
+		android:defaultValue="0"
+		miuizer:offtext="@string/array_disable"
+		miuizer:minValue="0"
+		miuizer:maxValue="48"
+		miuizer:stepValue="1"
+		miuizer:format="%d" />
+
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_system_statusbaricons_bluetooth"
+		android:title="@string/array_global_toggle_bt"
+		android:entries="@array/selectivebt"
+		android:entryValues="@array/selectivebt_val"
+		android:defaultValue="1" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_signal"
+		android:title="@string/system_statusbaricons_signal_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_sound"
+		android:title="@string/system_statusbaricons_sound_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_dnd"
+		android:title="@string/system_statusbaricons_dnd_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_headset"
+		android:title="@string/system_statusbaricons_headset_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_mute"
+		android:title="@string/system_statusbaricons_mute_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_speaker"
+		android:title="@string/system_statusbaricons_speaker_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_record"
+		android:title="@string/system_statusbaricons_record_title"
+		android:defaultValue="false" />
+
+</PreferenceScreen>

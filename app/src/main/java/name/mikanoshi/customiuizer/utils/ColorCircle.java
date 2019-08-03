@@ -1,13 +1,15 @@
 package name.mikanoshi.customiuizer.utils;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ComposeShader;
 import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.PointF;
+import android.graphics.PorterDuff;
+import android.graphics.RadialGradient;
+import android.graphics.SweepGradient;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,18 +18,18 @@ import name.mikanoshi.customiuizer.R;
 
 public class ColorCircle extends View {
 
-	private float posX;
-	private float posY;
 	private float posXin;
 	private float posYin;
 	private float radius;
 	private float innerRadius;
-	private Bitmap bitmap;
 	private int offset;
 	private Paint paint1;
 	private Paint paint2;
+	private Paint paint3;
 	private ColorListener listener;
-	private int mColor;
+	private boolean mTransparent = false;
+	private float[] mColor = new float[3];
+	private boolean initialized = false;
 
 	public ColorCircle(Context context) {
 		this(context, null);
@@ -39,32 +41,97 @@ public class ColorCircle extends View {
 
 	public ColorCircle(Context context, AttributeSet attributeSet, int i) {
 		super(context, attributeSet, i);
-		init(context);
 	}
 
 	public int getColor() {
-		return mColor;
+		return this.mTransparent ? Color.TRANSPARENT : Color.HSVToColor(this.mColor);
 	}
 
-	public void saveCirclePosition() {
-		Helpers.prefs.edit().putFloat("visualizer_circle_x", this.posX).putFloat("visualizer_circle_y", this.posY)
-							.putFloat("visualizer_circle_x_in", this.posXin).putFloat("visualizer_circle_y_in", this.posYin).apply();
+	public void setColor(int color) {
+		this.mTransparent = color == Color.TRANSPARENT;
+		Color.RGBToHSV(Color.red(color), Color.green(color), Color.blue(color), this.mColor);
+		if (this.listener != null) this.listener.onColorSelected(mTransparent ? Color.TRANSPARENT : Color.HSVToColor(this.mColor));
+		PointF coords = getPointForColor();
+		updatePickerPos(coords.x, coords.y);
+		postInvalidate();
 	}
 
-	private void init(Context context) {
+	private void update() {
+		float diameter = Math.min(getResources().getDisplayMetrics().widthPixels, getResources().getDisplayMetrics().heightPixels) *
+						(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 0.7f : 0.8f);
+		this.radius = diameter / 2.0f;
+		this.innerRadius = this.radius - this.offset * 2;
+		this.getLayoutParams().width = Math.round(diameter);
+		this.getLayoutParams().height = Math.round(diameter);
+
+		int steps = 6;
+		int[] colors = new int[steps + 1];
+		float[] hsv = new float[] { 0.0f, 1.0f, 1.0f };
+		for (int i = 0; i < steps; i++) {
+			hsv[0] = (360f / steps) * i;
+			colors[i] = Color.HSVToColor(hsv);
+		}
+		colors[steps] = colors[0];
+
+		SweepGradient sweepGradient = new SweepGradient(this.radius, this.radius, colors, null);
+		RadialGradient radialGradient = new RadialGradient(this.radius, this.radius, this.radius, 0xFFFFFFFF, 0x00FFFFFF, android.graphics.Shader.TileMode.CLAMP);
+		ComposeShader shader = new ComposeShader(sweepGradient, radialGradient, PorterDuff.Mode.SRC_OVER);
+		this.paint1.setShader(shader);
+	}
+
+	public PointF getPointForColor() {
+		float hue = this.mColor[0];
+		float sat = this.mColor[1];
+		PointF point = new PointF();
+		point.x = (float)(this.radius + this.radius * sat * Math.cos(Math.toRadians(hue)));
+		point.y = (float)(this.radius + this.radius * sat * Math.sin(Math.toRadians(hue)));
+		return point;
+	}
+
+	public void getColorForPoint(int x, int y) {
+		x -= this.radius;
+		y -= this.radius;
+		this.mColor[0] = (float)(Math.toDegrees(Math.atan2(y, x)) + 360f) % 360f;
+		this.mColor[1] = Math.max(0f, Math.min(1f, (float)(Math.hypot(x, y) / this.radius)));
+		this.mTransparent = false;
+	}
+
+	@Override
+	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+		super.onSizeChanged(w, h, oldw, oldh);
+		update();
+		postInvalidate();
+	}
+
+	public void init() {
 		setLayerType(View.LAYER_TYPE_HARDWARE, null);
 		this.paint1 = new Paint();
+		this.paint1.setAntiAlias(true);
+		//this.paint1.setDither(true);
 		this.paint2 = new Paint();
-		this.bitmap = ((BitmapDrawable)context.getResources().getDrawable(R.drawable.palette, context.getTheme())).getBitmap();
-		this.offset = (int)context.getResources().getDimension(R.dimen.screen_color_preview_offset);
-		float diameter = context.getResources().getDimension(R.dimen.screen_color_preview_diameter);
-		this.radius = diameter / 2.0f - 3.0f;
-		this.innerRadius = this.radius - this.offset;
-		this.posX = Helpers.prefs.getFloat("visualizer_circle_x", diameter / 2.0f);
-		this.posY = Helpers.prefs.getFloat("visualizer_circle_y", diameter / 2.0f);
-		this.posXin = Helpers.prefs.getFloat("visualizer_circle_x_in", diameter / 2.0f);
-		this.posYin = Helpers.prefs.getFloat("visualizer_circle_y_in", diameter / 2.0f);
-		this.mColor = this.bitmap.getPixel((int)this.posX, (int)this.posY);
+		this.paint2.setAntiAlias(true);
+		this.paint2.setColor(Color.CYAN);
+		this.paint2.setStrokeWidth(2.0f);
+		this.paint2.setStyle(Paint.Style.STROKE);
+		this.paint3 = new Paint();
+		this.paint3.setAntiAlias(true);
+		this.paint3.setColor(Color.WHITE);
+		this.paint3.setStyle(Paint.Style.FILL_AND_STROKE);
+		this.offset = (int)getResources().getDimension(R.dimen.screen_color_preview_offset);
+		int prefColor = Helpers.prefs.getInt((String)getTag(), Color.WHITE);
+		this.mTransparent = prefColor == Color.TRANSPARENT;
+		Color.RGBToHSV(Color.red(prefColor), Color.green(prefColor), Color.blue(prefColor), this.mColor);
+		update();
+		PointF coords = getPointForColor();
+		updatePickerPos(coords.x, coords.y);
+		initialized = true;
+		postInvalidate();
+	}
+
+	public void setValue(float value) {
+		this.mTransparent = false;
+		this.mColor[2] = value;
+		if (this.listener != null) this.listener.onColorSelected(Color.HSVToColor(this.mColor));
 		postInvalidate();
 	}
 
@@ -77,106 +144,50 @@ public class ColorCircle extends View {
 	}
 
 	private float distanceToCenter(float f, float f2) {
-		return (float)Math.sqrt(Math.pow((double)(this.radius - f), 2.0d) + Math.pow((double)(this.radius - f2), 2.0d));
+		return (float)Math.hypot((double)(this.radius - f), (double)(this.radius - f2));
 	}
 
-	private float distanceToInnerCenter(float f, float f2) {
-		return (float)Math.sqrt(Math.pow((double)(this.radius - f), 2.0d) + Math.pow((double)(this.radius - f2), 2.0d));
+	private boolean isInCircle(float f, float f2, float radius) {
+		return distanceToCenter(f, f2) <= radius;
 	}
 
-	private boolean isInCircle(float f, float f2) {
-		return distanceToCenter(f, f2) <= this.radius;
+	private void limitByCircle(float f, float f2, float radius) {
+		float angle = (float)Math.atan2(f - this.radius, f2 - this.radius);
+		this.posXin = radius + (float)(radius * Math.sin(angle)) + this.offset * 2;
+		this.posYin = radius + (float)(radius * Math.cos(angle)) + this.offset * 2;
 	}
 
-	private boolean isInInnerCircle(float f, float f2) {
-		return distanceToInnerCenter(f, f2) <= this.innerRadius;
-	}
-
-	private void limitByCircle(float f, float f2) {
-		float d = distanceToCenter(f, f2);
-		float abs = (Math.abs(f - this.radius) * this.radius) / d;
-		float abs2 = (Math.abs(f2 - this.radius) * this.radius) / d;
-		float correction = 1.5f;
-		if (f > this.radius) {
-			if (f2 > this.radius) {
-				this.posY = this.radius + abs2 + correction;
-			} else if (f2 < this.radius) {
-				this.posY = this.radius - abs2 + correction;
-			}
-			this.posX = this.radius + abs + correction;
-		} else if (f < this.radius) {
-			if (f2 - this.radius > 0.0f) {
-				this.posY = this.radius + abs2 + correction;
-			} else if (f2 - this.radius < 0.0f) {
-				this.posY = this.radius - abs2 + correction;
-			}
-			this.posX = this.radius - abs + correction;
-		}
-	}
-
-	private void limitByInnerCircle(float f, float f2) {
-		float d = distanceToInnerCenter(f, f2);
-		float abs = (Math.abs(f - this.innerRadius) * this.innerRadius) / d;
-		float abs2 = (Math.abs(f2 - this.innerRadius) * this.innerRadius) / d;
-		float correction = 1.5f + this.offset / 2f;
-		if (f > this.innerRadius) {
-			if (f2 > this.innerRadius) {
-				this.posYin = this.innerRadius + abs2 + correction;
-			} else if (f2 < this.innerRadius) {
-				this.posYin = this.innerRadius - abs2 + correction;
-			}
-			this.posXin = this.innerRadius + abs + correction;
-		} else if (f < this.innerRadius) {
-			if (f2 - this.innerRadius > 0.0f) {
-				this.posYin = this.innerRadius + abs2 + correction;
-			} else if (f2 - this.innerRadius < 0.0f) {
-				this.posYin = this.innerRadius - abs2 + correction;
-			}
-			this.posXin = this.innerRadius - abs + correction;
+	private void updatePickerPos(float x, float y) {
+		if (isInCircle(x, y, this.innerRadius)) {
+			this.posXin = x;
+			this.posYin = y;
+		} else {
+			limitByCircle(x, y, this.innerRadius);
 		}
 	}
 
 	public boolean dispatchTouchEvent(MotionEvent motionEvent) {
+		if (!initialized) return false;
+
 		getParent().requestDisallowInterceptTouchEvent(true);
 		if (!isEnabled()) return true;
 
 		float x = motionEvent.getX();
 		float y = motionEvent.getY();
-
-		if (isInCircle(x, y)) {
-			this.posX = x;
-			this.posY = y;
-		} else {
-			limitByCircle(x, y);
-		}
-
-		if (isInInnerCircle(x, y)) {
-			this.posXin = x;
-			this.posYin = y;
-		} else {
-			limitByInnerCircle(x, y);
-		}
-
-		this.posX = Math.max(0, Math.min(bitmap.getWidth() - 1, Math.round(this.posX)));
-		this.posY = Math.max(0, Math.min(bitmap.getHeight() - 1, Math.round(this.posY)));
-		this.mColor = this.bitmap.getPixel((int)this.posX, (int)this.posY);
-		if (this.listener != null) this.listener.onColorSelected(this.mColor);
+		updatePickerPos(x, y);
+		getColorForPoint((int)x, (int)y);
+		if (this.listener != null) this.listener.onColorSelected(Color.HSVToColor(this.mColor));
 		postInvalidate();
+
 		return true;
 	}
 
-	@SuppressLint("DrawAllocation")
 	public void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		this.paint1.setMaskFilter(null);
-		canvas.drawBitmap(this.bitmap, null, new Rect(this.offset, this.offset, getWidth() - this.offset, getHeight() - this.offset), this.paint1);
-		this.paint2.setColor(Color.CYAN);
-		this.paint2.setStrokeWidth(2.0f);
-		this.paint2.setStyle(Paint.Style.STROKE);
+		if (!initialized) return;
+		canvas.drawCircle(this.radius, this.radius, this.radius - this.offset * 2, paint1);
 		canvas.drawCircle(this.posXin, this.posYin, (float)this.offset, this.paint2);
-		this.paint2.setColor(Color.WHITE);
-		this.paint2.setStyle(Paint.Style.FILL_AND_STROKE);
-		canvas.drawCircle(this.posXin, this.posYin, (float)(this.offset - 2), this.paint2);
+		canvas.drawCircle(this.posXin, this.posYin, (float)(this.offset - 2), this.paint3);
 	}
 
 }

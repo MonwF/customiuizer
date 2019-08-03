@@ -24,6 +24,12 @@
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_magnifier"
+		android:title="@string/system_magnifier_title"
+		android:summary="@string/system_magnifier_summ"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_cleanshare"
 		android:title="@string/system_cleanshare_title"
 		android:summary="@string/system_cleanshare_summ"
@@ -78,6 +84,19 @@
 		android:defaultValue="false"
 		android:dependency="pref_key_system_defaultusb"
 		miuizer:child="true" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_forceclose"
+		android:title="@string/system_forceclose_title"
+		android:summary="@string/system_forceclose_summ"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/system_popupnotif_apps_title"
+		android:key="pref_key_system_forceclose_apps"
+		android:dependency="pref_key_system_forceclose"
+		miuizer:child="true"
+		miuizer:countAsSummary="true" />
 
 	<PreferenceCategory
 		android:key="pref_key_system_cat_screen"
@@ -268,6 +287,16 @@
 	<PreferenceCategory
 		android:key="pref_key_system_cat_statusbar"
 		android:title="@string/system_mods_statusbar">
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_statusbaricons_cat"
+			android:title="@string/system_statusbaricons_title"
+			android:summary="@string/system_statusbaricons_summ" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_batteryindicator_cat"
+			android:title="@string/system_batteryindicator_title"
+			android:summary="@string/system_batteryindicator_summ" />
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_system_statusbarheight"

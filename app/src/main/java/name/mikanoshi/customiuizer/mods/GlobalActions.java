@@ -58,6 +58,31 @@ public class GlobalActions {
 	public static Object mStatusBar = null;
 //	public static FloatingSelector floatSel = null;
 
+	public static final String[] actionPrefs = new String[]{
+		"pref_key_launcher_swipedown",
+		"pref_key_launcher_swipedown2",
+		"pref_key_launcher_swipeup",
+		"pref_key_launcher_swipeup2",
+		"pref_key_launcher_swiperight",
+		"pref_key_launcher_swipeleft",
+		"pref_key_launcher_shake",
+		"pref_key_controls_navbarleft",
+		"pref_key_controls_navbarleftlong",
+		"pref_key_controls_navbarright",
+		"pref_key_controls_navbarrightlong",
+		"pref_key_controls_fingerprint1",
+		"pref_key_controls_fingerprint2",
+		"pref_key_controls_fingerprintlong",
+		"pref_key_controls_backlong",
+		"pref_key_controls_homelong",
+		"pref_key_controls_menulong",
+		"pref_key_launcher_doubletap",
+		"pref_key_system_recommended_first",
+		"pref_key_system_recommended_second",
+		"pref_key_system_recommended_third",
+		"pref_key_system_recommended_fourth"
+	};
+
 	public static boolean handleAction(int action, int extraLaunch, int extraToggle, Context helperContext) {
 		switch (action) {
 			case 2: return expandNotifications(helperContext);
@@ -68,6 +93,7 @@ public class GlobalActions {
 			case 7: return openRecents(helperContext);
 			case 8: return launchApp(helperContext, extraLaunch);
 			case 9: return launchShortcut(helperContext, extraLaunch);
+			case 20: return launchActivity(helperContext, extraLaunch);
 			case 10: return toggleThis(helperContext, extraToggle);
 			case 11: return switchToPrevApp(helperContext);
 			case 12: return openPowerMenu(helperContext);
@@ -322,6 +348,11 @@ public class GlobalActions {
 				} catch (Throwable t) {
 					XposedBridge.log(t);
 				}
+			}
+
+			if (action.equals("name.mikanoshi.customiuizer.mods.action.LaunchIntent")) {
+				Intent launchIntent = intent.getParcelableExtra("intent");
+				if (launchIntent != null) context.startActivity(launchIntent);
 			}
 
 			if (action.equals("name.mikanoshi.customiuizer.mods.action.VolumeUp")) {
@@ -623,6 +654,7 @@ public class GlobalActions {
 				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.SimulateMenu");
 				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.VolumeUp");
 				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.VolumeDown");
+				intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.LaunchIntent");
 				//intentfilter.addAction("name.mikanoshi.customiuizer.mods.action.KillForegroundAppShedule");
 
 				// Toggles
@@ -797,84 +829,48 @@ public class GlobalActions {
 
 	public static Intent getAppIntent(Context context, int action) {
 		try {
-			String pkgAppName = null;
-			switch (action) {
-				case 1: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_launcher_swipedown_app", null); break;
-				case 2: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_launcher_swipedown2_app", null); break;
-				case 3: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_launcher_swipeup_app", null); break;
-				case 4: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_launcher_swipeup2_app", null); break;
-				case 5: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_launcher_swiperight_app", null); break;
-				case 6: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_launcher_swipeleft_app", null); break;
-				case 7: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_launcher_shake_app", null); break;
-				case 8: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_navbarleft_app", null); break;
-				case 9: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_navbarleftlong_app", null); break;
-				case 10: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_navbarright_app", null); break;
-				case 11: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_navbarrightlong_app", null); break;
-				case 12: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_fingerprint1_app", null); break;
-				case 13: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_fingerprint2_app", null); break;
-				case 14: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_fingerprintlong_app", null); break;
-				case 15: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_backlong_app", null); break;
-				case 16: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_homelong_app", null); break;
-				case 17: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_controls_menulong_app", null); break;
-				case 18: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_launcher_doubltap_app", null); break;
-				case 19: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_system_recommended_first_app", null); break;
-				case 20: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_system_recommended_second_app", null); break;
-				case 21: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_system_recommended_third_app", null); break;
-				case 22: pkgAppName = Helpers.getSharedStringPref(context, "pref_key_system_recommended_fourth_app", null); break;
-			}
+			String pkgAppName = Helpers.getSharedStringPref(context, actionPrefs[action - 1] + "_app", null);
+			if (pkgAppName == null) return null;
 
-			if (pkgAppName != null) {
-				String[] pkgAppArray = pkgAppName.split("\\|");
-				if (pkgAppArray.length < 2) return null;
+			String[] pkgAppArray = pkgAppName.split("\\|");
+			if (pkgAppArray.length < 2) return null;
 
-				ComponentName name = new ComponentName(pkgAppArray[0], pkgAppArray[1]);
-				Intent intent = new Intent(Intent.ACTION_MAIN);
-				intent.addCategory(Intent.CATEGORY_LAUNCHER);
-				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-				intent.setComponent(name);
+			ComponentName name = new ComponentName(pkgAppArray[0], pkgAppArray[1]);
+			Intent intent = new Intent(Intent.ACTION_MAIN);
+			intent.addCategory(Intent.CATEGORY_LAUNCHER);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+			intent.setComponent(name);
 
-				return intent;
-			} else return null;
+			return intent;
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 			return null;
 		}
 	}
 
-	public static boolean launchApp(Context context, int action) {
-		Intent intent = getAppIntent(context, action);
-		if (intent != null) context.startActivity(intent);
-		return intent != null;
+	public static Intent getActivityIntent(Context context, int action) {
+		try {
+			String pkgAppName = Helpers.getSharedStringPref(context, actionPrefs[action - 1] + "_activity", null);
+			if (pkgAppName == null) return null;
+
+			String[] pkgAppArray = pkgAppName.split("\\|");
+			if (pkgAppArray.length < 2) return null;
+
+			ComponentName name = new ComponentName(pkgAppArray[0], pkgAppArray[1]);
+			Intent intent = new Intent();
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+			intent.setComponent(name);
+
+			return intent;
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+			return null;
+		}
 	}
 
 	public static Intent getShortcutIntent(Context context, int action) {
 		try {
-			String intentString = null;
-			switch (action) {
-				case 1: intentString = Helpers.getSharedStringPref(context, "pref_key_launcher_swipedown_shortcut_intent", null); break;
-				case 2: intentString = Helpers.getSharedStringPref(context, "pref_key_launcher_swipedown2_shortcut_intent", null); break;
-				case 3: intentString = Helpers.getSharedStringPref(context, "pref_key_launcher_swipeup_shortcut_intent", null); break;
-				case 4: intentString = Helpers.getSharedStringPref(context, "pref_key_launcher_swipeup2_shortcut_intent", null); break;
-				case 5: intentString = Helpers.getSharedStringPref(context, "pref_key_launcher_swiperight_shortcut_intent", null); break;
-				case 6: intentString = Helpers.getSharedStringPref(context, "pref_key_launcher_swipeleft_shortcut_intent", null); break;
-				case 7: intentString = Helpers.getSharedStringPref(context, "pref_key_launcher_shake_shortcut_intent", null); break;
-				case 8: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_navbarleft_shortcut_intent", null); break;
-				case 9: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_navbarleftlong_shortcut_intent", null); break;
-				case 10: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_navbarright_shortcut_intent", null); break;
-				case 11: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_navbarrightlong_shortcut_intent", null); break;
-				case 12: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_fingerprint1_shortcut_intent", null); break;
-				case 13: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_fingerprint2_shortcut_intent", null); break;
-				case 14: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_fingerprintlong_shortcut_intent", null); break;
-				case 15: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_backlong_shortcut_intent", null); break;
-				case 16: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_homelong_shortcut_intent", null); break;
-				case 17: intentString = Helpers.getSharedStringPref(context, "pref_key_controls_menulong_shortcut_intent", null); break;
-				case 18: intentString = Helpers.getSharedStringPref(context, "pref_key_launcher_doubltap_shortcut_intent", null); break;
-				case 19: intentString = Helpers.getSharedStringPref(context, "pref_key_system_recommended_first_shortcut_intent", null); break;
-				case 20: intentString = Helpers.getSharedStringPref(context, "pref_key_system_recommended_second_shortcut_intent", null); break;
-				case 21: intentString = Helpers.getSharedStringPref(context, "pref_key_system_recommended_third_shortcut_intent", null); break;
-				case 22: intentString = Helpers.getSharedStringPref(context, "pref_key_system_recommended_fourth_shortcut_intent", null); break;
-			}
-
+			String intentString = Helpers.getSharedStringPref(context, actionPrefs[action - 1] + "_shortcut_intent", null);
 			if (intentString != null) {
 				Intent shortcutIntent = Intent.parseUri(intentString, 0);
 				shortcutIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
@@ -884,12 +880,6 @@ public class GlobalActions {
 			XposedBridge.log(t);
 			return null;
 		}
-	}
-
-	public static boolean launchShortcut(Context context, int action) {
-		Intent intent = getShortcutIntent(context, action);
-		if (intent != null) context.startActivity(intent);
-		return intent != null;
 	}
 
 	public static boolean takeScreenshot(Context context) {
@@ -930,6 +920,26 @@ public class GlobalActions {
 			XposedBridge.log(t);
 			return false;
 		}
+	}
+
+	public static boolean launchApp(Context context, int action) {
+		return launchIntent(context, getAppIntent(context, action));
+	}
+
+	public static boolean launchActivity(Context context, int action) {
+		return launchIntent(context, getActivityIntent(context, action));
+	}
+
+	public static boolean launchShortcut(Context context, int action) {
+		return launchIntent(context, getShortcutIntent(context, action));
+	}
+
+	public static boolean launchIntent(Context context, Intent intent) {
+		if (intent == null) return false;
+		Intent bIntent = new Intent("name.mikanoshi.customiuizer.mods.action.LaunchIntent");
+		bIntent.putExtra("intent", intent);
+		context.sendBroadcast(bIntent);
+		return true;
 	}
 
 	public static boolean openVolumeDialog(Context context) {
@@ -1123,6 +1133,6 @@ public class GlobalActions {
 		am.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, keyCode));
 
 		if (vibrate && Helpers.getSharedBoolPref(mContext, "pref_key_controls_volumemedia_vibrate", true))
-		Helpers.performStrongVibration(mContext);
+		Helpers.performStrongVibration(mContext, Helpers.getSharedBoolPref(mContext, "pref_key_controls_volumemedia_vibrate_ignore", false));
 	}
 }
