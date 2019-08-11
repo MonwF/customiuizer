@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item
+		android:id="@+id/additem"
+		android:showAsAction="ifRoom"
+		android:title="@string/add" />
+	<item
+		android:id="@+id/deleteitem"
+		android:showAsAction="ifRoom"
+		android:title="@string/delete" />
+</menu>

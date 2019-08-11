@@ -1,7 +1,6 @@
 package name.mikanoshi.customiuizer.subs;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +13,7 @@ import android.widget.SeekBar;
 
 import java.util.Objects;
 
+import miui.app.AlertDialog;
 import name.mikanoshi.customiuizer.CredentialsLauncher;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SharedPrefsProvider;
@@ -124,6 +124,14 @@ public class System extends SubFragment {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				openSubFragment(new System_BatteryIndicator(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_batteryindicator_title, R.xml.prefs_system_batteryindicator);
+				return true;
+			}
+		});
+
+		findPreference("pref_key_system_lockscreenshortcuts_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				openSubFragment(new System_LockScreenShortcuts(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_lockscreenshortcuts_title, R.xml.prefs_system_lockscreenshortcuts);
 				return true;
 			}
 		});

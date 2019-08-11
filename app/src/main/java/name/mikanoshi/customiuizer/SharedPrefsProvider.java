@@ -6,17 +6,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.UriMatcher;
 import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
-import android.provider.MediaStore;
-import android.util.Log;
+import android.os.ParcelFileDescriptor;
 
+import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,6 +33,7 @@ public class SharedPrefsProvider extends ContentProvider {
 		uriMatcher.addURI(AUTHORITY, "boolean/*/*", 3);
 		uriMatcher.addURI(AUTHORITY, "stringset/*", 4);
 		uriMatcher.addURI(AUTHORITY, "test/*", 5);
+		uriMatcher.addURI(AUTHORITY, "shortcut_icon/*", 6);
 	}
 
 	@Override
@@ -78,53 +75,38 @@ public class SharedPrefsProvider extends ContentProvider {
 				for (String str: strings) cursor.newRow().add("data", str);
 				return cursor;
 			}
-//			case 5: try {
-//				cursor = new MatrixCursor(projection);
-//				Object[] row = new Object[projection.length];
-//				if (getContext() == null) return null;
-//				InputStream stream = getContext().getResources().openRawResource(R.raw.test0);
-//				for (int i = 0; i < projection.length; i++) {
-//					if (projection[i].compareToIgnoreCase(MediaStore.MediaColumns.DISPLAY_NAME) == 0)
-//						row[i] = "CustoMIUIzer";
-//					else if (projection[i].compareToIgnoreCase(MediaStore.MediaColumns.SIZE) == 0)
-//						row[i] = stream.available();
-//					else if (projection[i].compareToIgnoreCase(MediaStore.MediaColumns.DATA) == 0)
-//						row[i] = stream;
-//					else if (projection[i].compareToIgnoreCase(MediaStore.MediaColumns.MIME_TYPE) == 0)
-//						row[i] = "image/png";
-//				}
-//				cursor.addRow(row);
-//				//if ("0".equals(parts.get(1))) cursor.newRow().add();
-//				Log.e("miuizer", "projection: " + Arrays.toString(projection));
-//				return cursor;
-//			} catch (Throwable t) {
-//				return null;
-//			}
 		}
 		return null;
 	}
 
 	@Override
 	public AssetFileDescriptor openAssetFile(Uri uri, String mode) throws FileNotFoundException {
-		if (uriMatcher.match(uri) != 5) return null;
 		if (getContext() == null) return null;
 
 		List<String> parts = uri.getPathSegments();
+		if (uriMatcher.match(uri) == 5) {
+			String filename = null;
+			if ("0".equals(parts.get(1))) filename = "test0.png";
+			else if ("1".equals(parts.get(1))) filename = "test1.mp3";
+			else if ("2".equals(parts.get(1))) filename = "test2.mp4";
+			else if ("3".equals(parts.get(1)) || "5".equals(parts.get(1))) filename = "test3.txt";
+			else if ("4".equals(parts.get(1))) filename = "test4.zip";
 
-		String filename = null;
-		if ("0".equals(parts.get(1))) filename = "test0.png";
-		else if ("1".equals(parts.get(1))) filename = "test1.mp3";
-		else if ("2".equals(parts.get(1))) filename = "test2.mp4";
-		else if ("3".equals(parts.get(1)) || "5".equals(parts.get(1))) filename = "test3.txt";
-		else if ("4".equals(parts.get(1))) filename = "test4.zip";
-
-		AssetFileDescriptor afd = null;
-		if (filename != null) try {
-			afd = getContext().getAssets().openFd(filename);
-		} catch(Throwable t) {
-			t.printStackTrace();
+			AssetFileDescriptor afd = null;
+			if (filename != null) try {
+				afd = getContext().getAssets().openFd(filename);
+			} catch (Throwable t) {
+				t.printStackTrace();
+			}
+			return afd;
+		} else if (uriMatcher.match(uri) == 6) {
+			Context context = Helpers.getProtectedContext(getContext());
+			File file = new File(context.getFilesDir() + "/shortcuts/" + parts.get(1) + "_shortcut.png");
+			if (!file.exists()) return null;
+			return new AssetFileDescriptor(ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY), 0, AssetFileDescriptor.UNKNOWN_LENGTH);
 		}
-		return afd;
+
+		return null;
 	}
 
 	@Override
@@ -146,4 +128,5 @@ public class SharedPrefsProvider extends ContentProvider {
 	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 		return 0;
 	}
+
 }

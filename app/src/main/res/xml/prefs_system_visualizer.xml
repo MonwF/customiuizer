@@ -10,6 +10,8 @@
 		android:summary="@string/system_visualizer_lockscreen_summ"
 		android:defaultValue="false" />
 
+	<PreferenceCategory>
+
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_visualizer_custom"
 		android:title="@string/system_visualizer_custom_title"
@@ -73,5 +75,7 @@
 		android:title="@string/system_visualizer_colorval_title"
 		android:dependency="pref_key_system_visualizer"
 		miuizer:dynamic="true" />
+
+	</PreferenceCategory>
 
 </PreferenceScreen>

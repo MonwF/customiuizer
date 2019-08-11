@@ -25,6 +25,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.widget.GridView;
 
 import java.util.HashSet;
 
@@ -73,38 +74,22 @@ public class Launcher {
 			@Override
 			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
 				if ((boolean)XposedHelpers.callMethod(param.thisObject, "isInNormalEditingMode")) return;
-				int action = 1;
-				int launch = 0;
-				int toggle = 0;
+				String key = null;
 				Context helperContext = ((ViewGroup)param.thisObject).getContext();
 				int numOfFingers = 1;
 				if (param.args[1] != null) numOfFingers = ((MotionEvent)param.args[1]).getPointerCount();
 				if ((int)param.args[0] == 11) {
-					if (numOfFingers == 1) {
-						action = Helpers.getSharedIntPref(helperContext, "pref_key_launcher_swipedown_action", 1);
-						launch = 1;
-						toggle = Helpers.getSharedIntPref(helperContext, "pref_key_launcher_swipedown_toggle", 0);
-					} else if (numOfFingers == 2) {
-						action = Helpers.getSharedIntPref(helperContext, "pref_key_launcher_swipedown2_action", 1);
-						launch = 2;
-						toggle = Helpers.getSharedIntPref(helperContext, "pref_key_launcher_swipedown2_toggle", 0);
-					}
-					if (action <= 1) return;
-					boolean res = GlobalActions.handleAction(action, launch, toggle, helperContext);
-					if (res) param.setResult(true);
+					if (numOfFingers == 1)
+						key = "pref_key_launcher_swipedown";
+					else if (numOfFingers == 2)
+						key = "pref_key_launcher_swipedown2";
+					if (GlobalActions.handleAction(helperContext, key)) param.setResult(true);
 				} else if ((int)param.args[0] == 10) {
-					if (numOfFingers == 1) {
-						action = Helpers.getSharedIntPref(helperContext, "pref_key_launcher_swipeup_action", 1);
-						launch = 3;
-						toggle = Helpers.getSharedIntPref(helperContext, "pref_key_launcher_swipeup_toggle", 0);
-					} else if (numOfFingers == 2) {
-						action = Helpers.getSharedIntPref(helperContext, "pref_key_launcher_swipeup2_action", 1);
-						launch = 4;
-						toggle = Helpers.getSharedIntPref(helperContext, "pref_key_launcher_swipeup2_toggle", 0);
-					}
-					if (action <= 1) return;
-					boolean res = GlobalActions.handleAction(action, launch, toggle, helperContext);
-					if (res) param.setResult(true);
+					if (numOfFingers == 1)
+						key = "pref_key_launcher_swipeup";
+					else if (numOfFingers == 2)
+						key = "pref_key_launcher_swipeup2";
+					if (GlobalActions.handleAction(helperContext, key)) param.setResult(true);
 				}
 			}
 		});
@@ -215,18 +200,11 @@ public class Launcher {
 		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 			if (e1 == null || e2 == null) return false;
 
-			if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE_HORIZ && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-				return GlobalActions.handleAction(
-					Helpers.getSharedIntPref(helperContext, "pref_key_launcher_swiperight_action", 1), 5,
-					Helpers.getSharedIntPref(helperContext, "pref_key_launcher_swiperight_toggle", 0), helperContext
-				);
-			}
-			if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE_HORIZ && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-				return GlobalActions.handleAction(
-					Helpers.getSharedIntPref(helperContext, "pref_key_launcher_swipeleft_action", 1), 6,
-					Helpers.getSharedIntPref(helperContext, "pref_key_launcher_swipeleft_toggle", 0), helperContext
-				);
-			}
+			if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE_HORIZ && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY)
+			return GlobalActions.handleAction(helperContext, "pref_key_launcher_swiperight");
+
+			if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE_HORIZ && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY)
+			return GlobalActions.handleAction(helperContext, "pref_key_launcher_swipeleft");
 
 			return false;
 		}
@@ -476,10 +454,7 @@ public class Launcher {
 		}
 
 		void onDoubleTapEvent() {
-			GlobalActions.handleAction(
-				Helpers.getSharedIntPref(mContext, "pref_key_launcher_doubletap_action", 1), 18,
-				Helpers.getSharedIntPref(mContext, "pref_key_launcher_doubletap_toggle", 0), mContext
-			);
+			GlobalActions.handleAction(mContext, "pref_key_launcher_doubletap");
 		}
 	}
 
@@ -640,6 +615,29 @@ public class Launcher {
 					param.setResult(screenCount);
 				else if ((int)param.getResult() == screenCount - 1)
 					param.setResult(0);
+			}
+		});
+	}
+
+	public static void UnlockGridsRes() {
+		MainModule.resHooks.setObjectReplacement("com.miui.home", "integer", "config_cell_count_x", 3);
+		MainModule.resHooks.setObjectReplacement("com.miui.home", "integer", "config_cell_count_y", 4);
+		MainModule.resHooks.setObjectReplacement("com.miui.home", "integer", "config_cell_count_x_min", 3);
+		MainModule.resHooks.setObjectReplacement("com.miui.home", "integer", "config_cell_count_y_min", 4);
+		MainModule.resHooks.setObjectReplacement("com.miui.home", "integer", "config_cell_count_x_max", 6);
+		MainModule.resHooks.setObjectReplacement("com.miui.home", "integer", "config_cell_count_y_max", 7);
+	}
+
+	public static void FolderColumnsHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.miui.home.launcher.Folder", lpparam.classLoader, "onFinishInflate", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+				try {
+					GridView mContent = (GridView)XposedHelpers.getObjectField(param.thisObject, "mContent");
+					mContent.setNumColumns(MainModule.mPrefs.getInt("launcher_folder_cols", 3));
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
 			}
 		});
 	}

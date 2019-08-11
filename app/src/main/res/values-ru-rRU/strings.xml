@@ -270,6 +270,10 @@
 	<string name="appsort_running">Состояние (по умолчанию)</string>
 	<string name="appsort_storage">Занимаемое место</string>
 	<string name="cancel">Отмена</string>
+	<string name="add">Добавить</string>
+	<string name="delete">Удалить</string>
+	<string name="delete_item_info">Используйте долгое нажатие для удаления ярлыка</string>
+	<string name="change_icon">Изменить иконку</string>
 	<string name="crash_confirm">Подтверждение</string>
 	<string name="launcher_gestures">Жесты</string>
 	<string name="launcher_gestures_action">Действие</string>
@@ -445,6 +449,7 @@
 	<string name="system_statusbaricons_alarmn_title">Избирательное отображение будильника</string>
 	<string name="system_statusbaricons_alarmn_summ">Начинает показывать иконку будильника только за указанное количество часов до его срабатывания</string>
 	<string name="system_statusbaricons_signal_title">Сигнал мобильной сети</string>
+	<string name="system_statusbaricons_hotspot_title">Мобильная точка доступа</string>
 	<string name="system_statusbaricons_sound_title">Профили звука</string>
 	<string name="system_statusbaricons_dnd_title">Режим Не беспокоить</string>
 	<string name="system_statusbaricons_headset_title">Наушники</string>
@@ -515,6 +520,8 @@
 	<string name="system_removedismiss_summ">Убирает из шторки кнопку для удаления всех уведомлений</string>
 	<string name="system_notifrowmenu_title">Расширенное меню уведомления</string>
 	<string name="system_notifrowmenu_summ">Добавляет новые действия в меню уведомления (открывается по свайпу влево) - открыть информацию о приложении и принудительно закрыть приложение</string>
+	<string name="system_disableanynotif_title">Отключение любых уведомлений</string>
+	<string name="system_disableanynotif_summ">Разрешает отключать даже системные уведомления</string>
 	<string name="system_expandnotifs_title">Разворачивать уведомления</string>
 	<string name="system_expandnotifs_summ">Показывать уведомления в полностью развёрнутом виде</string>
 	<string name="system_expandnotifs_apps_title">Чёрно-белый список</string>
@@ -538,6 +545,8 @@
 	<string name="system_noducking_summ">Не понижать громкость играющей в данный момент музыки для проигрывания звука уведомления</string>
 	<string name="system_separatevolume_title">Раздельные настройки громкости</string>
 	<string name="system_separatevolume_summ">Позволяет изменить громкость в Настройках отдельно для звонков/уведомлений/системных звуков</string>
+	<string name="system_separatevolume_slider_title">Ползунок громкости уведомлений</string>
+	<string name="system_separatevolume_slider_summ">Добавляет ползунок уведомлений в открытую панель громкости</string>
 	<string name="system_volumetimer_title">Расширенные таймеры</string>
 	<string name="system_volumetimer_summ">Добавляет больше интервалов в таймеры режимов Без звука и Не беспокоить</string>
 	<string name="system_volumesteps_title">Множитель шагов громкости</string>
@@ -596,6 +605,17 @@
 	<string name="system_credentials_summ">Авторизация в некоторых приложениях требует доступа к учётным данным, но при пропуске ПИН-кода/пароля/графического ключа они остаются заблокированными. Данная опция добавляет иконку в ланчере для разблокировки учётных данных.</string>
 	<string name="system_pocketmode_title">Режим \"В кармане\"</string>
 	<string name="system_pocketmode_summ">Вернуть Режим \"В кармане\" в расширенные настройки экрана блокировки на устройствах с ультразвуковым датчиком приближения</string>
+	<string name="system_lockscreenshortcuts_title">Пользовательские действия</string>
+	<string name="system_lockscreenshortcuts_summ">Настраиваемые действия на ярлыки и жесты</string>
+	<string name="system_lockscreenshortcuts_right_off_title">Отключить свайп влево</string>
+	<string name="system_lockscreenshortcuts_right_title">Действие на свайп влево</string>
+	<string name="system_lockscreenshortcuts_right_image_title">Изменить правую иконку</string>
+	<string name="system_lockscreenshortcuts_right_image_summ">Заменить иконку камеры на иконку CustoMIUIzer</string>
+	<string name="system_lockscreenshortcuts_left_off_title">Отключить свайп вправо</string>
+	<string name="system_lockscreenshortcuts_left_title">Ярлыки на левом экране</string>
+	<string name="system_lockscreenshortcuts_left_summ">Настройка списка ярлыков</string>
+	<string name="system_lockscreenshortcuts_left_skiplock_title">Не требовать разблокировки</string>
+	<string name="system_lockscreenshortcuts_left_skiplock_summ">Запущенные приложения будут доступны даже при заблокированном устройстве</string>
 	<string name="system_noscreenlock_act_title">Управление блокировкой</string>
 	<string name="system_noscreenlock_act_summ">Активирует динамическое управление блокировкой устройства</string>
 	<string name="system_noscreenlock_title">Отключить блокировку</string>

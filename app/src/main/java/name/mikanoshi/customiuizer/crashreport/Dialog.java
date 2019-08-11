@@ -27,6 +27,7 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -49,7 +50,6 @@ import android.widget.Toast;
 import android.widget.EditText;
 import android.widget.FrameLayout.LayoutParams;
 
-import miui.app.AlertDialog;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
 

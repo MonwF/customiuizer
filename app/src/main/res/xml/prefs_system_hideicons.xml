@@ -52,6 +52,16 @@
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_vpn"
+		android:title="@string/system_statusbaricons_vpn_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_hotspot"
+		android:title="@string/system_statusbaricons_hotspot_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbaricons_sound"
 		android:title="@string/system_statusbaricons_sound_title"
 		android:defaultValue="false" />

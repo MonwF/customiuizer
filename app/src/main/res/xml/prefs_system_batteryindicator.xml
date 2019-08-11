@@ -9,6 +9,8 @@
 		android:title="@string/enable_mod"
 		android:defaultValue="false" />
 
+	<PreferenceCategory>
+
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_batteryindicator_rounded"
 		android:title="@string/system_batteryindicator_rounded_title"
@@ -122,4 +124,6 @@
 		android:summary="@string/system_batteryindicator_test_summ"
 		android:dependency="pref_key_system_batteryindicator" />
 
-	</PreferenceScreen>
+	</PreferenceCategory>
+
+</PreferenceScreen>

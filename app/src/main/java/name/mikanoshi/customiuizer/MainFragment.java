@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -206,18 +207,7 @@ public class MainFragment extends PreferenceFragmentBase {
 						AlertDialog dlg = builder.create();
 						if (isFragmentReady(act)) dlg.show();
 					}
-				}); else if (Helpers.areXposedResourceHooksDisabled())
-				act.runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						AlertDialog.Builder builder = new AlertDialog.Builder(act);
-						builder.setTitle(R.string.xposed_not_reshooks);
-						builder.setMessage(R.string.xposed_not_reshooks_explain);
-						builder.setNeutralButton(R.string.okay, null);
-						AlertDialog dlg = builder.create();
-						if (isFragmentReady(act)) dlg.show();
-					}
-				});	else if (isFragmentReady(act) && !miuizerModuleActive)
+				}); else if (isFragmentReady(act) && !miuizerModuleActive)
 				act.runOnUiThread(new Runnable() {
 					public void run() {
 						showXposedDialog(act);

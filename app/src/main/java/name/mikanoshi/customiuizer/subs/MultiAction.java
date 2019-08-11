@@ -35,6 +35,10 @@ public class MultiAction extends SubFragment {
 	private String shortcutIconPath = null;
 	private Intent shortcutIntent = null;
 
+	public enum Actions {
+		NAVBAR, LAUNCHER, CONTROLS, RECENTS, LOCKSCREEN
+	}
+
 	@Override
 	@SuppressWarnings("ConstantConditions")
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -42,8 +46,37 @@ public class MultiAction extends SubFragment {
 
 		Bundle args = getArguments();
 		key = args.getString("key");
+		Actions actions = Actions.values()[args.getInt("actions")];
+
+		int entriesResId = 0;
+		int entryValuesResId = 0;
+
+		switch (actions) {
+			case NAVBAR:
+				entriesResId = R.array.global_actions_navbar;
+				entryValuesResId = R.array.global_actions_navbar_val;
+				break;
+			case LAUNCHER:
+				entriesResId = R.array.global_actions_launcher;
+				entryValuesResId = R.array.global_actions_launcher_val;
+				break;
+			case CONTROLS:
+				entriesResId = R.array.global_actions_controls;
+				entryValuesResId = R.array.global_actions_controls_val;
+				break;
+			case RECENTS:
+				entriesResId = R.array.global_actions_recents;
+				entryValuesResId = R.array.global_actions_recents_val;
+				break;
+			case LOCKSCREEN:
+				entriesResId = R.array.global_lockscreen_actions;
+				entryValuesResId = R.array.global_lockscreen_actions_val;
+				break;
+		}
 
 		SpinnerEx actionSpinner = getView().findViewById(R.id.action);
+		actionSpinner.entries = getResources().getStringArray(entriesResId);
+		actionSpinner.entryValues = getResources().getIntArray(entryValuesResId);
 		actionSpinner.setTag(key + "_action");
 		if (key.equals("pref_key_launcher_swipedown"))
 		actionSpinner.addDisabledItems(1);
@@ -105,7 +138,7 @@ public class MultiAction extends SubFragment {
 		shortcutLaunch.addValue(key + "_shortcut_intent", shortcutIntent);
 		shortcutLaunch.addValue(key + "_shortcut_name", shortcutName);
 
-		shortcutIconPath = getActivity().getFilesDir() + "/shortcuts" + "/" + key + "_shortcut.png";
+		shortcutIconPath = Helpers.getProtectedContext(getContext()).getFilesDir() + "/shortcuts/" + key + "_shortcut.png";
 		File shortcutIconFile;
 		if (shortcutIcon != null)
 			shortcutIconFile = new File(shortcutIcon);
@@ -242,7 +275,7 @@ public class MultiAction extends SubFragment {
 
 	@Override
 	public void saveSharedPrefs() {
-		File tmpIconFile = new File(getActivity().getFilesDir() + "/shortcuts/tmp.png");
+		File tmpIconFile = new File(Helpers.getProtectedContext(getContext()).getFilesDir() + "/shortcuts/tmp.png");
 		if (tmpIconFile.exists()) {
 			File prefIconFile = new File(shortcutIconPath);
 			prefIconFile.delete();
@@ -253,7 +286,7 @@ public class MultiAction extends SubFragment {
 
 	@Override
 	public void onDestroy() {
-		File tmpIconFile = new File(getActivity().getFilesDir() + "/shortcuts/tmp.png");
+		File tmpIconFile = new File(Helpers.getProtectedContext(getContext()).getFilesDir() + "/shortcuts/tmp.png");
 		if (tmpIconFile.exists()) tmpIconFile.delete();
 		super.onDestroy();
 	}

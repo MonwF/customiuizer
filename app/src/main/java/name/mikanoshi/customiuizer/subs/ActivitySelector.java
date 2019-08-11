@@ -121,7 +121,7 @@ public class ActivitySelector extends SubFragmentWithSearch {
 			Intent intent = new Intent(getContext(), this.getClass());
 
 			if (icon != null && key != null) try {
-				String dir = getActivity().getFilesDir() + "/shortcuts";
+				String dir = Helpers.getProtectedContext(getContext()).getFilesDir() + "/shortcuts";
 				String fileName = dir + "/tmp.png";
 
 				File shortcutsDir = new File(dir);

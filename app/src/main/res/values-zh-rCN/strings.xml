@@ -24,6 +24,7 @@
     <string name="system_statusbaricons_alarmn_title">选择性警报图标可见性</string>
     <string name="system_statusbaricons_alarmn_summ">仅在下次警报前所定义的小时数时显示警报图标</string>
     <string name="system_statusbaricons_signal_title">移动网络信号</string>
+    <string name="system_statusbaricons_hotspot_title">热点</string>
     <string name="system_statusbaricons_sound_title">声音情景</string>
     <string name="system_statusbaricons_dnd_title">勿扰模式</string>
     <string name="system_statusbaricons_headset_title">耳机</string>
@@ -49,8 +50,8 @@
     <string name="system_statusbarcolor_title">状态栏背景颜色</string>
     <string name="system_statusbarcolor_summ">将状态栏和应用操作栏背景颜色尽可能保持一致</string>
     <string name="system_statusbarcolor_apps_title">黑名单</string>
-    <string name="system_shortcut_app_title">快捷方式应用</string>
-    <string name="system_shortcut_app_summ">点击通知抽屉上方的快捷方式图标时打开所选应用</string>
+    <string name="system_shortcut_app_title">快捷应用</string>
+    <string name="system_shortcut_app_summ">点击通知抽屉上方的快捷图标时打开所选应用</string>
     <string name="system_clock_app_title">时钟应用</string>
     <string name="system_clock_app_summ">点击通知抽屉上方的时钟时打开所选应用</string>
     <string name="system_calendar_app_title">日历应用</string>
@@ -84,6 +85,8 @@
     <string name="system_removedismiss_summ">移除清除所有通知的按钮</string>
     <string name="system_notifrowmenu_title">扩展通知菜单</string>
     <string name="system_notifrowmenu_summ">从通知菜单打开应用信息并强制关闭应用(向左滑动通知将其打开)</string>
+    <string name="system_disableanynotif_title">禁用任何通知</string>
+    <string name="system_disableanynotif_summ">同时允许禁用系统通知</string>
     <string name="system_expandnotifs_title">展开通知</string>
     <string name="system_expandnotifs_summ">显示完整展开的通知</string>
     <string name="system_expandnotifs_apps_title">黑&amp;白名单</string>
@@ -107,6 +110,8 @@
     <string name="system_noducking_summ">播放通知声音时不降低当前播放音乐的音量</string>
     <string name="system_separatevolume_title">独立音量控制</string>
     <string name="system_separatevolume_summ">允许单独配置设置中的铃声/通知/系统声音的音量</string>
+    <string name="system_separatevolume_slider_title">通知音量滑块</string>
+    <string name="system_separatevolume_slider_summ">将通知滑块添加到扩展音量对话框</string>
     <string name="system_volumetimer_title">扩展计时器</string>
     <string name="system_volumetimer_summ">添加更多间隔到静音和勿扰模式的定时器</string>
     <string name="system_volumesteps_title">音量级数倍增器</string>
@@ -142,6 +147,17 @@
     <string name="system_credentials_summ">某些应用中的身份验证需要访问证书，但如果在开机后跳过了PIN/密码/图案，其将保持锁定状态。当前选项添加允许解锁证书的启动器图标。</string>
     <string name="system_pocketmode_title">口袋模式</string>
     <string name="system_pocketmode_summ">在具有超声波距离传感器的设备上的高级锁屏设置中恢复口袋模式选项</string>
+    <string name="system_lockscreenshortcuts_title">自定义动作</string>
+    <string name="system_lockscreenshortcuts_summ">自定义快捷方式和滑动的动作</string>
+    <string name="system_lockscreenshortcuts_right_off_title">禁用向左滑动手势</string>
+    <string name="system_lockscreenshortcuts_right_title">向左滑动动作</string>
+    <string name="system_lockscreenshortcuts_right_image_title">更改右侧图标</string>
+    <string name="system_lockscreenshortcuts_right_image_summ">用CustoMIUIzer图标替换相机图标</string>
+    <string name="system_lockscreenshortcuts_left_off_title">禁用向右滑动手势</string>
+    <string name="system_lockscreenshortcuts_left_title">左侧屏幕快捷方式</string>
+    <string name="system_lockscreenshortcuts_left_summ">管理快捷方式列表</string>
+    <string name="system_lockscreenshortcuts_left_skiplock_title">不需解锁</string>
+    <string name="system_lockscreenshortcuts_left_skiplock_summ">设备锁定时可以访问启动的应用</string>
     <string name="system_noscreenlock_act_title">屏幕锁覆盖</string>
     <string name="system_noscreenlock_act_summ">激活动态屏幕锁控制</string>
     <string name="system_noscreenlock_title">禁用屏幕锁</string>
@@ -516,7 +532,7 @@
     <string name="support_donate_title">捐赠</string>
     <string name="support_donate_summ">表达您对这个高大上模块感激之情的最好方式 :)</string>
     <string name="support_donate_inapp_title">应用内</string>
-    <string name="support_donate_inapp_summ">让Google处理</string>
+    <string name="support_donate_inapp_summ">由Google处理</string>
     <string name="support_donate_crypto_title">加密货币</string>
     <string name="support_donate_crypto_summ">未来货币 :)</string>
     <string name="support_donate_other_title">过时货币</string>
@@ -596,6 +612,10 @@
     <string name="no_browser">打开网址需要浏览器应用</string>
     <string name="okay">好的</string>
     <string name="cancel">取消</string>
+    <string name="add">添加</string>
+    <string name="delete">删除</string>
+    <string name="delete_item_info">长按要删除的快捷方式</string>
+    <string name="change_icon">更改图标</string>
     <string name="guide_longpress">长按类别快速跳到子类别</string>
     <string name="guide_search">按名称搜索模块</string>
     <string name="guide_softreboot">别忘了使用软重启应用模块。\n动态⟲模块仅需执行一次。\n更多信息请查看关于页面。</string>

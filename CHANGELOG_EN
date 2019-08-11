@@ -1,3 +1,13 @@
+1.7.0
+[New] Disable any notification including system ones
+[New] Customizable actions for shortcuts and swipes on lock screen
+[New][Hide icons] Hide VPN and Hotspot status bar icons
+[Improved][Separate volume controls] Notification slider in expanded volume dialog is optional
+[Fixed][Extended notification menu] Vertical position
+[Fixed][Hide clear button, Default USB configuration, Navbar long press actions] Compatibility with some ROMs
+[Fixed][App state control, Show additional app details] Compatibility with latest Security app
+Resource hooks support in Xposed framework is no longer required for module to work
+
 1.6.7
 [New] Customizable battery bar indicator
 [New] Hide statusbar icons

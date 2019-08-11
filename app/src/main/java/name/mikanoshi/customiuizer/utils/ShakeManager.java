@@ -92,6 +92,6 @@ public class ShakeManager implements SensorEventListener {
 	}
 	
 	private void executeShakeAction() {
-		GlobalActions.handleAction(Helpers.getSharedIntPref(helperContext, "pref_key_launcher_shake_action", 1), 7, Helpers.getSharedIntPref(helperContext, "pref_key_launcher_shake_toggle", 0), helperContext);
+		GlobalActions.handleAction(helperContext, "pref_key_launcher_shake");
 	}
 }

@@ -24,6 +24,7 @@ import name.mikanoshi.customiuizer.prefs.SpinnerExFake;
 import name.mikanoshi.customiuizer.subs.AppSelector;
 import name.mikanoshi.customiuizer.subs.ColorSelector;
 import name.mikanoshi.customiuizer.subs.MultiAction;
+import name.mikanoshi.customiuizer.subs.SortableList;
 import name.mikanoshi.customiuizer.utils.ColorCircle;
 import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.ModData;
@@ -225,7 +226,7 @@ public class SubFragment extends PreferenceFragmentBase {
 	public Preference.OnPreferenceClickListener openLauncherActions = new Preference.OnPreferenceClickListener() {
 		@Override
 		public boolean onPreferenceClick(Preference preference) {
-			openMultiAction(preference, R.layout.prefs_launcher_actions);
+			openMultiAction(preference, MultiAction.Actions.LAUNCHER);
 			return true;
 		}
 	};
@@ -233,7 +234,7 @@ public class SubFragment extends PreferenceFragmentBase {
 	public Preference.OnPreferenceClickListener openControlsActions = new Preference.OnPreferenceClickListener() {
 		@Override
 		public boolean onPreferenceClick(Preference preference) {
-			openMultiAction(preference, R.layout.prefs_controls_actions);
+			openMultiAction(preference, MultiAction.Actions.CONTROLS);
 			return true;
 		}
 	};
@@ -241,7 +242,7 @@ public class SubFragment extends PreferenceFragmentBase {
 	public Preference.OnPreferenceClickListener openNavbarActions = new Preference.OnPreferenceClickListener() {
 		@Override
 		public boolean onPreferenceClick(Preference preference) {
-			openMultiAction(preference, R.layout.prefs_navbar_actions);
+			openMultiAction(preference, MultiAction.Actions.NAVBAR);
 			return true;
 		}
 	};
@@ -249,7 +250,23 @@ public class SubFragment extends PreferenceFragmentBase {
 	public Preference.OnPreferenceClickListener openRecentsActions = new Preference.OnPreferenceClickListener() {
 		@Override
 		public boolean onPreferenceClick(Preference preference) {
-			openMultiAction(preference, R.layout.prefs_recents_actions);
+			openMultiAction(preference, MultiAction.Actions.RECENTS);
+			return true;
+		}
+	};
+
+	public Preference.OnPreferenceClickListener openLockScreenActions = new Preference.OnPreferenceClickListener() {
+		@Override
+		public boolean onPreferenceClick(Preference preference) {
+			openMultiAction(preference, MultiAction.Actions.LOCKSCREEN);
+			return true;
+		}
+	};
+
+	public Preference.OnPreferenceClickListener openSortableList = new Preference.OnPreferenceClickListener() {
+		@Override
+		public boolean onPreferenceClick(Preference preference) {
+			openSortableItemList(preference);
 			return true;
 		}
 	};
@@ -291,10 +308,11 @@ public class SubFragment extends PreferenceFragmentBase {
 		openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_apps, R.layout.prefs_app_selector);
 	}
 
-	void openMultiAction(Preference pref, int resId) {
+	void openMultiAction(Preference pref, MultiAction.Actions actions) {
 		Bundle args = new Bundle();
 		args.putString("key", pref.getKey());
-		openSubFragment(new MultiAction(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.Edit, pref.getTitleRes(), resId);
+		args.putInt("actions", actions.ordinal());
+		openSubFragment(new MultiAction(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.Edit, pref.getTitleRes(), R.layout.prefs_multiaction);
 	}
 
 	public void openStandaloneApp(Preference pref, Fragment targetFrag, int resultId) {
@@ -335,6 +353,13 @@ public class SubFragment extends PreferenceFragmentBase {
 		Bundle args = new Bundle();
 		args.putString("key", pref.getKey());
 		openSubFragment(new ColorSelector(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.Edit, pref.getTitleRes(), R.layout.fragment_selectcolor);
+	}
+
+	public void openSortableItemList(Preference pref) {
+		Bundle args = new Bundle();
+		args.putString("key", pref.getKey());
+		args.putInt("titleResId", pref.getTitleRes());
+		openSubFragment(new SortableList(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, pref.getTitleRes(), R.layout.prefs_sortable_list);
 	}
 
 	public void finish() {

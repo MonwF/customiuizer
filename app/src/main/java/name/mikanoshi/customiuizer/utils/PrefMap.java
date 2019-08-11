@@ -21,6 +21,11 @@ public class PrefMap<K, V> extends HashMap<K, V> {
 		return get(key) == null ? defValue : (String)get(key);
 	}
 
+	public int getStringAsInt(String key, int defValue) {
+		key = "pref_key_" + key;
+		return get(key) == null ? defValue : Integer.parseInt((String)get(key));
+	}
+
 	@SuppressWarnings("unchecked")
 	public Set<String> getStringSet(String key) {
 		key = "pref_key_" + key;

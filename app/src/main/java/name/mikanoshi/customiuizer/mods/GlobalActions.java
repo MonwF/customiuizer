@@ -15,7 +15,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
-import android.content.res.XModuleResources;
 import android.media.AudioManager;
 import android.net.wifi.WifiManager;
 import android.nfc.NfcAdapter;
@@ -40,7 +39,6 @@ import java.util.List;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
-import de.robv.android.xposed.callbacks.XC_InitPackageResources;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
 import miui.os.SystemProperties;
@@ -58,52 +56,34 @@ public class GlobalActions {
 	public static Object mStatusBar = null;
 //	public static FloatingSelector floatSel = null;
 
-	public static final String[] actionPrefs = new String[]{
-		"pref_key_launcher_swipedown",
-		"pref_key_launcher_swipedown2",
-		"pref_key_launcher_swipeup",
-		"pref_key_launcher_swipeup2",
-		"pref_key_launcher_swiperight",
-		"pref_key_launcher_swipeleft",
-		"pref_key_launcher_shake",
-		"pref_key_controls_navbarleft",
-		"pref_key_controls_navbarleftlong",
-		"pref_key_controls_navbarright",
-		"pref_key_controls_navbarrightlong",
-		"pref_key_controls_fingerprint1",
-		"pref_key_controls_fingerprint2",
-		"pref_key_controls_fingerprintlong",
-		"pref_key_controls_backlong",
-		"pref_key_controls_homelong",
-		"pref_key_controls_menulong",
-		"pref_key_launcher_doubletap",
-		"pref_key_system_recommended_first",
-		"pref_key_system_recommended_second",
-		"pref_key_system_recommended_third",
-		"pref_key_system_recommended_fourth"
-	};
+	public static boolean handleAction(Context context, String key) {
+		return handleAction(context, key, false);
+	}
 
-	public static boolean handleAction(int action, int extraLaunch, int extraToggle, Context helperContext) {
+	public static boolean handleAction(Context context, String key, boolean skipLock) {
+		if (key == null || key.isEmpty()) return false;
+		int action = Helpers.getSharedIntPref(context, key + "_action", 1);
+		if (action <= 1) return false;
 		switch (action) {
-			case 2: return expandNotifications(helperContext);
-			case 3: return expandEQS(helperContext);
-			case 4: return lockDevice(helperContext);
-			case 5: return goToSleep(helperContext);
-			case 6: return takeScreenshot(helperContext);
-			case 7: return openRecents(helperContext);
-			case 8: return launchApp(helperContext, extraLaunch);
-			case 9: return launchShortcut(helperContext, extraLaunch);
-			case 20: return launchActivity(helperContext, extraLaunch);
-			case 10: return toggleThis(helperContext, extraToggle);
-			case 11: return switchToPrevApp(helperContext);
-			case 12: return openPowerMenu(helperContext);
-			case 13: return clearMemory(helperContext);
-			case 14: return toggleColorInversion(helperContext);
-			case 15: return goBack(helperContext);
-			case 16: return simulateMenu(helperContext);
-			case 17: return openVolumeDialog(helperContext);
-			case 18: return volumeUp(helperContext);
-			case 19: return volumeDown(helperContext);
+			case 2: return expandNotifications(context);
+			case 3: return expandEQS(context);
+			case 4: return lockDevice(context);
+			case 5: return goToSleep(context);
+			case 6: return takeScreenshot(context);
+			case 7: return openRecents(context);
+			case 8: return launchAppIntent(context, key, skipLock);
+			case 9: return launchShortcutIntent(context, key, skipLock);
+			case 20: return launchActivityIntent(context, key, skipLock);
+			case 10: return toggleThis(context, Helpers.getSharedIntPref(context, key + "_toggle", 0));
+			case 11: return switchToPrevApp(context);
+			case 12: return openPowerMenu(context);
+			case 13: return clearMemory(context);
+			case 14: return toggleColorInversion(context);
+			case 15: return goBack(context);
+			case 16: return simulateMenu(context);
+			case 17: return openVolumeDialog(context);
+			case 18: return volumeUp(context);
+			case 19: return volumeDown(context);
 			default: return false;
 		}
 	}
@@ -556,13 +536,8 @@ public class GlobalActions {
 	}
 
 	private static int settingsIconResId;
-	public static void miuizerSettingsResInit(XC_InitPackageResources.InitPackageResourcesParam resparam) {
-		try {
-			XModuleResources modRes = XModuleResources.createInstance(MainModule.MODULE_PATH, resparam.res);
-			settingsIconResId = resparam.res.addResource(modRes, R.drawable.ic_miuizer_settings);
-		} catch (Throwable t) {
-			XposedBridge.log(t);
-		}
+	public static void miuizerSettingsResInit() {
+		settingsIconResId = MainModule.resHooks.addResource("ic_miuizer_settings", R.drawable.ic_miuizer_settings);
 	}
 
 	public static void miuizerSettingsInit(LoadPackageParam lpparam) {
@@ -827,55 +802,42 @@ public class GlobalActions {
 		}
 	}
 
-	public static Intent getAppIntent(Context context, int action) {
-		try {
-			String pkgAppName = Helpers.getSharedStringPref(context, actionPrefs[action - 1] + "_app", null);
-			if (pkgAppName == null) return null;
-
-			String[] pkgAppArray = pkgAppName.split("\\|");
-			if (pkgAppArray.length < 2) return null;
-
-			ComponentName name = new ComponentName(pkgAppArray[0], pkgAppArray[1]);
-			Intent intent = new Intent(Intent.ACTION_MAIN);
-			intent.addCategory(Intent.CATEGORY_LAUNCHER);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-			intent.setComponent(name);
-
-			return intent;
-		} catch (Throwable t) {
-			XposedBridge.log(t);
-			return null;
-		}
+	enum IntentType {
+		APP, ACTIVITY, SHORTCUT
 	}
 
-	public static Intent getActivityIntent(Context context, int action) {
+	public static Intent getIntent(Context context, String pref, IntentType intentType, boolean skipLock) {
 		try {
-			String pkgAppName = Helpers.getSharedStringPref(context, actionPrefs[action - 1] + "_activity", null);
-			if (pkgAppName == null) return null;
+			if (intentType == IntentType.APP) pref += "_app";
+			else if (intentType == IntentType.ACTIVITY) pref += "_activity";
+			else if (intentType == IntentType.SHORTCUT) pref += "_shortcut_intent";
 
-			String[] pkgAppArray = pkgAppName.split("\\|");
-			if (pkgAppArray.length < 2) return null;
+			String prefValue = Helpers.getSharedStringPref(context, pref, null);
+			if (prefValue == null) return null;
 
-			ComponentName name = new ComponentName(pkgAppArray[0], pkgAppArray[1]);
 			Intent intent = new Intent();
+			if (intentType == IntentType.SHORTCUT) {
+				intent = Intent.parseUri(prefValue, 0);
+			} else {
+				String[] pkgAppArray = prefValue.split("\\|");
+				if (pkgAppArray.length < 2) return null;
+				ComponentName name = new ComponentName(pkgAppArray[0], pkgAppArray[1]);
+				intent.setComponent(name);
+			}
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-			intent.setComponent(name);
+
+			if (intentType == IntentType.APP) {
+				intent.setAction(Intent.ACTION_MAIN);
+				intent.addCategory(Intent.CATEGORY_LAUNCHER);
+			}
+
+			if (skipLock) {
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+				intent.putExtra("ShowCameraWhenLocked", true);
+				intent.putExtra("StartActivityWhenLocked", true);
+			}
 
 			return intent;
-		} catch (Throwable t) {
-			XposedBridge.log(t);
-			return null;
-		}
-	}
-
-	public static Intent getShortcutIntent(Context context, int action) {
-		try {
-			String intentString = Helpers.getSharedStringPref(context, actionPrefs[action - 1] + "_shortcut_intent", null);
-			if (intentString != null) {
-				Intent shortcutIntent = Intent.parseUri(intentString, 0);
-				shortcutIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-				return shortcutIntent;
-			} else return null;
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 			return null;
@@ -922,16 +884,16 @@ public class GlobalActions {
 		}
 	}
 
-	public static boolean launchApp(Context context, int action) {
-		return launchIntent(context, getAppIntent(context, action));
+	public static boolean launchAppIntent(Context context, String key, boolean skipLock) {
+		return launchIntent(context, getIntent(context, key, IntentType.APP, skipLock));
 	}
 
-	public static boolean launchActivity(Context context, int action) {
-		return launchIntent(context, getActivityIntent(context, action));
+	public static boolean launchActivityIntent(Context context, String key, boolean skipLock) {
+		return launchIntent(context, getIntent(context, key, IntentType.ACTIVITY, skipLock));
 	}
 
-	public static boolean launchShortcut(Context context, int action) {
-		return launchIntent(context, getShortcutIntent(context, action));
+	public static boolean launchShortcutIntent(Context context, String key, boolean skipLock) {
+		return launchIntent(context, getIntent(context, key, IntentType.SHORTCUT, skipLock));
 	}
 
 	public static boolean launchIntent(Context context, Intent intent) {

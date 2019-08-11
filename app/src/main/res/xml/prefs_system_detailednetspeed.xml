@@ -9,6 +9,8 @@
 		android:title="@string/enable_mod"
 		android:defaultValue="false" />
 
+	<PreferenceCategory>
+
 	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_detailednetspeed_font"
 		android:title="@string/system_detailednetspeed_font_title"
@@ -52,5 +54,7 @@
 		android:title="@string/system_detailednetspeed_zero_title"
 		android:defaultValue="true"
 		android:dependency="pref_key_system_detailednetspeed" />
+
+	</PreferenceCategory>
 
 </PreferenceScreen>

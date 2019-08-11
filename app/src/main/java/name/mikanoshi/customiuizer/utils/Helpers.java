@@ -2,6 +2,7 @@ package name.mikanoshi.customiuizer.utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
@@ -19,7 +20,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -34,8 +34,11 @@ import android.content.res.XmlResourceParser;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -53,6 +56,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.LruCache;
+import android.util.Pair;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,6 +68,7 @@ import org.xmlpull.v1.XmlPullParser;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
+import miui.app.AlertDialog;
 import miui.util.HapticFeedbackUtil;
 import name.mikanoshi.customiuizer.GateWayLauncher;
 import name.mikanoshi.customiuizer.MainModule;
@@ -74,6 +79,8 @@ import name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx;
 @SuppressWarnings("WeakerAccess")
 public class Helpers {
 
+	@SuppressLint("StaticFieldLeak")
+	public static Context mModuleContext = null;
 	public static final String modulePkg = "name.mikanoshi.customiuizer";
 	public static final String prefsName = "customiuizer_prefs";
 	public static final String externalFolder = "/CustoMIUIzer/";
@@ -105,10 +112,14 @@ public class Helpers {
 	public static WakeLock mWakeLock;
 	public static boolean showNewMods = true;
 	public static final String[] newMods = new String[] {
-		"system_statusbaricons_cat",
-		"system_batteryindicator_cat",
-		"system_magnifier",
-		"system_forceclose"
+		"system_disableanynotif",
+		"system_lockscreenshortcuts_cat",
+		"system_separatevolume_slider",
+		"system_statusbaricons_vpn",
+		"system_statusbaricons_hotspot"
+	};
+	public static final String[] shortcutIcons = new String[] {
+		"bankcard", "buscard", "calculator", "calendar", "contacts", "magazine", "music", "notes", "remotecontroller", "smarthome", "miuizer"
 	};
 
 	public enum SettingsType {
@@ -149,8 +160,8 @@ public class Helpers {
 		return context.getPackageManager().getComponentEnabledSetting(new ComponentName(context, GateWayLauncher.class)) != PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
 	}
 
-	public static boolean isXposedInstallerInstalled(Context mContext) {
-		PackageManager pm = mContext.getPackageManager();
+	public static boolean isXposedInstallerInstalled(Context context) {
+		PackageManager pm = context.getPackageManager();
 		try {
 			pm.getPackageInfo("com.solohsu.android.edxp.manager", PackageManager.GET_ACTIVITIES);
 			return true;
@@ -176,10 +187,10 @@ public class Helpers {
 		return d1.exists() || d2.exists() || d3.exists();
 	}
 
-	public static String getXposedInstallerErrorLog(Context mContext) {
+	public static String getXposedInstallerErrorLog(Context context) {
 		String baseDir = null;
 		File file;
-		PackageManager pm = mContext.getPackageManager();
+		PackageManager pm = context.getPackageManager();
 
 		try {
 			pm.getPackageInfo("com.solohsu.android.edxp.manager", PackageManager.GET_ACTIVITIES);
@@ -212,8 +223,8 @@ public class Helpers {
 			return baseDir + "log/error.log";
 	}
 
-	public static boolean isSysAppUpdaterInstalled(Context mContext) {
-		PackageManager pm = mContext.getPackageManager();
+	public static boolean isSysAppUpdaterInstalled(Context context) {
+		PackageManager pm = context.getPackageManager();
 		boolean res = false;
 		try {
 			pm.getPackageInfo("com.xiaomi.discover", PackageManager.GET_ACTIVITIES);
@@ -222,8 +233,8 @@ public class Helpers {
 		return res;
 	}
 
-	public static void showOKDialog(Context mContext, int title, int text) {
-		AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+	public static void showOKDialog(Context context, int title, int text) {
+		AlertDialog.Builder alert = new AlertDialog.Builder(context);
 		alert.setTitle(title);
 		alert.setMessage(text);
 		alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -236,10 +247,10 @@ public class Helpers {
 		void onInputFinished(String key, String text);
 	}
 
-	public static void showInputDialog(Context mContext, final String key, int titleRes, InputCallback callback) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+	public static void showInputDialog(Context context, final String key, int titleRes, InputCallback callback) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setTitle(titleRes);
-		final EditText input = new EditText(mContext);
+		final EditText input = new EditText(context);
 		input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
 		input.setText(prefs.getString(key, ""));
 		builder.setView(input);
@@ -258,12 +269,12 @@ public class Helpers {
 		builder.show();
 	}
 	
-	public static boolean checkStorageReadable(Context mContext) {
+	public static boolean checkStorageReadable(Context context) {
 		String state = Environment.getExternalStorageState();
 		if (state.equals(Environment.MEDIA_MOUNTED_READ_ONLY) || state.equals(Environment.MEDIA_MOUNTED)) {
 			return true;
 		} else {
-			showOKDialog(mContext, R.string.warning, R.string.storage_unavailable);
+			showOKDialog(context, R.string.warning, R.string.storage_unavailable);
 			return false;
 		}
 	}
@@ -321,12 +332,12 @@ public class Helpers {
 		}
 	}
 
-	public static long getNextMIUIAlarmTime(Context mContext) {
-		String nextAlarm = Settings.System.getString(mContext.getContentResolver(), "next_alarm_clock_formatted");
+	public static long getNextMIUIAlarmTime(Context context) {
+		String nextAlarm = Settings.System.getString(context.getContentResolver(), "next_alarm_clock_formatted");
 		long nextTime = 0;
 		if (!TextUtils.isEmpty(nextAlarm)) try {
 			TimeZone timeZone = TimeZone.getTimeZone("UTC");
-			SimpleDateFormat dateFormat = new SimpleDateFormat(DateFormat.getBestDateTimePattern(Locale.getDefault(), DateFormat.is24HourFormat(mContext) ? "EHm" : "Ehma"), Locale.getDefault());
+			SimpleDateFormat dateFormat = new SimpleDateFormat(DateFormat.getBestDateTimePattern(Locale.getDefault(), DateFormat.is24HourFormat(context) ? "EHm" : "Ehma"), Locale.getDefault());
 			dateFormat.setTimeZone(timeZone);
 			long nextTimePart = dateFormat.parse(nextAlarm).getTime();
 
@@ -354,20 +365,20 @@ public class Helpers {
 		return nextTime;
 	}
 
-	public static long getNextStockAlarmTime(Context mContext) {
-		AlarmManager alarmMgr = (AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE);
+	public static long getNextStockAlarmTime(Context context) {
+		AlarmManager alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
 		AlarmManager.AlarmClockInfo aci = alarmMgr.getNextAlarmClock();
 		return aci == null ? 0 : aci.getTriggerTime();
 	}
 
 	@SuppressWarnings("ConstantConditions")
-	public static void updateNewModsMarking(Context mContext) {
-		updateNewModsMarking(mContext, Integer.parseInt(prefs.getString("pref_key_miuizer_marknewmods", "2")));
+	public static void updateNewModsMarking(Context context) {
+		updateNewModsMarking(context, Integer.parseInt(prefs.getString("pref_key_miuizer_marknewmods", "2")));
 	}
 
-	public static void updateNewModsMarking(Context mContext, int opt) {
+	public static void updateNewModsMarking(Context context, int opt) {
 		try {
-			ApplicationInfo appInfo = mContext.getPackageManager().getApplicationInfo(Helpers.modulePkg, 0);
+			ApplicationInfo appInfo = context.getPackageManager().getApplicationInfo(modulePkg, 0);
 			long appInstalled = System.currentTimeMillis() - new File(appInfo.sourceDir).lastModified();
 //			Log.e("miuizer", "installed: " + appInstalled + " msecs or " + appInstalled / (1000 * 60 * 60) + " hrs");
 			if (opt == 0)
@@ -393,13 +404,13 @@ public class Helpers {
 		title.setText(ssb);
 	}
 
-	public static void openURL(Context mContext, String url) {
-		if (mContext == null) return;
+	public static void openURL(Context context, String url) {
+		if (context == null) return;
 		Intent uriIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-		if (uriIntent.resolveActivity(mContext.getPackageManager()) != null)
-			mContext.startActivity(uriIntent);
+		if (uriIntent.resolveActivity(context.getPackageManager()) != null)
+			context.startActivity(uriIntent);
 		else
-			showOKDialog(mContext, R.string.warning, R.string.no_browser);
+			showOKDialog(context, R.string.warning, R.string.no_browser);
 	}
 
 	public static ArrayList<View> getChildViewsRecursive(View view) {
@@ -434,8 +445,8 @@ public class Helpers {
 		return res.getString(titleResId);
 	}
 
-	public static void getInstalledApps(Context mContext) {
-		final PackageManager pm = mContext.getPackageManager();
+	public static void getInstalledApps(Context context) {
+		final PackageManager pm = context.getPackageManager();
 		List<ApplicationInfo> packs = pm.getInstalledApplications(PackageManager.GET_META_DATA | PackageManager.MATCH_DISABLED_COMPONENTS);
 		installedAppsList = new ArrayList<AppData>();
 		AppData app;
@@ -456,8 +467,8 @@ public class Helpers {
 		});
 	}
 	
-	public static void getLaunchableApps(Context mContext) {
-		PackageManager pm = mContext.getPackageManager();
+	public static void getLaunchableApps(Context context) {
+		PackageManager pm = context.getPackageManager();
 		final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
 		mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 		List<ResolveInfo> packs = pm.queryIntentActivities(mainIntent, 0);
@@ -480,8 +491,8 @@ public class Helpers {
 		});
 	}
 
-	public static void getShareApps(Context mContext) {
-		PackageManager pm = mContext.getPackageManager();
+	public static void getShareApps(Context context) {
+		PackageManager pm = context.getPackageManager();
 		final Intent mainIntent = new Intent();
 		mainIntent.setAction(Intent.ACTION_SEND);
 		mainIntent.setType("*/*");
@@ -513,8 +524,8 @@ public class Helpers {
 		});
 	}
 
-	public static void getOpenWithApps(Context mContext) {
-		PackageManager pm = mContext.getPackageManager();
+	public static void getOpenWithApps(Context context) {
+		PackageManager pm = context.getPackageManager();
 		final Intent mainIntent = new Intent();
 		mainIntent.setAction(Intent.ACTION_VIEW);
 		mainIntent.setDataAndType(Uri.parse("content://" + SharedPrefsProvider.AUTHORITY + "/test/5"), "*/*");
@@ -546,13 +557,13 @@ public class Helpers {
 		});
 	}
 
-	public static CharSequence getAppName(Context mContext, String pkgActName) {
-		return getAppName(mContext, pkgActName, false);
+	public static CharSequence getAppName(Context context, String pkgActName) {
+		return getAppName(context, pkgActName, false);
 	}
 
-	public static CharSequence getAppName(Context mContext, String pkgActName, boolean forcePkg) {
-		PackageManager pm = mContext.getPackageManager();
-		String not_selected = mContext.getResources().getString(R.string.notselected);
+	public static CharSequence getAppName(Context context, String pkgActName, boolean forcePkg) {
+		PackageManager pm = context.getPackageManager();
+		String not_selected = context.getResources().getString(R.string.notselected);
 		String[] pkgActArray = pkgActName.split("\\|");
 		ApplicationInfo ai;
 
@@ -570,17 +581,41 @@ public class Helpers {
 		return null;
 	}
 
-	public static String getActionName(Context context, int action, String key) {
+	public static Drawable getAppIcon(Context context, String pkgActName) {
+		return getAppIcon(context, pkgActName, false);
+	}
+
+	public static Drawable getAppIcon(Context context, String pkgActName, boolean forcePkg) {
+		PackageManager pm = context.getPackageManager();
+		String not_selected = context.getResources().getString(R.string.notselected);
+		String[] pkgActArray = pkgActName.split("\\|");
+
+		if (!pkgActName.equals(not_selected))
+		if (pkgActArray.length >= 1 && pkgActArray[0] != null) try {
+			if (!forcePkg && pkgActArray.length >= 2 && pkgActArray[1] != null && !pkgActArray[1].trim().equals(""))
+				return pm.getActivityIcon(new ComponentName(pkgActArray[0], pkgActArray[1]));
+			else if (!pkgActArray[0].trim().equals(""))
+				return pm.getApplicationIcon(pkgActArray[0]);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static String getActionName(Context context, String key) {
 		try {
+			int action = getSharedIntPref(context, key + "_action", 1);
 			Resources modRes = getModuleRes(context);
-			if (action == 4)
+			if (action <= 1)
+				return modRes.getString(R.string.notselected);
+			else if (action == 4)
 				return modRes.getString(R.string.array_global_actions_lock);
 			else if (action == 5)
 				return modRes.getString(R.string.array_global_actions_sleep);
 			else if (action == 8)
-				return (String)Helpers.getAppName(getModuleContext(context), Helpers.getSharedStringPref(context, key + "_app", ""));
+				return (String)getAppName(getModuleContext(context), getSharedStringPref(context, key + "_app", ""), true);
 			else if (action == 9)
-				return Helpers.getSharedStringPref(context, key + "_shortcut_name", "");
+				return getSharedStringPref(context, key + "_shortcut_name", "");
 			else if (action == 10) {
 				int what = getSharedIntPref(context, key + "_toggle", 0);
 				switch (what) {
@@ -599,6 +634,77 @@ public class Helpers {
 				return modRes.getString(R.string.array_global_actions_powermenu_short);
 			else if (action == 14)
 				return modRes.getString(R.string.array_global_actions_invertcolors);
+			else if (action == 20) {
+				Context ctx = getModuleContext(context);
+				String pref = getSharedStringPref(context, key + "_activity", "");
+				String name = (String)getAppName(ctx, pref);
+				if (name == null || name.isEmpty()) name = (String)getAppName(ctx, pref, true);
+				return name;
+			} else
+				return null;
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+			return null;
+		}
+	}
+
+	@SuppressWarnings("ConstantConditions")
+	public static Pair<String, String> getActionNameLocal(Context context, String key) {
+		try {
+			int action = prefs.getInt(key + "_action", 1);
+			Resources modRes = context.getResources();
+			Pair<String, String> pair = null;
+			if (action <= 1)
+				pair = new Pair<>(modRes.getString(R.string.notselected), "");
+			else if (action == 4)
+				pair = new Pair<>(modRes.getString(R.string.array_global_actions_lock), "");
+			else if (action == 5)
+				pair = new Pair<>(modRes.getString(R.string.array_global_actions_sleep), "");
+			else if (action == 8)
+				pair = new Pair<>(modRes.getString(R.string.array_global_actions_launch), (String)getAppName(context, prefs.getString(key + "_app", ""), true));
+			else if (action == 9)
+				pair = new Pair<>(modRes.getString(R.string.array_global_actions_shortcut), prefs.getString(key + "_shortcut_name", ""));
+			else if (action == 10) {
+				int what = prefs.getInt(key + "_toggle", 0);
+				String toggle = modRes.getString(R.string.array_global_actions_toggle);
+				switch (what) {
+					case 1: pair = new Pair<>(toggle, modRes.getString(R.string.array_global_toggle_wifi)); break;
+					case 2: pair = new Pair<>(toggle, modRes.getString(R.string.array_global_toggle_bt)); break;
+					case 3: pair = new Pair<>(toggle, modRes.getString(R.string.array_global_toggle_gps)); break;
+					case 4: pair = new Pair<>(toggle, modRes.getString(R.string.array_global_toggle_nfc)); break;
+					case 5: pair = new Pair<>(toggle, modRes.getString(R.string.array_global_toggle_sound)); break;
+					case 6: pair = new Pair<>(toggle, modRes.getString(R.string.array_global_toggle_brightness)); break;
+					case 7: pair = new Pair<>(toggle, modRes.getString(R.string.array_global_toggle_rotation)); break;
+					case 8: pair = new Pair<>(toggle, modRes.getString(R.string.array_global_toggle_torch)); break;
+					case 9: pair = new Pair<>(toggle, modRes.getString(R.string.array_global_toggle_mobiledata)); break;
+				}
+			} else if (action == 12)
+				pair = new Pair<>(modRes.getString(R.string.array_global_actions_powermenu_short), "");
+			else if (action == 14)
+				pair = new Pair<>(modRes.getString(R.string.array_global_actions_invertcolors), "");
+			else if (action == 20) {
+				String pref = prefs.getString(key + "_activity", "");
+				String name = (String)getAppName(context, pref);
+				if (name == null || name.isEmpty()) name = (String)getAppName(context, pref, true);
+				pair = new Pair<>(modRes.getString(R.string.array_global_actions_activity), name);
+			}
+			return pair;
+		} catch (Throwable t) {
+			t.printStackTrace();
+			return null;
+		}
+	}
+
+	public static Drawable getActionImage(Context context, String key) {
+		try {
+			int action = getSharedIntPref(context, key + "_action", 1);
+			Context modCtx = getModuleContext(context);
+			if (action == 8)
+				return getAppIcon(modCtx, getSharedStringPref(context, key + "_app", ""));
+			else if (action == 9)
+				return getSharedShortcutIconPref(modCtx, key);
+			else if (action == 20)
+				return getAppIcon(modCtx, getSharedStringPref(context, key + "_activity", ""), true);
 			else
 				return null;
 		} catch (Throwable t) {
@@ -607,8 +713,8 @@ public class Helpers {
 		}
 	}
 
-	private static void parsePrefXml(Context mContext, int xmlResId) {
-		Resources res = mContext.getResources();
+	private static void parsePrefXml(Context context, int xmlResId) {
+		Resources res = context.getResources();
 		String lastPrefScreen = null;
 		int catResId = 0;
 		ModData.ModCat catPrefKey = null;
@@ -673,46 +779,46 @@ public class Helpers {
 		}
 	}
 
-	public static void getAllMods(Context mContext) {
+	public static void getAllMods(Context context) {
 		if (allModsList.size() > 0) return;
-		parsePrefXml(mContext, R.xml.prefs_system);
-		parsePrefXml(mContext, R.xml.prefs_launcher);
-		parsePrefXml(mContext, R.xml.prefs_controls);
-		parsePrefXml(mContext, R.xml.prefs_various);
+		parsePrefXml(context, R.xml.prefs_system);
+		parsePrefXml(context, R.xml.prefs_launcher);
+		parsePrefXml(context, R.xml.prefs_controls);
+		parsePrefXml(context, R.xml.prefs_various);
 	}
 
-	public static void performLightVibration(Context mContext) {
-		performLightVibration(mContext, false);
+	public static void performLightVibration(Context context) {
+		performLightVibration(context, false);
 	}
 
-	public static void performLightVibration(Context mContext, boolean ignoreOff) {
-		performVibration(mContext, false, ignoreOff);
+	public static void performLightVibration(Context context, boolean ignoreOff) {
+		performVibration(context, false, ignoreOff);
 	}
 
-	public static void performStrongVibration(Context mContext) {
-		performVibration(mContext, true, false);
+	public static void performStrongVibration(Context context) {
+		performVibration(context, true, false);
 	}
 
-	public static void performStrongVibration(Context mContext, boolean ignoreOff) {
-		performVibration(mContext, true, ignoreOff);
+	public static void performStrongVibration(Context context, boolean ignoreOff) {
+		performVibration(context, true, ignoreOff);
 	}
 
-	public static void performVibration(Context mContext, boolean isStrong, boolean ignoreOff) {
-		if (mContext == null) return;
-		HapticFeedbackUtil mHapticFeedbackUtil = new HapticFeedbackUtil(mContext, false);
+	public static void performVibration(Context context, boolean isStrong, boolean ignoreOff) {
+		if (context == null) return;
+		HapticFeedbackUtil mHapticFeedbackUtil = new HapticFeedbackUtil(context, false);
 		mHapticFeedbackUtil.performHapticFeedback(isStrong ? HapticFeedbackConstants.LONG_PRESS : HapticFeedbackConstants.VIRTUAL_KEY, ignoreOff);
 
 //		int state = 1;
 //		int level = 1;
 //		try {
-//			state = Settings.System.getInt(mContext.getContentResolver(), "haptic_feedback_enabled");
-//			level = Settings.System.getInt(mContext.getContentResolver(), "haptic_feedback_level");
+//			state = Settings.System.getInt(context.getContentResolver(), "haptic_feedback_enabled");
+//			level = Settings.System.getInt(context.getContentResolver(), "haptic_feedback_level");
 //		} catch (Throwable t) {
 //			XposedBridge.log(t);
 //		}
 //		if (state == 0) return;
 //
-//		Vibrator v = (Vibrator)mContext.getSystemService(Context.VIBRATOR_SERVICE);
+//		Vibrator v = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
 //		if (Build.VERSION.SDK_INT >= 26)
 //			v.vibrate(VibrationEffect.createOneShot(30, VibrationEffect.DEFAULT_AMPLITUDE));
 //		else
@@ -798,16 +904,26 @@ public class Helpers {
 	}
 
 	public static synchronized Context getModuleContext(Context context) throws Throwable {
-		return context.createPackageContext(modulePkg, Context.CONTEXT_IGNORE_SECURITY).createDeviceProtectedStorageContext();
+		return getModuleContext(context, null);
 	}
 
-	public static synchronized Context getProtectedContext(Context context, Configuration config) throws Throwable {
-		Context mContext = context.isDeviceProtectedStorage() ? context : context.createDeviceProtectedStorageContext();
-		return getLocaleContext(config == null ? mContext : mContext.createConfigurationContext(config));
+	public static synchronized Context getModuleContext(Context context, Configuration config) throws Throwable {
+		if (mModuleContext == null)
+		mModuleContext = context.createPackageContext(modulePkg, Context.CONTEXT_IGNORE_SECURITY).createDeviceProtectedStorageContext();
+		return config == null ? mModuleContext : mModuleContext.createConfigurationContext(config);
 	}
 
-	public static synchronized Context getProtectedContext(Context context) throws Throwable {
+	public static synchronized Context getProtectedContext(Context context) {
 		return getProtectedContext(context, null);
+	}
+
+	public static synchronized Context getProtectedContext(Context context, Configuration config) {
+		try {
+			Context mContext = context.isDeviceProtectedStorage() ? context : context.createDeviceProtectedStorageContext();
+			return getLocaleContext(config == null ? mContext : mContext.createConfigurationContext(config));
+		} catch (Throwable t) {
+			return context;
+		}
 	}
 
 	public static synchronized Resources getModuleRes(Context context) throws Throwable {
@@ -830,6 +946,10 @@ public class Helpers {
 
 	public static Uri boolPrefToUri(String name, boolean defValue) {
 		return Uri.parse("content://" + SharedPrefsProvider.AUTHORITY + "/boolean/" + name + "/" + (defValue ? '1' : '0'));
+	}
+
+	public static Uri shortcutIconPrefToUri(String name) {
+		return Uri.parse("content://" + SharedPrefsProvider.AUTHORITY + "/shortcut_icon/" + name);
 	}
 
 	public static Uri anyPrefToUri() {
@@ -913,6 +1033,21 @@ public class Helpers {
 			return (boolean)MainModule.mPrefs.getObject(name, false);
 		else
 			return defValue;
+	}
+
+	public static Drawable getSharedShortcutIconPref(Context context, String name) {
+		Uri uri = shortcutIconPrefToUri(name);
+		try {
+			InputStream inputStream = context.getContentResolver().openInputStream(uri);
+			if (inputStream != null && inputStream.available() > 0) {
+				Bitmap bmp = BitmapFactory.decodeStream(inputStream);
+				inputStream.close();
+				return bmp == null ? null : new BitmapDrawable(context.getResources(), bmp) ;
+			} else log("ContentResolver", "[" + name + "] InputStream fail: " + inputStream);
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+		return null;
 	}
 
 	public static class SharedPrefObserver extends ContentObserver {

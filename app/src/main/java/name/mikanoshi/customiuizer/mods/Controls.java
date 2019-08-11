@@ -8,8 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
-import android.content.res.XModuleResources;
-import android.content.res.XResources;
 import android.graphics.drawable.Drawable;
 import android.inputmethodservice.InputMethodService;
 import android.media.AudioManager;
@@ -67,6 +65,10 @@ public class Controls {
 			if (Helpers.mWakeLock != null && Helpers.mWakeLock.isHeld()) Helpers.mWakeLock.release();
 		}
 	};
+
+	public static void PowerKeyRes() {
+		MainModule.resHooks.setObjectReplacement("android", "bool", "config_supportLongPressPowerWhenNonInteractive", true);
+	}
 
 	public static void PowerKeyHook(LoadPackageParam lpparam) {
 		Helpers.hookAllMethods("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "init", new XC_MethodHook() {
@@ -293,7 +295,8 @@ public class Controls {
 		});
 	}
 
-	private static boolean handleNavBarAction(int action, int launch, int toggle, Context context) {
+	private static boolean handleNavBarAction(Context context, String key) {
+		int action = Helpers.getSharedIntPref(context, key + "_action", 1);
 		if (action >= 85 && action <= 88) {
 			if (GlobalActions.isMediaActionsAllowed(context))
 			GlobalActions.sendDownUpKeyEvent(context, action, false);
@@ -304,7 +307,7 @@ public class Controls {
 			} catch (Throwable t) {}
 			return false;
 		} else {
-			return GlobalActions.handleAction(action, launch, toggle, context);
+			return GlobalActions.handleAction(context, key);
 		}
 	}
 
@@ -349,19 +352,13 @@ public class Controls {
 		leftbtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				int action = Helpers.getSharedIntPref(v.getContext(), "pref_key_controls_navbarleft_action", 1);
-				int launch = 8;
-				int toggle = Helpers.getSharedIntPref(v.getContext(), "pref_key_controls_navbarleft_toggle", 0);
-				handleNavBarAction(action, launch, toggle, v.getContext());
+				handleNavBarAction(v.getContext(), "pref_key_controls_navbarleft");
 			}
 		});
 		leftbtn.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
-				int action = Helpers.getSharedIntPref(v.getContext(), "pref_key_controls_navbarleftlong_action", 1);
-				int launch = 9;
-				int toggle = Helpers.getSharedIntPref(v.getContext(), "pref_key_controls_navbarleftlong_toggle", 0);
-				return handleNavBarAction(action, launch, toggle, v.getContext());
+				return handleNavBarAction(v.getContext(), "pref_key_controls_navbarleftlong");
 			}
 		});
 		leftbtn.addView(left);
@@ -391,19 +388,13 @@ public class Controls {
 		rightbtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				int action = Helpers.getSharedIntPref(v.getContext(), "pref_key_controls_navbarright_action", 1);
-				int launch = 10;
-				int toggle = Helpers.getSharedIntPref(v.getContext(), "pref_key_controls_navbarright_toggle", 0);
-				handleNavBarAction(action, launch, toggle, v.getContext());
+				handleNavBarAction(v.getContext(), "pref_key_controls_navbarright");
 			}
 		});
 		rightbtn.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
-				int action = Helpers.getSharedIntPref(v.getContext(), "pref_key_controls_navbarrightlong_action", 1);
-				int launch = 11;
-				int toggle = Helpers.getSharedIntPref(v.getContext(), "pref_key_controls_navbarrightlong_toggle", 0);
-				return handleNavBarAction(action, launch, toggle, v.getContext());
+				return handleNavBarAction(v.getContext(), "pref_key_controls_navbarrightlong");
 			}
 		});
 		rightbtn.addView(right);
@@ -508,10 +499,7 @@ public class Controls {
 		public void run() {
 			if (miuiPWMContext == null || miuiPWMHandler == null) return;
 			miuiPWMHandler.removeCallbacks(longPressFingerprint);
-			int action = Helpers.getSharedIntPref(miuiPWMContext, "pref_key_controls_fingerprint1_action", 1);
-			int launch = 12;
-			int toggle = Helpers.getSharedIntPref(miuiPWMContext, "pref_key_controls_fingerprint1_toggle", 0);
-			GlobalActions.handleAction(action, launch, toggle, miuiPWMContext);
+			GlobalActions.handleAction(miuiPWMContext, "pref_key_controls_fingerprint1");
 		}
 	};
 	private static Runnable longPressFingerprint = new Runnable() {
@@ -598,15 +586,10 @@ public class Controls {
 				if (dtaction > 1 && currentTouchTime - lastTouchTime < dttimeout) {
 					mHandler.removeCallbacks(singlePressFingerprint);
 					mHandler.removeCallbacks(longPressFingerprint);
-					int launch = 13;
-					int toggle = Helpers.getSharedIntPref(mContext, "pref_key_controls_fingerprint2_toggle", 0);
-					GlobalActions.handleAction(dtaction, launch, toggle, mContext);
+					GlobalActions.handleAction(mContext, "pref_key_controls_fingerprint2");
 					wasScreenOn = false;
 				} else if (isFingerprintLongPressed) {
-					int action = Helpers.getSharedIntPref(mContext, "pref_key_controls_fingerprintlong_action", 1);
-					int launch = 14;
-					int toggle = Helpers.getSharedIntPref(mContext, "pref_key_controls_fingerprintlong_toggle", 0);
-					GlobalActions.handleAction(action, launch, toggle, mContext);
+					GlobalActions.handleAction(mContext, "pref_key_controls_fingerprintlong");
 					wasScreenOn = false;
 				} else {
 					mHandler.removeCallbacks(longPressFingerprint);
@@ -682,11 +665,8 @@ public class Controls {
 		public void run() {
 			try {
 				if (basePWMContext == null || basePWMObject == null) return;
-				int action = Helpers.getSharedIntPref(basePWMContext, "pref_key_controls_backlong_action", 1);
-				int launch = 15;
-				int toggle = Helpers.getSharedIntPref(basePWMContext, "pref_key_controls_backlong_toggle", 0);
-				if (GlobalActions.handleAction(action, launch, toggle, basePWMContext)) Helpers.performStrongVibration(basePWMContext);
-				if (action != 1) markShortcutTriggered.invoke(basePWMObject);
+				if (GlobalActions.handleAction(basePWMContext, "pref_key_controls_backlong")) Helpers.performStrongVibration(basePWMContext);
+				if (Helpers.getSharedIntPref(basePWMContext, "pref_key_controls_backlong_action", 1) != 1) markShortcutTriggered.invoke(basePWMObject);
 			} catch (Throwable t) {
 				XposedBridge.log(t);
 			}
@@ -697,11 +677,8 @@ public class Controls {
 		public void run() {
 			try {
 				if (basePWMContext == null || basePWMObject == null) return;
-				int action = Helpers.getSharedIntPref(basePWMContext, "pref_key_controls_homelong_action", 1);
-				int launch = 16;
-				int toggle = Helpers.getSharedIntPref(basePWMContext, "pref_key_controls_homelong_toggle", 0);
-				if (GlobalActions.handleAction(action, launch, toggle, basePWMContext)) Helpers.performStrongVibration(basePWMContext);
-				if (action != 1) markShortcutTriggered.invoke(basePWMObject);
+				if (GlobalActions.handleAction(basePWMContext, "pref_key_controls_homelong")) Helpers.performStrongVibration(basePWMContext);
+				if (Helpers.getSharedIntPref(basePWMContext, "pref_key_controls_homelong_action", 1) != 1) markShortcutTriggered.invoke(basePWMObject);
 			} catch (Throwable t) {
 				XposedBridge.log(t);
 			}
@@ -712,11 +689,8 @@ public class Controls {
 		public void run() {
 			try {
 				if (basePWMContext == null || basePWMObject == null) return;
-				int action = Helpers.getSharedIntPref(basePWMContext, "pref_key_controls_menulong_action", 1);
-				int launch = 17;
-				int toggle = Helpers.getSharedIntPref(basePWMContext, "pref_key_controls_menulong_toggle", 0);
-				if (GlobalActions.handleAction(action, launch, toggle, basePWMContext)) Helpers.performStrongVibration(basePWMContext);
-				if (action != 1) markShortcutTriggered.invoke(basePWMObject);
+				if (GlobalActions.handleAction(basePWMContext, "pref_key_controls_menulong")) Helpers.performStrongVibration(basePWMContext);
+				if (Helpers.getSharedIntPref(basePWMContext, "pref_key_controls_menulong_action", 1) != 1) markShortcutTriggered.invoke(basePWMObject);
 			} catch (Throwable t) {
 				XposedBridge.log(t);
 			}
@@ -751,7 +725,7 @@ public class Controls {
 			}
 		});
 
-		Helpers.findAndHookMethod("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "postKeyLongPress", int.class, boolean.class, new XC_MethodHook() {
+		Helpers.hookAllMethods("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "postKeyLongPress", new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 				if (basePWMObject == null) basePWMObject = param.thisObject;
@@ -772,7 +746,7 @@ public class Controls {
 			}
 		});
 
-		Helpers.findAndHookMethod("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "removeKeyLongPress", int.class, boolean.class, new XC_MethodHook() {
+		Helpers.hookAllMethods("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "removeKeyLongPress", new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 				try {
@@ -791,16 +765,11 @@ public class Controls {
 	}
 
 	public static void NavbarHeightRes() {
-		try {
-			XModuleResources modRes = XModuleResources.createInstance(MainModule.MODULE_PATH, null);
-			int opt = MainModule.mPrefs.getInt("controls_navbarheight", 26);
-			int heightRes = opt == 26 ? R.dimen.navigation_bar_height_47 : modRes.getIdentifier("navigation_bar_height_" + opt, "dimen", Helpers.modulePkg);
-			XResources.setSystemWideReplacement("android", "dimen", "navigation_bar_height", modRes.fwd(heightRes));
-			XResources.setSystemWideReplacement("android", "dimen", "navigation_bar_height_landscape", modRes.fwd(heightRes));
-			XResources.setSystemWideReplacement("android", "dimen", "navigation_bar_width", modRes.fwd(heightRes));
-		} catch (Throwable t) {
-			XposedBridge.log(t);
-		}
+		int opt = MainModule.mPrefs.getInt("controls_navbarheight", 26);
+		String heightRes = "navigation_bar_height_" + (opt == 26 ? 47 : opt);
+		MainModule.resHooks.setResReplacement("android", "dimen", "navigation_bar_height", heightRes);
+		MainModule.resHooks.setResReplacement("android", "dimen", "navigation_bar_height_landscape", heightRes);
+		MainModule.resHooks.setResReplacement("android", "dimen", "navigation_bar_width", heightRes);
 	}
 
 	public static void FingerprintHapticSuccessHook(LoadPackageParam lpparam) {

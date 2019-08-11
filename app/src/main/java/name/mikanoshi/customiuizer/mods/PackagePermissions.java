@@ -3,6 +3,7 @@ package name.mikanoshi.customiuizer.mods;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ResolveInfo;
 
+import static de.robv.android.xposed.XposedHelpers.findClass;
 import static de.robv.android.xposed.XposedHelpers.getObjectField;
 import static de.robv.android.xposed.XposedHelpers.setObjectField;
 
@@ -157,6 +158,14 @@ public class PackagePermissions {
 				}
 			}
 		);
+
+		try {
+			Class<?> dpgpiClass = findClass("com.android.server.pm.DefaultPermissionGrantPolicyInjector", lpparam.classLoader);
+			String[] MIUI_SYSTEM_APPS = (String[])XposedHelpers.getStaticObjectField(dpgpiClass, "MIUI_SYSTEM_APPS");
+			String[] MIUI_SYSTEM_APPS_NEW = new String[MIUI_SYSTEM_APPS.length + 1];
+			MIUI_SYSTEM_APPS_NEW[MIUI_SYSTEM_APPS_NEW.length - 1] = Helpers.modulePkg;
+			XposedHelpers.setStaticObjectField(dpgpiClass, "MIUI_SYSTEM_APPS", MIUI_SYSTEM_APPS_NEW);
+		} catch (Throwable t) {}
 	}
 
 }

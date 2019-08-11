@@ -24,6 +24,7 @@
     <string name="system_statusbaricons_alarmn_title">Вибіркове відображення будильника</string>
     <string name="system_statusbaricons_alarmn_summ">Починає показувати іконку будильника лише за вказану кількість годин до його спрацювання</string>
     <string name="system_statusbaricons_signal_title">Сигнал мобільної мережі</string>
+    <string name="system_statusbaricons_hotspot_title">Мобільна точка доступу</string>
     <string name="system_statusbaricons_sound_title">Профілі звуку</string>
     <string name="system_statusbaricons_dnd_title">Режим Не турбувати</string>
     <string name="system_statusbaricons_headset_title">Навушники</string>
@@ -84,6 +85,8 @@
     <string name="system_removedismiss_summ">Прибирає з шторки кнопку для видалення всіх сповіщень</string>
     <string name="system_notifrowmenu_title">Розширене меню сповіщення</string>
     <string name="system_notifrowmenu_summ">Додає нові дії в меню сповіщення (відкривається за свайпа вліво) - відкрити інформацію про програму та примусово закрити програму</string>
+    <string name="system_disableanynotif_title">Вимкнення будь-яких сповіщень</string>
+    <string name="system_disableanynotif_summ">Дозволяє вимикати навіть системні сповіщення</string>
     <string name="system_expandnotifs_title">Розгортати сповіщення</string>
     <string name="system_expandnotifs_summ">Показувати сповіщення в повністю розгорнутому вигляді</string>
     <string name="system_expandnotifs_apps_title">Чорно-білий список</string>
@@ -107,6 +110,8 @@
     <string name="system_noducking_summ">Не знижувати гучність граючої в даний момент музики для програвання звуку сповіщення</string>
     <string name="system_separatevolume_title">Роздільні налаштування гучності</string>
     <string name="system_separatevolume_summ">Дозволяє змінити гучність в Настройках окремо для дзвінків/сповіщень/системних звуків</string>
+    <string name="system_separatevolume_slider_title">Повзунок гучності сповіщень</string>
+    <string name="system_separatevolume_slider_summ">Додає повзунок сповіщень в відкриту панель гучності</string>
     <string name="system_volumetimer_title">Розширені таймери</string>
     <string name="system_volumetimer_summ">Додає більше інтервалів в таймери режимів Без звуку і Не турбувати</string>
     <string name="system_volumesteps_title">Множник кроків гучності</string>
@@ -142,6 +147,17 @@
     <string name="system_credentials_summ">Авторизація в деяких додатках вимагає доступу до облікових даних, але при пропуску ПІН-коду/пароля/графічного ключа вони залишаються заблокованими. Дана опція додає іконку в лаунчері для розблокування облікових даних.</string>
     <string name="system_pocketmode_title">Режим \"У кишені\"</string>
     <string name="system_pocketmode_summ">Повернути Режим \"У кишені\" в розширені налаштування екрану блокування на пристроях з ультразвуковим датчиком наближення</string>
+    <string name="system_lockscreenshortcuts_title">Користувацькі дії</string>
+    <string name="system_lockscreenshortcuts_summ">Налаштовувані дії на ярлики і жести</string>
+    <string name="system_lockscreenshortcuts_right_off_title">Вимкнути свайп наліво</string>
+    <string name="system_lockscreenshortcuts_right_title">Дія на свайп наліво</string>
+    <string name="system_lockscreenshortcuts_right_image_title">Змінити праву іконку</string>
+    <string name="system_lockscreenshortcuts_right_image_summ">Замінити іконку камери на іконку CustoMIUIzer</string>
+    <string name="system_lockscreenshortcuts_left_off_title">Вимкнути свайп направо</string>
+    <string name="system_lockscreenshortcuts_left_title">Ярлики на лівому екрані</string>
+    <string name="system_lockscreenshortcuts_left_summ">Налаштування списку ярликів</string>
+    <string name="system_lockscreenshortcuts_left_skiplock_title">Не вимагати розблокування</string>
+    <string name="system_lockscreenshortcuts_left_skiplock_summ">Запущені програми будуть доступні навіть при заблокованому пристрої</string>
     <string name="system_noscreenlock_act_title">Управління блокуванням</string>
     <string name="system_noscreenlock_act_summ">Активує динамічне управління блокуванням пристрою</string>
     <string name="system_noscreenlock_title">Вимкнути блокування</string>
@@ -596,6 +612,10 @@
     <string name="no_browser">Для відкриття посилань необхідний браузер</string>
     <string name="okay">Окей</string>
     <string name="cancel">Скасувати</string>
+    <string name="add">Додати</string>
+    <string name="delete">Видалити</string>
+    <string name="delete_item_info">Використовуйте довге натиснення для видалення ярлика</string>
+    <string name="change_icon">Змінити іконку</string>
     <string name="guide_longpress">Довге натиснення на категорію дозволить швидко перейти до підкатегорії</string>
     <string name="guide_search">Пошук модів за назвою</string>
     <string name="guide_softreboot">Не забудьте перезавантажити пристрій для застосування модів.\nДинамічні ⟲ моди вимагають тільки одне перезавантаження.\nДокладніше про це на сторінці Про програму.</string>

@@ -23,7 +23,7 @@ public class MainActivity extends Activity {
 
 	MainFragment mainFrag = null;
 	SharedPreferences.OnSharedPreferenceChangeListener prefsChanged;
-	FileObserver mFileObserver;
+	FileObserver fileObserver;
 
 	@Override
 	protected void attachBaseContext(Context base) {
@@ -36,9 +36,16 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		Helpers.setMiuiTheme(this, R.style.MIUIPrefs);
+		boolean mSDKFound = ((MainApplication)getApplication()).mStarted;
+		if (mSDKFound) Helpers.setMiuiTheme(this, R.style.MIUIPrefs);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		if (!mSDKFound) {
+			Toast.makeText(this, R.string.sdk_failed, Toast.LENGTH_LONG).show();
+			finish();
+			return;
+		}
 
 		prefsChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
 			@Override
@@ -64,32 +71,30 @@ public class MainActivity extends Activity {
 		Helpers.fixPermissionsAsync(getApplicationContext());
 
 		try {
-			mFileObserver = new FileObserver(Helpers.getProtectedContext(this).getDataDir() + "/shared_prefs", FileObserver.CLOSE_WRITE) {
+			fileObserver = new FileObserver(Helpers.getProtectedContext(this).getDataDir() + "/shared_prefs", FileObserver.CLOSE_WRITE) {
 				@Override
 				public void onEvent(int event, String path) {
 					Helpers.fixPermissionsAsync(getApplicationContext());
 				}
 			};
-			mFileObserver.startWatching();
+			fileObserver.startWatching();
 		} catch (Throwable t) {
 			Log.e("prefs", "Failed to start FileObserver!");
 		}
 
 		Helpers.updateNewModsMarking(this);
 
-		if (!((MainApplication)getApplication()).mStarted) {
-			Toast.makeText(this, R.string.sdk_failed, Toast.LENGTH_LONG).show();
-			finish();
-			return;
-		}
-
 		mainFrag = new MainFragment();
 		getFragmentManager().beginTransaction().replace(R.id.fragment_container, mainFrag).commit();
 	}
 
 	protected void onDestroy() {
-		Helpers.prefs.unregisterOnSharedPreferenceChangeListener(prefsChanged);
-		mFileObserver.stopWatching();
+		try {
+			if (prefsChanged != null) Helpers.prefs.unregisterOnSharedPreferenceChangeListener(prefsChanged);
+			if (fileObserver != null) fileObserver.stopWatching();
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
 		super.onDestroy();
 	}
 

@@ -9,6 +9,8 @@
 		android:title="@string/enable_mod"
 		android:defaultValue="false" />
 
+	<PreferenceCategory>
+
 	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_noscreenlock"
 		android:summary="@string/system_noscreenlock_summ"
@@ -40,5 +42,7 @@
 		android:key="pref_key_system_noscreenlock_bt"
 		android:dependency="pref_key_system_noscreenlock_act"
 		miuizer:dynamic="true" />
+
+	</PreferenceCategory>
 
 </PreferenceScreen>

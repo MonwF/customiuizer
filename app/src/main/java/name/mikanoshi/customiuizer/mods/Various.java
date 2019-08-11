@@ -2,7 +2,6 @@ package name.mikanoshi.customiuizer.mods;
 
 import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ContentResolver;
@@ -25,12 +24,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
+import miui.app.AlertDialog;
 import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
 
@@ -45,11 +46,12 @@ public class Various {
 			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
 				try {
 					final PreferenceActivity act = (PreferenceActivity)param.thisObject;
-					final PackageInfo mPackageInfo = (PackageInfo)XposedHelpers.getObjectField(act, "mPackageInfo");
+					Field piField = XposedHelpers.findFirstFieldByExactType(act.getClass(), PackageInfo.class);
+					final PackageInfo mPackageInfo = (PackageInfo)piField.get(act);
 					final Resources modRes = Helpers.getModuleRes(act);
 					Method[] addPref = XposedHelpers.findMethodsByExactParameters(act.getClass(), void.class, String.class, String.class, String.class);
-					if (addPref.length == 0) {
-						Helpers.log("AppInfoHook", "Unable to find class/method in SecurityCenter to hook");
+					if (mPackageInfo == null || addPref.length == 0) {
+						Helpers.log("AppInfoHook", "Unable to find field/class/method in SecurityCenter to hook");
 						return;
 					} else {
 						addPref[0].setAccessible(true);
@@ -162,25 +164,30 @@ public class Various {
 		Helpers.findAndHookMethod("com.miui.appmanager.ApplicationsDetailsActivity", lpparam.classLoader, "onCreateOptionsMenu", Menu.class, new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
-				Activity act = (Activity)param.thisObject;
-				Menu menu = (Menu)param.args[0];
-				MenuItem dis = menu.add(0, 666, 1, act.getResources().getIdentifier("app_manager_disable_text", "string", lpparam.packageName));
-				dis.setIcon(act.getResources().getIdentifier("action_button_stop", "drawable", lpparam.packageName));
-				dis.setEnabled(true);
-				dis.setShowAsAction(1);
-				//XposedHelpers.setAdditionalInstanceField(param.thisObject, "mDisableButton", dis);
+				try {
+					Activity act = (Activity)param.thisObject;
+					Menu menu = (Menu)param.args[0];
+					MenuItem dis = menu.add(0, 666, 1, act.getResources().getIdentifier("app_manager_disable_text", "string", lpparam.packageName));
+					dis.setIcon(act.getResources().getIdentifier("action_button_stop", "drawable", lpparam.packageName));
+					dis.setEnabled(true);
+					dis.setShowAsAction(1);
+					//XposedHelpers.setAdditionalInstanceField(param.thisObject, "mDisableButton", dis);
 
-				PackageManager pm = act.getPackageManager();
-				String mPackageName = (String)XposedHelpers.getObjectField(act, "mPackageName");
-				ApplicationInfo appInfo = pm.getApplicationInfo(mPackageName, PackageManager.GET_META_DATA);
-				boolean isSystem = (appInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-				boolean isUpdatedSystem = (appInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0;
+					PackageManager pm = act.getPackageManager();
+					Field piField = XposedHelpers.findFirstFieldByExactType(act.getClass(), PackageInfo.class);
+					PackageInfo mPackageInfo = (PackageInfo)piField.get(act);
+					ApplicationInfo appInfo = pm.getApplicationInfo(mPackageInfo.packageName, PackageManager.GET_META_DATA);
+					boolean isSystem = (appInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+					boolean isUpdatedSystem = (appInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0;
 
-				dis.setTitle(act.getResources().getIdentifier(appInfo.enabled ? "app_manager_disable_text" : "app_manager_enable_text", "string", lpparam.packageName));
+					dis.setTitle(act.getResources().getIdentifier(appInfo.enabled ? "app_manager_disable_text" : "app_manager_enable_text", "string", lpparam.packageName));
 
-				if (!appInfo.enabled || (isSystem && !isUpdatedSystem)) {
-					MenuItem item = menu.findItem(2);
-					if (item != null) item.setVisible(false);
+					if (!appInfo.enabled || (isSystem && !isUpdatedSystem)) {
+						MenuItem item = menu.findItem(2);
+						if (item != null) item.setVisible(false);
+					}
+				} catch (Throwable t) {
+					XposedBridge.log(t);
 				}
 			}
 		});
@@ -188,34 +195,39 @@ public class Various {
 		Helpers.findAndHookMethod("com.miui.appmanager.ApplicationsDetailsActivity", lpparam.classLoader, "onOptionsItemSelected", MenuItem.class, new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
-				MenuItem item = (MenuItem)param.args[0];
-				if (item == null || item.getItemId() != 666) return;
+				try {
+					MenuItem item = (MenuItem)param.args[0];
+					if (item == null || item.getItemId() != 666) return;
 
-				Activity act = (Activity)param.thisObject;
-				Resources modRes = Helpers.getModuleRes(act);
-				String mPackageName = (String)XposedHelpers.getObjectField(act, "mPackageName");
-				if ("com.android.settings".equals(mPackageName)) {
-					Toast.makeText(act, modRes.getString(R.string.disable_app_settings), Toast.LENGTH_SHORT).show();
-					return;
+					Activity act = (Activity)param.thisObject;
+					Resources modRes = Helpers.getModuleRes(act);
+					Field piField = XposedHelpers.findFirstFieldByExactType(act.getClass(), PackageInfo.class);
+					PackageInfo mPackageInfo = (PackageInfo)piField.get(act);
+					if ("com.android.settings".equals(mPackageInfo.packageName)) {
+						Toast.makeText(act, modRes.getString(R.string.disable_app_settings), Toast.LENGTH_SHORT).show();
+						return;
+					}
+
+					PackageManager pm = act.getPackageManager();
+					ApplicationInfo appInfo = pm.getApplicationInfo(mPackageInfo.packageName, PackageManager.GET_META_DATA);
+					boolean isSystem = (appInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+					int state = pm.getApplicationEnabledSetting(mPackageInfo.packageName);
+					boolean isEnabledOrDefault = (state == PackageManager.COMPONENT_ENABLED_STATE_ENABLED || state == PackageManager.COMPONENT_ENABLED_STATE_DEFAULT);
+					if (isEnabledOrDefault) {
+						if (isSystem) {
+							String title = modRes.getString(R.string.disable_app_title);
+							String text = modRes.getString(R.string.disable_app_text);
+							new AlertDialog.Builder(act).setTitle(title).setMessage(text).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int whichButton) {
+									setAppState(act, mPackageInfo.packageName, item, false);
+								}
+							}).setNegativeButton(android.R.string.cancel, null).show();
+						} else setAppState(act, mPackageInfo.packageName, item, false);
+					} else setAppState(act, mPackageInfo.packageName, item, true);
+					param.setResult(true);
+				} catch (Throwable t) {
+					XposedBridge.log(t);
 				}
-
-				boolean mIsSystem = XposedHelpers.getBooleanField(act, "mIsSystem");
-				PackageManager pm = act.getPackageManager();
-				int state = pm.getApplicationEnabledSetting(mPackageName);
-				boolean isEnabledOrDefault = (state == PackageManager.COMPONENT_ENABLED_STATE_ENABLED || state == PackageManager.COMPONENT_ENABLED_STATE_DEFAULT);
-				if (isEnabledOrDefault) {
-					if (mIsSystem) {
-
-						String title = modRes.getString(R.string.disable_app_title);
-						String text = modRes.getString(R.string.disable_app_text);
-						new AlertDialog.Builder(act).setTitle(title).setMessage(text).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int whichButton) {
-								setAppState(act, mPackageName, item, false);
-							}
-						}).setNegativeButton(android.R.string.cancel, null).show();
-					} else setAppState(act, mPackageName, item, false);
-				} else setAppState(act, mPackageName, item, true);
-				param.setResult(true);
 			}
 		});
 	}

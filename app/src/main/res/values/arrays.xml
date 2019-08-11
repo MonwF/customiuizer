@@ -149,6 +149,23 @@
 		<item>10</item>
 	</integer-array>
 
+	<string-array name="global_lockscreen_actions">
+		<item>@string/array_global_actions_none</item>
+		<item>@string/array_global_actions_powermenu</item>
+		<item>@string/array_global_actions_launch</item>
+		<item>@string/array_global_actions_shortcut</item>
+		<item>@string/array_global_actions_activity</item>
+		<item>@string/array_global_actions_toggle</item>
+	</string-array>
+	<integer-array name="global_lockscreen_actions_val">
+		<item>1</item>
+		<item>12</item>
+		<item>8</item>
+		<item>9</item>
+		<item>20</item>
+		<item>10</item>
+	</integer-array>
+
 	<string-array name="global_toggles">
 		<item>@string/array_global_toggle_wifi</item>
 		<item>@string/array_global_toggle_bt</item>

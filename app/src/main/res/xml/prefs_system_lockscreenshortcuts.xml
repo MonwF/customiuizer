@@ -1,0 +1,65 @@
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:miuizer="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_lockscreenshortcuts"
+		android:title="@string/enable_mod"
+		android:defaultValue="false" />
+
+	<PreferenceCategory>
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_lockscreenshortcuts_right_off"
+			android:title="@string/system_lockscreenshortcuts_right_off_title"
+			android:dependency="pref_key_system_lockscreenshortcuts"
+			android:defaultValue="false"
+			miuizer:dynamic="true" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_lockscreenshortcuts_right"
+			android:title="@string/system_lockscreenshortcuts_right_title"
+			android:dependency="pref_key_system_lockscreenshortcuts"
+			android:defaultValue="false"
+			miuizer:dynamic="true" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_lockscreenshortcuts_right_image"
+			android:title="@string/system_lockscreenshortcuts_right_image_title"
+			android:summary="@string/system_lockscreenshortcuts_right_image_summ"
+			android:dependency="pref_key_system_lockscreenshortcuts"
+			android:defaultValue="false"
+			miuizer:dynamic="true" />
+
+	</PreferenceCategory>
+
+	<PreferenceCategory>
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_lockscreenshortcuts_left_off"
+			android:title="@string/system_lockscreenshortcuts_left_off_title"
+			android:dependency="pref_key_system_lockscreenshortcuts"
+			android:defaultValue="false"
+			miuizer:dynamic="true" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_lockscreenshortcuts_left"
+			android:title="@string/system_lockscreenshortcuts_left_title"
+			android:summary="@string/system_lockscreenshortcuts_left_summ"
+			android:dependency="pref_key_system_lockscreenshortcuts"
+			android:defaultValue="false"
+			miuizer:dynamic="true" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_lockscreenshortcuts_left_skiplock"
+			android:title="@string/system_lockscreenshortcuts_left_skiplock_title"
+			android:summary="@string/system_lockscreenshortcuts_left_skiplock_summ"
+			android:dependency="pref_key_system_lockscreenshortcuts"
+			android:defaultValue="false"
+			miuizer:dynamic="true" />
+
+	</PreferenceCategory>
+
+	</PreferenceScreen>

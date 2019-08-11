@@ -197,6 +197,14 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_separatevolume_slider"
+			android:title="@string/system_separatevolume_slider_title"
+			android:summary="@string/system_separatevolume_slider_summ"
+			android:defaultValue="false"
+			android:dependency="pref_key_system_separatevolume"
+			miuizer:child="true" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_volumetimer"
 			android:title="@string/system_volumetimer_title"
 			android:summary="@string/system_volumetimer_summ"
@@ -367,6 +375,12 @@
 			android:key="pref_key_system_notifrowmenu"
 			android:summary="@string/system_notifrowmenu_summ"
 			android:title="@string/system_notifrowmenu_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_disableanynotif"
+			android:summary="@string/system_disableanynotif_summ"
+			android:title="@string/system_disableanynotif_title"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
@@ -639,6 +653,12 @@
 			android:key="pref_key_system_pocketmode"
 			android:summary="@string/system_pocketmode_summ"
 			android:title="@string/system_pocketmode_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_lockscreenshortcuts_cat"
+			android:summary="@string/system_lockscreenshortcuts_summ"
+			android:title="@string/system_lockscreenshortcuts_title"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
