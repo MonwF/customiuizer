@@ -141,6 +141,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (pkg.equals("com.android.systemui")) {
 			GlobalActions.setupStatusBar(lpparam);
 
+			if (mPrefs.getInt("system_statusbarheight", 19) > 19) System.StatusBarHeightHook(lpparam);
 			if (mPrefs.getInt("system_recents_blur", 100) < 100) System.RecentsBlurRatioHook(lpparam);
 			if (mPrefs.getInt("system_drawer_blur", 100) < 100) System.DrawerBlurRatioHook(lpparam);
 			if (mPrefs.getInt("system_drawer_opacity", 100) < 100) System.DrawerThemeBackgroundHook(lpparam);

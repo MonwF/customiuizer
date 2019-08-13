@@ -13,7 +13,7 @@ import de.robv.android.xposed.XposedHelpers;
 public class ResourceHooks {
 	private SparseIntArray fakes = new SparseIntArray();
 	private final HashMap<String, Integer> idReplacements = new HashMap<String, Integer>();
-	private final HashMap<String, String> strReplacements = new HashMap<String, String>();
+	private final HashMap<String, Integer> densityReplacements = new HashMap<String, Integer>();
 	private final HashMap<String, Object> objReplacements = new HashMap<String, Object>();
 
 	private static int getFakeResId(String resourceName) {
@@ -103,10 +103,10 @@ public class ResourceHooks {
 		}
 	}
 
-	public void setResReplacement(String pkg, String type, String name, String replacementResName) {
+	public void setDensityReplacement(String pkg, String type, String name, Integer replacementResValue) {
 		try {
-			synchronized (strReplacements) {
-				strReplacements.put(pkg + ":" + type + "/" + name, replacementResName);
+			synchronized (densityReplacements) {
+				densityReplacements.put(pkg + ":" + type + "/" + name, replacementResValue);
 			}
 		} catch (Throwable t) {
 			XposedBridge.log(t);
@@ -123,6 +123,7 @@ public class ResourceHooks {
 		}
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	private Object getResourceReplacement(Context context, Resources res, int resId, String method) {
 		if (context == null) return null;
 
@@ -137,25 +138,30 @@ public class ResourceHooks {
 		if (pkgName == null || resType == null || resName == null) return null;
 
 		try {
-			Object value = null;
-			Integer modResId = null;
+			Object value;
 			String resFullName = pkgName + ":" + resType + "/" + resName;
+			String resAnyPkgName = "*:" + resType + "/" + resName;
+
 			synchronized (objReplacements) {
-				if (objReplacements.containsKey(resFullName))
-				return objReplacements.get(resFullName);
+				if (objReplacements.containsKey(resFullName)) return objReplacements.get(resFullName);
+				else if (objReplacements.containsKey(resAnyPkgName)) return objReplacements.get(resAnyPkgName);
 			}
+
+			synchronized (densityReplacements) {
+				if (densityReplacements.containsKey(resFullName))
+					return Math.round(densityReplacements.get(resFullName) * res.getDisplayMetrics().density);
+				else if (densityReplacements.containsKey(resAnyPkgName))
+					return Math.round(densityReplacements.get(resAnyPkgName) * res.getDisplayMetrics().density);
+			}
+
+			Integer modResId = null;
 			synchronized (idReplacements) {
-				if (idReplacements.containsKey(resFullName)) {
+				if (idReplacements.containsKey(resFullName))
 					modResId = idReplacements.get(resFullName);
-					if (modResId == null || modResId == 0) return null;
-				}
+				else if (idReplacements.containsKey(resAnyPkgName))
+					modResId = idReplacements.get(resAnyPkgName);
 			}
-			if (modResId == null)
-			synchronized (strReplacements) {
-				if (strReplacements.containsKey(resFullName))
-				modResId = Helpers.getModuleRes(context).getIdentifier(strReplacements.get(resFullName), resType, Helpers.modulePkg);
-			}
-			if (modResId == null || modResId == 0) return null;
+			if (modResId == null) return null;
 
 			Resources modRes = Helpers.getModuleRes(context);
 			if ("getDrawableForDensity".equals(method))

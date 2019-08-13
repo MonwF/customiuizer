@@ -1598,9 +1598,9 @@ public class System {
 	}
 
 	public static void CompactNotificationsRes() {
-		MainModule.resHooks.setResReplacement("android", "dimen", "notification_action_height", R.dimen.notification_action_height);
-		MainModule.resHooks.setResReplacement("android", "dimen", "notification_action_list_height", R.dimen.notification_action_height);
-		MainModule.resHooks.setResReplacement("com.android.systemui", "dimen", "notification_row_extra_padding", R.dimen.notification_row_extra_padding);
+		MainModule.resHooks.setDensityReplacement("android", "dimen", "notification_action_height", 38);
+		MainModule.resHooks.setDensityReplacement("android", "dimen", "notification_action_list_height", 38);
+		MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "notification_row_extra_padding", 0);
 	}
 
 	public static void HideFromRecentsHook(LoadPackageParam lpparam) {
@@ -1742,8 +1742,8 @@ public class System {
 	public static void NotificationRowMenuRes() {
 		appInfoIconResId = MainModule.resHooks.addResource("ic_appinfo", R.drawable.ic_appinfo);
 		forceCloseIconResId = MainModule.resHooks.addResource("ic_forceclose", R.drawable.ic_forceclose);
-		MainModule.resHooks.setResReplacement("com.android.systemui", "dimen", "notification_menu_icon_size", R.dimen.notification_menu_icon_size);
-		MainModule.resHooks.setResReplacement("com.android.systemui", "dimen", "notification_menu_icon_padding", R.dimen.notification_menu_icon_padding);
+		MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "notification_menu_icon_size", 36);
+		MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "notification_menu_icon_padding", 0);
 	}
 
 	public static void NotificationRowMenuHook(LoadPackageParam lpparam) {
@@ -2065,10 +2065,53 @@ public class System {
 
 	public static void StatusBarHeightRes() {
 		int opt = MainModule.mPrefs.getInt("system_statusbarheight", 19);
-		String heightRes = "status_bar_height_" + (opt == 19 ? 27 : opt);
-		MainModule.resHooks.setResReplacement("android", "dimen", "status_bar_height", heightRes);
-		MainModule.resHooks.setResReplacement("android", "dimen", "status_bar_height_portrait", heightRes);
-		MainModule.resHooks.setResReplacement("android", "dimen", "status_bar_height_landscape", heightRes);
+		int heightDpi = opt == 19 ? 27 : opt;
+		MainModule.resHooks.setDensityReplacement("*", "dimen", "status_bar_height", heightDpi);
+		MainModule.resHooks.setDensityReplacement("*", "dimen", "status_bar_height_portrait", heightDpi);
+		MainModule.resHooks.setDensityReplacement("*", "dimen", "status_bar_height_landscape", heightDpi);
+	}
+
+	private static void applyHeight(Object thisObject) {
+		try {
+			if (thisObject == null) return;
+			ViewGroup view = (ViewGroup)thisObject;
+			ViewGroup.LayoutParams lp = view.getLayoutParams();
+			Resources res = view.getResources();
+			lp.height = res.getDimensionPixelSize(res.getIdentifier("status_bar_height", "dimen", "android"));
+			view.setLayoutParams(lp);
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void StatusBarHeightHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.KeyguardStatusBarView", lpparam.classLoader, "onFinishInflate", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				applyHeight(param.thisObject);
+			}
+		});
+
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.PhoneStatusBarView", lpparam.classLoader, "onFinishInflate", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				applyHeight(param.thisObject);
+			}
+		});
+
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.SignalClusterView", lpparam.classLoader, "onFinishInflate", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				try {
+					ViewGroup mSignalSimpleDualMobileContainer = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mSignalSimpleDualMobileContainer");
+					applyHeight(mSignalSimpleDualMobileContainer);
+					ViewGroup mSignalDualNotchGroup = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mSignalDualNotchGroup");
+					applyHeight(mSignalDualNotchGroup.findViewById(mSignalDualNotchGroup.getResources().getIdentifier("notch_mobile", "id", lpparam.packageName)));
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
 	}
 
 	public static void HideMemoryCleanHook(LoadPackageParam lpparam) {
@@ -3569,6 +3612,19 @@ public class System {
 	}
 
 	public static void LockScreenShortcutHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.KeyguardBottomAreaView$DefaultLeftButton", lpparam.classLoader, "getIcon", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				try {
+					Object img = param.getResult();
+					if (MainModule.mPrefs.getBoolean("system_lockscreenshortcuts_left_off"))
+					XposedHelpers.setObjectField(img, "drawable", null);
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
+
 		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.KeyguardBottomAreaView$DefaultRightButton", lpparam.classLoader, "getIcon", new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
@@ -3616,14 +3672,18 @@ public class System {
 			@Override
 			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
 				try {
-					if ((boolean)param.args[0]) XposedHelpers.callMethod(param.thisObject, "setCameraImage");
+					if ((boolean)param.args[0]) try {
+						XposedHelpers.callMethod(param.thisObject, "setCameraImage", false);
+					} catch (Throwable t) {
+						XposedHelpers.callMethod(param.thisObject, "setCameraImage");
+					}
 				} catch (Throwable t) {
 					XposedBridge.log(t);
 				}
 			}
 		});
 
-		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, "setCameraImage", new XC_MethodHook() {
+		Helpers.hookAllMethods("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, "setCameraImage", new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
 				try {
@@ -3694,7 +3754,7 @@ public class System {
 								if (!type.equals("boolean")) return;
 								String key = uri.getPathSegments().get(2);
 								if (key.contains("pref_key_system_lockscreenshortcuts"))
-									MainModule.mPrefs.put(key, Helpers.getSharedBoolPref(mContext, key, false));
+								MainModule.mPrefs.put(key, Helpers.getSharedBoolPref(mContext, key, false));
 							} catch (Throwable t) {
 								XposedBridge.log(t);
 							}
@@ -3739,9 +3799,10 @@ public class System {
 			public void onClick(View v) {
 				try {
 					int action = Helpers.getSharedIntPref(v.getContext(), v.getTag() + "_action", 1);
-					if (action == 8 || action == 9 || action == 20)
+					boolean skip = MainModule.mPrefs.getBoolean("system_lockscreenshortcuts_left_skiplock");
+					if (!skip && (action == 8 || action == 9 || action == 20))
 					XposedHelpers.callStaticMethod(findClass("com.android.systemui.SystemUICompat", lpparam.classLoader), "dismissKeyguardOnNextActivity");
-					GlobalActions.handleAction(v.getContext(), (String)v.getTag(), MainModule.mPrefs.getBoolean("system_lockscreenshortcuts_left_skiplock"));
+					GlobalActions.handleAction(v.getContext(), (String)v.getTag(), skip);
 				} catch (Throwable t) {
 					XposedBridge.log(t);
 				}
@@ -3768,24 +3829,24 @@ public class System {
 					//int numberResId = mContext.getResources().getIdentifier("keyguard_left_list_item_number", "id", lpparam.packageName);
 					int margin = mContext.getResources().getDimensionPixelSize(mContext.getResources().getIdentifier("keyguard_move_left_item_margin", "dimen", lpparam.packageName));
 
-					String itemStr = MainModule.mPrefs.getString("system_lockscreenshortcuts_left", "");
+					String key = "system_lockscreenshortcuts_left";
+					String itemStr = MainModule.mPrefs.getString(key, "");
 					if (itemStr == null || itemStr.isEmpty()) return;
 					String[] itemArr = itemStr.trim().split("\\|");
 
 					int i = 0;
-					String key = "pref_key_system_lockscreenshortcuts_left";
 					for (String uuid: itemArr) {
 						LinearLayout item = (LinearLayout)inflater.inflate(layoutResId, leftList, false);
-						item.setTag(key + "_" + uuid);
+						item.setTag("pref_key_" + key + "_" + uuid);
 						leftList.addView(item);
-						String iconResName = MainModule.mPrefs.getString("system_lockscreenshortcuts_left_" + uuid + "_icon", "");
+						String iconResName = MainModule.mPrefs.getString(key + "_" + uuid + "_icon", "");
 						int iconResId;
 						if (iconResName == null || iconResName.isEmpty() || iconResName.equals("miuizer"))
 							iconResId = miuizerShortcutResId;
 						else
 							iconResId = mContext.getResources().getIdentifier("keyguard_left_view_" + iconResName, "drawable", lpparam.packageName);
 						item.findViewById(imgResId).setBackgroundResource(iconResId);
-						((TextView)item.findViewById(nameResId)).setText(Helpers.getActionName(mContext, key + "_" + uuid));
+						((TextView)item.findViewById(nameResId)).setText(Helpers.getActionName(mContext, "pref_key_" + key + "_" + uuid));
 						if (i > 0) {
 							LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)item.getLayoutParams();
 							lp.topMargin = margin;

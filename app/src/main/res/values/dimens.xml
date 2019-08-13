@@ -21,11 +21,6 @@
 	<dimen name="secondary_text_size">13.25sp</dimen>
 	<dimen name="normal_text_size">16sp</dimen>
 
-	<dimen name="notification_row_extra_padding">0dp</dimen>
-	<dimen name="notification_action_height">38dip</dimen>
-	<dimen name="notification_menu_icon_size">36dp</dimen>
-	<dimen name="notification_menu_icon_padding">0dp</dimen>
-
 	<dimen name="status_bar_height_20">20.0dp</dimen>
 	<dimen name="status_bar_height_21">21.0dp</dimen>
 	<dimen name="status_bar_height_22">22.0dp</dimen>

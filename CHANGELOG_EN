@@ -1,3 +1,8 @@
+1.7.1
+[Fixed][Status bar height, Navbar height] Incomplete height changes, slow boot, bootloops
+[Fixed][Custom locks screen actions] Hide left icon when swipe right gesture is disabled; Better compatibility with different ROMs
+[Fixed][Quick flashlight, Volume keys long press actions] Always On Display compatibility
+
 1.7.0
 [New] Disable any notification including system ones
 [New] Customizable actions for shortcuts and swipes on lock screen
