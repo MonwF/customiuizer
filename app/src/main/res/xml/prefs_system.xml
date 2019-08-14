@@ -5,102 +5,24 @@
 	android:layout_height="match_parent"
 	android:key="pref_key_system">
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_epm"
-		android:title="@string/system_epm_title"
-		android:summary="@string/system_epm_summ"
-		android:defaultValue="false" />
-
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_downgrade"
-		android:title="@string/system_downgrade_title"
-		android:summary="@string/system_downgrade_summ"
-		android:defaultValue="false" />
-
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_unblockthird"
-		android:title="@string/system_unblockthird_title"
-		android:summary="@string/system_unblockthird_summ"
-		android:defaultValue="false" />
-
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_magnifier"
-		android:title="@string/system_magnifier_title"
-		android:summary="@string/system_magnifier_summ"
-		android:defaultValue="false" />
-
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_cleanshare"
-		android:title="@string/system_cleanshare_title"
-		android:summary="@string/system_cleanshare_summ"
-		android:defaultValue="false" />
-
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
-		android:title="@string/system_popupnotif_apps_title"
-		android:key="pref_key_system_cleanshare_apps"
-		android:dependency="pref_key_system_cleanshare"
-		miuizer:dynamic="true"
-		miuizer:child="true"
-		miuizer:countAsSummary="true" />
-
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
-		android:title="@string/system_clean_test"
-		android:key="pref_key_system_cleanshare_test"
-		android:dependency="pref_key_system_cleanshare"
-		miuizer:child="true" />
-
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_cleanopenwith"
-		android:title="@string/system_cleanopenwith_title"
-		android:summary="@string/system_cleanopenwith_summ"
-		android:defaultValue="false" />
-
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
-		android:title="@string/system_popupnotif_apps_title"
-		android:key="pref_key_system_cleanopenwith_apps"
-		android:dependency="pref_key_system_cleanopenwith"
-		miuizer:dynamic="true"
-		miuizer:child="true"
-		miuizer:countAsSummary="true" />
-
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
-		android:title="@string/system_clean_test"
-		android:key="pref_key_system_cleanopenwith_test"
-		android:dependency="pref_key_system_cleanopenwith"
-		miuizer:child="true" />
-
-	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
-		android:key="pref_key_system_defaultusb"
-		android:title="@string/system_defaultusb_title"
-		android:summary="@string/system_defaultusb_summ"
-		android:entries="@array/usbconfigs"
-		android:entryValues="@array/usbconfigs_val"
-		android:defaultValue="1" />
-
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_defaultusb_unsecure"
-		android:title="@string/system_defaultusb_unsecure_title"
-		android:summary="@string/system_defaultusb_unsecure_summ"
-		android:defaultValue="false"
-		android:dependency="pref_key_system_defaultusb"
-		miuizer:child="true" />
-
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_forceclose"
-		android:title="@string/system_forceclose_title"
-		android:summary="@string/system_forceclose_summ"
-		android:defaultValue="false" />
-
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
-		android:title="@string/system_popupnotif_apps_title"
-		android:key="pref_key_system_forceclose_apps"
-		android:dependency="pref_key_system_forceclose"
-		miuizer:child="true"
-		miuizer:countAsSummary="true" />
-
-	<PreferenceCategory
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_system_cat_screen"
 		android:title="@string/system_mods_screen">
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_chargeanimtime"
+			android:title="@string/system_chargeanimtime_title"
+			android:summary="@string/system_chargeanimtime_summ"
+			android:defaultValue="20"
+			miuizer:minValue="3"
+			miuizer:maxValue="20"
+			miuizer:stepValue="1"
+			miuizer:format="@string/format_d_s"
+			miuizer:offtext="@string/array_default"
+			miuizer:dynamic="true" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+			android:title="@string/system_mods_screen_rotation" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_allrotations"
@@ -113,6 +35,18 @@
 			android:title="@string/system_orientationlock_title"
 			android:summary="@string/system_orientationlock_summ"
 			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_rotateanim"
+			android:summary=""
+			android:title="@string/system_rotateanim_title"
+			android:entries="@array/screenrotate"
+			android:entryValues="@array/screenrotate_val"
+			android:defaultValue="1"
+			miuizer:valueAsSummary="true" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+			android:title="@string/system_mods_screen_backlight" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_nolightuponheadset"
@@ -145,18 +79,6 @@
 			miuizer:format="%d"/>
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_chargeanimtime"
-			android:title="@string/system_chargeanimtime_title"
-			android:summary="@string/system_chargeanimtime_summ"
-			android:defaultValue="20"
-			miuizer:minValue="3"
-			miuizer:maxValue="20"
-			miuizer:stepValue="1"
-			miuizer:format="@string/format_d_s"
-			miuizer:offtext="@string/array_default"
-			miuizer:dynamic="true" />
-
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_system_screenanim_duration"
 			android:title="@string/system_screenanim_duration_title"
 			android:summary="@string/system_screenanim_duration_summ"
@@ -169,18 +91,9 @@
 			miuizer:note="@string/system_screenanim_desc"
 			miuizer:dynamic="true" />
 
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
-			android:key="pref_key_system_rotateanim"
-			android:summary=""
-			android:title="@string/system_rotateanim_title"
-			android:entries="@array/screenrotate"
-			android:entryValues="@array/screenrotate_val"
-			android:defaultValue="1"
-			miuizer:valueAsSummary="true" />
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
-	</PreferenceCategory>
-
-	<PreferenceCategory
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_system_cat_audio"
 		android:title="@string/system_mods_audio">
 
@@ -240,7 +153,7 @@
 			miuizer:child="true"
 			miuizer:countAsSummary="true" />
 
-	</PreferenceCategory>
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_system_cat_vibration"
@@ -292,9 +205,12 @@
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
-	<PreferenceCategory
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_system_cat_statusbar"
 		android:title="@string/system_mods_statusbar">
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+			android:title="@string/system_mods_statusbar_statusbar" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_statusbaricons_cat"
@@ -329,86 +245,11 @@
 			miuizer:child="true"
 			miuizer:countAsSummary="true" />
 
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
-			android:title="@string/system_shortcut_app_title"
-			android:summary="@string/system_shortcut_app_summ"
-			android:key="pref_key_system_shortcut_app"
-			miuizer:dynamic="true" />
-
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
-			android:title="@string/system_clock_app_title"
-			android:summary="@string/system_clock_app_summ"
-			android:key="pref_key_system_clock_app"
-			miuizer:dynamic="true" />
-
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
-			android:title="@string/system_calendar_app_title"
-			android:summary="@string/system_calendar_app_summ"
-			android:key="pref_key_system_calendar_app"
-			miuizer:dynamic="true" />
-
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_clockseconds"
 			android:summary="@string/system_clockseconds_summ"
 			android:title="@string/system_clockseconds_title"
 			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_compactnotif"
-			android:summary="@string/system_compactnotif_summ"
-			android:title="@string/system_compactnotif_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_colorizenotiftitle"
-			android:summary="@string/system_colorizenotiftitle_summ"
-			android:title="@string/system_colorizenotiftitle_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_removedismiss"
-			android:summary="@string/system_removedismiss_summ"
-			android:title="@string/system_removedismiss_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_notifrowmenu"
-			android:summary="@string/system_notifrowmenu_summ"
-			android:title="@string/system_notifrowmenu_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_disableanynotif"
-			android:summary="@string/system_disableanynotif_summ"
-			android:title="@string/system_disableanynotif_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
-			android:key="pref_key_system_expandnotifs"
-			android:summary="@string/system_expandnotifs_summ"
-			android:title="@string/system_expandnotifs_title"
-			android:entries="@array/expandnotifs"
-			android:entryValues="@array/expandnotifs_val"
-			android:defaultValue="1" />
-
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
-			android:title="@string/system_expandnotifs_apps_title"
-			android:key="pref_key_system_expandnotifs_apps"
-			miuizer:child="true"
-			miuizer:countAsSummary="true" />
-
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
-			android:key="pref_key_system_autogroupnotif"
-			android:summary="@string/system_autogroupnotif_summ"
-			android:title="@string/system_autogroupnotif_title"
-			android:entries="@array/autogroupnotif"
-			android:entryValues="@array/autogroupnotif_val"
-			android:defaultValue="1" />
-
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
-			android:key="pref_key_system_popupnotif_cat"
-			android:summary="@string/system_popupnotif_summ"
-			android:title="@string/system_popupnotif_title" />
 
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_system_mobiletypeicon"
@@ -444,9 +285,117 @@
 			android:summary="@string/system_detailednetspeed_summ"
 			android:title="@string/system_detailednetspeed_title" />
 
-	</PreferenceCategory>
+		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+			android:title="@string/system_mods_statusbar_drawer" />
 
-	<PreferenceCategory
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_removedismiss"
+			android:summary="@string/system_removedismiss_summ"
+			android:title="@string/system_removedismiss_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_popupnotif_cat"
+			android:summary="@string/system_popupnotif_summ"
+			android:title="@string/system_popupnotif_title" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_shortcut_app_title"
+			android:summary="@string/system_shortcut_app_summ"
+			android:key="pref_key_system_shortcut_app"
+			miuizer:dynamic="true" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_clock_app_title"
+			android:summary="@string/system_clock_app_summ"
+			android:key="pref_key_system_clock_app"
+			miuizer:dynamic="true" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_calendar_app_title"
+			android:summary="@string/system_calendar_app_summ"
+			android:key="pref_key_system_calendar_app"
+			miuizer:dynamic="true" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_drawer_blur"
+			android:title="@string/system_blur_title"
+			android:summary="@string/system_drawer_blur_summ"
+			android:defaultValue="100"
+			miuizer:minValue="0"
+			miuizer:maxValue="100"
+			miuizer:stepValue="1"
+			miuizer:format="%d%%"
+			miuizer:offtext="@string/array_default"
+			miuizer:dynamic="true" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_drawer_opacity"
+			android:title="@string/system_drawer_opacity_title"
+			android:summary="@string/system_drawer_opacity_summ"
+			android:defaultValue="100"
+			miuizer:minValue="0"
+			miuizer:maxValue="100"
+			miuizer:stepValue="1"
+			miuizer:format="%d%%"
+			miuizer:offtext="@string/array_default"
+			miuizer:dynamic="true" />
+
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:key="pref_key_system_cat_notifications"
+		android:title="@string/system_mods_notifications">
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_disableanynotif"
+			android:summary="@string/system_disableanynotif_summ"
+			android:title="@string/system_disableanynotif_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_compactnotif"
+			android:summary="@string/system_compactnotif_summ"
+			android:title="@string/system_compactnotif_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_colorizenotiftitle"
+			android:summary="@string/system_colorizenotiftitle_summ"
+			android:title="@string/system_colorizenotiftitle_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_notifrowmenu"
+			android:summary="@string/system_notifrowmenu_summ"
+			android:title="@string/system_notifrowmenu_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_expandnotifs"
+			android:summary="@string/system_expandnotifs_summ"
+			android:title="@string/system_expandnotifs_title"
+			android:entries="@array/expandnotifs"
+			android:entryValues="@array/expandnotifs_val"
+			android:defaultValue="1" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_expandnotifs_apps_title"
+			android:key="pref_key_system_expandnotifs_apps"
+			miuizer:child="true"
+			miuizer:countAsSummary="true" />
+
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_autogroupnotif"
+			android:summary="@string/system_autogroupnotif_summ"
+			android:title="@string/system_autogroupnotif_title"
+			android:entries="@array/autogroupnotif"
+			android:entryValues="@array/autogroupnotif_val"
+			android:defaultValue="1" />
+
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_system_cat_qs"
 		android:title="@string/system_mods_qs">
 
@@ -505,9 +454,9 @@
 			miuizer:dynamic="true"
 			miuizer:child="true" />
 
-	</PreferenceCategory>
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
-	<PreferenceCategory
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_system_cat_recents"
 		android:title="@string/system_mods_recents">
 
@@ -529,6 +478,21 @@
 			android:dependency="pref_key_system_hidefromrecents"
 			miuizer:child="true"
 			miuizer:countAsSummary="true" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_recents_blur"
+			android:title="@string/system_blur_title"
+			android:summary="@string/system_recents_blur_summ"
+			android:defaultValue="100"
+			miuizer:minValue="0"
+			miuizer:maxValue="100"
+			miuizer:stepValue="1"
+			miuizer:format="%d%%"
+			miuizer:offtext="@string/array_default"
+			miuizer:dynamic="true" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+			android:title="@string/mods_actions" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:title="@string/system_recommended_first_title"
@@ -554,11 +518,24 @@
 			android:key="pref_key_system_recommended_fourth"
 			miuizer:dynamic="true" />
 
-	</PreferenceCategory>
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
-	<PreferenceCategory
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_system_cat_betterpopups"
 		android:title="@string/system_mods_betterpopups">
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_betterpopups_swipedown"
+			android:summary="@string/system_betterpopups_swipedown_summ"
+			android:title="@string/system_betterpopups_swipedown_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_betterpopups_nohide"
+			android:summary="@string/system_betterpopups_nohide_summ"
+			android:title="@string/system_betterpopups_nohide_title"
+			android:defaultValue="false"
+			android:disableDependentsState="true" />
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_system_betterpopups_delay"
@@ -572,22 +549,9 @@
 			miuizer:offtext="@string/array_default"
 			miuizer:dynamic="true" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_betterpopups_nohide"
-			android:summary="@string/system_betterpopups_nohide_summ"
-			android:title="@string/system_betterpopups_nohide_title"
-			android:defaultValue="false"
-			android:disableDependentsState="true" />
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_betterpopups_swipedown"
-			android:summary="@string/system_betterpopups_swipedown_summ"
-			android:title="@string/system_betterpopups_swipedown_title"
-			android:defaultValue="false" />
-
-	</PreferenceCategory>
-
-	<PreferenceCategory
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_system_cat_applock"
 		android:title="@string/system_mods_applock">
 
@@ -613,41 +577,11 @@
 			android:title="@string/system_applock_list_title"
 			android:summary="@string/system_applock_list_summ" />
 
-	</PreferenceCategory>
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
-	<PreferenceCategory
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_system_cat_lockscreen"
 		android:title="@string/system_mods_lockscreen">
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_notifafterunlock"
-			android:summary="@string/system_notifafterunlock_summ"
-			android:title="@string/system_notifafterunlock_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_dttosleep"
-			android:summary="@string/system_dttosleep_summ"
-			android:title="@string/system_dttosleep_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_securelock"
-			android:summary="@string/system_securelock_summ"
-			android:title="@string/system_securelock_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_scramblepin"
-			android:summary="@string/system_scramblepin_summ"
-			android:title="@string/system_scramblepin_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_nopassword"
-			android:summary="@string/system_nopassword_summ"
-			android:title="@string/system_nopassword_title"
-			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_pocketmode"
@@ -655,22 +589,25 @@
 			android:title="@string/system_pocketmode_title"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_notifafterunlock"
+			android:summary="@string/system_notifafterunlock_summ"
+			android:title="@string/system_notifafterunlock_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+			android:title="@string/system_mods_lockscreen_functionality" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_dttosleep"
+			android:summary="@string/system_dttosleep_summ"
+			android:title="@string/system_dttosleep_title"
+			android:defaultValue="false" />
+
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_lockscreenshortcuts_cat"
 			android:summary="@string/system_lockscreenshortcuts_summ"
 			android:title="@string/system_lockscreenshortcuts_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
-			android:key="pref_key_system_noscreenlock_cat"
-			android:summary="@string/system_noscreenlock_summ"
-			android:title="@string/system_noscreenlock_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_credentials"
-			android:summary="@string/system_credentials_summ"
-			android:title="@string/system_credentials_title"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
@@ -691,45 +628,137 @@
 			miuizer:offtext="@string/array_noblur"
 			miuizer:dynamic="true" />
 
-	</PreferenceCategory>
+		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+			android:title="@string/system_mods_lockscreen_security" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_securelock"
+			android:summary="@string/system_securelock_summ"
+			android:title="@string/system_securelock_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_scramblepin"
+			android:summary="@string/system_scramblepin_summ"
+			android:title="@string/system_scramblepin_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_nopassword"
+			android:summary="@string/system_nopassword_summ"
+			android:title="@string/system_nopassword_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_noscreenlock_cat"
+			android:summary="@string/system_noscreenlock_summ"
+			android:title="@string/system_noscreenlock_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_credentials"
+			android:summary="@string/system_credentials_summ"
+			android:title="@string/system_credentials_title"
+			android:defaultValue="false" />
+
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
-		android:key="pref_key_system_cat_blur"
-		android:title="@string/system_mods_blur"
-		miuizer:dynamic="true">
+		android:key="pref_key_system_cat_other"
+		android:title="@string/system_mods_other">
 
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_recents_blur"
-			android:title="@string/system_recents_blur_title"
-			android:summary="@string/system_recents_blur_summ"
-			android:defaultValue="100"
-			miuizer:minValue="0"
-			miuizer:maxValue="100"
-			miuizer:stepValue="1"
-			miuizer:format="%d%%"
-			miuizer:offtext="@string/array_default" />
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_epm"
+			android:title="@string/system_epm_title"
+			android:summary="@string/system_epm_summ"
+			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_drawer_blur"
-			android:title="@string/system_drawer_blur_title"
-			android:summary="@string/system_drawer_blur_summ"
-			android:defaultValue="100"
-			miuizer:minValue="0"
-			miuizer:maxValue="100"
-			miuizer:stepValue="1"
-			miuizer:format="%d%%"
-			miuizer:offtext="@string/array_default" />
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_downgrade"
+			android:title="@string/system_downgrade_title"
+			android:summary="@string/system_downgrade_summ"
+			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_drawer_opacity"
-			android:title="@string/system_drawer_opacity_title"
-			android:summary="@string/system_drawer_opacity_summ"
-			android:defaultValue="100"
-			miuizer:minValue="0"
-			miuizer:maxValue="100"
-			miuizer:stepValue="1"
-			miuizer:format="%d%%"
-			miuizer:offtext="@string/array_default" />
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_unblockthird"
+			android:title="@string/system_unblockthird_title"
+			android:summary="@string/system_unblockthird_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_magnifier"
+			android:title="@string/system_magnifier_title"
+			android:summary="@string/system_magnifier_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_cleanshare"
+			android:title="@string/system_cleanshare_title"
+			android:summary="@string/system_cleanshare_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_popupnotif_apps_title"
+			android:key="pref_key_system_cleanshare_apps"
+			android:dependency="pref_key_system_cleanshare"
+			miuizer:dynamic="true"
+			miuizer:child="true"
+			miuizer:countAsSummary="true" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_clean_test"
+			android:key="pref_key_system_cleanshare_test"
+			android:dependency="pref_key_system_cleanshare"
+			miuizer:child="true" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_cleanopenwith"
+			android:title="@string/system_cleanopenwith_title"
+			android:summary="@string/system_cleanopenwith_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_popupnotif_apps_title"
+			android:key="pref_key_system_cleanopenwith_apps"
+			android:dependency="pref_key_system_cleanopenwith"
+			miuizer:dynamic="true"
+			miuizer:child="true"
+			miuizer:countAsSummary="true" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_clean_test"
+			android:key="pref_key_system_cleanopenwith_test"
+			android:dependency="pref_key_system_cleanopenwith"
+			miuizer:child="true" />
+
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_defaultusb"
+			android:title="@string/system_defaultusb_title"
+			android:summary="@string/system_defaultusb_summ"
+			android:entries="@array/usbconfigs"
+			android:entryValues="@array/usbconfigs_val"
+			android:defaultValue="1" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_defaultusb_unsecure"
+			android:title="@string/system_defaultusb_unsecure_title"
+			android:summary="@string/system_defaultusb_unsecure_summ"
+			android:defaultValue="false"
+			android:dependency="pref_key_system_defaultusb"
+			miuizer:child="true" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_forceclose"
+			android:title="@string/system_forceclose_title"
+			android:summary="@string/system_forceclose_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_popupnotif_apps_title"
+			android:key="pref_key_system_forceclose_apps"
+			android:dependency="pref_key_system_forceclose"
+			miuizer:child="true"
+			miuizer:countAsSummary="true" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 

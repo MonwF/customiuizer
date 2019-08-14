@@ -3,36 +3,26 @@
 	xmlns:miuizer="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:key="pref_key_various">
-
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_controls_powerflash"
-		android:summary="@string/controls_powerflash_summ"
-		android:title="@string/controls_powerflash_title"
-		android:defaultValue="false" />
-
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_controls_powerflash_delay"
-		android:summary="@string/controls_powerflash_delay_summ"
-		android:title="@string/controls_powerflash_delay_title"
-		android:defaultValue="false"
-		android:dependency="pref_key_controls_powerflash"
-		miuizer:dynamic="true" />
+	android:key="pref_key_controls">
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_controls_cat_fingerprint"
-		android:title="@string/controls_mods_fingerprint"
-		miuizer:dynamic="true">
+		android:title="@string/controls_mods_fingerprint">
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+			android:title="@string/mods_actions" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_fingerprint1"
 			android:summary="@string/controls_fingerprint1_summ"
-			android:title="@string/controls_fingerprint1_title" />
+			android:title="@string/controls_fingerprint1_title"
+			miuizer:dynamic="true" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_fingerprint2"
 			android:summary="@string/controls_fingerprint2_summ"
-			android:title="@string/controls_fingerprint2_title" />
+			android:title="@string/controls_fingerprint2_title"
+			miuizer:dynamic="true" />
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_controls_fingerprint2_delay"
@@ -43,12 +33,14 @@
 			miuizer:stepValue="50"
 			miuizer:format="@string/format_d_ms"
 			miuizer:note="@string/controls_fingerprint2_delay_note"
-			miuizer:offtext="@string/array_system_default" />
+			miuizer:offtext="@string/array_system_default"
+			miuizer:dynamic="true" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_fingerprintlong"
 			android:summary="@string/controls_fingerprintlong_summ"
-			android:title="@string/controls_fingerprintlong_title" />
+			android:title="@string/controls_fingerprintlong_title"
+			miuizer:dynamic="true" />
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_controls_fingerprintlong_delay"
@@ -58,7 +50,8 @@
 			miuizer:maxValue="2000"
 			miuizer:stepValue="100"
 			miuizer:format="@string/format_d_ms"
-			miuizer:offtext="@string/array_system_default" />
+			miuizer:offtext="@string/array_system_default"
+			miuizer:dynamic="true" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_fingerprintskip"
@@ -71,6 +64,9 @@
 			android:title="@string/controls_fingerprintskip2_title"
 			android:summary="@string/controls_fingerprintskip2_summ"
 			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+			android:title="@string/system_mods_vibration" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_fingerprintfailure"
@@ -95,7 +91,28 @@
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
-	<PreferenceCategory
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:key="pref_key_controls_cat_power"
+		android:title="@string/controls_mods_power">
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_controls_powerflash"
+			android:summary="@string/controls_powerflash_summ"
+			android:title="@string/controls_powerflash_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_controls_powerflash_delay"
+			android:summary="@string/controls_powerflash_delay_summ"
+			android:title="@string/controls_powerflash_delay_title"
+			android:defaultValue="false"
+			android:dependency="pref_key_controls_powerflash"
+			miuizer:dynamic="true"
+			miuizer:child="true" />
+
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_controls_cat_volume"
 		android:title="@string/controls_mods_volume">
 
@@ -110,7 +127,12 @@
 			android:summary="@string/controls_volumecursor_reverse_summ"
 			android:title="@string/controls_volumecursor_reverse_title"
 			android:defaultValue="false"
-			android:dependency="pref_key_controls_volumecursor" />
+			android:dependency="pref_key_controls_volumecursor"
+			miuizer:child="true" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+			android:title="@string/mods_actions"
+			miuizer:dynamic="true" />
 
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_controls_volumemedia_up"
@@ -118,8 +140,7 @@
 			android:title="@string/controls_volumemedia_up_title"
 			android:entries="@array/media_action"
 			android:entryValues="@array/media_action_val"
-			android:defaultValue="0"
-			miuizer:dynamic="true" />
+			android:defaultValue="0" />
 
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_controls_volumemedia_down"
@@ -127,15 +148,13 @@
 			android:title="@string/controls_volumemedia_down_title"
 			android:entries="@array/media_action"
 			android:entryValues="@array/media_action_val"
-			android:defaultValue="0"
-			miuizer:dynamic="true" />
+			android:defaultValue="0" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_volumemedia_vibrate"
 			android:summary="@string/controls_volumemedia_vibrate_summ"
 			android:title="@string/controls_volumemedia_vibrate_title"
-			android:defaultValue="true"
-			miuizer:dynamic="true" />
+			android:defaultValue="true" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_volumemedia_vibrate_ignore"
@@ -145,12 +164,11 @@
 			android:defaultValue="false"
 			miuizer:child="true" />
 
-	</PreferenceCategory>
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_controls_cat_navbar"
-		android:title="@string/controls_mods_navbar"
-		miuizer:dynamic="true">
+		android:title="@string/controls_mods_navbar">
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_nonavbar"
@@ -168,6 +186,10 @@
 			miuizer:stepValue="1"
 			miuizer:format="%d dip"
 			android:dependency="pref_key_controls_nonavbar" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+			android:title="@string/mods_actions"
+			miuizer:dynamic="true" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_backlong"
@@ -205,7 +227,7 @@
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
-	<PreferenceCategory
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_controls_cat_fsg"
 		android:title="@string/controls_mods_fsg">
 
@@ -225,6 +247,6 @@
 			miuizer:format="%d%%"
 			miuizer:offtext="@string/array_default" />
 
-	</PreferenceCategory>
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>
