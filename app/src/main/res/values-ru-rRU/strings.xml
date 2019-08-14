@@ -22,6 +22,7 @@
 	<string name="backup_restore_info">Ваши настройки были восстановлены из Google Cloud. Если мод Vol2wake был активен, отключите его и включите снова, после этого сделайте полную перезагрузку.</string>
 
 	<string name="mods">Моды</string>
+	<string name="mods_actions">Действия</string>
 
 	<string name="xposed_not_found">Не найден Xposed Framework</string>
 	<string name="xposed_not_found_explain">Похоже, что у Вас не установлен Xposed Framework.\n\nВсе моды работают только при наличии установленного Xposed Framework!</string>
@@ -223,6 +224,7 @@
 	<string name="controls_fingerprintsuccess_ignore_summ">Не отключать виброотклик, даже если вибрация при касании отключена</string>
 	<string name="controls_fingerprintfailure_title">Не вибрировать при неудаче</string>
 	<string name="controls_fingerprintfailure_summ">Убрать виброотклик при неудачной аутентификации</string>
+	<string name="controls_mods_power">Кнопка питания</string>
 	<string name="controls_mods_volume">Кнопки громкости</string>
 	<string name="controls_volumecursor_title">Управлять курсором ввода</string>
 	<string name="controls_volumecursor_summ">Перемещать курсор ввода текста при нажатии кнопок громкости</string>
@@ -416,12 +418,19 @@
 	<string name="system_recommended_fourth_summ">Действие на четвёртый ярлык виджета безопасности</string>
 	<string name="system_mods">Система</string>
 	<string name="system_mods_screen">Экран</string>
+	<string name="system_mods_screen_rotation">Поворот</string>
+	<string name="system_mods_screen_backlight">Подсветка</string>
 	<string name="system_mods_audio">Аудио</string>
 	<string name="system_mods_vibration">Вибрация</string>
 	<string name="system_mods_toasts">Всплывающие сообщения</string>
 	<string name="system_mods_lockscreen">Экран блокировки</string>
+	<string name="system_mods_lockscreen_functionality">Дополнительная функциональность</string>
+	<string name="system_mods_lockscreen_security">Безопасность</string>
 	<string name="system_mods_screenanim">Экранная анимация</string>
 	<string name="system_mods_statusbar">Строка состояния и панель уведомлений</string>
+	<string name="system_mods_statusbar_statusbar">Строка состояния</string>
+	<string name="system_mods_statusbar_drawer">Панель уведомлений</string>
+	<string name="system_mods_notifications">Уведомления</string>
 	<string name="system_mods_recents">Список последних приложений</string>
 	<string name="system_removecleaner_title">Убрать кнопку очистки</string>
 	<string name="system_removecleaner_summ">Скрывает кнопку для очистки списка последних приложений и памяти</string>
@@ -449,7 +458,9 @@
 	<string name="system_statusbaricons_alarmn_title">Избирательное отображение будильника</string>
 	<string name="system_statusbaricons_alarmn_summ">Начинает показывать иконку будильника только за указанное количество часов до его срабатывания</string>
 	<string name="system_statusbaricons_signal_title">Сигнал мобильной сети</string>
+	<string name="system_statusbaricons_nosims_title">Нет SIM карты</string>
 	<string name="system_statusbaricons_hotspot_title">Мобильная точка доступа</string>
+	<string name="system_statusbaricons_profile_title">Рабочий профиль</string>
 	<string name="system_statusbaricons_sound_title">Профили звука</string>
 	<string name="system_statusbaricons_dnd_title">Режим Не беспокоить</string>
 	<string name="system_statusbaricons_headset_title">Наушники</string>
@@ -574,10 +585,8 @@
 	<string name="system_screenanim_desc">Малые значения практически отключат анимацию</string>
 	<string name="system_screenanim_duration_summ">Задать длительность анимации</string>
 	<string name="system_screenanim_duration_title">Анимация при выключении</string>
-	<string name="system_mods_blur">Интенсивность размытия</string>
-	<string name="system_recents_blur_title">Последние приложения</string>
+	<string name="system_blur_title">Размытие фона</string>
 	<string name="system_recents_blur_summ">Уровень размытия фона на экране последних приложений</string>
-	<string name="system_drawer_blur_title">Панель уведомлений</string>
 	<string name="system_drawer_blur_summ">Уровень размытия фона в панели уведомлений</string>
 	<string name="system_drawer_opacity_title">Прозрачность фона из темы</string>
 	<string name="system_drawer_opacity_summ">Уровень прозрачности фона панели уведомлений из текущей темы</string>
@@ -637,6 +646,7 @@
 	<string name="system_notifafterunlock_summ">Оставляет уведомления на экране блокировки даже после того как он был закрыт и потом открыт вновь</string>
 	<string name="system_dttosleep_title">Сон по двойному нажатию</string>
 	<string name="system_dttosleep_summ">Выключает экран при двойном нажатии по пустому месту на экране блокировки</string>
+	<string name="system_mods_other">Другое</string>
 
 	<string name="guide_longpress">Долгое нажатие на категорию позволит\nбыстро перейти к подкатегории</string>
 	<string name="guide_search">Поиск модов по названию</string>

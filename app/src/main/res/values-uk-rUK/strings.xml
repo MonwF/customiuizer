@@ -171,10 +171,7 @@
     <string name="system_screenanim_duration_title">Анімація при вимкненні</string>
     <string name="system_screenanim_duration_summ">Задати тривалість анімації</string>
     <string name="system_screenanim_desc">Малі значення практично вимкнуть анімацію</string>
-    <string name="system_mods_blur">Інтенсивність розмиття</string>
-    <string name="system_recents_blur_title">Нещодавні програми</string>
     <string name="system_recents_blur_summ">Рівень розмиття фону на екрані нещодавніх додатків</string>
-    <string name="system_drawer_blur_title">Панель сповіщень</string>
     <string name="system_drawer_blur_summ">Рівень розмиття фону в панелі сповіщень</string>
     <string name="system_drawer_opacity_title">Прозорість фону з теми</string>
     <string name="system_drawer_opacity_summ">Рівень прозорості фону панелі сповіщень з поточної теми</string>

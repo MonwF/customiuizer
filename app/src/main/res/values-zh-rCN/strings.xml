@@ -171,10 +171,7 @@
     <string name="system_screenanim_duration_title">关闭动画</string>
     <string name="system_screenanim_duration_summ">配置动画长度</string>
     <string name="system_screenanim_desc">值过低等同于禁用动画</string>
-    <string name="system_mods_blur">模糊度</string>
-    <string name="system_recents_blur_title">最近应用</string>
     <string name="system_recents_blur_summ">最近应用的背景模糊度</string>
-    <string name="system_drawer_blur_title">通知抽屉</string>
     <string name="system_drawer_blur_summ">通知抽屉的背景模糊度</string>
     <string name="system_drawer_opacity_title">主题背景不透明度</string>
     <string name="system_drawer_opacity_summ">主题通知抽屉背景的不透明度</string>

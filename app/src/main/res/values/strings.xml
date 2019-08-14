@@ -8,10 +8,13 @@
 	<string name="title_activity_main" translatable="false">@string/app_name</string>
 
 	<string name="mods">Mods</string>
+	<string name="mods_actions">Actions</string>
 
 	<string name="enable_mod">Enable mod</string>
 	<string name="system_mods">System</string>
 	<string name="system_mods_screen">Screen</string>
+	<string name="system_mods_screen_rotation">Rotation</string>
+	<string name="system_mods_screen_backlight">Backlight</string>
 	<string name="system_mods_audio">Audio</string>
 	<string name="system_mods_vibration">Vibration</string>
 	<string name="system_mods_toasts">Toasts</string>
@@ -27,8 +30,10 @@
 	<string name="system_statusbaricons_alarmn_title">Selective alarm icon visibility</string>
 	<string name="system_statusbaricons_alarmn_summ">Show alarm icon only during the defined number of hours before next alarm</string>
 	<string name="system_statusbaricons_signal_title">Mobile network signal</string>
+	<string name="system_statusbaricons_nosims_title">No SIM card</string>
 	<string name="system_statusbaricons_vpn_title" translatable="false">VPN</string>
 	<string name="system_statusbaricons_hotspot_title">Hotspot</string>
+	<string name="system_statusbaricons_profile_title">Work profile</string>
 	<string name="system_statusbaricons_sound_title">Sound profiles</string>
 	<string name="system_statusbaricons_dnd_title">Do not disturb mode</string>
 	<string name="system_statusbaricons_headset_title">Headset</string>
@@ -175,14 +180,14 @@
 	<string name="system_screenanim_duration_title">Turning off animation</string>
 	<string name="system_screenanim_duration_summ">Configure animation length</string>
 	<string name="system_screenanim_desc">Very low values will practically disable animation</string>
-	<string name="system_mods_blur">Blur intensity</string>
-	<string name="system_recents_blur_title">Recent apps</string>
+	<string name="system_blur_title">Background blur</string>
 	<string name="system_recents_blur_summ">Background blur intensity in recent apps</string>
-	<string name="system_drawer_blur_title">Notification drawer</string>
 	<string name="system_drawer_blur_summ">Background blur intensity in notification drawer</string>
 	<string name="system_drawer_opacity_title">Themed background opacity</string>
 	<string name="system_drawer_opacity_summ">Opacity of a themed notification drawer background</string>
-	<string name="system_mods_lockscreen">Lock Screen</string>
+	<string name="system_mods_lockscreen">Lock screen</string>
+	<string name="system_mods_lockscreen_functionality">Additional functionality</string>
+	<string name="system_mods_lockscreen_security">Security</string>
 	<string name="system_iconlabletoasts_title">Additional elements</string>
 	<string name="system_iconlabletoasts_summ">Add application\'s icon and label to its toasts</string>
 	<string name="system_blocktoasts_title">Block toasts</string>
@@ -222,6 +227,9 @@
 	<string name="system_dttosleep_title">Double tap to sleep</string>
 	<string name="system_dttosleep_summ">Turn screen off by double tapping on any empty space on lock screen</string>
 	<string name="system_mods_statusbar">Status bar and notification drawer</string>
+	<string name="system_mods_statusbar_statusbar">Status bar</string>
+	<string name="system_mods_statusbar_drawer">Notification drawer</string>
+	<string name="system_mods_notifications">Notifications</string>
 	<string name="system_mods_recents">Recent apps list</string>
 	<string name="system_removecleaner_title">Remove cleaner button</string>
 	<string name="system_removecleaner_summ">Hide button that clears recent apps and cleans memory</string>
@@ -258,6 +266,7 @@
 	<string name="system_qsnolabels_title">Remove labels completely</string>
 	<string name="system_qshaptic_title">Quick settings haptic feedback</string>
 	<string name="system_qshaptic_summ">Vibrate on Quick settings tile tap</string>
+	<string name="system_mods_other">Other</string>
 
 	<string name="poco_mods">POCO Launcher</string>
 	<string name="launcher_mods">MIUI Launcher</string>
@@ -339,6 +348,7 @@
 	<string name="controls_fingerprintsuccess_ignore_summ">Do not disable haptic feedback when vibration on tap is disabled</string>
 	<string name="controls_fingerprintfailure_title">No vibrate on failure</string>
 	<string name="controls_fingerprintfailure_summ">Remove haptic feedback on authentication failure</string>
+	<string name="controls_mods_power">Power key</string>
 	<string name="controls_mods_volume">Volume keys</string>
 	<string name="controls_volumecursor_title">Control input cursor</string>
 	<string name="controls_volumecursor_summ">Move text input cursor using volume keys</string>
