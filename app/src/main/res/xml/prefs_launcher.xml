@@ -149,6 +149,28 @@
 			android:summary="@string/launcher_fixstatusbarmode_summ"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_launcher_iconscale"
+			android:title="@string/launcher_iconscale_title"
+			android:defaultValue="45"
+			miuizer:minValue="45"
+			miuizer:maxValue="200"
+			miuizer:stepValue="5"
+			miuizer:displayDividerValue="100"
+			miuizer:format="x%s"
+			miuizer:offtext="@string/array_default" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_launcher_folderscale"
+			android:title="@string/launcher_folderscale_title"
+			android:defaultValue="45"
+			miuizer:minValue="45"
+			miuizer:maxValue="200"
+			miuizer:stepValue="5"
+			miuizer:displayDividerValue="100"
+			miuizer:format="x%s"
+			miuizer:offtext="@string/array_default" />
+
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

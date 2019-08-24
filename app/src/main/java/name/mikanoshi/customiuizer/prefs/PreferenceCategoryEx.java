@@ -3,6 +3,7 @@ package name.mikanoshi.customiuizer.prefs;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.util.AttributeSet;
 import android.view.View;
@@ -14,12 +15,22 @@ import name.mikanoshi.customiuizer.R;
 public class PreferenceCategoryEx extends PreferenceCategory {
 
 	private boolean dynamic;
+	private boolean empty;
+	private boolean hidden = false;
+
 
 	public PreferenceCategoryEx(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		final TypedArray xmlAttrs = context.obtainStyledAttributes(attrs, R.styleable.PreferenceCategoryEx);
 		dynamic = xmlAttrs.getBoolean(R.styleable.PreferenceCategoryEx_dynamic, false);
+		empty = xmlAttrs.getBoolean(R.styleable.PreferenceCategoryEx_empty, false);
 		xmlAttrs.recycle();
+	}
+
+	@Override
+	public boolean onPrepareAddPreference(Preference preference) {
+		preference.onParentChanged(this, shouldDisableDependents());
+		return true;
 	}
 
 	@Override
@@ -28,7 +39,23 @@ public class PreferenceCategoryEx extends PreferenceCategory {
 		View finalView = super.getView(view, parent);
 		TextView title = finalView.findViewById(android.R.id.title);
 		title.setText(getTitle() + (dynamic ? " ⟲" : ""));
+		title.setVisibility(hidden || empty ? View.GONE : View.VISIBLE);
+		if (hidden) finalView.setBackground(null);
 		return finalView;
+	}
+
+	public boolean isDynamic() {
+		return dynamic;
+	}
+
+	public void hide() {
+		hidden = true;
+		this.notifyChanged();
+	}
+
+	public void show() {
+		hidden = false;
+		this.notifyChanged();
 	}
 
 }

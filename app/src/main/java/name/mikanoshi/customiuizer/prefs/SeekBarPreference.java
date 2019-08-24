@@ -16,7 +16,6 @@ import java.util.IllegalFormatException;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
-@SuppressWarnings("WeakerAccess")
 public class SeekBarPreference extends Preference implements PreferenceState {
 
 	private boolean dynamic;

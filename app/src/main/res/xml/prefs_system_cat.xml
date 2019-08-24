@@ -1,0 +1,44 @@
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:key="pref_key_cat">
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/system_mods_screen"
+		android:key="pref_key_system_cat_screen" />
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/system_mods_audio"
+		android:key="pref_key_system_cat_audio" />
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/system_mods_vibration"
+		android:key="pref_key_system_cat_vibration" />
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/system_mods_toasts"
+		android:key="pref_key_system_cat_toasts" />
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/system_mods_statusbar"
+		android:key="pref_key_system_cat_statusbar" />
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/system_mods_notifications"
+		android:key="pref_key_system_cat_notifications" />
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/system_mods_qs"
+		android:key="pref_key_system_cat_qs" />
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/system_mods_recents"
+		android:key="pref_key_system_cat_recents" />
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/system_mods_betterpopups"
+		android:key="pref_key_system_cat_betterpopups" />
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/system_mods_applock"
+		android:key="pref_key_system_cat_applock" />
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/system_mods_lockscreen"
+		android:key="pref_key_system_cat_lockscreen" />
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/system_mods_other"
+		android:key="pref_key_system_cat_other" />
+
+</PreferenceScreen>

@@ -44,6 +44,14 @@ public class Various extends SubFragment {
 		});
 
 		findPreference("pref_key_various_alarmcompat_apps").setOnPreferenceClickListener(openAppsEdit);
+
+		findPreference("pref_key_various_calluibright_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				openSubFragment(new System_CallUIBright(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.various_calluibright_title, R.xml.prefs_various_calluibright);
+				return true;
+			}
+		});
 	}
 
 }

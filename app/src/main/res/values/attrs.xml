@@ -6,12 +6,14 @@
 
 	<declare-styleable name="PreferenceCategoryEx">
 		<attr name="dynamic" />
+		<attr name="empty" format="boolean" />
 	</declare-styleable>
 
 	<declare-styleable name="PreferenceEx">
 		<attr name="dynamic" />
 		<attr name="child" />
 		<attr name="countAsSummary" format="boolean" />
+		<attr name="customSummary" format="boolean" />
 	</declare-styleable>
 
 	<declare-styleable name="CheckBoxPreferenceEx">

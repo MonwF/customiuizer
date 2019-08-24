@@ -69,6 +69,7 @@
 	<string name="system_clockseconds_summ">Display seconds in the status bar clock</string>
 	<string name="system_mobiletypeicon_title">Hide mobile network type</string>
 	<string name="system_mobiletypeicon_summ">Remove mobile network type icon from status bar</string>
+	<string name="system_4gtolte_title">Show LTE icon for 4G</string>
 	<string name="system_hidemoreicon_title">No hidden icons indicator</string>
 	<string name="system_hidemoreicon_summ">Do not show icon with 3 dots when notification icons are hidden</string>
 	<string name="system_netspeedinterval_title">Network speed update interval</string>
@@ -92,6 +93,10 @@
 	<string name="system_colorizenotiftitle_summ">Apply icon\'s color to title text (Android notification style only)</string>
 	<string name="system_removedismiss_title">Hide clear button</string>
 	<string name="system_removedismiss_summ">Remove button that clears all notifications</string>
+	<string name="system_showlux_title">Show illuminance level</string>
+	<string name="system_showlux_summ">Display ambient illuminance value in lux inside brightness slider</string>
+	<string name="system_showlux_style_title">Alternative style</string>
+	<string name="system_showlux_style_summ">Large semitransparent text</string>
 	<string name="system_notifrowmenu_title">Extended notification menu</string>
 	<string name="system_notifrowmenu_summ">Open app info and force close app from notification menu (swipe notification to the left to open it)</string>
 	<string name="system_disableanynotif_title">Disable any notification</string>
@@ -101,6 +106,8 @@
 	<string name="system_expandnotifs_apps_title">Black &amp; white list</string>
 	<string name="system_autogroupnotif_title">Auto group notifications</string>
 	<string name="system_autogroupnotif_summ">Number of notifications from one app that triggers auto grouping</string>
+	<string name="system_notifmediaseekbar_title">Media position slider</string>
+	<string name="system_notifmediaseekbar_summ">Add media notification slider that indicates current position and allows to change it</string>
 	<string name="system_popupnotif_title">Auto open notification drawer</string>
 	<string name="system_popupnotif_summ">Open notification drawer automatically on notifications from selected apps</string>
 	<string name="system_popupnotif_fs_title">Respect fullscreen</string>
@@ -154,8 +161,6 @@
 	<string name="system_albumartonlock_blur_title">Album art blur</string>
 	<string name="system_credentials_title">Unlock credentials</string>
 	<string name="system_credentials_summ">Authentication in some apps requires access to credentials, but they remain locked if PIN/password/pattern is skipped after boot. Current option adds launcher icon that allows to unlock credentials.</string>
-	<string name="system_pocketmode_title">Pocket mode</string>
-	<string name="system_pocketmode_summ">Bring back Pocket mode option in advanced lock screen settings on devices with ultrasonic proximity sensor</string>
 	<string name="system_lockscreenshortcuts_title">Custom actions</string>
 	<string name="system_lockscreenshortcuts_summ">Customizable actions for shortcuts and swipes</string>
 	<string name="system_lockscreenshortcuts_right_off_title">Disable swipe left gesture</string>
@@ -267,6 +272,10 @@
 	<string name="system_qshaptic_title">Quick settings haptic feedback</string>
 	<string name="system_qshaptic_summ">Vibrate on Quick settings tile tap</string>
 	<string name="system_mods_other">Other</string>
+	<string name="system_mods_animationscale">Animation scale</string>
+	<string name="system_animationscale_window_title">Windows</string>
+	<string name="system_animationscale_transition_title">Transitions</string>
+	<string name="system_animationscale_animator_title">Value animators</string>
 
 	<string name="poco_mods">POCO Launcher</string>
 	<string name="launcher_mods">MIUI Launcher</string>
@@ -286,6 +295,8 @@
 	<string name="launcher_hideseekpoints_summ">Show page indicator only during scrolling</string>
 	<string name="launcher_unlockgrids_title">Unlock grid sizes</string>
 	<string name="launcher_unlockgrids_summ">Make all grid sizes from 3x4 to 6x7 available in home screen layout setting</string>
+	<string name="launcher_iconscale_title">Icons scaling</string>
+	<string name="launcher_folderscale_title">Folder scaling</string>
 	<string name="launcher_folders">Folders</string>
 	<string name="launcher_folder_cols_title">Number of columns in folders</string>
 	<string name="launcher_fixstatusbarmode_title">Fix status bar mode</string>
@@ -342,6 +353,8 @@
 	<string name="controls_fingerprintskip_summ">Enable this if you use fingerprint shutter option</string>
 	<string name="controls_fingerprintskip2_title">No actions during calls</string>
 	<string name="controls_fingerprintskip2_summ">Do not execute actions when call is active</string>
+	<string name="controls_fingerprintscreen_title">Turn screen on after failure</string>
+	<string name="controls_fingerprintscreen_summ">Light screen up on failed authentication</string>
 	<string name="controls_fingerprintsuccess_title">Vibrate on success</string>
 	<string name="controls_fingerprintsuccess_summ">Haptic feedback on successful authentication</string>
 	<string name="controls_fingerprintsuccess_ignore_title">Ignore system settings</string>
@@ -386,6 +399,15 @@
 	<string name="various_sysappsupdater_summ2">Be careful when updating modified system apps on custom ROMs, you might lose the added functionality</string>
 	<string name="various_alarmcompat_title">Alarm clock compatibility</string>
 	<string name="various_alarmcompat_summ">Make selected apps display correct next alarm time set by stock MIUI Clock app</string>
+	<string name="various_showcallui_title">Show call UI</string>
+	<string name="various_showcallui_summ">Define when UI for incoming call should be displayed instead of popup notification</string>
+	<string name="various_calluibright_title">Screen brightness during call</string>
+	<string name="various_calluibright_type_title">Call types</string>
+	<string name="various_calluibright_val_title">Brightness value</string>
+	<string name="various_calluibright_night_title">Night mode</string>
+	<string name="various_calluibright_night_summ">Do not change brightness during night time</string>
+	<string name="various_calluibright_night_start_title">Start</string>
+	<string name="various_calluibright_night_end_title">End</string>
 	<string name="various_disableapp_title">App state control</string>
 	<string name="various_disableapp_summ">Allows to disable almost any app from its info page</string>
 	<string name="various_apps_title">Show additional app details</string>
@@ -409,6 +431,7 @@
 	<string name="appsort_storage">Used storage</string>
 	<string name="appsort_install">Installation time</string>
 
+	<string name="calls">Calls</string>
 	<string name="settings">Settings</string>
 
 	<string name="array_default">Default</string>
@@ -502,6 +525,10 @@
 	<string name="array_doc">Document</string>
 	<string name="array_archive">Archive</string>
 	<string name="array_any">Any</string>
+	<string name="array_nofs">When not in fullscreen mode</string>
+	<string name="array_incoming">Incoming</string>
+	<string name="array_outgoing">Outgoing</string>
+	<string name="array_both">Both</string>
 
 	<string name="toggle_wifi_on">Wi-Fi enabled</string>
 	<string name="toggle_wifi_off">Wi-Fi disabled</string>
@@ -651,7 +678,6 @@
 	<string name="delete_item_info">Long press shortcut to delete</string>
 	<string name="change_icon">Change icon</string>
 
-	<string name="guide_longpress">Long press category to quickly jump to subcategory</string>
 	<string name="guide_search">Search mods by name</string>
 	<string name="guide_softreboot">Don\'t forget to apply mods by using soft reboot.\nDynamic ⟲ mods require it only once.\nMore information is on About page.</string>
 	<string name="guide_marknew">New mods since previous update\ncan be marked for better visibility</string>
@@ -668,6 +694,7 @@
 	<string name="oneKBs">1 KB/s</string>
 	<string name="Bs">B/s</string>
 	<string name="speedunits">KMGTPE</string>
+	<string name="lux">%s lux</string>
 
 	<string name="off">Off</string>
 	<string name="time_30m">30 minutes</string>

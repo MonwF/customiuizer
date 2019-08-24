@@ -5,19 +5,20 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.PreferenceScreen;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import miui.app.ActionBar;
 import miui.widget.ClearableEditText;
+import name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx;
 import name.mikanoshi.customiuizer.prefs.PreferenceState;
 import name.mikanoshi.customiuizer.prefs.SpinnerEx;
 import name.mikanoshi.customiuizer.prefs.SpinnerExFake;
@@ -27,7 +28,6 @@ import name.mikanoshi.customiuizer.subs.MultiAction;
 import name.mikanoshi.customiuizer.subs.SortableList;
 import name.mikanoshi.customiuizer.utils.ColorCircle;
 import name.mikanoshi.customiuizer.utils.Helpers;
-import name.mikanoshi.customiuizer.utils.ModData;
 
 public class SubFragment extends PreferenceFragmentBase {
 
@@ -35,7 +35,6 @@ public class SubFragment extends PreferenceFragmentBase {
 	private int resId = 0;
 	public int titleId = 0;
 	private float order = 100.0f;
-	private String scrollToKey = null;
 	public boolean padded = true;
 	Helpers.SettingsType settingsType = Helpers.SettingsType.Preference;
 	Helpers.ActionBarType abType = Helpers.ActionBarType.Edit;
@@ -53,7 +52,6 @@ public class SubFragment extends PreferenceFragmentBase {
 		resId = getArguments().getInt("contentResId");
 		titleId = getArguments().getInt("titleResId");
 		order = getArguments().getFloat("order") + 10.0f;
-		scrollToKey = getArguments().getString("scrollToKey", null);
 
 		if (resId == 0) {
 			getActivity().finish();
@@ -69,7 +67,6 @@ public class SubFragment extends PreferenceFragmentBase {
 	}
 
 	@Override
-	@SuppressWarnings("ConstantConditions")
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		loadSharedPrefs();
@@ -106,33 +103,6 @@ public class SubFragment extends PreferenceFragmentBase {
 			});
 		} else {
 			actionBar.setTitle(titleId);
-		}
-
-		if (scrollToKey != null) try {
-			ListView listView = getView().findViewById(android.R.id.list);
-			int order = 0;
-			for (ModData mod: Helpers.allModsList)
-			if (mod.key.equals(scrollToKey)) {
-				order = mod.order;
-				break;
-			}
-			if (order == 0)
-			for (ModData sub: Helpers.allSubsList)
-			if (sub.key.equals(scrollToKey)) {
-				order = sub.order;
-				break;
-			}
-			scrollToKey = null;
-			listView.clearFocus();
-			int fOrder = order;
-			listView.post(new Runnable() {
-				@Override
-				public void run() {
-					listView.setSelection(fOrder);
-				}
-			});
-		} catch (Throwable t) {
-			t.printStackTrace();
 		}
 
 		if (Helpers.showNewMods)
@@ -361,6 +331,25 @@ public class SubFragment extends PreferenceFragmentBase {
 		args.putInt("titleResId", pref.getTitleRes());
 		openSubFragment(new SortableList(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, pref.getTitleRes(), R.layout.prefs_sortable_list);
 	}
+
+	public void selectSub(String cat, String sub) {
+		PreferenceScreen screen = (PreferenceScreen)findPreference(cat);
+		int cnt = screen.getPreferenceCount();
+		for (int i = cnt - 1; i >= 0; i--) {
+			Preference pref = screen.getPreference(i);
+			if (!pref.getKey().equals(sub))
+				screen.removePreference(pref);
+			else {
+				PreferenceCategoryEx category = (PreferenceCategoryEx)pref;
+				if (category.isDynamic())
+					getActionBar().setTitle(pref.getTitle() + " ⟲");
+				else
+					getActionBar().setTitle(pref.getTitleRes());
+				category.hide();
+			}
+		}
+	}
+
 
 	public void finish() {
 		if (isAnimating) return;

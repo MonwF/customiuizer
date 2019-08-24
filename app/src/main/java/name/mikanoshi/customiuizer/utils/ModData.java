@@ -1,7 +1,5 @@
 package name.mikanoshi.customiuizer.utils;
 
-import name.mikanoshi.customiuizer.R;
-
 public class ModData {
 
 	public enum ModCat {
@@ -15,5 +13,5 @@ public class ModData {
 	public String breadcrumbs;
 	public String key;
 	public ModCat cat;
-	public int order;
+	public String sub;
 }

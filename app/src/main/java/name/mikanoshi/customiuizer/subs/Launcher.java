@@ -13,18 +13,17 @@ import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class Launcher extends SubFragment {
 
+	String sub = "";
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		//setupImmersiveMenu();
 
-		findPreference("pref_key_launcher_mods").setOnPreferenceChangeListener(new CheckBoxPreference.OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				updateLauncherMods((String)newValue);
-				return true;
-			}
-		});
+		Bundle args = getArguments();
+		sub = args.getString("sub");
+		if (sub == null) sub = "";
+
+		selectSub("pref_key_launcher", sub);
 
 		CheckBoxPreference.OnPreferenceChangeListener switchPrivacyAppState = new CheckBoxPreference.OnPreferenceChangeListener() {
 			@Override
@@ -50,35 +49,53 @@ public class Launcher extends SubFragment {
 			}
 		};
 
-		findPreference("pref_key_launcher_swipedown").setOnPreferenceClickListener(openLauncherActions);
-		findPreference("pref_key_launcher_swipedown2").setOnPreferenceClickListener(openLauncherActions);
-		findPreference("pref_key_launcher_swipeup").setOnPreferenceClickListener(openLauncherActions);
-		findPreference("pref_key_launcher_swipeup2").setOnPreferenceClickListener(openLauncherActions);
-		findPreference("pref_key_launcher_swiperight").setOnPreferenceClickListener(openLauncherActions);
-		findPreference("pref_key_launcher_swipeleft").setOnPreferenceClickListener(openLauncherActions);
-		findPreference("pref_key_launcher_shake").setOnPreferenceClickListener(openLauncherActions);
-		findPreference("pref_key_launcher_doubletap").setOnPreferenceClickListener(openLauncherActions);
+		@SuppressWarnings("ConstantConditions")
+		int opt = Integer.parseInt(Helpers.prefs.getString("pref_key_launcher_mods", "1"));
 
-		findPreference("pref_key_launcher_privacyapps_list").setOnPreferenceClickListener(openPrivacyAppEdit);
-		findPreference("pref_key_launcher_privacyapps_gest").setOnPreferenceChangeListener(switchPrivacyAppState);
-		findPreference("pref_key_launcher_renameapps_list").setOnPreferenceClickListener(openLaunchableList);
+		switch (sub) {
+			case "pref_key_launcher_cat_folders":
+				break;
+			case "pref_key_launcher_cat_gestures":
+				findPreference("pref_key_launcher_swipedown").setOnPreferenceClickListener(openLauncherActions);
+				findPreference("pref_key_launcher_swipedown2").setOnPreferenceClickListener(openLauncherActions);
+				findPreference("pref_key_launcher_swipeup").setOnPreferenceClickListener(openLauncherActions);
+				findPreference("pref_key_launcher_swipeup2").setOnPreferenceClickListener(openLauncherActions);
+				findPreference("pref_key_launcher_swiperight").setOnPreferenceClickListener(openLauncherActions);
+				findPreference("pref_key_launcher_swipeleft").setOnPreferenceClickListener(openLauncherActions);
+				findPreference("pref_key_launcher_shake").setOnPreferenceClickListener(openLauncherActions);
+				findPreference("pref_key_launcher_doubletap").setOnPreferenceClickListener(openLauncherActions);
+				findPreference("pref_key_launcher_swipeup").setEnabled(opt == 1);
+				break;
+			case "pref_key_launcher_cat_privacyapps":
+				findPreference("pref_key_launcher_cat_privacyapps").setEnabled(opt == 1);
+				findPreference("pref_key_launcher_privacyapps_list").setOnPreferenceClickListener(openPrivacyAppEdit);
+				findPreference("pref_key_launcher_privacyapps_gest").setOnPreferenceChangeListener(switchPrivacyAppState);
 
-		if (!checkPermissions()) {
-			Preference pref = findPreference("pref_key_launcher_cat_privacyapps");
-			pref.setEnabled(false);
-			pref.setTitle(R.string.launcher_privacyapps_fail);
-			findPreference("pref_key_launcher_privacyapps_list").setEnabled(false);
-			findPreference("pref_key_launcher_privacyapps_gest").setEnabled(false);
+				if (!checkPermissions()) {
+					Preference pref = findPreference("pref_key_launcher_cat_privacyapps");
+					pref.setEnabled(false);
+					pref.setTitle(R.string.launcher_privacyapps_fail);
+					findPreference("pref_key_launcher_privacyapps_list").setEnabled(false);
+					findPreference("pref_key_launcher_privacyapps_gest").setEnabled(false);
+				}
+
+				break;
+			case "pref_key_launcher_cat_titles":
+				findPreference("pref_key_launcher_renameapps_list").setOnPreferenceClickListener(openLaunchableList);
+				break;
+			case "pref_key_launcher_cat_other":
+				findPreference("pref_key_launcher_fixstatusbarmode").setEnabled(opt == 1);
+				findPreference("pref_key_launcher_unlockgrids").setEnabled(opt == 1);
+				findPreference("pref_key_launcher_hideseekpoints").setEnabled(opt == 1);
+				break;
 		}
-
-		updateLauncherMods(Helpers.prefs.getString("pref_key_launcher_mods", "1"));
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
 
-		if (checkPermissions()) {
+		if ("pref_key_launcher_cat_privacyapps".equals(sub) && checkPermissions()) {
 			Preference pref = findPreference("pref_key_launcher_privacyapps_gest");
 			((CheckBoxPreference)pref).setChecked(Settings.Secure.getInt(getActivity().getContentResolver(), "is_privacy_apps_enable", 0) == 1);
 		}
@@ -90,16 +107,6 @@ public class Launcher extends SubFragment {
 			   pm.checkPermission(Helpers.ACCESS_SECURITY_CENTER, Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED;
 	}
 
-	private void updateLauncherMods(String value) {
-		int opt = Integer.parseInt(value);
-		findPreference("pref_key_launcher_fixstatusbarmode").setEnabled(opt == 1);
-		findPreference("pref_key_launcher_unlockgrids").setEnabled(opt == 1);
-		findPreference("pref_key_launcher_foldershade").setEnabled(opt == 1);
-		findPreference("pref_key_launcher_cat_privacyapps").setEnabled(opt == 1);
-		findPreference("pref_key_launcher_swipeup").setEnabled(opt == 1);
-		findPreference("pref_key_launcher_hideseekpoints").setEnabled(opt == 1);
-	}
-
 //	public boolean onCreateOptionsMenu(Menu menu) {
 //		getMenuInflater().inflate(R.menu.menu_launcher, menu);
 //		return true;
@@ -109,7 +116,7 @@ public class Launcher extends SubFragment {
 //	public boolean onOptionsItemSelected(MenuItem item) {
 //		if (item.getItemId() == R.id.restartlauncher)
 //		try {
-//			getActivity().sendBroadcast(new Intent("name.mikanoshi.customiuizer.mods.action.RestartLauncher"));
+//			getActivity().sendBroadcast(new Intent(GlobalActions.ACTION_PREFIX + "RestartLauncher"));
 //		} catch (Throwable e) {
 //			e.printStackTrace();
 //		}

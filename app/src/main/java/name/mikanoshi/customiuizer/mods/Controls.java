@@ -27,17 +27,17 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.lang.reflect.Method;
+import static java.lang.System.currentTimeMillis;
 
-import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
-import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
+
 import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
-
-import static java.lang.System.currentTimeMillis;
+import name.mikanoshi.customiuizer.utils.Helpers.MethodHook;
 
 public class Controls {
 
@@ -71,33 +71,33 @@ public class Controls {
 	}
 
 	public static void PowerKeyHook(LoadPackageParam lpparam) {
-		Helpers.hookAllMethods("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "init", new XC_MethodHook() {
+		Helpers.hookAllMethods("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "init", new MethodHook() {
 			@Override
-			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+			protected void after(MethodHookParam param) throws Throwable {
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 				mContext.registerReceiver(mScreenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
 			}
 		});
 
-//		Helpers.findAndHookMethod("com.android.server.input.InputManagerService", lpparam.classLoader, "interceptKeyBeforeQueueing", KeyEvent.class, int.class, new XC_MethodHook() {
+//		Helpers.findAndHookMethod("com.android.server.input.InputManagerService", lpparam.classLoader, "interceptKeyBeforeQueueing", KeyEvent.class, int.class, new MethodHook() {
 //			@Override
-//			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+//			protected void before(final MethodHookParam param) throws Throwable {
 //				KeyEvent keyEvent = (KeyEvent)param.args[0];
 //				Helpers.log("PowerKeyHook", "InputManagerService interceptKeyBeforeQueueing: | KeyCode: " + keyEvent.getKeyCode() + " | Action: " + keyEvent.getAction() + " | RepeatCount: " + keyEvent.getRepeatCount()+ " | Flags: " + keyEvent.getFlags());
 //			}
 //		});
 //
-//		Helpers.findAndHookMethod("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "interceptKeyBeforeQueueingInternal", KeyEvent.class, int.class, boolean.class, new XC_MethodHook() {
+//		Helpers.findAndHookMethod("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "interceptKeyBeforeQueueingInternal", KeyEvent.class, int.class, boolean.class, new MethodHook() {
 //			@Override
-//			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+//			protected void before(final MethodHookParam param) throws Throwable {
 //				KeyEvent keyEvent = (KeyEvent)param.args[0];
 //				Helpers.log("PowerKeyHook", "interceptKeyBeforeQueueingInternal: " + param.args[2] + " | KeyCode: " + keyEvent.getKeyCode() + " | Action: " + keyEvent.getAction() + " | RepeatCount: " + keyEvent.getRepeatCount()+ " | Flags: " + keyEvent.getFlags());
 //			}
 //		});
 
-		Helpers.findAndHookMethod("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "interceptKeyBeforeQueueing", KeyEvent.class, int.class, new XC_MethodHook() {
+		Helpers.findAndHookMethod("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "interceptKeyBeforeQueueing", KeyEvent.class, int.class, new MethodHook() {
 			@Override
-			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+			protected void before(final MethodHookParam param) throws Throwable {
 				// Power and volkeys are pressed at the same time
 				if (isVolumePressed) return;
 				KeyEvent keyEvent = (KeyEvent)param.args[0];
@@ -168,10 +168,10 @@ public class Controls {
 	}
 
 	public static void VolumeMediaButtonsHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "interceptKeyBeforeQueueing", KeyEvent.class, int.class, new XC_MethodHook() {
+		Helpers.findAndHookMethod("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "interceptKeyBeforeQueueing", KeyEvent.class, int.class, new MethodHook() {
 			@Override
 			@SuppressLint("MissingPermission")
-			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
+			protected void before(final MethodHookParam param) throws Throwable {
 				// Power and volkeys are pressed at the same time
 				if (isPowerPressed) return;
 				final KeyEvent keyEvent = (KeyEvent)param.args[0];
@@ -253,25 +253,21 @@ public class Controls {
 	}
 
 	public static void VolumeMediaPlayerHook() {
-		Helpers.findAndHookMethod("android.media.MediaPlayer", null, "pause", new XC_MethodHook() {
+		Helpers.findAndHookMethod("android.media.MediaPlayer", null, "pause", new MethodHook() {
 			@Override
-			protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
-				try {
-					Application mContext = (Application)XposedHelpers.callStaticMethod(XposedHelpers.findClass("android.app.ActivityThread", null), "currentApplication");
-					int mStreamType = (int)XposedHelpers.findMethodExact(XposedHelpers.findClass("android.media.MediaPlayer", null), "getAudioStreamType").invoke(param.thisObject);
-					if (mContext != null && (mStreamType == AudioManager.STREAM_MUSIC || mStreamType == 0x80000000))
-					mContext.sendBroadcast(new Intent("name.mikanoshi.customiuizer.mods.action.SaveLastMusicPausedTime"));
-				} catch (Throwable t) {
-					XposedBridge.log(t);
-				}
+			protected void before(final MethodHookParam param) throws Throwable {
+				Application mContext = (Application)XposedHelpers.callStaticMethod(XposedHelpers.findClass("android.app.ActivityThread", null), "currentApplication");
+				int mStreamType = (int)XposedHelpers.findMethodExact(XposedHelpers.findClass("android.media.MediaPlayer", null), "getAudioStreamType").invoke(param.thisObject);
+				if (mContext != null && (mStreamType == AudioManager.STREAM_MUSIC || mStreamType == 0x80000000))
+				mContext.sendBroadcast(new Intent(GlobalActions.ACTION_PREFIX + "SaveLastMusicPausedTime"));
 			}
 		});
 	}
 
 	public static void VolumeCursorHook() {
-		Helpers.findAndHookMethod("android.inputmethodservice.InputMethodService", null, "onKeyDown", int.class, KeyEvent.class, new XC_MethodHook() {
+		Helpers.findAndHookMethod("android.inputmethodservice.InputMethodService", null, "onKeyDown", int.class, KeyEvent.class, new MethodHook() {
 			@Override
-			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+			protected void before(MethodHookParam param) throws Throwable {
 				InputMethodService ims = (InputMethodService)param.thisObject;
 				int code = (int)param.args[0];
 				if ((code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN) && ims.isInputViewShown()) {
@@ -282,9 +278,9 @@ public class Controls {
 			}
 		});
 
-		Helpers.findAndHookMethod("android.inputmethodservice.InputMethodService", null, "onKeyUp", int.class, KeyEvent.class, new XC_MethodHook() {
+		Helpers.findAndHookMethod("android.inputmethodservice.InputMethodService", null, "onKeyUp", int.class, KeyEvent.class, new MethodHook() {
 			@Override
-			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+			protected void before(MethodHookParam param) throws Throwable {
 				InputMethodService ims = (InputMethodService)param.thisObject;
 				int code = (int)param.args[0];
 				if ((code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN) && ims.isInputViewShown())
@@ -432,9 +428,9 @@ public class Controls {
 	}
 
 	public static void NavBarButtonsHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "createNavigationBar", new XC_MethodHook() {
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "createNavigationBar", new MethodHook() {
 			@Override
-			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+			protected void after(MethodHookParam param) throws Throwable {
 				Class<?> kbrCls = XposedHelpers.findClassIfExists("com.android.systemui.statusbar.policy.KeyButtonRipple", lpparam.classLoader);
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 				if (mContext == null) {
@@ -456,9 +452,9 @@ public class Controls {
 			}
 		});
 
-		Helpers.hookAllMethods("com.android.systemui.statusbar.phone.NavigationBarView", lpparam.classLoader, "switchSuit", new XC_MethodHook() {
+		Helpers.hookAllMethods("com.android.systemui.statusbar.phone.NavigationBarView", lpparam.classLoader, "switchSuit", new MethodHook() {
 			@Override
-			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+			protected void after(MethodHookParam param) throws Throwable {
 				LinearLayout navbar = (LinearLayout)param.thisObject;
 				boolean isDark = (boolean)param.args[1];
 				ImageView hleft = navbar.findViewWithTag("custom_left_horiz");
@@ -514,10 +510,10 @@ public class Controls {
 		boolean skipInCamera = MainModule.mPrefs.getBoolean("controls_fingerprintskip");
 		boolean skipInCall = MainModule.mPrefs.getBoolean("controls_fingerprintskip2");
 
-		Helpers.findAndHookMethod("com.android.server.policy.MiuiPhoneWindowManager", lpparam.classLoader, "processFingerprintNavigationEvent", KeyEvent.class, boolean.class, new XC_MethodHook() {
+		Helpers.findAndHookMethod("com.android.server.policy.MiuiPhoneWindowManager", lpparam.classLoader, "processFingerprintNavigationEvent", KeyEvent.class, boolean.class, new MethodHook() {
 			@Override
 			@SuppressLint("MissingPermission")
-			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+			protected void before(MethodHookParam param) throws Throwable {
 				if (skipInCamera) {
 					Object mFocusedWindow = XposedHelpers.getObjectField(param.thisObject, "mFocusedWindow");
 					if ((boolean)param.args[1] && mFocusedWindow != null) {
@@ -553,7 +549,7 @@ public class Controls {
 
 			@Override
 			@SuppressLint("MissingPermission")
-			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+			protected void after(MethodHookParam param) throws Throwable {
 				if (skipInCamera) {
 					Object mFocusedWindow = XposedHelpers.getObjectField(param.thisObject, "mFocusedWindow");
 					if ((boolean)param.args[1] && mFocusedWindow != null) {
@@ -603,27 +599,27 @@ public class Controls {
 			}
 		});
 
-		Helpers.hookAllMethods("com.android.server.fingerprint.FingerprintService", lpparam.classLoader, "startClient", new XC_MethodHook() {
+		Helpers.hookAllMethods("com.android.server.fingerprint.FingerprintService", lpparam.classLoader, "startClient", new MethodHook() {
 			@Override
-			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+			protected void before(MethodHookParam param) throws Throwable {
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 				Settings.System.putInt(mContext.getContentResolver(), "is_fingerprint_active", 1);
 			}
 		});
 
-		Helpers.hookAllMethods("com.android.server.fingerprint.FingerprintService", lpparam.classLoader, "removeClient", new XC_MethodHook() {
+		Helpers.hookAllMethods("com.android.server.fingerprint.FingerprintService", lpparam.classLoader, "removeClient", new MethodHook() {
 			@Override
-			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+			protected void after(MethodHookParam param) throws Throwable {
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 				Settings.System.putInt(mContext.getContentResolver(), "is_fingerprint_active", 0);
 			}
 		});
 	}
 
-//	public static void FingerprintHook(XC_LoadPackage.LoadPackageParam lpparam) {
-//		Helpers.findAndHookMethod("com.android.server.devicepolicy.DevicePolicyManagerService", lpparam.classLoader, "reportSuccessfulFingerprintAttempt", int.class, new XC_MethodHook() {
+//	public static void FingerprintHook(LoadPackageParam lpparam) {
+//		Helpers.findAndHookMethod("com.android.server.devicepolicy.DevicePolicyManagerService", lpparam.classLoader, "reportSuccessfulFingerprintAttempt", int.class, new MethodHook() {
 //			@Override
-//			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+//			protected void before(MethodHookParam param) throws Throwable {
 //				Helpers.log("reportSuccessfulFingerprintAttempt");
 //				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 //			}
@@ -631,23 +627,19 @@ public class Controls {
 //	}
 
 	public static void FSGesturesHook() {
-		Helpers.findAndHookMethod("android.provider.MiuiSettings$Global", null, "getBoolean", ContentResolver.class, String.class, new XC_MethodHook() {
+		Helpers.findAndHookMethod("android.provider.MiuiSettings$Global", null, "getBoolean", ContentResolver.class, String.class, new MethodHook() {
 			@Override
-			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-				try {
-					if (!"force_fsg_nav_bar".equals(param.args[1])) return;
+			protected void after(MethodHookParam param) throws Throwable {
+				if (!"force_fsg_nav_bar".equals(param.args[1])) return;
 
-					ContentResolver resolver = (ContentResolver)param.args[0];
-					Context mContext = (Context)XposedHelpers.getObjectField(resolver, "mContext");
+				ContentResolver resolver = (ContentResolver)param.args[0];
+				Context mContext = (Context)XposedHelpers.getObjectField(resolver, "mContext");
 
-					if ("com.android.systemui".equals(mContext.getPackageName()))
-					for (StackTraceElement el: Thread.currentThread().getStackTrace())
-					if ("com.android.systemui.recents.BaseRecentsImpl".equals(el.getClassName())) {
-						param.setResult(true);
-						return;
-					}
-				} catch (Throwable t) {
-					XposedBridge.log(t);
+				if ("com.android.systemui".equals(mContext.getPackageName()))
+				for (StackTraceElement el: Thread.currentThread().getStackTrace())
+				if ("com.android.systemui.recents.BaseRecentsImpl".equals(el.getClassName())) {
+					param.setResult(true);
+					return;
 				}
 			}
 		});
@@ -696,9 +688,9 @@ public class Controls {
 	};
 
 	public static void NavBarActionsHook(LoadPackageParam lpparam) {
-		Helpers.hookAllMethods("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "initInternal", new XC_MethodHook() {
+		Helpers.hookAllMethods("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "initInternal", new MethodHook() {
 			@Override
-			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+			protected void after(MethodHookParam param) throws Throwable {
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 				Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
 
@@ -723,9 +715,9 @@ public class Controls {
 			}
 		});
 
-		Helpers.hookAllMethods("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "postKeyLongPress", new XC_MethodHook() {
+		Helpers.hookAllMethods("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "postKeyLongPress", new MethodHook() {
 			@Override
-			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+			protected void before(MethodHookParam param) throws Throwable {
 				if (basePWMObject == null) basePWMObject = param.thisObject;
 				if (basePWMContext == null) basePWMContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 				if (markShortcutTriggered == null) markShortcutTriggered = XposedHelpers.findMethodExact("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "markShortcutTriggered");
@@ -744,20 +736,16 @@ public class Controls {
 			}
 		});
 
-		Helpers.hookAllMethods("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "removeKeyLongPress", new XC_MethodHook() {
+		Helpers.hookAllMethods("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "removeKeyLongPress", new MethodHook() {
 			@Override
-			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-				try {
-					int key = (int)param.args[0];
-					if (key == KeyEvent.KEYCODE_BACK)
-						((Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler")).removeCallbacks(mBackLongPressAction);
-					else if (key == KeyEvent.KEYCODE_HOME)
-						((Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler")).removeCallbacks(mHomeLongPressAction);
-					else if (key == KeyEvent.KEYCODE_APP_SWITCH)
-						((Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler")).removeCallbacks(mMenuLongPressAction);
-				} catch (Throwable t) {
-					XposedBridge.log(t);
-				}
+			protected void before(MethodHookParam param) throws Throwable {
+				int key = (int)param.args[0];
+				if (key == KeyEvent.KEYCODE_BACK)
+					((Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler")).removeCallbacks(mBackLongPressAction);
+				else if (key == KeyEvent.KEYCODE_HOME)
+					((Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler")).removeCallbacks(mHomeLongPressAction);
+				else if (key == KeyEvent.KEYCODE_APP_SWITCH)
+					((Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler")).removeCallbacks(mMenuLongPressAction);
 			}
 		});
 	}
@@ -771,27 +759,23 @@ public class Controls {
 	}
 
 	public static void FingerprintHapticSuccessHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.android.server.fingerprint.AuthenticationClient", lpparam.classLoader, "onAuthenticated", int.class, int.class, new XC_MethodHook() {
+		Helpers.findAndHookMethod("com.android.server.fingerprint.AuthenticationClient", lpparam.classLoader, "onAuthenticated", int.class, int.class, new MethodHook() {
 			@Override
-			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-				try {
-					if (!((boolean)param.getResult())) return;
-					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-//					boolean isScreenOn = (boolean)XposedHelpers.callMethod(param.thisObject, "isScreenOn");
-//					if (!isScreenOn) {
-//						WakeLock wl = ((PowerManager)mContext.getSystemService(Context.POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "miuizer:fingerprint_haptic_feedback");
-//						wl.acquire(2000);
-//					}
+			protected void after(MethodHookParam param) throws Throwable {
+				if (!((boolean)param.getResult())) return;
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+//				boolean isScreenOn = (boolean)XposedHelpers.callMethod(param.thisObject, "isScreenOn");
+//				if (!isScreenOn) {
+//					WakeLock wl = ((PowerManager)mContext.getSystemService(Context.POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "miuizer:fingerprint_haptic_feedback");
+//					wl.acquire(2000);
+//				}
 
-					boolean ignoreSystem = MainModule.mPrefs.getBoolean("controls_fingerprintsuccess_ignore");
-					int opt = Integer.parseInt(MainModule.mPrefs.getString("controls_fingerprintsuccess", "1"));
-					if (opt == 2)
-						Helpers.performLightVibration(mContext, ignoreSystem);
-					else if (opt == 3)
-						Helpers.performStrongVibration(mContext, ignoreSystem);
-				} catch (Throwable t) {
-					XposedBridge.log(t);
-				}
+				boolean ignoreSystem = MainModule.mPrefs.getBoolean("controls_fingerprintsuccess_ignore");
+				int opt = Integer.parseInt(MainModule.mPrefs.getString("controls_fingerprintsuccess", "1"));
+				if (opt == 2)
+					Helpers.performLightVibration(mContext, ignoreSystem);
+				else if (opt == 3)
+					Helpers.performStrongVibration(mContext, ignoreSystem);
 			}
 		});
 	}
@@ -803,19 +787,32 @@ public class Controls {
 			Helpers.findAndHookMethod("com.android.server.fingerprint.ClientMonitor", lpparam.classLoader, "vibrateError", XC_MethodReplacement.returnConstant(null));
 	}
 
+	public static void FingerprintScreenOnHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.server.fingerprint.AuthenticationClient", lpparam.classLoader, "onAuthenticated", int.class, int.class, new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				if ((boolean)param.getResult()) return;
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				PowerManager mPowerManager = (PowerManager)mContext.getSystemService(Context.POWER_SERVICE);
+				if (mPowerManager.isInteractive()) return;
+				if (!GlobalActions.wakeUp(mContext)) Helpers.log("FingerprintScreenOnHook", "Failed to wake up device");
+			}
+		});
+	}
+
 //	public static void AIButtonHook(LoadPackageParam lpparam) {
-//		Helpers.findAndHookMethod("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "startAiKeyService", String.class, new XC_MethodHook() {
+//		Helpers.findAndHookMethod("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "startAiKeyService", String.class, new MethodHook() {
 //			@Override
-//			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+//			protected void before(MethodHookParam param) throws Throwable {
 //				Helpers.log("AIButtonHook", "startAiKeyService: " + param.args[0]);
 //			}
 //		});
 //	}
 
-//	public static void SwapVolumeKeysHook(XC_LoadPackage.LoadPackageParam lpparam) {
-//		Helpers.findAndHookMethod("com.android.server.audio.AudioService", lpparam.classLoader, "adjustSuggestedStreamVolume", int.class, int.class, int.class, String.class, String.class, int.class, new XC_MethodHook() {
+//	public static void SwapVolumeKeysHook(LoadPackageParam lpparam) {
+//		Helpers.findAndHookMethod("com.android.server.audio.AudioService", lpparam.classLoader, "adjustSuggestedStreamVolume", int.class, int.class, int.class, String.class, String.class, int.class, new MethodHook() {
 //			@Override
-//			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+//			protected void before(MethodHookParam param) throws Throwable {
 //				//Helpers.log("adjustStreamVolume: " + String.valueOf(param.args[0]) + ", " + String.valueOf(param.args[1]) + ", " + String.valueOf(param.args[2]) + ", " + String.valueOf(param.args[3]) + ", " + String.valueOf(param.args[4]) + ", " + String.valueOf(param.args[5]));
 //				if ((Integer)param.args[0] != 0) try {
 //					Context context = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");

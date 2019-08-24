@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -89,11 +90,14 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 		float order = 100.0f;
 		try {
 			if (getView() != null) order = getView().getTranslationZ();
-		} catch (Throwable e) {}
+		} catch (Throwable t) {}
 		args.putFloat("order", order);
-		fragment.setArguments(args);
+		if (fragment.getArguments() == null)
+			fragment.setArguments(args);
+		else
+			fragment.getArguments().putAll(args);
 		getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fragment_open_enter, R.animator.fragment_open_exit, R.animator.fragment_close_enter, R.animator.fragment_close_exit)
-				.replace(R.id.fragment_container, fragment).addToBackStack(null).commitAllowingStateLoss();
+			.replace(R.id.fragment_container, fragment).addToBackStack(null).commitAllowingStateLoss();
 		getFragmentManager().executePendingTransactions();
 	}
 

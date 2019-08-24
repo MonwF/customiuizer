@@ -1,6 +1,24 @@
+1.7.2
+[New] Position slider in media notifications
+[New] Turn screen on after failed fingerprint authentication
+[New] LTE icon instead of 4G
+[New] Show incoming call UI instead of just a notification
+[New] Configurable screen brightness during call
+[New] System animations scale from x0 to x20 with 0.1x step
+[New] Icon and folder scale in Launcher
+[New][Hide icons] Hide No SIM and Managed profile status bar icons
+[Improved][Volume steps multiplier] 0.25x multiplier step
+[Removed][Pocket mode] Mod was draining battery during sleep by getting proximity values once a second; ultrasonic sensors are not reliable in such situations as they require 1 second to start showing correct values
+[Fixed][Extended notification menu] Vertical position when Compact notification mod is not active
+[Fixed][Custom lock screen actions] Restore default right image when no action is selected; Better compatibility with different ROMs
+[Fixed][Hide clear button] Compatibility with latest ROMs
+[Fixed][Android 7] Image resource hooks not working (was affecting a number of mods)
+[Fixed] Single app selection lists in module settings
+[Improved] Mods' settings categorization
+
 1.7.1
 [Fixed][Status bar height, Navbar height] Incomplete height changes, slow boot, bootloops
-[Fixed][Custom locks screen actions] Hide left icon when swipe right gesture is disabled; Better compatibility with different ROMs
+[Fixed][Custom lock screen actions] Hide left icon when swipe right gesture is disabled; Better compatibility with different ROMs
 [Fixed][Quick flashlight, Volume keys long press actions] Always On Display compatibility
 
 1.7.0

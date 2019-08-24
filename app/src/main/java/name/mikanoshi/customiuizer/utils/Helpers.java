@@ -93,7 +93,6 @@ public class Helpers {
 	public static ArrayList<AppData> installedAppsList = null;
 	public static ArrayList<AppData> launchableAppsList = null;
 	public static ArrayList<ModData> allModsList = new ArrayList<ModData>();
-	public static ArrayList<ModData> allSubsList = new ArrayList<ModData>();
 	public static String backupFile = "settings_backup";
 	public static final int markColor = Color.rgb(205, 73, 97);
 	public static final int markColorVibrant = Color.rgb(222, 45, 73);
@@ -112,11 +111,20 @@ public class Helpers {
 	public static WakeLock mWakeLock;
 	public static boolean showNewMods = true;
 	public static final String[] newMods = new String[] {
-		"system_disableanynotif",
-		"system_lockscreenshortcuts_cat",
-		"system_separatevolume_slider",
-		"system_statusbaricons_vpn",
-		"system_statusbaricons_hotspot"
+		"system_statusbaricons_nosims",
+		"system_statusbaricons_profile",
+		"system_notifmediaseekbar",
+		"system_4gtolte",
+		"system_showlux",
+		"system_showlux_style",
+		"system_animationscale_window",
+		"system_animationscale_transition",
+		"system_animationscale_animator",
+		"launcher_iconscale",
+		"launcher_folderscale",
+		"controls_fingerprintscreen",
+		"various_showcallui",
+		"various_calluibright_cat"
 	};
 	public static final String[] shortcutIcons = new String[] {
 		"bankcard", "buscard", "calculator", "calendar", "contacts", "magazine", "music", "notes", "remotecontroller", "smarthome", "miuizer"
@@ -715,7 +723,8 @@ public class Helpers {
 
 	private static void parsePrefXml(Context context, int xmlResId) {
 		Resources res = context.getResources();
-		String lastPrefScreen = null;
+		String lastPrefSub = null;
+		String lastPrefSubTitle = null;
 		int catResId = 0;
 		ModData.ModCat catPrefKey = null;
 
@@ -740,19 +749,14 @@ public class Helpers {
 
 		try (XmlResourceParser xml = res.getXml(xmlResId)) {
 			int eventType = xml.getEventType();
-			int order = 0;
 			while (eventType != XmlPullParser.END_DOCUMENT) {
 				if (eventType == XmlPullParser.START_TAG) try {
 					if (xml.getName().equals(PreferenceCategory.class.getSimpleName()) || xml.getName().equals(PreferenceCategoryEx.class.getCanonicalName())) {
-						lastPrefScreen = getModTitle(res, xml.getAttributeValue(ANDROID_NS, "title"));
-						ModData modData = new ModData();
-						modData.title = lastPrefScreen;
-						modData.key = xml.getAttributeValue(ANDROID_NS, "key");
-						modData.cat = catPrefKey;
-						modData.order = order - 1;
-						allSubsList.add(modData);
+						if (xml.getAttributeValue(ANDROID_NS, "key") != null) {
+							lastPrefSub = xml.getAttributeValue(ANDROID_NS, "key");
+							lastPrefSubTitle = getModTitle(res, xml.getAttributeValue(ANDROID_NS, "title"));
+						}
 						eventType = xml.next();
-						order++;
 						continue;
 					}
 
@@ -761,14 +765,13 @@ public class Helpers {
 					if (!isChild) {
 						modData.title = getModTitle(res, xml.getAttributeValue(ANDROID_NS, "title"));
 						if (modData.title != null) {
-							modData.breadcrumbs = res.getString(catResId) + (lastPrefScreen == null ? "" : "/" + lastPrefScreen);
+							modData.breadcrumbs = res.getString(catResId) + (lastPrefSubTitle == null ? "" : "/" + lastPrefSubTitle);
 							modData.key = xml.getAttributeValue(ANDROID_NS, "key");
 							modData.cat = catPrefKey;
-							modData.order = order - 1;
+							modData.sub = lastPrefSub;
 							allModsList.add(modData);
 						}
 					}
-					order++;
 				} catch (Throwable t) {
 					t.printStackTrace();
 				}
@@ -1163,7 +1166,38 @@ public class Helpers {
 		XposedBridge.log("[CustoMIUIzer][" + mod + "] " + line);
 	}
 
-	public static void hookMethod(Method method, XC_MethodHook callback) {
+	public static class MethodHook extends XC_MethodHook {
+		protected void before(MethodHookParam param) throws Throwable {}
+		protected void after(MethodHookParam param) throws Throwable {}
+
+		public MethodHook() {
+			super();
+		}
+
+		public MethodHook(int priority) {
+			super(priority);
+		}
+
+		@Override
+		final protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+			try {
+				this.before(param);
+			} catch (Throwable t) {
+				XposedBridge.log(t);
+			}
+		}
+
+		@Override
+		final protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+			try {
+				this.after(param);
+			} catch (Throwable t) {
+				XposedBridge.log(t);
+			}
+		}
+	}
+
+	public static void hookMethod(Method method, MethodHook callback) {
 		try {
 			XposedBridge.hookMethod(method, callback);
 		} catch (Throwable t) {
@@ -1215,7 +1249,7 @@ public class Helpers {
 		}
 	}
 
-	public static void hookAllConstructors(String className, ClassLoader classLoader, XC_MethodHook callback) {
+	public static void hookAllConstructors(String className, ClassLoader classLoader, MethodHook callback) {
 		try {
 			Class<?> hookClass = XposedHelpers.findClassIfExists(className, classLoader);
 			if (hookClass == null || XposedBridge.hookAllConstructors(hookClass, callback).size() == 0)
@@ -1225,7 +1259,7 @@ public class Helpers {
 		}
 	}
 
-	public static void hookAllConstructors(Class<?> hookClass, XC_MethodHook callback) {
+	public static void hookAllConstructors(Class<?> hookClass, MethodHook callback) {
 		try {
 			if (XposedBridge.hookAllConstructors(hookClass, callback).size() == 0)
 			log(getCallerMethod(), "Failed to hook " + hookClass + " constructor");

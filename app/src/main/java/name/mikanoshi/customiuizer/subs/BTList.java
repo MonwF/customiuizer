@@ -25,6 +25,7 @@ import java.util.Set;
 
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SubFragment;
+import name.mikanoshi.customiuizer.mods.GlobalActions;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class BTList extends SubFragment {
@@ -132,7 +133,7 @@ public class BTList extends SubFragment {
 	};
 
 	void fetchCachedDevices() {
-		getActivity().sendBroadcast(new Intent("name.mikanoshi.customiuizer.mods.action.FetchCachedDevices"));
+		getActivity().sendBroadcast(new Intent(GlobalActions.ACTION_PREFIX + "FetchCachedDevices"));
 	}
 
 	void updateProgressBar() {
@@ -142,7 +143,7 @@ public class BTList extends SubFragment {
 	void registerReceivers() {
 		unregisterReceivers();
 		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction("name.mikanoshi.customiuizer.mods.event.CACHEDDEVICESUPDATE");
+		intentFilter.addAction(GlobalActions.EVENT_PREFIX + "CACHEDDEVICESUPDATE");
 		getActivity().registerReceiver(devicesReceiver, intentFilter);
 		handler.postDelayed(getCachedDevices, 1000);
 	}

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SubFragmentWithSearch;
+import name.mikanoshi.customiuizer.mods.GlobalActions;
 import name.mikanoshi.customiuizer.utils.AppData;
 import name.mikanoshi.customiuizer.utils.AppDataAdapter;
 import name.mikanoshi.customiuizer.utils.Helpers;
@@ -68,7 +69,7 @@ public class ActivitySelector extends SubFragmentWithSearch {
 						Intent intent = new Intent(getContext(), this.getClass());
 						intent.setComponent(new ComponentName(appdData.pkgName, appdData.actName));
 						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-						Intent bIntent = new Intent("name.mikanoshi.customiuizer.mods.action.LaunchIntent");
+						Intent bIntent = new Intent(GlobalActions.ACTION_PREFIX + "LaunchIntent");
 						bIntent.putExtra("intent", intent);
 						getContext().sendBroadcast(bIntent);
 						return true;

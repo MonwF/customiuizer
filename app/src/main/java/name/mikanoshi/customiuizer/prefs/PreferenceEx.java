@@ -25,6 +25,7 @@ public class PreferenceEx extends Preference implements PreferenceState {
 	private boolean child;
 	private boolean dynamic;
 	private boolean countAsSummary;
+	private String customSummary = null;
 	private boolean newmod = false;
 
 	public PreferenceEx(Context context, AttributeSet attrs) {
@@ -45,14 +46,22 @@ public class PreferenceEx extends Preference implements PreferenceState {
 		TextView summary = finalView.findViewById(android.R.id.summary);
 		TextView valSummary = finalView.findViewById(android.R.id.hint);
 
-		summary.setVisibility(countAsSummary || getSummary() == null || getSummary().equals("") ? View.GONE : View.VISIBLE);
-		valSummary.setVisibility(countAsSummary ? View.VISIBLE : View.GONE);
-		valSummary.setText(countAsSummary ? String.valueOf(Helpers.prefs.getStringSet(getKey(), new LinkedHashSet<String>()).size()) : null);
+		summary.setVisibility(customSummary != null || countAsSummary || getSummary() == null || getSummary().equals("") ? View.GONE : View.VISIBLE);
+		valSummary.setVisibility(customSummary != null || countAsSummary ? View.VISIBLE : View.GONE);
+		if (customSummary != null)
+			valSummary.setText(customSummary);
+		else
+			valSummary.setText(countAsSummary ? String.valueOf(Helpers.prefs.getStringSet(getKey(), new LinkedHashSet<String>()).size()) : null);
 		title.setTextColor(isEnabled() ? primary : secondary);
 		title.setText((child ? "			" : "") + getTitle() + (dynamic ? " ⟲" : ""));
 		if (newmod) Helpers.applyNewMod(title);
 
 		return finalView;
+	}
+
+	public void setCustomSummary(String text) {
+		customSummary = text;
+		notifyChanged();
 	}
 
 	@Override

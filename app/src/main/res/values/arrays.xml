@@ -204,6 +204,28 @@
 		<item>4</item>
 	</string-array>
 
+	<string-array name="incallui">
+		<item>@string/array_default</item>
+		<item>@string/array_nofs</item>
+		<item>@string/array_always</item>
+	</string-array>
+	<string-array name="incallui_val">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+	</string-array>
+
+	<string-array name="calluibright">
+		<item>@string/array_incoming</item>
+		<item>@string/array_outgoing</item>
+		<item>@string/array_both</item>
+	</string-array>
+	<string-array name="calluibright_val">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+	</string-array>
+
 	<string-array name="screenrotate">
 		<item>@string/array_default</item>
 		<item>@string/array_screen_anim_none</item>

@@ -22,6 +22,24 @@
 		miuizer:countAsSummary="true" />
 
 	<PreferenceCategory
+		android:key="pref_key_various_cat_calls"
+		android:title="@string/calls">
+
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_various_showcallui"
+			android:title="@string/various_showcallui_title"
+			android:summary="@string/various_showcallui_summ"
+			android:entries="@array/incallui"
+			android:entryValues="@array/incallui_val"
+			android:defaultValue="0" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_various_calluibright_cat"
+			android:title="@string/various_calluibright_title" />
+
+	</PreferenceCategory>
+
+	<PreferenceCategory
 		android:key="pref_key_various_cat_settings"
 		android:title="@string/settings">
 

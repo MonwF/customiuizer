@@ -26,14 +26,7 @@
 		<item name="android:windowTranslucentNavigation">true</item>
 	</style>
 
-	<attr name="accentColor" format="color" />
-	<attr name="headerColor" format="color" />
-	<attr name="statusBarColor" format="color" />
-
 	<style name="MIUIPrefs">
-		<item name="android:colorAccent">?attr/accentColor</item>
-		<item name="android:colorPrimary">?attr/headerColor</item>
-		<item name="android:statusBarColor">?attr/statusBarColor</item>
 		<item name="android:windowTranslucentStatus">true</item>
 		<item name="android:windowTranslucentNavigation">false</item>
 		<item name="android:windowActionBarOverlay">false</item>

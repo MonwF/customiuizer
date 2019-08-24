@@ -1,0 +1,35 @@
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:miuizer="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:key="pref_key_cat">
+
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_launcher_mods"
+		android:title="@string/launcher_title"
+		android:summary="@string/launcher_summ"
+		android:entries="@array/launchers"
+		android:entryValues="@array/launchers_val"
+		android:defaultValue="1" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		miuizer:empty="true" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/launcher_folders"
+		android:key="pref_key_launcher_cat_folders" />
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/launcher_titles"
+		android:key="pref_key_launcher_cat_titles" />
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/launcher_privacyapps"
+		android:key="pref_key_launcher_cat_privacyapps" />
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/launcher_gestures"
+		android:key="pref_key_launcher_cat_gestures" />
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/system_mods_other"
+		android:key="pref_key_launcher_cat_other" />
+
+</PreferenceScreen>

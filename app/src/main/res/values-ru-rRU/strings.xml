@@ -42,6 +42,15 @@
 	<string name="various_mods">Различное</string>
 	<string name="various_alarmcompat_title">Совместимость будильника</string>
 	<string name="various_alarmcompat_summ">Позволяет выбранным приложениям правильно показывать время следующего будильника, установленного стандартным приложением часов MIUI</string>
+	<string name="various_showcallui_title">Показывать интерфейс звонка</string>
+	<string name="various_showcallui_summ">Задаёт когда показывать интерфейс входящего звонка вместо всплывающего уведомелния</string>
+	<string name="various_calluibright_title">Яркость экрана во время звонка</string>
+	<string name="various_calluibright_type_title">Тип звонков</string>
+	<string name="various_calluibright_val_title">Значение яркости</string>
+	<string name="various_calluibright_night_title">Ночной режим</string>
+	<string name="various_calluibright_night_summ">Не менять яркость в ночное время</string>
+	<string name="various_calluibright_night_start_title">Начало</string>
+	<string name="various_calluibright_night_end_title">Конец</string>
 	<string name="various_disableapp_title">Контроль состояния приложений</string>
 	<string name="various_disableapp_summ">Позволяет отключить почти любое приложение с его страницы \"О приложении\"</string>
 	<string name="various_apps_title">Доп. сведения о приложении</string>
@@ -162,6 +171,10 @@
 	<string name="array_doc">Документ</string>
 	<string name="array_archive">Архив</string>
 	<string name="array_any">Любой</string>
+	<string name="array_nofs">Вне полноэкранных приложений</string>
+	<string name="array_incoming">Входящие</string>
+	<string name="array_outgoing">Исходящие</string>
+	<string name="array_both">Любые</string>
 
 	<string name="support_bug_title">Сообщить об ошибке</string>
 	<string name="support_bug_summ">Отправить сообщение об ошибке или предложить новую фичу</string>
@@ -218,6 +231,8 @@
 	<string name="controls_fingerprintskip_summ">Включите данную опцию для правильной работы съёмки отпечатком пальца</string>
 	<string name="controls_fingerprintskip2_title">Отключить действия во время звонка</string>
 	<string name="controls_fingerprintskip2_summ">Не выполнять дейстия при активном звонке</string>
+	<string name="controls_fingerprintscreen_title">Включить экран при неудаче</string>
+	<string name="controls_fingerprintscreen_summ">Зажигать экран после неудачной аутентификации</string>
 	<string name="controls_fingerprintsuccess_title">Вибрировать при успехе</string>
 	<string name="controls_fingerprintsuccess_summ">Виброотклик при успешной аутентификации</string>
 	<string name="controls_fingerprintsuccess_ignore_title">Игнорировать настройки системы</string>
@@ -352,6 +367,8 @@
 	<string name="launcher_hideseekpoints_summ">Показывает индикатор только во время прокрутки</string>
 	<string name="launcher_unlockgrids_title">Разблокировать размеры сетки</string>
 	<string name="launcher_unlockgrids_summ">Делает все размеры от 3x4 до 6x7 доступными в настройках сетки рабочего стола</string>
+	<string name="launcher_iconscale_title">Масштаб значков</string>
+	<string name="launcher_folderscale_title">Масштаб папок</string>
 	<string name="launcher_folders">Папки</string>
 	<string name="launcher_folder_cols_title">Число колонок в папках</string>
 	<string name="launcher_fixstatusbarmode_title">Исправить режим строки состояния</string>
@@ -372,6 +389,7 @@
 	<string name="launcher_privacyapps_gest_summ">Для открытия папки со скрытыми приложениями необходимо развести два пальца на рабочем столе MIUI. Перезагрузка не требуется.</string>
 	<string name="launcher_privacyapps_list_title">Список приложений для скрытия</string>
 	<string name="launcher_privacyapps_list_summ">Улучшенная версия функции Скрытые приложения, позволяющая скрыть любое установленное приложение. Перезагрузка не требуется.</string>
+	<string name="calls">Звонки</string>
 	<string name="settings">Настройки</string>
 	<string name="support_repo_summ">Git репозиторий с исходниками и дистрибутивами модуля</string>
 	<string name="support_repo_title">Репозиторий CustoMIUIzer</string>
@@ -506,6 +524,7 @@
 	<string name="system_clockseconds_summ">Отображает секунды на часах в статусбаре</string>
 	<string name="system_mobiletypeicon_title">Скрывать тип мобильной сети</string>
 	<string name="system_mobiletypeicon_summ">Удаляет иконку типа мобильной сети из строки состояния</string>
+	<string name="system_4gtolte_title">Показывать LTE вместо 4G</string>
 	<string name="system_hidemoreicon_title">Убрать индикатор скрытых иконок</string>
 	<string name="system_hidemoreicon_summ">Отключает показ иконки с 3 точками, когда активна опция скрытия иконок уведомлений</string>
 	<string name="system_netspeedinterval_title">Частота обновления индикатора скорости</string>
@@ -529,6 +548,10 @@
 	<string name="system_colorizenotiftitle_summ">Применяет цвет иконки к заголовку (только для стиля уведомлений Android)</string>
 	<string name="system_removedismiss_title">Скрыть кнопку удаления</string>
 	<string name="system_removedismiss_summ">Убирает из шторки кнопку для удаления всех уведомлений</string>
+	<string name="system_showlux_title">Показать уровень освещённости</string>
+	<string name="system_showlux_summ">Отображает уровень окружающей освещённости в люксах внутри слайдера яркости</string>
+	<string name="system_showlux_style_title">Альтернативный стиль</string>
+	<string name="system_showlux_style_summ">Большой полупрозрачный текст</string>
 	<string name="system_notifrowmenu_title">Расширенное меню уведомления</string>
 	<string name="system_notifrowmenu_summ">Добавляет новые действия в меню уведомления (открывается по свайпу влево) - открыть информацию о приложении и принудительно закрыть приложение</string>
 	<string name="system_disableanynotif_title">Отключение любых уведомлений</string>
@@ -538,6 +561,8 @@
 	<string name="system_expandnotifs_apps_title">Чёрно-белый список</string>
 	<string name="system_autogroupnotif_title">Автогруппировка уведомлений</string>
 	<string name="system_autogroupnotif_summ">Число уведомлений от одного приложения при котором срабатывает их автоматическая группировка</string>
+	<string name="system_notifmediaseekbar_title">Слайдер медиа позиции</string>
+	<string name="system_notifmediaseekbar_summ">Добавляет слайдер в медиа уведомелние для отображения и изменения текущей позиции</string>
 	<string name="system_popupnotif_title">Автооткрытие панели уведомлений</string>
 	<string name="system_popupnotif_summ">Открывает панель уведомлений автоматически при получении уведомлений от выбранных приложений</string>
 	<string name="system_popupnotif_fs_title">Определение полноэкранного режима</string>
@@ -612,8 +637,6 @@
 	<string name="system_albumartonlock_blur_title">Размытие обложки</string>
 	<string name="system_credentials_title">Разблокировать учётные данные</string>
 	<string name="system_credentials_summ">Авторизация в некоторых приложениях требует доступа к учётным данным, но при пропуске ПИН-кода/пароля/графического ключа они остаются заблокированными. Данная опция добавляет иконку в ланчере для разблокировки учётных данных.</string>
-	<string name="system_pocketmode_title">Режим \"В кармане\"</string>
-	<string name="system_pocketmode_summ">Вернуть Режим \"В кармане\" в расширенные настройки экрана блокировки на устройствах с ультразвуковым датчиком приближения</string>
 	<string name="system_lockscreenshortcuts_title">Пользовательские действия</string>
 	<string name="system_lockscreenshortcuts_summ">Настраиваемые действия на ярлыки и жесты</string>
 	<string name="system_lockscreenshortcuts_right_off_title">Отключить свайп влево</string>
@@ -647,8 +670,11 @@
 	<string name="system_dttosleep_title">Сон по двойному нажатию</string>
 	<string name="system_dttosleep_summ">Выключает экран при двойном нажатии по пустому месту на экране блокировки</string>
 	<string name="system_mods_other">Другое</string>
+	<string name="system_mods_animationscale">Масштабирование анимации</string>
+	<string name="system_animationscale_window_title">Окна</string>
+	<string name="system_animationscale_transition_title">Переходы</string>
+	<string name="system_animationscale_animator_title">Аниматоры значений</string>
 
-	<string name="guide_longpress">Долгое нажатие на категорию позволит\nбыстро перейти к подкатегории</string>
 	<string name="guide_search">Поиск модов по названию</string>
 	<string name="guide_softreboot">Не забудьте перезагрузиться для применения модов.\nДинамические ⟲ моды требуют только одну перезагрузку.\nБолее подробно об этом на странице О приложении.</string>
 	<string name="guide_marknew">Новые моды с предыдушего обновления\nмогут быть выделены для лучшей видимости</string>
@@ -664,6 +690,7 @@
 	<string name="oneKBs">1 КБ/с</string>
 	<string name="Bs">Б/с</string>
 	<string name="speedunits">КМГТПЭ</string>
+	<string name="lux">%s люкс</string>
 	<string name="off">Отключен</string>
 	<string name="time_30m">30 минут</string>
 	<string name="time_1h">1 час</string>

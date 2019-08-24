@@ -56,7 +56,6 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
@@ -64,7 +63,8 @@ import miui.app.ActionBar;
 import miui.app.AlertDialog;
 
 import miui.view.SearchActionMode;
-import name.mikanoshi.customiuizer.prefs.PreferenceEx;
+import name.mikanoshi.customiuizer.mods.GlobalActions;
+import name.mikanoshi.customiuizer.subs.CategorySelector;
 import name.mikanoshi.customiuizer.subs.Controls;
 import name.mikanoshi.customiuizer.subs.Launcher;
 import name.mikanoshi.customiuizer.subs.System;
@@ -77,9 +77,10 @@ import name.mikanoshi.customiuizer.utils.ModSearchAdapter;
 public class MainFragment extends PreferenceFragmentBase {
 
 	public boolean miuizerModuleActive = false;
-	private System prefSystem = new System();
-	private Launcher prefLauncher = new Launcher();
-	private Controls prefControls = new Controls();
+	private CategorySelector catSelector = new CategorySelector();
+	public System prefSystem = new System();
+	public Launcher prefLauncher = new Launcher();
+	public Controls prefControls = new Controls();
 	private Various prefVarious = new Various();
 	private ListView listView = null;
 	private ListView resultView = null;
@@ -318,7 +319,7 @@ public class MainFragment extends PreferenceFragmentBase {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				ModData mod = (ModData)parent.getAdapter().getItem(position);
-				openModCat(mod.cat.name(), mod.key);
+				openModCat(mod.cat.name(), mod.sub);
 			}
 		});
 		resultView.setOnTouchListener(new View.OnTouchListener() {
@@ -333,49 +334,6 @@ public class MainFragment extends PreferenceFragmentBase {
 			}
 		});
 		setViewBackground(resultView);
-
-		listView = getView().findViewById(android.R.id.list);
-		listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				Object item = parent.getAdapter().getItem(position);
-				if (!(item instanceof PreferenceEx)) return false;
-				PreferenceEx pref = (PreferenceEx)item;
-
-				String key = pref.getKey();
-				if (key.equals("pref_key_various")) {
-					openModCat(key);
-					return true;
-				}
-				boolean isCat = key.equals("pref_key_system") || key.equals("pref_key_launcher") || key.equals("pref_key_controls");
-				if (!isCat) return false;
-
-				ArrayList<ModData> subData = new ArrayList<ModData>();
-				ArrayList<CharSequence> subNames = new ArrayList<CharSequence>();
-				for (ModData sub: Helpers.allSubsList)
-				if (sub.cat == ModData.ModCat.valueOf(key)) {
-					subData.add(sub);
-					subNames.add(sub.title);
-				}
-
-				AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-				alert.setTitle(R.string.miuizer_jumptosub);
-				alert.setSingleChoiceItems(subNames.toArray(new CharSequence[0]), -1, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-						ModData sub = subData.get(which);
-						openModCat(sub.cat.name(), sub.key);
-					}
-				});
-				alert.setNeutralButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {}
-				});
-				alert.show();
-
-				return true;
-			}
-		});
 
 		search = getView().findViewById(android.R.id.inputArea);
 		((TextView)search.findViewById(android.R.id.input)).setHint(android.R.string.search_go);
@@ -487,6 +445,7 @@ public class MainFragment extends PreferenceFragmentBase {
 		//Helpers.removePref(this, "pref_key_miuizer_force_material", "pref_key_miuizer");
 
 		modsCat = null; markCat = null;
+		listView = getView().findViewById(android.R.id.list);
 		listView.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
 			@Override
 			public void onChildViewAdded(View parent, View child) {
@@ -522,20 +481,15 @@ public class MainFragment extends PreferenceFragmentBase {
 		showGuide(search, GuidePopup.ARROW_TOP_MODE, R.string.guide_search).setOnDismissListener(new PopupWindow.OnDismissListener() {
 			@Override
 			public void onDismiss() {
-				showGuide(modsCat, GuidePopup.ARROW_TOP_MODE, R.string.guide_longpress).setOnDismissListener(new PopupWindow.OnDismissListener() {
+				showGuide(markCat, GuidePopup.ARROW_BOTTOM_MODE, R.string.guide_marknew).setOnDismissListener(new PopupWindow.OnDismissListener() {
 					@Override
 					public void onDismiss() {
-						showGuide(markCat, GuidePopup.ARROW_BOTTOM_MODE, R.string.guide_marknew).setOnDismissListener(new PopupWindow.OnDismissListener() {
+						showImmersionMenu();
+						showGuide(more, GuidePopup.ARROW_TOP_MODE, R.string.guide_softreboot).setOnDismissListener(new PopupWindow.OnDismissListener() {
 							@Override
 							public void onDismiss() {
-								showImmersionMenu();
-								showGuide(more, GuidePopup.ARROW_TOP_MODE, R.string.guide_softreboot).setOnDismissListener(new PopupWindow.OnDismissListener() {
-									@Override
-									public void onDismiss() {
-										dismissImmersionMenu(true);
-										overlay.setVisibility(View.GONE);
-									}
-								});
+								dismissImmersionMenu(true);
+								overlay.setVisibility(View.GONE);
 							}
 						});
 					}
@@ -648,7 +602,7 @@ public class MainFragment extends PreferenceFragmentBase {
 				alert.setMessage(R.string.soft_reboot_ask);
 				alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
-						getContext().sendBroadcast(new Intent("name.mikanoshi.customiuizer.mods.action.FastReboot"));
+						getContext().sendBroadcast(new Intent(GlobalActions.ACTION_PREFIX + "FastReboot"));
 					}
 				});
 				alert.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -786,21 +740,29 @@ public class MainFragment extends PreferenceFragmentBase {
 		return openModCat(cat, null);
 	}
 
-	private boolean openModCat(String cat, String key) {
-		Bundle bundle = null;
-		if (key != null) {
-			bundle = new Bundle();
-			bundle.putString("scrollToKey", key);
-		}
+	private boolean openModCat(String cat, String sub) {
+		Bundle bundle = new Bundle();
+		bundle.putString("cat", cat);
+		bundle.putString("sub", sub);
+		catSelector.setTargetFragment(this, 0);
 		switch (cat) {
 			case "pref_key_system":
-				openSubFragment(prefSystem, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_mods, R.xml.prefs_system);
+				if (sub == null)
+					openSubFragment(catSelector, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_mods, R.xml.prefs_system_cat);
+				else
+					openSubFragment(prefSystem, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_mods, R.xml.prefs_system);
 				return false;
 			case "pref_key_launcher":
-				openSubFragment(prefLauncher, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.launcher_title, R.xml.prefs_launcher);
+				if (sub == null)
+					openSubFragment(catSelector, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.launcher_title, R.xml.prefs_launcher_cat);
+				else
+					openSubFragment(prefLauncher, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.launcher_title, R.xml.prefs_launcher);
 				return true;
 			case "pref_key_controls":
-				openSubFragment(prefControls, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.controls_mods, R.xml.prefs_controls);
+				if (sub == null)
+					openSubFragment(catSelector, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.controls_mods, R.xml.prefs_controls_cat);
+				else
+					openSubFragment(prefControls, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.controls_mods, R.xml.prefs_controls);
 				return false;
 			case "pref_key_various":
 				openSubFragment(prefVarious, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.various_mods, R.xml.prefs_various);

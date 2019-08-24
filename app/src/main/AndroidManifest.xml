@@ -14,6 +14,7 @@
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
 	<uses-permission android:name="android.permission.CHANGE_COMPONENT_ENABLED_STATE" />
+	<uses-permission android:name="android.permission.SET_ANIMATION_SCALE" />
 	<uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" />
 	<uses-permission android:name="android.permission.MANAGE_USB" />
 	<uses-permission android:name="android.permission.READ_LOGS" />
@@ -37,6 +38,7 @@
         	android:name=".MainActivity"
         	android:label="@string/title_activity_main"
 			android:theme="@style/AppTheme"
+			android:launchMode="singleTop"
 			android:configChanges="keyboardHidden|orientation|screenSize">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
@@ -49,6 +51,9 @@
 			android:label="@string/title_activity_main"
 			android:name=".GateWayLauncher"
 			android:targetActivity=".MainActivity"
+			android:taskAffinity="com.android.settings.customiuizer"
+			android:allowTaskReparenting="true"
+			android:clearTaskOnLaunch="true"
 			android:enabled="true"
 			android:excludeFromRecents="true">
 			<intent-filter>

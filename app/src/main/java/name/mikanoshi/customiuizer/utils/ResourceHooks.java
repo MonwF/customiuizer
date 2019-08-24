@@ -6,9 +6,10 @@ import android.util.SparseIntArray;
 
 import java.util.HashMap;
 
-import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
+
+import name.mikanoshi.customiuizer.utils.Helpers.MethodHook;
 
 public class ResourceHooks {
 	private SparseIntArray fakes = new SparseIntArray();
@@ -21,9 +22,9 @@ public class ResourceHooks {
 	}
 
 	@SuppressWarnings("FieldCanBeLocal")
-	private XC_MethodHook mReplaceHook = new XC_MethodHook() {
+	private MethodHook mReplaceHook = new MethodHook() {
 		@Override
-		protected void beforeHookedMethod(MethodHookParam param) {
+		protected void before(MethodHookParam param) {
 			final int resId = (int)param.args[0];
 			Context mContext = null;
 			try {
@@ -34,17 +35,15 @@ public class ResourceHooks {
 			}
 			if (mContext == null) return;
 
-			try {
-				String method = param.method.getName();
-				Object value = getFakeResource(mContext, resId, method);
-				if (value == null) {
-					value = getResourceReplacement(mContext, (Resources)param.thisObject, resId, method);
-					if (value == null) return;
-				}
-				param.setResult(value);
-			} catch (Throwable t) {
-				XposedBridge.log(t);
+			String method = param.method.getName();
+			Object value = getFakeResource(mContext, resId, method);
+			if (value == null) {
+				value = getResourceReplacement(mContext, (Resources)param.thisObject, resId, method);
+				if (value == null) return;
+				if ("getDimensionPixelOffset".equals(method) || "getDimensionPixelSize".equals(method))
+				if (value instanceof Float) value = ((Float)value).intValue();
 			}
+			param.setResult(value);
 		}
 	};
 
@@ -55,6 +54,8 @@ public class ResourceHooks {
 		Helpers.findAndHookMethod(Resources.class, "getDimensionPixelOffset", int.class, mReplaceHook);
 		Helpers.findAndHookMethod(Resources.class, "getDimensionPixelSize", int.class, mReplaceHook);
 		Helpers.findAndHookMethod(Resources.class, "getText", int.class, mReplaceHook);
+		if (Helpers.isNougat())
+		Helpers.findAndHookMethod(Resources.class, "getDrawable", int.class, Resources.Theme.class, mReplaceHook);
 		Helpers.findAndHookMethod(Resources.class, "getDrawableForDensity", int.class, int.class, Resources.Theme.class, mReplaceHook);
 		Helpers.findAndHookMethod(Resources.class, "getIntArray", int.class, mReplaceHook);
 		Helpers.findAndHookMethod(Resources.class, "getStringArray", int.class, mReplaceHook);
@@ -81,16 +82,17 @@ public class ResourceHooks {
 
 			Object value;
 			Resources modRes = Helpers.getModuleRes(context);
-			if ("getDrawableForDensity".equals(method))
+			if ("getDrawable".equals(method))
+				value = XposedHelpers.callMethod(modRes, method, modResId, context.getTheme());
+			else if ("getDrawableForDensity".equals(method))
 				value = XposedHelpers.callMethod(modRes, method, modResId, 0, context.getTheme());
 			else
 				value = XposedHelpers.callMethod(modRes, method, modResId);
 			return value;
 		} catch (Throwable t) {
 			XposedBridge.log(t);
+			return null;
 		}
-
-		return null;
 	}
 
 	public void setResReplacement(String pkg, String type, String name, int replacementResId) {
@@ -149,9 +151,9 @@ public class ResourceHooks {
 
 			synchronized (densityReplacements) {
 				if (densityReplacements.containsKey(resFullName))
-					return Math.round(densityReplacements.get(resFullName) * res.getDisplayMetrics().density);
+					return densityReplacements.get(resFullName) * res.getDisplayMetrics().density;
 				else if (densityReplacements.containsKey(resAnyPkgName))
-					return Math.round(densityReplacements.get(resAnyPkgName) * res.getDisplayMetrics().density);
+					return densityReplacements.get(resAnyPkgName) * res.getDisplayMetrics().density;
 			}
 
 			Integer modResId = null;
@@ -164,16 +166,17 @@ public class ResourceHooks {
 			if (modResId == null) return null;
 
 			Resources modRes = Helpers.getModuleRes(context);
-			if ("getDrawableForDensity".equals(method))
+			if ("getDrawable".equals(method))
 				value = XposedHelpers.callMethod(modRes, method, modResId, context.getTheme());
+			else if ("getDrawableForDensity".equals(method))
+				value = XposedHelpers.callMethod(modRes, method, modResId, 0, context.getTheme());
 			else
 				value = XposedHelpers.callMethod(modRes, method, modResId);
 			return value;
 		} catch (Throwable t) {
 			XposedBridge.log(t);
+			return null;
 		}
-
-		return null;
 	}
 
 }

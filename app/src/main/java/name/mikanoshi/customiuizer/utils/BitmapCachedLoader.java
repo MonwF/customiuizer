@@ -5,8 +5,9 @@ import java.lang.ref.WeakReference;
 import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
+import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
@@ -30,37 +31,42 @@ public class BitmapCachedLoader extends AsyncTask<Void, Void, Bitmap> {
 
 	@Override
 	protected Bitmap doInBackground(Void... params) {
-		Bitmap bmp = null;
 		Drawable icon = null;
 		String cacheKey = null;
-		int newIconSize = ctx.getResources().getDimensionPixelSize(android.R.dimen.app_icon_size);
 
 		AppData ad = ((AppData)appInfo.get());
 		if (ad != null) try {
 			if ((ad.pkgName == null || ad.pkgName.equals("")) && (ad.actName == null || ad.actName.equals(""))) return null;
-			if (ad.actName != null && !ad.actName.equals("-"))
-			icon = ctx.getPackageManager().getActivityIcon(new ComponentName(ad.pkgName, ad.actName));
-			if (icon == null) icon = ctx.getPackageManager().getApplicationIcon(ad.pkgName);
+			PackageManager pkgMgr = ctx.getPackageManager();
+			if (ad.actName != null && !ad.actName.equals("-")) {
+				ComponentName component = new ComponentName(ad.pkgName, ad.actName);
+				if (pkgMgr.getActivityInfo(component, PackageManager.MATCH_ALL).icon != 0)
+				icon = pkgMgr.getActivityIcon(component);
+			}
+			if (icon == null)
+			if (pkgMgr.getApplicationInfo(ad.pkgName, PackageManager.MATCH_DISABLED_COMPONENTS).icon != 0)
+			icon = pkgMgr.getApplicationIcon(ad.pkgName);
 
 			if (ad.pkgName != null) cacheKey = ad.pkgName;
 			if (ad.actName != null) cacheKey += "|" + ad.actName;
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
-		
-		if (cacheKey != null && icon instanceof BitmapDrawable) {
-			bmp = ((BitmapDrawable)icon).getBitmap();
-			Matrix matrix = new Matrix();
-			matrix.postScale(((float)newIconSize) / bmp.getWidth(), ((float)newIconSize) / bmp.getHeight());
-			bmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, false);
-			
-			//Log.e("mem_left", String.valueOf(Runtime.getRuntime().maxMemory() - Runtime.getRuntime().totalMemory()));
-			if (Runtime.getRuntime().maxMemory() - Runtime.getRuntime().totalMemory() > 8 * 1024 * 1024)
-				Helpers.memoryCache.put(cacheKey, bmp);
-			else
-				Runtime.getRuntime().gc();
-		}
-		
+		if (icon == null) return null;
+
+		int newIconSize = ctx.getResources().getDimensionPixelSize(android.R.dimen.app_icon_size);
+		Bitmap bmp = Bitmap.createBitmap(newIconSize, newIconSize, Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(bmp);
+		icon.setBounds(0, 0, newIconSize, newIconSize);
+		icon.draw(canvas);
+
+		//Log.e("mem_left", String.valueOf(Runtime.getRuntime().maxMemory() - Runtime.getRuntime().totalMemory()));
+		if (cacheKey != null)
+		if (Runtime.getRuntime().maxMemory() - Runtime.getRuntime().totalMemory() > 8 * 1024 * 1024)
+			Helpers.memoryCache.put(cacheKey, bmp);
+		else
+			Runtime.getRuntime().gc();
+
 		return bmp;
 	}
 	
