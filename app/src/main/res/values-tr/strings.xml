@@ -14,7 +14,7 @@
     <string name="system_mods_screen_backlight">Arka Işık</string>
     <string name="system_mods_audio">Ses</string>
     <string name="system_mods_vibration">Titreşim</string>
-    <string name="system_mods_toasts">Tost</string>
+    <string name="system_mods_toasts">Bildirim mesajları</string>
     <string name="system_mods_screenanim">Ekran animasyonları</string>
     <string name="system_statusbaricons_title">Simgeleri gizle</string>
     <string name="system_statusbaricons_summ">Durum çubuğu simgeleri görünürlüğünü yönet</string>
@@ -65,6 +65,7 @@
     <string name="system_clockseconds_summ">Durum çubuğundaki saatin saniyesini görüntüle</string>
     <string name="system_mobiletypeicon_title">Mobil ağ türünü gizle</string>
     <string name="system_mobiletypeicon_summ">Mobil ağ türü simgesini durum çubuğundan kaldır</string>
+    <string name="system_4gtolte_title">4G yerine LTE göster</string>
     <string name="system_hidemoreicon_title">Gizli simge göstergesi yok</string>
     <string name="system_hidemoreicon_summ">Bildirim simgeleri gizlendiğinde 3 noktalı simge gösterme</string>
     <string name="system_netspeedinterval_title">Ağ hızı güncelleme aralığı</string>
@@ -88,6 +89,10 @@
     <string name="system_colorizenotiftitle_summ">Simge rengini başlık metnine uygulayın (yalnızca Android bildirim stili)</string>
     <string name="system_removedismiss_title">Temizle düğmesini gizle</string>
     <string name="system_removedismiss_summ">Tüm bildirimleri temizle düğmesini kaldır</string>
+    <string name="system_showlux_title">Aydınlık seviyesini göster</string>
+    <string name="system_showlux_summ">Ortam aydınlık değerini lüks iç aydınlatma sürgüsünde gösterin</string>
+    <string name="system_showlux_style_title">Alternatif stil</string>
+    <string name="system_showlux_style_summ">Büyük yarı saydam metin</string>
     <string name="system_notifrowmenu_title">Genişletilmiş bildirim menüsü</string>
     <string name="system_notifrowmenu_summ">Uygulama bilgilerini açın ve bildirim menüsünden uygulamayı kapatmaya zorlayın (açmak için bildirimi sola kaydırın)</string>
     <string name="system_disableanynotif_title">Herhangi bir bildirimi devre dışı bırak</string>
@@ -260,6 +265,10 @@
     <string name="system_qshaptic_title">Hızlı ayarlar dokunsal geribildirim</string>
     <string name="system_qshaptic_summ">Hızlı ayarlar döşemesinde hafifçe vurun</string>
     <string name="system_mods_other">Diğer</string>
+    <string name="system_mods_animationscale">Animasyon ölçeği</string>
+    <string name="system_animationscale_window_title">Pencere</string>
+    <string name="system_animationscale_transition_title">Geçişler</string>
+    <string name="system_animationscale_animator_title">Değer animatörleri</string>
     <string name="poco_mods">POCO Başlatıcı</string>
     <string name="launcher_mods">MIUI Başlatıcı</string>
     <string name="launcher_gestures">Hareketler</string>
@@ -278,6 +287,8 @@
     <string name="launcher_hideseekpoints_summ">Sayfa göstergesini yalnızca kaydırma sırasında göster</string>
     <string name="launcher_unlockgrids_title">Izgara boyutlarının kilidini aç</string>
     <string name="launcher_unlockgrids_summ">Ana ekran düzeninde 3x4 ile 6x7 arasındaki tüm ızgara boyutlarını kullanılabilir duruma getirin</string>
+    <string name="launcher_iconscale_title">Simge ölçeği</string>
+    <string name="launcher_folderscale_title">Klasör ölçeği</string>
     <string name="launcher_folders">Klasörler</string>
     <string name="launcher_folder_cols_title">Klasörlerdeki sütun sayısı</string>
     <string name="launcher_fixstatusbarmode_title">Durum çubuğu modunu düzelt</string>
@@ -378,6 +389,15 @@
     <string name="various_sysappsupdater_summ2">Özel ROM\'larda değiştirilmiş sistem uygulamalarını güncellerken dikkatli olun, eklenen işlevleri kaybedebilirsiniz</string>
     <string name="various_alarmcompat_title">Çalar saat uyumluluğu</string>
     <string name="various_alarmcompat_summ">Seçilen uygulamaların, stok MIUI Clock uygulaması tarafından belirlenen bir sonraki alarm saatinde doğru görüntülenmesini sağlayın</string>
+    <string name="various_showcallui_title">Arama kullanıcı arayüzünü göster</string>
+    <string name="various_showcallui_summ">Açılır bildirim yerine, gelen arama için kullanıcı arayüzünün ne zaman görüntüleneceğini tanımlayın.</string>
+    <string name="various_calluibright_title">Görüşme sırasında ekran parlaklığı</string>
+    <string name="various_calluibright_type_title">Çağrı türleri</string>
+    <string name="various_calluibright_val_title">Parlaklık değeri</string>
+    <string name="various_calluibright_night_title">Gece modu</string>
+    <string name="various_calluibright_night_summ">Gece boyunca parlaklığı değiştirmeyin</string>
+    <string name="various_calluibright_night_start_title">Başla</string>
+    <string name="various_calluibright_night_end_title">Son</string>
     <string name="various_disableapp_title">Uygulama durumu kontrolü</string>
     <string name="various_disableapp_summ">Hemen hemen her uygulamayı bilgi sayfasından devre dışı bırakmanıza izin verir</string>
     <string name="various_apps_title">Ek uygulama ayrıntılarını göster</string>
@@ -399,6 +419,7 @@
     <string name="appsort_frequency">Kullanım frekansı</string>
     <string name="appsort_storage">Kullanılan depolama</string>
     <string name="appsort_install">Kurulum süresi</string>
+    <string name="calls">Çağrılar</string>
     <string name="settings">Ayarlar</string>
     <string name="array_default">Varsayılan</string>
     <string name="array_system_default">Sistem</string>
@@ -490,6 +511,10 @@
     <string name="array_doc">Belge</string>
     <string name="array_archive">Arşiv</string>
     <string name="array_any">Herhangi</string>
+    <string name="array_nofs">Tam ekran modunda değilken</string>
+    <string name="array_incoming">Gelen</string>
+    <string name="array_outgoing">Giden</string>
+    <string name="array_both">Her ikisi de</string>
     <string name="toggle_wifi_on">Wi-Fi etkin</string>
     <string name="toggle_wifi_off">Wi-Fi devre dışı</string>
     <string name="toggle_bt_on">Bluetooth etkin</string>
@@ -642,6 +667,7 @@
     <string name="oneKBs">1 KB/s</string>
     <string name="Bs">B/s</string>
     <string name="speedunits">KMGTPE</string>
+    <string name="lux">%s lux</string>
     <string name="off">Kapalı</string>
     <string name="time_30m">30 dakika</string>
     <string name="time_1h">1 saat</string>

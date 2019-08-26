@@ -254,7 +254,7 @@
     <string name="system_applock_timeout_summ">Часовий інтервал між закриттям програми та її блокуванням</string>
     <string name="system_applock_list_title">Список додатків для захисту</string>
     <string name="system_applock_list_summ">Покращена версія функції Захист додатків, що дозволяє заблокувати будь-який встановлений додаток.  Перезавантаження не потрібно.</string>
-    <string name="system_mods_qs">Швидкі Налаштування</string>
+    <string name="system_mods_qs">Швидкі налаштування</string>
     <string name="system_qsgridrows_title">Число рядів</string>
     <string name="system_qsgridrows_note">Підписи до перемикачів будуть приховані для 5 рядів в портретній орієнтації. Число рядів обмежена 3-ма в ландшафтній орієнтації, підписи також будуть приховані.</string>
     <string name="system_qsgridcolumns_title">Число колонок</string>

@@ -31,6 +31,7 @@
 	<string name="system_statusbaricons_alarmn_summ">Show alarm icon only during the defined number of hours before next alarm</string>
 	<string name="system_statusbaricons_signal_title">Mobile network signal</string>
 	<string name="system_statusbaricons_nosims_title">No SIM card</string>
+	<string name="system_statusbaricons_volte_title" translatable="false">VoLTE</string>
 	<string name="system_statusbaricons_vpn_title" translatable="false">VPN</string>
 	<string name="system_statusbaricons_hotspot_title">Hotspot</string>
 	<string name="system_statusbaricons_profile_title">Work profile</string>
@@ -203,6 +204,8 @@
 	<string name="system_downgrade_summ">Make installing older app version on top of a newer one possible</string>
 	<string name="system_magnifier_title">Text magnifier</string>
 	<string name="system_magnifier_summ">Display magnified text when moving an input cursor or making a selection</string>
+	<string name="system_hideproxywarn_title">Hide warning about disabled touches</string>
+	<string name="system_hideproxywarn_summ">Do not display a warning that earphone area is covered</string>
 	<string name="system_unblockthird_title">Unblock launchers</string>
 	<string name="system_unblockthird_summ">Remove restriction of 3rd party launchers on Chinese ROMs</string>
 	<string name="system_cleanshare_title">Clean share menu</string>
@@ -229,6 +232,8 @@
 	<string name="system_orientationlock_summ">Add Quick Settings tile that can lock orientation in portrait or landscape mode</string>
 	<string name="system_notifafterunlock_title">Keep notifications</string>
 	<string name="system_notifafterunlock_summ">Show notifications on lock screen even after it\'s dismissed and then opened again</string>
+	<string name="system_hidelsclock_title">Hide top block</string>
+	<string name="system_hidelsclock_summ">Remove top block containing clock, date and other data</string>
 	<string name="system_dttosleep_title">Double tap to sleep</string>
 	<string name="system_dttosleep_summ">Turn screen off by double tapping on any empty space on lock screen</string>
 	<string name="system_mods_statusbar">Status bar and notification drawer</string>
@@ -408,6 +413,13 @@
 	<string name="various_calluibright_night_summ">Do not change brightness during night time</string>
 	<string name="various_calluibright_night_start_title">Start</string>
 	<string name="various_calluibright_night_end_title">End</string>
+	<string name="various_callreminder_title">Missed call reminder</string>
+	<string name="various_callreminder_summ">Define sound, vibration and interval for reminder</string>
+	<string name="various_callreminder_interval_title">Interval</string>
+	<string name="various_callreminder_sound_title">Sound</string>
+	<string name="various_callreminder_nosound">No sound</string>
+	<string name="various_callreminder_vibration_own_title">Own pattern</string>
+	<string name="various_callreminder_vibration_own_msg">Format: delay,vibration,delay,vibration,…</string>
 	<string name="various_disableapp_title">App state control</string>
 	<string name="various_disableapp_summ">Allows to disable almost any app from its info page</string>
 	<string name="various_apps_title">Show additional app details</string>
@@ -456,6 +468,7 @@
 	<string name="array_global_actions_powermenu_short">Power menu</string>
 	<string name="array_global_actions_clearmemory">Clear memory</string>
 	<string name="array_global_actions_invertcolors">Invert colors</string>
+	<string name="array_global_actions_switchkeyboard">Switch keyboard</string>
 	<string name="array_global_actions_goback">Go back</string>
 	<string name="array_global_toggle_wifi">Wi-Fi</string>
 	<string name="array_global_toggle_bt">Bluetooth</string>
@@ -529,6 +542,14 @@
 	<string name="array_incoming">Incoming</string>
 	<string name="array_outgoing">Outgoing</string>
 	<string name="array_both">Both</string>
+	<string name="array_no_vibration">No vibration</string>
+	<string name="array_single_short">Single (short)</string>
+	<string name="array_single_long">Single (long)</string>
+	<string name="array_ticktock">Ticktock</string>
+	<string name="array_heartbeat">Heartbeat</string>
+	<string name="array_waltz">Waltz</string>
+	<string name="array_zig">Zig-zig-zig</string>
+	<string name="array_own">Own pattern</string>
 
 	<string name="toggle_wifi_on">Wi-Fi enabled</string>
 	<string name="toggle_wifi_off">Wi-Fi disabled</string>

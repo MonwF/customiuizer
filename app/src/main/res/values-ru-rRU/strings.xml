@@ -51,6 +51,13 @@
 	<string name="various_calluibright_night_summ">Не менять яркость в ночное время</string>
 	<string name="various_calluibright_night_start_title">Начало</string>
 	<string name="various_calluibright_night_end_title">Конец</string>
+	<string name="various_callreminder_title">Напоминание о пропущенном звонке</string>
+	<string name="various_callreminder_summ">Задать звук, вибрацию и интервал для напоминания</string>
+	<string name="various_callreminder_interval_title">Интервал</string>
+	<string name="various_callreminder_sound_title">Звук</string>
+	<string name="various_callreminder_nosound">Без звука</string>
+	<string name="various_callreminder_vibration_own_title">Свой шаблон</string>
+	<string name="various_callreminder_vibration_own_msg">Формат: задержка,вибрация,задержка,вибрация,…</string>
 	<string name="various_disableapp_title">Контроль состояния приложений</string>
 	<string name="various_disableapp_summ">Позволяет отключить почти любое приложение с его страницы \"О приложении\"</string>
 	<string name="various_apps_title">Доп. сведения о приложении</string>
@@ -109,6 +116,7 @@
 	<string name="array_global_actions_powermenu_short">Управление питанием</string>
 	<string name="array_global_actions_clearmemory">Очистить память</string>
 	<string name="array_global_actions_invertcolors">Ин\u200Bвер\u200Bти\u200Bро\u200Bвать цвета</string>
+	<string name="array_global_actions_switchkeyboard">Выбор клавиатуры</string>
 	<string name="array_global_actions_goback">Вернуться назад</string>
 	<string name="array_global_toggle_wifi">Wi-Fi</string>
 	<string name="array_global_toggle_bt">Bluetooth</string>
@@ -175,6 +183,14 @@
 	<string name="array_incoming">Входящие</string>
 	<string name="array_outgoing">Исходящие</string>
 	<string name="array_both">Любые</string>
+	<string name="array_no_vibration">Без вибрации</string>
+	<string name="array_single_short">Одиночная (короткая)</string>
+	<string name="array_single_long">Одиночная (длинная)</string>
+	<string name="array_ticktock">Тик-так</string>
+	<string name="array_heartbeat">Сердцебиение</string>
+	<string name="array_waltz">Вальс</string>
+	<string name="array_zig">Вж-вж-вж</string>
+	<string name="array_own">Свой шаблон</string>
 
 	<string name="support_bug_title">Сообщить об ошибке</string>
 	<string name="support_bug_summ">Отправить сообщение об ошибке или предложить новую фичу</string>
@@ -408,6 +424,8 @@
 	<string name="system_downgrade_summ">Делает возможным установку старой версии приложения поверх новой</string>
 	<string name="system_magnifier_title">Лупа для текста</string>
 	<string name="system_magnifier_summ">Показывает увеличенный текст при передвижении указателя ввода и при выделении</string>
+	<string name="system_hideproxywarn_title">Скрыть предупреждение об отключенных касаниях</string>
+	<string name="system_hideproxywarn_summ">Не показывать предупреждение о закрытой области динамика</string>
 	<string name="system_unblockthird_title">Разблокировать ланчеры</string>
 	<string name="system_unblockthird_summ">Отключает ограничение на использование сторонних ланчеров на китайских прошивках</string>
 	<string name="system_cleanshare_title">Очистка меню \"Поделиться\"</string>
@@ -667,6 +685,8 @@
 	<string name="array_screen_anim_fade">Затухание</string>
 	<string name="system_notifafterunlock_title">Не скрывать уведомления</string>
 	<string name="system_notifafterunlock_summ">Оставляет уведомления на экране блокировки даже после того как он был закрыт и потом открыт вновь</string>
+	<string name="system_hidelsclock_title">Скрыть верхний блок</string>
+	<string name="system_hidelsclock_summ">Удаляет верхний блок, содержащий часы, дату и другие данные</string>
 	<string name="system_dttosleep_title">Сон по двойному нажатию</string>
 	<string name="system_dttosleep_summ">Выключает экран при двойном нажатии по пустому месту на экране блокировки</string>
 	<string name="system_mods_other">Другое</string>
