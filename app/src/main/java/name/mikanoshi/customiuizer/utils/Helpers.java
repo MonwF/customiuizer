@@ -45,6 +45,8 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.PowerManager.WakeLock;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.preference.PreferenceCategory;
 import android.provider.Settings;
 import android.text.InputType;
@@ -68,8 +70,10 @@ import org.xmlpull.v1.XmlPullParser;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
+
 import miui.app.AlertDialog;
 import miui.util.HapticFeedbackUtil;
+
 import name.mikanoshi.customiuizer.GateWayLauncher;
 import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
@@ -111,20 +115,11 @@ public class Helpers {
 	public static WakeLock mWakeLock;
 	public static boolean showNewMods = true;
 	public static final String[] newMods = new String[] {
-		"system_statusbaricons_nosims",
-		"system_statusbaricons_profile",
-		"system_notifmediaseekbar",
-		"system_4gtolte",
-		"system_showlux",
-		"system_showlux_style",
-		"system_animationscale_window",
-		"system_animationscale_transition",
-		"system_animationscale_animator",
-		"launcher_iconscale",
-		"launcher_folderscale",
-		"controls_fingerprintscreen",
-		"various_showcallui",
-		"various_calluibright_cat"
+		"system_statusbaricons_volte",
+		"system_hideproxywarn",
+		"system_hidelsclock",
+		"system_uimode",
+		"various_callreminder_cat"
 	};
 	public static final String[] shortcutIcons = new String[] {
 		"bankcard", "buscard", "calculator", "calendar", "contacts", "magazine", "music", "notes", "remotecontroller", "smarthome", "miuizer"
@@ -827,7 +822,42 @@ public class Helpers {
 //		else
 //			v.vibrate(30);
 	}
-	
+
+	public static void performCustomVibration(Context context, int vibration, String ownPattern) {
+		if (vibration == 0) return;
+		Vibrator vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
+		long[] pattern = new long[0];
+		switch (vibration) {
+			case 1: vibrator.vibrate(200); return;
+			case 2: vibrator.vibrate(400); return;
+			case 3: pattern = new long[] { 0, 250, 250, 250 }; break;
+			case 4: pattern = new long[] { 0, 250, 150, 125, 100, 125 }; break;
+			case 5: pattern = new long[] { 0, 150, 150, 100, 250, 150, 150, 100 }; break;
+			case 6: pattern = new long[] { 0, 100, 150, 100, 150, 100 }; break;
+			case 7:
+				if (TextUtils.isEmpty(ownPattern)) return;
+				pattern = Helpers.getVibrationPattern(ownPattern);
+				break;
+		}
+		if (!Helpers.isNougat())
+			vibrator.vibrate(VibrationEffect.createWaveform(pattern, -1));
+		else
+			vibrator.vibrate(200);
+	}
+
+	public static long[] getVibrationPattern(String patternStr) {
+		try {
+			if (TextUtils.isEmpty(patternStr)) return new long[0];
+			String[] sPattern = patternStr.split(",");
+			long[] pattern = new long[sPattern.length];
+			for (int i = 0; i < sPattern.length; i++)
+			pattern[i] = TextUtils.isEmpty(sPattern[i]) ? 0 : Long.parseLong(sPattern[i]);
+			return pattern;
+		} catch (Throwable t) {
+			return new long[0];
+		}
+	}
+
 //	public static void removePref(PreferenceFragmentBase frag, String prefName, String catName) {
 //		if (frag.findPreference(prefName) != null) {
 //			Preference cat = frag.findPreference(catName);

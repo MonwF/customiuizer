@@ -1,6 +1,5 @@
 package name.mikanoshi.customiuizer.mods;
 
-import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
@@ -28,8 +27,6 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import java.util.HashSet;
 
@@ -296,7 +293,9 @@ public class Launcher {
 							CharSequence newTitle = Helpers.getSharedStringPref(act, key, "");
 							MainModule.mPrefs.put(key, newTitle);
 							HashSet<?> mAllLoadedApps;
-							if (XposedHelpers.findFieldIfExists(param.thisObject.getClass(), "mAllLoadedApps") != null)
+							if (XposedHelpers.findFieldIfExists(param.thisObject.getClass(), "mAllLoadedShortcut") != null)
+								mAllLoadedApps = (HashSet<?>)XposedHelpers.getObjectField(param.thisObject, "mAllLoadedShortcut");
+							else if (XposedHelpers.findFieldIfExists(param.thisObject.getClass(), "mAllLoadedApps") != null)
 								mAllLoadedApps = (HashSet<?>)XposedHelpers.getObjectField(param.thisObject, "mAllLoadedApps");
 							else
 								mAllLoadedApps = (HashSet<?>)XposedHelpers.getObjectField(param.thisObject, "mLoadedAppsAndShortcut");
@@ -629,14 +628,25 @@ public class Launcher {
 	}
 
 	public static void IconScaleHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.miui.home.launcher.ShortcutIcon", lpparam.classLoader, "onFinishInflate", new MethodHook() {
+		Helpers.findAndHookMethod("com.miui.home.launcher.ShortcutIcon", lpparam.classLoader, "restoreToInitState", new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
-				ImageView mIconImageView = (ImageView)XposedHelpers.getObjectField(param.thisObject, lpparam.packageName.equals("com.mi.android.globallauncher") ? "mIcon" : "mIconImageView");
-				if (mIconImageView == null) return;
+				ViewGroup mIconContainer = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mIconContainer");
+				if (mIconContainer == null) return;
 				float multx = (float)Math.sqrt(MainModule.mPrefs.getInt("launcher_iconscale", 100) / 100f);
-				mIconImageView.setScaleX(multx);
-				mIconImageView.setScaleY(multx);
+				mIconContainer.setScaleX(multx);
+				mIconContainer.setScaleY(multx);
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.home.launcher.ItemIcon", lpparam.classLoader, "onFinishInflate", new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				ViewGroup mIconContainer = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mIconContainer");
+				if (mIconContainer == null) return;
+				float multx = (float)Math.sqrt(MainModule.mPrefs.getInt("launcher_iconscale", 100) / 100f);
+				mIconContainer.setScaleX(multx);
+				mIconContainer.setScaleY(multx);
 			}
 		});
 
@@ -645,71 +655,44 @@ public class Launcher {
 			protected void after(final MethodHookParam param) throws Throwable {
 				float multx = (float)Math.sqrt(MainModule.mPrefs.getInt("launcher_iconscale", 100) / 100f);
 				Rect rect = (Rect)param.getResult();
-				ImageView mIconImageView = (ImageView)XposedHelpers.getObjectField(param.thisObject, lpparam.packageName.equals("com.mi.android.globallauncher") ? "mIcon" : "mIconImageView");
-				if (rect == null || mIconImageView == null) return;
-				rect.right = rect.left + Math.round(mIconImageView.getWidth() * multx);
-				rect.bottom = rect.top + Math.round(mIconImageView.getHeight() * multx);
+				rect.right = rect.left + Math.round(rect.width() * multx);
+				rect.bottom = rect.top + Math.round(rect.height() * multx);
 				param.setResult(rect);
 			}
 		});
 
-		if (lpparam.packageName.equals("com.miui.home")) {
-			Helpers.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "getIconWidth", new MethodHook() {
-				@Override
-				protected void after(final MethodHookParam param) throws Throwable {
-					float multx = (float)Math.sqrt(MainModule.mPrefs.getInt("launcher_iconscale", 100) / 100f);
-					param.setResult(Math.round((int)param.getResult() * multx));
-				}
-			});
-
-			Helpers.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "getIconHeight", new MethodHook() {
-				@Override
-				protected void after(final MethodHookParam param) throws Throwable {
-					float multx = (float)Math.sqrt(MainModule.mPrefs.getInt("launcher_iconscale", 100) / 100f);
-					param.setResult(Math.round((int)param.getResult() * multx));
-				}
-			});
-		}
-	}
-
-	public static void FolderScaleHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.miui.home.launcher.FolderIcon", lpparam.classLoader, "onFinishInflate", new MethodHook() {
+		Helpers.findAndHookMethod("com.miui.home.launcher.gadget.ClearButton", lpparam.classLoader, "onCreate", new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
-				final float multx = (float)Math.sqrt(MainModule.mPrefs.getInt("launcher_folderscale", 100) / 100f);
-				final boolean isPOCO = lpparam.packageName.equals("com.mi.android.globallauncher");
+				ViewGroup mIconContainer = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mIconContainer");
+				if (mIconContainer == null) return;
+				float multx = (float)Math.sqrt(MainModule.mPrefs.getInt("launcher_iconscale", 100) / 100f);
+				mIconContainer.setScaleX(multx);
+				mIconContainer.setScaleY(multx);
+			}
+		});
 
-				LinearLayout mPreviewContainer = (LinearLayout)XposedHelpers.getObjectField(param.thisObject, "mPreviewContainer");
-				if (mPreviewContainer != null) {
-					mPreviewContainer.setScaleX(multx);
-					mPreviewContainer.setScaleY(multx);
-				}
+		Helpers.findAndHookMethod("com.miui.home.launcher.Folder", lpparam.classLoader, "onOpen", boolean.class, new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				XposedHelpers.setFloatField(param.thisObject, "mItemIconToPreviewIconScale", -1.0f);
+			}
+		});
 
-				ImageView mIconImageView = (ImageView)XposedHelpers.getObjectField(param.thisObject, isPOCO ? "mIcon" : "mIconImageView");
-				if (mIconImageView != null) {
-					mIconImageView.setScaleX(multx);
-					mIconImageView.setScaleY(multx);
-				}
-
-				ValueAnimator mDragOverAnimator = (ValueAnimator)XposedHelpers.getObjectField(param.thisObject, "mDragOverAnimator");
-				if (mDragOverAnimator == null) return;
-				mDragOverAnimator.removeAllUpdateListeners();
-				mDragOverAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-					@Override
-					public void onAnimationUpdate(ValueAnimator animator) {
-						try {
-							float value = (Float)animator.getAnimatedValue();
-							ImageView mIconImageView = (ImageView)XposedHelpers.getObjectField(param.thisObject, isPOCO ? "mIcon" : "mIconImageView");
-							mIconImageView.setScaleX(value);
-							mIconImageView.setScaleY(value);
-							ImageView mFolderCover = (ImageView)XposedHelpers.getObjectField(param.thisObject, "mFolderCover");
-							mFolderCover.setScaleX(value);
-							mFolderCover.setScaleY(value);
-						} catch (Throwable t) {
-							XposedBridge.log(t);
-						}
+		Helpers.findAndHookMethod("com.miui.home.launcher.Folder", lpparam.classLoader, "changeItemsInFolderDuringOpenAndCloseAnimation", float.class, new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				float multx = (float)Math.sqrt(MainModule.mPrefs.getInt("launcher_iconscale", 100) / 100f);
+				ViewGroup mContent = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mContent");
+				for (int i = 0; i < mContent.getChildCount(); i++) {
+					String cls = mContent.getChildAt(i).getClass().getSimpleName();
+					if ("ItemIcon".equals(cls) || "ShortcutIcon".equals(cls) || "FolderIcon".equals(cls)) {
+						View iconContainer = (View)XposedHelpers.callMethod(mContent.getChildAt(i), "getIconContainer");
+						float mult = (float)param.args[0] * multx;
+						iconContainer.setScaleX(mult);
+						iconContainer.setScaleY(mult);
 					}
-				});
+				}
 			}
 		});
 	}

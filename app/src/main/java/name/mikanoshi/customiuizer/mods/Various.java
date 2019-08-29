@@ -2,6 +2,7 @@ package name.mikanoshi.customiuizer.mods;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ContentResolver;
@@ -13,6 +14,9 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.ContentObserver;
+import android.media.AudioAttributes;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Bundle;
@@ -20,6 +24,7 @@ import android.os.Handler;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
@@ -41,6 +46,8 @@ import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.Helpers.MethodHook;
+
+import static java.lang.System.currentTimeMillis;
 
 public class Various {
 
@@ -291,7 +298,8 @@ public class Various {
 				if (Settings.Global.getInt(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.fullscreen", 0) == 1) return;
 
 				XposedHelpers.callMethod(param.thisObject, "showInCall", false, false);
-				XposedHelpers.callStaticMethod(XposedHelpers.findClass("com.android.incallui.StatusBarNotifier", lpparam.classLoader), "clearInCallNotification", mContext);
+				Object mStatusBarNotifier = XposedHelpers.getObjectField(param.thisObject, "mStatusBarNotifier");
+				if (mStatusBarNotifier != null) XposedHelpers.callMethod(mStatusBarNotifier, "cancelInCall");
 				param.setResult(true);
 			}
 		});
@@ -337,6 +345,57 @@ public class Various {
 				if (val == 0) return;
 				params.screenBrightness = val / 100f;
 				act.getWindow().setAttributes(params);
+			}
+		});
+	}
+
+	public static void CallReminderHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.server.telecom.MiuiMissedCallNotifierImpl", lpparam.classLoader, "startRepeatReminder", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				param.setResult(null);
+				if ((int)XposedHelpers.callMethod(param.thisObject, "getRepeatTimes") > 0) {
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					AlarmManager alarmManager = (AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE);
+					int interval = Helpers.getSharedIntPref(mContext, "pref_key_various_callreminder_interval", 5);
+					PendingIntent repeatAlarmPendingIntent = (PendingIntent)XposedHelpers.callMethod(param.thisObject, "getRepeatAlarmPendingIntent");
+					alarmManager.cancel(repeatAlarmPendingIntent);
+					alarmManager.setExact(AlarmManager.RTC_WAKEUP, currentTimeMillis() + interval * 60 * 1000, repeatAlarmPendingIntent);
+				}
+			}
+		});
+
+		Helpers.findAndHookMethod("com.android.server.telecom.MiuiMissedCallNotifierImpl", lpparam.classLoader, "onRepeatReminder", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				param.setResult(null);
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+
+				Object remindTime = XposedHelpers.callMethod(param.thisObject, "getMinAndIncreaseMissCallRemindTime", true);
+				int repeatTimes = remindTime == null ? -1 : (int)XposedHelpers.callMethod(param.thisObject, "getRepeatTimes") - XposedHelpers.getIntField(remindTime, "remindTimes");
+				if (repeatTimes >= 0) {
+					String uriStr = Helpers.getSharedStringPref(mContext, "pref_key_various_callreminder_sound", "");
+					if (!TextUtils.isEmpty(uriStr)) {
+						Uri uri = Uri.parse(uriStr);
+						Ringtone ringtone = RingtoneManager.getRingtone(mContext, uri);
+						if (ringtone != null) {
+							ringtone.setAudioAttributes(new AudioAttributes.Builder().setLegacyStreamType(5).build());
+							ringtone.play();
+						}
+					}
+
+					Helpers.performCustomVibration(mContext,
+						Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_various_callreminder_vibration", "0")),
+						Helpers.getSharedStringPref(mContext, "pref_key_various_callreminder_vibration_own", "")
+					);
+				}
+
+				if (repeatTimes > 0) {
+					int interval = Helpers.getSharedIntPref(mContext, "pref_key_various_callreminder_interval", 5);
+					((AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE)).setExact(AlarmManager.RTC_WAKEUP, currentTimeMillis() + interval * 60 * 1000, (PendingIntent)XposedHelpers.callMethod(param.thisObject, "getRepeatAlarmPendingIntent"));
+				} else {
+					XposedHelpers.callMethod(param.thisObject, "cancelRepeatReminder");
+				}
 			}
 		});
 	}

@@ -18,7 +18,6 @@ public class PreferenceCategoryEx extends PreferenceCategory {
 	private boolean empty;
 	private boolean hidden = false;
 
-
 	public PreferenceCategoryEx(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		final TypedArray xmlAttrs = context.obtainStyledAttributes(attrs, R.styleable.PreferenceCategoryEx);

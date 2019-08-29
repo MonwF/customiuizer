@@ -15,7 +15,6 @@
     <string name="system_mods_audio">音频</string>
     <string name="system_mods_vibration">振动</string>
     <string name="system_mods_toasts">Toast</string>
-    <string name="system_mods_screenanim">屏幕动画</string>
     <string name="system_statusbaricons_title">隐藏图标</string>
     <string name="system_statusbaricons_summ">管理状态栏图标可见性</string>
     <string name="system_statusbaricons_battery1_title">电池图片</string>
@@ -33,7 +32,6 @@
     <string name="system_statusbaricons_sound_title">声音情景</string>
     <string name="system_statusbaricons_dnd_title">勿扰模式</string>
     <string name="system_statusbaricons_headset_title">耳机</string>
-    <string name="system_statusbaricons_sync_title">正在同步</string>
     <string name="system_statusbaricons_mute_title">通话：麦克风静音</string>
     <string name="system_statusbaricons_speaker_title">通话：免提</string>
     <string name="system_statusbaricons_record_title">通话：录音</string>
@@ -41,7 +39,6 @@
     <string name="system_batteryindicator_summ">将电池电量显示为彩色条</string>
     <string name="system_batteryindicator_rounded_title">圆形</string>
     <string name="system_batteryindicator_centered_title">居中</string>
-    <string name="system_batteryindicator_centered_summ">电量条屏幕居中</string>
     <string name="system_batteryindicator_height_title">电量条高度</string>
     <string name="system_batteryindicator_padding_title">水平边距</string>
     <string name="system_batteryindicator_colorval1_title">满电颜色</string>
@@ -69,7 +66,6 @@
     <string name="system_hidemoreicon_title">不显示隐藏图标指示器</string>
     <string name="system_hidemoreicon_summ">隐藏通知图标时不显示3点图标</string>
     <string name="system_netspeedinterval_title">网速更新间隔</string>
-    <string name="system_netspeedinterval_summ">需要修改系统设置权限</string>
     <string name="system_detailednetspeed_title">详细的网速指示器</string>
     <string name="system_detailednetspeed_summ">分别显示传入和传出的网络速度</string>
     <string name="system_detailednetspeed_font_title">字体大小</string>
@@ -168,8 +164,6 @@
     <string name="system_lockscreenshortcuts_left_summ">管理快捷方式列表</string>
     <string name="system_lockscreenshortcuts_left_skiplock_title">不需解锁</string>
     <string name="system_lockscreenshortcuts_left_skiplock_summ">设备锁定时可以访问启动的应用</string>
-    <string name="system_noscreenlock_act_title">屏幕锁覆盖</string>
-    <string name="system_noscreenlock_act_summ">激活动态屏幕锁控制</string>
     <string name="system_noscreenlock_title">禁用屏幕锁</string>
     <string name="system_noscreenlock_summ">选择性禁用屏幕锁(不会更改任何应用的安全性，也不会移除指纹数据)</string>
     <string name="system_noscreenlock_scr_title">跳过屏幕锁</string>
@@ -193,12 +187,16 @@
     <string name="system_iconlabletoasts_summ">将应用程序的图标和文字添加到其toast</string>
     <string name="system_blocktoasts_title">阻止toast</string>
     <string name="system_blocktoasts_summ">阻止所选应用显示toast</string>
+    <string name="system_uimode_title">界面模式</string>
+    <string name="system_uimode_summ">将模式更改为暗色、亮色或自动。不需要重启。</string>
     <string name="system_epm_title">扩展电源菜单</string>
     <string name="system_epm_summ">新增以下重启选项到电源菜单(引导模式、恢复模式、软重启、重启系统界面、重启启动器)</string>
     <string name="system_downgrade_title">允许降级</string>
     <string name="system_downgrade_summ">可以在新版本应用上安装旧版本应用</string>
     <string name="system_magnifier_title">文本放大镜</string>
     <string name="system_magnifier_summ">移动光标或进行选择时显示文本放大镜</string>
+    <string name="system_hideproxywarn_title">隐藏禁用触摸的警告</string>
+    <string name="system_hideproxywarn_summ">不显示耳机区域被覆盖的警告</string>
     <string name="system_unblockthird_title">解锁启动器</string>
     <string name="system_unblockthird_summ">解除中国版ROM对第三方启动器的限制</string>
     <string name="system_cleanshare_title">清理共享菜单</string>
@@ -211,7 +209,6 @@
     <string name="system_defaultusb_summ">连接其它设备时应用所选配置</string>
     <string name="system_defaultusb_unsecure_title">忽略锁定</string>
     <string name="system_defaultusb_unsecure_summ">即使设备处于锁定状态时仍然应用</string>
-    <string name="system_defaultusb_noconfigs">没有找到USB配置</string>
     <string name="system_defaultusb_config_rndis">RNDIS(USB绑定)</string>
     <string name="system_forceclose_title">阻止应用强制关闭</string>
     <string name="system_forceclose_summ">不允许预置的MIUI动作关闭所选应用</string>
@@ -222,6 +219,8 @@
     <string name="system_orientationlock_summ">添加快速设置瓷砖，可以竖屏或者横屏模式锁定方向</string>
     <string name="system_notifafterunlock_title">保留通知</string>
     <string name="system_notifafterunlock_summ">在锁屏上显示通知，如果通知已关闭，则再次打开</string>
+    <string name="system_hidelsclock_title">隐藏顶部区域</string>
+    <string name="system_hidelsclock_summ">移除包含时钟、数据和其他数据的顶部区域</string>
     <string name="system_dttosleep_title">双击熄屏</string>
     <string name="system_dttosleep_summ">双击锁屏上任意空白处关闭屏幕</string>
     <string name="system_mods_statusbar">状态栏和通知抽屉</string>
@@ -288,7 +287,6 @@
     <string name="launcher_unlockgrids_title">解锁网格大小</string>
     <string name="launcher_unlockgrids_summ">可在主屏幕布局设置中使用3x4到6x7之间的所有网格大小</string>
     <string name="launcher_iconscale_title">图标缩放</string>
-    <string name="launcher_folderscale_title">文件夹缩放</string>
     <string name="launcher_folders">文件夹</string>
     <string name="launcher_folder_cols_title">文件夹排列数量</string>
     <string name="launcher_fixstatusbarmode_title">修复状态栏模式</string>
@@ -398,6 +396,13 @@
     <string name="various_calluibright_night_summ">晚上的时候不更改亮度</string>
     <string name="various_calluibright_night_start_title">开始</string>
     <string name="various_calluibright_night_end_title">结束</string>
+    <string name="various_callreminder_title">未接来电提醒</string>
+    <string name="various_callreminder_summ">定义提醒的声音、振动和间隔</string>
+    <string name="various_callreminder_interval_title">间隔</string>
+    <string name="various_callreminder_sound_title">声音</string>
+    <string name="various_callreminder_nosound">无声</string>
+    <string name="various_callreminder_vibration_own_title">自带</string>
+    <string name="various_callreminder_vibration_own_msg">格式：延迟,振动,延迟,振动,…</string>
     <string name="various_disableapp_title">应用状态控制</string>
     <string name="various_disableapp_summ">允许从应用信息页面禁用任何应用</string>
     <string name="various_apps_title">显示附加应用详情</string>
@@ -443,6 +448,7 @@
     <string name="array_global_actions_powermenu_short">电源菜单</string>
     <string name="array_global_actions_clearmemory">清理内存</string>
     <string name="array_global_actions_invertcolors">颜色反转</string>
+    <string name="array_global_actions_switchkeyboard">切换键盘</string>
     <string name="array_global_actions_goback">返回</string>
     <string name="array_global_toggle_wifi">Wi-Fi</string>
     <string name="array_global_toggle_bt">蓝牙</string>
@@ -515,6 +521,14 @@
     <string name="array_incoming">来电</string>
     <string name="array_outgoing">去电</string>
     <string name="array_both">两者</string>
+    <string name="array_no_vibration">无振动</string>
+    <string name="array_single_short">单次（短）</string>
+    <string name="array_single_long">单次（长）</string>
+    <string name="array_ticktock">滴答声</string>
+    <string name="array_heartbeat">心跳声</string>
+    <string name="array_waltz">华尔兹舞</string>
+    <string name="array_zig">Zig-zig-zig</string>
+    <string name="array_own">自带</string>
     <string name="toggle_wifi_on">Wi-Fi已启用</string>
     <string name="toggle_wifi_off">Wi-Fi已禁用</string>
     <string name="toggle_bt_on">蓝牙已启用</string>
@@ -539,7 +553,6 @@
     <string name="qs_toggle_autorotate_portrait">竖屏</string>
     <string name="qs_toggle_autorotate_landscape">横屏</string>
     <string name="miuizer">CustoMIUIzer设置</string>
-    <string name="miuizer_jumptosub">跳到子类别</string>
     <string name="miuizer_show_newmods_title">标记新模块</string>
     <string name="miuizer_new_mod">新！</string>
     <string name="miuizer_show_launchericon_title">启动器图标</string>
@@ -548,12 +561,10 @@
     <string name="miuizer_show_settingsicon_summ">在设置中显示图标</string>
     <string name="miuizer_forcelocale_title">英文界面</string>
     <string name="miuizer_forcelocale_summ">始终以英文显示模块界面</string>
-    <string name="miuizer_theme_title">主题</string>
     <string name="troubleshoot">故障排除</string>
     <string name="miuizer_acrasend_title">发送详细报告</string>
     <string name="miuizer_acrasend_summ">收集设备和环境信息、logcat和Xposed日志，并将其发送给开发人员。\n需要互联网连接</string>
     <string name="miuizer_acramail_summ">请输入您的联系信息，其将会包含在详细崩溃报告中</string>
-    <string name="your_contact_info">您的联系信息</string>
     <string name="miuizer_acramail_title">联系信息</string>
     <string name="miuizer_acramail_tip">如果您希望收到对崩溃报告的回复，此项当然是必填的。请使用电子邮箱、ICQ、XDA或者4PDA的昵称。</string>
     <string name="support">支持</string>
@@ -593,6 +604,7 @@
     <string name="crash_ok">报告发送成功！</string>
     <string name="crash_error">发送报告失败</string>
     <string name="crash_confirm">确认</string>
+    <string name="array_color_auto">自动</string>
     <string name="array_color_dark">暗</string>
     <string name="array_color_light">亮</string>
     <string name="sdk_failed">无法初始化MIUI SDK。\n不是小米设备？</string>
@@ -611,8 +623,6 @@
     <string name="storage_cannot_mkdir">创建备份目录失败</string>
     <string name="storage_cannot_backup">创建备份文件失败</string>
     <string name="storage_cannot_restore">没有找到设置备份</string>
-    <string name="storage_perm_denied_backup">您是否要创建设置备份？</string>
-    <string name="storage_perm_denied_restore">您是否要恢复设置？</string>
     <string name="backup_ok">设置备份成功！</string>
     <string name="restore_ok">设置恢复成功！</string>
     <string name="backup_restore_info">您的设置已通过Google Cloud Backup恢复。请在启用Xposed模块后进行软重启。</string>

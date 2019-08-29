@@ -129,6 +129,15 @@ public class SubFragmentWithSearch extends SubFragment {
 		});
 	}
 
+	@Override
+	public void onDestroyView() {
+		if (actionMode != null) {
+			actionMode.finish();
+			actionMode = null;
+		}
+		super.onDestroyView();
+	}
+
 	void applyFilter(String filter) {
 		if (listView == null) return;
 		ListAdapter adapter = listView.getAdapter();

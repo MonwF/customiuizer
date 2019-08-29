@@ -18,7 +18,6 @@
 	<string name="system_mods_audio">Audio</string>
 	<string name="system_mods_vibration">Vibration</string>
 	<string name="system_mods_toasts">Toasts</string>
-	<string name="system_mods_screenanim">Screen animations</string>
 	<string name="system_statusbaricons_title">Hide icons</string>
 	<string name="system_statusbaricons_summ">Manage status bar icons visibility</string>
 	<string name="system_statusbaricons_battery1_title">Battery image</string>
@@ -38,7 +37,6 @@
 	<string name="system_statusbaricons_sound_title">Sound profiles</string>
 	<string name="system_statusbaricons_dnd_title">Do not disturb mode</string>
 	<string name="system_statusbaricons_headset_title">Headset</string>
-	<string name="system_statusbaricons_sync_title">Running sync</string>
 	<string name="system_statusbaricons_mute_title">Call: muted mic</string>
 	<string name="system_statusbaricons_speaker_title">Call: speakerphone</string>
 	<string name="system_statusbaricons_record_title">Call: recording</string>
@@ -46,7 +44,6 @@
 	<string name="system_batteryindicator_summ">Display battery charge level as a colored bar</string>
 	<string name="system_batteryindicator_rounded_title">Rounded ends</string>
 	<string name="system_batteryindicator_centered_title">Centered</string>
-	<string name="system_batteryindicator_centered_summ">Makes bar centered on screen instead of left aligned</string>
 	<string name="system_batteryindicator_height_title">Bar height</string>
 	<string name="system_batteryindicator_padding_title">Horizontal padding</string>
 	<string name="system_batteryindicator_colorval1_title">Full charge color</string>
@@ -74,7 +71,6 @@
 	<string name="system_hidemoreicon_title">No hidden icons indicator</string>
 	<string name="system_hidemoreicon_summ">Do not show icon with 3 dots when notification icons are hidden</string>
 	<string name="system_netspeedinterval_title">Network speed update interval</string>
-	<string name="system_netspeedinterval_summ">System settings modification permission is required</string>
 	<string name="system_detailednetspeed_title">Detailed network speed indicator</string>
 	<string name="system_detailednetspeed_summ">Show incoming and outgoing network speeds separately</string>
 	<string name="system_detailednetspeed_font_title">Font size</string>
@@ -173,8 +169,6 @@
 	<string name="system_lockscreenshortcuts_left_summ">Manage shortcuts list</string>
 	<string name="system_lockscreenshortcuts_left_skiplock_title">Do not require unlock</string>
 	<string name="system_lockscreenshortcuts_left_skiplock_summ">Launched apps could be accessed while device is still locked</string>
-	<string name="system_noscreenlock_act_title">Screen lock override</string>
-	<string name="system_noscreenlock_act_summ">Activates dynamic screen lock controls</string>
 	<string name="system_noscreenlock_title">Disable screen lock</string>
 	<string name="system_noscreenlock_summ">Selectively disable screen lock (does not change security for any apps and does not remove fingerprint data)</string>
 	<string name="system_noscreenlock_scr_title">Skip lock screen</string>
@@ -198,6 +192,8 @@
 	<string name="system_iconlabletoasts_summ">Add application\'s icon and label to its toasts</string>
 	<string name="system_blocktoasts_title">Block toasts</string>
 	<string name="system_blocktoasts_summ">Prevent selected apps from showing toasts</string>
+	<string name="system_uimode_title">Interface mode</string>
+	<string name="system_uimode_summ">Change mode to dark, light or auto. No reboot required.</string>
 	<string name="system_epm_title">Extended power menu</string>
 	<string name="system_epm_summ">Add new restart options to power menu (Fastboot mode, Recovery mode, Soft reboot, Restart System UI, Restart Launcher)</string>
 	<string name="system_downgrade_title">Allow downgrade</string>
@@ -218,7 +214,6 @@
 	<string name="system_defaultusb_summ">Apply selected configuration when another device is connected</string>
 	<string name="system_defaultusb_unsecure_title">Ignore lock</string>
 	<string name="system_defaultusb_unsecure_summ">Apply even if device is still locked</string>
-	<string name="system_defaultusb_noconfigs">No USB configurations found</string>
 	<string name="system_defaultusb_config_rndis">RNDIS (USB Tethering)</string>
 	<string name="system_defaultusb_config_midi" translatable="false">MIDI</string>
 	<string name="system_defaultusb_config_mtp" translatable="false">MTP (Media Transfer Protocol)</string>
@@ -301,7 +296,6 @@
 	<string name="launcher_unlockgrids_title">Unlock grid sizes</string>
 	<string name="launcher_unlockgrids_summ">Make all grid sizes from 3x4 to 6x7 available in home screen layout setting</string>
 	<string name="launcher_iconscale_title">Icons scaling</string>
-	<string name="launcher_folderscale_title">Folder scaling</string>
 	<string name="launcher_folders">Folders</string>
 	<string name="launcher_folder_cols_title">Number of columns in folders</string>
 	<string name="launcher_fixstatusbarmode_title">Fix status bar mode</string>
@@ -576,7 +570,6 @@
 	<string name="qs_toggle_autorotate_landscape">Landscape</string>
 
 	<string name="miuizer">CustoMIUIzer settings</string>
-	<string name="miuizer_jumptosub">Jump to subcategory</string>
 	<string name="miuizer_show_newmods_title">Mark new mods</string>
 	<string name="miuizer_new_mod">New!</string>
 	<string name="miuizer_show_launchericon_title">Launcher icon</string>
@@ -585,13 +578,11 @@
 	<string name="miuizer_show_settingsicon_summ">Show icon in Settings</string>
 	<string name="miuizer_forcelocale_title">English UI</string>
 	<string name="miuizer_forcelocale_summ">Always display module\'s interface in English</string>
-	<string name="miuizer_theme_title">Theme</string>
 
 	<string name="troubleshoot">Troubleshooting</string>
 	<string name="miuizer_acrasend_title">Send detailed report</string>
 	<string name="miuizer_acrasend_summ">Collect device and environment info, logcat and Xposed log, and send them to developer.\nInternet connection is required</string>
 	<string name="miuizer_acramail_summ">Enter your contact information and it will be included in detailed and crash reports</string>
-	<string name="your_contact_info">Your contact info</string>
 	<string name="miuizer_acramail_title">Contact information</string>
 	<string name="miuizer_acramail_tip">It\'s absolutely necessary to fill this in if you expect to receive replies to your crash reports. Use e-mail, ICQ, XDA or 4PDA nickname.</string>
 
@@ -636,6 +627,7 @@
 	<string name="crash_error">Failed to send report</string>
 	<string name="crash_confirm">Confirmation</string>
 
+	<string name="array_color_auto">Automatic</string>
 	<string name="array_color_dark">Dark</string>
 	<string name="array_color_light">Light</string>
 
@@ -655,8 +647,6 @@
 	<string name="storage_cannot_mkdir">Failed to create backup directory</string>
 	<string name="storage_cannot_backup">Failed to create backup file</string>
 	<string name="storage_cannot_restore">No settings backup found</string>
-	<string name="storage_perm_denied_backup">Do you want to create settings backup or not?</string>
-	<string name="storage_perm_denied_restore">Do you want to restore settings or not?</string>
 	<string name="backup_ok">Settings were backed up successfully!</string>
 	<string name="restore_ok">Settings were successfully restored!</string>
 	<string name="backup_restore_info">Your settings have been restored via Google Cloud Backup. Please do a soft reboot after enabling the Xposed module.</string>

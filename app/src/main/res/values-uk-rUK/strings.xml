@@ -15,7 +15,6 @@
     <string name="system_mods_audio">Аудіо</string>
     <string name="system_mods_vibration">Вібрація</string>
     <string name="system_mods_toasts">Спливаючі повідомлення</string>
-    <string name="system_mods_screenanim">Екранна анімація</string>
     <string name="system_statusbaricons_title">Приховування іконок</string>
     <string name="system_statusbaricons_summ">Керування видимістю іконок в рядку стану</string>
     <string name="system_statusbaricons_battery1_title">Зображення батареї</string>
@@ -33,7 +32,6 @@
     <string name="system_statusbaricons_sound_title">Профілі звуку</string>
     <string name="system_statusbaricons_dnd_title">Режим Не турбувати</string>
     <string name="system_statusbaricons_headset_title">Навушники</string>
-    <string name="system_statusbaricons_sync_title">Синхронізація</string>
     <string name="system_statusbaricons_mute_title">Дзвінок: вимкнений мікрофон</string>
     <string name="system_statusbaricons_speaker_title">Дзвінок: гучномовець</string>
     <string name="system_statusbaricons_record_title">Дзвінок: запис розмови</string>
@@ -41,7 +39,6 @@
     <string name="system_batteryindicator_summ">Відображає рівень заряду батареї кольоровою смужкою</string>
     <string name="system_batteryindicator_rounded_title">Заокруглені кінці</string>
     <string name="system_batteryindicator_centered_title">По центру</string>
-    <string name="system_batteryindicator_centered_summ">Вирівнює смужку по центру екрану замість лівого краю</string>
     <string name="system_batteryindicator_height_title">Висота індикатора</string>
     <string name="system_batteryindicator_padding_title">Відступ по горизонталі</string>
     <string name="system_batteryindicator_colorval1_title">Колір при повному заряді</string>
@@ -69,7 +66,6 @@
     <string name="system_hidemoreicon_title">Прибрати індикатор прихованих іконок</string>
     <string name="system_hidemoreicon_summ">Вимикає показ іконки з 3 точками, коли активна опція приховування іконок сповіщень</string>
     <string name="system_netspeedinterval_title">Частота оновлення індикатора швидкості</string>
-    <string name="system_netspeedinterval_summ">Потрібен дозвіл на змінення установок системи</string>
     <string name="system_detailednetspeed_title">Докладний індикатор швидкості з\'єднання</string>
     <string name="system_detailednetspeed_summ">Показує вхідну і вихідну швидкості передачі даних</string>
     <string name="system_detailednetspeed_font_title">Розмір шрифту</string>
@@ -168,8 +164,6 @@
     <string name="system_lockscreenshortcuts_left_summ">Налаштування списку ярликів</string>
     <string name="system_lockscreenshortcuts_left_skiplock_title">Не вимагати розблокування</string>
     <string name="system_lockscreenshortcuts_left_skiplock_summ">Запущені програми будуть доступні навіть при заблокованому пристрої</string>
-    <string name="system_noscreenlock_act_title">Управління блокуванням</string>
-    <string name="system_noscreenlock_act_summ">Активує динамічне управління блокуванням пристрою</string>
     <string name="system_noscreenlock_title">Вимкнути блокування</string>
     <string name="system_noscreenlock_summ">Вибірково пропускає блокування пристрою (не впливає на безпеку додатків і не видаляє дані відбитків пальців)</string>
     <string name="system_noscreenlock_scr_title">Пропустити екран блокування</string>
@@ -193,12 +187,16 @@
     <string name="system_iconlabletoasts_summ">Додає іконку і назву програми в спливаючі повідомлення</string>
     <string name="system_blocktoasts_title">Блокування</string>
     <string name="system_blocktoasts_summ">Заборонити обраним програмам показ спливаючих повідомлень</string>
+    <string name="system_uimode_title">Режим інтерфейсу</string>
+    <string name="system_uimode_summ">Змінити режим на темний, світлий або авто. Перезавантаження не потрібне.</string>
     <string name="system_epm_title">Розширене меню живлення</string>
     <string name="system_epm_summ">Додає нові опції в меню живлення (Режим Fastboot, Режим Recovery, Швидке перезавантаження, Перезапуск інтерфейсу, Перезапуск лаунчера)</string>
     <string name="system_downgrade_title">Дозволити пониження версії</string>
     <string name="system_downgrade_summ">Уможливлює установку старої версії програми поверх нової</string>
     <string name="system_magnifier_title">Лупа для тексту</string>
     <string name="system_magnifier_summ">Показує збільшений текст при переміщенні вказівника вводу і при виділенні</string>
+    <string name="system_hideproxywarn_title">Приховати попередження про вимкнені торкання</string>
+    <string name="system_hideproxywarn_summ">Не показувати попередження про закриту область динаміка</string>
     <string name="system_unblockthird_title">Розблокувати лаунчери</string>
     <string name="system_unblockthird_summ">Вимикає обмеження на використання сторонніх лаунчерів на китайських прошивках</string>
     <string name="system_cleanshare_title">Очистка меню \"Поділитися\"</string>
@@ -211,7 +209,6 @@
     <string name="system_defaultusb_summ">Застосовувати обрану конфігурацію при підключенні до іншого пристрою</string>
     <string name="system_defaultusb_unsecure_title">Ігнорувати блокування</string>
     <string name="system_defaultusb_unsecure_summ">Застосовувати навіть якщо пристрій усе ще заблокований</string>
-    <string name="system_defaultusb_noconfigs">Конфігурації USB не знайдені</string>
     <string name="system_defaultusb_config_rndis">RNDIS (USB модем)</string>
     <string name="system_forceclose_title">Запобігати закриттю програм</string>
     <string name="system_forceclose_summ">Не дає стандартній дії MIUI примусово закривати вказані програми</string>
@@ -222,6 +219,8 @@
     <string name="system_orientationlock_summ">Додає перемикач в Швидкі Налаштування для закріплення портретної або ландшафтної орієнтації</string>
     <string name="system_notifafterunlock_title">Не приховувати сповіщення</string>
     <string name="system_notifafterunlock_summ">Залишає сповіщення на екрані блокування навіть після того як воно було закрите і потім відкрите знову</string>
+    <string name="system_hidelsclock_title">Приховати верхній блок</string>
+    <string name="system_hidelsclock_summ">Видаляє верхній блок, що містить годинник, дату та інші дані</string>
     <string name="system_dttosleep_title">Сон по подвійному натисненню</string>
     <string name="system_dttosleep_summ">Вимикає екран при подвійному натисканні по порожньому місці на екрані блокування</string>
     <string name="system_mods_statusbar">Рядок стану і панель сповіщень</string>
@@ -288,7 +287,6 @@
     <string name="launcher_unlockgrids_title">Розблокувати розміри сітки</string>
     <string name="launcher_unlockgrids_summ">Робить все розміри від 3x4 до 6x7 доступними в налаштуваннях сітки робочого столу</string>
     <string name="launcher_iconscale_title">Масштаб значків</string>
-    <string name="launcher_folderscale_title">Масштаб папок</string>
     <string name="launcher_folders">Папки</string>
     <string name="launcher_folder_cols_title">Число колонок в папках</string>
     <string name="launcher_fixstatusbarmode_title">Виправити режим рядку стану</string>
@@ -398,6 +396,13 @@
     <string name="various_calluibright_night_summ">Не змінювати яскравість у нічний час</string>
     <string name="various_calluibright_night_start_title">Початок</string>
     <string name="various_calluibright_night_end_title">Кінець</string>
+    <string name="various_callreminder_title">Нагадування про пропущений дзвінок</string>
+    <string name="various_callreminder_summ">Задати звук, вібрацію і інтервал для нагадування</string>
+    <string name="various_callreminder_interval_title">Інтервал</string>
+    <string name="various_callreminder_sound_title">Звук</string>
+    <string name="various_callreminder_nosound">Без звуку</string>
+    <string name="various_callreminder_vibration_own_title">Свій шаблон</string>
+    <string name="various_callreminder_vibration_own_msg">Формат: затримка, вібрація, затримка, вібрація,..</string>
     <string name="various_disableapp_title">Контроль стану додатків</string>
     <string name="various_disableapp_summ">Дозволяє вимкнути майже будь-який додаток з його сторінки \"Про програму\"</string>
     <string name="various_apps_title">Додаткові відомості про програму</string>
@@ -443,6 +448,7 @@
     <string name="array_global_actions_powermenu_short">Керування живленням</string>
     <string name="array_global_actions_clearmemory">Очистити пам\'ять</string>
     <string name="array_global_actions_invertcolors">Інвертувати кольори</string>
+    <string name="array_global_actions_switchkeyboard">Вибір клавіатури</string>
     <string name="array_global_actions_goback">Повернутися назад</string>
     <string name="array_global_toggle_wifi">Wi-Fi</string>
     <string name="array_global_toggle_bt">Bluetooth</string>
@@ -515,6 +521,14 @@
     <string name="array_incoming">Вхідні</string>
     <string name="array_outgoing">Вихідні</string>
     <string name="array_both">Будь-які</string>
+    <string name="array_no_vibration">Без вібрації</string>
+    <string name="array_single_short">Одинарна (коротка)</string>
+    <string name="array_single_long">Одинарна (довга)</string>
+    <string name="array_ticktock">Тік-так</string>
+    <string name="array_heartbeat">Серцебиття</string>
+    <string name="array_waltz">Вальс</string>
+    <string name="array_zig">Вж-вж-вж</string>
+    <string name="array_own">Свій шаблон</string>
     <string name="toggle_wifi_on">Wi-Fi увімкнений</string>
     <string name="toggle_wifi_off">Wi-Fi вимкнений</string>
     <string name="toggle_bt_on">Bluetooth увімкнений</string>
@@ -539,7 +553,6 @@
     <string name="qs_toggle_autorotate_portrait">Портрет</string>
     <string name="qs_toggle_autorotate_landscape">Ландшафт</string>
     <string name="miuizer">Налаштування CustoMIUIzer</string>
-    <string name="miuizer_jumptosub">Перейти до підкатегорії</string>
     <string name="miuizer_show_newmods_title">Виділяти нові моди</string>
     <string name="miuizer_new_mod">Новий!</string>
     <string name="miuizer_show_launchericon_title">Іконка в лаунчері</string>
@@ -548,12 +561,10 @@
     <string name="miuizer_show_settingsicon_summ">Показувати іконку в Налаштуваннях</string>
     <string name="miuizer_forcelocale_title">Інтерфейс англійською</string>
     <string name="miuizer_forcelocale_summ">Завжди відображати інтерфейс модуля англійською мовою</string>
-    <string name="miuizer_theme_title">Тема</string>
     <string name="troubleshoot">Вирішення проблем</string>
     <string name="miuizer_acrasend_title">Надіслати докладний звіт</string>
     <string name="miuizer_acrasend_summ">Зібрати дані про пристрій і змінні оточення, logcat і Xposed лог, і відправити їх розробнику.\nДля відправки потрібен інтернет</string>
     <string name="miuizer_acramail_summ">Вкажіть свої контактні дані, і вони будуть включені в звіти, що відправляються</string>
-    <string name="your_contact_info">Ваші контактні дані</string>
     <string name="miuizer_acramail_title">Контактна інформація</string>
     <string name="miuizer_acramail_tip">Якщо Ви хочете отримувати відповіді на відправлені звіти про помилки, то необхідно заповнити дане поле. Використовуйте e-mail, ICQ, свій нік з XDA або 4PDA.</string>
     <string name="support">Підтримка</string>
@@ -593,6 +604,7 @@
     <string name="crash_ok">Звіт успішно відправлений!</string>
     <string name="crash_error">Не вдалося відправити звіт</string>
     <string name="crash_confirm">Підтвердження</string>
+    <string name="array_color_auto">Автоматичний</string>
     <string name="array_color_dark">Темна</string>
     <string name="array_color_light">Світла</string>
     <string name="sdk_failed">Не вдалося ініціалізувати MIUI SDK. Пристрій не Xiaomi?</string>
@@ -611,8 +623,6 @@
     <string name="storage_cannot_mkdir">Помилка при створенні каталогу</string>
     <string name="storage_cannot_backup">Помилка при створенні файлу</string>
     <string name="storage_cannot_restore">Не знайдено збережених налаштувань</string>
-    <string name="storage_perm_denied_backup">Ви хочете створити резервну копію налаштувань чи ні?</string>
-    <string name="storage_perm_denied_restore">Ви хочете відновити налаштування чи ні?</string>
     <string name="backup_ok">Налаштування успішно збережені!</string>
     <string name="restore_ok">Налаштування успішно відновлені!</string>
     <string name="backup_restore_info">Ваші налаштування були відновлені з Google Cloud. Якщо мод Vol2wake був активний, вимкніть його і увімкніть знову, після цього зробіть повне перезавантаження.</string>

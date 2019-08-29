@@ -88,6 +88,7 @@ public class GlobalActions {
 			case 17: return openVolumeDialog(context);
 			case 18: return volumeUp(context);
 			case 19: return volumeDown(context);
+			case 21: return switchKeyboard(context);
 			default: return false;
 		}
 	}
@@ -356,6 +357,14 @@ public class GlobalActions {
 				Class<?> clsWMG = XposedHelpers.findClass("android.view.WindowManagerGlobal", null);
 				Object wms = XposedHelpers.callStaticMethod(clsWMG, "getWindowManagerService");
 				XposedHelpers.callMethod(wms, "showGlobalActions");
+			}
+
+			if (action.equals(ACTION_PREFIX + "SwitchKeyboard")) {
+				context.sendBroadcast(
+					Helpers.isNougat() ?
+					new Intent("android.settings.SHOW_INPUT_METHOD_PICKER") :
+					new Intent("com.android.server.InputMethodManagerService.SHOW_INPUT_METHOD_PICKER").setPackage("android")
+				);
 			}
 
 			if (action.equals(ACTION_PREFIX + "ToggleColorInversion")) {
@@ -660,6 +669,7 @@ public class GlobalActions {
 				intentfilter.addAction(ACTION_PREFIX + "SwitchToPrevApp");
 				intentfilter.addAction(ACTION_PREFIX + "GoBack");
 				intentfilter.addAction(ACTION_PREFIX + "OpenPowerMenu");
+				intentfilter.addAction(ACTION_PREFIX + "SwitchKeyboard");
 				intentfilter.addAction(ACTION_PREFIX + "ToggleColorInversion");
 				intentfilter.addAction(ACTION_PREFIX + "SimulateMenu");
 				intentfilter.addAction(ACTION_PREFIX + "VolumeUp");
@@ -1002,6 +1012,16 @@ public class GlobalActions {
 	public static boolean openPowerMenu(Context context) {
 		try {
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "OpenPowerMenu"));
+			return true;
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+			return false;
+		}
+	}
+
+	public static boolean switchKeyboard(Context context) {
+		try {
+			context.sendBroadcast(new Intent(ACTION_PREFIX + "SwitchKeyboard"));
 			return true;
 		} catch (Throwable t) {
 			XposedBridge.log(t);

@@ -57,17 +57,9 @@
 		<item name="android:textStyle">normal</item>
 		<item name="android:textColor">@color/preference_primary_text</item>
 	</style>
-	<style name="TextAppearance.List">
-		<item name="android:textSize">@dimen/normal_text_size</item>
-		<item name="android:textStyle">normal</item>
-		<item name="android:textColor">@color/list_text</item>
-	</style>
-	<style name="TextAppearance.List.Secondary">
+	<style name="TextAppearance.Preference">
 		<item name="android:textSize">@dimen/secondary_text_size</item>
 		<item name="android:textStyle">normal</item>
-		<item name="android:textColor">@color/list_secondary_text</item>
-	</style>
-	<style name="TextAppearance.List.Secondary.Preference">
 		<item name="android:textColor">@color/preference_secondary_text</item>
 	</style>
 

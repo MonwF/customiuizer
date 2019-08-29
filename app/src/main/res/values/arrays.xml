@@ -51,6 +51,7 @@
 		<item>@string/array_global_actions_powermenu</item>
 		<item>@string/array_global_actions_clearmemory</item>
 		<item>@string/array_global_actions_invertcolors</item>
+		<item>@string/array_global_actions_switchkeyboard</item>
 		<item>@string/array_global_actions_launch</item>
 		<item>@string/array_global_actions_shortcut</item>
 		<item>@string/array_global_actions_activity</item>
@@ -76,6 +77,7 @@
 		<item>12</item>
 		<item>13</item>
 		<item>14</item>
+		<item>21</item>
 		<item>8</item>
 		<item>9</item>
 		<item>20</item>
@@ -100,6 +102,7 @@
 		<item>@string/array_global_actions_powermenu</item>
 		<item>@string/array_global_actions_clearmemory</item>
 		<item>@string/array_global_actions_invertcolors</item>
+		<item>@string/array_global_actions_switchkeyboard</item>
 		<item>@string/array_global_actions_launch</item>
 		<item>@string/array_global_actions_shortcut</item>
 		<item>@string/array_global_actions_activity</item>
@@ -120,6 +123,7 @@
 		<item>12</item>
 		<item>13</item>
 		<item>14</item>
+		<item>21</item>
 		<item>8</item>
 		<item>9</item>
 		<item>20</item>
@@ -500,6 +504,17 @@
 		<item>midi</item>
 	</string-array>
 
+	<string-array name="uimode">
+		<item>@string/array_color_auto</item>
+		<item>@string/array_color_light</item>
+		<item>@string/array_color_dark</item>
+	</string-array>
+	<string-array name="uimode_val">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+	</string-array>
+
 	<string-array name="openwithtest">
 		<item>@string/array_image</item>
 		<item>@string/array_audio</item>
@@ -518,6 +533,27 @@
 		<item>1</item>
 		<item>2</item>
 		<item>3</item>
+	</string-array>
+
+	<string-array name="vibration">
+		<item>@string/array_no_vibration</item>
+		<item>@string/array_single_short</item>
+		<item>@string/array_single_long</item>
+		<item>@string/array_ticktock</item>
+		<item>@string/array_waltz</item>
+		<item>@string/array_heartbeat</item>
+		<item>@string/array_zig</item>
+		<item>@string/array_own</item>
+	</string-array>
+	<string-array name="vibration_val">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+		<item>4</item>
+		<item>5</item>
+		<item>6</item>
+		<item>7</item>
 	</string-array>
 
 	<string-array name="placeholder_array">

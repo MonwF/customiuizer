@@ -37,6 +37,11 @@
 			android:key="pref_key_various_calluibright_cat"
 			android:title="@string/various_calluibright_title" />
 
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_various_callreminder_cat"
+			android:title="@string/various_callreminder_title"
+			android:summary="@string/various_callreminder_summ" />
+
 	</PreferenceCategory>
 
 	<PreferenceCategory

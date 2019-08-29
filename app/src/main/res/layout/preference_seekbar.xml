@@ -3,11 +3,12 @@
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:layout_gravity="center_vertical"
-	android:gravity="center_vertical">
+	android:gravity="center_vertical"
+	android:baselineAligned="false">
 
 	<RelativeLayout
 		style="@style/Widget.PreferenceItem"
-		android:layout_width="wrap_content"
+		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_gravity="center_vertical"
 		android:layout_weight="1"
@@ -29,7 +30,7 @@
 			android:layout_below="@android:id/title"
 			android:layout_alignStart="@android:id/title"
 			android:maxLines="10"
-			style="@style/TextAppearance.List.Secondary.Preference" />
+			style="@style/TextAppearance.Preference" />
 
 		<RelativeLayout
 			android:id="@+id/seekbar_group"
@@ -54,7 +55,7 @@
 				android:layout_centerVertical="true"
 				android:maxLines="1"
 				tools:text="Value"
-				style="@style/TextAppearance.List.Secondary.Preference" />
+				style="@style/TextAppearance.Preference" />
 
 		</RelativeLayout>
 
@@ -65,7 +66,7 @@
 			android:layout_below="@id/seekbar_group"
 			android:layout_marginTop="10dip"
 			android:layout_alignStart="@id/seekbar_group"
-			style="@style/TextAppearance.List.Secondary.Preference" />
+			style="@style/TextAppearance.Preference" />
 
 	</RelativeLayout>
 </LinearLayout>

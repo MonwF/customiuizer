@@ -2,7 +2,9 @@ package name.mikanoshi.customiuizer.subs;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.UiModeManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -370,6 +372,25 @@ public class System extends SubFragment {
 					}
 				});
 
+				UiModeManager uiManager = (UiModeManager)getActivity().getSystemService(Context.UI_MODE_SERVICE);
+				String mode = String.valueOf(uiManager.getNightMode());
+				Helpers.prefs.edit().putString("pref_key_system_uimode", mode).apply();
+				ListPreferenceEx uiMode = (ListPreferenceEx)findPreference("pref_key_system_uimode");
+				uiMode.setValue(mode);
+				uiMode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+					@Override
+					public boolean onPreferenceChange(Preference preference, Object newValue) {
+						UiModeManager uiManager = (UiModeManager)getActivity().getSystemService(Context.UI_MODE_SERVICE);
+						uiManager.setNightMode(Integer.parseInt((String)newValue));
+						return true;
+					}
+				});
+
+				if (!checkUIModePermission()) {
+					uiMode.setEnabled(false);
+					uiMode.setSummary(R.string.launcher_privacyapps_fail);
+				}
+
 				if (!checkUSBPermission()) {
 					Preference pref = findPreference("pref_key_system_defaultusb");
 					pref.setEnabled(false);
@@ -453,6 +474,11 @@ public class System extends SubFragment {
 	private boolean checkAnimationPermission() {
 		PackageManager pm = getActivity().getPackageManager();
 		return pm.checkPermission("android.permission.SET_ANIMATION_SCALE", Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED;
+	}
+
+	private boolean checkUIModePermission() {
+		PackageManager pm = getActivity().getPackageManager();
+		return pm.checkPermission("android.permission.MODIFY_DAY_NIGHT_MODE", Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED;
 	}
 
 }

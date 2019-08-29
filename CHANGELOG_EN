@@ -1,3 +1,18 @@
+1.7.3
+[New] Action: Switch keyboard
+[New] Hide covered earphone area warning
+[New] Hide top block (clock, date, etc) on lock screen
+[New] Custom sound, vibration and interval for missed call reminder
+[New] Switch between dark/light/auto UI modes (does the same thing as Dark mode is Settings, option is mainly for turning off dark mode on ROMs that don't support it)
+[New][Hide icons] Hide VoLTE status bar icon
+[Fixed][Show illuminance level] Right slider icon visual bug while changing brightness
+[Fixed][Launcher icons scale] Scale MIUI quick functions widgets
+[Fixed][Custom app titles] Changing titles without reboot on latest launcher versions
+[Fixed][Minimum auto brightness] Compatibility with some devices
+[Fixed][Custom lock screen shortcuts] Compatibility with some ROMs
+[Fixed][Detailed network speed indicator] Spacing between tx and rx speeds without indicator icons
+[Fixed] Dark mode
+
 1.7.2
 [New] Show ambient illuminance value in lux inside brightness slider
 [New] Position slider in media notifications
@@ -38,7 +53,7 @@ Resource hooks support in Xposed framework is no longer required for module to w
 [New] Show alarm icon only during the defined number of hours before next alarm
 [New] Hide Bluetooth icon when no devices are connected
 [New] Prevent stock MIUI action from closing selected apps
-[New] Actions: Launch any activity of any package
+[New] Action: Launch any activity of any package
 [New][Android 9+] Display text magnifier during selection (for TextView-based elements only)
 [Improved] Color pickers in module settings (darker colors selection and landscape layout support)
 [Fixed][Alarm clock compatibility] Incorrect alarm time

@@ -18,20 +18,9 @@
 
 	<color name="app_manager_text_color">#cc000000</color>
 
-	<color name="list_text_color_disable">#66ffffff</color>
-	<color name="list_text_color_normal">#ccffffff</color>
-	<color name="list_text_color_pressed">#ccffffff</color>
-	<color name="list_secondary_text_color_disable">#33ffffff</color>
-	<color name="list_secondary_text_color_normal">#73ffffff</color>
-	<color name="list_secondary_text_color_pressed">#73ffffff</color>
-
 	<color name="edit_text_search_bg_color">#10000000</color>
 	<color name="hint_edit_text_color">#4c000000</color>
 	<color name="edit_text_search_hint_color">#66000000</color>
-
-	<color name="icon_shadow">#FF0000FF</color>
-	<color name="icon_title_text_shadow">#FFFF0000</color>
-	<color name="icon_title_text_shadow_light">#FF00FF00</color>
 
 	<color name="guide_popup_text">#7fffffff</color>
 

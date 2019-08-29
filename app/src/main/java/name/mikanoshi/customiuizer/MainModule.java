@@ -57,23 +57,24 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getBoolean("system_allrotations")) System.AllRotationsRes();
 		if (mPrefs.getBoolean("system_volumetimer")) System.VolumeTimerValuesRes();
 		if (mPrefs.getBoolean("system_separatevolume") && mPrefs.getBoolean("system_separatevolume_slider")) System.NotificationVolumeDialogRes();
-		if (mPrefs.getBoolean("controls_powerflash")) Controls.PowerKeyRes();
-		if (mPrefs.getBoolean("launcher_unlockgrids")) Launcher.UnlockGridsRes();
 		if (mPrefs.getBoolean("system_lockscreenshortcuts")) System.LockScreenShortcutRes();
+		if (mPrefs.getBoolean("system_statusbaricons_volte")) System.HideIconsVoLTERes();
+		if (mPrefs.getBoolean("launcher_unlockgrids")) Launcher.UnlockGridsRes();
+		if (mPrefs.getBoolean("controls_powerflash")) Controls.PowerKeyRes();
 		if (mPrefs.getStringAsInt("system_rotateanim", 1) > 1) System.RotationAnimationRes();
 
 		if (mPrefs.getInt("system_betterpopups_delay", 0) > 0 && !mPrefs.getBoolean("system_betterpopups_nohide")) System.BetterPopupsHideDelaySysHook();
-		if (mPrefs.getBoolean("controls_volumecursor")) Controls.VolumeCursorHook();
 		if (mPrefs.getBoolean("system_colorizenotiftitle")) System.ColorizedNotificationTitlesHook();
 		if (mPrefs.getBoolean("system_nopassword")) System.NoPasswordHook();
-		if (mPrefs.getBoolean("controls_fsg_horiz")) Controls.FSGesturesHook();
 		if (mPrefs.getBoolean("system_epm")) System.ExtendedPowerMenuHook();
 		if (mPrefs.getBoolean("system_statusbarcolor")) System.StatusBarBackgroundHook();
-		if (mPrefs.getBoolean("various_alarmcompat")) Various.AlarmCompatHook();
 		if (mPrefs.getBoolean("system_magnifier") && Helpers.isPiePlus()) System.TextMagnifierHook();
 		if (mPrefs.getBoolean("system_lockscreenshortcuts")) System.LockScreenShortcutLaunchHook();
 		if (mPrefs.getBoolean("system_notifmediaseekbar")) System.MediaNotificationSeekBarHook();
-		if (mPrefs.getBoolean("system_disableanynotif")) System.DisableAnyNotificationBlockHook();
+		if (mPrefs.getBoolean("system_disableanynotif") && !Helpers.isNougat()) System.DisableAnyNotificationBlockHook();
+		if (mPrefs.getBoolean("controls_volumecursor")) Controls.VolumeCursorHook();
+		if (mPrefs.getBoolean("controls_fsg_horiz")) Controls.FSGesturesHook();
+		if (mPrefs.getBoolean("various_alarmcompat")) Various.AlarmCompatHook();
 		if (mPrefs.getStringAsInt("system_iconlabletoasts", 1) > 1) System.IconLabelToastsHook();
 		if (mPrefs.getStringAsInt("system_blocktoasts", 1) > 1) System.SelectiveToastsHook();
 
@@ -129,6 +130,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_ignorecalls")) System.NoCallInterruptionHook(lpparam);
 			if (mPrefs.getBoolean("system_allrotations")) System.AllRotationsHook(lpparam);
 			if (mPrefs.getBoolean("system_forceclose")) System.ForceCloseHook(lpparam);
+			if (mPrefs.getBoolean("system_hideproxywarn")) System.HideProximityWarningHook(lpparam);
 			if (mPrefs.getBoolean("controls_powerflash")) Controls.PowerKeyHook(lpparam);
 			if (mPrefs.getBoolean("controls_fingerprintfailure")) Controls.FingerprintHapticFailureHook(lpparam);
 			if (mPrefs.getBoolean("controls_fingerprintscreen")) Controls.FingerprintScreenOnHook(lpparam);
@@ -140,6 +142,10 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getStringAsInt("system_vibration", 1) > 1) System.SelectiveVibrationHook(lpparam);
 
 			//Controls.AIButtonHook(lpparam);
+		}
+
+		if (pkg.equals("com.android.server.telecom")) {
+			if (mPrefs.getBoolean("various_callreminder")) Various.CallReminderHook(lpparam);
 		}
 
 		if (pkg.equals(Helpers.modulePkg)) {
@@ -197,6 +203,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_statusbaricons_nosims")) System.HideIconsNoSIMsHook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_hotspot")) System.HideIconsHotspotHook(lpparam);
 			if (mPrefs.getBoolean("system_showlux")) System.BrightnessLuxHook(lpparam);
+			if (mPrefs.getBoolean("system_hidelsclock")) System.HideLockScreenClockHook(lpparam);
 			if (!mPrefs.getBoolean("system_statusbaricons_alarm") && mPrefs.getInt("system_statusbaricons_alarmn", 0) > 0) System.HideIconsSelectiveAlarmHook(lpparam);
 			if (!mPrefs.getString("system_shortcut_app", "").equals("")) System.ReplaceShortcutAppHook(lpparam);
 			if (!mPrefs.getString("system_clock_app", "").equals("")) System.ReplaceClockAppHook(lpparam);
@@ -241,7 +248,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 				if (mPrefs.getInt("launcher_doubletap_action", 1) != 1) Launcher.LauncherDoubleTapHook(lpparam);
 				if (mPrefs.getInt("launcher_folder_cols", 3) != 3) Launcher.FolderColumnsHook(lpparam);
 				if (mPrefs.getInt("launcher_iconscale", 45) > 45) Launcher.IconScaleHook(lpparam);
-				if (mPrefs.getInt("launcher_folderscale", 45) > 45) Launcher.FolderScaleHook(lpparam);
 				if (mPrefs.getBoolean("launcher_noclockhide")) Launcher.NoClockHideHook(lpparam);
 				if (mPrefs.getBoolean("launcher_renameapps")) Launcher.RenameShortcutsHook(lpparam);
 				if (mPrefs.getBoolean("launcher_closefolder")) Launcher.CloseFolderOnLaunchHook(lpparam);

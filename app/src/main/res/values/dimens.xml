@@ -21,8 +21,6 @@
 	<dimen name="secondary_text_size">13.25sp</dimen>
 	<dimen name="normal_text_size">16sp</dimen>
 
-	<dimen name="qs_tile_label_padding_top">2dp</dimen>
-
 	<dimen name="screen_color_preview_offset">11dp</dimen>
 
 	<dimen name="miui_volume_content_width_expanded">337.77dp</dimen>

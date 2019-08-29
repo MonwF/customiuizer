@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
@@ -78,7 +79,10 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 	}
 
 	public void setViewBackground(View view) {
-		view.setBackgroundResource(getResources().getIdentifier(Helpers.isNightMode(getContext()) ? "settings_window_bg_dark" : "settings_window_bg_light", "drawable", "miui"));
+		if (Helpers.isPiePlus())
+			view.setBackgroundResource(getResources().getIdentifier(Helpers.isNightMode(getContext()) ? "settings_window_bg_dark" : "settings_window_bg_light", "drawable", "miui"));
+		else
+			view.setBackgroundColor(Helpers.isNightMode(getContext()) ? Color.BLACK : Color.rgb(247, 247, 247));
 	}
 
 	public void openSubFragment(Fragment fragment, Bundle args, Helpers.SettingsType settingsType, Helpers.ActionBarType abType, int titleResId, int contentResId) {

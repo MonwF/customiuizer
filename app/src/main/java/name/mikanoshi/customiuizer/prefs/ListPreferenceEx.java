@@ -4,11 +4,15 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.os.Bundle;
 import android.preference.ListPreference;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.CheckedTextView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import name.mikanoshi.customiuizer.R;
@@ -84,6 +88,32 @@ public class ListPreferenceEx extends ListPreference implements PreferenceState 
 		view.addView(valSummary, 2);
 
 		return view;
+	}
+
+	@Override
+	protected void showDialog(Bundle state) {
+		super.showDialog(state);
+		final Window window = getDialog().getWindow();
+		if (window == null) return;
+
+		final int listResID = res.getIdentifier("select_dialog_listview", "id", "miui");
+		final ListView listView = window.findViewById(listResID);
+		if (listView != null)
+		listView.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
+			@Override
+			public void onChildViewAdded(View parent, View child) {
+				if (child == null) return;
+				if (child instanceof CheckedTextView) {
+					if (((CheckedTextView)child).isChecked())
+						((CheckedTextView)child).setTextColor(res.getColor(res.getIdentifier("highlight_normal_light", "color", "miui"), getContext().getTheme()));
+					else if (Helpers.isNightMode(getContext()))
+						((CheckedTextView)child).setTextColor(res.getColor(res.getIdentifier("list_text_color_normal_dark", "color", "miui"), getContext().getTheme()));
+				}
+			}
+
+			@Override
+			public void onChildViewRemoved(View parent, View child) {}
+		});
 	}
 
 	@Override

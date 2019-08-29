@@ -614,6 +614,12 @@
 			android:title="@string/system_notifafterunlock_title"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_hidelsclock"
+			android:summary="@string/system_hidelsclock_summ"
+			android:title="@string/system_hidelsclock_title"
+			android:defaultValue="false" />
+
 		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 			android:title="@string/system_mods_lockscreen_functionality" />
 
@@ -686,6 +692,14 @@
 		android:key="pref_key_system_cat_other"
 		android:title="@string/system_mods_other">
 
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_uimode"
+			android:title="@string/system_uimode_title"
+			android:summary="@string/system_uimode_summ"
+			android:entries="@array/uimode"
+			android:entryValues="@array/uimode_val"
+			android:defaultValue="1" />
+
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_epm"
 			android:title="@string/system_epm_title"
@@ -708,6 +722,12 @@
 			android:key="pref_key_system_magnifier"
 			android:title="@string/system_magnifier_title"
 			android:summary="@string/system_magnifier_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_hideproxywarn"
+			android:title="@string/system_hideproxywarn_title"
+			android:summary="@string/system_hideproxywarn_summ"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx

@@ -287,8 +287,9 @@
 	<string name="controls_fsg_horiz_title">Горизонтальные жесты</string>
 	<string name="controls_fsg_horiz_summ">Активировать вместе горизонтальные жесты и панель навигации</string>
 
-	<string name="array_color_dark">Тёмная</string>
-	<string name="array_color_light">Светлая</string>
+	<string name="array_color_auto">Автоматический</string>
+	<string name="array_color_dark">Тёмный</string>
+	<string name="array_color_light">Светлый</string>
 
 	<string name="update_available">Доступно обновление ⚠</string>
 
@@ -338,8 +339,6 @@
 	<string name="miuizer_acramail_title">Контактная информация</string>
 	<string name="miuizer_acrasend_summ">Собрать данные об устройтве и переменных окружения, logcat и Xposed лог, и отправить их разработчику.\nДля отправки требуется интернет</string>
 	<string name="miuizer_acrasend_title">Отправить подробный отчёт</string>
-	<string name="miuizer_theme_title">Тема</string>
-	<string name="miuizer_jumptosub">Перейти к подкатегории</string>
 	<string name="miuizer_show_newmods_title">Отмечать новые моды</string>
 	<string name="miuizer_new_mod">Новый!</string>
 	<string name="miuizer_show_launchericon_title">Иконка в ланчере</string>
@@ -384,7 +383,6 @@
 	<string name="launcher_unlockgrids_title">Разблокировать размеры сетки</string>
 	<string name="launcher_unlockgrids_summ">Делает все размеры от 3x4 до 6x7 доступными в настройках сетки рабочего стола</string>
 	<string name="launcher_iconscale_title">Масштаб значков</string>
-	<string name="launcher_folderscale_title">Масштаб папок</string>
 	<string name="launcher_folders">Папки</string>
 	<string name="launcher_folder_cols_title">Число колонок в папках</string>
 	<string name="launcher_fixstatusbarmode_title">Исправить режим строки состояния</string>
@@ -418,6 +416,8 @@
 	<string name="system_iconlabletoasts_summ">Добавляет иконку и название приложения во всплывающие сообщения</string>
 	<string name="system_blocktoasts_title">Блокировка</string>
 	<string name="system_blocktoasts_summ">Запретить выбранным приложениям показ всплывающих сообщений</string>
+	<string name="system_uimode_title">Режим интерфейса</string>
+	<string name="system_uimode_summ">Изменить режим на тёмный, светлый или авто. Перезагрузка не требуется.</string>
 	<string name="system_epm_title">Расширенное меню питания</string>
 	<string name="system_epm_summ">Добавляет новые опции презагрузки в меню питания (Режим Fastboot, Режим Recovery, Быстрая перезагрузка, Перезапуск интерфейса, Перезапуск ланчера)</string>
 	<string name="system_downgrade_title">Разрешить понижение версии</string>
@@ -438,7 +438,6 @@
 	<string name="system_defaultusb_summ">Применять выбранную конфигурацию при подключении к другому устройству</string>
 	<string name="system_defaultusb_unsecure_title">Игнорировать блокировку</string>
 	<string name="system_defaultusb_unsecure_summ">Применять даже если устойство всё ещё заблокировано</string>
-	<string name="system_defaultusb_noconfigs">Не найдены конфигурации USB</string>
 	<string name="system_defaultusb_config_rndis">RNDIS (USB модем)</string>
 	<string name="system_forceclose_title">Предотвратить закрытие приложений</string>
 	<string name="system_forceclose_summ">Не даёт стандартному MIUI действию насильно закрывать указанные приложения</string>
@@ -462,7 +461,6 @@
 	<string name="system_mods_lockscreen">Экран блокировки</string>
 	<string name="system_mods_lockscreen_functionality">Дополнительная функциональность</string>
 	<string name="system_mods_lockscreen_security">Безопасность</string>
-	<string name="system_mods_screenanim">Экранная анимация</string>
 	<string name="system_mods_statusbar">Строка состояния и панель уведомлений</string>
 	<string name="system_mods_statusbar_statusbar">Строка состояния</string>
 	<string name="system_mods_statusbar_drawer">Панель уведомлений</string>
@@ -500,7 +498,6 @@
 	<string name="system_statusbaricons_sound_title">Профили звука</string>
 	<string name="system_statusbaricons_dnd_title">Режим Не беспокоить</string>
 	<string name="system_statusbaricons_headset_title">Наушники</string>
-	<string name="system_statusbaricons_sync_title">Синхронизация</string>
 	<string name="system_statusbaricons_mute_title">Звонок: отключенный микрофон</string>
 	<string name="system_statusbaricons_speaker_title">Звонок: громкая связь</string>
 	<string name="system_statusbaricons_record_title">Звонок: запись разговора</string>
@@ -508,7 +505,6 @@
 	<string name="system_batteryindicator_summ">Отображает уровень заряда батареи цветной полоской</string>
 	<string name="system_batteryindicator_rounded_title">Скруглённые концы</string>
 	<string name="system_batteryindicator_centered_title">По центру</string>
-	<string name="system_batteryindicator_centered_summ">Выравнивает полоску по центру экрана вместо левого края</string>
 	<string name="system_batteryindicator_height_title">Высота индикатора</string>
 	<string name="system_batteryindicator_padding_title">Отступ по горизонтали</string>
 	<string name="system_batteryindicator_colorval1_title">Цвет при полном заряде</string>
@@ -546,7 +542,6 @@
 	<string name="system_hidemoreicon_title">Убрать индикатор скрытых иконок</string>
 	<string name="system_hidemoreicon_summ">Отключает показ иконки с 3 точками, когда активна опция скрытия иконок уведомлений</string>
 	<string name="system_netspeedinterval_title">Частота обновления индикатора скорости</string>
-	<string name="system_netspeedinterval_summ">Требуется разрешение на изменение системных настроек</string>
 	<string name="system_detailednetspeed_title">Подробный индикатор скорости соединения</string>
 	<string name="system_detailednetspeed_summ">Показыает входящую и исходящую скорости передачи данных</string>
 	<string name="system_detailednetspeed_font_title">Размер шрифта</string>
@@ -644,9 +639,6 @@
 	<string name="disable_app_text">Если данное приложение является важным системным, то его отключение может что-нибудь поломать :)</string>
 	<string name="disable_app_settings">Это плохая идея! :)</string>
 	<string name="disable_app_fail">Не удалось изменить статус приложения</string>
-	<string name="your_contact_info">Ваши контактные данные</string>
-	<string name="storage_perm_denied_backup">Вы хотите создать резервную копию настроек или нет?</string>
-	<string name="storage_perm_denied_restore">Вы хотите восстановить настройки или нет?</string>
 	<string name="about_dev">от Mikanoshi</string>
 	<string name="system_nopassword_title">Не требовать пароль после загрузки</string>
 	<string name="system_nopassword_summ">Отключает требование пароля вместо отпечатка пальца первый раз после загрузки</string>
@@ -666,8 +658,6 @@
 	<string name="system_lockscreenshortcuts_left_summ">Настройка списка ярлыков</string>
 	<string name="system_lockscreenshortcuts_left_skiplock_title">Не требовать разблокировки</string>
 	<string name="system_lockscreenshortcuts_left_skiplock_summ">Запущенные приложения будут доступны даже при заблокированном устройстве</string>
-	<string name="system_noscreenlock_act_title">Управление блокировкой</string>
-	<string name="system_noscreenlock_act_summ">Активирует динамическое управление блокировкой устройства</string>
 	<string name="system_noscreenlock_title">Отключить блокировку</string>
 	<string name="system_noscreenlock_summ">Выборочно пропускает блокировку устройства (не влияет на безопасность приложений и не удаляет данные отпечатков пальцев)</string>
 	<string name="system_noscreenlock_scr_title">Пропустить экран блокировки</string>

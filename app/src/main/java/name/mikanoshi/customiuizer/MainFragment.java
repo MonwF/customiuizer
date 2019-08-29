@@ -20,7 +20,9 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.text.Editable;
+import android.text.SpannableString;
 import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
 import android.view.ActionMode;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -61,8 +63,8 @@ import java.util.Set;
 
 import miui.app.ActionBar;
 import miui.app.AlertDialog;
-
 import miui.view.SearchActionMode;
+
 import name.mikanoshi.customiuizer.mods.GlobalActions;
 import name.mikanoshi.customiuizer.subs.CategorySelector;
 import name.mikanoshi.customiuizer.subs.Controls;
@@ -464,6 +466,15 @@ public class MainFragment extends PreferenceFragmentBase {
 		});
 	}
 
+	@Override
+	public void onDestroyView() {
+		if (actionMode != null) {
+			actionMode.finish();
+			actionMode = null;
+		}
+		super.onDestroyView();
+	}
+
 	void showGuides() {
 		if (getView() == null) return;
 		Button more = getView().findViewById(getResources().getIdentifier("more", "id", "miui"));
@@ -539,6 +550,13 @@ public class MainFragment extends PreferenceFragmentBase {
 
 	public boolean onCreateOptionsMenu(Menu menu) {
  		getMenuInflater().inflate(R.menu.menu_mods, menu);
+ 		if (Helpers.isNightMode(getActivity()))
+		for (int i = 0; i < menu.size(); i++) try {
+			MenuItem item = menu.getItem(i);
+			SpannableString spanString = new SpannableString(item.getTitle().toString());
+			spanString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.preference_primary_text_color, getActivity().getTheme())), 0, spanString.length(), 0);
+			item.setTitle(spanString);
+		} catch (Throwable t) {}
 		return true;
 	}
 

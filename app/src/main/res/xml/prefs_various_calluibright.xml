@@ -35,6 +35,7 @@
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_various_calluibright_night"
 		android:title="@string/various_calluibright_night_title"
+		android:summary="@string/various_calluibright_night_summ"
 		android:dependency="pref_key_various_calluibright"
 		android:defaultValue="false"
 		miuizer:dynamic="true" />

@@ -900,7 +900,7 @@ public class System {
 	public static void DrawerThemeBackgroundHook(LoadPackageParam lpparam) {
 		Helpers.hookAllConstructors("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, new MethodHook() {
 			@Override
-			protected void after(MethodHookParam param) throws Throwable {
+			protected void after(final MethodHookParam param) throws Throwable {
 				Context mContext = (Context)param.args[0];
 				Handler mHandler = new Handler(mContext.getMainLooper());
 
@@ -1055,31 +1055,60 @@ public class System {
 	}
 
 	public static void MinAutoBrightnessHook(LoadPackageParam lpparam) {
-		if (Helpers.isNougat())
-		Helpers.findAndHookMethod("com.android.server.display.AutomaticBrightnessController", lpparam.classLoader, "updateAutoBrightness", boolean.class, new MethodHook() {
-			@Override
-			protected void after(final MethodHookParam param) throws Throwable {
-				int val = XposedHelpers.getIntField(param.thisObject, "mScreenAutoBrightness");
-				int opt = MainModule.mPrefs.getInt("system_minbrightness", 44);
-				int newVal = Math.max(val, opt);
-				if (val >= 0 && val != newVal) {
-					XposedHelpers.setIntField(param.thisObject, "mScreenAutoBrightness", newVal);
-					if ((boolean)param.args[0]) {
-						Object mCallbacks = XposedHelpers.getObjectField(param.thisObject, "mCallbacks");
-						XposedHelpers.callMethod(mCallbacks, "updateBrightness");
+		if (Helpers.isNougat()) {
+			Helpers.findAndHookMethod("com.android.server.display.AutomaticBrightnessController", lpparam.classLoader, "updateAutoBrightness", boolean.class, new MethodHook() {
+				@Override
+				protected void after(final MethodHookParam param) throws Throwable {
+					int val = XposedHelpers.getIntField(param.thisObject, "mScreenAutoBrightness");
+					int newVal = Math.max(val, MainModule.mPrefs.getInt("system_minbrightness", 44));
+					if (val >= 0 && val != newVal) {
+						XposedHelpers.setIntField(param.thisObject, "mScreenAutoBrightness", newVal);
+						if ((boolean)param.args[0]) {
+							Object mCallbacks = XposedHelpers.getObjectField(param.thisObject, "mCallbacks");
+							XposedHelpers.callMethod(mCallbacks, "updateBrightness");
+						}
 					}
 				}
-			}
-		});
-		else
-		Helpers.findAndHookMethod("com.android.server.display.AutomaticBrightnessControllerInjector", lpparam.classLoader, "changeBrightness", float.class, int.class, new MethodHook() {
-			@Override
-			protected void after(final MethodHookParam param) throws Throwable {
-				int val = (int)param.getResult();
-				int opt = MainModule.mPrefs.getInt("system_minbrightness", 44);
-				if (val >= 0) param.setResult(Math.max(val, opt));
-			}
-		});
+			});
+		} else {
+			Helpers.hookAllConstructors("com.android.server.display.BrightnessMappingStrategy$SimpleMappingStrategy", lpparam.classLoader, new MethodHook() {
+				@Override
+				protected void before(MethodHookParam param) throws Throwable {
+					int[] values = (int[])param.args[1];
+					int min = MainModule.mPrefs.getInt("system_minbrightness", 44);
+					for (int i = 0; i < values.length; i++)
+					if (values[i] < min) values[i] = min;
+					param.args[1] = values;
+				}
+			});
+
+			Helpers.hookAllConstructors("com.android.server.display.BrightnessMappingStrategy$PhysicalMappingStrategy", lpparam.classLoader, new MethodHook() {
+				@Override
+				protected void before(MethodHookParam param) throws Throwable {
+					int[] values = (int[])param.args[2];
+					int min = MainModule.mPrefs.getInt("system_minbrightness", 44);
+					for (int i = 0; i < values.length; i++)
+					if (values[i] < min) values[i] = min;
+					param.args[2] = values;
+				}
+			});
+
+			Helpers.hookAllMethods("com.android.server.display.AutomaticBrightnessControllerInjector", lpparam.classLoader, "changeBrightness", new MethodHook() {
+				@Override
+				protected void after(final MethodHookParam param) throws Throwable {
+					int val = (int)param.getResult();
+					if (val >= 0) param.setResult(Math.max(val, MainModule.mPrefs.getInt("system_minbrightness", 44)));
+				}
+			});
+		}
+
+//		Helpers.hookAllConstructors("com.android.server.display.AutomaticBrightnessController", lpparam.classLoader, new MethodHook() {
+//			@Override
+//			protected void after(final MethodHookParam param) throws Throwable {
+//				XposedHelpers.setLongField(param.thisObject, "mBrighteningLightDebounceConfig", 500L);
+//				XposedHelpers.setLongField(param.thisObject, "mDarkeningLightDebounceConfig", 500L);
+//			}
+//		});
 	}
 
 	private static long measureTime = 0;
@@ -1151,11 +1180,12 @@ public class System {
 			protected void after(final MethodHookParam param) throws Throwable {
 				TextView meter = (TextView)param.thisObject;
 				float density = meter.getResources().getDisplayMetrics().density;
-				int opt = Integer.parseInt(MainModule.mPrefs.getString("system_detailednetspeed_font", "3"));
+				int font = Integer.parseInt(MainModule.mPrefs.getString("system_detailednetspeed_font", "3"));
+				int icons = Integer.parseInt(MainModule.mPrefs.getString("system_detailednetspeed_icon", "2"));
 				float size = 8.0f;
 				float spacing = 0.7f;
 				int top = 0;
-				switch (opt) {
+				switch (font) {
 					case 1: size = 10.0f; spacing = 0.75f; top = Math.round(density); break;
 					case 2: size = 9.0f; break;
 					case 3: size = 8.0f; break;
@@ -1165,7 +1195,7 @@ public class System {
 				meter.setSingleLine(false);
 				meter.setLines(2);
 				meter.setMaxLines(2);
-				meter.setLineSpacing(0, spacing);
+				meter.setLineSpacing(0, icons == 1 ? 0.85f : spacing);
 				meter.setPadding(Math.round(meter.getPaddingLeft() + 3 * density), meter.getPaddingTop() - top, meter.getPaddingRight(), meter.getPaddingBottom());
 			}
 		});
@@ -3292,6 +3322,8 @@ public class System {
 	}
 
 	public static void DisableAnyNotificationBlockHook() {
+		if (Helpers.isNougat()) return;
+
 		Helpers.hookAllConstructors("android.app.NotificationChannel", null, new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
@@ -3331,6 +3363,15 @@ public class System {
 		mKeyguardRightView.setForeground(null);
 		if (mKeyguardRightView instanceof ImageView)
 		((ImageView)mKeyguardRightView).setScaleType(ImageView.ScaleType.FIT_END);
+	}
+
+	private static void initLeftView(Object thisObject) {
+		Handler mHandler = (Handler)XposedHelpers.getAdditionalInstanceField(thisObject, "mHandler");
+		mHandler.removeMessages(1);
+		Message msg = new Message();
+		msg.what = 1;
+		msg.obj = thisObject;
+		mHandler.sendMessageDelayed(msg, 1000);
 	}
 
 	public static void LockScreenShortcutHook(LoadPackageParam lpparam) {
@@ -3599,7 +3640,11 @@ public class System {
 										MainModule.mPrefs.put(key, Helpers.getSharedBoolPref(mContext, key, false));
 										break;
 								}
-								XposedHelpers.callMethod(param.thisObject, "initKeyguardLeftItems");
+								try {
+									XposedHelpers.callMethod(param.thisObject, "initKeyguardLeftItems");
+								} catch (Throwable t) {
+									XposedHelpers.callMethod(param.thisObject, "initKeyguardLeftItemInfos");
+								}
 							}
 						} catch (Throwable t) {
 							XposedBridge.log(t);
@@ -3609,15 +3654,16 @@ public class System {
 			}
 		});
 
-		Helpers.findAndHookMethod("com.android.keyguard.negative.MiuiKeyguardMoveLeftControlCenterView", lpparam.classLoader, "initKeyguardLeftItems", new MethodHook() {
+		if (!Helpers.findAndHookMethodSilently("com.android.keyguard.negative.MiuiKeyguardMoveLeftControlCenterView", lpparam.classLoader, "initKeyguardLeftItems", new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
-				Handler mHandler = (Handler)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mHandler");
-				mHandler.removeMessages(1);
-				Message msg = new Message();
-				msg.what = 1;
-				msg.obj = param.thisObject;
-				mHandler.sendMessageDelayed(msg, 1000);
+				initLeftView(param.thisObject);
+				param.setResult(null);
+			}
+		})) Helpers.findAndHookMethod("com.android.keyguard.negative.MiuiKeyguardMoveLeftControlCenterView", lpparam.classLoader, "initKeyguardLeftItemInfos", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				initLeftView(param.thisObject);
 				param.setResult(null);
 			}
 		});
@@ -3977,6 +4023,8 @@ public class System {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				Context context = (Context)param.args[0];
+				if (((View)param.thisObject).getId() != context.getResources().getIdentifier("qs_brightness", "id", lpparam.packageName)) return;
+
 				lux = new TextView(context);
 				RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 				lp.alignWithParent = true;
@@ -4044,6 +4092,30 @@ public class System {
 				boolean mPanelExpanded = XposedHelpers.getBooleanField(param.thisObject, "mPanelExpanded");
 				boolean mListenerEnabled = (boolean)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mListenerEnabled");
 				if (mPanelExpanded && !mListenerEnabled) registerLuxListener(param.thisObject);
+			}
+		});
+	}
+
+	public static void HideProximityWarningHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.server.policy.MiuiScreenOnProximityLock", lpparam.classLoader, "showHint", XC_MethodReplacement.DO_NOTHING);
+	}
+
+	public static void HideIconsVoLTERes() {
+		MainModule.resHooks.setObjectReplacement("com.android.systemui", "bool", "status_bar_hide_volte", true);
+	}
+
+	public static void HideLockScreenClockHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethods("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, "setKeyguardStatusViewVisibility", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				View mKeyguardClockView = (View)XposedHelpers.getObjectField(param.thisObject, "mKeyguardClockView");
+				if (mKeyguardClockView == null) {
+					Helpers.log("HideLockScreenClockHook", "mKeyguardClockView is null");
+					return;
+				}
+				mKeyguardClockView.animate().cancel();
+				mKeyguardClockView.setAlpha(0.0f);
+				mKeyguardClockView.setVisibility(View.INVISIBLE);
 			}
 		});
 	}
