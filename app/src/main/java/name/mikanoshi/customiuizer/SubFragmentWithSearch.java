@@ -46,7 +46,10 @@ public class SubFragmentWithSearch extends SubFragment {
 
 			@Override
 			public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-				if (getView() == null) return false;
+				if (getView() == null || searchView == null || listView == null) {
+					if (mode != null) mode.finish();
+					return false;
+				}
 
 				SearchActionMode samode = (SearchActionMode)mode;
 				samode.setAnchorView(searchView);
@@ -127,15 +130,6 @@ public class SubFragmentWithSearch extends SubFragment {
 				return false;
 			}
 		});
-	}
-
-	@Override
-	public void onDestroyView() {
-		if (actionMode != null) {
-			actionMode.finish();
-			actionMode = null;
-		}
-		super.onDestroyView();
 	}
 
 	void applyFilter(String filter) {

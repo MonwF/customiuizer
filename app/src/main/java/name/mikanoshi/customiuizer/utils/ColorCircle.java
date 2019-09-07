@@ -4,10 +4,8 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ComposeShader;
 import android.graphics.Paint;
 import android.graphics.PointF;
-import android.graphics.PorterDuff;
 import android.graphics.RadialGradient;
 import android.graphics.SweepGradient;
 import android.util.AttributeSet;
@@ -23,9 +21,10 @@ public class ColorCircle extends View {
 	private float radius;
 	private float innerRadius;
 	private int offset;
-	private Paint paint1;
-	private Paint paint2;
-	private Paint paint3;
+	private Paint paint1 = new Paint();
+	private Paint paint1a = new Paint();
+	private Paint paint2 = new Paint();
+	private Paint paint3 = new Paint();
 	private ColorListener listener;
 	private boolean mTransparent = false;
 	private float[] mColor = new float[3];
@@ -73,10 +72,8 @@ public class ColorCircle extends View {
 		}
 		colors[steps] = colors[0];
 
-		SweepGradient sweepGradient = new SweepGradient(this.radius, this.radius, colors, null);
-		RadialGradient radialGradient = new RadialGradient(this.radius, this.radius, this.radius, 0xFFFFFFFF, 0x00FFFFFF, android.graphics.Shader.TileMode.CLAMP);
-		ComposeShader shader = new ComposeShader(sweepGradient, radialGradient, PorterDuff.Mode.SRC_OVER);
-		this.paint1.setShader(shader);
+		this.paint1.setShader(new SweepGradient(this.radius, this.radius, colors, null));
+		this.paint1a.setShader(new RadialGradient(this.radius, this.radius, this.radius, 0xFFFFFFFF, 0x00FFFFFF, android.graphics.Shader.TileMode.CLAMP));
 	}
 
 	public PointF getPointForColor() {
@@ -104,16 +101,13 @@ public class ColorCircle extends View {
 	}
 
 	public void init() {
-		setLayerType(View.LAYER_TYPE_HARDWARE, null);
-		this.paint1 = new Paint();
+		this.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 		this.paint1.setAntiAlias(true);
-		//this.paint1.setDither(true);
-		this.paint2 = new Paint();
+		this.paint1a.setAntiAlias(true);
 		this.paint2.setAntiAlias(true);
 		this.paint2.setColor(Color.CYAN);
 		this.paint2.setStrokeWidth(2.0f);
 		this.paint2.setStyle(Paint.Style.STROKE);
-		this.paint3 = new Paint();
 		this.paint3.setAntiAlias(true);
 		this.paint3.setColor(Color.WHITE);
 		this.paint3.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -186,6 +180,7 @@ public class ColorCircle extends View {
 		super.onDraw(canvas);
 		if (!initialized) return;
 		canvas.drawCircle(this.radius, this.radius, this.radius - this.offset * 2, paint1);
+		canvas.drawCircle(this.radius, this.radius, this.radius - this.offset * 2, paint1a);
 		canvas.drawCircle(this.posXin, this.posYin, (float)this.offset, this.paint2);
 		canvas.drawCircle(this.posXin, this.posYin, (float)(this.offset - 2), this.paint3);
 	}

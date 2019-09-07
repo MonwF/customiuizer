@@ -81,7 +81,9 @@ public class SubFragment extends PreferenceFragmentBase {
 			((TextView)customView.findViewById(android.R.id.title)).setText(titleId);
 
 			TextView cancelBtn = customView.findViewById(android.R.id.button1);
-			cancelBtn.setBackgroundResource(getResources().getIdentifier(Helpers.isNightMode(getContext()) ? "action_mode_title_button_cancel_dark" : "action_mode_title_button_cancel_light", "drawable", "miui"));
+			int cancelResId = getResources().getIdentifier(Helpers.isNightMode(getContext()) ? "action_mode_title_button_cancel_dark" : "action_mode_title_button_cancel_light", "drawable", "miui");
+			if (cancelResId == 0) cancelResId = getResources().getIdentifier(Helpers.isNightMode(getContext()) ? "action_mode_immersion_close_dark" : "action_mode_immersion_close_light", "drawable", "miui");
+			cancelBtn.setBackgroundResource(cancelResId);
 			cancelBtn.setText(null);
 			cancelBtn.setContentDescription(getText(android.R.string.cancel));
 			cancelBtn.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +93,9 @@ public class SubFragment extends PreferenceFragmentBase {
 				}
 			});
 			TextView applyBtn = customView.findViewById(android.R.id.button2);
-			applyBtn.setBackgroundResource(getResources().getIdentifier(Helpers.isNightMode(getContext()) ? "action_mode_title_button_confirm_dark" : "action_mode_title_button_confirm_light", "drawable", "miui"));
+			int applyResId = getResources().getIdentifier(Helpers.isNightMode(getContext()) ? "action_mode_title_button_confirm_dark" : "action_mode_title_button_confirm_light", "drawable", "miui");
+			if (applyResId == 0) applyResId = getResources().getIdentifier(Helpers.isNightMode(getContext()) ? "action_mode_immersion_done_dark" : "action_mode_immersion_done_light", "drawable", "miui");
+			applyBtn.setBackgroundResource(applyResId);
 			applyBtn.setText(null);
 			applyBtn.setContentDescription(getText(android.R.string.ok));
 			applyBtn.setOnClickListener(new View.OnClickListener() {

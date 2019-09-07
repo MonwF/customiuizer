@@ -31,7 +31,7 @@
 		android:dependency="pref_key_system_batteryindicator"
 		android:defaultValue="5"
 		miuizer:dynamic="true"
-		miuizer:minValue="1"
+		miuizer:minValue="0"
 		miuizer:maxValue="15"
 		miuizer:stepValue="1"
 		miuizer:format="%d px" />

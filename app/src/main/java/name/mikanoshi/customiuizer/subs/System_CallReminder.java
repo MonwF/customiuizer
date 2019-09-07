@@ -124,7 +124,12 @@ public class System_CallReminder extends SubFragment {
 						if (Helpers.isNougat()) return;
 						EditText edit = dialog.findViewById(android.R.id.edit);
 						Vibrator vibrator = (Vibrator)getContext().getSystemService(Context.VIBRATOR_SERVICE);
-						vibrator.vibrate(VibrationEffect.createWaveform(Helpers.getVibrationPattern(edit.getText().toString()), -1));
+						try {
+							vibrator.vibrate(VibrationEffect.createWaveform(Helpers.getVibrationPattern(edit.getText().toString()), -1));
+						} catch (Throwable t) {
+							//noinspection deprecation
+							vibrator.vibrate(200);
+						}
 					}
 				});
 

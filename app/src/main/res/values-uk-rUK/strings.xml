@@ -138,6 +138,8 @@
     <string name="system_visualizer_colorval_title">Задати колір</string>
     <string name="system_ignorecalls_title">Ігнорувати дзвінки</string>
     <string name="system_ignorecalls_summ">Запобігає передачі аудіо фокуса з обраних додатків на вхідний дзвінок, також перестає сповіщати їх про зміни стану дзвінків</string>
+    <string name="system_nosilentvibrate_title">Вимкнути тестову вібрацію</string>
+    <string name="system_nosilentvibrate_summ">Не вібрувати при увімкненні режиму \"Без звуку\" и при увімкненні вібрації в цьому режимі</string>
     <string name="system_vibration_title">Блокування вібрації</string>
     <string name="system_vibration_summ">Заборонити обраним додаткам використовувати вібрацію</string>
     <string name="notification_volume">Гучність сповіщень</string>

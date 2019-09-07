@@ -1,3 +1,13 @@
+1.7.4
+[New] Adjust media stream volume on first key press
+[New] Disable test vibration when switching ringer mode to silent or turning on vibration in this mode
+[Improved][Battery bar indicator] Zero bar height
+[Improved][Music visualizer] Animation duration option to configure visualizer update rate
+[Fixed][Launcher icons scale] App icon badge scale
+[Fixed][Clean Open With and Share menus] Compatibility with some ROMs
+[Fixed] Color picker not drawing on some devices
+[Fixed] Module UI crashes
+
 1.7.3
 [New] Action: Switch keyboard
 [New] Hide covered earphone area warning

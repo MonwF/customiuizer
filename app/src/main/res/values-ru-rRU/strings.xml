@@ -592,6 +592,8 @@
 	<string name="system_minbrightness_note">Слайдер не соответствует системному слайдеру громкости на последних версиях Андроида с нелинейной шкалой яркости</string>
 	<string name="system_noducking_title">Отключить заглушение</string>
 	<string name="system_noducking_summ">Не понижать громкость играющей в данный момент музыки для проигрывания звука уведомления</string>
+	<string name="system_firstpress_title">Немедленная регулировка громкости</string>
+	<string name="system_firstpress_summ">Менять громкость медиа при первом нажатии кнопки</string>
 	<string name="system_separatevolume_title">Раздельные настройки громкости</string>
 	<string name="system_separatevolume_summ">Позволяет изменить громкость в Настройках отдельно для звонков/уведомлений/системных звуков</string>
 	<string name="system_separatevolume_slider_title">Ползунок громкости уведомлений</string>
@@ -607,6 +609,7 @@
 	<string name="system_visualizer_custom_summ">Рисует визуализацию поверх стороннего экрана блокировки</string>
 	<string name="system_visualizer_drawer_title">Отображать в панели уведомлений</string>
 	<string name="system_visualizer_drawer_summ">Рисует визуализацию также и в раскрытой панели уведомлений</string>
+	<string name="system_visualizer_animdur_title">Продолжительность анимации</string>
 	<string name="system_visualizer_transp_title">Уровень прозрачности</string>
 	<string name="system_visualizer_style_title">Стиль</string>
 	<string name="system_visualizer_glowlevel_title">Свечение</string>
@@ -614,6 +617,8 @@
 	<string name="system_visualizer_colorval_title">Задать цвет</string>
 	<string name="system_ignorecalls_title">Игнорировать звонки</string>
 	<string name="system_ignorecalls_summ">Предотвращает передачу аудио фокуса с выбранных приложения на входящий звонок, также перестаёт уведомлять их об изменениях состояния звонков</string>
+	<string name="system_nosilentvibrate_title">Отключить тестовую вибрацию</string>
+	<string name="system_nosilentvibrate_summ">Не вибрировать при переключении в режим "Без звука" и при включении вибрации в этом режиме</string>
 	<string name="system_vibration_title">Блокировка вибрации</string>
 	<string name="system_vibration_summ">Запрещает выбранным приложениям использовать вибрацию</string>
 	<string name="notification_volume">Громкость уведомлений</string>
@@ -626,6 +631,8 @@
 	<string name="system_blur_title">Размытие фона</string>
 	<string name="system_recents_blur_summ">Уровень размытия фона на экране последних приложений</string>
 	<string name="system_drawer_blur_summ">Уровень размытия фона в панели уведомлений</string>
+	<string name="system_drawer_hidebackground_title">Временно скрывать фон из темы</string>
+	<string name="system_drawer_hidebackground_summ">Скрывать фон во время изменения яркости</string>
 	<string name="system_drawer_opacity_title">Прозрачность фона из темы</string>
 	<string name="system_drawer_opacity_summ">Уровень прозрачности фона панели уведомлений из текущей темы</string>
 	<string name="system_securelock_title">Улучшенная блокировка</string>

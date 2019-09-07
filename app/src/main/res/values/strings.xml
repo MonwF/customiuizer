@@ -121,6 +121,8 @@
 	<string name="system_minbrightness_note">Slider will not correspond to system brightness slider on latest Android versions with non-linear brightness scale</string>
 	<string name="system_noducking_title">Disable ducking</string>
 	<string name="system_noducking_summ">Do not lower volume of currently playing music to play notification sound</string>
+	<string name="system_firstpress_title">Immediate volume adjustment</string>
+	<string name="system_firstpress_summ">Adjust media stream volume on first key press</string>
 	<string name="system_separatevolume_title">Separate volume controls</string>
 	<string name="system_separatevolume_summ">Allow to configure separate volume for rings/notifications/system sounds in Settings</string>
 	<string name="system_separatevolume_slider_title">Notification volume slider</string>
@@ -136,6 +138,7 @@
 	<string name="system_visualizer_custom_summ">Draw visualizer on top of custom lock screen</string>
 	<string name="system_visualizer_drawer_title">Show in notification drawer</string>
 	<string name="system_visualizer_drawer_summ">Additionally draw visualizer in an expanded notification drawer</string>
+	<string name="system_visualizer_animdur_title">Animation duration</string>
 	<string name="system_visualizer_transp_title">Transparency</string>
 	<string name="system_visualizer_style_title">Style</string>
 	<string name="system_visualizer_glowlevel_title">Glow</string>
@@ -143,6 +146,8 @@
 	<string name="system_visualizer_colorval_title">Select custom color</string>
 	<string name="system_ignorecalls_title">Ignore calls</string>
 	<string name="system_ignorecalls_summ">Prevent incoming calls from stealing audio focus when it\'s on selected apps and stop notifying them about call state changes</string>
+	<string name="system_nosilentvibrate_title">No test vibration</string>
+	<string name="system_nosilentvibrate_summ">Do not vibrate when switching ringer mode to silent or turning on vibration in this mode</string>
 	<string name="system_vibration_title">Block vibration</string>
 	<string name="system_vibration_summ">Prevent selected apps from using vibration</string>
 	<string name="notification_volume">Notification volume</string>
@@ -183,6 +188,8 @@
 	<string name="system_blur_title">Background blur</string>
 	<string name="system_recents_blur_summ">Background blur intensity in recent apps</string>
 	<string name="system_drawer_blur_summ">Background blur intensity in notification drawer</string>
+	<string name="system_drawer_hidebackground_title">Temporarily hide themed background</string>
+	<string name="system_drawer_hidebackground_summ">Hide background while brightness is being changed</string>
 	<string name="system_drawer_opacity_title">Themed background opacity</string>
 	<string name="system_drawer_opacity_summ">Opacity of a themed notification drawer background</string>
 	<string name="system_mods_lockscreen">Lock screen</string>

@@ -64,8 +64,8 @@ public class AudioVisualizer extends View {
 	private int[] mRainbowVertical = new int[mBandsNum];
 	private float[] mPositions = new float[mBandsNum];
 	private Path mLinePath = new Path();
-	private int sdk = Build.VERSION.SDK_INT;
 	public boolean showOnCustom;
+	private int animDur;
 	private int transparency;
 	public ColorMode colorMode;
 	public BarStyle barStyle;
@@ -196,12 +196,13 @@ public class AudioVisualizer extends View {
 		mPaint.setStrokeJoin(Paint.Join.MITER);
 		mPaint.setColor(mColor);
 
+		animDur = Helpers.getSharedIntPref(context, "pref_key_system_visualizer_animdur", 65);
 		mFFTPoints = new float[128];
 		mValueAnimators = new ValueAnimator[mBandsNum];
 		for (int i = 0; i < mBandsNum; i++) {
 			final int j = i * 4 + 3;
 			mValueAnimators[i] = new ValueAnimator();
-			mValueAnimators[i].setDuration(133);
+			mValueAnimators[i].setDuration(animDur);
 			mValueAnimators[i].addUpdateListener(animation -> {
 				mFFTPoints[j] = (float)animation.getAnimatedValue();
 				postInvalidate();
@@ -229,6 +230,11 @@ public class AudioVisualizer extends View {
 					switch (key) {
 						case "pref_key_system_visualizer_custom":
 							showOnCustom = Helpers.getSharedBoolPref(context, key, false);
+							break;
+						case "pref_key_system_visualizer_animdur":
+							animDur = Helpers.getSharedIntPref(context, key, 65);
+							for (int i = 0; i < mBandsNum; i++)
+							mValueAnimators[i].setDuration(animDur);
 							break;
 						case "pref_key_system_visualizer_transp":
 							transparency = Math.round(255f - 255f * Helpers.getSharedIntPref(context, key, 40) / 100f);
@@ -326,7 +332,7 @@ public class AudioVisualizer extends View {
 			return;
 		}
 
-		boolean drawAsLines = sdk >= Build.VERSION_CODES.P || (barStyle != BarStyle.DASHED && barStyle != BarStyle.CIRCLES);
+		boolean drawAsLines = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P || (barStyle != BarStyle.DASHED && barStyle != BarStyle.CIRCLES);
 		if (colorMode == ColorMode.RAINBOW_H) {
 			for (int i = 0; i < mBandsNum; i++) {
 				if (glowLevel > 0)
@@ -439,15 +445,15 @@ public class AudioVisualizer extends View {
 		if (mVisualizer != null) {
 			if (mVisualizerColorAnimator != null) mVisualizerColorAnimator.cancel();
 			mVisualizerColorAnimator = ObjectAnimator.ofArgb(mPaint, "color", mPaint.getColor(), mColor);
-			mVisualizerColorAnimator.setStartDelay(600);
-			mVisualizerColorAnimator.setDuration(1200);
+			mVisualizerColorAnimator.setStartDelay(Math.round(600 * animDur / 65f));
+			mVisualizerColorAnimator.setDuration(Math.round(1200 * animDur / 65f));
 			mVisualizerColorAnimator.start();
 
 			if (glowLevel > 0) {
 				if (mVisualizerGlowColorAnimator != null) mVisualizerGlowColorAnimator.cancel();
 				mVisualizerGlowColorAnimator = ObjectAnimator.ofArgb(mGlowPaint, "color", mGlowPaint.getColor(), mColor);
-				mVisualizerGlowColorAnimator.setStartDelay(600);
-				mVisualizerGlowColorAnimator.setDuration(1200);
+				mVisualizerGlowColorAnimator.setStartDelay(Math.round(600 * animDur / 65f));
+				mVisualizerGlowColorAnimator.setDuration(Math.round(1200 * animDur / 65f));
 				mVisualizerGlowColorAnimator.start();
 			}
 		} else {
@@ -541,7 +547,7 @@ public class AudioVisualizer extends View {
 			if (!mDisplaying) {
 				mDisplaying = true;
 				AsyncTask.execute(mLinkVisualizer);
-				animate().alpha(1.0f).withEndAction(null).setDuration(800);
+				animate().alpha(1.0f).withEndAction(null).setDuration(Math.round(800 * animDur / 65f));
 			}
 		} else {
 			if (mDisplaying) {
@@ -552,7 +558,7 @@ public class AudioVisualizer extends View {
 						public void run() {
 							AsyncTask.execute(mUnlinkVisualizer);
 						}
-					}).setDuration(600);
+					}).setDuration(Math.round(600 * animDur / 65f));
 				} else {
 					setAlpha(0.0f);
 					AsyncTask.execute(mUnlinkVisualizer);

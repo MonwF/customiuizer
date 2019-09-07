@@ -115,11 +115,10 @@ public class Helpers {
 	public static WakeLock mWakeLock;
 	public static boolean showNewMods = true;
 	public static final String[] newMods = new String[] {
-		"system_statusbaricons_volte",
-		"system_hideproxywarn",
-		"system_hidelsclock",
-		"system_uimode",
-		"various_callreminder_cat"
+		"system_nosilentvibrate",
+		"system_firstpress",
+		"system_visualizer_animdur",
+		"system_drawer_hidebackground"
 	};
 	public static final String[] shortcutIcons = new String[] {
 		"bankcard", "buscard", "calculator", "calendar", "contacts", "magazine", "music", "notes", "remotecontroller", "smarthome", "miuizer"
@@ -839,9 +838,12 @@ public class Helpers {
 				pattern = Helpers.getVibrationPattern(ownPattern);
 				break;
 		}
-		if (!Helpers.isNougat())
+		if (!Helpers.isNougat()) try {
 			vibrator.vibrate(VibrationEffect.createWaveform(pattern, -1));
-		else
+		} catch (Throwable t) {
+			//noinspection deprecation
+			vibrator.vibrate(200);
+		} else
 			vibrator.vibrate(200);
 	}
 

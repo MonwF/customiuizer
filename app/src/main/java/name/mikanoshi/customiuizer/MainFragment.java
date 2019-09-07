@@ -84,6 +84,7 @@ public class MainFragment extends PreferenceFragmentBase {
 	public Launcher prefLauncher = new Launcher();
 	public Controls prefControls = new Controls();
 	private Various prefVarious = new Various();
+	private View searchView = null;
 	private ListView listView = null;
 	private ListView resultView = null;
 	private LinearLayout search = null;
@@ -100,10 +101,13 @@ public class MainFragment extends PreferenceFragmentBase {
 
 		@Override
 		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-			if (getView() == null) return false;
+			if (getView() == null || searchView == null || listView == null) {
+				if (mode != null) mode.finish();
+				return false;
+			}
 
 			SearchActionMode samode = (SearchActionMode)mode;
-			samode.setAnchorView(getView().findViewById(R.id.am_search_view));
+			samode.setAnchorView(searchView);
 			samode.setAnimateView(listView);
 			samode.getSearchInput().setOnFocusChangeListener(new View.OnFocusChangeListener() {
 				@Override
@@ -447,6 +451,7 @@ public class MainFragment extends PreferenceFragmentBase {
 		//Helpers.removePref(this, "pref_key_miuizer_force_material", "pref_key_miuizer");
 
 		modsCat = null; markCat = null;
+		searchView = getView().findViewById(R.id.am_search_view);
 		listView = getView().findViewById(android.R.id.list);
 		listView.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
 			@Override
@@ -456,7 +461,11 @@ public class MainFragment extends PreferenceFragmentBase {
 				if (title.equals(getResources().getString(R.string.system_mods))) modsCat = child;
 				if (title.equals(getResources().getString(R.string.miuizer_show_newmods_title))) markCat = child;
 				if (modsCat != null && markCat != null) {
-					if (areGuidesCleared) showGuides();
+					if (areGuidesCleared) try {
+						showGuides();
+					} catch (Throwable t) {
+						t.printStackTrace();
+					}
 					listView.setOnHierarchyChangeListener(null);
 				}
 			}
@@ -466,24 +475,12 @@ public class MainFragment extends PreferenceFragmentBase {
 		});
 	}
 
-	@Override
-	public void onDestroyView() {
-		if (actionMode != null) {
-			actionMode.finish();
-			actionMode = null;
-		}
-		super.onDestroyView();
-	}
-
 	void showGuides() {
-		if (getView() == null) return;
+		if (getView() == null || getActivity() == null) return;
 		Button more = getView().findViewById(getResources().getIdentifier("more", "id", "miui"));
 		View search = getView().findViewById(android.R.id.inputArea);
 		View overlay = getActivity().findViewById(R.id.guide_overlay);
-		if (more == null || search == null || overlay == null) return;
-
-		if (Helpers.prefs.getBoolean("miuizer_guides_shown", false)) return;
-		Helpers.prefs.edit().putBoolean("miuizer_guides_shown", true).apply();
+		if (more == null || search == null || overlay == null || Helpers.prefs.getBoolean("miuizer_guides_shown", false)) return;
 
 		overlay.setBackgroundColor(Helpers.isNightMode(getActivity()) ? Color.argb(150, 0, 0, 0) : Color.argb(150, 255, 255, 255));
 		overlay.setVisibility(View.VISIBLE);
@@ -508,13 +505,7 @@ public class MainFragment extends PreferenceFragmentBase {
 			}
 		});
 
-//		GuidePopupView popupView = new GuidePopupView(getActivity());
-//		((ViewGroup)getView().findViewById(android.R.id.content)).addView(popupView);
-//		popupView.setArrowMode(GuidePopupView.ARROW_TOP_MODE);
-//		popupView.setAnchor(child);
-//		popupView.setOffset(300, 0);
-//		popupView.setGuidePopupWindow(guidePopup);
-//		popupView.animateToShow();
+		Helpers.prefs.edit().putBoolean("miuizer_guides_shown", true).apply();
 	}
 
 	@SuppressWarnings({"UnusedReturnValue", "SameParameterValue"})

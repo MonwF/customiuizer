@@ -29,6 +29,17 @@
 		miuizer:dynamic="true" />
 
 	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		android:key="pref_key_system_visualizer_animdur"
+		android:title="@string/system_visualizer_animdur_title"
+		android:dependency="pref_key_system_visualizer"
+		android:defaultValue="65"
+		miuizer:minValue="50"
+		miuizer:maxValue="200"
+		miuizer:stepValue="5"
+		miuizer:format="@string/format_d_ms"
+		miuizer:dynamic="true" />
+
+	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_visualizer_transp"
 		android:title="@string/system_visualizer_transp_title"
 		android:dependency="pref_key_system_visualizer"

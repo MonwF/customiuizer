@@ -103,11 +103,13 @@ public class ListPreferenceEx extends ListPreference implements PreferenceState 
 			@Override
 			public void onChildViewAdded(View parent, View child) {
 				if (child == null) return;
-				if (child instanceof CheckedTextView) {
+				if (child instanceof CheckedTextView) try {
 					if (((CheckedTextView)child).isChecked())
 						((CheckedTextView)child).setTextColor(res.getColor(res.getIdentifier("highlight_normal_light", "color", "miui"), getContext().getTheme()));
 					else if (Helpers.isNightMode(getContext()))
 						((CheckedTextView)child).setTextColor(res.getColor(res.getIdentifier("list_text_color_normal_dark", "color", "miui"), getContext().getTheme()));
+				} catch (Throwable t) {
+					t.printStackTrace();
 				}
 			}
 

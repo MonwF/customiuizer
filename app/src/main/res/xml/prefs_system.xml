@@ -104,6 +104,12 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_firstpress"
+			android:title="@string/system_firstpress_title"
+			android:summary="@string/system_firstpress_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_separatevolume"
 			android:title="@string/system_separatevolume_title"
 			android:summary="@string/system_separatevolume_summ"
@@ -159,6 +165,12 @@
 		android:key="pref_key_system_cat_vibration"
 		android:title="@string/system_mods_vibration"
 		miuizer:dynamic="true">
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_nosilentvibrate"
+			android:title="@string/system_nosilentvibrate_title"
+			android:summary="@string/system_nosilentvibrate_summ"
+			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_system_vibration"
@@ -359,6 +371,12 @@
 			miuizer:format="%d%%"
 			miuizer:offtext="@string/array_default"
 			miuizer:dynamic="true" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_drawer_hidebackground"
+			android:title="@string/system_drawer_hidebackground_title"
+			android:summary="@string/system_drawer_hidebackground_summ"
+			android:defaultValue="false" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 

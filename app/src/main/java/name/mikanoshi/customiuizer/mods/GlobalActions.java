@@ -743,6 +743,28 @@ public class GlobalActions {
 			}
 		});
 
+//		Helpers.hookAllMethods("com.android.server.policy.MiuiPhoneWindowManager", lpparam.classLoader, "init", new MethodHook() {
+//			@Override
+//			protected void after(MethodHookParam param) throws Throwable {
+//				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+//				IntentFilter intentfilter = new IntentFilter();
+//				intentfilter.addAction(ACTION_PREFIX + "OpenFingerprintActionDialog");
+//				final Object thisObject = param.thisObject;
+//				mContext.registerReceiver(new BroadcastReceiver() {
+//					public void onReceive(final Context context, Intent intent) {
+//						String action = intent.getAction();
+//						if (action == null) return;
+//
+//						try {
+//							XposedHelpers.callMethod(thisObject, "bringUpActionChooseDlg");
+//						} catch (Throwable t) {
+//							XposedBridge.log(t);
+//						}
+//					}
+//				}, intentfilter);
+//			}
+//		});
+
 //		Helpers.hookAllMethods("com.android.server.am.ActivityStackSupervisor", lpparam.classLoader, "getComponentRestrictionForCallingPackage", new MethodHook() {
 //			@Override
 //			protected void after(MethodHookParam param) throws Throwable {

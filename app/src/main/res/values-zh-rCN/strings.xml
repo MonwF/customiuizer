@@ -116,6 +116,8 @@
     <string name="system_minbrightness_note">在具有非线性亮度标度的最新Android版本上，滑块不会对应系统亮度滑块</string>
     <string name="system_noducking_title">禁用闪避</string>
     <string name="system_noducking_summ">播放通知声音时不降低当前播放音乐的音量</string>
+    <string name="system_firstpress_title">即时音量调整</string>
+    <string name="system_firstpress_summ">首次按键时调整媒体流音量</string>
     <string name="system_separatevolume_title">独立音量控制</string>
     <string name="system_separatevolume_summ">允许单独配置设置中的铃声/通知/系统声音的音量</string>
     <string name="system_separatevolume_slider_title">通知音量滑块</string>
@@ -131,6 +133,7 @@
     <string name="system_visualizer_custom_summ">在自定义锁屏顶部绘制可视化</string>
     <string name="system_visualizer_drawer_title">在通知抽屉中显示</string>
     <string name="system_visualizer_drawer_summ">展开通知抽屉时绘制可视化</string>
+    <string name="system_visualizer_animdur_title">动画时长</string>
     <string name="system_visualizer_transp_title">透明度</string>
     <string name="system_visualizer_style_title">样式</string>
     <string name="system_visualizer_glowlevel_title">发光</string>
@@ -138,6 +141,8 @@
     <string name="system_visualizer_colorval_title">选择自定义颜色</string>
     <string name="system_ignorecalls_title">忽略通话</string>
     <string name="system_ignorecalls_summ">阻止来电在所选应用上时窃取音频焦点，并停止通知其有关通话状态的变化</string>
+    <string name="system_nosilentvibrate_title">不振动测试</string>
+    <string name="system_nosilentvibrate_summ">将铃声模式切换为静音或在此模式下打开振动时不振动</string>
     <string name="system_vibration_title">阻止振动</string>
     <string name="system_vibration_summ">阻止已选应用使用振动</string>
     <string name="notification_volume">通知音量</string>
@@ -178,6 +183,8 @@
     <string name="system_blur_title">背景模糊</string>
     <string name="system_recents_blur_summ">最近应用的背景模糊度</string>
     <string name="system_drawer_blur_summ">通知抽屉的背景模糊度</string>
+    <string name="system_drawer_hidebackground_title">临时隐藏主题背景</string>
+    <string name="system_drawer_hidebackground_summ">更改亮度时隐藏背景</string>
     <string name="system_drawer_opacity_title">主题背景不透明度</string>
     <string name="system_drawer_opacity_summ">主题通知抽屉背景的不透明度</string>
     <string name="system_mods_lockscreen">锁屏</string>
@@ -216,7 +223,7 @@
     <string name="system_allrotations_title">所有旋转</string>
     <string name="system_allrotations_summ">允许所有屏幕旋转包括反向竖屏</string>
     <string name="system_orientationlock_title">方向锁定</string>
-    <string name="system_orientationlock_summ">添加快速设置瓷砖，可以竖屏或者横屏模式锁定方向</string>
+    <string name="system_orientationlock_summ">添加快速设置磁贴，可以竖屏或者横屏模式锁定方向</string>
     <string name="system_notifafterunlock_title">保留通知</string>
     <string name="system_notifafterunlock_summ">在锁屏上显示通知，如果通知已关闭，则再次打开</string>
     <string name="system_hidelsclock_title">隐藏顶部区域</string>
@@ -262,7 +269,7 @@
     <string name="system_qqsgridcolumns_note">横屏时将会额外增加一列。</string>
     <string name="system_qsnolabels_title">彻底移除标签</string>
     <string name="system_qshaptic_title">快速设置触觉反馈</string>
-    <string name="system_qshaptic_summ">点击快速设置瓷砖时振动</string>
+    <string name="system_qshaptic_summ">点击快速设置磁贴时振动</string>
     <string name="system_mods_other">其他</string>
     <string name="system_mods_animationscale">动画缩放</string>
     <string name="system_animationscale_window_title">窗口</string>
