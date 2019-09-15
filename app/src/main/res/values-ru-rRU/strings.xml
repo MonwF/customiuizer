@@ -18,13 +18,13 @@
 	<string name="restore_ok">Настройки успешно восстановлены!</string>
 
 	<string name="warning">Внимание!</string>
-	<string name="module_not_active">Модуль CustoMIUIzer не активен! Откройте Xposed Installer, активируйте модуль и перезагрузитесь.</string>
+	<string name="module_not_active">Модуль CustoMIUIzer не активен! Откройте приложение Xposed, активируйте модуль и перезагрузитесь.</string>
 	<string name="backup_restore_info">Ваши настройки были восстановлены из Google Cloud. Если мод Vol2wake был активен, отключите его и включите снова, после этого сделайте полную перезагрузку.</string>
 
 	<string name="mods">Моды</string>
 	<string name="mods_actions">Действия</string>
 
-	<string name="xposed_not_found">Не найден Xposed Framework</string>
+	<string name="xposed_not_found">Не найдено Xposed приложение</string>
 	<string name="xposed_not_found_explain">Похоже, что у Вас не установлен Xposed Framework.\n\nВсе моды работают только при наличии установленного Xposed Framework!</string>
 	<string name="xposed_not_reshooks">Модификация ресурсов невозможна</string>
 	<string name="xposed_not_reshooks_explain">Изменение ресурсов отключено в настройках Xposed Installer, модуль не будет активирован!</string>
@@ -161,6 +161,7 @@
 	<string name="array_rainbowh">Цвета радуги (горизонтально)</string>
 	<string name="array_rainbowv">Цвета радуги (вертикально)</string>
 	<string name="array_rainbow">Цвета радуги</string>
+	<string name="array_dynamic">Динамический цвет</string>
 	<string name="array_discrete">Дискретный</string>
 	<string name="array_gradual">Постепенный</string>
 	<string name="array_bars_solid">Сплошные полоски</string>
@@ -347,7 +348,7 @@
 	<string name="miuizer_show_settingsicon_summ">Показывать иконку в Настройках</string>
 	<string name="miuizer_forcelocale_title">Интерфейс на английском</string>
 	<string name="miuizer_forcelocale_summ">Всегда отображать интерфейс модуля на английском языке</string>
-	<string name="open_xposed">Открыть Xposed Installer</string>
+	<string name="open_xposed">Управление модулями Xposed</string>
 	<string name="search_input_description">Поиск</string>
 	<string name="wifi_networks">Wi-Fi сети</string>
 	<string name="wifi_location_title">Настройки местоположения</string>
@@ -422,6 +423,8 @@
 	<string name="system_epm_summ">Добавляет новые опции презагрузки в меню питания (Режим Fastboot, Режим Recovery, Быстрая перезагрузка, Перезапуск интерфейса, Перезапуск ланчера)</string>
 	<string name="system_downgrade_title">Разрешить понижение версии</string>
 	<string name="system_downgrade_summ">Делает возможным установку старой версии приложения поверх новой</string>
+	<string name="system_apksign_title">Отключить проверку подписи</string>
+	<string name="system_apksign_summ">Разрешает обновление приложений, даже если подпись в APK не совпадает с установленной</string>
 	<string name="system_magnifier_title">Лупа для текста</string>
 	<string name="system_magnifier_summ">Показывает увеличенный текст при передвижении указателя ввода и при выделении</string>
 	<string name="system_hideproxywarn_title">Скрыть предупреждение об отключенных касаниях</string>
@@ -587,6 +590,8 @@
 	<string name="system_nolightuponcharges_title">Не включать экран при зарядке</string>
 	<string name="system_nolightuponheadset_title">Не включать экран при подключении наушников</string>
 	<string name="system_nolightuponheadset_summ">Запрещает включение экрана при подключении наушников</string>
+	<string name="system_dimtime_title">Продолжительность затемнения</string>
+	<string name="system_dimtime_summ">Как долго экран должен быть затемнён перед автоматическим выключением</string>
 	<string name="system_minbrightness_title">Минимальная автояркость</string>
 	<string name="system_minbrightness_summ">Задаёт минимальное значение яркости в автоматическом режиме</string>
 	<string name="system_minbrightness_note">Слайдер не соответствует системному слайдеру громкости на последних версиях Андроида с нелинейной шкалой яркости</string>

@@ -113,6 +113,8 @@ Türkçe çeviri için; Buğra Çağlar\'a teşekkürler.</string>
     <string name="system_nolightuponcharges_summ">Şarj cihazı takıldığında veya çıkarıldığında ekran uyandırılmaz.</string>
     <string name="system_nolightuponheadset_title">Kulaklık</string>
     <string name="system_nolightuponheadset_summ">Kulaklık takıldığında veya çıkarıldığında ekran uyandırılmaz.</string>
+    <string name="system_dimtime_title">Karartma Süresi</string>
+    <string name="system_dimtime_summ">Ekran kilitlenmeden önceki karartmanın süresini belirler.</string>
     <string name="system_minbrightness_title">Otomatik Parlaklık (Minimum)</string>
     <string name="system_minbrightness_summ">Otomatik Parlaklık aktifken minimum parlaklık seviyesini belirler.</string>
     <string name="system_minbrightness_note">Değerler doğrusal parlaklık değerine sahip değildir. Android sürümüne göre farklılıklar gösterebilir.</string>
@@ -202,6 +204,8 @@ Türkçe çeviri için; Buğra Çağlar\'a teşekkürler.</string>
     <string name="system_epm_summ">Güç Menüsü\'ne daha fazla seçenek ekler (FastBoot, Kurtarma, Hızlı, Sistem UI, Başlatıcı).</string>
     <string name="system_downgrade_title">Uygulama Versiyonu</string>
     <string name="system_downgrade_summ">Uygulamanın eski versiyonunu yükleyebilme imkanı sağlar.</string>
+    <string name="system_apksign_title">İmza Doğrulaması</string>
+    <string name="system_apksign_summ">APK imzası yüklü olan uygulamadan farklı dahi olsa değiştirilmesine izin verir.</string>
     <string name="system_magnifier_title">Büyüteç (Metin)</string>
     <string name="system_magnifier_summ">Metne basılığı tuttuğunuz zaman Büyüteç açılır ve daha kolay seçim yaparsınız.</string>
     <string name="system_hideproxywarn_title">Uyarı</string>
@@ -508,6 +512,7 @@ Türkçe çeviri için; Buğra Çağlar\'a teşekkürler.</string>
     <string name="array_rainbowh">Gökkuşağı Renkleri (Yatay)</string>
     <string name="array_rainbowv">Gökkuşağı Renkleri (Dikey)</string>
     <string name="array_rainbow">Gökkuşağı</string>
+    <string name="array_dynamic">Dinamik renk</string>
     <string name="array_discrete">Ayrık</string>
     <string name="array_gradual">Kademeli</string>
     <string name="array_bars_solid">Çubuk (Dolu)</string>

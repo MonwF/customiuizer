@@ -57,6 +57,7 @@ public class AudioVisualizer extends View {
 	private boolean mDisplaying;
 	private int mOpaqueColor;
 	private int mColor;
+	private Handler mHandler;
 	private Bitmap mArt;
 	private Bitmap mProcessedArt;
 	private final int mBandsNum = 31;
@@ -73,15 +74,29 @@ public class AudioVisualizer extends View {
 	public int customColor;
 	public boolean showInDrawer;
 
-	AccelerateInterpolator accel = new AccelerateInterpolator();
-	DecelerateInterpolator decel = new DecelerateInterpolator();
+	private final AccelerateInterpolator accel = new AccelerateInterpolator();
+	private final DecelerateInterpolator decel = new DecelerateInterpolator();
+	private final int randomizeInterval = 10000;
+	private final Runnable randomizeColor = new Runnable() {
+		@Override
+		public void run() {
+			if (colorMode != ColorMode.DYNAMIC) return;
+			setColor(getRandomColor());
+			mHandler.removeCallbacks(randomizeColor);
+			mHandler.postDelayed(randomizeColor, randomizeInterval);
+		}
+	};
+
+	int getRandomColor() {
+		return Color.HSVToColor(new float[] {(float)(Math.random() * 360f), (float)(0.5f + Math.random() * 0.5f), (float)(0.75f + Math.random() * 0.25f) });
+	}
 
 	enum BarStyle {
 		DUMMY, SOLID, SOLID_ROUNDED, DASHED, CIRCLES, LINE
 	}
 
 	enum ColorMode {
-		DUMMY, MATCH, STATIC, RAINBOW_H, RAINBOW_V
+		DUMMY, MATCH, STATIC, RAINBOW_H, RAINBOW_V, DYNAMIC
 	}
 
 	public static boolean allZeros(byte[] array) {
@@ -221,8 +236,8 @@ public class AudioVisualizer extends View {
 		updateGlowPaint();
 		updateRainbowColors();
 
-		Handler handler = new Handler(context.getMainLooper());
-		new Helpers.SharedPrefObserver(context, handler) {
+		mHandler = new Handler(context.getMainLooper());
+		new Helpers.SharedPrefObserver(context, mHandler) {
 			@Override
 			public void onChange(Uri uri) {
 				try {
@@ -466,6 +481,8 @@ public class AudioVisualizer extends View {
 		if (!isMusicPlaying) return;
 		if (colorMode == ColorMode.MATCH)
 			setBitmap();
+		else if (colorMode == ColorMode.DYNAMIC)
+			setColor(getRandomColor());
 		else if (colorMode == ColorMode.STATIC)
 			setColor(customColor);
 		else
@@ -547,11 +564,14 @@ public class AudioVisualizer extends View {
 			if (!mDisplaying) {
 				mDisplaying = true;
 				AsyncTask.execute(mLinkVisualizer);
+				mHandler.removeCallbacks(randomizeColor);
+				mHandler.postDelayed(randomizeColor, randomizeInterval);
 				animate().alpha(1.0f).withEndAction(null).setDuration(Math.round(800 * animDur / 65f));
 			}
 		} else {
 			if (mDisplaying) {
 				mDisplaying = false;
+				mHandler.removeCallbacks(randomizeColor);
 				if (isOnKeyguard) {
 					animate().alpha(0.0f).withEndAction(new Runnable() {
 						@Override

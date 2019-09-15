@@ -116,6 +116,8 @@
 	<string name="system_nolightuponcharges_summ">Do not turn screen on when you connect or disconnect a charger</string>
 	<string name="system_nolightuponheadset_title">No screen light up on headset connection</string>
 	<string name="system_nolightuponheadset_summ">Do not turn screen on when you connect a headset</string>
+	<string name="system_dimtime_title">Dim duration</string>
+	<string name="system_dimtime_summ">How long screen should remain dimmed before turning off automatically</string>
 	<string name="system_minbrightness_title">Minimum auto brightness</string>
 	<string name="system_minbrightness_summ">Set the minimum brightness value in automatic mode</string>
 	<string name="system_minbrightness_note">Slider will not correspond to system brightness slider on latest Android versions with non-linear brightness scale</string>
@@ -205,6 +207,8 @@
 	<string name="system_epm_summ">Add new restart options to power menu (Fastboot mode, Recovery mode, Soft reboot, Restart System UI, Restart Launcher)</string>
 	<string name="system_downgrade_title">Allow downgrade</string>
 	<string name="system_downgrade_summ">Make installing older app version on top of a newer one possible</string>
+	<string name="system_apksign_title">Disable signature verification</string>
+	<string name="system_apksign_summ">Allow app updating even when APK signature differs from installed one</string>
 	<string name="system_magnifier_title">Text magnifier</string>
 	<string name="system_magnifier_summ">Display magnified text when moving an input cursor or making a selection</string>
 	<string name="system_hideproxywarn_title">Hide warning about disabled touches</string>
@@ -521,6 +525,7 @@
 	<string name="array_rainbowh">Rainbow colors (horizontal)</string>
 	<string name="array_rainbowv">Rainbow colors (vertical)</string>
 	<string name="array_rainbow">Rainbow</string>
+	<string name="array_dynamic">Dynamic color</string>
 	<string name="array_discrete">Discrete</string>
 	<string name="array_gradual">Gradual</string>
 	<string name="array_bars_solid">Solid bars</string>
@@ -641,7 +646,7 @@
 	<string name="sdk_failed">Cannot initialize MIUI SDK.\nNot a Xiaomi device?</string>
 	<string name="notselected">Not selected</string>
 	<string name="warning">Warning!</string>
-	<string name="open_xposed">Open Xposed Installer</string>
+	<string name="open_xposed">Manage Xposed modules</string>
 	<string name="soft_reboot">Soft reboot</string>
 	<string name="soft_reboot_ask">Perform soft reboot now?</string>
 	<string name="restart_launcher">Restart launcher</string>
@@ -683,11 +688,11 @@
 	<string name="credentials_unlock">Unlock credentials</string>
 	<string name="credentials_success">Credentials unlocked!</string>
 
-	<string name="xposed_not_found">Xposed Installer not found</string>
+	<string name="xposed_not_found">Xposed app not found</string>
 	<string name="xposed_not_found_explain">It looks like you don\'t have Xposed Framework Installed.\n\nPlease note that mods will only work with Xposed!</string>
 	<string name="xposed_not_reshooks">Resource hooks are disabled</string>
 	<string name="xposed_not_reshooks_explain">You have resource hooks disabled in Xposed Installer settings, module will not be activated!</string>
-	<string name="module_not_active">CustoMIUIzer module is not active!\nOpen Xposed Installer, activate module and reboot.</string>
+	<string name="module_not_active">CustoMIUIzer module is not active!\nOpen Xposed app, activate module and reboot.</string>
 	<string name="no_browser">Browser app is required to open URLs</string>
 	<string name="okay">Okay</string>
 	<string name="cancel">Cancel</string>

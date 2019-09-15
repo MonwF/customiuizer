@@ -1,3 +1,13 @@
+1.7.5
+[New] Disable APK signature verification when app is being updated
+[New] Dim duration before automatic screen off
+[Improved][Music visualizer] Dynamic color option (changes color to a random one every 10 seconds)
+[Fixed][Custom app titles] Compatibility with latest launcher alpha versions
+[Fixed][Default USB configuration] Incorrect default value
+[Fixed][Minimum auto brightness] Compatibility with some ROMs
+[Fixed][Extended notification menu] Compatibility with some ROMs
+Detect TaiChi app and don't complain about Xposed not being installed
+
 1.7.4
 [New] Adjust media stream volume on first key press
 [New] Disable test vibration when switching ringer mode to silent or turning on vibration in this mode

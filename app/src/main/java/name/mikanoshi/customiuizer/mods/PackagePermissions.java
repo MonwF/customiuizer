@@ -116,40 +116,49 @@ public class PackagePermissions {
 		);
 
 		// Make module appear as system app
-		Helpers.hookAllMethods("com.android.server.pm.PackageManagerService", lpparam.classLoader, "queryIntentActivitiesInternal",
-			new MethodHook() {
-				@Override
-				@SuppressWarnings("unchecked")
-				protected void after(MethodHookParam param) throws Throwable {
-					List<ResolveInfo> infos = (List<ResolveInfo>)param.getResult();
-					if (infos != null)
-					for (ResolveInfo info: infos)
-					if (info != null && info.activityInfo != null && info.activityInfo.packageName.equalsIgnoreCase(Helpers.modulePkg))
-					XposedHelpers.setObjectField(info, "system", true);
-				}
+		Helpers.hookAllMethods("com.android.server.pm.PackageManagerService", lpparam.classLoader, "queryIntentActivitiesInternal", new MethodHook() {
+			@Override
+			@SuppressWarnings("unchecked")
+			protected void after(MethodHookParam param) throws Throwable {
+				List<ResolveInfo> infos = (List<ResolveInfo>)param.getResult();
+				if (infos != null)
+				for (ResolveInfo info: infos)
+				if (info != null && info.activityInfo != null && info.activityInfo.packageName.equalsIgnoreCase(Helpers.modulePkg))
+				XposedHelpers.setObjectField(info, "system", true);
 			}
-		);
+		});
 
-		Helpers.findAndHookMethod("android.content.pm.ApplicationInfo", lpparam.classLoader, "isSystemApp",
-			new MethodHook() {
-				@Override
-				protected void after(MethodHookParam param) throws Throwable {
-					ApplicationInfo ai = (ApplicationInfo)param.thisObject;
-					if (ai != null && ai.packageName.equalsIgnoreCase(Helpers.modulePkg)) param.setResult(true);
-				}
+		Helpers.findAndHookMethod("android.content.pm.ApplicationInfo", lpparam.classLoader, "isSystemApp", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				ApplicationInfo ai = (ApplicationInfo)param.thisObject;
+				if (ai != null && ai.packageName.equalsIgnoreCase(Helpers.modulePkg)) param.setResult(true);
 			}
-		);
+		});
 
 		//noinspection ResultOfMethodCallIgnored
-		Helpers.findAndHookMethodSilently("android.content.pm.ApplicationInfo", lpparam.classLoader, "isSignedWithPlatformKey",
-			new MethodHook() {
-				@Override
-				protected void after(MethodHookParam param) throws Throwable {
-					ApplicationInfo ai = (ApplicationInfo)param.thisObject;
-					if (ai != null && ai.packageName.equalsIgnoreCase(Helpers.modulePkg)) param.setResult(true);
-				}
+		Helpers.findAndHookMethodSilently("android.content.pm.ApplicationInfo", lpparam.classLoader, "isSignedWithPlatformKey", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				ApplicationInfo ai = (ApplicationInfo)param.thisObject;
+				if (ai != null && ai.packageName.equalsIgnoreCase(Helpers.modulePkg)) param.setResult(true);
 			}
-		);
+		});
+
+		// Do not restrict background activity
+		Helpers.hookAllMethods("com.android.server.am.ActivityManagerService", lpparam.classLoader, "appRestrictedInBackgroundLocked", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				if (Helpers.modulePkg.equals(param.args[1])) param.setResult(0);
+			}
+		});
+
+		Helpers.hookAllMethods("com.android.server.am.ActivityManagerService", lpparam.classLoader, "appServicesRestrictedInBackgroundLocked", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				if (Helpers.modulePkg.equals(param.args[1])) param.setResult(0);
+			}
+		});
 
 		try {
 			Class<?> dpgpiClass = findClass("com.android.server.pm.DefaultPermissionGrantPolicyInjector", lpparam.classLoader);

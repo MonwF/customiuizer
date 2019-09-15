@@ -111,6 +111,8 @@
     <string name="system_nolightuponcharges_summ">当您连接或者断开充电器时不打开屏幕</string>
     <string name="system_nolightuponheadset_title">连接耳机时不亮起屏幕</string>
     <string name="system_nolightuponheadset_summ">当您连接耳机时不打开屏幕</string>
+    <string name="system_dimtime_title">暗屏时长</string>
+    <string name="system_dimtime_summ">自动灭屏前保持暗屏的时间</string>
     <string name="system_minbrightness_title">自动亮度最小值</string>
     <string name="system_minbrightness_summ">设置自动模式下的最小亮度值</string>
     <string name="system_minbrightness_note">在具有非线性亮度标度的最新Android版本上，滑块不会对应系统亮度滑块</string>
@@ -200,6 +202,8 @@
     <string name="system_epm_summ">新增以下重启选项到电源菜单(引导模式、恢复模式、软重启、重启系统界面、重启启动器)</string>
     <string name="system_downgrade_title">允许降级</string>
     <string name="system_downgrade_summ">可以在新版本应用上安装旧版本应用</string>
+    <string name="system_apksign_title">禁用签名认证</string>
+    <string name="system_apksign_summ">APK签名与已安装应用不同时允许对其进行更新</string>
     <string name="system_magnifier_title">文本放大镜</string>
     <string name="system_magnifier_summ">移动光标或进行选择时显示文本放大镜</string>
     <string name="system_hideproxywarn_title">隐藏禁用触摸的警告</string>
@@ -506,6 +510,7 @@
     <string name="array_rainbowh">彩虹色(水平)</string>
     <string name="array_rainbowv">彩虹色(垂直)</string>
     <string name="array_rainbow">彩虹</string>
+    <string name="array_dynamic">动态颜色</string>
     <string name="array_discrete">分离</string>
     <string name="array_gradual">缓慢</string>
     <string name="array_bars_solid">实心</string>

@@ -1073,22 +1073,8 @@ public class System {
 	}
 
 	public static void MinAutoBrightnessHook(LoadPackageParam lpparam) {
-		if (Helpers.isNougat()) {
-			Helpers.findAndHookMethod("com.android.server.display.AutomaticBrightnessController", lpparam.classLoader, "updateAutoBrightness", boolean.class, new MethodHook() {
-				@Override
-				protected void after(final MethodHookParam param) throws Throwable {
-					int val = XposedHelpers.getIntField(param.thisObject, "mScreenAutoBrightness");
-					int newVal = Math.max(val, MainModule.mPrefs.getInt("system_minbrightness", 44));
-					if (val >= 0 && val != newVal) {
-						XposedHelpers.setIntField(param.thisObject, "mScreenAutoBrightness", newVal);
-						if ((boolean)param.args[0]) {
-							Object mCallbacks = XposedHelpers.getObjectField(param.thisObject, "mCallbacks");
-							XposedHelpers.callMethod(mCallbacks, "updateBrightness");
-						}
-					}
-				}
-			});
-		} else {
+		Class<?> bmsCls = findClassIfExists("com.android.server.display.BrightnessMappingStrategy", lpparam.classLoader);
+		if (bmsCls != null) {
 			Helpers.hookAllConstructors("com.android.server.display.BrightnessMappingStrategy$SimpleMappingStrategy", lpparam.classLoader, new MethodHook() {
 				@Override
 				protected void before(MethodHookParam param) throws Throwable {
@@ -1111,11 +1097,27 @@ public class System {
 				}
 			});
 
+			if (!Helpers.isNougat())
 			Helpers.hookAllMethods("com.android.server.display.AutomaticBrightnessControllerInjector", lpparam.classLoader, "changeBrightness", new MethodHook() {
 				@Override
 				protected void after(final MethodHookParam param) throws Throwable {
 					int val = (int)param.getResult();
 					if (val >= 0) param.setResult(Math.max(val, MainModule.mPrefs.getInt("system_minbrightness", 44)));
+				}
+			});
+		} else {
+			Helpers.findAndHookMethod("com.android.server.display.AutomaticBrightnessController", lpparam.classLoader, "updateAutoBrightness", boolean.class, new MethodHook() {
+				@Override
+				protected void after(final MethodHookParam param) throws Throwable {
+					int val = XposedHelpers.getIntField(param.thisObject, "mScreenAutoBrightness");
+					int newVal = Math.max(val, MainModule.mPrefs.getInt("system_minbrightness", 44));
+					if (val >= 0 && val != newVal) {
+						XposedHelpers.setIntField(param.thisObject, "mScreenAutoBrightness", newVal);
+						if ((boolean)param.args[0]) {
+							Object mCallbacks = XposedHelpers.getObjectField(param.thisObject, "mCallbacks");
+							XposedHelpers.callMethod(mCallbacks, "updateBrightness");
+						}
+					}
 				}
 			});
 		}
@@ -1307,14 +1309,20 @@ public class System {
 				String tx = hideLow && txSpeed < lowLevel ? "" : humanReadableByteCount(mContext, txSpeed) + txarrow;
 				String rx = hideLow && rxSpeed < lowLevel ? "" : humanReadableByteCount(mContext, rxSpeed) + rxarrow;
 				param.args[0] = tx + "\n" + rx;
-				try {
+				if (reduceVis) try {
 					CopyOnWriteArrayList mViewList = (CopyOnWriteArrayList)XposedHelpers.getObjectField(param.thisObject, "mViewList");
 					for (Object tv: mViewList)
-					if (tv != null) ((TextView)tv).setAlpha(reduceVis && rxSpeed == 0 && txSpeed == 0 ? 0.3f : 1.0f);
-				} catch (Throwable t) {
-					ArrayList<?> sViewList = (ArrayList<?>)XposedHelpers.getObjectField(param.thisObject, "sViewList");
-					for (Object tv: sViewList)
-					if (tv != null) ((TextView)tv).setAlpha(reduceVis && rxSpeed == 0 && txSpeed == 0 ? 0.3f : 1.0f);
+					if (tv != null) ((TextView)tv).setAlpha(rxSpeed == 0 && txSpeed == 0 ? 0.3f : 1.0f);
+				} catch (Throwable t1) {
+					try {
+						ArrayList mViewList = (ArrayList)XposedHelpers.getObjectField(param.thisObject, "mViewList");
+						for (Object tv: mViewList)
+						if (tv != null) ((TextView)tv).setAlpha(rxSpeed == 0 && txSpeed == 0 ? 0.3f : 1.0f);
+					} catch (Throwable t2) {
+						ArrayList<?> sViewList = (ArrayList<?>)XposedHelpers.getObjectField(param.thisObject, "sViewList");
+						for (Object tv : sViewList)
+						if (tv != null) ((TextView)tv).setAlpha(rxSpeed == 0 && txSpeed == 0 ? 0.3f : 1.0f);
+					}
 				}
 				//Helpers.log("DetailedNetSpeedHook", "setTextToViewList: " + tx + ", " + rx);
 				//Helpers.log("DetailedNetSpeedHook", "class: " + param.thisObject.getClass().getSimpleName());
@@ -1706,10 +1714,43 @@ public class System {
 
 				mMenuItems.add(infoBtn);
 				mMenuItems.add(forceCloseBtn);
+				XposedHelpers.setObjectField(param.thisObject, "mMenuItems", mMenuItems);
 				FrameLayout mMenuContainer = (FrameLayout)XposedHelpers.getObjectField(param.thisObject, "mMenuContainer");
 				XposedHelpers.callMethod(param.thisObject, "addMenuView", infoBtn, mMenuContainer);
 				XposedHelpers.callMethod(param.thisObject, "addMenuView", forceCloseBtn, mMenuContainer);
 				//XposedHelpers.callMethod(param.thisObject, "setMenuLocation");
+			}
+		});
+
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.NotificationMenuRow", lpparam.classLoader, "onClick", View.class, new MethodHook() {
+			@Override
+			protected void before(final MethodHookParam param) throws Throwable {
+				View view = (View)param.args[0];
+				if (view == null || view.getTag() == null || !(view.getTag() instanceof Integer)) return;
+
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				Object mParent = XposedHelpers.getObjectField(param.thisObject, "mParent");
+				Object notification = XposedHelpers.callMethod(mParent, "getStatusBarNotification");
+				String pkgName = (String)XposedHelpers.callMethod(notification, "getPackageName");
+
+				int iconResId = (int)view.getTag();
+				if (iconResId == appInfoIconResId) {
+					param.setResult(null);
+					Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+					intent.setData(Uri.parse("package:" + pkgName));
+					mContext.startActivity(intent);
+					mContext.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+				} else if (iconResId == forceCloseIconResId) {
+					param.setResult(null);
+					ActivityManager am = (ActivityManager)mContext.getSystemService(Context.ACTIVITY_SERVICE);
+					XposedHelpers.callMethod(am, "forceStopPackage", pkgName);
+					CharSequence appName = pkgName;
+					try {
+						appName = mContext.getPackageManager().getApplicationLabel(mContext.getPackageManager().getApplicationInfo(pkgName, 0));
+					} catch (Throwable t) {}
+					Toast.makeText(mContext, Helpers.getModuleRes(mContext).getString(R.string.force_closed, appName), Toast.LENGTH_SHORT).show();
+				}
 			}
 		});
 
@@ -1750,37 +1791,6 @@ public class System {
 							row++;
 						}
 					}
-				}
-			}
-		});
-
-		Helpers.hookAllMethods("com.android.systemui.statusbar.stack.NotificationStackScrollLayout", lpparam.classLoader, "onMenuClicked", new MethodHook() {
-			@Override
-			protected void before(final MethodHookParam param) throws Throwable {
-				if (param.args[0] == null) return;
-				Object menuItem = param.args[3];
-				String desc = (String)XposedHelpers.callMethod(menuItem, "getContentDescription");
-				if ("Application info".equals(desc)) {
-					param.setResult(null);
-					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-					Object notification = XposedHelpers.getObjectField(XposedHelpers.callMethod(param.args[0], "getEntry"), "notification");
-					String pkgName = (String)XposedHelpers.callMethod(notification, "getPackageName");
-					Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-					intent.setData(Uri.parse("package:" + pkgName));
-					mContext.startActivity(intent);
-					mContext.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
-				} else if ("Force close".equals(desc)) {
-					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-					ActivityManager am = (ActivityManager)mContext.getSystemService(Context.ACTIVITY_SERVICE);
-					Object notification = XposedHelpers.getObjectField(XposedHelpers.callMethod(param.args[0], "getEntry"), "notification");
-					String pkgName = (String)XposedHelpers.callMethod(notification, "getPackageName");
-					XposedHelpers.callMethod(am, "forceStopPackage", pkgName);
-					CharSequence appName = pkgName;
-					try {
-						appName = mContext.getPackageManager().getApplicationLabel(mContext.getPackageManager().getApplicationInfo(pkgName, 0));
-					} catch (Throwable t) {}
-					Toast.makeText(mContext, Helpers.getModuleRes(mContext).getString(R.string.force_closed, appName), Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
@@ -2117,8 +2127,11 @@ public class System {
 					ActivityManager am = (ActivityManager)mContext.getSystemService(Context.ACTIVITY_SERVICE);
 					Intent intent = new Intent(Intent.ACTION_MAIN);
 					intent.addCategory(Intent.CATEGORY_HOME);
-					String pkgName = mContext.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY).activityInfo.packageName;
-					if (pkgName != null) XposedHelpers.callMethod(am, "forceStopPackage", pkgName);
+					ResolveInfo launcherInfo = mContext.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+					if (launcherInfo != null) {
+						String pkgName = launcherInfo.activityInfo.packageName;
+						if (pkgName != null) XposedHelpers.callMethod(am, "forceStopPackage", pkgName);
+					}
 					custom = true;
 				}
 
@@ -2917,7 +2930,7 @@ public class System {
 								int mPlugType = XposedHelpers.getIntField(param.thisObject, "mPlugType");
 								if (mPlugType != BatteryManager.BATTERY_PLUGGED_USB) return;
 								String func = MainModule.mPrefs.getString("system_defaultusb", "none");
-								if ("none".equals(func)) return;
+								if ("none".equals(func) || "1".equals(func)) return;
 								UsbManager usbMgr = (UsbManager)mContext.getSystemService(Context.USB_SERVICE);
 								if ((boolean)XposedHelpers.callMethod(usbMgr, "isFunctionEnabled", func)) return;
 								XposedHelpers.callMethod(usbMgr, "setCurrentFunction", func, MainModule.mPrefs.getBoolean("system_defaultusb_unsecure"));
@@ -3374,6 +3387,69 @@ public class System {
 		miuizerShortcutResId = MainModule.resHooks.addResource("keyguard_bottom_miuizer_shortcut_img", R.drawable.keyguard_bottom_miuizer_shortcut_img);
 	}
 
+	private static boolean modifyCameraImage(Context mContext, View mKeyguardRightView, boolean mDarkMode) {
+		if (MainModule.mPrefs.getBoolean("system_lockscreenshortcuts_right_off")) {
+			restoreCameraImage(mKeyguardRightView);
+			return false;
+		}
+
+		final String key = "pref_key_system_lockscreenshortcuts_right";
+
+		int action = Helpers.getSharedIntPref(mContext, key + "_action", 1);
+		if (action <= 1) {
+			restoreCameraImage(mKeyguardRightView);
+			return false;
+		}
+
+		String str = Helpers.getActionName(mContext, key);
+		if (str == null) {
+			restoreCameraImage(mKeyguardRightView);
+			return false;
+		}
+
+		Drawable icon = Helpers.getActionImage(mContext, key);
+		mKeyguardRightView.setBackgroundColor(Color.TRANSPARENT);
+		mKeyguardRightView.setForeground(icon);
+		mKeyguardRightView.setForegroundGravity(Gravity.CENTER);
+
+		float density = mContext.getResources().getDisplayMetrics().density;
+		int size = Math.round(mContext.getResources().getConfiguration().smallestScreenWidthDp * density);
+
+		Bitmap bmp = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(bmp);
+		Paint paint = new Paint();
+		paint.setAntiAlias(true);
+		paint.setShadowLayer(2 * density, 0, 0, mDarkMode ? Color.argb(90, 255, 255, 255) : Color.argb(90, 0, 0, 0));
+		paint.setTextSize(20 * density);
+		paint.setStyle(Paint.Style.STROKE);
+		paint.setStrokeWidth(density);
+		paint.setColor(mDarkMode ? Color.WHITE : Color.BLACK);
+		paint.setAlpha(90);
+
+		Rect bounds = new Rect();
+		paint.getTextBounds(str, 0, str.length(), bounds);
+		float x = size / 2f - bounds.width() / 2f;
+		float y = size / 2f + bounds.height() / 2f + (icon == null ? 0 : icon.getIntrinsicHeight() / 2f + 30 * density);
+		canvas.drawText(str, x, y, paint);
+		paint.setStyle(Paint.Style.FILL);
+//		paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+		paint.clearShadowLayer();
+		paint.setColor(mDarkMode ? Color.BLACK : Color.WHITE);
+		paint.setAlpha(mDarkMode ? 160 : 230);
+		canvas.drawText(str, x, y, paint);
+
+		BitmapDrawable bmpDrawable = new BitmapDrawable(mContext.getResources(), bmp);
+		if (mKeyguardRightView instanceof ImageView) {
+			((ImageView)mKeyguardRightView).setScaleType(ImageView.ScaleType.CENTER);
+			((ImageView)mKeyguardRightView).setImageDrawable(bmpDrawable);
+		} else {
+			bmpDrawable.setGravity(Gravity.CENTER);
+			mKeyguardRightView.setBackground(bmpDrawable);
+		}
+
+		return true;
+	}
+
 	private static void restoreCameraImage(View mKeyguardRightView) {
 		mKeyguardRightView.setBackgroundColor(Color.BLACK);
 		mKeyguardRightView.setForeground(null);
@@ -3435,90 +3511,50 @@ public class System {
 			}
 		});
 
-		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, "updateWallpaper", boolean.class, new MethodHook() {
+		if (!Helpers.findAndHookMethodSilently("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, "updateWallpaper", boolean.class, new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				if ((boolean)param.args[0]) try {
 					XposedHelpers.callMethod(param.thisObject, "setCameraImage", false);
-				} catch (Throwable t) {
+				} catch (Throwable t1) {
 					XposedHelpers.callMethod(param.thisObject, "setCameraImage");
 				}
 			}
+		})) Helpers.hookAllMethods("com.android.keyguard.KeyguardCameraView", lpparam.classLoader, "setDarkMode", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				XposedHelpers.callMethod(param.thisObject, "updatePreViewBackground");
+			}
 		});
 
-		Helpers.hookAllMethods("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, "setCameraImage", new MethodHook() {
+		if (!Helpers.hookAllMethodsSilently("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, "setCameraImage", new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
-				View mKeyguardRightView = (View)XposedHelpers.getObjectField(param.thisObject, "mKeyguardRightView");
-
-				if (MainModule.mPrefs.getBoolean("system_lockscreenshortcuts_right_off")) {
-					restoreCameraImage(mKeyguardRightView);
-					return;
-				}
-
-				final String key = "pref_key_system_lockscreenshortcuts_right";
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-
-				int action = Helpers.getSharedIntPref(mContext, key + "_action", 1);
-				if (action <= 1) {
-					restoreCameraImage(mKeyguardRightView);
-					return;
-				}
-
-				String str = Helpers.getActionName(mContext, key);
-				if (str == null) {
-					restoreCameraImage(mKeyguardRightView);
-					return;
-				}
-
-				Drawable icon = Helpers.getActionImage(mContext, key);
-				mKeyguardRightView.setBackgroundColor(Color.TRANSPARENT);
-				mKeyguardRightView.setForeground(icon);
-				mKeyguardRightView.setForegroundGravity(Gravity.CENTER);
-
+				View mView = (View)XposedHelpers.getObjectField(param.thisObject, "mKeyguardRightView");
 				Object mUpdateMonitor = XposedHelpers.getObjectField(param.thisObject, "mUpdateMonitor");
 				boolean mDarkMode = (boolean)XposedHelpers.callMethod(mUpdateMonitor, "isLightWallpaperBottom");
-
-				float density = mContext.getResources().getDisplayMetrics().density;
-				int size = Math.round(mContext.getResources().getConfiguration().smallestScreenWidthDp * density);
-
-				Bitmap bmp = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
-				Canvas canvas = new Canvas(bmp);
-				Paint paint = new Paint();
-				paint.setAntiAlias(true);
-				paint.setShadowLayer(2 * density, 0, 0, mDarkMode ? Color.argb(90, 255, 255, 255): Color.argb(90, 0, 0, 0));
-				paint.setTextSize(20 * density);
-				paint.setStyle(Paint.Style.STROKE);
-				paint.setStrokeWidth(density);
-				paint.setColor(mDarkMode ? Color.WHITE : Color.BLACK);
-				paint.setAlpha(90);
-
-				Rect bounds = new Rect();
-				paint.getTextBounds(str, 0, str.length(), bounds);
-				float x = size / 2f - bounds.width() / 2f;
-				float y = size / 2f + bounds.height() / 2f + (icon == null ? 0 : icon.getIntrinsicHeight() / 2f + 30 * density);
-				canvas.drawText(str, x, y, paint);
-				paint.setStyle(Paint.Style.FILL);
-//				paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-				paint.clearShadowLayer();
-				paint.setColor(mDarkMode ? Color.BLACK : Color.WHITE);
-				paint.setAlpha(mDarkMode ? 160 : 230);
-				canvas.drawText(str, x, y, paint);
-
-				BitmapDrawable bmpDrawable = new BitmapDrawable(mContext.getResources(), bmp);
-				if (mKeyguardRightView instanceof ImageView) {
-					((ImageView)mKeyguardRightView).setScaleType(ImageView.ScaleType.CENTER);
-					((ImageView)mKeyguardRightView).setImageDrawable(bmpDrawable);
-				} else {
-					bmpDrawable.setGravity(Gravity.CENTER);
-					mKeyguardRightView.setBackground(bmpDrawable);
+				if (modifyCameraImage(mContext, mView, mDarkMode)) {
+					try {
+						XposedHelpers.setBooleanField(param.thisObject, "mGetCameraImageSucceed", false);
+					} catch (Throwable t) {}
+					param.setResult(null);
 				}
+			}
+		})) Helpers.hookAllMethods("com.android.keyguard.KeyguardCameraView", lpparam.classLoader, "updatePreViewBackground", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				View mView = (View)XposedHelpers.getObjectField(param.thisObject, "mPreView");
+				boolean mBottomDarkMode = XposedHelpers.getBooleanField(param.thisObject, "mBottomDarkMode");
+				if (modifyCameraImage(mContext, mView, mBottomDarkMode)) param.setResult(null);
+			}
+		});
 
-				try {
-					XposedHelpers.setBooleanField(param.thisObject, "mGetCameraImageSucceed", false);
-				} catch (Throwable t) {}
-
-				param.setResult(null);
+		Helpers.hookAllMethodsSilently("com.android.keyguard.KeyguardCameraView", lpparam.classLoader, "startFullScreenAnim", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				if (MainModule.mPrefs.getBoolean("system_lockscreenshortcuts_right_off")) param.setResult(null);
 			}
 		});
 
@@ -3538,8 +3574,10 @@ public class System {
 
 							if (key.contains("pref_key_system_lockscreenshortcuts")) try {
 								XposedHelpers.callMethod(param.thisObject, "setCameraImage", false);
-							} catch (Throwable t) {
-								XposedHelpers.callMethod(param.thisObject, "setCameraImage");
+							} catch (Throwable t1) {
+								try {
+									XposedHelpers.callMethod(param.thisObject, "setCameraImage");
+								} catch (Throwable t2) {}
 							}
 						} catch (Throwable t) {
 							XposedBridge.log(t);
@@ -4173,6 +4211,36 @@ public class System {
 				if (mNotificationPanel == null) return;
 				View mThemeBackgroundView = (View)XposedHelpers.getObjectField(mNotificationPanel, "mThemeBackgroundView");
 				if (mThemeBackgroundView != null) mThemeBackgroundView.setVisibility(View.VISIBLE);
+			}
+		});
+	}
+
+	public static void NoSignatureVerifyHook() {
+		if (Helpers.isNougat()) return;
+		Helpers.hookAllMethods("android.content.pm.PackageParser$SigningDetails", null, "checkCapability", XC_MethodReplacement.returnConstant(true));
+		Helpers.hookAllMethods("android.content.pm.PackageParser$SigningDetails", null, "checkCapabilityRecover", XC_MethodReplacement.returnConstant(true));
+	}
+
+	public static void NoSignatureVerifyServiceHook(LoadPackageParam lpparam) {
+		if (!Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "compareSignatures", XC_MethodReplacement.returnConstant(0))) {
+			Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerService", lpparam.classLoader, "compareSignatures", XC_MethodReplacement.returnConstant(0));
+			Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerService", lpparam.classLoader, "compareSignaturesCompat", XC_MethodReplacement.returnConstant(0));
+			Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerService", lpparam.classLoader, "compareSignaturesRecover", XC_MethodReplacement.returnConstant(0));
+		}
+
+		Helpers.hookAllMethods("com.android.server.pm.PackageManagerServiceInjector", lpparam.classLoader, "isAllowedInstall", XC_MethodReplacement.returnConstant(true));
+		Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerService", lpparam.classLoader, "canSkipFullPackageVerification", XC_MethodReplacement.returnConstant(true));
+		Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerService", lpparam.classLoader, "canSkipFullApkVerification", XC_MethodReplacement.returnConstant(true));
+	}
+
+	public static void ScreenDimTimeHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethods("com.android.server.power.PowerManagerService", lpparam.classLoader, "getScreenDimDurationLocked", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				int opt = MainModule.mPrefs.getInt("system_dimtime", 0);
+				if (param.getResult() instanceof Long) param.setResult(opt * 1000L);
+				else if (param.getResult() instanceof Integer) param.setResult(opt * 1000);
+				else Helpers.log("ScreenDimTimeHook", "Unknown result type: " + param.getResult().getClass().getSimpleName());
 			}
 		});
 	}

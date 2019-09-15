@@ -111,6 +111,8 @@
     <string name="system_nolightuponcharges_summ">Non accendere lo schermo quando si collega o si scollega il caricabatterie</string>
     <string name="system_nolightuponheadset_title">Non accendere lo schermo dopo aver collegato le cuffie</string>
     <string name="system_nolightuponheadset_summ">Non accendere lo schermo dopo aver collegato un headset</string>
+    <string name="system_dimtime_title">Durata oscuramento</string>
+    <string name="system_dimtime_summ">Per quanto tempo lo schermo dovrebbe rimanere oscurato prima di spegnersi automaticamente</string>
     <string name="system_minbrightness_title">Luminosità minima automatica</string>
     <string name="system_minbrightness_summ">Impostare il valore di luminosità minimo in modalità automatica</string>
     <string name="system_minbrightness_note">Lo slider non corrisponderà a quello di sistema nelle ultime versioni di Android con scala di luminosità non lineare</string>
@@ -200,6 +202,8 @@
     <string name="system_epm_summ">Aggiungi nuove opzioni di riavvio al menu di accensione (modalità Fastboot, modalità recovery, Riavvio veloce, Riavvio interfaccia utente, Riavvio Launcher)</string>
     <string name="system_downgrade_title">Consenti downgrade</string>
     <string name="system_downgrade_summ">Rendi possibile l\'installazione di una versione dell\'app precedente su una più recente</string>
+    <string name="system_apksign_title">Disabilita verifica firma</string>
+    <string name="system_apksign_summ">Permetti l\'aggiornamento delle app anche quando la firma dell\'APK è diversa da quella installata</string>
     <string name="system_magnifier_title">Lente d\'ingrandimento del testo</string>
     <string name="system_magnifier_summ">Visualizza lente di ingrandimento quando si sposta un cursore di input o si effettua una selezione</string>
     <string name="system_hideproxywarn_title">Nascondi avvisi sui tocchi disabilitati</string>
@@ -506,6 +510,7 @@
     <string name="array_rainbowh">Colori arcobaleno (orizzontale)</string>
     <string name="array_rainbowv">Colori arcobaleno (verticale)</string>
     <string name="array_rainbow">Arcobaleno</string>
+    <string name="array_dynamic">Colore dinamico</string>
     <string name="array_discrete">Discreto</string>
     <string name="array_gradual">Graduale</string>
     <string name="array_bars_solid">Barre piene</string>

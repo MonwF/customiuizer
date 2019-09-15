@@ -188,7 +188,7 @@
 			android:defaultValue="26"
 			miuizer:offtext="@string/array_default"
 			miuizer:minValue="26"
-			miuizer:maxValue="60"
+			miuizer:maxValue="100"
 			miuizer:stepValue="1"
 			miuizer:format="%d dip"
 			android:dependency="pref_key_controls_nonavbar" />

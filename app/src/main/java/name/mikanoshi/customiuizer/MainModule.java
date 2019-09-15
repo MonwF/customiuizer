@@ -72,6 +72,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getBoolean("system_lockscreenshortcuts")) System.LockScreenShortcutLaunchHook();
 		if (mPrefs.getBoolean("system_notifmediaseekbar")) System.MediaNotificationSeekBarHook();
 		if (mPrefs.getBoolean("system_disableanynotif") && !Helpers.isNougat()) System.DisableAnyNotificationBlockHook();
+		if (mPrefs.getBoolean("system_apksign")) System.NoSignatureVerifyHook();
 		if (mPrefs.getBoolean("controls_volumecursor")) Controls.VolumeCursorHook();
 		if (mPrefs.getBoolean("controls_fsg_horiz")) Controls.FSGesturesHook();
 		if (mPrefs.getBoolean("various_alarmcompat")) Various.AlarmCompatHook();
@@ -93,7 +94,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (fsMonitorActive) GlobalActions.setupFullScreenMonitor();
 
 		Controls.VolumeMediaPlayerHook();
-		GlobalActions.setupUnhandledCatcher();
+		GlobalActions.setupSystemHelpers();
 	}
 
 	public void handleLoadPackage(final LoadPackageParam lpparam) {
@@ -113,6 +114,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getInt("system_screenanim_duration", 0) > 0) System.ScreenAnimHook(lpparam);
 			if (mPrefs.getInt("system_volumesteps", 0) > 0) System.VolumeStepsHook(lpparam);
 			if (mPrefs.getInt("system_applock_timeout", 1) > 1) System.AppLockTimeoutHook(lpparam);
+			if (mPrefs.getInt("system_dimtime", 0) > 0) System.ScreenDimTimeHook(lpparam);
 			if (!mPrefs.getString("system_defaultusb", "none").equals("none")) System.USBConfigHook(lpparam);
 			if (mPrefs.getBoolean("system_nolightuponheadset")) System.NoLightUpOnHeadsetHook(lpparam);
 			if (mPrefs.getBoolean("system_securelock")) System.EnhancedSecurityHook(lpparam);
@@ -132,6 +134,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_forceclose")) System.ForceCloseHook(lpparam);
 			if (mPrefs.getBoolean("system_hideproxywarn")) System.HideProximityWarningHook(lpparam);
 			if (mPrefs.getBoolean("system_firstpress")) System.FirstVolumePressHook(lpparam);
+			if (mPrefs.getBoolean("system_apksign")) System.NoSignatureVerifyServiceHook(lpparam);
 			if (mPrefs.getBoolean("controls_powerflash")) Controls.PowerKeyHook(lpparam);
 			if (mPrefs.getBoolean("controls_fingerprintfailure")) Controls.FingerprintHapticFailureHook(lpparam);
 			if (mPrefs.getBoolean("controls_fingerprintscreen")) Controls.FingerprintScreenOnHook(lpparam);

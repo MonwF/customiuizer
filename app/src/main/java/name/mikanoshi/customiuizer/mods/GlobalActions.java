@@ -548,6 +548,13 @@ public class GlobalActions {
 				XposedHelpers.setBooleanField(param.thisObject, "miuizerModuleActive", true);
 			}
 		});
+
+		try {
+			XposedHelpers.setStaticObjectField(findClass(Helpers.modulePkg + ".utils.Helpers", lpparam.classLoader), "xposedVersion", XposedBridge.getXposedVersion());
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+		
 		Helpers.emptyFile(lpparam.appInfo.dataDir + "/files/uncaught_exceptions", false);
 	}
 
@@ -601,7 +608,7 @@ public class GlobalActions {
 		});
 	}
 	
-	public static void setupUnhandledCatcher() {
+	public static void setupSystemHelpers() {
 		Helpers.findAndHookMethod(Application.class, "onCreate", new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
@@ -619,6 +626,28 @@ public class GlobalActions {
 						}
 					}
 				});
+			}
+		});
+
+		// Handle exception for null WeakReference
+		Helpers.hookAllMethodsSilently("com.miui.internal.widget.SearchActionModeView", null, "notifyAnimationStart", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				if (param.hasThrowable()) param.setThrowable(null);
+			}
+		});
+
+		Helpers.hookAllMethodsSilently("com.miui.internal.widget.SearchActionModeView", null, "notifyAnimationUpdate", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				if (param.hasThrowable()) param.setThrowable(null);
+			}
+		});
+
+		Helpers.hookAllMethodsSilently("com.miui.internal.widget.SearchActionModeView", null, "notifyAnimationEnd", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				if (param.hasThrowable()) param.setThrowable(null);
 			}
 		});
 	}

@@ -31,7 +31,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -118,7 +122,39 @@ public class Dialog extends Activity {
 		}
 		return res;
 	}
-	
+
+	private String getXposedPropVersion(File propFile) {
+		String version = "unknown";
+		try (FileInputStream inputStream = new FileInputStream(propFile)) {
+			try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+				while (true) {
+					String readLine = null;
+					try {
+						readLine = bufferedReader.readLine();
+					} catch (Throwable t) {
+						t.printStackTrace();
+					}
+					if (readLine == null) break;
+
+					String[] split = readLine.split("=", 2);
+					if (split.length == 2) {
+						String line = split[0].trim();
+						if (line.charAt(0) != '#' && "version".equals(line)) {
+							version = split[1].trim();
+							break;
+						}
+					}
+				}
+			} catch (Throwable t) {
+				t.printStackTrace();
+			}
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+		return version.equals("unknown") ? version + " (" + Helpers.xposedVersion + ")" : version;
+	}
+
+
 	private void sendCrash(final String xposedLogStr) {
 		CrashReportPersister persister = new CrashReportPersister();
 		SharedPreferences prefs;
@@ -154,12 +190,41 @@ public class Dialog extends Activity {
 			crashData.put("BUILD", buildData);
 
 			StringBuilder sb = new StringBuilder();
-			try (FileInputStream in = new FileInputStream(new File(getFilesDir().getAbsolutePath() + "/uncaught_exceptions"))) {
+			try (FileInputStream in = new FileInputStream(new File(Helpers.getProtectedContext(this).getFilesDir().getAbsolutePath() + "/uncaught_exceptions"))) {
 				try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in))) {
 					String line;
 					while ((line = bufferedReader.readLine()) != null) sb.append(line).append("\n");
 				} catch (Throwable t) {}
 			} catch (Throwable t) {}
+
+			final String[] xposedPropFiles = new String[]{
+					"/system/framework/edconfig.jar", // EdXposed
+					"/system/xposed.prop", // Classic
+					"/magisk/xposed/system/xposed.prop",
+					"/magisk/PurifyXposed/system/xposed.prop",
+					"/su/xposed/system/xposed.prop",
+					"/vendor/xposed.prop",
+					"/xposed/xposed.prop",
+					"/xposed.prop",
+					"/su/xposed/xposed.prop"
+			};
+			for (String prop: xposedPropFiles) {
+				File propFile = new File(prop);
+				if (propFile.exists()) {
+					if (!propFile.canRead()) break;
+					crashData.put("XPOSED_VERSION", getXposedPropVersion(propFile));
+					break;
+				}
+			}
+
+			Intent intent = new Intent(Intent.ACTION_MAIN);
+			intent.addCategory(Intent.CATEGORY_HOME);
+			PackageManager pkgMgr = getPackageManager();
+			ResolveInfo launcherInfo = pkgMgr.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+			if (launcherInfo != null) {
+				PackageInfo packageInfo = pkgMgr.getPackageInfo(launcherInfo.activityInfo.packageName, 0);
+				if (packageInfo != null) crashData.put("LAUNCHER_VERSION", launcherInfo.activityInfo.loadLabel(pkgMgr) + " " + packageInfo.versionName);
+			}
 
 			crashData.put("SHARED_PREFERENCES", new JSONObject(prefs.getAll()));
 			if (!sb.toString().isEmpty())
@@ -188,7 +253,7 @@ public class Dialog extends Activity {
 				@Override
 				public void run() {
 					if (finalRes) {
-						Helpers.emptyFile(getFilesDir().getAbsolutePath() + "/uncaught_exceptions", true);
+						Helpers.emptyFile(Helpers.getProtectedContext(Dialog.this).getFilesDir().getAbsolutePath() + "/uncaught_exceptions", true);
 						cancelReports();
 						showFinishDialog(true, null);
 					} else {
@@ -274,7 +339,7 @@ public class Dialog extends Activity {
 		LinearLayout dialogView = new LinearLayout(this);
 		dialogView.setOrientation(LinearLayout.VERTICAL);
 
-		int tries = 5;
+		int tries = 3;
 		xposedLog = null;
 		while (xposedLog == null && tries > 0) try {
 			tries--;

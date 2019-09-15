@@ -258,6 +258,7 @@ public class MainFragment extends PreferenceFragmentBase {
 					int last_build = 0;
 					try {
 						last_build = Integer.parseInt(reader.readLine().trim());
+						reader.close();
 					} catch (Throwable t) {}
 
 					//noinspection ConditionCoveredByFurtherCondition
@@ -592,7 +593,14 @@ public class MainFragment extends PreferenceFragmentBase {
 							getContext().startActivity(intent);
 							return true;
 						} catch (Throwable e3) {
-							Toast.makeText(getContext(), R.string.xposed_not_found, Toast.LENGTH_LONG).show();
+							intent = getContext().getPackageManager().getLaunchIntentForPackage("me.weishu.exp");
+							if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+							try {
+								getContext().startActivity(intent);
+								return true;
+							} catch (Throwable e4) {
+								Toast.makeText(getContext(), R.string.xposed_not_found, Toast.LENGTH_LONG).show();
+							}
 						}
 					}
 					return false;

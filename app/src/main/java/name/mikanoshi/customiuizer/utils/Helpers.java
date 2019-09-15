@@ -98,6 +98,7 @@ public class Helpers {
 	public static ArrayList<AppData> launchableAppsList = null;
 	public static ArrayList<ModData> allModsList = new ArrayList<ModData>();
 	public static String backupFile = "settings_backup";
+	public static int xposedVersion = 0;
 	public static final int markColor = Color.rgb(205, 73, 97);
 	public static final int markColorVibrant = Color.rgb(222, 45, 73);
 	public static final int REQUEST_PERMISSIONS_BACKUP = 1;
@@ -115,10 +116,8 @@ public class Helpers {
 	public static WakeLock mWakeLock;
 	public static boolean showNewMods = true;
 	public static final String[] newMods = new String[] {
-		"system_nosilentvibrate",
-		"system_firstpress",
-		"system_visualizer_animdur",
-		"system_drawer_hidebackground"
+		"system_apksign",
+		"system_dimtime"
 	};
 	public static final String[] shortcutIcons = new String[] {
 		"bankcard", "buscard", "calculator", "calendar", "contacts", "magazine", "music", "notes", "remotecontroller", "smarthome", "miuizer"
@@ -164,6 +163,7 @@ public class Helpers {
 
 	public static boolean isXposedInstallerInstalled(Context context) {
 		PackageManager pm = context.getPackageManager();
+
 		try {
 			pm.getPackageInfo("com.solohsu.android.edxp.manager", PackageManager.GET_ACTIVITIES);
 			return true;
@@ -176,6 +176,11 @@ public class Helpers {
 
 		try {
 			pm.getPackageInfo("de.robv.android.xposed.installer", PackageManager.GET_ACTIVITIES);
+			return true;
+		} catch (PackageManager.NameNotFoundException e) {}
+
+		try {
+			pm.getPackageInfo("me.weishu.exp", PackageManager.GET_ACTIVITIES);
 			return true;
 		} catch (PackageManager.NameNotFoundException e) {}
 
@@ -197,19 +202,19 @@ public class Helpers {
 		try {
 			pm.getPackageInfo("com.solohsu.android.edxp.manager", PackageManager.GET_ACTIVITIES);
 			baseDir = "/data/user_de/0/com.solohsu.android.edxp.manager/";
-			file = new File(baseDir + "log/all.log");
-			if (file.exists()) return baseDir + "log/all.log";
 			file = new File(baseDir + "log/error.log");
 			if (file.exists()) return baseDir + "log/error.log";
+			file = new File(baseDir + "log/all.log");
+			if (file.exists()) return baseDir + "log/all.log";
 		} catch (PackageManager.NameNotFoundException e) {}
 
 		try {
 			pm.getPackageInfo("org.meowcat.edxposed.manager", PackageManager.GET_ACTIVITIES);
 			baseDir = "/data/user_de/0/org.meowcat.edxposed.manager/";
-			file = new File(baseDir + "log/all.log");
-			if (file.exists()) return baseDir + "log/all.log";
 			file = new File(baseDir + "log/error.log");
 			if (file.exists()) return baseDir + "log/error.log";
+			file = new File(baseDir + "log/all.log");
+			if (file.exists()) return baseDir + "log/all.log";
 		} catch (PackageManager.NameNotFoundException e) {}
 
 		try {
@@ -1307,6 +1312,15 @@ public class Helpers {
 			log(getCallerMethod(), "Failed to hook " + methodName + " method in " + className);
 		} catch (Throwable t) {
 			XposedBridge.log(t);
+		}
+	}
+
+	public static boolean hookAllMethodsSilently(String className, ClassLoader classLoader, String methodName, XC_MethodHook callback) {
+		try {
+			Class<?> hookClass = XposedHelpers.findClassIfExists(className, classLoader);
+			return hookClass != null && XposedBridge.hookAllMethods(hookClass, methodName, callback).size() > 0;
+		} catch (Throwable t) {
+			return false;
 		}
 	}
 
