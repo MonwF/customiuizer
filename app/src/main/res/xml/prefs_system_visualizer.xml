@@ -81,6 +81,17 @@
 		miuizer:dynamic="true"
 		miuizer:valueAsSummary="true" />
 
++	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		android:key="pref_key_system_visualizer_dyntime"
+		android:title="@string/system_visualizer_dyntime_title"
+		android:dependency="pref_key_system_visualizer"
+		android:defaultValue="10"
+		miuizer:minValue="3"
+		miuizer:maxValue="60"
+		miuizer:stepValue="1"
+		miuizer:format="@string/format_d_s"
+		miuizer:dynamic="true" />
+
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_system_visualizer_colorval"
 		android:title="@string/system_visualizer_colorval_title"

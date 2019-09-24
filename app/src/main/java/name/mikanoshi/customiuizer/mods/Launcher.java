@@ -23,12 +23,14 @@ import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.HashSet;
@@ -630,8 +632,22 @@ public class Launcher {
 		Helpers.findAndHookMethod("com.miui.home.launcher.Folder", lpparam.classLoader, "onFinishInflate", new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
+				int cols = MainModule.mPrefs.getInt("launcher_folder_cols", 1);
+
 				GridView mContent = (GridView)XposedHelpers.getObjectField(param.thisObject, "mContent");
-				mContent.setNumColumns(MainModule.mPrefs.getInt("launcher_folder_cols", 3));
+				mContent.setNumColumns(cols);
+				ViewGroup.LayoutParams lp = mContent.getLayoutParams();
+				lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
+				mContent.setLayoutParams(lp);
+
+				ViewGroup mBackgroundView = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mBackgroundView");
+				if (mBackgroundView != null)
+				mBackgroundView.setPadding(
+					mBackgroundView.getPaddingLeft() / (cols > 3 ? 3 : 1),
+					mBackgroundView.getPaddingTop(),
+					mBackgroundView.getPaddingRight() / (cols > 3 ? 3 : 1),
+					mBackgroundView.getPaddingBottom()
+				);
 			}
 		});
 	}
@@ -755,6 +771,89 @@ public class Launcher {
 //				}
 //			}
 //		});
+	}
+
+	public static void TitleFontSizeHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.miui.home.launcher.ItemIcon", lpparam.classLoader, "onFinishInflate", new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				TextView mTitle = (TextView)XposedHelpers.getObjectField(param.thisObject, "mTitle");
+				if (mTitle != null) mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, MainModule.mPrefs.getInt("launcher_titlefontsize", 5));
+			}
+		});
+
+		if (lpparam.packageName.equals("com.mi.android.globallauncher"))
+		Helpers.hookAllMethods("com.miui.home.launcher.ItemIcon", lpparam.classLoader, "setTitleColorMode", new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				TextView mTitle = (TextView)XposedHelpers.getObjectField(param.thisObject, "mTitle");
+				if (mTitle != null) mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, MainModule.mPrefs.getInt("launcher_titlefontsize", 5));
+			}
+		});
+
+		Helpers.hookAllMethods("com.miui.home.launcher.ShortcutIcon", lpparam.classLoader, "fromXml", new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				Object buddyIcon = XposedHelpers.callMethod(param.args[3], "getBuddyIconView", param.args[2]);
+				if (buddyIcon == null) return;
+				TextView mTitle = (TextView)XposedHelpers.getObjectField(buddyIcon, "mTitle");
+				if (mTitle != null) mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, MainModule.mPrefs.getInt("launcher_titlefontsize", 5));
+			}
+		});
+
+		if (lpparam.packageName.equals("com.miui.home")) {
+			Helpers.hookAllMethods("com.miui.home.launcher.ShortcutIcon", lpparam.classLoader, "createShortcutIcon", new MethodHook() {
+				@Override
+				protected void after(final MethodHookParam param) throws Throwable {
+					Object buddyIcon = param.getResult();
+					if (buddyIcon == null) return;
+					TextView mTitle = (TextView)XposedHelpers.getObjectField(buddyIcon, "mTitle");
+					if (mTitle != null)
+						mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, MainModule.mPrefs.getInt("launcher_titlefontsize", 5));
+				}
+			});
+
+			Helpers.hookAllMethods("com.miui.home.launcher.common.Utilities", lpparam.classLoader, "adaptTitleStyleToWallpaper", new MethodHook() {
+				@Override
+				protected void after(final MethodHookParam param) throws Throwable {
+					TextView mTitle = (TextView)param.args[1];
+					if (mTitle != null)
+						mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, MainModule.mPrefs.getInt("launcher_titlefontsize", 5));
+				}
+			});
+		}
+	}
+
+	public static void TitleTopMarginHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.miui.home.launcher.ItemIcon", lpparam.classLoader, "onFinishInflate", new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				ViewGroup mTitleContainer = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mTitleContainer");
+				if (mTitleContainer == null) return;
+				ViewGroup.LayoutParams lp = mTitleContainer.getLayoutParams();
+				int opt = Math.round(MainModule.mPrefs.getInt("launcher_titletopmargin", 0) * mTitleContainer.getResources().getDisplayMetrics().density);
+				if (lp instanceof RelativeLayout.LayoutParams) {
+					((RelativeLayout.LayoutParams)lp).topMargin = opt;
+					mTitleContainer.setLayoutParams(lp);
+				} else {
+					mTitleContainer.setTranslationY(opt);
+					mTitleContainer.setClipChildren(false);
+					mTitleContainer.setClipToPadding(false);
+					((ViewGroup)mTitleContainer.getParent()).setClipChildren(false);
+					((ViewGroup)mTitleContainer.getParent()).setClipToPadding(false);
+				}
+			}
+		});
+	}
+
+	public static void PrivacyFolderHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.classLoader, "startSecurityHide", new MethodHook() {
+			@Override
+			protected void before(final MethodHookParam param) throws Throwable {
+				boolean opt = Helpers.getSharedBoolPref((Activity)param.thisObject, "pref_key_launcher_privacyapps_gest", false);
+				if (opt) param.setResult(null);
+			}
+		});
 	}
 
 //	public static void ReplaceClockAppHook(LoadPackageParam lpparam) {

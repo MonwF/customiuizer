@@ -88,6 +88,8 @@ public class Helpers {
 	public static final String modulePkg = "name.mikanoshi.customiuizer";
 	public static final String prefsName = "customiuizer_prefs";
 	public static final String externalFolder = "/CustoMIUIzer/";
+	public static final String backupFile = "settings_backup";
+	public static final String logFile = "xposed_log";
 	public static final String ANDROID_NS = "http://schemas.android.com/apk/res/android";
 	public static final String MIUIZER_NS = "http://schemas.android.com/apk/res-auto";
 	public static final String ACCESS_SECURITY_CENTER = "com.miui.securitycenter.permission.ACCESS_SECURITY_CENTER_PROVIDER";
@@ -97,13 +99,13 @@ public class Helpers {
 	public static ArrayList<AppData> installedAppsList = null;
 	public static ArrayList<AppData> launchableAppsList = null;
 	public static ArrayList<ModData> allModsList = new ArrayList<ModData>();
-	public static String backupFile = "settings_backup";
 	public static int xposedVersion = 0;
 	public static final int markColor = Color.rgb(205, 73, 97);
 	public static final int markColorVibrant = Color.rgb(222, 45, 73);
 	public static final int REQUEST_PERMISSIONS_BACKUP = 1;
 	public static final int REQUEST_PERMISSIONS_RESTORE = 2;
 	public static final int REQUEST_PERMISSIONS_WIFI = 3;
+	public static final int REQUEST_PERMISSIONS_REPORT = 4;
 	public static LruCache<String, Bitmap> memoryCache = new LruCache<String, Bitmap>((int)(Runtime.getRuntime().maxMemory() / 1024) / 2) {
 		@Override
 		protected int sizeOf(String key, Bitmap icon) {
@@ -116,8 +118,11 @@ public class Helpers {
 	public static WakeLock mWakeLock;
 	public static boolean showNewMods = true;
 	public static final String[] newMods = new String[] {
-		"system_apksign",
-		"system_dimtime"
+		"various_installappinfo",
+		"system_visualizer_dyntime",
+		"system_nooverscroll",
+		"launcher_titlefontsize",
+		"launcher_titletopmargin"
 	};
 	public static final String[] shortcutIcons = new String[] {
 		"bankcard", "buscard", "calculator", "calendar", "contacts", "magazine", "music", "notes", "remotecontroller", "smarthome", "miuizer"
@@ -202,27 +207,27 @@ public class Helpers {
 		try {
 			pm.getPackageInfo("com.solohsu.android.edxp.manager", PackageManager.GET_ACTIVITIES);
 			baseDir = "/data/user_de/0/com.solohsu.android.edxp.manager/";
-			file = new File(baseDir + "log/error.log");
-			if (file.exists()) return baseDir + "log/error.log";
 			file = new File(baseDir + "log/all.log");
 			if (file.exists()) return baseDir + "log/all.log";
-		} catch (PackageManager.NameNotFoundException e) {}
+			file = new File(baseDir + "log/error.log");
+			if (file.exists()) return baseDir + "log/error.log";
+		} catch (Throwable t) {}
 
 		try {
 			pm.getPackageInfo("org.meowcat.edxposed.manager", PackageManager.GET_ACTIVITIES);
 			baseDir = "/data/user_de/0/org.meowcat.edxposed.manager/";
-			file = new File(baseDir + "log/error.log");
-			if (file.exists()) return baseDir + "log/error.log";
 			file = new File(baseDir + "log/all.log");
 			if (file.exists()) return baseDir + "log/all.log";
-		} catch (PackageManager.NameNotFoundException e) {}
+			file = new File(baseDir + "log/error.log");
+			if (file.exists()) return baseDir + "log/error.log";
+		} catch (Throwable t) {}
 
 		try {
 			pm.getPackageInfo("de.robv.android.xposed.installer", PackageManager.GET_ACTIVITIES);
 			baseDir = "/data/user_de/0/de.robv.android.xposed.installer/";
 			file = new File(baseDir + "log/error.log");
 			if (file.exists()) return baseDir + "log/error.log";
-		} catch (PackageManager.NameNotFoundException e) {}
+		} catch (Throwable t) {}
 
 		if (baseDir == null)
 			return null;
@@ -452,8 +457,26 @@ public class Helpers {
 		return res.getString(titleResId);
 	}
 
+	private static boolean checkMultiUserPermission(Context context) {
+		return context.getPackageManager().checkPermission("android.permission.INTERACT_ACROSS_USERS", Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED;
+	}
+
+	@SuppressLint("DiscouragedPrivateApi")
+	private static Method getPackageInfoAsUser(Context context) {
+		try {
+			return context.getPackageManager().getClass().getDeclaredMethod("getPackageInfoAsUser", String.class, int.class, int.class);
+		} catch (Throwable t) {
+			t.printStackTrace();
+			return null;
+		}
+	}
+
 	public static void getInstalledApps(Context context) {
 		final PackageManager pm = context.getPackageManager();
+		boolean includeDualApps = checkMultiUserPermission(context);
+		Method getPackageInfoAsUser = getPackageInfoAsUser(context);
+		if (getPackageInfoAsUser == null) includeDualApps = false;
+
 		List<ApplicationInfo> packs = pm.getInstalledApplications(PackageManager.GET_META_DATA | PackageManager.MATCH_DISABLED_COMPONENTS);
 		installedAppsList = new ArrayList<AppData>();
 		AppData app;
@@ -464,6 +487,17 @@ public class Helpers {
 			app.pkgName = pack.packageName;
 			app.actName = "-";
 			installedAppsList.add(app);
+			if (includeDualApps) try {
+				if (getPackageInfoAsUser.invoke(pm, app.pkgName, 0, 999) != null) {
+					AppData appDual = new AppData();
+					appDual.enabled = pack.enabled;
+					appDual.label = pack.loadLabel(pm).toString();
+					appDual.pkgName = pack.packageName;
+					appDual.actName = "-";
+					appDual.user = 999;
+					installedAppsList.add(appDual);
+				}
+			} catch (Throwable t) {}
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -474,8 +508,13 @@ public class Helpers {
 		});
 	}
 	
+	@SuppressLint("DiscouragedPrivateApi")
 	public static void getLaunchableApps(Context context) {
-		PackageManager pm = context.getPackageManager();
+		final PackageManager pm = context.getPackageManager();
+		boolean includeDualApps = checkMultiUserPermission(context);
+		Method getPackageInfoAsUser = getPackageInfoAsUser(context);
+		if (getPackageInfoAsUser == null) includeDualApps = false;
+
 		final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
 		mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 		List<ResolveInfo> packs = pm.queryIntentActivities(mainIntent, 0);
@@ -488,8 +527,19 @@ public class Helpers {
 			app.enabled = pack.activityInfo.enabled;
 			app.label = pack.loadLabel(pm).toString();
 			launchableAppsList.add(app);
-		} catch (Throwable e) {
-			e.printStackTrace();
+			if (includeDualApps) try {
+				if (getPackageInfoAsUser.invoke(pm, app.pkgName, 0, 999) != null) {
+					AppData appDual = new AppData();
+					appDual.pkgName = pack.activityInfo.applicationInfo.packageName;
+					appDual.actName = pack.activityInfo.name;
+					appDual.enabled = pack.activityInfo.enabled;
+					appDual.label = pack.loadLabel(pm).toString();
+					appDual.user = 999;
+					launchableAppsList.add(appDual);
+				}
+			} catch (Throwable t) {}
+		} catch (Throwable t) {
+			t.printStackTrace();
 		}
 		Collections.sort(launchableAppsList, new Comparator<AppData>() {
 			public int compare(AppData app1, AppData app2) {
@@ -500,11 +550,15 @@ public class Helpers {
 
 	public static void getShareApps(Context context) {
 		PackageManager pm = context.getPackageManager();
+		boolean includeDualApps = checkMultiUserPermission(context);
+		Method getPackageInfoAsUser = getPackageInfoAsUser(context);
+		if (getPackageInfoAsUser == null) includeDualApps = false;
+
 		final Intent mainIntent = new Intent();
 		mainIntent.setAction(Intent.ACTION_SEND);
 		mainIntent.setType("*/*");
 		mainIntent.putExtra("CustoMIUIzer", true);
-		List<ResolveInfo> packs = pm.queryIntentActivities(mainIntent, PackageManager.MATCH_ALL);
+		List<ResolveInfo> packs = pm.queryIntentActivities(mainIntent, PackageManager.MATCH_ALL | PackageManager.MATCH_DISABLED_COMPONENTS);
 		shareAppsList = new ArrayList<AppData>();
 		AppData app;
 		for (ResolveInfo pack: packs) try {
@@ -521,6 +575,17 @@ public class Helpers {
 			app.enabled = pack.activityInfo.applicationInfo.enabled;
 			app.label = pack.activityInfo.applicationInfo.loadLabel(pm).toString();
 			shareAppsList.add(app);
+			if (includeDualApps) try {
+				if (getPackageInfoAsUser.invoke(pm, app.pkgName, 0, 999) != null) {
+					AppData appDual = new AppData();
+					appDual.pkgName = pack.activityInfo.applicationInfo.packageName;
+					appDual.actName = "-";
+					appDual.enabled = pack.activityInfo.applicationInfo.enabled;
+					appDual.label = pack.activityInfo.applicationInfo.loadLabel(pm).toString();
+					appDual.user = 999;
+					shareAppsList.add(appDual);
+				}
+			} catch (Throwable t) {}
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -533,11 +598,15 @@ public class Helpers {
 
 	public static void getOpenWithApps(Context context) {
 		PackageManager pm = context.getPackageManager();
+		boolean includeDualApps = checkMultiUserPermission(context);
+		Method getPackageInfoAsUser = getPackageInfoAsUser(context);
+		if (getPackageInfoAsUser == null) includeDualApps = false;
+
 		final Intent mainIntent = new Intent();
 		mainIntent.setAction(Intent.ACTION_VIEW);
 		mainIntent.setDataAndType(Uri.parse("content://" + SharedPrefsProvider.AUTHORITY + "/test/5"), "*/*");
 		mainIntent.putExtra("CustoMIUIzer", true);
-		List<ResolveInfo> packs = pm.queryIntentActivities(mainIntent, PackageManager.MATCH_ALL);
+		List<ResolveInfo> packs = pm.queryIntentActivities(mainIntent, PackageManager.MATCH_ALL | PackageManager.MATCH_DISABLED_COMPONENTS);
 		openWithAppsList = new ArrayList<AppData>();
 		AppData app;
 		for (ResolveInfo pack: packs) try {
@@ -554,6 +623,17 @@ public class Helpers {
 			app.enabled = pack.activityInfo.applicationInfo.enabled;
 			app.label = pack.activityInfo.applicationInfo.loadLabel(pm).toString();
 			openWithAppsList.add(app);
+			if (includeDualApps) try {
+				if (getPackageInfoAsUser.invoke(pm, app.pkgName, 0, 999) != null) {
+					AppData appDual = new AppData();
+					appDual.pkgName = pack.activityInfo.applicationInfo.packageName;
+					appDual.actName = "-";
+					appDual.enabled = pack.activityInfo.applicationInfo.enabled;
+					appDual.label = pack.activityInfo.applicationInfo.loadLabel(pm).toString();
+					appDual.user = 999;
+					openWithAppsList.add(appDual);
+				}
+			} catch (Throwable t) {}
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}

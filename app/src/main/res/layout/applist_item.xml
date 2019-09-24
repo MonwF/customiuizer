@@ -52,11 +52,23 @@
 		</LinearLayout>
 
 		<ImageView
+			android:id="@+id/am_isDual_icon"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_marginStart="5dp"
+			android:layout_marginEnd="5dp"
+			android:visibility="gone"
+			android:src="@drawable/ic_xspace" />
+
+		<ImageView
 			android:id="@+id/am_isDisable_icon"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center"
 			android:layout_marginStart="5dp"
+			android:layout_marginEnd="5dp"
+			android:visibility="gone"
 			android:src="@drawable/am_card_item_disabled" />
 
 		<CheckBox

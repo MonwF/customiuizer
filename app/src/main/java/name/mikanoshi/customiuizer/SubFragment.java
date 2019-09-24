@@ -354,7 +354,6 @@ public class SubFragment extends PreferenceFragmentBase {
 		}
 	}
 
-
 	public void finish() {
 		if (isAnimating) return;
 		if (getActivity() == null) return;

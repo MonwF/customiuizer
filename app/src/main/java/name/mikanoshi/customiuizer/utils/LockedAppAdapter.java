@@ -33,7 +33,7 @@ public class LockedAppAdapter extends BaseAdapter implements Filterable {
 	private ArrayList<AppData> originalAppList;
 	private ArrayList<AppData> filteredAppList;
 	private Object mSecurityManager;
-	private Method getApplicationAccessControlEnabled;
+	private Method getApplicationAccessControlEnabledAsUser;
 
 	@SuppressLint("WrongConstant")
 	public LockedAppAdapter(Context context, ArrayList<AppData> arr) {
@@ -46,8 +46,8 @@ public class LockedAppAdapter extends BaseAdapter implements Filterable {
 
 		try {
 			mSecurityManager = context.getSystemService("security");
-			getApplicationAccessControlEnabled = mSecurityManager.getClass().getDeclaredMethod("getApplicationAccessControlEnabled", String.class);
-			getApplicationAccessControlEnabled.setAccessible(true);
+			getApplicationAccessControlEnabledAsUser = mSecurityManager.getClass().getDeclaredMethod("getApplicationAccessControlEnabledAsUser", String.class, int.class);
+			getApplicationAccessControlEnabledAsUser.setAccessible(true);
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
@@ -59,8 +59,8 @@ public class LockedAppAdapter extends BaseAdapter implements Filterable {
 		Collections.sort(filteredAppList, new Comparator<AppData>() {
 			public int compare(AppData app1, AppData app2) {
 				try {
-					boolean app1checked = (boolean)getApplicationAccessControlEnabled.invoke(mSecurityManager, app1.pkgName);
-					boolean app2checked = (boolean)getApplicationAccessControlEnabled.invoke(mSecurityManager, app2.pkgName);
+					boolean app1checked = (boolean)getApplicationAccessControlEnabledAsUser.invoke(mSecurityManager, app1.pkgName, app1.user);
+					boolean app2checked = (boolean)getApplicationAccessControlEnabledAsUser.invoke(mSecurityManager, app2.pkgName, app2.user);
 					if (app1checked && app2checked)
 						return 0;
 					else if (app1checked)
@@ -100,6 +100,7 @@ public class LockedAppAdapter extends BaseAdapter implements Filterable {
 			row = mInflater.inflate(R.layout.applist_item, parent, false);
 
 		ImageView itemIsDis = row.findViewById(R.id.am_isDisable_icon);
+		ImageView itemIsDual = row.findViewById(R.id.am_isDual_icon);
 		CheckBox itemChecked = row.findViewById(R.id.am_checked_icon);
 		TextView itemTitle = row.findViewById(R.id.am_label);
 		ImageView itemIcon = row.findViewById(R.id.am_icon);
@@ -107,7 +108,8 @@ public class LockedAppAdapter extends BaseAdapter implements Filterable {
 		AppData ad = getItem(position);
 		itemIcon.setTag(position);
 		itemTitle.setText(ad.label);
-		itemIsDis.setVisibility(ad.enabled ? View.INVISIBLE : View.VISIBLE);
+		itemIsDis.setVisibility(ad.enabled ? View.GONE : View.VISIBLE);
+		itemIsDual.setVisibility(ad.user != 0 ? View.VISIBLE : View.GONE);
 		Bitmap icon = Helpers.memoryCache.get(ad.pkgName + "|" + ad.actName);
 		//int iconSize = getResources().getDimensionPixelSize(android.R.dimen.app_icon_size);
 
@@ -124,7 +126,7 @@ public class LockedAppAdapter extends BaseAdapter implements Filterable {
 
 		try {
 			itemChecked.setVisibility(View.VISIBLE);
-			itemChecked.setChecked((boolean)getApplicationAccessControlEnabled.invoke(mSecurityManager, ad.pkgName));
+			itemChecked.setChecked((boolean)getApplicationAccessControlEnabledAsUser.invoke(mSecurityManager, ad.pkgName, ad.user));
 		} catch (Throwable t) {
 			itemChecked.setVisibility(View.GONE);
 		}

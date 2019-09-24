@@ -3,6 +3,8 @@ package name.mikanoshi.customiuizer.utils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -37,8 +39,10 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 	private ArrayList<AppData> filteredAppList = new ArrayList<AppData>();
 	private String key = null;
 	private String selectedApp;
+	private int selectedUser = 0;
 	private Set<String> selectedApps = new LinkedHashSet<String>();
 	private Helpers.AppAdapterType aType = Helpers.AppAdapterType.Default;
+	private boolean multiUserSupport = false;
 
 	public AppDataAdapter(Context context, ArrayList<AppData> arr) {
 		ctx = context;
@@ -53,10 +57,32 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 		this(context, arr);
 		key = prefKey;
 		aType = adapterType;
-		if (aType == Helpers.AppAdapterType.Mutli)
+		if (aType == Helpers.AppAdapterType.Mutli) {
 			selectedApps = Helpers.prefs.getStringSet(key, new LinkedHashSet<String>());
-		else if (aType == Helpers.AppAdapterType.Standalone) {
+			ArrayList<String> multiUserMods = new ArrayList<String>();
+			multiUserMods.add("pref_key_system_cleanshare_apps");
+			multiUserMods.add("pref_key_system_cleanopenwith_apps");
+			multiUserSupport = multiUserMods.contains(key);
+			if (multiUserSupport) {
+				HashSet<String> selectedAppsAdd = new HashSet<String>();
+				Iterator iter = selectedApps.iterator();
+				while (iter.hasNext()) {
+					String item = ((String)iter.next());
+					if (!item.contains("|")) {
+						selectedAppsAdd.add(item + "|0");
+						iter.remove();
+					}
+				}
+				if (selectedAppsAdd.size() > 0) selectedApps.addAll(selectedAppsAdd);
+			} else {
+				Iterator iter = originalAppList.iterator();
+				while (iter.hasNext()) if (((AppData)iter.next()).user != 0) iter.remove();
+				filteredAppList.clear();
+				filteredAppList.addAll(originalAppList);
+			}
+		} else if (aType == Helpers.AppAdapterType.Standalone) {
 			selectedApp = Helpers.prefs.getString(key, "");
+			selectedUser = Helpers.prefs.getInt(key + "_user", 0);
 			AppData noApp = new AppData();
 			noApp.pkgName = "";
 			noApp.actName = "";
@@ -71,17 +97,23 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 	public void updateSelectedApps() {
 		if (aType == Helpers.AppAdapterType.Mutli)
 			selectedApps = Helpers.prefs.getStringSet(key, new LinkedHashSet<String>());
-		else if (aType == Helpers.AppAdapterType.Standalone)
+		else if (aType == Helpers.AppAdapterType.Standalone) {
 			selectedApp = Helpers.prefs.getString(key, "");
+			selectedUser = Helpers.prefs.getInt(key + "_user", 0);
+		}
 		notifyDataSetChanged();
+	}
+
+	private boolean shouldSelect(String pkgName, int user) {
+		return (!multiUserSupport && (selectedApps.contains(pkgName) || selectedApps.contains(pkgName + "|0"))) || (multiUserSupport && selectedApps.contains(pkgName + "|" + user));
 	}
 
 	private void sortList() {
 		Collections.sort(filteredAppList, new Comparator<AppData>() {
 			public int compare(AppData app1, AppData app2) {
 				if (aType == Helpers.AppAdapterType.Mutli && selectedApps.size() > 0) {
-					boolean app1checked = selectedApps.contains(app1.pkgName);
-					boolean app2checked = selectedApps.contains(app2.pkgName);
+					boolean app1checked = shouldSelect(app1.pkgName, app1.user);
+					boolean app2checked = shouldSelect(app2.pkgName, app2.user);
 					if (app1checked && app2checked)
 						return 0;
 					else if (app1checked)
@@ -92,8 +124,8 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 				} else if (aType == Helpers.AppAdapterType.Standalone) {
 					if (app1.pkgName.equals("") && app1.actName.equals("")) return -1;
 					if (app2.pkgName.equals("") && app2.actName.equals("")) return 1;
-					boolean app1checked = selectedApp.equals(app1.pkgName + "|" + app1.actName);
-					boolean app2checked = selectedApp.equals(app2.pkgName + "|" + app2.actName);
+					boolean app1checked = selectedApp.equals(app1.pkgName + "|" + app1.actName) && selectedUser == app1.user;
+					boolean app2checked = selectedApp.equals(app2.pkgName + "|" + app2.actName) && selectedUser == app2.user;
 					if (app1checked && app2checked)
 						return 0;
 					else if (app1checked)
@@ -128,6 +160,7 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 			row = mInflater.inflate(R.layout.applist_item, parent, false);
 
 		ImageView itemIsDis = row.findViewById(R.id.am_isDisable_icon);
+		ImageView itemIsDual = row.findViewById(R.id.am_isDual_icon);
 		CheckBox itemChecked = row.findViewById(R.id.am_checked_icon);
 		TextView itemTitle = row.findViewById(R.id.am_label);
 		TextView itemSummary = row.findViewById(R.id.am_summary);
@@ -135,7 +168,7 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 
 		AppData ad = getItem(position);
 		itemTitle.setText(ad.label);
-		itemIsDis.setVisibility(ad.enabled ? View.INVISIBLE : View.VISIBLE);
+		itemIsDis.setVisibility(ad.enabled ? View.GONE : View.VISIBLE);
 
 		if (aType == Helpers.AppAdapterType.Activities) {
 			itemIcon.setVisibility(View.GONE);
@@ -162,21 +195,25 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 		if (aType == Helpers.AppAdapterType.Mutli) {
 			itemSummary.setVisibility(View.GONE);
 			itemChecked.setVisibility(View.VISIBLE);
-			itemChecked.setChecked(selectedApps.size() > 0 && selectedApps.contains(ad.pkgName));
+			itemChecked.setChecked(selectedApps.size() > 0 && shouldSelect(ad.pkgName, ad.user));
+			itemIsDual.setVisibility(ad.user != 0 ? View.VISIBLE : View.GONE);
 		} else if (aType == Helpers.AppAdapterType.CustomTitles) {
 			itemSummary.setText(Helpers.prefs.getString(key + ":" + ad.pkgName + "|" + ad.actName, ""));
 			itemSummary.setVisibility(TextUtils.isEmpty(itemSummary.getText()) ? View.GONE : View.VISIBLE);
 		} else if (aType == Helpers.AppAdapterType.Standalone) {
 			itemChecked.setVisibility(View.VISIBLE);
-			itemChecked.setChecked((selectedApp.equals("") && ad.pkgName.equals("") && ad.actName.equals("")) || (ad.pkgName + "|" + ad.actName).equals(selectedApp));
+			itemChecked.setChecked((selectedApp.equals("") && ad.pkgName.equals("") && ad.actName.equals("")) || ((ad.pkgName + "|" + ad.actName).equals(selectedApp) && ad.user == selectedUser));
+			itemIsDual.setVisibility(ad.user != 0 ? View.VISIBLE : View.GONE);
 		} else if (aType == Helpers.AppAdapterType.Activities) {
 			itemSummary.setText(ad.actName.replace(".", ".\u200B"));
 			itemSummary.setVisibility(TextUtils.isEmpty(itemSummary.getText()) ? View.GONE : View.VISIBLE);
 			itemSummary.setSingleLine(false);
 			itemSummary.setMaxLines(Integer.MAX_VALUE);
 			itemSummary.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+			itemIsDual.setVisibility(ad.user != 0 ? View.VISIBLE : View.GONE);
 		} else {
 			itemSummary.setVisibility(View.GONE);
+			itemIsDual.setVisibility(ad.user != 0 ? View.VISIBLE : View.GONE);
 		}
 
 		//row.setEnabled(true);

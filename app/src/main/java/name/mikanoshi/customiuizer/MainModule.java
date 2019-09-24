@@ -73,6 +73,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getBoolean("system_notifmediaseekbar")) System.MediaNotificationSeekBarHook();
 		if (mPrefs.getBoolean("system_disableanynotif") && !Helpers.isNougat()) System.DisableAnyNotificationBlockHook();
 		if (mPrefs.getBoolean("system_apksign")) System.NoSignatureVerifyHook();
+		if (mPrefs.getBoolean("system_nooverscroll")) System.NoOverscrollHook();
+		if (mPrefs.getBoolean("system_cleanshare")) System.CleanShareMenuHook();
+		if (mPrefs.getBoolean("system_cleanopenwith")) System.CleanOpenWithMenuHook();
 		if (mPrefs.getBoolean("controls_volumecursor")) Controls.VolumeCursorHook();
 		if (mPrefs.getBoolean("controls_fsg_horiz")) Controls.FSGesturesHook();
 		if (mPrefs.getBoolean("various_alarmcompat")) Various.AlarmCompatHook();
@@ -124,8 +127,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_orientationlock")) System.OrientationLockHook(lpparam);
 			if (mPrefs.getBoolean("system_noducking")) System.NoDuckingHook(lpparam);
 			if (mPrefs.getBoolean("system_epm")) System.ExtendedPowerMenuHook(lpparam);
-			if (mPrefs.getBoolean("system_cleanshare")) System.CleanShareMenuHook(lpparam);
-			if (mPrefs.getBoolean("system_cleanopenwith")) System.CleanOpenWithMenuHook(lpparam);
+			if (mPrefs.getBoolean("system_cleanshare")) System.CleanShareMenuServiceHook(lpparam);
+			if (mPrefs.getBoolean("system_cleanopenwith")) System.CleanOpenWithMenuServiceHook(lpparam);
 			if (mPrefs.getBoolean("system_limitminbrightness")) System.MinAutoBrightnessHook(lpparam);
 			if (mPrefs.getBoolean("system_applock")) System.AppLockHook(lpparam);
 			if (mPrefs.getBoolean("various_alarmcompat")) Various.AlarmCompatServiceHook(lpparam);
@@ -238,6 +241,11 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			GlobalActions.miuizerSettingsInit(lpparam);
 			if (mPrefs.getBoolean("system_separatevolume")) System.NotificationVolumeSettingsHook(lpparam);
 			if (mPrefs.getBoolean("system_disableanynotif")) System.DisableAnyNotificationHook();
+			if (!mPrefs.getString("system_defaultusb", "none").equals("none")) System.USBConfigSettingsHook(lpparam);
+		}
+
+		if (pkg.equals("com.google.android.packageinstaller") || pkg.equals("com.android.packageinstaller")) {
+			if (mPrefs.getBoolean("various_installappinfo")) Various.AppInfoDuringInstallHook(lpparam);
 		}
 
 		if (pkg.equals("com.miui.home") || pkg.equals("com.mi.android.globallauncher"))
@@ -252,8 +260,10 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 					mPrefs.getInt("launcher_swiperight_action", 1) != 1) Launcher.HotSeatSwipesHook(lpparam);
 				if (mPrefs.getInt("launcher_shake_action", 1) != 1) Launcher.ShakeHook(lpparam);
 				if (mPrefs.getInt("launcher_doubletap_action", 1) != 1) Launcher.LauncherDoubleTapHook(lpparam);
-				if (mPrefs.getInt("launcher_folder_cols", 3) != 3) Launcher.FolderColumnsHook(lpparam);
+				if (mPrefs.getInt("launcher_folder_cols", 1) > 1) Launcher.FolderColumnsHook(lpparam);
 				if (mPrefs.getInt("launcher_iconscale", 45) > 45) Launcher.IconScaleHook(lpparam);
+				if (mPrefs.getInt("launcher_titlefontsize", 5) > 5) Launcher.TitleFontSizeHook(lpparam);
+				if (mPrefs.getInt("launcher_titletopmargin", 0) > 0) Launcher.TitleTopMarginHook(lpparam);
 				if (mPrefs.getBoolean("launcher_noclockhide")) Launcher.NoClockHideHook(lpparam);
 				if (mPrefs.getBoolean("launcher_renameapps")) Launcher.RenameShortcutsHook(lpparam);
 				if (mPrefs.getBoolean("launcher_closefolder")) Launcher.CloseFolderOnLaunchHook(lpparam);
@@ -265,6 +275,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 					if (mPrefs.getBoolean("controls_fsg_horiz")) Launcher.FSGesturesHook(lpparam);
 					if (mPrefs.getBoolean("launcher_fixstatusbarmode")) Launcher.FixStatusBarModeHook(lpparam);
 					if (mPrefs.getBoolean("launcher_hideseekpoints")) Launcher.HideSeekPointsHook(lpparam);
+					if (mPrefs.getBoolean("launcher_privacyapps_gest")) Launcher.PrivacyFolderHook(lpparam);
 				}
 				//if (!mPrefs.getString("system_clock_app", "").equals("")) Launcher.ReplaceClockAppHook(lpparam);
 				//if (!mPrefs.getString("system_calendar_app", "").equals("")) Launcher.ReplaceCalendarAppHook(lpparam);

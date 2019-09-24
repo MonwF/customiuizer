@@ -1,3 +1,28 @@
+1.8.0
+[New] Action: Toggle one-handed mode
+[New] Display version info about app that is being installed
+[New] Disable overscroll in list views
+[New] Font size of titles in launcher
+[New] Top margin of titles in launcher
+[New] Dual apps support in mods:
+- App lock
+- Hidden apps
+- Clean share menu
+- Clean Open with menu
+- Additional app details
+- Extended notification menu
+- Shortcut/Clock/Calendar app in notification drawer
+- Launch app and Launch activity actions
+[Improved][Number of columns in launcher folders] Increased width of folder grid
+[Improved][Default USB configuration] Do not show dialog automatically upon connection on latest ROMs
+[Improved][Music visualizer] Customizable interval for dynamic color change
+[Fixed][Minimum auto brightness] Compatibility with some ROMs
+[Fixed][Hide mobile network type] Compatibility with some ROMs
+[Fixed][Custom lock screen actions] Compatibility with latest ROMs
+[Fixed][Disable hidden apps folder] Compatibility with latest ROMs
+[Fixed][Number of columns in collapsed Quick Settings panel] Compatibility with latest ROMs
+Detailed report compression to save that precious traffic
+
 1.7.5
 [New] Disable APK signature verification when app is being updated
 [New] Dim duration before automatic screen off

@@ -26,17 +26,38 @@
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_launcher_folder_cols"
 			android:title="@string/launcher_folder_cols_title"
-			android:defaultValue="3"
-			miuizer:minValue="2"
+			android:defaultValue="1"
+			miuizer:minValue="1"
 			miuizer:maxValue="5"
 			miuizer:stepValue="1"
-			miuizer:format="%d" />
+			miuizer:format="%d"
+			miuizer:offtext="@string/array_default" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_launcher_cat_titles"
 		android:title="@string/launcher_titles">
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_launcher_titlefontsize"
+			android:title="@string/launcher_titlefontsize_title"
+			android:defaultValue="5"
+			miuizer:minValue="5"
+			miuizer:maxValue="20"
+			miuizer:stepValue="1"
+			miuizer:format="%d sp"
+			miuizer:offtext="@string/array_default" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_launcher_titletopmargin"
+			android:title="@string/launcher_titletopmargin_title"
+			android:defaultValue="0"
+			miuizer:minValue="0"
+			miuizer:maxValue="10"
+			miuizer:stepValue="1"
+			miuizer:format="%d dp"
+			miuizer:offtext="@string/array_default" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_darkershadow"
@@ -71,7 +92,8 @@
 			android:key="pref_key_launcher_privacyapps_gest"
 			android:title="@string/launcher_privacyapps_gest_title"
 			android:summary="@string/launcher_privacyapps_gest_summ"
-			android:defaultValue="false" />
+			android:defaultValue="false"
+			miuizer:dynamic="true" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 

@@ -3,9 +3,7 @@ package name.mikanoshi.customiuizer.subs;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
 import android.preference.Preference;
-import android.provider.Settings;
 
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SubFragment;
@@ -24,14 +22,6 @@ public class Launcher extends SubFragment {
 		if (sub == null) sub = "";
 
 		selectSub("pref_key_launcher", sub);
-
-		CheckBoxPreference.OnPreferenceChangeListener switchPrivacyAppState = new CheckBoxPreference.OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				Settings.Secure.putInt(getActivity().getContentResolver(), "is_privacy_apps_enable", (boolean)newValue ? 1 : 0);
-				return true;
-			}
-		};
 
 		Preference.OnPreferenceClickListener openPrivacyAppEdit = new Preference.OnPreferenceClickListener() {
 			@Override
@@ -69,14 +59,12 @@ public class Launcher extends SubFragment {
 			case "pref_key_launcher_cat_privacyapps":
 				findPreference("pref_key_launcher_cat_privacyapps").setEnabled(opt == 1);
 				findPreference("pref_key_launcher_privacyapps_list").setOnPreferenceClickListener(openPrivacyAppEdit);
-				findPreference("pref_key_launcher_privacyapps_gest").setOnPreferenceChangeListener(switchPrivacyAppState);
 
 				if (!checkPermissions()) {
 					Preference pref = findPreference("pref_key_launcher_cat_privacyapps");
 					pref.setEnabled(false);
 					pref.setTitle(R.string.launcher_privacyapps_fail);
 					findPreference("pref_key_launcher_privacyapps_list").setEnabled(false);
-					findPreference("pref_key_launcher_privacyapps_gest").setEnabled(false);
 				}
 
 				break;
@@ -88,16 +76,6 @@ public class Launcher extends SubFragment {
 				findPreference("pref_key_launcher_unlockgrids").setEnabled(opt == 1);
 				findPreference("pref_key_launcher_hideseekpoints").setEnabled(opt == 1);
 				break;
-		}
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-
-		if ("pref_key_launcher_cat_privacyapps".equals(sub) && checkPermissions()) {
-			Preference pref = findPreference("pref_key_launcher_privacyapps_gest");
-			((CheckBoxPreference)pref).setChecked(Settings.Secure.getInt(getActivity().getContentResolver(), "is_privacy_apps_enable", 0) == 1);
 		}
 	}
 

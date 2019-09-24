@@ -748,6 +748,12 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_nooverscroll"
+			android:title="@string/system_nooverscroll_title"
+			android:summary="@string/system_nooverscroll_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_unblockthird"
 			android:title="@string/system_unblockthird_title"
 			android:summary="@string/system_unblockthird_summ"

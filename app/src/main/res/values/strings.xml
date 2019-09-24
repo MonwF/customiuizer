@@ -146,6 +146,7 @@
 	<string name="system_visualizer_glowlevel_title">Glow</string>
 	<string name="system_visualizer_color_title">Color</string>
 	<string name="system_visualizer_colorval_title">Select custom color</string>
+	<string name="system_visualizer_dyntime_title">Dynamic color change interval</string>
 	<string name="system_ignorecalls_title">Ignore calls</string>
 	<string name="system_ignorecalls_summ">Prevent incoming calls from stealing audio focus when it\'s on selected apps and stop notifying them about call state changes</string>
 	<string name="system_nosilentvibrate_title">No test vibration</string>
@@ -211,6 +212,8 @@
 	<string name="system_apksign_summ">Allow app updating even when APK signature differs from installed one</string>
 	<string name="system_magnifier_title">Text magnifier</string>
 	<string name="system_magnifier_summ">Display magnified text when moving an input cursor or making a selection</string>
+	<string name="system_nooverscroll_title">Disable overscroll</string>
+	<string name="system_nooverscroll_summ">Prevent list views from overscrolling</string>
 	<string name="system_hideproxywarn_title">Hide warning about disabled touches</string>
 	<string name="system_hideproxywarn_summ">Do not display a warning that earphone area is covered</string>
 	<string name="system_unblockthird_title">Unblock launchers</string>
@@ -316,6 +319,8 @@
 	<string name="launcher_closefolder_title">Auto close folders</string>
 	<string name="launcher_closefolder_summ">Close app\'s folder after launch</string>
 	<string name="launcher_titles">App titles</string>
+	<string name="launcher_titlefontsize_title">Font size</string>
+	<string name="launcher_titletopmargin_title">Additional top margin</string>
 	<string name="launcher_darkershadow_title">Darker shadow</string>
 	<string name="launcher_darkershadow_summ">Makes title shadow less transparent</string>
 	<string name="launcher_renameapps_title">Custom app titles</string>
@@ -323,8 +328,8 @@
 	<string name="launcher_renameapps_modified">Modified title</string>
 	<string name="launcher_privacyapps">Hidden apps</string>
 	<string name="launcher_privacyapps_fail">Required permissions are not granted</string>
-	<string name="launcher_privacyapps_gest_title">Hidden folder</string>
-	<string name="launcher_privacyapps_gest_summ">Spread two fingers on MIUI launcher to open hidden apps folder. No reboot is required.</string>
+	<string name="launcher_privacyapps_gest_title">No hidden folder</string>
+	<string name="launcher_privacyapps_gest_summ">Disable two-finger gesture that opens hidden apps folder</string>
 	<string name="launcher_privacyapps_list_title">List of apps to hide</string>
 	<string name="launcher_privacyapps_list_summ">Enhanced version of Hidden apps option that allows to hide any installed app. No reboot is required.</string>
 	<string name="launcher_swipedownaction_title">Swipe down action (1 finger)</string>
@@ -407,6 +412,13 @@
 	<string name="various_sysappsupdater_title">Open \"System app updater\"</string>
 	<string name="various_sysappsupdater_summ">App is no longer a part of some ROMs and has to be installed manually</string>
 	<string name="various_sysappsupdater_summ2">Be careful when updating modified system apps on custom ROMs, you might lose the added functionality</string>
+	<string name="various_installappinfo_title">App info in installer</string>
+	<string name="various_installappinfo_summ">Display info about app that is being installed</string>
+	<string name="various_installappinfo_package">Package</string>
+	<string name="various_installappinfo_vername">Version name</string>
+	<string name="various_installappinfo_vercode">Version code</string>
+	<string name="various_installappinfo_sdk">Supported SDK</string>
+	<string name="various_installappinfo_current">current</string>
 	<string name="various_alarmcompat_title">Alarm clock compatibility</string>
 	<string name="various_alarmcompat_summ">Make selected apps display correct next alarm time set by stock MIUI Clock app</string>
 	<string name="various_showcallui_title">Show call UI</string>
@@ -475,6 +487,8 @@
 	<string name="array_global_actions_invertcolors">Invert colors</string>
 	<string name="array_global_actions_switchkeyboard">Switch keyboard</string>
 	<string name="array_global_actions_goback">Go back</string>
+	<string name="array_global_actions_onehanded_left">One-handed mode (left)</string>
+	<string name="array_global_actions_onehanded_right">One-handed mode (right)</string>
 	<string name="array_global_toggle_wifi">Wi-Fi</string>
 	<string name="array_global_toggle_bt">Bluetooth</string>
 	<string name="array_global_toggle_gps">GPS</string>
@@ -638,6 +652,8 @@
 	<string name="crash_ok">Report was sent successfully!</string>
 	<string name="crash_error">Failed to send report</string>
 	<string name="crash_confirm">Confirmation</string>
+	<string name="crash_collecting_report">Building report…</string>
+	<string name="crash_sending_report">Sending report…</string>
 
 	<string name="array_color_auto">Automatic</string>
 	<string name="array_color_dark">Dark</string>

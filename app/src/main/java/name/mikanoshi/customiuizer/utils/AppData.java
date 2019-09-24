@@ -5,4 +5,5 @@ public class AppData {
 	public String pkgName;
 	public String actName;
 	public boolean enabled;
+	public int user = 0;
 }

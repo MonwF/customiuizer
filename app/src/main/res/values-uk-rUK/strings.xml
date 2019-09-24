@@ -111,11 +111,15 @@
     <string name="system_nolightuponcharges_summ">Забороняє увімкнення екрану при підключенні або відключенні зарядки</string>
     <string name="system_nolightuponheadset_title">Не вмикати екран при підключенні навушників</string>
     <string name="system_nolightuponheadset_summ">Забороняє увімкнення екрану при підключенні навушників</string>
+    <string name="system_dimtime_title">Тривалість затемнення</string>
+    <string name="system_dimtime_summ">Як довго екран повинен бути затемнений перед автоматичним вимкненням</string>
     <string name="system_minbrightness_title">Мінімальна автояскравість</string>
     <string name="system_minbrightness_summ">Задає мінімальне значення яскравості в автоматичному режимі</string>
     <string name="system_minbrightness_note">Слайдер не відповідає системному слайдеру гучності на останніх версіях Android з нелінійної шкалою яскравості</string>
     <string name="system_noducking_title">Вимкнути заглушення</string>
     <string name="system_noducking_summ">Не знижувати гучність граючої в даний момент музики для програвання звуку сповіщення</string>
+    <string name="system_firstpress_title">Негайне регулювання гучності</string>
+    <string name="system_firstpress_summ">Змінювати гучність медіа при першому натисканні кнопки</string>
     <string name="system_separatevolume_title">Роздільні налаштування гучності</string>
     <string name="system_separatevolume_summ">Дозволяє змінити гучність в Настройках окремо для дзвінків/сповіщень/системних звуків</string>
     <string name="system_separatevolume_slider_title">Повзунок гучності сповіщень</string>
@@ -131,6 +135,7 @@
     <string name="system_visualizer_custom_summ">Показує візуалізацію поверх стороннього екрана блокування</string>
     <string name="system_visualizer_drawer_title">Відображати в панелі сповіщень</string>
     <string name="system_visualizer_drawer_summ">Показує візуалізацію також і в розкритій панелі сповіщень</string>
+    <string name="system_visualizer_animdur_title">Тривалість анімації</string>
     <string name="system_visualizer_transp_title">Рівень прозорості</string>
     <string name="system_visualizer_style_title">Стиль</string>
     <string name="system_visualizer_glowlevel_title">Світіння</string>
@@ -180,6 +185,8 @@
     <string name="system_blur_title">Розмиття фону</string>
     <string name="system_recents_blur_summ">Рівень розмиття фону на екрані нещодавніх додатків</string>
     <string name="system_drawer_blur_summ">Рівень розмиття фону в панелі сповіщень</string>
+    <string name="system_drawer_hidebackground_title">Тимчасово приховувати фон з теми</string>
+    <string name="system_drawer_hidebackground_summ">Приховувати фон під час зміни яскравості</string>
     <string name="system_drawer_opacity_title">Прозорість фону з теми</string>
     <string name="system_drawer_opacity_summ">Рівень прозорості фону панелі сповіщень з поточної теми</string>
     <string name="system_mods_lockscreen">Екран блокування</string>
@@ -195,6 +202,8 @@
     <string name="system_epm_summ">Додає нові опції в меню живлення (Режим Fastboot, Режим Recovery, Швидке перезавантаження, Перезапуск інтерфейсу, Перезапуск лаунчера)</string>
     <string name="system_downgrade_title">Дозволити пониження версії</string>
     <string name="system_downgrade_summ">Уможливлює установку старої версії програми поверх нової</string>
+    <string name="system_apksign_title">Вимкнути перевірку підпису</string>
+    <string name="system_apksign_summ">Дозволяє оновлення програм, навіть якщо підпис в APK не співпадає з підписом встановленої</string>
     <string name="system_magnifier_title">Лупа для тексту</string>
     <string name="system_magnifier_summ">Показує збільшений текст при переміщенні вказівника вводу і при виділенні</string>
     <string name="system_hideproxywarn_title">Приховати попередження про вимкнені торкання</string>
@@ -388,7 +397,7 @@
     <string name="various_sysappsupdater_summ">Додаток більше не є частиною деяких прошивок і має бути встановленим вручну</string>
     <string name="various_sysappsupdater_summ2">Будьте обережні при оновленні модифікованих додатків на кастомних прошивках, це може привести до втрати додаткової функціональності</string>
     <string name="various_alarmcompat_title">Сумісність будильника</string>
-    <string name="various_alarmcompat_summ">Робить обрані програми сумісними зі способом зберігання часу наступного спрацювання будильника в MIUI</string>
+    <string name="various_alarmcompat_summ">Дозволяє обраним додаткам правильно показувати час наступного будильника, встановленого стандартним додатком годин MIUI</string>
     <string name="various_showcallui_title">Показувати інтерфейс дзвінка</string>
     <string name="various_showcallui_summ">Задає коли показувати інтерфейс вхідного дзвінка замість спливаючого сповіщення</string>
     <string name="various_calluibright_title">Яскравість екрану під час дзвінка</string>
@@ -501,6 +510,7 @@
     <string name="array_rainbowh">Кольори веселки (горизонтально)</string>
     <string name="array_rainbowv">Кольори веселки (вертикально)</string>
     <string name="array_rainbow">Кольори веселки</string>
+    <string name="array_dynamic">Динамічний колір</string>
     <string name="array_discrete">Дискретний</string>
     <string name="array_gradual">Поступовий</string>
     <string name="array_bars_solid">Суцільні смуги</string>
@@ -612,7 +622,7 @@
     <string name="sdk_failed">Не вдалося ініціалізувати MIUI SDK. Пристрій не Xiaomi?</string>
     <string name="notselected">Не вибрано</string>
     <string name="warning">Увага!</string>
-    <string name="open_xposed">Відкрити Xposed Installer</string>
+    <string name="open_xposed">Керування модулями Xposed</string>
     <string name="soft_reboot">Швидке перезавантаження</string>
     <string name="soft_reboot_ask">Виконати швидке перезавантаження?</string>
     <string name="restart_launcher">Перезавантажити робочий стіл</string>
@@ -653,11 +663,11 @@
     <string name="credentials_ok">Облікові дані вже розблоковані</string>
     <string name="credentials_unlock">Розблокувати облікові дані</string>
     <string name="credentials_success">Облікові дані розблоковані!</string>
-    <string name="xposed_not_found">Не вдалося знайти Xposed Framework</string>
+    <string name="xposed_not_found">Не вдалося знайти програму Xposed</string>
     <string name="xposed_not_found_explain">Схоже, що у Вас не встановлений Xposed Framework.\n\nВсі модифікації працюють тільки за наявності встановленого Xposed Framework!</string>
     <string name="xposed_not_reshooks">Модифікація ресурсів неможлива</string>
     <string name="xposed_not_reshooks_explain">Зміна ресурсів вимкнена в налаштуваннях Xposed Installer, модуль не буде діяти!</string>
-    <string name="module_not_active">Модуль CustoMIUIzer не активний! Відкрийте Xposed Installer, увімкніть модуль і перезавантажте пристрій.</string>
+    <string name="module_not_active">Модуль CustoMIUIzer не активний! Відкрийте програму Xposed, увімкніть модуль і перезавантажте пристрій.</string>
     <string name="no_browser">Для відкриття посилань необхідний браузер</string>
     <string name="okay">Окей</string>
     <string name="cancel">Скасувати</string>

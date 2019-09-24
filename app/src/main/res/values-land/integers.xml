@@ -9,4 +9,9 @@
 	<integer name="quick_settings_num_rows_4">3</integer>
 	<integer name="quick_settings_num_rows_5">3</integer>
 
+	<integer name="quick_quick_settings_num_rows_3">4</integer>
+	<integer name="quick_quick_settings_num_rows_4">5</integer>
+	<integer name="quick_quick_settings_num_rows_5">6</integer>
+	<integer name="quick_quick_settings_num_rows_6">7</integer>
+
 </resources>

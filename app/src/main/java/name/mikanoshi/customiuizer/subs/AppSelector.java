@@ -90,17 +90,25 @@ public class AppSelector extends SubFragmentWithSearch {
 						if (multi && key != null) {
 							AppData app = (AppData)parent.getAdapter().getItem(position);
 							Set<String> selectedApps = new LinkedHashSet<String>(Helpers.prefs.getStringSet(key, new LinkedHashSet<String>()));
-							if (selectedApps.contains(app.pkgName))
-								selectedApps.remove(app.pkgName);
-							else
-								selectedApps.add(app.pkgName);
+							if (share || openwith) {
+								if (selectedApps.contains(app.pkgName + "|" + app.user))
+									selectedApps.remove(app.pkgName + "|" + app.user);
+								else
+									selectedApps.add(app.pkgName + "|" + app.user);
+							} else {
+								if (selectedApps.contains(app.pkgName))
+									selectedApps.remove(app.pkgName);
+								else
+									selectedApps.add(app.pkgName);
+							}
 							Helpers.prefs.edit().putStringSet(key, selectedApps).apply();
 							((AppDataAdapter)parent.getAdapter()).updateSelectedApps();
 						} else if (activity) {
 							AppData app = (AppData)parent.getAdapter().getItem(position);
-							Bundle args = new Bundle();
+							final Bundle args = new Bundle();
 							args.putString("key", key);
 							args.putString("package", app.pkgName);
+							args.putInt("user", app.user);
 							ActivitySelector activitySelect = new ActivitySelector();
 							activitySelect.setTargetFragment(AppSelector.this, getTargetRequestCode());
 							openSubFragment(activitySelect, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_activity, R.layout.prefs_app_selector);
@@ -112,7 +120,7 @@ public class AppSelector extends SubFragmentWithSearch {
 								isPrivacyApp.setAccessible(true);
 								Method setPrivacyApp = mSecurityManager.getClass().getDeclaredMethod("setPrivacyApp", String.class, int.class, boolean.class);
 								setPrivacyApp.setAccessible(true);
-								setPrivacyApp.invoke(mSecurityManager, app.pkgName, 0, !(boolean)isPrivacyApp.invoke(mSecurityManager, app.pkgName, 0));
+								setPrivacyApp.invoke(mSecurityManager, app.pkgName, app.user, !(boolean)isPrivacyApp.invoke(mSecurityManager, app.pkgName, app.user));
 								PrivacyAppAdapter adapter = (PrivacyAppAdapter)parent.getAdapter();
 								adapter.notifyDataSetChanged();
 								getActivity().getContentResolver().notifyChange(Uri.parse("content://com.miui.securitycenter.provider/update_privacyapps_icon"), null);
@@ -123,11 +131,11 @@ public class AppSelector extends SubFragmentWithSearch {
 							AppData app = (AppData)parent.getAdapter().getItem(position);
 							try {
 								@SuppressLint("WrongConstant") Object mSecurityManager = getActivity().getSystemService("security");
-								Method getApplicationAccessControlEnabled = mSecurityManager.getClass().getDeclaredMethod("getApplicationAccessControlEnabled", String.class);
-								getApplicationAccessControlEnabled.setAccessible(true);
-								Method setApplicationAccessControlEnabled = mSecurityManager.getClass().getDeclaredMethod("setApplicationAccessControlEnabled", String.class, boolean.class);
-								setApplicationAccessControlEnabled.setAccessible(true);
-								setApplicationAccessControlEnabled.invoke(mSecurityManager, app.pkgName, !(boolean)getApplicationAccessControlEnabled.invoke(mSecurityManager, app.pkgName));
+								Method getApplicationAccessControlEnabledAsUser = mSecurityManager.getClass().getDeclaredMethod("getApplicationAccessControlEnabledAsUser", String.class, int.class);
+								getApplicationAccessControlEnabledAsUser.setAccessible(true);
+								Method setApplicationAccessControlEnabledForUser = mSecurityManager.getClass().getDeclaredMethod("setApplicationAccessControlEnabledForUser", String.class, boolean.class, int.class);
+								setApplicationAccessControlEnabledForUser.setAccessible(true);
+								setApplicationAccessControlEnabledForUser.invoke(mSecurityManager, app.pkgName, !(boolean)getApplicationAccessControlEnabledAsUser.invoke(mSecurityManager, app.pkgName, app.user), app.user);
 								LockedAppAdapter adapter = (LockedAppAdapter)parent.getAdapter();
 								adapter.notifyDataSetChanged();
 							} catch (Throwable t) {
@@ -147,12 +155,13 @@ public class AppSelector extends SubFragmentWithSearch {
 								}
 							});
 						} else {
-							Intent intent = new Intent(getContext(), this.getClass());
+							final Intent intent = new Intent(getContext(), this.getClass());
 							AppData app = (AppData)parent.getAdapter().getItem(position);
 							if (app.pkgName.equals("") && app.actName.equals(""))
 								intent.putExtra("app", "");
 							else
 								intent.putExtra("app", app.pkgName + "|" + app.actName);
+							intent.putExtra("user", app.user);
 							getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
 							finish();
 						}

@@ -1,12 +1,11 @@
 package name.mikanoshi.customiuizer.crashreport;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
@@ -15,6 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import java.util.zip.GZIPOutputStream;
 
 import org.acra.ACRA;
 import org.acra.ReportField;
@@ -39,6 +39,7 @@ import android.content.pm.ResolveInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -48,13 +49,17 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.EditText;
 import android.widget.FrameLayout.LayoutParams;
 
+import miui.app.ProgressDialog;
+
 import name.mikanoshi.customiuizer.R;
+import name.mikanoshi.customiuizer.mods.GlobalActions;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 import static org.acra.ReportField.USER_COMMENT;
@@ -62,27 +67,17 @@ import static org.acra.ReportField.USER_EMAIL;
 
 public class Dialog extends Activity {
 
+	private ProgressDialog loader;
+	private CrashReportData crashData;
 	private CoreConfiguration config;
 	private File reportFile;
-	private String xposedLog;
+	private StringBuilder debugLog = new StringBuilder();
 	private EditText desc;
-	
+
 	private boolean isNetworkAvailable() {
 		ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-	}
-	
-	private String getXposedLog() {
-		String errorLogPath = Helpers.getXposedInstallerErrorLog(this);
-		StringBuilder sb = new StringBuilder();
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(errorLogPath))))) {
-			String line;
-			while ((line = reader.readLine()) != null) sb.append(line).append("\n");
-			return sb.toString();
-		} catch (Throwable e) {
-			return null;
-		}
 	}
 	
 	void showFinishDialog(boolean isOk, String details) {
@@ -117,7 +112,7 @@ public class Dialog extends Activity {
 			ifc = Runtime.getRuntime().exec("getprop " + prop);
 			BufferedReader bis = new BufferedReader(new InputStreamReader(ifc.getInputStream()), 2048);
 			res = bis.readLine();
-		} catch (Throwable e) {} finally {
+		} catch (Throwable t) {} finally {
 			if (ifc != null) ifc.destroy();
 		}
 		return res;
@@ -154,40 +149,206 @@ public class Dialog extends Activity {
 		return version.equals("unknown") ? version + " (" + Helpers.xposedVersion + ")" : version;
 	}
 
+	private void sendCrash() {
+		crashData.put(USER_COMMENT, desc.getText().toString());
 
-	private void sendCrash(final String xposedLogStr) {
-		CrashReportPersister persister = new CrashReportPersister();
-		SharedPreferences prefs;
+		loader.setMessage(getResources().getString(R.string.crash_sending_report));
+		loader.show();
+
+		new Thread(() -> {
+			boolean res;
+			try {
+				res = sendReport();
+			} catch (Throwable t) {
+				res = false;
+			}
+
+			boolean finalRes = res;
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					loader.hide();
+					if (finalRes) {
+						Helpers.emptyFile(Helpers.getProtectedContext(Dialog.this).getFilesDir().getAbsolutePath() + "/uncaught_exceptions", true);
+						cancelReports();
+						showFinishDialog(true, null);
+					} else {
+						showFinishDialog(false, "REQUEST_ERROR");
+					}
+				}
+			});
+		}).start();
+	}
+
+	protected boolean sendReport() {
+		try {
+			byte[] jsonData = crashData.toJSON().getBytes(StandardCharsets.UTF_8);
+			if (jsonData.length == 0) return false;
+
+			//final String basicAuth = "Basic " + Base64.encodeToString("login:pass".getBytes(), Base64.NO_WRAP);
+			URL url = new URL("https://code.highspec.ru/crashreports/reporter.php");
+			HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+			conn.setReadTimeout(10000);
+			conn.setConnectTimeout(10000);
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Accept", "application/json");
+			conn.setRequestProperty("Content-Type", "application/json");
+			conn.setRequestProperty("Content-Encoding", "gzip");
+			conn.setDoInput(true);
+			conn.setDoOutput(true);
+			conn.setUseCaches(false);
+			conn.setDefaultUseCaches(false);
+			conn.connect();
+
+			try (OutputStream os = conn.getOutputStream()) {
+				try (GZIPOutputStream dataStream = new GZIPOutputStream(os)) {
+					dataStream.write(jsonData);
+					dataStream.flush();
+				} catch (Throwable t) {}
+			} catch (Throwable t) {}
+
+//			StringBuilder builder = new StringBuilder();
+//			try (BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+//				String tmp;
+//				while ((tmp = in.readLine()) != null) builder.append(tmp);
+//			}
+//			Log.e("miuizer", "Response: " + builder.toString());
+
+			if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) throw new ReportSenderException(String.valueOf(conn.getResponseMessage()));
+			//Log.e("HTTP", "Report server response code: " + String.valueOf(conn.getResponseCode()));
+			//Log.e("HTTP", "Report server response: " + conn.getResponseMessage());
+			conn.disconnect();
+			return true;
+		} catch (Throwable t) {
+			t.printStackTrace();
+			return false;
+		}
+	}
+
+	protected final void cancelReports() {
+		(new Thread(() -> (new BulkReportDeleter(this)).deleteReports(false, 0))).start();
+	}
+
+	protected void cancelReportsAndFinish() {
+		cancelReports();
+		finish();
+	}
+	
+	int densify(int size) {
+		return Math.round(getResources().getDisplayMetrics().density * size);
+	}
+
+	@Override
+	protected final void onCreate(Bundle savedInstanceState) {
+		overridePendingTransition(0, 0);
+		Helpers.setMiuiTheme(this, R.style.ApplyInvisible);
+		super.onCreate(savedInstanceState);
+
+		if (getIntent().getBooleanExtra("FORCE_CANCEL", false)) {
+			cancelReportsAndFinish();
+			return;
+		}
+
+		Serializable sConfig = getIntent().getSerializableExtra(DialogInteraction.EXTRA_REPORT_CONFIG);
+		Serializable sReportFile = getIntent().getSerializableExtra(DialogInteraction.EXTRA_REPORT_FILE);
+		if (sConfig instanceof CoreConfiguration && sReportFile instanceof File) {
+			config = (CoreConfiguration) sConfig;
+			reportFile = (File)sReportFile;
+		} else {
+			ACRA.log.w(ACRA.LOG_TAG, "Illegal or incomplete call of CrashReportDialog.");
+			finish();
+		}
+
+		loader = new ProgressDialog(this);
+		loader.setMessage(getResources().getString(R.string.crash_collecting_report));
+		loader.show();
+
+		File sdcardLog = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder + Helpers.logFile);
+		if (sdcardLog.exists()) {
+			debugLog.append("Log on external storage found, removing\n");
+			sdcardLog.delete();
+		}
+		debugLog.append("Asking System UI to collect Xposed log\n");
+		sendBroadcast(new Intent(GlobalActions.ACTION_PREFIX + "CollectLogs"));
+
+		final Activity act = this;
+		new Thread(new Runnable() {
+			public void run() {
+				try { Thread.sleep(1500); } catch (Throwable t) {}
+				act.runOnUiThread(Dialog.this::showReportDialog);
+			}
+		}).start();
+	}
+
+	@SuppressLint({"SetTextI18n", "ClickableViewAccessibility"})
+	void showReportDialog() {
+		int title = R.string.warning;
+		int neutralText = R.string.crash_ignore;
+		int text = R.string.crash_dialog;
+		LinearLayout dialogView = new LinearLayout(this);
+		dialogView.setOrientation(LinearLayout.VERTICAL);
+
+		String errorLog = Helpers.getXposedInstallerErrorLog(this);
+		debugLog.append("Installer log path: ").append(errorLog).append("\n");
+
+		String xposedLog = null;
+		try {
+			File sdcardLog = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder + Helpers.logFile);
+			File errorLogFile = null;
+			if (sdcardLog.exists() && sdcardLog.canRead()) {
+				debugLog.append("Log found on external storage: ").append(sdcardLog.getAbsolutePath()).append("\n");
+				errorLogFile = sdcardLog;
+			} else if (errorLog != null) {
+				errorLogFile = new File(errorLog);
+				debugLog.append("Log found: ").append(errorLog).append("\n");
+			} else debugLog.append("No Xposed log found!\n");
+
+			if (errorLogFile != null)
+			try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(errorLogFile)))) {
+				String line;
+				StringBuilder sb = new StringBuilder();
+				while ((line = reader.readLine()) != null) sb.append(line).append("\n");
+				xposedLog = sb.toString();
+			} catch (Throwable t) {
+				debugLog.append("Error reading log: ").append(t.getMessage()).append("\n");
+			}
+
+			if (sdcardLog.exists()) sdcardLog.delete();
+		} catch (Throwable t) {}
+
+		SharedPreferences prefs = getSharedPreferences(Helpers.prefsName, Context.MODE_PRIVATE);
 		try {
 			prefs = Helpers.getProtectedContext(this).getSharedPreferences(Helpers.prefsName, Context.MODE_PRIVATE);
 		} catch (Throwable t) {
-			Log.e("prefs", "Failed to use protected storage!");
-			return;
+			Log.e("miuizer", "Failed to use protected storage!");
 		}
-		final CrashReportData crashData;
+
+		CrashReportPersister persister = new CrashReportPersister();
 		try {
 			crashData = persister.load(reportFile);
-			crashData.put(USER_COMMENT, desc.getText().toString());
 			crashData.put(USER_EMAIL, prefs.getString("acra.user.email", ""));
 		} catch (Throwable t) {
 			t.printStackTrace();
 			cancelReports();
-			showFinishDialog(false, "cannot read report file");
+			showFinishDialog(false, "REPORT_READ_ERROR");
 			return;
 		}
 
 		try {
+			Log.e("AndroidRuntime", crashData.getString(ReportField.STACK_TRACE));
+
 			String ROM = getProp("ro.modversion");
 			String MIUI = getProp("ro.miui.ui.version.name");
-			
+
 			String kernel = System.getProperty("os.version");
 			if (kernel == null) kernel = "";
-			
+
 			JSONObject buildData = (JSONObject)crashData.get("BUILD");
 			buildData.put("ROM_VERSION", ROM);
 			buildData.put("MIUI_VERSION", MIUI);
 			buildData.put("KERNEL_VERSION", kernel);
 			crashData.put("BUILD", buildData);
+			crashData.put("DEBUG_LOG", debugLog.toString());
 
 			StringBuilder sb = new StringBuilder();
 			try (FileInputStream in = new FileInputStream(new File(Helpers.getProtectedContext(this).getFilesDir().getAbsolutePath() + "/uncaught_exceptions"))) {
@@ -228,133 +389,41 @@ public class Dialog extends Activity {
 
 			crashData.put("SHARED_PREFERENCES", new JSONObject(prefs.getAll()));
 			if (!sb.toString().isEmpty())
-			crashData.put("UNCAUGHT_EXCEPTIONS", sb.toString());
+				crashData.put("UNCAUGHT_EXCEPTIONS", sb.toString());
 
-			if (xposedLogStr == null || xposedLogStr.trim().equals(""))
+			if (xposedLog == null || xposedLog.trim().equals(""))
 				crashData.put(ReportField.CUSTOM_DATA, "Xposed log is empty...");
 			else
-				crashData.put(ReportField.CUSTOM_DATA, xposedLogStr);
-		} catch (Throwable e) {
+				crashData.put(ReportField.CUSTOM_DATA, xposedLog);
+		} catch (Throwable t) {
 			StringWriter sw = new StringWriter();
-			e.printStackTrace(new PrintWriter(sw));
+			t.printStackTrace(new PrintWriter(sw));
 			crashData.put(ReportField.CUSTOM_DATA, "Retrieval failed. Stack trace:\n" + sw.toString());
 		}
 
-		new Thread(() -> {
-			boolean res;
-			try {
-				res = sendReport(crashData);
-			} catch (Throwable t) {
-				res = false;
-			}
-
-			boolean finalRes = res;
-			runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					if (finalRes) {
-						Helpers.emptyFile(Helpers.getProtectedContext(Dialog.this).getFilesDir().getAbsolutePath() + "/uncaught_exceptions", true);
-						cancelReports();
-						showFinishDialog(true, null);
-					} else {
-						showFinishDialog(false, "request failed");
-					}
-				}
-			});
-		}).start();
-	}
-
-	protected boolean sendReport(CrashReportData report) {
+		int payloadSize;
 		try {
-			String json = report.toJSON();
-
-			//final String basicAuth = "Basic " + Base64.encodeToString("login:pass".getBytes(), Base64.NO_WRAP);
-			URL url = new URL("https://code.highspec.ru/crashreports/reporter.php");
-			HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-			conn.setReadTimeout(10000);
-			conn.setConnectTimeout(10000);
-			conn.setRequestMethod("POST");
-			conn.setRequestProperty("Accept", "application/json");
-			conn.setRequestProperty("Content-Type", "application/json");
-			conn.setDoInput(true);
-			conn.setDoOutput(true);
-			conn.setUseCaches(false);
-			conn.setDefaultUseCaches(false);
-			conn.connect();
-			try (OutputStream os = conn.getOutputStream()) {
-				try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8))) {
-					writer.write(json);
-					writer.flush();
-				} catch (Throwable t) {}
-			} catch (Throwable t) {}
-			if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) throw new ReportSenderException(String.valueOf(conn.getResponseMessage()));
-			//Log.e("HTTP", "Report server response code: " + String.valueOf(conn.getResponseCode()));
-			//Log.e("HTTP", "Report server response: " + conn.getResponseMessage());
-			conn.disconnect();
-			return true;
-		} catch (Throwable e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	protected final void cancelReports() {
-		(new Thread(() -> (new BulkReportDeleter(this)).deleteReports(false, 0))).start();
-	}
-
-	protected void cancelReportsAndFinish() {
-		cancelReports();
-		finish();
-	}
-	
-	int densify(int size) {
-		return Math.round(getResources().getDisplayMetrics().density * size);
-	}
-
-	@Override
-	@SuppressLint({"SetTextI18n", "ClickableViewAccessibility"})
-	protected final void onCreate(Bundle savedInstanceState) {
-		overridePendingTransition(0, 0);
-		Helpers.setMiuiTheme(this, R.style.ApplyInvisible);
-		super.onCreate(savedInstanceState);
-
-		if (getIntent().getBooleanExtra("FORCE_CANCEL", false)) {
-			cancelReportsAndFinish();
+			try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+				try (GZIPOutputStream dataStream = new GZIPOutputStream(os)) {
+					dataStream.write(crashData.toJSON().getBytes(StandardCharsets.UTF_8));
+					dataStream.flush();
+				}
+				payloadSize = os.size();
+			}
+		} catch (Throwable t) {
+			t.printStackTrace();
+			cancelReports();
+			showFinishDialog(false, "JSON_PAYLOAD_ERROR");
 			return;
 		}
 
-		Serializable sConfig = getIntent().getSerializableExtra(DialogInteraction.EXTRA_REPORT_CONFIG);
-		Serializable sReportFile = getIntent().getSerializableExtra(DialogInteraction.EXTRA_REPORT_FILE);
-		if (sConfig instanceof CoreConfiguration && sReportFile instanceof File) {
-			config = (CoreConfiguration) sConfig;
-			reportFile = (File)sReportFile;
-		} else {
-			ACRA.log.w(ACRA.LOG_TAG, "Illegal or incomplete call of CrashReportDialog.");
-			finish();
+		if (payloadSize == 0) {
+			cancelReports();
+			showFinishDialog(false, "EMPTY_PAYLOAD_ERROR");
+			return;
 		}
 
-		int title = R.string.warning;
-		int neutralText = R.string.crash_ignore;
-		int text = R.string.crash_dialog;
-		LinearLayout dialogView = new LinearLayout(this);
-		dialogView.setOrientation(LinearLayout.VERTICAL);
-
-		int tries = 3;
-		xposedLog = null;
-		while (xposedLog == null && tries > 0) try {
-			tries--;
-			xposedLog = getXposedLog();
-			if (xposedLog == null) Thread.sleep(500);
-		} catch (Throwable e) {}
-
 		try {
-			CrashReportPersister persister = new CrashReportPersister();
-			CrashReportData crashData = persister.load(reportFile);
-			String payload = crashData.toJSON();
-			int payloadSize = payload.getBytes(StandardCharsets.UTF_8).length;
-			boolean isManualReport = crashData.getString(ReportField.STACK_TRACE).contains("Report requested by developer");
-			Log.e("AndroidRuntime", crashData.getString(ReportField.STACK_TRACE));
-
 			TextView mainText = new TextView(this);
 			mainText.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 			mainText.setGravity(Gravity.START);
@@ -375,6 +444,7 @@ public class Dialog extends Activity {
 			desc.setSingleLine(false);
 			desc.setPadding(densify(5), densify(5), densify(5), densify(5));
 
+			boolean isManualReport = crashData.getString(ReportField.STACK_TRACE).contains("Report requested by developer");
 			if (isManualReport) {
 				title = R.string.crash_confirm;
 				text = R.string.crash_dialog_manual;
@@ -421,7 +491,7 @@ public class Dialog extends Activity {
 				dialogView.addView(feedbackNote);
 
 			mainText.setText(mainText.getText() + "\n" + getResources().getString(R.string.crash_dialog_manual_size) + ": " + Math.round(payloadSize / 1024.0f) + " KB");
-		} catch (Throwable e) {}
+		} catch (Throwable t) {}
 
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		alert.setTitle(title);
@@ -440,6 +510,7 @@ public class Dialog extends Activity {
 		alert.setPositiveButton(R.string.crash_send, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {}
 		});
+		loader.hide();
 		final AlertDialog alertDlg = alert.show();
 		alertDlg.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new OnClickListener() {
 			@Override
@@ -449,8 +520,16 @@ public class Dialog extends Activity {
 				} else if (!isNetworkAvailable()) {
 					Toast.makeText(Dialog.this, R.string.crash_needs_inet, Toast.LENGTH_LONG).show();
 				} else {
+					try {
+						InputMethodManager inputManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+						View currentFocusedView = getCurrentFocus();
+						if (currentFocusedView != null)
+							inputManager.hideSoftInputFromWindow(currentFocusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+					} catch (Throwable t) {
+						Log.e("miuizer", t.getMessage());
+					}
 					alertDlg.dismiss();
-					sendCrash(xposedLog);
+					sendCrash();
 				}
 			}
 		});

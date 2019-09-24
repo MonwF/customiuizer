@@ -143,6 +143,7 @@ Türkçe çeviri için; Buğra Çağlar\'a teşekkürler.</string>
     <string name="system_visualizer_glowlevel_title">Gölge</string>
     <string name="system_visualizer_color_title">Renk</string>
     <string name="system_visualizer_colorval_title">Özel (Renk)</string>
+    <string name="system_visualizer_dyntime_title">Dinamik Renk Değişim Aralığı</string>
     <string name="system_ignorecalls_title">Gelen Arama</string>
     <string name="system_ignorecalls_summ">Seçilen uygulamalar da Gelen Arama ile oynatılan dosyanın sesi azaltılmaz/durdurulmaz.</string>
     <string name="system_nosilentvibrate_title">Titreşim (Sessiz)</string>
@@ -208,6 +209,8 @@ Türkçe çeviri için; Buğra Çağlar\'a teşekkürler.</string>
     <string name="system_apksign_summ">APK imzası yüklü olan uygulamadan farklı dahi olsa değiştirilmesine izin verir.</string>
     <string name="system_magnifier_title">Büyüteç (Metin)</string>
     <string name="system_magnifier_summ">Metne basılığı tuttuğunuz zaman Büyüteç açılır ve daha kolay seçim yaparsınız.</string>
+    <string name="system_nooverscroll_title">Kaydırmayı (Fazla) Devre Dışı Bırak</string>
+    <string name="system_nooverscroll_summ">Liste görünümlerinin fazladan kaydırılmasını önler.</string>
     <string name="system_hideproxywarn_title">Uyarı</string>
     <string name="system_hideproxywarn_summ">Kulaklık alanının kapatıldığını belirten uyarı gizlenir.</string>
     <string name="system_unblockthird_title">Başlatıcı</string>
@@ -309,6 +312,8 @@ Türkçe çeviri için; Buğra Çağlar\'a teşekkürler.</string>
     <string name="launcher_closefolder_title">Klasörü Kapat</string>
     <string name="launcher_closefolder_summ">Klasör içerisindeki uygulamayı başlatınca, klasör otomatik olarak kapatılır.</string>
     <string name="launcher_titles">Uygulama İsmi</string>
+    <string name="launcher_titlefontsize_title">Yazı Boyutu</string>
+    <string name="launcher_titletopmargin_title">Ek Üst Marj</string>
     <string name="launcher_darkershadow_title">Gölge</string>
     <string name="launcher_darkershadow_summ">Uygulama isminin gölge şeffaflığını azaltır.</string>
     <string name="launcher_renameapps_title">Özel İsim</string>
@@ -398,6 +403,13 @@ Türkçe çeviri için; Buğra Çağlar\'a teşekkürler.</string>
     <string name="various_sysappsupdater_title">Aç \"Sistem Uygulama Güncelleyici\"</string>
     <string name="various_sysappsupdater_summ">Uygulama bazı ROM\'lar da yüklü olarak gelmez ve yüklenmesi gerekir.</string>
     <string name="various_sysappsupdater_summ2">Özel ROM\'lar da sistem uygulamalarını güncellerken dikkat ediniz aksi taktir de eklenen özelleştirmeler silinebilir.</string>
+    <string name="various_installappinfo_title">Uygulama Yükleyicisinde Uygulama Bilgisi</string>
+    <string name="various_installappinfo_summ">Yüklenen Uygulama Hakkında Bilgi Görüntüleme</string>
+    <string name="various_installappinfo_package">Paket</string>
+    <string name="various_installappinfo_vername">Versiyon Adı</string>
+    <string name="various_installappinfo_vercode">Versiyon Kodu</string>
+    <string name="various_installappinfo_sdk">Desteklenen SDK</string>
+    <string name="various_installappinfo_current">Şimdiki</string>
     <string name="various_alarmcompat_title">Alarm</string>
     <string name="various_alarmcompat_summ">Seçtiğiniz uygulamaların varsayılan Saat (MiUI) uygulaması tarafından belirlenen alarm saatini doğru görüntülemesini sağlar.</string>
     <string name="various_showcallui_title">Arama/Çağrı Arayüzü</string>
@@ -463,6 +475,8 @@ Türkçe çeviri için; Buğra Çağlar\'a teşekkürler.</string>
     <string name="array_global_actions_invertcolors">Ters Renkler</string>
     <string name="array_global_actions_switchkeyboard">Klavyeyi Değiştir</string>
     <string name="array_global_actions_goback">Geri Dön</string>
+    <string name="array_global_actions_onehanded_left">Tek El Kullanım Mod\'u (Sol)</string>
+    <string name="array_global_actions_onehanded_right">Tek El Kullanım Mod\'u (Sağ)</string>
     <string name="array_global_toggle_wifi">Wi-Fi</string>
     <string name="array_global_toggle_bt">Bluetooth</string>
     <string name="array_global_toggle_gps">GPS</string>
@@ -618,6 +632,8 @@ Türkçe çeviri için; Buğra Çağlar\'a teşekkürler.</string>
     <string name="crash_ok">Rapor Başarıyla Gönderildi!</string>
     <string name="crash_error">Rapor Gönderilemedi!</string>
     <string name="crash_confirm">Onayla</string>
+    <string name="crash_collecting_report">Rapor oluştur…</string>
+    <string name="crash_sending_report">Rapor gönderiliyor…</string>
     <string name="array_color_auto">Otomatik</string>
     <string name="array_color_dark">Karanlık</string>
     <string name="array_color_light">Aydınlık</string>

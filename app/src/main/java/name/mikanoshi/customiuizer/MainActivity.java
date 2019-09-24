@@ -161,6 +161,12 @@ public class MainActivity extends Activity {
 				else
 					Toast.makeText(this, R.string.permission_permanent, Toast.LENGTH_LONG).show();
 				break;
+			case Helpers.REQUEST_PERMISSIONS_REPORT:
+				if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+					mainFrag.createReport();
+				else
+					Toast.makeText(this, ":(", Toast.LENGTH_SHORT).show();
+				break;
 			default:
 				super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		}

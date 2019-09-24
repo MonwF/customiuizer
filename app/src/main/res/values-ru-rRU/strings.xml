@@ -42,6 +42,13 @@
 	<string name="various_mods">Различное</string>
 	<string name="various_alarmcompat_title">Совместимость будильника</string>
 	<string name="various_alarmcompat_summ">Позволяет выбранным приложениям правильно показывать время следующего будильника, установленного стандартным приложением часов MIUI</string>
+	<string name="various_installappinfo_title">Данные о приложении при инсталляции</string>
+	<string name="various_installappinfo_summ">Отображает данные об устанавливаемом приложении в окне инсталлера</string>
+	<string name="various_installappinfo_package">Пакет</string>
+	<string name="various_installappinfo_vername">Версия</string>
+	<string name="various_installappinfo_vercode">Код версии</string>
+	<string name="various_installappinfo_sdk">Поддержка SDK</string>
+	<string name="various_installappinfo_current">текущая</string>
 	<string name="various_showcallui_title">Показывать интерфейс звонка</string>
 	<string name="various_showcallui_summ">Задаёт когда показывать интерфейс входящего звонка вместо всплывающего уведомелния</string>
 	<string name="various_calluibright_title">Яркость экрана во время звонка</string>
@@ -118,6 +125,8 @@
 	<string name="array_global_actions_invertcolors">Ин\u200Bвер\u200Bти\u200Bро\u200Bвать цвета</string>
 	<string name="array_global_actions_switchkeyboard">Выбор клавиатуры</string>
 	<string name="array_global_actions_goback">Вернуться назад</string>
+	<string name="array_global_actions_onehanded_left">Управление одной рукой (слева)</string>
+	<string name="array_global_actions_onehanded_right">Управление одной рукой (справа)</string>
 	<string name="array_global_toggle_wifi">Wi-Fi</string>
 	<string name="array_global_toggle_bt">Bluetooth</string>
 	<string name="array_global_toggle_gps">GPS</string>
@@ -310,6 +319,8 @@
 	<string name="delete_item_info">Используйте долгое нажатие для удаления ярлыка</string>
 	<string name="change_icon">Изменить иконку</string>
 	<string name="crash_confirm">Подтверждение</string>
+	<string name="crash_collecting_report">Создание отчёта…</string>
+	<string name="crash_sending_report">Отправка отчёта…</string>
 	<string name="launcher_gestures">Жесты</string>
 	<string name="launcher_gestures_action">Действие</string>
 	<string name="launcher_gestures_launch">Приложение для запуска</string>
@@ -393,6 +404,8 @@
 	<string name="launcher_closefolder_title">Закрывать папки автоматом</string>
 	<string name="launcher_closefolder_summ">Закрывает папку приложения после его запуска</string>
 	<string name="launcher_titles">Названия приложений</string>
+	<string name="launcher_titlefontsize_title">Размер шрифта</string>
+	<string name="launcher_titletopmargin_title">Дополнительный отступ сверху</string>
 	<string name="launcher_darkershadow_title">Более тёмная тень</string>
 	<string name="launcher_darkershadow_summ">Делает тень от названий менее прозрачной</string>
 	<string name="launcher_renameapps_title">Модификация названий приложений</string>
@@ -400,8 +413,8 @@
 	<string name="launcher_renameapps_modified">Изменённое название</string>
 	<string name="launcher_privacyapps">Скрытые приложения</string>
 	<string name="launcher_privacyapps_fail">Не получены необходимые разрешения</string>
-	<string name="launcher_privacyapps_gest_title">Скрытая папка</string>
-	<string name="launcher_privacyapps_gest_summ">Для открытия папки со скрытыми приложениями необходимо развести два пальца на рабочем столе MIUI. Перезагрузка не требуется.</string>
+	<string name="launcher_privacyapps_gest_title">Убрать скрытую папку</string>
+	<string name="launcher_privacyapps_gest_summ">Отключает жест двумя пальцами для открытия папки со скрытыми приложениями</string>
 	<string name="launcher_privacyapps_list_title">Список приложений для скрытия</string>
 	<string name="launcher_privacyapps_list_summ">Улучшенная версия функции Скрытые приложения, позволяющая скрыть любое установленное приложение. Перезагрузка не требуется.</string>
 	<string name="calls">Звонки</string>
@@ -427,6 +440,8 @@
 	<string name="system_apksign_summ">Разрешает обновление приложений, даже если подпись в APK не совпадает с установленной</string>
 	<string name="system_magnifier_title">Лупа для текста</string>
 	<string name="system_magnifier_summ">Показывает увеличенный текст при передвижении указателя ввода и при выделении</string>
+	<string name="system_nooverscroll_title">Отключить избыточную прокрутку</string>
+	<string name="system_nooverscroll_summ">Предотвращает чрезмерную прокрутку в списках</string>
 	<string name="system_hideproxywarn_title">Скрыть предупреждение об отключенных касаниях</string>
 	<string name="system_hideproxywarn_summ">Не показывать предупреждение о закрытой области динамика</string>
 	<string name="system_unblockthird_title">Разблокировать ланчеры</string>
@@ -620,6 +635,7 @@
 	<string name="system_visualizer_glowlevel_title">Свечение</string>
 	<string name="system_visualizer_color_title">Цвет</string>
 	<string name="system_visualizer_colorval_title">Задать цвет</string>
+	<string name="system_visualizer_dyntime_title">Интервал изменения динамического цвета</string>
 	<string name="system_ignorecalls_title">Игнорировать звонки</string>
 	<string name="system_ignorecalls_summ">Предотвращает передачу аудио фокуса с выбранных приложения на входящий звонок, также перестаёт уведомлять их об изменениях состояния звонков</string>
 	<string name="system_nosilentvibrate_title">Отключить тестовую вибрацию</string>

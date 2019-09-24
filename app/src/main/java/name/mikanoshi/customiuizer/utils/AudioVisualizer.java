@@ -72,11 +72,11 @@ public class AudioVisualizer extends View {
 	public BarStyle barStyle;
 	public int glowLevel;
 	public int customColor;
+	private int randomizeInterval;
 	public boolean showInDrawer;
 
 	private final AccelerateInterpolator accel = new AccelerateInterpolator();
 	private final DecelerateInterpolator decel = new DecelerateInterpolator();
-	private final int randomizeInterval = 10000;
 	private final Runnable randomizeColor = new Runnable() {
 		@Override
 		public void run() {
@@ -231,6 +231,7 @@ public class AudioVisualizer extends View {
 		barStyle = BarStyle.values()[Integer.parseInt(MainModule.mPrefs.getString("system_visualizer_style", "1"))];
 		glowLevel = MainModule.mPrefs.getInt("system_visualizer_glowlevel", 50);
 		customColor = MainModule.mPrefs.getInt("system_visualizer_colorval", Color.WHITE);
+		randomizeInterval = MainModule.mPrefs.getInt("system_visualizer_dyntime", 10) * 1000;
 		showInDrawer = MainModule.mPrefs.getBoolean("system_visualizer_drawer");
 		updateBarStyle();
 		updateGlowPaint();
@@ -272,6 +273,11 @@ public class AudioVisualizer extends View {
 						case "pref_key_system_visualizer_colorval":
 							customColor = Helpers.getSharedIntPref(context, key, Color.WHITE);
 							setColor(customColor);
+							break;
+						case "pref_key_system_visualizer_dyntime":
+							randomizeInterval = Helpers.getSharedIntPref(context, key, 10) * 1000;
+							mHandler.removeCallbacks(randomizeColor);
+							mHandler.post(randomizeColor);
 							break;
 						case "pref_key_system_visualizer_drawer":
 							showInDrawer = Helpers.getSharedBoolPref(context, key, false);

@@ -390,7 +390,7 @@ public class MainFragment extends PreferenceFragmentBase {
 		findPreference("pref_key_miuizer_sendreport").setOnPreferenceClickListener(new CheckBoxPreference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				ACRA.getErrorReporter().handleException(null);
+				if (Helpers.checkStoragePerm(act, Helpers.REQUEST_PERMISSIONS_REPORT)) createReport();
 				return true;
 			}
 		});
@@ -731,6 +731,10 @@ public class MainFragment extends PreferenceFragmentBase {
 				ex.printStackTrace();
 			}
 		}
+	}
+
+	public void createReport() {
+		ACRA.getErrorReporter().handleException(null);
 	}
 
 	public void showBackupRestoreDialog() {

@@ -59,8 +59,8 @@ public class PrivacyAppAdapter extends BaseAdapter implements Filterable {
 		Collections.sort(filteredAppList, new Comparator<AppData>() {
 			public int compare(AppData app1, AppData app2) {
 				try {
-					boolean app1checked = (boolean)isPrivacyApp.invoke(mSecurityManager, app1.pkgName, 0);
-					boolean app2checked = (boolean)isPrivacyApp.invoke(mSecurityManager, app2.pkgName, 0);
+					boolean app1checked = (boolean)isPrivacyApp.invoke(mSecurityManager, app1.pkgName, app1.user);
+					boolean app2checked = (boolean)isPrivacyApp.invoke(mSecurityManager, app2.pkgName, app2.user);
 					if (app1checked && app2checked)
 						return 0;
 					else if (app1checked)
@@ -95,6 +95,7 @@ public class PrivacyAppAdapter extends BaseAdapter implements Filterable {
 			row = mInflater.inflate(R.layout.applist_item, parent, false);
 
 		ImageView itemIsDis = row.findViewById(R.id.am_isDisable_icon);
+		ImageView itemIsDual = row.findViewById(R.id.am_isDual_icon);
 		CheckBox itemChecked = row.findViewById(R.id.am_checked_icon);
 		TextView itemTitle = row.findViewById(R.id.am_label);
 		ImageView itemIcon = row.findViewById(R.id.am_icon);
@@ -102,7 +103,8 @@ public class PrivacyAppAdapter extends BaseAdapter implements Filterable {
 		AppData ad = getItem(position);
 		itemIcon.setTag(position);
 		itemTitle.setText(ad.label);
-		itemIsDis.setVisibility(ad.enabled ? View.INVISIBLE : View.VISIBLE);
+		itemIsDis.setVisibility(ad.enabled ? View.GONE : View.VISIBLE);
+		itemIsDual.setVisibility(ad.user != 0 ? View.VISIBLE : View.GONE);
 		Bitmap icon = Helpers.memoryCache.get(ad.pkgName + "|" + ad.actName);
 		//int iconSize = getResources().getDimensionPixelSize(android.R.dimen.app_icon_size);
 
@@ -119,7 +121,7 @@ public class PrivacyAppAdapter extends BaseAdapter implements Filterable {
 
 		try {
 			itemChecked.setVisibility(View.VISIBLE);
-			itemChecked.setChecked((boolean)isPrivacyApp.invoke(mSecurityManager, ad.pkgName, 0));
+			itemChecked.setChecked((boolean)isPrivacyApp.invoke(mSecurityManager, ad.pkgName, ad.user));
 		} catch (Throwable t) {
 			itemChecked.setVisibility(View.GONE);
 		}

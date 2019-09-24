@@ -1,7 +1,9 @@
 package name.mikanoshi.customiuizer.subs;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
@@ -24,6 +26,7 @@ public class ActivitySelector extends SubFragmentWithSearch {
 
 	String pkg = null;
 	String key = null;
+	int user = 0;
 	ArrayList<AppData> activities = new ArrayList<AppData>();
 
 	@Override
@@ -39,6 +42,7 @@ public class ActivitySelector extends SubFragmentWithSearch {
 		Bundle args = getArguments();
 		key = args.getString("key");
 		pkg = args.getString("package");
+		user = args.getInt("user");
 
 		final Runnable process = new Runnable() {
 			@Override
@@ -53,7 +57,10 @@ public class ActivitySelector extends SubFragmentWithSearch {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 						AppData appdData = ((AppDataAdapter)parent.getAdapter()).getItem(position);
-						getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, new Intent(getContext(), this.getClass()).putExtra("activity", appdData.pkgName + "|" + appdData.actName));
+						final Intent intent = new Intent(getContext(), this.getClass());
+						intent.putExtra("activity", appdData.pkgName + "|" + appdData.actName);
+						intent.putExtra("user", user);
+						getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
 						finish();
 					}
 				});
@@ -64,6 +71,7 @@ public class ActivitySelector extends SubFragmentWithSearch {
 						Intent intent = new Intent(getContext(), this.getClass());
 						intent.setComponent(new ComponentName(appdData.pkgName, appdData.actName));
 						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+						intent.putExtra("user", user);
 						Intent bIntent = new Intent(GlobalActions.ACTION_PREFIX + "LaunchIntent");
 						bIntent.putExtra("intent", intent);
 						getContext().sendBroadcast(bIntent);

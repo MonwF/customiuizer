@@ -411,7 +411,7 @@ public class System extends SubFragment {
 			if (requestCode == 0) key = "pref_key_system_shortcut_app";
 			else if (requestCode == 1) key = "pref_key_system_clock_app";
 			else if (requestCode == 2) key = "pref_key_system_calendar_app";
-			if (key != null) Helpers.prefs.edit().putString(key, data.getStringExtra("app")).apply();
+			if (key != null) Helpers.prefs.edit().putString(key, data.getStringExtra("app")).putInt(key + "_user", data.getIntExtra("user", 0)).apply();
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}

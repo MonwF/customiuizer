@@ -28,7 +28,9 @@ public class MultiAction extends SubFragment {
 	private SpinnerExFake activityLaunch = null;
 	private String key = null;
 	private String appValue = null;
+	private int appUser = -1;
 	private String activityValue = null;
+	private int activityUser = -1;
 	private String shortcutValue = null;
 	private String shortcutName = null;
 	private String shortcutIcon = null;
@@ -98,6 +100,7 @@ public class MultiAction extends SubFragment {
 		appLaunch.setValue(appValue != null ? appValue : Helpers.prefs.getString(key + "_app", null));
 		appLaunch.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
 			@Override
+			@SuppressLint("SetTextI18n")
 			public void onChildViewAdded(View parent, View child) {
 				if (child instanceof TextView && child.getId() == android.R.id.text1) {
 					TextView appLaunchLabel = ((TextView)child);
@@ -106,7 +109,7 @@ public class MultiAction extends SubFragment {
 					if (pkgAppName != null) {
 						CharSequence label = Helpers.getAppName(getContext(), pkgAppName);
 						if (label != null) {
-							appLaunchLabel.setText(label);
+							appLaunchLabel.setText(label + ((appUser != -1 ? appUser : Helpers.prefs.getInt(key + "_app_user", 0)) != 0 ? " *" : ""));
 							return;
 						}
 					}
@@ -199,6 +202,7 @@ public class MultiAction extends SubFragment {
 		((TextView)getView().findViewById(R.id.activity_class)).setText(val != null && !val.equals("") ? val.replace("|", "/\u200B").replace(".", ".\u200B") : "");
 		activityLaunch.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
 			@Override
+			@SuppressLint("SetTextI18n")
 			public void onChildViewAdded(View parent, View child) {
 				if (child instanceof TextView && child.getId() == android.R.id.text1) {
 					TextView appLaunchLabel = ((TextView)child);
@@ -207,7 +211,7 @@ public class MultiAction extends SubFragment {
 					if (pkgAppName != null) {
 						CharSequence label = Helpers.getAppName(getContext(), pkgAppName, true);
 						if (label != null) {
-							appLaunchLabel.setText(label);
+							appLaunchLabel.setText(label + ((activityUser != -1 ? activityUser : Helpers.prefs.getInt(key + "_activity_user", 0)) != 0 ? " *" : ""));
 							return;
 						}
 					}
@@ -260,18 +264,23 @@ public class MultiAction extends SubFragment {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, final Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
-			if (requestCode == 0) appValue = data.getStringExtra("app");
+			if (requestCode == 0) {
+				appValue = data.getStringExtra("app");
+				appUser = data.getIntExtra("user", 0);
+			}
 			if (requestCode == 1) {
 				shortcutValue = data.getStringExtra("shortcut_contents");
 				shortcutName = data.getStringExtra("shortcut_name");
 				shortcutIcon = data.getStringExtra("shortcut_icon");
 				shortcutIntent = data.getParcelableExtra("shortcut_intent");
 			}
-			if (requestCode == 2) activityValue = data.getStringExtra("activity");
+			if (requestCode == 2) {
+				activityValue = data.getStringExtra("activity");
+				activityUser = data.getIntExtra("user", 0);
+			}
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-
 
 	@Override
 	public void saveSharedPrefs() {
@@ -281,6 +290,8 @@ public class MultiAction extends SubFragment {
 			prefIconFile.delete();
 			tmpIconFile.renameTo(prefIconFile);
 		}
+		if (appUser != -1) Helpers.prefs.edit().putInt(key + "_app_user", appUser).apply();
+		if (activityUser != -1) Helpers.prefs.edit().putInt(key + "_activity_user", activityUser).apply();
 		super.saveSharedPrefs();
 	}
 

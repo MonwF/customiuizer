@@ -1,5 +1,6 @@
 package name.mikanoshi.customiuizer.mods;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -13,6 +14,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.database.ContentObserver;
 import android.media.AudioAttributes;
 import android.media.Ringtone;
@@ -21,13 +23,24 @@ import android.net.Uri;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.UserHandle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.provider.Settings;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.RelativeSizeSpan;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.reflect.Field;
@@ -115,8 +128,22 @@ public class Various {
 						if (launchIntent == null) {
 							Toast.makeText(act, modRes.getString(R.string.appdetails_nolaunch), Toast.LENGTH_SHORT).show();
 						} else {
+							int user = 0;
+							try {
+								int uid = act.getIntent().getIntExtra("am_app_uid", -1);
+								user = (int)XposedHelpers.callStaticMethod(UserHandle.class, "getUserId", uid);
+							} catch (Throwable t) {
+								XposedBridge.log(t);
+							}
+
 							launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-							act.startActivity(launchIntent);
+							if (user != 0) try {
+								XposedHelpers.callMethod(act, "startActivityAsUser", launchIntent, XposedHelpers.newInstance(UserHandle.class, user));
+							} catch (Throwable t) {
+								XposedBridge.log(t);
+							} else {
+								act.startActivity(launchIntent);
+							}
 						}
 						return true;
 					}
@@ -396,6 +423,169 @@ public class Various {
 				} else {
 					XposedHelpers.callMethod(param.thisObject, "cancelRepeatReminder");
 				}
+			}
+		});
+	}
+
+	private static TextView createTitleTextView(Context context, ViewGroup.LayoutParams lp, int resId) {
+		TextView tv = new TextView(context);
+		tv.setMaxLines(1);
+		tv.setSingleLine(true);
+		tv.setGravity(Gravity.START);
+		tv.setLayoutParams(lp);
+		tv.setTextAppearance(resId != -1 ? resId : android.R.style.TextAppearance_DeviceDefault);
+		return tv;
+	}
+
+	private static TextView createValueTextView(Context context, ViewGroup.LayoutParams lp, int resId, int gravity) {
+		TextView tv = new TextView(context);
+		tv.setMaxLines(1);
+		tv.setSingleLine(true);
+		tv.setGravity(gravity);
+		tv.setEllipsize(TextUtils.TruncateAt.START);
+		tv.setLayoutParams(lp);
+		tv.setTextAppearance(resId != -1 ? resId : android.R.style.TextAppearance_DeviceDefault);
+		return tv;
+	}
+
+	public static void AppInfoDuringInstallHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.packageinstaller.PackageInstallerActivity", lpparam.classLoader, "startInstallConfirm", new MethodHook() {
+			@Override
+			@SuppressLint("SetTextI18n")
+			protected void after(MethodHookParam param) throws Throwable {
+				Activity act = (Activity)param.thisObject;
+				PackageInfo mPkgInfo = (PackageInfo)XposedHelpers.getObjectField(param.thisObject, "mPkgInfo");
+				if (mPkgInfo == null) return;
+
+				float density = act.getResources().getDisplayMetrics().density;
+
+				TypedArray a = act.obtainStyledAttributes(new int[]{android.R.attr.textAppearance});
+				int resId = a.getResourceId(0, -1);
+				a.recycle();
+
+				PackageInfo mAppInfo = null;
+				try {
+					PackageManager mPm = (PackageManager)XposedHelpers.getObjectField(param.thisObject, "mPm");
+					mAppInfo = mPm.getPackageInfo(mPkgInfo.packageName, 0);
+				} catch (Throwable t) {}
+
+				Resources modRes = Helpers.getModuleRes(act);
+
+				LinearLayout container = new LinearLayout(act);
+				LinearLayout.LayoutParams lpCont = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+				lpCont.setMargins(Math.round(16.0f * density), Math.round(8.0f * density), Math.round(16.0f * density), Math.round(4.0f * density));
+				container.setLayoutParams(lpCont);
+				container.setOrientation(LinearLayout.VERTICAL);
+
+				LinearLayout name = new LinearLayout(act);
+				name.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+				name.setOrientation(LinearLayout.HORIZONTAL);
+
+				LinearLayout.LayoutParams lpInfoTitle = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+				lpInfoTitle.setMargins(0, 0, Math.round(20.0f * density), 0);
+				TextView infoTitle = createTitleTextView(act, lpInfoTitle, resId);
+				infoTitle.setText(modRes.getString(R.string.various_installappinfo_package));
+				LinearLayout.LayoutParams lpInfo = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+				lpInfo.weight = 1;
+				TextView info = createValueTextView(act, lpInfo, resId, Gravity.END);
+				info.setText(mPkgInfo.applicationInfo.packageName);
+
+				name.addView(infoTitle);
+				name.addView(info);
+
+				TableLayout table = new TableLayout(act);
+				LinearLayout.LayoutParams lpTable = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+				table.setLayoutParams(lpTable);
+				table.setColumnStretchable(0, false);
+				table.setColumnStretchable(1, true);
+				table.setColumnStretchable(2, false);
+				table.setColumnShrinkable(0, false);
+				table.setColumnShrinkable(1, true);
+				table.setColumnShrinkable(2, false);
+
+				TableLayout.LayoutParams lpRow = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
+				lpRow.gravity = Gravity.BOTTOM;
+				TableRow row1 = new TableRow(act); row1.setLayoutParams(lpRow);
+				TableRow row2 = new TableRow(act); row2.setLayoutParams(lpRow);
+				TableRow row3 = new TableRow(act); row3.setLayoutParams(lpRow);
+
+				TableRow.LayoutParams lp0 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
+				lp0.column = 0;
+				lp0.setMargins(0, 0, Math.round(20.0f * density), 0);
+				TableRow.LayoutParams lp1 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT);
+				lp1.column = 1;
+				lp1.weight = 1;
+				FrameLayout.LayoutParams lp2 = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+				lp2.gravity = Gravity.BOTTOM | Gravity.END;
+				lp2.setMargins(0, 0, Math.round(20.0f * density), 0);
+				TableRow.LayoutParams lp3 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
+				lp3.column = 2;
+
+				TextView infoTitle1 = createTitleTextView(act, lp0, resId);
+				infoTitle1.setText(modRes.getString(R.string.various_installappinfo_vername));
+				TextView infoTitle2 = createTitleTextView(act, lp0, resId);
+				infoTitle2.setText(modRes.getString(R.string.various_installappinfo_vercode));
+				TextView infoTitle3 = createTitleTextView(act, lp0, resId);
+				infoTitle3.setText(modRes.getString(R.string.various_installappinfo_sdk));
+
+				FrameLayout dummy1 = new FrameLayout(act); dummy1.setLayoutParams(lp1);
+				FrameLayout dummy2 = new FrameLayout(act); dummy2.setLayoutParams(lp1);
+				FrameLayout dummy3 = new FrameLayout(act); dummy3.setLayoutParams(lp1);
+
+				String current = modRes.getString(R.string.various_installappinfo_current);
+
+				TextView info1current = createValueTextView(act, lp2, resId, Gravity.START);
+				if (mAppInfo != null) {
+					SpannableString span = new SpannableString(current + " " + mAppInfo.versionName);
+					span.setSpan(new RelativeSizeSpan(0.7f), 0, span.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+					info1current.setText(span);
+				} else info1current.setText(" ");
+
+				TextView info2current = createValueTextView(act, lp2, resId, Gravity.START);
+				if (mAppInfo != null) {
+					SpannableString span = new SpannableString(current + " " + mAppInfo.versionCode);
+					span.setSpan(new RelativeSizeSpan(0.7f), 0, span.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+					info2current.setText(span);
+				} else info2current.setText(" ");
+
+				TextView info3current = createValueTextView(act, lp2, resId, Gravity.START);
+				if (mAppInfo != null) {
+					SpannableString span = new SpannableString(current + " " + mAppInfo.applicationInfo.minSdkVersion + "-" + mAppInfo.applicationInfo.targetSdkVersion);
+					span.setSpan(new RelativeSizeSpan(0.7f), 0, span.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+					info3current.setText(span);
+				} else info3current.setText(" ");
+
+				TextView info1 = createValueTextView(act, lp3, resId, Gravity.END);
+				info1.setText(mPkgInfo.versionName);
+				TextView info2 = createValueTextView(act, lp3, resId, Gravity.END);
+				info2.setText(String.valueOf(mPkgInfo.versionCode));
+				TextView info3 = createValueTextView(act, lp3, resId, Gravity.END);
+				info3.setText(mPkgInfo.applicationInfo.minSdkVersion + "-" + mPkgInfo.applicationInfo.targetSdkVersion);
+
+				row1.addView(infoTitle1);
+				row2.addView(infoTitle2);
+				row3.addView(infoTitle3);
+
+				row1.addView(dummy1); dummy1.addView(info1current);
+				row2.addView(dummy2); dummy2.addView(info2current);
+				row3.addView(dummy3); dummy3.addView(info3current);
+
+				row1.addView(info1);
+				row2.addView(info2);
+				row3.addView(info3);
+
+				table.addView(row1);
+				table.addView(row2);
+				table.addView(row3);
+
+				container.addView(name);
+				container.addView(table);
+
+				ViewGroup parent = (ViewGroup)act.findViewById(act.getResources().getIdentifier("install_confirm_question", "id", "com.android.packageinstaller")).getParent();
+				if (parent.getChildCount() == 1)
+					((ViewGroup)parent.getParent()).addView(container, ((ViewGroup)parent.getParent()).getChildCount() - 1);
+				else
+					parent.addView(container, parent.getChildCount() - 1);
 			}
 		});
 	}

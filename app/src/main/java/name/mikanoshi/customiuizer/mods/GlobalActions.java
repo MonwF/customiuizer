@@ -20,6 +20,7 @@ import android.net.wifi.WifiManager;
 import android.nfc.NfcAdapter;
 import android.os.Binder;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.os.UserHandle;
@@ -32,6 +33,11 @@ import android.view.ViewConfiguration;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -89,6 +95,8 @@ public class GlobalActions {
 			case 18: return volumeUp(context);
 			case 19: return volumeDown(context);
 			case 21: return switchKeyboard(context);
+			case 22: return switchOneHandedLeft(context);
+			case 23: return switchOneHandedRight(context);
 			default: return false;
 		}
 	}
@@ -107,6 +115,33 @@ public class GlobalActions {
 //				} else if (action.equals(ACTION_PREFIX + "HideQuickRecents")) {
 //					if (floatSel != null) floatSel.hide();
 //				}
+
+				if (action.equals(ACTION_PREFIX + "CollectLogs")) {
+					try {
+						String errorLogPath = Helpers.getXposedInstallerErrorLog(context);
+						if (errorLogPath != null)
+						try (InputStream in = new FileInputStream(errorLogPath)) {
+							String dir = Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder;
+							new File(dir).mkdirs();
+							File sdcardLog = new File(dir + Helpers.logFile);
+							sdcardLog.createNewFile();
+							try (OutputStream out = new FileOutputStream(sdcardLog, false)) {
+								byte[] buf = new byte[1024];
+								int len;
+								while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
+							}
+						}
+					} catch (Throwable t) {
+						XposedBridge.log(t);
+					}
+				}
+
+				if (action.equals(ACTION_PREFIX + "ClearMemory")) {
+					Intent clearIntent = new Intent("com.android.systemui.taskmanager.Clear");
+					clearIntent.putExtra("show_toast", true);
+					//clearIntent.putExtra("clean_type", -1);
+					context.sendBroadcast(clearIntent);
+				}
 
 				if (mStatusBar != null) {
 					if (action.equals(ACTION_PREFIX + "ExpandNotifications")) try {
@@ -201,13 +236,6 @@ public class GlobalActions {
 						});
 					} catch (Throwable t) {
 						XposedBridge.log(t);
-					}
-
-					if (action.equals(ACTION_PREFIX + "ClearMemory")) {
-						Intent clearIntent = new Intent("com.android.systemui.taskmanager.Clear");
-						clearIntent.putExtra("show_toast", true);
-						//clearIntent.putExtra("clean_type", -1);
-						context.sendBroadcast(clearIntent);
 					}
 
 					Object mToggleManager = XposedHelpers.getObjectField(mStatusBar, "mToggleManager");
@@ -340,7 +368,17 @@ public class GlobalActions {
 
 			if (action.equals(ACTION_PREFIX + "LaunchIntent")) {
 				Intent launchIntent = intent.getParcelableExtra("intent");
-				if (launchIntent != null) context.startActivity(launchIntent);
+				if (launchIntent != null) {
+					int user = 0;
+					if (launchIntent.hasExtra("user")) {
+						user = launchIntent.getIntExtra("user", 0);
+						launchIntent.removeExtra("user");
+					}
+					if (user != 0)
+						XposedHelpers.callMethod(context, "startActivityAsUser", launchIntent, XposedHelpers.newInstance(UserHandle.class, user));
+					else
+						context.startActivity(launchIntent);
+				}
 			}
 
 			if (action.equals(ACTION_PREFIX + "VolumeUp")) {
@@ -365,6 +403,18 @@ public class GlobalActions {
 					new Intent("android.settings.SHOW_INPUT_METHOD_PICKER") :
 					new Intent("com.android.server.InputMethodManagerService.SHOW_INPUT_METHOD_PICKER").setPackage("android")
 				);
+			}
+
+			if (action.equals(ACTION_PREFIX + "SwitchOneHandedLeft")) {
+				Intent handyIntent = new Intent("miui.action.handymode.changemode");
+				handyIntent.putExtra("mode", 1);
+				context.sendBroadcast(handyIntent);
+			}
+
+			if (action.equals(ACTION_PREFIX + "SwitchOneHandedRight")) {
+				Intent handyIntent = new Intent("miui.action.handymode.changemode");
+				handyIntent.putExtra("mode", 2);
+				context.sendBroadcast(handyIntent);
 			}
 
 			if (action.equals(ACTION_PREFIX + "ToggleColorInversion")) {
@@ -699,6 +749,8 @@ public class GlobalActions {
 				intentfilter.addAction(ACTION_PREFIX + "GoBack");
 				intentfilter.addAction(ACTION_PREFIX + "OpenPowerMenu");
 				intentfilter.addAction(ACTION_PREFIX + "SwitchKeyboard");
+				intentfilter.addAction(ACTION_PREFIX + "SwitchOneHandedLeft");
+				intentfilter.addAction(ACTION_PREFIX + "SwitchOneHandedRight");
 				intentfilter.addAction(ACTION_PREFIX + "ToggleColorInversion");
 				intentfilter.addAction(ACTION_PREFIX + "SimulateMenu");
 				intentfilter.addAction(ACTION_PREFIX + "VolumeUp");
@@ -822,6 +874,7 @@ public class GlobalActions {
 				intentfilter.addAction(ACTION_PREFIX + "HideQuickRecents");
 
 				intentfilter.addAction(ACTION_PREFIX + "ClearMemory");
+				intentfilter.addAction(ACTION_PREFIX + "CollectLogs");
 
 				mStatusBarContext.registerReceiver(mSBReceiver, intentfilter);
 			}
@@ -929,6 +982,8 @@ public class GlobalActions {
 				if (pkgAppArray.length < 2) return null;
 				ComponentName name = new ComponentName(pkgAppArray[0], pkgAppArray[1]);
 				intent.setComponent(name);
+				int user = Helpers.getSharedIntPref(context, pref + "_user", 0);
+				if (user != 0) intent.putExtra("user", user);
 			}
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 
@@ -1073,6 +1128,26 @@ public class GlobalActions {
 	public static boolean switchKeyboard(Context context) {
 		try {
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "SwitchKeyboard"));
+			return true;
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+			return false;
+		}
+	}
+
+	public static boolean switchOneHandedLeft(Context context) {
+		try {
+			context.sendBroadcast(new Intent(ACTION_PREFIX + "SwitchOneHandedLeft"));
+			return true;
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+			return false;
+		}
+	}
+
+	public static boolean switchOneHandedRight(Context context) {
+		try {
+			context.sendBroadcast(new Intent(ACTION_PREFIX + "SwitchOneHandedRight"));
 			return true;
 		} catch (Throwable t) {
 			XposedBridge.log(t);
