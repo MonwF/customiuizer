@@ -38,6 +38,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -118,11 +119,12 @@ public class Helpers {
 	public static WakeLock mWakeLock;
 	public static boolean showNewMods = true;
 	public static final String[] newMods = new String[] {
-		"various_installappinfo",
-		"system_visualizer_dyntime",
-		"system_nooverscroll",
-		"launcher_titlefontsize",
-		"launcher_titletopmargin"
+		"system_showpct",
+		"system_uimodetile",
+		"launcher_hidetitles",
+		"launcher_horizmargin",
+		"launcher_topmargin",
+		"launcher_indicatorheight"
 	};
 	public static final String[] shortcutIcons = new String[] {
 		"bankcard", "buscard", "calculator", "calendar", "contacts", "magazine", "music", "notes", "remotecontroller", "smarthome", "miuizer"
@@ -141,6 +143,10 @@ public class Helpers {
 	}
 
 	public static void setMiuiTheme(Activity act, int overrideTheme) {
+		setMiuiTheme(act, overrideTheme, false);
+	}
+
+	public static void setMiuiTheme(Activity act, int overrideTheme, boolean noBackground) {
 		int themeResId = 0;
 		try {
 			themeResId = act.getResources().getIdentifier("Theme.DayNight", "style", "miui");
@@ -148,6 +154,7 @@ public class Helpers {
 		if (themeResId == 0) themeResId = act.getResources().getIdentifier(isNightMode(act) ? "Theme.Dark" : "Theme.Light", "style", "miui");
 		act.setTheme(themeResId);
 		act.getTheme().applyStyle(overrideTheme, true);
+		act.getWindow().setBackgroundDrawable(noBackground ? null : (isNightMode(act) ? new ColorDrawable(Color.BLACK) : new ColorDrawable(Color.WHITE)));
 	}
 
 	public static boolean isNightMode(Context context) {

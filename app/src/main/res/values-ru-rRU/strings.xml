@@ -94,6 +94,8 @@
 	<string name="qs_toggle_autorotate_off">Отключено</string>
 	<string name="qs_toggle_autorotate_portrait">Портрет</string>
 	<string name="qs_toggle_autorotate_landscape">Ландшафт</string>
+	<string name="qs_toggle_darkmode">Тёмный режим</string>
+	<string name="qs_toggle_darkmode_noperm">У CustoMIUIzer нет прав на изменение тёмного режима</string>
 
 	<string name="appdetails_playstore">Открыть в Play Маркет</string>
 	<string name="appdetails_launch">Запустить</string>
@@ -297,7 +299,7 @@
 	<string name="controls_fsg_horiz_title">Горизонтальные жесты</string>
 	<string name="controls_fsg_horiz_summ">Активировать вместе горизонтальные жесты и панель навигации</string>
 
-	<string name="array_color_auto">Автоматический</string>
+	<string name="array_color_auto">Авто</string>
 	<string name="array_color_dark">Тёмный</string>
 	<string name="array_color_light">Светлый</string>
 
@@ -395,6 +397,9 @@
 	<string name="launcher_unlockgrids_title">Разблокировать размеры сетки</string>
 	<string name="launcher_unlockgrids_summ">Делает все размеры от 3x4 до 6x7 доступными в настройках сетки рабочего стола</string>
 	<string name="launcher_iconscale_title">Масштаб значков</string>
+	<string name="launcher_horizmargin_title">Горизонтальные отступы сетки</string>
+	<string name="launcher_topmargin_title">Отступ сетки сверху</string>
+	<string name="launcher_indicatorheight_title">Высота индикатора страниц</string>
 	<string name="launcher_folders">Папки</string>
 	<string name="launcher_folder_cols_title">Число колонок в папках</string>
 	<string name="launcher_fixstatusbarmode_title">Исправить режим строки состояния</string>
@@ -404,6 +409,7 @@
 	<string name="launcher_closefolder_title">Закрывать папки автоматом</string>
 	<string name="launcher_closefolder_summ">Закрывает папку приложения после его запуска</string>
 	<string name="launcher_titles">Названия приложений</string>
+	<string name="launcher_hidetitles_title">Скрыть названия</string>
 	<string name="launcher_titlefontsize_title">Размер шрифта</string>
 	<string name="launcher_titletopmargin_title">Дополнительный отступ сверху</string>
 	<string name="launcher_darkershadow_title">Более тёмная тень</string>
@@ -432,6 +438,8 @@
 	<string name="system_blocktoasts_summ">Запретить выбранным приложениям показ всплывающих сообщений</string>
 	<string name="system_uimode_title">Режим интерфейса</string>
 	<string name="system_uimode_summ">Изменить режим на тёмный, светлый или авто. Перезагрузка не требуется.</string>
+	<string name="system_uimodetile_title">Переключатель тёмного режима</string>
+	<string name="system_uimodetile_summ">Добавляет переключатель в Быстрые Настройки. Перезагрузка не требуется.</string>
 	<string name="system_epm_title">Расширенное меню питания</string>
 	<string name="system_epm_summ">Добавляет новые опции презагрузки в меню питания (Режим Fastboot, Режим Recovery, Быстрая перезагрузка, Перезапуск интерфейса, Перезапуск ланчера)</string>
 	<string name="system_downgrade_title">Разрешить понижение версии</string>
@@ -583,6 +591,8 @@
 	<string name="system_showlux_summ">Отображает уровень окружающей освещённости в люксах внутри слайдера яркости</string>
 	<string name="system_showlux_style_title">Альтернативный стиль</string>
 	<string name="system_showlux_style_summ">Большой полупрозрачный текст</string>
+	<string name="system_showpct_title">Показывать процент яркости</string>
+	<string name="system_showpct_summ">Отображает уровень яркости в процентах при изменении яркости слайдером</string>
 	<string name="system_notifrowmenu_title">Расширенное меню уведомления</string>
 	<string name="system_notifrowmenu_summ">Добавляет новые действия в меню уведомления (открывается по свайпу влево) - открыть информацию о приложении и принудительно закрыть приложение</string>
 	<string name="system_disableanynotif_title">Отключение любых уведомлений</string>
@@ -681,6 +691,7 @@
 	<string name="system_lockscreenshortcuts_right_title">Действие на свайп влево</string>
 	<string name="system_lockscreenshortcuts_right_image_title">Изменить правую иконку</string>
 	<string name="system_lockscreenshortcuts_right_image_summ">Заменить иконку камеры на иконку CustoMIUIzer</string>
+	<string name="system_lockscreenshortcuts_right_image_hint">Потяните иконку для запуска действия</string>
 	<string name="system_lockscreenshortcuts_left_off_title">Отключить свайп вправо</string>
 	<string name="system_lockscreenshortcuts_left_title">Ярлыки на левом экране</string>
 	<string name="system_lockscreenshortcuts_left_summ">Настройка списка ярлыков</string>

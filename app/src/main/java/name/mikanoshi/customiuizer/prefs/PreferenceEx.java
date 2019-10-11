@@ -21,6 +21,8 @@ public class PreferenceEx extends Preference implements PreferenceState {
 	private Resources res = getContext().getResources();
 	private int primary = res.getColor(R.color.preference_primary_text, getContext().getTheme());
 	private int secondary = res.getColor(R.color.preference_secondary_text, getContext().getTheme());
+	private int childpadding = res.getDimensionPixelSize(R.dimen.preference_item_child_padding);
+	private int[] paddings = new int[] {0, 0, 0, 0};
 
 	private boolean child;
 	private boolean dynamic;
@@ -53,8 +55,14 @@ public class PreferenceEx extends Preference implements PreferenceState {
 		else
 			valSummary.setText(countAsSummary ? String.valueOf(Helpers.prefs.getStringSet(getKey(), new LinkedHashSet<String>()).size()) : null);
 		title.setTextColor(isEnabled() ? primary : secondary);
-		title.setText((child ? "			" : "") + getTitle() + (dynamic ? " ⟲" : ""));
+		title.setText(getTitle() + (dynamic ? " ⟲" : ""));
 		if (newmod) Helpers.applyNewMod(title);
+
+		if (paddings[0] == 0) paddings[0] = finalView.getPaddingLeft();
+		if (paddings[1] == 0) paddings[1] = finalView.getPaddingTop();
+		if (paddings[2] == 0) paddings[2] = finalView.getPaddingRight();
+		if (paddings[3] == 0) paddings[3] = finalView.getPaddingBottom();
+		finalView.setPadding(paddings[0] + (child ? childpadding : 0), paddings[1], paddings[2], paddings[3]);
 
 		return finalView;
 	}

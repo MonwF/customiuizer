@@ -241,7 +241,7 @@ public class Dialog extends Activity {
 	@Override
 	protected final void onCreate(Bundle savedInstanceState) {
 		overridePendingTransition(0, 0);
-		Helpers.setMiuiTheme(this, R.style.ApplyInvisible);
+		Helpers.setMiuiTheme(this, R.style.ApplyInvisible, true);
 		super.onCreate(savedInstanceState);
 
 		if (getIntent().getBooleanExtra("FORCE_CANCEL", false)) {
@@ -261,6 +261,8 @@ public class Dialog extends Activity {
 
 		loader = new ProgressDialog(this);
 		loader.setMessage(getResources().getString(R.string.crash_collecting_report));
+		loader.setCancelable(false);
+		loader.setCanceledOnTouchOutside(false);
 		loader.show();
 
 		File sdcardLog = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder + Helpers.logFile);
@@ -548,7 +550,7 @@ public class Dialog extends Activity {
 				layoutParams.flags |= WindowManager.LayoutParams.FLAG_BLUR_BEHIND;
 				Field blurRatio = WindowManager.LayoutParams.class.getDeclaredField("blurRatio");
 				blurRatio.setAccessible(true);
-				blurRatio.set(layoutParams, 0.75f);
+				blurRatio.set(layoutParams, Helpers.isNightMode(this) ? 0.5f :  0.75f);
 				getWindowManager().updateViewLayout(rootView, layoutParams);
 			}
 		} catch (Throwable t) {}

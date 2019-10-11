@@ -141,6 +141,7 @@
     <string name="system_visualizer_glowlevel_title">Calore</string>
     <string name="system_visualizer_color_title">Colore</string>
     <string name="system_visualizer_colorval_title">Seleziona colore personalizzato</string>
+    <string name="system_visualizer_dyntime_title">Intervallo del cambio colore dinamico</string>
     <string name="system_ignorecalls_title">Ignora chiamate</string>
     <string name="system_ignorecalls_summ">Impedisci alle chiamate in arrivo di interrompere la riproduzione dell\'audio quando è attivo su una delle app selezionate e smetti di avvisarle delle modifiche allo stato delle chiamate</string>
     <string name="system_nosilentvibrate_title">Nessuna vibrazione di prova</string>
@@ -166,6 +167,7 @@
     <string name="system_lockscreenshortcuts_right_title">Azione swipe verso sinistra</string>
     <string name="system_lockscreenshortcuts_right_image_title">Cambia l\'icona di destra</string>
     <string name="system_lockscreenshortcuts_right_image_summ">Sostituisci l\'icona della fotocamera con l\'icona di CustoMIUIzer</string>
+    <string name="system_lockscreenshortcuts_right_image_hint">Trascina l\'icona per eseguire l\'azione personalizzata</string>
     <string name="system_lockscreenshortcuts_left_off_title">Disabilita lo swipe verso destra</string>
     <string name="system_lockscreenshortcuts_left_title">Collegamenti schermata di sinistra</string>
     <string name="system_lockscreenshortcuts_left_summ">Gestisci la lista dei collegamenti</string>
@@ -198,6 +200,8 @@
     <string name="system_blocktoasts_summ">Impedisci alle app selezionate di mostrare i toast</string>
     <string name="system_uimode_title">Modalità di interfaccia</string>
     <string name="system_uimode_summ">Cambia modalità in scuro, chiaro o automatico. Nessun riavvio richiesto.</string>
+    <string name="system_uimodetile_title">Pulsante modalità scura</string>
+    <string name="system_uimodetile_summ">Aggiungi il pulsante per attivare la modalità scura nei Quick Settings. Non è richiesto il riavvio.</string>
     <string name="system_epm_title">Menù di accensione esteso</string>
     <string name="system_epm_summ">Aggiungi nuove opzioni di riavvio al menu di accensione (modalità Fastboot, modalità recovery, Riavvio veloce, Riavvio interfaccia utente, Riavvio Launcher)</string>
     <string name="system_downgrade_title">Consenti downgrade</string>
@@ -206,6 +210,8 @@
     <string name="system_apksign_summ">Permetti l\'aggiornamento delle app anche quando la firma dell\'APK è diversa da quella installata</string>
     <string name="system_magnifier_title">Lente d\'ingrandimento del testo</string>
     <string name="system_magnifier_summ">Visualizza lente di ingrandimento quando si sposta un cursore di input o si effettua una selezione</string>
+    <string name="system_nooverscroll_title">Disabilita overscroll</string>
+    <string name="system_nooverscroll_summ">Impedire alle visualizzazioni dell\'elenco di eseguire l\'overcrolling</string>
     <string name="system_hideproxywarn_title">Nascondi avvisi sui tocchi disabilitati</string>
     <string name="system_hideproxywarn_summ">Non visualizzare l\'avviso di copertura della parte superiore dello schermo</string>
     <string name="system_unblockthird_title">Sblocca i launcher</string>
@@ -307,6 +313,9 @@
     <string name="launcher_closefolder_title">Chiudi automaticamente le cartelle</string>
     <string name="launcher_closefolder_summ">Chiudi la cartella dell\'app dopo l\'avvio</string>
     <string name="launcher_titles">Titoli delle app</string>
+    <string name="launcher_hidetitles_title">Nascondi pulsanti</string>
+    <string name="launcher_titlefontsize_title">DImensione carattere</string>
+    <string name="launcher_titletopmargin_title">Margine superiore aggiuntivo</string>
     <string name="launcher_darkershadow_title">Ombra più scura</string>
     <string name="launcher_darkershadow_summ">Rende l\'ombra del titolo meno trasparente</string>
     <string name="launcher_renameapps_title">Titoli delle app personalizzati</string>
@@ -396,6 +405,13 @@
     <string name="various_sysappsupdater_title">Apri \"Aggiornamenti di sistema\"</string>
     <string name="various_sysappsupdater_summ">L\'app non fa più parte di alcuna ROM e deve essere installata manualmente</string>
     <string name="various_sysappsupdater_summ2">Fai attenzione: quando aggiorni le app di sistema modificate su ROM personalizzate, potresti perdere le funzionalità aggiuntive</string>
+    <string name="various_installappinfo_title">Informazioni sull\'app nel programma di installazione</string>
+    <string name="various_installappinfo_summ">Visualizza informazioni sull\'app che viene installata</string>
+    <string name="various_installappinfo_package">Pacchetto</string>
+    <string name="various_installappinfo_vername">Nome della versione</string>
+    <string name="various_installappinfo_vercode">Codice versione</string>
+    <string name="various_installappinfo_sdk">SDK supportato</string>
+    <string name="various_installappinfo_current">attuale</string>
     <string name="various_alarmcompat_title">Compatibilità sveglia</string>
     <string name="various_alarmcompat_summ">Fai in modo che le app selezionate visualizzino l\'ora corretta della sveglia successiva impostata dall\'app orologio di MIUI</string>
     <string name="various_showcallui_title">Mostra interfaccia di chiamata</string>
@@ -461,6 +477,8 @@
     <string name="array_global_actions_invertcolors">Inverti i colori</string>
     <string name="array_global_actions_switchkeyboard">Cambia tastiera</string>
     <string name="array_global_actions_goback">Torna indietro</string>
+    <string name="array_global_actions_onehanded_left">Modalità a una mano (sinistra)</string>
+    <string name="array_global_actions_onehanded_right">Modalità a una mano (destra)</string>
     <string name="array_global_toggle_wifi">Wi-Fi</string>
     <string name="array_global_toggle_bt">Bluetooth</string>
     <string name="array_global_toggle_gps">GPS</string>
@@ -564,6 +582,8 @@
     <string name="qs_toggle_autorotate_off">Illimitata</string>
     <string name="qs_toggle_autorotate_portrait">Ritratto</string>
     <string name="qs_toggle_autorotate_landscape">Landscape</string>
+    <string name="qs_toggle_darkmode">Modalità scura</string>
+    <string name="qs_toggle_darkmode_noperm">CustoMIUIzer non ha il permesso di cambiare la modalità scura</string>
     <string name="miuizer">Impostazioni CustoMIUIzer</string>
     <string name="miuizer_show_newmods_title">Contrassegna le nuove mod</string>
     <string name="miuizer_new_mod">Nuovo!</string>
@@ -616,6 +636,8 @@
     <string name="crash_ok">Il rapporto è stato inviato con successo!</string>
     <string name="crash_error">Rapporto non inviato</string>
     <string name="crash_confirm">Conferma</string>
+    <string name="crash_collecting_report">Rapporto di costruzione...</string>
+    <string name="crash_sending_report">Invio rapporto...</string>
     <string name="array_color_auto">Automatico</string>
     <string name="array_color_dark">Scuro</string>
     <string name="array_color_light">Chiaro</string>

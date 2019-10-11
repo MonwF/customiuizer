@@ -28,7 +28,7 @@
 			android:title="@string/launcher_folder_cols_title"
 			android:defaultValue="1"
 			miuizer:minValue="1"
-			miuizer:maxValue="5"
+			miuizer:maxValue="6"
 			miuizer:stepValue="1"
 			miuizer:format="%d"
 			miuizer:offtext="@string/array_default" />
@@ -39,10 +39,17 @@
 		android:key="pref_key_launcher_cat_titles"
 		android:title="@string/launcher_titles">
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_launcher_hidetitles"
+			android:title="@string/launcher_hidetitles_title"
+			android:defaultValue="false"
+			android:disableDependentsState="true" />
+
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_launcher_titlefontsize"
 			android:title="@string/launcher_titlefontsize_title"
 			android:defaultValue="5"
+			android:dependency="pref_key_launcher_hidetitles"
 			miuizer:minValue="5"
 			miuizer:maxValue="20"
 			miuizer:stepValue="1"
@@ -53,6 +60,7 @@
 			android:key="pref_key_launcher_titletopmargin"
 			android:title="@string/launcher_titletopmargin_title"
 			android:defaultValue="0"
+			android:dependency="pref_key_launcher_hidetitles"
 			miuizer:minValue="0"
 			miuizer:maxValue="10"
 			miuizer:stepValue="1"
@@ -63,12 +71,14 @@
 			android:key="pref_key_launcher_darkershadow"
 			android:title="@string/launcher_darkershadow_title"
 			android:summary="@string/launcher_darkershadow_summ"
-			android:defaultValue="false" />
+			android:defaultValue="false"
+			android:dependency="pref_key_launcher_hidetitles" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_renameapps"
 			android:title="@string/launcher_renameapps_title"
-			android:defaultValue="false" />
+			android:defaultValue="false"
+			android:dependency="pref_key_launcher_hidetitles" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_launcher_renameapps_list"
@@ -154,10 +164,26 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_launcher_fixstatusbarmode"
+			android:title="@string/launcher_fixstatusbarmode_title"
+			android:summary="@string/launcher_fixstatusbarmode_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_hideseekpoints"
 			android:title="@string/launcher_hideseekpoints_title"
 			android:summary="@string/launcher_hideseekpoints_summ"
 			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_launcher_indicatorheight"
+			android:title="@string/launcher_indicatorheight_title"
+			android:defaultValue="9"
+			miuizer:minValue="9"
+			miuizer:maxValue="30"
+			miuizer:stepValue="1"
+			miuizer:format="%d dp"
+			miuizer:offtext="@string/array_default" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_unlockgrids"
@@ -165,11 +191,27 @@
 			android:summary="@string/launcher_unlockgrids_summ"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_launcher_fixstatusbarmode"
-			android:title="@string/launcher_fixstatusbarmode_title"
-			android:summary="@string/launcher_fixstatusbarmode_summ"
-			android:defaultValue="false" />
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_launcher_horizmargin"
+			android:title="@string/launcher_horizmargin_title"
+			android:defaultValue="0"
+			miuizer:minValue="0"
+			miuizer:maxValue="41"
+			miuizer:negativeShift="21"
+			miuizer:stepValue="1"
+			miuizer:format="%d dp"
+			miuizer:offtext="@string/array_default" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_launcher_topmargin"
+			android:title="@string/launcher_topmargin_title"
+			android:defaultValue="0"
+			miuizer:minValue="0"
+			miuizer:maxValue="41"
+			miuizer:negativeShift="21"
+			miuizer:stepValue="1"
+			miuizer:format="%d dp"
+			miuizer:offtext="@string/array_default" />
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_launcher_iconscale"

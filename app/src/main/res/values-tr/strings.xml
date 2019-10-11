@@ -91,6 +91,8 @@ Türkçe çeviri için; Buğra Çağlar\'a teşekkürler.</string>
     <string name="system_showlux_summ">Parlaklık Seviyesi metin olarak görüntülenir</string>
     <string name="system_showlux_style_title">Alternatif Tarz</string>
     <string name="system_showlux_style_summ">Metin; Büyük ve Yarı Saydam olarak görüntülenir.</string>
+    <string name="system_showpct_title">Parlaklık Yüzdesi</string>
+    <string name="system_showpct_summ">Parlaklık kaydırıcısını sürüklerken, parlaklık seviyesini yüzde cinsinden görüntülenir.</string>
     <string name="system_notifrowmenu_title">Geliştirilmiş Menü</string>
     <string name="system_notifrowmenu_summ">Bildirim ayarlarına birden fazla seçenek ekler (Açmak için; bildirimi sola doğru kaydırın).</string>
     <string name="system_disableanynotif_title">Devre Dışı Bırak</string>
@@ -169,6 +171,7 @@ Türkçe çeviri için; Buğra Çağlar\'a teşekkürler.</string>
     <string name="system_lockscreenshortcuts_right_title">Eylem (Sol\'a Kaydır)</string>
     <string name="system_lockscreenshortcuts_right_image_title">Simge</string>
     <string name="system_lockscreenshortcuts_right_image_summ">Kamera simgesini CustoMIzed simgesiyle değiştirir.</string>
+    <string name="system_lockscreenshortcuts_right_image_hint">Özel eylem yürütmek için simgeyi sürükleyin.</string>
     <string name="system_lockscreenshortcuts_left_off_title">Sağ\'a Kaydır (Devre Dışı)</string>
     <string name="system_lockscreenshortcuts_left_title">Kısayollar (Sol Ekran)</string>
     <string name="system_lockscreenshortcuts_left_summ">Ekran Kilidi\'ndeki sol tarafta bulunan kısayollar listesini düzenleyebilirsiniz.</string>
@@ -201,6 +204,8 @@ Türkçe çeviri için; Buğra Çağlar\'a teşekkürler.</string>
     <string name="system_blocktoasts_summ">Seçmiş olduğunuz Uygulamalar\'ın Pencere Bildirimi gösterilmez.</string>
     <string name="system_uimode_title">Uygulama Arayüzü</string>
     <string name="system_uimode_summ">Arayüzü; Otomatik, Aydınlık ve Karanlık olarak değiştirebilirsiniz.</string>
+    <string name="system_uimodetile_title">Karanlık mod kiremit</string>
+    <string name="system_uimodetile_summ">Karanlık mod\'una geçmek için Hızlı Ayarlar döşemesi ekleyin. Yeniden başlatma gerekmez.</string>
     <string name="system_epm_title">Güç Menüsü</string>
     <string name="system_epm_summ">Güç Menüsü\'ne daha fazla seçenek ekler (FastBoot, Kurtarma, Hızlı, Sistem UI, Başlatıcı).</string>
     <string name="system_downgrade_title">Uygulama Versiyonu</string>
@@ -303,6 +308,9 @@ Türkçe çeviri için; Buğra Çağlar\'a teşekkürler.</string>
     <string name="launcher_unlockgrids_title">Ana Ekran Düzeni</string>
     <string name="launcher_unlockgrids_summ">Ana Ekran Düzeni\'ne daha fazla seçenek ekler (3x4 - 6x7)</string>
     <string name="launcher_iconscale_title">Simge Boyutu</string>
+    <string name="launcher_horizmargin_title">Yatay ızgara kenar boşlukları</string>
+    <string name="launcher_topmargin_title">Üst ızgara marjı</string>
+    <string name="launcher_indicatorheight_title">Sayfa göstergesi yüksekliği</string>
     <string name="launcher_folders">Klasör</string>
     <string name="launcher_folder_cols_title">Sütun Sayısı</string>
     <string name="launcher_fixstatusbarmode_title">Durum Çubuğu</string>
@@ -312,6 +320,7 @@ Türkçe çeviri için; Buğra Çağlar\'a teşekkürler.</string>
     <string name="launcher_closefolder_title">Klasörü Kapat</string>
     <string name="launcher_closefolder_summ">Klasör içerisindeki uygulamayı başlatınca, klasör otomatik olarak kapatılır.</string>
     <string name="launcher_titles">Uygulama İsmi</string>
+    <string name="launcher_hidetitles_title">Başlıkları gizle</string>
     <string name="launcher_titlefontsize_title">Yazı Boyutu</string>
     <string name="launcher_titletopmargin_title">Ek Üst Marj</string>
     <string name="launcher_darkershadow_title">Gölge</string>
@@ -321,8 +330,8 @@ Türkçe çeviri için; Buğra Çağlar\'a teşekkürler.</string>
     <string name="launcher_renameapps_modified">Değiştirilen Uygulama İsmi</string>
     <string name="launcher_privacyapps">Gizli Uygulamalar</string>
     <string name="launcher_privacyapps_fail">Gerekli izin alınamadı.</string>
-    <string name="launcher_privacyapps_gest_title">Klasör</string>
-    <string name="launcher_privacyapps_gest_summ">Gizlemiş olduğunuz uygulamaların Klasör\'ünü açmak için iki parmağınızı geriye doğru çekiniz (Başlatıcı: MiUI).</string>
+    <string name="launcher_privacyapps_gest_title">Gizli Klasör (Devre Dışı)</string>
+    <string name="launcher_privacyapps_gest_summ">Gizlemiş olduğunuz uygulamaların Klasör\'ünü açmak için iki parmağınızı geriye doğru çekme işlemini devre dışı bırakır (Başlatıcı: MiUI).</string>
     <string name="launcher_privacyapps_list_title">Uygulamalar</string>
     <string name="launcher_privacyapps_list_summ">Gizlemek istediğiniz Uygulamalar\'ı seçiniz.</string>
     <string name="launcher_swipedownaction_title">Aşağı Kaydır (Parmak Sayısı: 1)</string>
@@ -580,6 +589,8 @@ Türkçe çeviri için; Buğra Çağlar\'a teşekkürler.</string>
     <string name="qs_toggle_autorotate_off">Sınırsız</string>
     <string name="qs_toggle_autorotate_portrait">Portre</string>
     <string name="qs_toggle_autorotate_landscape">Manzara</string>
+    <string name="qs_toggle_darkmode">Karanlık modu</string>
+    <string name="qs_toggle_darkmode_noperm">CustoMIUIzer karanlık modunu değiştirme iznine sahip değil</string>
     <string name="miuizer">Ayarlar (CustoMIUIzer)</string>
     <string name="miuizer_show_newmods_title">Yeni Mod\'ları Belirt</string>
     <string name="miuizer_new_mod">Yeni!</string>

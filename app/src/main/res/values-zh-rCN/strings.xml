@@ -89,6 +89,8 @@
     <string name="system_showlux_summ">在亮度滑块以lux为单位显示环境照度值</string>
     <string name="system_showlux_style_title">替代风格</string>
     <string name="system_showlux_style_summ">半透明大文本</string>
+    <string name="system_showpct_title">显示亮度百分比</string>
+    <string name="system_showpct_summ">拖动亮度滑块时以百分比显示亮度</string>
     <string name="system_notifrowmenu_title">扩展通知菜单</string>
     <string name="system_notifrowmenu_summ">从通知菜单打开应用信息并强制关闭应用(向左滑动通知将其打开)</string>
     <string name="system_disableanynotif_title">禁用任何通知</string>
@@ -167,6 +169,7 @@
     <string name="system_lockscreenshortcuts_right_title">向左滑动动作</string>
     <string name="system_lockscreenshortcuts_right_image_title">更改右侧图标</string>
     <string name="system_lockscreenshortcuts_right_image_summ">用CustoMIUIzer图标替换相机图标</string>
+    <string name="system_lockscreenshortcuts_right_image_hint">拖动图标用以执行自定义动作</string>
     <string name="system_lockscreenshortcuts_left_off_title">禁用向右滑动手势</string>
     <string name="system_lockscreenshortcuts_left_title">左侧屏幕快捷方式</string>
     <string name="system_lockscreenshortcuts_left_summ">管理快捷方式列表</string>
@@ -198,7 +201,9 @@
     <string name="system_blocktoasts_title">阻止toast</string>
     <string name="system_blocktoasts_summ">阻止所选应用显示toast</string>
     <string name="system_uimode_title">界面模式</string>
-    <string name="system_uimode_summ">将模式更改为暗色、亮色或自动。不需要重启。</string>
+    <string name="system_uimode_summ">将模式更改为暗色、亮色或自动。无需重启。</string>
+    <string name="system_uimodetile_title">深色模式磁贴</string>
+    <string name="system_uimodetile_summ">添加快速设置磁贴用以切换深色模式。无需重启。</string>
     <string name="system_epm_title">扩展电源菜单</string>
     <string name="system_epm_summ">新增以下重启选项到电源菜单(引导模式、恢复模式、软重启、重启系统界面、重启启动器)</string>
     <string name="system_downgrade_title">允许降级</string>
@@ -301,6 +306,9 @@
     <string name="launcher_unlockgrids_title">解锁网格大小</string>
     <string name="launcher_unlockgrids_summ">可在主屏幕布局设置中使用3x4到6x7之间的所有网格大小</string>
     <string name="launcher_iconscale_title">图标缩放</string>
+    <string name="launcher_horizmargin_title">水平网格边距</string>
+    <string name="launcher_topmargin_title">顶部网格边距</string>
+    <string name="launcher_indicatorheight_title">页面指示器高度</string>
     <string name="launcher_folders">文件夹</string>
     <string name="launcher_folder_cols_title">文件夹排列数量</string>
     <string name="launcher_fixstatusbarmode_title">修复状态栏模式</string>
@@ -310,6 +318,7 @@
     <string name="launcher_closefolder_title">自动关闭文件夹</string>
     <string name="launcher_closefolder_summ">启动后关闭应用的文件夹</string>
     <string name="launcher_titles">应用标题</string>
+    <string name="launcher_hidetitles_title">隐藏标题</string>
     <string name="launcher_titlefontsize_title">字体大小</string>
     <string name="launcher_titletopmargin_title">附加顶部边距</string>
     <string name="launcher_darkershadow_title">加深阴影</string>
@@ -319,10 +328,10 @@
     <string name="launcher_renameapps_modified">修改标题</string>
     <string name="launcher_privacyapps">隐藏应用</string>
     <string name="launcher_privacyapps_fail">未授予所需权限</string>
-    <string name="launcher_privacyapps_gest_title">隐藏文件夹</string>
-    <string name="launcher_privacyapps_gest_summ">在MIUI启动器上双指外扩时打开隐藏应用文件夹。不需要重启。</string>
+    <string name="launcher_privacyapps_gest_title">没有隐藏的文件夹</string>
+    <string name="launcher_privacyapps_gest_summ">打开隐藏应用文件夹禁用双指手势</string>
     <string name="launcher_privacyapps_list_title">隐藏应用列表</string>
-    <string name="launcher_privacyapps_list_summ">隐藏应用选项的增强版，可以隐藏任何已安装的应用。不需要重启。</string>
+    <string name="launcher_privacyapps_list_summ">隐藏应用选项的增强版，可以隐藏任何已安装的应用。无需重启。</string>
     <string name="launcher_swipedownaction_title">下滑动作(单指)</string>
     <string name="launcher_swipedownaction_summ">在任意主屏幕单指下滑的动作</string>
     <string name="launcher_swipedownaction2_title">下滑动作(双指)</string>
@@ -578,6 +587,8 @@
     <string name="qs_toggle_autorotate_off">无限制</string>
     <string name="qs_toggle_autorotate_portrait">竖屏</string>
     <string name="qs_toggle_autorotate_landscape">横屏</string>
+    <string name="qs_toggle_darkmode">深色模式</string>
+    <string name="qs_toggle_darkmode_noperm">CustoMIUIzer没有更改深色模式的权限</string>
     <string name="miuizer">CustoMIUIzer设置</string>
     <string name="miuizer_show_newmods_title">标记新模块</string>
     <string name="miuizer_new_mod">新！</string>

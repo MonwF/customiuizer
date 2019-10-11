@@ -127,6 +127,17 @@
 			</intent-filter>
 		</service>
 
+		<service
+			android:name=".qs.DarkModeService"
+			android:icon="@drawable/ic_qs_darkmode_disabled"
+			android:label="@string/qs_toggle_darkmode"
+			android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+			android:enabled="false">
+			<intent-filter>
+				<action android:name="android.service.quicksettings.action.QS_TILE" />
+			</intent-filter>
+		</service>
+
 		<activity
 			android:name=".crashreport.Dialog"
 			android:theme="@style/Invisible"

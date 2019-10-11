@@ -15,13 +15,14 @@
 			android:key="pref_key_system_lockscreenshortcuts_right_off"
 			android:title="@string/system_lockscreenshortcuts_right_off_title"
 			android:dependency="pref_key_system_lockscreenshortcuts"
+			android:disableDependentsState="true"
 			android:defaultValue="false"
 			miuizer:dynamic="true" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_lockscreenshortcuts_right"
 			android:title="@string/system_lockscreenshortcuts_right_title"
-			android:dependency="pref_key_system_lockscreenshortcuts"
+			android:dependency="pref_key_system_lockscreenshortcuts_right_off"
 			android:defaultValue="false"
 			miuizer:dynamic="true" />
 
@@ -29,7 +30,7 @@
 			android:key="pref_key_system_lockscreenshortcuts_right_image"
 			android:title="@string/system_lockscreenshortcuts_right_image_title"
 			android:summary="@string/system_lockscreenshortcuts_right_image_summ"
-			android:dependency="pref_key_system_lockscreenshortcuts"
+			android:dependency="pref_key_system_lockscreenshortcuts_right_off"
 			android:defaultValue="false"
 			miuizer:dynamic="true" />
 
@@ -41,6 +42,7 @@
 			android:key="pref_key_system_lockscreenshortcuts_left_off"
 			android:title="@string/system_lockscreenshortcuts_left_off_title"
 			android:dependency="pref_key_system_lockscreenshortcuts"
+			android:disableDependentsState="true"
 			android:defaultValue="false"
 			miuizer:dynamic="true" />
 
@@ -48,7 +50,7 @@
 			android:key="pref_key_system_lockscreenshortcuts_left"
 			android:title="@string/system_lockscreenshortcuts_left_title"
 			android:summary="@string/system_lockscreenshortcuts_left_summ"
-			android:dependency="pref_key_system_lockscreenshortcuts"
+			android:dependency="pref_key_system_lockscreenshortcuts_left_off"
 			android:defaultValue="false"
 			miuizer:dynamic="true" />
 
@@ -56,7 +58,7 @@
 			android:key="pref_key_system_lockscreenshortcuts_left_skiplock"
 			android:title="@string/system_lockscreenshortcuts_left_skiplock_title"
 			android:summary="@string/system_lockscreenshortcuts_left_skiplock_summ"
-			android:dependency="pref_key_system_lockscreenshortcuts"
+			android:dependency="pref_key_system_lockscreenshortcuts_left_off"
 			android:defaultValue="false"
 			miuizer:dynamic="true" />
 

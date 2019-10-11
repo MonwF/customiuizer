@@ -27,6 +27,7 @@ import name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx;
 import name.mikanoshi.customiuizer.prefs.ListPreferenceEx;
 import name.mikanoshi.customiuizer.prefs.SeekBarPreference;
 import name.mikanoshi.customiuizer.qs.AutoRotateService;
+import name.mikanoshi.customiuizer.qs.DarkModeService;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class System extends SubFragment {
@@ -199,6 +200,15 @@ public class System extends SubFragment {
 
 					@Override
 					public void onStopTrackingTouch(SeekBar seekBar) {}
+				});
+
+				findPreference("pref_key_system_uimodetile").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+					@Override
+					public boolean onPreferenceChange(Preference preference, Object newValue) {
+						PackageManager pm = getActivity().getPackageManager();
+						pm.setComponentEnabledSetting(new ComponentName(getActivity(), DarkModeService.class), (Boolean)newValue ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED : PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+						return true;
+					}
 				});
 
 				break;

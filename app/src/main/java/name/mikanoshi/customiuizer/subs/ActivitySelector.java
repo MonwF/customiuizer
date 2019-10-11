@@ -1,9 +1,7 @@
 package name.mikanoshi.customiuizer.subs;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ComponentName;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
@@ -52,12 +50,12 @@ public class ActivitySelector extends SubFragmentWithSearch {
 					finish();
 					return;
 				}
-				listView.setAdapter(new AppDataAdapter(getContext(), activities, Helpers.AppAdapterType.Activities, null));
+				listView.setAdapter(new AppDataAdapter(getActivity(), activities, Helpers.AppAdapterType.Activities, null));
 				listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 						AppData appdData = ((AppDataAdapter)parent.getAdapter()).getItem(position);
-						final Intent intent = new Intent(getContext(), this.getClass());
+						final Intent intent = new Intent(getActivity(), this.getClass());
 						intent.putExtra("activity", appdData.pkgName + "|" + appdData.actName);
 						intent.putExtra("user", user);
 						getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
@@ -68,13 +66,13 @@ public class ActivitySelector extends SubFragmentWithSearch {
 					@Override
 					public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 						AppData appdData = ((AppDataAdapter)parent.getAdapter()).getItem(position);
-						Intent intent = new Intent(getContext(), this.getClass());
+						Intent intent = new Intent(getActivity(), this.getClass());
 						intent.setComponent(new ComponentName(appdData.pkgName, appdData.actName));
 						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 						intent.putExtra("user", user);
 						Intent bIntent = new Intent(GlobalActions.ACTION_PREFIX + "LaunchIntent");
 						bIntent.putExtra("intent", intent);
-						getContext().sendBroadcast(bIntent);
+						getActivity().sendBroadcast(bIntent);
 						return true;
 					}
 				});

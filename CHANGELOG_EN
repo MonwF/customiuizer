@@ -1,3 +1,16 @@
+1.8.1
+[New] Dark mode Quick Settings tile
+[New] Hide app titles in launcher
+[New] Horizontal launcher grid margins
+[New] Top launcher grid margin
+[New] Page indicator height in launcher
+[New] Display brightness level in percentages while dragging brightness slider
+[Improved][Number of rows in Quick Settings] Option for 2 rows with reduced QS height
+[Fixed][Font size of titles in launcher] Do not apply to opened folder's title
+[Fixed][Custom lock screen actions] Right icon and text replacement; Revert to stock camera launch when no custom action is selected
+[Fixed][Extended power menu] System UI restart
+Minor module UI fixes
+
 1.8.0
 [New] Action: Toggle one-handed mode
 [New] Display version info about app that is being installed

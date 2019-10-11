@@ -94,6 +94,8 @@
 	<string name="system_showlux_summ">Display ambient illuminance value in lux inside brightness slider</string>
 	<string name="system_showlux_style_title">Alternative style</string>
 	<string name="system_showlux_style_summ">Large semitransparent text</string>
+	<string name="system_showpct_title">Show brightness percentage</string>
+	<string name="system_showpct_summ">Display brightness level in percentages while dragging brightness slider</string>
 	<string name="system_notifrowmenu_title">Extended notification menu</string>
 	<string name="system_notifrowmenu_summ">Open app info and force close app from notification menu (swipe notification to the left to open it)</string>
 	<string name="system_disableanynotif_title">Disable any notification</string>
@@ -172,6 +174,7 @@
 	<string name="system_lockscreenshortcuts_right_title">Swipe left action</string>
 	<string name="system_lockscreenshortcuts_right_image_title">Change right icon</string>
 	<string name="system_lockscreenshortcuts_right_image_summ">Replace camera icon with CustoMIUIzer icon</string>
+	<string name="system_lockscreenshortcuts_right_image_hint">Drag the icon to execute custom action</string>
 	<string name="system_lockscreenshortcuts_left_off_title">Disable swipe right gesture</string>
 	<string name="system_lockscreenshortcuts_left_title">Left screen shortcuts</string>
 	<string name="system_lockscreenshortcuts_left_summ">Manage shortcuts list</string>
@@ -204,6 +207,8 @@
 	<string name="system_blocktoasts_summ">Prevent selected apps from showing toasts</string>
 	<string name="system_uimode_title">Interface mode</string>
 	<string name="system_uimode_summ">Change mode to dark, light or auto. No reboot required.</string>
+	<string name="system_uimodetile_title">Dark mode tile</string>
+	<string name="system_uimodetile_summ">Add Quick Settings tile to toggle dark mode. No reboot required.</string>
 	<string name="system_epm_title">Extended power menu</string>
 	<string name="system_epm_summ">Add new restart options to power menu (Fastboot mode, Recovery mode, Soft reboot, Restart System UI, Restart Launcher)</string>
 	<string name="system_downgrade_title">Allow downgrade</string>
@@ -310,6 +315,9 @@
 	<string name="launcher_unlockgrids_title">Unlock grid sizes</string>
 	<string name="launcher_unlockgrids_summ">Make all grid sizes from 3x4 to 6x7 available in home screen layout setting</string>
 	<string name="launcher_iconscale_title">Icons scaling</string>
+	<string name="launcher_horizmargin_title">Horizontal grid margins</string>
+	<string name="launcher_topmargin_title">Top grid margin</string>
+	<string name="launcher_indicatorheight_title">Page indicator height</string>
 	<string name="launcher_folders">Folders</string>
 	<string name="launcher_folder_cols_title">Number of columns in folders</string>
 	<string name="launcher_fixstatusbarmode_title">Fix status bar mode</string>
@@ -319,6 +327,7 @@
 	<string name="launcher_closefolder_title">Auto close folders</string>
 	<string name="launcher_closefolder_summ">Close app\'s folder after launch</string>
 	<string name="launcher_titles">App titles</string>
+	<string name="launcher_hidetitles_title">Hide titles</string>
 	<string name="launcher_titlefontsize_title">Font size</string>
 	<string name="launcher_titletopmargin_title">Additional top margin</string>
 	<string name="launcher_darkershadow_title">Darker shadow</string>
@@ -594,6 +603,8 @@
 	<string name="qs_toggle_autorotate_off">Unrestricted</string>
 	<string name="qs_toggle_autorotate_portrait">Portrait</string>
 	<string name="qs_toggle_autorotate_landscape">Landscape</string>
+	<string name="qs_toggle_darkmode">Dark mode</string>
+	<string name="qs_toggle_darkmode_noperm">CustoMIUIzer has no permission to change dark mode</string>
 
 	<string name="miuizer">CustoMIUIzer settings</string>
 	<string name="miuizer_show_newmods_title">Mark new mods</string>

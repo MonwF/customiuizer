@@ -336,6 +336,12 @@
 			android:defaultValue="false"
 			miuizer:child="true" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_showpct"
+			android:title="@string/system_showpct_title"
+			android:summary="@string/system_showpct_summ"
+			android:defaultValue="false" />
+
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_popupnotif_cat"
 			android:summary="@string/system_popupnotif_summ"
@@ -453,13 +459,19 @@
 		android:key="pref_key_system_cat_qs"
 		android:title="@string/system_mods_qs">
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_uimodetile"
+			android:title="@string/system_uimodetile_title"
+			android:summary="@string/system_uimodetile_summ"
+			android:defaultValue="false" />
+
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_system_qsgridrows"
 			android:title="@string/system_qsgridrows_title"
-			android:defaultValue="3"
+			android:defaultValue="1"
 			miuizer:note="@string/system_qsgridrows_note"
 			miuizer:offtext="@string/array_default"
-			miuizer:minValue="3"
+			miuizer:minValue="1"
 			miuizer:maxValue="5"
 			miuizer:stepValue="1"
 			miuizer:format="%d" />

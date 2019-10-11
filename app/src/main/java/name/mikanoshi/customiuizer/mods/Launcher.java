@@ -808,8 +808,7 @@ public class Launcher {
 					Object buddyIcon = param.getResult();
 					if (buddyIcon == null) return;
 					TextView mTitle = (TextView)XposedHelpers.getObjectField(buddyIcon, "mTitle");
-					if (mTitle != null)
-						mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, MainModule.mPrefs.getInt("launcher_titlefontsize", 5));
+					if (mTitle != null) mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, MainModule.mPrefs.getInt("launcher_titlefontsize", 5));
 				}
 			});
 
@@ -817,8 +816,8 @@ public class Launcher {
 				@Override
 				protected void after(final MethodHookParam param) throws Throwable {
 					TextView mTitle = (TextView)param.args[1];
-					if (mTitle != null)
-						mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, MainModule.mPrefs.getInt("launcher_titlefontsize", 5));
+					if (mTitle != null && mTitle.getId() == mTitle.getResources().getIdentifier("icon_title", "id", "com.miui.home"))
+					mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, MainModule.mPrefs.getInt("launcher_titlefontsize", 5));
 				}
 			});
 		}
@@ -854,6 +853,34 @@ public class Launcher {
 				if (opt) param.setResult(null);
 			}
 		});
+	}
+
+	public static void HideTitlesHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.miui.home.launcher.ItemIcon", lpparam.classLoader, "onFinishInflate", new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				View mTitleContainer = (View)XposedHelpers.getObjectField(param.thisObject, "mTitleContainer");
+				if (mTitleContainer != null) mTitleContainer.setVisibility(View.GONE);
+			}
+		});
+	}
+
+	public static void HorizontalSpacingRes() {
+		int opt = MainModule.mPrefs.getInt("launcher_horizmargin", 0) - 21;
+		MainModule.resHooks.setDensityReplacement("com.miui.home", "dimen", "workspace_cell_padding_side", opt);
+		MainModule.resHooks.setDensityReplacement("com.mi.android.globallauncher", "dimen", "workspace_cell_padding_side", opt);
+	}
+
+	public static void TopSpacingRes() {
+		int opt = MainModule.mPrefs.getInt("launcher_topmargin", 0) - 21;
+		MainModule.resHooks.setDensityReplacement("com.miui.home", "dimen", "workspace_cell_padding_top", opt);
+		MainModule.resHooks.setDensityReplacement("com.mi.android.globallauncher", "dimen", "workspace_cell_padding_top", opt);
+	}
+
+	public static void IndicatorHeightRes() {
+		int opt = MainModule.mPrefs.getInt("launcher_indicatorheight", 9);
+		MainModule.resHooks.setDensityReplacement("com.miui.home", "dimen", "slide_bar_height", opt);
+		MainModule.resHooks.setDensityReplacement("com.mi.android.globallauncher", "dimen", "slide_bar_height", opt);
 	}
 
 //	public static void ReplaceClockAppHook(LoadPackageParam lpparam) {

@@ -22,6 +22,7 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Process;
 import android.os.SystemClock;
 import android.os.UserHandle;
 import android.preference.PreferenceActivity.Header;
@@ -115,6 +116,10 @@ public class GlobalActions {
 //				} else if (action.equals(ACTION_PREFIX + "HideQuickRecents")) {
 //					if (floatSel != null) floatSel.hide();
 //				}
+
+				if (action.equals(ACTION_PREFIX + "RestartSystemUI")) {
+					Process.sendSignal(Process.myPid(), Process.SIGNAL_KILL);
+				}
 
 				if (action.equals(ACTION_PREFIX + "CollectLogs")) {
 					try {
@@ -875,6 +880,7 @@ public class GlobalActions {
 
 				intentfilter.addAction(ACTION_PREFIX + "ClearMemory");
 				intentfilter.addAction(ACTION_PREFIX + "CollectLogs");
+				intentfilter.addAction(ACTION_PREFIX + "RestartSystemUI");
 
 				mStatusBarContext.registerReceiver(mSBReceiver, intentfilter);
 			}
