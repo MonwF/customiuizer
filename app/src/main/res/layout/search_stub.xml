@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/searchView"
+	android:gravity="right|center_horizontal|clip_horizontal"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:clickable="false">
+
+	<LinearLayout
+		android:id="@android:id/inputArea"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<ImageView
+			android:id="@+id/inputIcon"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical" />
+
+		<TextView
+			android:id="@android:id/input"
+			style="@style/TextAppearance.Widget.EditText"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical"
+			android:contentDescription="@string/search_input_description"
+			android:gravity="left|center_vertical|center_horizontal|center|start"
+			android:singleLine="true" />
+	</LinearLayout>
+</FrameLayout>

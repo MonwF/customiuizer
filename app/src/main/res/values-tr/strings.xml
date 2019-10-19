@@ -3,10 +3,8 @@
     <string name="app_about">Hakkında</string>
     <string name="about_version">Versiyon: %1$s</string>
     <string name="about_dev">Geliştirici; Mikanoshi</string>
-    <string name="about_dynamic">Genel olarak, mod\'lar etkin veya devre dışı bırakılmıştır ancak \'⟲\' ile işaretlenenler; değerleri değiştirildikten sonra yalnızca hızlı yeniden başlatma gerektirir, ardından değişiklikler hemen uygulanır.</string>
-    <string name="about_unsupported">\'⨯\' ile işaretlenmiş mod\'lar bu cihazda desteklenmemektedir.
-
-Türkçe çeviri için; Buğra Çağlar\'a teşekkürler.</string>
+    <string name="about_dynamic">Genel olarak mod\'lar etkin veya devre dışı bırakılmak için hızlı başlatmaya ihtiyaç duyarlar, ancak \'⟲\' ile işaretlenenler; değerleri değiştirildikten sonra yalnızca bir hızlı yeniden başlatma gerektirir, ardından değişiklikler hemen uygulanır.</string>
+    <string name="about_unsupported">\'⨯\' ile işaretlenmiş mod\'lar bu cihazda desteklenmemektedir.</string>
     <string name="mods">Mod\'lar</string>
     <string name="mods_actions">Eylemler</string>
     <string name="enable_mod">Mod\'u etkinleştir</string>
@@ -104,6 +102,8 @@ Türkçe çeviri için; Buğra Çağlar\'a teşekkürler.</string>
     <string name="system_autogroupnotif_summ">Aynı uygulamadan gelen birden fazla bildirimi gruplandırır.</string>
     <string name="system_notifmediaseekbar_title">İleri/Geri Sarma (Medya)</string>
     <string name="system_notifmediaseekbar_summ">Dinlediğiniz ya da izlediğiniz medya dosyasını İleri/Geri Sarma\'nıza imkan sağlar.</string>
+    <string name="system_notifmediaseekbar_full_title">Sistem stilini kullan</string>
+    <string name="system_notifmediaseekbar_full_summ">Özel ince stili kaydırıcıya uygulamayın</string>
     <string name="system_popupnotif_title">Bildirim Paneli</string>
     <string name="system_popupnotif_summ">Seçilen uygulamalardaki gelen bildirimlerde Bildirim Paneli otomatik olarak açılır.</string>
     <string name="system_popupnotif_fs_title">Tam Ekran</string>
@@ -116,7 +116,7 @@ Türkçe çeviri için; Buğra Çağlar\'a teşekkürler.</string>
     <string name="system_nolightuponheadset_title">Kulaklık</string>
     <string name="system_nolightuponheadset_summ">Kulaklık takıldığında veya çıkarıldığında ekran uyandırılmaz.</string>
     <string name="system_dimtime_title">Karartma Süresi</string>
-    <string name="system_dimtime_summ">Ekran kilitlenmeden önceki karartmanın süresini belirler.</string>
+    <string name="system_dimtime_summ">Otomatik kapanmadan önce ekranın soluk kalması gerekir (toplam ekran kapanma zaman aşımının yüzdesi olarak)</string>
     <string name="system_minbrightness_title">Otomatik Parlaklık (Minimum)</string>
     <string name="system_minbrightness_summ">Otomatik Parlaklık aktifken minimum parlaklık seviyesini belirler.</string>
     <string name="system_minbrightness_note">Değerler doğrusal parlaklık değerine sahip değildir. Android sürümüne göre farklılıklar gösterebilir.</string>
@@ -303,6 +303,8 @@ Türkçe çeviri için; Buğra Çağlar\'a teşekkürler.</string>
     <string name="launcher_infinitescroll_summ">Ana ekranda Sayfalar Arası Geçiş yaparken sonsuz kaydırma yapabilirsiniz.</string>
     <string name="launcher_noclockhide_title">Saat</string>
     <string name="launcher_noclockhide_summ">Durum Çubuğu\'ndaki Saat, Ana Ekran\'daki Saat\'in bulunduğu sayfada gizlenmez.</string>
+    <string name="launcher_googlediscover_title">Google</string>
+    <string name="launcher_googlediscover_summ">Uygulama Kasası\'nı; Google Keşfet (Discover) ile değiştir (Google uygulamasının yüklü olması gerekir).</string>
     <string name="launcher_hideseekpoints_title">Sayfa Göstergesi</string>
     <string name="launcher_hideseekpoints_summ">Sayfa Göstergesi sadece sayfalar arası geçişlerde görünür.</string>
     <string name="launcher_unlockgrids_title">Ana Ekran Düzeni</string>
@@ -391,6 +393,8 @@ Türkçe çeviri için; Buğra Çağlar\'a teşekkürler.</string>
     <string name="controls_volumemedia_vibrate_summ">Ses artırma/azaltma tuşlarına uzun süreli basılı tutulduğunda titrer.</string>
     <string name="controls_mods_navbar">Gezinme Tuşları (Klasik)</string>
     <string name="controls_nonavbar_title">Gizle</string>
+    <string name="controls_imebackalticon_title">Reaktif geri düğmesi</string>
+    <string name="controls_imebackalticon_summ">Giriş modunda geri düğme simgesini alternatifine geçin</string>
     <string name="controls_navbarheight_title">Yükseklik</string>
     <string name="controls_backlong_title">Geri (Basılı Tut: Uzun)</string>
     <string name="controls_homelong_title">Ev (Basılı Tut: Uzun)</string>
@@ -412,6 +416,9 @@ Türkçe çeviri için; Buğra Çağlar\'a teşekkürler.</string>
     <string name="various_sysappsupdater_title">Aç \"Sistem Uygulama Güncelleyici\"</string>
     <string name="various_sysappsupdater_summ">Uygulama bazı ROM\'lar da yüklü olarak gelmez ve yüklenmesi gerekir.</string>
     <string name="various_sysappsupdater_summ2">Özel ROM\'lar da sistem uygulamalarını güncellerken dikkat ediniz aksi taktir de eklenen özelleştirmeler silinebilir.</string>
+    <string name="various_miuiinstaller_title">Uygulama Yükleyici (MiUI)</string>
+    <string name="various_miuiinstaller_summ">Uygulama yükleyicisini MiUI\'nkiyle yer değiştirin ve sürekli güncel kalın.</string>
+    <string name="various_miuiinstaller_error">Gerekli uygulama yüklü değil. Yüklemek için basılı tutunuz...</string>
     <string name="various_installappinfo_title">Uygulama Yükleyicisinde Uygulama Bilgisi</string>
     <string name="various_installappinfo_summ">Yüklenen Uygulama Hakkında Bilgi Görüntüleme</string>
     <string name="various_installappinfo_package">Paket</string>

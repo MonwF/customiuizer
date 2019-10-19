@@ -107,6 +107,8 @@
 	<string name="system_autogroupnotif_summ">Number of notifications from one app that triggers auto grouping</string>
 	<string name="system_notifmediaseekbar_title">Media position slider</string>
 	<string name="system_notifmediaseekbar_summ">Add media notification slider that indicates current position and allows to change it</string>
+	<string name="system_notifmediaseekbar_full_title">Use system style</string>
+	<string name="system_notifmediaseekbar_full_summ">Do not apply custom thin style to slider</string>
 	<string name="system_popupnotif_title">Auto open notification drawer</string>
 	<string name="system_popupnotif_summ">Open notification drawer automatically on notifications from selected apps</string>
 	<string name="system_popupnotif_fs_title">Respect fullscreen</string>
@@ -119,7 +121,7 @@
 	<string name="system_nolightuponheadset_title">No screen light up on headset connection</string>
 	<string name="system_nolightuponheadset_summ">Do not turn screen on when you connect a headset</string>
 	<string name="system_dimtime_title">Dim duration</string>
-	<string name="system_dimtime_summ">How long screen should remain dimmed before turning off automatically</string>
+	<string name="system_dimtime_summ">How long screen should remain dimmed before turning off automatically (in percentage of total screen off timeout)</string>
 	<string name="system_minbrightness_title">Minimum auto brightness</string>
 	<string name="system_minbrightness_summ">Set the minimum brightness value in automatic mode</string>
 	<string name="system_minbrightness_note">Slider will not correspond to system brightness slider on latest Android versions with non-linear brightness scale</string>
@@ -310,6 +312,8 @@
 	<string name="launcher_infinitescroll_summ">Jump from the last page to the first one and vice versa</string>
 	<string name="launcher_noclockhide_title">No clock hide</string>
 	<string name="launcher_noclockhide_summ">Do not hide status bar clock on pages with clock widgets</string>
+	<string name="launcher_googlediscover_title">Enable Google Discover</string>
+	<string name="launcher_googlediscover_summ">Replace App Vault with Google Discover (requires Google app to be installed)</string>
 	<string name="launcher_hideseekpoints_title">Dynamic page indicator</string>
 	<string name="launcher_hideseekpoints_summ">Show page indicator only during scrolling</string>
 	<string name="launcher_unlockgrids_title">Unlock grid sizes</string>
@@ -399,6 +403,8 @@
 	<string name="controls_volumemedia_vibrate_summ">Vibrate when long press action is executed</string>
 	<string name="controls_mods_navbar">Navigation bar</string>
 	<string name="controls_nonavbar_title">Hide navbar</string>
+	<string name="controls_imebackalticon_title">Reactive Back button</string>
+	<string name="controls_imebackalticon_summ">Switch back button icon to alternative one in input mode</string>
 	<string name="controls_navbarheight_title">Navbar height</string>
 	<string name="controls_backlong_title">Back long press action</string>
 	<string name="controls_homelong_title">Home long press action</string>
@@ -421,6 +427,9 @@
 	<string name="various_sysappsupdater_title">Open \"System app updater\"</string>
 	<string name="various_sysappsupdater_summ">App is no longer a part of some ROMs and has to be installed manually</string>
 	<string name="various_sysappsupdater_summ2">Be careful when updating modified system apps on custom ROMs, you might lose the added functionality</string>
+	<string name="various_miuiinstaller_title">Use MIUI package installer</string>
+	<string name="various_miuiinstaller_summ">Make package installer by Xiaomi the default one and allow it to update system apps</string>
+	<string name="various_miuiinstaller_error">Required app is not installed. Long press to download.</string>
 	<string name="various_installappinfo_title">App info in installer</string>
 	<string name="various_installappinfo_summ">Display info about app that is being installed</string>
 	<string name="various_installappinfo_package">Package</string>

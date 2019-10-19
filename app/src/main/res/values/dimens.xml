@@ -11,10 +11,6 @@
 
 	<dimen name="am_app_list_padding_end">13.3dp</dimen>
 
-	<dimen name="search_mode_bg_padding">10.91dp</dimen>
-	<dimen name="search_mode_bg_size">38.55dp</dimen>
-	<dimen name="search_mode_bg_radius">7.27dp</dimen>
-
 	<dimen name="seekbar_margin_right">75dp</dimen>
 
 	<dimen name="progressbar_size">22.5dp</dimen>

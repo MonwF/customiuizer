@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -31,7 +32,7 @@ public class LockedAppAdapter extends BaseAdapter implements Filterable {
 	private ThreadPoolExecutor pool;
 	private ItemFilter mFilter = new ItemFilter();
 	private ArrayList<AppData> originalAppList;
-	private ArrayList<AppData> filteredAppList;
+	private CopyOnWriteArrayList<AppData> filteredAppList = new CopyOnWriteArrayList<AppData>();
 	private Object mSecurityManager;
 	private Method getApplicationAccessControlEnabledAsUser;
 
@@ -40,7 +41,7 @@ public class LockedAppAdapter extends BaseAdapter implements Filterable {
 		ctx = context;
 		mInflater = LayoutInflater.from(context);
 		originalAppList = arr;
-		filteredAppList = arr;
+		filteredAppList.addAll(arr);
 		int cpuCount = Runtime.getRuntime().availableProcessors();
 		pool = new ThreadPoolExecutor(cpuCount + 1, cpuCount * 2 + 1, 2, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
 
@@ -163,7 +164,8 @@ public class LockedAppAdapter extends BaseAdapter implements Filterable {
 		@Override
 		@SuppressWarnings("unchecked")
 		protected void publishResults(CharSequence constraint, FilterResults results) {
-			filteredAppList = (ArrayList<AppData>)results.values;
+			filteredAppList.clear();
+			filteredAppList.addAll((ArrayList<AppData>)results.values);
 			sortList();
 			notifyDataSetChanged();
 		}

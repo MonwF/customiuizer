@@ -569,6 +569,12 @@ public class Dialog extends Activity {
 	}
 
 	@Override
+	public void onDetachedFromWindow() {
+		if (loader != null && loader.isShowing()) loader.dismiss();
+		super.onDetachedFromWindow();
+	}
+
+	@Override
 	public void finish() {
 		super.finish();
 		overridePendingTransition(0, 0);

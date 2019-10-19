@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.database.ContentObserver;
@@ -20,6 +21,7 @@ import android.media.AudioAttributes;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.BadParcelableException;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,6 +31,7 @@ import android.preference.PreferenceActivity;
 import android.provider.Settings;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.RelativeSizeSpan;
 import android.view.Gravity;
@@ -46,9 +49,13 @@ import android.widget.Toast;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
+import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
@@ -60,6 +67,7 @@ import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.Helpers.MethodHook;
 
+import static de.robv.android.xposed.XposedHelpers.findClass;
 import static java.lang.System.currentTimeMillis;
 
 public class Various {
@@ -195,6 +203,10 @@ public class Various {
 		}
 	}
 
+	public static void AppsDisableServiceHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethods("com.android.server.pm.PackageManagerServiceInjector", lpparam.classLoader, "isAllowedDisable", XC_MethodReplacement.returnConstant(true));
+	}
+
 	public static void AppsDisableHook(LoadPackageParam lpparam) {
 		Helpers.findAndHookMethod("com.miui.appmanager.ApplicationsDetailsActivity", lpparam.classLoader, "onCreateOptionsMenu", Menu.class, new MethodHook() {
 			@Override
@@ -233,7 +245,7 @@ public class Various {
 				Resources modRes = Helpers.getModuleRes(act);
 				Field piField = XposedHelpers.findFirstFieldByExactType(act.getClass(), PackageInfo.class);
 				PackageInfo mPackageInfo = (PackageInfo)piField.get(act);
-				if ("com.android.settings".equals(mPackageInfo.packageName)) {
+				if ("com.android.settings".equals(mPackageInfo.packageName) || "com.google.android.packageinstaller".equals(mPackageInfo.packageName) || "com.android.packageinstaller".equals(mPackageInfo.packageName)) {
 					Toast.makeText(act, modRes.getString(R.string.disable_app_settings), Toast.LENGTH_SHORT).show();
 					return;
 				}
@@ -586,6 +598,112 @@ public class Various {
 					((ViewGroup)parent.getParent()).addView(container, ((ViewGroup)parent.getParent()).getChildCount() - 1);
 				else
 					parent.addView(container, parent.getChildCount() - 1);
+			}
+		});
+	}
+
+	public static void AppInfoDuringMiuiInstallHook(LoadPackageParam lpparam) {
+		Method[] methods = XposedHelpers.findMethodsByExactParameters(findClass("com.android.packageinstaller.PackageInstallerActivity", lpparam.classLoader), void.class, String.class);
+		if (methods.length == 0) {
+			Helpers.log("AppInfoDuringMiuiInstallHook", "Cannot find appropriate method");
+			return;
+		}
+		Helpers.hookMethod(methods[0], new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				Activity act = (Activity)param.thisObject;
+				TextView version = act.findViewById(act.getResources().getIdentifier("install_version", "id", lpparam.packageName));
+				Field fPkgInfo = XposedHelpers.findFirstFieldByExactType(param.thisObject.getClass(), PackageInfo.class);
+				PackageInfo mPkgInfo = (PackageInfo)fPkgInfo.get(param.thisObject);
+				if (version == null || mPkgInfo == null) return;
+
+				TextView source = act.findViewById(act.getResources().getIdentifier("install_source", "id", lpparam.packageName));
+				source.setGravity(Gravity.CENTER_HORIZONTAL);
+				source.setText(mPkgInfo.packageName);
+
+				PackageInfo mAppInfo = null;
+				try {
+					mAppInfo = act.getPackageManager().getPackageInfo(mPkgInfo.packageName, 0);
+				} catch (Throwable t) {}
+
+				String size = "";
+				String[] texts = ((String)version.getText()).split("\\|");
+				if (texts.length >= 2) size = texts[1].trim();
+
+				Resources modRes = Helpers.getModuleRes(act);
+
+				SpannableStringBuilder builder = new SpannableStringBuilder();
+				if (!TextUtils.isEmpty(size)) builder.append(size).append("\n");
+				builder.append(modRes.getString(R.string.various_installappinfo_vername)).append(":\t\t");
+				if (mAppInfo != null) builder.append(mAppInfo.versionName).append("  ➟  ");
+				builder.append(mPkgInfo.versionName).append("\n");
+				builder.append(modRes.getString(R.string.various_installappinfo_vercode)).append(":\t\t");
+				if (mAppInfo != null) builder.append(String.valueOf(mAppInfo.versionCode)).append("  ➟  ");
+				builder.append(String.valueOf(mPkgInfo.versionCode)).append("\n");
+				builder.append(modRes.getString(R.string.various_installappinfo_sdk)).append(":\t\t");
+				if (mAppInfo != null) builder.append(String.valueOf(mAppInfo.applicationInfo.minSdkVersion)).append("-").append(String.valueOf(mAppInfo.applicationInfo.targetSdkVersion)).append("  ➟  ");
+				builder.append(String.valueOf(mPkgInfo.applicationInfo.minSdkVersion)).append("-").append(String.valueOf(mPkgInfo.applicationInfo.targetSdkVersion));
+
+				version.setGravity(Gravity.CENTER_HORIZONTAL);
+				version.setSingleLine(false);
+				version.setMaxLines(10);
+				version.setText(builder);
+			}
+		});
+	}
+
+	public static void MiuiPackageInstallerServiceHook(LoadPackageParam lpparam) {
+		MethodHook hook = new MethodHook() {
+			@Override
+			@SuppressWarnings({"unchecked", "ConstantConditions"})
+			protected void after(MethodHookParam param) throws Throwable {
+				try {
+					if (param.args[0] == null) return;
+					Intent origIntent = (Intent)param.args[0];
+					Intent intent = (Intent)origIntent.clone();
+					String action = intent.getAction();
+					if (!Intent.ACTION_INSTALL_PACKAGE.equals(action)) return;
+					//XposedBridge.log(intent.getPackage() + ": " + intent.getType() + " | " + intent.getDataString());
+					boolean res = false;
+					try {
+						res = XposedHelpers.callMethod(param.thisObject, "getPackageInfo", "com.miui.packageinstaller", 0, 0) != null;
+					} catch (Throwable e) {}
+					if (!res) return;
+
+					List<ResolveInfo> resolved = new ArrayList<ResolveInfo>((List<ResolveInfo>)param.getResult());
+					ResolveInfo resolveInfo;
+					Iterator itr = resolved.iterator();
+					while (itr.hasNext()) {
+						resolveInfo = ((ResolveInfo)itr.next());
+						if (resolveInfo.activityInfo != null && !"com.miui.packageinstaller".equals(resolveInfo.activityInfo.packageName)) itr.remove();
+					}
+
+					if (resolved.size() > 0) param.setResult(resolved);
+				} catch (Throwable t) {
+					if (!(t instanceof BadParcelableException)) XposedBridge.log(t);
+				}
+			}
+		};
+
+		if (!Helpers.findAndHookMethodSilently("com.android.server.pm.PackageManagerService", lpparam.classLoader, "queryIntentActivitiesInternal", Intent.class, String.class, int.class, int.class, int.class, boolean.class, boolean.class, hook))
+		Helpers.findAndHookMethod("com.android.server.pm.PackageManagerService", lpparam.classLoader, "queryIntentActivitiesInternal", Intent.class, String.class, int.class, int.class, hook);
+	}
+
+	public static void MiuiPackageInstallerHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.packageinstaller.PackageInstallerActivity", lpparam.classLoader, "onCreate", Bundle.class, new MethodHook() {
+			@Override
+			@SuppressWarnings("unchecked")
+			protected void before(MethodHookParam param) throws Throwable {
+				Activity act = (Activity)param.thisObject;
+				List<ApplicationInfo> packs = act.getPackageManager().getInstalledApplications(PackageManager.MATCH_SYSTEM_ONLY | PackageManager.MATCH_DISABLED_COMPONENTS);
+				for (Field field: param.thisObject.getClass().getDeclaredFields())
+				if (field.getType() == List.class) {
+					field.setAccessible(true);
+					ArrayList<String> whiteList = (ArrayList<String>)field.get(param.thisObject);
+					if (whiteList.size() <= 1) continue;
+					for (ApplicationInfo pack: packs)
+					if (!whiteList.contains(pack.packageName)) whiteList.add(pack.packageName);
+				}
 			}
 		});
 	}

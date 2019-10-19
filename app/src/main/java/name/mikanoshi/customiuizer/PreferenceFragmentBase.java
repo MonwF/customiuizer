@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -12,8 +11,14 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import miui.preference.PreferenceFragment;
 import name.mikanoshi.customiuizer.utils.Helpers;
@@ -79,10 +84,32 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 	}
 
 	public void setViewBackground(View view) {
+		boolean isNight = Helpers.isNightMode(getActivity());
 		if (Helpers.isPiePlus())
-			view.setBackgroundResource(getResources().getIdentifier(Helpers.isNightMode(getContext()) ? "settings_window_bg_dark" : "settings_window_bg_light", "drawable", "miui"));
+			view.setBackgroundResource(getResources().getIdentifier(isNight ? "settings_window_bg_dark" : "settings_window_bg_light", "drawable", "miui"));
 		else
-			view.setBackgroundColor(Helpers.isNightMode(getContext()) ? Color.BLACK : Color.rgb(247, 247, 247));
+			view.setBackgroundColor(isNight ? Color.BLACK : Color.rgb(247, 247, 247));
+	}
+
+	public void setActionModeStyle(View searchView) {
+		boolean isNight = Helpers.isNightMode(getActivity());
+		searchView.setBackgroundResource(getResources().getIdentifier(isNight ? "search_mode_bg_dark" : "search_mode_bg_light", "drawable", "miui"));
+		LinearLayout inputArea = searchView.findViewById(android.R.id.inputArea);
+		inputArea.setBackgroundResource(getResources().getIdentifier(isNight ? "search_mode_edit_text_bg_dark" : "search_mode_edit_text_bg_light", "drawable", "miui"));
+		if (Helpers.is11()) {
+			ViewGroup.LayoutParams lp1 = searchView.getLayoutParams();
+			lp1.height = getResources().getDimensionPixelSize(getResources().getIdentifier("action_bar_default_height", "dimen", "miui"));
+			searchView.setLayoutParams(lp1);
+			FrameLayout.LayoutParams lp2 = (FrameLayout.LayoutParams)inputArea.getLayoutParams();
+			lp2.height = getResources().getDimensionPixelSize(getResources().getIdentifier("searchbar_bg_height", "dimen", "miui"));
+			inputArea.setLayoutParams(lp2);
+		}
+		ImageView inputIcon = searchView.findViewById(R.id.inputIcon);
+		inputIcon.setImageResource(getResources().getIdentifier(isNight ? "edit_text_search_dark" : "edit_text_search", "drawable", "miui"));
+		TextView input = searchView.findViewById(android.R.id.input);
+		int fontSize = getResources().getIdentifier(Helpers.is11() ? "edit_text_font_size" : "secondary_text_size", "dimen", "miui");
+		input.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(fontSize == 0 ? R.dimen.secondary_text_size : fontSize));
+		input.setHintTextColor(getResources().getColor(getResources().getIdentifier(isNight ? "edit_text_search_hint_color_dark" : "edit_text_search_hint_color_light", "color", "miui"), getActivity().getTheme()));
 	}
 
 	public void openSubFragment(Fragment fragment, Bundle args, Helpers.SettingsType settingsType, Helpers.ActionBarType abType, int titleResId, int contentResId) {

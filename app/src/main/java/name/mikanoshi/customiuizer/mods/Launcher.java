@@ -883,6 +883,10 @@ public class Launcher {
 		MainModule.resHooks.setDensityReplacement("com.mi.android.globallauncher", "dimen", "slide_bar_height", opt);
 	}
 
+	public static void GoogleDiscoverHook(final LoadPackageParam lpparam) {
+		XposedHelpers.setStaticBooleanField(XposedHelpers.findClass("com.miui.home.launcher.DeviceConfig", lpparam.classLoader), "IS_USE_GOOGLE_MINUS_SCREEN", true);
+	}
+
 //	public static void ReplaceClockAppHook(LoadPackageParam lpparam) {
 //		Helpers.findAndHookMethod("com.miui.home.launcher.common.Utilities", lpparam.classLoader, "startActivity", Context.class, String.class, View.class, new MethodHook() {
 //			@Override

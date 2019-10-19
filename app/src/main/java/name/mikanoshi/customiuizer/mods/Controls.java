@@ -22,6 +22,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -799,6 +800,41 @@ public class Controls {
 			}
 		});
 	}
+
+	public static void BackGestureAreaHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.fsgesture.GestureStubView", lpparam.classLoader, "getGestureStubWindowParam", new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				WindowManager.LayoutParams lp = (WindowManager.LayoutParams)param.getResult();
+				int pct = MainModule.mPrefs.getInt("controls_fsg_coverage", 60);
+				lp.height = Math.round(lp.height / 60.0f * pct);
+				param.setResult(lp);
+			}
+		});
+	}
+
+	public static void HideNavBarHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "addNavigationBar", XC_MethodReplacement.DO_NOTHING);
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "changeNavBarViewState", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				XposedHelpers.callMethod(param.thisObject, "removeNavBarView");
+				XposedHelpers.callMethod(param.thisObject, "updateStatusBarPading");
+				param.setResult(null);
+			}
+		});
+	}
+
+	public static void ImeBackAltIconHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethods("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "setImeWindowStatus", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				Object mNavigationBarView = XposedHelpers.getObjectField(param.thisObject, "mNavigationBarView");
+				if (mNavigationBarView != null) XposedHelpers.callMethod(mNavigationBarView, "setNavigationIconHints", param.args[1], false);
+			}
+		});
+	}
+
 
 //	public static void AIButtonHook(LoadPackageParam lpparam) {
 //		Helpers.findAndHookMethod("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "startAiKeyService", String.class, new MethodHook() {

@@ -342,7 +342,10 @@ public class MainFragment extends PreferenceFragmentBase {
 		});
 		setViewBackground(resultView);
 
-		search = getView().findViewById(android.R.id.inputArea);
+		searchView = getView().findViewById(R.id.searchView);
+		setActionModeStyle(searchView);
+
+		search = searchView.findViewById(android.R.id.inputArea);
 		((TextView)search.findViewById(android.R.id.input)).setHint(android.R.string.search_go);
 		search.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -365,6 +368,30 @@ public class MainFragment extends PreferenceFragmentBase {
 		});
 
 		if (actionMode != null) actionMode.invalidate();
+
+		modsCat = null; markCat = null;
+		listView = getView().findViewById(android.R.id.list);
+		listView.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
+			@Override
+			public void onChildViewAdded(View parent, View child) {
+				if (child == null) return;
+				CharSequence title = ((TextView)child.findViewById(android.R.id.title)).getText();
+				if (title.equals(getResources().getString(R.string.system_mods))) modsCat = child;
+				if (title.equals(getResources().getString(R.string.miuizer_show_newmods_title))) markCat = child;
+				if (modsCat != null && markCat != null) {
+					if (areGuidesCleared) try {
+						showGuides();
+					} catch (Throwable t) {
+						t.printStackTrace();
+					}
+					listView.setOnHierarchyChangeListener(null);
+				}
+			}
+
+			@Override
+			public void onChildViewRemoved(View parent, View child) {}
+		});
+
 		final Activity act = getActivity();
 
 		findPreference("pref_key_miuizer_launchericon").setOnPreferenceChangeListener(new CheckBoxPreference.OnPreferenceChangeListener() {
@@ -450,30 +477,6 @@ public class MainFragment extends PreferenceFragmentBase {
 		});
 
 		//Helpers.removePref(this, "pref_key_miuizer_force_material", "pref_key_miuizer");
-
-		modsCat = null; markCat = null;
-		searchView = getView().findViewById(R.id.am_search_view);
-		listView = getView().findViewById(android.R.id.list);
-		listView.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
-			@Override
-			public void onChildViewAdded(View parent, View child) {
-				if (child == null) return;
-				CharSequence title = ((TextView)child.findViewById(android.R.id.title)).getText();
-				if (title.equals(getResources().getString(R.string.system_mods))) modsCat = child;
-				if (title.equals(getResources().getString(R.string.miuizer_show_newmods_title))) markCat = child;
-				if (modsCat != null && markCat != null) {
-					if (areGuidesCleared) try {
-						showGuides();
-					} catch (Throwable t) {
-						t.printStackTrace();
-					}
-					listView.setOnHierarchyChangeListener(null);
-				}
-			}
-
-			@Override
-			public void onChildViewRemoved(View parent, View child) {}
-		});
 	}
 
 	void showGuides() {

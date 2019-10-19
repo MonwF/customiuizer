@@ -62,6 +62,7 @@ public class ListPreferenceEx extends ListPreference implements PreferenceState 
 		summary.setVisibility(valueAsSummary || getSummary() == null || getSummary().equals("") ? View.GONE : View.VISIBLE);
 		valSummary.setVisibility(valueAsSummary ? View.VISIBLE : View.GONE);
 		valSummary.setText(valueAsSummary ? sValue : "");
+		if (valueAsSummary && Helpers.is11()) valSummary.setTextColor(Helpers.isNightMode(getContext()) ? secondary : primary);
 		title.setTextColor(isEnabled() ? primary : secondary);
 		title.setText(getTitle() + (unsupported ? " ⨯" : (dynamic ? " ⟲" : "")));
 		if (newmod) Helpers.applyNewMod(title);

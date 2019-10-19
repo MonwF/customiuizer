@@ -33,13 +33,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -516,7 +514,7 @@ public class System {
 		TextView tv = new TextView(ctx);
 		tv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 		tv.setText(ctx.getApplicationInfo().loadLabel(ctx.getPackageManager()));
-		tv.setTextColor(Color.WHITE);
+		tv.setTextColor(Helpers.is11() ? (Helpers.isNightMode(ctx) ? Color.WHITE : Color.BLACK) : Color.WHITE);
 		tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, toastText.getTextSize());
 		tv.setTypeface(toastText.getTypeface());
 		tv.setSingleLine(true);
@@ -539,16 +537,30 @@ public class System {
 
 		TextView toastText = toast.findViewById(android.R.id.message);
 		if (toastText == null) return;
-		toastText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+		if (Helpers.is11()) {
+			toast.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+			toastText.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+			toastText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+			toastText.setLetterSpacing(0.015f);
+		} else {
+			toastText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+		}
 		LinearLayout.LayoutParams lpt = (LinearLayout.LayoutParams)toastText.getLayoutParams();
 		lpt.gravity = Gravity.START;
 
 		switch (option) {
 			case 2:
+				ImageView iv;
 				LinearLayout textOnly = new LinearLayout(ctx);
 				textOnly.setOrientation(LinearLayout.VERTICAL);
-				textOnly.setGravity(Gravity.START);
-				ImageView iv = createIcon(ctx, 21);
+				if (Helpers.is11()) {
+					textOnly.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+					textOnly.setPadding(0, Math.round(5 * density), 0, Math.round(6 * density));
+					iv = createIcon(ctx, 22);
+				} else {
+					textOnly.setGravity(Gravity.START);
+					iv = createIcon(ctx, 21);
+				}
 
 				toast.removeAllViews();
 				textOnly.addView(toastText);
@@ -561,10 +573,12 @@ public class System {
 				LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)tv.getLayoutParams();
 				lp.leftMargin = Math.round(5 * density);
 				lp.rightMargin = Math.round(5 * density);
+				if (Helpers.is11()) lp.topMargin = Math.round(5 * density);
 				tv.setLayoutParams(lp);
 				lp = (LinearLayout.LayoutParams)toastText.getLayoutParams();
 				lp.leftMargin = Math.round(5 * density);
 				lp.rightMargin = Math.round(5 * density);
+				if (Helpers.is11()) lp.bottomMargin = Math.round(5 * density);
 				toastText.setLayoutParams(lp);
 				toast.setOrientation(LinearLayout.VERTICAL);
 				toast.addView(tv, 0);
@@ -572,7 +586,12 @@ public class System {
 			case 4:
 				LinearLayout textLabel = new LinearLayout(ctx);
 				textLabel.setOrientation(LinearLayout.VERTICAL);
-				textLabel.setGravity(Gravity.START);
+				if (Helpers.is11()) {
+					textLabel.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+					textLabel.setPadding(0, Math.round(5 * density), 0, Math.round(6 * density));
+				} else {
+					textLabel.setGravity(Gravity.START);
+				}
 				ImageView iv2 = createIcon(ctx, 42);
 				TextView tv2 = createLabel(ctx, toastText);
 
@@ -1640,18 +1659,6 @@ public class System {
 		});
 	}
 
-	public static void BackGestureAreaHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.android.systemui.fsgesture.GestureStubView", lpparam.classLoader, "getGestureStubWindowParam", new MethodHook() {
-			@Override
-			protected void after(final MethodHookParam param) throws Throwable {
-				WindowManager.LayoutParams lp = (WindowManager.LayoutParams)param.getResult();
-				int pct = MainModule.mPrefs.getInt("controls_fsg_coverage", 60);
-				lp.height = Math.round(lp.height / 60.0f * pct);
-				param.setResult(lp);
-			}
-		});
-	}
-
 	public static void AutoGroupNotificationsHook(LoadPackageParam lpparam) {
 		Helpers.findAndHookMethod("com.android.server.notification.GroupHelper", lpparam.classLoader, "adjustAutogroupingSummary", int.class, String.class, String.class, boolean.class, new MethodHook() {
 			@Override
@@ -2149,7 +2156,7 @@ public class System {
 				String cmd = (String)param.args[0];
 				Object scrContext = XposedHelpers.getObjectField(param.thisObject, "mContext");
 				Context mContext = (Context)XposedHelpers.getObjectField(scrContext, "mContext");
-				Handler mHandler = (Handler)XposedHelpers.getObjectField(scrContext, "mHandler");
+//				Handler mHandler = (Handler)XposedHelpers.getObjectField(scrContext, "mHandler");
 				PowerManager pm = (PowerManager)mContext.getSystemService(Context.POWER_SERVICE);
 				Object mService = XposedHelpers.getObjectField(pm, "mService");
 				Object mSystemExternCommandListener = XposedHelpers.getObjectField(param.thisObject, "mSystemExternCommandListener");
@@ -2632,7 +2639,8 @@ public class System {
 	}
 
 	public static void UnblockThirdLaunchersHook(LoadPackageParam lpparam) {
-		Helpers.hookAllMethods("com.miui.securitycenter.provider.ThirdDesktopProvider", lpparam.classLoader, "call", new MethodHook() {
+		String thirdCls = Helpers.is11() ? "com.miui.securitycenter.provider.ThirdMonitorProvider" : "com.miui.securitycenter.provider.ThirdDesktopProvider";
+		Helpers.hookAllMethods(thirdCls, lpparam.classLoader, "call", new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
 				Bundle bundle = new Bundle();
@@ -2902,18 +2910,6 @@ public class System {
 				Intent intent = (Intent)param.args[0];
 				if (intent.getComponent() != null)
 				checkLastCheck(param.thisObject, 0);
-			}
-		});
-	}
-
-	public static void HideNavBarHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "addNavigationBar", XC_MethodReplacement.DO_NOTHING);
-		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "changeNavBarViewState", new MethodHook() {
-			@Override
-			protected void before(MethodHookParam param) throws Throwable {
-				XposedHelpers.callMethod(param.thisObject, "removeNavBarView");
-				XposedHelpers.callMethod(param.thisObject, "updateStatusBarPading");
-				param.setResult(null);
 			}
 		});
 	}
@@ -3907,7 +3903,7 @@ public class System {
 				boolean skip = MainModule.mPrefs.getBoolean("system_lockscreenshortcuts_left_skiplock");
 				if (!skip && (action == 8 || action == 9 || action == 20))
 				XposedHelpers.callStaticMethod(findClass("com.android.systemui.SystemUICompat", lpparam.classLoader), "dismissKeyguardOnNextActivity");
-				GlobalActions.handleAction(v.getContext(), (String)v.getTag(), skip);
+				GlobalActions.handleAction(v.getContext(), "pref_key_" + v.getTag(), skip);
 			}
 		};
 
@@ -4158,21 +4154,23 @@ public class System {
 				float density = view.getResources().getDisplayMetrics().density;
 				String pkgName = (String)XposedHelpers.callMethod(XposedHelpers.callMethod(param.args[2], "getStatusBarNotification"), "getPackageName");
 
-				FrameLayout container = new FrameLayout(view.getContext());
+				Context ctx = view.getContext();
+				FrameLayout container = new FrameLayout(ctx);
 				container.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 				container.setClipToPadding(false);
 				container.setClipChildren(false);
+				container.setPadding(0, Math.round(10 * density), 0, 0);
 				//container.setTranslationY(-Math.round(7 * density));
 
-				final TextView posDur = new TextView(view.getContext());
+				final TextView posDur = new TextView(ctx);
 				FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
 				lp.gravity = Gravity.END;
 				posDur.setLayoutParams(lp);
 				posDur.setGravity(Gravity.END);
 				posDur.setTranslationY(-Math.round(15 * density));
-				posDur.setPadding(0, 0, Math.round(15 * density), 0);
+				posDur.setPadding(0, 0, Math.round(16 * density), 0);
 				try {
-					posDur.setTextColor(view.getResources().getColor(view.getResources().getIdentifier("media_notification_app_name_text_color", "color", "android"), view.getContext().getTheme()));
+					posDur.setTextColor(view.getResources().getColor(view.getResources().getIdentifier("media_notification_app_name_text_color", "color", "android"), ctx.getTheme()));
 					posDur.setTextSize(TypedValue.COMPLEX_UNIT_PX, view.getResources().getDimensionPixelSize(view.getResources().getIdentifier("media_notification_app_name_text_size", "dimen", "android")));
 				} catch (Throwable t) {
 					TextView appName = view.findViewById(view.getResources().getIdentifier("media_app_name", "id", "android"));
@@ -4182,23 +4180,20 @@ public class System {
 					}
 				}
 
-				final SeekBar seekBar = new SeekBar(view.getContext());
-				seekBar.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT));
-				LayerDrawable progressLayers = (LayerDrawable)seekBar.getProgressDrawable();
-				Drawable background = progressLayers.findDrawableByLayerId(android.R.id.background);
-				background.setColorFilter(Helpers.isNightMode(view.getContext()) ? 0xFF262627 : 0xFFD0D0D0, PorterDuff.Mode.SRC_IN);
-				Drawable progress = progressLayers.findDrawableByLayerId(android.R.id.progress);
-				progress.setColorFilter(Helpers.isNightMode(view.getContext()) ? 0xFF505051 : 0xFF888888, PorterDuff.Mode.SRC_IN);
-				seekBar.setThumb(null);
+				final SeekBar seekBar = new SeekBar(ctx);
 
-				//StateListDrawable thumbStates = (StateListDrawable)seekBar.getThumb();
-				//Drawable thumb = (Drawable)XposedHelpers.callMethod(thumbStates, "getStateDrawable", 1);
-				//thumb.setColorFilter(Color.DKGRAY, PorterDuff.Mode.SRC_IN);
-				//ScaleDrawable thumbSmall = new ScaleDrawable(thumb, Gravity.CENTER, 0.5f, 0.5f);
-
+				boolean opt = MainModule.mPrefs.getBoolean("system_notifmediaseekbar_full");
+				if (opt) {
+					seekBar.setPadding(Math.round(15 * density), Math.round(5 * density), Math.round(15 * density), Math.round(5 * density));
+				} else {
+					seekBar.setProgressDrawable(Helpers.getModuleRes(ctx).getDrawable(R.drawable.seekbar, ctx.getTheme()));
+					seekBar.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, Math.round(10 * density)));
+					seekBar.setThumb(null);
+					seekBar.setBackground(null);
+					seekBar.setPadding(Math.round(16 * density), 0, Math.round(16 * density), 0);
+				}
 				seekBar.setMax(100);
 				seekBar.setProgress(0);
-				seekBar.setPadding(Math.round(15 * density), 0, Math.round(15 * density), 0);
 				seekBar.setTag(false);
 				seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 					@Override
@@ -4557,19 +4552,33 @@ public class System {
 	}
 
 	public static void ScreenDimTimeHook(LoadPackageParam lpparam) {
-		Helpers.hookAllMethods("com.android.server.power.PowerManagerService", lpparam.classLoader, "getScreenDimDurationLocked", new MethodHook() {
+		Helpers.findAndHookMethod("com.android.server.power.PowerManagerService", lpparam.classLoader, "readConfigurationLocked", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
-				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-				int minScreenOffTimeout = mContext.getResources().getInteger(mContext.getResources().getIdentifier("config_minimumScreenOffTimeout", "integer", "android"));
-				int opt = MainModule.mPrefs.getInt("system_dimtime", 0);
-				if (param.getResult() instanceof Long) {
-					if ((long)param.args[0] > minScreenOffTimeout) param.setResult(opt * 1000L);
-				} else if (param.getResult() instanceof Integer) {
-					if ((int)param.args[0] > minScreenOffTimeout) param.setResult(opt * 1000);
-				} else Helpers.log("ScreenDimTimeHook", "Unknown result type: " + param.getResult().getClass().getSimpleName());
+				float opt = MainModule.mPrefs.getInt("system_dimtime", 0) / 100f;
+				XposedHelpers.setIntField(param.thisObject, "mMaximumScreenDimDurationConfig", 600000);
+				XposedHelpers.setFloatField(param.thisObject, "mMaximumScreenDimRatioConfig", opt);
+//				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+//				int minScreenOffTimeout = mContext.getResources().getInteger(mContext.getResources().getIdentifier("config_minimumScreenOffTimeout", "integer", "android"));
 			}
 		});
+
+//		Helpers.hookAllMethods("com.android.server.power.PowerManagerService", lpparam.classLoader, "getScreenOffTimeoutLocked", new MethodHook() {
+//			@Override
+//			protected void after(MethodHookParam param) throws Throwable {
+//				//XposedBridge.log("getScreenOffTimeoutLocked (mSleepTimeoutSetting): " + param.args[0]);
+//				//XposedBridge.log("mMaximumScreenOffTimeoutFromDeviceAdmin: " + XposedHelpers.getLongField(param.thisObject, "mMaximumScreenOffTimeoutFromDeviceAdmin"));
+//				XposedBridge.log("mUserActivityTimeoutOverrideFromWindowManager: " + XposedHelpers.getLongField(param.thisObject, "mUserActivityTimeoutOverrideFromWindowManager"));
+//			}
+//		});
+//
+//		Helpers.hookAllMethods("com.android.server.power.PowerManagerService", lpparam.classLoader, "updateUserActivitySummaryLocked", new MethodHook() {
+//			@Override
+//			protected void after(MethodHookParam param) throws Throwable {
+//				if ((int)param.args[1] == 1) return;
+//				XposedBridge.log("updateUserActivitySummaryLocked: " + param.args[0] + ", " + param.args[1]);
+//			}
+//		});
 	}
 
 	public static void NoOverscrollHook() {

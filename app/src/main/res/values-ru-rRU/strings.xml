@@ -42,6 +42,9 @@
 	<string name="various_mods">Различное</string>
 	<string name="various_alarmcompat_title">Совместимость будильника</string>
 	<string name="various_alarmcompat_summ">Позволяет выбранным приложениям правильно показывать время следующего будильника, установленного стандартным приложением часов MIUI</string>
+	<string name="various_miuiinstaller_title">Использовать установщик пакетов MIUI</string>
+	<string name="various_miuiinstaller_summ">Делает дефолтным установщик пакетов от Xiaomi и разрешает ему обновление системных приложений</string>
+	<string name="various_miuiinstaller_error">Не установлено необходимое приложение. Сделайте долгое нажатие для скачивания.</string>
 	<string name="various_installappinfo_title">Данные о приложении при инсталляции</string>
 	<string name="various_installappinfo_summ">Отображает данные об устанавливаемом приложении в окне инсталлера</string>
 	<string name="various_installappinfo_package">Пакет</string>
@@ -281,6 +284,8 @@
 	<string name="controls_volumemedia_vibrate_summ">Вибрировать при выполнении действия на долгое нажатие</string>
 	<string name="controls_mods_navbar">Панель навигации</string>
 	<string name="controls_nonavbar_title">Скрыть панель</string>
+	<string name="controls_imebackalticon_title">Динамическая кнопка Назад</string>
+	<string name="controls_imebackalticon_summ">Переключает иконку кнопки Назад на альтернативную в режиме ввода</string>
 	<string name="controls_navbarheight_title">Высота панели</string>
 	<string name="controls_backlong_title">Действие на долгое нажатие кнопки Назад</string>
 	<string name="controls_homelong_title">Действие на долгое нажатие кнопки Домой</string>
@@ -299,7 +304,7 @@
 	<string name="controls_fsg_horiz_title">Горизонтальные жесты</string>
 	<string name="controls_fsg_horiz_summ">Активировать вместе горизонтальные жесты и панель навигации</string>
 
-	<string name="array_color_auto">Авто</string>
+	<string name="array_color_auto">Автоматический</string>
 	<string name="array_color_dark">Тёмный</string>
 	<string name="array_color_light">Светлый</string>
 
@@ -392,6 +397,8 @@
 	<string name="launcher_infinitescroll_summ">Позволяет переходить с последнего экрана на первый и обратно</string>
 	<string name="launcher_noclockhide_title">Не прятать часы</string>
 	<string name="launcher_noclockhide_summ">Отключает скрытие часов в статус баре на домашних экранах с виджетами часов</string>
+	<string name="launcher_googlediscover_title">Включить Google Discover</string>
+	<string name="launcher_googlediscover_summ">Заменяет ленту виджетов на Google Discover (требуется установленное приложение Google)</string>
 	<string name="launcher_hideseekpoints_title">Динамический индикатор экранов</string>
 	<string name="launcher_hideseekpoints_summ">Показывает индикатор только во время прокрутки</string>
 	<string name="launcher_unlockgrids_title">Разблокировать размеры сетки</string>
@@ -604,6 +611,8 @@
 	<string name="system_autogroupnotif_summ">Число уведомлений от одного приложения при котором срабатывает их автоматическая группировка</string>
 	<string name="system_notifmediaseekbar_title">Слайдер медиа позиции</string>
 	<string name="system_notifmediaseekbar_summ">Добавляет слайдер в медиа уведомелние для отображения и изменения текущей позиции</string>
+	<string name="system_notifmediaseekbar_full_title">Использовать системный стиль</string>
+	<string name="system_notifmediaseekbar_full_summ">Не применять специальный тонкий стиль к слайдеру</string>
 	<string name="system_popupnotif_title">Автооткрытие панели уведомлений</string>
 	<string name="system_popupnotif_summ">Открывает панель уведомлений автоматически при получении уведомлений от выбранных приложений</string>
 	<string name="system_popupnotif_fs_title">Определение полноэкранного режима</string>
@@ -616,7 +625,7 @@
 	<string name="system_nolightuponheadset_title">Не включать экран при подключении наушников</string>
 	<string name="system_nolightuponheadset_summ">Запрещает включение экрана при подключении наушников</string>
 	<string name="system_dimtime_title">Продолжительность затемнения</string>
-	<string name="system_dimtime_summ">Как долго экран должен быть затемнён перед автоматическим выключением</string>
+	<string name="system_dimtime_summ">Как долго экран должен быть затемнён перед автоматическим выключением (в процентах от задержки выключения экрана)</string>
 	<string name="system_minbrightness_title">Минимальная автояркость</string>
 	<string name="system_minbrightness_summ">Задаёт минимальное значение яркости в автоматическом режиме</string>
 	<string name="system_minbrightness_note">Слайдер не соответствует системному слайдеру громкости на последних версиях Андроида с нелинейной шкалой яркости</string>

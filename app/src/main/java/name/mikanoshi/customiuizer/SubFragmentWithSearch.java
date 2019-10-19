@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import miui.view.SearchActionMode;
+
 import name.mikanoshi.customiuizer.utils.AppDataAdapter;
 import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.LockedAppAdapter;
@@ -106,7 +107,10 @@ public class SubFragmentWithSearch extends SubFragment {
 			}
 		};
 
-		LinearLayout search = getView().findViewById(android.R.id.inputArea);
+		searchView = getView().findViewById(R.id.searchView);
+		setActionModeStyle(searchView);
+
+		LinearLayout search = searchView.findViewById(android.R.id.inputArea);
 		search.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -117,7 +121,6 @@ public class SubFragmentWithSearch extends SubFragment {
 			}
 		});
 
-		searchView = getView().findViewById(R.id.am_search_view);
 		listView = getView().findViewById(android.R.id.list);
 		listView.setOnTouchListener(new View.OnTouchListener() {
 			@Override

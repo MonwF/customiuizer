@@ -8,6 +8,7 @@ import static de.robv.android.xposed.XposedHelpers.getObjectField;
 import static de.robv.android.xposed.XposedHelpers.setObjectField;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
@@ -18,6 +19,8 @@ import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.Helpers.MethodHook;
 
 public class PackagePermissions {
+
+	private static ArrayList<String> systemPackages = new ArrayList<String>();
 
 	@SuppressWarnings("unchecked")
 	private static void doBefore(MethodHookParam param) {
@@ -45,6 +48,10 @@ public class PackagePermissions {
 	}
 
 	public static void init(LoadPackageParam lpparam) {
+		systemPackages.add(Helpers.modulePkg);
+		//systemPackages.add("com.miui.packageinstaller");
+		//systemPackages.add("pl.solidexplorer2");
+
 		// Allow signature level permissions for module
 		if (!Helpers.findAndHookMethodSilently("com.android.server.pm.permission.PermissionManagerService", lpparam.classLoader, "grantSignaturePermission",
 			String.class, "android.content.pm.PackageParser.Package", "com.android.server.pm.permission.BasePermission", "com.android.server.pm.permission.PermissionsState",
@@ -52,7 +59,7 @@ public class PackagePermissions {
 				@Override
 				protected void before(MethodHookParam param) throws Throwable {
 					String pkgName = (String)XposedHelpers.getObjectField(param.args[1], "packageName");
-					if (pkgName.equalsIgnoreCase(Helpers.modulePkg)) param.setResult(true);
+					if (systemPackages.contains(pkgName)) param.setResult(true);
 				}
 			}
 		)) Helpers.findAndHookMethod("com.android.server.pm.PackageManagerService", lpparam.classLoader, "grantSignaturePermission",
@@ -61,7 +68,7 @@ public class PackagePermissions {
 				@Override
 				protected void before(MethodHookParam param) throws Throwable {
 					String pkgName = (String)XposedHelpers.getObjectField(param.args[1], "packageName");
-					if (pkgName.equalsIgnoreCase(Helpers.modulePkg)) param.setResult(true);
+					if (systemPackages.contains(pkgName)) param.setResult(true);
 				}
 			}
 		);
@@ -72,7 +79,7 @@ public class PackagePermissions {
 				@Override
 				protected void before(MethodHookParam param) throws Throwable {
 					String pkgName = (String)XposedHelpers.getObjectField(param.args[0], "name");
-					if (pkgName.equalsIgnoreCase(Helpers.modulePkg)) param.setResult(true);
+					if (systemPackages.contains(pkgName)) param.setResult(true);
 				}
 			}
 		)) Helpers.findAndHookMethod("com.android.server.pm.PackageManagerService", lpparam.classLoader, "verifySignaturesLP",
@@ -81,7 +88,7 @@ public class PackagePermissions {
 				@Override
 				protected void before(MethodHookParam param) throws Throwable {
 					String pkgName = (String)XposedHelpers.getObjectField(param.args[1], "packageName");
-					if (pkgName.equalsIgnoreCase(Helpers.modulePkg)) param.setResult(true);
+					if (systemPackages.contains(pkgName)) param.setResult(true);
 				}
 			}
 		);
@@ -123,16 +130,28 @@ public class PackagePermissions {
 				List<ResolveInfo> infos = (List<ResolveInfo>)param.getResult();
 				if (infos != null)
 				for (ResolveInfo info: infos)
-				if (info != null && info.activityInfo != null && info.activityInfo.packageName.equalsIgnoreCase(Helpers.modulePkg))
+				if (info != null && info.activityInfo != null && systemPackages.contains(info.activityInfo.packageName))
 				XposedHelpers.setObjectField(info, "system", true);
 			}
 		});
+
+//		// Causes module removal by system on updates
+//		Helpers.hookAllMethods("com.android.server.pm.PackageManagerService", lpparam.classLoader, "getApplicationInfoInternal", new MethodHook() {
+//			@Override
+//			protected void after(MethodHookParam param) throws Throwable {
+//				ApplicationInfo info = (ApplicationInfo)param.getResult();
+//				if (info != null && systemPackages.contains(info.packageName)) {
+//					info.flags |= ApplicationInfo.FLAG_SYSTEM;
+//					param.setResult(info);
+//				}
+//			}
+//		});
 
 		Helpers.findAndHookMethod("android.content.pm.ApplicationInfo", lpparam.classLoader, "isSystemApp", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				ApplicationInfo ai = (ApplicationInfo)param.thisObject;
-				if (ai != null && ai.packageName.equalsIgnoreCase(Helpers.modulePkg)) param.setResult(true);
+				if (ai != null && systemPackages.contains(ai.packageName)) param.setResult(true);
 			}
 		});
 
@@ -141,7 +160,7 @@ public class PackagePermissions {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				ApplicationInfo ai = (ApplicationInfo)param.thisObject;
-				if (ai != null && ai.packageName.equalsIgnoreCase(Helpers.modulePkg)) param.setResult(true);
+				if (ai != null && systemPackages.contains(ai.packageName)) param.setResult(true);
 			}
 		});
 
@@ -163,9 +182,9 @@ public class PackagePermissions {
 		try {
 			Class<?> dpgpiClass = findClass("com.android.server.pm.DefaultPermissionGrantPolicyInjector", lpparam.classLoader);
 			String[] MIUI_SYSTEM_APPS = (String[])XposedHelpers.getStaticObjectField(dpgpiClass, "MIUI_SYSTEM_APPS");
-			String[] MIUI_SYSTEM_APPS_NEW = new String[MIUI_SYSTEM_APPS.length + 1];
-			MIUI_SYSTEM_APPS_NEW[MIUI_SYSTEM_APPS_NEW.length - 1] = Helpers.modulePkg;
-			XposedHelpers.setStaticObjectField(dpgpiClass, "MIUI_SYSTEM_APPS", MIUI_SYSTEM_APPS_NEW);
+			ArrayList<String> mySystemApps = new ArrayList<String>(Arrays.asList(MIUI_SYSTEM_APPS));
+			mySystemApps.addAll(systemPackages);
+			XposedHelpers.setStaticObjectField(dpgpiClass, "MIUI_SYSTEM_APPS", mySystemApps.toArray(new String[0]));
 		} catch (Throwable t) {}
 	}
 

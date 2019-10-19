@@ -164,6 +164,12 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_launcher_googlediscover"
+			android:title="@string/launcher_googlediscover_title"
+			android:summary="@string/launcher_googlediscover_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_fixstatusbarmode"
 			android:title="@string/launcher_fixstatusbarmode_title"
 			android:summary="@string/launcher_fixstatusbarmode_summ"

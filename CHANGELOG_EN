@@ -1,3 +1,20 @@
+2.0.0
+[New] Alternative back navbar button icon in input mode
+[New] Replace App Vault with Google Discover in MIUI Launcher
+[New] Make MIUI package installer the default one and allow it to update system apps
+[Improved][Media position slider] Option to switch to system slider style
+[Improved][App info in installer] MIUI package installer support
+[Improved][App state control] Ability to disable more apps (System launcher, Find device, etc)
+[Fixed][Dim duration] Compatibility with some ROMs, now configured in % of screen off timeout
+[Fixed][Custom lock screen actions] Launching shortcut actions
+[Fixed][Navbar actions] Media actions on main buttons long press
+MIUI 11 compatibility:
+	Fast access icon
+	Additional toasts elements
+	Unblock launchers
+	Media position slider
+	Open menu action
+
 1.8.1
 [New] Dark mode Quick Settings tile
 [New] Hide app titles in launcher

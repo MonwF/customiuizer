@@ -102,6 +102,8 @@
     <string name="system_autogroupnotif_summ">触发自动分组的应用的通知数量</string>
     <string name="system_notifmediaseekbar_title">媒体位置滑块</string>
     <string name="system_notifmediaseekbar_summ">添加指示当前位置的媒体通知滑块并允许对其进行更改</string>
+    <string name="system_notifmediaseekbar_full_title">使用系统风格</string>
+    <string name="system_notifmediaseekbar_full_summ">不应用自定义薄式风格到滑条</string>
     <string name="system_popupnotif_title">自动打开通知抽屉</string>
     <string name="system_popupnotif_summ">从所选应用的通知中自动打开应用抽屉</string>
     <string name="system_popupnotif_fs_title">遵守全屏</string>
@@ -114,7 +116,7 @@
     <string name="system_nolightuponheadset_title">连接耳机时不亮起屏幕</string>
     <string name="system_nolightuponheadset_summ">当您连接耳机时不打开屏幕</string>
     <string name="system_dimtime_title">暗屏时长</string>
-    <string name="system_dimtime_summ">自动灭屏前保持暗屏的时间</string>
+    <string name="system_dimtime_summ">自动灭屏前保持暗屏的时间(屏幕关闭超时总数的百分比)</string>
     <string name="system_minbrightness_title">自动亮度最小值</string>
     <string name="system_minbrightness_summ">设置自动模式下的最小亮度值</string>
     <string name="system_minbrightness_note">在具有非线性亮度标度的最新Android版本上，滑块不会对应系统亮度滑块</string>
@@ -301,6 +303,8 @@
     <string name="launcher_infinitescroll_summ">从末页跳到首页，反之亦然</string>
     <string name="launcher_noclockhide_title">不隐藏时钟</string>
     <string name="launcher_noclockhide_summ">时钟小部件所在页面不隐藏状态栏时钟</string>
+    <string name="launcher_googlediscover_title">启用Google探索</string>
+    <string name="launcher_googlediscover_summ">将App Vault替换为Google探索(需要安装Google应用)</string>
     <string name="launcher_hideseekpoints_title">动态页面指示器</string>
     <string name="launcher_hideseekpoints_summ">仅在滚动时显示页面指示器</string>
     <string name="launcher_unlockgrids_title">解锁网格大小</string>
@@ -389,6 +393,8 @@
     <string name="controls_volumemedia_vibrate_summ">执行长按动作时振动</string>
     <string name="controls_mods_navbar">导航栏</string>
     <string name="controls_nonavbar_title">隐藏导航栏</string>
+    <string name="controls_imebackalticon_title">反应性返回键</string>
+    <string name="controls_imebackalticon_summ">切换返回键图标为输入模式中的替代方案</string>
     <string name="controls_navbarheight_title">导航栏高度</string>
     <string name="controls_backlong_title">长按返回键动作</string>
     <string name="controls_homelong_title">长按Home键动作</string>
@@ -410,6 +416,9 @@
     <string name="various_sysappsupdater_title">打开 \"系统应用更新\"</string>
     <string name="various_sysappsupdater_summ">应用不再是某些ROM的一部分，必须手动安装</string>
     <string name="various_sysappsupdater_summ2">请小心，在自定义ROM上更新被修改的系统应用时，您可能会丢失所添加的功能</string>
+    <string name="various_miuiinstaller_title">使用MIUI软件包安装器</string>
+    <string name="various_miuiinstaller_summ">使用小米的软件包安装器并允许其更新系统应用</string>
+    <string name="various_miuiinstaller_error">请求的应用未安装。长按下载。</string>
     <string name="various_installappinfo_title">安装程序中的应用信息</string>
     <string name="various_installappinfo_summ">显示安装中应用的相关信息</string>
     <string name="various_installappinfo_package">软件包</string>

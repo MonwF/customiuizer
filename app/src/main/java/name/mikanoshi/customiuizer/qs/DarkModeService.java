@@ -17,26 +17,18 @@ public class DarkModeService extends TileService {
 		Tile tile = this.getQsTile();
 		if (tile == null) return;
 
-		Icon newIcon = Icon.createWithResource(getApplicationContext(),	R.drawable.ic_qs_darkmode_disabled);
-		String newLabel = getString(R.string.qs_toggle_darkmode);
-		int newState = Tile.STATE_UNAVAILABLE;
+		Icon newIcon;
+		int newState;
 
 		UiModeManager uiManager = (UiModeManager)getSystemService(Context.UI_MODE_SERVICE);
 		if (uiManager.getNightMode() == UiModeManager.MODE_NIGHT_YES) {
-			newLabel = getString(R.string.array_color_dark);
 			newIcon = Icon.createWithResource(getApplicationContext(),	R.drawable.ic_qs_darkmode_enabled);
 			newState = Tile.STATE_ACTIVE;
-		} else if (uiManager.getNightMode() == UiModeManager.MODE_NIGHT_NO) {
-			newLabel = getString(R.string.array_color_light);
+		} else {
 			newIcon = Icon.createWithResource(getApplicationContext(),	R.drawable.ic_qs_darkmode_disabled);
 			newState = Tile.STATE_INACTIVE;
-		} else if (uiManager.getNightMode() == UiModeManager.MODE_NIGHT_AUTO) {
-			newLabel = getString(R.string.array_color_auto);
-			newIcon = Icon.createWithResource(getApplicationContext(),	R.drawable.ic_qs_darkmode_enabled);
-			newState = Tile.STATE_ACTIVE;
 		}
 
-		tile.setLabel(newLabel);
 		tile.setIcon(newIcon);
 		tile.setState(newState);
 		tile.updateTile();
@@ -48,9 +40,7 @@ public class DarkModeService extends TileService {
 				Toast.makeText(this, R.string.qs_toggle_darkmode_noperm, Toast.LENGTH_LONG).show();
 			} else {
 				UiModeManager uiManager = (UiModeManager)getSystemService(Context.UI_MODE_SERVICE);
-				if (uiManager.getNightMode() == UiModeManager.MODE_NIGHT_NO) uiManager.setNightMode(UiModeManager.MODE_NIGHT_YES);
-				else if (uiManager.getNightMode() == UiModeManager.MODE_NIGHT_YES) uiManager.setNightMode(UiModeManager.MODE_NIGHT_AUTO);
-				else if (uiManager.getNightMode() == UiModeManager.MODE_NIGHT_AUTO) uiManager.setNightMode(UiModeManager.MODE_NIGHT_NO);
+				uiManager.setNightMode(uiManager.getNightMode() != UiModeManager.MODE_NIGHT_YES ? UiModeManager.MODE_NIGHT_YES : UiModeManager.MODE_NIGHT_NO);
 			}
 		} catch (Throwable t) {
 			t.printStackTrace();

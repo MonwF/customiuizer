@@ -182,6 +182,13 @@
 			android:defaultValue="false"
 			android:disableDependentsState="true" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_controls_imebackalticon"
+			android:title="@string/controls_imebackalticon_title"
+			android:summary="@string/controls_imebackalticon_summ"
+			android:defaultValue="false"
+			android:dependency="pref_key_controls_nonavbar"/>
+
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_controls_navbarheight"
 			android:title="@string/controls_navbarheight_title"

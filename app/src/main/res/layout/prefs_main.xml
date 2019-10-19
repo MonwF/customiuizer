@@ -4,40 +4,11 @@
 	android:layout_height="match_parent"
 	android:background="@android:color/transparent">
 
-	<FrameLayout
-		android:id="@+id/am_search_view"
-		style="@style/Widget.SearchActionMode"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:clickable="false">
-
-		<LinearLayout
-			android:id="@android:id/inputArea"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:background="@drawable/search_mode_edit_text_bg">
-
-			<ImageView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_gravity="center_vertical"
-				android:src="@drawable/edit_text_search" />
-
-			<TextView
-				android:id="@android:id/input"
-				style="@style/TextAppearance.Widget.EditText.Search"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_gravity="center_vertical"
-				android:contentDescription="@string/search_input_description"
-				android:gravity="left|center_vertical|center_horizontal|center|start"
-				android:singleLine="true" />
-		</LinearLayout>
-	</FrameLayout>
+	<include layout="@layout/search_stub" />
 
 	<ListView
 		android:id="@android:id/list"
-		android:layout_below="@+id/am_search_view"
+		android:layout_below="@+id/searchView"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:cacheColorHint="@android:color/transparent"
@@ -49,7 +20,7 @@
 		android:id="@android:id/custom"
 		android:visibility="gone"
 		android:paddingTop="5.5dp"
-		android:layout_below="@+id/am_search_view"
+		android:layout_below="@+id/searchView"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:cacheColorHint="@android:color/transparent"

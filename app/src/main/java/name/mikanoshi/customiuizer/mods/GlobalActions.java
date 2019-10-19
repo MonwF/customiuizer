@@ -39,6 +39,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -57,6 +58,8 @@ import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.Helpers.MethodHook;
 
 import static de.robv.android.xposed.XposedHelpers.findClass;
+import static de.robv.android.xposed.XposedHelpers.findField;
+import static de.robv.android.xposed.XposedHelpers.findMethodExact;
 import static java.lang.System.currentTimeMillis;
 
 @SuppressWarnings("WeakerAccess")
@@ -75,6 +78,11 @@ public class GlobalActions {
 		if (key == null || key.isEmpty()) return false;
 		int action = Helpers.getSharedIntPref(context, key + "_action", 1);
 		if (action <= 1) return false;
+		if (action >= 85 && action <= 88) {
+			if (GlobalActions.isMediaActionsAllowed(context))
+			GlobalActions.sendDownUpKeyEvent(context, action, false);
+			return true;
+		}
 		switch (action) {
 			case 2: return expandNotifications(context);
 			case 3: return expandEQS(context);
@@ -615,7 +623,7 @@ public class GlobalActions {
 
 	private static int settingsIconResId;
 	public static void miuizerSettingsResInit() {
-		settingsIconResId = MainModule.resHooks.addResource("ic_miuizer_settings", R.drawable.ic_miuizer_settings);
+		settingsIconResId = MainModule.resHooks.addResource("ic_miuizer_settings", Helpers.is11() ? R.drawable.ic_miuizer_settings11 : R.drawable.ic_miuizer_settings10);
 	}
 
 	public static void miuizerSettingsInit(LoadPackageParam lpparam) {
@@ -647,13 +655,23 @@ public class GlobalActions {
 				int security = mContext.getResources().getIdentifier("security_status", "id", mContext.getPackageName());
 				int advanced = mContext.getResources().getIdentifier("other_advanced_settings", "id", mContext.getPackageName());
 				int feedback = mContext.getResources().getIdentifier("bug_report_settings", "id", mContext.getPackageName());
+				int themes = mContext.getResources().getIdentifier("theme_settings", "id", mContext.getPackageName());
+				int special = mContext.getResources().getIdentifier("other_special_feature_settings", "id", mContext.getPackageName());
+
 				List<Header> headers = (List<Header>)param.args[0];
 				int position = 0;
+				boolean is11 = Helpers.is11();
 				for (Header head: headers) {
-					if (opt == 2 && head.id == advanced) { headers.add(position, header); return; }
-					if (opt == 3 && head.id == feedback) { headers.add(position, header); return; }
+					if (!is11) {
+						if (opt == 2 && head.id == advanced) { headers.add(position, header); return; }
+						if (opt == 3 && head.id == feedback) { headers.add(position, header); return; }
+					}
 					position++;
 					if (opt == 1 && head.id == security) { headers.add(position, header); return; }
+					if (is11) {
+						if (opt == 2 && head.id == themes) { headers.add(position, header); return; }
+						if (opt == 3 && head.id == special) { headers.add(position, header); return; }
+					}
 				}
 				if (headers.size() > 25 )
 					headers.add(25, header);
@@ -674,11 +692,11 @@ public class GlobalActions {
 				Helpers.findAndHookMethodSilently(Thread.getDefaultUncaughtExceptionHandler().getClass(), "uncaughtException", Thread.class, Throwable.class, new MethodHook() {
 					@Override
 					protected void before(MethodHookParam param) throws Throwable {
-						if (param.args[1] != null) {
+						if (param.args[1] != null) try {
 							Intent intent = new Intent("name.mikanoshi.customiuizer.SAVEEXCEPTION");
 							intent.putExtra("throwable", (Throwable)param.args[1]);
 							ctx.sendBroadcast(intent);
-						}
+						} catch (Throwable t) {}
 					}
 				});
 			}
@@ -819,10 +837,22 @@ public class GlobalActions {
 						if (action == null) return;
 
 						try {
-							Handler mHandler = (Handler)XposedHelpers.getObjectField(thisObject, "mHandler");
-							mHandler.sendMessageDelayed(mHandler.obtainMessage(1, "show_menu"), (long)ViewConfiguration.getLongPressTimeout());
-						} catch (Throwable t) {
-							XposedBridge.log(t);
+							Field fRequestShowMenu = findField(thisObject.getClass().getSuperclass(), "mRequestShowMenu");
+							fRequestShowMenu.setAccessible(true);
+							fRequestShowMenu.set(thisObject, true);
+							Method markShortcutTriggered = findMethodExact(thisObject.getClass().getSuperclass(), "markShortcutTriggered");
+							markShortcutTriggered.setAccessible(true);
+							markShortcutTriggered.invoke(thisObject);
+							Method injectEvent = findMethodExact(thisObject.getClass().getSuperclass(), "injectEvent", int.class);
+							injectEvent.setAccessible(true);
+							injectEvent.invoke(thisObject, 82);
+						} catch (Throwable t1) {
+							try {
+								Handler mHandler = (Handler)XposedHelpers.getObjectField(thisObject, "mHandler");
+								mHandler.sendMessageDelayed(mHandler.obtainMessage(1, "show_menu"), (long)ViewConfiguration.getLongPressTimeout());
+							} catch (Throwable t2) {
+								XposedBridge.log(t2);
+							}
 						}
 					}
 				}, intentfilter);

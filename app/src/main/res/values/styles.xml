@@ -70,9 +70,6 @@
 		<item name="android:textColor">?android:attr/editTextColor</item>
 		<item name="android:textColorHint">@color/hint_edit_text_color</item>
 	</style>
-	<style name="TextAppearance.Widget.EditText.Search">
-		<item name="android:textColorHint">@color/edit_text_search_hint_color</item>
-	</style>
 
 	<style name="Widget" />
 	<style name="Widget.PreferenceItem">
@@ -109,12 +106,6 @@
 	</style>
 	<style name="Widget.InputField.Category.Middle">
 		<item name="android:layout_marginTop">16dp</item>
-	</style>
-	<style name="Widget.SearchActionMode">
-		<item name="android:gravity">right|center_horizontal|clip_horizontal</item>
-		<item name="android:background">@drawable/search_mode_bg</item>
-		<item name="android:layout_width">match_parent</item>
-		<item name="android:layout_height">wrap_content</item>
 	</style>
 	<style name="Widget.ProgressBar">
 		<item name="android:background">@android:color/transparent</item>

@@ -20,6 +20,7 @@
 
 	<color name="edit_text_search_bg_color">#1fffffff</color>
 	<color name="hint_edit_text_color">#4cffffff</color>
-	<color name="edit_text_search_hint_color">#4cffffff</color>
 
+	<color name="seekbar_background">#ff262627</color>
+	<color name="seekbar_progress">#ff505051</color>
 </resources>

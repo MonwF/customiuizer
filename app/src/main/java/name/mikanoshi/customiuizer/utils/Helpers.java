@@ -73,6 +73,7 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 
 import miui.app.AlertDialog;
+import miui.os.SystemProperties;
 import miui.util.HapticFeedbackUtil;
 
 import name.mikanoshi.customiuizer.GateWayLauncher;
@@ -119,12 +120,10 @@ public class Helpers {
 	public static WakeLock mWakeLock;
 	public static boolean showNewMods = true;
 	public static final String[] newMods = new String[] {
-		"system_showpct",
-		"system_uimodetile",
-		"launcher_hidetitles",
-		"launcher_horizmargin",
-		"launcher_topmargin",
-		"launcher_indicatorheight"
+		"system_notifmediaseekbar_full",
+		"controls_imebackalticon",
+		"various_miuiinstaller",
+		"launcher_googlediscover"
 	};
 	public static final String[] shortcutIcons = new String[] {
 		"bankcard", "buscard", "calculator", "calendar", "contacts", "magazine", "music", "notes", "remotecontroller", "smarthome", "miuizer"
@@ -155,6 +154,10 @@ public class Helpers {
 		act.setTheme(themeResId);
 		act.getTheme().applyStyle(overrideTheme, true);
 		act.getWindow().setBackgroundDrawable(noBackground ? null : (isNightMode(act) ? new ColorDrawable(Color.BLACK) : new ColorDrawable(Color.WHITE)));
+	}
+
+	public static boolean is11() {
+		return SystemProperties.getInt("ro.miui.ui.version.code", 8) >= 9;
 	}
 
 	public static boolean isNightMode(Context context) {

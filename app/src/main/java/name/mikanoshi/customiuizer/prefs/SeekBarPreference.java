@@ -127,6 +127,8 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 		mSeekBar = view.findViewById(R.id.seekbar);
 		mSeekBar.setMax(mSteppedMaxValue - mSteppedMinValue);
 
+		if (Helpers.is11()) mSeekBar.setPadding(0, mSeekBar.getPaddingTop(), 0, mSeekBar.getPaddingBottom());
+
 		setValue(Helpers.prefs.getInt(getKey(), mDefaultValue));
 
 		mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
