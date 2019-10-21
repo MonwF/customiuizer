@@ -206,6 +206,8 @@
 	<string name="array_waltz">Вальс</string>
 	<string name="array_zig">Вж-вж-вж</string>
 	<string name="array_own">Свой шаблон</string>
+	<string name="array_scale_fit">Вместить в размеры экрана</string>
+	<string name="array_scale_cover">Заполнить экран полностью</string>
 
 	<string name="support_bug_title">Сообщить об ошибке</string>
 	<string name="support_bug_summ">Отправить сообщение об ошибке или предложить новую фичу</string>
@@ -336,6 +338,8 @@
 	<string name="launcher_mods">Рабочий стол MIUI</string>
 	<string name="launcher_title">Рабочий стол</string>
 	<string name="launcher_summ">Отображать моды для выбранного ланчера</string>
+	<string name="launcher_compat_title">Режим совместимости</string>
+	<string name="launcher_compat_summ">Альтернативный метод применения всех модов ланчера</string>
 	<string name="launcher_swipedownaction_summ">Присвоить действие жесту сверху вниз одним пальцем на любом домашнем экране</string>
 	<string name="launcher_swipedownaction_title">Действие на свайп вниз (1 пальцем)</string>
 	<string name="launcher_swipedownaction2_title">Действие на свайп вниз (2 пальцами)</string>
@@ -402,7 +406,7 @@
 	<string name="launcher_hideseekpoints_title">Динамический индикатор экранов</string>
 	<string name="launcher_hideseekpoints_summ">Показывает индикатор только во время прокрутки</string>
 	<string name="launcher_unlockgrids_title">Разблокировать размеры сетки</string>
-	<string name="launcher_unlockgrids_summ">Делает все размеры от 3x4 до 6x7 доступными в настройках сетки рабочего стола</string>
+	<string name="launcher_unlockgrids_summ">Делает все размеры от 3x4 до 8x8 доступными в настройках сетки рабочего стола</string>
 	<string name="launcher_iconscale_title">Масштаб значков</string>
 	<string name="launcher_horizmargin_title">Горизонтальные отступы сетки</string>
 	<string name="launcher_topmargin_title">Отступ сетки сверху</string>
@@ -417,6 +421,7 @@
 	<string name="launcher_closefolder_summ">Закрывает папку приложения после его запуска</string>
 	<string name="launcher_titles">Названия приложений</string>
 	<string name="launcher_hidetitles_title">Скрыть названия</string>
+	<string name="launcher_docktitles_title">Показать названия в доке</string>
 	<string name="launcher_titlefontsize_title">Размер шрифта</string>
 	<string name="launcher_titletopmargin_title">Дополнительный отступ сверху</string>
 	<string name="launcher_darkershadow_title">Более тёмная тень</string>
@@ -457,6 +462,8 @@
 	<string name="system_magnifier_summ">Показывает увеличенный текст при передвижении указателя ввода и при выделении</string>
 	<string name="system_nooverscroll_title">Отключить избыточную прокрутку</string>
 	<string name="system_nooverscroll_summ">Предотвращает чрезмерную прокрутку в списках</string>
+	<string name="system_removesecure_title">Отключить защиту контента</string>
+	<string name="system_removesecure_summ">Позволяет записывать видео и делать скриншоты любого приложения</string>
 	<string name="system_hideproxywarn_title">Скрыть предупреждение об отключенных касаниях</string>
 	<string name="system_hideproxywarn_summ">Не показывать предупреждение о закрытой области динамика</string>
 	<string name="system_unblockthird_title">Разблокировать ланчеры</string>
@@ -640,7 +647,7 @@
 	<string name="system_volumetimer_title">Расширенные таймеры</string>
 	<string name="system_volumetimer_summ">Добавляет больше интервалов в таймеры режимов Без звука и Не беспокоить</string>
 	<string name="system_volumesteps_title">Множитель шагов громкости</string>
-	<string name="system_volumesteps_summ">Увеличивает количество шагов громкости для всех типов потоков</string>
+	<string name="system_volumesteps_summ">Изменяет количество шагов громкости для всех типов потоков</string>
 	<string name="system_visualizer_title">Визуализация музыки</string>
 	<string name="system_visualizer_summ">Отображает спектральную плотность дискретных звуковых частотных диапазонов</string>
 	<string name="system_visualizer_lockscreen_summ">Визуализация по умолчанию рисуется на обоях экрана блокировки</string>
@@ -692,6 +699,7 @@
 	<string name="system_albumartonlock_title">Обложка альбома на обоях</string>
 	<string name="system_albumartonlock_summ">Отображает обложку альбома текущего трека на обоях экрана блокировки</string>
 	<string name="system_albumartonlock_blur_title">Размытие обложки</string>
+	<string name="system_albumartonlock_scale_title">Масштабирование обложки</string>
 	<string name="system_credentials_title">Разблокировать учётные данные</string>
 	<string name="system_credentials_summ">Авторизация в некоторых приложениях требует доступа к учётным данным, но при пропуске ПИН-кода/пароля/графического ключа они остаются заблокированными. Данная опция добавляет иконку в ланчере для разблокировки учётных данных.</string>
 	<string name="system_lockscreenshortcuts_title">Пользовательские действия</string>
@@ -728,6 +736,9 @@
 	<string name="system_dttosleep_title">Сон по двойному нажатию</string>
 	<string name="system_dttosleep_summ">Выключает экран при двойном нажатии по пустому месту на экране блокировки</string>
 	<string name="system_mods_other">Другое</string>
+	<string name="system_mods_volumeblur">Размытия фона диалога громкости</string>
+	<string name="system_volumeblur_collapsed_title">Свёрнутый диалог</string>
+	<string name="system_volumeblur_expanded_title">Развёрнутый диалог</string>
 	<string name="system_mods_animationscale">Масштабирование анимации</string>
 	<string name="system_animationscale_window_title">Окна</string>
 	<string name="system_animationscale_transition_title">Переходы</string>

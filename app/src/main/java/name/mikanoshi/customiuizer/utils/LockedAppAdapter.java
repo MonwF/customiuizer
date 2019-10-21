@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -57,7 +56,7 @@ public class LockedAppAdapter extends BaseAdapter implements Filterable {
 	}
 
 	private void sortList() {
-		Collections.sort(filteredAppList, new Comparator<AppData>() {
+		filteredAppList.sort(new Comparator<AppData>() {
 			public int compare(AppData app1, AppData app2) {
 				try {
 					boolean app1checked = (boolean)getApplicationAccessControlEnabledAsUser.invoke(mSecurityManager, app1.pkgName, app1.user);

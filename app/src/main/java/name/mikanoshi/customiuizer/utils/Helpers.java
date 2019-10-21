@@ -8,7 +8,6 @@ import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -120,10 +119,10 @@ public class Helpers {
 	public static WakeLock mWakeLock;
 	public static boolean showNewMods = true;
 	public static final String[] newMods = new String[] {
-		"system_notifmediaseekbar_full",
-		"controls_imebackalticon",
-		"various_miuiinstaller",
-		"launcher_googlediscover"
+		"launcher_docktitles",
+		"system_removesecure",
+		"system_volumeblur_collapsed",
+		"system_volumeblur_expanded"
 	};
 	public static final String[] shortcutIcons = new String[] {
 		"bankcard", "buscard", "calculator", "calendar", "contacts", "magazine", "music", "notes", "remotecontroller", "smarthome", "miuizer"
@@ -511,7 +510,7 @@ public class Helpers {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-		Collections.sort(installedAppsList, new Comparator<AppData>() {
+		installedAppsList.sort(new Comparator<AppData>() {
 			public int compare(AppData app1, AppData app2) {
 				return app1.label.compareToIgnoreCase(app2.label);
 			}
@@ -551,7 +550,7 @@ public class Helpers {
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
-		Collections.sort(launchableAppsList, new Comparator<AppData>() {
+		launchableAppsList.sort(new Comparator<AppData>() {
 			public int compare(AppData app1, AppData app2) {
 				return app1.label.compareToIgnoreCase(app2.label);
 			}
@@ -599,7 +598,7 @@ public class Helpers {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-		Collections.sort(shareAppsList, new Comparator<AppData>() {
+		shareAppsList.sort(new Comparator<AppData>() {
 			public int compare(AppData app1, AppData app2) {
 				return app1.label.compareToIgnoreCase(app2.label);
 			}
@@ -647,7 +646,7 @@ public class Helpers {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-		Collections.sort(openWithAppsList, new Comparator<AppData>() {
+		openWithAppsList.sort(new Comparator<AppData>() {
 			public int compare(AppData app1, AppData app2) {
 				return app1.label.compareToIgnoreCase(app2.label);
 			}

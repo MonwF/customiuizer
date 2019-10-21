@@ -624,8 +624,8 @@ public class Launcher {
 		MainModule.resHooks.setObjectReplacement("com.miui.home", "integer", "config_cell_count_y", 4);
 		MainModule.resHooks.setObjectReplacement("com.miui.home", "integer", "config_cell_count_x_min", 3);
 		MainModule.resHooks.setObjectReplacement("com.miui.home", "integer", "config_cell_count_y_min", 4);
-		MainModule.resHooks.setObjectReplacement("com.miui.home", "integer", "config_cell_count_x_max", 6);
-		MainModule.resHooks.setObjectReplacement("com.miui.home", "integer", "config_cell_count_y_max", 7);
+		MainModule.resHooks.setObjectReplacement("com.miui.home", "integer", "config_cell_count_x_max", 8);
+		MainModule.resHooks.setObjectReplacement("com.miui.home", "integer", "config_cell_count_y_max", 8);
 	}
 
 	public static void FolderColumnsHook(LoadPackageParam lpparam) {
@@ -885,6 +885,11 @@ public class Launcher {
 
 	public static void GoogleDiscoverHook(final LoadPackageParam lpparam) {
 		XposedHelpers.setStaticBooleanField(XposedHelpers.findClass("com.miui.home.launcher.DeviceConfig", lpparam.classLoader), "IS_USE_GOOGLE_MINUS_SCREEN", true);
+	}
+
+	public static void ShowHotseatTitlesRes() {
+		MainModule.resHooks.setObjectReplacement("com.miui.home", "bool", "config_hide_hotseats_app_title", false);
+		MainModule.resHooks.setObjectReplacement("com.mi.android.globallauncher", "bool", "config_hide_hotseats_app_title", false);
 	}
 
 //	public static void ReplaceClockAppHook(LoadPackageParam lpparam) {

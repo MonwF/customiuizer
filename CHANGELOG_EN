@@ -1,3 +1,12 @@
+2.0.1
+[New] Show app titles in launcher dock
+[New] Allow screenshots and video recording of any app
+[New] Blur background behind collapsed and expanded volume dialogs
+[Improved][Unlock grid sizes] Launcher grids up to 8x8
+[Improved][Album art as wallpaper] Scaling option
+Compatibility mode for all launcher mods
+Module's UI fixes
+
 2.0.0
 [New] Alternative back navbar button icon in input mode
 [New] Replace App Vault with Google Discover in MIUI Launcher
@@ -26,7 +35,7 @@ MIUI 11 compatibility:
 [Fixed][Font size of titles in launcher] Do not apply to opened folder's title
 [Fixed][Custom lock screen actions] Right icon and text replacement; Revert to stock camera launch when no custom action is selected
 [Fixed][Extended power menu] System UI restart
-Minor module UI fixes
+Minor module's UI fixes
 
 1.8.0
 [New] Action: Toggle one-handed mode

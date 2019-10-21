@@ -45,6 +45,12 @@
 			android:defaultValue="false"
 			android:disableDependentsState="true" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_launcher_docktitles"
+			android:title="@string/launcher_docktitles_title"
+			android:defaultValue="false"
+			android:dependency="pref_key_launcher_hidetitles" />
+
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_launcher_titlefontsize"
 			android:title="@string/launcher_titlefontsize_title"

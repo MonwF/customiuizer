@@ -63,6 +63,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getBoolean("system_lockscreenshortcuts")) System.LockScreenShortcutRes();
 		if (mPrefs.getBoolean("system_statusbaricons_volte")) System.HideIconsVoLTERes();
 		if (mPrefs.getBoolean("launcher_unlockgrids")) Launcher.UnlockGridsRes();
+		if (mPrefs.getBoolean("launcher_docktitles")) Launcher.ShowHotseatTitlesRes();
 		if (mPrefs.getBoolean("controls_powerflash")) Controls.PowerKeyRes();
 		if (mPrefs.getStringAsInt("system_rotateanim", 1) > 1) System.RotationAnimationRes();
 
@@ -79,6 +80,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getBoolean("system_nooverscroll")) System.NoOverscrollHook();
 		if (mPrefs.getBoolean("system_cleanshare")) System.CleanShareMenuHook();
 		if (mPrefs.getBoolean("system_cleanopenwith")) System.CleanOpenWithMenuHook();
+		if (mPrefs.getBoolean("system_removesecure")) System.RemoveSecureHook();
 		if (mPrefs.getBoolean("controls_volumecursor")) Controls.VolumeCursorHook();
 		if (mPrefs.getBoolean("controls_fsg_horiz")) Controls.FSGesturesHook();
 		if (mPrefs.getBoolean("various_alarmcompat")) Various.AlarmCompatHook();
@@ -175,6 +177,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getInt("system_betterpopups_delay", 0) > 0 && !mPrefs.getBoolean("system_betterpopups_nohide")) System.BetterPopupsHideDelayHook(lpparam);
 			if (mPrefs.getInt("system_netspeedinterval", 4) != 4) System.NetSpeedIntervalHook(lpparam);
 			if (mPrefs.getInt("system_qsgridrows", 1) > 1 || mPrefs.getBoolean("system_qsnolabels")) System.QSGridLabelsHook(lpparam);
+			if (mPrefs.getInt("system_volumeblur_collapsed", 0) > 0 || mPrefs.getInt("system_volumeblur_expanded", 0) > 0) System.BlurVolumeDialogBackgroundHook(lpparam);
 			if (mPrefs.getInt("controls_fsg_coverage", 60) != 60) Controls.BackGestureAreaHook(lpparam);
 			if (mPrefs.getInt("controls_navbarleft_action", 1) > 1 ||
 				mPrefs.getInt("controls_navbarleftlong_action", 1) > 1 ||
@@ -260,41 +263,15 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("various_installappinfo")) Various.AppInfoDuringMiuiInstallHook(lpparam);
 		}
 
-		if (pkg.equals("com.miui.home") || pkg.equals("com.mi.android.globallauncher"))
-		Helpers.findAndHookMethod(Application.class, "attach", Context.class, new MethodHook() {
-			@Override
-			protected void after(MethodHookParam param) throws Throwable {
-				if (mPrefs.getInt("launcher_swipedown_action", 1) != 1 ||
-					mPrefs.getInt("launcher_swipeup_action", 1) != 1 ||
-					mPrefs.getInt("launcher_swipedown2_action", 1) != 1 ||
-					mPrefs.getInt("launcher_swipeup2_action", 1) != 1) Launcher.HomescreenSwipesHook(lpparam);
-				if (mPrefs.getInt("launcher_swipeleft_action", 1) != 1 ||
-					mPrefs.getInt("launcher_swiperight_action", 1) != 1) Launcher.HotSeatSwipesHook(lpparam);
-				if (mPrefs.getInt("launcher_shake_action", 1) != 1) Launcher.ShakeHook(lpparam);
-				if (mPrefs.getInt("launcher_doubletap_action", 1) != 1) Launcher.LauncherDoubleTapHook(lpparam);
-				if (mPrefs.getInt("launcher_folder_cols", 1) > 1) Launcher.FolderColumnsHook(lpparam);
-				if (mPrefs.getInt("launcher_iconscale", 45) > 45) Launcher.IconScaleHook(lpparam);
-				if (mPrefs.getInt("launcher_titlefontsize", 5) > 5) Launcher.TitleFontSizeHook(lpparam);
-				if (mPrefs.getInt("launcher_titletopmargin", 0) > 0) Launcher.TitleTopMarginHook(lpparam);
-				if (mPrefs.getBoolean("launcher_noclockhide")) Launcher.NoClockHideHook(lpparam);
-				if (mPrefs.getBoolean("launcher_renameapps")) Launcher.RenameShortcutsHook(lpparam);
-				if (mPrefs.getBoolean("launcher_closefolder")) Launcher.CloseFolderOnLaunchHook(lpparam);
-				if (mPrefs.getBoolean("launcher_darkershadow")) Launcher.TitleShadowHook(lpparam);
-				if (mPrefs.getBoolean("controls_nonavbar")) Launcher.HideNavBarHook(lpparam);
-				if (mPrefs.getBoolean("launcher_infinitescroll")) Launcher.InfiniteScrollHook(lpparam);
-				if (mPrefs.getBoolean("launcher_hidetitles")) Launcher.HideTitlesHook(lpparam);
-				if (mPrefs.getStringAsInt("launcher_foldershade", 1) > 1) Launcher.FolderShadeHook(lpparam);
-				if (lpparam.packageName.equals("com.miui.home")) {
-					if (mPrefs.getBoolean("controls_fsg_horiz")) Launcher.FSGesturesHook(lpparam);
-					if (mPrefs.getBoolean("launcher_fixstatusbarmode")) Launcher.FixStatusBarModeHook(lpparam);
-					if (mPrefs.getBoolean("launcher_hideseekpoints")) Launcher.HideSeekPointsHook(lpparam);
-					if (mPrefs.getBoolean("launcher_privacyapps_gest")) Launcher.PrivacyFolderHook(lpparam);
-					if (mPrefs.getBoolean("launcher_googlediscover")) Launcher.GoogleDiscoverHook(lpparam);
+		if (pkg.equals("com.miui.home") || pkg.equals("com.mi.android.globallauncher")) {
+			if (mPrefs.getBoolean("key_launcher_compat")) handleLoadLauncher(lpparam); else
+			Helpers.findAndHookMethod(Application.class, "attach", Context.class, new MethodHook() {
+				@Override
+				protected void after(MethodHookParam param) throws Throwable {
+					handleLoadLauncher(lpparam);
 				}
-				//if (!mPrefs.getString("system_clock_app", "").equals("")) Launcher.ReplaceClockAppHook(lpparam);
-				//if (!mPrefs.getString("system_calendar_app", "").equals("")) Launcher.ReplaceCalendarAppHook(lpparam);
-			}
-		});
+			});
+		}
 
 		if (mPrefs.getBoolean("system_statusbarcolor") && !mPrefs.getStringSet("system_statusbarcolor_apps").contains(pkg))
 		Helpers.findAndHookMethod(Application.class, "attach", Context.class, new MethodHook() {
@@ -303,6 +280,38 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 				System.StatusBarBackgroundCompatHook(lpparam);
 			}
 		});
+	}
+
+	private void handleLoadLauncher(final LoadPackageParam lpparam) {
+		if (mPrefs.getInt("launcher_swipedown_action", 1) != 1 ||
+			mPrefs.getInt("launcher_swipeup_action", 1) != 1 ||
+			mPrefs.getInt("launcher_swipedown2_action", 1) != 1 ||
+			mPrefs.getInt("launcher_swipeup2_action", 1) != 1) Launcher.HomescreenSwipesHook(lpparam);
+		if (mPrefs.getInt("launcher_swipeleft_action", 1) != 1 ||
+			mPrefs.getInt("launcher_swiperight_action", 1) != 1) Launcher.HotSeatSwipesHook(lpparam);
+		if (mPrefs.getInt("launcher_shake_action", 1) != 1) Launcher.ShakeHook(lpparam);
+		if (mPrefs.getInt("launcher_doubletap_action", 1) != 1) Launcher.LauncherDoubleTapHook(lpparam);
+		if (mPrefs.getInt("launcher_folder_cols", 1) > 1) Launcher.FolderColumnsHook(lpparam);
+		if (mPrefs.getInt("launcher_iconscale", 45) > 45) Launcher.IconScaleHook(lpparam);
+		if (mPrefs.getInt("launcher_titlefontsize", 5) > 5) Launcher.TitleFontSizeHook(lpparam);
+		if (mPrefs.getInt("launcher_titletopmargin", 0) > 0) Launcher.TitleTopMarginHook(lpparam);
+		if (mPrefs.getBoolean("launcher_noclockhide")) Launcher.NoClockHideHook(lpparam);
+		if (mPrefs.getBoolean("launcher_renameapps")) Launcher.RenameShortcutsHook(lpparam);
+		if (mPrefs.getBoolean("launcher_closefolder")) Launcher.CloseFolderOnLaunchHook(lpparam);
+		if (mPrefs.getBoolean("launcher_darkershadow")) Launcher.TitleShadowHook(lpparam);
+		if (mPrefs.getBoolean("controls_nonavbar")) Launcher.HideNavBarHook(lpparam);
+		if (mPrefs.getBoolean("launcher_infinitescroll")) Launcher.InfiniteScrollHook(lpparam);
+		if (mPrefs.getBoolean("launcher_hidetitles")) Launcher.HideTitlesHook(lpparam);
+		if (mPrefs.getStringAsInt("launcher_foldershade", 1) > 1) Launcher.FolderShadeHook(lpparam);
+		if (lpparam.packageName.equals("com.miui.home")) {
+			if (mPrefs.getBoolean("controls_fsg_horiz")) Launcher.FSGesturesHook(lpparam);
+			if (mPrefs.getBoolean("launcher_fixstatusbarmode")) Launcher.FixStatusBarModeHook(lpparam);
+			if (mPrefs.getBoolean("launcher_hideseekpoints")) Launcher.HideSeekPointsHook(lpparam);
+			if (mPrefs.getBoolean("launcher_privacyapps_gest")) Launcher.PrivacyFolderHook(lpparam);
+			if (mPrefs.getBoolean("launcher_googlediscover")) Launcher.GoogleDiscoverHook(lpparam);
+		}
+		//if (!mPrefs.getString("system_clock_app", "").equals("")) Launcher.ReplaceClockAppHook(lpparam);
+		//if (!mPrefs.getString("system_calendar_app", "").equals("")) Launcher.ReplaceCalendarAppHook(lpparam);
 	}
 
 }

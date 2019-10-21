@@ -165,6 +165,7 @@ public class PackagePermissions {
 		});
 
 		// Do not restrict background activity
+		if (!Helpers.isNougat())
 		Helpers.hookAllMethods("com.android.server.am.ActivityManagerService", lpparam.classLoader, "appRestrictedInBackgroundLocked", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
@@ -172,6 +173,7 @@ public class PackagePermissions {
 			}
 		});
 
+		if (!Helpers.isNougat())
 		Helpers.hookAllMethods("com.android.server.am.ActivityManagerService", lpparam.classLoader, "appServicesRestrictedInBackgroundLocked", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {

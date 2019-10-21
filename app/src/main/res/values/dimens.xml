@@ -23,5 +23,7 @@
 	<dimen name="miui_volume_ringer_layout_width_expanded">337.77dp</dimen>
 
 	<dimen name="screen_color_text_height">30dp</dimen>
+	<dimen name="action_bar_default_height">53.3dp</dimen>
+	<dimen name="searchbar_bg_height">40.0dp</dimen>
 
 </resources>

@@ -1,7 +1,6 @@
 package name.mikanoshi.customiuizer.utils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -109,7 +108,7 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 	}
 
 	private void sortList() {
-		Collections.sort(filteredAppList, new Comparator<AppData>() {
+		filteredAppList.sort(new Comparator<AppData>() {
 			public int compare(AppData app1, AppData app2) {
 				if (aType == Helpers.AppAdapterType.Mutli && selectedApps.size() > 0) {
 					boolean app1checked = shouldSelect(app1.pkgName, app1.user);

@@ -131,7 +131,7 @@
     <string name="system_volumetimer_title">Zamanlayıcı</string>
     <string name="system_volumetimer_summ">Sessiz ve Rahatsız Etmeyin seçenekleri için Zamanlayıcı\'ya daha fazla aralık ekler.</string>
     <string name="system_volumesteps_title">Seviye</string>
-    <string name="system_volumesteps_summ">Ses seviyesine daha fazla aralık ekler.</string>
+    <string name="system_volumesteps_summ">Her akış tipi için hacim adım sayısını değiştirin</string>
     <string name="system_visualizer_title">Animasyon (Müzik)</string>
     <string name="system_visualizer_summ">Medya dosyası oynatılırken görsel animasyon ekler.</string>
     <string name="system_visualizer_lockscreen_summ">Animasyon; Ekran Kilidi duvar kağıdı üzerinde görüntülenir.</string>
@@ -163,6 +163,7 @@
     <string name="system_albumartonlock_title">Kapak Fotoğrafı (Duvar Kağıdı)</string>
     <string name="system_albumartonlock_summ">Dinlemekte olduğunuz müziğin Kapak Fotoğrafı Ekran Kilidi\'nde görüntülenir.</string>
     <string name="system_albumartonlock_blur_title">Bulanıklık</string>
+    <string name="system_albumartonlock_scale_title">Albüm resim ölçeği</string>
     <string name="system_credentials_title">Kimlik Bilgileri</string>
     <string name="system_credentials_summ">Bazı uygulamalarda kimlik doğrulaması için kimlik bilgilerine erişim gerektirir ancak yeniden başlatmadan sonra PIN / Şifre / Desen kilitli kalırsa erişemez. Kimlik Bilgileri\'ni aktif ederseniz eğer erişim izni vermenize imkan sağlayan simge eklenir.</string>
     <string name="system_lockscreenshortcuts_title">Daha Fazla</string>
@@ -216,6 +217,8 @@
     <string name="system_magnifier_summ">Metne basılığı tuttuğunuz zaman Büyüteç açılır ve daha kolay seçim yaparsınız.</string>
     <string name="system_nooverscroll_title">Kaydırmayı (Fazla) Devre Dışı Bırak</string>
     <string name="system_nooverscroll_summ">Liste görünümlerinin fazladan kaydırılmasını önler.</string>
+    <string name="system_removesecure_title">Güvenli içerik korumasını devre dışı bırak</string>
+    <string name="system_removesecure_summ">Herhangi bir uygulamanın ekran görüntüsünü ve videosunu kaydetmesine izin ver</string>
     <string name="system_hideproxywarn_title">Uyarı</string>
     <string name="system_hideproxywarn_summ">Kulaklık alanının kapatıldığını belirten uyarı gizlenir.</string>
     <string name="system_unblockthird_title">Başlatıcı</string>
@@ -285,6 +288,9 @@
     <string name="system_qshaptic_title">Geri Bildirim</string>
     <string name="system_qshaptic_summ">Bildirim Paneli\'ndeki araçlara dokunduğunuzda almak istediğiniz Geri Bildirim\'i seçiniz.</string>
     <string name="system_mods_other">Daha Fazla</string>
+    <string name="system_mods_volumeblur">Birim iletişim arka plan bulanıklığı</string>
+    <string name="system_volumeblur_collapsed_title">Daraltılmış iletişim kutusu</string>
+    <string name="system_volumeblur_expanded_title">Genişletilmiş iletişim kutusu</string>
     <string name="system_mods_animationscale">Animasyon Ölçeği</string>
     <string name="system_animationscale_window_title">Pencere</string>
     <string name="system_animationscale_transition_title">Geçiş</string>
@@ -299,6 +305,8 @@
     <string name="launcher_gestures_activity">Başlatılacak Etkinlik</string>
     <string name="launcher_title">Başlatıcı</string>
     <string name="launcher_summ">Görüntülemek istediğiniz ana ekranın başlatıcısını seçiniz.</string>
+    <string name="launcher_compat_title">Uyumluluk modu</string>
+    <string name="launcher_compat_summ">Tüm başlatıcı modlarını uygulamanın alternatif yöntemi</string>
     <string name="launcher_infinitescroll_title">Sayfalar Arası Geçiş</string>
     <string name="launcher_infinitescroll_summ">Ana ekranda Sayfalar Arası Geçiş yaparken sonsuz kaydırma yapabilirsiniz.</string>
     <string name="launcher_noclockhide_title">Saat</string>
@@ -308,7 +316,7 @@
     <string name="launcher_hideseekpoints_title">Sayfa Göstergesi</string>
     <string name="launcher_hideseekpoints_summ">Sayfa Göstergesi sadece sayfalar arası geçişlerde görünür.</string>
     <string name="launcher_unlockgrids_title">Ana Ekran Düzeni</string>
-    <string name="launcher_unlockgrids_summ">Ana Ekran Düzeni\'ne daha fazla seçenek ekler (3x4 - 6x7)</string>
+    <string name="launcher_unlockgrids_summ">Ana Ekran Düzeni\'ne daha fazla seçenek ekler (3x4 - 8x8)</string>
     <string name="launcher_iconscale_title">Simge Boyutu</string>
     <string name="launcher_horizmargin_title">Yatay ızgara kenar boşlukları</string>
     <string name="launcher_topmargin_title">Üst ızgara marjı</string>
@@ -323,6 +331,7 @@
     <string name="launcher_closefolder_summ">Klasör içerisindeki uygulamayı başlatınca, klasör otomatik olarak kapatılır.</string>
     <string name="launcher_titles">Uygulama İsmi</string>
     <string name="launcher_hidetitles_title">Başlıkları gizle</string>
+    <string name="launcher_docktitles_title">Dock\'taki başlıkları göster</string>
     <string name="launcher_titlefontsize_title">Yazı Boyutu</string>
     <string name="launcher_titletopmargin_title">Ek Üst Marj</string>
     <string name="launcher_darkershadow_title">Gölge</string>
@@ -542,7 +551,7 @@
     <string name="array_rainbowh">Gökkuşağı Renkleri (Yatay)</string>
     <string name="array_rainbowv">Gökkuşağı Renkleri (Dikey)</string>
     <string name="array_rainbow">Gökkuşağı</string>
-    <string name="array_dynamic">Dinamik renk</string>
+    <string name="array_dynamic">Dinamik Renk</string>
     <string name="array_discrete">Ayrık</string>
     <string name="array_gradual">Kademeli</string>
     <string name="array_bars_solid">Çubuk (Dolu)</string>
@@ -573,6 +582,8 @@
     <string name="array_waltz">Vals</string>
     <string name="array_zig">Zig-Zig-Zig</string>
     <string name="array_own">Özel</string>
+    <string name="array_scale_fit">Ekrana sığdır</string>
+    <string name="array_scale_cover">Tüm ekranı kapat</string>
     <string name="toggle_wifi_on">Etkin (Wi-Fi)</string>
     <string name="toggle_wifi_off">Devre Dışı (Wi-Fi)</string>
     <string name="toggle_bt_on">Etkin (Bluetooth)</string>
@@ -596,8 +607,8 @@
     <string name="qs_toggle_autorotate_off">Sınırsız</string>
     <string name="qs_toggle_autorotate_portrait">Portre</string>
     <string name="qs_toggle_autorotate_landscape">Manzara</string>
-    <string name="qs_toggle_darkmode">Karanlık modu</string>
-    <string name="qs_toggle_darkmode_noperm">CustoMIUIzer karanlık modunu değiştirme iznine sahip değil</string>
+    <string name="qs_toggle_darkmode">Karanlık Mod</string>
+    <string name="qs_toggle_darkmode_noperm">CustoMIUIzer, Karanlık Mod\'u değiştirme iznine sahip değil.</string>
     <string name="miuizer">Ayarlar (CustoMIUIzer)</string>
     <string name="miuizer_show_newmods_title">Yeni Mod\'ları Belirt</string>
     <string name="miuizer_new_mod">Yeni!</string>

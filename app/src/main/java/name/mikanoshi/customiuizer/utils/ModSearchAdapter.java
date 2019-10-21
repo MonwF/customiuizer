@@ -14,7 +14,6 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 
 import name.mikanoshi.customiuizer.R;
@@ -32,7 +31,7 @@ public class ModSearchAdapter extends BaseAdapter implements Filterable {
 	}
 
 	private void sortList() {
-		Collections.sort(modsList, new Comparator<ModData>() {
+		modsList.sort(new Comparator<ModData>() {
 			public int compare(ModData app1, ModData app2) {
 				int breadcrumbs = app1.breadcrumbs.compareToIgnoreCase(app2.breadcrumbs);
 				if (breadcrumbs == 0)

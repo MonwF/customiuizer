@@ -4,7 +4,9 @@
 	android:layout_height="wrap_content"
 	android:layout_gravity="center_vertical"
 	android:gravity="center_vertical"
-	android:baselineAligned="false">
+	android:baselineAligned="false"
+	android:clipChildren="false"
+	android:clipToPadding="false">
 
 	<RelativeLayout
 		style="@style/Widget.PreferenceItem"
@@ -12,7 +14,9 @@
 		android:layout_height="wrap_content"
 		android:layout_gravity="center_vertical"
 		android:layout_weight="1"
-		android:gravity="center_vertical">
+		android:gravity="center_vertical"
+		android:clipChildren="false"
+		android:clipToPadding="false">
 
 		<TextView
 			android:id="@android:id/title"
@@ -38,7 +42,9 @@
 			android:layout_height="wrap_content"
 			android:layout_marginEnd="6dip"
 			android:layout_marginTop="10dip"
-			android:layout_below="@android:id/summary">
+			android:layout_below="@android:id/summary"
+			android:clipChildren="false"
+			android:clipToPadding="false">
 
 			<SeekBar
 				android:id="@+id/seekbar"

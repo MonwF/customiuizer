@@ -131,7 +131,7 @@
     <string name="system_volumetimer_title">扩展计时器</string>
     <string name="system_volumetimer_summ">添加更多间隔到静音和勿扰模式的定时器</string>
     <string name="system_volumesteps_title">音量级数倍增器</string>
-    <string name="system_volumesteps_summ">增加每种流类型的音量级数</string>
+    <string name="system_volumesteps_summ">更改每种流类型的音量级数</string>
     <string name="system_visualizer_title">音乐可视化</string>
     <string name="system_visualizer_summ">显示音频频段的频谱密度</string>
     <string name="system_visualizer_lockscreen_summ">锁屏壁纸顶部绘制可视化</string>
@@ -163,6 +163,7 @@
     <string name="system_albumartonlock_title">专辑封面设为壁纸</string>
     <string name="system_albumartonlock_summ">将当前播放曲目的专辑封面显示为壁纸</string>
     <string name="system_albumartonlock_blur_title">专辑封面模糊</string>
+    <string name="system_albumartonlock_scale_title">专辑封面缩放</string>
     <string name="system_credentials_title">解锁证书</string>
     <string name="system_credentials_summ">某些应用中的身份验证需要访问证书，但如果在开机后跳过了PIN/密码/图案，其将保持锁定状态。当前选项添加允许解锁证书的启动器图标。</string>
     <string name="system_lockscreenshortcuts_title">自定义动作</string>
@@ -216,6 +217,8 @@
     <string name="system_magnifier_summ">移动光标或进行选择时显示文本放大镜</string>
     <string name="system_nooverscroll_title">禁用弹性滚动</string>
     <string name="system_nooverscroll_summ">阻止列表视图越界回弹</string>
+    <string name="system_removesecure_title">禁用安全内容保护</string>
+    <string name="system_removesecure_summ">允许对任意应用进行截图和录屏</string>
     <string name="system_hideproxywarn_title">隐藏禁用触摸的警告</string>
     <string name="system_hideproxywarn_summ">不显示耳机区域被覆盖的警告</string>
     <string name="system_unblockthird_title">解锁启动器</string>
@@ -285,6 +288,9 @@
     <string name="system_qshaptic_title">快速设置触觉反馈</string>
     <string name="system_qshaptic_summ">点击快速设置磁贴时振动</string>
     <string name="system_mods_other">其他</string>
+    <string name="system_mods_volumeblur">音量对话框背景模糊</string>
+    <string name="system_volumeblur_collapsed_title">折叠对话框</string>
+    <string name="system_volumeblur_expanded_title">展开对话框</string>
     <string name="system_mods_animationscale">动画缩放</string>
     <string name="system_animationscale_window_title">窗口</string>
     <string name="system_animationscale_transition_title">过渡</string>
@@ -299,6 +305,8 @@
     <string name="launcher_gestures_activity">要启动的活动</string>
     <string name="launcher_title">启动器</string>
     <string name="launcher_summ">显示所选启动器的模块</string>
+    <string name="launcher_compat_title">兼容模式</string>
+    <string name="launcher_compat_summ">应用所有启动器模块的替代方法</string>
     <string name="launcher_infinitescroll_title">无限滚动</string>
     <string name="launcher_infinitescroll_summ">从末页跳到首页，反之亦然</string>
     <string name="launcher_noclockhide_title">不隐藏时钟</string>
@@ -308,7 +316,7 @@
     <string name="launcher_hideseekpoints_title">动态页面指示器</string>
     <string name="launcher_hideseekpoints_summ">仅在滚动时显示页面指示器</string>
     <string name="launcher_unlockgrids_title">解锁网格大小</string>
-    <string name="launcher_unlockgrids_summ">可在主屏幕布局设置中使用3x4到6x7之间的所有网格大小</string>
+    <string name="launcher_unlockgrids_summ">可在主屏幕布局设置中使用3x4到8x8之间的所有网格大小</string>
     <string name="launcher_iconscale_title">图标缩放</string>
     <string name="launcher_horizmargin_title">水平网格边距</string>
     <string name="launcher_topmargin_title">顶部网格边距</string>
@@ -323,6 +331,7 @@
     <string name="launcher_closefolder_summ">启动后关闭应用的文件夹</string>
     <string name="launcher_titles">应用标题</string>
     <string name="launcher_hidetitles_title">隐藏标题</string>
+    <string name="launcher_docktitles_title">在底栏显示标题</string>
     <string name="launcher_titlefontsize_title">字体大小</string>
     <string name="launcher_titletopmargin_title">附加顶部边距</string>
     <string name="launcher_darkershadow_title">加深阴影</string>
@@ -573,6 +582,8 @@
     <string name="array_waltz">华尔兹舞</string>
     <string name="array_zig">Zig-zig-zig</string>
     <string name="array_own">自带</string>
+    <string name="array_scale_fit">适应屏幕</string>
+    <string name="array_scale_cover">覆盖全屏</string>
     <string name="toggle_wifi_on">Wi-Fi已启用</string>
     <string name="toggle_wifi_off">Wi-Fi已禁用</string>
     <string name="toggle_bt_on">蓝牙已启用</string>

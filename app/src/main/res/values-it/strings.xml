@@ -163,6 +163,7 @@
     <string name="system_albumartonlock_title">Copertina album come sfondo</string>
     <string name="system_albumartonlock_summ">Mostra copertina album della traccia in riproduzione come sfondo della schermata di blocco</string>
     <string name="system_albumartonlock_blur_title">Copertina album sfocata</string>
+    <string name="system_albumartonlock_scale_title">Scala delle copertine degli album</string>
     <string name="system_credentials_title">Sblocca credenziali</string>
     <string name="system_credentials_summ">L\'autenticazione in alcune app richiede l\'accesso alle credenziali, ma rimangono bloccate se il PIN/password/sequenza viene saltato dopo l\'avvio. L\'opzione corrente aggiunge l\'icona di avvio che consente di sbloccare le credenziali.</string>
     <string name="system_lockscreenshortcuts_title">Azioni personalizzate</string>
@@ -216,6 +217,8 @@
     <string name="system_magnifier_summ">Visualizza lente di ingrandimento quando si sposta un cursore di input o si effettua una selezione</string>
     <string name="system_nooverscroll_title">Disabilita overscroll</string>
     <string name="system_nooverscroll_summ">Impedire alle visualizzazioni dell\'elenco di eseguire l\'overcrolling</string>
+    <string name="system_removesecure_title">Disabilita la protezione dei contenuti</string>
+    <string name="system_removesecure_summ">Consenti lo screenshot e la registrazione di video per qualsiasi app</string>
     <string name="system_hideproxywarn_title">Nascondi avvisi sui tocchi disabilitati</string>
     <string name="system_hideproxywarn_summ">Non visualizzare l\'avviso di copertura della parte superiore dello schermo</string>
     <string name="system_unblockthird_title">Sblocca i launcher</string>
@@ -285,6 +288,9 @@
     <string name="system_qshaptic_title">Feedback aptico nelle impostazioni rapide</string>
     <string name="system_qshaptic_summ">Vibra al tocco dei pulsanti nelle impostazioni rapide</string>
     <string name="system_mods_other">Altro</string>
+    <string name="system_mods_volumeblur">Sfocatura dello sfondo della finestra di dialogo del volume</string>
+    <string name="system_volumeblur_collapsed_title">Finestra di dialogo compressa</string>
+    <string name="system_volumeblur_expanded_title">Finestra di dialogo estesa</string>
     <string name="system_mods_animationscale">Regola le animazioni</string>
     <string name="system_animationscale_window_title">Finestra</string>
     <string name="system_animationscale_transition_title">Transizioni</string>
@@ -299,14 +305,18 @@
     <string name="launcher_gestures_activity">Attività da avviare</string>
     <string name="launcher_title">Launcher</string>
     <string name="launcher_summ">Mostra le mod per il launcher selezionato</string>
+    <string name="launcher_compat_title">Modalità di compatibilità</string>
+    <string name="launcher_compat_summ">Metodo alternativo per applicare tutte le mod all\'avvio</string>
     <string name="launcher_infinitescroll_title">Scorrimento infinito</string>
     <string name="launcher_infinitescroll_summ">Passa dall\'ultima pagina alla prima e viceversa</string>
     <string name="launcher_noclockhide_title">Non nascondere l\'orologio</string>
     <string name="launcher_noclockhide_summ">Non nascondere l\'orologio della barra di stato sulle pagine con widget orologio</string>
+    <string name="launcher_googlediscover_title">Abilita Google Discover</string>
+    <string name="launcher_googlediscover_summ">Sostituisci App Vault con Google Discover (richiede l\'installazione dell\'app Google)</string>
     <string name="launcher_hideseekpoints_title">Indicatore dinamico della pagina</string>
     <string name="launcher_hideseekpoints_summ">Mostra l\'indicatore della pagina solo durante lo scorrimento</string>
     <string name="launcher_unlockgrids_title">Sblocca le dimensioni della griglia</string>
-    <string name="launcher_unlockgrids_summ">Rendi disponibili tutte le dimensioni della griglia da 3x4 a 6x7 nelle impostazioni del layout della schermata principale</string>
+    <string name="launcher_unlockgrids_summ">Rendi disponibili tutte le dimensioni della griglia da 3x4 a 8x8 nelle impostazioni del layout della schermata principale</string>
     <string name="launcher_iconscale_title">Ridimensionamento delle icone</string>
     <string name="launcher_horizmargin_title">Margini della griglia orizzontale</string>
     <string name="launcher_topmargin_title">Margine superiore della griglia</string>
@@ -321,6 +331,7 @@
     <string name="launcher_closefolder_summ">Chiudi la cartella dell\'app dopo l\'avvio</string>
     <string name="launcher_titles">Titoli delle app</string>
     <string name="launcher_hidetitles_title">Nascondi pulsanti</string>
+    <string name="launcher_docktitles_title">Mostra i titoli nel dock</string>
     <string name="launcher_titlefontsize_title">DImensione carattere</string>
     <string name="launcher_titletopmargin_title">Margine superiore aggiuntivo</string>
     <string name="launcher_darkershadow_title">Ombra più scura</string>
@@ -414,6 +425,9 @@
     <string name="various_sysappsupdater_title">Apri \"Aggiornamenti di sistema\"</string>
     <string name="various_sysappsupdater_summ">L\'app non fa più parte di alcuna ROM e deve essere installata manualmente</string>
     <string name="various_sysappsupdater_summ2">Fai attenzione: quando aggiorni le app di sistema modificate su ROM personalizzate, potresti perdere le funzionalità aggiuntive</string>
+    <string name="various_miuiinstaller_title">Utilizzare il programma di installazione del pacchetto MIUI</string>
+    <string name="various_miuiinstaller_summ">Rendi il programma di installazione dei pacchetti di Xiaomi quello predefinito e consenti di aggiornare le app di sistema</string>
+    <string name="various_miuiinstaller_error">L\'app richiesta non è installata. Premi a lungo per scaricarla.</string>
     <string name="various_installappinfo_title">Informazioni sull\'app nel programma di installazione</string>
     <string name="various_installappinfo_summ">Visualizza informazioni sull\'app che viene installata</string>
     <string name="various_installappinfo_package">Pacchetto</string>
@@ -568,6 +582,8 @@
     <string name="array_waltz">Valzer</string>
     <string name="array_zig">Zig-zig-zig</string>
     <string name="array_own">Proprio modello</string>
+    <string name="array_scale_fit">Adatta allo schermo</string>
+    <string name="array_scale_cover">Coprire l\'intero schermo</string>
     <string name="toggle_wifi_on">Wi-Fi attivo</string>
     <string name="toggle_wifi_off">Wi-Fi disattivo</string>
     <string name="toggle_bt_on">Bluetooth attivo</string>

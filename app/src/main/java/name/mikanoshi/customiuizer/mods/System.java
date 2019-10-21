@@ -7,6 +7,7 @@ import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.Dialog;
 import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.TaskStackBuilder;
@@ -30,6 +31,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
@@ -77,6 +79,7 @@ import android.util.AttributeSet;
 import android.util.Pair;
 import android.util.SparseIntArray;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -1373,6 +1376,36 @@ public class System {
 		});
 	}
 
+	private static Bitmap fitBitmapToScreen(Context context, Bitmap bitmap) {
+		if (context == null || bitmap == null) return bitmap;
+		int opt = Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_system_albumartonlock_scale", "1"));
+		if (opt == 1) return bitmap;
+
+		Display display = ((WindowManager)context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		Point point = new Point();
+		display.getRealSize(point);
+		int width = point.x;
+		int height = point.y;
+
+		Bitmap scaled = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(scaled);
+		float originalWidth = bitmap.getWidth();
+		float originalHeight = bitmap.getHeight();
+		float scale = opt == 2 ? Math.min(width / originalWidth, height / originalHeight) : Math.max(width / originalWidth, height / originalHeight);
+		float xTranslation = (width - originalWidth * scale) / 2.0f;
+		float yTranslation = (height - originalHeight * scale) / 2.0f;
+
+		Matrix transformation = new Matrix();
+		transformation.postTranslate(xTranslation, yTranslation);
+		transformation.preScale(scale, scale);
+
+		Paint paint = new Paint();
+		paint.setFilterBitmap(true);
+
+		canvas.drawBitmap(bitmap, transformation, paint);
+		return scaled;
+	}
+
 	public static void LockScreenAlbumArtHook(LoadPackageParam lpparam) {
 		Method getLockWallpaperPreview = null;
 		Class<?> utilClsTmp = XposedHelpers.findClassIfExists("com.android.keyguard.wallpaper.KeyguardWallpaperUtils", lpparam.classLoader);
@@ -1451,10 +1484,7 @@ public class System {
 				XposedHelpers.setAdditionalStaticField(utilCls, "mAlbumArtSource", art);
 
 				int blur = Helpers.getSharedIntPref(mContext, "pref_key_system_albumartonlock_blur", 0);
-				if (art != null && blur > 0)
-					XposedHelpers.setAdditionalStaticField(utilCls, "mAlbumArt", Helpers.fastBlur(art, blur + 1));
-				else
-					XposedHelpers.setAdditionalStaticField(utilCls, "mAlbumArt", art);
+				XposedHelpers.setAdditionalStaticField(utilCls, "mAlbumArt", fitBitmapToScreen(mContext, art != null && blur > 0 ? Helpers.fastBlur(art, blur + 1) : art));
 
 				Intent setWallpaper = new Intent("com.miui.keyguard.setwallpaper");
 				setWallpaper.putExtra("set_lock_wallpaper_result", true);
@@ -4586,6 +4616,76 @@ public class System {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
 				param.args[0] = View.OVER_SCROLL_NEVER;
+			}
+		});
+	}
+
+	private static Dialog mDialog = null;
+	private static float blurCollapsed = 0.0f;
+	private static float blurExpanded = 0.0f;
+
+	@SuppressWarnings("deprecation")
+	private static void updateBlurRatio(Object thisObject) {
+		if (mDialog == null || mDialog.getWindow() == null) return;
+		View rootView = mDialog.getWindow().getDecorView();
+		if (rootView.isAttachedToWindow() && rootView.getLayoutParams() instanceof WindowManager.LayoutParams) {
+			WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams)rootView.getLayoutParams();
+			layoutParams.flags |= WindowManager.LayoutParams.FLAG_BLUR_BEHIND;
+			boolean isExpanded = (boolean)XposedHelpers.callMethod(thisObject, "isExpanded");
+			XposedHelpers.setFloatField(layoutParams, "blurRatio", isExpanded ? blurExpanded : blurCollapsed);
+			mDialog.getWindow().getWindowManager().updateViewLayout(rootView, layoutParams);
+		}
+	}
+
+	public static void BlurVolumeDialogBackgroundHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethods("com.android.systemui.miui.volume.MiuiVolumeDialogView", lpparam.classLoader, "onAttachedToWindow", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				updateBlurRatio(param.thisObject);
+			}
+		});
+
+		Helpers.hookAllMethods("com.android.systemui.miui.volume.MiuiVolumeDialogView", lpparam.classLoader, "onExpandStateUpdated", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				updateBlurRatio(param.thisObject);
+			}
+		});
+
+		Helpers.hookAllMethods("com.android.systemui.miui.volume.MiuiVolumeDialogImpl", lpparam.classLoader, "initDialog", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				Handler mHandler = new Handler(mContext.getMainLooper());
+
+				mDialog = (Dialog)XposedHelpers.getObjectField(param.thisObject, "mDialog");
+				blurCollapsed = MainModule.mPrefs.getInt("system_volumeblur_collapsed", 0) / 100f;
+				blurExpanded = MainModule.mPrefs.getInt("system_volumeblur_expanded", 0) / 100f;
+				new Helpers.SharedPrefObserver(mContext, mHandler) {
+					@Override
+					public void onChange(Uri uri) {
+						try {
+							String key = uri.getPathSegments().get(2);
+							if (key.equals("pref_key_system_volumeblur_collapsed")) blurCollapsed = Helpers.getSharedIntPref(mContext, key, 0) / 100f;
+							if (key.equals("pref_key_system_volumeblur_expanded")) blurExpanded = Helpers.getSharedIntPref(mContext, key, 0) / 100f;
+						} catch (Throwable t) {
+							XposedBridge.log(t);
+						}
+					}
+				};
+			}
+		});
+	}
+
+	public static void RemoveSecureHook() {
+		Helpers.findAndHookMethod(Window.class, "setFlags", int.class, int.class, new MethodHook() {
+			protected void before(MethodHookParam param) throws Throwable {
+				int flags = (int)param.args[0];
+				int mask = (int)param.args[1];
+				flags &= ~WindowManager.LayoutParams.FLAG_SECURE;
+				mask &= ~WindowManager.LayoutParams.FLAG_SECURE;
+				param.args[0] = flags;
+				param.args[1] = mask;
 			}
 		});
 	}

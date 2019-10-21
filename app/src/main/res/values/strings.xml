@@ -136,7 +136,7 @@
 	<string name="system_volumetimer_title">Extended timers</string>
 	<string name="system_volumetimer_summ">Add more intervals to timers for Silent and Do Not Disturb modes</string>
 	<string name="system_volumesteps_title">Volume steps multiplier</string>
-	<string name="system_volumesteps_summ">Increase number of volume steps for each stream type</string>
+	<string name="system_volumesteps_summ">Change number of volume steps for each stream type</string>
 	<string name="system_visualizer_title">Music visualizer</string>
 	<string name="system_visualizer_summ">Display spectral density of discreet audio frequency bands</string>
 	<string name="system_visualizer_lockscreen_summ">Visualizer is drawn on top of lock screen wallpaper</string>
@@ -168,6 +168,7 @@
 	<string name="system_albumartonlock_title">Album art as wallpaper</string>
 	<string name="system_albumartonlock_summ">Display album art of currently playing track as lock screen wallpaper</string>
 	<string name="system_albumartonlock_blur_title">Album art blur</string>
+	<string name="system_albumartonlock_scale_title">Album art scale</string>
 	<string name="system_credentials_title">Unlock credentials</string>
 	<string name="system_credentials_summ">Authentication in some apps requires access to credentials, but they remain locked if PIN/password/pattern is skipped after boot. Current option adds launcher icon that allows to unlock credentials.</string>
 	<string name="system_lockscreenshortcuts_title">Custom actions</string>
@@ -221,6 +222,8 @@
 	<string name="system_magnifier_summ">Display magnified text when moving an input cursor or making a selection</string>
 	<string name="system_nooverscroll_title">Disable overscroll</string>
 	<string name="system_nooverscroll_summ">Prevent list views from overscrolling</string>
+	<string name="system_removesecure_title">Disable secure content protection</string>
+	<string name="system_removesecure_summ">Allow to screenshot and record video of any app</string>
 	<string name="system_hideproxywarn_title">Hide warning about disabled touches</string>
 	<string name="system_hideproxywarn_summ">Do not display a warning that earphone area is covered</string>
 	<string name="system_unblockthird_title">Unblock launchers</string>
@@ -293,6 +296,9 @@
 	<string name="system_qshaptic_title">Quick settings haptic feedback</string>
 	<string name="system_qshaptic_summ">Vibrate on Quick settings tile tap</string>
 	<string name="system_mods_other">Other</string>
+	<string name="system_mods_volumeblur">Volume dialog background blur</string>
+	<string name="system_volumeblur_collapsed_title">Collapsed dialog</string>
+	<string name="system_volumeblur_expanded_title">Expanded dialog</string>
 	<string name="system_mods_animationscale">Animation scale</string>
 	<string name="system_animationscale_window_title">Windows</string>
 	<string name="system_animationscale_transition_title">Transitions</string>
@@ -308,6 +314,8 @@
 	<string name="launcher_gestures_activity">Activity to launch</string>
 	<string name="launcher_title">Launcher</string>
 	<string name="launcher_summ">Display mods for selected launcher</string>
+	<string name="launcher_compat_title">Compatibility mode</string>
+	<string name="launcher_compat_summ">Alternative method of applying all launcher mods</string>
 	<string name="launcher_infinitescroll_title">Infinite scrolling</string>
 	<string name="launcher_infinitescroll_summ">Jump from the last page to the first one and vice versa</string>
 	<string name="launcher_noclockhide_title">No clock hide</string>
@@ -317,7 +325,7 @@
 	<string name="launcher_hideseekpoints_title">Dynamic page indicator</string>
 	<string name="launcher_hideseekpoints_summ">Show page indicator only during scrolling</string>
 	<string name="launcher_unlockgrids_title">Unlock grid sizes</string>
-	<string name="launcher_unlockgrids_summ">Make all grid sizes from 3x4 to 6x7 available in home screen layout setting</string>
+	<string name="launcher_unlockgrids_summ">Make all grid sizes from 3x4 to 8x8 available in home screen layout setting</string>
 	<string name="launcher_iconscale_title">Icons scaling</string>
 	<string name="launcher_horizmargin_title">Horizontal grid margins</string>
 	<string name="launcher_topmargin_title">Top grid margin</string>
@@ -332,6 +340,7 @@
 	<string name="launcher_closefolder_summ">Close app\'s folder after launch</string>
 	<string name="launcher_titles">App titles</string>
 	<string name="launcher_hidetitles_title">Hide titles</string>
+	<string name="launcher_docktitles_title">Show titles in dock</string>
 	<string name="launcher_titlefontsize_title">Font size</string>
 	<string name="launcher_titletopmargin_title">Additional top margin</string>
 	<string name="launcher_darkershadow_title">Darker shadow</string>
@@ -588,6 +597,8 @@
 	<string name="array_waltz">Waltz</string>
 	<string name="array_zig">Zig-zig-zig</string>
 	<string name="array_own">Own pattern</string>
+	<string name="array_scale_fit">Fit to screen</string>
+	<string name="array_scale_cover">Cover whole screen</string>
 
 	<string name="toggle_wifi_on">Wi-Fi enabled</string>
 	<string name="toggle_wifi_off">Wi-Fi disabled</string>

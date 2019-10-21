@@ -252,6 +252,14 @@ public class System extends SubFragment {
 					}
 				});
 
+				findPreference("pref_key_system_albumartonlock_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						openSubFragment(new SubFragment(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_albumartonlock_title, R.xml.prefs_system_albumartonlock);
+						return true;
+					}
+				});
+
 				findPreference("pref_key_system_credentials").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
 					@Override
 					public boolean onPreferenceChange(Preference preference, Object newValue) {

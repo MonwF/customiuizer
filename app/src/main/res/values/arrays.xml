@@ -574,6 +574,17 @@
 		<item>7</item>
 	</string-array>
 
+	<string-array name="albumartscale">
+		<item>@string/array_default</item>
+		<item>@string/array_scale_fit</item>
+		<item>@string/array_scale_cover</item>
+	</string-array>
+	<string-array name="albumartscale_val">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+	</string-array>
+
 	<string-array name="placeholder_array">
 		<item>@string/dummy</item>
 	</string-array>
