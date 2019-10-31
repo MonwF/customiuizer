@@ -7,7 +7,7 @@
 [Improved][Show titles in dock] Additional bottom padding for dock when full screen gestures are active (MIUI Launcher only)
 [Improved][Disable signature verification] Skip signature check in MIUI installer
 [Improved][Show seconds] Equal update intervals
-[Improved][Folder background] Use white color when light wallpepr is applied
+[Improved][Folder background] Use white color when light wallpaper is applied
 [Fixed][Media position slider] Compatibility with some ROMs
 Long press search box to display a list of new mods
 Scroll found mod into view and highlight it beautifully :)
