@@ -92,6 +92,7 @@ public class MainFragment extends PreferenceFragmentBase {
 	private View markCat = null;
 	boolean isSearchFocused = false;
 	boolean areGuidesCleared = false;
+	boolean actionModeNew = false;
 	ActionMode actionMode = null;
 	SearchActionMode.Callback actionModeCallback = new SearchActionMode.Callback() {
 		@Override
@@ -144,6 +145,20 @@ public class MainFragment extends PreferenceFragmentBase {
 					findMod(s.toString().trim());
 				}
 			});
+
+			if (actionModeNew) {
+				actionModeNew = false;
+				resultView.postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						samode.getSearchInput().setText(Helpers.NEW_MODS_SEARCH_QUERY);
+						samode.getSearchInput().setSelection(1, 1);
+						hideKeyboard();
+						resultView.requestFocus();
+					}
+				}, getResources().getInteger(android.R.integer.config_longAnimTime));
+			}
+
 			return true;
 		}
 
@@ -154,7 +169,8 @@ public class MainFragment extends PreferenceFragmentBase {
 
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
-			((TextView)search.findViewById(android.R.id.input)).setText("");
+			TextView input = search == null ? null : search.findViewById(android.R.id.input);
+			if (input != null) input.setText("");
 			findMod("");
 			getActionBar().show();
 			actionMode = null;
@@ -312,6 +328,24 @@ public class MainFragment extends PreferenceFragmentBase {
 		setupImmersiveMenu();
 	}
 
+	private void openActionMode(boolean isNew) {
+		actionModeNew = isNew;
+		if (actionMode != null)
+			actionMode.invalidate();
+		else
+			actionMode = startActionMode(actionModeCallback);
+		// Hide stupid auto split actionbar
+		try {
+			ActionBar actionBar = getActionBar();
+			Field mSplitViewField = actionBar.getClass().getDeclaredField("mSplitView");
+			mSplitViewField.setAccessible(true);
+			View mSplitView = (View)mSplitViewField.get(actionBar);
+			mSplitView.setVisibility(View.GONE);
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+	}
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -326,7 +360,7 @@ public class MainFragment extends PreferenceFragmentBase {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				ModData mod = (ModData)parent.getAdapter().getItem(position);
-				openModCat(mod.cat.name(), mod.sub);
+				openModCat(mod.cat.name(), mod.sub, mod.key);
 			}
 		});
 		resultView.setOnTouchListener(new View.OnTouchListener() {
@@ -346,24 +380,18 @@ public class MainFragment extends PreferenceFragmentBase {
 		setActionModeStyle(searchView);
 
 		search = searchView.findViewById(android.R.id.inputArea);
-		((TextView)search.findViewById(android.R.id.input)).setHint(android.R.string.search_go);
+		((TextView)search.findViewById(android.R.id.input)).setHint(R.string.search_input_description);
 		search.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (actionMode != null)
-					actionMode.invalidate();
-				else
-					actionMode = startActionMode(actionModeCallback);
-				// Hide stupid auto split actionbar
-				try {
-					ActionBar actionBar = getActionBar();
-					Field mSplitViewField = actionBar.getClass().getDeclaredField("mSplitView");
-					mSplitViewField.setAccessible(true);
-					View mSplitView = (View)mSplitViewField.get(actionBar);
-					mSplitView.setVisibility(View.GONE);
-				} catch (Throwable t) {
-					t.printStackTrace();
-				}
+				openActionMode(false);
+			}
+		});
+		search.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				openActionMode(true);
+				return true;
 			}
 		});
 
@@ -761,13 +789,14 @@ public class MainFragment extends PreferenceFragmentBase {
 
 	// PreferenceScreens management
 	private boolean openModCat(String cat) {
-		return openModCat(cat, null);
+		return openModCat(cat, null, null);
 	}
 
-	private boolean openModCat(String cat, String sub) {
+	private boolean openModCat(String cat, String sub, String mod) {
 		Bundle bundle = new Bundle();
 		bundle.putString("cat", cat);
 		bundle.putString("sub", sub);
+		bundle.putString("mod", mod);
 		catSelector.setTargetFragment(this, 0);
 		switch (cat) {
 			case "pref_key_system":

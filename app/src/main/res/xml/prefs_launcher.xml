@@ -33,6 +33,12 @@
 			miuizer:format="%d"
 			miuizer:offtext="@string/array_default" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_launcher_folderspace"
+			android:title="@string/launcher_folderspace_title"
+			android:defaultValue="false"
+			miuizer:child="true" />
+
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx

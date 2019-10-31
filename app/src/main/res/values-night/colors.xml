@@ -3,8 +3,6 @@
 	<color name="color_not_selected">#99ffffff</color>
 	<color name="about_divider">#337f7f7f</color>
 
-	<color name="divider_line">#0dffffff</color>
-
 	<color name="checked_text">#ff0099ff</color>
 
 	<color name="preference_category_text_color">#80ffffff</color>
@@ -17,10 +15,11 @@
 	<color name="preference_secondary_text_color_checked">#ff0099ff</color>
 
 	<color name="app_manager_text_color">#e6ffffff</color>
-
-	<color name="edit_text_search_bg_color">#1fffffff</color>
 	<color name="hint_edit_text_color">#4cffffff</color>
 
 	<color name="seekbar_background">#ff262627</color>
 	<color name="seekbar_progress">#ff505051</color>
+
+	<color name="list_item_bg_color_pressed">#14ffffff</color>
+	<color name="list_item_bg_color">@android:color/transparent</color>
 </resources>

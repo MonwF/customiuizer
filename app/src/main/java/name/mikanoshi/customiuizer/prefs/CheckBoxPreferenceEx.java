@@ -75,4 +75,5 @@ public class CheckBoxPreferenceEx extends CheckBoxPreference implements Preferen
 	public void markAsNew() {
 		newmod = true;
 	}
+
 }

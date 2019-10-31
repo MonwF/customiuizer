@@ -7,8 +7,10 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -16,6 +18,8 @@ import java.util.Set;
 import java.util.TimeZone;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -35,6 +39,9 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Matrix;
+import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
@@ -48,6 +55,7 @@ import android.os.PowerManager.WakeLock;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.preference.PreferenceCategory;
+import android.preference.PreferenceScreen;
 import android.provider.Settings;
 import android.text.InputType;
 import android.text.Spannable;
@@ -62,6 +70,7 @@ import android.util.Pair;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -94,6 +103,7 @@ public class Helpers {
 	public static final String ANDROID_NS = "http://schemas.android.com/apk/res/android";
 	public static final String MIUIZER_NS = "http://schemas.android.com/apk/res-auto";
 	public static final String ACCESS_SECURITY_CENTER = "com.miui.securitycenter.permission.ACCESS_SECURITY_CENTER_PROVIDER";
+	public static final String NEW_MODS_SEARCH_QUERY = "\uD83C\uDD95";
 	public static SharedPreferences prefs = null;
 	public static ArrayList<AppData> shareAppsList = null;
 	public static ArrayList<AppData> openWithAppsList = null;
@@ -117,13 +127,18 @@ public class Helpers {
 		}
 	};
 	public static WakeLock mWakeLock;
+	public static ValueAnimator shimmerAnim;
 	public static boolean showNewMods = true;
-	public static final String[] newMods = new String[] {
-		"launcher_docktitles",
-		"system_removesecure",
-		"system_volumeblur_collapsed",
-		"system_volumeblur_expanded"
-	};
+	public static final HashSet<String> newMods =  new HashSet<String>(Arrays.asList(
+		"pref_key_launcher_folderspace",
+		"pref_key_controls_powerdt",
+		"pref_key_system_allownotifonkeyguard",
+		"pref_key_system_allownotiffloat",
+		"pref_key_system_allowdirectreply",
+		"pref_key_system_hideqs",
+		"pref_key_system_nodrawerbackground",
+		"pref_key_system_lstimeout"
+	));
 	public static final String[] shortcutIcons = new String[] {
 		"bankcard", "buscard", "calculator", "calendar", "contacts", "magazine", "music", "notes", "remotecontroller", "smarthome", "miuizer"
 	};
@@ -146,13 +161,22 @@ public class Helpers {
 
 	public static void setMiuiTheme(Activity act, int overrideTheme, boolean noBackground) {
 		int themeResId = 0;
-		try {
-			themeResId = act.getResources().getIdentifier("Theme.DayNight", "style", "miui");
-		} catch (Throwable t) {}
+		try { themeResId = act.getResources().getIdentifier("Theme.DayNight", "style", "miui"); } catch (Throwable t) {}
 		if (themeResId == 0) themeResId = act.getResources().getIdentifier(isNightMode(act) ? "Theme.Dark" : "Theme.Light", "style", "miui");
 		act.setTheme(themeResId);
+		if (Helpers.is11()) act.getTheme().applyStyle(R.style.ActivityAnimation11, true);
 		act.getTheme().applyStyle(overrideTheme, true);
 		act.getWindow().setBackgroundDrawable(noBackground ? null : (isNightMode(act) ? new ColorDrawable(Color.BLACK) : new ColorDrawable(Color.WHITE)));
+	}
+
+	public static void setMiuiCheckbox(CheckBox checkbox) {
+		checkbox.setBackground(null);
+		int btnResID = checkbox.getResources().getIdentifier(isNightMode(checkbox.getContext()) ? "btn_checkbox_dark" : "btn_checkbox_light", "drawable", "miui");
+		try {
+			checkbox.setButtonDrawable(btnResID == 0 ? R.drawable.btn_checkbox : btnResID);
+		} catch (Throwable t) {
+			checkbox.setButtonDrawable(R.drawable.btn_checkbox);
+		}
 	}
 
 	public static boolean is11() {
@@ -423,6 +447,46 @@ public class Helpers {
 		ssb.setSpan(new StyleSpan(Typeface.ITALIC), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		ssb.setSpan(new RelativeSizeSpan(0.75f), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		title.setText(ssb);
+	}
+
+	public static void applyShimmer(TextView title) {
+		if (title.getPaint().getShader() != null) return;
+		int width = title.getResources().getDisplayMetrics().widthPixels;
+		Shader shimmer = new LinearGradient(0, 0, width, 0, new int[]{ 0xFF5DA5FF, 0xFF9B8AFB, 0xFFD176F2, 0xFFFE88B2, 0xFFD176F2, 0xFF9B8AFB }, new float[]{ 0.0f, 0.2f, 0.4f, 0.6f, 0.8f, 1.0f }, Shader.TileMode.REPEAT);
+		Matrix matrix = new Matrix();
+		matrix.setTranslate(0, 0);
+		shimmer.setLocalMatrix(matrix);
+		title.getPaint().setShader(shimmer);
+
+		if (shimmerAnim != null) shimmerAnim.cancel();
+		shimmerAnim = ValueAnimator.ofFloat(0, width, width / 1.8f, width * 1.3f);
+		shimmerAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+			@Override
+			public void onAnimationUpdate(ValueAnimator animation) {
+				matrix.setTranslate((float)animation.getAnimatedValue(), 0);
+				title.getPaint().getShader().setLocalMatrix(matrix);
+				title.invalidate();
+			}
+		});
+		shimmerAnim.addListener(new Animator.AnimatorListener() {
+			@Override
+			public void onAnimationEnd(Animator animation) {
+				title.getPaint().setShader(null);
+				title.invalidate();
+			}
+
+			@Override
+			public void onAnimationStart(Animator animation) {}
+
+			@Override
+			public void onAnimationCancel(Animator animation) {}
+
+			@Override
+			public void onAnimationRepeat(Animator animation) {}
+		});
+		shimmerAnim.setStartDelay(0);
+		shimmerAnim.setDuration(10000);
+		shimmerAnim.start();
 	}
 
 	public static void openURL(Context context, String url) {
@@ -813,6 +877,7 @@ public class Helpers {
 		Resources res = context.getResources();
 		String lastPrefSub = null;
 		String lastPrefSubTitle = null;
+		String lastPrefSubSubTitle = null;
 		int catResId = 0;
 		ModData.ModCat catPrefKey = null;
 
@@ -837,12 +902,18 @@ public class Helpers {
 
 		try (XmlResourceParser xml = res.getXml(xmlResId)) {
 			int eventType = xml.getEventType();
+			int order = 0;
 			while (eventType != XmlPullParser.END_DOCUMENT) {
-				if (eventType == XmlPullParser.START_TAG) try {
+				if (eventType == XmlPullParser.START_TAG && !PreferenceScreen.class.getSimpleName().equals(xml.getName())) try {
 					if (xml.getName().equals(PreferenceCategory.class.getSimpleName()) || xml.getName().equals(PreferenceCategoryEx.class.getCanonicalName())) {
 						if (xml.getAttributeValue(ANDROID_NS, "key") != null) {
 							lastPrefSub = xml.getAttributeValue(ANDROID_NS, "key");
 							lastPrefSubTitle = getModTitle(res, xml.getAttributeValue(ANDROID_NS, "title"));
+							lastPrefSubSubTitle = null;
+							order = 1;
+						} else {
+							lastPrefSubSubTitle = getModTitle(res, xml.getAttributeValue(ANDROID_NS, "title"));
+							order++;
 						}
 						eventType = xml.next();
 						continue;
@@ -853,13 +924,16 @@ public class Helpers {
 					if (!isChild) {
 						modData.title = getModTitle(res, xml.getAttributeValue(ANDROID_NS, "title"));
 						if (modData.title != null) {
-							modData.breadcrumbs = res.getString(catResId) + (lastPrefSubTitle == null ? "" : "/" + lastPrefSubTitle);
+							modData.breadcrumbs = res.getString(catResId) + (lastPrefSubTitle == null ? "" : ("/" + lastPrefSubTitle + (lastPrefSubSubTitle == null ? "" : "/" + lastPrefSubSubTitle)));
 							modData.key = xml.getAttributeValue(ANDROID_NS, "key");
 							modData.cat = catPrefKey;
 							modData.sub = lastPrefSub;
+							modData.order = order;
 							allModsList.add(modData);
+							//Log.e("miuizer", modData.key + " = " + modData.order);
 						}
 					}
+					order++;
 				} catch (Throwable t) {
 					t.printStackTrace();
 				}

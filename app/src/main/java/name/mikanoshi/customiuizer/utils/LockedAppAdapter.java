@@ -97,13 +97,14 @@ public class LockedAppAdapter extends BaseAdapter implements Filterable {
 		if (convertView != null)
 			row = convertView;
 		else
-			row = mInflater.inflate(R.layout.applist_item, parent, false);
+			row = mInflater.inflate(Helpers.is11() ? R.layout.applist_item11 : R.layout.applist_item, parent, false);
 
-		ImageView itemIsDis = row.findViewById(R.id.am_isDisable_icon);
-		ImageView itemIsDual = row.findViewById(R.id.am_isDual_icon);
-		CheckBox itemChecked = row.findViewById(R.id.am_checked_icon);
-		TextView itemTitle = row.findViewById(R.id.am_label);
-		ImageView itemIcon = row.findViewById(R.id.am_icon);
+		ImageView itemIsDis = row.findViewById(R.id.icon_disable);
+		ImageView itemIsDual = row.findViewById(R.id.icon_dual);
+		CheckBox itemChecked = row.findViewById(android.R.id.checkbox);
+		Helpers.setMiuiCheckbox(itemChecked);
+		TextView itemTitle = row.findViewById(android.R.id.title);
+		ImageView itemIcon = row.findViewById(android.R.id.icon);
 
 		AppData ad = getItem(position);
 		itemIcon.setTag(position);

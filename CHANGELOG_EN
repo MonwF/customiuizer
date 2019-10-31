@@ -1,10 +1,26 @@
+2.0.2
+[New] Force all notifications from MIUI apps to be able to appear on lock screen and as floating ones
+[New] Remove Quick Settings and brightness slider in expanded notifications mode on lock screen
+[New] Remove notification drawer background on lock screen
+[New] Double press power key launch action
+[Improved][Number of columns in folders] Option to reduce side padding for more than 3 columns
+[Improved][Show titles in dock] Additional bottom padding for dock when full screen gestures are active (MIUI Launcher only)
+[Improved][Disable signature verification] Skip signature check in MIUI installer
+[Improved][Show seconds] Equal update intervals
+[Improved][Folder background] Use white color when light wallpepr is applied
+[Fixed][Media position slider] Compatibility with some ROMs
+Long press search box to display a list of new mods
+Scroll found mod into view and highlight it beautifully :)
+MIUI-styled checkboxes in lists on MIUI 11
+Adaptive module icon
+
 2.0.1
 [New] Show app titles in launcher dock
 [New] Allow screenshots and video recording of any app
 [New] Blur background behind collapsed and expanded volume dialogs
+[New] Compatibility mode for all launcher mods
 [Improved][Unlock grid sizes] Launcher grids up to 8x8
 [Improved][Album art as wallpaper] Scaling option
-Compatibility mode for all launcher mods
 Module's UI fixes
 
 2.0.0

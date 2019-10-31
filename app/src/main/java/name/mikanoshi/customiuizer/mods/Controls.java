@@ -403,26 +403,27 @@ public class Controls {
 		boolean hasLeftAction = MainModule.mPrefs.getInt("controls_navbarleft_action", 1) > 1 || MainModule.mPrefs.getInt("controls_navbarleftlong_action", 1) > 1;
 		boolean hasRightAction = MainModule.mPrefs.getInt("controls_navbarright_action", 1) > 1 || MainModule.mPrefs.getInt("controls_navbarrightlong_action", 1) > 1;
 
+		float part = Helpers.is11() ? 0.6f : 0.5f;
 		if (isVertical) {
 			if (hasRightAction) {
 				navButtons.addView(rightbtn, 0);
-				lp2.weight = Math.round(lp2.weight * 0.5f);
+				lp2.weight = Math.round(lp2.weight * part);
 				sidePadding.setLayoutParams(lp2);
 			}
 			if (hasLeftAction) {
 				navButtons.addView(leftbtn, navButtons.getChildCount());
-				lp1.weight = Math.round(lp1.weight * 0.5f);
+				lp1.weight = Math.round(lp1.weight * part);
 				startPadding.setLayoutParams(lp1);
 			}
 		} else {
 			if (hasLeftAction) {
 				navButtons.addView(leftbtn, 0);
-				lp1.weight = Math.round(lp1.weight * 0.5f);
+				lp1.weight = Math.round(lp1.weight * part);
 				startPadding.setLayoutParams(lp1);
 			}
 			if (hasRightAction) {
 				navButtons.addView(rightbtn, navButtons.getChildCount());
-				lp2.weight = Math.round(lp2.weight * 0.5f);
+				lp2.weight = Math.round(lp2.weight * part);
 				sidePadding.setLayoutParams(lp2);
 			}
 		}
@@ -835,6 +836,18 @@ public class Controls {
 		});
 	}
 
+	public static void PowerDoubleTapActionHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "launchApp", Intent.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				Intent intent = (Intent)param.args[0];
+				if (intent == null) return;
+				if (!"android.media.action.STILL_IMAGE_CAMERA".equals(intent.getAction())) return;
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				if (GlobalActions.handleAction(mContext, "pref_key_controls_powerdt", true)) param.setResult(true);
+			}
+		});
+	}
 
 //	public static void AIButtonHook(LoadPackageParam lpparam) {
 //		Helpers.findAndHookMethod("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "startAiKeyService", String.class, new MethodHook() {

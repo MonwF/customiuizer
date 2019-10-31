@@ -115,6 +115,7 @@
     <string name="system_nolightuponcharges_summ">当您连接或者断开充电器时不打开屏幕</string>
     <string name="system_nolightuponheadset_title">连接耳机时不亮起屏幕</string>
     <string name="system_nolightuponheadset_summ">当您连接耳机时不打开屏幕</string>
+    <string name="system_lstimeout_title">锁屏屏幕超时</string>
     <string name="system_dimtime_title">暗屏时长</string>
     <string name="system_dimtime_summ">自动灭屏前保持暗屏的时间(屏幕关闭超时总数的百分比)</string>
     <string name="system_minbrightness_title">自动亮度最小值</string>
@@ -243,8 +244,18 @@
     <string name="system_orientationlock_summ">添加快速设置磁贴，可以竖屏或者横屏模式锁定方向</string>
     <string name="system_notifafterunlock_title">保留通知</string>
     <string name="system_notifafterunlock_summ">在锁屏上显示通知，如果通知已关闭，则再次打开</string>
+    <string name="system_allowdirectreply_title">无需解锁直接回复</string>
+    <string name="system_allowdirectreply_summ">无需解锁设备直接在锁屏上使用回复</string>
+    <string name="system_allownotifonkeyguard_title">允许在锁屏上显示</string>
+    <string name="system_allownotifonkeyguard_summ">强制MIUI应用的所有通知显示在锁屏上</string>
+    <string name="system_allownotiffloat_title">允许作为悬浮通知</string>
+    <string name="system_allownotiffloat_summ">强制悬浮MIUI应用的所有通知</string>
     <string name="system_hidelsclock_title">隐藏顶部区域</string>
     <string name="system_hidelsclock_summ">移除包含时钟、数据和其他数据的顶部区域</string>
+    <string name="system_hideqs_title">净化扩展模式视图</string>
+    <string name="system_hideqs_summ">隐藏锁屏上展开通知模式中的快速设置和亮度滑块</string>
+    <string name="system_nodrawerbackground_title">禁用彩色背景</string>
+    <string name="system_nodrawerbackground_summ">锁屏时将背景从壁纸随机生成的颜色更改为透明</string>
     <string name="system_dttosleep_title">双击熄屏</string>
     <string name="system_dttosleep_summ">双击锁屏上任意空白处关闭屏幕</string>
     <string name="system_mods_statusbar">状态栏和通知抽屉</string>
@@ -323,6 +334,7 @@
     <string name="launcher_indicatorheight_title">页面指示器高度</string>
     <string name="launcher_folders">文件夹</string>
     <string name="launcher_folder_cols_title">文件夹排列数量</string>
+    <string name="launcher_folderspace_title">减少边距</string>
     <string name="launcher_fixstatusbarmode_title">修复状态栏模式</string>
     <string name="launcher_fixstatusbarmode_summ">调整开发版启动器上浅色/深色壁纸的状态栏内容颜色</string>
     <string name="launcher_foldershade_title">文件夹背景</string>
@@ -362,6 +374,8 @@
     <string name="launcher_doubletap_title">双击动作</string>
     <string name="launcher_doubletap_summ">双击任意主屏幕空白处的动作</string>
     <string name="controls_mods">控制</string>
+    <string name="controls_powerdt_title">按压两次动作</string>
+    <string name="controls_powerdt_summ">按压两次电源键替代启动相机。需要启用内置的快捷键。</string>
     <string name="controls_powerflash_title">快速手电筒</string>
     <string name="controls_powerflash_summ">屏幕关闭时长按电源键打开手电筒</string>
     <string name="controls_powerflash_delay_title">加长快速手电筒延迟</string>
@@ -691,7 +705,7 @@
     <string name="select_activity">选择活动</string>
     <string name="no_activities_found">没有找到活动</string>
     <string name="select_shortcut">选择快捷方式</string>
-    <string name="search_input_description">搜索</string>
+    <string name="search_input_description">搜索模块</string>
     <string name="wifi_networks">Wi-Fi网络</string>
     <string name="wifi_location_title">位置设置</string>
     <string name="wifi_location_summ">在Android Pie上，应用需要位置权限才能获取Wi-Fi网络列表</string>

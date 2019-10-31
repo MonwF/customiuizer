@@ -101,9 +101,16 @@ public class MainActivity extends Activity {
 	@Override
 	public void onBackPressed() {
 		Fragment fragment = getFragmentManager().findFragmentById(R.id.fragment_container);
-		if (fragment != null)
+		if (fragment == null) {
+			super.onBackPressed();
+			return;
+		}
+		if (Helpers.shimmerAnim != null) Helpers.shimmerAnim.cancel();
 		if (((PreferenceFragmentBase)fragment).isAnimating) return;
-		super.onBackPressed();
+		if (fragment instanceof MainFragment && ((MainFragment)fragment).actionMode != null)
+			((MainFragment)fragment).actionMode.finish();
+		else
+			super.onBackPressed();
 	}
 
 	@Override

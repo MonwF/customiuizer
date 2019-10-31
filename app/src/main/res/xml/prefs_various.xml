@@ -34,7 +34,6 @@
 		miuizer:countAsSummary="true" />
 
 	<PreferenceCategory
-		android:key="pref_key_various_cat_calls"
 		android:title="@string/calls">
 
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
@@ -57,7 +56,6 @@
 	</PreferenceCategory>
 
 	<PreferenceCategory
-		android:key="pref_key_various_cat_settings"
 		android:title="@string/settings">
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx

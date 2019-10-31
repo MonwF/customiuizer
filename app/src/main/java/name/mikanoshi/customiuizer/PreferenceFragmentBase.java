@@ -129,10 +129,12 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 			if (getView() != null) order = getView().getTranslationZ();
 		} catch (Throwable t) {}
 		args.putFloat("order", order);
-		if (fragment.getArguments() == null)
+		if (fragment.getArguments() == null) {
 			fragment.setArguments(args);
-		else
+		} else {
+			fragment.getArguments().clear();
 			fragment.getArguments().putAll(args);
+		}
 		getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fragment_open_enter, R.animator.fragment_open_exit, R.animator.fragment_close_enter, R.animator.fragment_close_exit)
 			.replace(R.id.fragment_container, fragment).addToBackStack(null).commitAllowingStateLoss();
 		getFragmentManager().executePendingTransactions();
@@ -178,23 +180,26 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 			public void onAnimationRepeat(Animator animation) {}
 		}); else isAnimating = false;
 
+		boolean is11 = Helpers.is11();
 		valAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 			@Override
 			public void onAnimationUpdate(ValueAnimator animation) {
 				if (content == null) return;
 				float val = (float)animation.getAnimatedValue();
+				float alpha1 = is11 ? val * 1.0f : 0.6f + val * 0.4f;
+				float alpha2 = 1.0f - val * 0.4f;
 				if (nextAnim == R.animator.fragment_open_enter) {
 					top.setX(scrWidth * (1.0f - val));
-					content.setAlpha(0.6f + val * 0.4f);
+					content.setAlpha(alpha1);
 				} else if (nextAnim == R.animator.fragment_open_exit) {
 					top.setX(-scrWidth / 4.0f * val);
-					top.setAlpha(1.0f - val * 0.4f);
+					top.setAlpha(alpha2);
 				} else if (nextAnim == R.animator.fragment_close_enter) {
 					top.setX(-scrWidth / 4.0f * (1.0f - val));
-					top.setAlpha(0.6f + val * 0.4f);
+					top.setAlpha(alpha1);
 				} else if (nextAnim == R.animator.fragment_close_exit) {
 					top.setX(scrWidth * val);
-					content.setAlpha(1.0f - val * 0.4f);
+					content.setAlpha(alpha2);
 				}
 			}
 		});

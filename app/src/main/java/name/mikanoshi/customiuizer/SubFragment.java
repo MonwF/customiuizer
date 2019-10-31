@@ -1,17 +1,21 @@
 package name.mikanoshi.customiuizer;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
 import android.widget.FrameLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -28,6 +32,7 @@ import name.mikanoshi.customiuizer.subs.MultiAction;
 import name.mikanoshi.customiuizer.subs.SortableList;
 import name.mikanoshi.customiuizer.utils.ColorCircle;
 import name.mikanoshi.customiuizer.utils.Helpers;
+import name.mikanoshi.customiuizer.utils.ModData;
 
 public class SubFragment extends PreferenceFragmentBase {
 
@@ -35,6 +40,7 @@ public class SubFragment extends PreferenceFragmentBase {
 	private int resId = 0;
 	public int titleId = 0;
 	private float order = 100.0f;
+	private String highlight = null;
 	public boolean padded = true;
 	Helpers.SettingsType settingsType = Helpers.SettingsType.Preference;
 	Helpers.ActionBarType abType = Helpers.ActionBarType.Edit;
@@ -52,6 +58,7 @@ public class SubFragment extends PreferenceFragmentBase {
 		resId = getArguments().getInt("contentResId");
 		titleId = getArguments().getInt("titleResId");
 		order = getArguments().getFloat("order") + 10.0f;
+		highlight = getArguments().getString("mod");
 
 		if (resId == 0) {
 			getActivity().finish();
@@ -111,9 +118,48 @@ public class SubFragment extends PreferenceFragmentBase {
 
 		if (Helpers.showNewMods)
 		for (String mod: Helpers.newMods) {
-			Preference pref = findPreference("pref_key_" + mod);
+			Preference pref = findPreference(mod);
 			if (pref != null) ((PreferenceState)pref).markAsNew();
 		}
+
+		if (highlight != null && getView() != null) try {
+			ListView listView = getView().findViewById(android.R.id.list);
+			int order = 0;
+			for (ModData mod: Helpers.allModsList)
+			if (mod.key.equals(highlight)) {
+				order = mod.order;
+				break;
+			}
+			highlight = null;
+			listView.clearFocus();
+			int fOrder = order;
+			listView.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+						@Override
+						public void onScrollStateChanged(AbsListView view, int scrollState) {}
+
+						@Override
+						public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+							int first = view.getFirstVisiblePosition();
+							int last = view.getLastVisiblePosition();
+							if (fOrder >= first && fOrder <= last) {
+								view.setOnScrollListener(null);
+								View item = view.getChildAt(fOrder - first);
+								if (item == null) return;
+								TextView title = item.findViewById(android.R.id.title);
+								if (title != null) Helpers.applyShimmer(title);
+							}
+						}
+					});
+					listView.smoothScrollToPositionFromTop(fOrder, getResources().getDisplayMetrics().heightPixels / 3);
+				}
+			}, Math.round(animDur * Settings.Global.getFloat(getContext().getContentResolver(), Settings.Global.ANIMATOR_DURATION_SCALE, 1.0f)));
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+
 	}
 
 	public View onInflateView(LayoutInflater inflater, ViewGroup group, Bundle bundle) {
@@ -237,6 +283,14 @@ public class SubFragment extends PreferenceFragmentBase {
 		}
 	};
 
+	public Preference.OnPreferenceClickListener openLaunchActions = new Preference.OnPreferenceClickListener() {
+		@Override
+		public boolean onPreferenceClick(Preference preference) {
+			openMultiAction(preference, MultiAction.Actions.LAUNCH);
+			return true;
+		}
+	};
+
 	public Preference.OnPreferenceClickListener openSortableList = new Preference.OnPreferenceClickListener() {
 		@Override
 		public boolean onPreferenceClick(Preference preference) {
@@ -356,11 +410,12 @@ public class SubFragment extends PreferenceFragmentBase {
 
 	public void finish() {
 		if (isAnimating) return;
-		if (getActivity() == null) return;
+		if (Helpers.shimmerAnim != null) Helpers.shimmerAnim.cancel();
 		hideKeyboard();
 		FragmentManager fragmentManager = getFragmentManager();
 		if (fragmentManager == null || !isResumed()) {
-			getActivity().getFragmentManager().popBackStack();
+			Activity act = getActivity();
+			if (act != null) act.getFragmentManager().popBackStack();
 		} else {
 			fragmentManager.popBackStackImmediate();
 		}

@@ -29,6 +29,7 @@ public class SubFragmentWithSearch extends SubFragment {
 
 	public ListView listView = null;
 	View searchView = null;
+	LinearLayout search = null;
 	ActionMode actionMode = null;
 	boolean isSearchFocused = false;
 
@@ -101,6 +102,8 @@ public class SubFragmentWithSearch extends SubFragment {
 
 			@Override
 			public void onDestroyActionMode(ActionMode mode) {
+				TextView input = search == null ? null : search.findViewById(android.R.id.input);
+				if (input != null) input.setText("");
 				applyFilter("");
 				getActionBar().show();
 				actionMode = null;
@@ -110,7 +113,7 @@ public class SubFragmentWithSearch extends SubFragment {
 		searchView = getView().findViewById(R.id.searchView);
 		setActionModeStyle(searchView);
 
-		LinearLayout search = searchView.findViewById(android.R.id.inputArea);
+		search = searchView.findViewById(android.R.id.inputArea);
 		search.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

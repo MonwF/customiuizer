@@ -246,24 +246,49 @@ public class Launcher {
 		});
 	}
 
+	private static Class<?> wallpaperUtilsCls = null;
+	@SuppressWarnings("ConstantConditions")
+	private static void applyFolderShade(Context context, View folder) {
+		int opt = Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_launcher_foldershade", "1"));
+		if (opt == 2) {
+			boolean isLight = false;
+			if (wallpaperUtilsCls != null) try { isLight = (boolean)XposedHelpers.callStaticMethod(wallpaperUtilsCls, "hasAppliedLightWallpaper"); } catch (Throwable t) {}
+			folder.setBackground(new ColorDrawable(isLight ? 0x99ffffff : 0x99000000));
+		} else if (opt == 3) {
+			PaintDrawable pd = new PaintDrawable();
+			pd.setShape(new RectShape());
+			pd.setShaderFactory(new ShapeDrawable.ShaderFactory() {
+				@Override
+				public Shader resize(int width, int height) {
+					boolean isLight = false;
+					if (wallpaperUtilsCls != null) try { isLight = (boolean)XposedHelpers.callStaticMethod(wallpaperUtilsCls, "hasAppliedLightWallpaper"); } catch (Throwable t) {}
+					return new LinearGradient(0, 0, 0, height,
+							isLight ? new int[]{0x11ffffff, 0x99ffffff, 0x99ffffff, 0x11ffffff} : new int[]{0x11000000, 0x99000000, 0x99000000, 0x11000000},
+							new float[]{0.0f, 0.25f, 0.65f, 1.0f},
+							Shader.TileMode.CLAMP
+					);
+				}
+			});
+			folder.setBackground(pd);
+		}
+	}
+
 	public static void FolderShadeHook(final LoadPackageParam lpparam) {
+		wallpaperUtilsCls = XposedHelpers.findClassIfExists("com.miui.home.launcher.WallpaperUtils", lpparam.classLoader);
+
 		Helpers.hookAllConstructors("com.miui.home.launcher.FolderCling", lpparam.classLoader, new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
-				int opt = Integer.parseInt(Helpers.getSharedStringPref((Context)param.args[0], "pref_key_launcher_foldershade", "1"));
-				if (opt == 2) {
-					((View)param.thisObject).setBackground(new ColorDrawable(0x99000000));
-				} else if (opt == 3) {
-					PaintDrawable pd = new PaintDrawable();
-					pd.setShape(new RectShape());
-					pd.setShaderFactory(new ShapeDrawable.ShaderFactory() {
-						@Override
-						public Shader resize(int width, int height) {
-							return new LinearGradient(0, 0, 0, height, new int[]{0x11000000, 0x99000000, 0x99000000, 0x11000000}, new float[]{0.0f, 0.25f, 0.65f, 1.0f}, Shader.TileMode.CLAMP);
-						}
-					});
-					((View)param.thisObject).setBackground(pd);
-				}
+				View folder = (View)param.thisObject;
+				applyFolderShade(folder.getContext(), folder);
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.home.launcher.FolderCling", lpparam.classLoader, "onWallpaperColorChanged", new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				View folder = (View)param.thisObject;
+				applyFolderShade(folder.getContext(), folder);
 			}
 		});
 	}
@@ -640,14 +665,16 @@ public class Launcher {
 				lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
 				mContent.setLayoutParams(lp);
 
-				ViewGroup mBackgroundView = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mBackgroundView");
-				if (mBackgroundView != null)
-				mBackgroundView.setPadding(
-					mBackgroundView.getPaddingLeft() / (cols > 3 ? 3 : 1),
-					mBackgroundView.getPaddingTop(),
-					mBackgroundView.getPaddingRight() / (cols > 3 ? 3 : 1),
-					mBackgroundView.getPaddingBottom()
-				);
+				if (cols > 3 && MainModule.mPrefs.getBoolean("launcher_folderspace")) {
+					ViewGroup mBackgroundView = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mBackgroundView");
+					if (mBackgroundView != null)
+					mBackgroundView.setPadding(
+						mBackgroundView.getPaddingLeft() / 3,
+						mBackgroundView.getPaddingTop(),
+						mBackgroundView.getPaddingRight() / 3,
+						mBackgroundView.getPaddingBottom()
+					);
+				}
 			}
 		});
 	}
@@ -890,6 +917,19 @@ public class Launcher {
 	public static void ShowHotseatTitlesRes() {
 		MainModule.resHooks.setObjectReplacement("com.miui.home", "bool", "config_hide_hotseats_app_title", false);
 		MainModule.resHooks.setObjectReplacement("com.mi.android.globallauncher", "bool", "config_hide_hotseats_app_title", false);
+	}
+
+	public static void ShowHotseatTitlesHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethods("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "calcHotSeatsHeight", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				Context context = (Context)param.args[0];
+				if (context == null) return;
+				int height = (int)param.getResult();
+				boolean sIsImmersiveNavigationBar = XposedHelpers.getStaticBooleanField(XposedHelpers.findClass("com.miui.home.launcher.DeviceConfig", lpparam.classLoader), "sIsImmersiveNavigationBar");
+				if (sIsImmersiveNavigationBar) param.setResult(Math.round(height + 8 * context.getResources().getDisplayMetrics().density));
+			}
+		});
 	}
 
 //	public static void ReplaceClockAppHook(LoadPackageParam lpparam) {

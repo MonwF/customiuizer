@@ -156,14 +156,18 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 		if (convertView != null)
 			row = convertView;
 		else
-			row = mInflater.inflate(R.layout.applist_item, parent, false);
+			row = mInflater.inflate(Helpers.is11() ? R.layout.applist_item11 : R.layout.applist_item, parent, false);
 
-		ImageView itemIsDis = row.findViewById(R.id.am_isDisable_icon);
-		ImageView itemIsDual = row.findViewById(R.id.am_isDual_icon);
-		CheckBox itemChecked = row.findViewById(R.id.am_checked_icon);
-		TextView itemTitle = row.findViewById(R.id.am_label);
-		TextView itemSummary = row.findViewById(R.id.am_summary);
-		ImageView itemIcon = row.findViewById(R.id.am_icon);
+		ImageView itemIsDis = row.findViewById(R.id.icon_disable);
+		ImageView itemIsDual = row.findViewById(R.id.icon_dual);
+		CheckBox itemChecked = row.findViewById(android.R.id.checkbox);
+		if (itemChecked.getTag() == null || !(boolean)itemChecked.getTag()) {
+			itemChecked.setTag(true);
+			Helpers.setMiuiCheckbox(itemChecked);
+		}
+		TextView itemTitle = row.findViewById(android.R.id.title);
+		TextView itemSummary = row.findViewById(android.R.id.summary);
+		ImageView itemIcon = row.findViewById(android.R.id.icon);
 
 		AppData ad = getItem(position);
 		itemTitle.setText(ad.label);
@@ -171,7 +175,7 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 
 		if (aType == Helpers.AppAdapterType.Activities) {
 			itemIcon.setVisibility(View.GONE);
-			View container = row.findViewById(R.id.am_container);
+			View container = row.findViewById(R.id.container);
 			LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)container.getLayoutParams();
 			lp.leftMargin = 0;
 			container.setLayoutParams(lp);

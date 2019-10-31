@@ -14,4 +14,5 @@ public class ModData {
 	public String key;
 	public ModCat cat;
 	public String sub;
+	public int order;
 }

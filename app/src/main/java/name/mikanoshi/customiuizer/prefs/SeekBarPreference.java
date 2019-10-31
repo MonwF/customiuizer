@@ -99,9 +99,9 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 	@SuppressLint("SetTextI18n")
 	public View getView(View view, ViewGroup parent) {
 		View finalView = super.getView(view, parent);
-		TextView title = finalView.findViewById(android.R.id.title);
-		title.setText(getTitle() + (dynamic ? " ⟲" : ""));
-		if (newmod) Helpers.applyNewMod(title);
+		TextView mTitle = finalView.findViewById(android.R.id.title);
+		mTitle.setText(getTitle() + (dynamic ? " ⟲" : ""));
+		if (newmod) Helpers.applyNewMod(mTitle);
 		return finalView;
 	}
 
@@ -272,4 +272,6 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 	public void markAsNew() {
 		newmod = true;
 	}
+
 }
+

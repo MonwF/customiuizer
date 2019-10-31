@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ListView;
 
 import java.lang.reflect.Method;
 import java.util.LinkedHashSet;
@@ -57,32 +58,32 @@ public class AppSelector extends SubFragmentWithSearch {
 				if (multi && key != null) {
 					if (openwith) {
 						if (Helpers.openWithAppsList == null) return;
-						listView.setAdapter(new AppDataAdapter(getActivity(), Helpers.openWithAppsList, Helpers.AppAdapterType.Mutli, key));
+						listView.setAdapter(new AppDataAdapter(getActivity().getApplicationContext(), Helpers.openWithAppsList, Helpers.AppAdapterType.Mutli, key));
 					} else if (share) {
 						if (Helpers.shareAppsList == null) return;
-						listView.setAdapter(new AppDataAdapter(getActivity(), Helpers.shareAppsList, Helpers.AppAdapterType.Mutli, key));
+						listView.setAdapter(new AppDataAdapter(getActivity().getApplicationContext(), Helpers.shareAppsList, Helpers.AppAdapterType.Mutli, key));
 					} else {
 						if (Helpers.installedAppsList == null) return;
-						listView.setAdapter(new AppDataAdapter(getActivity(), Helpers.installedAppsList, Helpers.AppAdapterType.Mutli, key));
+						listView.setAdapter(new AppDataAdapter(getActivity().getApplicationContext(), Helpers.installedAppsList, Helpers.AppAdapterType.Mutli, key));
 					}
 				} else if (privacy) {
 					if (Helpers.installedAppsList == null) return;
-					listView.setAdapter(new PrivacyAppAdapter(getActivity(), Helpers.installedAppsList));
+					listView.setAdapter(new PrivacyAppAdapter(getActivity().getApplicationContext(), Helpers.installedAppsList));
 				} else if (applock) {
 					if (Helpers.installedAppsList == null) return;
-					listView.setAdapter(new LockedAppAdapter(getActivity(), Helpers.installedAppsList));
+					listView.setAdapter(new LockedAppAdapter(getActivity().getApplicationContext(), Helpers.installedAppsList));
 				} else if (customTitles) {
 					if (Helpers.launchableAppsList == null) return;
-					listView.setAdapter(new AppDataAdapter(getActivity(), Helpers.launchableAppsList, Helpers.AppAdapterType.CustomTitles, key));
+					listView.setAdapter(new AppDataAdapter(getActivity().getApplicationContext(), Helpers.launchableAppsList, Helpers.AppAdapterType.CustomTitles, key));
 				} else if (standalone && key != null) {
 					if (Helpers.launchableAppsList == null) return;
-					listView.setAdapter(new AppDataAdapter(getActivity(), Helpers.launchableAppsList, Helpers.AppAdapterType.Standalone, key));
+					listView.setAdapter(new AppDataAdapter(getActivity().getApplicationContext(), Helpers.launchableAppsList, Helpers.AppAdapterType.Standalone, key));
 				} else if (activity) {
 					if (Helpers.installedAppsList == null) return;
-					listView.setAdapter(new AppDataAdapter(getActivity(), Helpers.installedAppsList, Helpers.AppAdapterType.Default, key));
+					listView.setAdapter(new AppDataAdapter(getActivity().getApplicationContext(), Helpers.installedAppsList, Helpers.AppAdapterType.Default, key));
 				} else {
 					if (Helpers.launchableAppsList == null) return;
-					listView.setAdapter(new AppDataAdapter(getActivity(), Helpers.launchableAppsList));
+					listView.setAdapter(new AppDataAdapter(getActivity().getApplicationContext(), Helpers.launchableAppsList));
 				}
 				listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 					@Override

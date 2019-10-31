@@ -123,4 +123,5 @@ public class ListPreferenceEx extends ListPreference implements PreferenceState 
 	public void markAsNew() {
 		newmod = true;
 	}
+
 }

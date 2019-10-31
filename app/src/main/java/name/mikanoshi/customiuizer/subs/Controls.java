@@ -20,6 +20,9 @@ public class Controls extends SubFragment {
 
 		selectSub("pref_key_controls", sub);
 		switch (sub) {
+			case "pref_key_controls_cat_power":
+				findPreference("pref_key_controls_powerdt").setOnPreferenceClickListener(openLaunchActions);
+				break;
 			case "pref_key_controls_cat_navbar":
 				findPreference("pref_key_controls_backlong").setOnPreferenceClickListener(openNavbarActions);
 				findPreference("pref_key_controls_homelong").setOnPreferenceClickListener(openNavbarActions);

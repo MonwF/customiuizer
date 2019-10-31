@@ -4,9 +4,11 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.widget.SeekBar;
 
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SubFragment;
+import name.mikanoshi.customiuizer.prefs.SeekBarPreference;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class Launcher extends SubFragment {
@@ -44,6 +46,20 @@ public class Launcher extends SubFragment {
 
 		switch (sub) {
 			case "pref_key_launcher_cat_folders":
+				SeekBarPreference folderCols = (SeekBarPreference)findPreference("pref_key_launcher_folder_cols");
+				findPreference("pref_key_launcher_folderspace").setEnabled(Helpers.prefs.getInt("pref_key_launcher_folder_cols", 1) > 3);
+				folderCols.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+					@Override
+					public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {}
+
+					@Override
+					public void onStartTrackingTouch(SeekBar seekBar) {}
+
+					@Override
+					public void onStopTrackingTouch(SeekBar seekBar) {
+						findPreference("pref_key_launcher_folderspace").setEnabled(seekBar.getProgress() > 2);
+					}
+				});
 				break;
 			case "pref_key_launcher_cat_gestures":
 				findPreference("pref_key_launcher_swipedown").setOnPreferenceClickListener(openLauncherActions);

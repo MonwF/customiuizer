@@ -186,6 +186,19 @@
 		<item>10</item>
 	</integer-array>
 
+	<string-array name="global_launch_actions">
+		<item>@string/array_global_actions_none</item>
+		<item>@string/array_global_actions_launch</item>
+		<item>@string/array_global_actions_shortcut</item>
+		<item>@string/array_global_actions_activity</item>
+	</string-array>
+	<integer-array name="global_launch_actions_val">
+		<item>1</item>
+		<item>8</item>
+		<item>9</item>
+		<item>20</item>
+	</integer-array>
+
 	<string-array name="global_toggles">
 		<item>@string/array_global_toggle_wifi</item>
 		<item>@string/array_global_toggle_bt</item>

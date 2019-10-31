@@ -38,7 +38,7 @@ public class MultiAction extends SubFragment {
 	private Intent shortcutIntent = null;
 
 	public enum Actions {
-		NAVBAR, LAUNCHER, CONTROLS, RECENTS, LOCKSCREEN
+		NAVBAR, LAUNCHER, CONTROLS, RECENTS, LOCKSCREEN, LAUNCH
 	}
 
 	@Override
@@ -73,6 +73,10 @@ public class MultiAction extends SubFragment {
 			case LOCKSCREEN:
 				entriesResId = R.array.global_lockscreen_actions;
 				entryValuesResId = R.array.global_lockscreen_actions_val;
+				break;
+			case LAUNCH:
+				entriesResId = R.array.global_launch_actions;
+				entryValuesResId = R.array.global_launch_actions_val;
 				break;
 		}
 

@@ -35,10 +35,6 @@
 	<string name="sdk_failed">Не удалось инициализировать MIUI SDK.\nДевайс не Xiaomi?</string>
 	<string name="notselected">Не выбрано</string>
 
-	<string name="controls_mods">Управление</string>
-	<string name="controls_powerflash_title">Быстрый фонарик</string>
-	<string name="controls_powerflash_summ">Позволяет активировать фонарик при отключенном экране долгим нажатием на кнопку питания</string>
-
 	<string name="various_mods">Различное</string>
 	<string name="various_alarmcompat_title">Совместимость будильника</string>
 	<string name="various_alarmcompat_summ">Позволяет выбранным приложениям правильно показывать время следующего будильника, установленного стандартным приложением часов MIUI</string>
@@ -248,6 +244,11 @@
 
 	<string name="crash_dialog_manual_desc2">Опишите действия, приведшие к проблеме:</string>
 
+	<string name="controls_mods">Управление</string>
+	<string name="controls_powerdt_title">Действие на двойное нажатие</string>
+	<string name="controls_powerdt_summ">Заменяет запуск камеры по двойному нажатию кнопки питания. Родное действие должно быть активно.</string>
+	<string name="controls_powerflash_title">Быстрый фонарик</string>
+	<string name="controls_powerflash_summ">Позволяет активировать фонарик при отключенном экране долгим нажатием на кнопку питания</string>
 	<string name="controls_powerflash_delay_title">Задержка активации фонарика</string>
 	<string name="controls_powerflash_delay_summ">Увеличивает задержку при долгом нажатии на кнопку питания</string>
 	<string name="controls_mods_fingerprint">Сканер отпечатка пальца</string>
@@ -371,7 +372,7 @@
 	<string name="miuizer_forcelocale_title">Интерфейс на английском</string>
 	<string name="miuizer_forcelocale_summ">Всегда отображать интерфейс модуля на английском языке</string>
 	<string name="open_xposed">Управление модулями Xposed</string>
-	<string name="search_input_description">Поиск</string>
+	<string name="search_input_description">Поиск модов</string>
 	<string name="wifi_networks">Wi-Fi сети</string>
 	<string name="wifi_location_title">Настройки местоположения</string>
 	<string name="wifi_location_summ">Для получения списка Wi-Fi сетей на Android Pie приложениям требуется доступ к местоположению</string>
@@ -413,6 +414,7 @@
 	<string name="launcher_indicatorheight_title">Высота индикатора страниц</string>
 	<string name="launcher_folders">Папки</string>
 	<string name="launcher_folder_cols_title">Число колонок в папках</string>
+	<string name="launcher_folderspace_title">Уменьшить боковые отступы</string>
 	<string name="launcher_fixstatusbarmode_title">Исправить режим строки состояния</string>
 	<string name="launcher_fixstatusbarmode_summ">Изменяет цвет содержимого строки состояния в зависимости от светлых/тёмных обоев на версии ланчера для разработчиков</string>
 	<string name="launcher_foldershade_title">Фон папок</string>
@@ -631,6 +633,7 @@
 	<string name="system_nolightuponcharges_title">Не включать экран при зарядке</string>
 	<string name="system_nolightuponheadset_title">Не включать экран при подключении наушников</string>
 	<string name="system_nolightuponheadset_summ">Запрещает включение экрана при подключении наушников</string>
+	<string name="system_lstimeout_title">Задержка перед выключением на экране блокировки</string>
 	<string name="system_dimtime_title">Продолжительность затемнения</string>
 	<string name="system_dimtime_summ">Как долго экран должен быть затемнён перед автоматическим выключением (в процентах от задержки выключения экрана)</string>
 	<string name="system_minbrightness_title">Минимальная автояркость</string>
@@ -731,8 +734,18 @@
 	<string name="array_screen_anim_fade">Затухание</string>
 	<string name="system_notifafterunlock_title">Не скрывать уведомления</string>
 	<string name="system_notifafterunlock_summ">Оставляет уведомления на экране блокировки даже после того как он был закрыт и потом открыт вновь</string>
+	<string name="system_allowdirectreply_title">Прямой ответ без разблокировки</string>
+	<string name="system_allowdirectreply_summ">Не требовать разблокировки устройства при использовании прямого ответа на экране блокировки</string>
+	<string name="system_allownotifonkeyguard_title">Не прятать на экране блокировки</string>
+	<string name="system_allownotifonkeyguard_summ">Разрешает любому уведомлению из MIUI приложений отображаться на экране блокировки</string>
+	<string name="system_allownotiffloat_title">Не отключать всплывающие уведомления</string>
+	<string name="system_allownotiffloat_summ">Разрешает любому уведомлению из MIUI приложений отображаться в виде всплывающего</string>
 	<string name="system_hidelsclock_title">Скрыть верхний блок</string>
 	<string name="system_hidelsclock_summ">Удаляет верхний блок, содержащий часы, дату и другие данные</string>
+	<string name="system_hideqs_title">Очистить вид развёрнутого режима</string>
+	<string name="system_hideqs_summ">Скрывает панель Быстрых Настроек и слайдер яркости в режиме развёрнутых уведомлений на экране блокировки</string>
+	<string name="system_nodrawerbackground_title">Отключить цветной фон</string>
+	<string name="system_nodrawerbackground_summ">Изменяет фон со сгенерированным цветом, взятым из обоев, на прозрачный на экране блокировки</string>
 	<string name="system_dttosleep_title">Сон по двойному нажатию</string>
 	<string name="system_dttosleep_summ">Выключает экран при двойном нажатии по пустому месту на экране блокировки</string>
 	<string name="system_mods_other">Другое</string>
@@ -744,7 +757,7 @@
 	<string name="system_animationscale_transition_title">Переходы</string>
 	<string name="system_animationscale_animator_title">Аниматоры значений</string>
 
-	<string name="guide_search">Поиск модов по названию</string>
+	<string name="guide_search">Поиск модов по названию.\nДолгое нажатие покажет список новых модов.</string>
 	<string name="guide_softreboot">Не забудьте перезагрузиться для применения модов.\nДинамические ⟲ моды требуют только одну перезагрузку.\nБолее подробно об этом на странице О приложении.</string>
 	<string name="guide_marknew">Новые моды с предыдушего обновления\nмогут быть выделены для лучшей видимости</string>
 

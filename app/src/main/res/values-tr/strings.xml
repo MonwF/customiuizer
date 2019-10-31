@@ -115,6 +115,7 @@
     <string name="system_nolightuponcharges_summ">Şarj cihazı takıldığında veya çıkarıldığında ekran uyandırılmaz.</string>
     <string name="system_nolightuponheadset_title">Kulaklık</string>
     <string name="system_nolightuponheadset_summ">Kulaklık takıldığında veya çıkarıldığında ekran uyandırılmaz.</string>
+    <string name="system_lstimeout_title">Kilit ekranında ekran kapalı zaman aşımı</string>
     <string name="system_dimtime_title">Karartma Süresi</string>
     <string name="system_dimtime_summ">Otomatik kapanmadan önce ekranın soluk kalması gerekir (toplam ekran kapanma zaman aşımının yüzdesi olarak)</string>
     <string name="system_minbrightness_title">Otomatik Parlaklık (Minimum)</string>
@@ -243,8 +244,18 @@
     <string name="system_orientationlock_summ">Döndürmeyi kilitleyebilmeniz için Bildirim Paneli\'ne anahtar eklenir.</string>
     <string name="system_notifafterunlock_title">Bildirim</string>
     <string name="system_notifafterunlock_summ">Kilitlendikten veya tekrar açıldıktan sonra bile Bildirimler\'i Ekran Kilidi\'nde gösterir.</string>
+    <string name="system_allowdirectreply_title">Ekran Kilidi\'nden Yanıtla</string>
+    <string name="system_allowdirectreply_summ">Ekran Kilidi\'nden bildirimleri yanıtlamanız için kilidi açmanıza gerek yoktur.</string>
+    <string name="system_allownotifonkeyguard_title">Kilit ekranında izin ver</string>
+    <string name="system_allownotifonkeyguard_summ">MIUI uygulamalarındaki tüm bildirimleri kilit ekranında görünmeye zorla</string>
+    <string name="system_allownotiffloat_title">Kayan bildirimler olarak izin ver</string>
+    <string name="system_allownotiffloat_summ">MIUI uygulamalarından gelen tüm bildirimleri, yüzen olarak görünebilecek şekilde zorlayın</string>
     <string name="system_hidelsclock_title">Saat/Tarih</string>
     <string name="system_hidelsclock_summ">Saat, Tarih ve diğer verileri Ekran Kilidi\'nden gizler.</string>
+    <string name="system_hideqs_title">Genişletilmiş mod görünümünü temizle</string>
+    <string name="system_hideqs_summ">Kilit ekranında genişletilmiş bildirimler modunda Hızlı Ayarları ve parlaklık kaydırıcısını gizle</string>
+    <string name="system_nodrawerbackground_title">Renkli arka planı devre dışı bırak</string>
+    <string name="system_nodrawerbackground_summ">Kilit ekranındayken otomatik olarak renk üretme duvar kağıdı ile saydam olana arka plan değiştirme</string>
     <string name="system_dttosleep_title">Dokunma (Çift)</string>
     <string name="system_dttosleep_summ">Ekran Kilidi\'nde boş bir yere çift dokunulduğunda ekran kapatılır.</string>
     <string name="system_mods_statusbar">Durum ve Bildirim Paneli</string>
@@ -323,6 +334,7 @@
     <string name="launcher_indicatorheight_title">Sayfa göstergesi yüksekliği</string>
     <string name="launcher_folders">Klasör</string>
     <string name="launcher_folder_cols_title">Sütun Sayısı</string>
+    <string name="launcher_folderspace_title">Yan dolguyu azalt</string>
     <string name="launcher_fixstatusbarmode_title">Durum Çubuğu</string>
     <string name="launcher_fixstatusbarmode_summ">Duvar Kağıdına göre Karanlık veya Açık olarak görüntülenir.</string>
     <string name="launcher_foldershade_title">Arka Plan</string>
@@ -362,6 +374,8 @@
     <string name="launcher_doubletap_title">Dokunma (Çift)</string>
     <string name="launcher_doubletap_summ">Ana ekranda çift dokunarak belirlemiş olduğunuz eylem gerçekleşir.</string>
     <string name="controls_mods">Kontrol</string>
+    <string name="controls_powerdt_title">Çift basın eylem</string>
+    <string name="controls_powerdt_summ">Açma / kapatma tuşundaki kamera başlatmayı değiştirin, iki kez basın. Etkinleştirilmesi için stok düğmesi kısayolu gerekir.</string>
     <string name="controls_powerflash_title">El Feneri</string>
     <string name="controls_powerflash_summ">Güç düğmesine basılı tuttuğunuz da El Feneri açılır.</string>
     <string name="controls_powerflash_delay_title">Gecikme Süresi</string>
@@ -691,7 +705,7 @@
     <string name="select_activity">Etkinlik Seç</string>
     <string name="no_activities_found">Etkinlik Bulunamadı</string>
     <string name="select_shortcut">Kısayol Seç</string>
-    <string name="search_input_description">Arama</string>
+    <string name="search_input_description">Ara (Mod)</string>
     <string name="wifi_networks">Wi-Fi Ağları</string>
     <string name="wifi_location_title">Konum Ayarları</string>
     <string name="wifi_location_summ">Android Pie\'de; Wi-Fi ağlarının listesini alabilmesi için konum erişimi gerekir.</string>
@@ -722,7 +736,8 @@
     <string name="delete">Sil</string>
     <string name="delete_item_info">Kısayol (Basılı Tut: Sil)</string>
     <string name="change_icon">Simgeyi Değiştir</string>
-    <string name="guide_search">Mod\'ları isimlerine göre sıralayın.</string>
+    <string name="guide_search">Mod\'ları isimlerine göre arayın.
+Yeni Mod\'ları görüntülemek için de basılı tutunuz.</string>
     <string name="guide_softreboot">Yeniden başlat (Hızlı)\'ı kullanarak mod\'ları aktif etmeyi unutmayın.\nDinamik ⟲ mod\'lar sadece bir kez gerektirir.\nDaha fazla bilgiye \'Hakkında\' sayfasındandan ulaşabilirsiniz.</string>
     <string name="guide_marknew">Önceki güncellemeden bu yana yeni mod\'lar\ndaha iyi görünürlük için işaretlenebilir.</string>
     <string name="permission_save">Yedeklemek istiyor musun, istemiyor musun?</string>

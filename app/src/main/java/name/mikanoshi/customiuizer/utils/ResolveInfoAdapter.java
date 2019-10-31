@@ -59,11 +59,11 @@ public class ResolveInfoAdapter extends BaseAdapter implements Filterable {
 		if (convertView != null)
 			row = convertView;
 		else
-			row = mInflater.inflate(R.layout.applist_item, parent, false);
+			row = mInflater.inflate(Helpers.is11() ? R.layout.applist_item11 : R.layout.applist_item, parent, false);
 
-		ImageView itemIsDis = row.findViewById(R.id.am_isDisable_icon);
-		TextView itemTitle = row.findViewById(R.id.am_label);
-		ImageView itemIcon = row.findViewById(R.id.am_icon);
+		ImageView itemIsDis = row.findViewById(R.id.icon_disable);
+		TextView itemTitle = row.findViewById(android.R.id.title);
+		ImageView itemIcon = row.findViewById(android.R.id.icon);
 
 		ResolveInfo ri = getItem(position);
 		itemIcon.setTag(position);
@@ -79,7 +79,7 @@ public class ResolveInfoAdapter extends BaseAdapter implements Filterable {
 		Bitmap icon = Helpers.memoryCache.get(ad.pkgName + "|" + ad.actName);
 
 		if (icon == null) {
-			Drawable dualIcon[] = new Drawable[1];
+			Drawable[] dualIcon = new Drawable[1];
 			dualIcon[0] = ctx.getResources().getDrawable(R.drawable.card_icon_default, ctx.getTheme());
 			TransitionDrawable crossfader = new TransitionDrawable(dualIcon);
 			crossfader.setCrossFadeEnabled(true);

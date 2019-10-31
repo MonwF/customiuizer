@@ -101,6 +101,12 @@
 		android:key="pref_key_controls_cat_power"
 		android:title="@string/controls_mods_power">
 
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_controls_powerdt"
+			android:title="@string/controls_powerdt_title"
+			android:summary="@string/controls_powerdt_summ"
+			miuizer:dynamic="true" />
+
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_powerflash"
 			android:summary="@string/controls_powerflash_summ"

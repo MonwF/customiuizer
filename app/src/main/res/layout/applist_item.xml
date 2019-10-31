@@ -5,11 +5,11 @@
 	android:background="@drawable/am_list_item_background"
 	android:minHeight="73.3dp"
 	android:orientation="horizontal"
-	android:paddingStart="10.3dp"
+	android:paddingStart="20.3dp"
 	android:paddingEnd="@dimen/am_app_list_padding_end">
 
 	<ImageView
-		android:id="@+id/am_icon"
+		android:id="@android:id/icon"
 		android:layout_width="@android:dimen/app_icon_size"
 		android:layout_height="@android:dimen/app_icon_size"
 		android:layout_gravity="center_vertical" />
@@ -22,7 +22,7 @@
 		android:orientation="horizontal">
 
 		<LinearLayout
-			android:id="@+id/am_container"
+			android:id="@+id/container"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
@@ -31,7 +31,7 @@
 			android:orientation="vertical">
 
 			<TextView
-				android:id="@+id/am_label"
+				android:id="@android:id/title"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_gravity="center_vertical"
@@ -40,7 +40,7 @@
 				android:textSize="15sp" />
 
 			<TextView
-				android:id="@+id/am_summary"
+				android:id="@android:id/summary"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_gravity="center_vertical"
@@ -52,7 +52,7 @@
 		</LinearLayout>
 
 		<ImageView
-			android:id="@+id/am_isDual_icon"
+			android:id="@+id/icon_dual"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center"
@@ -62,7 +62,7 @@
 			android:src="@drawable/ic_xspace" />
 
 		<ImageView
-			android:id="@+id/am_isDisable_icon"
+			android:id="@+id/icon_disable"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center"
@@ -72,7 +72,7 @@
 			android:src="@drawable/am_card_item_disabled" />
 
 		<CheckBox
-			android:id="@+id/am_checked_icon"
+			android:id="@android:id/checkbox"
 			android:visibility="gone"
 			android:clickable="false"
 			android:focusable="false"

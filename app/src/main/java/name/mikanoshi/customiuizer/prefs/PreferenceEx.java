@@ -97,4 +97,5 @@ public class PreferenceEx extends Preference implements PreferenceState {
 	public void markAsNew() {
 		newmod = true;
 	}
+
 }

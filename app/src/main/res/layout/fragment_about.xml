@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:miuizer="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:orientation="vertical">
@@ -12,17 +13,28 @@
 		<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:paddingTop="43.7dp"
+			android:paddingTop="40dp"
 			android:gravity="center"
 			android:orientation="vertical">
 
-			<ImageView
-				android:id="@+id/miuizer_icon"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:contentDescription="@null"
-				android:gravity="center"
-				android:src="@drawable/ic_launcher" />
+			<FrameLayout
+				android:layout_height="80dp"
+				android:layout_width="80dp"
+				android:backgroundTint="@color/ic_launcher_background"
+				android:background="@drawable/ic_mask">
+
+				<ImageView
+					android:id="@+id/miuizer_icon"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:contentDescription="@null"
+					android:gravity="center"
+					android:layout_gravity="center"
+					android:scaleX="1.5"
+					android:scaleY="1.5"
+					android:src="@mipmap/ic_launcher_foreground" />
+
+			</FrameLayout>
 
 			<TextView
 				android:layout_width="match_parent"
