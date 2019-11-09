@@ -409,6 +409,8 @@ public class SubFragment extends PreferenceFragmentBase {
 	}
 
 	public void finish() {
+		//View view = getView();
+		//if (isAnimating && view != null) ((ViewGroup)view.getParent()).removeView(view);
 		if (isAnimating) return;
 		if (Helpers.shimmerAnim != null) Helpers.shimmerAnim.cancel();
 		hideKeyboard();

@@ -1,5 +1,6 @@
 package name.mikanoshi.customiuizer.subs;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +17,7 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -102,7 +104,11 @@ public class WiFiList extends SubFragment {
 			cat1.setBackgroundResource(resId);
 			cat2.setBackgroundResource(resId);
 
-			View location = getView().findViewById(R.id.location_settings);
+			@SuppressLint("CutPasteId") ViewStub locationStub = getView().findViewById(R.id.location_settings);
+			locationStub.setLayoutResource(Helpers.is11() ? R.layout.pref_item11 : R.layout.pref_item);
+			locationStub.inflate();
+
+			@SuppressLint("CutPasteId") View location = getView().findViewById(R.id.location_settings);
 			((TextView)location.findViewById(android.R.id.title)).setText(R.string.wifi_location_title);
 			((TextView)location.findViewById(android.R.id.summary)).setText(R.string.wifi_location_summ);
 			location.setOnClickListener(new View.OnClickListener() {
@@ -240,7 +246,7 @@ public class WiFiList extends SubFragment {
 			if (convertView != null)
 				row = convertView;
 			else
-				row = mInflater.inflate(R.layout.pref_item, parent, false);
+				row = mInflater.inflate(Helpers.is11() ? R.layout.pref_item11 : R.layout.pref_item, parent, false);
 
 			TextView itemTitle = row.findViewById(android.R.id.title);
 			TextView itemSumm = row.findViewById(android.R.id.summary);

@@ -55,6 +55,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getInt("launcher_horizmargin", 0) > 0) Launcher.HorizontalSpacingRes();
 		if (mPrefs.getInt("launcher_topmargin", 0) > 0) Launcher.TopSpacingRes();
 		if (mPrefs.getInt("launcher_indicatorheight", 9) > 9) Launcher.IndicatorHeightRes();
+		if (mPrefs.getInt("system_volumeblur_collapsed", 0) > 0 || mPrefs.getInt("system_volumeblur_expanded", 0) > 0) System.BlurVolumeDialogBackgroundRes();
 		if (mPrefs.getBoolean("system_notifrowmenu")) System.NotificationRowMenuRes();
 		if (mPrefs.getBoolean("system_compactnotif")) System.CompactNotificationsRes();
 		if (mPrefs.getBoolean("system_allrotations")) System.AllRotationsRes();
@@ -274,7 +275,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		}
 
 		if (pkg.equals("com.miui.home") || pkg.equals("com.mi.android.globallauncher")) {
-			if (mPrefs.getBoolean("key_launcher_compat")) handleLoadLauncher(lpparam); else
+			if (mPrefs.getBoolean("launcher_compat")) handleLoadLauncher(lpparam); else
 			Helpers.findAndHookMethod(Application.class, "attach", Context.class, new MethodHook() {
 				@Override
 				protected void after(MethodHookParam param) throws Throwable {

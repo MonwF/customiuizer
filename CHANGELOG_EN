@@ -1,3 +1,11 @@
+2.0.3
+[New][Number of columns in folders] Use entire folder's width
+[Improved][Volume dialog background blur] Background dimming is disabled when blur is active
+[Fixed][Shortcut actions in recents] Missing titles of some actions
+[Fixed][Launcher compatibility mode] It actually works now
+[Fixed][Show brightness percentage] Compatibility with some ROMs
+Better themes support, UI fixes
+
 2.0.2
 [New] Force all notifications from MIUI apps to be able to appear on lock screen and as floating ones
 [New] Remove Quick Settings and brightness slider in expanded notifications mode on lock screen

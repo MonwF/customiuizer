@@ -351,7 +351,7 @@ public class MainFragment extends PreferenceFragmentBase {
 		super.onActivityCreated(savedInstanceState);
 		setupImmersiveMenu();
 
-		getActionBar().setBackgroundDrawable(new ColorDrawable(Helpers.isNightMode(getContext()) ? Color.BLACK : Color.WHITE));
+		getActionBar().setBackgroundDrawable(new ColorDrawable(Helpers.getSystemBackgroundColor(getContext())));
 		if (getView() == null) return;
 
 		resultView = getView().findViewById(android.R.id.custom);

@@ -3,13 +3,14 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:animateLayoutChanges="true"
-	android:fitsSystemWindows="false">
+	android:fitsSystemWindows="false"
+	android:paddingBottom="1dp">
 
 	<FrameLayout
 		android:id="@+id/fragment_container"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:background="@android:color/black" />
+		android:background="#ff000000" />
 
 	<View
 		android:id="@+id/guide_overlay"

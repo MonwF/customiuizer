@@ -110,6 +110,32 @@ public class GlobalActions {
 		}
 	}
 
+	public static int getActionResId(int action) {
+		switch (action) {
+			case 0:
+			case 1: return R.string.notselected;
+			case 2: return R.string.array_global_actions_notif;
+			case 3: return R.string.array_global_actions_eqs;
+			case 4: return R.string.array_global_actions_lock;
+			case 5: return R.string.array_global_actions_sleep;
+			case 6: return R.string.array_global_actions_screenshot;
+			case 7: return R.string.array_global_actions_recents;
+			case 11: return R.string.array_global_actions_back;
+			case 12: return R.string.array_global_actions_powermenu_short;
+			case 13: return R.string.array_global_actions_clearmemory;
+			case 14: return R.string.array_global_actions_invertcolors;
+			case 15: return R.string.array_global_actions_goback;
+			case 16: return R.string.array_global_actions_menu;
+			case 17: return R.string.array_global_actions_volume;
+			case 18: return R.string.array_global_actions_volume_up;
+			case 19: return R.string.array_global_actions_volume_down;
+			case 21: return R.string.array_global_actions_switchkeyboard;
+			case 22: return R.string.array_global_actions_onehanded_left;
+			case 23: return R.string.array_global_actions_onehanded_right;
+			default: return 0;
+		}
+	}
+
 	private static BroadcastReceiver mSBReceiver = new BroadcastReceiver() {
 		@SuppressLint("WrongConstant")
 		public void onReceive(final Context context, Intent intent) {

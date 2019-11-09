@@ -117,7 +117,7 @@ public class InAppFragment extends SubFragment implements PurchasesUpdatedListen
 		new Thread(new Runnable() {
 			public void run() {
 				try {
-					Thread.sleep(350);
+					Thread.sleep(animDur);
 					Activity act = getActivity();
 					if (act != null && !act.isFinishing())
 					act.runOnUiThread(new Runnable() {

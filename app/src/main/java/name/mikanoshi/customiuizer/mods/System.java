@@ -881,6 +881,9 @@ public class System {
 						XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomBlurModifier", Helpers.getSharedIntPref(mContext, name, defValue));
 					}
 				};
+
+				XposedHelpers.setFloatField(param.thisObject, "mDefaultScrimAlpha", 0.15f);
+				XposedHelpers.setObjectField(param.thisObject, "mBackgroundScrim", new ColorDrawable(Color.argb(38, 0, 0, 0)).mutate());
 			}
 		});
 
@@ -1195,7 +1198,7 @@ public class System {
 						tx = query.getLong(query.getColumnIndex("total_tx_byte"));
 						rx = query.getLong(query.getColumnIndex("total_rx_byte"));
 					}
-				} catch (@SuppressWarnings("deprecation") Exception e) {
+				} catch (Exception e) {
 					tx = 1L; rx = 1L;
 				} catch (Throwable th) {
 					query.close();
@@ -4497,9 +4500,10 @@ public class System {
 			@Override
 			@SuppressLint("SetTextI18n")
 			protected void after(final MethodHookParam param) throws Throwable {
+				int currentLevel = (int)(param.args[2] instanceof Integer ? param.args[2] : param.args[3]);
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 				int maxLevel = mContext.getResources().getInteger(mContext.getResources().getIdentifier("config_screenBrightnessSettingMaximum", "integer", "android"));
-				if (mPct != null) mPct.setText((((int)param.args[2] * 100) / maxLevel) + "%");
+				if (mPct != null) mPct.setText(((currentLevel * 100) / maxLevel) + "%");
 			}
 		});
 	}
@@ -4700,6 +4704,11 @@ public class System {
 				};
 			}
 		});
+	}
+
+	public static void BlurVolumeDialogBackgroundRes() {
+		MainModule.resHooks.setObjectReplacement("com.android.systemui", "fraction", "miui_volume_dim_behind_collapsed", 0.0f);
+		MainModule.resHooks.setObjectReplacement("com.android.systemui", "fraction", "miui_volume_dim_behind_expanded", 0.0f);
 	}
 
 	public static void RemoveSecureHook() {

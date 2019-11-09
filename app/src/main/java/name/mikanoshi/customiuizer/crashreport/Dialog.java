@@ -337,7 +337,7 @@ public class Dialog extends Activity {
 		}
 
 		try {
-			Log.e("AndroidRuntime", crashData.getString(ReportField.STACK_TRACE));
+			//Log.e("AndroidRuntime", crashData.getString(ReportField.STACK_TRACE));
 
 			String ROM = getProp("ro.modversion");
 			String MIUI = getProp("ro.miui.ui.version.name");

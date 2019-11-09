@@ -9,12 +9,16 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,7 +30,7 @@ import name.mikanoshi.customiuizer.utils.Helpers;
 public class PreferenceFragmentBase extends PreferenceFragment {
 
 	public boolean isAnimating = false;
-	public int animDur = 350;
+	public int animDur = 650;
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -84,9 +88,12 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 	}
 
 	public void setViewBackground(View view) {
-		boolean isNight = Helpers.isNightMode(getActivity());
-		if (Helpers.isPiePlus())
-			view.setBackgroundResource(getResources().getIdentifier(isNight ? "settings_window_bg_dark" : "settings_window_bg_light", "drawable", "miui"));
+		boolean isNight = Helpers.isNightMode(getContext());
+		int bgResId = getResources().getIdentifier(isNight ? "settings_window_bg_dark" : "settings_window_bg_light", "drawable", "miui");
+		if (bgResId != 0)
+			view.setBackgroundResource(bgResId);
+		else if (Helpers.is11())
+			view.setBackgroundColor(Helpers.getSystemBackgroundColor(getContext()));
 		else
 			view.setBackgroundColor(isNight ? Color.BLACK : Color.rgb(247, 247, 247));
 	}
@@ -94,7 +101,16 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 	public void setActionModeStyle(View searchView) {
 		boolean isNight = Helpers.isNightMode(getActivity());
 		if (searchView != null) try {
-			searchView.setBackgroundResource(getResources().getIdentifier(isNight ? "search_mode_bg_dark" : "search_mode_bg_light", "drawable", "miui"));
+			Drawable drawable = getResources().getDrawable(getResources().getIdentifier(isNight ? "search_mode_bg_dark" : "search_mode_bg_light", "drawable", "miui"), getActivity().getTheme());
+			try {
+				int colorResId = getResources().getIdentifier(isNight ? "primary_color_dark" : "primary_color_light", "color", "miui");
+				if (colorResId != 0 && drawable instanceof LayerDrawable) {
+					drawable = ((LayerDrawable)drawable).getDrawable(0);
+					if (drawable instanceof GradientDrawable)
+					((GradientDrawable)drawable).setColor(getResources().getColor(colorResId, getActivity().getTheme()));
+				}
+			} catch (Throwable ignore) {}
+			searchView.setBackground(drawable);
 			LinearLayout inputArea = searchView.findViewById(android.R.id.inputArea);
 			inputArea.setBackgroundResource(getResources().getIdentifier(isNight ? "search_mode_edit_text_bg_dark" : "search_mode_edit_text_bg_light", "drawable", "miui"));
 			if (Helpers.is11()) {
@@ -155,6 +171,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 		ValueAnimator valAnimator = new ValueAnimator();
 		valAnimator.setDuration(animDur);
 		valAnimator.setFloatValues(0.0f, 1.0f);
+		valAnimator.setInterpolator(new DecelerateInterpolator(2.5f));
 
 		if (nextAnim == R.animator.fragment_open_enter || nextAnim == R.animator.fragment_open_exit)
 		valAnimator.addListener(new Animator.AnimatorListener() {
@@ -171,10 +188,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 			}
 
 			@Override
-			public void onAnimationCancel(Animator animation) {
-//				Log.e("animation", "cancel");
-				isAnimating = false;
-			}
+			public void onAnimationCancel(Animator animation) {}
 
 			@Override
 			public void onAnimationRepeat(Animator animation) {}
@@ -186,20 +200,18 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 			public void onAnimationUpdate(ValueAnimator animation) {
 				if (content == null) return;
 				float val = (float)animation.getAnimatedValue();
-				float alpha1 = is11 ? val * 1.0f : 0.6f + val * 0.4f;
-				float alpha2 = 1.0f - val * 0.4f;
 				if (nextAnim == R.animator.fragment_open_enter) {
 					top.setX(scrWidth * (1.0f - val));
-					content.setAlpha(alpha1);
+					content.setAlpha(is11 ? val * 1.0f : 0.6f + val * 0.4f);
 				} else if (nextAnim == R.animator.fragment_open_exit) {
 					top.setX(-scrWidth / 4.0f * val);
-					top.setAlpha(alpha2);
+					top.setAlpha(1.0f - val * 0.4f);
 				} else if (nextAnim == R.animator.fragment_close_enter) {
 					top.setX(-scrWidth / 4.0f * (1.0f - val));
-					top.setAlpha(alpha1);
+					top.setAlpha(0.6f + val * 0.4f);
 				} else if (nextAnim == R.animator.fragment_close_exit) {
 					top.setX(scrWidth * val);
-					content.setAlpha(alpha2);
+					content.setAlpha(1.0f - val * 0.4f);
 				}
 			}
 		});

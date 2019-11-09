@@ -10,9 +10,9 @@
 	android:orientation="vertical"
 	android:animateLayoutChanges="true">
 
-	<include
-		layout="@layout/pref_item"
+	<ViewStub
 		android:id="@+id/fetch_devices"
+		android:inflatedId="@+id/fetch_devices"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content" />
 

@@ -106,9 +106,10 @@ public class MainActivity extends Activity {
 			return;
 		}
 		if (Helpers.shimmerAnim != null) Helpers.shimmerAnim.cancel();
-		if (((PreferenceFragmentBase)fragment).isAnimating) return;
 		if (fragment instanceof MainFragment && ((MainFragment)fragment).actionMode != null)
 			((MainFragment)fragment).actionMode.finish();
+		else if (fragment instanceof SubFragment)
+			((SubFragment)fragment).finish();
 		else
 			super.onBackPressed();
 	}

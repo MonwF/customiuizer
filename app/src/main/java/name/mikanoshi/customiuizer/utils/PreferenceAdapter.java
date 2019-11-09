@@ -57,7 +57,7 @@ public class PreferenceAdapter extends BaseAdapter {
 		if (convertView != null)
 			row = convertView;
 		else
-			row = mInflater.inflate(R.layout.pref_item, parent, false);
+			row = mInflater.inflate(Helpers.is11() ? R.layout.pref_item11 : R.layout.pref_item, parent, false);
 
 		ImageView dragHandle = row.findViewById(R.id.drag_handle);
 		ImageView itemIcon = row.findViewById(android.R.id.icon);

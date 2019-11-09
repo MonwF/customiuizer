@@ -88,6 +88,7 @@ import name.mikanoshi.customiuizer.GateWayLauncher;
 import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SharedPrefsProvider;
+import name.mikanoshi.customiuizer.mods.GlobalActions;
 import name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx;
 
 @SuppressWarnings("WeakerAccess")
@@ -130,14 +131,7 @@ public class Helpers {
 	public static ValueAnimator shimmerAnim;
 	public static boolean showNewMods = true;
 	public static final HashSet<String> newMods =  new HashSet<String>(Arrays.asList(
-		"pref_key_launcher_folderspace",
-		"pref_key_controls_powerdt",
-		"pref_key_system_allownotifonkeyguard",
-		"pref_key_system_allownotiffloat",
-		"pref_key_system_allowdirectreply",
-		"pref_key_system_hideqs",
-		"pref_key_system_nodrawerbackground",
-		"pref_key_system_lstimeout"
+		"pref_key_launcher_folderwidth"
 	));
 	public static final String[] shortcutIcons = new String[] {
 		"bankcard", "buscard", "calculator", "calendar", "contacts", "magazine", "music", "notes", "remotecontroller", "smarthome", "miuizer"
@@ -155,6 +149,16 @@ public class Helpers {
 		HomeUp, Edit
 	}
 
+	public static int getSystemBackgroundColor(Context context) {
+		int black = Color.BLACK;
+		int white = Color.WHITE;
+		try {
+			black = context.getResources().getColor(context.getResources().getIdentifier("black", "color", "miui"), context.getTheme());
+			white = context.getResources().getColor(context.getResources().getIdentifier("white", "color", "miui"), context.getTheme());
+		} catch (Throwable ignore) {}
+		return isNightMode(context) ? black : white;
+	}
+
 	public static void setMiuiTheme(Activity act, int overrideTheme) {
 		setMiuiTheme(act, overrideTheme, false);
 	}
@@ -164,9 +168,9 @@ public class Helpers {
 		try { themeResId = act.getResources().getIdentifier("Theme.DayNight", "style", "miui"); } catch (Throwable t) {}
 		if (themeResId == 0) themeResId = act.getResources().getIdentifier(isNightMode(act) ? "Theme.Dark" : "Theme.Light", "style", "miui");
 		act.setTheme(themeResId);
-		if (Helpers.is11()) act.getTheme().applyStyle(R.style.ActivityAnimation11, true);
+		if (!Helpers.is11()) act.getTheme().applyStyle(R.style.ActivityAnimation10, true);
 		act.getTheme().applyStyle(overrideTheme, true);
-		act.getWindow().setBackgroundDrawable(noBackground ? null : (isNightMode(act) ? new ColorDrawable(Color.BLACK) : new ColorDrawable(Color.WHITE)));
+		act.getWindow().setBackgroundDrawable(noBackground ? null : new ColorDrawable(getSystemBackgroundColor(act)));
 	}
 
 	public static void setMiuiCheckbox(CheckBox checkbox) {
@@ -766,12 +770,9 @@ public class Helpers {
 		try {
 			int action = getSharedIntPref(context, key + "_action", 1);
 			Resources modRes = getModuleRes(context);
-			if (action <= 1)
-				return modRes.getString(R.string.notselected);
-			else if (action == 4)
-				return modRes.getString(R.string.array_global_actions_lock);
-			else if (action == 5)
-				return modRes.getString(R.string.array_global_actions_sleep);
+			int resId = GlobalActions.getActionResId(action);
+			if (resId != 0)
+				return modRes.getString(resId);
 			else if (action == 8)
 				return (String)getAppName(getModuleContext(context), getSharedStringPref(context, key + "_app", ""), true);
 			else if (action == 9)
@@ -790,11 +791,7 @@ public class Helpers {
 					case 9: return modRes.getString(R.string.array_global_toggle_mobiledata);
 					default: return null;
 				}
-			} else if (action == 12)
-				return modRes.getString(R.string.array_global_actions_powermenu_short);
-			else if (action == 14)
-				return modRes.getString(R.string.array_global_actions_invertcolors);
-			else if (action == 20) {
+			} else if (action == 20) {
 				Context ctx = getModuleContext(context);
 				String pref = getSharedStringPref(context, key + "_activity", "");
 				String name = (String)getAppName(ctx, pref);
@@ -814,12 +811,9 @@ public class Helpers {
 			int action = prefs.getInt(key + "_action", 1);
 			Resources modRes = context.getResources();
 			Pair<String, String> pair = null;
-			if (action <= 1)
-				pair = new Pair<>(modRes.getString(R.string.notselected), "");
-			else if (action == 4)
-				pair = new Pair<>(modRes.getString(R.string.array_global_actions_lock), "");
-			else if (action == 5)
-				pair = new Pair<>(modRes.getString(R.string.array_global_actions_sleep), "");
+			int resId = GlobalActions.getActionResId(action);
+			if (resId != 0)
+				pair = new Pair<>(modRes.getString(resId), "");
 			else if (action == 8)
 				pair = new Pair<>(modRes.getString(R.string.array_global_actions_launch), (String)getAppName(context, prefs.getString(key + "_app", ""), true));
 			else if (action == 9)
@@ -838,11 +832,7 @@ public class Helpers {
 					case 8: pair = new Pair<>(toggle, modRes.getString(R.string.array_global_toggle_torch)); break;
 					case 9: pair = new Pair<>(toggle, modRes.getString(R.string.array_global_toggle_mobiledata)); break;
 				}
-			} else if (action == 12)
-				pair = new Pair<>(modRes.getString(R.string.array_global_actions_powermenu_short), "");
-			else if (action == 14)
-				pair = new Pair<>(modRes.getString(R.string.array_global_actions_invertcolors), "");
-			else if (action == 20) {
+			} else if (action == 20) {
 				String pref = prefs.getString(key + "_activity", "");
 				String name = (String)getAppName(context, pref);
 				if (name == null || name.isEmpty()) name = (String)getAppName(context, pref, true);

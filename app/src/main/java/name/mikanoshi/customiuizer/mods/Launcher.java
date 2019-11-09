@@ -248,8 +248,8 @@ public class Launcher {
 
 	private static Class<?> wallpaperUtilsCls = null;
 	@SuppressWarnings("ConstantConditions")
-	private static void applyFolderShade(Context context, View folder) {
-		int opt = Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_launcher_foldershade", "1"));
+	private static void applyFolderShade(View folder) {
+		int opt = MainModule.mPrefs.getStringAsInt("launcher_foldershade", 1);
 		if (opt == 2) {
 			boolean isLight = false;
 			if (wallpaperUtilsCls != null) try { isLight = (boolean)XposedHelpers.callStaticMethod(wallpaperUtilsCls, "hasAppliedLightWallpaper"); } catch (Throwable t) {}
@@ -279,16 +279,14 @@ public class Launcher {
 		Helpers.hookAllConstructors("com.miui.home.launcher.FolderCling", lpparam.classLoader, new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
-				View folder = (View)param.thisObject;
-				applyFolderShade(folder.getContext(), folder);
+				applyFolderShade((View)param.thisObject);
 			}
 		});
 
 		Helpers.findAndHookMethod("com.miui.home.launcher.FolderCling", lpparam.classLoader, "onWallpaperColorChanged", new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
-				View folder = (View)param.thisObject;
-				applyFolderShade(folder.getContext(), folder);
+				applyFolderShade((View)param.thisObject);
 			}
 		});
 	}
@@ -401,7 +399,7 @@ public class Launcher {
 	}
 
 	public static void CloseFolderOnLaunchHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.classLoader, "launch", XposedHelpers.findClass("com.miui.home.launcher.ShortcutInfo", lpparam.classLoader), View.class, new MethodHook() {
+		Helpers.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.classLoader, "launch", "com.miui.home.launcher.ShortcutInfo", View.class, new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
 				boolean mHasLaunchedAppFromFolder = XposedHelpers.getBooleanField(param.thisObject, "mHasLaunchedAppFromFolder");
@@ -661,9 +659,12 @@ public class Launcher {
 
 				GridView mContent = (GridView)XposedHelpers.getObjectField(param.thisObject, "mContent");
 				mContent.setNumColumns(cols);
-				ViewGroup.LayoutParams lp = mContent.getLayoutParams();
-				lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
-				mContent.setLayoutParams(lp);
+
+				if (MainModule.mPrefs.getBoolean("launcher_folderwidth")) {
+					ViewGroup.LayoutParams lp = mContent.getLayoutParams();
+					lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
+					mContent.setLayoutParams(lp);
+				}
 
 				if (cols > 3 && MainModule.mPrefs.getBoolean("launcher_folderspace")) {
 					ViewGroup mBackgroundView = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mBackgroundView");

@@ -334,6 +334,7 @@
     <string name="launcher_indicatorheight_title">Sayfa göstergesi yüksekliği</string>
     <string name="launcher_folders">Klasör</string>
     <string name="launcher_folder_cols_title">Sütun Sayısı</string>
+    <string name="launcher_folderwidth_title">Tüm klasörün genişliğini kullan</string>
     <string name="launcher_folderspace_title">Yan dolguyu azalt</string>
     <string name="launcher_fixstatusbarmode_title">Durum Çubuğu</string>
     <string name="launcher_fixstatusbarmode_summ">Duvar Kağıdına göre Karanlık veya Açık olarak görüntülenir.</string>
@@ -736,8 +737,7 @@
     <string name="delete">Sil</string>
     <string name="delete_item_info">Kısayol (Basılı Tut: Sil)</string>
     <string name="change_icon">Simgeyi Değiştir</string>
-    <string name="guide_search">Mod\'ları isimlerine göre arayın.
-Yeni Mod\'ları görüntülemek için de basılı tutunuz.</string>
+    <string name="guide_search">Mod\'ları isimlerine göre arayın.\nYeni Mod\'ları görüntülemek için de basılı tutunuz.</string>
     <string name="guide_softreboot">Yeniden başlat (Hızlı)\'ı kullanarak mod\'ları aktif etmeyi unutmayın.\nDinamik ⟲ mod\'lar sadece bir kez gerektirir.\nDaha fazla bilgiye \'Hakkında\' sayfasındandan ulaşabilirsiniz.</string>
     <string name="guide_marknew">Önceki güncellemeden bu yana yeni mod\'lar\ndaha iyi görünürlük için işaretlenebilir.</string>
     <string name="permission_save">Yedeklemek istiyor musun, istemiyor musun?</string>

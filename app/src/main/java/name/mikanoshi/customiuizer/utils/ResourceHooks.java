@@ -25,7 +25,6 @@ public class ResourceHooks {
 	private MethodHook mReplaceHook = new MethodHook() {
 		@Override
 		protected void before(MethodHookParam param) {
-			final int resId = (int)param.args[0];
 			Context mContext = null;
 			try {
 				Object currentActivityThread = XposedHelpers.callStaticMethod(XposedHelpers.findClass("android.app.ActivityThread", null), "currentActivityThread");
@@ -36,9 +35,9 @@ public class ResourceHooks {
 			if (mContext == null) return;
 
 			String method = param.method.getName();
-			Object value = getFakeResource(mContext, resId, method);
+			Object value = getFakeResource(mContext, method, param.args);
 			if (value == null) {
-				value = getResourceReplacement(mContext, (Resources)param.thisObject, resId, method);
+				value = getResourceReplacement(mContext, (Resources)param.thisObject, method, param.args);
 				if (value == null) return;
 				if ("getDimensionPixelOffset".equals(method) || "getDimensionPixelSize".equals(method))
 				if (value instanceof Float) value = ((Float)value).intValue();
@@ -49,6 +48,7 @@ public class ResourceHooks {
 
 	public ResourceHooks() {
 		Helpers.findAndHookMethod(Resources.class, "getInteger", int.class, mReplaceHook);
+		Helpers.findAndHookMethod(Resources.class, "getFraction", int.class, int.class, int.class, mReplaceHook);
 		Helpers.findAndHookMethod(Resources.class, "getBoolean", int.class, mReplaceHook);
 		Helpers.findAndHookMethod(Resources.class, "getDimension", int.class, mReplaceHook);
 		Helpers.findAndHookMethod(Resources.class, "getDimensionPixelOffset", int.class, mReplaceHook);
@@ -74,18 +74,18 @@ public class ResourceHooks {
 		}
 	}
 
-	private Object getFakeResource(Context context, int resId, String method) {
+	private Object getFakeResource(Context context, String method, Object[] args) {
 		try {
 			if (context == null) return null;
-			int modResId = fakes.get(resId);
+			int modResId = fakes.get((int)args[0]);
 			if (modResId == 0) return null;
 
 			Object value;
 			Resources modRes = Helpers.getModuleRes(context);
 			if ("getDrawable".equals(method))
-				value = XposedHelpers.callMethod(modRes, method, modResId, context.getTheme());
-			else if ("getDrawableForDensity".equals(method))
-				value = XposedHelpers.callMethod(modRes, method, modResId, 0, context.getTheme());
+				value = XposedHelpers.callMethod(modRes, method, modResId, args[1]);
+			else if ("getDrawableForDensity".equals(method) || "getFraction".equals(method))
+				value = XposedHelpers.callMethod(modRes, method, modResId, args[1], args[2]);
 			else
 				value = XposedHelpers.callMethod(modRes, method, modResId);
 			return value;
@@ -126,16 +126,16 @@ public class ResourceHooks {
 	}
 
 	@SuppressWarnings("ConstantConditions")
-	private Object getResourceReplacement(Context context, Resources res, int resId, String method) {
+	private Object getResourceReplacement(Context context, Resources res, String method, Object[] args) {
 		if (context == null) return null;
 
 		String pkgName = null;
 		String resType = null;
 		String resName = null;
 		try {
-			pkgName = res.getResourcePackageName(resId);
-			resType = res.getResourceTypeName(resId);
-			resName = res.getResourceEntryName(resId);
+			pkgName = res.getResourcePackageName((int)args[0]);
+			resType = res.getResourceTypeName((int)args[0]);
+			resName = res.getResourceEntryName((int)args[0]);
 		} catch (Throwable t) {}
 		if (pkgName == null || resType == null || resName == null) return null;
 
@@ -167,9 +167,9 @@ public class ResourceHooks {
 
 			Resources modRes = Helpers.getModuleRes(context);
 			if ("getDrawable".equals(method))
-				value = XposedHelpers.callMethod(modRes, method, modResId, context.getTheme());
-			else if ("getDrawableForDensity".equals(method))
-				value = XposedHelpers.callMethod(modRes, method, modResId, 0, context.getTheme());
+				value = XposedHelpers.callMethod(modRes, method, modResId, args[1]);
+			else if ("getDrawableForDensity".equals(method) || "getFraction".equals(method))
+				value = XposedHelpers.callMethod(modRes, method, modResId, args[1], args[2]);
 			else
 				value = XposedHelpers.callMethod(modRes, method, modResId);
 			return value;

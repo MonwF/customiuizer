@@ -343,6 +343,7 @@
 	<string name="launcher_indicatorheight_title">Page indicator height</string>
 	<string name="launcher_folders">Folders</string>
 	<string name="launcher_folder_cols_title">Number of columns in folders</string>
+	<string name="launcher_folderwidth_title">Use entire folder\'s width</string>
 	<string name="launcher_folderspace_title">Reduce side padding</string>
 	<string name="launcher_fixstatusbarmode_title">Fix status bar mode</string>
 	<string name="launcher_fixstatusbarmode_summ">Adjust status bar contents color for light/dark wallpapers on developer launcher version</string>

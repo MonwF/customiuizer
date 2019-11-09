@@ -1,5 +1,6 @@
 package name.mikanoshi.customiuizer.subs;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -12,6 +13,7 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -80,7 +82,11 @@ public class BTList extends SubFragment {
 			cat1.setBackgroundResource(resId);
 			cat2.setBackgroundResource(resId);
 
-			View location = getView().findViewById(R.id.fetch_devices);
+			@SuppressLint("CutPasteId") ViewStub locationStub = getView().findViewById(R.id.fetch_devices);
+			locationStub.setLayoutResource(Helpers.is11() ? R.layout.pref_item11 : R.layout.pref_item);
+			locationStub.inflate();
+
+			@SuppressLint("CutPasteId") View location = getView().findViewById(R.id.fetch_devices);
 			((TextView)location.findViewById(android.R.id.title)).setText(R.string.bt_fetch_devices_title);
 			((TextView)location.findViewById(android.R.id.summary)).setText(R.string.bt_fetch_devices_summ);
 			location.setOnClickListener(new View.OnClickListener() {
@@ -213,7 +219,7 @@ public class BTList extends SubFragment {
 			if (convertView != null)
 				row = convertView;
 			else
-				row = mInflater.inflate(R.layout.pref_item, parent, false);
+				row = mInflater.inflate(Helpers.is11() ? R.layout.pref_item11 : R.layout.pref_item, parent, false);
 
 			TextView itemTitle = row.findViewById(android.R.id.title);
 			TextView itemSumm = row.findViewById(android.R.id.summary);
