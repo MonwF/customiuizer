@@ -21,7 +21,23 @@
 			android:summary="@string/launcher_foldershade_summ"
 			android:entries="@array/foldershade"
 			android:entryValues="@array/foldershade_val"
-			android:defaultValue="1" />
+			android:defaultValue="1"
+			miuizer:dynamic="true" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_launcher_foldershade_level"
+			android:title="@string/launcher_foldershade_level_title"
+			android:defaultValue="40"
+			miuizer:minValue="0"
+			miuizer:maxValue="100"
+			miuizer:stepValue="1"
+			miuizer:format="%d%%"
+			miuizer:dynamic="true" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_launcher_folderblur_cat"
+			android:summary="@string/launcher_folderblur_summ"
+			android:title="@string/launcher_folderblur_title" />
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_launcher_folder_cols"

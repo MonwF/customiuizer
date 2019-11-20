@@ -149,8 +149,8 @@
 	<string name="array_screenlock_trusted">Отключать в доверенных сетях и устройствах</string>
 	<string name="array_netspeedicons_no">Без иконок</string>
 	<string name="array_noblur">Без размытия</string>
-	<string name="array_foldershade_solid">Затемнить весь фон</string>
-	<string name="array_foldershade_gradient">Затемнить только в центре</string>
+	<string name="array_foldershade_solid">Весь фон</string>
+	<string name="array_foldershade_gradient">Только в центре</string>
 	<string name="array_expandnotifs_allbutblack">Кроме тех приложений, что в списке</string>
 	<string name="array_expandnotifs_whiteonly">Только для приложений в списке</string>
 	<string name="array_mobiletypeicon_connected">Скрывать только при отсутствии подключения</string>
@@ -418,8 +418,16 @@
 	<string name="launcher_folderspace_title">Уменьшить боковые отступы</string>
 	<string name="launcher_fixstatusbarmode_title">Исправить режим строки состояния</string>
 	<string name="launcher_fixstatusbarmode_summ">Изменяет цвет содержимого строки состояния в зависимости от светлых/тёмных обоев на версии ланчера для разработчиков</string>
-	<string name="launcher_foldershade_title">Фон папок</string>
-	<string name="launcher_foldershade_summ">Затемнённый фон папок</string>
+	<string name="launcher_foldershade_title">Наложение цвета</string>
+	<string name="launcher_foldershade_summ">Затемняет или осветляет фон</string>
+	<string name="launcher_foldershade_level_title">Интенсивность цвета</string>
+	<string name="launcher_folderblur_title">Размытие</string>
+	<string name="launcher_folderblur_summ">Настройки размытия фона и обоев</string>
+	<string name="launcher_folderblur">Размытие фона</string>
+	<string name="launcher_folderwallblur">Размытие обоев</string>
+	<string name="launcher_folderblur_opacity_title">Видимость размытого фона</string>
+	<string name="launcher_folderblur_radius_title">Радиус размытия фона</string>
+	<string name="launcher_folderwallblur_radius_summ">Также влияет на размытие обоев в режиме редактирования</string>
 	<string name="launcher_closefolder_title">Закрывать папки автоматом</string>
 	<string name="launcher_closefolder_summ">Закрывает папку приложения после его запуска</string>
 	<string name="launcher_titles">Названия приложений</string>
@@ -610,6 +618,7 @@
 	<string name="system_showlux_style_summ">Большой полупрозрачный текст</string>
 	<string name="system_showpct_title">Показывать процент яркости</string>
 	<string name="system_showpct_summ">Отображает уровень яркости в процентах при изменении яркости слайдером</string>
+	<string name="system_showpct_top_title">Отступ панели процентов сверху</string>
 	<string name="system_notifrowmenu_title">Расширенное меню уведомления</string>
 	<string name="system_notifrowmenu_summ">Добавляет новые действия в меню уведомления (открывается по свайпу влево) - открыть информацию о приложении и принудительно закрыть приложение</string>
 	<string name="system_disableanynotif_title">Отключение любых уведомлений</string>

@@ -96,6 +96,7 @@
 	<string name="system_showlux_style_summ">Large semitransparent text</string>
 	<string name="system_showpct_title">Show brightness percentage</string>
 	<string name="system_showpct_summ">Display brightness level in percentages while dragging brightness slider</string>
+	<string name="system_showpct_top_title">Percentages panel\'s top margin</string>
 	<string name="system_notifrowmenu_title">Extended notification menu</string>
 	<string name="system_notifrowmenu_summ">Open app info and force close app from notification menu (swipe notification to the left to open it)</string>
 	<string name="system_disableanynotif_title">Disable any notification</string>
@@ -347,8 +348,16 @@
 	<string name="launcher_folderspace_title">Reduce side padding</string>
 	<string name="launcher_fixstatusbarmode_title">Fix status bar mode</string>
 	<string name="launcher_fixstatusbarmode_summ">Adjust status bar contents color for light/dark wallpapers on developer launcher version</string>
-	<string name="launcher_foldershade_title">Folder background</string>
-	<string name="launcher_foldershade_summ">Darken folder background</string>
+	<string name="launcher_foldershade_title">Color overlay</string>
+	<string name="launcher_foldershade_summ">Darken or lighten background</string>
+	<string name="launcher_foldershade_level_title">Color intensity</string>
+	<string name="launcher_folderblur_title">Blur</string>
+	<string name="launcher_folderblur_summ">Background and wallpaper blur options. Launcher must support blur in folders.</string>
+	<string name="launcher_folderblur">Background blur</string>
+	<string name="launcher_folderwallblur">Wallpaper blur</string>
+	<string name="launcher_folderblur_opacity_title">Visibility</string>
+	<string name="launcher_folderblur_radius_title">Radius</string>
+	<string name="launcher_folderwallblur_radius_summ">Affects edit mode wallpaper blur too</string>
 	<string name="launcher_closefolder_title">Auto close folders</string>
 	<string name="launcher_closefolder_summ">Close app\'s folder after launch</string>
 	<string name="launcher_titles">App titles</string>
@@ -559,8 +568,8 @@
 	<string name="array_netspeedicons_no">No icons</string>
 	<string name="array_netspeedicons_arrows" translatable="false">△▲▽▼</string>
 	<string name="array_netspeedicons_bullets" translatable="false">☖ ☗ ⛉ ⛊</string>
-	<string name="array_foldershade_solid">Darken entire background</string>
-	<string name="array_foldershade_gradient">Darken only in the middle</string>
+	<string name="array_foldershade_solid">Entire background</string>
+	<string name="array_foldershade_gradient">Only in the middle</string>
 	<string name="array_expandnotifs_allbutblack">For all apps except the listed ones</string>
 	<string name="array_expandnotifs_whiteonly">For listed apps only</string>
 	<string name="array_mobiletypeicon_connected">Hide only when not connected</string>

@@ -91,6 +91,7 @@
     <string name="system_showlux_style_summ">Metin; Büyük ve Yarı Saydam olarak görüntülenir.</string>
     <string name="system_showpct_title">Parlaklık Yüzdesi</string>
     <string name="system_showpct_summ">Parlaklık kaydırıcısını sürüklerken, parlaklık seviyesini yüzde cinsinden görüntülenir.</string>
+    <string name="system_showpct_top_title">Yüzdeleri panelin üst marjı</string>
     <string name="system_notifrowmenu_title">Geliştirilmiş Menü</string>
     <string name="system_notifrowmenu_summ">Bildirim ayarlarına birden fazla seçenek ekler (Açmak için; bildirimi sola doğru kaydırın).</string>
     <string name="system_disableanynotif_title">Devre Dışı Bırak</string>
@@ -338,8 +339,16 @@
     <string name="launcher_folderspace_title">Yan dolguyu azalt</string>
     <string name="launcher_fixstatusbarmode_title">Durum Çubuğu</string>
     <string name="launcher_fixstatusbarmode_summ">Duvar Kağıdına göre Karanlık veya Açık olarak görüntülenir.</string>
-    <string name="launcher_foldershade_title">Arka Plan</string>
-    <string name="launcher_foldershade_summ">Klasör arka planını değiştirebilirsiniz.</string>
+    <string name="launcher_foldershade_title">Renk Yerleşimi</string>
+    <string name="launcher_foldershade_summ">Karanlık veya aydınlık arka planı aç</string>
+    <string name="launcher_foldershade_level_title">Renk Yoğunluğu</string>
+    <string name="launcher_folderblur_title">Bulanıklık</string>
+    <string name="launcher_folderblur_summ">Arka plan ve duvar kağıdı bulanıklık seçenekleri. Başlatıcı, klasörlerde bulanıklığı desteklemelidir.</string>
+    <string name="launcher_folderblur">Arka plan Bulanıklığı</string>
+    <string name="launcher_folderwallblur">Duvar Kağıdı Bulanıklığı</string>
+    <string name="launcher_folderblur_opacity_title">Görünürlülük</string>
+    <string name="launcher_folderblur_radius_title">Yarıçap</string>
+    <string name="launcher_folderwallblur_radius_summ">Düzenleme modu duvar kağıdının bulanıklığını da etkiler.</string>
     <string name="launcher_closefolder_title">Klasörü Kapat</string>
     <string name="launcher_closefolder_summ">Klasör içerisindeki uygulamayı başlatınca, klasör otomatik olarak kapatılır.</string>
     <string name="launcher_titles">Uygulama İsmi</string>
@@ -543,8 +552,8 @@
     <string name="array_screenlock_trusted">Güvenli Ağ\'lar ve Cihaz\'lar da Devre Dışı Bırak</string>
     <string name="array_noblur">Yok (Bulanıklık)</string>
     <string name="array_netspeedicons_no">Yok (Simge)</string>
-    <string name="array_foldershade_solid">Karart (Tam)</string>
-    <string name="array_foldershade_gradient">Karart (Yarım)</string>
+    <string name="array_foldershade_solid">Tüm arka plan</string>
+    <string name="array_foldershade_gradient">Sadece ortada</string>
     <string name="array_expandnotifs_allbutblack">Listede olmayan uygulamalar için</string>
     <string name="array_expandnotifs_whiteonly">Listede olan uygulamalar için</string>
     <string name="array_mobiletypeicon_connected">Yalnızca bağlı olmadığında gizle</string>

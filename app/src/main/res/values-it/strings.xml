@@ -115,6 +115,7 @@
     <string name="system_nolightuponcharges_summ">Non accendere lo schermo quando si collega o si scollega il caricabatterie</string>
     <string name="system_nolightuponheadset_title">Non accendere lo schermo dopo aver collegato le cuffie</string>
     <string name="system_nolightuponheadset_summ">Non accendere lo schermo dopo aver collegato un headset</string>
+    <string name="system_lstimeout_title">Durata dello schermo spento sulla schermata di blocco</string>
     <string name="system_dimtime_title">Durata oscuramento</string>
     <string name="system_dimtime_summ">Per quanto tempo lo schermo dovrebbe rimanere oscurato prima di spegnersi automaticamente</string>
     <string name="system_minbrightness_title">Luminosità minima automatica</string>
@@ -217,7 +218,7 @@
     <string name="system_magnifier_summ">Visualizza lente di ingrandimento quando si sposta un cursore di input o si effettua una selezione</string>
     <string name="system_nooverscroll_title">Disabilita overscroll</string>
     <string name="system_nooverscroll_summ">Impedire alle visualizzazioni dell\'elenco di eseguire l\'overcrolling</string>
-    <string name="system_removesecure_title">Disabilita la protezione dei contenuti</string>
+    <string name="system_removesecure_title">Disabilita la protezione dei contenuti sicuri</string>
     <string name="system_removesecure_summ">Consenti lo screenshot e la registrazione di video per qualsiasi app</string>
     <string name="system_hideproxywarn_title">Nascondi avvisi sui tocchi disabilitati</string>
     <string name="system_hideproxywarn_summ">Non visualizzare l\'avviso di copertura della parte superiore dello schermo</string>
@@ -243,8 +244,18 @@
     <string name="system_orientationlock_summ">Aggiungi nelle impostazioni rapide un pulsante che può bloccare la rotazione in modalità verticale o orizzontale</string>
     <string name="system_notifafterunlock_title">Mantieni notifiche</string>
     <string name="system_notifafterunlock_summ">Mostra le notifiche sulla schermata di blocco anche dopo che è stata eliminata e quindi riaperta</string>
+    <string name="system_allowdirectreply_title">Risposta diretta senza sblocco</string>
+    <string name="system_allowdirectreply_summ">Non è necessario lo sblocco del dispositivo per utilizzare la risposta diretta sulla schermata di blocco</string>
+    <string name="system_allownotifonkeyguard_title">Consenti nella schermata di blocco</string>
+    <string name="system_allownotifonkeyguard_summ">Forza la visualizzazione di tutte le notifiche dalle app MIUI sulla schermata di blocco</string>
+    <string name="system_allownotiffloat_title">Consenti come notifiche mobili</string>
+    <string name="system_allownotiffloat_summ">Forzare tutte le notifiche delle app MIUI per essere visualizzate come fluttuanti</string>
     <string name="system_hidelsclock_title">Nascondi parte superiore</string>
     <string name="system_hidelsclock_summ">Rimuovi la parte superiore che contiene l\'orologio, la data e altre informazioni</string>
+    <string name="system_hideqs_title">Pulisci la modalità di visualizzazione estesa</string>
+    <string name="system_hideqs_summ">Nascondi le impostazioni rapide e il cursore della luminosità nella modalità di notifica estesa sulla schermata di blocco</string>
+    <string name="system_nodrawerbackground_title">Disabilita sfondo colorato</string>
+    <string name="system_nodrawerbackground_summ">Cambia lo sfondo con il colore generato automaticamente dallo sfondo a quello trasparente mentre sei nella schermata di blocco</string>
     <string name="system_dttosleep_title">Doppio tap per spegnere</string>
     <string name="system_dttosleep_summ">Spegni lo schermo toccando due volte su qualsiasi spazio vuoto nella schermata di blocco</string>
     <string name="system_mods_statusbar">Barra di stato e riquadro delle notifiche</string>
@@ -323,6 +334,8 @@
     <string name="launcher_indicatorheight_title">Altezza dell\'indicatore della pagina</string>
     <string name="launcher_folders">Cartelle</string>
     <string name="launcher_folder_cols_title">Numero di colonne nelle cartelle</string>
+    <string name="launcher_folderwidth_title">Usa l\'intera larghezza della cartella</string>
+    <string name="launcher_folderspace_title">Ridurre il padding laterale</string>
     <string name="launcher_fixstatusbarmode_title">Correggi la modalità barra di stato</string>
     <string name="launcher_fixstatusbarmode_summ">Regola il colore del contenuto della barra di stato per gli sfondi chiari/scuri nella versione sviluppatore del launcher</string>
     <string name="launcher_foldershade_title">Sfondo delle cartelle</string>
@@ -362,6 +375,8 @@
     <string name="launcher_doubletap_title">Azione doppio tap</string>
     <string name="launcher_doubletap_summ">Azione per doppio tap su qualsiasi spazio vuoto della homscreen</string>
     <string name="controls_mods">Controlli</string>
+    <string name="controls_powerdt_title">Doppia pressione per le azioni</string>
+    <string name="controls_powerdt_summ">Sostituisci l\'avvio della fotocamera premendo due volte il tasto di accensione. Richiede la scorciatoia del pulsante di scorta per essere abilitata.</string>
     <string name="controls_powerflash_title">Torcia veloce</string>
     <string name="controls_powerflash_summ">Premi a lungo il pulsante di accensione mentre lo schermo è spento per accendere la torcia</string>
     <string name="controls_powerflash_delay_title">Aumenta i tempi di risposta dell\'attivazione della torcia</string>

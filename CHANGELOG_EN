@@ -1,3 +1,13 @@
+2.0.4
+[New] Folder background blur options (MIUI Launcher with folder blur support is required)
+[Improved][Show brightness percentage] Configurable top margin
+[Improved][Folder background color overlay] Configurable level of darkening/lightening; smoothly change overlay opacity when folder is opened
+[Improved][Clean Open with menu] Hide apps that can accept links with http, https and vnd.youtube protocols
+[Improved][Modify app titles] Change titles in app drawer too
+[Improved][Additional navbar buttons] Original buttons are a little more spaced, full screen mode button moved to the right to prevent it from being truncated
+[Fixed][Volume keys long press actions] Wake up on volume keys press option support
+[Fixed][Custom lock screen shortcuts] Compatibility with latest ROMs
+
 2.0.3
 [New][Number of columns in folders] Use entire folder's width
 [Improved][Volume dialog background blur] Background dimming is disabled when blur is active

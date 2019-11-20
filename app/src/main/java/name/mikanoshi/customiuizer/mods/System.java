@@ -92,6 +92,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Magnifier;
 import android.widget.RelativeLayout;
 import android.widget.RemoteViews;
@@ -2822,10 +2823,10 @@ public class System {
 //					XposedBridge.log(action + ": " + intent.getType() + " | " + intent.getDataString());
 					if (!Intent.ACTION_VIEW.equals(action)) return;
 					if (intent.hasExtra("CustoMIUIzer") && intent.getBooleanExtra("CustoMIUIzer", false)) return;
-					//boolean validSchemes = "http".equals(intent.getScheme()) || "https".equals(intent.getScheme());
-					//if (intent.getType() == null && !validSchemes) return;
-					if (intent.getType() == null) return;
-//					XposedBridge.log(intent.getPackage() + ": " + intent.getType() + " | " + intent.getDataString());
+					String scheme = intent.getScheme();
+					boolean validSchemes = "http".equals(scheme) || "https".equals(scheme) || "vnd.youtube".equals(scheme);
+					if (intent.getType() == null && !validSchemes) return;
+					//if (intent.getType() == null) return;
 					Set<String> selectedApps = MainModule.mPrefs.getStringSet("system_cleanopenwith_apps");
 					List<ResolveInfo> resolved = (List<ResolveInfo>)param.getResult();
 					ResolveInfo resolveInfo;
@@ -3892,12 +3893,17 @@ public class System {
 								}
 
 								if (leftView != null) try {
-									XposedHelpers.callMethod(leftView, "initKeyguardLeftItems");
+									XposedHelpers.callMethod(leftView, "reloadListItems");
 								} catch (Throwable t1) {
-									XposedBridge.log(t1);
 									try {
-										XposedHelpers.callMethod(leftView, "initKeyguardLeftItemInfos");
-									} catch (Throwable t2) {}
+										XposedHelpers.callMethod(leftView, "initKeyguardLeftItems");
+									} catch (Throwable t2) {
+										try {
+											XposedHelpers.callMethod(leftView, "initKeyguardLeftItemInfos");
+										} catch (Throwable t3) {
+											XposedBridge.log(t3);
+										}
+									}
 								}
 							}
 						} catch (Throwable t) {
@@ -3950,8 +3956,20 @@ public class System {
 					ViewGroup leftView = (ViewGroup)msg.obj;
 					Context mContext = (Context)XposedHelpers.getObjectField(leftView, "mContext");
 					int listResId = mContext.getResources().getIdentifier("keyguard_move_left", "id", lpparam.packageName);
-					LinearLayout leftList = leftView.findViewById(listResId);
-					leftList.removeAllViews();
+					ViewGroup leftList = leftView.findViewById(listResId);
+					if (leftList instanceof ListView) {
+						LinearLayout leftList2 = new LinearLayout(leftList.getContext());
+						RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)leftList.getLayoutParams();
+						ViewGroup parent = ((ViewGroup)leftList.getParent());
+						parent.removeView(leftList);
+						parent.addView(leftList2);
+						leftList2.setLayoutParams(lp);
+						leftList2.setOrientation(LinearLayout.VERTICAL);
+						leftList = leftList2;
+						leftList.setId(listResId);
+					} else {
+						leftList.removeAllViews();
+					}
 					LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 					int layoutResId = mContext.getResources().getIdentifier("miui_keyguard_left_view_control_center_item", "layout", lpparam.packageName);
 					int imgResId = mContext.getResources().getIdentifier("keyguard_left_list_item_img", "id", lpparam.packageName);
@@ -3969,19 +3987,31 @@ public class System {
 						LinearLayout item = (LinearLayout)inflater.inflate(layoutResId, leftList, false);
 						item.setTag(key + "_" + uuid);
 						leftList.addView(item);
+
 						String iconResName = MainModule.mPrefs.getString(key + "_" + uuid + "_icon", "");
 						int iconResId;
 						if (iconResName == null || iconResName.isEmpty() || iconResName.equals("miuizer"))
 							iconResId = miuizerShortcutResId;
 						else
 							iconResId = mContext.getResources().getIdentifier("keyguard_left_view_" + iconResName, "drawable", lpparam.packageName);
-						item.findViewById(imgResId).setBackgroundResource(iconResId);
-						((TextView)item.findViewById(nameResId)).setText(Helpers.getActionName(mContext, "pref_key_" + key + "_" + uuid));
+						ImageView img = item.findViewById(imgResId);
+						int size = (int)(20 * img.getResources().getDisplayMetrics().density);
+						ViewGroup.LayoutParams lp1 = img.getLayoutParams();
+						lp1.width = size;
+						lp1.height = size;
+						img.setLayoutParams(lp1);
+						img.setImageResource(iconResId);
+						img.setBackgroundResource(0);
+
+						TextView title = item.findViewById(nameResId);
+						title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+						title.setText(Helpers.getActionName(mContext, "pref_key_" + key + "_" + uuid));
 						if (i > 0) {
-							LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)item.getLayoutParams();
-							lp.topMargin = margin;
-							item.setLayoutParams(lp);
+							LinearLayout.LayoutParams lp2 = (LinearLayout.LayoutParams)item.getLayoutParams();
+							lp2.topMargin = margin;
+							item.setLayoutParams(lp2);
 						}
+
 						i++;
 						item.setOnClickListener(mListener);
 					}
@@ -4000,7 +4030,13 @@ public class System {
 			}
 		});
 
-		if (!Helpers.findAndHookMethodSilently("com.android.keyguard.negative.MiuiKeyguardMoveLeftControlCenterView", lpparam.classLoader, "initKeyguardLeftItems", new MethodHook() {
+		if (!Helpers.findAndHookMethodSilently("com.android.keyguard.negative.MiuiKeyguardMoveLeftControlCenterView", lpparam.classLoader, "reloadListItems", new MethodHook() {
+			@Override
+			protected void before(final MethodHookParam param) throws Throwable {
+				initLeftView(param.thisObject);
+				param.setResult(null);
+			}
+		})) if (!Helpers.findAndHookMethodSilently("com.android.keyguard.negative.MiuiKeyguardMoveLeftControlCenterView", lpparam.classLoader, "initKeyguardLeftItems", new MethodHook() {
 			@Override
 			protected void before(final MethodHookParam param) throws Throwable {
 				initLeftView(param.thisObject);
@@ -4467,7 +4503,7 @@ public class System {
 					mPct.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
 					float density = mStatusBarWindow.getContext().getResources().getDisplayMetrics().density;
 					FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-					lp.topMargin = Math.round(26 * density);
+					lp.topMargin = Math.round(MainModule.mPrefs.getInt("system_showpct_top", 26) * density);
 					lp.gravity = Gravity.CENTER_HORIZONTAL|Gravity.TOP;
 					mPct.setPadding(Math.round(20 * density), Math.round(10 * density), Math.round(18 * density), Math.round(12 * density));
 					mPct.setLayoutParams(lp);

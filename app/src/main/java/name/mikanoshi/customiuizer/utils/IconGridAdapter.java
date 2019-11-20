@@ -19,6 +19,14 @@ public class IconGridAdapter implements ListAdapter {
 
 	public IconGridAdapter(Context context) {
 		mInflater = LayoutInflater.from(context);
+		try {
+			PackageManager manager = context.getPackageManager();
+			Resources resources = manager.getResourcesForApplication("com.android.systemui");
+			for (int i = Helpers.shortcutIcons.size() - 1; i >= 0; i--) try {
+				int resId = resources.getIdentifier("keyguard_left_view_" + Helpers.shortcutIcons.get(i), "drawable", "com.android.systemui");
+				if (resId == 0) Helpers.shortcutIcons.remove(i);
+			} catch (Throwable t) {}
+		} catch (Throwable t) {}
 	}
 
 	@Override
@@ -39,12 +47,12 @@ public class IconGridAdapter implements ListAdapter {
 
 	@Override
 	public int getCount() {
-		return Helpers.shortcutIcons.length;
+		return Helpers.shortcutIcons.size();
 	}
 
 	@Override
 	public String getItem(int position) {
-		return Helpers.shortcutIcons[position];
+		return Helpers.shortcutIcons.get(position);
 	}
 
 	@Override
@@ -66,7 +74,7 @@ public class IconGridAdapter implements ListAdapter {
 			cell = mInflater.inflate(R.layout.grid_item, parent, false);
 
 		ImageView icon = cell.findViewById(android.R.id.icon);
-		String iconResName = Helpers.shortcutIcons[position];
+		String iconResName = Helpers.shortcutIcons.get(position);
 
 		if ("miuizer".equals(iconResName))
 			icon.setImageResource(R.drawable.keyguard_bottom_miuizer_shortcut_img);

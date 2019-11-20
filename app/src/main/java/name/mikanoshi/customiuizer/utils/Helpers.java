@@ -131,11 +131,13 @@ public class Helpers {
 	public static ValueAnimator shimmerAnim;
 	public static boolean showNewMods = true;
 	public static final HashSet<String> newMods =  new HashSet<String>(Arrays.asList(
-		"pref_key_launcher_folderwidth"
+		"pref_key_launcher_folderblur",
+		"pref_key_launcher_foldershade_level",
+		"pref_key_system_showpct_top"
 	));
-	public static final String[] shortcutIcons = new String[] {
+	public static final ArrayList<String> shortcutIcons = new ArrayList<String>(Arrays.asList(
 		"bankcard", "buscard", "calculator", "calendar", "contacts", "magazine", "music", "notes", "remotecontroller", "smarthome", "miuizer"
-	};
+	));
 
 	public enum SettingsType {
 		Preference, Edit
@@ -679,11 +681,27 @@ public class Helpers {
 		Method getPackageInfoAsUser = getPackageInfoAsUser(context);
 		if (getPackageInfoAsUser == null) includeDualApps = false;
 
-		final Intent mainIntent = new Intent();
+		Intent mainIntent = new Intent();
 		mainIntent.setAction(Intent.ACTION_VIEW);
 		mainIntent.setDataAndType(Uri.parse("content://" + SharedPrefsProvider.AUTHORITY + "/test/5"), "*/*");
 		mainIntent.putExtra("CustoMIUIzer", true);
 		List<ResolveInfo> packs = pm.queryIntentActivities(mainIntent, PackageManager.MATCH_ALL | PackageManager.MATCH_DISABLED_COMPONENTS);
+
+		mainIntent = new Intent();
+		mainIntent.setAction(Intent.ACTION_VIEW);
+		mainIntent.setData(Uri.parse("https://google.com"));
+		mainIntent.putExtra("CustoMIUIzer", true);
+		List<ResolveInfo> packs2 = pm.queryIntentActivities(mainIntent, PackageManager.MATCH_ALL | PackageManager.MATCH_DISABLED_COMPONENTS);
+
+		mainIntent = new Intent();
+		mainIntent.setAction(Intent.ACTION_VIEW);
+		mainIntent.setData(Uri.parse("vnd.youtube:n9AcG0glVu4"));
+		mainIntent.putExtra("CustoMIUIzer", true);
+		List<ResolveInfo> packs3 = pm.queryIntentActivities(mainIntent, PackageManager.MATCH_ALL | PackageManager.MATCH_DISABLED_COMPONENTS);
+
+		packs.addAll(packs2);
+		packs.addAll(packs3);
+
 		openWithAppsList = new ArrayList<AppData>();
 		AppData app;
 		for (ResolveInfo pack: packs) try {

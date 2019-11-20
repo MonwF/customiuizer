@@ -65,7 +65,6 @@ public class System extends SubFragment {
 				break;
 			case "pref_key_system_cat_audio":
 				findPreference("pref_key_system_ignorecalls_apps").setOnPreferenceClickListener(openAppsEdit);
-
 				findPreference("pref_key_system_visualizer_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {

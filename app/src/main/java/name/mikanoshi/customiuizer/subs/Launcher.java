@@ -62,6 +62,22 @@ public class Launcher extends SubFragment {
 						findPreference("pref_key_launcher_folderspace").setEnabled(seekBar.getProgress() > 2);
 					}
 				});
+				findPreference("pref_key_launcher_foldershade_level").setEnabled(!"1".equals(Helpers.prefs.getString("pref_key_launcher_foldershade", "1")));
+				findPreference("pref_key_launcher_foldershade").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+					@Override
+					public boolean onPreferenceChange(Preference preference, Object newValue) {
+						findPreference("pref_key_launcher_foldershade_level").setEnabled(!"1".equals(newValue));
+						return true;
+					}
+				});
+				findPreference("pref_key_launcher_folderblur_cat").setEnabled(opt == 1);
+				findPreference("pref_key_launcher_folderblur_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						openSubFragment(new SubFragment(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.launcher_folderblur_title, R.xml.prefs_launcher_folderblur);
+						return true;
+					}
+				});
 				break;
 			case "pref_key_launcher_cat_gestures":
 				findPreference("pref_key_launcher_swipedown").setOnPreferenceClickListener(openLauncherActions);

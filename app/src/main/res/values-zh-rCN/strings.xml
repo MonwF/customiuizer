@@ -91,6 +91,7 @@
     <string name="system_showlux_style_summ">半透明大文本</string>
     <string name="system_showpct_title">显示亮度百分比</string>
     <string name="system_showpct_summ">拖动亮度滑块时以百分比显示亮度</string>
+    <string name="system_showpct_top_title">百分比面板的上边距</string>
     <string name="system_notifrowmenu_title">扩展通知菜单</string>
     <string name="system_notifrowmenu_summ">从通知菜单打开应用信息并强制关闭应用(向左滑动通知将其打开)</string>
     <string name="system_disableanynotif_title">禁用任何通知</string>
@@ -338,8 +339,16 @@
     <string name="launcher_folderspace_title">减少边距</string>
     <string name="launcher_fixstatusbarmode_title">修复状态栏模式</string>
     <string name="launcher_fixstatusbarmode_summ">调整开发版启动器上浅色/深色壁纸的状态栏内容颜色</string>
-    <string name="launcher_foldershade_title">文件夹背景</string>
-    <string name="launcher_foldershade_summ">加深文件夹背景</string>
+    <string name="launcher_foldershade_title">颜色覆盖</string>
+    <string name="launcher_foldershade_summ">增强或减弱背景</string>
+    <string name="launcher_foldershade_level_title">色彩强度</string>
+    <string name="launcher_folderblur_title">模糊</string>
+    <string name="launcher_folderblur_summ">壁纸和背景模糊选项。启动器必须支持文件夹模糊。</string>
+    <string name="launcher_folderblur">背景模糊</string>
+    <string name="launcher_folderwallblur">壁纸模糊</string>
+    <string name="launcher_folderblur_opacity_title">可见度</string>
+    <string name="launcher_folderblur_radius_title">半径</string>
+    <string name="launcher_folderwallblur_radius_summ">特效编辑模式，支持壁纸模糊</string>
     <string name="launcher_closefolder_title">自动关闭文件夹</string>
     <string name="launcher_closefolder_summ">启动后关闭应用的文件夹</string>
     <string name="launcher_titles">应用标题</string>
@@ -543,8 +552,8 @@
     <string name="array_screenlock_trusted">在可信Wi-Fi网络/设备上禁用</string>
     <string name="array_noblur">不模糊</string>
     <string name="array_netspeedicons_no">无图标</string>
-    <string name="array_foldershade_solid">加深整个背景</string>
-    <string name="array_foldershade_gradient">仅加深中间</string>
+    <string name="array_foldershade_solid">整个背景</string>
+    <string name="array_foldershade_gradient">仅中间</string>
     <string name="array_expandnotifs_allbutblack">排除已加入列表中的应用</string>
     <string name="array_expandnotifs_whiteonly">仅已加入列表中的应用</string>
     <string name="array_mobiletypeicon_connected">仅在未连接时隐藏</string>

@@ -242,8 +242,8 @@ public class Controls {
 						// If voice call is active while screen off by proximity sensor, adjust its volume
 						else if (tm.isInCall()) am.adjustStreamVolume(AudioManager.STREAM_VOICE_CALL, k, 0);
 						// If volume keys to wake option active, wake the device
-						//else if (XposedHelpers.getBooleanField(param.thisObject, "mVolumeKeyWakeScreen"))
-						//XposedHelpers.callMethod(mPowerManager, "wakeUpFromPowerKey", SystemClock.uptimeMillis());
+						else if (Settings.System.getInt(mContext.getContentResolver(), "volumekey_wake_screen", 0) == 1)
+						XposedHelpers.callMethod(mPowerManager, "wakeUp", SystemClock.uptimeMillis());
 						if (mBroadcastWakeLock.isHeld()) mBroadcastWakeLock.release();
 					}
 					param.setResult(0);
@@ -403,12 +403,13 @@ public class Controls {
 		boolean hasLeftAction = MainModule.mPrefs.getInt("controls_navbarleft_action", 1) > 1 || MainModule.mPrefs.getInt("controls_navbarleftlong_action", 1) > 1;
 		boolean hasRightAction = MainModule.mPrefs.getInt("controls_navbarright_action", 1) > 1 || MainModule.mPrefs.getInt("controls_navbarrightlong_action", 1) > 1;
 
-		float part = Helpers.is11() ? 0.6f : 0.5f;
+		float part = Helpers.is11() ? 0.55f : 0.5f;
 		if (isVertical) {
 			if (hasRightAction) {
 				navButtons.addView(rightbtn, 0);
 				lp2.weight = Math.round(lp2.weight * part);
 				sidePadding.setLayoutParams(lp2);
+				sidePadding.setPadding(sidePadding.getPaddingLeft(), sidePadding.getPaddingTop() / 3, sidePadding.getPaddingRight(), sidePadding.getPaddingBottom());
 			}
 			if (hasLeftAction) {
 				navButtons.addView(leftbtn, navButtons.getChildCount());
@@ -425,6 +426,7 @@ public class Controls {
 				navButtons.addView(rightbtn, navButtons.getChildCount());
 				lp2.weight = Math.round(lp2.weight * part);
 				sidePadding.setLayoutParams(lp2);
+				sidePadding.setPadding(sidePadding.getPaddingLeft(), sidePadding.getPaddingTop(), sidePadding.getPaddingRight() / 3, sidePadding.getPaddingBottom());
 			}
 		}
 	}

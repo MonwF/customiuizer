@@ -9,6 +9,7 @@ import android.graphics.LinearGradient;
 import android.graphics.Rect;
 import android.graphics.Shader;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
@@ -29,6 +30,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -249,11 +251,15 @@ public class Launcher {
 	private static Class<?> wallpaperUtilsCls = null;
 	@SuppressWarnings("ConstantConditions")
 	private static void applyFolderShade(View folder) {
-		int opt = MainModule.mPrefs.getStringAsInt("launcher_foldershade", 1);
+		int opt = Integer.parseInt(Helpers.getSharedStringPref(folder.getContext(), "pref_key_launcher_foldershade", "1"));
+		int level = Helpers.getSharedIntPref(folder.getContext(), "pref_key_launcher_foldershade_level", 40);
+		MainModule.mPrefs.put("pref_key_launcher_foldershade", String.valueOf(opt));
+		MainModule.mPrefs.put("pref_key_launcher_foldershade_level", level);
 		if (opt == 2) {
 			boolean isLight = false;
 			if (wallpaperUtilsCls != null) try { isLight = (boolean)XposedHelpers.callStaticMethod(wallpaperUtilsCls, "hasAppliedLightWallpaper"); } catch (Throwable t) {}
-			folder.setBackground(new ColorDrawable(isLight ? 0x99ffffff : 0x99000000));
+			int bgcolor = (isLight ? 0x00ffffff : 0x00000000) | (Math.round(255 * level / 100f) * 0x1000000);
+			folder.setBackground(new ColorDrawable(bgcolor));
 		} else if (opt == 3) {
 			PaintDrawable pd = new PaintDrawable();
 			pd.setShape(new RectShape());
@@ -262,15 +268,17 @@ public class Launcher {
 				public Shader resize(int width, int height) {
 					boolean isLight = false;
 					if (wallpaperUtilsCls != null) try { isLight = (boolean)XposedHelpers.callStaticMethod(wallpaperUtilsCls, "hasAppliedLightWallpaper"); } catch (Throwable t) {}
+					int bgcolor1 = (isLight ? 0x00ffffff : 0x00000000) | (Math.round(255 / 6f * level / 100f) * 0x1000000);
+					int bgcolor2 = (isLight ? 0x00ffffff : 0x00000000) | (Math.round(255 * level / 100f) * 0x1000000);
 					return new LinearGradient(0, 0, 0, height,
-							isLight ? new int[]{0x11ffffff, 0x99ffffff, 0x99ffffff, 0x11ffffff} : new int[]{0x11000000, 0x99000000, 0x99000000, 0x11000000},
-							new float[]{0.0f, 0.25f, 0.65f, 1.0f},
+							new int[]{ bgcolor1, bgcolor2, bgcolor2, bgcolor1 },
+							new float[]{ 0.0f, 0.25f, 0.65f, 1.0f },
 							Shader.TileMode.CLAMP
 					);
 				}
 			});
 			folder.setBackground(pd);
-		}
+		} else folder.setBackground(null);
 	}
 
 	public static void FolderShadeHook(final LoadPackageParam lpparam) {
@@ -287,6 +295,20 @@ public class Launcher {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
 				applyFolderShade((View)param.thisObject);
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.home.launcher.Folder", lpparam.classLoader, "setBackgroundAlpha", float.class, new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				int opt = MainModule.mPrefs.getStringAsInt("launcher_foldershade", 1);
+				if (opt == 1) return;
+				Object mLauncher = XposedHelpers.getObjectField(param.thisObject, "mLauncher");
+				if (mLauncher == null) return;
+				View folderCling = (View)XposedHelpers.callMethod(mLauncher, "getFolderCling");
+				if (folderCling == null) return;
+				Drawable bkg = folderCling.getBackground();
+				if (bkg != null) bkg.setAlpha(Math.round((float)param.args[0] * 255));
 			}
 		});
 	}
@@ -391,6 +413,13 @@ public class Launcher {
 		});
 
 		Helpers.findAndHookMethod("com.miui.home.launcher.ShortcutInfo", lpparam.classLoader, "load", Context.class, Cursor.class, new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				modifyTitle(param.thisObject);
+			}
+		});
+
+		Helpers.hookAllMethodsSilently("com.miui.home.launcher.AppInfo", lpparam.classLoader, "resetTitle", new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
 				modifyTitle(param.thisObject);
@@ -759,6 +788,7 @@ public class Launcher {
 			protected void after(final MethodHookParam param) throws Throwable {
 				float multx = (float)Math.sqrt(MainModule.mPrefs.getInt("launcher_iconscale", 100) / 100f);
 				Rect rect = (Rect)param.getResult();
+				if (rect == null) return;
 				rect.right = rect.left + Math.round(rect.width() * multx);
 				rect.bottom = rect.top + Math.round(rect.height() * multx);
 				param.setResult(rect);
@@ -932,6 +962,79 @@ public class Launcher {
 			}
 		});
 	}
+
+	public static void FolderBlurHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.classLoader, "onCreate", Bundle.class, new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				final Activity act = (Activity)param.thisObject;
+				Handler mHandler = (Handler)XposedHelpers.getObjectField(act, "mHandler");
+				new Helpers.SharedPrefObserver(act, mHandler) {
+					@Override
+					public void onChange(Uri uri) {
+						try {
+							String type = uri.getPathSegments().get(1);
+							String key = uri.getPathSegments().get(2);
+							if (!key.contains("pref_key_launcher_folder")) return;
+
+							switch (type) {
+								case "string":
+									MainModule.mPrefs.put(key, Helpers.getSharedStringPref(act, key, ""));
+									break;
+								case "integer":
+									MainModule.mPrefs.put(key, Helpers.getSharedIntPref(act, key, 1));
+									break;
+								case "boolean":
+									MainModule.mPrefs.put(key, Helpers.getSharedBoolPref(act, key, false));
+									break;
+							}
+						} catch (Throwable t) {
+							XposedBridge.log(t);
+						}
+					}
+				};
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.home.launcher.blur.BlockingBlurController", lpparam.classLoader, "setBlurEnabled", boolean.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				if (MainModule.mPrefs.getBoolean("launcher_folderblur_disable")) param.args[0] = false;
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.home.launcher.view.BlurFrameLayout", lpparam.classLoader, "setBlurAlpha", float.class, new MethodHook(10) {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				float ratio = MainModule.mPrefs.getInt("launcher_folderblur_opacity", 0) / 100f;
+				if (ratio > 0) param.args[0] = ratio + (float)param.args[0] * (1.0f - ratio);
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.home.launcher.view.BlurFrameLayout", lpparam.classLoader, "setBlurRadius", float.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				float ratio = 5 * MainModule.mPrefs.getInt("launcher_folderblur_radius", 0) / 100f;
+				if (ratio > 0) param.args[0] = ratio;
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.home.launcher.common.Utilities", lpparam.classLoader, "fastBlur", float.class, Window.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				if (MainModule.mPrefs.getBoolean("launcher_folderwallblur_disable")) {
+					param.args[0] = 0.0f;
+					return;
+				}
+				float ratio = MainModule.mPrefs.getInt("launcher_folderwallblur_radius", 0) / 100f;
+				if (ratio > 0) param.args[0] = (float)param.args[0] * ratio;
+			}
+		});
+	}
+
+//	public static void NoInternationalBuildHook(LoadPackageParam lpparam) {
+//		XposedHelpers.setStaticBooleanField(XposedHelpers.findClass("miui.os.Build", null), "IS_INTERNATIONAL_BUILD", false);
+//	}
 
 //	public static void ReplaceClockAppHook(LoadPackageParam lpparam) {
 //		Helpers.findAndHookMethod("com.miui.home.launcher.common.Utilities", lpparam.classLoader, "startActivity", Context.class, String.class, View.class, new MethodHook() {
