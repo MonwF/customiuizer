@@ -204,6 +204,8 @@
 	<string name="array_own">Свой шаблон</string>
 	<string name="array_scale_fit">Вместить в размеры экрана</string>
 	<string name="array_scale_cover">Заполнить экран полностью</string>
+	<string name="array_align_top">Сверху</string>
+	<string name="array_align_bottom">Снизу</string>
 
 	<string name="support_bug_title">Сообщить об ошибке</string>
 	<string name="support_bug_summ">Отправить сообщение об ошибке или предложить новую фичу</string>
@@ -304,6 +306,7 @@
 	<string name="controls_navbar_noaction">Действие не задано</string>
 	<string name="controls_mods_fsg">Полноэкранные жесты навигации</string>
 	<string name="controls_fsg_coverage_title">Высота области срабатывания жеста Назад</string>
+	<string name="controls_fsg_width_title">Ширина области срабатывания жеста Назад</string>
 	<string name="controls_fsg_horiz_title">Горизонтальные жесты</string>
 	<string name="controls_fsg_horiz_summ">Активировать вместе горизонтальные жесты и панель навигации</string>
 
@@ -361,7 +364,7 @@
 	<string name="miuizer_acramail_summ">Укажите свои контактные данные, и они будут включены в отправляемые отчёты</string>
 	<string name="miuizer_acramail_tip">Если Вы хотите получать ответы на отправленные отчёты об ошибках, то необходимо заполнить данное поле. Используйте e-mail, ICQ, свой ник с XDA или 4PDA.</string>
 	<string name="miuizer_acramail_title">Контактная информация</string>
-	<string name="miuizer_acrasend_summ">Собрать данные об устройтве и переменных окружения, logcat и Xposed лог, и отправить их разработчику.\nДля отправки требуется интернет</string>
+	<string name="miuizer_acrasend_summ">Собрать данные об устройстве и переменных окружения, logcat и Xposed лог, и отправить их разработчику.\nДля отправки требуется интернет</string>
 	<string name="miuizer_acrasend_title">Отправить подробный отчёт</string>
 	<string name="miuizer_show_newmods_title">Отмечать новые моды</string>
 	<string name="miuizer_new_mod">Новый!</string>
@@ -369,8 +372,8 @@
 	<string name="miuizer_show_launchericon_summ">Показывать иконку в ланчерах</string>
 	<string name="miuizer_show_settingsicon_title">Иконка быстрого доступа</string>
 	<string name="miuizer_show_settingsicon_summ">Показывать иконку в Настройках</string>
-	<string name="miuizer_forcelocale_title">Интерфейс на английском</string>
-	<string name="miuizer_forcelocale_summ">Всегда отображать интерфейс модуля на английском языке</string>
+	<string name="miuizer_locale_title">Язык интерфейса</string>
+	<string name="miuizer_locale_summ">Всегда отображать интерфейс модуля на выбранном языке</string>
 	<string name="open_xposed">Управление модулями Xposed</string>
 	<string name="search_input_description">Поиск модов</string>
 	<string name="wifi_networks">Wi-Fi сети</string>
@@ -679,6 +682,14 @@
 	<string name="system_ignorecalls_summ">Предотвращает передачу аудио фокуса с выбранных приложения на входящий звонок, также перестаёт уведомлять их об изменениях состояния звонков</string>
 	<string name="system_nosilentvibrate_title">Отключить тестовую вибрацию</string>
 	<string name="system_nosilentvibrate_summ">Не вибрировать при переключении в режим "Без звука" и при включении вибрации в этом режиме</string>
+	<string name="system_vibration_amp_title">Приглушённая вибрация</string>
+	<string name="system_vibration_amp_summ">Уменьшает интенсивность вибрации в указанные часы</string>
+	<string name="system_vibration_amp_val_title">Интенсивность вибрации</string>
+	<string name="system_vibration_amp_val_summ">Изменяет силу вибрации или её продолжительность в зависимости от поддержки устройством управления амплитудой вибрации</string>
+	<string name="system_vibration_amp_ringer_title">Звонки</string>
+	<string name="system_vibration_amp_notif_title">Уведомления</string>
+	<string name="system_vibration_amp_other_title">Всё остальное</string>
+	<string name="system_vibration_amp_period_title">Временной промежуток</string>
 	<string name="system_vibration_title">Блокировка вибрации</string>
 	<string name="system_vibration_summ">Запрещает выбранным приложениям использовать вибрацию</string>
 	<string name="notification_volume">Громкость уведомлений</string>
@@ -725,6 +736,7 @@
 	<string name="system_lockscreenshortcuts_left_off_title">Отключить свайп вправо</string>
 	<string name="system_lockscreenshortcuts_left_title">Ярлыки на левом экране</string>
 	<string name="system_lockscreenshortcuts_left_summ">Настройка списка ярлыков</string>
+	<string name="system_lockscreenshortcuts_left_align_title">Выравнивание по вертикали</string>
 	<string name="system_lockscreenshortcuts_left_skiplock_title">Не требовать разблокировки</string>
 	<string name="system_lockscreenshortcuts_left_skiplock_summ">Запущенные приложения будут доступны даже при заблокированном устройстве</string>
 	<string name="system_noscreenlock_title">Отключить блокировку</string>

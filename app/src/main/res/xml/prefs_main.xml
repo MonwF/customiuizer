@@ -41,11 +41,13 @@
 			android:summary="@string/miuizer_show_launchericon_summ"
 			android:title="@string/miuizer_show_launchericon_title"
 			android:defaultValue="true" />
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_miuizer_forcelocale"
-			android:summary="@string/miuizer_forcelocale_summ"
-			android:title="@string/miuizer_forcelocale_title"
-			android:defaultValue="true" />
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_miuizer_locale"
+			android:title="@string/miuizer_locale_title"
+			android:summary="@string/miuizer_locale_summ"
+			android:entries="@array/placeholder_array"
+			android:entryValues="@array/placeholder_array_strval"
+			android:defaultValue="auto" />
 	</PreferenceCategory>
 
 	<PreferenceCategory

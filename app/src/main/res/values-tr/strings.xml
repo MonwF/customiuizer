@@ -152,6 +152,14 @@
     <string name="system_ignorecalls_summ">Seçilen uygulamalar da Gelen Arama ile oynatılan dosyanın sesi azaltılmaz/durdurulmaz.</string>
     <string name="system_nosilentvibrate_title">Titreşim (Sessiz)</string>
     <string name="system_nosilentvibrate_summ">Sessiz\'e aldığınız da cihaz titremez.</string>
+    <string name="system_vibration_amp_title">Titreşim Yoğunluğu</string>
+    <string name="system_vibration_amp_summ">Belirlemiş olduğunuz saatler de titreşim yoğunluğu azalır.</string>
+    <string name="system_vibration_amp_val_title">Titreşim yoğunluğu</string>
+    <string name="system_vibration_amp_val_summ">Cihazın genlik kontrol desteğine bağlı olarak titreşimin süresini veya gücünü değiştirir</string>
+    <string name="system_vibration_amp_ringer_title">Aramalar</string>
+    <string name="system_vibration_amp_notif_title">Bildirimler</string>
+    <string name="system_vibration_amp_other_title">Diğer her şey</string>
+    <string name="system_vibration_amp_period_title">Zaman dilimi</string>
     <string name="system_vibration_title">Engelle</string>
     <string name="system_vibration_summ">Seçtiğiniz uygulamaların titreşim kullanmasını engellersiniz.</string>
     <string name="notification_volume">Bildirim Sesi</string>
@@ -178,6 +186,7 @@
     <string name="system_lockscreenshortcuts_left_off_title">Sağ\'a Kaydır (Devre Dışı)</string>
     <string name="system_lockscreenshortcuts_left_title">Kısayollar (Sol Ekran)</string>
     <string name="system_lockscreenshortcuts_left_summ">Ekran Kilidi\'ndeki sol tarafta bulunan kısayollar listesini düzenleyebilirsiniz.</string>
+    <string name="system_lockscreenshortcuts_left_align_title">Dikey hizalama</string>
     <string name="system_lockscreenshortcuts_left_skiplock_title">Şifrelendirmeyi Kapat</string>
     <string name="system_lockscreenshortcuts_left_skiplock_summ">Şifrelendirilmiş cihazınızda şifre girmeden uygulamalara erişebilmenize olanak tanır.</string>
     <string name="system_noscreenlock_title">Şifrelendirme (Devre Dışı)</string>
@@ -443,6 +452,7 @@
     <string name="controls_navbar_noaction">Eylem Tanımlanamadı</string>
     <string name="controls_mods_fsg">Tam Ekran Hareketleri</string>
     <string name="controls_fsg_coverage_title">Yükseklik (Geri)</string>
+    <string name="controls_fsg_width_title">Geri jest alanı genişliği</string>
     <string name="controls_fsg_horiz_title">Yatay</string>
     <string name="controls_fsg_horiz_summ">Yatay ekranda da Tam Ekran Hareketleri\'ni kullanabilirsiniz.</string>
     <string name="various_mods">Daha Fazla</string>
@@ -608,6 +618,8 @@
     <string name="array_own">Özel</string>
     <string name="array_scale_fit">Ekrana sığdır</string>
     <string name="array_scale_cover">Tüm ekranı kapat</string>
+    <string name="array_align_top">Üst</string>
+    <string name="array_align_bottom">Alt</string>
     <string name="toggle_wifi_on">Etkin (Wi-Fi)</string>
     <string name="toggle_wifi_off">Devre Dışı (Wi-Fi)</string>
     <string name="toggle_bt_on">Etkin (Bluetooth)</string>
@@ -640,8 +652,8 @@
     <string name="miuizer_show_launchericon_summ">Başlatıcı\'lar da simgeyi göster.</string>
     <string name="miuizer_show_settingsicon_title">Hızlı Erişim (Simge)</string>
     <string name="miuizer_show_settingsicon_summ">Ayarlar\'da simgeyi göster.</string>
-    <string name="miuizer_forcelocale_title">Dil</string>
-    <string name="miuizer_forcelocale_summ">Uygulama dilini İngilizce yapar.</string>
+    <string name="miuizer_locale_title">Arayüz dili</string>
+    <string name="miuizer_locale_summ">Modül arayüzünü daima seçilen dilde göster</string>
     <string name="troubleshoot">Sorun Bildirme</string>
     <string name="miuizer_acrasend_title">Rapor Gönder (Detaylı)</string>
     <string name="miuizer_acrasend_summ">Cihaz, hata ve Xposed günlüğünü toplar ve geliştiriciye gönderir.\nİnternet bağlantısına ihtiyaç duyar.</string>

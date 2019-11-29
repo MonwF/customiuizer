@@ -44,7 +44,7 @@
         	android:label="@string/title_activity_main"
 			android:theme="@style/AppTheme"
 			android:launchMode="singleTop"
-			android:configChanges="keyboardHidden|orientation|screenSize">
+			android:alwaysRetainTaskState="true">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 				<action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES"/>

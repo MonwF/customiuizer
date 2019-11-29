@@ -54,7 +54,8 @@ public class MainApplication extends Application {
 		try {
 			pContext = Helpers.getProtectedContext(base);
 			Helpers.prefs = pContext.getSharedPreferences(Helpers.prefsName, Context.MODE_PRIVATE);
-			if (Helpers.prefs.getBoolean("pref_key_miuizer_forcelocale", false)) Locale.setDefault(Locale.ENGLISH);
+			String locale = Helpers.prefs.getString("pref_key_miuizer_locale", "auto");
+			if (!"auto".equals(locale) && !"1".equals(locale)) Locale.setDefault(Locale.forLanguageTag(locale));
 		} catch (Throwable t) {
 			pContext = base;
 			Log.e("miuizer", "Failed to use protected storage!");

@@ -193,6 +193,11 @@
 			android:summary="@string/system_nosilentvibrate_summ"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_vibration_amp_cat"
+			android:title="@string/system_vibration_amp_title"
+			android:summary="@string/system_vibration_amp_summ" />
+
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_system_vibration"
 			android:summary="@string/system_vibration_summ"
@@ -240,10 +245,7 @@
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_system_cat_statusbar"
-		android:title="@string/system_mods_statusbar">
-
-		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
-			android:title="@string/system_mods_statusbar_statusbar" />
+		android:title="@string/system_mods_statusbar_statusbar">
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_statusbaricons_cat"
@@ -323,8 +325,11 @@
 			android:summary="@string/system_detailednetspeed_summ"
 			android:title="@string/system_detailednetspeed_title" />
 
-		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
-			android:title="@string/system_mods_statusbar_drawer" />
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:key="pref_key_system_cat_drawer"
+		android:title="@string/system_mods_statusbar_drawer">
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_hideqs"
@@ -380,21 +385,21 @@
 			android:title="@string/system_popupnotif_title" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_shortcut_app"
 			android:title="@string/system_shortcut_app_title"
 			android:summary="@string/system_shortcut_app_summ"
-			android:key="pref_key_system_shortcut_app"
 			miuizer:dynamic="true" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_clock_app"
 			android:title="@string/system_clock_app_title"
 			android:summary="@string/system_clock_app_summ"
-			android:key="pref_key_system_clock_app"
 			miuizer:dynamic="true" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_calendar_app"
 			android:title="@string/system_calendar_app_title"
 			android:summary="@string/system_calendar_app_summ"
-			android:key="pref_key_system_calendar_app"
 			miuizer:dynamic="true" />
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
@@ -622,31 +627,28 @@
 			miuizer:dynamic="true" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
-			android:title="@string/mods_actions" />
+			android:title="@string/mods_actions"
+			miuizer:dynamic="true" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:title="@string/system_recommended_first_title"
 			android:summary="@string/system_recommended_first_summ"
-			android:key="pref_key_system_recommended_first"
-			miuizer:dynamic="true" />
+			android:key="pref_key_system_recommended_first" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:title="@string/system_recommended_second_title"
 			android:summary="@string/system_recommended_second_summ"
-			android:key="pref_key_system_recommended_second"
-			miuizer:dynamic="true" />
+			android:key="pref_key_system_recommended_second" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:title="@string/system_recommended_third_title"
 			android:summary="@string/system_recommended_third_summ"
-			android:key="pref_key_system_recommended_third"
-			miuizer:dynamic="true" />
+			android:key="pref_key_system_recommended_third" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:title="@string/system_recommended_fourth_title"
 			android:summary="@string/system_recommended_fourth_summ"
-			android:key="pref_key_system_recommended_fourth"
-			miuizer:dynamic="true" />
+			android:key="pref_key_system_recommended_fourth" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 

@@ -45,11 +45,6 @@ public class SubFragment extends PreferenceFragmentBase {
 	Helpers.SettingsType settingsType = Helpers.SettingsType.Preference;
 	Helpers.ActionBarType abType = Helpers.ActionBarType.Edit;
 
-	public SubFragment() {
-		super();
-		this.setRetainInstance(true);
-	}
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		settingsType = Helpers.SettingsType.values()[getArguments().getInt("settingsType")];
@@ -122,7 +117,7 @@ public class SubFragment extends PreferenceFragmentBase {
 			if (pref != null) ((PreferenceState)pref).markAsNew();
 		}
 
-		if (highlight != null && getView() != null) try {
+		if (highlight != null && getView() != null && savedInstanceState == null) try {
 			ListView listView = getView().findViewById(android.R.id.list);
 			int order = 0;
 			for (ModData mod: Helpers.allModsList)
@@ -159,7 +154,6 @@ public class SubFragment extends PreferenceFragmentBase {
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
-
 	}
 
 	public View onInflateView(LayoutInflater inflater, ViewGroup group, Bundle bundle) {

@@ -9,24 +9,23 @@
 		android:title="@string/enable_mod"
 		android:defaultValue="false" />
 
-	<PreferenceCategory>
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:title="@string/settings"
+		android:dependency="pref_key_various_callreminder"
+		miuizer:dynamic="true">
 
 	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_various_callreminder_interval"
 		android:title="@string/various_callreminder_interval_title"
-		android:dependency="pref_key_various_callreminder"
 		android:defaultValue="5"
 		miuizer:minValue="1"
 		miuizer:maxValue="15"
 		miuizer:stepValue="1"
-		miuizer:format="@string/format_d_m"
-		miuizer:dynamic="true" />
+		miuizer:format="@string/format_d_m" />
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_various_callreminder_sound"
 		android:title="@string/various_callreminder_sound_title"
-		android:dependency="pref_key_various_callreminder"
-		miuizer:dynamic="true"
 		miuizer:customSummary="true" />
 
 	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
@@ -35,17 +34,13 @@
 		android:entries="@array/vibration"
 		android:entryValues="@array/vibration_val"
 		android:defaultValue="1"
-		android:dependency="pref_key_various_callreminder"
-		miuizer:dynamic="true"
 		miuizer:valueAsSummary="true" />
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_various_callreminder_vibration_own"
 		android:title="@string/various_callreminder_vibration_own_title"
-		android:dependency="pref_key_various_callreminder"
-		miuizer:dynamic="true"
 		miuizer:child="true" />
 
-	</PreferenceCategory>
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

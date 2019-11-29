@@ -1,3 +1,11 @@
+2.0.5
+[New] Reduce vibration intensity (strength or duration) during selected hours
+[New][Full screen navigation gestures] Back gesture area width
+[Improved][Custom lock screen shortcuts] Unlimited number of shortcuts with app icons and top/bottom alignment
+[Improved][Modify app titles] Dual apps support
+Interface language selection
+Module's UI improvements: preserve current state on configuration changes; correct checkbox size in dark mode
+
 2.0.4
 [New] Folder background blur options (MIUI Launcher with folder blur support is required)
 [Improved][Show brightness percentage] Configurable top margin

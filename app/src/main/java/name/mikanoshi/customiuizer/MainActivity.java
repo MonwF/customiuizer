@@ -84,8 +84,18 @@ public class MainActivity extends Activity {
 
 		Helpers.updateNewModsMarking(this);
 
-		mainFrag = new MainFragment();
-		getFragmentManager().beginTransaction().replace(R.id.fragment_container, mainFrag).commit();
+		if (savedInstanceState != null)
+		mainFrag = (MainFragment)getFragmentManager().getFragment(savedInstanceState, "mainFrag");
+		if (mainFrag == null) {
+			mainFrag = new MainFragment();
+			getFragmentManager().beginTransaction().replace(R.id.fragment_container, mainFrag).commit();
+		}
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		getFragmentManager().putFragment(savedInstanceState, "mainFrag", mainFrag);
+		super.onSaveInstanceState(savedInstanceState);
 	}
 
 	protected void onDestroy() {

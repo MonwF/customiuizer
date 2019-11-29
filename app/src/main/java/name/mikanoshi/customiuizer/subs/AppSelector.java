@@ -2,6 +2,7 @@ package name.mikanoshi.customiuizer.subs;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -54,35 +55,36 @@ public class AppSelector extends SubFragmentWithSearch {
 		process = new Runnable() {
 			@Override
 			public void run() {
+				Context context = getActivity() == null ? getContext() : getActivity().getApplicationContext();
 				if (multi && key != null) {
 					if (openwith) {
 						if (Helpers.openWithAppsList == null) return;
-						listView.setAdapter(new AppDataAdapter(getActivity().getApplicationContext(), Helpers.openWithAppsList, Helpers.AppAdapterType.Mutli, key));
+						listView.setAdapter(new AppDataAdapter(context, Helpers.openWithAppsList, Helpers.AppAdapterType.Mutli, key));
 					} else if (share) {
 						if (Helpers.shareAppsList == null) return;
-						listView.setAdapter(new AppDataAdapter(getActivity().getApplicationContext(), Helpers.shareAppsList, Helpers.AppAdapterType.Mutli, key));
+						listView.setAdapter(new AppDataAdapter(context, Helpers.shareAppsList, Helpers.AppAdapterType.Mutli, key));
 					} else {
 						if (Helpers.installedAppsList == null) return;
-						listView.setAdapter(new AppDataAdapter(getActivity().getApplicationContext(), Helpers.installedAppsList, Helpers.AppAdapterType.Mutli, key));
+						listView.setAdapter(new AppDataAdapter(context, Helpers.installedAppsList, Helpers.AppAdapterType.Mutli, key));
 					}
 				} else if (privacy) {
 					if (Helpers.installedAppsList == null) return;
-					listView.setAdapter(new PrivacyAppAdapter(getActivity().getApplicationContext(), Helpers.installedAppsList));
+					listView.setAdapter(new PrivacyAppAdapter(context, Helpers.installedAppsList));
 				} else if (applock) {
 					if (Helpers.installedAppsList == null) return;
-					listView.setAdapter(new LockedAppAdapter(getActivity().getApplicationContext(), Helpers.installedAppsList));
+					listView.setAdapter(new LockedAppAdapter(context, Helpers.installedAppsList));
 				} else if (customTitles) {
 					if (Helpers.launchableAppsList == null) return;
-					listView.setAdapter(new AppDataAdapter(getActivity().getApplicationContext(), Helpers.launchableAppsList, Helpers.AppAdapterType.CustomTitles, key));
+					listView.setAdapter(new AppDataAdapter(context, Helpers.launchableAppsList, Helpers.AppAdapterType.CustomTitles, key));
 				} else if (standalone && key != null) {
 					if (Helpers.launchableAppsList == null) return;
-					listView.setAdapter(new AppDataAdapter(getActivity().getApplicationContext(), Helpers.launchableAppsList, Helpers.AppAdapterType.Standalone, key));
+					listView.setAdapter(new AppDataAdapter(context, Helpers.launchableAppsList, Helpers.AppAdapterType.Standalone, key));
 				} else if (activity) {
 					if (Helpers.installedAppsList == null) return;
-					listView.setAdapter(new AppDataAdapter(getActivity().getApplicationContext(), Helpers.installedAppsList, Helpers.AppAdapterType.Default, key));
+					listView.setAdapter(new AppDataAdapter(context, Helpers.installedAppsList, Helpers.AppAdapterType.Default, key));
 				} else {
 					if (Helpers.launchableAppsList == null) return;
-					listView.setAdapter(new AppDataAdapter(getActivity().getApplicationContext(), Helpers.launchableAppsList));
+					listView.setAdapter(new AppDataAdapter(context, Helpers.launchableAppsList));
 				}
 				listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 					@Override
@@ -143,7 +145,7 @@ public class AppSelector extends SubFragmentWithSearch {
 							}
 						} else if (customTitles) {
 							AppData app = (AppData)parent.getAdapter().getItem(position);
-							Helpers.showInputDialog(getActivity(), key + ":" + app.pkgName + "|" + app.actName, R.string.launcher_renameapps_modified, new Helpers.InputCallback() {
+							Helpers.showInputDialog(getActivity(), key + ":" + app.pkgName + "|" + app.actName + "|" + app.user, R.string.launcher_renameapps_modified, new Helpers.InputCallback() {
 								@Override
 								public void onInputFinished(String key, String text){
 									if (TextUtils.isEmpty(text))
@@ -168,10 +170,14 @@ public class AppSelector extends SubFragmentWithSearch {
 					}
 				});
 				if (getView() != null) getView().findViewById(R.id.am_progressBar).setVisibility(View.GONE);
-				initialized = true;
 			}
 		};
+	}
 
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		if (initialized) process.run(); else
 		new Thread() {
 			@Override
 			public void run() {
@@ -188,18 +194,13 @@ public class AppSelector extends SubFragmentWithSearch {
 					} else {
 						if (Helpers.launchableAppsList == null) Helpers.getLaunchableApps(getActivity());
 					}
+					initialized = true;
 					getActivity().runOnUiThread(process);
 				} catch (Throwable e) {
 					e.printStackTrace();
 				}
 			}
 		}.start();
-	}
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		if (initialized) process.run();
 	}
 
 	@Override

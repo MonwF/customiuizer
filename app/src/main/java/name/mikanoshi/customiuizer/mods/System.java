@@ -96,6 +96,7 @@ import android.widget.ListView;
 import android.widget.Magnifier;
 import android.widget.RelativeLayout;
 import android.widget.RemoteViews;
+import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -108,10 +109,12 @@ import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -119,6 +122,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -3588,11 +3592,6 @@ public class System {
 		});
 	}
 
-	private static int miuizerShortcutResId;
-	public static void LockScreenShortcutRes() {
-		miuizerShortcutResId = MainModule.resHooks.addResource("keyguard_bottom_miuizer_shortcut_img", R.drawable.keyguard_bottom_miuizer_shortcut_img);
-	}
-
 	private static boolean modifyCameraImage(Context mContext, View mKeyguardRightView, boolean mDarkMode) {
 		if (MainModule.mPrefs.getBoolean("system_lockscreenshortcuts_right_off")) {
 			restoreCameraImage(mKeyguardRightView);
@@ -3956,20 +3955,33 @@ public class System {
 					ViewGroup leftView = (ViewGroup)msg.obj;
 					Context mContext = (Context)XposedHelpers.getObjectField(leftView, "mContext");
 					int listResId = mContext.getResources().getIdentifier("keyguard_move_left", "id", lpparam.packageName);
-					ViewGroup leftList = leftView.findViewById(listResId);
-					if (leftList instanceof ListView) {
-						LinearLayout leftList2 = new LinearLayout(leftList.getContext());
-						RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)leftList.getLayoutParams();
-						ViewGroup parent = ((ViewGroup)leftList.getParent());
-						parent.removeView(leftList);
-						parent.addView(leftList2);
-						leftList2.setLayoutParams(lp);
-						leftList2.setOrientation(LinearLayout.VERTICAL);
-						leftList = leftList2;
-						leftList.setId(listResId);
-					} else {
-						leftList.removeAllViews();
+					ViewGroup oldList = leftView.findViewById(listResId);
+					RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)oldList.getLayoutParams();
+					ScrollView container = new ScrollView(oldList.getContext());
+					container.setVerticalScrollBarEnabled(false);
+					ViewGroup parent = ((ViewGroup)oldList.getParent());
+					LinearLayout leftList = new LinearLayout(oldList.getContext());
+					parent.removeView(oldList);
+					leftList.setLayoutParams(new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.WRAP_CONTENT));
+					leftList.setOrientation(LinearLayout.VERTICAL);
+
+					try {
+						int align = MainModule.mPrefs.getStringAsInt("system_lockscreenshortcuts_left_align", 2);
+						lp.topMargin = lp.bottomMargin;
+						lp.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
+						if (align == 1)
+							lp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+						else
+							lp.removeRule(RelativeLayout.ALIGN_PARENT_TOP);
+						container.setLayoutParams(lp);
+					} catch (Throwable t) {
+						XposedBridge.log(t);
 					}
+
+					container.addView(leftList);
+					container.setId(listResId);
+					parent.addView(container);
+
 					LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 					int layoutResId = mContext.getResources().getIdentifier("miui_keyguard_left_view_control_center_item", "layout", lpparam.packageName);
 					int imgResId = mContext.getResources().getIdentifier("keyguard_left_list_item_img", "id", lpparam.packageName);
@@ -3988,29 +4000,27 @@ public class System {
 						item.setTag(key + "_" + uuid);
 						leftList.addView(item);
 
-						String iconResName = MainModule.mPrefs.getString(key + "_" + uuid + "_icon", "");
-						int iconResId;
-						if (iconResName == null || iconResName.isEmpty() || iconResName.equals("miuizer"))
-							iconResId = miuizerShortcutResId;
-						else
-							iconResId = mContext.getResources().getIdentifier("keyguard_left_view_" + iconResName, "drawable", lpparam.packageName);
 						ImageView img = item.findViewById(imgResId);
-						int size = (int)(20 * img.getResources().getDisplayMetrics().density);
+						int size = (int)(32 * img.getResources().getDisplayMetrics().density);
 						ViewGroup.LayoutParams lp1 = img.getLayoutParams();
 						lp1.width = size;
 						lp1.height = size;
 						img.setLayoutParams(lp1);
-						img.setImageResource(iconResId);
+						Drawable image = Helpers.getActionImage(mContext, "pref_key_" + key + "_" + uuid);
+						img.setImageDrawable(image != null ? image : mContext.getPackageManager().getApplicationIcon(Helpers.modulePkg));
 						img.setBackgroundResource(0);
 
 						TextView title = item.findViewById(nameResId);
 						title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
 						title.setText(Helpers.getActionName(mContext, "pref_key_" + key + "_" + uuid));
-						if (i > 0) {
-							LinearLayout.LayoutParams lp2 = (LinearLayout.LayoutParams)item.getLayoutParams();
-							lp2.topMargin = margin;
-							item.setLayoutParams(lp2);
-						}
+
+						LinearLayout.LayoutParams lp2 = (LinearLayout.LayoutParams)item.getLayoutParams();
+						if (i > 0) lp2.topMargin = margin;
+						lp2.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+						item.setLayoutParams(lp2);
+
+						int padding = (int)(14 * img.getResources().getDisplayMetrics().density);
+						item.setPadding(padding, padding, padding, padding);
 
 						i++;
 						item.setOnClickListener(mListener);
@@ -4852,6 +4862,129 @@ public class System {
 		});
 	}
 
+	private static SimpleDateFormat formatter = new SimpleDateFormat("H:m", Locale.ENGLISH);
+	public static void MuffledVibrationHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.server.VibratorService", lpparam.classLoader, "systemReady", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				Handler mHandler = new Handler(mContext.getMainLooper());
+				new Helpers.SharedPrefObserver(mContext, mHandler) {
+					@Override
+					public void onChange(Uri uri) {
+						try {
+							String key = uri.getPathSegments().get(2);
+							if (key.contains("pref_key_system_vibration_amp_")) MainModule.mPrefs.put(key, Helpers.getSharedIntPref(mContext, key, 100));
+						} catch (Throwable t) {
+							XposedBridge.log(t);
+						}
+					}
+				};
+			}
+		});
+
+		Helpers.hookAllMethods("com.android.server.VibratorService", lpparam.classLoader, "doVibratorOn", new MethodHook() {
+			@Override
+			protected void before(final MethodHookParam param) throws Throwable {
+				float ratio_ringer = MainModule.mPrefs.getInt("system_vibration_amp_ringer", 100) / 100f;
+				float ratio_notif = MainModule.mPrefs.getInt("system_vibration_amp_notif", 100) / 100f;
+				float ratio_other = MainModule.mPrefs.getInt("system_vibration_amp_other", 100) / 100f;
+
+				boolean isRingtone = false;
+				boolean isNotification = false;
+				Object mCurrentVibration = XposedHelpers.getObjectField(param.thisObject, "mCurrentVibration");
+				if (mCurrentVibration != null) try {
+					isRingtone = (boolean)XposedHelpers.callMethod(mCurrentVibration, "isRingtone");
+					isNotification = (boolean)XposedHelpers.callMethod(mCurrentVibration, "isNotification");
+				} catch (Throwable t) {
+					int mUsageHint = XposedHelpers.getIntField(param.thisObject, "mUsageHint");
+					isRingtone = mUsageHint == 6;
+					isNotification = mUsageHint == 5 || mUsageHint == 7 || mUsageHint == 8 || mUsageHint == 9;
+				}
+
+				float ratio;
+				if (isRingtone) ratio = ratio_ringer;
+				else if (isNotification) ratio = ratio_notif;
+				else ratio = ratio_other;
+				if (ratio == 1.0f) return;
+
+				String key = "system_vibration_amp_period";
+				int start_hour = MainModule.mPrefs.getInt(key + "_start_hour", 0);
+				int start_minute = MainModule.mPrefs.getInt(key + "_start_minute", 0);
+				int end_hour = MainModule.mPrefs.getInt(key + "_end_hour", 0);
+				int end_minute = MainModule.mPrefs.getInt(key + "_end_minute", 0);
+
+				formatter.setTimeZone(TimeZone.getDefault());
+				Date start = formatter.parse(start_hour + ":" + start_minute);
+				Date end = formatter.parse(end_hour + ":" + end_minute);
+				Date now = formatter.parse(formatter.format(new Date()));
+
+				boolean insidePeriod = start.before(end) ? now.after(start) && now.before(end) : now.before(end) || now.after(start);
+				if (!insidePeriod) return;
+
+				boolean mSupportsAmplitudeControl = false;
+				try {
+					mSupportsAmplitudeControl = XposedHelpers.getBooleanField(param.thisObject, "mSupportsAmplitudeControl");
+				} catch (Throwable ignored) {}
+
+				if (mSupportsAmplitudeControl)
+					param.args[1] = Math.round(((int)param.args[1] == -1 ? XposedHelpers.getIntField(param.thisObject, "mDefaultVibrationAmplitude"): (int)param.args[1]) * ratio);
+				else
+					param.args[0] = Math.max(3, (long)Math.round((long)param.args[0] * ratio));
+			}
+		});
+
+//		if (Helpers.isNougat())
+//		Helpers.hookAllMethods("com.android.server.VibratorService", lpparam.classLoader, "vibratePattern", new MethodHook() {
+//			@Override
+//			protected void before(final MethodHookParam param) throws Throwable {
+//
+//			}
+//		});
+	}
+
+//	@SuppressWarnings("unchecked")
+//	public static void MultiWindowHook() {
+//		HashMap<String, Integer> sAppList = (HashMap<String, Integer>)XposedHelpers.getStaticObjectField(findClass("android.util.MiuiMultiWindowUtils", null), "sAppList");
+//		sAppList.put(Helpers.modulePkg, 4);
+//		XposedHelpers.setStaticObjectField(findClass("android.util.MiuiMultiWindowUtils", null), "sAppList", sAppList);
+//	}
+//
+//	public static void MultiWindowServiceHook(LoadPackageParam lpparam) {
+//		Helpers.hookAllMethods("com.android.server.am.ActivityStarterInjector", lpparam.classLoader, "checkFreeformSupport", new MethodHook() {
+//			@Override
+//			protected void after(MethodHookParam param) throws Throwable {
+//				XposedHelpers.setObjectField(param.args[0], "mSupportsFreeformWindowManagement", true);
+//			}
+//		});
+//
+//		Helpers.findAndHookMethod("com.android.server.am.ActivityStackSupervisorInjector", lpparam.classLoader, "supportsFreeform", XC_MethodReplacement.returnConstant(true));
+//
+//		Helpers.hookAllMethods("com.android.server.am.ActivityDisplay", lpparam.classLoader, "resolveWindowingMode", new MethodHook() {
+//			@Override
+//			protected void after(MethodHookParam param) throws Throwable {
+//				Object mSupervisor = XposedHelpers.getObjectField(param.thisObject, "mSupervisor");
+//				Object mService = XposedHelpers.getObjectField(mSupervisor, "mService");
+//				Object mSupportsMultiWindow = XposedHelpers.getObjectField(mService, "mSupportsMultiWindow");
+//				Object mSupportsSplitScreenMultiWindow = XposedHelpers.getObjectField(mService, "mSupportsSplitScreenMultiWindow");
+//				Object mSupportsFreeformWindowManagement = XposedHelpers.getObjectField(mService, "mSupportsFreeformWindowManagement");
+//				Object mSupportsPictureInPicture = XposedHelpers.getObjectField(mService, "mSupportsPictureInPicture");
+//				XposedBridge.log("mSupportsMultiWindow: " + mSupportsMultiWindow);
+//				XposedBridge.log("mSupportsSplitScreenMultiWindow: " + mSupportsSplitScreenMultiWindow);
+//				XposedBridge.log("mSupportsFreeformWindowManagement: " + mSupportsFreeformWindowManagement);
+//				XposedBridge.log("mSupportsPictureInPicture: " + mSupportsPictureInPicture);
+//				XposedBridge.log("resolveWindowingMode: " + param.args[0] + ", " + param.args[1] + ", " + param.args[2] + ", " + param.args[3] + " = " + param.getResult());
+//			}
+//		});
+//
+//		Helpers.hookAllMethods("com.android.server.pm.PackageManagerService", lpparam.classLoader, "hasSystemFeature", new MethodHook() {
+//			@Override
+//			protected void after(MethodHookParam param) throws Throwable {
+//				if ("android.software.freeform_window_management".equals(param.args[0])) param.setResult(true);
+//			}
+//		});
+//	}
+//
 //	public static void QSFooterHook(LoadPackageParam lpparam) {
 //		Helpers.findAndHookMethod("com.android.systemui.qs.QSContainerImpl", lpparam.classLoader, "onFinishInflate", new MethodHook() {
 //			@Override

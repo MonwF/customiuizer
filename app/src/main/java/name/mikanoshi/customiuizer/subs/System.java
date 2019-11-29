@@ -84,6 +84,13 @@ public class System extends SubFragment {
 				});
 
 				findPreference("pref_key_system_vibration_apps").setOnPreferenceClickListener(openAppsEdit);
+				findPreference("pref_key_system_vibration_amp_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						openSubFragment(new System_VibrationAmp(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_vibration_amp_title, R.xml.prefs_system_vibration_amp);
+						return true;
+					}
+				});
 				break;
 			case "pref_key_system_cat_toasts":
 				findPreference("pref_key_system_blocktoasts_apps").setEnabled(!Objects.equals(Helpers.prefs.getString("pref_key_system_blocktoasts", "1"), "1"));
@@ -125,6 +132,16 @@ public class System extends SubFragment {
 					}
 				});
 
+				break;
+			case "pref_key_system_cat_drawer":
+				findPreference("pref_key_system_popupnotif_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						openSubFragment(new System_PopupNotif(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_popupnotif_title, R.xml.prefs_system_popupnotif);
+						return true;
+					}
+				});
+
 				findPreference("pref_key_system_shortcut_app").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
@@ -145,14 +162,6 @@ public class System extends SubFragment {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
 						openStandaloneApp(preference, System.this, 2);
-						return true;
-					}
-				});
-
-				findPreference("pref_key_system_popupnotif_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-					@Override
-					public boolean onPreferenceClick(Preference preference) {
-						openSubFragment(new System_PopupNotif(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_popupnotif_title, R.xml.prefs_system_popupnotif);
 						return true;
 					}
 				});

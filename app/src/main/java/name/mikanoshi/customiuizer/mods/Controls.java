@@ -804,7 +804,7 @@ public class Controls {
 		});
 	}
 
-	public static void BackGestureAreaHook(LoadPackageParam lpparam) {
+	public static void BackGestureAreaHeightHook(LoadPackageParam lpparam) {
 		Helpers.findAndHookMethod("com.android.systemui.fsgesture.GestureStubView", lpparam.classLoader, "getGestureStubWindowParam", new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
@@ -812,6 +812,33 @@ public class Controls {
 				int pct = MainModule.mPrefs.getInt("controls_fsg_coverage", 60);
 				lp.height = Math.round(lp.height / 60.0f * pct);
 				param.setResult(lp);
+			}
+		});
+	}
+
+	public static void BackGestureAreaWidthHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.fsgesture.GestureStubView", lpparam.classLoader, "initScreenSizeAndDensity", int.class, new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				int pct = MainModule.mPrefs.getInt("controls_fsg_width", 100);
+				if (pct == 100) return;
+				int mGestureStubDefaultSize = XposedHelpers.getIntField(param.thisObject, "mGestureStubDefaultSize");
+				int mGestureStubSize  = XposedHelpers.getIntField(param.thisObject, "mGestureStubSize");
+				mGestureStubDefaultSize = Math.round(mGestureStubDefaultSize * pct / 100f);
+				mGestureStubSize = Math.round(mGestureStubSize * pct / 100f);
+				XposedHelpers.setIntField(param.thisObject, "mGestureStubDefaultSize", mGestureStubDefaultSize);
+				XposedHelpers.setIntField(param.thisObject, "mGestureStubSize", mGestureStubSize);
+			}
+		});
+
+		Helpers.findAndHookMethod("com.android.systemui.fsgesture.GestureStubView", lpparam.classLoader, "setSize", int.class, new MethodHook() {
+			@Override
+			protected void before(final MethodHookParam param) throws Throwable {
+				int pct = MainModule.mPrefs.getInt("controls_fsg_width", 100);
+				if (pct == 100) return;
+				int mGestureStubDefaultSize = XposedHelpers.getIntField(param.thisObject, "mGestureStubDefaultSize");
+				if ((int)param.args[0] == mGestureStubDefaultSize) return;
+				param.args[0] = Math.round((int)param.args[0] * pct / 100f);
 			}
 		});
 	}

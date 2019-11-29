@@ -201,8 +201,9 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 			itemChecked.setChecked(selectedApps.size() > 0 && shouldSelect(ad.pkgName, ad.user));
 			itemIsDual.setVisibility(ad.user != 0 ? View.VISIBLE : View.GONE);
 		} else if (aType == Helpers.AppAdapterType.CustomTitles) {
-			itemSummary.setText(Helpers.prefs.getString(key + ":" + ad.pkgName + "|" + ad.actName, ""));
+			itemSummary.setText(Helpers.prefs.getString(key + ":" + ad.pkgName + "|" + ad.actName + "|" + ad.user, ""));
 			itemSummary.setVisibility(TextUtils.isEmpty(itemSummary.getText()) ? View.GONE : View.VISIBLE);
+			itemIsDual.setVisibility(ad.user != 0 ? View.VISIBLE : View.GONE);
 		} else if (aType == Helpers.AppAdapterType.Standalone) {
 			itemChecked.setVisibility(View.VISIBLE);
 			itemChecked.setChecked((selectedApp.equals("") && ad.pkgName.equals("") && ad.actName.equals("")) || ((ad.pkgName + "|" + ad.actName).equals(selectedApp) && ad.user == selectedUser));

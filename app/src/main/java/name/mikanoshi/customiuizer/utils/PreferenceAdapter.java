@@ -5,9 +5,6 @@ import java.util.Arrays;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -67,7 +64,6 @@ public class PreferenceAdapter extends BaseAdapter {
 		dragHandle.setVisibility(View.VISIBLE);
 		dragHandle.setOnTouchListener(((SortableListView)parent).getListenerForStartingSort());
 		itemIcon.setVisibility(View.VISIBLE);
-		itemIcon.setColorFilter(Color.argb(200, 78, 78, 81));
 		String uuid = getItem(position);
 		Pair<String, String> name = Helpers.getActionNameLocal(row.getContext(), key + "_" + uuid);
 		if (name == null) {
@@ -83,15 +79,9 @@ public class PreferenceAdapter extends BaseAdapter {
 			}
 		}
 
-		String iconResName = Helpers.prefs.getString(key + "_" + uuid + "_icon", "");
-		if (name == null || iconResName == null || iconResName.isEmpty() || iconResName.equals("miuizer"))
-			itemIcon.setImageResource(R.drawable.keyguard_bottom_miuizer_shortcut_img);
-		else try {
-			PackageManager manager = row.getContext().getPackageManager();
-			Resources resources = manager.getResourcesForApplication("com.android.systemui");
-			int resId = resources.getIdentifier("keyguard_left_view_" + iconResName, "drawable", "com.android.systemui");
-			Drawable drawable = resources.getDrawable(resId, row.getContext().getTheme());
-			itemIcon.setImageDrawable(drawable);
+		try {
+			Drawable drawable = Helpers.getActionImageLocal(row.getContext(), key + "_" + uuid);
+			itemIcon.setImageDrawable(drawable != null ? drawable : row.getContext().getPackageManager().getApplicationIcon(Helpers.modulePkg));
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}

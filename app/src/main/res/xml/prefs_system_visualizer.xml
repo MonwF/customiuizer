@@ -10,65 +10,57 @@
 		android:summary="@string/system_visualizer_lockscreen_summ"
 		android:defaultValue="false" />
 
-	<PreferenceCategory>
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:title="@string/settings"
+		android:dependency="pref_key_system_visualizer"
+		miuizer:dynamic="true">
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_visualizer_custom"
 		android:title="@string/system_visualizer_custom_title"
 		android:summary="@string/system_visualizer_custom_summ"
-		android:dependency="pref_key_system_visualizer"
-		android:defaultValue="false"
-		miuizer:dynamic="true" />
+		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_visualizer_drawer"
 		android:title="@string/system_visualizer_drawer_title"
 		android:summary="@string/system_visualizer_drawer_summ"
-		android:dependency="pref_key_system_visualizer"
-		android:defaultValue="false"
-		miuizer:dynamic="true" />
+		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_visualizer_animdur"
 		android:title="@string/system_visualizer_animdur_title"
-		android:dependency="pref_key_system_visualizer"
 		android:defaultValue="65"
 		miuizer:minValue="50"
 		miuizer:maxValue="200"
 		miuizer:stepValue="5"
-		miuizer:format="@string/format_d_ms"
-		miuizer:dynamic="true" />
+		miuizer:format="@string/format_d_ms" />
 
 	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_visualizer_transp"
 		android:title="@string/system_visualizer_transp_title"
-		android:dependency="pref_key_system_visualizer"
 		android:defaultValue="40"
 		miuizer:minValue="0"
 		miuizer:maxValue="95"
 		miuizer:stepValue="5"
-		miuizer:format="%d%%"
-		miuizer:dynamic="true" />
+		miuizer:format="%d%%" />
 
 	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_visualizer_glowlevel"
 		android:title="@string/system_visualizer_glowlevel_title"
-		android:dependency="pref_key_system_visualizer"
 		android:defaultValue="50"
 		miuizer:minValue="0"
 		miuizer:maxValue="100"
 		miuizer:stepValue="1"
-		miuizer:format="%d%%"
-		miuizer:dynamic="true" />
+		miuizer:format="%d%%" />
 
 	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_visualizer_style"
 		android:title="@string/system_visualizer_style_title"
 		android:entries="@array/visualizerstyle"
 		android:entryValues="@array/visualizerstyle_val"
-		android:dependency="pref_key_system_visualizer"
+
 		android:defaultValue="1"
-		miuizer:dynamic="true"
 		miuizer:valueAsSummary="true" />
 
 	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
@@ -76,28 +68,22 @@
 		android:title="@string/system_visualizer_color_title"
 		android:entries="@array/visualizercolor"
 		android:entryValues="@array/visualizercolor_val"
-		android:dependency="pref_key_system_visualizer"
 		android:defaultValue="1"
-		miuizer:dynamic="true"
 		miuizer:valueAsSummary="true" />
 
-+	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_visualizer_dyntime"
 		android:title="@string/system_visualizer_dyntime_title"
-		android:dependency="pref_key_system_visualizer"
 		android:defaultValue="10"
 		miuizer:minValue="3"
 		miuizer:maxValue="60"
 		miuizer:stepValue="1"
-		miuizer:format="@string/format_d_s"
-		miuizer:dynamic="true" />
+		miuizer:format="@string/format_d_s" />
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_system_visualizer_colorval"
-		android:title="@string/system_visualizer_colorval_title"
-		android:dependency="pref_key_system_visualizer"
-		miuizer:dynamic="true" />
+		android:title="@string/system_visualizer_colorval_title" />
 
-	</PreferenceCategory>
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

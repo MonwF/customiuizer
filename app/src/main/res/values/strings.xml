@@ -157,6 +157,14 @@
 	<string name="system_ignorecalls_summ">Prevent incoming calls from stealing audio focus when it\'s on selected apps and stop notifying them about call state changes</string>
 	<string name="system_nosilentvibrate_title">No test vibration</string>
 	<string name="system_nosilentvibrate_summ">Do not vibrate when switching ringer mode to silent or turning on vibration in this mode</string>
+	<string name="system_vibration_amp_title">Muffled vibration</string>
+	<string name="system_vibration_amp_summ">Reduce vibration intensity during selected hours</string>
+	<string name="system_vibration_amp_val_title">Vibration intensity</string>
+	<string name="system_vibration_amp_val_summ">Changes either duration or strength of the vibration depending on amplitude control support by device</string>
+	<string name="system_vibration_amp_ringer_title">Calls</string>
+	<string name="system_vibration_amp_notif_title">Notifications</string>
+	<string name="system_vibration_amp_other_title">Everything else</string>
+	<string name="system_vibration_amp_period_title">Time period</string>
 	<string name="system_vibration_title">Block vibration</string>
 	<string name="system_vibration_summ">Prevent selected apps from using vibration</string>
 	<string name="notification_volume">Notification volume</string>
@@ -183,6 +191,7 @@
 	<string name="system_lockscreenshortcuts_left_off_title">Disable swipe right gesture</string>
 	<string name="system_lockscreenshortcuts_left_title">Left screen shortcuts</string>
 	<string name="system_lockscreenshortcuts_left_summ">Manage shortcuts list</string>
+	<string name="system_lockscreenshortcuts_left_align_title">Vertical alignment</string>
 	<string name="system_lockscreenshortcuts_left_skiplock_title">Do not require unlock</string>
 	<string name="system_lockscreenshortcuts_left_skiplock_summ">Launched apps could be accessed while device is still locked</string>
 	<string name="system_noscreenlock_title">Disable screen lock</string>
@@ -453,6 +462,7 @@
 	<string name="controls_navbar_noaction">No action defined</string>
 	<string name="controls_mods_fsg">Full screen navigation gestures</string>
 	<string name="controls_fsg_coverage_title">Back gesture area height</string>
+	<string name="controls_fsg_width_title">Back gesture area width</string>
 	<string name="controls_fsg_horiz_title">Horizontal gestures</string>
 	<string name="controls_fsg_horiz_summ">Enable both horizontal gestures and navigation bar</string>
 
@@ -623,6 +633,8 @@
 	<string name="array_own">Own pattern</string>
 	<string name="array_scale_fit">Fit to screen</string>
 	<string name="array_scale_cover">Cover whole screen</string>
+	<string name="array_align_top">Top</string>
+	<string name="array_align_bottom">Bottom</string>
 
 	<string name="toggle_wifi_on">Wi-Fi enabled</string>
 	<string name="toggle_wifi_off">Wi-Fi disabled</string>
@@ -657,8 +669,8 @@
 	<string name="miuizer_show_launchericon_summ">Show icon in launchers</string>
 	<string name="miuizer_show_settingsicon_title">Fast access icon</string>
 	<string name="miuizer_show_settingsicon_summ">Show icon in Settings</string>
-	<string name="miuizer_forcelocale_title">English UI</string>
-	<string name="miuizer_forcelocale_summ">Always display module\'s interface in English</string>
+	<string name="miuizer_locale_title">Interface language</string>
+	<string name="miuizer_locale_summ">Always display module\'s interface in selected language</string>
 
 	<string name="troubleshoot">Troubleshooting</string>
 	<string name="miuizer_acrasend_title">Send detailed report</string>

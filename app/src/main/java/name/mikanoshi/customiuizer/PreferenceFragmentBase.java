@@ -9,6 +9,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
@@ -61,6 +62,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 
 		getActionBar().setTitle(R.string.app_name);
 		getActionBar().setDisplayHomeAsUpEnabled(showBack);
+		getActionBar().setBackgroundDrawable(new ColorDrawable(Helpers.getSystemBackgroundColor(getContext())));
 	}
 
 	public void onCreate(Bundle savedInstanceState, int pref_defaults) {
@@ -101,6 +103,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 	public void setActionModeStyle(View searchView) {
 		boolean isNight = Helpers.isNightMode(getActivity());
 		if (searchView != null) try {
+			searchView.setSaveFromParentEnabled(false);
 			Drawable drawable = getResources().getDrawable(getResources().getIdentifier(isNight ? "search_mode_bg_dark" : "search_mode_bg_light", "drawable", "miui"), getActivity().getTheme());
 			try {
 				int colorResId = getResources().getIdentifier(isNight ? "primary_color_dark" : "primary_color_light", "color", "miui");

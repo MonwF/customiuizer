@@ -16,13 +16,14 @@ public class PreferenceCategoryEx extends PreferenceCategory {
 
 	private boolean dynamic;
 	private boolean empty;
-	private boolean hidden = false;
+	private boolean hidden;
 
 	public PreferenceCategoryEx(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		final TypedArray xmlAttrs = context.obtainStyledAttributes(attrs, R.styleable.PreferenceCategoryEx);
 		dynamic = xmlAttrs.getBoolean(R.styleable.PreferenceCategoryEx_dynamic, false);
 		empty = xmlAttrs.getBoolean(R.styleable.PreferenceCategoryEx_empty, false);
+		hidden = xmlAttrs.getBoolean(R.styleable.PreferenceCategoryEx_hidden, false);
 		xmlAttrs.recycle();
 	}
 
@@ -39,7 +40,15 @@ public class PreferenceCategoryEx extends PreferenceCategory {
 		TextView title = finalView.findViewById(android.R.id.title);
 		title.setText(getTitle() + (dynamic ? " ⟲" : ""));
 		title.setVisibility(hidden || empty ? View.GONE : View.VISIBLE);
-		if (hidden) finalView.setBackground(null);
+		if (hidden) {
+			finalView.setBackground(null);
+			finalView.setPadding(
+				finalView.getPaddingLeft(),
+				finalView.getPaddingTop() + Math.round(getContext().getResources().getDisplayMetrics().density * 10),
+				finalView.getPaddingRight(),
+				finalView.getPaddingBottom()
+			);
+		}
 		return finalView;
 	}
 

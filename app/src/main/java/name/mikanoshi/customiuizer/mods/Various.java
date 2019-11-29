@@ -54,6 +54,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
@@ -363,14 +364,16 @@ public class Various {
 					else if (opt == 2 && !"OUTGOING".equals(state) && !"PENDING_OUTGOING".equals(state)) return;
 				}
 
-				boolean checkNight = Helpers.getSharedBoolPref(act, "pref_key_various_calluibright_night", false);
+				String key = "pref_key_various_calluibright_night";
+				boolean checkNight = Helpers.getSharedBoolPref(act, key, false);
 				if (checkNight) {
-					int start_hour = Helpers.getSharedIntPref(act, "pref_key_various_calluibright_night_start_hour", 0);
-					int start_minute = Helpers.getSharedIntPref(act, "pref_key_various_calluibright_night_start_minute", 0);
-					int end_hour = Helpers.getSharedIntPref(act, "pref_key_various_calluibright_night_end_hour", 0);
-					int end_minute = Helpers.getSharedIntPref(act, "pref_key_various_calluibright_night_end_minute", 0);
+					int start_hour = Helpers.getSharedIntPref(act, key + "_start_hour", 0);
+					int start_minute = Helpers.getSharedIntPref(act, key + "_start_minute", 0);
+					int end_hour = Helpers.getSharedIntPref(act, key + "_end_hour", 0);
+					int end_minute = Helpers.getSharedIntPref(act, key + "_end_minute", 0);
 
-					SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
+					SimpleDateFormat formatter = new SimpleDateFormat("H:m", Locale.ENGLISH);
+					formatter.setTimeZone(TimeZone.getDefault());
 					Date start = formatter.parse(start_hour + ":" + start_minute);
 					Date end = formatter.parse(end_hour + ":" + end_minute);
 					Date now = formatter.parse(formatter.format(new Date()));

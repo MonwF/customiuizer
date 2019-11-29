@@ -9,7 +9,10 @@
 		android:title="@string/enable_mod"
 		android:defaultValue="false" />
 
-	<PreferenceCategory>
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:title="@string/settings"
+		android:dependency="pref_key_system_noscreenlock_act"
+		miuizer:dynamic="true">
 
 	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_noscreenlock"
@@ -17,32 +20,24 @@
 		android:title="@string/system_noscreenlock_title"
 		android:entries="@array/noscreenlock"
 		android:entryValues="@array/noscreenlock_val"
-		android:defaultValue="1"
-		android:dependency="pref_key_system_noscreenlock_act"
-		miuizer:dynamic="true" />
+		android:defaultValue="1" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_noscreenlock_skip"
 		android:summary="@string/system_noscreenlock_scr_summ"
 		android:title="@string/system_noscreenlock_scr_title"
-		android:defaultValue="false"
-		android:dependency="pref_key_system_noscreenlock_act"
-		miuizer:dynamic="true" />
+		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
 		android:title="@string/system_noscreenlock_wifi_title"
 		android:summary="@string/system_noscreenlock_wifi_summ"
-		android:key="pref_key_system_noscreenlock_wifi"
-		android:dependency="pref_key_system_noscreenlock_act"
-		miuizer:dynamic="true" />
+		android:key="pref_key_system_noscreenlock_wifi" />
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
 		android:title="@string/system_noscreenlock_bt_title"
 		android:summary="@string/system_noscreenlock_bt_summ"
-		android:key="pref_key_system_noscreenlock_bt"
-		android:dependency="pref_key_system_noscreenlock_act"
-		miuizer:dynamic="true" />
+		android:key="pref_key_system_noscreenlock_bt" />
 
-	</PreferenceCategory>
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -56,8 +57,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -66,6 +71,7 @@ import miui.app.AlertDialog;
 import miui.view.SearchActionMode;
 
 import name.mikanoshi.customiuizer.mods.GlobalActions;
+import name.mikanoshi.customiuizer.prefs.ListPreferenceEx;
 import name.mikanoshi.customiuizer.subs.CategorySelector;
 import name.mikanoshi.customiuizer.subs.Controls;
 import name.mikanoshi.customiuizer.subs.Launcher;
@@ -83,7 +89,7 @@ public class MainFragment extends PreferenceFragmentBase {
 	public System prefSystem = new System();
 	public Launcher prefLauncher = new Launcher();
 	public Controls prefControls = new Controls();
-	private Various prefVarious = new Various();
+	public Various prefVarious = new Various();
 	private View searchView = null;
 	private ListView listView = null;
 	private ListView resultView = null;
@@ -176,11 +182,6 @@ public class MainFragment extends PreferenceFragmentBase {
 			actionMode = null;
 		}
 	};
-
-	public MainFragment() {
-		super();
-		this.setRetainInstance(true);
-	}
 
 	private Runnable showUpdateNotification = new Runnable() {
 		@Override
@@ -284,7 +285,7 @@ public class MainFragment extends PreferenceFragmentBase {
 						handler.post(hideUpdateNotification);
 				} catch (Throwable t) {}
 
-				Helpers.getAllMods(act);
+				Helpers.getAllMods(act, savedInstanceState != null);
 			}
 		}).start();
 
@@ -351,7 +352,6 @@ public class MainFragment extends PreferenceFragmentBase {
 		super.onActivityCreated(savedInstanceState);
 		setupImmersiveMenu();
 
-		getActionBar().setBackgroundDrawable(new ColorDrawable(Helpers.getSystemBackgroundColor(getContext())));
 		if (getView() == null) return;
 
 		resultView = getView().findViewById(android.R.id.custom);
@@ -380,7 +380,6 @@ public class MainFragment extends PreferenceFragmentBase {
 		setActionModeStyle(searchView);
 
 		search = searchView.findViewById(android.R.id.inputArea);
-		((TextView)search.findViewById(android.R.id.input)).setHint(R.string.search_input_description);
 		search.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -394,6 +393,9 @@ public class MainFragment extends PreferenceFragmentBase {
 				return true;
 			}
 		});
+
+		TextView searchInput = search.findViewById(android.R.id.input);
+		searchInput.setHint(R.string.search_input_description);
 
 		if (actionMode != null) actionMode.invalidate();
 
@@ -434,7 +436,35 @@ public class MainFragment extends PreferenceFragmentBase {
 			}
 		});
 
-		findPreference("pref_key_miuizer_forcelocale").setOnPreferenceChangeListener(new CheckBoxPreference.OnPreferenceChangeListener() {
+		String[] locales;
+		try {
+			AssetManager am = getContext().getAssets();
+			@SuppressWarnings("JavaReflectionMemberAccess") @SuppressLint("SoonBlockedPrivateApi")
+			Method getNonSystemLocales = AssetManager.class.getDeclaredMethod("getNonSystemLocales");
+			locales = (String[])getNonSystemLocales.invoke(am);
+		} catch (Throwable t) {
+			locales = new String[] { "it", "ru-RU", "tr", "uk-UK", "zh-CN" };
+		}
+
+		ArrayList<String> localesArr = new ArrayList<String>(Arrays.asList(locales));
+		ArrayList<String> localeNames = new ArrayList<String>();
+		localesArr.add(0, "en");
+		for (String locale: localesArr) try {
+			Locale loc = Locale.forLanguageTag(locale);
+			StringBuilder locStr = new StringBuilder(loc.getDisplayLanguage(loc));
+			locStr.setCharAt(0, Character.toUpperCase(locStr.charAt(0)));
+			localeNames.add(locStr.toString());
+		} catch (Throwable t) {
+			localeNames.add(Locale.getDefault().getDisplayLanguage(Locale.getDefault()));
+		}
+
+		localesArr.add(0, "auto");
+		localeNames.add(0, getString(R.string.array_system_default));
+
+		ListPreferenceEx locale = (ListPreferenceEx)findPreference("pref_key_miuizer_locale");
+		locale.setEntries(localeNames.toArray(new CharSequence[0]));
+		locale.setEntryValues(localesArr.toArray(new CharSequence[0]));
+		locale.setOnPreferenceChangeListener(new CheckBoxPreference.OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				getActivity().recreate();

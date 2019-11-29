@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.os.UserHandle;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -322,7 +323,8 @@ public class Launcher {
 		if (!isApplicatoin) return;
 		String pkgName = (String)XposedHelpers.callMethod(thisObject, "getPackageName");
 		String actName = (String)XposedHelpers.callMethod(thisObject, "getClassName");
-		String newTitle = MainModule.mPrefs.getString("launcher_renameapps_list:" + pkgName + "|" + actName, "");
+		UserHandle user = (UserHandle)XposedHelpers.getObjectField(thisObject, "user");
+		String newTitle = MainModule.mPrefs.getString("launcher_renameapps_list:" + pkgName + "|" + actName + "|" + user.hashCode(), "");
 		if (!TextUtils.isEmpty(newTitle)) XposedHelpers.setObjectField(thisObject, "mLabel", newTitle);
 	}
 
@@ -355,7 +357,8 @@ public class Launcher {
 								if (!isApplicatoin) continue;
 								String pkgName = (String)XposedHelpers.callMethod(shortcut, "getPackageName");
 								String actName = (String)XposedHelpers.callMethod(shortcut, "getClassName");
-								if (("pref_key_launcher_renameapps_list:" + pkgName + "|" + actName).equals(key)) {
+								UserHandle user = (UserHandle)XposedHelpers.getObjectField(shortcut, "user");
+								if (("pref_key_launcher_renameapps_list:" + pkgName + "|" + actName + "|" + user.hashCode()).equals(key)) {
 									CharSequence newStr = TextUtils.isEmpty(newTitle) ? (CharSequence)XposedHelpers.getAdditionalInstanceField(shortcut, "mLabelOrig") : newTitle;
 									XposedHelpers.setObjectField(shortcut, "mLabel", newStr);
 									if (lpparam.packageName.equals("com.miui.home")) {

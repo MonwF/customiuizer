@@ -17,8 +17,11 @@
 		android:title="@string/system_mods_toasts"
 		android:key="pref_key_system_cat_toasts" />
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
-		android:title="@string/system_mods_statusbar"
+		android:title="@string/system_mods_statusbar_statusbar"
 		android:key="pref_key_system_cat_statusbar" />
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/system_mods_statusbar_drawer"
+		android:key="pref_key_system_cat_drawer" />
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
 		android:title="@string/system_mods_notifications"
 		android:key="pref_key_system_cat_notifications" />

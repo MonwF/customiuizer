@@ -266,6 +266,16 @@
 			miuizer:format="%d%%"
 			miuizer:offtext="@string/array_default" />
 
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_controls_fsg_width"
+			android:title="@string/controls_fsg_width_title"
+			android:defaultValue="100"
+			miuizer:minValue="100"
+			miuizer:maxValue="400"
+			miuizer:stepValue="50"
+			miuizer:format="%d%%"
+			miuizer:offtext="@string/array_default" />
+
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

@@ -152,6 +152,14 @@
     <string name="system_ignorecalls_summ">阻止来电在所选应用上时窃取音频焦点，并停止通知其有关通话状态的变化</string>
     <string name="system_nosilentvibrate_title">不振动测试</string>
     <string name="system_nosilentvibrate_summ">将铃声模式切换为静音或在此模式下打开振动时不振动</string>
+    <string name="system_vibration_amp_title">闷响振动</string>
+    <string name="system_vibration_amp_summ">所选时段内减小振动强度</string>
+    <string name="system_vibration_amp_val_title">振动强度</string>
+    <string name="system_vibration_amp_val_summ">更改振动的时段或强度取决于设备的振幅控制支持</string>
+    <string name="system_vibration_amp_ringer_title">通话</string>
+    <string name="system_vibration_amp_notif_title">通知</string>
+    <string name="system_vibration_amp_other_title">其他全部</string>
+    <string name="system_vibration_amp_period_title">时段</string>
     <string name="system_vibration_title">阻止振动</string>
     <string name="system_vibration_summ">阻止已选应用使用振动</string>
     <string name="notification_volume">通知音量</string>
@@ -178,6 +186,7 @@
     <string name="system_lockscreenshortcuts_left_off_title">禁用向右滑动手势</string>
     <string name="system_lockscreenshortcuts_left_title">左侧屏幕快捷方式</string>
     <string name="system_lockscreenshortcuts_left_summ">管理快捷方式列表</string>
+    <string name="system_lockscreenshortcuts_left_align_title">垂直对齐</string>
     <string name="system_lockscreenshortcuts_left_skiplock_title">不需解锁</string>
     <string name="system_lockscreenshortcuts_left_skiplock_summ">设备锁定时可以访问启动的应用</string>
     <string name="system_noscreenlock_title">禁用屏幕锁</string>
@@ -443,6 +452,7 @@
     <string name="controls_navbar_noaction">无定义的动作</string>
     <string name="controls_mods_fsg">全屏导航手势</string>
     <string name="controls_fsg_coverage_title">返回手势区域高度</string>
+    <string name="controls_fsg_width_title">后退手势区域宽度</string>
     <string name="controls_fsg_horiz_title">水平手势</string>
     <string name="controls_fsg_horiz_summ">启用水平手势和导航栏</string>
     <string name="various_mods">杂项</string>
@@ -608,6 +618,8 @@
     <string name="array_own">自带</string>
     <string name="array_scale_fit">适应屏幕</string>
     <string name="array_scale_cover">覆盖全屏</string>
+    <string name="array_align_top">顶部</string>
+    <string name="array_align_bottom">底部</string>
     <string name="toggle_wifi_on">Wi-Fi已启用</string>
     <string name="toggle_wifi_off">Wi-Fi已禁用</string>
     <string name="toggle_bt_on">蓝牙已启用</string>
@@ -640,8 +652,8 @@
     <string name="miuizer_show_launchericon_summ">在启动器中显示图标</string>
     <string name="miuizer_show_settingsicon_title">快速访问图标</string>
     <string name="miuizer_show_settingsicon_summ">在设置中显示图标</string>
-    <string name="miuizer_forcelocale_title">英文界面</string>
-    <string name="miuizer_forcelocale_summ">始终以英文显示模块界面</string>
+    <string name="miuizer_locale_title">界面语言</string>
+    <string name="miuizer_locale_summ">始终以所选语言显示模块界面</string>
     <string name="troubleshoot">故障排除</string>
     <string name="miuizer_acrasend_title">发送详细报告</string>
     <string name="miuizer_acrasend_summ">收集设备和环境信息、logcat和Xposed日志，并将其发送给开发人员。\n需要互联网连接</string>

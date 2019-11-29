@@ -1,6 +1,5 @@
 package name.mikanoshi.customiuizer.subs;
 
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import miui.widget.SeekBar;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SubFragment;
 import name.mikanoshi.customiuizer.utils.ColorCircle;
-import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class ColorSelector extends SubFragment {
 
@@ -40,7 +38,9 @@ public class ColorSelector extends SubFragment {
 		colorCircle.setTag(key);
 		colorCircle.init();
 		colorCircle.setListener(this::updateSelColor);
-		updateSelColor(colorCircle.getColor());
+		if (savedInstanceState != null) colorCircle.setColor(savedInstanceState.getInt("colorCircleColor"));
+		int currentColor = colorCircle.getColor();
+		updateSelColor(currentColor);
 
 		SeekBar value = getView().findViewById(R.id.hsv_value);
 		value.setOnSeekBarChangeListener(new android.widget.SeekBar.OnSeekBarChangeListener() {
@@ -56,9 +56,8 @@ public class ColorSelector extends SubFragment {
 			@Override
 			public void onStopTrackingTouch(android.widget.SeekBar seekBar) {}
 		});
-		int mColor = Helpers.prefs.getInt(key, Color.WHITE);
 		float[] hsv = new float[3];
-		Color.RGBToHSV(Color.red(mColor), Color.green(mColor), Color.blue(mColor), hsv);
+		Color.RGBToHSV(Color.red(currentColor), Color.green(currentColor), Color.blue(currentColor), hsv);
 		value.setProgress((int)(hsv[2] * 100), false);
 
 		white = getView().findViewById(R.id.white_color);
@@ -66,7 +65,7 @@ public class ColorSelector extends SubFragment {
 		auto = getView().findViewById(R.id.auto_color);
 
 		white = getView().findViewById(R.id.white_color);
-		white.setSelected(colorCircle.getColor() == Color.WHITE);
+		white.setSelected(currentColor == Color.WHITE);
 		white.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -77,7 +76,7 @@ public class ColorSelector extends SubFragment {
 		});
 
 		black = getView().findViewById(R.id.black_color);
-		black.setSelected(colorCircle.getColor() == Color.BLACK);
+		black.setSelected(currentColor == Color.BLACK);
 		black.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -89,7 +88,7 @@ public class ColorSelector extends SubFragment {
 
 		auto = getView().findViewById(R.id.auto_color);
 		if (key.contains("pref_key_system_batteryindicator")) auto.setVisibility(View.VISIBLE);
-		auto.setSelected(colorCircle.getColor() == Color.TRANSPARENT);
+		auto.setSelected(currentColor == Color.TRANSPARENT);
 		auto.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -98,6 +97,12 @@ public class ColorSelector extends SubFragment {
 				value.setProgress(0, false);
 			}
 		});
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		savedInstanceState.putInt("colorCircleColor", colorCircle.getColor());
+		super.onSaveInstanceState(savedInstanceState);
 	}
 
 	void setSelected(int btn) {
@@ -109,15 +114,6 @@ public class ColorSelector extends SubFragment {
 			case 2: black.setSelected(true); break;
 			case 3: auto.setSelected(true); break;
 		}
-	}
-
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-		finish();
-		Bundle args = new Bundle();
-		args.putString("key", key);
-		openSubFragment(new ColorSelector(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.Edit, this.titleId, R.layout.fragment_selectcolor);
 	}
 
 }

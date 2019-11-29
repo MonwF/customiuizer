@@ -46,6 +46,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -131,9 +132,9 @@ public class Helpers {
 	public static ValueAnimator shimmerAnim;
 	public static boolean showNewMods = true;
 	public static final HashSet<String> newMods =  new HashSet<String>(Arrays.asList(
-		"pref_key_launcher_folderblur",
-		"pref_key_launcher_foldershade_level",
-		"pref_key_system_showpct_top"
+		"pref_key_system_vibration_amp_cat",
+		"pref_key_system_lockscreenshortcuts_left_align",
+		"pref_key_controls_fsg_width"
 	));
 	public static final ArrayList<String> shortcutIcons = new ArrayList<String>(Arrays.asList(
 		"bankcard", "buscard", "calculator", "calendar", "contacts", "magazine", "music", "notes", "remotecontroller", "smarthome", "miuizer"
@@ -784,6 +785,19 @@ public class Helpers {
 		return null;
 	}
 
+	public static Drawable getShortcutIcon(Context context, String key) {
+		Drawable shortcutIcon = null;
+		String shortcutIconPath = Helpers.getProtectedContext(context).getFilesDir() + "/shortcuts/" + key + "_shortcut.png";
+		File shortcutIconFile = new File(shortcutIconPath);
+		if (shortcutIconFile.exists())
+		shortcutIcon = new BitmapDrawable(context.getResources(), BitmapFactory.decodeFile(shortcutIconFile.getAbsolutePath()));
+		Drawable[] layers = { shortcutIcon };
+		LayerDrawable insetShortcutIcon = new LayerDrawable(layers);
+		int padding = (int)(5 * context.getResources().getDisplayMetrics().density);
+		insetShortcutIcon.setLayerInset(0, padding, padding, padding, padding);
+		return insetShortcutIcon;
+	}
+
 	public static String getActionName(Context context, String key) {
 		try {
 			int action = getSharedIntPref(context, key + "_action", 1);
@@ -881,6 +895,24 @@ public class Helpers {
 		}
 	}
 
+	@SuppressWarnings("ConstantConditions")
+	public static Drawable getActionImageLocal(Context context, String key) {
+		try {
+			int action = prefs.getInt(key + "_action", 1);
+			if (action == 8)
+				return getAppIcon(context, prefs.getString(key + "_app", ""));
+			else if (action == 9)
+				return getShortcutIcon(context, key);
+			else if (action == 20)
+				return getAppIcon(context, prefs.getString(key + "_activity", ""), true);
+			else
+				return null;
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+			return null;
+		}
+	}
+
 	private static void parsePrefXml(Context context, int xmlResId) {
 		Resources res = context.getResources();
 		String lastPrefSub = null;
@@ -952,8 +984,9 @@ public class Helpers {
 		}
 	}
 
-	public static void getAllMods(Context context) {
-		if (allModsList.size() > 0) return;
+	public static void getAllMods(Context context, boolean force) {
+		if (force) allModsList.clear();
+		else if (allModsList.size() > 0) return;
 		parsePrefXml(context, R.xml.prefs_system);
 		parsePrefXml(context, R.xml.prefs_launcher);
 		parsePrefXml(context, R.xml.prefs_controls);
@@ -1105,9 +1138,11 @@ public class Helpers {
 	}
 
 	public static synchronized Context getLocaleContext(Context context) throws Throwable {
-		if (prefs != null && prefs.getBoolean("pref_key_miuizer_forcelocale", false)) {
+		if (prefs != null) {
+			String locale = prefs.getString("pref_key_miuizer_locale", "auto");
+			if ("auto".equals(locale) || "1".equals(locale)) return context;
 			Configuration config = context.getResources().getConfiguration();
-			config.setLocale(Locale.ENGLISH);
+			config.setLocale(Locale.forLanguageTag(locale));
 			return context.createConfigurationContext(config);
 		} else {
 			return context;
@@ -1253,7 +1288,12 @@ public class Helpers {
 			if (inputStream != null && inputStream.available() > 0) {
 				Bitmap bmp = BitmapFactory.decodeStream(inputStream);
 				inputStream.close();
-				return bmp == null ? null : new BitmapDrawable(context.getResources(), bmp) ;
+				if (bmp == null) return null;
+				Drawable[] layers = { new BitmapDrawable(context.getResources(), bmp) };
+				LayerDrawable insetShortcutIcon = new LayerDrawable(layers);
+				int padding = (int)(5 * context.getResources().getDisplayMetrics().density);
+				insetShortcutIcon.setLayerInset(0, padding, padding, padding, padding);
+				return insetShortcutIcon;
 			} else log("ContentResolver", "[" + name + "] InputStream fail: " + inputStream);
 		} catch (Throwable t) {
 			XposedBridge.log(t);

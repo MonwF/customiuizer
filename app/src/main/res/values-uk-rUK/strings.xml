@@ -571,8 +571,6 @@
     <string name="miuizer_show_launchericon_summ">Показувати іконку в лаунчерах</string>
     <string name="miuizer_show_settingsicon_title">Іконка швидкого доступу</string>
     <string name="miuizer_show_settingsicon_summ">Показувати іконку в Налаштуваннях</string>
-    <string name="miuizer_forcelocale_title">Інтерфейс англійською</string>
-    <string name="miuizer_forcelocale_summ">Завжди відображати інтерфейс модуля англійською мовою</string>
     <string name="troubleshoot">Вирішення проблем</string>
     <string name="miuizer_acrasend_title">Надіслати докладний звіт</string>
     <string name="miuizer_acrasend_summ">Зібрати дані про пристрій і змінні оточення, logcat і Xposed лог, і відправити їх розробнику.\nДля відправки потрібен інтернет</string>

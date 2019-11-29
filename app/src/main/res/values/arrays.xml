@@ -598,6 +598,15 @@
 		<item>3</item>
 	</string-array>
 
+	<string-array name="verticalalign">
+		<item>@string/array_align_top</item>
+		<item>@string/array_align_bottom</item>
+	</string-array>
+	<string-array name="verticalalign_val">
+		<item>1</item>
+		<item>2</item>
+	</string-array>
+
 	<string-array name="placeholder_array">
 		<item>@string/dummy</item>
 	</string-array>

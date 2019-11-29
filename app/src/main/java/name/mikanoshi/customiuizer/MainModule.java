@@ -61,7 +61,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getBoolean("system_allrotations")) System.AllRotationsRes();
 		if (mPrefs.getBoolean("system_volumetimer")) System.VolumeTimerValuesRes();
 		if (mPrefs.getBoolean("system_separatevolume") && mPrefs.getBoolean("system_separatevolume_slider")) System.NotificationVolumeDialogRes();
-		if (mPrefs.getBoolean("system_lockscreenshortcuts")) System.LockScreenShortcutRes();
 		if (mPrefs.getBoolean("system_statusbaricons_volte")) System.HideIconsVoLTERes();
 		if (mPrefs.getBoolean("launcher_unlockgrids")) Launcher.UnlockGridsRes();
 		if (mPrefs.getBoolean("launcher_docktitles")) Launcher.ShowHotseatTitlesRes();
@@ -147,6 +146,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_hideproxywarn")) System.HideProximityWarningHook(lpparam);
 			if (mPrefs.getBoolean("system_firstpress")) System.FirstVolumePressHook(lpparam);
 			if (mPrefs.getBoolean("system_apksign")) System.NoSignatureVerifyServiceHook(lpparam);
+			if (mPrefs.getBoolean("system_vibration_amp")) System.MuffledVibrationHook(lpparam);
 			if (mPrefs.getBoolean("controls_powerflash")) Controls.PowerKeyHook(lpparam);
 			if (mPrefs.getBoolean("controls_fingerprintfailure")) Controls.FingerprintHapticFailureHook(lpparam);
 			if (mPrefs.getBoolean("controls_fingerprintscreen")) Controls.FingerprintScreenOnHook(lpparam);
@@ -183,7 +183,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getInt("system_qsgridrows", 1) > 1 || mPrefs.getBoolean("system_qsnolabels")) System.QSGridLabelsHook(lpparam);
 			if (mPrefs.getInt("system_volumeblur_collapsed", 0) > 0 || mPrefs.getInt("system_volumeblur_expanded", 0) > 0) System.BlurVolumeDialogBackgroundHook(lpparam);
 			if (mPrefs.getInt("system_lstimeout", 9) > 9) System.LockScreenTimeoutHook(lpparam);
-			if (mPrefs.getInt("controls_fsg_coverage", 60) != 60) Controls.BackGestureAreaHook(lpparam);
+			if (mPrefs.getInt("controls_fsg_coverage", 60) != 60) Controls.BackGestureAreaHeightHook(lpparam);
+			if (mPrefs.getInt("controls_fsg_width", 100) > 100) Controls.BackGestureAreaWidthHook(lpparam);
 			if (mPrefs.getInt("controls_navbarleft_action", 1) > 1 ||
 				mPrefs.getInt("controls_navbarleftlong_action", 1) > 1 ||
 				mPrefs.getInt("controls_navbarright_action", 1) > 1 ||
