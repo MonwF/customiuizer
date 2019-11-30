@@ -34,52 +34,48 @@
 		miuizer:countAsSummary="true" />
 
 	<PreferenceCategory
-		android:title="@string/calls">
+		android:title="@string/calls"/>
 
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
-			android:key="pref_key_various_showcallui"
-			android:title="@string/various_showcallui_title"
-			android:summary="@string/various_showcallui_summ"
-			android:entries="@array/incallui"
-			android:entryValues="@array/incallui_val"
-			android:defaultValue="0" />
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_various_showcallui"
+		android:title="@string/various_showcallui_title"
+		android:summary="@string/various_showcallui_summ"
+		android:entries="@array/incallui"
+		android:entryValues="@array/incallui_val"
+		android:defaultValue="0" />
 
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
-			android:key="pref_key_various_calluibright_cat"
-			android:title="@string/various_calluibright_title" />
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:key="pref_key_various_calluibright_cat"
+		android:title="@string/various_calluibright_title" />
 
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
-			android:key="pref_key_various_callreminder_cat"
-			android:title="@string/various_callreminder_title"
-			android:summary="@string/various_callreminder_summ" />
-
-	</PreferenceCategory>
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:key="pref_key_various_callreminder_cat"
+		android:title="@string/various_callreminder_title"
+		android:summary="@string/various_callreminder_summ" />
 
 	<PreferenceCategory
-		android:title="@string/settings">
+		android:title="@string/settings" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_various_disableapp"
-			android:summary="@string/various_disableapp_summ"
-			android:title="@string/various_disableapp_title"
-			android:defaultValue="false" />
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_various_disableapp"
+		android:summary="@string/various_disableapp_summ"
+		android:title="@string/various_disableapp_title"
+		android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_various_appdetails"
-			android:summary="@string/various_apps_summ"
-			android:title="@string/various_apps_title"
-			android:defaultValue="false" />
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_various_appdetails"
+		android:summary="@string/various_apps_summ"
+		android:title="@string/various_apps_title"
+		android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
-			android:key="pref_key_various_appsort"
-			android:summary=""
-			android:title="@string/various_appsort_title"
-			android:entries="@array/appsort"
-			android:entryValues="@array/appsort_val"
-			android:defaultValue="0"
-			miuizer:valueAsSummary="true"
-			miuizer:dynamic="true" />
-
-	</PreferenceCategory>
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_various_appsort"
+		android:summary=""
+		android:title="@string/various_appsort_title"
+		android:entries="@array/appsort"
+		android:entryValues="@array/appsort_val"
+		android:defaultValue="0"
+		miuizer:valueAsSummary="true"
+		miuizer:dynamic="true" />
 
 </PreferenceScreen>
