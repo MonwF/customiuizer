@@ -269,6 +269,14 @@ public class SubFragment extends PreferenceFragmentBase {
 		}
 	};
 
+	public Preference.OnPreferenceClickListener openStatusbarActions = new Preference.OnPreferenceClickListener() {
+		@Override
+		public boolean onPreferenceClick(Preference preference) {
+			openMultiAction(preference, MultiAction.Actions.STATUSBAR);
+			return true;
+		}
+	};
+
 	public Preference.OnPreferenceClickListener openLockScreenActions = new Preference.OnPreferenceClickListener() {
 		@Override
 		public boolean onPreferenceClick(Preference preference) {

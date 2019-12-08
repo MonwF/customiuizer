@@ -325,6 +325,11 @@
 			android:summary="@string/system_detailednetspeed_summ"
 			android:title="@string/system_detailednetspeed_title" />
 
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_statusbarcontrols_cat"
+			android:summary="@string/system_statusbarcontrols_summ"
+			android:title="@string/system_statusbarcontrols_title" />
+
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
@@ -731,6 +736,12 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_lsalarm_cat"
+			android:summary="@string/system_lsalarm_summ"
+			android:title="@string/system_lsalarm_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_lockscreenshortcuts_cat"
 			android:summary="@string/system_lockscreenshortcuts_summ"
 			android:title="@string/system_lockscreenshortcuts_title"
@@ -817,6 +828,12 @@
 			android:key="pref_key_system_removesecure"
 			android:title="@string/system_removesecure_title"
 			android:summary="@string/system_removesecure_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_resizablewidgets"
+			android:title="@string/system_resizablewidgets_title"
+			android:summary="@string/system_resizablewidgets_summ"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx

@@ -1,6 +1,7 @@
 package name.mikanoshi.customiuizer.mods;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
@@ -266,12 +267,25 @@ public class Controls {
 	}
 
 	public static void VolumeCursorHook() {
+		Helpers.findAndHookMethod(Activity.class, "onResume", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				Activity act = (Activity)param.thisObject;
+				if (act == null) return;
+				Intent intent = new Intent(GlobalActions.EVENT_PREFIX + "CHANGE_FOCUSED_APP");
+				intent.putExtra("package", act.getPackageName());
+				act.sendBroadcast(intent);
+			}
+		});
+
 		Helpers.findAndHookMethod("android.inputmethodservice.InputMethodService", null, "onKeyDown", int.class, KeyEvent.class, new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
 				InputMethodService ims = (InputMethodService)param.thisObject;
 				int code = (int)param.args[0];
 				if ((code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN) && ims.isInputViewShown()) {
+					String pkgName = Settings.Global.getString(ims.getContentResolver(), Helpers.modulePkg + ".foreground.package");
+					if (MainModule.mPrefs.getStringSet("controls_volumecursor_apps").contains(pkgName)) return;
 					boolean swapDir = MainModule.mPrefs.getBoolean("controls_volumecursor_reverse");
 					ims.sendDownUpKeyEvents(code == (swapDir ? KeyEvent.KEYCODE_VOLUME_DOWN : KeyEvent.KEYCODE_VOLUME_UP) ? KeyEvent.KEYCODE_DPAD_LEFT : KeyEvent.KEYCODE_DPAD_RIGHT);
 					param.setResult(true);
@@ -284,8 +298,24 @@ public class Controls {
 			protected void before(MethodHookParam param) throws Throwable {
 				InputMethodService ims = (InputMethodService)param.thisObject;
 				int code = (int)param.args[0];
-				if ((code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN) && ims.isInputViewShown())
-				param.setResult(true);
+				if ((code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN) && ims.isInputViewShown()) {
+					String pkgName = Settings.Global.getString(ims.getContentResolver(), Helpers.modulePkg + ".foreground.package");
+					if (!MainModule.mPrefs.getStringSet("controls_volumecursor_apps").contains(pkgName)) param.setResult(true);
+				}
+			}
+		});
+	}
+
+	public static void VolumeCursorFocusedHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethods("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "init", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				mContext.registerReceiver(new BroadcastReceiver() {
+					public void onReceive(final Context context, Intent intent) {
+						Settings.Global.putString(context.getContentResolver(), Helpers.modulePkg + ".foreground.package", intent.getStringExtra("package"));
+					}
+				}, new IntentFilter(GlobalActions.EVENT_PREFIX + "CHANGE_FOCUSED_APP"));
 			}
 		});
 	}

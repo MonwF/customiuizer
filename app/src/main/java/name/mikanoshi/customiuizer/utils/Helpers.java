@@ -132,13 +132,12 @@ public class Helpers {
 	public static ValueAnimator shimmerAnim;
 	public static boolean showNewMods = true;
 	public static final HashSet<String> newMods =  new HashSet<String>(Arrays.asList(
-		"pref_key_system_vibration_amp_cat",
-		"pref_key_system_lockscreenshortcuts_left_align",
-		"pref_key_controls_fsg_width"
+		"pref_key_system_statusbarcontrols_cat",
+		"pref_key_system_lsalarm_cat",
+		"pref_key_system_resizablewidgets",
+		"pref_key_controls_volumecursor_apps"
 	));
-	public static final ArrayList<String> shortcutIcons = new ArrayList<String>(Arrays.asList(
-		"bankcard", "buscard", "calculator", "calendar", "contacts", "magazine", "music", "notes", "remotecontroller", "smarthome", "miuizer"
-	));
+	public static final ArrayList<String> shortcutIcons = new ArrayList<String>();
 
 	public enum SettingsType {
 		Preference, Edit

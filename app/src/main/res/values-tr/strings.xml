@@ -77,6 +77,11 @@
     <string name="system_detailednetspeed_lowlevel_summ">Ayarlamış olduğunuz değere göre Bağlantı Hızı düşük olarak kabul edilir.</string>
     <string name="system_detailednetspeed_zero_title">Devre Dışı (Mobil Ağ)</string>
     <string name="system_detailednetspeed_zero_summ">Bağlantı Hızı değerleri sıfırken görünürlüğü azaltır.</string>
+    <string name="system_statusbarcontrols_title">Hareket kontrolleri</string>
+    <string name="system_statusbarcontrols_summ">Seçili eylemleri slayt ve çift dokunuşla gerçekleştir</string>
+    <string name="system_statusbarcontrols_single_title">Tek parmakla yatay slayt</string>
+    <string name="system_statusbarcontrols_dual_title">İki parmağınızla yatay slayt</string>
+    <string name="system_statusbarcontrols_dt_title">Çift dokunuş eylemi</string>
     <string name="system_fixmeter_title">Boşluk (Bağlantı Hızı)</string>
     <string name="system_fixmeter_summ">Bağlantı Hızı göstergesi için ekran kenarından yatay olarak boşluk artırılır.</string>
     <string name="system_compactnotif_title">Kompakt</string>
@@ -232,6 +237,8 @@
     <string name="system_removesecure_summ">Herhangi bir uygulamanın ekran görüntüsünü ve videosunu kaydetmesine izin ver</string>
     <string name="system_hideproxywarn_title">Uyarı</string>
     <string name="system_hideproxywarn_summ">Kulaklık alanının kapatıldığını belirten uyarı gizlenir.</string>
+    <string name="system_resizablewidgets_title">Widget yeniden boyutlandırma</string>
+    <string name="system_resizablewidgets_summ">Widget boyutu sınırlamalarını kaldırın</string>
     <string name="system_unblockthird_title">Başlatıcı</string>
     <string name="system_unblockthird_summ">Çin ROM\'larındaki 3.Parti kısıtlaması kaldırılır.</string>
     <string name="system_cleanshare_title">Paylaş</string>
@@ -268,6 +275,11 @@
     <string name="system_nodrawerbackground_summ">Kilit ekranındayken otomatik olarak renk üretme duvar kağıdı ile saydam olana arka plan değiştirme</string>
     <string name="system_dttosleep_title">Dokunma (Çift)</string>
     <string name="system_dttosleep_summ">Ekran Kilidi\'nde boş bir yere çift dokunulduğunda ekran kapatılır.</string>
+    <string name="system_lsalarm_title">Bir sonraki alarmı göster</string>
+    <string name="system_lsalarm_summ">Geçerli tarihin yanında en yakın alarm saatini göster</string>
+    <string name="system_lsalarm_format_title">Oynatma formatı</string>
+    <string name="system_lsalarm_all_title">Tüm alarmları göster</string>
+    <string name="system_lsalarm_all_summ">MIUI alarmı ayarlanmadığında varsayılan Android API kullanarak bir sonraki alarm saatini alın. Beklenmeyen sonuçlar üretebilir.</string>
     <string name="system_mods_statusbar">Durum ve Bildirim Paneli</string>
     <string name="system_mods_statusbar_statusbar">Durum Çubuğu</string>
     <string name="system_mods_statusbar_drawer">Bildirim Paneli</string>
@@ -620,6 +632,10 @@
     <string name="array_scale_cover">Tüm ekranı kapat</string>
     <string name="array_align_top">Üst</string>
     <string name="array_align_bottom">Alt</string>
+    <string name="array_adjust_brightness">Parlaklığı ayarla</string>
+    <string name="array_adjust_volume">Ses seviyesini ayarlayın</string>
+    <string name="array_alarm_absolute">Normal zaman</string>
+    <string name="array_alarm_relative">Bağıl zaman</string>
     <string name="toggle_wifi_on">Etkin (Wi-Fi)</string>
     <string name="toggle_wifi_off">Devre Dışı (Wi-Fi)</string>
     <string name="toggle_bt_on">Etkin (Bluetooth)</string>
@@ -732,15 +748,15 @@
     <string name="wifi_location_title">Konum Ayarları</string>
     <string name="wifi_location_summ">Android Pie\'de; Wi-Fi ağlarının listesini alabilmesi için konum erişimi gerekir.</string>
     <string name="wifi_category1">Güvenilir Ağlar</string>
-    <string name="wifi_category2">Mevcut Ağlar</string>
+    <string name="wifi_category2">Mevcut ağlar</string>
     <string name="bt_fetch_devices_title">Aktar</string>
     <string name="bt_fetch_devices_summ">Sistemde kayıtlı Bluetooth cihazlarını aktarır.</string>
-    <string name="bt_category1">Güvenilir Cihazlar</string>
-    <string name="bt_category2">Mevcut Cihazlar</string>
-    <string name="bt_devices">Bluetooth Cihazları</string>
+    <string name="bt_category1">Güvenilir cihazlar</string>
+    <string name="bt_category2">Mevcut cihazlar</string>
+    <string name="bt_devices">Bluetooth cihazları</string>
     <string name="bt_not_supported">Bluetooth bu cihazda desteklenmiyor</string>
-    <string name="request_bt">Önce Bluetooth\'u Aç!</string>
-    <string name="request_wifi">Önce Wi-Fi\'yi Aç!</string>
+    <string name="request_bt">Önce Bluetooth\'u aç!</string>
+    <string name="request_wifi">Önce Wi-Fi\'yi aç!</string>
     <string name="request_location">Konum erişimi olmadan tarama yapılamıyor.</string>
     <string name="force_closed">Zorla Kapalı %s</string>
     <string name="credentials_ok">Açık (Kimlik Bilgileri)</string>
@@ -786,5 +802,5 @@
     <string name="time_12h">12 saat</string>
     <string name="white_color">Beyaz</string>
     <string name="black_color">Siyah</string>
-    <string name="auto_color">Durum Çubuğu Rengi</string>
+    <string name="auto_color">Durum çubuğu rengi</string>
 </resources>

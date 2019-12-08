@@ -14,6 +14,7 @@ import android.app.Notification;
 import android.app.TaskStackBuilder;
 import android.app.WallpaperManager;
 import android.app.admin.DevicePolicyManager;
+import android.appwidget.AppWidgetProviderInfo;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -74,8 +75,11 @@ import android.support.annotation.RequiresApi;
 import android.telephony.PhoneStateListener;
 import android.text.Layout;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
+import android.text.format.DateUtils;
 import android.util.ArrayMap;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Pair;
 import android.util.SparseIntArray;
 import android.util.TypedValue;
@@ -92,7 +96,6 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Magnifier;
 import android.widget.RelativeLayout;
 import android.widget.RemoteViews;
@@ -1151,7 +1154,7 @@ public class System {
 			});
 		}
 
-		if (Helpers.isNougat())
+		if (!Helpers.isPiePlus())
 			Helpers.findAndHookMethod("com.android.server.display.AutomaticBrightnessController", lpparam.classLoader, "updateAutoBrightness", boolean.class, new MethodHook() {
 				@Override
 				protected void after(final MethodHookParam param) throws Throwable {
@@ -4621,8 +4624,8 @@ public class System {
 
 	public static void NoSignatureVerifyHook() {
 		if (Helpers.isNougat()) return;
-		Helpers.hookAllMethods("android.content.pm.PackageParser$SigningDetails", null, "checkCapability", XC_MethodReplacement.returnConstant(true));
-		Helpers.hookAllMethods("android.content.pm.PackageParser$SigningDetails", null, "checkCapabilityRecover", XC_MethodReplacement.returnConstant(true));
+		Helpers.hookAllMethods("android.content.pm.PackageParser.SigningDetails", null, "checkCapability", XC_MethodReplacement.returnConstant(true));
+		Helpers.hookAllMethods("android.content.pm.PackageParser.SigningDetails", null, "checkCapabilityRecover", XC_MethodReplacement.returnConstant(true));
 	}
 
 	public static void NoSignatureVerifyServiceHook(LoadPackageParam lpparam) {
@@ -4941,6 +4944,201 @@ public class System {
 //
 //			}
 //		});
+	}
+
+	public static void ResizableWidgetsHook() {
+		Helpers.findAndHookMethod("android.appwidget.AppWidgetHostView", null, "getAppWidgetInfo", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				AppWidgetProviderInfo widgetInfo = (AppWidgetProviderInfo)param.getResult();
+				if (widgetInfo == null) return;
+				widgetInfo.resizeMode = AppWidgetProviderInfo.RESIZE_BOTH;
+				widgetInfo.minHeight = 0;
+				widgetInfo.minWidth = 0;
+				widgetInfo.minResizeHeight = 0;
+				widgetInfo.minResizeWidth = 0;
+				param.setResult(widgetInfo);
+			}
+		});
+
+		Helpers.findAndHookMethod("android.appwidget.AppWidgetManager", null, "getAppWidgetInfo", int.class, new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				AppWidgetProviderInfo widgetInfo = (AppWidgetProviderInfo)param.getResult();
+				if (widgetInfo == null) return;
+				widgetInfo.resizeMode = AppWidgetProviderInfo.RESIZE_BOTH;
+				widgetInfo.minHeight = 0;
+				widgetInfo.minWidth = 0;
+				widgetInfo.minResizeHeight = 0;
+				widgetInfo.minResizeWidth = 0;
+				param.setResult(widgetInfo);
+			}
+		});
+	}
+
+	private static void hookUpdateTime(Object thisObject) {
+		try {
+			TextView mCurrentDate = (TextView)XposedHelpers.getObjectField(thisObject, "mCurrentDate");
+			if (mCurrentDate == null) return;
+
+			long timestamp = Helpers.getNextMIUIAlarmTime(mCurrentDate.getContext());
+			if (timestamp == 0 && MainModule.mPrefs.getBoolean("system_lsalarm_all"))
+			timestamp = Helpers.getNextStockAlarmTime(mCurrentDate.getContext());
+			if (timestamp == 0) return;
+
+			StringBuilder alarmStr = new StringBuilder();
+			alarmStr.append(mCurrentDate.getText()).append(" — ").append(Helpers.getModuleRes(mCurrentDate.getContext()).getString(R.string.system_statusbaricons_alarm_title)).append(" ");
+			int format = MainModule.mPrefs.getStringAsInt("system_lsalarm_format", 1);
+			if (format == 2) {
+				StringBuilder timeStr = new StringBuilder(DateUtils.getRelativeTimeSpanString(timestamp, currentTimeMillis(), 0, DateUtils.FORMAT_ABBREV_RELATIVE));
+				timeStr.setCharAt(0, Character.toLowerCase(timeStr.charAt(0)));
+				alarmStr.append(timeStr);
+			} else {
+				SimpleDateFormat dateFormat = new SimpleDateFormat(DateFormat.getBestDateTimePattern(Locale.getDefault(), DateFormat.is24HourFormat(mCurrentDate.getContext()) ? "EHmm" : "EHmma"), Locale.getDefault());
+				dateFormat.setTimeZone(TimeZone.getDefault());
+				Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+				calendar.setTimeInMillis(timestamp);
+				alarmStr.append(dateFormat.format(calendar.getTime()));
+			}
+			mCurrentDate.setText(alarmStr);
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void LockScreenAlaramHook(LoadPackageParam lpparam) {
+		Helpers.hookAllConstructors("com.android.keyguard.KeyguardUpdateMonitor", lpparam.classLoader, new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				new Helpers.SharedPrefObserver(mContext, new Handler(mContext.getMainLooper())) {
+					@Override
+					public void onChange(Uri uri) {
+						try {
+							String key = uri.getPathSegments().get(2);
+							if ("pref_key_system_lsalarm_all".equals(key)) MainModule.mPrefs.put(key, Helpers.getSharedBoolPref(mContext, key, false));
+							if ("pref_key_system_lsalarm_format".equals(key)) MainModule.mPrefs.put(key, Helpers.getSharedStringPref(mContext, key, "1"));
+						} catch (Throwable t) {
+							XposedBridge.log(t);
+						}
+					}
+				};
+			}
+		});
+
+		if (!Helpers.findAndHookMethodSilently("com.android.keyguard.MiuiKeyguardBaseClock", lpparam.classLoader, "updateTime", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				hookUpdateTime(param.thisObject);
+			}
+		})) Helpers.findAndHookMethod("com.android.keyguard.MiuiKeyguardClock", lpparam.classLoader, "updateTime", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				hookUpdateTime(param.thisObject);
+			}
+		});
+	}
+
+	private static boolean isSlidingStart = false;
+	private static boolean isSliding = false;
+	private static float tapStartX = 0;
+	private static float tapStartY = 0;
+	private static float tapStartPointers = 0;
+	private static float tapStartBrightness = 0;
+	private static float currentTouchX = 0;
+	private static long currentTouchTime = 0;
+
+	public static void StatusBarGesturesHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "makeStatusBarView", new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				new Helpers.SharedPrefObserver(mContext, new Handler(mContext.getMainLooper())) {
+					@Override
+					public void onChange(Uri uri) {
+						try {
+							String key = uri.getPathSegments().get(2);
+							if ("pref_key_system_statusbarcontrols_single".equals(key) || "pref_key_system_statusbarcontrols_dual".equals(key))
+							MainModule.mPrefs.put(key, Helpers.getSharedStringPref(mContext, key, "1"));
+						} catch (Throwable t) {
+							XposedBridge.log(t);
+						}
+					}
+				};
+			}
+		});
+
+		Helpers.hookAllMethods("com.android.systemui.statusbar.phone.PanelView", lpparam.classLoader, "setExpandedHeightInternal", new MethodHook() {
+			@Override
+			protected void before(final MethodHookParam param) throws Throwable {
+				float mExpandedFraction = XposedHelpers.getFloatField(param.thisObject, "mExpandedFraction");
+				if (mExpandedFraction > 0.33f) {
+					currentTouchTime = 0;
+					currentTouchX = 0;
+				}
+			}
+		});
+
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "interceptTouchEvent", MotionEvent.class, new MethodHook() {
+			@Override
+			protected void before(final MethodHookParam param) throws Throwable {
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				MotionEvent event = (MotionEvent)param.args[0];
+				switch (event.getActionMasked()) {
+					case MotionEvent.ACTION_DOWN:
+						isSlidingStart = !XposedHelpers.getBooleanField(param.thisObject, "mPanelExpanded");
+						tapStartX = event.getX();
+						tapStartY = event.getY();
+						tapStartPointers = 1;
+						tapStartBrightness = Settings.System.getInt(mContext.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 0);
+						break;
+					case MotionEvent.ACTION_POINTER_DOWN:
+						tapStartPointers = event.getPointerCount();
+						break;
+					case MotionEvent.ACTION_UP:
+						long lastTouchTime = currentTouchTime;
+						float lastTouchX = currentTouchX;
+						currentTouchTime = currentTimeMillis();
+						currentTouchX = event.getX();
+						if (currentTouchTime - lastTouchTime < 250L && Math.abs(currentTouchX - lastTouchX) < 100F) {
+							GlobalActions.handleAction(mContext, "pref_key_system_statusbarcontrols_dt");
+							currentTouchTime = 0L;
+							currentTouchX = 0F;
+						}
+					case MotionEvent.ACTION_POINTER_UP:
+					case MotionEvent.ACTION_CANCEL:
+						isSlidingStart = false;
+						isSliding = false;
+						break;
+					case MotionEvent.ACTION_MOVE:
+						if (!isSlidingStart) return;
+						DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+						if (event.getY() - tapStartY > metrics.density * 30) return;
+						float delta = event.getX() - tapStartX;
+						if (delta == 0) return;
+						if (!isSliding && Math.abs(delta) > metrics.widthPixels / 10f) isSliding = true;
+						if (!isSliding) return;
+						int opt = MainModule.mPrefs.getStringAsInt(tapStartPointers == 2 ? "system_statusbarcontrols_dual" : "system_statusbarcontrols_single", 1);
+						if (opt == 2) {
+							ContentResolver resolver = mContext.getContentResolver();
+							int brightnessMode = Settings.System.getInt(resolver, Settings.System.SCREEN_BRIGHTNESS_MODE, 0);
+							if (brightnessMode == android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC) return;
+							int brightness = Settings.System.getInt(mContext.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 0);
+							int maxLevel = mContext.getResources().getInteger(mContext.getResources().getIdentifier("config_screenBrightnessSettingMaximum", "integer", "android"));
+							float ratio = delta / metrics.widthPixels;
+							if (maxLevel != 255) ratio *= 0.20f + 0.8f * ((float)brightness / (float)maxLevel);
+							int nextLevel = Math.min(maxLevel, Math.max(0, Math.round(tapStartBrightness + maxLevel * ratio)));
+							Settings.System.putInt(resolver, Settings.System.SCREEN_BRIGHTNESS, nextLevel);
+						} else if (opt == 3){
+							if (Math.abs(delta) < metrics.widthPixels / 50f) return;
+							tapStartX = event.getX();
+							AudioManager audioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
+							audioManager.adjustVolume(delta > 0 ? AudioManager.ADJUST_RAISE : AudioManager.ADJUST_LOWER, 1 << 12 /* FLAG_FROM_KEY */ | AudioManager.FLAG_SHOW_UI | AudioManager.FLAG_ALLOW_RINGER_MODES | AudioManager.FLAG_VIBRATE);
+						}
+						break;
+				}
+			}
+		});
 	}
 
 //	@SuppressWarnings("unchecked")

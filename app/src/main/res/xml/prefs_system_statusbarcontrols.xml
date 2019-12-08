@@ -1,0 +1,38 @@
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:miuizer="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbarcontrols"
+		android:title="@string/enable_mod"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:title="@string/settings"
+		android:dependency="pref_key_system_statusbarcontrols"
+		miuizer:dynamic="true">
+
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_system_statusbarcontrols_single"
+		android:title="@string/system_statusbarcontrols_single_title"
+		android:entries="@array/slideoptions"
+		android:entryValues="@array/slideoptions_val"
+		android:defaultValue="1" />
+
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_system_statusbarcontrols_dual"
+		android:title="@string/system_statusbarcontrols_dual_title"
+		android:entries="@array/slideoptions"
+		android:entryValues="@array/slideoptions_val"
+		android:defaultValue="1" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:key="pref_key_system_statusbarcontrols_dt"
+		android:title="@string/system_statusbarcontrols_dt_title"
+		android:defaultValue="false" />
+
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+
+</PreferenceScreen>

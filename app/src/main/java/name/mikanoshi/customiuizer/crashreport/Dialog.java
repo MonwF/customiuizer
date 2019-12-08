@@ -73,6 +73,7 @@ public class Dialog extends Activity {
 	private File reportFile;
 	private StringBuilder debugLog = new StringBuilder();
 	private EditText desc;
+	String errorText = null;
 
 	private boolean isNetworkAvailable() {
 		ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -156,24 +157,17 @@ public class Dialog extends Activity {
 		loader.show();
 
 		new Thread(() -> {
-			boolean res;
-			try {
-				res = sendReport();
-			} catch (Throwable t) {
-				res = false;
-			}
-
-			boolean finalRes = res;
+			final boolean res = sendReport();
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
 					loader.hide();
-					if (finalRes) {
+					if (res) {
 						Helpers.emptyFile(Helpers.getProtectedContext(Dialog.this).getFilesDir().getAbsolutePath() + "/uncaught_exceptions", true);
 						cancelReports();
 						showFinishDialog(true, null);
 					} else {
-						showFinishDialog(false, "REQUEST_ERROR");
+						showFinishDialog(false, errorText == null ? "REQUEST_ERROR" : errorText);
 					}
 				}
 			});
@@ -183,7 +177,10 @@ public class Dialog extends Activity {
 	protected boolean sendReport() {
 		try {
 			byte[] jsonData = crashData.toJSON().getBytes(StandardCharsets.UTF_8);
-			if (jsonData.length == 0) return false;
+			if (jsonData.length == 0) {
+				errorText = "ZERO_LENGTH";
+				return false;
+			}
 
 			//final String basicAuth = "Basic " + Base64.encodeToString("login:pass".getBytes(), Base64.NO_WRAP);
 			URL url = new URL("https://code.highspec.ru/crashreports/reporter.php");
@@ -220,6 +217,7 @@ public class Dialog extends Activity {
 			conn.disconnect();
 			return true;
 		} catch (Throwable t) {
+			errorText = t.getMessage();
 			t.printStackTrace();
 			return false;
 		}

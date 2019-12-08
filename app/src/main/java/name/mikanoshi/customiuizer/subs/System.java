@@ -132,6 +132,14 @@ public class System extends SubFragment {
 					}
 				});
 
+				findPreference("pref_key_system_statusbarcontrols_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						openSubFragment(new System_StatusbarControls(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_statusbarcontrols_title, R.xml.prefs_system_statusbarcontrols);
+						return true;
+					}
+				});
+
 				break;
 			case "pref_key_system_cat_drawer":
 				findPreference("pref_key_system_popupnotif_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -264,6 +272,14 @@ public class System extends SubFragment {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
 						openSubFragment(new SubFragment(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_albumartonlock_title, R.xml.prefs_system_albumartonlock);
+						return true;
+					}
+				});
+
+				findPreference("pref_key_system_lsalarm_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						openSubFragment(new SubFragment(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_lsalarm_title, R.xml.prefs_system_alarmonlock);
 						return true;
 					}
 				});

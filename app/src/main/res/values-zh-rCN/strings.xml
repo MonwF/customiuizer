@@ -21,10 +21,10 @@
     <string name="system_statusbaricons_battery2_title">电池充电百分比</string>
     <string name="system_statusbaricons_battery3_title">充电指示器</string>
     <string name="system_statusbaricons_battery_summ">可以叠加在某些ROM的电池图片上</string>
-    <string name="system_statusbaricons_alarm_title">警报</string>
+    <string name="system_statusbaricons_alarm_title">闹钟</string>
     <string name="system_statusbaricons_alarm_summ">完全隐藏</string>
-    <string name="system_statusbaricons_alarmn_title">选择性警报图标可见性</string>
-    <string name="system_statusbaricons_alarmn_summ">仅在下次警报前所定义的小时数时显示警报图标</string>
+    <string name="system_statusbaricons_alarmn_title">选择闹钟图标的可见性</string>
+    <string name="system_statusbaricons_alarmn_summ">仅在下次闹钟所定义的小时数前显示闹钟图标</string>
     <string name="system_statusbaricons_signal_title">移动网络信号</string>
     <string name="system_statusbaricons_nosims_title">无SIM卡</string>
     <string name="system_statusbaricons_hotspot_title">热点</string>
@@ -77,6 +77,11 @@
     <string name="system_detailednetspeed_lowlevel_summ">网速值低于该水平时将被认为慢，并会显示不同的指示器图标</string>
     <string name="system_detailednetspeed_zero_title">不活动时降低可见性</string>
     <string name="system_detailednetspeed_zero_summ">速值均为0时指示器透明</string>
+    <string name="system_statusbarcontrols_title">手势控制</string>
+    <string name="system_statusbarcontrols_summ">滑动双击时执行所选动作</string>
+    <string name="system_statusbarcontrols_single_title">单指水平滑动</string>
+    <string name="system_statusbarcontrols_dual_title">爽直水平滑动</string>
+    <string name="system_statusbarcontrols_dt_title">双击动作</string>
     <string name="system_fixmeter_title">网速间距</string>
     <string name="system_fixmeter_summ">增加网速指示器的水平边距</string>
     <string name="system_compactnotif_title">紧凑通知</string>
@@ -232,6 +237,8 @@
     <string name="system_removesecure_summ">允许对任意应用进行截图和录屏</string>
     <string name="system_hideproxywarn_title">隐藏禁用触摸的警告</string>
     <string name="system_hideproxywarn_summ">不显示耳机区域被覆盖的警告</string>
+    <string name="system_resizablewidgets_title">解禁小部件调整</string>
+    <string name="system_resizablewidgets_summ">解除小部件大小的限制</string>
     <string name="system_unblockthird_title">解锁启动器</string>
     <string name="system_unblockthird_summ">解除中国版ROM对第三方启动器的限制</string>
     <string name="system_cleanshare_title">清理共享菜单</string>
@@ -268,6 +275,11 @@
     <string name="system_nodrawerbackground_summ">锁屏时将背景从壁纸随机生成的颜色更改为透明</string>
     <string name="system_dttosleep_title">双击熄屏</string>
     <string name="system_dttosleep_summ">双击锁屏上任意空白处关闭屏幕</string>
+    <string name="system_lsalarm_title">显示下次闹钟</string>
+    <string name="system_lsalarm_summ">显示离当前日期最近的闹钟</string>
+    <string name="system_lsalarm_format_title">显示格式</string>
+    <string name="system_lsalarm_all_title">显示全部闹钟</string>
+    <string name="system_lsalarm_all_summ">当未设置MIUI闹钟时，使用默认的Android API获取下次闹钟的时间。可能会导致意外的后果。</string>
     <string name="system_mods_statusbar">状态栏和通知抽屉</string>
     <string name="system_mods_statusbar_statusbar">状态栏</string>
     <string name="system_mods_statusbar_drawer">通知抽屉</string>
@@ -470,7 +482,7 @@
     <string name="various_installappinfo_sdk">支持SDK</string>
     <string name="various_installappinfo_current">当前</string>
     <string name="various_alarmcompat_title">闹钟兼容性</string>
-    <string name="various_alarmcompat_summ">令所选应用正确显示MIUI时钟应用设置的下一次响铃时间</string>
+    <string name="various_alarmcompat_summ">令所选应用正确显示MIUI时钟应用设置的下一次闹钟时间</string>
     <string name="various_showcallui_title">显示通话界面</string>
     <string name="various_showcallui_summ">定义来电时应该显示的界面</string>
     <string name="various_calluibright_title">通话时屏幕亮度</string>
@@ -620,6 +632,10 @@
     <string name="array_scale_cover">覆盖全屏</string>
     <string name="array_align_top">顶部</string>
     <string name="array_align_bottom">底部</string>
+    <string name="array_adjust_brightness">调整亮度</string>
+    <string name="array_adjust_volume">调整音量</string>
+    <string name="array_alarm_absolute">定时</string>
+    <string name="array_alarm_relative">相对时间</string>
     <string name="toggle_wifi_on">Wi-Fi已启用</string>
     <string name="toggle_wifi_off">Wi-Fi已禁用</string>
     <string name="toggle_bt_on">蓝牙已启用</string>

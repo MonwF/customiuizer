@@ -945,7 +945,11 @@ public class Launcher {
 	}
 
 	public static void GoogleDiscoverHook(final LoadPackageParam lpparam) {
-		XposedHelpers.setStaticBooleanField(XposedHelpers.findClass("com.miui.home.launcher.DeviceConfig", lpparam.classLoader), "IS_USE_GOOGLE_MINUS_SCREEN", true);
+		try {
+			XposedHelpers.setStaticBooleanField(XposedHelpers.findClass("com.miui.home.launcher.DeviceConfig", lpparam.classLoader), "IS_USE_GOOGLE_MINUS_SCREEN", true);
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
 	}
 
 	public static void ShowHotseatTitlesRes() {
@@ -1031,6 +1035,21 @@ public class Launcher {
 				}
 				float ratio = MainModule.mPrefs.getInt("launcher_folderwallblur_radius", 0) / 100f;
 				if (ratio > 0) param.args[0] = (float)param.args[0] * ratio;
+			}
+		});
+	}
+
+	public static void StatusBarHeightHook(LoadPackageParam lpparam) {
+		Helpers.hookAllConstructors("com.miui.home.launcher.Workspace", lpparam.classLoader, new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				ViewGroup workspace = (ViewGroup)param.thisObject;
+				workspace.setPadding(
+					workspace.getPaddingLeft(),
+					workspace.getResources().getDimensionPixelSize(workspace.getResources().getIdentifier("status_bar_height", "dimen", "android")),
+					workspace.getPaddingRight(),
+					workspace.getPaddingBottom()
+				);
 			}
 		});
 	}

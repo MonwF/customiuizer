@@ -23,6 +23,9 @@ public class Controls extends SubFragment {
 			case "pref_key_controls_cat_power":
 				findPreference("pref_key_controls_powerdt").setOnPreferenceClickListener(openLaunchActions);
 				break;
+			case "pref_key_controls_cat_volume":
+				findPreference("pref_key_controls_volumecursor_apps").setOnPreferenceClickListener(openAppsEdit);
+				break;
 			case "pref_key_controls_cat_navbar":
 				findPreference("pref_key_controls_backlong").setOnPreferenceClickListener(openNavbarActions);
 				findPreference("pref_key_controls_homelong").setOnPreferenceClickListener(openNavbarActions);

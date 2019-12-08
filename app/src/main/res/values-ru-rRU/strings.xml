@@ -206,6 +206,10 @@
 	<string name="array_scale_cover">Заполнить экран полностью</string>
 	<string name="array_align_top">Сверху</string>
 	<string name="array_align_bottom">Снизу</string>
+	<string name="array_adjust_brightness">Регулировка яркости</string>
+	<string name="array_adjust_volume">Регулировка громкости</string>
+	<string name="array_alarm_absolute">Обычное время</string>
+	<string name="array_alarm_relative">Относительное время</string>
 
 	<string name="support_bug_title">Сообщить об ошибке</string>
 	<string name="support_bug_summ">Отправить сообщение об ошибке или предложить новую фичу</string>
@@ -425,7 +429,7 @@
 	<string name="launcher_foldershade_summ">Затемняет или осветляет фон</string>
 	<string name="launcher_foldershade_level_title">Интенсивность цвета</string>
 	<string name="launcher_folderblur_title">Размытие</string>
-	<string name="launcher_folderblur_summ">Настройки размытия фона и обоев</string>
+	<string name="launcher_folderblur_summ">Настройки размытия фона и обоев. Рабочий стол должен поддерживать размытие в папках.</string>
 	<string name="launcher_folderblur">Размытие фона</string>
 	<string name="launcher_folderwallblur">Размытие обоев</string>
 	<string name="launcher_folderblur_opacity_title">Видимость размытого фона</string>
@@ -480,6 +484,8 @@
 	<string name="system_removesecure_summ">Позволяет записывать видео и делать скриншоты любого приложения</string>
 	<string name="system_hideproxywarn_title">Скрыть предупреждение об отключенных касаниях</string>
 	<string name="system_hideproxywarn_summ">Не показывать предупреждение о закрытой области динамика</string>
+	<string name="system_resizablewidgets_title">Свободный размер виджетов</string>
+	<string name="system_resizablewidgets_summ">Убирает все ограничения на размер виджетов</string>
 	<string name="system_unblockthird_title">Разблокировать ланчеры</string>
 	<string name="system_unblockthird_summ">Отключает ограничение на использование сторонних ланчеров на китайских прошивках</string>
 	<string name="system_cleanshare_title">Очистка меню \"Поделиться\"</string>
@@ -607,6 +613,11 @@
 	<string name="system_detailednetspeed_lowlevel_summ">Задаёт уровень, ниже которого скорость будет считаться низкой и будет иметь другую иконку</string>
 	<string name="system_detailednetspeed_zero_title">Понизить видимость при неактивности</string>
 	<string name="system_detailednetspeed_zero_summ">Делает индикатор полупрозрачным, если обе скорости равны нулю</string>
+	<string name="system_statusbarcontrols_title">Управление жестами</string>
+	<string name="system_statusbarcontrols_summ">Выполняет выбранные действия на скольжение и двойное нажатие</string>
+	<string name="system_statusbarcontrols_single_title">Горизонтальное скольжение одним пальцем</string>
+	<string name="system_statusbarcontrols_dual_title">Горизонтальное скольжение двумя пальцами</string>
+	<string name="system_statusbarcontrols_dt_title">Действие на двойное нажатие</string>
 	<string name="system_fixmeter_title">Отступ скорости соединения</string>
 	<string name="system_fixmeter_summ">Увеличивает горизонтальные отступы для индикатора скорости соединения</string>
 	<string name="system_compactnotif_title">Компактные уведомления</string>
@@ -651,7 +662,7 @@
 	<string name="system_dimtime_summ">Как долго экран должен быть затемнён перед автоматическим выключением (в процентах от задержки выключения экрана)</string>
 	<string name="system_minbrightness_title">Минимальная автояркость</string>
 	<string name="system_minbrightness_summ">Задаёт минимальное значение яркости в автоматическом режиме</string>
-	<string name="system_minbrightness_note">Слайдер не соответствует системному слайдеру громкости на последних версиях Андроида с нелинейной шкалой яркости</string>
+	<string name="system_minbrightness_note">Слайдер не соответствует системному слайдеру яркости на последних версиях Андроида с нелинейной шкалой яркости</string>
 	<string name="system_noducking_title">Отключить заглушение</string>
 	<string name="system_noducking_summ">Не понижать громкость играющей в данный момент музыки для проигрывания звука уведомления</string>
 	<string name="system_firstpress_title">Немедленная регулировка громкости</string>
@@ -770,6 +781,11 @@
 	<string name="system_nodrawerbackground_summ">Изменяет фон со сгенерированным цветом, взятым из обоев, на прозрачный на экране блокировки</string>
 	<string name="system_dttosleep_title">Сон по двойному нажатию</string>
 	<string name="system_dttosleep_summ">Выключает экран при двойном нажатии по пустому месту на экране блокировки</string>
+	<string name="system_lsalarm_title">Показ будильника</string>
+	<string name="system_lsalarm_summ">Отображает ближайшее время срабатывания будильника рядом с текущей датой</string>
+	<string name="system_lsalarm_format_title">Формат отображения</string>
+	<string name="system_lsalarm_all_title">Показывать все будильники</string>
+	<string name="system_lsalarm_all_summ">Получать время следующего будильника используя родное API Android, если не задан MIUI будильник. Может выдавать непредсказуемые результаты.</string>
 	<string name="system_mods_other">Другое</string>
 	<string name="system_mods_volumeblur">Размытия фона диалога громкости</string>
 	<string name="system_volumeblur_collapsed_title">Свёрнутый диалог</string>

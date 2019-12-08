@@ -1,3 +1,11 @@
+2.0.6
+[New] Make all widgets freely resizable (exceptions are some MIUI ones)
+[New] Show next alarm time on lock screen
+[New][Status bar gesture controls] Adjust brightness or volume by sliding with 1 or 2 fingers; double tap to perform action
+[Improved][Control input cursor] Black list
+[Fixed][Status bar height] Update launcher's top padding to match modified status bar height
+[Fixed][Minimum auto brightness] Compatibility with some Android 8 ROMs
+
 2.0.5
 [New] Reduce vibration intensity (strength or duration) during selected hours
 [New][Full screen navigation gestures] Back gesture area width

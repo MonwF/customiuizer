@@ -31,6 +31,7 @@ public class ModSearchAdapter extends BaseAdapter implements Filterable {
 	}
 
 	private void sortList() {
+		if (modsList != null)
 		modsList.sort(new Comparator<ModData>() {
 			public int compare(ModData app1, ModData app2) {
 				int breadcrumbs = app1.breadcrumbs.compareToIgnoreCase(app2.breadcrumbs);

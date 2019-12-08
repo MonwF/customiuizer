@@ -1,0 +1,33 @@
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:miuizer="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_lsalarm"
+		android:title="@string/enable_mod"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:title="@string/settings"
+		android:dependency="pref_key_system_lsalarm"
+		miuizer:dynamic="true">
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_lsalarm_all"
+		android:summary="@string/system_lsalarm_all_summ"
+		android:title="@string/system_lsalarm_all_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_system_lsalarm_format"
+		android:title="@string/system_lsalarm_format_title"
+		android:entries="@array/alarmformats"
+		android:entryValues="@array/alarmformats_val"
+		android:defaultValue="1"
+		miuizer:valueAsSummary="true" />
+
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+
+</PreferenceScreen>

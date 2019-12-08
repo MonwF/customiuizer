@@ -169,6 +169,59 @@
 		<item>23</item>
 	</integer-array>
 
+	<string-array name="global_actions_statusbar">
+		<item>@string/array_global_actions_none</item>
+		<item>@string/array_global_actions_lock</item>
+		<item>@string/array_global_actions_sleep</item>
+		<item>@string/array_global_actions_screenshot</item>
+		<item>@string/array_global_actions_recents</item>
+		<item>@string/array_global_actions_volume</item>
+		<item>@string/array_global_actions_volume_up</item>
+		<item>@string/array_global_actions_volume_down</item>
+		<item>@string/array_global_actions_menu</item>
+		<item>@string/array_global_actions_goback</item>
+		<item>@string/array_global_actions_back</item>
+		<item>@string/array_global_actions_powermenu</item>
+		<item>@string/array_global_actions_clearmemory</item>
+		<item>@string/array_global_actions_invertcolors</item>
+		<item>@string/array_global_actions_switchkeyboard</item>
+		<item>@string/array_global_actions_launch</item>
+		<item>@string/array_global_actions_shortcut</item>
+		<item>@string/array_global_actions_activity</item>
+		<item>@string/array_global_actions_toggle</item>
+		<item>@string/array_global_actions_onehanded_left</item>
+		<item>@string/array_global_actions_onehanded_right</item>
+		<item>@string/array_media_playpause</item>
+		<item>@string/array_media_next</item>
+		<item>@string/array_media_prev</item>
+	</string-array>
+	<integer-array name="global_actions_statusbar_val">
+		<item>1</item>
+		<item>4</item>
+		<item>5</item>
+		<item>6</item>
+		<item>7</item>
+		<item>17</item>
+		<item>18</item>
+		<item>19</item>
+		<item>16</item>
+		<item>15</item>
+		<item>11</item>
+		<item>12</item>
+		<item>13</item>
+		<item>14</item>
+		<item>21</item>
+		<item>8</item>
+		<item>9</item>
+		<item>20</item>
+		<item>10</item>
+		<item>22</item>
+		<item>23</item>
+		<item>85</item>
+		<item>87</item>
+		<item>88</item>
+	</integer-array>
+
 	<string-array name="global_lockscreen_actions">
 		<item>@string/array_global_actions_none</item>
 		<item>@string/array_global_actions_powermenu</item>
@@ -603,6 +656,26 @@
 		<item>@string/array_align_bottom</item>
 	</string-array>
 	<string-array name="verticalalign_val">
+		<item>1</item>
+		<item>2</item>
+	</string-array>
+
+	<string-array name="slideoptions">
+		<item>@string/array_disable</item>
+		<item>@string/array_adjust_brightness</item>
+		<item>@string/array_adjust_volume</item>
+	</string-array>
+	<string-array name="slideoptions_val">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+	</string-array>
+
+	<string-array name="alarmformats">
+		<item>@string/array_alarm_absolute</item>
+		<item>@string/array_alarm_relative</item>
+	</string-array>
+	<string-array name="alarmformats_val">
 		<item>1</item>
 		<item>2</item>
 	</string-array>

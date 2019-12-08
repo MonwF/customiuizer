@@ -142,6 +142,13 @@
 			android:dependency="pref_key_controls_volumecursor"
 			miuizer:child="true" />
 
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_statusbarcolor_apps_title"
+			android:key="pref_key_controls_volumecursor_apps"
+			android:dependency="pref_key_controls_volumecursor"
+			miuizer:child="true"
+			miuizer:countAsSummary="true" />
+
 		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 			android:title="@string/mods_actions"
 			miuizer:dynamic="true" />
