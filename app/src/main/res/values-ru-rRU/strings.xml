@@ -158,6 +158,7 @@
 	<string name="array_autogroupnotif_no">Не группировать</string>
 	<string name="array_qshaptic_light">Лёгкая вибрация</string>
 	<string name="array_qshaptic_strong">Сильная вибрация</string>
+	<string name="array_enable">Включить</string>
 	<string name="array_disable">Отключить</string>
 	<string name="array_top">Ближе к началу</string>
 	<string name="array_middle">В середине списка</string>
@@ -166,6 +167,9 @@
 	<string name="array_large">Большой</string>
 	<string name="array_normal">Нормальный</string>
 	<string name="array_small">Мелкий</string>
+	<string name="array_low">Низкая</string>
+	<string name="array_average">Средняя</string>
+	<string name="array_high">Высокая</string>
 	<string name="array_match">Взять из обложки или обоев</string>s
 	<string name="array_static">Задать вручную</string>
 	<string name="array_rainbowh">Цвета радуги (горизонтально)</string>
@@ -364,6 +368,7 @@
 	<string name="launcher_swipeupaction2_summ">Присвоить действие жесту снизу вверх двумя пальцами на любом домашнем экране</string>
 	<string name="launcher_swipeupaction_title">Действие на свайп вверх (1 пальцем)</string>
 	<string name="launcher_swipeupaction2_title">Действие на свайп вверх (2 пальцами)</string>
+	<string name="launcher_bugfixes">Исправление багов</string>
 	<string name="miuizer">Настройки CustoMIUIzer</string>
 	<string name="miuizer_acramail_summ">Укажите свои контактные данные, и они будут включены в отправляемые отчёты</string>
 	<string name="miuizer_acramail_tip">Если Вы хотите получать ответы на отправленные отчёты об ошибках, то необходимо заполнить данное поле. Используйте e-mail, ICQ, свой ник с XDA или 4PDA.</string>
@@ -425,6 +430,8 @@
 	<string name="launcher_folderspace_title">Уменьшить боковые отступы</string>
 	<string name="launcher_fixstatusbarmode_title">Исправить режим строки состояния</string>
 	<string name="launcher_fixstatusbarmode_summ">Изменяет цвет содержимого строки состояния в зависимости от светлых/тёмных обоев на версии ланчера для разработчиков</string>
+	<string name="launcher_fixanim_title">Исправить анимацию</string>
+	<string name="launcher_fixanim_summ">Применяет масштабирование продолжительности аниматоров значений к некоторым анимациям ланчера</string>
 	<string name="launcher_foldershade_title">Наложение цвета</string>
 	<string name="launcher_foldershade_summ">Затемняет или осветляет фон</string>
 	<string name="launcher_foldershade_level_title">Интенсивность цвета</string>
@@ -615,6 +622,9 @@
 	<string name="system_detailednetspeed_zero_summ">Делает индикатор полупрозрачным, если обе скорости равны нулю</string>
 	<string name="system_statusbarcontrols_title">Управление жестами</string>
 	<string name="system_statusbarcontrols_summ">Выполняет выбранные действия на скольжение и двойное нажатие</string>
+	<string name="system_statusbarcontrols_sens_title">Чувствительность регулировки</string>
+	<string name="system_statusbarcontrols_sens_bright_title">Яркость</string>
+	<string name="system_statusbarcontrols_sens_vol_title">Громкость</string>
 	<string name="system_statusbarcontrols_single_title">Горизонтальное скольжение одним пальцем</string>
 	<string name="system_statusbarcontrols_dual_title">Горизонтальное скольжение двумя пальцами</string>
 	<string name="system_statusbarcontrols_dt_title">Действие на двойное нажатие</string>

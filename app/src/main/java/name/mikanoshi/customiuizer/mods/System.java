@@ -681,11 +681,15 @@ public class System {
 
 	private static int notifVolumeOnResId;
 	private static int notifVolumeOffResId;
+	private static int settingsNotifResId;
+	private static int settingsSystemResId;
 	public static void NotificationVolumeDialogRes() {
 		MainModule.resHooks.setResReplacement("com.android.systemui", "dimen", "miui_volume_content_width_expanded", R.dimen.miui_volume_content_width_expanded);
 		MainModule.resHooks.setResReplacement("com.android.systemui", "dimen", "miui_volume_ringer_layout_width_expanded", R.dimen.miui_volume_ringer_layout_width_expanded);
 		notifVolumeOnResId = MainModule.resHooks.addResource("ic_miui_volume_notification", R.drawable.ic_miui_volume_notification);
 		notifVolumeOffResId = MainModule.resHooks.addResource("ic_miui_volume_notification_mute", R.drawable.ic_miui_volume_notification_mute);
+		settingsNotifResId = MainModule.resHooks.addResource("ic_audio_notification", R.drawable.ic_audio_notification);
+		settingsSystemResId = MainModule.resHooks.addResource("ic_audio_system", R.drawable.ic_audio_system);
 	}
 
 	public static void NotificationVolumeServiceHook(LoadPackageParam lpparam) {
@@ -750,7 +754,6 @@ public class System {
 			protected void after(MethodHookParam param) throws Throwable {
 				PreferenceFragment fragment = (PreferenceFragment)param.thisObject;
 				Resources modRes = Helpers.getModuleRes(fragment.getActivity());
-				int iconRes = fragment.getResources().getIdentifier("ic_audio_notification", "drawable", "com.android.settings");
 				int order = 6;
 
 				Class<?> vsbCls;
@@ -777,7 +780,7 @@ public class System {
 				pref.setTitle(modRes.getString(R.string.notification_volume));
 				pref.setPersistent(true);
 				fragment.getPreferenceScreen().addPreference(pref);
-				initSeekBar[0].invoke(fragment, "notification_volume", 5, iconRes);
+				initSeekBar[0].invoke(fragment, "notification_volume", 5, settingsNotifResId);
 				pref.setOrder(order);
 
 				pref = (Preference)XposedHelpers.newInstance(vsbCls, fragment.getActivity());
@@ -785,7 +788,7 @@ public class System {
 				pref.setTitle(modRes.getString(R.string.system_volume));
 				pref.setPersistent(true);
 				fragment.getPreferenceScreen().addPreference(pref);
-				initSeekBar[0].invoke(fragment, "system_volume", 1, iconRes);
+				initSeekBar[0].invoke(fragment, "system_volume", 1, settingsSystemResId);
 				pref.setOrder(order);
 			}
 		});
@@ -3102,14 +3105,14 @@ public class System {
 	}
 
 	public static void AllRotationsRes() {
-		MainModule.resHooks.setObjectReplacement("android", "bool", "config_allowAllRotations", true);
+		MainModule.resHooks.setObjectReplacement("android", "bool", "config_allowAllRotations", MainModule.mPrefs.getStringAsInt("system_allrotations2", 1) == 2);
 	}
 
 	public static void AllRotationsHook(LoadPackageParam lpparam) {
 		Helpers.hookAllMethods("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "init", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
-				XposedHelpers.setIntField(param.thisObject, "mAllowAllRotations", 1);
+				XposedHelpers.setIntField(param.thisObject, "mAllowAllRotations", MainModule.mPrefs.getStringAsInt("system_allrotations2", 1) == 2 ? 1 : 0);
 			}
 		});
 	}
@@ -3898,12 +3901,16 @@ public class System {
 									XposedHelpers.callMethod(leftView, "reloadListItems");
 								} catch (Throwable t1) {
 									try {
-										XposedHelpers.callMethod(leftView, "initKeyguardLeftItems");
+										XposedHelpers.callMethod(leftView, "updateShortcuts");
 									} catch (Throwable t2) {
 										try {
-											XposedHelpers.callMethod(leftView, "initKeyguardLeftItemInfos");
+											XposedHelpers.callMethod(leftView, "initKeyguardLeftItems");
 										} catch (Throwable t3) {
-											XposedBridge.log(t3);
+											try {
+												XposedHelpers.callMethod(leftView, "initKeyguardLeftItemInfos");
+											} catch (Throwable t4) {
+												XposedBridge.log(t4);
+											}
 										}
 									}
 								}
@@ -4034,7 +4041,9 @@ public class System {
 			}
 		}
 
-		Helpers.findAndHookConstructor("com.android.keyguard.negative.MiuiKeyguardMoveLeftControlCenterView", lpparam.classLoader, Context.class, AttributeSet.class, new MethodHook() {
+		String leftViewCls = "com.android.keyguard.negative.MiuiKeyguardMoveLeftControlCenterView";
+
+		Helpers.findAndHookConstructor(leftViewCls, lpparam.classLoader, Context.class, AttributeSet.class, new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
@@ -4043,19 +4052,25 @@ public class System {
 			}
 		});
 
-		if (!Helpers.findAndHookMethodSilently("com.android.keyguard.negative.MiuiKeyguardMoveLeftControlCenterView", lpparam.classLoader, "reloadListItems", new MethodHook() {
+		if (!Helpers.findAndHookMethodSilently(leftViewCls, lpparam.classLoader, "reloadListItems", new MethodHook() {
 			@Override
 			protected void before(final MethodHookParam param) throws Throwable {
 				initLeftView(param.thisObject);
 				param.setResult(null);
 			}
-		})) if (!Helpers.findAndHookMethodSilently("com.android.keyguard.negative.MiuiKeyguardMoveLeftControlCenterView", lpparam.classLoader, "initKeyguardLeftItems", new MethodHook() {
+		})) if (!Helpers.findAndHookMethodSilently(leftViewCls, lpparam.classLoader, "updateShortcuts", new MethodHook() {
 			@Override
 			protected void before(final MethodHookParam param) throws Throwable {
 				initLeftView(param.thisObject);
 				param.setResult(null);
 			}
-		})) Helpers.findAndHookMethod("com.android.keyguard.negative.MiuiKeyguardMoveLeftControlCenterView", lpparam.classLoader, "initKeyguardLeftItemInfos", new MethodHook() {
+		})) if (!Helpers.findAndHookMethodSilently(leftViewCls, lpparam.classLoader, "initKeyguardLeftItems", new MethodHook() {
+			@Override
+			protected void before(final MethodHookParam param) throws Throwable {
+				initLeftView(param.thisObject);
+				param.setResult(null);
+			}
+		})) Helpers.findAndHookMethod(leftViewCls, lpparam.classLoader, "initKeyguardLeftItemInfos", new MethodHook() {
 			@Override
 			protected void before(final MethodHookParam param) throws Throwable {
 				initLeftView(param.thisObject);
@@ -4931,7 +4946,7 @@ public class System {
 				} catch (Throwable ignored) {}
 
 				if (mSupportsAmplitudeControl)
-					param.args[1] = Math.round(((int)param.args[1] == -1 ? XposedHelpers.getIntField(param.thisObject, "mDefaultVibrationAmplitude"): (int)param.args[1]) * ratio);
+					param.args[1] = Math.round(((int)param.args[1] == -1 ? XposedHelpers.getIntField(param.thisObject, "mDefaultVibrationAmplitude") : (int)param.args[1]) * ratio);
 				else
 					param.args[0] = Math.max(3, (long)Math.round((long)param.args[0] * ratio));
 			}
@@ -4980,6 +4995,8 @@ public class System {
 		try {
 			TextView mCurrentDate = (TextView)XposedHelpers.getObjectField(thisObject, "mCurrentDate");
 			if (mCurrentDate == null) return;
+			mCurrentDate.setTextAlignment(View.TEXT_ALIGNMENT_INHERIT);
+			mCurrentDate.setLineSpacing(0, 1.0f);
 
 			long timestamp = Helpers.getNextMIUIAlarmTime(mCurrentDate.getContext());
 			if (timestamp == 0 && MainModule.mPrefs.getBoolean("system_lsalarm_all"))
@@ -4987,20 +5004,24 @@ public class System {
 			if (timestamp == 0) return;
 
 			StringBuilder alarmStr = new StringBuilder();
-			alarmStr.append(mCurrentDate.getText()).append(" — ").append(Helpers.getModuleRes(mCurrentDate.getContext()).getString(R.string.system_statusbaricons_alarm_title)).append(" ");
+			alarmStr.append(mCurrentDate.getText()).append("\n").append(Helpers.getModuleRes(mCurrentDate.getContext()).getString(R.string.system_statusbaricons_alarm_title)).append(" ");
 			int format = MainModule.mPrefs.getStringAsInt("system_lsalarm_format", 1);
 			if (format == 2) {
 				StringBuilder timeStr = new StringBuilder(DateUtils.getRelativeTimeSpanString(timestamp, currentTimeMillis(), 0, DateUtils.FORMAT_ABBREV_RELATIVE));
 				timeStr.setCharAt(0, Character.toLowerCase(timeStr.charAt(0)));
 				alarmStr.append(timeStr);
+				mCurrentDate.setLineSpacing(0, 1.5f);
 			} else {
 				SimpleDateFormat dateFormat = new SimpleDateFormat(DateFormat.getBestDateTimePattern(Locale.getDefault(), DateFormat.is24HourFormat(mCurrentDate.getContext()) ? "EHmm" : "EHmma"), Locale.getDefault());
 				dateFormat.setTimeZone(TimeZone.getDefault());
 				Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 				calendar.setTimeInMillis(timestamp);
 				alarmStr.append(dateFormat.format(calendar.getTime()));
+				mCurrentDate.setLineSpacing(0, 1.5f);
 			}
 			mCurrentDate.setText(alarmStr);
+			int pos = Settings.System.getInt(mCurrentDate.getContext().getContentResolver(), "selected_keyguard_clock_position", 0);
+			if (pos != 2) mCurrentDate.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
@@ -5059,7 +5080,9 @@ public class System {
 						try {
 							String key = uri.getPathSegments().get(2);
 							if ("pref_key_system_statusbarcontrols_single".equals(key) || "pref_key_system_statusbarcontrols_dual".equals(key))
-							MainModule.mPrefs.put(key, Helpers.getSharedStringPref(mContext, key, "1"));
+								MainModule.mPrefs.put(key, Helpers.getSharedStringPref(mContext, key, "1"));
+							else if ("pref_key_system_statusbarcontrols_sens_bright".equals(key) || "pref_key_system_statusbarcontrols_sens_vol".equals(key))
+								MainModule.mPrefs.put(key, Helpers.getSharedStringPref(mContext, key, "2"));
 						} catch (Throwable t) {
 							XposedBridge.log(t);
 						}
@@ -5112,25 +5135,30 @@ public class System {
 						break;
 					case MotionEvent.ACTION_MOVE:
 						if (!isSlidingStart) return;
-						DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
-						if (event.getY() - tapStartY > metrics.density * 30) return;
+						Resources res = mContext.getResources();
+						DisplayMetrics metrics = res.getDisplayMetrics();
+						int sbheight = res.getDimensionPixelSize(res.getIdentifier("status_bar_height", "dimen", "android"));
+						if (event.getY() - tapStartY > sbheight) return;
 						float delta = event.getX() - tapStartX;
 						if (delta == 0) return;
 						if (!isSliding && Math.abs(delta) > metrics.widthPixels / 10f) isSliding = true;
 						if (!isSliding) return;
 						int opt = MainModule.mPrefs.getStringAsInt(tapStartPointers == 2 ? "system_statusbarcontrols_dual" : "system_statusbarcontrols_single", 1);
 						if (opt == 2) {
+							//int brightnessMode = Settings.System.getInt(resolver, Settings.System.SCREEN_BRIGHTNESS_MODE, 0);
+							//if (brightnessMode == android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC) return;
+							//int brightness = Settings.System.getInt(mContext.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 0);
 							ContentResolver resolver = mContext.getContentResolver();
-							int brightnessMode = Settings.System.getInt(resolver, Settings.System.SCREEN_BRIGHTNESS_MODE, 0);
-							if (brightnessMode == android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC) return;
-							int brightness = Settings.System.getInt(mContext.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 0);
-							int maxLevel = mContext.getResources().getInteger(mContext.getResources().getIdentifier("config_screenBrightnessSettingMaximum", "integer", "android"));
+							int sens = MainModule.mPrefs.getStringAsInt("system_statusbarcontrols_sens_bright", 2);
+							int minLevel = res.getInteger(res.getIdentifier("config_screenBrightnessSettingMinimum", "integer", "android"));
+							int maxLevel = res.getInteger(res.getIdentifier("config_screenBrightnessSettingMaximum", "integer", "android"));
 							float ratio = delta / metrics.widthPixels;
-							if (maxLevel != 255) ratio *= 0.20f + 0.8f * ((float)brightness / (float)maxLevel);
-							int nextLevel = Math.min(maxLevel, Math.max(0, Math.round(tapStartBrightness + maxLevel * ratio)));
+							if (maxLevel != 255) ratio = (ratio >= 0 ? 1 : -1) * (sens == 1 ? 0.66f : (sens == 3 ? 1.66f : 1.0f)) * (float)Math.pow(ratio, 2);
+							int nextLevel = Math.min(maxLevel, Math.max(minLevel, Math.round(tapStartBrightness + (maxLevel - minLevel) * ratio)));
 							Settings.System.putInt(resolver, Settings.System.SCREEN_BRIGHTNESS, nextLevel);
-						} else if (opt == 3){
-							if (Math.abs(delta) < metrics.widthPixels / 50f) return;
+						} else if (opt == 3) {
+							int sens = MainModule.mPrefs.getStringAsInt("system_statusbarcontrols_sens_vol", 2);
+							if (Math.abs(delta) < metrics.widthPixels / ((sens == 1 ? 0.66f : (sens == 3 ? 1.66f : 1.0f)) * 20 * metrics.density)) return;
 							tapStartX = event.getX();
 							AudioManager audioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
 							audioManager.adjustVolume(delta > 0 ? AudioManager.ADJUST_RAISE : AudioManager.ADJUST_LOWER, 1 << 12 /* FLAG_FROM_KEY */ | AudioManager.FLAG_SHOW_UI | AudioManager.FLAG_ALLOW_RINGER_MODES | AudioManager.FLAG_VIBRATE);

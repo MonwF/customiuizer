@@ -52,6 +52,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.PowerManager.WakeLock;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
@@ -133,9 +134,12 @@ public class Helpers {
 	public static boolean showNewMods = true;
 	public static final HashSet<String> newMods =  new HashSet<String>(Arrays.asList(
 		"pref_key_system_statusbarcontrols_cat",
+		"pref_key_system_statusbarcontrols_sens_bright",
+		"pref_key_system_statusbarcontrols_sens_vol",
 		"pref_key_system_lsalarm_cat",
 		"pref_key_system_resizablewidgets",
-		"pref_key_controls_volumecursor_apps"
+		"pref_key_controls_volumecursor_apps",
+		"pref_key_launcher_fixanim"
 	));
 	public static final ArrayList<String> shortcutIcons = new ArrayList<String>();
 
@@ -538,6 +542,51 @@ public class Helpers {
 
 	private static boolean checkMultiUserPermission(Context context) {
 		return context.getPackageManager().checkPermission("android.permission.INTERACT_ACROSS_USERS", Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED;
+	}
+
+	@SuppressWarnings("JavaReflectionInvocation")
+	@SuppressLint({"PrivateApi", "DiscouragedPrivateApi"})
+	public static float getAnimationScale(int type) {
+		try {
+			Class<?> smClass = Class.forName("android.os.ServiceManager");
+			Method getService = smClass.getDeclaredMethod("getService", String.class);
+			getService.setAccessible(true);
+			Object manager = getService.invoke(smClass, "window");
+
+			Class<?> wmsClass = Class.forName("android.view.IWindowManager$Stub");
+			Method asInterface = wmsClass.getDeclaredMethod("asInterface", IBinder.class);
+			asInterface.setAccessible(true);
+			Object wm = asInterface.invoke(wmsClass, manager);
+
+			Method getAnimationScale = wm.getClass().getDeclaredMethod("getAnimationScale", int.class);
+			getAnimationScale.setAccessible(true);
+			return (float)getAnimationScale.invoke(wm, type);
+		} catch (Throwable t) {
+			t.printStackTrace();
+			return 1.0f;
+		}
+	}
+
+	@SuppressWarnings("JavaReflectionInvocation")
+	@SuppressLint({"PrivateApi", "DiscouragedPrivateApi"})
+	public static void setAnimationScale(int type, float value) {
+		try {
+			Class<?> smClass = Class.forName("android.os.ServiceManager");
+			Method getService = smClass.getDeclaredMethod("getService", String.class);
+			getService.setAccessible(true);
+			Object manager = getService.invoke(smClass, "window");
+
+			Class<?> wmsClass = Class.forName("android.view.IWindowManager$Stub");
+			Method asInterface = wmsClass.getDeclaredMethod("asInterface", IBinder.class);
+			asInterface.setAccessible(true);
+			Object wm = asInterface.invoke(wmsClass, manager);
+
+			Method setAnimationScale = wm.getClass().getDeclaredMethod("setAnimationScale", int.class, float.class);
+			setAnimationScale.setAccessible(true);
+			setAnimationScale.invoke(wm, type, value);
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
 	}
 
 	@SuppressLint("DiscouragedPrivateApi")

@@ -434,8 +434,17 @@ public class Launcher {
 		Helpers.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.classLoader, "launch", "com.miui.home.launcher.ShortcutInfo", View.class, new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
+				if (MainModule.mPrefs.getStringAsInt("launcher_closefolders", 1) != 2) return;
 				boolean mHasLaunchedAppFromFolder = XposedHelpers.getBooleanField(param.thisObject, "mHasLaunchedAppFromFolder");
 				if (mHasLaunchedAppFromFolder) XposedHelpers.callMethod(param.thisObject, "closeFolder");
+			}
+		});
+
+		//noinspection ResultOfMethodCallIgnored
+		Helpers.findAndHookMethodSilently("com.miui.home.launcher.common.CloseFolderStateMachine", lpparam.classLoader, "onPause", new MethodHook() {
+			@Override
+			protected void before(final MethodHookParam param) throws Throwable {
+				if (MainModule.mPrefs.getStringAsInt("launcher_closefolders", 1) == 3) param.setResult(null);
 			}
 		});
 	}
@@ -1042,7 +1051,7 @@ public class Launcher {
 	public static void StatusBarHeightHook(LoadPackageParam lpparam) {
 		Helpers.hookAllConstructors("com.miui.home.launcher.Workspace", lpparam.classLoader, new MethodHook() {
 			@Override
-			protected void after(final MethodHookParam param) throws Throwable {
+			protected void after(MethodHookParam param) throws Throwable {
 				ViewGroup workspace = (ViewGroup)param.thisObject;
 				workspace.setPadding(
 					workspace.getPaddingLeft(),
@@ -1050,6 +1059,18 @@ public class Launcher {
 					workspace.getPaddingRight(),
 					workspace.getPaddingBottom()
 				);
+			}
+		});
+	}
+
+	public static void FixAnimHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethods("com.miui.home.launcher.animate.SpringAnimator", lpparam.classLoader, "getSpringForce", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				float scale = Helpers.getAnimationScale(2);
+				if (scale == 1.0f) return;
+				if (scale == 0) scale = 0.01f;
+				param.args[2] = (scale < 1.0f ? 1.5f / scale : 1.0f / scale) * (float)param.args[2];
 			}
 		});
 	}

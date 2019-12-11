@@ -12,11 +12,13 @@
 		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 			android:title="@string/system_mods_screen_rotation" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_allrotations"
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_allrotations2"
 			android:title="@string/system_allrotations_title"
 			android:summary="@string/system_allrotations_summ"
-			android:defaultValue="false" />
+			android:entries="@array/onoff"
+			android:entryValues="@array/onoff_val"
+			android:defaultValue="1" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_orientationlock"

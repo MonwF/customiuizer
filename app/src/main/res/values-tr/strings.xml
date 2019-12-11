@@ -79,6 +79,9 @@
     <string name="system_detailednetspeed_zero_summ">Bağlantı Hızı değerleri sıfırken görünürlüğü azaltır.</string>
     <string name="system_statusbarcontrols_title">Hareket kontrolleri</string>
     <string name="system_statusbarcontrols_summ">Seçili eylemleri slayt ve çift dokunuşla gerçekleştir</string>
+    <string name="system_statusbarcontrols_sens_title">Ayar hassasiyeti</string>
+    <string name="system_statusbarcontrols_sens_bright_title">Parlaklık</string>
+    <string name="system_statusbarcontrols_sens_vol_title">Ses</string>
     <string name="system_statusbarcontrols_single_title">Tek parmakla yatay slayt</string>
     <string name="system_statusbarcontrols_dual_title">İki parmağınızla yatay slayt</string>
     <string name="system_statusbarcontrols_dt_title">Çift dokunuş eylemi</string>
@@ -360,6 +363,8 @@
     <string name="launcher_folderspace_title">Yan dolguyu azalt</string>
     <string name="launcher_fixstatusbarmode_title">Durum Çubuğu</string>
     <string name="launcher_fixstatusbarmode_summ">Duvar Kağıdına göre Karanlık veya Açık olarak görüntülenir.</string>
+    <string name="launcher_fixanim_title">Animasyonu düzelt</string>
+    <string name="launcher_fixanim_summ">Bazı başlatıcı animasyonlarına değer animatörlerinin süre ölçeklendirmesini uygulayın</string>
     <string name="launcher_foldershade_title">Renk Yerleşimi</string>
     <string name="launcher_foldershade_summ">Karanlık veya aydınlık arka planı aç</string>
     <string name="launcher_foldershade_level_title">Renk Yoğunluğu</string>
@@ -404,6 +409,7 @@
     <string name="launcher_shakeaction_summ">Ana ekranda cihazı salladığınız da belirlemiş olduğunuz eylem gerçekleşir.</string>
     <string name="launcher_doubletap_title">Dokunma (Çift)</string>
     <string name="launcher_doubletap_summ">Ana ekranda çift dokunarak belirlemiş olduğunuz eylem gerçekleşir.</string>
+    <string name="launcher_bugfixes">Hata düzeltmeleri</string>
     <string name="controls_mods">Kontrol</string>
     <string name="controls_powerdt_title">Çift basın eylem</string>
     <string name="controls_powerdt_summ">Açma / kapatma tuşundaki kamera başlatmayı değiştirin, iki kez basın. Etkinleştirilmesi için stok düğmesi kısayolu gerekir.</string>
@@ -583,6 +589,7 @@
     <string name="array_autogroupnotif_no">Gruplama</string>
     <string name="array_qshaptic_light">Hafif Titreşim</string>
     <string name="array_qshaptic_strong">Güçlü Titreşim</string>
+    <string name="array_enable">Etkinleştir</string>
     <string name="array_disable">Devre Dışı</string>
     <string name="array_top">Yukarda</string>
     <string name="array_middle">Ortada</string>
@@ -591,6 +598,9 @@
     <string name="array_large">Büyük</string>
     <string name="array_normal">Normal</string>
     <string name="array_small">Küçük</string>
+    <string name="array_low">Düşük</string>
+    <string name="array_average">Ortalama</string>
+    <string name="array_high">Yüksek</string>
     <string name="array_match">Kapak Fotoğrafı veya Duvar Kağıdı</string>s
 	
     <string name="array_static">Özel</string>

@@ -671,6 +671,17 @@
 		<item>3</item>
 	</string-array>
 
+	<string-array name="sensitivity">
+		<item>@string/array_low</item>
+		<item>@string/array_average</item>
+		<item>@string/array_high</item>
+	</string-array>
+	<string-array name="sensitivity_val">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+	</string-array>
+
 	<string-array name="alarmformats">
 		<item>@string/array_alarm_absolute</item>
 		<item>@string/array_alarm_relative</item>
@@ -678,6 +689,17 @@
 	<string-array name="alarmformats_val">
 		<item>1</item>
 		<item>2</item>
+	</string-array>
+
+	<string-array name="onoff">
+		<item>@string/array_default</item>
+		<item>@string/array_enable</item>
+		<item>@string/array_disable</item>
+	</string-array>
+	<string-array name="onoff_val">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
 	</string-array>
 
 	<string-array name="placeholder_array">

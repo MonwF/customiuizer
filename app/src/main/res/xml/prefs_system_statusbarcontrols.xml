@@ -10,7 +10,30 @@
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
-		android:title="@string/settings"
+		android:title="@string/system_statusbarcontrols_sens_title"
+		android:dependency="pref_key_system_statusbarcontrols"
+		miuizer:dynamic="true">
+
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_system_statusbarcontrols_sens_bright"
+		android:title="@string/system_statusbarcontrols_sens_bright_title"
+		android:entries="@array/sensitivity"
+		android:entryValues="@array/sensitivity_val"
+		android:defaultValue="2"
+		miuizer:valueAsSummary="true" />
+
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_system_statusbarcontrols_sens_vol"
+		android:title="@string/system_statusbarcontrols_sens_vol_title"
+		android:entries="@array/sensitivity"
+		android:entryValues="@array/sensitivity_val"
+		android:defaultValue="2"
+		miuizer:valueAsSummary="true" />
+
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:title="@string/mods_actions"
 		android:dependency="pref_key_system_statusbarcontrols"
 		miuizer:dynamic="true">
 

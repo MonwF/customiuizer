@@ -1,3 +1,12 @@
+2.0.7
+[New][Launcher bug fixes] Apply value animators scaling to some launcher animations
+[Improved][All rotations] Option to enable or disable
+[Improved][Auto close folders] Option to enable or disable
+[Improved][Separate volume controls] New icons for notification and system sounds volume sliders in Settings
+[Improved][Status bar gesture controls] Better slide detection method with configurable sensitivity
+[Fixed][Auto rotation toggle action] Incorrect orientation in some cases
+[Fixed][Custom lock screen shortcuts] Compatibility with latest ROMs
+
 2.0.6
 [New] Make all widgets freely resizable (exceptions are some MIUI ones)
 [New] Show next alarm time on lock screen

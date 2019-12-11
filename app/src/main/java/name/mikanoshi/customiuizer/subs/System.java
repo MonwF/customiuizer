@@ -1,6 +1,5 @@
 package name.mikanoshi.customiuizer.subs;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.UiModeManager;
 import android.content.ComponentName;
@@ -10,12 +9,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.preference.Preference;
 import android.provider.Settings;
 import android.widget.SeekBar;
 
-import java.lang.reflect.Method;
 import java.util.Objects;
 
 import miui.app.AlertDialog;
@@ -350,7 +347,7 @@ public class System extends SubFragment {
 					}
 				});
 
-				Helpers.prefs.edit().putInt("pref_key_system_animationscale_window", Math.round(getAnimationScale(0) * 10)).apply();
+				Helpers.prefs.edit().putInt("pref_key_system_animationscale_window", Math.round(Helpers.getAnimationScale(0) * 10)).apply();
 				((SeekBarPreference)findPreference("pref_key_system_animationscale_window")).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 					@Override
 					public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {}
@@ -360,11 +357,11 @@ public class System extends SubFragment {
 
 					@Override
 					public void onStopTrackingTouch(SeekBar seekBar) {
-						setAnimationScale(0, seekBar.getProgress() / 10f);
+						Helpers.setAnimationScale(0, seekBar.getProgress() / 10f);
 					}
 				});
 
-				Helpers.prefs.edit().putInt("pref_key_system_animationscale_transition", Math.round(getAnimationScale(1) * 10)).apply();
+				Helpers.prefs.edit().putInt("pref_key_system_animationscale_transition", Math.round(Helpers.getAnimationScale(1) * 10)).apply();
 				((SeekBarPreference)findPreference("pref_key_system_animationscale_transition")).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 					@Override
 					public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {}
@@ -374,11 +371,11 @@ public class System extends SubFragment {
 
 					@Override
 					public void onStopTrackingTouch(SeekBar seekBar) {
-						setAnimationScale(1, seekBar.getProgress() / 10f);
+						Helpers.setAnimationScale(1, seekBar.getProgress() / 10f);
 					}
 				});
 
-				Helpers.prefs.edit().putInt("pref_key_system_animationscale_animator", Math.round(getAnimationScale(2) * 10)).apply();
+				Helpers.prefs.edit().putInt("pref_key_system_animationscale_animator", Math.round(Helpers.getAnimationScale(2) * 10)).apply();
 				((SeekBarPreference)findPreference("pref_key_system_animationscale_animator")).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 					@Override
 					public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {}
@@ -388,7 +385,7 @@ public class System extends SubFragment {
 
 					@Override
 					public void onStopTrackingTouch(SeekBar seekBar) {
-						setAnimationScale(2, seekBar.getProgress() / 10f);
+						Helpers.setAnimationScale(2, seekBar.getProgress() / 10f);
 					}
 				});
 
@@ -456,51 +453,6 @@ public class System extends SubFragment {
 			if (key != null) Helpers.prefs.edit().putString(key, data.getStringExtra("app")).putInt(key + "_user", data.getIntExtra("user", 0)).apply();
 		}
 		super.onActivityResult(requestCode, resultCode, data);
-	}
-
-	@SuppressWarnings("JavaReflectionInvocation")
-	@SuppressLint({"PrivateApi", "DiscouragedPrivateApi"})
-	float getAnimationScale(int type) {
-		try {
-			Class<?> smClass = Class.forName("android.os.ServiceManager");
-			Method getService = smClass.getDeclaredMethod("getService", String.class);
-			getService.setAccessible(true);
-			Object manager = getService.invoke(smClass, "window");
-
-			Class<?> wmsClass = Class.forName("android.view.IWindowManager$Stub");
-			Method asInterface = wmsClass.getDeclaredMethod("asInterface", IBinder.class);
-			asInterface.setAccessible(true);
-			Object wm = asInterface.invoke(wmsClass, manager);
-
-			Method getAnimationScale = wm.getClass().getDeclaredMethod("getAnimationScale", int.class);
-			getAnimationScale.setAccessible(true);
-			return (float)getAnimationScale.invoke(wm, type);
-		} catch (Throwable t) {
-			t.printStackTrace();
-			return 0.0f;
-		}
-	}
-
-	@SuppressWarnings("JavaReflectionInvocation")
-	@SuppressLint({"PrivateApi", "DiscouragedPrivateApi"})
-	void setAnimationScale(int type, float value) {
-		try {
-			Class<?> smClass = Class.forName("android.os.ServiceManager");
-			Method getService = smClass.getDeclaredMethod("getService", String.class);
-			getService.setAccessible(true);
-			Object manager = getService.invoke(smClass, "window");
-
-			Class<?> wmsClass = Class.forName("android.view.IWindowManager$Stub");
-			Method asInterface = wmsClass.getDeclaredMethod("asInterface", IBinder.class);
-			asInterface.setAccessible(true);
-			Object wm = asInterface.invoke(wmsClass, manager);
-
-			Method setAnimationScale = wm.getClass().getDeclaredMethod("setAnimationScale", int.class, float.class);
-			setAnimationScale.setAccessible(true);
-			setAnimationScale.invoke(wm, type, value);
-		} catch (Throwable t) {
-			t.printStackTrace();
-		}
 	}
 
 	private boolean checkSecurityPermission() {

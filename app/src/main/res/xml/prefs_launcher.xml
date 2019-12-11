@@ -9,11 +9,13 @@
 		android:key="pref_key_launcher_cat_folders"
 		android:title="@string/launcher_folders">
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_launcher_closefolder"
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_launcher_closefolders"
 			android:title="@string/launcher_closefolder_title"
 			android:summary="@string/launcher_closefolder_summ"
-			android:defaultValue="false" />
+			android:entries="@array/onoff"
+			android:entryValues="@array/onoff_val"
+			android:defaultValue="1" />
 
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_launcher_foldershade"
@@ -204,12 +206,6 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_launcher_fixstatusbarmode"
-			android:title="@string/launcher_fixstatusbarmode_title"
-			android:summary="@string/launcher_fixstatusbarmode_summ"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_hideseekpoints"
 			android:title="@string/launcher_hideseekpoints_title"
 			android:summary="@string/launcher_hideseekpoints_summ"
@@ -263,6 +259,24 @@
 			miuizer:displayDividerValue="100"
 			miuizer:format="x%s"
 			miuizer:offtext="@string/array_default" />
+
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:key="pref_key_launcher_cat_bugfixes"
+		android:title="@string/launcher_bugfixes">
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_launcher_fixstatusbarmode"
+			android:title="@string/launcher_fixstatusbarmode_title"
+			android:summary="@string/launcher_fixstatusbarmode_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_launcher_fixanim"
+			android:title="@string/launcher_fixanim_title"
+			android:summary="@string/launcher_fixanim_summ"
+			android:defaultValue="false" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 

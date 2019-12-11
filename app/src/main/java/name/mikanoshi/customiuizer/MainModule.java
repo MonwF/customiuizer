@@ -58,13 +58,13 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getInt("system_volumeblur_collapsed", 0) > 0 || mPrefs.getInt("system_volumeblur_expanded", 0) > 0) System.BlurVolumeDialogBackgroundRes();
 		if (mPrefs.getBoolean("system_notifrowmenu")) System.NotificationRowMenuRes();
 		if (mPrefs.getBoolean("system_compactnotif")) System.CompactNotificationsRes();
-		if (mPrefs.getBoolean("system_allrotations")) System.AllRotationsRes();
 		if (mPrefs.getBoolean("system_volumetimer")) System.VolumeTimerValuesRes();
 		if (mPrefs.getBoolean("system_separatevolume") && mPrefs.getBoolean("system_separatevolume_slider")) System.NotificationVolumeDialogRes();
 		if (mPrefs.getBoolean("system_statusbaricons_volte")) System.HideIconsVoLTERes();
 		if (mPrefs.getBoolean("launcher_unlockgrids")) Launcher.UnlockGridsRes();
 		if (mPrefs.getBoolean("launcher_docktitles")) Launcher.ShowHotseatTitlesRes();
 		if (mPrefs.getBoolean("controls_powerflash")) Controls.PowerKeyRes();
+		if (mPrefs.getStringAsInt("system_allrotations2", 1) > 1) System.AllRotationsRes();
 		if (mPrefs.getStringAsInt("system_rotateanim", 1) > 1) System.RotationAnimationRes();
 
 		if (mPrefs.getInt("system_betterpopups_delay", 0) > 0 && !mPrefs.getBoolean("system_betterpopups_nohide")) System.BetterPopupsHideDelaySysHook();
@@ -142,7 +142,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_applock")) System.AppLockHook(lpparam);
 			if (mPrefs.getBoolean("various_alarmcompat")) Various.AlarmCompatServiceHook(lpparam);
 			if (mPrefs.getBoolean("system_ignorecalls")) System.NoCallInterruptionHook(lpparam);
-			if (mPrefs.getBoolean("system_allrotations")) System.AllRotationsHook(lpparam);
 			if (mPrefs.getBoolean("system_forceclose")) System.ForceCloseHook(lpparam);
 			if (mPrefs.getBoolean("system_hideproxywarn")) System.HideProximityWarningHook(lpparam);
 			if (mPrefs.getBoolean("system_firstpress")) System.FirstVolumePressHook(lpparam);
@@ -154,6 +153,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("controls_volumecursor")) Controls.VolumeCursorFocusedHook(lpparam);
 			if (mPrefs.getBoolean("various_miuiinstaller")) Various.MiuiPackageInstallerServiceHook(lpparam);
 			if (mPrefs.getBoolean("various_disableapp")) Various.AppsDisableServiceHook(lpparam);
+			if (mPrefs.getStringAsInt("system_allrotations2", 1) > 1) System.AllRotationsHook(lpparam);
 			if (mPrefs.getStringAsInt("system_nolightuponcharges", 1) > 1) System.NoLightUpOnChargeHook(lpparam);
 			if (mPrefs.getStringAsInt("system_autogroupnotif", 1) > 1) System.AutoGroupNotificationsHook(lpparam);
 			if (mPrefs.getStringAsInt("system_vibration", 1) > 1) System.SelectiveVibrationHook(lpparam);
@@ -314,15 +314,16 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getInt("system_statusbarheight", 19) > 19) Launcher.StatusBarHeightHook(lpparam);
 		if (mPrefs.getBoolean("launcher_noclockhide")) Launcher.NoClockHideHook(lpparam);
 		if (mPrefs.getBoolean("launcher_renameapps")) Launcher.RenameShortcutsHook(lpparam);
-		if (mPrefs.getBoolean("launcher_closefolder")) Launcher.CloseFolderOnLaunchHook(lpparam);
 		if (mPrefs.getBoolean("launcher_darkershadow")) Launcher.TitleShadowHook(lpparam);
 		if (mPrefs.getBoolean("controls_nonavbar")) Launcher.HideNavBarHook(lpparam);
 		if (mPrefs.getBoolean("launcher_infinitescroll")) Launcher.InfiniteScrollHook(lpparam);
 		if (mPrefs.getBoolean("launcher_hidetitles")) Launcher.HideTitlesHook(lpparam);
 		if (mPrefs.getStringAsInt("launcher_foldershade", 1) > 1) Launcher.FolderShadeHook(lpparam);
+		if (mPrefs.getStringAsInt("launcher_closefolders", 1) > 1) Launcher.CloseFolderOnLaunchHook(lpparam);
 		if (lpparam.packageName.equals("com.miui.home")) {
 			if (mPrefs.getBoolean("controls_fsg_horiz")) Launcher.FSGesturesHook(lpparam);
 			if (mPrefs.getBoolean("launcher_fixstatusbarmode")) Launcher.FixStatusBarModeHook(lpparam);
+			if (mPrefs.getBoolean("launcher_fixanim")) Launcher.FixAnimHook(lpparam);
 			if (mPrefs.getBoolean("launcher_hideseekpoints")) Launcher.HideSeekPointsHook(lpparam);
 			if (mPrefs.getBoolean("launcher_privacyapps_gest")) Launcher.PrivacyFolderHook(lpparam);
 			if (mPrefs.getBoolean("launcher_googlediscover")) Launcher.GoogleDiscoverHook(lpparam);

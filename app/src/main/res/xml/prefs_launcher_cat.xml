@@ -35,6 +35,9 @@
 		android:title="@string/launcher_gestures"
 		android:key="pref_key_launcher_cat_gestures" />
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/launcher_bugfixes"
+		android:key="pref_key_launcher_cat_bugfixes" />
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
 		android:title="@string/system_mods_other"
 		android:key="pref_key_launcher_cat_other" />
 

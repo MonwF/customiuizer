@@ -22,4 +22,6 @@
 
 	<color name="list_item_bg_color_pressed">#14ffffff</color>
 	<color name="list_item_bg_color">@android:color/transparent</color>
+
+	<color name="svg_stroke_color">#ff808080</color>
 </resources>
