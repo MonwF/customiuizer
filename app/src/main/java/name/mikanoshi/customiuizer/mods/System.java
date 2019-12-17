@@ -5278,13 +5278,13 @@ public class System {
 				if (hasTemp) mTempImageFilePath = String.format("%s/%s", mScreenshotDir, "." + mImageFileName);
 
 				int quality = Helpers.getSharedIntPref(context, "pref_key_system_screenshot_quality", 100);
-				int format = Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_system_screenshot_format", "1"));
+				int format = Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_system_screenshot_format", "2"));
 				XposedHelpers.setAdditionalInstanceField(param.thisObject, "mScreenshotQuality", quality);
 				XposedHelpers.setAdditionalInstanceField(param.thisObject, "mScreenshotFormat", format);
-				if (format == 1) return;
-				String ext = format == 2 ? ".jpg" : (format == 3 ? ".png" : ".webp");
+				String ext = format <= 2 ? ".jpg" : (format == 3 ? ".png" : ".webp");
 				mImageFileName = mImageFileName.replace(".png", "").replace(".jpg", "").replace(".webp", "") + ext;
 				mImageFilePath = mImageFilePath.replace(".png", "").replace(".jpg", "").replace(".webp", "") + ext;
+
 				XposedHelpers.setObjectField(param.thisObject, "mImageFileName", mImageFileName);
 				XposedHelpers.setObjectField(param.thisObject, "mImageFilePath", mImageFilePath);
 				Object mNotifyMediaStoreData = XposedHelpers.getObjectField(param.thisObject, "mNotifyMediaStoreData");
@@ -5305,7 +5305,7 @@ public class System {
 				Bitmap image = (Bitmap)XposedHelpers.getObjectField(data[0], "image");
 				if (image == null) return;
 
-				int format = 1;
+				int format = 2;
 				int quality = 100;
 				try {
 					format = (int)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mScreenshotFormat");
@@ -5313,7 +5313,6 @@ public class System {
 				} catch (Throwable t) {
 					XposedBridge.log(t);
 				}
-				if (format == 1) return;
 
 				FileOutputStream mCustomOutputStream;
 				try {
@@ -5328,7 +5327,7 @@ public class System {
 					mCustomOutputStream = new FileOutputStream(mImageFilePath);
 				}
 
-				Bitmap.CompressFormat compress = format == 2 ? Bitmap.CompressFormat.JPEG : (format == 3 ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.WEBP);
+				Bitmap.CompressFormat compress = format <= 2 ? Bitmap.CompressFormat.JPEG : (format == 3 ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.WEBP);
 				image.compress(compress, quality, mCustomOutputStream);
 				mCustomOutputStream.flush();
 				mCustomOutputStream.close();

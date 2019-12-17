@@ -19,7 +19,7 @@
 		android:title="@string/system_screenshot_format_title"
 		android:entries="@array/screenshotformat"
 		android:entryValues="@array/screenshotformat_val"
-		android:defaultValue="1" />
+		android:defaultValue="2" />
 
 	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_screenshot_quality"
