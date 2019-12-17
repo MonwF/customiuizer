@@ -1,7 +1,9 @@
 package name.mikanoshi.customiuizer.mods;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -1073,6 +1075,75 @@ public class Launcher {
 				param.args[2] = (scale < 1.0f ? 1.5f / scale : 1.0f / scale) * (float)param.args[2];
 			}
 		});
+	}
+
+	public static void BottomSpacingRes() {
+		int opt = MainModule.mPrefs.getInt("launcher_bottommargin", 0);
+		MainModule.resHooks.setDensityReplacement("com.miui.home", "dimen", "hotseats_padding_bottom", opt);
+	}
+
+	public static void BottomSpacingHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethods("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "calcHotSeatsHeight", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				Context context = (Context)param.args[0];
+				if (context == null) return;
+				int height = (int)param.getResult();
+				int opt = MainModule.mPrefs.getInt("launcher_bottommargin", 0);
+				param.setResult(Math.round(height + opt * context.getResources().getDisplayMetrics().density));
+			}
+		});
+	}
+
+	public static void FixAppInfoLaunchHook(LoadPackageParam lpparam) {
+		if (lpparam.packageName.equals("com.mi.android.globallauncher"))
+			Helpers.hookAllMethods("com.miui.home.launcher.util.Utilities", lpparam.classLoader, "startDetailsActivityForInfo", new MethodHook() {
+				@Override
+				protected void before(MethodHookParam param) throws Throwable {
+					Object itemInfo = param.args[0];
+					ComponentName component;
+					try {
+						component = (ComponentName)XposedHelpers.callMethod(itemInfo, "getComponentName");
+					} catch (Throwable t1) {
+						try {
+							component = (ComponentName)XposedHelpers.callMethod(XposedHelpers.getObjectField(itemInfo, "intent"), "getComponent");
+						} catch (Throwable t2) {
+							try {
+								component = (ComponentName)XposedHelpers.getObjectField(itemInfo, "providerName");
+							} catch (Throwable t3) {
+								component = (ComponentName)XposedHelpers.getObjectField(XposedHelpers.getObjectField(itemInfo, "providerInfo"), "provider");
+							}
+						}
+					}
+					if (component == null) return;
+					Context context = (Context)param.args[1];
+					if (context == null) return;
+					UserHandle userHandle = (UserHandle)XposedHelpers.callMethod(param.args[0], "getUser");
+					Intent intent = new Intent("miui.intent.action.APP_MANAGER_APPLICATION_DETAIL");
+					intent.setPackage("com.miui.securitycenter");
+					intent.putExtra("package_name", component.getPackageName());
+					if (userHandle != null) intent.putExtra("miui.intent.extra.USER_ID", userHandle.hashCode());
+					context.startActivity(intent);
+					param.setResult(true);
+				}
+			});
+		else
+			Helpers.hookAllMethods("com.miui.home.launcher.shortcuts.ShortcutMenuManager", lpparam.classLoader, "startAppDetailsActivity", new MethodHook() {
+				@Override
+				protected void before(MethodHookParam param) throws Throwable {
+					ComponentName component = (ComponentName)XposedHelpers.callMethod(param.args[0], "getComponentName");
+					if (component == null) return;
+					View view = (View)param.args[1];
+					if (view == null) return;
+					UserHandle userHandle = (UserHandle)XposedHelpers.callMethod(param.args[0], "getUserHandle");
+					Intent intent = new Intent("miui.intent.action.APP_MANAGER_APPLICATION_DETAIL");
+					intent.setPackage("com.miui.securitycenter");
+					intent.putExtra("package_name", component.getPackageName());
+					if (userHandle != null) intent.putExtra("miui.intent.extra.USER_ID", userHandle.hashCode());
+					view.getContext().startActivity(intent);
+					param.setResult(null);
+				}
+			});
 	}
 
 //	public static void NoInternationalBuildHook(LoadPackageParam lpparam) {

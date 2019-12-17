@@ -23,12 +23,11 @@
 	<PreferenceCategory
 		android:title="@string/miuizer"
 		android:key="pref_key_miuizer">
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
-			android:key="pref_key_miuizer_marknewmods"
-			android:title="@string/miuizer_show_newmods_title"
-			android:entries="@array/marknewmods"
-			android:entryValues="@array/marknewmods_val"
-			android:defaultValue="2" />
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_miuizer_launchericon"
+			android:summary="@string/miuizer_show_launchericon_summ"
+			android:title="@string/miuizer_show_launchericon_title"
+			android:defaultValue="true" />
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_miuizer_settingsiconpos"
 			android:title="@string/miuizer_show_settingsicon_title"
@@ -36,11 +35,6 @@
 			android:entries="@array/settingsicon"
 			android:entryValues="@array/settingsicon_val"
 			android:defaultValue="2" />
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_miuizer_launchericon"
-			android:summary="@string/miuizer_show_launchericon_summ"
-			android:title="@string/miuizer_show_launchericon_title"
-			android:defaultValue="true" />
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_miuizer_locale"
 			android:title="@string/miuizer_locale_title"
@@ -48,6 +42,20 @@
 			android:entries="@array/placeholder_array"
 			android:entryValues="@array/placeholder_array_strval"
 			android:defaultValue="auto" />
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_miuizer_marknewmods"
+			android:title="@string/miuizer_show_newmods_title"
+			android:summary="@string/miuizer_show_newmods_summ"
+			android:entries="@array/marknewmods"
+			android:entryValues="@array/marknewmods_val"
+			android:defaultValue="2" />
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_miuizer_holiday"
+			android:title="@string/miuizer_holiday_title"
+			android:summary="@string/miuizer_holiday_summ"
+			android:entries="@array/holidays"
+			android:entryValues="@array/holidays_val"
+			android:defaultValue="0" />
 	</PreferenceCategory>
 
 	<PreferenceCategory

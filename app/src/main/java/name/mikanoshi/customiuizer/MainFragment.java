@@ -472,6 +472,14 @@ public class MainFragment extends PreferenceFragmentBase {
 			}
 		});
 
+		findPreference("pref_key_miuizer_holiday").setOnPreferenceChangeListener(new CheckBoxPreference.OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				getActivity().recreate();
+				return true;
+			}
+		});
+
 		findPreference("pref_key_miuizer_sendreport").setOnPreferenceClickListener(new CheckBoxPreference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {

@@ -19,6 +19,7 @@ import android.os.PowerManager.WakeLock;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.telecom.TelecomManager;
+import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -515,6 +516,31 @@ public class Controls {
 		});
 	}
 
+	@SuppressLint("MissingPermission")
+	private static boolean handleCallAction(int action) {
+		TelecomManager tm = (TelecomManager)miuiPWMContext.getSystemService(Context.TELECOM_SERVICE);
+		if (!tm.isInCall()) return false;
+		int callState = (int)XposedHelpers.callMethod(tm, "getCallState");
+		if (callState == TelephonyManager.CALL_STATE_RINGING) {
+			int accept = MainModule.mPrefs.getStringAsInt("controls_fingerprint_accept", 1);
+			int reject = MainModule.mPrefs.getStringAsInt("controls_fingerprint_reject", 1);
+			if (action == accept) {
+				XposedHelpers.callMethod(tm, "acceptRingingCall");
+				return true;
+			} else if (action == reject) {
+				XposedHelpers.callMethod(tm, "endCall");
+				return true;
+			}
+		} else if (callState == TelephonyManager.CALL_STATE_OFFHOOK) {
+			int hangup = MainModule.mPrefs.getStringAsInt("controls_fingerprint_hangup", 1);
+			if (action == hangup) {
+				XposedHelpers.callMethod(tm, "endCall");
+				return true;
+			}
+		}
+		return MainModule.mPrefs.getBoolean("controls_fingerprintskip2");
+	}
+
 	@SuppressLint("StaticFieldLeak")
 	private static Context miuiPWMContext;
 	private static Handler miuiPWMHandler;
@@ -522,33 +548,65 @@ public class Controls {
 	private static boolean wasFingerprintUsed = false;
 	private static boolean isFingerprintPressed = false;
 	private static boolean isFingerprintLongPressed = false;
+	private static boolean isFingerprintLongPressHandled = false;
 	private static Runnable singlePressFingerprint = new Runnable() {
 		@Override
 		public void run() {
 			if (miuiPWMContext == null || miuiPWMHandler == null) return;
 			miuiPWMHandler.removeCallbacks(longPressFingerprint);
-			GlobalActions.handleAction(miuiPWMContext, "pref_key_controls_fingerprint1");
+			if (!handleCallAction(2)) GlobalActions.handleAction(miuiPWMContext, "pref_key_controls_fingerprint1");
 		}
 	};
 	private static Runnable longPressFingerprint = new Runnable() {
 		@Override
 		public void run() {
-			if (isFingerprintPressed && miuiPWMContext != null) {
+			if (isFingerprintPressed) {
 				isFingerprintLongPressed = true;
+				isFingerprintLongPressHandled = handleCallAction(4);
 				Helpers.performStrongVibration(miuiPWMContext, true);
 			}
 		}
 	};
 
 	public static void FingerprintEventsHook(LoadPackageParam lpparam) {
-		boolean skipInCamera = MainModule.mPrefs.getBoolean("controls_fingerprintskip");
-		boolean skipInCall = MainModule.mPrefs.getBoolean("controls_fingerprintskip2");
+		Helpers.hookAllMethods("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "initInternal", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
+
+				new Helpers.SharedPrefObserver(mContext, mHandler) {
+					@Override
+					public void onChange(Uri uri) {
+						try {
+							String type = uri.getPathSegments().get(1);
+							String key = uri.getPathSegments().get(2);
+							if (!key.contains("pref_key_controls_fingerprint")) return;
+
+							switch (type) {
+								case "string":
+									MainModule.mPrefs.put(key, Helpers.getSharedStringPref(mContext, key, ""));
+									break;
+								case "integer":
+									MainModule.mPrefs.put(key, Helpers.getSharedIntPref(mContext, key, 1));
+									break;
+								case "boolean":
+									MainModule.mPrefs.put(key, Helpers.getSharedBoolPref(mContext, key, false));
+									break;
+							}
+						} catch (Throwable t) {
+							XposedBridge.log(t);
+						}
+					}
+				};
+			}
+		});
 
 		Helpers.findAndHookMethod("com.android.server.policy.MiuiPhoneWindowManager", lpparam.classLoader, "processFingerprintNavigationEvent", KeyEvent.class, boolean.class, new MethodHook() {
 			@Override
 			@SuppressLint("MissingPermission")
 			protected void before(MethodHookParam param) throws Throwable {
-				if (skipInCamera) {
+				if (MainModule.mPrefs.getBoolean("controls_fingerprintskip")) {
 					Object mFocusedWindow = XposedHelpers.getObjectField(param.thisObject, "mFocusedWindow");
 					if ((boolean)param.args[1] && mFocusedWindow != null) {
 						String ownPkg = (String)XposedHelpers.callMethod(mFocusedWindow, "getOwningPackage");
@@ -558,11 +616,7 @@ public class Controls {
 
 				miuiPWMContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 				miuiPWMHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
-
-				if (skipInCall && miuiPWMContext != null) {
-					TelecomManager tm = (TelecomManager)miuiPWMContext.getSystemService(Context.TELECOM_SERVICE);
-					if (tm.isInCall()) return;
-				}
+				if (miuiPWMContext == null || miuiPWMHandler == null) return;
 
 				KeyEvent keyEvent = (KeyEvent)param.args[0];
 				if (keyEvent.getKeyCode() != KeyEvent.KEYCODE_DPAD_CENTER || keyEvent.getAction() != KeyEvent.ACTION_DOWN) return;
@@ -572,8 +626,8 @@ public class Controls {
 				wasFingerprintUsed = Settings.System.getInt(miuiPWMContext.getContentResolver(), "is_fingerprint_active", 0) == 1;
 
 				if (wasScreenOn && !wasFingerprintUsed)
-				if (Helpers.getSharedIntPref(miuiPWMContext, "pref_key_controls_fingerprintlong_action", 1) > 1) {
-					int delay = Helpers.getSharedIntPref(miuiPWMContext, "pref_key_controls_fingerprintlong_delay", 0);
+				if (MainModule.mPrefs.getInt("controls_fingerprintlong_action", 1) > 1) {
+					int delay = MainModule.mPrefs.getInt("controls_fingerprintlong_delay", 0);
 					miuiPWMHandler.postDelayed(longPressFingerprint, delay < 200 ? ViewConfiguration.getLongPressTimeout() : delay);
 				}
 
@@ -584,7 +638,7 @@ public class Controls {
 			@Override
 			@SuppressLint("MissingPermission")
 			protected void after(MethodHookParam param) throws Throwable {
-				if (skipInCamera) {
+				if (MainModule.mPrefs.getBoolean("controls_fingerprintskip")) {
 					Object mFocusedWindow = XposedHelpers.getObjectField(param.thisObject, "mFocusedWindow");
 					if ((boolean)param.args[1] && mFocusedWindow != null) {
 						String ownPkg = (String)XposedHelpers.callMethod(mFocusedWindow, "getOwningPackage");
@@ -592,9 +646,10 @@ public class Controls {
 					}
 				}
 
-				if (skipInCall && miuiPWMContext != null) {
+				boolean isInCall = false;
+				if (miuiPWMContext != null) {
 					TelecomManager tm = (TelecomManager)miuiPWMContext.getSystemService(Context.TELECOM_SERVICE);
-					if (tm.isInCall()) return;
+					isInCall = tm.isInCall();
 				}
 
 				KeyEvent keyEvent = (KeyEvent)param.args[0];
@@ -607,25 +662,36 @@ public class Controls {
 				long currentTouchTime = currentTimeMillis();
 				XposedHelpers.setAdditionalInstanceField(param.thisObject, "touchTime", currentTouchTime);
 
-				int delay = Helpers.getSharedIntPref(mContext, "pref_key_controls_fingerprint2_delay", 50);
+				int delay = MainModule.mPrefs.getInt("controls_fingerprint2_delay", 50);
 				int dttimeout = delay < 200 ? ViewConfiguration.getDoubleTapTimeout() : delay;
-				int dtaction = Helpers.getSharedIntPref(mContext, "pref_key_controls_fingerprint2_action", 1);
-				if (wasScreenOn && !wasFingerprintUsed)
-				if (dtaction > 1 && currentTouchTime - lastTouchTime < dttimeout) {
-					mHandler.removeCallbacks(singlePressFingerprint);
-					mHandler.removeCallbacks(longPressFingerprint);
-					GlobalActions.handleAction(mContext, "pref_key_controls_fingerprint2");
-					wasScreenOn = false;
-				} else if (isFingerprintLongPressed) {
-					GlobalActions.handleAction(mContext, "pref_key_controls_fingerprintlong");
-					wasScreenOn = false;
-				} else {
-					mHandler.removeCallbacks(longPressFingerprint);
-					mHandler.removeCallbacks(singlePressFingerprint);
-					if (dtaction > 1)
-						mHandler.postDelayed(singlePressFingerprint, dttimeout);
-					else
-						mHandler.post(singlePressFingerprint);
+				if (wasScreenOn && !wasFingerprintUsed) {
+					boolean hasDoubleTap;
+					if (isInCall) {
+						int accept = MainModule.mPrefs.getStringAsInt("controls_fingerprint_accept", 1);
+						int reject = MainModule.mPrefs.getStringAsInt("controls_fingerprint_reject", 1);
+						int hangup = MainModule.mPrefs.getStringAsInt("controls_fingerprint_hangup", 1);
+						hasDoubleTap = accept == 3 || reject == 3 || hangup == 3;
+					} else {
+						int dtaction = MainModule.mPrefs.getInt("controls_fingerprint2_action", 1);
+						hasDoubleTap = dtaction > 1;
+					}
+					if (hasDoubleTap && currentTouchTime - lastTouchTime < dttimeout) {
+						mHandler.removeCallbacks(singlePressFingerprint);
+						mHandler.removeCallbacks(longPressFingerprint);
+						if (!handleCallAction(3)) GlobalActions.handleAction(mContext, "pref_key_controls_fingerprint2");
+						wasScreenOn = false;
+					} else if (isFingerprintLongPressed) {
+						if (!isFingerprintLongPressHandled) GlobalActions.handleAction(mContext, "pref_key_controls_fingerprintlong");
+						isFingerprintLongPressHandled = false;
+						wasScreenOn = false;
+					} else {
+						mHandler.removeCallbacks(longPressFingerprint);
+						mHandler.removeCallbacks(singlePressFingerprint);
+						if (hasDoubleTap)
+							mHandler.postDelayed(singlePressFingerprint, dttimeout);
+						else
+							mHandler.post(singlePressFingerprint);
+					}
 				}
 
 				isFingerprintLongPressed = false;

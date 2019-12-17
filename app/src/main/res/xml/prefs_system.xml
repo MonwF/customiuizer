@@ -559,7 +559,7 @@
 			miuizer:note="@string/system_qsgridcolumns_note"
 			miuizer:offtext="@string/array_default"
 			miuizer:minValue="2"
-			miuizer:maxValue="6"
+			miuizer:maxValue="7"
 			miuizer:stepValue="1"
 			miuizer:format="%d" />
 
@@ -570,7 +570,7 @@
 			miuizer:note="@string/system_qqsgridcolumns_note"
 			miuizer:offtext="@string/array_default"
 			miuizer:minValue="2"
-			miuizer:maxValue="6"
+			miuizer:maxValue="7"
 			miuizer:stepValue="1"
 			miuizer:format="%d" />
 
@@ -924,6 +924,11 @@
 			android:dependency="pref_key_system_forceclose"
 			miuizer:child="true"
 			miuizer:countAsSummary="true" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_screenshot_cat"
+			android:title="@string/system_screenshot_title"
+			android:summary="@string/system_screenshot_summ" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 			android:title="@string/system_mods_volumeblur"

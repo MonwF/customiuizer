@@ -133,15 +133,19 @@ public class Helpers {
 	public static ValueAnimator shimmerAnim;
 	public static boolean showNewMods = true;
 	public static final HashSet<String> newMods =  new HashSet<String>(Arrays.asList(
-		"pref_key_system_statusbarcontrols_cat",
-		"pref_key_system_statusbarcontrols_sens_bright",
-		"pref_key_system_statusbarcontrols_sens_vol",
-		"pref_key_system_lsalarm_cat",
-		"pref_key_system_resizablewidgets",
-		"pref_key_controls_volumecursor_apps",
-		"pref_key_launcher_fixanim"
+		"pref_key_system_screenshot_cat",
+		"pref_key_controls_fingerprint_accept",
+		"pref_key_controls_fingerprint_reject",
+		"pref_key_controls_fingerprint_hangup",
+		"pref_key_launcher_bottommargin",
+		"pref_key_launcher_fixlaunch"
 	));
 	public static final ArrayList<String> shortcutIcons = new ArrayList<String>();
+	public static Holidays currentHoliday = Holidays.NONE;
+
+	public enum Holidays {
+		NONE, NEWYEAR
+	}
 
 	public enum SettingsType {
 		Preference, Edit
@@ -186,6 +190,19 @@ public class Helpers {
 			checkbox.setButtonDrawable(btnResID == 0 ? R.drawable.btn_checkbox : btnResID);
 		} catch (Throwable t) {
 			checkbox.setButtonDrawable(R.drawable.btn_checkbox);
+		}
+	}
+
+	public static void detectHoliday() {
+		currentHoliday = Holidays.NONE;
+		String opt = Helpers.prefs.getString("pref_key_miuizer_holiday", "0");
+		int holiday = opt != null ? Integer.parseInt(opt) : 0;
+		if (holiday > 0) currentHoliday = Holidays.values()[holiday];
+		if (holiday == 0) {
+			// NY
+			Calendar cal = Calendar.getInstance();
+			int month = cal.get(Calendar.MONTH);
+			if (month == 0 || month == 11) currentHoliday = Holidays.NEWYEAR;
 		}
 	}
 

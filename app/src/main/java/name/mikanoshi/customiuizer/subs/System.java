@@ -347,6 +347,14 @@ public class System extends SubFragment {
 					}
 				});
 
+				findPreference("pref_key_system_screenshot_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						openSubFragment(new System_ScreenshotConfig(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_screenshot_title, R.xml.prefs_system_screenshot);
+						return true;
+					}
+				});
+
 				Helpers.prefs.edit().putInt("pref_key_system_animationscale_window", Math.round(Helpers.getAnimationScale(0) * 10)).apply();
 				((SeekBarPreference)findPreference("pref_key_system_animationscale_window")).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 					@Override

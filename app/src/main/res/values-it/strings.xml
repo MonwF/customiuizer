@@ -162,7 +162,6 @@
     <string name="system_vibration_amp_period_title">Periodo di tempo</string>
     <string name="system_vibration_title">Blocca la vibrazione</string>
     <string name="system_vibration_summ">Impedisci alle app selezionate di utilizzare la vibrazione</string>
-    <string name="notification_volume">Volume di notifica</string>
     <string name="system_volume">Volume dei suoni di sistema</string>
     <string name="system_scramblepin_title">PIN criptato</string>
     <string name="system_scramblepin_summ">Cambia casualmente l\'ordine dei pulsanti PIN</string>

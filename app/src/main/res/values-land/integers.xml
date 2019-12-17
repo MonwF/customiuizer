@@ -5,6 +5,7 @@
 	<integer name="quick_settings_num_columns_4">5</integer>
 	<integer name="quick_settings_num_columns_5">6</integer>
 	<integer name="quick_settings_num_columns_6">7</integer>
+	<integer name="quick_settings_num_columns_7">8</integer>
 
 	<integer name="quick_settings_num_rows_2">2</integer>
 	<integer name="quick_settings_num_rows_3">3</integer>
@@ -15,5 +16,6 @@
 	<integer name="quick_quick_settings_num_rows_4">5</integer>
 	<integer name="quick_quick_settings_num_rows_5">6</integer>
 	<integer name="quick_quick_settings_num_rows_6">7</integer>
+	<integer name="quick_quick_settings_num_rows_7">8</integer>
 
 </resources>

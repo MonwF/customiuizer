@@ -13,17 +13,30 @@ import android.os.FileObserver;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.Surface;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import java.lang.reflect.Field;
 import java.util.Set;
 
+import com.github.jinatonic.confetti.ConfettiManager;
+import com.github.matteobattilana.weather.PrecipType;
+import com.github.matteobattilana.weather.WeatherView;
+
+import name.mikanoshi.customiuizer.utils.GravitySensor;
 import name.mikanoshi.customiuizer.utils.Helpers;
+import name.mikanoshi.customiuizer.utils.SnowGenerator;
 
 public class MainActivity extends Activity {
 
 	MainFragment mainFrag = null;
 	SharedPreferences.OnSharedPreferenceChangeListener prefsChanged;
 	FileObserver fileObserver;
+	GravitySensor angleListener;
 
 	@Override
 	protected void attachBaseContext(Context base) {
@@ -45,6 +58,45 @@ public class MainActivity extends Activity {
 			Toast.makeText(this, R.string.sdk_failed, Toast.LENGTH_LONG).show();
 			finish();
 			return;
+		}
+
+		Helpers.detectHoliday();
+		WeatherView mWeatherView = findViewById(R.id.snow_view);
+		ImageView mHolidayHeader = findViewById(R.id.holiday_header);
+		if (Helpers.currentHoliday == Helpers.Holidays.NEWYEAR) {
+			int rotation = getWindowManager().getDefaultDisplay().getRotation();
+			mWeatherView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+			mWeatherView.setPrecipType(PrecipType.SNOW);
+			mWeatherView.setSpeed(50);
+			mWeatherView.setEmissionRate(rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270 ? 8 : 4);
+			mWeatherView.setFadeOutPercent(0.75f);
+			mWeatherView.setAngle(0);
+			RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)mWeatherView.getLayoutParams();
+			lp.height = getResources().getDisplayMetrics().heightPixels / (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270 ? 2 : 3);
+			mWeatherView.setLayoutParams(lp);
+			try {
+				ConfettiManager manager = mWeatherView.getConfettiManager();
+				Field confettoGenerator = ConfettiManager.class.getDeclaredField("confettoGenerator");
+				confettoGenerator.setAccessible(true);
+				confettoGenerator.set(manager, new SnowGenerator(this));
+			} catch (Throwable t) {
+				t.printStackTrace();
+			}
+			mWeatherView.resetWeather();
+			mWeatherView.setVisibility(View.VISIBLE);
+			mWeatherView.getConfettiManager().setRotationalVelocity(0, 45);
+			angleListener = new GravitySensor(this, mWeatherView);
+			angleListener.setOrientation(rotation);
+			angleListener.setSpeed(50);
+			angleListener.start();
+
+			RelativeLayout.LayoutParams lp2 = (RelativeLayout.LayoutParams)mHolidayHeader.getLayoutParams();
+			lp2.height = getResources().getDisplayMetrics().widthPixels / 3;
+			mHolidayHeader.setLayoutParams(lp2);
+			mHolidayHeader.setVisibility(View.VISIBLE);
+		} else {
+			((ViewGroup)mWeatherView.getParent()).removeView(mWeatherView);
+			((ViewGroup)mHolidayHeader.getParent()).removeView(mHolidayHeader);
 		}
 
 		prefsChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
@@ -102,6 +154,7 @@ public class MainActivity extends Activity {
 		try {
 			if (prefsChanged != null) Helpers.prefs.unregisterOnSharedPreferenceChangeListener(prefsChanged);
 			if (fileObserver != null) fileObserver.stopWatching();
+			if (angleListener != null) angleListener.stop();
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
@@ -188,6 +241,18 @@ public class MainActivity extends Activity {
 			default:
 				super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		}
+	}
+
+	@Override
+	public void onPause() {
+		if (angleListener != null) angleListener.onPause();
+		super.onPause();
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (angleListener != null) angleListener.onResume();
 	}
 
 }

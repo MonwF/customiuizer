@@ -1,3 +1,15 @@
+2.0.8
+[New] Customize screenshot format, quality and save folder
+[New] Accept or reject incoming calls and disconnect active calls using fingerprint scanner
+[New] Launcher dock bottom margin
+[New][Launcher bug fixes] Always open MIUI-styled app info from long press menu
+[Improved][Quick Settings grid] Up to 7 columns
+[Improved][Custom lock screen shortcuts] Allow to open whole app without unlock, not just a single activity
+[Improved][Custom lock screen shortcuts] Launch Mi Home and Mi Remote without unlock if corresponding option for shortcuts is enabled
+[Fixed][Separate volume controls] Crash in sound settings
+[Fixed][Hide icons] Hide charging icon inside battery icon
+New Year is nigh! :)
+
 2.0.7
 [New][Launcher bug fixes] Apply value animators' duration scaling to some launcher animations
 [Improved][All rotations] Option to enable or disable

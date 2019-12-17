@@ -118,6 +118,11 @@
     <string name="system_popupnotif_fs_title">Tam Ekran</string>
     <string name="system_popupnotif_fs_summ">Tam Ekran Mod\'u aktif ise Bildirim Paneli otomatik olarak açılmaz.</string>
     <string name="system_popupnotif_apps_title">Uygulamalar</string>
+    <string name="system_screenshot_title">Ekran görüntüsü yapılandırması</string>
+    <string name="system_screenshot_summ">Ekran görüntüleri için formatı, kaliteyi özelleştirin ve klasörü kaydedin</string>
+    <string name="system_screenshot_format_title">Format</string>
+    <string name="system_screenshot_quality_title">Kalite</string>
+    <string name="system_screenshot_path_title">Kaydedilecek klasör</string>
     <string name="system_chargeanimtime_title">Zaman Aşımı (Şarj Animasyonu)</string>
     <string name="system_chargeanimtime_summ">Şarj Animasyonu\'nun ekranda ne kadar açık kalacağını ayarlayabilirsiniz.</string>
     <string name="system_nolightuponcharges_title">Şarj</string>
@@ -170,8 +175,7 @@
     <string name="system_vibration_amp_period_title">Zaman dilimi</string>
     <string name="system_vibration_title">Engelle</string>
     <string name="system_vibration_summ">Seçtiğiniz uygulamaların titreşim kullanmasını engellersiniz.</string>
-    <string name="notification_volume">Bildirim Sesi</string>
-    <string name="system_volume">Sistem Ses Seviyesi</string>
+    <string name="system_volume">Sistem sesleri</string>
     <string name="system_scramblepin_title">PIN Konumu</string>
     <string name="system_scramblepin_summ">Şifre girerken PIN numara konumları her seferinde değişir.</string>
     <string name="system_securelock_title">Güç Menüsü</string>
@@ -340,7 +344,7 @@
     <string name="launcher_gestures_shortcut">Başlatılacak Kısayol</string>
     <string name="launcher_gestures_activity">Başlatılacak Etkinlik</string>
     <string name="launcher_title">Başlatıcı</string>
-    <string name="launcher_summ">Görüntülemek istediğiniz ana ekranın başlatıcısını seçiniz.</string>
+    <string name="launcher_summ">Seçilen başlatıcı için modları görüntüleme. Yalnızca görsel yardım için, modlar üzerinde herhangi bir etkisi yoktur.</string>
     <string name="launcher_compat_title">Uyumluluk modu</string>
     <string name="launcher_compat_summ">Tüm başlatıcı modlarını uygulamanın alternatif yöntemi</string>
     <string name="launcher_infinitescroll_title">Sayfalar Arası Geçiş</string>
@@ -356,6 +360,7 @@
     <string name="launcher_iconscale_title">Simge Boyutu</string>
     <string name="launcher_horizmargin_title">Yatay ızgara kenar boşlukları</string>
     <string name="launcher_topmargin_title">Üst ızgara marjı</string>
+    <string name="launcher_bottommargin_title">Alt iskele marjı</string>
     <string name="launcher_indicatorheight_title">Sayfa göstergesi yüksekliği</string>
     <string name="launcher_folders">Klasör</string>
     <string name="launcher_folder_cols_title">Sütun Sayısı</string>
@@ -365,6 +370,8 @@
     <string name="launcher_fixstatusbarmode_summ">Duvar Kağıdına göre Karanlık veya Açık olarak görüntülenir.</string>
     <string name="launcher_fixanim_title">Animasyonu düzelt</string>
     <string name="launcher_fixanim_summ">Bazı başlatıcı animasyonlarına değer animatörlerinin süre ölçeklendirmesini uygulayın</string>
+    <string name="launcher_fixlaunch_title">Uygulama bilgilerini düzelt</string>
+    <string name="launcher_fixlaunch_summ">MIUI tarzı uygulama bilgilerini her zaman uzun basın menüsünden aç</string>
     <string name="launcher_foldershade_title">Renk Yerleşimi</string>
     <string name="launcher_foldershade_summ">Karanlık veya aydınlık arka planı aç</string>
     <string name="launcher_foldershade_level_title">Renk Yoğunluğu</string>
@@ -431,6 +438,12 @@
     <string name="controls_fingerprintskip_summ">Deklanşör olarak Parmak İzi\'ni kullanıyorsanız eğer aktif ediniz.</string>
     <string name="controls_fingerprintskip2_title">Arama (Çağrı)</string>
     <string name="controls_fingerprintskip2_summ">Arama (Çağrı) sırasındayken seçilen eylemler gerçekleştirilmez.</string>
+    <string name="controls_fingerprint_accept_title">Gelen aramayı kabul et</string>
+    <string name="controls_fingerprint_reject_title">Gelen aramayı reddet</string>
+    <string name="controls_fingerprint_hangup_title">Geçerli aramayı bitir</string>
+    <string name="controls_fingerprint_conflict">Kabul etme ve reddetme işlemleri aynı kombinasyona sahip olamaz.</string>
+    <string name="controls_fingerprint_conflict_reset_accept">Kabul işlemi devre dışı bırakıldı.</string>
+    <string name="controls_fingerprint_conflict_reset_reject">Reddetme işlemi devre dışı bırakıldı.</string>
     <string name="controls_fingerprintscreen_title">Hata</string>
     <string name="controls_fingerprintscreen_summ">Kimlik doğrulama da hata olursa eğer ekran uyandırılır.</string>
     <string name="controls_fingerprintsuccess_title">Titreşim</string>
@@ -646,6 +659,10 @@
     <string name="array_adjust_volume">Ses seviyesini ayarlayın</string>
     <string name="array_alarm_absolute">Normal zaman</string>
     <string name="array_alarm_relative">Bağıl zaman</string>
+    <string name="array_singletap">Dokunma (Tek)</string>
+    <string name="array_doubletap">Dokunma (Tek)</string>
+    <string name="array_longpress">Basılı Tut (Uzun)</string>
+    <string name="array_newyear">Yeni yıl</string>
     <string name="toggle_wifi_on">Etkin (Wi-Fi)</string>
     <string name="toggle_wifi_off">Devre Dışı (Wi-Fi)</string>
     <string name="toggle_bt_on">Etkin (Bluetooth)</string>
@@ -673,6 +690,7 @@
     <string name="qs_toggle_darkmode_noperm">CustoMIUIzer, Karanlık Mod\'u değiştirme iznine sahip değil.</string>
     <string name="miuizer">Ayarlar (CustoMIUIzer)</string>
     <string name="miuizer_show_newmods_title">Yeni Mod\'ları Belirt</string>
+    <string name="miuizer_show_newmods_summ">\"Yeni!\" Göster Geçerli sürümde eklenen modlar için başlık etiketi</string>
     <string name="miuizer_new_mod">Yeni!</string>
     <string name="miuizer_show_launchericon_title">Simge</string>
     <string name="miuizer_show_launchericon_summ">Başlatıcı\'lar da simgeyi göster.</string>
@@ -680,6 +698,8 @@
     <string name="miuizer_show_settingsicon_summ">Ayarlar\'da simgeyi göster.</string>
     <string name="miuizer_locale_title">Arayüz dili</string>
     <string name="miuizer_locale_summ">Modül arayüzünü daima seçilen dilde göster</string>
+    <string name="miuizer_holiday_title">Tatil tasarım</string>
+    <string name="miuizer_holiday_summ">Modül arayüzünü duruma göre dekore et</string>
     <string name="troubleshoot">Sorun Bildirme</string>
     <string name="miuizer_acrasend_title">Rapor Gönder (Detaylı)</string>
     <string name="miuizer_acrasend_summ">Cihaz, hata ve Xposed günlüğünü toplar ve geliştiriciye gönderir.\nİnternet bağlantısına ihtiyaç duyar.</string>

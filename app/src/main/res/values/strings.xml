@@ -123,6 +123,11 @@
 	<string name="system_popupnotif_fs_title">Respect fullscreen</string>
 	<string name="system_popupnotif_fs_summ">Do not open notification drawer when fullscreen app is active (does not apply to immersive apps with hidden status and navigation bars)</string>
 	<string name="system_popupnotif_apps_title">Selected apps</string>
+	<string name="system_screenshot_title">Screenshot configuration</string>
+	<string name="system_screenshot_summ">Customize format, quality and save folder for screenshots</string>
+	<string name="system_screenshot_format_title">Format</string>
+	<string name="system_screenshot_quality_title">Quality</string>
+	<string name="system_screenshot_path_title">Save folder</string>
 	<string name="system_chargeanimtime_title">Charge animation screen timeout</string>
 	<string name="system_chargeanimtime_summ">How long screen should be kept on after charging animation starts</string>
 	<string name="system_nolightuponcharges_title">No screen light up on charge</string>
@@ -175,8 +180,7 @@
 	<string name="system_vibration_amp_period_title">Time period</string>
 	<string name="system_vibration_title">Block vibration</string>
 	<string name="system_vibration_summ">Prevent selected apps from using vibration</string>
-	<string name="notification_volume">Notification volume</string>
-	<string name="system_volume">System sounds volume</string>
+	<string name="system_volume">System sounds</string>
 	<string name="system_scramblepin_title">Scramble PIN</string>
 	<string name="system_scramblepin_summ">Randomly change PIN buttons order</string>
 	<string name="system_securelock_title">Enhanced screen lock</string>
@@ -349,7 +353,7 @@
 	<string name="launcher_gestures_shortcut">Shortcut to launch</string>
 	<string name="launcher_gestures_activity">Activity to launch</string>
 	<string name="launcher_title">Launcher</string>
-	<string name="launcher_summ">Display mods for selected launcher</string>
+	<string name="launcher_summ">Display mods for selected launcher. For visual aid only, does not have any effect on mods.</string>
 	<string name="launcher_compat_title">Compatibility mode</string>
 	<string name="launcher_compat_summ">Alternative method of applying all launcher mods</string>
 	<string name="launcher_infinitescroll_title">Infinite scrolling</string>
@@ -365,6 +369,7 @@
 	<string name="launcher_iconscale_title">Icons scaling</string>
 	<string name="launcher_horizmargin_title">Horizontal grid margins</string>
 	<string name="launcher_topmargin_title">Top grid margin</string>
+	<string name="launcher_bottommargin_title">Bottom dock margin</string>
 	<string name="launcher_indicatorheight_title">Page indicator height</string>
 	<string name="launcher_folders">Folders</string>
 	<string name="launcher_folder_cols_title">Number of columns in folders</string>
@@ -374,6 +379,8 @@
 	<string name="launcher_fixstatusbarmode_summ">Adjust status bar contents color for light/dark wallpapers on developer launcher version</string>
 	<string name="launcher_fixanim_title">Fix animation</string>
 	<string name="launcher_fixanim_summ">Apply value animators\' duration scaling to some launcher animations</string>
+	<string name="launcher_fixlaunch_title">Fix app info</string>
+	<string name="launcher_fixlaunch_summ">Always open MIUI-styled app info from long press menu</string>
 	<string name="launcher_foldershade_title">Color overlay</string>
 	<string name="launcher_foldershade_summ">Darken or lighten background</string>
 	<string name="launcher_foldershade_level_title">Color intensity</string>
@@ -441,6 +448,12 @@
 	<string name="controls_fingerprintskip_summ">Enable this if you use fingerprint shutter option</string>
 	<string name="controls_fingerprintskip2_title">No actions during calls</string>
 	<string name="controls_fingerprintskip2_summ">Do not execute actions when call is active</string>
+	<string name="controls_fingerprint_accept_title">Accept incoming call</string>
+	<string name="controls_fingerprint_reject_title">Reject incoming call</string>
+	<string name="controls_fingerprint_hangup_title">End current call</string>
+	<string name="controls_fingerprint_conflict">Accept and reject actions cannot have the same combination.</string>
+	<string name="controls_fingerprint_conflict_reset_accept">Accept action was disabled.</string>
+	<string name="controls_fingerprint_conflict_reset_reject">Reject action was disabled.</string>
 	<string name="controls_fingerprintscreen_title">Turn screen on after failure</string>
 	<string name="controls_fingerprintscreen_summ">Light screen up on failed authentication</string>
 	<string name="controls_fingerprintsuccess_title">Vibrate on success</string>
@@ -661,6 +674,10 @@
 	<string name="array_adjust_volume">Adjust volume</string>
 	<string name="array_alarm_absolute">Regular time</string>
 	<string name="array_alarm_relative">Relative time</string>
+	<string name="array_singletap">Single tap</string>
+	<string name="array_doubletap">Double tap</string>
+	<string name="array_longpress">Long press</string>
+	<string name="array_newyear">New Year</string>
 
 	<string name="toggle_wifi_on">Wi-Fi enabled</string>
 	<string name="toggle_wifi_off">Wi-Fi disabled</string>
@@ -690,6 +707,7 @@
 
 	<string name="miuizer">CustoMIUIzer settings</string>
 	<string name="miuizer_show_newmods_title">Mark new mods</string>
+	<string name="miuizer_show_newmods_summ">Display \"New!\" label in title for mods added in current version</string>
 	<string name="miuizer_new_mod">New!</string>
 	<string name="miuizer_show_launchericon_title">Launcher icon</string>
 	<string name="miuizer_show_launchericon_summ">Show icon in launchers</string>
@@ -697,6 +715,8 @@
 	<string name="miuizer_show_settingsicon_summ">Show icon in Settings</string>
 	<string name="miuizer_locale_title">Interface language</string>
 	<string name="miuizer_locale_summ">Always display module\'s interface in selected language</string>
+	<string name="miuizer_holiday_title">Holiday design</string>
+	<string name="miuizer_holiday_summ">Decorate module interface according to occasion</string>
 
 	<string name="troubleshoot">Troubleshooting</string>
 	<string name="miuizer_acrasend_title">Send detailed report</string>

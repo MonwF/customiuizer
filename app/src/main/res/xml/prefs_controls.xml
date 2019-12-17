@@ -9,20 +9,25 @@
 		android:key="pref_key_controls_cat_fingerprint"
 		android:title="@string/controls_mods_fingerprint">
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_controls_fingerprintscreen"
+			android:title="@string/controls_fingerprintscreen_title"
+			android:summary="@string/controls_fingerprintscreen_summ"
+			android:defaultValue="false" />
+
 		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
-			android:title="@string/mods_actions" />
+			android:title="@string/mods_actions"
+			miuizer:dynamic="true" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_fingerprint1"
 			android:summary="@string/controls_fingerprint1_summ"
-			android:title="@string/controls_fingerprint1_title"
-			miuizer:dynamic="true" />
+			android:title="@string/controls_fingerprint1_title" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_fingerprint2"
 			android:summary="@string/controls_fingerprint2_summ"
-			android:title="@string/controls_fingerprint2_title"
-			miuizer:dynamic="true" />
+			android:title="@string/controls_fingerprint2_title" />
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_controls_fingerprint2_delay"
@@ -33,14 +38,12 @@
 			miuizer:stepValue="50"
 			miuizer:format="@string/format_d_ms"
 			miuizer:note="@string/controls_fingerprint2_delay_note"
-			miuizer:offtext="@string/array_system_default"
-			miuizer:dynamic="true" />
+			miuizer:offtext="@string/array_system_default" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_fingerprintlong"
 			android:summary="@string/controls_fingerprintlong_summ"
-			android:title="@string/controls_fingerprintlong_title"
-			miuizer:dynamic="true" />
+			android:title="@string/controls_fingerprintlong_title" />
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_controls_fingerprintlong_delay"
@@ -50,8 +53,7 @@
 			miuizer:maxValue="2000"
 			miuizer:stepValue="100"
 			miuizer:format="@string/format_d_ms"
-			miuizer:offtext="@string/array_system_default"
-			miuizer:dynamic="true" />
+			miuizer:offtext="@string/array_system_default" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_fingerprintskip"
@@ -63,13 +65,33 @@
 			android:key="pref_key_controls_fingerprintskip2"
 			android:title="@string/controls_fingerprintskip2_title"
 			android:summary="@string/controls_fingerprintskip2_summ"
+			android:disableDependentsState="true"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_controls_fingerprintscreen"
-			android:title="@string/controls_fingerprintscreen_title"
-			android:summary="@string/controls_fingerprintscreen_summ"
-			android:defaultValue="false" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+			android:title="@string/calls"
+			miuizer:dynamic="true" />
+
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_controls_fingerprint_accept"
+			android:title="@string/controls_fingerprint_accept_title"
+			android:entries="@array/callactions"
+			android:entryValues="@array/callactions_val"
+			android:defaultValue="1" />
+
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_controls_fingerprint_reject"
+			android:title="@string/controls_fingerprint_reject_title"
+			android:entries="@array/callactions"
+			android:entryValues="@array/callactions_val"
+			android:defaultValue="1" />
+
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_controls_fingerprint_hangup"
+			android:title="@string/controls_fingerprint_hangup_title"
+			android:entries="@array/callactions"
+			android:entryValues="@array/callactions_val"
+			android:defaultValue="1" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 			android:title="@string/system_mods_vibration" />

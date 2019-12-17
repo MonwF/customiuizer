@@ -1,0 +1,42 @@
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:miuizer="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_screenshot"
+		android:title="@string/enable_mod"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:title="@string/settings"
+		android:dependency="pref_key_system_screenshot"
+		miuizer:dynamic="true">
+
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_system_screenshot_format"
+		android:title="@string/system_screenshot_format_title"
+		android:entries="@array/screenshotformat"
+		android:entryValues="@array/screenshotformat_val"
+		android:defaultValue="1" />
+
+	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		android:key="pref_key_system_screenshot_quality"
+		android:title="@string/system_screenshot_quality_title"
+		android:defaultValue="100"
+		miuizer:minValue="0"
+		miuizer:maxValue="100"
+		miuizer:stepValue="1"
+		miuizer:format="%d" />
+
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_system_screenshot_path"
+		android:title="@string/system_screenshot_path_title"
+		android:entries="@array/screenshotpath"
+		android:entryValues="@array/screenshotpath_val"
+		android:defaultValue="1" />
+
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+
+</PreferenceScreen>

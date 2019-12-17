@@ -62,6 +62,7 @@ import android.os.BadParcelableException;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -104,9 +105,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
@@ -777,7 +780,7 @@ public class System {
 
 				Preference pref = (Preference)XposedHelpers.newInstance(vsbCls, fragment.getActivity());
 				pref.setKey("notification_volume");
-				pref.setTitle(modRes.getString(R.string.notification_volume));
+				pref.setTitle(modRes.getString(R.string.system_mods_notifications));
 				pref.setPersistent(true);
 				fragment.getPreferenceScreen().addPreference(pref);
 				initSeekBar[0].invoke(fragment, "notification_volume", 5, settingsNotifResId);
@@ -1950,6 +1953,7 @@ public class System {
 			case 4: colsResId = R.integer.quick_quick_settings_num_rows_4; break;
 			case 5: colsResId = R.integer.quick_quick_settings_num_rows_5; break;
 			case 6: colsResId = R.integer.quick_quick_settings_num_rows_6; break;
+			case 7: colsResId = R.integer.quick_quick_settings_num_rows_7; break;
 		}
 		MainModule.resHooks.setObjectReplacement("com.android.systemui", "integer", "quick_settings_qqs_count_portrait", cols);
 		MainModule.resHooks.setResReplacement("com.android.systemui", "integer", "quick_settings_qqs_count", colsResId);
@@ -1966,6 +1970,7 @@ public class System {
 			case 4: colsRes = R.integer.quick_settings_num_columns_4; break;
 			case 5: colsRes = R.integer.quick_settings_num_columns_5; break;
 			case 6: colsRes = R.integer.quick_settings_num_columns_6; break;
+			case 7: colsRes = R.integer.quick_settings_num_columns_7; break;
 		}
 
 		switch (rows) {
@@ -3208,6 +3213,10 @@ public class System {
 			protected void after(MethodHookParam param) throws Throwable {
 				ImageView mBatteryChargingView = (ImageView)XposedHelpers.getObjectField(param.thisObject, "mBatteryChargingView");
 				mBatteryChargingView.setVisibility(View.GONE);
+				try {
+					ImageView mBatteryChargingInView = (ImageView)XposedHelpers.getObjectField(param.thisObject, "mBatteryChargingInView");
+					mBatteryChargingInView.setVisibility(View.GONE);
+				} catch (Throwable ignore) {}
 			}
 		});
 	}
@@ -3785,7 +3794,6 @@ public class System {
 					}
 					if (mBackgroundView != null) mBackgroundView.setBackgroundColor(result ? Color.TRANSPARENT : Color.BLACK);
 					if (mIconCircleStrokePaint != null) mIconCircleStrokePaint.setColor(result ? Color.TRANSPARENT : Color.WHITE);
-
 				}
 			});
 
@@ -4077,21 +4085,88 @@ public class System {
 				param.setResult(null);
 			}
 		});
+
+		if (!Helpers.findAndHookMethodSilently(leftViewCls, lpparam.classLoader, "onClick", View.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				if (handleStockShortcut((View)param.args[0])) param.setResult(null);
+			}
+		})) Helpers.findAndHookMethod(leftViewCls, lpparam.classLoader, "onFinishInflate", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				View mSmartHomeLinearLayout = (View)XposedHelpers.getObjectField(param.thisObject, "mSmartHomeLinearLayout");
+				View mRemoteCenterLinearLayout = (View)XposedHelpers.getObjectField(param.thisObject, "mRemoteCenterLinearLayout");
+				final View.OnClickListener mListener = (View.OnClickListener)XposedHelpers.getObjectField(param.thisObject, "mListener");
+				View.OnClickListener mNewListener = new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						if (!handleStockShortcut(view))
+						if (mListener != null) mListener.onClick(view);
+					}
+				};
+				mSmartHomeLinearLayout.setOnClickListener(mNewListener);
+				mRemoteCenterLinearLayout.setOnClickListener(mNewListener);
+			}
+		});
+	}
+
+	private static boolean handleStockShortcut(View view) {
+		if (view == null) return false;
+		boolean skip = MainModule.mPrefs.getBoolean("system_lockscreenshortcuts_left_skiplock");
+		if (!skip) return false;
+		Context context = view.getContext();
+		int id = view.getId();
+		try {
+			if (id == view.getResources().getIdentifier("keyguard_remote_controller_info", "id", context.getPackageName())) {
+				Intent intent = context.getPackageManager().getLaunchIntentForPackage("com.duokan.phone.remotecontroller");
+				if (intent == null) return false;
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				if (MainModule.mPrefs.getBoolean("system_lockscreenshortcuts_left_skiplock")) {
+					intent.putExtra("ShowCameraWhenLocked", true);
+					intent.putExtra("StartActivityWhenLocked", true);
+				}
+				context.startActivity(intent);
+				return true;
+			} else if (id == view.getResources().getIdentifier("keyguard_smarthome_info", "id", context.getPackageName())) {
+				Intent intent = new Intent();
+				intent.setPackage("com.xiaomi.smarthome");
+				intent.setData(Uri.parse("http://home.mi.com/main"));
+				intent.setAction("android.intent.action.VIEW");
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				intent.putExtra("source", 11);
+				if (MainModule.mPrefs.getBoolean("system_lockscreenshortcuts_left_skiplock")) {
+					intent.putExtra("ShowCameraWhenLocked", true);
+					intent.putExtra("StartActivityWhenLocked", true);
+				}
+				context.startActivity(intent);
+				return true;
+			}
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+		return false;
 	}
 
 	public static void LockScreenSecureLaunchHook() {
 		Helpers.findAndHookMethod(Activity.class, "onCreate", Bundle.class, new MethodHook() {
+			@SuppressWarnings("ConstantConditions")
 			protected void after(MethodHookParam param) throws Throwable {
 				Activity act = (Activity)param.thisObject;
 				if (act == null) return;
 				Intent intent = act.getIntent();
 				if (intent == null) return;
 				boolean mFromSecureKeyguard = intent.getBooleanExtra("StartActivityWhenLocked", false);
-				if (mFromSecureKeyguard)
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1)
-					act.setShowWhenLocked(true);
-				else
-					act.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+				boolean mStartedFromLockScreen = false;
+				try {
+					mStartedFromLockScreen = (boolean)XposedHelpers.getAdditionalInstanceField(act.getApplication(), "wasStartedFromLockScreen");
+				} catch (Throwable t) {}
+				if (mFromSecureKeyguard || mStartedFromLockScreen) {
+					XposedHelpers.setAdditionalInstanceField(act.getApplication(), "wasStartedFromLockScreen", true);
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1)
+						act.setShowWhenLocked(true);
+					else
+						act.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+				}
 			}
 		});
 	}
@@ -5165,6 +5240,102 @@ public class System {
 						}
 						break;
 				}
+			}
+		});
+	}
+
+	public static void ScreenshotConfigHook(LoadPackageParam lpparam) {
+		Helpers.hookAllConstructors("com.android.systemui.screenshot.SaveImageInBackgroundTask", lpparam.classLoader, new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				try {
+					OutputStream mOutputStream = (OutputStream)XposedHelpers.getObjectField(param.thisObject, "mOutputStream");
+					if (mOutputStream != null) mOutputStream.close();
+					String filePath = (String)XposedHelpers.getObjectField(param.thisObject, "mImageFilePath");
+					new File(filePath).delete();
+				} catch (Throwable ignore) {}
+
+				Context context = (Context)param.args[0];
+				int folder = Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_system_screenshot_path", "1"));
+
+				File mScreenshotDir;
+				if (folder > 1) {
+					mScreenshotDir = new File(Environment.getExternalStoragePublicDirectory(folder == 2 ? Environment.DIRECTORY_PICTURES : Environment.DIRECTORY_DCIM), "Screenshots");
+					if (!mScreenshotDir.exists()) mScreenshotDir.mkdirs();
+				} else {
+					mScreenshotDir = (File)XposedHelpers.getObjectField(param.thisObject, "mScreenshotDir");
+				}
+
+				boolean hasTemp = false;
+				String mTempImageFilePath = null;
+				try {
+					mTempImageFilePath = (String)XposedHelpers.getObjectField(param.thisObject, "mTempImageFilePath");
+					hasTemp = true;
+				} catch (Throwable ignore) {}
+
+				String mImageFileName = (String)XposedHelpers.getObjectField(param.thisObject, "mImageFileName");
+				String mImageFilePath = String.format("%s/%s", mScreenshotDir, mImageFileName);
+				if (hasTemp) mTempImageFilePath = String.format("%s/%s", mScreenshotDir, "." + mImageFileName);
+
+				int quality = Helpers.getSharedIntPref(context, "pref_key_system_screenshot_quality", 100);
+				int format = Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_system_screenshot_format", "1"));
+				XposedHelpers.setAdditionalInstanceField(param.thisObject, "mScreenshotQuality", quality);
+				XposedHelpers.setAdditionalInstanceField(param.thisObject, "mScreenshotFormat", format);
+				if (format == 1) return;
+				String ext = format == 2 ? ".jpg" : (format == 3 ? ".png" : ".webp");
+				mImageFileName = mImageFileName.replace(".png", "").replace(".jpg", "").replace(".webp", "") + ext;
+				mImageFilePath = mImageFilePath.replace(".png", "").replace(".jpg", "").replace(".webp", "") + ext;
+				XposedHelpers.setObjectField(param.thisObject, "mImageFileName", mImageFileName);
+				XposedHelpers.setObjectField(param.thisObject, "mImageFilePath", mImageFilePath);
+				Object mNotifyMediaStoreData = XposedHelpers.getObjectField(param.thisObject, "mNotifyMediaStoreData");
+				XposedHelpers.setObjectField(mNotifyMediaStoreData, "imageFileName", mImageFileName);
+				XposedHelpers.setObjectField(mNotifyMediaStoreData, "imageFilePath", mImageFilePath);
+				if (hasTemp) {
+					XposedHelpers.setObjectField(param.thisObject, "mTempImageFilePath", mTempImageFilePath);
+					XposedHelpers.setObjectField(mNotifyMediaStoreData, "tempImageFilePath", mTempImageFilePath);
+				}
+			}
+		});
+
+		Helpers.hookAllMethods("com.android.systemui.screenshot.SaveImageInBackgroundTask", lpparam.classLoader, "doInBackground", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				Object[] data = (Object[])param.args[0];
+				if (data == null || data.length != 1) return;
+				Bitmap image = (Bitmap)XposedHelpers.getObjectField(data[0], "image");
+				if (image == null) return;
+
+				int format = 1;
+				int quality = 100;
+				try {
+					format = (int)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mScreenshotFormat");
+					quality = (int)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mScreenshotQuality");
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+				if (format == 1) return;
+
+				FileOutputStream mCustomOutputStream;
+				try {
+					String mTempImageFilePath = (String)XposedHelpers.getObjectField(param.thisObject, "mTempImageFilePath");
+					File shot = new File(mTempImageFilePath);
+					if (shot.exists()) shot.delete();
+					mCustomOutputStream = new FileOutputStream(mTempImageFilePath);
+				} catch (Throwable t) {
+					String mImageFilePath = (String)XposedHelpers.getObjectField(param.thisObject, "mImageFilePath");
+					File shot = new File(mImageFilePath);
+					if (shot.exists()) shot.delete();
+					mCustomOutputStream = new FileOutputStream(mImageFilePath);
+				}
+
+				Bitmap.CompressFormat compress = format == 2 ? Bitmap.CompressFormat.JPEG : (format == 3 ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.WEBP);
+				image.compress(compress, quality, mCustomOutputStream);
+				mCustomOutputStream.flush();
+				mCustomOutputStream.close();
+
+				try {
+					XposedHelpers.setObjectField(param.thisObject, "mOutputStream", new ByteArrayOutputStream());
+				} catch (Throwable ignore) {}
 			}
 		});
 	}

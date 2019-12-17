@@ -54,12 +54,13 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getInt("controls_navbarheight", 26) > 26) Controls.NavbarHeightRes();
 		if (mPrefs.getInt("launcher_horizmargin", 0) > 0) Launcher.HorizontalSpacingRes();
 		if (mPrefs.getInt("launcher_topmargin", 0) > 0) Launcher.TopSpacingRes();
+		if (mPrefs.getInt("launcher_bottommargin", 0) > 0) Launcher.BottomSpacingRes();
 		if (mPrefs.getInt("launcher_indicatorheight", 9) > 9) Launcher.IndicatorHeightRes();
 		if (mPrefs.getInt("system_volumeblur_collapsed", 0) > 0 || mPrefs.getInt("system_volumeblur_expanded", 0) > 0) System.BlurVolumeDialogBackgroundRes();
 		if (mPrefs.getBoolean("system_notifrowmenu")) System.NotificationRowMenuRes();
 		if (mPrefs.getBoolean("system_compactnotif")) System.CompactNotificationsRes();
 		if (mPrefs.getBoolean("system_volumetimer")) System.VolumeTimerValuesRes();
-		if (mPrefs.getBoolean("system_separatevolume") && mPrefs.getBoolean("system_separatevolume_slider")) System.NotificationVolumeDialogRes();
+		if (mPrefs.getBoolean("system_separatevolume")) System.NotificationVolumeDialogRes();
 		if (mPrefs.getBoolean("system_statusbaricons_volte")) System.HideIconsVoLTERes();
 		if (mPrefs.getBoolean("launcher_unlockgrids")) Launcher.UnlockGridsRes();
 		if (mPrefs.getBoolean("launcher_docktitles")) Launcher.ShowHotseatTitlesRes();
@@ -118,7 +119,10 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 
 			if (mPrefs.getInt("controls_fingerprint1_action", 1) > 1 ||
 				mPrefs.getInt("controls_fingerprint2_action", 1) > 1 ||
-				mPrefs.getInt("controls_fingerprintlong_action", 1) > 1) Controls.FingerprintEventsHook(lpparam);
+				mPrefs.getInt("controls_fingerprintlong_action", 1) > 1 ||
+				mPrefs.getInt("controls_fingerprint_accept", 1) > 1 ||
+				mPrefs.getInt("controls_fingerprint_reject", 1) > 1 ||
+				mPrefs.getInt("controls_fingerprint_hangup", 1) > 1) Controls.FingerprintEventsHook(lpparam);
 			if (mPrefs.getInt("controls_backlong_action", 1) > 1 ||
 				mPrefs.getInt("controls_homelong_action", 1) > 1 ||
 				mPrefs.getInt("controls_menulong_action", 1) > 1) Controls.NavBarActionsHook(lpparam);
@@ -231,6 +235,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_lsalarm")) System.LockScreenAlaramHook(lpparam);
 			if (mPrefs.getBoolean("system_statusbarcontrols")) System.StatusBarGesturesHook(lpparam);
 			if (mPrefs.getBoolean("system_nodrawerbackground")) System.RemoveDrawerBackgroundHook(lpparam);
+			if (mPrefs.getBoolean("system_screenshot")) System.ScreenshotConfigHook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_battery1")) System.HideIconsBattery1Hook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_battery2")) System.HideIconsBattery2Hook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_battery3")) System.HideIconsBattery3Hook(lpparam);
@@ -318,6 +323,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getBoolean("controls_nonavbar")) Launcher.HideNavBarHook(lpparam);
 		if (mPrefs.getBoolean("launcher_infinitescroll")) Launcher.InfiniteScrollHook(lpparam);
 		if (mPrefs.getBoolean("launcher_hidetitles")) Launcher.HideTitlesHook(lpparam);
+		if (mPrefs.getBoolean("launcher_fixlaunch")) Launcher.FixAppInfoLaunchHook(lpparam);
 		if (mPrefs.getStringAsInt("launcher_foldershade", 1) > 1) Launcher.FolderShadeHook(lpparam);
 		if (mPrefs.getStringAsInt("launcher_closefolders", 1) > 1) Launcher.CloseFolderOnLaunchHook(lpparam);
 		if (lpparam.packageName.equals("com.miui.home")) {
@@ -327,8 +333,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("launcher_hideseekpoints")) Launcher.HideSeekPointsHook(lpparam);
 			if (mPrefs.getBoolean("launcher_privacyapps_gest")) Launcher.PrivacyFolderHook(lpparam);
 			if (mPrefs.getBoolean("launcher_googlediscover")) Launcher.GoogleDiscoverHook(lpparam);
-			if (mPrefs.getBoolean("launcher_docktitles")) Launcher.ShowHotseatTitlesHook(lpparam);
+			if (mPrefs.getBoolean("launcher_docktitles") && mPrefs.getInt("launcher_bottommargin", 0) == 0) Launcher.ShowHotseatTitlesHook(lpparam);
 			if (mPrefs.getBoolean("launcher_folderblur")) Launcher.FolderBlurHook(lpparam);
+			if (mPrefs.getInt("launcher_bottommargin", 0) > 0) Launcher.BottomSpacingHook(lpparam);
 		}
 		//if (!mPrefs.getString("system_clock_app", "").equals("")) Launcher.ReplaceClockAppHook(lpparam);
 		//if (!mPrefs.getString("system_calendar_app", "").equals("")) Launcher.ReplaceCalendarAppHook(lpparam);

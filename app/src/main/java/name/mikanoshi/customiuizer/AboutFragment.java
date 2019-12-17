@@ -41,9 +41,11 @@ public class AboutFragment extends SubFragment {
 		});
 
 		//Add version name to support title
-		if (getView() != null) try {
-			TextView version = getView().findViewById(R.id.about_version);
+		View view = getView();
+		if (view != null) try {
+			TextView version = view.findViewById(R.id.about_version);
 			version.setText(String.format(getResources().getString(R.string.about_version), act.getPackageManager().getPackageInfo(act.getPackageName(), 0).versionName));
+			if (Helpers.currentHoliday == Helpers.Holidays.NEWYEAR) view.findViewById(R.id.santa_hat).setVisibility(View.VISIBLE);
 		} catch (Throwable e) {
 			//Shouldn't happen...
 			e.printStackTrace();

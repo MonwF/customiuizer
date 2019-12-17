@@ -118,6 +118,11 @@
     <string name="system_popupnotif_fs_title">遵守全屏</string>
     <string name="system_popupnotif_fs_summ">应用激活全屏模式时不打开通知抽屉(不适用于具有隐藏状态和导航栏的沉浸式应用)</string>
     <string name="system_popupnotif_apps_title">已选应用</string>
+    <string name="system_screenshot_title">截图配置</string>
+    <string name="system_screenshot_summ">自定义截图的格式、质量和存放目录</string>
+    <string name="system_screenshot_format_title">格式</string>
+    <string name="system_screenshot_quality_title">质量</string>
+    <string name="system_screenshot_path_title">存放目录</string>
     <string name="system_chargeanimtime_title">充电动画屏幕超时</string>
     <string name="system_chargeanimtime_summ">充电动画开始后保持亮屏的时间</string>
     <string name="system_nolightuponcharges_title">充电时不亮起屏幕</string>
@@ -170,8 +175,7 @@
     <string name="system_vibration_amp_period_title">时段</string>
     <string name="system_vibration_title">阻止振动</string>
     <string name="system_vibration_summ">阻止已选应用使用振动</string>
-    <string name="notification_volume">通知音量</string>
-    <string name="system_volume">系统声音音量</string>
+    <string name="system_volume">系统声音</string>
     <string name="system_scramblepin_title">乱序PIN</string>
     <string name="system_scramblepin_summ">随机更改PIN键盘顺序</string>
     <string name="system_securelock_title">增强屏幕锁</string>
@@ -340,7 +344,7 @@
     <string name="launcher_gestures_shortcut">启动快捷方式</string>
     <string name="launcher_gestures_activity">要启动的活动</string>
     <string name="launcher_title">启动器</string>
-    <string name="launcher_summ">显示所选启动器的模块</string>
+    <string name="launcher_summ">显示所选启动器的模块。只是视觉辅助，不会对模块有其他影响。</string>
     <string name="launcher_compat_title">兼容模式</string>
     <string name="launcher_compat_summ">应用所有启动器模块的替代方法</string>
     <string name="launcher_infinitescroll_title">无限滚动</string>
@@ -356,6 +360,7 @@
     <string name="launcher_iconscale_title">图标缩放</string>
     <string name="launcher_horizmargin_title">水平网格边距</string>
     <string name="launcher_topmargin_title">顶部网格边距</string>
+    <string name="launcher_bottommargin_title">底栏边距</string>
     <string name="launcher_indicatorheight_title">页面指示器高度</string>
     <string name="launcher_folders">文件夹</string>
     <string name="launcher_folder_cols_title">文件夹排列数量</string>
@@ -365,6 +370,8 @@
     <string name="launcher_fixstatusbarmode_summ">调整开发版启动器上浅色/深色壁纸的状态栏内容颜色</string>
     <string name="launcher_fixanim_title">修复动画</string>
     <string name="launcher_fixanim_summ">将动画值时长比例应用到某些启动器动画</string>
+    <string name="launcher_fixlaunch_title">修复应用信息</string>
+    <string name="launcher_fixlaunch_summ">长按菜单始终打开MIUI样式应用信息</string>
     <string name="launcher_foldershade_title">颜色覆盖</string>
     <string name="launcher_foldershade_summ">增强或减弱背景</string>
     <string name="launcher_foldershade_level_title">色彩强度</string>
@@ -431,6 +438,12 @@
     <string name="controls_fingerprintskip_summ">如果您使用指纹拍摄选项，请启用此项</string>
     <string name="controls_fingerprintskip2_title">通话期间不操作</string>
     <string name="controls_fingerprintskip2_summ">通话处于活动状态时不执行操作</string>
+    <string name="controls_fingerprint_accept_title">接受来电</string>
+    <string name="controls_fingerprint_reject_title">拒绝来电</string>
+    <string name="controls_fingerprint_hangup_title">结束当前通话</string>
+    <string name="controls_fingerprint_conflict">接受和拒绝动作不能同一组合。</string>
+    <string name="controls_fingerprint_conflict_reset_accept">接受动作已禁用。</string>
+    <string name="controls_fingerprint_conflict_reset_reject">拒绝动作已禁用。</string>
     <string name="controls_fingerprintscreen_title">失败后打开屏幕</string>
     <string name="controls_fingerprintscreen_summ">认证失败后亮起屏幕</string>
     <string name="controls_fingerprintsuccess_title">成功时振动</string>
@@ -646,6 +659,10 @@
     <string name="array_adjust_volume">调整音量</string>
     <string name="array_alarm_absolute">定时</string>
     <string name="array_alarm_relative">相对时间</string>
+    <string name="array_singletap">单击</string>
+    <string name="array_doubletap">双击</string>
+    <string name="array_longpress">长按</string>
+    <string name="array_newyear">新年</string>
     <string name="toggle_wifi_on">Wi-Fi已启用</string>
     <string name="toggle_wifi_off">Wi-Fi已禁用</string>
     <string name="toggle_bt_on">蓝牙已启用</string>
@@ -673,6 +690,7 @@
     <string name="qs_toggle_darkmode_noperm">CustoMIUIzer没有更改深色模式的权限</string>
     <string name="miuizer">CustoMIUIzer设置</string>
     <string name="miuizer_show_newmods_title">标记新模块</string>
+    <string name="miuizer_show_newmods_summ">添加到当前版本中的模块在标题处显示\"新!\"标签</string>
     <string name="miuizer_new_mod">新！</string>
     <string name="miuizer_show_launchericon_title">启动器图标</string>
     <string name="miuizer_show_launchericon_summ">在启动器中显示图标</string>
@@ -680,6 +698,8 @@
     <string name="miuizer_show_settingsicon_summ">在设置中显示图标</string>
     <string name="miuizer_locale_title">界面语言</string>
     <string name="miuizer_locale_summ">始终以所选语言显示模块界面</string>
+    <string name="miuizer_holiday_title">节日设计</string>
+    <string name="miuizer_holiday_summ">根据场景装饰模块界面</string>
     <string name="troubleshoot">故障排除</string>
     <string name="miuizer_acrasend_title">发送详细报告</string>
     <string name="miuizer_acrasend_summ">收集设备和环境信息、logcat和Xposed日志，并将其发送给开发人员。\n需要互联网连接</string>

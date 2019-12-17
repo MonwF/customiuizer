@@ -147,7 +147,6 @@
     <string name="system_nosilentvibrate_summ">Не вібрувати при увімкненні режиму \"Без звуку\" и при увімкненні вібрації в цьому режимі</string>
     <string name="system_vibration_title">Блокування вібрації</string>
     <string name="system_vibration_summ">Заборонити обраним додаткам використовувати вібрацію</string>
-    <string name="notification_volume">Гучність сповіщень</string>
     <string name="system_volume">Гучність системних звуків</string>
     <string name="system_scramblepin_title">Ускладнити PIN</string>
     <string name="system_scramblepin_summ">Випадковим чином переставляє кнопки введення PIN</string>

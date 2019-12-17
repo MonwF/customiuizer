@@ -199,6 +199,12 @@
 			android:summary="@string/launcher_fixanim_summ"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_launcher_fixlaunch"
+			android:title="@string/launcher_fixlaunch_title"
+			android:summary="@string/launcher_fixlaunch_summ"
+			android:defaultValue="false" />
+
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
@@ -263,6 +269,16 @@
 			miuizer:minValue="0"
 			miuizer:maxValue="41"
 			miuizer:negativeShift="21"
+			miuizer:stepValue="1"
+			miuizer:format="%d dp"
+			miuizer:offtext="@string/array_default" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_launcher_bottommargin"
+			android:title="@string/launcher_bottommargin_title"
+			android:defaultValue="0"
+			miuizer:minValue="0"
+			miuizer:maxValue="20"
 			miuizer:stepValue="1"
 			miuizer:format="%d dp"
 			miuizer:offtext="@string/array_default" />

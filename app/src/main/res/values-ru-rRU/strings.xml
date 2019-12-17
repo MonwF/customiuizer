@@ -49,7 +49,7 @@
 	<string name="various_installappinfo_sdk">Поддержка SDK</string>
 	<string name="various_installappinfo_current">текущая</string>
 	<string name="various_showcallui_title">Показывать интерфейс звонка</string>
-	<string name="various_showcallui_summ">Задаёт когда показывать интерфейс входящего звонка вместо всплывающего уведомелния</string>
+	<string name="various_showcallui_summ">Задаёт когда показывать интерфейс входящего звонка вместо всплывающего уведомления</string>
 	<string name="various_calluibright_title">Яркость экрана во время звонка</string>
 	<string name="various_calluibright_type_title">Тип звонков</string>
 	<string name="various_calluibright_val_title">Значение яркости</string>
@@ -214,6 +214,10 @@
 	<string name="array_adjust_volume">Регулировка громкости</string>
 	<string name="array_alarm_absolute">Обычное время</string>
 	<string name="array_alarm_relative">Относительное время</string>
+	<string name="array_singletap">Одиночное нажатие</string>
+	<string name="array_doubletap">Двойное нажатие</string>
+	<string name="array_longpress">Долгое нажатие</string>
+	<string name="array_newyear">Новый Год</string>
 
 	<string name="support_bug_title">Сообщить об ошибке</string>
 	<string name="support_bug_summ">Отправить сообщение об ошибке или предложить новую фичу</string>
@@ -275,6 +279,12 @@
 	<string name="controls_fingerprintskip_summ">Включите данную опцию для правильной работы съёмки отпечатком пальца</string>
 	<string name="controls_fingerprintskip2_title">Отключить действия во время звонка</string>
 	<string name="controls_fingerprintskip2_summ">Не выполнять дейстия при активном звонке</string>
+	<string name="controls_fingerprint_accept_title">Принять входящий вызов</string>
+	<string name="controls_fingerprint_reject_title">Отклонить входящий вызов</string>
+	<string name="controls_fingerprint_hangup_title">Завершить текущий вызов</string>
+	<string name="controls_fingerprint_conflict">Принятие и отклонение не могут быть назначены на одну комбинацию.</string>
+	<string name="controls_fingerprint_conflict_reset_accept">Действие принятия было отключено.</string>
+	<string name="controls_fingerprint_conflict_reset_reject">Действие отклонения было отключено.</string>
 	<string name="controls_fingerprintscreen_title">Включить экран при неудаче</string>
 	<string name="controls_fingerprintscreen_summ">Зажигать экран после неудачной аутентификации</string>
 	<string name="controls_fingerprintsuccess_title">Вибрировать при успехе</string>
@@ -349,7 +359,7 @@
 	<string name="poco_mods">Рабочий стол POCO</string>
 	<string name="launcher_mods">Рабочий стол MIUI</string>
 	<string name="launcher_title">Рабочий стол</string>
-	<string name="launcher_summ">Отображать моды для выбранного ланчера</string>
+	<string name="launcher_summ">Отображать моды для выбранного ланчера. Только для наглядности, никак не влияет на сами моды.</string>
 	<string name="launcher_compat_title">Режим совместимости</string>
 	<string name="launcher_compat_summ">Альтернативный метод применения всех модов ланчера</string>
 	<string name="launcher_swipedownaction_summ">Присвоить действие жесту сверху вниз одним пальцем на любом домашнем экране</string>
@@ -376,6 +386,7 @@
 	<string name="miuizer_acrasend_summ">Собрать данные об устройстве и переменных окружения, logcat и Xposed лог, и отправить их разработчику.\nДля отправки требуется интернет</string>
 	<string name="miuizer_acrasend_title">Отправить подробный отчёт</string>
 	<string name="miuizer_show_newmods_title">Отмечать новые моды</string>
+	<string name="miuizer_show_newmods_summ">Делать пометку \"Новый!\" в заголовке модов, добавленных в текущей версии</string>
 	<string name="miuizer_new_mod">Новый!</string>
 	<string name="miuizer_show_launchericon_title">Иконка в ланчере</string>
 	<string name="miuizer_show_launchericon_summ">Показывать иконку в ланчерах</string>
@@ -383,6 +394,8 @@
 	<string name="miuizer_show_settingsicon_summ">Показывать иконку в Настройках</string>
 	<string name="miuizer_locale_title">Язык интерфейса</string>
 	<string name="miuizer_locale_summ">Всегда отображать интерфейс модуля на выбранном языке</string>
+	<string name="miuizer_holiday_title">Праздничный дизайн</string>
+	<string name="miuizer_holiday_summ">Украсить интерфейс модуля по случаю праздников</string>
 	<string name="open_xposed">Управление модулями Xposed</string>
 	<string name="search_input_description">Поиск модов</string>
 	<string name="wifi_networks">Wi-Fi сети</string>
@@ -423,6 +436,7 @@
 	<string name="launcher_iconscale_title">Масштаб значков</string>
 	<string name="launcher_horizmargin_title">Горизонтальные отступы сетки</string>
 	<string name="launcher_topmargin_title">Отступ сетки сверху</string>
+	<string name="launcher_bottommargin_title">Отступ дока снизу</string>
 	<string name="launcher_indicatorheight_title">Высота индикатора страниц</string>
 	<string name="launcher_folders">Папки</string>
 	<string name="launcher_folder_cols_title">Число колонок в папках</string>
@@ -432,6 +446,8 @@
 	<string name="launcher_fixstatusbarmode_summ">Изменяет цвет содержимого строки состояния в зависимости от светлых/тёмных обоев на версии ланчера для разработчиков</string>
 	<string name="launcher_fixanim_title">Исправить анимацию</string>
 	<string name="launcher_fixanim_summ">Применяет масштабирование продолжительности аниматоров значений к некоторым анимациям ланчера</string>
+	<string name="launcher_fixlaunch_title">Исправить данные о приложении</string>
+	<string name="launcher_fixlaunch_summ">Всегда открывать данные о приложении в стиле MIUI из меню по долгому нажатию</string>
 	<string name="launcher_foldershade_title">Наложение цвета</string>
 	<string name="launcher_foldershade_summ">Затемняет или осветляет фон</string>
 	<string name="launcher_foldershade_level_title">Интенсивность цвета</string>
@@ -653,7 +669,7 @@
 	<string name="system_autogroupnotif_title">Автогруппировка уведомлений</string>
 	<string name="system_autogroupnotif_summ">Число уведомлений от одного приложения при котором срабатывает их автоматическая группировка</string>
 	<string name="system_notifmediaseekbar_title">Слайдер медиа позиции</string>
-	<string name="system_notifmediaseekbar_summ">Добавляет слайдер в медиа уведомелние для отображения и изменения текущей позиции</string>
+	<string name="system_notifmediaseekbar_summ">Добавляет слайдер в медиа уведомление для отображения и изменения текущей позиции</string>
 	<string name="system_notifmediaseekbar_full_title">Использовать системный стиль</string>
 	<string name="system_notifmediaseekbar_full_summ">Не применять специальный тонкий стиль к слайдеру</string>
 	<string name="system_popupnotif_title">Автооткрытие панели уведомлений</string>
@@ -661,6 +677,11 @@
 	<string name="system_popupnotif_fs_title">Определение полноэкранного режима</string>
 	<string name="system_popupnotif_fs_summ">Не открывать панель уведомлений, если запущено полноэкранное приложение (не распространяется на \"режим погружения\" со скрытыми панелями статуса и навигации)</string>
 	<string name="system_popupnotif_apps_title">Выбранные приложения</string>
+	<string name="system_screenshot_title">Конфигурация снимков экрана</string>
+	<string name="system_screenshot_summ">Настройка формата, качества и папки сохранения скриншотов</string>
+	<string name="system_screenshot_format_title">Формат</string>
+	<string name="system_screenshot_quality_title">Качество</string>
+	<string name="system_screenshot_path_title">Папка для сохранения</string>
 	<string name="system_chargeanimtime_title">Таймаут экрана при анимации зарядки</string>
 	<string name="system_chargeanimtime_summ">Как долго держать экран включенным после начала анимации зарядки</string>
 	<string name="system_nolightuponcharges_summ">Запрещает включение экрана при подключении или отключении зарядки</string>
@@ -713,8 +734,7 @@
 	<string name="system_vibration_amp_period_title">Временной промежуток</string>
 	<string name="system_vibration_title">Блокировка вибрации</string>
 	<string name="system_vibration_summ">Запрещает выбранным приложениям использовать вибрацию</string>
-	<string name="notification_volume">Громкость уведомлений</string>
-	<string name="system_volume">Громкость системных звуков</string>
+	<string name="system_volume">Системные звуки</string>
 	<string name="system_scramblepin_title">Усложнить PIN</string>
 	<string name="system_scramblepin_summ">Случайным образом переставляет кнопки ввода PIN</string>
 	<string name="system_screenanim_desc">Малые значения практически отключат анимацию</string>

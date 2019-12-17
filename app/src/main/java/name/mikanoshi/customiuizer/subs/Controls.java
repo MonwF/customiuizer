@@ -2,9 +2,11 @@ package name.mikanoshi.customiuizer.subs;
 
 import android.os.Bundle;
 import android.preference.Preference;
+import android.widget.Toast;
 
 import java.util.Objects;
 
+import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SubFragment;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
@@ -49,6 +51,35 @@ public class Controls extends SubFragment {
 						return true;
 					}
 				});
+
+				findPreference("pref_key_controls_fingerprint_accept").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+					@Override
+					public boolean onPreferenceChange(Preference preference, Object newValue) {
+						String other = Helpers.prefs.getString("pref_key_controls_fingerprint_reject", "1");
+						if (newValue.equals(other)) {
+							Helpers.prefs.edit().putString("pref_key_controls_fingerprint_reject", "1").apply();
+							String msg = getResources().getString(R.string.controls_fingerprint_conflict) + " " + getResources().getString(R.string.controls_fingerprint_conflict_reset_reject);
+							Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+							getActivity().recreate();
+						}
+						return true;
+					}
+				});
+
+				findPreference("pref_key_controls_fingerprint_reject").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+					@Override
+					public boolean onPreferenceChange(Preference preference, Object newValue) {
+						String other = Helpers.prefs.getString("pref_key_controls_fingerprint_accept", "1");
+						if (newValue.equals(other)) {
+							Helpers.prefs.edit().putString("pref_key_controls_fingerprint_accept", "1").apply();
+							String msg = getResources().getString(R.string.controls_fingerprint_conflict) + " " + getResources().getString(R.string.controls_fingerprint_conflict_reset_accept);
+							Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+							getActivity().recreate();
+						}
+						return true;
+					}
+				});
+				
 				break;
 		}
 	}

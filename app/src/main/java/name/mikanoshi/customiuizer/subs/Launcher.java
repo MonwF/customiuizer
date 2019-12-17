@@ -113,6 +113,7 @@ public class Launcher extends SubFragment {
 				findPreference("pref_key_launcher_unlockgrids").setEnabled(opt == 1);
 				findPreference("pref_key_launcher_hideseekpoints").setEnabled(opt == 1);
 				findPreference("pref_key_launcher_googlediscover").setEnabled(opt == 1);
+				findPreference("pref_key_launcher_bottommargin").setEnabled(opt == 1);
 				break;
 		}
 	}
