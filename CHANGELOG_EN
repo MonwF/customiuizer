@@ -1,3 +1,6 @@
+2.0.8.1
+[Fixed][Fingerprint call control] Error during mod activation that was also causing other mods to break
+
 2.0.8
 [New] Customize screenshot format, quality and save folder
 [New] Accept or reject incoming calls and disconnect active calls using fingerprint scanner

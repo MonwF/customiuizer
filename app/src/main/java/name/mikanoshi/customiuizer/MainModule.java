@@ -120,9 +120,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getInt("controls_fingerprint1_action", 1) > 1 ||
 				mPrefs.getInt("controls_fingerprint2_action", 1) > 1 ||
 				mPrefs.getInt("controls_fingerprintlong_action", 1) > 1 ||
-				mPrefs.getInt("controls_fingerprint_accept", 1) > 1 ||
-				mPrefs.getInt("controls_fingerprint_reject", 1) > 1 ||
-				mPrefs.getInt("controls_fingerprint_hangup", 1) > 1) Controls.FingerprintEventsHook(lpparam);
+				mPrefs.getStringAsInt("controls_fingerprint_accept", 1) > 1 ||
+				mPrefs.getStringAsInt("controls_fingerprint_reject", 1) > 1 ||
+				mPrefs.getStringAsInt("controls_fingerprint_hangup", 1) > 1) Controls.FingerprintEventsHook(lpparam);
 			if (mPrefs.getInt("controls_backlong_action", 1) > 1 ||
 				mPrefs.getInt("controls_homelong_action", 1) > 1 ||
 				mPrefs.getInt("controls_menulong_action", 1) > 1) Controls.NavBarActionsHook(lpparam);
