@@ -411,6 +411,10 @@
     <string name="controls_fingerprintskip_summ">Abilitare questa opzione se si utilizza l\'opzione dell\'otturatore dell\'impronta digitale</string>
     <string name="controls_fingerprintskip2_title">Nessuna azione durante le chiamate</string>
     <string name="controls_fingerprintskip2_summ">Non eseguire azioni quando è in corso una chiamata</string>
+    <string name="controls_fingerprint_hangup_title">Termina la chiamata corrente</string>
+    <string name="controls_fingerprint_conflict">Le azioni accetta e rifiuto non possono avere la stessa combinazione</string>
+    <string name="controls_fingerprint_conflict_reset_accept">L\'azione accetta è stata disabilitata.</string>
+    <string name="controls_fingerprint_conflict_reset_reject">L\'azione di rifiuto è stata disabilitata.</string>
     <string name="controls_fingerprintscreen_title">Accendi lo schermo dopo un errore</string>
     <string name="controls_fingerprintscreen_summ">Accendi lo schermo dopo un\'autenticazione fallita</string>
     <string name="controls_fingerprintsuccess_title">Vibra all\'autenticazione</string>
@@ -569,6 +573,7 @@
     <string name="array_autogroupnotif_no">Non raggruppare</string>
     <string name="array_qshaptic_light">Vibrazione leggera</string>
     <string name="array_qshaptic_strong">Vibrazione forte</string>
+    <string name="array_enable">Abilita</string>
     <string name="array_disable">Disabilita</string>
     <string name="array_top">In alto</string>
     <string name="array_middle">Al centro</string>
@@ -577,6 +582,9 @@
     <string name="array_large">Grande</string>
     <string name="array_normal">Normale</string>
     <string name="array_small">Piccolo</string>
+    <string name="array_low">Bassa</string>
+    <string name="array_average">Media</string>
+    <string name="array_high">Alta</string>
     <string name="array_match">Abbina la copertina dell\'album o lo sfondo</string>s
 	
     <string name="array_static">Colore personalizzato</string>
@@ -616,6 +624,12 @@
     <string name="array_own">Proprio modello</string>
     <string name="array_scale_fit">Adatta allo schermo</string>
     <string name="array_scale_cover">Coprire l\'intero schermo</string>
+    <string name="array_align_top">Superiore</string>
+    <string name="array_align_bottom">Inferiore</string>
+    <string name="array_adjust_brightness">Regola la luminosità</string>
+    <string name="array_adjust_volume">Regola il volume</string>
+    <string name="array_doubletap">Doppio tocco</string>
+    <string name="array_longpress">Pressione prolunga</string>
     <string name="toggle_wifi_on">Wi-Fi attivo</string>
     <string name="toggle_wifi_off">Wi-Fi disattivo</string>
     <string name="toggle_bt_on">Bluetooth attivo</string>

@@ -1,5 +1,4 @@
 <resources>
-	<string name="app_name">CustoMIUIzer</string>
 	<string name="app_about">О приложении</string>
 	<string name="about_version">Версия %1$s</string>
 	<string name="soft_reboot">Быстрая перезагрузка</string>
@@ -145,8 +144,11 @@
 	<string name="array_allbutanim">Только события без анимации</string>
 	<string name="array_screenlock_no">По умолчанию системы</string>
 	<string name="array_screenlock_none">Отключить полностью</string>
-	<string name="array_screenlock_bootonly">Потребовать только раз после загрузки</string>
+	<string name="array_screenlock_bootonly">Потребовать авторизацию после загрузки</string>
 	<string name="array_screenlock_trusted">Отключать в доверенных сетях и устройствах</string>
+	<string name="array_screenlock_noreq">Не требовать</string>
+	<string name="array_screenlock_weak">Слабую (отпечаток)</string>
+	<string name="array_screenlock_strong">Сильную (ПИН-код/пароль/графический ключ)</string>
 	<string name="array_netspeedicons_no">Без иконок</string>
 	<string name="array_noblur">Без размытия</string>
 	<string name="array_foldershade_solid">Весь фон</string>
@@ -321,6 +323,8 @@
 	<string name="controls_navbarright_title">Действие на нажатие правой кнопки</string>
 	<string name="controls_navbarrightlong_summ">Задаёт действие на долгое нажатие правой дополнительной кнопки</string>
 	<string name="controls_navbarrightlong_title">Действие на долгое нажатие правой кнопки</string>
+	<string name="controls_navbarmargin_title">Дополнительный отступ</string>
+	<string name="controls_navbarmargin_summ">Увеличивает расстояние от краёв экрана до дополнительных кнопок</string>
 	<string name="controls_navbar_noaction">Действие не задано</string>
 	<string name="controls_mods_fsg">Полноэкранные жесты навигации</string>
 	<string name="controls_fsg_coverage_title">Высота области срабатывания жеста Назад</string>
@@ -429,6 +433,8 @@
 	<string name="launcher_noclockhide_summ">Отключает скрытие часов в статус баре на домашних экранах с виджетами часов</string>
 	<string name="launcher_googlediscover_title">Включить Google Discover</string>
 	<string name="launcher_googlediscover_summ">Заменяет ленту виджетов на Google Discover (требуется установленное приложение Google)</string>
+	<string name="launcher_nowidgetonly_title">Отключить экран с одними виджетами</string>
+	<string name="launcher_nowidgetonly_summ">Позволяет добавлять виджеты и приложения на любой экран на планшетах</string>
 	<string name="launcher_hideseekpoints_title">Динамический индикатор экранов</string>
 	<string name="launcher_hideseekpoints_summ">Показывает индикатор только во время прокрутки</string>
 	<string name="launcher_unlockgrids_title">Разблокировать размеры сетки</string>
@@ -624,6 +630,8 @@
 	<string name="system_4gtolte_title">Показывать LTE вместо 4G</string>
 	<string name="system_hidemoreicon_title">Убрать индикатор скрытых иконок</string>
 	<string name="system_hidemoreicon_summ">Отключает показ иконки с 3 точками, когда активна опция скрытия иконок уведомлений</string>
+	<string name="system_nonetspeedseparator_title">Убрать разделитель скорости соединения</string>
+	<string name="system_nonetspeedseparator_summ">Отключает показ вертикальной линии между временем и индикатором скорости на устройствах с вырезом-каплей</string>
 	<string name="system_netspeedinterval_title">Частота обновления индикатора скорости</string>
 	<string name="system_detailednetspeed_title">Подробный индикатор скорости соединения</string>
 	<string name="system_detailednetspeed_summ">Показыает входящую и исходящую скорости передачи данных</string>
@@ -666,6 +674,9 @@
 	<string name="system_expandnotifs_title">Разворачивать уведомления</string>
 	<string name="system_expandnotifs_summ">Показывать уведомления в полностью развёрнутом виде</string>
 	<string name="system_expandnotifs_apps_title">Чёрно-белый список</string>
+	<string name="system_toasttime_title">Модификация времени отображения</string>
+	<string name="system_toasttime_summ">Изменяет короткую и длинную продолжительность показа</string>
+	<string name="system_toasttime_note">Итоговая продолжительность не опустится ниже 1 секунды</string>
 	<string name="system_autogroupnotif_title">Автогруппировка уведомлений</string>
 	<string name="system_autogroupnotif_summ">Число уведомлений от одного приложения при котором срабатывает их автоматическая группировка</string>
 	<string name="system_notifmediaseekbar_title">Слайдер медиа позиции</string>
@@ -760,7 +771,7 @@
 	<string name="disable_app_fail">Не удалось изменить статус приложения</string>
 	<string name="about_dev">от Mikanoshi</string>
 	<string name="system_nopassword_title">Не требовать пароль после загрузки</string>
-	<string name="system_nopassword_summ">Отключает требование пароля вместо отпечатка пальца первый раз после загрузки</string>
+	<string name="system_nopassword_summ">Отключает требование пароля вместо отпечатка пальца первый раз после загрузки. Работа на устройствах с шифрованием маловероятна.</string>
 	<string name="system_albumartonlock_title">Обложка альбома на обоях</string>
 	<string name="system_albumartonlock_summ">Отображает обложку альбома текущего трека на обоях экрана блокировки</string>
 	<string name="system_albumartonlock_blur_title">Размытие обложки</string>
@@ -781,6 +792,7 @@
 	<string name="system_lockscreenshortcuts_left_skiplock_title">Не требовать разблокировки</string>
 	<string name="system_lockscreenshortcuts_left_skiplock_summ">Запущенные приложения будут доступны даже при заблокированном устройстве</string>
 	<string name="system_noscreenlock_title">Отключить блокировку</string>
+	<string name="system_noscreenlock_req_summ">Некоторые устройства могут не работать без разблокировки один раз после перезагрузки</string>
 	<string name="system_noscreenlock_summ">Выборочно пропускает блокировку устройства (не влияет на безопасность приложений и не удаляет данные отпечатков пальцев)</string>
 	<string name="system_noscreenlock_scr_title">Пропустить экран блокировки</string>
 	<string name="system_noscreenlock_scr_summ">Не показывать экран блокировки если блокировка устройства отключена</string>
@@ -788,6 +800,9 @@
 	<string name="system_noscreenlock_wifi_summ">При подключении к данным сетям блокировка будет временно отключена</string>
 	<string name="system_noscreenlock_bt_title">Доверенные Bluetooth устройства</string>
 	<string name="system_noscreenlock_bt_summ">Блокировка будет временно отключена, пока подключены данные устройства</string>
+	<string name="system_noscreenlock_force_locked">Блокировать принудительно</string>
+	<string name="system_noscreenlock_force_unlocked">Разблокировать принудительно</string>
+	<string name="system_noscreenlock_force_off">Отключить принудительные настройки</string>
 	<string name="system_rotateanim_title">Анимация при повороте</string>
 	<string name="system_allrotations_title">Все ориентации</string>
 	<string name="system_allrotations_summ">Разрешает все ориентации экрана, включая обратную портретную</string>

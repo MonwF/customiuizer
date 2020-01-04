@@ -103,12 +103,7 @@ public class MainFragment extends PreferenceFragmentBase {
 	SearchActionMode.Callback actionModeCallback = new SearchActionMode.Callback() {
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-			return true;
-		}
-
-		@Override
-		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-			if (getView() == null || searchView == null || listView == null) {
+			if (searchView == null || listView == null) {
 				if (mode != null) mode.finish();
 				return false;
 			}
@@ -164,6 +159,20 @@ public class MainFragment extends PreferenceFragmentBase {
 					}
 				}, getResources().getInteger(android.R.integer.config_longAnimTime));
 			}
+
+			return true;
+		}
+
+		@Override
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			if (searchView == null || listView == null) {
+				if (mode != null) mode.finish();
+				return false;
+			}
+
+			SearchActionMode samode = (SearchActionMode)mode;
+			samode.setAnchorView(searchView);
+			samode.setAnimateView(listView);
 
 			return true;
 		}
@@ -331,10 +340,7 @@ public class MainFragment extends PreferenceFragmentBase {
 
 	private void openActionMode(boolean isNew) {
 		actionModeNew = isNew;
-		if (actionMode != null)
-			actionMode.invalidate();
-		else
-			actionMode = startActionMode(actionModeCallback);
+		actionMode = startActionMode(actionModeCallback);
 		// Hide stupid auto split actionbar
 		try {
 			ActionBar actionBar = getActionBar();
@@ -397,8 +403,6 @@ public class MainFragment extends PreferenceFragmentBase {
 		TextView searchInput = search.findViewById(android.R.id.input);
 		searchInput.setHint(R.string.search_input_description);
 
-		if (actionMode != null) actionMode.invalidate();
-
 		modsCat = null; markCat = null;
 		listView = getView().findViewById(android.R.id.list);
 		listView.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
@@ -422,6 +426,7 @@ public class MainFragment extends PreferenceFragmentBase {
 			public void onChildViewRemoved(View parent, View child) {}
 		});
 
+		if (actionMode != null) actionMode.invalidate();
 		final Activity act = getActivity();
 
 		findPreference("pref_key_miuizer_launchericon").setOnPreferenceChangeListener(new CheckBoxPreference.OnPreferenceChangeListener() {

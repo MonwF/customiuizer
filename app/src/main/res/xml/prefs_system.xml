@@ -229,6 +229,20 @@
 			android:entryValues="@array/iconlabletoasts_val"
 			android:defaultValue="1" />
 
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_toasttime"
+			android:title="@string/system_toasttime_title"
+			android:summary="@string/system_toasttime_summ"
+			android:defaultValue="0"
+			miuizer:offtext="@string/array_default"
+			miuizer:minValue="0"
+			miuizer:maxValue="19"
+			miuizer:negativeShift="4"
+			miuizer:stepValue="1"
+			miuizer:showplus="true"
+			miuizer:format="@string/format_d_s"
+			miuizer:note="@string/system_toasttime_note" />
+
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_system_blocktoasts"
 			android:summary="@string/system_blocktoasts_summ"
@@ -305,6 +319,12 @@
 			android:key="pref_key_system_hidemoreicon"
 			android:summary="@string/system_hidemoreicon_summ"
 			android:title="@string/system_hidemoreicon_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_nonetspeedseparator"
+			android:summary="@string/system_nonetspeedseparator_summ"
+			android:title="@string/system_nonetspeedseparator_title"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx

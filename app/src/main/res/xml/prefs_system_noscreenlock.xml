@@ -22,6 +22,14 @@
 		android:entryValues="@array/noscreenlock_val"
 		android:defaultValue="1" />
 
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_system_noscreenlock_req"
+		android:summary="@string/system_noscreenlock_req_summ"
+		android:title="@string/array_screenlock_bootonly"
+		android:entries="@array/noscreenlockreq"
+		android:entryValues="@array/noscreenlockreq_val"
+		android:defaultValue="1" />
+
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_noscreenlock_skip"
 		android:summary="@string/system_noscreenlock_scr_summ"

@@ -1,3 +1,14 @@
+2.0.9
+[New] Toasts display duration
+[New] Do not show vertical line between time and network speed on devices with waterdrop notches
+[New] Make all MIUI launcher screens support both widgets and apps on tablets
+[New][Additional navbar buttons] Option to increase distance from screen edges
+[New][Disable screen lock] Tasker plugin to force enable/disable device lock
+[Improved][Disable screen lock] Option to require authentication once after boot
+[Improved][Disable screen lock] Apply device lock changes right away when state of Bluetooth connections change
+[Fixed][Invert colors action] Restore color scheme/reading mode after inversion is disabled
+[Fixed][Music visualizer] Music playing state detection on some ROMs; also visualizer will now be active when any music is playing, not just the one with media notification
+
 2.0.8.1
 [Fixed][Fingerprint call control] Error during mod activation that was also causing other mods to break
 

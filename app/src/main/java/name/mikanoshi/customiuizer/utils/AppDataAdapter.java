@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -34,8 +35,8 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 	private LayoutInflater mInflater;
 	private ThreadPoolExecutor pool;
 	private ItemFilter mFilter = new ItemFilter();
-	private ArrayList<AppData> originalAppList = new ArrayList<AppData>();
-	private ArrayList<AppData> filteredAppList = new ArrayList<AppData>();
+	private CopyOnWriteArrayList<AppData> originalAppList = new CopyOnWriteArrayList<AppData>();
+	private CopyOnWriteArrayList<AppData> filteredAppList = new CopyOnWriteArrayList<AppData>();
 	private String key = null;
 	private String selectedApp;
 	private int selectedUser = 0;
@@ -74,8 +75,7 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 				}
 				if (selectedAppsAdd.size() > 0) selectedApps.addAll(selectedAppsAdd);
 			} else {
-				Iterator iter = originalAppList.iterator();
-				while (iter.hasNext()) if (((AppData)iter.next()).user != 0) iter.remove();
+				originalAppList.removeIf(appData -> appData.user != 0);
 				filteredAppList.clear();
 				filteredAppList.addAll(originalAppList);
 			}
@@ -248,7 +248,8 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 		@Override
 		@SuppressWarnings("unchecked")
 		protected void publishResults(CharSequence constraint, FilterResults results) {
-			filteredAppList = (ArrayList<AppData>)results.values;
+			filteredAppList.clear();
+			filteredAppList.addAll((ArrayList<AppData>)results.values);
 			sortList();
 			notifyDataSetChanged();
 		}

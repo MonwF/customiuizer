@@ -70,6 +70,8 @@
 	<string name="system_4gtolte_title">Show LTE icon for 4G</string>
 	<string name="system_hidemoreicon_title">No hidden icons indicator</string>
 	<string name="system_hidemoreicon_summ">Do not show icon with 3 dots when notification icons are hidden</string>
+	<string name="system_nonetspeedseparator_title">No network speed separator</string>
+	<string name="system_nonetspeedseparator_summ">Do not show vertical line between time and network speed on devices with waterdrop notches</string>
 	<string name="system_netspeedinterval_title">Network speed update interval</string>
 	<string name="system_detailednetspeed_title">Detailed network speed indicator</string>
 	<string name="system_detailednetspeed_summ">Show incoming and outgoing network speeds separately</string>
@@ -112,6 +114,9 @@
 	<string name="system_expandnotifs_title">Expand notifications</string>
 	<string name="system_expandnotifs_summ">Show notifications fully expanded</string>
 	<string name="system_expandnotifs_apps_title">Black &amp; white list</string>
+	<string name="system_toasttime_title">Display time modification</string>
+	<string name="system_toasttime_summ">Changes both short and long durations</string>
+	<string name="system_toasttime_note">Resulting duration won\'t fall below 1 second</string>
 	<string name="system_autogroupnotif_title">Auto group notifications</string>
 	<string name="system_autogroupnotif_summ">Number of notifications from one app that triggers auto grouping</string>
 	<string name="system_notifmediaseekbar_title">Media position slider</string>
@@ -186,7 +191,7 @@
 	<string name="system_securelock_title">Enhanced screen lock</string>
 	<string name="system_securelock_summ">Disable power menu while screen lock is active</string>
 	<string name="system_nopassword_title">No password after boot</string>
-	<string name="system_nopassword_summ">Do not require password instead of a fingerprint first time after boot</string>
+	<string name="system_nopassword_summ">Do not require password instead of a fingerprint first time after boot. Unlikely to work on encrypted devices.</string>
 	<string name="system_albumartonlock_title">Album art as wallpaper</string>
 	<string name="system_albumartonlock_summ">Display album art of currently playing track as lock screen wallpaper</string>
 	<string name="system_albumartonlock_blur_title">Album art blur</string>
@@ -207,6 +212,7 @@
 	<string name="system_lockscreenshortcuts_left_skiplock_title">Do not require unlock</string>
 	<string name="system_lockscreenshortcuts_left_skiplock_summ">Launched apps could be accessed while device is still locked</string>
 	<string name="system_noscreenlock_title">Disable screen lock</string>
+	<string name="system_noscreenlock_req_summ">Some devices might not work without unlocking once after boot</string>
 	<string name="system_noscreenlock_summ">Selectively disable screen lock (does not change security for any apps and does not remove fingerprint data)</string>
 	<string name="system_noscreenlock_scr_title">Skip lock screen</string>
 	<string name="system_noscreenlock_scr_summ">Do not show lock screen at all when screen lock is disabled</string>
@@ -214,6 +220,9 @@
 	<string name="system_noscreenlock_wifi_summ">Temporarily disable screen lock while connected to these networks</string>
 	<string name="system_noscreenlock_bt_title">Trusted Bluetooth devices</string>
 	<string name="system_noscreenlock_bt_summ">Temporarily disable screen lock while these devices are connected</string>
+	<string name="system_noscreenlock_force_locked">Force locked</string>
+	<string name="system_noscreenlock_force_unlocked">Force unlocked</string>
+	<string name="system_noscreenlock_force_off">Do not force</string>
 	<string name="system_screenanim_duration_title">Turning off animation</string>
 	<string name="system_screenanim_duration_summ">Configure animation length</string>
 	<string name="system_screenanim_desc">Very low values will practically disable animation</string>
@@ -362,6 +371,8 @@
 	<string name="launcher_noclockhide_summ">Do not hide status bar clock on pages with clock widgets</string>
 	<string name="launcher_googlediscover_title">Enable Google Discover</string>
 	<string name="launcher_googlediscover_summ">Replace App Vault with Google Discover (requires Google app to be installed)</string>
+	<string name="launcher_nowidgetonly_title">Disable widget only screen</string>
+	<string name="launcher_nowidgetonly_summ">Make all screens support both widgets and apps on tablets</string>
 	<string name="launcher_hideseekpoints_title">Dynamic page indicator</string>
 	<string name="launcher_hideseekpoints_summ">Show page indicator only during scrolling</string>
 	<string name="launcher_unlockgrids_title">Unlock grid sizes</string>
@@ -490,6 +501,8 @@
 	<string name="controls_navbarright_title">Right button action</string>
 	<string name="controls_navbarrightlong_summ">Action on right additional navigation button long press</string>
 	<string name="controls_navbarrightlong_title">Right button long press action</string>
+	<string name="controls_navbarmargin_title">Additional margin</string>
+	<string name="controls_navbarmargin_summ">Increase distance from screen edges for additional buttons</string>
 	<string name="controls_navbar_noaction">No action defined</string>
 	<string name="controls_mods_fsg">Full screen navigation gestures</string>
 	<string name="controls_fsg_coverage_title">Back gesture area height</string>
@@ -603,8 +616,11 @@
 	<string name="array_allbutanim">Only events without animation</string>
 	<string name="array_screenlock_no">System default</string>
 	<string name="array_screenlock_none">Disable completely</string>
-	<string name="array_screenlock_bootonly">Require only once after boot</string>
+	<string name="array_screenlock_bootonly">Require authentication after boot</string>
 	<string name="array_screenlock_trusted">Disable on trusted networks/devices</string>
+	<string name="array_screenlock_noreq">Do not require</string>
+	<string name="array_screenlock_weak">Weak (fingerprint)</string>
+	<string name="array_screenlock_strong">Strong (PIN/password/pattern)</string>
 	<string name="array_noblur">No blur</string>
 	<string name="array_netspeedicons_no">No icons</string>
 	<string name="array_netspeedicons_arrows" translatable="false">△▲▽▼</string>

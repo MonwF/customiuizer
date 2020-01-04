@@ -40,6 +40,7 @@ import android.widget.TextView;
 
 import java.util.HashSet;
 
+import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
@@ -1144,6 +1145,15 @@ public class Launcher {
 					param.setResult(null);
 				}
 			});
+	}
+
+	public static void NoWidgetOnlyHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.miui.home.launcher.CellLayout", lpparam.classLoader, "setScreenType", int.class, new MethodHook() {
+			@Override
+			protected void before(XC_MethodHook.MethodHookParam param) throws Throwable {
+				param.args[0] = 0;
+			}
+		});
 	}
 
 //	public static void NoInternationalBuildHook(LoadPackageParam lpparam) {

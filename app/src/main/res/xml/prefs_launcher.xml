@@ -230,6 +230,12 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_launcher_nowidgetonly"
+			android:title="@string/launcher_nowidgetonly_title"
+			android:summary="@string/launcher_nowidgetonly_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_hideseekpoints"
 			android:title="@string/launcher_hideseekpoints_title"
 			android:summary="@string/launcher_hideseekpoints_summ"

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:animateLayoutChanges="true"
+	android:fitsSystemWindows="false"
+	android:orientation="vertical"
+	android:padding="10dp"
+	tools:ignore="RtlHardcoded,RtlSymmetry">
+
+	<RadioGroup
+		android:id="@+id/force_option"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		tools:ignore="UselessParent">
+
+		<RadioButton
+			android:id="@+id/force_locked"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/system_noscreenlock_force_locked" />
+
+		<RadioButton
+			android:id="@+id/force_unlocked"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/system_noscreenlock_force_unlocked" />
+
+		<RadioButton
+			android:id="@+id/force_off"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:checked="true"
+			android:text="@string/system_noscreenlock_force_off" />
+
+	</RadioGroup>
+
+	<Button
+		android:id="@+id/force_ok"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@android:string/ok" />
+
+</LinearLayout>

@@ -38,6 +38,7 @@
 		<attr name="stepValue" format="integer" />
 		<attr name="displayDividerValue" format="integer" />
 		<attr name="negativeShift" format="integer" />
+		<attr name="showplus" format="boolean" />
 		<attr name="format" format="string" />
 		<attr name="note" format="string" />
 		<attr name="offtext" format="string" />

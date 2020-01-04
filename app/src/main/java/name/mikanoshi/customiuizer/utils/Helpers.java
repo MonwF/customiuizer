@@ -133,12 +133,11 @@ public class Helpers {
 	public static ValueAnimator shimmerAnim;
 	public static boolean showNewMods = true;
 	public static final HashSet<String> newMods =  new HashSet<String>(Arrays.asList(
-		"pref_key_system_screenshot_cat",
-		"pref_key_controls_fingerprint_accept",
-		"pref_key_controls_fingerprint_reject",
-		"pref_key_controls_fingerprint_hangup",
-		"pref_key_launcher_bottommargin",
-		"pref_key_launcher_fixlaunch"
+		"pref_key_system_noscreenlock_req",
+		"pref_key_system_toasttime",
+		"pref_key_system_nonetspeedseparator",
+		"pref_key_controls_navbarmargin",
+		"pref_key_launcher_nowidgetonly"
 	));
 	public static final ArrayList<String> shortcutIcons = new ArrayList<String>();
 	public static Holidays currentHoliday = Holidays.NONE;

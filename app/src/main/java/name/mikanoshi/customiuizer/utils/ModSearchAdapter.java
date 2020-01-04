@@ -15,23 +15,22 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import name.mikanoshi.customiuizer.R;
 
 public class ModSearchAdapter extends BaseAdapter implements Filterable {
 	private LayoutInflater mInflater;
 	private ItemFilter mFilter = new ItemFilter();
-	private ArrayList<ModData> modsList;
+	private CopyOnWriteArrayList<ModData> modsList = new CopyOnWriteArrayList<ModData>();
 	private String filterString = "";
 
 	@SuppressLint("WrongConstant")
 	public ModSearchAdapter(Context context) {
 		mInflater = LayoutInflater.from(context);
-		modsList = new ArrayList<ModData>();
 	}
 
 	private void sortList() {
-		if (modsList != null)
 		modsList.sort(new Comparator<ModData>() {
 			public int compare(ModData app1, ModData app2) {
 				int breadcrumbs = app1.breadcrumbs.compareToIgnoreCase(app2.breadcrumbs);
@@ -100,7 +99,8 @@ public class ModSearchAdapter extends BaseAdapter implements Filterable {
 		@Override
 		@SuppressWarnings("unchecked")
 		protected void publishResults(CharSequence constraint, FilterResults results) {
-			modsList = (ArrayList<ModData>)results.values;
+			modsList.clear();
+			modsList.addAll((ArrayList<ModData>)results.values);
 			sortList();
 			notifyDataSetChanged();
 		}

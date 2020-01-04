@@ -458,7 +458,11 @@ public class GlobalActions {
 
 			if (action.equals(ACTION_PREFIX + "ToggleColorInversion")) {
 				int opt = Settings.Secure.getInt(context.getContentResolver(), "accessibility_display_inversion_enabled");
+				boolean hasConflict = SystemProperties.getInt("ro.df.effect.conflict", 0) == 1 || SystemProperties.getInt("ro.vendor.df.effect.conflict", 0) == 1;
+				Object dfMgr = XposedHelpers.callStaticMethod(XposedHelpers.findClass("miui.hardware.display.DisplayFeatureManager", null), "getInstance");
+				if (hasConflict && opt == 0) XposedHelpers.callMethod(dfMgr, "setScreenEffect", 15, 1);
 				Settings.Secure.putInt(context.getContentResolver(), "accessibility_display_inversion_enabled", opt == 0 ? 1 : 0);
+				if (hasConflict && opt != 0) XposedHelpers.callMethod(dfMgr, "setScreenEffect", 15, 0);
 			}
 
 			// Toggles

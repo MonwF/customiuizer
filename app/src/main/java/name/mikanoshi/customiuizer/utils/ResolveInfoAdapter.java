@@ -1,6 +1,7 @@
 package name.mikanoshi.customiuizer.utils;
 
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -29,15 +30,15 @@ public class ResolveInfoAdapter extends BaseAdapter implements Filterable {
 	private LayoutInflater mInflater;
 	private ThreadPoolExecutor pool;
 	private ItemFilter mFilter = new ItemFilter();
-	private ArrayList<ResolveInfo> originalAppList;
-	private ArrayList<ResolveInfo> filteredAppList;
+	private CopyOnWriteArrayList<ResolveInfo> originalAppList = new CopyOnWriteArrayList<ResolveInfo>();
+	private CopyOnWriteArrayList<ResolveInfo> filteredAppList = new CopyOnWriteArrayList<ResolveInfo>();
 
 	public ResolveInfoAdapter(Context context, ArrayList<ResolveInfo> arr) {
 		ctx = context;
 		pm = ctx.getPackageManager();
 		mInflater = LayoutInflater.from(context);
-		originalAppList = arr;
-		filteredAppList = arr;
+		originalAppList.addAll(arr);
+		filteredAppList.addAll(arr);
 		int cpuCount = Runtime.getRuntime().availableProcessors();
 		pool = new ThreadPoolExecutor(cpuCount + 1, cpuCount * 2 + 1, 2, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
 	}
@@ -116,7 +117,8 @@ public class ResolveInfoAdapter extends BaseAdapter implements Filterable {
 		@Override
 		@SuppressWarnings("unchecked")
 		protected void publishResults(CharSequence constraint, FilterResults results) {
-			filteredAppList = (ArrayList<ResolveInfo>)results.values;
+			filteredAppList.clear();
+			filteredAppList.addAll((ArrayList<ResolveInfo>)results.values);
 			notifyDataSetChanged();
 		}
 	}

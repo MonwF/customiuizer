@@ -29,6 +29,7 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 
 	private int mDisplayDividerValue;
 	private boolean mUseDisplayDividerValue;
+	private boolean mShowPlus;
 
 	private String mFormat;
 	private String mNote;
@@ -60,6 +61,7 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 			mStepValue = a.getInt(R.styleable.SeekBarPreference_stepValue, 1);
 			mDefaultValue = a.getInt(R.styleable.SeekBarPreference_android_defaultValue, 0);
 			mNegativeShift = a.getInt(R.styleable.SeekBarPreference_negativeShift, 0);
+			mShowPlus = a.getBoolean(R.styleable.SeekBarPreference_showplus, false);
 
 			if (a.hasValue(R.styleable.SeekBarPreference_displayDividerValue)) {
 				mUseDisplayDividerValue = true;
@@ -258,6 +260,7 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 				e.printStackTrace();
 				text = Integer.toString(value);
 			}
+			if (mShowPlus && value > 0) text = "+" + text;
 			mValue.setText(text);
 		} else {
 			mValue.setVisibility(View.GONE);

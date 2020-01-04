@@ -1,7 +1,6 @@
 package name.mikanoshi.customiuizer;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -43,12 +42,7 @@ public class SubFragmentWithSearch extends SubFragment {
 		SearchActionMode.Callback actionModeCallback = new SearchActionMode.Callback() {
 			@Override
 			public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-				return true;
-			}
-
-			@Override
-			public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-				if (getView() == null || searchView == null || listView == null) {
+				if (searchView == null || listView == null) {
 					if (mode != null) mode.finish();
 					return false;
 				}
@@ -96,6 +90,20 @@ public class SubFragmentWithSearch extends SubFragment {
 			}
 
 			@Override
+			public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+				if (searchView == null || listView == null) {
+					if (mode != null) mode.finish();
+					return false;
+				}
+
+				SearchActionMode samode = (SearchActionMode)mode;
+				samode.setAnchorView(searchView);
+				samode.setAnimateView(listView);
+
+				return true;
+			}
+
+			@Override
 			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 				return true;
 			}
@@ -117,10 +125,7 @@ public class SubFragmentWithSearch extends SubFragment {
 		search.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (actionMode != null)
-					actionMode.invalidate();
-				else
-					actionMode = startActionMode(actionModeCallback);
+				actionMode = startActionMode(actionModeCallback);
 			}
 		});
 
@@ -136,6 +141,8 @@ public class SubFragmentWithSearch extends SubFragment {
 				return false;
 			}
 		});
+
+		if (actionMode != null) actionMode.invalidate();
 	}
 
 	void applyFilter(String filter) {

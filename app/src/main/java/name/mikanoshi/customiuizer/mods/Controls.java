@@ -341,6 +341,7 @@ public class Controls {
 		String pkgName = "com.android.systemui";
 		float density = mContext.getResources().getDisplayMetrics().density;
 		int two = Math.round(2 * density);
+		int margin = Math.round(MainModule.mPrefs.getInt("controls_navbarmargin", 0) * density);
 
 		Drawable dot;
 		try {
@@ -355,13 +356,21 @@ public class Controls {
 		int diff = (dot.getIntrinsicWidth() - dot.getIntrinsicHeight()) / 2;
 		LinearLayout leftbtn = new LinearLayout(mContext);
 		ImageView left = new ImageView(mContext);
-		LinearLayout.LayoutParams lpl;
+
+		LinearLayout.LayoutParams lplc;
 		if (isVertical)
-			lpl = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+			lplc = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 		else
-			lpl = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+			lplc = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+		left.setLayoutParams(lplc);
+
+		LinearLayout.LayoutParams lpl = new LinearLayout.LayoutParams(lplc);
+		if (isVertical)
+			lpl.bottomMargin += margin;
+		else
+			lpl.leftMargin += margin;
 		leftbtn.setLayoutParams(lpl);
-		left.setLayoutParams(lpl);
+
 		left.setScaleType(ImageView.ScaleType.CENTER);
 		left.setImageDrawable(dot);
 		left.setScaleX(0.7f);
@@ -391,13 +400,20 @@ public class Controls {
 
 		LinearLayout rightbtn = new LinearLayout(mContext);
 		ImageView right = new ImageView(mContext);
-		LinearLayout.LayoutParams lpr;
+		LinearLayout.LayoutParams lprc;
 		if (isVertical)
-			lpr = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+			lprc = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 		else
-			lpr = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+			lprc = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+		right.setLayoutParams(lprc);
+
+		LinearLayout.LayoutParams lpr = new LinearLayout.LayoutParams(lprc);
+		if (isVertical)
+			lpr.topMargin += margin;
+		else
+			lpr.rightMargin += margin;
 		rightbtn.setLayoutParams(lpr);
-		right.setLayoutParams(lpr);
+
 		right.setScaleType(ImageView.ScaleType.CENTER);
 		right.setImageDrawable(dot);
 		right.setScaleX(0.7f);

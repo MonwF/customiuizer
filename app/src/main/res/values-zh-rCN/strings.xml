@@ -65,6 +65,8 @@
     <string name="system_4gtolte_title">4G显示LTE图标</string>
     <string name="system_hidemoreicon_title">不显示隐藏图标指示器</string>
     <string name="system_hidemoreicon_summ">隐藏通知图标时不显示3点图标</string>
+    <string name="system_nonetspeedseparator_title">隐藏网速分隔符</string>
+    <string name="system_nonetspeedseparator_summ">于水滴屏的设备上不显示时间和网速间的竖线</string>
     <string name="system_netspeedinterval_title">网速更新间隔</string>
     <string name="system_detailednetspeed_title">详细的网速指示器</string>
     <string name="system_detailednetspeed_summ">分别显示传入和传出的网络速度</string>
@@ -107,6 +109,9 @@
     <string name="system_expandnotifs_title">展开通知</string>
     <string name="system_expandnotifs_summ">显示完整展开的通知</string>
     <string name="system_expandnotifs_apps_title">黑&amp;白名单</string>
+    <string name="system_toasttime_title">显示时间修改</string>
+    <string name="system_toasttime_summ">更改短和长的时长</string>
+    <string name="system_toasttime_note">生成的时长不会少于1秒</string>
     <string name="system_autogroupnotif_title">自动分组通知</string>
     <string name="system_autogroupnotif_summ">触发自动分组的应用的通知数量</string>
     <string name="system_notifmediaseekbar_title">媒体位置滑块</string>
@@ -181,7 +186,7 @@
     <string name="system_securelock_title">增强屏幕锁</string>
     <string name="system_securelock_summ">屏幕锁激活时禁用电源菜单</string>
     <string name="system_nopassword_title">开机免密</string>
-    <string name="system_nopassword_summ">开机后首次解锁不需要密码</string>
+    <string name="system_nopassword_summ">开机后首次解锁不需要密码。此项对加密的设备无效。</string>
     <string name="system_albumartonlock_title">专辑封面设为壁纸</string>
     <string name="system_albumartonlock_summ">将当前播放曲目的专辑封面显示为壁纸</string>
     <string name="system_albumartonlock_blur_title">专辑封面模糊</string>
@@ -202,6 +207,7 @@
     <string name="system_lockscreenshortcuts_left_skiplock_title">不需解锁</string>
     <string name="system_lockscreenshortcuts_left_skiplock_summ">设备锁定时可以访问启动的应用</string>
     <string name="system_noscreenlock_title">禁用屏幕锁</string>
+    <string name="system_noscreenlock_req_summ">某些设备可能要开机后解锁一次才能工作</string>
     <string name="system_noscreenlock_summ">选择性禁用屏幕锁(不会更改任何应用的安全性，也不会移除指纹数据)</string>
     <string name="system_noscreenlock_scr_title">跳过屏幕锁</string>
     <string name="system_noscreenlock_scr_summ">屏幕锁禁用时不再显示锁屏</string>
@@ -209,6 +215,9 @@
     <string name="system_noscreenlock_wifi_summ">连接到这些网络时暂时禁用屏幕锁</string>
     <string name="system_noscreenlock_bt_title">可信蓝牙设备</string>
     <string name="system_noscreenlock_bt_summ">连接到这些设备时暂时禁用屏幕锁</string>
+    <string name="system_noscreenlock_force_locked">强制锁定</string>
+    <string name="system_noscreenlock_force_unlocked">强制解锁</string>
+    <string name="system_noscreenlock_force_off">不强制</string>
     <string name="system_screenanim_duration_title">关闭动画</string>
     <string name="system_screenanim_duration_summ">配置动画长度</string>
     <string name="system_screenanim_desc">值过低等同于禁用动画</string>
@@ -353,6 +362,8 @@
     <string name="launcher_noclockhide_summ">时钟小部件所在页面不隐藏状态栏时钟</string>
     <string name="launcher_googlediscover_title">启用Google探索</string>
     <string name="launcher_googlediscover_summ">将App Vault替换为Google探索(需要安装Google应用)</string>
+    <string name="launcher_nowidgetonly_title">禁用小部件，仅屏幕</string>
+    <string name="launcher_nowidgetonly_summ">令所有屏幕平板上的支持小部件和应用</string>
     <string name="launcher_hideseekpoints_title">动态页面指示器</string>
     <string name="launcher_hideseekpoints_summ">仅在滚动时显示页面指示器</string>
     <string name="launcher_unlockgrids_title">解锁网格大小</string>
@@ -480,6 +491,8 @@
     <string name="controls_navbarright_title">右键动作</string>
     <string name="controls_navbarrightlong_summ">长按右侧导航键的动作</string>
     <string name="controls_navbarrightlong_title">长按右键动作</string>
+    <string name="controls_navbarmargin_title">附加边距</string>
+    <string name="controls_navbarmargin_summ">增大附加按钮到屏幕边缘的距离</string>
     <string name="controls_navbar_noaction">无定义的动作</string>
     <string name="controls_mods_fsg">全屏导航手势</string>
     <string name="controls_fsg_coverage_title">返回手势区域高度</string>
@@ -589,8 +602,11 @@
     <string name="array_allbutanim">仅事件(无动画)</string>
     <string name="array_screenlock_no">系统默认</string>
     <string name="array_screenlock_none">完全禁用</string>
-    <string name="array_screenlock_bootonly">仅开机</string>
+    <string name="array_screenlock_bootonly">开机后需要验证</string>
     <string name="array_screenlock_trusted">在可信Wi-Fi网络/设备上禁用</string>
+    <string name="array_screenlock_noreq">不要求</string>
+    <string name="array_screenlock_weak">弱（指纹）</string>
+    <string name="array_screenlock_strong">强（PIN/密码/图案）</string>
     <string name="array_noblur">不模糊</string>
     <string name="array_netspeedicons_no">无图标</string>
     <string name="array_foldershade_solid">整个背景</string>

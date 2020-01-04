@@ -15,13 +15,13 @@ public class System_NoScreenLock extends SubFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		findPreference("pref_key_system_noscreenlock_wifi").setEnabled(Objects.equals(Helpers.prefs.getString("pref_key_system_noscreenlock", "1"), "4"));
-		findPreference("pref_key_system_noscreenlock_bt").setEnabled(Objects.equals(Helpers.prefs.getString("pref_key_system_noscreenlock", "1"), "4"));
+		findPreference("pref_key_system_noscreenlock_wifi").setEnabled(Objects.equals(Helpers.prefs.getString("pref_key_system_noscreenlock", "1"), "3"));
+		findPreference("pref_key_system_noscreenlock_bt").setEnabled(Objects.equals(Helpers.prefs.getString("pref_key_system_noscreenlock", "1"), "3"));
 		findPreference("pref_key_system_noscreenlock").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				findPreference("pref_key_system_noscreenlock_wifi").setEnabled(newValue.equals("4"));
-				findPreference("pref_key_system_noscreenlock_bt").setEnabled(newValue.equals("4"));
+				findPreference("pref_key_system_noscreenlock_wifi").setEnabled(newValue.equals("3"));
+				findPreference("pref_key_system_noscreenlock_bt").setEnabled(newValue.equals("3"));
 				return true;
 			}
 		});

@@ -37,6 +37,7 @@ public class MainActivity extends Activity {
 	SharedPreferences.OnSharedPreferenceChangeListener prefsChanged;
 	FileObserver fileObserver;
 	GravitySensor angleListener;
+	WeatherView weatherView;
 
 	@Override
 	protected void attachBaseContext(Context base) {
@@ -61,31 +62,31 @@ public class MainActivity extends Activity {
 		}
 
 		Helpers.detectHoliday();
-		WeatherView mWeatherView = findViewById(R.id.snow_view);
+		weatherView = findViewById(R.id.snow_view);
 		ImageView mHolidayHeader = findViewById(R.id.holiday_header);
 		if (Helpers.currentHoliday == Helpers.Holidays.NEWYEAR) {
 			int rotation = getWindowManager().getDefaultDisplay().getRotation();
-			mWeatherView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-			mWeatherView.setPrecipType(PrecipType.SNOW);
-			mWeatherView.setSpeed(50);
-			mWeatherView.setEmissionRate(rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270 ? 8 : 4);
-			mWeatherView.setFadeOutPercent(0.75f);
-			mWeatherView.setAngle(0);
-			RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)mWeatherView.getLayoutParams();
+			weatherView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+			weatherView.setPrecipType(PrecipType.SNOW);
+			weatherView.setSpeed(50);
+			weatherView.setEmissionRate(rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270 ? 8 : 4);
+			weatherView.setFadeOutPercent(0.75f);
+			weatherView.setAngle(0);
+			RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)weatherView.getLayoutParams();
 			lp.height = getResources().getDisplayMetrics().heightPixels / (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270 ? 2 : 3);
-			mWeatherView.setLayoutParams(lp);
+			weatherView.setLayoutParams(lp);
 			try {
-				ConfettiManager manager = mWeatherView.getConfettiManager();
+				ConfettiManager manager = weatherView.getConfettiManager();
 				Field confettoGenerator = ConfettiManager.class.getDeclaredField("confettoGenerator");
 				confettoGenerator.setAccessible(true);
 				confettoGenerator.set(manager, new SnowGenerator(this));
 			} catch (Throwable t) {
 				t.printStackTrace();
 			}
-			mWeatherView.resetWeather();
-			mWeatherView.setVisibility(View.VISIBLE);
-			mWeatherView.getConfettiManager().setRotationalVelocity(0, 45);
-			angleListener = new GravitySensor(this, mWeatherView);
+			weatherView.resetWeather();
+			weatherView.setVisibility(View.VISIBLE);
+			weatherView.getConfettiManager().setRotationalVelocity(0, 45);
+			angleListener = new GravitySensor(this, weatherView);
 			angleListener.setOrientation(rotation);
 			angleListener.setSpeed(50);
 			angleListener.start();
@@ -95,7 +96,7 @@ public class MainActivity extends Activity {
 			mHolidayHeader.setLayoutParams(lp2);
 			mHolidayHeader.setVisibility(View.VISIBLE);
 		} else {
-			((ViewGroup)mWeatherView.getParent()).removeView(mWeatherView);
+			((ViewGroup)weatherView.getParent()).removeView(weatherView);
 			((ViewGroup)mHolidayHeader.getParent()).removeView(mHolidayHeader);
 		}
 
@@ -246,12 +247,14 @@ public class MainActivity extends Activity {
 	@Override
 	public void onPause() {
 		if (angleListener != null) angleListener.onPause();
+		if (weatherView != null) weatherView.getConfettiManager().terminate();
 		super.onPause();
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
+		if (weatherView != null) weatherView.getConfettiManager().animate();
 		if (angleListener != null) angleListener.onResume();
 	}
 

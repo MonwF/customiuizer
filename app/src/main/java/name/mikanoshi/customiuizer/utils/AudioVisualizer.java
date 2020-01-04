@@ -542,7 +542,7 @@ public class AudioVisualizer extends View {
 		updateGlowPaint();
 	}
 
-	public void updateState(boolean isKeyguard, boolean isExpanded) {
+	public void updateViewState(boolean isKeyguard, boolean isExpanded) {
 		isOnKeyguard = isKeyguard;
 		isExpandedPanel = showInDrawer && !isOnKeyguard && isExpanded;
 		isOnCustomLockScreen = new File("/data/system/theme/lockscreen").exists();
@@ -554,11 +554,14 @@ public class AudioVisualizer extends View {
 		updatePlaying();
 	}
 
-	public void updateMusic(boolean isPlaying, Bitmap art) {
+	public void updateMusicState(boolean isPlaying) {
 		isMusicPlaying = isPlaying;
+		updatePlaying();
+	}
+
+	public void updateMusicArt(Bitmap art) {
 		mArt = art;
 		updateColorMode();
-		updatePlaying();
 	}
 
 	public void updatePlaying() {

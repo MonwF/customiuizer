@@ -350,14 +350,23 @@
 	<string-array name="noscreenlock">
 		<item>@string/array_screenlock_no</item>
 		<item>@string/array_screenlock_none</item>
-		<item>@string/array_screenlock_bootonly</item>
 		<item>@string/array_screenlock_trusted</item>
 	</string-array>
 	<string-array name="noscreenlock_val">
 		<item>1</item>
 		<item>2</item>
 		<item>3</item>
-		<item>4</item>
+	</string-array>
+
+	<string-array name="noscreenlockreq">
+		<item>@string/array_screenlock_noreq</item>
+		<item>@string/array_screenlock_weak</item>
+		<item>@string/array_screenlock_strong</item>
+	</string-array>
+	<string-array name="noscreenlockreq_val">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
 	</string-array>
 
 	<string-array name="netspeedicons">

@@ -65,6 +65,8 @@
     <string name="system_4gtolte_title">LTE (4G yerine gösterilir)</string>
     <string name="system_hidemoreicon_title">Gösterge (Gizli Simge)</string>
     <string name="system_hidemoreicon_summ">Gizlenen Bildirim\'ler Bildirim Çubuğu\'nda gösterilmez.</string>
+    <string name="system_nonetspeedseparator_title">Ağ hızı ayırıcı yok</string>
+    <string name="system_nonetspeedseparator_summ">Su damlası çentikli cihazlarda zaman ve ağ hızı arasında dikey çizgi gösterme</string>
     <string name="system_netspeedinterval_title">Güncelleme Aralığı (Bağlantı Hızı)</string>
     <string name="system_detailednetspeed_title">Detaylar (Bağlantı Hızı)</string>
     <string name="system_detailednetspeed_summ">Gelen ve giden Bağlantı Hızı\'nı ayrı ayrı gösterir.</string>
@@ -107,6 +109,9 @@
     <string name="system_expandnotifs_title">Genişlet</string>
     <string name="system_expandnotifs_summ">Bildirimleri genişletir.</string>
     <string name="system_expandnotifs_apps_title">Kara/Beyaz Liste</string>
+    <string name="system_toasttime_title">Ekran zaman değişikliği</string>
+    <string name="system_toasttime_summ">Hem kısa hem de uzun süreleri değiştirir</string>
+    <string name="system_toasttime_note">Sonuç süresi 1 saniyenin altına düşmeyecek</string>
     <string name="system_autogroupnotif_title">Gruplandırma (Otomatik)</string>
     <string name="system_autogroupnotif_summ">Aynı uygulamadan gelen birden fazla bildirimi gruplandırır.</string>
     <string name="system_notifmediaseekbar_title">İleri/Geri Sarma (Medya)</string>
@@ -181,7 +186,7 @@
     <string name="system_securelock_title">Güç Menüsü</string>
     <string name="system_securelock_summ">Ekran Kilidi\'ndeyken Güç Menüsü\'nü devre dışı bırakılır</string>
     <string name="system_nopassword_title">Parmak İzi</string>
-    <string name="system_nopassword_summ">Yeniden Başlat\'madan sonra Parmak İzi\'yle cihazı açabilirsiniz.</string>
+    <string name="system_nopassword_summ">Önyüklemeden sonra ilk kez parmak izi yerine şifre gerekmez. Şifreli cihazlarda çalışma olasılığı düşüktür.</string>
     <string name="system_albumartonlock_title">Kapak Fotoğrafı (Duvar Kağıdı)</string>
     <string name="system_albumartonlock_summ">Dinlemekte olduğunuz müziğin Kapak Fotoğrafı Ekran Kilidi\'nde görüntülenir.</string>
     <string name="system_albumartonlock_blur_title">Bulanıklık</string>
@@ -202,6 +207,7 @@
     <string name="system_lockscreenshortcuts_left_skiplock_title">Şifrelendirmeyi Kapat</string>
     <string name="system_lockscreenshortcuts_left_skiplock_summ">Şifrelendirilmiş cihazınızda şifre girmeden uygulamalara erişebilmenize olanak tanır.</string>
     <string name="system_noscreenlock_title">Şifrelendirme (Devre Dışı)</string>
+    <string name="system_noscreenlock_req_summ">Bazı cihazlar önyüklemeden sonra kilidi açılmadan çalışmayabilir</string>
     <string name="system_noscreenlock_summ">Şifreler ve Güvenlik kısmında yaptığınız işlemler silinmez sadece şifrelendirmeyi devre dışı bırakır.</string>
     <string name="system_noscreenlock_scr_title">Gösterme (Ekran Kilidi)</string>
     <string name="system_noscreenlock_scr_summ">Ekran Kilidi gösterilmez ve direkt olarak ana ekran açılır.</string>
@@ -209,6 +215,9 @@
     <string name="system_noscreenlock_wifi_summ">Wi-Fi ağına bağlıyken Ekran Kilidi gösterilmez ve direkt olarak ana ekran açılır.</string>
     <string name="system_noscreenlock_bt_title">Bluetooth</string>
     <string name="system_noscreenlock_bt_summ">Bluetooth cihazınıza bağlıyken Ekran Kilidi gösterilmez ve direkt olarak ana ekran açılır.</string>
+    <string name="system_noscreenlock_force_locked">Zorla kilitlendi</string>
+    <string name="system_noscreenlock_force_unlocked">Güç kilidi açıldı</string>
+    <string name="system_noscreenlock_force_off">Zorlama</string>
     <string name="system_screenanim_duration_title">Animasyon</string>
     <string name="system_screenanim_duration_summ">Animasyon süresini düzenleyebilirsiniz.</string>
     <string name="system_screenanim_desc">Düşük değerler animasyonu devre dışı bırakır.</string>
@@ -353,6 +362,8 @@
     <string name="launcher_noclockhide_summ">Durum Çubuğu\'ndaki Saat, Ana Ekran\'daki Saat\'in bulunduğu sayfada gizlenmez.</string>
     <string name="launcher_googlediscover_title">Google</string>
     <string name="launcher_googlediscover_summ">Uygulama Kasası\'nı; Google Keşfet (Discover) ile değiştir (Google uygulamasının yüklü olması gerekir).</string>
+    <string name="launcher_nowidgetonly_title">Yalnızca widget\'ı devre dışı bırak ekranı</string>
+    <string name="launcher_nowidgetonly_summ">Tüm ekranların tabletlerdeki hem widget\'ları hem de uygulamaları desteklemesini sağlayın</string>
     <string name="launcher_hideseekpoints_title">Sayfa Göstergesi</string>
     <string name="launcher_hideseekpoints_summ">Sayfa Göstergesi sadece sayfalar arası geçişlerde görünür.</string>
     <string name="launcher_unlockgrids_title">Ana Ekran Düzeni</string>
@@ -480,6 +491,8 @@
     <string name="controls_navbarright_title">Sağ Tuş</string>
     <string name="controls_navbarrightlong_summ">Gezinti çubuğunun sol tarafına ilave eklenen tuşa basılı tuttuğunuz da seçmiş olduğunuz eylem gerçekleşir.</string>
     <string name="controls_navbarrightlong_title">Sağ Tuş (Basılı Tut: Uzun)</string>
+    <string name="controls_navbarmargin_title">Ek marj</string>
+    <string name="controls_navbarmargin_summ">Ek düğmeler için ekran kenarlarından uzaklığı artırma</string>
     <string name="controls_navbar_noaction">Eylem Tanımlanamadı</string>
     <string name="controls_mods_fsg">Tam Ekran Hareketleri</string>
     <string name="controls_fsg_coverage_title">Yükseklik (Geri)</string>
@@ -589,8 +602,11 @@
     <string name="array_allbutanim">Animasyonsuz Durumlar</string>
     <string name="array_screenlock_no">Varsayılan (Sistem)</string>
     <string name="array_screenlock_none">Devre Dışı Bırak (Tamamen)</string>
-    <string name="array_screenlock_bootonly">Cihaz Açıldıktan Sonra</string>
+    <string name="array_screenlock_bootonly">Önyüklemeden sonra kimlik doğrulaması iste</string>
     <string name="array_screenlock_trusted">Güvenli Ağ\'lar ve Cihaz\'lar da Devre Dışı Bırak</string>
+    <string name="array_screenlock_noreq">Gerekmez</string>
+    <string name="array_screenlock_weak">Zayıf (parmak izi)</string>
+    <string name="array_screenlock_strong">Güçlü (PIN / şifre / desen)</string>
     <string name="array_noblur">Yok (Bulanıklık)</string>
     <string name="array_netspeedicons_no">Yok (Simge)</string>
     <string name="array_foldershade_solid">Tüm arka plan</string>

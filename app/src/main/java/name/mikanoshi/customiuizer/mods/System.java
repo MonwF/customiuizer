@@ -326,22 +326,31 @@ public class System {
 		});
 	}
 
+	@SuppressWarnings("RedundantIfStatement")
+	private static boolean isAuthOnce() {
+		int req = MainModule.mPrefs.getStringAsInt("system_noscreenlock_req", 1);
+		if (req <= 1) return true;
+		if (req == 2 && !isUnlockedWithFingerprint && !isUnlockedWithStrong) return false;
+		if (req == 3 && !isUnlockedWithStrong) return false;
+		return true;
+	}
+
 	private static boolean isTrusted(Context mContext, ClassLoader classLoader) {
-		return isTrustedWiFi(mContext) || isTrustedBt(mContext, classLoader);
+		return isTrustedWiFi(mContext) || isTrustedBt(classLoader);
 	}
 
 	private static boolean isTrustedWiFi(Context mContext) {
 		WifiManager wifiManager = (WifiManager)mContext.getSystemService(Context.WIFI_SERVICE);
 		if (!wifiManager.isWifiEnabled()) return false;
-		Set<String> trustedNetworks = Helpers.getSharedStringSetPref(mContext, "pref_key_system_noscreenlock_wifi");
+		Set<String> trustedNetworks = MainModule.mPrefs.getStringSet("system_noscreenlock_wifi");
 		return Helpers.containsStringPair(trustedNetworks, wifiManager.getConnectionInfo().getBSSID());
 	}
 
-	private static boolean isTrustedBt(Context mContext, ClassLoader classLoader) {
+	private static boolean isTrustedBt(ClassLoader classLoader) {
 		try {
 			BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 			if (!mBluetoothAdapter.isEnabled()) return false;
-			Set<String> trustedDevices = Helpers.getSharedStringSetPref(mContext, "pref_key_system_noscreenlock_bt");
+			Set<String> trustedDevices = MainModule.mPrefs.getStringSet("system_noscreenlock_bt");
 			Object mController = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", classLoader), "get", findClass("com.android.systemui.statusbar.policy.BluetoothController", classLoader));
 			Collection cachedDevices = (Collection)XposedHelpers.callMethod(mController, "getCachedDevicesCopy");
 			if (cachedDevices != null)
@@ -358,6 +367,13 @@ public class System {
 		return false;
 	}
 
+	private static void checkBTConnections(Context mContext) {
+		if (mContext == null)
+			Helpers.log("checkBTConnections", "mContext is NULL!");
+		else
+			mContext.sendBroadcast(new Intent(GlobalActions.ACTION_PREFIX + "UnlockBTConnection"));
+	}
+
 //	private static void setLockScreenDisabled(ClassLoader classLoader, Object thisObject, boolean state) {
 //		try {
 //			Class<?> kumCls = findClass("com.android.keyguard.KeyguardUpdateMonitor", classLoader);
@@ -370,19 +386,26 @@ public class System {
 //		}
 //	}
 
-	private static boolean isUnlockedOnce = false;
+	private static boolean isUnlockedInnerCall = false;
+	private static boolean isUnlockedWithFingerprint = false;
+	private static boolean isUnlockedWithStrong = false;
+	private static int forcedOption = -1;
 	public static void NoScreenLockHook(LoadPackageParam lpparam) {
 		Helpers.findAndHookMethod("com.android.keyguard.KeyguardUpdateMonitor", lpparam.classLoader, "reportSuccessfulStrongAuthUnlockAttempt", new MethodHook() {
 			@Override
-			protected void before(MethodHookParam param) throws Throwable {
-				isUnlockedOnce = true;
+			protected void after(MethodHookParam param) throws Throwable {
+				if (isUnlockedInnerCall) {
+					isUnlockedInnerCall = false;
+					return;
+				}
+				isUnlockedWithStrong = true;
 			}
 		});
 
 		Helpers.findAndHookMethod("android.app.admin.DevicePolicyManagerCompat", lpparam.classLoader, "reportSuccessfulFingerprintAttempt", DevicePolicyManager.class, int.class, new MethodHook() {
 			@Override
-			protected void before(MethodHookParam param) throws Throwable {
-				isUnlockedOnce = true;
+			protected void after(MethodHookParam param) throws Throwable {
+				isUnlockedWithFingerprint = true;
 			}
 		});
 
@@ -408,16 +431,22 @@ public class System {
 		Helpers.findAndHookMethod("com.android.systemui.keyguard.KeyguardViewMediator", lpparam.classLoader, "doKeyguardLocked", Bundle.class, new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
+				if (forcedOption == 0) return;
+
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-				int opt = Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_system_noscreenlock", "1"));
+				if (!isAuthOnce()) return;
+
+				int opt = MainModule.mPrefs.getStringAsInt("system_noscreenlock", 1);
+				if (forcedOption == 1) opt = 2;
 				boolean isTrusted = false;
-				if (opt == 4) isTrusted = isTrusted(mContext, lpparam.classLoader);
-				if (opt == 2 || opt == 3 && isUnlockedOnce || opt == 4 && isTrusted) {
-					boolean skip = Helpers.getSharedBoolPref(mContext, "pref_key_system_noscreenlock_skip", false);
+				if (opt == 3) isTrusted = isTrusted(mContext, lpparam.classLoader);
+				if (opt == 2 || opt == 3 && isTrusted) {
+					boolean skip = MainModule.mPrefs.getBoolean("system_noscreenlock_skip");
 					if (skip) {
 						param.setResult(null);
 						XposedHelpers.callMethod(param.thisObject, "keyguardDone");
 					}
+					isUnlockedInnerCall = true;
 					XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mUpdateMonitor"), "reportSuccessfulStrongAuthUnlockAttempt");
 					Intent unlockIntent = new Intent(GlobalActions.ACTION_PREFIX + "UnlockStrongAuth");
 					mContext.sendBroadcast(unlockIntent);
@@ -429,48 +458,93 @@ public class System {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				IntentFilter filter = new IntentFilter();
+				filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+				filter.addAction(GlobalActions.ACTION_PREFIX + "UnlockSetForced");
+				filter.addAction(GlobalActions.ACTION_PREFIX + "UnlockBTConnection");
 				mContext.registerReceiver(new BroadcastReceiver() {
 					@Override
 					public void onReceive(Context context, Intent intent) {
 						String action = intent.getAction();
 
+						if (action.equals(GlobalActions.ACTION_PREFIX + "UnlockSetForced"))
+						forcedOption = intent.getIntExtra("system_noscreenlock_force", -1);
+
 						boolean isShowing = (boolean)XposedHelpers.callMethod(param.thisObject, "isShowing");
 						if (!isShowing) return;
+						if (!isAuthOnce()) return;
 
 						boolean isTrusted = false;
-						if (Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_system_noscreenlock", "1")) == 4)
+						if (MainModule.mPrefs.getStringAsInt("system_noscreenlock", 1) == 3)
 						if (action.equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
 							NetworkInfo netInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
 							if (netInfo.isConnected()) isTrusted = isTrustedWiFi(mContext);
+						} else if (action.equals(GlobalActions.ACTION_PREFIX + "UnlockBTConnection")) {
+							isTrusted = isTrustedBt(lpparam.classLoader);
 						}
 
+						if (forcedOption == 0) isTrusted = false;
+						else if (forcedOption == 1) isTrusted = true;
+
 						if (isTrusted) {
-							boolean skip = Helpers.getSharedBoolPref(mContext, "pref_key_system_noscreenlock_skip", false);
+							boolean skip = MainModule.mPrefs.getBoolean("system_noscreenlock_skip");
 							if (skip)
 								XposedHelpers.callMethod(param.thisObject, "keyguardDone");
 							else
 								XposedHelpers.callMethod(param.thisObject, "resetStateLocked");
+							isUnlockedInnerCall = true;
 							XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mUpdateMonitor"), "reportSuccessfulStrongAuthUnlockAttempt");
 							Intent unlockIntent = new Intent(GlobalActions.ACTION_PREFIX + "UnlockStrongAuth");
 							mContext.sendBroadcast(unlockIntent);
 						}
 					}
-				}, new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION));
+				}, filter);
+
+				new Helpers.SharedPrefObserver(mContext, new Handler(mContext.getMainLooper())) {
+					@Override
+					public void onChange(Uri uri) {
+						try {
+							String type = uri.getPathSegments().get(1);
+							String key = uri.getPathSegments().get(2);
+							if (!key.contains("pref_key_system_noscreenlock")) return;
+
+							switch (type) {
+								case "string":
+									MainModule.mPrefs.put(key, Helpers.getSharedStringPref(mContext, key, ""));
+									break;
+								case "stringset":
+									MainModule.mPrefs.put(key, Helpers.getSharedStringSetPref(mContext, key));
+									break;
+								case "integer":
+									MainModule.mPrefs.put(key, Helpers.getSharedIntPref(mContext, key, 1));
+									break;
+								case "boolean":
+									MainModule.mPrefs.put(key, Helpers.getSharedBoolPref(mContext, key, false));
+									break;
+							}
+						} catch (Throwable t) {
+							XposedBridge.log(t);
+						}
+					}
+				};
 			}
 		});
 
 		Helpers.findAndHookMethod("com.android.keyguard.KeyguardSecurityModel", lpparam.classLoader, "getSecurityMode", int.class, new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
+				if (forcedOption == 0) return;
+
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-				boolean skip = Helpers.getSharedBoolPref(mContext, "pref_key_system_noscreenlock_skip", false);
+				boolean skip = MainModule.mPrefs.getBoolean("system_noscreenlock_skip");
 				if (skip) return;
+				if (!isAuthOnce()) return;
 
-				int opt = Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_system_noscreenlock", "1"));
-
+				int opt = MainModule.mPrefs.getStringAsInt("system_noscreenlock", 1);
+				if (forcedOption == 1) opt = 2;
 				boolean isTrusted = false;
-				if (opt == 4) isTrusted = isTrusted(mContext, lpparam.classLoader);
-				if (opt == 1 || opt == 3 && !isUnlockedOnce || opt == 4 && !isTrusted) return;
+				if (opt == 3) isTrusted = isTrusted(mContext, lpparam.classLoader);
+				if (opt == 1 || opt == 3 && !isTrusted) return;
 
 				Class<?> securityModeEnum = XposedHelpers.findClass("com.android.keyguard.KeyguardSecurityModel$SecurityMode", lpparam.classLoader);
 				Object securityModeNone = XposedHelpers.getStaticObjectField(securityModeEnum, "None");
@@ -490,6 +564,7 @@ public class System {
 			@Override
 			protected void after(MethodHookParam param) {
 				Context mContext = (Context)param.args[0];
+				XposedHelpers.setAdditionalInstanceField(param.thisObject, "mContextMy", mContext);
 				mContext.registerReceiver(new BroadcastReceiver() {
 					public void onReceive(final Context context, Intent intent) {
 						ArrayList<BluetoothDevice> deviceList = new ArrayList<BluetoothDevice>();
@@ -504,6 +579,26 @@ public class System {
 						mContext.sendBroadcast(updateIntent);
 					}
 				}, new IntentFilter(GlobalActions.ACTION_PREFIX + "FetchCachedDevices"));
+			}
+		});
+
+		if (!Helpers.findAndHookMethodSilently("com.android.systemui.statusbar.policy.BluetoothControllerImpl", lpparam.classLoader, "updateConnectionState", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) {
+				checkBTConnections((Context)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mContextMy"));
+			}
+		})) Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BluetoothControllerImpl", lpparam.classLoader, "updateConnected", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) {
+				checkBTConnections((Context)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mContextMy"));
+			}
+		});
+
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BluetoothControllerImpl", lpparam.classLoader, "onBluetoothStateChanged", int.class, new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) {
+				int state = (int)param.args[0];
+				if (state != 10) checkBTConnections((Context)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mContextMy"));
 			}
 		});
 	}
@@ -2965,8 +3060,11 @@ public class System {
 	private static AudioVisualizer audioViz = null;
 	private static boolean isKeyguardShowing = false;
 	private static boolean isNotificationPanelExpanded = false;
-	private static void UpdateAudioVisualizerState() {
-		if (audioViz != null) audioViz.updateState(isKeyguardShowing, isNotificationPanelExpanded);
+	private static void UpdateAudioVisualizerState(Context context) {
+		if (audioViz == null || context == null) return;
+		AudioManager am = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+		audioViz.updateMusicState(am.isMusicActive());
+		audioViz.updateViewState(isKeyguardShowing, isNotificationPanelExpanded);
 	}
 	public static void AudioVisualizerHook(LoadPackageParam lpparam) {
 		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "makeStatusBarView", new MethodHook() {
@@ -2989,6 +3087,7 @@ public class System {
 				View wallpaper = mNotificationPanel.findViewById(mContext.getResources().getIdentifier("wallpaper", "id", lpparam.packageName));
 				View themebkg = mNotificationPanel.findViewById(mContext.getResources().getIdentifier("theme_background", "id", lpparam.packageName));
 				View awesome = mNotificationPanel.findViewById(mContext.getResources().getIdentifier("awesome_lock_screen_container", "id", lpparam.packageName));
+
 				int order = 0;
 				if (awesome != null) order = Math.max(order, mNotificationPanel.indexOfChild(awesome));
 				if (themebkg != null) order = Math.max(order, mNotificationPanel.indexOfChild(themebkg));
@@ -3012,7 +3111,7 @@ public class System {
 				if (isKeyguardShowing != isKeyguardShowingNew) {
 					isKeyguardShowing = isKeyguardShowingNew;
 					isNotificationPanelExpanded = false;
-					UpdateAudioVisualizerState();
+					UpdateAudioVisualizerState((Context)XposedHelpers.getObjectField(param.thisObject, "mContext"));
 				}
 			}
 		});
@@ -3023,7 +3122,7 @@ public class System {
 				boolean isNotificationPanelExpandedNew = XposedHelpers.getBooleanField(param.thisObject, "mPanelExpanded");
 				if (isNotificationPanelExpanded != isNotificationPanelExpandedNew) {
 					isNotificationPanelExpanded = isNotificationPanelExpandedNew;
-					UpdateAudioVisualizerState();
+					UpdateAudioVisualizerState((Context)XposedHelpers.getObjectField(param.thisObject, "mContext"));
 				}
 			}
 		});
@@ -3055,8 +3154,15 @@ public class System {
 				}
 
 				MediaController mMediaController = (MediaController)XposedHelpers.getObjectField(param.thisObject, "mMediaController");
-				boolean isPlaying = mMediaController != null && mMediaController.getPlaybackState() != null && mMediaController.getPlaybackState().getState() == PlaybackState.STATE_PLAYING;
-				audioViz.updateMusic(isPlaying, art);
+				boolean isPlaying;
+				if (mMediaController == null || mMediaController.getPlaybackState() == null) {
+					AudioManager am = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
+					isPlaying = am.isMusicActive();
+				} else {
+					isPlaying = mMediaController.getPlaybackState().getState() == PlaybackState.STATE_PLAYING;
+				}
+				audioViz.updateMusicState(isPlaying);
+				audioViz.updateMusicArt(art);
 			}
 		});
 	}
@@ -5335,6 +5441,77 @@ public class System {
 				try {
 					XposedHelpers.setObjectField(param.thisObject, "mOutputStream", new ByteArrayOutputStream());
 				} catch (Throwable ignore) {}
+			}
+		});
+	}
+
+	public static void NoNetworkSpeedSeparatorHook(LoadPackageParam lpparam) {
+//		Helpers.hookAllMethods("com.android.systemui.statusbar.phone.StatusBarFactory", lpparam.classLoader, "getCollapsedStatusBarFragmentController", new MethodHook() {
+//			@Override
+//			protected void before(MethodHookParam param) throws Throwable {
+//				Class<?> cls = XposedHelpers.findClass("com.android.systemui.statusbar.phone.StatusBarTypeController$CutoutType", lpparam.classLoader);
+//				XposedBridge.log("new: " + cls.getEnumConstants()[3]);
+//				param.args[0] = cls.getEnumConstants()[3];
+//			}
+//		});
+
+		Helpers.hookAllConstructors("com.android.systemui.statusbar.NetworkSpeedSplitter", lpparam.classLoader, new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				((TextView)param.thisObject).setText("");
+			}
+		});
+
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.NetworkSpeedSplitter", lpparam.classLoader, "init", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				((TextView)param.thisObject).setText("");
+			}
+		});
+	}
+
+	private static void rescheduleToast(MethodHookParam param) {
+		Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
+		mHandler.removeCallbacksAndMessages(param.args[0]);
+		int mod = (MainModule.mPrefs.getInt("system_toasttime", 0) - 4) * 1000;
+		int duration = XposedHelpers.getIntField(param.args[0], "duration");
+		int delay = Math.max(1000, (duration == 1 ? 3500 : 2000) + mod);
+		mHandler.sendMessageDelayed(Message.obtain(mHandler, 2, param.args[0]), delay);
+		param.setResult(null);
+	}
+
+	public static void ToastTimeServiceHook(LoadPackageParam lpparam) {
+
+		if (!Helpers.hookAllMethodsSilently("com.android.server.notification.NotificationManagerService", lpparam.classLoader, "scheduleDurationReachedLocked", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				rescheduleToast(param);
+			}
+		})) Helpers.hookAllMethods("com.android.server.notification.NotificationManagerService", lpparam.classLoader, "scheduleTimeoutLocked", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				rescheduleToast(param);
+			}
+		});
+
+		Helpers.hookAllMethods("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "adjustWindowParamsLw", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				Object lp = param.args.length == 1 ? param.args[0] : param.args[1];
+				XposedHelpers.setAdditionalInstanceField(param.thisObject, "mPrevHideTimeout", XposedHelpers.getLongField(lp, "hideTimeoutMilliseconds"));
+			}
+
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				Object lp = param.args.length == 1 ? param.args[0] : param.args[1];
+				long mPrevHideTimeout = (long)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mPrevHideTimeout");
+				long mHideTimeout = XposedHelpers.getLongField(lp, "hideTimeoutMilliseconds");
+				if (mPrevHideTimeout == -1 || mHideTimeout == -1) return;
+
+				int dur = 0;
+				if (mPrevHideTimeout == 1000 || mPrevHideTimeout == 4000 || mPrevHideTimeout == 5000 || mPrevHideTimeout == 7000 || mPrevHideTimeout != mHideTimeout)
+				dur = Math.max(1000, 3500 + (MainModule.mPrefs.getInt("system_toasttime", 0) - 4) * 1000);
+				if (dur != 0) XposedHelpers.setLongField(lp, "hideTimeoutMilliseconds", dur);
 			}
 		});
 	}

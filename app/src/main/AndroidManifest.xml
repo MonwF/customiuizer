@@ -116,6 +116,16 @@
 			</intent-filter>
 		</activity>
 
+		<activity
+			android:name=".tasker.UnlockSettings"
+			android:exported="true"
+			android:icon="@mipmap/ic_launcher"
+			android:label="@string/system_noscreenlock_scr_title">
+			<intent-filter>
+				<action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING"/>
+			</intent-filter>
+		</activity>
+
 		<service
 			android:name=".qs.AutoRotateService"
 			android:icon="@drawable/ic_qs_autorotate_disabled"
@@ -162,6 +172,15 @@
 			<intent-filter>
 				<action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
 				<action android:name="name.mikanoshi.customiuizer.SAVEEXCEPTION" />
+			</intent-filter>
+		</receiver>
+
+		<receiver
+			android:name=".tasker.UnlockReceiver"
+			android:exported="true"
+			tools:ignore="ExportedReceiver">
+			<intent-filter>
+				<action android:name="com.twofortyfouram.locale.intent.action.FIRE_SETTING"/>
 			</intent-filter>
 		</receiver>
 
