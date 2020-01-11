@@ -2,6 +2,9 @@ package name.mikanoshi.customiuizer;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -43,7 +46,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.acra.ACRA;
 
@@ -72,6 +74,7 @@ import miui.view.SearchActionMode;
 
 import name.mikanoshi.customiuizer.mods.GlobalActions;
 import name.mikanoshi.customiuizer.prefs.ListPreferenceEx;
+import name.mikanoshi.customiuizer.prefs.PreferenceEx;
 import name.mikanoshi.customiuizer.subs.CategorySelector;
 import name.mikanoshi.customiuizer.subs.Controls;
 import name.mikanoshi.customiuizer.subs.Launcher;
@@ -429,6 +432,19 @@ public class MainFragment extends PreferenceFragmentBase {
 		if (actionMode != null) actionMode.invalidate();
 		final Activity act = getActivity();
 
+		PreferenceEx warning = (PreferenceEx)findPreference("pref_key_warning");
+		if (warning != null)
+		if (Helpers.areXposedBlacklistsEnabled()) {
+			warning.setSummary(R.string.warning_blacklist);
+			warning.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+				@Override
+				public boolean onPreferenceClick(Preference preference) {
+					Helpers.openXposedApp(getContext());
+					return true;
+				}
+			});
+		} else getPreferenceScreen().removePreference(warning);
+
 		findPreference("pref_key_miuizer_launchericon").setOnPreferenceChangeListener(new CheckBoxPreference.OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -649,36 +665,7 @@ public class MainFragment extends PreferenceFragmentBase {
 					Helpers.openURL(getActivity(), "https://code.highspec.ru/Mikanoshi/CustoMIUIzer/releases");
 				}
 			case R.id.xposedinstaller:
-				Intent intent = getContext().getPackageManager().getLaunchIntentForPackage("com.solohsu.android.edxp.manager");
-				if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-				try {
-					getContext().startActivity(intent);
-					return true;
-				} catch (Throwable e1) {
-					intent = getContext().getPackageManager().getLaunchIntentForPackage("org.meowcat.edxposed.manager");
-					if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-					try {
-						getContext().startActivity(intent);
-						return true;
-					} catch (Throwable e2) {
-						intent = getContext().getPackageManager().getLaunchIntentForPackage("de.robv.android.xposed.installer");
-						if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-						try {
-							getContext().startActivity(intent);
-							return true;
-						} catch (Throwable e3) {
-							intent = getContext().getPackageManager().getLaunchIntentForPackage("me.weishu.exp");
-							if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-							try {
-								getContext().startActivity(intent);
-								return true;
-							} catch (Throwable e4) {
-								Toast.makeText(getContext(), R.string.xposed_not_found, Toast.LENGTH_LONG).show();
-							}
-						}
-					}
-					return false;
-				}
+				return Helpers.openXposedApp(getContext());
 			case R.id.backuprestore:
 				showBackupRestoreDialog();
 				return true;

@@ -735,6 +735,17 @@
 		<item>3</item>
 	</string-array>
 
+	<string-array name="inactivebrightness">
+		<item>@string/array_default</item>
+		<item>@string/array_displayonly</item>
+		<item>@string/array_hide</item>
+	</string-array>
+	<string-array name="inactivebrightness_val">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+	</string-array>
+
 	<string-array name="holidays">
 		<item>@string/array_disable</item>
 		<item>@string/array_color_auto</item>
@@ -755,6 +766,12 @@
 		<item>1</item>
 		<item>2</item>
 		<item>3</item>
+	</string-array>
+
+	<string-array name="snoozedactions">
+		<item>@string/snooze_unsnooze</item>
+		<item>@string/snooze_cancel</item>
+		<item>@string/snooze_restore</item>
 	</string-array>
 
 	<string-array name="placeholder_array">

@@ -1,13 +1,11 @@
 package name.mikanoshi.customiuizer.subs;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.SortableListView;
 import android.widget.Toast;
 
@@ -19,12 +17,9 @@ import java.util.UUID;
 import miui.app.ActionBar;
 import miui.util.AttributeResolver;
 
-import miui.widget.PopupMenu;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SubFragment;
-import name.mikanoshi.customiuizer.utils.GuidePopup;
 import name.mikanoshi.customiuizer.utils.Helpers;
-import name.mikanoshi.customiuizer.utils.IconGridAdapter;
 import name.mikanoshi.customiuizer.utils.PreferenceAdapter;
 
 public class SortableList extends SubFragment {

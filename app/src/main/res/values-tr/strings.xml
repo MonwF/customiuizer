@@ -5,6 +5,18 @@
     <string name="about_dev">Geliştirici; Mikanoshi</string>
     <string name="about_dynamic">Genel olarak mod\'lar etkin veya devre dışı bırakılmak için hızlı başlatmaya ihtiyaç duyarlar, ancak \'⟲\' ile işaretlenenler; değerleri değiştirildikten sonra yalnızca bir hızlı yeniden başlatma gerektirir, ardından değişiklikler hemen uygulanır.</string>
     <string name="about_unsupported">\'⨯\' ile işaretlenmiş mod\'lar bu cihazda desteklenmemektedir.</string>
+    <string name="title_snoozed">Ertelenmiş bildirimler</string>
+    <string name="menu_update">Güncelleme</string>
+    <string name="snooze_unsnooze">Bu bildirimi erteleyin</string>
+    <string name="snooze_cancel">Kapatıldı olarak işaretle</string>
+    <string name="snooze_restore">Beklemede olarak işaretle</string>
+    <string name="snooze_fetch_fail">Ertelenmiş bildirimler listesi getirilemiyor</string>
+    <string name="snooze_empty">Ertelenmiş bildirim yok</string>
+    <string name="snooze_messages">Mesajlar</string>
+    <string name="snooze_channel">Kanal</string>
+    <string name="snooze_created">Düzenlendi</string>
+    <string name="snooze_updated">Güncellenmiş</string>
+    <string name="snooze_repost">Yeniden yayınla</string>
     <string name="mods">Mod\'lar</string>
     <string name="mods_actions">Eylemler</string>
     <string name="enable_mod">Mod\'u etkinleştir</string>
@@ -102,6 +114,7 @@
     <string name="system_showpct_title">Parlaklık Yüzdesi</string>
     <string name="system_showpct_summ">Parlaklık kaydırıcısını sürüklerken, parlaklık seviyesini yüzde cinsinden görüntülenir.</string>
     <string name="system_showpct_top_title">Yüzdeleri panelin üst marjı</string>
+    <string name="system_inactivebrightness_title">Parlaklık kaydırıcısını devre dışı bırak</string>
     <string name="system_notifrowmenu_title">Geliştirilmiş Menü</string>
     <string name="system_notifrowmenu_summ">Bildirim ayarlarına birden fazla seçenek ekler (Açmak için; bildirimi sola doğru kaydırın).</string>
     <string name="system_disableanynotif_title">Devre Dışı Bırak</string>
@@ -114,6 +127,8 @@
     <string name="system_toasttime_note">Sonuç süresi 1 saniyenin altına düşmeyecek</string>
     <string name="system_autogroupnotif_title">Gruplandırma (Otomatik)</string>
     <string name="system_autogroupnotif_summ">Aynı uygulamadan gelen birden fazla bildirimi gruplandırır.</string>
+    <string name="system_snoozedmanager_title">Ertelenen bildirim yöneticisi</string>
+    <string name="system_snoozedmanager_summ">Erteleme aralıklarının sayısını artırın ve o anda ertelenen bildirimlerin bir listesini açan başlatıcıya simge ekleyin</string>
     <string name="system_notifmediaseekbar_title">İleri/Geri Sarma (Medya)</string>
     <string name="system_notifmediaseekbar_summ">Dinlediğiniz ya da izlediğiniz medya dosyasını İleri/Geri Sarma\'nıza imkan sağlar.</string>
     <string name="system_notifmediaseekbar_full_title">Sistem stilini kullan</string>
@@ -303,6 +318,8 @@
     <string name="system_mods_recents">Son Uygulamalar</string>
     <string name="system_removecleaner_title">Buton (Sil)</string>
     <string name="system_removecleaner_summ">Son Uygulamalar ve RAM\'i temizleyen Sil butonunu kaldırır.</string>
+    <string name="system_clearalltasks_title">Hepsini temizle</string>
+    <string name="system_clearalltasks_summ">Temiz düğmenin çalışan tüm görevleri öldürmesini sağlayın</string>
     <string name="system_hidefromrecents_title">Uygulama</string>
     <string name="system_hidefromrecents_summ">Seçtiğiniz uygulamalar Son Uygulamalar listesinden gizlenir.</string>
     <string name="system_recommended_first_title">Kısayol - 1</string>
@@ -679,6 +696,8 @@
     <string name="array_doubletap">Dokunma (Tek)</string>
     <string name="array_longpress">Basılı Tut (Uzun)</string>
     <string name="array_newyear">Yeni yıl</string>
+    <string name="array_displayonly">Yalnızca görüntüleme</string>
+    <string name="array_hide">Gizle</string>
     <string name="toggle_wifi_on">Etkin (Wi-Fi)</string>
     <string name="toggle_wifi_off">Devre Dışı (Wi-Fi)</string>
     <string name="toggle_bt_on">Etkin (Bluetooth)</string>
@@ -767,6 +786,7 @@
     <string name="sdk_failed">MiUI SDK başlatılamıyor.\nXiaomi cihazı değil mi?</string>
     <string name="notselected">Seçili değil</string>
     <string name="warning">Uyarı!</string>
+    <string name="warning_blacklist">Siyah / Beyaz liste seçeneği Xposed Framework\'te etkindir, modların düzgün çalışmasını engelleyebilir</string>
     <string name="open_xposed">Xposed\'i Aç</string>
     <string name="soft_reboot">Hızlı</string>
     <string name="soft_reboot_ask">Yeniden Başlatmak (Hızlı) istediğinize emin misiniz?</string>

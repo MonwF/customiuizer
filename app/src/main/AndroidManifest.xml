@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="name.mikanoshi.customiuizer">
+	xmlns:tools="http://schemas.android.com/tools"
+	package="name.mikanoshi.customiuizer">
 
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
@@ -28,20 +28,20 @@
 	<uses-permission android:name="com.miui.securitycenter.permission.ACCESS_SECURITY_CENTER_PROVIDER" />
 
 	<application
-        android:allowBackup="false"
+		android:allowBackup="false"
 		android:backupAgent="name.mikanoshi.customiuizer.utils.PrefBackupAgent"
 		android:hardwareAccelerated="true"
-        android:icon="@mipmap/ic_launcher"
+		android:icon="@mipmap/ic_launcher"
 		android:roundIcon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:name=".MainApplication"
+		android:label="@string/app_name"
+		android:supportsRtl="true"
+		android:name=".MainApplication"
 		android:usesCleartextTraffic="true"
-        tools:ignore="GoogleAppIndexingWarning">
+		tools:ignore="GoogleAppIndexingWarning">
 
-        <activity
-        	android:name=".MainActivity"
-        	android:label="@string/title_activity_main"
+		<activity
+			android:name=".MainActivity"
+			android:label="@string/title_activity_main"
 			android:theme="@style/AppTheme"
 			android:launchMode="singleTop"
 			android:alwaysRetainTaskState="true">
@@ -126,6 +126,21 @@
 			</intent-filter>
 		</activity>
 
+		<activity
+			android:name=".SnoozedActivity"
+			android:enabled="false"
+			android:label="@string/title_snoozed"
+			android:theme="@style/AppTheme"
+			android:icon="@mipmap/ic_snooze"
+			android:taskAffinity="name.mikanoshi.customiuizer.snoozed"
+			android:launchMode="singleTop"
+			android:allowTaskReparenting="false">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN"/>
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+
 		<service
 			android:name=".qs.AutoRotateService"
 			android:icon="@drawable/ic_qs_autorotate_disabled"
@@ -184,10 +199,10 @@
 			</intent-filter>
 		</receiver>
 
-        <meta-data android:name="xposedmodule" android:value="true" />
-        <meta-data android:name="xposedminversion" android:value="82+" />
-        <meta-data android:name="xposeddescription" android:value="Customize MIUI to your liking" />
+		<meta-data android:name="xposedmodule" android:value="true" />
+		<meta-data android:name="xposedminversion" android:value="82+" />
+		<meta-data android:name="xposeddescription" android:value="Customize MIUI to your liking" />
 		<meta-data android:name="com.google.android.backup.api_key" android:value="AEdPqrEAAAAIRIa0lKCzoQ_qe_xfqaQCC4EQhwk3CWeRwzFrww" />
-    </application>
+	</application>
 
 </manifest>

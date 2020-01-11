@@ -75,6 +75,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -133,11 +134,9 @@ public class Helpers {
 	public static ValueAnimator shimmerAnim;
 	public static boolean showNewMods = true;
 	public static final HashSet<String> newMods =  new HashSet<String>(Arrays.asList(
-		"pref_key_system_noscreenlock_req",
-		"pref_key_system_toasttime",
-		"pref_key_system_nonetspeedseparator",
-		"pref_key_controls_navbarmargin",
-		"pref_key_launcher_nowidgetonly"
+		"pref_key_system_clearalltasks",
+		"pref_key_system_snoozedmanager",
+		"pref_key_system_inactivebrightness"
 	));
 	public static final ArrayList<String> shortcutIcons = new ArrayList<String>();
 	public static Holidays currentHoliday = Holidays.NONE;
@@ -256,6 +255,46 @@ public class Helpers {
 		File d2 = new File("/data/user_de/0/org.meowcat.edxposed.manager/conf/disable_resources");
 		File d3 = new File("/data/user_de/0/de.robv.android.xposed.installer/conf/disable_resources");
 		return d1.exists() || d2.exists() || d3.exists();
+	}
+
+	public static boolean areXposedBlacklistsEnabled() {
+		File d1 = new File("/data/user_de/0/com.solohsu.android.edxp.manager/conf/blackwhitelist");
+		File d2 = new File("/data/user_de/0/org.meowcat.edxposed.manager/conf/blackwhitelist");
+		File d3 = new File("/data/user_de/0/de.robv.android.xposed.installer/conf/blackwhitelist");
+		return d1.exists() || d2.exists() || d3.exists();
+	}
+
+	public static boolean openXposedApp(Context context) {
+		Intent intent = context.getPackageManager().getLaunchIntentForPackage("com.solohsu.android.edxp.manager");
+		if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+		try {
+			context.startActivity(intent);
+			return true;
+		} catch (Throwable e1) {
+			intent = context.getPackageManager().getLaunchIntentForPackage("org.meowcat.edxposed.manager");
+			if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+			try {
+				context.startActivity(intent);
+				return true;
+			} catch (Throwable e2) {
+				intent = context.getPackageManager().getLaunchIntentForPackage("de.robv.android.xposed.installer");
+				if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+				try {
+					context.startActivity(intent);
+					return true;
+				} catch (Throwable e3) {
+					intent =context.getPackageManager().getLaunchIntentForPackage("me.weishu.exp");
+					if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+					try {
+						context.startActivity(intent);
+						return true;
+					} catch (Throwable e4) {
+						Toast.makeText(context, R.string.xposed_not_found, Toast.LENGTH_LONG).show();
+					}
+				}
+			}
+			return false;
+		}
 	}
 
 	public static String getXposedInstallerErrorLog(Context context) {

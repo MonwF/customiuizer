@@ -50,22 +50,32 @@ public class Controls {
 	private static boolean isVolumeLongPressed = false;
 	private static boolean isWaitingForPowerLongPressed = false;
 	private static boolean isWaitingForVolumeLongPressed = false;
+	private static boolean wasRaise2WakeEnabled = false;
 	private static Handler mHandler;
 
 	private static boolean isTorchEnabled(Context mContext) {
 		return Settings.Global.getInt(mContext.getContentResolver(), "torch_state", 0) != 0;
 	}
 
-	private static void setTorch(Context mContext, boolean state) {
+	private static void setTorch(Context context, boolean state) {
+		if (state) {
+			int wakeup = Settings.System.getInt(context.getContentResolver(), "pick_up_gesture_wakeup_mode", 0);
+			wasRaise2WakeEnabled = wakeup == 1;
+			if (wasRaise2WakeEnabled) Settings.System.putInt(context.getContentResolver(), "pick_up_gesture_wakeup_mode", 0);
+		}
 		Intent intent = new Intent("miui.intent.action.TOGGLE_TORCH");
 		intent.putExtra("miui.intent.extra.IS_ENABLE", state);
-		mContext.sendBroadcast(intent);
+		context.sendBroadcast(intent);
 	}
 
 	private static BroadcastReceiver mScreenOnReceiver = new BroadcastReceiver() {
 		public void onReceive(final Context context, Intent intent) {
 			if (isTorchEnabled(context)) setTorch(context, false);
 			if (Helpers.mWakeLock != null && Helpers.mWakeLock.isHeld()) Helpers.mWakeLock.release();
+			if (wasRaise2WakeEnabled) {
+				wasRaise2WakeEnabled = false;
+				Settings.System.putInt(context.getContentResolver(), "pick_up_gesture_wakeup_mode", 1);
+			}
 		}
 	};
 
@@ -162,6 +172,9 @@ public class Controls {
 						param.setResult(0);
 					} catch (Throwable t) {
 						XposedBridge.log(t);
+					} else if (wasRaise2WakeEnabled && !isTorchEnabled(mContext)) {
+						wasRaise2WakeEnabled = false;
+						Settings.System.putInt(mContext.getContentResolver(), "pick_up_gesture_wakeup_mode", 1);
 					}
 					isPowerPressed = false;
 					isWaitingForPowerLongPressed = false;

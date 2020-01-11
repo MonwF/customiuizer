@@ -30,18 +30,20 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 	private static boolean fsMonitorActive = false;
 
 	public void initZygote(StartupParam startParam) {
-		XSharedPreferences pref = null;
-		try {
-			pref = new XSharedPreferences(new File("/data/user_de/0/" + Helpers.modulePkg + "/shared_prefs/" + Helpers.prefsName + ".xml"));
-			pref.makeWorldReadable();
-		} catch (Throwable t) {
-			XposedBridge.log(t);
-		}
+		if (mPrefs.size() == 0) {
+			XSharedPreferences pref = null;
+			try {
+				pref = new XSharedPreferences(new File("/data/user_de/0/" + Helpers.modulePkg + "/shared_prefs/" + Helpers.prefsName + ".xml"));
+				pref.makeWorldReadable();
+			} catch (Throwable t) {
+				XposedBridge.log(t);
+			}
 
-		if (pref == null || pref.getAll().size() == 0) {
-			Helpers.log("Cannot read module's SharedPreferences, mods won't work!");
-			return;
-		} else mPrefs.putAll(pref.getAll());
+			if (pref == null || pref.getAll().size() == 0) {
+				Helpers.log("Cannot read module's SharedPreferences, mods won't work!");
+				return;
+			} else mPrefs.putAll(pref.getAll());
+		}
 
 		resHooks = new ResourceHooks();
 		GlobalActions.miuizerSettingsResInit();
@@ -61,6 +63,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getBoolean("system_compactnotif")) System.CompactNotificationsRes();
 		if (mPrefs.getBoolean("system_volumetimer")) System.VolumeTimerValuesRes();
 		if (mPrefs.getBoolean("system_separatevolume")) System.NotificationVolumeDialogRes();
+		if (mPrefs.getBoolean("system_snoozedmanager")) System.MoreSnoozeOptionsRes();
 		if (mPrefs.getBoolean("system_statusbaricons_volte")) System.HideIconsVoLTERes();
 		if (mPrefs.getBoolean("launcher_unlockgrids")) Launcher.UnlockGridsRes();
 		if (mPrefs.getBoolean("launcher_docktitles")) Launcher.ShowHotseatTitlesRes();
@@ -131,7 +134,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getInt("system_volumesteps", 0) > 0) System.VolumeStepsHook(lpparam);
 			if (mPrefs.getInt("system_applock_timeout", 1) > 1) System.AppLockTimeoutHook(lpparam);
 			if (mPrefs.getInt("system_dimtime", 0) > 0) System.ScreenDimTimeHook(lpparam);
-			if (mPrefs.getInt("system_toasttime", 0) > 0) System.ToastTimeServiceHook(lpparam);
+			if (mPrefs.getInt("system_toasttime", 0) > 0) System.ToastTimeHook(lpparam);
 			if (!mPrefs.getString("system_defaultusb", "none").equals("none")) System.USBConfigHook(lpparam);
 			if (mPrefs.getBoolean("system_nolightuponheadset")) System.NoLightUpOnHeadsetHook(lpparam);
 			if (mPrefs.getBoolean("system_securelock")) System.EnhancedSecurityHook(lpparam);
@@ -152,6 +155,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_firstpress")) System.FirstVolumePressHook(lpparam);
 			if (mPrefs.getBoolean("system_apksign")) System.NoSignatureVerifyServiceHook(lpparam);
 			if (mPrefs.getBoolean("system_vibration_amp")) System.MuffledVibrationHook(lpparam);
+			if (mPrefs.getBoolean("system_clearalltasks")) System.ClearAllTasksHook(lpparam);
+			if (mPrefs.getBoolean("system_snoozedmanager")) System.MoreSnoozeOptionsServiceHook(lpparam);
 			if (mPrefs.getBoolean("controls_powerflash")) Controls.PowerKeyHook(lpparam);
 			if (mPrefs.getBoolean("controls_fingerprintfailure")) Controls.FingerprintHapticFailureHook(lpparam);
 			if (mPrefs.getBoolean("controls_fingerprintscreen")) Controls.FingerprintScreenOnHook(lpparam);
@@ -238,6 +243,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_screenshot")) System.ScreenshotConfigHook(lpparam);
 			if (mPrefs.getBoolean("system_nodrawerbackground")) System.RemoveDrawerBackgroundHook(lpparam);
 			if (mPrefs.getBoolean("system_nonetspeedseparator")) System.NoNetworkSpeedSeparatorHook(lpparam);
+			if (mPrefs.getBoolean("system_snoozedmanager")) System.MoreSnoozeOptionsHook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_battery1")) System.HideIconsBattery1Hook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_battery2")) System.HideIconsBattery2Hook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_battery3")) System.HideIconsBattery3Hook(lpparam);
@@ -251,6 +257,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (!mPrefs.getString("system_calendar_app", "").equals("")) System.ReplaceCalendarAppHook(lpparam);
 			if (mPrefs.getStringAsInt("system_qshaptics", 1) > 1) System.QSHapticHook(lpparam);
 			if (mPrefs.getStringAsInt("system_expandnotifs", 1) > 1) System.ExpandNotificationsHook(lpparam);
+			if (mPrefs.getStringAsInt("system_inactivebrightness", 1) > 1) System.InactiveBrightnessSliderHook(lpparam);
 			if (mPrefs.getStringAsInt("system_mobiletypeicon", 1) > 1) System.HideNetworkTypeHook(lpparam);
 			if (mPrefs.getStringAsInt("system_statusbaricons_bluetooth", 1) > 1) System.HideIconsBluetoothHook(lpparam);
 			if (hideIconsActive) System.HideIconsHook(lpparam);

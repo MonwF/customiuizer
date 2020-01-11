@@ -66,6 +66,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.os.Parcelable;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.UserHandle;
@@ -3682,8 +3683,6 @@ public class System {
 	}
 
 	public static void DisableAnyNotificationBlockHook() {
-		if (Helpers.isNougat()) return;
-
 		Helpers.hookAllConstructors("android.app.NotificationChannel", null, new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
@@ -4695,6 +4694,33 @@ public class System {
 
 	@SuppressLint("StaticFieldLeak")
 	private static TextView mPct = null;
+	private static void initPct(ViewGroup container, int source) {
+		Context context = container.getContext();
+		Resources res = container.getResources();
+		if (mPct == null) {
+			mPct = new TextView(context);
+			mPct.setTag("mirrorBrightnessPct");
+			mPct.setTextSize(TypedValue.COMPLEX_UNIT_SP, 40);
+			mPct.setGravity(Gravity.CENTER);
+			mPct.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
+			float density = res.getDisplayMetrics().density;
+			FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+			lp.topMargin = Math.round(MainModule.mPrefs.getInt("system_showpct_top", 26) * density);
+			lp.gravity = Gravity.CENTER_HORIZONTAL|Gravity.TOP;
+			mPct.setPadding(Math.round(20 * density), Math.round(10 * density), Math.round(18 * density), Math.round(12 * density));
+			mPct.setLayoutParams(lp);
+			container.addView(mPct);
+		}
+
+		mPct.setTag(source);
+		int panelResId = res.getIdentifier("panel_round_corner_bg", "drawable", "com.android.systemui");
+		mPct.setBackground(res.getDrawable(panelResId, context.getTheme()));
+		int colorResId = res.getIdentifier("qs_tile_icon_disabled_color", "color", "com.android.systemui");
+		mPct.setTextColor(res.getColor(colorResId, container.getContext().getTheme()));
+		mPct.setAlpha(0.0f);
+		mPct.setVisibility(View.GONE);
+	}
+
 	public static void BrightnessPctHook(LoadPackageParam lpparam) {
 		Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BrightnessMirrorController", lpparam.classLoader, "showMirror", new MethodHook() {
 			@Override
@@ -4704,25 +4730,7 @@ public class System {
 					Helpers.log("BrightnessPctHook", "mStatusBarWindow is null");
 					return;
 				}
-				if (mPct == null) {
-					mPct = new TextView(mStatusBarWindow.getContext());
-					mPct.setTag("mirrorBrightnessPct");
-					mPct.setTextSize(TypedValue.COMPLEX_UNIT_SP, 40);
-					mPct.setGravity(Gravity.CENTER);
-					mPct.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
-					float density = mStatusBarWindow.getContext().getResources().getDisplayMetrics().density;
-					FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-					lp.topMargin = Math.round(MainModule.mPrefs.getInt("system_showpct_top", 26) * density);
-					lp.gravity = Gravity.CENTER_HORIZONTAL|Gravity.TOP;
-					mPct.setPadding(Math.round(20 * density), Math.round(10 * density), Math.round(18 * density), Math.round(12 * density));
-					mPct.setLayoutParams(lp);
-					mStatusBarWindow.addView(mPct);
-				}
-				int panelResId = mStatusBarWindow.getResources().getIdentifier("panel_round_corner_bg", "drawable", "com.android.systemui");
-				mPct.setBackground(mStatusBarWindow.getResources().getDrawable(panelResId, mStatusBarWindow.getContext().getTheme()));
-				int colorResId = mStatusBarWindow.getResources().getIdentifier("qs_tile_icon_disabled_color", "color", "com.android.systemui");
-				mPct.setTextColor(mStatusBarWindow.getResources().getColor(colorResId, mStatusBarWindow.getContext().getTheme()));
-				mPct.setAlpha(0.0f);
+				initPct(mStatusBarWindow, 1);
 				mPct.setVisibility(View.VISIBLE);
 				mPct.animate().alpha(1.0f).setDuration(300).start();
 			}
@@ -4745,10 +4753,11 @@ public class System {
 			@Override
 			@SuppressLint("SetTextI18n")
 			protected void after(final MethodHookParam param) throws Throwable {
+				if (mPct == null || (int)mPct.getTag() != 1) return;
 				int currentLevel = (int)(param.args[2] instanceof Integer ? param.args[2] : param.args[3]);
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 				int maxLevel = mContext.getResources().getInteger(mContext.getResources().getIdentifier("config_screenBrightnessSettingMaximum", "integer", "android"));
-				if (mPct != null) mPct.setText(((currentLevel * 100) / maxLevel) + "%");
+				mPct.setText(((currentLevel * 100) / maxLevel) + "%");
 			}
 		});
 	}
@@ -4841,7 +4850,6 @@ public class System {
 		Helpers.findAndHookMethodSilently("com.android.packageinstaller.InstallAppProgress.a", lpparam.classLoader, "a", Boolean.class, new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
-				XposedBridge.log("InstallAppProgress onPostExecute: " + param.args[0]);
 				param.args[0] = true;
 			}
 		});
@@ -4849,7 +4857,6 @@ public class System {
 		Helpers.findAndHookMethodSilently("com.android.packageinstaller.IncrementInstallProgress.a", lpparam.classLoader, "a", Boolean.class, new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
-				XposedBridge.log("IncrementInstallProgress onPostExecute: " + param.args[0]);
 				param.args[0] = true;
 			}
 		});
@@ -5283,8 +5290,10 @@ public class System {
 			}
 		});
 
+		final Class<?> buCls = XposedHelpers.findClass("com.android.settingslib.display.BrightnessUtils", lpparam.classLoader);
 		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "interceptTouchEvent", MotionEvent.class, new MethodHook() {
 			@Override
+			@SuppressLint("SetTextI18n")
 			protected void before(final MethodHookParam param) throws Throwable {
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 				MotionEvent event = (MotionEvent)param.args[0];
@@ -5295,6 +5304,13 @@ public class System {
 						tapStartY = event.getY();
 						tapStartPointers = 1;
 						tapStartBrightness = Settings.System.getInt(mContext.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 0);
+						if (MainModule.mPrefs.getBoolean("system_showpct")) {
+							ViewGroup mStatusBarWindow = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mStatusBarWindow");
+							if (mStatusBarWindow == null)
+								Helpers.log("StatusBarGesturesHook", "mStatusBarWindow is null");
+							else
+								initPct(mStatusBarWindow, 2);
+						}
 						break;
 					case MotionEvent.ACTION_POINTER_DOWN:
 						tapStartPointers = event.getPointerCount();
@@ -5313,6 +5329,7 @@ public class System {
 					case MotionEvent.ACTION_CANCEL:
 						isSlidingStart = false;
 						isSliding = false;
+						if (mPct != null) mPct.setVisibility(View.GONE);
 						break;
 					case MotionEvent.ACTION_MOVE:
 						if (!isSlidingStart) return;
@@ -5333,10 +5350,21 @@ public class System {
 							int sens = MainModule.mPrefs.getStringAsInt("system_statusbarcontrols_sens_bright", 2);
 							int minLevel = res.getInteger(res.getIdentifier("config_screenBrightnessSettingMinimum", "integer", "android"));
 							int maxLevel = res.getInteger(res.getIdentifier("config_screenBrightnessSettingMaximum", "integer", "android"));
+							boolean isHLG = maxLevel != 255;
 							float ratio = delta / metrics.widthPixels;
-							if (maxLevel != 255) ratio = (ratio >= 0 ? 1 : -1) * (sens == 1 ? 0.66f : (sens == 3 ? 1.66f : 1.0f)) * (float)Math.pow(ratio, 2);
+							if (isHLG) ratio = (ratio >= 0 ? 1 : -1) * (sens == 1 ? 0.66f : (sens == 3 ? 1.66f : 1.0f)) * (float)Math.pow(ratio, 2);
 							int nextLevel = Math.min(maxLevel, Math.max(minLevel, Math.round(tapStartBrightness + (maxLevel - minLevel) * ratio)));
 							Settings.System.putInt(resolver, Settings.System.SCREEN_BRIGHTNESS, nextLevel);
+							if (MainModule.mPrefs.getBoolean("system_showpct") && mPct != null) {
+								if (mPct.getVisibility() == View.GONE) {
+									mPct.setVisibility(View.VISIBLE);
+									mPct.animate().alpha(1.0f).setDuration(300).start();
+								}
+								int nextLevelGamma = nextLevel;
+								if (isHLG && buCls != null)
+								nextLevelGamma = (int)XposedHelpers.callStaticMethod(buCls, "convertLinearToGamma", nextLevel, minLevel, maxLevel);
+								if ((int)mPct.getTag() == 2) mPct.setText(((nextLevelGamma * 100) / maxLevel) + "%");
+							}
 						} else if (opt == 3) {
 							int sens = MainModule.mPrefs.getStringAsInt("system_statusbarcontrols_sens_vol", 2);
 							if (Math.abs(delta) < metrics.widthPixels / ((sens == 1 ? 0.66f : (sens == 3 ? 1.66f : 1.0f)) * 20 * metrics.density)) return;
@@ -5470,27 +5498,22 @@ public class System {
 		});
 	}
 
-	private static void rescheduleToast(MethodHookParam param) {
-		Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
-		mHandler.removeCallbacksAndMessages(param.args[0]);
-		int mod = (MainModule.mPrefs.getInt("system_toasttime", 0) - 4) * 1000;
-		int duration = XposedHelpers.getIntField(param.args[0], "duration");
-		int delay = Math.max(1000, (duration == 1 ? 3500 : 2000) + mod);
-		mHandler.sendMessageDelayed(Message.obtain(mHandler, 2, param.args[0]), delay);
-		param.setResult(null);
-	}
-
-	public static void ToastTimeServiceHook(LoadPackageParam lpparam) {
-
-		if (!Helpers.hookAllMethodsSilently("com.android.server.notification.NotificationManagerService", lpparam.classLoader, "scheduleDurationReachedLocked", new MethodHook() {
+	public static void ToastTimeHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.server.notification.NotificationManagerService", lpparam.classLoader, "showNextToastLocked", new MethodHook() {
 			@Override
-			protected void before(MethodHookParam param) throws Throwable {
-				rescheduleToast(param);
-			}
-		})) Helpers.hookAllMethods("com.android.server.notification.NotificationManagerService", lpparam.classLoader, "scheduleTimeoutLocked", new MethodHook() {
-			@Override
-			protected void before(MethodHookParam param) throws Throwable {
-				rescheduleToast(param);
+			@SuppressWarnings("unchecked")
+			protected void after(MethodHookParam param) throws Throwable {
+				Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
+				ArrayList<Object> mToastQueue = (ArrayList<Object>)XposedHelpers.getObjectField(param.thisObject, "mToastQueue");
+				if (mHandler == null || mToastQueue == null || mToastQueue.size() == 0) return;
+				int mod = (MainModule.mPrefs.getInt("system_toasttime", 0) - 4) * 1000;
+				for (Object record: mToastQueue)
+				if (record != null && mHandler.hasMessages(2, record)) {
+					mHandler.removeCallbacksAndMessages(record);
+					int duration = XposedHelpers.getIntField(record, "duration");
+					int delay = Math.max(1000, (duration == 1 ? 3500 : 2000) + mod);
+					mHandler.sendMessageDelayed(Message.obtain(mHandler, 2, record), delay);
+				}
 			}
 		});
 
@@ -5508,10 +5531,197 @@ public class System {
 				long mHideTimeout = XposedHelpers.getLongField(lp, "hideTimeoutMilliseconds");
 				if (mPrevHideTimeout == -1 || mHideTimeout == -1) return;
 
-				int dur = 0;
+				long dur = 0;
 				if (mPrevHideTimeout == 1000 || mPrevHideTimeout == 4000 || mPrevHideTimeout == 5000 || mPrevHideTimeout == 7000 || mPrevHideTimeout != mHideTimeout)
 				dur = Math.max(1000, 3500 + (MainModule.mPrefs.getInt("system_toasttime", 0) - 4) * 1000);
 				if (dur != 0) XposedHelpers.setLongField(lp, "hideTimeoutMilliseconds", dur);
+			}
+		});
+	}
+
+	public static void ClearAllTasksHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethods("com.android.server.am.ProcessUtils", lpparam.classLoader, "getPerceptibleRecentAppList", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				param.setResult(null);
+			}
+		});
+	}
+
+	private static int hours3ResId;
+	private static int hours4ResId;
+	private static int hours5ResId;
+	private static int hours6ResId;
+	private static int hours8ResId;
+	private static int hours10ResId;
+	private static int hours12ResId;
+	public static void MoreSnoozeOptionsRes() {
+		hours3ResId = MainModule.resHooks.addResource("time_3h", R.string.time_3h);
+		hours4ResId = MainModule.resHooks.addResource("time_4h", R.string.time_4h);
+		hours5ResId = MainModule.resHooks.addResource("time_5h", R.string.time_5h);
+		hours6ResId = MainModule.resHooks.addResource("time_6h", R.string.time_6h);
+		hours8ResId = MainModule.resHooks.addResource("time_8h", R.string.time_8h);
+		hours10ResId = MainModule.resHooks.addResource("time_10h", R.string.time_10h);
+		hours12ResId = MainModule.resHooks.addResource("time_12h", R.string.time_12h);
+	}
+
+	public static void MoreSnoozeOptionsHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.NotificationSnooze", lpparam.classLoader, "getDefaultSnoozeOptions", new MethodHook() {
+			@Override
+			@SuppressWarnings("unchecked")
+			protected void after(MethodHookParam param) throws Throwable {
+				ArrayList<Object> options = (ArrayList<Object>)param.getResult();
+				if (options == null) return;
+				options.add(XposedHelpers.callMethod(param.thisObject, "createOption", hours3ResId, 180));
+				options.add(XposedHelpers.callMethod(param.thisObject, "createOption", hours3ResId, 180));
+				options.add(XposedHelpers.callMethod(param.thisObject, "createOption", hours4ResId, 240));
+				options.add(XposedHelpers.callMethod(param.thisObject, "createOption", hours5ResId, 300));
+				options.add(XposedHelpers.callMethod(param.thisObject, "createOption", hours6ResId, 360));
+				options.add(XposedHelpers.callMethod(param.thisObject, "createOption", hours8ResId, 480));
+				options.add(XposedHelpers.callMethod(param.thisObject, "createOption", hours10ResId, 600));
+				options.add(XposedHelpers.callMethod(param.thisObject, "createOption", hours12ResId, 720));
+			}
+		});
+	}
+
+	public static void MoreSnoozeOptionsServiceHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethods("com.android.server.notification.SnoozeHelper", lpparam.classLoader, "scheduleRepost", new MethodHook() {
+			@Override
+			@SuppressWarnings("unchecked")
+			protected void after(MethodHookParam param) throws Throwable {
+				ArrayMap<String, Long> mSnoozedNotificationDelays = (ArrayMap<String, Long>)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mSnoozedNotificationDelays");
+				if (mSnoozedNotificationDelays == null) mSnoozedNotificationDelays = new ArrayMap<String, Long>();
+				mSnoozedNotificationDelays.put((String)param.args[1], (long)param.args[3]);
+				XposedHelpers.setAdditionalInstanceField(param.thisObject, "mSnoozedNotificationDelays", mSnoozedNotificationDelays);
+			}
+		});
+
+		Helpers.findAndHookMethod("com.android.server.notification.SnoozeHelper", lpparam.classLoader, "repost", String.class, int.class, new MethodHook() {
+			@Override
+			@SuppressWarnings({"unchecked", "SuspiciousMethodCalls"})
+			protected void after(MethodHookParam param) throws Throwable {
+				ArrayMap<String, Long> mSnoozedNotificationDelays = (ArrayMap<String, Long>)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mSnoozedNotificationDelays");
+				if (mSnoozedNotificationDelays != null) mSnoozedNotificationDelays.remove(param.args[0]);
+			}
+		});
+
+		Helpers.hookAllConstructors("com.android.server.notification.SnoozeHelper", lpparam.classLoader, new MethodHook() {
+			@Override
+			@SuppressWarnings("unchecked")
+			protected void after(MethodHookParam param) throws Throwable {
+				IntentFilter filter = new IntentFilter();
+				filter.addAction(GlobalActions.ACTION_PREFIX + "GetSnoozedNotifications");
+				filter.addAction(GlobalActions.ACTION_PREFIX + "UnsnoozeNotification");
+				filter.addAction(GlobalActions.ACTION_PREFIX + "CancelNotification");
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				mContext.registerReceiver(new BroadcastReceiver() {
+					@Override
+					public void onReceive(Context context, Intent intent) {
+						String action = intent.getAction();
+						ArrayMap<Integer, ArrayMap<String, ArrayMap<String, Object>>> mSnoozedNotifications = (ArrayMap<Integer, ArrayMap<String, ArrayMap<String, Object>>>)XposedHelpers.getObjectField(param.thisObject, "mSnoozedNotifications");
+						ArrayMap<String, Long> mSnoozedNotificationDelays = (ArrayMap<String, Long>)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mSnoozedNotificationDelays");
+
+						if (action.equals(GlobalActions.ACTION_PREFIX + "CancelNotification")) try {
+							ArrayMap<String, ArrayMap<String, Object>> packages = mSnoozedNotifications.get(intent.getIntExtra("user", 0));
+							if (packages == null) return;
+							ArrayMap<String, Object> notificatios = packages.get(intent.getStringExtra("package"));
+							if (notificatios == null) return;
+							if (notificatios.containsKey(intent.getStringExtra("key")))
+							XposedHelpers.setBooleanField(notificatios.get(intent.getStringExtra("key")), "isCanceled", intent.getBooleanExtra("canceled", false));
+							return;
+						} catch (Throwable t) {
+							XposedBridge.log(t);
+						}
+
+						if (action.equals(GlobalActions.ACTION_PREFIX + "UnsnoozeNotification")) try {
+							XposedHelpers.callMethod(param.thisObject, "repost", intent.getStringExtra("key"), intent.getIntExtra("user", 0));
+						} catch (Throwable t) {
+							XposedBridge.log(t);
+						}
+
+						try {
+							Bundle notifications = new Bundle();
+							int user;
+							String pkg;
+							for (int i = 0; i < mSnoozedNotifications.size(); i++ ) {
+								user = mSnoozedNotifications.keyAt(i);
+								ArrayMap<String, ArrayMap<String, Object>> mSnoozedNotification = mSnoozedNotifications.get(mSnoozedNotifications.keyAt(i));
+								for (int j = 0; j < mSnoozedNotification.size(); j++ ) {
+									pkg = mSnoozedNotification.keyAt(j);
+									ArrayMap<String, Object> mSnoozed = mSnoozedNotification.get(mSnoozedNotification.keyAt(j));
+									for (int k = 0; k < mSnoozed.size(); k++) {
+										String key = mSnoozed.keyAt(k);
+										Bundle notif = new Bundle();
+										notif.putInt("user", user);
+										notif.putString("package", pkg);
+										notif.putString("key", key);
+										Object record = mSnoozed.get(key);
+										notif.putBoolean("canceled", XposedHelpers.getBooleanField(record, "isCanceled"));
+										notif.putLong("created", XposedHelpers.getLongField(record, "mCreationTimeMs"));
+										notif.putLong("updated", XposedHelpers.getLongField(record, "mUpdateTimeMs"));
+										if (mSnoozedNotificationDelays != null && mSnoozedNotificationDelays.get(key) != null)
+										notif.putLong("reposted", currentTimeMillis() + mSnoozedNotificationDelays.get(key));
+										Object sbn = XposedHelpers.getObjectField(record, "sbn");
+										Notification notification = (Notification)XposedHelpers.getObjectField(sbn, "notification");
+										if (notification != null) {
+											if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+											notif.putString("channel", notification.getChannelId());
+											notif.putInt("color", notification.color);
+											if (notification.getLargeIcon() != null)
+											notif.putParcelable("icon", notification.getLargeIcon());
+											if (notification.extras != null) {
+												notif.putString("title", notification.extras.getCharSequence(Notification.EXTRA_TITLE).toString());
+												CharSequence text = notification.extras.getCharSequence(Notification.EXTRA_BIG_TEXT, null);
+												if (text == null || "" == text) text = notification.extras.getCharSequence(Notification.EXTRA_TEXT, null);
+												if (text != null && "" != text) {
+													String[] lines = text.toString().split("\\n");
+													notif.putString("text", lines[0] + (lines.length == 1 ? "" : "..."));
+												}
+												Parcelable[] messages = notification.extras.getParcelableArray(Notification.EXTRA_MESSAGES);
+												if (messages != null) notif.putInt("messages", messages.length);
+											}
+										}
+										notifications.putBundle(mSnoozed.keyAt(k), notif);
+									}
+								}
+							}
+							Intent snoozedIntent = new Intent(GlobalActions.EVENT_PREFIX + "UpdateSnoozedNotifications");
+							snoozedIntent.setPackage(Helpers.modulePkg);
+							snoozedIntent.putExtras(notifications);
+							mContext.sendBroadcast(snoozedIntent);
+						} catch (Throwable t) {
+							XposedBridge.log(t);
+						}
+					}
+				}, filter);
+			}
+		});
+	}
+
+	public static void InactiveBrightnessSliderHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.settings.ToggleSliderView", lpparam.classLoader, "onAttachedToWindow", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				int opt = MainModule.mPrefs.getStringAsInt("system_inactivebrightness", 1);
+				if (opt == 2) {
+					SeekBar mSlider = (SeekBar)XposedHelpers.getObjectField(param.thisObject, "mSlider");
+					if (mSlider != null)
+					mSlider.setOnTouchListener(new View.OnTouchListener(){
+						@Override
+						public boolean onTouch(View v, MotionEvent event) {
+							return true;
+						}
+					});
+				} else if (opt == 3) try {
+					View sliderView = (View)param.thisObject;
+					ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams)sliderView.getLayoutParams();
+					lp.height = 0;
+					lp.topMargin = Math.round(2 * sliderView.getResources().getDisplayMetrics().density);
+					lp.bottomMargin = 0;
+					sliderView.setLayoutParams(lp);
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
 			}
 		});
 	}

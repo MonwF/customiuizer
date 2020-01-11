@@ -13,6 +13,7 @@
 	<declare-styleable name="PreferenceEx">
 		<attr name="dynamic" />
 		<attr name="child" />
+		<attr name="warning" format="boolean" />
 		<attr name="countAsSummary" format="boolean" />
 		<attr name="customSummary" format="boolean" />
 	</declare-styleable>

@@ -1,3 +1,13 @@
+2.0.10
+[New] More snooze time options and snoozed notifications manager
+[New] Clear all tasks using cleaner button in recent apps list
+[New] Remove brightness slider or make it display only
+[Improved][Volume steps multiplier] Multiplier up to 5x
+[Improved][Quick flashlight] Temporarily disable raise to wake when flashlight is active
+[Improved][Status bar gesture controls] Show percentage when adjusting brightness if "Show brightness percentage" mod is enabled
+[Fixed][Toasts display duration] Compatibility with some ROMs
+[Fixed][Android 7] Crash in some app lists
+
 2.0.9
 [New] Toasts display duration
 [New] Do not show vertical line between time and network speed on devices with waterdrop notches

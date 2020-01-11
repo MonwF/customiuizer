@@ -58,7 +58,8 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 			} catch (PackageManager.NameNotFoundException e) {
 				e.printStackTrace();
 			}
-		} else showBack = true;
+		} else showBack = !(this instanceof SnoozedFragment);
+
 
 		getActionBar().setTitle(R.string.app_name);
 		getActionBar().setDisplayHomeAsUpEnabled(showBack);

@@ -7,6 +7,19 @@
 	<string name="about_unsupported">Mods marked with ⨯ are not supported on this device.</string>
 	<string name="title_activity_main" translatable="false">@string/app_name</string>
 
+	<string name="title_snoozed">Snoozed notifications</string>
+	<string name="menu_update">Update</string>
+	<string name="snooze_unsnooze">Unsnooze this notification</string>
+	<string name="snooze_cancel">Mark as dismissed</string>
+	<string name="snooze_restore">Mark as pending</string>
+	<string name="snooze_fetch_fail">Unable to fetch snoozed notifications list</string>
+	<string name="snooze_empty">No snoozed notifications</string>
+	<string name="snooze_messages">Messages</string>
+	<string name="snooze_channel">Channel</string>
+	<string name="snooze_created">Created</string>
+	<string name="snooze_updated">Updated</string>
+	<string name="snooze_repost">Repost</string>
+
 	<string name="mods">Mods</string>
 	<string name="mods_actions">Actions</string>
 
@@ -107,6 +120,7 @@
 	<string name="system_showpct_title">Show brightness percentage</string>
 	<string name="system_showpct_summ">Display brightness level in percentages while dragging brightness slider</string>
 	<string name="system_showpct_top_title">Percentages panel\'s top margin</string>
+	<string name="system_inactivebrightness_title">Deactivate brightness slider</string>
 	<string name="system_notifrowmenu_title">Extended notification menu</string>
 	<string name="system_notifrowmenu_summ">Open app info and force close app from notification menu (swipe notification to the left to open it)</string>
 	<string name="system_disableanynotif_title">Disable any notification</string>
@@ -119,6 +133,8 @@
 	<string name="system_toasttime_note">Resulting duration won\'t fall below 1 second</string>
 	<string name="system_autogroupnotif_title">Auto group notifications</string>
 	<string name="system_autogroupnotif_summ">Number of notifications from one app that triggers auto grouping</string>
+	<string name="system_snoozedmanager_title">Snoozed notifications manager</string>
+	<string name="system_snoozedmanager_summ">Increase number of snooze intervals and add icon to launcher that opens a list of currently snoozed notifications</string>
 	<string name="system_notifmediaseekbar_title">Media position slider</string>
 	<string name="system_notifmediaseekbar_summ">Add media notification slider that indicates current position and allows to change it</string>
 	<string name="system_notifmediaseekbar_full_title">Use system style</string>
@@ -311,6 +327,8 @@
 	<string name="system_mods_recents">Recent apps list</string>
 	<string name="system_removecleaner_title">Remove cleaner button</string>
 	<string name="system_removecleaner_summ">Hide button that clears recent apps and cleans memory</string>
+	<string name="system_clearalltasks_title">Clean all</string>
+	<string name="system_clearalltasks_summ">Make cleaner button kill all running tasks</string>
 	<string name="system_hidefromrecents_title">Hide from recents</string>
 	<string name="system_hidefromrecents_summ">Hide selected apps from recent tasks list</string>
 	<string name="system_recommended_first_title">First shortcut action</string>
@@ -694,6 +712,8 @@
 	<string name="array_doubletap">Double tap</string>
 	<string name="array_longpress">Long press</string>
 	<string name="array_newyear">New Year</string>
+	<string name="array_displayonly">Display only</string>
+	<string name="array_hide">Hide</string>
 
 	<string name="toggle_wifi_on">Wi-Fi enabled</string>
 	<string name="toggle_wifi_off">Wi-Fi disabled</string>
@@ -791,6 +811,7 @@
 	<string name="sdk_failed">Cannot initialize MIUI SDK.\nNot a Xiaomi device?</string>
 	<string name="notselected">Not selected</string>
 	<string name="warning">Warning!</string>
+	<string name="warning_blacklist">Black/White list option is active in Xposed Framework, it can prevent mods from working properly</string>
 	<string name="open_xposed">Manage Xposed modules</string>
 	<string name="soft_reboot">Soft reboot</string>
 	<string name="soft_reboot_ask">Perform soft reboot now?</string>

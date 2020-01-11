@@ -26,6 +26,7 @@ public class PreferenceEx extends Preference implements PreferenceState {
 
 	private boolean child;
 	private boolean dynamic;
+	private boolean warning;
 	private boolean countAsSummary;
 	private String customSummary = null;
 	private boolean newmod = false;
@@ -35,6 +36,7 @@ public class PreferenceEx extends Preference implements PreferenceState {
 		final TypedArray xmlAttrs = context.obtainStyledAttributes(attrs, R.styleable.PreferenceEx);
 		dynamic = xmlAttrs.getBoolean(R.styleable.PreferenceEx_dynamic, false);
 		child = xmlAttrs.getBoolean(R.styleable.PreferenceEx_child, false);
+		warning = xmlAttrs.getBoolean(R.styleable.PreferenceEx_warning, false);
 		countAsSummary = xmlAttrs.getBoolean(R.styleable.PreferenceEx_countAsSummary, false);
 		xmlAttrs.recycle();
 	}
@@ -54,7 +56,10 @@ public class PreferenceEx extends Preference implements PreferenceState {
 			valSummary.setText(customSummary);
 		else
 			valSummary.setText(countAsSummary ? String.valueOf(Helpers.prefs.getStringSet(getKey(), new LinkedHashSet<String>()).size()) : null);
-		title.setTextColor(isEnabled() ? primary : secondary);
+		if (warning)
+			title.setTextColor(Helpers.markColor);
+		else
+			title.setTextColor(isEnabled() ? primary : secondary);
 		title.setText(getTitle() + (dynamic ? " ⟲" : ""));
 		if (newmod) Helpers.applyNewMod(title);
 

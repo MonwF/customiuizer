@@ -158,7 +158,7 @@
 			android:summary="@string/system_volumesteps_summ"
 			android:defaultValue="0"
 			miuizer:minValue="0"
-			miuizer:maxValue="300"
+			miuizer:maxValue="500"
 			miuizer:stepValue="25"
 			miuizer:displayDividerValue="100"
 			miuizer:format="x%s"
@@ -406,6 +406,14 @@
 			miuizer:stepValue="1"
 			miuizer:format="%d dp" />
 
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_inactivebrightness"
+			android:title="@string/system_inactivebrightness_title"
+			android:entries="@array/inactivebrightness"
+			android:entryValues="@array/inactivebrightness_val"
+			android:defaultValue="1"
+			miuizer:valueAsSummary="true" />
+
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_popupnotif_cat"
 			android:summary="@string/system_popupnotif_summ"
@@ -549,6 +557,12 @@
 			android:entryValues="@array/autogroupnotif_val"
 			android:defaultValue="1" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_snoozedmanager"
+			android:title="@string/system_snoozedmanager_title"
+			android:summary="@string/system_snoozedmanager_summ"
+			android:defaultValue="false" />
+
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
@@ -626,6 +640,14 @@
 			android:key="pref_key_system_removecleaner"
 			android:title="@string/system_removecleaner_title"
 			android:summary="@string/system_removecleaner_summ"
+			android:disableDependentsState="true"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_clearalltasks"
+			android:title="@string/system_clearalltasks_title"
+			android:summary="@string/system_clearalltasks_summ"
+			android:dependency="pref_key_system_removecleaner"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx

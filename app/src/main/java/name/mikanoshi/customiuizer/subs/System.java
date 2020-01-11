@@ -19,6 +19,7 @@ import miui.app.AlertDialog;
 import name.mikanoshi.customiuizer.CredentialsLauncher;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SharedPrefsProvider;
+import name.mikanoshi.customiuizer.SnoozedActivity;
 import name.mikanoshi.customiuizer.SubFragment;
 import name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx;
 import name.mikanoshi.customiuizer.prefs.ListPreferenceEx;
@@ -182,8 +183,22 @@ public class System extends SubFragment {
 						return true;
 					}
 				});
+				findPreference("pref_key_system_snoozedmanager").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+					@Override
+					public boolean onPreferenceChange(Preference preference, Object newValue) {
+						PackageManager pm = getActivity().getPackageManager();
+						if ((Boolean)newValue)
+							pm.setComponentEnabledSetting(new ComponentName(getActivity(), SnoozedActivity.class), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+						else
+							pm.setComponentEnabledSetting(new ComponentName(getActivity(), SnoozedActivity.class), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+						return true;
+					}
+				});
 
-				if (Helpers.isNougat()) ((ListPreferenceEx)findPreference("pref_key_system_autogroupnotif")).setUnsupported(true);
+				if (Helpers.isNougat()) {
+					((ListPreferenceEx)findPreference("pref_key_system_autogroupnotif")).setUnsupported(true);
+					((CheckBoxPreferenceEx)findPreference("pref_key_system_snoozedmanager")).setUnsupported(true);
+				}
 
 				break;
 			case "pref_key_system_cat_qs":

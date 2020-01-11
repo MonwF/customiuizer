@@ -35,7 +35,7 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 	private LayoutInflater mInflater;
 	private ThreadPoolExecutor pool;
 	private ItemFilter mFilter = new ItemFilter();
-	private CopyOnWriteArrayList<AppData> originalAppList = new CopyOnWriteArrayList<AppData>();
+	private ArrayList<AppData> originalAppList = new ArrayList<AppData>();
 	private CopyOnWriteArrayList<AppData> filteredAppList = new CopyOnWriteArrayList<AppData>();
 	private String key = null;
 	private String selectedApp;

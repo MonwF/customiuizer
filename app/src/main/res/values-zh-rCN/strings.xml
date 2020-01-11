@@ -5,6 +5,18 @@
     <string name="about_dev">作者：Mikanoshi</string>
     <string name="about_dynamic">通常，激活或者停用模块需要软重启，但标记⟲的那些在其值从默认值更改为自定义值后只需软重启一次，之后的更改将立即应用。</string>
     <string name="about_unsupported">标记⨯的模块不支持此设备。</string>
+    <string name="title_snoozed">通知已延迟</string>
+    <string name="menu_update">更新</string>
+    <string name="snooze_unsnooze">取消延迟此通知</string>
+    <string name="snooze_cancel">标记为已读</string>
+    <string name="snooze_restore">标记为未读</string>
+    <string name="snooze_fetch_fail">无法获取延迟通知列表</string>
+    <string name="snooze_empty">无延迟通知</string>
+    <string name="snooze_messages">消息</string>
+    <string name="snooze_channel">频道</string>
+    <string name="snooze_created">已创建</string>
+    <string name="snooze_updated">已更新</string>
+    <string name="snooze_repost">转发</string>
     <string name="mods">模块</string>
     <string name="mods_actions">动作</string>
     <string name="enable_mod">启用模块</string>
@@ -102,6 +114,7 @@
     <string name="system_showpct_title">显示亮度百分比</string>
     <string name="system_showpct_summ">拖动亮度滑块时以百分比显示亮度</string>
     <string name="system_showpct_top_title">百分比面板的上边距</string>
+    <string name="system_inactivebrightness_title">停用亮度滑块</string>
     <string name="system_notifrowmenu_title">扩展通知菜单</string>
     <string name="system_notifrowmenu_summ">从通知菜单打开应用信息并强制关闭应用(向左滑动通知将其打开)</string>
     <string name="system_disableanynotif_title">禁用任何通知</string>
@@ -114,6 +127,8 @@
     <string name="system_toasttime_note">生成的时长不会少于1秒</string>
     <string name="system_autogroupnotif_title">自动分组通知</string>
     <string name="system_autogroupnotif_summ">触发自动分组的应用的通知数量</string>
+    <string name="system_snoozedmanager_title">延迟通知管理器</string>
+    <string name="system_snoozedmanager_summ">增大延迟间隔的数字并添加打开当前延迟通知列表的图标到启动器</string>
     <string name="system_notifmediaseekbar_title">媒体位置滑块</string>
     <string name="system_notifmediaseekbar_summ">添加指示当前位置的媒体通知滑块并允许对其进行更改</string>
     <string name="system_notifmediaseekbar_full_title">使用系统风格</string>
@@ -303,6 +318,8 @@
     <string name="system_mods_recents">最近应用列表</string>
     <string name="system_removecleaner_title">移除清理按钮</string>
     <string name="system_removecleaner_summ">隐藏清理最近应用和内存的按钮</string>
+    <string name="system_clearalltasks_title">清空</string>
+    <string name="system_clearalltasks_summ">使清洁器按钮结束所有正在运行中的任务</string>
     <string name="system_hidefromrecents_title">隐藏最近</string>
     <string name="system_hidefromrecents_summ">隐藏最近任务列表中的所选应用</string>
     <string name="system_recommended_first_title">第一个快捷方式动作</string>
@@ -679,6 +696,8 @@
     <string name="array_doubletap">双击</string>
     <string name="array_longpress">长按</string>
     <string name="array_newyear">新年</string>
+    <string name="array_displayonly">仅显示</string>
+    <string name="array_hide">隐藏</string>
     <string name="toggle_wifi_on">Wi-Fi已启用</string>
     <string name="toggle_wifi_off">Wi-Fi已禁用</string>
     <string name="toggle_bt_on">蓝牙已启用</string>
@@ -767,6 +786,7 @@
     <string name="sdk_failed">无法初始化MIUI SDK。\n不是小米设备？</string>
     <string name="notselected">未选择</string>
     <string name="warning">警告！</string>
+    <string name="warning_blacklist">Xposed框架中的黑/白名单选项已激活，可能会阻止模块正常工作</string>
     <string name="open_xposed">管理Xposed模块</string>
     <string name="soft_reboot">软重启</string>
     <string name="soft_reboot_ask">现在执行软重启吗？</string>
