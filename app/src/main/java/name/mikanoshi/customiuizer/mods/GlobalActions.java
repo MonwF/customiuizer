@@ -307,7 +307,8 @@ public class GlobalActions {
 	};
 
 	private static BroadcastReceiver mGlobalReceiver = new BroadcastReceiver() {
-		@SuppressLint({"MissingPermission", "WrongConstant"})
+		@SuppressWarnings("ConstantConditions")
+		@SuppressLint({"MissingPermission", "WrongConstant", "NewApi"})
 		public void onReceive(final Context context, Intent intent) {
 			try {
 
@@ -1334,6 +1335,7 @@ public class GlobalActions {
 //		}
 //	}
 
+	@SuppressWarnings("ConstantConditions")
 	public static boolean isMediaActionsAllowed(Context mContext) {
 		AudioManager am = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
 		boolean isMusicActive = am.isMusicActive();
@@ -1347,6 +1349,7 @@ public class GlobalActions {
 		return isAllowed;
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	public static void sendDownUpKeyEvent(Context mContext, int keyCode, boolean vibrate) {
 		AudioManager am = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
 		am.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, keyCode));

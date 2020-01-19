@@ -41,7 +41,6 @@ public class Launcher extends SubFragment {
 			}
 		};
 
-		@SuppressWarnings("ConstantConditions")
 		int opt = Integer.parseInt(Helpers.prefs.getString("pref_key_launcher_mods", "1"));
 
 		switch (sub) {

@@ -30,6 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.lang.reflect.Method;
+
 import static java.lang.System.currentTimeMillis;
 
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
@@ -548,6 +549,7 @@ public class Controls {
 	@SuppressLint("MissingPermission")
 	private static boolean handleCallAction(int action) {
 		TelecomManager tm = (TelecomManager)miuiPWMContext.getSystemService(Context.TELECOM_SERVICE);
+		if (tm == null) return false;
 		if (!tm.isInCall()) return false;
 		int callState = (int)XposedHelpers.callMethod(tm, "getCallState");
 		if (callState == TelephonyManager.CALL_STATE_RINGING) {
@@ -678,7 +680,7 @@ public class Controls {
 				boolean isInCall = false;
 				if (miuiPWMContext != null) {
 					TelecomManager tm = (TelecomManager)miuiPWMContext.getSystemService(Context.TELECOM_SERVICE);
-					isInCall = tm.isInCall();
+					isInCall = tm != null && tm.isInCall();
 				}
 
 				KeyEvent keyEvent = (KeyEvent)param.args[0];
@@ -728,7 +730,8 @@ public class Controls {
 			}
 		});
 
-		Helpers.hookAllMethods("com.android.server.fingerprint.FingerprintService", lpparam.classLoader, "startClient", new MethodHook() {
+		String fpService = Helpers.isQPlus() ? "com.android.server.biometrics.BiometricServiceBase" : "com.android.server.fingerprint.FingerprintService";
+		Helpers.hookAllMethods(fpService, lpparam.classLoader, "startClient", new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
@@ -736,7 +739,7 @@ public class Controls {
 			}
 		});
 
-		Helpers.hookAllMethods("com.android.server.fingerprint.FingerprintService", lpparam.classLoader, "removeClient", new MethodHook() {
+		Helpers.hookAllMethods(fpService, lpparam.classLoader, "removeClient", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
@@ -888,7 +891,8 @@ public class Controls {
 	}
 
 	public static void FingerprintHapticSuccessHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.android.server.fingerprint.AuthenticationClient", lpparam.classLoader, "onAuthenticated", int.class, int.class, new MethodHook() {
+		String authClient = Helpers.isQPlus() ? "com.android.server.biometrics.AuthenticationClient" : "com.android.server.fingerprint.AuthenticationClient";
+		Helpers.hookAllMethods(authClient, lpparam.classLoader, "onAuthenticated", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				if (!((boolean)param.getResult())) return;
@@ -912,12 +916,25 @@ public class Controls {
 	public static void FingerprintHapticFailureHook(LoadPackageParam lpparam) {
 		if (Helpers.isNougat())
 			Helpers.findAndHookMethod("com.android.server.fingerprint.FingerprintUtils", lpparam.classLoader, "vibrateFingerprintError", Context.class, XC_MethodReplacement.returnConstant(null));
-		else
-			Helpers.findAndHookMethod("com.android.server.fingerprint.ClientMonitor", lpparam.classLoader, "vibrateError", XC_MethodReplacement.returnConstant(null));
+		else {
+			String monitorClass = Helpers.isQPlus() ? "com.android.server.biometrics.ClientMonitor" : "com.android.server.fingerprint.ClientMonitor";
+			Helpers.hookAllMethods("com.android.server.VibratorService", lpparam.classLoader, "vibrate", new MethodHook() {
+				@Override
+				protected void before(MethodHookParam param) throws Throwable {
+					StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+					for (StackTraceElement el : stackTrace)
+					if (monitorClass.equals(el.getClassName()) && "vibrateError".equals(el.getMethodName())) {
+						param.setResult(null);
+						return;
+					}
+				}
+			});
+		}
 	}
 
 	public static void FingerprintScreenOnHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.android.server.fingerprint.AuthenticationClient", lpparam.classLoader, "onAuthenticated", int.class, int.class, new MethodHook() {
+		String authClient = Helpers.isQPlus() ? "com.android.server.biometrics.AuthenticationClient" : "com.android.server.fingerprint.AuthenticationClient";
+		Helpers.hookAllMethods(authClient, lpparam.classLoader, "onAuthenticated", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				if ((boolean)param.getResult()) return;

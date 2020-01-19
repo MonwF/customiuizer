@@ -20,7 +20,7 @@ public class Credentials extends Activity {
 
 		try {
 			KeyguardManager km = (KeyguardManager)getSystemService(Context.KEYGUARD_SERVICE);
-			if (km.isKeyguardSecure()) {
+			if (km != null && km.isKeyguardSecure()) {
 				try {
 					KeyGenParameterSpec.Builder builder = new KeyGenParameterSpec.Builder("dummy", KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT).setUserAuthenticationRequired(true);
 					KeyGenerator keygen = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore");

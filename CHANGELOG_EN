@@ -1,3 +1,22 @@
+2.1.0
+[Improved][Extended notification menu] Always open MIUI-styled app info
+[Improved][Android 9+] Better app list (black/white list) mode support (but not perfect, so warning will remain)
+[Fixed] No vibration on fingerprint authentication failure
+[Fixed] Crash in snoozed notifications list
+[Fixed][Missed call reminder] Stop playing ringtone when missed call notification is dismissed
+[Fixed][Compact notifications] Wrong height of action buttons in some notifications
+[Fixed][Status bar gesture controls] Mod was broken on older Androids after some recent changes
+Android 10 compatibility:
+	No screen light up on charge/headset connection
+	No password after boot
+	Disable screen lock
+	Orientation lock
+	Media position slider
+	Disable overscroll
+	Hide from recents
+	Toasts display duration
+	[Fingerprint authentication] Vibrate on success, no vibration on failure, turn screen on after failure
+
 2.0.10
 [New] More snooze time options and snoozed notifications manager
 [New] Clear all tasks using cleaner button in recent apps list

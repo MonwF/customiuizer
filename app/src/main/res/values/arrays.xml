@@ -750,11 +750,13 @@
 		<item>@string/array_disable</item>
 		<item>@string/array_color_auto</item>
 		<item>@string/array_newyear</item>
+		<item>@string/array_lunarnewyear</item>
 	</string-array>
 	<string-array name="holidays_val">
 		<item>-1</item>
 		<item>0</item>
 		<item>1</item>
+		<item>2</item>
 	</string-array>
 
 	<string-array name="onoff">

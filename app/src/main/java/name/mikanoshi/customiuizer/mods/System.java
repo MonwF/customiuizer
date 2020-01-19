@@ -13,7 +13,6 @@ import android.app.MiuiNotification;
 import android.app.Notification;
 import android.app.TaskStackBuilder;
 import android.app.WallpaperManager;
-import android.app.admin.DevicePolicyManager;
 import android.appwidget.AppWidgetProviderInfo;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -90,11 +89,13 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -196,29 +197,35 @@ public class System {
 	}
 
 	public static void NoLightUpOnChargeHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.android.server.power.PowerManagerService", lpparam.classLoader, "wakeUpNoUpdateLocked", long.class, String.class, int.class, String.class, int.class, new MethodHook() {
+		Helpers.hookAllMethods("com.android.server.power.PowerManagerService", lpparam.classLoader, "wakeUpNoUpdateLocked", new MethodHook() {
 			@Override
 			protected void before(final MethodHookParam param) throws Throwable {
-				if (Integer.parseInt(MainModule.mPrefs.getString("system_nolightuponcharges", "1")) == 3 && param.args[1].equals("android.server.power:POWER")) {
+				String reason = param.args[1] instanceof String ? (String)param.args[1] : (String)param.args[2];
+				if (reason == null) return;
+
+				if (Integer.parseInt(MainModule.mPrefs.getString("system_nolightuponcharges", "1")) == 3 &&
+					(reason.equals("android.server.power:POWER") || reason.startsWith("android.server.power:PLUGGED"))) {
 					param.setResult(false);
 					return;
 				}
 				if (Integer.parseInt(MainModule.mPrefs.getString("system_nolightuponcharges", "1")) == 2 && (
-					param.args[1].equals("android.server.power:POWER") ||
-					param.args[1].equals("com.android.systemui:RAPID_CHARGE") ||
-					param.args[1].equals("com.android.systemui:WIRELESS_CHARGE") ||
-					param.args[1].equals("com.android.systemui:WIRELESS_RAPID_CHARGE")
+					reason.equals("android.server.power:POWER") ||
+					reason.startsWith("android.server.power:PLUGGED") ||
+					reason.equals("com.android.systemui:RAPID_CHARGE") ||
+					reason.equals("com.android.systemui:WIRELESS_CHARGE") ||
+					reason.equals("com.android.systemui:WIRELESS_RAPID_CHARGE")
 				)) param.setResult(false);
-				//Helpers.log("wakeUpNoUpdateLocked: " + String.valueOf(param.args[0]) + " | " + String.valueOf(param.args[1]) + " | " + String.valueOf(param.args[2]) + " | " + String.valueOf(param.args[3]) + " | " + String.valueOf(param.args[4]));
+				//Helpers.log("wakeUpNoUpdateLocked: " + param.args[0] + " | " + param.args[1] + " | " + param.args[2] + " | " + param.args[3] + " | " + param.args[4]);
 			}
 		});
 	}
 
 	public static void NoLightUpOnHeadsetHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.android.server.power.PowerManagerService", lpparam.classLoader, "wakeUpNoUpdateLocked", long.class, String.class, int.class, String.class, int.class, new MethodHook() {
+		Helpers.hookAllMethods("com.android.server.power.PowerManagerService", lpparam.classLoader, "wakeUpNoUpdateLocked", new MethodHook() {
 			@Override
 			protected void before(final MethodHookParam param) throws Throwable {
-				if (param.args[1].equals("com.android.systemui:HEADSET")) param.setResult(false);
+				String reason = param.args[1] instanceof String ? (String)param.args[1] : (String)param.args[2];
+				if ("com.android.systemui:HEADSET".equals(reason)) param.setResult(false);
 			}
 		});
 	}
@@ -270,9 +277,10 @@ public class System {
 	}
 
 	public static void NoPasswordHook() {
+		String isAllowed = Helpers.isQPlus() ?  "isBiometricAllowedForUser" : "isFingerprintAllowedForUser";
 		//Helpers.findAndHookMethod("com.android.internal.widget.LockPatternUtils$StrongAuthTracker", null, "handleStrongAuthRequiredChanged", int.class, int.class, XC_MethodReplacement.DO_NOTHING);
-		Helpers.findAndHookMethod("com.android.internal.widget.LockPatternUtils$StrongAuthTracker", null, "isFingerprintAllowedForUser", int.class, XC_MethodReplacement.returnConstant(true));
-		Helpers.findAndHookMethod("com.android.internal.widget.LockPatternUtils", null, "isFingerprintAllowedForUser", int.class, XC_MethodReplacement.returnConstant(true));
+		Helpers.findAndHookMethod("com.android.internal.widget.LockPatternUtils$StrongAuthTracker", null, isAllowed, int.class, XC_MethodReplacement.returnConstant(true));
+		Helpers.findAndHookMethod("com.android.internal.widget.LockPatternUtils", null, isAllowed, int.class, XC_MethodReplacement.returnConstant(true));
 	}
 
 //	public static void NoPasswordKeyguardHook(LoadPackageParam lpparam) {
@@ -342,6 +350,7 @@ public class System {
 
 	private static boolean isTrustedWiFi(Context mContext) {
 		WifiManager wifiManager = (WifiManager)mContext.getSystemService(Context.WIFI_SERVICE);
+		if (wifiManager == null) return false;
 		if (!wifiManager.isWifiEnabled()) return false;
 		Set<String> trustedNetworks = MainModule.mPrefs.getStringSet("system_noscreenlock_wifi");
 		return Helpers.containsStringPair(trustedNetworks, wifiManager.getConnectionInfo().getBSSID());
@@ -403,7 +412,7 @@ public class System {
 			}
 		});
 
-		Helpers.findAndHookMethod("android.app.admin.DevicePolicyManagerCompat", lpparam.classLoader, "reportSuccessfulFingerprintAttempt", DevicePolicyManager.class, int.class, new MethodHook() {
+		Helpers.findAndHookMethod("com.android.keyguard.KeyguardUpdateMonitorCallback", lpparam.classLoader, "onFingerprintAuthenticated", int.class, new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				isUnlockedWithFingerprint = true;
@@ -1488,6 +1497,7 @@ public class System {
 		});
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	private static Bitmap fitBitmapToScreen(Context context, Bitmap bitmap) {
 		if (context == null || bitmap == null) return bitmap;
 		int opt = Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_system_albumartonlock_scale", "1"));
@@ -1737,13 +1747,43 @@ public class System {
 	}
 
 	public static void CompactNotificationsRes() {
-		MainModule.resHooks.setDensityReplacement("android", "dimen", "notification_action_height", 38);
-		MainModule.resHooks.setDensityReplacement("android", "dimen", "notification_action_list_height", 38);
+		MainModule.resHooks.setDensityReplacement("android", "dimen", "notification_action_height", 39);
+		MainModule.resHooks.setDensityReplacement("android", "dimen", "notification_action_list_height", 39);
 		MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "notification_row_extra_padding", 0);
 	}
 
+	public static void CompactNotificationsHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethods("com.android.systemui.statusbar.notification.NotificationViewWrapper", lpparam.classLoader, "wrap", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				if (param.args.length > 3) return;
+				Object res = param.getResult();
+				if (res == null) return;
+				View mView = (View)XposedHelpers.getObjectField(res, "mView");
+				if (mView == null) return;
+				//if (mView.getId() != mView.getResources().getIdentifier("status_bar_latest_event_content", "id", "android")) return;
+				FrameLayout container = mView.findViewById(mView.getResources().getIdentifier("actions_container", "id", "android"));
+				if (container == null) return;
+				float density = mView.getResources().getDisplayMetrics().density;
+				int height = Math.round(density * 39);
+				LinearLayout actions = (LinearLayout)container.getChildAt(0);
+				FrameLayout.LayoutParams lp1 = (FrameLayout.LayoutParams)actions.getLayoutParams();
+				lp1.height = height;
+				actions.setLayoutParams(lp1);
+				actions.setPadding(0, 0, 0, 0);
+				for (int c = 0; c < actions.getChildCount(); c++) {
+					LinearLayout.LayoutParams lp2 = (LinearLayout.LayoutParams)actions.getChildAt(c).getLayoutParams();
+					lp2.height = height;
+					lp2.bottomMargin = 0;
+					lp2.topMargin = 0;
+				}
+			}
+		});
+	}
+
 	public static void HideFromRecentsHook(LoadPackageParam lpparam) {
-		Helpers.hookAllConstructors("com.android.server.am.TaskRecord", lpparam.classLoader, new MethodHook() {
+		String taskRecordClass = Helpers.isQPlus() ? "com.android.server.wm.TaskRecord" : "com.android.server.am.TaskRecord";
+		Helpers.hookAllConstructors(taskRecordClass, lpparam.classLoader, new MethodHook() {
 			@Override
 			@SuppressLint("WrongConstant")
 			protected void after(final MethodHookParam param) throws Throwable {
@@ -1916,13 +1956,7 @@ public class System {
 				int iconResId = (int)view.getTag();
 				if (iconResId == appInfoIconResId) {
 					param.setResult(null);
-					Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-					intent.setData(Uri.parse("package:" + pkgName));
-					if (user != 0)
-						XposedHelpers.callMethod(mContext, "startActivityAsUser", intent, XposedHelpers.newInstance(UserHandle.class, user));
-					else
-						mContext.startActivity(intent);
+					Helpers.openAppInfo(mContext, pkgName, user);
 					mContext.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 				} else if (iconResId == forceCloseIconResId) {
 					param.setResult(null);
@@ -2159,23 +2193,24 @@ public class System {
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 				Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
 
-				XposedHelpers.setAdditionalInstanceField(param.thisObject, "mOrientationLockState", MainModule.mPrefs.getInt("qs_autorotate_state", 0));
 				new Helpers.SharedPrefObserver(mContext, mHandler, "pref_key_qs_autorotate_state", 0) {
 					@Override
 					public void onChange(String name, int defValue) {
-						XposedHelpers.setAdditionalInstanceField(param.thisObject, "mOrientationLockState", Helpers.getSharedIntPref(mContext, name, defValue));
+						MainModule.mPrefs.put(name, Helpers.getSharedIntPref(mContext, name, defValue));
 					}
 				};
 			}
 		});
 
-		Helpers.hookAllMethods("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "rotationForOrientationLw", new MethodHook() {
+		String windowClass = Helpers.isQPlus() ? "com.android.server.wm.DisplayRotation" : "com.android.server.policy.PhoneWindowManager";
+		String rotMethod = Helpers.isQPlus() ? "rotationForOrientation" : "rotationForOrientationLw";
+		Helpers.hookAllMethods(windowClass, lpparam.classLoader, rotMethod, new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				//Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 				//Helpers.log("rotationForOrientationLw: " + param.args[0] + ", " + param.args[1] + " = " + param.getResult());
 				if ((int)param.args[0] == -1) {
-					int opt = (int)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mOrientationLockState");
+					int opt = MainModule.mPrefs.getInt("qs_autorotate_state", 0);
 					int prevOrient = (int)param.args[1];
 					if (opt == 1) {
 						if (prevOrient != 0 && prevOrient != 2) prevOrient = 0;
@@ -3064,7 +3099,7 @@ public class System {
 	private static void UpdateAudioVisualizerState(Context context) {
 		if (audioViz == null || context == null) return;
 		AudioManager am = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
-		audioViz.updateMusicState(am.isMusicActive());
+		audioViz.updateMusicState(am != null && am.isMusicActive());
 		audioViz.updateViewState(isKeyguardShowing, isNotificationPanelExpanded);
 	}
 	public static void AudioVisualizerHook(LoadPackageParam lpparam) {
@@ -3221,12 +3256,20 @@ public class System {
 	}
 
 	public static void AllRotationsHook(LoadPackageParam lpparam) {
-		Helpers.hookAllMethods("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "init", new MethodHook() {
-			@Override
-			protected void after(MethodHookParam param) throws Throwable {
-				XposedHelpers.setIntField(param.thisObject, "mAllowAllRotations", MainModule.mPrefs.getStringAsInt("system_allrotations2", 1) == 2 ? 1 : 0);
-			}
-		});
+		if (Helpers.isQPlus())
+			Helpers.hookAllConstructors("com.android.server.wm.DisplayRotation", lpparam.classLoader, new MethodHook() {
+				@Override
+				protected void after(MethodHookParam param) throws Throwable {
+					XposedHelpers.setIntField(param.thisObject, "mAllowAllRotations", MainModule.mPrefs.getStringAsInt("system_allrotations2", 1) == 2 ? 1 : 0);
+				}
+			});
+		else
+			Helpers.hookAllMethods("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "init", new MethodHook() {
+				@Override
+				protected void after(MethodHookParam param) throws Throwable {
+					XposedHelpers.setIntField(param.thisObject, "mAllowAllRotations", MainModule.mPrefs.getStringAsInt("system_allrotations2", 1) == 2 ? 1 : 0);
+				}
+			});
 	}
 
 	private static boolean mUSBConnected = false;
@@ -3642,9 +3685,22 @@ public class System {
 		Helpers.findAndHookMethod("android.widget.Magnifier", null, "obtainContentCoordinates", float.class, float.class, new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
-				Point mCenterZoomCoords = (Point)XposedHelpers.getObjectField(param.thisObject, "mCenterZoomCoords");
 				Point mClampedCenterZoomCoords = (Point)XposedHelpers.getObjectField(param.thisObject, "mClampedCenterZoomCoords");
-				mClampedCenterZoomCoords.x = mCenterZoomCoords.x;
+				if (Helpers.isQPlus()) {
+					Object mView = XposedHelpers.getObjectField(param.thisObject, "mView");
+					float f = (float)param.args[0];
+					int x;
+					if (mView instanceof SurfaceView) {
+						x = Math.round(f);
+					} else {
+						int[] mViewCoordinatesInSurface = (int[])XposedHelpers.getObjectField(param.thisObject, "mViewCoordinatesInSurface");
+						x = Math.round(f + (float)mViewCoordinatesInSurface[0]);
+					}
+					mClampedCenterZoomCoords.x = x;
+				} else {
+					Point mCenterZoomCoords = (Point)XposedHelpers.getObjectField(param.thisObject, "mCenterZoomCoords");
+					mClampedCenterZoomCoords.x = mCenterZoomCoords.x;
+				}
 			}
 		});
 
@@ -4339,7 +4395,7 @@ public class System {
 	}
 
 	public static void MediaNotificationSeekBarHook() {
-		Helpers.findAndHookConstructor("android.media.session.MediaSession", null, Context.class, String.class, int.class, new MethodHook() {
+		MethodHook hook = new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				stateHandler = new Handler();
@@ -4370,7 +4426,12 @@ public class System {
 				XposedHelpers.setAdditionalInstanceField(param.thisObject, "mStateRunnable", mStateRunnable);
 				XposedHelpers.setAdditionalInstanceField(param.thisObject, "mContext", param.args[0]);
 			}
-		});
+		};
+
+		if (Helpers.isQPlus())
+			Helpers.findAndHookConstructor("android.media.session.MediaSession", null, Context.class, String.class, Bundle.class, hook);
+		else
+			Helpers.findAndHookConstructor("android.media.session.MediaSession", null, Context.class, String.class, int.class, hook);
 
 		Helpers.findAndHookMethod("android.media.session.MediaSession", null, "setActive", boolean.class, new MethodHook() {
 			@Override
@@ -4770,6 +4831,11 @@ public class System {
 		MainModule.resHooks.setObjectReplacement("com.android.systemui", "bool", "status_bar_hide_volte", true);
 	}
 
+	public static void HideIconsVoLTEHook(LoadPackageParam lpparam) {
+		//noinspection ResultOfMethodCallIgnored
+		Helpers.findAndHookMethodSilently("com.android.systemui.MCCUtils", lpparam.classLoader, "isHideVolte", Context.class, String.class, XC_MethodReplacement.returnConstant(true));
+	}
+
 	public static void HideLockScreenClockHook(LoadPackageParam lpparam) {
 		Helpers.hookAllMethods("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, "setKeyguardStatusViewVisibility", new MethodHook() {
 			@Override
@@ -4893,12 +4959,20 @@ public class System {
 	}
 
 	public static void NoOverscrollHook() {
-		Helpers.findAndHookMethod("android.widget.AbsListView", null, "setOverScrollMode", int.class, new MethodHook() {
-			@Override
-			protected void before(MethodHookParam param) throws Throwable {
-				param.args[0] = View.OVER_SCROLL_NEVER;
-			}
-		});
+		if (Helpers.isQPlus())
+			Helpers.findAndHookMethod("android.widget.AbsListView", null, "initAbsListView", new MethodHook() {
+				@Override
+				protected void before(MethodHookParam param) throws Throwable {
+					((AbsListView)param.thisObject).setOverScrollMode(View.OVER_SCROLL_NEVER);
+				}
+			});
+		else
+			Helpers.findAndHookMethod("android.widget.AbsListView", null, "setOverScrollMode", int.class, new MethodHook() {
+				@Override
+				protected void before(MethodHookParam param) throws Throwable {
+					param.args[0] = View.OVER_SCROLL_NEVER;
+				}
+			});
 	}
 
 	private static Dialog mDialog = null;
@@ -5290,7 +5364,7 @@ public class System {
 			}
 		});
 
-		final Class<?> buCls = XposedHelpers.findClass("com.android.settingslib.display.BrightnessUtils", lpparam.classLoader);
+		final Class<?> buCls = XposedHelpers.findClassIfExists("com.android.settingslib.display.BrightnessUtils", lpparam.classLoader);
 		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "interceptTouchEvent", MotionEvent.class, new MethodHook() {
 			@Override
 			@SuppressLint("SetTextI18n")
@@ -5503,10 +5577,11 @@ public class System {
 			@Override
 			@SuppressWarnings("unchecked")
 			protected void after(MethodHookParam param) throws Throwable {
+				Context mContext = (Context)XposedHelpers.callMethod(param.thisObject, "getContext");
 				Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
 				ArrayList<Object> mToastQueue = (ArrayList<Object>)XposedHelpers.getObjectField(param.thisObject, "mToastQueue");
-				if (mHandler == null || mToastQueue == null || mToastQueue.size() == 0) return;
-				int mod = (MainModule.mPrefs.getInt("system_toasttime", 0) - 4) * 1000;
+				if (mContext == null || mHandler == null || mToastQueue == null || mToastQueue.size() == 0) return;
+				int mod = (Helpers.getSharedIntPref(mContext, "pref_key_system_toasttime", 0) - 4) * 1000;
 				for (Object record: mToastQueue)
 				if (record != null && mHandler.hasMessages(2, record)) {
 					mHandler.removeCallbacksAndMessages(record);
@@ -5517,7 +5592,23 @@ public class System {
 			}
 		});
 
-		Helpers.hookAllMethods("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "adjustWindowParamsLw", new MethodHook() {
+		Helpers.findAndHookMethod("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "systemReady", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
+
+				new Helpers.SharedPrefObserver(mContext, mHandler, "pref_key_system_toasttime", 0) {
+					@Override
+					public void onChange(String name, int defValue) {
+						MainModule.mPrefs.put(name, Helpers.getSharedIntPref(mContext, name, defValue));
+					}
+				};
+			}
+		});
+
+		String windowClass = Helpers.isQPlus() ? "com.android.server.wm.DisplayPolicy" : "com.android.server.policy.PhoneWindowManager";
+		Helpers.hookAllMethods(windowClass, lpparam.classLoader, "adjustWindowParamsLw", new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
 				Object lp = param.args.length == 1 ? param.args[0] : param.args[1];

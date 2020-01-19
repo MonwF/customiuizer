@@ -24,6 +24,8 @@
 	<uses-permission android:name="android.permission.MANAGE_USB" />
 	<uses-permission android:name="android.permission.READ_LOGS" />
 	<uses-permission android:name="android.permission.DUMP" />
+	<uses-permission android:name="miui.permission.READ_LOGS" />
+	<uses-permission android:name="miui.permission.DUMP_CACHED_LOG" />
 
 	<uses-permission android:name="com.miui.securitycenter.permission.ACCESS_SECURITY_CENTER_PROVIDER" />
 

@@ -696,6 +696,7 @@
     <string name="array_doubletap">Dokunma (Tek)</string>
     <string name="array_longpress">Basılı Tut (Uzun)</string>
     <string name="array_newyear">Yeni yıl</string>
+    <string name="array_lunarnewyear">Çin Yeni Yılı</string>
     <string name="array_displayonly">Yalnızca görüntüleme</string>
     <string name="array_hide">Gizle</string>
     <string name="toggle_wifi_on">Etkin (Wi-Fi)</string>

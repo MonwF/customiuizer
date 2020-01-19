@@ -28,7 +28,7 @@
 				android:clipToPadding="false">
 
 				<ImageView
-					android:id="@+id/santa_hat"
+					android:id="@+id/lunar_animal"
 					android:layout_width="80dp"
 					android:layout_height="80dp"
 					android:contentDescription="@null"
@@ -36,22 +36,64 @@
 					android:scaleY="1.0"
 					android:visibility="gone"
 					android:layout_alignParentTop="true"
-					android:layout_alignParentRight="true"
+					android:layout_alignParentLeft="true"
+					android:layout_marginLeft="-25dp"
 					android:layout_marginTop="-32dp"
-					android:layout_marginRight="-23dp"
-					android:translationZ="10dp"
-					android:src="@drawable/santa_hat" />
+					android:translationZ="0dp"
+					android:rotation="-25"
+					android:src="@drawable/year2020_rat" />
 
-				<ImageView
-					android:id="@+id/miuizer_icon"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:contentDescription="@null"
-					android:gravity="center"
-					android:layout_gravity="center"
-					android:scaleX="1.5"
-					android:scaleY="1.5"
-					android:src="@mipmap/ic_launcher_foreground" />
+				<RelativeLayout
+					android:layout_height="80dp"
+					android:layout_width="80dp"
+					android:backgroundTint="@color/ic_launcher_background"
+					android:background="@drawable/ic_mask"
+					android:clipChildren="false"
+					android:clipToPadding="false">
+
+					<ImageView
+						android:id="@+id/santa_hat"
+						android:layout_width="80dp"
+						android:layout_height="80dp"
+						android:contentDescription="@null"
+						android:scaleX="1.0"
+						android:scaleY="1.0"
+						android:visibility="gone"
+						android:layout_alignParentTop="true"
+						android:layout_alignParentRight="true"
+						android:layout_marginTop="-32dp"
+						android:layout_marginRight="-23dp"
+						android:translationZ="10dp"
+						android:src="@drawable/santa_hat" />
+
+					<ImageView
+						android:id="@+id/decoration"
+						android:layout_width="50dp"
+						android:layout_height="50dp"
+						android:contentDescription="@null"
+						android:scaleX="1.0"
+						android:scaleY="1.0"
+						android:visibility="gone"
+						android:layout_alignParentRight="true"
+						android:layout_alignParentBottom="true"
+						android:layout_marginBottom="-3dp"
+						android:layout_marginRight="-20dp"
+						android:translationZ="10dp"
+						android:src="@drawable/fortune_bag" />
+
+
+					<ImageView
+						android:id="@+id/miuizer_icon"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:contentDescription="@null"
+						android:gravity="center"
+						android:layout_gravity="center"
+						android:scaleX="1.5"
+						android:scaleY="1.5"
+						android:src="@mipmap/ic_launcher_foreground" />
+
+				</RelativeLayout>
 
 			</RelativeLayout>
 

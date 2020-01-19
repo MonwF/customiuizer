@@ -39,10 +39,10 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 				XposedBridge.log(t);
 			}
 
-			if (pref == null || pref.getAll().size() == 0) {
-				Helpers.log("Cannot read module's SharedPreferences, mods won't work!");
-				return;
-			} else mPrefs.putAll(pref.getAll());
+			if (pref == null || pref.getAll().size() == 0)
+				Helpers.log("[UID " + android.os.Process.myUid() +"] Cannot read module's SharedPreferences, some mods might not work!");
+			else
+				mPrefs.putAll(pref.getAll());
 		}
 
 		resHooks = new ResourceHooks();
@@ -218,6 +218,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_hidemoreicon")) System.NoMoreIconHook(lpparam);
 			if (mPrefs.getBoolean("system_notifafterunlock")) System.ShowNotificationsAfterUnlockHook(lpparam);
 			if (mPrefs.getBoolean("system_notifrowmenu")) System.NotificationRowMenuHook(lpparam);
+			if (mPrefs.getBoolean("system_compactnotif")) System.CompactNotificationsHook(lpparam);
 			if (mPrefs.getBoolean("system_removecleaner")) System.HideMemoryCleanHook(lpparam);
 			if (mPrefs.getBoolean("system_removedismiss")) System.HideDismissViewHook(lpparam);
 			if (mPrefs.getBoolean("controls_nonavbar")) Controls.HideNavBarHook(lpparam);
@@ -251,6 +252,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_statusbaricons_vpn")) System.HideIconsVPNHook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_nosims")) System.HideIconsNoSIMsHook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_hotspot")) System.HideIconsHotspotHook(lpparam);
+			if (mPrefs.getBoolean("system_statusbaricons_volte")) System.HideIconsVoLTEHook(lpparam);
 			if (!mPrefs.getBoolean("system_statusbaricons_alarm") && mPrefs.getInt("system_statusbaricons_alarmn", 0) > 0) System.HideIconsSelectiveAlarmHook(lpparam);
 			if (!mPrefs.getString("system_shortcut_app", "").equals("")) System.ReplaceShortcutAppHook(lpparam);
 			if (!mPrefs.getString("system_clock_app", "").equals("")) System.ReplaceClockAppHook(lpparam);

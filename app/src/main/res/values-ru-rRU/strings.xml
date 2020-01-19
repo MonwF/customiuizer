@@ -234,6 +234,7 @@
 	<string name="array_doubletap">Двойное нажатие</string>
 	<string name="array_longpress">Долгое нажатие</string>
 	<string name="array_newyear">Новый Год</string>
+	<string name="array_lunarnewyear">Китайский Новый Год</string>
 	<string name="array_displayonly">Только отображение</string>
 	<string name="array_hide">Скрыть</string>
 

@@ -4,15 +4,12 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.ResolveInfo;
 
 import static de.robv.android.xposed.XposedHelpers.findClass;
-import static de.robv.android.xposed.XposedHelpers.getObjectField;
-import static de.robv.android.xposed.XposedHelpers.setObjectField;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
-import de.robv.android.xposed.XC_MethodHook.MethodHookParam;
 import de.robv.android.xposed.XposedHelpers;
 
 import name.mikanoshi.customiuizer.utils.Helpers;
@@ -22,30 +19,30 @@ public class PackagePermissions {
 
 	private static ArrayList<String> systemPackages = new ArrayList<String>();
 
-	@SuppressWarnings("unchecked")
-	private static void doBefore(MethodHookParam param) {
-		ArrayList<String> requestedPermissions = (ArrayList<String>)getObjectField(param.args[0], "requestedPermissions");
-		param.setObjectExtra("orig_requested_permissions", requestedPermissions);
-		//ArrayList<Boolean> requestedPermissionsRequired = (ArrayList<Boolean>)getObjectField(param.args[0], "requestedPermissionsRequired");
-		//param.setObjectExtra("orig_requested_permissions_required", requestedPermissionsRequired);
-
-		String pkgName = (String)getObjectField(param.args[0], "packageName");
-		if (pkgName.equalsIgnoreCase(Helpers.modulePkg)) {
-			requestedPermissions.add("miui.permission.READ_LOGS");
-			requestedPermissions.add("miui.permission.DUMP_CACHED_LOG");
-		}
-
-		setObjectField(param.args[0], "requestedPermissions", requestedPermissions);
-		//setObjectField(param.args[0], "requestedPermissionsRequired", requestedPermissionsRequired);
-	}
-
-	@SuppressWarnings("unchecked")
-	private static void doAfter(MethodHookParam param) {
-		ArrayList<String> origRequestedPermissions = (ArrayList<String>) param.getObjectExtra("orig_requested_permissions");
-		if (origRequestedPermissions != null) setObjectField(param.args[0], "requestedPermissions", origRequestedPermissions);
-		//ArrayList<Boolean> origRequestedPermissionsRequired = (ArrayList<Boolean>) param.getObjectExtra("orig_requested_permissions_required");
-		//if (origRequestedPermissionsRequired != null) setObjectField(param.args[0], "requestedPermissionsRequired", origRequestedPermissionsRequired);
-	}
+//	@SuppressWarnings("unchecked")
+//	private static void doBefore(MethodHookParam param) {
+//		ArrayList<String> requestedPermissions = (ArrayList<String>)getObjectField(param.args[0], "requestedPermissions");
+//		param.setObjectExtra("orig_requested_permissions", requestedPermissions);
+//		//ArrayList<Boolean> requestedPermissionsRequired = (ArrayList<Boolean>)getObjectField(param.args[0], "requestedPermissionsRequired");
+//		//param.setObjectExtra("orig_requested_permissions_required", requestedPermissionsRequired);
+//
+//		String pkgName = (String)getObjectField(param.args[0], "packageName");
+//		if (pkgName.equalsIgnoreCase(Helpers.modulePkg)) {
+//			requestedPermissions.add("miui.permission.READ_LOGS");
+//			requestedPermissions.add("miui.permission.DUMP_CACHED_LOG");
+//		}
+//
+//		setObjectField(param.args[0], "requestedPermissions", requestedPermissions);
+//		//setObjectField(param.args[0], "requestedPermissionsRequired", requestedPermissionsRequired);
+//	}
+//
+//	@SuppressWarnings("unchecked")
+//	private static void doAfter(MethodHookParam param) {
+//		ArrayList<String> origRequestedPermissions = (ArrayList<String>) param.getObjectExtra("orig_requested_permissions");
+//		if (origRequestedPermissions != null) setObjectField(param.args[0], "requestedPermissions", origRequestedPermissions);
+//		//ArrayList<Boolean> origRequestedPermissionsRequired = (ArrayList<Boolean>) param.getObjectExtra("orig_requested_permissions_required");
+//		//if (origRequestedPermissionsRequired != null) setObjectField(param.args[0], "requestedPermissionsRequired", origRequestedPermissionsRequired);
+//	}
 
 	public static void init(LoadPackageParam lpparam) {
 		systemPackages.add(Helpers.modulePkg);
@@ -93,34 +90,44 @@ public class PackagePermissions {
 			}
 		);
 
-		// Add custom permissions for module
-		if (!Helpers.findAndHookMethodSilently("com.android.server.pm.permission.PermissionManagerService", lpparam.classLoader, "grantPermissions",
-			"android.content.pm.PackageParser$Package", boolean.class, String.class, "com.android.server.pm.permission.PermissionManagerInternal.PermissionCallback",
-			new MethodHook() {
-				@Override
-				protected void before(MethodHookParam param) throws Throwable {
-					doBefore(param);
-				}
-
-				@Override
-				protected void after(MethodHookParam param) throws Throwable {
-					doAfter(param);
-				}
-			}
-		)) Helpers.findAndHookMethod("com.android.server.pm.PackageManagerService", lpparam.classLoader, "grantPermissionsLPw",
-			"android.content.pm.PackageParser$Package", boolean.class, String.class,
-			new MethodHook() {
-				@Override
-				protected void before(MethodHookParam param) throws Throwable {
-					doBefore(param);
-				}
-
-				@Override
-				protected void after(MethodHookParam param) throws Throwable {
-					doAfter(param);
-				}
-			}
-		);
+//		// Add custom permissions for module
+//		if (!Helpers.findAndHookMethodSilently("com.android.server.pm.permission.PermissionManagerService", lpparam.classLoader, "grantRequestedRuntimePermissions",
+//			"android.content.pm.PackageParser$Package", int[].class, String[].class, int.class, "com.android.server.pm.permission.PermissionManagerServiceInternal.PermissionCallback",
+//			new MethodHook() {
+//				@Override
+//				protected void before(MethodHookParam param) throws Throwable {
+//					doBefore(param);
+//				}
+//				@Override
+//				protected void after(MethodHookParam param) throws Throwable {
+//					doAfter(param);
+//				}
+//			}
+//		)) if (!Helpers.findAndHookMethodSilently("com.android.server.pm.permission.PermissionManagerService", lpparam.classLoader, "grantPermissions",
+//			"android.content.pm.PackageParser$Package", boolean.class, String.class, "com.android.server.pm.permission.PermissionManagerInternal.PermissionCallback",
+//			new MethodHook() {
+//				@Override
+//				protected void before(MethodHookParam param) throws Throwable {
+//					doBefore(param);
+//				}
+//				@Override
+//				protected void after(MethodHookParam param) throws Throwable {
+//					doAfter(param);
+//				}
+//			}
+//		)) Helpers.findAndHookMethod("com.android.server.pm.PackageManagerService", lpparam.classLoader, "grantPermissionsLPw",
+//			"android.content.pm.PackageParser$Package", boolean.class, String.class,
+//			new MethodHook() {
+//				@Override
+//				protected void before(MethodHookParam param) throws Throwable {
+//					doBefore(param);
+//				}
+//				@Override
+//				protected void after(MethodHookParam param) throws Throwable {
+//					doAfter(param);
+//				}
+//			}
+//		);
 
 		// Make module appear as system app
 		Helpers.hookAllMethods("com.android.server.pm.PackageManagerService", lpparam.classLoader, "queryIntentActivitiesInternal", new MethodHook() {

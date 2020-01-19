@@ -435,7 +435,7 @@ public class System extends SubFragment {
 				});
 
 				UiModeManager uiManager = (UiModeManager)getActivity().getSystemService(Context.UI_MODE_SERVICE);
-				String mode = String.valueOf(uiManager.getNightMode());
+				String mode = String.valueOf(uiManager != null ? uiManager.getNightMode() : 1);
 				Helpers.prefs.edit().putString("pref_key_system_uimode", mode).apply();
 				ListPreferenceEx uiMode = (ListPreferenceEx)findPreference("pref_key_system_uimode");
 				uiMode.setValue(mode);
@@ -443,7 +443,7 @@ public class System extends SubFragment {
 					@Override
 					public boolean onPreferenceChange(Preference preference, Object newValue) {
 						UiModeManager uiManager = (UiModeManager)getActivity().getSystemService(Context.UI_MODE_SERVICE);
-						uiManager.setNightMode(Integer.parseInt((String)newValue));
+						if (uiManager != null) uiManager.setNightMode(Integer.parseInt((String)newValue));
 						return true;
 					}
 				});

@@ -696,6 +696,7 @@
     <string name="array_doubletap">Doppio tocco</string>
     <string name="array_longpress">Pressione prolunga</string>
     <string name="array_newyear">Nuovo anno</string>
+    <string name="array_lunarnewyear">Capodanno cinese</string>
     <string name="array_displayonly">"Solo display "</string>
     <string name="array_hide">Nascondi</string>
     <string name="toggle_wifi_on">Wi-Fi attivo</string>

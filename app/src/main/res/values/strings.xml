@@ -712,6 +712,7 @@
 	<string name="array_doubletap">Double tap</string>
 	<string name="array_longpress">Long press</string>
 	<string name="array_newyear">New Year</string>
+	<string name="array_lunarnewyear">Chinese New Year</string>
 	<string name="array_displayonly">Display only</string>
 	<string name="array_hide">Hide</string>
 

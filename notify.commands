@@ -1,0 +1,2 @@
+su
+am broadcast -a android.intent.action.PACKAGE_ADDED -d "package:name.mikanoshi.customiuizer" -f 0x400010 -n "org.meowcat.edxposed.manager/.receivers.PackageChangeReceiver"

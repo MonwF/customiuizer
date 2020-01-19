@@ -41,7 +41,9 @@ public class SnoozedFragment extends PreferenceFragmentBase {
 		@Override
 		public void run() {
 			finishLoading();
-			Toast.makeText(getContext(), R.string.snooze_fetch_fail, Toast.LENGTH_LONG).show();
+			Context context = getContext();
+			if (context != null)
+			Toast.makeText(context, R.string.snooze_fetch_fail, Toast.LENGTH_LONG).show();
 		}
 	};
 
@@ -174,6 +176,7 @@ public class SnoozedFragment extends PreferenceFragmentBase {
 	}
 
 	public void onPrepareOptionsMenu(Menu menu) {
+		if (menu != null && menu.size() > 0)
 		menu.getItem(0).setEnabled(!loading);
 	}
 

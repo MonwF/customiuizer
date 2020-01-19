@@ -3,7 +3,6 @@ package name.mikanoshi.customiuizer.mods;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -1120,11 +1119,7 @@ public class Launcher {
 					Context context = (Context)param.args[1];
 					if (context == null) return;
 					UserHandle userHandle = (UserHandle)XposedHelpers.callMethod(param.args[0], "getUser");
-					Intent intent = new Intent("miui.intent.action.APP_MANAGER_APPLICATION_DETAIL");
-					intent.setPackage("com.miui.securitycenter");
-					intent.putExtra("package_name", component.getPackageName());
-					if (userHandle != null) intent.putExtra("miui.intent.extra.USER_ID", userHandle.hashCode());
-					context.startActivity(intent);
+					Helpers.openAppInfo(context, component.getPackageName(), userHandle != null ? userHandle.hashCode() : 0);
 					param.setResult(true);
 				}
 			});
@@ -1137,11 +1132,7 @@ public class Launcher {
 					View view = (View)param.args[1];
 					if (view == null) return;
 					UserHandle userHandle = (UserHandle)XposedHelpers.callMethod(param.args[0], "getUserHandle");
-					Intent intent = new Intent("miui.intent.action.APP_MANAGER_APPLICATION_DETAIL");
-					intent.setPackage("com.miui.securitycenter");
-					intent.putExtra("package_name", component.getPackageName());
-					if (userHandle != null) intent.putExtra("miui.intent.extra.USER_ID", userHandle.hashCode());
-					view.getContext().startActivity(intent);
+					Helpers.openAppInfo(view.getContext(), component.getPackageName(), userHandle != null ? userHandle.hashCode() : 0);
 					param.setResult(null);
 				}
 			});

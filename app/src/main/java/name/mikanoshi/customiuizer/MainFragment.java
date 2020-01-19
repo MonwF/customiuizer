@@ -2,9 +2,6 @@ package name.mikanoshi.customiuizer;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -350,7 +347,7 @@ public class MainFragment extends PreferenceFragmentBase {
 			Field mSplitViewField = actionBar.getClass().getDeclaredField("mSplitView");
 			mSplitViewField.setAccessible(true);
 			View mSplitView = (View)mSplitViewField.get(actionBar);
-			mSplitView.setVisibility(View.GONE);
+			if (mSplitView != null) mSplitView.setVisibility(View.GONE);
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
@@ -463,6 +460,7 @@ public class MainFragment extends PreferenceFragmentBase {
 			@SuppressWarnings("JavaReflectionMemberAccess") @SuppressLint("SoonBlockedPrivateApi")
 			Method getNonSystemLocales = AssetManager.class.getDeclaredMethod("getNonSystemLocales");
 			locales = (String[])getNonSystemLocales.invoke(am);
+			if (locales == null) locales = new String[] {};
 		} catch (Throwable t) {
 			locales = new String[] { "it", "ru-RU", "tr", "uk-UK", "zh-CN" };
 		}
@@ -625,6 +623,7 @@ public class MainFragment extends PreferenceFragmentBase {
 
 	public void hideKeyboard() {
 		InputMethodManager inputManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+		if (inputManager == null) return;
 		View currentFocusedView = getActivity().getCurrentFocus();
 		if (currentFocusedView != null)
 		inputManager.hideSoftInputFromWindow(currentFocusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);

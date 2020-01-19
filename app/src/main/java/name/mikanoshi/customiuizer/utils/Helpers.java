@@ -54,6 +54,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager.WakeLock;
+import android.os.UserHandle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.preference.PreferenceCategory;
@@ -142,7 +143,7 @@ public class Helpers {
 	public static Holidays currentHoliday = Holidays.NONE;
 
 	public enum Holidays {
-		NONE, NEWYEAR
+		NONE, NEWYEAR, LUNARNEWYEAR
 	}
 
 	public enum SettingsType {
@@ -194,13 +195,17 @@ public class Helpers {
 	public static void detectHoliday() {
 		currentHoliday = Holidays.NONE;
 		String opt = Helpers.prefs.getString("pref_key_miuizer_holiday", "0");
-		int holiday = opt != null ? Integer.parseInt(opt) : 0;
+		int holiday = Integer.parseInt(opt);
 		if (holiday > 0) currentHoliday = Holidays.values()[holiday];
 		if (holiday == 0) {
-			// NY
 			Calendar cal = Calendar.getInstance();
 			int month = cal.get(Calendar.MONTH);
-			if (month == 0 || month == 11) currentHoliday = Holidays.NEWYEAR;
+			int monthDay = cal.get(Calendar.DAY_OF_MONTH);
+
+			// Lunar NY
+			if ((month == 0 && monthDay > 15) || month == 1) currentHoliday = Holidays.LUNARNEWYEAR;
+			// NY
+			else if (month == 0 || month == 11) currentHoliday = Holidays.NEWYEAR;
 		}
 	}
 
@@ -218,6 +223,10 @@ public class Helpers {
 
 	public static boolean isPiePlus() {
 		return Build.VERSION.SDK_INT >=  Build.VERSION_CODES.P;
+	}
+
+	public static boolean isQPlus() {
+		return Build.VERSION.SDK_INT >=  Build.VERSION_CODES.Q;
 	}
 
 	public static boolean isLauncherIconVisible(Context context) {
@@ -442,6 +451,7 @@ public class Helpers {
 		}
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	public static long getNextMIUIAlarmTime(Context context) {
 		String nextAlarm = Settings.System.getString(context.getContentResolver(), "next_alarm_clock_formatted");
 		long nextTime = 0;
@@ -477,11 +487,11 @@ public class Helpers {
 
 	public static long getNextStockAlarmTime(Context context) {
 		AlarmManager alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+		if (alarmMgr == null) return 0;
 		AlarmManager.AlarmClockInfo aci = alarmMgr.getNextAlarmClock();
 		return aci == null ? 0 : aci.getTriggerTime();
 	}
 
-	@SuppressWarnings("ConstantConditions")
 	public static void updateNewModsMarking(Context context) {
 		updateNewModsMarking(context, Integer.parseInt(prefs.getString("pref_key_miuizer_marknewmods", "2")));
 	}
@@ -563,6 +573,28 @@ public class Helpers {
 			showOKDialog(context, R.string.warning, R.string.no_browser);
 	}
 
+	public static void openAppInfo(Context context, String pkg, int user) {
+		try {
+			Intent intent = new Intent("miui.intent.action.APP_MANAGER_APPLICATION_DETAIL");
+			intent.setPackage("com.miui.securitycenter");
+			intent.putExtra("package_name", pkg);
+			if (user != 0) intent.putExtra("miui.intent.extra.USER_ID", user);
+			context.startActivity(intent);
+		} catch (Throwable t) {
+			try {
+				Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+				intent.setData(Uri.parse("package:" + pkg));
+				if (user != 0)
+					XposedHelpers.callMethod(context, "startActivityAsUser", intent, XposedHelpers.newInstance(UserHandle.class, user));
+				else
+					context.startActivity(intent);
+			} catch (Throwable t2) {
+				XposedBridge.log(t2);
+			}
+		}
+	}
+
 	public static ArrayList<View> getChildViewsRecursive(View view) {
 		return getChildViewsRecursive(view, true);
 	}
@@ -599,7 +631,7 @@ public class Helpers {
 		return context.getPackageManager().checkPermission("android.permission.INTERACT_ACROSS_USERS", Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED;
 	}
 
-	@SuppressWarnings("JavaReflectionInvocation")
+	@SuppressWarnings({"JavaReflectionInvocation", "ConstantConditions"})
 	@SuppressLint({"PrivateApi", "DiscouragedPrivateApi"})
 	public static float getAnimationScale(int type) {
 		try {
@@ -622,7 +654,7 @@ public class Helpers {
 		}
 	}
 
-	@SuppressWarnings("JavaReflectionInvocation")
+	@SuppressWarnings({"JavaReflectionInvocation", "ConstantConditions"})
 	@SuppressLint({"PrivateApi", "DiscouragedPrivateApi"})
 	public static void setAnimationScale(int type, float value) {
 		try {
@@ -859,7 +891,7 @@ public class Helpers {
 				return pm.getActivityInfo(new ComponentName(pkgActArray[0], pkgActArray[1]), 0).loadLabel(pm).toString();
 			} else if (!pkgActArray[0].trim().equals("")) {
 				ai = pm.getApplicationInfo(pkgActArray[0], 0);
-				return (ai != null ? pm.getApplicationLabel(ai) : null);
+				return pm.getApplicationLabel(ai);
 			}
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -940,7 +972,6 @@ public class Helpers {
 		}
 	}
 
-	@SuppressWarnings("ConstantConditions")
 	public static Pair<String, String> getActionNameLocal(Context context, String key) {
 		try {
 			int action = prefs.getInt(key + "_action", 1);
@@ -998,7 +1029,6 @@ public class Helpers {
 		}
 	}
 
-	@SuppressWarnings("ConstantConditions")
 	public static Drawable getActionImageLocal(Context context, String key) {
 		try {
 			int action = prefs.getInt(key + "_action", 1);
@@ -1137,6 +1167,7 @@ public class Helpers {
 	public static void performCustomVibration(Context context, int vibration, String ownPattern) {
 		if (vibration == 0) return;
 		Vibrator vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
+		if (vibrator == null) return;
 		long[] pattern = new long[0];
 		switch (vibration) {
 			case 1: vibrator.vibrate(200); return;

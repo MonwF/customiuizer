@@ -27,6 +27,7 @@ import com.github.jinatonic.confetti.ConfettiManager;
 import com.github.matteobattilana.weather.PrecipType;
 import com.github.matteobattilana.weather.WeatherView;
 
+import name.mikanoshi.customiuizer.utils.FlowerGenerator;
 import name.mikanoshi.customiuizer.utils.GravitySensor;
 import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.SnowGenerator;
@@ -91,9 +92,36 @@ public class MainActivity extends Activity {
 			angleListener.setSpeed(50);
 			angleListener.start();
 
-			RelativeLayout.LayoutParams lp2 = (RelativeLayout.LayoutParams)mHolidayHeader.getLayoutParams();
-			lp2.height = getResources().getDisplayMetrics().widthPixels / 3;
-			mHolidayHeader.setLayoutParams(lp2);
+			mHolidayHeader.setImageResource(R.drawable.newyear_header);
+			mHolidayHeader.setVisibility(View.VISIBLE);
+		} else if (Helpers.currentHoliday == Helpers.Holidays.LUNARNEWYEAR) {
+			int rotation = getWindowManager().getDefaultDisplay().getRotation();
+			weatherView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+			weatherView.setPrecipType(PrecipType.SNOW);
+			weatherView.setSpeed(35);
+			weatherView.setEmissionRate(rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270 ? 4 : 2);
+			weatherView.setFadeOutPercent(0.75f);
+			weatherView.setAngle(0);
+			RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)weatherView.getLayoutParams();
+			lp.height = getResources().getDisplayMetrics().heightPixels / (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270 ? 3 : 4);
+			weatherView.setLayoutParams(lp);
+			try {
+				ConfettiManager manager = weatherView.getConfettiManager();
+				Field confettoGenerator = ConfettiManager.class.getDeclaredField("confettoGenerator");
+				confettoGenerator.setAccessible(true);
+				confettoGenerator.set(manager, new FlowerGenerator(this));
+			} catch (Throwable t) {
+				t.printStackTrace();
+			}
+			weatherView.resetWeather();
+			weatherView.setVisibility(View.VISIBLE);
+			weatherView.getConfettiManager().setRotationalVelocity(0, 45);
+			angleListener = new GravitySensor(this, weatherView);
+			angleListener.setOrientation(rotation);
+			angleListener.setSpeed(35);
+			angleListener.start();
+
+			mHolidayHeader.setImageResource(R.drawable.lunar_newyear_header);
 			mHolidayHeader.setVisibility(View.VISIBLE);
 		} else {
 			((ViewGroup)weatherView.getParent()).removeView(weatherView);

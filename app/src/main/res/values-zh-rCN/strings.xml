@@ -696,6 +696,7 @@
     <string name="array_doubletap">双击</string>
     <string name="array_longpress">长按</string>
     <string name="array_newyear">新年</string>
+    <string name="array_lunarnewyear">中国新年</string>
     <string name="array_displayonly">仅显示</string>
     <string name="array_hide">隐藏</string>
     <string name="toggle_wifi_on">Wi-Fi已启用</string>

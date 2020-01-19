@@ -18,6 +18,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.database.ContentObserver;
 import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -377,6 +378,7 @@ public class Various {
 					Date start = formatter.parse(start_hour + ":" + start_minute);
 					Date end = formatter.parse(end_hour + ":" + end_minute);
 					Date now = formatter.parse(formatter.format(new Date()));
+					if (start == null || end == null || now == null) return;
 
 					boolean isNight = start.before(end) ? now.after(start) && now.before(end) : now.before(end) || now.after(start);
 					if (isNight) return;
@@ -421,8 +423,10 @@ public class Various {
 						Uri uri = Uri.parse(uriStr);
 						Ringtone ringtone = RingtoneManager.getRingtone(mContext, uri);
 						if (ringtone != null) {
-							ringtone.setAudioAttributes(new AudioAttributes.Builder().setLegacyStreamType(5).build());
+							if (ringtone.isPlaying()) ringtone.stop();
+							ringtone.setAudioAttributes(new AudioAttributes.Builder().setLegacyStreamType(AudioManager.STREAM_NOTIFICATION).build());
 							ringtone.play();
+							XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCurrentRingtone", ringtone);
 						}
 					}
 
@@ -438,6 +442,14 @@ public class Various {
 				} else {
 					XposedHelpers.callMethod(param.thisObject, "cancelRepeatReminder");
 				}
+			}
+		});
+
+		Helpers.findAndHookMethod("com.android.server.telecom.MiuiMissedCallNotifierImpl", lpparam.classLoader, "cancelMissedCallNotification", String.class, boolean.class, new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				Ringtone ringtone = (Ringtone)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mCurrentRingtone");
+				if (ringtone != null && ringtone.isPlaying()) ringtone.stop();
 			}
 		});
 	}
@@ -703,7 +715,7 @@ public class Various {
 				if (field.getType() == List.class) {
 					field.setAccessible(true);
 					ArrayList<String> whiteList = (ArrayList<String>)field.get(param.thisObject);
-					if (whiteList.size() <= 1) continue;
+					if (whiteList == null || whiteList.size() <= 1) continue;
 					for (ApplicationInfo pack: packs)
 					if (!whiteList.contains(pack.packageName)) whiteList.add(pack.packageName);
 				}

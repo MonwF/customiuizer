@@ -1,0 +1,1 @@
+D:\Progs\Mobile\Global\SDK\platform-tools\adb.exe -d shell < notify.commands
