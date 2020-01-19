@@ -6,6 +6,7 @@
 [Fixed][Missed call reminder] Stop playing ringtone when missed call notification is dismissed
 [Fixed][Compact notifications] Wrong height of action buttons in some notifications
 [Fixed][Status bar gesture controls] Mod was broken on older Androids after some recent changes
+New holiday design 🐀🏮
 Android 10 compatibility:
 	No screen light up on charge/headset connection
 	No password after boot
