@@ -19,7 +19,8 @@
 		android:title="@string/system_screenshot_format_title"
 		android:entries="@array/screenshotformat"
 		android:entryValues="@array/screenshotformat_val"
-		android:defaultValue="2" />
+		android:defaultValue="2"
+		miuizer:valueAsSummary="true" />
 
 	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_screenshot_quality"
@@ -35,7 +36,8 @@
 		android:title="@string/system_screenshot_path_title"
 		android:entries="@array/screenshotpath"
 		android:entryValues="@array/screenshotpath_val"
-		android:defaultValue="1" />
+		android:defaultValue="1"
+		miuizer:valueAsSummary="true" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 

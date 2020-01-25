@@ -64,10 +64,12 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getBoolean("system_volumetimer")) System.VolumeTimerValuesRes();
 		if (mPrefs.getBoolean("system_separatevolume")) System.NotificationVolumeDialogRes();
 		if (mPrefs.getBoolean("system_snoozedmanager")) System.MoreSnoozeOptionsRes();
+		if (mPrefs.getBoolean("system_nosafevolume")) System.NoSafeVolumeWarningRes();
 		if (mPrefs.getBoolean("system_statusbaricons_volte")) System.HideIconsVoLTERes();
 		if (mPrefs.getBoolean("launcher_unlockgrids")) Launcher.UnlockGridsRes();
 		if (mPrefs.getBoolean("launcher_docktitles")) Launcher.ShowHotseatTitlesRes();
 		if (mPrefs.getBoolean("controls_powerflash")) Controls.PowerKeyRes();
+		if (mPrefs.getBoolean("controls_noscrchord")) Controls.NoScreenshotChordRes();
 		if (mPrefs.getStringAsInt("system_allrotations2", 1) > 1) System.AllRotationsRes();
 		if (mPrefs.getStringAsInt("system_rotateanim", 1) > 1) System.RotationAnimationRes();
 
@@ -146,7 +148,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_epm")) System.ExtendedPowerMenuHook(lpparam);
 			if (mPrefs.getBoolean("system_cleanshare")) System.CleanShareMenuServiceHook(lpparam);
 			if (mPrefs.getBoolean("system_cleanopenwith")) System.CleanOpenWithMenuServiceHook(lpparam);
-			if (mPrefs.getBoolean("system_limitminbrightness")) System.MinAutoBrightnessHook(lpparam);
+			if (mPrefs.getBoolean("system_autobrightness")) System.AutoBrightnessRangeHook(lpparam);
 			if (mPrefs.getBoolean("system_applock")) System.AppLockHook(lpparam);
 			if (mPrefs.getBoolean("various_alarmcompat")) Various.AlarmCompatServiceHook(lpparam);
 			if (mPrefs.getBoolean("system_ignorecalls")) System.NoCallInterruptionHook(lpparam);
@@ -160,6 +162,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("controls_powerflash")) Controls.PowerKeyHook(lpparam);
 			if (mPrefs.getBoolean("controls_fingerprintfailure")) Controls.FingerprintHapticFailureHook(lpparam);
 			if (mPrefs.getBoolean("controls_fingerprintscreen")) Controls.FingerprintScreenOnHook(lpparam);
+			if (mPrefs.getBoolean("controls_fingerprintwake")) Controls.NoFingerprintWakeHook(lpparam);
 			if (mPrefs.getBoolean("controls_volumecursor")) Controls.VolumeCursorFocusedHook(lpparam);
 			if (mPrefs.getBoolean("various_miuiinstaller")) Various.MiuiPackageInstallerServiceHook(lpparam);
 			if (mPrefs.getBoolean("various_disableapp")) Various.AppsDisableServiceHook(lpparam);
@@ -245,12 +248,15 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_nodrawerbackground")) System.RemoveDrawerBackgroundHook(lpparam);
 			if (mPrefs.getBoolean("system_nonetspeedseparator")) System.NoNetworkSpeedSeparatorHook(lpparam);
 			if (mPrefs.getBoolean("system_snoozedmanager")) System.MoreSnoozeOptionsHook(lpparam);
+			if (mPrefs.getBoolean("system_taptounlock")) System.TapToUnlockHook(lpparam);
+			if (mPrefs.getBoolean("system_hidelowbatwarn")) System.NoLowBatteryWarningHook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_battery1")) System.HideIconsBattery1Hook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_battery2")) System.HideIconsBattery2Hook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_battery3")) System.HideIconsBattery3Hook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_signal")) System.HideIconsSignalHook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_vpn")) System.HideIconsVPNHook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_nosims")) System.HideIconsNoSIMsHook(lpparam);
+			if (mPrefs.getBoolean("system_statusbaricons_wifi")) System.HideIconsNoWiFiHook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_hotspot")) System.HideIconsHotspotHook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_volte")) System.HideIconsVoLTEHook(lpparam);
 			if (!mPrefs.getBoolean("system_statusbaricons_alarm") && mPrefs.getInt("system_statusbaricons_alarmn", 0) > 0) System.HideIconsSelectiveAlarmHook(lpparam);

@@ -53,12 +53,13 @@ public class System extends SubFragment {
 					}
 				});
 
-				int min = getResources().getInteger(getResources().getIdentifier("config_screenBrightnessSettingMinimum", "integer", "android"));
-				int max = getResources().getInteger(getResources().getIdentifier("config_screenBrightnessSettingMaximum", "integer", "android"));
-				SeekBarPreference minBrightness = (SeekBarPreference)findPreference("pref_key_system_minbrightness");
-				minBrightness.setDefaultValue(Math.round((max - min) / 2.0));
-				minBrightness.setMinValue(min);
-				minBrightness.setMaxValue(max);
+				findPreference("pref_key_system_autobrightness_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						openSubFragment(new System_AutoBrightness(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_autobrightness_title, R.xml.prefs_system_autobrightness);
+						return true;
+					}
+				});
 
 				break;
 			case "pref_key_system_cat_audio":

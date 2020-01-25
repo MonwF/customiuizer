@@ -30,6 +30,7 @@ import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class PreferenceFragmentBase extends PreferenceFragment {
 
+	private Context actContext = null;
 	public boolean isAnimating = false;
 	public int animDur = 650;
 
@@ -53,8 +54,9 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 		if (this instanceof MainFragment) {
 			ActivityInfo appInfo;
 			try {
-				appInfo = getActivity().getPackageManager().getActivityInfo(getActivity().getComponentName(), PackageManager.GET_META_DATA);
-				showBack = appInfo != null && appInfo.metaData != null && appInfo.metaData.containsKey("from.settings");
+				Activity act = getActivity();
+				appInfo = act.getPackageManager().getActivityInfo(act.getComponentName(), PackageManager.GET_META_DATA);
+				showBack = appInfo.metaData != null && appInfo.metaData.containsKey("from.settings");
 			} catch (PackageManager.NameNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -63,7 +65,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 
 		getActionBar().setTitle(R.string.app_name);
 		getActionBar().setDisplayHomeAsUpEnabled(showBack);
-		getActionBar().setBackgroundDrawable(new ColorDrawable(Helpers.getSystemBackgroundColor(getContext())));
+		getActionBar().setBackgroundDrawable(new ColorDrawable(Helpers.getSystemBackgroundColor(getValidContext())));
 	}
 
 	public void onCreate(Bundle savedInstanceState, int pref_defaults) {
@@ -72,7 +74,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 			getPreferenceManager().setSharedPreferencesName(Helpers.prefsName);
 			getPreferenceManager().setSharedPreferencesMode(Context.MODE_PRIVATE);
 			getPreferenceManager().setStorageDeviceProtected();
-			PreferenceManager.setDefaultValues(getActivity(), pref_defaults, false);
+			PreferenceManager.setDefaultValues(getValidContext(), pref_defaults, false);
 		} catch (Throwable throwable) {
 			throwable.printStackTrace();
 		}
@@ -91,27 +93,27 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 	}
 
 	public void setViewBackground(View view) {
-		boolean isNight = Helpers.isNightMode(getContext());
+		boolean isNight = Helpers.isNightMode(getValidContext());
 		int bgResId = getResources().getIdentifier(isNight ? "settings_window_bg_dark" : "settings_window_bg_light", "drawable", "miui");
 		if (bgResId != 0)
 			view.setBackgroundResource(bgResId);
 		else if (Helpers.is11())
-			view.setBackgroundColor(Helpers.getSystemBackgroundColor(getContext()));
+			view.setBackgroundColor(Helpers.getSystemBackgroundColor(getValidContext()));
 		else
 			view.setBackgroundColor(isNight ? Color.BLACK : Color.rgb(247, 247, 247));
 	}
 
 	public void setActionModeStyle(View searchView) {
-		boolean isNight = Helpers.isNightMode(getActivity());
+		boolean isNight = Helpers.isNightMode(getValidContext());
 		if (searchView != null) try {
 			searchView.setSaveFromParentEnabled(false);
-			Drawable drawable = getResources().getDrawable(getResources().getIdentifier(isNight ? "search_mode_bg_dark" : "search_mode_bg_light", "drawable", "miui"), getActivity().getTheme());
+			Drawable drawable = getResources().getDrawable(getResources().getIdentifier(isNight ? "search_mode_bg_dark" : "search_mode_bg_light", "drawable", "miui"), getValidContext().getTheme());
 			try {
 				int colorResId = getResources().getIdentifier(isNight ? "primary_color_dark" : "primary_color_light", "color", "miui");
 				if (colorResId != 0 && drawable instanceof LayerDrawable) {
 					drawable = ((LayerDrawable)drawable).getDrawable(0);
 					if (drawable instanceof GradientDrawable)
-					((GradientDrawable)drawable).setColor(getResources().getColor(colorResId, getActivity().getTheme()));
+					((GradientDrawable)drawable).setColor(getResources().getColor(colorResId, getValidContext().getTheme()));
 				}
 			} catch (Throwable ignore) {}
 			searchView.setBackground(drawable);
@@ -132,7 +134,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 			TextView input = searchView.findViewById(android.R.id.input);
 			int fontSize = getResources().getIdentifier(Helpers.is11() ? "edit_text_font_size" : "secondary_text_size", "dimen", "miui");
 			input.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(fontSize == 0 ? R.dimen.secondary_text_size : fontSize));
-			input.setHintTextColor(getResources().getColor(getResources().getIdentifier(isNight ? "edit_text_search_hint_color_dark" : "edit_text_search_hint_color_light", "color", "miui"), getActivity().getTheme()));
+			input.setHintTextColor(getResources().getColor(getResources().getIdentifier(isNight ? "edit_text_search_hint_color_dark" : "edit_text_search_hint_color_light", "color", "miui"), getValidContext().getTheme()));
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
@@ -221,5 +223,22 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 		});
 
 		return valAnimator;
+	}
+
+	@Override
+	public void onAttach(Context context) {
+		super.onAttach(context);
+		this.actContext = context;
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		this.actContext = null;
+	}
+
+	public Context getValidContext() {
+		if (actContext != null) return actContext;
+		return getActivity() == null ? getContext() : getActivity().getApplicationContext();
 	}
 }

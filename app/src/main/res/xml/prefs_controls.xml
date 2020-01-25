@@ -15,6 +15,12 @@
 			android:summary="@string/controls_fingerprintscreen_summ"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_controls_fingerprintwake"
+			android:title="@string/controls_fingerprintwake_title"
+			android:summary="@string/controls_fingerprintwake_summ"
+			android:defaultValue="false" />
+
 		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 			android:title="@string/mods_actions"
 			miuizer:dynamic="true" />
@@ -128,6 +134,12 @@
 			android:title="@string/controls_powerdt_title"
 			android:summary="@string/controls_powerdt_summ"
 			miuizer:dynamic="true" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_controls_noscrchord"
+			android:title="@string/controls_noscrchord_title"
+			android:summary="@string/controls_noscrchord_summ"
+			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_powerflash"

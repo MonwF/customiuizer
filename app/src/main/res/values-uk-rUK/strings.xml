@@ -114,8 +114,6 @@
     <string name="system_dimtime_title">Тривалість затемнення</string>
     <string name="system_dimtime_summ">Як довго екран повинен бути затемнений перед автоматичним вимкненням</string>
     <string name="system_minbrightness_title">Мінімальна автояскравість</string>
-    <string name="system_minbrightness_summ">Задає мінімальне значення яскравості в автоматичному режимі</string>
-    <string name="system_minbrightness_note">Слайдер не відповідає системному слайдеру гучності на останніх версіях Android з нелінійної шкалою яскравості</string>
     <string name="system_noducking_title">Вимкнути заглушення</string>
     <string name="system_noducking_summ">Не знижувати гучність граючої в даний момент музики для програвання звуку сповіщення</string>
     <string name="system_firstpress_title">Негайне регулювання гучності</string>

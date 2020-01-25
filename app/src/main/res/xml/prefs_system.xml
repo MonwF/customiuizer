@@ -38,21 +38,10 @@
 		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 			android:title="@string/system_mods_screen_backlight" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_limitminbrightness"
-			android:title="@string/system_minbrightness_title"
-			android:summary="@string/system_minbrightness_summ"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_minbrightness"
-			android:defaultValue="0"
-			android:dependency="pref_key_system_limitminbrightness"
-			miuizer:note="@string/system_minbrightness_note"
-			miuizer:minValue="0"
-			miuizer:maxValue="1"
-			miuizer:stepValue="1"
-			miuizer:format="%d"/>
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_autobrightness_cat"
+			android:summary="@string/system_autobrightness_summ"
+			android:title="@string/system_autobrightness_title" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_nolightuponheadset"
@@ -119,6 +108,12 @@
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_system_cat_audio"
 		android:title="@string/system_mods_audio">
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_nosafevolume"
+			android:title="@string/system_nosafevolume_title"
+			android:summary="@string/system_nosafevolume_summ"
+			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_noducking"
@@ -774,6 +769,12 @@
 			android:title="@string/system_mods_lockscreen_functionality" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_taptounlock"
+			android:title="@string/system_taptounlock_title"
+			android:summary="@string/system_taptounlock_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_dttosleep"
 			android:summary="@string/system_dttosleep_summ"
 			android:title="@string/system_dttosleep_title"
@@ -890,6 +891,12 @@
 			android:key="pref_key_system_magnifier"
 			android:title="@string/system_magnifier_title"
 			android:summary="@string/system_magnifier_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_hidelowbatwarn"
+			android:title="@string/system_hidelowbatwarn_title"
+			android:summary="@string/system_hidelowbatwarn_summ"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx

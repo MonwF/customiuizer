@@ -70,6 +70,7 @@ public class AudioVisualizer extends View {
 	private int transparency;
 	public ColorMode colorMode;
 	public BarStyle barStyle;
+	public RenderType renderType;
 	public int glowLevel;
 	public int customColor;
 	private int randomizeInterval;
@@ -97,6 +98,10 @@ public class AudioVisualizer extends View {
 
 	enum ColorMode {
 		DUMMY, MATCH, STATIC, RAINBOW_H, RAINBOW_V, DYNAMIC
+	}
+
+	enum RenderType {
+		AUTO, LINES, PATH
 	}
 
 	public static boolean allZeros(byte[] array) {
@@ -197,6 +202,7 @@ public class AudioVisualizer extends View {
 
 	public AudioVisualizer(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
+		setLayerType(View.LAYER_TYPE_HARDWARE, null);
 
 		Resources res = context.getResources();
 		mHeight = res.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? res.getDisplayMetrics().heightPixels : res.getDisplayMetrics().widthPixels;
@@ -227,8 +233,9 @@ public class AudioVisualizer extends View {
 
 		showOnCustom = MainModule.mPrefs.getBoolean("system_visualizer_custom");
 		transparency = Math.round(255f - 255f * MainModule.mPrefs.getInt("system_visualizer_transp", 40) / 100f);
-		colorMode = ColorMode.values()[Integer.parseInt(MainModule.mPrefs.getString("system_visualizer_color", "1"))];
-		barStyle = BarStyle.values()[Integer.parseInt(MainModule.mPrefs.getString("system_visualizer_style", "1"))];
+		colorMode = ColorMode.values()[MainModule.mPrefs.getStringAsInt("system_visualizer_color", 1)];
+		barStyle = BarStyle.values()[MainModule.mPrefs.getStringAsInt("system_visualizer_style", 1)];
+		renderType = RenderType.values()[MainModule.mPrefs.getStringAsInt("system_visualizer_render", 0)];
 		glowLevel = MainModule.mPrefs.getInt("system_visualizer_glowlevel", 50);
 		customColor = MainModule.mPrefs.getInt("system_visualizer_colorval", Color.WHITE);
 		randomizeInterval = MainModule.mPrefs.getInt("system_visualizer_dyntime", 10) * 1000;
@@ -264,6 +271,10 @@ public class AudioVisualizer extends View {
 							break;
 						case "pref_key_system_visualizer_style":
 							barStyle = BarStyle.values()[Integer.parseInt(Helpers.getSharedStringPref(context, key, "1"))];
+							updateBarStyle();
+							break;
+						case "pref_key_system_visualizer_render":
+							renderType = RenderType.values()[Integer.parseInt(Helpers.getSharedStringPref(context, key, "0"))];
 							updateBarStyle();
 							break;
 						case "pref_key_system_visualizer_glowlevel":
@@ -353,40 +364,27 @@ public class AudioVisualizer extends View {
 			return;
 		}
 
-		boolean drawAsLines = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P || (barStyle != BarStyle.DASHED && barStyle != BarStyle.CIRCLES);
-		if (colorMode == ColorMode.RAINBOW_H) {
-			for (int i = 0; i < mBandsNum; i++) {
-				if (glowLevel > 0)
-				mGlowPaint.setColor(mRainbow[i]);
-				mPaint.setColor(mRainbow[i]);
-				if (drawAsLines) {
-					if (glowLevel > 0)
-					canvas.drawLine(mFFTPoints[i * 4], mFFTPoints[i * 4 + 1], mFFTPoints[i * 4 + 2], mFFTPoints[i * 4 + 3], mGlowPaint);
-					canvas.drawLine(mFFTPoints[i * 4], mFFTPoints[i * 4 + 1], mFFTPoints[i * 4 + 2], mFFTPoints[i * 4 + 3], mPaint);
-				} else {
-					mLinePath.reset();
-					mLinePath.moveTo(mFFTPoints[i * 4], mFFTPoints[i * 4 + 1]);
-					mLinePath.lineTo(mFFTPoints[i * 4], mFFTPoints[i * 4 + 3]);
-					if (glowLevel > 0)
-					canvas.drawPath(mLinePath, mGlowPaint);
-					canvas.drawPath(mLinePath, mPaint);
-				}
-			}
+		boolean drawAsLines;
+		if (renderType == RenderType.LINES)
+			drawAsLines = true;
+		else if (renderType == RenderType.PATH)
+			drawAsLines = false;
+		else
+			drawAsLines = glowLevel == 0 && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P || (barStyle != BarStyle.DASHED && barStyle != BarStyle.CIRCLES));
+
+		if (drawAsLines) {
+			if (glowLevel > 0)
+			canvas.drawLines(mFFTPoints, mGlowPaint);
+			canvas.drawLines(mFFTPoints, mPaint);
 		} else {
-			if (drawAsLines) {
-				if (glowLevel > 0)
-				canvas.drawLines(mFFTPoints, mGlowPaint);
-				canvas.drawLines(mFFTPoints, mPaint);
-			} else {
-				mLinePath.reset();
-				for (int i = 0; i < mBandsNum; i++) {
-					mLinePath.moveTo(mFFTPoints[i * 4], mFFTPoints[i * 4 + 1]);
-					mLinePath.lineTo(mFFTPoints[i * 4], mFFTPoints[i * 4 + 3]);
-				}
-				if (glowLevel > 0)
-				canvas.drawPath(mLinePath, mGlowPaint);
-				canvas.drawPath(mLinePath, mPaint);
+			mLinePath.reset();
+			for (int i = 0; i < mBandsNum; i++) {
+				mLinePath.moveTo(mFFTPoints[i * 4], mFFTPoints[i * 4 + 1]);
+				mLinePath.lineTo(mFFTPoints[i * 4], mFFTPoints[i * 4 + 3]);
 			}
+			if (glowLevel > 0)
+			canvas.drawPath(mLinePath, mGlowPaint);
+			canvas.drawPath(mLinePath, mPaint);
 		}
 	}
 
@@ -508,18 +506,13 @@ public class AudioVisualizer extends View {
 	}
 
 	private void updateBarStyle() {
-		if (barStyle == BarStyle.LINE) {
-			if (colorMode == ColorMode.RAINBOW_H)
-				mPaint.setShader(new LinearGradient(0, 0, mWidth, 0, mRainbow, mPositions, Shader.TileMode.MIRROR));
-			else if (colorMode == ColorMode.RAINBOW_V) {
-				float maxHeight = Math.min(0.85f * maxDp * mDensity, mHeight / 2.0f);
-				mPaint.setShader(new LinearGradient(0, mHeight, 0, mHeight - maxHeight, mRainbowVertical, mPositions, Shader.TileMode.CLAMP));
-			} else
-				mPaint.setShader(null);
-		} else {
+		if (colorMode == ColorMode.RAINBOW_H)
+			mPaint.setShader(new LinearGradient(0, 0, mWidth, 0, mRainbow, mPositions, Shader.TileMode.MIRROR));
+		else if (colorMode == ColorMode.RAINBOW_V) {
 			float maxHeight = Math.min(0.85f * maxDp * mDensity, mHeight / 2.0f);
-			mPaint.setShader(colorMode == ColorMode.RAINBOW_V ? new LinearGradient(0, mHeight, 0, mHeight - maxHeight, mRainbowVertical, mPositions, Shader.TileMode.CLAMP) : null);
-		}
+			mPaint.setShader(new LinearGradient(0, mHeight, 0, mHeight - maxHeight, mRainbowVertical, mPositions, Shader.TileMode.CLAMP));
+		} else
+			mPaint.setShader(null);
 
 		if (barStyle == BarStyle.SOLID) {
 			mPaint.setPathEffect(null);

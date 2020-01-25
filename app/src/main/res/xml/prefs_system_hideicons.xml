@@ -57,6 +57,11 @@
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_wifi"
+		android:title="@string/array_global_toggle_wifi"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbaricons_volte"
 		android:title="@string/system_statusbaricons_volte_title"
 		android:defaultValue="false" />

@@ -237,6 +237,7 @@
 	<string name="array_lunarnewyear">Китайский Новый Год</string>
 	<string name="array_displayonly">Только отображение</string>
 	<string name="array_hide">Скрыть</string>
+	<string name="array_render_auto">Определять автоматически</string>
 
 	<string name="support_bug_title">Сообщить об ошибке</string>
 	<string name="support_bug_summ">Отправить сообщение об ошибке или предложить новую фичу</string>
@@ -280,6 +281,8 @@
 	<string name="controls_mods">Управление</string>
 	<string name="controls_powerdt_title">Действие на двойное нажатие</string>
 	<string name="controls_powerdt_summ">Заменяет запуск камеры по двойному нажатию кнопки питания. Родное действие должно быть активно.</string>
+	<string name="controls_noscrchord_title">Отключить комбинацию для скриншота</string>
+	<string name="controls_noscrchord_summ">Не делать снимок экрана при нажатии кнопки питания вместе с кнопкой понижения громкости</string>
 	<string name="controls_powerflash_title">Быстрый фонарик</string>
 	<string name="controls_powerflash_summ">Позволяет активировать фонарик при отключенном экране долгим нажатием на кнопку питания</string>
 	<string name="controls_powerflash_delay_title">Задержка активации фонарика</string>
@@ -306,6 +309,8 @@
 	<string name="controls_fingerprint_conflict_reset_reject">Действие отклонения было отключено.</string>
 	<string name="controls_fingerprintscreen_title">Включить экран при неудаче</string>
 	<string name="controls_fingerprintscreen_summ">Зажигать экран после неудачной аутентификации</string>
+	<string name="controls_fingerprintwake_title">Требовать наличие отпечатков</string>
+	<string name="controls_fingerprintwake_summ">Не включать экран, если не заданы отпечатки</string>
 	<string name="controls_fingerprintsuccess_title">Вибрировать при успехе</string>
 	<string name="controls_fingerprintsuccess_summ">Виброотклик при успешной аутентификации</string>
 	<string name="controls_fingerprintsuccess_ignore_title">Игнорировать настройки системы</string>
@@ -528,6 +533,8 @@
 	<string name="system_nooverscroll_summ">Предотвращает чрезмерную прокрутку в списках</string>
 	<string name="system_removesecure_title">Отключить защиту контента</string>
 	<string name="system_removesecure_summ">Позволяет записывать видео и делать скриншоты любого приложения</string>
+	<string name="system_hidelowbatwarn_title">Скрыть предупреждение о низком заряде батареи</string>
+	<string name="system_hidelowbatwarn_summ">Не показывать диалог, предлагающий переключиться в режим экономии энергии</string>
 	<string name="system_hideproxywarn_title">Скрыть предупреждение об отключенных касаниях</string>
 	<string name="system_hideproxywarn_summ">Не показывать предупреждение о закрытой области динамика</string>
 	<string name="system_resizablewidgets_title">Свободный размер виджетов</string>
@@ -724,9 +731,12 @@
 	<string name="system_lstimeout_title">Задержка перед выключением на экране блокировки</string>
 	<string name="system_dimtime_title">Продолжительность затемнения</string>
 	<string name="system_dimtime_summ">Как долго экран должен быть затемнён перед автоматическим выключением (в процентах от задержки выключения экрана)</string>
+	<string name="system_autobrightness_title">Пределы автояркости</string>
+	<string name="system_autobrightness_summ">Задаёт минимальное и максимальное значение яркости в автоматическом режиме</string>
 	<string name="system_minbrightness_title">Минимальная автояркость</string>
-	<string name="system_minbrightness_summ">Задаёт минимальное значение яркости в автоматическом режиме</string>
-	<string name="system_minbrightness_note">Слайдер не соответствует системному слайдеру яркости на последних версиях Андроида с нелинейной шкалой яркости</string>
+	<string name="system_maxbrightness_title">Максимальная автояркость</string>
+	<string name="system_nosafevolume_title">Отключить предупреждение о высокой громкости</string>
+	<string name="system_nosafevolume_summ">Не показывать диалог при достижении небезопасного уровня громкости</string>
 	<string name="system_noducking_title">Отключить заглушение</string>
 	<string name="system_noducking_summ">Не понижать громкость играющей в данный момент музыки для проигрывания звука уведомления</string>
 	<string name="system_firstpress_title">Немедленная регулировка громкости</string>
@@ -748,6 +758,7 @@
 	<string name="system_visualizer_drawer_summ">Рисует визуализацию также и в раскрытой панели уведомлений</string>
 	<string name="system_visualizer_animdur_title">Продолжительность анимации</string>
 	<string name="system_visualizer_transp_title">Уровень прозрачности</string>
+	<string name="system_visualizer_render_title">Способ отрисовки</string>
 	<string name="system_visualizer_style_title">Стиль</string>
 	<string name="system_visualizer_glowlevel_title">Свечение</string>
 	<string name="system_visualizer_color_title">Цвет</string>
@@ -846,6 +857,8 @@
 	<string name="system_hideqs_summ">Скрывает панель Быстрых Настроек и слайдер яркости в режиме развёрнутых уведомлений на экране блокировки</string>
 	<string name="system_nodrawerbackground_title">Отключить цветной фон</string>
 	<string name="system_nodrawerbackground_summ">Изменяет фон со сгенерированным цветом, взятым из обоев, на прозрачный на экране блокировки</string>
+	<string name="system_taptounlock_title">Разблокировка нажатием</string>
+	<string name="system_taptounlock_summ">Нажатие на нижнюю область экрана блокировки начинает разблокировку устройства</string>
 	<string name="system_dttosleep_title">Сон по двойному нажатию</string>
 	<string name="system_dttosleep_summ">Выключает экран при двойном нажатии по пустому месту на экране блокировки</string>
 	<string name="system_lsalarm_title">Показ будильника</string>

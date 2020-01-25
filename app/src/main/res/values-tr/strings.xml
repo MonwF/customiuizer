@@ -152,9 +152,12 @@
     <string name="system_lstimeout_title">Kilit ekranında ekran kapalı zaman aşımı</string>
     <string name="system_dimtime_title">Karartma Süresi</string>
     <string name="system_dimtime_summ">Otomatik kapanmadan önce ekranın soluk kalması gerekir (toplam ekran kapanma zaman aşımının yüzdesi olarak)</string>
+    <string name="system_autobrightness_title">Otomatik parlaklık aralığı</string>
+    <string name="system_autobrightness_summ">Minimum ve maksimum otomatik parlaklık değerlerini tanımlama</string>
     <string name="system_minbrightness_title">Otomatik Parlaklık (Minimum)</string>
-    <string name="system_minbrightness_summ">Otomatik Parlaklık aktifken minimum parlaklık seviyesini belirler.</string>
-    <string name="system_minbrightness_note">Değerler doğrusal parlaklık değerine sahip değildir. Android sürümüne göre farklılıklar gösterebilir.</string>
+    <string name="system_maxbrightness_title">Maksimum otomatik parlaklık</string>
+    <string name="system_nosafevolume_title">Yüksek ses düzeyi uyarısını devre dışı bırak</string>
+    <string name="system_nosafevolume_summ">Birim güvenli olmayan düzeye ulaştığında iletişim kutusu gösterme</string>
     <string name="system_noducking_title">Bildirim ve Ses</string>
     <string name="system_noducking_summ">Bildirim geldiği zaman oynatılan medya dosyasının sesi azaltılmaz.</string>
     <string name="system_firstpress_title">Ses Ayarı (Hızlı)</string>
@@ -176,6 +179,7 @@
     <string name="system_visualizer_drawer_summ">Bildirim Paneli\'nde görsel animasyon gösterilir.</string>
     <string name="system_visualizer_animdur_title">Animasyon Süresi</string>
     <string name="system_visualizer_transp_title">Şeffaflık</string>
+    <string name="system_visualizer_render_title">Oluşturma yöntemi</string>
     <string name="system_visualizer_style_title">Tarz</string>
     <string name="system_visualizer_glowlevel_title">Gölge</string>
     <string name="system_visualizer_color_title">Renk</string>
@@ -266,6 +270,8 @@
     <string name="system_nooverscroll_summ">Liste görünümlerinin fazladan kaydırılmasını önler.</string>
     <string name="system_removesecure_title">Güvenli içerik korumasını devre dışı bırak</string>
     <string name="system_removesecure_summ">Herhangi bir uygulamanın ekran görüntüsünü ve videosunu kaydetmesine izin ver</string>
+    <string name="system_hidelowbatwarn_title">Düşük pil seviyesi hakkında uyarıyı gizle</string>
+    <string name="system_hidelowbatwarn_summ">Pil tasarrufunu açmanızı isteyen bir uyarı iletişim kutusu görüntülemeyin</string>
     <string name="system_hideproxywarn_title">Uyarı</string>
     <string name="system_hideproxywarn_summ">Kulaklık alanının kapatıldığını belirten uyarı gizlenir.</string>
     <string name="system_resizablewidgets_title">Widget yeniden boyutlandırma</string>
@@ -304,6 +310,8 @@
     <string name="system_hideqs_summ">Kilit ekranında genişletilmiş bildirimler modunda Hızlı Ayarları ve parlaklık kaydırıcısını gizle</string>
     <string name="system_nodrawerbackground_title">Renkli arka planı devre dışı bırak</string>
     <string name="system_nodrawerbackground_summ">Kilit ekranındayken otomatik olarak renk üretme duvar kağıdı ile saydam olana arka plan değiştirme</string>
+    <string name="system_taptounlock_title">Kilidi açmak için hafifçe vurun</string>
+    <string name="system_taptounlock_summ">Alt kilit ekranı alanına dokunarak cihazın kilidini açmaya başlayın</string>
     <string name="system_dttosleep_title">Dokunma (Çift)</string>
     <string name="system_dttosleep_summ">Ekran Kilidi\'nde boş bir yere çift dokunulduğunda ekran kapatılır.</string>
     <string name="system_lsalarm_title">Bir sonraki alarmı göster</string>
@@ -448,6 +456,8 @@
     <string name="controls_mods">Kontrol</string>
     <string name="controls_powerdt_title">Çift basın eylem</string>
     <string name="controls_powerdt_summ">Açma / kapatma tuşundaki kamera başlatmayı değiştirin, iki kez basın. Etkinleştirilmesi için stok düğmesi kısayolu gerekir.</string>
+    <string name="controls_noscrchord_title">Ekran görüntüsü kombinasyonunu devre dışı bırak</string>
+    <string name="controls_noscrchord_summ">Açma / kapama tuşu ile birlikte ses kısma tuşu basılıyken ekran görüntüsü almayın</string>
     <string name="controls_powerflash_title">El Feneri</string>
     <string name="controls_powerflash_summ">Güç düğmesine basılı tuttuğunuz da El Feneri açılır.</string>
     <string name="controls_powerflash_delay_title">Gecikme Süresi</string>
@@ -474,6 +484,8 @@
     <string name="controls_fingerprint_conflict_reset_reject">Reddetme işlemi devre dışı bırakıldı.</string>
     <string name="controls_fingerprintscreen_title">Hata</string>
     <string name="controls_fingerprintscreen_summ">Kimlik doğrulama da hata olursa eğer ekran uyandırılır.</string>
+    <string name="controls_fingerprintwake_title">Gerçek parmak izi gerektir</string>
+    <string name="controls_fingerprintwake_summ">Hiçbir parmak izi kaydedilmediğinde ekranı açmayın</string>
     <string name="controls_fingerprintsuccess_title">Titreşim</string>
     <string name="controls_fingerprintsuccess_summ">Kimlik doğrulaması başarılı olduğunda parmak izindeki geri bildirimi seçiniz.</string>
     <string name="controls_fingerprintsuccess_ignore_title">Yoksay (Sistem)</string>
@@ -699,6 +711,7 @@
     <string name="array_lunarnewyear">Çin Yeni Yılı</string>
     <string name="array_displayonly">Yalnızca görüntüleme</string>
     <string name="array_hide">Gizle</string>
+    <string name="array_render_auto">Otomatik algıla</string>
     <string name="toggle_wifi_on">Etkin (Wi-Fi)</string>
     <string name="toggle_wifi_off">Devre Dışı (Wi-Fi)</string>
     <string name="toggle_bt_on">Etkin (Bluetooth)</string>

@@ -1020,6 +1020,20 @@ public class Controls {
 		});
 	}
 
+	public static void NoScreenshotChordRes() {
+		MainModule.resHooks.setObjectReplacement("android", "bool", "config_enableScreenshotChord", false);
+	}
+
+	public static void NoFingerprintWakeHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.server.policy.MiuiPhoneWindowManager", lpparam.classLoader, "processBackFingerprintDpcenterEvent", KeyEvent.class, boolean.class, new MethodHook() {
+			@Override
+			protected void before(final MethodHookParam param) throws Throwable {
+				boolean isScreenOn = (boolean)param.args[1];
+				if (!isScreenOn) param.setResult(null);
+			}
+		});
+	}
+
 //	public static void AIButtonHook(LoadPackageParam lpparam) {
 //		Helpers.findAndHookMethod("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "startAiKeyService", String.class, new MethodHook() {
 //			@Override

@@ -1,0 +1,46 @@
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:miuizer="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_autobrightness"
+		android:title="@string/enable_mod"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:title="@string/settings"
+		android:dependency="pref_key_system_autobrightness">
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_autobrightness_limitmin"
+			android:title="@string/system_minbrightness_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_autobrightness_min"
+			android:defaultValue="25"
+			android:dependency="pref_key_system_autobrightness_limitmin"
+			miuizer:minValue="0"
+			miuizer:maxValue="98"
+			miuizer:stepValue="1"
+			miuizer:format="%d%%" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_autobrightness_limitmax"
+			android:title="@string/system_maxbrightness_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_autobrightness_max"
+			android:defaultValue="75"
+			android:dependency="pref_key_system_autobrightness_limitmax"
+			miuizer:minValue="0"
+			miuizer:maxValue="100"
+			miuizer:stepValue="1"
+			miuizer:format="%d%%" />
+
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+
+</PreferenceScreen>

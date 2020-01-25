@@ -432,6 +432,7 @@ public class MainFragment extends PreferenceFragmentBase {
 		PreferenceEx warning = (PreferenceEx)findPreference("pref_key_warning");
 		if (warning != null)
 		if (Helpers.areXposedBlacklistsEnabled()) {
+			warning.setTitle(R.string.warning);
 			warning.setSummary(R.string.warning_blacklist);
 			warning.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 				@Override

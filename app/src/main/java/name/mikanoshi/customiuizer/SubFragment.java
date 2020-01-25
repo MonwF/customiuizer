@@ -83,8 +83,8 @@ public class SubFragment extends PreferenceFragmentBase {
 			((TextView)customView.findViewById(android.R.id.title)).setText(titleId);
 
 			TextView cancelBtn = customView.findViewById(android.R.id.button1);
-			int cancelResId = getResources().getIdentifier(Helpers.isNightMode(getContext()) ? "action_mode_title_button_cancel_dark" : "action_mode_title_button_cancel_light", "drawable", "miui");
-			if (cancelResId == 0) cancelResId = getResources().getIdentifier(Helpers.isNightMode(getContext()) ? "action_mode_immersion_close_dark" : "action_mode_immersion_close_light", "drawable", "miui");
+			int cancelResId = getResources().getIdentifier(Helpers.isNightMode(getValidContext()) ? "action_mode_title_button_cancel_dark" : "action_mode_title_button_cancel_light", "drawable", "miui");
+			if (cancelResId == 0) cancelResId = getResources().getIdentifier(Helpers.isNightMode(getValidContext()) ? "action_mode_immersion_close_dark" : "action_mode_immersion_close_light", "drawable", "miui");
 			cancelBtn.setBackgroundResource(cancelResId);
 			cancelBtn.setText(null);
 			cancelBtn.setContentDescription(getText(android.R.string.cancel));
@@ -95,8 +95,8 @@ public class SubFragment extends PreferenceFragmentBase {
 				}
 			});
 			TextView applyBtn = customView.findViewById(android.R.id.button2);
-			int applyResId = getResources().getIdentifier(Helpers.isNightMode(getContext()) ? "action_mode_title_button_confirm_dark" : "action_mode_title_button_confirm_light", "drawable", "miui");
-			if (applyResId == 0) applyResId = getResources().getIdentifier(Helpers.isNightMode(getContext()) ? "action_mode_immersion_done_dark" : "action_mode_immersion_done_light", "drawable", "miui");
+			int applyResId = getResources().getIdentifier(Helpers.isNightMode(getValidContext()) ? "action_mode_title_button_confirm_dark" : "action_mode_title_button_confirm_light", "drawable", "miui");
+			if (applyResId == 0) applyResId = getResources().getIdentifier(Helpers.isNightMode(getValidContext()) ? "action_mode_immersion_done_dark" : "action_mode_immersion_done_light", "drawable", "miui");
 			applyBtn.setBackgroundResource(applyResId);
 			applyBtn.setText(null);
 			applyBtn.setContentDescription(getText(android.R.string.ok));
@@ -150,7 +150,7 @@ public class SubFragment extends PreferenceFragmentBase {
 					});
 					listView.smoothScrollToPositionFromTop(fOrder, getResources().getDisplayMetrics().heightPixels / 3);
 				}
-			}, Math.round(animDur * Settings.Global.getFloat(getContext().getContentResolver(), Settings.Global.ANIMATOR_DURATION_SCALE, 1.0f)));
+			}, Math.round(animDur * Settings.Global.getFloat(getValidContext().getContentResolver(), Settings.Global.ANIMATOR_DURATION_SCALE, 1.0f)));
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
@@ -199,7 +199,7 @@ public class SubFragment extends PreferenceFragmentBase {
 			if (nView.getTag() != null)
 			if (nView instanceof TextView) {
 				((TextView)nView).setText(Helpers.prefs.getString((String)nView.getTag(), ""));
-				if (nView instanceof ClearableEditText) nView.setBackgroundResource(getResources().getIdentifier(Helpers.isNightMode(getContext()) ? "edit_text_bg_dark" : "edit_text_bg_light", "drawable", "miui"));
+				if (nView instanceof ClearableEditText) nView.setBackgroundResource(getResources().getIdentifier(Helpers.isNightMode(getValidContext()) ? "edit_text_bg_dark" : "edit_text_bg_light", "drawable", "miui"));
 			}
 		} catch (Throwable e) {
 			Log.e("miuizer", "Cannot load sub preference!");
@@ -207,10 +207,13 @@ public class SubFragment extends PreferenceFragmentBase {
 	}
 
 	public void hideKeyboard() {
-		InputMethodManager inputManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-		View currentFocusedView = getActivity().getCurrentFocus();
+		Activity act = getActivity();
+		if (act == null) return;
+		InputMethodManager inputMgr = (InputMethodManager)act.getSystemService(Context.INPUT_METHOD_SERVICE);
+		if (inputMgr == null) return;
+		View currentFocusedView = act.getCurrentFocus();
 		if (currentFocusedView != null)
-		inputManager.hideSoftInputFromWindow(currentFocusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+		inputMgr.hideSoftInputFromWindow(currentFocusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 	}
 
 	public Preference.OnPreferenceClickListener openAppsEdit = new Preference.OnPreferenceClickListener() {

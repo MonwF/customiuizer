@@ -5,7 +5,6 @@
 	android:key="prefs">
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
-		android:title="@string/warning"
 		android:key="pref_key_warning"
 		miuizer:warning="true" />
 

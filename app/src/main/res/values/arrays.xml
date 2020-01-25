@@ -567,6 +567,17 @@
 		<item>3</item>
 	</string-array>
 
+	<string-array name="visualizerrender">
+		<item>@string/array_render_auto</item>
+		<item>@string/array_render_lines</item>
+		<item>@string/array_render_path</item>
+	</string-array>
+	<string-array name="visualizerrender_val">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+	</string-array>
+
 	<string-array name="visualizerstyle">
 		<item>@string/array_bars_solid</item>
 		<item>@string/array_bars_solid_rounded</item>

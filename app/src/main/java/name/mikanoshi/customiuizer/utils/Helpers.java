@@ -41,6 +41,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Matrix;
+import android.graphics.Rect;
 import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
@@ -135,9 +136,14 @@ public class Helpers {
 	public static ValueAnimator shimmerAnim;
 	public static boolean showNewMods = true;
 	public static final HashSet<String> newMods =  new HashSet<String>(Arrays.asList(
-		"pref_key_system_clearalltasks",
-		"pref_key_system_snoozedmanager",
-		"pref_key_system_inactivebrightness"
+		"pref_key_system_statusbaricons_wifi",
+		"pref_key_system_autobrightness_cat",
+		"pref_key_system_nosafevolume",
+		"pref_key_system_taptounlock",
+		"pref_key_system_visualizer_render",
+		"pref_key_system_hidelowbatwarn",
+		"pref_key_controls_fingerprintwake",
+		"pref_key_controls_noscrchord"
 	));
 	public static final ArrayList<String> shortcutIcons = new ArrayList<String>();
 	public static Holidays currentHoliday = Holidays.NONE;
@@ -593,6 +599,13 @@ public class Helpers {
 				XposedBridge.log(t2);
 			}
 		}
+	}
+
+	public static boolean isReallyVisible(final View view) {
+		if (view == null || !view.isShown() || view.getAlpha() == 0) return false;
+		final Rect actualPosition = new Rect();
+		view.getGlobalVisibleRect(actualPosition);
+		return actualPosition.intersect(new Rect(0, 0, view.getResources().getDisplayMetrics().widthPixels, view.getResources().getDisplayMetrics().heightPixels));
 	}
 
 	public static ArrayList<View> getChildViewsRecursive(View view) {
@@ -1865,15 +1878,39 @@ public class Helpers {
 		return bitmap;
 	}
 
-	/*
-	public static int[][] cellArray = {
-		{ 0, 0, 0 },
-		{ R.id.cell1, R.id.cell1img, R.id.cell1txt },
-		{ R.id.cell2, R.id.cell2img, R.id.cell2txt },
-		{ R.id.cell3, R.id.cell3img, R.id.cell3txt },
-		{ R.id.cell4, R.id.cell4img, R.id.cell4txt },
-		{ R.id.cell5, R.id.cell5img, R.id.cell5txt },
-		{ R.id.cell6, R.id.cell6img, R.id.cell6txt }
-	};
-*/
+	private static float norm(float f, float f2, float f3) {
+		return (f3 - f) / (f2 - f);
+	}
+
+	private static float lerp(float f, float f2, float f3) {
+		return ((f2 - f) * f3) + f;
+	}
+
+	private static float sq(float f) {
+		return f * f;
+	}
+
+	public static float exp(float f) {
+		return (float)Math.exp((double)f);
+	}
+
+	public static float sqrt(float f) {
+		return (float)Math.sqrt((double)f);
+	}
+
+	public static float log(float f) {
+		return (float)Math.log((double)f);
+	}
+
+	public static int convertGammaToLinear(int val, int min, int max) {
+		float norm = norm(0.0f, (float)max, (float) val);
+		val = Math.round(lerp((float) min, (float) max, (norm <= 0.2f ? sq(norm / 0.2f) : exp((norm - 0.221f) / 0.314f) + 0.06f) / 12.0f));
+		return val > max ? max : val;
+	}
+
+	public static int convertLinearToGamma(int val, int min, int max) {
+		float norm = norm((float) min, (float)max, (float)val) * 12.0f;
+		return Math.round(lerp(0.0f, (float)max, norm <= 1.0f ? sqrt(norm) * 0.2f : (log(norm - 0.06f) * 0.314f) + 0.221f));
+	}
+
 }

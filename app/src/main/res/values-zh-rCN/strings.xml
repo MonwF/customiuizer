@@ -152,9 +152,12 @@
     <string name="system_lstimeout_title">锁屏屏幕超时</string>
     <string name="system_dimtime_title">暗屏时长</string>
     <string name="system_dimtime_summ">自动灭屏前保持暗屏的时间(屏幕关闭超时总数的百分比)</string>
+    <string name="system_autobrightness_title">自动亮度范围</string>
+    <string name="system_autobrightness_summ">定义自动亮度的最小值和最大值</string>
     <string name="system_minbrightness_title">自动亮度最小值</string>
-    <string name="system_minbrightness_summ">设置自动模式下的最小亮度值</string>
-    <string name="system_minbrightness_note">在具有非线性亮度标度的最新Android版本上，滑块不会对应系统亮度滑块</string>
+    <string name="system_maxbrightness_title">最大自动亮度</string>
+    <string name="system_nosafevolume_title">禁用高音量警告</string>
+    <string name="system_nosafevolume_summ">音量达到不安全级别时不显示对话框</string>
     <string name="system_noducking_title">禁用闪避</string>
     <string name="system_noducking_summ">播放通知声音时不降低当前播放音乐的音量</string>
     <string name="system_firstpress_title">即时音量调整</string>
@@ -176,6 +179,7 @@
     <string name="system_visualizer_drawer_summ">展开通知抽屉时绘制可视化</string>
     <string name="system_visualizer_animdur_title">动画时长</string>
     <string name="system_visualizer_transp_title">透明度</string>
+    <string name="system_visualizer_render_title">渲染模式</string>
     <string name="system_visualizer_style_title">样式</string>
     <string name="system_visualizer_glowlevel_title">发光</string>
     <string name="system_visualizer_color_title">颜色</string>
@@ -266,6 +270,8 @@
     <string name="system_nooverscroll_summ">阻止列表视图越界回弹</string>
     <string name="system_removesecure_title">禁用安全内容保护</string>
     <string name="system_removesecure_summ">允许对任意应用进行截图和录屏</string>
+    <string name="system_hidelowbatwarn_title">隐藏低电量警告</string>
+    <string name="system_hidelowbatwarn_summ">不显示打开省电模式的警告对话框</string>
     <string name="system_hideproxywarn_title">隐藏禁用触摸的警告</string>
     <string name="system_hideproxywarn_summ">不显示耳机区域被覆盖的警告</string>
     <string name="system_resizablewidgets_title">解禁小部件调整</string>
@@ -304,6 +310,8 @@
     <string name="system_hideqs_summ">隐藏锁屏上展开通知模式中的快速设置和亮度滑块</string>
     <string name="system_nodrawerbackground_title">禁用彩色背景</string>
     <string name="system_nodrawerbackground_summ">锁屏时将背景从壁纸随机生成的颜色更改为透明</string>
+    <string name="system_taptounlock_title">点击解锁</string>
+    <string name="system_taptounlock_summ">点击屏幕底部锁屏区域解锁设备</string>
     <string name="system_dttosleep_title">双击熄屏</string>
     <string name="system_dttosleep_summ">双击锁屏上任意空白处关闭屏幕</string>
     <string name="system_lsalarm_title">显示下次闹钟</string>
@@ -448,6 +456,8 @@
     <string name="controls_mods">控制</string>
     <string name="controls_powerdt_title">按压两次动作</string>
     <string name="controls_powerdt_summ">按压两次电源键替代启动相机。需要启用内置的快捷键。</string>
+    <string name="controls_noscrchord_title">禁用截图组合键</string>
+    <string name="controls_noscrchord_summ">同时按住电源键和音量下键时不进行截图</string>
     <string name="controls_powerflash_title">快速手电筒</string>
     <string name="controls_powerflash_summ">屏幕关闭时长按电源键打开手电筒</string>
     <string name="controls_powerflash_delay_title">加长快速手电筒延迟</string>
@@ -474,6 +484,8 @@
     <string name="controls_fingerprint_conflict_reset_reject">拒绝动作已禁用。</string>
     <string name="controls_fingerprintscreen_title">失败后打开屏幕</string>
     <string name="controls_fingerprintscreen_summ">认证失败后亮起屏幕</string>
+    <string name="controls_fingerprintwake_title">需要实际指纹</string>
+    <string name="controls_fingerprintwake_summ">未录入指纹时不打开屏幕</string>
     <string name="controls_fingerprintsuccess_title">成功时振动</string>
     <string name="controls_fingerprintsuccess_summ">触觉反馈成功验证</string>
     <string name="controls_fingerprintsuccess_ignore_title">忽略系统设置</string>
@@ -699,6 +711,7 @@
     <string name="array_lunarnewyear">中国新年</string>
     <string name="array_displayonly">仅显示</string>
     <string name="array_hide">隐藏</string>
+    <string name="array_render_auto">自动侦测</string>
     <string name="toggle_wifi_on">Wi-Fi已启用</string>
     <string name="toggle_wifi_off">Wi-Fi已禁用</string>
     <string name="toggle_bt_on">蓝牙已启用</string>

@@ -55,11 +55,18 @@
 		miuizer:format="%d%%" />
 
 	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_system_visualizer_render"
+		android:title="@string/system_visualizer_render_title"
+		android:entries="@array/visualizerrender"
+		android:entryValues="@array/visualizerrender_val"
+		android:defaultValue="0"
+		miuizer:valueAsSummary="true" />
+
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_visualizer_style"
 		android:title="@string/system_visualizer_style_title"
 		android:entries="@array/visualizerstyle"
 		android:entryValues="@array/visualizerstyle_val"
-
 		android:defaultValue="1"
 		miuizer:valueAsSummary="true" />
 

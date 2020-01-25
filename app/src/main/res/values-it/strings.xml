@@ -153,8 +153,6 @@
     <string name="system_dimtime_title">Durata oscuramento</string>
     <string name="system_dimtime_summ">Per quanto tempo lo schermo dovrebbe rimanere oscurato prima di spegnersi automaticamente</string>
     <string name="system_minbrightness_title">Luminosità minima automatica</string>
-    <string name="system_minbrightness_summ">Impostare il valore di luminosità minimo in modalità automatica</string>
-    <string name="system_minbrightness_note">Il cursore non corrisponderà a quello di sistema nelle ultime versioni di Android con scala di luminosità non lineare</string>
     <string name="system_noducking_title">Disattiva il ducking</string>
     <string name="system_noducking_summ">Non ridurre il volume della musica attualmente in ascolto per riprodurre l\'audio delle notifiche</string>
     <string name="system_firstpress_title">Regolazione del volume immediata</string>

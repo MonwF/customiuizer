@@ -1,3 +1,14 @@
+2.1.1
+[New] Disable warning dialog about unsafe volume level
+[New] Disable warning dialog about low battery level
+[New] Disable screenshot on Power+Volume down key combination
+[New] Do not wake device using fingerprint scanner if no fingerprints are enrolled
+[New] Tap bottom area of lock screen to start device unlock
+[New][Hide icons] Hide Wi-Fi icon
+[Improved][Auto brightness range] Minimum and maximum values in percents
+[Improved][Music visualizer] Faster rendering in some cases; option to select rendering method
+[Fixed][Colorize notification title] Compatibility with Android 10
+
 2.1.0
 [Improved][Extended notification menu] Always open MIUI-styled app info
 [Improved][Android 9+] Better app list (black/white list) mode support (but not perfect, so warning will remain)

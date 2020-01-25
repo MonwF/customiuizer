@@ -43,7 +43,6 @@ public class PreferenceEx extends Preference implements PreferenceState {
 
 	@Override
 	@SuppressLint("SetTextI18n")
-	@SuppressWarnings("ConstantConditions")
 	public View getView(View view, ViewGroup parent) {
 		View finalView = super.getView(view, parent);
 		TextView title = finalView.findViewById(android.R.id.title);

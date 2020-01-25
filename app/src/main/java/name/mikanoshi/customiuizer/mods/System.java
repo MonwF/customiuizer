@@ -91,6 +91,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.view.Window;
@@ -1239,16 +1240,38 @@ public class System {
 		});
 	}
 
-	public static void MinAutoBrightnessHook(LoadPackageParam lpparam) {
+	private static int minBrightnessLevel;
+	private static int maxBrightnessLevel;
+	private static int constrainValue(int val) {
+		boolean limitmin = MainModule.mPrefs.getBoolean("system_autobrightness_limitmin");
+		boolean limitmax = MainModule.mPrefs.getBoolean("system_autobrightness_limitmax");
+		int min_pct = MainModule.mPrefs.getInt("system_autobrightness_min", 25);
+		int max_pct = MainModule.mPrefs.getInt("system_autobrightness_max", 75);
+
+		int min, max;
+		if (maxBrightnessLevel != 255) {
+			min = Helpers.convertGammaToLinear((int)(maxBrightnessLevel * min_pct / 100f), minBrightnessLevel, maxBrightnessLevel);
+			max = Helpers.convertGammaToLinear((int)(maxBrightnessLevel * max_pct / 100f), minBrightnessLevel, maxBrightnessLevel);
+		} else {
+			min = (int)(maxBrightnessLevel * min_pct / 100f);
+			max = (int)(maxBrightnessLevel * max_pct / 100f);
+		}
+
+		if (max <= min) max = min + 1;
+		if (limitmin && val < min) val = min;
+		if (limitmax && val > max) val = max;
+		return val;
+	}
+
+	public static void AutoBrightnessRangeHook(LoadPackageParam lpparam) {
 		Class<?> bmsCls = findClassIfExists("com.android.server.display.BrightnessMappingStrategy", lpparam.classLoader);
 		if (bmsCls != null) {
 			Helpers.hookAllConstructors("com.android.server.display.BrightnessMappingStrategy$SimpleMappingStrategy", lpparam.classLoader, new MethodHook() {
 				@Override
 				protected void before(MethodHookParam param) throws Throwable {
 					int[] values = (int[])param.args[1];
-					int min = MainModule.mPrefs.getInt("system_minbrightness", 44);
 					for (int i = 0; i < values.length; i++)
-					if (values[i] < min) values[i] = min;
+					values[i] = constrainValue(values[i]);
 					param.args[1] = values;
 				}
 			});
@@ -1257,9 +1280,8 @@ public class System {
 				@Override
 				protected void before(MethodHookParam param) throws Throwable {
 					int[] values = (int[])param.args[2];
-					int min = MainModule.mPrefs.getInt("system_minbrightness", 44);
 					for (int i = 0; i < values.length; i++)
-					if (values[i] < min) values[i] = min;
+					values[i] = constrainValue(values[i]);
 					param.args[2] = values;
 				}
 			});
@@ -1270,7 +1292,7 @@ public class System {
 				@Override
 				protected void after(final MethodHookParam param) throws Throwable {
 					int val = XposedHelpers.getIntField(param.thisObject, "mScreenAutoBrightness");
-					int newVal = Math.max(val, MainModule.mPrefs.getInt("system_minbrightness", 44));
+					int newVal = constrainValue(val);
 					if (val >= 0 && val != newVal) {
 						XposedHelpers.setIntField(param.thisObject, "mScreenAutoBrightness", newVal);
 						if ((boolean)param.args[0]) {
@@ -1285,7 +1307,7 @@ public class System {
 				@Override
 				protected void after(final MethodHookParam param) throws Throwable {
 					int val = (int)param.getResult();
-					if (val >= 0) param.setResult(Math.max(val, MainModule.mPrefs.getInt("system_minbrightness", 44)));
+					if (val >= 0) param.setResult(constrainValue(val));
 				}
 			});
 
@@ -1294,6 +1316,16 @@ public class System {
 			protected void after(final MethodHookParam param) throws Throwable {
 				XposedHelpers.setLongField(param.thisObject, "mBrighteningLightDebounceConfig", 500L);
 				XposedHelpers.setLongField(param.thisObject, "mDarkeningLightDebounceConfig", 500L);
+			}
+		});
+
+		Helpers.hookAllConstructors("com.android.server.display.DisplayPowerController", lpparam.classLoader, new MethodHook() {
+			@Override
+			protected void before(final MethodHookParam param) throws Throwable {
+				Context context = (Context)param.args[0];
+				Resources res = context.getResources();
+				minBrightnessLevel = res.getInteger(res.getIdentifier("config_screenBrightnessSettingMinimum", "integer", "android"));
+				maxBrightnessLevel = res.getInteger(res.getIdentifier("config_screenBrightnessSettingMaximum", "integer", "android"));
 			}
 		});
 	}
@@ -1735,15 +1767,34 @@ public class System {
 	}
 
 	public static void ColorizedNotificationTitlesHook() {
-		Helpers.hookAllMethods("android.app.Notification$Builder", null, "bindHeaderAppName", new MethodHook() {
+		Helpers.hookAllMethods("android.app.Notification.Builder", null, "bindNotificationHeader", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				RemoteViews rv = (RemoteViews)param.args[0];
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				int contrastColor;
+				if (Helpers.isQPlus())
+					contrastColor = (int)XposedHelpers.callMethod(param.thisObject, "resolveContrastColor", param.args[1]);
+				else
+					contrastColor = (int)XposedHelpers.callMethod(param.thisObject, "resolveContrastColor");
 				if (rv != null && mContext != null)
-				rv.setTextColor(mContext.getResources().getIdentifier("app_name_text", "id", "android"), (int)XposedHelpers.callMethod(param.thisObject, "resolveContrastColor"));
+				rv.setTextColor(mContext.getResources().getIdentifier("app_name_text", "id", "android"), contrastColor);
 			}
 		});
+
+//		Helpers.hookAllMethods("android.app.Notification.Builder", null, "bindHeaderAppName", new MethodHook() {
+//			@Override
+//			protected void after(MethodHookParam param) throws Throwable {
+//				XposedBridge.log("bindHeaderAppName");
+//			}
+//		});
+//
+//		Helpers.findAndHookMethod("android.app.Notification.Builder", null, "bindHeaderAppName", RemoteViews.class, "android.app.Notification.StandardTemplateParams", new MethodHook() {
+//			@Override
+//			protected void after(MethodHookParam param) throws Throwable {
+//				XposedBridge.log("bindHeaderAppName2");
+//			}
+//		});
 	}
 
 	public static void CompactNotificationsRes() {
@@ -3481,6 +3532,16 @@ public class System {
 			protected void after(MethodHookParam param) throws Throwable {
 				View mNoSimsCombo = (View)XposedHelpers.getObjectField(param.thisObject, "mNoSimsCombo");
 				if (mNoSimsCombo != null) mNoSimsCombo.setVisibility(View.GONE);
+			}
+		});
+	}
+
+	public static void HideIconsNoWiFiHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.SignalClusterView", lpparam.classLoader, "apply", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				View mWifiGroup = (View)XposedHelpers.getObjectField(param.thisObject, "mWifiGroup");
+				if (mWifiGroup != null) mWifiGroup.setVisibility(View.GONE);
 			}
 		});
 	}
@@ -5815,6 +5876,62 @@ public class System {
 				}
 			}
 		});
+	}
+
+	private static final float[] startPos = new float[2];
+	private static void processLSEvent(MethodHookParam param) {
+		MotionEvent event = (MotionEvent)param.args[0];
+		if (event.getPointerCount() > 1) return;
+		int action = event.getActionMasked();
+		if (action != MotionEvent.ACTION_DOWN && action != MotionEvent.ACTION_UP) return;
+
+		ViewGroup mKeyguardBottomArea = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mKeyguardBottomArea");
+		if (mKeyguardBottomArea == null) return;
+		ViewGroup mIndicationArea = (ViewGroup)XposedHelpers.getObjectField(mKeyguardBottomArea, "mIndicationArea");
+		if (!Helpers.isReallyVisible(mIndicationArea)) return;
+
+		int[] coord = new int[2];
+		mIndicationArea.getLocationOnScreen(coord);
+		Rect rect = new Rect(coord[0], coord[1], coord[0] + mIndicationArea.getWidth(), coord[1] + mIndicationArea.getHeight());
+		if (!rect.contains((int)event.getX(), (int)event.getY())) return;
+
+		if (action == MotionEvent.ACTION_DOWN) {
+			startPos[0] = event.getX();
+			startPos[1] = event.getY();
+		} else if (action == MotionEvent.ACTION_UP) try {
+			Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+			int slop = ViewConfiguration.get(mContext).getScaledTouchSlop();
+			if (Math.abs(event.getX() - startPos[0]) > slop || Math.abs(event.getY() - startPos[1]) > slop) return;
+			Object mStatusBar = XposedHelpers.getObjectField(param.thisObject, "mStatusBar");
+			XposedHelpers.callMethod(mStatusBar, "showBouncer");
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void TapToUnlockHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethods("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, "onTouchEvent", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				processLSEvent(param);
+			}
+		});
+
+		Helpers.hookAllMethods("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, "onInterceptTouchEvent", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				processLSEvent(param);
+			}
+		});
+	}
+
+	public static void NoSafeVolumeWarningRes() {
+		MainModule.resHooks.setObjectReplacement("android", "bool", "config_safe_media_volume_enabled", false);
+		MainModule.resHooks.setObjectReplacement("android", "bool", "config_safe_media_disable_on_volume_up", false);
+	}
+
+	public static void NoLowBatteryWarningHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.power.PowerUI", lpparam.classLoader, "showLowBatteryWarning", XC_MethodReplacement.DO_NOTHING);
 	}
 
 //	@SuppressWarnings("unchecked")

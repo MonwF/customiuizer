@@ -55,7 +55,7 @@ public class AppSelector extends SubFragmentWithSearch {
 		process = new Runnable() {
 			@Override
 			public void run() {
-				Context context = getActivity() == null ? getContext() : getActivity().getApplicationContext();
+				Context context = getValidContext();
 				if (multi && key != null) {
 					if (openwith) {
 						if (Helpers.openWithAppsList == null) return;
@@ -88,6 +88,7 @@ public class AppSelector extends SubFragmentWithSearch {
 				}
 				listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 					@Override
+					@SuppressWarnings("ConstantConditions")
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 						if (multi && key != null) {
 							AppData app = (AppData)parent.getAdapter().getItem(position);
@@ -177,25 +178,26 @@ public class AppSelector extends SubFragmentWithSearch {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		final Activity act = getActivity();
 		if (initialized) process.run(); else
 		new Thread() {
 			@Override
 			public void run() {
 				try { sleep(animDur); } catch (Throwable e) {}
-				try {
+				if (act != null) try {
 					if (activity || privacy || applock || (multi && key != null)) {
 						if (openwith) {
-							if (Helpers.openWithAppsList == null) Helpers.getOpenWithApps(getActivity());
+							if (Helpers.openWithAppsList == null) Helpers.getOpenWithApps(act);
 						} else if (share) {
-							if (Helpers.shareAppsList == null) Helpers.getShareApps(getActivity());
+							if (Helpers.shareAppsList == null) Helpers.getShareApps(act);
 						} else {
-							if (Helpers.installedAppsList == null) Helpers.getInstalledApps(getActivity());
+							if (Helpers.installedAppsList == null) Helpers.getInstalledApps(act);
 						}
 					} else {
-						if (Helpers.launchableAppsList == null) Helpers.getLaunchableApps(getActivity());
+						if (Helpers.launchableAppsList == null) Helpers.getLaunchableApps(act);
 					}
 					initialized = true;
-					getActivity().runOnUiThread(process);
+					act.runOnUiThread(process);
 				} catch (Throwable e) {
 					e.printStackTrace();
 				}

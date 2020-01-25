@@ -36,7 +36,7 @@ public class SubFragmentWithSearch extends SubFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		getActionBar().setBackgroundDrawable(new ColorDrawable(Helpers.getSystemBackgroundColor(getContext())));
+		getActionBar().setBackgroundDrawable(new ColorDrawable(Helpers.getSystemBackgroundColor(getValidContext())));
 		if (getView() == null) return;
 
 		SearchActionMode.Callback actionModeCallback = new SearchActionMode.Callback() {
