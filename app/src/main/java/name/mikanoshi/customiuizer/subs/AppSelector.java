@@ -56,6 +56,7 @@ public class AppSelector extends SubFragmentWithSearch {
 			@Override
 			public void run() {
 				Context context = getValidContext();
+				if (context == null || !AppSelector.this.isAdded()) return;
 				if (multi && key != null) {
 					if (openwith) {
 						if (Helpers.openWithAppsList == null) return;

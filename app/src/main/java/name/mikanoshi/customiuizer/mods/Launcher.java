@@ -3,6 +3,7 @@ package name.mikanoshi.customiuizer.mods;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -1143,6 +1144,21 @@ public class Launcher {
 			@Override
 			protected void before(XC_MethodHook.MethodHookParam param) throws Throwable {
 				param.args[0] = 0;
+			}
+		});
+	}
+
+	public static void NoUnlockAnimationHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.miui.home.launcher.common.Utilities", lpparam.classLoader, "notShowUserPresentAnimation", Context.class, XC_MethodReplacement.returnConstant(true));
+	}
+
+	public static void UseOldLaunchAnimationHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "isSupportRecentsAndFsGesture", XC_MethodReplacement.returnConstant(false));
+		Helpers.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.classLoader, "onCreate", Bundle.class, new MethodHook() {
+			@Override
+			protected void after(XC_MethodHook.MethodHookParam param) throws Throwable {
+				Activity act = (Activity)param.thisObject;
+				act.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 			}
 		});
 	}

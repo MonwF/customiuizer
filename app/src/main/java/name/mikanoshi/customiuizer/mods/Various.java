@@ -642,7 +642,7 @@ public class Various {
 				} catch (Throwable t) {}
 
 				String size = "";
-				String[] texts = ((String)version.getText()).split("\\|");
+				String[] texts = version.getText().toString().split("\\|");
 				if (texts.length >= 2) size = texts[1].trim();
 
 				Resources modRes = Helpers.getModuleRes(act);

@@ -44,6 +44,7 @@
 	<string name="system_statusbaricons_signal_title">Mobile network signal</string>
 	<string name="system_statusbaricons_nosims_title">No SIM card</string>
 	<string name="system_statusbaricons_volte_title" translatable="false">VoLTE</string>
+	<string name="system_statusbaricons_vowifi_title" translatable="false">VoWiFi</string>
 	<string name="system_statusbaricons_vpn_title" translatable="false">VPN</string>
 	<string name="system_statusbaricons_hotspot_title">Hotspot</string>
 	<string name="system_statusbaricons_profile_title">Work profile</string>
@@ -399,6 +400,10 @@
 	<string name="launcher_googlediscover_summ">Replace App Vault with Google Discover (requires Google app to be installed)</string>
 	<string name="launcher_nowidgetonly_title">Disable widget only screen</string>
 	<string name="launcher_nowidgetonly_summ">Make all screens support both widgets and apps on tablets</string>
+	<string name="launcher_nounlockanim_title">Remove unlock animation</string>
+	<string name="launcher_nounlockanim_summ">Do not animate icons when device is unlocked</string>
+	<string name="launcher_oldlaunchanim_title">Use old launch animation</string>
+	<string name="launcher_oldlaunchanim_summ">Revert app opening transition to a previous one</string>
 	<string name="launcher_hideseekpoints_title">Dynamic page indicator</string>
 	<string name="launcher_hideseekpoints_summ">Show page indicator only during scrolling</string>
 	<string name="launcher_unlockgrids_title">Unlock grid sizes</string>

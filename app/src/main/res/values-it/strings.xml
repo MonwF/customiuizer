@@ -152,7 +152,12 @@
     <string name="system_lstimeout_title">Durata dello schermo spento sulla schermata di blocco</string>
     <string name="system_dimtime_title">Durata oscuramento</string>
     <string name="system_dimtime_summ">Per quanto tempo lo schermo dovrebbe rimanere oscurato prima di spegnersi automaticamente</string>
+    <string name="system_autobrightness_title">Intensità della luminosità automatica</string>
+    <string name="system_autobrightness_summ">Definisci i valori della luminosità automatica minima e massima</string>
     <string name="system_minbrightness_title">Luminosità minima automatica</string>
+    <string name="system_maxbrightness_title">Luminosità automatica massima</string>
+    <string name="system_nosafevolume_title">Disabilita l\'avviso del volume elevato</string>
+    <string name="system_nosafevolume_summ">Non mostrare la finestra di dialogo quando il volume raggiunge un livello non sicuro</string>
     <string name="system_noducking_title">Disattiva il ducking</string>
     <string name="system_noducking_summ">Non ridurre il volume della musica attualmente in ascolto per riprodurre l\'audio delle notifiche</string>
     <string name="system_firstpress_title">Regolazione del volume immediata</string>
@@ -174,6 +179,7 @@
     <string name="system_visualizer_drawer_summ">Visualizzatore addizionale nel riquadro esteso delle notifiche</string>
     <string name="system_visualizer_animdur_title">Durata dell\'animazione</string>
     <string name="system_visualizer_transp_title">Trasparenza</string>
+    <string name="system_visualizer_render_title">Metodo rendering</string>
     <string name="system_visualizer_style_title">Stile</string>
     <string name="system_visualizer_glowlevel_title">Calore</string>
     <string name="system_visualizer_color_title">Colore</string>
@@ -264,6 +270,8 @@
     <string name="system_nooverscroll_summ">Impedire alle visualizzazioni dell\'elenco di eseguire l\'overcrolling</string>
     <string name="system_removesecure_title">Disabilita la protezione dei contenuti sicuri</string>
     <string name="system_removesecure_summ">Consenti lo screenshot e la registrazione di video per qualsiasi app</string>
+    <string name="system_hidelowbatwarn_title">Nascondi gli avvisi sui livelli di batteria scarica</string>
+    <string name="system_hidelowbatwarn_summ">Non visualizzare la finestra di avviso che richiede di attivare il Risparmio della batteria</string>
     <string name="system_hideproxywarn_title">Nascondi avvisi sui tocchi disabilitati</string>
     <string name="system_hideproxywarn_summ">Non visualizzare l\'avviso di copertura della parte superiore dello schermo</string>
     <string name="system_resizablewidgets_title">Ridimensionamento widget libero</string>
@@ -302,6 +310,8 @@
     <string name="system_hideqs_summ">Nascondi le impostazioni rapide e il cursore della luminosità nella modalità di notifica estesa sulla schermata di blocco</string>
     <string name="system_nodrawerbackground_title">Disabilita sfondo colorato</string>
     <string name="system_nodrawerbackground_summ">Cambia lo sfondo con il colore generato automaticamente dallo sfondo a quello trasparente mentre sei nella schermata di blocco</string>
+    <string name="system_taptounlock_title">Tocca per sbloccare</string>
+    <string name="system_taptounlock_summ">Inizia lo sblocco del dispositivo toccando l\'area della schermata di blocco inferiore</string>
     <string name="system_dttosleep_title">Doppio tocco per spegnere</string>
     <string name="system_dttosleep_summ">Spegni lo schermo toccando due volte su qualsiasi spazio vuoto nella schermata di blocco</string>
     <string name="system_lsalarm_title">Visualizza prossimo allarme</string>
@@ -379,6 +389,10 @@
     <string name="launcher_googlediscover_summ">Sostituisci App Vault con Google Discover (richiede l\'installazione dell\'app Google)</string>
     <string name="launcher_nowidgetonly_title">Disabilita solo la schermata del widget</string>
     <string name="launcher_nowidgetonly_summ">Rendi tutti gli schermi a supporto sia dei widget che delle app sui tablet</string>
+    <string name="launcher_nounlockanim_title">Rimuovi l\'animazione di sblocco</string>
+    <string name="launcher_nounlockanim_summ">Non animare le icone quando il dispositivo è sbloccato</string>
+    <string name="launcher_oldlaunchanim_title">Usa la vecchia animazione di avvio</string>
+    <string name="launcher_oldlaunchanim_summ">Ripristina la transizione di apertura dell\'app a una precedente</string>
     <string name="launcher_hideseekpoints_title">Indicatore dinamico della pagina</string>
     <string name="launcher_hideseekpoints_summ">Mostra l\'indicatore della pagina solo durante lo scorrimento</string>
     <string name="launcher_unlockgrids_title">Sblocca le dimensioni della griglia</string>
@@ -446,6 +460,8 @@
     <string name="controls_mods">Controlli</string>
     <string name="controls_powerdt_title">Doppia pressione per le azioni</string>
     <string name="controls_powerdt_summ">Sostituisci l\'avvio della fotocamera premendo due volte il tasto di accensione. Richiede la scorciatoia del pulsante di scorta per essere abilitata.</string>
+    <string name="controls_noscrchord_title">Disabilita la combinazione di screenshot</string>
+    <string name="controls_noscrchord_summ">Non effettuare una cattura dello schermo quando si preme il tasto di accensione insieme al tasto di riduzione del volume</string>
     <string name="controls_powerflash_title">Torcia veloce</string>
     <string name="controls_powerflash_summ">Premi a lungo il pulsante di accensione mentre lo schermo è spento per accendere la torcia</string>
     <string name="controls_powerflash_delay_title">Aumenta i tempi di risposta dell\'attivazione della torcia</string>
@@ -472,6 +488,8 @@
     <string name="controls_fingerprint_conflict_reset_reject">L\'azione di rifiuto è stata disabilitata.</string>
     <string name="controls_fingerprintscreen_title">Accendi lo schermo dopo un errore</string>
     <string name="controls_fingerprintscreen_summ">Accendi lo schermo dopo un\'autenticazione fallita</string>
+    <string name="controls_fingerprintwake_title">Richiedi le impronte digitali registrate</string>
+    <string name="controls_fingerprintwake_summ">Non accendere lo schermo quando non sono registrate le impronte digitali</string>
     <string name="controls_fingerprintsuccess_title">Vibra all\'autenticazione</string>
     <string name="controls_fingerprintsuccess_summ">Feedback aptico dopo autenticazione riuscita</string>
     <string name="controls_fingerprintsuccess_ignore_title">Ignora le impostazioni di sistema</string>
@@ -697,6 +715,7 @@
     <string name="array_lunarnewyear">Capodanno cinese</string>
     <string name="array_displayonly">"Solo display "</string>
     <string name="array_hide">Nascondi</string>
+    <string name="array_render_auto">Rileva automaticamente</string>
     <string name="toggle_wifi_on">Wi-Fi attivo</string>
     <string name="toggle_wifi_off">Wi-Fi disattivo</string>
     <string name="toggle_bt_on">Bluetooth attivo</string>

@@ -236,6 +236,18 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_launcher_nounlockanim"
+			android:title="@string/launcher_nounlockanim_title"
+			android:summary="@string/launcher_nounlockanim_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_launcher_oldlaunchanim"
+			android:title="@string/launcher_oldlaunchanim_title"
+			android:summary="@string/launcher_oldlaunchanim_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_hideseekpoints"
 			android:title="@string/launcher_hideseekpoints_title"
 			android:summary="@string/launcher_hideseekpoints_summ"

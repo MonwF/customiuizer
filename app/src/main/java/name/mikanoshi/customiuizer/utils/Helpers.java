@@ -136,14 +136,9 @@ public class Helpers {
 	public static ValueAnimator shimmerAnim;
 	public static boolean showNewMods = true;
 	public static final HashSet<String> newMods =  new HashSet<String>(Arrays.asList(
-		"pref_key_system_statusbaricons_wifi",
-		"pref_key_system_autobrightness_cat",
-		"pref_key_system_nosafevolume",
-		"pref_key_system_taptounlock",
-		"pref_key_system_visualizer_render",
-		"pref_key_system_hidelowbatwarn",
-		"pref_key_controls_fingerprintwake",
-		"pref_key_controls_noscrchord"
+		"pref_key_system_statusbaricons_vowifi",
+		"pref_key_launcher_nounlockanim",
+		"pref_key_launcher_oldlaunchanim"
 	));
 	public static final ArrayList<String> shortcutIcons = new ArrayList<String>();
 	public static Holidays currentHoliday = Holidays.NONE;
@@ -1668,6 +1663,15 @@ public class Helpers {
 			Class<?> hookClass = XposedHelpers.findClassIfExists(className, classLoader);
 			if (hookClass == null || XposedBridge.hookAllMethods(hookClass, methodName, callback).size() == 0)
 			log(getCallerMethod(), "Failed to hook " + methodName + " method in " + className);
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
+	public static void hookAllMethods(Class<?> hookClass, String methodName, XC_MethodHook callback) {
+		try {
+			if (XposedBridge.hookAllMethods(hookClass, methodName, callback).size() == 0)
+			log(getCallerMethod(), "Failed to hook " + methodName + " method in " + hookClass.getSimpleName());
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}

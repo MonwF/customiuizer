@@ -457,6 +457,10 @@
 	<string name="launcher_googlediscover_summ">Заменяет ленту виджетов на Google Discover (требуется установленное приложение Google)</string>
 	<string name="launcher_nowidgetonly_title">Отключить экран с одними виджетами</string>
 	<string name="launcher_nowidgetonly_summ">Позволяет добавлять виджеты и приложения на любой экран на планшетах</string>
+	<string name="launcher_nounlockanim_title">Убрать анимацию разблокировки</string>
+	<string name="launcher_nounlockanim_summ">Не анимировать иконки при разблокировке устройства</string>
+	<string name="launcher_oldlaunchanim_title">Использовать старую анимацию запуска</string>
+	<string name="launcher_oldlaunchanim_summ">Возвращает предыдущую анимацию запуска приложений</string>
 	<string name="launcher_hideseekpoints_title">Динамический индикатор экранов</string>
 	<string name="launcher_hideseekpoints_summ">Показывает индикатор только во время прокрутки</string>
 	<string name="launcher_unlockgrids_title">Разблокировать размеры сетки</string>

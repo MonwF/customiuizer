@@ -90,6 +90,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getBoolean("system_allownotifonkeyguard")) System.AllowAllKeyguardSysHook();
 		if (mPrefs.getBoolean("system_allownotiffloat")) System.AllowAllFloatSysHook();
 		if (mPrefs.getBoolean("system_resizablewidgets")) System.ResizableWidgetsHook();
+		if (mPrefs.getBoolean("system_hidelowbatwarn")) System.NoLowBatteryWarningHook();
 		if (mPrefs.getBoolean("controls_volumecursor")) Controls.VolumeCursorHook();
 		if (mPrefs.getBoolean("controls_fsg_horiz")) Controls.FSGesturesHook();
 		if (mPrefs.getBoolean("various_alarmcompat")) Various.AlarmCompatHook();
@@ -249,7 +250,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_nonetspeedseparator")) System.NoNetworkSpeedSeparatorHook(lpparam);
 			if (mPrefs.getBoolean("system_snoozedmanager")) System.MoreSnoozeOptionsHook(lpparam);
 			if (mPrefs.getBoolean("system_taptounlock")) System.TapToUnlockHook(lpparam);
-			if (mPrefs.getBoolean("system_hidelowbatwarn")) System.NoLowBatteryWarningHook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_battery1")) System.HideIconsBattery1Hook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_battery2")) System.HideIconsBattery2Hook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_battery3")) System.HideIconsBattery3Hook(lpparam);
@@ -259,6 +259,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_statusbaricons_wifi")) System.HideIconsNoWiFiHook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_hotspot")) System.HideIconsHotspotHook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_volte")) System.HideIconsVoLTEHook(lpparam);
+			if (mPrefs.getBoolean("system_statusbaricons_vowifi")) System.HideIconsVoWiFiHook(lpparam);
 			if (!mPrefs.getBoolean("system_statusbaricons_alarm") && mPrefs.getInt("system_statusbaricons_alarmn", 0) > 0) System.HideIconsSelectiveAlarmHook(lpparam);
 			if (!mPrefs.getString("system_shortcut_app", "").equals("")) System.ReplaceShortcutAppHook(lpparam);
 			if (!mPrefs.getString("system_clock_app", "").equals("")) System.ReplaceClockAppHook(lpparam);
@@ -353,6 +354,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("launcher_googlediscover")) Launcher.GoogleDiscoverHook(lpparam);
 			if (mPrefs.getBoolean("launcher_docktitles") && mPrefs.getInt("launcher_bottommargin", 0) == 0) Launcher.ShowHotseatTitlesHook(lpparam);
 			if (mPrefs.getBoolean("launcher_folderblur")) Launcher.FolderBlurHook(lpparam);
+			if (mPrefs.getBoolean("launcher_nounlockanim")) Launcher.NoUnlockAnimationHook(lpparam);
+			if (mPrefs.getBoolean("launcher_oldlaunchanim")) Launcher.UseOldLaunchAnimationHook(lpparam);
 			if (mPrefs.getInt("launcher_bottommargin", 0) > 0) Launcher.BottomSpacingHook(lpparam);
 		}
 		//if (!mPrefs.getString("system_clock_app", "").equals("")) Launcher.ReplaceClockAppHook(lpparam);

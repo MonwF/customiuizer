@@ -22,8 +22,8 @@ android {
         minSdkVersion 24
         //noinspection OldTargetApi
         targetSdkVersion 27
-        versionCode 48
-        versionName "2.1.1"
+        versionCode 49
+        versionName "2.1.2"
         signingConfig signingConfigs.dev
     }
     buildTypes {

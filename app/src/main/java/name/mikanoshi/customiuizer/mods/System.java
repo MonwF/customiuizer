@@ -1165,7 +1165,8 @@ public class System {
 			}
 		}
 
-		Helpers.findAndHookMethod(ccCls, "showWirelessChargeAnimation", int.class, boolean.class, new MethodHook() {
+		//noinspection ResultOfMethodCallIgnored
+		Helpers.findAndHookMethodSilently(ccCls, "showWirelessChargeAnimation", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
@@ -1243,6 +1244,8 @@ public class System {
 	private static int minBrightnessLevel;
 	private static int maxBrightnessLevel;
 	private static int constrainValue(int val) {
+		if (val < 0) return val;
+
 		boolean limitmin = MainModule.mPrefs.getBoolean("system_autobrightness_limitmin");
 		boolean limitmax = MainModule.mPrefs.getBoolean("system_autobrightness_limitmax");
 		int min_pct = MainModule.mPrefs.getInt("system_autobrightness_min", 25);
@@ -1294,8 +1297,10 @@ public class System {
 					int val = XposedHelpers.getIntField(param.thisObject, "mScreenAutoBrightness");
 					int newVal = constrainValue(val);
 					if (val >= 0 && val != newVal) {
+						//XposedBridge.log("updateAutoBrightness: " + val + " -> " + newVal);
 						XposedHelpers.setIntField(param.thisObject, "mScreenAutoBrightness", newVal);
 						if ((boolean)param.args[0]) {
+							//XposedHelpers.callStaticMethod(findClass("com.android.server.display.AutomaticBrightnessControllerInjector", lpparam.classLoader), "recordAutoBrightnessChange", newVal);
 							Object mCallbacks = XposedHelpers.getObjectField(param.thisObject, "mCallbacks");
 							XposedHelpers.callMethod(mCallbacks, "updateBrightness");
 						}
@@ -1817,13 +1822,13 @@ public class System {
 				if (container == null) return;
 				float density = mView.getResources().getDisplayMetrics().density;
 				int height = Math.round(density * 39);
-				LinearLayout actions = (LinearLayout)container.getChildAt(0);
+				ViewGroup actions = (ViewGroup)container.getChildAt(0);
 				FrameLayout.LayoutParams lp1 = (FrameLayout.LayoutParams)actions.getLayoutParams();
 				lp1.height = height;
 				actions.setLayoutParams(lp1);
 				actions.setPadding(0, 0, 0, 0);
 				for (int c = 0; c < actions.getChildCount(); c++) {
-					LinearLayout.LayoutParams lp2 = (LinearLayout.LayoutParams)actions.getChildAt(c).getLayoutParams();
+					ViewGroup.MarginLayoutParams lp2 = (ViewGroup.MarginLayoutParams)actions.getChildAt(c).getLayoutParams();
 					lp2.height = height;
 					lp2.bottomMargin = 0;
 					lp2.topMargin = 0;
@@ -3058,7 +3063,7 @@ public class System {
 	}
 
 	public static void AppLockHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.miui.server.SecurityManagerService", lpparam.classLoader, "removeAccessControlPassLocked", "com.miui.server.SecurityManagerService$UserState", String.class, new MethodHook() {
+		Helpers.hookAllMethods("com.miui.server.SecurityManagerService", lpparam.classLoader, "removeAccessControlPassLocked", new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
 				if (!"*".equals(param.args[1])) return;
@@ -3147,10 +3152,16 @@ public class System {
 	private static AudioVisualizer audioViz = null;
 	private static boolean isKeyguardShowing = false;
 	private static boolean isNotificationPanelExpanded = false;
-	private static void UpdateAudioVisualizerState(Context context) {
+	private static void updateAudioVisualizerState(Context context, MediaController mediaController) {
 		if (audioViz == null || context == null) return;
-		AudioManager am = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
-		audioViz.updateMusicState(am != null && am.isMusicActive());
+		boolean isPlaying = false;
+		if (mediaController == null || mediaController.getPlaybackState() == null) {
+			AudioManager am = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+			if (am != null) isPlaying = am.isMusicActive();
+		} else {
+			isPlaying = mediaController.getPlaybackState().getState() == PlaybackState.STATE_PLAYING;
+		}
+		audioViz.updateMusicState(isPlaying);
 		audioViz.updateViewState(isKeyguardShowing, isNotificationPanelExpanded);
 	}
 	public static void AudioVisualizerHook(LoadPackageParam lpparam) {
@@ -3198,7 +3209,7 @@ public class System {
 				if (isKeyguardShowing != isKeyguardShowingNew) {
 					isKeyguardShowing = isKeyguardShowingNew;
 					isNotificationPanelExpanded = false;
-					UpdateAudioVisualizerState((Context)XposedHelpers.getObjectField(param.thisObject, "mContext"));
+					updateAudioVisualizerState((Context)XposedHelpers.getObjectField(param.thisObject, "mContext"), null);
 				}
 			}
 		});
@@ -3209,7 +3220,7 @@ public class System {
 				boolean isNotificationPanelExpandedNew = XposedHelpers.getBooleanField(param.thisObject, "mPanelExpanded");
 				if (isNotificationPanelExpanded != isNotificationPanelExpandedNew) {
 					isNotificationPanelExpanded = isNotificationPanelExpandedNew;
-					UpdateAudioVisualizerState((Context)XposedHelpers.getObjectField(param.thisObject, "mContext"));
+					updateAudioVisualizerState((Context)XposedHelpers.getObjectField(param.thisObject, "mContext"), null);
 				}
 			}
 		});
@@ -3241,14 +3252,7 @@ public class System {
 				}
 
 				MediaController mMediaController = (MediaController)XposedHelpers.getObjectField(param.thisObject, "mMediaController");
-				boolean isPlaying;
-				if (mMediaController == null || mMediaController.getPlaybackState() == null) {
-					AudioManager am = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
-					isPlaying = am.isMusicActive();
-				} else {
-					isPlaying = mMediaController.getPlaybackState().getState() == PlaybackState.STATE_PLAYING;
-				}
-				audioViz.updateMusicState(isPlaying);
+				updateAudioVisualizerState(mContext, mMediaController);
 				audioViz.updateMusicArt(art);
 			}
 		});
@@ -3542,6 +3546,18 @@ public class System {
 			protected void after(MethodHookParam param) throws Throwable {
 				View mWifiGroup = (View)XposedHelpers.getObjectField(param.thisObject, "mWifiGroup");
 				if (mWifiGroup != null) mWifiGroup.setVisibility(View.GONE);
+			}
+		});
+	}
+
+	public static void HideIconsVoWiFiHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.SignalClusterView", lpparam.classLoader, "apply", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				View[] mVowifi = (View[])XposedHelpers.getObjectField(param.thisObject, "mVowifi");
+				if (mVowifi == null) return;
+				if (mVowifi[0] != null) mVowifi[0].setVisibility(View.GONE);
+				if (mVowifi[1] != null) mVowifi[1].setVisibility(View.GONE);
 			}
 		});
 	}
@@ -4682,7 +4698,10 @@ public class System {
 		@Override
 		public void onSensorChanged(SensorEvent event) {
 			if (lux != null && lux.isAttachedToWindow()) try {
+				Long last = (Long)lux.getTag();
+				if (last != null && currentTimeMillis() - last < 750) return;
 				lux.setText(Helpers.getModuleContext(lux.getContext()).getResources().getString(R.string.lux, String.valueOf(Math.round(event.values[0]))));
+				lux.setTag(currentTimeMillis());
 			} catch (Throwable t) {
 				XposedBridge.log(t);
 			}
@@ -4714,7 +4733,6 @@ public class System {
 			if (!powerMgr.isInteractive()) return;
 			boolean sBootCompleted = XposedHelpers.getBooleanField(statusBar, "sBootCompleted");
 			if (!sBootCompleted) return;
-
 			SensorManager sensorMgr = (SensorManager)mContext.getSystemService(Context.SENSOR_SERVICE);
 			LuxListener mLuxListener = (LuxListener)XposedHelpers.getAdditionalInstanceField(statusBar, "mLuxListener");
 			sensorMgr.registerListener(mLuxListener, sensorMgr.getDefaultSensor(Sensor.TYPE_LIGHT), SensorManager.SENSOR_DELAY_NORMAL);
@@ -5238,7 +5256,7 @@ public class System {
 					isRingtone = (boolean)XposedHelpers.callMethod(mCurrentVibration, "isRingtone");
 					isNotification = (boolean)XposedHelpers.callMethod(mCurrentVibration, "isNotification");
 				} catch (Throwable t) {
-					int mUsageHint = XposedHelpers.getIntField(param.thisObject, "mUsageHint");
+					int mUsageHint = XposedHelpers.getIntField(mCurrentVibration, "mUsageHint");
 					isRingtone = mUsageHint == 6;
 					isNotification = mUsageHint == 5 || mUsageHint == 7 || mUsageHint == 8 || mUsageHint == 9;
 				}
@@ -5692,7 +5710,8 @@ public class System {
 	}
 
 	public static void ClearAllTasksHook(LoadPackageParam lpparam) {
-		Helpers.hookAllMethods("com.android.server.am.ProcessUtils", lpparam.classLoader, "getPerceptibleRecentAppList", new MethodHook() {
+		String wpuClass = Helpers.isQPlus() ? "com.android.server.wm.WindowProcessUtils" : "com.android.server.am.ProcessUtils";
+		Helpers.hookAllMethods(wpuClass, lpparam.classLoader, "getPerceptibleRecentAppList", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				param.setResult(null);
@@ -5724,7 +5743,6 @@ public class System {
 			protected void after(MethodHookParam param) throws Throwable {
 				ArrayList<Object> options = (ArrayList<Object>)param.getResult();
 				if (options == null) return;
-				options.add(XposedHelpers.callMethod(param.thisObject, "createOption", hours3ResId, 180));
 				options.add(XposedHelpers.callMethod(param.thisObject, "createOption", hours3ResId, 180));
 				options.add(XposedHelpers.callMethod(param.thisObject, "createOption", hours4ResId, 240));
 				options.add(XposedHelpers.callMethod(param.thisObject, "createOption", hours5ResId, 300));
@@ -5930,9 +5948,43 @@ public class System {
 		MainModule.resHooks.setObjectReplacement("android", "bool", "config_safe_media_disable_on_volume_up", false);
 	}
 
-	public static void NoLowBatteryWarningHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.android.systemui.power.PowerUI", lpparam.classLoader, "showLowBatteryWarning", XC_MethodReplacement.DO_NOTHING);
+	public static void NoLowBatteryWarningHook() {
+		Helpers.hookAllMethods(Settings.System.class, "getIntForUser", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				String key = (String)param.args[1];
+				if ("low_battery_dialog_disabled".equals(key)) param.setResult(1);
+			}
+		});
 	}
+
+//	public static void TempHideOverlayHook() {
+//		Helpers.hookAllMethods("android.view.WindowManagerGlobal", null, "addView", new MethodHook() {
+//			@Override
+//			@SuppressWarnings("ConstantConditions")
+//			protected void after(final MethodHookParam param) throws Throwable {
+//				if (param.args[0] == null || !(param.args[1] instanceof WindowManager.LayoutParams) || param.getThrowable() != null) return;
+//				WindowManager.LayoutParams params = (WindowManager.LayoutParams)param.args[1];
+//				final View view = (View)param.args[0];
+//				if (params.type != WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY && params.type != WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY) return;
+//
+//				XposedHelpers.setAdditionalInstanceField(view, "mSavedVisibility", view.getVisibility());
+//				view.getContext().registerReceiver(new BroadcastReceiver() {
+//					@Override
+//					public void onReceive(Context context, Intent intent) {
+//						if (view == null) return;
+//						boolean state = intent.getBooleanExtra("IsFinished", true);
+//						if (state) {
+//							view.setVisibility((int)XposedHelpers.getAdditionalInstanceField(view, "mSavedVisibility"));
+//						} else if (view.getVisibility() != View.GONE) {
+//							XposedHelpers.setAdditionalInstanceField(view, "mSavedVisibility", view.getVisibility());
+//							view.setVisibility(View.GONE);
+//						}
+//					}
+//				}, new IntentFilter("miui.intent.TAKE_SCREENSHOT"));
+//			}
+//		});
+//	}
 
 //	@SuppressWarnings("unchecked")
 //	public static void MultiWindowHook() {

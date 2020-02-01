@@ -1,3 +1,12 @@
+2.1.2
+[New][Hide icons] Hide VoWiFi icon
+[New][MIUI Launcher] Remove unlock animation
+[New][MIUI Launcher] Use old launch animation
+[Improved][Show illuminance level] Lower update rate to prevent chaotic value changes
+[Fixed][Hide low battery warning] Compatibility with some ROMs
+[Fixed][Clear all recent tasks] Compatibility with Android 10
+Module UI crash fixes
+
 2.1.1
 [New] Disable warning dialog about unsafe volume level
 [New] Disable warning dialog about low battery level
