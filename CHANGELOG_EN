@@ -1,3 +1,12 @@
+2.1.3
+[New] Hide overlays while making a screenshot
+[New] Reverse portrait orientation support in launcher
+[Improved][Dynamic page indicator] Option to show only in edit mode
+[Improved][Auto brightness range] Option to switch to non-linear scale on older Android versions (use if mod sets incorrect percentages)
+[Improved][Clean Open with menu] Hide apps from menu based on type of content that is being opened
+[Improved][Music visualizer] Option to display visualizer only if media controller exists (usually used by audio players for notification controls)
+[Fixed][Music visualizer] Visualizer wasn't showing right away in notification drawer
+
 2.1.2
 [New][Hide icons] Hide VoWiFi icon
 [New][MIUI Launcher] Remove unlock animation

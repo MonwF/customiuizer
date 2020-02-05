@@ -143,6 +143,8 @@
     <string name="system_screenshot_format_title">Formato</string>
     <string name="system_screenshot_quality_title">Qualità</string>
     <string name="system_screenshot_path_title">Salva cartella</string>
+    <string name="system_screenshot_overlay_title">Nascondi le sovrapposizioni sugli screenshot</string>
+    <string name="system_screenshot_overlay_summ">Nascondi temporaneamente le sovrapposizioni mentre fai uno screenshot</string>
     <string name="system_chargeanimtime_title">Durata animazione di ricarica</string>
     <string name="system_chargeanimtime_summ">Quanto tempo lo schermo deve rimanere acceso dopo l\'animazione di ricarica</string>
     <string name="system_nolightuponcharges_title">Non accendere lo schermo durante la ricarica</string>
@@ -151,11 +153,13 @@
     <string name="system_nolightuponheadset_summ">Non accendere lo schermo dopo aver collegato un headset</string>
     <string name="system_lstimeout_title">Durata dello schermo spento sulla schermata di blocco</string>
     <string name="system_dimtime_title">Durata oscuramento</string>
-    <string name="system_dimtime_summ">Per quanto tempo lo schermo dovrebbe rimanere oscurato prima di spegnersi automaticamente</string>
+    <string name="system_dimtime_summ">Tempo dello schermo che deve rimanere oscurato prima di spegnersi automaticamente</string>
     <string name="system_autobrightness_title">Intensità della luminosità automatica</string>
     <string name="system_autobrightness_summ">Definisci i valori della luminosità automatica minima e massima</string>
     <string name="system_minbrightness_title">Luminosità minima automatica</string>
     <string name="system_maxbrightness_title">Luminosità automatica massima</string>
+    <string name="system_autobrightness_hlg_title">Usa sempre una scala non lineare</string>
+    <string name="system_autobrightness_hlg_summ">Abilita se le percentuali di luminosità in mod non corrispondono a quelle reali nelle versioni inferiori a Android 9</string>
     <string name="system_nosafevolume_title">Disabilita l\'avviso del volume elevato</string>
     <string name="system_nosafevolume_summ">Non mostrare la finestra di dialogo quando il volume raggiunge un livello non sicuro</string>
     <string name="system_noducking_title">Disattiva il ducking</string>
@@ -177,6 +181,8 @@
     <string name="system_visualizer_custom_summ">Mostra il visualizzatore sulla parte superiore della schermata di blocco personalizzata</string>
     <string name="system_visualizer_drawer_title">Mostra nel riquadro delle notifiche</string>
     <string name="system_visualizer_drawer_summ">Visualizzatore addizionale nel riquadro esteso delle notifiche</string>
+    <string name="system_visualizer_controller_title">Mostra solo se esiste un controller multimediale</string>
+    <string name="system_visualizer_controller_summ">I lettori audio di solito lo creano per le notifiche con i controlli multimediali</string>
     <string name="system_visualizer_animdur_title">Durata dell\'animazione</string>
     <string name="system_visualizer_transp_title">Trasparenza</string>
     <string name="system_visualizer_render_title">Metodo rendering</string>
@@ -199,13 +205,14 @@
     <string name="system_vibration_amp_period_title">Periodo di tempo</string>
     <string name="system_vibration_title">Blocca la vibrazione</string>
     <string name="system_vibration_summ">Impedisci alle app selezionate di utilizzare la vibrazione</string>
-    <string name="system_volume">Volume dei suoni di sistema</string>
+    <string name="system_volume">Suoni di sistema</string>
     <string name="system_scramblepin_title">PIN criptato</string>
     <string name="system_scramblepin_summ">Cambia casualmente l\'ordine dei pulsanti PIN</string>
     <string name="system_securelock_title">Schermata di blocco estesa</string>
     <string name="system_securelock_summ">Disabilita il menù di accensione mentre il blocco schermo è attivo</string>
     <string name="system_nopassword_title">Nessuna password dopo il riavvio</string>
-    <string name="system_nopassword_summ">Non richiedere la password al posto dello sblocco con impronta dopo il riavvio</string>
+    <string name="system_nopassword_summ">Non richiedere la password al posto dello sblocco con impronta dopo il riavvio. 
+È improbabile che funzioni su dispositivi crittografati.</string>
     <string name="system_albumartonlock_title">Copertina album come sfondo</string>
     <string name="system_albumartonlock_summ">Mostra copertina album della traccia in riproduzione come sfondo della schermata di blocco</string>
     <string name="system_albumartonlock_blur_title">Copertina album sfocata</string>
@@ -284,6 +291,7 @@
     <string name="system_cleanopenwith_title">Personalizza menù \"Apri con\"</string>
     <string name="system_cleanopenwith_summ">Rimuovi le seguenti app dal menù \"Apri con\"</string>
     <string name="system_cleanopenwith_testdata">Seleziona il tipo di dati di prova</string>
+    <string name="system_cleanopenwith_datatype">Seleziona il tipo di dati da nascondere</string>
     <string name="system_defaultusb_title">Modalità USB predefinita</string>
     <string name="system_defaultusb_summ">Applica la seguente configurazione quando è collegato un altro dispositivo</string>
     <string name="system_defaultusb_unsecure_title">Ignora blocco</string>
@@ -378,7 +386,7 @@
     <string name="launcher_gestures_shortcut">Collegamento da avviare</string>
     <string name="launcher_gestures_activity">Attività da avviare</string>
     <string name="launcher_title">Launcher</string>
-    <string name="launcher_summ">Mostra le mod per il launcher selezionato</string>
+    <string name="launcher_summ">Mostra le mod per il launcher selezionato. Solo per l\'aiuto visivo, non ha alcun effetto sulle mod.</string>
     <string name="launcher_compat_title">Modalità di compatibilità</string>
     <string name="launcher_compat_summ">Metodo alternativo per applicare tutte le mod all\'avvio</string>
     <string name="launcher_infinitescroll_title">Scorrimento infinito</string>
@@ -393,8 +401,11 @@
     <string name="launcher_nounlockanim_summ">Non animare le icone quando il dispositivo è sbloccato</string>
     <string name="launcher_oldlaunchanim_title">Usa la vecchia animazione di avvio</string>
     <string name="launcher_oldlaunchanim_summ">Ripristina la transizione di apertura dell\'app a una precedente</string>
+    <string name="launcher_sensorportrait_title">Supporto verticale inverso</string>
+    <string name="launcher_sensorportrait_summ">Ruota il Launcher per l\'orientamento verticale</string>
     <string name="launcher_hideseekpoints_title">Indicatore dinamico della pagina</string>
     <string name="launcher_hideseekpoints_summ">Mostra l\'indicatore della pagina solo durante lo scorrimento</string>
+    <string name="launcher_hideseekpoints_edit_title">Mostra solo in modalità modifica</string>
     <string name="launcher_unlockgrids_title">Sblocca le dimensioni della griglia</string>
     <string name="launcher_unlockgrids_summ">Rendi disponibili tutte le dimensioni della griglia da 3x4 a 8x8 nelle impostazioni del layout della schermata principale</string>
     <string name="launcher_iconscale_title">Ridimensionamento delle icone</string>
@@ -412,8 +423,8 @@
     <string name="launcher_fixanim_summ">Applica il ridimensionamento e la durata dell\'animazione di alcuni valori del Launcher</string>
     <string name="launcher_fixlaunch_title">Correggi le informazioni sull\'app</string>
     <string name="launcher_fixlaunch_summ">Apri sempre le informazioni sull\'app in stile MIUI dal menu con pressione prolungata</string>
-    <string name="launcher_foldershade_title">Sfondo delle cartelle</string>
-    <string name="launcher_foldershade_summ">Scurisci lo sfondo della cartella</string>
+    <string name="launcher_foldershade_title">Colore della sovrapposizione</string>
+    <string name="launcher_foldershade_summ">Scurire o schiarire lo sfondo</string>
     <string name="launcher_foldershade_level_title">Intensità colore</string>
     <string name="launcher_folderblur_title">Sfocatura</string>
     <string name="launcher_folderblur_summ">Opzioni di sfocatura dello sfondo. Il Launcher deve supportare la sfocatura nelle cartelle.</string>
@@ -436,8 +447,8 @@
     <string name="launcher_renameapps_modified">Titolo modificato</string>
     <string name="launcher_privacyapps">App nascoste</string>
     <string name="launcher_privacyapps_fail">Le autorizzazioni necessarie non sono concesse</string>
-    <string name="launcher_privacyapps_gest_title">Cartella nascosta</string>
-    <string name="launcher_privacyapps_gest_summ">Allarga due dita sul launcher MIUI per aprire la cartella delle app nascoste. Non è richiesto il riavvio.</string>
+    <string name="launcher_privacyapps_gest_title">Nessuna cartella nascosta</string>
+    <string name="launcher_privacyapps_gest_summ">Disabilita il gesto con due dita che apre la cartella delle app nascoste</string>
     <string name="launcher_privacyapps_list_title">Elenco di app da nascondere</string>
     <string name="launcher_privacyapps_list_summ">Versione avanzata dell\'opzione App nascoste che consente di nascondere qualsiasi app installata. Non è richiesto il riavvio.</string>
     <string name="launcher_swipedownaction_title">Azione di scorrimento verso il basso (1 dito)</string>
@@ -465,7 +476,7 @@
     <string name="controls_powerflash_title">Torcia veloce</string>
     <string name="controls_powerflash_summ">Premi a lungo il pulsante di accensione mentre lo schermo è spento per accendere la torcia</string>
     <string name="controls_powerflash_delay_title">Aumenta i tempi di risposta dell\'attivazione della torcia</string>
-    <string name="controls_powerflash_delay_summ">Aumenta i tempi di risposta della pressione prolungata del pulsante di accensione</string>
+    <string name="controls_powerflash_delay_summ">Aumenta il ritardo della pressione prolungata del pulsante di accensione</string>
     <string name="controls_mods_fingerprint">Scanner di impronta digitale</string>
     <string name="controls_fingerprint1_title">Azione singolo tocco</string>
     <string name="controls_fingerprint1_summ">Azione per un singolo tocco quando lo schermo è attivo</string>
@@ -635,7 +646,7 @@
     <string name="array_allbutanim">Solo gli eventi senza animazione</string>
     <string name="array_screenlock_no">Predefinite di sistema</string>
     <string name="array_screenlock_none">Disabilita completamente</string>
-    <string name="array_screenlock_bootonly">Richiesto solo una volta dopo l\'avvio</string>
+    <string name="array_screenlock_bootonly">Richiedi l\'autenticazione dopo l\'avvio</string>
     <string name="array_screenlock_trusted">Disabilita su reti/dispositivi attendibili</string>
     <string name="array_screenlock_noreq">Non chiedere</string>
     <string name="array_screenlock_weak">Debole (impronta digitale)</string>
@@ -643,7 +654,7 @@
     <string name="array_noblur">Nessuna sfocatura</string>
     <string name="array_netspeedicons_no">Nessuna icona</string>
     <string name="array_foldershade_solid">Scurisci l\'intero sfondo</string>
-    <string name="array_foldershade_gradient">Scurisci solo al centro</string>
+    <string name="array_foldershade_gradient">Solo al centro</string>
     <string name="array_expandnotifs_allbutblack">Per tutte le app eccetto quelle elencate</string>
     <string name="array_expandnotifs_whiteonly">Solo per le app elencate</string>
     <string name="array_mobiletypeicon_connected">Nascondi solo quando non connesso</string>
@@ -687,7 +698,9 @@
     <string name="array_video">Video</string>
     <string name="array_doc">Documenti</string>
     <string name="array_archive">Archivio</string>
+    <string name="array_link">Collegamento</string>
     <string name="array_any">Qualsiasi</string>
+    <string name="array_others">Altro</string>
     <string name="array_nofs">Quando non in modalità a schermo intero</string>
     <string name="array_incoming">In arrivo</string>
     <string name="array_outgoing">In uscita</string>
@@ -805,7 +818,7 @@
     <string name="notselected">Non selezionato</string>
     <string name="warning">Attenzione!</string>
     <string name="warning_blacklist">L\'opzione elenco bianco/nero è attiva in Xposed Framework, può impedire il corretto funzionamento della mod</string>
-    <string name="open_xposed">Apri Xposed Installer</string>
+    <string name="open_xposed">Moduli Xposed</string>
     <string name="soft_reboot">Riavvio veloce</string>
     <string name="soft_reboot_ask">Eseguire un riavvio veloce adesso?</string>
     <string name="restart_launcher">Riavvia il launcher</string>
@@ -827,7 +840,7 @@
     <string name="select_activity">Seleziona attività</string>
     <string name="no_activities_found">Nessuna attività trovata</string>
     <string name="select_shortcut">Seleziona collegamento</string>
-    <string name="search_input_description">Cerca</string>
+    <string name="search_input_description">Cerca modifiche</string>
     <string name="wifi_networks">Reti Wi-Fi</string>
     <string name="wifi_location_title">Impostazioni geolocalizzazione</string>
     <string name="wifi_location_summ">L\'accesso alla posizione è necessario per le app per ottenere un elenco di reti Wi-Fi su Android Pie</string>
@@ -846,11 +859,11 @@
     <string name="credentials_ok">Le credenziali sono già sbloccate</string>
     <string name="credentials_unlock">Sblocca credenziali</string>
     <string name="credentials_success">Credenziali sbloccate</string>
-    <string name="xposed_not_found">Xposed Installer non trovato</string>
+    <string name="xposed_not_found">Xposed aap non trovata</string>
     <string name="xposed_not_found_explain">Sembra che tu non abbia installato l\'Xposed Framework.\n\nNota che le mod funzionano solo con Xposed!</string>
     <string name="xposed_not_reshooks">Gli hook delle risorse sono disabilitati</string>
     <string name="xposed_not_reshooks_explain">Gli hook delle risorse sono disabilitati nelle impostazioni di Xposed Installer, il modulo non verrà attivato!</string>
-    <string name="module_not_active">Il modulo CustoMIUIzer non è attivo!\nApri Xposed Installer, attiva il modulo e riavvia.</string>
+    <string name="module_not_active">Il modulo CustoMIUIzer non è attivo!\nApri Xposed app, attiva il modulo e riavvia.</string>
     <string name="no_browser">Per aprire gli URL è necessaria l\'app del browser</string>
     <string name="okay">Okay</string>
     <string name="cancel">Cancella</string>
@@ -858,7 +871,7 @@
     <string name="delete">Elimina</string>
     <string name="delete_item_info">Scorciatoia pressione prolungata per eliminare</string>
     <string name="change_icon">Cambia icona</string>
-    <string name="guide_search">Cerca le mod per nome</string>
+    <string name="guide_search">Cerca le mod per nome.\nPremi a lungo per visualizzare l\'elenco delle nuove mod.</string>
     <string name="guide_softreboot">Non dimenticare di applicare le mod utilizzando il riavvio veloce.\nLe mod dinamiche ⟲ lo richiedono solo una volta.\nUlteriori informazioni sono disponibili nella pagina Informazioni.</string>
     <string name="guide_marknew">Le nuove mod introdotte dall\'ultimo aggiornamento\npossono essere contrassegnate per una maggiore visibilità</string>
     <string name="permission_save">Vuoi effettuare il backup o no?</string>

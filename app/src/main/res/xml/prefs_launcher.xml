@@ -248,10 +248,23 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_launcher_sensorportrait"
+			android:title="@string/launcher_sensorportrait_title"
+			android:summary="@string/launcher_sensorportrait_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_hideseekpoints"
 			android:title="@string/launcher_hideseekpoints_title"
 			android:summary="@string/launcher_hideseekpoints_summ"
 			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_launcher_hideseekpoints_edit"
+			android:title="@string/launcher_hideseekpoints_edit_title"
+			android:defaultValue="false"
+			android:dependency="pref_key_launcher_hideseekpoints"
+			miuizer:child="true" />
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_launcher_indicatorheight"

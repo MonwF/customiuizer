@@ -75,6 +75,7 @@ public class AudioVisualizer extends View {
 	public int customColor;
 	private int randomizeInterval;
 	public boolean showInDrawer;
+	public boolean showWithControllerOnly;
 
 	private final AccelerateInterpolator accel = new AccelerateInterpolator();
 	private final DecelerateInterpolator decel = new DecelerateInterpolator();
@@ -240,6 +241,7 @@ public class AudioVisualizer extends View {
 		customColor = MainModule.mPrefs.getInt("system_visualizer_colorval", Color.WHITE);
 		randomizeInterval = MainModule.mPrefs.getInt("system_visualizer_dyntime", 10) * 1000;
 		showInDrawer = MainModule.mPrefs.getBoolean("system_visualizer_drawer");
+		showWithControllerOnly = MainModule.mPrefs.getBoolean("system_visualizer_controller");
 		updateBarStyle();
 		updateGlowPaint();
 		updateRainbowColors();
@@ -292,6 +294,9 @@ public class AudioVisualizer extends View {
 							break;
 						case "pref_key_system_visualizer_drawer":
 							showInDrawer = Helpers.getSharedBoolPref(context, key, false);
+							break;
+						case "pref_key_system_visualizer_controller":
+							showWithControllerOnly = Helpers.getSharedBoolPref(context, key, false);
 							break;
 					}
 				} catch (Throwable t) {
@@ -535,7 +540,8 @@ public class AudioVisualizer extends View {
 		updateGlowPaint();
 	}
 
-	public void updateViewState(boolean isKeyguard, boolean isExpanded) {
+	public void updateViewState(boolean isPlaying, boolean isKeyguard, boolean isExpanded) {
+		isMusicPlaying = isPlaying;
 		isOnKeyguard = isKeyguard;
 		isExpandedPanel = showInDrawer && !isOnKeyguard && isExpanded;
 		isOnCustomLockScreen = new File("/data/system/theme/lockscreen").exists();
@@ -544,11 +550,6 @@ public class AudioVisualizer extends View {
 
 	public void updateScreenOn(boolean isOn) {
 		isScreenOn = isOn;
-		updatePlaying();
-	}
-
-	public void updateMusicState(boolean isPlaying) {
-		isMusicPlaying = isPlaying;
 		updatePlaying();
 	}
 

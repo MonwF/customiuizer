@@ -979,6 +979,12 @@
 			android:title="@string/system_screenshot_title"
 			android:summary="@string/system_screenshot_summ" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_screenshot_overlay"
+			android:title="@string/system_screenshot_overlay_title"
+			android:summary="@string/system_screenshot_overlay_summ"
+			android:defaultValue="false" />
+
 		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 			android:title="@string/system_mods_volumeblur"
 			miuizer:dynamic="true" />

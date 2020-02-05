@@ -27,6 +27,12 @@
 		android:summary="@string/system_visualizer_drawer_summ"
 		android:defaultValue="false" />
 
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_visualizer_controller"
+		android:title="@string/system_visualizer_controller_title"
+		android:summary="@string/system_visualizer_controller_summ"
+		android:defaultValue="false" />
+
 	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_visualizer_animdur"
 		android:title="@string/system_visualizer_animdur_title"

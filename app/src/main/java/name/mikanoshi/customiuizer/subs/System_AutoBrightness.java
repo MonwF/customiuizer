@@ -5,6 +5,7 @@ import android.widget.SeekBar;
 
 import name.mikanoshi.customiuizer.SubFragment;
 import name.mikanoshi.customiuizer.prefs.SeekBarPreference;
+import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class System_AutoBrightness extends SubFragment {
 	SeekBarPreference minBrightness;
@@ -30,6 +31,8 @@ public class System_AutoBrightness extends SubFragment {
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {}
 		});
+
+		findPreference("pref_key_system_autobrightness_hlg").setEnabled(!Helpers.isPiePlus());
 	}
 
 }

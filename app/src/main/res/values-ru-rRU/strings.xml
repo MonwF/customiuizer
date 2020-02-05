@@ -209,7 +209,9 @@
 	<string name="array_video">Видео</string>
 	<string name="array_doc">Документ</string>
 	<string name="array_archive">Архив</string>
+	<string name="array_link">Ссылка</string>
 	<string name="array_any">Любой</string>
+	<string name="array_others">Другие</string>
 	<string name="array_nofs">Вне полноэкранных приложений</string>
 	<string name="array_incoming">Входящие</string>
 	<string name="array_outgoing">Исходящие</string>
@@ -461,8 +463,11 @@
 	<string name="launcher_nounlockanim_summ">Не анимировать иконки при разблокировке устройства</string>
 	<string name="launcher_oldlaunchanim_title">Использовать старую анимацию запуска</string>
 	<string name="launcher_oldlaunchanim_summ">Возвращает предыдущую анимацию запуска приложений</string>
+	<string name="launcher_sensorportrait_title">Поддержка обратного портрета</string>
+	<string name="launcher_sensorportrait_summ">Вращать портретную ориентацию рабочего стола</string>
 	<string name="launcher_hideseekpoints_title">Динамический индикатор экранов</string>
 	<string name="launcher_hideseekpoints_summ">Показывает индикатор только во время прокрутки</string>
+	<string name="launcher_hideseekpoints_edit_title">Показывать только в режиме редактирования</string>
 	<string name="launcher_unlockgrids_title">Разблокировать размеры сетки</string>
 	<string name="launcher_unlockgrids_summ">Делает все размеры от 3x4 до 8x8 доступными в настройках сетки рабочего стола</string>
 	<string name="launcher_iconscale_title">Масштаб значков</string>
@@ -551,6 +556,7 @@
 	<string name="system_cleanopenwith_title">Очистка меню \"Открыть с помощью\"</string>
 	<string name="system_cleanopenwith_summ">Скрыть выбранные приложения в списке открытия данных сторонними приложениями</string>
 	<string name="system_cleanopenwith_testdata">Выберите тип данных для теста</string>
+	<string name="system_cleanopenwith_datatype">Выберите тип данных для скрытия</string>
 	<string name="system_defaultusb_title">Конфигурация USB по умолчанию</string>
 	<string name="system_defaultusb_summ">Применять выбранную конфигурацию при подключении к другому устройству</string>
 	<string name="system_defaultusb_unsecure_title">Игнорировать блокировку</string>
@@ -726,6 +732,8 @@
 	<string name="system_screenshot_format_title">Формат</string>
 	<string name="system_screenshot_quality_title">Качество</string>
 	<string name="system_screenshot_path_title">Папка для сохранения</string>
+	<string name="system_screenshot_overlay_title">Скрыть оверлеи на скриншотах</string>
+	<string name="system_screenshot_overlay_summ">Временно прячет оверлеи во время создания снимков экрана</string>
 	<string name="system_chargeanimtime_title">Таймаут экрана при анимации зарядки</string>
 	<string name="system_chargeanimtime_summ">Как долго держать экран включенным после начала анимации зарядки</string>
 	<string name="system_nolightuponcharges_summ">Запрещает включение экрана при подключении или отключении зарядки</string>
@@ -739,6 +747,8 @@
 	<string name="system_autobrightness_summ">Задаёт минимальное и максимальное значение яркости в автоматическом режиме</string>
 	<string name="system_minbrightness_title">Минимальная автояркость</string>
 	<string name="system_maxbrightness_title">Максимальная автояркость</string>
+	<string name="system_autobrightness_hlg_title">Всегда использовать нелинейную шкалу</string>
+	<string name="system_autobrightness_hlg_summ">Включить, если проценты яркости в моде не совпадают с реальными процентами на Android версиях ниже 9</string>
 	<string name="system_nosafevolume_title">Отключить предупреждение о высокой громкости</string>
 	<string name="system_nosafevolume_summ">Не показывать диалог при достижении небезопасного уровня громкости</string>
 	<string name="system_noducking_title">Отключить заглушение</string>
@@ -760,6 +770,8 @@
 	<string name="system_visualizer_custom_summ">Рисует визуализацию поверх стороннего экрана блокировки</string>
 	<string name="system_visualizer_drawer_title">Отображать в панели уведомлений</string>
 	<string name="system_visualizer_drawer_summ">Рисует визуализацию также и в раскрытой панели уведомлений</string>
+	<string name="system_visualizer_controller_title">Отображать только при наличии медиа контроллера</string>
+	<string name="system_visualizer_controller_summ">Обычно создаётся аудио плеерами для уведомлений с кнопками управления</string>
 	<string name="system_visualizer_animdur_title">Продолжительность анимации</string>
 	<string name="system_visualizer_transp_title">Уровень прозрачности</string>
 	<string name="system_visualizer_render_title">Способ отрисовки</string>

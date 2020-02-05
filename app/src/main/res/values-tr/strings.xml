@@ -143,6 +143,8 @@
     <string name="system_screenshot_format_title">Format</string>
     <string name="system_screenshot_quality_title">Kalite</string>
     <string name="system_screenshot_path_title">Kaydedilecek klasör</string>
+    <string name="system_screenshot_overlay_title">Ekran görüntülerindeki bindirmeleri gizle</string>
+    <string name="system_screenshot_overlay_summ">Ekran görüntüsü alırken yer paylaşımlarını geçici olarak gizleme</string>
     <string name="system_chargeanimtime_title">Zaman Aşımı (Şarj Animasyonu)</string>
     <string name="system_chargeanimtime_summ">Şarj Animasyonu\'nun ekranda ne kadar açık kalacağını ayarlayabilirsiniz.</string>
     <string name="system_nolightuponcharges_title">Şarj</string>
@@ -156,6 +158,8 @@
     <string name="system_autobrightness_summ">Minimum ve maksimum otomatik parlaklık değerlerini tanımlama</string>
     <string name="system_minbrightness_title">Otomatik Parlaklık (Minimum)</string>
     <string name="system_maxbrightness_title">Maksimum otomatik parlaklık</string>
+    <string name="system_autobrightness_hlg_title">Her zaman doğrusal olmayan ölçek kullanın</string>
+    <string name="system_autobrightness_hlg_summ">Moddaki parlaklık yüzdeleri 9\'un altındaki Android sürümlerinde gerçek yüzdelerle eşleşmiyorsa etkinleştir</string>
     <string name="system_nosafevolume_title">Yüksek ses düzeyi uyarısını devre dışı bırak</string>
     <string name="system_nosafevolume_summ">Birim güvenli olmayan düzeye ulaştığında iletişim kutusu gösterme</string>
     <string name="system_noducking_title">Bildirim ve Ses</string>
@@ -177,6 +181,8 @@
     <string name="system_visualizer_custom_summ">Ekran Kilidi\'nde görsel animasyon gösterilir.</string>
     <string name="system_visualizer_drawer_title">Bildirim Paneli</string>
     <string name="system_visualizer_drawer_summ">Bildirim Paneli\'nde görsel animasyon gösterilir.</string>
+    <string name="system_visualizer_controller_title">Yalnızca medya denetleyicisi varsa göster</string>
+    <string name="system_visualizer_controller_summ">Ses çalarlar genellikle medya denetimleriyle bildirimler için oluşturur</string>
     <string name="system_visualizer_animdur_title">Animasyon Süresi</string>
     <string name="system_visualizer_transp_title">Şeffaflık</string>
     <string name="system_visualizer_render_title">Oluşturma yöntemi</string>
@@ -284,6 +290,7 @@
     <string name="system_cleanopenwith_title">\'Bununla aç...\'</string>
     <string name="system_cleanopenwith_summ">\'Bununla aç...\' menüsünden seçmiş olduğunuz uygulamalar kaldırılır.</string>
     <string name="system_cleanopenwith_testdata">Test için dosya türünü seçiniz.</string>
+    <string name="system_cleanopenwith_datatype">Gizlenecek veri türünü seçin</string>
     <string name="system_defaultusb_title">Varsayılan USB Yapılandırması</string>
     <string name="system_defaultusb_summ">USB bağlantısı sırasında bağlantı tarzını seçiniz.</string>
     <string name="system_defaultusb_unsecure_title">Şifrelendirme</string>
@@ -389,8 +396,15 @@
     <string name="launcher_googlediscover_summ">Uygulama Kasası\'nı; Google Keşfet (Discover) ile değiştir (Google uygulamasının yüklü olması gerekir).</string>
     <string name="launcher_nowidgetonly_title">Yalnızca widget\'ı devre dışı bırak ekranı</string>
     <string name="launcher_nowidgetonly_summ">Tüm ekranların tabletlerdeki hem widget\'ları hem de uygulamaları desteklemesini sağlayın</string>
+    <string name="launcher_nounlockanim_title">Kilit açma animasyonunu kaldır</string>
+    <string name="launcher_nounlockanim_summ">Cihazın kilidi açıkken simgelere animasyon uygulama</string>
+    <string name="launcher_oldlaunchanim_title">Eski lansman animasyonunu kullan</string>
+    <string name="launcher_oldlaunchanim_summ">Uygulama açılış geçişini öncekine geri alma</string>
+    <string name="launcher_sensorportrait_title">Ters portre desteği</string>
+    <string name="launcher_sensorportrait_summ">Başlatıcının dikey yönünü döndürme</string>
     <string name="launcher_hideseekpoints_title">Sayfa Göstergesi</string>
     <string name="launcher_hideseekpoints_summ">Sayfa Göstergesi sadece sayfalar arası geçişlerde görünür.</string>
+    <string name="launcher_hideseekpoints_edit_title">Yalnızca düzenleme modunda göster</string>
     <string name="launcher_unlockgrids_title">Ana Ekran Düzeni</string>
     <string name="launcher_unlockgrids_summ">Ana Ekran Düzeni\'ne daha fazla seçenek ekler (3x4 - 8x8)</string>
     <string name="launcher_iconscale_title">Simge Boyutu</string>
@@ -683,7 +697,9 @@
     <string name="array_video">Video</string>
     <string name="array_doc">Belge</string>
     <string name="array_archive">Arşiv</string>
+    <string name="array_link">Bağlantı</string>
     <string name="array_any">Herhangi</string>
+    <string name="array_others">Diğerleri</string>
     <string name="array_nofs">Tam Ekran Mod\'unda Değilken</string>
     <string name="array_incoming">Gelen</string>
     <string name="array_outgoing">Giden</string>

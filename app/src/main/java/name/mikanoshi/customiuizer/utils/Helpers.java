@@ -135,10 +135,12 @@ public class Helpers {
 	public static WakeLock mWakeLock;
 	public static ValueAnimator shimmerAnim;
 	public static boolean showNewMods = true;
-	public static final HashSet<String> newMods =  new HashSet<String>(Arrays.asList(
-		"pref_key_system_statusbaricons_vowifi",
-		"pref_key_launcher_nounlockanim",
-		"pref_key_launcher_oldlaunchanim"
+	public static final HashSet<String> newMods = new HashSet<String>(Arrays.asList(
+		"pref_key_system_autobrightness_hlg",
+		"pref_key_system_visualizer_controller",
+		"pref_key_system_screenshot_overlay",
+		"pref_key_launcher_sensorportrait",
+		"pref_key_launcher_hideseekpoints_edit"
 	));
 	public static final ArrayList<String> shortcutIcons = new ArrayList<String>();
 	public static Holidays currentHoliday = Holidays.NONE;
@@ -157,6 +159,17 @@ public class Helpers {
 
 	public enum ActionBarType {
 		HomeUp, Edit
+	}
+
+	public static class MimeType {
+		public static int IMAGE = 1;
+		public static int AUDIO = 2;
+		public static int VIDEO = 4;
+		public static int DOCUMENT = 8;
+		public static int ARCHIVE = 16;
+		public static int LINK = 32;
+		public static int OTHERS = 64;
+		public static int ALL = IMAGE | AUDIO | VIDEO | DOCUMENT | ARCHIVE | LINK | OTHERS;
 	}
 
 	public static int getSystemBackgroundColor(Context context) {

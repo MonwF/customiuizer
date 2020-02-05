@@ -249,6 +249,7 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 		@SuppressWarnings("unchecked")
 		protected void publishResults(CharSequence constraint, FilterResults results) {
 			filteredAppList.clear();
+			if (results.count > 0 && results.values != null)
 			filteredAppList.addAll((ArrayList<AppData>)results.values);
 			sortList();
 			notifyDataSetChanged();

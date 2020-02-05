@@ -2,7 +2,9 @@ package name.mikanoshi.customiuizer.subs;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import name.mikanoshi.customiuizer.SubFragmentWithSearch;
 import name.mikanoshi.customiuizer.utils.AppData;
 import name.mikanoshi.customiuizer.utils.AppDataAdapter;
 import name.mikanoshi.customiuizer.utils.Helpers;
+import name.mikanoshi.customiuizer.utils.Helpers.MimeType;
 import name.mikanoshi.customiuizer.utils.LockedAppAdapter;
 import name.mikanoshi.customiuizer.utils.PrivacyAppAdapter;
 
@@ -94,16 +97,45 @@ public class AppSelector extends SubFragmentWithSearch {
 						if (multi && key != null) {
 							AppData app = (AppData)parent.getAdapter().getItem(position);
 							Set<String> selectedApps = new LinkedHashSet<String>(Helpers.prefs.getStringSet(key, new LinkedHashSet<String>()));
-							if (share || openwith) {
-								if (selectedApps.contains(app.pkgName + "|" + app.user))
-									selectedApps.remove(app.pkgName + "|" + app.user);
-								else
-									selectedApps.add(app.pkgName + "|" + app.user);
+							if (selectedApps.contains(share || openwith ? app.pkgName + "|" + app.user : app.pkgName)) {
+								selectedApps.remove(share || openwith ? app.pkgName + "|" + app.user : app.pkgName);
 							} else {
-								if (selectedApps.contains(app.pkgName))
-									selectedApps.remove(app.pkgName);
-								else
-									selectedApps.add(app.pkgName);
+								selectedApps.add(share || openwith ? app.pkgName + "|" + app.user : app.pkgName);
+								if (openwith) {
+									String mimeKey = key + "_" + app.pkgName + "|" + app.user;
+									int mimeFlags = Helpers.prefs.getInt(mimeKey, MimeType.ALL);
+									final boolean[] checkedTypes = new boolean[] {
+										(mimeFlags & MimeType.IMAGE) == MimeType.IMAGE,
+										(mimeFlags & MimeType.AUDIO) == MimeType.AUDIO,
+										(mimeFlags & MimeType.VIDEO) == MimeType.VIDEO,
+										(mimeFlags & MimeType.DOCUMENT) == MimeType.DOCUMENT,
+										(mimeFlags & MimeType.ARCHIVE) == MimeType.ARCHIVE,
+										(mimeFlags & MimeType.LINK) == MimeType.LINK,
+										(mimeFlags & MimeType.OTHERS) == MimeType.OTHERS,
+									};
+									AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+									builder.setTitle(R.string.system_cleanopenwith_datatype);
+									builder.setMultiChoiceItems(R.array.mimetypes, checkedTypes, new DialogInterface.OnMultiChoiceClickListener() {
+										@Override
+										public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+											checkedTypes[which] = isChecked;
+										}
+									});
+									builder.setCancelable(true);
+									builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(DialogInterface dialog, int which) {
+											int sum = 0;
+											int order = 0;
+											for (boolean checkedType: checkedTypes) {
+												if (checkedType) sum += Math.pow(2, order);
+												order++;
+											}
+											Helpers.prefs.edit().putInt(mimeKey, sum).apply();
+										}
+									});
+									builder.show();
+								}
 							}
 							Helpers.prefs.edit().putStringSet(key, selectedApps).apply();
 							((AppDataAdapter)parent.getAdapter()).updateSelectedApps();

@@ -157,6 +157,7 @@ import name.mikanoshi.customiuizer.utils.AudioVisualizer;
 import name.mikanoshi.customiuizer.utils.BatteryIndicator;
 import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.Helpers.MethodHook;
+import name.mikanoshi.customiuizer.utils.Helpers.MimeType;
 
 public class System {
 
@@ -1251,13 +1252,14 @@ public class System {
 		int min_pct = MainModule.mPrefs.getInt("system_autobrightness_min", 25);
 		int max_pct = MainModule.mPrefs.getInt("system_autobrightness_max", 75);
 
-		int min, max;
-		if (maxBrightnessLevel != 255) {
-			min = Helpers.convertGammaToLinear((int)(maxBrightnessLevel * min_pct / 100f), minBrightnessLevel, maxBrightnessLevel);
-			max = Helpers.convertGammaToLinear((int)(maxBrightnessLevel * max_pct / 100f), minBrightnessLevel, maxBrightnessLevel);
+		int range, min, max;
+		range = maxBrightnessLevel - minBrightnessLevel;
+		if (maxBrightnessLevel != 255 || MainModule.mPrefs.getBoolean("system_autobrightness_hlg")) {
+			min = Helpers.convertGammaToLinear(minBrightnessLevel + (int)(range * min_pct / 100f), minBrightnessLevel, maxBrightnessLevel);
+			max = Helpers.convertGammaToLinear(minBrightnessLevel + (int)(range * max_pct / 100f), minBrightnessLevel, maxBrightnessLevel);
 		} else {
-			min = (int)(maxBrightnessLevel * min_pct / 100f);
-			max = (int)(maxBrightnessLevel * max_pct / 100f);
+			min = minBrightnessLevel + (int)(range * min_pct / 100f);
+			max = minBrightnessLevel + (int)(range * max_pct / 100f);
 		}
 
 		if (max <= min) max = min + 1;
@@ -2970,6 +2972,61 @@ public class System {
 		Helpers.findAndHookMethod("com.android.server.pm.PackageManagerService", lpparam.classLoader, "queryIntentActivitiesInternal", Intent.class, String.class, int.class, int.class, hook);
 	}
 
+	private static boolean hideMimeType(int mimeFlags, String mimeType) {
+		int dataType = MimeType.OTHERS;
+		if (mimeType != null)
+			if (mimeType.startsWith("image/")) dataType = MimeType.IMAGE;
+			else if (mimeType.startsWith("audio/")) dataType = MimeType.AUDIO;
+			else if (mimeType.startsWith("video/")) dataType = MimeType.VIDEO;
+			else if (mimeType.startsWith("text/") ||
+					mimeType.startsWith("application/pdf") ||
+					mimeType.startsWith("application/msword") ||
+					mimeType.startsWith("application/vnd.ms-") ||
+					mimeType.startsWith("application/vnd.openxmlformats-")) dataType = MimeType.DOCUMENT;
+			else if (mimeType.startsWith("application/vnd.android.package-archive") ||
+					mimeType.startsWith("application/zip") ||
+					mimeType.startsWith("application/x-zip") ||
+					mimeType.startsWith("application/octet-stream") ||
+					mimeType.startsWith("application/rar") ||
+					mimeType.startsWith("application/x-rar") ||
+					mimeType.startsWith("application/x-tar") ||
+					mimeType.startsWith("application/x-bzip") ||
+					mimeType.startsWith("application/gzip") ||
+					mimeType.startsWith("application/x-lz") ||
+					mimeType.startsWith("application/x-compress") ||
+					mimeType.startsWith("application/x-7z") ||
+					mimeType.startsWith("application/java-archive")) dataType = MimeType.ARCHIVE;
+			else if (mimeType.startsWith("link/")) dataType = MimeType.LINK;
+		return (mimeFlags & dataType) == dataType;
+	}
+
+	private static String getContentType(Context context, Intent intent) {
+		String scheme = intent.getScheme();
+		boolean linkSchemes = "http".equals(scheme) || "https".equals(scheme) || "vnd.youtube".equals(scheme);
+		String mimeType = intent.getType();
+		if (mimeType == null && linkSchemes) mimeType = "link/*";
+		if (mimeType == null && intent.getData() != null) try {
+			mimeType = context.getContentResolver().getType(intent.getData());
+		} catch (Throwable ignore) {}
+		return mimeType;
+	}
+
+	private static Pair<Boolean, Boolean> isRemoveApp(boolean dynamic, Context context, String pkgName, Set<String> selectedApps, String mimeType) {
+		String key = "system_cleanopenwith_apps";
+		int mimeFlags0;
+		int mimeFlags999;
+		if (dynamic) {
+			mimeFlags0 = Helpers.getSharedIntPref(context, "pref_key_" + key + "_" + pkgName + "|0", MimeType.ALL);
+			mimeFlags999 = Helpers.getSharedIntPref(context, "pref_key_" + key + "_" + pkgName + "|999", MimeType.ALL);
+		} else {
+			mimeFlags0 = MainModule.mPrefs.getInt(key + "_" + pkgName + "|0", MimeType.ALL);
+			mimeFlags999 = MainModule.mPrefs.getInt(key + "_" + pkgName + "|999", MimeType.ALL);
+		}
+		boolean removeOriginal = (selectedApps.contains(pkgName) || selectedApps.contains(pkgName + "|0")) && hideMimeType(mimeFlags0, mimeType);
+		boolean removeDual = selectedApps.contains(pkgName + "|999") && hideMimeType(mimeFlags999, mimeType);
+		return new Pair<Boolean, Boolean>(removeOriginal, removeDual);
+	}
+
 	public static void CleanOpenWithMenuHook() {
 		Helpers.hookAllMethods("miui.securityspace.XSpaceResolverActivityHelper.ResolverActivityRunner", null, "run", new MethodHook() {
 			@Override
@@ -2984,15 +3041,16 @@ public class System {
 				String mAimPackageName = (String)XposedHelpers.getObjectField(param.thisObject, "mAimPackageName");
 				if (mContext == null || mAimPackageName == null) return;
 				Set<String> selectedApps = Helpers.getSharedStringSetPref(mContext, "pref_key_system_cleanopenwith_apps");
+				String mimeType = getContentType(mContext, mOriginalIntent);
+				Pair<Boolean, Boolean> isRemove = isRemoveApp(true, mContext, mAimPackageName, selectedApps, mimeType);
+
 				View mRootView = (View)XposedHelpers.getObjectField(param.thisObject, "mRootView");
 				int appResId1 = mContext.getResources().getIdentifier("app1", "id", "android.miui");
 				int appResId2 = mContext.getResources().getIdentifier("app2", "id", "android.miui");
-				boolean removeOriginal = selectedApps.contains(mAimPackageName) || selectedApps.contains(mAimPackageName + "|0");
-				boolean removeDual = selectedApps.contains(mAimPackageName + "|999");
 				View originalApp = mRootView.findViewById(appResId1);
 				View dualApp = mRootView.findViewById(appResId2);
-				if (removeOriginal) dualApp.performClick();
-				else if (removeDual) originalApp.performClick();
+				if (isRemove.first) dualApp.performClick();
+				else if (isRemove.second) originalApp.performClick();
 			}
 		});
 	}
@@ -3004,10 +3062,25 @@ public class System {
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 				Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
 
-				new Helpers.SharedPrefObserver(mContext, mHandler, "pref_key_system_cleanopenwith_apps") {
+				new Helpers.SharedPrefObserver(mContext, mHandler) {
 					@Override
-					public void onChange(String name) {
-						MainModule.mPrefs.put(name, Helpers.getSharedStringSetPref(mContext, name));
+					public void onChange(Uri uri) {
+						try {
+							String type = uri.getPathSegments().get(1);
+							String key = uri.getPathSegments().get(2);
+							if (!key.contains("pref_key_system_cleanopenwith_apps")) return;
+
+							switch (type) {
+								case "stringset":
+									MainModule.mPrefs.put(key, Helpers.getSharedStringSetPref(mContext, key));
+									break;
+								case "integer":
+									MainModule.mPrefs.put(key, Helpers.getSharedIntPref(mContext, key, 0));
+									break;
+							}
+						} catch (Throwable t) {
+							XposedBridge.log(t);
+						}
 					}
 				};
 			}
@@ -3022,28 +3095,31 @@ public class System {
 					Intent origIntent = (Intent)param.args[0];
 					Intent intent = (Intent)origIntent.clone();
 					String action = intent.getAction();
-//					XposedBridge.log(action + ": " + intent.getType() + " | " + intent.getDataString());
+					//XposedBridge.log(action + ": " + intent.getType() + " | " + intent.getDataString());
 					if (!Intent.ACTION_VIEW.equals(action)) return;
 					if (intent.hasExtra("CustoMIUIzer") && intent.getBooleanExtra("CustoMIUIzer", false)) return;
 					String scheme = intent.getScheme();
 					boolean validSchemes = "http".equals(scheme) || "https".equals(scheme) || "vnd.youtube".equals(scheme);
 					if (intent.getType() == null && !validSchemes) return;
-					//if (intent.getType() == null) return;
-					Set<String> selectedApps = MainModule.mPrefs.getStringSet("system_cleanopenwith_apps");
+
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					String mimeType = getContentType(mContext, intent);
+					//XposedBridge.log("mimeType: " + mimeType);
+
+					String key = "system_cleanopenwith_apps";
+					Set<String> selectedApps = MainModule.mPrefs.getStringSet(key);
 					List<ResolveInfo> resolved = (List<ResolveInfo>)param.getResult();
 					ResolveInfo resolveInfo;
-					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 					PackageManager pm = mContext.getPackageManager();
 					Iterator itr = resolved.iterator();
 					while (itr.hasNext()) {
 						resolveInfo = ((ResolveInfo)itr.next());
-						boolean removeOriginal = selectedApps.contains(resolveInfo.activityInfo.packageName) || selectedApps.contains(resolveInfo.activityInfo.packageName + "|0");
-						boolean removeDual = selectedApps.contains(resolveInfo.activityInfo.packageName + "|999");
+						Pair<Boolean, Boolean> isRemove = isRemoveApp(false, mContext, resolveInfo.activityInfo.packageName, selectedApps, mimeType);
 						boolean hasDual = false;
 						try {
 							hasDual = XposedHelpers.callMethod(pm, "getPackageInfoAsUser", resolveInfo.activityInfo.packageName, 0, 999) != null;
 						} catch (Throwable t) {}
-						if ((removeOriginal && !hasDual) || removeOriginal && hasDual && removeDual) itr.remove();
+						if ((isRemove.first && !hasDual) || isRemove.first && hasDual && isRemove.second) itr.remove();
 					}
 
 					param.setResult(resolved);
@@ -3152,17 +3228,18 @@ public class System {
 	private static AudioVisualizer audioViz = null;
 	private static boolean isKeyguardShowing = false;
 	private static boolean isNotificationPanelExpanded = false;
-	private static void updateAudioVisualizerState(Context context, MediaController mediaController) {
+	private static MediaController mMediaController = null;
+	private static void updateAudioVisualizerState(Context context) {
 		if (audioViz == null || context == null) return;
+		AudioManager am = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+		boolean isMusicPlaying = am != null && am.isMusicActive();
 		boolean isPlaying = false;
-		if (mediaController == null || mediaController.getPlaybackState() == null) {
-			AudioManager am = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
-			if (am != null) isPlaying = am.isMusicActive();
+		if (mMediaController == null || mMediaController.getPlaybackState() == null || mMediaController.getPlaybackState().getState() != PlaybackState.STATE_PLAYING) {
+			if (!audioViz.showWithControllerOnly) isPlaying = isMusicPlaying;
 		} else {
-			isPlaying = mediaController.getPlaybackState().getState() == PlaybackState.STATE_PLAYING;
+			isPlaying = isMusicPlaying && mMediaController.getPlaybackState().getState() == PlaybackState.STATE_PLAYING;
 		}
-		audioViz.updateMusicState(isPlaying);
-		audioViz.updateViewState(isKeyguardShowing, isNotificationPanelExpanded);
+		audioViz.updateViewState(isPlaying, isKeyguardShowing, isNotificationPanelExpanded);
 	}
 	public static void AudioVisualizerHook(LoadPackageParam lpparam) {
 		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "makeStatusBarView", new MethodHook() {
@@ -3209,7 +3286,7 @@ public class System {
 				if (isKeyguardShowing != isKeyguardShowingNew) {
 					isKeyguardShowing = isKeyguardShowingNew;
 					isNotificationPanelExpanded = false;
-					updateAudioVisualizerState((Context)XposedHelpers.getObjectField(param.thisObject, "mContext"), null);
+					updateAudioVisualizerState((Context)XposedHelpers.getObjectField(param.thisObject, "mContext"));
 				}
 			}
 		});
@@ -3220,7 +3297,7 @@ public class System {
 				boolean isNotificationPanelExpandedNew = XposedHelpers.getBooleanField(param.thisObject, "mPanelExpanded");
 				if (isNotificationPanelExpanded != isNotificationPanelExpandedNew) {
 					isNotificationPanelExpanded = isNotificationPanelExpandedNew;
-					updateAudioVisualizerState((Context)XposedHelpers.getObjectField(param.thisObject, "mContext"), null);
+					updateAudioVisualizerState((Context)XposedHelpers.getObjectField(param.thisObject, "mContext"));
 				}
 			}
 		});
@@ -3251,8 +3328,8 @@ public class System {
 					art = ((BitmapDrawable)wallpaperDrawable).getBitmap();
 				}
 
-				MediaController mMediaController = (MediaController)XposedHelpers.getObjectField(param.thisObject, "mMediaController");
-				updateAudioVisualizerState(mContext, mMediaController);
+				mMediaController = (MediaController)XposedHelpers.getObjectField(param.thisObject, "mMediaController");
+				updateAudioVisualizerState(mContext);
 				audioViz.updateMusicArt(art);
 			}
 		});
@@ -5496,9 +5573,6 @@ public class System {
 						if (!isSliding) return;
 						int opt = MainModule.mPrefs.getStringAsInt(tapStartPointers == 2 ? "system_statusbarcontrols_dual" : "system_statusbarcontrols_single", 1);
 						if (opt == 2) {
-							//int brightnessMode = Settings.System.getInt(resolver, Settings.System.SCREEN_BRIGHTNESS_MODE, 0);
-							//if (brightnessMode == android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC) return;
-							//int brightness = Settings.System.getInt(mContext.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 0);
 							ContentResolver resolver = mContext.getContentResolver();
 							int sens = MainModule.mPrefs.getStringAsInt("system_statusbarcontrols_sens_bright", 2);
 							int minLevel = res.getInteger(res.getIdentifier("config_screenBrightnessSettingMinimum", "integer", "android"));
@@ -5507,6 +5581,16 @@ public class System {
 							float ratio = delta / metrics.widthPixels;
 							if (isHLG) ratio = (ratio >= 0 ? 1 : -1) * (sens == 1 ? 0.66f : (sens == 3 ? 1.66f : 1.0f)) * (float)Math.pow(ratio, 2);
 							int nextLevel = Math.min(maxLevel, Math.max(minLevel, Math.round(tapStartBrightness + (maxLevel - minLevel) * ratio)));
+							if (!Helpers.isPiePlus()) try {
+								int brightnessMode = Settings.System.getInt(resolver, Settings.System.SCREEN_BRIGHTNESS_MODE, 0);
+								if (brightnessMode == android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC) {
+									float adj = nextLevel * 2.0f / (maxLevel - minLevel) - 1.0f;
+									XposedHelpers.callStaticMethod(findClass("com.android.systemui.SystemUICompat", lpparam.classLoader), "setTemporaryScreenAutoBrightness", adj);
+									Settings.System.putFloat(resolver, "screen_auto_brightness_adj", adj);
+								} else {
+									XposedHelpers.callStaticMethod(findClass("com.android.systemui.SystemUICompat", lpparam.classLoader), "setTemporaryScreenBrightness", nextLevel);
+								}
+							} catch (Throwable ignore) {}
 							Settings.System.putInt(resolver, Settings.System.SCREEN_BRIGHTNESS, nextLevel);
 							if (MainModule.mPrefs.getBoolean("system_showpct") && mPct != null) {
 								if (mPct.getVisibility() == View.GONE) {
@@ -5958,33 +6042,33 @@ public class System {
 		});
 	}
 
-//	public static void TempHideOverlayHook() {
-//		Helpers.hookAllMethods("android.view.WindowManagerGlobal", null, "addView", new MethodHook() {
-//			@Override
-//			@SuppressWarnings("ConstantConditions")
-//			protected void after(final MethodHookParam param) throws Throwable {
-//				if (param.args[0] == null || !(param.args[1] instanceof WindowManager.LayoutParams) || param.getThrowable() != null) return;
-//				WindowManager.LayoutParams params = (WindowManager.LayoutParams)param.args[1];
-//				final View view = (View)param.args[0];
-//				if (params.type != WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY && params.type != WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY) return;
-//
-//				XposedHelpers.setAdditionalInstanceField(view, "mSavedVisibility", view.getVisibility());
-//				view.getContext().registerReceiver(new BroadcastReceiver() {
-//					@Override
-//					public void onReceive(Context context, Intent intent) {
-//						if (view == null) return;
-//						boolean state = intent.getBooleanExtra("IsFinished", true);
-//						if (state) {
-//							view.setVisibility((int)XposedHelpers.getAdditionalInstanceField(view, "mSavedVisibility"));
-//						} else if (view.getVisibility() != View.GONE) {
-//							XposedHelpers.setAdditionalInstanceField(view, "mSavedVisibility", view.getVisibility());
-//							view.setVisibility(View.GONE);
-//						}
-//					}
-//				}, new IntentFilter("miui.intent.TAKE_SCREENSHOT"));
-//			}
-//		});
-//	}
+	public static void TempHideOverlayHook() {
+		Helpers.hookAllMethods("android.view.WindowManagerGlobal", null, "addView", new MethodHook() {
+			@Override
+			@SuppressWarnings("ConstantConditions")
+			protected void after(final MethodHookParam param) throws Throwable {
+				if (param.args[0] == null || !(param.args[1] instanceof WindowManager.LayoutParams) || param.getThrowable() != null) return;
+				WindowManager.LayoutParams params = (WindowManager.LayoutParams)param.args[1];
+				final View view = (View)param.args[0];
+				if (params.type != WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY && params.type != WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY) return;
+
+				XposedHelpers.setAdditionalInstanceField(view, "mSavedVisibility", view.getVisibility());
+				view.getContext().registerReceiver(new BroadcastReceiver() {
+					@Override
+					public void onReceive(Context context, Intent intent) {
+						if (view == null) return;
+						boolean state = intent.getBooleanExtra("IsFinished", true);
+						if (state) {
+							view.setVisibility((int)XposedHelpers.getAdditionalInstanceField(view, "mSavedVisibility"));
+						} else if (view.getVisibility() != View.GONE) {
+							XposedHelpers.setAdditionalInstanceField(view, "mSavedVisibility", view.getVisibility());
+							view.setVisibility(View.GONE);
+						}
+					}
+				}, new IntentFilter("miui.intent.TAKE_SCREENSHOT"));
+			}
+		});
+	}
 
 //	@SuppressWarnings("unchecked")
 //	public static void MultiWindowHook() {

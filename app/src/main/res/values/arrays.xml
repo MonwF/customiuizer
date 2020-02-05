@@ -787,6 +787,16 @@
 		<item>@string/snooze_restore</item>
 	</string-array>
 
+	<string-array name="mimetypes">
+		<item>@string/array_image</item>
+		<item>@string/array_audio</item>
+		<item>@string/array_video</item>
+		<item>@string/array_doc</item>
+		<item>@string/array_archive</item>
+		<item>@string/array_link</item>
+		<item>@string/array_others</item>
+	</string-array>
+
 	<string-array name="placeholder_array">
 		<item>@string/dummy</item>
 	</string-array>

@@ -41,6 +41,12 @@
 			miuizer:stepValue="1"
 			miuizer:format="%d%%" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_autobrightness_hlg"
+			android:title="@string/system_autobrightness_hlg_title"
+			android:summary="@string/system_autobrightness_hlg_summ"
+			android:defaultValue="false" />
+
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

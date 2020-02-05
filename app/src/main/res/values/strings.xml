@@ -150,6 +150,8 @@
 	<string name="system_screenshot_format_title">Format</string>
 	<string name="system_screenshot_quality_title">Quality</string>
 	<string name="system_screenshot_path_title">Save folder</string>
+	<string name="system_screenshot_overlay_title">Hide overlays on screenshots</string>
+	<string name="system_screenshot_overlay_summ">Temporarily hide overlays while taking a screenshot</string>
 	<string name="system_chargeanimtime_title">Charge animation screen timeout</string>
 	<string name="system_chargeanimtime_summ">How long screen should be kept on after charging animation starts</string>
 	<string name="system_nolightuponcharges_title">No screen light up on charge</string>
@@ -163,6 +165,8 @@
 	<string name="system_autobrightness_summ">Define minimum and maximum auto brightness values</string>
 	<string name="system_minbrightness_title">Minimum auto brightness</string>
 	<string name="system_maxbrightness_title">Maximum auto brightness</string>
+	<string name="system_autobrightness_hlg_title">Always use non-linear scale</string>
+	<string name="system_autobrightness_hlg_summ">Enable if brightness percentages in mod do not match real ones on Android versions below 9</string>
 	<string name="system_nosafevolume_title">Disable high volume warning</string>
 	<string name="system_nosafevolume_summ">Do not show dialog when volume reaches unsafe level</string>
 	<string name="system_noducking_title">Disable ducking</string>
@@ -184,6 +188,8 @@
 	<string name="system_visualizer_custom_summ">Draw visualizer on top of custom lock screen</string>
 	<string name="system_visualizer_drawer_title">Show in notification drawer</string>
 	<string name="system_visualizer_drawer_summ">Additionally draw visualizer in an expanded notification drawer</string>
+	<string name="system_visualizer_controller_title">Show only if media controller exists</string>
+	<string name="system_visualizer_controller_summ">Audio players usually create it for notifications with media controls</string>
 	<string name="system_visualizer_animdur_title">Animation duration</string>
 	<string name="system_visualizer_transp_title">Transparency</string>
 	<string name="system_visualizer_render_title">Rendering method</string>
@@ -291,6 +297,7 @@
 	<string name="system_cleanopenwith_title">Clean Open with menu</string>
 	<string name="system_cleanopenwith_summ">Remove selected apps from Open with menu</string>
 	<string name="system_cleanopenwith_testdata">Select test data type</string>
+	<string name="system_cleanopenwith_datatype">Select data type to hide</string>
 	<string name="system_defaultusb_title">Default USB configuration</string>
 	<string name="system_defaultusb_summ">Apply selected configuration when another device is connected</string>
 	<string name="system_defaultusb_unsecure_title">Ignore lock</string>
@@ -404,8 +411,11 @@
 	<string name="launcher_nounlockanim_summ">Do not animate icons when device is unlocked</string>
 	<string name="launcher_oldlaunchanim_title">Use old launch animation</string>
 	<string name="launcher_oldlaunchanim_summ">Revert app opening transition to a previous one</string>
+	<string name="launcher_sensorportrait_title">Reverse portrait support</string>
+	<string name="launcher_sensorportrait_summ">Rotate launcher\'s portrait orientation</string>
 	<string name="launcher_hideseekpoints_title">Dynamic page indicator</string>
 	<string name="launcher_hideseekpoints_summ">Show page indicator only during scrolling</string>
+	<string name="launcher_hideseekpoints_edit_title">Show only in edit mode</string>
 	<string name="launcher_unlockgrids_title">Unlock grid sizes</string>
 	<string name="launcher_unlockgrids_summ">Make all grid sizes from 3x4 to 8x8 available in home screen layout setting</string>
 	<string name="launcher_iconscale_title">Icons scaling</string>
@@ -704,7 +714,9 @@
 	<string name="array_video">Video</string>
 	<string name="array_doc">Document</string>
 	<string name="array_archive">Archive</string>
+	<string name="array_link">Link</string>
 	<string name="array_any">Any</string>
+	<string name="array_others">Others</string>
 	<string name="array_nofs">When not in fullscreen mode</string>
 	<string name="array_incoming">Incoming</string>
 	<string name="array_outgoing">Outgoing</string>

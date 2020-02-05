@@ -620,6 +620,11 @@ public class Launcher {
 		}
 		if (mHandler.hasMessages(666)) mHandler.removeMessages(666);
 		mScreenSeekBar.animate().cancel();
+		if (!isInEditingMode && MainModule.mPrefs.getBoolean("launcher_hideseekpoints_edit")) {
+			mScreenSeekBar.setAlpha(0.0f);
+			mScreenSeekBar.setVisibility(View.GONE);
+			return;
+		}
 		mScreenSeekBar.setVisibility(View.VISIBLE);
 		mScreenSeekBar.animate().alpha(1.0f).setDuration(300);
 		if (!isInEditingMode) {
@@ -1154,11 +1159,21 @@ public class Launcher {
 
 	public static void UseOldLaunchAnimationHook(LoadPackageParam lpparam) {
 		Helpers.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "isSupportRecentsAndFsGesture", XC_MethodReplacement.returnConstant(false));
-		Helpers.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.classLoader, "onCreate", Bundle.class, new MethodHook() {
+		Helpers.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.classLoader, "onCreate", Bundle.class, new MethodHook(1) {
 			@Override
 			protected void after(XC_MethodHook.MethodHookParam param) throws Throwable {
 				Activity act = (Activity)param.thisObject;
 				act.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			}
+		});
+	}
+
+	public static void ReverseLauncherPortraitHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.classLoader, "onCreate", Bundle.class, new MethodHook(2) {
+			@Override
+			protected void after(XC_MethodHook.MethodHookParam param) throws Throwable {
+				Activity act = (Activity)param.thisObject;
+				act.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 			}
 		});
 	}

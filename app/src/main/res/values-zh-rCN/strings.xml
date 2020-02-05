@@ -143,6 +143,8 @@
     <string name="system_screenshot_format_title">格式</string>
     <string name="system_screenshot_quality_title">质量</string>
     <string name="system_screenshot_path_title">存放目录</string>
+    <string name="system_screenshot_overlay_title">截图时隐藏叠加层</string>
+    <string name="system_screenshot_overlay_summ">进行截图时临时隐藏叠加层</string>
     <string name="system_chargeanimtime_title">充电动画屏幕超时</string>
     <string name="system_chargeanimtime_summ">充电动画开始后保持亮屏的时间</string>
     <string name="system_nolightuponcharges_title">充电时不亮起屏幕</string>
@@ -156,6 +158,7 @@
     <string name="system_autobrightness_summ">定义自动亮度的最小值和最大值</string>
     <string name="system_minbrightness_title">自动亮度最小值</string>
     <string name="system_maxbrightness_title">最大自动亮度</string>
+    <string name="system_autobrightness_hlg_title">始终使用非线性缩放</string>
     <string name="system_nosafevolume_title">禁用高音量警告</string>
     <string name="system_nosafevolume_summ">音量达到不安全级别时不显示对话框</string>
     <string name="system_noducking_title">禁用闪避</string>
@@ -177,6 +180,7 @@
     <string name="system_visualizer_custom_summ">在自定义锁屏顶部绘制可视化</string>
     <string name="system_visualizer_drawer_title">在通知抽屉中显示</string>
     <string name="system_visualizer_drawer_summ">展开通知抽屉时绘制可视化</string>
+    <string name="system_visualizer_controller_title">仅媒体控制器存在时显示</string>
     <string name="system_visualizer_animdur_title">动画时长</string>
     <string name="system_visualizer_transp_title">透明度</string>
     <string name="system_visualizer_render_title">渲染模式</string>
@@ -284,6 +288,7 @@
     <string name="system_cleanopenwith_title">清理打开方式菜单</string>
     <string name="system_cleanopenwith_summ">从打开方式菜单移除所选应用</string>
     <string name="system_cleanopenwith_testdata">选择测试数据类型</string>
+    <string name="system_cleanopenwith_datatype">选择要隐藏的数据类型</string>
     <string name="system_defaultusb_title">默认USB配置</string>
     <string name="system_defaultusb_summ">连接其它设备时应用所选配置</string>
     <string name="system_defaultusb_unsecure_title">忽略锁定</string>
@@ -389,8 +394,15 @@
     <string name="launcher_googlediscover_summ">将App Vault替换为Google探索(需要安装Google应用)</string>
     <string name="launcher_nowidgetonly_title">禁用小部件，仅屏幕</string>
     <string name="launcher_nowidgetonly_summ">令所有屏幕平板上的支持小部件和应用</string>
+    <string name="launcher_nounlockanim_title">去除解锁动画</string>
+    <string name="launcher_nounlockanim_summ">设备解锁时去除图标动画</string>
+    <string name="launcher_oldlaunchanim_title">使用旧的启动动画</string>
+    <string name="launcher_oldlaunchanim_summ">还原应用打开过渡为前一个</string>
+    <string name="launcher_sensorportrait_title">反向竖屏支持</string>
+    <string name="launcher_sensorportrait_summ">旋转启动器的竖屏方向</string>
     <string name="launcher_hideseekpoints_title">动态页面指示器</string>
     <string name="launcher_hideseekpoints_summ">仅在滚动时显示页面指示器</string>
+    <string name="launcher_hideseekpoints_edit_title">仅在编辑模式中显示</string>
     <string name="launcher_unlockgrids_title">解锁网格大小</string>
     <string name="launcher_unlockgrids_summ">可在主屏幕布局设置中使用3x4到8x8之间的所有网格大小</string>
     <string name="launcher_iconscale_title">图标缩放</string>
@@ -683,7 +695,9 @@
     <string name="array_video">视频</string>
     <string name="array_doc">文档</string>
     <string name="array_archive">归档</string>
+    <string name="array_link">链接</string>
     <string name="array_any">任何</string>
+    <string name="array_others">其他</string>
     <string name="array_nofs">未处于全屏模式时</string>
     <string name="array_incoming">来电</string>
     <string name="array_outgoing">去电</string>
