@@ -29,6 +29,9 @@ public class UnlockSettings extends Activity {
 				resultIntent.putExtra(Constants.EXTRA_STRING_BLURB, getString(val == 1 ? R.string.system_noscreenlock_force_unlocked : (val == 0 ? R.string.system_noscreenlock_force_locked : R.string.system_noscreenlock_force_off)));
 				Bundle bundle = new Bundle();
 				bundle.putInt("system_noscreenlock_force", val);
+				//bundle.putString("net.dinglisch.android.tasker.extras.VARIABLE_REPLACE_KEYS", "lockstate");
+				//resultIntent.putExtra("net.dinglisch.android.tasker.RELEVANT_VARIABLES", new String[] { "%lockstate\nLock state\nCurrent state of lock override:<br><b>0</b> force locked<br><b>1</b> force unlocked<br><b>-1</b> do not force"});
+				//resultIntent.putExtra("net.dinglisch.android.tasker.extras.REQUESTED_TIMEOUT", 3000);
 				resultIntent.putExtra(Constants.EXTRA_BUNDLE, bundle);
 				setResult(Activity.RESULT_OK, resultIntent);
 				finish();

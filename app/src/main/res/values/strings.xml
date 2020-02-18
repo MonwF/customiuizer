@@ -145,6 +145,7 @@
 	<string name="system_popupnotif_fs_title">Respect fullscreen</string>
 	<string name="system_popupnotif_fs_summ">Do not open notification drawer when fullscreen app is active (does not apply to immersive apps with hidden status and navigation bars)</string>
 	<string name="system_popupnotif_apps_title">Selected apps</string>
+	<string name="system_mods_screenshots">Screenshots</string>
 	<string name="system_screenshot_title">Screenshot configuration</string>
 	<string name="system_screenshot_summ">Customize format, quality and save folder for screenshots</string>
 	<string name="system_screenshot_format_title">Format</string>
@@ -152,6 +153,8 @@
 	<string name="system_screenshot_path_title">Save folder</string>
 	<string name="system_screenshot_overlay_title">Hide overlays on screenshots</string>
 	<string name="system_screenshot_overlay_summ">Temporarily hide overlays while taking a screenshot</string>
+	<string name="system_screenshot_floattime_title">Floating screenshot display time</string>
+	<string name="system_screenshot_floattime_summ">Delay before a floating window with newly created screenshot disappears</string>
 	<string name="system_chargeanimtime_title">Charge animation screen timeout</string>
 	<string name="system_chargeanimtime_summ">How long screen should be kept on after charging animation starts</string>
 	<string name="system_nolightuponcharges_title">No screen light up on charge</string>
@@ -418,6 +421,8 @@
 	<string name="launcher_hideseekpoints_edit_title">Show only in edit mode</string>
 	<string name="launcher_unlockgrids_title">Unlock grid sizes</string>
 	<string name="launcher_unlockgrids_summ">Make all grid sizes from 3x4 to 8x8 available in home screen layout setting</string>
+	<string name="launcher_unlockhotseat_title">More icons in dock</string>
+	<string name="launcher_unlockhotseat_summ">Unlimited number of dock icons</string>
 	<string name="launcher_iconscale_title">Icons scaling</string>
 	<string name="launcher_horizmargin_title">Horizontal grid margins</string>
 	<string name="launcher_topmargin_title">Top grid margin</string>
@@ -639,10 +644,10 @@
 	<string name="array_global_actions_goback">Go back</string>
 	<string name="array_global_actions_onehanded_left">One-handed mode (left)</string>
 	<string name="array_global_actions_onehanded_right">One-handed mode (right)</string>
-	<string name="array_global_toggle_wifi">Wi-Fi</string>
+	<string name="array_global_toggle_wifi" translatable="false">Wi-Fi</string>
 	<string name="array_global_toggle_bt">Bluetooth</string>
-	<string name="array_global_toggle_gps">GPS</string>
-	<string name="array_global_toggle_nfc">NFC</string>
+	<string name="array_global_toggle_gps" translatable="false">GPS</string>
+	<string name="array_global_toggle_nfc" translatable="false">NFC</string>
 	<string name="array_global_toggle_sound">Sound profile</string>
 	<string name="array_global_toggle_brightness">Auto brightness</string>
 	<string name="array_global_toggle_rotation">Auto rotation</string>
@@ -812,7 +817,7 @@
 	<string name="support_donate_crypto_title">Cryptocurrencies</string>
 	<string name="support_donate_crypto_summ">Money of the future :)</string>
 	<string name="support_donate_other_title">Outdated currencies</string>
-	<string name="support_donate_other_summ">Webmoney, QIWI</string>
+	<string name="support_donate_other_summ" translatable="false">Webmoney, QIWI</string>
 
 	<string name="donate_level1">Thanks for your donation!</string>
 	<string name="donate_level2">Thanks for your generous donation!</string>

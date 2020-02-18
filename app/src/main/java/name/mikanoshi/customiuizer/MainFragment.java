@@ -713,15 +713,14 @@ public class MainFragment extends PreferenceFragmentBase {
 			});
 			alert.show();
 		} catch (Throwable e) {
+			e.printStackTrace();
 			AlertDialog.Builder alert = new AlertDialog.Builder(act);
 			alert.setTitle(R.string.warning);
-			alert.setMessage(R.string.storage_cannot_backup);
+			alert.setMessage(getString(R.string.storage_cannot_backup) + "\n" + e.getMessage());
 			alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {}
 			});
 			alert.show();
-
-			e.printStackTrace();
 		} finally {
 			try {
 				if (output != null) {

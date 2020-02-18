@@ -282,6 +282,12 @@
 			android:summary="@string/launcher_unlockgrids_summ"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_launcher_unlockhotseat"
+			android:title="@string/launcher_unlockhotseat_title"
+			android:summary="@string/launcher_unlockhotseat_summ"
+			android:defaultValue="false" />
+
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_launcher_horizmargin"
 			android:title="@string/launcher_horizmargin_title"

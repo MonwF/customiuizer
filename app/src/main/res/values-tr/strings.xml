@@ -138,6 +138,7 @@
     <string name="system_popupnotif_fs_title">Tam Ekran</string>
     <string name="system_popupnotif_fs_summ">Tam Ekran Mod\'u aktif ise Bildirim Paneli otomatik olarak açılmaz.</string>
     <string name="system_popupnotif_apps_title">Uygulamalar</string>
+    <string name="system_mods_screenshots">Ekran görüntüleri</string>
     <string name="system_screenshot_title">Ekran görüntüsü yapılandırması</string>
     <string name="system_screenshot_summ">Ekran görüntüleri için formatı, kaliteyi özelleştirin ve klasörü kaydedin</string>
     <string name="system_screenshot_format_title">Format</string>
@@ -145,6 +146,8 @@
     <string name="system_screenshot_path_title">Kaydedilecek klasör</string>
     <string name="system_screenshot_overlay_title">Ekran görüntülerindeki bindirmeleri gizle</string>
     <string name="system_screenshot_overlay_summ">Ekran görüntüsü alırken yer paylaşımlarını geçici olarak gizleme</string>
+    <string name="system_screenshot_floattime_title">Kayan ekran görüntüsü görüntüleme süresi</string>
+    <string name="system_screenshot_floattime_summ">Yeni oluşturulan ekran görüntüsünün bulunduğu kayan bir pencerenin gecikmesi</string>
     <string name="system_chargeanimtime_title">Zaman Aşımı (Şarj Animasyonu)</string>
     <string name="system_chargeanimtime_summ">Şarj Animasyonu\'nun ekranda ne kadar açık kalacağını ayarlayabilirsiniz.</string>
     <string name="system_nolightuponcharges_title">Şarj</string>
@@ -407,6 +410,8 @@
     <string name="launcher_hideseekpoints_edit_title">Yalnızca düzenleme modunda göster</string>
     <string name="launcher_unlockgrids_title">Ana Ekran Düzeni</string>
     <string name="launcher_unlockgrids_summ">Ana Ekran Düzeni\'ne daha fazla seçenek ekler (3x4 - 8x8)</string>
+    <string name="launcher_unlockhotseat_title">Dock içindeki diğer simgeler</string>
+    <string name="launcher_unlockhotseat_summ">Sınırsız sayıda dock simgesi</string>
     <string name="launcher_iconscale_title">Simge Boyutu</string>
     <string name="launcher_horizmargin_title">Yatay ızgara kenar boşlukları</string>
     <string name="launcher_topmargin_title">Üst ızgara marjı</string>

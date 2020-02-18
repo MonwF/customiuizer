@@ -17,7 +17,10 @@ import android.graphics.drawable.shapes.RoundRectShape;
 import android.net.Uri;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import de.robv.android.xposed.XposedBridge;
@@ -45,6 +48,7 @@ public class BatteryIndicator extends ImageView {
 	private boolean mRounded = false;
 	private boolean mCentered = false;
 	private boolean mExpanded = false;
+	private boolean mBottom = false;
 	private int mTintColor = Color.argb(153, 0, 0, 0);
 	private Object mStatusBar = null;
 
@@ -248,9 +252,15 @@ public class BatteryIndicator extends ImageView {
 		mHeight = Helpers.getSharedIntPref(getContext(), "pref_key_system_batteryindicator_height", 5);
 		mGlow = Helpers.getSharedIntPref(getContext(), "pref_key_system_batteryindicator_glow", 0);
 		mRounded = Helpers.getSharedBoolPref(getContext(), "pref_key_system_batteryindicator_rounded", false);
+		mBottom = Integer.parseInt(Helpers.getSharedStringPref(getContext(), "pref_key_system_batteryindicator_align", "1")) == 2;
 		mCentered = Helpers.getSharedBoolPref(getContext(), "pref_key_system_batteryindicator_centered", false);
 		mTransparency = Helpers.getSharedIntPref(getContext(), "pref_key_system_batteryindicator_transp", 0);
 		mPadding = Helpers.getSharedIntPref(getContext(), "pref_key_system_batteryindicator_padding", 0);
+		FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)getLayoutParams();
+		lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
+		lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+		lp.gravity = mBottom ? Gravity.BOTTOM : Gravity.TOP;
+		setLayoutParams(lp);
 		this.setImageAlpha(255 - Math.round(255 * mTransparency / 100f));
 		this.setVisibility(Helpers.getSharedBoolPref(getContext(), "pref_key_system_batteryindicator", false) ? View.VISIBLE : View.GONE);
 		this.setScaleType(mCentered ? ScaleType.CENTER : ScaleType.MATRIX);
@@ -326,7 +336,10 @@ public class BatteryIndicator extends ImageView {
 			int sbHeight = getResources().getDimensionPixelSize(getResources().getIdentifier("status_bar_height", "dimen", "android"));
 			if (mGlow == 0) {
 				paint.clearShadowLayer();
-				setPadding(mDisplayPadding, -mHeight, mDisplayPadding, 0);
+				if (mBottom)
+					setPadding(mDisplayPadding, 0, mDisplayPadding, -mHeight);
+				else
+					setPadding(mDisplayPadding, -mHeight, mDisplayPadding, 0);
 				shape.setIntrinsicHeight(mHeight * 2);
 				shape.setIntrinsicWidth(mWidth);
 			} else {
@@ -334,13 +347,13 @@ public class BatteryIndicator extends ImageView {
 				paint.setShadowLayer(
 					(mGlow / 100f) * (sbHeight - 9 * mDensity),
 					(mCentered || mDisplayPadding > 0) ? 0 : shadowPadding / 2f,
-					10 - mHeight,
+					mBottom ? mHeight - 10 : 10 - mHeight,
 					Color.argb(Math.min(Math.round(mGlow / 100f * 255), Math.round(255 - mTransparency / 100f * 255)), Color.red(color), Color.green(color), Color.blue(color))
 				);
 				if (mDisplayPadding == 0)
-					setPadding(mCentered ? 0 : -shadowPadding, -shadowPadding, mCentered ? 0 : Math.min(mDisplayWidth - mWidth, shadowPadding), shadowPadding);
+					setPadding(mCentered ? 0 : -shadowPadding, mBottom ? shadowPadding : -shadowPadding, mCentered ? 0 : Math.min(mDisplayWidth - mWidth, shadowPadding), mBottom ? -shadowPadding : shadowPadding);
 				else
-					setPadding(mDisplayPadding, -shadowPadding, mDisplayPadding, shadowPadding);
+					setPadding(mDisplayPadding, mBottom ? shadowPadding : -shadowPadding, mDisplayPadding, mBottom ? -shadowPadding : shadowPadding);
 				shape.setIntrinsicHeight(sbHeight);
 				shape.setIntrinsicWidth(mWidth + (mCentered ? 0 : (mDisplayPadding == 0 ? shadowPadding : 0)));
 			}

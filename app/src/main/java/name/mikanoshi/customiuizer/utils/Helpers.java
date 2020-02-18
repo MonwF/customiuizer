@@ -136,11 +136,9 @@ public class Helpers {
 	public static ValueAnimator shimmerAnim;
 	public static boolean showNewMods = true;
 	public static final HashSet<String> newMods = new HashSet<String>(Arrays.asList(
-		"pref_key_system_autobrightness_hlg",
-		"pref_key_system_visualizer_controller",
-		"pref_key_system_screenshot_overlay",
-		"pref_key_launcher_sensorportrait",
-		"pref_key_launcher_hideseekpoints_edit"
+		"pref_key_system_batteryindicator_align",
+		"pref_key_system_screenshot_floattime",
+		"pref_key_launcher_unlockhotseat"
 	));
 	public static final ArrayList<String> shortcutIcons = new ArrayList<String>();
 	public static Holidays currentHoliday = Holidays.NONE;

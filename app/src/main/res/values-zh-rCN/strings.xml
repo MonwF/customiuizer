@@ -138,6 +138,7 @@
     <string name="system_popupnotif_fs_title">遵守全屏</string>
     <string name="system_popupnotif_fs_summ">应用激活全屏模式时不打开通知抽屉(不适用于具有隐藏状态和导航栏的沉浸式应用)</string>
     <string name="system_popupnotif_apps_title">已选应用</string>
+    <string name="system_mods_screenshots">截图</string>
     <string name="system_screenshot_title">截图配置</string>
     <string name="system_screenshot_summ">自定义截图的格式、质量和存放目录</string>
     <string name="system_screenshot_format_title">格式</string>
@@ -145,6 +146,8 @@
     <string name="system_screenshot_path_title">存放目录</string>
     <string name="system_screenshot_overlay_title">截图时隐藏叠加层</string>
     <string name="system_screenshot_overlay_summ">进行截图时临时隐藏叠加层</string>
+    <string name="system_screenshot_floattime_title">浮动截图显示时间</string>
+    <string name="system_screenshot_floattime_summ">新建的截图悬浮窗口消失前的延迟</string>
     <string name="system_chargeanimtime_title">充电动画屏幕超时</string>
     <string name="system_chargeanimtime_summ">充电动画开始后保持亮屏的时间</string>
     <string name="system_nolightuponcharges_title">充电时不亮起屏幕</string>
@@ -159,6 +162,7 @@
     <string name="system_minbrightness_title">自动亮度最小值</string>
     <string name="system_maxbrightness_title">最大自动亮度</string>
     <string name="system_autobrightness_hlg_title">始终使用非线性缩放</string>
+    <string name="system_autobrightness_hlg_summ">在低于Android 9版本上启用模块中的亮度百分比是否不匹配真实值</string>
     <string name="system_nosafevolume_title">禁用高音量警告</string>
     <string name="system_nosafevolume_summ">音量达到不安全级别时不显示对话框</string>
     <string name="system_noducking_title">禁用闪避</string>
@@ -181,6 +185,7 @@
     <string name="system_visualizer_drawer_title">在通知抽屉中显示</string>
     <string name="system_visualizer_drawer_summ">展开通知抽屉时绘制可视化</string>
     <string name="system_visualizer_controller_title">仅媒体控制器存在时显示</string>
+    <string name="system_visualizer_controller_summ">音频播放器通常创建它用于带有媒体控制的通知</string>
     <string name="system_visualizer_animdur_title">动画时长</string>
     <string name="system_visualizer_transp_title">透明度</string>
     <string name="system_visualizer_render_title">渲染模式</string>
@@ -405,6 +410,8 @@
     <string name="launcher_hideseekpoints_edit_title">仅在编辑模式中显示</string>
     <string name="launcher_unlockgrids_title">解锁网格大小</string>
     <string name="launcher_unlockgrids_summ">可在主屏幕布局设置中使用3x4到8x8之间的所有网格大小</string>
+    <string name="launcher_unlockhotseat_title">增加底栏图标</string>
+    <string name="launcher_unlockhotseat_summ">解除底栏图标数量的限制</string>
     <string name="launcher_iconscale_title">图标缩放</string>
     <string name="launcher_horizmargin_title">水平网格边距</string>
     <string name="launcher_topmargin_title">顶部网格边距</string>

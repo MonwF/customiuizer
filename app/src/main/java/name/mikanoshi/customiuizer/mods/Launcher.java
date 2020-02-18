@@ -35,6 +35,7 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -296,6 +297,13 @@ public class Launcher {
 		});
 
 		Helpers.findAndHookMethod("com.miui.home.launcher.FolderCling", lpparam.classLoader, "onWallpaperColorChanged", new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				applyFolderShade((View)param.thisObject);
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.home.launcher.FolderCling", lpparam.classLoader, "updateLayout", boolean.class, new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
 				applyFolderShade((View)param.thisObject);
@@ -725,6 +733,16 @@ public class Launcher {
 						mBackgroundView.getPaddingBottom()
 					);
 				}
+			}
+		});
+
+		Helpers.hookAllMethods("com.miui.home.launcher.Folder", lpparam.classLoader, "onLayout", new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				if (!MainModule.mPrefs.getBoolean("launcher_folderwidth")) return;
+				GridView mContent = (GridView)XposedHelpers.getObjectField(param.thisObject, "mContent");
+				ImageView mFakeIcon = (ImageView)XposedHelpers.getObjectField(param.thisObject, "mFakeIcon");
+				mFakeIcon.layout(mContent.getLeft(), mContent.getTop(), mContent.getRight(), mContent.getTop() + mContent.getWidth());
 			}
 		});
 	}
@@ -1176,6 +1194,11 @@ public class Launcher {
 				act.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 			}
 		});
+	}
+
+	public static void MaxHotseatIconsCountHook(LoadPackageParam lpparam) {
+		String methodName = lpparam.packageName.equals("com.mi.android.globallauncher") ? "getHotseatCount" : "getHotseatMaxCount";
+		Helpers.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, methodName, XC_MethodReplacement.returnConstant(666));
 	}
 
 //	public static void NoInternationalBuildHook(LoadPackageParam lpparam) {

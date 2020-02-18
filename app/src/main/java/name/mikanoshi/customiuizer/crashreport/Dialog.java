@@ -33,6 +33,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -371,8 +372,7 @@ public class Dialog extends Activity {
 			};
 			for (String prop: xposedPropFiles) {
 				File propFile = new File(prop);
-				if (propFile.exists()) {
-					if (!propFile.canRead()) break;
+				if (propFile.exists() && propFile.canRead()) {
 					crashData.put("XPOSED_VERSION", getXposedPropVersion(propFile));
 					break;
 				}
@@ -385,6 +385,12 @@ public class Dialog extends Activity {
 			if (launcherInfo != null) {
 				PackageInfo packageInfo = pkgMgr.getPackageInfo(launcherInfo.activityInfo.packageName, 0);
 				if (packageInfo != null) crashData.put("LAUNCHER_VERSION", launcherInfo.activityInfo.loadLabel(pkgMgr) + " " + packageInfo.versionName);
+			}
+
+			if (!crashData.containsKey("XPOSED_VERSION")) {
+				PackageInfo taichiInfo = pkgMgr.getPackageInfo("me.weishu.exp", 0);
+				if (taichiInfo != null)
+				crashData.put("XPOSED_VERSION", taichiInfo.applicationInfo.loadLabel(pkgMgr) + " " + taichiInfo.versionName);
 			}
 
 			crashData.put("SHARED_PREFERENCES", new JSONObject(prefs.getAll()));

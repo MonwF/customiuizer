@@ -653,6 +653,7 @@ public class System {
 		if (option == 1) return;
 
 		Object res = param.getResult();
+		if (res == null) return;
 		LinearLayout toast = (LinearLayout)XposedHelpers.getObjectField(res, "mNextView");
 		if (toast == null) return;
 		toast.setGravity(Gravity.START);
@@ -3692,12 +3693,7 @@ public class System {
 				BatteryIndicator indicator = new BatteryIndicator(mContext);
 				View panel = mStatusBarWindow.findViewById(mContext.getResources().getIdentifier("notification_panel", "id", lpparam.packageName));
 				mStatusBarWindow.addView(indicator, panel != null ? mStatusBarWindow.indexOfChild(panel) + 1 : Math.max(mStatusBarWindow.getChildCount() - 1, 8));
-				FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)indicator.getLayoutParams();
-				lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
-				lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-				lp.gravity = Gravity.TOP;
 				indicator.setAdjustViewBounds(false);
-				indicator.setLayoutParams(lp);
 				indicator.init(param.thisObject);
 				XposedHelpers.setAdditionalInstanceField(param.thisObject, "mBatteryIndicator", indicator);
 				Object mNotificationIconAreaController = XposedHelpers.getObjectField(param.thisObject, "mNotificationIconAreaController");
@@ -6066,6 +6062,26 @@ public class System {
 						}
 					}
 				}, new IntentFilter("miui.intent.TAKE_SCREENSHOT"));
+			}
+		});
+	}
+
+	public static void ScreenshotFloatTimeHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.screenshot.GlobalScreenshot", lpparam.classLoader, "showThumbnailWindow", new MethodHook() {
+			@Override
+			@SuppressWarnings("ConstantConditions")
+			protected void after(MethodHookParam param) throws Throwable {
+				boolean mIsShowLongScreenShotGuide = false;
+				try {
+					mIsShowLongScreenShotGuide = XposedHelpers.getBooleanField(param.thisObject, "mIsShowLongScreenShotGuide");
+				} catch (Throwable ignore) {}
+				if (mIsShowLongScreenShotGuide) return;
+				int opt = MainModule.mPrefs.getInt("system_screenshot_floattime", 0);
+				if (opt <= 0) return;
+				Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
+				Runnable mQuitThumbnailRunnable = (Runnable)XposedHelpers.getObjectField(param.thisObject, "mQuitThumbnailRunnable");
+				mHandler.removeCallbacks(mQuitThumbnailRunnable);
+				mHandler.postDelayed(mQuitThumbnailRunnable, opt * 1000);
 			}
 		});
 	}

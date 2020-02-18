@@ -14,6 +14,14 @@
 		android:dependency="pref_key_system_batteryindicator"
 		miuizer:dynamic="true">
 
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_system_batteryindicator_align"
+		android:title="@string/system_lockscreenshortcuts_left_align_title"
+		android:entries="@array/verticalalign"
+		android:entryValues="@array/verticalalign_val"
+		android:defaultValue="1"
+		miuizer:valueAsSummary="true" />
+
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_batteryindicator_rounded"
 		android:title="@string/system_batteryindicator_rounded_title"

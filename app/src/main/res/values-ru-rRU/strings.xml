@@ -470,6 +470,8 @@
 	<string name="launcher_hideseekpoints_edit_title">Показывать только в режиме редактирования</string>
 	<string name="launcher_unlockgrids_title">Разблокировать размеры сетки</string>
 	<string name="launcher_unlockgrids_summ">Делает все размеры от 3x4 до 8x8 доступными в настройках сетки рабочего стола</string>
+	<string name="launcher_unlockhotseat_title">Больше иконок в доке</string>
+	<string name="launcher_unlockhotseat_summ">Неограниченное число иконок в доке рабочего стола</string>
 	<string name="launcher_iconscale_title">Масштаб значков</string>
 	<string name="launcher_horizmargin_title">Горизонтальные отступы сетки</string>
 	<string name="launcher_topmargin_title">Отступ сетки сверху</string>
@@ -727,6 +729,7 @@
 	<string name="system_popupnotif_fs_title">Определение полноэкранного режима</string>
 	<string name="system_popupnotif_fs_summ">Не открывать панель уведомлений, если запущено полноэкранное приложение (не распространяется на \"режим погружения\" со скрытыми панелями статуса и навигации)</string>
 	<string name="system_popupnotif_apps_title">Выбранные приложения</string>
+	<string name="system_mods_screenshots">Снимки экрана</string>
 	<string name="system_screenshot_title">Конфигурация снимков экрана</string>
 	<string name="system_screenshot_summ">Настройка формата, качества и папки сохранения скриншотов</string>
 	<string name="system_screenshot_format_title">Формат</string>
@@ -734,6 +737,8 @@
 	<string name="system_screenshot_path_title">Папка для сохранения</string>
 	<string name="system_screenshot_overlay_title">Скрыть оверлеи на скриншотах</string>
 	<string name="system_screenshot_overlay_summ">Временно прячет оверлеи во время создания снимков экрана</string>
+	<string name="system_screenshot_floattime_title">Время показа всплывающего скриншота</string>
+	<string name="system_screenshot_floattime_summ">Задержка перед скрытием всплывающего окна с только что созданным снимком экрана</string>
 	<string name="system_chargeanimtime_title">Таймаут экрана при анимации зарядки</string>
 	<string name="system_chargeanimtime_summ">Как долго держать экран включенным после начала анимации зарядки</string>
 	<string name="system_nolightuponcharges_summ">Запрещает включение экрана при подключении или отключении зарядки</string>

@@ -1,3 +1,9 @@
+2.1.4
+[New] Change delay before a floating window with newly created screenshot disappears
+[New] Unlimited number of icons in launcher's dock
+[Improved][Battery bar indicator] Align to the bottom of status bar (indicator will also appear at the bottom of the screen in notification drawer and on lock screen)
+[Fixed][Use entire folder's width] Truncated icons during folder close animation
+
 2.1.3
 [New] Hide overlays while making a screenshot
 [New] Reverse portrait orientation support in launcher
