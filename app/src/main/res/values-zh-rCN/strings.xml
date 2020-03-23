@@ -49,6 +49,8 @@
     <string name="system_statusbaricons_record_title">通话：录音</string>
     <string name="system_batteryindicator_title">电池条指示器</string>
     <string name="system_batteryindicator_summ">将电池电量显示为彩色条</string>
+    <string name="system_batteryindicator_limitvis_title">限制可见性</string>
+    <string name="system_batteryindicator_limitvis_summ">仅在通知抽屉中和锁屏上显示</string>
     <string name="system_batteryindicator_rounded_title">圆形</string>
     <string name="system_batteryindicator_centered_title">居中</string>
     <string name="system_batteryindicator_height_title">电量条高度</string>
@@ -97,7 +99,7 @@
     <string name="system_statusbarcontrols_sens_bright_title">亮度</string>
     <string name="system_statusbarcontrols_sens_vol_title">音量</string>
     <string name="system_statusbarcontrols_single_title">单指水平滑动</string>
-    <string name="system_statusbarcontrols_dual_title">爽直水平滑动</string>
+    <string name="system_statusbarcontrols_dual_title">双指水平滑动</string>
     <string name="system_statusbarcontrols_dt_title">双击动作</string>
     <string name="system_fixmeter_title">网速间距</string>
     <string name="system_fixmeter_summ">增加网速指示器的水平边距</string>
@@ -324,6 +326,8 @@
     <string name="system_taptounlock_summ">点击屏幕底部锁屏区域解锁设备</string>
     <string name="system_dttosleep_title">双击熄屏</string>
     <string name="system_dttosleep_summ">双击锁屏上任意空白处关闭屏幕</string>
+    <string name="system_lscurrent_title">显示充电电流</string>
+    <string name="system_lscurrent_summ">在锁屏底部显示充电电流值</string>
     <string name="system_lsalarm_title">显示下次闹钟</string>
     <string name="system_lsalarm_summ">显示离当前日期最近的闹钟</string>
     <string name="system_lsalarm_format_title">显示格式</string>
@@ -628,10 +632,7 @@
     <string name="array_global_actions_goback">返回</string>
     <string name="array_global_actions_onehanded_left">单手模式(左)</string>
     <string name="array_global_actions_onehanded_right">单手模式(右)</string>
-    <string name="array_global_toggle_wifi">Wi-Fi</string>
     <string name="array_global_toggle_bt">蓝牙</string>
-    <string name="array_global_toggle_gps">GPS</string>
-    <string name="array_global_toggle_nfc">NFC</string>
     <string name="array_global_toggle_sound">声音情景</string>
     <string name="array_global_toggle_brightness">自动亮度</string>
     <string name="array_global_toggle_rotation">自动旋转</string>
@@ -793,7 +794,6 @@
     <string name="support_donate_crypto_title">加密货币</string>
     <string name="support_donate_crypto_summ">未来货币 :)</string>
     <string name="support_donate_other_title">过时货币</string>
-    <string name="support_donate_other_summ">Webmoney、QIWI</string>
     <string name="donate_level1">感谢您的捐款！</string>
     <string name="donate_level2">感谢您的慷慨解囊！</string>
     <string name="donate_level3">您真是太慷慨了，非常感谢！ 😮</string>

@@ -56,6 +56,8 @@
 	<string name="system_statusbaricons_record_title">Call: recording</string>
 	<string name="system_batteryindicator_title">Battery bar indicator</string>
 	<string name="system_batteryindicator_summ">Display battery charge level as a colored bar</string>
+	<string name="system_batteryindicator_limitvis_title">Limited visibility</string>
+	<string name="system_batteryindicator_limitvis_summ">Show only in notificaton drawer and on lock screen</string>
 	<string name="system_batteryindicator_rounded_title">Rounded ends</string>
 	<string name="system_batteryindicator_centered_title">Centered</string>
 	<string name="system_batteryindicator_height_title">Bar height</string>
@@ -334,6 +336,8 @@
 	<string name="system_taptounlock_summ">Start device unlocking by tapping on bottom lock screen area</string>
 	<string name="system_dttosleep_title">Double tap to sleep</string>
 	<string name="system_dttosleep_summ">Turn screen off by double tapping on any empty space on lock screen</string>
+	<string name="system_lscurrent_title">Display charging current</string>
+	<string name="system_lscurrent_summ">Show charging current value at the bottom of lock screen</string>
 	<string name="system_lsalarm_title">Display next alarm</string>
 	<string name="system_lsalarm_summ">Show nearest alarm time next to current date</string>
 	<string name="system_lsalarm_format_title">Display format</string>
@@ -934,6 +938,7 @@
 	<string name="time_8h">8 hours</string>
 	<string name="time_10h">10 hours</string>
 	<string name="time_12h">12 hours</string>
+	<string name="time_forever" translatable="false">∞</string>
 
 	<string name="white_color">White</string>
 	<string name="black_color">Black</string>

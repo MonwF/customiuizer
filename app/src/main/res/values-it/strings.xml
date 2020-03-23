@@ -49,6 +49,8 @@
     <string name="system_statusbaricons_record_title">Chiamata: registrazione</string>
     <string name="system_batteryindicator_title">Indicatore barra della batteria</string>
     <string name="system_batteryindicator_summ">Mostra il livello di carica con una barra colorata</string>
+    <string name="system_batteryindicator_limitvis_title">Visibilità limitata</string>
+    <string name="system_batteryindicator_limitvis_summ">Mostra solo nel riquadro delle notifiche e nella schermata di blocco</string>
     <string name="system_batteryindicator_rounded_title">Angoli arrotondati</string>
     <string name="system_batteryindicator_centered_title">Centrato</string>
     <string name="system_batteryindicator_height_title">Altezza della barra</string>
@@ -138,6 +140,7 @@
     <string name="system_popupnotif_fs_title">Forza schermo intero</string>
     <string name="system_popupnotif_fs_summ">Non aprire il riquadro delle notifiche quando è attiva l\'app a schermo intero (non si applica alla modalità immersiva con stato e barre di navigazione nascosti)</string>
     <string name="system_popupnotif_apps_title">App selezionate</string>
+    <string name="system_mods_screenshots">Screenshots</string>
     <string name="system_screenshot_title">Configura uno Screenshot</string>
     <string name="system_screenshot_summ">Personalizza il formato, la qualità e salva la cartella per gli screenshot</string>
     <string name="system_screenshot_format_title">Formato</string>
@@ -145,6 +148,8 @@
     <string name="system_screenshot_path_title">Salva cartella</string>
     <string name="system_screenshot_overlay_title">Nascondi le sovrapposizioni sugli screenshot</string>
     <string name="system_screenshot_overlay_summ">Nascondi temporaneamente le sovrapposizioni mentre fai uno screenshot</string>
+    <string name="system_screenshot_floattime_title">Tempo di visualizzazione dello screenshot mobile</string>
+    <string name="system_screenshot_floattime_summ">Il ritardo prima che una finestra mobile con uno screenshot appena creato scompaia</string>
     <string name="system_chargeanimtime_title">Durata animazione di ricarica</string>
     <string name="system_chargeanimtime_summ">Quanto tempo lo schermo deve rimanere acceso dopo l\'animazione di ricarica</string>
     <string name="system_nolightuponcharges_title">Non accendere lo schermo durante la ricarica</string>
@@ -408,6 +413,8 @@
     <string name="launcher_hideseekpoints_edit_title">Mostra solo in modalità modifica</string>
     <string name="launcher_unlockgrids_title">Sblocca le dimensioni della griglia</string>
     <string name="launcher_unlockgrids_summ">Rendi disponibili tutte le dimensioni della griglia da 3x4 a 8x8 nelle impostazioni del layout della schermata principale</string>
+    <string name="launcher_unlockhotseat_title">Altre icone nel dock</string>
+    <string name="launcher_unlockhotseat_summ">Numero illimitato di icone nel dock</string>
     <string name="launcher_iconscale_title">Ridimensionamento delle icone</string>
     <string name="launcher_horizmargin_title">Margini della griglia orizzontale</string>
     <string name="launcher_topmargin_title">Margine superiore della griglia</string>
@@ -624,10 +631,7 @@
     <string name="array_global_actions_goback">Torna indietro</string>
     <string name="array_global_actions_onehanded_left">Modalità a una mano (sinistra)</string>
     <string name="array_global_actions_onehanded_right">Modalità a una mano (destra)</string>
-    <string name="array_global_toggle_wifi">Wi-Fi</string>
     <string name="array_global_toggle_bt">Bluetooth</string>
-    <string name="array_global_toggle_gps">GPS</string>
-    <string name="array_global_toggle_nfc">NFC</string>
     <string name="array_global_toggle_sound">Profili suono</string>
     <string name="array_global_toggle_brightness">Luminosità automatica</string>
     <string name="array_global_toggle_rotation">Rotazione automatica</string>
@@ -789,7 +793,6 @@
     <string name="support_donate_crypto_title">Criptovalute</string>
     <string name="support_donate_crypto_summ">Moneta del futuro :)</string>
     <string name="support_donate_other_title">Valute obsolete</string>
-    <string name="support_donate_other_summ">Webmoney, QIWI</string>
     <string name="donate_level1">Grazie per la tua donazione!</string>
     <string name="donate_level2">Grazie per la tua generosa donazione!</string>
     <string name="donate_level3">Grazie per la tua mostruosa donazione! 😮</string>

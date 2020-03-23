@@ -78,7 +78,7 @@ public class Various extends SubFragment {
 				@Override
 				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 					if (!view.isEnabled()) {
-						Helpers.openURL(getActivity(), "https://www.apkmirror.com/apk/xiaomi-inc/package-installer-3/");
+						Helpers.openURL(getActivity(), "https://www.apkmirror.com/apk/xiaomi-inc/xiaomi-package-installer/");
 						return true;
 					} else return false;
 				}

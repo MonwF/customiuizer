@@ -43,12 +43,15 @@ public class BatteryIndicator extends ImageView {
 	private int mGlow = 0;
 	private int mTransparency = 0;
 	private int mPadding = 0;
+	private int mVisibility = View.VISIBLE;
 	private ColorMode mColorMode = ColorMode.DISCRETE;
 	private boolean mTesting = false;
 	private boolean mRounded = false;
 	private boolean mCentered = false;
 	private boolean mExpanded = false;
+	private boolean mOnKeyguard = false;
 	private boolean mBottom = false;
+	private boolean mLimited = false;
 	private int mTintColor = Color.argb(153, 0, 0, 0);
 	private Object mStatusBar = null;
 
@@ -184,6 +187,12 @@ public class BatteryIndicator extends ImageView {
 		update();
 	}
 
+	public void onKeyguardStateChanged(boolean showing) {
+		if (mOnKeyguard == showing) return;
+		mOnKeyguard = showing;
+		update();
+	}
+
 	public void onDarkModeChanged(float intensity, int tintColor) {
 		//if (intensity != 0.0f && intensity != 1.0f) return;
 		if (mTintColor == tintColor) return;
@@ -234,6 +243,7 @@ public class BatteryIndicator extends ImageView {
 	}
 
 	public void update() {
+		if (mLimited) this.setVisibility(mExpanded || mOnKeyguard ? mVisibility : View.GONE);
 		clearAnimation();
 		updateDrawable();
 	}
@@ -254,15 +264,17 @@ public class BatteryIndicator extends ImageView {
 		mRounded = Helpers.getSharedBoolPref(getContext(), "pref_key_system_batteryindicator_rounded", false);
 		mBottom = Integer.parseInt(Helpers.getSharedStringPref(getContext(), "pref_key_system_batteryindicator_align", "1")) == 2;
 		mCentered = Helpers.getSharedBoolPref(getContext(), "pref_key_system_batteryindicator_centered", false);
+		mLimited = Helpers.getSharedBoolPref(getContext(), "pref_key_system_batteryindicator_limitvis", false);
 		mTransparency = Helpers.getSharedIntPref(getContext(), "pref_key_system_batteryindicator_transp", 0);
 		mPadding = Helpers.getSharedIntPref(getContext(), "pref_key_system_batteryindicator_padding", 0);
+		mVisibility = Helpers.getSharedBoolPref(getContext(), "pref_key_system_batteryindicator", false) ? View.VISIBLE : View.GONE;
 		FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)getLayoutParams();
 		lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
 		lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
 		lp.gravity = mBottom ? Gravity.BOTTOM : Gravity.TOP;
 		setLayoutParams(lp);
 		this.setImageAlpha(255 - Math.round(255 * mTransparency / 100f));
-		this.setVisibility(Helpers.getSharedBoolPref(getContext(), "pref_key_system_batteryindicator", false) ? View.VISIBLE : View.GONE);
+		this.setVisibility(mVisibility);
 		this.setScaleType(mCentered ? ScaleType.CENTER : ScaleType.MATRIX);
 		Matrix matrix = new Matrix();
 		matrix.setTranslate(0, 0);
@@ -291,8 +303,7 @@ public class BatteryIndicator extends ImageView {
 				if (mExpanded) {
 					color = Color.WHITE;
 				} else {
-					boolean isKeyguardShowing = (boolean)XposedHelpers.callMethod(mStatusBar, "isKeyguardShowing");
-					if (isKeyguardShowing) {
+					if (mOnKeyguard) {
 						boolean isLightWallpaperStatusBar = (boolean)XposedHelpers.callMethod(XposedHelpers.getObjectField(mStatusBar, "mUpdateMonitor"), "isLightWallpaperStatusBar");
 						color = (isLightWallpaperStatusBar ? Color.argb(153, 0, 0, 0) : Color.WHITE);
 					} else {

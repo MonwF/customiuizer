@@ -387,11 +387,11 @@ public class Dialog extends Activity {
 				if (packageInfo != null) crashData.put("LAUNCHER_VERSION", launcherInfo.activityInfo.loadLabel(pkgMgr) + " " + packageInfo.versionName);
 			}
 
-			if (!crashData.containsKey("XPOSED_VERSION")) {
+			if (!crashData.containsKey("XPOSED_VERSION")) try {
 				PackageInfo taichiInfo = pkgMgr.getPackageInfo("me.weishu.exp", 0);
 				if (taichiInfo != null)
 				crashData.put("XPOSED_VERSION", taichiInfo.applicationInfo.loadLabel(pkgMgr) + " " + taichiInfo.versionName);
-			}
+			} catch (Throwable t) {}
 
 			crashData.put("SHARED_PREFERENCES", new JSONObject(prefs.getAll()));
 			if (!sb.toString().isEmpty())

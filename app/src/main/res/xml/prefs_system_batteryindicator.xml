@@ -23,6 +23,12 @@
 		miuizer:valueAsSummary="true" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_batteryindicator_limitvis"
+		android:title="@string/system_batteryindicator_limitvis_title"
+		android:summary="@string/system_batteryindicator_limitvis_summ"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_batteryindicator_rounded"
 		android:title="@string/system_batteryindicator_rounded_title"
 		android:defaultValue="false" />

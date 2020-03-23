@@ -81,6 +81,7 @@ import android.text.format.DateUtils;
 import android.util.ArrayMap;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.Pair;
 import android.util.SparseIntArray;
 import android.util.TypedValue;
@@ -3725,6 +3726,15 @@ public class System {
 			}
 		});
 
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "updateKeyguardState", boolean.class, boolean.class, new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				boolean isKeyguardShowing = (boolean)XposedHelpers.callMethod(param.thisObject, "isKeyguardShowing");
+				BatteryIndicator indicator = (BatteryIndicator)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mBatteryIndicator");
+				if (indicator != null) indicator.onKeyguardStateChanged(isKeyguardShowing);
+			}
+		});
+
 		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.NotificationIconAreaController", lpparam.classLoader, "onDarkChanged", Rect.class, float.class, int.class, new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
@@ -5806,6 +5816,7 @@ public class System {
 	private static int hours8ResId;
 	private static int hours10ResId;
 	private static int hours12ResId;
+	private static int foreverResId;
 	public static void MoreSnoozeOptionsRes() {
 		hours3ResId = MainModule.resHooks.addResource("time_3h", R.string.time_3h);
 		hours4ResId = MainModule.resHooks.addResource("time_4h", R.string.time_4h);
@@ -5814,6 +5825,7 @@ public class System {
 		hours8ResId = MainModule.resHooks.addResource("time_8h", R.string.time_8h);
 		hours10ResId = MainModule.resHooks.addResource("time_10h", R.string.time_10h);
 		hours12ResId = MainModule.resHooks.addResource("time_12h", R.string.time_12h);
+		foreverResId = MainModule.resHooks.addResource("time_forever", R.string.time_forever);
 	}
 
 	public static void MoreSnoozeOptionsHook(LoadPackageParam lpparam) {
@@ -5830,6 +5842,7 @@ public class System {
 				options.add(XposedHelpers.callMethod(param.thisObject, "createOption", hours8ResId, 480));
 				options.add(XposedHelpers.callMethod(param.thisObject, "createOption", hours10ResId, 600));
 				options.add(XposedHelpers.callMethod(param.thisObject, "createOption", hours12ResId, 720));
+				options.add(XposedHelpers.callMethod(param.thisObject, "createOption", foreverResId, 1024));
 			}
 		});
 	}
@@ -5837,11 +5850,16 @@ public class System {
 	public static void MoreSnoozeOptionsServiceHook(LoadPackageParam lpparam) {
 		Helpers.hookAllMethods("com.android.server.notification.SnoozeHelper", lpparam.classLoader, "scheduleRepost", new MethodHook() {
 			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				if ((long)param.args[3] == 1024 * 60000) param.setResult(null);
+			}
+			@Override
 			@SuppressWarnings("unchecked")
 			protected void after(MethodHookParam param) throws Throwable {
+				if ((long)param.args[3] == 1024 * 60000) return;
 				ArrayMap<String, Long> mSnoozedNotificationDelays = (ArrayMap<String, Long>)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mSnoozedNotificationDelays");
 				if (mSnoozedNotificationDelays == null) mSnoozedNotificationDelays = new ArrayMap<String, Long>();
-				mSnoozedNotificationDelays.put((String)param.args[1], (long)param.args[3]);
+				mSnoozedNotificationDelays.put((String)param.args[1], currentTimeMillis() + (long)param.args[3]);
 				XposedHelpers.setAdditionalInstanceField(param.thisObject, "mSnoozedNotificationDelays", mSnoozedNotificationDelays);
 			}
 		});
@@ -5910,7 +5928,7 @@ public class System {
 										notif.putLong("created", XposedHelpers.getLongField(record, "mCreationTimeMs"));
 										notif.putLong("updated", XposedHelpers.getLongField(record, "mUpdateTimeMs"));
 										if (mSnoozedNotificationDelays != null && mSnoozedNotificationDelays.get(key) != null)
-										notif.putLong("reposted", currentTimeMillis() + mSnoozedNotificationDelays.get(key));
+										notif.putLong("reposted", mSnoozedNotificationDelays.get(key));
 										Object sbn = XposedHelpers.getObjectField(record, "sbn");
 										Notification notification = (Notification)XposedHelpers.getObjectField(sbn, "notification");
 										if (notification != null) {
@@ -6082,6 +6100,70 @@ public class System {
 				Runnable mQuitThumbnailRunnable = (Runnable)XposedHelpers.getObjectField(param.thisObject, "mQuitThumbnailRunnable");
 				mHandler.removeCallbacks(mQuitThumbnailRunnable);
 				mHandler.postDelayed(mQuitThumbnailRunnable, opt * 1000);
+			}
+		});
+	}
+
+	public static void ScrambleAppLockPINHook(LoadPackageParam lpparam) {
+		Helpers.hookAllConstructors("com.miui.applicationlock.widget.MiuiNumericInputView", lpparam.classLoader, new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				LinearLayout keys = (LinearLayout)param.thisObject;
+				ArrayList<View> mRandomViews = new ArrayList<View>();
+				View bottom0 = null; View bottom2 = null;
+				for (int row = 0; row <= 3; row++) {
+					ViewGroup cols = (ViewGroup)keys.getChildAt(row);
+					for (int col = 0; col <= 2; col++) {
+						if (row == 3)
+						if (col == 0) {
+							bottom0 = cols.getChildAt(col);
+							continue;
+						} else if (col == 2) {
+							bottom2 = cols.getChildAt(col);
+							continue;
+						}
+						mRandomViews.add(cols.getChildAt(col));
+					}
+					cols.removeAllViews();
+				}
+
+				Collections.shuffle(mRandomViews);
+
+				int cnt = 0;
+				for (int row = 0; row <= 3; row++)
+				for (int col = 0; col <= 2; col++) {
+					ViewGroup cols = (ViewGroup)keys.getChildAt(row);
+					if (row == 3)
+					if (col == 0) {
+						cols.addView(bottom0);
+						continue;
+					} else if (col == 2) {
+						cols.addView(bottom2);
+						continue;
+					}
+					cols.addView(mRandomViews.get(cnt));
+					cnt++;
+				}
+			}
+		});
+	}
+
+	public static void ChargingInfoHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethods("com.android.keyguard.charge.ChargeUtils", lpparam.classLoader, "getChargingHintText", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				Context context = (Context)param.args[0];
+				int charge = (int)param.args[2];
+				String hint = (String)param.getResult();
+				String PROVIDER_POWER_CENTER = (String)XposedHelpers.getStaticObjectField(findClass("com.android.keyguard.charge.ChargeUtils", lpparam.classLoader), "PROVIDER_POWER_CENTER");
+
+				Bundle bundle = null;
+				try {
+					bundle = context.getContentResolver().call(Uri.parse(PROVIDER_POWER_CENTER), "getBatteryCurrent", null, null);
+				} catch (Exception ignore) {}
+
+				if (bundle != null && charge < 100)
+				param.setResult(hint + " • " + Math.abs(bundle.getInt("current_now")) + " mA");
 			}
 		});
 	}

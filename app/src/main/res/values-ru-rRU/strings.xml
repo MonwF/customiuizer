@@ -630,6 +630,8 @@
 	<string name="system_statusbaricons_record_title">Звонок: запись разговора</string>
 	<string name="system_batteryindicator_title">Индикатор батареи полоской</string>
 	<string name="system_batteryindicator_summ">Отображает уровень заряда батареи цветной полоской</string>
+	<string name="system_batteryindicator_limitvis_title">Ограниченнная видимость</string>
+	<string name="system_batteryindicator_limitvis_summ">Показывать только в панели уведомлений и на экране блокировки</string>
 	<string name="system_batteryindicator_rounded_title">Скруглённые концы</string>
 	<string name="system_batteryindicator_centered_title">По центру</string>
 	<string name="system_batteryindicator_height_title">Высота индикатора</string>
@@ -882,6 +884,8 @@
 	<string name="system_taptounlock_summ">Нажатие на нижнюю область экрана блокировки начинает разблокировку устройства</string>
 	<string name="system_dttosleep_title">Сон по двойному нажатию</string>
 	<string name="system_dttosleep_summ">Выключает экран при двойном нажатии по пустому месту на экране блокировки</string>
+	<string name="system_lscurrent_title">Показывать ток зарядки</string>
+	<string name="system_lscurrent_summ">Отображает значение тока зарядки в нижней части экрана блокировки</string>
 	<string name="system_lsalarm_title">Показ будильника</string>
 	<string name="system_lsalarm_summ">Отображает ближайшее время срабатывания будильника рядом с текущей датой</string>
 	<string name="system_lsalarm_format_title">Формат отображения</string>

@@ -49,6 +49,8 @@
     <string name="system_statusbaricons_record_title">Çağrı: kayıt</string>
     <string name="system_batteryindicator_title">Pil Çubuğu</string>
     <string name="system_batteryindicator_summ">Şarj seviyesini ekranın üst kısmında çubuk olarak görüntüler.</string>
+    <string name="system_batteryindicator_limitvis_title">Sınırlı görünürlük</string>
+    <string name="system_batteryindicator_limitvis_summ">Yalnızca bildirim çekmecesinde ve kilit ekranında göster</string>
     <string name="system_batteryindicator_rounded_title">Yuvarlak Uçlar</string>
     <string name="system_batteryindicator_centered_title">Ortalı</string>
     <string name="system_batteryindicator_height_title">Yükseklik</string>
@@ -324,6 +326,8 @@
     <string name="system_taptounlock_summ">Alt kilit ekranı alanına dokunarak cihazın kilidini açmaya başlayın</string>
     <string name="system_dttosleep_title">Dokunma (Çift)</string>
     <string name="system_dttosleep_summ">Ekran Kilidi\'nde boş bir yere çift dokunulduğunda ekran kapatılır.</string>
+    <string name="system_lscurrent_title">Ekran şarj akımı</string>
+    <string name="system_lscurrent_summ">Şarj akımı değerini kilit ekranının altında göster</string>
     <string name="system_lsalarm_title">Bir sonraki alarmı göster</string>
     <string name="system_lsalarm_summ">Geçerli tarihin yanında en yakın alarm saatini göster</string>
     <string name="system_lsalarm_format_title">Oynatma formatı</string>
@@ -628,10 +632,7 @@
     <string name="array_global_actions_goback">Geri Dön</string>
     <string name="array_global_actions_onehanded_left">Tek El Kullanım Mod\'u (Sol)</string>
     <string name="array_global_actions_onehanded_right">Tek El Kullanım Mod\'u (Sağ)</string>
-    <string name="array_global_toggle_wifi">Wi-Fi</string>
     <string name="array_global_toggle_bt">Bluetooth</string>
-    <string name="array_global_toggle_gps">GPS</string>
-    <string name="array_global_toggle_nfc">NFC</string>
     <string name="array_global_toggle_sound">Ses Profili</string>
     <string name="array_global_toggle_brightness">Otomatik Parlaklık</string>
     <string name="array_global_toggle_rotation">Döndürme</string>
@@ -793,7 +794,6 @@
     <string name="support_donate_crypto_title">Yeni Para (CryptoDonate)</string>
     <string name="support_donate_crypto_summ">Ne demişler? \'Geleceğin modülü, geleceğin parası yâ\'hû!\'</string>
     <string name="support_donate_other_title">Eski Para (MikanoshiDonate)</string>
-    <string name="support_donate_other_summ">Daha ne kadar seçenek ekleyebilirim buraya, inan bana... Bilmiyorum!</string>
     <string name="donate_level1">Bağışınız İçin Teşekkürler!</string>
     <string name="donate_level2">Cömert Bağışınız İçin Teşekkürler!</string>
     <string name="donate_level3">Cömert Cömert Bağışınız İçin Teşekkürler! 😮</string>

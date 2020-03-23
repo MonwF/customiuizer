@@ -1,3 +1,10 @@
+2.1.5
+[New] Scramble App Lock PIN
+[New] Show a value of charging current at the bottom of lock screen
+[Improved][Battery bar indicator] Option to only show in notification drawer and on lock screen
+[Improved][Snoozed notifications manager] Option to snooze notification indefinitely (until the next device reboot)
+[Fixed][Snoozed notifications manager] Show correct time until snoozed notification is reposted
+
 2.1.4
 [New] Change delay before a floating window with newly created screenshot disappears
 [New] Unlimited number of icons in launcher's dock

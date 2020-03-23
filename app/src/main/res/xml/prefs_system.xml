@@ -732,6 +732,12 @@
 		android:title="@string/system_mods_applock">
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_applock_scramblepin"
+			android:title="@string/system_scramblepin_title"
+			android:summary="@string/system_scramblepin_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_applock"
 			android:title="@string/system_applock_title"
 			android:summary="@string/system_applock_summ"
@@ -778,6 +784,12 @@
 			android:key="pref_key_system_dttosleep"
 			android:summary="@string/system_dttosleep_summ"
 			android:title="@string/system_dttosleep_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_lscurrent"
+			android:summary="@string/system_lscurrent_summ"
+			android:title="@string/system_lscurrent_title"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx

@@ -246,6 +246,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_allownotiffloat")) System.AllowAllFloatHook(lpparam);
 			if (mPrefs.getBoolean("system_hideqs")) System.HideQSHook(lpparam);
 			if (mPrefs.getBoolean("system_lsalarm")) System.LockScreenAlaramHook(lpparam);
+			if (mPrefs.getBoolean("system_lscurrent")) System.ChargingInfoHook(lpparam);
 			if (mPrefs.getBoolean("system_statusbarcontrols")) System.StatusBarGesturesHook(lpparam);
 			if (mPrefs.getBoolean("system_screenshot")) System.ScreenshotConfigHook(lpparam);
 			if (mPrefs.getBoolean("system_nodrawerbackground")) System.RemoveDrawerBackgroundHook(lpparam);
@@ -284,6 +285,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("various_appdetails")) Various.AppInfoHook(lpparam);
 			if (mPrefs.getBoolean("various_disableapp")) Various.AppsDisableHook(lpparam);
 			if (mPrefs.getBoolean("system_unblockthird")) System.UnblockThirdLaunchersHook(lpparam);
+			if (mPrefs.getBoolean("system_applock_scramblepin")) System.ScrambleAppLockPINHook(lpparam);
 			if (mPrefs.getStringAsInt("various_appsort", 0) > 0) Various.AppsDefaultSortHook(lpparam);
 		}
 

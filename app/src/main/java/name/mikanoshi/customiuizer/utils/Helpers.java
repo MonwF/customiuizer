@@ -136,9 +136,9 @@ public class Helpers {
 	public static ValueAnimator shimmerAnim;
 	public static boolean showNewMods = true;
 	public static final HashSet<String> newMods = new HashSet<String>(Arrays.asList(
-		"pref_key_system_batteryindicator_align",
-		"pref_key_system_screenshot_floattime",
-		"pref_key_launcher_unlockhotseat"
+		"pref_key_system_applock_scramblepin",
+		"pref_key_system_lscurrent",
+		"pref_key_system_batteryindicator_limitvis"
 	));
 	public static final ArrayList<String> shortcutIcons = new ArrayList<String>();
 	public static Holidays currentHoliday = Holidays.NONE;
