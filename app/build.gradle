@@ -21,9 +21,9 @@ android {
         applicationId "name.mikanoshi.customiuizer"
         minSdkVersion 24
         //noinspection OldTargetApi
-        targetSdkVersion 29
-        versionCode 52
-        versionName "2.1.5"
+        targetSdkVersion 27
+        versionCode 53
+        versionName "2.2.0"
         signingConfig signingConfigs.dev
     }
     buildTypes {
@@ -57,7 +57,7 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "ch.acra:acra-core:$acraVersion"
-    implementation 'com.android.billingclient:billing:2.1.0'
+    implementation 'com.android.billingclient:billing:2.2.0'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.3.61'
     implementation 'com.github.jinatonic.confetti:confetti:1.1.2'
     implementation files('libs/WeatherView-2.0.3.aar')

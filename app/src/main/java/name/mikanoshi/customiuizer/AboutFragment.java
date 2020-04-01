@@ -13,6 +13,7 @@ public class AboutFragment extends SubFragment {
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
+		supressMenu = true;
 		super.onActivityCreated(savedInstanceState);
 		final Activity act = getActivity();
 
@@ -49,6 +50,9 @@ public class AboutFragment extends SubFragment {
 			else if (Helpers.currentHoliday == Helpers.Holidays.LUNARNEWYEAR) {
 				view.findViewById(R.id.lunar_animal).setVisibility(View.VISIBLE);
 				view.findViewById(R.id.decoration).setVisibility(View.VISIBLE);
+			} else if (Helpers.currentHoliday == Helpers.Holidays.PANDEMIC) {
+				view.findViewById(R.id.medical_mask).setVisibility(View.VISIBLE);
+				view.findViewById(R.id.hand_sanitizer).setVisibility(View.VISIBLE);
 			}
 		} catch (Throwable e) {
 			//Shouldn't happen...

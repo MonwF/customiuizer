@@ -623,7 +623,8 @@ public class Various {
 			Helpers.log("AppInfoDuringMiuiInstallHook", "Cannot find appropriate method");
 			return;
 		}
-		Helpers.hookMethod(methods[0], new MethodHook() {
+		for (Method method: methods)
+		Helpers.hookMethod(method, new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				Activity act = (Activity)param.thisObject;
@@ -641,14 +642,14 @@ public class Various {
 					mAppInfo = act.getPackageManager().getPackageInfo(mPkgInfo.packageName, 0);
 				} catch (Throwable t) {}
 
-				String size = "";
-				String[] texts = version.getText().toString().split("\\|");
-				if (texts.length >= 2) size = texts[1].trim();
+				//String size = "";
+				//String[] texts = version.getText().toString().split("\\|");
+				//if (texts.length >= 2) size = texts[1].trim();
 
 				Resources modRes = Helpers.getModuleRes(act);
 
 				SpannableStringBuilder builder = new SpannableStringBuilder();
-				if (!TextUtils.isEmpty(size)) builder.append(size).append("\n");
+				//if (!TextUtils.isEmpty(size)) builder.append(size).append("\n");
 				builder.append(modRes.getString(R.string.various_installappinfo_vername)).append(":\t\t");
 				if (mAppInfo != null) builder.append(mAppInfo.versionName).append("  ➟  ");
 				builder.append(mPkgInfo.versionName).append("\n");

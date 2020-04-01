@@ -70,6 +70,7 @@ public class SubFragment extends PreferenceFragmentBase {
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
+		supressMenu = supressMenu || abType == Helpers.ActionBarType.Edit;
 		super.onActivityCreated(savedInstanceState);
 		loadSharedPrefs();
 

@@ -240,6 +240,9 @@
 	<string name="array_displayonly">Только отображение</string>
 	<string name="array_hide">Скрыть</string>
 	<string name="array_render_auto">Определять автоматически</string>
+	<string name="array_append">После</string>
+	<string name="array_prepend">Перед</string>
+	<string name="array_newline">Вставить новой строкой</string>
 
 	<string name="support_bug_title">Сообщить об ошибке</string>
 	<string name="support_bug_summ">Отправить сообщение об ошибке или предложить новую фичу</string>
@@ -591,6 +594,8 @@
 	<string name="system_mods_statusbar_drawer">Панель уведомлений</string>
 	<string name="system_mods_notifications">Уведомления</string>
 	<string name="system_mods_recents">Список последних приложений</string>
+	<string name="system_usenativerecents_title">Использовать родной список</string>
+	<string name="system_usenativerecents_summ">Не использовать список последних приложений, встроенный в Рабочий стол MIUI</string>
 	<string name="system_removecleaner_title">Убрать кнопку очистки</string>
 	<string name="system_removecleaner_summ">Скрывает кнопку для очистки списка последних приложений и памяти</string>
 	<string name="system_clearalltasks_title">Очистить все</string>
@@ -830,6 +835,8 @@
 	<string name="system_nopassword_summ">Отключает требование пароля вместо отпечатка пальца первый раз после загрузки. Работа на устройствах с шифрованием маловероятна.</string>
 	<string name="system_albumartonlock_title">Обложка альбома на обоях</string>
 	<string name="system_albumartonlock_summ">Отображает обложку альбома текущего трека на обоях экрана блокировки</string>
+	<string name="system_albumartonlock_gray_title">Оттенки серого</string>
+	<string name="system_albumartonlock_gray_summ">Преобразовывает обложку в чёрно-белую</string>
 	<string name="system_albumartonlock_blur_title">Размытие обложки</string>
 	<string name="system_albumartonlock_scale_title">Масштабирование обложки</string>
 	<string name="system_credentials_title">Разблокировать учётные данные</string>

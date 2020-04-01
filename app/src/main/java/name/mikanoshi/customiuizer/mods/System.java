@@ -32,6 +32,8 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -1539,34 +1541,49 @@ public class System {
 	}
 
 	@SuppressWarnings("ConstantConditions")
-	private static Bitmap fitBitmapToScreen(Context context, Bitmap bitmap) {
+	private static Bitmap processAlbumArt(Context context, Bitmap bitmap) {
 		if (context == null || bitmap == null) return bitmap;
-		int opt = Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_system_albumartonlock_scale", "1"));
-		if (opt == 1) return bitmap;
-
-		Display display = ((WindowManager)context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-		Point point = new Point();
-		display.getRealSize(point);
-		int width = point.x;
-		int height = point.y;
-
-		Bitmap scaled = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-		Canvas canvas = new Canvas(scaled);
-		float originalWidth = bitmap.getWidth();
-		float originalHeight = bitmap.getHeight();
-		float scale = opt == 2 ? Math.min(width / originalWidth, height / originalHeight) : Math.max(width / originalWidth, height / originalHeight);
-		float xTranslation = (width - originalWidth * scale) / 2.0f;
-		float yTranslation = (height - originalHeight * scale) / 2.0f;
-
-		Matrix transformation = new Matrix();
-		transformation.postTranslate(xTranslation, yTranslation);
-		transformation.preScale(scale, scale);
+		int rescale = Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_system_albumartonlock_scale", "1"));
+		boolean grayscale = Helpers.getSharedBoolPref(context, "pref_key_system_albumartonlock_gray", false);
+		if (rescale == 1 && !grayscale) return bitmap;
 
 		Paint paint = new Paint();
-		paint.setFilterBitmap(true);
+		Matrix transformation = new Matrix();
+		int width = 0;
+		int height = 0;
 
+		if (grayscale) {
+			width = bitmap.getWidth();
+			height = bitmap.getHeight();
+
+			ColorMatrix matrix = new ColorMatrix();
+			matrix.setSaturation(0);
+			paint.setColorFilter(new ColorMatrixColorFilter(matrix));
+		}
+
+		if (rescale != 1) {
+			Display display = ((WindowManager)context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+			Point point = new Point();
+			display.getRealSize(point);
+			width = point.x;
+			height = point.y;
+
+			float originalWidth = bitmap.getWidth();
+			float originalHeight = bitmap.getHeight();
+			float scale = rescale == 2 ? Math.min(width / originalWidth, height / originalHeight) : Math.max(width / originalWidth, height / originalHeight);
+			float xTranslation = (width - originalWidth * scale) / 2.0f;
+			float yTranslation = (height - originalHeight * scale) / 2.0f;
+
+			transformation.postTranslate(xTranslation, yTranslation);
+			transformation.preScale(scale, scale);
+
+			paint.setFilterBitmap(true);
+		}
+
+		Bitmap processed = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(processed);
 		canvas.drawBitmap(bitmap, transformation, paint);
-		return scaled;
+		return processed;
 	}
 
 	public static void LockScreenAlbumArtHook(LoadPackageParam lpparam) {
@@ -1647,7 +1664,7 @@ public class System {
 				XposedHelpers.setAdditionalStaticField(utilCls, "mAlbumArtSource", art);
 
 				int blur = Helpers.getSharedIntPref(mContext, "pref_key_system_albumartonlock_blur", 0);
-				XposedHelpers.setAdditionalStaticField(utilCls, "mAlbumArt", fitBitmapToScreen(mContext, art != null && blur > 0 ? Helpers.fastBlur(art, blur + 1) : art));
+				XposedHelpers.setAdditionalStaticField(utilCls, "mAlbumArt", processAlbumArt(mContext, art != null && blur > 0 ? Helpers.fastBlur(art, blur + 1) : art));
 
 				Intent setWallpaper = new Intent("com.miui.keyguard.setwallpaper");
 				setWallpaper.putExtra("set_lock_wallpaper_result", true);
@@ -2334,8 +2351,9 @@ public class System {
 		});
 	}
 
-	public static void HideMemoryCleanHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.android.systemui.recents.RecentsActivity", lpparam.classLoader, "setupVisible", new MethodHook() {
+	public static void HideMemoryCleanHook(LoadPackageParam lpparam, boolean isInLauncher) {
+		String raClass = isInLauncher ? "com.miui.home.recents.views.RecentsContainer" : "com.android.systemui.recents.RecentsActivity";
+		Helpers.findAndHookMethod(raClass, lpparam.classLoader, "setupVisible", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				ViewGroup mMemoryAndClearContainer = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mMemoryAndClearContainer");
@@ -2754,11 +2772,12 @@ public class System {
 		});
 	}
 
-	public static void CustomRecommendedHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookConstructor("com.android.systemui.recents.views.RecentsRecommendView", lpparam.classLoader, Context.class, AttributeSet.class, int.class, int.class, new MethodHook() {
+	public static void CustomRecommendedHook(LoadPackageParam lpparam, boolean isInLauncher) {
+		String rrvClass = isInLauncher ? "com.miui.home.recents.views.RecentsRecommendView" : "com.android.systemui.recents.views.RecentsRecommendView";
+		Helpers.findAndHookConstructor(rrvClass, lpparam.classLoader, Context.class, AttributeSet.class, int.class, int.class, new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
-				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				Context mContext = (Context)param.args[0];
 				Handler mHandler = new Handler(mContext.getMainLooper());
 
 				new Helpers.SharedPrefObserver(mContext, mHandler) {
@@ -2776,7 +2795,7 @@ public class System {
 			}
 		});
 
-		Helpers.findAndHookMethod("com.android.systemui.recents.views.RecentsRecommendView", lpparam.classLoader, "initItem", int.class, int.class, int.class, new MethodHook() {
+		Helpers.findAndHookMethod(rrvClass, lpparam.classLoader, "initItem", int.class, int.class, int.class, new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				LinearLayout view = (LinearLayout)param.thisObject;
@@ -2830,7 +2849,7 @@ public class System {
 			}
 		});
 
-		Helpers.findAndHookMethod("com.android.systemui.recents.views.RecentsRecommendView", lpparam.classLoader, "onClick", View.class, new MethodHook() {
+		Helpers.findAndHookMethod(rrvClass, lpparam.classLoader, "onClick", View.class, new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
 				View view = ((View)param.args[0]);
@@ -4037,7 +4056,11 @@ public class System {
 				boolean opt = MainModule.mPrefs.getBoolean("system_lockscreenshortcuts_right_image");
 				if (!opt) return;
 				boolean mDarkMode = XposedHelpers.getBooleanField(thisObject, "mDarkMode");
-				XposedHelpers.setObjectField(img, "drawable", Helpers.getModuleRes(mContext).getDrawable(mDarkMode ? R.drawable.keyguard_bottom_miuizer_img_dark : R.drawable.keyguard_bottom_miuizer_img, mContext.getTheme()));
+				boolean isNewLS = findClassIfExists("com.android.keyguard.KeyguardCameraView", lpparam.classLoader) != null;
+				XposedHelpers.setObjectField(img, "drawable", Helpers.getModuleRes(mContext).getDrawable(mDarkMode ?
+					(isNewLS ? R.drawable.keyguard_bottom_miuizer_img_dark : R.drawable.keyguard_bottom_miuizer_oldimg_dark) :
+					(isNewLS ? R.drawable.keyguard_bottom_miuizer_img_light : R.drawable.keyguard_bottom_miuizer_oldimg_light), mContext.getTheme()
+				));
 			}
 		});
 
@@ -4092,21 +4115,20 @@ public class System {
 				protected void before(MethodHookParam param) throws Throwable {
 					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 
-					boolean mBottomDarkMode = XposedHelpers.getBooleanField(param.thisObject, "mBottomDarkMode");
+					boolean mDarkMode = XposedHelpers.getBooleanField(param.thisObject, "mDarkMode");
 					ImageView mIconView = (ImageView)XposedHelpers.getObjectField(param.thisObject, "mIconView");
 					if (mIconView != null)
 					if (MainModule.mPrefs.getBoolean("system_lockscreenshortcuts_right_image"))
-						mIconView.setImageDrawable(Helpers.getModuleRes(mContext).getDrawable(mBottomDarkMode ? R.drawable.keyguard_bottom_miuizer_img_dark : R.drawable.keyguard_bottom_miuizer_img, mContext.getTheme()));
+						mIconView.setImageDrawable(Helpers.getModuleRes(mContext).getDrawable(mDarkMode ? R.drawable.keyguard_bottom_miuizer_img_dark : R.drawable.keyguard_bottom_miuizer_img_light, mContext.getTheme()));
 					else
-						mIconView.setImageDrawable(mContext.getDrawable(mBottomDarkMode ? mContext.getResources().getIdentifier("keyguard_bottom_camera_img_dark", "drawable", lpparam.packageName) : mContext.getResources().getIdentifier("keyguard_bottom_camera_img", "drawable", lpparam.packageName)));
+						mIconView.setImageDrawable(mContext.getDrawable(mDarkMode ? mContext.getResources().getIdentifier("keyguard_bottom_camera_img_dark", "drawable", lpparam.packageName) : mContext.getResources().getIdentifier("keyguard_bottom_camera_img", "drawable", lpparam.packageName)));
 
-					boolean mWallpaperDarkMode = XposedHelpers.getBooleanField(param.thisObject, "mWallpaperDarkMode");
 					View mPreView = (View)XposedHelpers.getObjectField(param.thisObject, "mPreView");
 					View mPreViewContainer = (View)XposedHelpers.getObjectField(param.thisObject, "mPreViewContainer");
 					View mBackgroundView = (View)XposedHelpers.getObjectField(param.thisObject, "mBackgroundView");
 					Paint mIconCircleStrokePaint = (Paint)XposedHelpers.getObjectField(param.thisObject, "mIconCircleStrokePaint");
 					ViewOutlineProvider mPreViewOutlineProvider = (ViewOutlineProvider)XposedHelpers.getObjectField(param.thisObject, "mPreViewOutlineProvider");
-					boolean result = modifyCameraImage(mContext, mPreView, mWallpaperDarkMode);
+					boolean result = modifyCameraImage(mContext, mPreView, mDarkMode);
 					if (result) param.setResult(null);
 					if (mPreViewContainer != null) {
 						mPreViewContainer.setBackgroundColor(result ? Color.TRANSPARENT : Color.BLACK);
@@ -4749,19 +4771,6 @@ public class System {
 				mView.getContext().registerReceiver(seekBarUpdate, new IntentFilter(GlobalActions.ACTION_PREFIX + "UpdateMediaPosition:" + pkgName));
 			}
 		});
-
-		Helpers.findAndHookMethod("com.android.systemui.statusbar.notification.NotificationMediaTemplateViewWrapper", lpparam.classLoader, "initResources", new MethodHook() {
-			@Override
-			protected void after(MethodHookParam param) throws Throwable {
-				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-				Object mRow = XposedHelpers.getObjectField(param.thisObject, "mRow");
-				String pkgName = (String)XposedHelpers.callMethod(XposedHelpers.callMethod(mRow, "getStatusBarNotification"), "getPackageName");
-				if ("com.sonyericsson.music".equals(pkgName)) {
-					int mMediaNotificationActionSize = XposedHelpers.getIntField(param.thisObject, "mMediaNotificationActionSize");
-					XposedHelpers.setIntField(param.thisObject, "mMediaNotificationActionSize", mMediaNotificationActionSize + Math.round(10 * mContext.getResources().getDisplayMetrics().density));
-				}
-			}
-		});
 	}
 
 	public static void Network4GtoLTEHook(LoadPackageParam lpparam) {
@@ -5082,7 +5091,21 @@ public class System {
 			}
 		});
 
+		Helpers.findAndHookMethodSilently("com.android.packageinstaller.InstallAppProgress.a", lpparam.classLoader, "onPostExecute", Boolean.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				param.args[0] = true;
+			}
+		});
+
 		Helpers.findAndHookMethodSilently("com.android.packageinstaller.IncrementInstallProgress.a", lpparam.classLoader, "a", Boolean.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				param.args[0] = true;
+			}
+		});
+
+		Helpers.findAndHookMethodSilently("com.android.packageinstaller.IncrementInstallProgress.a", lpparam.classLoader, "onPostExecute", Boolean.class, new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
 				param.args[0] = true;
@@ -6085,7 +6108,7 @@ public class System {
 	}
 
 	public static void ScreenshotFloatTimeHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.android.systemui.screenshot.GlobalScreenshot", lpparam.classLoader, "showThumbnailWindow", new MethodHook() {
+		Helpers.findAndHookMethod("com.android.systemui.screenshot.GlobalScreenshot", lpparam.classLoader, "startGotoThumbnailAnimation", Runnable.class, new MethodHook() {
 			@Override
 			@SuppressWarnings("ConstantConditions")
 			protected void after(MethodHookParam param) throws Throwable {
@@ -6162,10 +6185,36 @@ public class System {
 					bundle = context.getContentResolver().call(Uri.parse(PROVIDER_POWER_CENTER), "getBatteryCurrent", null, null);
 				} catch (Exception ignore) {}
 
-				if (bundle != null && charge < 100)
-				param.setResult(hint + " • " + Math.abs(bundle.getInt("current_now")) + " mA");
+				int opt = MainModule.mPrefs.getStringAsInt("system_lscurrentcharge", 1);
+				if (bundle != null && charge < 100) {
+					String curr = Math.abs(bundle.getInt("current_now")) + " mA";
+					if (opt == 2)
+						param.setResult(hint + " • " + curr);
+					else if (opt == 3)
+						param.setResult(curr + " • " + hint);
+					else if (opt == 4)
+						param.setResult(hint + "\n" + curr);
+				}
 			}
 		});
+
+		Helpers.hookAllConstructors("com.android.systemui.statusbar.phone.KeyguardIndicationTextView", lpparam.classLoader, new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				int opt = MainModule.mPrefs.getStringAsInt("system_lscurrentcharge", 1);
+				if (opt != 4) return;
+				TextView indicator = (TextView)param.thisObject;
+				if (indicator != null) indicator.setSingleLine(false);
+			}
+		});
+	}
+
+	public static void UseNativeRecentsHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.recents.misc.SystemServicesProxy", lpparam.classLoader, "isRecentsWithinLauncher", Context.class, XC_MethodReplacement.returnConstant(false));
+	}
+
+	public static void NoUnlockAnimationHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.miui.ActivityObserverImpl", lpparam.classLoader, "isTopActivityLauncher", XC_MethodReplacement.returnConstant(false));
 	}
 
 //	@SuppressWarnings("unchecked")

@@ -210,7 +210,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getInt("system_recommended_first_action", 1) > 1 ||
 				mPrefs.getInt("system_recommended_second_action", 1) > 1 ||
 				mPrefs.getInt("system_recommended_third_action", 1) > 1 ||
-				mPrefs.getInt("system_recommended_fourth_action", 1) > 1) System.CustomRecommendedHook(lpparam);
+				mPrefs.getInt("system_recommended_fourth_action", 1) > 1) System.CustomRecommendedHook(lpparam, false);
 			if (mPrefs.getBoolean("system_scramblepin")) System.ScramblePINHook(lpparam);
 			if (mPrefs.getBoolean("system_dttosleep")) System.DoubleTapToSleepHook(lpparam);
 			if (mPrefs.getBoolean("system_clockseconds")) System.ClockSecondsHook(lpparam);
@@ -225,7 +225,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_notifafterunlock")) System.ShowNotificationsAfterUnlockHook(lpparam);
 			if (mPrefs.getBoolean("system_notifrowmenu")) System.NotificationRowMenuHook(lpparam);
 			if (mPrefs.getBoolean("system_compactnotif")) System.CompactNotificationsHook(lpparam);
-			if (mPrefs.getBoolean("system_removecleaner")) System.HideMemoryCleanHook(lpparam);
+			if (mPrefs.getBoolean("system_removecleaner")) System.HideMemoryCleanHook(lpparam, false);
 			if (mPrefs.getBoolean("system_removedismiss")) System.HideDismissViewHook(lpparam);
 			if (mPrefs.getBoolean("controls_nonavbar")) Controls.HideNavBarHook(lpparam);
 			if (mPrefs.getBoolean("controls_imebackalticon")) Controls.ImeBackAltIconHook(lpparam);
@@ -246,13 +246,14 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_allownotiffloat")) System.AllowAllFloatHook(lpparam);
 			if (mPrefs.getBoolean("system_hideqs")) System.HideQSHook(lpparam);
 			if (mPrefs.getBoolean("system_lsalarm")) System.LockScreenAlaramHook(lpparam);
-			if (mPrefs.getBoolean("system_lscurrent")) System.ChargingInfoHook(lpparam);
 			if (mPrefs.getBoolean("system_statusbarcontrols")) System.StatusBarGesturesHook(lpparam);
 			if (mPrefs.getBoolean("system_screenshot")) System.ScreenshotConfigHook(lpparam);
 			if (mPrefs.getBoolean("system_nodrawerbackground")) System.RemoveDrawerBackgroundHook(lpparam);
 			if (mPrefs.getBoolean("system_nonetspeedseparator")) System.NoNetworkSpeedSeparatorHook(lpparam);
 			if (mPrefs.getBoolean("system_snoozedmanager")) System.MoreSnoozeOptionsHook(lpparam);
 			if (mPrefs.getBoolean("system_taptounlock")) System.TapToUnlockHook(lpparam);
+			if (mPrefs.getBoolean("system_usenativerecents")) System.UseNativeRecentsHook(lpparam);
+			if (mPrefs.getBoolean("launcher_nounlockanim")) System.NoUnlockAnimationHook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_battery1")) System.HideIconsBattery1Hook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_battery2")) System.HideIconsBattery2Hook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_battery3")) System.HideIconsBattery3Hook(lpparam);
@@ -267,6 +268,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (!mPrefs.getString("system_shortcut_app", "").equals("")) System.ReplaceShortcutAppHook(lpparam);
 			if (!mPrefs.getString("system_clock_app", "").equals("")) System.ReplaceClockAppHook(lpparam);
 			if (!mPrefs.getString("system_calendar_app", "").equals("")) System.ReplaceCalendarAppHook(lpparam);
+			if (mPrefs.getStringAsInt("system_lscurrentcharge", 1) > 1) System.ChargingInfoHook(lpparam);
 			if (mPrefs.getStringAsInt("system_qshaptics", 1) > 1) System.QSHapticHook(lpparam);
 			if (mPrefs.getStringAsInt("system_expandnotifs", 1) > 1) System.ExpandNotificationsHook(lpparam);
 			if (mPrefs.getStringAsInt("system_inactivebrightness", 1) > 1) System.InactiveBrightnessSliderHook(lpparam);
@@ -352,6 +354,11 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getStringAsInt("launcher_foldershade", 1) > 1) Launcher.FolderShadeHook(lpparam);
 		if (mPrefs.getStringAsInt("launcher_closefolders", 1) > 1) Launcher.CloseFolderOnLaunchHook(lpparam);
 		if (lpparam.packageName.equals("com.miui.home")) {
+			if (mPrefs.getInt("system_recommended_first_action", 1) > 1 ||
+				mPrefs.getInt("system_recommended_second_action", 1) > 1 ||
+				mPrefs.getInt("system_recommended_third_action", 1) > 1 ||
+				mPrefs.getInt("system_recommended_fourth_action", 1) > 1) System.CustomRecommendedHook(lpparam, true);
+			if (mPrefs.getBoolean("system_removecleaner")) System.HideMemoryCleanHook(lpparam, true);
 			if (mPrefs.getBoolean("controls_fsg_horiz")) Launcher.FSGesturesHook(lpparam);
 			if (mPrefs.getBoolean("launcher_fixstatusbarmode")) Launcher.FixStatusBarModeHook(lpparam);
 			if (mPrefs.getBoolean("launcher_fixanim")) Launcher.FixAnimHook(lpparam);

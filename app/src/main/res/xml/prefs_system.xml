@@ -632,6 +632,12 @@
 		android:title="@string/system_mods_recents">
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_usenativerecents"
+			android:title="@string/system_usenativerecents_title"
+			android:summary="@string/system_usenativerecents_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_removecleaner"
 			android:title="@string/system_removecleaner_title"
 			android:summary="@string/system_removecleaner_summ"
@@ -786,11 +792,13 @@
 			android:title="@string/system_dttosleep_title"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_lscurrent"
-			android:summary="@string/system_lscurrent_summ"
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_lscurrentcharge"
 			android:title="@string/system_lscurrent_title"
-			android:defaultValue="false" />
+			android:summary="@string/system_lscurrent_summ"
+			android:entries="@array/lscurrent"
+			android:entryValues="@array/lscurrent_val"
+			android:defaultValue="1" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_lsalarm_cat"

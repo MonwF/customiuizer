@@ -5,6 +5,9 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -13,38 +16,178 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Map;
+import java.util.Set;
+
+import miui.app.ActionBar;
+import miui.app.AlertDialog;
 import miui.preference.PreferenceFragment;
+import name.mikanoshi.customiuizer.mods.GlobalActions;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class PreferenceFragmentBase extends PreferenceFragment {
 
 	private Context actContext = null;
 	public boolean isAnimating = false;
+	public boolean supressMenu = false;
 	public int animDur = 650;
 
-	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		if (supressMenu) return false;
+		getMenuInflater().inflate(R.menu.menu_mods, menu);
+		if (Helpers.isNightMode(getActivity()))
+		for (int i = 0; i < menu.size(); i++) try {
+			MenuItem item = menu.getItem(i);
+			SpannableString spanString = new SpannableString(item.getTitle().toString());
+			spanString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.preference_primary_text_color, getActivity().getTheme())), 0, spanString.length(), 0);
+			item.setTitle(spanString);
+		} catch (Throwable t) {}
+		return true;
+	}
+
+	public void onPrepareOptionsMenu(Menu menu) {
+		if (supressMenu) return;
+		if (menu.size() == 0) return;
+		menu.getItem(0).setVisible(false);
+		if (getView() == null) return;
+		ImageView alert = getView().findViewById(R.id.update_alert);
+		if (alert != null && alert.isShown()) menu.getItem(0).setVisible(true);
+	}
+
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Activity act = getActivity();
-		if (item.getItemId() == android.R.id.home) {
-			if (this instanceof MainFragment)
-				act.finish();
-			else
-				((SubFragment)this).finish();
-			return true;
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				if (this instanceof MainFragment)
+					act.finish();
+				else
+					((SubFragment)this).finish();
+				return true;
+			case R.id.get_update:
+				try {
+					Intent detailsIntent = new Intent("de.robv.android.xposed.installer.DOWNLOAD_DETAILS");
+					detailsIntent.addCategory(Intent.CATEGORY_DEFAULT);
+					detailsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+					detailsIntent.setData(Uri.fromParts("package", Helpers.modulePkg, null));
+					startActivity(detailsIntent);
+				} catch (Throwable e) {
+					Helpers.openURL(getActivity(), "https://code.highspec.ru/Mikanoshi/CustoMIUIzer/releases");
+				}
+			case R.id.xposedinstaller:
+				return Helpers.openXposedApp(getContext());
+			case R.id.backuprestore:
+				showBackupRestoreDialog();
+				return true;
+			case R.id.softreboot:
+				if (!Helpers.miuizerModuleActive) {
+					showXposedDialog(getActivity());
+					return true;
+				}
+
+				AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+				alert.setTitle(R.string.soft_reboot);
+				alert.setMessage(R.string.soft_reboot_ask);
+				alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						getContext().sendBroadcast(new Intent(GlobalActions.ACTION_PREFIX + "FastReboot"));
+					}
+				});
+				alert.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {}
+				});
+				alert.show();
+				return true;
+			case R.id.about:
+				Bundle args = new Bundle();
+				args.putInt("baseResId", R.layout.fragment_about);
+				openSubFragment(new AboutFragment(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.app_about, R.xml.prefs_about);
+				return true;
 		}
-		return super.onOptionsItemSelected(item);
+		return false;
+	}
+
+	public void showXposedDialog(Activity act) {
+		try {
+			AlertDialog.Builder builder = new AlertDialog.Builder(act);
+			builder.setTitle(R.string.warning);
+			builder.setMessage(R.string.module_not_active);
+			builder.setCancelable(true);
+			builder.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton){}
+			});
+			AlertDialog dlg = builder.create();
+			dlg.show();
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+	}
+
+	public void showBackupRestoreDialog() {
+		final Activity act = getActivity();
+
+		AlertDialog.Builder alert = new AlertDialog.Builder(act);
+		alert.setTitle(R.string.backup_restore);
+		alert.setMessage(R.string.backup_restore_choose);
+		alert.setPositiveButton(R.string.do_restore, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				restoreSettings(act);
+			}
+		});
+		alert.setNegativeButton(R.string.do_backup, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				backupSettings(act);
+			}
+		});
+		alert.show();
+	}
+
+	private void setupImmersiveMenu() {
+		if (supressMenu) return;
+
+		ActionBar actionBar = getActionBar();
+		if (actionBar != null) actionBar.showSplitActionBar(false, false);
+		setImmersionMenuEnabled(true);
+
+		if (getView() != null)
+			if (getView().findViewById(R.id.update_alert) == null) {
+				Button more = getView().findViewById(getResources().getIdentifier("more", "id", "miui"));
+				if (more == null) return;
+				float density = getResources().getDisplayMetrics().density;
+				FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+				lp.gravity = Gravity.END | Gravity.TOP;
+				ImageView alert = new ImageView(getContext());
+				alert.setImageResource(R.drawable.alert);
+				alert.setAdjustViewBounds(true);
+				alert.setMaxWidth(Math.round(16 * density));
+				alert.setMaxHeight(Math.round(16 * density));
+				alert.setLayoutParams(lp);
+				alert.setId(R.id.update_alert);
+				alert.setVisibility(View.GONE);
+				((ViewGroup)more.getParent()).addView(alert);
+			}
 	}
 
 	private void initFragment() {
@@ -84,6 +227,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		initFragment();
+		setupImmersiveMenu();
 	}
 
 	@Override
@@ -237,8 +381,110 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 		this.actContext = null;
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		setupImmersiveMenu();
+	}
+
 	public Context getValidContext() {
 		if (actContext != null) return actContext;
 		return getActivity() == null ? getContext() : getActivity().getApplicationContext();
+	}
+
+	public void backupSettings(Activity act) {
+		String backupPath = Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder;
+		if (!Helpers.preparePathForBackup(act, backupPath)) return;
+		ObjectOutputStream output = null;
+		try {
+			output = new ObjectOutputStream(new FileOutputStream(backupPath + Helpers.backupFile));
+			output.writeObject(Helpers.prefs.getAll());
+
+			AlertDialog.Builder alert = new AlertDialog.Builder(act);
+			alert.setTitle(R.string.do_backup);
+			alert.setMessage(R.string.backup_ok);
+			alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {}
+			});
+			alert.show();
+		} catch (Throwable e) {
+			e.printStackTrace();
+			AlertDialog.Builder alert = new AlertDialog.Builder(act);
+			alert.setTitle(R.string.warning);
+			alert.setMessage(getString(R.string.storage_cannot_backup) + "\n" + e.getMessage());
+			alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {}
+			});
+			alert.show();
+		} finally {
+			try {
+				if (output != null) {
+					output.flush();
+					output.close();
+				}
+			} catch (Throwable ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public void restoreSettings(final Activity act) {
+		if (!Helpers.checkStoragePerm(act, Helpers.REQUEST_PERMISSIONS_RESTORE)) return;
+		if (!Helpers.checkStorageReadable(act)) return;
+		ObjectInputStream input = null;
+		try {
+			input = new ObjectInputStream(new FileInputStream(Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder + Helpers.backupFile));
+			Map<String, ?> entries = (Map<String, ?>)input.readObject();
+			if (entries == null || entries.isEmpty()) throw new RuntimeException("Cannot read entries");
+
+			SharedPreferences.Editor prefEdit = Helpers.prefs.edit();
+			prefEdit.clear();
+			for (Map.Entry<String, ?> entry: entries.entrySet()) {
+				Object val = entry.getValue();
+				String key = entry.getKey();
+
+				if (val instanceof Boolean)
+					prefEdit.putBoolean(key, (Boolean)val);
+				else if (val instanceof Float)
+					prefEdit.putFloat(key, (Float)val);
+				else if (val instanceof Integer)
+					prefEdit.putInt(key, (Integer)val);
+				else if (val instanceof Long)
+					prefEdit.putLong(key, (Long)val);
+				else if (val instanceof String)
+					prefEdit.putString(key, ((String)val));
+				else if (val instanceof Set<?>)
+					prefEdit.putStringSet(key, ((Set<String>)val));
+			}
+			prefEdit.apply();
+
+			AlertDialog.Builder alert = new AlertDialog.Builder(act);
+			alert.setTitle(R.string.do_restore);
+			alert.setMessage(R.string.restore_ok);
+			alert.setCancelable(false);
+			alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					act.finish();
+					act.startActivity(act.getIntent());
+				}
+			});
+			alert.show();
+		} catch (Throwable t) {
+			t.printStackTrace();
+			AlertDialog.Builder alert = new AlertDialog.Builder(act);
+			alert.setTitle(R.string.warning);
+			alert.setMessage(R.string.storage_cannot_restore);
+			alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {}
+			});
+			alert.show();
+		} finally {
+			try {
+				if (input != null) input.close();
+			} catch (Throwable ex) {
+				ex.printStackTrace();
+			}
+		}
 	}
 }

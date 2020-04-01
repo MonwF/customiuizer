@@ -1,6 +1,8 @@
 package name.mikanoshi.customiuizer.mods;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -1089,6 +1091,10 @@ public class Launcher {
 		});
 	}
 
+	private static float scaleStiffness(float val, float scale) {
+		return (scale < 1.0f ? 1.5f / scale : 1.0f / scale) * val;
+	}
+
 	public static void FixAnimHook(LoadPackageParam lpparam) {
 		Helpers.hookAllMethods("com.miui.home.launcher.animate.SpringAnimator", lpparam.classLoader, "getSpringForce", new MethodHook() {
 			@Override
@@ -1096,9 +1102,35 @@ public class Launcher {
 				float scale = Helpers.getAnimationScale(2);
 				if (scale == 1.0f) return;
 				if (scale == 0) scale = 0.01f;
-				param.args[2] = (scale < 1.0f ? 1.5f / scale : 1.0f / scale) * (float)param.args[2];
+				param.args[2] = scaleStiffness((float)param.args[2], scale);
 			}
 		});
+
+		Helpers.hookAllMethods("com.miui.home.recents.util.RectFSpringAnim", lpparam.classLoader, "start", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				float scale = Helpers.getAnimationScale(2);
+				if (scale == 1.0f) return;
+				if (scale == 0) scale = 0.01f;
+				XposedHelpers.setFloatField(param.thisObject, "mCenterXStiffness", scaleStiffness(XposedHelpers.getFloatField(param.thisObject, "mCenterXStiffness"), scale));
+				XposedHelpers.setFloatField(param.thisObject, "mCenterYStiffness", scaleStiffness(XposedHelpers.getFloatField(param.thisObject, "mCenterYStiffness"), scale));
+				XposedHelpers.setFloatField(param.thisObject, "mWidthStiffness", scaleStiffness(XposedHelpers.getFloatField(param.thisObject, "mWidthStiffness"), scale));
+				XposedHelpers.setFloatField(param.thisObject, "mRadioStiffness", scaleStiffness(XposedHelpers.getFloatField(param.thisObject, "mRadioStiffness"), scale));
+				XposedHelpers.setFloatField(param.thisObject, "mRadiusStiffness", scaleStiffness(XposedHelpers.getFloatField(param.thisObject, "mRadiusStiffness"), scale));
+				XposedHelpers.setFloatField(param.thisObject, "mAlphaStiffness", scaleStiffness(XposedHelpers.getFloatField(param.thisObject, "mAlphaStiffness"), scale));
+			}
+		});
+
+//		if (XposedHelpers.findClassIfExists("com.android.systemui.shared.recents.system.RemoteAnimationAdapterCompat", lpparam.classLoader) != null)
+//		Helpers.hookAllConstructors("com.android.systemui.shared.recents.system.RemoteAnimationAdapterCompat", lpparam.classLoader, new MethodHook() {
+//			@Override
+//			protected void before(MethodHookParam param) throws Throwable {
+//				float scale = Helpers.getAnimationScale(2);
+//				if (scale == 1.0f) return;
+//				param.args[1] = (long)((long)param.args[1] * scale);
+//				param.args[2] = (long)((long)param.args[2] * scale);
+//			}
+//		});
 	}
 
 	public static void BottomSpacingRes() {
@@ -1176,19 +1208,37 @@ public class Launcher {
 	}
 
 	public static void UseOldLaunchAnimationHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "isSupportRecentsAndFsGesture", XC_MethodReplacement.returnConstant(false));
-		Helpers.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.classLoader, "onCreate", Bundle.class, new MethodHook(1) {
+		Helpers.hookAllMethods("com.miui.home.recents.QuickstepAppTransitionManagerImpl", lpparam.classLoader, "hasControlRemoteAppTransitionPermission", XC_MethodReplacement.returnConstant(false));
+		Helpers.hookAllMethods("com.miui.home.recents.QuickstepAppTransitionManagerImpl", lpparam.classLoader, "registerRemoteAnimations", XC_MethodReplacement.DO_NOTHING);
+		Helpers.hookAllMethods("com.miui.home.recents.QuickstepAppTransitionManagerImpl", lpparam.classLoader, "getActivityLaunchOptions", new MethodHook() {
 			@Override
 			protected void after(XC_MethodHook.MethodHookParam param) throws Throwable {
-				Activity act = (Activity)param.thisObject;
-				act.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+				View view = (View)param.args[1];
+				Rect rect = (Rect)param.args[2];
+
+				boolean isLaunchingFromRecents = (boolean)XposedHelpers.callMethod(param.thisObject, "isLaunchingFromRecents", view, null);
+				if (isLaunchingFromRecents) return;
+
+				if (view == null) {
+					param.setResult(null);
+					return;
+				}
+
+				if (rect != null) {
+					int[] arr = new int[2];
+					view.getLocationOnScreen(arr);
+					param.setResult(XposedHelpers.callStaticMethod(ActivityOptions.class, "makeClipRevealAnimation", view, rect.left - arr[0], rect.top - arr[1], rect.width(), rect.height(), true));
+				} else {
+					param.setResult(XposedHelpers.callStaticMethod(ActivityOptions.class, "makeClipRevealAnimation", view, 0, 0, view.getWidth(), view.getHeight(), false));
+				}
 			}
 		});
 	}
 
 	public static void ReverseLauncherPortraitHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.classLoader, "onCreate", Bundle.class, new MethodHook(2) {
+		Helpers.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.classLoader, "onCreate", Bundle.class, new MethodHook() {
 			@Override
+			@SuppressLint("SourceLockedOrientationActivity")
 			protected void after(XC_MethodHook.MethodHookParam param) throws Throwable {
 				Activity act = (Activity)param.thisObject;
 				act.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);

@@ -637,14 +637,8 @@ public class GlobalActions {
 //	}
 
 	public static void miuizerInit(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod(Helpers.modulePkg + ".MainFragment", lpparam.classLoader, "onCreate", Bundle.class, new MethodHook() {
-			@Override
-			protected void before(MethodHookParam param) throws Throwable {
-				XposedHelpers.setBooleanField(param.thisObject, "miuizerModuleActive", true);
-			}
-		});
-
 		try {
+			XposedHelpers.setStaticBooleanField(findClass(Helpers.modulePkg + ".utils.Helpers", lpparam.classLoader), "miuizerModuleActive", true);
 			XposedHelpers.setStaticObjectField(findClass(Helpers.modulePkg + ".utils.Helpers", lpparam.classLoader), "xposedVersion", XposedBridge.getXposedVersion());
 		} catch (Throwable t) {
 			XposedBridge.log(t);
@@ -864,6 +858,7 @@ public class GlobalActions {
 				intentfilter.addAction(ACTION_PREFIX + "SimulateMenu");
 				final Object thisObject = param.thisObject;
 				mContext.registerReceiver(new BroadcastReceiver() {
+					@SuppressWarnings("RedundantCast")
 					public void onReceive(final Context context, Intent intent) {
 						String action = intent.getAction();
 						if (action == null) return;

@@ -27,6 +27,7 @@ import com.github.jinatonic.confetti.ConfettiManager;
 import com.github.matteobattilana.weather.PrecipType;
 import com.github.matteobattilana.weather.WeatherView;
 
+import name.mikanoshi.customiuizer.utils.FilthGenerator;
 import name.mikanoshi.customiuizer.utils.FlowerGenerator;
 import name.mikanoshi.customiuizer.utils.GravitySensor;
 import name.mikanoshi.customiuizer.utils.Helpers;
@@ -63,7 +64,7 @@ public class MainActivity extends Activity {
 		}
 
 		Helpers.detectHoliday();
-		weatherView = findViewById(R.id.snow_view);
+		weatherView = findViewById(R.id.weather_view);
 		ImageView mHolidayHeader = findViewById(R.id.holiday_header);
 		if (Helpers.currentHoliday == Helpers.Holidays.NEWYEAR) {
 			int rotation = getWindowManager().getDefaultDisplay().getRotation();
@@ -123,6 +124,24 @@ public class MainActivity extends Activity {
 
 			mHolidayHeader.setImageResource(R.drawable.lunar_newyear_header);
 			mHolidayHeader.setVisibility(View.VISIBLE);
+		} else if (Helpers.currentHoliday == Helpers.Holidays.PANDEMIC) {
+			weatherView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+			weatherView.setPrecipType(PrecipType.CLEAR);
+			weatherView.setSpeed(0);
+			weatherView.setEmissionRate(0.5f);
+			weatherView.setFadeOutPercent(1.0f);
+			weatherView.setAngle(0);
+			try {
+				ConfettiManager manager = weatherView.getConfettiManager();
+				Field confettoGenerator = ConfettiManager.class.getDeclaredField("confettoGenerator");
+				confettoGenerator.setAccessible(true);
+				confettoGenerator.set(manager, new FilthGenerator(this));
+			} catch (Throwable t) {
+				t.printStackTrace();
+			}
+			weatherView.resetWeather();
+			weatherView.setVisibility(View.VISIBLE);
+			weatherView.getConfettiManager().setRotationalVelocity(0, 15).setTTL(30000);
 		} else {
 			((ViewGroup)weatherView.getParent()).removeView(weatherView);
 			((ViewGroup)mHolidayHeader.getParent()).removeView(mHolidayHeader);

@@ -9,7 +9,7 @@
 	tools:ignore="RtlHardcoded,RtlSymmetry">
 
 	<com.github.matteobattilana.weather.WeatherView
-		android:id="@+id/snow_view"
+		android:id="@+id/weather_view"
 		android:layout_height="match_parent"
 		android:layout_width="match_parent"
 		android:layout_alignParentTop="true"

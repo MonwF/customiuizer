@@ -1,3 +1,18 @@
+2.2.0
+[New] Use native recent apps list implementation instead of the one from MIUI Launcher
+[Improved][Album art as wallpaper] Option to convert album art to grayscale
+[Improved][Display charging current] Option to append/prepend/insert as new line
+[Fixed][Custom lock screen actions] Swipe left action and right icon replacement compatibility with latest beta ROMs
+[Fixed][Custom suggestions box actions] Compatibility with recent apps list from MIUI Launcher
+[Fixed][Remove cleaner button] Compatibility with recent apps list from MIUI Launcher
+[Fixed][Remove unlock animation] Compatibility with latest beta ROMs; also disables fade/zoom out unlock animation of lock screen
+[Fixed][Use old launch animation] Compatibility with latest launcher alpha versions
+[Fixed][Fix launcher animation] Compatibility with latest launcher alpha versions
+[Fixed][App info in installer] Compatibility with latest MIUI package installer version
+[Fixed][Floating screenshot display time] Compatibility with latest beta ROMs
+Show main menu on all pages in module settings
+New anti-holiday design ☣️
+
 2.1.5
 [New] Scramble App Lock PIN
 [New] Show a value of charging current at the bottom of lock screen

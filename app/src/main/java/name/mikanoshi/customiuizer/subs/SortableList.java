@@ -36,6 +36,7 @@ public class SortableList extends SubFragment {
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
+		supressMenu = true;
 		super.onActivityCreated(savedInstanceState);
 		ActionBar actionBar = getActionBar();
 		if (actionBar != null) actionBar.showSplitActionBar(true, true);
@@ -64,8 +65,7 @@ public class SortableList extends SubFragment {
 			public void OnOrderChanged(int oldPos, int newPos) {
 				if (oldPos == newPos) return;
 				String itemStr = Helpers.prefs.getString(key, "");
-				if (itemStr == null) return;
-				itemStr = itemStr.trim();
+				if (itemStr.isEmpty()) return;
 				String[] itemArr = itemStr.trim().split("\\|");
 				ArrayList<String> itemList = new ArrayList<String>(Arrays.asList(itemArr));
 				String uuid = itemList.get(oldPos);
@@ -92,7 +92,7 @@ public class SortableList extends SubFragment {
 				PreferenceAdapter adapter = (PreferenceAdapter)listView.getAdapter();
 				String uuid = adapter.getItem(position);
 				String items = Helpers.prefs.getString(key, "");
-				Helpers.prefs.edit().putString(key, items == null || items.isEmpty() ? "" : items.replace(uuid, "").replace("||", "|").replaceAll("^\\|", "").replaceAll("\\|$", "")).apply();
+				Helpers.prefs.edit().putString(key, items.isEmpty() ? "" : items.replace(uuid, "").replace("||", "|").replaceAll("^\\|", "").replaceAll("\\|$", "")).apply();
 				adapter.updateItems();
 				adapter.notifyDataSetChanged();
 				invalidateOptionsMenu();
@@ -145,6 +145,7 @@ public class SortableList extends SubFragment {
 		});
 	}
 
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.menu_itemactions, menu);
 		//menu.getItem(0).setEnabled(listView.getChildCount() < 10);
@@ -162,7 +163,7 @@ public class SortableList extends SubFragment {
 			//if (listView.getChildCount() >= 10) return true;
 			String uuid = UUID.randomUUID().toString().replaceAll("-", "").toLowerCase();
 			String items = Helpers.prefs.getString(key, "");
-			Helpers.prefs.edit().putString(key, items == null || items.isEmpty() ? uuid : items + "|" + uuid).apply();
+			Helpers.prefs.edit().putString(key, items.isEmpty() ? uuid : items + "|" + uuid).apply();
 			PreferenceAdapter adapter = (PreferenceAdapter)listView.getAdapter();
 			adapter.updateItems();
 			adapter.notifyDataSetChanged();

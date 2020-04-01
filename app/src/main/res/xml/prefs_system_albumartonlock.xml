@@ -14,6 +14,12 @@
 		android:dependency="pref_key_system_albumartonlock"
 		miuizer:dynamic="true">
 
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_albumartonlock_gray"
+		android:title="@string/system_albumartonlock_gray_title"
+		android:summary="@string/system_albumartonlock_gray_summ"
+		android:defaultValue="false" />
+
 	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_albumartonlock_blur"
 		android:title="@string/system_albumartonlock_blur_title"

@@ -43,6 +43,21 @@
 					android:rotation="-25"
 					android:src="@drawable/year2020_rat" />
 
+				<ImageView
+					android:id="@+id/hand_sanitizer"
+					android:layout_width="85dp"
+					android:layout_height="85dp"
+					android:contentDescription="@null"
+					android:scaleX="1.0"
+					android:scaleY="1.0"
+					android:visibility="gone"
+					android:layout_alignParentTop="true"
+					android:layout_alignParentLeft="true"
+					android:layout_marginLeft="-20dp"
+					android:layout_marginTop="-29dp"
+					android:translationZ="0dp"
+					android:src="@drawable/hand_sanitizer" />
+
 				<RelativeLayout
 					android:layout_height="80dp"
 					android:layout_width="80dp"
@@ -81,6 +96,19 @@
 						android:translationZ="10dp"
 						android:src="@drawable/fortune_bag" />
 
+					<ImageView
+						android:id="@+id/medical_mask"
+						android:layout_width="75dp"
+						android:layout_height="75dp"
+						android:layout_centerHorizontal="true"
+						android:layout_alignParentBottom="true"
+						android:layout_marginBottom="-18dp"
+						android:contentDescription="@null"
+						android:scaleX="1.0"
+						android:scaleY="1.0"
+						android:src="@drawable/medical_mask"
+						android:translationZ="10dp"
+						android:visibility="gone" />
 
 					<ImageView
 						android:id="@+id/miuizer_icon"

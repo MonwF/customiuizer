@@ -135,16 +135,17 @@ public class Helpers {
 	public static WakeLock mWakeLock;
 	public static ValueAnimator shimmerAnim;
 	public static boolean showNewMods = true;
+	public static boolean miuizerModuleActive = false;
 	public static final HashSet<String> newMods = new HashSet<String>(Arrays.asList(
-		"pref_key_system_applock_scramblepin",
-		"pref_key_system_lscurrent",
-		"pref_key_system_batteryindicator_limitvis"
+		"pref_key_system_usenativerecents",
+		"pref_key_system_lscurrentcharge",
+		"pref_key_system_albumartonlock_gray"
 	));
 	public static final ArrayList<String> shortcutIcons = new ArrayList<String>();
 	public static Holidays currentHoliday = Holidays.NONE;
 
 	public enum Holidays {
-		NONE, NEWYEAR, LUNARNEWYEAR
+		NONE, NEWYEAR, LUNARNEWYEAR, PANDEMIC
 	}
 
 	public enum SettingsType {
@@ -204,6 +205,7 @@ public class Helpers {
 		}
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	public static void detectHoliday() {
 		currentHoliday = Holidays.NONE;
 		String opt = Helpers.prefs.getString("pref_key_miuizer_holiday", "0");
@@ -213,11 +215,14 @@ public class Helpers {
 			Calendar cal = Calendar.getInstance();
 			int month = cal.get(Calendar.MONTH);
 			int monthDay = cal.get(Calendar.DAY_OF_MONTH);
+			int year = cal.get(Calendar.YEAR);
 
 			// Lunar NY
 			if ((month == 0 && monthDay > 15) || month == 1) currentHoliday = Holidays.LUNARNEWYEAR;
 			// NY
 			else if (month == 0 || month == 11) currentHoliday = Holidays.NEWYEAR;
+			// COVID19
+			else if (month >= 2 && month <= 5 && year == 2020) currentHoliday = Holidays.PANDEMIC;
 		}
 	}
 
@@ -1906,21 +1911,21 @@ public class Helpers {
 	}
 
 	public static float exp(float f) {
-		return (float)Math.exp((double)f);
+		return (float)Math.exp(f);
 	}
 
 	public static float sqrt(float f) {
-		return (float)Math.sqrt((double)f);
+		return (float)Math.sqrt(f);
 	}
 
 	public static float log(float f) {
-		return (float)Math.log((double)f);
+		return (float)Math.log(f);
 	}
 
 	public static int convertGammaToLinear(int val, int min, int max) {
 		float norm = norm(0.0f, (float)max, (float) val);
 		val = Math.round(lerp((float) min, (float) max, (norm <= 0.2f ? sq(norm / 0.2f) : exp((norm - 0.221f) / 0.314f) + 0.06f) / 12.0f));
-		return val > max ? max : val;
+		return Math.min(val, max);
 	}
 
 	public static int convertLinearToGamma(int val, int min, int max) {

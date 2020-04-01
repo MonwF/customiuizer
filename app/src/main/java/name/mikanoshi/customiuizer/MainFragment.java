@@ -5,15 +5,11 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
@@ -21,11 +17,8 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.text.Editable;
-import android.text.SpannableString;
 import android.text.TextWatcher;
-import android.text.style.ForegroundColorSpan;
 import android.view.ActionMode;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,7 +29,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -52,8 +44,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -62,14 +52,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
 
 import miui.app.ActionBar;
 import miui.app.AlertDialog;
 import miui.view.SearchActionMode;
 
-import name.mikanoshi.customiuizer.mods.GlobalActions;
 import name.mikanoshi.customiuizer.prefs.ListPreferenceEx;
 import name.mikanoshi.customiuizer.prefs.PreferenceEx;
 import name.mikanoshi.customiuizer.subs.CategorySelector;
@@ -84,7 +71,6 @@ import name.mikanoshi.customiuizer.utils.ModSearchAdapter;
 
 public class MainFragment extends PreferenceFragmentBase {
 
-	public boolean miuizerModuleActive = false;
 	private CategorySelector catSelector = new CategorySelector();
 	public System prefSystem = new System();
 	public Launcher prefLauncher = new Launcher();
@@ -239,7 +225,7 @@ public class MainFragment extends PreferenceFragmentBase {
 						AlertDialog dlg = builder.create();
 						if (isFragmentReady(act)) dlg.show();
 					}
-				}); else if (isFragmentReady(act) && !miuizerModuleActive)
+				}); else if (isFragmentReady(act) && !Helpers.miuizerModuleActive)
 				act.runOnUiThread(new Runnable() {
 					public void run() {
 						showXposedDialog(act);
@@ -308,36 +294,6 @@ public class MainFragment extends PreferenceFragmentBase {
 		return inflater.inflate(R.layout.prefs_main, group, false);
 	}
 
-	private void setupImmersiveMenu() {
-		ActionBar actionBar = getActionBar();
-		if (actionBar != null) actionBar.showSplitActionBar(false, false);
-		setImmersionMenuEnabled(true);
-
-		if (getView() != null)
-		if (getView().findViewById(R.id.update_alert) == null) {
-			Button more = getView().findViewById(getResources().getIdentifier("more", "id", "miui"));
-			if (more == null) return;
-			float density = getResources().getDisplayMetrics().density;
-			FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-			lp.gravity = Gravity.END | Gravity.TOP;
-			ImageView alert = new ImageView(getContext());
-			alert.setImageResource(R.drawable.alert);
-			alert.setAdjustViewBounds(true);
-			alert.setMaxWidth(Math.round(16 * density));
-			alert.setMaxHeight(Math.round(16 * density));
-			alert.setLayoutParams(lp);
-			alert.setId(R.id.update_alert);
-			alert.setVisibility(View.GONE);
-			((ViewGroup)more.getParent()).addView(alert);
-		}
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		setupImmersiveMenu();
-	}
-
 	private void openActionMode(boolean isNew) {
 		actionModeNew = isNew;
 		actionMode = startActionMode(actionModeCallback);
@@ -356,7 +312,6 @@ public class MainFragment extends PreferenceFragmentBase {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		setupImmersiveMenu();
 
 		if (getView() == null) return;
 
@@ -630,190 +585,8 @@ public class MainFragment extends PreferenceFragmentBase {
 		inputManager.hideSoftInputFromWindow(currentFocusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 	}
 
-	public boolean onCreateOptionsMenu(Menu menu) {
- 		getMenuInflater().inflate(R.menu.menu_mods, menu);
- 		if (Helpers.isNightMode(getActivity()))
-		for (int i = 0; i < menu.size(); i++) try {
-			MenuItem item = menu.getItem(i);
-			SpannableString spanString = new SpannableString(item.getTitle().toString());
-			spanString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.preference_primary_text_color, getActivity().getTheme())), 0, spanString.length(), 0);
-			item.setTitle(spanString);
-		} catch (Throwable t) {}
-		return true;
-	}
-
-	@Override
-	public void onPrepareOptionsMenu(Menu menu) {
-		if (menu.size() == 0) return;
-		menu.getItem(0).setVisible(false);
-		if (getView() == null) return;
-		ImageView alert = getView().findViewById(R.id.update_alert);
-		if (alert != null && alert.isShown()) menu.getItem(0).setVisible(true);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.get_update:
-				try {
-					Intent detailsIntent = new Intent("de.robv.android.xposed.installer.DOWNLOAD_DETAILS");
-					detailsIntent.addCategory(Intent.CATEGORY_DEFAULT);
-					detailsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-					detailsIntent.setData(Uri.fromParts("package", Helpers.modulePkg, null));
-					startActivity(detailsIntent);
-				} catch (Throwable e) {
-					Helpers.openURL(getActivity(), "https://code.highspec.ru/Mikanoshi/CustoMIUIzer/releases");
-				}
-			case R.id.xposedinstaller:
-				return Helpers.openXposedApp(getContext());
-			case R.id.backuprestore:
-				showBackupRestoreDialog();
-				return true;
-			case R.id.softreboot:
-				if (!miuizerModuleActive) {
-					showXposedDialog(getActivity());
-					return true;
-				}
-
-				AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-				alert.setTitle(R.string.soft_reboot);
-				alert.setMessage(R.string.soft_reboot_ask);
-				alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						getContext().sendBroadcast(new Intent(GlobalActions.ACTION_PREFIX + "FastReboot"));
-					}
-				});
-				alert.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {}
-				});
-				alert.show();
-				return true;
-			case R.id.about:
-				Bundle args = new Bundle();
-				args.putInt("baseResId", R.layout.fragment_about);
-				openSubFragment(new AboutFragment(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.app_about, R.xml.prefs_about);
-				return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
-	public void backupSettings(Activity act) {
-		String backupPath = Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder;
-		if (!Helpers.preparePathForBackup(act, backupPath)) return;
-		ObjectOutputStream output = null;
-		try {
-			output = new ObjectOutputStream(new FileOutputStream(backupPath + Helpers.backupFile));
-			output.writeObject(Helpers.prefs.getAll());
-
-			AlertDialog.Builder alert = new AlertDialog.Builder(act);
-			alert.setTitle(R.string.do_backup);
-			alert.setMessage(R.string.backup_ok);
-			alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int whichButton) {}
-			});
-			alert.show();
-		} catch (Throwable e) {
-			e.printStackTrace();
-			AlertDialog.Builder alert = new AlertDialog.Builder(act);
-			alert.setTitle(R.string.warning);
-			alert.setMessage(getString(R.string.storage_cannot_backup) + "\n" + e.getMessage());
-			alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int whichButton) {}
-			});
-			alert.show();
-		} finally {
-			try {
-				if (output != null) {
-					output.flush();
-					output.close();
-				}
-			} catch (Throwable ex) {
-				ex.printStackTrace();
-			}
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	public void restoreSettings(final Activity act) {
-		if (!Helpers.checkStoragePerm(act, Helpers.REQUEST_PERMISSIONS_RESTORE)) return;
-		if (!Helpers.checkStorageReadable(act)) return;
-		ObjectInputStream input = null;
-		try {
-			input = new ObjectInputStream(new FileInputStream(Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder + Helpers.backupFile));
-			Map<String, ?> entries = (Map<String, ?>)input.readObject();
-			if (entries == null || entries.isEmpty()) throw new RuntimeException("Cannot read entries");
-
-			SharedPreferences.Editor prefEdit = Helpers.prefs.edit();
-			prefEdit.clear();
-			for (Map.Entry<String, ?> entry: entries.entrySet()) {
-				Object val = entry.getValue();
-				String key = entry.getKey();
-
-				if (val instanceof Boolean)
-					prefEdit.putBoolean(key, (Boolean)val);
-				else if (val instanceof Float)
-					prefEdit.putFloat(key, (Float)val);
-				else if (val instanceof Integer)
-					prefEdit.putInt(key, (Integer)val);
-				else if (val instanceof Long)
-					prefEdit.putLong(key, (Long)val);
-				else if (val instanceof String)
-					prefEdit.putString(key, ((String)val));
-				else if (val instanceof Set<?>)
-					prefEdit.putStringSet(key, ((Set<String>)val));
-			}
-			prefEdit.apply();
-
-			AlertDialog.Builder alert = new AlertDialog.Builder(act);
-			alert.setTitle(R.string.do_restore);
-			alert.setMessage(R.string.restore_ok);
-			alert.setCancelable(false);
-			alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int whichButton) {
-					act.finish();
-					act.startActivity(act.getIntent());
-				}
-			});
-			alert.show();
-		} catch (Throwable t) {
-			t.printStackTrace();
-			AlertDialog.Builder alert = new AlertDialog.Builder(act);
-			alert.setTitle(R.string.warning);
-			alert.setMessage(R.string.storage_cannot_restore);
-			alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int whichButton) {}
-			});
-			alert.show();
-		} finally {
-			try {
-				if (input != null) input.close();
-			} catch (Throwable ex) {
-				ex.printStackTrace();
-			}
-		}
-	}
-
 	public void createReport() {
 		ACRA.getErrorReporter().handleException(null);
-	}
-
-	public void showBackupRestoreDialog() {
-		final Activity act = getActivity();
-
-		AlertDialog.Builder alert = new AlertDialog.Builder(act);
-		alert.setTitle(R.string.backup_restore);
-		alert.setMessage(R.string.backup_restore_choose);
-		alert.setPositiveButton(R.string.do_restore, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-				restoreSettings(act);
-			}
-		});
-		alert.setNegativeButton(R.string.do_backup, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-				backupSettings(act);
-			}
-		});
-		alert.show();
 	}
 
 	// PreferenceScreens management
@@ -862,22 +635,6 @@ public class MainFragment extends PreferenceFragmentBase {
 			if (openModCat(preference.getKey())) return true;
 		}
 		return super.onPreferenceTreeClick(parentPreferenceScreen, preference);
-	}
-
-	public void showXposedDialog(Activity act) {
-		try {
-			AlertDialog.Builder builder = new AlertDialog.Builder(act);
-			builder.setTitle(R.string.warning);
-			builder.setMessage(R.string.module_not_active);
-			builder.setCancelable(true);
-			builder.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int whichButton){}
-			});
-			AlertDialog dlg = builder.create();
-			dlg.show();
-		} catch (Throwable t) {
-			t.printStackTrace();
-		}
 	}
 
 	private void showRestoreInfoDialog() {

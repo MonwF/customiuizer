@@ -350,6 +350,7 @@ public class Dialog extends Activity {
 			buildData.put("KERNEL_VERSION", kernel);
 			crashData.put("BUILD", buildData);
 			crashData.put("DEBUG_LOG", debugLog.toString());
+			crashData.put("TARGET_API", getApplicationContext().getApplicationInfo().targetSdkVersion);
 
 			StringBuilder sb = new StringBuilder();
 			try (FileInputStream in = new FileInputStream(new File(Helpers.getProtectedContext(this).getFilesDir().getAbsolutePath() + "/uncaught_exceptions"))) {

@@ -94,6 +94,7 @@ public class SnoozedFragment extends PreferenceFragmentBase {
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
+		supressMenu = true;
 		super.onActivityCreated(savedInstanceState);
 		ActionBar actionBar = getActionBar();
 		if (actionBar != null) {
@@ -161,6 +162,7 @@ public class SnoozedFragment extends PreferenceFragmentBase {
 		return inflater.inflate(R.layout.fragment_snoozed, group, false);
 	}
 
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuItem update = menu.add(R.string.menu_update);
 		update.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -175,6 +177,7 @@ public class SnoozedFragment extends PreferenceFragmentBase {
 		return true;
 	}
 
+	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
 		if (menu != null && menu.size() > 0)
 		menu.getItem(0).setEnabled(!loading);

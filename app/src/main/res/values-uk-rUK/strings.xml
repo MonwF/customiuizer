@@ -219,6 +219,8 @@
     <string name="system_nopassword_summ">Вимикає вимогу пароля замість відбитка пальця перший раз після завантаження. Робота на пристроях з шифруванням малоймовірна.</string>
     <string name="system_albumartonlock_title">Обкладинка альбому на шпалерах</string>
     <string name="system_albumartonlock_summ">Відображає обкладинку альбому поточного треку на шпалерах екрану блокування</string>
+    <string name="system_albumartonlock_gray_title">Відтінки сірого</string>
+    <string name="system_albumartonlock_gray_summ">Перетворює обкладинку на чорно-білу</string>
     <string name="system_albumartonlock_blur_title">Розмиття обкладинки</string>
     <string name="system_albumartonlock_scale_title">Масштабування обкладинки</string>
     <string name="system_credentials_title">Розблокувати облікові дані</string>
@@ -338,6 +340,8 @@
     <string name="system_mods_statusbar_drawer">Панель сповіщень</string>
     <string name="system_mods_notifications">Сповіщення</string>
     <string name="system_mods_recents">Список нещодавніх додатків</string>
+    <string name="system_usenativerecents_title">Використовувати рідний список</string>
+    <string name="system_usenativerecents_summ">Не використовувати список останніх програм, вбудований й Робочий стіл MIUI</string>
     <string name="system_removecleaner_title">Прибрати кнопку очищення</string>
     <string name="system_removecleaner_summ">Приховує кнопку для очищення списку нещодавніх додатків і пам\'яті</string>
     <string name="system_clearalltasks_title">Очистити все</string>
@@ -734,6 +738,9 @@
     <string name="array_displayonly">Тільки відображення</string>
     <string name="array_hide">Приховати</string>
     <string name="array_render_auto">Визначати автоматично</string>
+    <string name="array_append">Після</string>
+    <string name="array_prepend">Перед</string>
+    <string name="array_newline">Вставити новим рядком</string>
     <string name="toggle_wifi_on">Wi-Fi увімкнений</string>
     <string name="toggle_wifi_off">Wi-Fi вимкнений</string>
     <string name="toggle_bt_on">Bluetooth увімкнений</string>

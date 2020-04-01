@@ -226,6 +226,8 @@
 	<string name="system_nopassword_summ">Do not require password instead of a fingerprint first time after boot. Unlikely to work on encrypted devices.</string>
 	<string name="system_albumartonlock_title">Album art as wallpaper</string>
 	<string name="system_albumartonlock_summ">Display album art of currently playing track as lock screen wallpaper</string>
+	<string name="system_albumartonlock_gray_title">Grayscale</string>
+	<string name="system_albumartonlock_gray_summ">Convert album art to black&amp;white image</string>
 	<string name="system_albumartonlock_blur_title">Album art blur</string>
 	<string name="system_albumartonlock_scale_title">Album art scale</string>
 	<string name="system_credentials_title">Unlock credentials</string>
@@ -348,6 +350,8 @@
 	<string name="system_mods_statusbar_drawer">Notification drawer</string>
 	<string name="system_mods_notifications">Notifications</string>
 	<string name="system_mods_recents">Recent apps list</string>
+	<string name="system_usenativerecents_title">Use native implementation</string>
+	<string name="system_usenativerecents_summ">Don\'t use recent apps list from MIUI Launcher</string>
 	<string name="system_removecleaner_title">Remove cleaner button</string>
 	<string name="system_removecleaner_summ">Hide button that clears recent apps and cleans memory</string>
 	<string name="system_clearalltasks_title">Clean all</string>
@@ -756,6 +760,9 @@
 	<string name="array_render_auto">Detect automatically</string>
 	<string name="array_render_lines" translatable="false">drawLines</string>
 	<string name="array_render_path" translatable="false">drawPath</string>
+	<string name="array_append">Append</string>
+	<string name="array_prepend">Prepend</string>
+	<string name="array_newline">Insert as new line</string>
 
 	<string name="toggle_wifi_on">Wi-Fi enabled</string>
 	<string name="toggle_wifi_off">Wi-Fi disabled</string>
