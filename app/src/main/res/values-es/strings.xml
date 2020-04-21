@@ -320,6 +320,8 @@
     <string name="system_allownotiffloat_summ">Forzar que todas las notificaciones de las aplicaciones MIUI puedan aparecer como flotantes</string>
     <string name="system_hidelsclock_title">Ocultar bloque superior</string>
     <string name="system_hidelsclock_summ">Eliminar el bloque superior que contiene el reloj, la fecha y otros datos</string>
+    <string name="system_nosos_title">No llamadas de emergencia</string>
+    <string name="system_nosos_summ">Deshabilitar botón de llamada emergencia en pantalla de bloqueo</string>
     <string name="system_hideqs_title">Vista de modo expandido limpio</string>
     <string name="system_hideqs_summ">Ocultar Ajustes Rápidos y control deslizante de brillo en el modo de notificaciones expandidas en la pantalla de bloqueo</string>
     <string name="system_nodrawerbackground_title">Desactivar fondo de color</string>
@@ -741,6 +743,7 @@
     <string name="array_append">Adjuntar</string>
     <string name="array_prepend">Anteponer</string>
     <string name="array_newline">Insertar como nueva línea</string>
+    <string name="array_path">Ruta seleccionada</string>
     <string name="toggle_wifi_on">Wi-Fi habilitado</string>
     <string name="toggle_wifi_off">Wi-Fi deshabilitado</string>
     <string name="toggle_bt_on">Bluetooth habilitado</string>

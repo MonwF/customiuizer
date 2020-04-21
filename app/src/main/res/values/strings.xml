@@ -330,6 +330,8 @@
 	<string name="system_allownotiffloat_summ">Force all notifications from MIUI apps to be able to appear as floating ones</string>
 	<string name="system_hidelsclock_title">Hide top block</string>
 	<string name="system_hidelsclock_summ">Remove top block containing clock, date and other data</string>
+	<string name="system_nosos_title">No emergency calls</string>
+	<string name="system_nosos_summ">Disable emergency call button on lock screen</string>
 	<string name="system_hideqs_title">Clean expanded mode view</string>
 	<string name="system_hideqs_summ">Hide Quick Settings and brightness slider in expanded notifications mode on lock screen</string>
 	<string name="system_nodrawerbackground_title">Disable colored background</string>
@@ -763,6 +765,7 @@
 	<string name="array_append">Append</string>
 	<string name="array_prepend">Prepend</string>
 	<string name="array_newline">Insert as new line</string>
+	<string name="array_path">Selected path</string>
 
 	<string name="toggle_wifi_on">Wi-Fi enabled</string>
 	<string name="toggle_wifi_off">Wi-Fi disabled</string>

@@ -219,6 +219,8 @@
     <string name="system_nopassword_summ">开机后首次解锁不需要密码。此项对加密的设备无效。</string>
     <string name="system_albumartonlock_title">专辑封面设为壁纸</string>
     <string name="system_albumartonlock_summ">将当前播放曲目的专辑封面显示为壁纸</string>
+    <string name="system_albumartonlock_gray_title">灰度</string>
+    <string name="system_albumartonlock_gray_summ">将专辑封面转换为黑白图片</string>
     <string name="system_albumartonlock_blur_title">专辑封面模糊</string>
     <string name="system_albumartonlock_scale_title">专辑封面缩放</string>
     <string name="system_credentials_title">解锁证书</string>
@@ -318,6 +320,8 @@
     <string name="system_allownotiffloat_summ">强制悬浮MIUI应用的所有通知</string>
     <string name="system_hidelsclock_title">隐藏顶部区域</string>
     <string name="system_hidelsclock_summ">移除包含时钟、数据和其他数据的顶部区域</string>
+    <string name="system_nosos_title">移除紧急呼叫</string>
+    <string name="system_nosos_summ">锁屏时禁用紧急呼叫按钮</string>
     <string name="system_hideqs_title">净化扩展模式视图</string>
     <string name="system_hideqs_summ">隐藏锁屏上展开通知模式中的快速设置和亮度滑块</string>
     <string name="system_nodrawerbackground_title">禁用彩色背景</string>
@@ -338,6 +342,8 @@
     <string name="system_mods_statusbar_drawer">通知抽屉</string>
     <string name="system_mods_notifications">通知</string>
     <string name="system_mods_recents">最近应用列表</string>
+    <string name="system_usenativerecents_title">使用本地实现</string>
+    <string name="system_usenativerecents_summ">不适用MIUI启动器的最近应用列表</string>
     <string name="system_removecleaner_title">移除清理按钮</string>
     <string name="system_removecleaner_summ">隐藏清理最近应用和内存的按钮</string>
     <string name="system_clearalltasks_title">清空</string>
@@ -734,6 +740,10 @@
     <string name="array_displayonly">仅显示</string>
     <string name="array_hide">隐藏</string>
     <string name="array_render_auto">自动侦测</string>
+    <string name="array_append">附加</string>
+    <string name="array_prepend">前置</string>
+    <string name="array_newline">插入新行</string>
+    <string name="array_path">所选路径</string>
     <string name="toggle_wifi_on">Wi-Fi已启用</string>
     <string name="toggle_wifi_off">Wi-Fi已禁用</string>
     <string name="toggle_bt_on">蓝牙已启用</string>

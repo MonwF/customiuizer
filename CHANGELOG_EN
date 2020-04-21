@@ -1,3 +1,12 @@
+2.2.1
+[New] Disable emergency call button on lock screen
+[Improved][Screenshot configuration] Option to select a custom save folder
+[Improved][Additional toast elements] Disable stock adding of an app name on China ROMs
+[Improved][Extended notification menu] Display all icons in one row in notification of minimal importance so they fit in when notification is collapsed
+[Fixed][Colorize notification title] Don't apply to styled media notifications
+[Fixed][Screen off timeout on lock screen] Was also affecting timeout outside lock screen
+UI fixes
+
 2.2.0
 [New] Use native recent apps list implementation instead of the one from MIUI Launcher
 [Improved][Album art as wallpaper] Option to convert album art to grayscale

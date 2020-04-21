@@ -219,6 +219,8 @@
     <string name="system_nopassword_summ">Önyüklemeden sonra ilk kez parmak izi yerine şifre gerekmez. Şifreli cihazlarda çalışma olasılığı düşüktür.</string>
     <string name="system_albumartonlock_title">Kapak Fotoğrafı (Duvar Kağıdı)</string>
     <string name="system_albumartonlock_summ">Dinlemekte olduğunuz müziğin Kapak Fotoğrafı Ekran Kilidi\'nde görüntülenir.</string>
+    <string name="system_albumartonlock_gray_title">Gri tonlama</string>
+    <string name="system_albumartonlock_gray_summ">Albüm kapağını siyah &amp; beyaz resme dönüştürün</string>
     <string name="system_albumartonlock_blur_title">Bulanıklık</string>
     <string name="system_albumartonlock_scale_title">Albüm resim ölçeği</string>
     <string name="system_credentials_title">Kimlik Bilgileri</string>
@@ -318,6 +320,8 @@
     <string name="system_allownotiffloat_summ">MIUI uygulamalarından gelen tüm bildirimleri, yüzen olarak görünebilecek şekilde zorlayın</string>
     <string name="system_hidelsclock_title">Saat/Tarih</string>
     <string name="system_hidelsclock_summ">Saat, Tarih ve diğer verileri Ekran Kilidi\'nden gizler.</string>
+    <string name="system_nosos_title">Acil durum çağrısı yok</string>
+    <string name="system_nosos_summ">Kilit ekranında acil arama düğmesini devre dışı bırak</string>
     <string name="system_hideqs_title">Genişletilmiş mod görünümünü temizle</string>
     <string name="system_hideqs_summ">Kilit ekranında genişletilmiş bildirimler modunda Hızlı Ayarları ve parlaklık kaydırıcısını gizle</string>
     <string name="system_nodrawerbackground_title">Renkli arka planı devre dışı bırak</string>
@@ -338,6 +342,8 @@
     <string name="system_mods_statusbar_drawer">Bildirim Paneli</string>
     <string name="system_mods_notifications">Bildirim</string>
     <string name="system_mods_recents">Son Uygulamalar</string>
+    <string name="system_usenativerecents_title">Yerel uygulamayı kullan</string>
+    <string name="system_usenativerecents_summ">MIUI Launcher\'daki son uygulamalar listesini kullanma</string>
     <string name="system_removecleaner_title">Buton (Sil)</string>
     <string name="system_removecleaner_summ">Son Uygulamalar ve RAM\'i temizleyen Sil butonunu kaldırır.</string>
     <string name="system_clearalltasks_title">Hepsini temizle</string>
@@ -734,6 +740,10 @@
     <string name="array_displayonly">Yalnızca görüntüleme</string>
     <string name="array_hide">Gizle</string>
     <string name="array_render_auto">Otomatik algıla</string>
+    <string name="array_append">Ekleme</string>
+    <string name="array_prepend">Başına Ekle</string>
+    <string name="array_newline">Yeni satır olarak ekle</string>
+    <string name="array_path">Seçilen yol</string>
     <string name="toggle_wifi_on">Etkin (Wi-Fi)</string>
     <string name="toggle_wifi_off">Devre Dışı (Wi-Fi)</string>
     <string name="toggle_bt_on">Etkin (Bluetooth)</string>

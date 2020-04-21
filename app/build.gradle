@@ -22,8 +22,8 @@ android {
         minSdkVersion 24
         //noinspection OldTargetApi
         targetSdkVersion 27
-        versionCode 53
-        versionName "2.2.0"
+        versionCode 54
+        versionName "2.2.1"
         signingConfig signingConfigs.dev
     }
     buildTypes {
@@ -58,7 +58,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "ch.acra:acra-core:$acraVersion"
     implementation 'com.android.billingclient:billing:2.2.0'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.3.61'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.3.71'
     implementation 'com.github.jinatonic.confetti:confetti:1.1.2'
     implementation files('libs/WeatherView-2.0.3.aar')
     compileOnly 'de.robv.android.xposed:api:82'

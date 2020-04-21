@@ -253,6 +253,11 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		if (grantResults.length == 0) {
+			super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+			return;
+		}
+
 		switch (requestCode) {
 			case Helpers.REQUEST_PERMISSIONS_BACKUP:
 				if (grantResults[0] == PackageManager.PERMISSION_GRANTED)

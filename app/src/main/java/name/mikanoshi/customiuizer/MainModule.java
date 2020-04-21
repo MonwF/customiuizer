@@ -252,6 +252,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_nonetspeedseparator")) System.NoNetworkSpeedSeparatorHook(lpparam);
 			if (mPrefs.getBoolean("system_snoozedmanager")) System.MoreSnoozeOptionsHook(lpparam);
 			if (mPrefs.getBoolean("system_taptounlock")) System.TapToUnlockHook(lpparam);
+			if (mPrefs.getBoolean("system_nosos")) System.NoSOSHook(lpparam);
 			if (mPrefs.getBoolean("system_usenativerecents")) System.UseNativeRecentsHook(lpparam);
 			if (mPrefs.getBoolean("launcher_nounlockanim")) System.NoUnlockAnimationHook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_battery1")) System.HideIconsBattery1Hook(lpparam);

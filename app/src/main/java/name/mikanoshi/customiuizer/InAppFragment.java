@@ -75,6 +75,7 @@ public class InAppFragment extends SubFragment implements PurchasesUpdatedListen
 
 		for (String sku: skuList) {
 			Preference pref = findPreference(sku);
+			if (pref == null) continue;
 			pref.setTitle(getResources().getString(R.string.support_donate, skuToInt(sku)));
 			pref.setSummary("...");
 			pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -91,28 +92,30 @@ public class InAppFragment extends SubFragment implements PurchasesUpdatedListen
 		}
 
 		Preference consume = findPreference("consume");
-		consume.setTitle("Consume all");
-		consume.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				Purchase.PurchasesResult result = billingClient.queryPurchases(SkuType.INAPP);
-				List<Purchase> purchases = result.getPurchasesList();
-				if (purchases == null || purchases.size() == 0) return false;
-				for (Purchase purchase: purchases) {
-					if (purchase.getPurchaseState() != PurchaseState.PURCHASED) continue;
-					ConsumeParams params = ConsumeParams.newBuilder().setPurchaseToken(purchase.getPurchaseToken()).setDeveloperPayload(purchase.getDeveloperPayload()).build();
-					billingClient.consumeAsync(params, new ConsumeResponseListener() {
-						@Override
-						public void onConsumeResponse(BillingResult billingResult, String purchaseToken) {
-							checkBillingError(billingResult);
-						}
-					});
+		if (consume != null) {
+			consume.setTitle("Consume all");
+			consume.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+				@Override
+				public boolean onPreferenceClick(Preference preference) {
+					Purchase.PurchasesResult result = billingClient.queryPurchases(SkuType.INAPP);
+					List<Purchase> purchases = result.getPurchasesList();
+					if (purchases == null || purchases.size() == 0) return false;
+					for (Purchase purchase : purchases) {
+						if (purchase.getPurchaseState() != PurchaseState.PURCHASED) continue;
+						ConsumeParams params = ConsumeParams.newBuilder().setPurchaseToken(purchase.getPurchaseToken()).setDeveloperPayload(purchase.getDeveloperPayload()).build();
+						billingClient.consumeAsync(params, new ConsumeResponseListener() {
+							@Override
+							public void onConsumeResponse(BillingResult billingResult, String purchaseToken) {
+								checkBillingError(billingResult);
+							}
+						});
+					}
+					Toast.makeText(getActivity(), "All donations consumed!", Toast.LENGTH_SHORT).show();
+					return true;
 				}
-				Toast.makeText(getActivity(), "All donations consumed!", Toast.LENGTH_SHORT).show();
-				return true;
-			}
-		});
-		if (!BuildConfig.DEBUG) getPreferenceScreen().removePreference(consume);
+			});
+			if (!BuildConfig.DEBUG) getPreferenceScreen().removePreference(consume);
+		}
 
 		new Thread(new Runnable() {
 			public void run() {
@@ -224,6 +227,7 @@ public class InAppFragment extends SubFragment implements PurchasesUpdatedListen
 		billingClient.querySkuDetailsAsync(params.build(), new SkuDetailsResponseListener() {
 			@Override
 			public void onSkuDetailsResponse(BillingResult billingResult, List<SkuDetails> skuDetailsList) {
+				if (skuDetailsList == null) return;
 				if (checkBillingError(billingResult)) {
 					for (String sku: skuList) findPreference(sku).setEnabled(false);
 					return;
@@ -270,6 +274,7 @@ public class InAppFragment extends SubFragment implements PurchasesUpdatedListen
 
 	void registerNetReceiver() {
 		ConnectivityManager connectMgr = (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+		if (connectMgr == null) return;
 		NetworkInfo activeNetwork = connectMgr.getActiveNetworkInfo();
 		hasNetwork = activeNetwork != null && activeNetwork.isConnected();
 		connectMgr.registerDefaultNetworkCallback(networkCallback);
@@ -277,7 +282,7 @@ public class InAppFragment extends SubFragment implements PurchasesUpdatedListen
 
 	void unregisterNetReceiver() {
 		ConnectivityManager connectMgr = (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-		connectMgr.unregisterNetworkCallback(networkCallback);
+		if (connectMgr != null) connectMgr.unregisterNetworkCallback(networkCallback);
 	}
 
 }

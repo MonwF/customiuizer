@@ -742,6 +742,7 @@
     <string name="array_append">Aggiungi</string>
     <string name="array_prepend">Preferito</string>
     <string name="array_newline">Inserisci come nuova riga</string>
+    <string name="array_path">Percorso selezionato</string>
     <string name="toggle_wifi_on">Wi-Fi attivo</string>
     <string name="toggle_wifi_off">Wi-Fi disattivo</string>
     <string name="toggle_bt_on">Bluetooth attivo</string>

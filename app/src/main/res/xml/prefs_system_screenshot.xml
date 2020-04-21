@@ -39,6 +39,10 @@
 		android:defaultValue="1"
 		miuizer:valueAsSummary="true" />
 
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:key="pref_key_system_screenshot_mypath"
+		android:title="@string/array_path" />
+
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

@@ -83,7 +83,6 @@ import android.text.format.DateUtils;
 import android.util.ArrayMap;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.Pair;
 import android.util.SparseIntArray;
 import android.util.TypedValue;
@@ -100,6 +99,7 @@ import android.view.ViewOutlineProvider;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsListView;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -118,6 +118,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -744,6 +745,15 @@ public class System {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				modifyIconLabelToast(param);
+			}
+		});
+
+		Helpers.findAndHookMethod("android.widget.ToastInjector", null, "addAppName", Context.class, CharSequence.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				Context context = (Context)param.args[0];
+				int opt = Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_system_iconlabletoasts", "1"));
+				if (opt != 1) param.setResult(param.args[1]);
 			}
 		});
 	}
@@ -1796,6 +1806,12 @@ public class System {
 		Helpers.hookAllMethods("android.app.Notification.Builder", null, "bindNotificationHeader", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
+				if (!Helpers.isNougat()) try {
+					Object mN = XposedHelpers.getObjectField(param.thisObject, "mN");
+					if (mN != null)
+					if ((boolean)XposedHelpers.callMethod(mN, "isColorizedMedia")) return;
+				} catch (Throwable ignore) {}
+
 				RemoteViews rv = (RemoteViews)param.args[0];
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 				int contrastColor;
@@ -2075,12 +2091,23 @@ public class System {
 				int padding = 10;
 				float density = mMenuContainer.getResources().getDisplayMetrics().density;
 				float startingHeight = height / 2.0f - mHorizSpaceForIcon - padding * density - extraTopPadding;
-				if (!mSnapping && mMenuContainer != null && mMenuContainer.isAttachedToWindow()) {
+
+				Object sbNotification = XposedHelpers.callMethod(mParent, "getStatusBarNotification");
+				int mImportance = XposedHelpers.getIntField(sbNotification, "mImportance");
+				if (!mSnapping && mMenuContainer.isAttachedToWindow()) {
 					int childCount = mMenuContainer.getChildCount();
-					int row = 0; int col = 0;
-					for (int i = 0; i < childCount; i++) {
+					int row = 0;
+					int col = 0;
+					if (mImportance == 1) mHorizSpaceForIcon = 24 * density;
+					for (int i = 0; i < childCount; i++)
+					if (mImportance == 1) {
 						View childAt = mMenuContainer.getChildAt(i);
-						childAt.setX((float)width - ((mHorizSpaceForIcon + (col == 0 ? 2 * padding : 1.5f * padding) * density) * (col + 1)));
+						childAt.setX((float)width - padding * density - (mHorizSpaceForIcon + padding * density) * (col + 1));
+						childAt.setY(height / 2.0f - mHorizSpaceForIcon / 2.0f - padding / 2.0f * density - extraTopPadding);
+						col++;
+					} else {
+						View childAt = mMenuContainer.getChildAt(i);
+						childAt.setX((float)width - (mHorizSpaceForIcon + (col == 0 ? 2 * padding : 1.5f * padding) * density) * (col + 1));
 						childAt.setY(startingHeight + mHorizSpaceForIcon * row + padding * density);
 						col++;
 						if (i % 2 == 1) {
@@ -2353,6 +2380,7 @@ public class System {
 
 	public static void HideMemoryCleanHook(LoadPackageParam lpparam, boolean isInLauncher) {
 		String raClass = isInLauncher ? "com.miui.home.recents.views.RecentsContainer" : "com.android.systemui.recents.RecentsActivity";
+		if (isInLauncher && findClassIfExists(raClass, lpparam.classLoader) == null) return;
 		Helpers.findAndHookMethod(raClass, lpparam.classLoader, "setupVisible", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
@@ -2368,7 +2396,18 @@ public class System {
 			@SuppressWarnings("ResultOfMethodCallIgnored")
 			protected void after(MethodHookParam param) throws Throwable {
 				Context mContext = (Context)param.args[0];
-				File powermenu = new File("/cache/extended_power_menu");
+				File powermenu = null;
+				File path1 = new File("/cache");
+				File path2 = new File("/data/cache");
+				File path3 = new File("/data/tmp");
+				if (path1.canWrite()) powermenu = new File("/cache/extended_power_menu");
+				else if (path2.canWrite()) powermenu = new File("/data/cache/extended_power_menu");
+				else if (path3.canWrite()) powermenu = new File("/data/tmp/extended_power_menu");
+
+				if (powermenu == null) {
+					Helpers.log("ExtendedPowerMenuHook", "No writable path found!");
+					return;
+				}
 				if (powermenu.exists()) powermenu.delete();
 
 				InputStream inputStream;
@@ -2774,6 +2813,7 @@ public class System {
 
 	public static void CustomRecommendedHook(LoadPackageParam lpparam, boolean isInLauncher) {
 		String rrvClass = isInLauncher ? "com.miui.home.recents.views.RecentsRecommendView" : "com.android.systemui.recents.views.RecentsRecommendView";
+		if (isInLauncher && findClassIfExists(rrvClass, lpparam.classLoader) == null) return;
 		Helpers.findAndHookConstructor(rrvClass, lpparam.classLoader, Context.class, AttributeSet.class, int.class, int.class, new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
@@ -5322,7 +5362,10 @@ public class System {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				Object mLpChanged = XposedHelpers.getObjectField(param.thisObject, "mLpChanged");
-				if (mLpChanged != null) XposedHelpers.setLongField(mLpChanged, "userActivityTimeout", MainModule.mPrefs.getInt("system_lstimeout", 9) * 1000L);
+				if (mLpChanged == null) return;
+				long userActivityTimeout = XposedHelpers.getLongField(mLpChanged, "userActivityTimeout");
+				if (userActivityTimeout > 0)
+				XposedHelpers.setLongField(mLpChanged, "userActivityTimeout", MainModule.mPrefs.getInt("system_lstimeout", 9) * 1000L);
 			}
 		});
 	}
@@ -5657,10 +5700,14 @@ public class System {
 
 				Context context = (Context)param.args[0];
 				int folder = Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_system_screenshot_path", "1"));
+				String dir = Helpers.getSharedStringPref(context, "pref_key_system_screenshot_mypath", "");
 
 				File mScreenshotDir;
 				if (folder > 1) {
-					mScreenshotDir = new File(Environment.getExternalStoragePublicDirectory(folder == 2 ? Environment.DIRECTORY_PICTURES : Environment.DIRECTORY_DCIM), "Screenshots");
+					if (folder == 4 && !TextUtils.isEmpty(dir))
+						mScreenshotDir = new File(dir);
+					else
+						mScreenshotDir = new File(Environment.getExternalStoragePublicDirectory(folder == 2 ? Environment.DIRECTORY_PICTURES : Environment.DIRECTORY_DCIM), "Screenshots");
 					if (!mScreenshotDir.exists()) mScreenshotDir.mkdirs();
 				} else {
 					mScreenshotDir = (File)XposedHelpers.getObjectField(param.thisObject, "mScreenshotDir");
@@ -6215,6 +6262,16 @@ public class System {
 
 	public static void NoUnlockAnimationHook(LoadPackageParam lpparam) {
 		Helpers.findAndHookMethod("com.android.systemui.miui.ActivityObserverImpl", lpparam.classLoader, "isTopActivityLauncher", XC_MethodReplacement.returnConstant(false));
+	}
+
+	public static void NoSOSHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.keyguard.EmergencyButton", lpparam.classLoader, "updateEmergencyCallButton", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				Button mSOS = (Button)param.thisObject;
+				if (mSOS.getVisibility() == View.VISIBLE) mSOS.setEnabled(false);
+			}
+		});
 	}
 
 //	@SuppressWarnings("unchecked")

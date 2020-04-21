@@ -777,6 +777,12 @@
 			android:title="@string/system_hidelsclock_title"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_nosos"
+			android:summary="@string/system_nosos_summ"
+			android:title="@string/system_nosos_title"
+			android:defaultValue="false" />
+
 		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 			android:title="@string/system_mods_lockscreen_functionality" />
 

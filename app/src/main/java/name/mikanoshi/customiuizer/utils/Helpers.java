@@ -137,9 +137,8 @@ public class Helpers {
 	public static boolean showNewMods = true;
 	public static boolean miuizerModuleActive = false;
 	public static final HashSet<String> newMods = new HashSet<String>(Arrays.asList(
-		"pref_key_system_usenativerecents",
-		"pref_key_system_lscurrentcharge",
-		"pref_key_system_albumartonlock_gray"
+		"pref_key_system_nosos",
+		"pref_key_system_screenshot_mypath"
 	));
 	public static final ArrayList<String> shortcutIcons = new ArrayList<String>();
 	public static Holidays currentHoliday = Holidays.NONE;

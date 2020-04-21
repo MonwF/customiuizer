@@ -357,17 +357,20 @@ public class Controls {
 		int two = Math.round(2 * density);
 		int margin = Math.round(MainModule.mPrefs.getInt("controls_navbarmargin", 0) * density);
 
-		Drawable dot;
+		Drawable dot1;
+		Drawable dot2;
 		try {
 			Context modCtx = Helpers.getModuleContext(mContext);
 			Resources modRes = Helpers.getModuleRes(mContext);
-			dot = modRes.getDrawable(R.drawable.ic_sysbar_dot, modCtx.getTheme());
+			dot1 = modRes.getDrawable(R.drawable.ic_sysbar_dot_bottomleft, modCtx.getTheme());
+			dot2 = modRes.getDrawable(R.drawable.ic_sysbar_dot_topright, modCtx.getTheme());
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 			return;
 		}
 
-		int diff = (dot.getIntrinsicWidth() - dot.getIntrinsicHeight()) / 2;
+		int diff1 = (dot1.getIntrinsicWidth() - dot1.getIntrinsicHeight()) / 2;
+		int diff2 = (dot2.getIntrinsicWidth() - dot2.getIntrinsicHeight()) / 2;
 		LinearLayout leftbtn = new LinearLayout(mContext);
 		ImageView left = new ImageView(mContext);
 
@@ -386,11 +389,11 @@ public class Controls {
 		leftbtn.setLayoutParams(lpl);
 
 		left.setScaleType(ImageView.ScaleType.CENTER);
-		left.setImageDrawable(dot);
+		left.setImageDrawable(dot1);
 		left.setScaleX(0.7f);
 		left.setScaleY(0.7f);
 		left.setAlpha(0.9f);
-		left.setPadding(isVertical ? 0 : two, isVertical ? two + diff : 0, isVertical ? 0 : two, isVertical ? two + diff : 0);
+		left.setPadding(isVertical ? 0 : two, isVertical ? two + diff1 : 0, isVertical ? 0 : two, isVertical ? two + diff1 : 0);
 		left.setTag("custom_left" + (isVertical ? "_vert" : "_horiz"));
 		if (kbrCls != null) try {
 			Drawable lripple = (Drawable)kbrCls.getConstructor(Context.class, View.class).newInstance(mContext, leftbtn);
@@ -429,11 +432,11 @@ public class Controls {
 		rightbtn.setLayoutParams(lpr);
 
 		right.setScaleType(ImageView.ScaleType.CENTER);
-		right.setImageDrawable(dot);
+		right.setImageDrawable(dot2);
 		right.setScaleX(0.7f);
 		right.setScaleY(0.7f);
 		right.setAlpha(0.9f);
-		right.setPadding(isVertical ? 0 : two, isVertical ? two + diff : 0, isVertical ? 0 : two, isVertical ? two + diff : 0);
+		right.setPadding(isVertical ? 0 : two, isVertical ? two + diff2 : 0, isVertical ? 0 : two, isVertical ? two + diff2 : 0);
 		right.setTag("custom_right" + (isVertical ? "_vert" : "_horiz"));
 		if (kbrCls != null) try {
 			Drawable rripple = (Drawable)kbrCls.getConstructor(Context.class, View.class).newInstance(mContext, rightbtn);
@@ -530,17 +533,19 @@ public class Controls {
 				Context modCtx = Helpers.getModuleContext(navbar.getContext());
 				Resources modRes = Helpers.getModuleRes(navbar.getContext());
 				if (isDark) {
-					Drawable darkImg = modRes.getDrawable(R.drawable.ic_sysbar_dot_dark, modCtx.getTheme());
-					if (hleft != null) hleft.setImageDrawable(darkImg);
-					if (vleft != null) vleft.setImageDrawable(darkImg);
-					if (hright != null) hright.setImageDrawable(darkImg);
-					if (vright != null) vright.setImageDrawable(darkImg);
+					Drawable darkImg1 = modRes.getDrawable(R.drawable.ic_sysbar_dot_bottomleft_dark, modCtx.getTheme());
+					Drawable darkImg2 = modRes.getDrawable(R.drawable.ic_sysbar_dot_topright_dark, modCtx.getTheme());
+					if (hleft != null) hleft.setImageDrawable(darkImg1);
+					if (vleft != null) vleft.setImageDrawable(darkImg1);
+					if (hright != null) hright.setImageDrawable(darkImg2);
+					if (vright != null) vright.setImageDrawable(darkImg2);
 				} else {
-					Drawable lightImg = modRes.getDrawable(R.drawable.ic_sysbar_dot, modCtx.getTheme());
-					if (hleft != null) hleft.setImageDrawable(lightImg);
-					if (vleft != null) vleft.setImageDrawable(lightImg);
-					if (hright != null) hright.setImageDrawable(lightImg);
-					if (vright != null) vright.setImageDrawable(lightImg);
+					Drawable lightImg1 = modRes.getDrawable(R.drawable.ic_sysbar_dot_bottomleft, modCtx.getTheme());
+					Drawable lightImg2 = modRes.getDrawable(R.drawable.ic_sysbar_dot_topright, modCtx.getTheme());
+					if (hleft != null) hleft.setImageDrawable(lightImg1);
+					if (vleft != null) vleft.setImageDrawable(lightImg1);
+					if (hright != null) hright.setImageDrawable(lightImg2);
+					if (vright != null) vright.setImageDrawable(lightImg2);
 				}
 			}
 		});

@@ -39,6 +39,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Set;
 
@@ -188,6 +189,19 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 				alert.setVisibility(View.GONE);
 				((ViewGroup)more.getParent()).addView(alert);
 			}
+	}
+
+	void fixActionBar() {
+		// Hide stupid auto split actionbar
+		try {
+			ActionBar actionBar = getActionBar();
+			Field mSplitViewField = actionBar.getClass().getDeclaredField("mSplitView");
+			mSplitViewField.setAccessible(true);
+			View mSplitView = (View)mSplitViewField.get(actionBar);
+			if (mSplitView != null) mSplitView.setVisibility(View.GONE);
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
 	}
 
 	private void initFragment() {

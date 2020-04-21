@@ -243,6 +243,7 @@
 	<string name="array_append">После</string>
 	<string name="array_prepend">Перед</string>
 	<string name="array_newline">Вставить новой строкой</string>
+	<string name="array_path">Выбранный путь</string>
 
 	<string name="support_bug_title">Сообщить об ошибке</string>
 	<string name="support_bug_summ">Отправить сообщение об ошибке или предложить новую фичу</string>
@@ -883,6 +884,8 @@
 	<string name="system_allownotiffloat_summ">Разрешает любому уведомлению из MIUI приложений отображаться в виде всплывающего</string>
 	<string name="system_hidelsclock_title">Скрыть верхний блок</string>
 	<string name="system_hidelsclock_summ">Удаляет верхний блок, содержащий часы, дату и другие данные</string>
+	<string name="system_nosos_title">Запретить экстренные вызовы</string>
+	<string name="system_nosos_summ">Отключает кнопку экстренного вызова на экране блокировки</string>
 	<string name="system_hideqs_title">Очистить вид развёрнутого режима</string>
 	<string name="system_hideqs_summ">Скрывает панель Быстрых Настроек и слайдер яркости в режиме развёрнутых уведомлений на экране блокировки</string>
 	<string name="system_nodrawerbackground_title">Отключить цветной фон</string>

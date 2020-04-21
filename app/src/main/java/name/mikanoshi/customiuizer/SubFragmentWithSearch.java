@@ -126,6 +126,7 @@ public class SubFragmentWithSearch extends SubFragment {
 			@Override
 			public void onClick(View v) {
 				actionMode = startActionMode(actionModeCallback);
+				fixActionBar();
 			}
 		});
 

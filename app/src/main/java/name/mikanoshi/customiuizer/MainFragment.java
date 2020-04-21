@@ -45,7 +45,6 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -53,7 +52,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
-import miui.app.ActionBar;
 import miui.app.AlertDialog;
 import miui.view.SearchActionMode;
 
@@ -297,16 +295,7 @@ public class MainFragment extends PreferenceFragmentBase {
 	private void openActionMode(boolean isNew) {
 		actionModeNew = isNew;
 		actionMode = startActionMode(actionModeCallback);
-		// Hide stupid auto split actionbar
-		try {
-			ActionBar actionBar = getActionBar();
-			Field mSplitViewField = actionBar.getClass().getDeclaredField("mSplitView");
-			mSplitViewField.setAccessible(true);
-			View mSplitView = (View)mSplitViewField.get(actionBar);
-			if (mSplitView != null) mSplitView.setVisibility(View.GONE);
-		} catch (Throwable t) {
-			t.printStackTrace();
-		}
+		fixActionBar();
 	}
 
 	@Override

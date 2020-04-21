@@ -341,7 +341,7 @@
     <string name="system_mods_notifications">Сповіщення</string>
     <string name="system_mods_recents">Список нещодавніх додатків</string>
     <string name="system_usenativerecents_title">Використовувати рідний список</string>
-    <string name="system_usenativerecents_summ">Не використовувати список останніх програм, вбудований й Робочий стіл MIUI</string>
+    <string name="system_usenativerecents_summ">Не використовувати список останніх програм, вбудований у Робочий стіл MIUI</string>
     <string name="system_removecleaner_title">Прибрати кнопку очищення</string>
     <string name="system_removecleaner_summ">Приховує кнопку для очищення списку нещодавніх додатків і пам\'яті</string>
     <string name="system_clearalltasks_title">Очистити все</string>
@@ -741,6 +741,7 @@
     <string name="array_append">Після</string>
     <string name="array_prepend">Перед</string>
     <string name="array_newline">Вставити новим рядком</string>
+    <string name="array_path">Обраний шлях</string>
     <string name="toggle_wifi_on">Wi-Fi увімкнений</string>
     <string name="toggle_wifi_off">Wi-Fi вимкнений</string>
     <string name="toggle_bt_on">Bluetooth увімкнений</string>
