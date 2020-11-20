@@ -13,6 +13,8 @@ import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.zip.GZIPOutputStream;
 
@@ -33,7 +35,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -72,13 +73,13 @@ public class Dialog extends Activity {
 	private CrashReportData crashData;
 	private CoreConfiguration config;
 	private File reportFile;
-	private StringBuilder debugLog = new StringBuilder();
+	private final StringBuilder debugLog = new StringBuilder();
 	private EditText desc;
 	String errorText = null;
 
 	private boolean isNetworkAvailable() {
 		ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+		NetworkInfo activeNetworkInfo = connectivityManager == null ? null : connectivityManager.getActiveNetworkInfo();
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
 	
@@ -301,8 +302,9 @@ public class Dialog extends Activity {
 				errorLogFile = sdcardLog;
 			} else if (errorLog != null) {
 				errorLogFile = new File(errorLog);
-				debugLog.append("Log found: ").append(errorLog).append("\n");
-			} else debugLog.append("No Xposed log found!\n");
+				if (errorLogFile.exists() && errorLogFile.canRead())
+				debugLog.append("Log found in installer: ").append(errorLog).append("\n");
+			}
 
 			if (errorLogFile != null)
 			try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(errorLogFile)))) {
@@ -312,7 +314,7 @@ public class Dialog extends Activity {
 				xposedLog = sb.toString();
 			} catch (Throwable t) {
 				debugLog.append("Error reading log: ").append(t.getMessage()).append("\n");
-			}
+			} else debugLog.append("No accessble Xposed log found!\n");
 
 			if (sdcardLog.exists()) sdcardLog.delete();
 		} catch (Throwable t) {}
@@ -360,17 +362,28 @@ public class Dialog extends Activity {
 				} catch (Throwable t) {}
 			} catch (Throwable t) {}
 
-			final String[] xposedPropFiles = new String[]{
-					"/system/framework/edconfig.jar", // EdXposed
-					"/system/xposed.prop", // Classic
-					"/magisk/xposed/system/xposed.prop",
-					"/magisk/PurifyXposed/system/xposed.prop",
-					"/su/xposed/system/xposed.prop",
-					"/vendor/xposed.prop",
-					"/xposed/xposed.prop",
-					"/xposed.prop",
-					"/su/xposed/xposed.prop"
-			};
+			final ArrayList<String> xposedPropFiles = new ArrayList<String>(Arrays.asList(
+				"/system/framework/edconfig.jar", // EdXposed
+				"/system/xposed.prop", // Classic
+				"/magisk/xposed/system/xposed.prop",
+				"/magisk/PurifyXposed/system/xposed.prop",
+				"/su/xposed/system/xposed.prop",
+				"/vendor/xposed.prop",
+				"/xposed/xposed.prop",
+				"/xposed.prop",
+				"/su/xposed/xposed.prop"
+			));
+
+			File[] files = new File("/system/framework").listFiles();
+			if (files != null && files.length > 0)
+			for (File file: files) try {
+				long fsize = file.length();
+				if (fsize < 128) {
+					xposedPropFiles.add(file.getAbsolutePath());
+					break;
+				}
+			} catch (Throwable ignore) {}
+
 			for (String prop: xposedPropFiles) {
 				File propFile = new File(prop);
 				if (propFile.exists() && propFile.canRead()) {
@@ -531,7 +544,7 @@ public class Dialog extends Activity {
 						InputMethodManager inputManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 						View currentFocusedView = getCurrentFocus();
 						if (currentFocusedView != null)
-							inputManager.hideSoftInputFromWindow(currentFocusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+						inputManager.hideSoftInputFromWindow(currentFocusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 					} catch (Throwable t) {
 						Log.e("miuizer", t.getMessage());
 					}

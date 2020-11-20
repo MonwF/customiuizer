@@ -290,6 +290,17 @@
 		<item>4</item>
 	</string-array>
 
+	<string-array name="collapsetitles">
+		<item>@string/array_default</item>
+		<item>@string/array_collapse_initial</item>
+		<item>@string/array_collapse_permanent</item>
+	</string-array>
+	<string-array name="collapsetitles_val">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+	</string-array>
+
 	<string-array name="incallui">
 		<item>@string/array_default</item>
 		<item>@string/array_nofs</item>
@@ -772,17 +783,38 @@
 		<item>4</item>
 	</string-array>
 
+	<string-array name="maxsbicons">
+		<item>@string/array_default</item>
+		<item>3</item>
+		<item>5</item>
+		<item>7</item>
+		<item>10</item>
+		<item>15</item>
+		<item>@string/unlimited</item>
+	</string-array>
+	<string-array name="maxsbicons_val">
+		<item>0</item>
+		<item>3</item>
+		<item>5</item>
+		<item>7</item>
+		<item>10</item>
+		<item>15</item>
+		<item>-1</item>
+	</string-array>
+
 	<string-array name="holidays">
 		<item>@string/array_disable</item>
 		<item>@string/array_color_auto</item>
 		<item>@string/array_newyear</item>
 		<item>@string/array_lunarnewyear</item>
+		<item>@string/array_covid</item>
 	</string-array>
 	<string-array name="holidays_val">
 		<item>-1</item>
 		<item>0</item>
 		<item>1</item>
 		<item>2</item>
+		<item>3</item>
 	</string-array>
 
 	<string-array name="onoff">

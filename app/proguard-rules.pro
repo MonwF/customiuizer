@@ -1,6 +1,5 @@
 -verbose
 -dontobfuscate
--dontpreverify
 -allowaccessmodification
 
 -keepattributes Exceptions,LineNumberTable,Signature,SourceFile,EnclosingMethod,*Annotation*

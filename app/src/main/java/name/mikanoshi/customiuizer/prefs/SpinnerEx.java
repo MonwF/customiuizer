@@ -16,7 +16,7 @@ public class SpinnerEx extends Spinner {
 
 	public CharSequence[] entries;
 	public int[] entryValues;
-	private ArrayList<Integer> disabledItems = new ArrayList<Integer>();
+	private final ArrayList<Integer> disabledItems = new ArrayList<Integer>();
 
 	public SpinnerEx(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -35,7 +35,7 @@ public class SpinnerEx extends Spinner {
 
 	public void init(int val) {
 		if (entries == null || entryValues == null) return;
-		ArrayAdapterEx<CharSequence> newAdapter = new ArrayAdapterEx<CharSequence>(getContext(), android.R.layout.simple_spinner_item, entries);
+		ArrayAdapterEx newAdapter = new ArrayAdapterEx(getContext(), android.R.layout.simple_spinner_item, entries);
 		setAdapter(newAdapter);
 		setSelection(findIndex(val, entryValues));
 	}
@@ -48,7 +48,7 @@ public class SpinnerEx extends Spinner {
 		return entryValues[getSelectedItemPosition()];
 	}
 
-	class ArrayAdapterEx<CharSequence> extends ArrayAdapter<CharSequence> {
+	class ArrayAdapterEx extends ArrayAdapter<CharSequence> {
 
 		ArrayAdapterEx(Context context, int resource, CharSequence[] objects) {
 			super(context, resource, objects);

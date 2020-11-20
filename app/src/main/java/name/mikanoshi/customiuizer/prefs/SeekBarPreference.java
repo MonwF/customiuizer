@@ -103,6 +103,7 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 		View finalView = super.getView(view, parent);
 		TextView mTitle = finalView.findViewById(android.R.id.title);
 		mTitle.setText(getTitle() + (dynamic ? " ⟲" : ""));
+		if (Helpers.is12()) mSeekBar.setAlpha(isEnabled() ? 1.0f : 0.75f);
 		if (newmod) Helpers.applyNewMod(mTitle);
 		return finalView;
 	}

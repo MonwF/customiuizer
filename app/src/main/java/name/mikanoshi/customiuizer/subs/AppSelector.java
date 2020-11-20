@@ -92,7 +92,6 @@ public class AppSelector extends SubFragmentWithSearch {
 				}
 				listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 					@Override
-					@SuppressWarnings("ConstantConditions")
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 						if (multi && key != null) {
 							AppData app = (AppData)parent.getAdapter().getItem(position);

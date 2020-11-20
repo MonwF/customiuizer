@@ -1,3 +1,30 @@
+3.0.0
+[New] Increase limit of active notifications from a single app
+[New] Increase/remove notification icons limit in status bar
+[New] Disable forced dark mode
+[New][MIUI 12] Collapse MIUI titles
+[Improved][Navbar height, Additional navbar buttons margin] Increased value ranges
+[Improved][Show additional app details] APK version code
+[Fixed][Show seconds in status bar clock] Adding seconds twice
+[Fixed][Back gesture area height and width] Support for gestures implementation from MIUI Launcher
+[Fixed][Launcher gestures] Swipe up and down gestures; compatibility with latest MIUI Launcher versions
+[Fixed][Fingerprint actions during calls] Longpress action
+[Fixed][Separate volume controls] Muted state indication for notification slider in volume dialog when DND is active
+Coronavirus anti-holiday is back! Now even more viral!
+MIUI 12 compatibility:
+	Fast access icon
+	Rotation animation
+	Custom lock screen shortcuts (launching without unlock)
+	Separate volume controls
+	Compact notifications
+	Extended notification menu
+	Shortcut/Clock/Calendar app in notification drawer
+	Display next alarm on lock screen
+	Hide top block on lock screen
+	More notification snooze options
+	Show additional app details
+	Horizontal gestures
+
 2.2.1
 [New] Disable emergency call button on lock screen
 [Improved][Screenshot configuration] Option to select a custom save folder
@@ -5,7 +32,7 @@
 [Improved][Extended notification menu] Display all icons in one row in notification of minimal importance so they fit in when notification is collapsed
 [Fixed][Colorize notification title] Don't apply to styled media notifications
 [Fixed][Screen off timeout on lock screen] Was also affecting timeout outside lock screen
-UI fixes
+Module's UI fixes
 
 2.2.0
 [New] Use native recent apps list implementation instead of the one from MIUI Launcher

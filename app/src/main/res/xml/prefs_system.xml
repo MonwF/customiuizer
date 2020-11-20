@@ -310,6 +310,14 @@
 			android:title="@string/system_clockseconds_title"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_maxsbicons"
+			android:title="@string/system_maxsbicons_title"
+			android:summary="@string/system_maxsbicons_summ"
+			android:entries="@array/maxsbicons"
+			android:entryValues="@array/maxsbicons_val"
+			android:defaultValue="0" />
+
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_hidemoreicon"
 			android:summary="@string/system_hidemoreicon_summ"
@@ -472,6 +480,12 @@
 			android:key="pref_key_system_notifafterunlock"
 			android:summary="@string/system_notifafterunlock_summ"
 			android:title="@string/system_notifafterunlock_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_morenotif"
+			android:title="@string/system_morenotif_title"
+			android:summary="@string/system_morenotif_summ"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
@@ -870,6 +884,12 @@
 			android:entries="@array/uimode"
 			android:entryValues="@array/uimode_val"
 			android:defaultValue="1" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_nodarkforce"
+			android:title="@string/system_nodarkforce_title"
+			android:summary="@string/system_nodarkforce_summ"
+			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_epm"

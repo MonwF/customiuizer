@@ -45,7 +45,7 @@
 
 	<string name="dummy">" "</string>
 
-	<string name="sdk_failed">Не удалось инициализировать MIUI SDK.\nДевайс не Xiaomi?</string>
+	<string name="sdk_failed">Не удалось инициализировать MIUI SDK.\nПрошивка не MIUI?</string>
 	<string name="notselected">Не выбрано</string>
 
 	<string name="various_mods">Различное</string>
@@ -80,7 +80,7 @@
 	<string name="various_disableapp_title">Контроль состояния приложений</string>
 	<string name="various_disableapp_summ">Позволяет отключить почти любое приложение с его страницы \"О приложении\"</string>
 	<string name="various_apps_title">Доп. сведения о приложении</string>
-	<string name="various_apps_summ">Добавляет новые элементы в Настройки &gt; Все приложения &gt; О приложении:\n- кнопку запуска приложения\n- имя и путь до apk\n- путь до данных\n- имя процесса\n- номер пользователя\n- версию SDK</string>
+	<string name="various_apps_summ">Добавляет новые элементы на страницу с данными о приложении:\n- код версии\n- имя и путь до apk\n- путь до данных\n- ID пользователя\n- версию SDK\n- ссылку на страницу приложения в маркете\n- запуск приложения</string>
 
 	<string name="support">Поддержка</string>
 
@@ -112,6 +112,7 @@
 	<string name="appdetails_playstore">Открыть в Play Маркет</string>
 	<string name="appdetails_launch">Запустить</string>
 	<string name="appdetails_apk_file">Имя APK файла</string>
+	<string name="appdetails_apk_version_code">Код версии</string>
 	<string name="appdetails_data_path">Путь до данных</string>
 	<string name="appdetails_sdk">Версия SDK</string>
 
@@ -237,6 +238,7 @@
 	<string name="array_longpress">Долгое нажатие</string>
 	<string name="array_newyear">Новый Год</string>
 	<string name="array_lunarnewyear">Китайский Новый Год</string>
+	<string name="array_covid">Коронавирусный анти-праздник</string>
 	<string name="array_displayonly">Только отображение</string>
 	<string name="array_hide">Скрыть</string>
 	<string name="array_render_auto">Определять автоматически</string>
@@ -244,6 +246,9 @@
 	<string name="array_prepend">Перед</string>
 	<string name="array_newline">Вставить новой строкой</string>
 	<string name="array_path">Выбранный путь</string>
+	<string name="array_collapse_initial">Изначально</string>
+	<string name="array_collapse_permanent">Перманентно</string>
+	<string name="unlimited">Неограниченно</string>
 
 	<string name="support_bug_title">Сообщить об ошибке</string>
 	<string name="support_bug_summ">Отправить сообщение об ошибке или предложить новую фичу</string>
@@ -536,6 +541,8 @@
 	<string name="system_uimode_summ">Изменить режим на тёмный, светлый или авто. Перезагрузка не требуется.</string>
 	<string name="system_uimodetile_title">Переключатель тёмного режима</string>
 	<string name="system_uimodetile_summ">Добавляет переключатель в Быстрые Настройки. Перезагрузка не требуется.</string>
+	<string name="system_nodarkforce_title">Отключить принудительный тёмный режим</string>
+	<string name="system_nodarkforce_summ">Не инвертировать некоторые цвета в тёмном режиме</string>
 	<string name="system_epm_title">Расширенное меню питания</string>
 	<string name="system_epm_summ">Добавляет новые опции презагрузки в меню питания (Режим Fastboot, Режим Recovery, Быстрая перезагрузка, Перезапуск интерфейса, Перезапуск ланчера)</string>
 	<string name="system_downgrade_title">Разрешить понижение версии</string>
@@ -596,7 +603,7 @@
 	<string name="system_mods_notifications">Уведомления</string>
 	<string name="system_mods_recents">Список последних приложений</string>
 	<string name="system_usenativerecents_title">Использовать родной список</string>
-	<string name="system_usenativerecents_summ">Не использовать список последних приложений, встроенный в Рабочий стол MIUI</string>
+	<string name="system_usenativerecents_summ">Не использовать список последних приложений, встроенный в Рабочий стол MIUI. Плохо работает с полноэкранными жестами.</string>
 	<string name="system_removecleaner_title">Убрать кнопку очистки</string>
 	<string name="system_removecleaner_summ">Скрывает кнопку для очистки списка последних приложений и памяти</string>
 	<string name="system_clearalltasks_title">Очистить все</string>
@@ -671,6 +678,8 @@
 	<string name="system_calendar_app_summ">Открывает выбранное приложение при клике по дате в панели уведомлений</string>
 	<string name="system_clockseconds_title">Показывать секунды</string>
 	<string name="system_clockseconds_summ">Отображает секунды на часах в статусбаре</string>
+	<string name="system_maxsbicons_title">Лимит иконок уведомлений</string>
+	<string name="system_maxsbicons_summ">Число отображаемых иконок уведомлений до превращения их в точки</string>
 	<string name="system_mobiletypeicon_title">Скрывать тип мобильной сети</string>
 	<string name="system_mobiletypeicon_summ">Удаляет иконку типа мобильной сети из строки состояния</string>
 	<string name="system_4gtolte_title">Показывать LTE вместо 4G</string>
@@ -737,6 +746,8 @@
 	<string name="system_popupnotif_fs_title">Определение полноэкранного режима</string>
 	<string name="system_popupnotif_fs_summ">Не открывать панель уведомлений, если запущено полноэкранное приложение (не распространяется на \"режим погружения\" со скрытыми панелями статуса и навигации)</string>
 	<string name="system_popupnotif_apps_title">Выбранные приложения</string>
+	<string name="various_collapsemiuititles_title">Свернуть заголовки MIUI</string>
+	<string name="various_collapsemiuititles_summ">Настройка вида заголовков во всех MIUI 12 приложениях</string>
 	<string name="system_mods_screenshots">Снимки экрана</string>
 	<string name="system_screenshot_title">Конфигурация снимков экрана</string>
 	<string name="system_screenshot_summ">Настройка формата, качества и папки сохранения скриншотов</string>
@@ -876,6 +887,8 @@
 	<string name="array_screen_anim_fade">Затухание</string>
 	<string name="system_notifafterunlock_title">Не скрывать уведомления</string>
 	<string name="system_notifafterunlock_summ">Оставляет уведомления на экране блокировки даже после того как он был закрыт и потом открыт вновь</string>
+	<string name="system_morenotif_title">Больше уведомлений</string>
+	<string name="system_morenotif_summ">Увеличивает лимит активных уведомлений от одного приложения с 10 до 24</string>
 	<string name="system_allowdirectreply_title">Прямой ответ без разблокировки</string>
 	<string name="system_allowdirectreply_summ">Не требовать разблокировки устройства при использовании прямого ответа на экране блокировки</string>
 	<string name="system_allownotifonkeyguard_title">Не прятать на экране блокировки</string>

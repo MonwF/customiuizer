@@ -16,9 +16,9 @@ import android.widget.ImageView;
 
 @SuppressLint("StaticFieldLeak")
 public class BitmapCachedLoader extends AsyncTask<Void, Void, Bitmap> {
-	private WeakReference<Object> targetRef;
-	private WeakReference<Object> appInfo;
-	private Context ctx;
+	private final WeakReference<Object> targetRef;
+	private final WeakReference<Object> appInfo;
+	private final Context ctx;
 	private int theTag = -1;
 	
 	BitmapCachedLoader(Object target, Object info, Context context) {

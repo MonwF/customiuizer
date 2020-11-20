@@ -36,8 +36,8 @@ public class InAppFragment extends SubFragment implements PurchasesUpdatedListen
 
 	private int donated = 0;
 	private boolean hasNetwork = false;
-	private List<String> skuList = new ArrayList<>();
-	private SparseArray<SkuDetails> donations = new SparseArray<SkuDetails>();
+	private final List<String> skuList = new ArrayList<>();
+	private final SparseArray<SkuDetails> donations = new SparseArray<SkuDetails>();
 	private BillingClient billingClient;
 	boolean mIsServiceConnected = false;
 	BillingClientStateListener billingClientState = new BillingClientStateListener() {
@@ -102,7 +102,7 @@ public class InAppFragment extends SubFragment implements PurchasesUpdatedListen
 					if (purchases == null || purchases.size() == 0) return false;
 					for (Purchase purchase : purchases) {
 						if (purchase.getPurchaseState() != PurchaseState.PURCHASED) continue;
-						ConsumeParams params = ConsumeParams.newBuilder().setPurchaseToken(purchase.getPurchaseToken()).setDeveloperPayload(purchase.getDeveloperPayload()).build();
+						ConsumeParams params = ConsumeParams.newBuilder().setPurchaseToken(purchase.getPurchaseToken()).build();
 						billingClient.consumeAsync(params, new ConsumeResponseListener() {
 							@Override
 							public void onConsumeResponse(BillingResult billingResult, String purchaseToken) {
@@ -183,7 +183,7 @@ public class InAppFragment extends SubFragment implements PurchasesUpdatedListen
 				findPreference(purchase.getSku()).setEnabled(state != PurchaseState.PURCHASED);
 
 				if (state == PurchaseState.PURCHASED && !purchase.isAcknowledged()) {
-					AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder().setPurchaseToken(purchase.getPurchaseToken()).setDeveloperPayload(purchase.getDeveloperPayload()).build();
+					AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder().setPurchaseToken(purchase.getPurchaseToken()).build();
 					billingClient.acknowledgePurchase(acknowledgePurchaseParams, new AcknowledgePurchaseResponseListener() {
 						@Override
 						public void onAcknowledgePurchaseResponse(BillingResult billingResult) {

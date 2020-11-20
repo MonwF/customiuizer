@@ -81,6 +81,8 @@
 	<string name="system_calendar_app_summ">Open selected app when date in notification drawer\'s header is tapped</string>
 	<string name="system_clockseconds_title">Show seconds</string>
 	<string name="system_clockseconds_summ">Display seconds in the status bar clock</string>
+	<string name="system_maxsbicons_title">Notification icons limit</string>
+	<string name="system_maxsbicons_summ">Number of notification icons to display before turning them into dots</string>
 	<string name="system_mobiletypeicon_title">Hide mobile network type</string>
 	<string name="system_mobiletypeicon_summ">Remove mobile network type icon from status bar</string>
 	<string name="system_4gtolte_title">Show LTE icon for 4G</string>
@@ -147,6 +149,8 @@
 	<string name="system_popupnotif_fs_title">Respect fullscreen</string>
 	<string name="system_popupnotif_fs_summ">Do not open notification drawer when fullscreen app is active (does not apply to immersive apps with hidden status and navigation bars)</string>
 	<string name="system_popupnotif_apps_title">Selected apps</string>
+	<string name="various_collapsemiuititles_title">Collapse MIUI titles</string>
+	<string name="various_collapsemiuititles_summ">Configure action bar title state in all MIUI 12 apps</string>
 	<string name="system_mods_screenshots">Screenshots</string>
 	<string name="system_screenshot_title">Screenshot configuration</string>
 	<string name="system_screenshot_summ">Customize format, quality and save folder for screenshots</string>
@@ -278,6 +282,8 @@
 	<string name="system_uimode_summ">Change mode to dark, light or auto. No reboot required.</string>
 	<string name="system_uimodetile_title">Dark mode tile</string>
 	<string name="system_uimodetile_summ">Add Quick Settings tile to toggle dark mode. No reboot required.</string>
+	<string name="system_nodarkforce_title">Disable forced dark mode</string>
+	<string name="system_nodarkforce_summ">Do not invert some colors in dark mode</string>
 	<string name="system_epm_title">Extended power menu</string>
 	<string name="system_epm_summ">Add new restart options to power menu (Fastboot mode, Recovery mode, Soft reboot, Restart System UI, Restart Launcher)</string>
 	<string name="system_downgrade_title">Allow downgrade</string>
@@ -322,6 +328,8 @@
 	<string name="system_orientationlock_summ">Add Quick Settings tile that can lock orientation in portrait or landscape mode</string>
 	<string name="system_notifafterunlock_title">Keep notifications</string>
 	<string name="system_notifafterunlock_summ">Show notifications on lock screen even after it\'s dismissed and then opened again</string>
+	<string name="system_morenotif_title">More notifications</string>
+	<string name="system_morenotif_summ">Increase limit of active notifications for a single app from 10 to 24</string>
 	<string name="system_allowdirectreply_title">Direct reply without unlock</string>
 	<string name="system_allowdirectreply_summ">Do not require device unlocking to use direct reply on lock screen</string>
 	<string name="system_allownotifonkeyguard_title">Allow on lock screen</string>
@@ -353,7 +361,7 @@
 	<string name="system_mods_notifications">Notifications</string>
 	<string name="system_mods_recents">Recent apps list</string>
 	<string name="system_usenativerecents_title">Use native implementation</string>
-	<string name="system_usenativerecents_summ">Don\'t use recent apps list from MIUI Launcher</string>
+	<string name="system_usenativerecents_summ">Don\'t use recent apps list from MIUI Launcher. Works badly with full screen gestures.</string>
 	<string name="system_removecleaner_title">Remove cleaner button</string>
 	<string name="system_removecleaner_summ">Hide button that clears recent apps and cleans memory</string>
 	<string name="system_clearalltasks_title">Clean all</string>
@@ -410,7 +418,7 @@
 	<string name="launcher_gestures_activity">Activity to launch</string>
 	<string name="launcher_title">Launcher</string>
 	<string name="launcher_summ">Display mods for selected launcher. For visual aid only, does not have any effect on mods.</string>
-	<string name="launcher_compat_title">Compatibility mode</string>
+	<string name="launcher_compat_title">Performance mode</string>
 	<string name="launcher_compat_summ">Alternative method of applying all launcher mods</string>
 	<string name="launcher_infinitescroll_title">Infinite scrolling</string>
 	<string name="launcher_infinitescroll_summ">Jump from the last page to the first one and vice versa</string>
@@ -605,7 +613,7 @@
 	<string name="various_disableapp_title">App state control</string>
 	<string name="various_disableapp_summ">Allows to disable almost any app from its info page</string>
 	<string name="various_apps_title">Show additional app details</string>
-	<string name="various_apps_summ">Add new fields to Settings > Installed apps > App info:\n- option to launch an app\n- full path to apk\n- data path\n- user id\n- target SDK version</string>
+	<string name="various_apps_summ">Add new fields to app info page:\n- version code\n- full path to apk\n- data path\n- user ID\n- target SDK version\n- link to Play Store page\n- launch an app</string>
 	<string name="various_appsort_title">Installed apps initial sort order</string>
 	<string name="disable_app_title">Disable app?</string>
 	<string name="disable_app_text">If this is an essential system app, disabling it can break things :)</string>
@@ -616,6 +624,7 @@
 	<string name="appdetails_launch">Launch</string>
 	<string name="appdetails_nolaunch">App has no default launchable activity</string>
 	<string name="appdetails_apk_file">APK filename</string>
+	<string name="appdetails_apk_version_code">APK version code</string>
 	<string name="appdetails_data_path">Data path</string>
 	<string name="appdetails_app_uid">User id</string>
 	<string name="appdetails_sdk">Target SDK Version</string>
@@ -757,6 +766,7 @@
 	<string name="array_longpress">Long press</string>
 	<string name="array_newyear">New Year</string>
 	<string name="array_lunarnewyear">Chinese New Year</string>
+	<string name="array_covid">Coronavirus anti-holiday</string>
 	<string name="array_displayonly">Display only</string>
 	<string name="array_hide">Hide</string>
 	<string name="array_render_auto">Detect automatically</string>
@@ -766,6 +776,9 @@
 	<string name="array_prepend">Prepend</string>
 	<string name="array_newline">Insert as new line</string>
 	<string name="array_path">Selected path</string>
+	<string name="array_collapse_initial">Initially</string>
+	<string name="array_collapse_permanent">Permanently</string>
+	<string name="unlimited">Unlimited</string>
 
 	<string name="toggle_wifi_on">Wi-Fi enabled</string>
 	<string name="toggle_wifi_off">Wi-Fi disabled</string>
@@ -860,7 +873,7 @@
 	<string name="array_color_dark">Dark</string>
 	<string name="array_color_light">Light</string>
 
-	<string name="sdk_failed">Cannot initialize MIUI SDK.\nNot a Xiaomi device?</string>
+	<string name="sdk_failed">Cannot initialize MIUI SDK.\nNot a MIUI ROM?</string>
 	<string name="notselected">Not selected</string>
 	<string name="warning">Warning!</string>
 	<string name="warning_blacklist">Black/White list option is active in Xposed Framework, it can prevent mods from working properly</string>

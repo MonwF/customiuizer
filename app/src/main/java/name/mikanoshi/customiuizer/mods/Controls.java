@@ -69,7 +69,7 @@ public class Controls {
 		context.sendBroadcast(intent);
 	}
 
-	private static BroadcastReceiver mScreenOnReceiver = new BroadcastReceiver() {
+	private static final BroadcastReceiver mScreenOnReceiver = new BroadcastReceiver() {
 		public void onReceive(final Context context, Intent intent) {
 			if (isTorchEnabled(context)) setTorch(context, false);
 			if (Helpers.mWakeLock != null && Helpers.mWakeLock.isHeld()) Helpers.mWakeLock.release();
@@ -580,12 +580,13 @@ public class Controls {
 	@SuppressLint("StaticFieldLeak")
 	private static Context miuiPWMContext;
 	private static Handler miuiPWMHandler;
+	private static boolean hasDoubleTap = false;
 	private static boolean wasScreenOn = false;
 	private static boolean wasFingerprintUsed = false;
 	private static boolean isFingerprintPressed = false;
 	private static boolean isFingerprintLongPressed = false;
 	private static boolean isFingerprintLongPressHandled = false;
-	private static Runnable singlePressFingerprint = new Runnable() {
+	private static final Runnable singlePressFingerprint = new Runnable() {
 		@Override
 		public void run() {
 			if (miuiPWMContext == null || miuiPWMHandler == null) return;
@@ -593,7 +594,7 @@ public class Controls {
 			if (!handleCallAction(2)) GlobalActions.handleAction(miuiPWMContext, "pref_key_controls_fingerprint1");
 		}
 	};
-	private static Runnable longPressFingerprint = new Runnable() {
+	private static final Runnable longPressFingerprint = new Runnable() {
 		@Override
 		public void run() {
 			if (isFingerprintPressed) {
@@ -654,6 +655,12 @@ public class Controls {
 				miuiPWMHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
 				if (miuiPWMContext == null || miuiPWMHandler == null) return;
 
+				boolean isInCall = false;
+				if (miuiPWMContext != null) {
+					TelecomManager tm = (TelecomManager)miuiPWMContext.getSystemService(Context.TELECOM_SERVICE);
+					isInCall = tm != null && tm.isInCall();
+				}
+
 				KeyEvent keyEvent = (KeyEvent)param.args[0];
 				if (keyEvent.getKeyCode() != KeyEvent.KEYCODE_DPAD_CENTER || keyEvent.getAction() != KeyEvent.ACTION_DOWN) return;
 
@@ -661,10 +668,23 @@ public class Controls {
 				wasScreenOn = (boolean)XposedHelpers.callMethod(param.thisObject, "isScreenOn");
 				wasFingerprintUsed = Settings.System.getInt(miuiPWMContext.getContentResolver(), "is_fingerprint_active", 0) == 1;
 
-				if (wasScreenOn && !wasFingerprintUsed)
-				if (MainModule.mPrefs.getInt("controls_fingerprintlong_action", 1) > 1) {
+
+				hasDoubleTap = false;
+				if (wasScreenOn && !wasFingerprintUsed) {
 					int delay = MainModule.mPrefs.getInt("controls_fingerprintlong_delay", 0);
-					miuiPWMHandler.postDelayed(longPressFingerprint, delay < 200 ? ViewConfiguration.getLongPressTimeout() : delay);
+					if (isInCall) {
+						int accept = MainModule.mPrefs.getStringAsInt("controls_fingerprint_accept", 1);
+						int reject = MainModule.mPrefs.getStringAsInt("controls_fingerprint_reject", 1);
+						int hangup = MainModule.mPrefs.getStringAsInt("controls_fingerprint_hangup", 1);
+						hasDoubleTap = accept == 3 || reject == 3 || hangup == 3;
+						if (accept == 4 || reject == 4 || hangup == 4)
+						miuiPWMHandler.postDelayed(longPressFingerprint, delay < 200 ? ViewConfiguration.getLongPressTimeout() : delay);
+					} else {
+						int dtaction = MainModule.mPrefs.getInt("controls_fingerprint2_action", 1);
+						hasDoubleTap = dtaction > 1;
+						if (MainModule.mPrefs.getInt("controls_fingerprintlong_action", 1) > 1)
+						miuiPWMHandler.postDelayed(longPressFingerprint, delay < 200 ? ViewConfiguration.getLongPressTimeout() : delay);
+					}
 				}
 
 				if (XposedHelpers.getAdditionalInstanceField(param.thisObject, "touchTime") == null)
@@ -682,12 +702,6 @@ public class Controls {
 					}
 				}
 
-				boolean isInCall = false;
-				if (miuiPWMContext != null) {
-					TelecomManager tm = (TelecomManager)miuiPWMContext.getSystemService(Context.TELECOM_SERVICE);
-					isInCall = tm != null && tm.isInCall();
-				}
-
 				KeyEvent keyEvent = (KeyEvent)param.args[0];
 				if (keyEvent.getKeyCode() != KeyEvent.KEYCODE_DPAD_CENTER || keyEvent.getAction() != KeyEvent.ACTION_UP) return;
 
@@ -701,16 +715,6 @@ public class Controls {
 				int delay = MainModule.mPrefs.getInt("controls_fingerprint2_delay", 50);
 				int dttimeout = delay < 200 ? ViewConfiguration.getDoubleTapTimeout() : delay;
 				if (wasScreenOn && !wasFingerprintUsed) {
-					boolean hasDoubleTap;
-					if (isInCall) {
-						int accept = MainModule.mPrefs.getStringAsInt("controls_fingerprint_accept", 1);
-						int reject = MainModule.mPrefs.getStringAsInt("controls_fingerprint_reject", 1);
-						int hangup = MainModule.mPrefs.getStringAsInt("controls_fingerprint_hangup", 1);
-						hasDoubleTap = accept == 3 || reject == 3 || hangup == 3;
-					} else {
-						int dtaction = MainModule.mPrefs.getInt("controls_fingerprint2_action", 1);
-						hasDoubleTap = dtaction > 1;
-					}
 					if (hasDoubleTap && currentTouchTime - lastTouchTime < dttimeout) {
 						mHandler.removeCallbacks(singlePressFingerprint);
 						mHandler.removeCallbacks(longPressFingerprint);
@@ -787,7 +791,7 @@ public class Controls {
 	private static Object basePWMObject;
 	private static Method markShortcutTriggered;
 
-	private static Runnable mBackLongPressAction = new Runnable() {
+	private static final Runnable mBackLongPressAction = new Runnable() {
 		@Override
 		public void run() {
 			try {
@@ -799,7 +803,7 @@ public class Controls {
 			}
 		}
 	};
-	private static Runnable mHomeLongPressAction = new Runnable() {
+	private static final Runnable mHomeLongPressAction = new Runnable() {
 		@Override
 		public void run() {
 			try {
@@ -811,7 +815,7 @@ public class Controls {
 			}
 		}
 	};
-	private static Runnable mMenuLongPressAction = new Runnable() {
+	private static final Runnable mMenuLongPressAction = new Runnable() {
 		@Override
 		public void run() {
 			try {
@@ -888,8 +892,8 @@ public class Controls {
 	}
 
 	public static void NavbarHeightRes() {
-		int opt = MainModule.mPrefs.getInt("controls_navbarheight", 26);
-		int heightDpi = opt == 26 ? 47 : opt;
+		int opt = MainModule.mPrefs.getInt("controls_navbarheight", 19);
+		int heightDpi = opt == 19 ? 47 : opt;
 		MainModule.resHooks.setDensityReplacement("*", "dimen", "navigation_bar_height", heightDpi);
 		MainModule.resHooks.setDensityReplacement("*", "dimen", "navigation_bar_height_landscape", heightDpi);
 		MainModule.resHooks.setDensityReplacement("*", "dimen", "navigation_bar_width", heightDpi);
@@ -951,8 +955,8 @@ public class Controls {
 		});
 	}
 
-	public static void BackGestureAreaHeightHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.android.systemui.fsgesture.GestureStubView", lpparam.classLoader, "getGestureStubWindowParam", new MethodHook() {
+	public static void BackGestureAreaHeightHook(LoadPackageParam lpparam, boolean isNative) {
+		if (!Helpers.findAndHookMethodSilently(isNative ? "com.android.systemui.fsgesture.GestureStubView" : "com.miui.home.recents.GestureStubView", lpparam.classLoader, "getGestureStubWindowParam", new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
 				WindowManager.LayoutParams lp = (WindowManager.LayoutParams)param.getResult();
@@ -960,11 +964,11 @@ public class Controls {
 				lp.height = Math.round(lp.height / 60.0f * pct);
 				param.setResult(lp);
 			}
-		});
+		})) if (isNative) Helpers.log("BackGestureAreaHeightHook", "Cannot hook GestureStubView");
 	}
 
-	public static void BackGestureAreaWidthHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.android.systemui.fsgesture.GestureStubView", lpparam.classLoader, "initScreenSizeAndDensity", int.class, new MethodHook() {
+	public static void BackGestureAreaWidthHook(LoadPackageParam lpparam, boolean isNative) {
+		if (!Helpers.findAndHookMethodSilently(isNative ? "com.android.systemui.fsgesture.GestureStubView" : "com.miui.home.recents.GestureStubView", lpparam.classLoader, "initScreenSizeAndDensity", int.class, new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
 				int pct = MainModule.mPrefs.getInt("controls_fsg_width", 100);
@@ -976,9 +980,9 @@ public class Controls {
 				XposedHelpers.setIntField(param.thisObject, "mGestureStubDefaultSize", mGestureStubDefaultSize);
 				XposedHelpers.setIntField(param.thisObject, "mGestureStubSize", mGestureStubSize);
 			}
-		});
+		})) if (isNative) Helpers.log("BackGestureAreaWidthHook", "Cannot hook GestureStubView1");
 
-		Helpers.findAndHookMethod("com.android.systemui.fsgesture.GestureStubView", lpparam.classLoader, "setSize", int.class, new MethodHook() {
+		if (!Helpers.findAndHookMethodSilently(isNative ? "com.android.systemui.fsgesture.GestureStubView" : "com.miui.home.recents.GestureStubView", lpparam.classLoader, "setSize", int.class, new MethodHook() {
 			@Override
 			protected void before(final MethodHookParam param) throws Throwable {
 				int pct = MainModule.mPrefs.getInt("controls_fsg_width", 100);
@@ -987,7 +991,7 @@ public class Controls {
 				if ((int)param.args[0] == mGestureStubDefaultSize) return;
 				param.args[0] = Math.round((int)param.args[0] * pct / 100f);
 			}
-		});
+		})) if (isNative) Helpers.log("BackGestureAreaWidthHook", "Cannot hook GestureStubView2");
 	}
 
 	public static void HideNavBarHook(LoadPackageParam lpparam) {

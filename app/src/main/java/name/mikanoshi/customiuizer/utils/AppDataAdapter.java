@@ -31,12 +31,12 @@ import android.widget.TextView;
 import name.mikanoshi.customiuizer.R;
 
 public class AppDataAdapter extends BaseAdapter implements Filterable {
-	private Context ctx;
-	private LayoutInflater mInflater;
-	private ThreadPoolExecutor pool;
-	private ItemFilter mFilter = new ItemFilter();
-	private ArrayList<AppData> originalAppList = new ArrayList<AppData>();
-	private CopyOnWriteArrayList<AppData> filteredAppList = new CopyOnWriteArrayList<AppData>();
+	private final Context ctx;
+	private final LayoutInflater mInflater;
+	private final ThreadPoolExecutor pool;
+	private final ItemFilter mFilter = new ItemFilter();
+	private final ArrayList<AppData> originalAppList = new ArrayList<AppData>();
+	private final CopyOnWriteArrayList<AppData> filteredAppList = new CopyOnWriteArrayList<AppData>();
 	private String key = null;
 	private String selectedApp;
 	private int selectedUser = 0;
@@ -65,9 +65,9 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 			multiUserSupport = multiUserMods.contains(key);
 			if (multiUserSupport) {
 				HashSet<String> selectedAppsAdd = new HashSet<String>();
-				Iterator iter = selectedApps.iterator();
+				Iterator<String> iter = selectedApps.iterator();
 				while (iter.hasNext()) {
-					String item = ((String)iter.next());
+					String item = iter.next();
 					if (!item.contains("|")) {
 						selectedAppsAdd.add(item + "|0");
 						iter.remove();

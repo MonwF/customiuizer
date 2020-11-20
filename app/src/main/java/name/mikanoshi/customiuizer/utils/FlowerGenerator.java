@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class FlowerGenerator implements ConfettoGenerator {
 	private final ConfettoInfo confettoInfo;
-	private Context context;
+	private final Context context;
 
 	public FlowerGenerator(Context ctx) {
 		super();

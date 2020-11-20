@@ -74,6 +74,8 @@
     <string name="system_calendar_app_summ">Abrir la aplicación seleccionada cuando se toca la fecha en la barra de notificaciones</string>
     <string name="system_clockseconds_title">Mostrar segundos en el reloj</string>
     <string name="system_clockseconds_summ">Muestra los segundos en el reloj de la barra de estado</string>
+    <string name="system_maxsbicons_title">Límite de iconos de notificación</string>
+    <string name="system_maxsbicons_summ">Número de iconos de notificación para mostrar antes de convertirlos en puntos</string>
     <string name="system_mobiletypeicon_title">Ocultar el tipo de red</string>
     <string name="system_mobiletypeicon_summ">Elimina el icono de tipo de red de la barra de estado</string>
     <string name="system_4gtolte_title">Mostrar icono LTE para 4G</string>
@@ -140,6 +142,8 @@
     <string name="system_popupnotif_fs_title">Respetar pantalla completa</string>
     <string name="system_popupnotif_fs_summ">No abre barra de notificaciones cuando la aplicación de pantalla completa está activa (no se aplica a aplicaciones inmersivas con estado oculto y barras de navegación)</string>
     <string name="system_popupnotif_apps_title">Aplicaciones seleccionadas</string>
+    <string name="various_collapsemiuititles_title">Contraer títulos de MIUI</string>
+    <string name="various_collapsemiuititles_summ">Configurar el estado del título de la barra de acción en todas las aplicaciones MIUI 12</string>
     <string name="system_mods_screenshots">Capturas de pantalla</string>
     <string name="system_screenshot_title">Configuración de captura de pantalla</string>
     <string name="system_screenshot_summ">Personalice el formato, la calidad y dónde guardar las capturas de pantalla</string>
@@ -271,6 +275,8 @@
     <string name="system_uimode_summ">Cambia el modo a oscuro, claro o automático. No se requiere reiniciar.</string>
     <string name="system_uimodetile_title">Mosaico de \"Modo Oscuro\"</string>
     <string name="system_uimodetile_summ">Agregue el mosaico en Configuración Rápida para alternar el \"Modo Oscuro\". No se requiere reiniciar.</string>
+    <string name="system_nodarkforce_title">Desactivar modo oscuro forzado</string>
+    <string name="system_nodarkforce_summ">No invertir algunos colores en el modo oscuro</string>
     <string name="system_epm_title">Opciones extendidas de menú de apagado</string>
     <string name="system_epm_summ">Agregue nuevas opciones de reinicio al menú de apagado (modo de arranque rápido, modo de recuperación, reinicio suave, reinicio de la interfaz de usuario del sistema, reinicio del launcher)</string>
     <string name="system_downgrade_title">Permitir instalar aplicaciones de versiones inferiores</string>
@@ -312,6 +318,8 @@
     <string name="system_orientationlock_summ">Agregar el mosaico de Configuración Rápida que puede bloquear la orientación en modo vertical u horizontal</string>
     <string name="system_notifafterunlock_title">Mantener notificaciones</string>
     <string name="system_notifafterunlock_summ">Mostrar notificaciones en la pantalla de bloqueo incluso después de que se descarta y luego se abre nuevamente</string>
+    <string name="system_morenotif_title">Más notificaciones</string>
+    <string name="system_morenotif_summ">Aumente el límite de notificaciones activas para una sola aplicación de 10 a 24</string>
     <string name="system_allowdirectreply_title">Respuesta directa sin desbloqueo</string>
     <string name="system_allowdirectreply_summ">No es necesario desbloquear el dispositivo para usar la respuesta directa en la pantalla de bloqueo</string>
     <string name="system_allownotifonkeyguard_title">Permitir en la pantalla de bloqueo</string>
@@ -602,6 +610,7 @@
     <string name="appdetails_launch">Ejecutar</string>
     <string name="appdetails_nolaunch">La aplicación no tiene actividad de inicio predeterminada</string>
     <string name="appdetails_apk_file">Nombre de archivo APK</string>
+    <string name="appdetails_apk_version_code">Código de versión APK</string>
     <string name="appdetails_data_path">Ruta de datos</string>
     <string name="appdetails_app_uid">ID de usuario</string>
     <string name="appdetails_sdk">Versión del SDK preferido</string>
@@ -737,6 +746,7 @@
     <string name="array_longpress">Toque largo</string>
     <string name="array_newyear">Año Nuevo</string>
     <string name="array_lunarnewyear">Año Nuevo Chino</string>
+    <string name="array_covid">Coronavirus anti-vacaciones</string>
     <string name="array_displayonly">Sólo mostrar</string>
     <string name="array_hide">Ocultar</string>
     <string name="array_render_auto">Detectar automáticamente</string>
@@ -744,6 +754,9 @@
     <string name="array_prepend">Anteponer</string>
     <string name="array_newline">Insertar como nueva línea</string>
     <string name="array_path">Ruta seleccionada</string>
+    <string name="array_collapse_initial">Inicialmente</string>
+    <string name="array_collapse_permanent">Permanentemente</string>
+    <string name="unlimited">Ilimitado</string>
     <string name="toggle_wifi_on">Wi-Fi habilitado</string>
     <string name="toggle_wifi_off">Wi-Fi deshabilitado</string>
     <string name="toggle_bt_on">Bluetooth habilitado</string>

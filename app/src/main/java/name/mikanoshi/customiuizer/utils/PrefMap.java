@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-@SuppressWarnings("ConstantConditions")
 public class PrefMap<K, V> extends HashMap<K, V> {
 
 	public Object getObject(String key, Object defValue) {

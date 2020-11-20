@@ -201,6 +201,12 @@ public class System extends SubFragment {
 					((CheckBoxPreferenceEx)findPreference("pref_key_system_snoozedmanager")).setUnsupported(true);
 				}
 
+				if (Helpers.is12()) {
+					((CheckBoxPreferenceEx)findPreference("pref_key_system_notifmediaseekbar")).setChecked(false);
+					((CheckBoxPreferenceEx)findPreference("pref_key_system_notifmediaseekbar")).setUnsupported(true);
+					((CheckBoxPreferenceEx)findPreference("pref_key_system_notifmediaseekbar_full")).setUnsupported(true);
+				}
+
 				break;
 			case "pref_key_system_cat_qs":
 				findPreference("pref_key_system_qshaptics_ignore").setEnabled(!Objects.equals(Helpers.prefs.getString("pref_key_system_qshaptics", "1"), "1"));

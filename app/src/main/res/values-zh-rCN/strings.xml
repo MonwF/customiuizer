@@ -74,6 +74,8 @@
     <string name="system_calendar_app_summ">点击通知抽屉上方的日期时打开所选应用</string>
     <string name="system_clockseconds_title">显示秒</string>
     <string name="system_clockseconds_summ">状态栏显示秒钟</string>
+    <string name="system_maxsbicons_title">通知图标限制</string>
+    <string name="system_maxsbicons_summ">变成点前显示的通知图标的数目</string>
     <string name="system_mobiletypeicon_title">隐藏移动网络类型</string>
     <string name="system_mobiletypeicon_summ">从状态栏移除移动网络类型图标</string>
     <string name="system_4gtolte_title">4G显示LTE图标</string>
@@ -140,6 +142,8 @@
     <string name="system_popupnotif_fs_title">遵守全屏</string>
     <string name="system_popupnotif_fs_summ">应用激活全屏模式时不打开通知抽屉(不适用于具有隐藏状态和导航栏的沉浸式应用)</string>
     <string name="system_popupnotif_apps_title">已选应用</string>
+    <string name="various_collapsemiuititles_title">折叠MIUI标题</string>
+    <string name="various_collapsemiuititles_summ">在所有MIUI 12应用中配置操作栏标题状态</string>
     <string name="system_mods_screenshots">截图</string>
     <string name="system_screenshot_title">截图配置</string>
     <string name="system_screenshot_summ">自定义截图的格式、质量和存放目录</string>
@@ -271,6 +275,8 @@
     <string name="system_uimode_summ">将模式更改为暗色、亮色或自动。无需重启。</string>
     <string name="system_uimodetile_title">深色模式磁贴</string>
     <string name="system_uimodetile_summ">添加快速设置磁贴用以切换深色模式。无需重启。</string>
+    <string name="system_nodarkforce_title">禁用强制黑暗模式</string>
+    <string name="system_nodarkforce_summ">在黑暗模式中不反转某些颜色</string>
     <string name="system_epm_title">扩展电源菜单</string>
     <string name="system_epm_summ">新增以下重启选项到电源菜单(引导模式、恢复模式、软重启、重启系统界面、重启启动器)</string>
     <string name="system_downgrade_title">允许降级</string>
@@ -312,6 +318,8 @@
     <string name="system_orientationlock_summ">添加快速设置磁贴，可以竖屏或者横屏模式锁定方向</string>
     <string name="system_notifafterunlock_title">保留通知</string>
     <string name="system_notifafterunlock_summ">在锁屏上显示通知，如果通知已关闭，则再次打开</string>
+    <string name="system_morenotif_title">更多通知</string>
+    <string name="system_morenotif_summ">将单个应用的活跃通知限制从10个增加为24个</string>
     <string name="system_allowdirectreply_title">无需解锁直接回复</string>
     <string name="system_allowdirectreply_summ">无需解锁设备直接在锁屏上使用回复</string>
     <string name="system_allownotifonkeyguard_title">允许在锁屏上显示</string>
@@ -343,7 +351,7 @@
     <string name="system_mods_notifications">通知</string>
     <string name="system_mods_recents">最近应用列表</string>
     <string name="system_usenativerecents_title">使用本地实现</string>
-    <string name="system_usenativerecents_summ">不适用MIUI启动器的最近应用列表</string>
+    <string name="system_usenativerecents_summ">请不要使用MIUI启动器的最近应用列表。使用全屏手势效果不好。</string>
     <string name="system_removecleaner_title">移除清理按钮</string>
     <string name="system_removecleaner_summ">隐藏清理最近应用和内存的按钮</string>
     <string name="system_clearalltasks_title">清空</string>
@@ -399,7 +407,7 @@
     <string name="launcher_gestures_activity">要启动的活动</string>
     <string name="launcher_title">启动器</string>
     <string name="launcher_summ">显示所选启动器的模块。只是视觉辅助，不会对模块有其他影响。</string>
-    <string name="launcher_compat_title">兼容模式</string>
+    <string name="launcher_compat_title">性能模式</string>
     <string name="launcher_compat_summ">应用所有启动器模块的替代方法</string>
     <string name="launcher_infinitescroll_title">无限滚动</string>
     <string name="launcher_infinitescroll_summ">从末页跳到首页，反之亦然</string>
@@ -592,7 +600,7 @@
     <string name="various_disableapp_title">应用状态控制</string>
     <string name="various_disableapp_summ">允许从应用信息页面禁用任何应用</string>
     <string name="various_apps_title">显示附加应用详情</string>
-    <string name="various_apps_summ">添加新字段到设置 &gt; 已安装的应用 &gt; 应用信息:\n- 启动应用选项\n- apk完整路径\n- 数据路径\n- 用户标识符\n- 目标SDK版本</string>
+    <string name="various_apps_summ">添加新字段到应用信息页面:\n- 版本代码\n- apk完整路径\n- 数据路径\n- 用户标识符\n- 目标SDK版本\n- 连结到Play商店页面\n- 启动应用</string>
     <string name="various_appsort_title">已安装应用的初始排列顺序</string>
     <string name="disable_app_title">禁用应用？</string>
     <string name="disable_app_text">如果这是一个必要的系统应用，将其禁用可能会造成损坏:)</string>
@@ -602,6 +610,7 @@
     <string name="appdetails_launch">启动</string>
     <string name="appdetails_nolaunch">应用没有默认可启动的活动</string>
     <string name="appdetails_apk_file">APK文件名</string>
+    <string name="appdetails_apk_version_code">APK版本代码</string>
     <string name="appdetails_data_path">数据路径</string>
     <string name="appdetails_app_uid">用户标识符</string>
     <string name="appdetails_sdk">目标SDK版本</string>
@@ -737,6 +746,7 @@
     <string name="array_longpress">长按</string>
     <string name="array_newyear">新年</string>
     <string name="array_lunarnewyear">中国新年</string>
+    <string name="array_covid">冠状病毒反假期</string>
     <string name="array_displayonly">仅显示</string>
     <string name="array_hide">隐藏</string>
     <string name="array_render_auto">自动侦测</string>
@@ -744,6 +754,9 @@
     <string name="array_prepend">前置</string>
     <string name="array_newline">插入新行</string>
     <string name="array_path">所选路径</string>
+    <string name="array_collapse_initial">原本</string>
+    <string name="array_collapse_permanent">永久</string>
+    <string name="unlimited">无限制</string>
     <string name="toggle_wifi_on">Wi-Fi已启用</string>
     <string name="toggle_wifi_off">Wi-Fi已禁用</string>
     <string name="toggle_bt_on">蓝牙已启用</string>
@@ -828,7 +841,7 @@
     <string name="array_color_auto">自动</string>
     <string name="array_color_dark">暗</string>
     <string name="array_color_light">亮</string>
-    <string name="sdk_failed">无法初始化MIUI SDK。\n不是小米设备？</string>
+    <string name="sdk_failed">无法初始化MIUI SDK。\n不是MIUI ROM？</string>
     <string name="notselected">未选择</string>
     <string name="warning">警告！</string>
     <string name="warning_blacklist">Xposed框架中的黑/白名单选项已激活，可能会阻止模块正常工作</string>

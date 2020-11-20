@@ -3,7 +3,7 @@
 	<color name="color_not_selected">#99ffffff</color>
 	<color name="about_divider">#337f7f7f</color>
 
-	<color name="checked_text">#ff0099ff</color>
+	<color name="checked_text">#ff3e73B3</color>
 
 	<color name="preference_category_text_color">#80ffffff</color>
 	<color name="preference_primary_text_color">#e6ffffff</color>

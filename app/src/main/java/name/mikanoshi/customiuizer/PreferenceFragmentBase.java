@@ -46,6 +46,7 @@ import java.util.Set;
 import miui.app.ActionBar;
 import miui.app.AlertDialog;
 import miui.preference.PreferenceFragment;
+
 import name.mikanoshi.customiuizer.mods.GlobalActions;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
@@ -166,29 +167,34 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 	}
 
 	private void setupImmersiveMenu() {
-		if (supressMenu) return;
-
 		ActionBar actionBar = getActionBar();
+
+		if (Helpers.is12()) {
+			if (actionBar != null) actionBar.setExpandState(ActionBar.STATE_COLLAPSE, false);
+		}
+
+		if (supressMenu) return;
 		if (actionBar != null) actionBar.showSplitActionBar(false, false);
 		setImmersionMenuEnabled(true);
 
-		if (getView() != null)
-			if (getView().findViewById(R.id.update_alert) == null) {
-				Button more = getView().findViewById(getResources().getIdentifier("more", "id", "miui"));
-				if (more == null) return;
-				float density = getResources().getDisplayMetrics().density;
-				FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-				lp.gravity = Gravity.END | Gravity.TOP;
-				ImageView alert = new ImageView(getContext());
-				alert.setImageResource(R.drawable.alert);
-				alert.setAdjustViewBounds(true);
-				alert.setMaxWidth(Math.round(16 * density));
-				alert.setMaxHeight(Math.round(16 * density));
-				alert.setLayoutParams(lp);
-				alert.setId(R.id.update_alert);
-				alert.setVisibility(View.GONE);
-				((ViewGroup)more.getParent()).addView(alert);
-			}
+		View view = getView();
+		if (view != null)
+		if (view.findViewById(R.id.update_alert) == null) {
+			Button more = view.findViewById(getResources().getIdentifier("more", "id", "miui"));
+			if (more == null) return;
+			float density = getResources().getDisplayMetrics().density;
+			FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+			lp.gravity = Gravity.END | Gravity.TOP;
+			ImageView alert = new ImageView(getContext());
+			alert.setImageResource(R.drawable.alert);
+			alert.setAdjustViewBounds(true);
+			alert.setMaxWidth(Math.round(16 * density));
+			alert.setMaxHeight(Math.round(16 * density));
+			alert.setLayoutParams(lp);
+			alert.setId(R.id.update_alert);
+			alert.setVisibility(View.GONE);
+			((ViewGroup)more.getParent()).addView(alert);
+		}
 	}
 
 	void fixActionBar() {
@@ -219,10 +225,10 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 			}
 		} else showBack = !(this instanceof SnoozedFragment);
 
-
-		getActionBar().setTitle(R.string.app_name);
-		getActionBar().setDisplayHomeAsUpEnabled(showBack);
-		getActionBar().setBackgroundDrawable(new ColorDrawable(Helpers.getSystemBackgroundColor(getValidContext())));
+		ActionBar actionBar = getActionBar();
+		actionBar.setTitle(R.string.app_name);
+		actionBar.setDisplayHomeAsUpEnabled(showBack);
+		actionBar.setBackgroundDrawable(new ColorDrawable(Helpers.getSystemBackgroundColor(getValidContext())));
 	}
 
 	public void onCreate(Bundle savedInstanceState, int pref_defaults) {

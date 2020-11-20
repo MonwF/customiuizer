@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
@@ -59,6 +60,7 @@ public class Launcher {
 //	private static GestureDetector mDetector;
 	private static GestureDetector mDetectorHorizontal;
 
+	@SuppressWarnings("ResultOfMethodCallIgnored")
 	public static void HomescreenSwipesHook(final LoadPackageParam lpparam) {
 //		// Detect vertical swipes
 //		Helpers.findAndHookMethod("com.miui.home.launcher.ForceTouchLayer", lpparam.classLoader, "onInterceptTouchEvent", MotionEvent.class, new MethodHook() {
@@ -110,12 +112,87 @@ public class Launcher {
 			}
 		});
 
-		if (!Helpers.findAndHookMethodSilently("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "isGlobalSearchEnable", Context.class, new MethodHook() {
+		Helpers.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.classLoader, "onCreate", Bundle.class, new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				final Activity act = (Activity)param.thisObject;
+				Handler mHandler = (Handler)XposedHelpers.getObjectField(act, "mHandler");
+				new Helpers.SharedPrefObserver(act, mHandler) {
+					@Override
+					public void onChange(Uri uri) {
+						try {
+							String type = uri.getPathSegments().get(1);
+							String key = uri.getPathSegments().get(2);
+							if (key.contains("pref_key_launcher_swipedown"))
+							switch (type) {
+								case "string":
+									MainModule.mPrefs.put(key, Helpers.getSharedStringPref(act, key, ""));
+									break;
+								case "integer":
+									MainModule.mPrefs.put(key, Helpers.getSharedIntPref(act, key, 1));
+									break;
+								case "boolean":
+									MainModule.mPrefs.put(key, Helpers.getSharedBoolPref(act, key, false));
+									break;
+							}
+						} catch (Throwable t) {
+							XposedBridge.log(t);
+						}
+					}
+				};
+			}
+		});
+
+		Helpers.findAndHookMethodSilently("com.miui.home.launcher.uioverrides.StatusBarSwipeController", lpparam.classLoader, "canInterceptTouch", MotionEvent.class, new MethodHook() {
+			@Override
+			protected void before(final MethodHookParam param) throws Throwable {
+				if (MainModule.mPrefs.getInt("launcher_swipedown_action", 1) > 1) param.setResult(false);
+			}
+		});
+
+		// content_center, global_search, notification_bar
+		Helpers.findAndHookMethodSilently("com.miui.home.launcher.allapps.LauncherMode", lpparam.classLoader, "getPullDownGesture", Context.class, new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				if (Helpers.getSharedIntPref((Context)param.args[0], "pref_key_launcher_swipedown_action", 1) > 1) param.setResult("no_action");
+			}
+		});
+
+		// content_center, global_search
+		Helpers.findAndHookMethodSilently("com.miui.home.launcher.allapps.LauncherMode", lpparam.classLoader, "getSlideUpGesture", Context.class, new MethodHook() {
+			@Override
+			protected void before(final MethodHookParam param) throws Throwable {
+				if (Helpers.getSharedIntPref((Context)param.args[0], "pref_key_launcher_swipeup_action", 1) > 1) param.setResult("no_action");
+			}
+		});
+
+		if (Helpers.findAndHookMethodSilently("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "isGlobalSearchEnable", Context.class, new MethodHook() {
 			@Override
 			protected void before(final MethodHookParam param) throws Throwable {
 				if (Helpers.getSharedIntPref((Context)param.args[0], "pref_key_launcher_swipeup_action", 1) > 1) param.setResult(false);
 			}
-		})) if (!Helpers.findAndHookMethodSilently("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "allowedSlidingUpToStartGolbalSearch", Context.class, new MethodHook() {
+		})) {
+			Helpers.findAndHookMethodSilently("com.miui.home.launcher.search.SearchEdgeLayout", lpparam.classLoader, "isTopSearchEnable", new MethodHook() {
+				@Override
+				protected void before(final MethodHookParam param) throws Throwable {
+					View view = (View)param.thisObject;
+					if (Helpers.getSharedIntPref(view.getContext(), "pref_key_launcher_swipedown_action", 1) > 1) param.setResult(false);
+				}
+			});
+			Helpers.findAndHookMethodSilently("com.miui.home.launcher.search.SearchEdgeLayout", lpparam.classLoader, "isBottomGlobalSearchEnable", new MethodHook() {
+				@Override
+				protected void before(final MethodHookParam param) throws Throwable {
+					View view = (View)param.thisObject;
+					if (Helpers.getSharedIntPref(view.getContext(), "pref_key_launcher_swipeup_action", 1) > 1) param.setResult(false);
+				}
+			});
+			Helpers.findAndHookMethodSilently("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "isGlobalSearchBottomEffectEnable", Context.class, new MethodHook() {
+				@Override
+				protected void before(final MethodHookParam param) throws Throwable {
+					if (Helpers.getSharedIntPref((Context)param.args[0], "pref_key_launcher_swipeup_action", 1) > 1) param.setResult(false);
+				}
+			});
+		} else if (!Helpers.findAndHookMethodSilently("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "allowedSlidingUpToStartGolbalSearch", Context.class, new MethodHook() {
 			@Override
 			protected void before(final MethodHookParam param) throws Throwable {
 				if (Helpers.getSharedIntPref((Context)param.args[0], "pref_key_launcher_swipeup_action", 1) > 1) param.setResult(false);
@@ -195,8 +272,8 @@ public class Launcher {
 	// Listener for horizontal swipes on hotseats
 	private static class SwipeListenerHorizontal extends GestureDetector.SimpleOnGestureListener {
 
-		private int SWIPE_MIN_DISTANCE_HORIZ;
-		private int SWIPE_THRESHOLD_VELOCITY;
+		private final int SWIPE_MIN_DISTANCE_HORIZ;
+		private final int SWIPE_THRESHOLD_VELOCITY;
 
 		final Context helperContext;
 
@@ -256,7 +333,6 @@ public class Launcher {
 	}
 
 	private static Class<?> wallpaperUtilsCls = null;
-	@SuppressWarnings("ConstantConditions")
 	private static void applyFolderShade(View folder) {
 		int opt = Integer.parseInt(Helpers.getSharedStringPref(folder.getContext(), "pref_key_launcher_foldershade", "1"));
 		int level = Helpers.getSharedIntPref(folder.getContext(), "pref_key_launcher_foldershade_level", 40);
@@ -462,8 +538,45 @@ public class Launcher {
 		});
 	}
 
+	@SuppressWarnings("ResultOfMethodCallIgnored")
 	public static void FSGesturesHook(LoadPackageParam lpparam) {
 		Helpers.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "usingFsGesture", XC_MethodReplacement.returnConstant(true));
+
+		Helpers.findAndHookMethodSilently("com.miui.home.recents.BaseRecentsImpl", lpparam.classLoader, "createAndAddNavStubView", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				boolean fsg = (boolean)XposedHelpers.getAdditionalStaticField(XposedHelpers.findClass("com.miui.home.recents.BaseRecentsImpl", lpparam.classLoader), "REAL_FORCE_FSG_NAV_BAR");
+				if (!fsg) param.setResult(null);
+			}
+		});
+
+		Helpers.findAndHookMethodSilently("com.miui.home.recents.BaseRecentsImpl", lpparam.classLoader, "updateFsgWindowState", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				boolean fsg = (boolean)XposedHelpers.getAdditionalStaticField(XposedHelpers.findClass("com.miui.home.recents.BaseRecentsImpl", lpparam.classLoader), "REAL_FORCE_FSG_NAV_BAR");
+				if (fsg) return;
+				Object mNavStubView = XposedHelpers.getObjectField(param.thisObject, "mNavStubView");
+				Object mWindowManager = XposedHelpers.getObjectField(param.thisObject, "mWindowManager");
+				if (mWindowManager != null && mNavStubView != null) {
+					XposedHelpers.callMethod(mWindowManager, "removeView", mNavStubView);
+					XposedHelpers.setObjectField(param.thisObject, "mNavStubView", null);
+				}
+			}
+		});
+
+		Helpers.findAndHookMethodSilently("com.miui.launcher.utils.MiuiSettingsUtils", lpparam.classLoader, "getGlobalBoolean", ContentResolver.class, String.class, new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				if (!"force_fsg_nav_bar".equals(param.args[1])) return;
+
+				for (StackTraceElement el: Thread.currentThread().getStackTrace())
+				if ("com.miui.home.recents.BaseRecentsImpl".equals(el.getClassName())) {
+					XposedHelpers.setAdditionalStaticField(XposedHelpers.findClass("com.miui.home.recents.BaseRecentsImpl", lpparam.classLoader), "REAL_FORCE_FSG_NAV_BAR", param.getResult());
+					param.setResult(true);
+					return;
+				}
+			}
+		});
 	}
 
 	public static void FixStatusBarModeHook(LoadPackageParam lpparam) {
@@ -490,7 +603,7 @@ public class Launcher {
 		});
 	}
 
-	@SuppressWarnings("FieldCanBeLocal")
+	@SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})
 	public static class DoubleTapController {
 		private final long MAX_DURATION = 500;
 		private float mActionDownRawX;
@@ -710,6 +823,10 @@ public class Launcher {
 		MainModule.resHooks.setObjectReplacement("com.miui.home", "integer", "config_cell_count_y_max", 8);
 	}
 
+	public static void UnlockGridsHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethodsSilently("com.miui.home.launcher.compat.LauncherCellCountCompatDevice", lpparam.classLoader, "shouldUseDeviceValue", XC_MethodReplacement.returnConstant(false));
+	}
+
 	public static void FolderColumnsHook(LoadPackageParam lpparam) {
 		Helpers.findAndHookMethod("com.miui.home.launcher.Folder", lpparam.classLoader, "onFinishInflate", new MethodHook() {
 			@Override
@@ -835,7 +952,8 @@ public class Launcher {
 			}
 		});
 
-		Helpers.findAndHookMethod("com.miui.home.launcher.gadget.ClearButton", lpparam.classLoader, "onCreate", new MethodHook() {
+		//noinspection ResultOfMethodCallIgnored
+		Helpers.findAndHookMethodSilently("com.miui.home.launcher.gadget.ClearButton", lpparam.classLoader, "onCreate", new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
 				ViewGroup mIconContainer = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mIconContainer");
@@ -1019,8 +1137,7 @@ public class Launcher {
 						try {
 							String type = uri.getPathSegments().get(1);
 							String key = uri.getPathSegments().get(2);
-							if (!key.contains("pref_key_launcher_folder")) return;
-
+							if (key.contains("pref_key_launcher_folder"))
 							switch (type) {
 								case "string":
 									MainModule.mPrefs.put(key, Helpers.getSharedStringPref(act, key, ""));
@@ -1106,7 +1223,7 @@ public class Launcher {
 			}
 		});
 
-		Helpers.hookAllMethods("com.miui.home.recents.util.RectFSpringAnim", lpparam.classLoader, "start", new MethodHook() {
+		MethodHook hook = new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
 				float scale = Helpers.getAnimationScale(2);
@@ -1115,11 +1232,18 @@ public class Launcher {
 				XposedHelpers.setFloatField(param.thisObject, "mCenterXStiffness", scaleStiffness(XposedHelpers.getFloatField(param.thisObject, "mCenterXStiffness"), scale));
 				XposedHelpers.setFloatField(param.thisObject, "mCenterYStiffness", scaleStiffness(XposedHelpers.getFloatField(param.thisObject, "mCenterYStiffness"), scale));
 				XposedHelpers.setFloatField(param.thisObject, "mWidthStiffness", scaleStiffness(XposedHelpers.getFloatField(param.thisObject, "mWidthStiffness"), scale));
-				XposedHelpers.setFloatField(param.thisObject, "mRadioStiffness", scaleStiffness(XposedHelpers.getFloatField(param.thisObject, "mRadioStiffness"), scale));
 				XposedHelpers.setFloatField(param.thisObject, "mRadiusStiffness", scaleStiffness(XposedHelpers.getFloatField(param.thisObject, "mRadiusStiffness"), scale));
 				XposedHelpers.setFloatField(param.thisObject, "mAlphaStiffness", scaleStiffness(XposedHelpers.getFloatField(param.thisObject, "mAlphaStiffness"), scale));
+				try {
+					XposedHelpers.setFloatField(param.thisObject, "mRatioStiffness", scaleStiffness(XposedHelpers.getFloatField(param.thisObject, "mRatioStiffness"), scale));
+				} catch (Throwable t) {
+					XposedHelpers.setFloatField(param.thisObject, "mRadioStiffness", scaleStiffness(XposedHelpers.getFloatField(param.thisObject, "mRadioStiffness"), scale));
+				}
 			}
-		});
+		};
+
+		if (!Helpers.hookAllMethodsSilently("com.miui.home.recents.util.RectFSpringAnim", lpparam.classLoader, "start", hook))
+		Helpers.hookAllMethods("com.miui.home.recents.util.RectFSpringAnim", lpparam.classLoader, "initAllAnimations", hook);
 
 //		if (XposedHelpers.findClassIfExists("com.android.systemui.shared.recents.system.RemoteAnimationAdapterCompat", lpparam.classLoader) != null)
 //		Helpers.hookAllConstructors("com.android.systemui.shared.recents.system.RemoteAnimationAdapterCompat", lpparam.classLoader, new MethodHook() {
@@ -1249,6 +1373,28 @@ public class Launcher {
 	public static void MaxHotseatIconsCountHook(LoadPackageParam lpparam) {
 		String methodName = lpparam.packageName.equals("com.mi.android.globallauncher") ? "getHotseatCount" : "getHotseatMaxCount";
 		Helpers.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, methodName, XC_MethodReplacement.returnConstant(666));
+
+//		Helpers.findAndHookMethod("com.miui.home.launcher.RecentsAndFSGestureUtils", lpparam.classLoader, "isUseFsGestureV2Device", new MethodHook() {
+//			@Override
+//			protected void after(XC_MethodHook.MethodHookParam param) throws Throwable {
+//				XposedBridge.log("isUseFsGestureV2Device: " + param.getResult());
+//			}
+//		});
+//
+//		Helpers.findAndHookMethod("com.miui.home.launcher.RecentsAndFSGestureUtils", lpparam.classLoader, "isUseGestureVersion3", Context.class, new MethodHook() {
+//			@Override
+//			protected void after(XC_MethodHook.MethodHookParam param) throws Throwable {
+//				XposedBridge.log("isUseGestureVersion3: " + param.getResult());
+//			}
+//		});
+//
+//		Helpers.findAndHookMethod("com.miui.home.launcher.RecentsAndFSGestureUtils", lpparam.classLoader, "isSupportRecentsAndFsGesture", new MethodHook() {
+//			@Override
+//			protected void after(XC_MethodHook.MethodHookParam param) throws Throwable {
+//				XposedBridge.log("isSupportRecentsAndFsGesture: " + param.getResult());
+//				//param.setResult(false);
+//			}
+//		});
 	}
 
 //	public static void NoInternationalBuildHook(LoadPackageParam lpparam) {

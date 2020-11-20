@@ -14,6 +14,7 @@ import android.widget.ListView;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SubFragment;
 import name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx;
+import name.mikanoshi.customiuizer.prefs.ListPreferenceEx;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class Various extends SubFragment {
@@ -63,6 +64,11 @@ public class Various extends SubFragment {
 				return true;
 			}
 		});
+
+		if (!Helpers.is12()) {
+			ListPreferenceEx pref = (ListPreferenceEx)findPreference("pref_key_various_collapsemiuititles");
+			pref.setUnsupported(true);
+		}
 
 		try {
 			ApplicationInfo pkgInfo = act.getPackageManager().getApplicationInfo("com.miui.packageinstaller", PackageManager.MATCH_DISABLED_COMPONENTS);

@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class FilthGenerator implements ConfettoGenerator {
 	private final ConfettoInfo confettoInfo;
-	private Context context;
+	private final Context context;
 
 	public FilthGenerator(Context ctx) {
 		super();

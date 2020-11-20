@@ -26,12 +26,12 @@ import java.util.concurrent.TimeUnit;
 import name.mikanoshi.customiuizer.R;
 
 public class LockedAppAdapter extends BaseAdapter implements Filterable {
-	private Context ctx;
-	private LayoutInflater mInflater;
-	private ThreadPoolExecutor pool;
-	private ItemFilter mFilter = new ItemFilter();
-	private ArrayList<AppData> originalAppList;
-	private CopyOnWriteArrayList<AppData> filteredAppList = new CopyOnWriteArrayList<AppData>();
+	private final Context ctx;
+	private final LayoutInflater mInflater;
+	private final ThreadPoolExecutor pool;
+	private final ItemFilter mFilter = new ItemFilter();
+	private final ArrayList<AppData> originalAppList;
+	private final CopyOnWriteArrayList<AppData> filteredAppList = new CopyOnWriteArrayList<AppData>();
 	private Object mSecurityManager;
 	private Method getApplicationAccessControlEnabledAsUser;
 

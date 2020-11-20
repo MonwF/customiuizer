@@ -18,9 +18,9 @@ import android.widget.TextView;
 import name.mikanoshi.customiuizer.R;
 
 public class PreferenceAdapter extends BaseAdapter {
-	private LayoutInflater mInflater;
-	private String key;
-	private ArrayList<String> items = new ArrayList<String>();
+	private final LayoutInflater mInflater;
+	private final String key;
+	private final ArrayList<String> items = new ArrayList<String>();
 
 	public PreferenceAdapter(Context context, String prefKey) {
 		mInflater = LayoutInflater.from(context);

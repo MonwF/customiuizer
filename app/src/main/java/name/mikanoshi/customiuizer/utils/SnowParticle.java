@@ -16,8 +16,8 @@ public class SnowParticle extends Confetto {
 	private Float prevX;
 	private Float prevY;
 	private final ConfettoInfo confettoInfo;
-	private Bitmap snowflake;
-	private float snowScale;
+	private final Bitmap snowflake;
+	private final float snowScale;
 	//private float rainStretch;
 
 	SnowParticle(Context context, ConfettoInfo confettoInfo) {

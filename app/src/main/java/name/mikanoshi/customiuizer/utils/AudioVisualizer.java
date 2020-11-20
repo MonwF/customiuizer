@@ -35,7 +35,7 @@ public class AudioVisualizer extends View {
 
 	private int mHeight;
 	private int mWidth;
-	private float mDensity;
+	private final float mDensity;
 	private final Paint mPaint;
 	private Paint mGlowPaint;
 	private Visualizer mVisualizer;
@@ -57,14 +57,14 @@ public class AudioVisualizer extends View {
 	private boolean mDisplaying;
 	private int mOpaqueColor;
 	private int mColor;
-	private Handler mHandler;
+	private final Handler mHandler;
 	private Bitmap mArt;
 	private Bitmap mProcessedArt;
 	private final int mBandsNum = 31;
-	private int[] mRainbow = new int[mBandsNum];
-	private int[] mRainbowVertical = new int[mBandsNum];
-	private float[] mPositions = new float[mBandsNum];
-	private Path mLinePath = new Path();
+	private final int[] mRainbow = new int[mBandsNum];
+	private final int[] mRainbowVertical = new int[mBandsNum];
+	private final float[] mPositions = new float[mBandsNum];
+	private final Path mLinePath = new Path();
 	public boolean showOnCustom;
 	private int animDur;
 	private int transparency;
@@ -404,7 +404,7 @@ public class AudioVisualizer extends View {
 		void onGenerated(Object palette);
 	}
 
-	private PaletteAsyncListener paletteResult = new PaletteAsyncListener() {
+	private final PaletteAsyncListener paletteResult = new PaletteAsyncListener() {
 		@Override
 		public void onGenerated(Object palette) {
 			try {

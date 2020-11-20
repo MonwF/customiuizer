@@ -22,7 +22,7 @@ import name.mikanoshi.customiuizer.utils.Helpers;
 public class SharedPrefsProvider extends ContentProvider {
 
 	public static final String AUTHORITY = "name.mikanoshi.customiuizer.provider.sharedprefs";
-	private static UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+	private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
 	SharedPreferences prefs;
 

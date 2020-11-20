@@ -49,7 +49,6 @@ public class SnoozedFragment extends PreferenceFragmentBase {
 
 	BroadcastReceiver updateReceiver = new BroadcastReceiver() {
 		@Override
-		@SuppressWarnings("ConstantConditions")
 		public void onReceive(Context context, Intent intent) {
 			handler.removeCallbacks(fetchFailed);
 			HashMap<String, ArrayList<SnoozeData>> tmpList = new HashMap<String, ArrayList<SnoozeData>>();

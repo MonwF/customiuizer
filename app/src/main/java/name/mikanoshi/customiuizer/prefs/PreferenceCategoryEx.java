@@ -14,8 +14,8 @@ import name.mikanoshi.customiuizer.R;
 
 public class PreferenceCategoryEx extends PreferenceCategory {
 
-	private boolean dynamic;
-	private boolean empty;
+	private final boolean dynamic;
+	private final boolean empty;
 	private boolean hidden;
 
 	public PreferenceCategoryEx(Context context, AttributeSet attrs) {

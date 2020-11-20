@@ -21,14 +21,14 @@ import name.mikanoshi.customiuizer.utils.Helpers;
 public class ListPreferenceEx extends ListPreference implements PreferenceState {
 
 	private CharSequence sValue;
-	private Resources res = getContext().getResources();
-	private int primary = res.getColor(R.color.preference_primary_text, getContext().getTheme());
-	private int secondary = res.getColor(R.color.preference_secondary_text, getContext().getTheme());
+	private final Resources res = getContext().getResources();
+	private final int primary = res.getColor(R.color.preference_primary_text, getContext().getTheme());
+	private final int secondary = res.getColor(R.color.preference_secondary_text, getContext().getTheme());
 
-	private boolean dynamic;
+	private final boolean dynamic;
 	private boolean newmod = false;
 	private boolean unsupported = false;
-	private boolean valueAsSummary;
+	private final boolean valueAsSummary;
 
 	public ListPreferenceEx(Context context, AttributeSet attrs) {
 		super(context, attrs);

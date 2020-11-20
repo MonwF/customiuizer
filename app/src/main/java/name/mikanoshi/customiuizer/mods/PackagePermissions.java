@@ -17,7 +17,7 @@ import name.mikanoshi.customiuizer.utils.Helpers.MethodHook;
 
 public class PackagePermissions {
 
-	private static ArrayList<String> systemPackages = new ArrayList<String>();
+	private static final ArrayList<String> systemPackages = new ArrayList<String>();
 
 //	@SuppressWarnings("unchecked")
 //	private static void doBefore(MethodHookParam param) {
@@ -185,6 +185,13 @@ public class PackagePermissions {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				if (Helpers.modulePkg.equals(param.args[1])) param.setResult(0);
+			}
+		});
+
+		Helpers.hookAllMethodsSilently("com.android.server.wm.ActivityRecordInjector", lpparam.classLoader, "canShowWhenLocked", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				param.setResult(true);
 			}
 		});
 

@@ -321,6 +321,8 @@
     <string name="system_allownotiffloat_summ">Forzare tutte le notifiche delle app MIUI per essere visualizzate come fluttuanti</string>
     <string name="system_hidelsclock_title">Nascondi parte superiore</string>
     <string name="system_hidelsclock_summ">Rimuovi la parte superiore che contiene l\'orologio, la data e altre informazioni</string>
+    <string name="system_nosos_title">Nessuna chiamata di emergenza</string>
+    <string name="system_nosos_summ">Disabilita il pulsante di chiamata di emergenza sulla schermata di blocco</string>
     <string name="system_hideqs_title">Pulisci la modalità di visualizzazione estesa</string>
     <string name="system_hideqs_summ">Nascondi le impostazioni rapide e il cursore della luminosità nella modalità di notifica estesa sulla schermata di blocco</string>
     <string name="system_nodrawerbackground_title">Disabilita sfondo colorato</string>

@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,7 +18,12 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.text.Editable;
+import android.text.Layout;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextWatcher;
+import android.text.style.AlignmentSpan;
+import android.text.style.LineHeightSpan;
 import android.view.ActionMode;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -69,7 +75,7 @@ import name.mikanoshi.customiuizer.utils.ModSearchAdapter;
 
 public class MainFragment extends PreferenceFragmentBase {
 
-	private CategorySelector catSelector = new CategorySelector();
+	private final CategorySelector catSelector = new CategorySelector();
 	public System prefSystem = new System();
 	public Launcher prefLauncher = new Launcher();
 	public Controls prefControls = new Controls();
@@ -176,7 +182,7 @@ public class MainFragment extends PreferenceFragmentBase {
 		}
 	};
 
-	private Runnable showUpdateNotification = new Runnable() {
+	private final Runnable showUpdateNotification = new Runnable() {
 		@Override
 		public void run() {
 			if (getView() != null) try {
@@ -186,7 +192,7 @@ public class MainFragment extends PreferenceFragmentBase {
 		}
 	};
 
-	private Runnable hideUpdateNotification = new Runnable() {
+	private final Runnable hideUpdateNotification = new Runnable() {
 		@Override
 		public void run() {
 			if (getView() != null) try {
@@ -289,13 +295,41 @@ public class MainFragment extends PreferenceFragmentBase {
 	}
 
 	public View onInflateView(LayoutInflater inflater, ViewGroup group, Bundle bundle) {
-		return inflater.inflate(R.layout.prefs_main, group, false);
+		return inflater.inflate(Helpers.is12() ? R.layout.prefs_main12 : R.layout.prefs_main, group, false);
 	}
 
 	private void openActionMode(boolean isNew) {
 		actionModeNew = isNew;
 		actionMode = startActionMode(actionModeCallback);
 		fixActionBar();
+	}
+
+	private static class SetLineOverlap implements LineHeightSpan {
+		private int originalBottom = 15;
+		private int originalDescent = 13;
+		private final Boolean overlap;
+		private Boolean overlapSaved = false;
+
+		SetLineOverlap(Boolean overlap) {
+			this.overlap = overlap;
+		}
+
+		@Override
+		public void chooseHeight(CharSequence text, int start, int end, int spanstartv, int v, Paint.FontMetricsInt fm) {
+			if (overlap) {
+				if (!overlapSaved) {
+					originalBottom = fm.bottom;
+					originalDescent = fm.descent;
+					overlapSaved = true;
+				}
+				fm.bottom += fm.top;
+				fm.descent += fm.top;
+			} else {
+				fm.bottom = originalBottom;
+				fm.descent = originalDescent;
+				overlapSaved = false;
+			}
+		}
 	}
 
 	@Override
@@ -407,23 +441,32 @@ public class MainFragment extends PreferenceFragmentBase {
 			locales = (String[])getNonSystemLocales.invoke(am);
 			if (locales == null) locales = new String[] {};
 		} catch (Throwable t) {
-			locales = new String[] { "it", "ru-RU", "tr", "uk-UK", "zh-CN" };
+			locales = new String[] { "de", "es", "it", "pt-BR", "ru-RU", "tr", "uk-UK", "zh-CN" };
 		}
 
 		ArrayList<String> localesArr = new ArrayList<String>(Arrays.asList(locales));
-		ArrayList<String> localeNames = new ArrayList<String>();
+		ArrayList<SpannableString> localeNames = new ArrayList<SpannableString>();
 		localesArr.add(0, "en");
 		for (String locale: localesArr) try {
 			Locale loc = Locale.forLanguageTag(locale);
 			StringBuilder locStr = new StringBuilder(loc.getDisplayLanguage(loc));
 			locStr.setCharAt(0, Character.toUpperCase(locStr.charAt(0)));
-			localeNames.add(locStr.toString());
+			SpannableString locSpanString;
+			if (!locale.equals("en")) {
+				String locStrPct = locStr.toString() + "\n" + Helpers.l10nProgress.get(locale);
+				int fullTextLength = locStrPct.length();
+				locSpanString = new SpannableString(locStrPct);
+				locSpanString.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_OPPOSITE), locStr.toString().length(), fullTextLength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				locSpanString.setSpan(new SetLineOverlap(true), 1, fullTextLength - 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				locSpanString.setSpan(new SetLineOverlap(false), fullTextLength - 1, fullTextLength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			} else locSpanString = new SpannableString(locStr.toString());
+			localeNames.add(locSpanString);
 		} catch (Throwable t) {
-			localeNames.add(Locale.getDefault().getDisplayLanguage(Locale.getDefault()));
+			localeNames.add(new SpannableString(Locale.getDefault().getDisplayLanguage(Locale.getDefault())));
 		}
 
 		localesArr.add(0, "auto");
-		localeNames.add(0, getString(R.string.array_system_default));
+		localeNames.add(0, new SpannableString(getString(R.string.array_system_default)));
 
 		ListPreferenceEx locale = (ListPreferenceEx)findPreference("pref_key_miuizer_locale");
 		locale.setEntries(localeNames.toArray(new CharSequence[0]));

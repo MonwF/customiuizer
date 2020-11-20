@@ -21,7 +21,7 @@ public class ShakeManager implements SensorEventListener {
 	private boolean shakeInitiated = false;
 	private long lastShakeEvent = System.currentTimeMillis();
 	
-	private Context helperContext;
+	private final Context helperContext;
 	
 	public ShakeManager(Context helpercontext) {
 		this.helperContext = helpercontext;

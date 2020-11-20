@@ -15,7 +15,7 @@ import name.mikanoshi.customiuizer.R;
 
 public class IconGridAdapter implements ListAdapter {
 
-	private LayoutInflater mInflater;
+	private final LayoutInflater mInflater;
 
 	public IconGridAdapter(Context context) {
 		mInflater = LayoutInflater.from(context);

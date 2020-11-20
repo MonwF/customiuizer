@@ -33,6 +33,14 @@
 		miuizer:child="true"
 		miuizer:countAsSummary="true" />
 
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_various_collapsemiuititles"
+		android:title="@string/various_collapsemiuititles_title"
+		android:summary="@string/various_collapsemiuititles_summ"
+		android:entries="@array/collapsetitles"
+		android:entryValues="@array/collapsetitles_val"
+		android:defaultValue="0" />
+
 	<PreferenceCategory
 		android:title="@string/calls"/>
 

@@ -19,11 +19,10 @@ import name.mikanoshi.customiuizer.R;
 @SuppressWarnings("FieldCanBeLocal")
 public class FlowerParticle extends Confetto {
 	private final ConfettoInfo confettoInfo;
-	private Bitmap petal;
+	private final Bitmap petal;
 	private float petalScale;
-	private int[] petals = new int[] { R.drawable.confetti1, R.drawable.confetti1, R.drawable.confetti2, R.drawable.confetti2, R.drawable.confetti3, R.drawable.confetti3, R.drawable.petal };
+	private final int[] petals = new int[] { R.drawable.confetti1, R.drawable.confetti1, R.drawable.confetti2, R.drawable.confetti2, R.drawable.confetti3, R.drawable.confetti3, R.drawable.petal };
 
-	@SuppressWarnings("ConstantConditions")
 	FlowerParticle(Context context, ConfettoInfo confettoInfo) {
 		super();
 		this.confettoInfo = confettoInfo;

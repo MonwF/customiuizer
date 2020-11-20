@@ -180,8 +180,8 @@ public class BTList extends SubFragment {
 	}
 
 	public class BTAdapter extends BaseAdapter {
-		private boolean isSelected;
-		private LayoutInflater mInflater;
+		private final boolean isSelected;
+		private final LayoutInflater mInflater;
 
 		BTAdapter(Context context, boolean selected) {
 			isSelected = selected;

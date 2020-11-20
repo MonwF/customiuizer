@@ -12,7 +12,7 @@ import de.robv.android.xposed.XposedHelpers;
 import name.mikanoshi.customiuizer.utils.Helpers.MethodHook;
 
 public class ResourceHooks {
-	private SparseIntArray fakes = new SparseIntArray();
+	private final SparseIntArray fakes = new SparseIntArray();
 	private final HashMap<String, Integer> idReplacements = new HashMap<String, Integer>();
 	private final HashMap<String, Integer> densityReplacements = new HashMap<String, Integer>();
 	private final HashMap<String, Object> objReplacements = new HashMap<String, Object>();
@@ -22,7 +22,7 @@ public class ResourceHooks {
 	}
 
 	@SuppressWarnings("FieldCanBeLocal")
-	private MethodHook mReplaceHook = new MethodHook() {
+	private final MethodHook mReplaceHook = new MethodHook() {
 		@Override
 		protected void before(MethodHookParam param) {
 			Context mContext = null;
@@ -125,7 +125,6 @@ public class ResourceHooks {
 		}
 	}
 
-	@SuppressWarnings("ConstantConditions")
 	private Object getResourceReplacement(Context context, Resources res, String method, Object[] args) {
 		if (context == null) return null;
 

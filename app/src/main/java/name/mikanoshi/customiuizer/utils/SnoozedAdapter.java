@@ -20,7 +20,7 @@ import name.mikanoshi.customiuizer.SnoozedFragment;
 import static java.lang.System.currentTimeMillis;
 
 public class SnoozedAdapter extends BaseAdapter {
-	private LayoutInflater mInflater;
+	private final LayoutInflater mInflater;
 
 	public SnoozedAdapter(Context context) {
 		mInflater = LayoutInflater.from(context);

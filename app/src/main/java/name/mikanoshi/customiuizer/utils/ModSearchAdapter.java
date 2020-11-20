@@ -20,9 +20,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import name.mikanoshi.customiuizer.R;
 
 public class ModSearchAdapter extends BaseAdapter implements Filterable {
-	private LayoutInflater mInflater;
-	private ItemFilter mFilter = new ItemFilter();
-	private CopyOnWriteArrayList<ModData> modsList = new CopyOnWriteArrayList<ModData>();
+	private final LayoutInflater mInflater;
+	private final ItemFilter mFilter = new ItemFilter();
+	private final CopyOnWriteArrayList<ModData> modsList = new CopyOnWriteArrayList<ModData>();
 	private String filterString = "";
 
 	@SuppressLint("WrongConstant")

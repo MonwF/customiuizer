@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -137,9 +138,26 @@ public class Helpers {
 	public static boolean showNewMods = true;
 	public static boolean miuizerModuleActive = false;
 	public static final HashSet<String> newMods = new HashSet<String>(Arrays.asList(
-		"pref_key_system_nosos",
-		"pref_key_system_screenshot_mypath"
+		"pref_key_system_maxsbicons",
+		"pref_key_system_morenotif",
+		"pref_key_system_nodarkforce",
+		"pref_key_various_collapsemiuititles"
 	));
+	public static final HashMap<String, String> l10nProgress = new HashMap<String, String>() {{
+		put("ru-RU", "100.0%");
+		put("zh-CN", "100.0%");
+		put("id", "13.3%");
+		put("tr", "98.6%");
+		put("it", "98.6%");
+		put("pt-BR", "97.3%");
+		put("fr", "26.0%");
+		put("uk-UK", "98.4%");
+		put("es", "100.0%");
+		put("sk", "3.2%");
+		put("cs", "0.0%");
+		put("de", "98.6%");
+	}};
+
 	public static final ArrayList<String> shortcutIcons = new ArrayList<String>();
 	public static Holidays currentHoliday = Holidays.NONE;
 
@@ -204,7 +222,6 @@ public class Helpers {
 		}
 	}
 
-	@SuppressWarnings("ConstantConditions")
 	public static void detectHoliday() {
 		currentHoliday = Holidays.NONE;
 		String opt = Helpers.prefs.getString("pref_key_miuizer_holiday", "0");
@@ -221,12 +238,16 @@ public class Helpers {
 			// NY
 			else if (month == 0 || month == 11) currentHoliday = Holidays.NEWYEAR;
 			// COVID19
-			else if (month >= 2 && month <= 5 && year == 2020) currentHoliday = Holidays.PANDEMIC;
+			else if (month >= 2 && month <= 10 && year == 2020) currentHoliday = Holidays.PANDEMIC;
 		}
 	}
 
 	public static boolean is11() {
 		return SystemProperties.getInt("ro.miui.ui.version.code", 8) >= 9;
+	}
+
+	public static boolean is12() {
+		return SystemProperties.getInt("ro.miui.ui.version.code", 9) >= 10;
 	}
 
 	public static boolean isNightMode(Context context) {
@@ -238,11 +259,11 @@ public class Helpers {
 	}
 
 	public static boolean isPiePlus() {
-		return Build.VERSION.SDK_INT >=  Build.VERSION_CODES.P;
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.P;
 	}
 
 	public static boolean isQPlus() {
-		return Build.VERSION.SDK_INT >=  Build.VERSION_CODES.Q;
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
 	}
 
 	public static boolean isLauncherIconVisible(Context context) {
@@ -467,7 +488,6 @@ public class Helpers {
 		}
 	}
 
-	@SuppressWarnings("ConstantConditions")
 	public static long getNextMIUIAlarmTime(Context context) {
 		String nextAlarm = Settings.System.getString(context.getContentResolver(), "next_alarm_clock_formatted");
 		long nextTime = 0;
@@ -654,7 +674,7 @@ public class Helpers {
 		return context.getPackageManager().checkPermission("android.permission.INTERACT_ACROSS_USERS", Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED;
 	}
 
-	@SuppressWarnings({"JavaReflectionInvocation", "ConstantConditions"})
+	@SuppressWarnings({"JavaReflectionInvocation"})
 	@SuppressLint({"PrivateApi", "DiscouragedPrivateApi"})
 	public static float getAnimationScale(int type) {
 		try {
@@ -677,7 +697,7 @@ public class Helpers {
 		}
 	}
 
-	@SuppressWarnings({"JavaReflectionInvocation", "ConstantConditions"})
+	@SuppressWarnings({"JavaReflectionInvocation"})
 	@SuppressLint({"PrivateApi", "DiscouragedPrivateApi"})
 	public static void setAnimationScale(int type, float value) {
 		try {

@@ -128,7 +128,7 @@ public class MainActivity extends Activity {
 			weatherView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 			weatherView.setPrecipType(PrecipType.CLEAR);
 			weatherView.setSpeed(0);
-			weatherView.setEmissionRate(0.5f);
+			weatherView.setEmissionRate(0.6f);
 			weatherView.setFadeOutPercent(1.0f);
 			weatherView.setAngle(0);
 			try {
@@ -238,7 +238,7 @@ public class MainActivity extends Activity {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_MENU) {
 			PreferenceFragmentBase fragment = (PreferenceFragmentBase)getFragmentManager().findFragmentById(R.id.fragment_container);
-			if (fragment instanceof MainFragment && fragment.getView() != null) try {
+			if (fragment != null && fragment.getView() != null && !fragment.supressMenu) try {
 				fragment.getView().post(fragment::showImmersionMenu);
 				return true;
 			} catch (Throwable t) {}

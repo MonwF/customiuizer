@@ -239,9 +239,9 @@
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_controls_navbarheight"
 			android:title="@string/controls_navbarheight_title"
-			android:defaultValue="26"
+			android:defaultValue="19"
 			miuizer:offtext="@string/array_default"
-			miuizer:minValue="26"
+			miuizer:minValue="19"
 			miuizer:maxValue="100"
 			miuizer:stepValue="1"
 			miuizer:format="%d dip"
@@ -253,7 +253,7 @@
 			android:summary="@string/controls_navbarmargin_summ"
 			android:defaultValue="0"
 			miuizer:minValue="0"
-			miuizer:maxValue="30"
+			miuizer:maxValue="50"
 			miuizer:stepValue="1"
 			miuizer:format="%d dp" />
 

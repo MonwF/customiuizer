@@ -5,7 +5,7 @@
 	<color name="color_not_selected">#99000000</color>
 	<color name="about_divider">#33808080</color>
 
-	<color name="highlight_normal_light">#ff0099ff</color>
+	<color name="highlight_normal_light">#ff58a1ff</color>
 	<color name="checked_text">@color/highlight_normal_light</color>
 
 	<color name="preference_category_text_color">#80000000</color>

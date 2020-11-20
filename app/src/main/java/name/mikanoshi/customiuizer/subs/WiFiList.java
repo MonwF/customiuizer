@@ -57,7 +57,7 @@ public class WiFiList extends SubFragment {
 				updateProgressBar();
 			} else if (action.equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
 				NetworkInfo netInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
-				if (netInfo.getDetailedState() == NetworkInfo.DetailedState.CONNECTED ) isWiFiReady();
+				if (netInfo.getDetailedState() == NetworkInfo.DetailedState.CONNECTED) isWiFiReady();
 				if (netInfo.getDetailedState() == NetworkInfo.DetailedState.CONNECTED || netInfo.getDetailedState() == NetworkInfo.DetailedState.DISCONNECTED) {
 					handler.removeCallbacks(getScanResults);
 					handler.postDelayed(getScanResults, 1000);
@@ -69,7 +69,7 @@ public class WiFiList extends SubFragment {
 	Runnable getScanResults = new Runnable() {
 		@Override
 		public void run() {
-			wifiManager.startScan();
+			try { wifiManager.startScan(); } catch (Throwable ignore) {}
 			handler.postDelayed(getScanResults, scanInterval);
 			updateProgressBar();
 		}
@@ -207,8 +207,8 @@ public class WiFiList extends SubFragment {
 	}
 
 	public class WiFiAdapter extends BaseAdapter {
-		private boolean isSelected;
-		private LayoutInflater mInflater;
+		private final boolean isSelected;
+		private final LayoutInflater mInflater;
 
 		WiFiAdapter(Context context, boolean selected) {
 			isSelected = selected;

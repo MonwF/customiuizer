@@ -18,7 +18,7 @@ import name.mikanoshi.customiuizer.R;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class FilthyParticle extends Confetto {
-	private Context mContext;
+	private final Context mContext;
 	private float startX;
 	private float startY;
 	private int signX;
@@ -26,9 +26,9 @@ public class FilthyParticle extends Confetto {
 	private int distance;
 	private int maxAlpha;
 	private final ConfettoInfo confettoInfo;
-	private Bitmap filth;
-	private float filthScale;
-	private int[] microbes = new int[] { R.drawable.microbe1, R.drawable.microbe2, R.drawable.microbe3 };
+	private final Bitmap filth;
+	private final float filthScale;
+	private final int[] viruses = new int[] { R.drawable.virus1, R.drawable.virus2, R.drawable.virus3 };
 
 	@SuppressWarnings("ConstantConditions")
 	private void randomizeStartPoint() {
@@ -56,7 +56,7 @@ public class FilthyParticle extends Confetto {
 		}
 		signX = rand.nextInt(3) - 1;
 		signY = rand.nextInt(3) - 1;
-		maxAlpha = rand.nextInt(65) + 64;
+		maxAlpha = rand.nextInt(50) + 40;
 		distance = rand.nextInt(76) + 75;
 	}
 
@@ -64,8 +64,8 @@ public class FilthyParticle extends Confetto {
 		super();
 		this.confettoInfo = confettoInfo;
 		mContext = context;
-		filthScale = 1f - new Random().nextFloat() * 0.15f;
-		filth = BitmapFactory.decodeResource(context.getResources(), microbes[new Random().nextInt(microbes.length)]);
+		filthScale = 0.65f - new Random().nextFloat() * 0.15f;
+		filth = BitmapFactory.decodeResource(context.getResources(), viruses[new Random().nextInt(viruses.length)]);
 		randomizeStartPoint();
 	}
 

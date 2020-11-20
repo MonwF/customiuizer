@@ -25,13 +25,13 @@ import name.mikanoshi.customiuizer.R;
 
 public class ResolveInfoAdapter extends BaseAdapter implements Filterable {
 
-	private Context ctx;
-	private PackageManager pm;
-	private LayoutInflater mInflater;
-	private ThreadPoolExecutor pool;
-	private ItemFilter mFilter = new ItemFilter();
-	private CopyOnWriteArrayList<ResolveInfo> originalAppList = new CopyOnWriteArrayList<ResolveInfo>();
-	private CopyOnWriteArrayList<ResolveInfo> filteredAppList = new CopyOnWriteArrayList<ResolveInfo>();
+	private final Context ctx;
+	private final PackageManager pm;
+	private final LayoutInflater mInflater;
+	private final ThreadPoolExecutor pool;
+	private final ItemFilter mFilter = new ItemFilter();
+	private final CopyOnWriteArrayList<ResolveInfo> originalAppList = new CopyOnWriteArrayList<ResolveInfo>();
+	private final CopyOnWriteArrayList<ResolveInfo> filteredAppList = new CopyOnWriteArrayList<ResolveInfo>();
 
 	public ResolveInfoAdapter(Context context, ArrayList<ResolveInfo> arr) {
 		ctx = context;

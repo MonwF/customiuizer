@@ -18,16 +18,16 @@ import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class PreferenceEx extends Preference implements PreferenceState {
 
-	private Resources res = getContext().getResources();
-	private int primary = res.getColor(R.color.preference_primary_text, getContext().getTheme());
-	private int secondary = res.getColor(R.color.preference_secondary_text, getContext().getTheme());
-	private int childpadding = res.getDimensionPixelSize(R.dimen.preference_item_child_padding);
-	private int[] paddings = new int[] {0, 0, 0, 0};
+	private final Resources res = getContext().getResources();
+	private final int primary = res.getColor(R.color.preference_primary_text, getContext().getTheme());
+	private final int secondary = res.getColor(R.color.preference_secondary_text, getContext().getTheme());
+	private final int childpadding = res.getDimensionPixelSize(R.dimen.preference_item_child_padding);
+	private final int[] paddings = new int[] {0, 0, 0, 0};
 
-	private boolean child;
-	private boolean dynamic;
-	private boolean warning;
-	private boolean countAsSummary;
+	private final boolean child;
+	private final boolean dynamic;
+	private final boolean warning;
+	private final boolean countAsSummary;
 	private String customSummary = null;
 	private boolean newmod = false;
 

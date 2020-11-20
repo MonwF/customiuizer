@@ -13,7 +13,7 @@ import name.mikanoshi.customiuizer.utils.Helpers;
 public class SpinnerExFake extends SpinnerEx {
 
 	private String value = null;
-	private ArrayList<Pair<String, String>> others = new ArrayList<Pair<String, String>>();
+	private final ArrayList<Pair<String, String>> others = new ArrayList<Pair<String, String>>();
 
 	public SpinnerExFake(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -34,7 +34,7 @@ public class SpinnerExFake extends SpinnerEx {
 	}
 
 	public void addValue(String key, Intent val) {
-		String sVal = null;
+		String sVal;
 		if (val == null)
 			sVal = Helpers.prefs.getString(key, null);
 		else

@@ -21,13 +21,13 @@ public class ColorCircle extends View {
 	private float radius;
 	private float innerRadius;
 	private int offset;
-	private Paint paint1 = new Paint();
-	private Paint paint1a = new Paint();
-	private Paint paint2 = new Paint();
-	private Paint paint3 = new Paint();
+	private final Paint paint1 = new Paint();
+	private final Paint paint1a = new Paint();
+	private final Paint paint2 = new Paint();
+	private final Paint paint3 = new Paint();
 	private ColorListener listener;
 	private boolean mTransparent = false;
-	private float[] mColor = new float[3];
+	private final float[] mColor = new float[3];
 	private boolean initialized = false;
 
 	public ColorCircle(Context context) {
