@@ -139,6 +139,8 @@ public class System extends SubFragment {
 					}
 				});
 
+				if (!Helpers.is12()) ((ListPreferenceEx)findPreference("pref_key_system_maxsbicons")).setUnsupported(true);
+
 				break;
 			case "pref_key_system_cat_drawer":
 				findPreference("pref_key_system_popupnotif_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -253,6 +255,13 @@ public class System extends SubFragment {
 				findPreference("pref_key_system_recommended_second").setOnPreferenceClickListener(openRecentsActions);
 				findPreference("pref_key_system_recommended_third").setOnPreferenceClickListener(openRecentsActions);
 				findPreference("pref_key_system_recommended_fourth").setOnPreferenceClickListener(openRecentsActions);
+				break;
+			case "pref_key_system_cat_betterpopups":
+				findPreference("pref_key_system_betterpopups_allowfloat_apps").setOnPreferenceClickListener(openAppsEdit);
+
+				if (!Helpers.is12())
+				((CheckBoxPreferenceEx)findPreference("pref_key_system_betterpopups_allowfloat")).setUnsupported(true);
+
 				break;
 			case "pref_key_system_cat_applock":
 				findPreference("pref_key_system_applock_list").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

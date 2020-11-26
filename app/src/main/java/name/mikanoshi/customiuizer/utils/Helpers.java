@@ -138,24 +138,27 @@ public class Helpers {
 	public static boolean showNewMods = true;
 	public static boolean miuizerModuleActive = false;
 	public static final HashSet<String> newMods = new HashSet<String>(Arrays.asList(
-		"pref_key_system_maxsbicons",
-		"pref_key_system_morenotif",
-		"pref_key_system_nodarkforce",
-		"pref_key_various_collapsemiuititles"
+		"pref_key_system_nomediamute",
+		"pref_key_system_dndtoggle",
+		"pref_key_system_volumedialogdelay_collapsed",
+		"pref_key_system_volumedialogdelay_expanded",
+		"pref_key_system_betterpopups_allowfloat",
+		"pref_key_various_gboardpadding_port",
+		"pref_key_various_gboardpadding_land"
 	));
 	public static final HashMap<String, String> l10nProgress = new HashMap<String, String>() {{
 		put("ru-RU", "100.0%");
-		put("zh-CN", "100.0%");
-		put("id", "13.3%");
-		put("tr", "98.6%");
-		put("it", "98.6%");
-		put("pt-BR", "97.3%");
-		put("fr", "26.0%");
-		put("uk-UK", "98.4%");
-		put("es", "100.0%");
+		put("zh-CN", "98.7%");
+		put("id", "13.1%");
+		put("tr", "97.4%");
+		put("it", "97.4%");
+		put("pt-BR", "96.1%");
+		put("fr", "25.7%");
+		put("uk-UK", "97.2%");
+		put("es", "98.7%");
 		put("sk", "3.2%");
 		put("cs", "0.0%");
-		put("de", "98.6%");
+		put("de", "97.4%");
 	}};
 
 	public static final ArrayList<String> shortcutIcons = new ArrayList<String>();
@@ -222,6 +225,7 @@ public class Helpers {
 		}
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	public static void detectHoliday() {
 		currentHoliday = Holidays.NONE;
 		String opt = Helpers.prefs.getString("pref_key_miuizer_holiday", "0");
@@ -488,6 +492,7 @@ public class Helpers {
 		}
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	public static long getNextMIUIAlarmTime(Context context) {
 		String nextAlarm = Settings.System.getString(context.getContentResolver(), "next_alarm_clock_formatted");
 		long nextTime = 0;
@@ -528,6 +533,7 @@ public class Helpers {
 		return aci == null ? 0 : aci.getTriggerTime();
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	public static void updateNewModsMarking(Context context) {
 		updateNewModsMarking(context, Integer.parseInt(prefs.getString("pref_key_miuizer_marknewmods", "2")));
 	}
@@ -674,7 +680,7 @@ public class Helpers {
 		return context.getPackageManager().checkPermission("android.permission.INTERACT_ACROSS_USERS", Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED;
 	}
 
-	@SuppressWarnings({"JavaReflectionInvocation"})
+	@SuppressWarnings({"JavaReflectionInvocation", "ConstantConditions"})
 	@SuppressLint({"PrivateApi", "DiscouragedPrivateApi"})
 	public static float getAnimationScale(int type) {
 		try {
@@ -697,7 +703,7 @@ public class Helpers {
 		}
 	}
 
-	@SuppressWarnings({"JavaReflectionInvocation"})
+	@SuppressWarnings({"JavaReflectionInvocation", "ConstantConditions"})
 	@SuppressLint({"PrivateApi", "DiscouragedPrivateApi"})
 	public static void setAnimationScale(int type, float value) {
 		try {
@@ -1015,6 +1021,7 @@ public class Helpers {
 		}
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	public static Pair<String, String> getActionNameLocal(Context context, String key) {
 		try {
 			int action = prefs.getInt(key + "_action", 1);
@@ -1072,6 +1079,7 @@ public class Helpers {
 		}
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	public static Drawable getActionImageLocal(Context context, String key) {
 		try {
 			int action = prefs.getInt(key + "_action", 1);
@@ -1317,7 +1325,7 @@ public class Helpers {
 	public static synchronized Context getLocaleContext(Context context) throws Throwable {
 		if (prefs != null) {
 			String locale = prefs.getString("pref_key_miuizer_locale", "auto");
-			if ("auto".equals(locale) || "1".equals(locale)) return context;
+			if (locale == null || "auto".equals(locale) || "1".equals(locale)) return context;
 			Configuration config = context.getResources().getConfiguration();
 			config.setLocale(Locale.forLanguageTag(locale));
 			return context.createConfigurationContext(config);

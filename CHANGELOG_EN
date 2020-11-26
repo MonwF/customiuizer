@@ -1,3 +1,16 @@
+3.0.2
+[New] Disable media stream muting in Do not disturb mode
+[New] Toggle DND instead of Silent mode from collapsed volume dialog
+[New] Volume dialog autohide delay
+[New] Google Keyboard's bottom padding
+[New][MIUI 12] Allow floating window to be opened from any notification that has an appropriate click action defined
+[Improved][Compact notifications][MIUI12] Increased height of action buttons
+[Fixed][Display next alarm on lock screen] Compatibility with super wallpaper clock style
+[Fixed][Custom lock screen actions] Compatibility with some ancient Android versions
+[Fixed][Popup notification swipe down] Ignore notifications with floating windows
+[Fixed] Show seconds in status bar clock
+[Fixed] Hide No SIM card icon
+
 3.0.0
 [New] Increase limit of active notifications from a single app
 [New] Increase/remove notification icons limit in status bar

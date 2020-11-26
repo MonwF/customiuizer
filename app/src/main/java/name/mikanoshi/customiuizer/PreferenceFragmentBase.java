@@ -169,9 +169,9 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 	private void setupImmersiveMenu() {
 		ActionBar actionBar = getActionBar();
 
-		if (Helpers.is12()) {
+		if (Helpers.is12()) try {
 			if (actionBar != null) actionBar.setExpandState(ActionBar.STATE_COLLAPSE, false);
-		}
+		} catch (Throwable ignore) {}
 
 		if (supressMenu) return;
 		if (actionBar != null) actionBar.showSplitActionBar(false, false);

@@ -534,6 +534,7 @@ public class Dialog extends Activity {
 		final AlertDialog alertDlg = alert.show();
 		alertDlg.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new OnClickListener() {
 			@Override
+			@SuppressWarnings("ConstantConditions")
 			public void onClick(View v) {
 				if (desc != null && desc.getText().toString().trim().equals("")) {
 					Toast.makeText(Dialog.this, R.string.crash_needs_desc, Toast.LENGTH_LONG).show();

@@ -16,6 +16,7 @@ public class Launcher extends SubFragment {
 	String sub = "";
 
 	@Override
+	@SuppressWarnings("ConstantConditions")
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 

@@ -61,6 +61,8 @@
 	<string name="various_installappinfo_vercode">Код версии</string>
 	<string name="various_installappinfo_sdk">Поддержка SDK</string>
 	<string name="various_installappinfo_current">текущая</string>
+	<string name="various_gboardpadding_port_title">Нижний отступ в портретном режиме</string>
+	<string name="various_gboardpadding_land_title">Нижний отступ в ландшафтном режиме</string>
 	<string name="various_showcallui_title">Показывать интерфейс звонка</string>
 	<string name="various_showcallui_summ">Задаёт когда показывать интерфейс входящего звонка вместо всплывающего уведомления</string>
 	<string name="various_calluibright_title">Яркость экрана во время звонка</string>
@@ -524,6 +526,7 @@
 	<string name="launcher_privacyapps_gest_summ">Отключает жест двумя пальцами для открытия папки со скрытыми приложениями</string>
 	<string name="launcher_privacyapps_list_title">Список приложений для скрытия</string>
 	<string name="launcher_privacyapps_list_summ">Улучшенная версия функции Скрытые приложения, позволяющая скрыть любое установленное приложение. Перезагрузка не требуется.</string>
+	<string name="gboard">Google Клавиатура</string>
 	<string name="calls">Звонки</string>
 	<string name="settings">Настройки</string>
 	<string name="support_repo_summ">Git репозиторий с исходниками и дистрибутивами модуля</string>
@@ -612,6 +615,8 @@
 	<string name="system_betterpopups_delay_title">Задержка перед скрытием</string>
 	<string name="system_betterpopups_nohide_title">Не прятать автоматом</string>
 	<string name="system_betterpopups_nohide_summ">Отключает автоматическое скрытие</string>
+	<string name="system_betterpopups_allowfloat_title">Разрешить плавающее окно</string>
+	<string name="system_betterpopups_allowfloat_summ">Открывает приложение в плавающем окне по свайпу вниз, если у уведомления задано подходящее действие на нажатие</string>
 	<string name="system_betterpopups_swipedown_title">Активировать свайп вниз</string>
 	<string name="system_betterpopups_swipedown_summ">Открывает панель уведомлений по свайпу вниз</string>
 	<string name="system_mods_applock">Защита приложений</string>
@@ -783,8 +788,15 @@
 	<string name="system_separatevolume_summ">Позволяет изменить громкость в Настройках отдельно для звонков/уведомлений/системных звуков</string>
 	<string name="system_separatevolume_slider_title">Ползунок громкости уведомлений</string>
 	<string name="system_separatevolume_slider_summ">Добавляет ползунок уведомлений в открытую панель громкости</string>
+	<string name="system_nomediamute_title">Не заглушать музыку</string>
+	<string name="system_nomediamute_summ">Предотвращает установку громкости музыки на ноль в режиме Не беспокоить</string>
+	<string name="system_dndtoggle_title">Переключатель режима Не беспокоить</string>
+	<string name="system_dndtoggle_summ">Кнопка в свёрнутом диалоге громкости переключает режим Не беспокоить вместо режима Без звука</string>
 	<string name="system_volumetimer_title">Расширенные таймеры</string>
 	<string name="system_volumetimer_summ">Добавляет больше интервалов в таймеры режимов Без звука и Не беспокоить</string>
+	<string name="system_volumedialogdelay_collapsed_title">Задержка перед автоскрытием диалога громкости</string>
+	<string name="system_volumedialogdelay_collapsed_summ">Свёрнутый</string>
+	<string name="system_volumedialogdelay_expanded_summ">Развёрнутый</string>
 	<string name="system_volumesteps_title">Множитель шагов громкости</string>
 	<string name="system_volumesteps_summ">Изменяет количество шагов громкости для всех типов потоков</string>
 	<string name="system_visualizer_title">Визуализация музыки</string>

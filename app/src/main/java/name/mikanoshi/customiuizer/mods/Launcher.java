@@ -333,6 +333,7 @@ public class Launcher {
 	}
 
 	private static Class<?> wallpaperUtilsCls = null;
+	@SuppressWarnings("ConstantConditions")
 	private static void applyFolderShade(View folder) {
 		int opt = Integer.parseInt(Helpers.getSharedStringPref(folder.getContext(), "pref_key_launcher_foldershade", "1"));
 		int level = Helpers.getSharedIntPref(folder.getContext(), "pref_key_launcher_foldershade_level", 40);
@@ -340,7 +341,7 @@ public class Launcher {
 		MainModule.mPrefs.put("pref_key_launcher_foldershade_level", level);
 		if (opt == 2) {
 			boolean isLight = false;
-			if (wallpaperUtilsCls != null) try { isLight = (boolean)XposedHelpers.callStaticMethod(wallpaperUtilsCls, "hasAppliedLightWallpaper"); } catch (Throwable t) {}
+			if (wallpaperUtilsCls != null) try { isLight = (boolean)XposedHelpers.callStaticMethod(wallpaperUtilsCls, "hasAppliedLightWallpaper"); } catch (Throwable ignore) {}
 			int bgcolor = (isLight ? 0x00ffffff : 0x00000000) | (Math.round(255 * level / 100f) * 0x1000000);
 			folder.setBackground(new ColorDrawable(bgcolor));
 		} else if (opt == 3) {
@@ -350,7 +351,7 @@ public class Launcher {
 				@Override
 				public Shader resize(int width, int height) {
 					boolean isLight = false;
-					if (wallpaperUtilsCls != null) try { isLight = (boolean)XposedHelpers.callStaticMethod(wallpaperUtilsCls, "hasAppliedLightWallpaper"); } catch (Throwable t) {}
+					if (wallpaperUtilsCls != null) try { isLight = (boolean)XposedHelpers.callStaticMethod(wallpaperUtilsCls, "hasAppliedLightWallpaper"); } catch (Throwable ignore) {}
 					int bgcolor1 = (isLight ? 0x00ffffff : 0x00000000) | (Math.round(255 / 6f * level / 100f) * 0x1000000);
 					int bgcolor2 = (isLight ? 0x00ffffff : 0x00000000) | (Math.round(255 * level / 100f) * 0x1000000);
 					return new LinearGradient(0, 0, 0, height,

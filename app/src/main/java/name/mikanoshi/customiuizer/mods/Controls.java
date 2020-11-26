@@ -344,7 +344,7 @@ public class Controls {
 		} else if (action == 1) {
 			try {
 				Toast.makeText(Helpers.getModuleContext(context), R.string.controls_navbar_noaction, Toast.LENGTH_SHORT).show();
-			} catch (Throwable t) {}
+			} catch (Throwable ignore) {}
 			return false;
 		} else {
 			return GlobalActions.handleAction(context, key);
@@ -398,7 +398,7 @@ public class Controls {
 		if (kbrCls != null) try {
 			Drawable lripple = (Drawable)kbrCls.getConstructor(Context.class, View.class).newInstance(mContext, leftbtn);
 			leftbtn.setBackground(lripple);
-		} catch (Throwable t) {}
+		} catch (Throwable ignore) {}
 		leftbtn.setClickable(true);
 		leftbtn.setHapticFeedbackEnabled(true);
 		leftbtn.setOnClickListener(new View.OnClickListener() {
@@ -441,7 +441,7 @@ public class Controls {
 		if (kbrCls != null) try {
 			Drawable rripple = (Drawable)kbrCls.getConstructor(Context.class, View.class).newInstance(mContext, rightbtn);
 			rightbtn.setBackground(rripple);
-		} catch (Throwable t) {}
+		} catch (Throwable ignore) {}
 		rightbtn.setClickable(true);
 		rightbtn.setHapticFeedbackEnabled(true);
 		rightbtn.setOnClickListener(new View.OnClickListener() {

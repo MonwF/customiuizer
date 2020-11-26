@@ -307,6 +307,7 @@ public class GlobalActions {
 	};
 
 	private static final BroadcastReceiver mGlobalReceiver = new BroadcastReceiver() {
+		@SuppressWarnings("ConstantConditions")
 		@SuppressLint({"MissingPermission", "WrongConstant", "NewApi"})
 		public void onReceive(final Context context, Intent intent) {
 			try {

@@ -74,6 +74,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getStringAsInt("system_rotateanim", 1) > 1) System.RotationAnimationRes();
 
 		if (mPrefs.getInt("system_betterpopups_delay", 0) > 0 && !mPrefs.getBoolean("system_betterpopups_nohide")) System.BetterPopupsHideDelaySysHook();
+		if (mPrefs.getInt("various_gboardpadding_port", 0) > 0 || mPrefs.getInt("various_gboardpadding_land", 0) > 0) Various.GboardPaddingHook();
 		if (mPrefs.getBoolean("system_colorizenotiftitle")) System.ColorizedNotificationTitlesHook();
 		if (mPrefs.getBoolean("system_nopassword")) System.NoPasswordHook();
 		if (mPrefs.getBoolean("system_epm")) System.ExtendedPowerMenuHook();
@@ -92,11 +93,13 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getBoolean("system_resizablewidgets")) System.ResizableWidgetsHook();
 		if (mPrefs.getBoolean("system_hidelowbatwarn")) System.NoLowBatteryWarningHook();
 		if (mPrefs.getBoolean("system_screenshot_overlay")) System.TempHideOverlayHook();
+		if (mPrefs.getBoolean("system_nomediamute")) System.NoMediaMuteInDNDHook();
 		if (mPrefs.getBoolean("controls_volumecursor")) Controls.VolumeCursorHook();
 		if (mPrefs.getBoolean("controls_fsg_horiz")) Controls.FSGesturesHook();
 		if (mPrefs.getBoolean("various_alarmcompat")) Various.AlarmCompatHook();
 		if (mPrefs.getStringAsInt("system_iconlabletoasts", 1) > 1) System.IconLabelToastsHook();
 		if (mPrefs.getStringAsInt("system_blocktoasts", 1) > 1) System.SelectiveToastsHook();
+		//System.AudioSilencerHook();
 
 		hideIconsActive =
 			mPrefs.getBoolean("system_statusbaricons_alarm") ||
@@ -203,6 +206,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getInt("system_volumeblur_collapsed", 0) > 0 || mPrefs.getInt("system_volumeblur_expanded", 0) > 0) System.BlurVolumeDialogBackgroundHook(lpparam);
 			if (mPrefs.getInt("system_lstimeout", 9) > 9) System.LockScreenTimeoutHook(lpparam);
 			if (mPrefs.getInt("system_screenshot_floattime", 0) > 0) System.ScreenshotFloatTimeHook(lpparam);
+			if (mPrefs.getInt("system_volumedialogdelay_collapsed", 0) > 0 ||
+				mPrefs.getInt("system_volumedialogdelay_expanded", 0) > 0) System.VolumeDialogAutohideDelayHook(lpparam);
 			if (mPrefs.getInt("controls_fsg_coverage", 60) != 60) Controls.BackGestureAreaHeightHook(lpparam, true);
 			if (mPrefs.getInt("controls_fsg_width", 100) > 100) Controls.BackGestureAreaWidthHook(lpparam, true);
 			if (mPrefs.getInt("controls_navbarleft_action", 1) > 1 ||
@@ -223,6 +228,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_popupnotif")) System.PopupNotificationsHook(lpparam);
 			if (mPrefs.getBoolean("system_betterpopups_nohide")) System.BetterPopupsNoHideHook(lpparam);
 			if (mPrefs.getBoolean("system_betterpopups_swipedown")) System.BetterPopupsSwipeDownHook(lpparam);
+			if (mPrefs.getBoolean("system_betterpopups_allowfloat") && Helpers.is12()) System.BetterPopupsAllowFloatHook(lpparam);
 			if (mPrefs.getBoolean("system_hidemoreicon")) System.NoMoreIconHook(lpparam);
 			if (mPrefs.getBoolean("system_notifafterunlock")) System.ShowNotificationsAfterUnlockHook(lpparam);
 			if (mPrefs.getBoolean("system_notifrowmenu")) System.NotificationRowMenuHook(lpparam);
@@ -257,6 +263,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_nosos")) System.NoSOSHook(lpparam);
 			if (mPrefs.getBoolean("system_usenativerecents")) System.UseNativeRecentsHook(lpparam);
 			if (mPrefs.getBoolean("system_morenotif")) System.MoreNotificationsHook(lpparam);
+			if (mPrefs.getBoolean("system_dndtoggle")) System.VolumeDialogDNDSwitchHook(lpparam);
 			if (mPrefs.getBoolean("launcher_nounlockanim")) System.NoUnlockAnimationHook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_battery1")) System.HideIconsBattery1Hook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_battery2")) System.HideIconsBattery2Hook(lpparam);
@@ -278,7 +285,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getStringAsInt("system_inactivebrightness", 1) > 1) System.InactiveBrightnessSliderHook(lpparam);
 			if (mPrefs.getStringAsInt("system_mobiletypeicon", 1) > 1) System.HideNetworkTypeHook(lpparam);
 			if (mPrefs.getStringAsInt("system_statusbaricons_bluetooth", 1) > 1) System.HideIconsBluetoothHook(lpparam);
-			if (mPrefs.getStringAsInt("system_maxsbicons", 0) != 0) System.MaxNotificationIconsHook(lpparam);
+			if (mPrefs.getStringAsInt("system_maxsbicons", 0) != 0 && Helpers.is12()) System.MaxNotificationIconsHook(lpparam);
 			if (hideIconsActive) System.HideIconsHook(lpparam);
 		}
 

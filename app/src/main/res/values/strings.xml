@@ -186,8 +186,15 @@
 	<string name="system_separatevolume_summ">Allow to configure separate volume for rings/notifications/system sounds in Settings</string>
 	<string name="system_separatevolume_slider_title">Notification volume slider</string>
 	<string name="system_separatevolume_slider_summ">Add notification slider to expanded volume dialog</string>
+	<string name="system_nomediamute_title">No media mute</string>
+	<string name="system_nomediamute_summ">Do not set media volume to zero in Do Not Disturb mode</string>
+	<string name="system_dndtoggle_title">DND mode toggle</string>
+	<string name="system_dndtoggle_summ">Make button in collapsed volume dialog toggle Do Not Disturb mode instead of Silent mode</string>
 	<string name="system_volumetimer_title">Extended timers</string>
 	<string name="system_volumetimer_summ">Add more intervals to timers for Silent and Do Not Disturb modes</string>
+	<string name="system_volumedialogdelay_collapsed_title">Volume dialog autohide delay</string>
+	<string name="system_volumedialogdelay_collapsed_summ">Collapsed</string>
+	<string name="system_volumedialogdelay_expanded_summ">Expanded</string>
 	<string name="system_volumesteps_title">Volume steps multiplier</string>
 	<string name="system_volumesteps_summ">Change number of volume steps for each stream type</string>
 	<string name="system_visualizer_title">Music visualizer</string>
@@ -380,6 +387,8 @@
 	<string name="system_betterpopups_delay_title">Auto hide delay</string>
 	<string name="system_betterpopups_nohide_title">No auto hide</string>
 	<string name="system_betterpopups_nohide_summ">Do not dismiss popups automatically</string>
+	<string name="system_betterpopups_allowfloat_title">Allow floating window</string>
+	<string name="system_betterpopups_allowfloat_summ">Open app in a floating window on swipe down gesture if notification has an appropriate click action defined</string>
 	<string name="system_betterpopups_swipedown_title">Enable swipe down</string>
 	<string name="system_betterpopups_swipedown_summ">Open notification drawer on swipe down gesture</string>
 	<string name="system_mods_applock">App lock</string>
@@ -594,6 +603,8 @@
 	<string name="various_installappinfo_current">current</string>
 	<string name="various_alarmcompat_title">Alarm clock compatibility</string>
 	<string name="various_alarmcompat_summ">Make selected apps display correct next alarm time set by stock MIUI Clock app</string>
+	<string name="various_gboardpadding_port_title">Bottom padding in portrait</string>
+	<string name="various_gboardpadding_land_title">Bottom padding in landscape</string>
 	<string name="various_showcallui_title">Show call UI</string>
 	<string name="various_showcallui_summ">Define when UI for incoming call should be displayed instead of popup notification</string>
 	<string name="various_calluibright_title">Screen brightness during call</string>
@@ -634,6 +645,7 @@
 	<string name="appsort_storage">Used storage</string>
 	<string name="appsort_install">Installation time</string>
 
+	<string name="gboard">Google Keyboard</string>
 	<string name="calls">Calls</string>
 	<string name="settings">Settings</string>
 

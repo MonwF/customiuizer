@@ -20,10 +20,10 @@ android {
     defaultConfig {
         applicationId "name.mikanoshi.customiuizer"
         minSdkVersion 24
-        //noinspection OldTargetApi
+        //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 27
-        versionCode 55
-        versionName "3.0.0"
+        versionCode 56
+        versionName "3.0.2"
         signingConfig signingConfigs.dev
     }
     buildTypes {

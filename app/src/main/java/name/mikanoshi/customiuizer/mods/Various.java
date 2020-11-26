@@ -610,7 +610,7 @@ public class Various {
 				try {
 					PackageManager mPm = (PackageManager)XposedHelpers.getObjectField(param.thisObject, "mPm");
 					mAppInfo = mPm.getPackageInfo(mPkgInfo.packageName, 0);
-				} catch (Throwable t) {}
+				} catch (Throwable ignore) {}
 
 				Resources modRes = Helpers.getModuleRes(act);
 
@@ -756,7 +756,7 @@ public class Various {
 				PackageInfo mAppInfo = null;
 				try {
 					mAppInfo = act.getPackageManager().getPackageInfo(mPkgInfo.packageName, 0);
-				} catch (Throwable t) {}
+				} catch (Throwable ignore) {}
 
 				//String size = "";
 				//String[] texts = version.getText().toString().split("\\|");
@@ -788,7 +788,7 @@ public class Various {
 	public static void MiuiPackageInstallerServiceHook(LoadPackageParam lpparam) {
 		MethodHook hook = new MethodHook() {
 			@Override
-			@SuppressWarnings({"unchecked"})
+			@SuppressWarnings({"unchecked", "ConstantConditions"})
 			protected void after(MethodHookParam param) throws Throwable {
 				try {
 					if (param.args[0] == null) return;
@@ -856,6 +856,22 @@ public class Various {
 				XposedHelpers.setIntField(param.thisObject, "mInnerExpandState", ActionBar.STATE_COLLAPSE);
 				if (opt == 3)
 				XposedHelpers.setBooleanField(param.thisObject, "mResizable", false);
+			}
+		});
+	}
+
+	public static void GboardPaddingHook() {
+		Helpers.findAndHookMethod(findClass("android.os.SystemProperties", null), "get", String.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				String key = (String)param.args[0];
+				if (key.equals("ro.com.google.ime.kb_pad_port_b")) {
+					int opt = MainModule.mPrefs.getInt("various_gboardpadding_port", 0);
+					if (opt > 0) param.setResult(String.valueOf(opt));
+				} else if (key.equals("ro.com.google.ime.kb_pad_land_b")) {
+					int opt = MainModule.mPrefs.getInt("various_gboardpadding_land", 0);
+					if (opt > 0) param.setResult(String.valueOf(opt));
+				}
 			}
 		});
 	}
