@@ -35,6 +35,9 @@
 		android:title="@string/system_mods_betterpopups"
 		android:key="pref_key_system_cat_betterpopups" />
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:title="@string/system_mods_floatingwindows"
+		android:key="pref_key_system_cat_floatingwindows" />
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
 		android:title="@string/system_mods_applock"
 		android:key="pref_key_system_cat_applock" />
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx

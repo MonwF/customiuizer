@@ -30,7 +30,8 @@
 	<string name="snooze_repost">Возобновление</string>
 
 	<string name="warning">Внимание!</string>
-	<string name="warning_blacklist">Опция чёрного/белого списка активна в Xposed Framework, это может привести к неработоспособности модов</string>
+	<string name="warning_blacklist">Опция чёрного/белого списка активна в Xposed Framework, это может привести к неработоспособности модов.</string>
+	<string name="warning_blacklist_sdk">Кроме того, модуль был установлен из маркета, где находится более ограниченная версия. Рекомендуется переустановить модуль из любого другого источника.</string>
 	<string name="module_not_active">Модуль CustoMIUIzer не активен! Откройте приложение Xposed, активируйте модуль и перезагрузитесь.</string>
 	<string name="backup_restore_info">Ваши настройки были восстановлены из Google Cloud. Если мод Vol2wake был активен, отключите его и включите снова, после этого сделайте полную перезагрузку.</string>
 
@@ -399,7 +400,7 @@
 	<string name="launcher_mods">Рабочий стол MIUI</string>
 	<string name="launcher_title">Рабочий стол</string>
 	<string name="launcher_summ">Отображать моды для выбранного ланчера. Только для наглядности, никак не влияет на сами моды.</string>
-	<string name="launcher_compat_title">Режим совместимости</string>
+	<string name="launcher_compat_title">Режим производительности</string>
 	<string name="launcher_compat_summ">Альтернативный метод применения всех модов ланчера</string>
 	<string name="launcher_swipedownaction_summ">Присвоить действие жесту сверху вниз одним пальцем на любом домашнем экране</string>
 	<string name="launcher_swipedownaction_title">Действие на свайп вниз (1 пальцем)</string>
@@ -619,6 +620,11 @@
 	<string name="system_betterpopups_allowfloat_summ">Открывает приложение в плавающем окне по свайпу вниз, если у уведомления задано подходящее действие на нажатие</string>
 	<string name="system_betterpopups_swipedown_title">Активировать свайп вниз</string>
 	<string name="system_betterpopups_swipedown_summ">Открывает панель уведомлений по свайпу вниз</string>
+	<string name="system_mods_floatingwindows">Плавающие окна</string>
+	<string name="system_fw_noblacklist_title">Отключить чёрный список</string>
+	<string name="system_fw_noblacklist_summ">Разрешает открывать любое приложение в плавающем окне</string>
+	<string name="system_fw_sticky_title">Запоминать состояние</string>
+	<string name="system_fw_sticky_summ">Позволяет запускать приложения в плавающих окнах пока они не переведены на полный экран вручную</string>
 	<string name="system_mods_applock">Защита приложений</string>
 	<string name="system_applock_title">Менее строгая защита приложений</string>
 	<string name="system_applock_summ">Отключает блокировку приложений при блокировке устройства, если выбрана опция её активации при выходе из приложения</string>
@@ -778,6 +784,12 @@
 	<string name="system_maxbrightness_title">Максимальная автояркость</string>
 	<string name="system_autobrightness_hlg_title">Всегда использовать нелинейную шкалу</string>
 	<string name="system_autobrightness_hlg_summ">Включить, если проценты яркости в моде не совпадают с реальными процентами на Android версиях ниже 9</string>
+	<string name="system_audiosilencer_title">Аудио глушитель</string>
+	<string name="system_audiosilencer_summ">Позволяет заглушить любой уникально опознаваемый звук</string>
+	<string name="system_audiosilencer_last_title">Обновить список</string>
+	<string name="system_audiosilencer_last_summ">Получить список последних воспроизведённых звуков</string>
+	<string name="system_audiosilencer_silenced">Заглушённые звуки</string>
+	<string name="system_audiosilencer_played">Воспроизведённые звуки</string>
 	<string name="system_nosafevolume_title">Отключить предупреждение о высокой громкости</string>
 	<string name="system_nosafevolume_summ">Не показывать диалог при достижении небезопасного уровня громкости</string>
 	<string name="system_noducking_title">Отключить заглушение</string>
@@ -966,4 +978,7 @@
 	<string name="white_color">Белый</string>
 	<string name="black_color">Чёрный</string>
 	<string name="auto_color">Цвет статус бара</string>
+
+	<string name="type_file">файл</string>
+	<string name="type_res">ресурс</string>
 </resources>

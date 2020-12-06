@@ -71,6 +71,15 @@ public class System extends SubFragment {
 						return true;
 					}
 				});
+				findPreference("pref_key_system_audiosilencer_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						Bundle args = new Bundle();
+						args.putString("key", "pref_key_system_audiosilencer_sounds");
+						openSubFragment(new System_AudioSilencer(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.system_audiosilencer_title, R.layout.prefs_system_audiosilencer);
+						return true;
+					}
+				});
 				break;
 			case "pref_key_system_cat_vibration":
 				findPreference("pref_key_system_vibration_apps").setEnabled(!Objects.equals(Helpers.prefs.getString("pref_key_system_vibration", "1"), "1"));

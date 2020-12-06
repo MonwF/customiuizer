@@ -21,6 +21,11 @@ public class CategorySelector extends SubFragment {
 		Bundle args = getArguments();
 		cat = args.getString("cat");
 
+		if ("pref_key_system".equals(cat)) {
+			if (!Helpers.is12())
+			((PreferenceScreen)findPreference("pref_key_cat")).removePreference(findPreference("pref_key_system_cat_floatingwindows"));
+		}
+
 		PreferenceScreen screen = (PreferenceScreen)findPreference("pref_key_cat");
 		int cnt = screen.getPreferenceCount();
 		for (int i = 0; i < cnt; i++)

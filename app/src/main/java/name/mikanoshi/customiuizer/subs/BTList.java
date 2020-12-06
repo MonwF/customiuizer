@@ -46,6 +46,7 @@ public class BTList extends SubFragment {
 		public void onReceive(Context context, Intent intent) {
 			ArrayList<BluetoothDevice> deviceList = intent.getParcelableArrayListExtra("device_list");
 			btList.clear();
+			if (deviceList != null)
 			for (BluetoothDevice device: deviceList)
 			btList.add(new Pair<String, String>(device.getAddress(), device.getName()));
 			btAdapter1.notifyDataSetChanged();
@@ -83,12 +84,13 @@ public class BTList extends SubFragment {
 			cat2.setBackgroundResource(resId);
 
 			@SuppressLint("CutPasteId") ViewStub locationStub = getView().findViewById(R.id.fetch_devices);
-			locationStub.setLayoutResource(Helpers.is11() ? R.layout.pref_item11 : R.layout.pref_item);
+			locationStub.setLayoutResource(R.layout.pref_item);
 			locationStub.inflate();
 
 			@SuppressLint("CutPasteId") View location = getView().findViewById(R.id.fetch_devices);
 			((TextView)location.findViewById(android.R.id.title)).setText(R.string.bt_fetch_devices_title);
 			((TextView)location.findViewById(android.R.id.summary)).setText(R.string.bt_fetch_devices_summ);
+			Helpers.setMiuiPrefItem(location);
 			location.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -139,7 +141,9 @@ public class BTList extends SubFragment {
 	};
 
 	void fetchCachedDevices() {
-		getActivity().sendBroadcast(new Intent(GlobalActions.ACTION_PREFIX + "FetchCachedDevices"));
+		Intent intent = new Intent(GlobalActions.ACTION_PREFIX + "FetchCachedDevices");
+		intent.setPackage("com.android.systemui");
+		getActivity().sendBroadcast(intent);
 	}
 
 	void updateProgressBar() {
@@ -148,9 +152,7 @@ public class BTList extends SubFragment {
 
 	void registerReceivers() {
 		unregisterReceivers();
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(GlobalActions.EVENT_PREFIX + "CACHEDDEVICESUPDATE");
-		getActivity().registerReceiver(devicesReceiver, intentFilter);
+		getActivity().registerReceiver(devicesReceiver, new IntentFilter(GlobalActions.EVENT_PREFIX + "CACHEDDEVICESUPDATE"));
 		handler.postDelayed(getCachedDevices, 1000);
 	}
 
@@ -216,10 +218,12 @@ public class BTList extends SubFragment {
 
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			View row;
-			if (convertView != null)
+			if (convertView != null) {
 				row = convertView;
-			else
-				row = mInflater.inflate(Helpers.is11() ? R.layout.pref_item11 : R.layout.pref_item, parent, false);
+			} else {
+				row = mInflater.inflate(R.layout.pref_item, parent, false);
+				Helpers.setMiuiPrefItem(row);
+			}
 
 			TextView itemTitle = row.findViewById(android.R.id.title);
 			TextView itemSumm = row.findViewById(android.R.id.summary);

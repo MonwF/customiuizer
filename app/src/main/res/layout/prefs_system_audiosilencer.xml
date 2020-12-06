@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent" >
+
+<RelativeLayout
+	android:id="@+id/fields"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical"
+	android:animateLayoutChanges="true">
+
+	<ViewStub
+		android:id="@+id/refresh_list"
+		android:inflatedId="@+id/refresh_list"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" />
+
+	<TextView
+		android:id="@+id/sounds_silenced"
+		android:layout_below="@id/refresh_list"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="left|center_vertical|center_horizontal|center|start"
+		android:text="@string/system_audiosilencer_silenced"
+		style="@style/Widget.InputField.Category.First" />
+
+	<name.mikanoshi.customiuizer.prefs.ListViewEx
+		android:id="@android:id/text1"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/sounds_silenced"
+		android:nestedScrollingEnabled="false"
+		android:overScrollMode="never"
+		android:scrollbars="vertical" />
+
+	<TextView
+		android:id="@+id/sounds_played"
+		android:layout_below="@android:id/text1"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="left|center_vertical|center_horizontal|center|start"
+		android:text="@string/system_audiosilencer_played"
+		style="@style/Widget.InputField.Category.First" />
+
+	<name.mikanoshi.customiuizer.prefs.ListViewEx
+		android:id="@android:id/text2"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/sounds_played"
+		android:nestedScrollingEnabled="false"
+		android:overScrollMode="never"
+		android:scrollbars="vertical" />
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:minHeight="?android:attr/listPreferredItemHeightLarge"
+		android:layout_centerInParent="true"
+		android:gravity="center"
+		android:orientation="vertical"
+		android:layout_below="@id/sounds_played">
+
+		<miui.widget.ProgressBar
+			android:id="@+id/progress_bar"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:visibility="gone"
+			style="@style/Widget.ProgressBar" />
+
+	</LinearLayout>
+
+</RelativeLayout>
+
+</ScrollView>

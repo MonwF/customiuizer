@@ -275,8 +275,11 @@ public class Controls {
 			protected void before(final MethodHookParam param) throws Throwable {
 				Application mContext = (Application)XposedHelpers.callStaticMethod(XposedHelpers.findClass("android.app.ActivityThread", null), "currentApplication");
 				int mStreamType = (int)XposedHelpers.findMethodExact(XposedHelpers.findClass("android.media.MediaPlayer", null), "getAudioStreamType").invoke(param.thisObject);
-				if (mContext != null && (mStreamType == AudioManager.STREAM_MUSIC || mStreamType == 0x80000000))
-				mContext.sendBroadcast(new Intent(GlobalActions.ACTION_PREFIX + "SaveLastMusicPausedTime"));
+				if (mContext != null && (mStreamType == AudioManager.STREAM_MUSIC || mStreamType == 0x80000000)) {
+					Intent intent = new Intent(GlobalActions.ACTION_PREFIX + "SaveLastMusicPausedTime");
+					intent.setPackage("android");
+					mContext.sendBroadcast(intent);
+				}
 			}
 		});
 	}
@@ -289,6 +292,7 @@ public class Controls {
 				if (act == null) return;
 				Intent intent = new Intent(GlobalActions.EVENT_PREFIX + "CHANGE_FOCUSED_APP");
 				intent.putExtra("package", act.getPackageName());
+				intent.setPackage("android");
 				act.sendBroadcast(intent);
 			}
 		});
@@ -667,7 +671,6 @@ public class Controls {
 				isFingerprintPressed = true;
 				wasScreenOn = (boolean)XposedHelpers.callMethod(param.thisObject, "isScreenOn");
 				wasFingerprintUsed = Settings.System.getInt(miuiPWMContext.getContentResolver(), "is_fingerprint_active", 0) == 1;
-
 
 				hasDoubleTap = false;
 				if (wasScreenOn && !wasFingerprintUsed) {

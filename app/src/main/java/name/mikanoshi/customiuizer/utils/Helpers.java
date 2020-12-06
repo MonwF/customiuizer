@@ -72,6 +72,7 @@ import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.LruCache;
 import android.util.Pair;
+import android.util.TypedValue;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.ViewGroup;
@@ -138,27 +139,23 @@ public class Helpers {
 	public static boolean showNewMods = true;
 	public static boolean miuizerModuleActive = false;
 	public static final HashSet<String> newMods = new HashSet<String>(Arrays.asList(
-		"pref_key_system_nomediamute",
-		"pref_key_system_dndtoggle",
-		"pref_key_system_volumedialogdelay_collapsed",
-		"pref_key_system_volumedialogdelay_expanded",
-		"pref_key_system_betterpopups_allowfloat",
-		"pref_key_various_gboardpadding_port",
-		"pref_key_various_gboardpadding_land"
+		"pref_key_system_audiosilencer",
+		"pref_key_system_fw_noblacklist",
+		"pref_key_system_fw_sticky"
 	));
 	public static final HashMap<String, String> l10nProgress = new HashMap<String, String>() {{
 		put("ru-RU", "100.0%");
-		put("zh-CN", "98.7%");
-		put("id", "13.1%");
-		put("tr", "97.4%");
-		put("it", "97.4%");
-		put("pt-BR", "96.1%");
-		put("fr", "25.7%");
-		put("uk-UK", "97.2%");
-		put("es", "98.7%");
-		put("sk", "3.2%");
+		put("zh-CN", "100.0%");
+		put("id", "13.0%");
+		put("tr", "96.0%");
+		put("it", "96.0%");
+		put("pt-BR", "94.7%");
+		put("fr", "25.3%");
+		put("uk-UK", "95.8%");
+		put("es", "98.5%");
+		put("sk", "3.1%");
 		put("cs", "0.0%");
-		put("de", "97.4%");
+		put("de", "96.0%");
 	}};
 
 	public static final ArrayList<String> shortcutIcons = new ArrayList<String>();
@@ -223,6 +220,44 @@ public class Helpers {
 		} catch (Throwable t) {
 			checkbox.setButtonDrawable(R.drawable.btn_checkbox);
 		}
+	}
+
+	public static void setMiuiPrefItem(View item) {
+		item.setBackgroundResource(Helpers.is11() ? R.drawable.list_item_bg : R.drawable.am_list_item_background);
+		TextView title = item.findViewById(android.R.id.title);
+		if (Helpers.is12()) {
+			int resId = item.getResources().getIdentifier("preference_item_bg", "drawable", "miui");
+			if (resId != 0) item.setBackgroundResource(resId);
+			resId = item.getResources().getIdentifier("normal_text_size", "dimen", "miui");
+			if (resId != 0 && title != null) {
+				title.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
+				title.setTextSize(TypedValue.COMPLEX_UNIT_PX, item.getResources().getDimensionPixelSize(resId));
+			}
+			resId = item.getResources().getIdentifier("secondary_text_size", "dimen", "miui");
+			if (resId != 0) {
+				TextView summary = item.findViewById(android.R.id.summary);
+				TextView text1 = item.findViewById(android.R.id.text1);
+				TextView text2 = item.findViewById(android.R.id.text2);
+				int size = item.getResources().getDimensionPixelSize(resId);
+				if (summary != null) summary.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+				if (text1 != null) text1.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+				if (text2 != null) text2.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+			}
+		}
+		if (title != null && "header".equals(title.getTag())) {
+			int resIdSize = item.getResources().getIdentifier("preference_category_text_size", "dimen", "miui");
+			if (resIdSize != 0) title.setTextSize(TypedValue.COMPLEX_UNIT_PX, item.getResources().getDimensionPixelSize(resIdSize));
+		}
+
+		int resIdLeft = item.getResources().getIdentifier("preference_item_padding_left", "dimen", "miui");
+		int resIdRight = item.getResources().getIdentifier("preference_item_padding_right", "dimen", "miui");
+		int resIdTop = item.getResources().getIdentifier("preference_item_padding_top", "dimen", "miui");
+		int resIdBottom = item.getResources().getIdentifier("preference_item_padding_bottom", "dimen", "miui");
+		int paddingLeft = resIdLeft == 0 ? item.getPaddingLeft() : item.getResources().getDimensionPixelSize(resIdLeft);
+		int paddingRight = resIdRight == 0 ? item.getPaddingRight() : item.getResources().getDimensionPixelSize(resIdRight);
+		int paddingTop = resIdTop == 0 ? item.getPaddingTop() : item.getResources().getDimensionPixelSize(resIdTop);
+		int paddingBottom = resIdBottom == 0 ? item.getPaddingBottom() : item.getResources().getDimensionPixelSize(resIdBottom);
+		item.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
 	}
 
 	@SuppressWarnings("ConstantConditions")

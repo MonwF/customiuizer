@@ -45,6 +45,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 				mPrefs.putAll(pref.getAll());
 		}
 
+		if (!startParam.startsSystemServer) return;
+
 		resHooks = new ResourceHooks();
 		GlobalActions.miuizerSettingsResInit();
 
@@ -94,12 +96,13 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getBoolean("system_hidelowbatwarn")) System.NoLowBatteryWarningHook();
 		if (mPrefs.getBoolean("system_screenshot_overlay")) System.TempHideOverlayHook();
 		if (mPrefs.getBoolean("system_nomediamute")) System.NoMediaMuteInDNDHook();
+		if (mPrefs.getBoolean("system_audiosilencer")) System.AudioSilencerHook();
+		if (mPrefs.getBoolean("system_fw_noblacklist")) System.NoFloatingWindowBlacklistHook();
 		if (mPrefs.getBoolean("controls_volumecursor")) Controls.VolumeCursorHook();
 		if (mPrefs.getBoolean("controls_fsg_horiz")) Controls.FSGesturesHook();
 		if (mPrefs.getBoolean("various_alarmcompat")) Various.AlarmCompatHook();
 		if (mPrefs.getStringAsInt("system_iconlabletoasts", 1) > 1) System.IconLabelToastsHook();
 		if (mPrefs.getStringAsInt("system_blocktoasts", 1) > 1) System.SelectiveToastsHook();
-		//System.AudioSilencerHook();
 
 		hideIconsActive =
 			mPrefs.getBoolean("system_statusbaricons_alarm") ||
@@ -165,6 +168,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_clearalltasks")) System.ClearAllTasksHook(lpparam);
 			if (mPrefs.getBoolean("system_snoozedmanager")) System.MoreSnoozeOptionsServiceHook(lpparam);
 			if (mPrefs.getBoolean("system_nodarkforce")) System.NoDarkForceHook(lpparam);
+			if (mPrefs.getBoolean("system_audiosilencer")) System.AudioSilencerServiceHook(lpparam);
+			if (mPrefs.getBoolean("system_fw_sticky")) System.StickyFloatingWindowsHook(lpparam);
 			if (mPrefs.getBoolean("controls_powerflash")) Controls.PowerKeyHook(lpparam);
 			if (mPrefs.getBoolean("controls_fingerprintfailure")) Controls.FingerprintHapticFailureHook(lpparam);
 			if (mPrefs.getBoolean("controls_fingerprintscreen")) Controls.FingerprintScreenOnHook(lpparam);
@@ -369,6 +374,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getStringAsInt("launcher_foldershade", 1) > 1) Launcher.FolderShadeHook(lpparam);
 		if (mPrefs.getStringAsInt("launcher_closefolders", 1) > 1) Launcher.CloseFolderOnLaunchHook(lpparam);
 		if (lpparam.packageName.equals("com.miui.home")) {
+			if (mPrefs.getInt("system_recents_blur", 100) < 100) Launcher.RecentsBlurRatioHook(lpparam);
 			if (mPrefs.getInt("system_recommended_first_action", 1) > 1 ||
 				mPrefs.getInt("system_recommended_second_action", 1) > 1 ||
 				mPrefs.getInt("system_recommended_third_action", 1) > 1 ||
@@ -377,7 +383,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getInt("controls_fsg_width", 100) > 100) Controls.BackGestureAreaWidthHook(lpparam, false);
 			if (mPrefs.getBoolean("controls_fsg_horiz")) Launcher.FSGesturesHook(lpparam);
 			if (mPrefs.getBoolean("system_removecleaner")) System.HideMemoryCleanHook(lpparam, true);
-			if (mPrefs.getBoolean("launcher_fixstatusbarmode")) Launcher.FixStatusBarModeHook(lpparam);
+			//if (mPrefs.getBoolean("launcher_fixstatusbarmode")) Launcher.FixStatusBarModeHook(lpparam);
 			if (mPrefs.getBoolean("launcher_fixanim")) Launcher.FixAnimHook(lpparam);
 			if (mPrefs.getBoolean("launcher_hideseekpoints")) Launcher.HideSeekPointsHook(lpparam);
 			if (mPrefs.getBoolean("launcher_privacyapps_gest")) Launcher.PrivacyFolderHook(lpparam);

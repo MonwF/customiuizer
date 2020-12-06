@@ -18,9 +18,9 @@ public class HelperReceiver extends BroadcastReceiver {
 		if (intent.getAction().equals("name.mikanoshi.customiuizer.SAVEEXCEPTION")) {
 			try {
 				Throwable thw = (Throwable)intent.getSerializableExtra("throwable");
+				if (thw == null) return;
 				StringWriter stackTrace = new StringWriter();
-				thw.printStackTrace(new PrintWriter(stackTrace));
-				
+
 				File f = new File(ctx.getFilesDir().getAbsolutePath() + "/uncaught_exceptions");
 				if (!f.exists()) f.createNewFile();
 				

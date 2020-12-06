@@ -186,13 +186,13 @@
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_launcher_cat_bugfixes"
 		android:title="@string/launcher_bugfixes">
-
+<!--
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_fixstatusbarmode"
 			android:title="@string/launcher_fixstatusbarmode_title"
 			android:summary="@string/launcher_fixstatusbarmode_summ"
 			android:defaultValue="false" />
-
+-->
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_fixanim"
 			android:title="@string/launcher_fixanim_title"

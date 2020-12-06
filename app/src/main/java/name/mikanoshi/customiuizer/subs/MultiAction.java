@@ -87,8 +87,8 @@ public class MultiAction extends SubFragment {
 		actionSpinner.entries = getResources().getStringArray(entriesResId);
 		actionSpinner.entryValues = getResources().getIntArray(entryValuesResId);
 		actionSpinner.setTag(key + "_action");
-		if (key.equals("pref_key_launcher_swipedown"))
-		actionSpinner.addDisabledItems(1);
+		//if (key.equals("pref_key_launcher_swipedown"))
+		//actionSpinner.addDisabledItems(1);
 		actionSpinner.init(Helpers.prefs.getInt(key + "_action", 1));
 		actionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override

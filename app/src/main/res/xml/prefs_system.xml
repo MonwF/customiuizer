@@ -210,6 +210,19 @@
 			miuizer:child="true"
 			miuizer:countAsSummary="true" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_audiosilencer"
+			android:title="@string/system_audiosilencer_title"
+			android:summary="@string/system_audiosilencer_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_audiosilencer_cat"
+			android:title="@string/system_audiosilencer_silenced"
+			android:dependency="pref_key_system_audiosilencer"
+			miuizer:dynamic="true"
+			miuizer:child="true" />
+
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
@@ -791,6 +804,24 @@
 			miuizer:format="@string/format_d_s"
 			miuizer:offtext="@string/array_default"
 			miuizer:dynamic="true" />
+
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:key="pref_key_system_cat_floatingwindows"
+		android:title="@string/system_mods_floatingwindows">
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_fw_noblacklist"
+			android:title="@string/system_fw_noblacklist_title"
+			android:summary="@string/system_fw_noblacklist_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_fw_sticky"
+			android:title="@string/system_fw_sticky_title"
+			android:summary="@string/system_fw_sticky_summ"
+			android:defaultValue="false" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 

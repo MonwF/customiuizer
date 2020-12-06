@@ -12,6 +12,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
@@ -43,6 +44,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
@@ -58,6 +60,7 @@ import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.Helpers.MethodHook;
 
 import static de.robv.android.xposed.XposedHelpers.findClass;
+import static de.robv.android.xposed.XposedHelpers.findClassIfExists;
 import static de.robv.android.xposed.XposedHelpers.findField;
 import static de.robv.android.xposed.XposedHelpers.findMethodExact;
 import static java.lang.System.currentTimeMillis;
@@ -205,6 +208,18 @@ public class GlobalActions {
 					}
 
 					if (action.equals(ACTION_PREFIX + "ExpandSettings")) try {
+						if (Helpers.is12()) {
+							Object controller = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", context.getClassLoader()), "get", findClassIfExists("com.android.systemui.miui.statusbar.policy.ControlPanelController", context.getClassLoader()));
+							boolean isUseControlCenter = (boolean)XposedHelpers.callMethod(controller, "isUseControlCenter");
+							if (isUseControlCenter) {
+								if ((boolean)XposedHelpers.callMethod(controller, "isQSFullyCollapsed"))
+									XposedHelpers.callMethod(controller, "openPanel");
+								else
+									XposedHelpers.callMethod(controller, "collapsePanel", true);
+								return;
+							}
+						}
+
 						Object mNotificationPanel = XposedHelpers.getObjectField(mStatusBar, "mNotificationPanel");
 						boolean mPanelExpanded = (boolean)XposedHelpers.getObjectField(mNotificationPanel, "mPanelExpanded");
 						boolean mQsExpanded = (boolean)XposedHelpers.getObjectField(mNotificationPanel, "mQsExpanded");
@@ -771,6 +786,7 @@ public class GlobalActions {
 						if (param.args[1] != null) try {
 							Intent intent = new Intent("name.mikanoshi.customiuizer.SAVEEXCEPTION");
 							intent.putExtra("throwable", (Throwable)param.args[1]);
+							intent.setPackage(Helpers.modulePkg);
 							ctx.sendBroadcast(intent);
 						} catch (Throwable t) {}
 					}
@@ -811,6 +827,7 @@ public class GlobalActions {
 				Intent fullscreenIntent = new Intent(EVENT_PREFIX + "CHANGE_FULLSCREEN");
 				boolean isFullScreen = flags != 0 && !"com.android.systemui".equals(act.getPackageName()) && (flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN;
 				fullscreenIntent.putExtra("fullscreen", isFullScreen);
+				fullscreenIntent.setPackage("android");
 				act.sendBroadcast(fullscreenIntent);
 			}
 		});
@@ -1036,7 +1053,7 @@ public class GlobalActions {
 	public static boolean expandEQS(Context context) {
 		try {
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "ExpandSettings"));
-			return false;
+			return true;
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 			return false;

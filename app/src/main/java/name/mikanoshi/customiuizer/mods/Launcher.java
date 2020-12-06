@@ -1398,6 +1398,45 @@ public class Launcher {
 //		});
 	}
 
+	public static void RecentsBlurRatioHook(LoadPackageParam lpparam) {
+		Helpers.hookAllConstructors("com.miui.home.recents.views.RecentsView", lpparam.classLoader, new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				XposedHelpers.setFloatField(param.thisObject, "mDefaultScrimAlpha", 0.15f);
+				XposedHelpers.setObjectField(param.thisObject, "mBackgroundScrim", new ColorDrawable(Color.argb(38, 0, 0, 0)).mutate());
+			}
+		});
+
+		Helpers.hookAllConstructors("com.miui.home.recents.RecentsViewStateController", lpparam.classLoader, new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				Context mContext = (Context)param.args[0];
+				Handler mHandler = new Handler(mContext.getMainLooper());
+
+				new Helpers.SharedPrefObserver(mContext, mHandler, "pref_key_system_recents_blur", 100) {
+					@Override
+					public void onChange(String name, int defValue) {
+						MainModule.mPrefs.put(name, Helpers.getSharedIntPref(mContext, name, 100));
+					}
+				};
+			}
+		});
+
+		Helpers.hookAllMethods("com.miui.home.launcher.common.Utilities", lpparam.classLoader, "startBlurAnim", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				param.args[2] = (float)param.args[2] * MainModule.mPrefs.getInt("system_recents_blur", 100) / 100f;
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.home.launcher.common.Utilities", lpparam.classLoader, "fastBlur", float.class, Window.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				param.args[0] = (float)param.args[0] * MainModule.mPrefs.getInt("system_recents_blur", 100) / 100f;
+			}
+		});
+	}
+
 //	public static void NoInternationalBuildHook(LoadPackageParam lpparam) {
 //		XposedHelpers.setStaticBooleanField(XposedHelpers.findClass("miui.os.Build", null), "IS_INTERNATIONAL_BUILD", false);
 //	}

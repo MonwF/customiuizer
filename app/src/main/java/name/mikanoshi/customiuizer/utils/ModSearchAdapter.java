@@ -56,10 +56,12 @@ public class ModSearchAdapter extends BaseAdapter implements Filterable {
 
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		View row;
-		if (convertView != null)
+		if (convertView != null) {
 			row = convertView;
-		else
-			row = mInflater.inflate(Helpers.is11() ? R.layout.pref_item11 : R.layout.pref_item, parent, false);
+		} else {
+			row = mInflater.inflate(R.layout.pref_item, parent, false);
+			Helpers.setMiuiPrefItem(row);
+		}
 
 		TextView itemTitle = row.findViewById(android.R.id.title);
 		TextView itemSummary = row.findViewById(android.R.id.summary);

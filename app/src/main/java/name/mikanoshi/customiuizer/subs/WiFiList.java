@@ -57,6 +57,7 @@ public class WiFiList extends SubFragment {
 				updateProgressBar();
 			} else if (action.equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
 				NetworkInfo netInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+				if (netInfo == null) return;
 				if (netInfo.getDetailedState() == NetworkInfo.DetailedState.CONNECTED) isWiFiReady();
 				if (netInfo.getDetailedState() == NetworkInfo.DetailedState.CONNECTED || netInfo.getDetailedState() == NetworkInfo.DetailedState.DISCONNECTED) {
 					handler.removeCallbacks(getScanResults);
@@ -105,12 +106,13 @@ public class WiFiList extends SubFragment {
 			cat2.setBackgroundResource(resId);
 
 			@SuppressLint("CutPasteId") ViewStub locationStub = getView().findViewById(R.id.location_settings);
-			locationStub.setLayoutResource(Helpers.is11() ? R.layout.pref_item11 : R.layout.pref_item);
+			locationStub.setLayoutResource(R.layout.pref_item);
 			locationStub.inflate();
 
 			@SuppressLint("CutPasteId") View location = getView().findViewById(R.id.location_settings);
 			((TextView)location.findViewById(android.R.id.title)).setText(R.string.wifi_location_title);
 			((TextView)location.findViewById(android.R.id.summary)).setText(R.string.wifi_location_summ);
+			Helpers.setMiuiPrefItem(location);
 			location.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -243,10 +245,12 @@ public class WiFiList extends SubFragment {
 
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			View row;
-			if (convertView != null)
+			if (convertView != null) {
 				row = convertView;
-			else
-				row = mInflater.inflate(Helpers.is11() ? R.layout.pref_item11 : R.layout.pref_item, parent, false);
+			} else {
+				row = mInflater.inflate(R.layout.pref_item, parent, false);
+				Helpers.setMiuiPrefItem(row);
+			}
 
 			TextView itemTitle = row.findViewById(android.R.id.title);
 			TextView itemSumm = row.findViewById(android.R.id.summary);

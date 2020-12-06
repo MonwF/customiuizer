@@ -22,6 +22,7 @@ import name.mikanoshi.customiuizer.SubFragment;
 import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.PreferenceAdapter;
 
+@SuppressWarnings("ConstantConditions")
 public class SortableList extends SubFragment {
 
 	String key;
@@ -39,7 +40,7 @@ public class SortableList extends SubFragment {
 		supressMenu = true;
 		super.onActivityCreated(savedInstanceState);
 		ActionBar actionBar = getActionBar();
-		if (actionBar != null) actionBar.showSplitActionBar(true, true);
+		if (actionBar != null) try { actionBar.showSplitActionBar(true, true); } catch (Throwable ignore) {}
 
 		Bundle args = getArguments();
 		key = args.getString("key");

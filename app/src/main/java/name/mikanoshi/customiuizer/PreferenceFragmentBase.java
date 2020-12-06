@@ -174,7 +174,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 		} catch (Throwable ignore) {}
 
 		if (supressMenu) return;
-		if (actionBar != null) actionBar.showSplitActionBar(false, false);
+		if (actionBar != null) try { actionBar.showSplitActionBar(false, false); } catch (Throwable ignore) {}
 		setImmersionMenuEnabled(true);
 
 		View view = getView();

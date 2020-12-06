@@ -2,7 +2,7 @@
 <resources>
     <string name="app_about">Sobre</string>
     <string name="about_version">Versão %1$s</string>
-    <string name="about_dev">"  Desenvolvedor: Mikanoshi   |   Tradutor: FeLLzMODs"</string>
+    <string name="about_dev">por Mikanoshi</string>
     <string name="about_dynamic">Geralmente, os mods exigem que a reinicialização suave seja ativada ou desativada, mas aqueles marcados com ⟲ requerem apenas uma reinicialização suave depois que seu valor foi alterado de padrão para personalizado, as alterações subsequentes são aplicadas imediatamente.</string>
     <string name="about_unsupported">Mods marcados com ⨯ não são suportados neste dispositivo.</string>
     <string name="title_snoozed">Notificações adiadas</string>

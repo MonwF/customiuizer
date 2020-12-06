@@ -49,6 +49,7 @@ public class SnoozedFragment extends PreferenceFragmentBase {
 
 	BroadcastReceiver updateReceiver = new BroadcastReceiver() {
 		@Override
+		@SuppressWarnings("ConstantConditions")
 		public void onReceive(Context context, Intent intent) {
 			handler.removeCallbacks(fetchFailed);
 			HashMap<String, ArrayList<SnoozeData>> tmpList = new HashMap<String, ArrayList<SnoozeData>>();
@@ -96,10 +97,10 @@ public class SnoozedFragment extends PreferenceFragmentBase {
 		supressMenu = true;
 		super.onActivityCreated(savedInstanceState);
 		ActionBar actionBar = getActionBar();
-		if (actionBar != null) {
+		if (actionBar != null) try {
 			actionBar.setTitle(R.string.title_snoozed);
 			actionBar.showSplitActionBar(true, true);
-		}
+		} catch (Throwable ignore) {}
 		setImmersionMenuEnabled(false);
 
 		if (getView() == null) return;

@@ -7,6 +7,7 @@ import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.ActivityOptions;
 import android.app.Application;
 import android.app.Dialog;
 import android.app.KeyguardManager;
@@ -51,7 +52,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.hardware.usb.UsbManager;
 import android.media.AudioManager;
-import android.media.MediaDataSource;
 import android.media.MediaMetadata;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
@@ -148,6 +148,7 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -173,6 +174,8 @@ import name.mikanoshi.customiuizer.utils.BatteryIndicator;
 import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.Helpers.MethodHook;
 import name.mikanoshi.customiuizer.utils.Helpers.MimeType;
+import name.mikanoshi.customiuizer.utils.SoundData;
+import static name.mikanoshi.customiuizer.mods.GlobalActions.ACTION_PREFIX;
 
 public class System {
 
@@ -398,7 +401,7 @@ public class System {
 		if (mContext == null)
 			Helpers.log("checkBTConnections", "mContext is NULL!");
 		else
-			mContext.sendBroadcast(new Intent(GlobalActions.ACTION_PREFIX + "UnlockBTConnection"));
+			mContext.sendBroadcast(new Intent(ACTION_PREFIX + "UnlockBTConnection"));
 	}
 
 //	private static void setLockScreenDisabled(ClassLoader classLoader, Object thisObject, boolean state) {
@@ -451,7 +454,7 @@ public class System {
 							XposedBridge.log(t);
 						}
 					}
-				}, new IntentFilter(GlobalActions.ACTION_PREFIX + "UnlockStrongAuth"));
+				}, new IntentFilter(ACTION_PREFIX + "UnlockStrongAuth"));
 			}
 		});
 
@@ -475,7 +478,7 @@ public class System {
 					}
 					isUnlockedInnerCall = true;
 					XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mUpdateMonitor"), "reportSuccessfulStrongAuthUnlockAttempt");
-					Intent unlockIntent = new Intent(GlobalActions.ACTION_PREFIX + "UnlockStrongAuth");
+					Intent unlockIntent = new Intent(ACTION_PREFIX + "UnlockStrongAuth");
 					mContext.sendBroadcast(unlockIntent);
 				}
 			}
@@ -487,14 +490,14 @@ public class System {
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 				IntentFilter filter = new IntentFilter();
 				filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
-				filter.addAction(GlobalActions.ACTION_PREFIX + "UnlockSetForced");
-				filter.addAction(GlobalActions.ACTION_PREFIX + "UnlockBTConnection");
+				filter.addAction(ACTION_PREFIX + "UnlockSetForced");
+				filter.addAction(ACTION_PREFIX + "UnlockBTConnection");
 				mContext.registerReceiver(new BroadcastReceiver() {
 					@Override
 					public void onReceive(Context context, Intent intent) {
 						String action = intent.getAction();
 
-						if (action.equals(GlobalActions.ACTION_PREFIX + "UnlockSetForced"))
+						if (action.equals(ACTION_PREFIX + "UnlockSetForced"))
 						forcedOption = intent.getIntExtra("system_noscreenlock_force", -1);
 
 						boolean isShowing = (boolean)XposedHelpers.callMethod(param.thisObject, "isShowing");
@@ -506,7 +509,7 @@ public class System {
 						if (action.equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
 							NetworkInfo netInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
 							if (netInfo.isConnected()) isTrusted = isTrustedWiFi(mContext);
-						} else if (action.equals(GlobalActions.ACTION_PREFIX + "UnlockBTConnection")) {
+						} else if (action.equals(ACTION_PREFIX + "UnlockBTConnection")) {
 							isTrusted = isTrustedBt(lpparam.classLoader);
 						}
 
@@ -521,7 +524,7 @@ public class System {
 								XposedHelpers.callMethod(param.thisObject, "resetStateLocked");
 							isUnlockedInnerCall = true;
 							XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mUpdateMonitor"), "reportSuccessfulStrongAuthUnlockAttempt");
-							Intent unlockIntent = new Intent(GlobalActions.ACTION_PREFIX + "UnlockStrongAuth");
+							Intent unlockIntent = new Intent(ACTION_PREFIX + "UnlockStrongAuth");
 							mContext.sendBroadcast(unlockIntent);
 						}
 					}
@@ -603,9 +606,10 @@ public class System {
 							if (mDevice != null) deviceList.add(mDevice);
 						}
 						updateIntent.putParcelableArrayListExtra("device_list", deviceList);
+						updateIntent.setPackage(Helpers.modulePkg);
 						mContext.sendBroadcast(updateIntent);
 					}
-				}, new IntentFilter(GlobalActions.ACTION_PREFIX + "FetchCachedDevices"));
+				}, new IntentFilter(ACTION_PREFIX + "FetchCachedDevices"));
 			}
 		});
 
@@ -1043,7 +1047,7 @@ public class System {
 				Set<String> selectedApps = Helpers.getSharedStringSetPref(mContext, "pref_key_system_popupnotif_apps");
 				String pkgName = (String)XposedHelpers.callMethod(param.args[0], "getPackageName");
 				if (selectedApps.contains(pkgName)) {
-					Intent expandNotif = new Intent(GlobalActions.ACTION_PREFIX + "ExpandNotifications");
+					Intent expandNotif = new Intent(ACTION_PREFIX + "ExpandNotifications");
 					expandNotif.putExtra("expand_only", true);
 					mContext.sendBroadcast(expandNotif);
 				}
@@ -1524,7 +1528,8 @@ public class System {
 			}
 		});
 
-		Helpers.findAndHookMethod(nscCls, "updateNetworkSpeed", new MethodHook() {
+		Method asyncMethod = XposedHelpers.findMethodExactIfExists(nscCls, "updateNetworkSpeedAsync");
+		Helpers.findAndHookMethod(nscCls, asyncMethod != null ? "updateNetworkSpeedAsync" : "updateNetworkSpeed", new MethodHook() {
 			@Override
 			protected void before(final MethodHookParam param) throws Throwable {
 				boolean isConnected = false;
@@ -1803,12 +1808,14 @@ public class System {
 				MotionEvent me = (MotionEvent)param.args[0];
 				if (me.getActionMasked() == MotionEvent.ACTION_DOWN) {
 					boolean mAllowSwipingDown = true;
-					if (Helpers.is12()) {
+					if (Helpers.is12()) try {
 						Object mPickedChild = XposedHelpers.getObjectField(param.thisObject, "mPickedChild");
 						if (mPickedChild != null) {
 							View mMiniBar = (View)XposedHelpers.callMethod(mPickedChild, "getMiniWindowBar");
 							if (mMiniBar != null && mMiniBar.getVisibility() == View.VISIBLE) mAllowSwipingDown = false;
 						}
+					} catch (Throwable t) {
+						XposedBridge.log(t);
 					}
 					XposedHelpers.setAdditionalInstanceField(param.thisObject, "mAllowSwipingDown", mAllowSwipingDown);
 				}
@@ -1829,7 +1836,7 @@ public class System {
 							return;
 						}
 
-						Intent expandNotif = new Intent(GlobalActions.ACTION_PREFIX + "ExpandNotifications");
+						Intent expandNotif = new Intent(ACTION_PREFIX + "ExpandNotifications");
 						expandNotif.putExtra("expand_only", true);
 						mContext.sendBroadcast(expandNotif);
 					}
@@ -2607,7 +2614,7 @@ public class System {
 					SystemProperties.set("ctl.restart", "zygote");
 					custom = true;
 				} else if ("killsysui".equals(cmd)) {
-					mContext.sendBroadcast(new Intent(GlobalActions.ACTION_PREFIX + "RestartSystemUI"));
+					mContext.sendBroadcast(new Intent(ACTION_PREFIX + "RestartSystemUI"));
 //					final WallpaperManager wm = (WallpaperManager)mContext.getSystemService(Context.WALLPAPER_SERVICE);
 //					Drawable drawable = wm.getDrawable();
 //					ActivityManager am = (ActivityManager)mContext.getSystemService(Context.ACTIVITY_SERVICE);
@@ -4536,6 +4543,7 @@ public class System {
 
 					LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 					int layoutResId = mContext.getResources().getIdentifier("miui_keyguard_left_view_control_center_item", "layout", lpparam.packageName);
+					if (layoutResId == 0) layoutResId = mContext.getResources().getIdentifier("miui_keyguard_left_view_item", "layout", lpparam.packageName);
 					int imgResId = mContext.getResources().getIdentifier("keyguard_left_list_item_img", "id", lpparam.packageName);
 					int nameResId = mContext.getResources().getIdentifier("keyguard_left_list_item_name", "id", lpparam.packageName);
 					//int numberResId = mContext.getResources().getIdentifier("keyguard_left_list_item_number", "id", lpparam.packageName);
@@ -4761,7 +4769,7 @@ public class System {
 		try {
 			if (mContext == null) return;
 			String pkgName = (String)XposedHelpers.callMethod(controller, "getPackageName");
-			Intent intent = new Intent(GlobalActions.ACTION_PREFIX + "UpdateMediaPosition:" + pkgName);
+			Intent intent = new Intent(ACTION_PREFIX + "UpdateMediaPosition:" + pkgName);
 			MediaMetadata medaData = controller.getMetadata();
 			if (medaData == null) return;
 			intent.putExtra(MediaMetadata.METADATA_KEY_DURATION, medaData.getLong(MediaMetadata.METADATA_KEY_DURATION));
@@ -4823,7 +4831,7 @@ public class System {
 
 				MediaControllerReceiver mSeekToReceiver = (MediaControllerReceiver)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mSeekToReceiver");
 				if (newActive)
-					mContext.registerReceiver(mSeekToReceiver, new IntentFilter(GlobalActions.ACTION_PREFIX + "SeekToMediaPosition:" + mContext.getPackageName()));
+					mContext.registerReceiver(mSeekToReceiver, new IntentFilter(ACTION_PREFIX + "SeekToMediaPosition:" + mContext.getPackageName()));
 				else
 					mContext.unregisterReceiver(mSeekToReceiver);
 			}
@@ -4931,7 +4939,7 @@ public class System {
 					@Override
 					public void onStopTrackingTouch(SeekBar seekBar) {
 						seekBar.setTag(false);
-						Intent intent = new Intent(GlobalActions.ACTION_PREFIX + "SeekToMediaPosition:" + pkgName);
+						Intent intent = new Intent(ACTION_PREFIX + "SeekToMediaPosition:" + pkgName);
 						intent.putExtra("android.media.metadata.POSITION", Long.valueOf(seekBar.getProgress()));
 						seekBar.getContext().sendBroadcast(intent);
 					}
@@ -4964,7 +4972,7 @@ public class System {
 						}
 					}
 				};
-				mView.getContext().registerReceiver(seekBarUpdate, new IntentFilter(GlobalActions.ACTION_PREFIX + "UpdateMediaPosition:" + pkgName));
+				mView.getContext().registerReceiver(seekBarUpdate, new IntentFilter(ACTION_PREFIX + "UpdateMediaPosition:" + pkgName));
 			}
 		});
 	}
@@ -6154,9 +6162,9 @@ public class System {
 			@SuppressWarnings("unchecked")
 			protected void after(MethodHookParam param) throws Throwable {
 				IntentFilter filter = new IntentFilter();
-				filter.addAction(GlobalActions.ACTION_PREFIX + "GetSnoozedNotifications");
-				filter.addAction(GlobalActions.ACTION_PREFIX + "UnsnoozeNotification");
-				filter.addAction(GlobalActions.ACTION_PREFIX + "CancelNotification");
+				filter.addAction(ACTION_PREFIX + "GetSnoozedNotifications");
+				filter.addAction(ACTION_PREFIX + "UnsnoozeNotification");
+				filter.addAction(ACTION_PREFIX + "CancelNotification");
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 				mContext.registerReceiver(new BroadcastReceiver() {
 					@Override
@@ -6165,7 +6173,7 @@ public class System {
 						ArrayMap<Integer, ArrayMap<String, ArrayMap<String, Object>>> mSnoozedNotifications = (ArrayMap<Integer, ArrayMap<String, ArrayMap<String, Object>>>)XposedHelpers.getObjectField(param.thisObject, "mSnoozedNotifications");
 						ArrayMap<String, Long> mSnoozedNotificationDelays = (ArrayMap<String, Long>)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mSnoozedNotificationDelays");
 
-						if (action.equals(GlobalActions.ACTION_PREFIX + "CancelNotification")) try {
+						if (action.equals(ACTION_PREFIX + "CancelNotification")) try {
 							ArrayMap<String, ArrayMap<String, Object>> packages = mSnoozedNotifications.get(intent.getIntExtra("user", 0));
 							if (packages == null) return;
 							ArrayMap<String, Object> notificatios = packages.get(intent.getStringExtra("package"));
@@ -6177,7 +6185,7 @@ public class System {
 							XposedBridge.log(t);
 						}
 
-						if (action.equals(GlobalActions.ACTION_PREFIX + "UnsnoozeNotification")) try {
+						if (action.equals(ACTION_PREFIX + "UnsnoozeNotification")) try {
 							XposedHelpers.callMethod(param.thisObject, "repost", intent.getStringExtra("key"), intent.getIntExtra("user", 0));
 						} catch (Throwable t) {
 							XposedBridge.log(t);
@@ -6573,14 +6581,55 @@ public class System {
 		});
 	}
 
-	@SuppressWarnings({"unchecked", "unused"})
+	public static ArrayList<SoundData> mLastPlayedSounds = new ArrayList<SoundData>();
+
+	public static void AudioSilencerServiceHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethods("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "init", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				IntentFilter filter = new IntentFilter();
+				filter.addAction(ACTION_PREFIX + "SavePlayedSound");
+				filter.addAction(ACTION_PREFIX + "FetchPlayedSounds");
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				mContext.registerReceiver(new BroadcastReceiver() {
+					public void onReceive(final Context context, Intent intent) {
+						String action = intent.getAction();
+						if (action != null) try {
+							if (action.equals(ACTION_PREFIX + "SavePlayedSound")) {
+								SoundData data = intent.getParcelableExtra("data");
+								mLastPlayedSounds.add(0, data);
+								if (mLastPlayedSounds.size() > 10)
+								mLastPlayedSounds = new ArrayList<SoundData>(mLastPlayedSounds.subList(0, 10));
+							} else if (action.equals(ACTION_PREFIX + "FetchPlayedSounds")) {
+								Intent soundsIntent = new Intent(GlobalActions.EVENT_PREFIX + "FetchPlayedSoundsData");
+								soundsIntent.putParcelableArrayListExtra("sounds", mLastPlayedSounds);
+								soundsIntent.setPackage(Helpers.modulePkg);
+								mContext.sendBroadcast(soundsIntent);
+							}
+						} catch (Throwable t) {
+							XposedBridge.log(t);
+						}
+					}
+				}, filter);
+			}
+		});
+	}
+
+	public static void SavePlayedSound(Context context, SoundData data) {
+		Intent saveSoundIntent = new Intent(ACTION_PREFIX + "SavePlayedSound");
+		saveSoundIntent.putExtra("data", data);
+		saveSoundIntent.setPackage("android");
+		context.sendBroadcast(saveSoundIntent);
+	}
+
+	@SuppressWarnings({"unchecked"})
 	public static void AudioSilencerHook() {
 		Helpers.hookAllConstructors(SoundPool.class, new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
-				if (XposedHelpers.getAdditionalInstanceField(param.thisObject, "mSourceHashes") == null) {
-					SparseArray<String> mSourceHashes = new SparseArray<String>();
-					XposedHelpers.setAdditionalInstanceField(param.thisObject, "mSourceHashes", mSourceHashes);
+				if (XposedHelpers.getAdditionalInstanceField(param.thisObject, "mSourceSoundData") == null) {
+					SparseArray<SoundData> mSourceSoundData = new SparseArray<SoundData>();
+					XposedHelpers.setAdditionalInstanceField(param.thisObject, "mSourceSoundData", mSourceSoundData);
 				}
 			}
 		});
@@ -6588,19 +6637,15 @@ public class System {
 		Helpers.hookAllMethods(SoundPool.class, "load", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
-				SparseArray<String> mSourceHashes = (SparseArray<String>)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mSourceHashes");
+				SparseArray<SoundData> mSourceSoundData = (SparseArray<SoundData>)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mSourceSoundData");
 				Application callerContext = (Application)XposedHelpers.callStaticMethod(XposedHelpers.findClass("android.app.ActivityThread", null), "currentApplication");
 				if (callerContext == null) return;
 				String caller = callerContext.getPackageName();
 				if (param.args[0] instanceof Context) {
 					Context mContext = (Context)param.args[0];
-					String hash = "res|" + caller + "|" + mContext.getResources().getResourceName((int)param.args[1]);
-					XposedBridge.log(param.getResult() + " | " + hash);
-					mSourceHashes.put((int)param.getResult(), hash);
+					mSourceSoundData.put((int)param.getResult(), new SoundData(caller, "resource", mContext.getResources().getResourceName((int)param.args[1])));
 				} else if (param.args[0] instanceof String) {
-					String hash = "file|" + caller + "|" + param.args[0];
-					XposedBridge.log(param.getResult() + " | " + hash);
-					mSourceHashes.put((int)param.getResult(), hash);
+					mSourceSoundData.put((int)param.getResult(), new SoundData(caller, "file", (String)param.args[0]));
 				}
 			}
 		});
@@ -6608,9 +6653,15 @@ public class System {
 		Helpers.hookAllMethods(SoundPool.class, "play", new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
-				SparseArray<String> mSourceHashes = (SparseArray<String>)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mSourceHashes");
-				if (mSourceHashes == null) return;
-				XposedBridge.log("Playing [" + param.args[0] + "] " + mSourceHashes.get((Integer)param.args[0]));
+				SparseArray<SoundData> mSourceSoundData = (SparseArray<SoundData>)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mSourceSoundData");
+				if (mSourceSoundData != null) {
+					Application mContext = (Application)XposedHelpers.callStaticMethod(XposedHelpers.findClass("android.app.ActivityThread", null), "currentApplication");
+					if (mContext == null) return;
+					SoundData data = mSourceSoundData.get((Integer)param.args[0]);
+					SavePlayedSound(mContext, data);
+					Set<String> silencedSounds = Helpers.getSharedStringSetPref(mContext, "pref_key_system_audiosilencer_sounds");
+					if (silencedSounds.contains(data.toPref())) param.setResult(null);
+				}
 			}
 		});
 
@@ -6621,28 +6672,27 @@ public class System {
 				Application callerContext = (Application)XposedHelpers.callStaticMethod(XposedHelpers.findClass("android.app.ActivityThread", null), "currentApplication");
 				if (callerContext == null) return;
 				String caller = callerContext.getPackageName();
-				String hash = null;
-				if (param.args.length > 1 && param.args[0] instanceof Context && param.args[1] instanceof Uri) {
-					hash = "uri|" + caller + "|" + ((Uri)param.args[1]).getPath();
-					XposedBridge.log(hash);
-				} else if (param.args[0] instanceof String) {
-					hash = "file|" + caller + "|" + param.args[0];
-					XposedBridge.log(hash);
-				} else if (param.args[0] instanceof MediaDataSource) {
-					hash = "mds|" + caller + "|" + param.args[0];
-					XposedBridge.log(hash);
-				}
-				if (hash != null)
-					XposedHelpers.setAdditionalInstanceField(param.thisObject, "mSourceHash", hash);
+				SoundData soundData = null;
+				if (param.args.length > 1 && param.args[0] instanceof Context && param.args[1] instanceof Uri)
+					soundData = new SoundData(caller, "uri", ((Uri)param.args[1]).getPath());
+				else if (param.args[0] instanceof String)
+					soundData = new SoundData(caller, "file", (String)param.args[0]);
+				if (soundData != null)
+				XposedHelpers.setAdditionalInstanceField(param.thisObject, "mSourceSoundData", soundData);
 			}
 		});
 
 		Helpers.hookAllMethods(MediaPlayer.class, "start", new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
-				String mSourceHash = (String)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mSourceHash");
-				if (mSourceHash == null) return;
-				XposedBridge.log("Playing " + mSourceHash);
+				SoundData mSourceSoundData = (SoundData)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mSourceSoundData");
+				if (mSourceSoundData != null) {
+					Application mContext = (Application)XposedHelpers.callStaticMethod(XposedHelpers.findClass("android.app.ActivityThread", null), "currentApplication");
+					if (mContext == null) return;
+					SavePlayedSound(mContext, mSourceSoundData);
+					Set<String> silencedSounds = Helpers.getSharedStringSetPref(mContext, "pref_key_system_audiosilencer_sounds");
+					if (silencedSounds.contains(mSourceSoundData.toPref())) param.setResult(null);
+				}
 			}
 		});
 	}
@@ -6672,6 +6722,171 @@ public class System {
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 				Set<String> selectedApps = Helpers.getSharedStringSetPref(mContext, "pref_key_system_betterpopups_allowfloat_apps");
 				if (selectedApps.contains(intent.getCreatorPackage())) param.setResult(true);
+			}
+		});
+	}
+
+	public static void NoFloatingWindowBlacklistHook() {
+		MethodHook clearHook = new MethodHook() {
+			@Override
+			@SuppressWarnings("unchecked")
+			protected void after(MethodHookParam param) throws Throwable {
+				List<String> blackList = (List<String>)param.getResult();
+				if (blackList != null) blackList.clear();
+				param.setResult(blackList);
+			}
+		};
+		Helpers.findAndHookMethod("android.util.MiuiMultiWindowAdapter", null, "getFreeformBlackList", clearHook);
+		Helpers.findAndHookMethod("android.util.MiuiMultiWindowAdapter", null, "getFreeformBlackListFromCloud", Context.class, clearHook);
+	}
+
+	public static ConcurrentHashMap<String, Pair<Float, Rect>> fwApps = new ConcurrentHashMap<String, Pair<Float, Rect>>();
+
+	public static String getTaskPackageName(Object thisObject, int taskId) {
+		return getTaskPackageName(thisObject, taskId, false, null);
+	}
+
+	public static String getTaskPackageName(Object thisObject, int taskId, ActivityOptions options) {
+		return getTaskPackageName(thisObject, taskId, true, options);
+	}
+
+	public static String getTaskPackageName(Object thisObject, int taskId, boolean withOptions, ActivityOptions options) {
+		Object mRootActivityContainer = XposedHelpers.getObjectField(thisObject, "mRootActivityContainer");
+		if (mRootActivityContainer == null) return null;
+		Object task = withOptions ?
+			XposedHelpers.callMethod(mRootActivityContainer, "anyTaskForId", taskId, 2, options, true) :
+			XposedHelpers.callMethod(mRootActivityContainer, "anyTaskForId", taskId, 0);
+		if (task == null) return null;
+		Intent intent = (Intent)XposedHelpers.getObjectField(task, "intent");
+		return intent == null ? null : intent.getComponent().getPackageName();
+	}
+
+	public static String serializeFwApps() {
+		StringBuilder data = new StringBuilder();
+		for (Map.Entry<String, Pair<Float, Rect>> entry: fwApps.entrySet()) {
+			Pair<Float, Rect> val = entry.getValue();
+			data.append(entry.getKey());
+			data.append(":");
+			data.append(val.first);
+			data.append(":");
+			data.append(val.second == null ? "-" : val.second.flattenToString());
+			data.append("|");
+		}
+		return data.toString().replaceFirst("\\|$", "");
+	}
+
+	public static void unserializeFwApps(String data) {
+		fwApps.clear();
+		if (data == null || "".equals(data)) return;
+		String[] dataArr = data.split("\\|");
+		for (String appData: dataArr) {
+			if ("".equals(appData)) continue;
+			String[] appDataArr = appData.split(":");
+			fwApps.put(appDataArr[0], new Pair<Float, Rect>(Float.parseFloat(appDataArr[1]), "-".equals(appDataArr[2]) ? null : Rect.unflattenFromString(appDataArr[2])));
+		}
+	}
+
+	public static void storeFwAppsInSetting(Context context) {
+		Settings.Global.putString(context.getContentResolver(), Helpers.modulePkg + ".fw.apps", serializeFwApps());
+	}
+
+	public static void restoreFwAppsInSetting(Context context) {
+		unserializeFwApps(Settings.Global.getString(context.getContentResolver(), Helpers.modulePkg + ".fw.apps"));
+	}
+
+	public static void StickyFloatingWindowsHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethods("com.android.server.wm.ActivityStarterInjector", lpparam.classLoader, "modifyLaunchActivityOptionIfNeed", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				if (param.args.length != 8) return;
+				Intent intent = (Intent)param.args[5];
+				if (intent == null || intent.getComponent() == null) return;
+				ActivityOptions options = (ActivityOptions)param.getResult();
+				int windowingMode = options == null ? -1 : (int)XposedHelpers.callMethod(options, "getLaunchWindowingMode");
+				String pkgName = intent.getComponent().getPackageName();
+				if (windowingMode != 5 && fwApps.containsKey(pkgName)) try {
+					Class<?> mmwuCls = findClassIfExists("android.util.MiuiMultiWindowUtils", null);
+					if (mmwuCls == null) {
+						Helpers.log("StickyFloatingWindowsHook", "Cannot find MiuiMultiWindowUtils class");
+						return;
+					}
+					Context mContext = (Context)XposedHelpers.getObjectField(param.args[0], "mContext");
+					//options = (ActivityOptions)XposedHelpers.callStaticMethod(mmwuCls, "getActivityOptions", mContext, pkgName, true, false);
+					if (options == null) options = ActivityOptions.makeBasic();
+					XposedHelpers.callMethod(options, "setLaunchWindowingMode", 5);
+					XposedHelpers.callMethod(options, "setMiuiConfigFlag", 2);
+
+					Float scale;
+					Rect rect;
+					Pair<Float, Rect> values = fwApps.get(pkgName);
+					if (values == null || values.first == 0f || values.second == null) {
+						scale = XposedHelpers.getStaticFloatField(mmwuCls, "sScale");
+						rect = (Rect)XposedHelpers.callStaticMethod(mmwuCls, "getFreeformRect", mContext);
+					} else {
+						scale = values.first;
+						rect = values.second;
+					}
+					options.setLaunchBounds(rect);
+					try {
+						Object injector = XposedHelpers.callMethod(options, "getActivityOptionsInjector");
+						XposedHelpers.callMethod(injector, "setFreeformScale", scale);
+					} catch (Throwable ignore) {}
+
+					param.setResult(options);
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
+
+		Helpers.hookAllMethods("com.android.server.wm.ActivityStackSupervisor", lpparam.classLoader, "startActivityFromRecents", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				Object safeOptions = param.args[3];
+				ActivityOptions options = (ActivityOptions)XposedHelpers.callMethod(safeOptions, "getOptions", param.thisObject);
+				int windowingMode = options == null ? -1 : (int)XposedHelpers.callMethod(options, "getLaunchWindowingMode");
+				if (windowingMode != 5) return;
+				String pkgName = getTaskPackageName(param.thisObject, (int)param.args[2], options);
+				if (pkgName != null) {
+					fwApps.put(pkgName, new Pair<Float, Rect>(0f, null));
+					storeFwAppsInSetting((Context)XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.thisObject, "mService"), "mContext"));
+				}
+			}
+		});
+
+		Helpers.hookAllMethods("com.android.server.wm.MiuiFreeFormGestureController", lpparam.classLoader, "notifyFullScreenWidnowModeStart", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				String pkgName = (String)XposedHelpers.getObjectField(param.thisObject, "mFreeFormPackageName");
+				if (fwApps.remove(pkgName) != null)
+				storeFwAppsInSetting((Context)XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.thisObject, "mService"), "mContext"));
+			}
+		});
+
+//		Helpers.hookAllMethods("com.android.server.wm.MiuiFreeFormGesturePointerEventListener", lpparam.classLoader, "startShowFullScreenWindow", new MethodHook() {
+//			@Override
+//			protected void before(MethodHookParam param) throws Throwable {
+//				Object mGestureController = XposedHelpers.getObjectField(param.thisObject, "mGestureController");
+//				XposedBridge.log("FULLSCREEN: " + XposedHelpers.getObjectField(mGestureController, "mFreeFormPackageName"));
+//			}
+//		});
+
+		Helpers.findAndHookMethod("com.android.server.wm.ActivityTaskManagerService", lpparam.classLoader, "onSystemReady", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				restoreFwAppsInSetting((Context)XposedHelpers.getObjectField(param.thisObject, "mContext"));
+			}
+		});
+
+		Helpers.hookAllMethods("com.android.server.wm.ActivityTaskManagerService", lpparam.classLoader, "resizeTask", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				float sScale = XposedHelpers.getStaticFloatField(findClass("android.util.MiuiMultiWindowUtils", null), "sScale");
+				String pkgName = getTaskPackageName(param.thisObject, (int)param.args[0]);
+				if (pkgName != null && fwApps.containsKey(pkgName)) {
+					fwApps.put(pkgName, new Pair<Float, Rect>(sScale, new Rect((Rect)param.args[1])));
+					storeFwAppsInSetting((Context)XposedHelpers.getObjectField(param.thisObject, "mContext"));
+				}
 			}
 		});
 	}

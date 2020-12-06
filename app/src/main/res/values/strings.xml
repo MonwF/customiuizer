@@ -176,6 +176,12 @@
 	<string name="system_maxbrightness_title">Maximum auto brightness</string>
 	<string name="system_autobrightness_hlg_title">Always use non-linear scale</string>
 	<string name="system_autobrightness_hlg_summ">Enable if brightness percentages in mod do not match real ones on Android versions below 9</string>
+	<string name="system_audiosilencer_title">Audio silencer</string>
+	<string name="system_audiosilencer_summ">Mute any sound that can be uniquely identified</string>
+	<string name="system_audiosilencer_last_title">Refresh list</string>
+	<string name="system_audiosilencer_last_summ">Retrieve a list of recently played sounds</string>
+	<string name="system_audiosilencer_silenced">Silenced sounds</string>
+	<string name="system_audiosilencer_played">Played sounds</string>
 	<string name="system_nosafevolume_title">Disable high volume warning</string>
 	<string name="system_nosafevolume_summ">Do not show dialog when volume reaches unsafe level</string>
 	<string name="system_noducking_title">Disable ducking</string>
@@ -391,6 +397,11 @@
 	<string name="system_betterpopups_allowfloat_summ">Open app in a floating window on swipe down gesture if notification has an appropriate click action defined</string>
 	<string name="system_betterpopups_swipedown_title">Enable swipe down</string>
 	<string name="system_betterpopups_swipedown_summ">Open notification drawer on swipe down gesture</string>
+	<string name="system_mods_floatingwindows">Floating windows</string>
+	<string name="system_fw_noblacklist_title">Disable blacklisting</string>
+	<string name="system_fw_noblacklist_summ">Allow any app to be opened in a floating window</string>
+	<string name="system_fw_sticky_title">Remember state</string>
+	<string name="system_fw_sticky_summ">Keep opening apps in floating windows until they are swicthed back to full screen manually</string>
 	<string name="system_mods_applock">App lock</string>
 	<string name="system_applock_title">Less strict app lock</string>
 	<string name="system_applock_summ">Do not lock apps when device is locked if option with app locking after exit is selected</string>
@@ -888,7 +899,8 @@
 	<string name="sdk_failed">Cannot initialize MIUI SDK.\nNot a MIUI ROM?</string>
 	<string name="notselected">Not selected</string>
 	<string name="warning">Warning!</string>
-	<string name="warning_blacklist">Black/White list option is active in Xposed Framework, it can prevent mods from working properly</string>
+	<string name="warning_blacklist">Black/White list option is active in Xposed Framework, it can prevent mods from working properly.</string>
+	<string name="warning_blacklist_sdk">Additionally, installed module version is from Google Play and has more limitations. Consider reinstalling it from any other source.</string>
 	<string name="open_xposed">Manage Xposed modules</string>
 	<string name="soft_reboot">Soft reboot</string>
 	<string name="soft_reboot_ask">Perform soft reboot now?</string>
@@ -978,6 +990,9 @@
 	<string name="white_color">White</string>
 	<string name="black_color">Black</string>
 	<string name="auto_color">Statusbar color</string>
+
+	<string name="type_file">file</string>
+	<string name="type_res">resource</string>
 
 	<string name="dummy" translatable="false" />
 </resources>

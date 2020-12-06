@@ -169,6 +169,12 @@
     <string name="system_maxbrightness_title">最大自动亮度</string>
     <string name="system_autobrightness_hlg_title">始终使用非线性缩放</string>
     <string name="system_autobrightness_hlg_summ">在低于Android 9版本上启用模块中的亮度百分比是否不匹配真实值</string>
+    <string name="system_audiosilencer_title">消音器</string>
+    <string name="system_audiosilencer_summ">静音可被唯一识别的声音</string>
+    <string name="system_audiosilencer_last_title">刷新列表</string>
+    <string name="system_audiosilencer_last_summ">检索最近播放的声音列表</string>
+    <string name="system_audiosilencer_silenced">已消去的声音</string>
+    <string name="system_audiosilencer_played">已播放的声音</string>
     <string name="system_nosafevolume_title">禁用高音量警告</string>
     <string name="system_nosafevolume_summ">音量达到不安全级别时不显示对话框</string>
     <string name="system_noducking_title">禁用闪避</string>
@@ -179,8 +185,15 @@
     <string name="system_separatevolume_summ">允许单独配置设置中的铃声/通知/系统声音的音量</string>
     <string name="system_separatevolume_slider_title">通知音量滑块</string>
     <string name="system_separatevolume_slider_summ">将通知滑块添加到扩展音量对话框</string>
+    <string name="system_nomediamute_title">不将媒体静音</string>
+    <string name="system_nomediamute_summ">在勿扰模式中不将媒体音量设为零</string>
+    <string name="system_dndtoggle_title">勿扰模式开关</string>
+    <string name="system_dndtoggle_summ">在折叠音量对话框显示勿扰模式开关按钮</string>
     <string name="system_volumetimer_title">扩展计时器</string>
     <string name="system_volumetimer_summ">添加更多间隔到静音和勿扰模式的定时器</string>
+    <string name="system_volumedialogdelay_collapsed_title">音量对话框自动隐藏延迟</string>
+    <string name="system_volumedialogdelay_collapsed_summ">已折叠</string>
+    <string name="system_volumedialogdelay_expanded_summ">已展开</string>
     <string name="system_volumesteps_title">音量级数倍增器</string>
     <string name="system_volumesteps_summ">更改每种流类型的音量级数</string>
     <string name="system_visualizer_title">音乐可视化</string>
@@ -370,8 +383,15 @@
     <string name="system_betterpopups_delay_title">自动隐藏延迟</string>
     <string name="system_betterpopups_nohide_title">不自动隐藏</string>
     <string name="system_betterpopups_nohide_summ">不自动关闭弹窗</string>
+    <string name="system_betterpopups_allowfloat_title">允许浮窗</string>
+    <string name="system_betterpopups_allowfloat_summ">如果通知定义了适当的点击动作，向下滑动手势时在浮动窗口中打开应用</string>
     <string name="system_betterpopups_swipedown_title">启用下滑手势</string>
     <string name="system_betterpopups_swipedown_summ">向下滑动手势时打开通知抽屉</string>
+    <string name="system_mods_floatingwindows">浮动窗口</string>
+    <string name="system_fw_noblacklist_title">禁用黑名单</string>
+    <string name="system_fw_noblacklist_summ">允许在浮动窗口中打开任意应用</string>
+    <string name="system_fw_sticky_title">记住状态</string>
+    <string name="system_fw_sticky_summ">保持在浮动窗口中打开应用，直至手动将其切换回全屏</string>
     <string name="system_mods_applock">应用锁</string>
     <string name="system_applock_title">不严格的应用锁</string>
     <string name="system_applock_summ">如果选择了退出后应用锁定的选项，设备锁定时不要锁定应用</string>
@@ -581,6 +601,8 @@
     <string name="various_installappinfo_current">当前</string>
     <string name="various_alarmcompat_title">闹钟兼容性</string>
     <string name="various_alarmcompat_summ">令所选应用正确显示MIUI时钟应用设置的下一次闹钟时间</string>
+    <string name="various_gboardpadding_port_title">竖屏时底部填充</string>
+    <string name="various_gboardpadding_land_title">横屏时底部填充</string>
     <string name="various_showcallui_title">显示通话界面</string>
     <string name="various_showcallui_summ">定义来电时应该显示的界面</string>
     <string name="various_calluibright_title">通话时屏幕亮度</string>
@@ -619,6 +641,7 @@
     <string name="appsort_frequency">使用频率</string>
     <string name="appsort_storage">存储占用</string>
     <string name="appsort_install">安装时间</string>
+    <string name="gboard">Google键盘</string>
     <string name="calls">通话</string>
     <string name="settings">设置</string>
     <string name="array_default">默认</string>
@@ -844,7 +867,8 @@
     <string name="sdk_failed">无法初始化MIUI SDK。\n不是MIUI ROM？</string>
     <string name="notselected">未选择</string>
     <string name="warning">警告！</string>
-    <string name="warning_blacklist">Xposed框架中的黑/白名单选项已激活，可能会阻止模块正常工作</string>
+    <string name="warning_blacklist">Xposed框架中的黑/白名单选项已激活，可能会阻止模块正常工作。</string>
+    <string name="warning_blacklist_sdk">此外，从Google Play安装的模块版本限制比较多，请从其他来源重新安装。</string>
     <string name="open_xposed">管理Xposed模块</string>
     <string name="soft_reboot">软重启</string>
     <string name="soft_reboot_ask">现在执行软重启吗？</string>
@@ -927,4 +951,6 @@
     <string name="white_color">白色</string>
     <string name="black_color">黑色</string>
     <string name="auto_color">状态栏颜色</string>
+    <string name="type_file">文件</string>
+    <string name="type_res">资源</string>
 </resources>

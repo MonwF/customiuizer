@@ -179,8 +179,15 @@
     <string name="system_separatevolume_summ">Permite configurar el volumen por separado para tonos de llamada/notificaciones/sonidos del sistema en Ajustes</string>
     <string name="system_separatevolume_slider_title">Control deslizante de volumen de notificaciones</string>
     <string name="system_separatevolume_slider_summ">Agregar control deslizante de notificaciones al diálogo de volumen expandido</string>
+    <string name="system_nomediamute_title">No silenciar medios</string>
+    <string name="system_nomediamute_summ">No establecer el volumen de los medios en cero en el modo No Molestar</string>
+    <string name="system_dndtoggle_title">Ajuste rápido de Modo no Molestar</string>
+    <string name="system_dndtoggle_summ">Hacer que el botón en el cuadro de diálogo de volumen contraído alterne el modo No molestar en lugar del modo Silencioso</string>
     <string name="system_volumetimer_title">Temporizadores extendidos</string>
     <string name="system_volumetimer_summ">Agregar más intervalos a los temporizadores para los modos Silencioso y No molestar</string>
+    <string name="system_volumedialogdelay_collapsed_title">Retraso de ocultación automática del diálogo de volumen</string>
+    <string name="system_volumedialogdelay_collapsed_summ">Minimizado</string>
+    <string name="system_volumedialogdelay_expanded_summ">Expandido</string>
     <string name="system_volumesteps_title">Multiplicador de pasos de volumen</string>
     <string name="system_volumesteps_summ">Cambiar el número de pasos de volumen para cada tipo de transmisión</string>
     <string name="system_visualizer_title">Visualizador de música</string>
@@ -370,6 +377,8 @@
     <string name="system_betterpopups_delay_title">Retardo de ocultación automática</string>
     <string name="system_betterpopups_nohide_title">Sin ocultación automática</string>
     <string name="system_betterpopups_nohide_summ">No descartar las ventanas emergentes automáticamente</string>
+    <string name="system_betterpopups_allowfloat_title">Permitir ventana flotante</string>
+    <string name="system_betterpopups_allowfloat_summ">Abrir la aplicación en una ventana flotante con el gesto de deslizar hacia abajo si la notificación tiene definida una acción de clic adecuada</string>
     <string name="system_betterpopups_swipedown_title">Habilitar deslizar hacia abajo</string>
     <string name="system_betterpopups_swipedown_summ">Abrir el cajón de notificaciones en el gesto de deslizar hacia abajo</string>
     <string name="system_mods_applock">Bloqueo de aplicación</string>
@@ -581,6 +590,8 @@
     <string name="various_installappinfo_current">Actual</string>
     <string name="various_alarmcompat_title">Compatibilidad reloj despertador</string>
     <string name="various_alarmcompat_summ">Hacer que las aplicaciones seleccionadas muestren la hora de la próxima alarma correcta establecida por la aplicación de reloj MIUI</string>
+    <string name="various_gboardpadding_port_title">Acolchado inferior en vertical</string>
+    <string name="various_gboardpadding_land_title">Acolchado inferior en horizontal</string>
     <string name="various_showcallui_title">Mostrar visualización de llamada</string>
     <string name="various_showcallui_summ">Defina cuándo se debe mostrar la visualización para la llamada entrante en lugar de la notificación emergente</string>
     <string name="various_calluibright_title">Brillo de pantalla durante la llamada</string>
@@ -619,6 +630,7 @@
     <string name="appsort_frequency">Frecuencia de uso</string>
     <string name="appsort_storage">Almacenamiento usado</string>
     <string name="appsort_install">Tiempo de instalación</string>
+    <string name="gboard">Teclado de Google</string>
     <string name="calls">Llamadas</string>
     <string name="settings">Configuraciones</string>
     <string name="array_default">por Defecto</string>

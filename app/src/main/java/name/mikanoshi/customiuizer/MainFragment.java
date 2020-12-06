@@ -353,7 +353,8 @@ public class MainFragment extends PreferenceFragmentBase {
 			public boolean onTouch(View v, MotionEvent event) {
 				if (actionMode != null && isSearchFocused) {
 					isSearchFocused = false;
-					hideKeyboard();
+					Handler handler = new Handler(v.getContext().getMainLooper());
+					handler.postDelayed(MainFragment.this::hideKeyboard, getResources().getInteger(android.R.integer.config_shortAnimTime));
 				}
 				return false;
 			}
@@ -411,7 +412,10 @@ public class MainFragment extends PreferenceFragmentBase {
 		if (warning != null)
 		if (Helpers.areXposedBlacklistsEnabled()) {
 			warning.setTitle(R.string.warning);
-			warning.setSummary(R.string.warning_blacklist);
+			if (act.getApplicationContext().getApplicationInfo().targetSdkVersion > 27)
+				warning.setSummary(getString(R.string.warning_blacklist) + "\n" + getString(R.string.warning_blacklist_sdk));
+			else
+				warning.setSummary(R.string.warning_blacklist);
 			warning.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 				@Override
 				public boolean onPreferenceClick(Preference preference) {

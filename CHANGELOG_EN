@@ -1,10 +1,20 @@
+3.0.3
+[New] Audio silencer: mute any sound that can be uniquely identified
+[New][MIUI 12] Sticky floating windows: remember window state, position and dimensions
+[New][MIUI 12] Allow any app to be pened in floating window
+[Improved][Recent apps background blur] Compatibility with recents from MIUI Launcher
+[Fixed][Expand QS action][MIUI 12] Expands control center too
+[Fixed][Detailed network speed indicator] Android 7.1 compatibility
+[Fixed][Custom lock screen actions] Android 7.1 compatibility
+[Fixed][MIUI 12] Module's settings crash on beta ROMs
+
 3.0.2
 [New] Disable media stream muting in Do not disturb mode
 [New] Toggle DND instead of Silent mode from collapsed volume dialog
 [New] Volume dialog autohide delay
 [New] Google Keyboard's bottom padding
 [New][MIUI 12] Allow floating window to be opened from any notification that has an appropriate click action defined
-[Improved][Compact notifications][MIUI12] Increased height of action buttons
+[Improved][Compact notifications][MIUI 12] Increased height of action buttons
 [Fixed][Display next alarm on lock screen] Compatibility with super wallpaper clock style
 [Fixed][Custom lock screen actions] Compatibility with some ancient Android versions
 [Fixed][Popup notification swipe down] Ignore notifications with floating windows
