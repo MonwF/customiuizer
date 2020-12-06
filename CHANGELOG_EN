@@ -1,7 +1,7 @@
 3.0.3
 [New] Audio silencer: mute any sound that can be uniquely identified
 [New][MIUI 12] Sticky floating windows: remember window state, position and dimensions
-[New][MIUI 12] Allow any app to be pened in floating window
+[New][MIUI 12] Allow any app to be opened in floating window
 [Improved][Recent apps background blur] Compatibility with recents from MIUI Launcher
 [Fixed][Expand QS action][MIUI 12] Expands control center too
 [Fixed][Detailed network speed indicator] Android 7.1 compatibility
