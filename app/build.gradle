@@ -22,7 +22,7 @@ android {
         minSdkVersion 24
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 27
-        versionCode 57
+        versionCode 58
         versionName "3.0.3"
         signingConfig signingConfigs.dev
     }
