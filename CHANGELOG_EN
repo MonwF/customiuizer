@@ -1,3 +1,13 @@
+3.0.4
+[Fixed][Detailed network speed indicator] Show correct values when VPN is active
+[Fixed] Module's settings crash
+[MIUI 12] Control Center compatibility:
+	Show illuminance level
+	Show brightness percentage
+	Deactivate brightness slider
+	Status bar gesture controls
+	Notification drawer background blur
+
 3.0.3
 [New] Audio silencer: mute any sound that can be uniquely identified
 [New][MIUI 12] Sticky floating windows: remember window state, position and dimensions

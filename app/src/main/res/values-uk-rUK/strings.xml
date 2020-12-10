@@ -10,9 +10,9 @@
     <string name="snooze_unsnooze">Повернути дане сповіщення</string>
     <string name="snooze_cancel">Позначити як відмічене</string>
     <string name="snooze_restore">Позначити як очікуюче</string>
-    <string name="snooze_fetch_fail">Не вдалося отримати список відкладених сповіщень</string>
+    <string name="snooze_fetch_fail">Не вдається отримати список відкладених сповіщень</string>
     <string name="snooze_empty">Відкладені сповіщення відсутні</string>
-    <string name="snooze_messages">Повідомлень</string>
+    <string name="snooze_messages">Повідомлення</string>
     <string name="snooze_channel">Канал</string>
     <string name="snooze_created">Створено</string>
     <string name="snooze_updated">Оновлено</string>
@@ -36,7 +36,7 @@
     <string name="system_statusbaricons_alarm_title">Будильник</string>
     <string name="system_statusbaricons_alarm_summ">Приховати повністю</string>
     <string name="system_statusbaricons_alarmn_title">Вибіркове відображення будильника</string>
-    <string name="system_statusbaricons_alarmn_summ">Починає показувати іконку будильника лише за вказану кількість годин до його спрацювання</string>
+    <string name="system_statusbaricons_alarmn_summ">Починати показувати іконку будильника лише за вказану кількість годин до його спрацювання</string>
     <string name="system_statusbaricons_signal_title">Сигнал мобільної мережі</string>
     <string name="system_statusbaricons_nosims_title">Немає SIM карти</string>
     <string name="system_statusbaricons_hotspot_title">Мобільна точка доступу</string>
@@ -74,6 +74,7 @@
     <string name="system_calendar_app_summ">Відкриває обрану програму при кліці по даті в панелі сповіщень</string>
     <string name="system_clockseconds_title">Показувати секунди</string>
     <string name="system_clockseconds_summ">Показує секунди на годиннику в рядку стану</string>
+    <string name="system_maxsbicons_title">Ліміт іконок повідомлень</string>
     <string name="system_mobiletypeicon_title">Приховувати тип мобільної мережі</string>
     <string name="system_mobiletypeicon_summ">Видаляє іконку типу мобільної мережі з рядка стану</string>
     <string name="system_4gtolte_title">Показувати LTE замість 4G</string>
@@ -140,6 +141,7 @@
     <string name="system_popupnotif_fs_title">Визначення повноекранного режиму</string>
     <string name="system_popupnotif_fs_summ">Не відкривати панель сповіщень якщо запущено повноекранний додаток (не поширюється на \"режим занурення\" з прихованими панелями статусу і навігації)</string>
     <string name="system_popupnotif_apps_title">Обрані додатки</string>
+    <string name="various_collapsemiuititles_title">Звернути заголовки MIUI</string>
     <string name="system_mods_screenshots">Знімки екрану</string>
     <string name="system_screenshot_title">Конфігурація скріншотів</string>
     <string name="system_screenshot_summ">Параметри формату, якості та папки збереження скріншотів</string>
@@ -165,6 +167,11 @@
     <string name="system_maxbrightness_title">Максимальна автояскравість</string>
     <string name="system_autobrightness_hlg_title">Завжди використовувати нелінійну шкалу</string>
     <string name="system_autobrightness_hlg_summ">Увімкнути якщо відсотки яскравості в моді не співпадають з реальними відсотками на версіях Android нижче 9</string>
+    <string name="system_audiosilencer_title">Заглушеня звуків</string>
+    <string name="system_audiosilencer_last_title">Оновити список</string>
+    <string name="system_audiosilencer_last_summ">Отримати список останніх відтворених звуків</string>
+    <string name="system_audiosilencer_silenced">Заглушені звуки</string>
+    <string name="system_audiosilencer_played">Відтворенні звуки</string>
     <string name="system_nosafevolume_title">Вимкнути попередження про високу гучність</string>
     <string name="system_nosafevolume_summ">Не показувати діалог при досягненні небезпечного рівня гучності</string>
     <string name="system_noducking_title">Вимкнути заглушення</string>
@@ -341,7 +348,7 @@
     <string name="system_mods_notifications">Сповіщення</string>
     <string name="system_mods_recents">Список нещодавніх додатків</string>
     <string name="system_usenativerecents_title">Використовувати рідний список</string>
-    <string name="system_usenativerecents_summ">Не використовувати список останніх програм, вбудований у Робочий стіл MIUI</string>
+    <string name="system_usenativerecents_summ">Не використовувати список останніх програм, вбудований у Робочий стіл MIUI. Погано працює з повноекранними жестами.</string>
     <string name="system_removecleaner_title">Прибрати кнопку очищення</string>
     <string name="system_removecleaner_summ">Приховує кнопку для очищення списку нещодавніх додатків і пам\'яті</string>
     <string name="system_clearalltasks_title">Очистити все</string>
@@ -362,6 +369,9 @@
     <string name="system_betterpopups_nohide_summ">Вимикає автоматичне приховування</string>
     <string name="system_betterpopups_swipedown_title">Активувати свайп вниз</string>
     <string name="system_betterpopups_swipedown_summ">Відкриває панель сповіщень по свайпу вниз</string>
+    <string name="system_fw_noblacklist_title">Відключити чорний список</string>
+    <string name="system_fw_noblacklist_summ">Дозволяє відчиняти любий додаток в плавучему вікні</string>
+    <string name="system_fw_sticky_title">Запам\'ятовувати стан</string>
     <string name="system_mods_applock">Захист додатків</string>
     <string name="system_applock_title">Менш суворий захист додатків</string>
     <string name="system_applock_summ">Вимикає блокування додатків при блокуванні пристрою, якщо обрана опція його активації при виході з програми</string>
@@ -826,10 +836,10 @@
     <string name="array_color_auto">Автоматичний</string>
     <string name="array_color_dark">Темна</string>
     <string name="array_color_light">Світла</string>
-    <string name="sdk_failed">Не вдалося ініціалізувати MIUI SDK. Пристрій не Xiaomi?</string>
+    <string name="sdk_failed">Не вдалося ініціалізувати MIUI SDK. Прошивка не MIUI?</string>
     <string name="notselected">Не вибрано</string>
     <string name="warning">Увага!</string>
-    <string name="warning_blacklist">Опція чорного/білого списку активна в Xposed Framework, що може призвести до непрацездатності модів</string>
+    <string name="warning_blacklist">Опція чорного/білого списку активна в Xposed Framework, що може призвести до непрацездатності модифікацій</string>
     <string name="open_xposed">Керування модулями Xposed</string>
     <string name="soft_reboot">Швидке перезавантаження</string>
     <string name="soft_reboot_ask">Виконати швидке перезавантаження?</string>
@@ -912,4 +922,6 @@
     <string name="white_color">Білий</string>
     <string name="black_color">Чорний</string>
     <string name="auto_color">Колір рядку стану</string>
+    <string name="type_file">файл</string>
+    <string name="type_res">ресурс</string>
 </resources>

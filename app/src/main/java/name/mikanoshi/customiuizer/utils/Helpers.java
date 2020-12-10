@@ -151,7 +151,7 @@ public class Helpers {
 		put("it", "96.0%");
 		put("pt-BR", "94.7%");
 		put("fr", "25.3%");
-		put("uk-UK", "95.8%");
+		put("uk-UK", "97.0%");
 		put("es", "98.5%");
 		put("sk", "3.1%");
 		put("cs", "0.0%");
@@ -410,6 +410,7 @@ public class Helpers {
 			baseDir = "/data/user_de/0/de.robv.android.xposed.installer/";
 			file = new File(baseDir + "log/error.log");
 			if (file.exists()) return baseDir + "log/error.log";
+			baseDir = null;
 		} catch (Throwable t) {}
 
 		if (baseDir == null)

@@ -22,8 +22,10 @@ public class CategorySelector extends SubFragment {
 		cat = args.getString("cat");
 
 		if ("pref_key_system".equals(cat)) {
-			if (!Helpers.is12())
-			((PreferenceScreen)findPreference("pref_key_cat")).removePreference(findPreference("pref_key_system_cat_floatingwindows"));
+			if (!Helpers.is12()) {
+				Preference pref = findPreference("pref_key_system_cat_floatingwindows");
+				if (pref != null) ((PreferenceScreen)findPreference("pref_key_cat")).removePreference(pref);
+			}
 		}
 
 		PreferenceScreen screen = (PreferenceScreen)findPreference("pref_key_cat");

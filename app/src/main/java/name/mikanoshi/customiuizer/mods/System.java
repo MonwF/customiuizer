@@ -129,6 +129,7 @@ import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.NetworkInterface;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -138,6 +139,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -1094,7 +1096,12 @@ public class System {
 				new Helpers.SharedPrefObserver(mContext, mHandler, "pref_key_system_drawer_blur", 100) {
 					@Override
 					public void onChange(String name, int defValue) {
-						XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomBlurModifier", Helpers.getSharedIntPref(mContext, name, defValue));
+						int opt = Helpers.getSharedIntPref(mContext, name, defValue);
+						XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomBlurModifier", opt);
+						if (Helpers.is12()) {
+							Object mControlPanelWindowManager = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", lpparam.classLoader), "get", findClass("com.android.systemui.miui.statusbar.phone.ControlPanelWindowManager", lpparam.classLoader));
+							XposedHelpers.setAdditionalInstanceField(mControlPanelWindowManager, "mCustomBlurModifier", opt);
+						}
 					}
 				};
 			}
@@ -1122,6 +1129,22 @@ public class System {
 				mThemeBackgroundView.setAlpha((float)XposedHelpers.callMethod(param.thisObject, "getAppearFraction"));
 			}
 		});
+
+		if (Helpers.is12()) {
+			Helpers.hookAllConstructors("com.android.systemui.miui.statusbar.phone.ControlPanelWindowManager", lpparam.classLoader, new MethodHook() {
+				@Override
+				protected void after(MethodHookParam param) throws Throwable {
+					XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomBlurModifier", MainModule.mPrefs.getInt("system_drawer_blur", 100));
+				}
+			});
+
+			Helpers.findAndHookMethod("com.android.systemui.miui.statusbar.phone.ControlPanelWindowManager", lpparam.classLoader, "applyBlurRatio", float.class, new MethodHook() {
+				@Override
+				protected void before(MethodHookParam param) throws Throwable {
+					param.args[0] = (float)param.args[0] * (int)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mCustomBlurModifier") / 100f;
+				}
+			});
+		}
 	}
 
 	public static void DrawerThemeBackgroundHook(LoadPackageParam lpparam) {
@@ -1413,6 +1436,20 @@ public class System {
 	private static Pair<Long, Long> getTrafficBytes(Object thisObject) {
 		long tx = -1L;
 		long rx = -1L;
+
+		try {
+			for (Enumeration<NetworkInterface> list = NetworkInterface.getNetworkInterfaces(); list.hasMoreElements();) {
+				NetworkInterface iface = list.nextElement();
+				if (iface.isUp() && !iface.isVirtual() && !iface.isLoopback() && !iface.isPointToPoint() && !"".equals(iface.getName())) {
+					tx += (long)XposedHelpers.callStaticMethod(TrafficStats.class, "getTxBytes", iface.getName());
+					rx += (long)XposedHelpers.callStaticMethod(TrafficStats.class, "getRxBytes", iface.getName());
+				}
+			}
+			return new Pair<Long, Long>(tx, rx);
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+
 		try {
 			Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
 			Uri mNetworkUri = (Uri)XposedHelpers.getObjectField(thisObject, "mNetworkUri");
@@ -1435,7 +1472,10 @@ public class System {
 			}
 		} catch (Throwable t) {
 			XposedBridge.log(t);
+			tx = TrafficStats.getTotalTxBytes();
+			rx = TrafficStats.getTotalRxBytes();
 		}
+
 		return new Pair<Long, Long>(tx, rx);
 	}
 
@@ -1537,7 +1577,7 @@ public class System {
 				ConnectivityManager mConnectivityManager = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 				NetworkInfo activeNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
 				if (activeNetworkInfo != null)
-					if (activeNetworkInfo.isConnected()) isConnected = true;
+				if (activeNetworkInfo.isConnected()) isConnected = true;
 				if (isConnected) {
 					long nanoTime = nanoTime();
 					long newTime = nanoTime - measureTime;
@@ -4988,16 +5028,39 @@ public class System {
 		});
 	}
 
-	@SuppressLint("StaticFieldLeak")
-	private static TextView lux = null;
+	private static final TextView[] lux = { null, null, null };
 	private static class LuxListener implements SensorEventListener {
 		@Override
 		public void onSensorChanged(SensorEvent event) {
-			if (lux != null && lux.isAttachedToWindow()) try {
-				Long last = (Long)lux.getTag();
-				if (last != null && currentTimeMillis() - last < 750) return;
-				lux.setText(Helpers.getModuleContext(lux.getContext()).getResources().getString(R.string.lux, String.valueOf(Math.round(event.values[0]))));
-				lux.setTag(currentTimeMillis());
+			long cTime = currentTimeMillis();
+			String caption = null;
+
+			if (lux[0] != null && lux[0].isAttachedToWindow()) try {
+				Long last = (Long)lux[0].getTag();
+				if (last != null && cTime - last < 750) return;
+				caption = Helpers.getModuleContext(lux[0].getContext()).getResources().getString(R.string.lux, String.valueOf(Math.round(event.values[0])));
+				lux[0].setText(caption);
+				lux[0].setTag(cTime);
+			} catch (Throwable t) {
+				XposedBridge.log(t);
+			}
+
+			if (lux[1] != null && lux[1].isAttachedToWindow()) try {
+				Long last = (Long)lux[1].getTag();
+				if (last != null && cTime - last < 750) return;
+				if (caption == null) Helpers.getModuleContext(lux[1].getContext()).getResources().getString(R.string.lux, String.valueOf(Math.round(event.values[0])));
+				lux[1].setText(caption);
+				lux[1].setTag(cTime);
+			} catch (Throwable t) {
+				XposedBridge.log(t);
+			}
+
+			if (lux[2] != null && lux[2].isAttachedToWindow()) try {
+				Long last = (Long)lux[2].getTag();
+				if (last != null && cTime - last < 750) return;
+				if (caption == null) Helpers.getModuleContext(lux[2].getContext()).getResources().getString(R.string.lux, String.valueOf(Math.round(event.values[0])));
+				lux[2].setText(caption);
+				lux[2].setTag(cTime);
 			} catch (Throwable t) {
 				XposedBridge.log(t);
 			}
@@ -5050,35 +5113,54 @@ public class System {
 		}
 	}
 
+	public static void setTextColors(Context context, TextView textView) {
+		textView.setTextColor(Helpers.isNightMode(context) ? 0xFFDDDDDD : 0xFF606060);
+		if (Helpers.isNightMode(context))
+			textView.setShadowLayer(context.getResources().getDisplayMetrics().density, 1f, 1f, 0xEE222224);
+		else
+			textView.setShadowLayer(0, 0, 0, Color.WHITE);
+	}
+
 	public static void BrightnessLuxHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookConstructor("com.android.systemui.settings.ToggleSliderView", lpparam.classLoader, Context.class, AttributeSet.class, int.class, new MethodHook() {
+		MethodHook hook = new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				Context context = (Context)param.args[0];
-				if (((View)param.thisObject).getId() != context.getResources().getIdentifier("qs_brightness", "id", lpparam.packageName)) return;
+				ViewGroup container = (ViewGroup)param.thisObject;
+				int port = context.getResources().getIdentifier("qs_brightness", "id", lpparam.packageName);
+				int land = context.getResources().getIdentifier("qs_brightness_land", "id", lpparam.packageName);
+				if (container.getId() != port && container.getId() != land) return;
 
-				lux = new TextView(context);
+				TextView clux = new TextView(context);
 				RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 				lp.alignWithParent = true;
 				lp.addRule(RelativeLayout.CENTER_IN_PARENT);
-				lux.setLayoutParams(lp);
-				lux.setGravity(Gravity.CENTER);
-				lux.setTextColor(Helpers.isNightMode(context) ? 0xFFBDBDBE : 0xFF606060);
+				clux.setLayoutParams(lp);
+				clux.setGravity(Gravity.CENTER);
 
 				boolean isAlt = MainModule.mPrefs.getBoolean("system_showlux_style");
-				if (Helpers.isNightMode(context))
-					lux.setShadowLayer(isAlt ? 0.1f : lux.getResources().getDisplayMetrics().density * 1.5f, 0, 1f, isAlt ? 0x66222224 : 0x99222224);
-				else
-					lux.setShadowLayer(0, 0, 0, Color.WHITE);
-
+				setTextColors(context, clux);
 				if (isAlt) {
-					lux.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-					lux.setAlpha(0.25f);
+					clux.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+					clux.setAlpha(0.33f);
 				}
 
-				((ViewGroup)param.thisObject).addView(lux);
+				container.addView(clux);
+
+				if (Helpers.is12() && "QCToggleSliderView".equals(param.thisObject.getClass().getSimpleName())) {
+					if (container.getId() == land)
+						lux[2] = clux;
+					else
+						lux[1] = clux;
+				} else {
+					lux[0] = clux;
+				}
 			}
-		});
+		};
+
+		Helpers.findAndHookConstructor("com.android.systemui.settings.ToggleSliderView", lpparam.classLoader, Context.class, AttributeSet.class, int.class, hook);
+		if (Helpers.is12())
+		Helpers.findAndHookConstructor("com.android.systemui.miui.controlcenter.QCToggleSliderView", lpparam.classLoader, Context.class, AttributeSet.class, int.class, hook);
 
 		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "makeStatusBarView", new MethodHook() {
 			@Override
@@ -5101,6 +5183,32 @@ public class System {
 					unregisterLuxListener(param.thisObject);
 			}
 		});
+
+		if (Helpers.is12()) {
+			Helpers.findAndHookMethod("com.android.systemui.miui.controlcenter.QSControlCenterPanel", lpparam.classLoader, "setListening", boolean.class, new MethodHook() {
+				@Override
+				protected void after(final MethodHookParam param) throws Throwable {
+					boolean isExpanded = (boolean)param.args[0];
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					Object mApplication = XposedHelpers.callMethod(mContext.getApplicationContext(), "getSystemUIApplication");
+					Object mStatusBar = XposedHelpers.callMethod(mApplication, "getComponent", findClassIfExists("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader));
+					boolean mListenerEnabled = (boolean)XposedHelpers.getAdditionalInstanceField(mStatusBar, "mListenerEnabled");
+					if (isExpanded && !mListenerEnabled)
+						registerLuxListener(mStatusBar);
+					else if (!isExpanded && mListenerEnabled)
+						unregisterLuxListener(mStatusBar);
+				}
+			});
+
+			Helpers.findAndHookMethod("com.android.systemui.miui.controlcenter.QSControlCenterPanel", lpparam.classLoader, "updateResources", new MethodHook() {
+				@Override
+				protected void after(final MethodHookParam param) throws Throwable {
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					if (lux[1] != null) setTextColors(mContext, lux[1]);
+					if (lux[2] != null) setTextColors(mContext, lux[2]);
+				}
+			});
+		}
 
 		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "onScreenTurnedOff", new MethodHook() {
 			@Override
@@ -5145,9 +5253,11 @@ public class System {
 			lp.gravity = Gravity.CENTER_HORIZONTAL|Gravity.TOP;
 			mPct.setPadding(Math.round(20 * density), Math.round(10 * density), Math.round(18 * density), Math.round(12 * density));
 			mPct.setLayoutParams(lp);
-			container.addView(mPct);
+		} else {
+			ViewGroup parent = (ViewGroup)mPct.getParent();
+			if (parent != null) parent.removeView(mPct);
 		}
-
+		container.addView(mPct);
 		mPct.setTag(source);
 		int panelResId = res.getIdentifier("panel_round_corner_bg", "drawable", "com.android.systemui");
 		mPct.setBackground(res.getDrawable(panelResId, context.getTheme()));
@@ -5179,11 +5289,28 @@ public class System {
 			}
 		});
 
-//		Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BrightnessMirrorController", lpparam.classLoader, "updateResources", new MethodHook() {
-//			@Override
-//			protected void after(final MethodHookParam param) throws Throwable {
-//			}
-//		});
+		if (Helpers.is12()) {
+			Helpers.findAndHookMethod("com.android.systemui.miui.controlcenter.policy.QCBrightnessMirrorController", lpparam.classLoader, "showMirror", new MethodHook() {
+				@Override
+				protected void after(final MethodHookParam param) throws Throwable {
+					ViewGroup mControlPanelContentView = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mControlPanelContentView");
+					if (mControlPanelContentView == null) {
+						Helpers.log("BrightnessPctHook", "mControlPanelContentView is null");
+						return;
+					}
+					initPct((ViewGroup)mControlPanelContentView.getParent(), 1);
+					mPct.setVisibility(View.VISIBLE);
+					mPct.animate().alpha(1.0f).setDuration(300).start();
+				}
+			});
+
+			Helpers.findAndHookMethod("com.android.systemui.miui.controlcenter.policy.QCBrightnessMirrorController", lpparam.classLoader, "hideMirror", new MethodHook() {
+				@Override
+				protected void after(final MethodHookParam param) throws Throwable {
+					if (mPct != null) mPct.setVisibility(View.GONE);
+				}
+			});
+		}
 
 		Helpers.hookAllMethods("com.android.systemui.settings.BrightnessController", lpparam.classLoader, "onChanged", new MethodHook() {
 			@Override
@@ -5781,21 +5908,24 @@ public class System {
 		});
 
 		final Class<?> buCls = XposedHelpers.findClassIfExists("com.android.settingslib.display.BrightnessUtils", lpparam.classLoader);
-		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "interceptTouchEvent", MotionEvent.class, new MethodHook() {
+		MethodHook hook = new MethodHook() {
 			@Override
 			@SuppressLint("SetTextI18n")
 			protected void before(final MethodHookParam param) throws Throwable {
-				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				boolean isInControlCenter = Helpers.is12() && "ControlPanelWindowView".equals(param.thisObject.getClass().getSimpleName());
+				Context mContext = isInControlCenter ? ((View)param.thisObject).getContext() : (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				Resources res = mContext.getResources();
+				int sbHeight = res.getDimensionPixelSize(res.getIdentifier("status_bar_height", "dimen", "android"));
 				MotionEvent event = (MotionEvent)param.args[0];
 				switch (event.getActionMasked()) {
 					case MotionEvent.ACTION_DOWN:
-						isSlidingStart = !XposedHelpers.getBooleanField(param.thisObject, "mPanelExpanded");
 						tapStartX = event.getX();
 						tapStartY = event.getY();
+						isSlidingStart = isInControlCenter ? tapStartY <= sbHeight : !XposedHelpers.getBooleanField(param.thisObject, "mPanelExpanded");
 						tapStartPointers = 1;
 						tapStartBrightness = Settings.System.getInt(mContext.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 0);
 						if (MainModule.mPrefs.getBoolean("system_showpct")) {
-							ViewGroup mStatusBarWindow = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mStatusBarWindow");
+							ViewGroup mStatusBarWindow = isInControlCenter ? (ViewGroup)param.thisObject : (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mStatusBarWindow");
 							if (mStatusBarWindow == null)
 								Helpers.log("StatusBarGesturesHook", "mStatusBarWindow is null");
 							else
@@ -5823,10 +5953,8 @@ public class System {
 						break;
 					case MotionEvent.ACTION_MOVE:
 						if (!isSlidingStart) return;
-						Resources res = mContext.getResources();
 						DisplayMetrics metrics = res.getDisplayMetrics();
-						int sbheight = res.getDimensionPixelSize(res.getIdentifier("status_bar_height", "dimen", "android"));
-						if (event.getY() - tapStartY > sbheight) return;
+						if (event.getY() - tapStartY > sbHeight) return;
 						float delta = event.getX() - tapStartX;
 						if (delta == 0) return;
 						if (!isSliding && Math.abs(delta) > metrics.widthPixels / 10f) isSliding = true;
@@ -5872,7 +6000,11 @@ public class System {
 						break;
 				}
 			}
-		});
+		};
+
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "interceptTouchEvent", MotionEvent.class, hook);
+		if (Helpers.is12())
+		Helpers.findAndHookMethod("com.android.systemui.miui.statusbar.phone.ControlPanelWindowView", lpparam.classLoader, "onTouchEvent", MotionEvent.class, hook);
 	}
 
 	public static void ScreenshotConfigHook(LoadPackageParam lpparam) {
@@ -6251,7 +6383,7 @@ public class System {
 	}
 
 	public static void InactiveBrightnessSliderHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.android.systemui.settings.ToggleSliderView", lpparam.classLoader, "onAttachedToWindow", new MethodHook() {
+		MethodHook hook = new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				int opt = MainModule.mPrefs.getStringAsInt("system_inactivebrightness", 1);
@@ -6275,7 +6407,10 @@ public class System {
 					XposedBridge.log(t);
 				}
 			}
-		});
+		};
+		Helpers.findAndHookMethod("com.android.systemui.settings.ToggleSliderView", lpparam.classLoader, "onAttachedToWindow", hook);
+		if (Helpers.is12())
+		Helpers.findAndHookMethod("com.android.systemui.miui.controlcenter.QCToggleSliderView", lpparam.classLoader, "onAttachedToWindow", hook);
 	}
 
 	private static final float[] startPos = new float[2];
@@ -6509,6 +6644,32 @@ public class System {
 				param.setResult(opt == -1 ? 9999 : opt);
 			}
 		});
+
+//		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.NotificationIconContainer", lpparam.classLoader, "calculateIconTranslations", new MethodHook() {
+//			@Override
+//			@SuppressWarnings("unchecked")
+//			protected void after(MethodHookParam param) throws Throwable {
+//				HashMap<View, ?> mIconStates = (HashMap<View, ?>)XposedHelpers.getObjectField(param.thisObject, "mIconStates");
+//				if (mIconStates.size() == 0) return;
+//				int opt = MainModule.mPrefs.getStringAsInt("system_maxsbicons", 0);
+//				ViewGroup container = (ViewGroup)param.thisObject;
+//				for (int i = 0; i < container.getChildCount(); i++)
+//				if (opt == -1 || i < opt) {
+//					Object mIconState = mIconStates.get(container.getChildAt(i));
+//					if (mIconState == null) continue;
+//					XposedHelpers.setIntField(mIconState, "visibleState", 0);
+//					XposedHelpers.setFloatField(mIconState, "iconAppearAmount", 1.0f);
+//					XposedHelpers.setFloatField(mIconState, "xTranslation", (float)XposedHelpers.callMethod(param.thisObject, "getActualPaddingStart"));
+//				}
+//			}
+//		});
+
+//		Helpers.findAndHookMethod(Math.class, "min", int.class, int.class, new MethodHook() {
+//			@Override
+//			protected void before(MethodHookParam param) throws Throwable {
+//				XposedBridge.log("Math.min: " + param.args[0] + ", " + param.args[1]);
+//			}
+//		});
 	}
 
 	public static void MoreNotificationsHook(LoadPackageParam lpparam) {
@@ -6737,7 +6898,8 @@ public class System {
 			}
 		};
 		Helpers.findAndHookMethod("android.util.MiuiMultiWindowAdapter", null, "getFreeformBlackList", clearHook);
-		Helpers.findAndHookMethod("android.util.MiuiMultiWindowAdapter", null, "getFreeformBlackListFromCloud", Context.class, clearHook);
+		//noinspection ResultOfMethodCallIgnored
+		Helpers.findAndHookMethodSilently("android.util.MiuiMultiWindowAdapter", null, "getFreeformBlackListFromCloud", Context.class, clearHook);
 	}
 
 	public static ConcurrentHashMap<String, Pair<Float, Rect>> fwApps = new ConcurrentHashMap<String, Pair<Float, Rect>>();
