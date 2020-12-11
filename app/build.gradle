@@ -22,8 +22,8 @@ android {
         minSdkVersion 24
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 27
-        versionCode 59
-        versionName "3.0.4"
+        versionCode 60
+        versionName "3.0.5"
         signingConfig signingConfigs.dev
     }
     buildTypes {

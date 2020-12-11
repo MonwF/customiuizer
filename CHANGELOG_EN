@@ -1,3 +1,6 @@
+3.0.5
+Revert changes introduced in 3.0.2 that break some system mods
+
 3.0.4
 [Fixed][Detailed network speed indicator] Show correct values when VPN is active
 [Fixed] Module's settings crash

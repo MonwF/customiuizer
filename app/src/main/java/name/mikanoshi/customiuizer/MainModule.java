@@ -45,7 +45,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 				mPrefs.putAll(pref.getAll());
 		}
 
-		if (!startParam.startsSystemServer) return;
+		//if (!startParam.startsSystemServer) return; // breaks mods!
 
 		resHooks = new ResourceHooks();
 		GlobalActions.miuizerSettingsResInit();
