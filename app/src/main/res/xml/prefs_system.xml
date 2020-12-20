@@ -570,6 +570,17 @@
 			android:title="@string/system_colorizenotiftitle_title"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_messagingstylelines"
+			android:title="@string/system_messagingstylelines_title"
+			android:summary="@string/system_messagingstylelines_summ"
+			android:defaultValue="0"
+			miuizer:offtext="@string/unlimited"
+			miuizer:minValue="0"
+			miuizer:maxValue="8"
+			miuizer:stepValue="1"
+			miuizer:format="%d" />
+
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_notifmediaseekbar"
 			android:title="@string/system_notifmediaseekbar_title"
@@ -616,6 +627,21 @@
 			android:key="pref_key_system_snoozedmanager"
 			android:title="@string/system_snoozedmanager_title"
 			android:summary="@string/system_snoozedmanager_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+			android:title="@string/launcher_bugfixes" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_minimalnotifview"
+			android:summary="@string/system_minimalnotifview_summ"
+			android:title="@string/system_minimalnotifview_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_notifchannelsettings"
+			android:summary="@string/system_notifchannelsettings_summ"
+			android:title="@string/system_notifchannelsettings_title"
 			android:defaultValue="false" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
@@ -773,7 +799,7 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
-			android:title="@string/system_popupnotif_apps_title"
+			android:title="@string/system_expandnotifs_apps_title"
 			android:key="pref_key_system_betterpopups_allowfloat_apps"
 			android:dependency="pref_key_system_betterpopups_allowfloat"
 			miuizer:dynamic="true"
@@ -821,6 +847,12 @@
 			android:key="pref_key_system_fw_sticky"
 			android:title="@string/system_fw_sticky_title"
 			android:summary="@string/system_fw_sticky_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_fw_splitscreen"
+			android:title="@string/system_fw_splitscreen_title"
+			android:summary="@string/system_fw_splitscreen_summ"
 			android:defaultValue="false" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
@@ -923,6 +955,12 @@
 			android:key="pref_key_system_securelock"
 			android:summary="@string/system_securelock_summ"
 			android:title="@string/system_securelock_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_securecontrolcenter"
+			android:summary="@string/system_securecontrolcenter_summ"
+			android:title="@string/system_securecontrolcenter_title"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx

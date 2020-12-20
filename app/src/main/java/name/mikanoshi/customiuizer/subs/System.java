@@ -216,6 +216,10 @@ public class System extends SubFragment {
 					((CheckBoxPreferenceEx)findPreference("pref_key_system_notifmediaseekbar")).setChecked(false);
 					((CheckBoxPreferenceEx)findPreference("pref_key_system_notifmediaseekbar")).setUnsupported(true);
 					((CheckBoxPreferenceEx)findPreference("pref_key_system_notifmediaseekbar_full")).setUnsupported(true);
+				} else {
+					((SeekBarPreference)findPreference("pref_key_system_messagingstylelines")).setUnsupported(true);
+					((CheckBoxPreferenceEx)findPreference("pref_key_system_minimalnotifview")).setUnsupported(true);
+					((CheckBoxPreferenceEx)findPreference("pref_key_system_notifchannelsettings")).setUnsupported(true);
 				}
 
 				break;
@@ -266,7 +270,7 @@ public class System extends SubFragment {
 				findPreference("pref_key_system_recommended_fourth").setOnPreferenceClickListener(openRecentsActions);
 				break;
 			case "pref_key_system_cat_betterpopups":
-				findPreference("pref_key_system_betterpopups_allowfloat_apps").setOnPreferenceClickListener(openAppsEdit);
+				findPreference("pref_key_system_betterpopups_allowfloat_apps").setOnPreferenceClickListener(openAppsBWEdit);
 
 				if (!Helpers.is12())
 				((CheckBoxPreferenceEx)findPreference("pref_key_system_betterpopups_allowfloat")).setUnsupported(true);
@@ -334,6 +338,7 @@ public class System extends SubFragment {
 				});
 
 				((CheckBoxPreferenceEx)findPreference("pref_key_system_credentials")).setChecked(getActivity().getPackageManager().getComponentEnabledSetting(new ComponentName(getActivity(), CredentialsLauncher.class)) == PackageManager.COMPONENT_ENABLED_STATE_ENABLED);
+				if (!Helpers.is12()) ((CheckBoxPreferenceEx)findPreference("pref_key_system_securecontrolcenter")).setUnsupported(true);
 
 				break;
 			case "pref_key_system_cat_other":

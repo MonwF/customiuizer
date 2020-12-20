@@ -2,7 +2,6 @@ package name.mikanoshi.customiuizer.mods;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -273,7 +272,7 @@ public class Controls {
 		Helpers.findAndHookMethod("android.media.MediaPlayer", null, "pause", new MethodHook() {
 			@Override
 			protected void before(final MethodHookParam param) throws Throwable {
-				Application mContext = (Application)XposedHelpers.callStaticMethod(XposedHelpers.findClass("android.app.ActivityThread", null), "currentApplication");
+				Context mContext = Helpers.findContext();
 				int mStreamType = (int)XposedHelpers.findMethodExact(XposedHelpers.findClass("android.media.MediaPlayer", null), "getAudioStreamType").invoke(param.thisObject);
 				if (mContext != null && (mStreamType == AudioManager.STREAM_MUSIC || mStreamType == 0x80000000)) {
 					Intent intent = new Intent(GlobalActions.ACTION_PREFIX + "SaveLastMusicPausedTime");

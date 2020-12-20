@@ -225,6 +225,14 @@ public class SubFragment extends PreferenceFragmentBase {
 		}
 	};
 
+	public Preference.OnPreferenceClickListener openAppsBWEdit = new Preference.OnPreferenceClickListener() {
+		@Override
+		public boolean onPreferenceClick(Preference preference) {
+			openAppsBW(preference.getKey());
+			return true;
+		}
+	};
+
 	public Preference.OnPreferenceClickListener openShareEdit = new Preference.OnPreferenceClickListener() {
 		@Override
 		public boolean onPreferenceClick(Preference preference) {
@@ -317,6 +325,16 @@ public class SubFragment extends PreferenceFragmentBase {
 		Bundle args = new Bundle();
 		args.putString("key", key);
 		args.putBoolean("multi", true);
+		AppSelector appSelector = new AppSelector();
+		appSelector.setTargetFragment(this, 0);
+		openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_apps, R.layout.prefs_app_selector);
+	}
+
+	void openAppsBW(String key) {
+		Bundle args = new Bundle();
+		args.putString("key", key);
+		args.putBoolean("multi", true);
+		args.putBoolean("bw", true);
 		AppSelector appSelector = new AppSelector();
 		appSelector.setTargetFragment(this, 0);
 		openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_apps, R.layout.prefs_app_selector);

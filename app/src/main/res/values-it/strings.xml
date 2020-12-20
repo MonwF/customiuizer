@@ -74,6 +74,8 @@
     <string name="system_calendar_app_summ">Apri l\'app selezionata quando tappi la data nella parte superiore del riquadro delle notifiche</string>
     <string name="system_clockseconds_title">Mostra secondi</string>
     <string name="system_clockseconds_summ">Mostra secondi nella barra di stato dell\'orario</string>
+    <string name="system_maxsbicons_title">Limite delle icone di notifica</string>
+    <string name="system_maxsbicons_summ">Numero icone di notifica da visualizzare prima di trasformarle in punti</string>
     <string name="system_mobiletypeicon_title">Nascondi tipo di rete mobile in uso</string>
     <string name="system_mobiletypeicon_summ">Rimuovi l\'icona del tipo di rete mobile in uso dalla barra di stato</string>
     <string name="system_4gtolte_title">Mostra l\'icona LTE al posto di 4G</string>
@@ -107,6 +109,12 @@
     <string name="system_compactnotif_summ">Riduci le notifiche per il padding verticale</string>
     <string name="system_colorizenotiftitle_title">Colora il titolo della notifica</string>
     <string name="system_colorizenotiftitle_summ">Applica il colore dell\'icona al testo del titolo (solo stile di notifica Android)</string>
+    <string name="system_minimalnotifview_title">Riporta la visualizzazione ridotta al minimo</string>
+    <string name="system_minimalnotifview_summ">Le notifiche di importanza minima potrebbero essere nuovamente compresse in una visualizzazione su una riga</string>
+    <string name="system_notifchannelsettings_title">Apri le impostazioni del canale</string>
+    <string name="system_notifchannelsettings_summ">L\'apertura delle impostazioni dal menu di notifica porta alle impostazioni del canale invece delle impostazioni di notifica comuni dell\'app</string>
+    <string name="system_messagingstylelines_title">Numero massimo di righe nello stile di messaggistica</string>
+    <string name="system_messagingstylelines_summ">Limita il numero di righe visualizzate nelle notifiche in stile messaggistica</string>
     <string name="system_removedismiss_title">Nascondi tasto pulisci</string>
     <string name="system_removedismiss_summ">Nascondi il pulsante che rimuove tutte le notifiche</string>
     <string name="system_showlux_title">Mostra livello di illuminamento</string>
@@ -140,6 +148,8 @@
     <string name="system_popupnotif_fs_title">Forza schermo intero</string>
     <string name="system_popupnotif_fs_summ">Non aprire il riquadro delle notifiche quando è attiva l\'app a schermo intero (non si applica alla modalità immersiva con stato e barre di navigazione nascosti)</string>
     <string name="system_popupnotif_apps_title">App selezionate</string>
+    <string name="various_collapsemiuititles_title">Comprimi i titoli MIUI</string>
+    <string name="various_collapsemiuititles_summ">Configura lo stato del titolo della barra delle azioni in tutte le app MIUI 12</string>
     <string name="system_mods_screenshots">Screenshots</string>
     <string name="system_screenshot_title">Configura uno Screenshot</string>
     <string name="system_screenshot_summ">Personalizza il formato, la qualità e salva la cartella per gli screenshot</string>
@@ -165,6 +175,12 @@
     <string name="system_maxbrightness_title">Luminosità automatica massima</string>
     <string name="system_autobrightness_hlg_title">Usa sempre una scala non lineare</string>
     <string name="system_autobrightness_hlg_summ">Abilita se le percentuali di luminosità in mod non corrispondono a quelle reali nelle versioni inferiori a Android 9</string>
+    <string name="system_audiosilencer_title">"Silenziatore audio "</string>
+    <string name="system_audiosilencer_summ">Disattiva qualsiasi suono che possa essere identificato in modo univoco</string>
+    <string name="system_audiosilencer_last_title">Aggiorna la lista</string>
+    <string name="system_audiosilencer_last_summ">Recupera un elenco di suoni riprodotti di recente</string>
+    <string name="system_audiosilencer_silenced">Suoni silenziati</string>
+    <string name="system_audiosilencer_played">Suoni riprodotti</string>
     <string name="system_nosafevolume_title">Disabilita l\'avviso del volume elevato</string>
     <string name="system_nosafevolume_summ">Non mostrare la finestra di dialogo quando il volume raggiunge un livello non sicuro</string>
     <string name="system_noducking_title">Disattiva il ducking</string>
@@ -175,8 +191,15 @@
     <string name="system_separatevolume_summ">Consenti di configurare un volume separato per suonerie/notifiche/suoni di sistema in Impostazioni</string>
     <string name="system_separatevolume_slider_title">Cursore del volume delle notifiche</string>
     <string name="system_separatevolume_slider_summ">Aggiungi il cursore al menù esteso del volume</string>
+    <string name="system_nomediamute_title">Nessun muto multimediale</string>
+    <string name="system_nomediamute_summ">Non impostare il volume del supporto su zero in modalità Non disturbare</string>
+    <string name="system_dndtoggle_title">Attiva/disattiva la modalità DND</string>
+    <string name="system_dndtoggle_summ">Il pulsante crea nella finestra di dialogo del volume compresso attiva la modalità Non disturbare invece della modalità Silenzioso</string>
     <string name="system_volumetimer_title">Timer estesi</string>
     <string name="system_volumetimer_summ">Aggiungi più intervalli ai timer per le modalità Silenzioso e Non disturbare</string>
+    <string name="system_volumedialogdelay_collapsed_title">Ritardo per nascondere automaticamente la finestra di dialogo del volume</string>
+    <string name="system_volumedialogdelay_collapsed_summ">Crollo</string>
+    <string name="system_volumedialogdelay_expanded_summ">Espanso</string>
     <string name="system_volumesteps_title">Moltiplicatore regolatore volume</string>
     <string name="system_volumesteps_summ">Aumenta il numero di tacche del volume per ciascun tipo di cursore</string>
     <string name="system_visualizer_title">Visualizzatore musicale</string>
@@ -215,6 +238,8 @@
     <string name="system_scramblepin_summ">Cambia casualmente l\'ordine dei pulsanti PIN</string>
     <string name="system_securelock_title">Schermata di blocco estesa</string>
     <string name="system_securelock_summ">Disabilita il menù di accensione mentre il blocco schermo è attivo</string>
+    <string name="system_securecontrolcenter_title">Sicurezza centro di controllo</string>
+    <string name="system_securecontrolcenter_summ">Disabilita il Centro di controllo mentre il blocco dello schermo è attivo</string>
     <string name="system_nopassword_title">Nessuna password dopo il riavvio</string>
     <string name="system_nopassword_summ">Non richiedere la password al posto dello sblocco con impronta dopo il riavvio. 
 È improbabile che funzioni su dispositivi crittografati.</string>
@@ -272,6 +297,8 @@
     <string name="system_uimode_summ">Cambia modalità in scuro, chiaro o automatico. Nessun riavvio richiesto.</string>
     <string name="system_uimodetile_title">Pulsante modalità scura</string>
     <string name="system_uimodetile_summ">Aggiungi il pulsante per attivare la modalità scura nelle impostazioni rapide. Non è richiesto il riavvio.</string>
+    <string name="system_nodarkforce_title">Disabilita la modalità scura forzata</string>
+    <string name="system_nodarkforce_summ">Non invertire alcuni colori in modalità scura</string>
     <string name="system_epm_title">Menù di accensione esteso</string>
     <string name="system_epm_summ">Aggiungi nuove opzioni di riavvio al menu di accensione (modalità Fastboot, modalità recovery, Riavvio veloce, Riavvio interfaccia utente, Riavvio Launcher)</string>
     <string name="system_downgrade_title">Consenti downgrade</string>
@@ -313,6 +340,8 @@
     <string name="system_orientationlock_summ">Aggiungi nelle impostazioni rapide un pulsante che può bloccare la rotazione in modalità verticale o orizzontale</string>
     <string name="system_notifafterunlock_title">Mantieni notifiche</string>
     <string name="system_notifafterunlock_summ">Mostra le notifiche sulla schermata di blocco anche dopo che è stata eliminata e quindi riaperta</string>
+    <string name="system_morenotif_title">Altre notifiche</string>
+    <string name="system_morenotif_summ">Aumenta il limite di notifiche attive per una singola app da 10 a 24</string>
     <string name="system_allowdirectreply_title">Risposta diretta senza sblocco</string>
     <string name="system_allowdirectreply_summ">Non è necessario lo sblocco del dispositivo per utilizzare la risposta diretta sulla schermata di blocco</string>
     <string name="system_allownotifonkeyguard_title">Consenti nella schermata di blocco</string>
@@ -363,8 +392,17 @@
     <string name="system_betterpopups_delay_title">Nascondi automaticamente il ritardo</string>
     <string name="system_betterpopups_nohide_title">Non nascondere automaticamente</string>
     <string name="system_betterpopups_nohide_summ">Non eliminare automaticamente i popup</string>
+    <string name="system_betterpopups_allowfloat_title">Consenti finestra fluttuante</string>
+    <string name="system_betterpopups_allowfloat_summ">Apri l\'app in una finestra fluttuante al gesto di scorrimento verso il basso se per la notifica è stata definita un\'azione di clic appropriata</string>
     <string name="system_betterpopups_swipedown_title">Abilita di scorrimento verso il basso</string>
     <string name="system_betterpopups_swipedown_summ">Apri il riquadro delle notifiche con lo scorrimento verso il basso</string>
+    <string name="system_mods_floatingwindows">Finestre fluttuanti</string>
+    <string name="system_fw_noblacklist_title">Disabilita la lista nera</string>
+    <string name="system_fw_noblacklist_summ">Consenti a qualsiasi app di essere aperta in una finestra mobile</string>
+    <string name="system_fw_sticky_title">Ricorda lo stato</string>
+    <string name="system_fw_sticky_summ">Continua ad aprire le app in finestre fluttuanti finché non vengono ripristinate manualmente a schermo intero</string>
+    <string name="system_fw_splitscreen_title">Multiwindow+</string>
+    <string name="system_fw_splitscreen_summ">Consenti l\'utilizzo di schermo diviso e finestre fluttuanti insieme</string>
     <string name="system_mods_applock">Blocco app</string>
     <string name="system_applock_title">Blocco delle app meno forzato</string>
     <string name="system_applock_summ">Non bloccare le app quando il dispositivo è bloccato se è selezionata l\'opzione con il blocco delle app dopo la chiusura</string>
@@ -574,6 +612,8 @@
     <string name="various_installappinfo_current">attuale</string>
     <string name="various_alarmcompat_title">Compatibilità sveglia</string>
     <string name="various_alarmcompat_summ">Fai in modo che le app selezionate visualizzino l\'ora corretta della sveglia successiva impostata dall\'app orologio di MIUI</string>
+    <string name="various_gboardpadding_port_title">Riempi parte inferiore in verticale</string>
+    <string name="various_gboardpadding_land_title">Riempi parte inferiore in orizzontale</string>
     <string name="various_showcallui_title">Mostra interfaccia di chiamata</string>
     <string name="various_showcallui_summ">Stabilisci quando l\'interfaccia di chiamata dovrebbe essere visualizzata al posto del popup di notifica</string>
     <string name="various_calluibright_title">Luminosità schermo durante le chiamate</string>
@@ -603,6 +643,7 @@
     <string name="appdetails_launch">Avvia</string>
     <string name="appdetails_nolaunch">L\'app non ha attività di avvio predefinite</string>
     <string name="appdetails_apk_file">Nome file APK</string>
+    <string name="appdetails_apk_version_code">Codice versione APK</string>
     <string name="appdetails_data_path">Percorso dati</string>
     <string name="appdetails_app_uid">ID Utente</string>
     <string name="appdetails_sdk">Versione SDK di destinazione</string>
@@ -611,6 +652,7 @@
     <string name="appsort_frequency">Frequenza di utilizzo</string>
     <string name="appsort_storage">Spazio utilizzato</string>
     <string name="appsort_install">Data di installazione</string>
+    <string name="gboard">Tastiera Google</string>
     <string name="calls">Chiamate</string>
     <string name="settings">Impostazioni</string>
     <string name="array_default">Predefinito</string>
@@ -738,6 +780,7 @@
     <string name="array_longpress">Pressione prolunga</string>
     <string name="array_newyear">Nuovo anno</string>
     <string name="array_lunarnewyear">Capodanno cinese</string>
+    <string name="array_covid">Coronavirus anti-vacanza</string>
     <string name="array_displayonly">"Solo display "</string>
     <string name="array_hide">Nascondi</string>
     <string name="array_render_auto">Rileva automaticamente</string>
@@ -745,6 +788,9 @@
     <string name="array_prepend">Preferito</string>
     <string name="array_newline">Inserisci come nuova riga</string>
     <string name="array_path">Percorso selezionato</string>
+    <string name="array_collapse_initial">Inizialmente</string>
+    <string name="array_collapse_permanent">Permanentemente</string>
+    <string name="unlimited">Illimitato</string>
     <string name="toggle_wifi_on">Wi-Fi attivo</string>
     <string name="toggle_wifi_off">Wi-Fi disattivo</string>
     <string name="toggle_bt_on">Bluetooth attivo</string>
@@ -833,6 +879,7 @@
     <string name="notselected">Non selezionato</string>
     <string name="warning">Attenzione!</string>
     <string name="warning_blacklist">L\'opzione elenco bianco/nero è attiva in Xposed Framework, può impedire il corretto funzionamento della mod</string>
+    <string name="warning_blacklist_sdk">Inoltre, la versione del modulo installato proviene da Google Play e presenta ulteriori limitazioni. Considera l\'idea di reinstallarlo da qualsiasi altra fonte.</string>
     <string name="open_xposed">Moduli Xposed</string>
     <string name="soft_reboot">Riavvio veloce</string>
     <string name="soft_reboot_ask">Eseguire un riavvio veloce adesso?</string>
@@ -915,4 +962,6 @@
     <string name="white_color">Bianco</string>
     <string name="black_color">Nero</string>
     <string name="auto_color">Colore barra di stato</string>
+    <string name="type_file">file</string>
+    <string name="type_res">fonte</string>
 </resources>

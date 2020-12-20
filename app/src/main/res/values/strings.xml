@@ -116,6 +116,12 @@
 	<string name="system_compactnotif_summ">Reduce notifications\' vertical paddings</string>
 	<string name="system_colorizenotiftitle_title">Colorize notification title</string>
 	<string name="system_colorizenotiftitle_summ">Apply icon\'s color to title text (Android notification style only)</string>
+	<string name="system_minimalnotifview_title">Bring back minimalistic collapsed view</string>
+	<string name="system_minimalnotifview_summ">Notifications of minimal importance could be collapsed into one-line view again</string>
+	<string name="system_notifchannelsettings_title">Open channel settings</string>
+	<string name="system_notifchannelsettings_summ">Opening settings from notification menu leads to channel settings instead of app\'s common notification settings</string>
+	<string name="system_messagingstylelines_title">Maximum line count in messaging style</string>
+	<string name="system_messagingstylelines_summ">Limit number of displayed lines in messaging style notifications</string>
 	<string name="system_removedismiss_title">Hide clear button</string>
 	<string name="system_removedismiss_summ">Remove button that clears all notifications</string>
 	<string name="system_showlux_title">Show illuminance level</string>
@@ -239,6 +245,8 @@
 	<string name="system_scramblepin_summ">Randomly change PIN buttons order</string>
 	<string name="system_securelock_title">Enhanced screen lock</string>
 	<string name="system_securelock_summ">Disable power menu while screen lock is active</string>
+	<string name="system_securecontrolcenter_title">Secure Control center</string>
+	<string name="system_securecontrolcenter_summ">Disable Control center while screen lock is active</string>
 	<string name="system_nopassword_title">No password after boot</string>
 	<string name="system_nopassword_summ">Do not require password instead of a fingerprint first time after boot. Unlikely to work on encrypted devices.</string>
 	<string name="system_albumartonlock_title">Album art as wallpaper</string>
@@ -402,6 +410,8 @@
 	<string name="system_fw_noblacklist_summ">Allow any app to be opened in a floating window</string>
 	<string name="system_fw_sticky_title">Remember state</string>
 	<string name="system_fw_sticky_summ">Keep opening apps in floating windows until they are swicthed back to full screen manually</string>
+	<string name="system_fw_splitscreen_title">Multiwindow+</string>
+	<string name="system_fw_splitscreen_summ">Allow using split screen and floating windows together</string>
 	<string name="system_mods_applock">App lock</string>
 	<string name="system_applock_title">Less strict app lock</string>
 	<string name="system_applock_summ">Do not lock apps when device is locked if option with app locking after exit is selected</string>

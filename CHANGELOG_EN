@@ -1,10 +1,24 @@
+3.0.6
+[New][MIUI 12] Allow using split screen and floating windows together
+[New][MIUI 12] Disable Control center while screen lock is active
+[New][MIUI 12] Change maximum line count in messaging style notifications (can fix truncated action buttons bug)
+[New][MIUI 12] Bring back minimalistic collapsed view for unimportant notifications
+[New][MIUI 12] Open notification channel settings instead of app's common notification settings from notification menu
+[Improved][Disable screen lock] Don't start face unlock and don't hide contents of all notifications if lock is disabled
+[Improved][Allow floating window] Supports black list now to disallow opening floating windows from popup notifications
+[Improved][Compact notifications][MIUI 12] Smaller bottom padding in MIUI style
+[Fixed][Custom lock screen actions] Zero top margin for actions list on some devices
+[Fixed][Sticky floating windows] Remember window state when launched from top widget in recent apps list
+[Fixed][Recent apps background blur] Compatibility with latest MIUI launcher versions
+[Fixed] Module's settings crash on MIUI 11 and lower
+
 3.0.5
 Revert changes introduced in 3.0.2 that break some system mods
 
 3.0.4
 [Fixed][Detailed network speed indicator] Show correct values when VPN is active
 [Fixed] Module's settings crash
-[MIUI 12] Control Center compatibility:
+[MIUI 12] Control center compatibility:
 	Show illuminance level
 	Show brightness percentage
 	Deactivate brightness slider
@@ -16,7 +30,7 @@ Revert changes introduced in 3.0.2 that break some system mods
 [New][MIUI 12] Sticky floating windows: remember window state, position and dimensions
 [New][MIUI 12] Allow any app to be opened in floating window
 [Improved][Recent apps background blur] Compatibility with recents from MIUI Launcher
-[Fixed][Expand QS action][MIUI 12] Expands control center too
+[Fixed][Expand QS action][MIUI 12] Expands Control center too
 [Fixed][Detailed network speed indicator] Android 7.1 compatibility
 [Fixed][Custom lock screen actions] Android 7.1 compatibility
 [Fixed][MIUI 12] Module's settings crash on beta ROMs

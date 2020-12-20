@@ -20,6 +20,7 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 
 	private boolean dynamic;
 	private boolean newmod = false;
+	private boolean unsupported = false;
 
 	private int mDefaultValue;
 	private int mMinValue;
@@ -102,7 +103,7 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 	public View getView(View view, ViewGroup parent) {
 		View finalView = super.getView(view, parent);
 		TextView mTitle = finalView.findViewById(android.R.id.title);
-		mTitle.setText(getTitle() + (dynamic ? " ⟲" : ""));
+		mTitle.setText(getTitle() + (unsupported ? " ⨯" : (dynamic ? " ⟲" : "")));
 		if (Helpers.is12()) mSeekBar.setAlpha(isEnabled() ? 1.0f : 0.75f);
 		if (newmod) Helpers.applyNewMod(mTitle);
 		return finalView;
@@ -274,6 +275,11 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 
 	private void saveValue() {
 		Helpers.prefs.edit().putInt(getKey(), getValue()).apply();
+	}
+
+	public void setUnsupported(boolean value) {
+		unsupported = value;
+		setEnabled(!value);
 	}
 
 	@Override

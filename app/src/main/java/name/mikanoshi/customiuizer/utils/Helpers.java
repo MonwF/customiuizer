@@ -24,6 +24,7 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -139,23 +140,25 @@ public class Helpers {
 	public static boolean showNewMods = true;
 	public static boolean miuizerModuleActive = false;
 	public static final HashSet<String> newMods = new HashSet<String>(Arrays.asList(
-		"pref_key_system_audiosilencer",
-		"pref_key_system_fw_noblacklist",
-		"pref_key_system_fw_sticky"
+		"pref_key_system_fw_splitscreen",
+		"pref_key_system_securecontrolcenter",
+		"pref_key_system_messagingstylelines",
+		"pref_key_system_minimalnotifview",
+		"pref_key_system_notifchannelsettings"
 	));
 	public static final HashMap<String, String> l10nProgress = new HashMap<String, String>() {{
 		put("ru-RU", "100.0%");
 		put("zh-CN", "100.0%");
-		put("id", "13.0%");
-		put("tr", "96.0%");
-		put("it", "96.0%");
-		put("pt-BR", "94.7%");
-		put("fr", "25.3%");
-		put("uk-UK", "97.0%");
-		put("es", "98.5%");
+		put("id", "12.8%");
+		put("tr", "95.0%");
+		put("it", "100.0%");
+		put("pt-BR", "93.7%");
+		put("fr", "25.5%");
+		put("uk-UK", "96.0%");
+		put("es", "100.0%");
 		put("sk", "3.1%");
 		put("cs", "0.0%");
-		put("de", "96.0%");
+		put("de", "95.0%");
 	}};
 
 	public static final ArrayList<String> shortcutIcons = new ArrayList<String>();
@@ -204,7 +207,7 @@ public class Helpers {
 
 	public static void setMiuiTheme(Activity act, int overrideTheme, boolean noBackground) {
 		int themeResId = 0;
-		try { themeResId = act.getResources().getIdentifier("Theme.DayNight", "style", "miui"); } catch (Throwable t) {}
+		try { themeResId = act.getResources().getIdentifier("Theme.DayNight", "style", "miui"); } catch (Throwable ignore) {}
 		if (themeResId == 0) themeResId = act.getResources().getIdentifier(isNightMode(act) ? "Theme.Dark" : "Theme.Light", "style", "miui");
 		act.setTheme(themeResId);
 		if (!Helpers.is11()) act.getTheme().applyStyle(R.style.ActivityAnimation10, true);
@@ -313,12 +316,12 @@ public class Helpers {
 		PackageManager pm = context.getPackageManager();
 
 		try {
-			pm.getPackageInfo("com.solohsu.android.edxp.manager", PackageManager.GET_ACTIVITIES);
+			pm.getPackageInfo("org.meowcat.edxposed.manager", PackageManager.GET_ACTIVITIES);
 			return true;
 		} catch (PackageManager.NameNotFoundException e) {}
 
 		try {
-			pm.getPackageInfo("org.meowcat.edxposed.manager", PackageManager.GET_ACTIVITIES);
+			pm.getPackageInfo("com.solohsu.android.edxp.manager", PackageManager.GET_ACTIVITIES);
 			return true;
 		} catch (PackageManager.NameNotFoundException e) {}
 
@@ -336,27 +339,27 @@ public class Helpers {
 	}
 
 	public static boolean areXposedResourceHooksDisabled() {
-		File d1 = new File("/data/user_de/0/com.solohsu.android.edxp.manager/conf/disable_resources");
-		File d2 = new File("/data/user_de/0/org.meowcat.edxposed.manager/conf/disable_resources");
+		File d1 = new File("/data/user_de/0/org.meowcat.edxposed.manager/conf/disable_resources");
+		File d2 = new File("/data/user_de/0/com.solohsu.android.edxp.manager/conf/disable_resources");
 		File d3 = new File("/data/user_de/0/de.robv.android.xposed.installer/conf/disable_resources");
 		return d1.exists() || d2.exists() || d3.exists();
 	}
 
 	public static boolean areXposedBlacklistsEnabled() {
-		File d1 = new File("/data/user_de/0/com.solohsu.android.edxp.manager/conf/blackwhitelist");
-		File d2 = new File("/data/user_de/0/org.meowcat.edxposed.manager/conf/blackwhitelist");
+		File d1 = new File("/data/user_de/0/org.meowcat.edxposed.manager/conf/blackwhitelist");
+		File d2 = new File("/data/user_de/0/com.solohsu.android.edxp.manager/conf/blackwhitelist");
 		File d3 = new File("/data/user_de/0/de.robv.android.xposed.installer/conf/blackwhitelist");
 		return d1.exists() || d2.exists() || d3.exists();
 	}
 
 	public static boolean openXposedApp(Context context) {
-		Intent intent = context.getPackageManager().getLaunchIntentForPackage("com.solohsu.android.edxp.manager");
+		Intent intent = context.getPackageManager().getLaunchIntentForPackage("org.meowcat.edxposed.manager");
 		if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 		try {
 			context.startActivity(intent);
 			return true;
 		} catch (Throwable e1) {
-			intent = context.getPackageManager().getLaunchIntentForPackage("org.meowcat.edxposed.manager");
+			intent = context.getPackageManager().getLaunchIntentForPackage("com.solohsu.android.edxp.manager");
 			if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 			try {
 				context.startActivity(intent);
@@ -368,7 +371,7 @@ public class Helpers {
 					context.startActivity(intent);
 					return true;
 				} catch (Throwable e3) {
-					intent =context.getPackageManager().getLaunchIntentForPackage("me.weishu.exp");
+					intent = context.getPackageManager().getLaunchIntentForPackage("me.weishu.exp");
 					if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 					try {
 						context.startActivity(intent);
@@ -388,22 +391,22 @@ public class Helpers {
 		PackageManager pm = context.getPackageManager();
 
 		try {
-			pm.getPackageInfo("com.solohsu.android.edxp.manager", PackageManager.GET_ACTIVITIES);
-			baseDir = "/data/user_de/0/com.solohsu.android.edxp.manager/";
-			file = new File(baseDir + "log/all.log");
-			if (file.exists()) return baseDir + "log/all.log";
-			file = new File(baseDir + "log/error.log");
-			if (file.exists()) return baseDir + "log/error.log";
-		} catch (Throwable t) {}
-
-		try {
 			pm.getPackageInfo("org.meowcat.edxposed.manager", PackageManager.GET_ACTIVITIES);
 			baseDir = "/data/user_de/0/org.meowcat.edxposed.manager/";
 			file = new File(baseDir + "log/all.log");
 			if (file.exists()) return baseDir + "log/all.log";
 			file = new File(baseDir + "log/error.log");
 			if (file.exists()) return baseDir + "log/error.log";
-		} catch (Throwable t) {}
+		} catch (Throwable ignore) {}
+
+		try {
+			pm.getPackageInfo("com.solohsu.android.edxp.manager", PackageManager.GET_ACTIVITIES);
+			baseDir = "/data/user_de/0/com.solohsu.android.edxp.manager/";
+			file = new File(baseDir + "log/all.log");
+			if (file.exists()) return baseDir + "log/all.log";
+			file = new File(baseDir + "log/error.log");
+			if (file.exists()) return baseDir + "log/error.log";
+		} catch (Throwable ignore) {}
 
 		try {
 			pm.getPackageInfo("de.robv.android.xposed.installer", PackageManager.GET_ACTIVITIES);
@@ -411,7 +414,7 @@ public class Helpers {
 			file = new File(baseDir + "log/error.log");
 			if (file.exists()) return baseDir + "log/error.log";
 			baseDir = null;
-		} catch (Throwable t) {}
+		} catch (Throwable ignore) {}
 
 		if (baseDir == null)
 			return null;
@@ -464,7 +467,7 @@ public class Helpers {
 		});
 		builder.show();
 	}
-	
+
 	public static boolean checkStorageReadable(Context context) {
 		String state = Environment.getExternalStorageState();
 		if (state.equals(Environment.MEDIA_MOUNTED_READ_ONLY) || state.equals(Environment.MEDIA_MOUNTED)) {
@@ -495,7 +498,7 @@ public class Helpers {
 			return false;
 		} else return true;
 	}
-	
+
 	public static boolean preparePathForBackup(Activity act, String path) {
 		if (!checkStoragePerm(act, REQUEST_PERMISSIONS_BACKUP)) return false;
 
@@ -523,8 +526,8 @@ public class Helpers {
 			try (FileOutputStream fOut = new FileOutputStream(f, false)) {
 				try (OutputStreamWriter output = new OutputStreamWriter(fOut)) {
 					output.write("");
-				} catch (Throwable e) {}
-			} catch (Throwable e) {}
+				} catch (Throwable ignore) {}
+			} catch (Throwable ignore) {}
 		}
 	}
 
@@ -613,14 +616,20 @@ public class Helpers {
 
 		if (shimmerAnim != null) shimmerAnim.cancel();
 		shimmerAnim = ValueAnimator.ofFloat(0, width, width / 1.8f, width * 1.3f);
+		shimmerAnim.removeAllUpdateListeners();
 		shimmerAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 			@Override
 			public void onAnimationUpdate(ValueAnimator animation) {
 				matrix.setTranslate((float)animation.getAnimatedValue(), 0);
-				title.getPaint().getShader().setLocalMatrix(matrix);
+				Shader shader = title.getPaint().getShader();
+				if (shader == null)
+					shimmerAnim.cancel();
+				else
+					shader.setLocalMatrix(matrix);
 				title.invalidate();
 			}
 		});
+		shimmerAnim.removeAllListeners();
 		shimmerAnim.addListener(new Animator.AnimatorListener() {
 			@Override
 			public void onAnimationEnd(Animator animation) {
@@ -797,7 +806,7 @@ public class Helpers {
 					appDual.user = 999;
 					installedAppsList.add(appDual);
 				}
-			} catch (Throwable t) {}
+			} catch (Throwable ignore) {}
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -807,7 +816,7 @@ public class Helpers {
 			}
 		});
 	}
-	
+
 	@SuppressLint("DiscouragedPrivateApi")
 	public static void getLaunchableApps(Context context) {
 		final PackageManager pm = context.getPackageManager();
@@ -837,7 +846,7 @@ public class Helpers {
 					appDual.user = 999;
 					launchableAppsList.add(appDual);
 				}
-			} catch (Throwable t) {}
+			} catch (Throwable ignore) {}
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
@@ -885,7 +894,7 @@ public class Helpers {
 					appDual.user = 999;
 					shareAppsList.add(appDual);
 				}
-			} catch (Throwable t) {}
+			} catch (Throwable ignore) {}
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -949,7 +958,7 @@ public class Helpers {
 					appDual.user = 999;
 					openWithAppsList.add(appDual);
 				}
-			} catch (Throwable t) {}
+			} catch (Throwable ignore) {}
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -1308,7 +1317,7 @@ public class Helpers {
 	@SuppressLint({"SetWorldReadable", "SetWorldWritable"})
 	public static void fixPermissionsAsync(Context context) {
 		AsyncTask.execute(() -> {
-			try { Thread.sleep(500); } catch (Throwable t) {}
+			try { Thread.sleep(500); } catch (Throwable ignore) {}
 			File pkgFolder = context.getDataDir();
 			if (pkgFolder.exists()) {
 				pkgFolder.setExecutable(true, false);
@@ -1670,7 +1679,7 @@ public class Helpers {
 		try {
 			XposedBridge.hookMethod(method, callback);
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			log(getCallerMethod(), "Failed to hook " + method.getName() + " method");
 		}
 	}
 
@@ -1678,7 +1687,7 @@ public class Helpers {
 		try {
 			XposedHelpers.findAndHookMethod(className, classLoader, methodName, parameterTypesAndCallback);
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			log(getCallerMethod(), "Failed to hook " + methodName + " method in " + className);
 		}
 	}
 
@@ -1686,7 +1695,7 @@ public class Helpers {
 		try {
 			XposedHelpers.findAndHookMethod(clazz, methodName, parameterTypesAndCallback);
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			log(getCallerMethod(), "Failed to hook " + methodName + " method in " + clazz.getCanonicalName());
 		}
 	}
 
@@ -1714,7 +1723,7 @@ public class Helpers {
 		try {
 			XposedHelpers.findAndHookConstructor(className, classLoader, parameterTypesAndCallback);
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			log(getCallerMethod(), "Failed to hook constructor in " + className);
 		}
 	}
 
@@ -1731,7 +1740,7 @@ public class Helpers {
 	public static void hookAllConstructors(Class<?> hookClass, MethodHook callback) {
 		try {
 			if (XposedBridge.hookAllConstructors(hookClass, callback).size() == 0)
-			log(getCallerMethod(), "Failed to hook " + hookClass + " constructor");
+			log(getCallerMethod(), "Failed to hook " + hookClass.getCanonicalName() + " constructor");
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
@@ -1750,7 +1759,7 @@ public class Helpers {
 	public static void hookAllMethods(Class<?> hookClass, String methodName, XC_MethodHook callback) {
 		try {
 			if (XposedBridge.hookAllMethods(hookClass, methodName, callback).size() == 0)
-			log(getCallerMethod(), "Failed to hook " + methodName + " method in " + hookClass.getSimpleName());
+			log(getCallerMethod(), "Failed to hook " + methodName + " method in " + hookClass.getCanonicalName());
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
@@ -1763,6 +1772,19 @@ public class Helpers {
 		} catch (Throwable t) {
 			return false;
 		}
+	}
+
+	@SuppressWarnings("ConstantConditions")
+	public static Context findContext() {
+		Context context = null;
+		try {
+			context = (Application)XposedHelpers.callStaticMethod(XposedHelpers.findClass("android.app.ActivityThread", null), "currentApplication");
+			if (context == null) {
+				Object currentActivityThread = XposedHelpers.callStaticMethod(XposedHelpers.findClass("android.app.ActivityThread", null), "currentActivityThread");
+				if (currentActivityThread != null) context = (Context)XposedHelpers.callMethod(currentActivityThread, "getSystemContext");
+			}
+		} catch (Throwable ignore) {}
+		return context;
 	}
 
 	public static Bitmap fastBlur(Bitmap sentBitmap, int radius) {

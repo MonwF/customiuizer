@@ -314,7 +314,7 @@ public class Dialog extends Activity {
 				xposedLog = sb.toString();
 			} catch (Throwable t) {
 				debugLog.append("Error reading log: ").append(t.getMessage()).append("\n");
-			} else debugLog.append("No accessble Xposed log found!\n");
+			} else debugLog.append("No accessible Xposed log found!\n");
 
 			if (sdcardLog.exists()) sdcardLog.delete();
 		} catch (Throwable t) {}

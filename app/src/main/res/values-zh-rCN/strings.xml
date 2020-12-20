@@ -109,6 +109,12 @@
     <string name="system_compactnotif_summ">减小通知垂直边框</string>
     <string name="system_colorizenotiftitle_title">着色通知标题</string>
     <string name="system_colorizenotiftitle_summ">将图标颜色应用到标题文本(仅Android通知样式)</string>
+    <string name="system_minimalnotifview_title">还原简约的折叠视图</string>
+    <string name="system_minimalnotifview_summ">最低重要性的通知可以重新折叠为单行视图</string>
+    <string name="system_notifchannelsettings_title">打开频道设置</string>
+    <string name="system_notifchannelsettings_summ">打开通知菜单的设置会导航至频道设置而不是应用通用通知设置</string>
+    <string name="system_messagingstylelines_title">消息样式的最大行数</string>
+    <string name="system_messagingstylelines_summ">限制消息样式通知中显示的行数</string>
     <string name="system_removedismiss_title">隐藏清除按钮</string>
     <string name="system_removedismiss_summ">移除清除所有通知的按钮</string>
     <string name="system_showlux_title">显示照度级别</string>
@@ -232,6 +238,8 @@
     <string name="system_scramblepin_summ">随机更改PIN键盘顺序</string>
     <string name="system_securelock_title">增强屏幕锁</string>
     <string name="system_securelock_summ">屏幕锁激活时禁用电源菜单</string>
+    <string name="system_securecontrolcenter_title">安全控制中心</string>
+    <string name="system_securecontrolcenter_summ">屏幕锁激活时禁用控制中心</string>
     <string name="system_nopassword_title">开机免密</string>
     <string name="system_nopassword_summ">开机后首次解锁不需要密码。此项对加密的设备无效。</string>
     <string name="system_albumartonlock_title">专辑封面设为壁纸</string>
@@ -392,6 +400,8 @@
     <string name="system_fw_noblacklist_summ">允许在浮动窗口中打开任意应用</string>
     <string name="system_fw_sticky_title">记住状态</string>
     <string name="system_fw_sticky_summ">保持在浮动窗口中打开应用，直至手动将其切换回全屏</string>
+    <string name="system_fw_splitscreen_title">多窗口</string>
+    <string name="system_fw_splitscreen_summ">允许同时使用分屏和浮窗</string>
     <string name="system_mods_applock">应用锁</string>
     <string name="system_applock_title">不严格的应用锁</string>
     <string name="system_applock_summ">如果选择了退出后应用锁定的选项，设备锁定时不要锁定应用</string>

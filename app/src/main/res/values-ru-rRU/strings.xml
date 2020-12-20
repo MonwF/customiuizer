@@ -625,6 +625,8 @@
 	<string name="system_fw_noblacklist_summ">Разрешает открывать любое приложение в плавающем окне</string>
 	<string name="system_fw_sticky_title">Запоминать состояние</string>
 	<string name="system_fw_sticky_summ">Позволяет запускать приложения в плавающих окнах пока они не переведены на полный экран вручную</string>
+	<string name="system_fw_splitscreen_title">Многооконность+</string>
+	<string name="system_fw_splitscreen_summ">Разрешает одновременно использовать разделение экрана и плавающие окна</string>
 	<string name="system_mods_applock">Защита приложений</string>
 	<string name="system_applock_title">Менее строгая защита приложений</string>
 	<string name="system_applock_summ">Отключает блокировку приложений при блокировке устройства, если выбрана опция её активации при выходе из приложения</string>
@@ -724,6 +726,12 @@
 	<string name="system_compactnotif_summ">Уменьшает вертикальные отступы в уведомлениях</string>
 	<string name="system_colorizenotiftitle_title">Раскрасить заголовок уведомления</string>
 	<string name="system_colorizenotiftitle_summ">Применяет цвет иконки к заголовку (только для стиля уведомлений Android)</string>
+	<string name="system_minimalnotifview_title">Вернуть минималистичный свёрнутый вид</string>
+	<string name="system_minimalnotifview_summ">Уведомления низкой важности при сворачивании смогут снова принимать вид в одну строку</string>
+	<string name="system_notifchannelsettings_title">Открывать настройки канала</string>
+	<string name="system_notifchannelsettings_summ">Открытие настроек из меню уведомления ведёт к настройкам канала, а не к общим настройкам уведомлений приложения</string>
+	<string name="system_messagingstylelines_title">Максимальное число строк в стиле сообщений</string>
+	<string name="system_messagingstylelines_summ">Ограничивает число отображаемых строк в уведомлениях, содержащих сообщения</string>
 	<string name="system_removedismiss_title">Скрыть кнопку удаления</string>
 	<string name="system_removedismiss_summ">Убирает из шторки кнопку для удаления всех уведомлений</string>
 	<string name="system_showlux_title">Показать уровень освещённости</string>
@@ -857,6 +865,8 @@
 	<string name="system_drawer_opacity_summ">Уровень прозрачности фона панели уведомлений из текущей темы</string>
 	<string name="system_securelock_title">Улучшенная блокировка</string>
 	<string name="system_securelock_summ">Отключает меню управления питанием во время блокировки</string>
+	<string name="system_securecontrolcenter_title">Безопасный Центр управления</string>
+	<string name="system_securecontrolcenter_summ">Отключает Центр управления во время блокировки</string>
 	<string name="toggle_flash_on">Фонарик включен</string>
 	<string name="various_appsort_title">Порядок сортировки Всех приложений</string>
 	<string name="various_sysappsupdater_summ">Приложение больше не является частью некоторых прошивок и должно быть установлено вручную</string>

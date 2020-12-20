@@ -53,8 +53,11 @@ public class PreferenceEx extends Preference implements PreferenceState {
 		valSummary.setVisibility(customSummary != null || countAsSummary ? View.VISIBLE : View.GONE);
 		if (customSummary != null)
 			valSummary.setText(customSummary);
-		else
-			valSummary.setText(countAsSummary ? String.valueOf(Helpers.prefs.getStringSet(getKey(), new LinkedHashSet<String>()).size()) : null);
+		else if (countAsSummary) {
+			int count = Helpers.prefs.getStringSet(getKey(), new LinkedHashSet<String>()).size() + Helpers.prefs.getStringSet(getKey() + "_black", new LinkedHashSet<String>()).size();
+			valSummary.setText(String.valueOf(count));
+		} else
+			valSummary.setText(null);
 		if (warning)
 			title.setTextColor(Helpers.markColor);
 		else

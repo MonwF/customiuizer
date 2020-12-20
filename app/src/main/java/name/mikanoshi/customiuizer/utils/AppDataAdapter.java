@@ -39,8 +39,10 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 	private final CopyOnWriteArrayList<AppData> filteredAppList = new CopyOnWriteArrayList<AppData>();
 	private String key = null;
 	private String selectedApp;
+	private boolean bwlist = false;
 	private int selectedUser = 0;
 	private Set<String> selectedApps = new LinkedHashSet<String>();
+	private Set<String> selectedAppsBlack = new LinkedHashSet<String>();
 	private Helpers.AppAdapterType aType = Helpers.AppAdapterType.Default;
 	private boolean multiUserSupport = false;
 
@@ -54,11 +56,17 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 	}
 
 	public AppDataAdapter(Context context, ArrayList<AppData> arr, Helpers.AppAdapterType adapterType, String prefKey) {
+		this(context, arr, adapterType, prefKey, false);
+	}
+
+	public AppDataAdapter(Context context, ArrayList<AppData> arr, Helpers.AppAdapterType adapterType, String prefKey, boolean isBW) {
 		this(context, arr);
 		key = prefKey;
 		aType = adapterType;
+		bwlist = isBW;
 		if (aType == Helpers.AppAdapterType.Mutli) {
 			selectedApps = Helpers.prefs.getStringSet(key, new LinkedHashSet<String>());
+			if (bwlist) selectedAppsBlack = Helpers.prefs.getStringSet(key + "_black", new LinkedHashSet<String>());
 			ArrayList<String> multiUserMods = new ArrayList<String>();
 			multiUserMods.add("pref_key_system_cleanshare_apps");
 			multiUserMods.add("pref_key_system_cleanopenwith_apps");
@@ -94,9 +102,10 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 	}
 
 	public void updateSelectedApps() {
-		if (aType == Helpers.AppAdapterType.Mutli)
+		if (aType == Helpers.AppAdapterType.Mutli) {
 			selectedApps = Helpers.prefs.getStringSet(key, new LinkedHashSet<String>());
-		else if (aType == Helpers.AppAdapterType.Standalone) {
+			if (bwlist) selectedAppsBlack = Helpers.prefs.getStringSet(key + "_black", new LinkedHashSet<String>());
+		} else if (aType == Helpers.AppAdapterType.Standalone) {
 			selectedApp = Helpers.prefs.getString(key, "");
 			selectedUser = Helpers.prefs.getInt(key + "_user", 0);
 		}
@@ -107,12 +116,17 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 		return (!multiUserSupport && (selectedApps.contains(pkgName) || selectedApps.contains(pkgName + "|0"))) || (multiUserSupport && selectedApps.contains(pkgName + "|" + user));
 	}
 
+	private boolean shouldSelectBW(String pkgName) {
+		return selectedApps.contains(pkgName) || selectedAppsBlack.contains(pkgName);
+	}
+
 	private void sortList() {
 		filteredAppList.sort(new Comparator<AppData>() {
 			public int compare(AppData app1, AppData app2) {
-				if (aType == Helpers.AppAdapterType.Mutli && selectedApps.size() > 0) {
-					boolean app1checked = shouldSelect(app1.pkgName, app1.user);
-					boolean app2checked = shouldSelect(app2.pkgName, app2.user);
+				if (aType == Helpers.AppAdapterType.Mutli) {
+					if (selectedApps.size() == 0 && selectedAppsBlack.size() == 0) return 0;
+					boolean app1checked = bwlist ? shouldSelectBW(app1.pkgName) : shouldSelect(app1.pkgName, app1.user);
+					boolean app2checked = bwlist ? shouldSelectBW(app2.pkgName) : shouldSelect(app2.pkgName, app2.user);
 					if (app1checked && app2checked)
 						return 0;
 					else if (app1checked)
@@ -161,10 +175,11 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 		ImageView itemIsDis = row.findViewById(R.id.icon_disable);
 		ImageView itemIsDual = row.findViewById(R.id.icon_dual);
 		CheckBox itemChecked = row.findViewById(android.R.id.checkbox);
-		if (itemChecked.getTag() == null || !(boolean)itemChecked.getTag()) {
+		if (!bwlist && (itemChecked.getTag() == null || !(boolean)itemChecked.getTag())) {
 			itemChecked.setTag(true);
 			Helpers.setMiuiCheckbox(itemChecked);
 		}
+		ImageView itemStateIcon = row.findViewById(android.R.id.selectedIcon);
 		TextView itemTitle = row.findViewById(android.R.id.title);
 		TextView itemSummary = row.findViewById(android.R.id.summary);
 		ImageView itemIcon = row.findViewById(android.R.id.icon);
@@ -197,8 +212,13 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 
 		if (aType == Helpers.AppAdapterType.Mutli) {
 			itemSummary.setVisibility(View.GONE);
-			itemChecked.setVisibility(View.VISIBLE);
-			itemChecked.setChecked(selectedApps.size() > 0 && shouldSelect(ad.pkgName, ad.user));
+			if (bwlist) {
+				itemStateIcon.setVisibility(View.VISIBLE);
+				itemStateIcon.setImageResource(selectedApps.contains(ad.pkgName) ? R.drawable.icon_action_allow : selectedAppsBlack.contains(ad.pkgName) ? R.drawable.icon_action_disallow : R.drawable.icon_action_default);
+			} else {
+				itemChecked.setVisibility(View.VISIBLE);
+				itemChecked.setChecked(shouldSelect(ad.pkgName, ad.user));
+			}
 			itemIsDual.setVisibility(ad.user != 0 ? View.VISIBLE : View.GONE);
 		} else if (aType == Helpers.AppAdapterType.CustomTitles) {
 			itemSummary.setText(Helpers.prefs.getString(key + ":" + ad.pkgName + "|" + ad.actName + "|" + ad.user, ""));

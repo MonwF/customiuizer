@@ -12,10 +12,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
+import android.graphics.LinearGradient;
+import android.graphics.Shader;
+import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.net.wifi.WifiManager;
 import android.nfc.NfcAdapter;
@@ -33,6 +35,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -44,7 +47,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
@@ -158,24 +160,22 @@ public class GlobalActions {
 					Process.sendSignal(Process.myPid(), Process.SIGNAL_KILL);
 				}
 
-				if (action.equals(ACTION_PREFIX + "CollectLogs")) {
-					try {
-						String errorLogPath = Helpers.getXposedInstallerErrorLog(context);
-						if (errorLogPath != null)
-						try (InputStream in = new FileInputStream(errorLogPath)) {
-							String dir = Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder;
-							new File(dir).mkdirs();
-							File sdcardLog = new File(dir + Helpers.logFile);
-							sdcardLog.createNewFile();
-							try (OutputStream out = new FileOutputStream(sdcardLog, false)) {
-								byte[] buf = new byte[1024];
-								int len;
-								while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
-							}
+				if (action.equals(ACTION_PREFIX + "CollectLogs")) try {
+					String errorLogPath = Helpers.getXposedInstallerErrorLog(context);
+					if (errorLogPath != null)
+					try (InputStream in = new FileInputStream(errorLogPath)) {
+						String dir = Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder;
+						new File(dir).mkdirs();
+						File sdcardLog = new File(dir + Helpers.logFile);
+						sdcardLog.createNewFile();
+						try (OutputStream out = new FileOutputStream(sdcardLog, false)) {
+							byte[] buf = new byte[1024];
+							int len;
+							while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
 						}
-					} catch (Throwable t) {
-						XposedBridge.log(t);
 					}
+				} catch (Throwable t) {
+					XposedBridge.log(t);
 				}
 
 				if (action.equals(ACTION_PREFIX + "ClearMemory")) {
@@ -660,6 +660,39 @@ public class GlobalActions {
 		}
 		
 		Helpers.emptyFile(lpparam.appInfo.dataDir + "/files/uncaught_exceptions", false);
+	}
+
+	public static void miuizerEdXposedManagerInit(LoadPackageParam lpparam) {
+		Helpers.hookAllMethodsSilently("org.meowcat.edxposed.manager.ModulesFragment$ModuleAdapter", lpparam.classLoader, "getView", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				View view = (View)param.getResult();
+				if (view == null) return;
+				TextView pkgName = view.findViewById(view.getResources().getIdentifier("package_name", "id", "org.meowcat.edxposed.manager"));
+				TextView title = view.findViewById(view.getResources().getIdentifier("title", "id", "org.meowcat.edxposed.manager"));
+				if (title == null) return;
+				Boolean tag = (Boolean)title.getTag();
+				if (Helpers.modulePkg.contentEquals(pkgName.getText())) {
+					if (tag == null || !tag) {
+						title.setTag(true);
+						title.setTypeface(title.getTypeface(), Typeface.BOLD);
+						if (title.getLayout() == null)
+						title.measure(View.MeasureSpec.makeMeasureSpec(title.getResources().getDisplayMetrics().widthPixels, View.MeasureSpec.AT_MOST), 0);
+						int baseColor = (title.getCurrentTextColor() & 0x00FFFFFF) | 0xFF000000;
+						title.getPaint().setShader(new LinearGradient(
+							(int)title.getLayout().getPrimaryHorizontal(5), 0,
+							(int)title.getLayout().getPrimaryHorizontal(9), 0,
+							new int[]{ baseColor, 0xFFFE9D8C, 0xFFFD7ABD, 0xFFE178E0, 0xFFD375F6, 0xFF9190F5, 0xFF5FA2FD, baseColor },
+							new float[]{ 0.0f, 0.01f, 0.2f, 0.4f, 0.6f, 0.8f, 0.99f, 1.0f }, Shader.TileMode.CLAMP)
+						);
+					}
+				} else if (tag != null) {
+					title.setTag(null);
+					title.setTypeface(title.getTypeface(), Typeface.NORMAL);
+					title.getPaint().setShader(null);
+				}
+			}
+		});
 	}
 
 	private static int settingsIconResId;

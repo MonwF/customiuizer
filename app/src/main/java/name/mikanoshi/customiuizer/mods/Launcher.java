@@ -1422,14 +1422,14 @@ public class Launcher {
 			}
 		});
 
-		Helpers.hookAllMethods("com.miui.home.launcher.common.Utilities", lpparam.classLoader, "startBlurAnim", new MethodHook() {
-			@Override
-			protected void before(MethodHookParam param) throws Throwable {
-				param.args[2] = (float)param.args[2] * MainModule.mPrefs.getInt("system_recents_blur", 100) / 100f;
-			}
-		});
+		Class<?> utilsClass = XposedHelpers.findClassIfExists("com.miui.home.launcher.common.BlurUtils", lpparam.classLoader);
+		if (utilsClass == null) utilsClass = XposedHelpers.findClassIfExists("com.miui.home.launcher.common.Utilities", lpparam.classLoader);
+		if (utilsClass == null) {
+			Helpers.log("RecentsBlurRatioHook", "Cannot find blur utility class");
+			return;
+		}
 
-		Helpers.findAndHookMethod("com.miui.home.launcher.common.Utilities", lpparam.classLoader, "fastBlur", float.class, Window.class, new MethodHook() {
+		Helpers.hookAllMethods(utilsClass, "fastBlur", new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
 				param.args[0] = (float)param.args[0] * MainModule.mPrefs.getInt("system_recents_blur", 100) / 100f;

@@ -82,5 +82,11 @@
 			android:layout_gravity="center"
 			android:layout_marginStart="5dp"
 			android:layout_marginEnd="5dp" />
+
+		<ImageView
+			android:id="@android:id/selectedIcon"
+			android:layout_width="@dimen/action_icon_size"
+			android:layout_height="@dimen/action_icon_size"
+			android:visibility="gone" />
 	</LinearLayout>
 </LinearLayout>

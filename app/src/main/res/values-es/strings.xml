@@ -109,6 +109,12 @@
     <string name="system_compactnotif_summ">Reduce el espaciado vertical de las notificaciones</string>
     <string name="system_colorizenotiftitle_title">Colorear el título de la notificación</string>
     <string name="system_colorizenotiftitle_summ">Aplica el color del icono al texto del título (solo estilo de notificación de Android)</string>
+    <string name="system_minimalnotifview_title">Recuperar la vista minimalista colapsada</string>
+    <string name="system_minimalnotifview_summ">Las notificaciones de importancia mínima podrían colapsarse en la vista de una línea nuevamente</string>
+    <string name="system_notifchannelsettings_title">Abrir ajustes de canal</string>
+    <string name="system_notifchannelsettings_summ">Abrir la configuración desde el menú de notificaciones que conduce a la configuración del canal en lugar de la configuración de notificación común de la aplicación</string>
+    <string name="system_messagingstylelines_title">Máxima cantidad de líneas en estilo de mensajería</string>
+    <string name="system_messagingstylelines_summ">Limitar el número de líneas mostradas en las notificaciones de estilo de mensajería</string>
     <string name="system_removedismiss_title">Ocultar botón de borrar notificaciones</string>
     <string name="system_removedismiss_summ">Oculta el icono de borrar todas las notificaciones</string>
     <string name="system_showlux_title">Mostrar nivel de luminosidad</string>
@@ -169,6 +175,12 @@
     <string name="system_maxbrightness_title">Brillo automático máximo</string>
     <string name="system_autobrightness_hlg_title">Siempre use escala no lineal</string>
     <string name="system_autobrightness_hlg_summ">Habilítelo si los porcentajes de brillo en la modificación no coinciden con los reales en las versiones de Android inferiores a 9</string>
+    <string name="system_audiosilencer_title">Silenciador de audio</string>
+    <string name="system_audiosilencer_summ">Silencia cualquier sonido que pueda identificarse de forma única</string>
+    <string name="system_audiosilencer_last_title">Actualizar lista</string>
+    <string name="system_audiosilencer_last_summ">Recuperar lista de sonidos recientemente reproducidos</string>
+    <string name="system_audiosilencer_silenced">Sonidos silenciados</string>
+    <string name="system_audiosilencer_played">Sonidos reproducidos</string>
     <string name="system_nosafevolume_title">Deshabilitar advertencia de volumen alto</string>
     <string name="system_nosafevolume_summ">No mostrar diálogo cuando el volumen alcanza un nivel inseguro</string>
     <string name="system_noducking_title">Desactivar la reducción del volumen</string>
@@ -226,6 +238,8 @@
     <string name="system_scramblepin_summ">Cambiar aleatoriamente el orden de los botones PIN</string>
     <string name="system_securelock_title">Bloqueo de pantalla mejorado</string>
     <string name="system_securelock_summ">Desactiva el menú de encendido mientras el bloqueo de pantalla está activo</string>
+    <string name="system_securecontrolcenter_title">Centro de control de seguridad</string>
+    <string name="system_securecontrolcenter_summ">Deshabilitar dentro de control mientras la pantalla de bloqueo está activa</string>
     <string name="system_nopassword_title">Sin contraseña después del arranque</string>
     <string name="system_nopassword_summ">No requiere contraseña en lugar de una huella digital la primera vez después del arranque. Es poco probable que funcione en dispositivos cifrados.</string>
     <string name="system_albumartonlock_title">Arte del álbum como fondo de pantalla</string>
@@ -381,6 +395,13 @@
     <string name="system_betterpopups_allowfloat_summ">Abrir la aplicación en una ventana flotante con el gesto de deslizar hacia abajo si la notificación tiene definida una acción de clic adecuada</string>
     <string name="system_betterpopups_swipedown_title">Habilitar deslizar hacia abajo</string>
     <string name="system_betterpopups_swipedown_summ">Abrir el cajón de notificaciones en el gesto de deslizar hacia abajo</string>
+    <string name="system_mods_floatingwindows">Ventana flotante</string>
+    <string name="system_fw_noblacklist_title">Deshabilitar lista negra</string>
+    <string name="system_fw_noblacklist_summ">Permitir que cualquier aplicación sea abierta en ventana flotante</string>
+    <string name="system_fw_sticky_title">Recordar estado</string>
+    <string name="system_fw_sticky_summ">Seguir abriendo aplicaciones en ventanas flotantes hasta que se vuelvan a cambiar a pantalla completa manualmente</string>
+    <string name="system_fw_splitscreen_title">Multiventana+</string>
+    <string name="system_fw_splitscreen_summ">Permitir usar la pantalla dividida y las ventanas flotantes juntas</string>
     <string name="system_mods_applock">Bloqueo de aplicación</string>
     <string name="system_applock_title">Bloqueo de aplicaciones menos estricto</string>
     <string name="system_applock_summ">No bloquee las aplicaciones cuando el dispositivo está bloqueado si se selecciona la opción con bloqueo de la aplicación después de salir</string>
@@ -857,6 +878,7 @@
     <string name="notselected">No seleccionado</string>
     <string name="warning">¡Advertencia!</string>
     <string name="warning_blacklist">La opción de lista negra/blanca está activa en Xposed Framework, puede evitar que los mods funcionen correctamente</string>
+    <string name="warning_blacklist_sdk">Además, la versión del módulo instalado es de Google Play y tiene más limitaciones.  Considere reinstalarlo desde cualquier otra fuente.</string>
     <string name="open_xposed">Administrar módulos Xposed</string>
     <string name="soft_reboot">Reinicio suave</string>
     <string name="soft_reboot_ask">¿Realizar reinicio suave ahora?</string>
@@ -939,4 +961,6 @@
     <string name="white_color">Blanco</string>
     <string name="black_color">Negro</string>
     <string name="auto_color">Color de barra de estado</string>
+    <string name="type_file">archivo</string>
+    <string name="type_res">recurso</string>
 </resources>

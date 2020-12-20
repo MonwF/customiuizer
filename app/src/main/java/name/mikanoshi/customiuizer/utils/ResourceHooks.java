@@ -2,9 +2,10 @@ package name.mikanoshi.customiuizer.utils;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.util.Pair;
 import android.util.SparseIntArray;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
@@ -12,10 +13,14 @@ import de.robv.android.xposed.XposedHelpers;
 import name.mikanoshi.customiuizer.utils.Helpers.MethodHook;
 
 public class ResourceHooks {
+	public enum ReplacementType {
+		ID,
+		DENSITY,
+		OBJECT
+	}
+
 	private final SparseIntArray fakes = new SparseIntArray();
-	private final HashMap<String, Integer> idReplacements = new HashMap<String, Integer>();
-	private final HashMap<String, Integer> densityReplacements = new HashMap<String, Integer>();
-	private final HashMap<String, Object> objReplacements = new HashMap<String, Object>();
+	private final ConcurrentHashMap<String, Pair<ReplacementType, Object>> replacements = new ConcurrentHashMap<String, Pair<ReplacementType, Object>>();
 
 	private static int getFakeResId(String resourceName) {
 		return 0x7e000000 | (resourceName.hashCode() & 0x00ffffff);
@@ -25,15 +30,8 @@ public class ResourceHooks {
 	private final MethodHook mReplaceHook = new MethodHook() {
 		@Override
 		protected void before(MethodHookParam param) {
-			Context mContext = null;
-			try {
-				Object currentActivityThread = XposedHelpers.callStaticMethod(XposedHelpers.findClass("android.app.ActivityThread", null), "currentActivityThread");
-				if (currentActivityThread != null) mContext = (Context)XposedHelpers.callMethod(currentActivityThread, "getSystemContext");
-			} catch (Throwable t) {
-				XposedBridge.log(t);
-			}
+			Context mContext = Helpers.findContext();
 			if (mContext == null) return;
-
 			String method = param.method.getName();
 			Object value = getFakeResource(mContext, method, param.args);
 			if (value == null) {
@@ -97,9 +95,7 @@ public class ResourceHooks {
 
 	public void setResReplacement(String pkg, String type, String name, int replacementResId) {
 		try {
-			synchronized (idReplacements) {
-				idReplacements.put(pkg + ":" + type + "/" + name, replacementResId);
-			}
+			replacements.put(pkg + ":" + type + "/" + name, new Pair<>(ReplacementType.ID, replacementResId));
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
@@ -107,9 +103,7 @@ public class ResourceHooks {
 
 	public void setDensityReplacement(String pkg, String type, String name, Integer replacementResValue) {
 		try {
-			synchronized (densityReplacements) {
-				densityReplacements.put(pkg + ":" + type + "/" + name, replacementResValue);
-			}
+			replacements.put(pkg + ":" + type + "/" + name, new Pair<>(ReplacementType.DENSITY, replacementResValue));
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
@@ -117,9 +111,7 @@ public class ResourceHooks {
 
 	public void setObjectReplacement(String pkg, String type, String name, Object replacementResValue) {
 		try {
-			synchronized (objReplacements) {
-				objReplacements.put(pkg + ":" + type + "/" + name, replacementResValue);
-			}
+			replacements.put(pkg + ":" + type + "/" + name, new Pair<>(ReplacementType.OBJECT, replacementResValue));
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
@@ -135,7 +127,7 @@ public class ResourceHooks {
 			pkgName = res.getResourcePackageName((int)args[0]);
 			resType = res.getResourceTypeName((int)args[0]);
 			resName = res.getResourceEntryName((int)args[0]);
-		} catch (Throwable t) {}
+		} catch (Throwable ignore) {}
 		if (pkgName == null || resType == null || resName == null) return null;
 
 		try {
@@ -143,25 +135,17 @@ public class ResourceHooks {
 			String resFullName = pkgName + ":" + resType + "/" + resName;
 			String resAnyPkgName = "*:" + resType + "/" + resName;
 
-			synchronized (objReplacements) {
-				if (objReplacements.containsKey(resFullName)) return objReplacements.get(resFullName);
-				else if (objReplacements.containsKey(resAnyPkgName)) return objReplacements.get(resAnyPkgName);
-			}
-
-			synchronized (densityReplacements) {
-				if (densityReplacements.containsKey(resFullName))
-					return densityReplacements.get(resFullName) * res.getDisplayMetrics().density;
-				else if (densityReplacements.containsKey(resAnyPkgName))
-					return densityReplacements.get(resAnyPkgName) * res.getDisplayMetrics().density;
-			}
-
 			Integer modResId = null;
-			synchronized (idReplacements) {
-				if (idReplacements.containsKey(resFullName))
-					modResId = idReplacements.get(resFullName);
-				else if (idReplacements.containsKey(resAnyPkgName))
-					modResId = idReplacements.get(resAnyPkgName);
-			}
+			Pair<ReplacementType, Object> replacement = null;
+			if (replacements.containsKey(resFullName))
+				replacement = replacements.get(resFullName);
+			else if (replacements.containsKey(resAnyPkgName))
+				replacement = replacements.get(resAnyPkgName);
+
+			if (replacement != null)
+			if (replacement.first == ReplacementType.OBJECT) return replacement.second;
+			else if (replacement.first == ReplacementType.DENSITY) return (Integer)replacement.second * res.getDisplayMetrics().density;
+			else if (replacement.first == ReplacementType.ID) modResId = (Integer)replacement.second;
 			if (modResId == null) return null;
 
 			Resources modRes = Helpers.getModuleRes(context);

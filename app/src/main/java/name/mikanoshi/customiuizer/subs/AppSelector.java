@@ -31,6 +31,7 @@ public class AppSelector extends SubFragmentWithSearch {
 	boolean initialized = false;
 	boolean standalone = false;
 	boolean multi = false;
+	boolean bwlist = false;
 	boolean privacy = false;
 	boolean applock = false;
 	boolean customTitles = false;
@@ -47,6 +48,7 @@ public class AppSelector extends SubFragmentWithSearch {
 
 		standalone = getArguments().getBoolean("standalone");
 		multi = getArguments().getBoolean("multi");
+		bwlist = getArguments().getBoolean("bw");
 		privacy = getArguments().getBoolean("privacy");
 		applock = getArguments().getBoolean("applock");
 		customTitles = getArguments().getBoolean("custom_titles");
@@ -69,7 +71,7 @@ public class AppSelector extends SubFragmentWithSearch {
 						listView.setAdapter(new AppDataAdapter(context, Helpers.shareAppsList, Helpers.AppAdapterType.Mutli, key));
 					} else {
 						if (Helpers.installedAppsList == null) return;
-						listView.setAdapter(new AppDataAdapter(context, Helpers.installedAppsList, Helpers.AppAdapterType.Mutli, key));
+						listView.setAdapter(new AppDataAdapter(context, Helpers.installedAppsList, Helpers.AppAdapterType.Mutli, key, bwlist));
 					}
 				} else if (privacy) {
 					if (Helpers.installedAppsList == null) return;
@@ -96,7 +98,20 @@ public class AppSelector extends SubFragmentWithSearch {
 						if (multi && key != null) {
 							AppData app = (AppData)parent.getAdapter().getItem(position);
 							Set<String> selectedApps = new LinkedHashSet<String>(Helpers.prefs.getStringSet(key, new LinkedHashSet<String>()));
-							if (selectedApps.contains(share || openwith ? app.pkgName + "|" + app.user : app.pkgName)) {
+							if (bwlist) {
+								Set<String> selectedAppsBlack = new LinkedHashSet<String>(Helpers.prefs.getStringSet(key + "_black", new LinkedHashSet<String>()));
+								if (selectedApps.contains(app.pkgName)) {
+									selectedApps.remove(app.pkgName);
+									selectedAppsBlack.add(app.pkgName);
+								} else if (selectedAppsBlack.contains(app.pkgName)) {
+									selectedApps.remove(app.pkgName);
+									selectedAppsBlack.remove(app.pkgName);
+								} else {
+									selectedApps.add(app.pkgName);
+									selectedAppsBlack.remove(app.pkgName);
+								}
+								Helpers.prefs.edit().putStringSet(key + "_black", selectedAppsBlack).apply();
+							} else if (selectedApps.contains(share || openwith ? app.pkgName + "|" + app.user : app.pkgName)) {
 								selectedApps.remove(share || openwith ? app.pkgName + "|" + app.user : app.pkgName);
 							} else {
 								selectedApps.add(share || openwith ? app.pkgName + "|" + app.user : app.pkgName);
