@@ -1442,9 +1442,6 @@ public class Helpers {
 					while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
 					return true;
 				}
-			} catch (Throwable t) {
-				t.printStackTrace();
-				return false;
 			}
 		} catch (Throwable t) {
 			return false;
