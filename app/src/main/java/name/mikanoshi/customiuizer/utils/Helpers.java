@@ -1434,7 +1434,7 @@ public class Helpers {
 			String newFile = getSharedPrefsFile();
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 				Files.copy(Paths.get(prefsFile), Paths.get(newFile), StandardCopyOption.REPLACE_EXISTING);
-	    		return true;
+				return true;
 			} else try (InputStream in = new FileInputStream(prefsFile)) {
 				try (OutputStream out = new FileOutputStream(newFile, false)) {
 					byte[] buf = new byte[1024];
