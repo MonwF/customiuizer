@@ -1410,10 +1410,10 @@ public class Helpers {
 			return prefsPathCurrent;
 		} catch (Throwable t) {
 			return prefsPath;
-        } else return prefsPathCurrent;
-    }
+		} else return prefsPathCurrent;
+	}
 
-    @SuppressWarnings("ConstantConditions")
+	@SuppressWarnings("ConstantConditions")
 	public static String getSharedPrefsFile() {
 		if (prefsFileCurrent == null) try {
 			Field fFile = prefs.getClass().getDeclaredField("mFile");
@@ -1422,11 +1422,11 @@ public class Helpers {
 			return prefsFileCurrent;
 		} catch (Throwable t) {
 			return prefsFile;
-        } else return prefsFileCurrent;
-    }
+		} else return prefsFileCurrent;
+	}
 
-    public static boolean usingNewSharedPrefs() {
-    	return getSharedPrefsPath().startsWith("/data/misc/");
+	public static boolean usingNewSharedPrefs() {
+		return getSharedPrefsPath().startsWith("/data/misc/");
 	}
 
 	public static boolean migratePrefs() {
@@ -1449,7 +1449,7 @@ public class Helpers {
 		} catch (Throwable t) {
 			return false;
 		}
-    }
+	}
 
 	@SuppressLint({"SetWorldReadable", "SetWorldWritable"})
 	public static void fixPermissionsAsync(Context context) {
