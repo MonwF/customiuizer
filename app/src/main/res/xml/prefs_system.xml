@@ -889,6 +889,19 @@
 			android:title="@string/system_applock_list_title"
 			android:summary="@string/system_applock_list_summ" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_applock_skip"
+			android:title="@string/system_applock_skip_title"
+			android:summary="@string/system_applock_skip_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_applock_activities"
+			android:key="pref_key_system_applock_skip_activities"
+			android:dependency="pref_key_system_applock_skip"
+			miuizer:dynamic="true"
+			miuizer:child="true" />
+
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
@@ -922,13 +935,11 @@
 			android:title="@string/system_dttosleep_title"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
-			android:key="pref_key_system_lscurrentcharge"
-			android:title="@string/system_lscurrent_title"
-			android:summary="@string/system_lscurrent_summ"
-			android:entries="@array/lscurrent"
-			android:entryValues="@array/lscurrent_val"
-			android:defaultValue="1" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_charginginfo_cat"
+			android:summary="@string/system_charginginfo_summ"
+			android:title="@string/system_charginginfo_title"
+			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_lsalarm_cat"

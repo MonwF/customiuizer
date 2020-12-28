@@ -223,11 +223,14 @@ public class System_AudioSilencer extends SubFragment {
 			TextView itemUid = row.findViewById(android.R.id.summary);
 			TextView itemType = row.findViewById(android.R.id.text1);
 			TextView itemTime = row.findViewById(android.R.id.text2);
+
 			SoundData data = getItem(position);
-			itemPackage.setText(data.caller);
-			itemUid.setText(data.uid);
-			itemType.setText("file".equals(data.type) ? getResources().getString(R.string.type_file) : "resource".equals(data.type) ? getResources().getString(R.string.type_res) : "uri".equals(data.type) ? "URI" : "");
-			itemTime.setText(isSelected ? "" : formatter.format(data.time));
+			if (data != null) {
+				itemPackage.setText(data.caller);
+				itemUid.setText(data.uid);
+				itemType.setText("file".equals(data.type) ? getResources().getString(R.string.type_file) : "resource".equals(data.type) ? getResources().getString(R.string.type_res) : "uri".equals(data.type) ? "URI" : "");
+				itemTime.setText(isSelected ? "" : formatter.format(data.time));
+			}
 
 			if (isEnabled(position)) {
 				row.setEnabled(true);

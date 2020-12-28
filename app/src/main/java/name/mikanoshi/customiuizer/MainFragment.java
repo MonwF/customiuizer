@@ -3,7 +3,6 @@ package name.mikanoshi.customiuizer;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
@@ -32,7 +31,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -117,7 +115,7 @@ public class MainFragment extends PreferenceFragmentBase {
 				@Override
 				public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 					if (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-						hideKeyboard();
+						Helpers.hideKeyboard(getActivity(), v);
 						resultView.requestFocus();
 						return true;
 					}
@@ -144,7 +142,7 @@ public class MainFragment extends PreferenceFragmentBase {
 					public void run() {
 						samode.getSearchInput().setText(Helpers.NEW_MODS_SEARCH_QUERY);
 						samode.getSearchInput().setSelection(1, 1);
-						hideKeyboard();
+						Helpers.hideKeyboard(getActivity(), getView());
 						resultView.requestFocus();
 					}
 				}, getResources().getInteger(android.R.integer.config_longAnimTime));
@@ -214,6 +212,20 @@ public class MainFragment extends PreferenceFragmentBase {
 
 		final Activity act = getActivity();
 		final Handler handler = new Handler(act.getMainLooper());
+
+		if (Helpers.miuizerModuleActive && !Helpers.prefs.getBoolean("miuizer_prefs_migrated", false) && Helpers.usingNewSharedPrefs()) {
+			((MainActivity)act).migrateOnExit = true;
+			act.recreate();
+			return;
+		}
+
+		if (Helpers.prefs.getBoolean("miuizer_prefs_migrated", false)) {
+			int result = Helpers.prefs.getInt("miuizer_prefs_migration_result", 0);
+			if (result > 0) {
+				Helpers.prefs.edit().putInt("miuizer_prefs_migration_result", -1).apply();
+				showPrefsMigrationDialog(result == 1);
+			}
+		}
 
 		// Preventing launch delay
 		new Thread(new Runnable() {
@@ -354,7 +366,12 @@ public class MainFragment extends PreferenceFragmentBase {
 				if (actionMode != null && isSearchFocused) {
 					isSearchFocused = false;
 					Handler handler = new Handler(v.getContext().getMainLooper());
-					handler.postDelayed(MainFragment.this::hideKeyboard, getResources().getInteger(android.R.integer.config_shortAnimTime));
+					handler.postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							Helpers.hideKeyboard(getActivity(), getView());
+						}
+					}, getResources().getInteger(android.R.integer.config_shortAnimTime));
 				}
 				return false;
 			}
@@ -410,7 +427,7 @@ public class MainFragment extends PreferenceFragmentBase {
 
 		PreferenceEx warning = (PreferenceEx)findPreference("pref_key_warning");
 		if (warning != null)
-		if (Helpers.areXposedBlacklistsEnabled()) {
+		if (!Helpers.usingNewSharedPrefs() && Helpers.areXposedBlacklistsEnabled()) {
 			warning.setTitle(R.string.warning);
 			if (act.getApplicationContext().getApplicationInfo().targetSdkVersion > 27)
 				warning.setSummary(getString(R.string.warning_blacklist) + "\n" + getString(R.string.warning_blacklist_sdk));
@@ -613,14 +630,6 @@ public class MainFragment extends PreferenceFragmentBase {
 		((ModSearchAdapter)resultView.getAdapter()).getFilter().filter(filter);
 	}
 
-	public void hideKeyboard() {
-		InputMethodManager inputManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-		if (inputManager == null) return;
-		View currentFocusedView = getActivity().getCurrentFocus();
-		if (currentFocusedView != null)
-		inputManager.hideSoftInputFromWindow(currentFocusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-	}
-
 	public void createReport() {
 		ACRA.getErrorReporter().handleException(null);
 	}
@@ -679,6 +688,22 @@ public class MainFragment extends PreferenceFragmentBase {
 			builder.setTitle(R.string.warning);
 			builder.setMessage(R.string.backup_restore_info);
 			builder.setCancelable(true);
+			builder.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton){}
+			});
+			AlertDialog dlg = builder.create();
+			dlg.show();
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+	}
+
+	private void showPrefsMigrationDialog(boolean success) {
+		try {
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setTitle(R.string.warning);
+			builder.setMessage(success ? R.string.prefs_migration_success : R.string.prefs_migration_failure);
+			builder.setCancelable(false);
 			builder.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton){}
 			});

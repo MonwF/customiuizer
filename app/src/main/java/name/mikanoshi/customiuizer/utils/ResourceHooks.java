@@ -13,6 +13,8 @@ import de.robv.android.xposed.XposedHelpers;
 import name.mikanoshi.customiuizer.utils.Helpers.MethodHook;
 
 public class ResourceHooks {
+	private boolean hooksApplied = false;
+
 	public enum ReplacementType {
 		ID,
 		DENSITY,
@@ -44,7 +46,11 @@ public class ResourceHooks {
 		}
 	};
 
-	public ResourceHooks() {
+	public ResourceHooks() {}
+
+	private void applyHooks() {
+		if (hooksApplied) return;
+		hooksApplied = true;
 		Helpers.findAndHookMethod(Resources.class, "getInteger", int.class, mReplaceHook);
 		Helpers.findAndHookMethod(Resources.class, "getFraction", int.class, int.class, int.class, mReplaceHook);
 		Helpers.findAndHookMethod(Resources.class, "getBoolean", int.class, mReplaceHook);
@@ -63,6 +69,7 @@ public class ResourceHooks {
 
 	public int addResource(String resName, int resId) {
 		try {
+			applyHooks();
 			int fakeResId = getFakeResId(resName);
 			fakes.put(fakeResId, resId);
 			return fakeResId;
@@ -95,6 +102,7 @@ public class ResourceHooks {
 
 	public void setResReplacement(String pkg, String type, String name, int replacementResId) {
 		try {
+			applyHooks();
 			replacements.put(pkg + ":" + type + "/" + name, new Pair<>(ReplacementType.ID, replacementResId));
 		} catch (Throwable t) {
 			XposedBridge.log(t);
@@ -103,6 +111,7 @@ public class ResourceHooks {
 
 	public void setDensityReplacement(String pkg, String type, String name, Integer replacementResValue) {
 		try {
+			applyHooks();
 			replacements.put(pkg + ":" + type + "/" + name, new Pair<>(ReplacementType.DENSITY, replacementResValue));
 		} catch (Throwable t) {
 			XposedBridge.log(t);
@@ -111,6 +120,7 @@ public class ResourceHooks {
 
 	public void setObjectReplacement(String pkg, String type, String name, Object replacementResValue) {
 		try {
+			applyHooks();
 			replacements.put(pkg + ":" + type + "/" + name, new Pair<>(ReplacementType.OBJECT, replacementResValue));
 		} catch (Throwable t) {
 			XposedBridge.log(t);

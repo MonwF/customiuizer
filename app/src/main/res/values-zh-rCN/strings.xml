@@ -359,8 +359,6 @@
     <string name="system_taptounlock_summ">点击屏幕底部锁屏区域解锁设备</string>
     <string name="system_dttosleep_title">双击熄屏</string>
     <string name="system_dttosleep_summ">双击锁屏上任意空白处关闭屏幕</string>
-    <string name="system_lscurrent_title">显示充电电流</string>
-    <string name="system_lscurrent_summ">在锁屏底部显示充电电流值</string>
     <string name="system_lsalarm_title">显示下次闹钟</string>
     <string name="system_lsalarm_summ">显示离当前日期最近的闹钟</string>
     <string name="system_lsalarm_format_title">显示格式</string>

@@ -268,6 +268,7 @@
 	<string name="system_lockscreenshortcuts_left_title">Left screen shortcuts</string>
 	<string name="system_lockscreenshortcuts_left_summ">Manage shortcuts list</string>
 	<string name="system_lockscreenshortcuts_left_align_title">Vertical alignment</string>
+	<string name="system_lockscreenshortcuts_left_center_title">Center horizontally</string>
 	<string name="system_lockscreenshortcuts_left_skiplock_title">Do not require unlock</string>
 	<string name="system_lockscreenshortcuts_left_skiplock_summ">Launched apps could be accessed while device is still locked</string>
 	<string name="system_noscreenlock_title">Disable screen lock</string>
@@ -275,6 +276,8 @@
 	<string name="system_noscreenlock_summ">Selectively disable screen lock (does not change security for any apps and does not remove fingerprint data)</string>
 	<string name="system_noscreenlock_scr_title">Skip lock screen</string>
 	<string name="system_noscreenlock_scr_summ">Do not show lock screen at all when screen lock is disabled</string>
+	<string name="system_noscreenlock_nofaceunlock_title">Skip face unlock</string>
+	<string name="system_noscreenlock_nofaceunlock_summ">Do not start face unlock when screen lock is disabled</string>
 	<string name="system_noscreenlock_wifi_title">Trusted Wi-Fi networks</string>
 	<string name="system_noscreenlock_wifi_summ">Temporarily disable screen lock while connected to these networks</string>
 	<string name="system_noscreenlock_bt_title">Trusted Bluetooth devices</string>
@@ -369,8 +372,13 @@
 	<string name="system_taptounlock_summ">Start device unlocking by tapping on bottom lock screen area</string>
 	<string name="system_dttosleep_title">Double tap to sleep</string>
 	<string name="system_dttosleep_summ">Turn screen off by double tapping on any empty space on lock screen</string>
-	<string name="system_lscurrent_title">Display charging current</string>
-	<string name="system_lscurrent_summ">Show charging current value at the bottom of lock screen</string>
+	<string name="system_charginginfo_title">Display charging data</string>
+	<string name="system_charginginfo_summ">Show additional charging information at the bottom of lock screen</string>
+	<string name="system_charginginfo_view_title">How to display</string>
+	<string name="system_charginginfo_current_title">Charging current</string>
+	<string name="system_charginginfo_voltage_title">Battery voltage</string>
+	<string name="system_charginginfo_wattage_title">Power consumption</string>
+	<string name="system_charginginfo_temp_title">Battery temperature</string>
 	<string name="system_lsalarm_title">Display next alarm</string>
 	<string name="system_lsalarm_summ">Show nearest alarm time next to current date</string>
 	<string name="system_lsalarm_format_title">Display format</string>
@@ -419,6 +427,9 @@
 	<string name="system_applock_timeout_summ">Time interval during which app remains unlocked after exit</string>
 	<string name="system_applock_list_title">List of apps to lock</string>
 	<string name="system_applock_list_summ">Enhanced version of App lock option that allows to lock any installed app. No reboot is required.</string>
+	<string name="system_applock_skip_title">Skip app lock</string>
+	<string name="system_applock_skip_summ">Allow selected activities to bypass app lock</string>
+	<string name="system_applock_activities">Selected activities</string>
 	<string name="system_mods_qs">Quick Settings</string>
 	<string name="system_qsgridrows_title">Number of rows</string>
 	<string name="system_qsgridrows_note">Labels will be hidden for 5 rows in a portrait orientation. Number of rows is limited to 3 with hidden labels in a landscape orientation.</string>
@@ -927,6 +938,8 @@
 	<string name="backup_ok">Settings were backed up successfully!</string>
 	<string name="restore_ok">Settings were successfully restored!</string>
 	<string name="backup_restore_info">Your settings have been restored via Google Cloud Backup. Please do a soft reboot after enabling the Xposed module.</string>
+	<string name="prefs_migration_success">Module\'s setting were successfully migrated to work with new EdXposed version. Reboot to apply changes.</string>
+	<string name="prefs_migration_failure">Failed to migrate module\'s settings to work with new EdXposed version. You\'ll have to use restore function or configure mods from scratch.</string>
 	<string name="update_available">Update is available ⚠</string>
 	<string name="select_app">Select app</string>
 	<string name="select_apps">Select apps</string>
@@ -963,7 +976,7 @@
 	<string name="cancel">Cancel</string>
 	<string name="add">Add</string>
 	<string name="delete">Delete</string>
-	<string name="delete_item_info">Long press shortcut to delete</string>
+	<string name="delete_item_info">Long press item to delete</string>
 	<string name="change_icon">Change icon</string>
 
 	<string name="guide_search">Search mods by name.\nLong press to display a list of new mods.</string>

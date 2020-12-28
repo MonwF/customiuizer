@@ -1,3 +1,17 @@
+3.1.0
+[New] Bypass app lock for selected activities (activity names of locked apps are written to Xposed log upon launch)
+[Improved][Display charging data] Show battery info (current, voltage, wattage, temperature)
+[Improved][Custom lock screen actions] Option to center actions list horizontally
+[Improved][Disable screen lock] Face unlock skipping is optional
+[Improved][Extended power menu] Faster animations and dynamic background blur
+Minor performance improvements
+EdXposed 0.5.x.x support (build 4653+ is required):
+	Module's settings will be migrated to work with new EdXposed Framework version on first module UI launch.
+	It is recommended to make a backup using built-in function before updating.
+	Old settings could still be loaded by disabling EdXposed Framework or downgrading it to 0.4.x.x.
+	Launching any app on device can have an additional delay depending on the number of active mods.
+	It's a result of how new EdXposed loads modules, this cannot be avoided without breaking some system mods.
+
 3.0.6
 [New][MIUI 12] Allow using split screen and floating windows together
 [New][MIUI 12] Disable Control center while screen lock is active

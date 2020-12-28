@@ -2,6 +2,7 @@ package name.mikanoshi.customiuizer;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
@@ -231,13 +232,15 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 		actionBar.setBackgroundDrawable(new ColorDrawable(Helpers.getSystemBackgroundColor(getValidContext())));
 	}
 
+	@SuppressWarnings("deprecation")
+	@SuppressLint("WorldReadableFiles")
 	public void onCreate(Bundle savedInstanceState, int pref_defaults) {
 		super.onCreate(savedInstanceState);
 		try {
 			getPreferenceManager().setSharedPreferencesName(Helpers.prefsName);
-			getPreferenceManager().setSharedPreferencesMode(Context.MODE_PRIVATE);
+			getPreferenceManager().setSharedPreferencesMode(Context.MODE_WORLD_READABLE);
 			getPreferenceManager().setStorageDeviceProtected();
-			PreferenceManager.setDefaultValues(getValidContext(), pref_defaults, false);
+			PreferenceManager.setDefaultValues(Helpers.getProtectedContext(getValidContext()), pref_defaults, false);
 		} catch (Throwable throwable) {
 			throwable.printStackTrace();
 		}

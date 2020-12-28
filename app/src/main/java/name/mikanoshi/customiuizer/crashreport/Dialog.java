@@ -51,7 +51,6 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -119,37 +118,6 @@ public class Dialog extends Activity {
 			if (ifc != null) ifc.destroy();
 		}
 		return res;
-	}
-
-	private String getXposedPropVersion(File propFile) {
-		String version = "unknown";
-		try (FileInputStream inputStream = new FileInputStream(propFile)) {
-			try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
-				while (true) {
-					String readLine = null;
-					try {
-						readLine = bufferedReader.readLine();
-					} catch (Throwable t) {
-						t.printStackTrace();
-					}
-					if (readLine == null) break;
-
-					String[] split = readLine.split("=", 2);
-					if (split.length == 2) {
-						String line = split[0].trim();
-						if (line.charAt(0) != '#' && "version".equals(line)) {
-							version = split[1].trim();
-							break;
-						}
-					}
-				}
-			} catch (Throwable t) {
-				t.printStackTrace();
-			}
-		} catch (Throwable t) {
-			t.printStackTrace();
-		}
-		return version.equals("unknown") ? version + " (" + Helpers.xposedVersion + ")" : version;
 	}
 
 	private void sendCrash() {
@@ -270,8 +238,10 @@ public class Dialog extends Activity {
 			debugLog.append("Log on external storage found, removing\n");
 			sdcardLog.delete();
 		}
-		debugLog.append("Asking System UI to collect Xposed log\n");
-		sendBroadcast(new Intent(GlobalActions.ACTION_PREFIX + "CollectLogs"));
+		if (!Helpers.usingNewSharedPrefs()) {
+			debugLog.append("Asking System UI to collect Xposed log\n");
+			sendBroadcast(new Intent(GlobalActions.ACTION_PREFIX + "CollectXposedLog"));
+		}
 
 		final Activity act = this;
 		new Thread(new Runnable() {
@@ -290,21 +260,31 @@ public class Dialog extends Activity {
 		LinearLayout dialogView = new LinearLayout(this);
 		dialogView.setOrientation(LinearLayout.VERTICAL);
 
-		String errorLog = Helpers.getXposedInstallerErrorLog(this);
-		debugLog.append("Installer log path: ").append(errorLog).append("\n");
-
+		PackageManager pkgMgr = getPackageManager();
 		String xposedLog = null;
 		try {
-			File sdcardLog = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder + Helpers.logFile);
 			File errorLogFile = null;
-			if (sdcardLog.exists() && sdcardLog.canRead()) {
-				debugLog.append("Log found on external storage: ").append(sdcardLog.getAbsolutePath()).append("\n");
-				errorLogFile = sdcardLog;
-			} else if (errorLog != null) {
-				errorLogFile = new File(errorLog);
-				if (errorLogFile.exists() && errorLogFile.canRead())
-				debugLog.append("Log found in installer: ").append(errorLog).append("\n");
-			}
+			File sdcardLog = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder + Helpers.logFile);
+			try {
+				if (Helpers.usingNewSharedPrefs()) {
+					String errorLogFilename = pkgMgr.getInstallerPackageName("EdXposedLog");
+					if (errorLogFilename != null) {
+						errorLogFile = new File(errorLogFilename);
+						debugLog.append("Log found in misc: ").append(errorLogFilename).append("\n");
+					}
+				} else {
+					String errorLog = Helpers.getXposedInstallerErrorLog(this);
+					debugLog.append("Installer log path: ").append(errorLog).append("\n");
+					if (sdcardLog.exists() && sdcardLog.canRead()) {
+						debugLog.append("Log found on external storage: ").append(sdcardLog.getAbsolutePath()).append("\n");
+						errorLogFile = sdcardLog;
+					} else if (errorLog != null) {
+						errorLogFile = new File(errorLog);
+						if (errorLogFile.exists() && errorLogFile.canRead())
+						debugLog.append("Log found in installer: ").append(errorLog).append("\n");
+					}
+				}
+			} catch (Throwable ignore) {}
 
 			if (errorLogFile != null)
 			try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(errorLogFile)))) {
@@ -313,17 +293,19 @@ public class Dialog extends Activity {
 				while ((line = reader.readLine()) != null) sb.append(line).append("\n");
 				xposedLog = sb.toString();
 			} catch (Throwable t) {
+				t.printStackTrace();
 				debugLog.append("Error reading log: ").append(t.getMessage()).append("\n");
 			} else debugLog.append("No accessible Xposed log found!\n");
 
 			if (sdcardLog.exists()) sdcardLog.delete();
 		} catch (Throwable t) {}
 
-		SharedPreferences prefs = getSharedPreferences(Helpers.prefsName, Context.MODE_PRIVATE);
+		SharedPreferences prefs;
 		try {
-			prefs = Helpers.getProtectedContext(this).getSharedPreferences(Helpers.prefsName, Context.MODE_PRIVATE);
+			prefs = Helpers.getSharedPrefs(this, true);
 		} catch (Throwable t) {
 			Log.e("miuizer", "Failed to use protected storage!");
+			prefs = Helpers.getSharedPrefs(this, false);
 		}
 
 		CrashReportPersister persister = new CrashReportPersister();
@@ -362,39 +344,46 @@ public class Dialog extends Activity {
 				} catch (Throwable t) {}
 			} catch (Throwable t) {}
 
-			final ArrayList<String> xposedPropFiles = new ArrayList<String>(Arrays.asList(
-				"/system/framework/edconfig.jar", // EdXposed
-				"/system/xposed.prop", // Classic
-				"/magisk/xposed/system/xposed.prop",
-				"/magisk/PurifyXposed/system/xposed.prop",
-				"/su/xposed/system/xposed.prop",
-				"/vendor/xposed.prop",
-				"/xposed/xposed.prop",
-				"/xposed.prop",
-				"/su/xposed/xposed.prop"
-			));
-
-			File[] files = new File("/system/framework").listFiles();
-			if (files != null && files.length > 0)
-			for (File file: files) try {
-				long fsize = file.length();
-				if (fsize < 128) {
-					xposedPropFiles.add(file.getAbsolutePath());
-					break;
-				}
+			String edxpVersion = null;
+			if (Helpers.usingNewSharedPrefs()) try {
+				edxpVersion = pkgMgr.getInstallerPackageName("EdXposedVersion");
 			} catch (Throwable ignore) {}
 
-			for (String prop: xposedPropFiles) {
-				File propFile = new File(prop);
-				if (propFile.exists() && propFile.canRead()) {
-					crashData.put("XPOSED_VERSION", getXposedPropVersion(propFile));
-					break;
+			if (edxpVersion == null) {
+				final ArrayList<String> xposedPropFiles = new ArrayList<String>(Arrays.asList(
+					"/system/framework/edconfig.jar", // EdXposed
+					"/system/xposed.prop", // Classic
+					"/magisk/xposed/system/xposed.prop",
+					"/magisk/PurifyXposed/system/xposed.prop",
+					"/su/xposed/system/xposed.prop",
+					"/vendor/xposed.prop",
+					"/xposed/xposed.prop",
+					"/xposed.prop",
+					"/su/xposed/xposed.prop"
+				));
+
+				File[] files = new File("/system/framework").listFiles();
+				if (files != null && files.length > 0)
+				for (File file: files) try {
+					long fsize = file.length();
+					if (fsize < 128) {
+						xposedPropFiles.add(0, file.getAbsolutePath());
+						break;
+					}
+				} catch (Throwable ignore) {}
+
+				for (String prop: xposedPropFiles) {
+					File propFile = new File(prop);
+					if (propFile.exists() && propFile.canRead()) {
+						edxpVersion = Helpers.getXposedPropVersion(propFile);
+						break;
+					}
 				}
 			}
+			if (edxpVersion != null) crashData.put("XPOSED_VERSION", edxpVersion);
 
 			Intent intent = new Intent(Intent.ACTION_MAIN);
 			intent.addCategory(Intent.CATEGORY_HOME);
-			PackageManager pkgMgr = getPackageManager();
 			ResolveInfo launcherInfo = pkgMgr.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
 			if (launcherInfo != null) {
 				PackageInfo packageInfo = pkgMgr.getPackageInfo(launcherInfo.activityInfo.packageName, 0);
@@ -534,21 +523,13 @@ public class Dialog extends Activity {
 		final AlertDialog alertDlg = alert.show();
 		alertDlg.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new OnClickListener() {
 			@Override
-			@SuppressWarnings("ConstantConditions")
 			public void onClick(View v) {
 				if (desc != null && desc.getText().toString().trim().equals("")) {
 					Toast.makeText(Dialog.this, R.string.crash_needs_desc, Toast.LENGTH_LONG).show();
 				} else if (!isNetworkAvailable()) {
 					Toast.makeText(Dialog.this, R.string.crash_needs_inet, Toast.LENGTH_LONG).show();
 				} else {
-					try {
-						InputMethodManager inputManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-						View currentFocusedView = getCurrentFocus();
-						if (currentFocusedView != null)
-						inputManager.hideSoftInputFromWindow(currentFocusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-					} catch (Throwable t) {
-						Log.e("miuizer", t.getMessage());
-					}
+					Helpers.hideKeyboard(null, v);
 					alertDlg.dismiss();
 					sendCrash();
 				}

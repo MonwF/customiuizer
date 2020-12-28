@@ -770,17 +770,15 @@
 		<item>3</item>
 	</string-array>
 
-	<string-array name="lscurrent">
-		<item>@string/array_disable</item>
+	<string-array name="charginginfo">
+		<item>@string/array_newline</item>
 		<item>@string/array_append</item>
 		<item>@string/array_prepend</item>
-		<item>@string/array_newline</item>
 	</string-array>
-	<string-array name="lscurrent_val">
+	<string-array name="charginginfo_val">
 		<item>1</item>
 		<item>2</item>
 		<item>3</item>
-		<item>4</item>
 	</string-array>
 
 	<string-array name="maxsbicons">

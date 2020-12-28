@@ -330,8 +330,6 @@
     <string name="system_taptounlock_summ">Entsperrt das Gerät durch Tippen im unteren Bereich des Sperrbildschirms</string>
     <string name="system_dttosleep_title">Doppelt tippen, um Display auszuschalten</string>
     <string name="system_dttosleep_summ">Schaltet Bildschirm durch zweimaliges Tippen auf eine leere Stelle im Sperrbildschirm aus</string>
-    <string name="system_lscurrent_title">Ladestrom anzeigen</string>
-    <string name="system_lscurrent_summ">Zeigt den Wert des Ladestroms am unteren Rand des Sperrbildschirms an</string>
     <string name="system_lsalarm_title">Nächsten Alarm anzeigen</string>
     <string name="system_lsalarm_summ">Zeigt die nächste Alarmzeit neben dem aktuellen Datum an</string>
     <string name="system_lsalarm_format_title">Formatierung anzeigen</string>

@@ -2,12 +2,12 @@
 <resources>
     <string name="app_about">Hakkında</string>
     <string name="about_version">Versiyon: %1$s</string>
-    <string name="about_dev">Geliştirici; Mikanoshi</string>
+    <string name="about_dev">Geliştirici: Mikanoshi</string>
     <string name="about_dynamic">Genel olarak mod\'lar etkin veya devre dışı bırakılmak için hızlı başlatmaya ihtiyaç duyarlar, ancak \'⟲\' ile işaretlenenler; değerleri değiştirildikten sonra yalnızca bir hızlı yeniden başlatma gerektirir, ardından değişiklikler hemen uygulanır.</string>
     <string name="about_unsupported">\'⨯\' ile işaretlenmiş mod\'lar bu cihazda desteklenmemektedir.</string>
     <string name="title_snoozed">Ertelenmiş bildirimler</string>
     <string name="menu_update">Güncelleme</string>
-    <string name="snooze_unsnooze">Bu bildirimi erteleyin</string>
+    <string name="snooze_unsnooze">Ertelemeyi iptal et</string>
     <string name="snooze_cancel">Kapatıldı olarak işaretle</string>
     <string name="snooze_restore">Beklemede olarak işaretle</string>
     <string name="snooze_fetch_fail">Ertelenmiş bildirimler listesi getirilemiyor</string>
@@ -17,7 +17,7 @@
     <string name="snooze_created">Düzenlendi</string>
     <string name="snooze_updated">Güncellenmiş</string>
     <string name="snooze_repost">Yeniden yayınla</string>
-    <string name="mods">Mod\'lar</string>
+    <string name="mods">Modlar</string>
     <string name="mods_actions">Eylemler</string>
     <string name="enable_mod">Mod\'u etkinleştir</string>
     <string name="system_mods">Sistem</string>
@@ -330,8 +330,6 @@
     <string name="system_taptounlock_summ">Alt kilit ekranı alanına dokunarak cihazın kilidini açmaya başlayın</string>
     <string name="system_dttosleep_title">Dokunma (Çift)</string>
     <string name="system_dttosleep_summ">Ekran Kilidi\'nde boş bir yere çift dokunulduğunda ekran kapatılır.</string>
-    <string name="system_lscurrent_title">Ekran şarj akımı</string>
-    <string name="system_lscurrent_summ">Şarj akımı değerini kilit ekranının altında göster</string>
     <string name="system_lsalarm_title">Bir sonraki alarmı göster</string>
     <string name="system_lsalarm_summ">Geçerli tarihin yanında en yakın alarm saatini göster</string>
     <string name="system_lsalarm_format_title">Oynatma formatı</string>

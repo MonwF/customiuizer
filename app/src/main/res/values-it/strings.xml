@@ -360,8 +360,6 @@
     <string name="system_taptounlock_summ">Inizia lo sblocco del dispositivo toccando l\'area della schermata di blocco inferiore</string>
     <string name="system_dttosleep_title">Doppio tocco per spegnere</string>
     <string name="system_dttosleep_summ">Spegni lo schermo toccando due volte su qualsiasi spazio vuoto nella schermata di blocco</string>
-    <string name="system_lscurrent_title">Visualizza la carica corrente</string>
-    <string name="system_lscurrent_summ">Mostra il valore corrente di ricarica nella parte inferiore della schermata di blocco</string>
     <string name="system_lsalarm_title">Visualizza prossimo allarme</string>
     <string name="system_lsalarm_summ">Mostra l\'ora della sveglia più vicina alla data corrente</string>
     <string name="system_lsalarm_format_title">Formato da visualizzare</string>

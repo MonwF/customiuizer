@@ -34,6 +34,8 @@
 	<string name="warning_blacklist_sdk">Кроме того, модуль был установлен из маркета, где находится более ограниченная версия. Рекомендуется переустановить модуль из любого другого источника.</string>
 	<string name="module_not_active">Модуль CustoMIUIzer не активен! Откройте приложение Xposed, активируйте модуль и перезагрузитесь.</string>
 	<string name="backup_restore_info">Ваши настройки были восстановлены из Google Cloud. Если мод Vol2wake был активен, отключите его и включите снова, после этого сделайте полную перезагрузку.</string>
+	<string name="prefs_migration_success">Настройки модуля были успешно мигрированы для работы с новой версией EdXposed. Перезагрузитесь для применения изменений.</string>
+	<string name="prefs_migration_failure">Не удалось мигрировать настройки модуля для работы с новой версией EdXposed. Воспользуйтесь функцией восстановления или настройте моды с нуля.</string>
 
 	<string name="mods">Моды</string>
 	<string name="mods_actions">Действия</string>
@@ -387,7 +389,7 @@
 	<string name="cancel">Отмена</string>
 	<string name="add">Добавить</string>
 	<string name="delete">Удалить</string>
-	<string name="delete_item_info">Используйте долгое нажатие для удаления ярлыка</string>
+	<string name="delete_item_info">Используйте долгое нажатие для удаления</string>
 	<string name="change_icon">Изменить иконку</string>
 	<string name="crash_confirm">Подтверждение</string>
 	<string name="crash_collecting_report">Создание отчёта…</string>
@@ -634,6 +636,9 @@
 	<string name="system_applock_timeout_summ">Временной интервал между закрытием приложения и его блокировкой</string>
 	<string name="system_applock_list_title">Список приложений для защиты</string>
 	<string name="system_applock_list_summ">Улучшенная версия функции Защита приложений, позволяющая заблокировать любое установленное приложение. Перезагрузка не требуется.</string>
+	<string name="system_applock_skip_title">Пропуск защиты</string>
+	<string name="system_applock_skip_summ">Разрешить выбранным компонентам обходить защиту</string>
+	<string name="system_applock_activities">Выбранные компоненты</string>
 	<string name="system_statusbaricons_title">Скрытие иконок</string>
 	<string name="system_statusbaricons_summ">Управление видимостью иконок в строке состояния</string>
 	<string name="system_statusbaricons_battery1_title">Изображение батареи</string>
@@ -898,13 +903,16 @@
 	<string name="system_lockscreenshortcuts_left_title">Ярлыки на левом экране</string>
 	<string name="system_lockscreenshortcuts_left_summ">Настройка списка ярлыков</string>
 	<string name="system_lockscreenshortcuts_left_align_title">Выравнивание по вертикали</string>
+	<string name="system_lockscreenshortcuts_left_center_title">Горизонтально по центру</string>
 	<string name="system_lockscreenshortcuts_left_skiplock_title">Не требовать разблокировки</string>
 	<string name="system_lockscreenshortcuts_left_skiplock_summ">Запущенные приложения будут доступны даже при заблокированном устройстве</string>
 	<string name="system_noscreenlock_title">Отключить блокировку</string>
 	<string name="system_noscreenlock_req_summ">Некоторые устройства могут не работать без разблокировки один раз после перезагрузки</string>
 	<string name="system_noscreenlock_summ">Выборочно пропускает блокировку устройства (не влияет на безопасность приложений и не удаляет данные отпечатков пальцев)</string>
 	<string name="system_noscreenlock_scr_title">Пропустить экран блокировки</string>
-	<string name="system_noscreenlock_scr_summ">Не показывать экран блокировки если блокировка устройства отключена</string>
+	<string name="system_noscreenlock_scr_summ">Не показывать экран блокировки, если блокировка устройства отключена</string>
+	<string name="system_noscreenlock_nofaceunlock_title">Пропустить разблокировку по лицу</string>
+	<string name="system_noscreenlock_nofaceunlock_summ">Не начинать сканировать лицо, если блокировка устройства отключена</string>
 	<string name="system_noscreenlock_wifi_title">Доверенные Wi-Fi сети</string>
 	<string name="system_noscreenlock_wifi_summ">При подключении к данным сетям блокировка будет временно отключена</string>
 	<string name="system_noscreenlock_bt_title">Доверенные Bluetooth устройства</string>
@@ -941,8 +949,13 @@
 	<string name="system_taptounlock_summ">Нажатие на нижнюю область экрана блокировки начинает разблокировку устройства</string>
 	<string name="system_dttosleep_title">Сон по двойному нажатию</string>
 	<string name="system_dttosleep_summ">Выключает экран при двойном нажатии по пустому месту на экране блокировки</string>
-	<string name="system_lscurrent_title">Показывать ток зарядки</string>
-	<string name="system_lscurrent_summ">Отображает значение тока зарядки в нижней части экрана блокировки</string>
+	<string name="system_charginginfo_title">Показывать данные зарядки</string>
+	<string name="system_charginginfo_summ">Отображает доп. информацию о зарядке в нижней части экрана блокировки</string>
+	<string name="system_charginginfo_view_title">Как отображать</string>
+	<string name="system_charginginfo_current_title">Ток зарядки</string>
+	<string name="system_charginginfo_voltage_title">Напряжение батареи</string>
+	<string name="system_charginginfo_wattage_title">Потребление энергии</string>
+	<string name="system_charginginfo_temp_title">Температура батареи</string>
 	<string name="system_lsalarm_title">Показ будильника</string>
 	<string name="system_lsalarm_summ">Отображает ближайшее время срабатывания будильника рядом с текущей датой</string>
 	<string name="system_lsalarm_format_title">Формат отображения</string>

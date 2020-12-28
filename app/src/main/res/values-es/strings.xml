@@ -261,6 +261,7 @@
     <string name="system_lockscreenshortcuts_left_title">Atajos de la pantalla izquierda</string>
     <string name="system_lockscreenshortcuts_left_summ">Administrar lista de accesos directos</string>
     <string name="system_lockscreenshortcuts_left_align_title">Alineamiento vertical</string>
+    <string name="system_lockscreenshortcuts_left_center_title">Centrar horizontalmente</string>
     <string name="system_lockscreenshortcuts_left_skiplock_title">No requiere desbloqueo</string>
     <string name="system_lockscreenshortcuts_left_skiplock_summ">Se puede acceder a las aplicaciones iniciadas mientras el dispositivo aún está bloqueado</string>
     <string name="system_noscreenlock_title">Deshabilitar bloqueo de pantalla</string>
@@ -268,6 +269,8 @@
     <string name="system_noscreenlock_summ">Deshabilita selectivamente el bloqueo de pantalla (no cambia la seguridad de ninguna aplicación y no elimina los datos de huellas digitales)</string>
     <string name="system_noscreenlock_scr_title">Saltar pantalla de bloqueo</string>
     <string name="system_noscreenlock_scr_summ">No mostrar la pantalla de bloqueo en absoluto cuando el bloqueo de pantalla está desactivado</string>
+    <string name="system_noscreenlock_nofaceunlock_title">Saltar desloqueo facial</string>
+    <string name="system_noscreenlock_nofaceunlock_summ">No iniciar desbloqueo facial cuando el bloqueo de pantalla está deshabilitado</string>
     <string name="system_noscreenlock_wifi_title">Redes wifi de confianza</string>
     <string name="system_noscreenlock_wifi_summ">Desactiva temporalmente el bloqueo de pantalla mientras estás conectado a estas redes</string>
     <string name="system_noscreenlock_bt_title">Dispositivos Bluetooth de confianza</string>
@@ -359,8 +362,13 @@
     <string name="system_taptounlock_summ">Inicie el desbloqueo del dispositivo tocando el área inferior de la pantalla de bloqueo</string>
     <string name="system_dttosleep_title">Toca dos veces para apagar pantalla</string>
     <string name="system_dttosleep_summ">Apague la pantalla tocando dos veces en cualquier espacio vacío en la pantalla de bloqueo</string>
-    <string name="system_lscurrent_title">Mostrar corriente de carga (mA)</string>
-    <string name="system_lscurrent_summ">Mostrar el valor actual de carga (mA) en la parte inferior de la pantalla de bloqueo</string>
+    <string name="system_charginginfo_title">Mostrar datos de carga</string>
+    <string name="system_charginginfo_summ">Mostrar información adicional de carga en la parte inferior de la pantalla de bloqueo</string>
+    <string name="system_charginginfo_view_title">Cómo mostrar</string>
+    <string name="system_charginginfo_current_title">Corriente de carga</string>
+    <string name="system_charginginfo_voltage_title">Voltaje de batería</string>
+    <string name="system_charginginfo_wattage_title">Consumo de energía</string>
+    <string name="system_charginginfo_temp_title">Temperatura de batería</string>
     <string name="system_lsalarm_title">Mostrar próxima alarma</string>
     <string name="system_lsalarm_summ">Mostrar la hora de alarma más cercana a la fecha actual</string>
     <string name="system_lsalarm_format_title">Formato de pantalla</string>
@@ -409,6 +417,9 @@
     <string name="system_applock_timeout_summ">Intervalo de tiempo durante el cual la aplicación permanece desbloqueada después de salir</string>
     <string name="system_applock_list_title">Lista de aplicaciones para bloquear</string>
     <string name="system_applock_list_summ">Versión mejorada de la opción de bloqueo de aplicaciones que permite bloquear cualquier aplicación instalada. No se requiere reiniciar.</string>
+    <string name="system_applock_skip_title">Saltar bloqueo de aplicación</string>
+    <string name="system_applock_skip_summ">Permitir que las actividades seleccionadas pasen por encima del bloqueo de aplicación</string>
+    <string name="system_applock_activities">Actividades seleccionadas</string>
     <string name="system_mods_qs">Ajustes rápidos</string>
     <string name="system_qsgridrows_title">Número de filas</string>
     <string name="system_qsgridrows_note">Las etiquetas se ocultarán con 5 filas en orientación vertical. El número de filas está limitado a 3 con etiquetas ocultas en una orientación horizontal.</string>
@@ -895,6 +906,8 @@
     <string name="backup_ok">¡Las configuraciones fueron respaldadas con éxito!</string>
     <string name="restore_ok">¡La configuración se restauró con éxito!</string>
     <string name="backup_restore_info">Su configuración se ha restaurado a través de Google Cloud Backup. Realice un reinicio suave después de habilitar el módulo Xposed.</string>
+    <string name="prefs_migration_success">La configuración del módulo se migró con éxito para trabajar con la nueva versión de EdXposed. Reiniciar para aplicar los cambios.</string>
+    <string name="prefs_migration_failure">No se pudo migrar la configuración del módulo para que funcione con la nueva versión de EdXposed.  Tendrá que usar la función de restauración o configurar mods desde cero.</string>
     <string name="update_available">La actualización está disponible ⚠</string>
     <string name="select_app">Seleccionar aplicación</string>
     <string name="select_apps">Seleccionar aplicaciones</string>

@@ -5,8 +5,9 @@ import java.io.IOException;
 import android.app.backup.BackupAgentHelper;
 import android.app.backup.BackupDataInput;
 import android.app.backup.SharedPreferencesBackupHelper;
-import android.content.Context;
+
 import android.content.SharedPreferences;
+
 import android.os.ParcelFileDescriptor;
 
 public class PrefBackupAgent extends BackupAgentHelper {
@@ -24,7 +25,7 @@ public class PrefBackupAgent extends BackupAgentHelper {
 	public void onRestore(BackupDataInput data, int appVersionCode, ParcelFileDescriptor newState) throws IOException {
 		super.onRestore(data, appVersionCode, newState);
 		try {
-			SharedPreferences prefs = Helpers.getProtectedContext(this).getSharedPreferences("customiuizer_prefs", Context.MODE_PRIVATE);
+			SharedPreferences prefs = Helpers.getSharedPrefs(this, true);
 			prefs.edit().putBoolean("pref_key_was_restore", true).apply();
 		} catch (Throwable t) {}
 	}

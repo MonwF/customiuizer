@@ -513,7 +513,9 @@ public class System {
 						if (!isAuthOnce()) return;
 
 						boolean isTrusted = false;
-						if (MainModule.mPrefs.getStringAsInt("system_noscreenlock", 1) == 3)
+						if (forcedOption == 0) isTrusted = false;
+						else if (forcedOption == 1) isTrusted = true;
+						else if (MainModule.mPrefs.getStringAsInt("system_noscreenlock", 1) == 3)
 						if (action.equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
 							NetworkInfo netInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
 							if (netInfo.getState() != NetworkInfo.State.CONNECTED && netInfo.getState() != NetworkInfo.State.DISCONNECTED) return;
@@ -521,9 +523,6 @@ public class System {
 						} else if (action.equals(ACTION_PREFIX + "UnlockBTConnection")) {
 							isTrusted = isTrustedBt(lpparam.classLoader);
 						}
-
-						if (forcedOption == 0) isTrusted = false;
-						else if (forcedOption == 1) isTrusted = true;
 
 						XposedHelpers.setAdditionalStaticField(param.thisObject, "isScreenLockDisabled", isTrusted);
 						if (isTrusted) {
@@ -611,6 +610,8 @@ public class System {
 			Helpers.hookAllMethods(startClass, "startFaceUnlock", new MethodHook() {
 				@Override
 				protected void before(MethodHookParam param) throws Throwable {
+					boolean skip = MainModule.mPrefs.getBoolean("system_noscreenlock_nofaceunlock");
+					if (!skip) return;
 					if (Helpers.is12() && param.args.length == 0) return;
 					Boolean isScreenLockDisabled = (Boolean)XposedHelpers.getAdditionalStaticField(findClass("com.android.systemui.keyguard.KeyguardViewMediator", lpparam.classLoader), "isScreenLockDisabled");
 					isScreenLockDisabled = isScreenLockDisabled != null && isScreenLockDisabled;
@@ -626,7 +627,8 @@ public class System {
 				Helpers.hookAllMethods(startClass, showMsgMethod.getName(), new MethodHook() {
 					@Override
 					protected void after(MethodHookParam param) throws Throwable {
-						if (!(boolean)param.getResult()) return;
+						boolean skip = MainModule.mPrefs.getBoolean("system_noscreenlock_nofaceunlock");
+						if (!skip || !(boolean)param.getResult()) return;
 						boolean isScreenLockDisabled = (boolean)XposedHelpers.getAdditionalStaticField(findClass("com.android.systemui.keyguard.KeyguardViewMediator", lpparam.classLoader), "isScreenLockDisabled");
 						if (isScreenLockDisabled) param.setResult(false);
 					}
@@ -1826,7 +1828,7 @@ public class System {
 	}
 
 	public static void BetterPopupsHideDelaySysHook() {
-		Helpers.findAndHookMethod("android.app.MiuiNotification", null, "getFloatTime", XC_MethodReplacement.returnConstant(0));
+		Helpers.findAndHookMethod(MiuiNotification.class, "getFloatTime", XC_MethodReplacement.returnConstant(0));
 	}
 
 	public static void BetterPopupsHideDelayHook(LoadPackageParam lpparam) {
@@ -2652,8 +2654,8 @@ public class System {
 				InputStream inputStream;
 				FileOutputStream outputStream;
 				byte[] fileBytes;
-				Context context = Helpers.getModuleContext(mContext);
-				inputStream = context.getResources().openRawResource(context.getResources().getIdentifier("extended_power_menu", "raw", Helpers.modulePkg));
+				Resources resources = Helpers.getModuleRes(mContext);
+				inputStream = resources.openRawResource(resources.getIdentifier("extended_power_menu", "raw", Helpers.modulePkg));
 				fileBytes = new byte[inputStream.available()];
 				inputStream.read(fileBytes);
 				outputStream = new FileOutputStream(powermenu);
@@ -4619,11 +4621,14 @@ public class System {
 					leftList.setOrientation(LinearLayout.VERTICAL);
 
 					try {
+						float density = mContext.getResources().getDisplayMetrics().density;
 						int align = MainModule.mPrefs.getStringAsInt("system_lockscreenshortcuts_left_align", 2);
-						int margin = Math.round(mContext.getResources().getDisplayMetrics().density * 40);
+						int margin = Math.round(density * 40);
 						lp.topMargin = lp.bottomMargin;
 						if (lp.topMargin < margin) lp.topMargin = margin;
 						if (lp.bottomMargin < margin) lp.bottomMargin = margin;
+						boolean center = MainModule.mPrefs.getBoolean("system_lockscreenshortcuts_left_center");
+						lp.leftMargin = Math.round((center ? 36.33f : 20) * density);
 						lp.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
 						if (align == 1)
 							lp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -5095,7 +5100,7 @@ public class System {
 			if (lux[0] != null && lux[0].isAttachedToWindow()) try {
 				Long last = (Long)lux[0].getTag();
 				if (last != null && cTime - last < 750) return;
-				caption = Helpers.getModuleContext(lux[0].getContext()).getResources().getString(R.string.lux, String.valueOf(Math.round(event.values[0])));
+				caption = Helpers.getModuleRes(lux[0].getContext()).getString(R.string.lux, String.valueOf(Math.round(event.values[0])));
 				lux[0].setText(caption);
 				lux[0].setTag(cTime);
 			} catch (Throwable t) {
@@ -5105,7 +5110,8 @@ public class System {
 			if (lux[1] != null && lux[1].isAttachedToWindow()) try {
 				Long last = (Long)lux[1].getTag();
 				if (last != null && cTime - last < 750) return;
-				if (caption == null) Helpers.getModuleContext(lux[1].getContext()).getResources().getString(R.string.lux, String.valueOf(Math.round(event.values[0])));
+				if (caption == null)
+				caption = Helpers.getModuleRes(lux[1].getContext()).getString(R.string.lux, String.valueOf(Math.round(event.values[0])));
 				lux[1].setText(caption);
 				lux[1].setTag(cTime);
 			} catch (Throwable t) {
@@ -5115,7 +5121,8 @@ public class System {
 			if (lux[2] != null && lux[2].isAttachedToWindow()) try {
 				Long last = (Long)lux[2].getTag();
 				if (last != null && cTime - last < 750) return;
-				if (caption == null) Helpers.getModuleContext(lux[2].getContext()).getResources().getString(R.string.lux, String.valueOf(Math.round(event.values[0])));
+				if (caption == null)
+				caption = Helpers.getModuleRes(lux[2].getContext()).getString(R.string.lux, String.valueOf(Math.round(event.values[0])));
 				lux[2].setText(caption);
 				lux[2].setTag(cTime);
 			} catch (Throwable t) {
@@ -6160,6 +6167,12 @@ public class System {
 					XposedHelpers.setObjectField(param.thisObject, "mOutputStream", new ByteArrayOutputStream());
 				} catch (Throwable ignore) {}
 			}
+
+//			@Override
+//			protected void after(MethodHookParam param) throws Throwable {
+//				Object data = param.getResult();
+//				if (data != null) XposedHelpers.setIntField(data, "result", 0);
+//			}
 		});
 	}
 
@@ -6624,7 +6637,59 @@ public class System {
 		});
 	}
 
+	public static void ChargingInfoServiceHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethods("com.android.server.BatteryService$BatteryPropertiesRegistrar", lpparam.classLoader, "getProperty", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				int req = (int)param.args[0];
+				if (req < 1000) return;
+				long value = Long.MIN_VALUE;
+				if (req == 1001)
+					value = XposedHelpers.getIntField(XposedHelpers.getSurroundingThis(param.thisObject), "mLastBatteryVoltage");
+				else if (req == 1002)
+					value = XposedHelpers.getIntField(XposedHelpers.getSurroundingThis(param.thisObject), "mLastBatteryTemperature");
+				else if (req == 1003)
+					value = XposedHelpers.getIntField(XposedHelpers.getSurroundingThis(param.thisObject), "mLastBatteryHealth");
+				XposedHelpers.callMethod(param.args[1], "setLong", value);
+				param.setResult(0);
+			}
+		});
+	}
+
 	public static void ChargingInfoHook(LoadPackageParam lpparam) {
+		Helpers.hookAllConstructors("com.android.keyguard.KeyguardUpdateMonitor", lpparam.classLoader, new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				Context mContext = (Context)param.args[0];
+				Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
+
+				new Helpers.SharedPrefObserver(mContext, mHandler) {
+					@Override
+					public void onChange(Uri uri) {
+						try {
+							String type = uri.getPathSegments().get(1);
+							String key = uri.getPathSegments().get(2);
+							if (!key.contains("pref_key_system_charginginfo_")) return;
+
+							switch (type) {
+								case "string":
+									MainModule.mPrefs.put(key, Helpers.getSharedStringPref(mContext, key, ""));
+									break;
+								case "integer":
+									MainModule.mPrefs.put(key, Helpers.getSharedIntPref(mContext, key, 1));
+									break;
+								case "boolean":
+									MainModule.mPrefs.put(key, Helpers.getSharedBoolPref(mContext, key, false));
+									break;
+							}
+						} catch (Throwable t) {
+							XposedBridge.log(t);
+						}
+					}
+				};
+			}
+		});
+
 		Helpers.hookAllMethods("com.android.keyguard.charge.ChargeUtils", lpparam.classLoader, "getChargingHintText", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
@@ -6638,15 +6703,30 @@ public class System {
 					bundle = context.getContentResolver().call(Uri.parse(PROVIDER_POWER_CENTER), "getBatteryCurrent", null, null);
 				} catch (Exception ignore) {}
 
-				int opt = MainModule.mPrefs.getStringAsInt("system_lscurrentcharge", 1);
 				if (bundle != null && charge < 100) {
-					String curr = Math.abs(bundle.getInt("current_now")) + " mA";
-					if (opt == 2)
-						param.setResult(hint + " • " + curr);
+					boolean showCurr = MainModule.mPrefs.getBoolean("system_charginginfo_current");
+					boolean showVolt = MainModule.mPrefs.getBoolean("system_charginginfo_voltage");
+					boolean showWatt = MainModule.mPrefs.getBoolean("system_charginginfo_wattage");
+					boolean showTemp = MainModule.mPrefs.getBoolean("system_charginginfo_temp");
+
+					ArrayList<String> values = new ArrayList<>();
+					BatteryManager btrMgr = (BatteryManager)context.getSystemService(Context.BATTERY_SERVICE);
+					int currVal = Math.abs(bundle.getInt("current_now"));
+					long voltVal = btrMgr.getLongProperty(1001);
+					if (showCurr) values.add(currVal + " mA");
+					if (showVolt) values.add(String.format(Locale.getDefault(), "%.1f", voltVal / 1000f) + " V");
+					if (showWatt) values.add(String.format(Locale.getDefault(), "%.1f", voltVal / 1000f * currVal / 1000f) + " W");
+					if (showTemp) values.add(Math.round(btrMgr.getLongProperty(1002) / 10f) + " °C");
+					if (values.size() == 0) return;
+					String info = TextUtils.join(" · ", values);
+
+					int opt = MainModule.mPrefs.getStringAsInt("system_charginginfo_view", 1);
+					if (opt == 1)
+						param.setResult(hint + "\n" + info);
+					else if (opt == 2)
+						param.setResult(hint + " · " + info);
 					else if (opt == 3)
-						param.setResult(curr + " • " + hint);
-					else if (opt == 4)
-						param.setResult(hint + "\n" + curr);
+						param.setResult(info + " · " + hint);
 				}
 			}
 		});
@@ -6654,8 +6734,8 @@ public class System {
 		Helpers.hookAllConstructors("com.android.systemui.statusbar.phone.KeyguardIndicationTextView", lpparam.classLoader, new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
-				int opt = MainModule.mPrefs.getStringAsInt("system_lscurrentcharge", 1);
-				if (opt != 4) return;
+				int opt = MainModule.mPrefs.getStringAsInt("system_charginginfo_view", 1);
+				if (opt != 1) return;
 				TextView indicator = (TextView)param.thisObject;
 				if (indicator != null) indicator.setSingleLine(false);
 			}
@@ -7297,14 +7377,44 @@ public class System {
 	}
 
 	public static void SkipAppLockHook(LoadPackageParam lpparam) {
+		Helpers.hookAllConstructors("com.miui.server.AccessController", lpparam.classLoader, new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mWorkHandler");
+
+				new Helpers.SharedPrefObserver(mContext, mHandler) {
+					@Override
+					public void onChange(Uri uri) {
+						try {
+							String type = uri.getPathSegments().get(1);
+							String key = uri.getPathSegments().get(2);
+							if (key.contains("pref_key_system_applock_skip_activities") && "string".equals(type))
+							MainModule.mPrefs.put(key, Helpers.getSharedStringPref(mContext, key, ""));
+						} catch (Throwable t) {
+							XposedBridge.log(t);
+						}
+					}
+				};
+			}
+		});
+
 		Helpers.hookAllMethods("com.miui.server.AccessController", lpparam.classLoader, "skipActivity", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
-				XposedBridge.log("skipActivity: " + param.args[0]);
-//				Intent intent = (Intent)param.args[0];
-//				if (intent != null) {
-//					param.setResult(true);
-//				}
+				Intent intent = (Intent)param.args[0];
+				if (intent == null || intent.getComponent() == null) return;
+				String pkgName = intent.getComponent().getPackageName();
+				String actName = intent.getComponent().getClassName();
+				Helpers.log("SkipAppLock", actName);
+				String key = "system_applock_skip_activities";
+				String itemStr = MainModule.mPrefs.getString(key, "");
+				if (itemStr == null || itemStr.isEmpty()) return;
+				String[] itemArr = itemStr.trim().split("\\|");
+				for (String uuid: itemArr) {
+					String pkgAct = MainModule.mPrefs.getString(key + "_" + uuid + "_activity", "");
+					if (pkgAct.equals(pkgName + "|" + actName)) param.setResult(true);
+				}
 			}
 		});
 	}

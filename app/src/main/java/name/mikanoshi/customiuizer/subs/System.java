@@ -285,6 +285,8 @@ public class System extends SubFragment {
 					}
 				});
 
+				findPreference("pref_key_system_applock_skip_activities").setOnPreferenceClickListener(openActivitiesList);
+
 				if (!checkSecurityPermission()) {
 					Preference pref = findPreference("pref_key_system_applock_list");
 					pref.setEnabled(false);
@@ -313,6 +315,14 @@ public class System extends SubFragment {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
 						openSubFragment(new SubFragment(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_albumartonlock_title, R.xml.prefs_system_albumartonlock);
+						return true;
+					}
+				});
+
+				findPreference("pref_key_system_charginginfo_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						openSubFragment(new SubFragment(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_charginginfo_title, R.xml.prefs_system_charginginfo);
 						return true;
 					}
 				});

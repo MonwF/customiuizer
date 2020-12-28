@@ -1,0 +1,47 @@
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:miuizer="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_charginginfo"
+		android:title="@string/enable_mod"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:title="@string/settings"
+		android:dependency="pref_key_system_charginginfo"
+		miuizer:dynamic="true">
+
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_system_charginginfo_view"
+		android:title="@string/system_charginginfo_view_title"
+		android:entries="@array/charginginfo"
+		android:entryValues="@array/charginginfo_val"
+		miuizer:valueAsSummary="true"
+		android:defaultValue="1" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_charginginfo_current"
+		android:title="@string/system_charginginfo_current_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_charginginfo_voltage"
+		android:title="@string/system_charginginfo_voltage_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_charginginfo_wattage"
+		android:title="@string/system_charginginfo_wattage_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_charginginfo_temp"
+		android:title="@string/system_charginginfo_temp_title"
+		android:defaultValue="false" />
+
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+
+</PreferenceScreen>

@@ -204,8 +204,9 @@
 		</receiver>
 
 		<meta-data android:name="xposedmodule" android:value="true" />
-		<meta-data android:name="xposedminversion" android:value="82+" />
+		<meta-data android:name="xposedminversion" android:value="82" />
 		<meta-data android:name="xposeddescription" android:value="Customize MIUI to your liking" />
+		<meta-data android:name="xposedsharedprefs" android:value="true" />
 		<meta-data android:name="com.google.android.backup.api_key" android:value="AEdPqrEAAAAIRIa0lKCzoQ_qe_xfqaQCC4EQhwk3CWeRwzFrww" />
 	</application>
 

@@ -56,6 +56,13 @@
 			android:defaultValue="2" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_lockscreenshortcuts_left_center"
+			android:title="@string/system_lockscreenshortcuts_left_center_title"
+			android:dependency="pref_key_system_lockscreenshortcuts_left_off"
+			android:disableDependentsState="true"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_lockscreenshortcuts_left_skiplock"
 			android:title="@string/system_lockscreenshortcuts_left_skiplock_title"
 			android:summary="@string/system_lockscreenshortcuts_left_skiplock_summ"

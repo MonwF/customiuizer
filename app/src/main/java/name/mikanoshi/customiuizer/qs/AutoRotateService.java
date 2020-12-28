@@ -1,6 +1,5 @@
 package name.mikanoshi.customiuizer.qs;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
@@ -46,7 +45,7 @@ public class AutoRotateService extends TileService {
 
 	private void switchTileState() {
 		try {
-			SharedPreferences prefs = Helpers.getProtectedContext(this).getSharedPreferences(Helpers.prefsName, Context.MODE_PRIVATE);
+			SharedPreferences prefs = Helpers.getSharedPrefs(this, true);
 			int state = prefs.getInt("pref_key_qs_autorotate_state", 0);
 			state++;
 			if (state > 2) state = 0;
@@ -58,7 +57,7 @@ public class AutoRotateService extends TileService {
 
 	private int getTileState() {
 		try {
-			SharedPreferences prefs = Helpers.getProtectedContext(this).getSharedPreferences(Helpers.prefsName, Context.MODE_PRIVATE);
+			SharedPreferences prefs = Helpers.getSharedPrefs(this, true);
 			return prefs.getInt("pref_key_qs_autorotate_state", 0);
 		} catch (Throwable t) {
 			t.printStackTrace();

@@ -1,5 +1,7 @@
 package name.mikanoshi.customiuizer.subs;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -27,6 +29,7 @@ public class SortableList extends SubFragment {
 
 	String key;
 	int titleResId;
+	boolean activities;
 	SortableListView listView;
 
 	@Override
@@ -45,12 +48,13 @@ public class SortableList extends SubFragment {
 		Bundle args = getArguments();
 		key = args.getString("key");
 		titleResId = args.getInt("titleResId");
+		activities = args.getBoolean("activities", false);
 
 		if (getView() == null) return;
 
 		listView = getView().findViewById(android.R.id.list);
 
-		try {
+		if (!activities) try {
 			Field ssField = SortableListView.class.getDeclaredField("mSnapshotShadow");
 			ssField.setAccessible(true);
 			int lightShadow = getResources().getIdentifier("dynamic_listview_dragging_item_shadow_light", "drawable", "miui");
@@ -60,7 +64,8 @@ public class SortableList extends SubFragment {
 			e.printStackTrace();
 		}
 
-		listView.setAdapter(new PreferenceAdapter(getContext(), key));
+		listView.setAdapter(new PreferenceAdapter(getContext(), key, activities));
+		if (activities)	listView.setOnOrderChangedListener(null); else
 		listView.setOnOrderChangedListener(new SortableListView.OnOrderChangedListener() {
 			@Override
 			public void OnOrderChanged(int oldPos, int newPos) {
@@ -77,6 +82,7 @@ public class SortableList extends SubFragment {
 				((PreferenceAdapter)listView.getAdapter()).notifyDataSetChanged();
 			}
 		});
+		if (!activities)
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -90,13 +96,7 @@ public class SortableList extends SubFragment {
 		listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				PreferenceAdapter adapter = (PreferenceAdapter)listView.getAdapter();
-				String uuid = adapter.getItem(position);
-				String items = Helpers.prefs.getString(key, "");
-				Helpers.prefs.edit().putString(key, items.isEmpty() ? "" : items.replace(uuid, "").replace("||", "|").replaceAll("^\\|", "").replaceAll("\\|$", "")).apply();
-				adapter.updateItems();
-				adapter.notifyDataSetChanged();
-				invalidateOptionsMenu();
+				deleteItem(position);
 
 //				PopupMenu popup = new PopupMenu(getContext(), view);
 //				popup.inflate(R.menu.menu_itemoptions);
@@ -155,27 +155,66 @@ public class SortableList extends SubFragment {
 		return true;
 	}
 
+	private String createNewUUID() {
+		return UUID.randomUUID().toString().replaceAll("-", "").toLowerCase();
+	}
+
+	private void createNewItem(String uuid) {
+		String items = Helpers.prefs.getString(key, "");
+		Helpers.prefs.edit().putString(key, items.isEmpty() ? uuid : items + "|" + uuid).apply();
+		PreferenceAdapter adapter = (PreferenceAdapter)listView.getAdapter();
+		adapter.updateItems();
+		adapter.notifyDataSetChanged();
+		invalidateOptionsMenu();
+	}
+
+	private void deleteItem(int position) {
+		PreferenceAdapter adapter = (PreferenceAdapter)listView.getAdapter();
+		String items = Helpers.prefs.getString(key, "");
+		Helpers.prefs.edit().putString(key, items.isEmpty() ? "" : items.replace(adapter.getItem(position), "").replace("||", "|").replaceAll("^\\|", "").replaceAll("\\|$", "")).apply();
+		adapter.updateItems();
+		adapter.notifyDataSetChanged();
+		invalidateOptionsMenu();
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.deleteitem) {
 			Toast.makeText(getContext(), R.string.delete_item_info, Toast.LENGTH_SHORT).show();
 			return true;
 		} else if (item.getItemId() == R.id.additem) {
-			//if (listView.getChildCount() >= 10) return true;
-			String uuid = UUID.randomUUID().toString().replaceAll("-", "").toLowerCase();
-			String items = Helpers.prefs.getString(key, "");
-			Helpers.prefs.edit().putString(key, items.isEmpty() ? uuid : items + "|" + uuid).apply();
-			PreferenceAdapter adapter = (PreferenceAdapter)listView.getAdapter();
-			adapter.updateItems();
-			adapter.notifyDataSetChanged();
-			invalidateOptionsMenu();
+			if (activities) {
+				Bundle args = new Bundle();
+				args.putBoolean("activity", true);
+				args.putString("key", key);
+				AppSelector activitySelect = new AppSelector();
+				activitySelect.setTargetFragment(SortableList.this, 2);
+				openSubFragment(activitySelect, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_app, R.layout.prefs_app_selector);
+			} else {
+				//if (listView.getChildCount() >= 10) return true;
+				createNewItem(createNewUUID());
+			}
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void onPrepareOptionsMenu(Menu menu) {
+	public void onPrepareOptionsMenu(Menu menu) {}
 
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, final Intent data) {
+		if (resultCode == Activity.RESULT_OK) {
+			if (requestCode == 2) {
+				String activityValue = data.getStringExtra("activity");
+				int activityUser = data.getIntExtra("user", 0);
+				if (activityValue == null || activityUser < 0) return;
+
+				String uuid = createNewUUID();
+				Helpers.prefs.edit().putInt(key + "_" + uuid + "_action", 20).putString(key + "_" + uuid + "_activity", activityValue).putInt(key + "_" + uuid + "_activity_user", activityUser).apply();
+				createNewItem(uuid);
+			}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 }

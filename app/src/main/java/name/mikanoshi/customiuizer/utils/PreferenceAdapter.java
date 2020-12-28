@@ -20,11 +20,13 @@ import name.mikanoshi.customiuizer.R;
 public class PreferenceAdapter extends BaseAdapter {
 	private final LayoutInflater mInflater;
 	private final String key;
+	private final boolean activities;
 	private final ArrayList<String> items = new ArrayList<String>();
 
-	public PreferenceAdapter(Context context, String prefKey) {
+	public PreferenceAdapter(Context context, String prefKey, boolean actOnly) {
 		mInflater = LayoutInflater.from(context);
 		key = prefKey;
+		activities = actOnly;
 		updateItems();
 	}
 
@@ -62,7 +64,7 @@ public class PreferenceAdapter extends BaseAdapter {
 		TextView itemTitle = row.findViewById(android.R.id.title);
 		TextView itemSummary = row.findViewById(android.R.id.summary);
 
-		dragHandle.setVisibility(View.VISIBLE);
+		dragHandle.setVisibility(activities ? View.GONE : View.VISIBLE);
 		dragHandle.setOnTouchListener(((SortableListView)parent).getListenerForStartingSort());
 		itemIcon.setVisibility(View.VISIBLE);
 		String uuid = getItem(position);
@@ -71,7 +73,12 @@ public class PreferenceAdapter extends BaseAdapter {
 			itemTitle.setText(R.string.notselected);
 			itemSummary.setVisibility(View.GONE);
 		} else {
-			itemTitle.setText(name.first);
+			if (activities) {
+				String actStr = Helpers.prefs.getString(key + "_" + uuid + "_activity", "");
+				itemTitle.setText(actStr == null ? "" : Helpers.getAppName(row.getContext(), actStr, true));
+			} else {
+				itemTitle.setText(name.first);
+			}
 			if (name.second == null || name.second.isEmpty()) {
 				itemSummary.setVisibility(View.GONE);
 			} else {

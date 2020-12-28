@@ -335,8 +335,6 @@
     <string name="system_taptounlock_summ">Натиснення на нижню область екрану блокування починає розблокування пристрою</string>
     <string name="system_dttosleep_title">Сон по подвійному натисненню</string>
     <string name="system_dttosleep_summ">Вимикає екран при подвійному натисканні по порожньому місці на екрані блокування</string>
-    <string name="system_lscurrent_title">Показувати струм зарядки</string>
-    <string name="system_lscurrent_summ">Відображає значення струму зарядки в нижній частині екрану блокування</string>
     <string name="system_lsalarm_title">Показ будильника</string>
     <string name="system_lsalarm_summ">Відображає найближчий час спрацювання будильника поруч з поточною датою</string>
     <string name="system_lsalarm_format_title">Формат відображення</string>

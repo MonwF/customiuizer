@@ -53,7 +53,7 @@ public class MainApplication extends Application {
 		Context pContext;
 		try {
 			pContext = Helpers.getProtectedContext(base);
-			Helpers.prefs = pContext.getSharedPreferences(Helpers.prefsName, Context.MODE_PRIVATE);
+			Helpers.prefs = Helpers.getSharedPrefs(pContext, false);
 			String locale = Helpers.prefs.getString("pref_key_miuizer_locale", "auto");
 			if (locale != null && !"auto".equals(locale) && !"1".equals(locale)) Locale.setDefault(Locale.forLanguageTag(locale));
 		} catch (Throwable t) {

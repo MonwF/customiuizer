@@ -1,10 +1,18 @@
 package name.mikanoshi.customiuizer.utils;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -77,6 +85,7 @@ import android.util.TypedValue;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -106,6 +115,8 @@ public class Helpers {
 	public static Context mModuleContext = null;
 	public static final String modulePkg = "name.mikanoshi.customiuizer";
 	public static final String prefsName = "customiuizer_prefs";
+	public static final String prefsPath = "/data/user_de/0/" + modulePkg + "/shared_prefs";
+	public static final String prefsFile = prefsPath + "/" + prefsName + ".xml";
 	public static final String externalFolder = "/CustoMIUIzer/";
 	public static final String backupFile = "settings_backup";
 	public static final String logFile = "xposed_log";
@@ -114,6 +125,8 @@ public class Helpers {
 	public static final String ACCESS_SECURITY_CENTER = "com.miui.securitycenter.permission.ACCESS_SECURITY_CENTER_PROVIDER";
 	public static final String NEW_MODS_SEARCH_QUERY = "\uD83C\uDD95";
 	public static SharedPreferences prefs = null;
+	public static String prefsPathCurrent = null;
+	public static String prefsFileCurrent = null;
 	public static ArrayList<AppData> shareAppsList = null;
 	public static ArrayList<AppData> openWithAppsList = null;
 	public static ArrayList<AppData> installedAppsList = null;
@@ -140,25 +153,24 @@ public class Helpers {
 	public static boolean showNewMods = true;
 	public static boolean miuizerModuleActive = false;
 	public static final HashSet<String> newMods = new HashSet<String>(Arrays.asList(
-		"pref_key_system_fw_splitscreen",
-		"pref_key_system_securecontrolcenter",
-		"pref_key_system_messagingstylelines",
-		"pref_key_system_minimalnotifview",
-		"pref_key_system_notifchannelsettings"
+		"pref_key_system_applock_skip",
+		"pref_key_system_charginginfo_cat",
+		"pref_key_system_lockscreenshortcuts_left_center",
+		"pref_key_system_noscreenlock_nofaceunlock"
 	));
 	public static final HashMap<String, String> l10nProgress = new HashMap<String, String>() {{
 		put("ru-RU", "100.0%");
-		put("zh-CN", "100.0%");
-		put("id", "12.8%");
-		put("tr", "95.0%");
-		put("it", "100.0%");
-		put("pt-BR", "93.7%");
-		put("fr", "25.5%");
-		put("uk-UK", "96.0%");
+		put("zh-CN", "98.5%");
+		put("id", "12.7%");
+		put("tr", "93.5%");
+		put("it", "98.5%");
+		put("pt-BR", "92.5%");
+		put("fr", "25.2%");
+		put("uk-UK", "94.5%");
 		put("es", "100.0%");
-		put("sk", "3.1%");
+		put("sk", "3.0%");
 		put("cs", "0.0%");
-		put("de", "95.0%");
+		put("de", "93.5%");
 	}};
 
 	public static final ArrayList<String> shortcutIcons = new ArrayList<String>();
@@ -210,7 +222,7 @@ public class Helpers {
 		try { themeResId = act.getResources().getIdentifier("Theme.DayNight", "style", "miui"); } catch (Throwable ignore) {}
 		if (themeResId == 0) themeResId = act.getResources().getIdentifier(isNightMode(act) ? "Theme.Dark" : "Theme.Light", "style", "miui");
 		act.setTheme(themeResId);
-		if (!Helpers.is11()) act.getTheme().applyStyle(R.style.ActivityAnimation10, true);
+		if (!is11()) act.getTheme().applyStyle(R.style.ActivityAnimation10, true);
 		act.getTheme().applyStyle(overrideTheme, true);
 		act.getWindow().setBackgroundDrawable(noBackground ? null : new ColorDrawable(getSystemBackgroundColor(act)));
 	}
@@ -226,9 +238,9 @@ public class Helpers {
 	}
 
 	public static void setMiuiPrefItem(View item) {
-		item.setBackgroundResource(Helpers.is11() ? R.drawable.list_item_bg : R.drawable.am_list_item_background);
+		item.setBackgroundResource(is11() ? R.drawable.list_item_bg : R.drawable.am_list_item_background);
 		TextView title = item.findViewById(android.R.id.title);
-		if (Helpers.is12()) {
+		if (is12()) {
 			int resId = item.getResources().getIdentifier("preference_item_bg", "drawable", "miui");
 			if (resId != 0) item.setBackgroundResource(resId);
 			resId = item.getResources().getIdentifier("normal_text_size", "dimen", "miui");
@@ -266,7 +278,7 @@ public class Helpers {
 	@SuppressWarnings("ConstantConditions")
 	public static void detectHoliday() {
 		currentHoliday = Holidays.NONE;
-		String opt = Helpers.prefs.getString("pref_key_miuizer_holiday", "0");
+		String opt = prefs.getString("pref_key_miuizer_holiday", "0");
 		int holiday = Integer.parseInt(opt);
 		if (holiday > 0) currentHoliday = Holidays.values()[holiday];
 		if (holiday == 0) {
@@ -385,6 +397,49 @@ public class Helpers {
 		}
 	}
 
+	public static String getNewEdXposedPath() {
+		File[] files = new File("/data/misc").listFiles();
+		String edxpPath = null;
+		if (files != null && files.length > 0)
+		for (File file: files)
+		if (file.getName().startsWith("edxp_")) {
+			edxpPath = file.getName();
+			break;
+		}
+		return edxpPath;
+	}
+
+	public static String getXposedPropVersion(File propFile) {
+		String version = "unknown";
+		try (FileInputStream inputStream = new FileInputStream(propFile)) {
+			try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+				while (true) {
+					String readLine = null;
+					try {
+						readLine = bufferedReader.readLine();
+					} catch (Throwable t) {
+						t.printStackTrace();
+					}
+					if (readLine == null) break;
+
+					String[] split = readLine.split("=", 2);
+					if (split.length == 2) {
+						String line = split[0].trim();
+						if (line.charAt(0) != '#' && "version".equals(line)) {
+							version = split[1].trim();
+							break;
+						}
+					}
+				}
+			} catch (Throwable t) {
+				t.printStackTrace();
+			}
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+		return "unknown".equals(version) ? version + " (" + xposedVersion + ")" : version;
+	}
+
 	public static String getXposedInstallerErrorLog(Context context) {
 		String baseDir = null;
 		File file;
@@ -430,6 +485,22 @@ public class Helpers {
 			res = true;
 		} catch (PackageManager.NameNotFoundException e) {}
 		return res;
+	}
+
+	public static void hideKeyboard(Activity act, View view) {
+		try {
+			Context context = act == null ? view.getContext() : act;
+			InputMethodManager inputManager = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+			if (inputManager == null) return;
+			IBinder token = null;
+			View currentFocusedView = act == null ? view : act.getCurrentFocus();
+			if (currentFocusedView != null)
+			token = currentFocusedView.getWindowToken();
+			if (token != null)
+			inputManager.hideSoftInputFromWindow(token, InputMethodManager.HIDE_NOT_ALWAYS);
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
 	}
 
 	public static void showOKDialog(Context context, int title, int text) {
@@ -722,7 +793,7 @@ public class Helpers {
 	}
 
 	private static boolean checkMultiUserPermission(Context context) {
-		return context.getPackageManager().checkPermission("android.permission.INTERACT_ACROSS_USERS", Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED;
+		return context.getPackageManager().checkPermission("android.permission.INTERACT_ACROSS_USERS", modulePkg) == PackageManager.PERMISSION_GRANTED;
 	}
 
 	@SuppressWarnings({"JavaReflectionInvocation", "ConstantConditions"})
@@ -1016,7 +1087,7 @@ public class Helpers {
 
 	public static Drawable getShortcutIcon(Context context, String key) {
 		Drawable shortcutIcon = null;
-		String shortcutIconPath = Helpers.getProtectedContext(context).getFilesDir() + "/shortcuts/" + key + "_shortcut.png";
+		String shortcutIconPath = getProtectedContext(context).getFilesDir() + "/shortcuts/" + key + "_shortcut.png";
 		File shortcutIconFile = new File(shortcutIconPath);
 		if (shortcutIconFile.exists())
 		shortcutIcon = new BitmapDrawable(context.getResources(), BitmapFactory.decodeFile(shortcutIconFile.getAbsolutePath()));
@@ -1274,10 +1345,10 @@ public class Helpers {
 			case 6: pattern = new long[] { 0, 100, 150, 100, 150, 100 }; break;
 			case 7:
 				if (TextUtils.isEmpty(ownPattern)) return;
-				pattern = Helpers.getVibrationPattern(ownPattern);
+				pattern = getVibrationPattern(ownPattern);
 				break;
 		}
-		if (!Helpers.isNougat()) try {
+		if (!isNougat()) try {
 			vibrator.vibrate(VibrationEffect.createWaveform(pattern, -1));
 		} catch (Throwable t) {
 			//noinspection deprecation
@@ -1314,6 +1385,72 @@ public class Helpers {
 //			pref.setSummary(reasonText);
 //		}
 //	}
+
+	@SuppressWarnings("deprecation")
+	@SuppressLint("WorldReadableFiles")
+	public static SharedPreferences getSharedPrefs(Context context, boolean protectedStorage, boolean multiProcess) {
+		if (protectedStorage) context = getProtectedContext(context);
+		try {
+			return context.getSharedPreferences(prefsName, multiProcess ? Context.MODE_MULTI_PROCESS | Context.MODE_WORLD_READABLE : Context.MODE_WORLD_READABLE);
+		} catch (Throwable t) {
+			return context.getSharedPreferences(prefsName, multiProcess ? Context.MODE_MULTI_PROCESS | Context.MODE_PRIVATE : Context.MODE_PRIVATE);
+		}
+	}
+
+	public static SharedPreferences getSharedPrefs(Context context, boolean protectedStorage) {
+		return getSharedPrefs(context, protectedStorage, false);
+	}
+
+	@SuppressWarnings("ConstantConditions")
+	public static String getSharedPrefsPath() {
+		if (prefsPathCurrent == null) try {
+			Field fFile = prefs.getClass().getDeclaredField("mFile");
+			fFile.setAccessible(true);
+			prefsPathCurrent = ((File)fFile.get(prefs)).getParentFile().getAbsolutePath();
+			return prefsPathCurrent;
+		} catch (Throwable t) {
+			return prefsPath;
+        } else return prefsPathCurrent;
+    }
+
+    @SuppressWarnings("ConstantConditions")
+	public static String getSharedPrefsFile() {
+		if (prefsFileCurrent == null) try {
+			Field fFile = prefs.getClass().getDeclaredField("mFile");
+			fFile.setAccessible(true);
+			prefsFileCurrent = ((File)fFile.get(prefs)).getAbsolutePath();
+			return prefsFileCurrent;
+		} catch (Throwable t) {
+			return prefsFile;
+        } else return prefsFileCurrent;
+    }
+
+    public static boolean usingNewSharedPrefs() {
+    	return getSharedPrefsPath().startsWith("/data/misc/");
+	}
+
+	public static boolean migratePrefs() {
+		try {
+			String newFile = getSharedPrefsFile();
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+				Files.copy(Paths.get(prefsFile), Paths.get(newFile), StandardCopyOption.REPLACE_EXISTING);
+	    		return true;
+			} else try (InputStream in = new FileInputStream(prefsFile)) {
+				try (OutputStream out = new FileOutputStream(newFile, false)) {
+					byte[] buf = new byte[1024];
+					int len;
+					while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
+					return true;
+				}
+			} catch (Throwable t) {
+				t.printStackTrace();
+				return false;
+			}
+		} catch (Throwable t) {
+			return false;
+		}
+    }
+
 	@SuppressLint({"SetWorldReadable", "SetWorldWritable"})
 	public static void fixPermissionsAsync(Context context) {
 		AsyncTask.execute(() -> {
@@ -1323,18 +1460,18 @@ public class Helpers {
 				pkgFolder.setExecutable(true, false);
 				pkgFolder.setReadable(true, false);
 				pkgFolder.setWritable(true, false);
-				File sharedPrefsFolder = new File(pkgFolder.getAbsolutePath() + "/shared_prefs");
-				if (sharedPrefsFolder.exists()) {
-					sharedPrefsFolder.setExecutable(true, false);
-					sharedPrefsFolder.setReadable(true, false);
-					sharedPrefsFolder.setWritable(true, false);
-					File f = new File(sharedPrefsFolder.getAbsolutePath() + "/" + prefsName + ".xml");
-					if (f.exists()) {
-						f.setReadable(true, false);
-						f.setExecutable(true, false);
-						f.setWritable(true, false);
-					}
-				}
+			}
+			File sharedPrefsFolder = new File(Helpers.getSharedPrefsPath());
+			if (sharedPrefsFolder.exists()) {
+				sharedPrefsFolder.setExecutable(true, false);
+				sharedPrefsFolder.setReadable(true, false);
+				sharedPrefsFolder.setWritable(true, false);
+			}
+			File sharedPrefsFile = new File(Helpers.getSharedPrefsFile());
+			if (sharedPrefsFile.exists()) {
+				sharedPrefsFile.setReadable(true, false);
+				sharedPrefsFile.setExecutable(true, false);
+				sharedPrefsFile.setWritable(true, false);
 			}
 		});
 	}
@@ -1657,7 +1794,7 @@ public class Helpers {
 		}
 
 		@Override
-		final protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+		public final void beforeHookedMethod(MethodHookParam param) throws Throwable {
 			try {
 				this.before(param);
 			} catch (Throwable t) {
@@ -1666,7 +1803,7 @@ public class Helpers {
 		}
 
 		@Override
-		final protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+		public final void afterHookedMethod(MethodHookParam param) throws Throwable {
 			try {
 				this.after(param);
 			} catch (Throwable t) {

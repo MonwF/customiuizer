@@ -1,6 +1,7 @@
 package name.mikanoshi.customiuizer;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.backup.BackupManager;
@@ -40,6 +41,7 @@ public class MainActivity extends Activity {
 	FileObserver fileObserver;
 	GravitySensor angleListener;
 	WeatherView weatherView;
+	boolean migrateOnExit = false;
 
 	@Override
 	protected void attachBaseContext(Context base) {
@@ -171,7 +173,7 @@ public class MainActivity extends Activity {
 		Helpers.fixPermissionsAsync(getApplicationContext());
 
 		try {
-			fileObserver = new FileObserver(Helpers.getProtectedContext(this).getDataDir() + "/shared_prefs", FileObserver.CLOSE_WRITE) {
+			fileObserver = new FileObserver(Helpers.getSharedPrefsPath(), FileObserver.CLOSE_WRITE) {
 				@Override
 				public void onEvent(int event, String path) {
 					Helpers.fixPermissionsAsync(getApplicationContext());
@@ -198,11 +200,17 @@ public class MainActivity extends Activity {
 		super.onSaveInstanceState(savedInstanceState);
 	}
 
+	@SuppressLint("ApplySharedPref")
 	protected void onDestroy() {
 		try {
 			if (prefsChanged != null) Helpers.prefs.unregisterOnSharedPreferenceChangeListener(prefsChanged);
 			if (fileObserver != null) fileObserver.stopWatching();
 			if (angleListener != null) angleListener.stop();
+			if (migrateOnExit) {
+				boolean migrated = Helpers.migratePrefs();
+				Helpers.prefs = Helpers.getSharedPrefs(this, true, true);
+				Helpers.prefs.edit().putBoolean("miuizer_prefs_migrated", true).putInt("miuizer_prefs_migration_result", migrated ? 1 : 2).commit();
+			}
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
@@ -247,8 +255,7 @@ public class MainActivity extends Activity {
 	}
 
 	public void requestBackup() {
-		BackupManager bm = new BackupManager(getApplicationContext());
-		bm.dataChanged();
+		new BackupManager(getApplicationContext()).dataChanged();
 	}
 
 	@Override

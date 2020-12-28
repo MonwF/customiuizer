@@ -39,7 +39,7 @@ public class SharedPrefsProvider extends ContentProvider {
 	@Override
 	public boolean onCreate() {
 		try {
-			prefs = Helpers.getProtectedContext(getContext()).getSharedPreferences(Helpers.prefsName, Context.MODE_PRIVATE);
+			prefs = Helpers.getSharedPrefs(getContext(), true);
 			return true;
 		} catch (Throwable throwable) {
 			return false;

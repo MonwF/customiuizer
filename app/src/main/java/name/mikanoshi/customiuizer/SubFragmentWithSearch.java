@@ -66,7 +66,7 @@ public class SubFragmentWithSearch extends SubFragment {
 					@Override
 					public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 						if (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-							hideKeyboard();
+							Helpers.hideKeyboard(getActivity(), v);
 							listView.requestFocus();
 							return true;
 						}
@@ -137,7 +137,7 @@ public class SubFragmentWithSearch extends SubFragment {
 			public boolean onTouch(View v, MotionEvent event) {
 				if (actionMode != null && isSearchFocused) {
 					isSearchFocused = false;
-					hideKeyboard();
+					Helpers.hideKeyboard(getActivity(), v);
 				}
 				return false;
 			}

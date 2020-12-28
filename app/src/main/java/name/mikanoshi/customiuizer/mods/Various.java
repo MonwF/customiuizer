@@ -390,7 +390,7 @@ public class Various {
 	}
 
 	public static void AlarmCompatHook() {
-		Helpers.findAndHookMethod("android.provider.Settings$System", null, "getStringForUser", ContentResolver.class, String.class, int.class, new MethodHook() {
+		Helpers.findAndHookMethod(Settings.System.class, "getStringForUser", ContentResolver.class, String.class, int.class, new MethodHook() {
 			@Override
 			protected void before(final MethodHookParam param) throws Throwable {
 				ContentResolver resolver = (ContentResolver)param.args[0];

@@ -160,7 +160,7 @@ public class GlobalActions {
 					Process.sendSignal(Process.myPid(), Process.SIGNAL_KILL);
 				}
 
-				if (action.equals(ACTION_PREFIX + "CollectLogs")) try {
+				if (action.equals(ACTION_PREFIX + "CollectXposedLog")) try {
 					String errorLogPath = Helpers.getXposedInstallerErrorLog(context);
 					if (errorLogPath != null)
 					try (InputStream in = new FileInputStream(errorLogPath)) {
@@ -651,7 +651,7 @@ public class GlobalActions {
 //		}
 //	}
 
-	public static void miuizerInit(LoadPackageParam lpparam) {
+	public static void miuizerHook(LoadPackageParam lpparam) {
 		try {
 			XposedHelpers.setStaticBooleanField(findClass(Helpers.modulePkg + ".utils.Helpers", lpparam.classLoader), "miuizerModuleActive", true);
 			XposedHelpers.setStaticObjectField(findClass(Helpers.modulePkg + ".utils.Helpers", lpparam.classLoader), "xposedVersion", XposedBridge.getXposedVersion());
@@ -662,7 +662,7 @@ public class GlobalActions {
 		Helpers.emptyFile(lpparam.appInfo.dataDir + "/files/uncaught_exceptions", false);
 	}
 
-	public static void miuizerEdXposedManagerInit(LoadPackageParam lpparam) {
+	public static void miuizerEdXposedManagerHook(LoadPackageParam lpparam) {
 		Helpers.hookAllMethodsSilently("org.meowcat.edxposed.manager.ModulesFragment$ModuleAdapter", lpparam.classLoader, "getView", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
@@ -696,11 +696,11 @@ public class GlobalActions {
 	}
 
 	private static int settingsIconResId;
-	public static void miuizerSettingsResInit() {
+	public static void miuizerSettingsRes() {
 		settingsIconResId = MainModule.resHooks.addResource("ic_miuizer_settings", Helpers.is11() ? R.drawable.ic_miuizer_settings11 : R.drawable.ic_miuizer_settings10);
 	}
 
-	public static void miuizerSettingsInit(LoadPackageParam lpparam) {
+	public static void miuizerSettingsHook(LoadPackageParam lpparam) {
 		Method[] methods = XposedHelpers.findMethodsByExactParameters(findClass("com.android.settings.MiuiSettings", lpparam.classLoader), void.class, List.class);
 		for (Method method: methods)
 		if (Modifier.isPublic(method.getModifiers()))
@@ -755,7 +755,7 @@ public class GlobalActions {
 		});
 	}
 
-	public static void miuizerSettingsInit12(LoadPackageParam lpparam) {
+	public static void miuizerSettings12Hook(LoadPackageParam lpparam) {
 		Method[] methods = XposedHelpers.findMethodsByExactParameters(findClass("com.android.settings.MiuiSettings", lpparam.classLoader), void.class, List.class);
 		for (Method method: methods)
 		if (Modifier.isPublic(method.getModifiers()))
@@ -985,6 +985,33 @@ public class GlobalActions {
 			}
 		});
 
+		Helpers.findAndHookMethod("com.android.server.pm.PackageManagerService", lpparam.classLoader, "getInstallerPackageName", String.class, new MethodHook() {
+			@Override
+			@SuppressLint("SetWorldReadable")
+			protected void before(MethodHookParam param) throws Throwable {
+				String req = (String)param.args[0];
+				if ("EdXposedVersion".equals(req)) {
+					String edxpPath = Helpers.getNewEdXposedPath();
+					if (edxpPath == null) return;
+					String edxpVersion = Helpers.getXposedPropVersion(new File("/data/misc/" + edxpPath + "/framework/edconfig.jar"));
+					param.setResult(edxpVersion);
+				} else if ("EdXposedLog".equals(req)) {
+					String edxpPath = Helpers.getNewEdXposedPath();
+					if (edxpPath == null) return;
+					String baseDir = "/data/misc/" + edxpPath + "/0/log";
+					File file;
+					file = new File(baseDir);
+					if (!file.exists()) return;
+					try { file.setExecutable(true, false); } catch (Throwable ignore) {}
+					file = new File(baseDir + "/all.log");
+					if (!file.exists()) file = new File(baseDir + "/error.log");
+					if (!file.exists()) return;
+					try { file.setReadable(true, false); } catch (Throwable ignore) {}
+					param.setResult(file.getAbsolutePath());
+				}
+			}
+		});
+
 //		Helpers.hookAllMethods("com.android.server.policy.MiuiPhoneWindowManager", lpparam.classLoader, "init", new MethodHook() {
 //			@Override
 //			protected void after(MethodHookParam param) throws Throwable {
@@ -1035,7 +1062,7 @@ public class GlobalActions {
 				intentfilter.addAction(ACTION_PREFIX + "HideQuickRecents");
 
 				intentfilter.addAction(ACTION_PREFIX + "ClearMemory");
-				intentfilter.addAction(ACTION_PREFIX + "CollectLogs");
+				intentfilter.addAction(ACTION_PREFIX + "CollectXposedLog");
 				intentfilter.addAction(ACTION_PREFIX + "RestartSystemUI");
 
 				mStatusBarContext.registerReceiver(mSBReceiver, intentfilter);

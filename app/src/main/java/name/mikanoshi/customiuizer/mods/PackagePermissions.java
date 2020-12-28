@@ -44,7 +44,7 @@ public class PackagePermissions {
 //		//if (origRequestedPermissionsRequired != null) setObjectField(param.args[0], "requestedPermissionsRequired", origRequestedPermissionsRequired);
 //	}
 
-	public static void init(LoadPackageParam lpparam) {
+	public static void hook(LoadPackageParam lpparam) {
 		systemPackages.add(Helpers.modulePkg);
 		//systemPackages.add("com.miui.packageinstaller");
 		//systemPackages.add("pl.solidexplorer2");

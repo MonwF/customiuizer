@@ -3,7 +3,6 @@ package name.mikanoshi.customiuizer;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
@@ -12,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
@@ -207,16 +205,6 @@ public class SubFragment extends PreferenceFragmentBase {
 		}
 	}
 
-	public void hideKeyboard() {
-		Activity act = getActivity();
-		if (act == null) return;
-		InputMethodManager inputMgr = (InputMethodManager)act.getSystemService(Context.INPUT_METHOD_SERVICE);
-		if (inputMgr == null) return;
-		View currentFocusedView = act.getCurrentFocus();
-		if (currentFocusedView != null)
-		inputMgr.hideSoftInputFromWindow(currentFocusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-	}
-
 	public Preference.OnPreferenceClickListener openAppsEdit = new Preference.OnPreferenceClickListener() {
 		@Override
 		public boolean onPreferenceClick(Preference preference) {
@@ -309,6 +297,14 @@ public class SubFragment extends PreferenceFragmentBase {
 		@Override
 		public boolean onPreferenceClick(Preference preference) {
 			openSortableItemList(preference);
+			return true;
+		}
+	};
+
+	public Preference.OnPreferenceClickListener openActivitiesList = new Preference.OnPreferenceClickListener() {
+		@Override
+		public boolean onPreferenceClick(Preference preference) {
+			openActivitiesItemList(preference);
 			return true;
 		}
 	};
@@ -414,6 +410,14 @@ public class SubFragment extends PreferenceFragmentBase {
 		openSubFragment(new SortableList(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, pref.getTitleRes(), R.layout.prefs_sortable_list);
 	}
 
+	public void openActivitiesItemList(Preference pref) {
+		Bundle args = new Bundle();
+		args.putBoolean("activities", true);
+		args.putString("key", pref.getKey());
+		args.putInt("titleResId", pref.getTitleRes());
+		openSubFragment(new SortableList(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, pref.getTitleRes(), R.layout.prefs_sortable_list);
+	}
+
 	public void selectSub(String cat, String sub) {
 		PreferenceScreen screen = (PreferenceScreen)findPreference(cat);
 		int cnt = screen.getPreferenceCount();
@@ -437,7 +441,7 @@ public class SubFragment extends PreferenceFragmentBase {
 		//if (isAnimating && view != null) ((ViewGroup)view.getParent()).removeView(view);
 		if (isAnimating) return;
 		if (Helpers.shimmerAnim != null) Helpers.shimmerAnim.cancel();
-		hideKeyboard();
+		Helpers.hideKeyboard(getActivity(), getView());
 		FragmentManager fragmentManager = getFragmentManager();
 		if (fragmentManager == null || !isResumed()) {
 			Activity act = getActivity();

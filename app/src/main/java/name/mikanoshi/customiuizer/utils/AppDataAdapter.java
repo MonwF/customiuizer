@@ -64,6 +64,7 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 		key = prefKey;
 		aType = adapterType;
 		bwlist = isBW;
+		boolean removeDual = false;
 		if (aType == Helpers.AppAdapterType.Mutli) {
 			selectedApps = Helpers.prefs.getStringSet(key, new LinkedHashSet<String>());
 			if (bwlist) selectedAppsBlack = Helpers.prefs.getStringSet(key + "_black", new LinkedHashSet<String>());
@@ -82,11 +83,7 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 					}
 				}
 				if (selectedAppsAdd.size() > 0) selectedApps.addAll(selectedAppsAdd);
-			} else {
-				originalAppList.removeIf(appData -> appData.user != 0);
-				filteredAppList.clear();
-				filteredAppList.addAll(originalAppList);
-			}
+			} else removeDual = true;
 		} else if (aType == Helpers.AppAdapterType.Standalone) {
 			selectedApp = Helpers.prefs.getString(key, "");
 			selectedUser = Helpers.prefs.getInt(key + "_user", 0);
@@ -97,6 +94,13 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 			noApp.enabled = true;
 			originalAppList.add(0, noApp);
 			filteredAppList.add(0, noApp);
+		} else if (aType == Helpers.AppAdapterType.Default) {
+			removeDual = key != null && key.contains("pref_key_system_applock_skip_activities");
+		}
+		if (removeDual) {
+			originalAppList.removeIf(appData -> appData.user != 0);
+			filteredAppList.clear();
+			filteredAppList.addAll(originalAppList);
 		}
 		sortList();
 	}
