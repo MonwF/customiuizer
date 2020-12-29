@@ -1329,7 +1329,8 @@ public class Launcher {
 	}
 
 	public static void NoUnlockAnimationHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.miui.home.launcher.common.Utilities", lpparam.classLoader, "notShowUserPresentAnimation", Context.class, XC_MethodReplacement.returnConstant(true));
+		if (!Helpers.findAndHookMethodSilently("com.miui.home.launcher.common.Utilities", lpparam.classLoader, "notShowUserPresentAnimation", Context.class, XC_MethodReplacement.returnConstant(true)))
+		Helpers.findAndHookMethod("com.miui.launcher.utils.MiuiSettingsUtils", lpparam.classLoader, "isSystemAnimationOpen", Context.class, XC_MethodReplacement.returnConstant(false));
 	}
 
 	public static void UseOldLaunchAnimationHook(LoadPackageParam lpparam) {
@@ -1402,8 +1403,10 @@ public class Launcher {
 		Helpers.hookAllConstructors("com.miui.home.recents.views.RecentsView", lpparam.classLoader, new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
-				XposedHelpers.setFloatField(param.thisObject, "mDefaultScrimAlpha", 0.15f);
-				XposedHelpers.setObjectField(param.thisObject, "mBackgroundScrim", new ColorDrawable(Color.argb(38, 0, 0, 0)).mutate());
+				try {
+					XposedHelpers.setFloatField(param.thisObject, "mDefaultScrimAlpha", 0.15f);
+					XposedHelpers.setObjectField(param.thisObject, "mBackgroundScrim", new ColorDrawable(Color.argb(38, 0, 0, 0)).mutate());
+				} catch (Throwable ignore) {}
 			}
 		});
 

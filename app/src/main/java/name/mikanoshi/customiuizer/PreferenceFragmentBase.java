@@ -232,13 +232,12 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 		actionBar.setBackgroundDrawable(new ColorDrawable(Helpers.getSystemBackgroundColor(getValidContext())));
 	}
 
-	@SuppressWarnings("deprecation")
 	@SuppressLint("WorldReadableFiles")
 	public void onCreate(Bundle savedInstanceState, int pref_defaults) {
 		super.onCreate(savedInstanceState);
 		try {
 			getPreferenceManager().setSharedPreferencesName(Helpers.prefsName);
-			getPreferenceManager().setSharedPreferencesMode(Context.MODE_WORLD_READABLE);
+			getPreferenceManager().setSharedPreferencesMode(Context.MODE_PRIVATE);
 			getPreferenceManager().setStorageDeviceProtected();
 			PreferenceManager.setDefaultValues(Helpers.getProtectedContext(getValidContext()), pref_defaults, false);
 		} catch (Throwable throwable) {

@@ -1,3 +1,7 @@
+3.1.1
+[Fixed][Remove unlock animation] Compatibility with latest MIUI Launcher versions
+[Fixed] Module's settings crash on older Android versions
+
 3.1.0
 [New] Bypass app lock for selected activities (activity names of locked apps are written to Xposed log upon launch)
 [Improved][Display charging data] Show battery info (current, voltage, wattage, temperature)
