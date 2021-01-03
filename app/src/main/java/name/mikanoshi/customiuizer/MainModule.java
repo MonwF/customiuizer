@@ -260,6 +260,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_dndtoggle")) System.VolumeDialogDNDSwitchHook(lpparam);
 			if (mPrefs.getBoolean("system_fw_splitscreen")) System.MultiWindowPlusNativeHook(lpparam);
 			if (mPrefs.getBoolean("system_charginginfo")) System.ChargingInfoHook(lpparam);
+			if (mPrefs.getBoolean("system_secureqs")) System.SecureQSTilesHook(lpparam);
 			if (mPrefs.getBoolean("launcher_nounlockanim")) System.NoUnlockAnimationHook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_battery1")) System.HideIconsBattery1Hook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_battery2")) System.HideIconsBattery2Hook(lpparam);
@@ -322,7 +323,10 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 				GlobalActions.miuizerSettings12Hook(lpparam);
 			else
 				GlobalActions.miuizerSettingsHook(lpparam);
-			if (mPrefs.getBoolean("system_separatevolume")) System.NotificationVolumeSettingsHook(lpparam);
+			if (mPrefs.getBoolean("system_separatevolume")) {
+				System.NotificationVolumeSettingsRes();
+				System.NotificationVolumeSettingsHook(lpparam);
+			}
 			if (mPrefs.getBoolean("system_disableanynotif")) System.DisableAnyNotificationHook();
 			if (!mPrefs.getString("system_defaultusb", "none").equals("none")) System.USBConfigSettingsHook(lpparam);
 		}
@@ -351,7 +355,15 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		final int collapseTitlesOpt = mPrefs.getStringAsInt("various_collapsemiuititles", 1);
 		final boolean collapseTitles = collapseTitlesOpt > 1 && Helpers.is12();
 
-		if (isLauncherPkg && isLauncherPerf) handleLoadLauncher(lpparam);
+		if (isLauncherPkg) {
+			if (mPrefs.getInt("launcher_horizmargin", 0) > 0) Launcher.HorizontalSpacingRes();
+			if (mPrefs.getInt("launcher_topmargin", 0) > 0) Launcher.TopSpacingRes();
+			if (mPrefs.getInt("launcher_bottommargin", 0) > 0) Launcher.BottomSpacingRes();
+			if (mPrefs.getInt("launcher_indicatorheight", 9) > 9) Launcher.IndicatorHeightRes();
+			if (mPrefs.getBoolean("launcher_unlockgrids")) Launcher.UnlockGridsRes();
+			if (mPrefs.getBoolean("launcher_docktitles")) Launcher.ShowHotseatTitlesRes();
+			if (isLauncherPerf) handleLoadLauncher(lpparam);
+		}
 
 		if ((isLauncherPkg && !isLauncherPerf) || isStatusBarColor || collapseTitles)
 		Helpers.findAndHookMethod(Application.class, "attach", Context.class, new MethodHook() {
@@ -365,13 +377,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 	}
 
 	private void handleLoadLauncher(final LoadPackageParam lpparam) {
-		if (mPrefs.getInt("launcher_horizmargin", 0) > 0) Launcher.HorizontalSpacingRes();
-		if (mPrefs.getInt("launcher_topmargin", 0) > 0) Launcher.TopSpacingRes();
-		if (mPrefs.getInt("launcher_bottommargin", 0) > 0) Launcher.BottomSpacingRes();
-		if (mPrefs.getInt("launcher_indicatorheight", 9) > 9) Launcher.IndicatorHeightRes();
-		if (mPrefs.getBoolean("launcher_unlockgrids")) Launcher.UnlockGridsRes();
-		if (mPrefs.getBoolean("launcher_docktitles")) Launcher.ShowHotseatTitlesRes();
-
 		if (mPrefs.getInt("launcher_swipedown_action", 1) != 1 ||
 			mPrefs.getInt("launcher_swipeup_action", 1) != 1 ||
 			mPrefs.getInt("launcher_swipedown2_action", 1) != 1 ||

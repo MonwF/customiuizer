@@ -141,6 +141,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -866,14 +867,17 @@ public class System {
 
 	private static int notifVolumeOnResId;
 	private static int notifVolumeOffResId;
-	private static int settingsNotifResId;
-	private static int settingsSystemResId;
-	private static int callsResId;
 	public static void NotificationVolumeDialogRes() {
 		MainModule.resHooks.setResReplacement("com.android.systemui", "dimen", "miui_volume_content_width_expanded", R.dimen.miui_volume_content_width_expanded);
 		MainModule.resHooks.setResReplacement("com.android.systemui", "dimen", "miui_volume_ringer_layout_width_expanded", R.dimen.miui_volume_ringer_layout_width_expanded);
 		notifVolumeOnResId = MainModule.resHooks.addResource("ic_miui_volume_notification", R.drawable.ic_miui_volume_notification);
 		notifVolumeOffResId = MainModule.resHooks.addResource("ic_miui_volume_notification_mute", R.drawable.ic_miui_volume_notification_mute);
+	}
+
+	private static int settingsNotifResId;
+	private static int settingsSystemResId;
+	private static int callsResId;
+	public static void NotificationVolumeSettingsRes() {
 		settingsNotifResId = MainModule.resHooks.addResource("ic_audio_notification", R.drawable.ic_audio_notification);
 		settingsSystemResId = MainModule.resHooks.addResource("ic_audio_system", R.drawable.ic_audio_system);
 		callsResId = MainModule.resHooks.addResource("ring_volume_option_newtitle", R.string.calls);
@@ -2134,29 +2138,29 @@ public class System {
 	}
 
 	private static final List<String> hookedTiles = new ArrayList<String>();
-	@SuppressLint("StaticFieldLeak") private static Context qsCtx = null;
 
 	@SuppressLint("MissingPermission")
 	public static void QSHapticHook(LoadPackageParam lpparam) {
 		Helpers.findAndHookMethod("com.android.systemui.qs.tileimpl.QSFactoryImpl", lpparam.classLoader, "createTileInternal", String.class, new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
-				Object mHost = XposedHelpers.getObjectField(param.thisObject, "mHost");
-				qsCtx = (Context)XposedHelpers.callMethod(mHost, "getContext");
-				Object res = param.getResult();
-				if (res != null && !hookedTiles.contains(res.getClass().getCanonicalName())) {
-					Helpers.findAndHookMethod(res.getClass().getCanonicalName(), lpparam.classLoader, "handleClick", new MethodHook() {
+				Object tile = param.getResult();
+				if (tile == null) return;
+				String tileClass = tile.getClass().getCanonicalName();
+				if (!hookedTiles.contains(tileClass)) {
+					Helpers.findAndHookMethod(tileClass, lpparam.classLoader, "handleClick", new MethodHook(20) {
 						@Override
 						protected void after(final MethodHookParam param) throws Throwable {
-							boolean ignoreSystem = Helpers.getSharedBoolPref(qsCtx, "pref_key_system_qshaptics_ignore", false);
-							int opt = Integer.parseInt(Helpers.getSharedStringPref(qsCtx, "pref_key_system_qshaptics", "1"));
+							Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+							boolean ignoreSystem = Helpers.getSharedBoolPref(mContext, "pref_key_system_qshaptics_ignore", false);
+							int opt = Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_system_qshaptics", "1"));
 							if (opt == 2)
-								Helpers.performLightVibration(qsCtx, ignoreSystem);
+								Helpers.performLightVibration(mContext, ignoreSystem);
 							else if (opt == 3)
-								Helpers.performStrongVibration(qsCtx, ignoreSystem);
+								Helpers.performStrongVibration(mContext, ignoreSystem);
 						}
 					});
-					hookedTiles.add(res.getClass().getCanonicalName());
+					hookedTiles.add(tileClass);
 				}
 			}
 		});
@@ -6638,7 +6642,7 @@ public class System {
 	}
 
 	public static void ChargingInfoServiceHook(LoadPackageParam lpparam) {
-		Helpers.hookAllMethods("com.android.server.BatteryService$BatteryPropertiesRegistrar", lpparam.classLoader, "getProperty", new MethodHook() {
+		if (!Helpers.hookAllMethodsSilently("com.android.server.BatteryService$BatteryPropertiesRegistrar", lpparam.classLoader, "getProperty", new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
 				int req = (int)param.args[0];
@@ -6652,6 +6656,17 @@ public class System {
 					value = XposedHelpers.getIntField(XposedHelpers.getSurroundingThis(param.thisObject), "mLastBatteryHealth");
 				XposedHelpers.callMethod(param.args[1], "setLong", value);
 				param.setResult(0);
+			}
+		})) Helpers.findAndHookMethod("com.android.server.BatteryService", lpparam.classLoader, "processValuesLocked", boolean.class, new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				try {
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					ContentResolver provider = mContext.getContentResolver();
+					Settings.Global.putInt(provider, Helpers.modulePkg + ".battery.voltage", XposedHelpers.getIntField(param.thisObject, "mLastBatteryVoltage"));
+					Settings.Global.putInt(provider, Helpers.modulePkg + ".battery.temperature", XposedHelpers.getIntField(param.thisObject, "mLastBatteryTemperature"));
+					Settings.Global.putInt(provider, Helpers.modulePkg + ".battery.health", XposedHelpers.getIntField(param.thisObject, "mLastBatteryHealth"));
+				} catch (Throwable ignore) {}
 			}
 		});
 	}
@@ -6713,10 +6728,16 @@ public class System {
 					BatteryManager btrMgr = (BatteryManager)context.getSystemService(Context.BATTERY_SERVICE);
 					int currVal = Math.abs(bundle.getInt("current_now"));
 					long voltVal = btrMgr.getLongProperty(1001);
+					if (voltVal == Long.MIN_VALUE) voltVal = Settings.Global.getInt(context.getContentResolver(), Helpers.modulePkg + ".battery.voltage", 0);
+					if (voltVal == Long.MIN_VALUE) voltVal = 0;
+					long tempVal = btrMgr.getLongProperty(1002);
+					if (tempVal == Long.MIN_VALUE) tempVal = Settings.Global.getInt(context.getContentResolver(), Helpers.modulePkg + ".battery.temperature", 0);
+					if (tempVal == Long.MIN_VALUE) tempVal = 0;
+
 					if (showCurr) values.add(currVal + " mA");
 					if (showVolt) values.add(String.format(Locale.getDefault(), "%.1f", voltVal / 1000f) + " V");
 					if (showWatt) values.add(String.format(Locale.getDefault(), "%.1f", voltVal / 1000f * currVal / 1000f) + " W");
-					if (showTemp) values.add(Math.round(btrMgr.getLongProperty(1002) / 10f) + " °C");
+					if (showTemp) values.add(Math.round(tempVal / 10f) + " °C");
 					if (values.size() == 0) return;
 					String info = TextUtils.join(" · ", values);
 
@@ -6743,7 +6764,8 @@ public class System {
 	}
 
 	public static void UseNativeRecentsHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.android.systemui.recents.misc.SystemServicesProxy", lpparam.classLoader, "isRecentsWithinLauncher", Context.class, XC_MethodReplacement.returnConstant(false));
+		//noinspection ResultOfMethodCallIgnored
+		Helpers.findAndHookMethodSilently("com.android.systemui.recents.misc.SystemServicesProxy", lpparam.classLoader, "isRecentsWithinLauncher", Context.class, XC_MethodReplacement.returnConstant(false));
 	}
 
 	public static void NoUnlockAnimationHook(LoadPackageParam lpparam) {
@@ -6802,15 +6824,15 @@ public class System {
 //		});
 
 //		for (Member method: Math.class.getMethods())
-//		if (method.getName().equals("min")) XposedBridge.log("min method found! " + method);
+//		if (method.getName().equals("min")) Helpers.log("min method found! " + method);
 
 //		Set<XC_MethodHook.Unhook> unhooks = XposedBridge.hookAllMethods(Math.class, "min", new MethodHook() {
 //			@Override
 //			protected void before(MethodHookParam param) throws Throwable {
-//				XposedBridge.log("Math.min: " + param.args[1].getClass().getSimpleName() + ", " + param.args[1]);
+//				Helpers.log("Math.min: " + param.args[1].getClass().getSimpleName() + ", " + param.args[1]);
 //			}
 //		});
-//		XposedBridge.log("unhooks: " + unhooks.size());
+//		Helpers.log("unhooks: " + unhooks.size());
 	}
 
 	public static void MoreNotificationsHook(LoadPackageParam lpparam) {
@@ -7414,6 +7436,147 @@ public class System {
 				for (String uuid: itemArr) {
 					String pkgAct = MainModule.mPrefs.getString(key + "_" + uuid + "_activity", "");
 					if (pkgAct.equals(pkgName + "|" + actName)) param.setResult(true);
+				}
+			}
+		});
+	}
+
+	private static final List<String> securedTiles = new ArrayList<String>();
+
+	public static void SecureQSTilesHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.qs.QSTileHost", lpparam.classLoader, "init", new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				BroadcastReceiver mAfterUnlockReceiver = new BroadcastReceiver() {
+					@Override
+					@SuppressWarnings("unchecked")
+					public void onReceive(Context context, Intent intent) {
+						try {
+							String tileName = intent.getStringExtra("tileName");
+							boolean expandAfter = intent.getBooleanExtra("expandAfter", false);
+							boolean usingCenter = intent.getBooleanExtra("usingCenter", false);
+							if ("edit".equals(tileName) || expandAfter) {
+								Intent expandIntent = new Intent(ACTION_PREFIX + "ExpandSettings");
+								expandIntent.putExtra("forceExpand", true);
+								context.sendBroadcast(expandIntent);
+							}
+							LinkedHashMap<String, ?> mTiles = (LinkedHashMap<String, ?>)XposedHelpers.getObjectField(param.thisObject, "mTiles");
+							//for (Map.Entry<String, ?> mTile: mTiles.entrySet())
+							//XposedBridge.log(mTile.getKey() + " = " + mTile.getValue());
+							Object tile = mTiles.get(tileName);
+							if (tile == null)
+							if (usingCenter) {
+								Object mController = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", lpparam.classLoader), "get", findClassIfExists("com.android.systemui.miui.statusbar.policy.ControlPanelController", lpparam.classLoader));
+								Object mControlCenter = XposedHelpers.getObjectField(mController, "mControlCenter");
+								Object mControlPanelContentView = XposedHelpers.getObjectField(mControlCenter, "mControlPanelContentView");
+								Object mControlCenterPanel = XposedHelpers.callMethod(mControlPanelContentView, "getControlCenterPanel");
+								Object mBigTile = null;
+								if ("bt".equals(tileName)) mBigTile = XposedHelpers.getObjectField(mControlCenterPanel, "mBigTile1");
+								else if ("cell".equals(tileName)) mBigTile = XposedHelpers.getObjectField(mControlCenterPanel, "mBigTile2");
+								else if ("wifi".equals(tileName)) mBigTile = XposedHelpers.getObjectField(mControlCenterPanel, "mBigTile3");
+								if (mBigTile != null) tile = XposedHelpers.getObjectField(mBigTile, "mQSTile");
+								if (tile == null) return;
+							} else return;
+							XposedHelpers.setAdditionalInstanceField(tile, "mCalledAfterUnlock", true);
+							XposedHelpers.callMethod(tile, "handleClick");
+						} catch (Throwable t) {
+							XposedBridge.log(t);
+						}
+					}
+				};
+				XposedHelpers.setAdditionalInstanceField(param.thisObject, "mAfterUnlockReceiver", mAfterUnlockReceiver);
+				mContext.registerReceiver(mAfterUnlockReceiver, new IntentFilter(ACTION_PREFIX + "HandleQSTileClick"));
+			}
+		});
+
+		Helpers.findAndHookMethod("com.android.systemui.qs.QSTileHost", lpparam.classLoader, "destroy", new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				BroadcastReceiver mAfterUnlockReceiver = (BroadcastReceiver)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mAfterUnlockReceiver");
+				if (mAfterUnlockReceiver != null) mContext.unregisterReceiver(mAfterUnlockReceiver);
+			}
+		});
+
+		Helpers.findAndHookMethod("com.android.systemui.qs.tileimpl.QSFactoryImpl", lpparam.classLoader, "createTileInternal", String.class, new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				Object tile = param.getResult();
+				if (tile == null) return;
+				String tileClass = tile.getClass().getCanonicalName();
+				final String tileName = (String)param.args[0];
+				String name = (String)param.args[0];
+				if (name.startsWith("intent(")) name = "intent";
+				else if (name.startsWith("custom(")) name = "custom";
+				final HashSet<String> secureTitles = new HashSet<String>();
+				if (MainModule.mPrefs.getBoolean("system_secureqs_wifi")) secureTitles.add("wifi");
+				if (MainModule.mPrefs.getBoolean("system_secureqs_bt")) secureTitles.add("bt");
+				if (MainModule.mPrefs.getBoolean("system_secureqs_mobiledata")) secureTitles.add("cell");
+				if (MainModule.mPrefs.getBoolean("system_secureqs_airplane")) secureTitles.add("airplane");
+				if (MainModule.mPrefs.getBoolean("system_secureqs_location")) secureTitles.add("gps");
+				if (MainModule.mPrefs.getBoolean("system_secureqs_hotspot")) secureTitles.add("hotspot");
+				if (MainModule.mPrefs.getBoolean("system_secureqs_nfc")) secureTitles.add("nfc");
+				if (MainModule.mPrefs.getBoolean("system_secureqs_sync")) secureTitles.add("sync");
+				if (MainModule.mPrefs.getBoolean("system_secureqs_edit")) secureTitles.add("edit");
+				if (MainModule.mPrefs.getBoolean("system_secureqs_custom")) {
+					secureTitles.add("intent");
+					secureTitles.add("custom");
+				}
+				if (secureTitles.contains(name) && !securedTiles.contains(tileClass)) {
+					MethodHook hook = new MethodHook(10) {
+						@Override
+						protected void before(final MethodHookParam param) throws Throwable {
+							Boolean mCalledAfterUnlock = (Boolean)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mCalledAfterUnlock");
+							if (mCalledAfterUnlock != null && mCalledAfterUnlock) {
+								XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCalledAfterUnlock", false);
+								return;
+							}
+							Boolean isScreenLockDisabled = (Boolean)XposedHelpers.getAdditionalStaticField(findClass("com.android.systemui.keyguard.KeyguardViewMediator", lpparam.classLoader), "isScreenLockDisabled");
+							isScreenLockDisabled = isScreenLockDisabled != null && isScreenLockDisabled;
+							if (isScreenLockDisabled) return;
+							Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+							KeyguardManager kgMgr = (KeyguardManager)mContext.getSystemService(Context.KEYGUARD_SERVICE);
+							if (!kgMgr.isKeyguardLocked() || !kgMgr.isKeyguardSecure()) return;
+							Handler mHandler = new Handler(mContext.getMainLooper());
+							mHandler.post(new Runnable() {
+								@Override
+								public void run() {
+									try {
+										Object mApplication = XposedHelpers.callMethod(mContext.getApplicationContext(), "getSystemUIApplication");
+										Object mStatusBar = XposedHelpers.callMethod(mApplication, "getComponent", findClassIfExists("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader));
+										boolean usingControlCenter = false;
+										if (Helpers.is12()) {
+											Object mController = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", lpparam.classLoader), "get", findClassIfExists("com.android.systemui.miui.statusbar.policy.ControlPanelController", lpparam.classLoader));
+											usingControlCenter = (boolean)XposedHelpers.callMethod(mController, "isUseControlCenter");
+											if (usingControlCenter) XposedHelpers.callMethod(mController, "collapsePanel", true);
+										}
+										boolean keepOpened = MainModule.mPrefs.getBoolean("system_secureqs_keepopened");
+										final boolean usingCenter = usingControlCenter;
+										final boolean expandAfter = usingControlCenter && keepOpened;
+										if (!usingControlCenter && keepOpened)
+										XposedHelpers.setBooleanField(mStatusBar, "mLeaveOpenOnKeyguardHide", true);
+										XposedHelpers.callMethod(mStatusBar, "postQSRunnableDismissingKeyguard", new Runnable() {
+											public void run() {
+												Intent intent = new Intent(ACTION_PREFIX + "HandleQSTileClick");
+												intent.putExtra("tileName", tileName);
+												intent.putExtra("expandAfter", expandAfter);
+												intent.putExtra("usingCenter", usingCenter);
+												mContext.sendBroadcast(intent);
+											}
+										});
+									} catch (Throwable t) {
+										XposedBridge.log(t);
+									}
+								}
+							});
+							param.setResult(null);
+						}
+					};
+					Helpers.findAndHookMethod(tileClass, lpparam.classLoader, "handleClick", hook);
+					//noinspection ResultOfMethodCallIgnored
+					Helpers.findAndHookMethodSilently(tileClass, lpparam.classLoader, "handleSecondaryClick", hook);
+					securedTiles.add(tileClass);
 				}
 			}
 		});

@@ -240,6 +240,17 @@
     <string name="system_securelock_summ">屏幕锁激活时禁用电源菜单</string>
     <string name="system_securecontrolcenter_title">安全控制中心</string>
     <string name="system_securecontrolcenter_summ">屏幕锁激活时禁用控制中心</string>
+    <string name="system_secureqs_title">安全快速设置</string>
+    <string name="system_secureqs_summ">屏幕锁激活时禁用安全敏感的磁贴</string>
+    <string name="system_secureqs_custom_title">所有第三方磁贴</string>
+    <string name="system_secureqs_edit_title">磁贴编辑</string>
+    <string name="system_secureqs_edit_summ">不应用到控制中心</string>
+    <string name="system_secureqs_keepopened_title">保持打开</string>
+    <string name="system_secureqs_keepopened_summ">解锁后不折叠面板</string>
+    <string name="secure_tiles">安全磁贴</string>
+    <string name="system_secureqs_airplane_title">飞行模式</string>
+    <string name="system_secureqs_location_title">位置</string>
+    <string name="system_secureqs_sync_title">同步</string>
     <string name="system_nopassword_title">开机免密</string>
     <string name="system_nopassword_summ">开机后首次解锁不需要密码。此项对加密的设备无效。</string>
     <string name="system_albumartonlock_title">专辑封面设为壁纸</string>
@@ -261,6 +272,7 @@
     <string name="system_lockscreenshortcuts_left_title">左侧屏幕快捷方式</string>
     <string name="system_lockscreenshortcuts_left_summ">管理快捷方式列表</string>
     <string name="system_lockscreenshortcuts_left_align_title">垂直对齐</string>
+    <string name="system_lockscreenshortcuts_left_center_title">水平居中</string>
     <string name="system_lockscreenshortcuts_left_skiplock_title">不需解锁</string>
     <string name="system_lockscreenshortcuts_left_skiplock_summ">设备锁定时可以访问启动的应用</string>
     <string name="system_noscreenlock_title">禁用屏幕锁</string>
@@ -268,6 +280,8 @@
     <string name="system_noscreenlock_summ">选择性禁用屏幕锁(不会更改任何应用的安全性，也不会移除指纹数据)</string>
     <string name="system_noscreenlock_scr_title">跳过屏幕锁</string>
     <string name="system_noscreenlock_scr_summ">屏幕锁禁用时不再显示锁屏</string>
+    <string name="system_noscreenlock_nofaceunlock_title">跳过面部解锁</string>
+    <string name="system_noscreenlock_nofaceunlock_summ">当屏幕解锁被禁用时不启动面部解锁</string>
     <string name="system_noscreenlock_wifi_title">可信Wi-Fi网络</string>
     <string name="system_noscreenlock_wifi_summ">连接到这些网络时暂时禁用屏幕锁</string>
     <string name="system_noscreenlock_bt_title">可信蓝牙设备</string>
@@ -359,6 +373,13 @@
     <string name="system_taptounlock_summ">点击屏幕底部锁屏区域解锁设备</string>
     <string name="system_dttosleep_title">双击熄屏</string>
     <string name="system_dttosleep_summ">双击锁屏上任意空白处关闭屏幕</string>
+    <string name="system_charginginfo_title">显示充电数据</string>
+    <string name="system_charginginfo_summ">在锁屏底部显示额外的充电信息</string>
+    <string name="system_charginginfo_view_title">显示方式</string>
+    <string name="system_charginginfo_current_title">充电电流</string>
+    <string name="system_charginginfo_voltage_title">电池电压</string>
+    <string name="system_charginginfo_wattage_title">耗电量</string>
+    <string name="system_charginginfo_temp_title">电池温度</string>
     <string name="system_lsalarm_title">显示下次闹钟</string>
     <string name="system_lsalarm_summ">显示离当前日期最近的闹钟</string>
     <string name="system_lsalarm_format_title">显示格式</string>
@@ -407,6 +428,9 @@
     <string name="system_applock_timeout_summ">应用退出后保持解锁状态的时间间隔</string>
     <string name="system_applock_list_title">锁定应用列表</string>
     <string name="system_applock_list_summ">应用锁选项的增强版，允许锁定任何应用。无需重启。</string>
+    <string name="system_applock_skip_title">跳过应用锁定</string>
+    <string name="system_applock_skip_summ">允许选中的活动跳过应用锁定</string>
+    <string name="system_applock_activities">已选中活动</string>
     <string name="system_mods_qs">快速设置</string>
     <string name="system_qsgridrows_title">行数</string>
     <string name="system_qsgridrows_note">竖屏时能隐藏的标签为5行，横屏时则限制为3行。</string>
@@ -893,6 +917,8 @@
     <string name="backup_ok">设置备份成功！</string>
     <string name="restore_ok">设置恢复成功！</string>
     <string name="backup_restore_info">您的设置已通过Google Cloud Backup恢复。请在启用Xposed模块后进行软重启。</string>
+    <string name="prefs_migration_success">模块设置已经成功迁移到EdXposed新版本。请重新启动应用更改。</string>
+    <string name="prefs_migration_failure">模块设置无法迁移到EdXposed新版本。您必须使用恢复功能或从头开始配置模块。</string>
     <string name="update_available">更新可用⚠</string>
     <string name="select_app">选择应用</string>
     <string name="select_apps">选择应用</string>
@@ -928,7 +954,7 @@
     <string name="cancel">取消</string>
     <string name="add">添加</string>
     <string name="delete">删除</string>
-    <string name="delete_item_info">长按要删除的快捷方式</string>
+    <string name="delete_item_info">长按要删除的项目</string>
     <string name="change_icon">更改图标</string>
     <string name="guide_search">按名称搜索模块。\n长按显示新模块的列表。</string>
     <string name="guide_softreboot">别忘了使用软重启应用模块。\n动态⟲模块仅需执行一次。\n更多信息请查看关于页面。</string>

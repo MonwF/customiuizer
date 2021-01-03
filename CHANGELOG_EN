@@ -1,3 +1,9 @@
+3.1.2
+[New] Require device unlock before toggling selected Quick settings tiles
+[Fixed][Separate volume controls] Volume settings crash
+[Fixed][Display charging data] Compatibility with older Android versions
+[Fixed] Some Launcher mods not keeping changes after reboot
+
 3.1.1
 [Fixed][Remove unlock animation] Compatibility with latest MIUI Launcher versions
 [Fixed] Module's settings crash on older Android versions

@@ -100,7 +100,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 					Helpers.openURL(getActivity(), "https://code.highspec.ru/Mikanoshi/CustoMIUIzer/releases");
 				}
 			case R.id.xposedinstaller:
-				return Helpers.openXposedApp(getContext());
+				return Helpers.openXposedApp(getValidContext());
 			case R.id.backuprestore:
 				showBackupRestoreDialog();
 				return true;
@@ -110,12 +110,12 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 					return true;
 				}
 
-				AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+				AlertDialog.Builder alert = new AlertDialog.Builder(getValidContext());
 				alert.setTitle(R.string.soft_reboot);
 				alert.setMessage(R.string.soft_reboot_ask);
 				alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
-						getContext().sendBroadcast(new Intent(GlobalActions.ACTION_PREFIX + "FastReboot"));
+						getValidContext().sendBroadcast(new Intent(GlobalActions.ACTION_PREFIX + "FastReboot"));
 					}
 				});
 				alert.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -186,7 +186,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 			float density = getResources().getDisplayMetrics().density;
 			FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
 			lp.gravity = Gravity.END | Gravity.TOP;
-			ImageView alert = new ImageView(getContext());
+			ImageView alert = new ImageView(getValidContext());
 			alert.setImageResource(R.drawable.alert);
 			alert.setAdjustViewBounds(true);
 			alert.setMaxWidth(Math.round(16 * density));

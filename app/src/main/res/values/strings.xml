@@ -247,6 +247,17 @@
 	<string name="system_securelock_summ">Disable power menu while screen lock is active</string>
 	<string name="system_securecontrolcenter_title">Secure Control center</string>
 	<string name="system_securecontrolcenter_summ">Disable Control center while screen lock is active</string>
+	<string name="system_secureqs_title">Secure Quick settings</string>
+	<string name="system_secureqs_summ">Disable security-sensitive tiles while screen lock is active</string>
+	<string name="system_secureqs_custom_title">All 3rd party tiles</string>
+	<string name="system_secureqs_edit_title">Tiles editing</string>
+	<string name="system_secureqs_edit_summ">Does not apply to Control center</string>
+	<string name="system_secureqs_keepopened_title">Keep opened</string>
+	<string name="system_secureqs_keepopened_summ">Do not collapse panel after unlocking</string>
+	<string name="secure_tiles">Secure tiles</string>
+	<string name="system_secureqs_airplane_title">Airplane mode</string>
+	<string name="system_secureqs_location_title">Location</string>
+	<string name="system_secureqs_sync_title">Synchronization</string>
 	<string name="system_nopassword_title">No password after boot</string>
 	<string name="system_nopassword_summ">Do not require password instead of a fingerprint first time after boot. Unlikely to work on encrypted devices.</string>
 	<string name="system_albumartonlock_title">Album art as wallpaper</string>

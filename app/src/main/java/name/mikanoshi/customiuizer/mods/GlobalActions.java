@@ -208,11 +208,12 @@ public class GlobalActions {
 					}
 
 					if (action.equals(ACTION_PREFIX + "ExpandSettings")) try {
+						boolean forceExpand = intent.getBooleanExtra("forceExpand", false);
 						if (Helpers.is12()) {
 							Object controller = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", context.getClassLoader()), "get", findClassIfExists("com.android.systemui.miui.statusbar.policy.ControlPanelController", context.getClassLoader()));
 							boolean isUseControlCenter = (boolean)XposedHelpers.callMethod(controller, "isUseControlCenter");
 							if (isUseControlCenter) {
-								if ((boolean)XposedHelpers.callMethod(controller, "isQSFullyCollapsed"))
+								if (forceExpand || (boolean)XposedHelpers.callMethod(controller, "isQSFullyCollapsed"))
 									XposedHelpers.callMethod(controller, "openPanel");
 								else
 									XposedHelpers.callMethod(controller, "collapsePanel", true);
@@ -223,7 +224,7 @@ public class GlobalActions {
 						Object mNotificationPanel = XposedHelpers.getObjectField(mStatusBar, "mNotificationPanel");
 						boolean mPanelExpanded = (boolean)XposedHelpers.getObjectField(mNotificationPanel, "mPanelExpanded");
 						boolean mQsExpanded = (boolean)XposedHelpers.getObjectField(mNotificationPanel, "mQsExpanded");
-						if (mPanelExpanded) {
+						if (!forceExpand && mPanelExpanded) {
 							if (mQsExpanded)
 								XposedHelpers.callMethod(mStatusBar, "animateCollapsePanels");
 							else

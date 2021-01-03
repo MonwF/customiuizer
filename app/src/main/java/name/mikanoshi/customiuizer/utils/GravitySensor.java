@@ -55,10 +55,11 @@ public final class GravitySensor implements SensorEventListener {
 		float[] orientationAngles = new float[3];
 		SensorManager.getOrientation(remappedRotationMatrix, orientationAngles);
 		//double pitch = Math.toDegrees((double)orientationAngles[1]);
-		double roll = Math.toDegrees((double)orientationAngles[2]) + Math.random() * 20 - 10;
+		double roll = Math.toDegrees(orientationAngles[2]) + Math.random() * 20 - 10;
 		if (this.orientation == Surface.ROTATION_90) roll += 90;
 		else if (this.orientation == Surface.ROTATION_270) roll -= 90;
 		else if (this.orientation == Surface.ROTATION_180) roll += roll > 0 ? 180 : -180;
+		if (roll > 90) roll -= 180; else if (roll < -90) roll += 180;
 		this.weatherView.setAngle((int)roll);
 		this.weatherView.setSpeed(this.speed + (int)Math.round(Math.random() * 20 - 10));
 	}

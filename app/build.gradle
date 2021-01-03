@@ -22,9 +22,10 @@ android {
         minSdkVersion 24
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 27
-        versionCode 63
-        versionName "3.1.1"
+        versionCode 64
+        versionName "3.1.2"
         signingConfig signingConfigs.dev
+        //resConfigs 'ru-rRU', 'uk-rUK', 'zh-rCN', 'pt-rBR', 'de', 'es', 'it', 'tr';
     }
     buildTypes {
         release {

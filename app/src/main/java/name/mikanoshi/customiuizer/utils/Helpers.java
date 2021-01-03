@@ -160,17 +160,17 @@ public class Helpers {
 	));
 	public static final HashMap<String, String> l10nProgress = new HashMap<String, String>() {{
 		put("ru-RU", "100.0%");
-		put("zh-CN", "98.5%");
-		put("id", "12.7%");
-		put("tr", "93.5%");
-		put("it", "98.5%");
-		put("pt-BR", "92.5%");
-		put("fr", "25.2%");
-		put("uk-UK", "94.5%");
+		put("zh-CN", "100.0%");
+		put("id", "12.5%");
+		put("tr", "92.5%");
+		put("it", "97.4%");
+		put("pt-BR", "91.5%");
+		put("fr", "24.9%");
+		put("uk-UK", "93.5%");
 		put("es", "100.0%");
 		put("sk", "3.0%");
 		put("cs", "0.0%");
-		put("de", "93.5%");
+		put("de", "92.5%");
 	}};
 
 	public static final ArrayList<String> shortcutIcons = new ArrayList<String>();

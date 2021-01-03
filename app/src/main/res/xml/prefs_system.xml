@@ -938,26 +938,22 @@
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_charginginfo_cat"
 			android:summary="@string/system_charginginfo_summ"
-			android:title="@string/system_charginginfo_title"
-			android:defaultValue="false" />
+			android:title="@string/system_charginginfo_title" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_lsalarm_cat"
 			android:summary="@string/system_lsalarm_summ"
-			android:title="@string/system_lsalarm_title"
-			android:defaultValue="false" />
+			android:title="@string/system_lsalarm_title" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_lockscreenshortcuts_cat"
 			android:summary="@string/system_lockscreenshortcuts_summ"
-			android:title="@string/system_lockscreenshortcuts_title"
-			android:defaultValue="false" />
+			android:title="@string/system_lockscreenshortcuts_title" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_albumartonlock_cat"
 			android:summary="@string/system_albumartonlock_summ"
-			android:title="@string/system_albumartonlock_title"
-			android:defaultValue="false" />
+			android:title="@string/system_albumartonlock_title" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 			android:title="@string/system_mods_lockscreen_security" />
@@ -974,6 +970,11 @@
 			android:title="@string/system_securecontrolcenter_title"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_secureqs_cat"
+			android:title="@string/system_secureqs_title"
+			android:summary="@string/system_secureqs_summ"/>
+
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_scramblepin"
 			android:summary="@string/system_scramblepin_summ"
@@ -989,8 +990,7 @@
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_noscreenlock_cat"
 			android:summary="@string/system_noscreenlock_summ"
-			android:title="@string/system_noscreenlock_title"
-			android:defaultValue="false" />
+			android:title="@string/system_noscreenlock_title" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_credentials"

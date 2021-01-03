@@ -436,7 +436,7 @@ public class MainFragment extends PreferenceFragmentBase {
 			warning.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 				@Override
 				public boolean onPreferenceClick(Preference preference) {
-					Helpers.openXposedApp(getContext());
+					Helpers.openXposedApp(getValidContext());
 					return true;
 				}
 			});

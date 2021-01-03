@@ -1,0 +1,80 @@
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_secureqs"
+		android:title="@string/enable_mod"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:title="@string/settings"
+		android:dependency="pref_key_system_secureqs">
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_secureqs_keepopened"
+		android:title="@string/system_secureqs_keepopened_title"
+		android:summary="@string/system_secureqs_keepopened_summ"
+		android:defaultValue="false" />
+
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:title="@string/secure_tiles"
+		android:dependency="pref_key_system_secureqs">
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_secureqs_wifi"
+		android:title="@string/array_global_toggle_wifi"
+		android:defaultValue="true"/>
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_secureqs_bt"
+		android:title="@string/array_global_toggle_bt"
+		android:defaultValue="true"/>
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_secureqs_mobiledata"
+		android:title="@string/array_global_toggle_mobiledata"
+		android:defaultValue="true"/>
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_secureqs_airplane"
+		android:title="@string/system_secureqs_airplane_title"
+		android:defaultValue="true"/>
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_secureqs_location"
+		android:title="@string/system_secureqs_location_title"
+		android:defaultValue="true"/>
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_secureqs_hotspot"
+		android:title="@string/system_statusbaricons_hotspot_title"
+		android:defaultValue="true"/>
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_secureqs_nfc"
+		android:title="@string/array_global_toggle_nfc"
+		android:defaultValue="true"/>
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_secureqs_sync"
+		android:title="@string/system_secureqs_sync_title"
+		android:defaultValue="true"/>
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_secureqs_edit"
+		android:title="@string/system_secureqs_edit_title"
+		android:summary="@string/system_secureqs_edit_summ"
+		android:defaultValue="true" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_secureqs_custom"
+		android:title="@string/system_secureqs_custom_title"
+		android:defaultValue="true"/>
+
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+
+</PreferenceScreen>
