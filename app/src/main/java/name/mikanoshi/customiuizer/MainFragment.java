@@ -249,11 +249,10 @@ public class MainFragment extends PreferenceFragmentBase {
 				}); else areGuidesCleared = true;
 
 				String dataPath = act.getFilesDir().getAbsolutePath();
-				HttpURLConnection connection = null;
 				try {
 					URL url = new URL("https://code.highspec.ru/Mikanoshi/CustoMIUIzer/raw/branch/master/last_build");
 					//URL url = new URL("https://code.highspec.ru/last_build");
-					connection = (HttpURLConnection)url.openConnection();
+					HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 					connection.setDefaultUseCaches(false);
 					connection.setUseCaches(false);
 					connection.setRequestProperty("Pragma", "no-cache");
@@ -269,32 +268,26 @@ public class MainFragment extends PreferenceFragmentBase {
 						} catch (Throwable t) { t.printStackTrace(); }
 
 						File tmp = new File(dataPath);
-						if (!tmp.exists())
-							tmp.mkdirs();
+						if (!tmp.exists()) tmp.mkdirs();
 						try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(dataPath + "/last_build", false))) {
 							writer.write(last_build);
 						} catch (Throwable t) { t.printStackTrace(); }
 					}
-				} catch (Throwable t) {}
 
-				try {
-					if (connection != null) connection.disconnect();
-				} catch (Throwable t) {}
+					connection.disconnect();
+				} catch (Throwable t) { t.printStackTrace(); }
 
 				try (InputStream inputFile = new FileInputStream(dataPath + "/last_build")) {
-					BufferedReader reader = new BufferedReader(new InputStreamReader(inputFile));
 					int last_build = 0;
-					try {
+					try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputFile))) {
 						last_build = Integer.parseInt(reader.readLine().trim());
-						reader.close();
-					} catch (Throwable t) {}
+					} catch (Throwable ignore) {}
 
-					//noinspection ConditionCoveredByFurtherCondition
-					if (last_build != 0 && BuildConfig.VERSION_CODE < last_build)
+					if (last_build > BuildConfig.VERSION_CODE)
 						handler.post(showUpdateNotification);
 					else
 						handler.post(hideUpdateNotification);
-				} catch (Throwable t) {}
+				} catch (Throwable t) { t.printStackTrace(); }
 
 				Helpers.getAllMods(act, savedInstanceState != null);
 			}
@@ -313,7 +306,7 @@ public class MainFragment extends PreferenceFragmentBase {
 	private void openActionMode(boolean isNew) {
 		actionModeNew = isNew;
 		actionMode = startActionMode(actionModeCallback);
-		fixActionBar();
+		hideSplitView();
 	}
 
 	private static class SetLineOverlap implements LineHeightSpan {

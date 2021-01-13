@@ -91,10 +91,10 @@ public class InAppFragment extends SubFragment implements PurchasesUpdatedListen
 			});
 		}
 
-		Preference consume = findPreference("consume");
-		if (consume != null) {
-			consume.setTitle("Consume all");
-			consume.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+		Preference reset = findPreference("reset");
+		if (reset != null) {
+			reset.setTitle("Reset");
+			reset.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 				@Override
 				public boolean onPreferenceClick(Preference preference) {
 					Purchase.PurchasesResult result = billingClient.queryPurchases(SkuType.INAPP);
@@ -110,11 +110,11 @@ public class InAppFragment extends SubFragment implements PurchasesUpdatedListen
 							}
 						});
 					}
-					Toast.makeText(getActivity(), "All donations consumed!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getActivity(), "All donations were reset!", Toast.LENGTH_SHORT).show();
 					return true;
 				}
 			});
-			if (!BuildConfig.DEBUG) getPreferenceScreen().removePreference(consume);
+			if (!BuildConfig.DEBUG) getPreferenceScreen().removePreference(reset);
 		}
 
 		new Thread(new Runnable() {

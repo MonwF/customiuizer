@@ -52,6 +52,7 @@
 		<item>@string/array_global_actions_menu</item>
 		<item>@string/array_global_actions_goback</item>
 		<item>@string/array_global_actions_back</item>
+		<item>@string/array_global_actions_forceclose</item>
 		<item>@string/array_global_actions_powermenu</item>
 		<item>@string/array_global_actions_clearmemory</item>
 		<item>@string/array_global_actions_invertcolors</item>
@@ -80,6 +81,7 @@
 		<item>16</item>
 		<item>15</item>
 		<item>11</item>
+		<item>24</item>
 		<item>12</item>
 		<item>13</item>
 		<item>14</item>
@@ -107,6 +109,7 @@
 		<item>@string/array_global_actions_menu</item>
 		<item>@string/array_global_actions_goback</item>
 		<item>@string/array_global_actions_back</item>
+		<item>@string/array_global_actions_forceclose</item>
 		<item>@string/array_global_actions_powermenu</item>
 		<item>@string/array_global_actions_clearmemory</item>
 		<item>@string/array_global_actions_invertcolors</item>
@@ -130,6 +133,7 @@
 		<item>16</item>
 		<item>15</item>
 		<item>11</item>
+		<item>24</item>
 		<item>12</item>
 		<item>13</item>
 		<item>14</item>
@@ -181,6 +185,7 @@
 		<item>@string/array_global_actions_menu</item>
 		<item>@string/array_global_actions_goback</item>
 		<item>@string/array_global_actions_back</item>
+		<item>@string/array_global_actions_forceclose</item>
 		<item>@string/array_global_actions_powermenu</item>
 		<item>@string/array_global_actions_clearmemory</item>
 		<item>@string/array_global_actions_invertcolors</item>
@@ -207,6 +212,7 @@
 		<item>16</item>
 		<item>15</item>
 		<item>11</item>
+		<item>24</item>
 		<item>12</item>
 		<item>13</item>
 		<item>14</item>
@@ -262,6 +268,7 @@
 		<item>@string/array_global_toggle_rotation</item>
 		<item>@string/array_global_toggle_torch</item>
 		<item>@string/array_global_toggle_mobiledata</item>
+		<item>@string/system_statusbaricons_hotspot_title</item>
 	</string-array>
 	<integer-array name="global_toggles_val">
 		<item>1</item>
@@ -273,6 +280,7 @@
 		<item>7</item>
 		<item>8</item>
 		<item>9</item>
+		<item>10</item>
 	</integer-array>
 
 	<string-array name="appsort">
@@ -806,6 +814,7 @@
 		<item>@string/array_newyear</item>
 		<item>@string/array_lunarnewyear</item>
 		<item>@string/array_covid</item>
+		<item>@string/support_donate_crypto_title</item>
 	</string-array>
 	<string-array name="holidays_val">
 		<item>-1</item>
@@ -813,6 +822,7 @@
 		<item>1</item>
 		<item>2</item>
 		<item>3</item>
+		<item>4</item>
 	</string-array>
 
 	<string-array name="onoff">

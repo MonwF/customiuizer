@@ -139,6 +139,8 @@
     <string name="system_autogroupnotif_summ">Número de notificaciones de una aplicación que activa la agrupación automática</string>
     <string name="system_snoozedmanager_title">Administrador de notificaciones pospuestas</string>
     <string name="system_snoozedmanager_summ">Aumente el número de intervalos de repetición y agregue un icono al launcher que abra una lista de notificaciones pospuestas actualmente</string>
+    <string name="system_mutevisiblenotif_title">Silenciar si es visible</string>
+    <string name="system_mutevisiblenotif_summ">No reproducir el sonido de notificación si la pantalla está encendida</string>
     <string name="system_notifmediaseekbar_title">Control deslizante de posición de medios</string>
     <string name="system_notifmediaseekbar_summ">Agregar control deslizante de notificación de medios que indica la posición actual y permite cambiarla</string>
     <string name="system_notifmediaseekbar_full_title">Usar estilo de sistema</string>
@@ -186,7 +188,7 @@
     <string name="system_noducking_title">Desactivar la reducción del volumen</string>
     <string name="system_noducking_summ">No baja el volumen de la música que se está reproduciendo en ese momento para reproducir el sonido de notificación</string>
     <string name="system_firstpress_title">Ajuste de volumen inmediato</string>
-    <string name="system_firstpress_summ">Ajuste el volumen del flujo de medios al presionar la primera vez</string>
+    <string name="system_firstpress_summ">Ajuste el volumen multimedia al presionar la primera vez</string>
     <string name="system_separatevolume_title">Controles de volumen separados</string>
     <string name="system_separatevolume_summ">Permite configurar el volumen por separado para tonos de llamada/notificaciones/sonidos del sistema en Ajustes</string>
     <string name="system_separatevolume_slider_title">Control deslizante de volumen de notificaciones</string>
@@ -222,7 +224,7 @@
     <string name="system_ignorecalls_title">Ignorar llamadas</string>
     <string name="system_ignorecalls_summ">Previene que las llamadas entrantes enfoquen el audio cuando esté en las aplicaciones seleccionadas y anula las notificaciones sobre cambios en el estado de las llamadas</string>
     <string name="system_nosilentvibrate_title">Sin prueba de vibración</string>
-    <string name="system_nosilentvibrate_summ">No vibre cuando cambie el modo de timbre a silencio o active la vibración en este modo</string>
+    <string name="system_nosilentvibrate_summ">No vibrar cuando cambie el modo de timbre a silencio o activa la vibración en este modo</string>
     <string name="system_vibration_amp_title">Vibración amortiguada</string>
     <string name="system_vibration_amp_summ">Reduce la intensidad de la vibración durante las horas seleccionadas</string>
     <string name="system_vibration_amp_val_title">Intensidad de vibración</string>
@@ -231,7 +233,7 @@
     <string name="system_vibration_amp_notif_title">Notificaciones</string>
     <string name="system_vibration_amp_other_title">Todo lo demás</string>
     <string name="system_vibration_amp_period_title">Periodo de tiempo</string>
-    <string name="system_vibration_title">Vibración de bloque</string>
+    <string name="system_vibration_title">Bloquear vibración</string>
     <string name="system_vibration_summ">Evitar que las aplicaciones seleccionadas usen vibración</string>
     <string name="system_volume">Sonidos del sistema</string>
     <string name="system_scramblepin_title">Mezclar PIN</string>
@@ -240,10 +242,10 @@
     <string name="system_securelock_summ">Desactiva el menú de encendido mientras el bloqueo de pantalla está activo</string>
     <string name="system_securecontrolcenter_title">Centro de control de seguridad</string>
     <string name="system_securecontrolcenter_summ">Deshabilitar centro de control mientras la pantalla de bloqueo está activa</string>
-    <string name="system_secureqs_title">Configuración rápida segura</string>
-    <string name="system_secureqs_summ">Desactive los mosaicos sensibles a la seguridad mientras el bloqueo de pantalla está activo (Wi-Fi, Bluetooth, datos móviles, modo avión, ubicación, punto de acceso, NFC, sincronización)</string>
-    <string name="system_secureqs_custom_title">Deshabilitar todos los mosaicos de terceros</string>
-    <string name="system_secureqs_edit_title">Deshabilitar edición de mosaicos</string>
+    <string name="system_secureqs_title">Configuración Rápida de seguridad</string>
+    <string name="system_secureqs_summ">Desactiva los mosaicos sensibles a la seguridad mientras el bloqueo de pantalla está activo</string>
+    <string name="system_secureqs_custom_title">Todos los mosaicos de terceros</string>
+    <string name="system_secureqs_edit_title">Edición de mosaicos</string>
     <string name="system_secureqs_edit_summ">No aplicar al centro de control</string>
     <string name="system_secureqs_keepopened_title">Mantener abierto</string>
     <string name="system_secureqs_keepopened_summ">No cerrar el panel luego de desbloquear</string>
@@ -361,8 +363,12 @@
     <string name="system_allownotifonkeyguard_summ">Forzar que todas las notificaciones de las aplicaciones MIUI puedan aparecer en la pantalla de bloqueo</string>
     <string name="system_allownotiffloat_title">Permitir como notificaciones flotantes</string>
     <string name="system_allownotiffloat_summ">Forzar que todas las notificaciones de las aplicaciones MIUI puedan aparecer como flotantes</string>
+    <string name="system_hidelsstatusbar_title">Ocultar barra de estado</string>
+    <string name="system_hidelsstatusbar_summ">Eliminar la barra de estado de la pantalla de bloqueo</string>
     <string name="system_hidelsclock_title">Ocultar bloque superior</string>
     <string name="system_hidelsclock_summ">Eliminar el bloque superior que contiene el reloj, la fecha y otros datos</string>
+    <string name="system_hidelshint_title">Ocultar pista de desbloqueo</string>
+    <string name="system_hidelshint_summ">Quitar la pista \"Deslizar hacia arriba para desbloquear\"</string>
     <string name="system_nosos_title">No llamadas de emergencia</string>
     <string name="system_nosos_summ">Deshabilitar botón de llamada emergencia en pantalla de bloqueo</string>
     <string name="system_hideqs_title">Vista de modo expandido limpio</string>
@@ -391,7 +397,7 @@
     <string name="system_mods_notifications">Notificaciones</string>
     <string name="system_mods_recents">Lista de aplicaciones recientes</string>
     <string name="system_usenativerecents_title">Usar implementación nativa</string>
-    <string name="system_usenativerecents_summ">No usar la lista de aplicaciones recientes de MIUI Launcher</string>
+    <string name="system_usenativerecents_summ">No usar la lista de aplicaciones recientes de MIUI Launcher. Funciona mal con gestos de pantalla completa.</string>
     <string name="system_removecleaner_title">Eliminar botón de limpiador</string>
     <string name="system_removecleaner_summ">Ocultar botón que borra aplicaciones recientes y limpia memoria</string>
     <string name="system_clearalltasks_title">Limpiar todo</string>
@@ -420,7 +426,7 @@
     <string name="system_fw_sticky_title">Recordar estado</string>
     <string name="system_fw_sticky_summ">Seguir abriendo aplicaciones en ventanas flotantes hasta que se vuelvan a cambiar a pantalla completa manualmente</string>
     <string name="system_fw_splitscreen_title">Multiventana+</string>
-    <string name="system_fw_splitscreen_summ">Permitir usar la pantalla dividida y las ventanas flotantes juntas</string>
+    <string name="system_fw_splitscreen_summ">Permitir usar la pantalla dividida y las ventanas flotantes al mismo tiempo</string>
     <string name="system_mods_applock">Bloqueo de aplicación</string>
     <string name="system_applock_title">Bloqueo de aplicaciones menos estricto</string>
     <string name="system_applock_summ">No bloquee las aplicaciones cuando el dispositivo está bloqueado si se selecciona la opción con bloqueo de la aplicación después de salir</string>
@@ -459,7 +465,7 @@
     <string name="launcher_gestures_activity">Actividad para abrir</string>
     <string name="launcher_title">Launcher</string>
     <string name="launcher_summ">Mostrar mods para el launcher seleccionado. Solo para ayuda visual, no tiene ningún efecto en las modificaciones.</string>
-    <string name="launcher_compat_title">Modo de compatibilidad</string>
+    <string name="launcher_compat_title">Modo rendimiento</string>
     <string name="launcher_compat_summ">Método alternativo para aplicar todas las modificaciones del launcher</string>
     <string name="launcher_infinitescroll_title">Desplazamiento infinito</string>
     <string name="launcher_infinitescroll_summ">Salta de la última página a la primera y viceversa.</string>
@@ -617,6 +623,8 @@
     <string name="controls_fsg_width_title">Ancho del área del gesto hacia atrás</string>
     <string name="controls_fsg_horiz_title">Gestos horizontales</string>
     <string name="controls_fsg_horiz_summ">Habilita tanto los gestos horizontales como la barra de navegación</string>
+    <string name="controls_fsg_assist_title">Acción de deslizamiento de esquina</string>
+    <string name="controls_fsg_assist_summ">Realizar la acción seleccionada en lugar de abrir el Asistente de Google</string>
     <string name="various_mods">Varios</string>
     <string name="various_sysappsupdater_title">Abrir \"Actualizador de aplicaciones de sistema\"</string>
     <string name="various_sysappsupdater_summ">La aplicación ya no forma parte de algunas ROMs y debe instalarse manualmente</string>
@@ -654,7 +662,7 @@
     <string name="various_disableapp_title">Control de estado de la aplicación</string>
     <string name="various_disableapp_summ">Permite deshabilitar casi cualquier aplicación desde su página de información</string>
     <string name="various_apps_title">Mostrar detalles adicionales de la aplicación</string>
-    <string name="various_apps_summ">Agregue nuevos campos a Configuración&gt; Aplicaciones instaladas&gt; Información de la aplicación:\n- Opción para iniciar una aplicación\n- Ruta completa del apk\n- Ruta de datos\n- ID de usuario\n- Versión de SDK preferido</string>
+    <string name="various_apps_summ">Agregar nuevos campos a la página de información de la aplicación:\n- código de versión\n- ruta completa a apk\n- ruta de datos\n- ID de usuario\n- versión de SDK de destino\n- enlace a la página de Play Store\n- lanzar una aplicación</string>
     <string name="various_appsort_title">Orden de clasificación inicial de aplicaciones instaladas</string>
     <string name="disable_app_title">¿Deshabilitar aplicación?</string>
     <string name="disable_app_text">Si esta es una aplicación de sistema esencial, deshabilitarla puede romper cosas :)</string>
@@ -677,7 +685,7 @@
     <string name="calls">Llamadas</string>
     <string name="settings">Configuraciones</string>
     <string name="array_default">por Defecto</string>
-    <string name="array_system_default">sistema</string>
+    <string name="array_system_default">Sistema</string>
     <string name="array_global_actions_none">Ninguna acción</string>
     <string name="array_global_actions_notif">Expandir el cajón de notificaciones</string>
     <string name="array_global_actions_eqs">Expandir el panel de Configuración Rápida</string>
@@ -694,6 +702,7 @@
     <string name="array_global_actions_activity">Ejecutar actividad</string>
     <string name="array_global_actions_toggle">Función \"alternar\"</string>
     <string name="array_global_actions_back">Cambiar a la aplicación anterior</string>
+    <string name="array_global_actions_forceclose">Forzar cierre de la aplicación actual</string>
     <string name="array_global_actions_powermenu">Abrir el menú de apagado</string>
     <string name="array_global_actions_powermenu_short">Menú de apagado</string>
     <string name="array_global_actions_clearmemory">Limpiar memoria</string>
@@ -818,6 +827,8 @@
     <string name="toggle_bt_off">Bluetooth deshabilitado</string>
     <string name="toggle_gps_on">GPS habilitado</string>
     <string name="toggle_gps_off">GPS deshabilitado</string>
+    <string name="toggle_hotspot_on">Punto de acceso habilitado</string>
+    <string name="toggle_hotspot_off">Punto de acceso deshabilitado</string>
     <string name="toggle_nfc_on">NFC habilitado</string>
     <string name="toggle_nfc_off">NFC deshabilitado</string>
     <string name="toggle_sound_normal">Perfil de sonido: Normal</string>
@@ -845,6 +856,9 @@
     <string name="miuizer_show_launchericon_summ">Mostrar icono en launchers</string>
     <string name="miuizer_show_settingsicon_title">Icono de acceso rápido</string>
     <string name="miuizer_show_settingsicon_summ">Mostrar icono en Configuración</string>
+    <string name="miuizer_ownrepo_title">Repositorio propio</string>
+    <string name="miuizer_ownrepo_summ">Agregar un repositorio personalizado a EdXposed Manager para cargar la información de CustoMIUIzer de manera más confiable</string>
+    <string name="miuizer_ownrepo_note">Se utiliza un repositorio adicional</string>
     <string name="miuizer_locale_title">Idioma de la interfaz</string>
     <string name="miuizer_locale_summ">Mostrar siempre la interfaz del módulo en el idioma seleccionado</string>
     <string name="miuizer_holiday_title">Diseño de días festivos</string>
@@ -896,10 +910,10 @@
     <string name="array_color_auto">Automático</string>
     <string name="array_color_dark">Oscuro</string>
     <string name="array_color_light">Claro</string>
-    <string name="sdk_failed">No se puede inicializar MIUI SDK. \n¿No es un dispositivo Xiaomi?</string>
+    <string name="sdk_failed">No se puede inicializar MIUI SDK. \n¿No es una ROM Miui?</string>
     <string name="notselected">No seleccionado</string>
     <string name="warning">¡Advertencia!</string>
-    <string name="warning_blacklist">La opción de lista negra/blanca está activa en Xposed Framework, puede evitar que los mods funcionen correctamente</string>
+    <string name="warning_blacklist">La opción de lista negra/blanca está activa en Xposed Framework, puede evitar que las modificaciones funcionen correctamente.</string>
     <string name="warning_blacklist_sdk">Además, la versión del módulo instalado es de Google Play y tiene más limitaciones.  Considere reinstalarlo desde cualquier otra fuente.</string>
     <string name="open_xposed">Administrar módulos Xposed</string>
     <string name="soft_reboot">Reinicio suave</string>
@@ -954,7 +968,7 @@
     <string name="cancel">Cancelar</string>
     <string name="add">Añadir</string>
     <string name="delete">Borrar</string>
-    <string name="delete_item_info">Mantenga presionado el acceso directo para eliminar</string>
+    <string name="delete_item_info">Mantenga pulsado el elemento para eliminar</string>
     <string name="change_icon">Cambiar icono</string>
     <string name="guide_search">Buscar mods por nombre. \nMantenga presionado para mostrar una lista de nuevas modificaciones.</string>
     <string name="guide_softreboot">No olvide aplicar modificaciones mediante el reinicio suave. \nLas modificaciones dinámicas ⟲ lo requieren solo una vez. \nMás información en la página Acerca de.</string>

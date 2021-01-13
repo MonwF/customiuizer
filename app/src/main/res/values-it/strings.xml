@@ -705,7 +705,7 @@
     <string name="array_screenlock_strong">Forte (PIN/password/sequenza)</string>
     <string name="array_noblur">Nessuna sfocatura</string>
     <string name="array_netspeedicons_no">Nessuna icona</string>
-    <string name="array_foldershade_solid">Scurisci l\'intero sfondo</string>
+    <string name="array_foldershade_solid">L\'intero sfondo</string>
     <string name="array_foldershade_gradient">Solo al centro</string>
     <string name="array_expandnotifs_allbutblack">Per tutte le app eccetto quelle elencate</string>
     <string name="array_expandnotifs_whiteonly">Solo per le app elencate</string>

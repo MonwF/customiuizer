@@ -1,4 +1,4 @@
-package name.mikanoshi.customiuizer.utils;
+package name.mikanoshi.customiuizer.holidays;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -30,7 +30,6 @@ public class FilthyParticle extends Confetto {
 	private final float filthScale;
 	private final int[] viruses = new int[] { R.drawable.virus1, R.drawable.virus2, R.drawable.virus3 };
 
-	@SuppressWarnings("ConstantConditions")
 	private void randomizeStartPoint() {
 		int width = mContext.getResources().getDisplayMetrics().widthPixels;
 		int height = mContext.getResources().getDisplayMetrics().heightPixels;

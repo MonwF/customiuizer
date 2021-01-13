@@ -169,14 +169,10 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 
 	private void setupImmersiveMenu() {
 		ActionBar actionBar = getActionBar();
-
-		if (Helpers.is12()) try {
-			if (actionBar != null) actionBar.setExpandState(ActionBar.STATE_COLLAPSE, false);
-		} catch (Throwable ignore) {}
-
+		if (actionBar != null && Helpers.is12()) try { actionBar.setExpandState(ActionBar.STATE_COLLAPSE, false); } catch (Throwable ignore) {}
 		if (supressMenu) return;
-		if (actionBar != null) try { actionBar.showSplitActionBar(false, false); } catch (Throwable ignore) {}
 		setImmersionMenuEnabled(true);
+		hideSplitActionBar();
 
 		View view = getView();
 		if (view != null)
@@ -198,7 +194,15 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 		}
 	}
 
-	void fixActionBar() {
+	void hideSplitActionBar() {
+		try {
+			getActionBar().showSplitActionBar(false, false);
+		} catch (Throwable t) {
+			hideSplitView();
+		}
+	}
+
+	void hideSplitView() {
 		// Hide stupid auto split actionbar
 		try {
 			ActionBar actionBar = getActionBar();

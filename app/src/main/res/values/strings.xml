@@ -146,6 +146,8 @@
 	<string name="system_autogroupnotif_summ">Number of notifications from one app that triggers auto grouping</string>
 	<string name="system_snoozedmanager_title">Snoozed notifications manager</string>
 	<string name="system_snoozedmanager_summ">Increase number of snooze intervals and add icon to launcher that opens a list of currently snoozed notifications</string>
+	<string name="system_mutevisiblenotif_title">Mute if visible</string>
+	<string name="system_mutevisiblenotif_summ">Do not play notification sound if screen is on</string>
 	<string name="system_notifmediaseekbar_title">Media position slider</string>
 	<string name="system_notifmediaseekbar_summ">Add media notification slider that indicates current position and allows to change it</string>
 	<string name="system_notifmediaseekbar_full_title">Use system style</string>
@@ -371,8 +373,12 @@
 	<string name="system_allownotifonkeyguard_summ">Force all notifications from MIUI apps to be able to appear on lock screen</string>
 	<string name="system_allownotiffloat_title">Allow as floating notifications</string>
 	<string name="system_allownotiffloat_summ">Force all notifications from MIUI apps to be able to appear as floating ones</string>
+	<string name="system_hidelsstatusbar_title">Hide status bar</string>
+	<string name="system_hidelsstatusbar_summ">Remove status bar from lock screen</string>
 	<string name="system_hidelsclock_title">Hide top block</string>
 	<string name="system_hidelsclock_summ">Remove top block containing clock, date and other data</string>
+	<string name="system_hidelshint_title">Hide unlock hint</string>
+	<string name="system_hidelshint_summ">Remove "Swipe up to unlock" hint</string>
 	<string name="system_nosos_title">No emergency calls</string>
 	<string name="system_nosos_summ">Disable emergency call button on lock screen</string>
 	<string name="system_hideqs_title">Clean expanded mode view</string>
@@ -629,6 +635,8 @@
 	<string name="controls_fsg_width_title">Back gesture area width</string>
 	<string name="controls_fsg_horiz_title">Horizontal gestures</string>
 	<string name="controls_fsg_horiz_summ">Enable both horizontal gestures and navigation bar</string>
+	<string name="controls_fsg_assist_title">Corner swipe action</string>
+	<string name="controls_fsg_assist_summ">Perform selected action instead of opening Google Assistant</string>
 
 	<string name="various_mods">Various</string>
 	<string name="various_sysappsupdater_title">Open \"System app updater\"</string>
@@ -710,6 +718,7 @@
 	<string name="array_global_actions_activity">Launch activity</string>
 	<string name="array_global_actions_toggle">Toggle feature</string>
 	<string name="array_global_actions_back">Switch to previous app</string>
+	<string name="array_global_actions_forceclose">Force close current app</string>
 	<string name="array_global_actions_powermenu">Open power menu</string>
 	<string name="array_global_actions_powermenu_short">Power menu</string>
 	<string name="array_global_actions_clearmemory">Clear memory</string>
@@ -841,6 +850,8 @@
 	<string name="toggle_bt_off">Bluetooth disabled</string>
 	<string name="toggle_gps_on">GPS enabled</string>
 	<string name="toggle_gps_off">GPS disabled</string>
+	<string name="toggle_hotspot_on">Hotspot enabled</string>
+	<string name="toggle_hotspot_off">Hotspot disabled</string>
 	<string name="toggle_nfc_on">NFC enabled</string>
 	<string name="toggle_nfc_off">NFC disabled</string>
 	<string name="toggle_sound_normal">Sound profile: Normal</string>
@@ -869,6 +880,9 @@
 	<string name="miuizer_show_launchericon_summ">Show icon in launchers</string>
 	<string name="miuizer_show_settingsicon_title">Fast access icon</string>
 	<string name="miuizer_show_settingsicon_summ">Show icon in Settings</string>
+	<string name="miuizer_ownrepo_title">Own repository</string>
+	<string name="miuizer_ownrepo_summ">Add custom repo to EdXposed Manager to load CustoMIUIzer\'s info more reliably</string>
+	<string name="miuizer_ownrepo_note">Additional repository is used</string>
 	<string name="miuizer_locale_title">Interface language</string>
 	<string name="miuizer_locale_summ">Always display module\'s interface in selected language</string>
 	<string name="miuizer_holiday_title">Holiday design</string>

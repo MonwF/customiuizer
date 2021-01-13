@@ -582,6 +582,12 @@
 			miuizer:format="%d" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_mutevisiblenotif"
+			android:title="@string/system_mutevisiblenotif_title"
+			android:summary="@string/system_mutevisiblenotif_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_notifmediaseekbar"
 			android:title="@string/system_notifmediaseekbar_title"
 			android:summary="@string/system_notifmediaseekbar_summ"
@@ -909,15 +915,27 @@
 		android:title="@string/system_mods_lockscreen">
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_hidelsstatusbar"
+			android:title="@string/system_hidelsstatusbar_title"
+			android:summary="@string/system_hidelsstatusbar_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_hidelsclock"
-			android:summary="@string/system_hidelsclock_summ"
 			android:title="@string/system_hidelsclock_title"
+			android:summary="@string/system_hidelsclock_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_hidelshint"
+			android:title="@string/system_hidelshint_title"
+			android:summary="@string/system_hidelshint_summ"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_nosos"
-			android:summary="@string/system_nosos_summ"
 			android:title="@string/system_nosos_title"
+			android:summary="@string/system_nosos_summ"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx

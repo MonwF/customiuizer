@@ -50,6 +50,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.hardware.usb.UsbManager;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaMetadata;
 import android.media.MediaPlayer;
@@ -7577,6 +7578,54 @@ public class System {
 					//noinspection ResultOfMethodCallIgnored
 					Helpers.findAndHookMethodSilently(tileClass, lpparam.classLoader, "handleSecondaryClick", hook);
 					securedTiles.add(tileClass);
+				}
+			}
+		});
+	}
+
+	public static void HideLockScreenHintHook(LoadPackageParam lpparam) {
+		MethodHook hook = new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				Object controller = XposedHelpers.getSurroundingThis(param.thisObject);
+				XposedHelpers.setObjectField(controller, "mUpArrowIndication", null);
+				XposedHelpers.callMethod(controller, "updateIndication");
+			}
+		};
+		Helpers.hookAllMethods("com.android.systemui.statusbar.KeyguardIndicationController$BaseKeyguardCallback", lpparam.classLoader, "onRefreshBatteryInfo", hook);
+		if (!Helpers.hookAllMethodsSilently("com.android.systemui.statusbar.KeyguardIndicationController$BaseKeyguardCallback", lpparam.classLoader, "onStartedWakingUp", hook))
+		Helpers.hookAllMethodsSilently("com.android.systemui.statusbar.KeyguardIndicationController$BaseKeyguardCallback", lpparam.classLoader, "onScreenTurnedOn", hook);
+	}
+
+	public static void HideLockScreenStatusBarHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "makeStatusBarView", new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				View mKeyguardStatusBar = (View)XposedHelpers.getObjectField(param.thisObject, "mKeyguardStatusBar");
+				if (mKeyguardStatusBar != null) mKeyguardStatusBar.setTranslationY(-999f);
+			}
+		});
+	}
+
+	public static void MuteVisibleNotificationsHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.media.NotificationPlayer$CreationAndCompletionThread", lpparam.classLoader, "run", new MethodHook() {
+			@Override
+			@SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
+			protected void before(final MethodHookParam param) throws Throwable {
+				Object mCmd = XposedHelpers.getObjectField(param.thisObject, "mCmd");
+				if (mCmd == null) return;
+				int code = XposedHelpers.getIntField(mCmd, "code");
+				if (code != 1) return;
+				AudioAttributes attributes = (AudioAttributes)XposedHelpers.getObjectField(mCmd, "attributes");
+				if (attributes.getUsage() == AudioAttributes.USAGE_NOTIFICATION || attributes.getUsage() == AudioAttributes.USAGE_NOTIFICATION_RINGTONE || attributes.getUsage() == AudioAttributes.USAGE_UNKNOWN)
+				if (attributes.getContentType() == AudioAttributes.CONTENT_TYPE_SONIFICATION || attributes.getContentType() == AudioAttributes.CONTENT_TYPE_UNKNOWN) {
+					Context context = (Context)XposedHelpers.getObjectField(mCmd, "context");
+					PowerManager powerMgr = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
+					if (powerMgr.isInteractive()) {
+						Thread thread = (Thread)param.thisObject;
+						synchronized (thread) { thread.notify(); }
+						param.setResult(null);
+					}
 				}
 			}
 		});

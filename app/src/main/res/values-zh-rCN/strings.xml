@@ -139,6 +139,8 @@
     <string name="system_autogroupnotif_summ">触发自动分组的应用的通知数量</string>
     <string name="system_snoozedmanager_title">延迟通知管理器</string>
     <string name="system_snoozedmanager_summ">增大延迟间隔的数字并添加打开当前延迟通知列表的图标到启动器</string>
+    <string name="system_mutevisiblenotif_title">可见时静音</string>
+    <string name="system_mutevisiblenotif_summ">亮屏时不播放通知声音</string>
     <string name="system_notifmediaseekbar_title">媒体位置滑块</string>
     <string name="system_notifmediaseekbar_summ">添加指示当前位置的媒体通知滑块并允许对其进行更改</string>
     <string name="system_notifmediaseekbar_full_title">使用系统风格</string>
@@ -361,8 +363,12 @@
     <string name="system_allownotifonkeyguard_summ">强制MIUI应用的所有通知显示在锁屏上</string>
     <string name="system_allownotiffloat_title">允许作为悬浮通知</string>
     <string name="system_allownotiffloat_summ">强制悬浮MIUI应用的所有通知</string>
+    <string name="system_hidelsstatusbar_title">隐藏状态栏</string>
+    <string name="system_hidelsstatusbar_summ">锁屏时移除状态栏</string>
     <string name="system_hidelsclock_title">隐藏顶部区域</string>
     <string name="system_hidelsclock_summ">移除包含时钟、数据和其他数据的顶部区域</string>
+    <string name="system_hidelshint_title">隐藏解锁提示</string>
+    <string name="system_hidelshint_summ">移除“上滑解锁”提示</string>
     <string name="system_nosos_title">移除紧急呼叫</string>
     <string name="system_nosos_summ">锁屏时禁用紧急呼叫按钮</string>
     <string name="system_hideqs_title">净化扩展模式视图</string>
@@ -617,6 +623,8 @@
     <string name="controls_fsg_width_title">后退手势区域宽度</string>
     <string name="controls_fsg_horiz_title">水平手势</string>
     <string name="controls_fsg_horiz_summ">启用水平手势和导航栏</string>
+    <string name="controls_fsg_assist_title">屏幕角落滑动动作</string>
+    <string name="controls_fsg_assist_summ">执行选定的动作而不是打开Google Assistant</string>
     <string name="various_mods">杂项</string>
     <string name="various_sysappsupdater_title">打开 \"系统应用更新\"</string>
     <string name="various_sysappsupdater_summ">应用不再是某些ROM的一部分，必须手动安装</string>
@@ -694,6 +702,7 @@
     <string name="array_global_actions_activity">启动活动</string>
     <string name="array_global_actions_toggle">切换功能</string>
     <string name="array_global_actions_back">切换到上一个应用</string>
+    <string name="array_global_actions_forceclose">强制关闭当前应用</string>
     <string name="array_global_actions_powermenu">打开电源菜单</string>
     <string name="array_global_actions_powermenu_short">电源菜单</string>
     <string name="array_global_actions_clearmemory">清理内存</string>
@@ -818,6 +827,8 @@
     <string name="toggle_bt_off">蓝牙已禁用</string>
     <string name="toggle_gps_on">GPS已启用</string>
     <string name="toggle_gps_off">GPS已禁用</string>
+    <string name="toggle_hotspot_on">热点已启用</string>
+    <string name="toggle_hotspot_off">热点已关闭</string>
     <string name="toggle_nfc_on">NFC已启用</string>
     <string name="toggle_nfc_off">NFC已禁用</string>
     <string name="toggle_sound_normal">声音情景：正常</string>
@@ -845,6 +856,9 @@
     <string name="miuizer_show_launchericon_summ">在启动器中显示图标</string>
     <string name="miuizer_show_settingsicon_title">快速访问图标</string>
     <string name="miuizer_show_settingsicon_summ">在设置中显示图标</string>
+    <string name="miuizer_ownrepo_title">自有存储库</string>
+    <string name="miuizer_ownrepo_summ">添加自定义存储库到EdXposed Manager以更可靠地加载CustoMIUIzer的信息</string>
+    <string name="miuizer_ownrepo_note">使用其他存储库</string>
     <string name="miuizer_locale_title">界面语言</string>
     <string name="miuizer_locale_summ">始终以所选语言显示模块界面</string>
     <string name="miuizer_holiday_title">节日设计</string>

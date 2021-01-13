@@ -42,6 +42,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -724,11 +725,30 @@ public class Various {
 				container.addView(name);
 				container.addView(table);
 
+				boolean isDialog = false;
+				try { isDialog = "com.android.internal.app.AlertActivity".equals(act.getClass().getSuperclass().getCanonicalName()); } catch (Throwable ignore) {}
 				ViewGroup parent = (ViewGroup)act.findViewById(act.getResources().getIdentifier("install_confirm_question", "id", "com.android.packageinstaller")).getParent();
-				if (parent.getChildCount() == 1)
-					((ViewGroup)parent.getParent()).addView(container, ((ViewGroup)parent.getParent()).getChildCount() - 1);
-				else
+				if (parent.getChildCount() == 1) parent = ((ViewGroup)parent.getParent());
+				if (!isDialog) {
 					parent.addView(container, parent.getChildCount() - 1);
+				} else {
+					ViewGroup fParent = parent;
+					parent.post(new Runnable() {
+						@Override
+						public void run() {
+							try {
+								if (fParent.getMeasuredHeight() == 0)
+								fParent.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+								ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams)container.getLayoutParams();
+								lp.topMargin += fParent.getMeasuredHeight();
+								lp.leftMargin = 0;
+								lp.rightMargin = 0;
+								container.setLayoutParams(lp);
+								fParent.addView(container, fParent.getChildCount() - 1);
+							} catch (Throwable ignore) {}
+						}
+					});
+				}
 			}
 		});
 	}

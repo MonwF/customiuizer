@@ -1,3 +1,16 @@
+3.1.3
+[New] Action: Force close current app
+[New] Action: Toggle Hotspot
+[New] Hide status bar on lock screen
+[New] Hide unlock hint on lock screen
+[New] Mute notification sound when screen is on
+[New][Full screen navigation gestures][MIUI 12] Custom action on swipe up from corner
+[Fixed][App info in installer] Fit info into new Google Package Installer dialog
+[Fixed] Navbar height
+Additional repository with CustoMIUIzer module in it for EdXposed Manager to get updates more reliably
+Chinese New Year design updated
+New design added ₿
+
 3.1.2
 [New] Require device unlock before toggling selected Quick settings tiles
 [Fixed][Separate volume controls] Volume settings crash

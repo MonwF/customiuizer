@@ -95,6 +95,8 @@
 	<string name="toggle_bt_off">Bluetooth отключен</string>
 	<string name="toggle_gps_on">GPS включен</string>
 	<string name="toggle_gps_off">GPS отключен</string>
+	<string name="toggle_hotspot_on">Мобильная точка доступа включена</string>
+	<string name="toggle_hotspot_off">Мобильная точка доступа отключена</string>
 	<string name="toggle_nfc_on">NFC включен</string>
 	<string name="toggle_nfc_off">NFC отключен</string>
 	<string name="toggle_sound_normal">Профиль звука: обычный</string>
@@ -105,8 +107,8 @@
 	<string name="toggle_autorotate_on">Автоповорот экрана включен</string>
 	<string name="toggle_autorotate_off">Автоповорот экрана отключен</string>
 	<string name="toggle_flash_off">Фонарик выключен</string>
-	<string name="toggle_mobiledata_on">Мобильный Интернет включен</string>
-	<string name="toggle_mobiledata_off">Мобильный Интернет отключен</string>
+	<string name="toggle_mobiledata_on">Мобильный интернет включен</string>
+	<string name="toggle_mobiledata_off">Мобильный интернет отключен</string>
 	<string name="qs_toggle_autorotate">Закрепить ориентацию</string>
 	<string name="qs_toggle_autorotate_off">Отключено</string>
 	<string name="qs_toggle_autorotate_portrait">Портрет</string>
@@ -139,6 +141,7 @@
 	<string name="array_global_actions_activity">Запустить компонент</string>
 	<string name="array_global_actions_toggle">Включить/выключить настройку</string>
 	<string name="array_global_actions_back">Предыдущее приложение</string>
+	<string name="array_global_actions_forceclose">Принудительно закрыть текущее приложение</string>
 	<string name="array_global_actions_powermenu">Открыть меню управления питанием</string>
 	<string name="array_global_actions_powermenu_short">Управление питанием</string>
 	<string name="array_global_actions_clearmemory">Очистить память</string>
@@ -155,7 +158,7 @@
 	<string name="array_global_toggle_brightness">Автояркость</string>
 	<string name="array_global_toggle_rotation">Автоповорот</string>
 	<string name="array_global_toggle_torch">Фонарик</string>
-	<string name="array_global_toggle_mobiledata">Мобильный Интернет</string>
+	<string name="array_global_toggle_mobiledata">Мобильный интернет</string>
 	<string name="array_media_none">Действие не задано</string>
 	<string name="array_media_playpause">Старт/Пауза</string>
 	<string name="array_media_next">Следующий трек</string>
@@ -369,6 +372,8 @@
 	<string name="controls_fsg_width_title">Ширина области срабатывания жеста Назад</string>
 	<string name="controls_fsg_horiz_title">Горизонтальные жесты</string>
 	<string name="controls_fsg_horiz_summ">Активировать вместе горизонтальные жесты и панель навигации</string>
+	<string name="controls_fsg_assist_title">Действие на свайп вверх в углу</string>
+	<string name="controls_fsg_assist_summ">Выполнить выбранное действие вместо запуска Google Ассистента</string>
 
 	<string name="array_color_auto">Автоматический</string>
 	<string name="array_color_dark">Тёмный</string>
@@ -434,6 +439,9 @@
 	<string name="miuizer_show_launchericon_summ">Показывать иконку в ланчерах</string>
 	<string name="miuizer_show_settingsicon_title">Иконка быстрого доступа</string>
 	<string name="miuizer_show_settingsicon_summ">Показывать иконку в Настройках</string>
+	<string name="miuizer_ownrepo_title">Свой репозиторий</string>
+	<string name="miuizer_ownrepo_summ">Добавить новый репозиторий в EdXposed Manager для более надёжной загрузки данных о CustoMIUIzer</string>
+	<string name="miuizer_ownrepo_note">Используется дополнительный репозиторий</string>
 	<string name="miuizer_locale_title">Язык интерфейса</string>
 	<string name="miuizer_locale_summ">Всегда отображать интерфейс модуля на выбранном языке</string>
 	<string name="miuizer_holiday_title">Праздничный дизайн</string>
@@ -761,6 +769,8 @@
 	<string name="system_autogroupnotif_summ">Число уведомлений от одного приложения при котором срабатывает их автоматическая группировка</string>
 	<string name="system_snoozedmanager_title">Менеджер отложенных уведомлений</string>
 	<string name="system_snoozedmanager_summ">Увеличивает число отложенных интервалов и добавляет иконку на рабочий стол, которая открывает список текущих отложенных уведомлений</string>
+	<string name="system_mutevisiblenotif_title">Заглушить видимые</string>
+	<string name="system_mutevisiblenotif_summ">Не проигрывать звук уведомления при включенном экране</string>
 	<string name="system_notifmediaseekbar_title">Слайдер медиа позиции</string>
 	<string name="system_notifmediaseekbar_summ">Добавляет слайдер в медиа уведомление для отображения и изменения текущей позиции</string>
 	<string name="system_notifmediaseekbar_full_title">Использовать системный стиль</string>
@@ -948,8 +958,12 @@
 	<string name="system_allownotifonkeyguard_summ">Разрешает любому уведомлению из MIUI приложений отображаться на экране блокировки</string>
 	<string name="system_allownotiffloat_title">Не отключать всплывающие уведомления</string>
 	<string name="system_allownotiffloat_summ">Разрешает любому уведомлению из MIUI приложений отображаться в виде всплывающего</string>
+	<string name="system_hidelsstatusbar_title">Скрыть строку состояния</string>
+	<string name="system_hidelsstatusbar_summ">Удаляет строку состояния с экрана блокировки</string>
 	<string name="system_hidelsclock_title">Скрыть верхний блок</string>
 	<string name="system_hidelsclock_summ">Удаляет верхний блок, содержащий часы, дату и другие данные</string>
+	<string name="system_hidelshint_title">Скрыть подсказку разблокировки</string>
+	<string name="system_hidelshint_summ">Удаляет надпись "Проведите вверх для разблокировки"</string>
 	<string name="system_nosos_title">Запретить экстренные вызовы</string>
 	<string name="system_nosos_summ">Отключает кнопку экстренного вызова на экране блокировки</string>
 	<string name="system_hideqs_title">Очистить вид развёрнутого режима</string>

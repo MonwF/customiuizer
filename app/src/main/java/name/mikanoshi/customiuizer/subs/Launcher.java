@@ -95,10 +95,9 @@ public class Launcher extends SubFragment {
 				findPreference("pref_key_launcher_privacyapps_list").setOnPreferenceClickListener(openPrivacyAppEdit);
 
 				if (!checkPermissions()) {
-					Preference pref = findPreference("pref_key_launcher_cat_privacyapps");
+					Preference pref = findPreference("pref_key_launcher_privacyapps_list");
+					pref.setSummary(R.string.launcher_privacyapps_fail);
 					pref.setEnabled(false);
-					pref.setTitle(R.string.launcher_privacyapps_fail);
-					findPreference("pref_key_launcher_privacyapps_list").setEnabled(false);
 				}
 
 				break;

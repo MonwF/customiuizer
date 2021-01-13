@@ -8,10 +8,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.inputmethodservice.InputMethodService;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -898,7 +900,12 @@ public class Controls {
 		int heightDpi = opt == 19 ? 47 : opt;
 		MainModule.resHooks.setDensityReplacement("*", "dimen", "navigation_bar_height", heightDpi);
 		MainModule.resHooks.setDensityReplacement("*", "dimen", "navigation_bar_height_landscape", heightDpi);
+		MainModule.resHooks.setDensityReplacement("*", "dimen", "navigation_bar_frame_height", heightDpi);
+		MainModule.resHooks.setDensityReplacement("*", "dimen", "navigation_bar_frame_height_landscape", heightDpi);
+		MainModule.resHooks.setDensityReplacement("*", "dimen", "navigation_bar_gesture_height", heightDpi);
 		MainModule.resHooks.setDensityReplacement("*", "dimen", "navigation_bar_width", heightDpi);
+		MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "navigation_bar_size", heightDpi);
+		//MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "navigation_extra_key_width", heightDpi);
 	}
 
 	public static void FingerprintHapticSuccessHook(LoadPackageParam lpparam) {
@@ -1041,6 +1048,55 @@ public class Controls {
 			protected void before(final MethodHookParam param) throws Throwable {
 				boolean isScreenOn = (boolean)param.args[1];
 				if (!isScreenOn) param.setResult(null);
+			}
+		});
+	}
+
+	public static void AssistGestureActionHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.assist.AssistManager", lpparam.classLoader, "startAssist", Bundle.class, new MethodHook() {
+			@Override
+			protected void before(final MethodHookParam param) throws Throwable {
+				Bundle bundle = (Bundle)param.args[0];
+				if (bundle == null || bundle.getInt("triggered_by", 0) != 83 || bundle.getInt("invocation_type", 0) != 1) return;
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				if (GlobalActions.handleAction(mContext, "pref_key_controls_fsg_assist")) {
+					Helpers.performLightVibration(mContext);
+					param.setResult(null);
+				}
+			}
+		});
+
+		Helpers.findAndHookMethod("com.android.systemui.assist.AssistManager", lpparam.classLoader, "startAssist", Bundle.class, new MethodHook() {
+			@Override
+			protected void before(final MethodHookParam param) throws Throwable {
+				Bundle bundle = (Bundle)param.args[0];
+				if (bundle == null || bundle.getInt("triggered_by", 0) != 83 || bundle.getInt("invocation_type", 0) != 1) return;
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				if (GlobalActions.handleAction(mContext, "pref_key_controls_fsg_assist")) {
+					Helpers.performLightVibration(mContext);
+					param.setResult(null);
+				}
+			}
+		});
+
+		Helpers.hookAllConstructors("com.android.systemui.assist.ui.DefaultUiController", lpparam.classLoader, new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				Context mContext = (Context)param.args[0];
+				Handler mHandler = new Handler(mContext.getMainLooper());
+
+				new Helpers.SharedPrefObserver(mContext, mHandler, "pref_key_controls_fsg_assist_action", 1) {
+					@Override
+					public void onChange(String name, int defValue) {
+						Object mInvocationLightsView = XposedHelpers.getObjectField(param.thisObject, "mInvocationLightsView");
+						if (mInvocationLightsView == null) return;
+						int opt = Helpers.getSharedIntPref(mContext, name, defValue);
+						if (opt > 1)
+							XposedHelpers.callMethod(mInvocationLightsView, "setColors", Color.parseColor("#424A60"), Color.parseColor("#EC7C6D"), Color.parseColor("#EC7C6D"), Color.parseColor("#424A60"));
+						else
+							XposedHelpers.callMethod(mInvocationLightsView, "setColors", -16776961, -65536, -256, -16711936);
+					}
+				}.onChange(false);
 			}
 		});
 	}

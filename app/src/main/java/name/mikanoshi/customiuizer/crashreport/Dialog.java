@@ -390,7 +390,7 @@ public class Dialog extends Activity {
 				if (packageInfo != null) crashData.put("LAUNCHER_VERSION", launcherInfo.activityInfo.loadLabel(pkgMgr) + " " + packageInfo.versionName);
 			}
 
-			if (!crashData.containsKey("XPOSED_VERSION")) try {
+			if (edxpVersion == null || edxpVersion.startsWith("unknown")) try {
 				PackageInfo taichiInfo = pkgMgr.getPackageInfo("me.weishu.exp", 0);
 				if (taichiInfo != null)
 				crashData.put("XPOSED_VERSION", taichiInfo.applicationInfo.loadLabel(pkgMgr) + " " + taichiInfo.versionName);

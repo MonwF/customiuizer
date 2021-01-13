@@ -1,4 +1,4 @@
-package name.mikanoshi.customiuizer.utils;
+package name.mikanoshi.customiuizer.holidays;
 
 import android.content.Context;
 import android.graphics.Bitmap;

@@ -15,9 +15,13 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.wifi.WifiManager;
 import android.nfc.NfcAdapter;
@@ -31,10 +35,15 @@ import android.os.UserHandle;
 import android.preference.PreferenceActivity.Header;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -111,6 +120,7 @@ public class GlobalActions {
 			case 21: return switchKeyboard(context);
 			case 22: return switchOneHandedLeft(context);
 			case 23: return switchOneHandedRight(context);
+			case 24: return forceClose(context);
 			default: return false;
 		}
 	}
@@ -137,6 +147,7 @@ public class GlobalActions {
 			case 21: return R.string.array_global_actions_switchkeyboard;
 			case 22: return R.string.array_global_actions_onehanded_left;
 			case 23: return R.string.array_global_actions_onehanded_right;
+			case 24: return R.string.array_global_actions_forceclose;
 			default: return 0;
 		}
 	}
@@ -291,6 +302,19 @@ public class GlobalActions {
 						});
 					} catch (Throwable t) {
 						XposedBridge.log(t);
+					}
+
+					if (action.equals(ACTION_PREFIX + "ToggleHotspot")) {
+						Object mHotspotController = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", context.getClassLoader()), "get", findClassIfExists("com.android.systemui.statusbar.policy.HotspotController", context.getClassLoader()));
+						if (mHotspotController == null) return;
+						boolean mHotspotSupported = (boolean)XposedHelpers.callMethod(mHotspotController, "isHotspotSupported");
+						if (!mHotspotSupported) return;
+						boolean mHotspotEnabled = (boolean)XposedHelpers.callMethod(mHotspotController, "isHotspotEnabled");
+						if (mHotspotEnabled)
+							Toast.makeText(context, modRes.getString(R.string.toggle_hotspot_off), Toast.LENGTH_SHORT).show();
+						else
+							Toast.makeText(context, modRes.getString(R.string.toggle_hotspot_on), Toast.LENGTH_SHORT).show();
+						XposedHelpers.callMethod(mHotspotController, "setHotspotEnabled", !mHotspotEnabled);
 					}
 
 					Object mToggleManager = XposedHelpers.getObjectField(mStatusBar, "mToggleManager");
@@ -663,6 +687,8 @@ public class GlobalActions {
 		Helpers.emptyFile(lpparam.appInfo.dataDir + "/files/uncaught_exceptions", false);
 	}
 
+	public static boolean useOwnRepo = false;
+
 	public static void miuizerEdXposedManagerHook(LoadPackageParam lpparam) {
 		Helpers.hookAllMethodsSilently("org.meowcat.edxposed.manager.ModulesFragment$ModuleAdapter", lpparam.classLoader, "getView", new MethodHook() {
 			@Override
@@ -692,6 +718,99 @@ public class GlobalActions {
 					title.setTypeface(title.getTypeface(), Typeface.NORMAL);
 					title.getPaint().setShader(null);
 				}
+			}
+		});
+
+		Helpers.hookAllMethods("de.robv.android.xposed.installer.XposedApp", lpparam.classLoader, "onCreate", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				useOwnRepo = Helpers.getSharedBoolPref((Application)param.thisObject, "pref_key_miuizer_ownrepo", false);
+			}
+		});
+
+		Helpers.findAndHookMethod("org.meowcat.edxposed.manager.util.RepoLoader", lpparam.classLoader, "refreshRepositories", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				if (!useOwnRepo) return;
+				String DEFAULT_REPOSITORIES = (String)XposedHelpers.getStaticObjectField(param.thisObject.getClass(), "DEFAULT_REPOSITORIES");
+				if (!DEFAULT_REPOSITORIES.contains(Helpers.xposedRepo))
+				XposedHelpers.setStaticObjectField(param.thisObject.getClass(), "DEFAULT_REPOSITORIES", Helpers.xposedRepo + "|" + DEFAULT_REPOSITORIES);
+			}
+		});
+
+		Helpers.hookAllMethods("org.meowcat.edxposed.manager.repo.RepoDb", lpparam.classLoader, "insertModule", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				if (!useOwnRepo) return;
+				String pkgName = (String)XposedHelpers.getObjectField(param.args[1], "packageName");
+				if (!Helpers.modulePkg.equals(pkgName)) return;
+				SQLiteDatabase sDb = (SQLiteDatabase)XposedHelpers.getStaticObjectField(findClass("org.meowcat.edxposed.manager.repo.RepoDb", lpparam.classLoader), "sDb");
+				Cursor query = sDb.query("modules", new String[]{ "repo_id" }, "pkgname = ?", new String[]{ Helpers.modulePkg }, null, null, null, "1");
+				if (query.getCount() > 0) param.setResult(null);
+				query.close();
+			}
+		});
+
+		Helpers.hookAllMethods("org.meowcat.edxposed.manager.StatusInstallerFragment", lpparam.classLoader, "onCreateView", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				if (!useOwnRepo) return;
+				ViewGroup view = (ViewGroup)param.getResult();
+				if (view == null || view.findViewWithTag("OWN_REPO") != null) return;
+
+				Context context = view.getContext();
+				float density = context.getResources().getDisplayMetrics().density;
+
+				int apiResId = context.getResources().getIdentifier("api", "id", "org.meowcat.edxposed.manager");
+				TextView api = view.findViewById(apiResId);
+				if (api == null) return;
+				ViewGroup container = (ViewGroup)api.getParent().getParent().getParent();
+				if (container == null) return;
+
+				Drawable selectableItemBackground = null;
+				int listPreferredItemHeightSmall = 118;
+				try {
+					int[] bkgArr = new int[] { android.R.attr.selectableItemBackground, android.R.attr.listPreferredItemHeightSmall };
+					TypedArray typedArray = context.obtainStyledAttributes(bkgArr);
+					selectableItemBackground = typedArray.getDrawable(0);
+					listPreferredItemHeightSmall = typedArray.getDimensionPixelSize(1, 118);
+					typedArray.recycle();
+				} catch (Throwable ignore) {}
+
+				LinearLayout container1 = new LinearLayout(context);
+				container1.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+				if (selectableItemBackground != null)
+				container1.setBackground(selectableItemBackground);
+				container1.setOrientation(LinearLayout.HORIZONTAL);
+				container1.setClickable(true);
+				container1.setFocusable(true);
+				container1.setGravity(Gravity.CENTER_VERTICAL);
+				container1.setPaddingRelative(Math.round(16 * density), container1.getPaddingTop(), Math.round(16 * density), container1.getPaddingBottom());
+				container1.setMinimumHeight(listPreferredItemHeightSmall);
+
+				ImageView icon = new ImageView(context);
+				icon.setLayoutParams(new LinearLayout.LayoutParams(Math.round(24 * density), Math.round(24 * density)));
+				icon.setImageDrawable(Helpers.getModuleRes(context).getDrawable(R.drawable.ic_miuizer_settings11, context.getTheme()));
+				container1.addView(icon);
+
+				LinearLayout container2 = new LinearLayout(context);
+				ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+				lp.leftMargin = Math.round(32 * density);
+				container2.setLayoutParams(lp);
+				container2.setOrientation(LinearLayout.VERTICAL);
+				container2.setGravity(Gravity.CENTER_VERTICAL);
+				container2.setPaddingRelative(container2.getPaddingStart(), Math.round(8 * density), container2.getPaddingEnd(), Math.round(8 * density));
+
+				TextView ownRepo = new TextView(context);
+				ownRepo.setText(Helpers.getModuleRes(view.getContext()).getString(R.string.miuizer_ownrepo_note));
+				ownRepo.setTextSize(TypedValue.COMPLEX_UNIT_PX, api.getTextSize());
+				ownRepo.setTextColor(api.getCurrentTextColor());
+				ownRepo.setTag("OWN_REPO");
+
+				container2.addView(ownRepo);
+
+				container1.addView(container2);
+				container.addView(container1);
 			}
 		});
 	}
@@ -902,7 +1021,6 @@ public class GlobalActions {
 				intentfilter.addAction(ACTION_PREFIX + "SwitchOneHandedLeft");
 				intentfilter.addAction(ACTION_PREFIX + "SwitchOneHandedRight");
 				intentfilter.addAction(ACTION_PREFIX + "ToggleColorInversion");
-				intentfilter.addAction(ACTION_PREFIX + "SimulateMenu");
 				intentfilter.addAction(ACTION_PREFIX + "VolumeUp");
 				intentfilter.addAction(ACTION_PREFIX + "VolumeDown");
 				intentfilter.addAction(ACTION_PREFIX + "LaunchIntent");
@@ -957,13 +1075,14 @@ public class GlobalActions {
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 				IntentFilter intentfilter = new IntentFilter();
 				intentfilter.addAction(ACTION_PREFIX + "SimulateMenu");
+				intentfilter.addAction(ACTION_PREFIX + "ForceClose");
 				final Object thisObject = param.thisObject;
 				mContext.registerReceiver(new BroadcastReceiver() {
 					public void onReceive(final Context context, Intent intent) {
 						String action = intent.getAction();
 						if (action == null) return;
 
-						try {
+						if (action.equals(ACTION_PREFIX + "SimulateMenu")) try {
 							Field fRequestShowMenu = findField(thisObject.getClass().getSuperclass(), "mRequestShowMenu");
 							fRequestShowMenu.setAccessible(true);
 							fRequestShowMenu.set(thisObject, true);
@@ -980,6 +1099,14 @@ public class GlobalActions {
 							} catch (Throwable t2) {
 								XposedBridge.log(t2);
 							}
+						}
+
+						if (action.equals(ACTION_PREFIX + "ForceClose")) try {
+							Method closeApp = findMethodExact(thisObject.getClass().getSuperclass(), "closeApp", boolean.class);
+							closeApp.setAccessible(true);
+							closeApp.invoke(thisObject, false);
+						} catch (Throwable t) {
+							XposedBridge.log(t);
 						}
 					}
 				}, intentfilter);
@@ -1058,6 +1185,7 @@ public class GlobalActions {
 				intentfilter.addAction(ACTION_PREFIX + "OpenVolumeDialog");
 
 				intentfilter.addAction(ACTION_PREFIX + "ToggleGPS");
+				intentfilter.addAction(ACTION_PREFIX + "ToggleHotspot");
 				intentfilter.addAction(ACTION_PREFIX + "ToggleFlashlight");
 				intentfilter.addAction(ACTION_PREFIX + "ShowQuickRecents");
 				intentfilter.addAction(ACTION_PREFIX + "HideQuickRecents");
@@ -1218,6 +1346,16 @@ public class GlobalActions {
 	public static boolean simulateMenu(Context context) {
 		try {
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "SimulateMenu"));
+			return true;
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+			return false;
+		}
+	}
+
+	public static boolean forceClose(Context context) {
+		try {
+			context.sendBroadcast(new Intent(ACTION_PREFIX + "ForceClose"));
 			return true;
 		} catch (Throwable t) {
 			XposedBridge.log(t);
@@ -1398,6 +1536,7 @@ public class GlobalActions {
 				case 7: whatStr = "AutoRotation"; break;
 				case 8: whatStr = "Flashlight"; break;
 				case 9: whatStr = "MobileData"; break;
+				case 10: whatStr = "Hotspot"; break;
 				default: return false;
 			}
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "Toggle" + whatStr));

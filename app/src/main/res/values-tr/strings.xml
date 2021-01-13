@@ -881,7 +881,7 @@
     <string name="cancel">İptal</string>
     <string name="add">Ekle</string>
     <string name="delete">Sil</string>
-    <string name="delete_item_info">Kısayol (Basılı Tut: Sil)</string>
+    <string name="delete_item_info">Silmek için uzun basın kısayolu</string>
     <string name="change_icon">Simgeyi Değiştir</string>
     <string name="guide_search">Mod\'ları isimlerine göre arayın.\nYeni Mod\'ları görüntülemek için de basılı tutunuz.</string>
     <string name="guide_softreboot">Yeniden başlat (Hızlı)\'ı kullanarak mod\'ları aktif etmeyi unutmayın.\nDinamik ⟲ mod\'lar sadece bir kez gerektirir.\nDaha fazla bilgiye \'Hakkında\' sayfasındandan ulaşabilirsiniz.</string>

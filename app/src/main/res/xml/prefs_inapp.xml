@@ -28,7 +28,7 @@
 		android:key="donate100"
 		android:enabled="false" />
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
-		android:key="consume"
+		android:key="reset"
 		android:enabled="true" />
 
 </PreferenceScreen>

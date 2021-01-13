@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import name.mikanoshi.customiuizer.utils.Helpers;
@@ -49,10 +50,14 @@ public class AboutFragment extends SubFragment {
 			if (Helpers.currentHoliday == Helpers.Holidays.NEWYEAR) view.findViewById(R.id.santa_hat).setVisibility(View.VISIBLE);
 			else if (Helpers.currentHoliday == Helpers.Holidays.LUNARNEWYEAR) {
 				view.findViewById(R.id.lunar_animal).setVisibility(View.VISIBLE);
-				view.findViewById(R.id.decoration).setVisibility(View.VISIBLE);
+				LinearLayout logoSection = view.findViewById(R.id.logo_section);
+				logoSection.setPadding(logoSection.getPaddingLeft(), Math.round(view.getResources().getDisplayMetrics().density * 80), logoSection.getPaddingRight(), logoSection.getPaddingBottom());
 			} else if (Helpers.currentHoliday == Helpers.Holidays.PANDEMIC) {
 				view.findViewById(R.id.medical_mask).setVisibility(View.VISIBLE);
 				view.findViewById(R.id.hand_sanitizer).setVisibility(View.VISIBLE);
+			} else if (Helpers.currentHoliday == Helpers.Holidays.CRYPTO) {
+				view.findViewById(R.id.doge).setVisibility(View.VISIBLE);
+				view.findViewById(R.id.uptrend).setVisibility(View.VISIBLE);
 			}
 		} catch (Throwable e) {
 			//Shouldn't happen...

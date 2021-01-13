@@ -30,6 +30,7 @@ public class PreferenceEx extends Preference implements PreferenceState {
 	private final boolean countAsSummary;
 	private String customSummary = null;
 	private boolean newmod = false;
+	private boolean unsupported = false;
 
 	public PreferenceEx(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -62,7 +63,7 @@ public class PreferenceEx extends Preference implements PreferenceState {
 			title.setTextColor(Helpers.markColor);
 		else
 			title.setTextColor(isEnabled() ? primary : secondary);
-		title.setText(getTitle() + (dynamic ? " ⟲" : ""));
+		title.setText(getTitle() +  (unsupported ? " ⨯" : (dynamic ? " ⟲" : "")));
 		if (newmod) Helpers.applyNewMod(title);
 
 		if (paddings[0] == 0) paddings[0] = finalView.getPaddingLeft();
@@ -103,6 +104,11 @@ public class PreferenceEx extends Preference implements PreferenceState {
 	@Override
 	public void markAsNew() {
 		newmod = true;
+	}
+
+	public void setUnsupported(boolean value) {
+		unsupported = value;
+		setEnabled(!value);
 	}
 
 }

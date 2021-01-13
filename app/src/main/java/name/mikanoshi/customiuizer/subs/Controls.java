@@ -8,6 +8,7 @@ import java.util.Objects;
 
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SubFragment;
+import name.mikanoshi.customiuizer.prefs.PreferenceEx;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class Controls extends SubFragment {
@@ -80,6 +81,12 @@ public class Controls extends SubFragment {
 					}
 				});
 				
+				break;
+			case "pref_key_controls_cat_fsg":
+				findPreference("pref_key_controls_fsg_assist").setOnPreferenceClickListener(openNavbarActions);
+
+				if (!Helpers.is12()) ((PreferenceEx)findPreference("pref_key_controls_fsg_assist")).setUnsupported(true);
+
 				break;
 		}
 	}

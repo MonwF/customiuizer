@@ -1,4 +1,4 @@
-package name.mikanoshi.customiuizer.utils;
+package name.mikanoshi.customiuizer.holidays;
 
 import android.content.Context;
 
@@ -9,18 +9,18 @@ import com.github.matteobattilana.weather.confetti.ConfettoInfo;
 
 import java.util.Random;
 
-public class FlowerGenerator implements ConfettoGenerator {
+public class FilthGenerator implements ConfettoGenerator {
 	private final ConfettoInfo confettoInfo;
 	private final Context context;
 
-	public FlowerGenerator(Context ctx) {
+	public FilthGenerator(Context ctx) {
 		super();
 		this.context = ctx;
-		this.confettoInfo = new ConfettoInfo(PrecipType.SNOW);
+		this.confettoInfo = new ConfettoInfo(PrecipType.CLEAR);
 	}
 
 	public Confetto generateConfetto(Random random) {
-		return new FlowerParticle(this.context, this.confettoInfo);
+		return new FilthyParticle(this.context, this.confettoInfo);
 	}
 
 	public final ConfettoInfo getConfettoInfo() {

@@ -206,6 +206,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 				mPrefs.getInt("system_volumedialogdelay_expanded", 0) > 0) System.VolumeDialogAutohideDelayHook(lpparam);
 			if (mPrefs.getInt("controls_fsg_coverage", 60) != 60) Controls.BackGestureAreaHeightHook(lpparam, true);
 			if (mPrefs.getInt("controls_fsg_width", 100) > 100) Controls.BackGestureAreaWidthHook(lpparam, true);
+			if (mPrefs.getInt("controls_fsg_assist_action", 1) > 1) Controls.AssistGestureActionHook(lpparam);
 			if (mPrefs.getInt("controls_navbarleft_action", 1) > 1 ||
 				mPrefs.getInt("controls_navbarleftlong_action", 1) > 1 ||
 				mPrefs.getInt("controls_navbarright_action", 1) > 1 ||
@@ -240,7 +241,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_4gtolte")) System.Network4GtoLTEHook(lpparam);
 			if (mPrefs.getBoolean("system_showlux")) System.BrightnessLuxHook(lpparam);
 			if (mPrefs.getBoolean("system_showpct")) System.BrightnessPctHook(lpparam);
+			if (mPrefs.getBoolean("system_hidelsstatusbar")) System.HideLockScreenStatusBarHook(lpparam);
 			if (mPrefs.getBoolean("system_hidelsclock")) System.HideLockScreenClockHook(lpparam);
+			if (mPrefs.getBoolean("system_hidelshint")) System.HideLockScreenHintHook(lpparam);
 			if (mPrefs.getBoolean("system_nosilentvibrate")) System.NoSilentVibrateHook(lpparam);
 			if (mPrefs.getBoolean("system_drawer_hidebackground")) System.HideThemeBackgroundBrightnessHook(lpparam);
 			if (mPrefs.getBoolean("system_allowdirectreply")) System.AllowDirectReplyHook(lpparam);
@@ -261,6 +264,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_fw_splitscreen")) System.MultiWindowPlusNativeHook(lpparam);
 			if (mPrefs.getBoolean("system_charginginfo")) System.ChargingInfoHook(lpparam);
 			if (mPrefs.getBoolean("system_secureqs")) System.SecureQSTilesHook(lpparam);
+			if (mPrefs.getBoolean("system_mutevisiblenotif")) System.MuteVisibleNotificationsHook(lpparam);
 			if (mPrefs.getBoolean("launcher_nounlockanim")) System.NoUnlockAnimationHook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_battery1")) System.HideIconsBattery1Hook(lpparam);
 			if (mPrefs.getBoolean("system_statusbaricons_battery2")) System.HideIconsBattery2Hook(lpparam);

@@ -120,6 +120,7 @@ public class Helpers {
 	public static final String externalFolder = "/CustoMIUIzer/";
 	public static final String backupFile = "settings_backup";
 	public static final String logFile = "xposed_log";
+	public static final String xposedRepo = "https://code.highspec.ru/repo/full.xml.gz";
 	public static final String ANDROID_NS = "http://schemas.android.com/apk/res/android";
 	public static final String MIUIZER_NS = "http://schemas.android.com/apk/res-auto";
 	public static final String ACCESS_SECURITY_CENTER = "com.miui.securitycenter.permission.ACCESS_SECURITY_CENTER_PROVIDER";
@@ -153,31 +154,31 @@ public class Helpers {
 	public static boolean showNewMods = true;
 	public static boolean miuizerModuleActive = false;
 	public static final HashSet<String> newMods = new HashSet<String>(Arrays.asList(
-		"pref_key_system_applock_skip",
-		"pref_key_system_charginginfo_cat",
-		"pref_key_system_lockscreenshortcuts_left_center",
-		"pref_key_system_noscreenlock_nofaceunlock"
+		"controls_fsg_assist",
+		"system_hidelsstatusbar",
+		"system_hidelshint",
+		"system_mutevisiblenotif"
 	));
 	public static final HashMap<String, String> l10nProgress = new HashMap<String, String>() {{
 		put("ru-RU", "100.0%");
 		put("zh-CN", "100.0%");
-		put("id", "12.5%");
-		put("tr", "92.5%");
-		put("it", "97.4%");
-		put("pt-BR", "91.5%");
-		put("fr", "24.9%");
-		put("uk-UK", "93.5%");
+		put("id", "12.3%");
+		put("tr", "91.2%");
+		put("it", "96.1%");
+		put("pt-BR", "100.0%");
+		put("fr", "24.6%");
+		put("uk-UK", "92.2%");
 		put("es", "100.0%");
 		put("sk", "3.0%");
 		put("cs", "0.0%");
-		put("de", "92.5%");
+		put("de", "91.2%");
 	}};
 
 	public static final ArrayList<String> shortcutIcons = new ArrayList<String>();
 	public static Holidays currentHoliday = Holidays.NONE;
 
 	public enum Holidays {
-		NONE, NEWYEAR, LUNARNEWYEAR, PANDEMIC
+		NONE, NEWYEAR, LUNARNEWYEAR, PANDEMIC, CRYPTO
 	}
 
 	public enum SettingsType {
@@ -292,7 +293,9 @@ public class Helpers {
 			// NY
 			else if (month == 0 || month == 11) currentHoliday = Holidays.NEWYEAR;
 			// COVID19
-			else if (month >= 2 && month <= 10 && year == 2020) currentHoliday = Holidays.PANDEMIC;
+			else if (year <= 2020) currentHoliday = Holidays.PANDEMIC;
+			// Crypto
+			else if (year == 2021) currentHoliday = Holidays.CRYPTO;
 		}
 	}
 

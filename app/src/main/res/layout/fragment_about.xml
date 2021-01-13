@@ -10,6 +10,7 @@
 		android:orientation="vertical">
 
 		<LinearLayout
+			android:id="@+id/logo_section"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:paddingTop="40dp"
@@ -28,19 +29,20 @@
 
 				<ImageView
 					android:id="@+id/lunar_animal"
-					android:layout_width="80dp"
-					android:layout_height="80dp"
+					android:layout_width="256dp"
+					android:layout_height="wrap_content"
 					android:contentDescription="@null"
-					android:scaleX="1.0"
-					android:scaleY="1.0"
+					android:scaleX="2.0"
+					android:scaleY="2.0"
 					android:visibility="gone"
 					android:layout_alignParentTop="true"
-					android:layout_alignParentLeft="true"
-					android:layout_marginLeft="-25dp"
-					android:layout_marginTop="-32dp"
+					android:layout_marginTop="-36dp"
+					android:layout_marginBottom="34dp"
+					android:layout_marginLeft="-32dp"
+					android:layout_marginRight="-32dp"
 					android:translationZ="0dp"
-					android:rotation="-25"
-					android:src="@drawable/year2020_rat" />
+					android:rotation="0"
+					android:src="@drawable/year2021_ox" />
 
 				<ImageView
 					android:id="@+id/hand_sanitizer"
@@ -56,6 +58,37 @@
 					android:layout_marginTop="-29dp"
 					android:translationZ="0dp"
 					android:src="@drawable/hand_sanitizer" />
+
+				<ImageView
+					android:id="@+id/doge"
+					android:layout_width="80dp"
+					android:layout_height="80dp"
+					android:contentDescription="@null"
+					android:scaleX="1.0"
+					android:scaleY="1.0"
+					android:visibility="gone"
+					android:layout_alignParentTop="true"
+					android:layout_alignParentLeft="true"
+					android:layout_marginLeft="-36dp"
+					android:layout_marginTop="-24dp"
+					android:rotation="-40"
+					android:translationZ="0dp"
+					android:src="@drawable/doge" />
+
+				<ImageView
+					android:id="@+id/uptrend"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_alignParentTop="true"
+					android:layout_alignParentLeft="true"
+					android:layout_marginLeft="-32dp"
+					android:layout_marginBottom="-32dp"
+					android:contentDescription="@null"
+					android:scaleX="2.0"
+					android:scaleY="2.0"
+					android:src="@drawable/uptrend"
+					android:translationZ="20dp"
+					android:visibility="gone" />
 
 				<RelativeLayout
 					android:layout_height="80dp"
@@ -79,7 +112,7 @@
 						android:layout_marginRight="-23dp"
 						android:translationZ="10dp"
 						android:src="@drawable/santa_hat" />
-
+<!--
 					<ImageView
 						android:id="@+id/decoration"
 						android:layout_width="50dp"
@@ -94,7 +127,7 @@
 						android:layout_marginRight="-20dp"
 						android:translationZ="10dp"
 						android:src="@drawable/fortune_bag" />
-
+-->
 					<ImageView
 						android:id="@+id/medical_mask"
 						android:layout_width="75dp"
