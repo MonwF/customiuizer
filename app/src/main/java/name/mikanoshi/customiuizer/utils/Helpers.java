@@ -154,10 +154,10 @@ public class Helpers {
 	public static boolean showNewMods = true;
 	public static boolean miuizerModuleActive = false;
 	public static final HashSet<String> newMods = new HashSet<String>(Arrays.asList(
-		"controls_fsg_assist",
-		"system_hidelsstatusbar",
-		"system_hidelshint",
-		"system_mutevisiblenotif"
+		"pref_key_controls_fsg_assist",
+		"pref_key_system_hidelsstatusbar",
+		"pref_key_system_hidelshint",
+		"pref_key_system_mutevisiblenotif"
 	));
 	public static final HashMap<String, String> l10nProgress = new HashMap<String, String>() {{
 		put("ru-RU", "100.0%");

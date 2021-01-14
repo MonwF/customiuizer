@@ -477,7 +477,10 @@
 	<string name="launcher_infinitescroll_summ">Позволяет переходить с последнего экрана на первый и обратно</string>
 	<string name="launcher_noclockhide_title">Не прятать часы</string>
 	<string name="launcher_noclockhide_summ">Отключает скрытие часов в статус баре на домашних экранах с виджетами часов</string>
-	<string name="launcher_googlediscover_title">Включить Google Discover</string>
+	<string name="launcher_googleminus_title">Включить выбор -1 экрана</string>
+	<string name="launcher_googleminus_summ">Показывает переключатель между лентой виджетов и Google Discover в настройках Рабочего стола</string>
+	<string name="launcher_googleminus_note">Требуется глобальная (международная) прошивка</string>
+	<string name="launcher_googlediscover_title">Google Discover принудительно</string>
 	<string name="launcher_googlediscover_summ">Заменяет ленту виджетов на Google Discover (требуется установленное приложение Google)</string>
 	<string name="launcher_nowidgetonly_title">Отключить экран с одними виджетами</string>
 	<string name="launcher_nowidgetonly_summ">Позволяет добавлять виджеты и приложения на любой экран на планшетах</string>

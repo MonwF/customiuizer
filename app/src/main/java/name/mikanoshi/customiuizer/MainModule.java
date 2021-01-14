@@ -349,9 +349,13 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("various_installappinfo")) Various.AppInfoDuringMiuiInstallHook(lpparam);
 		}
 
-		if (pkg.equals("org.meowcat.edxposed.manager")) {
-			GlobalActions.miuizerEdXposedManagerHook(lpparam);
-		}
+		if (pkg.equals("org.meowcat.edxposed.manager"))
+		Helpers.findAndHookMethod(Application.class, "attach", Context.class, new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				GlobalActions.miuizerEdXposedManagerHook(lpparam, (Application)param.thisObject);
+			}
+		});
 
 		final boolean isLauncherPkg = pkg.equals("com.miui.home") || pkg.equals("com.mi.android.globallauncher");
 		final boolean isLauncherPerf = mPrefs.getBoolean("launcher_compat");
@@ -422,6 +426,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("launcher_fixanim")) Launcher.FixAnimHook(lpparam);
 			if (mPrefs.getBoolean("launcher_hideseekpoints")) Launcher.HideSeekPointsHook(lpparam);
 			if (mPrefs.getBoolean("launcher_privacyapps_gest")) Launcher.PrivacyFolderHook(lpparam);
+			//if (mPrefs.getBoolean("launcher_googleminus")) Launcher.GoogleMinusScreenHook(lpparam); else
 			if (mPrefs.getBoolean("launcher_googlediscover")) Launcher.GoogleDiscoverHook(lpparam);
 			if (mPrefs.getBoolean("launcher_docktitles") && mPrefs.getInt("launcher_bottommargin", 0) == 0) Launcher.ShowHotseatTitlesHook(lpparam);
 			if (mPrefs.getBoolean("launcher_folderblur")) Launcher.FolderBlurHook(lpparam);

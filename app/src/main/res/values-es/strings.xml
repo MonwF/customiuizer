@@ -471,6 +471,9 @@
     <string name="launcher_infinitescroll_summ">Salta de la última página a la primera y viceversa.</string>
     <string name="launcher_noclockhide_title">No ocultar reloj</string>
     <string name="launcher_noclockhide_summ">No ocultar el reloj de la barra de estado en páginas con widgets de reloj</string>
+    <string name="launcher_googleminus_title">Habilitar el interruptor de pantalla -1</string>
+    <string name="launcher_googleminus_summ">Mostrar un switch entre App Vault y Google Discover en la configuración de la pantalla de inicio</string>
+    <string name="launcher_googleminus_note">Requiere ROM global (internacional)</string>
     <string name="launcher_googlediscover_title">Habilitar Google Discover</string>
     <string name="launcher_googlediscover_summ">Reemplazar App Vault con Google Discover (requiere que la aplicación Google esté instalada)</string>
     <string name="launcher_nowidgetonly_title">Deshabilitar la pantalla de solo widgets</string>

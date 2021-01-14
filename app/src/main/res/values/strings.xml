@@ -482,7 +482,10 @@
 	<string name="launcher_infinitescroll_summ">Jump from the last page to the first one and vice versa</string>
 	<string name="launcher_noclockhide_title">No clock hide</string>
 	<string name="launcher_noclockhide_summ">Do not hide status bar clock on pages with clock widgets</string>
-	<string name="launcher_googlediscover_title">Enable Google Discover</string>
+	<string name="launcher_googleminus_title">Enable -1 screen switch</string>
+	<string name="launcher_googleminus_summ">Display a switch between App Vault and Google Discover in Home screen settings</string>
+	<string name="launcher_googleminus_note">Requires global (international) ROM</string>
+	<string name="launcher_googlediscover_title">Force Google Discover</string>
 	<string name="launcher_googlediscover_summ">Replace App Vault with Google Discover (requires Google app to be installed)</string>
 	<string name="launcher_nowidgetonly_title">Disable widget only screen</string>
 	<string name="launcher_nowidgetonly_summ">Make all screens support both widgets and apps on tablets</string>

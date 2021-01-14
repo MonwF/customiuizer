@@ -689,7 +689,7 @@ public class GlobalActions {
 
 	public static boolean useOwnRepo = false;
 
-	public static void miuizerEdXposedManagerHook(LoadPackageParam lpparam) {
+	public static void miuizerEdXposedManagerHook(LoadPackageParam lpparam, Application app) {
 		Helpers.hookAllMethodsSilently("org.meowcat.edxposed.manager.ModulesFragment$ModuleAdapter", lpparam.classLoader, "getView", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
@@ -721,33 +721,12 @@ public class GlobalActions {
 			}
 		});
 
+		if (app == null || !Helpers.getSharedBoolPref(app, "pref_key_miuizer_ownrepo", false)) return;
+
 		Helpers.hookAllMethods("de.robv.android.xposed.installer.XposedApp", lpparam.classLoader, "onCreate", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				useOwnRepo = Helpers.getSharedBoolPref((Application)param.thisObject, "pref_key_miuizer_ownrepo", false);
-			}
-		});
-
-		Helpers.findAndHookMethod("org.meowcat.edxposed.manager.util.RepoLoader", lpparam.classLoader, "refreshRepositories", new MethodHook() {
-			@Override
-			protected void before(MethodHookParam param) throws Throwable {
-				if (!useOwnRepo) return;
-				String DEFAULT_REPOSITORIES = (String)XposedHelpers.getStaticObjectField(param.thisObject.getClass(), "DEFAULT_REPOSITORIES");
-				if (!DEFAULT_REPOSITORIES.contains(Helpers.xposedRepo))
-				XposedHelpers.setStaticObjectField(param.thisObject.getClass(), "DEFAULT_REPOSITORIES", Helpers.xposedRepo + "|" + DEFAULT_REPOSITORIES);
-			}
-		});
-
-		Helpers.hookAllMethods("org.meowcat.edxposed.manager.repo.RepoDb", lpparam.classLoader, "insertModule", new MethodHook() {
-			@Override
-			protected void before(MethodHookParam param) throws Throwable {
-				if (!useOwnRepo) return;
-				String pkgName = (String)XposedHelpers.getObjectField(param.args[1], "packageName");
-				if (!Helpers.modulePkg.equals(pkgName)) return;
-				SQLiteDatabase sDb = (SQLiteDatabase)XposedHelpers.getStaticObjectField(findClass("org.meowcat.edxposed.manager.repo.RepoDb", lpparam.classLoader), "sDb");
-				Cursor query = sDb.query("modules", new String[]{ "repo_id" }, "pkgname = ?", new String[]{ Helpers.modulePkg }, null, null, null, "1");
-				if (query.getCount() > 0) param.setResult(null);
-				query.close();
 			}
 		});
 
@@ -811,6 +790,29 @@ public class GlobalActions {
 
 				container1.addView(container2);
 				container.addView(container1);
+			}
+		});
+
+		Helpers.findAndHookMethod("org.meowcat.edxposed.manager.util.RepoLoader", lpparam.classLoader, "refreshRepositories", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				if (!useOwnRepo) return;
+				String DEFAULT_REPOSITORIES = (String)XposedHelpers.getStaticObjectField(param.thisObject.getClass(), "DEFAULT_REPOSITORIES");
+				if (!DEFAULT_REPOSITORIES.contains(Helpers.xposedRepo))
+				XposedHelpers.setStaticObjectField(param.thisObject.getClass(), "DEFAULT_REPOSITORIES", Helpers.xposedRepo + "|" + DEFAULT_REPOSITORIES);
+			}
+		});
+
+		Helpers.hookAllMethods("org.meowcat.edxposed.manager.repo.RepoDb", lpparam.classLoader, "insertModule", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				if (!useOwnRepo) return;
+				String pkgName = (String)XposedHelpers.getObjectField(param.args[1], "packageName");
+				if (!Helpers.modulePkg.equals(pkgName)) return;
+				SQLiteDatabase sDb = (SQLiteDatabase)XposedHelpers.getStaticObjectField(findClass("org.meowcat.edxposed.manager.repo.RepoDb", lpparam.classLoader), "sDb");
+				Cursor query = sDb.query("modules", new String[]{ "repo_id" }, "pkgname = ?", new String[]{ Helpers.modulePkg }, null, null, null, "1");
+				if (query.getCount() > 0) param.setResult(null);
+				query.close();
 			}
 		});
 	}

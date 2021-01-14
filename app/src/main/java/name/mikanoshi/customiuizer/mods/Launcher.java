@@ -1106,6 +1106,38 @@ public class Launcher {
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
+		//noinspection ResultOfMethodCallIgnored
+		Helpers.findAndHookMethodSilently("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "isUseGoogleMinusScreen", XC_MethodReplacement.returnConstant(true));
+	}
+
+	@SuppressWarnings("unchecked")
+	public static void GoogleMinusScreenHook(final LoadPackageParam lpparam) {
+		try {
+			Class<?> configCls = XposedHelpers.findClass("com.miui.home.launcher.DeviceConfig", lpparam.classLoader);
+
+			XposedHelpers.setStaticBooleanField(XposedHelpers.findClass("com.miui.home.launcher.DeviceConfig", lpparam.classLoader), "CAN_SWITCH_MINUS_SCREEN", true);
+			XposedHelpers.setStaticBooleanField(XposedHelpers.findClass("com.miui.home.launcher.DeviceConfig", lpparam.classLoader), "ONLY_USE_GOOGLE_MINUS_SCREEN", false);
+			//XposedHelpers.setStaticBooleanField(XposedHelpers.findClass("com.miui.home.launcher.DeviceConfig", lpparam.classLoader), "IS_USE_GOOGLE_MINUS_SCREEN", true);
+
+			HashSet<String> SELECT_MINUS_SCREEN_CLIENT_ID = (HashSet<String>)XposedHelpers.getStaticObjectField(configCls, "SELECT_MINUS_SCREEN_CLIENT_ID");
+			SELECT_MINUS_SCREEN_CLIENT_ID.add("");
+
+			//HashSet<String> USE_GOOGLE_MINUS_SCREEN_REGIONS = (HashSet<String>)XposedHelpers.getStaticObjectField(configCls, "USE_GOOGLE_MINUS_SCREEN_REGIONS");
+			//String CURRENT_REGION = (String)XposedHelpers.getStaticObjectField(configCls, "CURRENT_REGION");
+			//USE_GOOGLE_MINUS_SCREEN_REGIONS.add(CURRENT_REGION);
+		} catch (Throwable t) {
+			Helpers.log("GoogleMinusScreenHook", t.getMessage());
+		}
+
+//		Helpers.hookAllMethods("com.miui.home.settings.MiuiHomeSettings", lpparam.classLoader, "onCreatePreferences", new MethodHook() {
+//			@Override
+//			protected void before(final MethodHookParam param) throws Throwable {
+//				XposedBridge.log("IS_INTERNATIONAL_BUILD: " + XposedHelpers.getStaticBooleanField(XposedHelpers.findClass("miui.os.Build", null), "IS_INTERNATIONAL_BUILD"));
+//				Class<?> configCls = XposedHelpers.findClass("com.miui.home.launcher.DeviceConfig", lpparam.classLoader);
+//				XposedBridge.log("CAN_SWITCH_MINUS_SCREEN: " + XposedHelpers.getStaticObjectField(configCls, "CAN_SWITCH_MINUS_SCREEN"));
+//				XposedBridge.log("ONLY_USE_GOOGLE_MINUS_SCREEN: " + XposedHelpers.getStaticObjectField(configCls, "ONLY_USE_GOOGLE_MINUS_SCREEN"));
+//			}
+//		});
 	}
 
 	public static void ShowHotseatTitlesRes() {

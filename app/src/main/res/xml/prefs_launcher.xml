@@ -222,7 +222,15 @@
 			android:title="@string/launcher_noclockhide_title"
 			android:summary="@string/launcher_noclockhide_summ"
 			android:defaultValue="false" />
-
+<!--
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_launcher_googleminus"
+			android:title="@string/launcher_googleminus_title"
+			android:summary="@string/launcher_googleminus_summ"
+			android:disableDependentsState="true"
+			android:defaultValue="false" />
+		android:dependency="pref_key_launcher_googleminus"
+-->
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_googlediscover"
 			android:title="@string/launcher_googlediscover_title"
