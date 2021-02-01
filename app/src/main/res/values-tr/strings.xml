@@ -417,7 +417,7 @@
     <string name="launcher_hideseekpoints_summ">Sayfa Göstergesi sadece sayfalar arası geçişlerde görünür.</string>
     <string name="launcher_hideseekpoints_edit_title">Yalnızca düzenleme modunda göster</string>
     <string name="launcher_unlockgrids_title">Ana Ekran Düzeni</string>
-    <string name="launcher_unlockgrids_summ">Ana Ekran Düzeni\'ne daha fazla seçenek ekler (3x4 - 8x8)</string>
+    <string name="launcher_unlockgrids_summ">Ana Ekran Düzeni\'ne daha fazla seçenek ekler (3x4 - 10x10)</string>
     <string name="launcher_unlockhotseat_title">Dock içindeki diğer simgeler</string>
     <string name="launcher_unlockhotseat_summ">Sınırsız sayıda dock simgesi</string>
     <string name="launcher_iconscale_title">Simge Boyutu</string>

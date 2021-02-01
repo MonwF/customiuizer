@@ -417,7 +417,7 @@
     <string name="launcher_hideseekpoints_summ">Seitenanzeige nur während des Bildlaufs anzeigen</string>
     <string name="launcher_hideseekpoints_edit_title">Nur im Bearbeitungsmodus anzeigen</string>
     <string name="launcher_unlockgrids_title">Schaltet Rastergrößen frei</string>
-    <string name="launcher_unlockgrids_summ">Stellt alle Rastergrößen von 3x4 bis 8x8 in der Layouteinstellung des Startbildschirms zur Verfügung</string>
+    <string name="launcher_unlockgrids_summ">Stellt alle Rastergrößen von 3x4 bis 10x10 in der Layouteinstellung des Startbildschirms zur Verfügung</string>
     <string name="launcher_unlockhotseat_title">Weitere Symbole im Dock</string>
     <string name="launcher_unlockhotseat_summ">Unbegrenzte Anzahl von Dock-Symbolen</string>
     <string name="launcher_iconscale_title">Skalierung von Symbolen</string>

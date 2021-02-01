@@ -485,7 +485,7 @@
     <string name="launcher_hideseekpoints_summ">Mostrar indicador de página apenas durante a rolagem</string>
     <string name="launcher_hideseekpoints_edit_title">Mostrar apenas no modo de edição</string>
     <string name="launcher_unlockgrids_title">Desbloquear tamanhos de grade</string>
-    <string name="launcher_unlockgrids_summ">Disponibilize todos os tamanhos de grade de 3x4 a 8x8 na configuração de layout da tela inicial</string>
+    <string name="launcher_unlockgrids_summ">Disponibilize todos os tamanhos de grade de 3x4 a 10x10 na configuração de layout da tela inicial</string>
     <string name="launcher_unlockhotseat_title">Mais ícones no dock</string>
     <string name="launcher_unlockhotseat_summ">Número ilimitado de ícones no dock</string>
     <string name="launcher_iconscale_title">Escala de ícones</string>

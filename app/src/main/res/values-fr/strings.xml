@@ -1,0 +1,915 @@
+<?xml version="1.0"?>
+<resources>
+    <string name="app_about">A propos</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="about_dev">Par Mikanoshi</string>
+    <string name="about_dynamic">Généralement, les mods nécessitent un redémarrage doux pour être activés ou désactivés, mais ceux marqués avec ⟲ ne nécessitent qu\'un redémarrage doux après que leur valeur ait été changée de par défaut à personnalisée, les modifications suivantes sont appliquées immédiatement.</string>
+    <string name="about_unsupported">"Les mods marqués d'un ⨯ ne sont pas supportés sur cet appareil "</string>
+    <string name="title_snoozed">Notifications mises en attente</string>
+    <string name="menu_update">Mise à jour</string>
+    <string name="snooze_unsnooze">Annuler la mise en attente de cette notification</string>
+    <string name="snooze_cancel">Marquer comme rejeté</string>
+    <string name="snooze_restore">Marquer comme en attente</string>
+    <string name="snooze_fetch_fail">Impossible de récupérer la liste des notifications mises en attente</string>
+    <string name="snooze_empty">Aucune notification mise en attente</string>
+    <string name="snooze_messages">Messages</string>
+    <string name="snooze_channel">Canal</string>
+    <string name="snooze_created">"Créé(e-s) "</string>
+    <string name="snooze_updated">Mis à jour</string>
+    <string name="snooze_repost">Republier</string>
+    <string name="mods">Modifications</string>
+    <string name="mods_actions">Actions</string>
+    <string name="enable_mod">Activer la modification</string>
+    <string name="system_mods">Système</string>
+    <string name="system_mods_screen">Écran</string>
+    <string name="system_mods_screen_rotation">Rotation</string>
+    <string name="system_mods_screen_backlight">Rétroéclairage</string>
+    <string name="system_mods_audio">Audio</string>
+    <string name="system_mods_vibration">Vibration</string>
+    <string name="system_mods_toasts">Toasts</string>
+    <string name="system_statusbaricons_title">Cacher les icônes</string>
+    <string name="system_statusbaricons_summ">Gérer les icônes visibles dans la barre de statut</string>
+    <string name="system_statusbaricons_battery1_title">Icône de la batterie</string>
+    <string name="system_statusbaricons_battery2_title">Pourcentage de la charge de batterie</string>
+    <string name="system_statusbaricons_battery3_title">Indicateur de charge</string>
+    <string name="system_statusbaricons_battery_summ">Peut se placer au dessus de l\'icône de batterie pour certaines ROMs</string>
+    <string name="system_statusbaricons_alarm_title">Alarme</string>
+    <string name="system_statusbaricons_alarm_summ">Cacher complètement</string>
+    <string name="system_statusbaricons_alarmn_title">Sélectionner la visibilité de l\'icône d\'alarme</string>
+    <string name="system_statusbaricons_alarmn_summ">Afficher l\'icône d\'alarme uniquement durant le délai définit avant la prochaine alarme</string>
+    <string name="system_statusbaricons_signal_title">Signal réseaux téléphonique</string>
+    <string name="system_statusbaricons_nosims_title">Pas de carte SIM</string>
+    <string name="system_statusbaricons_hotspot_title">Relai</string>
+    <string name="system_statusbaricons_profile_title">Profile de travail</string>
+    <string name="system_statusbaricons_sound_title">Profils de son</string>
+    <string name="system_statusbaricons_dnd_title">"Mode Ne pas déranger "</string>
+    <string name="system_statusbaricons_headset_title">Casque</string>
+    <string name="system_statusbaricons_mute_title">Appel: micro éteint</string>
+    <string name="system_statusbaricons_speaker_title">Appel: haut-parleur</string>
+    <string name="system_statusbaricons_record_title">Appel: enregistrement en cours</string>
+    <string name="system_batteryindicator_title">Barre indicatrice de batterie</string>
+    <string name="system_batteryindicator_summ">Afficher le niveau de charge de la batterie sous forme de barre</string>
+    <string name="system_batteryindicator_limitvis_title">"Visibilité limitée "</string>
+    <string name="system_batteryindicator_limitvis_summ">Afficher uniquement dans le panneau de notification et sur l\'écran de verrouillage</string>
+    <string name="system_batteryindicator_rounded_title">Bords arrondis</string>
+    <string name="system_batteryindicator_centered_title">"Centré "</string>
+    <string name="system_batteryindicator_height_title">Hauteur de la barre</string>
+    <string name="system_batteryindicator_padding_title">Déplacement horizontal</string>
+    <string name="system_batteryindicator_colorval1_title">Couleur de charge complète</string>
+    <string name="system_batteryindicator_colorval2_title">Couleur de batterie faible</string>
+    <string name="system_batteryindicator_colorval3_title">Couleur d\'économie de batterie</string>
+    <string name="system_batteryindicator_colorval4_title">"Couleur de chargement de batterie "</string>
+    <string name="system_batteryindicator_lowlevel_title">Niveau de batterie faible</string>
+    <string name="system_batteryindicator_test_title">Test</string>
+    <string name="system_batteryindicator_test_summ">Animer la barre de 100% à 0% en déchargement</string>
+    <string name="system_statusbarheight_title">"Hauteur de la part de statut "</string>
+    <string name="system_statusbarcolor_title">"Couleur de fond de la barre de statut "</string>
+    <string name="system_statusbarcolor_summ">Faire en sorte que la couleur de fond de la barre de statut et de la barre d\'action d\'application soit la même lorsque possible</string>
+    <string name="system_statusbarcolor_apps_title">Liste noire</string>
+    <string name="system_shortcut_app_title">Raccourci d\'application</string>
+    <string name="system_shortcut_app_summ">Ouvrir l\'application sélectionnée lorsque l\'icône de raccourci dans le haut du panneau de notification est touchée</string>
+    <string name="system_clock_app_title">Horloge</string>
+    <string name="system_clock_app_summ">Ouvrir l\'application sélectionnée lorsque l\'horloge dans le haut du panneau de notification est tapée</string>
+    <string name="system_calendar_app_title">Calendrier</string>
+    <string name="system_calendar_app_summ">"Ouvrir l\'application sélectionnée lorsque l\'utilisateur appuie sur la date dans le haut du panneau de notification "</string>
+    <string name="system_clockseconds_title">"Afficher les secondes "</string>
+    <string name="system_clockseconds_summ">Afficher les secondes pour l\'horloge dans la barre de status</string>
+    <string name="system_maxsbicons_title">Limite d\'icônes de notification</string>
+    <string name="system_maxsbicons_summ">"Nombre d'icônes de notification à afficher avant de les changer en '...' "</string>
+    <string name="system_mobiletypeicon_title">Cacher le type de réseau mobile</string>
+    <string name="system_mobiletypeicon_summ">Enlever l\'icône de type de réseau mobile dans la barre de statut</string>
+    <string name="system_4gtolte_title">Afficher l\'icône LTE pour la 4G</string>
+    <string name="system_hidemoreicon_title">"Pas d'indicateur d'icônes cachées "</string>
+    <string name="system_hidemoreicon_summ">"Ne pas afficher l'icône avec 3 points lorsque des icônes de notifications sont cachées "</string>
+    <string name="system_nonetspeedseparator_title">"Pas de séparateur de vitesse de connexion "</string>
+    <string name="system_nonetspeedseparator_summ">Ne pas afficher la barre verticale entre l\'horloge et la vitesse de connexion sur les appareil avec une encoche goutte-d\'eau</string>
+    <string name="system_netspeedinterval_title">Interval de rafraîchissement de la vitesse de connexion</string>
+    <string name="system_detailednetspeed_title">"Indicateur détaillé de vitesse de connexion "</string>
+    <string name="system_detailednetspeed_summ">"Afficher la vitesse de connexion entrante et sortante séparément "</string>
+    <string name="system_detailednetspeed_font_title">Táille de police</string>
+    <string name="system_detailednetspeed_icon_title">Icônes d\'indicateur</string>
+    <string name="system_detailednetspeed_icon_summ">"Icônes pour la connexion entrante/sortante affichées a côté de la vitesse (toutes les polices customises n'ont pas toutes les icones) "</string>
+    <string name="system_detailednetspeed_low_title">Cacher les basses vitesses</string>
+    <string name="system_detailednetspeed_low_summ">Ne pas afficher l\'indicateur si la vitesse est basse</string>
+    <string name="system_detailednetspeed_lowlevel_title">Niveau de vitesse bas</string>
+    <string name="system_detailednetspeed_lowlevel_summ">"Les vitesses en dessous de cette valeur seront considérées basse et seront de ce fait affichées différemment "</string>
+    <string name="system_detailednetspeed_zero_title">Réduire la visibilité lorsque inactif</string>
+    <string name="system_detailednetspeed_zero_summ">Rendre les indicateurs semi-transparents lorsque les deux vitesses valent 0</string>
+    <string name="system_statusbarcontrols_title">Contrôles par gestes</string>
+    <string name="system_statusbarcontrols_summ">Produire l\'action sélectionnée lors d\'un glissement sur l\'écran et d\'un double tap</string>
+    <string name="system_statusbarcontrols_sens_title">Sensibilité d\'ajustement</string>
+    <string name="system_statusbarcontrols_sens_bright_title">"Luminosité "</string>
+    <string name="system_statusbarcontrols_sens_vol_title">Volume</string>
+    <string name="system_statusbarcontrols_single_title">Glissement horizontal avec un doigt</string>
+    <string name="system_statusbarcontrols_dual_title">Glissement horizontal avec deux doigts</string>
+    <string name="system_statusbarcontrols_dt_title">Action de double tap</string>
+    <string name="system_fixmeter_title">Espacement des vitesses de connexion</string>
+    <string name="system_fixmeter_summ">Augmenter la marge horizontale pour l\'indicateur de vitesse de connexion</string>
+    <string name="system_compactnotif_title">Notifications compactes</string>
+    <string name="system_compactnotif_summ">Réduire le déplacement vertical des notifications</string>
+    <string name="system_colorizenotiftitle_title">Colorer le titre des notifications</string>
+    <string name="system_colorizenotiftitle_summ">"Appliquer la couleur de l\'icône au titre (uniquement pour le style de notification Android) "</string>
+    <string name="system_minimalnotifview_title">Retourner à la vue compacte minimaliste</string>
+    <string name="system_minimalnotifview_summ">Les notifications d\'importance minimale pourraient de nouveau être réduites en une seule ligne</string>
+    <string name="system_notifchannelsettings_title">Ouvrir les paramètres du canal</string>
+    <string name="system_removedismiss_title">Cacher le bouton effacer</string>
+    <string name="system_removedismiss_summ">"Enlever le bouton pour effacer toutes les notifications "</string>
+    <string name="system_showlux_title">"Afficher le niveau d'éclairage "</string>
+    <string name="system_showlux_summ">"Afficher la valeur d'éclairage ambiant en lux dans la barre de luminosité "</string>
+    <string name="system_showlux_style_title">Style alternatif</string>
+    <string name="system_showlux_style_summ">"Large texte semi-transparent "</string>
+    <string name="system_showpct_title">Afficher le pourcentage de luminosité</string>
+    <string name="system_showpct_summ">"Afficher le niveau de luminosité en pourcentages lors du réglage de la luminosité "</string>
+    <string name="system_showpct_top_title">Pourcentages de marge haute du panneau</string>
+    <string name="system_inactivebrightness_title">"Désactiver la barre de réglage de la luminosité "</string>
+    <string name="system_notifrowmenu_title">"Menu de notification étendu "</string>
+    <string name="system_notifrowmenu_summ">"Ouvrir les infos d'application et forcer la fermeture depuis le menu de notification (déplacer la notification vers la gauche pour l'ouvrir) "</string>
+    <string name="system_disableanynotif_title">"Désactiver toutes les notifications "</string>
+    <string name="system_disableanynotif_summ">"Autoriser à désactiver aussi les notifications systèmes "</string>
+    <string name="system_expandnotifs_title">"Étendre les notifications "</string>
+    <string name="system_expandnotifs_summ">"Afficher les notifications pleinement étendues "</string>
+    <string name="system_expandnotifs_apps_title">Liste noire et blanche</string>
+    <string name="system_toasttime_title">Afficher la date de modification</string>
+    <string name="system_toasttime_summ">Changer à la fois la durée courte et longue</string>
+    <string name="system_toasttime_note">La durée qui en résultent ne descendra pas en dessous de 1 seconde</string>
+    <string name="system_autogroupnotif_title">"Grouper automatiquement les notifications "</string>
+    <string name="system_autogroupnotif_summ">Nombre de notifications d\'une application déclenchant le groupement automatique</string>
+    <string name="system_snoozedmanager_title">Gérer les notifications en attente</string>
+    <string name="system_snoozedmanager_summ">Augmenter les intervalles d\'attente et ajouter l\'icône qui ouvre une liste des notifications actuellement en attentes au lanceur d\'application</string>
+    <string name="system_notifmediaseekbar_title">"Curseur de position du média "</string>
+    <string name="system_notifmediaseekbar_summ">Ajouter un curseur de notification de média indiquant la position actuelle et autorisant sa modification</string>
+    <string name="system_notifmediaseekbar_full_title">"Utiliser le style système "</string>
+    <string name="system_notifmediaseekbar_full_summ">Ne pas appliquer le style fin personnalisé au curseur</string>
+    <string name="system_popupnotif_title">"Ouvrir automatiquement le panneau de notification "</string>
+    <string name="system_popupnotif_summ">"Ouvrir automatiquement le panneau de notification pour les notifications des applications sélectionnées "</string>
+    <string name="system_popupnotif_fs_title">"Respecter le plein écran "</string>
+    <string name="system_popupnotif_fs_summ">Ne pas ouvrir le panneau de notification quand le mode plein écran est actif (ne s\'applique pas aux applications immersives avec la barre de statut et de navigation cachées)</string>
+    <string name="system_popupnotif_apps_title">"Applications sélectionnées "</string>
+    <string name="system_mods_screenshots">"Capture d'écran "</string>
+    <string name="system_screenshot_title">"Configuration des captures d'écran "</string>
+    <string name="system_screenshot_summ">Personnaliser le format, la qualité et le dossier de sauvegarde pour les captures d\'ecran</string>
+    <string name="system_screenshot_format_title">Format</string>
+    <string name="system_screenshot_quality_title">"Qualité "</string>
+    <string name="system_screenshot_path_title">Dossier de sauvegarde</string>
+    <string name="system_screenshot_overlay_title">"Cacher l'aperçu pour les captures d'écran "</string>
+    <string name="system_screenshot_overlay_summ">Désactiver temporairement les superpositions pendant la capture d\'ecran</string>
+    <string name="system_screenshot_floattime_title">"Temps d'affichage de l'aperçu de capture d'écran "</string>
+    <string name="system_screenshot_floattime_summ">"Délai avant qu'une fenêtre flottante d'une capture d'écran fraîchement crée ne disparaisse "</string>
+    <string name="system_chargeanimtime_title">"Délai de désactivation de l'écran d'animation de charge "</string>
+    <string name="system_chargeanimtime_summ">Durée de maintient de l\'écran allumé après le début de l\'animation de charge</string>
+    <string name="system_nolightuponcharges_title">Ne pas allumer l\'écran lors de la charge</string>
+    <string name="system_nolightuponcharges_summ">Ne pas allumer l\'écran lors de la (dé)connexion d\'un chargeur</string>
+    <string name="system_nolightuponheadset_title">"Ne pas allumer l'écran lors du branchement d'un casque "</string>
+    <string name="system_nolightuponheadset_summ">Ne pas allumer l\'écran lors du branchement d\'un casque</string>
+    <string name="system_lstimeout_title">"Délai avant extinction de l'écran de verrouillage "</string>
+    <string name="system_dimtime_title">Durée de rétro-éclairage</string>
+    <string name="system_dimtime_summ">"Durée de maintient de l'écran allumé avant de s'éteindre automatiquement (en pourcentage du délai total d'extinction de l'écran) "</string>
+    <string name="system_autobrightness_title">"Intervalle de luminosité automatique "</string>
+    <string name="system_autobrightness_summ">"Définir les valeurs minimum et maximum de la luminosité automatique "</string>
+    <string name="system_minbrightness_title">"Luminosité automatique minimum "</string>
+    <string name="system_maxbrightness_title">Luminosité automatique maximum</string>
+    <string name="system_autobrightness_hlg_title">"Toujours utiliser une échelle non linéaire "</string>
+    <string name="system_autobrightness_hlg_summ">Activer si le pourcentage de luminosité dans les mods ne correspond pas à celui d\'android pour des versions strictement inférieures à 9</string>
+    <string name="system_nosafevolume_title">Désactiver l\'alerte de volume fort</string>
+    <string name="system_nosafevolume_summ">"Ne pas afficher la boîte de dialogue l'orque le volume atteint un niveau possiblement dangereux "</string>
+    <string name="system_noducking_title">"Désactiver l'effet 'ducking' "</string>
+    <string name="system_noducking_summ">Ne pas baisser le volume de la musique en cours pour jouer le son de notification</string>
+    <string name="system_firstpress_title">Ajustement immédiat du volume</string>
+    <string name="system_firstpress_summ">Ajuster le volume du média en cours au premier appui</string>
+    <string name="system_separatevolume_title">Contrôles de volume séparés</string>
+    <string name="system_separatevolume_summ">"Autoriser la configuration séparée du volume pour les sonneries/notifications/sons systèmes dans les Paramètres "</string>
+    <string name="system_separatevolume_slider_title">Curseur de volume de notifications</string>
+    <string name="system_separatevolume_slider_summ">Ajouter un curseur dans les notifications pour étendre la boîte de dialogue du volume</string>
+    <string name="system_volumetimer_title">"Minuterie prolongée "</string>
+    <string name="system_volumetimer_summ">"Ajouter plus d'intervalles aux minuteries pour les modes Silencieux et Ne Pas Déranger "</string>
+    <string name="system_volumesteps_title">"Multiplicateur de palier de volume "</string>
+    <string name="system_volumesteps_summ">Modifier le nombre de paliers de volume pour chaque type de sortie son</string>
+    <string name="system_visualizer_title">Visualisateur de musique</string>
+    <string name="system_visualizer_summ">Afficher la densité spectrale des bandes de fréquences des son discrets</string>
+    <string name="system_visualizer_lockscreen_summ">"Le visualisateur est dessiné au dessus du fond d'écran de verrouillage "</string>
+    <string name="system_visualizer_custom_title">"Afficher sur l'écran de verrouillage personnalisé "</string>
+    <string name="system_visualizer_custom_summ">"Dessiner le visualisateur au dessus de l'écran de verrouillage personnalisé "</string>
+    <string name="system_visualizer_drawer_title">Afficher dans le panneau de notification</string>
+    <string name="system_visualizer_drawer_summ">Dessiner le visualisateur aussi dans le panneau de notification étendu</string>
+    <string name="system_visualizer_controller_title">"Afficher uniquement si un contrôleur de média existe "</string>
+    <string name="system_visualizer_controller_summ">Les applications jouant du son le créer habituellement pour les notifications avec des contrôles de media</string>
+    <string name="system_visualizer_animdur_title">Durée de l\'animation</string>
+    <string name="system_visualizer_transp_title">Transparence</string>
+    <string name="system_visualizer_render_title">Méthode de rendu</string>
+    <string name="system_visualizer_style_title">Style</string>
+    <string name="system_visualizer_glowlevel_title">Brille</string>
+    <string name="system_visualizer_color_title">Couleur</string>
+    <string name="system_visualizer_colorval_title">"Sélectionner une couleur personnalisée "</string>
+    <string name="system_visualizer_dyntime_title">Interval de changement de couleur dynamique</string>
+    <string name="system_ignorecalls_title">Ignorer les appels</string>
+    <string name="system_ignorecalls_summ">Empêcher les appels entrant de voler le focus audio dans les applications sélectionnées et de notifier à propos du changement de statut d\'appel</string>
+    <string name="system_nosilentvibrate_title">Pas de vibration de test</string>
+    <string name="system_nosilentvibrate_summ">Ne pas vibrer lors du changement de mode de sonnerie vers silencieux ou vibration dans ce mode</string>
+    <string name="system_vibration_amp_title">Vibration atténuée</string>
+    <string name="system_vibration_amp_summ">"Réduire l'intensité des vibrations durant la période sélectionnée "</string>
+    <string name="system_vibration_amp_val_title">Intensité des vibrations</string>
+    <string name="system_vibration_amp_val_summ">Modifier soit la durée soit la force des vibrations, en fonction du support des contrôles d\'amplitude sur ce telephone</string>
+    <string name="system_vibration_amp_ringer_title">Appels</string>
+    <string name="system_vibration_amp_notif_title">"Notifications "</string>
+    <string name="system_vibration_amp_other_title">Tous les autres</string>
+    <string name="system_vibration_amp_period_title">"Période de temps "</string>
+    <string name="system_vibration_title">Bloquer les vibrations</string>
+    <string name="system_vibration_summ">"Empêcher les applications sélectionner d'utiliser les vibrations "</string>
+    <string name="system_volume">"Sons systèmes "</string>
+    <string name="system_scramblepin_title">Mélanger le PIN</string>
+    <string name="system_scramblepin_summ">Changer aléatoirement l\'ordre des chiffres pour le PIN</string>
+    <string name="system_securelock_title">"Écran de verrouillage amélioré "</string>
+    <string name="system_securelock_summ">Désactiver le menu d\'extinction tant que l\'écran de verrouillage est actif</string>
+    <string name="system_nopassword_title">Pas de mot de basse après allumage</string>
+    <string name="system_nopassword_summ">Ne pas demander le mot de passe à la place des empreintes digitales la première fois après allumage. Risque de ne pas marcher sur les appareils encryptés</string>
+    <string name="system_albumartonlock_title">"Couverture de l'album en tant que fond d'écran "</string>
+    <string name="system_albumartonlock_summ">"Afficher la couverture d'album de la musique jouée en tant que fond d'écran de verrouillage "</string>
+    <string name="system_albumartonlock_gray_title">Échelles de gris</string>
+    <string name="system_albumartonlock_gray_summ">Convertir la couverture d\'album en noir&amp;blanc</string>
+    <string name="system_albumartonlock_blur_title">Flouter la couverture d\'album</string>
+    <string name="system_albumartonlock_scale_title">Échelle de la couverture d\'album</string>
+    <string name="system_credentials_title">"Déverrouiller les informations d'identification "</string>
+    <string name="system_credentials_summ">L\'authentification pour certaines applications requiert l\'accès aux identifiants, mais ceux-ci restent bloqués si le PIN/Mot de passe/Schéma est sauté après démarrage. Cette option ajoute une icone permettant de débloquer les identifiants</string>
+    <string name="system_lockscreenshortcuts_title">Actions personnalisées</string>
+    <string name="system_lockscreenshortcuts_summ">Actions personnalisées pour les raccourcis et les swipes</string>
+    <string name="system_lockscreenshortcuts_right_off_title">Désactivé le geste de défilement gauche</string>
+    <string name="system_lockscreenshortcuts_right_title">Action de défilement gauche</string>
+    <string name="system_lockscreenshortcuts_right_image_title">"Changer l'icône droite "</string>
+    <string name="system_lockscreenshortcuts_right_image_summ">Remplacer l\'icône de caméra par l\'icône de CustoMIUIzer</string>
+    <string name="system_lockscreenshortcuts_right_image_hint">"Faites glisser l'icône pour exécuter une action personnalisée "</string>
+    <string name="system_lockscreenshortcuts_left_off_title">Désactiver le geste de défilement droit</string>
+    <string name="system_lockscreenshortcuts_left_title">"Raccourcis de la gauche de l'écran "</string>
+    <string name="system_lockscreenshortcuts_left_summ">Gérer la liste des raccourcis</string>
+    <string name="system_lockscreenshortcuts_left_align_title">Alignement vertical</string>
+    <string name="system_lockscreenshortcuts_left_skiplock_title">Déverrouillage non requis</string>
+    <string name="system_lockscreenshortcuts_left_skiplock_summ">"Les applications lancées seraient accessibles avec l'appareil toujours verrouillé "</string>
+    <string name="system_noscreenlock_title">Désactiver l\'écran de verouillage</string>
+    <string name="system_noscreenlock_req_summ">"Certain appareil ne fonctionneront pas sans un déverrouillage préalable après démarrage "</string>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	s
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+
+	
+	
+	
+    <string name="warning">Attention!</string>
+</resources>

@@ -425,7 +425,7 @@
     <string name="launcher_hideseekpoints_summ">Показує індикатор лише під час прокрутки</string>
     <string name="launcher_hideseekpoints_edit_title">Показувати лише в режимі редагування</string>
     <string name="launcher_unlockgrids_title">Розблокувати розміри сітки</string>
-    <string name="launcher_unlockgrids_summ">Робить все розміри від 3x4 до 8x8 доступними в налаштуваннях сітки робочого столу</string>
+    <string name="launcher_unlockgrids_summ">Робить все розміри від 3x4 до 10x10 доступними в налаштуваннях сітки робочого столу</string>
     <string name="launcher_unlockhotseat_title">Більше іконок в доці</string>
     <string name="launcher_unlockhotseat_summ">Необмежена кількість іконок в доці робочого столу</string>
     <string name="launcher_iconscale_title">Масштаб значків</string>

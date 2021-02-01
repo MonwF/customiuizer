@@ -471,7 +471,10 @@
     <string name="launcher_infinitescroll_summ">从末页跳到首页，反之亦然</string>
     <string name="launcher_noclockhide_title">不隐藏时钟</string>
     <string name="launcher_noclockhide_summ">时钟小部件所在页面不隐藏状态栏时钟</string>
-    <string name="launcher_googlediscover_title">启用Google探索</string>
+    <string name="launcher_googleminus_title">启用 -1 屏幕开关</string>
+    <string name="launcher_googleminus_summ">在主屏幕设置中的App Vault和Google Discover间显示一个开关</string>
+    <string name="launcher_googleminus_note">需要全球版(国际版)ROM</string>
+    <string name="launcher_googlediscover_title">强制Google探索</string>
     <string name="launcher_googlediscover_summ">将App Vault替换为Google探索(需要安装Google应用)</string>
     <string name="launcher_nowidgetonly_title">禁用小部件，仅屏幕</string>
     <string name="launcher_nowidgetonly_summ">令所有屏幕平板上的支持小部件和应用</string>
@@ -485,7 +488,7 @@
     <string name="launcher_hideseekpoints_summ">仅在滚动时显示页面指示器</string>
     <string name="launcher_hideseekpoints_edit_title">仅在编辑模式中显示</string>
     <string name="launcher_unlockgrids_title">解锁网格大小</string>
-    <string name="launcher_unlockgrids_summ">可在主屏幕布局设置中使用3x4到8x8之间的所有网格大小</string>
+    <string name="launcher_unlockgrids_summ">可在主屏幕布局设置中使用3x4到10x10之间的所有网格大小</string>
     <string name="launcher_unlockhotseat_title">增加底栏图标</string>
     <string name="launcher_unlockhotseat_summ">解除底栏图标数量的限制</string>
     <string name="launcher_iconscale_title">图标缩放</string>

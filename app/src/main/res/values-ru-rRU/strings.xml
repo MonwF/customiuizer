@@ -54,6 +54,8 @@
 	<string name="various_mods">Различное</string>
 	<string name="various_alarmcompat_title">Совместимость будильника</string>
 	<string name="various_alarmcompat_summ">Позволяет выбранным приложениям правильно показывать время следующего будильника, установленного стандартным приложением часов MIUI</string>
+	<string name="various_unlockfps_title">Разблокировать частоту кадров</string>
+	<string name="various_unlockfps_summ">Делает доступным fps вплоть до 90 в приложении Запись экрана. Будет ли более высокий fps работать, зависит от устройства и видео драйвера.</string>
 	<string name="various_miuiinstaller_title">Использовать установщик пакетов MIUI</string>
 	<string name="various_miuiinstaller_summ">Делает дефолтным установщик пакетов от Xiaomi и разрешает ему обновление системных приложений</string>
 	<string name="various_miuiinstaller_error">Не установлено необходимое приложение. Сделайте долгое нажатие для скачивания.</string>
@@ -494,9 +496,11 @@
 	<string name="launcher_hideseekpoints_summ">Показывает индикатор только во время прокрутки</string>
 	<string name="launcher_hideseekpoints_edit_title">Показывать только в режиме редактирования</string>
 	<string name="launcher_unlockgrids_title">Разблокировать размеры сетки</string>
-	<string name="launcher_unlockgrids_summ">Делает все размеры от 3x4 до 8x8 доступными в настройках сетки рабочего стола</string>
+	<string name="launcher_unlockgrids_summ">Делает все размеры от 3x4 до 10x10 доступными в настройках сетки рабочего стола</string>
 	<string name="launcher_unlockhotseat_title">Больше иконок в доке</string>
 	<string name="launcher_unlockhotseat_summ">Неограниченное число иконок в доке рабочего стола</string>
+	<string name="launcher_closedrawer_title">Закрывать меню приложений автоматом</string>
+	<string name="launcher_closedrawer_summ">Закрывает меню после запуска приложения</string>
 	<string name="launcher_iconscale_title">Масштаб значков</string>
 	<string name="launcher_horizmargin_title">Горизонтальные отступы сетки</string>
 	<string name="launcher_topmargin_title">Отступ сетки сверху</string>

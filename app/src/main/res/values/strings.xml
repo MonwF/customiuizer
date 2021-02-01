@@ -499,9 +499,11 @@
 	<string name="launcher_hideseekpoints_summ">Show page indicator only during scrolling</string>
 	<string name="launcher_hideseekpoints_edit_title">Show only in edit mode</string>
 	<string name="launcher_unlockgrids_title">Unlock grid sizes</string>
-	<string name="launcher_unlockgrids_summ">Make all grid sizes from 3x4 to 8x8 available in home screen layout setting</string>
+	<string name="launcher_unlockgrids_summ">Make all grid sizes from 3x4 to 10x10 available in home screen layout setting</string>
 	<string name="launcher_unlockhotseat_title">More icons in dock</string>
 	<string name="launcher_unlockhotseat_summ">Unlimited number of dock icons</string>
+	<string name="launcher_closedrawer_title">Auto close app drawer</string>
+	<string name="launcher_closedrawer_summ">Close app drawer after launch</string>
 	<string name="launcher_iconscale_title">Icons scaling</string>
 	<string name="launcher_horizmargin_title">Horizontal grid margins</string>
 	<string name="launcher_topmargin_title">Top grid margin</string>
@@ -645,6 +647,8 @@
 	<string name="various_sysappsupdater_title">Open \"System app updater\"</string>
 	<string name="various_sysappsupdater_summ">App is no longer a part of some ROMs and has to be installed manually</string>
 	<string name="various_sysappsupdater_summ2">Be careful when updating modified system apps on custom ROMs, you might lose the added functionality</string>
+	<string name="various_unlockfps_title">Unlock frame rate</string>
+	<string name="various_unlockfps_summ">Make fps up to 90 available in Screen Recorder app. Whether higher fps will actually work depends on device and video driver.</string>
 	<string name="various_miuiinstaller_title">Use MIUI package installer</string>
 	<string name="various_miuiinstaller_summ">Make package installer by Xiaomi the default one and allow it to update system apps</string>
 	<string name="various_miuiinstaller_error">Required app is not installed. Long press to download.</string>

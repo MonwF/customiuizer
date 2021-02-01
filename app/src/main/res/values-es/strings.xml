@@ -488,9 +488,11 @@
     <string name="launcher_hideseekpoints_summ">Mostrar el indicador de página solo durante el desplazamiento</string>
     <string name="launcher_hideseekpoints_edit_title">Mostrar solo en modo edición</string>
     <string name="launcher_unlockgrids_title">Desbloquear tamaños de cuadrícula</string>
-    <string name="launcher_unlockgrids_summ">Haga que todos los tamaños de cuadrícula de 3x4 a 8x8 estén disponibles en la configuración de diseño de la pantalla de inicio</string>
+    <string name="launcher_unlockgrids_summ">Haga que todos los tamaños de cuadrícula de 3x4 a 10x10 estén disponibles en la configuración de diseño de la pantalla de inicio</string>
     <string name="launcher_unlockhotseat_title">Más iconos en el escitorio</string>
     <string name="launcher_unlockhotseat_summ">Número ilimitado de iconos en escritorio</string>
+    <string name="launcher_closedrawer_title">Cerrar automáticamente cajón de aplicaciones</string>
+    <string name="launcher_closedrawer_summ">Cerrar cajón de aplicaciones luego de ejecutar</string>
     <string name="launcher_iconscale_title">Escala de iconos</string>
     <string name="launcher_horizmargin_title">Márgenes horizontales de la cuadrícula</string>
     <string name="launcher_topmargin_title">Margen superior de la cuadrícula</string>
@@ -632,6 +634,8 @@
     <string name="various_sysappsupdater_title">Abrir \"Actualizador de aplicaciones de sistema\"</string>
     <string name="various_sysappsupdater_summ">La aplicación ya no forma parte de algunas ROMs y debe instalarse manualmente</string>
     <string name="various_sysappsupdater_summ2">Tenga cuidado al actualizar las aplicaciones modificadas del sistema en ROMs personalizadas, puede perder la funcionalidad agregada</string>
+    <string name="various_unlockfps_title">Desbloquear FPS</string>
+    <string name="various_unlockfps_summ">Haga que los FPS hasta 90 estén disponibles en la aplicación Screen Recorder.  Si los FPS más altos funcionarán realmente depende del dispositivo y del controlador de video.</string>
     <string name="various_miuiinstaller_title">Utilizar el instalador de paquetes MIUI</string>
     <string name="various_miuiinstaller_summ">Hacer que el instalador de paquetes de Xiaomi sea el predeterminado y permitir que actualice las aplicaciones del sistema</string>
     <string name="various_miuiinstaller_error">La aplicación requerida no está instalada. Mantenga pulsado para descargar.</string>
