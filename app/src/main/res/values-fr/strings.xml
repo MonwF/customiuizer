@@ -1,10 +1,10 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_about">A propos</string>
     <string name="about_version">Version %1$s</string>
     <string name="about_dev">Par Mikanoshi</string>
     <string name="about_dynamic">Généralement, les mods nécessitent un redémarrage doux pour être activés ou désactivés, mais ceux marqués avec ⟲ ne nécessitent qu\'un redémarrage doux après que leur valeur ait été changée de par défaut à personnalisée, les modifications suivantes sont appliquées immédiatement.</string>
-    <string name="about_unsupported">"Les mods marqués d'un ⨯ ne sont pas supportés sur cet appareil "</string>
+    <string name="about_unsupported">Les mods marqués d\'un ⨯ ne sont pas supportés sur cet appareil.</string>
     <string name="title_snoozed">Notifications mises en attente</string>
     <string name="menu_update">Mise à jour</string>
     <string name="snooze_unsnooze">Annuler la mise en attente de cette notification</string>
@@ -44,9 +44,9 @@
     <string name="system_statusbaricons_sound_title">Profils de son</string>
     <string name="system_statusbaricons_dnd_title">"Mode Ne pas déranger "</string>
     <string name="system_statusbaricons_headset_title">Casque</string>
-    <string name="system_statusbaricons_mute_title">Appel: micro éteint</string>
-    <string name="system_statusbaricons_speaker_title">Appel: haut-parleur</string>
-    <string name="system_statusbaricons_record_title">Appel: enregistrement en cours</string>
+    <string name="system_statusbaricons_mute_title">Appel : micro éteint</string>
+    <string name="system_statusbaricons_speaker_title">Appel : haut-parleur</string>
+    <string name="system_statusbaricons_record_title">Appel : enregistrement en cours</string>
     <string name="system_batteryindicator_title">Barre indicatrice de batterie</string>
     <string name="system_batteryindicator_summ">Afficher le niveau de charge de la batterie sous forme de barre</string>
     <string name="system_batteryindicator_limitvis_title">"Visibilité limitée "</string>
@@ -221,7 +221,7 @@
     <string name="system_securelock_title">"Écran de verrouillage amélioré "</string>
     <string name="system_securelock_summ">Désactiver le menu d\'extinction tant que l\'écran de verrouillage est actif</string>
     <string name="system_nopassword_title">Pas de mot de basse après allumage</string>
-    <string name="system_nopassword_summ">Ne pas demander le mot de passe à la place des empreintes digitales la première fois après allumage. Risque de ne pas marcher sur les appareils encryptés</string>
+    <string name="system_nopassword_summ">Ne pas demander le mot de passe à la place des empreintes digitales la première fois après allumage. Risque de ne pas marcher sur les appareils encryptés.</string>
     <string name="system_albumartonlock_title">"Couverture de l'album en tant que fond d'écran "</string>
     <string name="system_albumartonlock_summ">"Afficher la couverture d'album de la musique jouée en tant que fond d'écran de verrouillage "</string>
     <string name="system_albumartonlock_gray_title">Échelles de gris</string>
@@ -229,7 +229,7 @@
     <string name="system_albumartonlock_blur_title">Flouter la couverture d\'album</string>
     <string name="system_albumartonlock_scale_title">Échelle de la couverture d\'album</string>
     <string name="system_credentials_title">"Déverrouiller les informations d'identification "</string>
-    <string name="system_credentials_summ">L\'authentification pour certaines applications requiert l\'accès aux identifiants, mais ceux-ci restent bloqués si le PIN/Mot de passe/Schéma est sauté après démarrage. Cette option ajoute une icone permettant de débloquer les identifiants</string>
+    <string name="system_credentials_summ">L\'authentification pour certaines applications requiert l\'accès aux identifiants, mais ceux-ci restent bloqués si le PIN/Mot de passe/Schéma est sauté après démarrage. Cette option ajoute une icone permettant de débloquer les identifiants.</string>
     <string name="system_lockscreenshortcuts_title">Actions personnalisées</string>
     <string name="system_lockscreenshortcuts_summ">Actions personnalisées pour les raccourcis et les swipes</string>
     <string name="system_lockscreenshortcuts_right_off_title">Désactivé le geste de défilement gauche</string>
@@ -911,5 +911,5 @@
 	
 	
 	
-    <string name="warning">Attention!</string>
+    <string name="warning">Attention !</string>
 </resources>
