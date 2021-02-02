@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_about">Hakkında</string>
     <string name="about_version">Versiyon: %1$s</string>
@@ -83,7 +83,7 @@
     <string name="system_nonetspeedseparator_summ">Su damlası çentikli cihazlarda zaman ve ağ hızı arasında dikey çizgi gösterme</string>
     <string name="system_netspeedinterval_title">Güncelleme Aralığı (Bağlantı Hızı)</string>
     <string name="system_detailednetspeed_title">Detaylar (Bağlantı Hızı)</string>
-    <string name="system_detailednetspeed_summ">Gelen ve giden Bağlantı Hızı\'nı ayrı ayrı gösterir.</string>
+    <string name="system_detailednetspeed_summ">Gelen ve giden Bağlantı Hızı\'nı ayrı ayrı gösterir</string>
     <string name="system_detailednetspeed_font_title">Metin boyutu</string>
     <string name="system_detailednetspeed_icon_title">Gösterge Simgesi</string>
     <string name="system_detailednetspeed_icon_summ">Bağlantı Hızı değerinin yanıdan görüntülenir (Gelen/Giden)</string>
@@ -368,7 +368,7 @@
     <string name="system_applock_timeout_title">Zaman Aşımı</string>
     <string name="system_applock_timeout_summ">Uygulamanın kilitlenme süresini belirler.</string>
     <string name="system_applock_list_title">Uygulamalar</string>
-    <string name="system_applock_list_summ">"Kilitlemek istediğiniz Uygulamalar'ı seçiniz. "</string>
+    <string name="system_applock_list_summ">Kilitlemek istediğiniz Uygulamalar\'ı seçiniz.</string>
     <string name="system_mods_qs">Bildirim Paneli</string>
     <string name="system_qsgridrows_title">Satır Sayısı</string>
     <string name="system_qsgridrows_note">Bildirim Paneli\'nde bulunan araçların Satır Sayısı\'nı belirler.</string>
@@ -594,7 +594,7 @@
     <string name="various_appsort_title">Sıralama Düzeni</string>
     <string name="disable_app_title">Devre Dışı Bırak?</string>
     <string name="disable_app_text">Önemli bi\' sistem uygulamasını kaldırmadığına emin misin?</string>
-    <string name="disable_app_settings">Bu kötü bir fikir!</string>
+    <string name="disable_app_settings">Bu kötü bir fikir! :)</string>
     <string name="disable_app_fail">Uygulama durumu değiştirilemedi.</string>
     <string name="appdetails_playstore">Play Store\'da Aç...</string>
     <string name="appdetails_launch">Uygulamayı Başlat...</string>
@@ -612,7 +612,7 @@
     <string name="settings">Ayarlar</string>
     <string name="array_default">Varsayılan</string>
     <string name="array_system_default">Sistem</string>
-    <string name="array_global_actions_none">Eylem Yok!</string>
+    <string name="array_global_actions_none">Eylem Yok</string>
     <string name="array_global_actions_notif">Bildirim Paneli\'ni Aç</string>
     <string name="array_global_actions_eqs">Bildirim Paneli\'ni Aç ve Genişlet</string>
     <string name="array_global_actions_lock">Ekranı Kilitle</string>
@@ -796,7 +796,7 @@
     <string name="support_bug_summ">Her hangi bir hatayla karşılaşırsanız eğer bunu bize bildirin ve en kısa sürede çözümü sağlayalım.</string>
     <string name="support_donate">Bağış Yapmak İster misin? $%1$d</string>
     <string name="support_donate_title">Bağış</string>
-    <string name="support_donate_summ">Bu harika modül için minnettarlığınızı ifade etmenin en iyi yolu sadece dua etmek değildir... (:</string>
+    <string name="support_donate_summ">Bu harika modül için minnettarlığınızı ifade etmenin en iyi yolu :)</string>
     <string name="support_donate_inapp_title">Uygulama İçerisinden</string>
     <string name="support_donate_inapp_summ">Sen yeter ki bağış yapmak iste ve gerisini Google\'a bırak!</string>
     <string name="support_donate_crypto_title">Yeni Para (CryptoDonate)</string>
@@ -815,11 +815,11 @@
     <string name="crash_dialog_note">İletişim bilgilerinizi belirtmediniz, bu bildiriye bir cevap alamayacaksınız!</string>
     <string name="crash_needs_inet">İnternet bağlantısı gereklidir.</string>
     <string name="crash_needs_desc">Açıklama boş bırakılamaz.</string>
-    <string name="crash_ignore">Boş ver!</string>
-    <string name="crash_send">Rapor Gönder!</string>
+    <string name="crash_ignore">Boş ver</string>
+    <string name="crash_send">Rapor Gönder</string>
     <string name="crash_result">Sonuç Gönderiliyor...</string>
     <string name="crash_ok">Rapor Başarıyla Gönderildi!</string>
-    <string name="crash_error">Rapor Gönderilemedi!</string>
+    <string name="crash_error">Rapor Gönderilemedi</string>
     <string name="crash_confirm">Onayla</string>
     <string name="crash_collecting_report">Rapor oluştur…</string>
     <string name="crash_sending_report">Rapor gönderiliyor…</string>
@@ -836,13 +836,13 @@
     <string name="restart_launcher">Başlatıcı</string>
     <string name="backup_restore">Yedekle/Geri Yükle</string>
     <string name="backup_restore_choose">N\'apmak istersin?</string>
-    <string name="do_backup">Yedeklemek!</string>
-    <string name="do_restore">Geri Yüklemek!</string>
+    <string name="do_backup">Yedeklemek</string>
+    <string name="do_restore">Geri Yüklemek</string>
     <string name="storage_read_only">Depolama biriminiz de salt okunur mevcut.</string>
-    <string name="storage_unavailable">Uygun bir depoya erişilemiyor!</string>
-    <string name="storage_cannot_mkdir">Yedekleme dizini oluşturulamadı!</string>
-    <string name="storage_cannot_backup">Yedek dosyası oluşturulamadı!</string>
-    <string name="storage_cannot_restore">Hiçbir ayar yedeği bulunamadı!</string>
+    <string name="storage_unavailable">Uygun bir depoya erişilemiyor</string>
+    <string name="storage_cannot_mkdir">Yedekleme dizini oluşturulamadı</string>
+    <string name="storage_cannot_backup">Yedek dosyası oluşturulamadı</string>
+    <string name="storage_cannot_restore">Hiçbir ayar yedeği bulunamadı</string>
     <string name="backup_ok">Ayarlar başarıyla yedeklendi!</string>
     <string name="restore_ok">Ayarlar başarıyla geri yüklendi!</string>
     <string name="backup_restore_info">Ayarlarınız Google ile geri yüklendi. Lütfen Xposed modülünü etkinleştirdikten sonra yeniden başlatınız (Hızlı).</string>
@@ -864,14 +864,14 @@
     <string name="bt_category2">Mevcut cihazlar</string>
     <string name="bt_devices">Bluetooth cihazları</string>
     <string name="bt_not_supported">Bluetooth bu cihazda desteklenmiyor</string>
-    <string name="request_bt">Önce Bluetooth\'u aç!</string>
-    <string name="request_wifi">Önce Wi-Fi\'yi aç!</string>
+    <string name="request_bt">Önce Bluetooth\'u aç</string>
+    <string name="request_wifi">Önce Wi-Fi\'yi aç</string>
     <string name="request_location">Konum erişimi olmadan tarama yapılamıyor.</string>
     <string name="force_closed">Zorla Kapalı %s</string>
     <string name="credentials_ok">Açık (Kimlik Bilgileri)</string>
     <string name="credentials_unlock">Aç (Kimlik Bilgileri)</string>
     <string name="credentials_success">Açıldı (Kimlik Bilgileri)!</string>
-    <string name="xposed_not_found">Xposed Bulunamadı!</string>
+    <string name="xposed_not_found">Xposed Bulunamadı</string>
     <string name="xposed_not_found_explain">Xposed yüklü değil gibi gibi.\n\nLütfen, unutmayın... Modül sadece Xposed ile çalışıyor!</string>
     <string name="xposed_not_reshooks">Devre Dışı (Kaynak Kancası)</string>
     <string name="xposed_not_reshooks_explain">Xposed ayarlarından kaynak kancalarını devre dışı bıraktınız. Modül Etkinleştirilmeyecek!</string>
