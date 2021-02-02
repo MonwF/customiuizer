@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_about">关于</string>
     <string name="about_version">版本：%1$s</string>
@@ -908,8 +908,8 @@
     <string name="crash_ok">报告发送成功！</string>
     <string name="crash_error">发送报告失败</string>
     <string name="crash_confirm">确认</string>
-    <string name="crash_collecting_report">正在建立报告...</string>
-    <string name="crash_sending_report">正在发送报告...</string>
+    <string name="crash_collecting_report">正在建立报告…</string>
+    <string name="crash_sending_report">正在发送报告…</string>
     <string name="array_color_auto">自动</string>
     <string name="array_color_dark">暗</string>
     <string name="array_color_light">亮</string>
@@ -1004,4 +1004,8 @@
     <string name="auto_color">状态栏颜色</string>
     <string name="type_file">文件</string>
     <string name="type_res">资源</string>
+    <string name="launcher_closedrawer_title">自动关闭应用抽屉</string>
+    <string name="launcher_closedrawer_summ">启动后关闭应用抽屉</string>
+    <string name="various_unlockfps_title">解锁帧率</string>
+    <string name="various_unlockfps_summ">将屏幕录制应用中的fps提高到90。更高的fps是否有效是否工作取决于设备和视频驱动。</string>
 </resources>
