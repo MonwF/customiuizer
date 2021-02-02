@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_about">Informazioni</string>
     <string name="about_version">Versione %1$s</string>
@@ -663,7 +663,7 @@
     <string name="various_callreminder_sound_title">Suono</string>
     <string name="various_callreminder_nosound">Nessun suono</string>
     <string name="various_callreminder_vibration_own_title">Proprio modello</string>
-    <string name="various_callreminder_vibration_own_msg">Formato: ritardo,vibrazione,ritardo,vibrazione,...</string>
+    <string name="various_callreminder_vibration_own_msg">Formato: ritardo,vibrazione,ritardo,vibrazione,…</string>
     <string name="various_disableapp_title">Controllo dello stato dell\'app</string>
     <string name="various_disableapp_summ">Consente di disattivare quasi tutte le app dalla loro pagina delle informazioni</string>
     <string name="various_apps_title">Mostra dettagli aggiuntivi delle app</string>
@@ -816,7 +816,7 @@
     <string name="array_newyear">Nuovo anno</string>
     <string name="array_lunarnewyear">Capodanno cinese</string>
     <string name="array_covid">Coronavirus anti-vacanza</string>
-    <string name="array_displayonly">"Solo display "</string>
+    <string name="array_displayonly">Solo display</string>
     <string name="array_hide">Nascondi</string>
     <string name="array_render_auto">Rileva automaticamente</string>
     <string name="array_append">Aggiungi</string>
@@ -876,7 +876,7 @@
     <string name="miuizer_acramail_tip">È assolutamente necessario compilare questo campo se ti aspetti di ricevere risposte ai tuoi rapporti sugli arresti anomali. Usa email, nickname ICQ, XDA o 4PDA.</string>
     <string name="support">Supporto</string>
     <string name="support_repo_title">Repository CustoMIUIzer</string>
-    <string name="support_repo_summ">Repository Git con con sorgenti e distribuzioni di moduli</string>
+    <string name="support_repo_summ">Repository Git con sorgenti e distribuzioni di moduli</string>
     <string name="support_xda_title">Thread XDA</string>
     <string name="support_xda_summ">Thread del modulo sul forum XDA</string>
     <string name="support_4pda_title">Thread 4PDA</string>
@@ -900,7 +900,8 @@
     <string name="crash_dialog_manual">Tutti i dati necessari sono stati raccolti</string>
     <string name="crash_dialog_manual_size">Dimensione del rapporto generato</string>
     <string name="crash_dialog_manual_desc">Descrivi il tuo problema (in inglese se possibile):</string>
-    <string name="crash_dialog_manual_desc2">Descrivi le azioni che hanno portato al crash (in inglese se possibile):</string>
+    <string name="crash_dialog_manual_desc2">Descrivi le azioni che hanno portato al crash
+\n(possibilmente in inglese):</string>
     <string name="crash_dialog_note">Le informazioni di contatto non sono state fornite, non riceverai una risposta a questo rapporto!</string>
     <string name="crash_needs_inet">È necessaria una connessione ad internet</string>
     <string name="crash_needs_desc">La descrizione non può essere vuota</string>
@@ -910,8 +911,8 @@
     <string name="crash_ok">Il rapporto è stato inviato con successo!</string>
     <string name="crash_error">Impossibile inviare il rapporto</string>
     <string name="crash_confirm">Conferma</string>
-    <string name="crash_collecting_report">Costruzione del rapporto...</string>
-    <string name="crash_sending_report">Invio del rapporto...</string>
+    <string name="crash_collecting_report">Costruzione del rapporto…</string>
+    <string name="crash_sending_report">Invio del rapporto…</string>
     <string name="array_color_auto">Automatico</string>
     <string name="array_color_dark">Scuro</string>
     <string name="array_color_light">Chiaro</string>
@@ -1006,4 +1007,6 @@
     <string name="auto_color">Colore della barra di stato</string>
     <string name="type_file">file</string>
     <string name="type_res">fonte</string>
+    <string name="various_unlockfps_title">Sblocca frame rate</string>
+    <string name="various_unlockfps_summ">Rendi disponibili fps fino a 90 nell\'app Screen Recorder. L\'effettivo funzionamento di fps più alti dipende dal dispositivo e dal driver video.</string>
 </resources>
