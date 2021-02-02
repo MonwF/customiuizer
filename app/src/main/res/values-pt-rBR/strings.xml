@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_about">Sobre</string>
     <string name="about_version">Versão %1$s</string>
@@ -264,7 +264,7 @@
     <string name="system_credentials_title">Desbloquear credenciais</string>
     <string name="system_credentials_summ">A autenticação em alguns aplicativos requer acesso a credenciais, mas elas permanecem bloqueadas se o PIN / senha / padrão for ignorado após a inicialização. A opção atual adiciona o ícone do launcher que permite desbloquear credenciais.</string>
     <string name="system_lockscreenshortcuts_title">Ações personalizadas</string>
-    <string name="system_lockscreenshortcuts_summ">Ações personalizáveis ​​para atalhos e furtos</string>
+    <string name="system_lockscreenshortcuts_summ">Ações personalizáveis para atalhos e furtos</string>
     <string name="system_lockscreenshortcuts_right_off_title">Desativar deslizar para a esquerda</string>
     <string name="system_lockscreenshortcuts_right_title">Deslize para a esquerda</string>
     <string name="system_lockscreenshortcuts_right_image_title">Alterar ícone direito</string>
@@ -276,7 +276,7 @@
     <string name="system_lockscreenshortcuts_left_align_title">Alinhamento vertical</string>
     <string name="system_lockscreenshortcuts_left_center_title">Centrar horizontalmente</string>
     <string name="system_lockscreenshortcuts_left_skiplock_title">Não requer desbloqueio</string>
-    <string name="system_lockscreenshortcuts_left_skiplock_summ">Aplicativos iniciados podem ser acessados ​​enquanto o dispositivo ainda está bloqueado</string>
+    <string name="system_lockscreenshortcuts_left_skiplock_summ">Aplicativos iniciados podem ser acessados enquanto o dispositivo ainda está bloqueado</string>
     <string name="system_noscreenlock_title">Desativar bloqueio de tela</string>
     <string name="system_noscreenlock_req_summ">Alguns dispositivos podem não funcionar sem desbloquear uma vez após a inicialização</string>
     <string name="system_noscreenlock_summ">Desativar seletivamente o bloqueio de tela (não altera a segurança de nenhum aplicativo e não remove os dados de impressão digital)</string>
@@ -905,7 +905,7 @@
     <string name="crash_ok">O relatório foi enviado com sucesso!</string>
     <string name="crash_error">Falha ao enviar relatório</string>
     <string name="crash_confirm">Confirmação</string>
-    <string name="crash_collecting_report">Construindo relatório ...</string>
+    <string name="crash_collecting_report">Construindo relatório…</string>
     <string name="crash_sending_report">Enviando relatório…</string>
     <string name="array_color_auto">Automático</string>
     <string name="array_color_dark">Escuro</string>
