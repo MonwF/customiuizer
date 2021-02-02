@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_about">Über</string>
     <string name="about_version">Version %1$s</string>
@@ -586,7 +586,7 @@
     <string name="various_callreminder_sound_title">Töne</string>
     <string name="various_callreminder_nosound">Kein Ton</string>
     <string name="various_callreminder_vibration_own_title">Eigenes Muster</string>
-    <string name="various_callreminder_vibration_own_msg">Format: Verzögerung, Vibration, Verzögerung, Vibration, ...</string>
+    <string name="various_callreminder_vibration_own_msg">Format: Verzögerung, Vibration, Verzögerung, Vibration, …</string>
     <string name="various_disableapp_title">App-Status erweitern</string>
     <string name="various_disableapp_summ">Ermöglicht das Deaktivieren fast jeder App auf ihrer Infoseite (App-Info)</string>
     <string name="various_apps_title">Zusätzliche App-Details anzeigen</string>
@@ -782,7 +782,7 @@
     <string name="troubleshoot">Fehlerbehebung</string>
     <string name="miuizer_acrasend_title">Detaillierten Bericht senden</string>
     <string name="miuizer_acrasend_summ">Sammelt Geräte- und Umgebungsinformationen, Logcat und Xposed-Protokoll und sendet sie an den Entwickler. Eine Internetverbindung ist erforderlich.</string>
-    <string name="miuizer_acramail_summ">Kontaktinformationen eingeben, damit diese in detaillierten Absturzberichten aufgenommen werden.</string>
+    <string name="miuizer_acramail_summ">Kontaktinformationen eingeben, damit diese in detaillierten Absturzberichten aufgenommen werden</string>
     <string name="miuizer_acramail_title">Kontaktinformationen</string>
     <string name="miuizer_acramail_tip">Es ist unbedingt erforderlich dies auszufüllen, wenn Antworten auf Absturzberichte erwartet werden. Verwendung von E-Mail, ICQ, XDA- oder 4PDA-Accountname.</string>
     <string name="support">Support</string>
@@ -793,7 +793,7 @@
     <string name="support_4pda_title">4PDA Thread</string>
     <string name="support_4pda_summ">Modul Thread im 4PDA-Forum</string>
     <string name="support_bug_title">Technischen Fehler melden</string>
-    <string name="support_bug_summ">Sendet einen Fehlerbericht oder eine Funktionserweiterungsanfrage über den offiziellen Fehler-Tracker.</string>
+    <string name="support_bug_summ">Sendet einen Fehlerbericht oder eine Funktionserweiterungsanfrage über den offiziellen Fehler-Tracker</string>
     <string name="support_donate">Spende $%1$d</string>
     <string name="support_donate_title">Spenden</string>
     <string name="support_donate_summ">Der beste Weg, um die Dankbarkeit für dieses großartige Modul auszudrücken :-)</string>
@@ -808,28 +808,28 @@
     <string name="billing_error">Rechnungsinformationen konnten nicht abgerufen werden. Überprüfe deine Internetverbindung!</string>
     <string name="billing_canceled">Meinung geändert? ;-)</string>
     <string name="crash_dialog">CustoMIUIzer ist soeben abgestürzt!</string>
-    <string name="crash_dialog_manual">Alle notwendigen Daten wurden gesammelt.</string>
+    <string name="crash_dialog_manual">Alle notwendigen Daten wurden gesammelt</string>
     <string name="crash_dialog_manual_size">Generierte Größe des Berichtes</string>
     <string name="crash_dialog_manual_desc">Problembeschreibung (wenn möglich in Englisch):</string>
     <string name="crash_dialog_manual_desc2">Hergang beschreiben, der zu diesem Absturz geführt hat\n(wenn möglich auf Englisch):</string>
-    <string name="crash_dialog_note">Kontaktinformationen werden nicht übermittelt, es werden keine Antworten auf diesen Bericht erfolgen.</string>
+    <string name="crash_dialog_note">Kontaktinformationen werden nicht übermittelt, es werden keine Antworten auf diesen Bericht erfolgen!</string>
     <string name="crash_needs_inet">Eine Internetverbindung ist erforderlich</string>
     <string name="crash_needs_desc">Beschreibung darf nicht leer sein</string>
     <string name="crash_ignore">Ignorieren</string>
     <string name="crash_send">Sende Bericht</string>
     <string name="crash_result">Ergebnis senden</string>
     <string name="crash_ok">Bericht wurde erfolgreich gesendet!</string>
-    <string name="crash_error">Fehler beim Senden des Berichtes!</string>
+    <string name="crash_error">Fehler beim Senden des Berichtes</string>
     <string name="crash_confirm">Bestätigung</string>
-    <string name="crash_collecting_report">Bericht wird generiert...</string>
-    <string name="crash_sending_report">Bericht wird gesendet...</string>
+    <string name="crash_collecting_report">Bericht wird generiert…</string>
+    <string name="crash_sending_report">Bericht wird gesendet…</string>
     <string name="array_color_auto">Automatisch</string>
     <string name="array_color_dark">Dunkel</string>
     <string name="array_color_light">Hell</string>
     <string name="sdk_failed">MIUI SDK kann nicht initialisiert werden.\nKein Xiaomi Gerät?</string>
     <string name="notselected">nichts ausgewählt</string>
     <string name="warning">Warnung!</string>
-    <string name="warning_blacklist">Die Option \"black/white list\" ist in (Ed)Xposed Framework aktiv und kann verhindern, dass Mods ordnungsgemäß funktionieren</string>
+    <string name="warning_blacklist">Die Option \"black/white list\" ist in (Ed)Xposed Framework aktiv und kann verhindern, dass Mods ordnungsgemäß funktionieren.</string>
     <string name="open_xposed">Öffne (Ed)Xposed Module</string>
     <string name="soft_reboot">Soft-Neustart</string>
     <string name="soft_reboot_ask">Soft-Neustart jetzt ausführen?</string>
@@ -875,7 +875,8 @@
     <string name="xposed_not_found_explain">Es sieht so aus, als wäre das (Ed)Xposed Framework nicht installiert.\nMods funktionieren nur mit Xposed!</string>
     <string name="xposed_not_reshooks">Ressourcen-Hooks sind deaktiviert</string>
     <string name="xposed_not_reshooks_explain">Ressourcen-Hooks sind in den Xposed Installer-Einstellungen deaktiviert, das Modul wird nicht aktiviert!</string>
-    <string name="module_not_active">CustoMIUIzer-Modul ist nicht aktiviert!\r\nÖffne (Ed)Xposed App, aktiviere Modul und starte Gerät neu (Reboot).</string>
+    <string name="module_not_active">CustoMIUIzer-Modul ist nicht aktiviert!
+\nÖffne (Ed)Xposed App, aktiviere Modul und starte Gerät neu (Reboot).</string>
     <string name="no_browser">Browser-App muss vorhanden sein, um URLs zu öffnen</string>
     <string name="okay">Okay</string>
     <string name="cancel">Abbruch</string>
@@ -885,7 +886,8 @@
     <string name="change_icon">Symbol ändern</string>
     <string name="guide_search">Suche Mods nach Name.\nLange drücken, um eine Liste der neuen Mods anzuzeigen.</string>
     <string name="guide_softreboot">Nicht vergessen, Mods durch Soft-Neustart zu aktivieren.\nDynamische Mods ⟲ benötigen nur einen Neustart. Weitere Informationen befinden sich unter &lt;Über&gt;.</string>
-    <string name="guide_marknew">New mods since previous update\r\ncan be marked for better visibility</string>
+    <string name="guide_marknew">New mods since previous update
+\ncan be marked for better visibility</string>
     <string name="permission_save">Backup ertellen?</string>
     <string name="permission_restore">Backup wiederherstellen?</string>
     <string name="permission_scan">Liste der Netzwerke/Geräte erhalten?</string>
