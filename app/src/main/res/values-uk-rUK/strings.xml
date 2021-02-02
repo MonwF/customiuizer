@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_about">Про програму</string>
     <string name="about_version">Версія %1$s</string>
@@ -404,7 +404,7 @@
     <string name="launcher_gestures_shortcut">Ярлик для запуску</string>
     <string name="launcher_gestures_activity">Компонент для запуску</string>
     <string name="launcher_title">Робочий стіл</string>
-    <string name="launcher_summ">Відображати моди для обраного лаунчера. Лише для зручності, ніяк не впливає на самі моди</string>
+    <string name="launcher_summ">Відображати моди для обраного лаунчера. Лише для зручності, ніяк не впливає на самі моди.</string>
     <string name="launcher_compat_title">Режим сумісності</string>
     <string name="launcher_compat_summ">Альтернативний метод застосування всіх модів лаунчера</string>
     <string name="launcher_infinitescroll_title">Нескінченна прокрутка</string>
@@ -514,9 +514,9 @@
     <string name="controls_fingerprint_accept_title">Прийняти вхідний виклик</string>
     <string name="controls_fingerprint_reject_title">Відхилити вхідний виклик</string>
     <string name="controls_fingerprint_hangup_title">Завершити поточний виклик</string>
-    <string name="controls_fingerprint_conflict">Прийняття та відхилення не можуть бути призначені на одну комбінацію</string>
-    <string name="controls_fingerprint_conflict_reset_accept">Дію прийняття було вимкнено</string>
-    <string name="controls_fingerprint_conflict_reset_reject">Дію відхилення було вимкнено</string>
+    <string name="controls_fingerprint_conflict">Прийняття та відхилення не можуть бути призначені на одну комбінацію.</string>
+    <string name="controls_fingerprint_conflict_reset_accept">Дію прийняття було вимкнено.</string>
+    <string name="controls_fingerprint_conflict_reset_reject">Дію відхилення було вимкнено.</string>
     <string name="controls_fingerprintscreen_title">Увімкнути екран при невдачі</string>
     <string name="controls_fingerprintscreen_summ">Вмикати екран після невдалої аутентифікації</string>
     <string name="controls_fingerprintwake_title">Вимагати наявність відбитків</string>
@@ -594,7 +594,7 @@
     <string name="various_callreminder_sound_title">Звук</string>
     <string name="various_callreminder_nosound">Без звуку</string>
     <string name="various_callreminder_vibration_own_title">Свій шаблон</string>
-    <string name="various_callreminder_vibration_own_msg">Формат: затримка, вібрація, затримка, вібрація,..</string>
+    <string name="various_callreminder_vibration_own_msg">Формат: затримка, вібрація, затримка, вібрація,…</string>
     <string name="various_disableapp_title">Контроль стану додатків</string>
     <string name="various_disableapp_summ">Дозволяє вимкнути майже будь-який додаток з його сторінки \"Про програму\"</string>
     <string name="various_apps_title">Додаткові відомості про програму</string>
@@ -829,15 +829,16 @@
     <string name="crash_ok">Звіт успішно відправлений!</string>
     <string name="crash_error">Не вдалося відправити звіт</string>
     <string name="crash_confirm">Підтвердження</string>
-    <string name="crash_collecting_report">Створення звіту...</string>
-    <string name="crash_sending_report">Надсилання звіту...</string>
+    <string name="crash_collecting_report">Створення звіту…</string>
+    <string name="crash_sending_report">Надсилання звіту…</string>
     <string name="array_color_auto">Автоматичний</string>
     <string name="array_color_dark">Темна</string>
     <string name="array_color_light">Світла</string>
-    <string name="sdk_failed">Не вдалося ініціалізувати MIUI SDK. Прошивка не MIUI?</string>
+    <string name="sdk_failed">Не вдалося ініціалізувати MIUI SDK.
+\nПрошивка не MIUI\?</string>
     <string name="notselected">Не вибрано</string>
     <string name="warning">Увага!</string>
-    <string name="warning_blacklist">Опція чорного/білого списку активна в Xposed Framework, що може призвести до непрацездатності модифікацій</string>
+    <string name="warning_blacklist">Опція чорного/білого списку активна в Xposed Framework, що може призвести до непрацездатності модифікацій.</string>
     <string name="open_xposed">Керування модулями Xposed</string>
     <string name="soft_reboot">Швидке перезавантаження</string>
     <string name="soft_reboot_ask">Виконати швидке перезавантаження?</string>
@@ -883,7 +884,8 @@
     <string name="xposed_not_found_explain">Схоже, що у Вас не встановлений Xposed Framework.\n\nВсі модифікації працюють тільки за наявності встановленого Xposed Framework!</string>
     <string name="xposed_not_reshooks">Модифікація ресурсів неможлива</string>
     <string name="xposed_not_reshooks_explain">Зміна ресурсів вимкнена в налаштуваннях Xposed Installer, модуль не буде діяти!</string>
-    <string name="module_not_active">Модуль CustoMIUIzer не активний! Відкрийте програму Xposed, увімкніть модуль і перезавантажте пристрій.</string>
+    <string name="module_not_active">Модуль CustoMIUIzer не активний!
+\nВідкрийте програму Xposed, увімкніть модуль і перезавантажте пристрій.</string>
     <string name="no_browser">Для відкриття посилань необхідний браузер</string>
     <string name="okay">Окей</string>
     <string name="cancel">Скасувати</string>
