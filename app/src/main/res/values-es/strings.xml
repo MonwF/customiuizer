@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_about">Acerca de</string>
     <string name="about_version">Versión %1$s</string>
@@ -269,7 +269,7 @@
     <string name="system_lockscreenshortcuts_right_title">Acción de deslizar a la izquierda</string>
     <string name="system_lockscreenshortcuts_right_image_title">Cambiar icono a la derecha</string>
     <string name="system_lockscreenshortcuts_right_image_summ">Reemplace el ícono de la cámara con el ícono CustoMIUIzer</string>
-    <string name="system_lockscreenshortcuts_right_image_hint">Arrastre el icono para ejecutar una acción personalizada.</string>
+    <string name="system_lockscreenshortcuts_right_image_hint">Arrastre el icono para ejecutar una acción personalizada</string>
     <string name="system_lockscreenshortcuts_left_off_title">Deshabilitar el gesto de deslizar hacia la derecha</string>
     <string name="system_lockscreenshortcuts_left_title">Atajos de la pantalla izquierda</string>
     <string name="system_lockscreenshortcuts_left_summ">Administrar lista de accesos directos</string>
@@ -293,7 +293,7 @@
     <string name="system_noscreenlock_force_off">No forzar</string>
     <string name="system_screenanim_duration_title">Desactivar animación</string>
     <string name="system_screenanim_duration_summ">Configurar la duración de la animación</string>
-    <string name="system_screenanim_desc">Los valores muy bajos prácticamente deshabilitarán la animación.</string>
+    <string name="system_screenanim_desc">Los valores muy bajos prácticamente deshabilitarán la animación</string>
     <string name="system_blur_title">Desenfoque de fondo</string>
     <string name="system_recents_blur_summ">Intensidad de desenfoque de fondo en aplicaciones recientes</string>
     <string name="system_drawer_blur_summ">Intensidad de desenfoque de fondo en el cajón de notificaciones</string>
@@ -390,7 +390,7 @@
     <string name="system_lsalarm_summ">Mostrar la hora de alarma más cercana a la fecha actual</string>
     <string name="system_lsalarm_format_title">Formato de pantalla</string>
     <string name="system_lsalarm_all_title">Mostrar todas las alarmas</string>
-    <string name="system_lsalarm_all_summ">Obtenga la próxima hora de alarma utilizando la API de Android predeterminada cuando la alarma MIUI no está configurada. (Podría producir resultados inesperados.)</string>
+    <string name="system_lsalarm_all_summ">Obtenga la próxima hora de alarma utilizando la API de Android predeterminada cuando la alarma MIUI no está configurada. (Podría producir resultados inesperados).</string>
     <string name="system_mods_statusbar">Barra de estado y cajón de notificaciones</string>
     <string name="system_mods_statusbar_statusbar">Barra de estado</string>
     <string name="system_mods_statusbar_drawer">Cajón de notificaciones</string>
@@ -468,7 +468,7 @@
     <string name="launcher_compat_title">Modo rendimiento</string>
     <string name="launcher_compat_summ">Método alternativo para aplicar todas las modificaciones del launcher</string>
     <string name="launcher_infinitescroll_title">Desplazamiento infinito</string>
-    <string name="launcher_infinitescroll_summ">Salta de la última página a la primera y viceversa.</string>
+    <string name="launcher_infinitescroll_summ">Salta de la última página a la primera y viceversa</string>
     <string name="launcher_noclockhide_title">No ocultar reloj</string>
     <string name="launcher_noclockhide_summ">No ocultar el reloj de la barra de estado en páginas con widgets de reloj</string>
     <string name="launcher_googleminus_title">Habilitar el interruptor de pantalla -1</string>
@@ -531,7 +531,7 @@
     <string name="launcher_renameapps_list_title">Títulos modificados</string>
     <string name="launcher_renameapps_modified">Título modificado</string>
     <string name="launcher_privacyapps">Aplicaciones ocultas</string>
-    <string name="launcher_privacyapps_fail">No se han otorgado los permisos necesarios.</string>
+    <string name="launcher_privacyapps_fail">No se han otorgado los permisos necesarios</string>
     <string name="launcher_privacyapps_gest_title">Carpeta no oculta</string>
     <string name="launcher_privacyapps_gest_summ">Deshabilita el gesto con dos dedos que abre la carpeta de aplicaciones ocultas</string>
     <string name="launcher_privacyapps_list_title">Lista de aplicaciones para ocultar</string>
@@ -574,7 +574,7 @@
     <string name="controls_fingerprintlong_delay_title">Retraso de pulsación prolongada</string>
     <string name="controls_fingerprintskip_title">No hay acciones en la cámara</string>
     <string name="controls_fingerprintskip_summ">Habilite esto si usa la opción de obturador con el sensor de huellas</string>
-    <string name="controls_fingerprintskip2_title">No hay acciones durante las llamadas.</string>
+    <string name="controls_fingerprintskip2_title">No hay acciones durante las llamadas</string>
     <string name="controls_fingerprintskip2_summ">No ejecutar acciones cuando la llamada está activa</string>
     <string name="controls_fingerprint_accept_title">Aceptar llamada entrante</string>
     <string name="controls_fingerprint_reject_title">Rechazar llamada entrante</string>
@@ -665,7 +665,7 @@
     <string name="various_callreminder_sound_title">Sonido</string>
     <string name="various_callreminder_nosound">Sin sonido</string>
     <string name="various_callreminder_vibration_own_title">Patrón propio</string>
-    <string name="various_callreminder_vibration_own_msg">Formato: retraso, vibración, retraso, vibración, ...</string>
+    <string name="various_callreminder_vibration_own_msg">Formato: retraso, vibración, retraso, vibración, …</string>
     <string name="various_disableapp_title">Control de estado de la aplicación</string>
     <string name="various_disableapp_summ">Permite deshabilitar casi cualquier aplicación desde su página de información</string>
     <string name="various_apps_title">Mostrar detalles adicionales de la aplicación</string>
@@ -875,10 +875,10 @@
     <string name="miuizer_acrasend_summ">Recopilar información del dispositivo y del entorno, \"logcat\" y \"log\" de Xposed y envíar al desarrollador. Se requiere conexión a internet</string>
     <string name="miuizer_acramail_summ">Ingrese su información de contacto y se incluirá en informes detallados y de fallas</string>
     <string name="miuizer_acramail_title">Información de contacto</string>
-    <string name="miuizer_acramail_tip">Es absolutamente necesario completar esto si espera recibir respuestas a sus informes de fallas. Use el apodo de correo electrónico, ICQ, XDA o 4PDA</string>
+    <string name="miuizer_acramail_tip">Es absolutamente necesario completar esto si espera recibir respuestas a sus informes de fallas. Use el apodo de correo electrónico, ICQ, XDA o 4PDA.</string>
     <string name="support">Soporte</string>
     <string name="support_repo_title">Repositorio de CustoMIUIzer</string>
-    <string name="support_repo_summ">Repositorio de Git con fuentes y distribuciones de módulos.</string>
+    <string name="support_repo_summ">Repositorio de Git con fuentes y distribuciones de módulos</string>
     <string name="support_xda_title">Tema de XDA</string>
     <string name="support_xda_summ">Tema del módulo en foros XDA</string>
     <string name="support_4pda_title">Tema de 4DA</string>
@@ -912,8 +912,8 @@
     <string name="crash_ok">¡El reporte se envió con éxito!</string>
     <string name="crash_error">Fallo al enviar reporte</string>
     <string name="crash_confirm">Confirmación</string>
-    <string name="crash_collecting_report">Creando reporte...</string>
-    <string name="crash_sending_report">Enviando reporte...</string>
+    <string name="crash_collecting_report">Creando reporte…</string>
+    <string name="crash_sending_report">Enviando reporte…</string>
     <string name="array_color_auto">Automático</string>
     <string name="array_color_dark">Oscuro</string>
     <string name="array_color_light">Claro</string>
