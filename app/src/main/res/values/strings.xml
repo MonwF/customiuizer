@@ -81,6 +81,8 @@
 	<string name="system_calendar_app_summ">Open selected app when date in notification drawer\'s header is tapped</string>
 	<string name="system_clockseconds_title">Show seconds</string>
 	<string name="system_clockseconds_summ">Display seconds in the status bar clock</string>
+	<string name="system_clockseconds_sync_title">Synchronization</string>
+	<string name="system_clockseconds_sync_summ">Try to update value at a specified moment</string>
 	<string name="system_maxsbicons_title">Notification icons limit</string>
 	<string name="system_maxsbicons_summ">Number of notification icons to display before turning them into dots</string>
 	<string name="system_mobiletypeicon_title">Hide mobile network type</string>
@@ -849,6 +851,8 @@
 	<string name="array_path">Selected path</string>
 	<string name="array_collapse_initial">Initially</string>
 	<string name="array_collapse_permanent">Permanently</string>
+	<string name="array_second_beginning">Beginning of a second</string>
+	<string name="array_second_end">End of a second</string>
 	<string name="unlimited">Unlimited</string>
 
 	<string name="toggle_wifi_on">Wi-Fi enabled</string>

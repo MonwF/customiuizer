@@ -258,6 +258,8 @@
 	<string name="array_path">Выбранный путь</string>
 	<string name="array_collapse_initial">Изначально</string>
 	<string name="array_collapse_permanent">Перманентно</string>
+	<string name="array_second_beginning">Начало секунды</string>
+	<string name="array_second_end">Конец секунды</string>
 	<string name="unlimited">Неограниченно</string>
 
 	<string name="support_bug_title">Сообщить об ошибке</string>
@@ -711,6 +713,8 @@
 	<string name="system_calendar_app_summ">Открывает выбранное приложение при клике по дате в панели уведомлений</string>
 	<string name="system_clockseconds_title">Показывать секунды</string>
 	<string name="system_clockseconds_summ">Отображает секунды на часах в статусбаре</string>
+	<string name="system_clockseconds_sync_title">Синхронизация</string>
+	<string name="system_clockseconds_sync_summ">Попытаться обновлять значение в указанный момент</string>
 	<string name="system_maxsbicons_title">Лимит иконок уведомлений</string>
 	<string name="system_maxsbicons_summ">Число отображаемых иконок уведомлений до превращения их в точки</string>
 	<string name="system_mobiletypeicon_title">Скрывать тип мобильной сети</string>
