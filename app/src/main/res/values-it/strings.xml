@@ -1009,4 +1009,8 @@
     <string name="type_res">fonte</string>
     <string name="various_unlockfps_title">Sblocca frame rate</string>
     <string name="various_unlockfps_summ">Rendi disponibili fps fino a 90 nell\'app Screen Recorder. L\'effettivo funzionamento di fps più alti dipende dal dispositivo e dal driver video.</string>
+    <string name="system_clockseconds_sync_title">Sincronizzazione</string>
+    <string name="system_clockseconds_sync_summ">Prova ad aggiornare il valore in un momento specifico</string>
+    <string name="array_second_beginning">Inizio di un secondo</string>
+    <string name="array_second_end">Fine di un secondo</string>
 </resources>
