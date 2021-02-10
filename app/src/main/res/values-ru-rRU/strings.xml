@@ -243,6 +243,7 @@
 	<string name="array_adjust_volume">Регулировка громкости</string>
 	<string name="array_alarm_absolute">Обычное время</string>
 	<string name="array_alarm_relative">Относительное время</string>
+	<string name="array_alarm_both">Обычное и относительное время</string>
 	<string name="array_singletap">Одиночное нажатие</string>
 	<string name="array_doubletap">Двойное нажатие</string>
 	<string name="array_longpress">Долгое нажатие</string>

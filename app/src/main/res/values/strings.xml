@@ -834,6 +834,7 @@
 	<string name="array_adjust_volume">Adjust volume</string>
 	<string name="array_alarm_absolute">Regular time</string>
 	<string name="array_alarm_relative">Relative time</string>
+	<string name="array_alarm_both">Regular and relative time</string>
 	<string name="array_singletap">Single tap</string>
 	<string name="array_doubletap">Double tap</string>
 	<string name="array_longpress">Long press</string>
