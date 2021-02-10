@@ -32,6 +32,7 @@
 	<string name="warning">Внимание!</string>
 	<string name="warning_blacklist">Опция чёрного/белого списка активна в Xposed Framework, это может привести к неработоспособности модов.</string>
 	<string name="warning_blacklist_sdk">Кроме того, модуль был установлен из маркета, где находится более ограниченная версия. Рекомендуется переустановить модуль из любого другого источника.</string>
+	<string name="warning_scope">Область активации включена для данного модуля, это может привести к неработоспособности некоторых модов.</string>
 	<string name="module_not_active">Модуль CustoMIUIzer не активен! Откройте приложение Xposed, активируйте модуль и перезагрузитесь.</string>
 	<string name="backup_restore_info">Ваши настройки были восстановлены из Google Cloud. Если мод Vol2wake был активен, отключите его и включите снова, после этого сделайте полную перезагрузку.</string>
 	<string name="prefs_migration_success">Настройки модуля были успешно мигрированы для работы с новой версией EdXposed. Перезагрузитесь для применения изменений.</string>
@@ -447,6 +448,7 @@
 	<string name="miuizer_ownrepo_title">Свой репозиторий</string>
 	<string name="miuizer_ownrepo_summ">Добавить новый репозиторий в EdXposed Manager для более надёжной загрузки данных о CustoMIUIzer</string>
 	<string name="miuizer_ownrepo_note">Используется дополнительный репозиторий</string>
+	<string name="miuizer_ownrepo_unsupported">Установлена несовместимая версия EdXposed Менеджера</string>
 	<string name="miuizer_locale_title">Язык интерфейса</string>
 	<string name="miuizer_locale_summ">Всегда отображать интерфейс модуля на выбранном языке</string>
 	<string name="miuizer_holiday_title">Праздничный дизайн</string>

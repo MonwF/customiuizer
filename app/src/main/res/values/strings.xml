@@ -895,6 +895,7 @@
 	<string name="miuizer_ownrepo_title">Own repository</string>
 	<string name="miuizer_ownrepo_summ">Add custom repo to EdXposed Manager to load CustoMIUIzer\'s info more reliably</string>
 	<string name="miuizer_ownrepo_note">Additional repository is used</string>
+	<string name="miuizer_ownrepo_unsupported">Unsupported version of EdXposed Manager is installed</string>
 	<string name="miuizer_locale_title">Interface language</string>
 	<string name="miuizer_locale_summ">Always display module\'s interface in selected language</string>
 	<string name="miuizer_holiday_title">Holiday design</string>
@@ -959,6 +960,7 @@
 	<string name="warning">Warning!</string>
 	<string name="warning_blacklist">Black/White list option is active in Xposed Framework, it can prevent mods from working properly.</string>
 	<string name="warning_blacklist_sdk">Additionally, installed module version is from Google Play and has more limitations. Consider reinstalling it from any other source.</string>
+	<string name="warning_scope">Activation scope is active for this module, it can prevent some mods from working properly.</string>
 	<string name="open_xposed">Manage Xposed modules</string>
 	<string name="soft_reboot">Soft reboot</string>
 	<string name="soft_reboot_ask">Perform soft reboot now?</string>
