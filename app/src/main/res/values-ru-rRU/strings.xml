@@ -722,6 +722,8 @@
 	<string name="system_maxsbicons_summ">Число отображаемых иконок уведомлений до превращения их в точки</string>
 	<string name="system_mobiletypeicon_title">Скрывать тип мобильной сети</string>
 	<string name="system_mobiletypeicon_summ">Удаляет иконку типа мобильной сети из строки состояния</string>
+	<string name="system_networkindicator_title">Индикаторы активности сети</string>
+	<string name="system_networkindicator_summ">Настройка индикаторов Мобильного интернета и Wi-Fi</string>
 	<string name="system_4gtolte_title">Показывать LTE вместо 4G</string>
 	<string name="system_hidemoreicon_title">Убрать индикатор скрытых иконок</string>
 	<string name="system_hidemoreicon_summ">Отключает показ иконки с 3 точками, когда активна опция скрытия иконок уведомлений</string>
