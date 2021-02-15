@@ -1013,4 +1013,9 @@
     <string name="system_clockseconds_sync_summ">Prova ad aggiornare il valore in un momento specifico</string>
     <string name="array_second_beginning">Inizio di un secondo</string>
     <string name="array_second_end">Fine di un secondo</string>
+    <string name="array_alarm_both">Tempo regolare e relativo</string>
+    <string name="miuizer_ownrepo_unsupported">È installata una versione non supportata di EdXposed Manager</string>
+    <string name="warning_scope">Lo scope di attivazione è attivo per questo modulo, può impedire ad alcune mod di funzionare correttamente.</string>
+    <string name="system_networkindicator_title">Indicatori attività di rete</string>
+    <string name="system_networkindicator_summ">Configura gli indicatori dei dati mobili e del traffico Wi-Fi</string>
 </resources>
