@@ -1,3 +1,16 @@
+3.1.5
+[New] Unlock frame rate up to 90 in Screen Recorder app (whether it will actually work depends on device and video driver)
+[New] Display a switch between App Vault and Google Discover in Home screen settings on global ROMs
+[New] Automatically close app drawer in MIUI Launcher after app launch
+[New] Enable or disable network activity indicators in status bar
+[Improved][Unlock grid sizes] Launcher grids up to 10x10
+[Improved][Top margin for app titles in launcher] Negative values
+[Improved][Display next alarm] Option to display both relative and regular time
+[Improved][Seconds in status bar clock] Option to try to synchronize updates with beginning or end of a second
+[Fixed][Seconds in status bar clock] Premature update from 59 to 00
+[Fixed][Clock app in notification drawer] Clock app instead of Calendar app replacement in landscape mode
+[Fixed] Unnecessary preferences migration after restoring them from backup
+
 3.1.4
 [Fixed] EdXposed Manager freeze on launch (it might still happen on EdXposed SandHook when Own repository option is active)
 [Fixed] Searching for newly added mods

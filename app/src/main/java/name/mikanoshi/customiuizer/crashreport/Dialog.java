@@ -347,6 +347,11 @@ public class Dialog extends Activity {
 			String edxpVersion = null;
 			if (Helpers.usingNewSharedPrefs()) try {
 				edxpVersion = pkgMgr.getInstallerPackageName("EdXposedVersion");
+				if (edxpVersion == null || edxpVersion.startsWith("unknown")) {
+					File versionFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder + Helpers.versionFile);
+					if (versionFile.exists())
+					try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(versionFile)))) { edxpVersion = reader.readLine(); }
+				}
 			} catch (Throwable ignore) {}
 
 			if (edxpVersion == null) {
@@ -375,7 +380,7 @@ public class Dialog extends Activity {
 				for (String prop: xposedPropFiles) {
 					File propFile = new File(prop);
 					if (propFile.exists() && propFile.canRead()) {
-						edxpVersion = Helpers.getXposedPropVersion(propFile);
+						edxpVersion = Helpers.getXposedPropVersion(propFile, false);
 						break;
 					}
 				}
@@ -398,7 +403,7 @@ public class Dialog extends Activity {
 
 			crashData.put("SHARED_PREFERENCES", new JSONObject(prefs.getAll()));
 			if (!sb.toString().isEmpty())
-				crashData.put("UNCAUGHT_EXCEPTIONS", sb.toString());
+			crashData.put("UNCAUGHT_EXCEPTIONS", sb.toString());
 
 			if (xposedLog == null || xposedLog.trim().equals(""))
 				crashData.put(ReportField.CUSTOM_DATA, "Xposed log is empty...");
@@ -496,8 +501,7 @@ public class Dialog extends Activity {
 			dialogView.addView(desc);
 
 			String email = Helpers.prefs.getString("acra.user.email", "");
-			if (Objects.equals(email, ""))
-				dialogView.addView(feedbackNote);
+			if (Objects.equals(email, "")) dialogView.addView(feedbackNote);
 
 			mainText.setText(mainText.getText() + "\n" + getResources().getString(R.string.crash_dialog_manual_size) + ": " + Math.round(payloadSize / 1024.0f) + " KB");
 		} catch (Throwable t) {}

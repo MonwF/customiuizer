@@ -317,6 +317,14 @@
 			android:entryValues="@array/mobiletypeicon_val"
 			android:defaultValue="1" />
 
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_networkindicator"
+			android:title="@string/system_networkindicator_title"
+			android:summary="@string/system_networkindicator_summ"
+			android:entries="@array/onoff"
+			android:entryValues="@array/onoff_val"
+			android:defaultValue="1" />
+
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_4gtolte"
 			android:title="@string/system_4gtolte_title"
@@ -355,6 +363,16 @@
 			android:summary="@string/system_clockseconds_summ"
 			android:title="@string/system_clockseconds_title"
 			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_clockseconds_sync"
+			android:summary="@string/system_clockseconds_sync_summ"
+			android:title="@string/system_clockseconds_sync_title"
+			android:dependency="pref_key_system_clockseconds"
+			android:entries="@array/secondsync"
+			android:entryValues="@array/secondsync_val"
+			android:defaultValue="0"
+			miuizer:child="true" />
 
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_system_maxsbicons"

@@ -896,6 +896,15 @@ public class Various {
 		});
 	}
 
+	public static void ScreenRecorderFramerateHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethods("com.miui.screenrecorder.config.ScreenRecorderConfig", lpparam.classLoader, "setFramesValue", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				param.args[0] = 90;
+			}
+		});
+	}
+
 //	public static void LargeCallerPhotoHook(LoadPackageParam lpparam) {
 //		Helpers.findAndHookMethod("com.android.incallui.CallCardFragment", lpparam.classLoader, "setCallCardImage", Drawable.class, boolean.class, new MethodHook() {
 //			@Override

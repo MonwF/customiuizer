@@ -3,6 +3,7 @@ package name.mikanoshi.customiuizer.mods;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.app.Application;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -333,61 +334,63 @@ public class Launcher {
 	}
 
 	private static Class<?> wallpaperUtilsCls = null;
-	@SuppressWarnings("ConstantConditions")
-	private static void applyFolderShade(View folder) {
-		int opt = Integer.parseInt(Helpers.getSharedStringPref(folder.getContext(), "pref_key_launcher_foldershade", "1"));
-		int level = Helpers.getSharedIntPref(folder.getContext(), "pref_key_launcher_foldershade_level", 40);
-		MainModule.mPrefs.put("pref_key_launcher_foldershade", String.valueOf(opt));
-		MainModule.mPrefs.put("pref_key_launcher_foldershade_level", level);
-		if (opt == 2) {
-			boolean isLight = false;
-			if (wallpaperUtilsCls != null) try { isLight = (boolean)XposedHelpers.callStaticMethod(wallpaperUtilsCls, "hasAppliedLightWallpaper"); } catch (Throwable ignore) {}
-			int bgcolor = (isLight ? 0x00ffffff : 0x00000000) | (Math.round(255 * level / 100f) * 0x1000000);
-			folder.setBackground(new ColorDrawable(bgcolor));
-		} else if (opt == 3) {
-			PaintDrawable pd = new PaintDrawable();
-			pd.setShape(new RectShape());
-			pd.setShaderFactory(new ShapeDrawable.ShaderFactory() {
-				@Override
-				public Shader resize(int width, int height) {
-					boolean isLight = false;
-					if (wallpaperUtilsCls != null) try { isLight = (boolean)XposedHelpers.callStaticMethod(wallpaperUtilsCls, "hasAppliedLightWallpaper"); } catch (Throwable ignore) {}
-					int bgcolor1 = (isLight ? 0x00ffffff : 0x00000000) | (Math.round(255 / 6f * level / 100f) * 0x1000000);
-					int bgcolor2 = (isLight ? 0x00ffffff : 0x00000000) | (Math.round(255 * level / 100f) * 0x1000000);
-					return new LinearGradient(0, 0, 0, height,
-							new int[]{ bgcolor1, bgcolor2, bgcolor2, bgcolor1 },
-							new float[]{ 0.0f, 0.25f, 0.65f, 1.0f },
-							Shader.TileMode.CLAMP
-					);
-				}
-			});
-			folder.setBackground(pd);
-		} else folder.setBackground(null);
-	}
-
 	public static void FolderShadeHook(final LoadPackageParam lpparam) {
 		wallpaperUtilsCls = XposedHelpers.findClassIfExists("com.miui.home.launcher.WallpaperUtils", lpparam.classLoader);
 
-		Helpers.hookAllConstructors("com.miui.home.launcher.FolderCling", lpparam.classLoader, new MethodHook() {
+		MethodHook hook = new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
-				applyFolderShade((View)param.thisObject);
+				View folder = (View)param.thisObject;
+				new Thread() {
+					@Override
+					public void run() {
+						try {
+							Context context = folder.getContext();
+							int opt = Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_launcher_foldershade", "1"));
+							int level = Helpers.getSharedIntPref(context, "pref_key_launcher_foldershade_level", 40);
+							final Drawable bkg;
+							if (opt == 2) {
+								boolean isLight = false;
+								if (wallpaperUtilsCls != null) try { isLight = (boolean)XposedHelpers.callStaticMethod(wallpaperUtilsCls, "hasAppliedLightWallpaper"); } catch (Throwable ignore) {}
+								int bgcolor = (isLight ? 0x00ffffff : 0x00000000) | (Math.round(255 * level / 100f) * 0x1000000);
+								bkg = new ColorDrawable(bgcolor);
+							} else if (opt == 3) {
+								PaintDrawable pd = new PaintDrawable();
+								pd.setShape(new RectShape());
+								pd.setShaderFactory(new ShapeDrawable.ShaderFactory() {
+									@Override
+									public Shader resize(int width, int height) {
+										boolean isLight = false;
+										if (wallpaperUtilsCls != null) try { isLight = (boolean)XposedHelpers.callStaticMethod(wallpaperUtilsCls, "hasAppliedLightWallpaper"); } catch (Throwable ignore) {}
+										int bgcolor1 = (isLight ? 0x00ffffff : 0x00000000) | (Math.round(255 / 6f * level / 100f) * 0x1000000);
+										int bgcolor2 = (isLight ? 0x00ffffff : 0x00000000) | (Math.round(255 * level / 100f) * 0x1000000);
+										return new LinearGradient(0, 0, 0, height,
+											new int[]{ bgcolor1, bgcolor2, bgcolor2, bgcolor1 },
+											new float[]{ 0.0f, 0.25f, 0.65f, 1.0f },
+											Shader.TileMode.CLAMP
+										);
+									}
+								});
+								bkg = pd;
+							} else bkg = null;
+							new Handler(context.getMainLooper()).post(new Runnable() {
+								@Override
+								public void run() {
+									MainModule.mPrefs.put("pref_key_launcher_foldershade", String.valueOf(opt));
+									MainModule.mPrefs.put("pref_key_launcher_foldershade_level", level);
+									folder.setBackground(bkg);
+								}
+							});
+						} catch (Throwable t) {
+							XposedBridge.log(t);
+						}
+					}
+				}.start();
 			}
-		});
-
-		Helpers.findAndHookMethod("com.miui.home.launcher.FolderCling", lpparam.classLoader, "onWallpaperColorChanged", new MethodHook() {
-			@Override
-			protected void after(final MethodHookParam param) throws Throwable {
-				applyFolderShade((View)param.thisObject);
-			}
-		});
-
-		Helpers.findAndHookMethod("com.miui.home.launcher.FolderCling", lpparam.classLoader, "updateLayout", boolean.class, new MethodHook() {
-			@Override
-			protected void after(final MethodHookParam param) throws Throwable {
-				applyFolderShade((View)param.thisObject);
-			}
-		});
+		};
+		Helpers.hookAllConstructors("com.miui.home.launcher.FolderCling", lpparam.classLoader, hook);
+		Helpers.findAndHookMethod("com.miui.home.launcher.FolderCling", lpparam.classLoader, "onWallpaperColorChanged", hook);
+		Helpers.findAndHookMethod("com.miui.home.launcher.FolderCling", lpparam.classLoader, "updateLayout", boolean.class, hook);
 
 		Helpers.findAndHookMethod("com.miui.home.launcher.Folder", lpparam.classLoader, "setBackgroundAlpha", float.class, new MethodHook() {
 			@Override
@@ -820,8 +823,8 @@ public class Launcher {
 		MainModule.resHooks.setObjectReplacement("com.miui.home", "integer", "config_cell_count_y", 4);
 		MainModule.resHooks.setObjectReplacement("com.miui.home", "integer", "config_cell_count_x_min", 3);
 		MainModule.resHooks.setObjectReplacement("com.miui.home", "integer", "config_cell_count_y_min", 4);
-		MainModule.resHooks.setObjectReplacement("com.miui.home", "integer", "config_cell_count_x_max", 8);
-		MainModule.resHooks.setObjectReplacement("com.miui.home", "integer", "config_cell_count_y_max", 8);
+		MainModule.resHooks.setObjectReplacement("com.miui.home", "integer", "config_cell_count_x_max", 10);
+		MainModule.resHooks.setObjectReplacement("com.miui.home", "integer", "config_cell_count_y_max", 10);
 	}
 
 	public static void UnlockGridsHook(LoadPackageParam lpparam) {
@@ -1047,7 +1050,7 @@ public class Launcher {
 				ViewGroup mTitleContainer = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mTitleContainer");
 				if (mTitleContainer == null) return;
 				ViewGroup.LayoutParams lp = mTitleContainer.getLayoutParams();
-				int opt = Math.round(MainModule.mPrefs.getInt("launcher_titletopmargin", 0) * mTitleContainer.getResources().getDisplayMetrics().density);
+				int opt = Math.round((MainModule.mPrefs.getInt("launcher_titletopmargin", 0) - 11) * mTitleContainer.getResources().getDisplayMetrics().density);
 				if (lp instanceof RelativeLayout.LayoutParams) {
 					((RelativeLayout.LayoutParams)lp).topMargin = opt;
 					mTitleContainer.setLayoutParams(lp);
@@ -1115,29 +1118,23 @@ public class Launcher {
 		try {
 			Class<?> configCls = XposedHelpers.findClass("com.miui.home.launcher.DeviceConfig", lpparam.classLoader);
 
-			XposedHelpers.setStaticBooleanField(XposedHelpers.findClass("com.miui.home.launcher.DeviceConfig", lpparam.classLoader), "CAN_SWITCH_MINUS_SCREEN", true);
-			XposedHelpers.setStaticBooleanField(XposedHelpers.findClass("com.miui.home.launcher.DeviceConfig", lpparam.classLoader), "ONLY_USE_GOOGLE_MINUS_SCREEN", false);
-			//XposedHelpers.setStaticBooleanField(XposedHelpers.findClass("com.miui.home.launcher.DeviceConfig", lpparam.classLoader), "IS_USE_GOOGLE_MINUS_SCREEN", true);
-
 			HashSet<String> SELECT_MINUS_SCREEN_CLIENT_ID = (HashSet<String>)XposedHelpers.getStaticObjectField(configCls, "SELECT_MINUS_SCREEN_CLIENT_ID");
 			SELECT_MINUS_SCREEN_CLIENT_ID.add("");
 
 			//HashSet<String> USE_GOOGLE_MINUS_SCREEN_REGIONS = (HashSet<String>)XposedHelpers.getStaticObjectField(configCls, "USE_GOOGLE_MINUS_SCREEN_REGIONS");
 			//String CURRENT_REGION = (String)XposedHelpers.getStaticObjectField(configCls, "CURRENT_REGION");
 			//USE_GOOGLE_MINUS_SCREEN_REGIONS.add(CURRENT_REGION);
+
+			XposedHelpers.setStaticBooleanField(XposedHelpers.findClass("com.miui.home.launcher.DeviceConfig", lpparam.classLoader), "CAN_SWITCH_MINUS_SCREEN", true);
+			XposedHelpers.setStaticBooleanField(XposedHelpers.findClass("com.miui.home.launcher.DeviceConfig", lpparam.classLoader), "ONLY_USE_GOOGLE_MINUS_SCREEN", false);
+			Class<?> appCls = XposedHelpers.findClassIfExists("com.miui.home.launcher.Application", lpparam.classLoader);
+			if (appCls != null) {
+				Application app = (Application)XposedHelpers.callStaticMethod(appCls, "getInstance");
+				XposedHelpers.setStaticBooleanField(XposedHelpers.findClass("com.miui.home.launcher.DeviceConfig", lpparam.classLoader), "IS_USE_GOOGLE_MINUS_SCREEN", "personal_assistant_google".equals(Settings.System.getString(app.getContentResolver(), "switch_personal_assistant")));
+			}
 		} catch (Throwable t) {
 			Helpers.log("GoogleMinusScreenHook", t.getMessage());
 		}
-
-//		Helpers.hookAllMethods("com.miui.home.settings.MiuiHomeSettings", lpparam.classLoader, "onCreatePreferences", new MethodHook() {
-//			@Override
-//			protected void before(final MethodHookParam param) throws Throwable {
-//				XposedBridge.log("IS_INTERNATIONAL_BUILD: " + XposedHelpers.getStaticBooleanField(XposedHelpers.findClass("miui.os.Build", null), "IS_INTERNATIONAL_BUILD"));
-//				Class<?> configCls = XposedHelpers.findClass("com.miui.home.launcher.DeviceConfig", lpparam.classLoader);
-//				XposedBridge.log("CAN_SWITCH_MINUS_SCREEN: " + XposedHelpers.getStaticObjectField(configCls, "CAN_SWITCH_MINUS_SCREEN"));
-//				XposedBridge.log("ONLY_USE_GOOGLE_MINUS_SCREEN: " + XposedHelpers.getStaticObjectField(configCls, "ONLY_USE_GOOGLE_MINUS_SCREEN"));
-//			}
-//		});
 	}
 
 	public static void ShowHotseatTitlesRes() {
@@ -1470,6 +1467,17 @@ public class Launcher {
 				param.args[0] = (float)param.args[0] * MainModule.mPrefs.getInt("system_recents_blur", 100) / 100f;
 			}
 		});
+	}
+
+	public static void CloseDrawerOnLaunchHook(LoadPackageParam lpparam) {
+		MethodHook hook = new MethodHook() {
+			@Override
+			protected void before(final MethodHookParam param) throws Throwable {
+				XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mLauncher"), "hideAppView");
+			}
+		};
+		Helpers.findAndHookMethod("com.miui.home.launcher.allapps.category.fragment.AppsListFragment", lpparam.classLoader, "onClick", View.class, hook);
+		Helpers.findAndHookMethod("com.miui.home.launcher.allapps.category.fragment.RecommendCategoryAppListFragment", lpparam.classLoader, "onClick", View.class, hook);
 	}
 
 //	public static void NoInternationalBuildHook(LoadPackageParam lpparam) {

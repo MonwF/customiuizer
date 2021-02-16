@@ -190,6 +190,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_separatevolume")) System.NotificationVolumeDialogRes();
 			if (mPrefs.getBoolean("system_snoozedmanager")) System.MoreSnoozeOptionsRes();
 			if (mPrefs.getBoolean("system_statusbaricons_volte")) System.HideIconsVoLTERes();
+			if (mPrefs.getStringAsInt("system_networkindicator", 1) > 1) System.NetworkIndicatorRes();
 
 			if (mPrefs.getInt("system_statusbarheight", 19) > 19) System.StatusBarHeightHook(lpparam);
 			if (mPrefs.getInt("system_recents_blur", 100) < 100) System.RecentsBlurRatioHook(lpparam);
@@ -357,8 +358,14 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			}
 		});
 
-		final boolean isLauncherPkg = pkg.equals("com.miui.home") || pkg.equals("com.mi.android.globallauncher");
+		if (pkg.equals("com.miui.screenrecorder")) {
+			if (mPrefs.getBoolean("various_unlockfps")) Various.ScreenRecorderFramerateHook(lpparam);
+		}
+
+		final boolean isMIUILauncherPkg = pkg.equals("com.miui.home");
+		final boolean isLauncherPkg = isMIUILauncherPkg || pkg.equals("com.mi.android.globallauncher");
 		final boolean isLauncherPerf = mPrefs.getBoolean("launcher_compat");
+		final boolean isGoogleMinus = mPrefs.getBoolean("launcher_googleminus");
 		final boolean isStatusBarColor = mPrefs.getBoolean("system_statusbarcolor") && !mPrefs.getStringSet("system_statusbarcolor_apps").contains(pkg);
 		final int collapseTitlesOpt = mPrefs.getStringAsInt("various_collapsemiuititles", 1);
 		final boolean collapseTitles = collapseTitlesOpt > 1 && Helpers.is12();
@@ -373,11 +380,12 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (isLauncherPerf) handleLoadLauncher(lpparam);
 		}
 
-		if ((isLauncherPkg && !isLauncherPerf) || isStatusBarColor || collapseTitles)
+		if ((isLauncherPkg && !isLauncherPerf) || (isMIUILauncherPkg && isGoogleMinus) || isStatusBarColor || collapseTitles)
 		Helpers.findAndHookMethod(Application.class, "attach", Context.class, new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				if (isLauncherPkg && !isLauncherPerf) handleLoadLauncher(lpparam);
+				if (isMIUILauncherPkg && isGoogleMinus) Launcher.GoogleMinusScreenHook(lpparam);
 				if (isStatusBarColor) System.StatusBarBackgroundCompatHook(lpparam);
 				if (collapseTitles) Various.CollapseMIUITitlesHook(lpparam, param, collapseTitlesOpt);
 			}
@@ -426,13 +434,13 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("launcher_fixanim")) Launcher.FixAnimHook(lpparam);
 			if (mPrefs.getBoolean("launcher_hideseekpoints")) Launcher.HideSeekPointsHook(lpparam);
 			if (mPrefs.getBoolean("launcher_privacyapps_gest")) Launcher.PrivacyFolderHook(lpparam);
-			//if (mPrefs.getBoolean("launcher_googleminus")) Launcher.GoogleMinusScreenHook(lpparam); else
-			if (mPrefs.getBoolean("launcher_googlediscover")) Launcher.GoogleDiscoverHook(lpparam);
+			if (!mPrefs.getBoolean("launcher_googleminus") && mPrefs.getBoolean("launcher_googlediscover")) Launcher.GoogleDiscoverHook(lpparam);
 			if (mPrefs.getBoolean("launcher_docktitles") && mPrefs.getInt("launcher_bottommargin", 0) == 0) Launcher.ShowHotseatTitlesHook(lpparam);
 			if (mPrefs.getBoolean("launcher_folderblur")) Launcher.FolderBlurHook(lpparam);
 			if (mPrefs.getBoolean("launcher_nounlockanim")) Launcher.NoUnlockAnimationHook(lpparam);
 			if (mPrefs.getBoolean("launcher_oldlaunchanim")) Launcher.UseOldLaunchAnimationHook(lpparam);
 			if (mPrefs.getBoolean("launcher_unlockgrids")) Launcher.UnlockGridsHook(lpparam);
+			if (mPrefs.getBoolean("launcher_closedrawer")) Launcher.CloseDrawerOnLaunchHook(lpparam);
 			if (mPrefs.getInt("launcher_bottommargin", 0) > 0) Launcher.BottomSpacingHook(lpparam);
 		}
 		//if (!mPrefs.getString("system_clock_app", "").equals("")) Launcher.ReplaceClockAppHook(lpparam);

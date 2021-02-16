@@ -75,6 +75,7 @@ import android.os.Message;
 import android.os.Parcelable;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.os.SystemClock;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.telephony.PhoneStateListener;
@@ -1032,6 +1033,18 @@ public class System {
 	public static void ClockSecondsHook(LoadPackageParam lpparam) {
 		Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.Clock", lpparam.classLoader, "updateClock", new MethodHook(XCallback.PRIORITY_HIGHEST) {
 			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				TextView clock = (TextView)param.thisObject;
+				if (clock.getId() != clock.getResources().getIdentifier("clock", "id", "com.android.systemui")) return;
+				long now = SystemClock.elapsedRealtime();
+				Long last = (Long)XposedHelpers.getAdditionalInstanceField(clock, "mLastUpdateTime");
+				if (last == null || now - last > 900)
+					XposedHelpers.setAdditionalInstanceField(param.thisObject, "mLastUpdateTime", now);
+				else
+					param.setResult(null);
+			}
+
+			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				TextView clock = (TextView)param.thisObject;
 				if (clock.getId() == clock.getResources().getIdentifier("clock", "id", "com.android.systemui"))
@@ -1046,6 +1059,9 @@ public class System {
 				if (clock.getId() != clock.getResources().getIdentifier("clock", "id", "com.android.systemui")) return;
 				if (XposedHelpers.getAdditionalInstanceField(clock, "mSecondsTimer") != null) return;
 				final Handler mClockHandler = new Handler(clock.getContext().getMainLooper());
+				int opt = MainModule.mPrefs.getStringAsInt("system_clockseconds_sync", 0);
+				long delay = 1000 - SystemClock.elapsedRealtime() % 1000;
+				delay += opt == 1 ? 50 : 950;
 				Timer timer = new Timer();
 				timer.scheduleAtFixedRate(new TimerTask() {
 					@Override
@@ -1057,7 +1073,7 @@ public class System {
 							}
 						});
 					}
-				}, 0, 1000);
+				}, delay, 1000);
 				XposedHelpers.setAdditionalInstanceField(clock, "mSecondsTimer", timer);
 			}
 		});
@@ -2822,7 +2838,9 @@ public class System {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				View mClock = (View)XposedHelpers.getObjectField(param.thisObject, "mClock");
-				mClock.setOnClickListener(new View.OnClickListener() {
+				View mDateView = (View)XposedHelpers.getObjectField(param.thisObject, "mDateView");
+				View mView = mClock.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? mDateView : mClock;
+				mView.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						int user = Helpers.getSharedIntPref(v.getContext(), "pref_key_system_clock_app_user", 0);
@@ -2864,6 +2882,7 @@ public class System {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				View mDateView = (View)XposedHelpers.getObjectField(param.thisObject, "mDateView");
+				if (mDateView.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) return;
 				mDateView.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -5861,16 +5880,17 @@ public class System {
 			StringBuilder alarmStr = new StringBuilder();
 			alarmStr.append("\n").append(Helpers.getModuleRes(mContext).getString(R.string.system_statusbaricons_alarm_title)).append(" ");
 			int format = MainModule.mPrefs.getStringAsInt("system_lsalarm_format", 1);
-			if (format == 2) {
-				StringBuilder timeStr = new StringBuilder(DateUtils.getRelativeTimeSpanString(timestamp, currentTimeMillis(), 0, DateUtils.FORMAT_ABBREV_RELATIVE));
-				timeStr.setCharAt(0, Character.toLowerCase(timeStr.charAt(0)));
-				alarmStr.append(timeStr);
-			} else {
+			if (format == 1 || format == 3) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat(DateFormat.getBestDateTimePattern(Locale.getDefault(), DateFormat.is24HourFormat(mContext) ? "EHmm" : "EHmma"), Locale.getDefault());
 				dateFormat.setTimeZone(TimeZone.getDefault());
 				Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 				calendar.setTimeInMillis(timestamp);
 				alarmStr.append(dateFormat.format(calendar.getTime()));
+			}
+			if (format == 2 || format == 3) {
+				StringBuilder timeStr = new StringBuilder(DateUtils.getRelativeTimeSpanString(timestamp, currentTimeMillis(), 0, DateUtils.FORMAT_ABBREV_RELATIVE));
+				timeStr.setCharAt(0, Character.toLowerCase(timeStr.charAt(0)));
+				alarmStr.append(format == 3 ? " (" + timeStr + ")" : timeStr);
 			}
 			int pos = Settings.System.getInt(mContext.getContentResolver(), "selected_keyguard_clock_position", 0);
 			if (mCurrentDate != null) {
@@ -7629,6 +7649,12 @@ public class System {
 				}
 			}
 		});
+	}
+
+	public static void NetworkIndicatorRes() {
+		int opt = MainModule.mPrefs.getStringAsInt("system_networkindicator", 1);
+		MainModule.resHooks.setObjectReplacement("com.android.systemui", "bool", "config_showActivity", opt == 2);
+		MainModule.resHooks.setObjectReplacement("com.android.systemui", "bool", "config_showWifiActivity", opt == 2);
 	}
 
 //	@SuppressWarnings("unchecked")

@@ -116,12 +116,14 @@ public class Launcher extends SubFragment {
 				findPreference("pref_key_launcher_nounlockanim").setEnabled(opt == 1);
 				findPreference("pref_key_launcher_oldlaunchanim").setEnabled(opt == 1);
 				findPreference("pref_key_launcher_googlediscover").setEnabled(opt == 1);
-//				Preference pref = findPreference("pref_key_launcher_googleminus");
-//				pref.setEnabled(opt == 1);
-//				if (!miui.os.Build.IS_INTERNATIONAL_BUILD) {
-//					((CheckBoxPreferenceEx)pref).setUnsupported(true);
-//					pref.setSummary(R.string.launcher_googleminus_note);
-//				}
+				findPreference("pref_key_launcher_googleminus").setEnabled(opt == 1);
+				findPreference("pref_key_launcher_closedrawer").setEnabled(opt == 1);
+				Preference pref = findPreference("pref_key_launcher_googleminus");
+				pref.setEnabled(opt == 1);
+				if (!miui.os.Build.IS_INTERNATIONAL_BUILD) {
+					((CheckBoxPreferenceEx)pref).setUnsupported(true);
+					pref.setSummary(R.string.launcher_googleminus_note);
+				}
 				break;
 		}
 	}

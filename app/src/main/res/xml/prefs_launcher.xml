@@ -98,7 +98,8 @@
 			android:defaultValue="0"
 			android:dependency="pref_key_launcher_hidetitles"
 			miuizer:minValue="0"
-			miuizer:maxValue="10"
+			miuizer:maxValue="21"
+			miuizer:negativeShift="11"
 			miuizer:stepValue="1"
 			miuizer:format="%d dp"
 			miuizer:offtext="@string/array_default" />
@@ -222,19 +223,19 @@
 			android:title="@string/launcher_noclockhide_title"
 			android:summary="@string/launcher_noclockhide_summ"
 			android:defaultValue="false" />
-<!--
+
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_googleminus"
 			android:title="@string/launcher_googleminus_title"
 			android:summary="@string/launcher_googleminus_summ"
 			android:disableDependentsState="true"
 			android:defaultValue="false" />
-		android:dependency="pref_key_launcher_googleminus"
--->
+
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_googlediscover"
 			android:title="@string/launcher_googlediscover_title"
 			android:summary="@string/launcher_googlediscover_summ"
+			android:dependency="pref_key_launcher_googleminus"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
@@ -294,6 +295,12 @@
 			android:key="pref_key_launcher_unlockhotseat"
 			android:title="@string/launcher_unlockhotseat_title"
 			android:summary="@string/launcher_unlockhotseat_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_launcher_closedrawer"
+			android:title="@string/launcher_closedrawer_title"
+			android:summary="@string/launcher_closedrawer_summ"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference

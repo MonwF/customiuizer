@@ -120,6 +120,7 @@ public class Helpers {
 	public static final String externalFolder = "/CustoMIUIzer/";
 	public static final String backupFile = "settings_backup";
 	public static final String logFile = "xposed_log";
+	public static final String versionFile = "xposed_version";
 	public static final String xposedRepo = "https://code.highspec.ru/repo/full.xml.gz";
 	public static final String ANDROID_NS = "http://schemas.android.com/apk/res/android";
 	public static final String MIUIZER_NS = "http://schemas.android.com/apk/res-auto";
@@ -154,24 +155,24 @@ public class Helpers {
 	public static boolean showNewMods = true;
 	public static boolean miuizerModuleActive = false;
 	public static final HashSet<String> newMods = new HashSet<String>(Arrays.asList(
-		"pref_key_controls_fsg_assist",
-		"pref_key_system_hidelsstatusbar",
-		"pref_key_system_hidelshint",
-		"pref_key_system_mutevisiblenotif"
+		"pref_key_launcher_closedrawer",
+		"pref_key_launcher_googleminus",
+		"pref_key_system_clockseconds_sync",
+		"pref_key_system_networkindicator",
+		"pref_key_various_unlockfps"
 	));
 	public static final HashMap<String, String> l10nProgress = new HashMap<String, String>() {{
-		put("ru-RU", "100.0%");
-		put("zh-CN", "100.0%");
-		put("id", "12.3%");
-		put("tr", "91.2%");
-		put("it", "96.1%");
-		put("pt-BR", "100.0%");
-		put("fr", "24.6%");
-		put("uk-UK", "92.2%");
-		put("es", "100.0%");
-		put("sk", "3.0%");
-		put("cs", "0.0%");
-		put("de", "91.2%");
+		put("de", "89.8");
+		put("es", "99.1");
+		put("it", "100");
+		put("pt-rBR", "98.4");
+		put("ru-rRU", "100");
+		put("tr", "89.8");
+		put("uk-rUK", "90.8");
+		put("zh-rCN", "99.1");
+		put("fr", "25.5");
+		put("id", "13.5");
+		put("sk", "4.3");
 	}};
 
 	public static final ArrayList<String> shortcutIcons = new ArrayList<String>();
@@ -331,6 +332,11 @@ public class Helpers {
 		PackageManager pm = context.getPackageManager();
 
 		try {
+			pm.getPackageInfo("io.github.lsposed.manager", PackageManager.GET_ACTIVITIES);
+			return true;
+		} catch (PackageManager.NameNotFoundException e) {}
+
+		try {
 			pm.getPackageInfo("org.meowcat.edxposed.manager", PackageManager.GET_ACTIVITIES);
 			return true;
 		} catch (PackageManager.NameNotFoundException e) {}
@@ -353,6 +359,14 @@ public class Helpers {
 		return false;
 	}
 
+	public static boolean isUnsupportedManager(Context context) {
+		try {
+		    return context.getPackageManager().getPackageInfo("org.meowcat.edxposed.manager", 0).versionCode > 45700;
+		} catch (PackageManager.NameNotFoundException e) {
+			return true;
+		}
+	}
+
 	public static boolean areXposedResourceHooksDisabled() {
 		File d1 = new File("/data/user_de/0/org.meowcat.edxposed.manager/conf/disable_resources");
 		File d2 = new File("/data/user_de/0/com.solohsu.android.edxp.manager/conf/disable_resources");
@@ -367,32 +381,47 @@ public class Helpers {
 		return d1.exists() || d2.exists() || d3.exists();
 	}
 
+	public static boolean isXposedScopeEnabled(Context context) {
+		try {
+			return "true".equals(context.getPackageManager().getInstallerPackageName("EdXposedScope"));
+		} catch (Throwable t) {
+			return false;
+		}
+	}
+
 	public static boolean openXposedApp(Context context) {
-		Intent intent = context.getPackageManager().getLaunchIntentForPackage("org.meowcat.edxposed.manager");
+		Intent intent = context.getPackageManager().getLaunchIntentForPackage("io.github.lsposed.manager");
 		if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 		try {
 			context.startActivity(intent);
 			return true;
-		} catch (Throwable e1) {
-			intent = context.getPackageManager().getLaunchIntentForPackage("com.solohsu.android.edxp.manager");
+		} catch (Throwable e0) {
+			intent = context.getPackageManager().getLaunchIntentForPackage("org.meowcat.edxposed.manager");
 			if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 			try {
 				context.startActivity(intent);
 				return true;
-			} catch (Throwable e2) {
-				intent = context.getPackageManager().getLaunchIntentForPackage("de.robv.android.xposed.installer");
+			} catch (Throwable e1) {
+				intent = context.getPackageManager().getLaunchIntentForPackage("com.solohsu.android.edxp.manager");
 				if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 				try {
 					context.startActivity(intent);
 					return true;
-				} catch (Throwable e3) {
-					intent = context.getPackageManager().getLaunchIntentForPackage("me.weishu.exp");
+				} catch (Throwable e2) {
+					intent = context.getPackageManager().getLaunchIntentForPackage("de.robv.android.xposed.installer");
 					if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 					try {
 						context.startActivity(intent);
 						return true;
-					} catch (Throwable e4) {
-						Toast.makeText(context, R.string.xposed_not_found, Toast.LENGTH_LONG).show();
+					} catch (Throwable e3) {
+						intent = context.getPackageManager().getLaunchIntentForPackage("me.weishu.exp");
+						if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+						try {
+							context.startActivity(intent);
+							return true;
+						} catch (Throwable e4) {
+							Toast.makeText(context, R.string.xposed_not_found, Toast.LENGTH_LONG).show();
+						}
 					}
 				}
 			}
@@ -412,7 +441,7 @@ public class Helpers {
 		return edxpPath;
 	}
 
-	public static String getXposedPropVersion(File propFile) {
+	public static String getXposedPropVersion(File propFile, boolean fromHook) {
 		String version = "unknown";
 		try (FileInputStream inputStream = new FileInputStream(propFile)) {
 			try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
@@ -440,6 +469,7 @@ public class Helpers {
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
+		if (fromHook) xposedVersion = XposedBridge.getXposedVersion();
 		return "unknown".equals(version) ? version + " (" + xposedVersion + ")" : version;
 	}
 
@@ -489,6 +519,13 @@ public class Helpers {
 		} catch (PackageManager.NameNotFoundException e) {}
 		return res;
 	}
+
+//	public static boolean isScreenOn(Context context) {
+//		DisplayManager dispMgr = (DisplayManager)context.getSystemService(Context.DISPLAY_SERVICE);
+//		for (Display display: dispMgr.getDisplays())
+//		if (display.getState() != Display.STATE_OFF) return true;
+//		return false;
+//	}
 
 	public static void hideKeyboard(Activity act, View view) {
 		try {

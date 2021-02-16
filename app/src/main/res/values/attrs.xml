@@ -25,6 +25,7 @@
 
 	<declare-styleable name="ListPreferenceEx">
 		<attr name="dynamic" />
+		<attr name="child" />
 		<attr name="valueAsSummary" format="boolean" />
 	</declare-styleable>
 

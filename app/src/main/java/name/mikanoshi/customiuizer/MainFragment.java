@@ -59,6 +59,7 @@ import java.util.Locale;
 import miui.app.AlertDialog;
 import miui.view.SearchActionMode;
 
+import name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx;
 import name.mikanoshi.customiuizer.prefs.ListPreferenceEx;
 import name.mikanoshi.customiuizer.prefs.PreferenceEx;
 import name.mikanoshi.customiuizer.subs.CategorySelector;
@@ -420,7 +421,17 @@ public class MainFragment extends PreferenceFragmentBase {
 
 		PreferenceEx warning = (PreferenceEx)findPreference("pref_key_warning");
 		if (warning != null)
-		if (!Helpers.usingNewSharedPrefs() && Helpers.areXposedBlacklistsEnabled()) {
+		if (Helpers.usingNewSharedPrefs() && Helpers.isXposedScopeEnabled(act)) {
+			warning.setTitle(R.string.warning);
+			warning.setSummary(R.string.warning_scope);
+			warning.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+				@Override
+				public boolean onPreferenceClick(Preference preference) {
+					Helpers.openXposedApp(getValidContext());
+					return true;
+				}
+			});
+		} else if (!Helpers.usingNewSharedPrefs() && Helpers.areXposedBlacklistsEnabled()) {
 			warning.setTitle(R.string.warning);
 			if (act.getApplicationContext().getApplicationInfo().targetSdkVersion > 27)
 				warning.setSummary(getString(R.string.warning_blacklist) + "\n" + getString(R.string.warning_blacklist_sdk));
@@ -562,6 +573,13 @@ public class MainFragment extends PreferenceFragmentBase {
 				return true;
 			}
 		});
+
+		if (Helpers.isUnsupportedManager(act)) {
+			CheckBoxPreferenceEx ownrepo = (CheckBoxPreferenceEx)findPreference("pref_key_miuizer_ownrepo");
+			ownrepo.setSummary(R.string.miuizer_ownrepo_unsupported);
+			ownrepo.setEnabled(false);
+			ownrepo.setChecked(false);
+		}
 
 		//Helpers.removePref(this, "pref_key_miuizer_force_material", "pref_key_miuizer");
 	}

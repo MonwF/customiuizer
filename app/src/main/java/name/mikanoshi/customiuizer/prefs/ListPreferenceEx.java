@@ -24,7 +24,10 @@ public class ListPreferenceEx extends ListPreference implements PreferenceState 
 	private final Resources res = getContext().getResources();
 	private final int primary = res.getColor(R.color.preference_primary_text, getContext().getTheme());
 	private final int secondary = res.getColor(R.color.preference_secondary_text, getContext().getTheme());
+	private final int childpadding = res.getDimensionPixelSize(R.dimen.preference_item_child_padding);
+	private final int[] paddings = new int[] {0, 0, 0, 0};
 
+	private final boolean child;
 	private final boolean dynamic;
 	private boolean newmod = false;
 	private boolean unsupported = false;
@@ -33,6 +36,7 @@ public class ListPreferenceEx extends ListPreference implements PreferenceState 
 	public ListPreferenceEx(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		final TypedArray xmlAttrs = context.obtainStyledAttributes(attrs, R.styleable.ListPreferenceEx);
+		child = xmlAttrs.getBoolean(R.styleable.ListPreferenceEx_child, false);
 		dynamic = xmlAttrs.getBoolean(R.styleable.ListPreferenceEx_dynamic, false);
 		valueAsSummary = xmlAttrs.getBoolean(R.styleable.ListPreferenceEx_valueAsSummary, false);
 		xmlAttrs.recycle();
@@ -66,6 +70,12 @@ public class ListPreferenceEx extends ListPreference implements PreferenceState 
 		title.setTextColor(isEnabled() ? primary : secondary);
 		title.setText(getTitle() + (unsupported ? " ⨯" : (dynamic ? " ⟲" : "")));
 		if (newmod) Helpers.applyNewMod(title);
+
+		if (paddings[0] == 0) paddings[0] = finalView.getPaddingLeft();
+		if (paddings[1] == 0) paddings[1] = finalView.getPaddingTop();
+		if (paddings[2] == 0) paddings[2] = finalView.getPaddingRight();
+		if (paddings[3] == 0) paddings[3] = finalView.getPaddingBottom();
+		finalView.setPadding(paddings[0] + (child ? childpadding : 0), paddings[1], paddings[2], paddings[3]);
 
 		return finalView;
 	}

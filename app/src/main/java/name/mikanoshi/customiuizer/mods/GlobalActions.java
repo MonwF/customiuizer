@@ -26,6 +26,7 @@ import android.media.AudioManager;
 import android.net.wifi.WifiManager;
 import android.nfc.NfcAdapter;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -52,6 +53,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -721,6 +723,26 @@ public class GlobalActions {
 			}
 		});
 
+		Helpers.hookAllMethods("org.meowcat.edxposed.manager.XposedApp", lpparam.classLoader, "onCreate", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				Class<?> constCls = findClassIfExists("org.meowcat.edxposed.manager.Constants", lpparam.classLoader);
+				if (constCls == null) return;
+				String edxpVersion = (String)XposedHelpers.callStaticMethod(constCls, "getInstalledXposedVersion");
+				if (edxpVersion != null) try {
+					String dir = Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder;
+					new File(dir).mkdirs();
+					File xposedVersion = new File(dir + Helpers.versionFile);
+					xposedVersion.createNewFile();
+					try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(xposedVersion, false))) {
+			        	out.write(edxpVersion);
+					}
+				} catch (Throwable t) {
+					XposedBridge.log(t);
+				}
+			}
+		});
+
 		if (app == null || !Helpers.getSharedBoolPref(app, "pref_key_miuizer_ownrepo", false)) return;
 
 		Helpers.hookAllMethods("de.robv.android.xposed.installer.XposedApp", lpparam.classLoader, "onCreate", new MethodHook() {
@@ -1123,7 +1145,7 @@ public class GlobalActions {
 				if ("EdXposedVersion".equals(req)) {
 					String edxpPath = Helpers.getNewEdXposedPath();
 					if (edxpPath == null) return;
-					String edxpVersion = Helpers.getXposedPropVersion(new File("/data/misc/" + edxpPath + "/framework/edconfig.jar"));
+					String edxpVersion = Helpers.getXposedPropVersion(new File("/data/misc/" + edxpPath + "/framework/edconfig.jar"), true);
 					param.setResult(edxpVersion);
 				} else if ("EdXposedLog".equals(req)) {
 					String edxpPath = Helpers.getNewEdXposedPath();
@@ -1132,12 +1154,17 @@ public class GlobalActions {
 					File file;
 					file = new File(baseDir);
 					if (!file.exists()) return;
-					try { file.setExecutable(true, false); } catch (Throwable ignore) {}
+					try { file.setExecutable(true, false); } catch (Throwable t) { XposedBridge.log(t); }
 					file = new File(baseDir + "/all.log");
 					if (!file.exists()) file = new File(baseDir + "/error.log");
 					if (!file.exists()) return;
-					try { file.setReadable(true, false); } catch (Throwable ignore) {}
+					try { file.setReadable(true, false); } catch (Throwable t) { XposedBridge.log(t); }
 					param.setResult(file.getAbsolutePath());
+				} else if ("EdXposedScope".equals(req)) {
+					String edxpPath = Helpers.getNewEdXposedPath();
+					if (edxpPath == null) return;
+					File file = new File("/data/misc/" + edxpPath + "/0/conf/" + Helpers.modulePkg + ".conf");
+					param.setResult(file.exists() ? "true" : "false");
 				}
 			}
 		});

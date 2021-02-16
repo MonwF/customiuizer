@@ -9,6 +9,12 @@
 		android:title="@string/various_sysappsupdater_title" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_various_unlockfps"
+		android:title="@string/various_unlockfps_title"
+		android:summary="@string/various_unlockfps_summ"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_various_miuiinstaller"
 		android:title="@string/various_miuiinstaller_title"
 		android:summary="@string/various_miuiinstaller_summ"
