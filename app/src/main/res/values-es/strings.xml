@@ -872,7 +872,8 @@
     <string name="miuizer_holiday_summ">Decora la interfaz del módulo según la ocasión</string>
     <string name="troubleshoot">Solución de problemas</string>
     <string name="miuizer_acrasend_title">Enviar informe detallado</string>
-    <string name="miuizer_acrasend_summ">Recopilar información del dispositivo y del entorno, \"logcat\" y \"log\" de Xposed y envíar al desarrollador. Se requiere conexión a internet</string>
+    <string name="miuizer_acrasend_summ">Recopilar información del dispositivo y del entorno, \"logcat\" y \"log\" de Xposed y envíar al desarrollador. 
+\nSe requiere conexión a internet</string>
     <string name="miuizer_acramail_summ">Ingrese su información de contacto y se incluirá en informes detallados y de fallas</string>
     <string name="miuizer_acramail_title">Información de contacto</string>
     <string name="miuizer_acramail_tip">Es absolutamente necesario completar esto si espera recibir respuestas a sus informes de fallas. Use el apodo de correo electrónico, ICQ, XDA o 4PDA.</string>
@@ -902,7 +903,8 @@
     <string name="crash_dialog_manual">Todos los datos necesarios se han recopilado</string>
     <string name="crash_dialog_manual_size">Tamaño del informe generado</string>
     <string name="crash_dialog_manual_desc">Describa su problema (en inglés si es posible):</string>
-    <string name="crash_dialog_manual_desc2">Describir las acciones que llevaron a este fallo (en inglés si es posible):</string>
+    <string name="crash_dialog_manual_desc2">Describir las acciones que llevaron a este fallo 
+\n(en inglés si es posible):</string>
     <string name="crash_dialog_note">No se proporciona información de contacto, ¡no recibirá una respuesta a este reporte!</string>
     <string name="crash_needs_inet">Se requiere conexión a Internet</string>
     <string name="crash_needs_desc">La descripción no puede estar en blanco</string>
@@ -979,7 +981,8 @@
     <string name="change_icon">Cambiar icono</string>
     <string name="guide_search">Buscar mods por nombre. \nMantenga presionado para mostrar una lista de nuevas modificaciones.</string>
     <string name="guide_softreboot">No olvide aplicar modificaciones mediante el reinicio suave. \nLas modificaciones dinámicas ⟲ lo requieren solo una vez. \nMás información en la página Acerca de.</string>
-    <string name="guide_marknew">Nuevas modificaciones desde la actualización anterior se pueden marcar para una mejor visibilidad</string>
+    <string name="guide_marknew">Nuevas modificaciones desde la actualización anterior 
+\nse pueden marcar para una mejor visibilidad</string>
     <string name="permission_save">¿Quiere escribir copia de seguridad o no?</string>
     <string name="permission_restore">¿Desea restaurar la copia de seguridad o no?</string>
     <string name="permission_scan">¿Desea obtener una lista de redes/dispositivos o no?</string>
@@ -1008,4 +1011,13 @@
     <string name="auto_color">Color de barra de estado</string>
     <string name="type_file">archivo</string>
     <string name="type_res">recurso</string>
+    <string name="system_clockseconds_sync_title">Sincronización</string>
+    <string name="system_clockseconds_sync_summ">Intentar actualizar el valor en un momento específico</string>
+    <string name="array_second_beginning">Inicio de un segundo</string>
+    <string name="array_second_end">Fin de un segundo</string>
+    <string name="array_alarm_both">Tiempo normal y relativo</string>
+    <string name="miuizer_ownrepo_unsupported">Una versión no soportada de EdXposed Manager está instalada</string>
+    <string name="warning_scope">El alcance de activación está activo para este módulo, puede evitar que algunas modificaciones funcionen correctamente.</string>
+    <string name="system_networkindicator_title">Indicadores de actividad de red</string>
+    <string name="system_networkindicator_summ">Configurar indicador de tráfico en redes móviles y Wi-Fi</string>
 </resources>
