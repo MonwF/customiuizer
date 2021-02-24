@@ -1020,4 +1020,6 @@
     <string name="warning_scope">El alcance de activación está activo para este módulo, puede evitar que algunas modificaciones funcionen correctamente.</string>
     <string name="system_networkindicator_title">Indicadores de actividad de red</string>
     <string name="system_networkindicator_summ">Configurar indicador de tráfico en redes móviles y Wi-Fi</string>
+    <string name="system_cleanmirror_title">Estilo de control deslizante de brillo constante</string>
+    <string name="system_cleanmirror_summ">Eliminar la sombra y el fondo adicional del control deslizante mientras cambia el brillo</string>
 </resources>
