@@ -770,6 +770,8 @@
 	<string name="system_showpct_title">Показывать процент яркости</string>
 	<string name="system_showpct_summ">Отображает уровень яркости в процентах при изменении яркости слайдером</string>
 	<string name="system_showpct_top_title">Отступ панели процентов сверху</string>
+	<string name="system_cleanmirror_title">Неизменный стиль слайдера яркости</string>
+	<string name="system_cleanmirror_summ">Убирает тень и дополнительный фон у слайдера при изменении яркости</string>
 	<string name="system_inactivebrightness_title">Отключить ползунок яркости</string>
 	<string name="system_notifrowmenu_title">Расширенное меню уведомления</string>
 	<string name="system_notifrowmenu_summ">Добавляет новые действия в меню уведомления (открывается по свайпу влево) - открыть информацию о приложении и принудительно закрыть приложение</string>
