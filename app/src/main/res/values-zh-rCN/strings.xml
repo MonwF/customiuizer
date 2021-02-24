@@ -1008,4 +1008,15 @@
     <string name="launcher_closedrawer_summ">启动后关闭应用抽屉</string>
     <string name="various_unlockfps_title">解锁帧率</string>
     <string name="various_unlockfps_summ">将屏幕录制应用中的fps提高到90。更高的fps是否有效是否工作取决于设备和视频驱动。</string>
+    <string name="system_clockseconds_sync_title">同步</string>
+    <string name="system_clockseconds_sync_summ">尝试在指定时间更新值</string>
+    <string name="array_second_beginning">开始秒</string>
+    <string name="array_second_end">结束秒</string>
+    <string name="array_alarm_both">定期和相对时间</string>
+    <string name="miuizer_ownrepo_unsupported">不支持的EdXposed Manager版本已安装</string>
+    <string name="warning_scope">此模块的激活范围已激活，可能会阻止某些模块正常运行。</string>
+    <string name="system_networkindicator_title">网络活动指示器</string>
+    <string name="system_networkindicator_summ">配置移动数据和Wi-Fi流量指示器</string>
+    <string name="system_cleanmirror_title">一致的亮度滑块风格</string>
+    <string name="system_cleanmirror_summ">更改亮度时移除滑块的阴影和附加背景</string>
 </resources>
