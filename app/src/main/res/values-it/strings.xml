@@ -1018,4 +1018,6 @@
     <string name="warning_scope">Lo scope di attivazione è attivo per questo modulo, può impedire ad alcune mod di funzionare correttamente.</string>
     <string name="system_networkindicator_title">Indicatori attività di rete</string>
     <string name="system_networkindicator_summ">Configura gli indicatori dei dati mobili e del traffico Wi-Fi</string>
+    <string name="system_cleanmirror_title">Stile del cursore della luminosità coerente</string>
+    <string name="system_cleanmirror_summ">Rimuovi l\'ombra e lo sfondo aggiuntivo dal cursore durante la modifica della luminosità</string>
 </resources>
