@@ -262,6 +262,10 @@
 	<string name="array_collapse_permanent">Перманентно</string>
 	<string name="array_second_beginning">Начало секунды</string>
 	<string name="array_second_end">Конец секунды</string>
+	<string name="array_cellular_mobile">Сотовая сеть и мобильный интернет</string>
+	<string name="array_keep">Оставить как есть</string>
+	<string name="array_turn_off">Выключить</string>
+	<string name="array_turn_off_disable">Выключить и заблокировать</string>
 	<string name="unlimited">Неограниченно</string>
 
 	<string name="support_bug_title">Сообщить об ошибке</string>
@@ -431,6 +435,10 @@
 	<string name="launcher_swipeupaction2_summ">Присвоить действие жесту снизу вверх двумя пальцами на любом домашнем экране</string>
 	<string name="launcher_swipeupaction_title">Действие на свайп вверх (1 пальцем)</string>
 	<string name="launcher_swipeupaction2_title">Действие на свайп вверх (2 пальцами)</string>
+	<string name="launcher_pinch_title">Действие на сведение пальцев</string>
+	<string name="launcher_pinch_summ">Присвоить действие жесту сведения 2 пальцев на любом домашнем экране</string>
+	<string name="launcher_spread_title">Действие на разведение пальцев</string>
+	<string name="launcher_spread_summ">Присвоить действие жесту разведения 2 пальцев на любом домашнем экране</string>
 	<string name="launcher_bugfixes">Исправление багов</string>
 	<string name="miuizer">Настройки CustoMIUIzer</string>
 	<string name="miuizer_acramail_summ">Укажите свои контактные данные, и они будут включены в отправляемые отчёты</string>
@@ -563,6 +571,9 @@
 	<string name="system_iconlabletoasts_summ">Добавляет иконку и название приложения во всплывающие сообщения</string>
 	<string name="system_blocktoasts_title">Блокировка</string>
 	<string name="system_blocktoasts_summ">Запретить выбранным приложениям показ всплывающих сообщений</string>
+	<string name="system_airplanemodeconfig_title">Конфигурация режима полёта</string>
+	<string name="system_airplanemodeconfig_summ">Задать разрешённые коммуникации в режиме полёта. Перезагрузка не требуется.</string>
+	<string name="system_airplanemodeconfig_note">Мод всего лишь меняет уже существующий параметр системы, некоторые опции могут не работать</string>
 	<string name="system_uimode_title">Режим интерфейса</string>
 	<string name="system_uimode_summ">Изменить режим на тёмный, светлый или авто. Перезагрузка не требуется.</string>
 	<string name="system_uimodetile_title">Переключатель тёмного режима</string>
@@ -642,6 +653,8 @@
 	<string name="system_betterpopups_allowfloat_summ">Открывает приложение в плавающем окне по свайпу вниз, если у уведомления задано подходящее действие на нажатие</string>
 	<string name="system_betterpopups_swipedown_title">Активировать свайп вниз</string>
 	<string name="system_betterpopups_swipedown_summ">Открывает панель уведомлений по свайпу вниз</string>
+	<string name="system_betterpopups_center_title">Отображать по центру</string>
+	<string name="system_betterpopups_center_summ">Выровнять всплывающие уведомления по центру экрана</string>
 	<string name="system_mods_floatingwindows">Плавающие окна</string>
 	<string name="system_fw_noblacklist_title">Отключить чёрный список</string>
 	<string name="system_fw_noblacklist_summ">Разрешает открывать любое приложение в плавающем окне</string>
@@ -984,6 +997,8 @@
 	<string name="system_hidelshint_summ">Удаляет надпись "Проведите вверх для разблокировки"</string>
 	<string name="system_nosos_title">Запретить экстренные вызовы</string>
 	<string name="system_nosos_summ">Отключает кнопку экстренного вызова на экране блокировки</string>
+	<string name="system_lswallpaper_title">Установка обоев любым приложением</string>
+	<string name="system_lswallpaper_summ">Позволяет сторонним приложениям устанавливать обои для экрана блокировки. Приложение Темы должно быть установлено с разрешением на доступ к памяти устройства.</string>
 	<string name="system_hideqs_title">Очистить вид развёрнутого режима</string>
 	<string name="system_hideqs_summ">Скрывает панель Быстрых Настроек и слайдер яркости в режиме развёрнутых уведомлений на экране блокировки</string>
 	<string name="system_nodrawerbackground_title">Отключить цветной фон</string>

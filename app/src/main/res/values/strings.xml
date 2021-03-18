@@ -321,6 +321,9 @@
 	<string name="system_iconlabletoasts_summ">Add application\'s icon and label to its toasts</string>
 	<string name="system_blocktoasts_title">Block toasts</string>
 	<string name="system_blocktoasts_summ">Prevent selected apps from showing toasts</string>
+	<string name="system_airplanemodeconfig_title">Airplane mode configuration</string>
+	<string name="system_airplanemodeconfig_summ">Define allowed communications in airplane mode. No reboot required.</string>
+	<string name="system_airplanemodeconfig_note">Mod only changes existing system setting, some options might not work</string>
 	<string name="system_uimode_title">Interface mode</string>
 	<string name="system_uimode_summ">Change mode to dark, light or auto. No reboot required.</string>
 	<string name="system_uimodetile_title">Dark mode tile</string>
@@ -387,6 +390,8 @@
 	<string name="system_hidelshint_summ">Remove "Swipe up to unlock" hint</string>
 	<string name="system_nosos_title">No emergency calls</string>
 	<string name="system_nosos_summ">Disable emergency call button on lock screen</string>
+	<string name="system_lswallpaper_title">Apply wallpaper using any app</string>
+	<string name="system_lswallpaper_summ">Make third-party apps be able to set lock screen wallpaper. Themes app must be installed and given storage access permission.</string>
 	<string name="system_hideqs_title">Clean expanded mode view</string>
 	<string name="system_hideqs_summ">Hide Quick Settings and brightness slider in expanded notifications mode on lock screen</string>
 	<string name="system_nodrawerbackground_title">Disable colored background</string>
@@ -436,6 +441,8 @@
 	<string name="system_betterpopups_allowfloat_summ">Open app in a floating window on swipe down gesture if notification has an appropriate click action defined</string>
 	<string name="system_betterpopups_swipedown_title">Enable swipe down</string>
 	<string name="system_betterpopups_swipedown_summ">Open notification drawer on swipe down gesture</string>
+	<string name="system_betterpopups_center_title">Show centered</string>
+	<string name="system_betterpopups_center_summ">Display popups in the middle of the screen</string>
 	<string name="system_mods_floatingwindows">Floating windows</string>
 	<string name="system_fw_noblacklist_title">Disable blacklisting</string>
 	<string name="system_fw_noblacklist_summ">Allow any app to be opened in a floating window</string>
@@ -569,6 +576,10 @@
 	<string name="launcher_shakeaction_summ">Action for shaking the device on any home screen</string>
 	<string name="launcher_doubletap_title">Double tap action</string>
 	<string name="launcher_doubletap_summ">Action for double tap on empty space of any home screen</string>
+	<string name="launcher_pinch_title">Pinch action</string>
+	<string name="launcher_pinch_summ">Action for moving 2 fingers towards each other on any home screen</string>
+	<string name="launcher_spread_title">Spread action</string>
+	<string name="launcher_spread_summ">Action for moving 2 fingers away from each other on any home screen</string>
 	<string name="launcher_bugfixes">Bug fixes</string>
 
 	<string name="controls_mods">Controls</string>
@@ -749,6 +760,7 @@
 	<string name="array_global_toggle_rotation">Auto rotation</string>
 	<string name="array_global_toggle_torch">Flashlight</string>
 	<string name="array_global_toggle_mobiledata">Mobile data</string>
+	<string name="array_global_toggle_wimax" translatable="false">WiMAX</string>
 	<string name="array_toasts_icon">Icon</string>
 	<string name="array_toasts_label">Label</string>
 	<string name="array_toasts_both">Icon and label</string>
@@ -858,6 +870,10 @@
 	<string name="array_collapse_permanent">Permanently</string>
 	<string name="array_second_beginning">Beginning of a second</string>
 	<string name="array_second_end">End of a second</string>
+	<string name="array_cellular_mobile">Cellular network and mobile data</string>
+	<string name="array_keep">Keep as it is</string>
+	<string name="array_turn_off">Turn off</string>
+	<string name="array_turn_off_disable">Turn off and disable</string>
 	<string name="unlimited">Unlimited</string>
 
 	<string name="toggle_wifi_on">Wi-Fi enabled</string>
