@@ -1022,4 +1022,19 @@
     <string name="system_networkindicator_summ">Configurar indicador de tráfico en redes móviles y Wi-Fi</string>
     <string name="system_cleanmirror_title">Estilo de control deslizante de brillo constante</string>
     <string name="system_cleanmirror_summ">Eliminar la sombra y el fondo adicional del control deslizante mientras cambia el brillo</string>
+    <string name="system_airplanemodeconfig_title">Configuración del modo avión</string>
+    <string name="system_airplanemodeconfig_summ">Definir las comunicaciones permitidas en modo avión. No es necesario reiniciar.</string>
+    <string name="system_airplanemodeconfig_note">El mod solo cambia la configuración del sistema existente, algunas opciones pueden no funcionar</string>
+    <string name="system_lswallpaper_title">Aplicar wallpaper usando cualquier aplicación</string>
+    <string name="system_lswallpaper_summ">Hacer que las aplicaciones de terceros puedan configurar el fondo de pantalla de bloqueo. La aplicación Temas debe estar instalada y tener permiso de acceso al almacenamiento.</string>
+    <string name="system_betterpopups_center_title">Mostrar centrado</string>
+    <string name="system_betterpopups_center_summ">Mostrar popups en el medio de la pantalla</string>
+    <string name="launcher_pinch_title">Acción al pellizcar</string>
+    <string name="launcher_pinch_summ">Acción para mover 2 dedos uno hacia el otro en cualquier pantalla de inicio</string>
+    <string name="launcher_spread_title">Acción al expandir</string>
+    <string name="launcher_spread_summ">Acción para alejar 2 dedos entre sí en cualquier pantalla de inicio</string>
+    <string name="array_cellular_mobile">Redes celulares y datos móviles</string>
+    <string name="array_keep">Mantener como está</string>
+    <string name="array_turn_off">Apagar</string>
+    <string name="array_turn_off_disable">Apagar y deshabilitar</string>
 </resources>
