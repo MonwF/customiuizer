@@ -147,7 +147,7 @@
     <string name="system_notifmediaseekbar_full_summ">不应用自定义薄式风格到滑条</string>
     <string name="system_popupnotif_title">自动打开通知抽屉</string>
     <string name="system_popupnotif_summ">从所选应用的通知中自动打开应用抽屉</string>
-    <string name="system_popupnotif_fs_title">遵守全屏</string>
+    <string name="system_popupnotif_fs_title">遵循全屏</string>
     <string name="system_popupnotif_fs_summ">应用激活全屏模式时不打开通知抽屉(不适用于具有隐藏状态和导航栏的沉浸式应用)</string>
     <string name="system_popupnotif_apps_title">已选应用</string>
     <string name="various_collapsemiuititles_title">折叠 MIUI 标题</string>
@@ -1019,4 +1019,19 @@
     <string name="system_networkindicator_summ">配置移动数据和Wi-Fi流量指示器</string>
     <string name="system_cleanmirror_title">一致的亮度滑块风格</string>
     <string name="system_cleanmirror_summ">更改亮度时移除滑块的阴影和附加背景</string>
+    <string name="system_airplanemodeconfig_title">飞行模式配置</string>
+    <string name="system_airplanemodeconfig_summ">定义在飞行模式下允许的通信。不需要重启。</string>
+    <string name="system_airplanemodeconfig_note">模块只能修改现有的系统设置，某些选项可能无效</string>
+    <string name="system_lswallpaper_title">将壁纸应用到任意应用</string>
+    <string name="system_lswallpaper_summ">让第三方应用能够设置锁屏壁纸。必须安装主题应用并给予其存储访问权限。</string>
+    <string name="system_betterpopups_center_title">居中显示</string>
+    <string name="system_betterpopups_center_summ">在屏幕中间显示弹窗</string>
+    <string name="launcher_pinch_title">捏动作</string>
+    <string name="launcher_pinch_summ">在任何主屏幕上两个手指相互移近的动作</string>
+    <string name="launcher_spread_title">扩展动作</string>
+    <string name="launcher_spread_summ">在任何主屏幕上两个手指相互移开的动作</string>
+    <string name="array_cellular_mobile">蜂窝网络和移动数据</string>
+    <string name="array_keep">将其保持</string>
+    <string name="array_turn_off">关闭</string>
+    <string name="array_turn_off_disable">关闭并禁用</string>
 </resources>
