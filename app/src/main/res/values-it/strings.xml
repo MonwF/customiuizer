@@ -1020,4 +1020,19 @@
     <string name="system_networkindicator_summ">Configura gli indicatori dei dati mobili e del traffico Wi-Fi</string>
     <string name="system_cleanmirror_title">Stile del cursore della luminosità coerente</string>
     <string name="system_cleanmirror_summ">Rimuovi l\'ombra e lo sfondo aggiuntivo dal cursore durante la modifica della luminosità</string>
+    <string name="system_airplanemodeconfig_title">Configurazione modalità aereo</string>
+    <string name="system_airplanemodeconfig_summ">Definisci le comunicazioni consentite in modalità aereo. Non è richiesto il riavvio.</string>
+    <string name="system_airplanemodeconfig_note">Mod che cambia solo l\'impostazione di sistema esistente, alcune opzioni potrebbero non funzionare</string>
+    <string name="system_lswallpaper_title">Cambia lo sfondo da qualsiasi app</string>
+    <string name="system_lswallpaper_summ">Permetti alle app di terze parti di impostare lo sfondo della schermata di blocco. L\'app Temi deve essere installata e deve possedere il permesso di accedere allo spazio di archiviazione.</string>
+    <string name="system_betterpopups_center_title">Mostra centrato</string>
+    <string name="system_betterpopups_center_summ">Visualizza i popup al centro dello schermo</string>
+    <string name="launcher_pinch_title">Azione pizzica</string>
+    <string name="launcher_pinch_summ">Azione di spostare 2 dita l\'una verso l\'altra su qualsiasi schermata iniziale</string>
+    <string name="launcher_spread_title">Azione diffusione</string>
+    <string name="launcher_spread_summ">Azione di allontanare 2 dita l\'una dall\'altra su qualsiasi schermata iniziale</string>
+    <string name="array_cellular_mobile">Rete cellulare e dati mobili</string>
+    <string name="array_keep">Mantieni così com\'è</string>
+    <string name="array_turn_off">Spegni</string>
+    <string name="array_turn_off_disable">Spegni e disattiva</string>
 </resources>
