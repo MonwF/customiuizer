@@ -15,18 +15,13 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
-import android.content.res.TypedArray;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.wifi.WifiManager;
 import android.nfc.NfcAdapter;
 import android.os.Binder;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -36,15 +31,10 @@ import android.os.UserHandle;
 import android.preference.PreferenceActivity.Header;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -171,6 +161,28 @@ public class GlobalActions {
 
 				if (action.equals(ACTION_PREFIX + "RestartSystemUI")) {
 					Process.sendSignal(Process.myPid(), Process.SIGNAL_KILL);
+				}
+
+				if (action.equals(ACTION_PREFIX + "CopyToExternal")) try {
+					String dir = Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder;
+					new File(dir).mkdirs();
+
+					int copyAction = intent.getIntExtra("action", 0);
+					if (copyAction == 1) {
+						Helpers.copyFile(intent.getStringExtra("from"), dir + Helpers.wallpaperFile);
+						Intent lockIntent = new Intent("miui.intent.action.SET_LOCK_WALLPAPER");
+						lockIntent.setPackage("com.android.thememanager");
+						lockIntent.putExtra("lockWallpaperPath", dir + Helpers.wallpaperFile);
+						context.sendBroadcast(lockIntent);
+					} else if (copyAction == 2) {
+						File xposedVersion = new File(dir + Helpers.versionFile);
+						xposedVersion.createNewFile();
+						try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(xposedVersion, false))) {
+							out.write(intent.getStringExtra("data"));
+						}
+					}
+				} catch (Throwable t) {
+					XposedBridge.log(t);
 				}
 
 				if (action.equals(ACTION_PREFIX + "CollectXposedLog")) try {
@@ -689,9 +701,9 @@ public class GlobalActions {
 		Helpers.emptyFile(lpparam.appInfo.dataDir + "/files/uncaught_exceptions", false);
 	}
 
-	public static boolean useOwnRepo = false;
+//	public static boolean useOwnRepo = false;
 
-	public static void miuizerEdXposedManagerHook(LoadPackageParam lpparam, Application app) {
+	public static void miuizerEdXposedManagerHook(LoadPackageParam lpparam) {
 		Helpers.hookAllMethodsSilently("org.meowcat.edxposed.manager.ModulesFragment$ModuleAdapter", lpparam.classLoader, "getView", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
@@ -730,113 +742,111 @@ public class GlobalActions {
 				if (constCls == null) return;
 				String edxpVersion = (String)XposedHelpers.callStaticMethod(constCls, "getInstalledXposedVersion");
 				if (edxpVersion != null) try {
-					String dir = Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder;
-					new File(dir).mkdirs();
-					File xposedVersion = new File(dir + Helpers.versionFile);
-					xposedVersion.createNewFile();
-					try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(xposedVersion, false))) {
-			        	out.write(edxpVersion);
-					}
+					Intent copyIntent = new Intent(ACTION_PREFIX + "CopyToExternal");
+					copyIntent.putExtra("action", 2);
+					copyIntent.putExtra("data", edxpVersion);
+					((Application)param.thisObject).sendBroadcast(copyIntent);
 				} catch (Throwable t) {
 					XposedBridge.log(t);
 				}
+				Helpers.makeNewEdXposedPathReadable((String)XposedHelpers.callStaticMethod(constCls, "getBaseDir"));
 			}
 		});
 
-		if (app == null || !Helpers.getSharedBoolPref(app, "pref_key_miuizer_ownrepo", false)) return;
-
-		Helpers.hookAllMethods("de.robv.android.xposed.installer.XposedApp", lpparam.classLoader, "onCreate", new MethodHook() {
-			@Override
-			protected void after(MethodHookParam param) throws Throwable {
-				useOwnRepo = Helpers.getSharedBoolPref((Application)param.thisObject, "pref_key_miuizer_ownrepo", false);
-			}
-		});
-
-		Helpers.hookAllMethods("org.meowcat.edxposed.manager.StatusInstallerFragment", lpparam.classLoader, "onCreateView", new MethodHook() {
-			@Override
-			protected void after(MethodHookParam param) throws Throwable {
-				if (!useOwnRepo) return;
-				ViewGroup view = (ViewGroup)param.getResult();
-				if (view == null || view.findViewWithTag("OWN_REPO") != null) return;
-
-				Context context = view.getContext();
-				float density = context.getResources().getDisplayMetrics().density;
-
-				int apiResId = context.getResources().getIdentifier("api", "id", "org.meowcat.edxposed.manager");
-				TextView api = view.findViewById(apiResId);
-				if (api == null) return;
-				ViewGroup container = (ViewGroup)api.getParent().getParent().getParent();
-				if (container == null) return;
-
-				Drawable selectableItemBackground = null;
-				int listPreferredItemHeightSmall = 118;
-				try {
-					int[] bkgArr = new int[] { android.R.attr.selectableItemBackground, android.R.attr.listPreferredItemHeightSmall };
-					TypedArray typedArray = context.obtainStyledAttributes(bkgArr);
-					selectableItemBackground = typedArray.getDrawable(0);
-					listPreferredItemHeightSmall = typedArray.getDimensionPixelSize(1, 118);
-					typedArray.recycle();
-				} catch (Throwable ignore) {}
-
-				LinearLayout container1 = new LinearLayout(context);
-				container1.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-				if (selectableItemBackground != null)
-				container1.setBackground(selectableItemBackground);
-				container1.setOrientation(LinearLayout.HORIZONTAL);
-				container1.setClickable(true);
-				container1.setFocusable(true);
-				container1.setGravity(Gravity.CENTER_VERTICAL);
-				container1.setPaddingRelative(Math.round(16 * density), container1.getPaddingTop(), Math.round(16 * density), container1.getPaddingBottom());
-				container1.setMinimumHeight(listPreferredItemHeightSmall);
-
-				ImageView icon = new ImageView(context);
-				icon.setLayoutParams(new LinearLayout.LayoutParams(Math.round(24 * density), Math.round(24 * density)));
-				icon.setImageDrawable(Helpers.getModuleRes(context).getDrawable(R.drawable.ic_miuizer_settings11, context.getTheme()));
-				container1.addView(icon);
-
-				LinearLayout container2 = new LinearLayout(context);
-				ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-				lp.leftMargin = Math.round(32 * density);
-				container2.setLayoutParams(lp);
-				container2.setOrientation(LinearLayout.VERTICAL);
-				container2.setGravity(Gravity.CENTER_VERTICAL);
-				container2.setPaddingRelative(container2.getPaddingStart(), Math.round(8 * density), container2.getPaddingEnd(), Math.round(8 * density));
-
-				TextView ownRepo = new TextView(context);
-				ownRepo.setText(Helpers.getModuleRes(view.getContext()).getString(R.string.miuizer_ownrepo_note));
-				ownRepo.setTextSize(TypedValue.COMPLEX_UNIT_PX, api.getTextSize());
-				ownRepo.setTextColor(api.getCurrentTextColor());
-				ownRepo.setTag("OWN_REPO");
-
-				container2.addView(ownRepo);
-
-				container1.addView(container2);
-				container.addView(container1);
-			}
-		});
-
-		Helpers.findAndHookMethod("org.meowcat.edxposed.manager.util.RepoLoader", lpparam.classLoader, "refreshRepositories", new MethodHook() {
-			@Override
-			protected void before(MethodHookParam param) throws Throwable {
-				if (!useOwnRepo) return;
-				String DEFAULT_REPOSITORIES = (String)XposedHelpers.getStaticObjectField(param.thisObject.getClass(), "DEFAULT_REPOSITORIES");
-				if (!DEFAULT_REPOSITORIES.contains(Helpers.xposedRepo))
-				XposedHelpers.setStaticObjectField(param.thisObject.getClass(), "DEFAULT_REPOSITORIES", Helpers.xposedRepo + "|" + DEFAULT_REPOSITORIES);
-			}
-		});
-
-		Helpers.hookAllMethods("org.meowcat.edxposed.manager.repo.RepoDb", lpparam.classLoader, "insertModule", new MethodHook() {
-			@Override
-			protected void before(MethodHookParam param) throws Throwable {
-				if (!useOwnRepo) return;
-				String pkgName = (String)XposedHelpers.getObjectField(param.args[1], "packageName");
-				if (!Helpers.modulePkg.equals(pkgName)) return;
-				SQLiteDatabase sDb = (SQLiteDatabase)XposedHelpers.getStaticObjectField(findClass("org.meowcat.edxposed.manager.repo.RepoDb", lpparam.classLoader), "sDb");
-				Cursor query = sDb.query("modules", new String[]{ "repo_id" }, "pkgname = ?", new String[]{ Helpers.modulePkg }, null, null, null, "1");
-				if (query.getCount() > 0) param.setResult(null);
-				query.close();
-			}
-		});
+//		if (app == null || !Helpers.getSharedBoolPref(app, "pref_key_miuizer_ownrepo", false)) return;
+//
+//		Helpers.hookAllMethods("de.robv.android.xposed.installer.XposedApp", lpparam.classLoader, "onCreate", new MethodHook() {
+//			@Override
+//			protected void after(MethodHookParam param) throws Throwable {
+//				useOwnRepo = Helpers.getSharedBoolPref((Application)param.thisObject, "pref_key_miuizer_ownrepo", false);
+//			}
+//		});
+//
+//		Helpers.hookAllMethods("org.meowcat.edxposed.manager.StatusInstallerFragment", lpparam.classLoader, "onCreateView", new MethodHook() {
+//			@Override
+//			protected void after(MethodHookParam param) throws Throwable {
+//				if (!useOwnRepo) return;
+//				ViewGroup view = (ViewGroup)param.getResult();
+//				if (view == null || view.findViewWithTag("OWN_REPO") != null) return;
+//
+//				Context context = view.getContext();
+//				float density = context.getResources().getDisplayMetrics().density;
+//
+//				int apiResId = context.getResources().getIdentifier("api", "id", "org.meowcat.edxposed.manager");
+//				TextView api = view.findViewById(apiResId);
+//				if (api == null) return;
+//				ViewGroup container = (ViewGroup)api.getParent().getParent().getParent();
+//				if (container == null) return;
+//
+//				Drawable selectableItemBackground = null;
+//				int listPreferredItemHeightSmall = 118;
+//				try {
+//					int[] bkgArr = new int[] { android.R.attr.selectableItemBackground, android.R.attr.listPreferredItemHeightSmall };
+//					TypedArray typedArray = context.obtainStyledAttributes(bkgArr);
+//					selectableItemBackground = typedArray.getDrawable(0);
+//					listPreferredItemHeightSmall = typedArray.getDimensionPixelSize(1, 118);
+//					typedArray.recycle();
+//				} catch (Throwable ignore) {}
+//
+//				LinearLayout container1 = new LinearLayout(context);
+//				container1.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//				if (selectableItemBackground != null)
+//				container1.setBackground(selectableItemBackground);
+//				container1.setOrientation(LinearLayout.HORIZONTAL);
+//				container1.setClickable(true);
+//				container1.setFocusable(true);
+//				container1.setGravity(Gravity.CENTER_VERTICAL);
+//				container1.setPaddingRelative(Math.round(16 * density), container1.getPaddingTop(), Math.round(16 * density), container1.getPaddingBottom());
+//				container1.setMinimumHeight(listPreferredItemHeightSmall);
+//
+//				ImageView icon = new ImageView(context);
+//				icon.setLayoutParams(new LinearLayout.LayoutParams(Math.round(24 * density), Math.round(24 * density)));
+//				icon.setImageDrawable(Helpers.getModuleRes(context).getDrawable(R.drawable.ic_miuizer_settings11, context.getTheme()));
+//				container1.addView(icon);
+//
+//				LinearLayout container2 = new LinearLayout(context);
+//				ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//				lp.leftMargin = Math.round(32 * density);
+//				container2.setLayoutParams(lp);
+//				container2.setOrientation(LinearLayout.VERTICAL);
+//				container2.setGravity(Gravity.CENTER_VERTICAL);
+//				container2.setPaddingRelative(container2.getPaddingStart(), Math.round(8 * density), container2.getPaddingEnd(), Math.round(8 * density));
+//
+//				TextView ownRepo = new TextView(context);
+//				ownRepo.setText(Helpers.getModuleRes(view.getContext()).getString(R.string.miuizer_ownrepo_note));
+//				ownRepo.setTextSize(TypedValue.COMPLEX_UNIT_PX, api.getTextSize());
+//				ownRepo.setTextColor(api.getCurrentTextColor());
+//				ownRepo.setTag("OWN_REPO");
+//
+//				container2.addView(ownRepo);
+//
+//				container1.addView(container2);
+//				container.addView(container1);
+//			}
+//		});
+//
+//		Helpers.findAndHookMethod("org.meowcat.edxposed.manager.util.RepoLoader", lpparam.classLoader, "refreshRepositories", new MethodHook() {
+//			@Override
+//			protected void before(MethodHookParam param) throws Throwable {
+//				if (!useOwnRepo) return;
+//				String DEFAULT_REPOSITORIES = (String)XposedHelpers.getStaticObjectField(param.thisObject.getClass(), "DEFAULT_REPOSITORIES");
+//				if (!DEFAULT_REPOSITORIES.contains(Helpers.xposedRepo))
+//				XposedHelpers.setStaticObjectField(param.thisObject.getClass(), "DEFAULT_REPOSITORIES", Helpers.xposedRepo + "|" + DEFAULT_REPOSITORIES);
+//			}
+//		});
+//
+//		Helpers.hookAllMethods("org.meowcat.edxposed.manager.repo.RepoDb", lpparam.classLoader, "insertModule", new MethodHook() {
+//			@Override
+//			protected void before(MethodHookParam param) throws Throwable {
+//				if (!useOwnRepo) return;
+//				String pkgName = (String)XposedHelpers.getObjectField(param.args[1], "packageName");
+//				if (!Helpers.modulePkg.equals(pkgName)) return;
+//				SQLiteDatabase sDb = (SQLiteDatabase)XposedHelpers.getStaticObjectField(findClass("org.meowcat.edxposed.manager.repo.RepoDb", lpparam.classLoader), "sDb");
+//				Cursor query = sDb.query("modules", new String[]{ "repo_id" }, "pkgname = ?", new String[]{ Helpers.modulePkg }, null, null, null, "1");
+//				if (query.getCount() > 0) param.setResult(null);
+//				query.close();
+//			}
+//		});
 	}
 
 	private static int settingsIconResId;
@@ -994,32 +1004,34 @@ public class GlobalActions {
 		});
 	}
 
-	public static void setupFullScreenMonitor() {
+	public static void setupMonitors() {
 		Helpers.findAndHookMethod(Activity.class, "onResume", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				Activity act = (Activity)param.thisObject;
 				if (act == null) return;
 				int flags = act.getWindow().getAttributes().flags;
-				Intent fullscreenIntent = new Intent(EVENT_PREFIX + "CHANGE_FULLSCREEN");
 				boolean isFullScreen = flags != 0 && !"com.android.systemui".equals(act.getPackageName()) && (flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN;
-				fullscreenIntent.putExtra("fullscreen", isFullScreen);
-				fullscreenIntent.setPackage("android");
-				act.sendBroadcast(fullscreenIntent);
+				Intent intent = new Intent(GlobalActions.EVENT_PREFIX + "CHANGE_FOCUSED_APP");
+				intent.putExtra("package", act.getPackageName());
+				intent.putExtra("fullscreen", isFullScreen);
+				intent.setPackage("android");
+				act.sendBroadcast(intent);
 			}
 		});
 	}
 
-	public static void setupFullScreenReceiver(LoadPackageParam lpparam) {
+	public static void setupReceivers(LoadPackageParam lpparam) {
 		Helpers.hookAllMethods("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "init", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 				mContext.registerReceiver(new BroadcastReceiver() {
 					public void onReceive(final Context context, Intent intent) {
+						Settings.Global.putString(context.getContentResolver(), Helpers.modulePkg + ".foreground.package", intent.getStringExtra("package"));
 						Settings.Global.putInt(context.getContentResolver(), Helpers.modulePkg + ".foreground.fullscreen", intent.getBooleanExtra("fullscreen", false) ? 1 : 0);
 					}
-				}, new IntentFilter(EVENT_PREFIX + "CHANGE_FULLSCREEN"));
+				}, new IntentFilter(GlobalActions.EVENT_PREFIX + "CHANGE_FOCUSED_APP"));
 			}
 		});
 	}
@@ -1148,18 +1160,7 @@ public class GlobalActions {
 					String edxpVersion = Helpers.getXposedPropVersion(new File("/data/misc/" + edxpPath + "/framework/edconfig.jar"), true);
 					param.setResult(edxpVersion);
 				} else if ("EdXposedLog".equals(req)) {
-					String edxpPath = Helpers.getNewEdXposedPath();
-					if (edxpPath == null) return;
-					String baseDir = "/data/misc/" + edxpPath + "/0/log";
-					File file;
-					file = new File(baseDir);
-					if (!file.exists()) return;
-					try { file.setExecutable(true, false); } catch (Throwable t) { XposedBridge.log(t); }
-					file = new File(baseDir + "/all.log");
-					if (!file.exists()) file = new File(baseDir + "/error.log");
-					if (!file.exists()) return;
-					try { file.setReadable(true, false); } catch (Throwable t) { XposedBridge.log(t); }
-					param.setResult(file.getAbsolutePath());
+					param.setResult(Helpers.makeNewEdXposedPathReadable());
 				} else if ("EdXposedScope".equals(req)) {
 					String edxpPath = Helpers.getNewEdXposedPath();
 					if (edxpPath == null) return;
@@ -1222,6 +1223,7 @@ public class GlobalActions {
 				intentfilter.addAction(ACTION_PREFIX + "ClearMemory");
 				intentfilter.addAction(ACTION_PREFIX + "CollectXposedLog");
 				intentfilter.addAction(ACTION_PREFIX + "RestartSystemUI");
+				intentfilter.addAction(ACTION_PREFIX + "CopyToExternal");
 
 				mStatusBarContext.registerReceiver(mSBReceiver, intentfilter);
 			}

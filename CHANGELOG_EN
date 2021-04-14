@@ -1,3 +1,14 @@
+3.1.6
+[New] Configure allowed communications in airplane mode
+[New] Allow 3rd-party apps to set lock screen wallpaper
+[New] Display popup notifications in the middle of the screen
+[New] Minimize brightness slider visual changes when starting to adjust brightness
+[New][Launcher gestures] Pinch and spread gestures
+[Improved][Horizontal gestures] Black list
+[Improved][Disable secure content protection] Works in more places now
+[Improved][Secure Quick settings] Compatibility with older MIUI versions
+[Improved][Show additional app details] Compatibility with newer Security app versions installed on older ROMs
+
 3.1.5
 [New] Unlock frame rate up to 90 in Screen Recorder app (whether it will actually work depends on device and video driver)
 [New] Display a switch between App Vault and Google Discover in Home screen settings on global ROMs
@@ -512,7 +523,7 @@ Resource hooks support in Xposed framework is no longer required for module to w
 [New] Remove apps from share menu
 [New] Restrict toasts for selected apps
 [New] Darker app title shadow in launcher
-[New] Unblock 3rd party launchers on China ROMs
+[New] Unblock 3rd-party launchers on China ROMs
 [New] Define actions for 4 shortcuts in suggestion box in recents list
 [New] Define action for double tap on empty space in launcher
 [New] Actions: Open menu, Open volume dialog, Raise volume, Lower volume

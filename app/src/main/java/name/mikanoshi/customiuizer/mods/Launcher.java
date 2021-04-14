@@ -559,6 +559,7 @@ public class Launcher {
 			protected void after(MethodHookParam param) throws Throwable {
 				boolean fsg = (boolean)XposedHelpers.getAdditionalStaticField(XposedHelpers.findClass("com.miui.home.recents.BaseRecentsImpl", lpparam.classLoader), "REAL_FORCE_FSG_NAV_BAR");
 				if (fsg) return;
+
 				Object mNavStubView = XposedHelpers.getObjectField(param.thisObject, "mNavStubView");
 				Object mWindowManager = XposedHelpers.getObjectField(param.thisObject, "mWindowManager");
 				if (mWindowManager != null && mNavStubView != null) {
@@ -579,6 +580,17 @@ public class Launcher {
 					param.setResult(true);
 					return;
 				}
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.home.recents.GestureStubView", lpparam.classLoader, "onTouchEvent", MotionEvent.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				MotionEvent event = (MotionEvent)param.args[0];
+				if (event.getAction() != MotionEvent.ACTION_DOWN) return;
+				View stub = (View)param.thisObject;
+				String pkgName = Settings.Global.getString(stub.getContext().getContentResolver(), Helpers.modulePkg + ".foreground.package");
+				if (MainModule.mPrefs.getStringSet("controls_fsg_horiz_apps").contains(pkgName)) param.setResult(false);
 			}
 		});
 	}
@@ -1069,6 +1081,10 @@ public class Launcher {
 		Helpers.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.classLoader, "startSecurityHide", new MethodHook() {
 			@Override
 			protected void before(final MethodHookParam param) throws Throwable {
+				if (GlobalActions.handleAction((Activity)param.thisObject, "pref_key_launcher_spread")) {
+					param.setResult(null);
+					return;
+				}
 				boolean opt = Helpers.getSharedBoolPref((Activity)param.thisObject, "pref_key_launcher_privacyapps_gest", false);
 				if (opt) param.setResult(null);
 			}
@@ -1478,6 +1494,73 @@ public class Launcher {
 		};
 		Helpers.findAndHookMethod("com.miui.home.launcher.allapps.category.fragment.AppsListFragment", lpparam.classLoader, "onClick", View.class, hook);
 		Helpers.findAndHookMethod("com.miui.home.launcher.allapps.category.fragment.RecommendCategoryAppListFragment", lpparam.classLoader, "onClick", View.class, hook);
+	}
+
+	public static void LauncherPinchHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.classLoader, "onCreate", Bundle.class, new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				final Activity act = (Activity)param.thisObject;
+				Handler mHandler = (Handler)XposedHelpers.getObjectField(act, "mHandler");
+				new Helpers.SharedPrefObserver(act, mHandler) {
+					@Override
+					public void onChange(Uri uri) {
+						try {
+							String type = uri.getPathSegments().get(1);
+							String key = uri.getPathSegments().get(2);
+							if (key.contains("pref_key_launcher_pinch"))
+							switch (type) {
+								case "string":
+									MainModule.mPrefs.put(key, Helpers.getSharedStringPref(act, key, ""));
+									break;
+								case "integer":
+									MainModule.mPrefs.put(key, Helpers.getSharedIntPref(act, key, 1));
+									break;
+								case "boolean":
+									MainModule.mPrefs.put(key, Helpers.getSharedBoolPref(act, key, false));
+									break;
+							}
+						} catch (Throwable t) {
+							XposedBridge.log(t);
+						}
+					}
+				};
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.home.launcher.Workspace", lpparam.classLoader, "onPinching", float.class, new MethodHook() {
+			@Override
+			protected void before(final MethodHookParam param) throws Throwable {
+				float dampingScale = (float)XposedHelpers.callMethod(param.thisObject, "getDampingScale", param.args[0]);
+				float screenScaleRatio = (float)XposedHelpers.callMethod(param.thisObject, "getScreenScaleRatio");
+				if (dampingScale < screenScaleRatio)
+				if (MainModule.mPrefs.getInt("launcher_pinch_action", 1) > 1) param.setResult(false);
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.home.launcher.Workspace", lpparam.classLoader, "onPinchingEnd", float.class, new MethodHook() {
+			@Override
+			protected void before(final MethodHookParam param) throws Throwable {
+				float dampingScale = (float)XposedHelpers.callMethod(param.thisObject, "getDampingScale", param.args[0]);
+				float screenScaleRatio = (float)XposedHelpers.callMethod(param.thisObject, "getScreenScaleRatio");
+				if (dampingScale < screenScaleRatio)
+				if (GlobalActions.handleAction(((View)param.thisObject).getContext(), "pref_key_launcher_pinch")) {
+					XposedHelpers.callMethod(param.thisObject, "finishCurrentGesture");
+
+					Class<?> pinchingStateEnum = XposedHelpers.findClass("com.miui.home.launcher.Workspace$PinchingState", lpparam.classLoader);
+					Object stateFollow = XposedHelpers.getStaticObjectField(pinchingStateEnum, "FOLLOW");
+					Object stateReadyToEdit = XposedHelpers.getStaticObjectField(pinchingStateEnum, "READY_TO_EDIT");
+
+					Object mState = XposedHelpers.getObjectField(param.thisObject, "mState");
+					XposedHelpers.setObjectField(param.thisObject, "mState", stateFollow);
+					if (mState == stateReadyToEdit)
+					XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mLauncher"), "changeEditingEntryViewToHotseats");
+					XposedHelpers.callMethod(param.thisObject, "resetCellScreenScale", param.args[0]);
+
+					param.setResult(null);
+				}
+			}
+		});
 	}
 
 //	public static void NoInternationalBuildHook(LoadPackageParam lpparam) {

@@ -346,7 +346,8 @@ public class Dialog extends Activity {
 
 			String edxpVersion = null;
 			if (Helpers.usingNewSharedPrefs()) try {
-				edxpVersion = pkgMgr.getInstallerPackageName("EdXposedVersion");
+				String lsposed = Helpers.isLSPosedManagerInstalled(this);
+				edxpVersion = lsposed != null ? lsposed : pkgMgr.getInstallerPackageName("EdXposedVersion");
 				if (edxpVersion == null || edxpVersion.startsWith("unknown")) {
 					File versionFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder + Helpers.versionFile);
 					if (versionFile.exists())

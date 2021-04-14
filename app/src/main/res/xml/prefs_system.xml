@@ -444,6 +444,12 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_cleanmirror"
+			android:title="@string/system_cleanmirror_title"
+			android:summary="@string/system_cleanmirror_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_showlux"
 			android:title="@string/system_showlux_title"
 			android:summary="@string/system_showlux_summ"
@@ -817,6 +823,12 @@
 		android:title="@string/system_mods_betterpopups">
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_betterpopups_center"
+			android:summary="@string/system_betterpopups_center_summ"
+			android:title="@string/system_betterpopups_center_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_betterpopups_allowfloat"
 			android:title="@string/system_betterpopups_allowfloat_title"
 			android:summary="@string/system_betterpopups_allowfloat_summ"
@@ -956,6 +968,12 @@
 			android:summary="@string/system_nosos_summ"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_lswallpaper"
+			android:title="@string/system_lswallpaper_title"
+			android:summary="@string/system_lswallpaper_summ"
+			android:defaultValue="false" />
+
 		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 			android:title="@string/system_mods_lockscreen_functionality" />
 
@@ -1039,6 +1057,11 @@
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_system_cat_other"
 		android:title="@string/system_mods_other">
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_airplanemodeconfig"
+			android:title="@string/system_airplanemodeconfig_title"
+			android:summary="@string/system_airplanemodeconfig_summ" />
 
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_system_uimode"

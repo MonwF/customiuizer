@@ -181,6 +181,14 @@
 			android:key="pref_key_launcher_doubletap"
 			android:summary="@string/launcher_doubletap_summ"
 			android:title="@string/launcher_doubletap_title" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_launcher_pinch"
+			android:summary="@string/launcher_pinch_summ"
+			android:title="@string/launcher_pinch_title" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_launcher_spread"
+			android:summary="@string/launcher_spread_summ"
+			android:title="@string/launcher_spread_title" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 	

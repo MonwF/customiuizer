@@ -89,6 +89,8 @@ public class Launcher extends SubFragment {
 				findPreference("pref_key_launcher_swipeleft").setOnPreferenceClickListener(openLauncherActions);
 				findPreference("pref_key_launcher_shake").setOnPreferenceClickListener(openLauncherActions);
 				findPreference("pref_key_launcher_doubletap").setOnPreferenceClickListener(openLauncherActions);
+				findPreference("pref_key_launcher_pinch").setOnPreferenceClickListener(openLauncherActions);
+				findPreference("pref_key_launcher_spread").setOnPreferenceClickListener(openLauncherActions);
 				findPreference("pref_key_launcher_swipeup").setEnabled(opt == 1);
 				break;
 			case "pref_key_launcher_cat_privacyapps":

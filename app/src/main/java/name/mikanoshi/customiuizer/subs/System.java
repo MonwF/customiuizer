@@ -23,6 +23,7 @@ import name.mikanoshi.customiuizer.SnoozedActivity;
 import name.mikanoshi.customiuizer.SubFragment;
 import name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx;
 import name.mikanoshi.customiuizer.prefs.ListPreferenceEx;
+import name.mikanoshi.customiuizer.prefs.PreferenceEx;
 import name.mikanoshi.customiuizer.prefs.SeekBarPreference;
 import name.mikanoshi.customiuizer.qs.AutoRotateService;
 import name.mikanoshi.customiuizer.qs.DarkModeService;
@@ -357,6 +358,11 @@ public class System extends SubFragment {
 
 				((CheckBoxPreferenceEx)findPreference("pref_key_system_credentials")).setChecked(getActivity().getPackageManager().getComponentEnabledSetting(new ComponentName(getActivity(), CredentialsLauncher.class)) == PackageManager.COMPONENT_ENABLED_STATE_ENABLED);
 				if (!Helpers.is12()) ((CheckBoxPreferenceEx)findPreference("pref_key_system_securecontrolcenter")).setUnsupported(true);
+				if (Helpers.isDeviceEncrypted(getContext())) {
+					CheckBoxPreferenceEx nopwd = (CheckBoxPreferenceEx)findPreference("pref_key_system_nopassword");
+					nopwd.setChecked(false);
+					nopwd.setUnsupported(true);
+				}
 
 				break;
 			case "pref_key_system_cat_other":
@@ -414,6 +420,16 @@ public class System extends SubFragment {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
 						openSubFragment(new System_ScreenshotConfig(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_screenshot_title, R.xml.prefs_system_screenshot);
+						return true;
+					}
+				});
+
+				PreferenceEx airplaneModePref = (PreferenceEx)findPreference("pref_key_system_airplanemodeconfig");
+				airplaneModePref.setUnsupported(!Helpers.checkSettingsPerm(getActivity()));
+				airplaneModePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						openSubFragment(new System_AirplaneModeConfig(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_airplanemodeconfig_title, R.xml.prefs_system_airplanemode);
 						return true;
 					}
 				});

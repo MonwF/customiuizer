@@ -59,7 +59,6 @@ import java.util.Locale;
 import miui.app.AlertDialog;
 import miui.view.SearchActionMode;
 
-import name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx;
 import name.mikanoshi.customiuizer.prefs.ListPreferenceEx;
 import name.mikanoshi.customiuizer.prefs.PreferenceEx;
 import name.mikanoshi.customiuizer.subs.CategorySelector;
@@ -574,14 +573,14 @@ public class MainFragment extends PreferenceFragmentBase {
 			}
 		});
 
-		if (Helpers.isUnsupportedManager(act)) {
-			CheckBoxPreferenceEx ownrepo = (CheckBoxPreferenceEx)findPreference("pref_key_miuizer_ownrepo");
-			ownrepo.setSummary(R.string.miuizer_ownrepo_unsupported);
-			ownrepo.setEnabled(false);
-			ownrepo.setChecked(false);
-		}
+//		if (Helpers.isUnsupportedManager(act)) {
+//			CheckBoxPreferenceEx ownrepo = (CheckBoxPreferenceEx)findPreference("pref_key_miuizer_ownrepo");
+//			ownrepo.setSummary(R.string.miuizer_ownrepo_unsupported);
+//			ownrepo.setEnabled(false);
+//			ownrepo.setChecked(false);
+//		}
 
-		//Helpers.removePref(this, "pref_key_miuizer_force_material", "pref_key_miuizer");
+//		Helpers.removePref(this, "pref_key_miuizer_force_material", "pref_key_miuizer");
 	}
 
 	void showGuides() {

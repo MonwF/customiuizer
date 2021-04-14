@@ -66,6 +66,7 @@ import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.BadParcelableException;
 import android.os.BatteryManager;
+import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -605,8 +606,9 @@ public class System {
 			}
 		});
 
-		String startClassName = Helpers.is12() ? "com.android.keyguard.faceunlock.FaceUnlockManager" : "com.android.keyguard.KeyguardUpdateMonitor";
-		Class<?> startClass = findClassIfExists(startClassName, lpparam.classLoader);
+		Class<?> startClass = findClassIfExists("com.android.keyguard.faceunlock.FaceUnlockManager", lpparam.classLoader);
+		Method startMethod = XposedHelpers.findMethodExactIfExists(startClass, "startFaceUnlock");
+		if (!Helpers.is12() && startMethod == null) startClass = findClassIfExists("com.android.keyguard.KeyguardUpdateMonitor", lpparam.classLoader);
 		if (startClass == null) Helpers.log("NoScreenLockHook", "Face unlock class not found");
 
 		if (startClass != null) {
@@ -2658,14 +2660,8 @@ public class System {
 			@SuppressWarnings("ResultOfMethodCallIgnored")
 			protected void after(MethodHookParam param) throws Throwable {
 				Context mContext = (Context)param.args[0];
-				File powermenu = null;
-				File path1 = new File("/cache");
-				File path2 = new File("/data/cache");
-				File path3 = new File("/data/tmp");
-				if (path1.canWrite()) powermenu = new File("/cache/extended_power_menu");
-				else if (path2.canWrite()) powermenu = new File("/data/cache/extended_power_menu");
-				else if (path3.canWrite()) powermenu = new File("/data/tmp/extended_power_menu");
-
+				String powermenuPath = Helpers.getCacheFilePath("extended_power_menu");
+				File powermenu = powermenuPath == null ? null : new File(powermenuPath);
 				if (powermenu == null) {
 					Helpers.log("ExtendedPowerMenuHook", "No writable path found!");
 					return;
@@ -5654,6 +5650,22 @@ public class System {
 				param.args[1] = mask;
 			}
 		});
+
+		MethodHook paramFlagsHook = new MethodHook() {
+			protected void before(MethodHookParam param) throws Throwable {
+				if (!(param.args[1] instanceof WindowManager.LayoutParams)) return;
+				WindowManager.LayoutParams params = (WindowManager.LayoutParams)param.args[1];
+				params.flags &= ~WindowManager.LayoutParams.FLAG_SECURE;
+			}
+		};
+		Helpers.hookAllMethods("android.view.WindowManagerGlobal", null, "addView", paramFlagsHook);
+		Helpers.hookAllMethods("android.view.WindowManagerGlobal", null, "updateViewLayout", paramFlagsHook);
+
+		Helpers.findAndHookMethod(SurfaceView.class, "setSecure", boolean.class, new MethodHook() {
+			protected void before(MethodHookParam param) throws Throwable {
+				param.args[0] = false;
+			}
+		});
 	}
 
 	public static void AllowAllKeyguardHook(LoadPackageParam lpparam) {
@@ -7465,7 +7477,10 @@ public class System {
 	private static final List<String> securedTiles = new ArrayList<String>();
 
 	public static void SecureQSTilesHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.android.systemui.qs.QSTileHost", lpparam.classLoader, "init", new MethodHook() {
+		Class<?> tileHostCls = XposedHelpers.findClassIfExists("com.android.systemui.qs.QSTileHost", lpparam.classLoader);
+		Method initMethod = XposedHelpers.findMethodExactIfExists(tileHostCls, "init");
+
+		MethodHook hook = new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
@@ -7509,16 +7524,19 @@ public class System {
 				XposedHelpers.setAdditionalInstanceField(param.thisObject, "mAfterUnlockReceiver", mAfterUnlockReceiver);
 				mContext.registerReceiver(mAfterUnlockReceiver, new IntentFilter(ACTION_PREFIX + "HandleQSTileClick"));
 			}
-		});
+		};
 
-		Helpers.findAndHookMethod("com.android.systemui.qs.QSTileHost", lpparam.classLoader, "destroy", new MethodHook() {
-			@Override
-			protected void after(final MethodHookParam param) throws Throwable {
-				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-				BroadcastReceiver mAfterUnlockReceiver = (BroadcastReceiver)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mAfterUnlockReceiver");
-				if (mAfterUnlockReceiver != null) mContext.unregisterReceiver(mAfterUnlockReceiver);
-			}
-		});
+		if (initMethod != null) {
+			Helpers.findAndHookMethod(tileHostCls, "init", hook);
+			Helpers.findAndHookMethod(tileHostCls, "destroy", new MethodHook() {
+				@Override
+				protected void after(final MethodHookParam param) throws Throwable {
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					BroadcastReceiver mAfterUnlockReceiver = (BroadcastReceiver)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mAfterUnlockReceiver");
+					if (mAfterUnlockReceiver != null) mContext.unregisterReceiver(mAfterUnlockReceiver);
+				}
+			});
+		} else Helpers.hookAllConstructors(tileHostCls, hook);
 
 		Helpers.findAndHookMethod("com.android.systemui.qs.tileimpl.QSFactoryImpl", lpparam.classLoader, "createTileInternal", String.class, new MethodHook() {
 			@Override
@@ -7655,6 +7673,60 @@ public class System {
 		int opt = MainModule.mPrefs.getStringAsInt("system_networkindicator", 1);
 		MainModule.resHooks.setObjectReplacement("com.android.systemui", "bool", "config_showActivity", opt == 2);
 		MainModule.resHooks.setObjectReplacement("com.android.systemui", "bool", "config_showWifiActivity", opt == 2);
+	}
+
+	public static void ClearBrightnessMirrorHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BrightnessMirrorController", lpparam.classLoader, "showMirror", new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				View mBrightnessMirror = (View)XposedHelpers.getObjectField(param.thisObject, "mBrightnessMirror");
+				mBrightnessMirror.setElevation(0);
+				mBrightnessMirror.setBackgroundColor(Color.TRANSPARENT);
+			}
+		});
+	}
+
+	public static void SetLockscreenWallpaperHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethods("com.android.server.wallpaper.WallpaperManagerService", lpparam.classLoader, "setWallpaper", new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				if (param.getThrowable() != null || param.getResult() == null || (int)param.args[5] == 1 || "com.android.thememanager".equals(param.args[1])) return;
+
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				if (mContext == null) return;
+
+				int handleIncomingUser = 0;
+				try {
+					handleIncomingUser = (int)XposedHelpers.callStaticMethod(ActivityManager.class, "handleIncomingUser", Binder.getCallingPid(), Binder.getCallingUid(), param.args[7], false, true, "changing wallpaper", null);
+				} catch (Throwable ignore) {}
+				Object wallpaperData = XposedHelpers.callMethod(param.thisObject, "getWallpaperSafeLocked", handleIncomingUser, param.args[5]);
+				File wallpaper = (File)XposedHelpers.getObjectField(wallpaperData, "wallpaperFile");
+
+				new Handler(mContext.getMainLooper()).postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						if (!wallpaper.exists()) return;
+						Intent copyIntent = new Intent(ACTION_PREFIX + "CopyToExternal");
+						copyIntent.putExtra("action", 1);
+						copyIntent.putExtra("from", wallpaper.getAbsolutePath());
+						mContext.sendBroadcast(copyIntent);
+					}
+				}, 3000);
+			}
+		});
+	}
+
+	public static void BetterPopupsCenteredHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.HeadsUpManager", lpparam.classLoader, "getHeadsUpTopMargin", Context.class, new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				Context context = (Context)param.args[0];
+				Resources res = context.getResources();
+				int maxPopupHeight = res.getDimensionPixelSize(res.getIdentifier("notification_max_heads_up_height", "dimen", "com.android.systemui"));
+				if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) maxPopupHeight /= 3;
+				param.setResult(Math.round(context.getResources().getDisplayMetrics().heightPixels / 2.0f - maxPopupHeight / 2.0f));
+			}
+		});
 	}
 
 //	@SuppressWarnings("unchecked")

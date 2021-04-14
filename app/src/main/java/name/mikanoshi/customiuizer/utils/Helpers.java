@@ -33,12 +33,14 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Application;
+import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
@@ -101,7 +103,6 @@ import miui.app.AlertDialog;
 import miui.os.SystemProperties;
 import miui.util.HapticFeedbackUtil;
 
-import name.mikanoshi.customiuizer.GateWayLauncher;
 import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SharedPrefsProvider;
@@ -121,7 +122,8 @@ public class Helpers {
 	public static final String backupFile = "settings_backup";
 	public static final String logFile = "xposed_log";
 	public static final String versionFile = "xposed_version";
-	public static final String xposedRepo = "https://code.highspec.ru/repo/full.xml.gz";
+	public static final String wallpaperFile = "lockscreen_wallpaper";
+	//public static final String xposedRepo = "https://code.highspec.ru/repo/full.xml.gz";
 	public static final String ANDROID_NS = "http://schemas.android.com/apk/res/android";
 	public static final String MIUIZER_NS = "http://schemas.android.com/apk/res-auto";
 	public static final String ACCESS_SECURITY_CENTER = "com.miui.securitycenter.permission.ACCESS_SECURITY_CENTER_PROVIDER";
@@ -155,23 +157,25 @@ public class Helpers {
 	public static boolean showNewMods = true;
 	public static boolean miuizerModuleActive = false;
 	public static final HashSet<String> newMods = new HashSet<String>(Arrays.asList(
-		"pref_key_launcher_closedrawer",
-		"pref_key_launcher_googleminus",
-		"pref_key_system_clockseconds_sync",
-		"pref_key_system_networkindicator",
-		"pref_key_various_unlockfps"
+		"pref_key_system_cleanmirror",
+		"pref_key_system_lswallpaper",
+		"pref_key_system_airplanemodeconfig",
+		"pref_key_system_betterpopups_center",
+		"pref_key_controls_fsg_horiz_apps",
+		"pref_key_launcher_pinch",
+		"pref_key_launcher_spread"
 	));
 	public static final HashMap<String, String> l10nProgress = new HashMap<String, String>() {{
-		put("de", "89.8");
-		put("es", "99.1");
+		put("de", "88.4");
+		put("es", "100");
 		put("it", "100");
-		put("pt-rBR", "98.4");
+		put("pt-rBR", "96.8");
 		put("ru-rRU", "100");
-		put("tr", "89.8");
-		put("uk-rUK", "90.8");
-		put("zh-rCN", "99.1");
-		put("fr", "25.5");
-		put("id", "13.5");
+		put("tr", "88.4");
+		put("uk-rUK", "89.3");
+		put("zh-rCN", "100");
+		put("fr", "25.1");
+		put("id", "13.4");
 		put("sk", "4.3");
 	}};
 
@@ -324,9 +328,18 @@ public class Helpers {
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
 	}
 
-	public static boolean isLauncherIconVisible(Context context) {
-		return context.getPackageManager().getComponentEnabledSetting(new ComponentName(context, GateWayLauncher.class)) != PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
+	public static boolean isDeviceEncrypted(Context context) {
+		DevicePolicyManager policyMgr = (DevicePolicyManager)context.getSystemService(Context.DEVICE_POLICY_SERVICE);
+		int encryption = policyMgr.getStorageEncryptionStatus();
+		return
+			encryption == DevicePolicyManager.ENCRYPTION_STATUS_ACTIVE ||
+			encryption == DevicePolicyManager.ENCRYPTION_STATUS_ACTIVATING ||
+			encryption == DevicePolicyManager.ENCRYPTION_STATUS_ACTIVE_PER_USER;
 	}
+
+//	public static boolean isLauncherIconVisible(Context context) {
+//		return context.getPackageManager().getComponentEnabledSetting(new ComponentName(context, GateWayLauncher.class)) != PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
+//	}
 
 	public static boolean isXposedInstallerInstalled(Context context) {
 		PackageManager pm = context.getPackageManager();
@@ -359,13 +372,22 @@ public class Helpers {
 		return false;
 	}
 
-	public static boolean isUnsupportedManager(Context context) {
+	public static String isLSPosedManagerInstalled(Context context) {
 		try {
-		    return context.getPackageManager().getPackageInfo("org.meowcat.edxposed.manager", 0).versionCode > 45700;
+			PackageInfo info = context.getPackageManager().getPackageInfo("org.lsposed.manager", 0);
+			return info.versionName + " (" + info.versionCode + ")";
 		} catch (PackageManager.NameNotFoundException e) {
-			return true;
+			return null;
 		}
 	}
+
+//	public static boolean isUnsupportedManager(Context context) {
+//		try {
+//		    return context.getPackageManager().getPackageInfo("org.meowcat.edxposed.manager", 0).versionCode > 45700;
+//		} catch (PackageManager.NameNotFoundException e) {
+//			return true;
+//		}
+//	}
 
 	public static boolean areXposedResourceHooksDisabled() {
 		File d1 = new File("/data/user_de/0/org.meowcat.edxposed.manager/conf/disable_resources");
@@ -439,6 +461,36 @@ public class Helpers {
 			break;
 		}
 		return edxpPath;
+	}
+
+	public static String makeNewEdXposedPathReadable() {
+		return makeNewEdXposedPathReadable(null);
+	}
+
+	@SuppressLint("SetWorldReadable")
+	public static String makeNewEdXposedPathReadable(String path) {
+		try {
+			String baseDir;
+			if (path == null) {
+				String edxpPath = getNewEdXposedPath();
+				if (edxpPath == null) return null;
+				baseDir = "/data/misc/" + edxpPath + "/0/log";
+			} else {
+				baseDir = path + "log";
+			}
+			File file;
+			file = new File(baseDir);
+			if (!file.exists()) return null;
+			try { file.setExecutable(true, false); } catch (Throwable t) { XposedBridge.log(t); }
+			file = new File(baseDir + "/all.log");
+			if (!file.exists()) file = new File(baseDir + "/error.log");
+			if (!file.exists()) file = new File(baseDir + "/modules.log");
+			if (!file.exists()) return null;
+			try { file.setReadable(true, false); } catch (Throwable t) { XposedBridge.log(t); }
+			return file.getAbsolutePath();
+		} catch (Throwable t) {
+			return null;
+		}
 	}
 
 	public static String getXposedPropVersion(File propFile, boolean fromHook) {
@@ -594,6 +646,10 @@ public class Helpers {
 			act.requestPermissions(new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE }, action);
 			return false;
 		} else return true;
+	}
+
+	public static boolean checkSettingsPerm(Activity act) {
+		return act.checkSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED;
 	}
 
 	public static boolean checkCoarsePerm(Activity act, int action) {
@@ -1469,14 +1525,20 @@ public class Helpers {
 		return getSharedPrefsPath().startsWith("/data/misc/");
 	}
 
-	public static boolean migratePrefs() {
+	public static String getCacheFilePath(String filename) {
+		if (new File("/cache").canWrite()) return "/cache/" + filename;
+		else if (new File("/data/cache").canWrite()) return "/data/cache/" + filename;
+		else if (new File("/data/tmp").canWrite()) return "/data/tmp/" + filename;
+		else return null;
+	}
+
+	public static boolean copyFile(String from, String to) {
 		try {
-			String newFile = getSharedPrefsFile();
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-				Files.copy(Paths.get(prefsFile), Paths.get(newFile), StandardCopyOption.REPLACE_EXISTING);
+				Files.copy(Paths.get(from), Paths.get(to), StandardCopyOption.REPLACE_EXISTING);
 				return true;
-			} else try (InputStream in = new FileInputStream(prefsFile)) {
-				try (OutputStream out = new FileOutputStream(newFile, false)) {
+			} else try (InputStream in = new FileInputStream(from)) {
+				try (OutputStream out = new FileOutputStream(to, false)) {
 					byte[] buf = new byte[1024];
 					int len;
 					while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
@@ -1484,8 +1546,13 @@ public class Helpers {
 				}
 			}
 		} catch (Throwable t) {
+			t.printStackTrace();
 			return false;
 		}
+	}
+
+	public static boolean migratePrefs() {
+		return copyFile(prefsFile, getSharedPrefsFile());
 	}
 
 	@SuppressLint({"SetWorldReadable", "SetWorldWritable"})

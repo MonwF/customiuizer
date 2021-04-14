@@ -40,11 +40,13 @@
 			android:summary="@string/miuizer_show_launchericon_summ"
 			android:title="@string/miuizer_show_launchericon_title"
 			android:defaultValue="true" />
+<!--
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_miuizer_ownrepo"
 			android:summary="@string/miuizer_ownrepo_summ"
 			android:title="@string/miuizer_ownrepo_title"
 			android:defaultValue="false" />
+-->
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_miuizer_locale"
 			android:title="@string/miuizer_locale_title"

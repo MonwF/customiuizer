@@ -111,7 +111,7 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 
 	@Override
 	protected View onCreateView(ViewGroup parent) {
-		setLayoutResource(R.layout.preference_seekbar);
+		setLayoutResource(Helpers.is12() ? R.layout.preference_seekbar12 : R.layout.preference_seekbar);
 
 		View view = super.onCreateView(parent);
 

@@ -819,6 +819,17 @@
 		<item>1</item>
 	</string-array>
 
+	<string-array name="airplanemodeconfigs">
+		<item>@string/array_keep</item>
+		<item>@string/array_turn_off</item>
+		<item>@string/array_turn_off_disable</item>
+	</string-array>
+	<string-array name="airplanemodeconfigs_val">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+	</string-array>
+
 	<string-array name="holidays">
 		<item>@string/array_disable</item>
 		<item>@string/array_color_auto</item>

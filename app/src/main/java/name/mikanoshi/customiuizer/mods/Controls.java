@@ -1,7 +1,6 @@
 package name.mikanoshi.customiuizer.mods;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -22,6 +21,7 @@ import android.provider.Settings;
 import android.telecom.TelecomManager;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
@@ -286,18 +286,6 @@ public class Controls {
 	}
 
 	public static void VolumeCursorHook() {
-		Helpers.findAndHookMethod(Activity.class, "onResume", new MethodHook() {
-			@Override
-			protected void after(MethodHookParam param) throws Throwable {
-				Activity act = (Activity)param.thisObject;
-				if (act == null) return;
-				Intent intent = new Intent(GlobalActions.EVENT_PREFIX + "CHANGE_FOCUSED_APP");
-				intent.putExtra("package", act.getPackageName());
-				intent.setPackage("android");
-				act.sendBroadcast(intent);
-			}
-		});
-
 		Helpers.findAndHookMethod("android.inputmethodservice.InputMethodService", null, "onKeyDown", int.class, KeyEvent.class, new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
@@ -322,20 +310,6 @@ public class Controls {
 					String pkgName = Settings.Global.getString(ims.getContentResolver(), Helpers.modulePkg + ".foreground.package");
 					if (!MainModule.mPrefs.getStringSet("controls_volumecursor_apps").contains(pkgName)) param.setResult(true);
 				}
-			}
-		});
-	}
-
-	public static void VolumeCursorFocusedHook(LoadPackageParam lpparam) {
-		Helpers.hookAllMethods("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "init", new MethodHook() {
-			@Override
-			protected void after(MethodHookParam param) throws Throwable {
-				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-				mContext.registerReceiver(new BroadcastReceiver() {
-					public void onReceive(final Context context, Intent intent) {
-						Settings.Global.putString(context.getContentResolver(), Helpers.modulePkg + ".foreground.package", intent.getStringExtra("package"));
-					}
-				}, new IntentFilter(GlobalActions.EVENT_PREFIX + "CHANGE_FOCUSED_APP"));
 			}
 		});
 	}
@@ -771,7 +745,7 @@ public class Controls {
 //		});
 //	}
 
-	public static void FSGesturesHook() {
+	public static void FSGesturesSysHook() {
 		Helpers.findAndHookMethod("android.provider.MiuiSettings$Global", null, "getBoolean", ContentResolver.class, String.class, new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
@@ -786,6 +760,19 @@ public class Controls {
 					param.setResult(true);
 					return;
 				}
+			}
+		});
+	}
+
+	public static void FSGesturesHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.fsgesture.GestureStubView", lpparam.classLoader, "onTouchEvent", MotionEvent.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				MotionEvent event = (MotionEvent)param.args[0];
+				if (event.getAction() != MotionEvent.ACTION_DOWN) return;
+				View stub = (View)param.thisObject;
+				String pkgName = Settings.Global.getString(stub.getContext().getContentResolver(), Helpers.modulePkg + ".foreground.package");
+				if (MainModule.mPrefs.getStringSet("controls_fsg_horiz_apps").contains(pkgName)) param.setResult(false);
 			}
 		});
 	}

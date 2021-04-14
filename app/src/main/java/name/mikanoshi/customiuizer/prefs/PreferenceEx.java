@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.LinkedHashSet;
@@ -27,6 +28,7 @@ public class PreferenceEx extends Preference implements PreferenceState {
 	private final boolean child;
 	private final boolean dynamic;
 	private final boolean warning;
+	private final boolean notice;
 	private final boolean countAsSummary;
 	private String customSummary = null;
 	private boolean newmod = false;
@@ -38,6 +40,7 @@ public class PreferenceEx extends Preference implements PreferenceState {
 		dynamic = xmlAttrs.getBoolean(R.styleable.PreferenceEx_dynamic, false);
 		child = xmlAttrs.getBoolean(R.styleable.PreferenceEx_child, false);
 		warning = xmlAttrs.getBoolean(R.styleable.PreferenceEx_warning, false);
+		notice = xmlAttrs.getBoolean(R.styleable.PreferenceEx_notice, false);
 		countAsSummary = xmlAttrs.getBoolean(R.styleable.PreferenceEx_countAsSummary, false);
 		xmlAttrs.recycle();
 	}
@@ -65,6 +68,11 @@ public class PreferenceEx extends Preference implements PreferenceState {
 			title.setTextColor(isEnabled() ? primary : secondary);
 		title.setText(getTitle() +  (unsupported ? " ⨯" : (dynamic ? " ⟲" : "")));
 		if (newmod) Helpers.applyNewMod(title);
+
+		if (notice) try {
+			ImageView arrow = finalView.findViewById(finalView.getResources().getIdentifier("arrow_right", "id", "miui"));
+			if (arrow != null) arrow.setVisibility(View.GONE);
+		} catch (Throwable ignore) {}
 
 		if (paddings[0] == 0) paddings[0] = finalView.getPaddingLeft();
 		if (paddings[1] == 0) paddings[1] = finalView.getPaddingTop();

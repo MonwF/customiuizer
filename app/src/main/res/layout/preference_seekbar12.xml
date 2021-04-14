@@ -25,7 +25,8 @@
 			android:ellipsize="end"
 			android:fadingEdge="horizontal"
 			android:maxLines="2"
-			style="@style/TextAppearance.Primary" />
+			style="@style/TextAppearance.Primary"
+			android:textStyle="bold" />
 
 		<TextView
 			android:id="@android:id/summary"

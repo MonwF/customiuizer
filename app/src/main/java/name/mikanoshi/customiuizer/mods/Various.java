@@ -53,6 +53,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -83,8 +84,18 @@ public class Various {
 
 	public static PackageInfo mLastPackageInfo;
 	public static void AppInfoHook(LoadPackageParam lpparam) {
-		if (Helpers.is12())
-			Helpers.findAndHookMethod("com.miui.appmanager.AMAppInfomationActivity", lpparam.classLoader, "onCreate", Bundle.class, new MethodHook() {
+		Class<?> amaCls = XposedHelpers.findClassIfExists("com.miui.appmanager.AMAppInfomationActivity", lpparam.classLoader);
+		if (amaCls == null) {
+			Helpers.log("AppInfoHook", "Cannot find activity class!");
+			return;
+		}
+
+		boolean oldMethodFound = false;
+		for (Member method: amaCls.getDeclaredMethods())
+		if (method.getName().equals("onLoadFinished")) oldMethodFound = true;
+
+		if (Helpers.is12() || !oldMethodFound)
+			Helpers.findAndHookMethod(amaCls, "onCreate", Bundle.class, new MethodHook() {
 				@Override
 				protected void after(final MethodHookParam param) throws Throwable {
 					Handler handler = new Handler(Looper.getMainLooper());
@@ -191,7 +202,7 @@ public class Various {
 				}
 			});
 		else
-			Helpers.hookAllMethods("com.miui.appmanager.AMAppInfomationActivity", lpparam.classLoader, "onLoadFinished", new MethodHook() {
+			Helpers.hookAllMethods(amaCls, "onLoadFinished", new MethodHook() {
 				@Override
 				@SuppressWarnings("deprecation")
 				protected void after(final MethodHookParam param) throws Throwable {

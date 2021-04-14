@@ -307,6 +307,13 @@
 			android:title="@string/controls_fsg_horiz_title"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_statusbarcolor_apps_title"
+			android:key="pref_key_controls_fsg_horiz_apps"
+			android:dependency="pref_key_controls_fsg_horiz"
+			miuizer:child="true"
+			miuizer:countAsSummary="true" />
+
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_controls_fsg_coverage"
 			android:title="@string/controls_fsg_coverage_title"

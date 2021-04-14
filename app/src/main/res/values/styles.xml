@@ -61,12 +61,12 @@
 		<item name="android:textColorHint">?android:attr/textColorHint</item>
 		<item name="android:textColorLink">?android:attr/textColorLink</item>
 	</style>
-	<style name="TextAppearance.PreferenceList">
+	<style name="TextAppearance.Primary">
 		<item name="android:textSize">@dimen/normal_text_size</item>
 		<item name="android:textStyle">normal</item>
 		<item name="android:textColor">@color/preference_primary_text</item>
 	</style>
-	<style name="TextAppearance.Preference">
+	<style name="TextAppearance.Secondary">
 		<item name="android:textSize">@dimen/secondary_text_size</item>
 		<item name="android:textStyle">normal</item>
 		<item name="android:textColor">@color/preference_secondary_text</item>

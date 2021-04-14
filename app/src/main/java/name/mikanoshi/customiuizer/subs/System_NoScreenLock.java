@@ -7,6 +7,7 @@ import java.util.Objects;
 
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SubFragment;
+import name.mikanoshi.customiuizer.prefs.ListPreferenceEx;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class System_NoScreenLock extends SubFragment {
@@ -42,6 +43,12 @@ public class System_NoScreenLock extends SubFragment {
 				return true;
 			}
 		});
+
+		if (Helpers.isDeviceEncrypted(getContext())) {
+			ListPreferenceEx req = (ListPreferenceEx)findPreference("pref_key_system_noscreenlock_req");
+			req.setValue("3");
+			req.setEnabled(false);
+		}
 	}
 
 	public void openWifiNetworks() {
