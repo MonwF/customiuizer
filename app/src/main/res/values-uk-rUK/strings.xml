@@ -141,7 +141,7 @@
     <string name="system_popupnotif_fs_title">Визначення повноекранного режиму</string>
     <string name="system_popupnotif_fs_summ">Не відкривати панель сповіщень якщо запущено повноекранний додаток (не поширюється на \"режим занурення\" з прихованими панелями статусу і навігації)</string>
     <string name="system_popupnotif_apps_title">Обрані додатки</string>
-    <string name="various_collapsemiuititles_title">Звернути заголовки MIUI</string>
+    <string name="various_collapsemiuititles_title">Згорнути заголовки MIUI</string>
     <string name="system_mods_screenshots">Знімки екрану</string>
     <string name="system_screenshot_title">Конфігурація скріншотів</string>
     <string name="system_screenshot_summ">Параметри формату, якості та папки збереження скріншотів</string>
@@ -367,8 +367,8 @@
     <string name="system_betterpopups_nohide_summ">Вимикає автоматичне приховування</string>
     <string name="system_betterpopups_swipedown_title">Активувати свайп вниз</string>
     <string name="system_betterpopups_swipedown_summ">Відкриває панель сповіщень по свайпу вниз</string>
-    <string name="system_fw_noblacklist_title">Відключити чорний список</string>
-    <string name="system_fw_noblacklist_summ">Дозволяє відчиняти любий додаток в плавучему вікні</string>
+    <string name="system_fw_noblacklist_title">Вимкнути чорний список</string>
+    <string name="system_fw_noblacklist_summ">Дозволяє відчиняти будь-який додаток в плавучому вікні</string>
     <string name="system_fw_sticky_title">Запам\'ятовувати стан</string>
     <string name="system_mods_applock">Захист додатків</string>
     <string name="system_applock_title">Менш суворий захист додатків</string>
@@ -924,4 +924,5 @@
     <string name="auto_color">Колір рядку стану</string>
     <string name="type_file">файл</string>
     <string name="type_res">ресурс</string>
+    <string name="system_clockseconds_sync_title">Синхронізація</string>
 </resources>
