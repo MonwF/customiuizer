@@ -696,6 +696,8 @@
 	<string name="various_callreminder_nosound">No sound</string>
 	<string name="various_callreminder_vibration_own_title">Own pattern</string>
 	<string name="various_callreminder_vibration_own_msg">Format: delay,vibration,delay,vibration,…</string>
+	<string name="various_restrictapp_title">Full restrictions</string>
+	<string name="various_restrictapp_summ">Allows to configure battery saver and access to Wi-Fi for system apps</string>
 	<string name="various_disableapp_title">App state control</string>
 	<string name="various_disableapp_summ">Allows to disable almost any app from its info page</string>
 	<string name="various_apps_title">Show additional app details</string>

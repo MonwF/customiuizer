@@ -85,6 +85,8 @@
 	<string name="various_callreminder_nosound">Без звука</string>
 	<string name="various_callreminder_vibration_own_title">Свой шаблон</string>
 	<string name="various_callreminder_vibration_own_msg">Формат: задержка,вибрация,задержка,вибрация,…</string>
+	<string name="various_restrictapp_title">Полноценные ограничения</string>
+	<string name="various_restrictapp_summ">Позволяет настраивать контроль активности и доступ к Wi-Fi для системных приложений</string>
 	<string name="various_disableapp_title">Контроль состояния приложений</string>
 	<string name="various_disableapp_summ">Позволяет отключить почти любое приложение с его страницы \"О приложении\"</string>
 	<string name="various_apps_title">Доп. сведения о приложении</string>
