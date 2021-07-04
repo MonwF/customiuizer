@@ -1037,4 +1037,6 @@
     <string name="array_keep">Mantener como está</string>
     <string name="array_turn_off">Apagar</string>
     <string name="array_turn_off_disable">Apagar y deshabilitar</string>
+    <string name="various_restrictapp_title">Restricciones completas</string>
+    <string name="various_restrictapp_summ">Permite que se configure el ahorro de batería y acceso Wi-Fi para las aplicaciones de sistema</string>
 </resources>
