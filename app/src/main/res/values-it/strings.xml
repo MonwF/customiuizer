@@ -1035,4 +1035,6 @@
     <string name="array_keep">Mantieni così com\'è</string>
     <string name="array_turn_off">Spegni</string>
     <string name="array_turn_off_disable">Spegni e disattiva</string>
+    <string name="various_restrictapp_title">Restrizioni complete</string>
+    <string name="various_restrictapp_summ">Consente di configurare il risparmio energetico e l\'accesso al Wi-Fi per le app di sistema</string>
 </resources>
