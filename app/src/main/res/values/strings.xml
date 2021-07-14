@@ -948,7 +948,7 @@
 	<string name="support_donate_crypto_title">Cryptocurrencies</string>
 	<string name="support_donate_crypto_summ">Money of the future :)</string>
 	<string name="support_donate_other_title">Outdated currencies</string>
-	<string name="support_donate_other_summ" translatable="false">Webmoney, QIWI</string>
+	<string name="support_donate_other_summ" translatable="false">Paypal, Webmoney, QIWI</string>
 
 	<string name="donate_level1">Thanks for your donation!</string>
 	<string name="donate_level2">Thanks for your generous donation!</string>

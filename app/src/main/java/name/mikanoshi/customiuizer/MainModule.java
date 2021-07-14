@@ -324,9 +324,14 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (pkg.equals("com.miui.securitycenter")) {
 			if (mPrefs.getBoolean("various_appdetails")) Various.AppInfoHook(lpparam);
 			if (mPrefs.getBoolean("various_disableapp")) Various.AppsDisableHook(lpparam);
+			if (mPrefs.getBoolean("various_restrictapp")) Various.AppsRestrictHook(lpparam);
 			if (mPrefs.getBoolean("system_unblockthird")) System.UnblockThirdLaunchersHook(lpparam);
 			if (mPrefs.getBoolean("system_applock_scramblepin")) System.ScrambleAppLockPINHook(lpparam);
 			if (mPrefs.getStringAsInt("various_appsort", 0) > 0) Various.AppsDefaultSortHook(lpparam);
+		}
+
+		if (pkg.equals("com.miui.powerkeeper")) {
+			if (mPrefs.getBoolean("various_restrictapp")) Various.AppsRestrictPowerHook(lpparam);
 		}
 
 		if (pkg.equals("com.android.settings")) {

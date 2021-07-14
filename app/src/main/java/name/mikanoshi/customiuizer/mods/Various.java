@@ -58,6 +58,7 @@ import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -399,6 +400,49 @@ public class Various {
 				param.setResult(true);
 			}
 		});
+	}
+
+	public static void AppsRestrictHook(LoadPackageParam lpparam) {
+		Method[] mGetAppInfo = XposedHelpers.findMethodsByExactParameters(findClass("com.miui.appmanager.AppManageUtils", lpparam.classLoader), ApplicationInfo.class, Object.class, String.class, int.class, int.class);
+		if (mGetAppInfo.length == 0)
+			Helpers.log("AppsRestrictHook", "Cannot find getAppInfo method!");
+		else
+			Helpers.hookMethod(mGetAppInfo[0], new MethodHook() {
+				@Override
+				protected void after(final MethodHookParam param) throws Throwable {
+					if ((int)param.args[2] == 128 && (int)param.args[3] == 0) {
+						ApplicationInfo appInfo = (ApplicationInfo)param.getResult();
+						appInfo.flags &= ~ApplicationInfo.FLAG_SYSTEM;
+						param.setResult(appInfo);
+					}
+				}
+			});
+
+		Helpers.findAndHookMethod("com.miui.networkassistant.ui.fragment.ShowAppDetailFragment", lpparam.classLoader, "initFirewallData", new MethodHook() {
+			@Override
+			protected void before(final MethodHookParam param) throws Throwable {
+				Object mAppInfo = XposedHelpers.getObjectField(param.thisObject, "mAppInfo");
+				if (mAppInfo != null) XposedHelpers.setBooleanField(mAppInfo, "isSystemApp", false);
+			}
+		});
+
+		Helpers.hookAllMethods("com.miui.networkassistant.service.FirewallService", lpparam.classLoader, "setSystemAppWifiRuleAllow", XC_MethodReplacement.DO_NOTHING);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static void AppsRestrictPowerHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.miui.powerkeeper.provider.PowerKeeperConfigureManager", lpparam.classLoader, "pkgHasIcon", String.class, XC_MethodReplacement.returnConstant(true));
+
+		Helpers.findAndHookMethod("com.miui.powerkeeper.provider.PreSetGroup", lpparam.classLoader, "initGroup", new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				HashMap<String, Integer> mGroupHeadUidMap = (HashMap<String, Integer>)XposedHelpers.getStaticObjectField(findClass("com.miui.powerkeeper.provider.PreSetGroup", lpparam.classLoader), "mGroupHeadUidMap");
+				mGroupHeadUidMap.clear();
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.powerkeeper.provider.PreSetApp", lpparam.classLoader, "isPreSetApp", String.class, XC_MethodReplacement.returnConstant(false));
+		Helpers.hookAllMethods("com.miui.powerkeeper.utils.Utils", lpparam.classLoader, "pkgHasIcon", XC_MethodReplacement.returnConstant(true));
 	}
 
 	public static void AlarmCompatHook() {

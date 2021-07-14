@@ -535,15 +535,15 @@ public class MainFragment extends PreferenceFragmentBase {
 			}
 		});
 
-		findPreference("pref_key_payinapp").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference pref) {
-				Bundle args = new Bundle();
-				args.putInt("baseResId", R.layout.fragment_inapp);
-				openSubFragment(new InAppFragment(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.support_donate_title, R.xml.prefs_inapp);
-				return true;
-			}
-		});
+//		findPreference("pref_key_payinapp").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+//			@Override
+//			public boolean onPreferenceClick(Preference pref) {
+//				Bundle args = new Bundle();
+//				args.putInt("baseResId", R.layout.fragment_inapp);
+//				openSubFragment(new InAppFragment(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.support_donate_title, R.xml.prefs_inapp);
+//				return true;
+//			}
+//		});
 
 		findPreference("pref_key_paycrypto").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override

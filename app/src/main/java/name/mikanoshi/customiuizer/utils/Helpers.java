@@ -157,27 +157,30 @@ public class Helpers {
 	public static boolean showNewMods = true;
 	public static boolean miuizerModuleActive = false;
 	public static final HashSet<String> newMods = new HashSet<String>(Arrays.asList(
-		"pref_key_system_cleanmirror",
-		"pref_key_system_lswallpaper",
-		"pref_key_system_airplanemodeconfig",
-		"pref_key_system_betterpopups_center",
-		"pref_key_controls_fsg_horiz_apps",
-		"pref_key_launcher_pinch",
-		"pref_key_launcher_spread"
+		"pref_key_various_restrictapp"
 	));
 	public static final HashMap<String, String> l10nProgress = new HashMap<String, String>() {{
-		put("de", "88.4");
+		put("de", "88.2");
 		put("es", "100");
 		put("it", "100");
-		put("pt-rBR", "96.8");
+		put("pt-rBR", "96.6");
 		put("ru-rRU", "100");
-		put("tr", "88.4");
-		put("uk-rUK", "89.3");
-		put("zh-rCN", "100");
+		put("tr", "88.2");
+		put("uk-rUK", "89.2");
+		put("zh-rCN", "99.8");
 		put("fr", "25.1");
-		put("id", "13.4");
+		put("id", "13.3");
 		put("sk", "4.3");
 	}};
+
+	public static final HashSet<String> xposedManagers = new HashSet<String>(Arrays.asList(
+		"org.lsposed.manager",
+		"io.github.lsposed.manager",
+		"org.meowcat.edxposed.manager",
+		"com.solohsu.android.edxp.manager",
+		"de.robv.android.xposed.installer",
+		"me.weishu.exp"
+	));
 
 	public static final ArrayList<String> shortcutIcons = new ArrayList<String>();
 	public static Holidays currentHoliday = Holidays.NONE;
@@ -344,28 +347,8 @@ public class Helpers {
 	public static boolean isXposedInstallerInstalled(Context context) {
 		PackageManager pm = context.getPackageManager();
 
-		try {
-			pm.getPackageInfo("io.github.lsposed.manager", PackageManager.GET_ACTIVITIES);
-			return true;
-		} catch (PackageManager.NameNotFoundException e) {}
-
-		try {
-			pm.getPackageInfo("org.meowcat.edxposed.manager", PackageManager.GET_ACTIVITIES);
-			return true;
-		} catch (PackageManager.NameNotFoundException e) {}
-
-		try {
-			pm.getPackageInfo("com.solohsu.android.edxp.manager", PackageManager.GET_ACTIVITIES);
-			return true;
-		} catch (PackageManager.NameNotFoundException e) {}
-
-		try {
-			pm.getPackageInfo("de.robv.android.xposed.installer", PackageManager.GET_ACTIVITIES);
-			return true;
-		} catch (PackageManager.NameNotFoundException e) {}
-
-		try {
-			pm.getPackageInfo("me.weishu.exp", PackageManager.GET_ACTIVITIES);
+		for (String manager: xposedManagers) try {
+			pm.getPackageInfo(manager, PackageManager.GET_ACTIVITIES);
 			return true;
 		} catch (PackageManager.NameNotFoundException e) {}
 
@@ -412,43 +395,16 @@ public class Helpers {
 	}
 
 	public static boolean openXposedApp(Context context) {
-		Intent intent = context.getPackageManager().getLaunchIntentForPackage("io.github.lsposed.manager");
-		if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-		try {
+		for (String manager: xposedManagers) try {
+			Intent intent = context.getPackageManager().getLaunchIntentForPackage(manager);
+			if (intent == null) continue;
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 			context.startActivity(intent);
 			return true;
-		} catch (Throwable e0) {
-			intent = context.getPackageManager().getLaunchIntentForPackage("org.meowcat.edxposed.manager");
-			if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-			try {
-				context.startActivity(intent);
-				return true;
-			} catch (Throwable e1) {
-				intent = context.getPackageManager().getLaunchIntentForPackage("com.solohsu.android.edxp.manager");
-				if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-				try {
-					context.startActivity(intent);
-					return true;
-				} catch (Throwable e2) {
-					intent = context.getPackageManager().getLaunchIntentForPackage("de.robv.android.xposed.installer");
-					if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-					try {
-						context.startActivity(intent);
-						return true;
-					} catch (Throwable e3) {
-						intent = context.getPackageManager().getLaunchIntentForPackage("me.weishu.exp");
-						if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-						try {
-							context.startActivity(intent);
-							return true;
-						} catch (Throwable e4) {
-							Toast.makeText(context, R.string.xposed_not_found, Toast.LENGTH_LONG).show();
-						}
-					}
-				}
-			}
-			return false;
-		}
+		} catch (Throwable ignore) {}
+
+		Toast.makeText(context, R.string.xposed_not_found, Toast.LENGTH_LONG).show();
+		return false;
 	}
 
 	public static String getNewEdXposedPath() {

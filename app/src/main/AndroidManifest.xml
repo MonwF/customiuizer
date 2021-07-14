@@ -33,6 +33,7 @@
 	<application
 		android:allowBackup="false"
 		android:backupAgent="name.mikanoshi.customiuizer.utils.PrefBackupAgent"
+		android:hasFragileUserData="true"
 		android:hardwareAccelerated="true"
 		android:icon="@mipmap/ic_launcher"
 		android:roundIcon="@mipmap/ic_launcher"

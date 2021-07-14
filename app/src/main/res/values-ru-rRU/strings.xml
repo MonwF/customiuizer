@@ -280,7 +280,6 @@
 	<string name="support_donate_crypto_title">Криптовалюты</string>
 	<string name="support_donate_crypto_summ">Деньги будущего :)</string>
 	<string name="support_donate_other_title">Устаревшие валюты</string>
-	<string name="support_donate_other_summ">Webmoney, QIWI</string>
 
 	<string name="donate_level1">Спасибо за пожертвование!</string>
 	<string name="donate_level2">Спасибо за щедрое пожертвование!</string>

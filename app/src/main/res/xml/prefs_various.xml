@@ -71,6 +71,12 @@
 		android:title="@string/settings" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_various_restrictapp"
+		android:summary="@string/various_restrictapp_summ"
+		android:title="@string/various_restrictapp_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_various_disableapp"
 		android:summary="@string/various_disableapp_summ"
 		android:title="@string/various_disableapp_title"

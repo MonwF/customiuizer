@@ -22,8 +22,8 @@ android {
         minSdkVersion 24
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 27
-        versionCode 68
-        versionName "3.1.6"
+        versionCode 69
+        versionName "3.1.7"
         signingConfig signingConfigs.dev
         resConfigs 'ru-rRU', 'uk-rUK', 'zh-rCN', 'pt-rBR', 'de', 'es', 'it', 'tr'
     }
@@ -60,7 +60,6 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "ch.acra:acra-core:$acraVersion"
-    implementation 'com.android.billingclient:billing:3.0.2'
     //noinspection DifferentStdlibGradleVersion
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.21'
     implementation 'com.github.jinatonic.confetti:confetti:1.1.2'

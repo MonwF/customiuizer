@@ -1,3 +1,8 @@
+3.1.7
+[New] Allow configuring battery saver and access to Wi-Fi for system apps
+[Fixed][Remove unlock animation] Compatibility with latest MIUI Launcher versions
+Detect that LSPosed framework is installed
+
 3.1.6
 [New] Configure allowed communications in airplane mode
 [New] Allow 3rd-party apps to set lock screen wallpaper
