@@ -42,28 +42,28 @@
     <string name="system_statusbaricons_hotspot_title">Relai</string>
     <string name="system_statusbaricons_profile_title">Profile de travail</string>
     <string name="system_statusbaricons_sound_title">Profils de son</string>
-    <string name="system_statusbaricons_dnd_title">"Mode Ne pas déranger "</string>
+    <string name="system_statusbaricons_dnd_title">Mode \"Ne pas déranger\"</string>
     <string name="system_statusbaricons_headset_title">Casque</string>
     <string name="system_statusbaricons_mute_title">Appel : micro éteint</string>
     <string name="system_statusbaricons_speaker_title">Appel : haut-parleur</string>
     <string name="system_statusbaricons_record_title">Appel : enregistrement en cours</string>
     <string name="system_batteryindicator_title">Barre indicatrice de batterie</string>
     <string name="system_batteryindicator_summ">Afficher le niveau de charge de la batterie sous forme de barre</string>
-    <string name="system_batteryindicator_limitvis_title">"Visibilité limitée "</string>
+    <string name="system_batteryindicator_limitvis_title">Visibilité limitée</string>
     <string name="system_batteryindicator_limitvis_summ">Afficher uniquement dans le panneau de notification et sur l\'écran de verrouillage</string>
     <string name="system_batteryindicator_rounded_title">Bords arrondis</string>
-    <string name="system_batteryindicator_centered_title">"Centré "</string>
+    <string name="system_batteryindicator_centered_title">Centré</string>
     <string name="system_batteryindicator_height_title">Hauteur de la barre</string>
     <string name="system_batteryindicator_padding_title">Déplacement horizontal</string>
     <string name="system_batteryindicator_colorval1_title">Couleur de charge complète</string>
     <string name="system_batteryindicator_colorval2_title">Couleur de batterie faible</string>
     <string name="system_batteryindicator_colorval3_title">Couleur d\'économie de batterie</string>
-    <string name="system_batteryindicator_colorval4_title">"Couleur de chargement de batterie "</string>
+    <string name="system_batteryindicator_colorval4_title">Couleur de chargement de la batterie</string>
     <string name="system_batteryindicator_lowlevel_title">Niveau de batterie faible</string>
     <string name="system_batteryindicator_test_title">Test</string>
     <string name="system_batteryindicator_test_summ">Animer la barre de 100% à 0% en déchargement</string>
-    <string name="system_statusbarheight_title">"Hauteur de la part de statut "</string>
-    <string name="system_statusbarcolor_title">"Couleur de fond de la barre de statut "</string>
+    <string name="system_statusbarheight_title">Hauteur de la barre de statut</string>
+    <string name="system_statusbarcolor_title">Couleur de fond de la barre de statut</string>
     <string name="system_statusbarcolor_summ">Faire en sorte que la couleur de fond de la barre de statut et de la barre d\'action d\'application soit la même lorsque possible</string>
     <string name="system_statusbarcolor_apps_title">Liste noire</string>
     <string name="system_shortcut_app_title">Raccourci d\'application</string>
@@ -72,7 +72,7 @@
     <string name="system_clock_app_summ">Ouvrir l\'application sélectionnée lorsque l\'horloge dans le haut du panneau de notification est tapée</string>
     <string name="system_calendar_app_title">Calendrier</string>
     <string name="system_calendar_app_summ">"Ouvrir l\'application sélectionnée lorsque l\'utilisateur appuie sur la date dans le haut du panneau de notification "</string>
-    <string name="system_clockseconds_title">"Afficher les secondes "</string>
+    <string name="system_clockseconds_title">Afficher les secondes</string>
     <string name="system_clockseconds_summ">Afficher les secondes pour l\'horloge dans la barre de status</string>
     <string name="system_maxsbicons_title">Limite d\'icônes de notification</string>
     <string name="system_maxsbicons_summ">"Nombre d'icônes de notification à afficher avant de les changer en '...' "</string>
@@ -912,4 +912,6 @@
 	
 	
     <string name="warning">Attention !</string>
+    <string name="system_clockseconds_sync_title">Synchronisation</string>
+    <string name="system_networkindicator_summ">Configurer les indicateurs de données mobiles et de trafic Wi-Fi</string>
 </resources>
