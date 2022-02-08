@@ -987,6 +987,7 @@
 	<string name="warning_blacklist">Black/White list option is active in Xposed Framework, it can prevent mods from working properly.</string>
 	<string name="warning_blacklist_sdk">Additionally, installed module version is from Google Play and has more limitations. Consider reinstalling it from any other source.</string>
 	<string name="warning_scope">Activation scope is active for this module, it can prevent some mods from working properly.</string>
+	<string name="warning_unsupported_os">Android %1$s is not supported, mods might not work properly.</string>
 	<string name="open_xposed">Manage Xposed modules</string>
 	<string name="soft_reboot">Soft reboot</string>
 	<string name="soft_reboot_ask">Perform soft reboot now?</string>
