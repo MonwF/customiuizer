@@ -521,6 +521,8 @@
 	<string name="launcher_horizmargin_title">Horizontal grid margins</string>
 	<string name="launcher_topmargin_title">Top grid margin</string>
 	<string name="launcher_bottommargin_title">Bottom dock margin</string>
+	<string name="launcher_horizwidgetmargin_title">Horizontal widget margin</string>
+	<string name="launcher_horizwidgetmargin_summary">Works only on latest launcher versions with dynamic widget positioning</string>
 	<string name="launcher_indicatorheight_title">Page indicator height</string>
 	<string name="launcher_folders">Folders</string>
 	<string name="launcher_folder_cols_title">Number of columns in folders</string>
@@ -912,6 +914,8 @@
 	<string name="miuizer_new_mod">New!</string>
 	<string name="miuizer_show_launchericon_title">Launcher icon</string>
 	<string name="miuizer_show_launchericon_summ">Show icon in launchers</string>
+	<string name="miuizer_show_assumelsposed_title">LSPosed mode</string>
+	<string name="miuizer_show_assumelsposed_summ">Assume that LSPosed Framework is installed to correctly work with its manager</string>
 	<string name="miuizer_show_settingsicon_title">Fast access icon</string>
 	<string name="miuizer_show_settingsicon_summ">Show icon in Settings</string>
 	<string name="miuizer_ownrepo_title">Own repository</string>
@@ -999,8 +1003,8 @@
 	<string name="backup_ok">Settings were backed up successfully!</string>
 	<string name="restore_ok">Settings were successfully restored!</string>
 	<string name="backup_restore_info">Your settings have been restored via Google Cloud Backup. Please do a soft reboot after enabling the Xposed module.</string>
-	<string name="prefs_migration_success">Module\'s setting were successfully migrated to work with new EdXposed version. Reboot to apply changes.</string>
-	<string name="prefs_migration_failure">Failed to migrate module\'s settings to work with new EdXposed version. You\'ll have to use restore function or configure mods from scratch.</string>
+	<string name="prefs_migration_success">Module\'s setting were successfully migrated to work with new LSPosed/EdXposed version. Reboot to apply changes.</string>
+	<string name="prefs_migration_failure">Failed to migrate module\'s settings to work with new LSPosed/EdXposed version. You\'ll have to use restore function or configure mods from scratch.</string>
 	<string name="update_available">Update is available ⚠</string>
 	<string name="select_app">Select app</string>
 	<string name="select_apps">Select apps</string>
@@ -1039,6 +1043,7 @@
 	<string name="delete">Delete</string>
 	<string name="delete_item_info">Long press item to delete</string>
 	<string name="change_icon">Change icon</string>
+	<string name="i_use_lsp">I use LSPosed</string>
 
 	<string name="guide_search">Search mods by name.\nLong press to display a list of new mods.</string>
 	<string name="guide_softreboot">Don\'t forget to apply mods by using soft reboot.\nDynamic ⟲ mods require it only once.\nMore information is on About page.</string>

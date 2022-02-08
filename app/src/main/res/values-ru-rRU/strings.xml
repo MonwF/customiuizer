@@ -35,8 +35,8 @@
 	<string name="warning_scope">Область активации включена для данного модуля, это может привести к неработоспособности некоторых модов.</string>
 	<string name="module_not_active">Модуль CustoMIUIzer не активен! Откройте приложение Xposed, активируйте модуль и перезагрузитесь.</string>
 	<string name="backup_restore_info">Ваши настройки были восстановлены из Google Cloud. Если мод Vol2wake был активен, отключите его и включите снова, после этого сделайте полную перезагрузку.</string>
-	<string name="prefs_migration_success">Настройки модуля были успешно мигрированы для работы с новой версией EdXposed. Перезагрузитесь для применения изменений.</string>
-	<string name="prefs_migration_failure">Не удалось мигрировать настройки модуля для работы с новой версией EdXposed. Воспользуйтесь функцией восстановления или настройте моды с нуля.</string>
+	<string name="prefs_migration_success">Настройки модуля были успешно мигрированы для работы с новой версией LSPosed/EdXposed. Перезагрузитесь для применения изменений.</string>
+	<string name="prefs_migration_failure">Не удалось мигрировать настройки модуля для работы с новой версией LSPosed/EdXposed. Воспользуйтесь функцией восстановления или настройте моды с нуля.</string>
 
 	<string name="mods">Моды</string>
 	<string name="mods_actions">Действия</string>
@@ -407,6 +407,7 @@
 	<string name="delete">Удалить</string>
 	<string name="delete_item_info">Используйте долгое нажатие для удаления</string>
 	<string name="change_icon">Изменить иконку</string>
+	<string name="i_use_lsp">Я использую LSPosed</string>
 	<string name="crash_confirm">Подтверждение</string>
 	<string name="crash_collecting_report">Создание отчёта…</string>
 	<string name="crash_sending_report">Отправка отчёта…</string>
@@ -452,6 +453,8 @@
 	<string name="miuizer_new_mod">Новый!</string>
 	<string name="miuizer_show_launchericon_title">Иконка в ланчере</string>
 	<string name="miuizer_show_launchericon_summ">Показывать иконку в ланчерах</string>
+	<string name="miuizer_show_assumelsposed_title">Режим LSPosed</string>
+	<string name="miuizer_show_assumelsposed_summ">Предполагать, что установлен LSPosed Framework, для корректной работы с его менеджером</string>
 	<string name="miuizer_show_settingsicon_title">Иконка быстрого доступа</string>
 	<string name="miuizer_show_settingsicon_summ">Показывать иконку в Настройках</string>
 	<string name="miuizer_ownrepo_title">Свой репозиторий</string>
@@ -519,6 +522,8 @@
 	<string name="launcher_horizmargin_title">Горизонтальные отступы сетки</string>
 	<string name="launcher_topmargin_title">Отступ сетки сверху</string>
 	<string name="launcher_bottommargin_title">Отступ дока снизу</string>
+	<string name="launcher_horizwidgetmargin_title">Горизонтальные отступы виджетов</string>
+	<string name="launcher_horizwidgetmargin_summary">Работает только на последних версиях ланчера с динамическим позиционироанием виджетов</string>
 	<string name="launcher_indicatorheight_title">Высота индикатора страниц</string>
 	<string name="launcher_folders">Папки</string>
 	<string name="launcher_folder_cols_title">Число колонок в папках</string>
