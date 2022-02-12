@@ -36,6 +36,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.miui.internal.widget.ActionBarView;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
@@ -199,7 +201,9 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 			getActionBar().showSplitActionBar(false, false);
 		} catch (Throwable t) {
 			hideSplitView();
+			return;
 		}
+		if (Helpers.is125()) hideSplitView125();
 	}
 
 	void hideSplitView() {
@@ -210,6 +214,18 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 			mSplitViewField.setAccessible(true);
 			View mSplitView = (View)mSplitViewField.get(actionBar);
 			if (mSplitView != null) mSplitView.setVisibility(View.GONE);
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+	}
+
+	void hideSplitView125() {
+		try {
+			ActionBar actionBar = getActionBar();
+			Field mActionViewField = actionBar.getClass().getDeclaredField("mActionView");
+			mActionViewField.setAccessible(true);
+			ActionBarView mActionView = (ActionBarView)mActionViewField.get(actionBar);
+			if (mActionView != null) mActionView.setSplitActionBar(true);
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}

@@ -337,7 +337,7 @@ public class Dialog extends Activity {
 			crashData.put("TARGET_API", getApplicationContext().getApplicationInfo().targetSdkVersion);
 
 			StringBuilder sb = new StringBuilder();
-			try (FileInputStream in = new FileInputStream(new File(Helpers.getProtectedContext(this).getFilesDir().getAbsolutePath() + "/uncaught_exceptions"))) {
+			try (FileInputStream in = new FileInputStream(Helpers.getProtectedContext(this).getFilesDir().getAbsolutePath() + "/uncaught_exceptions")) {
 				try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in))) {
 					String line;
 					while ((line = bufferedReader.readLine()) != null) sb.append(line).append("\n");
@@ -413,7 +413,7 @@ public class Dialog extends Activity {
 		} catch (Throwable t) {
 			StringWriter sw = new StringWriter();
 			t.printStackTrace(new PrintWriter(sw));
-			crashData.put(ReportField.CUSTOM_DATA, "Retrieval failed. Stack trace:\n" + sw.toString());
+			crashData.put(ReportField.CUSTOM_DATA, "Retrieval failed. Stack trace:\n" + sw);
 		}
 
 		int payloadSize;

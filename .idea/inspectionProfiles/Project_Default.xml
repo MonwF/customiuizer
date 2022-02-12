@@ -6,10 +6,7 @@
     <inspection_tool class="AndroidNonConstantResIdsInSwitch" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="BooleanMethodIsAlwaysInverted" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="CatchMayIgnoreException" enabled="false" level="WARNING" enabled_by_default="false" />
-    <inspection_tool class="ConstantConditions" enabled="true" level="WARNING" enabled_by_default="true">
-      <option name="SUGGEST_NULLABLE_ANNOTATIONS" value="false" />
-      <option name="DONT_REPORT_TRUE_ASSERT_STATEMENTS" value="false" />
-    </inspection_tool>
+    <inspection_tool class="CommentedOutCode" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="Convert2Diamond" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="Convert2Lambda" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="DeprecatedClassUsageInspection" enabled="true" level="INFORMATION" enabled_by_default="true" />

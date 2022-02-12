@@ -81,6 +81,7 @@ import android.text.format.DateFormat;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.util.LruCache;
 import android.util.Pair;
 import android.util.TypedValue;
@@ -160,14 +161,14 @@ public class Helpers {
 		"pref_key_various_restrictapp"
 	));
 	public static final HashMap<String, String> l10nProgress = new HashMap<String, String>() {{
-		put("de", "88.2");
-		put("es", "100");
-		put("it", "100");
-		put("pt-rBR", "96.6");
-		put("ru-rRU", "100");
-		put("tr", "88.2");
-		put("uk-rUK", "89.2");
-		put("zh-rCN", "99.8");
+		put("de", "87.7");
+		put("es", "99.2");
+		put("it", "99.2");
+		put("pt-BR", "95.9");
+		put("ru-RU", "100");
+		put("tr", "87.7");
+		put("uk-UK", "88.7");
+		put("zh-CN", "99.2");
 		put("fr", "25.1");
 		put("id", "13.3");
 		put("sk", "4.3");
@@ -307,12 +308,20 @@ public class Helpers {
 		}
 	}
 
+	public static boolean is10() {
+		return SystemProperties.getInt("ro.miui.ui.version.code", 7) <= 8;
+	}
+
 	public static boolean is11() {
 		return SystemProperties.getInt("ro.miui.ui.version.code", 8) >= 9;
 	}
 
 	public static boolean is12() {
 		return SystemProperties.getInt("ro.miui.ui.version.code", 9) >= 10;
+	}
+
+	public static boolean is125() {
+		return SystemProperties.getInt("ro.miui.ui.version.code", 10) >= 11;
 	}
 
 	public static boolean isNightMode(Context context) {
@@ -331,6 +340,10 @@ public class Helpers {
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
 	}
 
+	public static boolean isRPlus() {
+		return Build.VERSION.SDK_INT >= 30;
+	}
+
 	public static boolean isDeviceEncrypted(Context context) {
 		DevicePolicyManager policyMgr = (DevicePolicyManager)context.getSystemService(Context.DEVICE_POLICY_SERVICE);
 		int encryption = policyMgr.getStorageEncryptionStatus();
@@ -345,6 +358,9 @@ public class Helpers {
 //	}
 
 	public static boolean isXposedInstallerInstalled(Context context) {
+		boolean skip = prefs.getBoolean("pref_key_miuizer_assumelsposed", false);
+		if (skip) return true;
+
 		PackageManager pm = context.getPackageManager();
 
 		for (String manager: xposedManagers) try {
@@ -356,6 +372,8 @@ public class Helpers {
 	}
 
 	public static String isLSPosedManagerInstalled(Context context) {
+		boolean lsposed = prefs.getBoolean("pref_key_miuizer_assumelsposed", false);
+		if (lsposed) return "Assumed LSPosed";
 		try {
 			PackageInfo info = context.getPackageManager().getPackageInfo("org.lsposed.manager", 0);
 			return info.versionName + " (" + info.versionCode + ")";
@@ -400,6 +418,12 @@ public class Helpers {
 			if (intent == null) continue;
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 			context.startActivity(intent);
+			return true;
+		} catch (Throwable ignore) {}
+
+		boolean lsposed = prefs.getBoolean("pref_key_miuizer_assumelsposed", false);
+		if (lsposed) try {
+			context.sendBroadcast(new Intent(GlobalActions.ACTION_PREFIX + "RunParasitic"));
 			return true;
 		} catch (Throwable ignore) {}
 
@@ -1044,13 +1068,13 @@ public class Helpers {
 		mainIntent.setAction(Intent.ACTION_VIEW);
 		mainIntent.setData(Uri.parse("https://google.com"));
 		mainIntent.putExtra("CustoMIUIzer", true);
-		List<ResolveInfo> packs2 = pm.queryIntentActivities(mainIntent, PackageManager.MATCH_ALL | PackageManager.MATCH_DISABLED_COMPONENTS);
+		List<ResolveInfo> packs2 = pm.queryIntentActivities(mainIntent, PackageManager.MATCH_ALL);
 
 		mainIntent = new Intent();
 		mainIntent.setAction(Intent.ACTION_VIEW);
 		mainIntent.setData(Uri.parse("vnd.youtube:n9AcG0glVu4"));
 		mainIntent.putExtra("CustoMIUIzer", true);
-		List<ResolveInfo> packs3 = pm.queryIntentActivities(mainIntent, PackageManager.MATCH_ALL | PackageManager.MATCH_DISABLED_COMPONENTS);
+		List<ResolveInfo> packs3 = pm.queryIntentActivities(mainIntent, PackageManager.MATCH_ALL);
 
 		packs.addAll(packs2);
 		packs.addAll(packs3);
@@ -1837,8 +1861,16 @@ public class Helpers {
 		XposedBridge.log("[CustoMIUIzer] " + line);
 	}
 
+	public static void log(Throwable t) {
+		XposedBridge.log("[CustoMIUIzer]\n" + Log.getStackTraceString(t));
+	}
+
 	public static void log(String mod, String line) {
 		XposedBridge.log("[CustoMIUIzer][" + mod + "] " + line);
+	}
+
+	public static void log(String mod, Throwable t) {
+		XposedBridge.log("[CustoMIUIzer][" + mod + "]\n" + Log.getStackTraceString(t));
 	}
 
 	public static class MethodHook extends XC_MethodHook {
@@ -1965,6 +1997,15 @@ public class Helpers {
 	public static boolean hookAllMethodsSilently(String className, ClassLoader classLoader, String methodName, XC_MethodHook callback) {
 		try {
 			Class<?> hookClass = XposedHelpers.findClassIfExists(className, classLoader);
+			return hookClass != null && XposedBridge.hookAllMethods(hookClass, methodName, callback).size() > 0;
+		} catch (Throwable t) {
+			return false;
+		}
+	}
+
+	@SuppressWarnings("ConstantConditions")
+	public static boolean hookAllMethodsSilently(Class<?> hookClass, String methodName, XC_MethodHook callback) {
+		try {
 			return hookClass != null && XposedBridge.hookAllMethods(hookClass, methodName, callback).size() > 0;
 		} catch (Throwable t) {
 			return false;

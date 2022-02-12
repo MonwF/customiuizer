@@ -182,6 +182,8 @@ import name.mikanoshi.customiuizer.utils.Helpers.MimeType;
 import name.mikanoshi.customiuizer.utils.SoundData;
 import static name.mikanoshi.customiuizer.mods.GlobalActions.ACTION_PREFIX;
 
+import org.json.JSONObject;
+
 public class System {
 
 	public static void ScreenAnimHook(LoadPackageParam lpparam) {
@@ -5577,6 +5579,24 @@ public class System {
 			});
 	}
 
+	public static void NoOverscrollAppHook(LoadPackageParam lpparam) {
+		if (findClassIfExists("miuix.springback.view.SpringBackLayout", lpparam.classLoader) == null) return;
+
+		Helpers.hookAllConstructors("miuix.springback.view.SpringBackLayout", lpparam.classLoader, new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				XposedHelpers.callMethod(param.thisObject, "setSpringBackEnable", false);
+			}
+		});
+
+		Helpers.findAndHookMethod("miuix.springback.view.SpringBackLayout", lpparam.classLoader, "setSpringBackEnable", boolean.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				param.args[0] = false;
+			}
+		});
+	}
+
 	private static Dialog mDialog = null;
 	private static float blurCollapsed = 0.0f;
 	private static float blurExpanded = 0.0f;
@@ -6625,7 +6645,7 @@ public class System {
 				Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
 				Runnable mQuitThumbnailRunnable = (Runnable)XposedHelpers.getObjectField(param.thisObject, "mQuitThumbnailRunnable");
 				mHandler.removeCallbacks(mQuitThumbnailRunnable);
-				mHandler.postDelayed(mQuitThumbnailRunnable, opt * 1000);
+				mHandler.postDelayed(mQuitThumbnailRunnable, opt * 1000L);
 			}
 		});
 	}
@@ -6799,6 +6819,21 @@ public class System {
 	public static void UseNativeRecentsHook(LoadPackageParam lpparam) {
 		//noinspection ResultOfMethodCallIgnored
 		Helpers.findAndHookMethodSilently("com.android.systemui.recents.misc.SystemServicesProxy", lpparam.classLoader, "isRecentsWithinLauncher", Context.class, XC_MethodReplacement.returnConstant(false));
+	}
+
+	public static void UseNativeRecentsFixHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethods("com.android.server.wm.TaskRecord", lpparam.classLoader, "isVisible", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				if ((boolean)param.getResult()) return;
+				StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+				for (StackTraceElement el: stackTrace)
+				if (el != null) if ("getPerceptibleRecentAppList".equals(el.getMethodName())) {
+					param.setResult(true);
+					return;
+				}
+			}
+		});
 	}
 
 	public static void NoUnlockAnimationHook(LoadPackageParam lpparam) {
@@ -7103,6 +7138,8 @@ public class System {
 		Helpers.findAndHookMethod("android.util.MiuiMultiWindowAdapter", null, "getFreeformBlackList", clearHook);
 		//noinspection ResultOfMethodCallIgnored
 		Helpers.findAndHookMethodSilently("android.util.MiuiMultiWindowAdapter", null, "getFreeformBlackListFromCloud", Context.class, clearHook);
+		// Unlock on all devices
+		Helpers.findAndHookMethod("android.util.MiuiMultiWindowUtils", null, "supportFreeform", XC_MethodReplacement.returnConstant(true));
 	}
 
 	public static ConcurrentHashMap<String, Pair<Float, Rect>> fwApps = new ConcurrentHashMap<String, Pair<Float, Rect>>();
@@ -7706,12 +7743,70 @@ public class System {
 					@Override
 					public void run() {
 						if (!wallpaper.exists()) return;
-						Intent copyIntent = new Intent(ACTION_PREFIX + "CopyToExternal");
-						copyIntent.putExtra("action", 1);
-						copyIntent.putExtra("from", wallpaper.getAbsolutePath());
-						mContext.sendBroadcast(copyIntent);
+
+						if (Helpers.is10()) {
+							Intent copyIntent = new Intent(ACTION_PREFIX + "CopyToExternal");
+							copyIntent.putExtra("action", 1);
+							copyIntent.putExtra("from", wallpaper.getAbsolutePath());
+							mContext.sendBroadcast(copyIntent);
+						}
+
+						JSONObject data = new JSONObject();
+						JSONObject ex = new JSONObject();
+						try {
+							ex
+							.put("link_type", "0")
+							.put("title_size", "26")
+							.put("item_id", "wallpaper1")
+							.put("title_color", "#ffffffff")
+							.put("index_in_album", "1")
+							.put("tag_list", "CustoMIUIzer,mod")
+							.put("content_color", "#ffffffff")
+							.put("total_of_album", "1")
+							.put("img_level", "0")
+							.put("album_id", "1")
+							.put("title_customized", "0")
+							.put("lks_entry_text", "Some wallpaper");
+
+							data
+							.put("authority", "name.mikanoshi.customiuizer.mods.set_lockscreen_wallpaper")
+							.put("content", "Wallpaper set by some app")
+							.put("contentColorValue", 0)
+							.put("cp", "CustoMIUIzer")
+							.put("cpColorValue", 0)
+							.put("definition", -1)
+							.put("ex", ex.toString())
+							.put("fromColorValue", 0)
+							.put("hasAcc", false)
+							.put("indexInAlbum", -1)
+							.put("isAd", false)
+							.put("isCustom", false)
+							.put("isFd", false)
+							.put("isFrontCover", false)
+							.put("key", "wallpaper1")
+							.put("like", false)
+							.put("linkType", 0)
+							.put("noApply", false)
+							.put("noDislike", false)
+							.put("noSave", false)
+							.put("noShare", false)
+							.put("pos", 0)
+							.put("supportLike", true)
+							.put("title", "Some wallpaper")
+							.put("titleColorValue", 0)
+							.put("titleTextSize", -1)
+							.put("totalOfAlbum", -1)
+							.put("wallpaperUri", wallpaper.toURI());
+						} catch (Throwable t) {
+							XposedBridge.log(t);
+						}
+
+						Intent setIntent = new Intent("android.miui.UPDATE_LOCKSCREEN_WALLPAPER");
+						setIntent.putExtra("wallpaperInfo", data.toString());
+						setIntent.putExtra("apply", true);
+						mContext.sendBroadcast(setIntent);
 					}
-				}, 3000);
+				}, 2000);
 			}
 		});
 	}

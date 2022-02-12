@@ -20,10 +20,10 @@ android {
     defaultConfig {
         applicationId "name.mikanoshi.customiuizer"
         minSdkVersion 24
-        //noinspection ExpiredTargetSdkVersion
+        //noinspection OldTargetApi,ExpiredTargetSdkVersion
         targetSdkVersion 27
-        versionCode 69
-        versionName "3.1.7"
+        versionCode 70
+        versionName "3.2.0"
         signingConfig signingConfigs.dev
         resConfigs 'ru-rRU', 'uk-rUK', 'zh-rCN', 'pt-rBR', 'de', 'es', 'it', 'tr'
     }
@@ -43,10 +43,10 @@ android {
             signingConfig signingConfigs.dev
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+//    compileOptions {
+//        sourceCompatibility JavaVersion.VERSION_1_8
+//        targetCompatibility JavaVersion.VERSION_1_8
+//    }
     aaptOptions {
         noCompress 'zip'
     }
@@ -61,7 +61,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "ch.acra:acra-core:$acraVersion"
     //noinspection DifferentStdlibGradleVersion
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.21'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.10'
     implementation 'com.github.jinatonic.confetti:confetti:1.1.2'
     implementation files('libs/WeatherView-2.0.3.aar')
     compileOnly 'de.robv.android.xposed:api:82'

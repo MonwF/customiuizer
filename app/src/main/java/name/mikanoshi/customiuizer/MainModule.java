@@ -28,7 +28,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 	public static PrefMap<String, Object> mPrefs = new PrefMap<String, Object>();
 	public static ResourceHooks resHooks;
 	private static boolean hideIconsActive = false;
-	private static boolean monitorsActive = false;
 
 	public void initZygote(StartupParam startParam) {
 		//long startTime = SystemClock.elapsedRealtime();
@@ -102,13 +101,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			mPrefs.getBoolean("system_statusbaricons_record");
 		if (hideIconsActive) System.HideIconsSystemHook();
 
-		monitorsActive =
-			mPrefs.getBoolean("system_popupnotif_fs") ||
-			mPrefs.getBoolean("controls_volumecursor") ||
-			mPrefs.getBoolean("controls_fsg_horiz") ||
-			mPrefs.getStringAsInt("various_showcallui", 0) > 0;
-		if (monitorsActive) GlobalActions.setupMonitors();
-
 		Controls.VolumeMediaPlayerHook();
 		GlobalActions.setupSystemHelpers();
 		//Helpers.log("initZygote", String.valueOf(SystemClock.elapsedRealtime() - startTime));
@@ -120,7 +112,10 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (pkg.equals("android") && lpparam.processName.equals("android")) {
 			PackagePermissions.hook(lpparam);
 			GlobalActions.setupGlobalActions(lpparam);
-			if (monitorsActive) GlobalActions.setupReceivers(lpparam);
+			if (mPrefs.getBoolean("system_popupnotif_fs") ||
+				mPrefs.getBoolean("controls_volumecursor") ||
+				mPrefs.getBoolean("controls_fsg_horiz") ||
+				mPrefs.getStringAsInt("various_showcallui", 0) > 0) GlobalActions.setupForegroundMonitor(lpparam);
 
 			if (mPrefs.getInt("controls_fingerprint1_action", 1) > 1 ||
 				mPrefs.getInt("controls_fingerprint2_action", 1) > 1 ||
@@ -165,6 +160,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("system_fw_sticky")) System.StickyFloatingWindowsHook(lpparam);
 			if (mPrefs.getBoolean("system_charginginfo")) System.ChargingInfoServiceHook(lpparam);
 			if (mPrefs.getBoolean("system_lswallpaper")) System.SetLockscreenWallpaperHook(lpparam);
+			if (mPrefs.getBoolean("system_usenativerecents") && Helpers.is125()) System.UseNativeRecentsFixHook(lpparam);
 			if (mPrefs.getBoolean("controls_powerflash")) Controls.PowerKeyHook(lpparam);
 			if (mPrefs.getBoolean("controls_fingerprintfailure")) Controls.FingerprintHapticFailureHook(lpparam);
 			if (mPrefs.getBoolean("controls_fingerprintscreen")) Controls.FingerprintScreenOnHook(lpparam);
@@ -346,6 +342,11 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			}
 			if (mPrefs.getBoolean("system_disableanynotif")) System.DisableAnyNotificationHook();
 			if (!mPrefs.getString("system_defaultusb", "none").equals("none")) System.USBConfigSettingsHook(lpparam);
+			if (mPrefs.getBoolean("system_nooverscroll") && Helpers.is125()) System.NoOverscrollAppHook(lpparam);
+		}
+
+		if (pkg.equals("com.android.thememanager")) {
+			if (mPrefs.getBoolean("system_nooverscroll") && Helpers.is125()) System.NoOverscrollAppHook(lpparam);
 		}
 
 		if (pkg.equals("com.google.android.packageinstaller") || pkg.equals("com.android.packageinstaller")) {
@@ -405,6 +406,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 	}
 
 	private void handleLoadLauncher(final LoadPackageParam lpparam) {
+		boolean closeOnLaunch = false;
 		if (mPrefs.getInt("launcher_swipedown_action", 1) != 1 ||
 			mPrefs.getInt("launcher_swipeup_action", 1) != 1 ||
 			mPrefs.getInt("launcher_swipedown2_action", 1) != 1 ||
@@ -430,7 +432,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		if (mPrefs.getBoolean("launcher_sensorportrait")) Launcher.ReverseLauncherPortraitHook(lpparam);
 		if (mPrefs.getBoolean("launcher_unlockhotseat")) Launcher.MaxHotseatIconsCountHook(lpparam);
 		if (mPrefs.getStringAsInt("launcher_foldershade", 1) > 1) Launcher.FolderShadeHook(lpparam);
-		if (mPrefs.getStringAsInt("launcher_closefolders", 1) > 1) Launcher.CloseFolderOnLaunchHook(lpparam);
+		if (mPrefs.getStringAsInt("launcher_closefolders", 1) > 1) { Launcher.CloseFolderOnLaunchHook(lpparam); closeOnLaunch = true; }
 		if (lpparam.packageName.equals("com.miui.home")) {
 			if (mPrefs.getInt("system_recents_blur", 100) < 100) Launcher.RecentsBlurRatioHook(lpparam);
 			if (mPrefs.getInt("system_recommended_first_action", 1) > 1 ||
@@ -454,9 +456,11 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("launcher_nounlockanim")) Launcher.NoUnlockAnimationHook(lpparam);
 			if (mPrefs.getBoolean("launcher_oldlaunchanim")) Launcher.UseOldLaunchAnimationHook(lpparam);
 			if (mPrefs.getBoolean("launcher_unlockgrids")) Launcher.UnlockGridsHook(lpparam);
-			if (mPrefs.getBoolean("launcher_closedrawer")) Launcher.CloseDrawerOnLaunchHook(lpparam);
+			if (mPrefs.getBoolean("launcher_closedrawer")) { Launcher.CloseDrawerOnLaunchHook(lpparam); closeOnLaunch = true; }
 			if (mPrefs.getInt("launcher_bottommargin", 0) > 0) Launcher.BottomSpacingHook(lpparam);
+			if (mPrefs.getInt("launcher_horizwidgetmargin", 0) > 0) Launcher.HorizontalWidgetSpacingHook(lpparam);
 		}
+		if (closeOnLaunch) Launcher.CloseFolderOrDrawerOnLaunchShortcutMenuHook(lpparam);
 		//if (!mPrefs.getString("system_clock_app", "").equals("")) Launcher.ReplaceClockAppHook(lpparam);
 		//if (!mPrefs.getString("system_calendar_app", "").equals("")) Launcher.ReplaceCalendarAppHook(lpparam);
 		//Launcher.NoInternationalBuildHook(lpparam);

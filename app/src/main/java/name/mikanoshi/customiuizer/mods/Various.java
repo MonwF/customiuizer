@@ -291,16 +291,46 @@ public class Various {
 			});
 	}
 
+	public static Bundle checkBundle(Context context, Bundle bundle) {
+		if (context == null) {
+			Helpers.log("AppsDefaultSortHook", "Context is null!");
+			return null;
+		}
+		if (bundle == null) bundle = new Bundle();
+		int order = Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_various_appsort", "0"));
+		bundle.putInt("current_sory_type", order); // Xiaomi noob typos :)
+		bundle.putInt("current_sort_type", order); // Future proof, they may fix it someday :D
+		return bundle;
+	}
+
 	public static void AppsDefaultSortHook(LoadPackageParam lpparam) {
 		Helpers.findAndHookMethod("com.miui.appmanager.AppManagerMainActivity", lpparam.classLoader, "onCreate", Bundle.class, new MethodHook() {
 			@Override
 			protected void before(final MethodHookParam param) throws Throwable {
-				Bundle bundle = (Bundle)param.args[0];
-				if (bundle == null) bundle = new Bundle();
-				int order = Integer.parseInt(Helpers.getSharedStringPref((Context)param.thisObject, "pref_key_various_appsort", "0"));
-				bundle.putInt("current_sory_type", order); // Xiaomi noob typos :)
-				bundle.putInt("current_sort_type", order); // Future proof, they may fix it someday :D
-				param.args[0] = bundle;
+				param.args[0] = checkBundle((Context)param.thisObject, (Bundle)param.args[0]);
+
+				// Bruteforce class on MIUI 12.5
+				if (Helpers.is125()) {
+					String fragCls = null;
+					Field[] fields = param.thisObject.getClass().getDeclaredFields();
+					for (Field field: fields)
+					if (field.getType() != boolean.class && field.getType() != int.class) {
+						fragCls = field.getType().getCanonicalName();
+						break;
+					}
+
+					if (fragCls != null)
+					Helpers.hookAllMethods(fragCls, lpparam.classLoader, "onActivityCreated", new MethodHook() {
+						@Override
+						protected void before(final MethodHookParam param) throws Throwable {
+							try {
+								param.args[0] = checkBundle(((Fragment)param.thisObject).getContext(), (Bundle)param.args[0]);
+							} catch (Throwable t) {
+								Helpers.log("AppsDefaultSortHook", t.getMessage());
+							}
+						}
+					});
+				}
 			}
 		});
 
@@ -432,6 +462,7 @@ public class Various {
 	@SuppressWarnings("unchecked")
 	public static void AppsRestrictPowerHook(LoadPackageParam lpparam) {
 		Helpers.findAndHookMethod("com.miui.powerkeeper.provider.PowerKeeperConfigureManager", lpparam.classLoader, "pkgHasIcon", String.class, XC_MethodReplacement.returnConstant(true));
+		//Helpers.hookAllMethods("com.miui.powerkeeper.provider.PowerKeeperConfigureManager", lpparam.classLoader, "isControlApp", XC_MethodReplacement.returnConstant(true));
 
 		Helpers.findAndHookMethod("com.miui.powerkeeper.provider.PreSetGroup", lpparam.classLoader, "initGroup", new MethodHook() {
 			@Override
@@ -576,7 +607,7 @@ public class Various {
 					int interval = Helpers.getSharedIntPref(mContext, "pref_key_various_callreminder_interval", 5);
 					PendingIntent repeatAlarmPendingIntent = (PendingIntent)XposedHelpers.callMethod(param.thisObject, "getRepeatAlarmPendingIntent");
 					alarmManager.cancel(repeatAlarmPendingIntent);
-					alarmManager.setExact(AlarmManager.RTC_WAKEUP, currentTimeMillis() + interval * 60 * 1000, repeatAlarmPendingIntent);
+					alarmManager.setExact(AlarmManager.RTC_WAKEUP, currentTimeMillis() + interval * 60 * 1000L, repeatAlarmPendingIntent);
 				}
 			}
 		});

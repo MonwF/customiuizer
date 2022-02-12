@@ -3,7 +3,6 @@ package name.mikanoshi.customiuizer.utils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import android.content.BroadcastReceiver;
@@ -26,7 +25,7 @@ public class HelperReceiver extends BroadcastReceiver {
 				
 				try (FileOutputStream fOut = new FileOutputStream(f, true)) {
 					try (OutputStreamWriter output = new OutputStreamWriter(fOut)) {
-						output.write(stackTrace.toString() + "\n\n");
+						output.write(stackTrace + "\n\n");
 					}
 				}
 			} catch (Throwable t) {}

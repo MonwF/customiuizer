@@ -1,3 +1,13 @@
+3.2.0
+[Improved][Auto close folders/app drawer] Also works when app is launched using shortcut menu
+[Fixed][Clean Open with menu] All suitable apps are listed
+Better LSPosed compatibility
+Removed unnecessary split action bar in module's UI on MIUI 12.5
+MIUI 12.5 mods compatibility:
+	Installed apps initial sort order
+	Disable overscroll
+	Apply lock screen wallpaper using any app (Themes app is no longer required on MIUI 11+)
+
 3.1.7
 [New] Allow configuring battery saver and access to Wi-Fi for system apps
 [Fixed][Remove unlock animation] Compatibility with latest MIUI Launcher versions

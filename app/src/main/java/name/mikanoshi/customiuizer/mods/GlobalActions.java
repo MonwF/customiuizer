@@ -374,6 +374,14 @@ public class GlobalActions {
 				SystemProperties.set("ctl.restart", "surfaceflinger");
 				SystemProperties.set("ctl.restart", "zygote");
 			}
+			if (action.equals(ACTION_PREFIX + "RunParasitic")) {
+				Intent intent2 = new Intent();
+				intent2.setAction("android.intent.action.MAIN");
+				intent2.addCategory("org.lsposed.manager.LAUNCH_MANAGER");
+				intent2.setClassName("com.android.shell", "com.android.shell.BugreportWarningActivity");
+				intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+				context.startActivity(intent2);
+			}
 			if (action.equals(ACTION_PREFIX + "WakeUp")) {
 				XposedHelpers.callMethod(context.getSystemService(Context.POWER_SERVICE), "wakeUp", SystemClock.uptimeMillis());
 			}
@@ -608,6 +616,41 @@ public class GlobalActions {
 					Toast.makeText(context, modRes.getString(R.string.toggle_mobiledata_on), Toast.LENGTH_SHORT).show();
 				}
 			}
+
+//			if (action.equals(ACTION_PREFIX + "QueryXposedService")) try {
+//				Class<?> smCls = XposedHelpers.findClass("android.os.ServiceManager", null);
+//				Object activity_service = XposedHelpers.callStaticMethod(smCls, "getService", "activity");
+//
+//				Binder heartBeat = new Binder();
+//				Parcel data = Parcel.obtain();
+//				Parcel reply = Parcel.obtain();
+//				data.writeInterfaceToken("LSPosed");
+//				data.writeInt(2);
+//				data.writeString("lsp-cli:" + UUID.randomUUID().toString());
+//				data.writeStrongBinder(heartBeat);
+//
+//				ArrayList<IBinder> resArr = new ArrayList<IBinder>(1);
+//				if ((boolean)XposedHelpers.callMethod(activity_service, "transact", 1598837584, data, reply, 0)) {
+//					reply.readException();
+//					IBinder serviceBinder = reply.readStrongBinder();
+//					if (serviceBinder == null) Helpers.log("XposedService", "binder null"); else {
+//						Helpers.log("XposedService", "serviceBinder: " + serviceBinder);
+//						//var service = ILSPApplicationService.Stub.asInterface(serviceBinder);
+//						//if (service.requestInjectedManagerBinder(resArr) == null) {
+//						//	System.out.println("not a manager");
+//						//	return null;
+//						//}
+//						//if (resArr.size() > 0)
+//						//	return ILSPManagerService.Stub.asInterface(resArr.get(0));
+//						//else
+//						//	System.out.println("arr size 0");
+//					}
+//				} else {
+//					Helpers.log("XposedService", "transact fail: " + reply.dataSize());
+//				}
+//			} catch (Throwable t) {
+//				XposedBridge.log(t);
+//			}
 
 //			String className = "com.htc.app.HtcShutdownThread";
 //			if (Helpers.isLP()) className = "com.android.internal.policy.impl.HtcShutdown.HtcShutdownThread";
@@ -1004,37 +1047,54 @@ public class GlobalActions {
 		});
 	}
 
-	public static void setupMonitors() {
-		Helpers.findAndHookMethod(Activity.class, "onResume", new MethodHook() {
+	public static void setupForegroundMonitor(LoadPackageParam lpparam) {
+		String windowClass = Helpers.isQPlus() ? "com.android.server.wm.DisplayPolicy" : "com.android.server.policy.PhoneWindowManager";
+		Helpers.hookAllMethods(windowClass, lpparam.classLoader, "focusChangedLw", new MethodHook() {
 			@Override
-			protected void after(MethodHookParam param) throws Throwable {
-				Activity act = (Activity)param.thisObject;
-				if (act == null) return;
-				int flags = act.getWindow().getAttributes().flags;
-				boolean isFullScreen = flags != 0 && !"com.android.systemui".equals(act.getPackageName()) && (flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN;
-				Intent intent = new Intent(GlobalActions.EVENT_PREFIX + "CHANGE_FOCUSED_APP");
-				intent.putExtra("package", act.getPackageName());
-				intent.putExtra("fullscreen", isFullScreen);
-				intent.setPackage("android");
-				act.sendBroadcast(intent);
+			protected void before(MethodHookParam param) throws Throwable {
+				if (param.args[1] == null) return;
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				if (mContext != null) try {
+					WindowManager.LayoutParams mAttrs = (WindowManager.LayoutParams)XposedHelpers.callMethod(param.args[1], "getAttrs");
+					boolean isFullScreen = mAttrs.flags != 0 && !"com.android.systemui".equals(mAttrs.packageName) && (mAttrs.flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN;
+					Settings.Global.putString(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.package", mAttrs.packageName);
+					Settings.Global.putInt(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.fullscreen", isFullScreen ? 1 : 0);
+				} catch (Throwable t) {
+					Helpers.log("ForegroundMonitor", t);
+				}
 			}
 		});
+
+//		Helpers.hookAllMethods("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "init", new MethodHook() {
+//			@Override
+//			protected void after(MethodHookParam param) throws Throwable {
+//				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+//				mContext.registerReceiver(new BroadcastReceiver() {
+//					public void onReceive(final Context context, Intent intent) {
+//						Settings.Global.putString(context.getContentResolver(), Helpers.modulePkg + ".foreground.package", intent.getStringExtra("package"));
+//						Settings.Global.putInt(context.getContentResolver(), Helpers.modulePkg + ".foreground.fullscreen", intent.getBooleanExtra("fullscreen", false) ? 1 : 0);
+//					}
+//				}, new IntentFilter(GlobalActions.EVENT_PREFIX + "CHANGE_FOCUSED_APP"));
+//			}
+//		});
 	}
 
-	public static void setupReceivers(LoadPackageParam lpparam) {
-		Helpers.hookAllMethods("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "init", new MethodHook() {
-			@Override
-			protected void after(MethodHookParam param) throws Throwable {
-				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-				mContext.registerReceiver(new BroadcastReceiver() {
-					public void onReceive(final Context context, Intent intent) {
-						Settings.Global.putString(context.getContentResolver(), Helpers.modulePkg + ".foreground.package", intent.getStringExtra("package"));
-						Settings.Global.putInt(context.getContentResolver(), Helpers.modulePkg + ".foreground.fullscreen", intent.getBooleanExtra("fullscreen", false) ? 1 : 0);
-					}
-				}, new IntentFilter(GlobalActions.EVENT_PREFIX + "CHANGE_FOCUSED_APP"));
-			}
-		});
-	}
+//	public static void setupMonitors() {
+//		Helpers.findAndHookMethod(Activity.class, "onResume", new MethodHook() {
+//			@Override
+//			protected void after(MethodHookParam param) throws Throwable {
+//				Activity act = (Activity)param.thisObject;
+//				if (act == null) return;
+//				int flags = act.getWindow().getAttributes().flags;
+//				boolean isFullScreen = flags != 0 && !"com.android.systemui".equals(act.getPackageName()) && (flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN;
+//				Intent intent = new Intent(GlobalActions.EVENT_PREFIX + "CHANGE_FOCUSED_APP");
+//				intent.putExtra("package", act.getPackageName());
+//				intent.putExtra("fullscreen", isFullScreen);
+//				intent.setPackage("android");
+//				act.sendBroadcast(intent);
+//			}
+//		});
+//	}
 
 	public static void setupGlobalActions(LoadPackageParam lpparam) {
 		Helpers.hookAllConstructors("com.android.server.accessibility.AccessibilityManagerService", lpparam.classLoader, new MethodHook() {
@@ -1073,6 +1133,8 @@ public class GlobalActions {
 
 				// Tools
 				intentfilter.addAction(ACTION_PREFIX + "FastReboot");
+				intentfilter.addAction(ACTION_PREFIX + "RunParasitic");
+				//intentfilter.addAction(ACTION_PREFIX + "QueryXposedService");
 
 				mGlobalContext.registerReceiver(mGlobalReceiver, intentfilter);
 			}

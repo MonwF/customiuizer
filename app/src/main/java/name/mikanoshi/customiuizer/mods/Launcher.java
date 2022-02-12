@@ -1122,9 +1122,7 @@ public class Launcher {
 	public static void GoogleDiscoverHook(final LoadPackageParam lpparam) {
 		try {
 			XposedHelpers.setStaticBooleanField(XposedHelpers.findClass("com.miui.home.launcher.DeviceConfig", lpparam.classLoader), "IS_USE_GOOGLE_MINUS_SCREEN", true);
-		} catch (Throwable t) {
-			XposedBridge.log(t);
-		}
+		} catch (Throwable ignore) {}
 		//noinspection ResultOfMethodCallIgnored
 		Helpers.findAndHookMethodSilently("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "isUseGoogleMinusScreen", XC_MethodReplacement.returnConstant(true));
 	}
@@ -1133,6 +1131,10 @@ public class Launcher {
 	public static void GoogleMinusScreenHook(final LoadPackageParam lpparam) {
 		try {
 			Class<?> configCls = XposedHelpers.findClass("com.miui.home.launcher.DeviceConfig", lpparam.classLoader);
+			if (configCls == null) {
+				Helpers.log("GoogleMinusScreenHook", "Cannot find config class");
+				return;
+			}
 
 			HashSet<String> SELECT_MINUS_SCREEN_CLIENT_ID = (HashSet<String>)XposedHelpers.getStaticObjectField(configCls, "SELECT_MINUS_SCREEN_CLIENT_ID");
 			SELECT_MINUS_SCREEN_CLIENT_ID.add("");
@@ -1141,15 +1143,15 @@ public class Launcher {
 			//String CURRENT_REGION = (String)XposedHelpers.getStaticObjectField(configCls, "CURRENT_REGION");
 			//USE_GOOGLE_MINUS_SCREEN_REGIONS.add(CURRENT_REGION);
 
-			XposedHelpers.setStaticBooleanField(XposedHelpers.findClass("com.miui.home.launcher.DeviceConfig", lpparam.classLoader), "CAN_SWITCH_MINUS_SCREEN", true);
-			XposedHelpers.setStaticBooleanField(XposedHelpers.findClass("com.miui.home.launcher.DeviceConfig", lpparam.classLoader), "ONLY_USE_GOOGLE_MINUS_SCREEN", false);
+			XposedHelpers.setStaticBooleanField(configCls, "CAN_SWITCH_MINUS_SCREEN", true);
+			XposedHelpers.setStaticBooleanField(configCls, "ONLY_USE_GOOGLE_MINUS_SCREEN", false);
 			Class<?> appCls = XposedHelpers.findClassIfExists("com.miui.home.launcher.Application", lpparam.classLoader);
-			if (appCls != null) {
+			if (appCls != null) try {
 				Application app = (Application)XposedHelpers.callStaticMethod(appCls, "getInstance");
-				XposedHelpers.setStaticBooleanField(XposedHelpers.findClass("com.miui.home.launcher.DeviceConfig", lpparam.classLoader), "IS_USE_GOOGLE_MINUS_SCREEN", "personal_assistant_google".equals(Settings.System.getString(app.getContentResolver(), "switch_personal_assistant")));
-			}
+				XposedHelpers.setStaticBooleanField(configCls, "IS_USE_GOOGLE_MINUS_SCREEN", "personal_assistant_google".equals(Settings.System.getString(app.getContentResolver(), "switch_personal_assistant")));
+			} catch (Throwable ignore) {}
 		} catch (Throwable t) {
-			Helpers.log("GoogleMinusScreenHook", t.getMessage());
+			Helpers.log("GoogleMinusScreenHook", t);
 		}
 	}
 
@@ -1321,6 +1323,29 @@ public class Launcher {
 		});
 	}
 
+	public static void HorizontalWidgetSpacingHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethods("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "getMiuiWidgetSizeSpec", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				if (param.args.length < 4) return;
+				Context context = Helpers.findContext();
+				long spec = (long)param.getResult();
+				long width = spec >> 32;
+				long height = spec - ((spec >> 32) << 32);
+				int opt = Math.round((MainModule.mPrefs.getInt("launcher_horizwidgetmargin", 0) - 21) * context.getResources().getDisplayMetrics().density) * 2;
+				width -= opt;
+				param.setResult((width << 32) | height);
+			}
+		});
+
+		Helpers.hookAllMethods("com.miui.home.launcher.MIUIWidgetUtil", lpparam.classLoader, "getMiuiWidgetPadding", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				param.setResult(new Rect());
+			}
+		});
+	}
+
 	public static void FixAppInfoLaunchHook(LoadPackageParam lpparam) {
 		if (lpparam.packageName.equals("com.mi.android.globallauncher"))
 			Helpers.hookAllMethods("com.miui.home.launcher.util.Utilities", lpparam.classLoader, "startDetailsActivityForInfo", new MethodHook() {
@@ -1481,6 +1506,26 @@ public class Launcher {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
 				param.args[0] = (float)param.args[0] * MainModule.mPrefs.getInt("system_recents_blur", 100) / 100f;
+			}
+		});
+	}
+
+    public static void CloseFolderOrDrawerOnLaunchShortcutMenuHook(LoadPackageParam lpparam) {
+    	Helpers.findAndHookMethod("com.miui.home.launcher.shortcuts.AppShortcutMenuItem", lpparam.classLoader, "getOnClickListener", new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				final View.OnClickListener listener = (View.OnClickListener)param.getResult();
+				param.setResult(new View.OnClickListener() {
+					public final void onClick(View view) {
+						listener.onClick(view);
+						Class<?> appCls = XposedHelpers.findClassIfExists("com.miui.home.launcher.Application", lpparam.classLoader);
+						if (appCls == null) return;
+						Object launcher = XposedHelpers.callStaticMethod(appCls, "getLauncher");
+						if (launcher == null) return;
+						if (MainModule.mPrefs.getBoolean("launcher_closedrawer")) XposedHelpers.callMethod(launcher, "hideAppView");
+						if (MainModule.mPrefs.getStringAsInt("launcher_closefolders", 1) > 1) XposedHelpers.callMethod(launcher, "closeFolder");
+					}
+				});
 			}
 		});
 	}

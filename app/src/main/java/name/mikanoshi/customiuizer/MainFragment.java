@@ -9,6 +9,7 @@ import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
@@ -219,14 +220,6 @@ public class MainFragment extends PreferenceFragmentBase {
 			return;
 		}
 
-		if (Helpers.prefs.getBoolean("miuizer_prefs_migrated", false)) {
-			int result = Helpers.prefs.getInt("miuizer_prefs_migration_result", 0);
-			if (result > 0) {
-				Helpers.prefs.edit().putInt("miuizer_prefs_migration_result", -1).apply();
-				showPrefsMigrationDialog(result == 1);
-			}
-		}
-
 		// Preventing launch delay
 		new Thread(new Runnable() {
 			public void run() {
@@ -238,6 +231,13 @@ public class MainFragment extends PreferenceFragmentBase {
 						builder.setTitle(R.string.xposed_not_found);
 						builder.setMessage(R.string.xposed_not_found_explain);
 						builder.setNeutralButton(R.string.okay, null);
+						builder.setNegativeButton(R.string.i_use_lsp, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								Helpers.prefs.edit().putBoolean("pref_key_miuizer_assumelsposed", true).apply();
+								getActivity().recreate();
+							}
+						});
 						AlertDialog dlg = builder.create();
 						if (isFragmentReady(act)) dlg.show();
 					}
@@ -247,6 +247,18 @@ public class MainFragment extends PreferenceFragmentBase {
 						showXposedDialog(act);
 					}
 				}); else areGuidesCleared = true;
+
+				if (Helpers.prefs.getBoolean("miuizer_prefs_migrated", false)) {
+					int result = Helpers.prefs.getInt("miuizer_prefs_migration_result", 0);
+					if (result > 0) {
+						Helpers.prefs.edit().putInt("miuizer_prefs_migration_result", -1).apply();
+						act.runOnUiThread(new Runnable() {
+							public void run() {
+								showPrefsMigrationDialog(result == 1);
+							}
+						});
+					}
+				}
 
 				String dataPath = act.getFilesDir().getAbsolutePath();
 				try {
@@ -420,7 +432,11 @@ public class MainFragment extends PreferenceFragmentBase {
 
 		PreferenceEx warning = (PreferenceEx)findPreference("pref_key_warning");
 		if (warning != null)
-		if (Helpers.usingNewSharedPrefs() && Helpers.isXposedScopeEnabled(act)) {
+		if (Helpers.isRPlus()) {
+			warning.setTitle(R.string.warning);
+			warning.setSummary(getString(R.string.warning_unsupported_os, Build.VERSION.RELEASE));
+			warning.setNotice(true);
+		} else if (Helpers.usingNewSharedPrefs() && Helpers.isXposedScopeEnabled(act)) {
 			warning.setTitle(R.string.warning);
 			warning.setSummary(R.string.warning_scope);
 			warning.setOnPreferenceClickListener(new OnPreferenceClickListener() {
@@ -477,7 +493,7 @@ public class MainFragment extends PreferenceFragmentBase {
 			locStr.setCharAt(0, Character.toUpperCase(locStr.charAt(0)));
 			SpannableString locSpanString;
 			if (!locale.equals("en")) {
-				String locStrPct = locStr.toString() + "\n" + Helpers.l10nProgress.get(locale);
+				String locStrPct = locStr + "\n" + Helpers.l10nProgress.get(locale) + "%";
 				int fullTextLength = locStrPct.length();
 				locSpanString = new SpannableString(locStrPct);
 				locSpanString.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_OPPOSITE), locStr.toString().length(), fullTextLength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

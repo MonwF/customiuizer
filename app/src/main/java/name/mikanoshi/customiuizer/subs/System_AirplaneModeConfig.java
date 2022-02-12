@@ -63,8 +63,16 @@ public class System_AirplaneModeConfig extends SubFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		radios = new ArrayList<String>(Arrays.asList(Settings.Global.getString(getActivity().getContentResolver(), "airplane_mode_radios").split(",")));
-		radios_toggle = new ArrayList<String>(Arrays.asList(Settings.Global.getString(getActivity().getContentResolver(), "airplane_mode_toggleable_radios").split(",")));
+		try {
+			radios = new ArrayList<String>(Arrays.asList(Settings.Global.getString(getActivity().getContentResolver(), "airplane_mode_radios").split(",")));
+		} catch (Throwable t) {
+			radios = new ArrayList<String>();
+		}
+		try {
+			radios_toggle = new ArrayList<String>(Arrays.asList(Settings.Global.getString(getActivity().getContentResolver(), "airplane_mode_toggleable_radios").split(",")));
+		} catch (Throwable t) {
+			radios_toggle = new ArrayList<String>();
+		}
 
 		setupPref("pref_key_system_airplanemodeconfig_cell", "cell");
 		setupPref("pref_key_system_airplanemodeconfig_bt", "bluetooth");

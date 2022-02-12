@@ -28,9 +28,9 @@ public class PreferenceEx extends Preference implements PreferenceState {
 	private final boolean child;
 	private final boolean dynamic;
 	private final boolean warning;
-	private final boolean notice;
 	private final boolean countAsSummary;
 	private String customSummary = null;
+	private boolean notice;
 	private boolean newmod = false;
 	private boolean unsupported = false;
 
@@ -112,6 +112,11 @@ public class PreferenceEx extends Preference implements PreferenceState {
 	@Override
 	public void markAsNew() {
 		newmod = true;
+	}
+
+	public void setNotice(boolean value) {
+		notice = value;
+		setEnabled(!value);
 	}
 
 	public void setUnsupported(boolean value) {

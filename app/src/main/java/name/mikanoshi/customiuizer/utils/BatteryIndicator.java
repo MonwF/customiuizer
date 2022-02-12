@@ -273,7 +273,7 @@ public class BatteryIndicator extends ImageView {
 		lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
 		lp.gravity = mBottom ? Gravity.BOTTOM : Gravity.TOP;
 		setLayoutParams(lp);
-		this.setImageAlpha(255 - Math.round(255 * mTransparency / 100f));
+		try { this.setImageAlpha(255 - Math.round(255 * mTransparency / 100f)); } catch (Throwable ignore) {};
 		this.setVisibility(mVisibility);
 		this.setScaleType(mCentered ? ScaleType.CENTER : ScaleType.MATRIX);
 		Matrix matrix = new Matrix();
