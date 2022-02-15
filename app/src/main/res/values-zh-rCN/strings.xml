@@ -1036,4 +1036,5 @@
     <string name="array_turn_off_disable">关闭并禁用</string>
     <string name="various_restrictapp_title">全限制</string>
     <string name="various_restrictapp_summ">允许配置省电程序并且为系统应用接入Wi-Fi</string>
+    <string name="launcher_horizwidgetmargin_title">水平小部件边缘</string>
 </resources>
