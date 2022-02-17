@@ -940,8 +940,8 @@
     <string name="backup_ok">¡Las configuraciones fueron respaldadas con éxito!</string>
     <string name="restore_ok">¡La configuración se restauró con éxito!</string>
     <string name="backup_restore_info">Su configuración se ha restaurado a través de Google Cloud Backup. Realice un reinicio suave después de habilitar el módulo Xposed.</string>
-    <string name="prefs_migration_success">La configuración del módulo se migró con éxito para trabajar con la nueva versión de EdXposed. Reiniciar para aplicar los cambios.</string>
-    <string name="prefs_migration_failure">No se pudo migrar la configuración del módulo para que funcione con la nueva versión de EdXposed.  Tendrá que usar la función de restauración o configurar mods desde cero.</string>
+    <string name="prefs_migration_success">La configuración del módulo se migró con éxito para trabajar con la nueva versión de LSPosed/EdXposed. Reiniciar para aplicar los cambios.</string>
+    <string name="prefs_migration_failure">No se pudo migrar la configuración del módulo para que funcione con la nueva versión de LSPosed/EdXposed. Tendrá que usar la función de restauración o configurar mods desde cero.</string>
     <string name="update_available">La actualización está disponible ⚠</string>
     <string name="select_app">Seleccionar aplicación</string>
     <string name="select_apps">Seleccionar aplicaciones</string>
@@ -1039,4 +1039,10 @@
     <string name="array_turn_off_disable">Apagar y deshabilitar</string>
     <string name="various_restrictapp_title">Restricciones completas</string>
     <string name="various_restrictapp_summ">Permite que se configure el ahorro de batería y acceso Wi-Fi para las aplicaciones de sistema</string>
+    <string name="launcher_horizwidgetmargin_title">‎Margen de widget horizontal‎</string>
+    <string name="launcher_horizwidgetmargin_summary">‎Funciona solo en las últimas versiones del launcher con posicionamiento dinámico de widgets‎</string>
+    <string name="miuizer_show_assumelsposed_title">Modo LSPosed</string>
+    <string name="miuizer_show_assumelsposed_summ">Se asume que LSPosed Framework está instalado para funcionar correctamente con su administrador‎</string>
+    <string name="i_use_lsp">Yo uso LSPosed</string>
+    <string name="warning_unsupported_os">‎Android ‎%1$s‎ no es compatible, es posible que los mods no funcionen correctamente.</string>
 </resources>
