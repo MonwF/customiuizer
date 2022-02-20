@@ -504,6 +504,8 @@
 	<string name="launcher_nowidgetonly_summ">Make all screens support both widgets and apps on tablets</string>
 	<string name="launcher_nounlockanim_title">Remove unlock animation</string>
 	<string name="launcher_nounlockanim_summ">Do not animate icons when device is unlocked</string>
+	<string name="launcher_nozoomanim_title">Remove launch animation</string>
+	<string name="launcher_nozoomanim_summ">Do not zoom in/out icons when app is closed/opened</string>
 	<string name="launcher_oldlaunchanim_title">Use old launch animation</string>
 	<string name="launcher_oldlaunchanim_summ">Revert app opening transition to a previous one</string>
 	<string name="launcher_sensorportrait_title">Reverse portrait support</string>

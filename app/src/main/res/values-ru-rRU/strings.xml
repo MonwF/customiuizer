@@ -506,6 +506,8 @@
 	<string name="launcher_nowidgetonly_summ">Позволяет добавлять виджеты и приложения на любой экран на планшетах</string>
 	<string name="launcher_nounlockanim_title">Убрать анимацию разблокировки</string>
 	<string name="launcher_nounlockanim_summ">Не анимировать иконки при разблокировке устройства</string>
+	<string name="launcher_nozoomanim_title">Убрать анимацию запуска</string>
+	<string name="launcher_nozoomanim_summ">Не отдалять/приближать иконки при открытии/закрытии приложения</string>
 	<string name="launcher_oldlaunchanim_title">Использовать старую анимацию запуска</string>
 	<string name="launcher_oldlaunchanim_summ">Возвращает предыдущую анимацию запуска приложений</string>
 	<string name="launcher_sensorportrait_title">Поддержка обратного портрета</string>
