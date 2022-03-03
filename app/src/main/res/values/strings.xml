@@ -665,7 +665,17 @@
 	<string name="controls_fsg_assist_summ">Perform selected action instead of opening Google Assistant</string>
 
 	<string name="various_mods">Various</string>
-	<string name="various_sysappsupdater_title">Open \"System app updater\"</string>
+	<string name="various_hiddenfeatures_title">Hidden features</string>
+	<string name="various_hiddenfeatures_summ">Activities that are not always easily accessible</string>
+	<string name="various_hiddenfeatures_not_found">Not available on this device</string>
+	<string name="various_memorystats_title">Memory statistics</string>
+	<string name="various_memorystats_summ">Per app memory usage</string>
+	<string name="various_appusagestats_title">Usage statistics</string>
+	<string name="various_aospsearch_title">Search</string>
+	<string name="various_aospnotif_title">Apps &amp; notifications</string>
+	<string name="various_aospnotiflog_title">Notification log</string>
+	<string name="various_clearspeaker_title">Clear speaker</string>
+	<string name="various_sysappsupdater_title">System app updater</string>
 	<string name="various_sysappsupdater_summ">App is no longer a part of some ROMs and has to be installed manually</string>
 	<string name="various_sysappsupdater_summ2">Be careful when updating modified system apps on custom ROMs, you might lose the added functionality</string>
 	<string name="various_unlockfps_title">Unlock frame rate</string>
