@@ -675,7 +675,7 @@
 	<string name="various_aospnotif_title">Apps &amp; notifications</string>
 	<string name="various_aospnotiflog_title">Notification log</string>
 	<string name="various_clearspeaker_title">Clear speaker</string>
-	<string name="various_sysappsupdater_title">System app updater</string>
+	<string name="various_sysappsupdater_title">System apps updater</string>
 	<string name="various_sysappsupdater_summ">App is no longer a part of some ROMs and has to be installed manually</string>
 	<string name="various_sysappsupdater_summ2">Be careful when updating modified system apps on custom ROMs, you might lose the added functionality</string>
 	<string name="various_unlockfps_title">Unlock frame rate</string>
