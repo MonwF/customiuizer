@@ -259,6 +259,12 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_launcher_nozoomanim"
+			android:title="@string/launcher_nozoomanim_title"
+			android:summary="@string/launcher_nozoomanim_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_oldlaunchanim"
 			android:title="@string/launcher_oldlaunchanim_title"
 			android:summary="@string/launcher_oldlaunchanim_summ"

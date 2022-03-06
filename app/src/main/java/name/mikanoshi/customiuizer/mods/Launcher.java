@@ -43,6 +43,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.lang.reflect.Method;
 import java.util.HashSet;
 
 import de.robv.android.xposed.XC_MethodHook;
@@ -1205,6 +1206,39 @@ public class Launcher {
 			}
 		});
 
+		Class<?> buCls = XposedHelpers.findClassIfExists("com.miui.home.launcher.common.BlurUtils", lpparam.classLoader);
+		if (buCls != null) {
+			Helpers.findAndHookMethod("com.miui.home.launcher.common.BlurUtils", lpparam.classLoader, "isUserBlurWhenOpenFolder", new MethodHook() {
+				@Override
+				protected void after(MethodHookParam param) throws Throwable {
+					param.setResult(true);
+				}
+			});
+
+			Method[] methods = buCls.getDeclaredMethods();
+			Method fastBlur = null;
+    		for (Method method: methods)
+    		if ("fastBlur".equals(method.getName())) {
+    			fastBlur = method;
+    			if (method.getParameterTypes().length == 4) break;
+    		}
+
+			if (fastBlur == null) Helpers.log("FolderBlurHook", "Cannot find fastBlur util method!"); else
+			Helpers.hookMethod(fastBlur, new MethodHook() {
+				@Override
+				protected void before(MethodHookParam param) throws Throwable {
+					if (MainModule.mPrefs.getBoolean("launcher_folderwallblur_disable")) {
+						param.args[0] = 0.0f;
+						return;
+					}
+					float ratio = MainModule.mPrefs.getInt("launcher_folderwallblur_radius", 0) / 100f;
+					if (ratio > 0) param.args[0] = (float)param.args[0] * ratio;
+				}
+			});
+
+			return;
+		}
+
 		Helpers.findAndHookMethod("com.miui.home.launcher.blur.BlockingBlurController", lpparam.classLoader, "setBlurEnabled", boolean.class, new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
@@ -1257,7 +1291,7 @@ public class Launcher {
 	}
 
 	private static float scaleStiffness(float val, float scale) {
-		return (scale < 1.0f ? 1.5f / scale : 1.0f / scale) * val;
+		return (scale < 1.0f ? 2f / scale : 1.0f / scale) * val;
 	}
 
 	public static void FixAnimHook(LoadPackageParam lpparam) {
@@ -1401,6 +1435,11 @@ public class Launcher {
 	public static void NoUnlockAnimationHook(LoadPackageParam lpparam) {
 		if (!Helpers.findAndHookMethodSilently("com.miui.home.launcher.common.Utilities", lpparam.classLoader, "notShowUserPresentAnimation", Context.class, XC_MethodReplacement.returnConstant(true)))
 		Helpers.hookAllMethods("com.miui.launcher.utils.MiuiSettingsUtils", lpparam.classLoader, "isSystemAnimationOpen", XC_MethodReplacement.returnConstant(false));
+	}
+
+	public static void NoZoomAnimationHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethods("com.miui.home.recents.util.SpringAnimationUtils", lpparam.classLoader, "startShortcutMenuLayerFadeOutAnim", XC_MethodReplacement.DO_NOTHING);
+		Helpers.hookAllMethods("com.miui.home.recents.util.SpringAnimationUtils", lpparam.classLoader, "startShortcutMenuLayerFadeInAnim", XC_MethodReplacement.DO_NOTHING);
 	}
 
 	public static void UseOldLaunchAnimationHook(LoadPackageParam lpparam) {

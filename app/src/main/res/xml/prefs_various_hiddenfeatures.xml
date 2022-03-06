@@ -1,0 +1,36 @@
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:key="pref_key_various_sysappsupdater"
+		android:summary="@string/various_sysappsupdater_summ"
+		android:title="@string/various_sysappsupdater_title" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:key="pref_key_various_memorystats"
+		android:summary="@string/various_memorystats_summ"
+		android:title="@string/various_memorystats_title" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:key="pref_key_various_appusagestats"
+		android:title="@string/various_appusagestats_title" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:key="pref_key_various_aospsearch"
+		android:title="@string/various_aospsearch_title" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:key="pref_key_various_aospnotif"
+		android:title="@string/various_aospnotif_title" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:key="pref_key_various_aospnotiflog"
+		android:title="@string/various_aospnotiflog_title" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:key="pref_key_various_clearspeaker"
+		android:title="@string/various_clearspeaker_title" />
+
+</PreferenceScreen>

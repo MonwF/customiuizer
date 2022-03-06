@@ -13,7 +13,7 @@ import name.mikanoshi.customiuizer.SubFragment;
 import name.mikanoshi.customiuizer.prefs.PreferenceEx;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
-public class System_CallUIBright extends SubFragment {
+public class Various_CallUIBright extends SubFragment {
 
 	final String key = "pref_key_various_calluibright_night_";
 	TimePickerDialog startTimePicker;

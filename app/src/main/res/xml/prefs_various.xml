@@ -4,9 +4,9 @@
 	android:key="pref_key_various">
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
-		android:key="pref_key_various_sysappsupdater"
-		android:summary="@string/various_sysappsupdater_summ"
-		android:title="@string/various_sysappsupdater_title" />
+		android:key="pref_key_various_hiddenfeatures_cat"
+		android:title="@string/various_hiddenfeatures_title"
+		android:summary="@string/various_hiddenfeatures_summ" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_various_unlockfps"

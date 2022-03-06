@@ -1,3 +1,15 @@
+3.2.1
+[New] Horizontal widget margin
+[New] Remove app launch zoom animation in MIUI Launcher
+[New] Launch different hidden system features from module's UI
+[Improved][Disable overscroll] Support more apps
+[Improved][Collapse MIUI titles] Support more apps
+[Improved][Show additional app details] Support latest Security versions
+[Improved][Installed apps initial sort order] Support latest Security versions
+[Improved][Prevent app force close] Allow killing most apps by default if mod is active (Security, Contacts, Backup, etc)
+[Improved][Folder background blur] Wallpaper blur support for latest MIUI Launcher versions
+Added all MIUI apps as recommended scope in LSPosed
+
 3.2.0
 [Improved][Auto close folders/app drawer] Also works when app is launched using shortcut menu
 [Fixed][Clean Open with menu] All suitable apps are listed

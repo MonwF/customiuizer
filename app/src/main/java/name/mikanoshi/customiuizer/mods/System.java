@@ -929,7 +929,6 @@ public class System {
 
 		//noinspection ResultOfMethodCallIgnored
 		Helpers.findAndHookMethodSilently("com.android.server.audio.AudioService", lpparam.classLoader, "shouldZenMuteStream", int.class, new MethodHook() {
-			@SuppressWarnings("ConstantConditions")
 			protected void after(MethodHookParam param) throws Throwable {
 				int mStreamType = (int)param.args[0];
 				if (mStreamType == 5 && !(boolean)param.getResult()) {
@@ -4228,6 +4227,15 @@ public class System {
 			@SuppressWarnings("unchecked")
 			protected void after(final MethodHookParam param) throws Throwable {
 				HashSet<String> mSystemKeyPackages = (HashSet<String>)XposedHelpers.getObjectField(param.thisObject, "mSystemKeyPackages");
+				mSystemKeyPackages.remove("com.miui.securitycenter");
+				mSystemKeyPackages.remove("com.miui.securityadd");
+				mSystemKeyPackages.remove("com.android.phone");
+				mSystemKeyPackages.remove("com.android.mms");
+				mSystemKeyPackages.remove("com.android.contacts");
+				mSystemKeyPackages.remove("com.miui.home");
+				mSystemKeyPackages.remove("com.jeejen.family.miui");
+				mSystemKeyPackages.remove("com.miui.backup");
+				mSystemKeyPackages.remove("com.xiaomi.mihomemanager");
 				mSystemKeyPackages.addAll(MainModule.mPrefs.getStringSet("system_forceclose_apps"));
 			}
 		});
@@ -5580,21 +5588,45 @@ public class System {
 	}
 
 	public static void NoOverscrollAppHook(LoadPackageParam lpparam) {
-		if (findClassIfExists("miuix.springback.view.SpringBackLayout", lpparam.classLoader) == null) return;
-
-		Helpers.hookAllConstructors("miuix.springback.view.SpringBackLayout", lpparam.classLoader, new MethodHook() {
-			@Override
-			protected void after(MethodHookParam param) throws Throwable {
-				XposedHelpers.callMethod(param.thisObject, "setSpringBackEnable", false);
-			}
-		});
-
-		Helpers.findAndHookMethod("miuix.springback.view.SpringBackLayout", lpparam.classLoader, "setSpringBackEnable", boolean.class, new MethodHook() {
+		MethodHook hookParam = new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
 				param.args[0] = false;
 			}
-		});
+		};
+
+		Class<?> sblCls = findClassIfExists("miuix.springback.view.SpringBackLayout", lpparam.classLoader);
+		if (sblCls != null) {
+			Helpers.hookAllConstructors(sblCls, new MethodHook() {
+				@Override
+				protected void after(MethodHookParam param) throws Throwable {
+					try {
+						XposedHelpers.callMethod(param.thisObject, "setSpringBackEnable", false);
+					} catch (Throwable t) {
+						try { XposedHelpers.setBooleanField(param.thisObject, "mSpringBackEnable", false); } catch (Throwable ignore) {}
+					}
+				}
+			});
+			//noinspection ResultOfMethodCallIgnored
+			Helpers.findAndHookMethodSilently(sblCls, "setSpringBackEnable", boolean.class, hookParam);
+		}
+
+		Class<?> rrvCls = findClassIfExists("androidx.recyclerview.widget.RemixRecyclerView", lpparam.classLoader);
+		if (rrvCls != null) {
+			Helpers.hookAllConstructors(rrvCls, new MethodHook() {
+				@Override
+				protected void after(MethodHookParam param) throws Throwable {
+					((View)param.thisObject).setOverScrollMode(View.OVER_SCROLL_NEVER);
+					try {
+						XposedHelpers.callMethod(param.thisObject, "setSpringEnabled", false);
+					} catch (Throwable t) {
+						try { XposedHelpers.setBooleanField(param.thisObject, "mSpringEnabled", false); } catch (Throwable ignore) {}
+					}
+				}
+			});
+			//noinspection ResultOfMethodCallIgnored
+			Helpers.findAndHookMethodSilently(rrvCls, "setSpringEnabled", boolean.class, hookParam);
+		}
 	}
 
 	private static Dialog mDialog = null;
@@ -7403,7 +7435,6 @@ public class System {
 
 		Helpers.hookAllMethods("com.android.systemui.miui.statusbar.ControlCenter", lpparam.classLoader, "panelEnabled", new MethodHook() {
 			@Override
-			@SuppressWarnings("ConstantConditions")
 			protected void before(MethodHookParam param) throws Throwable {
 				boolean isOnSecureKeyguard = false;
 				try { isOnSecureKeyguard = (boolean)XposedHelpers.getAdditionalInstanceField(param.thisObject, "isOnSecureKeyguard"); } catch (Throwable ignore) {}

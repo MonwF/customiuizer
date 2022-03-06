@@ -17,6 +17,7 @@ public class PreferenceCategoryEx extends PreferenceCategory {
 	private final boolean dynamic;
 	private final boolean empty;
 	private boolean hidden;
+	private boolean unsupported = false;
 
 	public PreferenceCategoryEx(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -38,7 +39,7 @@ public class PreferenceCategoryEx extends PreferenceCategory {
 	public View getView(View view, ViewGroup parent) {
 		View finalView = super.getView(view, parent);
 		TextView title = finalView.findViewById(android.R.id.title);
-		title.setText(getTitle() + (dynamic ? " ⟲" : ""));
+		title.setText(getTitle() + (unsupported ? " ⨯" : (dynamic ? " ⟲" : "")));
 		title.setVisibility(hidden || empty ? View.GONE : View.VISIBLE);
 		if (hidden) {
 			finalView.setBackground(null);
@@ -50,6 +51,11 @@ public class PreferenceCategoryEx extends PreferenceCategory {
 			);
 		}
 		return finalView;
+	}
+
+	public void setUnsupported(boolean value) {
+		unsupported = value;
+		setEnabled(!value);
 	}
 
 	public boolean isDynamic() {

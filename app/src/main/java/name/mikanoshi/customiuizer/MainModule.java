@@ -342,11 +342,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			}
 			if (mPrefs.getBoolean("system_disableanynotif")) System.DisableAnyNotificationHook();
 			if (!mPrefs.getString("system_defaultusb", "none").equals("none")) System.USBConfigSettingsHook(lpparam);
-			if (mPrefs.getBoolean("system_nooverscroll") && Helpers.is125()) System.NoOverscrollAppHook(lpparam);
-		}
-
-		if (pkg.equals("com.android.thememanager")) {
-			if (mPrefs.getBoolean("system_nooverscroll") && Helpers.is125()) System.NoOverscrollAppHook(lpparam);
 		}
 
 		if (pkg.equals("com.google.android.packageinstaller") || pkg.equals("com.android.packageinstaller")) {
@@ -382,6 +377,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 		final boolean isStatusBarColor = mPrefs.getBoolean("system_statusbarcolor") && !mPrefs.getStringSet("system_statusbarcolor_apps").contains(pkg);
 		final int collapseTitlesOpt = mPrefs.getStringAsInt("various_collapsemiuititles", 1);
 		final boolean collapseTitles = collapseTitlesOpt > 1 && Helpers.is12();
+		final boolean noOverscroll = mPrefs.getBoolean("system_nooverscroll") && Helpers.is125();
 
 		if (isLauncherPkg) {
 			if (mPrefs.getInt("launcher_horizmargin", 0) > 0) Launcher.HorizontalSpacingRes();
@@ -393,7 +389,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (isLauncherPerf) handleLoadLauncher(lpparam);
 		}
 
-		if ((isLauncherPkg && !isLauncherPerf) || (isMIUILauncherPkg && isGoogleMinus) || isStatusBarColor || collapseTitles)
+		if ((isLauncherPkg && !isLauncherPerf) || (isMIUILauncherPkg && isGoogleMinus) || isStatusBarColor || collapseTitles || noOverscroll)
 		Helpers.findAndHookMethod(Application.class, "attach", Context.class, new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
@@ -401,6 +397,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 				if (isMIUILauncherPkg && isGoogleMinus) Launcher.GoogleMinusScreenHook(lpparam);
 				if (isStatusBarColor) System.StatusBarBackgroundCompatHook(lpparam);
 				if (collapseTitles) Various.CollapseMIUITitlesHook(lpparam, param, collapseTitlesOpt);
+				if (noOverscroll) System.NoOverscrollAppHook(lpparam);
 			}
 		});
 	}
@@ -454,6 +451,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 			if (mPrefs.getBoolean("launcher_docktitles") && mPrefs.getInt("launcher_bottommargin", 0) == 0) Launcher.ShowHotseatTitlesHook(lpparam);
 			if (mPrefs.getBoolean("launcher_folderblur")) Launcher.FolderBlurHook(lpparam);
 			if (mPrefs.getBoolean("launcher_nounlockanim")) Launcher.NoUnlockAnimationHook(lpparam);
+			if (mPrefs.getBoolean("launcher_nozoomanim")) Launcher.NoZoomAnimationHook(lpparam);
 			if (mPrefs.getBoolean("launcher_oldlaunchanim")) Launcher.UseOldLaunchAnimationHook(lpparam);
 			if (mPrefs.getBoolean("launcher_unlockgrids")) Launcher.UnlockGridsHook(lpparam);
 			if (mPrefs.getBoolean("launcher_closedrawer")) { Launcher.CloseDrawerOnLaunchHook(lpparam); closeOnLaunch = true; }

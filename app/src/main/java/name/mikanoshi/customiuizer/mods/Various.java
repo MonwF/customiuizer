@@ -57,8 +57,10 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -79,11 +81,13 @@ import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.Helpers.MethodHook;
 
 import static de.robv.android.xposed.XposedHelpers.findClass;
+import static de.robv.android.xposed.XposedHelpers.findClassIfExists;
 import static java.lang.System.currentTimeMillis;
 
 public class Various {
 
 	public static PackageInfo mLastPackageInfo;
+	public static Object mSupportFragment = null;
 	public static void AppInfoHook(LoadPackageParam lpparam) {
 		Class<?> amaCls = XposedHelpers.findClassIfExists("com.miui.appmanager.AMAppInfomationActivity", lpparam.classLoader);
 		if (amaCls == null) {
@@ -95,6 +99,17 @@ public class Various {
 		for (Member method: amaCls.getDeclaredMethods())
 		if (method.getName().equals("onLoadFinished")) oldMethodFound = true;
 
+		if (findClassIfExists("androidx.fragment.app.Fragment", lpparam.classLoader) != null)
+		Helpers.findAndHookConstructor("androidx.fragment.app.Fragment", lpparam.classLoader, new MethodHook() {
+			@Override
+			protected void before(final MethodHookParam param) throws Throwable {
+				try {
+					Field piField = XposedHelpers.findFirstFieldByExactType(param.thisObject.getClass(), PackageInfo.class);
+					if (piField != null) mSupportFragment = param.thisObject;
+				} catch (Throwable ignore) {}
+			}
+		});
+
 		if (Helpers.is12() || !oldMethodFound)
 			Helpers.findAndHookMethod(amaCls, "onCreate", Bundle.class, new MethodHook() {
 				@Override
@@ -104,7 +119,8 @@ public class Various {
 						@Override
 						public void run() {
 							final Activity act = (Activity)param.thisObject;
-							Fragment frag = act.getFragmentManager().findFragmentById(android.R.id.content);
+							Object contentFrag = act.getFragmentManager().findFragmentById(android.R.id.content);
+							Object frag = contentFrag != null ? contentFrag : mSupportFragment;
 							if (frag == null) {
 								Helpers.log("AppInfoHook", "Unable to find fragment");
 								return;
@@ -312,9 +328,11 @@ public class Various {
 				// Bruteforce class on MIUI 12.5
 				if (Helpers.is125()) {
 					String fragCls = null;
+					Class<?> xfragCls = findClassIfExists("androidx.fragment.app.Fragment", lpparam.classLoader);
 					Field[] fields = param.thisObject.getClass().getDeclaredFields();
 					for (Field field: fields)
-					if (field.getType() != boolean.class && field.getType() != int.class) {
+					if (Fragment.class.isAssignableFrom(field.getType()) ||
+					   (xfragCls != null && xfragCls.isAssignableFrom(field.getType()))) {
 						fragCls = field.getType().getCanonicalName();
 						break;
 					}
@@ -324,7 +342,7 @@ public class Various {
 						@Override
 						protected void before(final MethodHookParam param) throws Throwable {
 							try {
-								param.args[0] = checkBundle(((Fragment)param.thisObject).getContext(), (Bundle)param.args[0]);
+								param.args[0] = checkBundle((Context)XposedHelpers.callMethod(param.thisObject, "getContext"), (Bundle)param.args[0]);
 							} catch (Throwable t) {
 								Helpers.log("AppsDefaultSortHook", t.getMessage());
 							}
@@ -947,21 +965,44 @@ public class Various {
 		});
 	}
 
+	public static final HashSet<String> miuiApps = new HashSet<String>(Arrays.asList(
+		"com.android.camera",
+		"com.android.soundrecorder",
+		"com.android.cellbroadcastreceiver",
+		"com.android.providers.downloads.ui"
+		//"com.android.stk" ???
+	));
+
 	public static void CollapseMIUITitlesHook(LoadPackageParam lpparam, XC_MethodHook.MethodHookParam param, int opt) {
 		Application app = (Application)param.thisObject;
 		String pkgName = app.getPackageName();
-		boolean isMIUIapp = pkgName.startsWith("com.miui") || pkgName.startsWith("com.xiaomi");
+
+		boolean isMIUIapp = pkgName.startsWith("com.miui") || pkgName.startsWith("com.xiaomi") || miuiApps.contains(pkgName);
 		if (!isMIUIapp) isMIUIapp = app.checkSelfPermission("miui.permission.USE_INTERNAL_GENERAL_API") == PackageManager.PERMISSION_GRANTED;
 		if (!isMIUIapp) return;
-		Class<?> aabvCls = XposedHelpers.findClassIfExists("com.miui.internal.widget.AbsActionBarView", lpparam.classLoader);
-		if (aabvCls != null)
-		Helpers.hookAllConstructors(aabvCls, new MethodHook() {
+
+		Class<?> abvCls = XposedHelpers.findClassIfExists("com.miui.internal.widget.AbsActionBarView", lpparam.classLoader);
+		if (abvCls != null)
+		Helpers.hookAllConstructors(abvCls, new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				XposedHelpers.setIntField(param.thisObject, "mExpandState", ActionBar.STATE_COLLAPSE);
 				XposedHelpers.setIntField(param.thisObject, "mInnerExpandState", ActionBar.STATE_COLLAPSE);
-				if (opt == 3)
-				XposedHelpers.setBooleanField(param.thisObject, "mResizable", false);
+				if (opt == 3) XposedHelpers.setBooleanField(param.thisObject, "mResizable", false);
+			}
+		});
+
+		abvCls = XposedHelpers.findClassIfExists("miuix.appcompat.internal.app.widget.ActionBarView", lpparam.classLoader);
+		if (abvCls != null)
+		Helpers.hookAllConstructors(abvCls, new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				try {
+					XposedHelpers.callMethod(param.thisObject, "setExpandState", ActionBar.STATE_COLLAPSE);
+					if (opt == 3) XposedHelpers.callMethod(param.thisObject, "setResizable", false);
+				} catch (Throwable ignore) {
+					XposedBridge.log(ignore);
+				}
 			}
 		});
 	}

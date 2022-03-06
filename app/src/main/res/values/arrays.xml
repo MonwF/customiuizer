@@ -886,20 +886,50 @@
 
 	<string-array name="xposed_scope">
 		<item>android</item>
-		<item>com.android.systemui</item>
-		<item>com.android.server.telecom</item>
+		<item>com.android.calendar</item>
+		<item>com.android.camera</item>
+		<item>com.android.cellbroadcastreceiver</item>
+		<item>com.android.contacts</item>
+		<item>com.android.deskclock</item>
+		<item>com.android.fileexplorer</item>
 		<item>com.android.incallui</item>
-		<item>com.android.settings</item>
+		<item>com.android.mms</item>
 		<item>com.android.packageinstaller</item>
+		<item>com.android.providers.downloads.ui</item>
+		<item>com.android.server.telecom</item>
+		<item>com.android.settings</item>
+		<item>com.android.soundrecorder</item>
+		<item>com.android.systemui</item>
 		<item>com.android.thememanager</item>
 		<item>com.google.android.packageinstaller</item>
 		<item>com.google.android.inputmethod.latin</item>
-		<item>com.miui.securitycenter</item>
+		<item>com.miui.backup</item>
+		<item>com.miui.bugreport</item>
+		<item>com.miui.calculator</item>
+		<item>com.miui.cleanmaster</item>
+		<item>com.miui.contentcatcher</item>
+		<item>com.miui.compass</item>
+		<item>com.miui.gallery</item>
+		<item>com.miui.miservice</item>
+		<item>com.miui.misound</item>
+		<item>com.miui.mishare.connectivity</item>
+		<item>com.miui.notification</item>
+		<item>com.miui.notes</item>
 		<item>com.miui.packageinstaller</item>
-		<item>com.miui.screenrecorder</item>
 		<item>com.miui.powerkeeper</item>
+		<item>com.miui.securitycenter</item>
+		<item>com.miui.screenrecorder</item>
+		<item>com.miui.touchassistant</item>
+		<item>com.miui.weather2</item>
 		<item>com.miui.home</item>
 		<item>com.mi.android.globallauncher</item>
+		<item>com.mi.globalbrowser</item>
+		<item>com.milink.service</item>
+		<item>com.xiaomi.account</item>
+		<item>com.xiaomi.discover</item>
+		<item>com.xiaomi.scanner</item>
+		<item>com.xiaomi.misettings</item>
+		<item>eu.xiaomi.ext</item>
 		<item>org.meowcat.edxposed.manager</item>
 	</string-array>
 </resources>

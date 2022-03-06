@@ -27,7 +27,7 @@ import name.mikanoshi.customiuizer.prefs.ListPreferenceEx;
 import name.mikanoshi.customiuizer.prefs.PreferenceEx;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
-public class System_CallReminder extends SubFragment {
+public class Various_CallReminder extends SubFragment {
 
 	String uriStr = "";
 	String key_sound = "pref_key_various_callreminder_sound";

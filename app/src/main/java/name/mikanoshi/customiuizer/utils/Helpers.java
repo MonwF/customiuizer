@@ -158,20 +158,22 @@ public class Helpers {
 	public static boolean showNewMods = true;
 	public static boolean miuizerModuleActive = false;
 	public static final HashSet<String> newMods = new HashSet<String>(Arrays.asList(
-		"pref_key_various_restrictapp"
+		"pref_key_various_hiddenfeatures_cat",
+		"pref_key_launcher_nozoomanim",
+		"pref_key_launcher_horizwidgetmargin"
 	));
 	public static final HashMap<String, String> l10nProgress = new HashMap<String, String>() {{
-		put("de", "87.7");
-		put("es", "99.2");
-		put("it", "99.2");
-		put("pt-BR", "95.9");
+		put("de", "86.6");
+		put("es", "98.7");
+		put("it", "98");
+		put("pt-BR", "94.7");
 		put("ru-RU", "100");
-		put("tr", "87.7");
-		put("uk-UK", "88.7");
-		put("zh-CN", "99.2");
-		put("fr", "25.1");
-		put("id", "13.3");
-		put("sk", "4.3");
+		put("tr", "86.6");
+		put("uk-UK", "87.6");
+		put("zh-CN", "98.1");
+		put("fr", "24.9");
+		put("id", "13.1");
+		put("sk", "4.2");
 	}};
 
 	public static final HashSet<String> xposedManagers = new HashSet<String>(Arrays.asList(
@@ -304,7 +306,7 @@ public class Helpers {
 			// COVID19
 			else if (year <= 2020) currentHoliday = Holidays.PANDEMIC;
 			// Crypto
-			else if (year == 2021) currentHoliday = Holidays.CRYPTO;
+			else if (year == 2021 || year == 2022) currentHoliday = Holidays.CRYPTO;
 		}
 	}
 
@@ -552,6 +554,25 @@ public class Helpers {
 		return res;
 	}
 
+	public static void launchActivity(Activity act, String pkg, String cmp) {
+		launchActivity(act, pkg, cmp, false);
+	}
+	public static boolean launchActivity(Activity act, String pkg, String cmp, boolean silent) {
+		PackageManager pm = act.getPackageManager();
+		try {
+			pm.getPackageInfo(pkg, PackageManager.GET_ACTIVITIES);
+			Intent intent = new Intent(Intent.ACTION_MAIN);
+			intent.addCategory(Intent.CATEGORY_DEFAULT);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+			intent.setComponent(new ComponentName(pkg, cmp));
+			act.startActivity(intent);
+			act.overridePendingTransition(R.anim.activity_open_enter, R.anim.activity_open_exit);
+			return true;
+		} catch (Throwable t) {
+			if (!silent) Toast.makeText(act, R.string.various_hiddenfeatures_not_found, Toast.LENGTH_LONG).show();
+			return false;
+		}
+	}
 //	public static boolean isScreenOn(Context context) {
 //		DisplayManager dispMgr = (DisplayManager)context.getSystemService(Context.DISPLAY_SERVICE);
 //		for (Display display: dispMgr.getDisplays())
@@ -924,6 +945,15 @@ public class Helpers {
 		} catch (Throwable t) {
 			t.printStackTrace();
 			return null;
+		}
+	}
+
+	public static int getMIUILauncherVersion(Context context) {
+		try {
+			PackageInfo packageInfo = context.getPackageManager().getPackageInfo("com.miui.home", 0);
+    		return packageInfo.versionCode;
+		} catch (Throwable t) {
+			return 0;
 		}
 	}
 

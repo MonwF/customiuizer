@@ -10,6 +10,7 @@
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:key="pref_key_launcher_folderbackblur"
 		android:title="@string/launcher_folderblur"
 		miuizer:dynamic="true">
 
@@ -45,6 +46,7 @@
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:key="pref_key_launcher_folderwallblur"
 		android:title="@string/launcher_folderwallblur"
 		miuizer:dynamic="true">
 

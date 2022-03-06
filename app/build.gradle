@@ -4,16 +4,28 @@ def acraVersion = '5.7.0'
 def keystorePropertiesFile = rootProject.file("../keystore.properties")
 def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+def sFile = file(keystoreProperties['storeFile'])
+def sPassword = keystoreProperties['storePassword']
+def kAlias = keystoreProperties['keyAlias']
+def kPassword = keystoreProperties['keyPassword']
 
 android {
     signingConfigs {
-        dev {
-            storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
+        v1 {
+            storeFile sFile
+            storePassword sPassword
+            keyAlias kAlias
+            keyPassword kPassword
             v1SigningEnabled true
             v2SigningEnabled false
+        }
+        v2 {
+            storeFile sFile
+            storePassword sPassword
+            keyAlias kAlias
+            keyPassword kPassword
+            v1SigningEnabled true
+            v2SigningEnabled true
         }
     }
     compileSdkVersion 29
@@ -22,9 +34,8 @@ android {
         minSdkVersion 24
         //noinspection OldTargetApi,ExpiredTargetSdkVersion
         targetSdkVersion 27
-        versionCode 70
-        versionName "3.2.0"
-        signingConfig signingConfigs.dev
+        versionCode 71
+        versionName "3.2.1"
         resConfigs 'ru-rRU', 'uk-rUK', 'zh-rCN', 'pt-rBR', 'de', 'es', 'it', 'tr'
     }
     buildTypes {
@@ -33,28 +44,37 @@ android {
             minifyEnabled true
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.dev
         }
         debug {
             debuggable true
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.dev
         }
+    }
+    flavorDimensions 'api'
+    productFlavors {
+        standalone {
+            targetSdkVersion 27
+            signingConfig signingConfigs.v1
+        }
+        playstore {
+            targetSdkVersion 30
+            signingConfig signingConfigs.v2
+        }
+    }
+    packagingOptions {
+        resources {
+            excludes += ['META-INF/*.kotlin_module', '**.kotlin_builtins', '**.kotlin_metadata']
+        }
+    }
+    androidResources {
+        noCompress 'zip'
     }
 //    compileOptions {
 //        sourceCompatibility JavaVersion.VERSION_1_8
 //        targetCompatibility JavaVersion.VERSION_1_8
 //    }
-    aaptOptions {
-        noCompress 'zip'
-    }
-    packagingOptions {
-        exclude("META-INF/*.kotlin_module")
-        exclude("**.kotlin_builtins")
-        exclude("**.kotlin_metadata")
-    }
 }
 
 dependencies {

@@ -75,7 +75,7 @@ public class Launcher extends SubFragment {
 				findPreference("pref_key_launcher_folderblur_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
-						openSubFragment(new SubFragment(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.launcher_folderblur_title, R.xml.prefs_launcher_folderblur);
+						openSubFragment(new Launcher_FolderBlur(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.launcher_folderblur_title, R.xml.prefs_launcher_folderblur);
 						return true;
 					}
 				});
