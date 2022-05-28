@@ -6,13 +6,13 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import androidx.appcompat.widget.AppCompatSpinner;
 
 import java.util.ArrayList;
 
 import name.mikanoshi.customiuizer.R;
 
-public class SpinnerEx extends Spinner {
+public class SpinnerEx extends AppCompatSpinner {
 
 	public CharSequence[] entries;
 	public int[] entryValues;

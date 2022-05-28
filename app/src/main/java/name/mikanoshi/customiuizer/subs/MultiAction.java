@@ -42,6 +42,12 @@ public class MultiAction extends SubFragment {
 	}
 
 	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		this.padded = false;
+		super.onCreate(savedInstanceState);
+	}
+
+	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 

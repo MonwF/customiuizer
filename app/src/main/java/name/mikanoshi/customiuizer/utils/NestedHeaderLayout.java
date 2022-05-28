@@ -36,14 +36,18 @@ public class NestedHeaderLayout extends miui.widget.NestedScrollingLayout {
 	@Override
 	protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
 		super.onLayout(z, i, i2, i3, i4);
-		setScrollingRange((int)((float)(-mHeaderView.getMeasuredHeight()) + mRangeOffset), 0);
+		if (mHeaderView != null) {
+			setScrollingRange((int)((float)(-mHeaderView.getMeasuredHeight()) + mRangeOffset), 0);
+		}
 	}
 
 	@Override
 	protected void onScrollingProgressUpdated(int i) {
 		super.onScrollingProgressUpdated(i);
-		mHeaderView.offsetTopAndBottom(i - mHeaderView.getTop());
-		mScrollableView.offsetTopAndBottom(mHeaderView.getMeasuredHeight() + i - mScrollableView.getTop());
-		mScrollableSearchView.setTop(mHeaderView.getMeasuredHeight());
+		if (mHeaderView != null) {
+			mHeaderView.offsetTopAndBottom(i - mHeaderView.getTop());
+			mScrollableView.offsetTopAndBottom(mHeaderView.getMeasuredHeight() + i - mScrollableView.getTop());
+			mScrollableSearchView.setTop(mHeaderView.getMeasuredHeight());
+		}
 	}
 }

@@ -45,7 +45,7 @@ public class PreferenceCategoryEx extends PreferenceCategory {
 			finalView.setBackground(null);
 			finalView.setPadding(
 				finalView.getPaddingLeft(),
-				finalView.getPaddingTop() + Math.round(getContext().getResources().getDisplayMetrics().density * 10),
+				Math.round(getContext().getResources().getDisplayMetrics().density * 10),
 				finalView.getPaddingRight(),
 				finalView.getPaddingBottom()
 			);

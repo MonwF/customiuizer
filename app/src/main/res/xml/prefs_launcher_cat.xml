@@ -19,9 +19,6 @@
 		android:summary="@string/launcher_compat_summ"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
-		miuizer:empty="true" />
-
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
 		android:title="@string/launcher_folders"
 		android:key="pref_key_launcher_cat_folders" />

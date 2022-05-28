@@ -42,6 +42,7 @@ public class BTList extends SubFragment {
 	List<Pair<String, String>> btList = new ArrayList<Pair<String, String>>();
 	Set<String> addresses = new LinkedHashSet<String>();
 	BroadcastReceiver devicesReceiver = new BroadcastReceiver() {
+		@SuppressLint("MissingPermission")
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			ArrayList<BluetoothDevice> deviceList = intent.getParcelableArrayListExtra("device_list");
@@ -235,6 +236,7 @@ public class BTList extends SubFragment {
 				row.setEnabled(true);
 
 				boolean isBonded = false;
+				@SuppressLint("MissingPermission")
 				Set<BluetoothDevice> bonded = BluetoothAdapter.getDefaultAdapter().getBondedDevices();
 				for (BluetoothDevice device: bonded)
 				if (device.getAddress().equals(sr.first)) isBonded = true;

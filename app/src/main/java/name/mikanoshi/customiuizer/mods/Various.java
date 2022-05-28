@@ -72,8 +72,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 
-import miui.app.ActionBar;
-import miui.app.AlertDialog;
+import android.app.AlertDialog;
 
 import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
@@ -974,37 +973,7 @@ public class Various {
 	));
 
 	public static void CollapseMIUITitlesHook(LoadPackageParam lpparam, XC_MethodHook.MethodHookParam param, int opt) {
-		Application app = (Application)param.thisObject;
-		String pkgName = app.getPackageName();
 
-		boolean isMIUIapp = pkgName.startsWith("com.miui") || pkgName.startsWith("com.xiaomi") || miuiApps.contains(pkgName);
-		if (!isMIUIapp) isMIUIapp = app.checkSelfPermission("miui.permission.USE_INTERNAL_GENERAL_API") == PackageManager.PERMISSION_GRANTED;
-		if (!isMIUIapp) return;
-
-		Class<?> abvCls = XposedHelpers.findClassIfExists("com.miui.internal.widget.AbsActionBarView", lpparam.classLoader);
-		if (abvCls != null)
-		Helpers.hookAllConstructors(abvCls, new MethodHook() {
-			@Override
-			protected void after(MethodHookParam param) throws Throwable {
-				XposedHelpers.setIntField(param.thisObject, "mExpandState", ActionBar.STATE_COLLAPSE);
-				XposedHelpers.setIntField(param.thisObject, "mInnerExpandState", ActionBar.STATE_COLLAPSE);
-				if (opt == 3) XposedHelpers.setBooleanField(param.thisObject, "mResizable", false);
-			}
-		});
-
-		abvCls = XposedHelpers.findClassIfExists("miuix.appcompat.internal.app.widget.ActionBarView", lpparam.classLoader);
-		if (abvCls != null)
-		Helpers.hookAllConstructors(abvCls, new MethodHook() {
-			@Override
-			protected void after(MethodHookParam param) throws Throwable {
-				try {
-					XposedHelpers.callMethod(param.thisObject, "setExpandState", ActionBar.STATE_COLLAPSE);
-					if (opt == 3) XposedHelpers.callMethod(param.thisObject, "setResizable", false);
-				} catch (Throwable ignore) {
-					XposedBridge.log(ignore);
-				}
-			}
-		});
 	}
 
 	public static void GboardPaddingHook() {

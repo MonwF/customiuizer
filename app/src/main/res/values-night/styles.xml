@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<style name="AppTheme" parent="@android:style/Theme.Material">
+	<style name="NightAppTheme" parent="@android:style/Theme.Material">
 		<item name="android:actionBarSize">?android:attr/actionBarSize</item>
 		<item name="android:textColor">@android:color/secondary_text_dark</item>
 		<item name="android:windowAnimationStyle">@style/ActivityAnimation</item>

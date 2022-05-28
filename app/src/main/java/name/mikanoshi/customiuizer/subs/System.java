@@ -15,7 +15,7 @@ import android.widget.SeekBar;
 
 import java.util.Objects;
 
-import miui.app.AlertDialog;
+import android.app.AlertDialog;
 import name.mikanoshi.customiuizer.CredentialsLauncher;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SharedPrefsProvider;

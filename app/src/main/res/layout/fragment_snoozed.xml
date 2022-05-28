@@ -20,7 +20,7 @@
 		android:gravity="center"
 		android:orientation="vertical">
 
-		<miui.widget.ProgressBar
+		<android.widget.ProgressBar
 			android:id="@+id/am_progressBar"
 			style="@style/Widget.ProgressBar"
 			android:layout_width="wrap_content"
@@ -28,12 +28,12 @@
 
 		<TextView
 			android:id="@android:id/empty"
-			android:visibility="gone"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:textSize="14sp"
 			android:alpha="0.5"
-			android:text="@string/snooze_empty" />
+			android:text="@string/snooze_empty"
+			android:textSize="14sp"
+			android:visibility="gone" />
 
 	</LinearLayout>
 

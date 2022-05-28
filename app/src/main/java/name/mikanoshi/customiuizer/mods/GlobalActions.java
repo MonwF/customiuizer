@@ -735,12 +735,12 @@ public class GlobalActions {
 
 	public static void miuizerHook(LoadPackageParam lpparam) {
 		try {
-			XposedHelpers.setStaticBooleanField(findClass(Helpers.modulePkg + ".utils.Helpers", lpparam.classLoader), "miuizerModuleActive", true);
-			XposedHelpers.setStaticObjectField(findClass(Helpers.modulePkg + ".utils.Helpers", lpparam.classLoader), "xposedVersion", XposedBridge.getXposedVersion());
+			XposedHelpers.setStaticBooleanField(findClass(Helpers.modulePackage + ".utils.Helpers", lpparam.classLoader), "miuizerModuleActive", true);
+			XposedHelpers.setStaticObjectField(findClass(Helpers.modulePackage + ".utils.Helpers", lpparam.classLoader), "xposedVersion", XposedBridge.getXposedVersion());
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
-		
+
 		Helpers.emptyFile(lpparam.appInfo.dataDir + "/files/uncaught_exceptions", false);
 	}
 
@@ -1001,7 +1001,7 @@ public class GlobalActions {
 				}
 			});
 	}
-	
+
 	public static void setupSystemHelpers() {
 		Helpers.findAndHookMethod(Application.class, "onCreate", new MethodHook() {
 			@Override

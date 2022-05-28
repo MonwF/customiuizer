@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<style name="AppTheme" parent="@android:style/Theme.Material.Light">
-		<item name="android:actionBarSize">?android:attr/actionBarSize</item>
-		<item name="android:textColor">@android:color/secondary_text_light</item>
+	<style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
 		<item name="android:windowAnimationStyle">@style/ActivityAnimation</item>
-		<item name="android:windowNoTitle">true</item>
 		<item name="android:windowIsTranslucent">false</item>
 		<item name="android:windowDisablePreview">true</item>
-		<item name="android:windowBackground">@android:color/white</item>
+		<item name="android:colorBackgroundCacheHint">@null</item>
+		<item name="android:spinnerItemStyle">@style/DropDownItemStyle</item>
 	</style>
-
+	<style name="DropDownItemStyle" parent="@style/Widget.AppCompat.TextView.SpinnerItem">
+		<item name="android:paddingTop">5dp</item>
+		<item name="android:paddingBottom">5dp</item>
+	</style>
 	<style name="ActivityAnimation" parent="@android:style/Animation">
 		<item name="android:activityOpenEnterAnimation">@anim/activity_open_enter</item>
 		<item name="android:activityOpenExitAnimation">@anim/activity_open_exit</item>
@@ -89,7 +90,7 @@
 		<item name="android:layout_marginRight">0dp</item>
 	</style>
 	<style name="Widget.EditPreference.Padded">
-		<item name="android:layout_marginTop">@dimen/screen_padding_top</item>
+		<item name="android:layout_marginTop">@dimen/preference_screen_padding_top</item>
 		<item name="android:layout_marginBottom">@dimen/preference_screen_padding_bottom</item>
 		<item name="android:layout_marginStart">?android:attr/listPreferredItemPaddingLeft</item>
 		<item name="android:layout_marginEnd">?android:attr/listPreferredItemPaddingRight</item>

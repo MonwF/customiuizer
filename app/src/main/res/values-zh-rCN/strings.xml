@@ -923,7 +923,7 @@
     <string name="soft_reboot_ask">现在执行软重启吗？</string>
     <string name="restart_launcher">重启启动器</string>
     <string name="backup_restore">设置管理</string>
-    <string name="backup_restore_choose">选择所需程序</string>
+    <string name="backup_restore_choose">请选择所需操作</string>
     <string name="do_backup">备份</string>
     <string name="do_restore">恢复</string>
     <string name="storage_read_only">您的外部存储是只读的</string>
@@ -1037,4 +1037,15 @@
     <string name="various_restrictapp_title">全限制</string>
     <string name="various_restrictapp_summ">允许配置省电程序并且为系统应用接入Wi-Fi</string>
     <string name="launcher_horizwidgetmargin_title">水平小部件边缘</string>
+    <string name="support_github">Github 仓库</string>
+    <string name="various_hiddenfeatures_title">隐藏特性</string>
+    <string name="various_hiddenfeatures_not_found">该设备不支持</string>
+    <string name="various_hiddenfeatures_summ">不易找到的界面</string>
+    <string name="various_memorystats_title">性能统计</string>
+    <string name="various_aospnotiflog_title">通知记录</string>
+    <string name="various_clearspeaker_title">清理扬声器</string>
+    <string name="various_aospnotif_title">应用通知</string>
+    <string name="various_appusagestats_title">使用统计</string>
+    <string name="miuizer_show_assumelsposed_title">LSPosed模式</string>
+    <string name="miuizer_show_assumelsposed_summ">假定已安装LSPosed框架以使用其管理器</string>
 </resources>

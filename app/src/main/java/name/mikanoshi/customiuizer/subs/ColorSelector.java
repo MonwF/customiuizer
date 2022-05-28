@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import miui.widget.SeekBar;
+import android.widget.SeekBar;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SubFragment;
 import name.mikanoshi.customiuizer.utils.ColorCircle;
@@ -19,6 +19,12 @@ public class ColorSelector extends SubFragment {
 	TextView black;
 	TextView auto;
 	View selColor;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		this.padded = false;
+		super.onCreate(savedInstanceState);
+	}
 
 	void updateSelColor(int color) {
 		((GradientDrawable)selColor.getBackground()).setColors(color == Color.TRANSPARENT ? new int[]{ Color.WHITE, Color.BLACK } : new int[]{ color, color });

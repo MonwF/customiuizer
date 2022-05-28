@@ -948,6 +948,7 @@
 
 	<string name="support">Support</string>
 	<string name="support_repo_title">CustoMIUIzer repo</string>
+	<string name="support_github">Github repo</string>
 	<string name="support_repo_summ">Git repository with module sources and distributions</string>
 	<string name="support_xda_title">XDA thread</string>
 	<string name="support_xda_summ">Module thread on XDA forums</string>

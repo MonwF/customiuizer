@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,43 +13,36 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.miui.internal.widget.ActionBarView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.ActionBar;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.Set;
-
-import miui.app.ActionBar;
-import miui.app.AlertDialog;
-import miui.preference.PreferenceFragment;
 
 import name.mikanoshi.customiuizer.mods.GlobalActions;
 import name.mikanoshi.customiuizer.utils.Helpers;
@@ -58,51 +52,57 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 	private Context actContext = null;
 	public boolean isAnimating = false;
 	public boolean supressMenu = false;
-	public int animDur = 650;
+	public int animDur = 350;
 
-	public boolean onCreateOptionsMenu(Menu menu) {
-		if (supressMenu) return false;
-		getMenuInflater().inflate(R.menu.menu_mods, menu);
-		if (Helpers.isNightMode(getActivity()))
-		for (int i = 0; i < menu.size(); i++) try {
-			MenuItem item = menu.getItem(i);
-			SpannableString spanString = new SpannableString(item.getTitle().toString());
-			spanString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.preference_primary_text_color, getActivity().getTheme())), 0, spanString.length(), 0);
-			item.setTitle(spanString);
-		} catch (Throwable t) {}
-		return true;
+	public static final int PICK_BACKFILE = 11;
+	public boolean isCustomActionBar = false;
+
+	protected ActionBar getActionBar() {
+		AppCompatActivity act = (AppCompatActivity) getActivity();
+		return act.getSupportActionBar();
+	}
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		if (supressMenu) {
+			inflater.inflate(R.menu.menu_mods, menu);
+		}
+		if (isCustomActionBar) {
+			MenuItem item = null;
+			for (int i = 0; i < menu.size(); i++) {
+				item = menu.getItem(i);
+				item.setVisible(item.getItemId() == R.id.edit_confirm);
+			}
+		}
 	}
 
+	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
-		if (supressMenu) return;
-		if (menu.size() == 0) return;
-		menu.getItem(0).setVisible(false);
-		if (getView() == null) return;
-		ImageView alert = getView().findViewById(R.id.update_alert);
-		if (alert != null && alert.isShown()) menu.getItem(0).setVisible(true);
+		if (isCustomActionBar) {
+			MenuItem confirmMenu = menu.findItem(R.id.edit_confirm);
+			confirmMenu.setTitle(null);
+			int applyResId = getResources().getIdentifier(Helpers.isNightMode(getValidContext()) ? "action_mode_title_button_confirm_dark" : "action_mode_title_button_confirm_light", "drawable", "miui");
+			if (applyResId == 0)
+				applyResId = getResources().getIdentifier(Helpers.isNightMode(getValidContext()) ? "action_mode_immersion_done_dark" : "action_mode_immersion_done_light", "drawable", "miui");
+			confirmMenu.setIcon(applyResId);
+		}
+		super.onPrepareOptionsMenu(menu);
 	}
 
+	public void confirmEdit() {}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Activity act = getActivity();
 		switch (item.getItemId()) {
+			case R.id.edit_confirm:
+				confirmEdit();
+				return true;
 			case android.R.id.home:
 				if (this instanceof MainFragment)
 					act.finish();
 				else
 					((SubFragment)this).finish();
 				return true;
-			case R.id.get_update:
-				try {
-					Intent detailsIntent = new Intent("de.robv.android.xposed.installer.DOWNLOAD_DETAILS");
-					detailsIntent.addCategory(Intent.CATEGORY_DEFAULT);
-					detailsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-					detailsIntent.setData(Uri.fromParts("package", Helpers.modulePkg, null));
-					startActivity(detailsIntent);
-				} catch (Throwable e) {
-					Helpers.openURL(getActivity(), "https://code.highspec.ru/Mikanoshi/CustoMIUIzer/releases");
-				}
-			case R.id.xposedinstaller:
-				return Helpers.openXposedApp(getValidContext());
 			case R.id.backuprestore:
 				showBackupRestoreDialog();
 				return true;
@@ -140,7 +140,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 			builder.setTitle(R.string.warning);
 			builder.setMessage(R.string.module_not_active);
 			builder.setCancelable(true);
-			builder.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+			builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton){}
 			});
 			AlertDialog dlg = builder.create();
@@ -169,70 +169,8 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 		alert.show();
 	}
 
-	private void setupImmersiveMenu() {
-		ActionBar actionBar = getActionBar();
-		if (actionBar != null && Helpers.is12()) try { actionBar.setExpandState(ActionBar.STATE_COLLAPSE, false); } catch (Throwable ignore) {}
-		if (supressMenu) return;
-		setImmersionMenuEnabled(true);
-		hideSplitActionBar();
-
-		View view = getView();
-		if (view != null)
-		if (view.findViewById(R.id.update_alert) == null) {
-			Button more = view.findViewById(getResources().getIdentifier("more", "id", "miui"));
-			if (more == null) return;
-			float density = getResources().getDisplayMetrics().density;
-			FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-			lp.gravity = Gravity.END | Gravity.TOP;
-			ImageView alert = new ImageView(getValidContext());
-			alert.setImageResource(R.drawable.alert);
-			alert.setAdjustViewBounds(true);
-			alert.setMaxWidth(Math.round(16 * density));
-			alert.setMaxHeight(Math.round(16 * density));
-			alert.setLayoutParams(lp);
-			alert.setId(R.id.update_alert);
-			alert.setVisibility(View.GONE);
-			((ViewGroup)more.getParent()).addView(alert);
-		}
-	}
-
-	void hideSplitActionBar() {
-		try {
-			getActionBar().showSplitActionBar(false, false);
-		} catch (Throwable t) {
-			hideSplitView();
-			return;
-		}
-		if (Helpers.is125()) hideSplitView125();
-	}
-
-	void hideSplitView() {
-		// Hide stupid auto split actionbar
-		try {
-			ActionBar actionBar = getActionBar();
-			Field mSplitViewField = actionBar.getClass().getDeclaredField("mSplitView");
-			mSplitViewField.setAccessible(true);
-			View mSplitView = (View)mSplitViewField.get(actionBar);
-			if (mSplitView != null) mSplitView.setVisibility(View.GONE);
-		} catch (Throwable t) {
-			t.printStackTrace();
-		}
-	}
-
-	void hideSplitView125() {
-		try {
-			ActionBar actionBar = getActionBar();
-			Field mActionViewField = actionBar.getClass().getDeclaredField("mActionView");
-			mActionViewField.setAccessible(true);
-			ActionBarView mActionView = (ActionBarView)mActionViewField.get(actionBar);
-			if (mActionView != null) mActionView.setSplitActionBar(true);
-		} catch (Throwable t) {
-			t.printStackTrace();
-		}
-	}
-
 	private void initFragment() {
-		setHasOptionsMenu(true);
+		setHasOptionsMenu(supressMenu);
 
 		boolean showBack = false;
 		if (this instanceof MainFragment) {
@@ -249,7 +187,6 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 		ActionBar actionBar = getActionBar();
 		actionBar.setTitle(R.string.app_name);
 		actionBar.setDisplayHomeAsUpEnabled(showBack);
-		actionBar.setBackgroundDrawable(new ColorDrawable(Helpers.getSystemBackgroundColor(getValidContext())));
 	}
 
 	@SuppressLint("WorldReadableFiles")
@@ -269,7 +206,6 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		initFragment();
-		setupImmersiveMenu();
 	}
 
 	@Override
@@ -279,14 +215,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 	}
 
 	public void setViewBackground(View view) {
-		boolean isNight = Helpers.isNightMode(getValidContext());
-		int bgResId = getResources().getIdentifier(isNight ? "settings_window_bg_dark" : "settings_window_bg_light", "drawable", "miui");
-		if (bgResId != 0)
-			view.setBackgroundResource(bgResId);
-		else if (Helpers.is11())
-			view.setBackgroundColor(Helpers.getSystemBackgroundColor(getValidContext()));
-		else
-			view.setBackgroundColor(isNight ? Color.BLACK : Color.rgb(247, 247, 247));
+		view.setBackgroundColor(Helpers.getSystemBackgroundColor(getValidContext()));
 	}
 
 	public void setActionModeStyle(View searchView) {
@@ -357,7 +286,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 
 		final View top = getView();
 		if (top == null) return null;
-		final View content = top.findViewById(android.R.id.content);
+		final View content = top.findViewById(android.R.id.list);
 
 		//ValueAnimator.setFrameDelay(17);
 		ValueAnimator valAnimator = new ValueAnimator();
@@ -386,7 +315,6 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 			public void onAnimationRepeat(Animator animation) {}
 		}); else isAnimating = false;
 
-		boolean is11 = Helpers.is11();
 		valAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 			@Override
 			public void onAnimationUpdate(ValueAnimator animation) {
@@ -394,7 +322,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 				float val = (float)animation.getAnimatedValue();
 				if (nextAnim == R.animator.fragment_open_enter) {
 					top.setX(scrWidth * (1.0f - val));
-					content.setAlpha(is11 ? val * 1.0f : 0.6f + val * 0.4f);
+					content.setAlpha(0.6f + val * 0.4f);
 				} else if (nextAnim == R.animator.fragment_open_exit) {
 					top.setX(-scrWidth / 4.0f * val);
 					top.setAlpha(1.0f - val * 0.4f);
@@ -423,11 +351,11 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 		this.actContext = null;
 	}
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		setupImmersiveMenu();
-	}
+//	@Override
+//	public void onResume() {
+//		super.onResume();
+//		setupImmersiveMenu();
+//	}
 
 	public Context getValidContext() {
 		if (actContext != null) return actContext;
@@ -439,7 +367,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 		if (!Helpers.preparePathForBackup(act, backupPath)) return;
 		ObjectOutputStream output = null;
 		try {
-			output = new ObjectOutputStream(new FileOutputStream(backupPath + Helpers.backupFile));
+			output = new ObjectOutputStream(new FileOutputStream(backupPath + Helpers.backupFile + new SimpleDateFormat("-MMddHHmmss").format(new java.util.Date())));
 			output.writeObject(Helpers.prefs.getAll());
 
 			AlertDialog.Builder alert = new AlertDialog.Builder(act);
@@ -470,13 +398,33 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@Override
+	public void onActivityResult(int requestCode, int resultCode,
+								 Intent resultData) {
+		if (requestCode == MainFragment.PICK_BACKFILE
+				&& resultCode == Activity.RESULT_OK) {
+			Uri uri = null;
+			if (resultData != null) {
+				uri = resultData.getData();
+				doRestoreSettings(uri);
+			}
+		}
+	}
+
 	public void restoreSettings(final Activity act) {
 		if (!Helpers.checkStoragePerm(act, Helpers.REQUEST_PERMISSIONS_RESTORE)) return;
 		if (!Helpers.checkStorageReadable(act)) return;
+		Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+		intent.addCategory(Intent.CATEGORY_OPENABLE);
+		intent.setType("application/octet-stream");
+		startActivityForResult(intent, PICK_BACKFILE);
+	}
+
+	public void doRestoreSettings(Uri uri) {
 		ObjectInputStream input = null;
+		final Activity act = getActivity();
 		try {
-			input = new ObjectInputStream(new FileInputStream(Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder + Helpers.backupFile));
+			input = new ObjectInputStream(act.getContentResolver().openInputStream(uri));
 			Map<String, ?> entries = (Map<String, ?>)input.readObject();
 			if (entries == null || entries.isEmpty()) throw new RuntimeException("Cannot read entries");
 

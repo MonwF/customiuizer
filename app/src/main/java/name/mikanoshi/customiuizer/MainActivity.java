@@ -16,12 +16,14 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import java.util.Set;
 
-import name.mikanoshi.customiuizer.holidays.HolidayHelper;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
 	MainFragment mainFrag = null;
 	SharedPreferences.OnSharedPreferenceChangeListener prefsChanged;
@@ -39,18 +41,8 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		boolean mSDKFound = ((MainApplication)getApplication()).mStarted;
-		if (mSDKFound) Helpers.setMiuiTheme(this, R.style.MIUIPrefs);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-		if (!mSDKFound) {
-			Toast.makeText(this, R.string.sdk_failed, Toast.LENGTH_LONG).show();
-			finish();
-			return;
-		}
-
-		HolidayHelper.setup(this);
 
 		prefsChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
 			@Override
@@ -87,7 +79,11 @@ public class MainActivity extends Activity {
 			Log.e("prefs", "Failed to start FileObserver!");
 		}
 
-		Helpers.updateNewModsMarking(this);
+//		Helpers.updateNewModsMarking(this);
+
+
+		Toolbar myToolbar = findViewById(R.id.mainActionBar);
+		setSupportActionBar(myToolbar);
 
 		if (savedInstanceState != null)
 		mainFrag = (MainFragment)getFragmentManager().getFragment(savedInstanceState, "mainFrag");
@@ -108,7 +104,6 @@ public class MainActivity extends Activity {
 		try {
 			if (prefsChanged != null) Helpers.prefs.unregisterOnSharedPreferenceChangeListener(prefsChanged);
 			if (fileObserver != null) fileObserver.stopWatching();
-			HolidayHelper.onDestroy();
 			if (migrateOnExit) {
 				boolean migrated = Helpers.migratePrefs();
 				Helpers.prefs = Helpers.getSharedPrefs(this, true, true);
@@ -128,9 +123,7 @@ public class MainActivity extends Activity {
 			return;
 		}
 		if (Helpers.shimmerAnim != null) Helpers.shimmerAnim.cancel();
-		if (fragment instanceof MainFragment && ((MainFragment)fragment).actionMode != null)
-			((MainFragment)fragment).actionMode.finish();
-		else if (fragment instanceof SubFragment)
+		if (fragment instanceof SubFragment)
 			((SubFragment)fragment).finish();
 		else
 			super.onBackPressed();
@@ -139,7 +132,14 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
-			finish();
+			Fragment fragment = getFragmentManager().findFragmentById(R.id.fragment_container);
+			if (fragment == null) {
+				finish();
+				return true;
+			}
+			if (Helpers.shimmerAnim != null) Helpers.shimmerAnim.cancel();
+			if (fragment instanceof SubFragment)
+				((SubFragment)fragment).finish();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -148,11 +148,7 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_MENU) {
-			PreferenceFragmentBase fragment = (PreferenceFragmentBase)getFragmentManager().findFragmentById(R.id.fragment_container);
-			if (fragment != null && fragment.getView() != null && !fragment.supressMenu) try {
-				fragment.getView().post(fragment::showImmersionMenu);
-				return true;
-			} catch (Throwable t) {}
+			return true;
 		}
 		return super.onKeyDown(keyCode, event);
 	}
@@ -196,26 +192,10 @@ public class MainActivity extends Activity {
 					Toast.makeText(this, R.string.permission_permanent, Toast.LENGTH_LONG).show();
 				break;
 			case Helpers.REQUEST_PERMISSIONS_REPORT:
-				if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-					mainFrag.createReport();
-				else
 					Toast.makeText(this, ":(", Toast.LENGTH_SHORT).show();
 				break;
 			default:
 				super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		}
 	}
-
-	@Override
-	public void onPause() {
-		HolidayHelper.onPause();
-		super.onPause();
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		HolidayHelper.onResume();
-	}
-
 }

@@ -100,8 +100,7 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 
-import miui.app.AlertDialog;
-import miui.os.SystemProperties;
+import android.app.AlertDialog;
 import miui.util.HapticFeedbackUtil;
 
 import name.mikanoshi.customiuizer.MainModule;
@@ -115,11 +114,12 @@ public class Helpers {
 
 	@SuppressLint("StaticFieldLeak")
 	public static Context mModuleContext = null;
-	public static final String modulePkg = "name.mikanoshi.customiuizer";
+	public static final String modulePkg = "name.monwf.customiuizer";
+	public static final String modulePackage = "name.mikanoshi.customiuizer";
 	public static final String prefsName = "customiuizer_prefs";
 	public static final String prefsPath = "/data/user_de/0/" + modulePkg + "/shared_prefs";
 	public static final String prefsFile = prefsPath + "/" + prefsName + ".xml";
-	public static final String externalFolder = "/CustoMIUIzer/";
+	public static final String externalFolder = "/Documents/CustoMIUIzer/";
 	public static final String backupFile = "settings_backup";
 	public static final String logFile = "xposed_log";
 	public static final String versionFile = "xposed_version";
@@ -163,17 +163,8 @@ public class Helpers {
 		"pref_key_launcher_horizwidgetmargin"
 	));
 	public static final HashMap<String, String> l10nProgress = new HashMap<String, String>() {{
-		put("de", "86.6");
-		put("es", "98.7");
-		put("it", "98");
-		put("pt-BR", "94.7");
 		put("ru-RU", "100");
-		put("tr", "86.6");
-		put("uk-UK", "87.6");
 		put("zh-CN", "98.1");
-		put("fr", "24.9");
-		put("id", "13.1");
-		put("sk", "4.2");
 	}};
 
 	public static final HashSet<String> xposedManagers = new HashSet<String>(Arrays.asList(
@@ -186,11 +177,6 @@ public class Helpers {
 	));
 
 	public static final ArrayList<String> shortcutIcons = new ArrayList<String>();
-	public static Holidays currentHoliday = Holidays.NONE;
-
-	public enum Holidays {
-		NONE, NEWYEAR, LUNARNEWYEAR, PANDEMIC, CRYPTO
-	}
 
 	public enum SettingsType {
 		Preference, Edit
@@ -223,20 +209,6 @@ public class Helpers {
 			white = context.getResources().getColor(context.getResources().getIdentifier("white", "color", "miui"), context.getTheme());
 		} catch (Throwable ignore) {}
 		return isNightMode(context) ? black : white;
-	}
-
-	public static void setMiuiTheme(Activity act, int overrideTheme) {
-		setMiuiTheme(act, overrideTheme, false);
-	}
-
-	public static void setMiuiTheme(Activity act, int overrideTheme, boolean noBackground) {
-		int themeResId = 0;
-		try { themeResId = act.getResources().getIdentifier("Theme.DayNight", "style", "miui"); } catch (Throwable ignore) {}
-		if (themeResId == 0) themeResId = act.getResources().getIdentifier(isNightMode(act) ? "Theme.Dark" : "Theme.Light", "style", "miui");
-		act.setTheme(themeResId);
-		if (!is11()) act.getTheme().applyStyle(R.style.ActivityAnimation10, true);
-		act.getTheme().applyStyle(overrideTheme, true);
-		act.getWindow().setBackgroundDrawable(noBackground ? null : new ColorDrawable(getSystemBackgroundColor(act)));
 	}
 
 	public static void setMiuiCheckbox(CheckBox checkbox) {
@@ -287,43 +259,20 @@ public class Helpers {
 		item.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
 	}
 
-	@SuppressWarnings("ConstantConditions")
-	public static void detectHoliday() {
-		currentHoliday = Holidays.NONE;
-		String opt = prefs.getString("pref_key_miuizer_holiday", "0");
-		int holiday = Integer.parseInt(opt);
-		if (holiday > 0) currentHoliday = Holidays.values()[holiday];
-		if (holiday == 0) {
-			Calendar cal = Calendar.getInstance();
-			int month = cal.get(Calendar.MONTH);
-			int monthDay = cal.get(Calendar.DAY_OF_MONTH);
-			int year = cal.get(Calendar.YEAR);
-
-			// Lunar NY
-			if ((month == 0 && monthDay > 15) || month == 1) currentHoliday = Holidays.LUNARNEWYEAR;
-			// NY
-			else if (month == 0 || month == 11) currentHoliday = Holidays.NEWYEAR;
-			// COVID19
-			else if (year <= 2020) currentHoliday = Holidays.PANDEMIC;
-			// Crypto
-			else if (year == 2021 || year == 2022) currentHoliday = Holidays.CRYPTO;
-		}
-	}
-
 	public static boolean is10() {
-		return SystemProperties.getInt("ro.miui.ui.version.code", 7) <= 8;
+		return false;
 	}
 
 	public static boolean is11() {
-		return SystemProperties.getInt("ro.miui.ui.version.code", 8) >= 9;
+		return true;
 	}
 
 	public static boolean is12() {
-		return SystemProperties.getInt("ro.miui.ui.version.code", 9) >= 10;
+		return true;
 	}
 
 	public static boolean is125() {
-		return SystemProperties.getInt("ro.miui.ui.version.code", 10) >= 11;
+		return true;
 	}
 
 	public static boolean isNightMode(Context context) {
@@ -360,37 +309,12 @@ public class Helpers {
 //	}
 
 	public static boolean isXposedInstallerInstalled(Context context) {
-		boolean skip = prefs.getBoolean("pref_key_miuizer_assumelsposed", false);
-		if (skip) return true;
-
-		PackageManager pm = context.getPackageManager();
-
-		for (String manager: xposedManagers) try {
-			pm.getPackageInfo(manager, PackageManager.GET_ACTIVITIES);
-			return true;
-		} catch (PackageManager.NameNotFoundException e) {}
-
-		return false;
+		return true;
 	}
 
 	public static String isLSPosedManagerInstalled(Context context) {
-		boolean lsposed = prefs.getBoolean("pref_key_miuizer_assumelsposed", false);
-		if (lsposed) return "Assumed LSPosed";
-		try {
-			PackageInfo info = context.getPackageManager().getPackageInfo("org.lsposed.manager", 0);
-			return info.versionName + " (" + info.versionCode + ")";
-		} catch (PackageManager.NameNotFoundException e) {
-			return null;
-		}
+		return "Assumed LSPosed";
 	}
-
-//	public static boolean isUnsupportedManager(Context context) {
-//		try {
-//		    return context.getPackageManager().getPackageInfo("org.meowcat.edxposed.manager", 0).versionCode > 45700;
-//		} catch (PackageManager.NameNotFoundException e) {
-//			return true;
-//		}
-//	}
 
 	public static boolean areXposedResourceHooksDisabled() {
 		File d1 = new File("/data/user_de/0/org.meowcat.edxposed.manager/conf/disable_resources");
@@ -773,59 +697,10 @@ public class Helpers {
 		title.setText(ssb);
 	}
 
-	public static void applyShimmer(TextView title) {
-		if (title.getPaint().getShader() != null) return;
-		int width = title.getResources().getDisplayMetrics().widthPixels;
-		Shader shimmer = new LinearGradient(0, 0, width, 0, new int[]{ 0xFF5DA5FF, 0xFF9B8AFB, 0xFFD176F2, 0xFFFE88B2, 0xFFD176F2, 0xFF9B8AFB }, new float[]{ 0.0f, 0.2f, 0.4f, 0.6f, 0.8f, 1.0f }, Shader.TileMode.REPEAT);
-		Matrix matrix = new Matrix();
-		matrix.setTranslate(0, 0);
-		shimmer.setLocalMatrix(matrix);
-		title.getPaint().setShader(shimmer);
-
-		if (shimmerAnim != null) shimmerAnim.cancel();
-		shimmerAnim = ValueAnimator.ofFloat(0, width, width / 1.8f, width * 1.3f);
-		shimmerAnim.removeAllUpdateListeners();
-		shimmerAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-			@Override
-			public void onAnimationUpdate(ValueAnimator animation) {
-				matrix.setTranslate((float)animation.getAnimatedValue(), 0);
-				Shader shader = title.getPaint().getShader();
-				if (shader == null)
-					shimmerAnim.cancel();
-				else
-					shader.setLocalMatrix(matrix);
-				title.invalidate();
-			}
-		});
-		shimmerAnim.removeAllListeners();
-		shimmerAnim.addListener(new Animator.AnimatorListener() {
-			@Override
-			public void onAnimationEnd(Animator animation) {
-				title.getPaint().setShader(null);
-				title.invalidate();
-			}
-
-			@Override
-			public void onAnimationStart(Animator animation) {}
-
-			@Override
-			public void onAnimationCancel(Animator animation) {}
-
-			@Override
-			public void onAnimationRepeat(Animator animation) {}
-		});
-		shimmerAnim.setStartDelay(0);
-		shimmerAnim.setDuration(10000);
-		shimmerAnim.start();
-	}
-
 	public static void openURL(Context context, String url) {
 		if (context == null) return;
 		Intent uriIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-		if (uriIntent.resolveActivity(context.getPackageManager()) != null)
-			context.startActivity(uriIntent);
-		else
-			showOKDialog(context, R.string.warning, R.string.no_browser);
+		context.startActivity(uriIntent);
 	}
 
 	public static void openAppInfo(Context context, String pkg, int user) {
@@ -1883,7 +1758,7 @@ public class Helpers {
 	private static String getCallerMethod() {
 		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 		for (StackTraceElement el: stackTrace)
-		if (el != null && el.getClassName().startsWith(modulePkg + ".mods")) return el.getMethodName();
+		if (el != null && el.getClassName().startsWith(modulePackage + ".mods")) return el.getMethodName();
 		return stackTrace[4].getMethodName();
 	}
 
