@@ -20,8 +20,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import miui.app.ActionBar;
-import miui.app.AlertDialog;
+import android.app.AlertDialog;
 import miui.util.AttributeResolver;
 import miui.widget.ProgressBar;
 
@@ -96,12 +95,6 @@ public class SnoozedFragment extends PreferenceFragmentBase {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		supressMenu = true;
 		super.onActivityCreated(savedInstanceState);
-		ActionBar actionBar = getActionBar();
-		if (actionBar != null) try {
-			actionBar.setTitle(R.string.title_snoozed);
-			actionBar.showSplitActionBar(true, true);
-		} catch (Throwable ignore) {}
-		setImmersionMenuEnabled(false);
 
 		if (getView() == null) return;
 
@@ -163,21 +156,6 @@ public class SnoozedFragment extends PreferenceFragmentBase {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuItem update = menu.add(R.string.menu_update);
-		update.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		update.setIcon(AttributeResolver.resolveDrawable(getContext(), getResources().getIdentifier("actionBarRefreshIcon", "attr", "miui")));
-		update.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-			@Override
-			public boolean onMenuItemClick(MenuItem item) {
-				fetchSnoozed();
-				return true;
-			}
-		});
-		return true;
-	}
-
-	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
 		if (menu != null && menu.size() > 0)
 		menu.getItem(0).setEnabled(!loading);
@@ -234,7 +212,6 @@ public class SnoozedFragment extends PreferenceFragmentBase {
 	private void startLoading() {
 		if (loading) return;
 		loading = true;
-		invalidateOptionsMenu();
 		snoozedList.clear();
 		updateListView();
 		if (loader != null) loader.setVisibility(View.VISIBLE);
@@ -243,7 +220,6 @@ public class SnoozedFragment extends PreferenceFragmentBase {
 
 	private void finishLoading() {
 		loading = false;
-		invalidateOptionsMenu();
 		updateListView();
 		if (loader != null) loader.setVisibility(View.GONE);
 		if (empty != null) empty.setVisibility(snoozedList.size() == 0 ? View.VISIBLE : View.GONE);

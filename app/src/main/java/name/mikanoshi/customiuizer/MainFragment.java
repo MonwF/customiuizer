@@ -2,46 +2,32 @@ package name.mikanoshi.customiuizer;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.content.res.AssetManager;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
-import android.text.Editable;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.TextWatcher;
 import android.text.style.AlignmentSpan;
 import android.text.style.LineHeightSpan;
 import android.view.ActionMode;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.PopupWindow;
-import android.widget.TextView;
-
-import org.acra.ACRA;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -50,15 +36,11 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
-
-import miui.app.AlertDialog;
-import miui.view.SearchActionMode;
 
 import name.mikanoshi.customiuizer.prefs.ListPreferenceEx;
 import name.mikanoshi.customiuizer.prefs.PreferenceEx;
@@ -67,7 +49,6 @@ import name.mikanoshi.customiuizer.subs.Controls;
 import name.mikanoshi.customiuizer.subs.Launcher;
 import name.mikanoshi.customiuizer.subs.System;
 import name.mikanoshi.customiuizer.subs.Various;
-import name.mikanoshi.customiuizer.utils.GuidePopup;
 import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.ModData;
 import name.mikanoshi.customiuizer.utils.ModSearchAdapter;
@@ -86,100 +67,7 @@ public class MainFragment extends PreferenceFragmentBase {
 	private View modsCat = null;
 	private View markCat = null;
 	boolean isSearchFocused = false;
-	boolean areGuidesCleared = false;
-	boolean actionModeNew = false;
 	ActionMode actionMode = null;
-	SearchActionMode.Callback actionModeCallback = new SearchActionMode.Callback() {
-		@Override
-		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-			if (searchView == null || listView == null) {
-				if (mode != null) mode.finish();
-				return false;
-			}
-
-			SearchActionMode samode = (SearchActionMode)mode;
-			samode.setAnchorView(searchView);
-			samode.setAnimateView(listView);
-			samode.getSearchInput().setOnFocusChangeListener(new View.OnFocusChangeListener() {
-				@Override
-				public void onFocusChange(View v, boolean hasFocus) {
-					isSearchFocused = hasFocus;
-				}
-			});
-			samode.getSearchInput().setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					isSearchFocused = v.hasFocus();
-				}
-			});
-			samode.getSearchInput().setOnEditorActionListener(new TextView.OnEditorActionListener() {
-				@Override
-				public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-					if (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-						Helpers.hideKeyboard(getActivity(), v);
-						resultView.requestFocus();
-						return true;
-					}
-					return false;
-				}
-			});
-			samode.getSearchInput().addTextChangedListener(new TextWatcher() {
-				@Override
-				public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-				@Override
-				public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-				@Override
-				public void afterTextChanged(Editable s) {
-					findMod(s.toString().trim());
-				}
-			});
-
-			if (actionModeNew) {
-				actionModeNew = false;
-				resultView.postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						samode.getSearchInput().setText(Helpers.NEW_MODS_SEARCH_QUERY);
-						samode.getSearchInput().setSelection(1, 1);
-						Helpers.hideKeyboard(getActivity(), getView());
-						resultView.requestFocus();
-					}
-				}, getResources().getInteger(android.R.integer.config_longAnimTime));
-			}
-
-			return true;
-		}
-
-		@Override
-		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-			if (searchView == null || listView == null) {
-				if (mode != null) mode.finish();
-				return false;
-			}
-
-			SearchActionMode samode = (SearchActionMode)mode;
-			samode.setAnchorView(searchView);
-			samode.setAnimateView(listView);
-
-			return true;
-		}
-
-		@Override
-		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			return true;
-		}
-
-		@Override
-		public void onDestroyActionMode(ActionMode mode) {
-			TextView input = search == null ? null : search.findViewById(android.R.id.input);
-			if (input != null) input.setText("");
-			findMod("");
-			getActionBar().show();
-			actionMode = null;
-		}
-	};
 
 	private final Runnable showUpdateNotification = new Runnable() {
 		@Override
@@ -204,6 +92,12 @@ public class MainFragment extends PreferenceFragmentBase {
 	private boolean isFragmentReady(Activity act) {
 		return act != null && !act.isFinishing() && MainFragment.this.isAdded();
 	}
+	@Override
+	public View onCreateView(LayoutInflater inflater,
+							 ViewGroup container,
+							 Bundle savedInstanceState) {
+		return LayoutInflater.from(getActivity()).inflate(R.layout.prefs_main12, container, false);
+	}
 
 	@Override
 	@SuppressLint("MissingSuperCall")
@@ -212,7 +106,6 @@ public class MainFragment extends PreferenceFragmentBase {
 		addPreferencesFromResource(R.xml.prefs_main);
 
 		final Activity act = getActivity();
-		final Handler handler = new Handler(act.getMainLooper());
 
 		if (Helpers.miuizerModuleActive && !Helpers.prefs.getBoolean("miuizer_prefs_migrated", false) && Helpers.usingNewSharedPrefs()) {
 			((MainActivity)act).migrateOnExit = true;
@@ -223,30 +116,12 @@ public class MainFragment extends PreferenceFragmentBase {
 		// Preventing launch delay
 		new Thread(new Runnable() {
 			public void run() {
-				if (!Helpers.isXposedInstallerInstalled(act))
-				act.runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						AlertDialog.Builder builder = new AlertDialog.Builder(act);
-						builder.setTitle(R.string.xposed_not_found);
-						builder.setMessage(R.string.xposed_not_found_explain);
-						builder.setNeutralButton(R.string.okay, null);
-						builder.setNegativeButton(R.string.i_use_lsp, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								Helpers.prefs.edit().putBoolean("pref_key_miuizer_assumelsposed", true).apply();
-								getActivity().recreate();
-							}
-						});
-						AlertDialog dlg = builder.create();
-						if (isFragmentReady(act)) dlg.show();
-					}
-				}); else if (isFragmentReady(act) && !Helpers.miuizerModuleActive)
+				if (isFragmentReady(act) && !Helpers.miuizerModuleActive)
 				act.runOnUiThread(new Runnable() {
 					public void run() {
 						showXposedDialog(act);
 					}
-				}); else areGuidesCleared = true;
+				});
 
 				if (Helpers.prefs.getBoolean("miuizer_prefs_migrated", false)) {
 					int result = Helpers.prefs.getInt("miuizer_prefs_migration_result", 0);
@@ -260,47 +135,6 @@ public class MainFragment extends PreferenceFragmentBase {
 					}
 				}
 
-				String dataPath = act.getFilesDir().getAbsolutePath();
-				try {
-					URL url = new URL("https://code.highspec.ru/Mikanoshi/CustoMIUIzer/raw/branch/master/last_build");
-					//URL url = new URL("https://code.highspec.ru/last_build");
-					HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-					connection.setDefaultUseCaches(false);
-					connection.setUseCaches(false);
-					connection.setRequestProperty("Pragma", "no-cache");
-					connection.setRequestProperty("Cache-Control", "no-cache");
-					connection.setRequestProperty("Expires", "-1");
-					connection.connect();
-
-					if (connection.getResponseCode() == HttpURLConnection.HTTP_OK || connection.getResponseCode() == HttpURLConnection.HTTP_NOT_MODIFIED) {
-						String last_build = "";
-
-						try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-							last_build = reader.readLine().trim();
-						} catch (Throwable t) { t.printStackTrace(); }
-
-						File tmp = new File(dataPath);
-						if (!tmp.exists()) tmp.mkdirs();
-						try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(dataPath + "/last_build", false))) {
-							writer.write(last_build);
-						} catch (Throwable t) { t.printStackTrace(); }
-					}
-
-					connection.disconnect();
-				} catch (Throwable t) { t.printStackTrace(); }
-
-				try (InputStream inputFile = new FileInputStream(dataPath + "/last_build")) {
-					int last_build = 0;
-					try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputFile))) {
-						last_build = Integer.parseInt(reader.readLine().trim());
-					} catch (Throwable ignore) {}
-
-					if (last_build > BuildConfig.VERSION_CODE)
-						handler.post(showUpdateNotification);
-					else
-						handler.post(hideUpdateNotification);
-				} catch (Throwable t) { t.printStackTrace(); }
-
 				Helpers.getAllMods(act, savedInstanceState != null);
 			}
 		}).start();
@@ -309,16 +143,6 @@ public class MainFragment extends PreferenceFragmentBase {
 			Helpers.prefs.edit().putBoolean("pref_key_was_restore", false).apply();
 			showRestoreInfoDialog();
 		}
-	}
-
-	public View onInflateView(LayoutInflater inflater, ViewGroup group, Bundle bundle) {
-		return inflater.inflate(Helpers.is12() ? R.layout.prefs_main12 : R.layout.prefs_main, group, false);
-	}
-
-	private void openActionMode(boolean isNew) {
-		actionModeNew = isNew;
-		actionMode = startActionMode(actionModeCallback);
-		hideSplitView();
 	}
 
 	private static class SetLineOverlap implements LineHeightSpan {
@@ -351,6 +175,7 @@ public class MainFragment extends PreferenceFragmentBase {
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
+		supressMenu = true;
 		super.onActivityCreated(savedInstanceState);
 
 		if (getView() == null) return;
@@ -382,84 +207,12 @@ public class MainFragment extends PreferenceFragmentBase {
 			}
 		});
 		setViewBackground(resultView);
-
-		searchView = getView().findViewById(R.id.searchView);
-		setActionModeStyle(searchView);
-
-		search = searchView.findViewById(android.R.id.inputArea);
-		search.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				openActionMode(false);
-			}
-		});
-		search.setOnLongClickListener(new View.OnLongClickListener() {
-			@Override
-			public boolean onLongClick(View v) {
-				openActionMode(true);
-				return true;
-			}
-		});
-
-		TextView searchInput = search.findViewById(android.R.id.input);
-		searchInput.setHint(R.string.search_input_description);
-
-		modsCat = null; markCat = null;
-		listView = getView().findViewById(android.R.id.list);
-		listView.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
-			@Override
-			public void onChildViewAdded(View parent, View child) {
-				if (child == null) return;
-				CharSequence title = ((TextView)child.findViewById(android.R.id.title)).getText();
-				if (title.equals(getResources().getString(R.string.system_mods))) modsCat = child;
-				if (title.equals(getResources().getString(R.string.miuizer_show_newmods_title))) markCat = child;
-				if (modsCat != null && markCat != null) {
-					if (areGuidesCleared) try {
-						showGuides();
-					} catch (Throwable t) {
-						t.printStackTrace();
-					}
-					listView.setOnHierarchyChangeListener(null);
-				}
-			}
-
-			@Override
-			public void onChildViewRemoved(View parent, View child) {}
-		});
-
-		if (actionMode != null) actionMode.invalidate();
 		final Activity act = getActivity();
 
 		PreferenceEx warning = (PreferenceEx)findPreference("pref_key_warning");
-		if (warning != null)
-		if (Helpers.isRPlus()) {
-			warning.setTitle(R.string.warning);
-			warning.setSummary(getString(R.string.warning_unsupported_os, Build.VERSION.RELEASE));
-			warning.setNotice(true);
-		} else if (Helpers.usingNewSharedPrefs() && Helpers.isXposedScopeEnabled(act)) {
-			warning.setTitle(R.string.warning);
-			warning.setSummary(R.string.warning_scope);
-			warning.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-				@Override
-				public boolean onPreferenceClick(Preference preference) {
-					Helpers.openXposedApp(getValidContext());
-					return true;
-				}
-			});
-		} else if (!Helpers.usingNewSharedPrefs() && Helpers.areXposedBlacklistsEnabled()) {
-			warning.setTitle(R.string.warning);
-			if (act.getApplicationContext().getApplicationInfo().targetSdkVersion > 27)
-				warning.setSummary(getString(R.string.warning_blacklist) + "\n" + getString(R.string.warning_blacklist_sdk));
-			else
-				warning.setSummary(R.string.warning_blacklist);
-			warning.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-				@Override
-				public boolean onPreferenceClick(Preference preference) {
-					Helpers.openXposedApp(getValidContext());
-					return true;
-				}
-			});
-		} else getPreferenceScreen().removePreference(warning);
+		if (warning != null) {
+			getPreferenceScreen().removePreference(warning);
+		}
 
 		findPreference("pref_key_miuizer_launchericon").setOnPreferenceChangeListener(new CheckBoxPreference.OnPreferenceChangeListener() {
 			@Override
@@ -473,16 +226,7 @@ public class MainFragment extends PreferenceFragmentBase {
 			}
 		});
 
-		String[] locales;
-		try {
-			AssetManager am = getContext().getAssets();
-			@SuppressWarnings("JavaReflectionMemberAccess") @SuppressLint("SoonBlockedPrivateApi")
-			Method getNonSystemLocales = AssetManager.class.getDeclaredMethod("getNonSystemLocales");
-			locales = (String[])getNonSystemLocales.invoke(am);
-			if (locales == null) locales = new String[] {};
-		} catch (Throwable t) {
-			locales = new String[] { "de", "es", "it", "pt-BR", "ru-RU", "tr", "uk-UK", "zh-CN" };
-		}
+		String[] locales = new String[] { "ru-RU", "zh-CN" };
 
 		ArrayList<String> localesArr = new ArrayList<String>(Arrays.asList(locales));
 		ArrayList<SpannableString> localeNames = new ArrayList<SpannableString>();
@@ -519,48 +263,6 @@ public class MainFragment extends PreferenceFragmentBase {
 			}
 		});
 
-		findPreference("pref_key_miuizer_holiday").setOnPreferenceChangeListener(new CheckBoxPreference.OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				getActivity().recreate();
-				return true;
-			}
-		});
-
-		findPreference("pref_key_miuizer_sendreport").setOnPreferenceClickListener(new CheckBoxPreference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				if (Helpers.checkStoragePerm(act, Helpers.REQUEST_PERMISSIONS_REPORT)) createReport();
-				return true;
-			}
-		});
-
-		findPreference("pref_key_miuizer_feedback").setOnPreferenceClickListener(new CheckBoxPreference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				openSubFragment(new SubFragment(), null, Helpers.SettingsType.Edit, Helpers.ActionBarType.Edit, R.string.miuizer_acramail_title, R.layout.prefs_freedback);
-				return true;
-			}
-		});
-
-		findPreference("pref_key_issuetracker").setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference pref) {
-				Helpers.openURL(act, "https://code.highspec.ru/Mikanoshi/CustoMIUIzer/issues");
-				return true;
-			}
-		});
-
-//		findPreference("pref_key_payinapp").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-//			@Override
-//			public boolean onPreferenceClick(Preference pref) {
-//				Bundle args = new Bundle();
-//				args.putInt("baseResId", R.layout.fragment_inapp);
-//				openSubFragment(new InAppFragment(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.support_donate_title, R.xml.prefs_inapp);
-//				return true;
-//			}
-//		});
-
 		findPreference("pref_key_paycrypto").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference pref) {
@@ -581,71 +283,14 @@ public class MainFragment extends PreferenceFragmentBase {
 			}
 		});
 
-		findPreference("pref_key_miuizer_marknewmods").setOnPreferenceChangeListener(new CheckBoxPreference.OnPreferenceChangeListener() {
+		findPreference("pref_key_github").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				Helpers.updateNewModsMarking(getActivity(), Integer.parseInt((String)newValue));
+			@SuppressWarnings("deprecation")
+			public boolean onPreferenceClick(Preference pref) {
+				Helpers.openURL(act, "https://github.com/monwf/customiuizer");
 				return true;
 			}
 		});
-
-//		if (Helpers.isUnsupportedManager(act)) {
-//			CheckBoxPreferenceEx ownrepo = (CheckBoxPreferenceEx)findPreference("pref_key_miuizer_ownrepo");
-//			ownrepo.setSummary(R.string.miuizer_ownrepo_unsupported);
-//			ownrepo.setEnabled(false);
-//			ownrepo.setChecked(false);
-//		}
-
-//		Helpers.removePref(this, "pref_key_miuizer_force_material", "pref_key_miuizer");
-	}
-
-	void showGuides() {
-		if (getView() == null || getActivity() == null) return;
-		Button more = getView().findViewById(getResources().getIdentifier("more", "id", "miui"));
-		View search = getView().findViewById(android.R.id.inputArea);
-		View overlay = getActivity().findViewById(R.id.guide_overlay);
-		if (more == null || search == null || overlay == null || Helpers.prefs.getBoolean("miuizer_guides_shown", false)) return;
-
-		overlay.setBackgroundColor(Helpers.isNightMode(getActivity()) ? Color.argb(150, 0, 0, 0) : Color.argb(150, 255, 255, 255));
-		overlay.setVisibility(View.VISIBLE);
-		overlay.bringToFront();
-
-		showGuide(search, GuidePopup.ARROW_TOP_MODE, R.string.guide_search).setOnDismissListener(new PopupWindow.OnDismissListener() {
-			@Override
-			public void onDismiss() {
-				showGuide(markCat, GuidePopup.ARROW_BOTTOM_MODE, R.string.guide_marknew).setOnDismissListener(new PopupWindow.OnDismissListener() {
-					@Override
-					public void onDismiss() {
-						showImmersionMenu();
-						showGuide(more, GuidePopup.ARROW_TOP_MODE, R.string.guide_softreboot).setOnDismissListener(new PopupWindow.OnDismissListener() {
-							@Override
-							public void onDismiss() {
-								dismissImmersionMenu(true);
-								overlay.setVisibility(View.GONE);
-							}
-						});
-					}
-				});
-			}
-		});
-
-		Helpers.prefs.edit().putBoolean("miuizer_guides_shown", true).apply();
-	}
-
-	@SuppressWarnings({"UnusedReturnValue", "SameParameterValue"})
-	GuidePopup showGuide(View anchor, int arrowMode, int textResId) {
-		return showGuide(anchor, arrowMode, textResId, 0,  0);
-	}
-
-	@SuppressWarnings({"UnusedReturnValue", "SameParameterValue"})
-	GuidePopup showGuide(View anchor, int arrowMode, int textResId, int x, int y) {
-		GuidePopup guidePopup = new GuidePopup(getActivity());
-		guidePopup.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-		guidePopup.setArrowMode(arrowMode);
-		guidePopup.setGuideText(textResId);
-		guidePopup.setOutsideTouchable(true);
-		guidePopup.show(anchor, x, y);
-		return guidePopup;
 	}
 
 	void findMod(String filter) {
@@ -654,10 +299,6 @@ public class MainFragment extends PreferenceFragmentBase {
 		ListAdapter adapter = resultView.getAdapter();
 		if (adapter == null) return;
 		((ModSearchAdapter)resultView.getAdapter()).getFilter().filter(filter);
-	}
-
-	public void createReport() {
-		ACRA.getErrorReporter().handleException(null);
 	}
 
 	// PreferenceScreens management

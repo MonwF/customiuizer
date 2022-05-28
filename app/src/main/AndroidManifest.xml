@@ -3,7 +3,8 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	package="name.mikanoshi.customiuizer">
 
-	<uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -14,16 +15,8 @@
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
-	<uses-permission android:name="android.permission.CHANGE_COMPONENT_ENABLED_STATE" />
-	<uses-permission android:name="android.permission.MODIFY_DAY_NIGHT_MODE" />
-	<uses-permission android:name="android.permission.SET_ANIMATION_SCALE" />
-	<uses-permission android:name="android.permission.INTERACT_ACROSS_USERS" />
-	<uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" />
-	<uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" />
-	<uses-permission android:name="android.permission.MANAGE_USB" />
-	<uses-permission android:name="android.permission.READ_LOGS" />
-	<uses-permission android:name="android.permission.DUMP" />
+	<uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+		tools:ignore="QueryAllPackagesPermission" />
 
 	<uses-permission android:name="miui.permission.READ_LOGS" />
 	<uses-permission android:name="miui.permission.DUMP_CACHED_LOG" />
@@ -44,6 +37,10 @@
 		android:requestLegacyExternalStorage="true"
 		tools:ignore="GoogleAppIndexingWarning"
 		tools:targetApi="q">
+
+		<uses-library android:name="com.miui.system" android:required="false" />
+		<uses-library android:name="com.miui.core" android:required="false" />
+		<uses-library android:name="com.miui.rom" android:required="false" />
 
 		<activity
 			android:name=".MainActivity"
@@ -168,14 +165,6 @@
 				<action android:name="android.service.quicksettings.action.QS_TILE" />
 			</intent-filter>
 		</service>
-
-		<activity
-			android:name=".crashreport.Dialog"
-			android:theme="@style/Invisible"
-			android:launchMode="singleTask"
-			android:excludeFromRecents="true"
-			android:finishOnTaskLaunch="true"
-			android:configChanges="keyboardHidden|orientation|screenSize" />
 
 		<provider
 			android:name=".SharedPrefsProvider"

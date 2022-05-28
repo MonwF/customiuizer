@@ -5,6 +5,8 @@
 	android:layout_gravity="center_vertical"
 	android:gravity="center_vertical"
 	android:baselineAligned="false"
+	android:paddingStart="15dp"
+	android:paddingEnd="10dp"
 	android:clipChildren="false"
 	android:clipToPadding="false">
 
@@ -41,8 +43,6 @@
 			android:id="@+id/seekbar_group"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginEnd="6dip"
-			android:layout_marginTop="10dip"
 			android:layout_below="@android:id/summary"
 			android:clipChildren="false"
 			android:clipToPadding="false">
@@ -71,7 +71,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_below="@id/seekbar_group"
-			android:layout_marginTop="10dip"
+			android:layout_marginTop="10dp"
 			android:layout_alignStart="@id/seekbar_group"
 			style="@style/TextAppearance.Secondary" />
 

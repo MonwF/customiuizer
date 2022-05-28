@@ -28,13 +28,13 @@
 			android:layout_width="200dp"
 			android:layout_height="100dp" />
 
-		<miui.widget.SeekBar
+		<android.widget.SeekBar
 			android:id="@+id/hsv_value"
 			android:layout_height="wrap_content"
 			android:layout_width="200dp"
 			android:layout_marginTop="15dp"
 			android:max="100">
-		</miui.widget.SeekBar>
+		</android.widget.SeekBar>
 
 		<LinearLayout
 			android:layout_height="match_parent"

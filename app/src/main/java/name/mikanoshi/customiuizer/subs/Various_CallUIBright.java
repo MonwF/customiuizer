@@ -6,8 +6,8 @@ import android.text.format.DateFormat;
 
 import java.util.Calendar;
 
-import miui.app.TimePickerDialog;
-import miui.widget.TimePicker;
+import android.app.TimePickerDialog;
+import android.widget.TimePicker;
 
 import name.mikanoshi.customiuizer.SubFragment;
 import name.mikanoshi.customiuizer.prefs.PreferenceEx;

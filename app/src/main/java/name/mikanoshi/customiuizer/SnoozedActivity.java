@@ -21,7 +21,6 @@ public class SnoozedActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		boolean mSDKFound = ((MainApplication)getApplication()).mStarted;
-		if (mSDKFound) Helpers.setMiuiTheme(this, R.style.MIUIPrefs);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_snoozed);
 

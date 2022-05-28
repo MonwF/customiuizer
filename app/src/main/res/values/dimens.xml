@@ -1,6 +1,6 @@
 <resources>
 
-	<dimen name="screen_padding_top">20dp</dimen>
+	<dimen name="preference_screen_padding_top">20dp</dimen>
 	<dimen name="preference_screen_padding_bottom">15dp</dimen>
 	<dimen name="preference_item_padding_top">15.16dp</dimen>
 	<dimen name="preference_item_padding_bottom">15.19dp</dimen>

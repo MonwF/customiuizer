@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.preference.CheckBoxPreference;
+import android.preference.SwitchPreference;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +13,7 @@ import android.widget.TextView;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
-public class CheckBoxPreferenceEx extends CheckBoxPreference implements PreferenceState {
+public class CheckBoxPreferenceEx extends SwitchPreference implements PreferenceState {
 
 	private final Resources res = getContext().getResources();
 	private final int primary = res.getColor(R.color.preference_primary_text, getContext().getTheme());

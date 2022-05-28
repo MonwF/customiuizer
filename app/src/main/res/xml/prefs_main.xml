@@ -45,12 +45,6 @@
 			android:summary="@string/miuizer_show_assumelsposed_summ"
 			android:title="@string/miuizer_show_assumelsposed_title"
 			android:defaultValue="false" />
-<!--
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_miuizer_ownrepo"
-			android:summary="@string/miuizer_ownrepo_summ"
-			android:title="@string/miuizer_ownrepo_title"
-			android:defaultValue="false" />
 -->
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_miuizer_locale"
@@ -59,37 +53,6 @@
 			android:entries="@array/placeholder_array"
 			android:entryValues="@array/placeholder_array_strval"
 			android:defaultValue="auto" />
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
-			android:key="pref_key_miuizer_marknewmods"
-			android:title="@string/miuizer_show_newmods_title"
-			android:summary="@string/miuizer_show_newmods_summ"
-			android:entries="@array/marknewmods"
-			android:entryValues="@array/marknewmods_val"
-			android:defaultValue="2" />
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
-			android:key="pref_key_miuizer_holiday"
-			android:title="@string/miuizer_holiday_title"
-			android:summary="@string/miuizer_holiday_summ"
-			android:entries="@array/holidays"
-			android:entryValues="@array/holidays_val"
-			android:defaultValue="0" />
-	</PreferenceCategory>
-
-	<PreferenceCategory
-		android:title="@string/troubleshoot"
-		android:key="pref_key_troubleshoot">
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
-			android:title="@string/support_bug_title"
-			android:summary="@string/support_bug_summ"
-			android:key="pref_key_issuetracker" />
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
-			android:key="pref_key_miuizer_sendreport"
-			android:title="@string/miuizer_acrasend_title"
-			android:summary="@string/miuizer_acrasend_summ" />
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
-			android:key="pref_key_miuizer_feedback"
-			android:title="@string/miuizer_acramail_title"
-			android:summary="@string/miuizer_acramail_summ"	/>
 	</PreferenceCategory>
 
 	<PreferenceCategory
@@ -102,12 +65,9 @@
 			android:title="@string/support_donate_other_title"
 			android:summary="@string/support_donate_other_summ"
 			android:key="pref_key_payother" />
-<!--
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
-			android:title="@string/support_donate_inapp_title"
-			android:summary="@string/support_donate_inapp_summ"
-			android:key="pref_key_payinapp" />
--->
+			android:title="@string/support_github"
+			android:key="pref_key_github" />
 	</PreferenceCategory>
 
 </PreferenceScreen>

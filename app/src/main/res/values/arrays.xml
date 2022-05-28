@@ -830,23 +830,6 @@
 		<item>2</item>
 	</string-array>
 
-	<string-array name="holidays">
-		<item>@string/array_disable</item>
-		<item>@string/array_color_auto</item>
-		<item>@string/array_newyear</item>
-		<item>@string/array_lunarnewyear</item>
-		<item>@string/array_covid</item>
-		<item>@string/support_donate_crypto_title</item>
-	</string-array>
-	<string-array name="holidays_val">
-		<item>-1</item>
-		<item>0</item>
-		<item>1</item>
-		<item>2</item>
-		<item>3</item>
-		<item>4</item>
-	</string-array>
-
 	<string-array name="onoff">
 		<item>@string/array_default</item>
 		<item>@string/array_enable</item>

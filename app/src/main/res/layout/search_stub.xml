@@ -17,12 +17,14 @@
 			android:layout_height="wrap_content"
 			android:layout_gravity="center_vertical" />
 
-		<TextView
+		<android.widget.EditText
 			android:id="@android:id/input"
 			style="@style/TextAppearance.Widget.EditText"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center_vertical"
+			android:imeOptions="actionSearch"
+			android:background="@null"
 			android:contentDescription="@string/search_input_description"
 			android:gravity="left|center_vertical|center_horizontal|center|start"
 			android:singleLine="true" />

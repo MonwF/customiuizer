@@ -4,6 +4,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:orientation="vertical"
+	android:paddingTop="20dp"
 	android:animateLayoutChanges="true">
 
 	<include layout="@layout/search_stub" />
@@ -23,9 +24,9 @@
 		android:gravity="center"
 		android:orientation="vertical">
 
-		<miui.widget.ProgressBar
+		<android.widget.ProgressBar
 			android:id="@+id/am_progressBar"
-			style="@style/Widget.ProgressBar"
+			style="@style/Widget.AppCompat.ProgressBar"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content" />
 

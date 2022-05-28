@@ -16,9 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 
-import miui.app.ActionBar;
-import miui.util.AttributeResolver;
-
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SubFragment;
 import name.mikanoshi.customiuizer.utils.Helpers;
@@ -42,8 +39,6 @@ public class SortableList extends SubFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		supressMenu = true;
 		super.onActivityCreated(savedInstanceState);
-		ActionBar actionBar = getActionBar();
-		if (actionBar != null) try { actionBar.showSplitActionBar(true, true); } catch (Throwable ignore) {}
 
 		Bundle args = getArguments();
 		key = args.getString("key");
@@ -146,15 +141,6 @@ public class SortableList extends SubFragment {
 		});
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.menu_itemactions, menu);
-		//menu.getItem(0).setEnabled(listView.getChildCount() < 10);
-		menu.getItem(0).setIcon(AttributeResolver.resolveDrawable(getActivity(), getResources().getIdentifier("actionBarNewIcon", "attr", "miui")));
-		menu.getItem(1).setIcon(AttributeResolver.resolveDrawable(getActivity(), getResources().getIdentifier("actionBarDeleteIcon", "attr", "miui")));
-		return true;
-	}
-
 	private String createNewUUID() {
 		return UUID.randomUUID().toString().replaceAll("-", "").toLowerCase();
 	}
@@ -165,7 +151,6 @@ public class SortableList extends SubFragment {
 		PreferenceAdapter adapter = (PreferenceAdapter)listView.getAdapter();
 		adapter.updateItems();
 		adapter.notifyDataSetChanged();
-		invalidateOptionsMenu();
 	}
 
 	private void deleteItem(int position) {
@@ -174,7 +159,6 @@ public class SortableList extends SubFragment {
 		Helpers.prefs.edit().putString(key, items.isEmpty() ? "" : items.replace(adapter.getItem(position), "").replace("||", "|").replaceAll("^\\|", "").replaceAll("\\|$", "")).apply();
 		adapter.updateItems();
 		adapter.notifyDataSetChanged();
-		invalidateOptionsMenu();
 	}
 
 	@Override
