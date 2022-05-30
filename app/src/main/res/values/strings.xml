@@ -46,6 +46,7 @@
 	<string name="system_statusbaricons_volte_title" translatable="false">VoLTE</string>
 	<string name="system_statusbaricons_vowifi_title" translatable="false">VoWiFi</string>
 	<string name="system_statusbaricons_vpn_title" translatable="false">VPN</string>
+	<string name="system_statusbaricons_nfc_title" translatable="false">NFC</string>
 	<string name="system_statusbaricons_hotspot_title">Hotspot</string>
 	<string name="system_statusbaricons_profile_title">Work profile</string>
 	<string name="system_statusbaricons_sound_title">Sound profiles</string>

@@ -107,32 +107,15 @@ public class MainFragment extends PreferenceFragmentBase {
 
 		final Activity act = getActivity();
 
-		if (Helpers.miuizerModuleActive && !Helpers.prefs.getBoolean("miuizer_prefs_migrated", false) && Helpers.usingNewSharedPrefs()) {
-			((MainActivity)act).migrateOnExit = true;
-			act.recreate();
-			return;
-		}
-
 		// Preventing launch delay
 		new Thread(new Runnable() {
 			public void run() {
-				if (isFragmentReady(act) && !Helpers.miuizerModuleActive)
-				act.runOnUiThread(new Runnable() {
-					public void run() {
-						showXposedDialog(act);
-					}
-				});
-
-				if (Helpers.prefs.getBoolean("miuizer_prefs_migrated", false)) {
-					int result = Helpers.prefs.getInt("miuizer_prefs_migration_result", 0);
-					if (result > 0) {
-						Helpers.prefs.edit().putInt("miuizer_prefs_migration_result", -1).apply();
-						act.runOnUiThread(new Runnable() {
-							public void run() {
-								showPrefsMigrationDialog(result == 1);
-							}
-						});
-					}
+				if (isFragmentReady(act) && !Helpers.miuizerModuleActive) {
+					act.runOnUiThread(new Runnable() {
+						public void run() {
+							showXposedDialog(act);
+						}
+					});
 				}
 
 				Helpers.getAllMods(act, savedInstanceState != null);

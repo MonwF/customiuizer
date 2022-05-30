@@ -77,6 +77,11 @@
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_nfc"
+		android:title="@string/system_statusbaricons_nfc_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbaricons_hotspot"
 		android:title="@string/system_statusbaricons_hotspot_title"
 		android:defaultValue="false" />

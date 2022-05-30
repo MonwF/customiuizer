@@ -280,19 +280,19 @@ public class Helpers {
 	}
 
 	public static boolean isNougat() {
-		return Build.VERSION.SDK_INT < Build.VERSION_CODES.O;
+		return false;
 	}
 
 	public static boolean isPiePlus() {
-		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.P;
+		return true;
 	}
 
 	public static boolean isQPlus() {
-		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
+		return true;
 	}
 
 	public static boolean isRPlus() {
-		return Build.VERSION.SDK_INT >= 30;
+		return Build.VERSION.SDK_INT >= 31;
 	}
 
 	public static boolean isDeviceEncrypted(Context context) {
@@ -308,34 +308,8 @@ public class Helpers {
 //		return context.getPackageManager().getComponentEnabledSetting(new ComponentName(context, GateWayLauncher.class)) != PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
 //	}
 
-	public static boolean isXposedInstallerInstalled(Context context) {
-		return true;
-	}
-
 	public static String isLSPosedManagerInstalled(Context context) {
 		return "Assumed LSPosed";
-	}
-
-	public static boolean areXposedResourceHooksDisabled() {
-		File d1 = new File("/data/user_de/0/org.meowcat.edxposed.manager/conf/disable_resources");
-		File d2 = new File("/data/user_de/0/com.solohsu.android.edxp.manager/conf/disable_resources");
-		File d3 = new File("/data/user_de/0/de.robv.android.xposed.installer/conf/disable_resources");
-		return d1.exists() || d2.exists() || d3.exists();
-	}
-
-	public static boolean areXposedBlacklistsEnabled() {
-		File d1 = new File("/data/user_de/0/org.meowcat.edxposed.manager/conf/blackwhitelist");
-		File d2 = new File("/data/user_de/0/com.solohsu.android.edxp.manager/conf/blackwhitelist");
-		File d3 = new File("/data/user_de/0/de.robv.android.xposed.installer/conf/blackwhitelist");
-		return d1.exists() || d2.exists() || d3.exists();
-	}
-
-	public static boolean isXposedScopeEnabled(Context context) {
-		try {
-			return "true".equals(context.getPackageManager().getInstallerPackageName("EdXposedScope"));
-		} catch (Throwable t) {
-			return false;
-		}
 	}
 
 	public static boolean openXposedApp(Context context) {
@@ -1436,10 +1410,6 @@ public class Helpers {
 		}
 	}
 
-	public static boolean migratePrefs() {
-		return copyFile(prefsFile, getSharedPrefsFile());
-	}
-
 	@SuppressLint({"SetWorldReadable", "SetWorldWritable"})
 	public static void fixPermissionsAsync(Context context) {
 		AsyncTask.execute(() -> {
@@ -1897,6 +1867,16 @@ public class Helpers {
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
+	}
+
+	public static Object proxySystemProperties(String method, String prop, String val, ClassLoader classLoader) {
+		return XposedHelpers.callStaticMethod(XposedHelpers.findClassIfExists("android.os.SystemProperties", classLoader),
+				method, prop, val);
+	}
+
+	public static Object proxySystemProperties(String method, String prop, int val, ClassLoader classLoader) {
+		return XposedHelpers.callStaticMethod(XposedHelpers.findClassIfExists("android.os.SystemProperties", classLoader),
+				method, prop, val);
 	}
 
 	public static boolean hookAllMethodsSilently(String className, ClassLoader classLoader, String methodName, XC_MethodHook callback) {

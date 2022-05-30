@@ -964,14 +964,6 @@ public class Various {
 		});
 	}
 
-	public static final HashSet<String> miuiApps = new HashSet<String>(Arrays.asList(
-		"com.android.camera",
-		"com.android.soundrecorder",
-		"com.android.cellbroadcastreceiver",
-		"com.android.providers.downloads.ui"
-		//"com.android.stk" ???
-	));
-
 	public static void CollapseMIUITitlesHook(LoadPackageParam lpparam, XC_MethodHook.MethodHookParam param, int opt) {
 
 	}

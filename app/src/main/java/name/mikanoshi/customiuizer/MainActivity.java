@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
 	MainFragment mainFrag = null;
 	SharedPreferences.OnSharedPreferenceChangeListener prefsChanged;
 	FileObserver fileObserver;
-	boolean migrateOnExit = false;
 
 	@Override
 	protected void attachBaseContext(Context base) {
@@ -104,11 +103,6 @@ public class MainActivity extends AppCompatActivity {
 		try {
 			if (prefsChanged != null) Helpers.prefs.unregisterOnSharedPreferenceChangeListener(prefsChanged);
 			if (fileObserver != null) fileObserver.stopWatching();
-			if (migrateOnExit) {
-				boolean migrated = Helpers.migratePrefs();
-				Helpers.prefs = Helpers.getSharedPrefs(this, true, true);
-				Helpers.prefs.edit().putBoolean("miuizer_prefs_migrated", true).putInt("miuizer_prefs_migration_result", migrated ? 1 : 2).commit();
-			}
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
