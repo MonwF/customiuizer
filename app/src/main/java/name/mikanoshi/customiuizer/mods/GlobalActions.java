@@ -54,8 +54,6 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 
-import miui.os.SystemProperties;
-
 import name.mikanoshi.customiuizer.GateWaySettings;
 import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
@@ -72,7 +70,6 @@ import static java.lang.System.currentTimeMillis;
 public class GlobalActions {
 
 	public static Object mStatusBar = null;
-//	public static FloatingSelector floatSel = null;
 	public static final String ACTION_PREFIX = "name.mikanoshi.customiuizer.mods.action.";
 	public static final String EVENT_PREFIX = "name.mikanoshi.customiuizer.mods.event.";
 
@@ -371,8 +368,8 @@ public class GlobalActions {
 			if (action == null) return;
 			// Actions
 			if (action.equals(ACTION_PREFIX + "FastReboot")) {
-				SystemProperties.set("ctl.restart", "surfaceflinger");
-				SystemProperties.set("ctl.restart", "zygote");
+				Helpers.proxySystemProperties("set", "ctl.restart", "surfaceflinger", null);
+				Helpers.proxySystemProperties("set", "ctl.restart", "zygote", null);
 			}
 			if (action.equals(ACTION_PREFIX + "RunParasitic")) {
 				Intent intent2 = new Intent();
@@ -521,7 +518,9 @@ public class GlobalActions {
 
 			if (action.equals(ACTION_PREFIX + "ToggleColorInversion")) {
 				int opt = Settings.Secure.getInt(context.getContentResolver(), "accessibility_display_inversion_enabled");
-				boolean hasConflict = SystemProperties.getInt("ro.df.effect.conflict", 0) == 1 || SystemProperties.getInt("ro.vendor.df.effect.conflict", 0) == 1;
+				int conflictProp = (int) Helpers.proxySystemProperties("getInt", "ro.df.effect.conflict", 0, null);
+				int conflictProp2 = (int) Helpers.proxySystemProperties("getInt", "ro.vendor.df.effect.conflict", 0, null);
+				boolean hasConflict = conflictProp == 1 || conflictProp2 == 1;
 				Object dfMgr = XposedHelpers.callStaticMethod(XposedHelpers.findClass("miui.hardware.display.DisplayFeatureManager", null), "getInstance");
 				if (hasConflict && opt == 0) XposedHelpers.callMethod(dfMgr, "setScreenEffect", 15, 1);
 				Settings.Secure.putInt(context.getContentResolver(), "accessibility_display_inversion_enabled", opt == 0 ? 1 : 0);
@@ -744,212 +743,9 @@ public class GlobalActions {
 		Helpers.emptyFile(lpparam.appInfo.dataDir + "/files/uncaught_exceptions", false);
 	}
 
-//	public static boolean useOwnRepo = false;
-
-	public static void miuizerEdXposedManagerHook(LoadPackageParam lpparam) {
-		Helpers.hookAllMethodsSilently("org.meowcat.edxposed.manager.ModulesFragment$ModuleAdapter", lpparam.classLoader, "getView", new MethodHook() {
-			@Override
-			protected void after(MethodHookParam param) throws Throwable {
-				View view = (View)param.getResult();
-				if (view == null) return;
-				TextView pkgName = view.findViewById(view.getResources().getIdentifier("package_name", "id", "org.meowcat.edxposed.manager"));
-				TextView title = view.findViewById(view.getResources().getIdentifier("title", "id", "org.meowcat.edxposed.manager"));
-				if (title == null) return;
-				Boolean tag = (Boolean)title.getTag();
-				if (Helpers.modulePkg.contentEquals(pkgName.getText())) {
-					if (tag == null || !tag) {
-						title.setTag(true);
-						title.setTypeface(title.getTypeface(), Typeface.BOLD);
-						if (title.getLayout() == null)
-						title.measure(View.MeasureSpec.makeMeasureSpec(title.getResources().getDisplayMetrics().widthPixels, View.MeasureSpec.AT_MOST), 0);
-						int baseColor = (title.getCurrentTextColor() & 0x00FFFFFF) | 0xFF000000;
-						title.getPaint().setShader(new LinearGradient(
-							(int)title.getLayout().getPrimaryHorizontal(5), 0,
-							(int)title.getLayout().getPrimaryHorizontal(9), 0,
-							new int[]{ baseColor, 0xFFFE9D8C, 0xFFFD7ABD, 0xFFE178E0, 0xFFD375F6, 0xFF9190F5, 0xFF5FA2FD, baseColor },
-							new float[]{ 0.0f, 0.01f, 0.2f, 0.4f, 0.6f, 0.8f, 0.99f, 1.0f }, Shader.TileMode.CLAMP)
-						);
-					}
-				} else if (tag != null) {
-					title.setTag(null);
-					title.setTypeface(title.getTypeface(), Typeface.NORMAL);
-					title.getPaint().setShader(null);
-				}
-			}
-		});
-
-		Helpers.hookAllMethods("org.meowcat.edxposed.manager.XposedApp", lpparam.classLoader, "onCreate", new MethodHook() {
-			@Override
-			protected void after(MethodHookParam param) throws Throwable {
-				Class<?> constCls = findClassIfExists("org.meowcat.edxposed.manager.Constants", lpparam.classLoader);
-				if (constCls == null) return;
-				String edxpVersion = (String)XposedHelpers.callStaticMethod(constCls, "getInstalledXposedVersion");
-				if (edxpVersion != null) try {
-					Intent copyIntent = new Intent(ACTION_PREFIX + "CopyToExternal");
-					copyIntent.putExtra("action", 2);
-					copyIntent.putExtra("data", edxpVersion);
-					((Application)param.thisObject).sendBroadcast(copyIntent);
-				} catch (Throwable t) {
-					XposedBridge.log(t);
-				}
-				Helpers.makeNewEdXposedPathReadable((String)XposedHelpers.callStaticMethod(constCls, "getBaseDir"));
-			}
-		});
-
-//		if (app == null || !Helpers.getSharedBoolPref(app, "pref_key_miuizer_ownrepo", false)) return;
-//
-//		Helpers.hookAllMethods("de.robv.android.xposed.installer.XposedApp", lpparam.classLoader, "onCreate", new MethodHook() {
-//			@Override
-//			protected void after(MethodHookParam param) throws Throwable {
-//				useOwnRepo = Helpers.getSharedBoolPref((Application)param.thisObject, "pref_key_miuizer_ownrepo", false);
-//			}
-//		});
-//
-//		Helpers.hookAllMethods("org.meowcat.edxposed.manager.StatusInstallerFragment", lpparam.classLoader, "onCreateView", new MethodHook() {
-//			@Override
-//			protected void after(MethodHookParam param) throws Throwable {
-//				if (!useOwnRepo) return;
-//				ViewGroup view = (ViewGroup)param.getResult();
-//				if (view == null || view.findViewWithTag("OWN_REPO") != null) return;
-//
-//				Context context = view.getContext();
-//				float density = context.getResources().getDisplayMetrics().density;
-//
-//				int apiResId = context.getResources().getIdentifier("api", "id", "org.meowcat.edxposed.manager");
-//				TextView api = view.findViewById(apiResId);
-//				if (api == null) return;
-//				ViewGroup container = (ViewGroup)api.getParent().getParent().getParent();
-//				if (container == null) return;
-//
-//				Drawable selectableItemBackground = null;
-//				int listPreferredItemHeightSmall = 118;
-//				try {
-//					int[] bkgArr = new int[] { android.R.attr.selectableItemBackground, android.R.attr.listPreferredItemHeightSmall };
-//					TypedArray typedArray = context.obtainStyledAttributes(bkgArr);
-//					selectableItemBackground = typedArray.getDrawable(0);
-//					listPreferredItemHeightSmall = typedArray.getDimensionPixelSize(1, 118);
-//					typedArray.recycle();
-//				} catch (Throwable ignore) {}
-//
-//				LinearLayout container1 = new LinearLayout(context);
-//				container1.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//				if (selectableItemBackground != null)
-//				container1.setBackground(selectableItemBackground);
-//				container1.setOrientation(LinearLayout.HORIZONTAL);
-//				container1.setClickable(true);
-//				container1.setFocusable(true);
-//				container1.setGravity(Gravity.CENTER_VERTICAL);
-//				container1.setPaddingRelative(Math.round(16 * density), container1.getPaddingTop(), Math.round(16 * density), container1.getPaddingBottom());
-//				container1.setMinimumHeight(listPreferredItemHeightSmall);
-//
-//				ImageView icon = new ImageView(context);
-//				icon.setLayoutParams(new LinearLayout.LayoutParams(Math.round(24 * density), Math.round(24 * density)));
-//				icon.setImageDrawable(Helpers.getModuleRes(context).getDrawable(R.drawable.ic_miuizer_settings11, context.getTheme()));
-//				container1.addView(icon);
-//
-//				LinearLayout container2 = new LinearLayout(context);
-//				ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//				lp.leftMargin = Math.round(32 * density);
-//				container2.setLayoutParams(lp);
-//				container2.setOrientation(LinearLayout.VERTICAL);
-//				container2.setGravity(Gravity.CENTER_VERTICAL);
-//				container2.setPaddingRelative(container2.getPaddingStart(), Math.round(8 * density), container2.getPaddingEnd(), Math.round(8 * density));
-//
-//				TextView ownRepo = new TextView(context);
-//				ownRepo.setText(Helpers.getModuleRes(view.getContext()).getString(R.string.miuizer_ownrepo_note));
-//				ownRepo.setTextSize(TypedValue.COMPLEX_UNIT_PX, api.getTextSize());
-//				ownRepo.setTextColor(api.getCurrentTextColor());
-//				ownRepo.setTag("OWN_REPO");
-//
-//				container2.addView(ownRepo);
-//
-//				container1.addView(container2);
-//				container.addView(container1);
-//			}
-//		});
-//
-//		Helpers.findAndHookMethod("org.meowcat.edxposed.manager.util.RepoLoader", lpparam.classLoader, "refreshRepositories", new MethodHook() {
-//			@Override
-//			protected void before(MethodHookParam param) throws Throwable {
-//				if (!useOwnRepo) return;
-//				String DEFAULT_REPOSITORIES = (String)XposedHelpers.getStaticObjectField(param.thisObject.getClass(), "DEFAULT_REPOSITORIES");
-//				if (!DEFAULT_REPOSITORIES.contains(Helpers.xposedRepo))
-//				XposedHelpers.setStaticObjectField(param.thisObject.getClass(), "DEFAULT_REPOSITORIES", Helpers.xposedRepo + "|" + DEFAULT_REPOSITORIES);
-//			}
-//		});
-//
-//		Helpers.hookAllMethods("org.meowcat.edxposed.manager.repo.RepoDb", lpparam.classLoader, "insertModule", new MethodHook() {
-//			@Override
-//			protected void before(MethodHookParam param) throws Throwable {
-//				if (!useOwnRepo) return;
-//				String pkgName = (String)XposedHelpers.getObjectField(param.args[1], "packageName");
-//				if (!Helpers.modulePkg.equals(pkgName)) return;
-//				SQLiteDatabase sDb = (SQLiteDatabase)XposedHelpers.getStaticObjectField(findClass("org.meowcat.edxposed.manager.repo.RepoDb", lpparam.classLoader), "sDb");
-//				Cursor query = sDb.query("modules", new String[]{ "repo_id" }, "pkgname = ?", new String[]{ Helpers.modulePkg }, null, null, null, "1");
-//				if (query.getCount() > 0) param.setResult(null);
-//				query.close();
-//			}
-//		});
-	}
-
 	private static int settingsIconResId;
 	public static void miuizerSettingsRes() {
 		settingsIconResId = MainModule.resHooks.addResource("ic_miuizer_settings", Helpers.is11() ? R.drawable.ic_miuizer_settings11 : R.drawable.ic_miuizer_settings10);
-	}
-
-	public static void miuizerSettingsHook(LoadPackageParam lpparam) {
-		Method[] methods = XposedHelpers.findMethodsByExactParameters(findClass("com.android.settings.MiuiSettings", lpparam.classLoader), void.class, List.class);
-		for (Method method: methods)
-		if (Modifier.isPublic(method.getModifiers()))
-		Helpers.hookMethod(method, new MethodHook() {
-			@Override
-			@SuppressWarnings("unchecked")
-			protected void after(final MethodHookParam param) throws Throwable {
-				if (param.args[0] == null) return;
-
-				Context mContext = ((Activity)param.thisObject).getBaseContext();
-				int opt = Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_miuizer_settingsiconpos", "2"));
-				if (opt == 0) return;
-
-				Resources modRes = Helpers.getModuleRes(mContext);
-				Header header = new Header();
-				header.id = 666;
-				header.intent = new Intent().setClassName(Helpers.modulePkg, GateWaySettings.class.getCanonicalName());
-				header.iconRes = settingsIconResId;
-				header.title = modRes.getString(R.string.app_name);
-				Bundle bundle = new Bundle();
-				ArrayList<UserHandle> users = new ArrayList<UserHandle>();
-				users.add((UserHandle)XposedHelpers.newInstance(UserHandle.class, 0));
-				bundle.putParcelableArrayList("header_user", users);
-				header.extras = bundle;
-
-				int security = mContext.getResources().getIdentifier("security_status", "id", mContext.getPackageName());
-				int advanced = mContext.getResources().getIdentifier("other_advanced_settings", "id", mContext.getPackageName());
-				int feedback = mContext.getResources().getIdentifier("bug_report_settings", "id", mContext.getPackageName());
-				int themes = mContext.getResources().getIdentifier("theme_settings", "id", mContext.getPackageName());
-				int special = mContext.getResources().getIdentifier("other_special_feature_settings", "id", mContext.getPackageName());
-
-				List<Header> headers = (List<Header>)param.args[0];
-				int position = 0;
-				boolean is11 = Helpers.is11();
-				for (Header head: headers) {
-					if (!is11) {
-						if (opt == 2 && head.id == advanced) { headers.add(position, header); return; }
-						if (opt == 3 && head.id == feedback) { headers.add(position, header); return; }
-					}
-					position++;
-					if (opt == 1 && head.id == security) { headers.add(position, header); return; }
-					if (is11) {
-						if (opt == 2 && head.id == themes) { headers.add(position, header); return; }
-						if (opt == 3 && head.id == special) { headers.add(position, header); return; }
-					}
-				}
-				if (headers.size() > 25 )
-					headers.add(25, header);
-				else
-					headers.add(header);
-			}
-		});
 	}
 
 	public static void miuizerSettings12Hook(LoadPackageParam lpparam) {

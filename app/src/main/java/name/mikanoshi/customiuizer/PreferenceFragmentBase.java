@@ -447,7 +447,6 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 				else if (val instanceof Set<?>)
 					prefEdit.putStringSet(key, ((Set<String>)val));
 			}
-			prefEdit.putBoolean("miuizer_prefs_migrated", true).putInt("miuizer_prefs_migration_result", -1);
 			prefEdit.apply();
 
 			AlertDialog.Builder alert = new AlertDialog.Builder(act);
