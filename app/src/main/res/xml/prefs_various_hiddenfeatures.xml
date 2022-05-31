@@ -9,6 +9,10 @@
 		android:title="@string/various_sysappsupdater_title" />
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:key="pref_key_various_runningservices"
+		android:title="@string/various_runningservices_title" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_various_memorystats"
 		android:summary="@string/various_memorystats_summ"
 		android:title="@string/various_memorystats_title" />

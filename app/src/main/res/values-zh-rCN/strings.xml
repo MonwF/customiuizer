@@ -1041,11 +1041,12 @@
     <string name="various_hiddenfeatures_title">隐藏特性</string>
     <string name="various_hiddenfeatures_not_found">该设备不支持</string>
     <string name="various_hiddenfeatures_summ">不易找到的界面</string>
-    <string name="various_memorystats_title">性能统计</string>
+    <string name="various_memorystats_title">内存统计</string>
     <string name="various_aospnotiflog_title">通知记录</string>
     <string name="various_clearspeaker_title">清理扬声器</string>
     <string name="various_aospnotif_title">应用通知</string>
     <string name="various_appusagestats_title">使用统计</string>
     <string name="miuizer_show_assumelsposed_title">LSPosed模式</string>
     <string name="miuizer_show_assumelsposed_summ">假定已安装LSPosed框架以使用其管理器</string>
+    <string name="various_runningservices_title">正在运行的服务</string>
 </resources>

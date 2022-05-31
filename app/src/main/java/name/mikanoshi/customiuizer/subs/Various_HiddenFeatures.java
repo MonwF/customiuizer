@@ -1,6 +1,8 @@
 package name.mikanoshi.customiuizer.subs;
 
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 
@@ -34,6 +36,22 @@ public class Various_HiddenFeatures extends SubFragment {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				Helpers.launchActivity(act, "com.android.settings", "com.android.settings.Settings$MemorySettingsActivity");
+				return true;
+			}
+		});
+
+		aosp = (PreferenceEx)findPreference("pref_key_various_runningservices");
+		aosp.setCustomSummary("AOSP");
+		aosp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				Intent intent = new Intent(Intent.ACTION_MAIN);
+				intent.addCategory(Intent.CATEGORY_DEFAULT);
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+				intent.setComponent(new ComponentName("com.android.settings", "com.android.settings.SubSettings"));
+				intent.putExtra(":settings:show_fragment", "com.android.settings.applications.RunningServices");
+				act.startActivity(intent);
+				act.overridePendingTransition(R.anim.activity_open_enter, R.anim.activity_open_exit);
 				return true;
 			}
 		});

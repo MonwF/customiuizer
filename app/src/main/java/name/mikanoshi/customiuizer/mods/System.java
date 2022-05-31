@@ -8,6 +8,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityOptions;
+import android.app.AndroidAppHelper;
 import android.app.Dialog;
 import android.app.KeyguardManager;
 import android.app.MiuiNotification;
@@ -383,13 +384,14 @@ public class System {
         return Helpers.containsStringPair(trustedNetworks, wifiManager.getConnectionInfo().getBSSID());
     }
 
+    @SuppressLint("MissingPermission")
     private static boolean isTrustedBt(ClassLoader classLoader) {
         try {
             BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             if (!mBluetoothAdapter.isEnabled()) return false;
             Set<String> trustedDevices = MainModule.mPrefs.getStringSet("system_noscreenlock_bt");
             Object mController = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", classLoader), "get", findClass("com.android.systemui.statusbar.policy.BluetoothController", classLoader));
-            Collection<?> cachedDevices = (Collection<?>)XposedHelpers.callMethod(mController, "getCachedDevicesCopy");
+            Collection<?> cachedDevices = (Collection<?>)XposedHelpers.callMethod(mController, "getDevices");
             if (cachedDevices != null)
                 for (Object device: cachedDevices) {
                     BluetoothDevice mDevice = (BluetoothDevice)XposedHelpers.getObjectField(device, "mDevice");
@@ -442,7 +444,7 @@ public class System {
     private static boolean isUnlockedWithStrong = false;
     private static int forcedOption = -1;
     public static void NoScreenLockHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.keyguard.KeyguardUpdateMonitor", lpparam.classLoader, "reportSuccessfulStrongAuthUnlockAttempt", new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.keyguard.KeyguardViewMediator", lpparam.classLoader, "handleKeyguardDone", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 if (isUnlockedInnerCall) {
@@ -453,14 +455,14 @@ public class System {
             }
         });
 
-        Helpers.findAndHookMethod("com.android.keyguard.KeyguardUpdateMonitorCallback", lpparam.classLoader, "onFingerprintAuthenticated", int.class, new MethodHook() {
+        Helpers.findAndHookMethod("com.android.keyguard.KeyguardUpdateMonitor", lpparam.classLoader, "onFingerprintAuthenticated", int.class, boolean.class, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 isUnlockedWithFingerprint = true;
             }
         });
 
-        Helpers.findAndHookMethod("com.android.keyguard.KeyguardHostView", lpparam.classLoader, "onFinishInflate", new MethodHook() {
+        Helpers.findAndHookMethod("com.android.keyguard.KeyguardSecurityContainer", lpparam.classLoader, "onFinishInflate", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
@@ -468,9 +470,8 @@ public class System {
                     @Override
                     public void onReceive(Context context, Intent intent) {
                         try {
-                            Object mSecurityContainer = XposedHelpers.getObjectField(param.thisObject, "mSecurityContainer");
-                            Object mCallback = XposedHelpers.getObjectField(mSecurityContainer, "mCallback");
-                            XposedHelpers.callMethod(mCallback, "reportUnlockAttempt", 0, true, 0);
+                            Object mCallback = XposedHelpers.getObjectField(param.thisObject, "mCallback");
+                            XposedHelpers.callMethod(mCallback, "reportUnlockAttempt", 0, true, 0, 0);
                         } catch (Throwable t) {
                             XposedBridge.log(t);
                         }
@@ -492,7 +493,7 @@ public class System {
                     XposedHelpers.callMethod(param.thisObject, "keyguardDone");
                 }
                 isUnlockedInnerCall = true;
-                XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mUpdateMonitor"), "reportSuccessfulStrongAuthUnlockAttempt");
+//                XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mUpdateMonitor"), "reportSuccessfulStrongAuthUnlockAttempt");
                 Intent unlockIntent = new Intent(ACTION_PREFIX + "UnlockStrongAuth");
                 mContext.sendBroadcast(unlockIntent);
             }
@@ -538,7 +539,7 @@ public class System {
                             else
                                 XposedHelpers.callMethod(param.thisObject, "resetStateLocked");
                             isUnlockedInnerCall = true;
-                            XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mUpdateMonitor"), "reportSuccessfulStrongAuthUnlockAttempt");
+//                            XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mUpdateMonitor"), "reportSuccessfulStrongAuthUnlockAttempt");
                             Intent unlockIntent = new Intent(ACTION_PREFIX + "UnlockStrongAuth");
                             mContext.sendBroadcast(unlockIntent);
                         } else try {
@@ -589,9 +590,9 @@ public class System {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 if (forcedOption == 0) return;
-                Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
                 boolean skip = MainModule.mPrefs.getBoolean("system_noscreenlock_skip");
                 if (skip) return;
+                Context mContext = (Context) AndroidAppHelper.currentApplication();
                 if (!isUnlocked(mContext, lpparam.classLoader)) return;
 
                 Class<?> securityModeEnum = XposedHelpers.findClass("com.android.keyguard.KeyguardSecurityModel$SecurityMode", lpparam.classLoader);
@@ -609,10 +610,6 @@ public class System {
         });
 
         Class<?> startClass = findClassIfExists("com.android.keyguard.faceunlock.FaceUnlockManager", lpparam.classLoader);
-        Method startMethod = XposedHelpers.findMethodExactIfExists(startClass, "startFaceUnlock");
-        if (!Helpers.is12() && startMethod == null) startClass = findClassIfExists("com.android.keyguard.KeyguardUpdateMonitor", lpparam.classLoader);
-        if (startClass == null) Helpers.log("NoScreenLockHook", "Face unlock class not found");
-
         if (startClass != null) {
             Helpers.hookAllMethods(startClass, "startFaceUnlock", new MethodHook() {
                 @Override
@@ -652,7 +649,7 @@ public class System {
                     public void onReceive(final Context context, Intent intent) {
                         ArrayList<BluetoothDevice> deviceList = new ArrayList<BluetoothDevice>();
                         Intent updateIntent = new Intent(GlobalActions.EVENT_PREFIX + "CACHEDDEVICESUPDATE");
-                        Collection<?> cachedDevices = (Collection<?>)XposedHelpers.callMethod(param.thisObject, "getCachedDevicesCopy");
+                        Collection<?> cachedDevices = (Collection<?>)XposedHelpers.callMethod(param.thisObject, "getDevices");
                         if (cachedDevices != null)
                             for (Object device: cachedDevices) {
                                 BluetoothDevice mDevice = (BluetoothDevice)XposedHelpers.getObjectField(device, "mDevice");
@@ -666,12 +663,7 @@ public class System {
             }
         });
 
-        if (!Helpers.findAndHookMethodSilently("com.android.systemui.statusbar.policy.BluetoothControllerImpl", lpparam.classLoader, "updateConnectionState", new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) {
-                checkBTConnections((Context)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mContextMy"));
-            }
-        })) Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BluetoothControllerImpl", lpparam.classLoader, "updateConnected", new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BluetoothControllerImpl", lpparam.classLoader, "updateConnected", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) {
                 checkBTConnections((Context)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mContextMy"));
@@ -3996,15 +3988,6 @@ public class System {
         };
         Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBarIconControllerImpl", lpparam.classLoader, "setIconVisibility", String.class, boolean.class, iconHook);
         Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiDripLeftStatusBarIconControllerImpl", lpparam.classLoader, "setIconVisibility", String.class, boolean.class, iconHook);
-    }
-
-    public static void HideIconsSystemHook() {
-        Helpers.findAndHookMethod("android.app.StatusBarManager", null, "setIconVisibility", String.class, boolean.class, new MethodHook() {
-            @Override
-            protected void before(MethodHookParam param) throws Throwable {
-                if (checkSlot((String)param.args[0])) param.args[1] = false;
-            }
-        });
     }
 
     public static void BatteryIndicatorHook(LoadPackageParam lpparam) {
