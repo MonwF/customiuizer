@@ -27,7 +27,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 
     public static PrefMap<String, Object> mPrefs = new PrefMap<String, Object>();
     public static ResourceHooks resHooks;
-    private static boolean hideIconsActive = false;
 
     public void initZygote(StartupParam startParam) {
         //long startTime = SystemClock.elapsedRealtime();
@@ -88,20 +87,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (mPrefs.getBoolean("various_alarmcompat")) Various.AlarmCompatHook();
         if (mPrefs.getStringAsInt("system_iconlabletoasts", 1) > 1) System.IconLabelToastsHook();
         if (mPrefs.getStringAsInt("system_blocktoasts", 1) > 1) System.SelectiveToastsHook();
-
-        hideIconsActive =
-            mPrefs.getBoolean("system_statusbaricons_alarm") ||
-            mPrefs.getBoolean("system_statusbaricons_profile") ||
-            mPrefs.getBoolean("system_statusbaricons_sound") ||
-            mPrefs.getBoolean("system_statusbaricons_dnd") ||
-            mPrefs.getBoolean("system_statusbaricons_headset") ||
-            mPrefs.getBoolean("system_statusbaricons_mute") ||
-            mPrefs.getBoolean("system_statusbaricons_speaker") ||
-            mPrefs.getBoolean("system_statusbaricons_record") ||
-            mPrefs.getBoolean("system_statusbaricons_nfc") ||
-            mPrefs.getBoolean("system_statusbaricons_vpn") ||
-            mPrefs.getBoolean("system_statusbaricons_hotspot");
-        if (hideIconsActive) System.HideIconsSystemHook();
 
         Controls.VolumeMediaPlayerHook();
         GlobalActions.setupSystemHelpers();
@@ -290,6 +275,20 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getStringAsInt("system_inactivebrightness", 1) > 1) System.InactiveBrightnessSliderHook(lpparam);
             if (mPrefs.getStringAsInt("system_mobiletypeicon", 1) > 1) System.HideNetworkTypeHook(lpparam);
             if (mPrefs.getStringAsInt("system_statusbaricons_bluetooth", 1) > 1) System.HideIconsBluetoothHook(lpparam);
+
+
+            boolean hideIconsActive =
+                mPrefs.getBoolean("system_statusbaricons_alarm") ||
+                    mPrefs.getBoolean("system_statusbaricons_profile") ||
+                    mPrefs.getBoolean("system_statusbaricons_sound") ||
+                    mPrefs.getBoolean("system_statusbaricons_dnd") ||
+                    mPrefs.getBoolean("system_statusbaricons_headset") ||
+                    mPrefs.getBoolean("system_statusbaricons_mute") ||
+                    mPrefs.getBoolean("system_statusbaricons_speaker") ||
+                    mPrefs.getBoolean("system_statusbaricons_record") ||
+                    mPrefs.getBoolean("system_statusbaricons_nfc") ||
+                    mPrefs.getBoolean("system_statusbaricons_vpn") ||
+                    mPrefs.getBoolean("system_statusbaricons_hotspot");
             if (hideIconsActive) System.HideIconsHook(lpparam);
 
             if (Helpers.is12()) {

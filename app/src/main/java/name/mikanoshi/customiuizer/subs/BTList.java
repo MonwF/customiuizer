@@ -128,9 +128,10 @@ public class BTList extends SubFragment {
 			}
 		});
 
+		if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+			Toast.makeText(getActivity(), R.string.request_bt, Toast.LENGTH_SHORT).show();
+		}
 		updateProgressBar();
-		if (!BluetoothAdapter.getDefaultAdapter().isEnabled())
-		Toast.makeText(getActivity(), R.string.request_bt, Toast.LENGTH_SHORT).show();
 	}
 
 	Runnable getCachedDevices = new Runnable() {
