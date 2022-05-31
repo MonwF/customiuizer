@@ -1,23 +1,34 @@
-<div style="line-height: 150%;">
+![logo](https://code.highspec.ru/customiuizer_promo.png)
 
-<center><img src="https://code.highspec.ru/customiuizer_promo.png" /></center>
+## CustoMIUIzer for MIUI 13
+tested on android 12 only
 
-<h2>What is CustoMIUIzer?</h2>
+[Dowload](https://tpsx.lanzoui.com/b01zwocid)
+
+password: `hfne`
+
+### Backup functionality ###
+Backups are stored in /sdcard/Documents/CustoMIUIzer/
+
+
+## Original Readme
+
+### What is CustoMIUIzer? ###
 CustoMIUIzer module contains a variety of mods that will provide additional functionality for your MIUI device. You have to have (Ed)Xposed Framework installed to use these mods. For more info about Xposed refer to the <a href="http://forum.xda-developers.com/xposed/xposed-installer-versions-changelog-t2714053" target="_blank">original thread</a> or <a href="https://github.com/ElderDrivers/EdXposed" target="_blank">github repo of EdXposed (for Android 8-10)</a>.
 
-<h2>Compatibility</h2>
+### Compatibility ###
 Module was written, tested and is mainly intended for MIUI 10-12.5 on Android 9-10.<br>
 Mods are not guaranteed to fully work on any other versions, especially lower MIUI versions.<br>
 APK installation is limited to Android 7+.
 
-<h2>How to use CustoMIUIzer?</h2>
+### How to use CustoMIUIzer? ###
 First you must have (Ed)Xposed Framework installed. After that enable CustoMIUIzer module in (Ed)Xposed Installer, set up mods you like and select 'Soft Reboot' from menu.
 
-<h2>Backup functionality</h2>
+### Backup functionality ###
 CustoMIUIzer supports settings backup and restore using local backup on SDCard/internal storage (find it in main window's menu).<br>
 It also supports automatic Google cloud backups (Android Backup Service).
 
-<h2>Troubleshooting</h2>
+### Troubleshooting ###
 You can send a detailed report with a description of your problem from CustoMIUIzer itself or create new issue on <a href="https://code.highspec.ru/Mikanoshi/CustoMIUIzer/issues">issue tracker</a>.
 <br><br>
 <u>Common poblems</u><br><br>
@@ -37,5 +48,3 @@ Main CustoMIUIzer screen > Contact information. Write your e-mail, ICQ or XDA/4P
 <a href="https://repo.xposed.info/module/name.mikanoshi.customiuizer" target="_blank">Xposed Module Repository</a><br>
 <a href="https://play.google.com/store/apps/details?id=name.mikanoshi.customiuizer" target="_blank">Google Play Store</a><br>
 <a href="https://customiuizer.oneskyapp.com/admin/project/dashboard/project/335607" target="_blank">Localization</a>
-
-</div>
