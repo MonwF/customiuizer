@@ -50,28 +50,18 @@ public class PackagePermissions {
 		//systemPackages.add("pl.solidexplorer2");
 
 		// Allow signature level permissions for module
-		if (!Helpers.findAndHookMethodSilently("com.android.server.pm.permission.PermissionManagerService", lpparam.classLoader, "grantSignaturePermission",
-			String.class, "android.content.pm.PackageParser.Package", "com.android.server.pm.permission.BasePermission", "com.android.server.pm.permission.PermissionsState",
-			new MethodHook() {
-				@Override
-				protected void before(MethodHookParam param) throws Throwable {
-					String pkgName = (String)XposedHelpers.getObjectField(param.args[1], "packageName");
-					if (systemPackages.contains(pkgName)) param.setResult(true);
+		Helpers.hookAllMethods("com.android.server.pm.permission.PermissionManagerService", lpparam.classLoader, "shouldGrantPermissionBySignature",
+				new MethodHook() {
+					@Override
+					protected void before(MethodHookParam param) throws Throwable {
+						String pkgName = (String)XposedHelpers.getObjectField(param.args[0], "packageName");
+						if (systemPackages.contains(pkgName)) param.setResult(true);
+					}
 				}
-			}
-		)) Helpers.findAndHookMethod("com.android.server.pm.PackageManagerService", lpparam.classLoader, "grantSignaturePermission",
-			String.class, "android.content.pm.PackageParser.Package", "com.android.server.pm.BasePermission", "com.android.server.pm.PermissionsState",
-			new MethodHook() {
-				@Override
-				protected void before(MethodHookParam param) throws Throwable {
-					String pkgName = (String)XposedHelpers.getObjectField(param.args[1], "packageName");
-					if (systemPackages.contains(pkgName)) param.setResult(true);
-				}
-			}
 		);
 
 		if (!Helpers.findAndHookMethodSilently("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "verifySignatures",
-			"com.android.server.pm.PackageSetting", "com.android.server.pm.PackageSetting", "android.content.pm.PackageParser.SigningDetails", boolean.class, boolean.class,
+			"com.android.server.pm.PackageSetting", "com.android.server.pm.PackageSetting", "android.content.pm.PackageParser.SigningDetails", boolean.class, boolean.class, boolean.class,
 			new MethodHook() {
 				@Override
 				protected void before(MethodHookParam param) throws Throwable {
@@ -172,21 +162,21 @@ public class PackagePermissions {
 		});
 
 		// Do not restrict background activity
-		if (!Helpers.isNougat())
-		Helpers.hookAllMethods("com.android.server.am.ActivityManagerService", lpparam.classLoader, "appRestrictedInBackgroundLocked", new MethodHook() {
-			@Override
-			protected void after(MethodHookParam param) throws Throwable {
-				if (Helpers.modulePkg.equals(param.args[1])) param.setResult(0);
-			}
-		});
-
-		if (!Helpers.isNougat())
-		Helpers.hookAllMethods("com.android.server.am.ActivityManagerService", lpparam.classLoader, "appServicesRestrictedInBackgroundLocked", new MethodHook() {
-			@Override
-			protected void after(MethodHookParam param) throws Throwable {
-				if (Helpers.modulePkg.equals(param.args[1])) param.setResult(0);
-			}
-		});
+//		if (!Helpers.isNougat())
+//		Helpers.hookAllMethods("com.android.server.am.ActivityManagerService", lpparam.classLoader, "appRestrictedInBackgroundLocked", new MethodHook() {
+//			@Override
+//			protected void after(MethodHookParam param) throws Throwable {
+//				if (Helpers.modulePkg.equals(param.args[1])) param.setResult(0);
+//			}
+//		});
+//
+//		if (!Helpers.isNougat())
+//		Helpers.hookAllMethods("com.android.server.am.ActivityManagerService", lpparam.classLoader, "appServicesRestrictedInBackgroundLocked", new MethodHook() {
+//			@Override
+//			protected void after(MethodHookParam param) throws Throwable {
+//				if (Helpers.modulePkg.equals(param.args[1])) param.setResult(0);
+//			}
+//		});
 
 		Helpers.hookAllMethodsSilently("com.android.server.wm.ActivityRecordInjector", lpparam.classLoader, "canShowWhenLocked", new MethodHook() {
 			@Override
@@ -196,7 +186,7 @@ public class PackagePermissions {
 		});
 
 		try {
-			Class<?> dpgpiClass = findClass("com.android.server.pm.DefaultPermissionGrantPolicyInjector", lpparam.classLoader);
+			Class<?> dpgpiClass = findClass("com.android.server.pm.MiuiDefaultPermissionGrantPolicy", lpparam.classLoader);
 			String[] MIUI_SYSTEM_APPS = (String[])XposedHelpers.getStaticObjectField(dpgpiClass, "MIUI_SYSTEM_APPS");
 			ArrayList<String> mySystemApps = new ArrayList<String>(Arrays.asList(MIUI_SYSTEM_APPS));
 			mySystemApps.addAll(systemPackages);

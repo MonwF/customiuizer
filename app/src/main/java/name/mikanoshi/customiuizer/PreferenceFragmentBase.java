@@ -97,12 +97,6 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 			case R.id.edit_confirm:
 				confirmEdit();
 				return true;
-			case android.R.id.home:
-				if (this instanceof MainFragment)
-					act.finish();
-				else
-					((SubFragment)this).finish();
-				return true;
 			case R.id.backuprestore:
 				showBackupRestoreDialog();
 				return true;
