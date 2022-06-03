@@ -132,8 +132,11 @@ public class MainActivity extends AppCompatActivity {
 				return true;
 			}
 			if (Helpers.shimmerAnim != null) Helpers.shimmerAnim.cancel();
-			if (fragment instanceof SubFragment)
+			if (fragment instanceof MainFragment)
+				finish();
+			else {
 				((SubFragment)fragment).finish();
+			}
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

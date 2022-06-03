@@ -270,7 +270,7 @@ public class MainFragment extends PreferenceFragmentBase {
 			@Override
 			@SuppressWarnings("deprecation")
 			public boolean onPreferenceClick(Preference pref) {
-				Helpers.openURL(act, "https://github.com/monwf/customiuizer");
+				Helpers.openURL(act, "https://github.com/MonwF/customiuizer");
 				return true;
 			}
 		});

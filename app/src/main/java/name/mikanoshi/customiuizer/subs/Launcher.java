@@ -96,13 +96,11 @@ public class Launcher extends SubFragment {
 			case "pref_key_launcher_cat_privacyapps":
 				findPreference("pref_key_launcher_cat_privacyapps").setEnabled(opt == 1);
 				findPreference("pref_key_launcher_privacyapps_list").setOnPreferenceClickListener(openPrivacyAppEdit);
-
 				if (!checkPermissions()) {
 					Preference pref = findPreference("pref_key_launcher_privacyapps_list");
 					pref.setSummary(R.string.launcher_privacyapps_fail);
 					pref.setEnabled(false);
 				}
-
 				break;
 			case "pref_key_launcher_cat_titles":
 				findPreference("pref_key_launcher_renameapps_list").setOnPreferenceClickListener(openLaunchableList);
@@ -132,8 +130,7 @@ public class Launcher extends SubFragment {
 
 	private boolean checkPermissions() {
 		PackageManager pm = getActivity().getPackageManager();
-		return pm.checkPermission(Manifest.permission.WRITE_SECURE_SETTINGS, Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED &&
-			   pm.checkPermission(Helpers.ACCESS_SECURITY_CENTER, Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED;
+		return pm.checkPermission(Helpers.ACCESS_SECURITY_CENTER, Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED;
 	}
 
 //	public boolean onCreateOptionsMenu(Menu menu) {

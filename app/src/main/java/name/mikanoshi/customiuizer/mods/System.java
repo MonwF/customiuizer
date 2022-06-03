@@ -25,6 +25,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
@@ -2119,32 +2120,27 @@ public class System {
     }
 
     public static void HideFromRecentsHook(LoadPackageParam lpparam) {
-        String taskRecordClass = Helpers.isQPlus() ? "com.android.server.wm.TaskRecord" : "com.android.server.am.TaskRecord";
-        Helpers.hookAllConstructors(taskRecordClass, lpparam.classLoader, new MethodHook() {
+        Helpers.findAndHookMethod("com.android.server.wm.Task", lpparam.classLoader, "setIntent", Intent.class, ActivityInfo.class, new MethodHook() {
             @Override
             @SuppressLint("WrongConstant")
             protected void after(final MethodHookParam param) throws Throwable {
-                //boolean mBooted = XposedHelpers.getBooleanField(param.args[0], "mBooted");
-                //if (!mBooted) return;
+            String pkgName = null;
+            Intent newIntent = (Intent) param.args[0];
+            ActivityInfo activityInfo = (ActivityInfo) param.args[1];
 
-                String pkgName = null;
-                ComponentName origActivity = (ComponentName)XposedHelpers.getObjectField(param.thisObject, "origActivity");
-                ComponentName realActivity = (ComponentName)XposedHelpers.getObjectField(param.thisObject, "realActivity");
-                String mCallingPackage = (String)XposedHelpers.getObjectField(param.thisObject, "mCallingPackage");
-
-                if (realActivity != null) pkgName = realActivity.getPackageName();
-                if (pkgName == null && origActivity != null) pkgName = origActivity.getPackageName();
-                if (pkgName == null) pkgName = mCallingPackage;
-
-                //Context mContext = (Context)XposedHelpers.getObjectField(param.args[0], "mContext");
-                //Set<String> selectedApps = Helpers.getSharedStringSetPref(mContext, "pref_key_system_hidefromrecents_apps");
+            if (newIntent != null && newIntent.getComponent() != null) {
+                pkgName = newIntent.getComponent().getPackageName();
+            }
+            if (pkgName == null && activityInfo != null) {
+                pkgName = activityInfo.packageName;
+            }
+            if (pkgName != null) {
                 Set<String> selectedApps = MainModule.mPrefs.getStringSet("system_hidefromrecents_apps");
                 if (selectedApps.contains(pkgName)) {
                     Intent intent = (Intent)XposedHelpers.getObjectField(param.thisObject, "intent");
-                    Intent affinityIntent = (Intent)XposedHelpers.getObjectField(param.thisObject, "affinityIntent");
                     if (intent != null) intent.addFlags(8388608);
-                    if (affinityIntent != null) affinityIntent.addFlags(8388608);
                 }
+            }
             }
         });
     }
