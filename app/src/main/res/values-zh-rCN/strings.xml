@@ -629,9 +629,6 @@
     <string name="controls_fsg_assist_title">屏幕角落滑动动作</string>
     <string name="controls_fsg_assist_summ">执行选定的动作而不是打开Google Assistant</string>
     <string name="various_mods">杂项</string>
-    <string name="various_sysappsupdater_title">打开 \"系统应用更新\"</string>
-    <string name="various_sysappsupdater_summ">应用不再是某些ROM的一部分，必须手动安装</string>
-    <string name="various_sysappsupdater_summ2">请小心，在自定义ROM上更新被修改的系统应用时，您可能会丢失所添加的功能</string>
     <string name="various_miuiinstaller_title">使用MIUI软件包安装器</string>
     <string name="various_miuiinstaller_summ">使用小米的软件包安装器并允许其更新系统应用</string>
     <string name="various_miuiinstaller_error">请求的应用未安装。长按下载。</string>

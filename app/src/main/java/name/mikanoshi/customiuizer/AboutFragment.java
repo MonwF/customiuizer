@@ -24,6 +24,26 @@ public class AboutFragment extends SubFragment {
 			}
 		});
 
+		findPreference("pref_key_paycrypto").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference pref) {
+				Helpers.openURL(act, "https://code.highspec.ru/cryptodonate");
+				return true;
+			}
+		});
+
+		findPreference("pref_key_payother").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			@SuppressWarnings("deprecation")
+			public boolean onPreferenceClick(Preference pref) {
+				if (getResources().getConfiguration().locale.getISO3Language().contains("ru"))
+					Helpers.openURL(act, "https://mikanoshi.name/donate/");
+				else
+					Helpers.openURL(act, "https://en.mikanoshi.name/donate/");
+				return true;
+			}
+		});
+
 		findPreference("pref_key_xda").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference pref) {

@@ -4,11 +4,6 @@
 	android:layout_height="match_parent">
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
-		android:key="pref_key_various_sysappsupdater"
-		android:summary="@string/various_sysappsupdater_summ"
-		android:title="@string/various_sysappsupdater_title" />
-
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_various_runningservices"
 		android:title="@string/various_runningservices_title" />
 
@@ -20,10 +15,6 @@
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_various_appusagestats"
 		android:title="@string/various_appusagestats_title" />
-
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
-		android:key="pref_key_various_aospsearch"
-		android:title="@string/various_aospsearch_title" />
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_various_aospnotif"

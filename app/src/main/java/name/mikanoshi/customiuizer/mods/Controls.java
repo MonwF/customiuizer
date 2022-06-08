@@ -745,38 +745,6 @@ public class Controls {
 //		});
 //	}
 
-	public static void FSGesturesSysHook() {
-		Helpers.findAndHookMethod("android.provider.MiuiSettings$Global", null, "getBoolean", ContentResolver.class, String.class, new MethodHook() {
-			@Override
-			protected void after(MethodHookParam param) throws Throwable {
-				if (!"force_fsg_nav_bar".equals(param.args[1])) return;
-
-				ContentResolver resolver = (ContentResolver)param.args[0];
-				Context mContext = (Context)XposedHelpers.getObjectField(resolver, "mContext");
-
-				if ("com.android.systemui".equals(mContext.getPackageName()))
-				for (StackTraceElement el: Thread.currentThread().getStackTrace())
-				if ("com.android.systemui.recents.BaseRecentsImpl".equals(el.getClassName())) {
-					param.setResult(true);
-					return;
-				}
-			}
-		});
-	}
-
-	public static void FSGesturesHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.android.systemui.fsgesture.GestureStubView", lpparam.classLoader, "onTouchEvent", MotionEvent.class, new MethodHook() {
-			@Override
-			protected void before(MethodHookParam param) throws Throwable {
-				MotionEvent event = (MotionEvent)param.args[0];
-				if (event.getAction() != MotionEvent.ACTION_DOWN) return;
-				View stub = (View)param.thisObject;
-				String pkgName = Settings.Global.getString(stub.getContext().getContentResolver(), Helpers.modulePkg + ".foreground.package");
-				if (MainModule.mPrefs.getStringSet("controls_fsg_horiz_apps").contains(pkgName)) param.setResult(false);
-			}
-		});
-	}
-
 	@SuppressLint("StaticFieldLeak")
 	private static Context basePWMContext;
 	private static Object basePWMObject;

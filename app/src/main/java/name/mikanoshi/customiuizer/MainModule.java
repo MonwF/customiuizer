@@ -83,7 +83,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (mPrefs.getBoolean("system_audiosilencer")) System.AudioSilencerHook();
         if (mPrefs.getBoolean("system_fw_noblacklist")) System.NoFloatingWindowBlacklistHook();
         if (mPrefs.getBoolean("controls_volumecursor")) Controls.VolumeCursorHook();
-        if (mPrefs.getBoolean("controls_fsg_horiz")) Controls.FSGesturesSysHook();
         if (mPrefs.getBoolean("various_alarmcompat")) Various.AlarmCompatHook();
         if (mPrefs.getStringAsInt("system_iconlabletoasts", 1) > 1) System.IconLabelToastsHook();
         if (mPrefs.getStringAsInt("system_blocktoasts", 1) > 1) System.SelectiveToastsHook();
@@ -223,7 +222,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_removedismiss")) System.HideDismissViewHook(lpparam);
             if (mPrefs.getBoolean("controls_nonavbar")) Controls.HideNavBarHook(lpparam);
             if (mPrefs.getBoolean("controls_imebackalticon")) Controls.ImeBackAltIconHook(lpparam);
-            if (mPrefs.getBoolean("controls_fsg_horiz")) Controls.FSGesturesHook(lpparam);
             if (mPrefs.getBoolean("system_visualizer")) System.AudioVisualizerHook(lpparam);
             if (mPrefs.getBoolean("system_separatevolume") && mPrefs.getBoolean("system_separatevolume_slider")) System.NotificationVolumeDialogHook(lpparam);
             if (mPrefs.getBoolean("system_batteryindicator")) System.BatteryIndicatorHook(lpparam);
