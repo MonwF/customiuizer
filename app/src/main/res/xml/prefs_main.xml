@@ -56,15 +56,7 @@
 	</PreferenceCategory>
 
 	<PreferenceCategory
-		android:title="@string/support_donate_title">
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
-			android:title="@string/support_donate_crypto_title"
-			android:summary="@string/support_donate_crypto_summ"
-			android:key="pref_key_paycrypto" />
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
-			android:title="@string/support_donate_other_title"
-			android:summary="@string/support_donate_other_summ"
-			android:key="pref_key_payother" />
+		android:title="@string/support">
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:title="@string/support_github"
 			android:key="pref_key_github" />

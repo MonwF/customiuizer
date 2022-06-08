@@ -382,7 +382,7 @@ public class Various {
 	}
 
 	public static void AppsDisableServiceHook(LoadPackageParam lpparam) {
-		Helpers.hookAllMethods("com.android.server.pm.PackageManagerServiceInjector", lpparam.classLoader, "isAllowedDisable", XC_MethodReplacement.returnConstant(true));
+		Helpers.hookAllMethods("com.android.server.pm.PackageManagerServiceImpl", lpparam.classLoader, "canBeDisabled", XC_MethodReplacement.returnConstant(true));
 	}
 
 	public static void AppsDisableHook(LoadPackageParam lpparam) {

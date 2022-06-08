@@ -924,9 +924,6 @@
     <string name="various_aospnotif_title">Приложения и уведомления</string>
     <string name="various_aospnotiflog_title">Журнал уведомлений</string>
     <string name="various_clearspeaker_title">Очистка динамика</string>
-    <string name="various_sysappsupdater_summ">Приложение больше не является частью некоторых прошивок и должно быть установлено вручную</string>
-    <string name="various_sysappsupdater_summ2">Будьте осторожны при обновлении модифицированных приложений на кастомных прошивках, это может привести к потере доп. функциональности</string>
-    <string name="various_sysappsupdater_title">Обновление системных компонентов</string>
     <string name="various_hiddenfeatures_not_found">Недоступно на данном устройстве</string>
     <string name="disable_app_title">Отключить приложение?</string>
     <string name="disable_app_text">Если данное приложение является важным системным, то его отключение может что-нибудь поломать :)</string>
