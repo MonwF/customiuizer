@@ -2644,55 +2644,7 @@ public class System {
     }
 
     public static void ExtendedPowerMenuHook(LoadPackageParam lpparam) {
-        Helpers.hookAllConstructors("com.android.server.policy.MiuiGlobalActions", lpparam.classLoader, new MethodHook() {
-            @Override
-            @SuppressWarnings("ResultOfMethodCallIgnored")
-            protected void after(MethodHookParam param) throws Throwable {
-                Context mContext = (Context)param.args[0];
-                String powermenuPath = Helpers.getCacheFilePath("extended_power_menu");
-                File powermenu = powermenuPath == null ? null : new File(powermenuPath);
-                if (powermenu == null) {
-                    Helpers.log("ExtendedPowerMenuHook", "No writable path found!");
-                    return;
-                }
-                if (powermenu.exists()) powermenu.delete();
-
-                InputStream inputStream;
-                FileOutputStream outputStream;
-                byte[] fileBytes;
-                Resources resources = Helpers.getModuleRes(mContext);
-                inputStream = resources.openRawResource(resources.getIdentifier("extended_power_menu", "raw", Helpers.modulePkg));
-                fileBytes = new byte[inputStream.available()];
-                inputStream.read(fileBytes);
-                outputStream = new FileOutputStream(powermenu);
-                outputStream.write(fileBytes);
-                outputStream.close();
-                inputStream.close();
-
-                if (!powermenu.exists()) {
-                    Helpers.log("ExtendedPowerMenuHook", "MAML file not found in cache");
-                    return;
-                }
-
-                Class<?> ResourceManager = XposedHelpers.findClass("miui.maml.ResourceManager", lpparam.classLoader);
-                Class<?> ZipResourceLoader = XposedHelpers.findClass("miui.maml.util.ZipResourceLoader", lpparam.classLoader);
-                Class<?> ScreenContext = XposedHelpers.findClass("miui.maml.ScreenContext", lpparam.classLoader);
-                Class<?> ScreenElementRoot = XposedHelpers.findClass("miui.maml.ScreenElementRoot", lpparam.classLoader);
-
-                XposedHelpers.setObjectField(param.thisObject, "mResourceManager", XposedHelpers.newInstance(ResourceManager, XposedHelpers.newInstance(ZipResourceLoader, powermenu.getPath())));
-                Object mResourceManager = XposedHelpers.getObjectField(param.thisObject, "mResourceManager");
-                Object mScreenElementRoot = XposedHelpers.newInstance(ScreenElementRoot, XposedHelpers.newInstance(ScreenContext, mContext, mResourceManager));
-                XposedHelpers.setObjectField(param.thisObject, "mScreenElementRoot", mScreenElementRoot);
-                XposedHelpers.callMethod(mScreenElementRoot, "setOnExternCommandListener", XposedHelpers.getObjectField(param.thisObject, "mCommandListener"));
-                XposedHelpers.callMethod(mScreenElementRoot, "setKeepResource", true);
-                XposedHelpers.callMethod(mScreenElementRoot, "load");
-                XposedHelpers.callMethod(mScreenElementRoot, "init");
-            }
-        });
-    }
-
-    public static void ExtendedPowerMenuHook() {
-        Helpers.findAndHookMethod("miui.maml.ScreenElementRoot", null, "issueExternCommand", String.class, Double.class, String.class, new MethodHook() {
+        Helpers.findAndHookMethod("com.miui.maml.ScreenElementRoot", lpparam.classLoader, "issueExternCommand", String.class, Double.class, String.class, new MethodHook() {
             @Override
             @SuppressLint("MissingPermission")
             protected void before(MethodHookParam param) throws Throwable {
@@ -2748,6 +2700,53 @@ public class System {
                     if (mSystemExternCommandListener != null) XposedHelpers.callMethod(mSystemExternCommandListener, "onCommand", param.args[0], param.args[1], param.args[2]);
                     param.setResult(null);
                 }
+            }
+        });
+        Helpers.hookAllConstructors("com.android.systemui.globalactions.MiuiGlobalActions", lpparam.classLoader, new MethodHook() {
+            @Override
+            @SuppressWarnings("ResultOfMethodCallIgnored")
+            protected void after(MethodHookParam param) throws Throwable {
+                Context mContext = (Context)param.args[0];
+                File powermenu = new File(mContext.getCacheDir(), "extended_power_menu");
+                if (powermenu == null) {
+                    Helpers.log("ExtendedPowerMenuHook", "No writable path found!");
+                    return;
+                }
+                if (powermenu.exists()) powermenu.delete();
+
+                InputStream inputStream;
+                FileOutputStream outputStream;
+                byte[] fileBytes;
+                Resources resources = Helpers.getModuleRes(mContext);
+                inputStream = resources.openRawResource(resources.getIdentifier("extended_power_menu", "raw", Helpers.modulePkg));
+                fileBytes = new byte[inputStream.available()];
+                inputStream.read(fileBytes);
+                outputStream = new FileOutputStream(powermenu);
+                outputStream.write(fileBytes);
+                outputStream.close();
+                inputStream.close();
+
+                if (!powermenu.exists()) {
+                    Helpers.log("ExtendedPowerMenuHook", "MAML file not found in cache");
+                    return;
+                }
+                else {
+                    powermenu.setReadable(true, false);
+                }
+
+                Class<?> ResourceManager = XposedHelpers.findClass("com.miui.maml.ResourceManager", lpparam.classLoader);
+                Class<?> ZipResourceLoader = XposedHelpers.findClass("com.miui.maml.util.ZipResourceLoader", lpparam.classLoader);
+                Class<?> ScreenContext = XposedHelpers.findClass("com.miui.maml.ScreenContext", lpparam.classLoader);
+                Class<?> ScreenElementRoot = XposedHelpers.findClass("com.miui.maml.ScreenElementRoot", lpparam.classLoader);
+
+                XposedHelpers.setObjectField(param.thisObject, "mResourceManager", XposedHelpers.newInstance(ResourceManager, XposedHelpers.newInstance(ZipResourceLoader, powermenu.getPath())));
+                Object mResourceManager = XposedHelpers.getObjectField(param.thisObject, "mResourceManager");
+                Object mScreenElementRoot = XposedHelpers.newInstance(ScreenElementRoot, XposedHelpers.newInstance(ScreenContext, mContext, mResourceManager));
+                XposedHelpers.setObjectField(param.thisObject, "mScreenElementRoot", mScreenElementRoot);
+                XposedHelpers.callMethod(mScreenElementRoot, "setOnExternCommandListener", XposedHelpers.getObjectField(param.thisObject, "mCommandListener"));
+                XposedHelpers.callMethod(mScreenElementRoot, "setKeepResource", true);
+                XposedHelpers.callMethod(mScreenElementRoot, "load");
+                XposedHelpers.callMethod(mScreenElementRoot, "init");
             }
         });
     }
