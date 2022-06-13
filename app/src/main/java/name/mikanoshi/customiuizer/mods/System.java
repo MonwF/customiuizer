@@ -2651,7 +2651,6 @@ public class System {
                 String cmd = (String)param.args[0];
                 Object scrContext = XposedHelpers.getObjectField(param.thisObject, "mContext");
                 Context mContext = (Context)XposedHelpers.getObjectField(scrContext, "mContext");
-//				Handler mHandler = (Handler)XposedHelpers.getObjectField(scrContext, "mHandler");
                 PowerManager pm = (PowerManager)mContext.getSystemService(Context.POWER_SERVICE);
                 Object mService = XposedHelpers.getObjectField(pm, "mService");
                 Object mSystemExternCommandListener = XposedHelpers.getObjectField(param.thisObject, "mSystemExternCommandListener");
@@ -2664,25 +2663,11 @@ public class System {
                     XposedHelpers.callMethod(mService, "reboot", false, "bootloader", false);
                     custom = true;
                 } else if ("softreboot".equals(cmd)) {
-                    SystemProperties.set("ctl.restart", "surfaceflinger");
-                    SystemProperties.set("ctl.restart", "zygote");
+                    Helpers.proxySystemProperties("set", "ctl.restart", "surfaceflinger", null);
+                    Helpers.proxySystemProperties("set", "ctl.restart", "zygote", null);
                     custom = true;
                 } else if ("killsysui".equals(cmd)) {
                     mContext.sendBroadcast(new Intent(ACTION_PREFIX + "RestartSystemUI"));
-//					final WallpaperManager wm = (WallpaperManager)mContext.getSystemService(Context.WALLPAPER_SERVICE);
-//					Drawable drawable = wm.getDrawable();
-//					ActivityManager am = (ActivityManager)mContext.getSystemService(Context.ACTIVITY_SERVICE);
-//					XposedHelpers.callMethod(am, "forceStopPackage", "com.android.systemui");
-//					mHandler.postDelayed(new Runnable() {
-//						@Override
-//						public void run() {
-//							if (drawable != null && drawable.getClass() == BitmapDrawable.class) try {
-//								wm.setBitmap(((BitmapDrawable)drawable).getBitmap());
-//							} catch (Throwable t) {
-//								XposedBridge.log(t);
-//							}
-//						}
-//					}, 1000);
                     custom = true;
                 } else if ("killlauncher".equals(cmd)) {
                     ActivityManager am = (ActivityManager)mContext.getSystemService(Context.ACTIVITY_SERVICE);
@@ -2702,6 +2687,8 @@ public class System {
                 }
             }
         });
+        Helpers.findAndHookMethod("com.miui.systemui.SettingsManager", lpparam.classLoader, "getExtendedPowerMenuEnabled", XC_MethodReplacement.returnConstant(true));
+
         Helpers.hookAllConstructors("com.android.systemui.globalactions.MiuiGlobalActions", lpparam.classLoader, new MethodHook() {
             @Override
             @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -2729,9 +2716,6 @@ public class System {
                 if (!powermenu.exists()) {
                     Helpers.log("ExtendedPowerMenuHook", "MAML file not found in cache");
                     return;
-                }
-                else {
-                    powermenu.setReadable(true, false);
                 }
 
                 Class<?> ResourceManager = XposedHelpers.findClass("com.miui.maml.ResourceManager", lpparam.classLoader);
