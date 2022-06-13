@@ -64,7 +64,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (mPrefs.getInt("system_messagingstylelines", 0) > 0 && Helpers.is12()) System.MessagingStyleLinesSysHook();
         if (mPrefs.getBoolean("system_colorizenotiftitle")) System.ColorizedNotificationTitlesHook();
         if (mPrefs.getBoolean("system_nopassword")) System.NoPasswordHook();
-        if (mPrefs.getBoolean("system_epm")) System.ExtendedPowerMenuHook();
         if (mPrefs.getBoolean("system_statusbarcolor")) System.StatusBarBackgroundHook();
         if (mPrefs.getBoolean("system_magnifier") && Helpers.isPiePlus()) System.TextMagnifierHook();
         if (mPrefs.getBoolean("system_lockscreenshortcuts") || mPrefs.getInt("controls_powerdt_action", 1) > 1) System.LockScreenSecureLaunchHook();
@@ -127,7 +126,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_hidefromrecents")) System.HideFromRecentsHook(lpparam);
             if (mPrefs.getBoolean("system_orientationlock")) System.OrientationLockHook(lpparam);
             if (mPrefs.getBoolean("system_noducking")) System.NoDuckingHook(lpparam);
-            if (mPrefs.getBoolean("system_epm")) System.ExtendedPowerMenuHook(lpparam);
             if (mPrefs.getBoolean("system_cleanshare")) System.CleanShareMenuServiceHook(lpparam);
             if (mPrefs.getBoolean("system_cleanopenwith")) System.CleanOpenWithMenuServiceHook(lpparam);
             if (mPrefs.getBoolean("system_autobrightness")) System.AutoBrightnessRangeHook(lpparam);
@@ -273,6 +271,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getStringAsInt("system_inactivebrightness", 1) > 1) System.InactiveBrightnessSliderHook(lpparam);
             if (mPrefs.getStringAsInt("system_mobiletypeicon", 1) > 1) System.HideNetworkTypeHook(lpparam);
             if (mPrefs.getStringAsInt("system_statusbaricons_bluetooth", 1) > 1) System.HideIconsBluetoothHook(lpparam);
+            if (mPrefs.getBoolean("system_epm")) System.ExtendedPowerMenuHook(lpparam);
 
 
             boolean hideIconsActive =
