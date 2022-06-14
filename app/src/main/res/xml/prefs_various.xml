@@ -47,7 +47,7 @@
 		android:entryValues="@array/collapsetitles_val"
 		android:defaultValue="0" />
 
-	<PreferenceCategory
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/calls"/>
 
 	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
@@ -67,7 +67,7 @@
 		android:title="@string/various_callreminder_title"
 		android:summary="@string/various_callreminder_summ" />
 
-	<PreferenceCategory
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/settings" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
@@ -98,7 +98,7 @@
 		miuizer:valueAsSummary="true"
 		miuizer:dynamic="true" />
 
-	<PreferenceCategory
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/gboard"/>
 
 	<name.mikanoshi.customiuizer.prefs.SeekBarPreference

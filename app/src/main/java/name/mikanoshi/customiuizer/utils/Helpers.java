@@ -167,15 +167,6 @@ public class Helpers {
 		put("zh-CN", "98.1");
 	}};
 
-	public static final HashSet<String> xposedManagers = new HashSet<String>(Arrays.asList(
-		"org.lsposed.manager",
-		"io.github.lsposed.manager",
-		"org.meowcat.edxposed.manager",
-		"com.solohsu.android.edxp.manager",
-		"de.robv.android.xposed.installer",
-		"me.weishu.exp"
-	));
-
 	public static final ArrayList<String> shortcutIcons = new ArrayList<String>();
 
 	public enum SettingsType {
@@ -307,103 +298,6 @@ public class Helpers {
 //	public static boolean isLauncherIconVisible(Context context) {
 //		return context.getPackageManager().getComponentEnabledSetting(new ComponentName(context, GateWayLauncher.class)) != PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
 //	}
-
-	public static String isLSPosedManagerInstalled(Context context) {
-		return "Assumed LSPosed";
-	}
-
-	public static boolean openXposedApp(Context context) {
-		for (String manager: xposedManagers) try {
-			Intent intent = context.getPackageManager().getLaunchIntentForPackage(manager);
-			if (intent == null) continue;
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-			context.startActivity(intent);
-			return true;
-		} catch (Throwable ignore) {}
-
-		boolean lsposed = prefs.getBoolean("pref_key_miuizer_assumelsposed", false);
-		if (lsposed) try {
-			context.sendBroadcast(new Intent(GlobalActions.ACTION_PREFIX + "RunParasitic"));
-			return true;
-		} catch (Throwable ignore) {}
-
-		Toast.makeText(context, R.string.xposed_not_found, Toast.LENGTH_LONG).show();
-		return false;
-	}
-
-	public static String getNewEdXposedPath() {
-		File[] files = new File("/data/misc").listFiles();
-		String edxpPath = null;
-		if (files != null && files.length > 0)
-		for (File file: files)
-		if (file.getName().startsWith("edxp_")) {
-			edxpPath = file.getName();
-			break;
-		}
-		return edxpPath;
-	}
-
-	public static String makeNewEdXposedPathReadable() {
-		return makeNewEdXposedPathReadable(null);
-	}
-
-	@SuppressLint("SetWorldReadable")
-	public static String makeNewEdXposedPathReadable(String path) {
-		try {
-			String baseDir;
-			if (path == null) {
-				String edxpPath = getNewEdXposedPath();
-				if (edxpPath == null) return null;
-				baseDir = "/data/misc/" + edxpPath + "/0/log";
-			} else {
-				baseDir = path + "log";
-			}
-			File file;
-			file = new File(baseDir);
-			if (!file.exists()) return null;
-			try { file.setExecutable(true, false); } catch (Throwable t) { XposedBridge.log(t); }
-			file = new File(baseDir + "/all.log");
-			if (!file.exists()) file = new File(baseDir + "/error.log");
-			if (!file.exists()) file = new File(baseDir + "/modules.log");
-			if (!file.exists()) return null;
-			try { file.setReadable(true, false); } catch (Throwable t) { XposedBridge.log(t); }
-			return file.getAbsolutePath();
-		} catch (Throwable t) {
-			return null;
-		}
-	}
-
-	public static String getXposedPropVersion(File propFile, boolean fromHook) {
-		String version = "unknown";
-		try (FileInputStream inputStream = new FileInputStream(propFile)) {
-			try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
-				while (true) {
-					String readLine = null;
-					try {
-						readLine = bufferedReader.readLine();
-					} catch (Throwable t) {
-						t.printStackTrace();
-					}
-					if (readLine == null) break;
-
-					String[] split = readLine.split("=", 2);
-					if (split.length == 2) {
-						String line = split[0].trim();
-						if (line.charAt(0) != '#' && "version".equals(line)) {
-							version = split[1].trim();
-							break;
-						}
-					}
-				}
-			} catch (Throwable t) {
-				t.printStackTrace();
-			}
-		} catch (Throwable t) {
-			t.printStackTrace();
-		}
-		if (fromHook) xposedVersion = XposedBridge.getXposedVersion();
-		return "unknown".equals(version) ? version + " (" + xposedVersion + ")" : version;
-	}
 
 	public static String getXposedInstallerErrorLog(Context context) {
 		String baseDir = null;

@@ -8,7 +8,7 @@
 		android:key="pref_key_warning"
 		miuizer:warning="true" />
 
-	<PreferenceCategory
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/mods"
 		android:key="prefs_cat">
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
@@ -23,9 +23,9 @@
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:title="@string/various_mods"
 			android:key="pref_key_various" />
-	</PreferenceCategory>
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
-	<PreferenceCategory
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/miuizer"
 		android:key="pref_key_miuizer">
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
@@ -40,12 +40,6 @@
 			android:summary="@string/miuizer_show_launchericon_summ"
 			android:title="@string/miuizer_show_launchericon_title"
 			android:defaultValue="true" />
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_miuizer_assumelsposed"
-			android:summary="@string/miuizer_show_assumelsposed_summ"
-			android:title="@string/miuizer_show_assumelsposed_title"
-			android:defaultValue="false" />
--->
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_miuizer_locale"
 			android:title="@string/miuizer_locale_title"
@@ -53,13 +47,13 @@
 			android:entries="@array/placeholder_array"
 			android:entryValues="@array/placeholder_array_strval"
 			android:defaultValue="auto" />
-	</PreferenceCategory>
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
-	<PreferenceCategory
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/support">
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:title="@string/support_github"
 			android:key="pref_key_github" />
-	</PreferenceCategory>
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

@@ -9,7 +9,7 @@
 		android:title="@string/enable_mod"
 		android:defaultValue="false" />
 
-	<PreferenceCategory>
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx android:title="">
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_popupnotif_fs"
@@ -25,6 +25,6 @@
 		miuizer:countAsSummary="true"
 		miuizer:dynamic="true" />
 
-	</PreferenceCategory>
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

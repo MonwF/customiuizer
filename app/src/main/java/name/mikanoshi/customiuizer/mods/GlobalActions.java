@@ -929,7 +929,7 @@ public class GlobalActions {
 
 				// Tools
 				intentfilter.addAction(ACTION_PREFIX + "FastReboot");
-				intentfilter.addAction(ACTION_PREFIX + "RunParasitic");
+//				intentfilter.addAction(ACTION_PREFIX + "RunParasitic");
 				//intentfilter.addAction(ACTION_PREFIX + "QueryXposedService");
 
 				mGlobalContext.registerReceiver(mGlobalReceiver, intentfilter);
@@ -1004,27 +1004,6 @@ public class GlobalActions {
 						}
 					}
 				}, intentfilter);
-			}
-		});
-
-		Helpers.findAndHookMethod("com.android.server.pm.PackageManagerService", lpparam.classLoader, "getInstallerPackageName", String.class, new MethodHook() {
-			@Override
-			@SuppressLint("SetWorldReadable")
-			protected void before(MethodHookParam param) throws Throwable {
-				String req = (String)param.args[0];
-				if ("EdXposedVersion".equals(req)) {
-					String edxpPath = Helpers.getNewEdXposedPath();
-					if (edxpPath == null) return;
-					String edxpVersion = Helpers.getXposedPropVersion(new File("/data/misc/" + edxpPath + "/framework/edconfig.jar"), true);
-					param.setResult(edxpVersion);
-				} else if ("EdXposedLog".equals(req)) {
-					param.setResult(Helpers.makeNewEdXposedPathReadable());
-				} else if ("EdXposedScope".equals(req)) {
-					String edxpPath = Helpers.getNewEdXposedPath();
-					if (edxpPath == null) return;
-					File file = new File("/data/misc/" + edxpPath + "/0/conf/" + Helpers.modulePkg + ".conf");
-					param.setResult(file.exists() ? "true" : "false");
-				}
 			}
 		});
 
