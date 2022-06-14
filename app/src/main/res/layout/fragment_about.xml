@@ -193,11 +193,6 @@
 		<View
 			android:layout_width="match_parent"
 			android:layout_height="0.3dp"
-			android:background="@color/about_divider" />
-
-		<View
-			android:layout_width="match_parent"
-			android:layout_height="0.3dp"
 			android:layout_marginTop="6.7dp"
 			android:background="@color/about_divider" />
 

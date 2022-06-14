@@ -26,6 +26,7 @@ public class PreferenceCategoryEx extends PreferenceCategory {
 		empty = xmlAttrs.getBoolean(R.styleable.PreferenceCategoryEx_empty, false);
 		hidden = xmlAttrs.getBoolean(R.styleable.PreferenceCategoryEx_hidden, false);
 		xmlAttrs.recycle();
+		setLayoutResource(R.layout.preference_category);
 	}
 
 	@Override
@@ -42,12 +43,11 @@ public class PreferenceCategoryEx extends PreferenceCategory {
 		title.setText(getTitle() + (unsupported ? " ⨯" : (dynamic ? " ⟲" : "")));
 		title.setVisibility(hidden || empty ? View.GONE : View.VISIBLE);
 		if (hidden) {
-			finalView.setBackground(null);
 			finalView.setPadding(
 				finalView.getPaddingLeft(),
-				Math.round(getContext().getResources().getDisplayMetrics().density * 10),
+				0,
 				finalView.getPaddingRight(),
-				finalView.getPaddingBottom()
+				0
 			);
 		}
 		return finalView;

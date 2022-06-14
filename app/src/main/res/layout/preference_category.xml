@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:paddingStart="?android:attr/listPreferredItemPaddingLeft"
+	android:paddingTop="8.66dp"
+	android:paddingBottom="0dp">
+	<TextView
+		android:layout_gravity="start|center_vertical"
+		android:id="@android:id/title"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		style="@style/MiuiPreferenceCategory"/>
+</FrameLayout>

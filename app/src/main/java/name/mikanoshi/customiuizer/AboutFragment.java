@@ -47,7 +47,7 @@ public class AboutFragment extends SubFragment {
 		findPreference("pref_key_xda").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference pref) {
-				Helpers.openURL(act, "https://forum.xda-developers.com/xposed/modules/mod-customiuizer-customize-miui-rom-t3910732");
+				Helpers.openURL(act, "https://forum.xda-developers.com/t/mod-xposed-3-2-1-customiuizer-customize-your-miui-rom.3910732/");
 				return true;
 			}
 		});

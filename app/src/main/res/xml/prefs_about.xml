@@ -3,7 +3,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<PreferenceCategory
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/support"
 		android:key="pref_key_support">
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
@@ -26,6 +26,6 @@
 			android:title="@string/support_4pda_title"
 			android:summary="@string/support_4pda_summ"
 			android:key="pref_key_4pda" />
-	</PreferenceCategory>
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

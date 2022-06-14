@@ -6,6 +6,8 @@
 		<item name="android:windowDisablePreview">true</item>
 		<item name="android:colorBackgroundCacheHint">@null</item>
 		<item name="android:spinnerItemStyle">@style/DropDownItemStyle</item>
+		<item name="android:colorAccent">@color/highlight_normal_light</item>
+		<item name="android:colorControlActivated">@color/highlight_normal_light</item>
 	</style>
 	<style name="DropDownItemStyle" parent="@style/Widget.AppCompat.TextView.SpinnerItem">
 		<item name="android:paddingTop">5dp</item>
@@ -17,7 +19,6 @@
 		<item name="android:activityCloseEnterAnimation">@anim/activity_close_enter</item>
 		<item name="android:activityCloseExitAnimation">@anim/activity_close_exit</item>
 	</style>
-
 	<style name="ActivityAnimation10" parent="@android:style/Animation">
 		<item name="android:activityOpenEnterAnimation">@anim/activity_open_enter10</item>
 		<item name="android:activityOpenExitAnimation">@anim/activity_open_exit</item>
@@ -71,6 +72,11 @@
 		<item name="android:textSize">@dimen/secondary_text_size</item>
 		<item name="android:textStyle">normal</item>
 		<item name="android:textColor">@color/preference_secondary_text</item>
+	</style>
+
+	<style name="MiuiPreferenceCategory">
+		<item name="android:textSize">@dimen/preference_category_text_size</item>
+		<item name="android:textColor">@color/preference_category_text_color</item>
 	</style>
 
 	<style name="TextAppearance.Widget" />
