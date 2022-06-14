@@ -1027,7 +1027,7 @@ public class System {
     }
 
     public static void ClockSecondsHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.Clock", lpparam.classLoader, "updateClock", new MethodHook(XCallback.PRIORITY_HIGHEST) {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.views.MiuiClock", lpparam.classLoader, "updateTime", new MethodHook(XCallback.PRIORITY_HIGHEST) {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 TextView clock = (TextView)param.thisObject;
@@ -1048,7 +1048,7 @@ public class System {
             }
         });
 
-        Helpers.hookAllConstructors("com.android.systemui.statusbar.policy.Clock", lpparam.classLoader, new MethodHook() {
+        Helpers.hookAllConstructors("com.android.systemui.statusbar.views.MiuiClock", lpparam.classLoader, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) {
                 final TextView clock = (TextView)param.thisObject;
@@ -1065,7 +1065,7 @@ public class System {
                         mClockHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                XposedHelpers.callMethod(clock, "updateClock");
+                                XposedHelpers.callMethod(clock, "updateTime");
                             }
                         });
                     }
