@@ -1070,22 +1070,25 @@ public class System {
     }
 
     public static void ExpandNotificationsHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.NotificationViewHierarchyManager", lpparam.classLoader, "updateRowStates", new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.NotificationViewHierarchyManager", lpparam.classLoader, "updateRowStatesInternal", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 Object mListContainer = XposedHelpers.getObjectField(param.thisObject, "mListContainer");
                 int containerChildCount = (int)XposedHelpers.callMethod(mListContainer, "getContainerChildCount");
-                for (int i = containerChildCount - 1; i >= 0; i--) {
-                    View enotificationrow = (View)XposedHelpers.callMethod(mListContainer, "getContainerChildAt", i);
-                    if (enotificationrow != null && enotificationrow.getClass().getSimpleName().equalsIgnoreCase("ExpandableNotificationRow")) try {
-                        Object notification = XposedHelpers.getObjectField(XposedHelpers.callMethod(enotificationrow, "getEntry"), "mSbn");
-                        String pkgName = (String)XposedHelpers.callMethod(notification, "getPackageName");
-                        int opt = Integer.parseInt(MainModule.mPrefs.getString("system_expandnotifs", "1"));
-                        boolean isSelected = MainModule.mPrefs.getStringSet("system_expandnotifs_apps").contains(pkgName);
-                        if (opt == 2 && !isSelected || opt == 3 && isSelected)
-                            XposedHelpers.callMethod(enotificationrow, "setSystemExpanded", true);
-                    } catch (Throwable t) {
-                        XposedBridge.log(t);
+                int statusbarState = (int)XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mStatusBarStateController"), "getCurrentOrUpcomingState");
+                if (statusbarState != 1) {
+                    for (int i = containerChildCount - 1; i >= 0; i--) {
+                        View enotificationrow = (View)XposedHelpers.callMethod(mListContainer, "getContainerChildAt", i);
+                        if (enotificationrow != null && enotificationrow.getClass().getSimpleName().equalsIgnoreCase("MiuiExpandableNotificationRow")) try {
+                            Object notification = XposedHelpers.getObjectField(XposedHelpers.callMethod(enotificationrow, "getEntry"), "mSbn");
+                            String pkgName = (String)XposedHelpers.callMethod(notification, "getPackageName");
+                            int opt = Integer.parseInt(MainModule.mPrefs.getString("system_expandnotifs", "1"));
+                            boolean isSelected = MainModule.mPrefs.getStringSet("system_expandnotifs_apps").contains(pkgName);
+                            if (opt == 2 && !isSelected || opt == 3 && isSelected)
+                                XposedHelpers.callMethod(enotificationrow, "setSystemExpanded", true);
+                        } catch (Throwable t) {
+                            XposedBridge.log(t);
+                        }
                     }
                 }
             }
