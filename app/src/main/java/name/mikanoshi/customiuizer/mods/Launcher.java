@@ -626,15 +626,17 @@ public class Launcher {
 		private float mActionDownRawX;
 		private float mActionDownRawY;
 		private int mClickCount;
-		private final Context mContext;
+		public final Context mContext;
+		private final String mActionKey;
 		private float mFirstClickRawX;
 		private float mFirstClickRawY;
 		private long mLastClickTime;
 		private int mTouchSlop;
 
-		DoubleTapController(Context context) {
+		DoubleTapController(Context context, String actionKey) {
 			this.mContext = context;
 			this.mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop() * 2;
+			this.mActionKey = actionKey;
 		}
 
 		boolean isDoubleTapEvent(MotionEvent motionEvent) {
@@ -669,7 +671,7 @@ public class Launcher {
 		}
 
 		void onDoubleTapEvent() {
-			GlobalActions.handleAction(mContext, "pref_key_launcher_doubletap");
+			GlobalActions.handleAction(mContext, mActionKey);
 		}
 	}
 
@@ -679,7 +681,7 @@ public class Launcher {
 			protected void after(final MethodHookParam param) throws Throwable {
 				Object mDoubleTapControllerEx = XposedHelpers.getAdditionalInstanceField(param.thisObject, "mDoubleTapControllerEx");
 				if (mDoubleTapControllerEx != null) return;
-				mDoubleTapControllerEx = new DoubleTapController((Context)param.args[0]);
+				mDoubleTapControllerEx = new DoubleTapController((Context)param.args[0], "pref_key_launcher_doubletap");
 				XposedHelpers.setAdditionalInstanceField(param.thisObject, "mDoubleTapControllerEx", mDoubleTapControllerEx);
 			}
 		});

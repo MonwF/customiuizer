@@ -330,6 +330,11 @@
 			android:title="@string/system_4gtolte_title"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_statusbar_dttosleep"
+			android:title="@string/system_statusbar_dttosleep_title"
+			android:defaultValue="false" />
+
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_batteryindicator_cat"
 			android:title="@string/system_batteryindicator_title"

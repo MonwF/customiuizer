@@ -494,7 +494,6 @@ public class System {
                     XposedHelpers.callMethod(param.thisObject, "keyguardDone");
                 }
                 isUnlockedInnerCall = true;
-//                XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mUpdateMonitor"), "reportSuccessfulStrongAuthUnlockAttempt");
                 Intent unlockIntent = new Intent(ACTION_PREFIX + "UnlockStrongAuth");
                 mContext.sendBroadcast(unlockIntent);
             }
@@ -544,13 +543,8 @@ public class System {
                             Intent unlockIntent = new Intent(ACTION_PREFIX + "UnlockStrongAuth");
                             mContext.sendBroadcast(unlockIntent);
                         } else try {
-                            Object mStatusBar = XposedHelpers.getObjectField(param.thisObject, "mStatusBar");
-                            if (mStatusBar == null) return;
-                            XposedHelpers.callMethod(mStatusBar, "updatePublicMode");
-                            boolean isAnyProfilePublicMode = (boolean)XposedHelpers.callMethod(mStatusBar, "isAnyProfilePublicMode");
-                            Object mStackScroller = XposedHelpers.getObjectField(mStatusBar, "mStackScroller");
-                            XposedHelpers.callMethod(mStackScroller, "setHideSensitive", isAnyProfilePublicMode, true);
-                            XposedHelpers.callMethod(mStatusBar, "updateNotificationViewsOnly");
+                            Object mLockUserManager = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", lpparam.classLoader), "get", findClassIfExists("com.android.systemui.statusbar.NotificationLockscreenUserManager", lpparam.classLoader));
+                            XposedHelpers.callMethod(mLockUserManager, "updatePublicMode");
                         } catch (Throwable t) {
                             XposedBridge.log(t);
                         }
@@ -1076,14 +1070,15 @@ public class System {
     }
 
     public static void ExpandNotificationsHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "updateRowStates", new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.NotificationViewHierarchyManager", lpparam.classLoader, "updateRowStates", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                ViewGroup mStackScroller = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mStackScroller");
-                for (int i = mStackScroller.getChildCount() - 1; i >= 0; i--) {
-                    View enotificationrow = mStackScroller.getChildAt(i);
+                Object mListContainer = XposedHelpers.getObjectField(param.thisObject, "mListContainer");
+                int containerChildCount = (int)XposedHelpers.callMethod(mListContainer, "getContainerChildCount");
+                for (int i = containerChildCount - 1; i >= 0; i--) {
+                    View enotificationrow = (View)XposedHelpers.callMethod(mListContainer, "getContainerChildAt", i);
                     if (enotificationrow != null && enotificationrow.getClass().getSimpleName().equalsIgnoreCase("ExpandableNotificationRow")) try {
-                        Object notification = XposedHelpers.getObjectField(XposedHelpers.callMethod(enotificationrow, "getEntry"), "notification");
+                        Object notification = XposedHelpers.getObjectField(XposedHelpers.callMethod(enotificationrow, "getEntry"), "mSbn");
                         String pkgName = (String)XposedHelpers.callMethod(notification, "getPackageName");
                         int opt = Integer.parseInt(MainModule.mPrefs.getString("system_expandnotifs", "1"));
                         boolean isSelected = MainModule.mPrefs.getStringSet("system_expandnotifs_apps").contains(pkgName);
@@ -5066,6 +5061,29 @@ public class System {
                 String net = (String)param.getResult();
                 if ("4G".equals(net)) param.setResult("LTE");
                 else if ("4G+".equals(net)) param.setResult("LTE+");
+            }
+        });
+    }
+    public static void StatusBarDoubleTapToSleepHook(LoadPackageParam lpparam) {
+        Helpers.hookAllConstructors("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView", lpparam.classLoader, new MethodHook() {
+            @Override
+            protected void after(final MethodHookParam param) throws Throwable {
+                Object mDoubleTapControllerEx = XposedHelpers.getAdditionalInstanceField(param.thisObject, "mDoubleTapControllerEx");
+                if (mDoubleTapControllerEx != null) return;
+                mDoubleTapControllerEx = new Launcher.DoubleTapController((Context)param.args[0], "");
+                XposedHelpers.setAdditionalInstanceField(param.thisObject, "mDoubleTapControllerEx", mDoubleTapControllerEx);
+            }
+        });
+
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView", lpparam.classLoader, "handleEvent", MotionEvent.class, new MethodHook() {
+            @Override
+            protected void before(final MethodHookParam param) throws Throwable {
+                Launcher.DoubleTapController mDoubleTapControllerEx = (Launcher.DoubleTapController)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mDoubleTapControllerEx");
+                if (mDoubleTapControllerEx == null) return;
+                boolean isPanelVisible = (boolean)XposedHelpers.callMethod(param.thisObject, "shouldPanelBeVisible");
+                if (isPanelVisible) return;
+                if (!mDoubleTapControllerEx.isDoubleTapEvent((MotionEvent)param.args[0])) return;
+                GlobalActions.goToSleep(mDoubleTapControllerEx.mContext);
             }
         });
     }
