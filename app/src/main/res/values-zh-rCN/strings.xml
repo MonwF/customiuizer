@@ -1046,4 +1046,5 @@
     <string name="miuizer_show_assumelsposed_title">LSPosed模式</string>
     <string name="miuizer_show_assumelsposed_summ">假定已安装LSPosed框架以使用其管理器</string>
     <string name="various_runningservices_title">正在运行的服务</string>
+    <string name="system_statusbar_dttosleep_title">双击锁屏</string>
 </resources>
