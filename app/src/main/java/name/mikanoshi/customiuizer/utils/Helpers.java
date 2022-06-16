@@ -220,7 +220,6 @@ public class Helpers {
 			if (resId != 0) item.setBackgroundResource(resId);
 			resId = item.getResources().getIdentifier("normal_text_size", "dimen", "miui");
 			if (resId != 0 && title != null) {
-				title.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
 				title.setTextSize(TypedValue.COMPLEX_UNIT_PX, item.getResources().getDimensionPixelSize(resId));
 			}
 			resId = item.getResources().getIdentifier("secondary_text_size", "dimen", "miui");

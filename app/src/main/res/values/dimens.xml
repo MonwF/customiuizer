@@ -14,8 +14,8 @@
 	<dimen name="seekbar_margin_right">75dp</dimen>
 
 	<dimen name="progressbar_size">22.5dp</dimen>
-	<dimen name="secondary_text_size">13.25sp</dimen>
-	<dimen name="normal_text_size">16sp</dimen>
+	<dimen name="normal_text_size">16.7sp</dimen>
+	<dimen name="secondary_text_size">12sp</dimen>
 
 	<dimen name="screen_color_preview_offset">11dp</dimen>
 

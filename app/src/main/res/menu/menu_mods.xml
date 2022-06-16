@@ -1,9 +1,15 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:android="http://schemas.android.com/apk/res/android">
 	<item
+		android:id="@+id/search_btn"
+		android:title=""
+		android:icon="@drawable/abc_ic_search_api_material"
+		app:actionViewClass="androidx.appcompat.widget.SearchView"
+		app:showAsAction="always|collapseActionView" />
+	<item
 		android:id="@+id/edit_confirm"
 		android:visible="false"
-		android:title="OK"
+		android:title=""
 		app:showAsAction="always"/>
 	<item
 		android:id="@+id/softreboot"
