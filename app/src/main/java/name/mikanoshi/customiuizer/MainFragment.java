@@ -20,6 +20,9 @@ import android.text.style.AlignmentSpan;
 import android.text.style.LineHeightSpan;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +31,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+
+import androidx.appcompat.widget.SearchView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,14 +56,13 @@ public class MainFragment extends PreferenceFragmentBase {
 	public Launcher prefLauncher = new Launcher();
 	public Controls prefControls = new Controls();
 	public Various prefVarious = new Various();
-	private View searchView = null;
+	private Menu mActionMenu;
 	private ListView listView = null;
 	private ListView resultView = null;
 	private LinearLayout search = null;
-	private View modsCat = null;
-	private View markCat = null;
 	boolean isSearchFocused = false;
-	ActionMode actionMode = null;
+	int inSearchView = 0;
+	String lastFilter;
 
 	private final Runnable showUpdateNotification = new Runnable() {
 		@Override
@@ -148,6 +152,62 @@ public class MainFragment extends PreferenceFragmentBase {
 	}
 
 	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		mActionMenu = menu;
+		MenuItem searchMenuItem = mActionMenu.findItem(R.id.search_btn);
+
+		SearchView searchView = (SearchView) searchMenuItem.getActionView();
+		searchMenuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+			@Override
+			public boolean onMenuItemActionCollapse(MenuItem searchItem) {
+				MenuItem item = null;
+				for (int i = 0; i < mActionMenu.size(); i++) {
+					item = mActionMenu.getItem(i);
+					item.setVisible(item.getItemId() != R.id.edit_confirm);
+				}
+				return true;
+			}
+
+			@Override
+			public boolean onMenuItemActionExpand(MenuItem searchItem) {
+				MenuItem item = null;
+				for (int i = 0; i < mActionMenu.size(); i++) {
+					item = mActionMenu.getItem(i);
+					item.setVisible(item.getItemId() == R.id.search_btn);
+				}
+				return true;
+			}
+		});
+		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+			@Override
+			public boolean onQueryTextSubmit(String query) {
+				return false;
+			}
+
+			@Override
+			public boolean onQueryTextChange(String newText) {
+				if (newText.length() > 0) {
+					inSearchView = 1;
+				}
+				findMod(newText);
+				return false;
+			}
+		});
+		searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				isSearchFocused = hasFocus;
+			}
+		});
+		if (inSearchView == 2) {
+			searchMenuItem.expandActionView();
+			searchView.setQuery(lastFilter, false);
+			searchView.clearFocus();
+		}
+	}
+
+	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		supressMenu = true;
 		super.onActivityCreated(savedInstanceState);
@@ -159,6 +219,7 @@ public class MainFragment extends PreferenceFragmentBase {
 		resultView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				inSearchView = 2;
 				ModData mod = (ModData)parent.getAdapter().getItem(position);
 				openModCat(mod.cat.name(), mod.sub, mod.key);
 			}
@@ -167,7 +228,7 @@ public class MainFragment extends PreferenceFragmentBase {
 			@Override
 			@SuppressLint("ClickableViewAccessibility")
 			public boolean onTouch(View v, MotionEvent event) {
-				if (actionMode != null && isSearchFocused) {
+				if (isSearchFocused) {
 					isSearchFocused = false;
 					Handler handler = new Handler(v.getContext().getMainLooper());
 					handler.postDelayed(new Runnable() {
@@ -176,11 +237,14 @@ public class MainFragment extends PreferenceFragmentBase {
 							Helpers.hideKeyboard(getActivity(), getView());
 						}
 					}, getResources().getInteger(android.R.integer.config_shortAnimTime));
+					resultView.requestFocus();
 				}
 				return false;
 			}
 		});
 		setViewBackground(resultView);
+
+		listView = getView().findViewById(android.R.id.list);
 		final Activity act = getActivity();
 
 		PreferenceEx warning = (PreferenceEx)findPreference("pref_key_warning");
@@ -248,6 +312,8 @@ public class MainFragment extends PreferenceFragmentBase {
 	}
 
 	void findMod(String filter) {
+		if (inSearchView == 2) return;
+		lastFilter = filter;
 		resultView.setVisibility(filter.equals("") ? View.GONE : View.VISIBLE);
 		listView.setEnabled(filter.equals(""));
 		ListAdapter adapter = resultView.getAdapter();
@@ -318,36 +384,4 @@ public class MainFragment extends PreferenceFragmentBase {
 			t.printStackTrace();
 		}
 	}
-
-	private void showPrefsMigrationDialog(boolean success) {
-		try {
-			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			builder.setTitle(R.string.warning);
-			builder.setMessage(success ? R.string.prefs_migration_success : R.string.prefs_migration_failure);
-			builder.setCancelable(false);
-			builder.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int whichButton){}
-			});
-			AlertDialog dlg = builder.create();
-			dlg.show();
-		} catch (Throwable t) {
-			t.printStackTrace();
-		}
-	}
-
-//	private void showNotYetDialog() {
-//		try {
-//			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//			builder.setTitle(R.string.info);
-//			builder.setMessage(R.string.not_yet);
-//			builder.setCancelable(true);
-//			builder.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-//				public void onClick(DialogInterface dialog, int whichButton){}
-//			});
-//			AlertDialog dlg = builder.create();
-//			dlg.show();
-//		} catch (Throwable t) {
-//			t.printStackTrace();
-//		}
-//	}
 }

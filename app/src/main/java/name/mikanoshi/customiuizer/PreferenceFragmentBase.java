@@ -36,7 +36,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.ActionBar;
 
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -72,20 +71,12 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 				item = menu.getItem(i);
 				item.setVisible(item.getItemId() == R.id.edit_confirm);
 			}
-		}
-	}
-
-	@Override
-	public void onPrepareOptionsMenu(Menu menu) {
-		if (isCustomActionBar) {
 			MenuItem confirmMenu = menu.findItem(R.id.edit_confirm);
-			confirmMenu.setTitle(null);
 			int applyResId = getResources().getIdentifier(Helpers.isNightMode(getValidContext()) ? "action_mode_title_button_confirm_dark" : "action_mode_title_button_confirm_light", "drawable", "miui");
 			if (applyResId == 0)
 				applyResId = getResources().getIdentifier(Helpers.isNightMode(getValidContext()) ? "action_mode_immersion_done_dark" : "action_mode_immersion_done_light", "drawable", "miui");
 			confirmMenu.setIcon(applyResId);
 		}
-		super.onPrepareOptionsMenu(menu);
 	}
 
 	public void confirmEdit() {}
@@ -165,6 +156,8 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 
 	private void initFragment() {
 		setHasOptionsMenu(supressMenu);
+		ActionBar actionBar = getActionBar();
+		actionBar.setTitle(R.string.app_name);
 
 		boolean showBack = false;
 		if (this instanceof MainFragment) {
@@ -178,8 +171,6 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 			}
 		} else showBack = !(this instanceof SnoozedFragment);
 
-		ActionBar actionBar = getActionBar();
-		actionBar.setTitle(R.string.app_name);
 		actionBar.setDisplayHomeAsUpEnabled(showBack);
 	}
 

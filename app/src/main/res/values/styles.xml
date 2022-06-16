@@ -19,12 +19,7 @@
 		<item name="android:activityCloseEnterAnimation">@anim/activity_close_enter</item>
 		<item name="android:activityCloseExitAnimation">@anim/activity_close_exit</item>
 	</style>
-	<style name="ActivityAnimation10" parent="@android:style/Animation">
-		<item name="android:activityOpenEnterAnimation">@anim/activity_open_enter10</item>
-		<item name="android:activityOpenExitAnimation">@anim/activity_open_exit</item>
-		<item name="android:activityCloseEnterAnimation">@anim/activity_close_enter</item>
-		<item name="android:activityCloseExitAnimation">@anim/activity_close_exit</item>
-	</style>
+	<style name="ToolbarStyle" parent="ThemeOverlay.AppCompat.DayNight.ActionBar"></style>
 
 	<style name="Invisible" parent="@android:style/Theme.Translucent">
 		<item name="android:backgroundDimEnabled">true</item>
@@ -113,6 +108,7 @@
 		<item name="android:layout_marginTop">8dp</item>
 		<item name="android:layout_height">50dp</item>
 		<item name="android:textAllCaps">true</item>
+		<item name="android:paddingStart">?android:attr/listPreferredItemPaddingLeft</item>
 		<item name="android:textSize">@dimen/preference_category_text_size</item>
 		<item name="android:textColor">@color/preference_category_text_color</item>
 	</style>

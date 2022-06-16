@@ -942,7 +942,7 @@ public class GlobalActions {
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 				IntentFilter intentfilter = new IntentFilter();
 				intentfilter.addAction(ACTION_PREFIX + "SaveLastMusicPausedTime");
-				intentfilter.addAction(ACTION_PREFIX + "RestartLauncher");
+//				intentfilter.addAction(ACTION_PREFIX + "RestartLauncher");
 				mContext.registerReceiver(new BroadcastReceiver() {
 					public void onReceive(final Context context, Intent intent) {
 						String action = intent.getAction();
