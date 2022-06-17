@@ -3239,10 +3239,10 @@ public class System {
                 try {
                     if (param.args[0] == null) return;
                     Intent origIntent = (Intent)param.args[0];
-                    Intent intent = (Intent)origIntent.clone();
-                    String action = intent.getAction();
+                    String action = origIntent.getAction();
                     if (action == null) return;
                     if (!action.equals(Intent.ACTION_SEND) && !action.equals(Intent.ACTION_SENDTO) && !action.equals(Intent.ACTION_SEND_MULTIPLE)) return;
+                    Intent intent = (Intent)origIntent.clone();
                     if (intent.getDataString() != null && intent.getDataString().contains(":")) return;
                     if (intent.hasExtra("CustoMIUIzer") && intent.getBooleanExtra("CustoMIUIzer", false)) return;
                     Set<String> selectedApps = MainModule.mPrefs.getStringSet("system_cleanshare_apps");
@@ -3258,7 +3258,9 @@ public class System {
                         boolean hasDual = false;
                         try {
                             hasDual = XposedHelpers.callMethod(pm, "getPackageInfoAsUser", resolveInfo.activityInfo.packageName, 0, 999) != null;
-                        } catch (Throwable ignore) {}
+                        } catch (Throwable ignore) {
+                            XposedBridge.log(ignore);
+                        }
                         if ((removeOriginal && !hasDual) || removeOriginal && hasDual && removeDual) itr.remove();
                     }
                     param.setResult(resolved);
@@ -7131,11 +7133,11 @@ public class System {
     }
 
     public static String getTaskPackageName(Object thisObject, int taskId, boolean withOptions, ActivityOptions options) {
-        Object mRootActivityContainer = XposedHelpers.getObjectField(thisObject, "mRootActivityContainer");
-        if (mRootActivityContainer == null) return null;
+        Object mRootWindowContainer = XposedHelpers.getObjectField(thisObject, "mRootWindowContainer");
+        if (mRootWindowContainer == null) return null;
         Object task = withOptions ?
-                XposedHelpers.callMethod(mRootActivityContainer, "anyTaskForId", taskId, 2, options, true) :
-                XposedHelpers.callMethod(mRootActivityContainer, "anyTaskForId", taskId, 0);
+                XposedHelpers.callMethod(mRootWindowContainer, "anyTaskForId", taskId, 2, options, true) :
+                XposedHelpers.callMethod(mRootWindowContainer, "anyTaskForId", taskId, 0);
         if (task == null) return null;
         Intent intent = (Intent)XposedHelpers.getObjectField(task, "intent");
         return intent == null ? null : intent.getComponent().getPackageName();
@@ -7185,7 +7187,7 @@ public class System {
                 int windowingMode = options == null ? -1 : (int)XposedHelpers.callMethod(options, "getLaunchWindowingMode");
                 String pkgName = intent.getComponent().getPackageName();
                 if (windowingMode != 5 && fwApps.containsKey(pkgName)) try {
-                    Class<?> mmwuCls = findClassIfExists("android.util.MiuiMultiWindowUtils", null);
+                    Class<?> mmwuCls = findClassIfExists("android.util.MiuiMultiWindowUtils", lpparam.classLoader);
                     if (mmwuCls == null) {
                         Helpers.log("StickyFloatingWindowsHook", "Cannot find MiuiMultiWindowUtils class");
                         return;
@@ -7210,7 +7212,9 @@ public class System {
                     try {
                         Object injector = XposedHelpers.callMethod(options, "getActivityOptionsInjector");
                         XposedHelpers.callMethod(injector, "setFreeformScale", scale);
-                    } catch (Throwable ignore) {}
+                    } catch (Throwable ignore) {
+                        XposedBridge.log(ignore);
+                    }
 
                     param.setResult(options);
                 } catch (Throwable t) {
@@ -7219,7 +7223,7 @@ public class System {
             }
         });
 
-        Helpers.hookAllMethods("com.android.server.wm.ActivityStackSupervisor", lpparam.classLoader, "startActivityFromRecents", new MethodHook() {
+        Helpers.hookAllMethods("com.android.server.wm.ActivityTaskSupervisor", lpparam.classLoader, "startActivityFromRecents", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 Object safeOptions = param.args[3];
@@ -7237,19 +7241,12 @@ public class System {
         Helpers.hookAllMethods("com.android.server.wm.MiuiFreeFormGestureController", lpparam.classLoader, "notifyFullScreenWidnowModeStart", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
-                String pkgName = (String)XposedHelpers.getObjectField(param.thisObject, "mFreeFormPackageName");
+                if (param.args.length != 3) return;
+                String pkgName = (String)XposedHelpers.callMethod(param.args[1], "getStackPackageName");
                 if (fwApps.remove(pkgName) != null)
                     storeFwAppsInSetting((Context)XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.thisObject, "mService"), "mContext"));
             }
         });
-
-//		Helpers.hookAllMethods("com.android.server.wm.MiuiFreeFormGesturePointerEventListener", lpparam.classLoader, "startShowFullScreenWindow", new MethodHook() {
-//			@Override
-//			protected void before(MethodHookParam param) throws Throwable {
-//				Object mGestureController = XposedHelpers.getObjectField(param.thisObject, "mGestureController");
-//				XposedBridge.log("FULLSCREEN: " + XposedHelpers.getObjectField(mGestureController, "mFreeFormPackageName"));
-//			}
-//		});
 
         Helpers.findAndHookMethod("com.android.server.wm.ActivityTaskManagerService", lpparam.classLoader, "onSystemReady", new MethodHook() {
             @Override
