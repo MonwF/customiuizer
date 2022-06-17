@@ -1009,7 +1009,7 @@
     <string name="system_clockseconds_sync_summ">尝试在指定时间更新值</string>
     <string name="array_second_beginning">开始秒</string>
     <string name="array_second_end">结束秒</string>
-    <string name="array_alarm_both">定期和相对时间</string>
+    <string name="array_alarm_both">定时和相对时间</string>
     <string name="miuizer_ownrepo_unsupported">不支持的EdXposed Manager版本已安装</string>
     <string name="warning_scope">此模块的激活范围已激活，可能会阻止某些模块正常运行。</string>
     <string name="system_networkindicator_title">网络活动指示器</string>
