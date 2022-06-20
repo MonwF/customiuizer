@@ -141,6 +141,8 @@
 	<string name="system_inactivebrightness_title">Deactivate brightness slider</string>
 	<string name="system_notifrowmenu_title">Extended notification menu</string>
 	<string name="system_notifrowmenu_summ">Open app info and force close app from notification menu (swipe notification to the left to open it)</string>
+	<string name="system_notifrowmenu_appinfo">App info</string>
+	<string name="system_notifrowmenu_forceclose">Force close</string>
 	<string name="system_disableanynotif_title">Disable any notification</string>
 	<string name="system_disableanynotif_summ">Allow to disable system notifications too</string>
 	<string name="system_expandnotifs_title">Expand notifications</string>

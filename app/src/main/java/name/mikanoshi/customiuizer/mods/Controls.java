@@ -186,7 +186,7 @@ public class Controls {
 	}
 
 	public static void VolumeMediaButtonsHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "interceptKeyBeforeQueueing", KeyEvent.class, int.class, new MethodHook() {
+		Helpers.findAndHookMethod("com.android.server.policy.MiuiPhoneWindowManager", lpparam.classLoader, "interceptKeyBeforeQueueing", KeyEvent.class, int.class, new MethodHook() {
 			@Override
 			@SuppressLint("MissingPermission")
 			protected void before(final MethodHookParam param) throws Throwable {
