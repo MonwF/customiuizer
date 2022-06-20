@@ -31,8 +31,6 @@ public class System_AutoBrightness extends SubFragment {
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {}
 		});
-
-		findPreference("pref_key_system_autobrightness_hlg").setEnabled(!Helpers.isPiePlus());
 	}
 
 }
