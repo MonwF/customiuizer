@@ -51,13 +51,13 @@
     <string name="system_batteryindicator_summ">将电池电量显示为彩色条</string>
     <string name="system_batteryindicator_limitvis_title">限制可见性</string>
     <string name="system_batteryindicator_limitvis_summ">仅在通知抽屉中和锁屏上显示</string>
-    <string name="system_batteryindicator_rounded_title">圆形</string>
+    <string name="system_batteryindicator_rounded_title">圆角</string>
     <string name="system_batteryindicator_centered_title">居中</string>
     <string name="system_batteryindicator_height_title">电量条高度</string>
     <string name="system_batteryindicator_padding_title">水平边距</string>
     <string name="system_batteryindicator_colorval1_title">满电颜色</string>
     <string name="system_batteryindicator_colorval2_title">低电量颜色</string>
-    <string name="system_batteryindicator_colorval3_title">电池保护程序颜色</string>
+    <string name="system_batteryindicator_colorval3_title">省电模式颜色</string>
     <string name="system_batteryindicator_colorval4_title">充电颜色</string>
     <string name="system_batteryindicator_lowlevel_title">低电量水平</string>
     <string name="system_batteryindicator_test_title">测试</string>

@@ -26,7 +26,7 @@ import android.widget.ImageView;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 
-public class BatteryIndicator extends ImageView {
+public class BatteryIndicator extends androidx.appcompat.widget.AppCompatImageView {
 	protected int mDisplayWidth;
 	protected boolean mIsBeingCharged;
 	protected boolean mIsExtremePowerSave;

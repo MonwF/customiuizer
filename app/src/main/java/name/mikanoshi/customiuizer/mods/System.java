@@ -2178,26 +2178,26 @@ public class System {
             @Override
             @SuppressWarnings({"unchecked", "SuspiciousMethodCalls"})
             protected void before(final MethodHookParam param) throws Throwable {
-                int opt = Integer.parseInt(MainModule.mPrefs.getString("system_autogroupnotif", "1"));
-                if (opt == 2) {
-                    param.setResult(null);
-                    return;
-                }
-                Map<Integer, Map<String, LinkedHashSet<String>>> mUngroupedNotifications = (Map<Integer, Map<String, LinkedHashSet<String>>>)XposedHelpers.getObjectField(param.thisObject, "mUngroupedNotifications");
-                Map<String, LinkedHashSet<String>> obj = mUngroupedNotifications.get(param.args[0]);
-                if (obj != null) {
-                    LinkedHashSet<String> list = obj.get(param.args[1]);
-                    if (list != null && list.size() < opt) param.setResult(null);
-                }
+            int opt = Integer.parseInt(MainModule.mPrefs.getString("system_autogroupnotif", "1"));
+            if (opt == 2) {
+                param.setResult(null);
+                return;
+            }
+            Map<Integer, Map<String, LinkedHashSet<String>>> mUngroupedNotifications = (Map<Integer, Map<String, LinkedHashSet<String>>>)XposedHelpers.getObjectField(param.thisObject, "mUngroupedNotifications");
+            Map<String, LinkedHashSet<String>> obj = mUngroupedNotifications.get(param.args[0]);
+            if (obj != null) {
+                LinkedHashSet<String> list = obj.get(param.args[1]);
+                if (list != null && list.size() < opt) param.setResult(null);
+            }
             }
         });
 
         Helpers.findAndHookMethod("com.android.server.notification.GroupHelper", lpparam.classLoader, "adjustNotificationBundling", List.class, boolean.class, new MethodHook() {
             @Override
             protected void before(final MethodHookParam param) throws Throwable {
-                List<?> list = (List<?>)param.args[0];
-                int opt = Integer.parseInt(MainModule.mPrefs.getString("system_autogroupnotif", "1"));
-                if (opt == 2 || (list != null && list.size() < opt)) param.setResult(null);
+            List<?> list = (List<?>)param.args[0];
+            int opt = Integer.parseInt(MainModule.mPrefs.getString("system_autogroupnotif", "1"));
+            if (opt == 2 || (list != null && list.size() < opt)) param.setResult(null);
             }
         });
     }
@@ -3721,7 +3721,7 @@ public class System {
     }
 
     public static void HideIconsBattery1Hook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.BatteryMeterView", lpparam.classLoader, "update", new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.views.MiuiBatteryMeterView", lpparam.classLoader, "initMiuiView", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 ImageView mBatteryIconView = (ImageView)XposedHelpers.getObjectField(param.thisObject, "mBatteryIconView");
@@ -3731,25 +3731,21 @@ public class System {
     }
 
     public static void HideIconsBattery2Hook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.BatteryMeterView", lpparam.classLoader, "update", new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.views.MiuiBatteryMeterView", lpparam.classLoader, "updateChargeAndText", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                TextView mBatteryTextDigitView = (TextView)XposedHelpers.getObjectField(param.thisObject, "mBatteryTextDigitView");
-                mBatteryTextDigitView.setVisibility(View.GONE);
-            }
-        });
-    }
-
-    public static void HideIconsBattery3Hook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.BatteryMeterView", lpparam.classLoader, "updateChargingIconView", new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                ImageView mBatteryChargingView = (ImageView)XposedHelpers.getObjectField(param.thisObject, "mBatteryChargingView");
-                mBatteryChargingView.setVisibility(View.GONE);
-                try {
-                    ImageView mBatteryChargingInView = (ImageView)XposedHelpers.getObjectField(param.thisObject, "mBatteryChargingInView");
-                    mBatteryChargingInView.setVisibility(View.GONE);
-                } catch (Throwable ignore) {}
+                if (MainModule.mPrefs.getBoolean("system_statusbaricons_battery2")) {
+                    TextView mBatteryTextDigitView = (TextView)XposedHelpers.getObjectField(param.thisObject, "mBatteryTextDigitView");
+                    mBatteryTextDigitView.setVisibility(View.GONE);
+                }
+                if (MainModule.mPrefs.getBoolean("system_statusbaricons_battery3")) {
+                    ImageView mBatteryChargingView = (ImageView)XposedHelpers.getObjectField(param.thisObject, "mBatteryChargingView");
+                    mBatteryChargingView.setVisibility(View.GONE);
+                    try {
+                        ImageView mBatteryChargingInView = (ImageView)XposedHelpers.getObjectField(param.thisObject, "mBatteryChargingInView");
+                        mBatteryChargingInView.setVisibility(View.GONE);
+                    } catch (Throwable ignore) {}
+                }
             }
         });
     }
@@ -3815,17 +3811,17 @@ public class System {
             }
         });
 
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.PhoneStatusBarPolicy", lpparam.classLoader, "updateAlarm", boolean.class, new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.PhoneStatusBarPolicy", lpparam.classLoader, "updateAlarm", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                lastState = (boolean)param.args[0];
+                lastState = (boolean)XposedHelpers.getObjectField(param.thisObject, "mHasAlarm");
                 updateAlarmVisibility(param.thisObject, lastState);
             }
         });
     }
 
     public static void HideIconsBluetoothHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.PhoneStatusBarPolicy", lpparam.classLoader, "updateBluetooth", String.class, new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarPolicy", lpparam.classLoader, "updateBluetooth", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 int opt = Integer.parseInt(MainModule.mPrefs.getString("system_statusbaricons_bluetooth", "1"));
@@ -3863,16 +3859,6 @@ public class System {
         });
     }
 
-    public static void HideIconsNoWiFiHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.SignalClusterView", lpparam.classLoader, "apply", new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                View mWifiGroup = (View)XposedHelpers.getObjectField(param.thisObject, "mWifiGroup");
-                if (mWifiGroup != null) mWifiGroup.setVisibility(View.GONE);
-            }
-        });
-    }
-
     public static void HideIconsVoWiFiHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethod("com.android.systemui.statusbar.SignalClusterView", lpparam.classLoader, "apply", new MethodHook() {
             @Override
@@ -3897,6 +3883,7 @@ public class System {
                 "managed_profile".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_profile") ||
                 "vpn".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_vpn") ||
                 "nfc".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_nfc") ||
+                "wifi".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_wifi") ||
                 "hotspot".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_hotspot");
         } catch (Throwable t) {
             XposedBridge.log(t);
@@ -3919,14 +3906,14 @@ public class System {
     }
 
     public static void BatteryIndicatorHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "makeStatusBarView", new MethodHook() {
+        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "makeStatusBarView", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
                 Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-                FrameLayout mStatusBarWindow = (FrameLayout)XposedHelpers.getObjectField(param.thisObject, "mStatusBarWindow");
+                FrameLayout mStatusBarWindow = (FrameLayout)XposedHelpers.getObjectField(param.thisObject, "mPhoneStatusBarWindow");
                 BatteryIndicator indicator = new BatteryIndicator(mContext);
                 View panel = mStatusBarWindow.findViewById(mContext.getResources().getIdentifier("notification_panel", "id", lpparam.packageName));
-                mStatusBarWindow.addView(indicator, panel != null ? mStatusBarWindow.indexOfChild(panel) + 1 : Math.max(mStatusBarWindow.getChildCount() - 1, 8));
+                mStatusBarWindow.addView(indicator, panel != null ? mStatusBarWindow.indexOfChild(panel) + 1 : Math.max(mStatusBarWindow.getChildCount() - 1, 2));
                 indicator.setAdjustViewBounds(false);
                 indicator.init(param.thisObject);
                 XposedHelpers.setAdditionalInstanceField(param.thisObject, "mBatteryIndicator", indicator);
@@ -3936,7 +3923,7 @@ public class System {
                 XposedHelpers.setAdditionalInstanceField(mBatteryController, "mBatteryIndicator", indicator);
                 XposedHelpers.callMethod(mBatteryController, "fireBatteryLevelChanged");
                 XposedHelpers.callMethod(mBatteryController, "firePowerSaveChanged");
-                XposedHelpers.callMethod(mBatteryController, "fireExtremePowerSaveChanged");
+//                XposedHelpers.callMethod(mBatteryController, "fireExtremePowerSaveChanged");
             }
         });
 
@@ -3959,7 +3946,7 @@ public class System {
             }
         });
 
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "updateKeyguardState", boolean.class, boolean.class, new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "updateKeyguardState", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
                 boolean isKeyguardShowing = (boolean)XposedHelpers.callMethod(param.thisObject, "isKeyguardShowing");
@@ -3976,7 +3963,7 @@ public class System {
             }
         });
 
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BatteryControllerImpl", lpparam.classLoader, "fireBatteryLevelChanged", new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.MiuiBatteryControllerImpl", lpparam.classLoader, "fireBatteryLevelChanged", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
                 BatteryIndicator indicator = (BatteryIndicator)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mBatteryIndicator");
@@ -3991,17 +3978,17 @@ public class System {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
                 BatteryIndicator indicator = (BatteryIndicator)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mBatteryIndicator");
-                if (indicator != null) indicator.onPowerSaveChanged(XposedHelpers.getBooleanField(param.thisObject, "mIsPowerSaveMode"));
+                if (indicator != null) indicator.onPowerSaveChanged(XposedHelpers.getBooleanField(param.thisObject, "mPowerSave"));
             }
         });
 
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BatteryControllerImpl", lpparam.classLoader, "fireExtremePowerSaveChanged", new MethodHook() {
-            @Override
-            protected void after(final MethodHookParam param) throws Throwable {
-                BatteryIndicator indicator = (BatteryIndicator)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mBatteryIndicator");
-                if (indicator != null) indicator.onExtremePowerSaveChanged(XposedHelpers.getBooleanField(param.thisObject, "mIsExtremePowerSaveMode"));
-            }
-        });
+//        Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BatteryControllerImpl", lpparam.classLoader, "fireExtremePowerSaveChanged", new MethodHook() {
+//            @Override
+//            protected void after(final MethodHookParam param) throws Throwable {
+//                BatteryIndicator indicator = (BatteryIndicator)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mBatteryIndicator");
+//                if (indicator != null) indicator.onExtremePowerSaveChanged(XposedHelpers.getBooleanField(param.thisObject, "mIsExtremePowerSaveMode"));
+//            }
+//        });
     }
 
     private static boolean obtainMagnifierShowCoordinates(Object mEditor, int type, final MotionEvent event, final PointF showPosInView) {
@@ -5350,8 +5337,7 @@ public class System {
     }
 
     public static void HideIconsVoLTEHook(LoadPackageParam lpparam) {
-        //noinspection ResultOfMethodCallIgnored
-        Helpers.findAndHookMethodSilently("com.android.systemui.MCCUtils", lpparam.classLoader, "isHideVolte", Context.class, String.class, XC_MethodReplacement.returnConstant(true));
+        Helpers.findAndHookMethodSilently("com.android.systemui.MiuiOperatorCustomizedPolicy$MiuiOperatorConfig", lpparam.classLoader, "getHideVolte", XC_MethodReplacement.returnConstant(true));
     }
 
     public static void HideLockScreenClockHook(LoadPackageParam lpparam) {

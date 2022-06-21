@@ -256,11 +256,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_mutevisiblenotif")) System.MuteVisibleNotificationsHook(lpparam);
             if (mPrefs.getBoolean("launcher_nounlockanim")) System.NoUnlockAnimationHook(lpparam);
             if (mPrefs.getBoolean("system_statusbaricons_battery1")) System.HideIconsBattery1Hook(lpparam);
-            if (mPrefs.getBoolean("system_statusbaricons_battery2")) System.HideIconsBattery2Hook(lpparam);
-            if (mPrefs.getBoolean("system_statusbaricons_battery3")) System.HideIconsBattery3Hook(lpparam);
+            if (mPrefs.getBoolean("system_statusbaricons_battery3") || mPrefs.getBoolean("system_statusbaricons_battery2")) System.HideIconsBattery2Hook(lpparam);
             if (mPrefs.getBoolean("system_statusbaricons_signal")) System.HideIconsSignalHook(lpparam);
             if (mPrefs.getBoolean("system_statusbaricons_nosims")) System.HideIconsNoSIMsHook(lpparam);
-            if (mPrefs.getBoolean("system_statusbaricons_wifi")) System.HideIconsNoWiFiHook(lpparam);
             if (mPrefs.getBoolean("system_statusbaricons_volte")) System.HideIconsVoLTEHook(lpparam);
             if (mPrefs.getBoolean("system_statusbaricons_vowifi")) System.HideIconsVoWiFiHook(lpparam);
             if (!mPrefs.getBoolean("system_statusbaricons_alarm") && mPrefs.getInt("system_statusbaricons_alarmn", 0) > 0) System.HideIconsSelectiveAlarmHook(lpparam);
@@ -276,17 +274,18 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 
 
             boolean hideIconsActive =
+                mPrefs.getBoolean("system_statusbaricons_wifi") ||
                 mPrefs.getBoolean("system_statusbaricons_alarm") ||
-                    mPrefs.getBoolean("system_statusbaricons_profile") ||
-                    mPrefs.getBoolean("system_statusbaricons_sound") ||
-                    mPrefs.getBoolean("system_statusbaricons_dnd") ||
-                    mPrefs.getBoolean("system_statusbaricons_headset") ||
-                    mPrefs.getBoolean("system_statusbaricons_mute") ||
-                    mPrefs.getBoolean("system_statusbaricons_speaker") ||
-                    mPrefs.getBoolean("system_statusbaricons_record") ||
-                    mPrefs.getBoolean("system_statusbaricons_nfc") ||
-                    mPrefs.getBoolean("system_statusbaricons_vpn") ||
-                    mPrefs.getBoolean("system_statusbaricons_hotspot");
+                mPrefs.getBoolean("system_statusbaricons_profile") ||
+                mPrefs.getBoolean("system_statusbaricons_sound") ||
+                mPrefs.getBoolean("system_statusbaricons_dnd") ||
+                mPrefs.getBoolean("system_statusbaricons_headset") ||
+                mPrefs.getBoolean("system_statusbaricons_mute") ||
+                mPrefs.getBoolean("system_statusbaricons_speaker") ||
+                mPrefs.getBoolean("system_statusbaricons_record") ||
+                mPrefs.getBoolean("system_statusbaricons_nfc") ||
+                mPrefs.getBoolean("system_statusbaricons_vpn") ||
+                mPrefs.getBoolean("system_statusbaricons_hotspot");
             if (hideIconsActive) System.HideIconsHook(lpparam);
 
             if (Helpers.is12()) {
