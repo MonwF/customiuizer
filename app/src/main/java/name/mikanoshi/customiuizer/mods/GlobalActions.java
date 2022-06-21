@@ -149,62 +149,60 @@ public class GlobalActions {
 				String action = intent.getAction();
 				if (action == null) return;
 
-//				if (action.equals(ACTION_PREFIX + "ShowQuickRecents")) {
-//					if (floatSel == null) floatSel = new FloatingSelector(context);
-//					floatSel.show();
-//				} else if (action.equals(ACTION_PREFIX + "HideQuickRecents")) {
-//					if (floatSel != null) floatSel.hide();
-//				}
-
 				if (action.equals(ACTION_PREFIX + "RestartSystemUI")) {
 					Process.sendSignal(Process.myPid(), Process.SIGNAL_KILL);
 				}
-
-				if (action.equals(ACTION_PREFIX + "CopyToExternal")) try {
-					String dir = Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder;
-					new File(dir).mkdirs();
-
-					int copyAction = intent.getIntExtra("action", 0);
-					if (copyAction == 1) {
-						Helpers.copyFile(intent.getStringExtra("from"), dir + Helpers.wallpaperFile);
-						Intent lockIntent = new Intent("miui.intent.action.SET_LOCK_WALLPAPER");
-						lockIntent.setPackage("com.android.thememanager");
-						lockIntent.putExtra("lockWallpaperPath", dir + Helpers.wallpaperFile);
-						context.sendBroadcast(lockIntent);
-					} else if (copyAction == 2) {
-						File xposedVersion = new File(dir + Helpers.versionFile);
-						xposedVersion.createNewFile();
-						try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(xposedVersion, false))) {
-							out.write(intent.getStringExtra("data"));
-						}
-					}
-				} catch (Throwable t) {
-					XposedBridge.log(t);
-				}
-
-				if (action.equals(ACTION_PREFIX + "CollectXposedLog")) try {
-					String errorLogPath = Helpers.getXposedInstallerErrorLog(context);
-					if (errorLogPath != null)
-					try (InputStream in = new FileInputStream(errorLogPath)) {
+				else if (action.equals(ACTION_PREFIX + "CopyToExternal")) {
+					try {
 						String dir = Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder;
 						new File(dir).mkdirs();
-						File sdcardLog = new File(dir + Helpers.logFile);
-						sdcardLog.createNewFile();
-						try (OutputStream out = new FileOutputStream(sdcardLog, false)) {
-							byte[] buf = new byte[1024];
-							int len;
-							while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
-						}
-					}
-				} catch (Throwable t) {
-					XposedBridge.log(t);
-				}
 
-				if (action.equals(ACTION_PREFIX + "ClearMemory")) {
+						int copyAction = intent.getIntExtra("action", 0);
+						if (copyAction == 1) {
+							Helpers.copyFile(intent.getStringExtra("from"), dir + Helpers.wallpaperFile);
+							Intent lockIntent = new Intent("miui.intent.action.SET_LOCK_WALLPAPER");
+							lockIntent.setPackage("com.android.thememanager");
+							lockIntent.putExtra("lockWallpaperPath", dir + Helpers.wallpaperFile);
+							context.sendBroadcast(lockIntent);
+						} else if (copyAction == 2) {
+							File xposedVersion = new File(dir + Helpers.versionFile);
+							xposedVersion.createNewFile();
+							try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(xposedVersion, false))) {
+								out.write(intent.getStringExtra("data"));
+							}
+						}
+					} catch (Throwable t) {
+						XposedBridge.log(t);
+					}
+				}
+				else if (action.equals(ACTION_PREFIX + "CollectXposedLog")) {
+					try {
+						String errorLogPath = Helpers.getXposedInstallerErrorLog(context);
+						if (errorLogPath != null)
+							try (InputStream in = new FileInputStream(errorLogPath)) {
+								String dir = Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder;
+								new File(dir).mkdirs();
+								File sdcardLog = new File(dir + Helpers.logFile);
+								sdcardLog.createNewFile();
+								try (OutputStream out = new FileOutputStream(sdcardLog, false)) {
+									byte[] buf = new byte[1024];
+									int len;
+									while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
+								}
+							}
+					} catch (Throwable t) {
+						XposedBridge.log(t);
+					}
+				}
+				else if (action.equals(ACTION_PREFIX + "ClearMemory")) {
 					Intent clearIntent = new Intent("com.android.systemui.taskmanager.Clear");
 					clearIntent.putExtra("show_toast", true);
 					//clearIntent.putExtra("clean_type", -1);
 					context.sendBroadcast(clearIntent);
+				}
+				else if (action.equals(ACTION_PREFIX + "RestartLauncher")) {
+					ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+					XposedHelpers.callMethod(am, "forceStopPackage", "com.miui.home");
 				}
 
 				if (mStatusBar != null) {
@@ -328,28 +326,20 @@ public class GlobalActions {
 						XposedHelpers.callMethod(mHotspotController, "setHotspotEnabled", !mHotspotEnabled);
 					}
 
-					Object mToggleManager = XposedHelpers.getObjectField(mStatusBar, "mToggleManager");
-					if (mToggleManager == null) return;
-					if (action.equals(ACTION_PREFIX + "ToggleGPS")) {
-						boolean mGpsEnable = (boolean)XposedHelpers.getObjectField(mToggleManager, "mGpsEnable");
-						if (mGpsEnable)
-							Toast.makeText(context, modRes.getString(R.string.toggle_gps_off), Toast.LENGTH_SHORT).show();
-						else
-							Toast.makeText(context, modRes.getString(R.string.toggle_gps_on), Toast.LENGTH_SHORT).show();
-						XposedHelpers.callMethod(mToggleManager, "toggleGps");
-					}
 					if (action.equals(ACTION_PREFIX + "ToggleFlashlight")) {
-						boolean mTorchEnable = (boolean)XposedHelpers.getObjectField(mToggleManager, "mTorchEnable");
-						if (mTorchEnable)
-							Toast.makeText(context, modRes.getString(R.string.toggle_flash_off), Toast.LENGTH_SHORT).show();
-						else
-							Toast.makeText(context, modRes.getString(R.string.toggle_flash_on), Toast.LENGTH_SHORT).show();
-						XposedHelpers.callMethod(mToggleManager, "toggleTorch");
+						XposedHelpers.callStaticMethod(findClass("com.miui.systemui.util.CommonUtil", context.getClassLoader()), "toggleTorch");
 					}
-
-					//Intent intent = new Intent("com.miui.app.ExtraStatusBarManager.action_TRIGGER_TOGGLE");
-					//intent.putExtra("com.miui.app.ExtraStatusBarManager.extra_TOGGLE_ID", 10);
-					//mContext.sendBroadcast(intent);
+					// @todo fix gps toggle
+//					Object mToggleManager = XposedHelpers.getObjectField(mStatusBar, "mToggleManager");
+//					if (mToggleManager == null) return;
+//					if (action.equals(ACTION_PREFIX + "ToggleGPS")) {
+//						boolean mGpsEnable = (boolean)XposedHelpers.getObjectField(mToggleManager, "mGpsEnable");
+//						if (mGpsEnable)
+//							Toast.makeText(context, modRes.getString(R.string.toggle_gps_off), Toast.LENGTH_SHORT).show();
+//						else
+//							Toast.makeText(context, modRes.getString(R.string.toggle_gps_on), Toast.LENGTH_SHORT).show();
+//						XposedHelpers.callMethod(mToggleManager, "toggleGps");
+//					}
 				}
 			} catch (Throwable t) {
 				XposedBridge.log(t);
@@ -936,33 +926,6 @@ public class GlobalActions {
 			}
 		});
 
-		Helpers.hookAllMethods("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "init", new MethodHook() {
-			@Override
-			protected void after(MethodHookParam param) throws Throwable {
-				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-				IntentFilter intentfilter = new IntentFilter();
-				intentfilter.addAction(ACTION_PREFIX + "SaveLastMusicPausedTime");
-//				intentfilter.addAction(ACTION_PREFIX + "RestartLauncher");
-				mContext.registerReceiver(new BroadcastReceiver() {
-					public void onReceive(final Context context, Intent intent) {
-						String action = intent.getAction();
-						if (action == null) return;
-
-						try {
-							if (action.equals(ACTION_PREFIX + "SaveLastMusicPausedTime")) {
-								Settings.System.putLong(context.getContentResolver(), "last_music_paused_time", currentTimeMillis());
-							} else if (action.equals(ACTION_PREFIX + "RestartLauncher")) {
-								ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
-								XposedHelpers.callMethod(am, "forceStopPackage", "com.miui.home");
-							}
-						} catch (Throwable t) {
-							XposedBridge.log(t);
-						}
-					}
-				}, intentfilter);
-			}
-		});
-
 		Helpers.hookAllMethods("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "initInternal", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
@@ -970,6 +933,7 @@ public class GlobalActions {
 				IntentFilter intentfilter = new IntentFilter();
 				intentfilter.addAction(ACTION_PREFIX + "SimulateMenu");
 				intentfilter.addAction(ACTION_PREFIX + "ForceClose");
+				intentfilter.addAction(ACTION_PREFIX + "SaveLastMusicPausedTime");
 				final Object thisObject = param.thisObject;
 				mContext.registerReceiver(new BroadcastReceiver() {
 					public void onReceive(final Context context, Intent intent) {
@@ -1002,40 +966,14 @@ public class GlobalActions {
 						} catch (Throwable t) {
 							XposedBridge.log(t);
 						}
+
+						if (action.equals(ACTION_PREFIX + "SaveLastMusicPausedTime")) {
+							Settings.System.putLong(context.getContentResolver(), "last_music_paused_time", currentTimeMillis());
+						}
 					}
 				}, intentfilter);
 			}
 		});
-
-//		Helpers.hookAllMethods("com.android.server.policy.MiuiPhoneWindowManager", lpparam.classLoader, "init", new MethodHook() {
-//			@Override
-//			protected void after(MethodHookParam param) throws Throwable {
-//				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-//				IntentFilter intentfilter = new IntentFilter();
-//				intentfilter.addAction(ACTION_PREFIX + "OpenFingerprintActionDialog");
-//				final Object thisObject = param.thisObject;
-//				mContext.registerReceiver(new BroadcastReceiver() {
-//					public void onReceive(final Context context, Intent intent) {
-//						String action = intent.getAction();
-//						if (action == null) return;
-//
-//						try {
-//							XposedHelpers.callMethod(thisObject, "bringUpActionChooseDlg");
-//						} catch (Throwable t) {
-//							XposedBridge.log(t);
-//						}
-//					}
-//				}, intentfilter);
-//			}
-//		});
-
-//		Helpers.hookAllMethods("com.android.server.am.ActivityStackSupervisor", lpparam.classLoader, "getComponentRestrictionForCallingPackage", new MethodHook() {
-//			@Override
-//			protected void after(MethodHookParam param) throws Throwable {
-//				ActivityInfo ai = (ActivityInfo)param.args[0];
-//				if (ai != null && ai.name.equals("com.miui.privacyapps.ui.PrivacyAppsOperationTutorialActivity")) param.setResult(0);
-//			}
-//		});
 	}
 
 	public static void setupStatusBar(LoadPackageParam lpparam) {
@@ -1060,40 +998,12 @@ public class GlobalActions {
 				intentfilter.addAction(ACTION_PREFIX + "ClearMemory");
 				intentfilter.addAction(ACTION_PREFIX + "CollectXposedLog");
 				intentfilter.addAction(ACTION_PREFIX + "RestartSystemUI");
+				intentfilter.addAction(ACTION_PREFIX + "RestartLauncher");
 				intentfilter.addAction(ACTION_PREFIX + "CopyToExternal");
 
 				mStatusBarContext.registerReceiver(mSBReceiver, intentfilter);
 			}
 		});
-
-//		Helpers.findAndHookMethod("com.android.systemui.statusbar.HeaderView", lpparam.classLoader, "onFinishInflate", new MethodHook() {
-//			@Override
-//			protected void after(MethodHookParam param) throws Throwable {
-//				TextView mClock = (TextView)XposedHelpers.getObjectField(param.thisObject, "mClock");
-//				RelativeLayout.LayoutParams clp = (RelativeLayout.LayoutParams)mClock.getLayoutParams();
-//				clp.height = 0;
-//				mClock.setLayoutParams(clp);
-//
-//				RelativeLayout heaverView = (RelativeLayout)param.thisObject;
-//				TextView temp = new TextView(heaverView.getContext());
-//				RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-//				lp.addRule(RelativeLayout.ABOVE, heaverView.getContext().getResources().getIdentifier("date_time", "id", "com.android.systemui"));
-//				lp.addRule(RelativeLayout.ALIGN_LEFT);
-//				lp.setMarginStart(heaverView.getContext().getResources().getDimensionPixelSize(heaverView.getContext().getResources().getIdentifier("expanded_notification_weather_temperature_right", "dimen", "com.android.systemui")));
-//				temp.setLayoutParams(lp);
-//				temp.setText("CPU 666° Battery 999° PCB 333°");
-//				temp.setTextAppearance(heaverView.getContext().getResources().getIdentifier("TextAppearance.StatusBar.Expanded.Weather", "style", "com.android.systemui"));
-//				heaverView.setGravity(Gravity.TOP);
-//				heaverView.addView(temp);
-//			}
-//		});
-//
-//		Helpers.findAndHookMethod("com.android.systemui.CustomizedUtils", lpparam.classLoader, "getNotchExpandedHeaderViewHeight", Context.class, int.class, new MethodHook() {
-//			@Override
-//			protected void after(MethodHookParam param) throws Throwable {
-//				param.setResult((int)param.getResult() + 65);
-//			}
-//		});
 	}
 
 	// Actions

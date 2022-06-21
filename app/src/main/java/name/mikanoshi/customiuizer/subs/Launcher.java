@@ -133,32 +133,4 @@ public class Launcher extends SubFragment {
 		return pm.checkPermission(Helpers.ACCESS_SECURITY_CENTER, Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED;
 	}
 
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		getMenuInflater().inflate(R.menu.menu_launcher, menu);
-//		return true;
-//	}
-//
-//	@Override
-//	public boolean onOptionsItemSelected(MenuItem item) {
-//		if (item.getItemId() == R.id.restartlauncher)
-//		try {
-//			getActivity().sendBroadcast(new Intent(GlobalActions.ACTION_PREFIX + "RestartLauncher"));
-//		} catch (Throwable e) {
-//			e.printStackTrace();
-//		}
-//		return super.onOptionsItemSelected(item);
-//	}
-//
-//	private void setupImmersiveMenu() {
-//		ActionBar actionBar = getActionBar();
-//		if (actionBar != null) actionBar.showSplitActionBar(false, false);
-//		setImmersionMenuEnabled(true);
-//	}
-//
-//	@Override
-//	public void onResume() {
-//		super.onResume();
-//		setupImmersiveMenu();
-//	}
-
 }

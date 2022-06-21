@@ -918,7 +918,7 @@
     <string name="open_xposed">管理Xposed模块</string>
     <string name="soft_reboot">软重启</string>
     <string name="soft_reboot_ask">现在执行软重启吗？</string>
-    <string name="restart_launcher">重启启动器</string>
+    <string name="restart_launcher">重启桌面</string>
     <string name="backup_restore">设置管理</string>
     <string name="backup_restore_choose">请选择所需操作</string>
     <string name="do_backup">备份</string>
@@ -1049,4 +1049,5 @@
     <string name="system_statusbar_dttosleep_title">双击锁屏</string>
     <string name="system_notifrowmenu_appinfo">应用信息</string>
     <string name="system_notifrowmenu_forceclose">强制关闭</string>
+    <string name="restart_systemui">重启系统界面</string>
 </resources>

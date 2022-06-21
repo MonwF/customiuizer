@@ -1006,6 +1006,7 @@
 	<string name="soft_reboot">Soft reboot</string>
 	<string name="soft_reboot_ask">Perform soft reboot now?</string>
 	<string name="restart_launcher">Restart launcher</string>
+	<string name="restart_systemui">Restart systemui</string>
 	<string name="backup_restore">Settings management</string>
 	<string name="backup_restore_choose">Choose the desired routine</string>
 	<string name="do_backup">Backup</string>

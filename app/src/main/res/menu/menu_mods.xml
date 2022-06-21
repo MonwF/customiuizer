@@ -12,6 +12,14 @@
 		android:title=""
 		app:showAsAction="always"/>
 	<item
+		android:id="@+id/restartlauncher"
+		app:showAsAction="never"
+		android:title="@string/restart_launcher" />
+	<item
+		android:id="@+id/restartsystemui"
+		app:showAsAction="never"
+		android:title="@string/restart_systemui" />
+	<item
 		android:id="@+id/softreboot"
 		android:title="@string/soft_reboot"
 		app:showAsAction="never" />
