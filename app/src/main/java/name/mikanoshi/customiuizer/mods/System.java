@@ -7582,11 +7582,12 @@ public class System {
     }
 
     public static void HideLockScreenStatusBarHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "makeStatusBarView", new MethodHook() {
+        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "makeStatusBarView", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
-                View mKeyguardStatusBar = (View)XposedHelpers.getObjectField(param.thisObject, "mKeyguardStatusBar");
-                if (mKeyguardStatusBar != null) mKeyguardStatusBar.setTranslationY(-999f);
+            XposedHelpers.getObjectField(param.thisObject, "mNotificationPanelViewController");
+            View mKeyguardStatusBar = (View) XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.thisObject, "mNotificationPanelViewController"), "mKeyguardStatusBar");
+            mKeyguardStatusBar.setTranslationY(-999f);
             }
         });
     }
