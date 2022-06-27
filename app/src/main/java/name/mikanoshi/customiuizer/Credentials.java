@@ -10,9 +10,11 @@ import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import javax.crypto.KeyGenerator;
 
-public class Credentials extends Activity {
+public class Credentials extends AppCompatActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

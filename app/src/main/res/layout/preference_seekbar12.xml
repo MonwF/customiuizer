@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:layout_gravity="center_vertical"
 	android:gravity="center_vertical"
 	android:baselineAligned="false"
-	android:paddingStart="15dp"
-	android:paddingEnd="20dp"
+	android:paddingStart="@dimen/preference_item_child_padding"
+	android:paddingEnd="@dimen/preference_item_child_padding"
 	android:clipChildren="false"
 	android:clipToPadding="false">
 
@@ -27,8 +28,7 @@
 			android:ellipsize="end"
 			android:fadingEdge="horizontal"
 			android:maxLines="2"
-			style="@style/TextAppearance.Primary"
-			android:textStyle="bold" />
+			style="@style/AppTextAppearance.Primary" />
 
 		<TextView
 			android:id="@android:id/summary"
@@ -37,7 +37,7 @@
 			android:layout_below="@android:id/title"
 			android:layout_alignStart="@android:id/title"
 			android:maxLines="10"
-			style="@style/TextAppearance.Secondary" />
+			style="@style/AppTextAppearance.Secondary" />
 
 		<RelativeLayout
 			android:id="@+id/seekbar_group"
@@ -52,7 +52,8 @@
 				android:id="@+id/seekbar"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:paddingStart="10dp"
+				android:layout_marginLeft="0dp"
+				android:paddingStart="4dp"
 				android:layout_marginRight="@dimen/seekbar_margin_right"
 				android:layout_alignParentLeft="true" />
 
@@ -61,10 +62,11 @@
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
 				android:layout_alignParentRight="true"
+				android:paddingRight="@dimen/preference_summary_padding_right"
 				android:layout_centerVertical="true"
 				android:maxLines="1"
 				tools:text="Value"
-				style="@style/TextAppearance.Secondary" />
+				style="@style/AppTextAppearance.Secondary" />
 
 		</RelativeLayout>
 
@@ -75,7 +77,7 @@
 			android:layout_below="@id/seekbar_group"
 			android:layout_marginTop="10dp"
 			android:layout_alignStart="@id/seekbar_group"
-			style="@style/TextAppearance.Secondary" />
+			style="@style/AppTextAppearance.Secondary" />
 
 	</RelativeLayout>
 </LinearLayout>

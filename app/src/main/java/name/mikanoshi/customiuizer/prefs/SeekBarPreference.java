@@ -1,13 +1,13 @@
 package name.mikanoshi.customiuizer.prefs;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.preference.Preference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceViewHolder;
+
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -96,39 +96,34 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 
 		mSteppedMinValue = Math.round((float)mMinValue / mStepValue);
 		mSteppedMaxValue = Math.round((float)mMaxValue / mStepValue);
+		setLayoutResource(R.layout.preference_seekbar12);
 	}
 
-	@Override
-	@SuppressLint("SetTextI18n")
-	public View getView(View view, ViewGroup parent) {
-		View finalView = super.getView(view, parent);
+	public void getView(View finalView) {
 		TextView mTitle = finalView.findViewById(android.R.id.title);
 		mTitle.setText(getTitle() + (unsupported ? " ⨯" : (dynamic ? " ⟲" : "")));
 		if (Helpers.is12()) mSeekBar.setAlpha(isEnabled() ? 1.0f : 0.75f);
 		if (newmod) Helpers.applyNewMod(mTitle);
-		return finalView;
 	}
 
 	@Override
-	protected View onCreateView(ViewGroup parent) {
-		setLayoutResource(R.layout.preference_seekbar12);
+	public void onBindViewHolder(PreferenceViewHolder view) {
+		super.onBindViewHolder(view);
 
-		View view = super.onCreateView(parent);
-
-		TextView mSummaryView = view.findViewById(android.R.id.summary);
+		TextView mSummaryView = (TextView) view.findViewById(android.R.id.summary);
 		if (!TextUtils.isEmpty(getSummary()))
 			mSummaryView.setText(getSummary());
 		else
 			mSummaryView.setVisibility(View.GONE);
 
-		TextView mNoteView = view.findViewById(android.R.id.text1);
+		TextView mNoteView = (TextView) view.findViewById(android.R.id.text1);
 		if (mNote == null || mNote.equals(""))
 			mNoteView.setVisibility(View.GONE);
 		else
 			mNoteView.setText(mNote);
 
-		mValue = view.findViewById(R.id.seekbar_value);
-		mSeekBar = view.findViewById(R.id.seekbar);
+		mValue = (TextView) view.findViewById(R.id.seekbar_value);
+		mSeekBar = (SeekBar) view.findViewById(R.id.seekbar);
 		mSeekBar.setMax(mSteppedMaxValue - mSteppedMinValue);
 
 		setValue(Helpers.prefs.getInt(getKey(), mDefaultValue));
@@ -151,8 +146,8 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 				updateDisplay(progress);
 			}
 		});
-
-		return view;
+		getView(view.itemView);
+		view.setDividerAllowedAbove(false);
 	}
 
 	public void setOnSeekBarChangeListener(SeekBar.OnSeekBarChangeListener listener) {

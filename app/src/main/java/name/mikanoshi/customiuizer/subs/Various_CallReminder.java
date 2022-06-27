@@ -1,7 +1,6 @@
 package name.mikanoshi.customiuizer.subs;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,7 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.preference.Preference;
+import androidx.preference.Preference;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.method.DigitsKeyListener;
@@ -20,6 +19,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
 
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SubFragment;

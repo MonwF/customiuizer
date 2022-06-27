@@ -8,6 +8,8 @@ public class ListViewEx extends ListView {
 
 	public ListViewEx(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		this.setDivider(null);
+		this.setDividerHeight(0);
 	}
 
 	public ListViewEx(Context context) {

@@ -99,12 +99,6 @@ public class WiFiList extends SubFragment {
 			listView1 = getView().findViewById(android.R.id.text1);
 			listView2 = getView().findViewById(android.R.id.text2);
 
-			TextView cat1 = getView().findViewById(R.id.wifi_category1);
-			TextView cat2 = getView().findViewById(R.id.wifi_category2);
-			int resId = getResources().getIdentifier("preference_category_background", "drawable", "miui");
-			cat1.setBackgroundResource(resId);
-			cat2.setBackgroundResource(resId);
-
 			@SuppressLint("CutPasteId") ViewStub locationStub = getView().findViewById(R.id.location_settings);
 			locationStub.setLayoutResource(R.layout.pref_item);
 			locationStub.inflate();
@@ -112,7 +106,6 @@ public class WiFiList extends SubFragment {
 			@SuppressLint("CutPasteId") View location = getView().findViewById(R.id.location_settings);
 			((TextView)location.findViewById(android.R.id.title)).setText(R.string.wifi_location_title);
 			((TextView)location.findViewById(android.R.id.summary)).setText(R.string.wifi_location_summ);
-			Helpers.setMiuiPrefItem(location);
 			location.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -249,7 +242,6 @@ public class WiFiList extends SubFragment {
 				row = convertView;
 			} else {
 				row = mInflater.inflate(R.layout.pref_item, parent, false);
-				Helpers.setMiuiPrefItem(row);
 			}
 
 			TextView itemTitle = row.findViewById(android.R.id.title);

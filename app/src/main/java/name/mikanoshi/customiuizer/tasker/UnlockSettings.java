@@ -7,9 +7,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import name.mikanoshi.customiuizer.R;
 
-public class UnlockSettings extends Activity {
+public class UnlockSettings extends AppCompatActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

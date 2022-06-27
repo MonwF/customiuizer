@@ -2,24 +2,17 @@ package name.mikanoshi.customiuizer;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.CheckBoxPreference;
-import android.preference.Preference;
-import android.preference.PreferenceCategory;
-import android.preference.PreferenceScreen;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.AlignmentSpan;
 import android.text.style.LineHeightSpan;
-import android.view.ActionMode;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,11 +21,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.view.MenuItemCompat;
+import androidx.preference.CheckBoxPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,9 +58,8 @@ public class MainFragment extends PreferenceFragmentBase {
 	public Controls prefControls = new Controls();
 	public Various prefVarious = new Various();
 	private Menu mActionMenu;
-	private ListView listView = null;
+	private RecyclerView listView = null;
 	private ListView resultView = null;
-	private LinearLayout search = null;
 	boolean isSearchFocused = false;
 	int inSearchView = 0;
 	String lastFilter;
@@ -84,23 +84,17 @@ public class MainFragment extends PreferenceFragmentBase {
 		}
 	};
 
-	private boolean isFragmentReady(Activity act) {
+	private boolean isFragmentReady(AppCompatActivity act) {
 		return act != null && !act.isFinishing() && MainFragment.this.isAdded();
-	}
-	@Override
-	public View onCreateView(LayoutInflater inflater,
-							 ViewGroup container,
-							 Bundle savedInstanceState) {
-		return LayoutInflater.from(getActivity()).inflate(R.layout.prefs_main12, container, false);
 	}
 
 	@Override
 	@SuppressLint("MissingSuperCall")
 	public void onCreate(Bundle savedInstanceState) {
+		supressMenu = true;
 		super.onCreate(savedInstanceState, R.xml.prefs_main);
-		addPreferencesFromResource(R.xml.prefs_main);
-
-		final Activity act = getActivity();
+		tailLayoutId = R.layout.prefs_main12;
+		final AppCompatActivity act = (AppCompatActivity) getActivity();
 
 		// Preventing launch delay
 		new Thread(new Runnable() {
@@ -121,6 +115,12 @@ public class MainFragment extends PreferenceFragmentBase {
 			Helpers.prefs.edit().putBoolean("pref_key_was_restore", false).apply();
 			showRestoreInfoDialog();
 		}
+	}
+
+	@Override
+	public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
+		super.onCreatePreferences(savedInstanceState, rootKey);
+		setPreferencesFromResource(R.xml.prefs_main, rootKey);
 	}
 
 	private static class SetLineOverlap implements LineHeightSpan {
@@ -157,8 +157,8 @@ public class MainFragment extends PreferenceFragmentBase {
 		mActionMenu = menu;
 		MenuItem searchMenuItem = mActionMenu.findItem(R.id.search_btn);
 
-		SearchView searchView = (SearchView) searchMenuItem.getActionView();
-		searchMenuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+		SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
+		MenuItemCompat.setOnActionExpandListener(searchMenuItem, new MenuItemCompat.OnActionExpandListener() {
 			@Override
 			public boolean onMenuItemActionCollapse(MenuItem searchItem) {
 				MenuItem item = null;
@@ -201,20 +201,33 @@ public class MainFragment extends PreferenceFragmentBase {
 			}
 		});
 		if (inSearchView == 2) {
-			searchMenuItem.expandActionView();
+			MenuItemCompat.expandActionView(searchMenuItem);
 			searchView.setQuery(lastFilter, false);
 			searchView.clearFocus();
 		}
 	}
 
 	@Override
+	protected void fixStubLayout(View view, int postion) {
+		if (postion == 2) {
+			ViewGroup.LayoutParams lp = view.getLayoutParams();
+			lp.height = ViewGroup.LayoutParams.MATCH_PARENT;
+			view.setLayoutParams(lp);
+		}
+	}
+
+	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		supressMenu = true;
 		super.onActivityCreated(savedInstanceState);
+
+		ActionBar actionBar = getActionBar();
+		actionBar.setTitle(R.string.app_name);
 
 		if (getView() == null) return;
 
-		resultView = getView().findViewById(android.R.id.custom);
+		resultView = getView().findViewById(R.id.custom);
+		resultView.setDivider(null);
+		resultView.setDividerHeight(0);
 		resultView.setAdapter(new ModSearchAdapter(getActivity()));
 		resultView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
@@ -234,7 +247,7 @@ public class MainFragment extends PreferenceFragmentBase {
 					handler.postDelayed(new Runnable() {
 						@Override
 						public void run() {
-							Helpers.hideKeyboard(getActivity(), getView());
+							Helpers.hideKeyboard((AppCompatActivity) getActivity(), getView());
 						}
 					}, getResources().getInteger(android.R.integer.config_shortAnimTime));
 					resultView.requestFocus();
@@ -244,10 +257,10 @@ public class MainFragment extends PreferenceFragmentBase {
 		});
 		setViewBackground(resultView);
 
-		listView = getView().findViewById(android.R.id.list);
+		listView = getListView();
 		final Activity act = getActivity();
 
-		PreferenceEx warning = (PreferenceEx)findPreference("pref_key_warning");
+		PreferenceEx warning = findPreference("pref_key_warning");
 		if (warning != null) {
 			getPreferenceScreen().removePreference(warning);
 		}
@@ -290,7 +303,7 @@ public class MainFragment extends PreferenceFragmentBase {
 		localesArr.add(0, "auto");
 		localeNames.add(0, new SpannableString(getString(R.string.array_system_default)));
 
-		ListPreferenceEx locale = (ListPreferenceEx)findPreference("pref_key_miuizer_locale");
+		ListPreferenceEx locale = findPreference("pref_key_miuizer_locale");
 		locale.setEntries(localeNames.toArray(new CharSequence[0]));
 		locale.setEntryValues(localesArr.toArray(new CharSequence[0]));
 		locale.setOnPreferenceChangeListener(new CheckBoxPreference.OnPreferenceChangeListener() {
@@ -360,13 +373,14 @@ public class MainFragment extends PreferenceFragmentBase {
 	}
 
 	@Override
-	public boolean onPreferenceTreeClick(PreferenceScreen parentPreferenceScreen, Preference preference) {
+	public boolean onPreferenceTreeClick(Preference preference) {
 		if (preference != null) {
-			PreferenceCategory modsCat = (PreferenceCategory)findPreference("prefs_cat");
-			if (modsCat.findPreference(preference.getKey()) != null)
-			if (openModCat(preference.getKey())) return true;
+			PreferenceCategory modsCat = findPreference("prefs_cat");
+			if (modsCat.findPreference(preference.getKey()) != null && openModCat(preference.getKey())) {
+				return true;
+			}
 		}
-		return super.onPreferenceTreeClick(parentPreferenceScreen, preference);
+		return super.onPreferenceTreeClick(preference);
 	}
 
 	private void showRestoreInfoDialog() {

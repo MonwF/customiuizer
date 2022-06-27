@@ -2,8 +2,6 @@ package name.mikanoshi.customiuizer;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.Fragment;
 import android.app.backup.BackupManager;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -18,7 +16,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 
+import java.io.File;
 import java.util.Set;
 
 import name.mikanoshi.customiuizer.utils.Helpers;
@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
 			@Override
 			public void onSharedPreferenceChanged(SharedPreferences sharedPrefs, String key) {
 				Log.i("prefs", "Changed: " + key);
-				requestBackup();
 				Object val = sharedPrefs.getAll().get(key);
 				String path = "";
 				if (val instanceof String)
@@ -59,15 +58,17 @@ public class MainActivity extends AppCompatActivity {
 				else if (val instanceof Boolean)
 					path = "boolean/";
 				getContentResolver().notifyChange(Uri.parse("content://" + SharedPrefsProvider.AUTHORITY + "/" + path + key), null);
-				if (!path.equals(""))
-				getContentResolver().notifyChange(Uri.parse("content://" + SharedPrefsProvider.AUTHORITY + "/pref/" + path + key), null);
+				if (!path.equals("")) {
+					getContentResolver().notifyChange(Uri.parse("content://" + SharedPrefsProvider.AUTHORITY + "/pref/" + path + key), null);
+				}
+				requestBackup();
 			}
 		};
 		Helpers.prefs.registerOnSharedPreferenceChangeListener(prefsChanged);
 		Helpers.fixPermissionsAsync(getApplicationContext());
 
 		try {
-			fileObserver = new FileObserver(Helpers.getSharedPrefsPath(), FileObserver.CLOSE_WRITE) {
+			fileObserver = new FileObserver(new File(Helpers.getSharedPrefsPath()), FileObserver.CLOSE_WRITE) {
 				@Override
 				public void onEvent(int event, String path) {
 					Helpers.fixPermissionsAsync(getApplicationContext());
@@ -80,21 +81,21 @@ public class MainActivity extends AppCompatActivity {
 
 //		Helpers.updateNewModsMarking(this);
 
-
 		Toolbar myToolbar = findViewById(R.id.mainActionBar);
 		setSupportActionBar(myToolbar);
 
-		if (savedInstanceState != null)
-		mainFrag = (MainFragment)getFragmentManager().getFragment(savedInstanceState, "mainFrag");
-		if (mainFrag == null) {
+		if (savedInstanceState != null) {
+			mainFrag = (MainFragment) getSupportFragmentManager().getFragment(savedInstanceState, "mainFrag");
+		}
+		else if (mainFrag == null) {
 			mainFrag = new MainFragment();
-			getFragmentManager().beginTransaction().replace(R.id.fragment_container, mainFrag).commit();
+			getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, mainFrag).commit();
 		}
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-		getFragmentManager().putFragment(savedInstanceState, "mainFrag", mainFrag);
+		getSupportFragmentManager().putFragment(savedInstanceState, "mainFrag", mainFrag);
 		super.onSaveInstanceState(savedInstanceState);
 	}
 
@@ -111,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
 	@Override
 	public void onBackPressed() {
-		Fragment fragment = getFragmentManager().findFragmentById(R.id.fragment_container);
+		Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 		if (fragment == null) {
 			super.onBackPressed();
 			return;
@@ -126,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
-			Fragment fragment = getFragmentManager().findFragmentById(R.id.fragment_container);
+			Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 			if (fragment == null) {
 				finish();
 				return true;
@@ -180,9 +181,9 @@ public class MainActivity extends AppCompatActivity {
 				break;
 			case Helpers.REQUEST_PERMISSIONS_WIFI:
 				if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-					Fragment frag = getFragmentManager().findFragmentById(R.id.fragment_container);
-					if (frag instanceof name.mikanoshi.customiuizer.subs.System_NoScreenLock)
-					((name.mikanoshi.customiuizer.subs.System_NoScreenLock)frag).openWifiNetworks();
+//					Fragment frag = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+//					if (frag instanceof name.mikanoshi.customiuizer.subs.System_NoScreenLock)
+//					((name.mikanoshi.customiuizer.subs.System_NoScreenLock)frag).openWifiNetworks();
 				} else if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION))
 					Toast.makeText(this, R.string.permission_scan, Toast.LENGTH_LONG).show();
 				else

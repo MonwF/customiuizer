@@ -2,20 +2,21 @@
 
 	<dimen name="preference_screen_padding_top">20dp</dimen>
 	<dimen name="preference_screen_padding_bottom">15dp</dimen>
-	<dimen name="preference_item_padding_top">15.16dp</dimen>
-	<dimen name="preference_item_padding_bottom">15.19dp</dimen>
-	<dimen name="preference_item_child_padding">20dp</dimen>
-	<dimen name="preference_summary_padding_right">15dp</dimen>
-	<dimen name="preference_text_size">14sp</dimen>
-	<dimen name="preference_category_text_size">12.36sp</dimen>
+	<dimen name="preference_item_padding_top">15.3dp</dimen>
+	<dimen name="preference_item_padding_bottom">15.3dp</dimen>
+	<dimen name="preference_item_child_padding">23.3dp</dimen>
+	<dimen name="preference_summary_padding_right">10dp</dimen>
+	<dimen name="preference_text_size">13sp</dimen>
+	<dimen name="preference_category_text_size">13sp</dimen>
 
 	<dimen name="am_app_list_padding_end">13.3dp</dimen>
 
-	<dimen name="seekbar_margin_right">75dp</dimen>
+	<dimen name="seekbar_margin_left">8dp</dimen>
+	<dimen name="seekbar_margin_right">70dp</dimen>
 
 	<dimen name="progressbar_size">22.5dp</dimen>
 	<dimen name="normal_text_size">16.7sp</dimen>
-	<dimen name="secondary_text_size">12sp</dimen>
+	<dimen name="secondary_text_size">14sp</dimen>
 
 	<dimen name="screen_color_preview_offset">11dp</dimen>
 

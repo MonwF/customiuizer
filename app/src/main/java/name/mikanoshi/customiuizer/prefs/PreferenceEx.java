@@ -1,10 +1,11 @@
 package name.mikanoshi.customiuizer.prefs;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.preference.Preference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceViewHolder;
+
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
@@ -18,12 +19,10 @@ import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class PreferenceEx extends Preference implements PreferenceState {
-
 	private final Resources res = getContext().getResources();
 	private final int primary = res.getColor(R.color.preference_primary_text, getContext().getTheme());
 	private final int secondary = res.getColor(R.color.preference_secondary_text, getContext().getTheme());
 	private final int childpadding = res.getDimensionPixelSize(R.dimen.preference_item_child_padding);
-	private final int[] paddings = new int[] {0, 0, 0, 0};
 
 	private final boolean child;
 	private final boolean dynamic;
@@ -43,12 +42,10 @@ public class PreferenceEx extends Preference implements PreferenceState {
 		notice = xmlAttrs.getBoolean(R.styleable.PreferenceEx_notice, false);
 		countAsSummary = xmlAttrs.getBoolean(R.styleable.PreferenceEx_countAsSummary, false);
 		xmlAttrs.recycle();
+		setIconSpaceReserved(false);
 	}
 
-	@Override
-	@SuppressLint("SetTextI18n")
-	public View getView(View view, ViewGroup parent) {
-		View finalView = super.getView(view, parent);
+	public void getView(View finalView) {
 		TextView title = finalView.findViewById(android.R.id.title);
 		TextView summary = finalView.findViewById(android.R.id.summary);
 		TextView valSummary = finalView.findViewById(android.R.id.hint);
@@ -73,14 +70,8 @@ public class PreferenceEx extends Preference implements PreferenceState {
 			ImageView arrow = finalView.findViewById(finalView.getResources().getIdentifier("arrow_right", "id", "miui"));
 			if (arrow != null) arrow.setVisibility(View.GONE);
 		} catch (Throwable ignore) {}
-
-		if (paddings[0] == 0) paddings[0] = finalView.getPaddingLeft();
-		if (paddings[1] == 0) paddings[1] = finalView.getPaddingTop();
-		if (paddings[2] == 0) paddings[2] = finalView.getPaddingRight();
-		if (paddings[3] == 0) paddings[3] = finalView.getPaddingBottom();
-		finalView.setPadding(paddings[0] + (child ? childpadding : 0), paddings[1], paddings[2], paddings[3]);
-
-		return finalView;
+		int hrzPadding = childpadding + (child ? childpadding : 0);
+		finalView.setPadding(hrzPadding, 0, childpadding, 0);
 	}
 
 	public void setCustomSummary(String text) {
@@ -89,24 +80,26 @@ public class PreferenceEx extends Preference implements PreferenceState {
 	}
 
 	@Override
-	protected View onCreateView(ViewGroup parent) {
-		ViewGroup view = (ViewGroup)super.onCreateView(parent);
+	public void onBindViewHolder(PreferenceViewHolder view) {
+		super.onBindViewHolder(view);
 
-		TextView title = view.findViewById(android.R.id.title);
+		TextView title = (TextView) view.findViewById(android.R.id.title);
 		title.setMaxLines(3);
 		title.setTextColor(primary);
 
-		TextView summary = view.findViewById(android.R.id.summary);
+		TextView summary = (TextView) view.findViewById(android.R.id.summary);
 		summary.setTextColor(secondary);
 
-		TextView valSummary = new TextView(getContext());
-		valSummary.setTextSize(TypedValue.COMPLEX_UNIT_PX, summary.getTextSize());
-		valSummary.setTextColor(summary.getCurrentTextColor());
-		valSummary.setPadding(summary.getPaddingLeft(), summary.getPaddingTop(), res.getDimensionPixelSize(R.dimen.preference_summary_padding_right), summary.getPaddingBottom());
-		valSummary.setId(android.R.id.hint);
-		view.addView(valSummary, 2);
-
-		return view;
+		TextView valSummary = view.itemView.findViewById(android.R.id.hint);
+		if (valSummary == null) {
+			valSummary = new TextView(getContext());
+			valSummary.setTextSize(TypedValue.COMPLEX_UNIT_PX, summary.getTextSize());
+			valSummary.setTextColor(secondary);
+			valSummary.setPadding(summary.getPaddingLeft(), summary.getPaddingTop(), res.getDimensionPixelSize(R.dimen.preference_summary_padding_right), summary.getPaddingBottom());
+			valSummary.setId(android.R.id.hint);
+			((ViewGroup) view.itemView).addView(valSummary, 2);
+		}
+		getView(view.itemView);
 	}
 
 	@Override

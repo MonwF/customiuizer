@@ -1,22 +1,21 @@
 package name.mikanoshi.customiuizer;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceScreen;
-import android.provider.Settings;
+
+import androidx.annotation.Nullable;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceScreen;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.FrameLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import java.util.ArrayList;
 
@@ -32,10 +31,9 @@ import name.mikanoshi.customiuizer.utils.ColorCircle;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class SubFragment extends PreferenceFragmentBase {
-
-    private int baseResId = 0;
-    private int resId = 0;
-    public int titleId = 0;
+    private int contentResId = 0;
+    public String titleId = "";
+    protected String sub;
     private float order = 100.0f;
     public boolean padded = true;
     Helpers.SettingsType settingsType = Helpers.SettingsType.Preference;
@@ -45,19 +43,18 @@ public class SubFragment extends PreferenceFragmentBase {
     public void onCreate(Bundle savedInstanceState) {
         settingsType = Helpers.SettingsType.values()[getArguments().getInt("settingsType")];
         abType = Helpers.ActionBarType.values()[getArguments().getInt("abType")];
-        baseResId = getArguments().getInt("baseResId");
-        resId = getArguments().getInt("contentResId");
-        titleId = getArguments().getInt("titleResId");
+        contentResId = getArguments().getInt("contentResId");
+        titleId = getArguments().getString("titleResId");
         order = getArguments().getFloat("order") + 10.0f;
+        sub = getArguments().getString("sub");
 
-        if (resId == 0) {
+        if (contentResId == 0) {
             getActivity().finish();
             return;
         }
 
         if (settingsType == Helpers.SettingsType.Preference) {
-            super.onCreate(savedInstanceState, resId);
-            addPreferencesFromResource(resId);
+            super.onCreate(savedInstanceState, contentResId);
         } else {
             super.onCreate(savedInstanceState);
         }
@@ -73,7 +70,27 @@ public class SubFragment extends PreferenceFragmentBase {
         loadSharedPrefs();
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
-            actionBar.setTitle(titleId);
+            Bundle args = getArguments();
+            String sub = args.getString("sub");
+            if (sub != null) {
+                PreferenceScreen screen = getPreferenceScreen();
+                PreferenceCategoryEx category = (PreferenceCategoryEx)screen.getPreference(0);
+                if (category.isDynamic())
+                    getActionBar().setTitle(category.getTitle() + " ⟲");
+                else
+                    getActionBar().setTitle(category.getTitle());
+            }
+            else {
+                actionBar.setTitle(titleId);
+            }
+        }
+    }
+
+    @Override
+    public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
+        if (settingsType == Helpers.SettingsType.Preference) {
+            super.onCreatePreferences(savedInstanceState, rootKey);
+            setPreferencesFromResource(contentResId, rootKey);
         }
     }
 
@@ -81,17 +98,12 @@ public class SubFragment extends PreferenceFragmentBase {
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
-        LayoutInflater crtInflator = LayoutInflater.from(getActivity());
+        LayoutInflater crtInflator = inflater.cloneInContext(requireContext());
         if (settingsType == Helpers.SettingsType.Preference) {
-            if (baseResId != 0) {
-                return LayoutInflater.from(getActivity()).inflate(baseResId, container, false);
-            }
-            else {
-                return super.onCreateView(crtInflator, container, savedInstanceState);
-            }
+            return super.onCreateView(crtInflator, container, savedInstanceState);
         }
         View view = crtInflator.inflate(padded ? R.layout.prefs_common_padded : R.layout.prefs_common, container, false);
-        crtInflator.inflate(resId, (FrameLayout)view);
+        crtInflator.inflate(contentResId, (FrameLayout)view);
         return view;
     }
 
@@ -291,7 +303,7 @@ public class SubFragment extends PreferenceFragmentBase {
         Bundle args = new Bundle();
         args.putString("key", pref.getKey());
         args.putInt("actions", actions.ordinal());
-        openSubFragment(new MultiAction(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.Edit, pref.getTitleRes(), R.layout.prefs_multiaction);
+        openSubFragment(new MultiAction(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.Edit, pref.getTitle().toString(), R.layout.prefs_multiaction);
     }
 
     public void openStandaloneApp(Preference pref, Fragment targetFrag, int resultId) {
@@ -331,26 +343,26 @@ public class SubFragment extends PreferenceFragmentBase {
     public void openColorSelector(Preference pref) {
         Bundle args = new Bundle();
         args.putString("key", pref.getKey());
-        openSubFragment(new ColorSelector(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.Edit, pref.getTitleRes(), R.layout.fragment_selectcolor);
+        openSubFragment(new ColorSelector(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.Edit, pref.getTitle().toString(), R.layout.fragment_selectcolor);
     }
 
     public void openSortableItemList(Preference pref) {
         Bundle args = new Bundle();
         args.putString("key", pref.getKey());
-        args.putInt("titleResId", pref.getTitleRes());
-        openSubFragment(new SortableList(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, pref.getTitleRes(), R.layout.prefs_sortable_list);
+        args.putString("titleResId", pref.getTitle().toString());
+        openSubFragment(new SortableList(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, pref.getTitle().toString(), R.layout.prefs_sortable_list);
     }
 
     public void openActivitiesItemList(Preference pref) {
         Bundle args = new Bundle();
         args.putBoolean("activities", true);
         args.putString("key", pref.getKey());
-        args.putInt("titleResId", pref.getTitleRes());
-        openSubFragment(new SortableList(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, pref.getTitleRes(), R.layout.prefs_sortable_list);
+        args.putString("titleResId", pref.getTitle().toString());
+        openSubFragment(new SortableList(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, pref.getTitle().toString(), R.layout.prefs_sortable_list);
     }
 
-    public void selectSub(String cat, String sub) {
-        PreferenceScreen screen = (PreferenceScreen)findPreference(cat);
+    public void selectSub() {
+        PreferenceScreen screen = getPreferenceScreen();
         int cnt = screen.getPreferenceCount();
         for (int i = cnt - 1; i >= 0; i--) {
             Preference pref = screen.getPreference(i);
@@ -361,7 +373,7 @@ public class SubFragment extends PreferenceFragmentBase {
                 if (category.isDynamic())
                     getActionBar().setTitle(pref.getTitle() + " ⟲");
                 else
-                    getActionBar().setTitle(pref.getTitleRes());
+                    getActionBar().setTitle(pref.getTitle());
                 category.hide();
             }
         }
@@ -372,11 +384,11 @@ public class SubFragment extends PreferenceFragmentBase {
         //if (isAnimating && view != null) ((ViewGroup)view.getParent()).removeView(view);
         if (isAnimating) return;
         if (Helpers.shimmerAnim != null) Helpers.shimmerAnim.cancel();
-        Helpers.hideKeyboard(getActivity(), getView());
-        FragmentManager fragmentManager = getFragmentManager();
+        AppCompatActivity act = (AppCompatActivity) getActivity();
+        Helpers.hideKeyboard(act, getView());
+        FragmentManager fragmentManager = getParentFragmentManager();
         if (fragmentManager == null || !isResumed()) {
-            Activity act = getActivity();
-            if (act != null) act.getFragmentManager().popBackStack();
+            if (act != null) act.getSupportFragmentManager().popBackStack();
         } else {
             fragmentManager.popBackStackImmediate();
         }

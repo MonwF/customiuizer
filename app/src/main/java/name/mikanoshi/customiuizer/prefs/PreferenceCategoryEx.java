@@ -1,23 +1,25 @@
 package name.mikanoshi.customiuizer.prefs;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.preference.Preference;
-import android.preference.PreferenceCategory;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
+import androidx.preference.PreferenceViewHolder;
 
 import name.mikanoshi.customiuizer.R;
 
 public class PreferenceCategoryEx extends PreferenceCategory {
-
 	private final boolean dynamic;
 	private final boolean empty;
 	private boolean hidden;
 	private boolean unsupported = false;
+	private final Resources res = getContext().getResources();
+	private final int childpadding = res.getDimensionPixelSize(R.dimen.preference_item_child_padding);
 
 	public PreferenceCategoryEx(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -36,21 +38,15 @@ public class PreferenceCategoryEx extends PreferenceCategory {
 	}
 
 	@Override
-	@SuppressLint("SetTextI18n")
-	public View getView(View view, ViewGroup parent) {
-		View finalView = super.getView(view, parent);
-		TextView title = finalView.findViewById(android.R.id.title);
+	public void onBindViewHolder(PreferenceViewHolder view) {
+		super.onBindViewHolder(view);
+		TextView title = (TextView) view.findViewById(android.R.id.title);
 		title.setText(getTitle() + (unsupported ? " ⨯" : (dynamic ? " ⟲" : "")));
 		title.setVisibility(hidden || empty ? View.GONE : View.VISIBLE);
+		View finalView = view.itemView;
 		if (hidden) {
-			finalView.setPadding(
-				finalView.getPaddingLeft(),
-				0,
-				finalView.getPaddingRight(),
-				0
-			);
+			finalView.setPadding(childpadding, 0, childpadding, 0);
 		}
-		return finalView;
 	}
 
 	public void setUnsupported(boolean value) {

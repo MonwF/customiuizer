@@ -869,9 +869,7 @@
 
 	<string-array name="xposed_scope">
 		<item>android</item>
-		<item>com.android.contacts</item>
 		<item>com.android.incallui</item>
-		<item>com.android.mms</item>
 		<item>com.android.packageinstaller</item>
 		<item>com.android.server.telecom</item>
 		<item>com.android.settings</item>
@@ -879,14 +877,11 @@
 		<item>com.android.thememanager</item>
 		<item>com.google.android.packageinstaller</item>
 		<item>com.miui.cleanmaster</item>
-		<item>com.miui.contentcatcher</item>
-		<item>com.miui.notification</item>
 		<item>com.miui.packageinstaller</item>
 		<item>com.miui.powerkeeper</item>
 		<item>com.miui.securitycenter</item>
 		<item>com.miui.screenrecorder</item>
 		<item>com.miui.home</item>
 		<item>com.mi.android.globallauncher</item>
-		<item>com.xiaomi.misettings</item>
 	</string-array>
 </resources>

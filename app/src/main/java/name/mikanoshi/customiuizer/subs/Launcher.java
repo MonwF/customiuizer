@@ -3,7 +3,9 @@ package name.mikanoshi.customiuizer.subs;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.preference.Preference;
+
+import androidx.annotation.Nullable;
+import androidx.preference.Preference;
 import android.widget.SeekBar;
 
 import name.mikanoshi.customiuizer.R;
@@ -14,18 +16,16 @@ import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class Launcher extends SubFragment {
 
-	String sub = "";
+	@Override
+	public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
+		super.onCreatePreferences(savedInstanceState, rootKey);
+		selectSub();
+	}
 
 	@Override
 	@SuppressWarnings("ConstantConditions")
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
-		Bundle args = getArguments();
-		sub = args.getString("sub");
-		if (sub == null) sub = "";
-
-		selectSub("pref_key_launcher", sub);
 
 		Preference.OnPreferenceClickListener openPrivacyAppEdit = new Preference.OnPreferenceClickListener() {
 			@Override

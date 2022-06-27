@@ -1,31 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
-		<item name="android:windowAnimationStyle">@style/ActivityAnimation</item>
+		<item name="android:windowAnimationStyle">@style/AppActivityAnimation</item>
 		<item name="android:windowIsTranslucent">false</item>
 		<item name="android:windowDisablePreview">true</item>
 		<item name="android:colorBackgroundCacheHint">@null</item>
 		<item name="android:spinnerItemStyle">@style/DropDownItemStyle</item>
-		<item name="android:colorAccent">@color/highlight_normal_light</item>
-		<item name="android:colorControlActivated">@color/highlight_normal_light</item>
+		<item name="android:textAppearanceListItem">@style/AppTextAppearance.Primary</item>
+		<item name="android:listPreferredItemPaddingLeft">@dimen/preference_item_child_padding</item>
+		<item name="android:listPreferredItemPaddingStart">@dimen/preference_item_child_padding</item>
+		<item name="colorAccent">@color/highlight_normal_light</item>
+		<item name="colorControlActivated">@color/highlight_normal_light</item>
+		<item name="preferenceTheme">@style/AppPreferenceTheme</item>
 	</style>
 	<style name="DropDownItemStyle" parent="@style/Widget.AppCompat.TextView.SpinnerItem">
 		<item name="android:paddingTop">5dp</item>
 		<item name="android:paddingBottom">5dp</item>
 	</style>
-	<style name="ActivityAnimation" parent="@android:style/Animation">
+	<style name="AppActivityAnimation" parent="@android:style/Animation">
 		<item name="android:activityOpenEnterAnimation">@anim/activity_open_enter</item>
 		<item name="android:activityOpenExitAnimation">@anim/activity_open_exit</item>
 		<item name="android:activityCloseEnterAnimation">@anim/activity_close_enter</item>
 		<item name="android:activityCloseExitAnimation">@anim/activity_close_exit</item>
 	</style>
-	<style name="ToolbarStyle" parent="ThemeOverlay.AppCompat.DayNight.ActionBar"></style>
+	<style name="AppToolbarStyle" parent="ThemeOverlay.AppCompat.DayNight.ActionBar"></style>
+	<style name="AppPreferenceTheme" parent="@style/PreferenceThemeOverlay.v14.Material">
+		<item name="preferenceFragmentCompatStyle">@style/AppPreferenceFragmentCompatStyle</item>
+	</style>
+	<style name="AppPreferenceFragmentCompatStyle" parent="@style/PreferenceFragment.Material">
+		<item name="android:layout">@layout/prefs_fragment_base</item>
+	</style>
 
 	<style name="Invisible" parent="@android:style/Theme.Translucent">
 		<item name="android:backgroundDimEnabled">true</item>
 		<item name="android:windowFrame">@null</item>
 		<item name="android:windowCloseOnTouchOutside">true</item>
-		<item name="android:windowNoTitle">true</item>
+		<item name="windowNoTitle">true</item>
 		<item name="android:windowContentOverlay">@null</item>
 		<item name="android:windowIsFloating">false</item>
 		<item name="android:windowTranslucentStatus">true</item>
@@ -35,14 +45,14 @@
 	<style name="MIUIPrefs">
 		<item name="android:windowTranslucentStatus">true</item>
 		<item name="android:windowTranslucentNavigation">false</item>
-		<item name="android:windowActionBarOverlay">false</item>
+		<item name="windowActionBarOverlay">false</item>
 	</style>
 
 	<style name="ApplyInvisible">
 		<item name="android:backgroundDimEnabled">true</item>
 		<item name="android:windowFrame">@null</item>
 		<item name="android:windowCloseOnTouchOutside">true</item>
-		<item name="android:windowNoTitle">true</item>
+		<item name="windowNoTitle">true</item>
 		<item name="android:windowContentOverlay">@null</item>
 		<item name="android:windowIsFloating">false</item>
 		<item name="android:windowTranslucentStatus">true</item>
@@ -52,32 +62,32 @@
 		<item name="android:windowIsTranslucent">true</item>
 	</style>
 
-	<style name="TextAppearance">
+	<style name="AppTextAppearance">
 		<item name="android:textSize">@dimen/secondary_text_size</item>
 		<item name="android:textColorHighlight">?android:attr/textColorHighlight</item>
 		<item name="android:textColorHint">?android:attr/textColorHint</item>
 		<item name="android:textColorLink">?android:attr/textColorLink</item>
 	</style>
-	<style name="TextAppearance.Primary">
+	<style name="AppTextAppearance.Primary" parent="TextAppearance.AppCompat.Subhead">
 		<item name="android:textSize">@dimen/normal_text_size</item>
 		<item name="android:textStyle">normal</item>
 		<item name="android:textColor">@color/preference_primary_text</item>
 	</style>
-	<style name="TextAppearance.Secondary">
+	<style name="AppTextAppearance.Secondary">
 		<item name="android:textSize">@dimen/secondary_text_size</item>
 		<item name="android:textStyle">normal</item>
 		<item name="android:textColor">@color/preference_secondary_text</item>
 	</style>
 
-	<style name="MiuiPreferenceCategory">
+	<style name="AppPreferenceCategory">
 		<item name="android:textSize">@dimen/preference_category_text_size</item>
 		<item name="android:textColor">@color/preference_category_text_color</item>
 	</style>
 
-	<style name="TextAppearance.Widget" />
-	<style name="TextAppearance.Widget.EditText">
+	<style name="AppTextAppearance.Widget" />
+	<style name="AppTextAppearance.Widget.EditText">
 		<item name="android:textSize">@dimen/secondary_text_size</item>
-		<item name="android:textColor">?android:attr/editTextColor</item>
+		<item name="android:textColor">?attr/editTextColor</item>
 		<item name="android:textColorHint">@color/hint_edit_text_color</item>
 	</style>
 
@@ -93,8 +103,8 @@
 	<style name="Widget.EditPreference.Padded">
 		<item name="android:layout_marginTop">@dimen/preference_screen_padding_top</item>
 		<item name="android:layout_marginBottom">@dimen/preference_screen_padding_bottom</item>
-		<item name="android:layout_marginStart">?android:attr/listPreferredItemPaddingLeft</item>
-		<item name="android:layout_marginEnd">?android:attr/listPreferredItemPaddingRight</item>
+		<item name="android:layout_marginStart">?attr/listPreferredItemPaddingLeft</item>
+		<item name="android:layout_marginEnd">?attr/listPreferredItemPaddingRight</item>
 	</style>
 	<style name="Widget.InputField">
 		<item name="android:gravity">left|center_vertical</item>
@@ -107,8 +117,8 @@
 		<item name="android:paddingBottom">9dp</item>
 		<item name="android:layout_marginTop">8dp</item>
 		<item name="android:layout_height">50dp</item>
-		<item name="android:textAllCaps">true</item>
-		<item name="android:paddingStart">?android:attr/listPreferredItemPaddingLeft</item>
+		<item name="textAllCaps">true</item>
+		<item name="android:paddingStart">@dimen/preference_item_child_padding</item>
 		<item name="android:textSize">@dimen/preference_category_text_size</item>
 		<item name="android:textColor">@color/preference_category_text_color</item>
 	</style>
@@ -119,7 +129,7 @@
 		<item name="android:layout_marginTop">16dp</item>
 	</style>
 	<style name="Widget.ProgressBar">
-		<item name="android:background">@android:color/transparent</item>
+		<item name="background">@android:color/transparent</item>
 		<item name="android:maxWidth">@dimen/progressbar_size</item>
 		<item name="android:maxHeight">@dimen/progressbar_size</item>
 		<item name="android:indeterminateDrawable">@drawable/progressbar_indeterminate</item>
