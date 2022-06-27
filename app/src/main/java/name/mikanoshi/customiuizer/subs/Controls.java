@@ -1,7 +1,9 @@
 package name.mikanoshi.customiuizer.subs;
 
 import android.os.Bundle;
-import android.preference.Preference;
+
+import androidx.annotation.Nullable;
+import androidx.preference.Preference;
 import android.widget.Toast;
 
 import java.util.Objects;
@@ -14,14 +16,15 @@ import name.mikanoshi.customiuizer.utils.Helpers;
 public class Controls extends SubFragment {
 
 	@Override
+	public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
+		super.onCreatePreferences(savedInstanceState, rootKey);
+		selectSub();
+	}
+
+	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		Bundle args = getArguments();
-		String sub = args.getString("sub");
-		if (sub == null) sub = "";
-
-		selectSub("pref_key_controls", sub);
 		switch (sub) {
 			case "pref_key_controls_cat_power":
 				findPreference("pref_key_controls_powerdt").setOnPreferenceClickListener(openLaunchActions);

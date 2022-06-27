@@ -1,5 +1,5 @@
 package name.mikanoshi.customiuizer;
 
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class GateWayLauncher extends Activity {}
+public class GateWayLauncher extends AppCompatActivity {}

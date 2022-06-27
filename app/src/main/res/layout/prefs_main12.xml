@@ -1,29 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<name.mikanoshi.customiuizer.utils.NestedHeaderLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/nestedLayout"
+
+<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/custom"
+	android:visibility="gone"
+	android:layout_alignParentTop="true"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:background="@android:color/transparent">
-
-	<ListView
-		android:id="@android:id/list"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:cacheColorHint="@android:color/transparent"
-		android:clipToPadding="false"
-		android:drawSelectorOnTop="false"
-		android:scrollbarAlwaysDrawVerticalTrack="false" />
-
-	<ListView
-		android:id="@android:id/custom"
-		android:visibility="gone"
-		android:paddingTop="5.5dp"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:cacheColorHint="@android:color/transparent"
-		android:clipToPadding="false"
-		android:drawSelectorOnTop="false"
-		android:scrollbarAlwaysDrawVerticalTrack="false" />
-
-</name.mikanoshi.customiuizer.utils.NestedHeaderLayout>
+	android:cacheColorHint="@android:color/transparent"
+	android:clipToPadding="false"
+	android:drawSelectorOnTop="false"
+	android:scrollbarAlwaysDrawVerticalTrack="false"
+	 />

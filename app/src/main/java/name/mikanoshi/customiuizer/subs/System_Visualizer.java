@@ -1,7 +1,7 @@
 package name.mikanoshi.customiuizer.subs;
 
 import android.os.Bundle;
-import android.preference.Preference;
+import androidx.preference.Preference;
 
 import name.mikanoshi.customiuizer.SubFragment;
 import name.mikanoshi.customiuizer.utils.Helpers;

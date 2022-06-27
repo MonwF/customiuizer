@@ -4,9 +4,9 @@
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:orientation="horizontal"
-	android:minHeight="?android:attr/listPreferredItemHeightLarge"
-	android:paddingStart="?android:attr/listPreferredItemPaddingLeft"
-	android:paddingEnd="?android:attr/listPreferredItemPaddingRight"
+	android:minHeight="?attr/listPreferredItemHeightLarge"
+	android:paddingStart="?attr/listPreferredItemPaddingLeft"
+	android:paddingEnd="?attr/listPreferredItemPaddingRight"
 	android:paddingTop="8.66dp"
 	android:paddingBottom="8.66dp"
 	tools:ignore="RtlSymmetry">

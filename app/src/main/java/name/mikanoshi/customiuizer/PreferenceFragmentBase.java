@@ -4,8 +4,6 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,28 +11,23 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
@@ -46,7 +39,7 @@ import java.util.Set;
 import name.mikanoshi.customiuizer.mods.GlobalActions;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
-public class PreferenceFragmentBase extends PreferenceFragment {
+public class PreferenceFragmentBase extends PreferenceFragmentCompat {
 
     private Context actContext = null;
     public boolean isAnimating = false;
@@ -55,6 +48,8 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 
     public static final int PICK_BACKFILE = 11;
     public boolean isCustomActionBar = false;
+    protected int headLayoutId = 0;
+    protected int tailLayoutId = 0;
 
     protected ActionBar getActionBar() {
         AppCompatActivity act = (AppCompatActivity) getActivity();
@@ -66,7 +61,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
             inflater.inflate(R.menu.menu_mods, menu);
         }
         if (isCustomActionBar) {
-            MenuItem item = null;
+            MenuItem item;
             for (int i = 0; i < menu.size(); i++) {
                 item = menu.getItem(i);
                 item.setVisible(item.getItemId() == R.id.edit_confirm);
@@ -82,8 +77,14 @@ public class PreferenceFragmentBase extends PreferenceFragment {
     public void confirmEdit() {}
 
     @Override
+    public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
+        getPreferenceManager().setSharedPreferencesName(Helpers.prefsName);
+        getPreferenceManager().setSharedPreferencesMode(Context.MODE_PRIVATE);
+        getPreferenceManager().setStorageDeviceProtected();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Activity act = getActivity();
         switch (item.getItemId()) {
             case R.id.edit_confirm:
                 confirmEdit();
@@ -99,33 +100,31 @@ public class PreferenceFragmentBase extends PreferenceFragment {
                 return true;
             case R.id.softreboot:
                 if (!Helpers.miuizerModuleActive) {
-                    showXposedDialog(getActivity());
+                    showXposedDialog((AppCompatActivity) getActivity());
                     return true;
                 }
 
                 AlertDialog.Builder alert = new AlertDialog.Builder(getValidContext());
                 alert.setTitle(R.string.soft_reboot);
                 alert.setMessage(R.string.soft_reboot_ask);
-                alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         getValidContext().sendBroadcast(new Intent(GlobalActions.ACTION_PREFIX + "FastReboot"));
                     }
                 });
-                alert.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {}
                 });
                 alert.show();
                 return true;
             case R.id.about:
-                Bundle args = new Bundle();
-                args.putInt("baseResId", R.layout.fragment_about);
-                openSubFragment(new AboutFragment(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.app_about, R.xml.prefs_about);
+                openSubFragment(new AboutFragment(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.app_about, R.xml.prefs_about);
                 return true;
         }
         return false;
     }
 
-    public void showXposedDialog(Activity act) {
+    public void showXposedDialog(AppCompatActivity act) {
         try {
             AlertDialog.Builder builder = new AlertDialog.Builder(act);
             builder.setTitle(R.string.warning);
@@ -142,7 +141,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
     }
 
     public void showBackupRestoreDialog() {
-        final Activity act = getActivity();
+        final AppCompatActivity act = (AppCompatActivity) getActivity();
 
         AlertDialog.Builder alert = new AlertDialog.Builder(act);
         alert.setTitle(R.string.backup_restore);
@@ -163,13 +162,12 @@ public class PreferenceFragmentBase extends PreferenceFragment {
     private void initFragment() {
         setHasOptionsMenu(supressMenu);
         ActionBar actionBar = getActionBar();
-        actionBar.setTitle(R.string.app_name);
 
         boolean showBack = false;
         if (this instanceof MainFragment) {
             ActivityInfo appInfo;
             try {
-                Activity act = getActivity();
+                AppCompatActivity act = (AppCompatActivity) getActivity();
                 appInfo = act.getPackageManager().getActivityInfo(act.getComponentName(), PackageManager.GET_META_DATA);
                 showBack = appInfo.metaData != null && appInfo.metaData.containsKey("from.settings");
             } catch (PackageManager.NameNotFoundException e) {
@@ -184,73 +182,48 @@ public class PreferenceFragmentBase extends PreferenceFragment {
     public void onCreate(Bundle savedInstanceState, int pref_defaults) {
         super.onCreate(savedInstanceState);
         try {
-            getPreferenceManager().setSharedPreferencesName(Helpers.prefsName);
-            getPreferenceManager().setSharedPreferencesMode(Context.MODE_PRIVATE);
-            getPreferenceManager().setStorageDeviceProtected();
             PreferenceManager.setDefaultValues(Helpers.getProtectedContext(getValidContext()), pref_defaults, false);
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        initFragment();
+    protected void fixStubLayout(View view, int postion) {
+
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (headLayoutId > 0) {
+            ViewStub vs = view.findViewById(R.id.head_stub);
+            vs.setLayoutResource(headLayoutId);
+            View renderView = vs.inflate();
+            fixStubLayout(renderView, 1);
+        }
+        if (tailLayoutId > 0) {
+            ViewStub vs = view.findViewById(R.id.tail_stub);
+            vs.setLayoutResource(tailLayoutId);
+            View renderView = vs.inflate();
+            fixStubLayout(renderView, 2);
+        }
         setViewBackground(view);
+        initFragment();
     }
 
     public void setViewBackground(View view) {
         view.setBackgroundColor(Helpers.getSystemBackgroundColor(getValidContext()));
     }
 
-    public void setActionModeStyle(View searchView) {
-        boolean isNight = Helpers.isNightMode(getValidContext());
-        if (searchView != null) try {
-            searchView.setSaveFromParentEnabled(false);
-            Drawable drawable = getResources().getDrawable(getResources().getIdentifier(isNight ? "search_mode_bg_dark" : "search_mode_bg_light", "drawable", "miui"), getValidContext().getTheme());
-            try {
-                int colorResId = getResources().getIdentifier(isNight ? "primary_color_dark" : "primary_color_light", "color", "miui");
-                if (colorResId != 0 && drawable instanceof LayerDrawable) {
-                    drawable = ((LayerDrawable)drawable).getDrawable(0);
-                    if (drawable instanceof GradientDrawable)
-                        ((GradientDrawable)drawable).setColor(getResources().getColor(colorResId, getValidContext().getTheme()));
-                }
-            } catch (Throwable ignore) {}
-            searchView.setBackground(drawable);
-            LinearLayout inputArea = searchView.findViewById(android.R.id.inputArea);
-            inputArea.setBackgroundResource(getResources().getIdentifier(isNight ? "search_mode_edit_text_bg_dark" : "search_mode_edit_text_bg_light", "drawable", "miui"));
-            if (Helpers.is11()) {
-                ViewGroup.LayoutParams lp1 = searchView.getLayoutParams();
-                int resId = getResources().getIdentifier("action_bar_default_height", "dimen", "miui");
-                lp1.height = getResources().getDimensionPixelSize(resId == 0 ? R.dimen.secondary_text_size : resId);
-                searchView.setLayoutParams(lp1);
-                FrameLayout.LayoutParams lp2 = (FrameLayout.LayoutParams)inputArea.getLayoutParams();
-                resId = getResources().getIdentifier("searchbar_bg_height", "dimen", "miui");
-                lp2.height = getResources().getDimensionPixelSize(resId == 0 ? R.dimen.searchbar_bg_height : resId);
-                inputArea.setLayoutParams(lp2);
-            }
-            ImageView inputIcon = searchView.findViewById(R.id.inputIcon);
-            inputIcon.setImageResource(getResources().getIdentifier(isNight ? "edit_text_search_dark" : "edit_text_search", "drawable", "miui"));
-            TextView input = searchView.findViewById(android.R.id.input);
-            int fontSize = getResources().getIdentifier(Helpers.is11() ? "edit_text_font_size" : "secondary_text_size", "dimen", "miui");
-            input.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(fontSize == 0 ? R.dimen.secondary_text_size : fontSize));
-            input.setHintTextColor(getResources().getColor(getResources().getIdentifier(isNight ? "edit_text_search_hint_color_dark" : "edit_text_search_hint_color_light", "color", "miui"), getValidContext().getTheme()));
-        } catch (Throwable t) {
-            t.printStackTrace();
-        }
+    public void openSubFragment(Fragment fragment, Bundle args, Helpers.SettingsType settingsType, Helpers.ActionBarType abType, int titleResId, int contentResId) {
+        openSubFragment(fragment, args, settingsType, abType, getResources().getString(titleResId), contentResId);
     }
 
-    public void openSubFragment(Fragment fragment, Bundle args, Helpers.SettingsType settingsType, Helpers.ActionBarType abType, int titleResId, int contentResId) {
+    public void openSubFragment(Fragment fragment, Bundle args, Helpers.SettingsType settingsType, Helpers.ActionBarType abType, String title, int contentResId) {
         if (args == null) args = new Bundle();
         args.putInt("settingsType", settingsType.ordinal());
         args.putInt("abType", abType.ordinal());
-        args.putInt("titleResId", titleResId);
+        args.putString("titleResId", title);
         args.putInt("contentResId", contentResId);
         float order = 100.0f;
         try {
@@ -263,9 +236,10 @@ public class PreferenceFragmentBase extends PreferenceFragment {
             fragment.getArguments().clear();
             fragment.getArguments().putAll(args);
         }
-        getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fragment_open_enter, R.animator.fragment_open_exit, R.animator.fragment_close_enter, R.animator.fragment_close_exit)
+        getParentFragmentManager().beginTransaction()
+            .setCustomAnimations(R.animator.fragment_open_enter, R.animator.fragment_open_exit, R.animator.fragment_close_enter, R.animator.fragment_close_exit)
             .replace(R.id.fragment_container, fragment).addToBackStack(null).commitAllowingStateLoss();
-        getFragmentManager().executePendingTransactions();
+        getParentFragmentManager().executePendingTransactions();
     }
 
     @Override
@@ -277,8 +251,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 
         final View top = getView();
         if (top == null) return null;
-        final View content = top.findViewById(android.R.id.list);
-
+        final View content = getListView();
         //ValueAnimator.setFrameDelay(17);
         ValueAnimator valAnimator = new ValueAnimator();
         valAnimator.setDuration(animDur);
@@ -342,18 +315,12 @@ public class PreferenceFragmentBase extends PreferenceFragment {
         this.actContext = null;
     }
 
-//	@Override
-//	public void onResume() {
-//		super.onResume();
-//		setupImmersiveMenu();
-//	}
-
     public Context getValidContext() {
         if (actContext != null) return actContext;
         return getActivity() == null ? getContext() : getActivity().getApplicationContext();
     }
 
-    public void backupSettings(Activity act) {
+    public void backupSettings(AppCompatActivity act) {
         String backupPath = Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder;
         if (!Helpers.preparePathForBackup(act, backupPath)) return;
         ObjectOutputStream output = null;
@@ -394,7 +361,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
                                  Intent resultData) {
         if (requestCode == MainFragment.PICK_BACKFILE
             && resultCode == Activity.RESULT_OK) {
-            Uri uri = null;
+            Uri uri;
             if (resultData != null) {
                 uri = resultData.getData();
                 doRestoreSettings(uri);
@@ -402,7 +369,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
         }
     }
 
-    public void restoreSettings(final Activity act) {
+    public void restoreSettings(final AppCompatActivity act) {
         if (!Helpers.checkStoragePerm(act, Helpers.REQUEST_PERMISSIONS_RESTORE)) return;
         if (!Helpers.checkStorageReadable(act)) return;
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -413,7 +380,7 @@ public class PreferenceFragmentBase extends PreferenceFragment {
 
     public void doRestoreSettings(Uri uri) {
         ObjectInputStream input = null;
-        final Activity act = getActivity();
+        final AppCompatActivity act = (AppCompatActivity) getActivity();
         try {
             input = new ObjectInputStream(act.getContentResolver().openInputStream(uri));
             Map<String, ?> entries = (Map<String, ?>)input.readObject();

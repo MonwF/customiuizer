@@ -3,13 +3,31 @@ package name.mikanoshi.customiuizer;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.preference.Preference;
 
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class AboutFragment extends SubFragment {
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		headLayoutId = R.layout.fragment_about_head;
+		tailLayoutId = R.layout.fragment_about_tail;
+	}
+
+	@Override
+	protected void fixStubLayout(View view, int postion) {
+		if (postion == 2) {
+			RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) view.getLayoutParams();
+			lp.addRule(RelativeLayout.BELOW, android.R.id.list_container);
+			view.setLayoutParams(lp);
+		}
+	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {

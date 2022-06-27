@@ -9,13 +9,17 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.Preference;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.Preference;
 import android.provider.Settings;
 import android.widget.SeekBar;
 
+import androidx.appcompat.app.AlertDialog;
+
 import java.util.Objects;
 
-import android.app.AlertDialog;
 import name.mikanoshi.customiuizer.CredentialsLauncher;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SharedPrefsProvider;
@@ -32,14 +36,15 @@ import name.mikanoshi.customiuizer.utils.Helpers;
 public class System extends SubFragment {
 
 	@Override
+	public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
+		super.onCreatePreferences(savedInstanceState, rootKey);
+		selectSub();
+	}
+
+	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		Bundle args = getArguments();
-		String sub = args.getString("sub");
-		if (sub == null) sub = "";
-
-		selectSub("pref_key_system", sub);
 		switch (sub) {
 			case "pref_key_system_cat_screen":
 				findPreference("pref_key_system_orientationlock").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -424,8 +429,8 @@ public class System extends SubFragment {
 					}
 				});
 
-				PreferenceEx airplaneModePref = (PreferenceEx)findPreference("pref_key_system_airplanemodeconfig");
-				airplaneModePref.setUnsupported(!Helpers.checkSettingsPerm(getActivity()));
+				PreferenceEx airplaneModePref = findPreference("pref_key_system_airplanemodeconfig");
+				airplaneModePref.setUnsupported(!Helpers.checkSettingsPerm((AppCompatActivity) getActivity()));
 				airplaneModePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {

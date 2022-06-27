@@ -1,7 +1,9 @@
 package name.mikanoshi.customiuizer.subs;
 
 import android.os.Bundle;
-import android.preference.Preference;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.Preference;
 
 import java.util.Objects;
 
@@ -30,7 +32,7 @@ public class System_NoScreenLock extends SubFragment {
 		findPreference("pref_key_system_noscreenlock_wifi").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				if (!Helpers.checkFinePerm(getActivity(), Helpers.REQUEST_PERMISSIONS_WIFI)) return false;
+				if (!Helpers.checkFinePerm((AppCompatActivity) getActivity(), Helpers.REQUEST_PERMISSIONS_WIFI)) return false;
 				openWifiNetworks();
 				return true;
 			}

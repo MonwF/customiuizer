@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.Preference;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.Preference;
 
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SubFragment;
@@ -17,9 +19,9 @@ public class Various_HiddenFeatures extends SubFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		final Activity act = getActivity();
+		final AppCompatActivity act = (AppCompatActivity) getActivity();
 
-		PreferenceEx aosp = (PreferenceEx)findPreference("pref_key_various_memorystats");
+		PreferenceEx aosp = findPreference("pref_key_various_memorystats");
 		aosp.setCustomSummary("AOSP");
 		aosp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
@@ -29,7 +31,7 @@ public class Various_HiddenFeatures extends SubFragment {
 			}
 		});
 
-		aosp = (PreferenceEx)findPreference("pref_key_various_runningservices");
+		aosp = findPreference("pref_key_various_runningservices");
 		aosp.setCustomSummary("AOSP");
 		aosp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override

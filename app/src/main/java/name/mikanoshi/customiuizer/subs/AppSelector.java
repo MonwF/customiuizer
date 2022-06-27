@@ -2,7 +2,6 @@ package name.mikanoshi.customiuizer.subs;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,6 +10,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
+
+import androidx.appcompat.app.AlertDialog;
 
 import java.lang.reflect.Method;
 import java.util.LinkedHashSet;

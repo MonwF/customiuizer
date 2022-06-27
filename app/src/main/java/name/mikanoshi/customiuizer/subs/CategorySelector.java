@@ -1,8 +1,8 @@
 package name.mikanoshi.customiuizer.subs;
 
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceScreen;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceScreen;
 
 import name.mikanoshi.customiuizer.MainFragment;
 import name.mikanoshi.customiuizer.R;
@@ -21,14 +21,7 @@ public class CategorySelector extends SubFragment {
 		Bundle args = getArguments();
 		cat = args.getString("cat");
 
-		if ("pref_key_system".equals(cat)) {
-			if (!Helpers.is12()) {
-				Preference pref = findPreference("pref_key_system_cat_floatingwindows");
-				if (pref != null) ((PreferenceScreen)findPreference("pref_key_cat")).removePreference(pref);
-			}
-		}
-
-		PreferenceScreen screen = (PreferenceScreen)findPreference("pref_key_cat");
+		PreferenceScreen screen = findPreference("pref_key_cat");
 		int cnt = screen.getPreferenceCount();
 		for (int i = 0; i < cnt; i++)
 		screen.getPreference(i).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

@@ -1,13 +1,14 @@
 package name.mikanoshi.customiuizer;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import name.mikanoshi.customiuizer.utils.Helpers;
 
-public class SnoozedActivity extends Activity {
+public class SnoozedActivity extends AppCompatActivity {
 
 	@Override
 	protected void attachBaseContext(Context base) {
@@ -30,7 +31,7 @@ public class SnoozedActivity extends Activity {
 			return;
 		}
 
-		getFragmentManager().beginTransaction().replace(R.id.fragment_container, new SnoozedFragment()).commit();
+		getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SnoozedFragment()).commit();
 	}
 
 }

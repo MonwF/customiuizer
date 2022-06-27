@@ -25,7 +25,7 @@ import name.mikanoshi.customiuizer.utils.PreferenceAdapter;
 public class SortableList extends SubFragment {
 
 	String key;
-	int titleResId;
+	String titleResId;
 	boolean activities;
 	SortableListView listView;
 
@@ -42,7 +42,7 @@ public class SortableList extends SubFragment {
 
 		Bundle args = getArguments();
 		key = args.getString("key");
-		titleResId = args.getInt("titleResId");
+		titleResId = args.getString("titleResId");
 		activities = args.getBoolean("activities", false);
 
 		if (getView() == null) return;

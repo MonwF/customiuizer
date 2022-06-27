@@ -14,7 +14,7 @@
 		app:contentInsetLeft="0dp"
 		app:contentInsetRight="0dp"
 		app:titleMarginStart="0dp"
-		android:theme="@style/ToolbarStyle"
+		android:theme="@style/AppToolbarStyle"
 		/>
 
 	<FrameLayout

@@ -1,7 +1,7 @@
 package name.mikanoshi.customiuizer.subs;
 
 import android.os.Bundle;
-import android.preference.Preference;
+import androidx.preference.Preference;
 import android.text.format.DateFormat;
 
 import java.util.Calendar;

@@ -1,36 +1,8 @@
 package name.mikanoshi.customiuizer.utils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.TimeZone;
-
 import android.Manifest;
-import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Application;
 import android.app.admin.DevicePolicyManager;
@@ -51,13 +23,9 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.LinearGradient;
-import android.graphics.Matrix;
 import android.graphics.Rect;
-import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
@@ -70,8 +38,8 @@ import android.os.PowerManager.WakeLock;
 import android.os.UserHandle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.preference.PreferenceCategory;
-import android.preference.PreferenceScreen;
+import androidx.preference.PreferenceCategory;
+import androidx.preference.PreferenceScreen;
 import android.provider.Settings;
 import android.text.InputType;
 import android.text.Spannable;
@@ -94,15 +62,39 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import org.xmlpull.v1.XmlPullParser;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.TimeZone;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
-
-import android.app.AlertDialog;
 import miui.util.HapticFeedbackUtil;
-
 import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SharedPrefsProvider;
@@ -139,7 +131,7 @@ public class Helpers {
 	public static ArrayList<ModData> allModsList = new ArrayList<ModData>();
 	public static int xposedVersion = 0;
 	public static final int markColor = Color.rgb(205, 73, 97);
-	public static final int markColorVibrant = Color.rgb(222, 45, 73);
+	public static final int markColorVibrant = Color.rgb(255, 0, 0);
 	public static final int REQUEST_PERMISSIONS_BACKUP = 1;
 	public static final int REQUEST_PERMISSIONS_RESTORE = 2;
 	public static final int REQUEST_PERMISSIONS_WIFI = 3;
@@ -345,10 +337,10 @@ public class Helpers {
 		return res;
 	}
 
-	public static void launchActivity(Activity act, String pkg, String cmp) {
+	public static void launchActivity(AppCompatActivity act, String pkg, String cmp) {
 		launchActivity(act, pkg, cmp, false);
 	}
-	public static boolean launchActivity(Activity act, String pkg, String cmp, boolean silent) {
+	public static boolean launchActivity(AppCompatActivity act, String pkg, String cmp, boolean silent) {
 		PackageManager pm = act.getPackageManager();
 		try {
 			pm.getPackageInfo(pkg, PackageManager.GET_ACTIVITIES);
@@ -371,7 +363,7 @@ public class Helpers {
 //		return false;
 //	}
 
-	public static void hideKeyboard(Activity act, View view) {
+	public static void hideKeyboard(AppCompatActivity act, View view) {
 		try {
 			Context context = act == null ? view.getContext() : act;
 			InputMethodManager inputManager = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -433,32 +425,32 @@ public class Helpers {
 		}
 	}
 
-	public static boolean checkStoragePerm(Activity act, int action) {
+	public static boolean checkStoragePerm(AppCompatActivity act, int action) {
 		if (act.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 			act.requestPermissions(new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE }, action);
 			return false;
 		} else return true;
 	}
 
-	public static boolean checkSettingsPerm(Activity act) {
+	public static boolean checkSettingsPerm(AppCompatActivity act) {
 		return act.checkSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED;
 	}
 
-	public static boolean checkCoarsePerm(Activity act, int action) {
+	public static boolean checkCoarsePerm(AppCompatActivity act, int action) {
 		if (act.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 			act.requestPermissions(new String[]{ Manifest.permission.ACCESS_COARSE_LOCATION }, action);
 			return false;
 		} else return true;
 	}
 
-	public static boolean checkFinePerm(Activity act, int action) {
+	public static boolean checkFinePerm(AppCompatActivity act, int action) {
 		if (act.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 			act.requestPermissions(new String[]{ Manifest.permission.ACCESS_FINE_LOCATION }, action);
 			return false;
 		} else return true;
 	}
 
-	public static boolean preparePathForBackup(Activity act, String path) {
+	public static boolean preparePathForBackup(AppCompatActivity act, String path) {
 		if (!checkStoragePerm(act, REQUEST_PERMISSIONS_BACKUP)) return false;
 
 		String state = Environment.getExternalStorageState();

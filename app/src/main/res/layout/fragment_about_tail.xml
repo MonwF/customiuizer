@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="start"
+		android:orientation="vertical"
+		android:paddingStart="15.5dp"
+		android:paddingEnd="15.5dp">
+
+		<TextView
+			style="@style/Widget.InputField"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="start"
+			android:text="@string/about_dynamic"
+			android:textColor="@color/color_not_selected" />
+
+		<TextView
+			style="@style/Widget.InputField"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="start"
+			android:text="@string/about_unsupported"
+			android:textColor="@color/color_not_selected" />
+	</LinearLayout>
+</ScrollView>

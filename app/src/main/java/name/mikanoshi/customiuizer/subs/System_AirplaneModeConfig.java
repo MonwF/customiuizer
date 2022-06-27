@@ -2,8 +2,8 @@ package name.mikanoshi.customiuizer.subs;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.Preference;
-import android.preference.PreferenceScreen;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceScreen;
 import android.provider.Settings;
 import android.text.TextUtils;
 

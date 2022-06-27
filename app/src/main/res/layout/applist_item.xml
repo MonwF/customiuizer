@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:background="@drawable/am_list_item_background"
 	android:minHeight="73.3dp"
@@ -59,7 +60,7 @@
 			android:layout_marginStart="5dp"
 			android:layout_marginEnd="5dp"
 			android:visibility="gone"
-			android:src="@drawable/ic_xspace" />
+			app:srcCompat="@drawable/ic_xspace" />
 
 		<ImageView
 			android:id="@+id/icon_disable"
@@ -69,7 +70,7 @@
 			android:layout_marginStart="5dp"
 			android:layout_marginEnd="5dp"
 			android:visibility="gone"
-			android:src="@drawable/am_card_item_disabled" />
+			app:srcCompat="@drawable/am_card_item_disabled" />
 
 		<CheckBox
 			android:id="@android:id/checkbox"
