@@ -236,12 +236,13 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
             fragment.getArguments().clear();
             fragment.getArguments().putAll(args);
         }
-        getParentFragmentManager().beginTransaction()
+        getParentFragmentManager().beginTransaction().setReorderingAllowed(true)
             .setCustomAnimations(R.animator.fragment_open_enter, R.animator.fragment_open_exit, R.animator.fragment_close_enter, R.animator.fragment_close_exit)
             .replace(R.id.fragment_container, fragment).addToBackStack(null).commitAllowingStateLoss();
         getParentFragmentManager().executePendingTransactions();
     }
 
+    /*
     @Override
     public Animator onCreateAnimator(int transit, boolean enter, final int nextAnim) {
         if (nextAnim == 0) return null;
@@ -302,6 +303,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
 
         return valAnimator;
     }
+     */
 
     @Override
     public void onAttach(Context context) {

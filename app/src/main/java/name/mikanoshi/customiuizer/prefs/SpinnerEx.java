@@ -1,6 +1,7 @@
 package name.mikanoshi.customiuizer.prefs;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import androidx.appcompat.widget.AppCompatSpinner;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import name.mikanoshi.customiuizer.R;
@@ -17,6 +19,8 @@ public class SpinnerEx extends AppCompatSpinner {
 	public CharSequence[] entries;
 	public int[] entryValues;
 	private final ArrayList<Integer> disabledItems = new ArrayList<Integer>();
+	private final Resources res = getContext().getResources();
+	private final int childpadding = res.getDimensionPixelSize(R.dimen.preference_item_child_padding);
 
 	public SpinnerEx(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -25,6 +29,16 @@ public class SpinnerEx extends AppCompatSpinner {
 		entries = xmlAttrs.getTextArray(0);
 		if (xmlAttrs.getResourceId(1, 0) != 0) entryValues = getResources().getIntArray(xmlAttrs.getResourceId(1, 0));
 		xmlAttrs.recycle();
+		this.setPadding(childpadding, 0, childpadding, 0);
+		try {
+			Field mPopup = AppCompatSpinner.class.getDeclaredField("mPopup");
+			mPopup.setAccessible(true);
+			final float scale = getResources().getDisplayMetrics().density;
+			androidx.appcompat.widget.ListPopupWindow popupWindow = (androidx.appcompat.widget.ListPopupWindow) mPopup.get(this);
+			popupWindow.setHeight((int) (40 * 10 * scale));
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 	}
 
 	private int findIndex(int val, int[] vals) {
@@ -38,10 +52,6 @@ public class SpinnerEx extends AppCompatSpinner {
 		ArrayAdapterEx newAdapter = new ArrayAdapterEx(getContext(), android.R.layout.simple_spinner_item, entries);
 		setAdapter(newAdapter);
 		setSelection(findIndex(val, entryValues));
-	}
-
-	public void addDisabledItems(int item) {
-		disabledItems.add(item);
 	}
 
 	public int getSelectedArrayValue() {

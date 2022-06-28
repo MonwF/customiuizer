@@ -739,53 +739,50 @@ public class GlobalActions {
 	}
 
 	public static void miuizerSettings12Hook(LoadPackageParam lpparam) {
-		Method[] methods = XposedHelpers.findMethodsByExactParameters(findClass("com.android.settings.MiuiSettings", lpparam.classLoader), void.class, List.class);
-		for (Method method: methods)
-		if (Modifier.isPublic(method.getModifiers()))
-			Helpers.hookMethod(method, new MethodHook() {
-				@Override
-				@SuppressWarnings("unchecked")
-				protected void after(final MethodHookParam param) throws Throwable {
-					if (param.args[0] == null) return;
+		Helpers.findAndHookMethod("com.android.settings.MiuiSettings", lpparam.classLoader, "updateHeaderList", List.class, new MethodHook() {
+			@Override
+			@SuppressWarnings("unchecked")
+			protected void after(final MethodHookParam param) throws Throwable {
+				if (param.args[0] == null) return;
 
-					Context mContext = ((Activity)param.thisObject).getBaseContext();
-					int opt = Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_miuizer_settingsiconpos", "2"));
-					if (opt == 0) return;
+				Context mContext = ((Activity)param.thisObject).getBaseContext();
+				int opt = Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_miuizer_settingsiconpos", "2"));
+				if (opt == 0) return;
 
-					Resources modRes = Helpers.getModuleRes(mContext);
-					Class<?> headerCls = XposedHelpers.findClassIfExists("com.android.settingslib.miuisettings.preference.PreferenceActivity$Header", lpparam.classLoader);
-					if (headerCls == null) return;
+				Resources modRes = Helpers.getModuleRes(mContext);
+				Class<?> headerCls = XposedHelpers.findClassIfExists("com.android.settingslib.miuisettings.preference.PreferenceActivity$Header", lpparam.classLoader);
+				if (headerCls == null) return;
 
-					Object header = XposedHelpers.newInstance(headerCls);
-					XposedHelpers.setLongField(header, "id", 666);
-					XposedHelpers.setObjectField(header, "intent", new Intent().setClassName(Helpers.modulePkg, GateWaySettings.class.getCanonicalName()));
-					XposedHelpers.setIntField(header, "iconRes", settingsIconResId);
-					XposedHelpers.setObjectField(header, "title", modRes.getString(R.string.app_name));
-					Bundle bundle = new Bundle();
-					ArrayList<UserHandle> users = new ArrayList<UserHandle>();
-					users.add((UserHandle)XposedHelpers.newInstance(UserHandle.class, 0));
-					bundle.putParcelableArrayList("header_user", users);
-					XposedHelpers.setObjectField(header, "extras", bundle);
+				Object header = XposedHelpers.newInstance(headerCls);
+				XposedHelpers.setLongField(header, "id", 666);
+				XposedHelpers.setObjectField(header, "intent", new Intent().setClassName(Helpers.modulePkg, GateWaySettings.class.getCanonicalName()));
+				XposedHelpers.setIntField(header, "iconRes", settingsIconResId);
+				XposedHelpers.setObjectField(header, "title", modRes.getString(R.string.app_name));
+				Bundle bundle = new Bundle();
+				ArrayList<UserHandle> users = new ArrayList<UserHandle>();
+				users.add((UserHandle)XposedHelpers.newInstance(UserHandle.class, 0));
+				bundle.putParcelableArrayList("header_user", users);
+				XposedHelpers.setObjectField(header, "extras", bundle);
 
-					int security = mContext.getResources().getIdentifier("security_status", "id", mContext.getPackageName());
-					int themes = mContext.getResources().getIdentifier("theme_settings", "id", mContext.getPackageName());
-					int special = mContext.getResources().getIdentifier("other_special_feature_settings", "id", mContext.getPackageName());
+				int security = mContext.getResources().getIdentifier("security_status", "id", mContext.getPackageName());
+				int themes = mContext.getResources().getIdentifier("launcher_settings", "id", mContext.getPackageName());
+				int special = mContext.getResources().getIdentifier("other_special_feature_settings", "id", mContext.getPackageName());
 
-					List<Object> headers = (List<Object>)param.args[0];
-					int position = 0;
-					for (Object head: headers) {
-						position++;
-						long id = XposedHelpers.getLongField(head, "id");
-						if (opt == 1 && id == security) { headers.add(position, header); return; }
-						if (opt == 2 && id == themes) { headers.add(position, header); return; }
-						if (opt == 3 && id == special) { headers.add(position, header); return; }
-					}
-					if (headers.size() > 25 )
-						headers.add(25, header);
-					else
-						headers.add(header);
+				List<Object> headers = (List<Object>)param.args[0];
+				int position = 0;
+				for (Object head: headers) {
+					position++;
+					long id = XposedHelpers.getLongField(head, "id");
+					if (opt == 1 && id == security) { headers.add(position, header); return; }
+					if (opt == 2 && id == themes) { headers.add(position, header); return; }
+					if (opt == 3 && id == special) { headers.add(position, header); return; }
 				}
-			});
+				if (headers.size() > 25 )
+					headers.add(25, header);
+				else
+					headers.add(header);
+			}
+		});
 	}
 
 	public static void setupSystemHelpers() {

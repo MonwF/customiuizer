@@ -99,7 +99,6 @@ public class System_AudioSilencer extends SubFragment {
 			@SuppressLint("CutPasteId") View refresh = getView().findViewById(R.id.refresh_list);
 			((TextView)refresh.findViewById(android.R.id.title)).setText(R.string.system_audiosilencer_last_title);
 			((TextView)refresh.findViewById(android.R.id.summary)).setText(R.string.system_audiosilencer_last_summ);
-			Helpers.setMiuiPrefItem(refresh);
 			refresh.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {

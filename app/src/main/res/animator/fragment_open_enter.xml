@@ -1,2 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<set />
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <objectAnimator android:duration="350" android:valueFrom="1000" android:valueTo="0" android:valueType="floatType" android:propertyName="x"/>
+</set>

@@ -146,7 +146,6 @@ public class Helpers {
 		}
 	};
 	public static WakeLock mWakeLock;
-	public static ValueAnimator shimmerAnim;
 	public static boolean showNewMods = true;
 	public static boolean miuizerModuleActive = false;
 	public static final HashSet<String> newMods = new HashSet<String>(Arrays.asList(
@@ -187,10 +186,6 @@ public class Helpers {
 	public static int getSystemBackgroundColor(Context context) {
 		int black = Color.BLACK;
 		int white = Color.WHITE;
-		try {
-			black = context.getResources().getColor(context.getResources().getIdentifier("black", "color", "miui"), context.getTheme());
-			white = context.getResources().getColor(context.getResources().getIdentifier("white", "color", "miui"), context.getTheme());
-		} catch (Throwable ignore) {}
 		return isNightMode(context) ? black : white;
 	}
 

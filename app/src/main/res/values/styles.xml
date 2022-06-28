@@ -5,6 +5,7 @@
 		<item name="android:windowIsTranslucent">false</item>
 		<item name="android:windowDisablePreview">true</item>
 		<item name="android:colorBackgroundCacheHint">@null</item>
+		<item name="android:spinnerStyle">@style/AppSpinnerStyle</item>
 		<item name="android:spinnerItemStyle">@style/DropDownItemStyle</item>
 		<item name="android:textAppearanceListItem">@style/AppTextAppearance.Primary</item>
 		<item name="android:listPreferredItemPaddingLeft">@dimen/preference_item_child_padding</item>
@@ -13,9 +14,12 @@
 		<item name="colorControlActivated">@color/highlight_normal_light</item>
 		<item name="preferenceTheme">@style/AppPreferenceTheme</item>
 	</style>
+	<style name="AppSpinnerStyle" parent="@style/Widget.AppCompat.Spinner.DropDown">
+		<item name="overlapAnchor">false</item>
+	</style>
 	<style name="DropDownItemStyle" parent="@style/Widget.AppCompat.TextView.SpinnerItem">
-		<item name="android:paddingTop">5dp</item>
-		<item name="android:paddingBottom">5dp</item>
+		<item name="android:paddingTop">8dp</item>
+		<item name="android:paddingBottom">8dp</item>
 	</style>
 	<style name="AppActivityAnimation" parent="@android:style/Animation">
 		<item name="android:activityOpenEnterAnimation">@anim/activity_open_enter</item>
@@ -40,12 +44,6 @@
 		<item name="android:windowIsFloating">false</item>
 		<item name="android:windowTranslucentStatus">true</item>
 		<item name="android:windowTranslucentNavigation">true</item>
-	</style>
-
-	<style name="MIUIPrefs">
-		<item name="android:windowTranslucentStatus">true</item>
-		<item name="android:windowTranslucentNavigation">false</item>
-		<item name="windowActionBarOverlay">false</item>
 	</style>
 
 	<style name="ApplyInvisible">
