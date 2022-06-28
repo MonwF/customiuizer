@@ -47,6 +47,7 @@ public class SubFragment extends PreferenceFragmentBase {
         titleId = getArguments().getString("titleResId");
         order = getArguments().getFloat("order") + 10.0f;
         sub = getArguments().getString("sub");
+        supressMenu = supressMenu || abType == Helpers.ActionBarType.Edit;
 
         if (contentResId == 0) {
             getActivity().finish();
@@ -65,7 +66,6 @@ public class SubFragment extends PreferenceFragmentBase {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        supressMenu = supressMenu || abType == Helpers.ActionBarType.Edit;
         super.onActivityCreated(savedInstanceState);
         loadSharedPrefs();
         ActionBar actionBar = getActionBar();
@@ -380,10 +380,6 @@ public class SubFragment extends PreferenceFragmentBase {
     }
 
     public void finish() {
-        //View view = getView();
-        //if (isAnimating && view != null) ((ViewGroup)view.getParent()).removeView(view);
-        if (isAnimating) return;
-        if (Helpers.shimmerAnim != null) Helpers.shimmerAnim.cancel();
         AppCompatActivity act = (AppCompatActivity) getActivity();
         Helpers.hideKeyboard(act, getView());
         FragmentManager fragmentManager = getParentFragmentManager();

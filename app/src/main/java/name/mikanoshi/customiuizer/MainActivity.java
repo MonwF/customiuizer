@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
 		}
 		else if (mainFrag == null) {
 			mainFrag = new MainFragment();
-			getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, mainFrag).commit();
+			getSupportFragmentManager().beginTransaction().setReorderingAllowed(true).replace(R.id.fragment_container, mainFrag).commit();
 		}
 	}
 
@@ -117,7 +117,6 @@ public class MainActivity extends AppCompatActivity {
 			super.onBackPressed();
 			return;
 		}
-		if (Helpers.shimmerAnim != null) Helpers.shimmerAnim.cancel();
 		if (fragment instanceof SubFragment)
 			((SubFragment)fragment).finish();
 		else
@@ -132,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
 				finish();
 				return true;
 			}
-			if (Helpers.shimmerAnim != null) Helpers.shimmerAnim.cancel();
 			if (fragment instanceof MainFragment)
 				finish();
 			else {

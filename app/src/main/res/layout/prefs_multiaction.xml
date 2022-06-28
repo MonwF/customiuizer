@@ -15,12 +15,12 @@
 
 	<name.mikanoshi.customiuizer.prefs.SpinnerEx
 		android:id="@+id/action"
-		android:layout_width="match_parent"
+		android:layout_width="240dp"
 		android:layout_height="wrap_content"
 		android:prompt="@string/launcher_gestures_action"
 		android:entries="@array/placeholder_array"
 		miuizer:entryValues="@array/placeholder_array_val"
-		android:spinnerMode="dialog" />
+		android:spinnerMode="dropdown" />
 
 	<LinearLayout
 		android:id="@+id/apps_group"
@@ -38,7 +38,7 @@
 
 		<name.mikanoshi.customiuizer.prefs.SpinnerExFake
 			android:id="@+id/app_to_launch"
-			android:layout_width="match_parent"
+			android:layout_width="240dp"
 			android:layout_height="wrap_content"
 			android:entries="@array/placeholder_array"
 			miuizer:entryValues="@array/placeholder_array_val"
@@ -62,7 +62,7 @@
 
 		<name.mikanoshi.customiuizer.prefs.SpinnerExFake
 			android:id="@+id/shortcut_to_launch"
-			android:layout_width="match_parent"
+			android:layout_width="240dp"
 			android:layout_height="wrap_content"
 			android:entries="@array/placeholder_array"
 			miuizer:entryValues="@array/placeholder_array_val"
@@ -92,7 +92,7 @@
 
 		<name.mikanoshi.customiuizer.prefs.SpinnerExFake
 			android:id="@+id/activity_to_launch"
-			android:layout_width="match_parent"
+			android:layout_width="240dp"
 			android:layout_height="wrap_content"
 			android:entries="@array/placeholder_array"
 			miuizer:entryValues="@array/placeholder_array_val"
@@ -125,12 +125,12 @@
 
 		<name.mikanoshi.customiuizer.prefs.SpinnerEx
 			android:id="@+id/toggle"
-			android:layout_width="match_parent"
+			android:layout_width="240dp"
 			android:layout_height="wrap_content"
 			android:prompt="@string/launcher_gestures_setting"
 			android:entries="@array/global_toggles"
 			miuizer:entryValues="@array/global_toggles_val"
-			android:spinnerMode="dialog" />
+			android:spinnerMode="dropdown" />
 	</LinearLayout>
 
 </LinearLayout>
