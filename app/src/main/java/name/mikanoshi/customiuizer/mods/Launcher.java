@@ -241,7 +241,7 @@ public class Launcher {
 //	}
 
 	public static void HotSeatSwipesHook(final LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.miui.home.launcher.HotSeats", lpparam.classLoader, "dispatchTouchEvent", MotionEvent.class, new MethodHook() {
+		Helpers.findAndHookMethod("com.miui.home.launcher.hotseats.HotSeats", lpparam.classLoader, "dispatchTouchEvent", MotionEvent.class, new MethodHook() {
 			@Override
 			protected void before(final MethodHookParam param) throws Throwable {
 				MotionEvent ev = (MotionEvent)param.args[0];
@@ -254,21 +254,6 @@ public class Launcher {
 				mDetectorHorizontal.onTouchEvent(ev);
 			}
 		});
-
-//		Helpers.findAndHookMethod("com.htc.launcher.DragLayer", lpparam.classLoader, "onInterceptTouchEvent", MotionEvent.class, new MethodHook() {
-//			@Override
-//			protected void before(final MethodHookParam param) throws Throwable {
-//				MotionEvent ev = (MotionEvent)param.args[0];
-//				if (ev == null) return;
-//
-//				FrameLayout dragLayer = (FrameLayout)param.thisObject;
-//				launcher = XposedHelpers.getObjectField(dragLayer, "m_launcher");
-//				Context helperContext = dragLayer.getContext();
-//				if (helperContext == null) return;
-//				if (mDetectorVertical == null) mDetectorVertical = new GestureDetector(helperContext, new SwipeListenerVertical(helperContext));
-//				if (mDetectorVertical.onTouchEvent(ev)) param.setResult(true);
-//			}
-//		});
 	}
 
 	// Listener for horizontal swipes on hotseats
