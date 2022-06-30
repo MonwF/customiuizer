@@ -683,7 +683,7 @@
 	<string name="various_unlockfps_summ">Make fps up to 90 available in Screen Recorder app. Whether higher fps will actually work depends on device and video driver.</string>
 	<string name="various_miuiinstaller_title">Use MIUI package installer</string>
 	<string name="various_miuiinstaller_summ">Make package installer by Xiaomi the default one and allow it to update system apps</string>
-	<string name="various_miuiinstaller_error">Required app is not installed. Long press to download.</string>
+	<string name="various_miuiinstaller_error">Required app is not installed or disabled</string>
 	<string name="various_installappinfo_title">App info in installer</string>
 	<string name="various_installappinfo_summ">Display info about app that is being installed</string>
 	<string name="various_installappinfo_package">Package</string>
