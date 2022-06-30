@@ -5932,10 +5932,10 @@ public class System {
             }
         });
 
-        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.PanelView", lpparam.classLoader, "setExpandedHeightInternal", new MethodHook() {
+        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController", lpparam.classLoader, "setExpandedHeightInternal", new MethodHook() {
             @Override
             protected void before(final MethodHookParam param) throws Throwable {
-                float mExpandedFraction = XposedHelpers.getFloatField(param.thisObject, "mExpandedFraction");
+                float mExpandedFraction = (float) XposedHelpers.callMethod(param.thisObject, "getExpandedFraction");
                 if (mExpandedFraction > 0.33f) {
                     currentTouchTime = 0;
                     currentTouchX = 0;
