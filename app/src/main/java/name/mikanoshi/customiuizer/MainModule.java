@@ -97,6 +97,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (pkg.equals("android") && lpparam.processName.equals("android")) {
             PackagePermissions.hook(lpparam);
             GlobalActions.setupGlobalActions(lpparam);
+            if (mPrefs.getBoolean("system_screenshot_overlay")) {
+                System.TempHideOverlayHook(lpparam);
+            }
             if (mPrefs.getBoolean("system_popupnotif_fs") ||
                     mPrefs.getBoolean("controls_volumecursor") ||
                     mPrefs.getBoolean("controls_fsg_horiz") ||

@@ -6518,6 +6518,7 @@ public class System {
     }
 
     public static void TempHideOverlayHook() {
+        final boolean[] isListened = {false};
         Helpers.hookAllMethods("android.view.WindowManagerGlobal", null, "addView", new MethodHook() {
             @Override
             @SuppressWarnings("ConstantConditions")
@@ -6525,24 +6526,66 @@ public class System {
                 if (param.args[0] == null || !(param.args[1] instanceof WindowManager.LayoutParams) || param.getThrowable() != null) return;
                 WindowManager.LayoutParams params = (WindowManager.LayoutParams)param.args[1];
                 final View view = (View)param.args[0];
-                if (params.type != WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY && params.type != WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY) return;
-
-                XposedHelpers.setAdditionalInstanceField(view, "mSavedVisibility", view.getVisibility());
-                view.getContext().registerReceiver(new BroadcastReceiver() {
-                    @Override
-                    public void onReceive(Context context, Intent intent) {
-                        if (view == null) return;
-                        boolean state = intent.getBooleanExtra("IsFinished", true);
-                        if (state) {
-                            view.setVisibility((int)XposedHelpers.getAdditionalInstanceField(view, "mSavedVisibility"));
-                        } else if (view.getVisibility() != View.GONE) {
-                            XposedHelpers.setAdditionalInstanceField(view, "mSavedVisibility", view.getVisibility());
-                            view.setVisibility(View.GONE);
+                if (params.type != 2002 && params.type != WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY && params.type != WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY) return;
+                String pkgName = view.getContext().getPackageName();
+                if (pkgName.equals("com.android.systemui")) {
+                    return;
+                }
+                IntentFilter intentFilter = new IntentFilter();
+                intentFilter.addAction("customuizer.action.TempHideOverlay");
+                intentFilter.addAction("miui.intent.TAKE_SCREENSHOT");
+                if (!isListened[0]) {
+                    isListened[0] = true;
+                    view.getContext().registerReceiver(new BroadcastReceiver() {
+                        @Override
+                        public void onReceive(Context context, Intent intent) {
+                            String action = intent.getAction();
+                            if (action == null || view == null) return;
+                            if (action.equals("customuizer.action.TempHideOverlay")) {
+                                ArrayList<View> mViews = (ArrayList<View>) XposedHelpers.getObjectField(param.thisObject, "mViews");
+                                for (View vs : mViews) {
+                                    if (vs.getVisibility() == View.VISIBLE) {
+                                        WindowManager.LayoutParams lp = (WindowManager.LayoutParams)vs.getLayoutParams();
+                                        if (lp.type == 2002 || lp.type == WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY
+                                            || lp.type == WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY) {
+                                            vs.setVisibility(View.GONE);
+                                            XposedHelpers.setAdditionalInstanceField(vs, "mSavedVisibility", View.VISIBLE);
+                                        }
+                                    }
+                                }
+                            }
+                            else if (action.equals("miui.intent.TAKE_SCREENSHOT")) {
+                                boolean state = intent.getBooleanExtra("IsFinished", true);
+                                if (state) {
+                                    ArrayList<View> mViews = (ArrayList<View>) XposedHelpers.getObjectField(param.thisObject, "mViews");
+                                    for (View vs : mViews) {
+                                        if (vs.getVisibility() == View.GONE && XposedHelpers.getAdditionalInstanceField(vs, "mSavedVisibility") != null) {
+                                            vs.setVisibility(View.VISIBLE);
+                                            XposedHelpers.removeAdditionalInstanceField(vs, "mSavedVisibility");
+                                        }
+                                    }
+                                }
+                            }
                         }
-                    }
-                }, new IntentFilter("miui.intent.TAKE_SCREENSHOT"));
+                    }, intentFilter);
+                }
             }
         });
+    }
+
+    public static void TempHideOverlayHook(LoadPackageParam lpparam) {
+        MethodHook delayScreenshotHook = new MethodHook() {
+            @Override
+            @SuppressWarnings("ConstantConditions")
+            protected void before(final MethodHookParam param) throws Throwable {
+                if (Modifier.isPrivate(param.method.getModifiers())) {
+                    Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+                    mContext.sendBroadcast(new Intent("customuizer.action.TempHideOverlay"));
+                }
+            }
+        };
+        Helpers.hookAllMethods("com.android.internal.util.ScreenshotHelper", lpparam.classLoader, "takeScreenshot", delayScreenshotHook);
+        Helpers.hookAllMethods("com.android.internal.util.MiuiScreenshotHelper", lpparam.classLoader, "takeScreenshot", delayScreenshotHook);
     }
 
     public static void ScreenshotFloatTimeHook(LoadPackageParam lpparam) {
@@ -7045,9 +7088,9 @@ public class System {
             @Override
             @SuppressWarnings("unchecked")
             protected void after(MethodHookParam param) throws Throwable {
-                List<String> blackList = (List<String>)param.getResult();
-                if (blackList != null) blackList.clear();
-                param.setResult(blackList);
+            List<String> blackList = (List<String>)param.getResult();
+            if (blackList != null) blackList.clear();
+            param.setResult(blackList);
             }
         };
         Helpers.findAndHookMethod("android.util.MiuiMultiWindowAdapter", null, "getFreeformBlackList", clearHook);
