@@ -49,30 +49,14 @@ public class Various extends SubFragment {
 			}
 		});
 
-		if (!Helpers.is12()) {
-			ListPreferenceEx pref = (ListPreferenceEx)findPreference("pref_key_various_collapsemiuititles");
-			pref.setUnsupported(true);
-		}
-
 		try {
 			ApplicationInfo pkgInfo = act.getPackageManager().getApplicationInfo("com.miui.packageinstaller", PackageManager.MATCH_DISABLED_COMPONENTS);
 			if (!pkgInfo.enabled) throw new Throwable();
 		} catch (Throwable e) {
-			CheckBoxPreferenceEx pref = (CheckBoxPreferenceEx)findPreference("pref_key_various_miuiinstaller");
+			CheckBoxPreferenceEx pref = findPreference("pref_key_various_miuiinstaller");
 			pref.setChecked(false);
 			pref.setUnsupported(true);
 			pref.setSummary(R.string.various_miuiinstaller_error);
-			if (getView() == null) return;
-			ListView list = getView().findViewById(android.R.id.list);
-			list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-				@Override
-				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-					if (!view.isEnabled()) {
-						Helpers.openURL(getActivity(), "https://www.apkmirror.com/apk/xiaomi-inc/xiaomi-package-installer/");
-						return true;
-					} else return false;
-				}
-			});
 		}
 	}
 

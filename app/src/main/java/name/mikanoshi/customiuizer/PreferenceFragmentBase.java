@@ -1,7 +1,5 @@
 package name.mikanoshi.customiuizer;
 
-import android.animation.Animator;
-import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -10,7 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -19,7 +16,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
-import android.view.animation.DecelerateInterpolator;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -42,7 +38,6 @@ import name.mikanoshi.customiuizer.utils.Helpers;
 public class PreferenceFragmentBase extends PreferenceFragmentCompat {
 
     private Context actContext = null;
-    public boolean isAnimating = false;
     public boolean supressMenu = false;
     public int animDur = 350;
 

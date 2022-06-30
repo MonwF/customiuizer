@@ -629,9 +629,9 @@
     <string name="controls_fsg_assist_title">屏幕角落滑动动作</string>
     <string name="controls_fsg_assist_summ">执行选定的动作而不是打开Google Assistant</string>
     <string name="various_mods">杂项</string>
-    <string name="various_miuiinstaller_title">使用MIUI软件包安装器</string>
-    <string name="various_miuiinstaller_summ">使用小米的软件包安装器并允许其更新系统应用</string>
-    <string name="various_miuiinstaller_error">请求的应用未安装。长按下载。</string>
+    <string name="various_miuiinstaller_title">使用MIUI应用包安装器</string>
+    <string name="various_miuiinstaller_summ">使用小米的应用包安装器并允许其更新系统应用</string>
+    <string name="various_miuiinstaller_error">请求的应用未安装或被禁用</string>
     <string name="various_installappinfo_title">安装程序中的应用信息</string>
     <string name="various_installappinfo_summ">显示安装中应用的相关信息</string>
     <string name="various_installappinfo_package">软件包</string>
