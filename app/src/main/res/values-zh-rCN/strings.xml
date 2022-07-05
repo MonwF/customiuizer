@@ -1032,7 +1032,7 @@
     <string name="array_turn_off">关闭</string>
     <string name="array_turn_off_disable">关闭并禁用</string>
     <string name="various_restrictapp_title">全限制</string>
-    <string name="various_restrictapp_summ">允许配置省电程序并且为系统应用接入Wi-Fi</string>
+    <string name="various_restrictapp_summ">允许为系统应用配置省电策略和Wi-Fi接入</string>
     <string name="launcher_horizwidgetmargin_title">水平小部件边缘</string>
     <string name="support_github">Github 仓库</string>
     <string name="various_hiddenfeatures_title">隐藏特性</string>

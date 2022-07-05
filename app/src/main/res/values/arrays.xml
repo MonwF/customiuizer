@@ -870,7 +870,6 @@
 	<string-array name="xposed_scope">
 		<item>android</item>
 		<item>com.android.incallui</item>
-		<item>com.android.packageinstaller</item>
 		<item>com.android.server.telecom</item>
 		<item>com.android.settings</item>
 		<item>com.android.systemui</item>

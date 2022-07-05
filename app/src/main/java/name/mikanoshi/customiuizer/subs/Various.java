@@ -1,18 +1,11 @@
 package name.mikanoshi.customiuizer.subs;
 
-import android.app.Activity;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
+
 import androidx.preference.Preference;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SubFragment;
-import name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx;
-import name.mikanoshi.customiuizer.prefs.ListPreferenceEx;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class Various extends SubFragment {
@@ -20,8 +13,6 @@ public class Various extends SubFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
-		final Activity act = getActivity();
 
 		findPreference("pref_key_various_alarmcompat_apps").setOnPreferenceClickListener(openAppsEdit);
 
@@ -48,16 +39,6 @@ public class Various extends SubFragment {
 				return true;
 			}
 		});
-
-		try {
-			ApplicationInfo pkgInfo = act.getPackageManager().getApplicationInfo("com.miui.packageinstaller", PackageManager.MATCH_DISABLED_COMPONENTS);
-			if (!pkgInfo.enabled) throw new Throwable();
-		} catch (Throwable e) {
-			CheckBoxPreferenceEx pref = findPreference("pref_key_various_miuiinstaller");
-			pref.setChecked(false);
-			pref.setUnsupported(true);
-			pref.setSummary(R.string.various_miuiinstaller_error);
-		}
 	}
 
 }

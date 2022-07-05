@@ -47,7 +47,6 @@ public class PackagePermissions {
 	public static void hook(LoadPackageParam lpparam) {
 		systemPackages.add(Helpers.modulePkg);
 		//systemPackages.add("com.miui.packageinstaller");
-		//systemPackages.add("pl.solidexplorer2");
 
 		// Allow signature level permissions for module
 		Helpers.hookAllMethods("com.android.server.pm.permission.PermissionManagerService", lpparam.classLoader, "shouldGrantPermissionBySignature",
