@@ -15,12 +15,6 @@
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_various_miuiinstaller"
-		android:title="@string/various_miuiinstaller_title"
-		android:summary="@string/various_miuiinstaller_summ"
-		android:defaultValue="false" />
-
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_various_installappinfo"
 		android:title="@string/various_installappinfo_title"
 		android:summary="@string/various_installappinfo_summ"

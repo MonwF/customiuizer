@@ -95,6 +95,7 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import miui.util.HapticFeedbackUtil;
+import name.mikanoshi.customiuizer.BuildConfig;
 import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SharedPrefsProvider;
@@ -106,7 +107,7 @@ public class Helpers {
 
 	@SuppressLint("StaticFieldLeak")
 	public static Context mModuleContext = null;
-	public static final String modulePkg = "name.monwf.customiuizer";
+	public static final String modulePkg = BuildConfig.APPLICATION_ID;
 	public static final String modulePackage = "name.mikanoshi.customiuizer";
 	public static final String prefsName = "customiuizer_prefs";
 	public static final String prefsPath = "/data/user_de/0/" + modulePkg + "/shared_prefs";
