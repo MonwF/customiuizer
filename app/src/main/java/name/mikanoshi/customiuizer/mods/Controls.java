@@ -959,15 +959,7 @@ public class Controls {
 	}
 
 	public static void HideNavBarHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "addNavigationBar", XC_MethodReplacement.DO_NOTHING);
-		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "changeNavBarViewState", new MethodHook() {
-			@Override
-			protected void before(MethodHookParam param) throws Throwable {
-				XposedHelpers.callMethod(param.thisObject, "removeNavBarView");
-				XposedHelpers.callMethod(param.thisObject, "updateStatusBarPading");
-				param.setResult(null);
-			}
-		});
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.NavigationModeControllerExt", lpparam.classLoader, "hideNavigationBar", XC_MethodReplacement.returnConstant(true));
 	}
 
 	public static void ImeBackAltIconHook(LoadPackageParam lpparam) {

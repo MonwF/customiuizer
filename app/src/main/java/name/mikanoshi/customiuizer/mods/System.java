@@ -6795,7 +6795,7 @@ public class System {
     }
 
     public static void NoUnlockAnimationHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.miui.ActivityObserverImpl", lpparam.classLoader, "isTopActivityLauncher", XC_MethodReplacement.returnConstant(false));
+        Helpers.findAndHookMethod("com.android.keyguard.utils.MiuiKeyguardUtils", lpparam.classLoader, "isTopActivityLauncher", Context.class, XC_MethodReplacement.returnConstant(false));
     }
 
     public static void NoSOSHook(LoadPackageParam lpparam) {
@@ -7613,15 +7613,11 @@ public class System {
     public static void HideLockScreenHintHook(LoadPackageParam lpparam) {
         MethodHook hook = new MethodHook() {
             @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                Object controller = XposedHelpers.getSurroundingThis(param.thisObject);
-                XposedHelpers.setObjectField(controller, "mUpArrowIndication", null);
-                XposedHelpers.callMethod(controller, "updateIndication");
+            protected void before(MethodHookParam param) throws Throwable {
+                XposedHelpers.setObjectField(param.thisObject, "mUpArrowIndication", null);
             }
         };
-        Helpers.hookAllMethods("com.android.systemui.statusbar.KeyguardIndicationController$BaseKeyguardCallback", lpparam.classLoader, "onRefreshBatteryInfo", hook);
-        if (!Helpers.hookAllMethodsSilently("com.android.systemui.statusbar.KeyguardIndicationController$BaseKeyguardCallback", lpparam.classLoader, "onStartedWakingUp", hook))
-            Helpers.hookAllMethodsSilently("com.android.systemui.statusbar.KeyguardIndicationController$BaseKeyguardCallback", lpparam.classLoader, "onScreenTurnedOn", hook);
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.KeyguardIndicationController", lpparam.classLoader, "updateIndication", boolean.class, boolean.class, hook);
     }
 
     public static void HideLockScreenStatusBarHook(LoadPackageParam lpparam) {

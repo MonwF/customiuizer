@@ -710,7 +710,7 @@ public class Launcher {
 		Helpers.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "loadScreenSize", Context.class, Resources.class, new MethodHook() {
 			@Override
 			protected void before(final MethodHookParam param) throws Throwable {
-				Settings.Global.putInt(((Context)param.args[0]).getContentResolver(), "force_immersive_nav_bar", 1);
+			Settings.Global.putInt(((Context)param.args[0]).getContentResolver(), "force_immersive_nav_bar", 1);
 			}
 		});
 	}
