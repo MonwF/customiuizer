@@ -760,14 +760,18 @@
 		<item>@string/array_default</item>
 		<item>Pictures</item>
 		<item>DCIM</item>
-		<item>@string/array_path</item>
+<!--		<item>@string/array_path</item>-->
 	</string-array>
 	<string-array name="screenshotpath_val">
 		<item>1</item>
 		<item>2</item>
 		<item>3</item>
-		<item>4</item>
+<!--		<item>4</item>-->
 	</string-array>
+	<array name="config_forbidenLongScreenshot">
+		<item>com.tencent.map</item>
+		<item>com.miui.calculator</item>
+	</array>
 
 	<string-array name="inactivebrightness">
 		<item>@string/array_default</item>
@@ -881,6 +885,7 @@
 		<item>com.miui.securitycenter</item>
 		<item>com.miui.screenrecorder</item>
 		<item>com.miui.home</item>
+		<item>com.miui.screenshot</item>
 		<item>com.mi.android.globallauncher</item>
 	</string-array>
 </resources>

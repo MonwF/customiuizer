@@ -154,7 +154,7 @@ public class GlobalActions {
 				}
 				else if (action.equals(ACTION_PREFIX + "CopyToExternal")) {
 					try {
-						String dir = Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder;
+						String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + Helpers.externalFolder;
 						new File(dir).mkdirs();
 
 						int copyAction = intent.getIntExtra("action", 0);
@@ -180,7 +180,7 @@ public class GlobalActions {
 						String errorLogPath = Helpers.getXposedInstallerErrorLog(context);
 						if (errorLogPath != null)
 							try (InputStream in = new FileInputStream(errorLogPath)) {
-								String dir = Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder;
+								String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + Helpers.externalFolder;
 								new File(dir).mkdirs();
 								File sdcardLog = new File(dir + Helpers.logFile);
 								sdcardLog.createNewFile();

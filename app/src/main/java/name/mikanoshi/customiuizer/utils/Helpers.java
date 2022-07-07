@@ -112,7 +112,7 @@ public class Helpers {
 	public static final String prefsName = "customiuizer_prefs";
 	public static final String prefsPath = "/data/user_de/0/" + modulePkg + "/shared_prefs";
 	public static final String prefsFile = prefsPath + "/" + prefsName + ".xml";
-	public static final String externalFolder = "/Documents/CustoMIUIzer/";
+	public static final String externalFolder = "/CustoMIUIzer/";
 	public static final String backupFile = "settings_backup";
 	public static final String logFile = "xposed_log";
 	public static final String versionFile = "xposed_version";

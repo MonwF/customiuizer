@@ -22,6 +22,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -80,6 +81,7 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.SystemClock;
 import android.os.UserHandle;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.telephony.PhoneStateListener;
 import android.text.Layout;
@@ -6044,107 +6046,66 @@ public class System {
     }
 
     public static void ScreenshotConfigHook(LoadPackageParam lpparam) {
-        Helpers.hookAllConstructors("com.android.systemui.screenshot.SaveImageInBackgroundTask", lpparam.classLoader, new MethodHook() {
+        Helpers.hookAllMethods("android.content.ContentResolver", lpparam.classLoader, "update", new MethodHook() {
             @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                try {
-                    OutputStream mOutputStream = (OutputStream)XposedHelpers.getObjectField(param.thisObject, "mOutputStream");
-                    if (mOutputStream != null) mOutputStream.close();
-                    String filePath = (String)XposedHelpers.getObjectField(param.thisObject, "mImageFilePath");
-                    new File(filePath).delete();
-                } catch (Throwable ignore) {}
+            protected void before(MethodHookParam param) throws Throwable {
+                if (param.args.length != 4) return;
+                ContentValues contentValues = (ContentValues) param.args[1];
+                String displayName = contentValues.getAsString("_display_name");
+                if (displayName != null && displayName.contains("Screenshot")) {
+                    Context context = Helpers.findContext();
+                    int format = Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_system_screenshot_format", "2"));
+                    String ext = format <= 2 ? ".jpg" : (format == 3 ? ".png" : ".webp");
 
-                Context context = (Context)param.args[0];
-                int folder = Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_system_screenshot_path", "1"));
-                String dir = Helpers.getSharedStringPref(context, "pref_key_system_screenshot_mypath", "");
-
-                File mScreenshotDir;
-                if (folder > 1) {
-                    if (folder == 4 && !TextUtils.isEmpty(dir))
-                        mScreenshotDir = new File(dir);
-                    else
-                        mScreenshotDir = new File(Environment.getExternalStoragePublicDirectory(folder == 2 ? Environment.DIRECTORY_PICTURES : Environment.DIRECTORY_DCIM), "Screenshots");
-                    if (!mScreenshotDir.exists()) mScreenshotDir.mkdirs();
-                } else {
-                    mScreenshotDir = (File)XposedHelpers.getObjectField(param.thisObject, "mScreenshotDir");
+                    displayName = displayName.replace(".png", "").replace(".jpg", "").replace(".webp", "") + ext;
+                    contentValues.put("_display_name", displayName);
                 }
+            }
+        });
+        Helpers.findAndHookMethod("android.content.ContentResolver", lpparam.classLoader, "insert", Uri.class, ContentValues.class, new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                Uri imgUri = (Uri) param.args[0];
+                ContentValues contentValues = (ContentValues) param.args[1];
+                String displayName = contentValues.getAsString("_display_name");
+                if (MediaStore.Images.Media.EXTERNAL_CONTENT_URI.equals(imgUri) && displayName != null && displayName.contains("Screenshot")) {
+                    Context context = Helpers.findContext();
+                    int folder = Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_system_screenshot_path", "1"));
+                    String dir = Helpers.getSharedStringPref(context, "pref_key_system_screenshot_mypath", "");
+                    int format = Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_system_screenshot_format", "2"));
+                    String ext = format <= 2 ? ".jpg" : (format == 3 ? ".png" : ".webp");
 
-                boolean hasTemp = false;
-                String mTempImageFilePath = null;
-                try {
-                    mTempImageFilePath = (String)XposedHelpers.getObjectField(param.thisObject, "mTempImageFilePath");
-                    hasTemp = true;
-                } catch (Throwable ignore) {}
-
-                String mImageFileName = (String)XposedHelpers.getObjectField(param.thisObject, "mImageFileName");
-                String mImageFilePath = String.format("%s/%s", mScreenshotDir, mImageFileName);
-                if (hasTemp) mTempImageFilePath = String.format("%s/%s", mScreenshotDir, "." + mImageFileName);
-
-                int quality = Helpers.getSharedIntPref(context, "pref_key_system_screenshot_quality", 100);
-                int format = Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_system_screenshot_format", "2"));
-                XposedHelpers.setAdditionalInstanceField(param.thisObject, "mScreenshotQuality", quality);
-                XposedHelpers.setAdditionalInstanceField(param.thisObject, "mScreenshotFormat", format);
-                String ext = format <= 2 ? ".jpg" : (format == 3 ? ".png" : ".webp");
-                mImageFileName = mImageFileName.replace(".png", "").replace(".jpg", "").replace(".webp", "") + ext;
-                mImageFilePath = mImageFilePath.replace(".png", "").replace(".jpg", "").replace(".webp", "") + ext;
-
-                XposedHelpers.setObjectField(param.thisObject, "mImageFileName", mImageFileName);
-                XposedHelpers.setObjectField(param.thisObject, "mImageFilePath", mImageFilePath);
-                Object mNotifyMediaStoreData = XposedHelpers.getObjectField(param.thisObject, "mNotifyMediaStoreData");
-                XposedHelpers.setObjectField(mNotifyMediaStoreData, "imageFileName", mImageFileName);
-                XposedHelpers.setObjectField(mNotifyMediaStoreData, "imageFilePath", mImageFilePath);
-                if (hasTemp) {
-                    XposedHelpers.setObjectField(param.thisObject, "mTempImageFilePath", mTempImageFilePath);
-                    XposedHelpers.setObjectField(mNotifyMediaStoreData, "tempImageFilePath", mTempImageFilePath);
+                    File mScreenshotDir;
+                    displayName = displayName.replace(".png", "").replace(".jpg", "").replace(".webp", "") + ext;
+                    if (folder > 1) {
+                        if (folder == 4 && !TextUtils.isEmpty(dir))
+                            mScreenshotDir = new File(dir);
+                        else
+                            mScreenshotDir = new File(Environment.getExternalStoragePublicDirectory(folder == 2 ? Environment.DIRECTORY_PICTURES : Environment.DIRECTORY_DCIM), "Screenshots");
+                        if (!mScreenshotDir.exists()) mScreenshotDir.mkdirs();
+                        String relativePath = mScreenshotDir.getPath().replace(Environment.getExternalStorageDirectory().getPath() + File.separator, "");
+                        contentValues.put("relative_path", relativePath);
+                    }
+                    contentValues.put("_display_name", displayName);
                 }
             }
         });
 
-        Helpers.hookAllMethods("com.android.systemui.screenshot.SaveImageInBackgroundTask", lpparam.classLoader, "doInBackground", new MethodHook() {
+        Helpers.hookAllMethods("android.graphics.Bitmap", lpparam.classLoader, "compress", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
-                Object[] data = (Object[])param.args[0];
-                if (data == null || data.length != 1) return;
-                Bitmap image = (Bitmap)XposedHelpers.getObjectField(data[0], "image");
-                if (image == null) return;
-
-                int format = 2;
-                int quality = 100;
-                try {
-                    format = (int)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mScreenshotFormat");
-                    quality = (int)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mScreenshotQuality");
-                } catch (Throwable t) {
-                    XposedBridge.log(t);
+                Context context = Helpers.findContext();
+                int quality = (int) param.args[1];
+                if (quality != 100 || (param.args[2] instanceof ByteArrayOutputStream)) return;
+                int format = Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_system_screenshot_format", "2"));
+                quality = Helpers.getSharedIntPref(context, "pref_key_system_screenshot_quality", 100);
+                if (format == 3) {
+                    quality = 100;
                 }
-
-                FileOutputStream mCustomOutputStream;
-                try {
-                    String mTempImageFilePath = (String)XposedHelpers.getObjectField(param.thisObject, "mTempImageFilePath");
-                    File shot = new File(mTempImageFilePath);
-                    if (shot.exists()) shot.delete();
-                    mCustomOutputStream = new FileOutputStream(mTempImageFilePath);
-                } catch (Throwable t) {
-                    String mImageFilePath = (String)XposedHelpers.getObjectField(param.thisObject, "mImageFilePath");
-                    File shot = new File(mImageFilePath);
-                    if (shot.exists()) shot.delete();
-                    mCustomOutputStream = new FileOutputStream(mImageFilePath);
-                }
-
                 Bitmap.CompressFormat compress = format <= 2 ? Bitmap.CompressFormat.JPEG : (format == 3 ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.WEBP);
-                image.compress(compress, quality, mCustomOutputStream);
-                mCustomOutputStream.flush();
-                mCustomOutputStream.close();
-
-                try {
-                    XposedHelpers.setObjectField(param.thisObject, "mOutputStream", new ByteArrayOutputStream());
-                } catch (Throwable ignore) {}
+                param.args[0] = compress;
+                param.args[1] = quality;
             }
-
-//			@Override
-//			protected void after(MethodHookParam param) throws Throwable {
-//				Object data = param.getResult();
-//				if (data != null) XposedHelpers.setIntField(data, "result", 0);
-//			}
         });
     }
 
@@ -6589,7 +6550,7 @@ public class System {
     }
 
     public static void ScreenshotFloatTimeHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.screenshot.GlobalScreenshot", lpparam.classLoader, "startGotoThumbnailAnimation", Runnable.class, new MethodHook() {
+        Helpers.findAndHookMethod("com.miui.screenshot.GlobalScreenshot", lpparam.classLoader, "startGotoThumbnailAnimation", Runnable.class, new MethodHook() {
             @Override
             @SuppressWarnings("ConstantConditions")
             protected void after(MethodHookParam param) throws Throwable {
