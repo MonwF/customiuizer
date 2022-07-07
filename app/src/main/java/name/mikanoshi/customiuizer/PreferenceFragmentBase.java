@@ -318,7 +318,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
     }
 
     public void backupSettings(AppCompatActivity act) {
-        String backupPath = Environment.getExternalStorageDirectory().getAbsolutePath() + Helpers.externalFolder;
+        String backupPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + Helpers.externalFolder;
         if (!Helpers.preparePathForBackup(act, backupPath)) return;
         ObjectOutputStream output = null;
         try {

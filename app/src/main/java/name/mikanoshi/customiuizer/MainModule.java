@@ -189,7 +189,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getInt("system_qsgridrows", 1) > 1 || mPrefs.getBoolean("system_qsnolabels")) System.QSGridLabelsHook(lpparam);
             if (mPrefs.getInt("system_volumeblur_collapsed", 0) > 0 || mPrefs.getInt("system_volumeblur_expanded", 0) > 0) System.BlurVolumeDialogBackgroundHook(lpparam);
             if (mPrefs.getInt("system_lstimeout", 9) > 9) System.LockScreenTimeoutHook(lpparam);
-            if (mPrefs.getInt("system_screenshot_floattime", 0) > 0) System.ScreenshotFloatTimeHook(lpparam);
             if (mPrefs.getInt("system_volumedialogdelay_collapsed", 0) > 0 ||
                     mPrefs.getInt("system_volumedialogdelay_expanded", 0) > 0) System.VolumeDialogAutohideDelayHook(lpparam);
             if (mPrefs.getInt("controls_fsg_coverage", 60) != 60) Controls.BackGestureAreaHeightHook(lpparam, true);
@@ -243,7 +242,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_hideqs")) System.HideQSHook(lpparam);
             if (mPrefs.getBoolean("system_lsalarm")) System.LockScreenAlaramHook(lpparam);
             if (mPrefs.getBoolean("system_statusbarcontrols")) System.StatusBarGesturesHook(lpparam);
-            if (mPrefs.getBoolean("system_screenshot")) System.ScreenshotConfigHook(lpparam);
             if (mPrefs.getBoolean("system_nodrawerbackground")) System.RemoveDrawerBackgroundHook(lpparam);
             if (mPrefs.getBoolean("system_nonetspeedseparator")) System.NoNetworkSpeedSeparatorHook(lpparam);
             if (mPrefs.getBoolean("system_snoozedmanager")) System.MoreSnoozeOptionsHook(lpparam);
@@ -355,6 +353,12 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 
         if (pkg.equals("com.miui.screenrecorder")) {
             if (mPrefs.getBoolean("various_unlockfps")) Various.ScreenRecorderFramerateHook(lpparam);
+        }
+
+        if (pkg.equals("com.miui.screenshot")) {
+//            resHooks.setResReplacement(pkg, "array", "config_forbidenLongScreenshot", R.array.config_forbidenLongScreenshot);
+            if (mPrefs.getBoolean("system_screenshot")) System.ScreenshotConfigHook(lpparam);
+            if (mPrefs.getInt("system_screenshot_floattime", 0) > 0) System.ScreenshotFloatTimeHook(lpparam);
         }
 
         final boolean isMIUILauncherPkg = pkg.equals("com.miui.home");
