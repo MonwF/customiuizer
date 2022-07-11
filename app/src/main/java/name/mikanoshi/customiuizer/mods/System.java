@@ -3495,7 +3495,7 @@ public class System {
         audioViz.updateViewState(isPlaying, isKeyguardShowing, isNotificationPanelExpanded);
     }
     public static void AudioVisualizerHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "makeStatusBarView", new MethodHook() {
+        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "makeStatusBarView", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
                 ViewGroup mNotificationPanel = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mNotificationPanel");
@@ -5167,7 +5167,7 @@ public class System {
         if (Helpers.is12())
             Helpers.findAndHookConstructor("com.android.systemui.miui.controlcenter.QCToggleSliderView", lpparam.classLoader, Context.class, AttributeSet.class, int.class, hook);
 
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "makeStatusBarView", new MethodHook() {
+        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "makeStatusBarView", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
                 LuxListener mLuxListener = new LuxListener();
@@ -5913,7 +5913,7 @@ public class System {
     private static long currentTouchTime = 0;
 
     public static void StatusBarGesturesHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "makeStatusBarView", new MethodHook() {
+        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "makeStatusBarView", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
                 Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
@@ -6041,8 +6041,7 @@ public class System {
         };
 
         Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "interceptTouchEvent", MotionEvent.class, hook);
-        if (Helpers.is12())
-            Helpers.findAndHookMethod("com.android.systemui.miui.statusbar.phone.ControlPanelWindowView", lpparam.classLoader, "onTouchEvent", MotionEvent.class, hook);
+        Helpers.findAndHookMethod("com.android.systemui.controlcenter.phone.ControlPanelWindowView", lpparam.classLoader, "onTouchEvent", MotionEvent.class, hook);
     }
 
     public static void ScreenshotConfigHook(LoadPackageParam lpparam) {

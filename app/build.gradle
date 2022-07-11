@@ -33,7 +33,7 @@ android {
         applicationId "name.monwf.customiuizer"
         minSdkVersion 30
         //noinspection OldTargetApi,ExpiredTargetSdkVersion
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 13
         versionName "3.2.1.2207011"
         resConfigs 'ru-rRU', 'zh-rCN'
