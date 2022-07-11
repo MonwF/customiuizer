@@ -97,7 +97,7 @@ public class LockedAppAdapter extends BaseAdapter implements Filterable {
 		if (convertView != null)
 			row = convertView;
 		else
-			row = mInflater.inflate(Helpers.is11() ? R.layout.applist_item11 : R.layout.applist_item, parent, false);
+			row = mInflater.inflate(R.layout.applist_item11, parent, false);
 
 		ImageView itemIsDis = row.findViewById(R.id.icon_disable);
 		ImageView itemIsDual = row.findViewById(R.id.icon_dual);

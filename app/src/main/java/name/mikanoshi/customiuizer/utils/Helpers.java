@@ -59,6 +59,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -395,7 +396,12 @@ public class Helpers {
 		final EditText input = new EditText(context);
 		input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
 		input.setText(prefs.getString(key, ""));
-		builder.setView(input);
+		FrameLayout container = new FrameLayout(context);
+		FrameLayout.LayoutParams params = new  FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+		params.leftMargin = params.rightMargin = context.getResources().getDimensionPixelSize(R.dimen.preference_item_child_padding);
+		input.setLayoutParams(params);
+		container.addView(input);
+		builder.setView(container);
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
