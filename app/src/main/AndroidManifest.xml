@@ -42,8 +42,7 @@
 		android:name=".MainApplication"
 		android:usesCleartextTraffic="true"
 		android:requestLegacyExternalStorage="true"
-		tools:ignore="GoogleAppIndexingWarning"
-		tools:targetApi="q">
+		tools:ignore="GoogleAppIndexingWarning">
 
 		<uses-library android:name="com.miui.system" android:required="false" />
 		<uses-library android:name="com.miui.core" android:required="false" />
