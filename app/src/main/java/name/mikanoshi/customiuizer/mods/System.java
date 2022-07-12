@@ -3498,7 +3498,8 @@ public class System {
         Helpers.hookAllMethods("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "makeStatusBarView", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
-                ViewGroup mNotificationPanel = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mNotificationPanel");
+                Object viewController = XposedHelpers.getObjectField(param.thisObject, "mNotificationPanelViewController");
+                FrameLayout mNotificationPanel = (FrameLayout) XposedHelpers.getObjectField(viewController, "mView");
                 if (mNotificationPanel == null) {
                     Helpers.log("AudioVisualizerHook", "Cannot find mNotificationPanel");
                     return;
@@ -3524,14 +3525,21 @@ public class System {
             }
         });
 
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "onScreenTurnedOff", new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.ScrimController", lpparam.classLoader, "onScreenTurnedOff", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
                 if (audioViz != null) audioViz.updateScreenOn(false);
             }
         });
 
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "updateKeyguardState", boolean.class, boolean.class, new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.ScrimController", lpparam.classLoader, "onScreenTurnedOn", new MethodHook() {
+            @Override
+            protected void after(final MethodHookParam param) throws Throwable {
+                if (audioViz != null) audioViz.updateScreenOn(true);
+            }
+        });
+
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "updateKeyguardState", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
                 Object mStatusBarKeyguardViewManager = XposedHelpers.getObjectField(param.thisObject, "mStatusBarKeyguardViewManager");
@@ -3544,46 +3552,46 @@ public class System {
             }
         });
 
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, "onExpandingFinished", new MethodHook() {
+        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "setPanelExpanded", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
-                boolean isNotificationPanelExpandedNew = XposedHelpers.getBooleanField(param.thisObject, "mPanelExpanded");
-                if (isNotificationPanelExpanded != isNotificationPanelExpandedNew) {
-                    isNotificationPanelExpanded = isNotificationPanelExpandedNew;
-                    updateAudioVisualizerState((Context)XposedHelpers.getObjectField(param.thisObject, "mContext"));
-                }
+            boolean isNotificationPanelExpandedNew = XposedHelpers.getBooleanField(param.thisObject, "mPanelExpanded");
+            if (isNotificationPanelExpanded != isNotificationPanelExpandedNew) {
+                isNotificationPanelExpanded = isNotificationPanelExpandedNew;
+                updateAudioVisualizerState((Context)XposedHelpers.getObjectField(param.thisObject, "mContext"));
+            }
             }
         });
 
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "updateMediaMetaData", boolean.class, boolean.class, new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.NotificationMediaManager", lpparam.classLoader, "updateMediaMetaData", boolean.class, boolean.class, new MethodHook() {
             @Override
             protected void before(final MethodHookParam param) throws Throwable {
-                if (audioViz == null) return;
-                Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-                PowerManager powerMgr = (PowerManager)mContext.getSystemService(Context.POWER_SERVICE);
-                boolean isScreenOn = powerMgr.isInteractive();
-                if (!isScreenOn) {
-                    audioViz.updateScreenOn(false);
-                    return;
-                } else audioViz.isScreenOn = true;
+            if (audioViz == null) return;
+            Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+            PowerManager powerMgr = (PowerManager)mContext.getSystemService(Context.POWER_SERVICE);
+            boolean isScreenOn = powerMgr.isInteractive();
+            if (!isScreenOn) {
+                audioViz.updateScreenOn(false);
+                return;
+            } else audioViz.isScreenOn = true;
 
-                MediaMetadata mMediaMetadata = (MediaMetadata)XposedHelpers.getObjectField(param.thisObject, "mMediaMetadata");
-                Bitmap art = null;
-                if (mMediaMetadata != null) {
-                    art = mMediaMetadata.getBitmap(MediaMetadata.METADATA_KEY_ART);
-                    if (art == null) art = mMediaMetadata.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART);
-                    if (art == null) art = mMediaMetadata.getBitmap(MediaMetadata.METADATA_KEY_DISPLAY_ICON);
-                }
-                if (art == null) {
-                    WallpaperManager wallpaperMgr = WallpaperManager.getInstance(mContext);
-                    Drawable wallpaperDrawable = wallpaperMgr.getDrawable();
-                    if (wallpaperDrawable instanceof BitmapDrawable)
-                        art = ((BitmapDrawable)wallpaperDrawable).getBitmap();
-                }
+            MediaMetadata mMediaMetadata = (MediaMetadata)XposedHelpers.getObjectField(param.thisObject, "mMediaMetadata");
+            Bitmap art = null;
+            if (mMediaMetadata != null) {
+                art = mMediaMetadata.getBitmap(MediaMetadata.METADATA_KEY_ART);
+                if (art == null) art = mMediaMetadata.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART);
+                if (art == null) art = mMediaMetadata.getBitmap(MediaMetadata.METADATA_KEY_DISPLAY_ICON);
+            }
+            if (art == null) {
+                WallpaperManager wallpaperMgr = WallpaperManager.getInstance(mContext);
+                @SuppressLint("MissingPermission") Drawable wallpaperDrawable = wallpaperMgr.getDrawable();
+                if (wallpaperDrawable instanceof BitmapDrawable)
+                    art = ((BitmapDrawable)wallpaperDrawable).getBitmap();
+            }
 
-                mMediaController = (MediaController)XposedHelpers.getObjectField(param.thisObject, "mMediaController");
-                updateAudioVisualizerState(mContext);
-                audioViz.updateMusicArt(art);
+            mMediaController = (MediaController)XposedHelpers.getObjectField(param.thisObject, "mMediaController");
+            updateAudioVisualizerState(mContext);
+            audioViz.updateMusicArt(art);
             }
         });
     }
@@ -7584,7 +7592,6 @@ public class System {
         Helpers.hookAllMethods("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "makeStatusBarView", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
-            XposedHelpers.getObjectField(param.thisObject, "mNotificationPanelViewController");
             View mKeyguardStatusBar = (View) XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.thisObject, "mNotificationPanelViewController"), "mKeyguardStatusBar");
             mKeyguardStatusBar.setTranslationY(-999f);
             }
