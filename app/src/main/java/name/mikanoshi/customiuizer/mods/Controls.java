@@ -588,33 +588,33 @@ public class Controls {
 		Helpers.hookAllMethods("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "initInternal", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
-				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-				Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
+			Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+			Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
 
-				new Helpers.SharedPrefObserver(mContext, mHandler) {
-					@Override
-					public void onChange(Uri uri) {
-						try {
-							String type = uri.getPathSegments().get(1);
-							String key = uri.getPathSegments().get(2);
-							if (!key.contains("pref_key_controls_fingerprint")) return;
+			new Helpers.SharedPrefObserver(mContext, mHandler) {
+				@Override
+				public void onChange(Uri uri) {
+					try {
+						String type = uri.getPathSegments().get(1);
+						String key = uri.getPathSegments().get(2);
+						if (!key.contains("pref_key_controls_fingerprint")) return;
 
-							switch (type) {
-								case "string":
-									MainModule.mPrefs.put(key, Helpers.getSharedStringPref(mContext, key, ""));
-									break;
-								case "integer":
-									MainModule.mPrefs.put(key, Helpers.getSharedIntPref(mContext, key, 1));
-									break;
-								case "boolean":
-									MainModule.mPrefs.put(key, Helpers.getSharedBoolPref(mContext, key, false));
-									break;
-							}
-						} catch (Throwable t) {
-							XposedBridge.log(t);
+						switch (type) {
+							case "string":
+								MainModule.mPrefs.put(key, Helpers.getSharedStringPref(mContext, key, ""));
+								break;
+							case "integer":
+								MainModule.mPrefs.put(key, Helpers.getSharedIntPref(mContext, key, 1));
+								break;
+							case "boolean":
+								MainModule.mPrefs.put(key, Helpers.getSharedBoolPref(mContext, key, false));
+								break;
 						}
+					} catch (Throwable t) {
+						XposedBridge.log(t);
 					}
-				};
+				}
+			};
 			}
 		});
 
@@ -721,29 +721,19 @@ public class Controls {
 		Helpers.hookAllMethods(fpService, lpparam.classLoader, "startClient", new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
-				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-				Settings.System.putInt(mContext.getContentResolver(), "is_fingerprint_active", 1);
+			Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+			Settings.System.putInt(mContext.getContentResolver(), "is_fingerprint_active", 1);
 			}
 		});
 
 		Helpers.hookAllMethods(fpService, lpparam.classLoader, "removeClient", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
-				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-				Settings.System.putInt(mContext.getContentResolver(), "is_fingerprint_active", 0);
+			Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+			Settings.System.putInt(mContext.getContentResolver(), "is_fingerprint_active", 0);
 			}
 		});
 	}
-
-//	public static void FingerprintHook(LoadPackageParam lpparam) {
-//		Helpers.findAndHookMethod("com.android.server.devicepolicy.DevicePolicyManagerService", lpparam.classLoader, "reportSuccessfulFingerprintAttempt", int.class, new MethodHook() {
-//			@Override
-//			protected void before(MethodHookParam param) throws Throwable {
-//				Helpers.log("reportSuccessfulFingerprintAttempt");
-//				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-//			}
-//		});
-//	}
 
 	@SuppressLint("StaticFieldLeak")
 	private static Context basePWMContext;
@@ -1000,19 +990,6 @@ public class Controls {
 	}
 
 	public static void AssistGestureActionHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.android.systemui.assist.AssistManager", lpparam.classLoader, "startAssist", Bundle.class, new MethodHook() {
-			@Override
-			protected void before(final MethodHookParam param) throws Throwable {
-				Bundle bundle = (Bundle)param.args[0];
-				if (bundle == null || bundle.getInt("triggered_by", 0) != 83 || bundle.getInt("invocation_type", 0) != 1) return;
-				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-				if (GlobalActions.handleAction(mContext, "pref_key_controls_fsg_assist")) {
-					Helpers.performLightVibration(mContext);
-					param.setResult(null);
-				}
-			}
-		});
-
 		Helpers.findAndHookMethod("com.android.systemui.assist.AssistManager", lpparam.classLoader, "startAssist", Bundle.class, new MethodHook() {
 			@Override
 			protected void before(final MethodHookParam param) throws Throwable {
