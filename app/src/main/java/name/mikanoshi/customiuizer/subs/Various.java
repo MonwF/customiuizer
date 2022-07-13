@@ -1,11 +1,15 @@
 package name.mikanoshi.customiuizer.subs;
 
+import android.app.Activity;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.preference.Preference;
 
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SubFragment;
+import name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class Various extends SubFragment {
@@ -39,6 +43,16 @@ public class Various extends SubFragment {
 				return true;
 			}
 		});
+		try {
+			final Activity act = getActivity();
+			ApplicationInfo pkgInfo = act.getPackageManager().getApplicationInfo("com.miui.packageinstaller", PackageManager.MATCH_DISABLED_COMPONENTS);
+			if (!pkgInfo.enabled) throw new Throwable();
+		} catch (Throwable e) {
+			CheckBoxPreferenceEx pref = findPreference("pref_key_various_miuiinstaller");
+			pref.setChecked(false);
+			pref.setUnsupported(true);
+			pref.setSummary(R.string.various_miuiinstaller_error);
+		}
 	}
 
 }

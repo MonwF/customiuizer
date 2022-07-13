@@ -915,6 +915,17 @@ public class Various {
 		});
 	}
 
+	public static void MiuiPackageInstallerHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("android.os.SystemProperties", lpparam.classLoader, "getBoolean", String.class, boolean.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				if ("persist.sys.allow_sys_app_update".equals(param.args[0])) {
+					param.setResult(true);
+				}
+			}
+		});
+	}
+
 	public static void CollapseMIUITitlesHook(LoadPackageParam lpparam, XC_MethodHook.MethodHookParam param, int opt) {
 
 	}
