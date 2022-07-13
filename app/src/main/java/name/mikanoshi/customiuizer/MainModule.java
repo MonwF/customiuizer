@@ -204,7 +204,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                     mPrefs.getInt("system_recommended_fourth_action", 1) > 1) System.CustomRecommendedHook(lpparam, false);
             if (mPrefs.getBoolean("system_scramblepin")) System.ScramblePINHook(lpparam);
             if (mPrefs.getBoolean("system_dttosleep")) System.DoubleTapToSleepHook(lpparam);
-            if (mPrefs.getBoolean("system_clockseconds")) System.ClockSecondsHook(lpparam);
+            if (mPrefs.getBoolean("system_clockseconds") || mPrefs.getBoolean("system_drawer_clockseconds")) System.ClockSecondsHook(lpparam);
             if (mPrefs.getBoolean("system_fixmeter")) System.TrafficSpeedSpacingHook(lpparam);
             if (mPrefs.getBoolean("system_noscreenlock_act")) System.NoScreenLockHook(lpparam);
             if (mPrefs.getBoolean("system_detailednetspeed")) System.DetailedNetSpeedHook(lpparam);
@@ -271,7 +271,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getStringAsInt("system_mobiletypeicon", 1) > 1) System.HideNetworkTypeHook(lpparam);
             if (mPrefs.getStringAsInt("system_statusbaricons_bluetooth", 1) > 1) System.HideIconsBluetoothHook(lpparam);
             if (mPrefs.getBoolean("system_epm")) System.ExtendedPowerMenuHook(lpparam);
-
 
             boolean hideIconsActive =
                 mPrefs.getBoolean("system_statusbaricons_wifi") ||
