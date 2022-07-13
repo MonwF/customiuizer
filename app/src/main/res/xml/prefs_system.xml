@@ -484,6 +484,11 @@
 			miuizer:stepValue="1"
 			miuizer:format="%d dp" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_drawer_clockseconds"
+			android:title="@string/system_clockseconds_title"
+			android:defaultValue="false" />
+
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_system_inactivebrightness"
 			android:title="@string/system_inactivebrightness_title"

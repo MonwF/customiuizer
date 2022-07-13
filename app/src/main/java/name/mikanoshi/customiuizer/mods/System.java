@@ -1015,7 +1015,6 @@ public class System {
         String clockStrLower = clockStr.toLowerCase();
         int colons = clockStr.length() - clockStr.replace(":", "").length();
         if (colons >= 2) return clockStr;
-        //return clockStr.replaceAll("(\\d{1,2}:\\d{1,2}:)\\d{1,2}(?i)(\\s?)((am|pm)?)", "$1" + df.format(Calendar.getInstance().get(Calendar.SECOND)) + "$2$3").trim();
         if (clockStrLower.endsWith("am") || clockStrLower.endsWith("pm"))
             return clockStr.replaceAll("(?i)(\\s?)(am|pm)", ":" + df.format(Calendar.getInstance().get(Calendar.SECOND)) + "$1$2").trim();
         else
@@ -1023,50 +1022,68 @@ public class System {
     }
 
     public static void ClockSecondsHook(LoadPackageParam lpparam) {
+        Method updateTimeMethod = XposedHelpers.findMethodExact("com.android.systemui.statusbar.views.MiuiClock", lpparam.classLoader, "updateTime");
+        if (updateTimeMethod != null) {
+            updateTimeMethod.setAccessible(true);
+        }
         Helpers.findAndHookMethod("com.android.systemui.statusbar.views.MiuiClock", lpparam.classLoader, "updateTime", new MethodHook(XCallback.PRIORITY_HIGHEST) {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 TextView clock = (TextView)param.thisObject;
-                if (clock.getId() != clock.getResources().getIdentifier("clock", "id", "com.android.systemui")) return;
-                long now = SystemClock.elapsedRealtime();
-                Long last = (Long)XposedHelpers.getAdditionalInstanceField(clock, "mLastUpdateTime");
-                if (last == null || now - last > 900)
-                    XposedHelpers.setAdditionalInstanceField(param.thisObject, "mLastUpdateTime", now);
-                else
-                    param.setResult(null);
+                if (XposedHelpers.getAdditionalInstanceField(clock, "mSecondsTimer") != null) {
+                    long now = SystemClock.elapsedRealtime();
+                    Long last = (Long)XposedHelpers.getAdditionalInstanceField(clock, "mLastUpdateTime");
+                    if (last == null || now - last > 900)
+                        XposedHelpers.setAdditionalInstanceField(param.thisObject, "mLastUpdateTime", now);
+                    else
+                        param.setResult(null);
+                }
             }
 
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 TextView clock = (TextView)param.thisObject;
-                if (clock.getId() == clock.getResources().getIdentifier("clock", "id", "com.android.systemui"))
+                if (XposedHelpers.getAdditionalInstanceField(clock, "mSecondsTimer") != null) {
                     clock.setText(putSecondsIn(clock.getText()));
+                }
             }
         });
-
         Helpers.hookAllConstructors("com.android.systemui.statusbar.views.MiuiClock", lpparam.classLoader, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) {
                 final TextView clock = (TextView)param.thisObject;
-                if (clock.getId() != clock.getResources().getIdentifier("clock", "id", "com.android.systemui")) return;
+                if (param.args.length != 3) return;
                 if (XposedHelpers.getAdditionalInstanceField(clock, "mSecondsTimer") != null) return;
-                final Handler mClockHandler = new Handler(clock.getContext().getMainLooper());
-                int opt = MainModule.mPrefs.getStringAsInt("system_clockseconds_sync", 0);
-                long delay = 1000 - SystemClock.elapsedRealtime() % 1000;
-                delay += opt == 1 ? 50 : 950;
-                Timer timer = new Timer();
-                timer.scheduleAtFixedRate(new TimerTask() {
-                    @Override
-                    public void run() {
-                        mClockHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                XposedHelpers.callMethod(clock, "updateTime");
-                            }
-                        });
-                    }
-                }, delay, 1000);
-                XposedHelpers.setAdditionalInstanceField(clock, "mSecondsTimer", timer);
+                int clockId = clock.getResources().getIdentifier("clock", "id", "com.android.systemui");
+                int bigClockId = clock.getResources().getIdentifier("big_time", "id", "com.android.systemui");
+                if ((clock.getId() == clockId && MainModule.mPrefs.getBoolean("system_clockseconds"))
+                    || (clock.getId() == bigClockId && MainModule.mPrefs.getBoolean("system_drawer_clockseconds"))) {
+                    final Handler mClockHandler = new Handler(clock.getContext().getMainLooper());
+                    int opt = MainModule.mPrefs.getStringAsInt("system_clockseconds_sync", 0);
+                    long delay = 1000 - SystemClock.elapsedRealtime() % 1000;
+                    delay += opt == 1 ? 50 : 950;
+                    Timer timer = new Timer();
+                    timer.scheduleAtFixedRate(new TimerTask() {
+                        @Override
+                        public void run() {
+                            mClockHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    int mVisibility = XposedHelpers.getIntField(clock, "mVisibility");
+                                    if (mVisibility == 0) {
+                                        if (updateTimeMethod != null) {
+                                            try {
+                                                updateTimeMethod.invoke(clock);
+                                            }
+                                            catch (Throwable t) {}
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }, delay, 1000);
+                    XposedHelpers.setAdditionalInstanceField(clock, "mSecondsTimer", timer);
+                }
             }
         });
     }
