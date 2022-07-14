@@ -33,7 +33,7 @@
     <string name="warning_blacklist_sdk">Кроме того, модуль был установлен из маркета, где находится более ограниченная версия. Рекомендуется переустановить модуль из любого другого источника.</string>
     <string name="warning_scope">Область активации включена для данного модуля, это может привести к неработоспособности некоторых модов.</string>
     <string name="warning_unsupported_os">Android %1$s не поддерживается, моды могут быть неработоспособны.</string>
-    <string name="module_not_active">Модуль CustoMIUIzer не активен! Откройте приложение Xposed, активируйте модуль и перезагрузитесь.</string>
+    <string name="module_not_active">Модуль CustoMIUIzer не активен! Откройте приложение LSPosed, активируйте модуль и перезагрузитесь.</string>
     <string name="backup_restore_info">Ваши настройки были восстановлены из Google Cloud. Если мод Vol2wake был активен, отключите его и включите снова, после этого сделайте полную перезагрузку.</string>
     <string name="prefs_migration_success">Настройки модуля были успешно мигрированы для работы с новой версией LSPosed/EdXposed. Перезагрузитесь для применения изменений.</string>
     <string name="prefs_migration_failure">Не удалось мигрировать настройки модуля для работы с новой версией LSPosed/EdXposed. Воспользуйтесь функцией восстановления или настройте моды с нуля.</string>
@@ -41,8 +41,6 @@
     <string name="mods_actions">Действия</string>
     <string name="xposed_not_found">Не найдено Xposed приложение</string>
     <string name="xposed_not_found_explain">Похоже, что у Вас не установлен Xposed Framework.\n\nВсе моды работают только при наличии установленного Xposed Framework!</string>
-    <string name="xposed_not_reshooks">Модификация ресурсов невозможна</string>
-    <string name="xposed_not_reshooks_explain">Изменение ресурсов отключено в настройках Xposed Installer, модуль не будет активирован!</string>
     <string name="okay">Окей</string>
     <string name="dummy">" "</string>
     <string name="sdk_failed">Не удалось инициализировать MIUI SDK.\nПрошивка не MIUI?</string>

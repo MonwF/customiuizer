@@ -25,6 +25,8 @@ import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
+import androidx.palette.graphics.Palette;
+
 import java.io.File;
 
 import de.robv.android.xposed.XposedBridge;
@@ -401,17 +403,17 @@ public class AudioVisualizer extends View {
 	}
 
 	public interface PaletteAsyncListener {
-		void onGenerated(Object palette);
+		void onGenerated(Palette palette);
 	}
 
 	private final PaletteAsyncListener paletteResult = new PaletteAsyncListener() {
 		@Override
-		public void onGenerated(Object palette) {
+		public void onGenerated(Palette palette) {
 			try {
 				int color = Color.TRANSPARENT;
-				color = (int)XposedHelpers.callMethod(palette, "getLightVibrantColor", color);
-				if (color == Color.TRANSPARENT) color = (int)XposedHelpers.callMethod(palette, "getVibrantColor", color);
-				if (color == Color.TRANSPARENT) color = (int)XposedHelpers.callMethod(palette, "getDarkVibrantColor", color);
+				color = palette.getLightVibrantColor(color);
+				if (color == Color.TRANSPARENT) color = palette.getVibrantColor(color);
+				if (color == Color.TRANSPARENT) color = palette.getDarkVibrantColor(color);
 				setColor(color);
 			} catch (Throwable t) {
 				XposedBridge.log(t);
@@ -419,7 +421,7 @@ public class AudioVisualizer extends View {
 		}
 	};
 
-	private static class PaletteTask extends AsyncTask<Bitmap, Void, Object> {
+	private static class PaletteTask extends AsyncTask<Bitmap, Void, Palette> {
 		PaletteAsyncListener resultListener;
 
 		PaletteTask(PaletteAsyncListener listener) {
@@ -427,17 +429,16 @@ public class AudioVisualizer extends View {
 		}
 
 		@Override
-		protected Object doInBackground(Bitmap... bitmaps) {
+		protected Palette doInBackground(Bitmap... bitmaps) {
 			try {
-				Class<?> paletteCls = XposedHelpers.findClassIfExists("com.android.internal.graphics.palette.Palette", null);
-				return paletteCls == null ? null : XposedHelpers.callStaticMethod(paletteCls, "generate", bitmaps[0]);
+				return Palette.from(bitmaps[0]).generate();
 			} catch (Throwable t) {
 				XposedBridge.log(t);
 				return null;
 			}
 		}
 
-		public void onPostExecute(Object palette) {
+		public void onPostExecute(Palette palette) {
 			resultListener.onGenerated(palette);
 		}
 	}
@@ -447,11 +448,7 @@ public class AudioVisualizer extends View {
 			if (mProcessedArt != null && mArt != null && !mProcessedArt.isRecycled() && !mArt.isRecycled() && mProcessedArt.sameAs(mArt)) return;
 			mProcessedArt = mArt;
 			if (mProcessedArt != null) {
-				Class<?> paletteCls = XposedHelpers.findClassIfExists("com.android.internal.graphics.palette.Palette", null);
-				if (paletteCls != null)
-					new PaletteTask(paletteResult).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mProcessedArt);
-				else
-					setColor(Color.TRANSPARENT);
+				new PaletteTask(paletteResult).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mProcessedArt);
 			} else {
 				setColor(Color.TRANSPARENT);
 			}
