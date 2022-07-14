@@ -722,14 +722,10 @@ public class System {
 
         TextView toastText = toast.findViewById(android.R.id.message);
         if (toastText == null) return;
-        if (Helpers.is11()) {
-            toast.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
-            toastText.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
-            toastText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
-            toastText.setLetterSpacing(0.015f);
-        } else {
-            toastText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-        }
+        toast.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+        toastText.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+        toastText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+        toastText.setLetterSpacing(0.015f);
         LinearLayout.LayoutParams lpt = (LinearLayout.LayoutParams)toastText.getLayoutParams();
         lpt.gravity = Gravity.START;
 
@@ -738,14 +734,9 @@ public class System {
                 ImageView iv;
                 LinearLayout textOnly = new LinearLayout(ctx);
                 textOnly.setOrientation(LinearLayout.VERTICAL);
-                if (Helpers.is11()) {
-                    textOnly.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
-                    textOnly.setPadding(0, Math.round(5 * density), 0, Math.round(6 * density));
-                    iv = createIcon(ctx, 22);
-                } else {
-                    textOnly.setGravity(Gravity.START);
-                    iv = createIcon(ctx, 21);
-                }
+                textOnly.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+                textOnly.setPadding(0, Math.round(5 * density), 0, Math.round(6 * density));
+                iv = createIcon(ctx, 22);
 
                 toast.removeAllViews();
                 textOnly.addView(toastText);
@@ -758,12 +749,12 @@ public class System {
                 LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)tv.getLayoutParams();
                 lp.leftMargin = Math.round(5 * density);
                 lp.rightMargin = Math.round(5 * density);
-                if (Helpers.is11()) lp.topMargin = Math.round(5 * density);
+                lp.topMargin = Math.round(5 * density);
                 tv.setLayoutParams(lp);
                 lp = (LinearLayout.LayoutParams)toastText.getLayoutParams();
                 lp.leftMargin = Math.round(5 * density);
                 lp.rightMargin = Math.round(5 * density);
-                if (Helpers.is11()) lp.bottomMargin = Math.round(5 * density);
+                lp.bottomMargin = Math.round(5 * density);
                 toastText.setLayoutParams(lp);
                 toast.setOrientation(LinearLayout.VERTICAL);
                 toast.addView(tv, 0);
@@ -771,12 +762,8 @@ public class System {
             case 4:
                 LinearLayout textLabel = new LinearLayout(ctx);
                 textLabel.setOrientation(LinearLayout.VERTICAL);
-                if (Helpers.is11()) {
-                    textLabel.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
-                    textLabel.setPadding(0, Math.round(5 * density), 0, Math.round(6 * density));
-                } else {
-                    textLabel.setGravity(Gravity.START);
-                }
+                textLabel.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+                textLabel.setPadding(0, Math.round(5 * density), 0, Math.round(6 * density));
                 ImageView iv2 = createIcon(ctx, 42);
                 TextView tv2 = createLabel(ctx, toastText);
 
@@ -796,21 +783,21 @@ public class System {
         if (!Helpers.findAndHookMethodSilently("android.widget.Toast", null, "makeText", Context.class, Looper.class, CharSequence.class, int.class, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                modifyIconLabelToast(param);
+            modifyIconLabelToast(param);
             }
         })) Helpers.findAndHookMethod("android.widget.Toast", null, "makeText", Context.class, CharSequence.class, int.class, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                modifyIconLabelToast(param);
+            modifyIconLabelToast(param);
             }
         });
 
-        Helpers.findAndHookMethod("android.widget.ToastInjector", null, "addAppName", Context.class, CharSequence.class, new MethodHook() {
+        Helpers.findAndHookMethod("android.widget.ToastInjectorImpl", null, "addAppName", Context.class, CharSequence.class, new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
-                Context context = (Context)param.args[0];
-                int opt = Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_system_iconlabletoasts", "1"));
-                if (opt != 1) param.setResult(param.args[1]);
+            Context context = (Context)param.args[0];
+            int opt = Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_system_iconlabletoasts", "1"));
+            if (opt != 1) param.setResult(param.args[1]);
             }
         });
     }
