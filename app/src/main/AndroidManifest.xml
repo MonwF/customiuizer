@@ -25,6 +25,10 @@
 		tools:ignore="ProtectedPermissions" />
 	<uses-permission android:name="android.permission.CHANGE_COMPONENT_ENABLED_STATE"
 		tools:ignore="ProtectedPermissions" />
+	<uses-permission android:name="android.permission.MANAGE_USB"
+		tools:ignore="ProtectedPermissions" />
+	<uses-permission android:name="android.permission.SET_ANIMATION_SCALE"
+		tools:ignore="ProtectedPermissions" />
 
 	<uses-permission android:name="miui.permission.READ_LOGS" />
 	<uses-permission android:name="miui.permission.DUMP_CACHED_LOG" />

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.Settings;
 
 import androidx.preference.Preference;
 
@@ -43,6 +44,21 @@ public class Various extends SubFragment {
 				return true;
 			}
 		});
+
+		CheckBoxPreferenceEx untrustedTouchPref = findPreference("pref_key_various_allow_untrusted_touch");
+		untrustedTouchPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				if (untrustedTouchPref.isChecked()) {
+					Settings.Global.putInt(getContext().getContentResolver(), "block_untrusted_touches", 0);
+				}
+				else {
+					Settings.Global.putInt(getContext().getContentResolver(), "block_untrusted_touches", 2);
+				}
+				return true;
+			}
+		});
+
 		try {
 			final Activity act = getActivity();
 			ApplicationInfo pkgInfo = act.getPackageManager().getApplicationInfo("com.miui.packageinstaller", PackageManager.MATCH_DISABLED_COMPONENTS);

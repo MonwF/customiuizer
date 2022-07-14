@@ -1099,4 +1099,5 @@
 
 	<string name="dummy" translatable="false" />
 	<string name="system_statusbar_dttosleep_title">Double tap to sleep</string>
+	<string name="various_allow_untrusted_touch_title">allow untrusted touch</string>
 </resources>

@@ -278,9 +278,6 @@ public class System extends SubFragment {
 			case "pref_key_system_cat_betterpopups":
 				findPreference("pref_key_system_betterpopups_allowfloat_apps").setOnPreferenceClickListener(openAppsBWEdit);
 
-				if (!Helpers.is12())
-				((CheckBoxPreferenceEx)findPreference("pref_key_system_betterpopups_allowfloat")).setUnsupported(true);
-
 				break;
 			case "pref_key_system_cat_applock":
 				findPreference("pref_key_system_applock_list").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

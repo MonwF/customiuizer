@@ -1048,4 +1048,5 @@
     <string name="system_notifrowmenu_appinfo">应用信息</string>
     <string name="system_notifrowmenu_forceclose">强制关闭</string>
     <string name="restart_systemui">重启系统界面</string>
+    <string name="various_allow_untrusted_touch_title">允许不受信任的触摸操作</string>
 </resources>
