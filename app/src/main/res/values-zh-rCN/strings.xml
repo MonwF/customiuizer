@@ -960,9 +960,7 @@
     <string name="credentials_success">证书已解锁！</string>
     <string name="xposed_not_found">未找到Xposed应用</string>
     <string name="xposed_not_found_explain">您似乎没有安装Xposed Framework。\n\n请注意，模块仅适用于Xposed！</string>
-    <string name="xposed_not_reshooks">资源钩子已禁用</string>
-    <string name="xposed_not_reshooks_explain">您在Xposed Installer设置中禁用了资源钩子，模块将无法激活！</string>
-    <string name="module_not_active">CustoMIUIzer模块未被激活！\n请打开Xposed应用，激活模块并重启。</string>
+    <string name="module_not_active">CustoMIUIzer模块未被激活！\n请打开LSPosed应用，激活模块并重启。</string>
     <string name="no_browser">打开网址需要浏览器应用</string>
     <string name="okay">好的</string>
     <string name="cancel">取消</string>

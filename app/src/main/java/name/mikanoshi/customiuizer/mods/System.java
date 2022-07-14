@@ -3602,8 +3602,9 @@ public class System {
             if (art == null) {
                 WallpaperManager wallpaperMgr = WallpaperManager.getInstance(mContext);
                 @SuppressLint("MissingPermission") Drawable wallpaperDrawable = wallpaperMgr.getDrawable();
-                if (wallpaperDrawable instanceof BitmapDrawable)
+                if (wallpaperDrawable instanceof BitmapDrawable) {
                     art = ((BitmapDrawable)wallpaperDrawable).getBitmap();
+                }
             }
 
             mMediaController = (MediaController)XposedHelpers.getObjectField(param.thisObject, "mMediaController");

@@ -1049,9 +1049,7 @@
 
 	<string name="xposed_not_found">Xposed app not found</string>
 	<string name="xposed_not_found_explain">It looks like you don\'t have Xposed Framework Installed.\n\nPlease note that mods will only work with Xposed!</string>
-	<string name="xposed_not_reshooks">Resource hooks are disabled</string>
-	<string name="xposed_not_reshooks_explain">You have resource hooks disabled in Xposed Installer settings, module will not be activated!</string>
-	<string name="module_not_active">CustoMIUIzer module is not active!\nOpen Xposed app, activate module and reboot.</string>
+	<string name="module_not_active">CustoMIUIzer module is not active!\nOpen LSPosed app, activate module and reboot.</string>
 	<string name="no_browser">Browser app is required to open URLs</string>
 	<string name="okay">Okay</string>
 	<string name="cancel">Cancel</string>

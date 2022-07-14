@@ -190,7 +190,9 @@ public class PackagePermissions {
 			ArrayList<String> mySystemApps = new ArrayList<String>(Arrays.asList(MIUI_SYSTEM_APPS));
 			mySystemApps.addAll(systemPackages);
 			XposedHelpers.setStaticObjectField(dpgpiClass, "MIUI_SYSTEM_APPS", mySystemApps.toArray(new String[0]));
-		} catch (Throwable t) {}
+		} catch (Throwable t) {
+			Helpers.log(t);
+		}
 	}
 
 }
