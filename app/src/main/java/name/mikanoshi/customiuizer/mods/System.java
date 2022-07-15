@@ -3797,15 +3797,7 @@ public class System {
     }
 
     public static void HideIconsVoWiFiHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.SignalClusterView", lpparam.classLoader, "apply", new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                View[] mVowifi = (View[])XposedHelpers.getObjectField(param.thisObject, "mVowifi");
-                if (mVowifi == null) return;
-                if (mVowifi[0] != null) mVowifi[0].setVisibility(View.GONE);
-                if (mVowifi[1] != null) mVowifi[1].setVisibility(View.GONE);
-            }
-        });
+        Helpers.findAndHookMethodSilently("com.android.systemui.MiuiOperatorCustomizedPolicy$MiuiOperatorConfig", lpparam.classLoader, "getHideVowifi", XC_MethodReplacement.returnConstant(true));
     }
 
     private static boolean checkSlot(String slotName) {
