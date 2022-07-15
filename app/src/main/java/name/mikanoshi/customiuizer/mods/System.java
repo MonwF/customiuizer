@@ -868,10 +868,10 @@ public class System {
     public static void NotificationVolumeServiceHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethod("com.android.server.audio.AudioService", lpparam.classLoader, "updateStreamVolumeAlias", boolean.class, String.class, new MethodHook() {
             protected void after(MethodHookParam param) throws Throwable {
-                int[] mStreamVolumeAlias = (int[])XposedHelpers.getObjectField(param.thisObject, "mStreamVolumeAlias");
-                mStreamVolumeAlias[1] = 1;
-                mStreamVolumeAlias[5] = 5;
-                XposedHelpers.setObjectField(param.thisObject, "mStreamVolumeAlias", mStreamVolumeAlias);
+            int[] mStreamVolumeAlias = (int[])XposedHelpers.getObjectField(param.thisObject, "mStreamVolumeAlias");
+            mStreamVolumeAlias[1] = 1;
+            mStreamVolumeAlias[5] = 5;
+            XposedHelpers.setObjectField(param.thisObject, "mStreamVolumeAlias", mStreamVolumeAlias);
             }
         });
 
@@ -906,28 +906,28 @@ public class System {
         //noinspection ResultOfMethodCallIgnored
         Helpers.findAndHookMethodSilently("com.android.server.audio.AudioService", lpparam.classLoader, "shouldZenMuteStream", int.class, new MethodHook() {
             protected void after(MethodHookParam param) throws Throwable {
-                int mStreamType = (int)param.args[0];
-                if (mStreamType == 5 && !(boolean)param.getResult()) {
-                    int mZenMode = (int)XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mNm"), "getZenMode");
-                    if (mZenMode == 1) param.setResult(true);
-                }
+            int mStreamType = (int)param.args[0];
+            if (mStreamType == 5 && !(boolean)param.getResult()) {
+                int mZenMode = (int)XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mNm"), "getZenMode");
+                if (mZenMode == 1) param.setResult(true);
+            }
             }
         });
     }
 
     public static void NotificationVolumeDialogHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.miui.volume.MiuiVolumeDialogImpl", lpparam.classLoader, "initDialog", new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.volume.VolumeDialogImpl", lpparam.classLoader, "initDialog", new MethodHook() {
             @Override
             @SuppressWarnings("unchecked")
             protected void before(MethodHookParam param) throws Throwable {
-                List<Object> mColumns = (List<Object>)XposedHelpers.getObjectField(param.thisObject, "mColumns");
+                List<Object> mColumns = (List<Object>)XposedHelpers.getObjectField(param.thisObject, "mRows");
                 XposedHelpers.setAdditionalInstanceField(param.thisObject, "mNoColumns", mColumns == null || mColumns.isEmpty());
             }
 
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 boolean mNoColumns = (boolean)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mNoColumns");
-                if (mNoColumns) XposedHelpers.callMethod(param.thisObject, "addColumn", 5, notifVolumeOnResId, notifVolumeOffResId, true);
+                if (mNoColumns) XposedHelpers.callMethod(param.thisObject, "addRow", 5, notifVolumeOnResId, notifVolumeOffResId, true, false);
             }
         });
     }
@@ -953,16 +953,14 @@ public class System {
                     } else {
                         initSeekBar[0].setAccessible(true);
                     }
-                    if (Helpers.is12()) {
-                        Class<?> pgCls = XposedHelpers.findClassIfExists("androidx.preference.PreferenceGroup", lpparam.classLoader);
-                        Class<?> pCls = XposedHelpers.findClassIfExists("androidx.preference.Preference", lpparam.classLoader);
-                        Method[] methods = XposedHelpers.findMethodsByExactParameters(pgCls, void.class, pCls);
-                        for (Method method: methods)
-                            if (Modifier.isPublic(method.getModifiers())) {
-                                addPreference = method.getName();
-                                break;
-                            }
-                    }
+                    Class<?> pgCls = XposedHelpers.findClassIfExists("androidx.preference.PreferenceGroup", lpparam.classLoader);
+                    Class<?> pCls = XposedHelpers.findClassIfExists("androidx.preference.Preference", lpparam.classLoader);
+                    Method[] methods = XposedHelpers.findMethodsByExactParameters(pgCls, void.class, pCls);
+                    for (Method method: methods)
+                        if (Modifier.isPublic(method.getModifiers())) {
+                            addPreference = method.getName();
+                            break;
+                        }
                 } catch (Throwable t) {
                     Helpers.log("NotificationVolumeSettingsHook", "Unable to find class/method in Settings to hook");
                     return;
@@ -988,10 +986,8 @@ public class System {
                 initSeekBar[0].invoke(fragment, "system_volume", 1, Helpers.is12() ? context.getResources().getIdentifier("ic_audio_vol", "drawable", context.getPackageName()) : settingsSystemResId);
                 XposedHelpers.callMethod(pref, "setOrder", order);
 
-                if (Helpers.is12()) {
-                    Object mRingVolume = XposedHelpers.callMethod(param.thisObject, "findPreference", "ring_volume");
-                    XposedHelpers.callMethod(mRingVolume, "setTitle", callsResId);
-                }
+                Object mRingVolume = XposedHelpers.callMethod(param.thisObject, "findPreference", "ring_volume");
+                XposedHelpers.callMethod(mRingVolume, "setTitle", callsResId);
             }
         });
     }
@@ -2715,132 +2711,58 @@ public class System {
     }
 
     public static void ReplaceShortcutAppHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.HeaderView", lpparam.classLoader, "onFinishInflate", new MethodHook() {
+        MethodHook openAppHook = new MethodHook() {
             @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                View mShortcut = (View)XposedHelpers.getObjectField(param.thisObject, "mShortcut");
-                mShortcut.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int user = Helpers.getSharedIntPref(v.getContext(), "pref_key_system_shortcut_app_user", 0);
-                        String pkgAppName = Helpers.getSharedStringPref(v.getContext(), "pref_key_system_shortcut_app", "");
-                        if (pkgAppName == null || pkgAppName.equals("")) try {
-                            View.OnClickListener mOnClickListener = (View.OnClickListener)XposedHelpers.getObjectField(param.thisObject, "mOnClickListener");
-                            if (mOnClickListener != null) mOnClickListener.onClick(v);
-                        } catch (Throwable t) {
-                            XposedHelpers.callMethod(param.thisObject, "onClick", v);
-                        }
+            protected void before(MethodHookParam param) throws Throwable {
+                Context mContext = (Context) AndroidAppHelper.currentApplication();
+                int user = 0;
+                String pkgAppName = "";
+                if (param.method.getName().equals("startCalendarApp")) {
+                    user = Helpers.getSharedIntPref(mContext, "pref_key_system_calendar_app_user", 0);
+                    pkgAppName = Helpers.getSharedStringPref(mContext, "pref_key_system_calendar_app", "");
+                }
+                else if (param.method.getName().equals("startClockApp")) {
+                    user = Helpers.getSharedIntPref(mContext, "pref_key_system_clock_app_user", 0);
+                    pkgAppName = Helpers.getSharedStringPref(mContext, "pref_key_system_clock_app", "");
+                }
+                else if (param.method.getName().equals("startSettingsApp")) {
+                    user = Helpers.getSharedIntPref(mContext, "pref_key_system_shortcut_app_user", 0);
+                    pkgAppName = Helpers.getSharedStringPref(mContext, "pref_key_system_shortcut_app", "");
+                }
+                if (pkgAppName != null && !pkgAppName.equals("")) {
+                    String[] pkgAppArray = pkgAppName.split("\\|");
+                    if (pkgAppArray.length < 2) return;
 
-                        String[] pkgAppArray = pkgAppName.split("\\|");
-                        if (pkgAppArray.length < 2) return;
-
-                        ComponentName name = new ComponentName(pkgAppArray[0], pkgAppArray[1]);
-                        Intent intent = new Intent(Intent.ACTION_MAIN);
-                        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-                        intent.setComponent(name);
-
-                        Object mActStarter = XposedHelpers.getObjectField(param.thisObject, "mActStarter");
-                        if (user != 0) try {
-                            XposedHelpers.callMethod(mActStarter, "collapsePanels");
-                            Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+                    ComponentName name = new ComponentName(pkgAppArray[0], pkgAppArray[1]);
+                    Intent intent = new Intent(Intent.ACTION_MAIN);
+                    intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                    intent.setComponent(name);
+                    if (user != 0) {
+                        try {
+                            Object mStatusBar = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", mContext.getClassLoader()), "get", findClass("com.android.systemui.statusbar.phone.StatusBar", mContext.getClassLoader()));
+                            XposedHelpers.callMethod(mStatusBar, "collapsePanels");
                             XposedHelpers.callMethod(mContext, "startActivityAsUser", intent, XposedHelpers.newInstance(UserHandle.class, user));
                         } catch (Throwable t) {
                             XposedBridge.log(t);
-                        } else {
-                            XposedHelpers.callMethod(mActStarter, "startActivity", intent, true);
                         }
+                    } else {
+                        Object activiyStarter = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", mContext.getClassLoader()), "get", findClass("com.android.systemui.plugins.ActivityStarter", mContext.getClassLoader()));
+                        XposedHelpers.callMethod(activiyStarter, "startActivity", intent, true);
                     }
-                });
+                    param.setResult(null);
+                }
             }
-        });
-    }
-
-    public static void ReplaceClockAppHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.HeaderView", lpparam.classLoader, "onFinishInflate", new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                View mClock = (View)XposedHelpers.getObjectField(param.thisObject, "mClock");
-                View mDateView = (View)XposedHelpers.getObjectField(param.thisObject, "mDateView");
-                View mView = mClock.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? mDateView : mClock;
-                mView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int user = Helpers.getSharedIntPref(v.getContext(), "pref_key_system_clock_app_user", 0);
-                        String pkgAppName = Helpers.getSharedStringPref(v.getContext(), "pref_key_system_clock_app", "");
-                        if (pkgAppName == null || pkgAppName.equals("")) try {
-                            View.OnClickListener mOnClickListener = (View.OnClickListener)XposedHelpers.getObjectField(param.thisObject, "mOnClickListener");
-                            if (mOnClickListener != null) mOnClickListener.onClick(v);
-                        } catch (Throwable t) {
-                            XposedHelpers.callMethod(param.thisObject, "onClick", v);
-                        }
-
-                        String[] pkgAppArray = pkgAppName.split("\\|");
-                        if (pkgAppArray.length < 2) return;
-
-                        ComponentName name = new ComponentName(pkgAppArray[0], pkgAppArray[1]);
-                        Intent intent = new Intent(Intent.ACTION_MAIN);
-                        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-                        intent.setComponent(name);
-
-                        Object mActStarter = XposedHelpers.getObjectField(param.thisObject, "mActStarter");
-                        if (user != 0) try {
-                            XposedHelpers.callMethod(mActStarter, "collapsePanels");
-                            Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-                            XposedHelpers.callMethod(mContext, "startActivityAsUser", intent, XposedHelpers.newInstance(UserHandle.class, user));
-                        } catch (Throwable t) {
-                            XposedBridge.log(t);
-                        } else {
-                            XposedHelpers.callMethod(mActStarter, "startActivity", intent, true);
-                        }
-                    }
-                });
-            }
-        });
-    }
-
-    public static void ReplaceCalendarAppHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.HeaderView", lpparam.classLoader, "onFinishInflate", new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                View mDateView = (View)XposedHelpers.getObjectField(param.thisObject, "mDateView");
-                if (mDateView.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) return;
-                mDateView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int user = Helpers.getSharedIntPref(v.getContext(), "pref_key_system_calendar_app_user", 0);
-                        String pkgAppName = Helpers.getSharedStringPref(v.getContext(), "pref_key_system_calendar_app", "");
-                        if (pkgAppName == null || pkgAppName.equals("")) try {
-                            View.OnClickListener mOnClickListener = (View.OnClickListener)XposedHelpers.getObjectField(param.thisObject, "mOnClickListener");
-                            if (mOnClickListener != null) mOnClickListener.onClick(v);
-                        } catch (Throwable t) {
-                            XposedHelpers.callMethod(param.thisObject, "onClick", v);
-                        }
-
-                        String[] pkgAppArray = pkgAppName.split("\\|");
-                        if (pkgAppArray.length < 2) return;
-
-                        ComponentName name = new ComponentName(pkgAppArray[0], pkgAppArray[1]);
-                        Intent intent = new Intent(Intent.ACTION_MAIN);
-                        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-                        intent.setComponent(name);
-
-                        Object mActStarter = XposedHelpers.getObjectField(param.thisObject, "mActStarter");
-                        if (user != 0) try {
-                            XposedHelpers.callMethod(mActStarter, "collapsePanels");
-                            Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-                            XposedHelpers.callMethod(mContext, "startActivityAsUser", intent, XposedHelpers.newInstance(UserHandle.class, user));
-                        } catch (Throwable t) {
-                            XposedBridge.log(t);
-                        } else {
-                            XposedHelpers.callMethod(mActStarter, "startActivity", intent, true);
-                        }
-                    }
-                });
-            }
-        });
+        };
+        if (!MainModule.mPrefs.getString("system_shortcut_app", "").equals("")) {
+            Helpers.findAndHookMethod("com.miui.systemui.util.CommonUtil", lpparam.classLoader, "startSettingsApp", openAppHook);
+        }
+        if (!MainModule.mPrefs.getString("system_calendar_app", "").equals("")) {
+            Helpers.findAndHookMethod("com.miui.systemui.util.CommonUtil", lpparam.classLoader, "startCalendarApp", Context.class, openAppHook);
+        }
+        if (!MainModule.mPrefs.getString("system_clock_app", "").equals("")) {
+            Helpers.findAndHookMethod("com.miui.systemui.util.CommonUtil", lpparam.classLoader, "startClockApp", openAppHook);
+        }
     }
 
     private static final int NOCOLOR = 0x01010101;
@@ -7423,7 +7345,6 @@ public class System {
                 if (intent == null || intent.getComponent() == null) return;
                 String pkgName = intent.getComponent().getPackageName();
                 String actName = intent.getComponent().getClassName();
-                Helpers.log("SkipAppLock", actName);
                 String key = "system_applock_skip_activities";
                 String itemStr = MainModule.mPrefs.getString(key, "");
                 if (itemStr == null || itemStr.isEmpty()) return;
