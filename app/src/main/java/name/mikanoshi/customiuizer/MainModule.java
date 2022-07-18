@@ -68,7 +68,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (mPrefs.getBoolean("system_magnifier") && Helpers.isPiePlus()) System.TextMagnifierHook();
         if (mPrefs.getBoolean("system_lockscreenshortcuts") || mPrefs.getInt("controls_powerdt_action", 1) > 1) System.LockScreenSecureLaunchHook();
         if (mPrefs.getBoolean("system_notifmediaseekbar") && !Helpers.is12()) System.MediaNotificationSeekBarHook();
-        if (mPrefs.getBoolean("system_disableanynotif") && !Helpers.isNougat()) System.DisableAnyNotificationBlockHook();
+        if (mPrefs.getBoolean("system_disableanynotif")) System.DisableAnyNotificationBlockHook();
         if (mPrefs.getBoolean("system_apksign")) System.NoSignatureVerifyHook();
         if (mPrefs.getBoolean("system_nooverscroll")) System.NoOverscrollHook();
         if (mPrefs.getBoolean("system_cleanshare")) System.CleanShareMenuHook();
@@ -224,7 +224,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_visualizer")) System.AudioVisualizerHook(lpparam);
             if (mPrefs.getBoolean("system_separatevolume") && mPrefs.getBoolean("system_separatevolume_slider")) System.NotificationVolumeDialogHook(lpparam);
             if (mPrefs.getBoolean("system_batteryindicator")) System.BatteryIndicatorHook(lpparam);
-            if (mPrefs.getBoolean("system_disableanynotif")) System.DisableAnyNotificationHook();
+            if (mPrefs.getBoolean("system_disableanynotif")) System.DisableAnyNotificationHook(lpparam);
             if (mPrefs.getBoolean("system_lockscreenshortcuts")) System.LockScreenShortcutHook(lpparam);
             if (mPrefs.getBoolean("system_4gtolte")) System.Network4GtoLTEHook(lpparam);
             if (mPrefs.getBoolean("system_statusbar_dttosleep")) System.StatusBarDoubleTapToSleepHook(lpparam);
@@ -250,7 +250,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_usenativerecents")) System.UseNativeRecentsHook(lpparam);
             if (mPrefs.getBoolean("system_morenotif")) System.MoreNotificationsHook(lpparam);
             if (mPrefs.getBoolean("system_dndtoggle")) System.VolumeDialogDNDSwitchHook(lpparam);
-            if (mPrefs.getBoolean("system_fw_splitscreen")) System.MultiWindowPlusNativeHook(lpparam);
             if (mPrefs.getBoolean("system_charginginfo")) System.ChargingInfoHook(lpparam);
             if (mPrefs.getBoolean("system_secureqs")) System.SecureQSTilesHook(lpparam);
             if (mPrefs.getBoolean("system_mutevisiblenotif")) System.MuteVisibleNotificationsHook(lpparam);
@@ -333,7 +332,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 System.NotificationVolumeSettingsRes();
                 System.NotificationVolumeSettingsHook(lpparam);
             }
-            if (mPrefs.getBoolean("system_disableanynotif")) System.DisableAnyNotificationHook();
+            if (mPrefs.getBoolean("system_disableanynotif")) System.DisableAnyNotificationHook(lpparam);
             if (!mPrefs.getString("system_defaultusb", "none").equals("none")) System.USBConfigSettingsHook(lpparam);
         }
 
