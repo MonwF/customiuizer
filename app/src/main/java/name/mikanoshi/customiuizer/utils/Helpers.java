@@ -1993,39 +1993,53 @@ public class Helpers {
 		return bitmap;
 	}
 
-	private static float norm(float f, float f2, float f3) {
-		return (f3 - f) / (f2 - f);
+	public static int constrain(int amount, int low, int high) {
+		return amount < low ? low : (amount > high ? high : amount);
+	}
+	public static float constrain(float amount, float low, float high) {
+		return amount < low ? low : (amount > high ? high : amount);
+	}
+	public static float lerp(float start, float stop, float amount) {
+		return start + (stop - start) * amount;
+	}
+	public static float lerp(int start, int stop, float amount) {
+		return lerp((float) start, (float) stop, amount);
 	}
 
-	private static float lerp(float f, float f2, float f3) {
-		return ((f2 - f) * f3) + f;
+	/**
+	 * Returns the interpolation scalar (s) that satisfies the equation: {@code value = }{@link
+	 * #lerp}{@code (a, b, s)}
+	 *
+	 * <p>If {@code a == b}, then this function will return 0.
+	 */
+	public static float lerpInv(float a, float b, float value) {
+		return a != b ? ((value - a) / (b - a)) : 0.0f;
 	}
-
+	/** Returns the single argument constrained between [0.0, 1.0]. */
+	public static float saturate(float value) {
+		return constrain(value, 0.0f, 1.0f);
+	}
+	/** Returns the saturated (constrained between [0, 1]) result of {@link #lerpInv}. */
+	public static float lerpInvSat(float a, float b, float value) {
+		return saturate(lerpInv(a, b, value));
+	}
+	public static float norm(float start, float stop, float value) {
+		return (value - start) / (stop - start);
+	}
 	private static float sq(float f) {
 		return f * f;
 	}
-
 	public static float exp(float f) {
 		return (float)Math.exp(f);
 	}
 
-	public static float sqrt(float f) {
-		return (float)Math.sqrt(f);
-	}
-
-	public static float log(float f) {
-		return (float)Math.log(f);
-	}
-
-	public static int convertGammaToLinear(int val, int min, int max) {
-		float norm = norm(0.0f, (float)max, (float) val);
-		val = Math.round(lerp((float) min, (float) max, (norm <= 0.2f ? sq(norm / 0.2f) : exp((norm - 0.221f) / 0.314f) + 0.06f) / 12.0f));
-		return Math.min(val, max);
-	}
-
-	public static int convertLinearToGamma(int val, int min, int max) {
-		float norm = norm((float) min, (float)max, (float)val) * 12.0f;
-		return Math.round(lerp(0.0f, (float)max, norm <= 1.0f ? sqrt(norm) * 0.2f : (log(norm - 0.06f) * 0.314f) + 0.221f));
+	public static final float convertGammaToLinearFloat(float i, int max, float f, float f2) {
+		float norm = norm(0.0f, max, i);
+		float R = 0.4f;
+		float A = 0.2146f;
+		float B = 0.2847f;
+		float C = 0.4719f;
+		return lerp(f, f2, constrain(norm <= R ? sq(norm / R) : exp((norm - C) / A) + B, 0.0f, 12.0f) / 12.0f);
 	}
 
 }
