@@ -217,7 +217,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_notifafterunlock")) System.ShowNotificationsAfterUnlockHook(lpparam);
             if (mPrefs.getBoolean("system_notifrowmenu")) System.NotificationRowMenuHook(lpparam);
             if (mPrefs.getBoolean("system_compactnotif")) System.CompactNotificationsHook(lpparam);
-            if (mPrefs.getBoolean("system_removecleaner")) System.HideMemoryCleanHook(lpparam, false);
+//            if (mPrefs.getBoolean("system_removecleaner")) System.HideMemoryCleanHook(lpparam, false);
             if (mPrefs.getBoolean("system_removedismiss")) System.HideDismissViewHook(lpparam);
             if (mPrefs.getBoolean("controls_nonavbar")) Controls.HideNavBarHook(lpparam);
             if (mPrefs.getBoolean("controls_imebackalticon")) Controls.ImeBackAltIconHook(lpparam);

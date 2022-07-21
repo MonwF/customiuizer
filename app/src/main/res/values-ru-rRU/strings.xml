@@ -823,8 +823,6 @@
     <string name="system_autobrightness_summ">Задаёт минимальное и максимальное значение яркости в автоматическом режиме</string>
     <string name="system_minbrightness_title">Минимальная автояркость</string>
     <string name="system_maxbrightness_title">Максимальная автояркость</string>
-    <string name="system_autobrightness_hlg_title">Всегда использовать нелинейную шкалу</string>
-    <string name="system_autobrightness_hlg_summ">Включить, если проценты яркости в моде не совпадают с реальными процентами на Android версиях ниже 9</string>
     <string name="system_audiosilencer_title">Аудио глушитель</string>
     <string name="system_audiosilencer_summ">Позволяет заглушить любой уникально опознаваемый звук</string>
     <string name="system_audiosilencer_last_title">Обновить список</string>

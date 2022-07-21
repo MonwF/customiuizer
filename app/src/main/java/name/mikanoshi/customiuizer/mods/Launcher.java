@@ -1431,30 +1431,6 @@ public class Launcher {
 
 	public static void UseOldLaunchAnimationHook(LoadPackageParam lpparam) {
 		Helpers.hookAllMethods("com.miui.home.recents.QuickstepAppTransitionManagerImpl", lpparam.classLoader, "hasControlRemoteAppTransitionPermission", XC_MethodReplacement.returnConstant(false));
-		Helpers.hookAllMethods("com.miui.home.recents.QuickstepAppTransitionManagerImpl", lpparam.classLoader, "registerRemoteAnimations", XC_MethodReplacement.DO_NOTHING);
-		Helpers.hookAllMethods("com.miui.home.recents.QuickstepAppTransitionManagerImpl", lpparam.classLoader, "getActivityLaunchOptions", new MethodHook() {
-			@Override
-			protected void after(XC_MethodHook.MethodHookParam param) throws Throwable {
-				View view = (View)param.args[1];
-				Rect rect = (Rect)param.args[2];
-
-				boolean isLaunchingFromRecents = (boolean)XposedHelpers.callMethod(param.thisObject, "isLaunchingFromRecents", view, null);
-				if (isLaunchingFromRecents) return;
-
-				if (view == null) {
-					param.setResult(null);
-					return;
-				}
-
-				if (rect != null) {
-					int[] arr = new int[2];
-					view.getLocationOnScreen(arr);
-					param.setResult(XposedHelpers.callStaticMethod(ActivityOptions.class, "makeClipRevealAnimation", view, rect.left - arr[0], rect.top - arr[1], rect.width(), rect.height(), true));
-				} else {
-					param.setResult(XposedHelpers.callStaticMethod(ActivityOptions.class, "makeClipRevealAnimation", view, 0, 0, view.getWidth(), view.getHeight(), false));
-				}
-			}
-		});
 	}
 
 	public static void ReverseLauncherPortraitHook(LoadPackageParam lpparam) {

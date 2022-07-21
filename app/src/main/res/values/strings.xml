@@ -191,8 +191,6 @@
 	<string name="system_autobrightness_summ">Define minimum and maximum auto brightness values</string>
 	<string name="system_minbrightness_title">Minimum auto brightness</string>
 	<string name="system_maxbrightness_title">Maximum auto brightness</string>
-	<string name="system_autobrightness_hlg_title">Always use non-linear scale</string>
-	<string name="system_autobrightness_hlg_summ">Enable if brightness percentages in mod do not match real ones on Android versions below 9</string>
 	<string name="system_audiosilencer_title">Audio silencer</string>
 	<string name="system_audiosilencer_summ">Mute any sound that can be uniquely identified</string>
 	<string name="system_audiosilencer_last_title">Refresh list</string>

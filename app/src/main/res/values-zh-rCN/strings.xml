@@ -175,8 +175,6 @@
     <string name="system_autobrightness_summ">定义自动亮度的最小值和最大值</string>
     <string name="system_minbrightness_title">自动亮度最小值</string>
     <string name="system_maxbrightness_title">最大自动亮度</string>
-    <string name="system_autobrightness_hlg_title">始终使用非线性缩放</string>
-    <string name="system_autobrightness_hlg_summ">在低于Android 9版本上启用模块中的亮度百分比是否不匹配真实值</string>
     <string name="system_audiosilencer_title">消音器</string>
     <string name="system_audiosilencer_summ">静音可被唯一识别的声音</string>
     <string name="system_audiosilencer_last_title">刷新列表</string>
@@ -1049,4 +1047,6 @@
     <string name="system_notifrowmenu_forceclose">强制关闭</string>
     <string name="restart_systemui">重启系统界面</string>
     <string name="various_allow_untrusted_touch_title">允许不受信任的触摸操作</string>
+    <string name="launcher_nozoomanim_title">去除启动动画</string>
+    <string name="launcher_nozoomanim_summ">app启动、关闭时不缩放图标</string>
 </resources>
