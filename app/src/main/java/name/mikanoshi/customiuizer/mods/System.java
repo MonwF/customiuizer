@@ -7223,15 +7223,8 @@ public class System {
                     boolean isHybrid = (boolean)XposedHelpers.callStaticMethod(nuCls, "isHybrid", notification);
                     if (isHybrid) return;
                 }
-                String pkgName;
-                int user;
-                if ((boolean)XposedHelpers.callMethod(notification, "isSubstituteNotification")) {
-                    pkgName = (String)XposedHelpers.callMethod(notification, "getOpPkg");
-                    user = -1;
-                } else {
-                    pkgName = (String)XposedHelpers.callMethod(notification, "getPackageName");
-                    user = (int)XposedHelpers.callMethod(notification, "getAppUid");
-                }
+                String pkgName = (String)XposedHelpers.callMethod(notification, "getPackageName");
+                int user = (int)XposedHelpers.callMethod(notification, "getAppUid");
 
                 Bundle bundle = new Bundle();
                 bundle.putString("android.provider.extra.CHANNEL_ID", id);
