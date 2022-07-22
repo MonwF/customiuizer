@@ -148,7 +148,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_fw_sticky")) System.StickyFloatingWindowsHook(lpparam);
             if (mPrefs.getBoolean("system_charginginfo")) System.ChargingInfoServiceHook(lpparam);
             if (mPrefs.getBoolean("system_lswallpaper")) System.SetLockscreenWallpaperHook(lpparam);
-            if (mPrefs.getBoolean("system_usenativerecents") && Helpers.is125()) System.UseNativeRecentsFixHook(lpparam);
+            if (mPrefs.getBoolean("system_usenativerecents")) System.UseNativeRecentsFixHook(lpparam);
             if (mPrefs.getBoolean("controls_powerflash")) Controls.PowerKeyHook(lpparam);
             if (mPrefs.getBoolean("controls_fingerprintfailure")) Controls.FingerprintHapticFailureHook(lpparam);
             if (mPrefs.getBoolean("controls_fingerprintscreen")) Controls.FingerprintScreenOnHook(lpparam);
@@ -334,6 +334,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             }
             if (mPrefs.getBoolean("system_disableanynotif")) System.DisableAnyNotificationHook(lpparam);
             if (!mPrefs.getString("system_defaultusb", "none").equals("none")) System.USBConfigSettingsHook(lpparam);
+            if (mPrefs.getBoolean("system_notifimportance")) {
+                System.NotificationImportanceHook(lpparam);
+            }
         }
 
         if (pkg.equals("com.google.android.packageinstaller") || pkg.equals("com.android.packageinstaller")) {

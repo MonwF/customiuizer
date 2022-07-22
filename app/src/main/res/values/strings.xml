@@ -117,6 +117,7 @@
 	<string name="system_statusbarcontrols_dt_title">Double tap action</string>
 	<string name="system_fixmeter_title">Network speed spacing</string>
 	<string name="system_fixmeter_summ">Increase horizontal margins for network speed indicator</string>
+	<string name="system_notifimportance_title">Show notification importance</string>
 	<string name="system_compactnotif_title">Compact notifications</string>
 	<string name="system_compactnotif_summ">Reduce notifications\' vertical paddings</string>
 	<string name="system_colorizenotiftitle_title">Colorize notification title</string>
