@@ -593,6 +593,11 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_notifimportance"
+			android:title="@string/system_notifimportance_title"
+			android:defaultValue="true" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_compactnotif"
 			android:summary="@string/system_compactnotif_summ"
 			android:title="@string/system_compactnotif_title"

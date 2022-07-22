@@ -13,6 +13,7 @@ import android.app.Dialog;
 import android.app.KeyguardManager;
 import android.app.MiuiNotification;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.app.WallpaperManager;
@@ -135,8 +136,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
 import java.net.NetworkInterface;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -423,7 +426,8 @@ public class System {
         if (opt == 2 || opt == 3 && isTrusted) {
             XposedHelpers.setAdditionalStaticField(kmvClas, "isScreenLockDisabled", true);
             return true;
-        } else return false;
+        }
+        return false;
     }
 
     private static void checkBTConnections(Context mContext) {
@@ -432,18 +436,6 @@ public class System {
         else
             mContext.sendBroadcast(new Intent(ACTION_PREFIX + "UnlockBTConnection"));
     }
-
-//	private static void setLockScreenDisabled(ClassLoader classLoader, Object thisObject, boolean state) {
-//		try {
-//			Class<?> kumCls = findClass("com.android.keyguard.KeyguardUpdateMonitor", classLoader);
-//			int user = (int)XposedHelpers.callStaticMethod(kumCls, "getCurrentUser");
-//			Object mLockPatternUtils = XposedHelpers.getObjectField(thisObject, "mLockPatternUtils");
-//			XposedHelpers.callMethod(mLockPatternUtils, "setLockScreenDisabled", state, user);
-//			Helpers.log("setLockScreenDisabled = " + state + ", " + user);
-//		} catch (Throwable t) {
-//			XposedBridge.log(t);
-//		}
-//	}
 
     private static boolean isUnlockedInnerCall = false;
     private static boolean isUnlockedWithFingerprint = false;
@@ -644,7 +636,6 @@ public class System {
             @Override
             protected void after(MethodHookParam param) {
                 Context mContext = (Context)param.args[0];
-                XposedHelpers.setAdditionalInstanceField(param.thisObject, "mContextMy", mContext);
                 mContext.registerReceiver(new BroadcastReceiver() {
                     public void onReceive(final Context context, Intent intent) {
                         ArrayList<BluetoothDevice> deviceList = new ArrayList<BluetoothDevice>();
@@ -666,15 +657,15 @@ public class System {
         Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BluetoothControllerImpl", lpparam.classLoader, "updateConnected", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) {
-                checkBTConnections((Context)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mContextMy"));
+            checkBTConnections((Context)XposedHelpers.getObjectField(param.thisObject, "mContext"));
             }
         });
 
         Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BluetoothControllerImpl", lpparam.classLoader, "onBluetoothStateChanged", int.class, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) {
-                int state = (int)param.args[0];
-                if (state != 10) checkBTConnections((Context)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mContextMy"));
+            int state = (int)param.args[0];
+            if (state != 10) checkBTConnections((Context)XposedHelpers.getObjectField(param.thisObject, "mContext"));
             }
         });
     }
@@ -4017,6 +4008,60 @@ public class System {
             @Override
             protected void before(final MethodHookParam param) throws Throwable {
             param.setResult(new HashSet<String>());
+            }
+        });
+    }
+
+    public static void NotificationImportanceHook(LoadPackageParam lpparam) {
+        Helpers.hookAllMethods("com.android.settings.notification.BaseNotificationSettings", lpparam.classLoader, "setPrefVisible", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                Object pref = param.args[0];
+                if (pref != null) {
+                    String prefKey = (String) XposedHelpers.callMethod(pref, "getKey");
+                    if ("importance".equals(prefKey)) {
+                        param.args[1] = true;
+                    }
+                }
+            }
+        });
+        Helpers.findAndHookMethod("com.android.settings.notification.ChannelNotificationSettings", lpparam.classLoader, "setupChannelDefaultPrefs", new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                Object pref = XposedHelpers.callMethod(param.thisObject, "findPreference", "importance");
+                XposedHelpers.setObjectField(param.thisObject, "mImportance", pref);
+                int mBackupImportance = (int)XposedHelpers.getObjectField(param.thisObject, "mBackupImportance");
+                if (mBackupImportance > 0) {
+                    int index = (int)XposedHelpers.callMethod(pref, "findSpinnerIndexOfValue", String.valueOf(mBackupImportance));
+                    if (index > -1) {
+                        XposedHelpers.callMethod(pref, "setValueIndex", index);
+                    }
+                    Class<?> ImportanceListener = XposedHelpers.findClassIfExists("androidx.preference.Preference$OnPreferenceChangeListener", lpparam.classLoader);
+                    InvocationHandler handler = new InvocationHandler() {
+                        @Override
+                        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                            if (method.getName().equals("onPreferenceChange")) {
+                                int mBackupImportance = Integer.parseInt((String) args[1]);
+                                XposedHelpers.setObjectField(param.thisObject, "mBackupImportance", mBackupImportance);
+                                NotificationChannel mChannel = (NotificationChannel) XposedHelpers.getObjectField(param.thisObject, "mChannel");
+                                mChannel.setImportance(mBackupImportance);
+                                XposedHelpers.callMethod(mChannel, "lockFields", 4);
+                                Object mBackend = XposedHelpers.getObjectField(param.thisObject, "mBackend");
+                                String mPkg = (String) XposedHelpers.getObjectField(param.thisObject, "mPkg");
+                                int mUid = (int) XposedHelpers.getObjectField(param.thisObject, "mUid");
+                                XposedHelpers.callMethod(mBackend, "updateChannel", mPkg, mUid, mChannel);
+                                XposedHelpers.callMethod(param.thisObject, "updateDependents", false);
+                            }
+                            return true;
+                        }
+                    };
+                    Object mImportanceListener = Proxy.newProxyInstance(
+                        lpparam.classLoader,
+                        new Class[] { ImportanceListener },
+                        handler
+                    );
+                    XposedHelpers.callMethod(pref, "setOnPreferenceChangeListener", mImportanceListener);
+                }
             }
         });
     }

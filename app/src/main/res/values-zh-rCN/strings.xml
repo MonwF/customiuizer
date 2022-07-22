@@ -105,6 +105,7 @@
     <string name="system_statusbarcontrols_dt_title">双击动作</string>
     <string name="system_fixmeter_title">网速间距</string>
     <string name="system_fixmeter_summ">增加网速指示器的水平边距</string>
+    <string name="system_notifimportance_title">开放通知的重要程度</string>
     <string name="system_compactnotif_title">紧凑通知</string>
     <string name="system_compactnotif_summ">减小通知垂直边框</string>
     <string name="system_colorizenotiftitle_title">着色通知标题</string>
