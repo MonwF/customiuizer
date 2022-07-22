@@ -627,20 +627,6 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_notifmediaseekbar"
-			android:title="@string/system_notifmediaseekbar_title"
-			android:summary="@string/system_notifmediaseekbar_summ"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_notifmediaseekbar_full"
-			android:title="@string/system_notifmediaseekbar_full_title"
-			android:summary="@string/system_notifmediaseekbar_full_summ"
-			android:defaultValue="false"
-			android:dependency="pref_key_system_notifmediaseekbar"
-			miuizer:child="true" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_notifrowmenu"
 			android:summary="@string/system_notifrowmenu_summ"
 			android:title="@string/system_notifrowmenu_title"

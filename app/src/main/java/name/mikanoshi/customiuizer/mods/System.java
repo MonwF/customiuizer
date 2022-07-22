@@ -5215,7 +5215,7 @@ public class System {
             }
         });
 
-        Helpers.findAndHookMethod("com.android.systemui.controlcenter.qs.tileview.QCBrightnessMirrorController", lpparam.classLoader, "hideMirror", new MethodHook() {
+        Helpers.hookAllMethods("com.android.systemui.controlcenter.policy.MiuiBrightnessController", lpparam.classLoader, "onStop", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
             if (mPct != null) mPct.setVisibility(View.GONE);

@@ -213,21 +213,6 @@ public class System extends SubFragment {
 					}
 				});
 
-				if (Helpers.isNougat()) {
-					((ListPreferenceEx)findPreference("pref_key_system_autogroupnotif")).setUnsupported(true);
-					((CheckBoxPreferenceEx)findPreference("pref_key_system_snoozedmanager")).setUnsupported(true);
-				}
-
-				if (Helpers.is12()) {
-					((CheckBoxPreferenceEx)findPreference("pref_key_system_notifmediaseekbar")).setChecked(false);
-					((CheckBoxPreferenceEx)findPreference("pref_key_system_notifmediaseekbar")).setUnsupported(true);
-					((CheckBoxPreferenceEx)findPreference("pref_key_system_notifmediaseekbar_full")).setUnsupported(true);
-				} else {
-					((SeekBarPreference)findPreference("pref_key_system_messagingstylelines")).setUnsupported(true);
-					((CheckBoxPreferenceEx)findPreference("pref_key_system_minimalnotifview")).setUnsupported(true);
-					((CheckBoxPreferenceEx)findPreference("pref_key_system_notifchannelsettings")).setUnsupported(true);
-				}
-
 				break;
 			case "pref_key_system_cat_qs":
 				findPreference("pref_key_system_qshaptics_ignore").setEnabled(!Objects.equals(Helpers.prefs.getString("pref_key_system_qshaptics", "1"), "1"));
