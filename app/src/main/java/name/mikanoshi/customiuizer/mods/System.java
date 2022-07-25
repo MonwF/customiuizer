@@ -5150,11 +5150,10 @@ public class System {
 
     @SuppressLint("StaticFieldLeak")
     private static TextView mPct = null;
-    private static void initPct(ViewGroup container, int source) {
-        Context context = container.getContext();
-        Resources res = container.getResources();
+    private static void initPct(ViewGroup container, int source, Context context) {
+        Resources res = context.getResources();
         if (mPct == null) {
-            mPct = new TextView(context);
+            mPct = new TextView(container.getContext());
             mPct.setTag("mirrorBrightnessPct");
             mPct.setTextSize(TypedValue.COMPLEX_UNIT_SP, 40);
             mPct.setGravity(Gravity.CENTER);
@@ -5165,16 +5164,11 @@ public class System {
             lp.gravity = Gravity.CENTER_HORIZONTAL|Gravity.TOP;
             mPct.setPadding(Math.round(20 * density), Math.round(10 * density), Math.round(18 * density), Math.round(12 * density));
             mPct.setLayoutParams(lp);
-        } else {
-            ViewGroup parent = (ViewGroup)mPct.getParent();
-            if (parent != null) parent.removeView(mPct);
+            container.addView(mPct);
         }
-        container.addView(mPct);
         mPct.setTag(source);
         int panelResId = res.getIdentifier("panel_round_corner_bg", "drawable", "com.android.systemui");
         mPct.setBackground(res.getDrawable(panelResId, context.getTheme()));
-        int colorResId = res.getIdentifier("qs_tile_icon_disabled_color", "color", "com.android.systemui");
-        mPct.setTextColor(res.getColor(colorResId, container.getContext().getTheme()));
         mPct.setAlpha(0.0f);
         mPct.setVisibility(View.GONE);
     }
@@ -5183,33 +5177,36 @@ public class System {
         Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BrightnessMirrorController", lpparam.classLoader, "showMirror", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
-            ViewGroup mStatusBarWindow = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mStatusBarWindow");
-            if (mStatusBarWindow == null) {
-                Helpers.log("BrightnessPctHook", "mStatusBarWindow is null");
-                return;
-            }
-            initPct(mStatusBarWindow, 1);
-            mPct.setVisibility(View.VISIBLE);
-            mPct.animate().alpha(1.0f).setDuration(300).start();
+                ViewGroup mStatusBarWindow = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mStatusBarWindow");
+                if (mStatusBarWindow == null) {
+                    Helpers.log("BrightnessPctHook", "mStatusBarWindow is null");
+                    return;
+                }
+                initPct(mStatusBarWindow, 1, mStatusBarWindow.getContext());
+                mPct.setVisibility(View.VISIBLE);
+                mPct.animate().alpha(1.0f).setDuration(300).start();
             }
         });
 
         Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BrightnessMirrorController", lpparam.classLoader, "hideMirror", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
-            if (mPct != null) mPct.setVisibility(View.GONE);
+                if (mPct != null) mPct.setVisibility(View.GONE);
             }
         });
 
-        Helpers.findAndHookMethod("com.android.systemui.controlcenter.qs.tileview.QCBrightnessMirrorController", lpparam.classLoader, "showMirror", new MethodHook() {
+        Helpers.hookAllMethods("com.android.systemui.controlcenter.policy.MiuiBrightnessController", lpparam.classLoader, "onStart", new MethodHook() {
             @Override
-            protected void after(final MethodHookParam param) throws Throwable {
-                ViewGroup mControlPanelContentView = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mControlPanelContentView");
-                if (mControlPanelContentView == null) {
+            protected void before(final MethodHookParam param) throws Throwable {
+                Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+                Object mMirror = XposedHelpers.getObjectField(param.thisObject, "mControl");
+                Object controlCenterWindowViewController = XposedHelpers.getObjectField(mMirror, "controlCenterWindowViewController");
+                Object windowView = XposedHelpers.callMethod(controlCenterWindowViewController, "getView");
+                if (windowView == null) {
                     Helpers.log("BrightnessPctHook", "mControlPanelContentView is null");
                     return;
                 }
-                initPct((ViewGroup)mControlPanelContentView.getParent(), 1);
+                initPct((ViewGroup) windowView, 1, mContext);
                 mPct.setVisibility(View.VISIBLE);
                 mPct.animate().alpha(1.0f).setDuration(300).start();
             }
@@ -5218,19 +5215,21 @@ public class System {
         Helpers.hookAllMethods("com.android.systemui.controlcenter.policy.MiuiBrightnessController", lpparam.classLoader, "onStop", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
-            if (mPct != null) mPct.setVisibility(View.GONE);
+                if (mPct != null) mPct.setVisibility(View.GONE);
             }
         });
 
+        final Class<?> BrightnessUtils = XposedHelpers.findClassIfExists("com.android.systemui.controlcenter.policy.BrightnessUtils", lpparam.classLoader);
         Helpers.hookAllMethods("com.android.systemui.controlcenter.policy.MiuiBrightnessController", lpparam.classLoader, "onChanged", new MethodHook() {
             @Override
             @SuppressLint("SetTextI18n")
             protected void after(final MethodHookParam param) throws Throwable {
                 if (mPct == null || (int)mPct.getTag() != 1) return;
                 int currentLevel = (int)param.args[3];
-                Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-                int maxLevel = mContext.getResources().getInteger(mContext.getResources().getIdentifier("config_screenBrightnessSettingMaximum", "integer", "android"));
-                mPct.setText(((currentLevel * 100) / maxLevel) + "%");
+                if (BrightnessUtils != null) {
+                    int maxLevel = (int) XposedHelpers.getStaticObjectField(BrightnessUtils, "GAMMA_SPACE_MAX");
+                    mPct.setText(((currentLevel * 100) / maxLevel) + "%");
+                }
             }
         });
     }
@@ -5867,7 +5866,7 @@ public class System {
                             if (mStatusBarWindow == null)
                                 Helpers.log("StatusBarGesturesHook", "mStatusBarWindow is null");
                             else
-                                initPct(mStatusBarWindow, 2);
+                                initPct(mStatusBarWindow, 2, mContext);
                         }
                         break;
                     case MotionEvent.ACTION_POINTER_DOWN:
