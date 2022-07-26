@@ -886,6 +886,7 @@
 		<item>com.miui.screenrecorder</item>
 		<item>com.miui.home</item>
 		<item>com.miui.screenshot</item>
+		<item>miui.systemui.plugin</item>
 		<item>com.mi.android.globallauncher</item>
 	</string-array>
 </resources>
