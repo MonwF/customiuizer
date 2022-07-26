@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
@@ -844,17 +845,17 @@ public class System {
     private static int notifVolumeOnResId;
     private static int notifVolumeOffResId;
     public static void NotificationVolumeDialogRes() {
-        MainModule.resHooks.setResReplacement("com.android.systemui", "dimen", "miui_volume_content_width_expanded", R.dimen.miui_volume_content_width_expanded);
-        MainModule.resHooks.setResReplacement("com.android.systemui", "dimen", "miui_volume_ringer_layout_width_expanded", R.dimen.miui_volume_ringer_layout_width_expanded);
+        MainModule.resHooks.setResReplacement("miui.systemui.plugin", "dimen", "miui_volume_content_width_expanded", R.dimen.miui_volume_content_width_expanded);
+        MainModule.resHooks.setResReplacement("miui.systemui.plugin", "dimen", "miui_volume_ringer_layout_width_expanded", R.dimen.miui_volume_ringer_layout_width_expanded);
+        MainModule.resHooks.setResReplacement("miui.systemui.plugin", "dimen", "miui_volume_column_width_expanded", R.dimen.miui_volume_column_width_expanded);
+        MainModule.resHooks.setResReplacement("miui.systemui.plugin", "dimen", "miui_volume_column_margin_horizontal_expanded", R.dimen.miui_volume_column_margin_horizontal_expanded);
         notifVolumeOnResId = MainModule.resHooks.addResource("ic_miui_volume_notification", R.drawable.ic_miui_volume_notification);
         notifVolumeOffResId = MainModule.resHooks.addResource("ic_miui_volume_notification_mute", R.drawable.ic_miui_volume_notification_mute);
     }
 
-    private static int settingsNotifResId;
     private static int settingsSystemResId;
     private static int callsResId;
     public static void NotificationVolumeSettingsRes() {
-        settingsNotifResId = MainModule.resHooks.addResource("ic_audio_notification", R.drawable.ic_audio_notification);
         settingsSystemResId = MainModule.resHooks.addResource("ic_audio_system", R.drawable.ic_audio_system);
         callsResId = MainModule.resHooks.addResource("ring_volume_option_newtitle", R.string.calls);
     }
@@ -862,10 +863,10 @@ public class System {
     public static void NotificationVolumeServiceHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethod("com.android.server.audio.AudioService", lpparam.classLoader, "updateStreamVolumeAlias", boolean.class, String.class, new MethodHook() {
             protected void after(MethodHookParam param) throws Throwable {
-            int[] mStreamVolumeAlias = (int[])XposedHelpers.getObjectField(param.thisObject, "mStreamVolumeAlias");
-            mStreamVolumeAlias[1] = 1;
-            mStreamVolumeAlias[5] = 5;
-            XposedHelpers.setObjectField(param.thisObject, "mStreamVolumeAlias", mStreamVolumeAlias);
+                int[] mStreamVolumeAlias = (int[])XposedHelpers.getObjectField(param.thisObject, "mStreamVolumeAlias");
+                mStreamVolumeAlias[1] = 1;
+                mStreamVolumeAlias[5] = 5;
+                XposedHelpers.setObjectField(param.thisObject, "mStreamVolumeAlias", mStreamVolumeAlias);
             }
         });
 
@@ -874,24 +875,22 @@ public class System {
                 int mStreamType = XposedHelpers.getIntField(param.thisObject, "mStreamType");
                 if (mStreamType != 1) return;
                 synchronized (param.method.getDeclaringClass()) {
-                    Class<?> audioSystem = findClass("android.media.AudioSystem", null);
-                    int DEVICE_OUT_ALL = XposedHelpers.getStaticIntField(audioSystem, "DEVICE_OUT_ALL");
+                    Class<?> audioSystem = findClass("android.media.AudioSystem", lpparam.classLoader);
+                    Set<Integer> DEVICE_OUT_ALL = (Set<Integer>) XposedHelpers.getStaticObjectField(audioSystem, "DEVICE_OUT_ALL_SET");
                     int DEVICE_OUT_DEFAULT = XposedHelpers.getStaticIntField(audioSystem, "DEVICE_OUT_DEFAULT");
                     int[] DEFAULT_STREAM_VOLUME = (int[])XposedHelpers.getStaticObjectField(audioSystem, "DEFAULT_STREAM_VOLUME");
-                    int remainingDevices = DEVICE_OUT_ALL;
-                    for (int i = 0; remainingDevices != 0; i++) {
-                        int device = 1 << i;
-                        if ((device & remainingDevices) == 0) continue;
-                        remainingDevices &= ~device;
+                    Set<Integer> remainingDevices = DEVICE_OUT_ALL;
+                    Object mContentResolver = XposedHelpers.getObjectField(XposedHelpers.getSurroundingThis(param.thisObject), "mContentResolver");
+                    SparseIntArray mIndexMap = (SparseIntArray)XposedHelpers.getObjectField(param.thisObject, "mIndexMap");
+                    for (Integer deviceType : remainingDevices) {
+                        int device = deviceType.intValue();
                         String name = (String)XposedHelpers.callMethod(param.thisObject, "getSettingNameForDevice", device);
-                        Object mContentResolver = XposedHelpers.getObjectField(XposedHelpers.getSurroundingThis(param.thisObject), "mContentResolver");
                         int index = (int)XposedHelpers.callStaticMethod(Settings.System.class, "getIntForUser", mContentResolver, name, device == DEVICE_OUT_DEFAULT ? DEFAULT_STREAM_VOLUME[mStreamType] : -1, -2);
                         if (index != -1) {
-                            SparseIntArray mIndexMap = (SparseIntArray)XposedHelpers.getObjectField(param.thisObject, "mIndexMap");
-                            mIndexMap.put(device, (Integer)XposedHelpers.callMethod(param.thisObject, "getValidIndex", 10 * index));
-                            XposedHelpers.setObjectField(param.thisObject, "mIndexMap", mIndexMap);
+                            mIndexMap.put(device, (int)XposedHelpers.callMethod(param.thisObject, "getValidIndex", 10 * index, true));
                         }
                     }
+                    XposedHelpers.setObjectField(param.thisObject, "mIndexMap", mIndexMap);
                 }
                 param.setResult(null);
             }
@@ -900,28 +899,37 @@ public class System {
         //noinspection ResultOfMethodCallIgnored
         Helpers.findAndHookMethodSilently("com.android.server.audio.AudioService", lpparam.classLoader, "shouldZenMuteStream", int.class, new MethodHook() {
             protected void after(MethodHookParam param) throws Throwable {
-            int mStreamType = (int)param.args[0];
-            if (mStreamType == 5 && !(boolean)param.getResult()) {
-                int mZenMode = (int)XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mNm"), "getZenMode");
-                if (mZenMode == 1) param.setResult(true);
-            }
+                int mStreamType = (int)param.args[0];
+                if (mStreamType == 5 && !(boolean)param.getResult()) {
+                    int mZenMode = (int)XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mNm"), "getZenMode");
+                    if (mZenMode == 1) param.setResult(true);
+                }
             }
         });
     }
 
-    public static void NotificationVolumeDialogHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.volume.VolumeDialogImpl", lpparam.classLoader, "initDialog", new MethodHook() {
-            @Override
-            @SuppressWarnings("unchecked")
-            protected void before(MethodHookParam param) throws Throwable {
-                List<Object> mColumns = (List<Object>)XposedHelpers.getObjectField(param.thisObject, "mRows");
-                XposedHelpers.setAdditionalInstanceField(param.thisObject, "mNoColumns", mColumns == null || mColumns.isEmpty());
-            }
+    private static ClassLoader pluginLoader = null;
 
+    public static void NotificationVolumeDialogHook(LoadPackageParam lpparam) {
+        Helpers.findAndHookMethod("com.android.systemui.shared.plugins.PluginManagerImpl", lpparam.classLoader, "getClassLoader", ApplicationInfo.class, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                boolean mNoColumns = (boolean)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mNoColumns");
-                if (mNoColumns) XposedHelpers.callMethod(param.thisObject, "addRow", 5, notifVolumeOnResId, notifVolumeOffResId, true, false);
+                ApplicationInfo appInfo = (ApplicationInfo) param.args[0];
+                if (pluginLoader == null && "miui.systemui.plugin".equals(appInfo.packageName)) {
+                    pluginLoader = (ClassLoader) param.getResult();
+                    Class<?> MiuiVolumeDialogImpl = XposedHelpers.findClassIfExists("com.android.systemui.miui.volume.MiuiVolumeDialogImpl", pluginLoader);
+                    Helpers.hookAllMethods(MiuiVolumeDialogImpl, "addColumn", new MethodHook() {
+                        @Override
+                        protected void before(MethodHookParam param) throws Throwable {
+                            if (param.args.length != 4) return;
+                            int streamType = (int) param.args[0];
+                            if (streamType == 4) {
+                                Helpers.log("addColumn 5");
+                                XposedHelpers.callMethod(param.thisObject, "addColumn", 5, notifVolumeOnResId, notifVolumeOffResId, true, false);
+                            }
+                        }
+                    });
+                }
             }
         });
     }
@@ -969,7 +977,7 @@ public class System {
                 XposedHelpers.callMethod(pref, "setTitle", modRes.getString(R.string.system_mods_notifications));
                 XposedHelpers.callMethod(pref, "setPersistent", true);
                 XposedHelpers.callMethod(prefScreen, addPreference, pref);
-                initSeekBar[0].invoke(fragment, "notification_volume", 5, Helpers.is12() ? context.getResources().getIdentifier("ic_audio_notification", "drawable", context.getPackageName()) : settingsNotifResId);
+                initSeekBar[0].invoke(fragment, "notification_volume", 5, context.getResources().getIdentifier("ic_audio_notification", "drawable", context.getPackageName()));
                 XposedHelpers.callMethod(pref, "setOrder", order);
 
                 pref = XposedHelpers.newInstance(vsbCls, context);

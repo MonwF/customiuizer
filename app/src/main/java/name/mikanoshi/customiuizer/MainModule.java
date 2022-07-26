@@ -174,7 +174,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getInt("system_volumeblur_collapsed", 0) > 0 || mPrefs.getInt("system_volumeblur_expanded", 0) > 0) System.BlurVolumeDialogBackgroundRes();
             if (mPrefs.getBoolean("system_notifrowmenu")) System.NotificationRowMenuRes();
             if (mPrefs.getBoolean("system_volumetimer")) System.VolumeTimerValuesRes();
-            if (mPrefs.getBoolean("system_separatevolume")) System.NotificationVolumeDialogRes();
             if (mPrefs.getBoolean("system_snoozedmanager")) System.MoreSnoozeOptionsRes();
             if (mPrefs.getBoolean("system_statusbaricons_volte")) System.HideIconsVoLTERes();
             if (mPrefs.getStringAsInt("system_networkindicator", 1) > 1) System.NetworkIndicatorRes();
@@ -222,7 +221,10 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("controls_nonavbar")) Controls.HideNavBarHook(lpparam);
             if (mPrefs.getBoolean("controls_imebackalticon")) Controls.ImeBackAltIconHook(lpparam);
             if (mPrefs.getBoolean("system_visualizer")) System.AudioVisualizerHook(lpparam);
-            if (mPrefs.getBoolean("system_separatevolume") && mPrefs.getBoolean("system_separatevolume_slider")) System.NotificationVolumeDialogHook(lpparam);
+            if (mPrefs.getBoolean("system_separatevolume") && mPrefs.getBoolean("system_separatevolume_slider")) {
+                System.NotificationVolumeDialogRes();
+                System.NotificationVolumeDialogHook(lpparam);
+            }
             if (mPrefs.getBoolean("system_batteryindicator")) System.BatteryIndicatorHook(lpparam);
             if (mPrefs.getBoolean("system_disableanynotif")) System.DisableAnyNotificationHook(lpparam);
             if (mPrefs.getBoolean("system_lockscreenshortcuts")) System.LockScreenShortcutHook(lpparam);
