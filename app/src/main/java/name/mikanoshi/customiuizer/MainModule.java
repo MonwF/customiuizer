@@ -173,7 +173,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getInt("system_qqsgridcolumns", 2) > 2) System.QQSGridRes();
             if (mPrefs.getInt("system_volumeblur_collapsed", 0) > 0 || mPrefs.getInt("system_volumeblur_expanded", 0) > 0) System.BlurVolumeDialogBackgroundRes();
             if (mPrefs.getBoolean("system_notifrowmenu")) System.NotificationRowMenuRes();
-            if (mPrefs.getBoolean("system_volumetimer")) System.VolumeTimerValuesRes();
+            if (mPrefs.getBoolean("system_volumetimer")) System.VolumeTimerValuesRes(lpparam);
             if (mPrefs.getBoolean("system_snoozedmanager")) System.MoreSnoozeOptionsRes();
             if (mPrefs.getBoolean("system_statusbaricons_volte")) System.HideIconsVoLTERes();
             if (mPrefs.getStringAsInt("system_networkindicator", 1) > 1) System.NetworkIndicatorRes();

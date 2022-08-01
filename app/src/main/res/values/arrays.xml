@@ -505,7 +505,6 @@
 
 	<array name="miui_volume_timer_segments">
 		<item>@null</item>
-		<item>@null</item>
 		<item>1800</item>
 		<item>3600</item>
 		<item>7200</item>
@@ -516,20 +515,6 @@
 		<item>28800</item>
 		<item>36000</item>
 		<item>43200</item>
-	</array>
-	<array name="miui_volume_timer_segments_title">
-		<item>@string/off</item>
-		<item>@string/off</item>
-		<item>@string/time_30m</item>
-		<item>@string/time_1h</item>
-		<item>@string/time_2h</item>
-		<item>@string/time_3h</item>
-		<item>@string/time_4h</item>
-		<item>@string/time_5h</item>
-		<item>@string/time_6h</item>
-		<item>@string/time_8h</item>
-		<item>@string/time_10h</item>
-		<item>@string/time_12h</item>
 	</array>
 
 	<string-array name="settingsicon">
