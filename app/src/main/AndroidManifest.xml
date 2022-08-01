@@ -59,6 +59,7 @@
 			android:label="@string/title_activity_main"
 			android:theme="@style/AppTheme"
 			android:launchMode="singleTop"
+			android:exported="true"
 			android:alwaysRetainTaskState="true">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
@@ -68,6 +69,7 @@
 		</activity>
 
 		<activity-alias
+			android:exported="true"
 			android:label="@string/title_activity_main"
 			android:name=".GateWayLauncher"
 			android:targetActivity=".MainActivity"
@@ -144,6 +146,7 @@
 		<activity
 			android:name=".SnoozedActivity"
 			android:enabled="false"
+			android:exported="true"
 			android:label="@string/title_snoozed"
 			android:theme="@style/AppTheme"
 			android:icon="@mipmap/ic_snooze"
@@ -157,6 +160,7 @@
 		</activity>
 
 		<service
+			android:exported="true"
 			android:name=".qs.AutoRotateService"
 			android:icon="@drawable/ic_qs_autorotate_disabled"
 			android:label="@string/qs_toggle_autorotate"
@@ -168,6 +172,7 @@
 		</service>
 
 		<service
+			android:exported="true"
 			android:name=".qs.DarkModeService"
 			android:icon="@drawable/ic_qs_darkmode_disabled"
 			android:label="@string/qs_toggle_darkmode"

@@ -5,10 +5,10 @@
 	<color name="color_not_selected">#99000000</color>
 	<color name="about_divider">#33808080</color>
 
-	<color name="highlight_normal_light">#ff0d84ff</color>
+	<color name="highlight_normal_light">@android:color/system_accent1_600</color>
 	<color name="checked_text">@color/highlight_normal_light</color>
 
-	<color name="preference_category_text_color">#ff8c93b0</color>
+	<color name="preference_category_text_color">@color/highlight_normal_light</color>
 	<color name="preference_primary_text_color">#ff000000</color>
 	<color name="preference_primary_text_color_disable">#4d000000</color>
 	<color name="preference_primary_text_color_pressed">#ff000000</color>
