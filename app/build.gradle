@@ -31,11 +31,11 @@ android {
     compileSdkVersion 31
     defaultConfig {
         applicationId "name.monwf.customiuizer"
-        minSdkVersion 30
+        minSdkVersion 31
         //noinspection OldTargetApi,ExpiredTargetSdkVersion
         targetSdkVersion 31
-        versionCode 18
-        versionName "3.2.1.220726"
+        versionCode 19
+        versionName "3.2.1.220801"
         resConfigs 'ru-rRU', 'zh-rCN'
         ndk { abiFilters "arm64-v8a" }
     }
@@ -56,11 +56,11 @@ android {
     flavorDimensions 'api'
     productFlavors {
         standalone {
-            targetSdkVersion 30
+            targetSdkVersion 31
             signingConfig signingConfigs.v2
         }
         playstore {
-            targetSdkVersion 30
+            targetSdkVersion 31
             signingConfig signingConfigs.v2
         }
     }

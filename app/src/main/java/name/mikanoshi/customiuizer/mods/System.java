@@ -1291,16 +1291,16 @@ public class System {
     }
 
     public static void TrafficSpeedSpacingHook(LoadPackageParam lpparam) {
-        Helpers.hookAllConstructors("com.android.systemui.statusbar.view.NetworkSpeedView", lpparam.classLoader, new MethodHook() {
+        Helpers.hookAllConstructors("com.android.systemui.statusbar.views.NetworkSpeedView", lpparam.classLoader, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-            TextView meter = (TextView)param.thisObject;
-            if (meter == null) return;
-            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)meter.getLayoutParams();
-            int margin = Math.round(meter.getResources().getDisplayMetrics().density * 4);
-            lp.rightMargin = margin;
-            lp.leftMargin = margin;
-            meter.setLayoutParams(lp);
+                TextView meter = (TextView)param.thisObject;
+                if (meter == null) return;
+                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)meter.getLayoutParams();
+                int margin = Math.round(meter.getResources().getDisplayMetrics().density * 4);
+                lp.rightMargin = margin;
+                lp.leftMargin = margin;
+                meter.setLayoutParams(lp);
             }
         });
     }
@@ -1531,11 +1531,14 @@ public class System {
     }
 
     public static void NetSpeedIntervalHook(LoadPackageParam lpparam) {
-        Helpers.hookAllConstructors("com.android.systemui.statusbar.views.NetworkSpeedView", lpparam.classLoader, new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.NetworkSpeedController", lpparam.classLoader, "postUpdateNetworkSpeedDelay", long.class, new MethodHook() {
             @Override
-            protected void after(final MethodHookParam param) throws Throwable {
-            Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-            Settings.System.putInt(mContext.getContentResolver(), "status_bar_network_speed_interval", MainModule.mPrefs.getInt("system_netspeedinterval", 4) * 1000);
+            protected void before(final MethodHookParam param) throws Throwable {
+                long originInterval = (long) param.args[0];
+                if (originInterval == 4000L) {
+                    long newInterval = MainModule.mPrefs.getInt("system_netspeedinterval", 4) * 1000;
+                    param.args[0] = newInterval;
+                }
             }
         });
     }
@@ -6059,23 +6062,7 @@ public class System {
     }
 
     public static void NoNetworkSpeedSeparatorHook(LoadPackageParam lpparam) {
-//		Helpers.hookAllMethods("com.android.systemui.statusbar.phone.StatusBarFactory", lpparam.classLoader, "getCollapsedStatusBarFragmentController", new MethodHook() {
-//			@Override
-//			protected void before(MethodHookParam param) throws Throwable {
-//				Class<?> cls = XposedHelpers.findClass("com.android.systemui.statusbar.phone.StatusBarTypeController$CutoutType", lpparam.classLoader);
-//				XposedBridge.log("new: " + cls.getEnumConstants()[3]);
-//				param.args[0] = cls.getEnumConstants()[3];
-//			}
-//		});
-
-        Helpers.hookAllConstructors("com.android.systemui.statusbar.NetworkSpeedSplitter", lpparam.classLoader, new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                ((TextView)param.thisObject).setText("");
-            }
-        });
-
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.NetworkSpeedSplitter", lpparam.classLoader, "init", new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.views.NetworkSpeedSplitter", lpparam.classLoader, "init", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 ((TextView)param.thisObject).setText("");

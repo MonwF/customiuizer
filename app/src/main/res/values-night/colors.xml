@@ -2,10 +2,10 @@
 <resources>
 	<color name="color_not_selected">#99ffffff</color>
 	<color name="about_divider">#337f7f7f</color>
+	<color name="highlight_normal_light">@android:color/system_accent1_200</color>
+	<color name="checked_text">@color/highlight_normal_light</color>
 
-	<color name="checked_text">#ff3e73B3</color>
-
-	<color name="preference_category_text_color">#80ffffff</color>
+	<color name="preference_category_text_color">@color/highlight_normal_light</color>
 	<color name="preference_primary_text_color">#e6ffffff</color>
 	<color name="preference_primary_text_color_disable">#4dffffff</color>
 	<color name="preference_primary_text_color_pressed">#e6ffffff</color>
