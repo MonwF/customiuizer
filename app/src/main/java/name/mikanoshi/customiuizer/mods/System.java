@@ -1266,14 +1266,6 @@ public class System {
                     mMobileType.setText("");
                     mSignalDualNotchMobileType.setText("");
                 }
-
-//				try {
-//					View parent = (View)((View)XposedHelpers.getSurroundingThis(param.thisObject)).getParent().getParent().getParent().getParent();
-//					parent != null && parent.getId() != parent.getResources().getIdentifier("header_content", "id", lpparam.packageName)
-//					Helpers.log(parent + ", " + parent.getId() + " != " + mMobileType.getResources().getIdentifier("header_content", "id", lpparam.packageName));
-//				} catch (Throwable t) {
-//					XposedBridge.log(t);
-//				}
             }
         });
 
@@ -7519,10 +7511,28 @@ public class System {
         });
     }
 
-    public static void NetworkIndicatorRes() {
-        int opt = MainModule.mPrefs.getStringAsInt("system_networkindicator", 1);
-        MainModule.resHooks.setObjectReplacement("com.android.systemui", "bool", "config_showActivity", opt == 2);
-        MainModule.resHooks.setObjectReplacement("com.android.systemui", "bool", "config_showWifiActivity", opt == 2);
+    public static void NetworkIndicatorRes(LoadPackageParam lpparam) {
+        MethodHook hideMobileActivity = new MethodHook() {
+            @Override
+            protected void after(final MethodHookParam param) throws Throwable {
+                Object mLeftInOut = XposedHelpers.getObjectField(param.thisObject, "mLeftInOut");
+                Object mRightInOut = XposedHelpers.getObjectField(param.thisObject, "mRightInOut");
+                XposedHelpers.callMethod(mLeftInOut, "setVisibility", 8);
+                XposedHelpers.callMethod(mRightInOut, "setVisibility", 8);
+            }
+        };
+        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "initViewState", hideMobileActivity);
+        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "updateState", hideMobileActivity);
+
+        MethodHook hideWifiActivity = new MethodHook() {
+            @Override
+            protected void after(final MethodHookParam param) throws Throwable {
+                Object mWifiActivityView = XposedHelpers.getObjectField(param.thisObject, "mWifiActivityView");
+                XposedHelpers.callMethod(mWifiActivityView, "setVisibility", 4);
+            }
+        };
+        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarWifiView", lpparam.classLoader, "initViewState", hideWifiActivity);
+        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarWifiView", lpparam.classLoader, "updateState", hideWifiActivity);
     }
 
     public static void ClearBrightnessMirrorHook(LoadPackageParam lpparam) {
