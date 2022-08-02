@@ -622,7 +622,7 @@
     <string name="controls_navbar_noaction">无定义的动作</string>
     <string name="controls_mods_fsg">全屏导航手势</string>
     <string name="controls_fsg_coverage_title">返回手势区域高度</string>
-    <string name="controls_fsg_width_title">后退手势区域宽度</string>
+    <string name="controls_fsg_width_title">返回手势区域宽度</string>
     <string name="controls_fsg_horiz_title">水平手势</string>
     <string name="controls_fsg_horiz_summ">启用水平手势和导航栏</string>
     <string name="controls_fsg_assist_title">屏幕角落滑动动作</string>
@@ -1050,4 +1050,5 @@
     <string name="various_allow_untrusted_touch_title">允许不受信任的触摸操作</string>
     <string name="launcher_nozoomanim_title">去除启动动画</string>
     <string name="launcher_nozoomanim_summ">app启动、关闭时不缩放图标</string>
+    <string name="various_skip_interceptperm_title">跳过开启特殊权限的倒计时</string>
 </resources>
