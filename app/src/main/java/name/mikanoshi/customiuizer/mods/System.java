@@ -4168,7 +4168,7 @@ public class System {
         try { XposedHelpers.setObjectField(thisObject, "mRemoteControllerNum", new TextView(mContext)); } catch (Throwable ignore) {}
         try { XposedHelpers.setObjectField(thisObject, "mSmartHomeNum", new TextView(mContext)); } catch (Throwable ignore) {}
 
-        Handler mHandler = (Handler)XposedHelpers.getAdditionalInstanceField(thisObject, "mHandler");
+        Handler mHandler = (Handler)XposedHelpers.getAdditionalInstanceField(thisObject, "myHandler");
         mHandler.removeMessages(1);
         Message msg = new Message();
         msg.what = 1;
@@ -4178,7 +4178,7 @@ public class System {
 
     private static Object notificationPanelView = null;
     public static void LockScreenShortcutHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.KeyguardBottomAreaView$DefaultLeftButton", lpparam.classLoader, "getIcon", new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.KeyguardBottomAreaView$MiuiDefaultLeftButton", lpparam.classLoader, "getIcon", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 Object img = param.getResult();
@@ -4187,7 +4187,7 @@ public class System {
             }
         });
 
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.KeyguardBottomAreaView$DefaultRightButton", lpparam.classLoader, "getIcon", new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.KeyguardBottomAreaView$MiuiDefaultRightButton", lpparam.classLoader, "getIcon", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 Object img = param.getResult();
@@ -4196,15 +4196,14 @@ public class System {
                     return;
                 }
 
-                Object thisObject = XposedHelpers.getSurroundingThis(param.thisObject);
-                Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
                 boolean opt = MainModule.mPrefs.getBoolean("system_lockscreenshortcuts_right_image");
                 if (!opt) return;
-                boolean mDarkMode = XposedHelpers.getBooleanField(thisObject, "mDarkMode");
-                boolean isNewLS = findClassIfExists("com.android.keyguard.KeyguardCameraView", lpparam.classLoader) != null;
-                XposedHelpers.setObjectField(img, "drawable", Helpers.getModuleRes(mContext).getDrawable(mDarkMode ?
-                        (isNewLS ? R.drawable.keyguard_bottom_miuizer_img_dark : R.drawable.keyguard_bottom_miuizer_oldimg_dark) :
-                        (isNewLS ? R.drawable.keyguard_bottom_miuizer_img_light : R.drawable.keyguard_bottom_miuizer_oldimg_light), mContext.getTheme()
+                Object thisObject = XposedHelpers.getSurroundingThis(param.thisObject);
+                Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
+                boolean mDarkMode = XposedHelpers.getBooleanField(thisObject, "mDarkStyle");
+                XposedHelpers.setObjectField(img, "drawable", Helpers.getModuleRes(mContext).getDrawable(
+                    mDarkMode ? R.drawable.keyguard_bottom_miuizer_img_dark : R.drawable.keyguard_bottom_miuizer_img_light,
+                    mContext.getTheme()
                 ));
             }
         });
@@ -4214,8 +4213,11 @@ public class System {
             protected void after(MethodHookParam param) throws Throwable {
                 boolean opt = MainModule.mPrefs.getBoolean("system_lockscreenshortcuts_right_image");
                 if (!opt) return;
-                TextView mRightAffordanceViewTips = (TextView)XposedHelpers.getObjectField(param.thisObject, "mRightAffordanceViewTips");
-                if (mRightAffordanceViewTips != null) mRightAffordanceViewTips.setText(Helpers.getModuleRes(mRightAffordanceViewTips.getContext()).getString(R.string.system_lockscreenshortcuts_right_image_hint));
+                boolean isLeft = (boolean) param.args[0];
+                if (!isLeft) {
+                    TextView mRightAffordanceViewTips = (TextView)XposedHelpers.getObjectField(param.thisObject, "mRightAffordanceViewTips");
+                    if (mRightAffordanceViewTips != null) mRightAffordanceViewTips.setText(Helpers.getModuleRes(mRightAffordanceViewTips.getContext()).getString(R.string.system_lockscreenshortcuts_right_image_hint));
+                }
             }
         });
 
@@ -4225,131 +4227,108 @@ public class System {
                 Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
                 if (GlobalActions.handleAction(mContext, "pref_key_system_lockscreenshortcuts_right", true)) {
                     param.setResult(null);
-                    final View mNotificationPanelView = (View)XposedHelpers.getObjectField(param.thisObject, "mNotificationPanelView");
+                    Object PanelInjector = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", lpparam.classLoader), "get", findClass("com.android.keyguard.injector.KeyguardPanelViewInjector", lpparam.classLoader));
+                    Object panelController = XposedHelpers.getObjectField(PanelInjector, "mPanelViewController");
+                    final View mNotificationPanelView = (View)XposedHelpers.getObjectField(PanelInjector, "mPanelView");
                     mNotificationPanelView.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            XposedHelpers.callMethod(mNotificationPanelView, "resetViews");
+                            XposedHelpers.callMethod(panelController, "resetViews", false);
                         }
                     }, 500);
                 }
             }
         });
 
-        if (findClassIfExists("com.android.keyguard.KeyguardCameraView", lpparam.classLoader) != null) {
-            Helpers.hookAllMethods("com.android.keyguard.KeyguardCameraView", lpparam.classLoader, "setDarkMode", new MethodHook() {
-                @Override
-                protected void after(MethodHookParam param) throws Throwable {
-                    XposedHelpers.callMethod(param.thisObject, "updatePreViewBackground");
-                }
-            });
-
-            Helpers.findAndHookMethod("com.android.keyguard.KeyguardCameraView", lpparam.classLoader, "updatePreView", new MethodHook() {
-                @Override
-                protected void before(MethodHookParam param) throws Throwable {
-                    View mPreViewContainer = (View)XposedHelpers.getObjectField(param.thisObject, "mPreViewContainer");
-                    if ("active".equals(mPreViewContainer.getTag())) {
-                        XposedHelpers.setFloatField(param.thisObject, "mIconCircleAlpha", 0.0f);
-                        ((View)param.thisObject).invalidate();
-                    }
-                }
-            });
-
-            Helpers.findAndHookMethod("com.android.keyguard.KeyguardCameraView", lpparam.classLoader, "updatePreViewBackground", new MethodHook() {
-                @Override
-                protected void before(MethodHookParam param) throws Throwable {
+        Helpers.hookAllMethods("com.android.keyguard.MiuiKeyguardCameraView", lpparam.classLoader, "setDarkStyle", new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                if (MainModule.mPrefs.getBoolean("system_lockscreenshortcuts_right_image")) {
                     Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-
-                    boolean mDarkMode = XposedHelpers.getBooleanField(param.thisObject, "mDarkMode");
-                    ImageView mIconView = (ImageView)XposedHelpers.getObjectField(param.thisObject, "mIconView");
-                    if (mIconView != null)
-                        if (MainModule.mPrefs.getBoolean("system_lockscreenshortcuts_right_image"))
-                            mIconView.setImageDrawable(Helpers.getModuleRes(mContext).getDrawable(mDarkMode ? R.drawable.keyguard_bottom_miuizer_img_dark : R.drawable.keyguard_bottom_miuizer_img_light, mContext.getTheme()));
-                        else
-                            mIconView.setImageDrawable(mContext.getDrawable(mDarkMode ? mContext.getResources().getIdentifier("keyguard_bottom_camera_img_dark", "drawable", lpparam.packageName) : mContext.getResources().getIdentifier("keyguard_bottom_camera_img", "drawable", lpparam.packageName)));
-
-                    View mPreView = (View)XposedHelpers.getObjectField(param.thisObject, "mPreView");
-                    View mPreViewContainer = (View)XposedHelpers.getObjectField(param.thisObject, "mPreViewContainer");
-                    View mBackgroundView = (View)XposedHelpers.getObjectField(param.thisObject, "mBackgroundView");
-                    Paint mIconCircleStrokePaint = (Paint)XposedHelpers.getObjectField(param.thisObject, "mIconCircleStrokePaint");
-                    ViewOutlineProvider mPreViewOutlineProvider = (ViewOutlineProvider)XposedHelpers.getObjectField(param.thisObject, "mPreViewOutlineProvider");
-                    boolean result = modifyCameraImage(mContext, mPreView, mDarkMode);
-                    if (result) param.setResult(null);
-                    if (mPreViewContainer != null) {
-                        mPreViewContainer.setBackgroundColor(result ? Color.TRANSPARENT : Color.BLACK);
-                        mPreViewContainer.setOutlineProvider(result ? null : mPreViewOutlineProvider);
-                        mPreViewContainer.setTag(result ? "active" : "inactive");
-                    }
-                    if (mBackgroundView != null) mBackgroundView.setBackgroundColor(result ? Color.TRANSPARENT : Color.BLACK);
-                    if (mIconCircleStrokePaint != null) mIconCircleStrokePaint.setColor(result ? Color.TRANSPARENT : Color.WHITE);
+                    boolean mDarkMode = XposedHelpers.getBooleanField(param.thisObject, "mDarkStyle");
+                    XposedHelpers.callMethod(param.thisObject, "setPreviewImageDrawable", Helpers.getModuleRes(mContext).getDrawable(mDarkMode ? R.drawable.keyguard_bottom_miuizer_img_dark : R.drawable.keyguard_bottom_miuizer_img_light, mContext.getTheme()));
                 }
-            });
+            }
+        });
 
-            Helpers.findAndHookMethod("com.android.keyguard.KeyguardCameraView", lpparam.classLoader, "handleMoveDistanceChanged", new MethodHook() {
-                @Override
-                protected void before(MethodHookParam param) throws Throwable {
-                    View mIconView = (View)XposedHelpers.getObjectField(param.thisObject, "mIconView");
-                    if (MainModule.mPrefs.getBoolean("system_lockscreenshortcuts_right_off")) {
-                        if (mIconView != null) mIconView.setVisibility(View.GONE);
-                        param.setResult(null);
-                    } else if (mIconView != null) mIconView.setVisibility(View.VISIBLE);
+        Helpers.findAndHookMethod("com.android.keyguard.MiuiKeyguardCameraView", lpparam.classLoader, "updatePreView", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                View mPreViewContainer = (View)XposedHelpers.getObjectField(param.thisObject, "mPreViewContainer");
+                if ("active".equals(mPreViewContainer.getTag())) {
+                    XposedHelpers.setFloatField(param.thisObject, "mIconCircleAlpha", 0.0f);
+                    ((View)param.thisObject).invalidate();
                 }
-            });
+            }
+        });
 
-            Helpers.findAndHookMethod("com.android.keyguard.KeyguardCameraView", lpparam.classLoader, "startFullScreenAnim", new MethodHook() {
-                @Override
-                protected void after(MethodHookParam param) throws Throwable {
-                    int action = MainModule.mPrefs.getInt("system_lockscreenshortcuts_right_action", 1);
-                    if (action <= 1) return;
-                    AnimatorSet mAnimatorSet = (AnimatorSet)XposedHelpers.getObjectField(param.thisObject, "mAnimatorSet");
-                    if (mAnimatorSet == null) return;
+        Helpers.hookAllMethods("com.android.keyguard.MiuiKeyguardCameraView", lpparam.classLoader, "setPreviewImageDrawable", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+
+                boolean mDarkMode = XposedHelpers.getBooleanField(param.thisObject, "mDarkStyle");
+                ImageView mIconView = (ImageView)XposedHelpers.getObjectField(param.thisObject, "mIconView");
+                if (mIconView != null)
+                    if (MainModule.mPrefs.getBoolean("system_lockscreenshortcuts_right_image"))
+                        mIconView.setImageDrawable(Helpers.getModuleRes(mContext).getDrawable(mDarkMode ? R.drawable.keyguard_bottom_miuizer_img_dark : R.drawable.keyguard_bottom_miuizer_img_light, mContext.getTheme()));
+                    else
+                        mIconView.setImageDrawable(mContext.getDrawable(mDarkMode ? mContext.getResources().getIdentifier("keyguard_bottom_camera_img_dark", "drawable", lpparam.packageName) : mContext.getResources().getIdentifier("keyguard_bottom_camera_img", "drawable", lpparam.packageName)));
+
+                View mPreView = (View)XposedHelpers.getObjectField(param.thisObject, "mPreView");
+                View mPreViewContainer = (View)XposedHelpers.getObjectField(param.thisObject, "mPreViewContainer");
+                View mBackgroundView = (View)XposedHelpers.getObjectField(param.thisObject, "mBackgroundView");
+                Paint mIconCircleStrokePaint = (Paint)XposedHelpers.getObjectField(param.thisObject, "mIconCircleStrokePaint");
+                ViewOutlineProvider mPreViewOutlineProvider = (ViewOutlineProvider)XposedHelpers.getObjectField(param.thisObject, "mPreViewOutlineProvider");
+                boolean result = modifyCameraImage(mContext, mPreView, mDarkMode);
+                if (result) param.setResult(null);
+                if (mPreViewContainer != null) {
+                    mPreViewContainer.setBackgroundColor(result ? Color.TRANSPARENT : Color.BLACK);
+                    mPreViewContainer.setOutlineProvider(result ? null : mPreViewOutlineProvider);
+                    mPreViewContainer.setTag(result ? "active" : "inactive");
+                }
+                if (mBackgroundView != null) mBackgroundView.setBackgroundColor(result ? Color.TRANSPARENT : Color.BLACK);
+                if (mIconCircleStrokePaint != null) mIconCircleStrokePaint.setColor(result ? Color.TRANSPARENT : Color.WHITE);
+            }
+        });
+
+        Helpers.findAndHookMethod("com.android.keyguard.MiuiKeyguardCameraView", lpparam.classLoader, "handleMoveDistanceChanged", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                View mIconView = (View)XposedHelpers.getObjectField(param.thisObject, "mIconView");
+                if (MainModule.mPrefs.getBoolean("system_lockscreenshortcuts_right_off")) {
+                    if (mIconView != null) mIconView.setVisibility(View.GONE);
                     param.setResult(null);
-                    mAnimatorSet.pause();
-                    mAnimatorSet.removeAllListeners();
-                    mAnimatorSet.addListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-                            GlobalActions.handleAction(mContext, "pref_key_system_lockscreenshortcuts_right", true);
-                            Object mCallBack = XposedHelpers.getObjectField(param.thisObject, "mCallBack");
-                            if (mCallBack != null) XposedHelpers.callMethod(mCallBack, "onCompletedAnimationEnd");
-                            XposedHelpers.setBooleanField(param.thisObject, "mIsPendingStartCamera", false);
-                            XposedHelpers.callMethod(param.thisObject, "dismiss");
-                            View mBackgroundView = (View)XposedHelpers.getObjectField(param.thisObject, "mBackgroundView");
-                            if (mBackgroundView != null) mBackgroundView.setAlpha(1.0f);
-                        }
-                    });
-                    mAnimatorSet.resume();
-                }
-            });
-        } else {
-            Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, "updateWallpaper", boolean.class, new MethodHook() {
-                @Override
-                protected void after(MethodHookParam param) throws Throwable {
-                    if ((boolean)param.args[0]) try {
-                        XposedHelpers.callMethod(param.thisObject, "setCameraImage", false);
-                    } catch (Throwable t1) {
-                        XposedHelpers.callMethod(param.thisObject, "setCameraImage");
-                    }
-                }
-            });
+                } else if (mIconView != null) mIconView.setVisibility(View.VISIBLE);
+            }
+        });
 
-            Helpers.hookAllMethods("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, "setCameraImage", new MethodHook() {
-                @Override
-                protected void before(MethodHookParam param) throws Throwable {
-                    Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-                    View mView = (View)XposedHelpers.getObjectField(param.thisObject, "mKeyguardRightView");
-                    Object mUpdateMonitor = XposedHelpers.getObjectField(param.thisObject, "mUpdateMonitor");
-                    boolean mDarkMode = (boolean)XposedHelpers.callMethod(mUpdateMonitor, "isLightWallpaperBottom");
-                    if (modifyCameraImage(mContext, mView, mDarkMode)) {
-                        try {
-                            XposedHelpers.setBooleanField(param.thisObject, "mGetCameraImageSucceed", false);
-                        } catch (Throwable ignore) {}
-                        param.setResult(null);
+        Helpers.findAndHookMethod("com.android.keyguard.MiuiKeyguardCameraView", lpparam.classLoader, "startFullScreenAnim", new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                int action = MainModule.mPrefs.getInt("system_lockscreenshortcuts_right_action", 1);
+                if (action <= 1) return;
+                AnimatorSet mAnimatorSet = (AnimatorSet)XposedHelpers.getObjectField(param.thisObject, "mAnimatorSet");
+                if (mAnimatorSet == null) return;
+                param.setResult(null);
+                mAnimatorSet.pause();
+                mAnimatorSet.removeAllListeners();
+                mAnimatorSet.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+                        GlobalActions.handleAction(mContext, "pref_key_system_lockscreenshortcuts_right", true);
+                        Object mCallBack = XposedHelpers.getObjectField(param.thisObject, "mCallBack");
+                        if (mCallBack != null) XposedHelpers.callMethod(mCallBack, "onCompletedAnimationEnd");
+                        XposedHelpers.setBooleanField(param.thisObject, "mIsPendingStartCamera", false);
+                        XposedHelpers.callMethod(param.thisObject, "dismiss");
+                        View mBackgroundView = (View)XposedHelpers.getObjectField(param.thisObject, "mBackgroundView");
+                        if (mBackgroundView != null) mBackgroundView.setAlpha(1.0f);
                     }
-                }
-            });
-        }
+                });
+                mAnimatorSet.resume();
+            }
+        });
 
         Helpers.hookAllConstructors("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, new MethodHook() {
             @Override
@@ -4419,7 +4398,7 @@ public class System {
             }
         });
 
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.KeyguardMoveHelper", lpparam.classLoader, "setTranslation", float.class, boolean.class, boolean.class, boolean.class, boolean.class, new MethodHook() {
+        Helpers.findAndHookMethod("com.android.keyguard.KeyguardMoveHelper", lpparam.classLoader, "setTranslation", float.class, boolean.class, boolean.class, boolean.class, boolean.class, new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 int mCurrentScreen = XposedHelpers.getIntField(param.thisObject, "mCurrentScreen");
@@ -4429,7 +4408,7 @@ public class System {
             }
         });
 
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.KeyguardMoveHelper", lpparam.classLoader, "fling", float.class, boolean.class, boolean.class, new MethodHook() {
+        Helpers.findAndHookMethod("com.android.keyguard.KeyguardMoveHelper", lpparam.classLoader, "fling", float.class, boolean.class, boolean.class, new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 int mCurrentScreen = XposedHelpers.getIntField(param.thisObject, "mCurrentScreen");
@@ -4545,55 +4524,28 @@ public class System {
         }
 
         String leftViewCls = "com.android.keyguard.negative.MiuiKeyguardMoveLeftControlCenterView";
-        if (XposedHelpers.findClassIfExists(leftViewCls, lpparam.classLoader) == null)
-            leftViewCls = "com.android.keyguard.MiuiKeyguardMoveLeftView";
-
         Helpers.findAndHookConstructor(leftViewCls, lpparam.classLoader, Context.class, AttributeSet.class, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
                 Handler mHandler = new LeftControlCenterHandler(mContext.getMainLooper());
-                XposedHelpers.setAdditionalInstanceField(param.thisObject, "mHandler", mHandler);
+                XposedHelpers.setAdditionalInstanceField(param.thisObject, "myHandler", mHandler);
             }
         });
 
-        if (!Helpers.findAndHookMethodSilently(leftViewCls, lpparam.classLoader, "reloadListItems", new MethodHook() {
+        Helpers.findAndHookMethodSilently(leftViewCls, lpparam.classLoader, "updateShortcuts", new MethodHook() {
             @Override
             protected void before(final MethodHookParam param) throws Throwable {
-                initLeftView(param.thisObject);
                 param.setResult(null);
-            }
-        })) if (!Helpers.findAndHookMethodSilently(leftViewCls, lpparam.classLoader, "updateShortcuts", new MethodHook() {
-            @Override
-            protected void before(final MethodHookParam param) throws Throwable {
                 initLeftView(param.thisObject);
-                param.setResult(null);
-            }
-        })) if (!Helpers.findAndHookMethodSilently(leftViewCls, lpparam.classLoader, "initKeyguardLeftItems", new MethodHook() {
-            @Override
-            protected void before(final MethodHookParam param) throws Throwable {
-                initLeftView(param.thisObject);
-                param.setResult(null);
-            }
-        })) Helpers.findAndHookMethod(leftViewCls, lpparam.classLoader, "initKeyguardLeftItemInfos", new MethodHook() {
-            @Override
-            protected void before(final MethodHookParam param) throws Throwable {
-                initLeftView(param.thisObject);
-                param.setResult(null);
             }
         });
-
-        if (!Helpers.findAndHookMethodSilently(leftViewCls, lpparam.classLoader, "onClick", View.class, new MethodHook() {
-            @Override
-            protected void before(MethodHookParam param) throws Throwable {
-                if (handleStockShortcut((View)param.args[0])) param.setResult(null);
-            }
-        })) Helpers.findAndHookMethod(leftViewCls, lpparam.classLoader, "onFinishInflate", new MethodHook() {
+        Helpers.findAndHookMethod(leftViewCls, lpparam.classLoader, "onFinishInflate", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                View mSmartHomeLinearLayout = (View)XposedHelpers.getObjectField(param.thisObject, "mSmartHomeLinearLayout");
-                View mRemoteCenterLinearLayout = (View)XposedHelpers.getObjectField(param.thisObject, "mRemoteCenterLinearLayout");
-                final View.OnClickListener mListener = (View.OnClickListener)XposedHelpers.getObjectField(param.thisObject, "mListener");
+                View mSmartHomeLinearLayout = (View)XposedHelpers.getObjectField(param.thisObject, "mSmartHomeImageView");
+                View mRemoteCenterLinearLayout = (View)XposedHelpers.getObjectField(param.thisObject, "mRemoteCenterImageView");
+                final View.OnClickListener mListener = (View.OnClickListener)XposedHelpers.getObjectField(param.thisObject, "mClickListener");
                 View.OnClickListener mNewListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
