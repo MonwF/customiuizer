@@ -1244,42 +1244,23 @@ public class System {
         });
     }
 
-    private static boolean is4GPlus = false;
     public static void HideNetworkTypeHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.SignalClusterView$PhoneState", lpparam.classLoader, "updateMobileType", String.class, new MethodHook() {
+        MethodHook hideMobileActivity = new MethodHook() {
             @Override
-            protected void after(MethodHookParam param) throws Throwable {
+            protected void after(final MethodHookParam param) throws Throwable {
                 int opt = Integer.parseInt(MainModule.mPrefs.getString("system_mobiletypeicon", "1"));
-                TextView mMobileType = (TextView)XposedHelpers.getObjectField(param.thisObject, "mMobileType");
-                TextView mSignalDualNotchMobileType = (TextView)XposedHelpers.getObjectField(XposedHelpers.getSurroundingThis(param.thisObject), "mSignalDualNotchMobileType");
+                Object mMobileType = XposedHelpers.getObjectField(param.thisObject, "mMobileType");
                 boolean isMobileConnected = false;
                 if (opt == 2) {
-                    ConnectivityManager mgr = (ConnectivityManager)mMobileType.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-                    Network net = mgr.getActiveNetwork();
-                    if (net != null) {
-                        NetworkCapabilities netCaps = mgr.getNetworkCapabilities(net);
-                        if (netCaps != null)
-                            isMobileConnected = netCaps.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR);
-                    }
+                    isMobileConnected = (boolean) XposedHelpers.getObjectField(param.args[0], "dataConnected");
                 }
                 if (opt == 3 || (opt == 2 && !isMobileConnected)) {
-                    mMobileType.setText("");
-                    mSignalDualNotchMobileType.setText("");
+                    XposedHelpers.callMethod(mMobileType, "setVisibility", View.INVISIBLE);
                 }
             }
-        });
-
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.SignalClusterView$PhoneState", lpparam.classLoader, "updateMobileTypeForNormal", boolean.class, String.class, new MethodHook() {
-            @Override
-            protected void before(MethodHookParam param) throws Throwable {
-                is4GPlus = (boolean)param.args[0];
-                param.args[0] = true;
-            }
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                param.setResult(is4GPlus);
-            }
-        });
+        };
+        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "initViewState", hideMobileActivity);
+        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "updateState", hideMobileActivity);
     }
 
     public static void TrafficSpeedSpacingHook(LoadPackageParam lpparam) {
@@ -3745,11 +3726,10 @@ public class System {
     }
 
     public static void HideIconsSignalHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.SignalClusterView", lpparam.classLoader, "apply", new MethodHook() {
+        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyMobileState", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                View[] mMobileSignalGroup = (View[])XposedHelpers.getObjectField(param.thisObject, "mMobileSignalGroup");
-                for (View mMobileSignal: mMobileSignalGroup) if (mMobileSignal != null) mMobileSignal.setVisibility(View.GONE);
+                XposedHelpers.callMethod(param.thisObject, "setVisibility", 8);
             }
         });
     }
@@ -5284,9 +5264,9 @@ public class System {
         Helpers.findAndHookMethod("com.android.server.policy.MiuiScreenOnProximityLock", lpparam.classLoader, "showHint", XC_MethodReplacement.DO_NOTHING);
     }
 
-    public static void HideIconsVoLTERes() {
-        MainModule.resHooks.setObjectReplacement("com.android.systemui", "bool", "status_bar_hide_volte", true);
-    }
+//    public static void HideIconsVoLTERes() {
+//        MainModule.resHooks.setObjectReplacement("com.android.systemui", "bool", "status_bar_hide_volte", true);
+//    }
 
     public static void HideIconsVoLTEHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethodSilently("com.android.systemui.MiuiOperatorCustomizedPolicy$MiuiOperatorConfig", lpparam.classLoader, "getHideVolte", XC_MethodReplacement.returnConstant(true));
