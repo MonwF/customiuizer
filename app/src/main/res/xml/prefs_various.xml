@@ -32,6 +32,11 @@
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_various_skip_interceptperm"
+		android:title="@string/various_skip_interceptperm_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_various_alarmcompat"
 		android:title="@string/various_alarmcompat_title"
 		android:summary="@string/various_alarmcompat_summ"

@@ -500,6 +500,37 @@ public class Various {
 		Helpers.hookAllMethods("com.miui.powerkeeper.utils.Utils", lpparam.classLoader, "pkgHasIcon", XC_MethodReplacement.returnConstant(true));
 	}
 
+	public static void InterceptPermHook(LoadPackageParam lpparam) {
+		Class<?> InterceptBaseFragmentClass = XposedHelpers.findClass("com.miui.permcenter.privacymanager.InterceptBaseFragment", lpparam.classLoader);
+		Class<?>[] innerClasses = InterceptBaseFragmentClass.getDeclaredClasses();
+		Class<?> HandlerClass = null;
+		for (int i = 0; i < innerClasses.length; i++) {
+			if (android.os.Handler.class.isAssignableFrom(innerClasses[i])) {
+				HandlerClass = innerClasses[i];
+				break;
+			}
+		}
+		if (HandlerClass != null) {
+			Helpers.hookAllConstructors(HandlerClass, new MethodHook() {
+				@Override
+				protected void before(final MethodHookParam param) throws Throwable {
+					if (param.args.length == 2) {
+						param.args[1] = 0;
+					}
+				}
+			});
+			Method[] methods = XposedHelpers.findMethodsByExactParameters(HandlerClass, void.class, int.class);
+			if (methods.length > 0) {
+				Helpers.hookMethod(methods[0], new MethodHook() {
+					@Override
+					protected void before(final MethodHookParam param) throws Throwable {
+						param.args[0] = 0;
+					}
+				});
+			}
+		}
+	}
+
 	public static void AlarmCompatHook() {
 		Helpers.findAndHookMethod(Settings.System.class, "getStringForUser", ContentResolver.class, String.class, int.class, new MethodHook() {
 			@Override

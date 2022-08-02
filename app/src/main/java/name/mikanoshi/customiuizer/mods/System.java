@@ -3758,7 +3758,7 @@ public class System {
             return "headset".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_headset") ||
                 "volume".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_sound") ||
                 "zen".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_dnd") ||
-                "mute".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_mute") ||
+                "volume".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_mute") ||
                 "speakerphone".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_speaker") ||
                 "call_record".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_record") ||
                 "alarm_clock".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_alarm") ||
