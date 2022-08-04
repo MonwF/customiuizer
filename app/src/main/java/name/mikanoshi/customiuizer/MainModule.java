@@ -65,7 +65,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (mPrefs.getBoolean("system_colorizenotiftitle")) System.ColorizedNotificationTitlesHook();
         if (mPrefs.getBoolean("system_nopassword")) System.NoPasswordHook();
         if (mPrefs.getBoolean("system_statusbarcolor")) System.StatusBarBackgroundHook();
-        if (mPrefs.getBoolean("system_magnifier") && Helpers.isPiePlus()) System.TextMagnifierHook();
+        if (mPrefs.getBoolean("system_magnifier")) System.TextMagnifierHook();
         if (mPrefs.getBoolean("system_lockscreenshortcuts") || mPrefs.getInt("controls_powerdt_action", 1) > 1) System.LockScreenSecureLaunchHook();
         if (mPrefs.getBoolean("system_notifmediaseekbar") && !Helpers.is12()) System.MediaNotificationSeekBarHook();
         if (mPrefs.getBoolean("system_disableanynotif")) System.DisableAnyNotificationBlockHook();

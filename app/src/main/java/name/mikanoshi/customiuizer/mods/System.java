@@ -2303,7 +2303,6 @@ public class System {
             case 6: colsResId = R.integer.quick_quick_settings_num_rows_6; break;
             case 7: colsResId = R.integer.quick_quick_settings_num_rows_7; break;
         }
-        MainModule.resHooks.setObjectReplacement("com.android.systemui", "integer", "quick_settings_qqs_count_portrait", cols);
         MainModule.resHooks.setResReplacement("com.android.systemui", "integer", "quick_settings_qqs_count", colsResId);
     }
 
@@ -2347,14 +2346,14 @@ public class System {
     }
 
     public static void QSGridLabelsHook(LoadPackageParam lpparam) {
-        Helpers.hookAllMethods("com.android.systemui.qs.TileLayout", lpparam.classLoader, "addTile", new MethodHook() {
+        Helpers.hookAllMethods("com.android.systemui.qs.MiuiTileLayout", lpparam.classLoader, "addTile", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 updateLabelsVisibility(param.args[0], XposedHelpers.getIntField(param.thisObject, "mRows"), ((ViewGroup)param.thisObject).getResources().getConfiguration().orientation);
             }
         });
 
-        Helpers.hookAllMethods("com.android.systemui.qs.PagedTileLayout", lpparam.classLoader, "addTile", new MethodHook() {
+        Helpers.hookAllMethods("com.android.systemui.qs.MiuiPagedTileLayout", lpparam.classLoader, "addTile", new MethodHook() {
             @Override
             @SuppressWarnings("unchecked")
             protected void before(MethodHookParam param) throws Throwable {
@@ -2366,7 +2365,7 @@ public class System {
             }
         });
 
-        Helpers.findAndHookMethod("com.android.systemui.qs.TileLayout", lpparam.classLoader, "updateResources", new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.qs.MiuiTileLayout", lpparam.classLoader, "updateResources", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 if (MainModule.mPrefs.getInt("system_qsgridrows", 1) != 2) return;
@@ -2379,7 +2378,7 @@ public class System {
         });
 
         if (MainModule.mPrefs.getInt("system_qsgridrows", 1) == 4)
-            Helpers.findAndHookMethod("com.android.systemui.qs.tileimpl.QSTileView", lpparam.classLoader, "createLabel", new MethodHook() {
+            Helpers.findAndHookMethod("com.android.systemui.qs.tileimpl.MiuiQSTileView", lpparam.classLoader, "createLabel", new MethodHook() {
                 @Override
                 protected void after(MethodHookParam param) throws Throwable {
                     ViewGroup mLabelContainer = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mLabelContainer");
@@ -4960,21 +4959,6 @@ public class System {
         public void onAccuracyChanged(Sensor sensor, int accuracy) {}
     }
 
-//	private static View getBrightnessSlider(Object statusBar) {
-//		try {
-//			View mStatusBarWindow = (View)XposedHelpers.getObjectField(statusBar, "mStatusBarWindow");
-//			if (mStatusBarWindow == null) return null;
-//			ViewGroup mQSFragment = mStatusBarWindow.findViewById(mStatusBarWindow.getResources().getIdentifier("qs_frame", "id", "com.android.systemui"));
-//			if (mQSFragment == null || mQSFragment.getChildCount() == 0) return null;
-//			Object mContainer = mQSFragment.getChildAt(0);
-//			if (mContainer == null) return null;
-//			return (View)XposedHelpers.callMethod(mContainer, "getBrightnessView");
-//		} catch (Throwable t) {
-//			XposedBridge.log(t);
-//			return null;
-//		}
-//	}
-
     private static void registerLuxListener(Object statusBar) {
         try {
             Context mContext = (Context)XposedHelpers.getObjectField(statusBar, "mContext");
@@ -5786,10 +5770,14 @@ public class System {
     private static float tapStartY = 0;
     private static float tapStartPointers = 0;
     private static float tapStartBrightness = 0;
+    private static float tapCurrentBrightness = 0;
+    private static float topMinimumBacklight = 0.0f;
+    private static float topMaximumBacklight = 1.0f;
     private static float currentTouchX = 0;
     private static long currentTouchTime = 0;
 
     public static void StatusBarGesturesHook(LoadPackageParam lpparam) {
+
         Helpers.hookAllMethods("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "makeStatusBarView", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
@@ -5822,12 +5810,14 @@ public class System {
             }
         });
 
-        final Class<?> buCls = XposedHelpers.findClassIfExists("com.android.settingslib.display.BrightnessUtils", lpparam.classLoader);
+        final Class<?> BrightnessUtils = XposedHelpers.findClassIfExists("com.android.systemui.controlcenter.policy.BrightnessUtils", lpparam.classLoader);
+
         MethodHook hook = new MethodHook() {
+            Object mBrightnessController = null;
             @Override
             @SuppressLint("SetTextI18n")
             protected void before(final MethodHookParam param) throws Throwable {
-                boolean isInControlCenter = Helpers.is12() && "ControlPanelWindowView".equals(param.thisObject.getClass().getSimpleName());
+                boolean isInControlCenter = "ControlPanelWindowView".equals(param.thisObject.getClass().getSimpleName());
                 Context mContext = isInControlCenter ? ((View)param.thisObject).getContext() : (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
                 Resources res = mContext.getResources();
                 int sbHeight = res.getDimensionPixelSize(res.getIdentifier("status_bar_height", "dimen", "android"));
@@ -5838,9 +5828,23 @@ public class System {
                         tapStartY = event.getY();
                         isSlidingStart = isInControlCenter ? tapStartY <= sbHeight : !XposedHelpers.getBooleanField(param.thisObject, "mPanelExpanded");
                         tapStartPointers = 1;
-                        tapStartBrightness = Settings.System.getInt(mContext.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 0);
+                        if (mBrightnessController == null) {
+                            Object mControlCenterController = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", lpparam.classLoader), "get", findClassIfExists("com.android.systemui.controlcenter.policy.ControlCenterControllerImpl", lpparam.classLoader));
+                            mBrightnessController = XposedHelpers.callMethod(XposedHelpers.getObjectField(mControlCenterController, "brightnessController"), "get");
+                        }
+                        Object mDisplayManager = XposedHelpers.getObjectField(mBrightnessController, "mDisplayManager");
+                        int mDisplayId = mContext.getDisplay().getDisplayId();
+                        topMinimumBacklight = (float) XposedHelpers.getObjectField(mBrightnessController, "mMinimumBacklight");
+                        topMaximumBacklight = (float) XposedHelpers.getObjectField(mBrightnessController, "mMaximumBacklight");
+                        tapStartBrightness = (float) XposedHelpers.callMethod(mDisplayManager, "getBrightness", mDisplayId);
                         if (MainModule.mPrefs.getBoolean("system_showpct")) {
-                            ViewGroup mStatusBarWindow = isInControlCenter ? (ViewGroup)param.thisObject : (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mStatusBarWindow");
+                            ViewGroup mStatusBarWindow;
+                            if (isInControlCenter) {
+                                mStatusBarWindow = (ViewGroup)param.thisObject;
+                            }
+                            else {
+                                mStatusBarWindow = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mNotificationShadeWindowView");
+                            }
                             if (mStatusBarWindow == null)
                                 Helpers.log("StatusBarGesturesHook", "mStatusBarWindow is null");
                             else
@@ -5864,7 +5868,13 @@ public class System {
                     case MotionEvent.ACTION_CANCEL:
                         isSlidingStart = false;
                         isSliding = false;
-                        if (mPct != null) mPct.setVisibility(View.GONE);
+                        if (mPct != null) {
+                            mPct.setVisibility(View.GONE);
+                            if (tapCurrentBrightness > -0.5f) {
+                                mDisplayManager = XposedHelpers.getObjectField(mBrightnessController, "mDisplayManager");
+                                XposedHelpers.callMethod(mDisplayManager, "setBrightness", mContext.getDisplay().getDisplayId(), tapCurrentBrightness);
+                            }
+                        }
                         break;
                     case MotionEvent.ACTION_MOVE:
                         if (!isSlidingStart) return;
@@ -5876,36 +5886,25 @@ public class System {
                         if (!isSliding) return;
                         int opt = MainModule.mPrefs.getStringAsInt(tapStartPointers == 2 ? "system_statusbarcontrols_dual" : "system_statusbarcontrols_single", 1);
                         if (opt == 2) {
-                            ContentResolver resolver = mContext.getContentResolver();
                             int sens = MainModule.mPrefs.getStringAsInt("system_statusbarcontrols_sens_bright", 2);
-                            int minLevel = res.getInteger(res.getIdentifier("config_screenBrightnessSettingMinimum", "integer", "android"));
-                            int maxLevel = res.getInteger(res.getIdentifier("config_screenBrightnessSettingMaximum", "integer", "android"));
-                            boolean isHLG = maxLevel != 255;
                             float ratio = delta / metrics.widthPixels;
-                            if (isHLG) ratio = (ratio >= 0 ? 1 : -1) * (sens == 1 ? 0.66f : (sens == 3 ? 1.66f : 1.0f)) * (float)Math.pow(ratio, 2);
-                            int nextLevel = Math.min(maxLevel, Math.max(minLevel, Math.round(tapStartBrightness + (maxLevel - minLevel) * ratio)));
-                            if (!Helpers.isPiePlus()) try {
-                                int brightnessMode = Settings.System.getInt(resolver, Settings.System.SCREEN_BRIGHTNESS_MODE, 0);
-                                if (brightnessMode == android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC) {
-                                    float adj = nextLevel * 2.0f / (maxLevel - minLevel) - 1.0f;
-                                    XposedHelpers.callStaticMethod(findClass("com.android.systemui.SystemUICompat", lpparam.classLoader), "setTemporaryScreenAutoBrightness", adj);
-                                    Settings.System.putFloat(resolver, "screen_auto_brightness_adj", adj);
-                                } else {
-                                    XposedHelpers.callStaticMethod(findClass("com.android.systemui.SystemUICompat", lpparam.classLoader), "setTemporaryScreenBrightness", nextLevel);
-                                }
-                            } catch (Throwable ignore) {}
-                            Settings.System.putInt(resolver, Settings.System.SCREEN_BRIGHTNESS, nextLevel);
+                            ratio = (sens == 1 ? 0.66f : (sens == 3 ? 1.66f : 1.0f)) * ratio * 0.618f;
+                            float nextLevel = Math.min(topMaximumBacklight, Math.max(topMinimumBacklight, tapStartBrightness + (topMaximumBacklight - topMinimumBacklight) * ratio));
+                            XposedHelpers.callMethod(mBrightnessController, "setBrightness", nextLevel);
+                            tapCurrentBrightness = nextLevel;
                             if (MainModule.mPrefs.getBoolean("system_showpct") && mPct != null) {
                                 if (mPct.getVisibility() == View.GONE) {
                                     mPct.setVisibility(View.VISIBLE);
                                     mPct.animate().alpha(1.0f).setDuration(300).start();
                                 }
-                                int nextLevelGamma = nextLevel;
-                                if (isHLG && buCls != null)
-                                    nextLevelGamma = (int)XposedHelpers.callStaticMethod(buCls, "convertLinearToGamma", nextLevel, minLevel, maxLevel);
-                                if ((int)mPct.getTag() == 2) mPct.setText(((nextLevelGamma * 100) / maxLevel) + "%");
+                                if ((int)mPct.getTag() == 2) {
+                                    int currentLevel = (int) XposedHelpers.callStaticMethod(BrightnessUtils, "convertLinearToGammaFloat", nextLevel, topMinimumBacklight, topMaximumBacklight);
+                                    int maxLevel = (int) XposedHelpers.getStaticObjectField(BrightnessUtils, "GAMMA_SPACE_MAX");
+                                    mPct.setText(((currentLevel * 100) / maxLevel) + "%");
+                                }
                             }
                         } else if (opt == 3) {
+                            tapCurrentBrightness = -1.0f;
                             int sens = MainModule.mPrefs.getStringAsInt("system_statusbarcontrols_sens_vol", 2);
                             if (Math.abs(delta) < metrics.widthPixels / ((sens == 1 ? 0.66f : (sens == 3 ? 1.66f : 1.0f)) * 20 * metrics.density)) return;
                             tapStartX = event.getX();

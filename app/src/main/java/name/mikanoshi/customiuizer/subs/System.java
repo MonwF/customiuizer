@@ -511,8 +511,6 @@ public class System extends SubFragment {
 					findPreference("pref_key_system_defaultusb_unsecure").setEnabled(false);
 				}
 
-				if (!Helpers.isPiePlus()) ((CheckBoxPreferenceEx)findPreference("pref_key_system_magnifier")).setUnsupported(true);
-
 				break;
 		}
 	}
