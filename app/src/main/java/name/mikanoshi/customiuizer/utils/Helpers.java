@@ -1,7 +1,6 @@
 package name.mikanoshi.customiuizer.utils;
 
 import android.Manifest;
-import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.Application;
@@ -260,10 +259,6 @@ public class Helpers {
 
 	public static boolean isNougat() {
 		return false;
-	}
-
-	public static boolean isPiePlus() {
-		return true;
 	}
 
 	public static boolean isQPlus() {
