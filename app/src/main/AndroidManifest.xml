@@ -173,9 +173,9 @@
 
 		<service
 			android:exported="true"
-			android:name=".qs.DarkModeService"
+			android:name=".qs.FiveGService"
 			android:icon="@drawable/ic_qs_darkmode_disabled"
-			android:label="@string/qs_toggle_darkmode"
+			android:label="@string/qs_toggle_5g"
 			android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
 			android:enabled="false">
 			<intent-filter>

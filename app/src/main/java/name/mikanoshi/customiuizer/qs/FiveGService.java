@@ -2,16 +2,13 @@ package name.mikanoshi.customiuizer.qs;
 
 import android.app.UiModeManager;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.drawable.Icon;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
-import android.widget.Toast;
 
 import name.mikanoshi.customiuizer.R;
-import name.mikanoshi.customiuizer.utils.Helpers;
 
-public class DarkModeService extends TileService {
+public class FiveGService extends TileService {
 
 	void updateTile() {
 		Tile tile = this.getQsTile();
@@ -36,12 +33,8 @@ public class DarkModeService extends TileService {
 
 	private void switchTileState() {
 		try {
-			if (!checkUIModePermission()) {
-				Toast.makeText(this, R.string.qs_toggle_darkmode_noperm, Toast.LENGTH_LONG).show();
-			} else {
-				UiModeManager uiManager = (UiModeManager)getSystemService(Context.UI_MODE_SERVICE);
-				uiManager.setNightMode(uiManager.getNightMode() != UiModeManager.MODE_NIGHT_YES ? UiModeManager.MODE_NIGHT_YES : UiModeManager.MODE_NIGHT_NO);
-			}
+			UiModeManager uiManager = (UiModeManager)getSystemService(Context.UI_MODE_SERVICE);
+			uiManager.setNightMode(uiManager.getNightMode() != UiModeManager.MODE_NIGHT_YES ? UiModeManager.MODE_NIGHT_YES : UiModeManager.MODE_NIGHT_NO);
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
@@ -68,11 +61,6 @@ public class DarkModeService extends TileService {
 
 	@Override
 	public void onStopListening() {}
-
-	private boolean checkUIModePermission() {
-		PackageManager pm = getPackageManager();
-		return pm.checkPermission("android.permission.MODIFY_DAY_NIGHT_MODE", Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED;
-	}
 
 }
 
