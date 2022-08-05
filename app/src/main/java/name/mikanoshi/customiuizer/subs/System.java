@@ -1,9 +1,7 @@
 package name.mikanoshi.customiuizer.subs;
 
 import android.app.Activity;
-import android.app.UiModeManager;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -30,7 +28,7 @@ import name.mikanoshi.customiuizer.prefs.ListPreferenceEx;
 import name.mikanoshi.customiuizer.prefs.PreferenceEx;
 import name.mikanoshi.customiuizer.prefs.SeekBarPreference;
 import name.mikanoshi.customiuizer.qs.AutoRotateService;
-import name.mikanoshi.customiuizer.qs.DarkModeService;
+import name.mikanoshi.customiuizer.qs.FiveGService;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class System extends SubFragment {
@@ -243,11 +241,11 @@ public class System extends SubFragment {
 					public void onStopTrackingTouch(SeekBar seekBar) {}
 				});
 
-				findPreference("pref_key_system_uimodetile").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+				findPreference("pref_key_system_fivegtile").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
 					@Override
 					public boolean onPreferenceChange(Preference preference, Object newValue) {
 						PackageManager pm = getActivity().getPackageManager();
-						pm.setComponentEnabledSetting(new ComponentName(getActivity(), DarkModeService.class), (Boolean)newValue ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED : PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+						pm.setComponentEnabledSetting(new ComponentName(getActivity(), FiveGService.class), (Boolean)newValue ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED : PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
 						return true;
 					}
 				});
@@ -485,24 +483,24 @@ public class System extends SubFragment {
 					}
 				});
 
-				UiModeManager uiManager = (UiModeManager)getActivity().getSystemService(Context.UI_MODE_SERVICE);
-				String mode = String.valueOf(uiManager != null ? uiManager.getNightMode() : 1);
-				Helpers.prefs.edit().putString("pref_key_system_uimode", mode).apply();
-				ListPreferenceEx uiMode = (ListPreferenceEx)findPreference("pref_key_system_uimode");
-				uiMode.setValue(mode);
-				uiMode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-					@Override
-					public boolean onPreferenceChange(Preference preference, Object newValue) {
-						UiModeManager uiManager = (UiModeManager)getActivity().getSystemService(Context.UI_MODE_SERVICE);
-						if (uiManager != null) uiManager.setNightMode(Integer.parseInt((String)newValue));
-						return true;
-					}
-				});
-
-				if (!checkUIModePermission()) {
-					uiMode.setEnabled(false);
-					uiMode.setSummary(R.string.launcher_privacyapps_fail);
-				}
+//				UiModeManager uiManager = (UiModeManager)getActivity().getSystemService(Context.UI_MODE_SERVICE);
+//				String mode = String.valueOf(uiManager != null ? uiManager.getNightMode() : 1);
+//				Helpers.prefs.edit().putString("pref_key_system_uimode", mode).apply();
+//				ListPreferenceEx uiMode = findPreference("pref_key_system_uimode");
+//				uiMode.setValue(mode);
+//				uiMode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+//					@Override
+//					public boolean onPreferenceChange(Preference preference, Object newValue) {
+//						UiModeManager uiManager = (UiModeManager)getActivity().getSystemService(Context.UI_MODE_SERVICE);
+//						if (uiManager != null) uiManager.setNightMode(Integer.parseInt((String)newValue));
+//						return true;
+//					}
+//				});
+//
+//				if (!checkUIModePermission()) {
+//					uiMode.setEnabled(false);
+//					uiMode.setSummary(R.string.launcher_privacyapps_fail);
+//				}
 
 				if (!checkUSBPermission()) {
 					Preference pref = findPreference("pref_key_system_defaultusb");

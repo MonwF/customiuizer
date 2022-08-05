@@ -20,12 +20,14 @@ import android.os.SystemClock;
 import android.provider.Settings;
 import android.telecom.TelecomManager;
 import android.telephony.TelephonyManager;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -330,7 +332,7 @@ public class Controls {
 		}
 	}
 
-	private static void addCustomNavBarKeys(boolean isVertical, Context mContext, LinearLayout navButtons, Class<?> kbrCls) {
+	private static void addCustomNavBarKeys(boolean isVertical, Context mContext, FrameLayout navButtons, Class<?> kbrCls) {
 		String pkgName = "com.android.systemui";
 		float density = mContext.getResources().getDisplayMetrics().density;
 		int two = Math.round(2 * density);
@@ -403,11 +405,15 @@ public class Controls {
 			lprc = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
 		right.setLayoutParams(lprc);
 
-		LinearLayout.LayoutParams lpr = new LinearLayout.LayoutParams(lprc);
-		if (isVertical)
+		FrameLayout.LayoutParams lpr = new FrameLayout.LayoutParams(lprc);
+		if (isVertical) {
 			lpr.topMargin += margin;
-		else
+			lpr.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+		}
+		else {
 			lpr.rightMargin += margin;
+			lpr.gravity = Gravity.RIGHT | Gravity.CENTER_VERTICAL;
+		}
 		rightbtn.setLayoutParams(lpr);
 
 		right.setScaleType(ImageView.ScaleType.CENTER);
@@ -437,73 +443,73 @@ public class Controls {
 		});
 		rightbtn.addView(right);
 
-		View startPadding = navButtons.findViewById(navButtons.getResources().getIdentifier("start_padding", "id", pkgName));
-		View sidePadding = navButtons.findViewById(navButtons.getResources().getIdentifier("side_padding", "id", pkgName));
-
-		LinearLayout.LayoutParams lp1 = (LinearLayout.LayoutParams)startPadding.getLayoutParams();
-		LinearLayout.LayoutParams lp2 = (LinearLayout.LayoutParams)sidePadding.getLayoutParams();
+//		View startPadding = navButtons.findViewById(navButtons.getResources().getIdentifier("start_padding", "id", pkgName));
+//		View sidePadding = navButtons.findViewById(navButtons.getResources().getIdentifier("side_padding", "id", pkgName));
+//
+//		LinearLayout.LayoutParams lp1 = (LinearLayout.LayoutParams)startPadding.getLayoutParams();
+//		LinearLayout.LayoutParams lp2 = (LinearLayout.LayoutParams)sidePadding.getLayoutParams();
 
 		boolean hasLeftAction = MainModule.mPrefs.getInt("controls_navbarleft_action", 1) > 1 || MainModule.mPrefs.getInt("controls_navbarleftlong_action", 1) > 1;
 		boolean hasRightAction = MainModule.mPrefs.getInt("controls_navbarright_action", 1) > 1 || MainModule.mPrefs.getInt("controls_navbarrightlong_action", 1) > 1;
 
-		float part = Helpers.is11() ? 0.55f : 0.5f;
+		float part = 0.55f;
 		if (isVertical) {
 			if (hasRightAction) {
 				navButtons.addView(rightbtn, 0);
-				lp2.weight = Math.round(lp2.weight * part);
-				sidePadding.setLayoutParams(lp2);
-				sidePadding.setPadding(sidePadding.getPaddingLeft(), sidePadding.getPaddingTop() / 3, sidePadding.getPaddingRight(), sidePadding.getPaddingBottom());
+//				lp2.weight = Math.round(lp2.weight * part);
+//				sidePadding.setLayoutParams(lp2);
+//				sidePadding.setPadding(sidePadding.getPaddingLeft(), sidePadding.getPaddingTop() / 3, sidePadding.getPaddingRight(), sidePadding.getPaddingBottom());
 			}
 			if (hasLeftAction) {
 				navButtons.addView(leftbtn, navButtons.getChildCount());
-				lp1.weight = Math.round(lp1.weight * part);
-				startPadding.setLayoutParams(lp1);
+//				lp1.weight = Math.round(lp1.weight * part);
+//				startPadding.setLayoutParams(lp1);
 			}
 		} else {
 			if (hasLeftAction) {
 				navButtons.addView(leftbtn, 0);
-				lp1.weight = Math.round(lp1.weight * part);
-				startPadding.setLayoutParams(lp1);
+//				lp1.weight = Math.round(lp1.weight * part);
+//				startPadding.setLayoutParams(lp1);
 			}
 			if (hasRightAction) {
 				navButtons.addView(rightbtn, navButtons.getChildCount());
-				lp2.weight = Math.round(lp2.weight * part);
-				sidePadding.setLayoutParams(lp2);
-				sidePadding.setPadding(sidePadding.getPaddingLeft(), sidePadding.getPaddingTop(), sidePadding.getPaddingRight() / 3, sidePadding.getPaddingBottom());
+//				lp2.weight = Math.round(lp2.weight * part);
+//				sidePadding.setLayoutParams(lp2);
+//				sidePadding.setPadding(sidePadding.getPaddingLeft(), sidePadding.getPaddingTop(), sidePadding.getPaddingRight() / 3, sidePadding.getPaddingBottom());
 			}
 		}
 	}
 
 	public static void NavBarButtonsHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "createNavigationBar", new MethodHook() {
+		Helpers.hookAllMethods("com.android.systemui.navigationbar.NavigationBar", lpparam.classLoader, "onViewAttachedToWindow", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
-				Class<?> kbrCls = XposedHelpers.findClassIfExists("com.android.systemui.statusbar.policy.KeyButtonRipple", lpparam.classLoader);
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 				if (mContext == null) {
 					Helpers.log("NavBarButtonsHook", "Cannot find context");
 					return;
 				}
-				LinearLayout mNavigationBarView = (LinearLayout)XposedHelpers.getObjectField(param.thisObject, "mNavigationBarView");
+				FrameLayout mNavigationBarView = (FrameLayout)XposedHelpers.getObjectField(param.thisObject, "mNavigationBarView");
 				if (mNavigationBarView == null) {
 					Helpers.log("NavBarButtonsHook", "Cannot find navbar layout");
 					return;
 				}
-				ViewGroup rot0 = mNavigationBarView.findViewById(mNavigationBarView.getResources().getIdentifier("rot0", "id", lpparam.packageName));
-				ViewGroup rot90 = mNavigationBarView.findViewById(mNavigationBarView.getResources().getIdentifier("rot90", "id", lpparam.packageName));
-				LinearLayout navButtons0 = rot0.findViewById(mNavigationBarView.getResources().getIdentifier("nav_buttons", "id", lpparam.packageName));
-				LinearLayout navButtons90 = rot90.findViewById(mNavigationBarView.getResources().getIdentifier("nav_buttons", "id", lpparam.packageName));
+				ViewGroup mHorizontal = mNavigationBarView.findViewById(mNavigationBarView.getResources().getIdentifier("horizontal", "id", lpparam.packageName));
+				ViewGroup mVertical = mNavigationBarView.findViewById(mNavigationBarView.getResources().getIdentifier("vertical", "id", lpparam.packageName));
+				FrameLayout navButtons0 = mHorizontal.findViewById(mNavigationBarView.getResources().getIdentifier("nav_buttons", "id", lpparam.packageName));
+				FrameLayout navButtons90 = mVertical.findViewById(mNavigationBarView.getResources().getIdentifier("nav_buttons", "id", lpparam.packageName));
 
+				Class<?> kbrCls = XposedHelpers.findClassIfExists("com.android.systemui.statusbar.phone.MiuiKeyButtonRipple", lpparam.classLoader);
 				addCustomNavBarKeys(false, mContext, navButtons0, kbrCls);
 				addCustomNavBarKeys(true, mContext, navButtons90, kbrCls);
 			}
 		});
 
-		Helpers.hookAllMethods("com.android.systemui.statusbar.phone.NavigationBarView", lpparam.classLoader, "switchSuit", new MethodHook() {
+		Helpers.hookAllMethods("com.android.systemui.navigationbar.NavigationBarInflaterView", lpparam.classLoader, "updateBackground", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
-				LinearLayout navbar = (LinearLayout)param.thisObject;
-				boolean isDark = (boolean)param.args[1];
+				FrameLayout navbar = (FrameLayout)param.thisObject;
+				boolean isDark = (boolean)param.args[0];
 				ImageView hleft = navbar.findViewWithTag("custom_left_horiz");
 				ImageView vleft = navbar.findViewWithTag("custom_left_vert");
 				ImageView hright = navbar.findViewWithTag("custom_right_horiz");

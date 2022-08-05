@@ -109,7 +109,7 @@
     <string name="qs_toggle_autorotate_off">Отключено</string>
     <string name="qs_toggle_autorotate_portrait">Портрет</string>
     <string name="qs_toggle_autorotate_landscape">Ландшафт</string>
-    <string name="qs_toggle_darkmode">Тёмный режим</string>
+    <string name="qs_toggle_5g">5G</string>
     <string name="qs_toggle_darkmode_noperm">У CustoMIUIzer нет прав на изменение тёмного режима</string>
     <string name="appdetails_playstore">Открыть в Play Маркет</string>
     <string name="appdetails_launch">Запустить</string>
@@ -563,8 +563,6 @@
     <string name="system_airplanemodeconfig_note">Мод всего лишь меняет уже существующий параметр системы, некоторые опции могут не работать</string>
     <string name="system_uimode_title">Режим интерфейса</string>
     <string name="system_uimode_summ">Изменить режим на тёмный, светлый или авто. Перезагрузка не требуется.</string>
-    <string name="system_uimodetile_title">Переключатель тёмного режима</string>
-    <string name="system_uimodetile_summ">Добавляет переключатель в Быстрые Настройки. Перезагрузка не требуется.</string>
     <string name="system_nodarkforce_title">Отключить принудительный тёмный режим</string>
     <string name="system_nodarkforce_summ">Не инвертировать некоторые цвета в тёмном режиме</string>
     <string name="system_epm_title">Расширенное меню питания</string>

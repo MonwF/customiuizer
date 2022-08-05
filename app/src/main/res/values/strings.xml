@@ -328,8 +328,8 @@
 	<string name="system_airplanemodeconfig_note">Mod only changes existing system setting, some options might not work</string>
 	<string name="system_uimode_title">Interface mode</string>
 	<string name="system_uimode_summ">Change mode to dark, light or auto. No reboot required.</string>
-	<string name="system_uimodetile_title">Dark mode tile</string>
-	<string name="system_uimodetile_summ">Add Quick Settings tile to toggle dark mode. No reboot required.</string>
+	<string name="system_fivegtile_title">5G tile</string>
+	<string name="system_fivegtile_summ">Add 5G tile to qs panel</string>
 	<string name="system_nodarkforce_title">Disable forced dark mode</string>
 	<string name="system_nodarkforce_summ">Do not invert some colors in dark mode</string>
 	<string name="system_epm_title">Extended power menu</string>
@@ -917,7 +917,7 @@
 	<string name="qs_toggle_autorotate_off">Unrestricted</string>
 	<string name="qs_toggle_autorotate_portrait">Portrait</string>
 	<string name="qs_toggle_autorotate_landscape">Landscape</string>
-	<string name="qs_toggle_darkmode">Dark mode</string>
+	<string name="qs_toggle_5g">5G</string>
 	<string name="qs_toggle_darkmode_noperm">CustoMIUIzer has no permission to change dark mode</string>
 
 	<string name="miuizer">CustoMIUIzer settings</string>

@@ -309,8 +309,8 @@
     <string name="system_blocktoasts_summ">阻止所选应用显示toast</string>
     <string name="system_uimode_title">界面模式</string>
     <string name="system_uimode_summ">将模式更改为暗色、亮色或自动。无需重启。</string>
-    <string name="system_uimodetile_title">深色模式磁贴</string>
-    <string name="system_uimodetile_summ">添加快速设置磁贴用以切换深色模式。无需重启。</string>
+    <string name="system_fivegtile_title">5G开关</string>
+    <string name="system_fivegtile_summ">添加5G开关磁贴至快速设置</string>
     <string name="system_nodarkforce_title">禁用强制黑暗模式</string>
     <string name="system_nodarkforce_summ">在黑暗模式中不反转某些颜色</string>
     <string name="system_epm_title">扩展电源菜单</string>
@@ -845,8 +845,7 @@
     <string name="qs_toggle_autorotate_off">无限制</string>
     <string name="qs_toggle_autorotate_portrait">竖屏</string>
     <string name="qs_toggle_autorotate_landscape">横屏</string>
-    <string name="qs_toggle_darkmode">深色模式</string>
-    <string name="qs_toggle_darkmode_noperm">CustoMIUIzer没有更改深色模式的权限</string>
+    <string name="qs_toggle_5g">5G开关</string>
     <string name="miuizer">CustoMIUIzer设置</string>
     <string name="miuizer_show_newmods_title">标记新模块</string>
     <string name="miuizer_show_newmods_summ">添加到当前版本中的模块在标题处显示\"新!\"标签</string>
