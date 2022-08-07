@@ -272,9 +272,8 @@ public class GlobalActions {
 
 					if (action.equals(ACTION_PREFIX + "OpenVolumeDialog")) try {
 						Object mVolumeComponent = XposedHelpers.getObjectField(mStatusBar, "mVolumeComponent");
-						Object mExtension = XposedHelpers.getObjectField(mVolumeComponent, "mExtension");
-						Object miuiVolumeDialog = XposedHelpers.callMethod(mExtension, "get");
-
+						Object mVolumeDialogPlugin = XposedHelpers.getObjectField(mVolumeComponent, "mDialog");
+						Object miuiVolumeDialog = XposedHelpers.getObjectField(mVolumeDialogPlugin, "mVolumeDialogImpl");
 						if (miuiVolumeDialog == null) {
 							Helpers.log("OpenVolumeDialog", "MIUI volume dialog is NULL!");
 							return;
@@ -286,18 +285,20 @@ public class GlobalActions {
 							public void run() {
 								boolean mShowing = XposedHelpers.getBooleanField(miuiVolumeDialog, "mShowing");
 								boolean mExpanded = XposedHelpers.getBooleanField(miuiVolumeDialog, "mExpanded");
-								View mExpandButton = (View)XposedHelpers.getObjectField(miuiVolumeDialog, "mExpandButton");
-								View.OnClickListener mClickExpand = (View.OnClickListener)XposedHelpers.getObjectField(miuiVolumeDialog, "mClickExpand");
 
 								AudioManager am = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
 								boolean isInCall = am.getMode() == AudioManager.MODE_IN_CALL || am.getMode() == AudioManager.MODE_IN_COMMUNICATION;
 								if (mShowing) {
 									if (mExpanded || isInCall)
 										XposedHelpers.callMethod(miuiVolumeDialog, "dismissH", 1);
-									else
+									else {
+										Object mDialogView = XposedHelpers.getObjectField(miuiVolumeDialog, "mDialogView");
+										View mExpandButton = (View)XposedHelpers.getObjectField(mDialogView, "mExpandButton");
+										View.OnClickListener mClickExpand = (View.OnClickListener)XposedHelpers.getObjectField(mDialogView, "expandListener");
 										mClickExpand.onClick(mExpandButton);
+									}
 								} else {
-									Object mController = XposedHelpers.getObjectField(miuiVolumeDialog, "mController");
+									Object mController = XposedHelpers.getObjectField(mVolumeDialogPlugin, "mController");
 									if (isInCall) {
 										XposedHelpers.callMethod(mController, "setActiveStream", 0);
 										XposedHelpers.setBooleanField(miuiVolumeDialog, "mNeedReInit", true);
