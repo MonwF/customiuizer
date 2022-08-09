@@ -860,17 +860,12 @@ public class Controls {
 	}
 
 	public static void FingerprintHapticSuccessHook(LoadPackageParam lpparam) {
-		String authClient = Helpers.isQPlus() ? "com.android.server.biometrics.AuthenticationClient" : "com.android.server.fingerprint.AuthenticationClient";
+		String authClient = "com.android.server.biometrics.AuthenticationClient";
 		Helpers.hookAllMethods(authClient, lpparam.classLoader, "onAuthenticated", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				if (!((boolean)param.getResult())) return;
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-//				boolean isScreenOn = (boolean)XposedHelpers.callMethod(param.thisObject, "isScreenOn");
-//				if (!isScreenOn) {
-//					WakeLock wl = ((PowerManager)mContext.getSystemService(Context.POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "miuizer:fingerprint_haptic_feedback");
-//					wl.acquire(2000);
-//				}
 
 				boolean ignoreSystem = MainModule.mPrefs.getBoolean("controls_fingerprintsuccess_ignore");
 				int opt = Integer.parseInt(MainModule.mPrefs.getString("controls_fingerprintsuccess", "1"));
@@ -883,26 +878,22 @@ public class Controls {
 	}
 
 	public static void FingerprintHapticFailureHook(LoadPackageParam lpparam) {
-		if (Helpers.isNougat())
-			Helpers.findAndHookMethod("com.android.server.fingerprint.FingerprintUtils", lpparam.classLoader, "vibrateFingerprintError", Context.class, XC_MethodReplacement.returnConstant(null));
-		else {
-			String monitorClass = Helpers.isQPlus() ? "com.android.server.biometrics.ClientMonitor" : "com.android.server.fingerprint.ClientMonitor";
-			Helpers.hookAllMethods("com.android.server.VibratorService", lpparam.classLoader, "vibrate", new MethodHook() {
-				@Override
-				protected void before(MethodHookParam param) throws Throwable {
-					StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-					for (StackTraceElement el : stackTrace)
-					if (monitorClass.equals(el.getClassName()) && "vibrateError".equals(el.getMethodName())) {
-						param.setResult(null);
-						return;
-					}
+		String monitorClass = "com.android.server.biometrics.ClientMonitor";
+		Helpers.hookAllMethods("com.android.server.VibratorService", lpparam.classLoader, "vibrate", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+				for (StackTraceElement el : stackTrace)
+				if (monitorClass.equals(el.getClassName()) && "vibrateError".equals(el.getMethodName())) {
+					param.setResult(null);
+					return;
 				}
-			});
-		}
+			}
+		});
 	}
 
 	public static void FingerprintScreenOnHook(LoadPackageParam lpparam) {
-		String authClient = Helpers.isQPlus() ? "com.android.server.biometrics.AuthenticationClient" : "com.android.server.fingerprint.AuthenticationClient";
+		String authClient = "com.android.server.biometrics.AuthenticationClient";
 		Helpers.hookAllMethods(authClient, lpparam.classLoader, "onAuthenticated", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {

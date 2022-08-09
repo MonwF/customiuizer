@@ -1,6 +1,5 @@
 package name.mikanoshi.customiuizer.subs;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;

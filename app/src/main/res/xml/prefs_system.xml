@@ -1067,16 +1067,6 @@
 			android:title="@string/system_airplanemodeconfig_title"
 			android:summary="@string/system_airplanemodeconfig_summ" />
 
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
-			android:key="pref_key_system_uimode"
-			android:title="@string/system_uimode_title"
-			android:summary="@string/system_uimode_summ"
-			android:entries="@array/uimode"
-			android:entryValues="@array/uimode_val"
-			android:defaultValue="1"
-			app:isPreferenceVisible="false"
-			/>
-
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_nodarkforce"
 			android:title="@string/system_nodarkforce_title"
