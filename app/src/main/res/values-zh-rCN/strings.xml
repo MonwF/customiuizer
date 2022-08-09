@@ -2,7 +2,7 @@
 <resources>
     <string name="app_about">关于</string>
     <string name="about_version">版本：%1$s</string>
-    <string name="about_dev">作者：Mikanoshi</string>
+    <string name="about_dev">作者：Mikanoshi &amp; MonwF</string>
     <string name="about_dynamic">标记有⟲的模块由默认值修改为其他值后只需软重启一次，之后的更改将立即应用；其他选项始终需要软重启。</string>
     <string name="about_unsupported">标记⨯的模块不支持此设备。</string>
     <string name="title_snoozed">通知已延迟</string>
@@ -25,7 +25,7 @@
     <string name="system_mods_screen_rotation">旋转</string>
     <string name="system_mods_screen_backlight">背光</string>
     <string name="system_mods_audio">声音</string>
-    <string name="system_mods_vibration">震动</string>
+    <string name="system_mods_vibration">振动</string>
     <string name="system_mods_toasts">Toast</string>
     <string name="system_statusbaricons_title">隐藏图标</string>
     <string name="system_statusbaricons_summ">管理状态栏图标可见性</string>
@@ -307,8 +307,6 @@
     <string name="system_iconlabletoasts_summ">将应用程序的图标和文字添加到其toast</string>
     <string name="system_blocktoasts_title">阻止toast</string>
     <string name="system_blocktoasts_summ">阻止所选应用显示toast</string>
-    <string name="system_uimode_title">界面模式</string>
-    <string name="system_uimode_summ">将模式更改为暗色、亮色或自动。无需重启。</string>
     <string name="system_fivegtile_title">5G开关</string>
     <string name="system_fivegtile_summ">添加5G开关磁贴至快速设置</string>
     <string name="system_nodarkforce_title">禁用强制黑暗模式</string>

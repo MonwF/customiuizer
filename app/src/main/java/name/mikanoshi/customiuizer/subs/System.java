@@ -483,25 +483,6 @@ public class System extends SubFragment {
 					}
 				});
 
-//				UiModeManager uiManager = (UiModeManager)getActivity().getSystemService(Context.UI_MODE_SERVICE);
-//				String mode = String.valueOf(uiManager != null ? uiManager.getNightMode() : 1);
-//				Helpers.prefs.edit().putString("pref_key_system_uimode", mode).apply();
-//				ListPreferenceEx uiMode = findPreference("pref_key_system_uimode");
-//				uiMode.setValue(mode);
-//				uiMode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-//					@Override
-//					public boolean onPreferenceChange(Preference preference, Object newValue) {
-//						UiModeManager uiManager = (UiModeManager)getActivity().getSystemService(Context.UI_MODE_SERVICE);
-//						if (uiManager != null) uiManager.setNightMode(Integer.parseInt((String)newValue));
-//						return true;
-//					}
-//				});
-//
-//				if (!checkUIModePermission()) {
-//					uiMode.setEnabled(false);
-//					uiMode.setSummary(R.string.launcher_privacyapps_fail);
-//				}
-
 				if (!checkUSBPermission()) {
 					Preference pref = findPreference("pref_key_system_defaultusb");
 					pref.setEnabled(false);
@@ -538,11 +519,6 @@ public class System extends SubFragment {
 	private boolean checkAnimationPermission() {
 		PackageManager pm = getActivity().getPackageManager();
 		return pm.checkPermission("android.permission.SET_ANIMATION_SCALE", Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED;
-	}
-
-	private boolean checkUIModePermission() {
-		PackageManager pm = getActivity().getPackageManager();
-		return pm.checkPermission("android.permission.MODIFY_DAY_NIGHT_MODE", Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED;
 	}
 
 }

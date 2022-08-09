@@ -37,7 +37,6 @@ import android.os.PowerManager.WakeLock;
 import android.os.UserHandle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceScreen;
 import android.provider.Settings;
 import android.text.InputType;
@@ -1080,9 +1079,10 @@ public class Helpers {
 		try (XmlResourceParser xml = res.getXml(xmlResId)) {
 			int eventType = xml.getEventType();
 			int order = 0;
+			String PrefCatExName = PreferenceCategoryEx.class.getCanonicalName();
 			while (eventType != XmlPullParser.END_DOCUMENT) {
 				if (eventType == XmlPullParser.START_TAG && !PreferenceScreen.class.getSimpleName().equals(xml.getName())) try {
-					if (xml.getName().equals(PreferenceCategory.class.getSimpleName()) || xml.getName().equals(PreferenceCategoryEx.class.getCanonicalName())) {
+					if (xml.getName().equals(PrefCatExName)) {
 						if (xml.getAttributeValue(ANDROID_NS, "key") != null) {
 							lastPrefSub = xml.getAttributeValue(ANDROID_NS, "key");
 							lastPrefSubTitle = getModTitle(res, xml.getAttributeValue(ANDROID_NS, "title"));
@@ -1096,9 +1096,9 @@ public class Helpers {
 						continue;
 					}
 
-					ModData modData = new ModData();
 					boolean isChild = xml.getAttributeBooleanValue(MIUIZER_NS, "child", false);
 					if (!isChild) {
+						ModData modData = new ModData();
 						modData.title = getModTitle(res, xml.getAttributeValue(ANDROID_NS, "title"));
 						if (modData.title != null) {
 							modData.breadcrumbs = res.getString(catResId) + (lastPrefSubTitle == null ? "" : ("/" + lastPrefSubTitle + (lastPrefSubSubTitle == null ? "" : "/" + lastPrefSubSubTitle)));
@@ -1150,22 +1150,6 @@ public class Helpers {
 		if (context == null) return;
 		HapticFeedbackUtil mHapticFeedbackUtil = new HapticFeedbackUtil(context, false);
 		mHapticFeedbackUtil.performHapticFeedback(isStrong ? HapticFeedbackConstants.LONG_PRESS : HapticFeedbackConstants.VIRTUAL_KEY, ignoreOff);
-
-//		int state = 1;
-//		int level = 1;
-//		try {
-//			state = Settings.System.getInt(context.getContentResolver(), "haptic_feedback_enabled");
-//			level = Settings.System.getInt(context.getContentResolver(), "haptic_feedback_level");
-//		} catch (Throwable t) {
-//			XposedBridge.log(t);
-//		}
-//		if (state == 0) return;
-//
-//		Vibrator v = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
-//		if (Build.VERSION.SDK_INT >= 26)
-//			v.vibrate(VibrationEffect.createOneShot(30, VibrationEffect.DEFAULT_AMPLITUDE));
-//		else
-//			v.vibrate(30);
 	}
 
 	public static void performCustomVibration(Context context, int vibration, String ownPattern) {

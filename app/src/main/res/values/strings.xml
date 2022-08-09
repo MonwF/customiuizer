@@ -2,7 +2,7 @@
     <string name="app_name" translatable="false">CustoMIUIzer13</string>
 	<string name="app_about">About</string>
 	<string name="about_version">Version %1$s</string>
-	<string name="about_dev">by Mikanoshi</string>
+	<string name="about_dev">by Mikanoshi &amp; MonwF</string>
 	<string name="about_dynamic">Generally, mods require soft reboot to be activated or deactivated, but those marked with ⟲ only require one soft reboot after their value was changed from default to custom one, subsequent changes are applied immediately.</string>
 	<string name="about_unsupported">Mods marked with ⨯ are not supported on this device.</string>
 	<string name="title_activity_main" translatable="false">@string/app_name</string>
@@ -326,8 +326,6 @@
 	<string name="system_airplanemodeconfig_title">Airplane mode configuration</string>
 	<string name="system_airplanemodeconfig_summ">Define allowed communications in airplane mode. No reboot required.</string>
 	<string name="system_airplanemodeconfig_note">Mod only changes existing system setting, some options might not work</string>
-	<string name="system_uimode_title">Interface mode</string>
-	<string name="system_uimode_summ">Change mode to dark, light or auto. No reboot required.</string>
 	<string name="system_fivegtile_title">5G tile</string>
 	<string name="system_fivegtile_summ">Add 5G tile to qs panel</string>
 	<string name="system_nodarkforce_title">Disable forced dark mode</string>

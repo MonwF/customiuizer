@@ -561,8 +561,6 @@
     <string name="system_airplanemodeconfig_title">Конфигурация режима полёта</string>
     <string name="system_airplanemodeconfig_summ">Задать разрешённые коммуникации в режиме полёта. Перезагрузка не требуется.</string>
     <string name="system_airplanemodeconfig_note">Мод всего лишь меняет уже существующий параметр системы, некоторые опции могут не работать</string>
-    <string name="system_uimode_title">Режим интерфейса</string>
-    <string name="system_uimode_summ">Изменить режим на тёмный, светлый или авто. Перезагрузка не требуется.</string>
     <string name="system_nodarkforce_title">Отключить принудительный тёмный режим</string>
     <string name="system_nodarkforce_summ">Не инвертировать некоторые цвета в тёмном режиме</string>
     <string name="system_epm_title">Расширенное меню питания</string>
@@ -923,7 +921,7 @@
     <string name="disable_app_text">Если данное приложение является важным системным, то его отключение может что-нибудь поломать :)</string>
     <string name="disable_app_settings">Это плохая идея! :)</string>
     <string name="disable_app_fail">Не удалось изменить статус приложения</string>
-    <string name="about_dev">от Mikanoshi</string>
+    <string name="about_dev">от Mikanoshi &amp; MonwF</string>
     <string name="system_nopassword_title">Не требовать пароль после загрузки</string>
     <string name="system_nopassword_summ">Отключает требование пароля вместо отпечатка пальца первый раз после загрузки. Работа на устройствах с шифрованием маловероятна.</string>
     <string name="system_albumartonlock_title">Обложка альбома на обоях</string>
