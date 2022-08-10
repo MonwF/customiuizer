@@ -911,12 +911,16 @@ public class System {
     private static ClassLoader pluginLoader = null;
 
     public static void NotificationVolumeDialogHook(LoadPackageParam lpparam) {
+        final boolean[] isHooked = {false};
         Helpers.findAndHookMethod("com.android.systemui.shared.plugins.PluginManagerImpl", lpparam.classLoader, "getClassLoader", ApplicationInfo.class, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 ApplicationInfo appInfo = (ApplicationInfo) param.args[0];
-                if (pluginLoader == null && "miui.systemui.plugin".equals(appInfo.packageName)) {
-                    pluginLoader = (ClassLoader) param.getResult();
+                if ("miui.systemui.plugin".equals(appInfo.packageName) && !isHooked[0]) {
+                    isHooked[0] = true;
+                    if (pluginLoader == null) {
+                        pluginLoader = (ClassLoader) param.getResult();
+                    }
                     Class<?> MiuiVolumeDialogImpl = XposedHelpers.findClassIfExists("com.android.systemui.miui.volume.MiuiVolumeDialogImpl", pluginLoader);
                     Helpers.hookAllMethods(MiuiVolumeDialogImpl, "addColumn", new MethodHook() {
                         @Override
@@ -3225,12 +3229,16 @@ public class System {
     public static void VolumeTimerValuesRes(LoadPackageParam lpparam) {
         MainModule.resHooks.setResReplacement("miui.systemui.plugin", "array", "miui_volume_timer_segments", R.array.miui_volume_timer_segments);
 
+        final boolean[] isHooked = {false};
         Helpers.findAndHookMethod("com.android.systemui.shared.plugins.PluginManagerImpl", lpparam.classLoader, "getClassLoader", ApplicationInfo.class, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 ApplicationInfo appInfo = (ApplicationInfo) param.args[0];
-                if (pluginLoader == null && "miui.systemui.plugin".equals(appInfo.packageName)) {
-                    pluginLoader = (ClassLoader) param.getResult();
+                if ("miui.systemui.plugin".equals(appInfo.packageName) && !isHooked[0]) {
+                    isHooked[0] = true;
+                    if (pluginLoader == null) {
+                        pluginLoader = (ClassLoader) param.getResult();
+                    }
                     Helpers.findAndHookMethod("com.android.systemui.miui.volume.MiuiVolumeTimerDrawableHelper", pluginLoader, "initTimerString", new MethodHook() {
                         @Override
                         protected void after(MethodHookParam param) throws Throwable {

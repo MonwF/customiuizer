@@ -650,7 +650,7 @@ public class Controls {
 				if (keyEvent.getKeyCode() != KeyEvent.KEYCODE_DPAD_CENTER || keyEvent.getAction() != KeyEvent.ACTION_DOWN) return;
 
 				isFingerprintPressed = true;
-				wasScreenOn = (boolean)XposedHelpers.callMethod(param.thisObject, "isScreenOn");
+				wasScreenOn = (boolean)XposedHelpers.callMethod(param.thisObject, "isScreenOnInternal");
 				wasFingerprintUsed = Settings.System.getInt(miuiPWMContext.getContentResolver(), "is_fingerprint_active", 0) == 1;
 
 				hasDoubleTap = false;
@@ -671,8 +671,9 @@ public class Controls {
 					}
 				}
 
-				if (XposedHelpers.getAdditionalInstanceField(param.thisObject, "touchTime") == null)
-				XposedHelpers.setAdditionalInstanceField(param.thisObject, "touchTime", 0L);
+				if (XposedHelpers.getAdditionalInstanceField(param.thisObject, "touchTime") == null) {
+					XposedHelpers.setAdditionalInstanceField(param.thisObject, "touchTime", 0L);
+				}
 			}
 
 			@Override
@@ -723,7 +724,7 @@ public class Controls {
 			}
 		});
 
-		String fpService = Helpers.isQPlus() ? "com.android.server.biometrics.BiometricServiceBase" : "com.android.server.fingerprint.FingerprintService";
+		String fpService = "com.android.server.biometrics.BiometricServiceBase";
 		Helpers.hookAllMethods(fpService, lpparam.classLoader, "startClient", new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
