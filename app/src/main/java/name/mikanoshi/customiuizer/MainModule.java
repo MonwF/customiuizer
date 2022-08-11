@@ -373,8 +373,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         final boolean isGoogleMinus = mPrefs.getBoolean("launcher_googleminus");
         final boolean isStatusBarColor = mPrefs.getBoolean("system_statusbarcolor") && !mPrefs.getStringSet("system_statusbarcolor_apps").contains(pkg);
         final int collapseTitlesOpt = mPrefs.getStringAsInt("various_collapsemiuititles", 1);
-        final boolean collapseTitles = collapseTitlesOpt > 1 && Helpers.is12();
-        final boolean noOverscroll = mPrefs.getBoolean("system_nooverscroll") && Helpers.is125();
+        final boolean collapseTitles = collapseTitlesOpt > 1;
+        final boolean noOverscroll = mPrefs.getBoolean("system_nooverscroll");
 
         if (isLauncherPkg) {
             if (mPrefs.getInt("launcher_horizmargin", 0) > 0) Launcher.HorizontalSpacingRes();

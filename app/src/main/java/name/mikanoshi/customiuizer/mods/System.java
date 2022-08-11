@@ -1456,31 +1456,6 @@ public class System {
                     rx += (long)XposedHelpers.callStaticMethod(TrafficStats.class, "getRxBytes", iface.getName());
                 }
             }
-            return new Pair<Long, Long>(tx, rx);
-        } catch (Throwable t) {
-            XposedBridge.log(t);
-        }
-
-        try {
-            Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
-            Uri mNetworkUri = (Uri)XposedHelpers.getObjectField(thisObject, "mNetworkUri");
-            Cursor query = mContext.getContentResolver().query(mNetworkUri, null, null, null, null);
-            if (query != null) {
-                try {
-                    if (query.moveToFirst()) {
-                        tx = query.getLong(query.getColumnIndex("total_tx_byte"));
-                        rx = query.getLong(query.getColumnIndex("total_rx_byte"));
-                    }
-                } catch (Exception e) {
-                    tx = 1L; rx = 1L;
-                } catch (Throwable th) {
-                    query.close();
-                }
-                query.close();
-            } else {
-                tx = TrafficStats.getTotalTxBytes();
-                rx = TrafficStats.getTotalRxBytes();
-            }
         } catch (Throwable t) {
             XposedBridge.log(t);
             tx = TrafficStats.getTotalTxBytes();
@@ -1524,96 +1499,81 @@ public class System {
         Helpers.hookAllConstructors("com.android.systemui.statusbar.views.NetworkSpeedView", lpparam.classLoader, new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
-            TextView meter = (TextView)param.thisObject;
-            float density = meter.getResources().getDisplayMetrics().density;
-            int font = Integer.parseInt(MainModule.mPrefs.getString("system_detailednetspeed_font", "3"));
-            int icons = Integer.parseInt(MainModule.mPrefs.getString("system_detailednetspeed_icon", "2"));
-            float size = 8.0f;
-            float spacing = 0.7f;
-            int top = 0;
-            switch (font) {
-                case 1: size = 10.0f; spacing = 0.75f; top = Math.round(density); break;
-                case 2: size = 9.0f; break;
-                case 3: size = 8.0f; break;
-                case 4: size = 7.0f; break;
-            }
-            meter.setTextSize(TypedValue.COMPLEX_UNIT_DIP, size);
-            meter.setSingleLine(false);
-            meter.setLines(2);
-            meter.setMaxLines(2);
-            meter.setLineSpacing(0, icons == 1 ? 0.85f : spacing);
-            meter.setPadding(Math.round(meter.getPaddingLeft() + 3 * density), meter.getPaddingTop() - top, meter.getPaddingRight(), meter.getPaddingBottom());
+                TextView meter = (TextView)param.thisObject;
+                float density = meter.getResources().getDisplayMetrics().density;
+                int font = Integer.parseInt(MainModule.mPrefs.getString("system_detailednetspeed_font", "3"));
+                int icons = Integer.parseInt(MainModule.mPrefs.getString("system_detailednetspeed_icon", "2"));
+                float size = 8.0f;
+                float spacing = 0.7f;
+                int top = 0;
+                switch (font) {
+                    case 1: size = 10.0f; spacing = 0.75f; top = Math.round(density); break;
+                    case 2: size = 9.0f; break;
+                    case 3: size = 8.0f; break;
+                    case 4: size = 7.0f; break;
+                }
+                meter.setTextSize(TypedValue.COMPLEX_UNIT_DIP, size);
+                meter.setSingleLine(false);
+                meter.setLines(2);
+                meter.setMaxLines(2);
+                meter.setLineSpacing(0, icons == 1 ? 0.85f : spacing);
+                meter.setPadding(Math.round(meter.getPaddingLeft() + 3 * density), meter.getPaddingTop() - top, meter.getPaddingRight(), meter.getPaddingBottom());
             }
         });
 
         Class<?> nscCls = XposedHelpers.findClassIfExists("com.android.systemui.statusbar.policy.NetworkSpeedController", lpparam.classLoader);
-        if (nscCls == null) nscCls = XposedHelpers.findClassIfExists("com.android.systemui.statusbar.views.NetworkSpeedView", lpparam.classLoader);
         if (nscCls == null) {
             Helpers.log("DetailedNetSpeedHook", "No NetworkSpeed view or controller");
             return;
         }
 
-        Helpers.hookAllConstructors(nscCls, new MethodHook() {
-            @Override
-            protected void after(final MethodHookParam param) throws Throwable {
-            Handler mHandler = new Handler(Looper.getMainLooper()) {
-                public void handleMessage(Message message) {
-                    if (message.what == 200000) try {
-                        boolean show = message.arg1 != 0;
-                        XposedHelpers.callMethod(param.thisObject, "setVisibilityToViewList", show ? View.VISIBLE : View.GONE);
-                        if (show) XposedHelpers.callMethod(param.thisObject, "setTextToViewList", "-");
-                    } catch (Throwable t) {
-                        XposedBridge.log(t);
-                    }
-                }
-            };
-            XposedHelpers.setObjectField(param.thisObject, "mHandler", mHandler);
-            }
-        });
-
         Helpers.findAndHookMethod(nscCls, "getTotalByte", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
-            Pair<Long, Long> bytes = getTrafficBytes(param.thisObject);
-            txBytesTotal = bytes.first;
-            rxBytesTotal = bytes.second;
-            measureTime = nanoTime();
+                Pair<Long, Long> bytes = getTrafficBytes(param.thisObject);
+                txBytesTotal = bytes.first;
+                rxBytesTotal = bytes.second;
+                measureTime = nanoTime();
             }
         });
 
         Helpers.findAndHookMethod(nscCls, "updateNetworkSpeed", new MethodHook() {
             @Override
             protected void before(final MethodHookParam param) throws Throwable {
-            boolean isConnected = false;
-            Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-            ConnectivityManager mConnectivityManager = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo activeNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
-            if (activeNetworkInfo != null)
-                if (activeNetworkInfo.isConnected()) isConnected = true;
-            if (isConnected) {
-                long nanoTime = nanoTime();
-                long newTime = nanoTime - measureTime;
-                measureTime = nanoTime;
-                if (newTime == 0) newTime = Math.round(4 * Math.pow(10, 9));
-                Pair<Long, Long> bytes = getTrafficBytes(param.thisObject);
-                long newTxBytes = bytes.first;
-                long newRxBytes = bytes.second;
-                long newTxBytesFixed = newTxBytes - txBytesTotal;
-                long newRxBytesFixed = newRxBytes - rxBytesTotal;
-                if (newTxBytesFixed < 0 || txBytesTotal == 0) newTxBytesFixed = 0;
-                if (newRxBytesFixed < 0 || rxBytesTotal == 0) newRxBytesFixed = 0;
-                txSpeed = Math.round(newTxBytesFixed / (newTime / Math.pow(10, 9)));
-                rxSpeed = Math.round(newRxBytesFixed / (newTime / Math.pow(10, 9)));
-                txBytesTotal = newTxBytes;
-                rxBytesTotal = newRxBytes;
-            } else {
-                txSpeed = 0;
-                rxSpeed = 0;
-            }
+                boolean isConnected = false;
+                Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+                ConnectivityManager mConnectivityManager = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+                Network nw = mConnectivityManager.getActiveNetwork();
+                if (nw != null) {
+                    NetworkCapabilities capabilities = mConnectivityManager.getNetworkCapabilities(nw);
+                    if (capabilities != null && (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR))) {
+                        isConnected = true;
+                    }
+                }
+                if (isConnected) {
+                    long nanoTime = nanoTime();
+                    long newTime = nanoTime - measureTime;
+                    measureTime = nanoTime;
+                    if (newTime == 0) newTime = Math.round(4 * Math.pow(10, 9));
+                    Pair<Long, Long> bytes = getTrafficBytes(param.thisObject);
+                    long newTxBytes = bytes.first;
+                    long newRxBytes = bytes.second;
+                    long newTxBytesFixed = newTxBytes - txBytesTotal;
+                    long newRxBytesFixed = newRxBytes - rxBytesTotal;
+                    if (newTxBytesFixed < 0 || txBytesTotal == 0) newTxBytesFixed = 0;
+                    if (newRxBytesFixed < 0 || rxBytesTotal == 0) newRxBytesFixed = 0;
+                    txSpeed = Math.round(newTxBytesFixed / (newTime / Math.pow(10, 9)));
+                    rxSpeed = Math.round(newRxBytesFixed / (newTime / Math.pow(10, 9)));
+                    txBytesTotal = newTxBytes;
+                    rxBytesTotal = newRxBytes;
+                } else {
+                    txSpeed = 0;
+                    rxSpeed = 0;
+                }
             }
         });
 
-        Helpers.findAndHookMethod(nscCls, "setTextToViewList", CharSequence.class, new MethodHook() {
+        Helpers.findAndHookMethod(nscCls, "updateText", String.class, new MethodHook() {
             @Override
             protected void before(final MethodHookParam param) throws Throwable {
                 Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
@@ -1635,23 +1595,12 @@ public class System {
                 String tx = hideLow && txSpeed < lowLevel ? "" : humanReadableByteCount(mContext, txSpeed) + txarrow;
                 String rx = hideLow && rxSpeed < lowLevel ? "" : humanReadableByteCount(mContext, rxSpeed) + rxarrow;
                 param.args[0] = tx + "\n" + rx;
-                if (reduceVis) try {
-                    CopyOnWriteArrayList<?> mViewList = (CopyOnWriteArrayList<?>)XposedHelpers.getObjectField(param.thisObject, "mViewList");
-                    for (Object tv: mViewList)
-                        if (tv != null) ((TextView)tv).setAlpha(rxSpeed == 0 && txSpeed == 0 ? 0.3f : 1.0f);
-                } catch (Throwable t1) {
-                    try {
-                        ArrayList<?> mViewList = (ArrayList<?>)XposedHelpers.getObjectField(param.thisObject, "mViewList");
-                        for (Object tv: mViewList)
-                            if (tv != null) ((TextView)tv).setAlpha(rxSpeed == 0 && txSpeed == 0 ? 0.3f : 1.0f);
-                    } catch (Throwable t2) {
-                        ArrayList<?> sViewList = (ArrayList<?>)XposedHelpers.getObjectField(param.thisObject, "sViewList");
-                        for (Object tv : sViewList)
-                            if (tv != null) ((TextView)tv).setAlpha(rxSpeed == 0 && txSpeed == 0 ? 0.3f : 1.0f);
+                if (reduceVis) {
+                    TextView sv = (TextView) XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mNetworkSpeedViewWRF"), "get");
+                    if (sv != null) {
+                        sv.setAlpha(rxSpeed == 0 && txSpeed == 0 ? 0.3f : 1.0f);
                     }
                 }
-                //Helpers.log("DetailedNetSpeedHook", "setTextToViewList: " + tx + ", " + rx);
-                //Helpers.log("DetailedNetSpeedHook", "class: " + param.thisObject.getClass().getSimpleName());
             }
         });
     }
