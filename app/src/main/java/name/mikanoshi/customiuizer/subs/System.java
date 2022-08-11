@@ -342,9 +342,8 @@ public class System extends SubFragment {
 				});
 
 				((CheckBoxPreferenceEx)findPreference("pref_key_system_credentials")).setChecked(getActivity().getPackageManager().getComponentEnabledSetting(new ComponentName(getActivity(), CredentialsLauncher.class)) == PackageManager.COMPONENT_ENABLED_STATE_ENABLED);
-				if (!Helpers.is12()) ((CheckBoxPreferenceEx)findPreference("pref_key_system_securecontrolcenter")).setUnsupported(true);
 				if (Helpers.isDeviceEncrypted(getContext())) {
-					CheckBoxPreferenceEx nopwd = (CheckBoxPreferenceEx)findPreference("pref_key_system_nopassword");
+					CheckBoxPreferenceEx nopwd = findPreference("pref_key_system_nopassword");
 					nopwd.setChecked(false);
 					nopwd.setUnsupported(true);
 				}
