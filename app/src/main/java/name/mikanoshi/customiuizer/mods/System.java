@@ -2072,7 +2072,7 @@ public class System {
                 if (tile == null) return;
                 String tileClass = tile.getClass().getCanonicalName();
                 if (!hookedTiles.contains(tileClass)) {
-                    Helpers.findAndHookMethod(tileClass, lpparam.classLoader, "handleClick", new MethodHook(20) {
+                    Helpers.hookAllMethods(tileClass, lpparam.classLoader, "handleClick", new MethodHook(20) {
                         @Override
                         protected void after(final MethodHookParam param) throws Throwable {
                             Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
@@ -2552,7 +2552,7 @@ public class System {
                 }
             }
         });
-        Helpers.findAndHookMethod("com.miui.systemui.SettingsManager", lpparam.classLoader, "getExtendedPowerMenuEnabled", XC_MethodReplacement.returnConstant(true));
+        Helpers.findAndHookMethodSilently("com.miui.systemui.SettingsManager", lpparam.classLoader, "getExtendedPowerMenuEnabled", XC_MethodReplacement.returnConstant(true));
 
         Helpers.hookAllConstructors("com.android.systemui.globalactions.MiuiGlobalActions", lpparam.classLoader, new MethodHook() {
             @Override
@@ -7137,26 +7137,15 @@ public class System {
     }
 
     public static void SecureControlCenterHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "updateKeyguardState", boolean.class, boolean.class, new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                Object mStatusBarWindow = XposedHelpers.callMethod(param.thisObject, "getStatusBarWindow");
-                if (mStatusBarWindow == null) return;
-                Object mControllerPanel = XposedHelpers.getObjectField(mStatusBarWindow, "mControllerPanel");
-                if (mControllerPanel == null) return;
-                Object mControlCenter = XposedHelpers.getObjectField(mControllerPanel, "mControlCenter");
-                if (mControlCenter == null) return;
-                KeyguardManager kgMgr = (KeyguardManager)XposedHelpers.getObjectField(param.thisObject, "mKeyguardManager");
-                XposedHelpers.setAdditionalInstanceField(mControlCenter, "isOnSecureKeyguard", kgMgr.isKeyguardLocked() && kgMgr.isKeyguardSecure());
-            }
-        });
+        XposedHelpers.findAndHookMethod("com.android.keyguard.utils.MiuiKeyguardUtils", lpparam.classLoader, "supportExpandableStatusbarUnderKeyguard", XC_MethodReplacement.returnConstant(false));
 
-        Helpers.hookAllMethods("com.android.systemui.miui.statusbar.ControlCenter", lpparam.classLoader, "panelEnabled", new MethodHook() {
+        Helpers.hookAllMethods("com.android.systemui.controlcenter.policy.ControlCenterControllerImpl", lpparam.classLoader, "onContentChanged", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
-                boolean isOnSecureKeyguard = false;
-                try { isOnSecureKeyguard = (boolean)XposedHelpers.getAdditionalInstanceField(param.thisObject, "isOnSecureKeyguard"); } catch (Throwable ignore) {}
-                if (isOnSecureKeyguard) param.setResult(false);
+                String key = (String) param.args[0];
+                if ("expandable_under_lock_screen".equals(key)) {
+                    param.args[1] = "0";
+                }
             }
         });
     }
@@ -7372,11 +7361,9 @@ public class System {
                                         Object mApplication = XposedHelpers.callMethod(mContext.getApplicationContext(), "getSystemUIApplication");
                                         Object mStatusBar = XposedHelpers.callMethod(mApplication, "getComponent", findClassIfExists("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader));
                                         boolean usingControlCenter = false;
-                                        if (Helpers.is12()) {
-                                            Object mController = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", lpparam.classLoader), "get", findClassIfExists("com.android.systemui.miui.statusbar.policy.ControlPanelController", lpparam.classLoader));
-                                            usingControlCenter = (boolean)XposedHelpers.callMethod(mController, "isUseControlCenter");
-                                            if (usingControlCenter) XposedHelpers.callMethod(mController, "collapsePanel", true);
-                                        }
+                                        Object mController = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", lpparam.classLoader), "get", findClassIfExists("com.android.systemui.controlcenter.policy.ControlCenterControllerImpl", lpparam.classLoader));
+                                        usingControlCenter = (boolean)XposedHelpers.callMethod(mController, "isUseControlCenter");
+                                        if (usingControlCenter) XposedHelpers.callMethod(mController, "collapseControlCenter", true);
                                         boolean keepOpened = MainModule.mPrefs.getBoolean("system_secureqs_keepopened");
                                         final boolean usingCenter = usingControlCenter;
                                         final boolean expandAfter = usingControlCenter && keepOpened;
@@ -7401,7 +7388,7 @@ public class System {
                     };
                     Helpers.findAndHookMethod(tileClass, lpparam.classLoader, "handleClick", hook);
                     //noinspection ResultOfMethodCallIgnored
-                    Helpers.findAndHookMethodSilently(tileClass, lpparam.classLoader, "handleSecondaryClick", hook);
+                    Helpers.hookAllMethodsSilently(tileClass, lpparam.classLoader, "handleSecondaryClick", hook);
                     securedTiles.add(tileClass);
                 }
             }
