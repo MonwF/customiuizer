@@ -6622,11 +6622,13 @@ public class System {
     }
 
     public static void NoSOSHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.keyguard.EmergencyButton", lpparam.classLoader, "updateEmergencyCallButton", new MethodHook() {
+        Helpers.hookAllMethods("com.android.keyguard.EmergencyButton", lpparam.classLoader, "updateEmergencyCallButton", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 Button mSOS = (Button)param.thisObject;
-                if (mSOS.getVisibility() == View.VISIBLE) mSOS.setEnabled(false);
+                if (mSOS.getVisibility() == View.VISIBLE) {
+                    mSOS.setVisibility(View.INVISIBLE);
+                }
             }
         });
     }
