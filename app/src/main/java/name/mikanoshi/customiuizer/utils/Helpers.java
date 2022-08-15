@@ -183,12 +183,6 @@ public class Helpers {
 		public static int ALL = IMAGE | AUDIO | VIDEO | DOCUMENT | ARCHIVE | LINK | OTHERS;
 	}
 
-	public static int getSystemBackgroundColor(Context context) {
-		int black = Color.BLACK;
-		int white = Color.WHITE;
-		return isNightMode(context) ? black : white;
-	}
-
 	public static void setMiuiCheckbox(CheckBox checkbox) {
 		checkbox.setBackground(null);
 		int btnResID = checkbox.getResources().getIdentifier(isNightMode(checkbox.getContext()) ? "btn_checkbox_dark" : "btn_checkbox_light", "drawable", "miui");

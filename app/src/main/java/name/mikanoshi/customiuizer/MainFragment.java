@@ -255,7 +255,6 @@ public class MainFragment extends PreferenceFragmentBase {
 				return false;
 			}
 		});
-		setViewBackground(resultView);
 
 		listView = getListView();
 		final Activity act = getActivity();

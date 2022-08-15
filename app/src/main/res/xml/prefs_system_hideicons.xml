@@ -102,6 +102,11 @@
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_privacy"
+		android:title="@string/system_statusbaricons_privacy_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbaricons_headset"
 		android:title="@string/system_statusbaricons_headset_title"
 		android:defaultValue="false" />

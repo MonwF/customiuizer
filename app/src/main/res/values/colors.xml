@@ -6,7 +6,6 @@
 	<color name="about_divider">#33808080</color>
 
 	<color name="highlight_normal_light">@android:color/system_accent1_600</color>
-	<color name="checked_text">@color/highlight_normal_light</color>
 
 	<color name="preference_category_text_color">@color/highlight_normal_light</color>
 	<color name="preference_primary_text_color">#ff000000</color>

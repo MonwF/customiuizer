@@ -3705,6 +3705,18 @@ public class System {
         });
     }
 
+    public static void HideIconsPrivacyHook(LoadPackageParam lpparam) {
+        Helpers.findAndHookMethod("android.app.StatusBarManager", lpparam.classLoader, "setIconVisibility", String.class, boolean.class, new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                String iconType = (String)param.args[0];
+                if (iconType.equals("stealth")) {
+                    param.args[1] = false;
+                }
+            }
+        });
+    }
+
     public static void HideIconsVoWiFiHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethodSilently("com.android.systemui.MiuiOperatorCustomizedPolicy$MiuiOperatorConfig", lpparam.classLoader, "getHideVowifi", XC_MethodReplacement.returnConstant(true));
     }
