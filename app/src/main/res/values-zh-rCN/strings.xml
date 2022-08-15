@@ -43,6 +43,7 @@
     <string name="system_statusbaricons_profile_title">工作配置</string>
     <string name="system_statusbaricons_sound_title">声音情景</string>
     <string name="system_statusbaricons_dnd_title">勿扰模式</string>
+    <string name="system_statusbaricons_privacy_title">隐身模式</string>
     <string name="system_statusbaricons_headset_title">耳机</string>
     <string name="system_statusbaricons_mute_title">通话：麦克风静音</string>
     <string name="system_statusbaricons_speaker_title">通话：免提</string>

@@ -202,12 +202,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
             View renderView = vs.inflate();
             fixStubLayout(renderView, 2);
         }
-        setViewBackground(view);
         initFragment();
-    }
-
-    public void setViewBackground(View view) {
-        view.setBackgroundColor(Helpers.getSystemBackgroundColor(getValidContext()));
     }
 
     public void openSubFragment(Fragment fragment, Bundle args, Helpers.SettingsType settingsType, Helpers.ActionBarType abType, int titleResId, int contentResId) {
