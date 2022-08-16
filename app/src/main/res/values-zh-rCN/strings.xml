@@ -310,10 +310,14 @@
     <string name="system_blocktoasts_summ">阻止所选应用显示toast</string>
     <string name="system_fivegtile_title">5G开关</string>
     <string name="system_fivegtile_summ">添加5G开关磁贴至快速设置</string>
+    <string name="system_wifipassword_title">查看已保存Wi-Fi密码</string>
+    <string name="system_wifipassword_btn_title">查看</string>
+    <string name="system_wifi_password_label">密码</string>
+    <string name="system_wifi_password_dlgtitle">Wi-Fi 详情</string>
     <string name="system_nodarkforce_title">禁用强制黑暗模式</string>
     <string name="system_nodarkforce_summ">在黑暗模式中不反转某些颜色</string>
     <string name="system_epm_title">扩展电源菜单</string>
-    <string name="system_epm_summ">新增以下重启选项到电源菜单(引导模式、恢复模式、软重启、重启系统界面、重启启动器)</string>
+    <string name="system_epm_summ">新增以下重启选项到电源菜单(引导模式、恢复模式、软重启)</string>
     <string name="system_downgrade_title">允许降级</string>
     <string name="system_downgrade_summ">可以在新版本应用上安装旧版本应用</string>
     <string name="system_apksign_title">禁用签名认证</string>

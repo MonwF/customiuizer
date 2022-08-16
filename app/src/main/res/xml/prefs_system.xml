@@ -1074,6 +1074,11 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_wifipassword"
+			android:title="@string/system_wifipassword_title"
+			android:defaultValue="true" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_epm"
 			android:title="@string/system_epm_title"
 			android:summary="@string/system_epm_summ"
