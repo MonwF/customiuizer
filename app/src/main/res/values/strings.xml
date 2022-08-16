@@ -329,10 +329,14 @@
 	<string name="system_airplanemodeconfig_note">Mod only changes existing system setting, some options might not work</string>
 	<string name="system_fivegtile_title">5G tile</string>
 	<string name="system_fivegtile_summ">Add 5G tile to qs panel</string>
+	<string name="system_wifipassword_title">View password of saved Wi-Fi network</string>
+	<string name="system_wifipassword_btn_title">View</string>
+	<string name="system_wifi_password_label">Password</string>
+	<string name="system_wifi_password_dlgtitle">Wi-Fi detail</string>
 	<string name="system_nodarkforce_title">Disable forced dark mode</string>
 	<string name="system_nodarkforce_summ">Do not invert some colors in dark mode</string>
 	<string name="system_epm_title">Extended power menu</string>
-	<string name="system_epm_summ">Add new restart options to power menu (Fastboot mode, Recovery mode, Soft reboot, Restart System UI, Restart Launcher)</string>
+	<string name="system_epm_summ">Add new restart options to power menu (Fastboot mode, Recovery mode, Soft reboot)</string>
 	<string name="system_downgrade_title">Allow downgrade</string>
 	<string name="system_downgrade_summ">Make installing older app version on top of a newer one possible</string>
 	<string name="system_apksign_title">Disable signature verification</string>

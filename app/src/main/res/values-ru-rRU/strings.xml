@@ -561,10 +561,13 @@
     <string name="system_airplanemodeconfig_title">Конфигурация режима полёта</string>
     <string name="system_airplanemodeconfig_summ">Задать разрешённые коммуникации в режиме полёта. Перезагрузка не требуется.</string>
     <string name="system_airplanemodeconfig_note">Мод всего лишь меняет уже существующий параметр системы, некоторые опции могут не работать</string>
+    <string name="system_wifipassword_btn_title">Проверять</string>
+    <string name="system_wifi_password_label">пароль</string>
+    <string name="system_wifi_password_dlgtitle">детали Wi-Fi</string>
     <string name="system_nodarkforce_title">Отключить принудительный тёмный режим</string>
     <string name="system_nodarkforce_summ">Не инвертировать некоторые цвета в тёмном режиме</string>
     <string name="system_epm_title">Расширенное меню питания</string>
-    <string name="system_epm_summ">Добавляет новые опции презагрузки в меню питания (Режим Fastboot, Режим Recovery, Быстрая перезагрузка, Перезапуск интерфейса, Перезапуск ланчера)</string>
+    <string name="system_epm_summ">Добавляет новые опции презагрузки в меню питания (Режим Fastboot, Режим Recovery, Быстрая перезагрузка)</string>
     <string name="system_downgrade_title">Разрешить понижение версии</string>
     <string name="system_downgrade_summ">Делает возможным установку старой версии приложения поверх новой</string>
     <string name="system_apksign_title">Отключить проверку подписи</string>

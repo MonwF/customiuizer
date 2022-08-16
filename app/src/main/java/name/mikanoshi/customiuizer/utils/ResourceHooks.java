@@ -58,8 +58,7 @@ public class ResourceHooks {
 		Helpers.findAndHookMethod(Resources.class, "getDimensionPixelOffset", int.class, mReplaceHook);
 		Helpers.findAndHookMethod(Resources.class, "getDimensionPixelSize", int.class, mReplaceHook);
 		Helpers.findAndHookMethod(Resources.class, "getText", int.class, mReplaceHook);
-		if (Helpers.isNougat())
-		Helpers.findAndHookMethod(Resources.class, "getDrawable", int.class, Resources.Theme.class, mReplaceHook);
+		Helpers.findAndHookMethod(Resources.class, "getString", int.class, mReplaceHook);
 		Helpers.findAndHookMethod(Resources.class, "getDrawableForDensity", int.class, int.class, Resources.Theme.class, mReplaceHook);
 		Helpers.findAndHookMethod(Resources.class, "getIntArray", int.class, mReplaceHook);
 		Helpers.findAndHookMethod(Resources.class, "getStringArray", int.class, mReplaceHook);

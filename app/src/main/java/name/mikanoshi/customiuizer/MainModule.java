@@ -342,6 +342,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_notifimportance")) {
                 System.NotificationImportanceHook(lpparam);
             }
+            if (mPrefs.getBoolean("system_wifipassword")) {
+                System.ViewWifiPasswordHook(lpparam);
+            }
         }
 
         if (pkg.equals("com.google.android.packageinstaller") || pkg.equals("com.android.packageinstaller")) {
