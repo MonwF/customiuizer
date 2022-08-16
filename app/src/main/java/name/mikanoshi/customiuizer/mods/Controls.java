@@ -861,7 +861,7 @@ public class Controls {
 	}
 
 	public static void FingerprintHapticSuccessHook(LoadPackageParam lpparam) {
-		String authClient = "com.android.server.biometrics.AuthenticationClient";
+		String authClient = "com.android.server.biometrics.sensors.AuthenticationClient";
 		Helpers.hookAllMethods(authClient, lpparam.classLoader, "onAuthenticated", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
@@ -879,22 +879,23 @@ public class Controls {
 	}
 
 	public static void FingerprintHapticFailureHook(LoadPackageParam lpparam) {
-		String monitorClass = "com.android.server.biometrics.ClientMonitor";
-		Helpers.hookAllMethods("com.android.server.VibratorService", lpparam.classLoader, "vibrate", new MethodHook() {
+		String monitorClass = "com.android.server.biometrics.sensors.AcquisitionClient";
+		Helpers.hookAllMethods("android.os.SystemVibrator", lpparam.classLoader, "vibrate", new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
 				StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-				for (StackTraceElement el : stackTrace)
-				if (monitorClass.equals(el.getClassName()) && "vibrateError".equals(el.getMethodName())) {
-					param.setResult(null);
-					return;
+				for (StackTraceElement el : stackTrace) {
+					if (monitorClass.equals(el.getClassName()) && "vibrateError".equals(el.getMethodName())) {
+						param.setResult(null);
+						return;
+					}
 				}
 			}
 		});
 	}
 
 	public static void FingerprintScreenOnHook(LoadPackageParam lpparam) {
-		String authClient = "com.android.server.biometrics.AuthenticationClient";
+		String authClient = "com.android.server.biometrics.sensors.AuthenticationClient";
 		Helpers.hookAllMethods(authClient, lpparam.classLoader, "onAuthenticated", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
