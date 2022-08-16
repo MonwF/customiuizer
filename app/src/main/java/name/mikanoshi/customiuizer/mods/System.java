@@ -2306,16 +2306,6 @@ public class System {
                 if (checkVibration(pkgName, param.thisObject)) param.setResult(null);
             }
         });
-
-        if (Helpers.isNougat())
-            Helpers.hookAllMethods("com.android.server.VibratorService", lpparam.classLoader, "vibratePattern", new MethodHook() {
-                @Override
-                protected void before(final MethodHookParam param) throws Throwable {
-                    String pkgName = (String)param.args[1];
-                    if (pkgName == null) return;
-                    if (checkVibration(pkgName, param.thisObject)) param.setResult(null);
-                }
-            });
     }
 
     public static void QQSGridRes() {
