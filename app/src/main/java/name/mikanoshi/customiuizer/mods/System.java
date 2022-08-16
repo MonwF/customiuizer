@@ -2273,7 +2273,7 @@ public class System {
     }
 
     public static void SelectiveVibrationHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.server.VibratorService", lpparam.classLoader, "systemReady", new MethodHook() {
+        Helpers.findAndHookConstructor("android.os.SystemVibrator", lpparam.classLoader, Context.class, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
@@ -2297,10 +2297,9 @@ public class System {
             }
         });
 
-        Helpers.hookAllMethods("com.android.server.VibratorService", lpparam.classLoader, "vibrate", new MethodHook() {
+        Helpers.hookAllMethods("android.os.SystemVibrator", lpparam.classLoader, "vibrate", new MethodHook() {
             @Override
             protected void before(final MethodHookParam param) throws Throwable {
-                //XposedBridge.log(Arrays.toString(new Throwable().getStackTrace()));
                 String pkgName = (String)param.args[1];
                 if (pkgName == null) return;
                 if (checkVibration(pkgName, param.thisObject)) param.setResult(null);
