@@ -895,7 +895,12 @@ public class Various {
 	}
 
 	public static void AppInfoDuringMiuiInstallHook(LoadPackageParam lpparam) {
-		Method[] methods = XposedHelpers.findMethodsByExactParameters(findClass("com.android.packageinstaller.PackageInstallerActivity", lpparam.classLoader), void.class, String.class);
+		Class<?> InstallActivity = findClassIfExists("com.android.packageinstaller.PackageInstallerActivity", lpparam.classLoader);
+		if (InstallActivity == null) {
+			Helpers.log("AppInfoDuringMiuiInstallHook", "Cannot find appropriate activity");
+			return;
+		}
+		Method[] methods = XposedHelpers.findMethodsByExactParameters(InstallActivity, void.class, String.class);
 		if (methods.length == 0) {
 			Helpers.log("AppInfoDuringMiuiInstallHook", "Cannot find appropriate method");
 			return;
@@ -953,6 +958,12 @@ public class Various {
 				if ("persist.sys.allow_sys_app_update".equals(param.args[0])) {
 					param.setResult(true);
 				}
+			}
+		});
+		Helpers.findAndHookMethodSilently("com.miui.packageInstaller.InstallStart", lpparam.classLoader, "getCallingPackage", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				param.setResult("com.android.fileexplorer");
 			}
 		});
 	}
