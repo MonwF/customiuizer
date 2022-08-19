@@ -545,7 +545,7 @@ public class Various {
 	}
 
 	public static void AlarmCompatServiceHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.android.server.AlarmManagerService", lpparam.classLoader, "onBootPhase", int.class, new MethodHook() {
+		Helpers.findAndHookMethod("com.android.server.alarm.AlarmManagerService", lpparam.classLoader, "onBootPhase", int.class, new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
 				if ((int)param.args[0] != 500 /*PHASE_SYSTEM_SERVICES_READY*/) return;
@@ -568,7 +568,7 @@ public class Various {
 			}
 		});
 
-		Helpers.findAndHookMethod("com.android.server.AlarmManagerService", lpparam.classLoader, "getNextAlarmClockImpl", int.class, new MethodHook() {
+		Helpers.findAndHookMethod("com.android.server.alarm.AlarmManagerService", lpparam.classLoader, "getNextAlarmClockImpl", int.class, new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
 				Context mContext = (Context)XposedHelpers.callMethod(param.thisObject, "getContext");
