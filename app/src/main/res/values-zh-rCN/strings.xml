@@ -153,7 +153,7 @@
     <string name="system_popupnotif_fs_summ">应用激活全屏模式时不打开通知抽屉(不适用于具有隐藏状态和导航栏的沉浸式应用)</string>
     <string name="system_popupnotif_apps_title">已选应用</string>
     <string name="various_collapsemiuititles_title">折叠 MIUI 标题</string>
-    <string name="various_collapsemiuititles_summ">调整 MIUI 12 应用中顶栏的标题</string>
+    <string name="various_collapsemiuititles_summ">调整 MIUI13 应用中顶栏的标题</string>
     <string name="system_mods_screenshots">截图</string>
     <string name="system_screenshot_title">截图配置</string>
     <string name="system_screenshot_summ">自定义截图的格式、质量和存放目录</string>

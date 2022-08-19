@@ -6380,11 +6380,11 @@ public class System {
                 if (pkgName.equals("com.android.systemui")) {
                     return;
                 }
-                IntentFilter intentFilter = new IntentFilter();
-                intentFilter.addAction("customuizer.action.TempHideOverlay");
-                intentFilter.addAction("miui.intent.TAKE_SCREENSHOT");
                 if (!isListened[0]) {
                     isListened[0] = true;
+                    IntentFilter intentFilter = new IntentFilter();
+                    intentFilter.addAction("customuizer.action.TempHideOverlay");
+                    intentFilter.addAction("miui.intent.TAKE_SCREENSHOT");
                     view.getContext().registerReceiver(new BroadcastReceiver() {
                         @Override
                         public void onReceive(Context context, Intent intent) {
