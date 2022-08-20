@@ -6669,43 +6669,21 @@ public class System {
     }
 
     public static void MaxNotificationIconsHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.NotificationIconContainer", lpparam.classLoader, "getMaxIconCount", new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.NotificationIconContainer", lpparam.classLoader, "miuiShowNotificationIcons", boolean.class, new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
-                int opt = MainModule.mPrefs.getStringAsInt("system_maxsbicons", 0);
-                param.setResult(opt == -1 ? 9999 : opt);
+                boolean isShow = (boolean) param.args[0];
+                if (isShow) {
+                    int opt = MainModule.mPrefs.getStringAsInt("system_maxsbicons", 0);
+                    opt = opt == -1 ? 999 : opt;
+                    XposedHelpers.setObjectField(param.thisObject, "MAX_DOTS", 3);
+                    XposedHelpers.setObjectField(param.thisObject, "MAX_STATIC_ICONS", opt);
+                    XposedHelpers.setObjectField(param.thisObject, "MAX_VISIBLE_ICONS_ON_LOCK", opt);
+                    XposedHelpers.callMethod(param.thisObject, "updateState");
+                    param.setResult(null);
+                }
             }
         });
-
-//		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.NotificationIconContainer", lpparam.classLoader, "calculateIconTranslations", new MethodHook() {
-//			@Override
-//			@SuppressWarnings("unchecked")
-//			protected void after(MethodHookParam param) throws Throwable {
-//				HashMap<View, ?> mIconStates = (HashMap<View, ?>)XposedHelpers.getObjectField(param.thisObject, "mIconStates");
-//				if (mIconStates.size() == 0) return;
-//				int opt = MainModule.mPrefs.getStringAsInt("system_maxsbicons", 0);
-//				ViewGroup container = (ViewGroup)param.thisObject;
-//				for (int i = 0; i < container.getChildCount(); i++)
-//				if (opt == -1 || i < opt) {
-//					Object mIconState = mIconStates.get(container.getChildAt(i));
-//					if (mIconState == null) continue;
-//					XposedHelpers.setIntField(mIconState, "visibleState", 0);
-//					XposedHelpers.setFloatField(mIconState, "iconAppearAmount", 1.0f);
-//					XposedHelpers.setFloatField(mIconState, "xTranslation", (float)XposedHelpers.callMethod(param.thisObject, "getActualPaddingStart"));
-//				}
-//			}
-//		});
-
-//		for (Member method: Math.class.getMethods())
-//		if (method.getName().equals("min")) Helpers.log("min method found! " + method);
-
-//		Set<XC_MethodHook.Unhook> unhooks = XposedBridge.hookAllMethods(Math.class, "min", new MethodHook() {
-//			@Override
-//			protected void before(MethodHookParam param) throws Throwable {
-//				Helpers.log("Math.min: " + param.args[1].getClass().getSimpleName() + ", " + param.args[1]);
-//			}
-//		});
-//		Helpers.log("unhooks: " + unhooks.size());
     }
 
     public static void MoreNotificationsHook(LoadPackageParam lpparam) {
