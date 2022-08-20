@@ -152,8 +152,6 @@ public class System extends SubFragment {
 					}
 				});
 
-				if (!Helpers.is12()) ((ListPreferenceEx)findPreference("pref_key_system_maxsbicons")).setUnsupported(true);
-
 				break;
 			case "pref_key_system_cat_drawer":
 				findPreference("pref_key_system_popupnotif_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
