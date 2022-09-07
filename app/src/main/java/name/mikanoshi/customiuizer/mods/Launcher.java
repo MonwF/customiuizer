@@ -466,7 +466,7 @@ public class Launcher {
 		});
 
 		//noinspection ResultOfMethodCallIgnored
-		Helpers.findAndHookMethodSilently("com.miui.home.launcher.ShortcutInfo", lpparam.classLoader, "loadSettingsInfo", Context.class, new MethodHook() {
+		Helpers.findAndHookMethodSilently("com.miui.home.launcher.ShortcutInfo", lpparam.classLoader, "loadToggleInfo", Context.class, new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
 				XposedHelpers.setAdditionalInstanceField(param.thisObject, "mLabelOrig", XposedHelpers.getObjectField(param.thisObject, "mLabel"));
@@ -474,19 +474,7 @@ public class Launcher {
 			}
 		});
 
-		if (!Helpers.findAndHookMethodSilently("com.miui.home.launcher.ShortcutInfo", lpparam.classLoader, "setLabelAndUpdateDB", CharSequence.class, Context.class, new MethodHook() {
-			@Override
-			protected void after(final MethodHookParam param) throws Throwable {
-				XposedHelpers.setAdditionalInstanceField(param.thisObject, "mLabelOrig", param.args[0]);
-				modifyTitle(param.thisObject);
-			}
-		})) if (!Helpers.findAndHookMethodSilently("com.miui.home.launcher.ShortcutInfo", lpparam.classLoader, "setLabel", CharSequence.class, new MethodHook() {
-			@Override
-			protected void after(final MethodHookParam param) throws Throwable {
-				XposedHelpers.setAdditionalInstanceField(param.thisObject, "mLabelOrig", param.args[0]);
-				modifyTitle(param.thisObject);
-			}
-		})) Helpers.findAndHookMethod("com.miui.home.launcher.ShortcutInfo", lpparam.classLoader, "setLabel", CharSequence.class, Context.class, new MethodHook() {
+		Helpers.findAndHookMethodSilently("com.miui.home.launcher.ShortcutInfo", lpparam.classLoader, "setLabelAndUpdateDB", CharSequence.class, Context.class, new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
 				XposedHelpers.setAdditionalInstanceField(param.thisObject, "mLabelOrig", param.args[0]);
@@ -501,7 +489,7 @@ public class Launcher {
 			}
 		});
 
-		Helpers.hookAllMethodsSilently("com.miui.home.launcher.AppInfo", lpparam.classLoader, "resetTitle", new MethodHook() {
+		Helpers.hookAllMethodsSilently("com.miui.home.launcher.BaseAppInfo", lpparam.classLoader, "resetTitle", new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
 				modifyTitle(param.thisObject);

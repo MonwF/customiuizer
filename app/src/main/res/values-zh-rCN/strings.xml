@@ -240,7 +240,7 @@
     <string name="system_scramblepin_summ">随机更改PIN键盘顺序</string>
     <string name="system_securelock_title">增强屏幕锁</string>
     <string name="system_securelock_summ">屏幕锁激活时禁用电源菜单</string>
-    <string name="system_securecontrolcenter_title">安全控制中心</string>
+    <string name="system_securecontrolcenter_title">加固控制中心</string>
     <string name="system_securecontrolcenter_summ">屏幕锁激活时禁用控制中心</string>
     <string name="system_secureqs_title">安全快速设置</string>
     <string name="system_secureqs_summ">屏幕锁激活时禁用安全敏感的磁贴</string>
@@ -441,7 +441,7 @@
     <string name="system_applock_activities">已选中活动</string>
     <string name="system_mods_qs">快速设置</string>
     <string name="system_qsgridrows_title">行数</string>
-    <string name="system_qsgridrows_note">竖屏时能隐藏的标签为5行，横屏时则限制为3行。</string>
+    <string name="system_qsgridrows_note">竖屏显示5行时会隐藏标签，横屏时则限制为3行。</string>
     <string name="system_qsgridcolumns_title">列数</string>
     <string name="system_qsgridcolumns_note">竖屏时会额外增加一列。如果您的ROM具有快速设置紧凑布局选项，不管是横屏还是竖屏都会增加其他列。</string>
     <string name="system_qqsgridcolumns_title">折叠面板中的列数</string>
