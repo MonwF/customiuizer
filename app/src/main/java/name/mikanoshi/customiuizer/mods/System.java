@@ -928,7 +928,6 @@ public class System {
                             if (param.args.length != 4) return;
                             int streamType = (int) param.args[0];
                             if (streamType == 4) {
-                                Helpers.log("addColumn 5");
                                 XposedHelpers.callMethod(param.thisObject, "addColumn", 5, notifVolumeOnResId, notifVolumeOffResId, true, false);
                             }
                         }
@@ -1907,7 +1906,7 @@ public class System {
         MainModule.resHooks.setResReplacement("android", "anim", "screen_rotate_plus_90_exit", exit);
     }
 
-    public static void RotationAnimatinoHook(LoadPackageParam lpparam) {
+    public static void RotationAnimationHook(LoadPackageParam lpparam) {
         MethodHook animEnter = new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
@@ -1918,7 +1917,7 @@ public class System {
                     param.setResult(anim);
                 } else if (opt == 3) {
                     Animation alphaAnim = new AlphaAnimation(1.0f, 1.0f);
-                    alphaAnim.setInterpolator((Interpolator)XposedHelpers.getStaticObjectField(XposedHelpers.findClass("com.android.server.wm.ScreenRotationAnimationInjector", lpparam.classLoader), "QUART_EASE_OUT_INTERPOLATOR"));
+                    alphaAnim.setInterpolator((Interpolator)XposedHelpers.getStaticObjectField(XposedHelpers.findClass("com.android.server.wm.AppTransitionInjector", lpparam.classLoader), "QUART_EASE_OUT_INTERPOLATOR"));
                     alphaAnim.setDuration(300);
                     alphaAnim.setFillAfter(true);
                     alphaAnim.setFillBefore(true);
@@ -1937,7 +1936,7 @@ public class System {
                     anim.setDuration(0);
                 } else if (opt == 3) {
                     AlphaAnimation alphaAnim = new AlphaAnimation(1.0f, 0.0f);
-                    alphaAnim.setInterpolator((Interpolator)XposedHelpers.getStaticObjectField(XposedHelpers.findClass("com.android.server.wm.ScreenRotationAnimationInjector", lpparam.classLoader), "QUART_EASE_OUT_INTERPOLATOR"));
+                    alphaAnim.setInterpolator((Interpolator)XposedHelpers.getStaticObjectField(XposedHelpers.findClass("com.android.server.wm.AppTransitionInjector", lpparam.classLoader), "QUART_EASE_OUT_INTERPOLATOR"));
                     alphaAnim.setDuration(300);
                     alphaAnim.setFillAfter(true);
                     alphaAnim.setFillBefore(true);
@@ -1947,11 +1946,11 @@ public class System {
             }
         };
 
-        Helpers.findAndHookMethod("com.android.server.wm.ScreenRotationAnimationInjector", lpparam.classLoader, "createRotation180Enter", animEnter);
-        Helpers.findAndHookMethod("com.android.server.wm.ScreenRotationAnimationInjector", lpparam.classLoader, "createRotation180Exit", animExit);
-        Helpers.hookAllMethods("com.android.server.wm.ScreenRotationAnimationInjector", lpparam.classLoader, "createRotationEnter", animEnter);
-        Helpers.hookAllMethods("com.android.server.wm.ScreenRotationAnimationInjector", lpparam.classLoader, "createRotationEnterWithBackColor", animEnter);
-        Helpers.hookAllMethods("com.android.server.wm.ScreenRotationAnimationInjector", lpparam.classLoader, "createRotationExit", animExit);
+        Helpers.findAndHookMethod("com.android.server.wm.ScreenRotationAnimationImpl", lpparam.classLoader, "createRotation180Enter", animEnter);
+        Helpers.findAndHookMethod("com.android.server.wm.ScreenRotationAnimationImpl", lpparam.classLoader, "createRotation180Exit", animExit);
+        Helpers.hookAllMethods("com.android.server.wm.ScreenRotationAnimationImpl", lpparam.classLoader, "createRotationEnter", animEnter);
+        Helpers.hookAllMethods("com.android.server.wm.ScreenRotationAnimationImpl", lpparam.classLoader, "createRotationEnterWithBackColor", animEnter);
+        Helpers.hookAllMethods("com.android.server.wm.ScreenRotationAnimationImpl", lpparam.classLoader, "createRotationExit", animExit);
     }
 
     public static void NoVersionCheckHook(LoadPackageParam lpparam) {
@@ -2349,13 +2348,19 @@ public class System {
         if (mRecord == null) return;
         Object tileView = XposedHelpers.getObjectField(mRecord, "tileView");
         if (tileView != null) {
-            ViewGroup mLabelContainer = (ViewGroup)XposedHelpers.getObjectField(tileView, "mLabelContainer");
-            if (mLabelContainer != null)
+            ViewGroup mLabelContainer = null;
+            try {
+                mLabelContainer = (ViewGroup)XposedHelpers.getObjectField(tileView, "mLabelContainer");
+            }
+            catch (Throwable ignore) {}
+
+            if (mLabelContainer != null) {
                 mLabelContainer.setVisibility(
-                        MainModule.mPrefs.getBoolean("system_qsnolabels") ||
-                                orientation == Configuration.ORIENTATION_PORTRAIT && mRows >= 5 ||
-                                orientation == Configuration.ORIENTATION_LANDSCAPE && mRows >= 3 ? View.GONE : View.VISIBLE
+                    MainModule.mPrefs.getBoolean("system_qsnolabels") ||
+                        orientation == Configuration.ORIENTATION_PORTRAIT && mRows >= 5 ||
+                        orientation == Configuration.ORIENTATION_LANDSCAPE && mRows >= 3 ? View.GONE : View.VISIBLE
                 );
+            }
         }
     }
 
@@ -2386,7 +2391,7 @@ public class System {
                 if (!(boolean)param.getResult()) return;
                 Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
                 if (mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) return;
-                XposedHelpers.setIntField(param.thisObject, "mContentHeight", Math.round(XposedHelpers.getIntField(param.thisObject, "mContentHeight") / 1.5f));
+                XposedHelpers.setIntField(param.thisObject, "mCellHeight", Math.round(XposedHelpers.getIntField(param.thisObject, "mCellHeight") / 1.5f));
                 ((ViewGroup)param.thisObject).requestLayout();
             }
         });
@@ -2404,6 +2409,34 @@ public class System {
                     );
                 }
             });
+
+
+        final boolean[] isHooked = {false};
+        Helpers.findAndHookMethod("com.android.systemui.shared.plugins.PluginManagerImpl", lpparam.classLoader, "getClassLoader", ApplicationInfo.class, new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                ApplicationInfo appInfo = (ApplicationInfo) param.args[0];
+                if ("miui.systemui.plugin".equals(appInfo.packageName) && !isHooked[0]) {
+                    isHooked[0] = true;
+                    if (pluginLoader == null) {
+                        pluginLoader = (ClassLoader) param.getResult();
+                    }
+                    Class<?> QSController = XposedHelpers.findClassIfExists("miui.systemui.controlcenter.qs.tileview.StandardTileView", pluginLoader);
+                    Helpers.hookAllMethods(QSController, "init", new MethodHook() {
+                        @Override
+                        protected void before(MethodHookParam param) throws Throwable {
+                            if (param.args.length != 1) return;
+                            View mLabelContainer = (View)XposedHelpers.getObjectField(param.thisObject, "labelContainer");
+                            if (mLabelContainer != null) {
+                                mLabelContainer.setVisibility(
+                                    MainModule.mPrefs.getBoolean("system_qsnolabels")? View.GONE : View.VISIBLE
+                                );
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 
     public static void NoDuckingHook(LoadPackageParam lpparam) {
@@ -6366,51 +6399,88 @@ public class System {
         });
     }
 
-    public static void TempHideOverlayHook() {
-        final boolean[] isListened = {false};
-        Helpers.hookAllMethods("android.view.WindowManagerGlobal", null, "addView", new MethodHook() {
-            @Override
-            @SuppressWarnings("ConstantConditions")
-            protected void after(final MethodHookParam param) throws Throwable {
-                if (param.args[0] == null || !(param.args[1] instanceof WindowManager.LayoutParams) || param.getThrowable() != null) return;
-                WindowManager.LayoutParams params = (WindowManager.LayoutParams)param.args[1];
-                final View view = (View)param.args[0];
-                if (params.type != 2002 && params.type != WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY && params.type != WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY) return;
-                String pkgName = view.getContext().getPackageName();
-                if (pkgName.equals("com.android.systemui")) {
-                    return;
+    public static void TempHideOverlayHook(LoadPackageParam lpparam, boolean hasOverlay) {
+        if (!hasOverlay) {
+            MethodHook delayScreenshotHook = new MethodHook() {
+                @Override
+                @SuppressWarnings("ConstantConditions")
+                protected void before(final MethodHookParam param) throws Throwable {
+                    if (Modifier.isPrivate(param.method.getModifiers())) {
+                        Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+                        mContext.sendBroadcast(new Intent("customuizer.action.TempHideOverlay"));
+                    }
                 }
+            };
+            Helpers.hookAllMethods("com.android.internal.util.ScreenshotHelper", lpparam.classLoader, "takeScreenshot", delayScreenshotHook);
+            Helpers.hookAllMethods("com.android.internal.util.MiuiScreenshotHelper", lpparam.classLoader, "takeScreenshot", delayScreenshotHook);
+            return;
+        }
+
+        final boolean[] isListened = {false};
+        final Activity[] mActs = {null};
+        final View[] mViews = {null};
+        MethodHook toggleViewHook = new MethodHook() {
+            @Override
+            protected void after(final MethodHookParam param) throws Throwable {
+                boolean isPip = "enterPictureInPictureMode".equals(param.method.getName());
+                Context context;
+                if (isPip) {
+                    if (param.args.length != 1) {
+                        return;
+                    }
+                    Activity thisAct = (Activity) param.thisObject;
+                    context = thisAct.getApplicationContext();
+                    mActs[0] = thisAct;
+                }
+                else {
+                    if (param.args[0] == null || !(param.args[1] instanceof WindowManager.LayoutParams) || param.getThrowable() != null) return;
+                    WindowManager.LayoutParams params = (WindowManager.LayoutParams)param.args[1];
+                    if (params.type != WindowManager.LayoutParams.TYPE_PHONE
+                        && params.type != WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY
+                        && params.type != WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY) return;
+                    View view = (View)param.args[0];
+                    context = view.getContext();
+                    mViews[0] = view;
+                }
+
                 if (!isListened[0]) {
                     isListened[0] = true;
                     IntentFilter intentFilter = new IntentFilter();
                     intentFilter.addAction("customuizer.action.TempHideOverlay");
                     intentFilter.addAction("miui.intent.TAKE_SCREENSHOT");
-                    view.getContext().registerReceiver(new BroadcastReceiver() {
+                    context.registerReceiver(new BroadcastReceiver() {
                         @Override
                         public void onReceive(Context context, Intent intent) {
                             String action = intent.getAction();
-                            if (action == null || view == null) return;
+                            if (action == null) return;
                             if (action.equals("customuizer.action.TempHideOverlay")) {
-                                ArrayList<View> mViews = (ArrayList<View>) XposedHelpers.getObjectField(param.thisObject, "mViews");
-                                for (View vs : mViews) {
+                                if (mViews[0] != null) {
+                                    View vs = mViews[0];
                                     if (vs.getVisibility() == View.VISIBLE) {
-                                        WindowManager.LayoutParams lp = (WindowManager.LayoutParams)vs.getLayoutParams();
-                                        if (lp.type == 2002 || lp.type == WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY
-                                            || lp.type == WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY) {
-                                            vs.setVisibility(View.GONE);
-                                            XposedHelpers.setAdditionalInstanceField(vs, "mSavedVisibility", View.VISIBLE);
-                                        }
+                                        vs.setVisibility(View.GONE);
+                                        XposedHelpers.setAdditionalInstanceField(vs, "mSavedVisibility", View.VISIBLE);
                                     }
                                 }
-                            }
-                            else if (action.equals("miui.intent.TAKE_SCREENSHOT")) {
+                                if (mActs[0] != null) {
+                                    Activity act = mActs[0];
+                                    if (act.isInPictureInPictureMode()) {
+                                        act.setVisible(false);
+                                    }
+                                }
+                            } else if (action.equals("miui.intent.TAKE_SCREENSHOT")) {
                                 boolean state = intent.getBooleanExtra("IsFinished", true);
                                 if (state) {
-                                    ArrayList<View> mViews = (ArrayList<View>) XposedHelpers.getObjectField(param.thisObject, "mViews");
-                                    for (View vs : mViews) {
+                                    if (mViews[0] != null) {
+                                        View vs = mViews[0];
                                         if (vs.getVisibility() == View.GONE && XposedHelpers.getAdditionalInstanceField(vs, "mSavedVisibility") != null) {
                                             vs.setVisibility(View.VISIBLE);
                                             XposedHelpers.removeAdditionalInstanceField(vs, "mSavedVisibility");
+                                        }
+                                    }
+                                    if (mActs[0] != null) {
+                                        Activity act = mActs[0];
+                                        if (act.isInPictureInPictureMode()) {
+                                            act.setVisible(true);
                                         }
                                     }
                                 }
@@ -6419,22 +6489,9 @@ public class System {
                     }, intentFilter);
                 }
             }
-        });
-    }
-
-    public static void TempHideOverlayHook(LoadPackageParam lpparam) {
-        MethodHook delayScreenshotHook = new MethodHook() {
-            @Override
-            @SuppressWarnings("ConstantConditions")
-            protected void before(final MethodHookParam param) throws Throwable {
-                if (Modifier.isPrivate(param.method.getModifiers())) {
-                    Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-                    mContext.sendBroadcast(new Intent("customuizer.action.TempHideOverlay"));
-                }
-            }
         };
-        Helpers.hookAllMethods("com.android.internal.util.ScreenshotHelper", lpparam.classLoader, "takeScreenshot", delayScreenshotHook);
-        Helpers.hookAllMethods("com.android.internal.util.MiuiScreenshotHelper", lpparam.classLoader, "takeScreenshot", delayScreenshotHook);
+        Helpers.hookAllMethods("android.app.Activity", lpparam.classLoader, "enterPictureInPictureMode", toggleViewHook);
+        Helpers.hookAllMethods("android.view.WindowManagerGlobal", lpparam.classLoader, "addView", toggleViewHook);
     }
 
     public static void ScreenshotFloatTimeHook(LoadPackageParam lpparam) {

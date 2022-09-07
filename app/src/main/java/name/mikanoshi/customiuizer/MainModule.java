@@ -77,7 +77,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (mPrefs.getBoolean("system_allownotiffloat")) System.AllowAllFloatSysHook();
         if (mPrefs.getBoolean("system_resizablewidgets")) System.ResizableWidgetsHook();
         if (mPrefs.getBoolean("system_hidelowbatwarn")) System.NoLowBatteryWarningHook();
-        if (mPrefs.getBoolean("system_screenshot_overlay")) System.TempHideOverlayHook();
         if (mPrefs.getBoolean("system_nomediamute")) System.NoMediaMuteInDNDHook();
         if (mPrefs.getBoolean("system_audiosilencer")) System.AudioSilencerHook();
         if (mPrefs.getBoolean("system_fw_noblacklist")) System.NoFloatingWindowBlacklistHook();
@@ -86,7 +85,10 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (mPrefs.getStringAsInt("system_iconlabletoasts", 1) > 1) System.IconLabelToastsHook();
         if (mPrefs.getStringAsInt("system_blocktoasts", 1) > 1) System.SelectiveToastsHook();
 
-        Controls.VolumeMediaPlayerHook();
+        if (mPrefs.getStringAsInt("controls_volumemedia_up", 0) > 0 ||
+            mPrefs.getStringAsInt("controls_volumemedia_down", 0) > 0) {
+            Controls.VolumeMediaPlayerHook();
+        }
         GlobalActions.setupSystemHelpers();
         //Helpers.log("initZygote", String.valueOf(SystemClock.elapsedRealtime() - startTime));
     }
@@ -94,11 +96,25 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
     public void handleLoadPackage(final LoadPackageParam lpparam) {
         String pkg = lpparam.packageName;
 
+        if (
+            !pkg.equals("android")
+            && !pkg.equals("com.android.systemui")
+            && !pkg.equals(Helpers.modulePkg)
+            && !pkg.equals("com.miui.securitycenter")
+            && !pkg.equals("com.miui.powerkeeper")
+            && !pkg.equals("com.android.settings")
+            && !pkg.equals("com.miui.screenshot")
+            && !pkg.equals("com.miui.packageinstaller")
+            && !pkg.equals("com.miui.home")
+        ) {
+            System.TempHideOverlayHook(lpparam, true);
+        }
+
         if (pkg.equals("android") && lpparam.processName.equals("android")) {
             PackagePermissions.hook(lpparam);
             GlobalActions.setupGlobalActions(lpparam);
             if (mPrefs.getBoolean("system_screenshot_overlay")) {
-                System.TempHideOverlayHook(lpparam);
+                System.TempHideOverlayHook(lpparam, false);
             }
             if (mPrefs.getBoolean("system_popupnotif_fs") ||
                     mPrefs.getBoolean("controls_volumecursor") ||
@@ -158,7 +174,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getStringAsInt("system_nolightuponcharges", 1) > 1) System.NoLightUpOnChargeHook(lpparam);
             if (mPrefs.getStringAsInt("system_autogroupnotif", 1) > 1) System.AutoGroupNotificationsHook(lpparam);
             if (mPrefs.getStringAsInt("system_vibration", 1) > 1) System.SelectiveVibrationHook(lpparam);
-            if (mPrefs.getStringAsInt("system_rotateanim", 1) > 1) System.RotationAnimatinoHook(lpparam);
+            if (mPrefs.getStringAsInt("system_rotateanim", 1) > 1) System.RotationAnimationHook(lpparam);
             if (mPrefs.getStringAsInt("controls_fingerprintsuccess", 1) > 1) Controls.FingerprintHapticSuccessHook(lpparam);
             if (mPrefs.getStringAsInt("controls_volumemedia_up", 0) > 0 ||
                     mPrefs.getStringAsInt("controls_volumemedia_down", 0) > 0) Controls.VolumeMediaButtonsHook(lpparam);

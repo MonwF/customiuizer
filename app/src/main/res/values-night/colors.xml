@@ -2,7 +2,8 @@
 <resources>
 	<color name="color_not_selected">#99ffffff</color>
 	<color name="about_divider">#337f7f7f</color>
-	<color name="highlight_normal_light">@android:color/system_accent1_200</color>
+
+	<color name="highlight_normal_light">#ff0073dd</color>
 
 	<color name="preference_category_text_color">@color/highlight_normal_light</color>
 	<color name="preference_primary_text_color">#e6ffffff</color>
