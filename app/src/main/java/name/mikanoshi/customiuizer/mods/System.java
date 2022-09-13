@@ -6023,6 +6023,9 @@ public class System {
                         if (!mScreenshotDir.exists()) mScreenshotDir.mkdirs();
                         String relativePath = mScreenshotDir.getPath().replace(Environment.getExternalStorageDirectory().getPath() + File.separator, "");
                         contentValues.put("relative_path", relativePath);
+                        if (contentValues.getAsString("_data") != null) {
+                            contentValues.put("_data", mScreenshotDir.getPath() + "/" + displayName);
+                        }
                     }
                     contentValues.put("_display_name", displayName);
                 }
