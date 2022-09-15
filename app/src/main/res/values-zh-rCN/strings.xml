@@ -48,6 +48,7 @@
     <string name="system_statusbaricons_mute_title">通话：麦克风静音</string>
     <string name="system_statusbaricons_speaker_title">通话：免提</string>
     <string name="system_statusbaricons_record_title">通话：录音</string>
+    <string name="system_statusbaricons_volte_title">HD图标</string>
     <string name="system_batteryindicator_title">电池条指示器</string>
     <string name="system_batteryindicator_summ">将电池电量显示为彩色条</string>
     <string name="system_batteryindicator_limitvis_title">限制可见性</string>
@@ -242,7 +243,7 @@
     <string name="system_securelock_summ">屏幕锁激活时禁用电源菜单</string>
     <string name="system_securecontrolcenter_title">加固控制中心</string>
     <string name="system_securecontrolcenter_summ">屏幕锁激活时禁用控制中心</string>
-    <string name="system_secureqs_title">安全快速设置</string>
+    <string name="system_secureqs_title">加固快速设置</string>
     <string name="system_secureqs_summ">屏幕锁激活时禁用安全敏感的磁贴</string>
     <string name="system_secureqs_custom_title">所有第三方磁贴</string>
     <string name="system_secureqs_edit_title">磁贴编辑</string>

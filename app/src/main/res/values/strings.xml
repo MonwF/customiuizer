@@ -43,7 +43,7 @@
 	<string name="system_statusbaricons_alarmn_summ">Show alarm icon only during the defined number of hours before next alarm</string>
 	<string name="system_statusbaricons_signal_title">Mobile network signal</string>
 	<string name="system_statusbaricons_nosims_title">No SIM card</string>
-	<string name="system_statusbaricons_volte_title" translatable="false">VoLTE</string>
+	<string name="system_statusbaricons_volte_title">VoLTE</string>
 	<string name="system_statusbaricons_vowifi_title" translatable="false">VoWiFi</string>
 	<string name="system_statusbaricons_vpn_title" translatable="false">VPN</string>
 	<string name="system_statusbaricons_nfc_title" translatable="false">NFC</string>

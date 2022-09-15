@@ -7314,7 +7314,6 @@ public class System {
 
     public static void SecureQSTilesHook(LoadPackageParam lpparam) {
         Class<?> tileHostCls = XposedHelpers.findClassIfExists("com.android.systemui.qs.QSTileHost", lpparam.classLoader);
-        Method initMethod = XposedHelpers.findMethodExactIfExists(tileHostCls, "init");
 
         MethodHook hook = new MethodHook() {
             @Override
@@ -7334,10 +7333,8 @@ public class System {
                                 context.sendBroadcast(expandIntent);
                             }
                             LinkedHashMap<String, ?> mTiles = (LinkedHashMap<String, ?>)XposedHelpers.getObjectField(param.thisObject, "mTiles");
-                            //for (Map.Entry<String, ?> mTile: mTiles.entrySet())
-                            //XposedBridge.log(mTile.getKey() + " = " + mTile.getValue());
                             Object tile = mTiles.get(tileName);
-                            if (tile == null)
+                            if (tile == null) {
                                 if (usingCenter) {
                                     Object mController = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", lpparam.classLoader), "get", findClassIfExists("com.android.systemui.miui.statusbar.policy.ControlPanelController", lpparam.classLoader));
                                     Object mControlCenter = XposedHelpers.getObjectField(mController, "mControlCenter");
@@ -7349,30 +7346,22 @@ public class System {
                                     else if ("wifi".equals(tileName)) mBigTile = XposedHelpers.getObjectField(mControlCenterPanel, "mBigTile3");
                                     if (mBigTile != null) tile = XposedHelpers.getObjectField(mBigTile, "mQSTile");
                                     if (tile == null) return;
-                                } else return;
+                                }
+                                return;
+                            }
                             XposedHelpers.setAdditionalInstanceField(tile, "mCalledAfterUnlock", true);
-                            XposedHelpers.callMethod(tile, "handleClick");
+                            Method clickHandler = XposedHelpers.findMethodExact(tile.getClass(), "handleClick", View.class);
+                            clickHandler.invoke(tile, new Object[]{ null });
                         } catch (Throwable t) {
                             XposedBridge.log(t);
                         }
                     }
                 };
-                XposedHelpers.setAdditionalInstanceField(param.thisObject, "mAfterUnlockReceiver", mAfterUnlockReceiver);
                 mContext.registerReceiver(mAfterUnlockReceiver, new IntentFilter(ACTION_PREFIX + "HandleQSTileClick"));
             }
         };
 
-        if (initMethod != null) {
-            Helpers.findAndHookMethod(tileHostCls, "init", hook);
-            Helpers.findAndHookMethod(tileHostCls, "destroy", new MethodHook() {
-                @Override
-                protected void after(final MethodHookParam param) throws Throwable {
-                    Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-                    BroadcastReceiver mAfterUnlockReceiver = (BroadcastReceiver)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mAfterUnlockReceiver");
-                    if (mAfterUnlockReceiver != null) mContext.unregisterReceiver(mAfterUnlockReceiver);
-                }
-            });
-        } else Helpers.hookAllConstructors(tileHostCls, hook);
+        Helpers.hookAllConstructors(tileHostCls, hook);
 
         Helpers.findAndHookMethod("com.android.systemui.qs.tileimpl.QSFactoryImpl", lpparam.classLoader, "createTileInternal", String.class, new MethodHook() {
             @Override
@@ -7381,7 +7370,7 @@ public class System {
                 if (tile == null) return;
                 String tileClass = tile.getClass().getCanonicalName();
                 final String tileName = (String)param.args[0];
-                String name = (String)param.args[0];
+                String name = tileName;
                 if (name.startsWith("intent(")) name = "intent";
                 else if (name.startsWith("custom(")) name = "custom";
                 final HashSet<String> secureTitles = new HashSet<String>();
@@ -7418,18 +7407,18 @@ public class System {
                                 @Override
                                 public void run() {
                                     try {
-                                        Object mApplication = XposedHelpers.callMethod(mContext.getApplicationContext(), "getSystemUIApplication");
-                                        Object mStatusBar = XposedHelpers.callMethod(mApplication, "getComponent", findClassIfExists("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader));
-                                        boolean usingControlCenter = false;
-                                        Object mController = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", lpparam.classLoader), "get", findClassIfExists("com.android.systemui.controlcenter.policy.ControlCenterControllerImpl", lpparam.classLoader));
+                                        Class<?> DependencyClass = findClass("com.android.systemui.Dependency", lpparam.classLoader);
+                                        Object mStatusBar = XposedHelpers.callStaticMethod(DependencyClass, "get", findClassIfExists("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader));
+                                        boolean usingControlCenter;
+                                        Object mController = XposedHelpers.callStaticMethod(DependencyClass, "get", findClassIfExists("com.android.systemui.controlcenter.policy.ControlCenterControllerImpl", lpparam.classLoader));
                                         usingControlCenter = (boolean)XposedHelpers.callMethod(mController, "isUseControlCenter");
                                         if (usingControlCenter) XposedHelpers.callMethod(mController, "collapseControlCenter", true);
                                         boolean keepOpened = MainModule.mPrefs.getBoolean("system_secureqs_keepopened");
                                         final boolean usingCenter = usingControlCenter;
                                         final boolean expandAfter = usingControlCenter && keepOpened;
-                                        if (!usingControlCenter && keepOpened)
-                                            XposedHelpers.setBooleanField(mStatusBar, "mLeaveOpenOnKeyguardHide", true);
-                                        XposedHelpers.callMethod(mStatusBar, "postQSRunnableDismissingKeyguard", new Runnable() {
+//                                        if (!usingControlCenter && keepOpened)
+//                                            XposedHelpers.callMethod(XposedHelpers.getObjectField(mStatusBar, "mStatusBarStateController"), "setLeaveOpenOnKeyguardHide", true);
+                                        XposedHelpers.callMethod(mStatusBar, "postQSRunnableDismissingKeyguard", !keepOpened, new Runnable() {
                                             public void run() {
                                                 Intent intent = new Intent(ACTION_PREFIX + "HandleQSTileClick");
                                                 intent.putExtra("tileName", tileName);
@@ -7446,8 +7435,7 @@ public class System {
                             param.setResult(null);
                         }
                     };
-                    Helpers.findAndHookMethod(tileClass, lpparam.classLoader, "handleClick", hook);
-                    //noinspection ResultOfMethodCallIgnored
+                    Helpers.findAndHookMethod(tileClass, lpparam.classLoader, "handleClick", View.class, hook);
                     Helpers.hookAllMethodsSilently(tileClass, lpparam.classLoader, "handleSecondaryClick", hook);
                     securedTiles.add(tileClass);
                 }
