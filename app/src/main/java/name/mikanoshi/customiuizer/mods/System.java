@@ -35,9 +35,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.database.ContentObserver;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorMatrix;
@@ -134,7 +132,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
@@ -147,7 +144,6 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -165,7 +161,6 @@ import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -1735,10 +1730,10 @@ public class System {
                 }
             });
 
-            Helpers.findAndHookMethod("com.android.systemui.statusbar.NotificationMediaManager", lpparam.classLoader, "updateMediaMetaData", boolean.class, boolean.class, new MethodHook() {
-                @Override
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.NotificationMediaManager", lpparam.classLoader, "updateMediaMetaData", boolean.class, boolean.class, new MethodHook() {
+            @Override
                 protected void after(MethodHookParam param) throws Throwable {
-                    Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+                Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
                     if (new File("/data/system/theme/lockscreen").exists()) {
                         XposedHelpers.setAdditionalStaticField(WallpaperUtilClass, "mAlbumArtSource", null);
                         XposedHelpers.setAdditionalStaticField(WallpaperUtilClass, "mAlbumArt", null);
@@ -1761,7 +1756,7 @@ public class System {
                     } catch (Throwable ignore) {}
                     XposedHelpers.setAdditionalStaticField(WallpaperUtilClass, "mAlbumArtSource", art);
 
-                    int blur = Helpers.getSharedIntPref(mContext, "pref_key_system_albumartonlock_blur", 0);
+                        int blur = Helpers.getSharedIntPref(mContext, "pref_key_system_albumartonlock_blur", 0);
                     Bitmap blurArt = processAlbumArt(mContext, art != null && blur > 0 ? Helpers.fastBlur(art, blur + 1) : art);
                     XposedHelpers.setAdditionalStaticField(WallpaperUtilClass, "mAlbumArt", blurArt);
                     if (blurArt != null) {
@@ -1779,7 +1774,7 @@ public class System {
                     mContext.sendBroadcast(setWallpaper);
                 }
             });
-        }
+                }
     }
 
     public static void BetterPopupsHideDelaySysHook() {
@@ -1961,7 +1956,7 @@ public class System {
         Helpers.hookAllMethods("android.app.Notification.Builder", null, "bindNotificationHeader", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                if (!Helpers.isNougat()) try {
+                try {
                     Object mN = XposedHelpers.getObjectField(param.thisObject, "mN");
                     if (mN != null)
                         if ((boolean)XposedHelpers.callMethod(mN, "isColorizedMedia")) return;
@@ -1969,29 +1964,11 @@ public class System {
 
                 RemoteViews rv = (RemoteViews)param.args[0];
                 Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-                int contrastColor;
-                if (Helpers.isQPlus())
-                    contrastColor = (int)XposedHelpers.callMethod(param.thisObject, "resolveContrastColor", param.args[1]);
-                else
-                    contrastColor = (int)XposedHelpers.callMethod(param.thisObject, "resolveContrastColor");
+                int contrastColor = (int)XposedHelpers.callMethod(param.thisObject, "resolveContrastColor", param.args[1]);
                 if (rv != null && mContext != null)
                     rv.setTextColor(mContext.getResources().getIdentifier("app_name_text", "id", "android"), contrastColor);
             }
         });
-
-//		Helpers.hookAllMethods("android.app.Notification.Builder", null, "bindHeaderAppName", new MethodHook() {
-//			@Override
-//			protected void after(MethodHookParam param) throws Throwable {
-//				XposedBridge.log("bindHeaderAppName");
-//			}
-//		});
-//
-//		Helpers.findAndHookMethod("android.app.Notification.Builder", null, "bindHeaderAppName", RemoteViews.class, "android.app.Notification.StandardTemplateParams", new MethodHook() {
-//			@Override
-//			protected void after(MethodHookParam param) throws Throwable {
-//				XposedBridge.log("bindHeaderAppName2");
-//			}
-//		});
     }
 
     public static int abHeight = 39;
@@ -4244,7 +4221,28 @@ public class System {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 Object img = param.getResult();
-                if (MainModule.mPrefs.getBoolean("system_lockscreenshortcuts_left_off"))
+                if (MainModule.mPrefs.getBoolean("system_lockscreenshortcuts_left_tapaction")) {
+                    Object thisObject = XposedHelpers.getSurroundingThis(param.thisObject);
+                    Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
+                    boolean mDarkMode = XposedHelpers.getBooleanField(thisObject, "mDarkStyle");
+                    Drawable flashlightDrawable;
+                    Object flashlightController = XposedHelpers.getObjectField(thisObject, "mFlashlightController");
+                    boolean isOn = (boolean) XposedHelpers.callMethod(flashlightController, "isEnabled");
+                    if (isOn) {
+                        flashlightDrawable = Helpers.getModuleRes(mContext).getDrawable(
+                            mDarkMode ? R.drawable.keyguard_bottom_flashlight_on_img_dark : R.drawable.keyguard_bottom_flashlight_on_img_light,
+                            mContext.getTheme()
+                        );
+                    }
+                    else {
+                        flashlightDrawable = Helpers.getModuleRes(mContext).getDrawable(
+                            mDarkMode ? R.drawable.keyguard_bottom_flashlight_img_dark : R.drawable.keyguard_bottom_flashlight_img_light,
+                            mContext.getTheme()
+                        );
+                    }
+                    XposedHelpers.setObjectField(img, "drawable", flashlightDrawable);
+                }
+                else if (MainModule.mPrefs.getBoolean("system_lockscreenshortcuts_left_off"))
                     XposedHelpers.setObjectField(img, "drawable", null);
             }
         });
@@ -4298,6 +4296,24 @@ public class System {
                             XposedHelpers.callMethod(panelController, "resetViews", false);
                         }
                     }, 500);
+                }
+            }
+        });
+
+
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.KeyguardBottomAreaView", lpparam.classLoader, "onClick", View.class, new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                if (MainModule.mPrefs.getBoolean("system_lockscreenshortcuts_left_tapaction")) {
+                    View view = (View) param.args[0];
+                    View mLeftAffordanceView = (View) XposedHelpers.getObjectField(param.thisObject, "mLeftAffordanceView");
+                    if (view == mLeftAffordanceView) {
+                        Object flashlightController = XposedHelpers.getObjectField(param.thisObject, "mFlashlightController");
+                        boolean z = !(boolean) XposedHelpers.callMethod(flashlightController, "isEnabled");
+                        XposedHelpers.callMethod(flashlightController, "setFlashlight", z);
+                        XposedHelpers.callMethod(param.thisObject, "updateLeftAffordanceIcon");
+                        param.setResult(null);
+                    }
                 }
             }
         });
@@ -4426,32 +4442,32 @@ public class System {
                                     } catch (Throwable t2) {}
                                 }
 
-                            if (key.contains("pref_key_system_lockscreenshortcuts_left")) {
-                                Object leftView = null;
-                                try {
-                                    leftView = XposedHelpers.getObjectField(XposedHelpers.getObjectField(notificationPanelView, "mKeyguardLeftView"), "mKeyguardMoveLeftView");
-                                } catch (Throwable t) {
-                                    XposedBridge.log(t);
-                                }
-
-                                if (leftView != null) try {
-                                    XposedHelpers.callMethod(leftView, "reloadListItems");
-                                } catch (Throwable t1) {
-                                    try {
-                                        XposedHelpers.callMethod(leftView, "updateShortcuts");
-                                    } catch (Throwable t2) {
-                                        try {
-                                            XposedHelpers.callMethod(leftView, "initKeyguardLeftItems");
-                                        } catch (Throwable t3) {
-                                            try {
-                                                XposedHelpers.callMethod(leftView, "initKeyguardLeftItemInfos");
-                                            } catch (Throwable t4) {
-                                                XposedBridge.log(t4);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+//                            if (key.contains("pref_key_system_lockscreenshortcuts_left")) {
+//                                Object leftView = null;
+//                                try {
+//                                    leftView = XposedHelpers.getObjectField(XposedHelpers.getObjectField(notificationPanelView, "mKeyguardLeftView"), "mKeyguardMoveLeftView");
+//                                } catch (Throwable t) {
+//                                    XposedBridge.log(t);
+//                                }
+//
+//                                if (leftView != null) try {
+//                                    XposedHelpers.callMethod(leftView, "reloadListItems");
+//                                } catch (Throwable t1) {
+//                                    try {
+//                                        XposedHelpers.callMethod(leftView, "updateShortcuts");
+//                                    } catch (Throwable t2) {
+//                                        try {
+//                                            XposedHelpers.callMethod(leftView, "initKeyguardLeftItems");
+//                                        } catch (Throwable t3) {
+//                                            try {
+//                                                XposedHelpers.callMethod(leftView, "initKeyguardLeftItemInfos");
+//                                            } catch (Throwable t4) {
+//                                                XposedBridge.log(t4);
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
                         } catch (Throwable t) {
                             XposedBridge.log(t);
                         }
@@ -4585,40 +4601,40 @@ public class System {
             }
         }
 
-        String leftViewCls = "com.android.keyguard.negative.MiuiKeyguardMoveLeftControlCenterView";
-        Helpers.findAndHookConstructor(leftViewCls, lpparam.classLoader, Context.class, AttributeSet.class, new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-                Handler mHandler = new LeftControlCenterHandler(mContext.getMainLooper());
-                XposedHelpers.setAdditionalInstanceField(param.thisObject, "myHandler", mHandler);
-            }
-        });
-
-        Helpers.findAndHookMethodSilently(leftViewCls, lpparam.classLoader, "updateShortcuts", new MethodHook() {
-            @Override
-            protected void before(final MethodHookParam param) throws Throwable {
-                param.setResult(null);
-                initLeftView(param.thisObject);
-            }
-        });
-        Helpers.findAndHookMethod(leftViewCls, lpparam.classLoader, "onFinishInflate", new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                View mSmartHomeLinearLayout = (View)XposedHelpers.getObjectField(param.thisObject, "mSmartHomeImageView");
-                View mRemoteCenterLinearLayout = (View)XposedHelpers.getObjectField(param.thisObject, "mRemoteCenterImageView");
-                final View.OnClickListener mListener = (View.OnClickListener)XposedHelpers.getObjectField(param.thisObject, "mClickListener");
-                View.OnClickListener mNewListener = new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (!handleStockShortcut(view))
-                            if (mListener != null) mListener.onClick(view);
-                    }
-                };
-                mSmartHomeLinearLayout.setOnClickListener(mNewListener);
-                mRemoteCenterLinearLayout.setOnClickListener(mNewListener);
-            }
-        });
+//        String leftViewCls = "com.android.keyguard.negative.MiuiKeyguardMoveLeftControlCenterView";
+//        Helpers.findAndHookConstructor(leftViewCls, lpparam.classLoader, Context.class, AttributeSet.class, new MethodHook() {
+//            @Override
+//            protected void after(MethodHookParam param) throws Throwable {
+//                Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+//                Handler mHandler = new LeftControlCenterHandler(mContext.getMainLooper());
+//                XposedHelpers.setAdditionalInstanceField(param.thisObject, "myHandler", mHandler);
+//            }
+//        });
+//
+//        Helpers.findAndHookMethodSilently(leftViewCls, lpparam.classLoader, "updateShortcuts", new MethodHook() {
+//            @Override
+//            protected void before(final MethodHookParam param) throws Throwable {
+//                param.setResult(null);
+//                initLeftView(param.thisObject);
+//            }
+//        });
+//        Helpers.findAndHookMethod(leftViewCls, lpparam.classLoader, "onFinishInflate", new MethodHook() {
+//            @Override
+//            protected void after(MethodHookParam param) throws Throwable {
+//                View mSmartHomeLinearLayout = (View)XposedHelpers.getObjectField(param.thisObject, "mSmartHomeImageView");
+//                View mRemoteCenterLinearLayout = (View)XposedHelpers.getObjectField(param.thisObject, "mRemoteCenterImageView");
+//                final View.OnClickListener mListener = (View.OnClickListener)XposedHelpers.getObjectField(param.thisObject, "mClickListener");
+//                View.OnClickListener mNewListener = new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        if (!handleStockShortcut(view))
+//                            if (mListener != null) mListener.onClick(view);
+//                    }
+//                };
+//                mSmartHomeLinearLayout.setOnClickListener(mNewListener);
+//                mRemoteCenterLinearLayout.setOnClickListener(mNewListener);
+//            }
+//        });
     }
 
     private static boolean handleStockShortcut(View view) {
