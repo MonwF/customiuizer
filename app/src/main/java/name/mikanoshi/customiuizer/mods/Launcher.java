@@ -817,6 +817,12 @@ public class Launcher {
 
 	public static void UnlockGridsHook(LoadPackageParam lpparam) {
 		Helpers.hookAllMethodsSilently("com.miui.home.launcher.compat.LauncherCellCountCompatDevice", lpparam.classLoader, "shouldUseDeviceValue", XC_MethodReplacement.returnConstant(false));
+		Helpers.findAndHookMethod("com.miui.home.settings.MiuiHomeSettings", lpparam.classLoader, "onCreatePreferences", Bundle.class, String.class, new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mScreenCellsConfig"), "setVisible", true);
+			}
+		});
 	}
 
 	public static void FolderColumnsHook(LoadPackageParam lpparam) {
