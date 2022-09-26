@@ -6963,16 +6963,14 @@ public class System {
             }
         });
 
-        Helpers.findAndHookMethod("com.android.systemui.miui.statusbar.policy.AppMiniWindowManager", lpparam.classLoader, "canNotificationSlide", Context.class, "com.android.systemui.miui.statusbar.ExpandedNotification", new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.notification.NotificationSettingsManager", lpparam.classLoader, "canSlide", String.class, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                Object notification = XposedHelpers.callMethod(param.args[1], "getNotification");
-                PendingIntent intent = (PendingIntent)XposedHelpers.callMethod(param.thisObject, "getIntent", notification);
-                if (intent == null) return;
+                String pkgName = (String) param.args[0];
                 Set<String> selectedApps = MainModule.mPrefs.getStringSet("system_betterpopups_allowfloat_apps");
                 Set<String> selectedAppsBlack = MainModule.mPrefs.getStringSet("system_betterpopups_allowfloat_apps_black");
-                if (selectedApps.contains(intent.getCreatorPackage())) param.setResult(true);
-                else if (selectedAppsBlack.contains(intent.getCreatorPackage())) param.setResult(false);
+                if (selectedApps.contains(pkgName)) param.setResult(true);
+                else if (selectedAppsBlack.contains(pkgName)) param.setResult(false);
             }
         });
     }
