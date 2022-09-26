@@ -5347,7 +5347,6 @@ public class System {
     }
 
     public static void NoSignatureVerifyHook() {
-        if (Helpers.isNougat()) return;
         Helpers.hookAllMethods("android.content.pm.PackageParser.SigningDetails", null, "checkCapability", XC_MethodReplacement.returnConstant(true));
         Helpers.hookAllMethods("android.content.pm.PackageParser.SigningDetails", null, "checkCapabilityRecover", XC_MethodReplacement.returnConstant(true));
     }
@@ -6983,9 +6982,9 @@ public class System {
             @Override
             @SuppressWarnings("unchecked")
             protected void after(MethodHookParam param) throws Throwable {
-            List<String> blackList = (List<String>)param.getResult();
-            if (blackList != null) blackList.clear();
-            param.setResult(blackList);
+                List<String> blackList = (List<String>)param.getResult();
+                if (blackList != null) blackList.clear();
+                param.setResult(blackList);
             }
         };
         Helpers.findAndHookMethod("android.util.MiuiMultiWindowAdapter", null, "getFreeformBlackList", clearHook);
@@ -7192,24 +7191,42 @@ public class System {
         });
     }
 
+    public static void MultiWindowPlusHook() {
+        MainModule.resHooks.setResReplacement("android", "array", "miui_resize_black_list", R.array.miui_resize_black_list);
+    }
+
     public static void MultiWindowPlusHook(LoadPackageParam lpparam) {
-        Helpers.hookAllMethods("com.miui.home.recents.views.RecentMenuView", lpparam.classLoader, "onMessageEvent", new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
-                mHandler.postDelayed(new Runnable() {
+        if (!lpparam.packageName.equals("android")) {
+            Helpers.hookAllMethods("com.miui.home.recents.views.RecentMenuView", lpparam.classLoader, "onMessageEvent", new MethodHook() {
+                @Override
+                protected void after(MethodHookParam param) throws Throwable {
+                    Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            ImageView mMenuItemMultiWindow = (ImageView)XposedHelpers.getObjectField(param.thisObject, "mMenuItemMultiWindow");
+                            ImageView mMenuItemSmallWindow = (ImageView)XposedHelpers.getObjectField(param.thisObject, "mMenuItemSmallWindow");
+                            mMenuItemMultiWindow.setEnabled(true);
+                            mMenuItemMultiWindow.setImageAlpha(255);
+                            mMenuItemSmallWindow.setEnabled(true);
+                            mMenuItemSmallWindow.setImageAlpha(255);
+                        }
+                    }, 200);
+                }
+            });
+        }
+        else {
+            Class <?> AtmClass = XposedHelpers.findClassIfExists("com.android.server.wm.ActivityTaskManagerServiceImpl", lpparam.classLoader);
+            if (AtmClass != null) {
+                Helpers.hookAllMethods(AtmClass, "inResizeBlackList", new MethodHook() {
                     @Override
-                    public void run() {
-                        ImageView mMenuItemMultiWindow = (ImageView)XposedHelpers.getObjectField(param.thisObject, "mMenuItemMultiWindow");
-                        ImageView mMenuItemSmallWindow = (ImageView)XposedHelpers.getObjectField(param.thisObject, "mMenuItemSmallWindow");
-                        mMenuItemMultiWindow.setEnabled(true);
-                        mMenuItemMultiWindow.setImageAlpha(255);
-                        mMenuItemSmallWindow.setEnabled(true);
-                        mMenuItemSmallWindow.setImageAlpha(255);
+                    protected void before(MethodHookParam param) throws Throwable {
+                        param.setResult(false);
                     }
-                }, 200);
+                });
+                return;
             }
-        });
+        }
     }
 
     public static void SecureControlCenterHook(LoadPackageParam lpparam) {
