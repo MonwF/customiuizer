@@ -448,13 +448,13 @@
     <string name="system_betterpopups_swipedown_summ">Open notification drawer on swipe down gesture</string>
     <string name="system_betterpopups_center_title">Show centered</string>
     <string name="system_betterpopups_center_summ">Display popups in the middle of the screen</string>
-    <string name="system_mods_floatingwindows">Floating windows</string>
+    <string name="system_mods_floatingwindows">Floating windows and Splitscreen</string>
     <string name="system_fw_noblacklist_title">Disable blacklisting</string>
     <string name="system_fw_noblacklist_summ">Allow any app to be opened in a floating window</string>
     <string name="system_fw_sticky_title">Remember state</string>
     <string name="system_fw_sticky_summ">Keep opening apps in floating windows until they are swicthed back to full screen manually</string>
     <string name="system_fw_splitscreen_title">Multiwindow+</string>
-    <string name="system_fw_splitscreen_summ">Allow using split screen and floating windows together</string>
+    <string name="system_fw_splitscreen_summ">Allow using split screen and floating windows together, disable backlist for splitscreen</string>
     <string name="system_mods_applock">App lock</string>
     <string name="system_applock_title">Less strict app lock</string>
     <string name="system_applock_summ">Do not lock apps when device is locked if option with app locking after exit is selected</string>

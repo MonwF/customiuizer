@@ -423,13 +423,13 @@
     <string name="system_betterpopups_allowfloat_summ">如果通知定义了适当的点击动作，向下滑动手势时在浮动窗口中打开应用</string>
     <string name="system_betterpopups_swipedown_title">启用下滑手势</string>
     <string name="system_betterpopups_swipedown_summ">向下滑动手势时打开通知抽屉</string>
-    <string name="system_mods_floatingwindows">浮动窗口</string>
+    <string name="system_mods_floatingwindows">浮动窗口与分屏</string>
     <string name="system_fw_noblacklist_title">禁用黑名单</string>
     <string name="system_fw_noblacklist_summ">允许在浮动窗口中打开任意应用</string>
     <string name="system_fw_sticky_title">记住状态</string>
     <string name="system_fw_sticky_summ">保持在浮动窗口中打开应用，直至手动将其切换回全屏</string>
     <string name="system_fw_splitscreen_title">多窗口</string>
-    <string name="system_fw_splitscreen_summ">允许同时使用分屏和浮窗</string>
+    <string name="system_fw_splitscreen_summ">允许同时使用分屏和浮窗，同时禁用分屏黑名单</string>
     <string name="system_mods_applock">应用锁</string>
     <string name="system_applock_title">不严格的应用锁</string>
     <string name="system_applock_summ">如果选择了退出后应用锁定的选项，设备锁定时不要锁定应用</string>
