@@ -80,6 +80,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (mPrefs.getBoolean("system_nomediamute")) System.NoMediaMuteInDNDHook();
         if (mPrefs.getBoolean("system_audiosilencer")) System.AudioSilencerHook();
         if (mPrefs.getBoolean("system_fw_noblacklist")) System.NoFloatingWindowBlacklistHook();
+        if (mPrefs.getBoolean("system_fw_splitscreen")) System.MultiWindowPlusHook();
         if (mPrefs.getBoolean("controls_volumecursor")) Controls.VolumeCursorHook();
         if (mPrefs.getBoolean("various_alarmcompat")) Various.AlarmCompatHook();
         if (mPrefs.getStringAsInt("system_iconlabletoasts", 1) > 1) System.IconLabelToastsHook();
@@ -179,7 +180,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getStringAsInt("controls_volumemedia_up", 0) > 0 ||
                     mPrefs.getStringAsInt("controls_volumemedia_down", 0) > 0) Controls.VolumeMediaButtonsHook(lpparam);
 
-            //Controls.AIButtonHook(lpparam);
+            if (mPrefs.getBoolean("system_fw_splitscreen")) System.MultiWindowPlusHook(lpparam);
         }
 
         if (pkg.equals("com.android.systemui")) {

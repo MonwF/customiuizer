@@ -517,6 +517,10 @@
 		<item>43200</item>
 	</array>
 
+	<array name="miui_resize_black_list">
+		<item>ab.cd.xyz</item>
+	</array>
+
 	<string-array name="settingsicon">
 		<item>@string/array_disable</item>
 		<item>@string/array_top</item>
