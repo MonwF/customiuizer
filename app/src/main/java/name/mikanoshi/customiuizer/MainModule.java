@@ -400,6 +400,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getInt("launcher_indicatorheight", 9) > 9) Launcher.IndicatorHeightRes();
             if (mPrefs.getBoolean("launcher_unlockgrids")) Launcher.UnlockGridsRes();
             if (mPrefs.getBoolean("launcher_docktitles")) Launcher.ShowHotseatTitlesRes();
+            if (mPrefs.getBoolean("launcher_unlockgrids")) Launcher.UnlockGridsHook(lpparam);
             if (isLauncherPerf) handleLoadLauncher(lpparam);
         }
 
@@ -467,7 +468,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("launcher_nounlockanim")) Launcher.NoUnlockAnimationHook(lpparam);
             if (mPrefs.getBoolean("launcher_nozoomanim")) Launcher.NoZoomAnimationHook(lpparam);
             if (mPrefs.getBoolean("launcher_oldlaunchanim")) Launcher.UseOldLaunchAnimationHook(lpparam);
-            if (mPrefs.getBoolean("launcher_unlockgrids")) Launcher.UnlockGridsHook(lpparam);
             if (mPrefs.getBoolean("launcher_closedrawer")) { Launcher.CloseDrawerOnLaunchHook(lpparam); closeOnLaunch = true; }
             if (mPrefs.getInt("launcher_bottommargin", 0) > 0) Launcher.BottomSpacingHook(lpparam);
             if (mPrefs.getInt("launcher_horizwidgetmargin", 0) > 0) Launcher.HorizontalWidgetSpacingHook(lpparam);

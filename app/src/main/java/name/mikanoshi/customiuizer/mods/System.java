@@ -4689,13 +4689,8 @@ public class System {
                 } catch (Throwable ignore) {}
                 if (mFromSecureKeyguard || mStartedFromLockScreen) {
                     XposedHelpers.setAdditionalInstanceField(act.getApplication(), "wasStartedFromLockScreen", true);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-                        act.setShowWhenLocked(true);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-                            act.setInheritShowWhenLocked(true);
-                    } else {
-                        act.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-                    }
+                    act.setShowWhenLocked(true);
+                    act.setInheritShowWhenLocked(true);
                 }
             }
         });
