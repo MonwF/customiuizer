@@ -6937,11 +6937,11 @@ public class System {
     }
 
     public static void BetterPopupsAllowFloatHook(LoadPackageParam lpparam) {
-        Helpers.hookAllConstructors("com.android.systemui.miui.statusbar.policy.AppMiniWindowManager", lpparam.classLoader, new MethodHook() {
+        Helpers.hookAllConstructors("com.android.systemui.statusbar.notification.policy.AppMiniWindowManager", lpparam.classLoader, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-                Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
+                Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "context");
+                Handler mHandler = new Handler(Looper.getMainLooper());
 
                 new Helpers.SharedPrefObserver(mContext, mHandler) {
                     @Override
@@ -6966,6 +6966,13 @@ public class System {
                 Set<String> selectedAppsBlack = MainModule.mPrefs.getStringSet("system_betterpopups_allowfloat_apps_black");
                 if (selectedApps.contains(pkgName)) param.setResult(true);
                 else if (selectedAppsBlack.contains(pkgName)) param.setResult(false);
+            }
+        });
+
+        Helpers.hookAllMethods("com.android.systemui.statusbar.notification.policy.MiniWindowPolicy", lpparam.classLoader, "canSlidePackage", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                param.setResult(true);
             }
         });
     }
