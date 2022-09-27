@@ -33,6 +33,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 import static java.lang.System.currentTimeMillis;
 
@@ -962,14 +963,18 @@ public class Controls {
 	}
 
 	public static void PowerDoubleTapActionHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "launchApp", Intent.class, new MethodHook() {
+		ArrayList<String> doubleTapResons = new ArrayList<String>();
+		doubleTapResons.add("double_click_power");
+		doubleTapResons.add("power_double_tap");
+		doubleTapResons.add("double_click_power_key");
+		Helpers.findAndHookMethod("com.miui.server.util.ShortCutActionsUtils", lpparam.classLoader, "triggerFunction", String.class, String.class, Bundle.class, boolean.class, new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
-				Intent intent = (Intent)param.args[0];
-				if (intent == null) return;
-				if (!"android.media.action.STILL_IMAGE_CAMERA".equals(intent.getAction())) return;
-				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-				if (GlobalActions.handleAction(mContext, "pref_key_controls_powerdt", true)) param.setResult(true);
+				if (doubleTapResons.contains(param.args[1])) {
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					GlobalActions.handleAction(mContext, "pref_key_controls_powerdt", true);
+					param.setResult(true);
+				}
 			}
 		});
 	}
