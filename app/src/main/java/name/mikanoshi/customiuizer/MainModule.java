@@ -302,7 +302,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 mPrefs.getBoolean("system_statusbaricons_record") ||
                 mPrefs.getBoolean("system_statusbaricons_nfc") ||
                 mPrefs.getBoolean("system_statusbaricons_vpn") ||
-                mPrefs.getBoolean("system_statusbaricons_hotspot");
+                mPrefs.getBoolean("system_statusbaricons_hotspot") ||
+                mPrefs.getBoolean("system_statusbaricons_volte");
             if (hideIconsActive) System.HideIconsHook(lpparam);
 
             if (mPrefs.getInt("system_messagingstylelines", 0) > 0) System.MessagingStyleLinesHook(lpparam);

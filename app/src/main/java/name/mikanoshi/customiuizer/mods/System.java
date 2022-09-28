@@ -3805,7 +3805,8 @@ public class System {
                 "vpn".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_vpn") ||
                 "nfc".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_nfc") ||
                 "wifi".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_wifi") ||
-                "hotspot".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_hotspot");
+                "hotspot".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_hotspot") ||
+                "hd".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_volte");
         } catch (Throwable t) {
             XposedBridge.log(t);
             return false;
