@@ -3739,7 +3739,7 @@ public class System {
     }
 
     public static void HideIconsBluetoothHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarPolicy", lpparam.classLoader, "updateBluetooth", new MethodHook() {
+        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarPolicy", lpparam.classLoader, "updateBluetooth", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 int opt = Integer.parseInt(MainModule.mPrefs.getString("system_statusbaricons_bluetooth", "1"));
