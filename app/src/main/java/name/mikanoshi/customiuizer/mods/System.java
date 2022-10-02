@@ -1319,13 +1319,15 @@ public class System {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
                 int opt = Integer.parseInt(MainModule.mPrefs.getString("system_mobiletypeicon", "1"));
-                Object mMobileType = XposedHelpers.getObjectField(param.thisObject, "mMobileType");
+                TextView mMobileType = (TextView) XposedHelpers.getObjectField(param.thisObject, "mMobileType");
+                TextView mMobileTypeSingle = (TextView) XposedHelpers.getObjectField(param.thisObject, "mMobileTypeSingle");
                 boolean isMobileConnected = false;
                 if (opt == 2) {
                     isMobileConnected = (boolean) XposedHelpers.getObjectField(param.args[0], "dataConnected");
                 }
                 if (opt == 3 || (opt == 2 && !isMobileConnected)) {
-                    XposedHelpers.callMethod(mMobileType, "setVisibility", View.INVISIBLE);
+                    mMobileTypeSingle.setVisibility(View.GONE);
+                    mMobileType.setVisibility(View.GONE);
                 }
             }
         };
@@ -7653,6 +7655,214 @@ public class System {
                 int maxPopupHeight = res.getDimensionPixelSize(res.getIdentifier("notification_max_heads_up_height", "dimen", "com.android.systemui"));
                 if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) maxPopupHeight /= 3;
                 param.setResult(Math.round(context.getResources().getDisplayMetrics().heightPixels / 2.0f - maxPopupHeight / 2.0f));
+            }
+        });
+    }
+
+    public static void DualRowSignalHook(LoadPackageParam lpparam) {
+        final boolean[] isListened = {false};
+        SparseIntArray signalResToLevelMap = new SparseIntArray();
+        int signalRes1_0 = MainModule.resHooks.addResource("signalRes1_0", R.drawable.statusbar_signal_1_0);
+        int signalRes1_1 = MainModule.resHooks.addResource("signalRes1_1", R.drawable.statusbar_signal_1_1);
+        int signalRes1_2 = MainModule.resHooks.addResource("signalRes1_2", R.drawable.statusbar_signal_1_2);
+        int signalRes1_3 = MainModule.resHooks.addResource("signalRes1_3", R.drawable.statusbar_signal_1_3);
+        int signalRes1_4 = MainModule.resHooks.addResource("signalRes1_4", R.drawable.statusbar_signal_1_4);
+        int signalRes1_5 = MainModule.resHooks.addResource("signalRes1_5", R.drawable.statusbar_signal_1_5);
+        int signalRes2_0 = MainModule.resHooks.addResource("signalRes2_0", R.drawable.statusbar_signal_2_0);
+        int signalRes2_1 = MainModule.resHooks.addResource("signalRes2_1", R.drawable.statusbar_signal_2_1);
+        int signalRes2_2 = MainModule.resHooks.addResource("signalRes2_2", R.drawable.statusbar_signal_2_2);
+        int signalRes2_3 = MainModule.resHooks.addResource("signalRes2_3", R.drawable.statusbar_signal_2_3);
+        int signalRes2_4 = MainModule.resHooks.addResource("signalRes2_4", R.drawable.statusbar_signal_2_4);
+        int signalRes2_5 = MainModule.resHooks.addResource("signalRes2_5", R.drawable.statusbar_signal_2_5);
+        SparseIntArray signalLevelToRes1Map = new SparseIntArray();
+        SparseIntArray signalLevelToRes2Map = new SparseIntArray();
+        signalLevelToRes1Map.put(0, signalRes1_0);
+        signalLevelToRes1Map.put(1, signalRes1_1);
+        signalLevelToRes1Map.put(2, signalRes1_2);
+        signalLevelToRes1Map.put(3, signalRes1_3);
+        signalLevelToRes1Map.put(4, signalRes1_4);
+        signalLevelToRes1Map.put(5, signalRes1_5);
+        signalLevelToRes1Map.put(6, signalRes1_0);
+        signalLevelToRes2Map.put(0, signalRes2_0);
+        signalLevelToRes2Map.put(1, signalRes2_1);
+        signalLevelToRes2Map.put(2, signalRes2_2);
+        signalLevelToRes2Map.put(3, signalRes2_3);
+        signalLevelToRes2Map.put(4, signalRes2_4);
+        signalLevelToRes2Map.put(5, signalRes2_5);
+        signalLevelToRes2Map.put(6, signalRes2_0);
+
+        int signalTintRes1_0 = MainModule.resHooks.addResource("signalTintRes1_0", R.drawable.statusbar_signal_1_0_tint);
+        int signalTintRes1_1 = MainModule.resHooks.addResource("signalTintRes1_1", R.drawable.statusbar_signal_1_1_tint);
+        int signalTintRes1_2 = MainModule.resHooks.addResource("signalTintRes1_2", R.drawable.statusbar_signal_1_2_tint);
+        int signalTintRes1_3 = MainModule.resHooks.addResource("signalTintRes1_3", R.drawable.statusbar_signal_1_3_tint);
+        int signalTintRes1_4 = MainModule.resHooks.addResource("signalTintRes1_4", R.drawable.statusbar_signal_1_4_tint);
+        int signalTintRes1_5 = MainModule.resHooks.addResource("signalTintRes1_5", R.drawable.statusbar_signal_1_5_tint);
+        int signalTintRes2_0 = MainModule.resHooks.addResource("signalTintRes2_0", R.drawable.statusbar_signal_2_0_tint);
+        int signalTintRes2_1 = MainModule.resHooks.addResource("signalTintRes2_1", R.drawable.statusbar_signal_2_1_tint);
+        int signalTintRes2_2 = MainModule.resHooks.addResource("signalTintRes2_2", R.drawable.statusbar_signal_2_2_tint);
+        int signalTintRes2_3 = MainModule.resHooks.addResource("signalTintRes2_3", R.drawable.statusbar_signal_2_3_tint);
+        int signalTintRes2_4 = MainModule.resHooks.addResource("signalTintRes2_4", R.drawable.statusbar_signal_2_4_tint);
+        int signalTintRes2_5 = MainModule.resHooks.addResource("signalTintRes2_5", R.drawable.statusbar_signal_2_5_tint);
+        SparseIntArray signalTintLevelToRes1Map = new SparseIntArray();
+        SparseIntArray signalTintLevelToRes2Map = new SparseIntArray();
+        signalTintLevelToRes1Map.put(0, signalTintRes1_0);
+        signalTintLevelToRes1Map.put(1, signalTintRes1_1);
+        signalTintLevelToRes1Map.put(2, signalTintRes1_2);
+        signalTintLevelToRes1Map.put(3, signalTintRes1_3);
+        signalTintLevelToRes1Map.put(4, signalTintRes1_4);
+        signalTintLevelToRes1Map.put(5, signalTintRes1_5);
+        signalTintLevelToRes1Map.put(6, signalTintRes1_0);
+        signalTintLevelToRes2Map.put(0, signalTintRes2_0);
+        signalTintLevelToRes2Map.put(1, signalTintRes2_1);
+        signalTintLevelToRes2Map.put(2, signalTintRes2_2);
+        signalTintLevelToRes2Map.put(3, signalTintRes2_3);
+        signalTintLevelToRes2Map.put(4, signalTintRes2_4);
+        signalTintLevelToRes2Map.put(5, signalTintRes2_5);
+        signalTintLevelToRes2Map.put(6, signalTintRes2_0);
+
+        int signalDarkRes1_0 = MainModule.resHooks.addResource("signalDarkRes1_0", R.drawable.statusbar_signal_1_0_dark);
+        int signalDarkRes1_1 = MainModule.resHooks.addResource("signalDarkRes1_1", R.drawable.statusbar_signal_1_1_dark);
+        int signalDarkRes1_2 = MainModule.resHooks.addResource("signalDarkRes1_2", R.drawable.statusbar_signal_1_2_dark);
+        int signalDarkRes1_3 = MainModule.resHooks.addResource("signalDarkRes1_3", R.drawable.statusbar_signal_1_3_dark);
+        int signalDarkRes1_4 = MainModule.resHooks.addResource("signalDarkRes1_4", R.drawable.statusbar_signal_1_4_dark);
+        int signalDarkRes1_5 = MainModule.resHooks.addResource("signalDarkRes1_5", R.drawable.statusbar_signal_1_5_dark);
+        int signalDarkRes2_0 = MainModule.resHooks.addResource("signalDarkRes2_0", R.drawable.statusbar_signal_2_0_dark);
+        int signalDarkRes2_1 = MainModule.resHooks.addResource("signalDarkRes2_1", R.drawable.statusbar_signal_2_1_dark);
+        int signalDarkRes2_2 = MainModule.resHooks.addResource("signalDarkRes2_2", R.drawable.statusbar_signal_2_2_dark);
+        int signalDarkRes2_3 = MainModule.resHooks.addResource("signalDarkRes2_3", R.drawable.statusbar_signal_2_3_dark);
+        int signalDarkRes2_4 = MainModule.resHooks.addResource("signalDarkRes2_4", R.drawable.statusbar_signal_2_4_dark);
+        int signalDarkRes2_5 = MainModule.resHooks.addResource("signalDarkRes2_5", R.drawable.statusbar_signal_2_5_dark);
+        SparseIntArray signalDarkLevelToRes1Map = new SparseIntArray();
+        SparseIntArray signalDarkLevelToRes2Map = new SparseIntArray();
+        signalDarkLevelToRes1Map.put(0, signalDarkRes1_0);
+        signalDarkLevelToRes1Map.put(1, signalDarkRes1_1);
+        signalDarkLevelToRes1Map.put(2, signalDarkRes1_2);
+        signalDarkLevelToRes1Map.put(3, signalDarkRes1_3);
+        signalDarkLevelToRes1Map.put(4, signalDarkRes1_4);
+        signalDarkLevelToRes1Map.put(5, signalDarkRes1_5);
+        signalDarkLevelToRes1Map.put(6, signalDarkRes1_0);
+        signalDarkLevelToRes2Map.put(0, signalDarkRes2_0);
+        signalDarkLevelToRes2Map.put(1, signalDarkRes2_1);
+        signalDarkLevelToRes2Map.put(2, signalDarkRes2_2);
+        signalDarkLevelToRes2Map.put(3, signalDarkRes2_3);
+        signalDarkLevelToRes2Map.put(4, signalDarkRes2_4);
+        signalDarkLevelToRes2Map.put(5, signalDarkRes2_5);
+        signalDarkLevelToRes2Map.put(6, signalDarkRes2_0);
+
+        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.StatusBarIconControllerImpl", lpparam.classLoader, "setMobileIcons", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                if (!isListened[0]) {
+                    isListened[0] = true;
+                    Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
+                    Resources res = mContext.getResources();
+                    signalResToLevelMap.put(res.getIdentifier("stat_sys_signal_0", "drawable", lpparam.packageName), 0);
+                    signalResToLevelMap.put(res.getIdentifier("stat_sys_signal_1", "drawable", lpparam.packageName), 1);
+                    signalResToLevelMap.put(res.getIdentifier("stat_sys_signal_2", "drawable", lpparam.packageName), 2);
+                    signalResToLevelMap.put(res.getIdentifier("stat_sys_signal_3", "drawable", lpparam.packageName), 3);
+                    signalResToLevelMap.put(res.getIdentifier("stat_sys_signal_4", "drawable", lpparam.packageName), 4);
+                    signalResToLevelMap.put(res.getIdentifier("stat_sys_signal_5", "drawable", lpparam.packageName), 5);
+                    signalResToLevelMap.put(res.getIdentifier("stat_sys_signal_null", "drawable", lpparam.packageName), 6);
+                }
+                List<?> iconStates = (List<?>) param.args[1];
+                if (iconStates.size() == 2) {
+                    Object mainIconState = iconStates.get(0);
+                    Object subIconState = iconStates.get(1);
+                    boolean mainDataConnected = (boolean) XposedHelpers.getObjectField(mainIconState, "dataConnected");
+                    boolean subDataConnected = (boolean) XposedHelpers.getObjectField(subIconState, "dataConnected");
+                    XposedHelpers.setObjectField(mainIconState, "dataConnected", mainDataConnected || subDataConnected);
+                    XposedHelpers.setObjectField(subIconState, "visible", false);
+                    int mainSignalResId = (int) XposedHelpers.getObjectField(mainIconState, "strengthId");
+                    int subSignalResId = (int) XposedHelpers.getObjectField(subIconState, "strengthId");
+                    int mainLevel = signalResToLevelMap.get(mainSignalResId);
+                    int subLevel = signalResToLevelMap.get(subSignalResId);
+                    int level;
+                    if (subDataConnected) {
+                        level = subLevel * 10 + mainLevel;
+                    }
+                    else {
+                        level = mainLevel * 10 + subLevel;
+                    }
+                    XposedHelpers.setObjectField(mainIconState, "strengthId", level);
+                    param.args[1] = iconStates;
+                }
+            }
+        });
+
+        MethodHook beforeUpdate = new MethodHook() {
+            @Override
+            protected void before(final MethodHookParam param) throws Throwable {
+                Object mobileIconState = param.args[0];
+                boolean visible = (boolean) XposedHelpers.getObjectField(mobileIconState, "visible");
+                boolean airplane = (boolean) XposedHelpers.getObjectField(mobileIconState, "airplane");
+                int level = (int) XposedHelpers.getObjectField(mobileIconState, "strengthId");
+                if (!visible || airplane || level == 0 || level > 100) {
+                    XposedHelpers.setAdditionalInstanceField(param.thisObject, "subStrengthId", -1);
+                }
+                else {
+                    XposedHelpers.setAdditionalInstanceField(param.thisObject, "subStrengthId", level % 10);
+                    XposedHelpers.setObjectField(mobileIconState, "fiveGDrawableId", 0);
+                    XposedHelpers.setObjectField(mobileIconState, "showMobileDataTypeSingle", true);
+                }
+            }
+        };
+        MethodHook afterUpdate = new MethodHook() {
+            @Override
+            protected void after(final MethodHookParam param) throws Throwable {
+                int subStrengthId = (int) XposedHelpers.getAdditionalInstanceField(param.thisObject, "subStrengthId");
+                if (subStrengthId < 0) return;
+                Object mSmallRoaming = XposedHelpers.getObjectField(param.thisObject, "mSmallRoaming");
+                XposedHelpers.callMethod(mSmallRoaming, "setVisibility", 8);
+                Object mMobileLeftContainer = XposedHelpers.getObjectField(param.thisObject, "mMobileLeftContainer");
+                XposedHelpers.callMethod(mMobileLeftContainer, "setVisibility", 8);
+                Object mSmallHd = XposedHelpers.getObjectField(param.thisObject, "mSmallHd");
+                XposedHelpers.callMethod(mSmallHd, "setVisibility", 0);
+            }
+        };
+        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyMobileState", beforeUpdate);
+        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "initViewState", afterUpdate);
+        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "updateState", afterUpdate);
+
+        MethodHook resetImageDrawable = new MethodHook() {
+            @Override
+            protected void before(final MethodHookParam param) throws Throwable {
+                Object mobileIconState = XposedHelpers.getObjectField(param.thisObject, "mState");
+                int subStrengthId = (int) XposedHelpers.getAdditionalInstanceField(param.thisObject, "subStrengthId");
+                if (subStrengthId < 0) return;
+                int level1 = (int) XposedHelpers.getObjectField(mobileIconState, "strengthId");
+                level1 = level1 / 10;
+                int level2 = subStrengthId;
+                boolean mLight = (boolean) XposedHelpers.getObjectField(param.thisObject, "mLight");
+                boolean mUseTint = (boolean) XposedHelpers.getObjectField(param.thisObject, "mUseTint");
+                Object mSmallHd = XposedHelpers.getObjectField(param.thisObject, "mSmallHd");
+                Object mMobile = XposedHelpers.getObjectField(param.thisObject, "mMobile");
+                int sim1ResId;
+                int sim2ResId;
+                if (mUseTint) {
+                    sim1ResId = signalTintLevelToRes1Map.get(level1);
+                    sim2ResId = signalTintLevelToRes2Map.get(level2);
+                }
+                else if (mLight) {
+                    sim1ResId = signalLevelToRes1Map.get(level1);
+                    sim2ResId = signalLevelToRes2Map.get(level2);
+                }
+                else {
+                    sim1ResId = signalDarkLevelToRes1Map.get(level1);
+                    sim2ResId = signalDarkLevelToRes2Map.get(level2);
+                }
+                XposedHelpers.callMethod(mMobile, "setImageResource", sim1ResId);
+                XposedHelpers.callMethod(mSmallHd, "setImageResource", sim2ResId);
+            }
+        };
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyDarknessInternal", resetImageDrawable);
+
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "init", new MethodHook() {
+            @Override
+            protected void after(final MethodHookParam param) throws Throwable {
+                LinearLayout mMobileGroup = (LinearLayout) XposedHelpers.getObjectField(param.thisObject, "mMobileGroup");
+                TextView mMobileTypeSingle = (TextView) XposedHelpers.getObjectField(param.thisObject, "mMobileTypeSingle");
+                mMobileGroup.removeView(mMobileTypeSingle);
+                mMobileGroup.addView(mMobileTypeSingle);
             }
         });
     }

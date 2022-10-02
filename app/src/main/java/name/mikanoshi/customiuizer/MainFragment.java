@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
@@ -317,7 +318,13 @@ public class MainFragment extends PreferenceFragmentBase {
 			@Override
 			@SuppressWarnings("deprecation")
 			public boolean onPreferenceClick(Preference pref) {
-				Helpers.openURL(act, "https://github.com/MonwF/customiuizer");
+				Configuration config = act.getResources().getConfiguration();
+				if (config.getLocales().get(0).getLanguage() == "zh") {
+					Helpers.openURL(act, "https://github.com/MonwF/customiuizer/blob/main/README_zh.md");
+				}
+				else {
+					Helpers.openURL(act, "https://github.com/MonwF/customiuizer");
+				}
 				return true;
 			}
 		});
