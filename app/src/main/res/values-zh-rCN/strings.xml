@@ -1047,6 +1047,7 @@
     <string name="miuizer_show_assumelsposed_summ">假定已安装LSPosed框架以使用其管理器</string>
     <string name="various_runningservices_title">正在运行的服务</string>
     <string name="system_statusbar_dttosleep_title">双击锁屏</string>
+    <string name="system_statusbar_dualsimin2rows_title">双排信号栏</string>
     <string name="system_notifrowmenu_appinfo">应用信息</string>
     <string name="system_notifrowmenu_forceclose">强制关闭</string>
     <string name="restart_systemui">重启系统界面</string>

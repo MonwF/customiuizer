@@ -332,6 +332,11 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_statusbar_dualsimin2rows"
+			android:title="@string/system_statusbar_dualsimin2rows_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_statusbar_dttosleep"
 			android:title="@string/system_statusbar_dttosleep_title"
 			android:defaultValue="false" />

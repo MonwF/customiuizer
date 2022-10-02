@@ -1101,6 +1101,7 @@
 
     <string name="dummy" translatable="false" />
     <string name="system_statusbar_dttosleep_title">Double tap to sleep</string>
+    <string name="system_statusbar_dualsimin2rows_title">Dual SIM signal bars in dual rows</string>
     <string name="various_allow_untrusted_touch_title">Allow untrusted touch</string>
     <string name="various_skip_interceptperm_title">Skip permission intercept timer</string>
     <string name="system_lockscreenshortcuts_left_tapaction_title">Tap left shortcut to toggle flashlight</string>

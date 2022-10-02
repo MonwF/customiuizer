@@ -312,6 +312,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_minimalnotifview")) System.MinimalNotificationViewHook(lpparam);
             if (mPrefs.getBoolean("system_notifchannelsettings")) System.NotificationChannelSettingsHook(lpparam);
             if (mPrefs.getStringAsInt("system_maxsbicons", 0) != 0) System.MaxNotificationIconsHook(lpparam);
+            if (mPrefs.getBoolean("system_statusbar_dualsimin2rows")) {
+                System.DualRowSignalHook(lpparam);
+            }
         }
 
         if (pkg.equals(Helpers.modulePkg)) {

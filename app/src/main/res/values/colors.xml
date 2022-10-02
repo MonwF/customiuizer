@@ -27,4 +27,13 @@
 	<color name="list_item_bg_color">@android:color/white</color>
 
 	<color name="svg_stroke_color">#80000000</color>
+
+	<color name="light_mode_icon_color_dual_tone_background">#4dffffff</color>
+	<color name="light_mode_icon_color_dual_tone_fill">#ffffffff</color>
+	<color name="light_mode_icon_color_single_tone">#e6ffffff</color>
+	<color name="light_mode_icon_transparent_color_single_tone">#5cffffff</color>
+	<color name="dark_mode_icon_color_dual_tone_background">#3d000000</color>
+	<color name="dark_mode_icon_color_dual_tone_fill">#7a000000</color>
+	<color name="dark_mode_icon_color_single_tone">#bf000000</color>
+	<color name="dark_mode_icon_transparent_color_single_tone">#4c000000</color>
 </resources>
