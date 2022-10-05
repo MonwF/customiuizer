@@ -5277,10 +5277,6 @@ public class System {
         Helpers.findAndHookMethod("com.android.server.policy.MiuiScreenOnProximityLock", lpparam.classLoader, "showHint", XC_MethodReplacement.DO_NOTHING);
     }
 
-//    public static void HideIconsVoLTERes() {
-//        MainModule.resHooks.setObjectReplacement("com.android.systemui", "bool", "status_bar_hide_volte", true);
-//    }
-
     public static void HideIconsVoLTEHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethodSilently("com.android.systemui.MiuiOperatorCustomizedPolicy$MiuiOperatorConfig", lpparam.classLoader, "getHideVolte", XC_MethodReplacement.returnConstant(true));
     }
@@ -7811,12 +7807,12 @@ public class System {
             protected void after(final MethodHookParam param) throws Throwable {
                 int subStrengthId = (int) XposedHelpers.getAdditionalInstanceField(param.thisObject, "subStrengthId");
                 if (subStrengthId < 0) return;
-                Object mSmallRoaming = XposedHelpers.getObjectField(param.thisObject, "mSmallRoaming");
-                XposedHelpers.callMethod(mSmallRoaming, "setVisibility", 8);
+                Object mSmallHd = XposedHelpers.getObjectField(param.thisObject, "mSmallHd");
+                XposedHelpers.callMethod(mSmallHd, "setVisibility", 8);
                 Object mMobileLeftContainer = XposedHelpers.getObjectField(param.thisObject, "mMobileLeftContainer");
                 XposedHelpers.callMethod(mMobileLeftContainer, "setVisibility", 8);
-                Object mSmallHd = XposedHelpers.getObjectField(param.thisObject, "mSmallHd");
-                XposedHelpers.callMethod(mSmallHd, "setVisibility", 0);
+                Object mSmallRoaming = XposedHelpers.getObjectField(param.thisObject, "mSmallRoaming");
+                XposedHelpers.callMethod(mSmallRoaming, "setVisibility", 0);
             }
         };
         Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyMobileState", beforeUpdate);
@@ -7834,7 +7830,7 @@ public class System {
                 int level2 = subStrengthId;
                 boolean mLight = (boolean) XposedHelpers.getObjectField(param.thisObject, "mLight");
                 boolean mUseTint = (boolean) XposedHelpers.getObjectField(param.thisObject, "mUseTint");
-                Object mSmallHd = XposedHelpers.getObjectField(param.thisObject, "mSmallHd");
+                Object mSmallRoaming = XposedHelpers.getObjectField(param.thisObject, "mSmallRoaming");
                 Object mMobile = XposedHelpers.getObjectField(param.thisObject, "mMobile");
                 int sim1ResId;
                 int sim2ResId;
@@ -7851,7 +7847,7 @@ public class System {
                     sim2ResId = signalDarkLevelToRes2Map.get(level2);
                 }
                 XposedHelpers.callMethod(mMobile, "setImageResource", sim1ResId);
-                XposedHelpers.callMethod(mSmallHd, "setImageResource", sim2ResId);
+                XposedHelpers.callMethod(mSmallRoaming, "setImageResource", sim2ResId);
             }
         };
         Helpers.findAndHookMethod("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyDarknessInternal", resetImageDrawable);
@@ -7859,10 +7855,21 @@ public class System {
         Helpers.findAndHookMethod("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "init", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
+                Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
+                Resources res = mContext.getResources();
                 LinearLayout mMobileGroup = (LinearLayout) XposedHelpers.getObjectField(param.thisObject, "mMobileGroup");
                 TextView mMobileTypeSingle = (TextView) XposedHelpers.getObjectField(param.thisObject, "mMobileTypeSingle");
                 mMobileGroup.removeView(mMobileTypeSingle);
                 mMobileGroup.addView(mMobileTypeSingle);
+                ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) mMobileTypeSingle.getLayoutParams();
+                float marginLeft = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    2.5f,
+                    res.getDisplayMetrics()
+                );
+                mlp.leftMargin = (int) marginLeft;
+                mMobileTypeSingle.setLayoutParams(mlp);
+                mMobileTypeSingle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11.5f);
             }
         });
     }
