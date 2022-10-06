@@ -858,9 +858,6 @@
     <string name="miuizer_show_launchericon_summ">在启动器中显示图标</string>
     <string name="miuizer_show_settingsicon_title">快速访问图标</string>
     <string name="miuizer_show_settingsicon_summ">在设置中显示图标</string>
-    <string name="miuizer_ownrepo_title">自有存储库</string>
-    <string name="miuizer_ownrepo_summ">添加自定义存储库到EdXposed Manager以更可靠地加载CustoMIUIzer的信息</string>
-    <string name="miuizer_ownrepo_note">使用其他存储库</string>
     <string name="miuizer_locale_title">界面语言</string>
     <string name="miuizer_locale_summ">始终以所选语言显示模块界面</string>
     <string name="miuizer_holiday_title">节日设计</string>
@@ -872,7 +869,9 @@
     <string name="miuizer_acramail_title">联系信息</string>
     <string name="miuizer_acramail_tip">如果您希望收到对崩溃报告的回复，此项当然是必填的。请使用电子邮箱、ICQ、XDA或者4PDA的昵称。</string>
     <string name="support">支持</string>
-    <string name="support_repo_title">CustoMIUIzer库</string>
+    <string name="support_github">Github 仓库</string>
+    <string name="support_releases_title">版本下载</string>
+    <string name="support_repo_title">原始CustoMIUIzer仓库</string>
     <string name="support_repo_summ">包含模块源码和分发的Git存储库</string>
     <string name="support_xda_title">XDA帖子</string>
     <string name="support_xda_summ">XDA论坛上的模块帖子</string>
@@ -912,7 +911,6 @@
     <string name="array_color_auto">自动</string>
     <string name="array_color_dark">暗</string>
     <string name="array_color_light">亮</string>
-    <string name="sdk_failed">无法初始化MIUI SDK。\n不是MIUI ROM？</string>
     <string name="notselected">未选择</string>
     <string name="warning">警告！</string>
     <string name="warning_blacklist">Xposed框架中的黑/白名单选项已激活，可能会阻止模块正常工作。</string>
@@ -1010,7 +1008,6 @@
     <string name="array_second_beginning">开始秒</string>
     <string name="array_second_end">结束秒</string>
     <string name="array_alarm_both">定时和相对时间</string>
-    <string name="miuizer_ownrepo_unsupported">不支持的EdXposed Manager版本已安装</string>
     <string name="warning_scope">此模块的激活范围已激活，可能会阻止某些模块正常运行。</string>
     <string name="system_networkindicator_title">网络活动指示器</string>
     <string name="system_networkindicator_summ">配置移动数据和Wi-Fi流量指示器</string>
@@ -1034,7 +1031,6 @@
     <string name="various_restrictapp_title">全限制</string>
     <string name="various_restrictapp_summ">允许为系统应用配置省电策略和Wi-Fi接入</string>
     <string name="launcher_horizwidgetmargin_title">水平小部件边缘</string>
-    <string name="support_github">Github 仓库</string>
     <string name="various_hiddenfeatures_title">隐藏特性</string>
     <string name="various_hiddenfeatures_not_found">该设备不支持</string>
     <string name="various_hiddenfeatures_summ">不易找到的界面</string>
