@@ -43,7 +43,6 @@
     <string name="xposed_not_found_explain">Похоже, что у Вас не установлен Xposed Framework.\n\nВсе моды работают только при наличии установленного Xposed Framework!</string>
     <string name="okay">Окей</string>
     <string name="dummy">" "</string>
-    <string name="sdk_failed">Не удалось инициализировать MIUI SDK.\nПрошивка не MIUI?</string>
     <string name="notselected">Не выбрано</string>
     <string name="various_mods">Различное</string>
     <string name="various_alarmcompat_title">Совместимость будильника</string>
@@ -386,7 +385,6 @@
     <string name="delete">Удалить</string>
     <string name="delete_item_info">Используйте долгое нажатие для удаления</string>
     <string name="change_icon">Изменить иконку</string>
-    <string name="i_use_lsp">Я использую LSPosed</string>
     <string name="crash_confirm">Подтверждение</string>
     <string name="crash_collecting_report">Создание отчёта…</string>
     <string name="crash_sending_report">Отправка отчёта…</string>
@@ -436,10 +434,6 @@
     <string name="miuizer_show_assumelsposed_summ">Предполагать, что установлен LSPosed Framework, для корректной работы с его менеджером</string>
     <string name="miuizer_show_settingsicon_title">Иконка быстрого доступа</string>
     <string name="miuizer_show_settingsicon_summ">Показывать иконку в Настройках</string>
-    <string name="miuizer_ownrepo_title">Свой репозиторий</string>
-    <string name="miuizer_ownrepo_summ">Добавить новый репозиторий в EdXposed Manager для более надёжной загрузки данных о CustoMIUIzer</string>
-    <string name="miuizer_ownrepo_note">Используется дополнительный репозиторий</string>
-    <string name="miuizer_ownrepo_unsupported">Установлена несовместимая версия EdXposed Менеджера</string>
     <string name="miuizer_locale_title">Язык интерфейса</string>
     <string name="miuizer_locale_summ">Всегда отображать интерфейс модуля на выбранном языке</string>
     <string name="miuizer_holiday_title">Праздничный дизайн</string>

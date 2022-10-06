@@ -7775,6 +7775,8 @@ public class System {
                     int level;
                     if (subDataConnected) {
                         level = subLevel * 10 + mainLevel;
+                        String showName = (String) XposedHelpers.getObjectField(subIconState, "showName");
+                        XposedHelpers.setObjectField(mainIconState, "showName", showName);
                     }
                     else {
                         level = mainLevel * 10 + subLevel;
@@ -7864,7 +7866,7 @@ public class System {
                 ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) mMobileTypeSingle.getLayoutParams();
                 float marginLeft = TypedValue.applyDimension(
                     TypedValue.COMPLEX_UNIT_DIP,
-                    2.5f,
+                    2f,
                     res.getDisplayMetrics()
                 );
                 mlp.leftMargin = (int) marginLeft;

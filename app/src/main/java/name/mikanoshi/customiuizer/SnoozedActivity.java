@@ -26,7 +26,6 @@ public class SnoozedActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_snoozed);
 
 		if (!mSDKFound) {
-			Toast.makeText(this, R.string.sdk_failed, Toast.LENGTH_LONG).show();
 			finish();
 			return;
 		}
