@@ -895,60 +895,123 @@ public class Various {
 	}
 
 	public static void AppInfoDuringMiuiInstallHook(LoadPackageParam lpparam) {
-		Class<?> InstallActivity = findClassIfExists("com.android.packageinstaller.PackageInstallerActivity", lpparam.classLoader);
-		if (InstallActivity == null) {
-			Helpers.log("AppInfoDuringMiuiInstallHook", "Cannot find appropriate activity");
-			return;
-		}
-		Method[] methods = XposedHelpers.findMethodsByExactParameters(InstallActivity, void.class, String.class);
-		if (methods.length == 0) {
-			Helpers.log("AppInfoDuringMiuiInstallHook", "Cannot find appropriate method");
-			return;
-		}
-		for (Method method: methods)
-		Helpers.hookMethod(method, new MethodHook() {
-			@Override
-			protected void after(MethodHookParam param) throws Throwable {
-				Activity act = (Activity)param.thisObject;
-				TextView version = act.findViewById(act.getResources().getIdentifier("install_version", "id", lpparam.packageName));
-				Field fPkgInfo = XposedHelpers.findFirstFieldByExactType(param.thisObject.getClass(), PackageInfo.class);
-				PackageInfo mPkgInfo = (PackageInfo)fPkgInfo.get(param.thisObject);
-				if (version == null || mPkgInfo == null) return;
-
-				TextView source = act.findViewById(act.getResources().getIdentifier("install_source", "id", lpparam.packageName));
-				source.setGravity(Gravity.CENTER_HORIZONTAL);
-				source.setText(mPkgInfo.packageName);
-
-				PackageInfo mAppInfo = null;
-				try {
-					mAppInfo = act.getPackageManager().getPackageInfo(mPkgInfo.packageName, 0);
-				} catch (Throwable ignore) {}
-
-				//String size = "";
-				//String[] texts = version.getText().toString().split("\\|");
-				//if (texts.length >= 2) size = texts[1].trim();
-
-				Resources modRes = Helpers.getModuleRes(act);
-
-				SpannableStringBuilder builder = new SpannableStringBuilder();
-				//if (!TextUtils.isEmpty(size)) builder.append(size).append("\n");
-				builder.append(modRes.getString(R.string.various_installappinfo_vername)).append(":\t\t");
-				if (mAppInfo != null) builder.append(mAppInfo.versionName).append("  ➟  ");
-				builder.append(mPkgInfo.versionName).append("\n");
-				builder.append(modRes.getString(R.string.various_installappinfo_vercode)).append(":\t\t");
-				if (mAppInfo != null) builder.append(String.valueOf(mAppInfo.versionCode)).append("  ➟  ");
-				builder.append(String.valueOf(mPkgInfo.versionCode)).append("\n");
-				builder.append(modRes.getString(R.string.various_installappinfo_sdk)).append(":\t\t");
-				if (mAppInfo != null) builder.append(String.valueOf(mAppInfo.applicationInfo.minSdkVersion)).append("-").append(String.valueOf(mAppInfo.applicationInfo.targetSdkVersion)).append("  ➟  ");
-				builder.append(String.valueOf(mPkgInfo.applicationInfo.minSdkVersion)).append("-").append(String.valueOf(mPkgInfo.applicationInfo.targetSdkVersion));
-
-				version.setGravity(Gravity.CENTER_HORIZONTAL);
-				version.setSingleLine(false);
-				version.setMaxLines(10);
-				version.setText(builder);
-				version.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13.09f);
+		Class<?> AppInfoViewObjectClass = findClassIfExists("com.miui.packageInstaller.ui.listcomponets.AppInfoViewObject", lpparam.classLoader);
+		if (AppInfoViewObjectClass != null) {
+			Class<?> ViewHolderClass = findClassIfExists("com.miui.packageInstaller.ui.listcomponets.AppInfoViewObject$ViewHolder", lpparam.classLoader);
+			Method[] methods = XposedHelpers.findMethodsByExactParameters(AppInfoViewObjectClass, void.class, ViewHolderClass);
+			if (methods.length == 0) {
+				Helpers.log("AppInfoDuringMiuiInstallHook", "Cannot find appropriate method");
+				return;
 			}
-		});
+			Class<?> ApkInfoClass = findClassIfExists("com.miui.packageInstaller.model.ApkInfo", lpparam.classLoader);
+
+			Field[] fields = AppInfoViewObjectClass.getDeclaredFields();
+			String apkInfoFieldName = null;
+			for (Field field: fields)
+				if (ApkInfoClass.isAssignableFrom(field.getType())) {
+					apkInfoFieldName = field.getName();
+					break;
+				}
+			if (apkInfoFieldName == null) return;
+			String finalApkInfoFieldName = apkInfoFieldName;
+			Helpers.hookMethod(methods[0], new MethodHook() {
+				@Override
+				protected void after(MethodHookParam param) throws Throwable {
+					Object viewHolder = param.args[0];
+					if (viewHolder == null) return;
+					TextView tvAppVersion = (TextView) XposedHelpers.callMethod(viewHolder, "getTvDes");
+					TextView tvAppSize = (TextView) XposedHelpers.callMethod(viewHolder, "getAppSize");
+					TextView tvAppName = (TextView) XposedHelpers.callMethod(viewHolder, "getTvAppName");
+					if (tvAppVersion == null) return;
+
+					ViewGroup.MarginLayoutParams appNameLp = (ViewGroup.MarginLayoutParams) tvAppName.getLayoutParams();
+					appNameLp.topMargin = 0;
+					tvAppName.setLayoutParams(appNameLp);
+
+					Object apkInfo = XposedHelpers.getObjectField(param.thisObject, finalApkInfoFieldName);
+					ApplicationInfo mAppInfo = (ApplicationInfo) XposedHelpers.callMethod(apkInfo, "getInstalledPackageInfo");
+					PackageInfo mPkgInfo = (PackageInfo) XposedHelpers.callMethod(apkInfo, "getPackageInfo");
+					Resources modRes = Helpers.getModuleRes(tvAppVersion.getContext());
+					SpannableStringBuilder builder = new SpannableStringBuilder();
+					builder.append(modRes.getString(R.string.various_installappinfo_vername)).append(": ");
+					if (mAppInfo != null) builder.append((String)XposedHelpers.callMethod(apkInfo, "getInstalledVersionName")).append(" ➟ ");
+					builder.append(mPkgInfo.versionName).append("\n");
+					builder.append(tvAppSize.getText()).append("\n");
+					builder.append(modRes.getString(R.string.various_installappinfo_vercode)).append(": ");
+					if (mAppInfo != null) builder.append(String.valueOf(XposedHelpers.callMethod(apkInfo, "getInstalledVersionCode"))).append(" ➟ ");
+					builder.append(String.valueOf(mPkgInfo.getLongVersionCode())).append("\n");
+					builder.append(modRes.getString(R.string.various_installappinfo_sdk)).append(": ");
+					if (mAppInfo != null) builder.append(String.valueOf(mAppInfo.minSdkVersion)).append("-").append(String.valueOf(mAppInfo.targetSdkVersion)).append(" ➟ ");
+					builder.append(String.valueOf(mPkgInfo.applicationInfo.minSdkVersion)).append("-").append(String.valueOf(mPkgInfo.applicationInfo.targetSdkVersion));
+
+					tvAppVersion.setText(builder);
+					tvAppVersion.setSingleLine(false);
+					tvAppVersion.setMaxLines(10);
+					LinearLayout layout = (LinearLayout) tvAppVersion.getParent();
+					ViewGroup.MarginLayoutParams versionSizeLp = (ViewGroup.MarginLayoutParams) layout.getLayoutParams();
+					versionSizeLp.topMargin = 0;
+					layout.setLayoutParams(versionSizeLp);
+					layout.removeAllViews();
+					layout.addView(tvAppVersion);
+				}
+			});
+		}
+		else {
+			Class<?> InstallActivity = findClassIfExists("com.android.packageinstaller.PackageInstallerActivity", lpparam.classLoader);
+			if (InstallActivity == null) {
+				Helpers.log("AppInfoDuringMiuiInstallHook", "Cannot find appropriate activity");
+				return;
+			}
+			Method[] methods = XposedHelpers.findMethodsByExactParameters(InstallActivity, void.class, String.class);
+			if (methods.length == 0) {
+				Helpers.log("AppInfoDuringMiuiInstallHook", "Cannot find appropriate method");
+				return;
+			}
+			for (Method method: methods)
+				Helpers.hookMethod(method, new MethodHook() {
+					@Override
+					protected void after(MethodHookParam param) throws Throwable {
+						Activity act = (Activity)param.thisObject;
+						TextView version = act.findViewById(act.getResources().getIdentifier("install_version", "id", lpparam.packageName));
+						Field fPkgInfo = XposedHelpers.findFirstFieldByExactType(param.thisObject.getClass(), PackageInfo.class);
+						PackageInfo mPkgInfo = (PackageInfo)fPkgInfo.get(param.thisObject);
+						if (version == null || mPkgInfo == null) return;
+
+						TextView source = act.findViewById(act.getResources().getIdentifier("install_source", "id", lpparam.packageName));
+						source.setGravity(Gravity.CENTER_HORIZONTAL);
+						source.setText(mPkgInfo.packageName);
+
+						PackageInfo mAppInfo = null;
+						try {
+							mAppInfo = act.getPackageManager().getPackageInfo(mPkgInfo.packageName, 0);
+						} catch (Throwable ignore) {}
+
+						//String size = "";
+						//String[] texts = version.getText().toString().split("\\|");
+						//if (texts.length >= 2) size = texts[1].trim();
+
+						Resources modRes = Helpers.getModuleRes(act);
+
+						SpannableStringBuilder builder = new SpannableStringBuilder();
+						//if (!TextUtils.isEmpty(size)) builder.append(size).append("\n");
+						builder.append(modRes.getString(R.string.various_installappinfo_vername)).append(":\t\t");
+						if (mAppInfo != null) builder.append(mAppInfo.versionName).append("  ➟  ");
+						builder.append(mPkgInfo.versionName).append("\n");
+						builder.append(modRes.getString(R.string.various_installappinfo_vercode)).append(":\t\t");
+						if (mAppInfo != null) builder.append(String.valueOf(mAppInfo.versionCode)).append("  ➟  ");
+						builder.append(String.valueOf(mPkgInfo.versionCode)).append("\n");
+						builder.append(modRes.getString(R.string.various_installappinfo_sdk)).append(":\t\t");
+						if (mAppInfo != null) builder.append(String.valueOf(mAppInfo.applicationInfo.minSdkVersion)).append("-").append(String.valueOf(mAppInfo.applicationInfo.targetSdkVersion)).append("  ➟  ");
+						builder.append(String.valueOf(mPkgInfo.applicationInfo.minSdkVersion)).append("-").append(String.valueOf(mPkgInfo.applicationInfo.targetSdkVersion));
+
+						version.setGravity(Gravity.CENTER_HORIZONTAL);
+						version.setSingleLine(false);
+						version.setMaxLines(10);
+						version.setText(builder);
+						version.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13.09f);
+					}
+				});
+		}
 	}
 
 	public static void MiuiPackageInstallerHook(LoadPackageParam lpparam) {
