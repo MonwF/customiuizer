@@ -6976,21 +6976,28 @@ public class System {
         });
     }
 
-    public static void NoFloatingWindowBlacklistHook() {
+    public static void NoFloatingWindowBlacklistHook(LoadPackageParam lpparam) {
+        MainModule.resHooks.setResReplacement("android", "array", "freeform_black_list", R.array.miui_resize_black_list);
         MethodHook clearHook = new MethodHook() {
             @Override
-            @SuppressWarnings("unchecked")
             protected void after(MethodHookParam param) throws Throwable {
                 List<String> blackList = (List<String>)param.getResult();
                 if (blackList != null) blackList.clear();
                 param.setResult(blackList);
             }
         };
-        Helpers.findAndHookMethod("android.util.MiuiMultiWindowAdapter", null, "getFreeformBlackList", clearHook);
-        //noinspection ResultOfMethodCallIgnored
-        Helpers.findAndHookMethodSilently("android.util.MiuiMultiWindowAdapter", null, "getFreeformBlackListFromCloud", Context.class, clearHook);
-        // Unlock on all devices
-        Helpers.findAndHookMethod("android.util.MiuiMultiWindowUtils", null, "supportFreeform", XC_MethodReplacement.returnConstant(true));
+        Helpers.hookAllMethods("android.util.MiuiMultiWindowAdapter", lpparam.classLoader, "getFreeformBlackList", clearHook);
+        Helpers.hookAllMethods("android.util.MiuiMultiWindowAdapter", lpparam.classLoader, "getFreeformBlackListFromCloud", clearHook);
+        Helpers.hookAllMethods("android.util.MiuiMultiWindowAdapter", lpparam.classLoader, "setFreeformBlackList", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                List<String> blackList = new ArrayList<String>();
+                blackList.add("ab.cd.xyz");
+                param.args[0] = blackList;
+            }
+        });
+        Helpers.findAndHookMethod("android.util.MiuiMultiWindowUtils", lpparam.classLoader, "isForceResizeable", XC_MethodReplacement.returnConstant(true));
+        Helpers.findAndHookMethod("android.util.MiuiMultiWindowUtils", lpparam.classLoader, "supportFreeform", XC_MethodReplacement.returnConstant(true));
     }
 
     public static ConcurrentHashMap<String, Pair<Float, Rect>> fwApps = new ConcurrentHashMap<String, Pair<Float, Rect>>();
@@ -7046,8 +7053,33 @@ public class System {
     public static void restoreFwAppsInSetting(Context context) {
         unserializeFwApps(Settings.Global.getString(context.getContentResolver(), Helpers.modulePkg + ".fw.apps"));
     }
+    private static ActivityOptions patchActivityOptions(Context mContext, ActivityOptions options, String pkgName, Class<?> MiuiMultiWindowUtils) {
+        if (options == null) options = ActivityOptions.makeBasic();
+        XposedHelpers.callMethod(options, "setLaunchWindowingMode", 5);
+        XposedHelpers.callMethod(options, "setMiuiConfigFlag", 2);
+
+        Float scale;
+        Rect rect;
+        Pair<Float, Rect> values = fwApps.get(pkgName);
+        if (values == null || values.first == 0f || values.second == null) {
+            scale = 0.7f;
+            rect = (Rect)XposedHelpers.callStaticMethod(MiuiMultiWindowUtils, "getFreeformRect", mContext);
+        } else {
+            scale = values.first;
+            rect = values.second;
+        }
+        options.setLaunchBounds(rect);
+        try {
+            Object injector = XposedHelpers.callMethod(options, "getActivityOptionsInjector");
+            XposedHelpers.callMethod(injector, "setFreeformScale", scale);
+        } catch (Throwable ignore) {
+            XposedBridge.log(ignore);
+        }
+        return options;
+    }
 
     public static void StickyFloatingWindowsHook(LoadPackageParam lpparam) {
+        Class<?> MiuiMultiWindowUtils = findClass("android.util.MiuiMultiWindowUtils", lpparam.classLoader);
         Helpers.hookAllMethods("com.android.server.wm.ActivityStarterInjector", lpparam.classLoader, "modifyLaunchActivityOptionIfNeed", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
@@ -7057,39 +7089,28 @@ public class System {
                 ActivityOptions options = (ActivityOptions)param.getResult();
                 int windowingMode = options == null ? -1 : (int)XposedHelpers.callMethod(options, "getLaunchWindowingMode");
                 String pkgName = intent.getComponent().getPackageName();
-                if (windowingMode != 5 && fwApps.containsKey(pkgName)) try {
-                    Class<?> mmwuCls = findClassIfExists("android.util.MiuiMultiWindowUtils", lpparam.classLoader);
-                    if (mmwuCls == null) {
-                        Helpers.log("StickyFloatingWindowsHook", "Cannot find MiuiMultiWindowUtils class");
-                        return;
-                    }
-                    Context mContext = (Context)XposedHelpers.getObjectField(param.args[0], "mContext");
-                    //options = (ActivityOptions)XposedHelpers.callStaticMethod(mmwuCls, "getActivityOptions", mContext, pkgName, true, false);
-                    if (options == null) options = ActivityOptions.makeBasic();
-                    XposedHelpers.callMethod(options, "setLaunchWindowingMode", 5);
-                    XposedHelpers.callMethod(options, "setMiuiConfigFlag", 2);
-
-                    Float scale;
-                    Rect rect;
-                    Pair<Float, Rect> values = fwApps.get(pkgName);
-                    if (values == null || values.first == 0f || values.second == null) {
-                        scale = XposedHelpers.getStaticFloatField(mmwuCls, "sScale");
-                        rect = (Rect)XposedHelpers.callStaticMethod(mmwuCls, "getFreeformRect", mContext);
-                    } else {
-                        scale = values.first;
-                        rect = values.second;
-                    }
-                    options.setLaunchBounds(rect);
+                if (pkgName == "com.miui.home") return;
+                Context mContext;
+                try {
+                    mContext = (Context)XposedHelpers.getObjectField(param.args[0], "mContext");
+                } catch (Throwable ignore) {
+                    mContext = (Context)XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.args[0], "mService"), "mContext");
+                }
+                if (windowingMode != 5 && fwApps.containsKey(pkgName)) {
                     try {
-                        Object injector = XposedHelpers.callMethod(options, "getActivityOptionsInjector");
-                        XposedHelpers.callMethod(injector, "setFreeformScale", scale);
-                    } catch (Throwable ignore) {
-                        XposedBridge.log(ignore);
+                        if (MiuiMultiWindowUtils == null) {
+                            Helpers.log("StickyFloatingWindowsHook", "Cannot find MiuiMultiWindowUtils class");
+                            return;
+                        }
+                        options = patchActivityOptions(mContext, options, pkgName, MiuiMultiWindowUtils);
+                        param.setResult(options);
+                    } catch (Throwable t) {
+                        XposedBridge.log(t);
                     }
-
-                    param.setResult(options);
-                } catch (Throwable t) {
-                    XposedBridge.log(t);
+                }
+                else if (windowingMode == 5 && !fwApps.containsKey(pkgName)) {
+                    fwApps.put(pkgName, new Pair<Float, Rect>(0f, null));
+                    storeFwAppsInSetting(mContext);
                 }
             }
         });
@@ -7100,22 +7121,76 @@ public class System {
                 Object safeOptions = param.args[3];
                 ActivityOptions options = (ActivityOptions)XposedHelpers.callMethod(safeOptions, "getOptions", param.thisObject);
                 int windowingMode = options == null ? -1 : (int)XposedHelpers.callMethod(options, "getLaunchWindowingMode");
-                if (windowingMode != 5) return;
                 String pkgName = getTaskPackageName(param.thisObject, (int)param.args[2], options);
-                if (pkgName != null) {
+                if (windowingMode == 5 && pkgName != null) {
                     fwApps.put(pkgName, new Pair<Float, Rect>(0f, null));
-                    storeFwAppsInSetting((Context)XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.thisObject, "mService"), "mContext"));
+                    Context mContext = (Context)XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.thisObject, "mService"), "mContext");
+                    storeFwAppsInSetting(mContext);
+                }
+            }
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                Object safeOptions = param.args[3];
+                ActivityOptions options = (ActivityOptions)XposedHelpers.callMethod(safeOptions, "getOptions", param.thisObject);
+                int windowingMode = options == null ? -1 : (int)XposedHelpers.callMethod(options, "getLaunchWindowingMode");
+                String pkgName = getTaskPackageName(param.thisObject, (int)param.args[2], options);
+                if (windowingMode != 5 && fwApps.containsKey(pkgName)) {
+                    Context mContext = (Context)XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.thisObject, "mService"), "mContext");
+                    options = patchActivityOptions(mContext, options, pkgName, MiuiMultiWindowUtils);
+                    XposedHelpers.setObjectField(safeOptions, "mOriginalOptions", options);
+                    param.args[3] = safeOptions;
+                    Intent intent = new Intent(ACTION_PREFIX + "dismissRecentsWhenFreeWindowOpen");
+                    intent.putExtra("package", pkgName);
+                    mContext.sendBroadcast(intent);
                 }
             }
         });
+
+        Helpers.findAndHookMethod("com.android.server.wm.MiuiFreeFormGestureController$FreeFormReceiver", lpparam.classLoader, "onReceive", new Object[]{Context.class, Intent.class, new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                Intent intent = (Intent) param.args[1];
+                String action = intent.getAction();
+                if (action == "miui.intent.action_launch_fullscreen_from_freeform") {
+                    Object parentThis = XposedHelpers.getSurroundingThis(param.thisObject);
+                    XposedHelpers.setAdditionalInstanceField(parentThis, "skipFreeFormStateClear", true);
+                }
+            }
+        }});
 
         Helpers.hookAllMethods("com.android.server.wm.MiuiFreeFormGestureController", lpparam.classLoader, "notifyFullScreenWidnowModeStart", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 if (param.args.length != 3) return;
                 String pkgName = (String)XposedHelpers.callMethod(param.args[1], "getStackPackageName");
-                if (fwApps.remove(pkgName) != null)
-                    storeFwAppsInSetting((Context)XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.thisObject, "mService"), "mContext"));
+                Object skipClear = XposedHelpers.getAdditionalInstanceField(param.thisObject, "skipFreeFormStateClear");
+                boolean skipFreeFormStateClear = false;
+                if (skipClear != null) {
+                    skipFreeFormStateClear = (boolean) skipClear;
+                }
+                if (!skipFreeFormStateClear) {
+                    if (fwApps.remove(pkgName) != null) {
+                        storeFwAppsInSetting((Context)XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.thisObject, "mService"), "mContext"));
+                    }
+                }
+                else {
+                    XposedHelpers.setAdditionalInstanceField(param.thisObject, "skipFreeFormStateClear", false);
+                }
+            }
+        });
+
+        Helpers.hookAllMethods("com.android.server.wm.ActivityTaskManagerService", lpparam.classLoader, "launchSmallFreeFormWindow", new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                Object taskId = XposedHelpers.getObjectField(param.args[0], "taskId");
+                Object mMiuiFreeFormManagerService = XposedHelpers.getObjectField(param.thisObject, "mMiuiFreeFormManagerService");
+                Object miuiFreeFormActivityStack = XposedHelpers.callMethod(mMiuiFreeFormManagerService, "getMiuiFreeFormActivityStack", taskId);
+                String pkgName = (String) XposedHelpers.callMethod(miuiFreeFormActivityStack, "getStackPackageName");
+                if (!fwApps.containsKey(pkgName)) {
+                    fwApps.put(pkgName, new Pair<Float, Rect>(0f, null));
+                    Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+                    storeFwAppsInSetting(mContext);
+                }
             }
         });
 
@@ -7123,46 +7198,68 @@ public class System {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+                restoreFwAppsInSetting(mContext);
+                Class<?> MiuiMultiWindowAdapter = findClass("android.util.MiuiMultiWindowAdapter", lpparam.classLoader);
+                List<String> blackList = (List<String>) XposedHelpers.getStaticObjectField(MiuiMultiWindowAdapter, "FREEFORM_BLACK_LIST");
+                blackList.clear();
                 mContext.registerReceiver(new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
-                        try {
-                            String pkgName = intent.getStringExtra("package");
-                            if (pkgName != null) {
-                                fwApps.put(pkgName, new Pair<Float, Rect>(0f, null));
-                                storeFwAppsInSetting(mContext);
-                            }
-                        } catch (Throwable t) {
-                            XposedBridge.log(t);
+                        String action = intent.getAction();
+                        if (action == "miui.intent.action_launch_fullscreen_from_freeform") {
+                            XposedHelpers.setAdditionalInstanceField(param.thisObject, "skipFreeFormStateClear", true);
                         }
                     }
-                }, new IntentFilter(ACTION_PREFIX + "RememberFloatingWindow"));
-                restoreFwAppsInSetting(mContext);
+                }, new IntentFilter("miui.intent.action_launch_fullscreen_from_freeform"));
             }
         });
 
         Helpers.hookAllMethods("com.android.server.wm.ActivityTaskManagerService", lpparam.classLoader, "resizeTask", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
-                float sScale = XposedHelpers.getStaticFloatField(findClass("android.util.MiuiMultiWindowUtils", null), "sScale");
                 String pkgName = getTaskPackageName(param.thisObject, (int)param.args[0]);
-                if (pkgName != null && fwApps.containsKey(pkgName)) {
-                    fwApps.put(pkgName, new Pair<Float, Rect>(sScale, new Rect((Rect)param.args[1])));
-                    storeFwAppsInSetting((Context)XposedHelpers.getObjectField(param.thisObject, "mContext"));
+                if (pkgName != null) {
+                    Object skipClear = XposedHelpers.getAdditionalInstanceField(param.thisObject, "skipFreeFormStateClear");
+                    boolean skipFreeFormStateClear = false;
+                    if (skipClear != null) {
+                        skipFreeFormStateClear = (boolean) skipClear;
+                    }
+                    if (skipFreeFormStateClear) {
+                        XposedHelpers.setAdditionalInstanceField(param.thisObject, "skipFreeFormStateClear", false);
+                    }
+                    else {
+                        Object mMiuiFreeFormManagerService = XposedHelpers.getObjectField(param.thisObject, "mMiuiFreeFormManagerService");
+                        Object miuiFreeFormActivityStack = XposedHelpers.callMethod(mMiuiFreeFormManagerService, "getMiuiFreeFormActivityStack", param.args[0]);
+                        if (fwApps.containsKey(pkgName)) {
+                            Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+                            float sScale = (float) XposedHelpers.callMethod(miuiFreeFormActivityStack, "getFreeFormScale");
+                            fwApps.put(pkgName, new Pair<Float, Rect>(sScale, new Rect((Rect)param.args[1])));
+                            storeFwAppsInSetting(mContext);
+                        }
+                    }
                 }
             }
         });
     }
 
     public static void StickyFloatingWindowsLauncherHook(LoadPackageParam lpparam) {
-        Helpers.hookAllMethods("com.miui.home.smallwindow.BaseDelegateAdapter", lpparam.classLoader, "startFreeformActivity",new MethodHook() {
+        Helpers.findAndHookMethod("com.miui.home.recents.views.RecentsContainer", lpparam.classLoader, "onAttachedToWindow", new MethodHook() {
             @Override
-            protected void before(MethodHookParam param) throws Throwable {
-                String pkgName = (String)param.args[1];
-                if (pkgName == null) return;
-                Intent intent = new Intent(ACTION_PREFIX + "RememberFloatingWindow");
-                intent.putExtra("package", pkgName);
-                ((Context)param.args[0]).sendBroadcast(intent);
+            protected void after(MethodHookParam param) throws Throwable {
+                Context mContext = (Context) XposedHelpers.callMethod(param.thisObject, "getContext");
+                mContext.registerReceiver(new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        try {
+                            String pkgName = intent.getStringExtra("package");
+                            if (pkgName != null) {
+                                XposedHelpers.callMethod(param.thisObject, "dismissRecentsToLaunchTargetTaskOrHome", pkgName, true);
+                            }
+                        } catch (Throwable t) {
+                            XposedBridge.log(t);
+                        }
+                    }
+                }, new IntentFilter(ACTION_PREFIX + "dismissRecentsWhenFreeWindowOpen"));
             }
         });
     }
@@ -7190,11 +7287,8 @@ public class System {
         });
     }
 
-    public static void MultiWindowPlusHook() {
-        MainModule.resHooks.setResReplacement("android", "array", "miui_resize_black_list", R.array.miui_resize_black_list);
-    }
-
     public static void MultiWindowPlusHook(LoadPackageParam lpparam) {
+        MainModule.resHooks.setResReplacement("android", "array", "miui_resize_black_list", R.array.miui_resize_black_list);
         if (!lpparam.packageName.equals("android")) {
             Helpers.hookAllMethods("com.miui.home.recents.views.RecentMenuView", lpparam.classLoader, "onMessageEvent", new MethodHook() {
                 @Override

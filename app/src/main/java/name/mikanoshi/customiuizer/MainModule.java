@@ -79,8 +79,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (mPrefs.getBoolean("system_hidelowbatwarn")) System.NoLowBatteryWarningHook();
         if (mPrefs.getBoolean("system_nomediamute")) System.NoMediaMuteInDNDHook();
         if (mPrefs.getBoolean("system_audiosilencer")) System.AudioSilencerHook();
-        if (mPrefs.getBoolean("system_fw_noblacklist")) System.NoFloatingWindowBlacklistHook();
-        if (mPrefs.getBoolean("system_fw_splitscreen")) System.MultiWindowPlusHook();
         if (mPrefs.getBoolean("controls_volumecursor")) Controls.VolumeCursorHook();
         if (mPrefs.getBoolean("various_alarmcompat")) Various.AlarmCompatHook();
         if (mPrefs.getStringAsInt("system_iconlabletoasts", 1) > 1) System.IconLabelToastsHook();
@@ -181,6 +179,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                     mPrefs.getStringAsInt("controls_volumemedia_down", 0) > 0) Controls.VolumeMediaButtonsHook(lpparam);
 
             if (mPrefs.getBoolean("system_fw_splitscreen")) System.MultiWindowPlusHook(lpparam);
+            if (mPrefs.getBoolean("system_fw_noblacklist")) System.NoFloatingWindowBlacklistHook(lpparam);
         }
 
         if (pkg.equals("com.android.systemui")) {
@@ -458,7 +457,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getInt("controls_fsg_width", 100) > 100) Controls.BackGestureAreaWidthHook(lpparam, false);
             if (mPrefs.getBoolean("controls_fsg_horiz")) Launcher.FSGesturesHook(lpparam);
             if (mPrefs.getBoolean("system_removecleaner")) System.HideMemoryCleanHook(lpparam, true);
-//            if (mPrefs.getBoolean("system_fw_sticky")) System.StickyFloatingWindowsLauncherHook(lpparam);
+            if (mPrefs.getBoolean("system_fw_sticky")) System.StickyFloatingWindowsLauncherHook(lpparam);
             if (mPrefs.getBoolean("system_fw_splitscreen")) System.MultiWindowPlusHook(lpparam);
             //if (mPrefs.getBoolean("launcher_fixstatusbarmode")) Launcher.FixStatusBarModeHook(lpparam);
             if (mPrefs.getBoolean("launcher_fixanim")) Launcher.FixAnimHook(lpparam);
