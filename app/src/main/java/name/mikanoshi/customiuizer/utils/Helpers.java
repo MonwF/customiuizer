@@ -155,7 +155,8 @@ public class Helpers {
 	));
 	public static final HashMap<String, String> l10nProgress = new HashMap<String, String>() {{
 		put("ru-RU", "100");
-		put("zh-CN", "98.1");
+		put("zh-CN", "99");
+		put("zh-TW", "99");
 	}};
 
 	public static final ArrayList<String> shortcutIcons = new ArrayList<String>();
