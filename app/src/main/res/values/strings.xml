@@ -1095,6 +1095,8 @@
     <string name="type_res">resource</string>
 
     <string name="dummy" translatable="false" />
+    <string name="system_statusbar_batterytempandcurrent_title">Display battery temp and current</string>
+    <string name="system_statusbar_batterytempandcurrentatright_title">Display at the right</string>
     <string name="system_statusbar_dttosleep_title">Double tap to sleep</string>
     <string name="system_statusbar_dualsimin2rows_title">Dual SIM signal bars in dual rows</string>
     <string name="various_allow_untrusted_touch_title">Allow untrusted touch</string>

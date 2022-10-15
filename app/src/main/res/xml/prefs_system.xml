@@ -341,6 +341,18 @@
 			android:title="@string/system_statusbar_dttosleep_title"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_statusbar_batterytempandcurrent"
+			android:title="@string/system_statusbar_batterytempandcurrent_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_statusbar_batterytempandcurrent_atright"
+			android:title="@string/system_statusbar_batterytempandcurrentatright_title"
+			android:dependency="pref_key_system_statusbar_batterytempandcurrent"
+			miuizer:child="true"
+			android:defaultValue="false" />
+
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_batteryindicator_cat"
 			android:title="@string/system_batteryindicator_title"
