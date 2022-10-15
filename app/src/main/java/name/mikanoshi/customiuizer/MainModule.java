@@ -245,6 +245,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_lockscreenshortcuts")) System.LockScreenShortcutHook(lpparam);
             if (mPrefs.getBoolean("system_4gtolte")) System.Network4GtoLTEHook(lpparam);
             if (mPrefs.getBoolean("system_statusbar_dttosleep")) System.StatusBarDoubleTapToSleepHook(lpparam);
+            if (mPrefs.getBoolean("system_statusbar_batterytempandcurrent")) System.DisplayBatteryDetailHook(lpparam);
             if (mPrefs.getBoolean("system_showlux")) System.BrightnessLuxHook(lpparam);
             if (mPrefs.getBoolean("system_showpct")) System.BrightnessPctHook(lpparam);
             if (mPrefs.getBoolean("system_cleanmirror")) System.ClearBrightnessMirrorHook(lpparam);
