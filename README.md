@@ -3,13 +3,18 @@
 ## CustoMIUIzer for MIUI 13
 tested on android 12 only ( **some hooks are not working** )
 
-[Dowload](https://tpsx.lanzouv.com/b021ly4gj) 
+[Dowload](https://tpsx.lanzouv.com/b021ly4gj)
 
 password: `miui`
 
-### Backup functionality ###
+### Backup functionality
 Backups are stored in /sdcard/Documents/CustoMIUIzer/
 
+### Donate
+Via paypal
+* [$5](https://paypal.me/tpsxj/5)
+* [$10](https://paypal.me/tpsxj/10)
+* [Other](https://paypal.me/tpsxj)
 
 ------
 
