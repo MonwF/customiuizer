@@ -245,6 +245,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_lockscreenshortcuts")) System.LockScreenShortcutHook(lpparam);
             if (mPrefs.getBoolean("system_4gtolte")) System.Network4GtoLTEHook(lpparam);
             if (mPrefs.getBoolean("system_statusbar_dttosleep")) System.StatusBarDoubleTapToSleepHook(lpparam);
+            if (mPrefs.getBoolean("system_statusbar_netspeed_atright")) System.StatusBarNetworkSpeedAtRightHook(lpparam);
             if (mPrefs.getBoolean("system_statusbar_batterytempandcurrent")) System.DisplayBatteryDetailHook(lpparam);
             if (mPrefs.getBoolean("system_showlux")) System.BrightnessLuxHook(lpparam);
             if (mPrefs.getBoolean("system_showpct")) System.BrightnessPctHook(lpparam);
@@ -274,6 +275,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 //            if (mPrefs.getBoolean("launcher_nounlockanim")) System.NoUnlockAnimationHook(lpparam);
             if (mPrefs.getBoolean("system_statusbaricons_battery1")) System.HideIconsBattery1Hook(lpparam);
             if (mPrefs.getBoolean("system_statusbaricons_battery3") || mPrefs.getBoolean("system_statusbaricons_battery2")) System.HideIconsBattery2Hook(lpparam);
+            if (mPrefs.getStringAsInt("system_statusbaricons_wifistandard", 1) > 1) System.DisplayWifiStandardHook(lpparam);
             if (mPrefs.getBoolean("system_statusbaricons_signal")) System.HideIconsSignalHook(lpparam);
             if (mPrefs.getBoolean("system_statusbaricons_nosims")) System.HideIconsNoSIMsHook(lpparam);
             if (mPrefs.getBoolean("system_statusbaricons_volte")) System.HideIconsVoLTEHook(lpparam);

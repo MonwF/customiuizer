@@ -324,6 +324,15 @@
 			android:summary="@string/system_networkindicator_summ"
 			android:entries="@array/onoff"
 			android:entryValues="@array/onoff_val"
+			miuizer:valueAsSummary="true"
+			android:defaultValue="1" />
+
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_statusbaricons_wifistandard"
+			android:title="@string/system_statusbaricons_wifistandard_title"
+			android:entries="@array/onoff"
+			android:entryValues="@array/onoff_val"
+			miuizer:valueAsSummary="true"
 			android:defaultValue="1" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
@@ -337,14 +346,24 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_statusbar_dttosleep"
-			android:title="@string/system_statusbar_dttosleep_title"
+			android:key="pref_key_system_statusbar_netspeed_atright"
+			android:title="@string/system_statusbar_netspeed_atright_title"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_statusbar_batterytempandcurrent"
 			android:title="@string/system_statusbar_batterytempandcurrent_title"
 			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_statusbar_batterytempandcurrent_content"
+			android:title="@string/system_statusbar_batterytempandcurrent_content_title"
+			android:entries="@array/batterydetails"
+			android:entryValues="@array/onoff_val"
+			miuizer:valueAsSummary="true"
+			android:dependency="pref_key_system_statusbar_batterytempandcurrent"
+			miuizer:child="true"
+			android:defaultValue="1" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_statusbar_batterytempandcurrent_atright"
@@ -441,6 +460,11 @@
 			android:key="pref_key_system_statusbarcontrols_cat"
 			android:summary="@string/system_statusbarcontrols_summ"
 			android:title="@string/system_statusbarcontrols_title" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_statusbar_dttosleep"
+			android:title="@string/system_statusbar_dttosleep_title"
+			android:defaultValue="false" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 

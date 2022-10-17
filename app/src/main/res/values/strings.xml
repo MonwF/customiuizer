@@ -33,6 +33,7 @@
     <string name="system_mods_toasts">Toasts</string>
     <string name="system_statusbaricons_title">Hide icons</string>
     <string name="system_statusbaricons_summ">Manage status bar icons visibility</string>
+    <string name="system_statusbaricons_wifistandard_title">Show Wi-Fi standard</string>
     <string name="system_statusbaricons_battery1_title">Battery image</string>
     <string name="system_statusbaricons_battery2_title">Battery charge percentage</string>
     <string name="system_statusbaricons_battery3_title">Charging indicator</string>
@@ -893,6 +894,8 @@
     <string name="array_keep">Keep as it is</string>
     <string name="array_turn_off">Turn off</string>
     <string name="array_turn_off_disable">Turn off and disable</string>
+    <string name="array_temperature">Temperature Only</string>
+    <string name="array_current">Current Only</string>
     <string name="unlimited">Unlimited</string>
 
     <string name="toggle_wifi_on">Wi-Fi enabled</string>
@@ -1096,9 +1099,11 @@
 
     <string name="dummy" translatable="false" />
     <string name="system_statusbar_batterytempandcurrent_title">Display battery temp and current</string>
+    <string name="system_statusbar_batterytempandcurrent_content_title">Display info</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">Display at the right</string>
     <string name="system_statusbar_dttosleep_title">Double tap to sleep</string>
     <string name="system_statusbar_dualsimin2rows_title">Dual SIM signal bars in dual rows</string>
+    <string name="system_statusbar_netspeed_atright_title">Move networkspeed indicator to the right side</string>
     <string name="various_allow_untrusted_touch_title">Allow untrusted touch</string>
     <string name="various_skip_interceptperm_title">Skip permission intercept timer</string>
     <string name="system_lockscreenshortcuts_left_tapaction_title">Tap left shortcut to toggle flashlight</string>
