@@ -29,6 +29,7 @@
     <string name="system_mods_toasts">Toast</string>
     <string name="system_statusbaricons_title">隐藏图标</string>
     <string name="system_statusbaricons_summ">管理状态栏图标可见性</string>
+    <string name="system_statusbaricons_wifistandard_title">显示Wi-Fi标准</string>
     <string name="system_statusbaricons_battery1_title">电池图片</string>
     <string name="system_statusbaricons_battery2_title">电池充电百分比</string>
     <string name="system_statusbaricons_battery3_title">充电指示器</string>
@@ -1043,7 +1044,11 @@
     <string name="miuizer_show_assumelsposed_summ">假定已安装LSPosed框架以使用其管理器</string>
     <string name="various_runningservices_title">正在运行的服务</string>
     <string name="system_statusbar_dttosleep_title">双击锁屏</string>
+    <string name="system_statusbar_netspeed_atright_title">网速显示在右边</string>
     <string name="system_statusbar_batterytempandcurrent_title">显示电池温度和电流</string>
+    <string name="system_statusbar_batterytempandcurrent_content_title">显示内容</string>
+    <string name="array_temperature">仅温度</string>
+    <string name="array_current">仅电流</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">右侧显示</string>
     <string name="system_statusbar_dualsimin2rows_title">双排信号栏</string>
     <string name="system_notifrowmenu_appinfo">应用信息</string>

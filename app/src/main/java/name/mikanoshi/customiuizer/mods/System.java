@@ -3758,6 +3758,20 @@ public class System {
         });
     }
 
+    public static void DisplayWifiStandardHook(LoadPackageParam lpparam) {
+        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarWifiView", lpparam.classLoader, "applyWifiState", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                Object wifiState = param.args[0];
+                if (wifiState != null) {
+                    int opt = MainModule.mPrefs.getStringAsInt("system_statusbaricons_wifistandard", 1);
+                    if (opt == 1) return;
+                    XposedHelpers.setObjectField(wifiState, "showWifiStandard", opt == 2);
+                }
+            }
+        });
+    }
+
     public static void HideIconsSignalHook(LoadPackageParam lpparam) {
         Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyMobileState", new MethodHook() {
             @Override
@@ -5006,7 +5020,13 @@ public class System {
         Resources res = mContext.getResources();
         int styleId = res.getIdentifier("TextAppearance.StatusBar.Clock", "style", "com.android.systemui");
         batteryView.setTextAppearance(styleId);
-        batteryView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 7.25f);
+        int opt = MainModule.mPrefs.getStringAsInt("system_statusbar_batterytempandcurrent_content", 1);
+        if (opt == 1) {
+            batteryView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 7.25f);
+        }
+        else {
+            batteryView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11.5f);
+        }
         batteryView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         int horizonMargin = (int) TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
@@ -5043,13 +5063,22 @@ public class System {
                 if (props != null) {
                     int tempVal = Integer.parseInt(props.getProperty("POWER_SUPPLY_TEMP"));
                     int currVal = Math.round(Integer.parseInt(props.getProperty("POWER_SUPPLY_CURRENT_NOW")) / 1000);
-                    batteryInfo = tempVal / 10f + " °C" + "\n" + currVal + " mA";
+                    int opt = MainModule.mPrefs.getStringAsInt("system_statusbar_batterytempandcurrent_content", 1);
+                    if (opt == 1) {
+                        batteryInfo = tempVal / 10f + "°C" + "\n" + currVal + "mA";
+                    }
+                    else if (opt == 2) {
+                        batteryInfo = tempVal / 10f + "°C";
+                    }
+                    else {
+                        batteryInfo = currVal + "mA";
+                    }
                 }
                 if (!batteryInfo.isEmpty()) {
                     for (TextView tv:mBatteryDetailViews) {
                         XposedHelpers.callMethod(tv, "setNetworkSpeed", batteryInfo);
                     }
-                    handler.postDelayed(this, 2500);
+                    handler.postDelayed(this, 2000);
                 }
             }
         };
@@ -5152,6 +5181,28 @@ public class System {
                 }
             });
         }
+    }
+
+    public static void StatusBarNetworkSpeedAtRightHook(LoadPackageParam lpparam) {
+        Class <?> MiuiEndIconManager = findClass("com.android.systemui.statusbar.phone.MiuiEndIconManager", lpparam.classLoader);
+        XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView", lpparam.classLoader, "onAttachedToWindow", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                ArrayList<String> rightBlockList = (ArrayList<String>) XposedHelpers.getStaticObjectField(MiuiEndIconManager, "RIGHT_BLOCK_LIST");
+                rightBlockList.remove("network_speed");
+                XposedHelpers.setStaticObjectField(MiuiEndIconManager, "RIGHT_BLOCK_LIST", rightBlockList);
+            }
+        });
+        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView", lpparam.classLoader, "updateCutoutLocation", new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                int mCurrentStatusBarType = (int) XposedHelpers.getObjectField(param.thisObject, "mCurrentStatusBarType");
+                if (mCurrentStatusBarType == 1) {
+                    Object mDripNetworkSpeedView = XposedHelpers.getObjectField(param.thisObject, "mDripNetworkSpeedView");
+                    XposedHelpers.callMethod(mDripNetworkSpeedView, "setBlocked", true);
+                }
+            }
+        });
     }
 
     private static final TextView[] lux = { null, null, null };
@@ -5976,23 +6027,11 @@ public class System {
             }
         });
 
-        if (Helpers.is12())
-            Helpers.findAndHookMethod("com.android.keyguard.clock.MiuiKeyguardSingleClock", lpparam.classLoader, "updateTime", new MethodHook() {
-                @Override
-                protected void after(MethodHookParam param) throws Throwable {
-                    Object mMiuiBaseClock = XposedHelpers.getObjectField(param.thisObject, "mMiuiBaseClock");
-                    if (mMiuiBaseClock != null) hookUpdateTime(mMiuiBaseClock);
-                }
-            });
-        else if (!Helpers.findAndHookMethodSilently("com.android.keyguard.MiuiKeyguardBaseClock", lpparam.classLoader, "updateTime", new MethodHook() {
+        Helpers.findAndHookMethod("com.android.keyguard.clock.MiuiKeyguardSingleClock", lpparam.classLoader, "updateTime", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                hookUpdateTime(param.thisObject);
-            }
-        })) Helpers.findAndHookMethod("com.android.keyguard.MiuiKeyguardClock", lpparam.classLoader, "updateTime", new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                hookUpdateTime(param.thisObject);
+                Object mMiuiBaseClock = XposedHelpers.getObjectField(param.thisObject, "mMiuiBaseClock");
+                if (mMiuiBaseClock != null) hookUpdateTime(mMiuiBaseClock);
             }
         });
     }
