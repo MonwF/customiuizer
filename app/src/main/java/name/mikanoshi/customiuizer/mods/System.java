@@ -5065,10 +5065,10 @@ public class System {
                     int currVal = Math.round(Integer.parseInt(props.getProperty("POWER_SUPPLY_CURRENT_NOW")) / 1000);
                     int opt = MainModule.mPrefs.getStringAsInt("system_statusbar_batterytempandcurrent_content", 1);
                     if (opt == 1) {
-                        batteryInfo = tempVal / 10f + "°C" + "\n" + currVal + "mA";
+                        batteryInfo = tempVal / 10f + "℃" + "\n" + currVal + "mA";
                     }
                     else if (opt == 2) {
-                        batteryInfo = tempVal / 10f + "°C";
+                        batteryInfo = tempVal / 10f + "℃";
                     }
                     else {
                         batteryInfo = currVal + "mA";
@@ -6866,7 +6866,7 @@ public class System {
                     if (showCurr) values.add(currVal + " mA");
                     if (showVolt) values.add(String.format(Locale.getDefault(), "%.1f", voltVal / 1000f) + " V");
                     if (showWatt) values.add(String.format(Locale.getDefault(), "%.1f", voltVal / 1000f * currVal / 1000f) + " W");
-                    if (showTemp) values.add(Math.round(tempVal / 10f) + " °C");
+                    if (showTemp) values.add(Math.round(tempVal / 10f) + " ℃");
                     if (values.size() == 0) return;
                     String info = TextUtils.join(" · ", values);
 
