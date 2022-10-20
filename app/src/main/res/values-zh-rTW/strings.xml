@@ -590,8 +590,6 @@
     <string name="system_clock_app_summ">點擊通知抽屜上方的時鐘時開啟所選應用</string>
     <string name="system_clock_app_title">時鐘應用</string>
     <string name="system_clockseconds_summ">狀態欄顯示秒鐘</string>
-    <string name="system_clockseconds_sync_summ">嘗試在指定時間更新值</string>
-    <string name="system_clockseconds_sync_title">同步</string>
     <string name="system_clockseconds_title">顯示秒</string>
     <string name="system_colorizenotiftitle_summ">將圖示顏色應用到標題文字(僅Android通知樣式)</string>
     <string name="system_colorizenotiftitle_title">著色通知標題</string>
