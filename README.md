@@ -1,11 +1,12 @@
 ![logo](https://code.highspec.ru/customiuizer_promo.png)
 
-## CustoMIUIzer for MIUI 13
+## CustoMIUIzer for MIUI 13 ([中文](./README_zh.md))
 tested on android 12 only ( **some hooks are not working** )
 
-[Dowload](https://tpsx.lanzouv.com/b021ly4gj)
+### Dowload
 
-password: `miui`
+* [Releases](https://github.com/MonwF/customiuizer/releases)
+* LSPosed Repo
 
 ### Backup functionality
 Backups are stored in /sdcard/Documents/CustoMIUIzer/
