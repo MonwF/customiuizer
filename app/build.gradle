@@ -26,8 +26,8 @@ android {
         minSdkVersion 31
         //noinspection OldTargetApi,ExpiredTargetSdkVersion
         targetSdkVersion 31
-        versionCode 39
-        versionName "22.10.18"
+        versionCode 40
+        versionName "22.10.21"
         resConfigs 'ru-rRU', 'zh-rCN', 'zh-rTW'
         ndk { abiFilters "arm64-v8a" }
     }
