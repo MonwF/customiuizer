@@ -1069,10 +1069,22 @@ public class System {
     }
 
     public static void ClockSecondsHook(LoadPackageParam lpparam) {
-        Helpers.hookAllConstructors("com.android.systemui.statusbar.policy.MiuiStatusBarClockController", lpparam.classLoader, new MethodHook() {
+        MethodHook ScheduleHook = new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
+                boolean isTimeSet = param.args.length == 2;
                 Context mContext = (Context) param.args[0];
+                if (isTimeSet) {
+                    Intent intent = (Intent) param.args[1];
+                    String action = intent.getAction();
+                    if ("android.intent.action.TIME_SET".equals(action)) {
+                        Timer scheduleTimer = (Timer) XposedHelpers.getAdditionalInstanceField(param.thisObject, "scheduleTimer");
+                        scheduleTimer.cancel();
+                    }
+                    else {
+                        return;
+                    }
+                }
                 final Handler mClockHandler = new Handler(mContext.getMainLooper());
                 long delay = 1000 - SystemClock.elapsedRealtime() % 1000;
                 Timer timer = new Timer();
@@ -1088,8 +1100,11 @@ public class System {
                         });
                     }
                 }, delay, 1000);
+                XposedHelpers.setAdditionalInstanceField(param.thisObject, "scheduleTimer", timer);
             }
-        });
+        };
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.MiuiStatusBarClockController", lpparam.classLoader, "onReceive", Context.class, Intent.class, ScheduleHook);
+        Helpers.hookAllConstructors("com.android.systemui.statusbar.policy.MiuiStatusBarClockController", lpparam.classLoader, ScheduleHook);
         Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.MiuiStatusBarClockController", lpparam.classLoader, "fireTimeChange", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
@@ -1120,9 +1135,9 @@ public class System {
                 if ((clock.getId() == clockId && MainModule.mPrefs.getBoolean("system_clockseconds"))
                     || (clock.getId() == bigClockId && MainModule.mPrefs.getBoolean("system_drawer_clockseconds"))) {
                     XposedHelpers.setAdditionalInstanceField(clock, "showSeconds", true);
-                }
-                if (clock.getId() == clockId) {
-                    XposedHelpers.setAdditionalInstanceField(clock, "mFixedWidth", true);
+                    if (clock.getId() == clockId) {
+                        XposedHelpers.setAdditionalInstanceField(clock, "mFixedWidth", true);
+                    }
                 }
             }
         });
@@ -1168,7 +1183,7 @@ public class System {
                             clock.setText(maxLenText);
                             clock.measure(0, 0);
                             ViewGroup.LayoutParams lp = clock.getLayoutParams();
-                            lp.width = clock.getMeasuredWidth() + 1;
+                            lp.width = clock.getMeasuredWidth() + (int)Math.ceil(mContext.getResources().getDisplayMetrics().density);
                             clock.setLayoutParams(lp);
                         }
                     }
