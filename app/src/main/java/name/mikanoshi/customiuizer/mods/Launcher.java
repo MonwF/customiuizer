@@ -718,13 +718,14 @@ public class Launcher {
 				@Override
 				public void handleMessage(Message msg) {
 					View seekBar = (View)msg.obj;
-					if (seekBar != null)
-					seekBar.animate().alpha(0.0f).setDuration(600).withEndAction(new Runnable() {
-						@Override
-						public void run() {
-							seekBar.setVisibility(View.GONE);
-						}
-					});
+					if (seekBar != null) {
+						seekBar.animate().alpha(0.0f).setDuration(600).withEndAction(new Runnable() {
+							@Override
+							public void run() {
+								seekBar.setVisibility(View.GONE);
+							}
+						});
+					}
 				}
 			};
 			XposedHelpers.setAdditionalInstanceField(workspace, "mHandlerEx", mHandler);
@@ -821,6 +822,17 @@ public class Launcher {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mScreenCellsConfig"), "setVisible", true);
+			}
+		});
+		Class <?> DeviceConfigClass = XposedHelpers.findClass("com.miui.home.launcher.DeviceConfig", lpparam.classLoader);
+		Helpers.findAndHookMethod(DeviceConfigClass, "loadCellsCountConfig", Context.class, boolean.class, new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				int sCellCountY = (int) XposedHelpers.getStaticObjectField(DeviceConfigClass, "sCellCountY");
+				if (sCellCountY > 6) {
+					int cellHeight = (int) XposedHelpers.callStaticMethod(DeviceConfigClass, "getCellHeight");
+					XposedHelpers.setStaticObjectField(DeviceConfigClass, "sFolderCellHeight", cellHeight);
+				}
 			}
 		});
 	}
