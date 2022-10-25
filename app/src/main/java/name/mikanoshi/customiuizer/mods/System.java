@@ -5069,10 +5069,10 @@ public class System {
         batteryView.setTextAppearance(styleId);
         int opt = MainModule.mPrefs.getStringAsInt("system_statusbar_batterytempandcurrent_content", 1);
         if (opt == 1) {
-            batteryView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 7.25f);
+            batteryView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 8f);
         }
         else {
-            batteryView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11.5f);
+            batteryView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13.45f);
         }
         batteryView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         int horizonMargin = (int) TypedValue.applyDimension(
@@ -8212,7 +8212,7 @@ public class System {
                 );
                 mlp.leftMargin = (int) marginLeft;
                 mMobileTypeSingle.setLayoutParams(mlp);
-                mMobileTypeSingle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11.5f);
+                mMobileTypeSingle.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12.45f);
             }
         });
     }
