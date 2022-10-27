@@ -3822,8 +3822,24 @@ public class System {
     public static void HideIconsSignalHook(LoadPackageParam lpparam) {
         Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyMobileState", new MethodHook() {
             @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                XposedHelpers.callMethod(param.thisObject, "setVisibility", 8);
+            protected void before(MethodHookParam param) throws Throwable {
+                Object mobileIconState = param.args[0];
+                XposedHelpers.setObjectField(mobileIconState, "visible", false);
+            }
+        });
+    }
+
+    public static void HideIconsSimHook(LoadPackageParam lpparam) {
+        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyMobileState", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                Object mobileIconState = param.args[0];
+                int subId = (int) XposedHelpers.getObjectField(mobileIconState, "subId");
+                if ((MainModule.mPrefs.getBoolean("system_statusbaricons_sim1") && subId == 1)
+                    || (MainModule.mPrefs.getBoolean("system_statusbaricons_sim2") && subId == 2)
+                ) {
+                    XposedHelpers.setObjectField(mobileIconState, "visible", false);
+                }
             }
         });
     }
@@ -8029,7 +8045,7 @@ public class System {
                 ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) mMobileTypeSingle.getLayoutParams();
                 float marginLeft = TypedValue.applyDimension(
                     TypedValue.COMPLEX_UNIT_DIP,
-                    2f,
+                    MainModule.mPrefs.getBoolean("system_statusbar_dualsimin2rows") ? 2.5f : 2f,
                     res.getDisplayMetrics()
                 );
                 mlp.leftMargin = (int) marginLeft;
