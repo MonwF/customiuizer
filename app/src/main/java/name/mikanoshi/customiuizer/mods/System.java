@@ -7996,7 +7996,57 @@ public class System {
         });
     }
 
+    public static void MobileTypeSingleHook(LoadPackageParam lpparam) {
+        MethodHook showSingleMobileType = new MethodHook(MethodHook.PRIORITY_HIGHEST) {
+            @Override
+            protected void before(final MethodHookParam param) throws Throwable {
+                Object mobileIconState = param.args[0];
+                XposedHelpers.setObjectField(mobileIconState, "showMobileDataTypeSingle", true);
+                XposedHelpers.setObjectField(mobileIconState, "fiveGDrawableId", 0);
+            }
+        };
+        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyMobileState", showSingleMobileType);
+
+        MethodHook afterUpdate = new MethodHook() {
+            @Override
+            protected void after(final MethodHookParam param) throws Throwable {
+                Object mMobileLeftContainer = XposedHelpers.getObjectField(param.thisObject, "mMobileLeftContainer");
+                XposedHelpers.callMethod(mMobileLeftContainer, "setVisibility", 8);
+            }
+        };
+        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "initViewState", afterUpdate);
+        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "updateState", afterUpdate);
+
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "init", new MethodHook() {
+            @Override
+            protected void after(final MethodHookParam param) throws Throwable {
+                Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
+                Resources res = mContext.getResources();
+                LinearLayout mMobileGroup = (LinearLayout) XposedHelpers.getObjectField(param.thisObject, "mMobileGroup");
+                TextView mMobileTypeSingle = (TextView) XposedHelpers.getObjectField(param.thisObject, "mMobileTypeSingle");
+                mMobileGroup.removeView(mMobileTypeSingle);
+                mMobileGroup.addView(mMobileTypeSingle);
+                ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) mMobileTypeSingle.getLayoutParams();
+                float marginLeft = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    2f,
+                    res.getDisplayMetrics()
+                );
+                mlp.leftMargin = (int) marginLeft;
+                mMobileTypeSingle.setLayoutParams(mlp);
+                mMobileTypeSingle.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13.45f);
+            }
+        });
+    }
+
     public static void DualRowSignalHook(LoadPackageParam lpparam) {
+        boolean mobileTypeSingle = MainModule.mPrefs.getBoolean("system_statusbar_mobiletype_single");
+        if (!mobileTypeSingle) {
+            MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "status_bar_mobile_type_half_to_top_distance", 3);
+            MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "status_bar_mobile_left_inout_over_strength", 0);
+            MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "status_bar_mobile_type_middle_to_strength_start", -0.4f);
+        }
+
         final boolean[] isListened = {false};
         SparseIntArray signalResToLevelMap = new SparseIntArray();
         int signalRes1_0 = MainModule.resHooks.addResource("signalRes1_0", R.drawable.statusbar_signal_1_0);
@@ -8141,7 +8191,6 @@ public class System {
                 else {
                     XposedHelpers.setAdditionalInstanceField(param.thisObject, "subStrengthId", level % 10);
                     XposedHelpers.setObjectField(mobileIconState, "fiveGDrawableId", 0);
-                    XposedHelpers.setObjectField(mobileIconState, "showMobileDataTypeSingle", true);
                 }
             }
         };
@@ -8152,8 +8201,6 @@ public class System {
                 if (subStrengthId < 0) return;
                 Object mSmallHd = XposedHelpers.getObjectField(param.thisObject, "mSmallHd");
                 XposedHelpers.callMethod(mSmallHd, "setVisibility", 8);
-                Object mMobileLeftContainer = XposedHelpers.getObjectField(param.thisObject, "mMobileLeftContainer");
-                XposedHelpers.callMethod(mMobileLeftContainer, "setVisibility", 8);
                 Object mSmallRoaming = XposedHelpers.getObjectField(param.thisObject, "mSmallRoaming");
                 XposedHelpers.callMethod(mSmallRoaming, "setVisibility", 0);
             }
@@ -8165,9 +8212,9 @@ public class System {
         MethodHook resetImageDrawable = new MethodHook() {
             @Override
             protected void before(final MethodHookParam param) throws Throwable {
-                Object mobileIconState = XposedHelpers.getObjectField(param.thisObject, "mState");
                 int subStrengthId = (int) XposedHelpers.getAdditionalInstanceField(param.thisObject, "subStrengthId");
                 if (subStrengthId < 0) return;
+                Object mobileIconState = XposedHelpers.getObjectField(param.thisObject, "mState");
                 int level1 = (int) XposedHelpers.getObjectField(mobileIconState, "strengthId");
                 level1 = level1 / 10;
                 int level2 = subStrengthId;
@@ -8194,134 +8241,5 @@ public class System {
             }
         };
         Helpers.findAndHookMethod("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyDarknessInternal", resetImageDrawable);
-
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "init", new MethodHook() {
-            @Override
-            protected void after(final MethodHookParam param) throws Throwable {
-                Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
-                Resources res = mContext.getResources();
-                LinearLayout mMobileGroup = (LinearLayout) XposedHelpers.getObjectField(param.thisObject, "mMobileGroup");
-                TextView mMobileTypeSingle = (TextView) XposedHelpers.getObjectField(param.thisObject, "mMobileTypeSingle");
-                mMobileGroup.removeView(mMobileTypeSingle);
-                mMobileGroup.addView(mMobileTypeSingle);
-                ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) mMobileTypeSingle.getLayoutParams();
-                float marginLeft = TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_DIP,
-                    2f,
-                    res.getDisplayMetrics()
-                );
-                mlp.leftMargin = (int) marginLeft;
-                mMobileTypeSingle.setLayoutParams(mlp);
-                mMobileTypeSingle.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13.45f);
-            }
-        });
     }
-
-//	@SuppressWarnings("unchecked")
-//	public static void MultiWindowHook() {
-//		HashMap<String, Integer> sAppList = (HashMap<String, Integer>)XposedHelpers.getStaticObjectField(findClass("android.util.MiuiMultiWindowUtils", null), "sAppList");
-//		sAppList.put(Helpers.modulePkg, 4);
-//		XposedHelpers.setStaticObjectField(findClass("android.util.MiuiMultiWindowUtils", null), "sAppList", sAppList);
-//	}
-//
-//	public static void MultiWindowServiceHook(LoadPackageParam lpparam) {
-//		Helpers.hookAllMethods("com.android.server.am.ActivityStarterInjector", lpparam.classLoader, "checkFreeformSupport", new MethodHook() {
-//			@Override
-//			protected void after(MethodHookParam param) throws Throwable {
-//				XposedHelpers.setObjectField(param.args[0], "mSupportsFreeformWindowManagement", true);
-//			}
-//		});
-//
-//		Helpers.findAndHookMethod("com.android.server.am.ActivityStackSupervisorInjector", lpparam.classLoader, "supportsFreeform", XC_MethodReplacement.returnConstant(true));
-//
-//		Helpers.hookAllMethods("com.android.server.am.ActivityDisplay", lpparam.classLoader, "resolveWindowingMode", new MethodHook() {
-//			@Override
-//			protected void after(MethodHookParam param) throws Throwable {
-//				Object mSupervisor = XposedHelpers.getObjectField(param.thisObject, "mSupervisor");
-//				Object mService = XposedHelpers.getObjectField(mSupervisor, "mService");
-//				Object mSupportsMultiWindow = XposedHelpers.getObjectField(mService, "mSupportsMultiWindow");
-//				Object mSupportsSplitScreenMultiWindow = XposedHelpers.getObjectField(mService, "mSupportsSplitScreenMultiWindow");
-//				Object mSupportsFreeformWindowManagement = XposedHelpers.getObjectField(mService, "mSupportsFreeformWindowManagement");
-//				Object mSupportsPictureInPicture = XposedHelpers.getObjectField(mService, "mSupportsPictureInPicture");
-//				XposedBridge.log("mSupportsMultiWindow: " + mSupportsMultiWindow);
-//				XposedBridge.log("mSupportsSplitScreenMultiWindow: " + mSupportsSplitScreenMultiWindow);
-//				XposedBridge.log("mSupportsFreeformWindowManagement: " + mSupportsFreeformWindowManagement);
-//				XposedBridge.log("mSupportsPictureInPicture: " + mSupportsPictureInPicture);
-//				XposedBridge.log("resolveWindowingMode: " + param.args[0] + ", " + param.args[1] + ", " + param.args[2] + ", " + param.args[3] + " = " + param.getResult());
-//			}
-//		});
-//
-//		Helpers.hookAllMethods("com.android.server.pm.PackageManagerService", lpparam.classLoader, "hasSystemFeature", new MethodHook() {
-//			@Override
-//			protected void after(MethodHookParam param) throws Throwable {
-//				if ("android.software.freeform_window_management".equals(param.args[0])) param.setResult(true);
-//			}
-//		});
-//	}
-//
-//	public static void QSFooterHook(LoadPackageParam lpparam) {
-//		Helpers.findAndHookMethod("com.android.systemui.qs.QSContainerImpl", lpparam.classLoader, "onFinishInflate", new MethodHook() {
-//			@Override
-//			protected void after(MethodHookParam param) throws Throwable {
-//				FrameLayout qs = (FrameLayout)param.thisObject;
-//				Context context = qs.getContext();
-//				Resources res = context.getResources();
-//				LinearLayout mQSFooterContainer = (LinearLayout)XposedHelpers.getObjectField(param.thisObject, "mQSFooterContainer");
-//				LayoutInflater inflater = (LayoutInflater)Helpers.getModuleContext(context).getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//
-//				View dataView = inflater.inflate(R.layout.qs_footer, mQSFooterContainer, false);
-//				dataView.setTag("mydata");
-//				LinearLayout.LayoutParams lp0 = (LinearLayout.LayoutParams)dataView.getLayoutParams();
-//				int margin = res.getDimensionPixelSize(res.getIdentifier("qs_divider_margin_horizontal", "dimen", context.getPackageName()));
-//				int height = res.getDimensionPixelSize(res.getIdentifier("qs_footer_height", "dimen", context.getPackageName()));
-//				lp0.setMarginStart(margin);
-//				lp0.topMargin = - height / 6;
-//				lp0.bottomMargin = height / 4;
-//				dataView.setLayoutParams(lp0);
-//
-//				ImageView icon = dataView.findViewById(R.id.qs_icon);
-//				icon.setImageDrawable(Helpers.getModuleRes(context).getDrawable(R.drawable.ic_gps_task, context.getTheme()));
-//				ViewGroup.LayoutParams lp1 = icon.getLayoutParams();
-//				int iconSize = res.getDimensionPixelSize(res.getIdentifier("qs_footer_data_usage_icon_size", "dimen", context.getPackageName()));
-//				lp1.width = iconSize;
-//				lp1.height = iconSize;
-//				icon.setLayoutParams(lp1);
-//
-//				TextView data = dataView.findViewById(R.id.qs_data);
-//				LinearLayout.LayoutParams lp2 = (LinearLayout.LayoutParams)data.getLayoutParams();
-//				margin = res.getDimensionPixelSize(res.getIdentifier("qs_footer_line_margin_start", "dimen", context.getPackageName()));
-//				lp2.setMarginStart(margin);
-//				lp2.setMarginEnd(margin);
-//				data.setLayoutParams(lp2);
-//				data.setText("Some data...");
-//
-//				int textColor = res.getColor(res.getIdentifier("qs_footer_data_usage_text_color", "color", context.getPackageName()), context.getTheme());
-//				int textSize = res.getDimensionPixelSize(res.getIdentifier("qs_tile_label_text_size", "dimen", context.getPackageName()));
-//				data.setTextColor(textColor);
-//				data.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-//
-//				mQSFooterContainer.addView(dataView);
-//			}
-//		});
-//
-//		Helpers.findAndHookMethod("com.android.systemui.qs.QSContainerImpl", lpparam.classLoader, "updateQSDataUsage", boolean.class, new MethodHook() {
-//			@Override
-//			protected void after(MethodHookParam param) throws Throwable {
-//				LinearLayout mQSFooterContainer = (LinearLayout)XposedHelpers.getObjectField(param.thisObject, "mQSFooterContainer");
-//				View dataView = mQSFooterContainer.findViewWithTag("mydata");
-//				mQSFooterContainer.removeView(dataView);
-//				mQSFooterContainer.addView(dataView);
-//			}
-//		});
-//	}
-//
-//	public static void VolumeDialogTimeoutHook(LoadPackageParam lpparam) {
-//		Helpers.findAndHookMethod("com.android.systemui.miui.volume.MiuiVolumeDialogImpl", lpparam.classLoader, "computeTimeoutH", new MethodHook() {
-//			@Override
-//			protected void after(MethodHookParam param) throws Throwable {
-//				param.setResult(Math.max((int)param.getResult(), 10000));
-//			}
-//		});
-//	}
-
 }

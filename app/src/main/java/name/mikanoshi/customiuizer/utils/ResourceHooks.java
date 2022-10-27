@@ -39,8 +39,9 @@ public class ResourceHooks {
 			if (value == null) {
 				value = getResourceReplacement(mContext, (Resources)param.thisObject, method, param.args);
 				if (value == null) return;
-				if ("getDimensionPixelOffset".equals(method) || "getDimensionPixelSize".equals(method))
-				if (value instanceof Float) value = ((Float)value).intValue();
+				if ("getDimensionPixelOffset".equals(method) || "getDimensionPixelSize".equals(method)) {
+					if (value instanceof Float) value = ((Float)value).intValue();
+				}
 			}
 			param.setResult(value);
 		}
@@ -117,6 +118,15 @@ public class ResourceHooks {
 		}
 	}
 
+	public void setDensityReplacement(String pkg, String type, String name, float replacementResValue) {
+		try {
+			applyHooks();
+			replacements.put(pkg + ":" + type + "/" + name, new Pair<>(ReplacementType.DENSITY, replacementResValue));
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
+	}
+
 	public void setObjectReplacement(String pkg, String type, String name, Object replacementResValue) {
 		try {
 			applyHooks();
@@ -153,7 +163,12 @@ public class ResourceHooks {
 
 			if (replacement != null)
 			if (replacement.first == ReplacementType.OBJECT) return replacement.second;
-			else if (replacement.first == ReplacementType.DENSITY) return (Integer)replacement.second * res.getDisplayMetrics().density;
+			else if (replacement.first == ReplacementType.DENSITY) {
+				if (replacement.second instanceof Float) {
+					return (Float) replacement.second * res.getDisplayMetrics().density;
+				}
+				return (Integer)replacement.second * res.getDisplayMetrics().density;
+			}
 			else if (replacement.first == ReplacementType.ID) modResId = (Integer)replacement.second;
 			if (modResId == null) return null;
 
