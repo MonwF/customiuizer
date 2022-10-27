@@ -318,6 +318,11 @@
 			android:entryValues="@array/mobiletypeicon_val"
 			android:defaultValue="1" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_statusbar_mobiletype_single"
+			android:title="@string/system_statusbar_mobiletype_single_title"
+			android:defaultValue="false" />
+
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_system_networkindicator"
 			android:title="@string/system_networkindicator_title"

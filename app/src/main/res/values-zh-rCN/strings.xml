@@ -1049,6 +1049,7 @@
     <string name="array_current">仅电流</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">右侧显示</string>
     <string name="system_statusbar_dualsimin2rows_title">双排信号栏</string>
+    <string name="system_statusbar_mobiletype_single_title">移动网络类型单独显示</string>
     <string name="system_notifrowmenu_appinfo">应用信息</string>
     <string name="system_notifrowmenu_forceclose">强制关闭</string>
     <string name="restart_systemui">重启系统界面</string>
