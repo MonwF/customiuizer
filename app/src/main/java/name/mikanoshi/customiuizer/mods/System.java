@@ -8212,7 +8212,7 @@ public class System {
                 );
                 mlp.leftMargin = (int) marginLeft;
                 mMobileTypeSingle.setLayoutParams(mlp);
-                mMobileTypeSingle.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12.45f);
+                mMobileTypeSingle.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13.45f);
             }
         });
     }
