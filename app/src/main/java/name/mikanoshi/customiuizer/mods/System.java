@@ -8064,7 +8064,7 @@ public class System {
                 );
                 float marginRight = TypedValue.applyDimension(
                     TypedValue.COMPLEX_UNIT_DIP,
-                    1.5f,
+                    0.5f,
                     res.getDisplayMetrics()
                 );
                 mlp.leftMargin = (int) marginLeft;
@@ -8287,7 +8287,7 @@ public class System {
                     Resources res = mContext.getResources();
                     int rightSpacing = (int) TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP,
-                        rightMargin - 0.5f,
+                        rightMargin * 0.5f,
                         res.getDisplayMetrics()
                     );
                     mobileView.setPadding(0, 0, rightSpacing, 0);
