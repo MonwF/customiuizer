@@ -1101,6 +1101,7 @@
     <string name="system_statusbar_batterytempandcurrentatright_title">Display on the right</string>
     <string name="system_statusbar_dttosleep_title">Double tap to sleep</string>
     <string name="system_statusbar_dualsimin2rows_title">Dual SIM signal bars in dual rows</string>
+    <string name="system_statusbar_dualsimin2rows_rightmargin_title">right margin</string>
     <string name="system_statusbar_mobiletype_single_title">Put mobile network type at the right of signal icon</string>
     <string name="system_statusbar_netspeed_atright_title">Move networkspeed indicator to the right</string>
     <string name="various_allow_untrusted_touch_title">Allow untrusted touch</string>
