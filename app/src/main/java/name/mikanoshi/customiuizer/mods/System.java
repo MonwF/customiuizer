@@ -1639,6 +1639,17 @@ public class System {
                 meter.setPadding(Math.round(meter.getPaddingLeft() + 3 * density), meter.getPaddingTop() - top, meter.getPaddingRight(), meter.getPaddingBottom());
             }
         });
+        boolean reduceVis = MainModule.mPrefs.getBoolean("system_detailednetspeed_zero");
+        if (reduceVis) {
+            Helpers.hookAllMethods("com.android.systemui.statusbar.views.NetworkSpeedView", lpparam.classLoader, "applyNetworkSpeedState", new MethodHook() {
+                @Override
+                protected void after(MethodHookParam param) throws Throwable {
+                    TextView meter = (TextView) param.thisObject;
+                    boolean isZero = rxSpeed == 0 && txSpeed == 0;
+                    meter.setAlpha(isZero ? 0.3f : 1.0f);
+                }
+            });
+        }
 
         Class<?> nscCls = XposedHelpers.findClassIfExists("com.android.systemui.statusbar.policy.NetworkSpeedController", lpparam.classLoader);
         if (nscCls == null) {
@@ -1697,7 +1708,6 @@ public class System {
             protected void before(final MethodHookParam param) throws Throwable {
                 Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
                 boolean hideLow = MainModule.mPrefs.getBoolean("system_detailednetspeed_low");
-                boolean reduceVis = MainModule.mPrefs.getBoolean("system_detailednetspeed_zero");
                 int lowLevel = MainModule.mPrefs.getInt("system_detailednetspeed_lowlevel", 1) * 1024;
                 int icons = Integer.parseInt(MainModule.mPrefs.getString("system_detailednetspeed_icon", "2"));
 
@@ -1714,12 +1724,6 @@ public class System {
                 String tx = hideLow && txSpeed < lowLevel ? "" : humanReadableByteCount(mContext, txSpeed) + txarrow;
                 String rx = hideLow && rxSpeed < lowLevel ? "" : humanReadableByteCount(mContext, rxSpeed) + rxarrow;
                 param.args[0] = tx + "\n" + rx;
-                if (reduceVis) {
-                    TextView sv = (TextView) XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mNetworkSpeedViewWRF"), "get");
-                    if (sv != null) {
-                        sv.setAlpha(rxSpeed == 0 && txSpeed == 0 ? 0.3f : 1.0f);
-                    }
-                }
             }
         });
     }
@@ -5264,6 +5268,12 @@ public class System {
                     Object mDripNetworkSpeedView = XposedHelpers.getObjectField(param.thisObject, "mDripNetworkSpeedView");
                     XposedHelpers.callMethod(mDripNetworkSpeedView, "setBlocked", true);
                 }
+            }
+        });
+        Helpers.hookAllMethods("com.android.systemui.statusbar.policy.NetworkSpeedController", lpparam.classLoader, "setDripNetworkSpeedView", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                param.args[0] = null;
             }
         });
     }
