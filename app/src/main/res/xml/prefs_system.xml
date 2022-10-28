@@ -351,11 +351,6 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_statusbar_netspeed_atright"
-			android:title="@string/system_statusbar_netspeed_atright_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_statusbar_batterytempandcurrent"
 			android:title="@string/system_statusbar_batterytempandcurrent_title"
 			android:defaultValue="false" />
@@ -423,6 +418,11 @@
 			android:key="pref_key_system_hidemoreicon"
 			android:summary="@string/system_hidemoreicon_summ"
 			android:title="@string/system_hidemoreicon_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_statusbar_netspeed_atright"
+			android:title="@string/system_statusbar_netspeed_atright_title"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
