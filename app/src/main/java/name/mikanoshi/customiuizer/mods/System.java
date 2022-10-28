@@ -8059,10 +8059,16 @@ public class System {
                 ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) mMobileTypeSingle.getLayoutParams();
                 float marginLeft = TypedValue.applyDimension(
                     TypedValue.COMPLEX_UNIT_DIP,
-                    MainModule.mPrefs.getBoolean("system_statusbar_dualsimin2rows") ? 2.5f : 2f,
+                    MainModule.mPrefs.getBoolean("system_statusbar_dualsimin2rows") ? 3f : 2f,
+                    res.getDisplayMetrics()
+                );
+                float marginRight = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    1.5f,
                     res.getDisplayMetrics()
                 );
                 mlp.leftMargin = (int) marginLeft;
+                mlp.rightMargin = (int) marginRight;
                 mMobileTypeSingle.setLayoutParams(mlp);
                 mMobileTypeSingle.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13.45f);
             }
@@ -8271,5 +8277,22 @@ public class System {
             }
         };
         Helpers.findAndHookMethod("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyDarknessInternal", resetImageDrawable);
+        int rightMargin = MainModule.mPrefs.getInt("system_statusbar_dualsimin2rows_rightmargin", 0);
+        if (rightMargin > 0) {
+            Helpers.findAndHookMethod("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "init", new MethodHook() {
+                @Override
+                protected void after(final MethodHookParam param) throws Throwable {
+                    LinearLayout mobileView = (LinearLayout) param.thisObject;
+                    Context mContext = mobileView.getContext();
+                    Resources res = mContext.getResources();
+                    int rightSpacing = (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        rightMargin - 0.5f,
+                        res.getDisplayMetrics()
+                    );
+                    mobileView.setPadding(0, 0, rightSpacing, 0);
+                }
+            });
+        }
     }
 }

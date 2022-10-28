@@ -350,6 +350,16 @@
 			android:title="@string/system_statusbar_dualsimin2rows_title"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_statusbar_dualsimin2rows_rightmargin"
+			android:title="@string/system_statusbar_dualsimin2rows_rightmargin_title"
+			android:dependency="pref_key_system_statusbar_dualsimin2rows"
+			android:defaultValue="0"
+			miuizer:minValue="0"
+			miuizer:maxValue="4"
+			miuizer:stepValue="1"
+			miuizer:format="%d dip" />
+
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_statusbar_batterytempandcurrent"
 			android:title="@string/system_statusbar_batterytempandcurrent_title"
