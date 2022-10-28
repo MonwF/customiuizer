@@ -14,7 +14,6 @@ import android.app.KeyguardManager;
 import android.app.MiuiNotification;
 import android.app.Notification;
 import android.app.NotificationChannel;
-import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.app.WallpaperManager;
 import android.appwidget.AppWidgetProviderInfo;
@@ -131,9 +130,7 @@ import android.widget.Toast;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
@@ -144,7 +141,6 @@ import java.lang.reflect.Proxy;
 import java.net.NetworkInterface;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -7352,6 +7348,9 @@ public class System {
     }
 
     public static void StickyFloatingWindowsHook(LoadPackageParam lpparam) {
+        final List<String> fwBlackList = new ArrayList<String>();
+        fwBlackList.add("com.miui.securitycenter");
+        fwBlackList.add("com.miui.home");
         Class<?> MiuiMultiWindowUtils = findClass("android.util.MiuiMultiWindowUtils", lpparam.classLoader);
         Helpers.hookAllMethods("com.android.server.wm.ActivityStarterInjector", lpparam.classLoader, "modifyLaunchActivityOptionIfNeed", new MethodHook() {
             @Override
@@ -7362,7 +7361,7 @@ public class System {
                 ActivityOptions options = (ActivityOptions)param.getResult();
                 int windowingMode = options == null ? -1 : (int)XposedHelpers.callMethod(options, "getLaunchWindowingMode");
                 String pkgName = intent.getComponent().getPackageName();
-                if (pkgName == "com.miui.home") return;
+                if (fwBlackList.contains(pkgName)) return;
                 Context mContext;
                 try {
                     mContext = (Context)XposedHelpers.getObjectField(param.args[0], "mContext");
@@ -7395,6 +7394,7 @@ public class System {
                 ActivityOptions options = (ActivityOptions)XposedHelpers.callMethod(safeOptions, "getOptions", param.thisObject);
                 int windowingMode = options == null ? -1 : (int)XposedHelpers.callMethod(options, "getLaunchWindowingMode");
                 String pkgName = getTaskPackageName(param.thisObject, (int)param.args[2], options);
+                if (fwBlackList.contains(pkgName)) return;
                 if (windowingMode == 5 && pkgName != null) {
                     fwApps.put(pkgName, new Pair<Float, Rect>(0f, null));
                     Context mContext = (Context)XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.thisObject, "mService"), "mContext");
@@ -7407,6 +7407,7 @@ public class System {
                 ActivityOptions options = (ActivityOptions)XposedHelpers.callMethod(safeOptions, "getOptions", param.thisObject);
                 int windowingMode = options == null ? -1 : (int)XposedHelpers.callMethod(options, "getLaunchWindowingMode");
                 String pkgName = getTaskPackageName(param.thisObject, (int)param.args[2], options);
+                if (fwBlackList.contains(pkgName)) return;
                 if (windowingMode != 5 && fwApps.containsKey(pkgName)) {
                     Context mContext = (Context)XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.thisObject, "mService"), "mContext");
                     options = patchActivityOptions(mContext, options, pkgName, MiuiMultiWindowUtils);
@@ -7442,6 +7443,7 @@ public class System {
                     skipFreeFormStateClear = (boolean) skipClear;
                 }
                 if (!skipFreeFormStateClear) {
+                    if (fwBlackList.contains(pkgName)) return;
                     if (fwApps.remove(pkgName) != null) {
                         storeFwAppsInSetting((Context)XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.thisObject, "mService"), "mContext"));
                     }
@@ -7459,6 +7461,7 @@ public class System {
                 Object mMiuiFreeFormManagerService = XposedHelpers.getObjectField(param.thisObject, "mMiuiFreeFormManagerService");
                 Object miuiFreeFormActivityStack = XposedHelpers.callMethod(mMiuiFreeFormManagerService, "getMiuiFreeFormActivityStack", taskId);
                 String pkgName = (String) XposedHelpers.callMethod(miuiFreeFormActivityStack, "getStackPackageName");
+                if (fwBlackList.contains(pkgName)) return;
                 if (!fwApps.containsKey(pkgName)) {
                     fwApps.put(pkgName, new Pair<Float, Rect>(0f, null));
                     Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
@@ -7501,6 +7504,7 @@ public class System {
                         XposedHelpers.setAdditionalInstanceField(param.thisObject, "skipFreeFormStateClear", false);
                     }
                     else {
+                        if (fwBlackList.contains(pkgName)) return;
                         Object mMiuiFreeFormManagerService = XposedHelpers.getObjectField(param.thisObject, "mMiuiFreeFormManagerService");
                         Object miuiFreeFormActivityStack = XposedHelpers.callMethod(mMiuiFreeFormManagerService, "getMiuiFreeFormActivityStack", param.args[0]);
                         if (fwApps.containsKey(pkgName)) {
