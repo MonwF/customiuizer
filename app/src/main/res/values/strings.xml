@@ -93,7 +93,7 @@
     <string name="system_4gtolte_title">Show LTE icon for 4G</string>
     <string name="system_hidemoreicon_title">No hidden icons indicator</string>
     <string name="system_hidemoreicon_summ">Do not show icon with 3 dots when notification icons are hidden</string>
-    <string name="system_nonetspeedseparator_title">No network speed separator</string>
+    <string name="system_nonetspeedseparator_title">Network speed separator</string>
     <string name="system_nonetspeedseparator_summ">Do not show vertical line between time and network speed on devices with waterdrop notches</string>
     <string name="system_netspeedinterval_title">Network speed update interval</string>
     <string name="system_detailednetspeed_title">Detailed network speed indicator</string>
@@ -1103,7 +1103,9 @@
     <string name="system_statusbar_dualsimin2rows_title">Dual SIM signal bars in dual rows</string>
     <string name="system_statusbar_dualsimin2rows_rightmargin_title">right margin</string>
     <string name="system_statusbar_mobiletype_single_title">Put mobile network type at the right of signal icon</string>
-    <string name="system_statusbar_netspeed_atright_title">Move networkspeed indicator to the right</string>
+    <string name="system_statusbaricons_atright_title">Move some icons to the right</string>
+    <string name="system_statusbaricons_atright_summ">For devices with cutout at the center of the top edge</string>
+    <string name="system_statusbaricons_netspeed_title">Network speed indicator</string>
     <string name="various_allow_untrusted_touch_title">Allow untrusted touch</string>
     <string name="various_skip_interceptperm_title">Skip permission intercept timer</string>
     <string name="system_lockscreenshortcuts_left_tapaction_title">Tap left shortcut to toggle flashlight</string>

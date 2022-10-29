@@ -21,6 +21,12 @@
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_nonetspeedseparator"
+		android:title="@string/system_nonetspeedseparator_title"
+		android:summary="@string/system_nonetspeedseparator_summ"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbaricons_alarm"
 		android:title="@string/system_statusbaricons_alarm_title"
 		android:summary="@string/system_statusbaricons_alarm_summ"

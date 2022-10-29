@@ -135,6 +135,13 @@ public class System extends SubFragment {
 						return true;
 					}
 				});
+				findPreference("pref_key_system_statusbaricons_atright_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						openSubFragment(new SubFragment(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_statusbaricons_atright_title, R.xml.prefs_system_statusbar_righticons);
+						return true;
+					}
+				});
 
 				findPreference("pref_key_system_batteryindicator_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 					@Override
