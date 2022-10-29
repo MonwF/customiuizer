@@ -84,7 +84,7 @@
     <string name="system_4gtolte_title">4G显示LTE图标</string>
     <string name="system_hidemoreicon_title">不显示隐藏图标指示器</string>
     <string name="system_hidemoreicon_summ">隐藏通知图标时不显示3点图标</string>
-    <string name="system_nonetspeedseparator_title">隐藏网速分隔符</string>
+    <string name="system_nonetspeedseparator_title">网速分隔符</string>
     <string name="system_nonetspeedseparator_summ">于水滴屏的设备上不显示时间和网速间的竖线</string>
     <string name="system_netspeedinterval_title">网速更新间隔</string>
     <string name="system_detailednetspeed_title">详细的网速指示器</string>
@@ -1042,7 +1042,9 @@
     <string name="miuizer_show_assumelsposed_summ">假定已安装LSPosed框架以使用其管理器</string>
     <string name="various_runningservices_title">正在运行的服务</string>
     <string name="system_statusbar_dttosleep_title">双击锁屏</string>
-    <string name="system_statusbar_netspeed_atright_title">网速显示在右边</string>
+    <string name="system_statusbaricons_atright_title">系统图标移至右侧显示</string>
+    <string name="system_statusbaricons_atright_summ">仅针对中置挖孔屏</string>
+    <string name="system_statusbaricons_netspeed_title">网速</string>
     <string name="system_statusbar_batterytempandcurrent_title">显示电池温度和电流</string>
     <string name="system_statusbar_batterytempandcurrent_content_title">显示内容</string>
     <string name="array_temperature">仅温度</string>

@@ -745,7 +745,7 @@
     <string name="system_nomediamute_summ">在勿擾模式中不將媒體音量設為零</string>
     <string name="system_nomediamute_title">不將媒體靜音</string>
     <string name="system_nonetspeedseparator_summ">於水滴屏的設備上不顯示時間和網速間的豎線</string>
-    <string name="system_nonetspeedseparator_title">隱藏網速分隔符</string>
+    <string name="system_nonetspeedseparator_title">網速分隔符</string>
     <string name="system_nooverscroll_summ">阻止列表檢視越界回彈</string>
     <string name="system_nooverscroll_title">禁用彈性滾動</string>
     <string name="system_nopassword_summ">開機後首次解鎖不需要密碼。此項對加密的設備無效。</string>

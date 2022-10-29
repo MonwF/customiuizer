@@ -1,5 +1,12 @@
 package name.mikanoshi.customiuizer.mods;
 
+import static java.lang.System.currentTimeMillis;
+import static java.lang.System.nanoTime;
+import static de.robv.android.xposed.XposedHelpers.findClass;
+import static de.robv.android.xposed.XposedHelpers.findClassIfExists;
+import static de.robv.android.xposed.XposedHelpers.findMethodExactIfExists;
+import static name.mikanoshi.customiuizer.mods.GlobalActions.ACTION_PREFIX;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
@@ -127,6 +134,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -166,19 +175,12 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static java.lang.System.currentTimeMillis;
-import static java.lang.System.nanoTime;
-
-import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
-import de.robv.android.xposed.callbacks.XCallback;
 import de.robv.android.xposed.XC_MethodHook.MethodHookParam;
 import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
-import static de.robv.android.xposed.XposedHelpers.findClass;
-import static de.robv.android.xposed.XposedHelpers.findClassIfExists;
-import static de.robv.android.xposed.XposedHelpers.findMethodExactIfExists;
-
+import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
+import de.robv.android.xposed.callbacks.XCallback;
 import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.AudioVisualizer;
@@ -187,9 +189,6 @@ import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.Helpers.MethodHook;
 import name.mikanoshi.customiuizer.utils.Helpers.MimeType;
 import name.mikanoshi.customiuizer.utils.SoundData;
-import static name.mikanoshi.customiuizer.mods.GlobalActions.ACTION_PREFIX;
-
-import org.json.JSONObject;
 
 public class System {
 
@@ -5246,32 +5245,57 @@ public class System {
         }
     }
 
-    public static void StatusBarNetworkSpeedAtRightHook(LoadPackageParam lpparam) {
-        Class <?> MiuiEndIconManager = findClass("com.android.systemui.statusbar.phone.MiuiEndIconManager", lpparam.classLoader);
-        XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView", lpparam.classLoader, "onAttachedToWindow", new MethodHook() {
+    public static void StatusBarIconsAtRightHook(LoadPackageParam lpparam) {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiDripLeftStatusBarIconControllerImpl", lpparam.classLoader, "setIconVisibility", String.class, boolean.class, new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
-                ArrayList<String> rightBlockList = (ArrayList<String>) XposedHelpers.getStaticObjectField(MiuiEndIconManager, "RIGHT_BLOCK_LIST");
-                rightBlockList.remove("network_speed");
-                XposedHelpers.setStaticObjectField(MiuiEndIconManager, "RIGHT_BLOCK_LIST", rightBlockList);
-            }
-        });
-        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView", lpparam.classLoader, "updateCutoutLocation", new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                int mCurrentStatusBarType = (int) XposedHelpers.getObjectField(param.thisObject, "mCurrentStatusBarType");
-                if (mCurrentStatusBarType == 1) {
-                    Object mDripNetworkSpeedView = XposedHelpers.getObjectField(param.thisObject, "mDripNetworkSpeedView");
-                    XposedHelpers.callMethod(mDripNetworkSpeedView, "setBlocked", true);
+                String slot = (String) param.args[0];
+                if (("alarm_clock".equals(slot) && MainModule.mPrefs.getBoolean("system_statusbar_alarm_atright"))
+                    || ("volume".equals(slot) && MainModule.mPrefs.getBoolean("system_statusbar_sound_atright"))
+                    || ("zen".equals(slot) && MainModule.mPrefs.getBoolean("system_statusbar_dnd_atright"))
+                    || ("nfc".equals(slot) && MainModule.mPrefs.getBoolean("system_statusbar_nfc_atright"))
+                ) {
+                    param.args[1] = false;
                 }
             }
         });
-        Helpers.hookAllMethods("com.android.systemui.statusbar.policy.NetworkSpeedController", lpparam.classLoader, "setDripNetworkSpeedView", new MethodHook() {
-            @Override
-            protected void before(MethodHookParam param) throws Throwable {
-                param.args[0] = null;
-            }
-        });
+
+        Class <?> MiuiEndIconManager = findClass("com.android.systemui.statusbar.phone.MiuiEndIconManager", lpparam.classLoader);
+        ArrayList<String> rightBlockList = (ArrayList<String>) XposedHelpers.getStaticObjectField(MiuiEndIconManager, "RIGHT_BLOCK_LIST");
+        if (MainModule.mPrefs.getBoolean("system_statusbar_netspeed_atright")) {
+            rightBlockList.remove("network_speed");
+        }
+        if (MainModule.mPrefs.getBoolean("system_statusbar_alarm_atright")) {
+            rightBlockList.remove("alarm_clock");
+        }
+        if (MainModule.mPrefs.getBoolean("system_statusbar_sound_atright")) {
+            rightBlockList.remove("volume");
+        }
+        if (MainModule.mPrefs.getBoolean("system_statusbar_dnd_atright")) {
+            rightBlockList.remove("zen");
+        }
+        if (MainModule.mPrefs.getBoolean("system_statusbar_nfc_atright")) {
+            rightBlockList.remove("nfc");
+        }
+        XposedHelpers.setStaticObjectField(MiuiEndIconManager, "RIGHT_BLOCK_LIST", rightBlockList);
+        if (MainModule.mPrefs.getBoolean("system_statusbar_netspeed_atright")) {
+            Helpers.hookAllMethods("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView", lpparam.classLoader, "updateCutoutLocation", new MethodHook() {
+                @Override
+                protected void after(MethodHookParam param) throws Throwable {
+                    int mCurrentStatusBarType = (int) XposedHelpers.getObjectField(param.thisObject, "mCurrentStatusBarType");
+                    if (mCurrentStatusBarType == 1) {
+                        Object mDripNetworkSpeedView = XposedHelpers.getObjectField(param.thisObject, "mDripNetworkSpeedView");
+                        XposedHelpers.callMethod(mDripNetworkSpeedView, "setBlocked", true);
+                    }
+                }
+            });
+            Helpers.hookAllMethods("com.android.systemui.statusbar.policy.NetworkSpeedController", lpparam.classLoader, "setDripNetworkSpeedView", new MethodHook() {
+                @Override
+                protected void before(MethodHookParam param) throws Throwable {
+                    param.args[0] = null;
+                }
+            });
+        }
     }
 
     private static final TextView[] lux = { null, null, null };
@@ -8062,13 +8086,13 @@ public class System {
                     MainModule.mPrefs.getBoolean("system_statusbar_dualsimin2rows") ? 3f : 2f,
                     res.getDisplayMetrics()
                 );
-                float marginRight = TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_DIP,
-                    0.5f,
-                    res.getDisplayMetrics()
-                );
+//                float marginRight = TypedValue.applyDimension(
+//                    TypedValue.COMPLEX_UNIT_DIP,
+//                    0.5f,
+//                    res.getDisplayMetrics()
+//                );
                 mlp.leftMargin = (int) marginLeft;
-                mlp.rightMargin = (int) marginRight;
+//                mlp.rightMargin = (int) marginRight;
                 mMobileTypeSingle.setLayoutParams(mlp);
                 mMobileTypeSingle.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13.45f);
             }

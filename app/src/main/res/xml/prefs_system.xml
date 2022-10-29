@@ -310,6 +310,11 @@
 			android:title="@string/system_statusbaricons_title"
 			android:summary="@string/system_statusbaricons_summ" />
 
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_statusbaricons_atright_cat"
+			android:title="@string/system_statusbaricons_atright_title"
+			android:summary="@string/system_statusbaricons_atright_summ" />
+
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_system_mobiletypeicon"
 			android:summary="@string/system_mobiletypeicon_summ"
@@ -428,17 +433,6 @@
 			android:key="pref_key_system_hidemoreicon"
 			android:summary="@string/system_hidemoreicon_summ"
 			android:title="@string/system_hidemoreicon_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_statusbar_netspeed_atright"
-			android:title="@string/system_statusbar_netspeed_atright_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_nonetspeedseparator"
-			android:summary="@string/system_nonetspeedseparator_summ"
-			android:title="@string/system_nonetspeedseparator_title"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
