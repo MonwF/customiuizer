@@ -8081,18 +8081,13 @@ public class System {
                 mMobileGroup.removeView(mMobileTypeSingle);
                 mMobileGroup.addView(mMobileTypeSingle);
                 ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) mMobileTypeSingle.getLayoutParams();
+                int leftMargin = MainModule.mPrefs.getInt("system_statusbar_mobiletype_single_leftmargin", 4);
                 float marginLeft = TypedValue.applyDimension(
                     TypedValue.COMPLEX_UNIT_DIP,
-                    MainModule.mPrefs.getBoolean("system_statusbar_dualsimin2rows") ? 3f : 2f,
+                    leftMargin * 0.5f,
                     res.getDisplayMetrics()
                 );
-//                float marginRight = TypedValue.applyDimension(
-//                    TypedValue.COMPLEX_UNIT_DIP,
-//                    0.5f,
-//                    res.getDisplayMetrics()
-//                );
                 mlp.leftMargin = (int) marginLeft;
-//                mlp.rightMargin = (int) marginRight;
                 mMobileTypeSingle.setLayoutParams(mlp);
                 mMobileTypeSingle.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13.45f);
             }
