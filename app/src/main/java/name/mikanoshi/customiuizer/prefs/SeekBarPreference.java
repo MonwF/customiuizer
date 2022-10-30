@@ -21,12 +21,14 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 	private boolean dynamic;
 	private boolean newmod = false;
 	private boolean unsupported = false;
+	private final int childpadding = getContext().getResources().getDimensionPixelSize(R.dimen.preference_item_child_padding);
 
 	private int mDefaultValue;
 	private int mMinValue;
 	private int mMaxValue;
 	private int mStepValue;
 	private int mNegativeShift;
+	private final boolean child;
 
 	private int mDisplayDividerValue;
 	private boolean mUseDisplayDividerValue;
@@ -56,6 +58,7 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 		if (attrs != null) {
 			TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.SeekBarPreference);
 
+			child = a.getBoolean(R.styleable.SeekBarPreference_child, false);
 			dynamic = a.getBoolean(R.styleable.SeekBarPreference_dynamic, false);
 			mMinValue = a.getInt(R.styleable.SeekBarPreference_minValue, 0);
 			mMaxValue = a.getInt(R.styleable.SeekBarPreference_maxValue, 10);
@@ -88,6 +91,7 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 
 			a.recycle();
 		} else {
+			child = false;
 			mMinValue = 0;
 			mMaxValue = 10;
 			mStepValue = 1;
@@ -102,8 +106,11 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 	public void getView(View finalView) {
 		TextView mTitle = finalView.findViewById(android.R.id.title);
 		mTitle.setText(getTitle() + (unsupported ? " ⨯" : (dynamic ? " ⟲" : "")));
-		if (Helpers.is12()) mSeekBar.setAlpha(isEnabled() ? 1.0f : 0.75f);
+		mSeekBar.setAlpha(isEnabled() ? 1.0f : 0.75f);
 		if (newmod) Helpers.applyNewMod(mTitle);
+
+		int hrzPadding = childpadding + (child ? childpadding : 0);
+		finalView.setPadding(hrzPadding, 0, childpadding, 0);
 	}
 
 	@Override

@@ -45,6 +45,7 @@
 		<attr name="format" format="string" />
 		<attr name="note" format="string" />
 		<attr name="offtext" format="string" />
+		<attr name="child" />
 		<attr name="dynamic" />
 	</declare-styleable>
 

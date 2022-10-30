@@ -6,8 +6,6 @@
 	android:layout_gravity="center_vertical"
 	android:gravity="center_vertical"
 	android:baselineAligned="false"
-	android:paddingStart="@dimen/preference_item_child_padding"
-	android:paddingEnd="@dimen/preference_item_child_padding"
 	android:clipChildren="false"
 	android:clipToPadding="false">
 
