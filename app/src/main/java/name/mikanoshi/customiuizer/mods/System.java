@@ -3742,8 +3742,10 @@ public class System {
             long diffMSec = nextTime - nowTime;
             if (diffMSec < 0) diffMSec += 7 * 24 * 60 *60 * 1000;
             float diffHours = (diffMSec - 59 * 1000) / (1000f * 60f * 60f);
-
-            XposedHelpers.callMethod(mIconController, "setIconVisibility", "alarm_clock", diffHours <= MainModule.mPrefs.getInt("system_statusbaricons_alarmn", 0));
+            boolean vis = diffHours <= MainModule.mPrefs.getInt("system_statusbaricons_alarmn", 0);
+            XposedHelpers.callMethod(mIconController, "setIconVisibility", "alarm_clock", vis);
+            mIconController = XposedHelpers.getObjectField(thisObject, "miuiDripLeftStatusBarIconController");
+            XposedHelpers.callMethod(mIconController, "setIconVisibility", "alarm_clock", vis);
         } catch (Throwable t) {
             XposedBridge.log(t);
         }
@@ -3786,6 +3788,15 @@ public class System {
             protected void after(MethodHookParam param) throws Throwable {
                 lastState = (boolean)XposedHelpers.getObjectField(param.thisObject, "mHasAlarm");
                 updateAlarmVisibility(param.thisObject, lastState);
+            }
+        });
+
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarPolicy", lpparam.classLoader, "onMiuiAlarmChanged", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                lastState = (boolean)XposedHelpers.getObjectField(param.thisObject, "mHasAlarm");
+                updateAlarmVisibility(param.thisObject, lastState);
+                param.setResult(null);
             }
         });
     }
