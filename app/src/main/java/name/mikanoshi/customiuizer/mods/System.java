@@ -5662,15 +5662,12 @@ public class System {
     }
 
     public static void NoSignatureVerifyServiceHook(LoadPackageParam lpparam) {
-        if (!Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "compareSignatures", XC_MethodReplacement.returnConstant(0))) {
-            Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerService", lpparam.classLoader, "compareSignatures", XC_MethodReplacement.returnConstant(0));
-            Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerService", lpparam.classLoader, "compareSignaturesCompat", XC_MethodReplacement.returnConstant(0));
-            Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerService", lpparam.classLoader, "compareSignaturesRecover", XC_MethodReplacement.returnConstant(0));
-        }
-
-        Helpers.hookAllMethods("com.android.server.pm.PackageManagerServiceInjector", lpparam.classLoader, "isAllowedInstall", XC_MethodReplacement.returnConstant(true));
-        Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerService", lpparam.classLoader, "canSkipFullPackageVerification", XC_MethodReplacement.returnConstant(true));
-        Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerService", lpparam.classLoader, "canSkipFullApkVerification", XC_MethodReplacement.returnConstant(true));
+        Helpers.hookAllMethodsSilently("com.miui.server.SecurityManagerService", lpparam.classLoader, "compareSignatures", XC_MethodReplacement.returnConstant(true));
+        Helpers.hookAllMethodsSilently("com.miui.server.SecurityManagerService", lpparam.classLoader, "checkSysAppCrack", XC_MethodReplacement.returnConstant(true));
+        Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "compareSignatures", XC_MethodReplacement.returnConstant(0));
+        Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "matchSignaturesCompat", XC_MethodReplacement.returnConstant(true));
+        Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "matchSignaturesRecover", XC_MethodReplacement.returnConstant(true));
+        Helpers.hookAllMethodsSilently("miui.util.CertificateUtils", lpparam.classLoader, "compareSignatures", XC_MethodReplacement.returnConstant(true));
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")

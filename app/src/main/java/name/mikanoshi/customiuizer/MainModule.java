@@ -389,7 +389,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         }
 
         if (pkg.equals("com.miui.packageinstaller")) {
-            if (mPrefs.getBoolean("system_apksign")) System.NoSignatureVerifyMiuiHook(lpparam);
+//            if (mPrefs.getBoolean("system_apksign")) System.NoSignatureVerifyMiuiHook(lpparam);
             if (mPrefs.getBoolean("various_miuiinstaller")) Various.MiuiPackageInstallerHook(lpparam);
             if (mPrefs.getBoolean("various_installappinfo")) Various.AppInfoDuringMiuiInstallHook(lpparam);
         }
