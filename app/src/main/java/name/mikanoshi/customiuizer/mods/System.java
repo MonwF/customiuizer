@@ -3823,7 +3823,8 @@ public class System {
                 if (wifiState != null) {
                     int opt = MainModule.mPrefs.getStringAsInt("system_statusbaricons_wifistandard", 1);
                     if (opt == 1) return;
-                    XposedHelpers.setObjectField(wifiState, "showWifiStandard", opt == 2);
+                    int wifiStandard = (int) XposedHelpers.getObjectField(wifiState, "wifiStandard");
+                    XposedHelpers.setObjectField(wifiState, "showWifiStandard", opt == 2 && wifiStandard > 0);
                 }
             }
         });
