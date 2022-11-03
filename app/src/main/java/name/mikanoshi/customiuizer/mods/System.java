@@ -6720,12 +6720,12 @@ public class System {
         Helpers.hookAllMethods("com.android.wm.shell.pip.PipTaskOrganizer", lpparam.classLoader, "onTaskAppeared", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                Context context = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
+                Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
                 if (!isActListened[0]) {
                     isActListened[0] = true;
                     IntentFilter intentFilter = new IntentFilter();
                     intentFilter.addAction("miui.intent.TAKE_SCREENSHOT");
-                    context.registerReceiver(new BroadcastReceiver() {
+                    mContext.registerReceiver(new BroadcastReceiver() {
                         @Override
                         public void onReceive(Context context, Intent intent) {
                             String action = intent.getAction();
@@ -6754,21 +6754,20 @@ public class System {
         MethodHook addViewHook = new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
-                Context context;
                 if (param.args[0] == null || !(param.args[1] instanceof WindowManager.LayoutParams) || param.getThrowable() != null) return;
                 WindowManager.LayoutParams params = (WindowManager.LayoutParams)param.args[1];
                 if (params.type != WindowManager.LayoutParams.TYPE_PHONE
                     && params.type != WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY
                     && params.type != WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY) return;
                 View view = (View)param.args[0];
-                context = view.getContext();
+                Context mContext = view.getContext();
                 mViews.add(view);
 
                 if (!isListened[0]) {
                     isListened[0] = true;
                     IntentFilter intentFilter = new IntentFilter();
                     intentFilter.addAction("miui.intent.TAKE_SCREENSHOT");
-                    context.registerReceiver(new BroadcastReceiver() {
+                    mContext.registerReceiver(new BroadcastReceiver() {
                         @Override
                         public void onReceive(Context context, Intent intent) {
                             String action = intent.getAction();
@@ -6779,14 +6778,14 @@ public class System {
                                     View vs = mViews.get(size);
                                     if (vs != null) {
                                         if (state) {
-                                            if (vs.getVisibility() == View.GONE && XposedHelpers.getAdditionalInstanceField(vs, "mSavedVisibility") != null) {
-                                                vs.setVisibility(View.VISIBLE);
+                                            if (vs.getVisibility() != View.VISIBLE && XposedHelpers.getAdditionalInstanceField(vs, "mSavedVisibility") != null) {
                                                 XposedHelpers.removeAdditionalInstanceField(vs, "mSavedVisibility");
+                                                vs.setVisibility(View.VISIBLE);
                                             }
                                         }
                                         else {
                                             if (vs.getVisibility() == View.VISIBLE) {
-                                                vs.setVisibility(View.GONE);
+                                                vs.setVisibility(View.INVISIBLE);
                                                 XposedHelpers.setAdditionalInstanceField(vs, "mSavedVisibility", true);
                                             }
                                         }
