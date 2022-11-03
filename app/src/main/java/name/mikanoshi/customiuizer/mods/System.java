@@ -110,6 +110,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.SurfaceControl;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -6713,88 +6714,81 @@ public class System {
         });
     }
 
-    public static void TempHideOverlayHook(LoadPackageParam lpparam, boolean hasOverlay) {
-        if (!hasOverlay) {
-            MethodHook delayScreenshotHook = new MethodHook() {
-                @Override
-                @SuppressWarnings("ConstantConditions")
-                protected void before(final MethodHookParam param) throws Throwable {
-                    if (Modifier.isPrivate(param.method.getModifiers())) {
-                        Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-                        mContext.sendBroadcast(new Intent("customuizer.action.TempHideOverlay"));
-                    }
-                }
-            };
-            Helpers.hookAllMethods("com.android.internal.util.ScreenshotHelper", lpparam.classLoader, "takeScreenshot", delayScreenshotHook);
-            Helpers.hookAllMethods("com.android.internal.util.MiuiScreenshotHelper", lpparam.classLoader, "takeScreenshot", delayScreenshotHook);
-            return;
-        }
+    public static void TempHideOverlaySystemUIHook(LoadPackageParam lpparam) {
+        final boolean[] isActListened = {false};
 
-        final boolean[] isListened = {false};
-        final Activity[] mActs = {null};
-        final View[] mViews = {null};
-        MethodHook toggleViewHook = new MethodHook() {
+        Helpers.hookAllMethods("com.android.wm.shell.pip.PipTaskOrganizer", lpparam.classLoader, "onTaskAppeared", new MethodHook() {
             @Override
-            protected void after(final MethodHookParam param) throws Throwable {
-                boolean isPip = "enterPictureInPictureMode".equals(param.method.getName());
-                Context context;
-                if (isPip) {
-                    if (param.args.length != 1) {
-                        return;
-                    }
-                    Activity thisAct = (Activity) param.thisObject;
-                    context = thisAct.getApplicationContext();
-                    mActs[0] = thisAct;
-                }
-                else {
-                    if (param.args[0] == null || !(param.args[1] instanceof WindowManager.LayoutParams) || param.getThrowable() != null) return;
-                    WindowManager.LayoutParams params = (WindowManager.LayoutParams)param.args[1];
-                    if (params.type != WindowManager.LayoutParams.TYPE_PHONE
-                        && params.type != WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY
-                        && params.type != WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY) return;
-                    View view = (View)param.args[0];
-                    context = view.getContext();
-                    mViews[0] = view;
-                }
-
-                if (!isListened[0]) {
-                    isListened[0] = true;
+            protected void after(MethodHookParam param) throws Throwable {
+                Context context = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
+                if (!isActListened[0]) {
+                    isActListened[0] = true;
                     IntentFilter intentFilter = new IntentFilter();
-                    intentFilter.addAction("customuizer.action.TempHideOverlay");
                     intentFilter.addAction("miui.intent.TAKE_SCREENSHOT");
                     context.registerReceiver(new BroadcastReceiver() {
                         @Override
                         public void onReceive(Context context, Intent intent) {
                             String action = intent.getAction();
                             if (action == null) return;
-                            if (action.equals("customuizer.action.TempHideOverlay")) {
-                                if (mViews[0] != null) {
-                                    View vs = mViews[0];
-                                    if (vs.getVisibility() == View.VISIBLE) {
-                                        vs.setVisibility(View.GONE);
-                                        XposedHelpers.setAdditionalInstanceField(vs, "mSavedVisibility", View.VISIBLE);
-                                    }
-                                }
-                                if (mActs[0] != null) {
-                                    Activity act = mActs[0];
-                                    if (act.isInPictureInPictureMode()) {
-                                        act.setVisible(false);
-                                    }
-                                }
-                            } else if (action.equals("miui.intent.TAKE_SCREENSHOT")) {
+                            if (action.equals("miui.intent.TAKE_SCREENSHOT")) {
                                 boolean state = intent.getBooleanExtra("IsFinished", true);
-                                if (state) {
-                                    if (mViews[0] != null) {
-                                        View vs = mViews[0];
-                                        if (vs.getVisibility() == View.GONE && XposedHelpers.getAdditionalInstanceField(vs, "mSavedVisibility") != null) {
-                                            vs.setVisibility(View.VISIBLE);
-                                            XposedHelpers.removeAdditionalInstanceField(vs, "mSavedVisibility");
+                                Object mState = XposedHelpers.getObjectField(param.thisObject, "mState");
+                                boolean isPip = (boolean) XposedHelpers.callMethod(mState, "isInPip");
+                                if (isPip) {
+                                    Object mSurfaceControlTransactionFactory = XposedHelpers.getObjectField(param.thisObject, "mSurfaceControlTransactionFactory");
+                                    SurfaceControl.Transaction transaction = (SurfaceControl.Transaction) XposedHelpers.callMethod(mSurfaceControlTransactionFactory, "getTransaction");
+                                    SurfaceControl mLeash = (SurfaceControl) XposedHelpers.getObjectField(param.thisObject, "mLeash");
+                                    transaction.setVisibility(mLeash, state);
+                                    transaction.apply();
+                                }
+                            }
+                        }
+                    }, intentFilter);
+                }
+            }
+        });
+    }
+    public static void TempHideOverlayAppHook(LoadPackageParam lpparam) {
+        final boolean[] isListened = {false};
+        final ArrayList<View> mViews = new ArrayList<>();
+        MethodHook addViewHook = new MethodHook() {
+            @Override
+            protected void after(final MethodHookParam param) throws Throwable {
+                Context context;
+                if (param.args[0] == null || !(param.args[1] instanceof WindowManager.LayoutParams) || param.getThrowable() != null) return;
+                WindowManager.LayoutParams params = (WindowManager.LayoutParams)param.args[1];
+                if (params.type != WindowManager.LayoutParams.TYPE_PHONE
+                    && params.type != WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY
+                    && params.type != WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY) return;
+                View view = (View)param.args[0];
+                context = view.getContext();
+                mViews.add(view);
+
+                if (!isListened[0]) {
+                    isListened[0] = true;
+                    IntentFilter intentFilter = new IntentFilter();
+                    intentFilter.addAction("miui.intent.TAKE_SCREENSHOT");
+                    context.registerReceiver(new BroadcastReceiver() {
+                        @Override
+                        public void onReceive(Context context, Intent intent) {
+                            String action = intent.getAction();
+                            if (action == null) return;
+                            if (action.equals("miui.intent.TAKE_SCREENSHOT")) {
+                                boolean state = intent.getBooleanExtra("IsFinished", true);
+                                for (int size = mViews.size() - 1; size >= 0; size--) {
+                                    View vs = mViews.get(size);
+                                    if (vs != null) {
+                                        if (state) {
+                                            if (vs.getVisibility() == View.GONE && XposedHelpers.getAdditionalInstanceField(vs, "mSavedVisibility") != null) {
+                                                vs.setVisibility(View.VISIBLE);
+                                                XposedHelpers.removeAdditionalInstanceField(vs, "mSavedVisibility");
+                                            }
                                         }
-                                    }
-                                    if (mActs[0] != null) {
-                                        Activity act = mActs[0];
-                                        if (act.isInPictureInPictureMode()) {
-                                            act.setVisible(true);
+                                        else {
+                                            if (vs.getVisibility() == View.VISIBLE) {
+                                                vs.setVisibility(View.GONE);
+                                                XposedHelpers.setAdditionalInstanceField(vs, "mSavedVisibility", true);
+                                            }
                                         }
                                     }
                                 }
@@ -6804,8 +6798,14 @@ public class System {
                 }
             }
         };
-        Helpers.hookAllMethods("android.app.Activity", lpparam.classLoader, "enterPictureInPictureMode", toggleViewHook);
-        Helpers.hookAllMethods("android.view.WindowManagerGlobal", lpparam.classLoader, "addView", toggleViewHook);
+        MethodHook removeViewHook = new MethodHook() {
+            @Override
+            protected void before(final MethodHookParam param) throws Throwable {
+                mViews.remove(param.args[0]);
+            }
+        };
+        Helpers.hookAllMethods("android.view.WindowManagerGlobal", lpparam.classLoader, "addView", addViewHook);
+        Helpers.hookAllMethods("android.view.WindowManagerGlobal", lpparam.classLoader, "removeView", removeViewHook);
     }
 
     public static void ScreenshotFloatTimeHook(LoadPackageParam lpparam) {

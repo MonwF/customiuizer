@@ -96,7 +96,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         String pkg = lpparam.packageName;
 
         if (
-            !pkg.equals("android")
+            mPrefs.getBoolean("system_screenshot_overlay")
+            && !pkg.equals("android")
             && !pkg.equals("com.android.systemui")
             && !pkg.equals(Helpers.modulePkg)
             && !pkg.equals("com.miui.securitycenter")
@@ -106,15 +107,13 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             && !pkg.equals("com.miui.packageinstaller")
             && !pkg.equals("com.miui.home")
         ) {
-            System.TempHideOverlayHook(lpparam, true);
+            System.TempHideOverlayAppHook(lpparam);
         }
 
         if (pkg.equals("android") && lpparam.processName.equals("android")) {
             PackagePermissions.hook(lpparam);
             GlobalActions.setupGlobalActions(lpparam);
-            if (mPrefs.getBoolean("system_screenshot_overlay")) {
-                System.TempHideOverlayHook(lpparam, false);
-            }
+
             if (mPrefs.getBoolean("system_popupnotif_fs") ||
                     mPrefs.getBoolean("controls_volumecursor") ||
                     mPrefs.getBoolean("controls_fsg_horiz") ||
@@ -184,6 +183,10 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 
         if (pkg.equals("com.android.systemui")) {
             GlobalActions.setupStatusBar(lpparam);
+
+            if (mPrefs.getBoolean("system_screenshot_overlay")) {
+                System.TempHideOverlaySystemUIHook(lpparam);
+            }
 
             if (mPrefs.getInt("system_qsgridcolumns", 2) > 2 || mPrefs.getInt("system_qsgridrows", 1) > 1) System.QSGridRes();
             if (mPrefs.getInt("system_qqsgridcolumns", 2) > 2) System.QQSGridRes();
