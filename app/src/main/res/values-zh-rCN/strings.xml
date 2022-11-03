@@ -163,7 +163,7 @@
     <string name="system_screenshot_quality_title">质量</string>
     <string name="system_screenshot_path_title">存放目录</string>
     <string name="system_screenshot_overlay_title">截图时隐藏叠加层</string>
-    <string name="system_screenshot_overlay_summ">进行截图时临时隐藏叠加层</string>
+    <string name="system_screenshot_overlay_summ">当截图时临时隐藏叠加层(请将有叠加层的App加入作用域)</string>
     <string name="system_screenshot_floattime_title">截图后的浮动窗口显示时间</string>
     <string name="system_screenshot_floattime_summ">截图后右上角的悬浮窗口显示时间</string>
     <string name="system_chargeanimtime_title">充电动画显示时间</string>
