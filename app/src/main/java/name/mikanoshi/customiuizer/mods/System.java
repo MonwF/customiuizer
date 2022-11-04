@@ -8097,7 +8097,8 @@ public class System {
                 );
                 mlp.leftMargin = (int) marginLeft;
                 mMobileTypeSingle.setLayoutParams(mlp);
-                mMobileTypeSingle.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13.45f);
+                int fontSize = MainModule.mPrefs.getInt("system_statusbar_mobiletype_single_fontsize", 27);
+                mMobileTypeSingle.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize * 0.5f);
             }
         });
     }

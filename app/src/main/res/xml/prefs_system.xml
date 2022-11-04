@@ -329,6 +329,18 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_statusbar_mobiletype_single_fontsize"
+			android:title="@string/launcher_titlefontsize_title"
+			android:dependency="pref_key_system_statusbar_mobiletype_single"
+			android:defaultValue="27"
+			miuizer:child="true"
+			miuizer:minValue="18"
+			miuizer:maxValue="30"
+			miuizer:stepValue="1"
+			miuizer:displayDividerValue="2"
+			miuizer:format="%s dip" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_system_statusbar_mobiletype_single_leftmargin"
 			android:title="@string/system_statusbar_mobiletype_single_leftmargin_title"
 			android:dependency="pref_key_system_statusbar_mobiletype_single"
@@ -337,7 +349,8 @@
 			miuizer:minValue="2"
 			miuizer:maxValue="12"
 			miuizer:stepValue="1"
-			miuizer:format="%d dip" />
+			miuizer:displayDividerValue="2"
+			miuizer:format="%s dip" />
 
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_system_networkindicator"
@@ -375,7 +388,8 @@
 			miuizer:minValue="0"
 			miuizer:maxValue="8"
 			miuizer:stepValue="1"
-			miuizer:format="%d dip" />
+			miuizer:displayDividerValue="2"
+			miuizer:format="%s dip" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_statusbar_batterytempandcurrent"
