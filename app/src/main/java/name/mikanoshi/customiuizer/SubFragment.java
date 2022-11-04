@@ -19,7 +19,6 @@ import androidx.fragment.app.FragmentManager;
 
 import java.util.ArrayList;
 
-import miui.widget.ClearableEditText;
 import name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx;
 import name.mikanoshi.customiuizer.prefs.SpinnerEx;
 import name.mikanoshi.customiuizer.prefs.SpinnerExFake;
@@ -141,7 +140,6 @@ public class SubFragment extends PreferenceFragmentBase {
                 if (nView.getTag() != null)
                     if (nView instanceof TextView) {
                         ((TextView)nView).setText(Helpers.prefs.getString((String)nView.getTag(), ""));
-                        if (nView instanceof ClearableEditText) nView.setBackgroundResource(getResources().getIdentifier(Helpers.isNightMode(getValidContext()) ? "edit_text_bg_dark" : "edit_text_bg_light", "drawable", "miui"));
                     }
             } catch (Throwable e) {
                 Log.e("miuizer", "Cannot load sub preference!");
