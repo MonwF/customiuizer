@@ -7978,16 +7978,14 @@ public class System {
                     public void run() {
                         if (!wallpaper.exists()) return;
 
-                        if (Helpers.is10()) {
-                            Intent copyIntent = new Intent(ACTION_PREFIX + "CopyToExternal");
-                            copyIntent.putExtra("action", 1);
-                            copyIntent.putExtra("from", wallpaper.getAbsolutePath());
-                            mContext.sendBroadcast(copyIntent);
-                        }
-
+                        String lockWallpaperPath = "/data/system/theme/thirdparty_lock_wallpaper";
+                        Helpers.copyFile(wallpaper.getAbsolutePath(), lockWallpaperPath);
+                        Class<?> ThemeUtils = XposedHelpers.findClass("miui.content.res.ThemeNativeUtils", lpparam.classLoader);
+                        XposedHelpers.callStaticMethod(ThemeUtils, "updateFilePermissionWithThemeContext", lockWallpaperPath);
                         JSONObject data = new JSONObject();
                         JSONObject ex = new JSONObject();
                         try {
+                            File lockWallpaper = new File(lockWallpaperPath);
                             ex
                                     .put("link_type", "0")
                                     .put("title_size", "26")
@@ -8030,19 +8028,21 @@ public class System {
                                     .put("titleColorValue", 0)
                                     .put("titleTextSize", -1)
                                     .put("totalOfAlbum", -1)
-                                    .put("wallpaperUri", wallpaper.toURI());
+                                    .put("wallpaperUri", lockWallpaper.toURI());
                         } catch (Throwable t) {
                             XposedBridge.log(t);
                         }
 
-                        Intent setIntent = new Intent("android.miui.UPDATE_LOCKSCREEN_WALLPAPER");
+                        Intent setIntent = new Intent("com.miui.miwallpaper.UPDATE_LOCKSCREEN_WALLPAPER");
                         setIntent.putExtra("wallpaperInfo", data.toString());
                         setIntent.putExtra("apply", true);
                         mContext.sendBroadcast(setIntent);
                     }
-                }, 2000);
+                }, 1800);
             }
         });
+
+
     }
 
     public static void BetterPopupsCenteredHook(LoadPackageParam lpparam) {
