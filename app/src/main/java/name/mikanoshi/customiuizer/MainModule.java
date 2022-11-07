@@ -88,7 +88,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             mPrefs.getStringAsInt("controls_volumemedia_down", 0) > 0) {
             Controls.VolumeMediaPlayerHook();
         }
-        GlobalActions.setupSystemHelpers();
+//        GlobalActions.setupSystemHelpers();
         //Helpers.log("initZygote", String.valueOf(SystemClock.elapsedRealtime() - startTime));
     }
 

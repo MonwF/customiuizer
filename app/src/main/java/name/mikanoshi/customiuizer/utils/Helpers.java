@@ -231,10 +231,6 @@ public class Helpers {
 		item.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
 	}
 
-	public static boolean is10() {
-		return false;
-	}
-
 	public static boolean is11() {
 		return true;
 	}
@@ -1254,17 +1250,8 @@ public class Helpers {
 
 	public static boolean copyFile(String from, String to) {
 		try {
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-				Files.copy(Paths.get(from), Paths.get(to), StandardCopyOption.REPLACE_EXISTING);
-				return true;
-			} else try (InputStream in = new FileInputStream(from)) {
-				try (OutputStream out = new FileOutputStream(to, false)) {
-					byte[] buf = new byte[1024];
-					int len;
-					while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
-					return true;
-				}
-			}
+			Files.copy(Paths.get(from), Paths.get(to), StandardCopyOption.REPLACE_EXISTING);
+			return true;
 		} catch (Throwable t) {
 			t.printStackTrace();
 			return false;

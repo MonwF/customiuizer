@@ -736,7 +736,7 @@ public class GlobalActions {
 
 	private static int settingsIconResId;
 	public static void miuizerSettingsRes() {
-		settingsIconResId = MainModule.resHooks.addResource("ic_miuizer_settings", Helpers.is11() ? R.drawable.ic_miuizer_settings11 : R.drawable.ic_miuizer_settings10);
+		settingsIconResId = MainModule.resHooks.addResource("ic_miuizer_settings", R.drawable.ic_miuizer_settings11);
 	}
 
 	public static void miuizerSettings12Hook(LoadPackageParam lpparam) {
@@ -747,7 +747,7 @@ public class GlobalActions {
 				if (param.args[0] == null) return;
 
 				Context mContext = ((Activity)param.thisObject).getBaseContext();
-				int opt = Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_miuizer_settingsiconpos", "2"));
+				int opt = Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_miuizer_settingsiconpos", "1"));
 				if (opt == 0) return;
 
 				Resources modRes = Helpers.getModuleRes(mContext);
@@ -765,7 +765,6 @@ public class GlobalActions {
 				bundle.putParcelableArrayList("header_user", users);
 				XposedHelpers.setObjectField(header, "extras", bundle);
 
-				int security = mContext.getResources().getIdentifier("security_status", "id", mContext.getPackageName());
 				int themes = mContext.getResources().getIdentifier("launcher_settings", "id", mContext.getPackageName());
 				int special = mContext.getResources().getIdentifier("other_special_feature_settings", "id", mContext.getPackageName());
 
@@ -774,11 +773,11 @@ public class GlobalActions {
 				for (Object head: headers) {
 					position++;
 					long id = XposedHelpers.getLongField(head, "id");
-					if (opt == 1 && id == security) { headers.add(position, header); return; }
+					if (opt == 1 && id == -1) { headers.add(position - 1, header); return; }
 					if (opt == 2 && id == themes) { headers.add(position, header); return; }
 					if (opt == 3 && id == special) { headers.add(position, header); return; }
 				}
-				if (headers.size() > 25 )
+				if (headers.size() > 25)
 					headers.add(25, header);
 				else
 					headers.add(header);
@@ -805,28 +804,6 @@ public class GlobalActions {
 						} catch (Throwable t) {}
 					}
 				});
-			}
-		});
-
-		// Handle exception for null WeakReference
-		Helpers.hookAllMethodsSilently("com.miui.internal.widget.SearchActionModeView", null, "notifyAnimationStart", new MethodHook() {
-			@Override
-			protected void after(MethodHookParam param) throws Throwable {
-				if (param.hasThrowable()) param.setThrowable(null);
-			}
-		});
-
-		Helpers.hookAllMethodsSilently("com.miui.internal.widget.SearchActionModeView", null, "notifyAnimationUpdate", new MethodHook() {
-			@Override
-			protected void after(MethodHookParam param) throws Throwable {
-				if (param.hasThrowable()) param.setThrowable(null);
-			}
-		});
-
-		Helpers.hookAllMethodsSilently("com.miui.internal.widget.SearchActionModeView", null, "notifyAnimationEnd", new MethodHook() {
-			@Override
-			protected void after(MethodHookParam param) throws Throwable {
-				if (param.hasThrowable()) param.setThrowable(null);
 			}
 		});
 	}
