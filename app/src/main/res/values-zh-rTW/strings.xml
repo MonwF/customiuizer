@@ -483,8 +483,6 @@
     <string name="support_bug_summ">通過官方問題跟蹤器向我們發送錯誤報告或者功能請求</string>
     <string name="support_bug_title">報告錯誤</string>
     <string name="support_donate">捐出$%1$d</string>
-    <string name="support_donate_crypto_summ">未來貨幣 :)</string>
-    <string name="support_donate_crypto_title">加密貨幣</string>
     <string name="support_donate_inapp_summ">由Google處理</string>
     <string name="support_donate_inapp_title">應用內</string>
     <string name="support_donate_other_title">過時貨幣</string>

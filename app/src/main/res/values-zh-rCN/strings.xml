@@ -885,8 +885,6 @@
     <string name="support_donate_summ">表达您对这个高大上模块感激之情的最好方式 :)</string>
     <string name="support_donate_inapp_title">应用内</string>
     <string name="support_donate_inapp_summ">由Google处理</string>
-    <string name="support_donate_crypto_title">加密货币</string>
-    <string name="support_donate_crypto_summ">未来货币 :)</string>
     <string name="support_donate_other_title">过时货币</string>
     <string name="donate_level1">感谢您的捐款！</string>
     <string name="donate_level2">感谢您的慷慨解囊！</string>

@@ -132,6 +132,7 @@ import android.widget.RelativeLayout;
 import android.widget.RemoteViews;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -175,6 +176,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import miui.telephony.TelephonyManager;
 
 import de.robv.android.xposed.XC_MethodHook.MethodHookParam;
 import de.robv.android.xposed.XC_MethodReplacement;
@@ -8322,5 +8325,162 @@ public class System {
                 }
             });
         }
+    }
+
+    public static void AddFiveGTileHook(LoadPackageParam lpparam) {
+        final boolean[] isListened = {false};
+
+        Helpers.findAndHookMethod("com.android.systemui.SystemUIFactory", lpparam.classLoader, "createFromConfig", Context.class, new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                if (!isListened[0]) {
+                    isListened[0] = true;
+                    Context mContext = (Context) param.args[0];
+                    int stockTilesResId = mContext.getResources().getIdentifier("miui_quick_settings_tiles_stock", "string", lpparam.packageName);
+                    String stockTiles = mContext.getString(stockTilesResId) + ",custom_5G";
+                    MainModule.resHooks.setObjectReplacement(lpparam.packageName, "string", "miui_quick_settings_tiles_stock", stockTiles);
+                    MainModule.resHooks.setObjectReplacement("miui.systemui.plugin", "string", "quick_settings_tiles_stock", stockTiles);
+                }
+            }
+        });
+        Class<?> ResourceIconClass = findClass("com.android.systemui.qs.tileimpl.QSTileImpl$ResourceIcon", lpparam.classLoader);
+        Helpers.findAndHookMethod("com.android.systemui.qs.tileimpl.QSFactoryImpl", lpparam.classLoader, "createTileInternal", String.class, new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                String tileName = (String) param.args[0];
+                if (tileName.startsWith("custom_")) {
+                    Object provider = XposedHelpers.getObjectField(param.thisObject, "mNfcTileProvider");
+                    Object tile = XposedHelpers.callMethod(provider, "get");
+                    XposedHelpers.setAdditionalInstanceField(tile, "customName", tileName);
+                    param.setResult(tile);
+                }
+            }
+        });
+        Helpers.findAndHookMethod("com.android.systemui.qs.tiles.NfcTile", lpparam.classLoader, "isAvailable", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                Object customName = XposedHelpers.getAdditionalInstanceField(param.thisObject, "customName");
+                if (customName != null) {
+                    String tileName = (String) customName;
+                    if ("custom_5G".equals(tileName)) {
+                        param.setResult(TelephonyManager.getDefault().isFiveGCapable());
+                    }
+                    else {
+                        param.setResult(false);
+                    }
+                }
+            }
+        });
+        Helpers.findAndHookMethod("com.android.systemui.qs.tiles.NfcTile", lpparam.classLoader, "getTileLabel", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                Object customName = XposedHelpers.getAdditionalInstanceField(param.thisObject, "customName");
+                if (customName != null) {
+                    String tileName = (String) customName;
+                    if ("custom_5G".equals(tileName)) {
+                        param.setResult("5G");
+                    }
+                }
+            }
+        });
+        Helpers.findAndHookMethod("com.android.systemui.qs.tiles.NfcTile", lpparam.classLoader, "handleSetListening", boolean.class, new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                Object customName = XposedHelpers.getAdditionalInstanceField(param.thisObject, "customName");
+                if (customName != null) {
+                    String tileName = (String) customName;
+                    if ("custom_5G".equals(tileName)) {
+                        Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
+                        boolean mListening = (boolean) param.args[0];
+                        if (mListening) {
+                            ContentObserver contentObserver = new ContentObserver(new Handler(mContext.getMainLooper())) {
+                                @Override
+                                public void onChange(boolean z) {
+                                    XposedHelpers.callMethod(param.thisObject, "refreshState");
+                                }
+                            };
+                            mContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor("fiveg_user_enable"), false, contentObserver);
+                            mContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor("dual_nr_enabled"), false, contentObserver);
+                            XposedHelpers.setAdditionalInstanceField(param.thisObject, "tileListener", contentObserver);
+                        }
+                        else {
+                            ContentObserver contentObserver = (ContentObserver) XposedHelpers.getAdditionalInstanceField(param.thisObject, "tileListener");
+                            mContext.getContentResolver().unregisterContentObserver(contentObserver);
+                        }
+                    }
+                    else {
+                        param.setResult(null);
+                    }
+                }
+            }
+        });
+        Helpers.findAndHookMethod("com.android.systemui.qs.tiles.NfcTile", lpparam.classLoader, "getLongClickIntent", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                Object customName = XposedHelpers.getAdditionalInstanceField(param.thisObject, "customName");
+                if (customName != null) {
+                    String tileName = (String) customName;
+                    if ("custom_5G".equals(tileName)) {
+                        Intent intent = new Intent(Intent.ACTION_MAIN);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                        intent.setComponent(new ComponentName("com.android.phone", "com.android.phone.settings.PreferredNetworkTypeListPreference"));
+                        param.setResult(intent);
+                    }
+                    else {
+                        param.setResult(null);
+                    }
+                }
+            }
+        });
+        Helpers.findAndHookMethod("com.android.systemui.qs.tiles.NfcTile", lpparam.classLoader, "handleClick", View.class, new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                Object customName = XposedHelpers.getAdditionalInstanceField(param.thisObject, "customName");
+                if (customName != null) {
+                    String tileName = (String) customName;
+                    if ("custom_5G".equals(tileName)) {
+                        TelephonyManager manager = TelephonyManager.getDefault();
+                        manager.setUserFiveGEnabled(!manager.isUserFiveGEnabled());
+                    }
+                    else {
+                        param.setResult(null);
+                    }
+                }
+            }
+        });
+        Helpers.findAndHookMethod("com.android.systemui.qs.tiles.NfcTile", lpparam.classLoader, "getAdapter", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                Object customName = XposedHelpers.getAdditionalInstanceField(param.thisObject, "customName");
+                if (customName != null) {
+                    param.setResult(null);
+                }
+            }
+        });
+
+        int fiveGIconResId = MainModule.resHooks.addResource("ic_qs_5g_on", R.drawable.ic_qs_5g_on);
+        int fiveGIconOffResId = MainModule.resHooks.addResource("ic_qs_5g_off", R.drawable.ic_qs_5g_off);
+        Helpers.hookAllMethods("com.android.systemui.qs.tiles.NfcTile", lpparam.classLoader, "handleUpdateState", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                Object customName = XposedHelpers.getAdditionalInstanceField(param.thisObject, "customName");
+                if (customName != null) {
+                    String tileName = (String) customName;
+                    if ("custom_5G".equals(tileName)) {
+                        Object booleanState = param.args[0];
+                        TelephonyManager manager = TelephonyManager.getDefault();
+                        boolean isEnable = manager.isUserFiveGEnabled();
+                        XposedHelpers.setObjectField(booleanState, "value", isEnable);
+                        XposedHelpers.setObjectField(booleanState, "state", isEnable ? 2 : 1);
+                        XposedHelpers.setObjectField(booleanState, "label", "5G");
+                        XposedHelpers.setObjectField(booleanState, "contentDescription", "5G");
+                        XposedHelpers.setObjectField(booleanState, "expandedAccessibilityClassName", Switch.class.getName());
+                        Object mIcon = XposedHelpers.callStaticMethod(ResourceIconClass, "get", isEnable ? fiveGIconResId : fiveGIconOffResId);
+                        XposedHelpers.setObjectField(booleanState, "icon", mIcon);
+                    }
+                    param.setResult(null);
+                }
+            }
+        });
     }
 }

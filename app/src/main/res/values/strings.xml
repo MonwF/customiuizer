@@ -963,8 +963,6 @@
     <string name="support_donate_summ">Best way to express your gratitude for this awesome module :)</string>
     <string name="support_donate_inapp_title">In-app</string>
     <string name="support_donate_inapp_summ">Let Google handle everything</string>
-    <string name="support_donate_crypto_title">Cryptocurrencies</string>
-    <string name="support_donate_crypto_summ">Money of the future :)</string>
     <string name="support_donate_other_title">Outdated currencies</string>
     <string name="support_donate_other_summ" translatable="false">Paypal, Webmoney, QIWI</string>
 

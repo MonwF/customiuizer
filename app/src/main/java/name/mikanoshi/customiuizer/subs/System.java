@@ -28,7 +28,6 @@ import name.mikanoshi.customiuizer.prefs.ListPreferenceEx;
 import name.mikanoshi.customiuizer.prefs.PreferenceEx;
 import name.mikanoshi.customiuizer.prefs.SeekBarPreference;
 import name.mikanoshi.customiuizer.qs.AutoRotateService;
-import name.mikanoshi.customiuizer.qs.FiveGService;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class System extends SubFragment {
@@ -245,16 +244,6 @@ public class System extends SubFragment {
 					@Override
 					public void onStopTrackingTouch(SeekBar seekBar) {}
 				});
-
-				findPreference("pref_key_system_fivegtile").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-					@Override
-					public boolean onPreferenceChange(Preference preference, Object newValue) {
-						PackageManager pm = getActivity().getPackageManager();
-						pm.setComponentEnabledSetting(new ComponentName(getActivity(), FiveGService.class), (Boolean)newValue ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED : PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-						return true;
-					}
-				});
-
 				break;
 			case "pref_key_system_cat_recents":
 				findPreference("pref_key_system_hidefromrecents_apps").setOnPreferenceClickListener(openAppsEdit);
