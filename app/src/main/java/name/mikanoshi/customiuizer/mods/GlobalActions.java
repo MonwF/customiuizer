@@ -431,7 +431,7 @@ public class GlobalActions {
 					ComponentName resolvedAct = recentIntent.resolveActivity(pm);
 
 					if (resolvedAct != null)
-					for (ResolveInfo launcher: launcherList)
+						for (ResolveInfo launcher: launcherList)
 					if (!launcher.activityInfo.packageName.equals("com.android.settings") && launcher.activityInfo.packageName.equals(resolvedAct.getPackageName())) {
 						isLauncher = true;
 						break;

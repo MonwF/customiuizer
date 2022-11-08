@@ -42,14 +42,6 @@ public class AboutFragment extends SubFragment {
 			}
 		});
 
-		findPreference("pref_key_paycrypto").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference pref) {
-				Helpers.openURL(act, "https://code.highspec.ru/cryptodonate");
-				return true;
-			}
-		});
-
 		findPreference("pref_key_payother").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			@SuppressWarnings("deprecation")

@@ -171,18 +171,6 @@
 			</intent-filter>
 		</service>
 
-		<service
-			android:exported="true"
-			android:name=".qs.FiveGService"
-			android:icon="@drawable/ic_qs_darkmode_disabled"
-			android:label="@string/qs_toggle_5g"
-			android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
-			android:enabled="false">
-			<intent-filter>
-				<action android:name="android.service.quicksettings.action.QS_TILE" />
-			</intent-filter>
-		</service>
-
 		<provider
 			android:name=".SharedPrefsProvider"
 			android:authorities="name.mikanoshi.customiuizer.provider.sharedprefs"

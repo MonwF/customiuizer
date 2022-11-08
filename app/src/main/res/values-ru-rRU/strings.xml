@@ -264,8 +264,6 @@
     <string name="support_donate_summ">Лучший способ выразить признательность за этот замечательный модуль :)</string>
     <string name="support_donate_inapp_title">В приложении</string>
     <string name="support_donate_inapp_summ">Пусть всё делает Google</string>
-    <string name="support_donate_crypto_title">Криптовалюты</string>
-    <string name="support_donate_crypto_summ">Деньги будущего :)</string>
     <string name="support_donate_other_title">Устаревшие валюты</string>
     <string name="donate_level1">Спасибо за пожертвование!</string>
     <string name="donate_level2">Спасибо за щедрое пожертвование!</string>

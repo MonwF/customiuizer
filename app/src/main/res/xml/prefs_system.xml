@@ -753,7 +753,6 @@
 			android:title="@string/system_fivegtile_title"
 			android:summary="@string/system_fivegtile_summ"
 			android:defaultValue="false"
-			app:isPreferenceVisible="false"
 			/>
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
