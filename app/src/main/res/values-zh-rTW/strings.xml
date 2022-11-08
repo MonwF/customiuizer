@@ -1046,4 +1046,19 @@
     <string name="wifi_networks">Wi-Fi網路</string>
     <string name="xposed_not_found">未找到Xposed應用</string>
     <string name="xposed_not_found_explain">"您似乎沒有安裝Xposed Framework。\n\n請注意，模組僅適用於Xposed！"</string>
+
+    <string name="array_current">僅電流</string>
+    <string name="array_temperature">僅溫度</string>
+    <string name="system_lockscreenshortcuts_left_tapaction_title">點選左側圖示時切換手電筒</string>
+    <string name="system_statusbar_batterytempandcurrent_content_title">顯示內容</string>
+    <string name="system_statusbar_batterytempandcurrent_title">顯示電池溫度和電流</string>
+    <string name="system_statusbar_batterytempandcurrentatright_title">右側顯示</string>
+    <string name="system_statusbar_dualsimin2rows_rightmargin_title">右側間距</string>
+    <string name="system_statusbar_dualsimin2rows_title">雙排訊號欄</string>
+    <string name="system_statusbar_mobiletype_single_leftmargin_title">左側間距</string>
+    <string name="system_statusbar_mobiletype_single_title">行動網路類型單獨顯示</string>
+    <string name="system_statusbaricons_atright_summ">僅針對中置挖孔屏</string>
+    <string name="system_statusbaricons_atright_title">系統圖示移至右側顯示</string>
+    <string name="system_statusbaricons_volte_title">HD圖示</string>
+    <string name="system_statusbaricons_wifistandard_title">顯示Wi-Fi標準</string>
 </resources>
