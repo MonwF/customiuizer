@@ -260,7 +260,7 @@
     <string name="support_bug_title">Сообщить об ошибке</string>
     <string name="support_bug_summ">Отправить сообщение об ошибке или предложить новую фичу</string>
     <string name="support_donate">Задонатить $%1$d</string>
-    <string name="support_donate_title">Пожертвования</string>
+    <string name="support_donate_title">Пожертвования Mikanoshi</string>
     <string name="support_donate_summ">Лучший способ выразить признательность за этот замечательный модуль :)</string>
     <string name="support_donate_inapp_title">В приложении</string>
     <string name="support_donate_inapp_summ">Пусть всё делает Google</string>

@@ -260,10 +260,10 @@ public class MainFragment extends PreferenceFragmentBase {
 		listView = getListView();
 		final Activity act = getActivity();
 
-		PreferenceEx warning = findPreference("pref_key_warning");
-		if (warning != null) {
-			getPreferenceScreen().removePreference(warning);
-		}
+//		PreferenceEx warning = findPreference("pref_key_warning");
+//		if (warning != null) {
+//			getPreferenceScreen().removePreference(warning);
+//		}
 
 		findPreference("pref_key_miuizer_launchericon").setOnPreferenceChangeListener(new CheckBoxPreference.OnPreferenceChangeListener() {
 			@Override
@@ -322,7 +322,6 @@ public class MainFragment extends PreferenceFragmentBase {
 
 		findPreference("pref_key_github").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
-			@SuppressWarnings("deprecation")
 			public boolean onPreferenceClick(Preference pref) {
 				Configuration config = act.getResources().getConfiguration();
 				if (config.getLocales().get(0).getLanguage() == "zh") {
@@ -334,6 +333,19 @@ public class MainFragment extends PreferenceFragmentBase {
 				return true;
 			}
 		});
+
+		PreferenceEx releasesEntry = findPreference("pref_key_releases");
+		Configuration config = act.getResources().getConfiguration();
+		if (config.getLocales().get(0).getCountry().equals("CN")) {
+			releasesEntry.setVisible(true);
+			releasesEntry.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+				@Override
+				public boolean onPreferenceClick(Preference pref) {
+					Helpers.openURL(act, "https://tpsx.lanzouv.com/b021ly4gj");
+					return true;
+				}
+			});
+		}
 	}
 
 	void findMod(String filter) {
