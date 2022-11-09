@@ -441,7 +441,7 @@
     <string name="poco_mods">POCO桌面</string>
     <string name="prefs_migration_failure">模組設置無法遷移到EdXposed新版本。您必須使用恢復功能或從頭開始配置模組。</string>
     <string name="prefs_migration_success">模組設置已經成功遷移到EdXposed新版本。請重新啟動應用更改。</string>
-    <string name="qs_toggle_5g">5G開關</string>
+    <string name="qs_toggle_5g">5G網路</string>
     <string name="qs_toggle_autorotate">旋轉鎖定</string>
     <string name="qs_toggle_autorotate_landscape">橫屏</string>
     <string name="qs_toggle_autorotate_off">無限制</string>

@@ -50,30 +50,20 @@ public class PackagePermissions {
 
 		// Allow signature level permissions for module
 		Helpers.hookAllMethods("com.android.server.pm.permission.PermissionManagerService", lpparam.classLoader, "shouldGrantPermissionBySignature",
-				new MethodHook() {
-					@Override
-					protected void before(MethodHookParam param) throws Throwable {
-						String pkgName = (String)XposedHelpers.getObjectField(param.args[0], "packageName");
-						if (systemPackages.contains(pkgName)) param.setResult(true);
-					}
+			new MethodHook() {
+				@Override
+				protected void before(MethodHookParam param) throws Throwable {
+					String pkgName = (String)XposedHelpers.getObjectField(param.args[0], "packageName");
+					if (systemPackages.contains(pkgName)) param.setResult(true);
 				}
+			}
 		);
 
-		if (!Helpers.findAndHookMethodSilently("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "verifySignatures",
-			"com.android.server.pm.PackageSetting", "com.android.server.pm.PackageSetting", "android.content.pm.PackageParser.SigningDetails", boolean.class, boolean.class, boolean.class,
+		Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "verifySignatures",
 			new MethodHook() {
 				@Override
 				protected void before(MethodHookParam param) throws Throwable {
 					String pkgName = (String)XposedHelpers.getObjectField(param.args[0], "name");
-					if (systemPackages.contains(pkgName)) param.setResult(true);
-				}
-			}
-		)) Helpers.findAndHookMethod("com.android.server.pm.PackageManagerService", lpparam.classLoader, "verifySignaturesLP",
-			"com.android.server.pm.PackageSetting", "android.content.pm.PackageParser.Package",
-			new MethodHook() {
-				@Override
-				protected void before(MethodHookParam param) throws Throwable {
-					String pkgName = (String)XposedHelpers.getObjectField(param.args[1], "packageName");
 					if (systemPackages.contains(pkgName)) param.setResult(true);
 				}
 			}
@@ -124,10 +114,11 @@ public class PackagePermissions {
 			@SuppressWarnings("unchecked")
 			protected void after(MethodHookParam param) throws Throwable {
 				List<ResolveInfo> infos = (List<ResolveInfo>)param.getResult();
-				if (infos != null)
-				for (ResolveInfo info: infos)
-				if (info != null && info.activityInfo != null && systemPackages.contains(info.activityInfo.packageName))
-				XposedHelpers.setObjectField(info, "system", true);
+				if (infos != null) {
+					for (ResolveInfo info: infos)
+						if (info != null && info.activityInfo != null && systemPackages.contains(info.activityInfo.packageName))
+							XposedHelpers.setObjectField(info, "system", true);
+				}
 			}
 		});
 

@@ -83,7 +83,7 @@ public class GlobalActions {
 		if (action <= 1) return false;
 		if (action >= 85 && action <= 88) {
 			if (GlobalActions.isMediaActionsAllowed(context))
-			GlobalActions.sendDownUpKeyEvent(context, action, false);
+				GlobalActions.sendDownUpKeyEvent(context, action, false);
 			return true;
 		}
 		switch (action) {
