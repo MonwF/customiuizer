@@ -5314,6 +5314,42 @@ public class System {
         }
     }
 
+    public static void StatusBarClockAtRightHook(LoadPackageParam lpparam) {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView", lpparam.classLoader, "onFinishInflate", new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                FrameLayout sbView = (FrameLayout) param.thisObject;
+                Context mContext = sbView.getContext();
+                Resources res = mContext.getResources();
+                TextView mClockView = (TextView) XposedHelpers.getObjectField(param.thisObject, "mMiuiClock");
+                ((ViewGroup)mClockView.getParent()).removeView(mClockView);
+                int contentId = res.getIdentifier("status_bar_contents", "id", lpparam.packageName);
+                LinearLayout mContentsContainer = sbView.findViewById(contentId);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                int leftMargin = MainModule.mPrefs.getInt("system_statusbar_clock_leftmargin", 6);
+                lp.leftMargin = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    leftMargin * 0.5f,
+                    res.getDisplayMetrics()
+                );
+                mContentsContainer.addView(mClockView, lp);
+            }
+        });
+
+        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView", lpparam.classLoader, "updateCutoutLocation", new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                int mCurrentStatusBarType = (int) XposedHelpers.getObjectField(param.thisObject, "mCurrentStatusBarType");
+                if (mCurrentStatusBarType == 0) {
+                    View mSystemIconArea = (View) XposedHelpers.getObjectField(param.thisObject, "mSystemIconArea");
+                    LinearLayout.LayoutParams mSystemIconAreaLp = (LinearLayout.LayoutParams) mSystemIconArea.getLayoutParams();
+                    mSystemIconAreaLp.width = 0;
+                    mSystemIconAreaLp.weight = 1.0f;
+                }
+            }
+        });
+    }
+
     private static final TextView[] lux = { null, null, null };
     private static class LuxListener implements SensorEventListener {
         @Override
