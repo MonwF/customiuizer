@@ -1041,8 +1041,9 @@
     <string name="various_runningservices_title">正在运行的服务</string>
     <string name="system_statusbar_dttosleep_title">双击锁屏</string>
     <string name="system_statusbaricons_atright_title">系统图标移至右侧显示</string>
-    <string name="system_statusbaricons_atright_summ">仅针对中置挖孔屏</string>
+    <string name="system_statusbaricons_atright_summ">部分针对中置挖孔屏</string>
     <string name="system_statusbaricons_netspeed_title">网速</string>
+    <string name="system_statusbaricons_clock_title">时钟</string>
     <string name="system_statusbar_batterytempandcurrent_title">显示电池温度和电流</string>
     <string name="system_statusbar_batterytempandcurrent_content_title">显示内容</string>
     <string name="array_temperature">仅温度</string>
