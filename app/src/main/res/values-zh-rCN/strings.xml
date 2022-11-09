@@ -870,8 +870,9 @@
     <string name="miuizer_acramail_title">联系信息</string>
     <string name="miuizer_acramail_tip">如果您希望收到对崩溃报告的回复，此项当然是必填的。请使用电子邮箱、ICQ、XDA或者4PDA的昵称。</string>
     <string name="support">支持</string>
-    <string name="support_github">Github 仓库</string>
+    <string name="support_github">代码仓库</string>
     <string name="support_releases_title">版本下载</string>
+    <string name="support_releases_summ">蓝奏云盘密码: miui</string>
     <string name="support_repo_title">原始CustoMIUIzer仓库</string>
     <string name="support_repo_summ">包含模块源码和分发的Git存储库</string>
     <string name="support_xda_title">XDA帖子</string>
@@ -881,7 +882,7 @@
     <string name="support_bug_title">报告错误</string>
     <string name="support_bug_summ">通过官方问题跟踪器向我们发送错误报告或者功能请求</string>
     <string name="support_donate">捐出$%1$d</string>
-    <string name="support_donate_title">捐赠</string>
+    <string name="support_donate_title">捐赠 Mikanoshi</string>
     <string name="support_donate_summ">表达您对这个高大上模块感激之情的最好方式 :)</string>
     <string name="support_donate_inapp_title">应用内</string>
     <string name="support_donate_inapp_summ">由Google处理</string>

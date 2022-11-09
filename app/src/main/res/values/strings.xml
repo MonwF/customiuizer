@@ -949,6 +949,7 @@
     <string name="support">Support</string>
     <string name="support_github">Github repo</string>
     <string name="support_releases_title">Releases</string>
+    <string name="support_releases_summ">Github Releases</string>
     <string name="support_repo_title">Mikanoshi\'s CustoMIUIzer repo</string>
     <string name="support_repo_summ">Git repository with module sources and distributions</string>
     <string name="support_xda_title">XDA thread</string>
@@ -959,7 +960,7 @@
     <string name="support_bug_title">Report a bug</string>
     <string name="support_bug_summ">Send us a bug report or a feature request via official issue tracker</string>
     <string name="support_donate">Donate $%1$d</string>
-    <string name="support_donate_title">Donate</string>
+    <string name="support_donate_title">Donate Mikanoshi</string>
     <string name="support_donate_summ">Best way to express your gratitude for this awesome module :)</string>
     <string name="support_donate_inapp_title">In-app</string>
     <string name="support_donate_inapp_summ">Let Google handle everything</string>
