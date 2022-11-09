@@ -8378,7 +8378,9 @@ public class System {
                 if (customName != null) {
                     String tileName = (String) customName;
                     if ("custom_5G".equals(tileName)) {
-                        param.setResult("5G");
+                        Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
+                        Resources modRes = Helpers.getModuleRes(mContext);
+                        param.setResult(modRes.getString(R.string.qs_toggle_5g));
                     }
                 }
             }
@@ -8408,9 +8410,7 @@ public class System {
                             mContext.getContentResolver().unregisterContentObserver(contentObserver);
                         }
                     }
-                    else {
-                        param.setResult(null);
-                    }
+                    param.setResult(null);
                 }
             }
         });
@@ -8442,17 +8442,6 @@ public class System {
                         TelephonyManager manager = TelephonyManager.getDefault();
                         manager.setUserFiveGEnabled(!manager.isUserFiveGEnabled());
                     }
-                    else {
-                        param.setResult(null);
-                    }
-                }
-            }
-        });
-        Helpers.findAndHookMethod("com.android.systemui.qs.tiles.NfcTile", lpparam.classLoader, "getAdapter", new MethodHook() {
-            @Override
-            protected void before(MethodHookParam param) throws Throwable {
-                Object customName = XposedHelpers.getAdditionalInstanceField(param.thisObject, "customName");
-                if (customName != null) {
                     param.setResult(null);
                 }
             }
@@ -8472,8 +8461,9 @@ public class System {
                         boolean isEnable = manager.isUserFiveGEnabled();
                         XposedHelpers.setObjectField(booleanState, "value", isEnable);
                         XposedHelpers.setObjectField(booleanState, "state", isEnable ? 2 : 1);
-                        XposedHelpers.setObjectField(booleanState, "label", "5G");
-                        XposedHelpers.setObjectField(booleanState, "contentDescription", "5G");
+                        String tileLabel = (String) XposedHelpers.callMethod(param.thisObject, "getTileLabel");
+                        XposedHelpers.setObjectField(booleanState, "label", tileLabel);
+                        XposedHelpers.setObjectField(booleanState, "contentDescription", tileLabel);
                         XposedHelpers.setObjectField(booleanState, "expandedAccessibilityClassName", Switch.class.getName());
                         Object mIcon = XposedHelpers.callStaticMethod(ResourceIconClass, "get", isEnable ? fiveGIconResId : fiveGIconOffResId);
                         XposedHelpers.setObjectField(booleanState, "icon", mIcon);

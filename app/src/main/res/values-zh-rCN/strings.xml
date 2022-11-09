@@ -850,7 +850,7 @@
     <string name="qs_toggle_autorotate_off">无限制</string>
     <string name="qs_toggle_autorotate_portrait">竖屏</string>
     <string name="qs_toggle_autorotate_landscape">横屏</string>
-    <string name="qs_toggle_5g">5G开关</string>
+    <string name="qs_toggle_5g">5G网络</string>
     <string name="miuizer">CustoMIUIzer设置</string>
     <string name="miuizer_show_newmods_title">标记新模块</string>
     <string name="miuizer_show_newmods_summ">添加到当前版本中的模块在标题处显示\"新!\"标签</string>

@@ -921,7 +921,7 @@
     <string name="qs_toggle_autorotate_off">Unrestricted</string>
     <string name="qs_toggle_autorotate_portrait">Portrait</string>
     <string name="qs_toggle_autorotate_landscape">Landscape</string>
-    <string name="qs_toggle_5g">5G</string>
+    <string name="qs_toggle_5g">5G Network</string>
     <string name="qs_toggle_darkmode_noperm">CustoMIUIzer has no permission to change dark mode</string>
 
     <string name="miuizer">CustoMIUIzer settings</string>
