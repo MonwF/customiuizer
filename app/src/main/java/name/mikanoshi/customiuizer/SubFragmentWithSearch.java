@@ -52,7 +52,7 @@ public class SubFragmentWithSearch extends SubFragment {
 			ImageView inputIcon = searchView.findViewById(R.id.inputIcon);
 			inputIcon.setImageResource(getResources().getIdentifier(isNight ? "edit_text_search_dark" : "edit_text_search", "drawable", "miui"));
 			TextView input = searchView.findViewById(android.R.id.input);
-			int fontSize = getResources().getIdentifier(Helpers.is11() ? "edit_text_font_size" : "secondary_text_size", "dimen", "miui");
+			int fontSize = getResources().getIdentifier("edit_text_font_size", "dimen", "miui");
 			input.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(fontSize == 0 ? R.dimen.secondary_text_size : fontSize));
 			input.setHintTextColor(getResources().getColor(getResources().getIdentifier(isNight ? "edit_text_search_hint_color_dark" : "edit_text_search_hint_color_light", "color", "miui"), getValidContext().getTheme()));
 		} catch (Throwable t) {
