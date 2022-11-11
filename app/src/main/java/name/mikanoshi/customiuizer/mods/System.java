@@ -146,6 +146,7 @@ import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
@@ -1774,29 +1775,68 @@ public class System {
     }
 
     public static void LockScreenAlbumArtHook(LoadPackageParam lpparam) {
-        String pkgName = lpparam.packageName;
-        String tmpLockScreenFile = "/data/system/theme/art_lockscreen";
-        if (pkgName.equals("com.android.systemui")) {
-            Class<?> WallpaperUtilClass = XposedHelpers.findClassIfExists("com.android.keyguard.wallpaper.KeyguardWallpaperUtils", lpparam.classLoader);
+        Class<?> WallpaperUtilClass = XposedHelpers.findClassIfExists("com.android.keyguard.wallpaper.KeyguardWallpaperUtils", lpparam.classLoader);
+        Class<?> MiuiThemeUtilsClass = XposedHelpers.findClassIfExists("com.miui.systemui.util.MiuiThemeUtils", lpparam.classLoader);
+        final Method isWallpaperLight;
+        Method isWallpaperLight1;
+        try {
+            isWallpaperLight1 = WallpaperUtilClass.getDeclaredMethod("isWallpaperColorLight", Context.class, Rect.class);
+        }
+        catch (NoSuchMethodException e) {
+            isWallpaperLight1 = null;
+            Helpers.log("isWallpaperColorLight not found");
+        }
+        isWallpaperLight = isWallpaperLight1;
+        Helpers.findAndHookMethod(WallpaperUtilClass, "getLockWallpaperPreview", Context.class, new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                Bitmap mAlbumArt = (Bitmap)XposedHelpers.getAdditionalStaticField(WallpaperUtilClass, "mAlbumArt");
+                if (mAlbumArt != null) param.setResult(new BitmapDrawable(((Context)param.args[0]).getResources(), mAlbumArt));
+            }
+        });
 
-            Helpers.findAndHookMethod(WallpaperUtilClass, "getLockWallpaperPreview", Context.class, new MethodHook() {
-                @Override
-                protected void before(MethodHookParam param) throws Throwable {
-                    Bitmap mAlbumArt = (Bitmap)XposedHelpers.getAdditionalStaticField(WallpaperUtilClass, "mAlbumArt");
-                    if (mAlbumArt != null) param.setResult(new BitmapDrawable(((Context)param.args[0]).getResources(), mAlbumArt));
+        final boolean[] isListened = {false};
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController", lpparam.classLoader, "updateThemeBackground", new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                boolean isOnShade = (boolean) XposedHelpers.callMethod(param.thisObject, "isOnShade");
+                View view = (View) XposedHelpers.getObjectField(param.thisObject, "mThemeBackgroundView");
+                if (!isListened[0]) {
+                    isListened[0] = true;
+                    IntentFilter intentFilter = new IntentFilter();
+                    intentFilter.addAction(GlobalActions.EVENT_PREFIX + "UPDATE_LS_ALBUM_ART");
+                    view.getContext().registerReceiver(new BroadcastReceiver() {
+                        @Override
+                        public void onReceive(Context context, Intent intent) {
+                            String action = intent.getAction();
+                            if (action == null) return;
+                            if (action.equals(GlobalActions.EVENT_PREFIX + "UPDATE_LS_ALBUM_ART")) {
+                                XposedHelpers.callMethod(param.thisObject, "updateThemeBackground");
+                            }
+                        }
+                    }, intentFilter);
                 }
-            });
+                if (isOnShade) {
+                    view.setVisibility(View.GONE);
+                }
+                else {
+                    Object mAlbumArt = XposedHelpers.getAdditionalStaticField(WallpaperUtilClass, "mAlbumArt");
+                    if (mAlbumArt != null) {
+                        view.setBackground(new BitmapDrawable(view.getContext().getResources(), (Bitmap) mAlbumArt));
+                        view.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
 
         Helpers.findAndHookMethod("com.android.systemui.statusbar.NotificationMediaManager", lpparam.classLoader, "updateMediaMetaData", boolean.class, boolean.class, new MethodHook() {
             @Override
                 protected void after(MethodHookParam param) throws Throwable {
-                Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-                    if (new File("/data/system/theme/lockscreen").exists()) {
+                    Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+                    boolean isDefaultLockScreenTheme = (boolean) XposedHelpers.callStaticMethod(MiuiThemeUtilsClass, "isDefaultLockScreenTheme");
+                    if (!isDefaultLockScreenTheme) {
                         XposedHelpers.setAdditionalStaticField(WallpaperUtilClass, "mAlbumArtSource", null);
                         XposedHelpers.setAdditionalStaticField(WallpaperUtilClass, "mAlbumArt", null);
-                        Intent saveWallpaper = new Intent("com.miui.miwallpaper.toggleartwallpaper");
-                        saveWallpaper.putExtra("is_save", false);
-                        mContext.sendBroadcast(saveWallpaper);
                         return;
                     }
                     MediaMetadata mMediaMetadata = (MediaMetadata)XposedHelpers.getObjectField(param.thisObject, "mMediaMetadata");
@@ -1813,25 +1853,20 @@ public class System {
                     } catch (Throwable ignore) {}
                     XposedHelpers.setAdditionalStaticField(WallpaperUtilClass, "mAlbumArtSource", art);
 
-                        int blur = Helpers.getSharedIntPref(mContext, "pref_key_system_albumartonlock_blur", 0);
+                    int blur = Helpers.getSharedIntPref(mContext, "pref_key_system_albumartonlock_blur", 0);
                     Bitmap blurArt = processAlbumArt(mContext, art != null && blur > 0 ? Helpers.fastBlur(art, blur + 1) : art);
                     XposedHelpers.setAdditionalStaticField(WallpaperUtilClass, "mAlbumArt", blurArt);
-                    if (blurArt != null) {
-                        FileOutputStream fileOutputStream = new FileOutputStream(tmpLockScreenFile);
-                        blurArt.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
-                        fileOutputStream.close();
-                        File lsFile = new File(tmpLockScreenFile);
-                        lsFile.setReadable(true, false);
-                    }
-//                    Intent saveWallpaper = new Intent("com.miui.miwallpaper.toggleartwallpaper");
-//                    saveWallpaper.putExtra("is_save", blurArt != null);
-//                    mContext.sendBroadcast(saveWallpaper);
-                    Intent setWallpaper = new Intent("com.miui.keyguard.setwallpaper");
-                    setWallpaper.putExtra("set_lock_wallpaper_result", true);
-                    mContext.sendBroadcast(setWallpaper);
+
+                    Intent updateWallpaper = new Intent(GlobalActions.EVENT_PREFIX + "UPDATE_LS_ALBUM_ART");
+                    updateWallpaper.setPackage("com.android.systemui");
+//                    boolean isWallpaperColorLight = false;
+//                    if (isWallpaperLight != null) {
+//                        isWallpaperColorLight = (boolean) isWallpaperLight.invoke(null, mContext, new Rect());
+//                    }
+//                    updateWallpaper.putExtra("is_wallpaper_color_light", isWallpaperColorLight);
+                    mContext.sendBroadcast(updateWallpaper);
                 }
             });
-                }
     }
 
     public static void BetterPopupsHideDelaySysHook() {
