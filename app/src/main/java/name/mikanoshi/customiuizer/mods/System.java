@@ -154,6 +154,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -691,7 +692,7 @@ public class System {
         TextView tv = new TextView(ctx);
         tv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         tv.setText(ctx.getApplicationInfo().loadLabel(ctx.getPackageManager()));
-        tv.setTextColor(Helpers.is11() ? (Helpers.isNightMode(ctx) ? Color.WHITE : Color.BLACK) : Color.WHITE);
+        tv.setTextColor(Helpers.isNightMode(ctx) ? Color.WHITE : Color.BLACK);
         tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, toastText.getTextSize());
         tv.setTypeface(toastText.getTypeface());
         tv.setSingleLine(true);
@@ -3045,7 +3046,7 @@ public class System {
     }
 
     public static void UnblockThirdLaunchersHook(LoadPackageParam lpparam) {
-        String thirdCls = Helpers.is11() ? "com.miui.securitycenter.provider.ThirdMonitorProvider" : "com.miui.securitycenter.provider.ThirdDesktopProvider";
+        String thirdCls = "com.miui.securitycenter.provider.ThirdMonitorProvider";
         Helpers.hookAllMethods(thirdCls, lpparam.classLoader, "call", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
@@ -5276,24 +5277,49 @@ public class System {
             }
         });
 
-        Class <?> MiuiEndIconManager = findClass("com.android.systemui.statusbar.phone.MiuiEndIconManager", lpparam.classLoader);
-        ArrayList<String> rightBlockList = (ArrayList<String>) XposedHelpers.getStaticObjectField(MiuiEndIconManager, "RIGHT_BLOCK_LIST");
-        if (MainModule.mPrefs.getBoolean("system_statusbar_netspeed_atright")) {
-            rightBlockList.remove("network_speed");
-        }
-        if (MainModule.mPrefs.getBoolean("system_statusbar_alarm_atright")) {
-            rightBlockList.remove("alarm_clock");
-        }
-        if (MainModule.mPrefs.getBoolean("system_statusbar_sound_atright")) {
-            rightBlockList.remove("volume");
-        }
-        if (MainModule.mPrefs.getBoolean("system_statusbar_dnd_atright")) {
-            rightBlockList.remove("zen");
-        }
-        if (MainModule.mPrefs.getBoolean("system_statusbar_nfc_atright")) {
-            rightBlockList.remove("nfc");
-        }
-        XposedHelpers.setStaticObjectField(MiuiEndIconManager, "RIGHT_BLOCK_LIST", rightBlockList);
+        final boolean[] isListened = {false};
+        Helpers.findAndHookMethod("com.android.systemui.SystemUIFactory", lpparam.classLoader, "createFromConfig", Context.class, new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                if (!isListened[0]) {
+                    isListened[0] = true;
+                    Context mContext = (Context) param.args[0];
+                    Class <?> MiuiEndIconManager = findClass("com.android.systemui.statusbar.phone.MiuiEndIconManager", lpparam.classLoader);
+                    Object blockList = Helpers.getStaticObjectFieldSilently(MiuiEndIconManager, "RIGHT_BLOCK_LIST");
+                    ArrayList rightBlockList;
+                    Resources res = mContext.getResources();
+                    if (blockList != null) {
+                        rightBlockList = (ArrayList<String>) blockList;
+                    }
+                    else {
+                        int blockResId = res.getIdentifier("config_drip_right_block_statusBarIcons", "array", lpparam.packageName);
+                        rightBlockList = new ArrayList<String>(Arrays.asList(res.getStringArray(blockResId)));
+                    }
+                    if (MainModule.mPrefs.getBoolean("system_statusbar_netspeed_atright")) {
+                        rightBlockList.remove("network_speed");
+                    }
+                    if (MainModule.mPrefs.getBoolean("system_statusbar_alarm_atright")) {
+                        rightBlockList.remove("alarm_clock");
+                    }
+                    if (MainModule.mPrefs.getBoolean("system_statusbar_sound_atright")) {
+                        rightBlockList.remove("volume");
+                    }
+                    if (MainModule.mPrefs.getBoolean("system_statusbar_dnd_atright")) {
+                        rightBlockList.remove("zen");
+                    }
+                    if (MainModule.mPrefs.getBoolean("system_statusbar_nfc_atright")) {
+                        rightBlockList.remove("nfc");
+                    }
+                    if (blockList != null) {
+                        XposedHelpers.setStaticObjectField(MiuiEndIconManager, "RIGHT_BLOCK_LIST", rightBlockList);
+                    }
+                    else {
+                        MainModule.resHooks.setObjectReplacement(lpparam.packageName, "array", "config_drip_right_block_statusBarIcons", rightBlockList.toArray(new String[0]));
+                    }
+                }
+            }
+        });
+
         if (MainModule.mPrefs.getBoolean("system_statusbar_netspeed_atright")) {
             Helpers.hookAllMethods("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView", lpparam.classLoader, "updateCutoutLocation", new MethodHook() {
                 @Override

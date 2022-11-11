@@ -67,10 +67,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -195,7 +193,7 @@ public class Helpers {
 	}
 
 	public static void setMiuiPrefItem(View item) {
-		item.setBackgroundResource(is11() ? R.drawable.list_item_bg : R.drawable.am_list_item_background);
+		item.setBackgroundResource(R.drawable.list_item_bg);
 		TextView title = item.findViewById(android.R.id.title);
 		if (is12()) {
 			int resId = item.getResources().getIdentifier("preference_item_bg", "drawable", "miui");
@@ -229,10 +227,6 @@ public class Helpers {
 		int paddingTop = resIdTop == 0 ? item.getPaddingTop() : item.getResources().getDimensionPixelSize(resIdTop);
 		int paddingBottom = resIdBottom == 0 ? item.getPaddingBottom() : item.getResources().getDimensionPixelSize(resIdBottom);
 		item.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
-	}
-
-	public static boolean is11() {
-		return true;
 	}
 
 	public static boolean is12() {
@@ -1576,7 +1570,7 @@ public class Helpers {
 	private static String getCallerMethod() {
 		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 		for (StackTraceElement el: stackTrace)
-		if (el != null && el.getClassName().startsWith(modulePackage + ".mods")) return el.getMethodName();
+			if (el != null && el.getClassName().startsWith(modulePackage + ".mods")) return el.getMethodName();
 		return stackTrace[4].getMethodName();
 	}
 
@@ -1733,6 +1727,14 @@ public class Helpers {
 			return hookClass != null && XposedBridge.hookAllMethods(hookClass, methodName, callback).size() > 0;
 		} catch (Throwable t) {
 			return false;
+		}
+	}
+
+	public static Object getStaticObjectFieldSilently(Class <?> clazz, String fieldName) {
+		try {
+			return XposedHelpers.getStaticObjectField(clazz, fieldName);
+		} catch (Throwable t) {
+			return null;
 		}
 	}
 
