@@ -1548,13 +1548,40 @@ public class System {
         Helpers.hookAllConstructors("com.android.server.display.DisplayPowerController", lpparam.classLoader, new MethodHook() {
             @Override
             protected void before(final MethodHookParam param) throws Throwable {
-            Resources res = Resources.getSystem();
-            int minBrightnessLevel = res.getInteger(res.getIdentifier("config_screenBrightnessSettingMinimum", "integer", "android"));
-            int maxBrightnessLevel = res.getInteger(res.getIdentifier("config_screenBrightnessSettingMaximum", "integer", "android"));
-            int backlightBit = res.getInteger(res.getIdentifier("config_backlightBit", "integer", "android.miui"));
-            backlightMaxLevel = (1 << backlightBit) - 1;
-            mMinimumBacklight = (minBrightnessLevel - 1) * 1.0f / (backlightMaxLevel - 1);
-            mMaximumBacklight = (maxBrightnessLevel - 1) * 1.0f / (backlightMaxLevel - 1);
+                Resources res = Resources.getSystem();
+                int minBrightnessLevel = res.getInteger(res.getIdentifier("config_screenBrightnessSettingMinimum", "integer", "android"));
+                int maxBrightnessLevel = res.getInteger(res.getIdentifier("config_screenBrightnessSettingMaximum", "integer", "android"));
+                int backlightBit = res.getInteger(res.getIdentifier("config_backlightBit", "integer", "android.miui"));
+                backlightMaxLevel = (1 << backlightBit) - 1;
+                mMinimumBacklight = (minBrightnessLevel - 1) * 1.0f / (backlightMaxLevel - 1);
+                mMaximumBacklight = (maxBrightnessLevel - 1) * 1.0f / (backlightMaxLevel - 1);
+            }
+            @Override
+            protected void after(final MethodHookParam param) throws Throwable {
+                Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+                Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
+                new Helpers.SharedPrefObserver(mContext, mHandler) {
+                    @Override
+                    public void onChange(Uri uri) {
+                        try {
+                            String type = uri.getPathSegments().get(1);
+                            String key = uri.getPathSegments().get(2);
+                            if (key.contains("pref_key_system_autobrightness_")) {
+                                switch (type) {
+                                    case "integer":
+                                        int defVal = "pref_key_system_autobrightness_min".equals(key) ? 25 : 75;
+                                        MainModule.mPrefs.put(key, Helpers.getSharedIntPref(mContext, key, defVal));
+                                        break;
+                                    case "boolean":
+                                        MainModule.mPrefs.put(key, Helpers.getSharedBoolPref(mContext, key, false));
+                                        break;
+                                }
+                            }
+                        } catch (Throwable t) {
+                            Helpers.log(t);
+                        }
+                    }
+                };
             }
         });
     }
