@@ -7153,8 +7153,19 @@ public class System {
                 XposedHelpers.callStaticMethod(XposedHelpers.findClassIfExists("android.os.SystemProperties", lpparam.classLoader), "set", "debug.hwui.force_dark", "false");
             }
         };
-        Helpers.findAndHookMethod("com.android.server.UiModeManagerService", lpparam.classLoader, "setForceDark", Context.class, hook);
-        Helpers.findAndHookMethod("com.android.server.UiModeManagerService", lpparam.classLoader, "setDarkProp", int.class, int.class, hook);
+        Helpers.findAndHookMethodSilently("com.android.server.UiModeManagerService", lpparam.classLoader, "setForceDark", Context.class, hook);
+        Helpers.findAndHookMethod("com.miui.server.SecurityManagerService", lpparam.classLoader, "getAppDarkModeForUser", String.class, int.class, new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                param.setResult(false);
+            }
+        });
+        Helpers.findAndHookMethod("com.android.server.DarkModeAppSettingsInfo", lpparam.classLoader, "getOverrideEnableValue", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                param.setResult(2);
+            }
+        });
     }
 
     public static void MaxNotificationIconsHook(LoadPackageParam lpparam) {
