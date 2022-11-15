@@ -41,19 +41,17 @@ public class AboutFragment extends SubFragment {
 				return true;
 			}
 		});
-
+		boolean isLangRu = getResources().getConfiguration().locale.getISO3Language().contains("ru");
 		findPreference("pref_key_payother").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
-			@SuppressWarnings("deprecation")
 			public boolean onPreferenceClick(Preference pref) {
-				if (getResources().getConfiguration().locale.getISO3Language().contains("ru"))
+				if (isLangRu)
 					Helpers.openURL(act, "https://mikanoshi.name/donate/");
 				else
 					Helpers.openURL(act, "https://en.mikanoshi.name/donate/");
 				return true;
 			}
 		});
-
 		findPreference("pref_key_xda").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference pref) {
@@ -62,13 +60,17 @@ public class AboutFragment extends SubFragment {
 			}
 		});
 
-		findPreference("pref_key_4pda").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference pref) {
-				Helpers.openURL(act, "https://4pda.ru/forum/index.php?showtopic=945275");
-				return true;
-			}
-		});
+		if (isLangRu) {
+			Preference pref4pda = findPreference("pref_key_4pda");
+			pref4pda.setVisible(true);
+			pref4pda.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+				@Override
+				public boolean onPreferenceClick(Preference pref) {
+					Helpers.openURL(act, "https://4pda.ru/forum/index.php?showtopic=945275");
+					return true;
+				}
+			});
+		}
 
 		//Add version name to support title
 		View view = getView();

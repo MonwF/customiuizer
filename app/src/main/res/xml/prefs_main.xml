@@ -54,13 +54,21 @@
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/support">
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
-			android:title="@string/support_github"
-			android:key="pref_key_github" />
+			android:title="@string/support_contact_title"
+			app:isPreferenceVisible="false"
+			android:key="pref_key_contact" />
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:title="@string/support_releases_title"
 			android:summary="@string/support_releases_summ"
 			app:isPreferenceVisible="false"
 			android:key="pref_key_releases" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/support_github"
+			android:key="pref_key_github" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/support_donate_me_title"
+			app:isPreferenceVisible="false"
+			android:key="pref_key_donate" />
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

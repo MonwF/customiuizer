@@ -4,9 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Layout;
@@ -334,14 +336,37 @@ public class MainFragment extends PreferenceFragmentBase {
 			}
 		});
 
-		PreferenceEx releasesEntry = findPreference("pref_key_releases");
 		Configuration config = act.getResources().getConfiguration();
 		if (config.getLocales().get(0).getCountry().equals("CN")) {
+			PreferenceEx releasesEntry = findPreference("pref_key_releases");
 			releasesEntry.setVisible(true);
 			releasesEntry.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 				@Override
 				public boolean onPreferenceClick(Preference pref) {
 					Helpers.openURL(act, "https://tpsx.lanzouv.com/b021ly4gj");
+					return true;
+				}
+			});
+
+			PreferenceEx contactEntry = findPreference("pref_key_contact");
+			contactEntry.setVisible(true);
+			contactEntry.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+				@Override
+				public boolean onPreferenceClick(Preference pref) {
+					Intent schemeIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("coolmarket://u/217384"))
+						.setPackage("com.coolapk.market");
+					startActivity(schemeIntent);
+					return true;
+				}
+			});
+		}
+		else {
+			PreferenceEx donateEntry = findPreference("pref_key_donate");
+			donateEntry.setVisible(true);
+			donateEntry.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+				@Override
+				public boolean onPreferenceClick(Preference pref) {
+					Helpers.openURL(act, "https://www.paypal.com/paypalme/tpsxj");
 					return true;
 				}
 			});

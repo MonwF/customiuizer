@@ -1,5 +1,6 @@
 <PreferenceScreen
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
@@ -21,6 +22,7 @@
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:title="@string/support_4pda_title"
 			android:summary="@string/support_4pda_summ"
+			app:isPreferenceVisible="false"
 			android:key="pref_key_4pda" />
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
