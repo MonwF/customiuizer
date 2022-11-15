@@ -947,7 +947,8 @@
     <string name="miuizer_acramail_tip">It\'s absolutely necessary to fill this in if you expect to receive replies to your crash reports. Use e-mail, ICQ, XDA or 4PDA nickname.</string>
 
     <string name="support">Support</string>
-    <string name="support_github">Github repo</string>
+    <string name="support_github">Code and Issues</string>
+    <string name="support_contact_title">Contact me</string>
     <string name="support_releases_title">Releases</string>
     <string name="support_releases_summ">Github Releases</string>
     <string name="support_repo_title">Mikanoshi\'s CustoMIUIzer repo</string>
@@ -960,6 +961,7 @@
     <string name="support_bug_title">Report a bug</string>
     <string name="support_bug_summ">Send us a bug report or a feature request via official issue tracker</string>
     <string name="support_donate">Donate $%1$d</string>
+    <string name="support_donate_me_title">Donate via PayPal</string>
     <string name="support_donate_title">Donate Mikanoshi</string>
     <string name="support_donate_summ">Best way to express your gratitude for this awesome module :)</string>
     <string name="support_donate_inapp_title">In-app</string>
