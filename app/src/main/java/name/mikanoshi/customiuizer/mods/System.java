@@ -7540,6 +7540,7 @@ public class System {
         final List<String> fwBlackList = new ArrayList<String>();
         fwBlackList.add("com.miui.securitycenter");
         fwBlackList.add("com.miui.home");
+        fwBlackList.add("com.android.camera");
         Class<?> MiuiMultiWindowUtils = findClass("android.util.MiuiMultiWindowUtils", lpparam.classLoader);
         Helpers.hookAllMethods("com.android.server.wm.ActivityStarterInjector", lpparam.classLoader, "modifyLaunchActivityOptionIfNeed", new MethodHook() {
             @Override
