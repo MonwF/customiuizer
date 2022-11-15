@@ -6206,12 +6206,17 @@ public class System {
     }
 
     @SuppressWarnings("ConstantConditions")
-    private static void hookUpdateTime(Object thisObject) {
+    private static void hookUpdateTime(Object thisObject, boolean isSingle) {
         try {
             TextView mCurrentDate = null;
             TextView mCurrentDateLarge = null;
-            try { mCurrentDate = (TextView)XposedHelpers.getObjectField(thisObject, "mCurrentDate"); } catch (Throwable ignore) {}
-            try { mCurrentDateLarge = (TextView)XposedHelpers.getObjectField(thisObject, "mCurrentDateLarge"); } catch (Throwable ignore) {}
+            if (isSingle) {
+                try { mCurrentDate = (TextView)XposedHelpers.getObjectField(thisObject, "mCurrentDate"); } catch (Throwable ignore) {}
+                try { mCurrentDateLarge = (TextView)XposedHelpers.getObjectField(thisObject, "mCurrentDateLarge"); } catch (Throwable ignore) {}
+            }
+            else {
+                try { mCurrentDate = (TextView)XposedHelpers.getObjectField(thisObject, "mLocalDate"); } catch (Throwable ignore) {}
+            }
             if (mCurrentDate == null && mCurrentDateLarge == null) return;
             Context mContext = mCurrentDate != null ? mCurrentDate.getContext() : mCurrentDateLarge.getContext();
 
@@ -6235,12 +6240,14 @@ public class System {
                 timeStr.setCharAt(0, Character.toLowerCase(timeStr.charAt(0)));
                 alarmStr.append(format == 3 ? " (" + timeStr + ")" : timeStr);
             }
-            int pos = Settings.System.getInt(mContext.getContentResolver(), "selected_keyguard_clock_position", 0);
             if (mCurrentDate != null) {
                 mCurrentDate.setTextAlignment(View.TEXT_ALIGNMENT_INHERIT);
                 mCurrentDate.setLineSpacing(0, 1.5f);
                 mCurrentDate.append(alarmStr);
-                if (pos != 2 && pos != 4) mCurrentDate.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                if (isSingle) {
+                    int pos = Settings.System.getInt(mContext.getContentResolver(), "selected_keyguard_clock_position", 0);
+                    if (pos != 2 && pos != 4) mCurrentDate.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                }
             }
             if (mCurrentDateLarge != null) {
                 int resId = mCurrentDateLarge.getResources().getIdentifier("miui_clock_date_text_size", "dimen", "com.android.systemui");
@@ -6280,7 +6287,14 @@ public class System {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 Object mMiuiBaseClock = XposedHelpers.getObjectField(param.thisObject, "mMiuiBaseClock");
-                if (mMiuiBaseClock != null) hookUpdateTime(mMiuiBaseClock);
+                if (mMiuiBaseClock != null) hookUpdateTime(mMiuiBaseClock, true);
+            }
+        });
+        Helpers.findAndHookMethod("com.android.keyguard.clock.MiuiKeyguardDualClock", lpparam.classLoader, "updateTime", new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                Object mMiuiDualClock = XposedHelpers.getObjectField(param.thisObject, "mMiuiDualClock");
+                if (mMiuiDualClock != null) hookUpdateTime(mMiuiDualClock, false);
             }
         });
     }
