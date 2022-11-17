@@ -13,6 +13,7 @@
 	<declare-styleable name="PreferenceEx">
 		<attr name="dynamic" />
 		<attr name="child" />
+		<attr name="longClickable" format="boolean" />
 		<attr name="warning" format="boolean" />
 		<attr name="notice" format="boolean" />
 		<attr name="countAsSummary" format="boolean" />

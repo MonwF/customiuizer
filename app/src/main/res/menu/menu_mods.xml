@@ -31,4 +31,8 @@
 		android:id="@+id/about"
 		android:title="@string/app_about"
 		app:showAsAction="never" />
+	<item
+		android:id="@+id/openinweb"
+		app:showAsAction="never"
+		android:title="@string/open_inweb" />
 </menu>

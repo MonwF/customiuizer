@@ -13,6 +13,7 @@
 		<item name="colorAccent">@color/highlight_normal_light</item>
 		<item name="colorControlActivated">@color/highlight_normal_light</item>
 		<item name="preferenceTheme">@style/AppPreferenceTheme</item>
+		<item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item>
 	</style>
 	<style name="AppSpinnerStyle" parent="@style/Widget.AppCompat.Spinner.DropDown">
 		<item name="overlapAnchor">false</item>
@@ -27,12 +28,17 @@
 		<item name="android:activityCloseEnterAnimation">@anim/activity_close_enter</item>
 		<item name="android:activityCloseExitAnimation">@anim/activity_close_exit</item>
 	</style>
-	<style name="AppToolbarStyle" parent="ThemeOverlay.AppCompat.DayNight.ActionBar"></style>
+	<style name="AppToolbarStyle" parent="ThemeOverlay.AppCompat.DayNight.ActionBar">
+
+	</style>
 	<style name="AppPreferenceTheme" parent="@style/PreferenceThemeOverlay.v14.Material">
 		<item name="preferenceFragmentCompatStyle">@style/AppPreferenceFragmentCompatStyle</item>
 	</style>
 	<style name="AppPreferenceFragmentCompatStyle" parent="@style/PreferenceFragment.Material">
 		<item name="android:layout">@layout/prefs_fragment_base</item>
+	</style>
+	<style name="OverflowMenuStyle" parent="@style/Widget.AppCompat.PopupMenu.Overflow">
+		<item name="android:overlapAnchor">false</item>
 	</style>
 
 	<style name="Invisible" parent="@android:style/Theme.Translucent">

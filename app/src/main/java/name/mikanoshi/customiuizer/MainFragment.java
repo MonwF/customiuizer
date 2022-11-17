@@ -26,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -340,10 +341,19 @@ public class MainFragment extends PreferenceFragmentBase {
 		if (config.getLocales().get(0).getCountry().equals("CN")) {
 			PreferenceEx releasesEntry = findPreference("pref_key_releases");
 			releasesEntry.setVisible(true);
+			String releasesUrl = "https://tpsx.lanzouv.com/b021ly4gj";
+			releasesEntry.setLongPressListener(new View.OnLongClickListener() {
+				@Override
+				public boolean onLongClick(View v) {
+					Helpers.copyToClipboard(getValidContext(), releasesUrl);
+					Toast.makeText(getValidContext(), "链接已复制", Toast.LENGTH_SHORT).show();
+					return true;
+				}
+			});
 			releasesEntry.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 				@Override
 				public boolean onPreferenceClick(Preference pref) {
-					Helpers.openURL(act, "https://tpsx.lanzouv.com/b021ly4gj");
+					openWebPage(releasesUrl);
 					return true;
 				}
 			});
