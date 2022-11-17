@@ -5,6 +5,8 @@ import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.Application;
 import android.app.admin.DevicePolicyManager;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -106,6 +108,7 @@ public class Helpers {
 	public static Context mModuleContext = null;
 	public static final String modulePkg = BuildConfig.APPLICATION_ID;
 	public static final String modulePackage = "name.mikanoshi.customiuizer";
+	public static final String TAG = "CustoMIUIzer";
 	public static final String prefsName = "customiuizer_prefs";
 	public static final String prefsPath = "/data/user_de/0/" + modulePkg + "/shared_prefs";
 	public static final String prefsFile = prefsPath + "/" + prefsName + ".xml";
@@ -1240,6 +1243,12 @@ public class Helpers {
 		else if (new File("/data/cache").canWrite()) return "/data/cache/" + filename;
 		else if (new File("/data/tmp").canWrite()) return "/data/tmp/" + filename;
 		else return null;
+	}
+
+	public static void copyToClipboard(Context context, String text) {
+		ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+		ClipData mClipData = ClipData.newPlainText("", text);
+		clipboard.setPrimaryClip(mClipData);
 	}
 
 	public static boolean copyFile(String from, String to) {

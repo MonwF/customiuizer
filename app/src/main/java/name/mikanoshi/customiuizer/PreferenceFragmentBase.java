@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.Set;
 
 import name.mikanoshi.customiuizer.mods.GlobalActions;
+import name.mikanoshi.customiuizer.subs.WebPage;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class PreferenceFragmentBase extends PreferenceFragmentCompat {
@@ -45,6 +46,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
     public boolean isCustomActionBar = false;
     protected int headLayoutId = 0;
     protected int tailLayoutId = 0;
+    protected String pageUrl;
 
     protected ActionBar getActionBar() {
         AppCompatActivity act = (AppCompatActivity) getActivity();
@@ -57,15 +59,27 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
         }
         if (isCustomActionBar) {
             MenuItem item;
+            boolean webPage = this instanceof WebPage;
             for (int i = 0; i < menu.size(); i++) {
                 item = menu.getItem(i);
-                item.setVisible(item.getItemId() == R.id.edit_confirm);
+                if (webPage) {
+                    item.setVisible(item.getItemId() == R.id.openinweb);
+                }
+                else {
+                    item.setVisible(item.getItemId() == R.id.edit_confirm);
+                }
             }
-            MenuItem confirmMenu = menu.findItem(R.id.edit_confirm);
-            int applyResId = getResources().getIdentifier(Helpers.isNightMode(getValidContext()) ? "action_mode_title_button_confirm_dark" : "action_mode_title_button_confirm_light", "drawable", "miui");
-            if (applyResId == 0)
-                applyResId = getResources().getIdentifier(Helpers.isNightMode(getValidContext()) ? "action_mode_immersion_done_dark" : "action_mode_immersion_done_light", "drawable", "miui");
-            confirmMenu.setIcon(applyResId);
+            if (!webPage) {
+                MenuItem confirmMenu = menu.findItem(R.id.edit_confirm);
+                int applyResId = getResources().getIdentifier(Helpers.isNightMode(getValidContext()) ? "action_mode_title_button_confirm_dark" : "action_mode_title_button_confirm_light", "drawable", "miui");
+                if (applyResId == 0)
+                    applyResId = getResources().getIdentifier(Helpers.isNightMode(getValidContext()) ? "action_mode_immersion_done_dark" : "action_mode_immersion_done_light", "drawable", "miui");
+                confirmMenu.setIcon(applyResId);
+            }
+        }
+        else {
+            MenuItem openInWebMenu = menu.findItem(R.id.openinweb);
+            openInWebMenu.setVisible(false);
         }
     }
 
@@ -92,6 +106,9 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
                 return true;
             case R.id.backuprestore:
                 showBackupRestoreDialog();
+                return true;
+            case R.id.openinweb:
+                Helpers.openURL(getValidContext(), pageUrl);
                 return true;
             case R.id.softreboot:
                 if (!Helpers.miuizerModuleActive) {
@@ -203,6 +220,12 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
             fixStubLayout(renderView, 2);
         }
         initFragment();
+    }
+
+    public void openWebPage(String url) {
+        Bundle args = new Bundle();
+        args.putString("pageUrl", url);
+        openSubFragment(new WebPage(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.Edit, "", R.layout.fragment_webpage);
     }
 
     public void openSubFragment(Fragment fragment, Bundle args, Helpers.SettingsType settingsType, Helpers.ActionBarType abType, int titleResId, int contentResId) {

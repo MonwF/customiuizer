@@ -111,19 +111,6 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	@Override
-	public void onBackPressed() {
-		Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-		if (fragment == null) {
-			super.onBackPressed();
-			return;
-		}
-		if (fragment instanceof SubFragment)
-			((SubFragment)fragment).finish();
-		else
-			super.onBackPressed();
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
 			Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);

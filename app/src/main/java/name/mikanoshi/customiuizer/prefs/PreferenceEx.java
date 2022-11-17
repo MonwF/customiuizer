@@ -28,10 +28,12 @@ public class PreferenceEx extends Preference implements PreferenceState {
 	private final boolean dynamic;
 	private final boolean warning;
 	private final boolean countAsSummary;
+	private final boolean longClickable;
 	private String customSummary = null;
 	private boolean notice;
 	private boolean newmod = false;
 	private boolean unsupported = false;
+	View.OnLongClickListener longPressListener;
 
 	public PreferenceEx(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -41,6 +43,7 @@ public class PreferenceEx extends Preference implements PreferenceState {
 		warning = xmlAttrs.getBoolean(R.styleable.PreferenceEx_warning, false);
 		notice = xmlAttrs.getBoolean(R.styleable.PreferenceEx_notice, false);
 		countAsSummary = xmlAttrs.getBoolean(R.styleable.PreferenceEx_countAsSummary, false);
+		longClickable = xmlAttrs.getBoolean(R.styleable.PreferenceEx_longClickable, false);
 		xmlAttrs.recycle();
 		setIconSpaceReserved(false);
 	}
@@ -72,6 +75,21 @@ public class PreferenceEx extends Preference implements PreferenceState {
 		} catch (Throwable ignore) {}
 		int hrzPadding = childpadding + (child ? childpadding : 0);
 		finalView.setPadding(hrzPadding, 0, childpadding, 0);
+		if (longClickable) {
+			finalView.setOnLongClickListener(new View.OnLongClickListener() {
+				@Override
+				public boolean onLongClick(View v) {
+					if (longPressListener != null) {
+						return longPressListener.onLongClick(finalView);
+					}
+					return false;
+				}
+			});
+		}
+	}
+
+	public void setLongPressListener(View.OnLongClickListener ll) {
+		longPressListener = ll;
 	}
 
 	public void setCustomSummary(String text) {

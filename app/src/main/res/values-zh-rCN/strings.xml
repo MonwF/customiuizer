@@ -873,7 +873,7 @@
     <string name="support_github">代码仓库</string>
     <string name="support_contact_title">酷安 @tpsxx</string>
     <string name="support_releases_title">版本下载</string>
-    <string name="support_releases_summ">蓝奏云盘密码: miui</string>
+    <string name="support_releases_summ">云盘密码: miui，可长按复制链接</string>
     <string name="support_repo_title">原始CustoMIUIzer仓库</string>
     <string name="support_repo_summ">包含模块源码和分发的Git存储库</string>
     <string name="support_xda_title">XDA帖子</string>
@@ -921,6 +921,7 @@
     <string name="soft_reboot">软重启</string>
     <string name="soft_reboot_ask">现在执行软重启吗？</string>
     <string name="restart_launcher">重启桌面</string>
+    <string name="open_inweb">在浏览器中打开</string>
     <string name="backup_restore">设置管理</string>
     <string name="backup_restore_choose">请选择所需操作</string>
     <string name="do_backup">备份</string>
