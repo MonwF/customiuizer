@@ -1650,21 +1650,19 @@ public class System {
                 TextView meter = (TextView)param.thisObject;
                 float density = meter.getResources().getDisplayMetrics().density;
                 int font = Integer.parseInt(MainModule.mPrefs.getString("system_detailednetspeed_font", "3"));
-                int icons = Integer.parseInt(MainModule.mPrefs.getString("system_detailednetspeed_icon", "2"));
                 float size = 8.0f;
-                float spacing = 0.7f;
+                float spacing = 0.9f;
                 int top = 0;
                 switch (font) {
-                    case 1: size = 10.0f; spacing = 0.75f; top = Math.round(density); break;
-                    case 2: size = 9.0f; break;
-                    case 3: size = 8.0f; break;
-                    case 4: size = 7.0f; break;
+                    case 1: size = 9f; spacing = 0.85f; top = Math.round(density);break;
+                    case 2: size = 8.5f; break;
+                    case 4: size = 7.5f; break;
                 }
                 meter.setTextSize(TypedValue.COMPLEX_UNIT_DIP, size);
                 meter.setSingleLine(false);
                 meter.setLines(2);
                 meter.setMaxLines(2);
-                meter.setLineSpacing(0, icons == 1 ? 0.85f : spacing);
+                meter.setLineSpacing(0, spacing);
                 meter.setPadding(Math.round(meter.getPaddingLeft() + 3 * density), meter.getPaddingTop() - top, meter.getPaddingRight(), meter.getPaddingBottom());
             }
         });
@@ -5182,10 +5180,12 @@ public class System {
         batteryView.setTextAppearance(styleId);
         int opt = MainModule.mPrefs.getStringAsInt("system_statusbar_batterytempandcurrent_content", 1);
         if (opt == 1) {
-            batteryView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 8f);
+            batteryView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 8.5f);
+            batteryView.setLineSpacing(0, 0.9f);
         }
         else {
             batteryView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13.45f);
+            batteryView.setLineSpacing(0, 1.0f);
         }
         batteryView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         int horizonMargin = (int) TypedValue.applyDimension(
@@ -5258,7 +5258,6 @@ public class System {
                     Object iconController = XposedHelpers.getObjectField(param.thisObject, "mStatusBarIconController");
                     int slotIndex = (int) XposedHelpers.callMethod(iconController, "getSlotIndex", "battery_detail");
                     Object iconHolder = XposedHelpers.callMethod(iconController, "getIcon", slotIndex, 0);
-                    Helpers.log("iconController is : " + (iconHolder == null));
                     if (iconHolder == null) {
                         iconHolder = XposedHelpers.newInstance(StatusBarIconHolder);
                         XposedHelpers.setObjectField(iconHolder, "mType", 91);
