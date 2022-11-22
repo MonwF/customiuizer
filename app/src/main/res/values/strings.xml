@@ -465,6 +465,7 @@
     <string name="system_applock_skip_summ">Allow selected activities to bypass app lock</string>
     <string name="system_applock_activities">Selected activities</string>
     <string name="system_mods_qs">Quick Settings</string>
+    <string name="system_mods_cc">Control Center</string>
     <string name="system_qsgridrows_title">Number of rows</string>
     <string name="system_qsgridrows_note">Labels will be hidden for 5 rows in a portrait orientation. Number of rows is limited to 3 with hidden labels in a landscape orientation.</string>
     <string name="system_qsgridcolumns_title">Number of columns</string>

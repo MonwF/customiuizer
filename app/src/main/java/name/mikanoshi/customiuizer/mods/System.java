@@ -1663,7 +1663,7 @@ public class System {
                 meter.setLines(2);
                 meter.setMaxLines(2);
                 meter.setLineSpacing(0, spacing);
-                meter.setPadding(Math.round(meter.getPaddingLeft() + 3 * density), meter.getPaddingTop() - top, meter.getPaddingRight(), meter.getPaddingBottom());
+                meter.setPadding(meter.getPaddingLeft(), meter.getPaddingTop() - top, meter.getPaddingRight(), meter.getPaddingBottom());
             }
         });
         boolean reduceVis = MainModule.mPrefs.getBoolean("system_detailednetspeed_zero");
@@ -2534,6 +2534,7 @@ public class System {
                     if (pluginLoader == null) {
                         pluginLoader = (ClassLoader) param.getResult();
                     }
+                    MainModule.resHooks.setDensityReplacement("miui.systemui.plugin", "dimen", "qs_cell_height", 85.0f);
                     Class<?> QSController = XposedHelpers.findClassIfExists("miui.systemui.controlcenter.qs.tileview.StandardTileView", pluginLoader);
                     Helpers.hookAllMethods(QSController, "init", new MethodHook() {
                         @Override
@@ -8637,6 +8638,135 @@ public class System {
                         XposedHelpers.setObjectField(booleanState, "icon", mIcon);
                     }
                     param.setResult(null);
+                }
+            }
+        });
+    }
+
+    public static void SystemCCGridHook(LoadPackageParam lpparam) {
+        int cols = MainModule.mPrefs.getInt("system_ccgridcolumns", 4);
+        int rows = MainModule.mPrefs.getInt("system_ccgridrows", 4);
+        if (cols > 4) {
+            MainModule.resHooks.setObjectReplacement(lpparam.packageName, "dimen", "qs_control_tiles_columns", cols);
+        }
+        if (rows > 2) {
+            MainModule.resHooks.setObjectReplacement(lpparam.packageName, "dimen", "qs_control_tiles_min_rows", rows);
+        }
+
+        final boolean[] isListened = {false};
+        Helpers.findAndHookMethod("com.android.systemui.SystemUIFactory", lpparam.classLoader, "createFromConfig", Context.class, new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                if (!isListened[0]) {
+                    isListened[0] = true;
+                    Context mContext = (Context) param.args[0];
+                    Resources res = mContext.getResources();
+                    float density = res.getDisplayMetrics().density;
+                    int tileWidthResId = res.getIdentifier("qs_control_center_tile_width", "dimen", "com.android.systemui");
+                    float tileWidthDim = res.getDimension(tileWidthResId);
+                    if (cols > 4) {
+                        tileWidthDim = tileWidthDim / density;
+                        float scaledTileWidthDim = tileWidthDim * 4 / cols;
+                        MainModule.resHooks.setDensityReplacement(lpparam.packageName, "dimen", "qs_control_center_tile_width", scaledTileWidthDim);
+                        MainModule.resHooks.setDensityReplacement("miui.systemui.plugin", "dimen", "qs_control_center_tile_width", scaledTileWidthDim);
+                        MainModule.resHooks.setDensityReplacement(lpparam.packageName, "dimen", "qs_control_tile_icon_bg_size", scaledTileWidthDim);
+                        MainModule.resHooks.setDensityReplacement("miui.systemui.plugin", "dimen", "qs_control_tile_icon_bg_size", scaledTileWidthDim);
+                        MainModule.resHooks.setDensityReplacement("miui.systemui.plugin", "dimen", "qs_cell_height", 85.0f);
+                    }
+                }
+            }
+        });
+
+        final boolean[] isHooked = {false};
+        Helpers.findAndHookMethod("com.android.systemui.shared.plugins.PluginManagerImpl", lpparam.classLoader, "getClassLoader", ApplicationInfo.class, new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                ApplicationInfo appInfo = (ApplicationInfo) param.args[0];
+                if ("miui.systemui.plugin".equals(appInfo.packageName) && !isHooked[0]) {
+                    isHooked[0] = true;
+                    if (pluginLoader == null) {
+                        pluginLoader = (ClassLoader) param.getResult();
+                    }
+                    if (cols > 4) {
+                        Helpers.findAndHookConstructor("miui.systemui.controlcenter.qs.QSPager", pluginLoader, Context.class, AttributeSet.class, new MethodHook() {
+                            @Override
+                            protected void after(MethodHookParam param) throws Throwable {
+                                XposedHelpers.setObjectField(param.thisObject, "columns", cols);
+                            }
+                        });
+                        if (!MainModule.mPrefs.getBoolean("system_qsnolabels")) {
+                            Helpers.hookAllMethods("miui.systemui.controlcenter.qs.tileview.StandardTileView", pluginLoader, "handleStateChanged", new MethodHook() {
+                                @Override
+                                protected void after(MethodHookParam param) throws Throwable {
+                                    Object label = XposedHelpers.getObjectField(param.thisObject, "label");
+                                    if (label != null) {
+                                        TextView lb = (TextView) label;
+                                        lb.setMaxLines(1);
+                                        lb.setSingleLine(true);
+                                        lb.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                                        lb.setMarqueeRepeatLimit(0);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    if (rows > 2) {
+                        Helpers.findAndHookMethod("miui.systemui.controlcenter.qs.QSPager", pluginLoader, "distributeTiles", new MethodHook() {
+                            @Override
+                            protected void after(MethodHookParam param) throws Throwable {
+                                boolean collapse = (boolean) XposedHelpers.getObjectField(param.thisObject, "collapse");
+                                if (collapse) {
+                                    ArrayList<Object> pages = (ArrayList<Object>) XposedHelpers.getObjectField(param.thisObject, "pages");
+                                    for (Object tileLayoutImpl : pages) {
+                                        XposedHelpers.callMethod(tileLayoutImpl, "removeTiles");
+                                    }
+                                    ArrayList<Object> pageTiles = new ArrayList<Object>();
+                                    int currentRow = 2;
+                                    ArrayList<?> records = (ArrayList<?>) XposedHelpers.getObjectField(param.thisObject, "records");
+                                    Iterator<?> it2 = records.iterator();
+                                    int i3 = 0;
+                                    int pageNow = 0;
+                                    Object bigHeader = XposedHelpers.getObjectField(param.thisObject, "header");
+                                    while (it2.hasNext()) {
+                                        Object tileRecord = it2.next();
+                                        pageTiles.add(tileRecord);
+                                        i3++;
+                                        if (i3 >= cols) {
+                                            currentRow++;
+                                            i3 = 0;
+                                        }
+                                        if (currentRow >= rows || !it2.hasNext()) {
+                                            XposedHelpers.callMethod(pages.get(pageNow), "setTiles", pageTiles, pageNow == 0 ? bigHeader : null);
+                                            pageTiles.clear();
+                                            int totalRows = (int) XposedHelpers.getObjectField(param.thisObject, "rows");
+                                            if (currentRow > totalRows) {
+                                                XposedHelpers.setObjectField(param.thisObject, "rows", currentRow);
+                                            }
+                                            if (it2.hasNext()) {
+                                                pageNow++;
+                                                currentRow = 0;
+                                            }
+                                        }
+                                    }
+                                    Iterator<Object> it3 = pages.iterator();
+                                    while (it3.hasNext()) {
+                                        Object next2 = it3.next();
+                                        boolean isEmpty = (boolean) XposedHelpers.callMethod(next2, "isEmpty");
+                                        if (isEmpty) {
+                                            it3.remove();
+                                        }
+                                    }
+                                    Object pageIndicator = XposedHelpers.getObjectField(param.thisObject, "pageIndicator");
+                                    if (pageIndicator != null) {
+                                        XposedHelpers.callMethod(pageIndicator, "setNumPages", pages.size());
+                                    }
+                                    Object adapter = XposedHelpers.getObjectField(param.thisObject, "adapter");
+                                    XposedHelpers.callMethod(param.thisObject, "setAdapter", adapter);
+//                                    XposedHelpers.callMethod(param.thisObject, "notifyDataSetChanged");
+                                }
+                            }
+                        });
+                    }
                 }
             }
         });

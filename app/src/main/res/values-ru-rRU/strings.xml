@@ -690,6 +690,7 @@
     <string name="system_statusbarcolor_summ">Делает одинаковыми цвета фона строки состояния и панели действий приложения, где это возможно</string>
     <string name="system_statusbarcolor_apps_title">Чёрный список</string>
     <string name="system_mods_qs">Быстрые Настройки</string>
+    <string name="system_mods_cc">Быстрые настройки</string>
     <string name="system_qsgridrows_title">Число рядов</string>
     <string name="system_qsgridrows_note">Подписи к переключателям будут скрыты для 5 рядов в портретной ориентации. Число рядов ограничено 3-я в ландшафтной ориентации, подписи также будут скрыты.</string>
     <string name="system_qsgridcolumns_title">Число колонок</string>
