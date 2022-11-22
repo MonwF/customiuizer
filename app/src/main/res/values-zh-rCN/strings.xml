@@ -98,6 +98,7 @@
     <string name="system_detailednetspeed_lowlevel_summ">网速值低于该水平时将被认为慢，并会显示不同的指示器图标</string>
     <string name="system_detailednetspeed_zero_title">不活动时降低可见性</string>
     <string name="system_detailednetspeed_zero_summ">速值均为0时指示器透明</string>
+    <string name="system_detailednetspeed_secunit_title">隐藏 B/s 单位</string>
     <string name="system_statusbarcontrols_title">手势控制</string>
     <string name="system_statusbarcontrols_summ">滑动双击时执行所选动作</string>
     <string name="system_statusbarcontrols_sens_title">调整灵敏度</string>

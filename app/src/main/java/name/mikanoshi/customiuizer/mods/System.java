@@ -1617,13 +1617,18 @@ public class System {
     private static String humanReadableByteCount(Context ctx, long bytes) {
         try {
             Resources modRes = Helpers.getModuleRes(ctx);
-            if (bytes < 1024) return bytes + " " + modRes.getString(R.string.Bs);
+            boolean hideSecUnit = MainModule.mPrefs.getBoolean("system_detailednetspeed_secunit");
+            String unitSuffix = modRes.getString(R.string.Bs);
+            if (hideSecUnit) {
+                unitSuffix = "";
+            }
+            if (bytes < 1024) return bytes + (unitSuffix.isEmpty() ? "" : unitSuffix);
             int exp = (int) (Math.log(bytes) / Math.log(1024));
             char pre = modRes.getString(R.string.speedunits).charAt(exp-1);
             DecimalFormat df = new DecimalFormat("0.#", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
             df.setMinimumFractionDigits(0);
             df.setMaximumFractionDigits(1);
-            return df.format(bytes / Math.pow(1024, exp)) + " " + String.format("%s" + modRes.getString(R.string.Bs), pre);
+            return df.format(bytes / Math.pow(1024, exp)) + " " + String.format("%s" + unitSuffix, pre);
         } catch (Throwable t) {
             XposedBridge.log(t);
             return "";
