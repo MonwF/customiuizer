@@ -1115,4 +1115,5 @@
     <string name="various_allow_untrusted_touch_title">Allow untrusted touch</string>
     <string name="various_skip_interceptperm_title">Skip permission intercept timer</string>
     <string name="system_lockscreenshortcuts_left_tapaction_title">Tap left shortcut to toggle flashlight</string>
+    <string name="system_cc_tile_roundedrect_title">Rounded rectangle tile</string>
 </resources>

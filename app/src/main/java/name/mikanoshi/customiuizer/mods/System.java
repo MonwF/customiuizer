@@ -1622,7 +1622,7 @@ public class System {
             if (hideSecUnit) {
                 unitSuffix = "";
             }
-            if (bytes < 1024) return bytes + (unitSuffix.isEmpty() ? "" : unitSuffix);
+            if (bytes < 1024) return bytes + " " + (hideSecUnit ? "B" : unitSuffix);
             int exp = (int) (Math.log(bytes) / Math.log(1024));
             char pre = modRes.getString(R.string.speedunits).charAt(exp-1);
             DecimalFormat df = new DecimalFormat("0.#", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
@@ -8648,6 +8648,7 @@ public class System {
         });
     }
 
+    private static float scaledTileWidthDim = -1f;
     public static void SystemCCGridHook(LoadPackageParam lpparam) {
         int cols = MainModule.mPrefs.getInt("system_ccgridcolumns", 4);
         int rows = MainModule.mPrefs.getInt("system_ccgridrows", 4);
@@ -8671,7 +8672,7 @@ public class System {
                     float tileWidthDim = res.getDimension(tileWidthResId);
                     if (cols > 4) {
                         tileWidthDim = tileWidthDim / density;
-                        float scaledTileWidthDim = tileWidthDim * 4 / cols;
+                        scaledTileWidthDim = tileWidthDim * 4 / cols;
                         MainModule.resHooks.setDensityReplacement(lpparam.packageName, "dimen", "qs_control_center_tile_width", scaledTileWidthDim);
                         MainModule.resHooks.setDensityReplacement("miui.systemui.plugin", "dimen", "qs_control_center_tile_width", scaledTileWidthDim);
                         MainModule.resHooks.setDensityReplacement(lpparam.packageName, "dimen", "qs_control_tile_icon_bg_size", scaledTileWidthDim);
@@ -8772,6 +8773,58 @@ public class System {
                             }
                         });
                     }
+                }
+            }
+        });
+    }
+
+    public static void CCTileCornerHook(LoadPackageParam lpparam) {
+        MainModule.resHooks.setResReplacement("miui.systemui.plugin", "drawable", "qs_background_unavailable", R.drawable.ic_qs_tile_bg_disabled);
+        MainModule.resHooks.setResReplacement("miui.systemui.plugin", "drawable", "qs_background_disabled", R.drawable.ic_qs_tile_bg_disabled);
+        MainModule.resHooks.setResReplacement("miui.systemui.plugin", "drawable", "qs_background_warning", R.drawable.ic_qs_tile_bg_warning);
+
+        final boolean[] isHooked = {false};
+        Helpers.findAndHookMethod("com.android.systemui.shared.plugins.PluginManagerImpl", lpparam.classLoader, "getClassLoader", ApplicationInfo.class, new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                ApplicationInfo appInfo = (ApplicationInfo) param.args[0];
+                if ("miui.systemui.plugin".equals(appInfo.packageName) && !isHooked[0]) {
+                    isHooked[0] = true;
+                    if (pluginLoader == null) {
+                        pluginLoader = (ClassLoader) param.getResult();
+                    }
+                    Helpers.findAndHookMethod("miui.systemui.controlcenter.qs.tileview.ExpandableIconView", pluginLoader, "setCornerRadius", float.class, new MethodHook() {
+                        @Override
+                        protected void before(MethodHookParam param) throws Throwable {
+                            Context mContext = (Context) XposedHelpers.callMethod(param.thisObject, "getPluginContext");
+                            float radius = 18;
+                            if (scaledTileWidthDim > 0) {
+                                radius *= scaledTileWidthDim / 65;
+                            }
+                            param.args[0] = mContext.getResources().getDisplayMetrics().density * radius;
+                        }
+                    });
+
+                    Helpers.findAndHookMethod("miui.systemui.dagger.PluginComponentFactory", pluginLoader, "create", Context.class, new MethodHook() {
+                        @Override
+                        protected void before(MethodHookParam param) throws Throwable {
+                            Context mContext = (Context) param.args[0];
+                            int enabledTileBackgroundResId = mContext.getResources().getIdentifier("qs_background_enabled", "drawable", "miui.systemui.plugin");
+                            int enabledTileColorResId = mContext.getResources().getIdentifier("qs_enabled_color", "color", "miui.systemui.plugin");
+                            Helpers.findAndHookMethod("android.content.res.Resources", pluginLoader, "getDrawable", int.class, new MethodHook() {
+                                @Override
+                                protected void before(MethodHookParam param) throws Throwable {
+                                    int resId = (int) param.args[0];
+                                    if (resId == enabledTileBackgroundResId && resId != 0) {
+                                        Resources modRes = Helpers.getModuleRes(mContext);
+                                        Drawable enableTile = modRes.getDrawable(R.drawable.ic_qs_tile_bg_enabled, null);
+                                        enableTile.setTint(mContext.getResources().getColor(enabledTileColorResId, null));
+                                        param.setResult(enableTile);
+                                    }
+                                }
+                            });
+                        }
+                    });
                 }
             }
         });
