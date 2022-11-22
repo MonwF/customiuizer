@@ -107,6 +107,7 @@
     <string name="system_detailednetspeed_lowlevel_summ">Speed values below this level will be considered low and will have a different indication icon</string>
     <string name="system_detailednetspeed_zero_title">Reduce visibility when inactive</string>
     <string name="system_detailednetspeed_zero_summ">Make indicator semitransparent when both speeds are zero</string>
+    <string name="system_detailednetspeed_secunit_title">Hide Byte per second suffix(B/s)</string>
     <string name="system_statusbarcontrols_title">Gesture controls</string>
     <string name="system_statusbarcontrols_summ">Perform selected actions on slide and double tap</string>
     <string name="system_statusbarcontrols_sens_title">Adjustment sensitivity</string>
