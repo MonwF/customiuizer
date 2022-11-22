@@ -341,6 +341,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_statusbar_dualsimin2rows")) {
                 System.DualRowSignalHook(lpparam);
             }
+            if (mPrefs.getInt("system_ccgridcolumns", 4) > 4 || mPrefs.getInt("system_ccgridrows", 4) > 4) System.SystemCCGridHook(lpparam);
         }
 
         if (pkg.equals(Helpers.modulePkg)) {

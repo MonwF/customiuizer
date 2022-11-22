@@ -442,6 +442,7 @@
     <string name="system_applock_skip_summ">允许选中的活动跳过应用锁定</string>
     <string name="system_applock_activities">已选中活动</string>
     <string name="system_mods_qs">快速设置</string>
+    <string name="system_mods_cc">控制中心</string>
     <string name="system_qsgridrows_title">行数</string>
     <string name="system_qsgridrows_note">竖屏显示5行时会隐藏标签，横屏时则限制为3行。</string>
     <string name="system_qsgridcolumns_title">列数</string>

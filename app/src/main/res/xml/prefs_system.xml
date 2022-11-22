@@ -810,6 +810,32 @@
 			miuizer:dynamic="true"
 			miuizer:child="true" />
 
+		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+			android:key="pref_key_system_cat_cc"
+			android:title="@string/system_mods_cc">
+
+			<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+				android:key="pref_key_system_ccgridrows"
+				android:title="@string/system_qsgridrows_title"
+				android:defaultValue="4"
+				miuizer:offtext="@string/array_default"
+				miuizer:minValue="4"
+				miuizer:maxValue="6"
+				miuizer:stepValue="1"
+				miuizer:format="%d" />
+
+			<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+				android:key="pref_key_system_ccgridcolumns"
+				android:title="@string/system_qsgridcolumns_title"
+				android:defaultValue="4"
+				miuizer:offtext="@string/array_default"
+				miuizer:minValue="4"
+				miuizer:maxValue="6"
+				miuizer:stepValue="1"
+				miuizer:format="%d" />
+
+		</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
