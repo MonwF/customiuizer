@@ -3,6 +3,10 @@
 	<style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
 		<item name="android:windowAnimationStyle">@style/AppActivityAnimation</item>
 		<item name="android:windowIsTranslucent">false</item>
+		<item name="android:colorBackground">@color/color_window_background</item>
+		<item name="android:windowTranslucentStatus">true</item>
+		<item name="android:windowDrawsSystemBarBackgrounds">true</item>
+		<item name="android:windowLightStatusBar">true</item>
 		<item name="android:windowDisablePreview">true</item>
 		<item name="android:colorBackgroundCacheHint">@null</item>
 		<item name="android:spinnerStyle">@style/AppSpinnerStyle</item>
@@ -12,6 +16,8 @@
 		<item name="android:listPreferredItemPaddingStart">@dimen/preference_item_child_padding</item>
 		<item name="colorAccent">@color/highlight_normal_light</item>
 		<item name="colorControlActivated">@color/highlight_normal_light</item>
+		<item name="dialogTheme">@style/AppDialogStyle</item>
+		<item name="alertDialogTheme">@style/AppDialogStyle</item>
 		<item name="preferenceTheme">@style/AppPreferenceTheme</item>
 		<item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item>
 	</style>
@@ -29,8 +35,12 @@
 		<item name="android:activityCloseExitAnimation">@anim/activity_close_exit</item>
 	</style>
 	<style name="AppToolbarStyle" parent="ThemeOverlay.AppCompat.DayNight.ActionBar">
-
 	</style>
+	<style name="AppDialogStyle" parent="ThemeOverlay.AppCompat.Dialog">
+		<item name="android:background">@color/color_window_background</item>
+		<item name="android:windowBackground">@color/color_window_background</item>
+	</style>
+
 	<style name="AppPreferenceTheme" parent="@style/PreferenceThemeOverlay.v14.Material">
 		<item name="preferenceFragmentCompatStyle">@style/AppPreferenceFragmentCompatStyle</item>
 	</style>
@@ -39,6 +49,7 @@
 	</style>
 	<style name="OverflowMenuStyle" parent="@style/Widget.AppCompat.PopupMenu.Overflow">
 		<item name="android:overlapAnchor">false</item>
+		<item name="android:popupBackground">@color/color_window_background</item>
 	</style>
 
 	<style name="Invisible" parent="@android:style/Theme.Translucent">

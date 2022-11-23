@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<color name="color_window_background">@color/background_material_dark</color>
 	<color name="color_not_selected">#99ffffff</color>
 	<color name="about_divider">#337f7f7f</color>
-
 	<color name="highlight_normal_light">#ff0073dd</color>
 
 	<color name="preference_category_text_color">@color/highlight_normal_light</color>
