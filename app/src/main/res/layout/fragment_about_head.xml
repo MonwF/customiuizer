@@ -19,21 +19,6 @@
 		android:clipChildren="false"
 		android:clipToPadding="false">
 
-		<ImageView
-			android:id="@+id/uptrend"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:layout_alignParentTop="true"
-			android:layout_alignParentLeft="true"
-			android:layout_marginLeft="-32dp"
-			android:layout_marginBottom="-32dp"
-			android:contentDescription="@null"
-			android:scaleX="2.0"
-			android:scaleY="2.0"
-			app:srcCompat="@drawable/uptrend"
-			android:translationZ="20dp"
-			android:visibility="gone" />
-
 		<RelativeLayout
 			android:layout_height="80dp"
 			android:layout_width="80dp"
