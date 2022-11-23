@@ -10,5 +10,5 @@
 	android:clipToPadding="false"
 	android:drawSelectorOnTop="false"
 	android:scrollbarAlwaysDrawVerticalTrack="false"
-	android:background="?android:attr/colorBackground"
-	 />
+	android:background="@color/color_window_background"
+	/>
