@@ -50,6 +50,7 @@
     <string name="system_statusbaricons_speaker_title">通话：免提</string>
     <string name="system_statusbaricons_record_title">通话：录音</string>
     <string name="system_statusbaricons_volte_title">HD图标</string>
+    <string name="system_statusbaricons_roaming_title">漫游</string>
     <string name="system_batteryindicator_title">电池条指示器</string>
     <string name="system_batteryindicator_summ">将电池电量显示为彩色条</string>
     <string name="system_batteryindicator_limitvis_title">限制可见性</string>

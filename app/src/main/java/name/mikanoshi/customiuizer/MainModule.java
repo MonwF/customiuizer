@@ -301,6 +301,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             }
             if (mPrefs.getBoolean("system_statusbaricons_nosims")) System.HideIconsNoSIMsHook(lpparam);
             if (mPrefs.getBoolean("system_statusbaricons_volte")) System.HideIconsVoLTEHook(lpparam);
+            if (mPrefs.getBoolean("system_statusbaricons_roaming")) System.HideIconsRoamingHook(lpparam);
             if (mPrefs.getBoolean("system_statusbaricons_vowifi")) System.HideIconsVoWiFiHook(lpparam);
             if (!mPrefs.getBoolean("system_statusbaricons_alarm") && mPrefs.getInt("system_statusbaricons_alarmn", 0) > 0) System.HideIconsSelectiveAlarmHook(lpparam);
             if (!mPrefs.getString("system_shortcut_app", "").equals("")

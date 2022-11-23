@@ -86,6 +86,11 @@
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_roaming"
+		android:title="@string/system_statusbaricons_roaming_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbaricons_volte"
 		android:title="@string/system_statusbaricons_volte_title"
 		android:defaultValue="false" />
