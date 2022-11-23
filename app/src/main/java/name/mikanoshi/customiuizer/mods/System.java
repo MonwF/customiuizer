@@ -3976,6 +3976,17 @@ public class System {
         Helpers.findAndHookMethodSilently("com.android.systemui.MiuiOperatorCustomizedPolicy$MiuiOperatorConfig", lpparam.classLoader, "getHideVowifi", XC_MethodReplacement.returnConstant(true));
     }
 
+    public static void HideIconsRoamingHook(LoadPackageParam lpparam) {
+        MethodHook beforeUpdate = new MethodHook() {
+            @Override
+            protected void before(final MethodHookParam param) throws Throwable {
+                Object mobileIconState = param.args[0];
+                XposedHelpers.setObjectField(mobileIconState, "roaming", false);
+            }
+        };
+        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyMobileState", beforeUpdate);
+    }
+
     private static boolean checkSlot(String slotName) {
         try {
             return "headset".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_headset") ||
