@@ -293,15 +293,14 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_statusbaricons_battery1")) System.HideIconsBattery1Hook(lpparam);
             if (mPrefs.getBoolean("system_statusbaricons_battery3") || mPrefs.getBoolean("system_statusbaricons_battery2")) System.HideIconsBattery2Hook(lpparam);
             if (mPrefs.getStringAsInt("system_statusbaricons_wifistandard", 1) > 1) System.DisplayWifiStandardHook(lpparam);
-            if (mPrefs.getBoolean("system_statusbaricons_signal")) {
-                System.HideIconsSignalHook(lpparam);
-            }
-            else if (mPrefs.getBoolean("system_statusbaricons_sim1") || mPrefs.getBoolean("system_statusbaricons_sim2")) {
-                System.HideIconsSimHook(lpparam);
-            }
             if (mPrefs.getBoolean("system_statusbaricons_nosims")) System.HideIconsNoSIMsHook(lpparam);
             if (mPrefs.getBoolean("system_statusbaricons_volte")) System.HideIconsVoLTEHook(lpparam);
-            if (mPrefs.getBoolean("system_statusbaricons_roaming")) System.HideIconsRoamingHook(lpparam);
+            if (mPrefs.getBoolean("system_statusbaricons_signal")
+                || mPrefs.getBoolean("system_statusbaricons_sim1")
+                || mPrefs.getBoolean("system_statusbaricons_sim2")
+                || mPrefs.getBoolean("system_statusbaricons_roaming")
+                || mPrefs.getBoolean("system_statusbaricons_volte")
+            ) System.HideIconsSignalHook(lpparam);
             if (mPrefs.getBoolean("system_statusbaricons_vowifi")) System.HideIconsVoWiFiHook(lpparam);
             if (!mPrefs.getBoolean("system_statusbaricons_alarm") && mPrefs.getInt("system_statusbaricons_alarmn", 0) > 0) System.HideIconsSelectiveAlarmHook(lpparam);
             if (!mPrefs.getString("system_shortcut_app", "").equals("")

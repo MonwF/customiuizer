@@ -1316,21 +1316,19 @@ public class System {
             }
         });
 
-        if (Helpers.is12()) {
-            Helpers.hookAllConstructors("com.android.systemui.miui.statusbar.phone.ControlPanelWindowManager", lpparam.classLoader, new MethodHook() {
-                @Override
-                protected void after(MethodHookParam param) throws Throwable {
-                    XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomBlurModifier", MainModule.mPrefs.getInt("system_drawer_blur", 100));
-                }
-            });
+        Helpers.hookAllConstructors("com.android.systemui.miui.statusbar.phone.ControlPanelWindowManager", lpparam.classLoader, new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomBlurModifier", MainModule.mPrefs.getInt("system_drawer_blur", 100));
+            }
+        });
 
-            Helpers.findAndHookMethod("com.android.systemui.miui.statusbar.phone.ControlPanelWindowManager", lpparam.classLoader, "applyBlurRatio", float.class, new MethodHook() {
-                @Override
-                protected void before(MethodHookParam param) throws Throwable {
-                    param.args[0] = (float)param.args[0] * (int)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mCustomBlurModifier") / 100f;
-                }
-            });
-        }
+        Helpers.findAndHookMethod("com.android.systemui.miui.statusbar.phone.ControlPanelWindowManager", lpparam.classLoader, "applyBlurRatio", float.class, new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                param.args[0] = (float)param.args[0] * (int)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mCustomBlurModifier") / 100f;
+            }
+        });
     }
 
     public static void DrawerThemeBackgroundHook(LoadPackageParam lpparam) {
@@ -1384,8 +1382,7 @@ public class System {
                 }
             }
         };
-        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "initViewState", hideMobileActivity);
-        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "updateState", hideMobileActivity);
+        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyMobileState", hideMobileActivity);
     }
 
     public static void TrafficSpeedSpacingHook(LoadPackageParam lpparam) {
@@ -3923,31 +3920,6 @@ public class System {
         });
     }
 
-    public static void HideIconsSignalHook(LoadPackageParam lpparam) {
-        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyMobileState", new MethodHook() {
-            @Override
-            protected void before(MethodHookParam param) throws Throwable {
-                Object mobileIconState = param.args[0];
-                XposedHelpers.setObjectField(mobileIconState, "visible", false);
-            }
-        });
-    }
-
-    public static void HideIconsSimHook(LoadPackageParam lpparam) {
-        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyMobileState", new MethodHook() {
-            @Override
-            protected void before(MethodHookParam param) throws Throwable {
-                Object mobileIconState = param.args[0];
-                int subId = (int) XposedHelpers.getObjectField(mobileIconState, "subId");
-                if ((MainModule.mPrefs.getBoolean("system_statusbaricons_sim1") && subId == 1)
-                    || (MainModule.mPrefs.getBoolean("system_statusbaricons_sim2") && subId == 2)
-                ) {
-                    XposedHelpers.setObjectField(mobileIconState, "visible", false);
-                }
-            }
-        });
-    }
-
     public static void HideIconsNoSIMsHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethod("com.android.systemui.statusbar.SignalClusterView", lpparam.classLoader, "apply", new MethodHook() {
             @Override
@@ -3979,12 +3951,28 @@ public class System {
         Helpers.findAndHookMethodSilently("com.android.systemui.MiuiOperatorCustomizedPolicy$MiuiOperatorConfig", lpparam.classLoader, "getHideVowifi", XC_MethodReplacement.returnConstant(true));
     }
 
-    public static void HideIconsRoamingHook(LoadPackageParam lpparam) {
+    public static void HideIconsSignalHook(LoadPackageParam lpparam) {
         MethodHook beforeUpdate = new MethodHook() {
             @Override
             protected void before(final MethodHookParam param) throws Throwable {
                 Object mobileIconState = param.args[0];
-                XposedHelpers.setObjectField(mobileIconState, "roaming", false);
+                if (MainModule.mPrefs.getBoolean("system_statusbaricons_signal")) {
+                    XposedHelpers.setObjectField(mobileIconState, "visible", false);
+                    return;
+                }
+                int subId = (int) XposedHelpers.getObjectField(mobileIconState, "subId");
+                if ((MainModule.mPrefs.getBoolean("system_statusbaricons_sim1") && subId == 1)
+                    || (MainModule.mPrefs.getBoolean("system_statusbaricons_sim2") && subId == 2)
+                ) {
+                    XposedHelpers.setObjectField(mobileIconState, "visible", false);
+                    return;
+                }
+                if (MainModule.mPrefs.getBoolean("system_statusbaricons_roaming")) {
+                    XposedHelpers.setObjectField(mobileIconState, "roaming", false);
+                }
+                if (MainModule.mPrefs.getBoolean("system_statusbaricons_volte")) {
+                    XposedHelpers.setObjectField(mobileIconState, "speechHd", false);
+                }
             }
         };
         Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyMobileState", beforeUpdate);
@@ -8123,8 +8111,7 @@ public class System {
                 XposedHelpers.callMethod(mRightInOut, "setVisibility", 8);
             }
         };
-        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "initViewState", hideMobileActivity);
-        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "updateState", hideMobileActivity);
+        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyMobileState", hideMobileActivity);
 
         MethodHook hideWifiActivity = new MethodHook() {
             @Override
@@ -8133,8 +8120,7 @@ public class System {
                 XposedHelpers.callMethod(mWifiActivityView, "setVisibility", 4);
             }
         };
-        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarWifiView", lpparam.classLoader, "initViewState", hideWifiActivity);
-        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarWifiView", lpparam.classLoader, "updateState", hideWifiActivity);
+        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarWifiView", lpparam.classLoader, "applyWifiState", hideWifiActivity);
     }
 
     public static void ClearBrightnessMirrorHook(LoadPackageParam lpparam) {
@@ -8267,8 +8253,7 @@ public class System {
                 XposedHelpers.callMethod(mMobileLeftContainer, "setVisibility", 8);
             }
         };
-        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "initViewState", afterUpdate);
-        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "updateState", afterUpdate);
+        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyMobileState", afterUpdate);
 
         Helpers.findAndHookMethod("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "init", new MethodHook() {
             @Override
@@ -8461,8 +8446,7 @@ public class System {
             }
         };
         Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyMobileState", beforeUpdate);
-        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "initViewState", afterUpdate);
-        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "updateState", afterUpdate);
+        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyMobileState", afterUpdate);
 
         MethodHook resetImageDrawable = new MethodHook() {
             @Override
