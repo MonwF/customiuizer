@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape
+            android:shape="rectangle"
+            android:useLevel="true">
+            <corners android:radius="28dp" />
+            <solid android:color="@color/color_window_background" />
+        </shape>
+    </item>
+    <item>
+        <shape
+            android:shape="rectangle"
+            android:useLevel="true">
+            <corners android:radius="28dp" />
+            <solid android:color="@color/color_popup_background" />
+        </shape>
+    </item>
+</layer-list>

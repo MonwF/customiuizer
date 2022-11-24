@@ -2094,20 +2094,23 @@ public class System {
     }
 
     public static void ColorizedNotificationTitlesHook() {
-        Helpers.hookAllMethods("android.app.Notification.Builder", null, "bindNotificationHeader", new MethodHook() {
+        Helpers.hookAllMethods("android.app.Notification.Builder", null, "bindHeaderAppName", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 try {
                     Object mN = XposedHelpers.getObjectField(param.thisObject, "mN");
-                    if (mN != null)
-                        if ((boolean)XposedHelpers.callMethod(mN, "isColorizedMedia")) return;
+                    if (mN != null) {
+                        if ((boolean)XposedHelpers.callMethod(mN, "isColorized")) return;
+                    }
                 } catch (Throwable ignore) {}
 
                 RemoteViews rv = (RemoteViews)param.args[0];
                 Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-                int contrastColor = (int)XposedHelpers.callMethod(param.thisObject, "resolveContrastColor", param.args[1]);
-                if (rv != null && mContext != null)
+                if (rv != null && mContext != null) {
+                    Helpers.log("Colorize Notify Header");
+                    int contrastColor = (int)XposedHelpers.callMethod(param.thisObject, "getPrimaryAccentColor", param.args[1]);
                     rv.setTextColor(mContext.getResources().getIdentifier("app_name_text", "id", "android"), contrastColor);
+                }
             }
         });
     }
