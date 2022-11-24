@@ -37,8 +37,9 @@
 	<style name="AppToolbarStyle" parent="ThemeOverlay.AppCompat.DayNight.ActionBar">
 	</style>
 	<style name="AppDialogStyle" parent="ThemeOverlay.AppCompat.Dialog">
-		<item name="android:background">@color/color_window_background</item>
-		<item name="android:windowBackground">@color/color_window_background</item>
+		<item name="android:windowBackground">@drawable/popup_background</item>
+		<item name="android:windowMinWidthMajor">65%</item>
+		<item name="android:windowMinWidthMinor">80%</item>
 	</style>
 
 	<style name="AppPreferenceTheme" parent="@style/PreferenceThemeOverlay.v14.Material">
@@ -49,7 +50,7 @@
 	</style>
 	<style name="OverflowMenuStyle" parent="@style/Widget.AppCompat.PopupMenu.Overflow">
 		<item name="android:overlapAnchor">false</item>
-		<item name="android:popupBackground">@color/color_window_background</item>
+		<item name="android:popupBackground">@drawable/popmenu_background</item>
 	</style>
 
 	<style name="Invisible" parent="@android:style/Theme.Translucent">
