@@ -368,10 +368,13 @@ public class SubFragment extends PreferenceFragmentBase {
                 screen.removePreference(pref);
             else {
                 PreferenceCategoryEx category = (PreferenceCategoryEx)pref;
-                if (category.isDynamic())
-                    getActionBar().setTitle(pref.getTitle() + " ⟲");
-                else
-                    getActionBar().setTitle(pref.getTitle());
+                ActionBar actionBar = getActionBar();
+                if (actionBar != null) {
+                    if (category.isDynamic())
+                        actionBar.setTitle(pref.getTitle() + " ⟲");
+                    else
+                        actionBar.setTitle(pref.getTitle());
+                }
                 category.hide();
             }
         }

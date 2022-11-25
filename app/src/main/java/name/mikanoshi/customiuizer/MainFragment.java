@@ -168,7 +168,7 @@ public class MainFragment extends PreferenceFragmentBase {
 				MenuItem item = null;
 				for (int i = 0; i < mActionMenu.size(); i++) {
 					item = mActionMenu.getItem(i);
-					item.setVisible(item.getItemId() != R.id.edit_confirm);
+					item.setVisible(item.getItemId() != R.id.edit_confirm && item.getItemId() != R.id.openinweb);
 				}
 				return true;
 			}
