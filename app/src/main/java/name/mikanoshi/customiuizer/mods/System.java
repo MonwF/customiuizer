@@ -3971,6 +3971,7 @@ public class System {
                     XposedHelpers.setObjectField(mobileIconState, "roaming", false);
                 }
                 if (MainModule.mPrefs.getBoolean("system_statusbaricons_volte")) {
+                    XposedHelpers.setObjectField(mobileIconState, "volte", false);
                     XposedHelpers.setObjectField(mobileIconState, "speechHd", false);
                 }
             }
@@ -5746,10 +5747,6 @@ public class System {
 
     public static void HideProximityWarningHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethod("com.android.server.policy.MiuiScreenOnProximityLock", lpparam.classLoader, "showHint", XC_MethodReplacement.DO_NOTHING);
-    }
-
-    public static void HideIconsVoLTEHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethodSilently("com.android.systemui.MiuiOperatorCustomizedPolicy$MiuiOperatorConfig", lpparam.classLoader, "getHideVolte", XC_MethodReplacement.returnConstant(true));
     }
 
     public static void HideLockScreenClockHook(LoadPackageParam lpparam) {
