@@ -911,7 +911,7 @@ public class System {
 
     private static ClassLoader pluginLoader = null;
 
-    public static void NotificationVolumeDialogHook(LoadPackageParam lpparam) {
+    public static void MIUIVolumeDialogHook(LoadPackageParam lpparam) {
         final boolean[] isHooked = {false};
         Helpers.findAndHookMethod("com.android.systemui.shared.plugins.PluginManagerImpl", lpparam.classLoader, "getClassLoader", ApplicationInfo.class, new MethodHook() {
             @Override
@@ -923,16 +923,27 @@ public class System {
                         pluginLoader = (ClassLoader) param.getResult();
                     }
                     Class<?> MiuiVolumeDialogImpl = XposedHelpers.findClassIfExists("com.android.systemui.miui.volume.MiuiVolumeDialogImpl", pluginLoader);
-                    Helpers.hookAllMethods(MiuiVolumeDialogImpl, "addColumn", new MethodHook() {
-                        @Override
-                        protected void before(MethodHookParam param) throws Throwable {
-                            if (param.args.length != 4) return;
-                            int streamType = (int) param.args[0];
-                            if (streamType == 4) {
-                                XposedHelpers.callMethod(param.thisObject, "addColumn", 5, notifVolumeOnResId, notifVolumeOffResId, true, false);
+                    if (MainModule.mPrefs.getBoolean("system_separatevolume") && MainModule.mPrefs.getBoolean("system_separatevolume_slider")) {
+                        Helpers.hookAllMethods(MiuiVolumeDialogImpl, "addColumn", new MethodHook() {
+                            @Override
+                            protected void before(MethodHookParam param) throws Throwable {
+                                if (param.args.length != 4) return;
+                                int streamType = (int) param.args[0];
+                                if (streamType == 4) {
+                                    XposedHelpers.callMethod(param.thisObject, "addColumn", 5, notifVolumeOnResId, notifVolumeOffResId, true, false);
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
+                    if (MainModule.mPrefs.getBoolean("system_nosilentvibrate")) {
+                        Helpers.hookAllMethods(MiuiVolumeDialogImpl, "vibrateH", XC_MethodReplacement.DO_NOTHING);
+                    }
+                    if (MainModule.mPrefs.getInt("system_volumedialogdelay_collapsed", 0) > 0 || MainModule.mPrefs.getInt("system_volumedialogdelay_expanded", 0) > 0) {
+                        VolumeDialogAutohideDelayHook(pluginLoader);
+                    }
+                    if (MainModule.mPrefs.getInt("system_volumeblur_collapsed", 0) > 0 || MainModule.mPrefs.getInt("system_volumeblur_expanded", 0) > 0) {
+                        BlurVolumeDialogBackgroundHook(pluginLoader);
+                    }
                 }
             }
         });
@@ -5774,10 +5785,6 @@ public class System {
         });
     }
 
-    public static void NoSilentVibrateHook(LoadPackageParam lpparam) {
-        Helpers.hookAllMethods("com.android.systemui.miui.volume.MiuiVolumeDialogImpl", lpparam.classLoader, "vibrateH", XC_MethodReplacement.DO_NOTHING);
-    }
-
     public static void FirstVolumePressHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethod("com.android.server.audio.AudioService$VolumeController", lpparam.classLoader, "suppressAdjustment", int.class, int.class, boolean.class, new MethodHook() {
             @Override
@@ -5966,22 +5973,22 @@ public class System {
         }
     }
 
-    public static void BlurVolumeDialogBackgroundHook(LoadPackageParam lpparam) {
-        Helpers.hookAllMethods("com.android.systemui.miui.volume.MiuiVolumeDialogView", lpparam.classLoader, "onAttachedToWindow", new MethodHook() {
+    public static void BlurVolumeDialogBackgroundHook(ClassLoader classLoader) {
+        Helpers.hookAllMethods("com.android.systemui.miui.volume.MiuiVolumeDialogView", classLoader, "onAttachedToWindow", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 updateBlurRatio(param.thisObject);
             }
         });
 
-        Helpers.hookAllMethods("com.android.systemui.miui.volume.MiuiVolumeDialogView", lpparam.classLoader, "onExpandStateUpdated", new MethodHook() {
+        Helpers.hookAllMethods("com.android.systemui.miui.volume.MiuiVolumeDialogView", classLoader, "onExpandStateUpdated", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 updateBlurRatio(param.thisObject);
             }
         });
 
-        Helpers.hookAllMethods("com.android.systemui.miui.volume.MiuiVolumeDialogImpl", lpparam.classLoader, "initDialog", new MethodHook() {
+        Helpers.hookAllMethods("com.android.systemui.miui.volume.MiuiVolumeDialogImpl", classLoader, "initDialog", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
@@ -6007,8 +6014,8 @@ public class System {
     }
 
     public static void BlurVolumeDialogBackgroundRes() {
-        MainModule.resHooks.setObjectReplacement("com.android.systemui", "fraction", "miui_volume_dim_behind_collapsed", 0.0f);
-        MainModule.resHooks.setObjectReplacement("com.android.systemui", "fraction", "miui_volume_dim_behind_expanded", 0.0f);
+        MainModule.resHooks.setObjectReplacement("miui.systemui.plugin", "fraction", "miui_volume_dim_behind_collapsed", 0.0f);
+        MainModule.resHooks.setObjectReplacement("miui.systemui.plugin", "fraction", "miui_volume_dim_behind_expanded", 0.0f);
     }
 
     public static void RemoveSecureHook(LoadPackageParam lpparam) {
@@ -7280,8 +7287,8 @@ public class System {
         });
     }
 
-    public static void VolumeDialogAutohideDelayHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.miui.volume.MiuiVolumeDialogImpl", lpparam.classLoader, "computeTimeoutH", new MethodHook() {
+    public static void VolumeDialogAutohideDelayHook(ClassLoader classLoader) {
+        Helpers.findAndHookMethod("com.android.systemui.miui.volume.MiuiVolumeDialogImpl", classLoader, "computeTimeoutH", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 boolean mHovering = XposedHelpers.getBooleanField(param.thisObject, "mHovering");
@@ -7289,8 +7296,8 @@ public class System {
                     param.setResult(16000);
                     return;
                 }
-                Object mSafetyWarning = XposedHelpers.getObjectField(param.thisObject, "mSafetyWarning");
-                if (mSafetyWarning != null) {
+                boolean mSafetyWarning = (boolean) XposedHelpers.getObjectField(param.thisObject, "mSafetyWarning");
+                if (mSafetyWarning) {
                     int opt = MainModule.mPrefs.getInt("system_volumedialogdelay_expanded", 0);
                     param.setResult(opt > 0 ? opt : 5000);
                     return;
