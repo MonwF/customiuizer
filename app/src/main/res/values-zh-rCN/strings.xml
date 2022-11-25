@@ -227,7 +227,7 @@
     <string name="system_visualizer_dyntime_title">动态颜色变化间隔</string>
     <string name="system_ignorecalls_title">忽略通话</string>
     <string name="system_ignorecalls_summ">阻止来电在所选应用上时窃取音频焦点，并停止通知其有关通话状态的变化</string>
-    <string name="system_nosilentvibrate_title">不振动测试</string>
+    <string name="system_nosilentvibrate_title">禁用测试性振动</string>
     <string name="system_nosilentvibrate_summ">将铃声模式切换为静音或在此模式下打开振动时不振动</string>
     <string name="system_vibration_amp_title">闷响振动</string>
     <string name="system_vibration_amp_summ">所选时段内减小振动强度</string>
