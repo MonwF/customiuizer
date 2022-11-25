@@ -2671,6 +2671,49 @@ public class System {
     }
 
     public static void ExtendedPowerMenuHook(LoadPackageParam lpparam) {
+        final boolean[] isListened = {false};
+        Helpers.findAndHookMethod("com.android.systemui.SystemUIFactory", lpparam.classLoader, "createFromConfig", Context.class, new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                if (!isListened[0]) {
+                    isListened[0] = true;
+                    Context mContext = (Context)param.args[0];
+                    File powermenu = new File(mContext.getCacheDir(), "extended_power_menu");
+                    if (powermenu == null) {
+                        Helpers.log("ExtendedPowerMenuHook", "No writable path found!");
+                        return;
+                    }
+                    if (powermenu.exists()) powermenu.delete();
+
+                    InputStream inputStream;
+                    FileOutputStream outputStream;
+                    byte[] fileBytes;
+                    Resources resources = Helpers.getModuleRes(mContext);
+                    inputStream = resources.openRawResource(resources.getIdentifier("extended_power_menu", "raw", Helpers.modulePkg));
+                    fileBytes = new byte[inputStream.available()];
+                    inputStream.read(fileBytes);
+                    outputStream = new FileOutputStream(powermenu);
+                    outputStream.write(fileBytes);
+                    outputStream.close();
+                    inputStream.close();
+
+                    if (!powermenu.exists()) {
+                        Helpers.log("ExtendedPowerMenuHook", "MAML file not found in cache");
+                    }
+                    else {
+                        Helpers.findAndHookConstructor("com.miui.maml.util.ZipResourceLoader", lpparam.classLoader, String.class, new MethodHook() {
+                            @Override
+                            protected void before(MethodHookParam param) throws Throwable {
+                                String res = (String) param.args[0];
+                                if ("/system/media/theme/default/powermenu".equals(res)) {
+                                    param.args[0] = powermenu.getPath();
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
         Helpers.findAndHookMethod("com.miui.maml.ScreenElementRoot", lpparam.classLoader, "issueExternCommand", String.class, Double.class, String.class, new MethodHook() {
             @Override
             @SuppressLint("MissingPermission")
@@ -2714,50 +2757,14 @@ public class System {
                 }
             }
         });
-        Helpers.findAndHookMethodSilently("com.miui.systemui.SettingsManager", lpparam.classLoader, "getExtendedPowerMenuEnabled", XC_MethodReplacement.returnConstant(true));
 
-        Helpers.hookAllConstructors("com.android.systemui.globalactions.MiuiGlobalActions", lpparam.classLoader, new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.plugins.PluginEnablerImpl", lpparam.classLoader, "isEnabled", ComponentName.class, new MethodHook() {
             @Override
-            @SuppressWarnings("ResultOfMethodCallIgnored")
-            protected void after(MethodHookParam param) throws Throwable {
-                Context mContext = (Context)param.args[0];
-                File powermenu = new File(mContext.getCacheDir(), "extended_power_menu");
-                if (powermenu == null) {
-                    Helpers.log("ExtendedPowerMenuHook", "No writable path found!");
-                    return;
+            protected void before(MethodHookParam param) throws Throwable {
+                ComponentName componentName = (ComponentName) param.args[0];
+                if (componentName.getClassName().contains("GlobalActions")) {
+                    param.setResult(false);
                 }
-                if (powermenu.exists()) powermenu.delete();
-
-                InputStream inputStream;
-                FileOutputStream outputStream;
-                byte[] fileBytes;
-                Resources resources = Helpers.getModuleRes(mContext);
-                inputStream = resources.openRawResource(resources.getIdentifier("extended_power_menu", "raw", Helpers.modulePkg));
-                fileBytes = new byte[inputStream.available()];
-                inputStream.read(fileBytes);
-                outputStream = new FileOutputStream(powermenu);
-                outputStream.write(fileBytes);
-                outputStream.close();
-                inputStream.close();
-
-                if (!powermenu.exists()) {
-                    Helpers.log("ExtendedPowerMenuHook", "MAML file not found in cache");
-                    return;
-                }
-
-                Class<?> ResourceManager = XposedHelpers.findClass("com.miui.maml.ResourceManager", lpparam.classLoader);
-                Class<?> ZipResourceLoader = XposedHelpers.findClass("com.miui.maml.util.ZipResourceLoader", lpparam.classLoader);
-                Class<?> ScreenContext = XposedHelpers.findClass("com.miui.maml.ScreenContext", lpparam.classLoader);
-                Class<?> ScreenElementRoot = XposedHelpers.findClass("com.miui.maml.ScreenElementRoot", lpparam.classLoader);
-
-                XposedHelpers.setObjectField(param.thisObject, "mResourceManager", XposedHelpers.newInstance(ResourceManager, XposedHelpers.newInstance(ZipResourceLoader, powermenu.getPath())));
-                Object mResourceManager = XposedHelpers.getObjectField(param.thisObject, "mResourceManager");
-                Object mScreenElementRoot = XposedHelpers.newInstance(ScreenElementRoot, XposedHelpers.newInstance(ScreenContext, mContext, mResourceManager));
-                XposedHelpers.setObjectField(param.thisObject, "mScreenElementRoot", mScreenElementRoot);
-                XposedHelpers.callMethod(mScreenElementRoot, "setOnExternCommandListener", XposedHelpers.getObjectField(param.thisObject, "mCommandListener"));
-                XposedHelpers.callMethod(mScreenElementRoot, "setKeepResource", true);
-                XposedHelpers.callMethod(mScreenElementRoot, "load");
-                XposedHelpers.callMethod(mScreenElementRoot, "init");
             }
         });
     }
