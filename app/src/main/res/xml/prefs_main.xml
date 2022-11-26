@@ -36,6 +36,7 @@
 			android:summary="@string/miuizer_show_settingsicon_summ"
 			android:entries="@array/settingsicon"
 			android:entryValues="@array/settingsicon_val"
+			miuizer:valueAsSummary="true"
 			android:defaultValue="1" />
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_miuizer_launchericon"

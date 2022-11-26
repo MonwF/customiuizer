@@ -86,10 +86,11 @@ public class ModSearchAdapter extends BaseAdapter implements Filterable {
 			filterString = constraint.toString().toLowerCase();
 			final ArrayList<ModData> nlist = new ArrayList<ModData>();
 
-			for (ModData filterableData: Helpers.allModsList)
-			if (constraint.toString().equals(Helpers.NEW_MODS_SEARCH_QUERY)) {
-				if (Helpers.newMods.contains(filterableData.key)) nlist.add(filterableData);
-			} else if (filterableData.title.toLowerCase().contains(filterString)) nlist.add(filterableData);
+			for (ModData filterableData: Helpers.allModsList) {
+				if (constraint.toString().equals(Helpers.NEW_MODS_SEARCH_QUERY)) {
+					if (Helpers.newMods.contains(filterableData.key)) nlist.add(filterableData);
+				} else if (filterableData.title.toLowerCase().contains(filterString)) nlist.add(filterableData);
+			}
 
 			FilterResults results = new FilterResults();
 			results.values = nlist;

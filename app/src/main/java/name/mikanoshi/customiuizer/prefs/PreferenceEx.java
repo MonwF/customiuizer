@@ -20,8 +20,8 @@ import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class PreferenceEx extends Preference implements PreferenceState {
 	private final Resources res = getContext().getResources();
-	private final int primary = res.getColor(R.color.preference_primary_text, getContext().getTheme());
 	private final int secondary = res.getColor(R.color.preference_secondary_text, getContext().getTheme());
+	private final int disableColor = res.getColor(R.color.preference_primary_text_disable, getContext().getTheme());
 	private final int childpadding = res.getDimensionPixelSize(R.dimen.preference_item_child_padding);
 
 	private final boolean child;
@@ -55,6 +55,9 @@ public class PreferenceEx extends Preference implements PreferenceState {
 
 		summary.setVisibility(customSummary != null || countAsSummary || getSummary() == null || getSummary().equals("") ? View.GONE : View.VISIBLE);
 		valSummary.setVisibility(customSummary != null || countAsSummary ? View.VISIBLE : View.GONE);
+		if (customSummary != null || countAsSummary) {
+			valSummary.setTextColor(isEnabled() ? secondary : disableColor);
+		}
 		if (customSummary != null)
 			valSummary.setText(customSummary);
 		else if (countAsSummary) {
@@ -62,17 +65,12 @@ public class PreferenceEx extends Preference implements PreferenceState {
 			valSummary.setText(String.valueOf(count));
 		} else
 			valSummary.setText(null);
-		if (warning)
+		if (warning) {
 			title.setTextColor(Helpers.markColor);
-		else
-			title.setTextColor(isEnabled() ? primary : secondary);
+		}
 		title.setText(getTitle() +  (unsupported ? " ⨯" : (dynamic ? " ⟲" : "")));
 		if (newmod) Helpers.applyNewMod(title);
 
-		if (notice) try {
-			ImageView arrow = finalView.findViewById(finalView.getResources().getIdentifier("arrow_right", "id", "miui"));
-			if (arrow != null) arrow.setVisibility(View.GONE);
-		} catch (Throwable ignore) {}
 		int hrzPadding = childpadding + (child ? childpadding : 0);
 		finalView.setPadding(hrzPadding, 0, childpadding, 0);
 		if (longClickable) {
@@ -103,16 +101,13 @@ public class PreferenceEx extends Preference implements PreferenceState {
 
 		TextView title = (TextView) view.findViewById(android.R.id.title);
 		title.setMaxLines(3);
-		title.setTextColor(primary);
 
 		TextView summary = (TextView) view.findViewById(android.R.id.summary);
-		summary.setTextColor(secondary);
 
 		TextView valSummary = view.itemView.findViewById(android.R.id.hint);
 		if (valSummary == null) {
 			valSummary = new TextView(getContext());
 			valSummary.setTextSize(TypedValue.COMPLEX_UNIT_PX, summary.getTextSize());
-			valSummary.setTextColor(secondary);
 			valSummary.setPadding(summary.getPaddingLeft(), summary.getPaddingTop(), res.getDimensionPixelSize(R.dimen.preference_summary_padding_right), summary.getPaddingBottom());
 			valSummary.setId(android.R.id.hint);
 			((ViewGroup) view.itemView).addView(valSummary, 2);

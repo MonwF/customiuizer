@@ -50,17 +50,17 @@
 				android:id="@+id/seekbar"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginLeft="0dp"
+				android:layout_marginStart="0dp"
 				android:paddingStart="4dp"
-				android:layout_marginRight="@dimen/seekbar_margin_right"
-				android:layout_alignParentLeft="true" />
+				android:layout_marginEnd="@dimen/seekbar_margin_right"
+				android:layout_alignParentStart="true" />
 
 			<TextView
 				android:id="@+id/seekbar_value"
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
-				android:layout_alignParentRight="true"
-				android:paddingRight="@dimen/preference_summary_padding_right"
+				android:layout_alignParentEnd="true"
+				android:paddingEnd="@dimen/preference_summary_padding_right"
 				android:layout_centerVertical="true"
 				android:maxLines="1"
 				tools:text="Value"

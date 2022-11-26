@@ -19,10 +19,9 @@ public class ListPreferenceEx extends ListPreference implements PreferenceState 
 
 	private CharSequence sValue;
 	private final Resources res = getContext().getResources();
-	private final int primary = res.getColor(R.color.preference_primary_text, getContext().getTheme());
-	private final int secondary = res.getColor(R.color.preference_secondary_text, getContext().getTheme());
 	private final int childpadding = res.getDimensionPixelSize(R.dimen.preference_item_child_padding);
-
+	private final int secondary = res.getColor(R.color.preference_secondary_text, getContext().getTheme());
+	private final int disableColor = res.getColor(R.color.preference_primary_text_disable, getContext().getTheme());
 	private final boolean child;
 	private final boolean dynamic;
 	private boolean newmod = false;
@@ -60,8 +59,9 @@ public class ListPreferenceEx extends ListPreference implements PreferenceState 
 		summary.setVisibility(valueAsSummary || getSummary() == null || getSummary().equals("") ? View.GONE : View.VISIBLE);
 		valSummary.setVisibility(valueAsSummary ? View.VISIBLE : View.GONE);
 		valSummary.setText(valueAsSummary ? sValue : "");
-		if (valueAsSummary) valSummary.setTextColor(Helpers.isNightMode(getContext()) ? secondary : primary);
-		title.setTextColor(isEnabled() ? primary : secondary);
+		if (valueAsSummary) {
+			valSummary.setTextColor(isEnabled() ? secondary : disableColor);
+		}
 		title.setText(getTitle() + (unsupported ? " ⨯" : (dynamic ? " ⟲" : "")));
 		if (newmod) Helpers.applyNewMod(title);
 
@@ -76,13 +76,11 @@ public class ListPreferenceEx extends ListPreference implements PreferenceState 
 		title.setMaxLines(3);
 
 		TextView summary = (TextView) view.findViewById(android.R.id.summary);
-		summary.setTextColor(secondary);
 
 		TextView valSummary = view.itemView.findViewById(android.R.id.hint);
 		if (valSummary == null) {
 			valSummary = new TextView(getContext());
 			valSummary.setTextSize(TypedValue.COMPLEX_UNIT_PX, summary.getTextSize());
-			valSummary.setTextColor(summary.getCurrentTextColor());
 			valSummary.setPadding(summary.getPaddingLeft(), summary.getPaddingTop(), res.getDimensionPixelSize(R.dimen.preference_summary_padding_right), summary.getPaddingBottom());
 			valSummary.setId(android.R.id.hint);
 			((ViewGroup) view.itemView).addView(valSummary, 2);

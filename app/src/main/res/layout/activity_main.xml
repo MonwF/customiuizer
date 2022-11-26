@@ -14,7 +14,8 @@
 		app:contentInsetLeft="0dp"
 		app:contentInsetRight="0dp"
 		app:titleMarginStart="0dp"
-		android:theme="@style/AppToolbarStyle"
+		app:titleTextColor="@color/preference_primary_text_color"
+		app:theme="@style/AppToolbarStyle"
 		/>
 
 	<FrameLayout
