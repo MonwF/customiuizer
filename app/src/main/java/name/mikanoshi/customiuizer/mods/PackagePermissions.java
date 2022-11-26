@@ -151,23 +151,6 @@ public class PackagePermissions {
 			}
 		});
 
-		// Do not restrict background activity
-//		if (!Helpers.isNougat())
-//		Helpers.hookAllMethods("com.android.server.am.ActivityManagerService", lpparam.classLoader, "appRestrictedInBackgroundLocked", new MethodHook() {
-//			@Override
-//			protected void after(MethodHookParam param) throws Throwable {
-//				if (Helpers.modulePkg.equals(param.args[1])) param.setResult(0);
-//			}
-//		});
-//
-//		if (!Helpers.isNougat())
-//		Helpers.hookAllMethods("com.android.server.am.ActivityManagerService", lpparam.classLoader, "appServicesRestrictedInBackgroundLocked", new MethodHook() {
-//			@Override
-//			protected void after(MethodHookParam param) throws Throwable {
-//				if (Helpers.modulePkg.equals(param.args[1])) param.setResult(0);
-//			}
-//		});
-
 		Helpers.hookAllMethodsSilently("com.android.server.wm.ActivityRecordInjector", lpparam.classLoader, "canShowWhenLocked", new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {

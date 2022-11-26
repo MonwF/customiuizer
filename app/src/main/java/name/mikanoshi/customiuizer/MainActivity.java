@@ -165,14 +165,20 @@ public class MainActivity extends AppCompatActivity {
 					Toast.makeText(this, R.string.permission_permanent, Toast.LENGTH_LONG).show();
 				break;
 			case Helpers.REQUEST_PERMISSIONS_WIFI:
-				if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//					Fragment frag = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-//					if (frag instanceof name.mikanoshi.customiuizer.subs.System_NoScreenLock)
-//					((name.mikanoshi.customiuizer.subs.System_NoScreenLock)frag).openWifiNetworks();
-				} else if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION))
-					Toast.makeText(this, R.string.permission_scan, Toast.LENGTH_LONG).show();
-				else
-					Toast.makeText(this, R.string.permission_permanent, Toast.LENGTH_LONG).show();
+				if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+					if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION))
+						Toast.makeText(this, R.string.permission_scan, Toast.LENGTH_LONG).show();
+					else
+						Toast.makeText(this, R.string.permission_permanent, Toast.LENGTH_LONG).show();
+				}
+				break;
+			case Helpers.REQUEST_PERMISSIONS_BLUETOOTH:
+				if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+					if (shouldShowRequestPermissionRationale(Manifest.permission.BLUETOOTH_CONNECT))
+						Toast.makeText(this, R.string.permission_scan, Toast.LENGTH_LONG).show();
+					else
+						Toast.makeText(this, R.string.permission_permanent, Toast.LENGTH_LONG).show();
+				}
 				break;
 			case Helpers.REQUEST_PERMISSIONS_REPORT:
 					Toast.makeText(this, ":(", Toast.LENGTH_SHORT).show();
