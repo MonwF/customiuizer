@@ -12,6 +12,9 @@
 		<item name="android:spinnerStyle">@style/AppSpinnerStyle</item>
 		<item name="android:spinnerItemStyle">@style/DropDownItemStyle</item>
 		<item name="android:textAppearanceListItem">@style/AppTextAppearance.Primary</item>
+		<item name="android:textAppearanceListItemSecondary">@style/AppTextAppearance.Secondary</item>
+		<item name="android:textColorPrimary">@color/preference_primary_text</item>
+		<item name="android:textColorSecondary">@color/preference_secondary_text</item>
 		<item name="android:listPreferredItemPaddingLeft">@dimen/preference_item_child_padding</item>
 		<item name="android:listPreferredItemPaddingStart">@dimen/preference_item_child_padding</item>
 		<item name="colorAccent">@color/highlight_normal_light</item>
@@ -87,15 +90,13 @@
 	<style name="AppTextAppearance.Primary" parent="TextAppearance.AppCompat.Subhead">
 		<item name="android:textSize">@dimen/normal_text_size</item>
 		<item name="android:textStyle">normal</item>
-		<item name="android:textColor">@color/preference_primary_text</item>
 	</style>
-	<style name="AppTextAppearance.Secondary">
+	<style name="AppTextAppearance.Secondary" parent="TextAppearance.AppCompat.Display1">
 		<item name="android:textSize">@dimen/secondary_text_size</item>
 		<item name="android:textStyle">normal</item>
-		<item name="android:textColor">@color/preference_secondary_text</item>
 	</style>
 
-	<style name="AppPreferenceCategory">
+	<style name="AppPreferenceCategory" parent="PreferenceCategoryTitleTextStyle">
 		<item name="android:textSize">@dimen/preference_category_text_size</item>
 		<item name="android:textColor">@color/preference_category_text_color</item>
 	</style>
@@ -103,7 +104,7 @@
 	<style name="AppTextAppearance.Widget" />
 	<style name="AppTextAppearance.Widget.EditText">
 		<item name="android:textSize">@dimen/secondary_text_size</item>
-		<item name="android:textColor">?attr/editTextColor</item>
+		<item name="android:textColor">@color/color_on_surface</item>
 		<item name="android:textColorHint">@color/hint_edit_text_color</item>
 	</style>
 

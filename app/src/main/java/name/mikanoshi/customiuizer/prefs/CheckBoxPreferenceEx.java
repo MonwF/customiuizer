@@ -14,10 +14,8 @@ import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class CheckBoxPreferenceEx extends SwitchPreference implements PreferenceState {
-
 	private final Resources res = getContext().getResources();
-	private final int primary = res.getColor(R.color.preference_primary_text, getContext().getTheme());
-	private final int secondary = res.getColor(R.color.preference_secondary_text, getContext().getTheme());
+
 	private final int childpadding = res.getDimensionPixelSize(R.dimen.preference_item_child_padding);
 
 	private final boolean child;
@@ -36,7 +34,6 @@ public class CheckBoxPreferenceEx extends SwitchPreference implements Preference
 
 	public void getView(View finalView) {
 		TextView title = finalView.findViewById(android.R.id.title);
-		title.setTextColor(isEnabled() ? primary : secondary);
 		title.setText(getTitle() + (unsupported ? " ⨯" : (dynamic ? " ⟲" : "")));
 		if (newmod) Helpers.applyNewMod(title);
 
@@ -49,10 +46,7 @@ public class CheckBoxPreferenceEx extends SwitchPreference implements Preference
 		super.onBindViewHolder(view);
 		TextView title = (TextView) view.findViewById(android.R.id.title);
 		title.setMaxLines(3);
-		title.setTextColor(primary);
 
-		TextView summary = (TextView) view.findViewById(android.R.id.summary);
-		summary.setTextColor(secondary);
 		getView(view.itemView);
 	}
 

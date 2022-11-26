@@ -547,6 +547,7 @@
 			android:dependency="pref_key_system_showpct"
 			android:defaultValue="26"
 			miuizer:minValue="0"
+			miuizer:child="true"
 			miuizer:maxValue="50"
 			miuizer:stepValue="1"
 			miuizer:format="%d dp" />

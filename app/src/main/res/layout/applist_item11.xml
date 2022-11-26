@@ -37,7 +37,7 @@
 				android:layout_height="wrap_content"
 				android:layout_gravity="center_vertical"
 				android:singleLine="true"
-				android:textColor="@color/app_manager_text_color"
+				android:textColor="@color/preference_primary_text"
 				android:textSize="15sp" />
 
 			<TextView
@@ -47,9 +47,8 @@
 				android:layout_gravity="center_vertical"
 				android:singleLine="true"
 				android:visibility="gone"
-				android:textColor="@color/preference_secondary_text_color"
+				android:textColor="@color/preference_secondary_text"
 				android:textSize="15sp" />
-
 		</LinearLayout>
 
 		<ImageView
