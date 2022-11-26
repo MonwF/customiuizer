@@ -322,7 +322,7 @@
     <string name="system_mods_lockscreen_functionality">Additional functionality</string>
     <string name="system_mods_lockscreen_security">Security</string>
     <string name="system_iconlabletoasts_title">Additional elements</string>
-    <string name="system_iconlabletoasts_summ">Add application\'s icon and label to its toasts</string>
+    <string name="system_iconlabletoasts_summ">Add application\'s icon and label to its toasts(Add apps that send toasts to LSPosed scope first)</string>
     <string name="system_blocktoasts_title">Block toasts</string>
     <string name="system_blocktoasts_summ">Prevent selected apps from showing toasts</string>
     <string name="system_airplanemodeconfig_title">Airplane mode configuration</string>
