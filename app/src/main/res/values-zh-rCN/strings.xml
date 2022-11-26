@@ -600,7 +600,7 @@
     <string name="controls_mods_power">电源键</string>
     <string name="controls_mods_volume">音量键</string>
     <string name="controls_volumecursor_title">控制输入法光标</string>
-    <string name="controls_volumecursor_summ">使用音量键移动文本输入法光标</string>
+    <string name="controls_volumecursor_summ">使用音量键移动文本输入法光标(请将输入法App加入作用域)</string>
     <string name="controls_volumecursor_reverse_title">改变方向</string>
     <string name="controls_volumecursor_reverse_summ">交换光标移动的方向</string>
     <string name="controls_volumemedia_up_title">长按音量上键动作</string>

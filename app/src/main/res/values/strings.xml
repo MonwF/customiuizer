@@ -178,7 +178,7 @@
     <string name="system_screenshot_quality_title">Quality</string>
     <string name="system_screenshot_path_title">Save folder</string>
     <string name="system_screenshot_overlay_title">Hide overlays on screenshots</string>
-    <string name="system_screenshot_overlay_summ">Temporarily hide overlays while taking a screenshot(Add apps that have overlays to LSPosed Scope first)</string>
+    <string name="system_screenshot_overlay_summ">Temporarily hide overlays while taking a screenshot(Add apps that have overlays to LSPosed scope first)</string>
     <string name="system_screenshot_floattime_title">Floating screenshot display time</string>
     <string name="system_screenshot_floattime_summ">Delay before a floating window with newly created screenshot disappears</string>
     <string name="system_chargeanimtime_title">Charge animation screen timeout</string>
@@ -343,7 +343,7 @@
     <string name="system_apksign_title">Disable signature verification</string>
     <string name="system_apksign_summ">Allow app updating even when APK signature differs from installed one</string>
     <string name="system_magnifier_title">Text magnifier</string>
-    <string name="system_magnifier_summ">Display magnified text when moving an input cursor or making a selection</string>
+    <string name="system_magnifier_summ">Display magnified text when moving an input cursor or making a selection(Add InputMethod apps to LSPosed scope first)</string>
     <string name="system_nooverscroll_title">Disable overscroll</string>
     <string name="system_nooverscroll_summ">Prevent list views from overscrolling</string>
     <string name="system_removesecure_title">Disable secure content protection</string>
