@@ -137,6 +137,7 @@ public class Helpers {
 	public static final int REQUEST_PERMISSIONS_RESTORE = 2;
 	public static final int REQUEST_PERMISSIONS_WIFI = 3;
 	public static final int REQUEST_PERMISSIONS_REPORT = 4;
+	public static final int REQUEST_PERMISSIONS_BLUETOOTH = 5;
 	public static LruCache<String, Bitmap> memoryCache = new LruCache<String, Bitmap>((int)(Runtime.getRuntime().maxMemory() / 1024) / 2) {
 		@Override
 		protected int sizeOf(String key, Bitmap icon) {
@@ -420,9 +421,9 @@ public class Helpers {
 		return act.checkSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED;
 	}
 
-	public static boolean checkCoarsePerm(AppCompatActivity act, int action) {
-		if (act.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-			act.requestPermissions(new String[]{ Manifest.permission.ACCESS_COARSE_LOCATION }, action);
+	public static boolean checkBluetoothPerm(AppCompatActivity act, int action) {
+		if (act.checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+			act.requestPermissions(new String[]{ Manifest.permission.BLUETOOTH_CONNECT }, action);
 			return false;
 		} else return true;
 	}

@@ -47,9 +47,11 @@ public class BTList extends SubFragment {
 		public void onReceive(Context context, Intent intent) {
 			ArrayList<BluetoothDevice> deviceList = intent.getParcelableArrayListExtra("device_list");
 			btList.clear();
-			if (deviceList != null)
-			for (BluetoothDevice device: deviceList)
-			btList.add(new Pair<String, String>(device.getAddress(), device.getName()));
+			if (deviceList != null) {
+				for (BluetoothDevice device: deviceList) {
+					btList.add(new Pair<String, String>(device.getAddress(), device.getName()));
+				}
+			}
 			btAdapter1.notifyDataSetChanged();
 			btAdapter2.notifyDataSetChanged();
 			updateProgressBar();

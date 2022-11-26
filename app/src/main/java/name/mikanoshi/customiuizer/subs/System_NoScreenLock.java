@@ -41,6 +41,7 @@ public class System_NoScreenLock extends SubFragment {
 		findPreference("pref_key_system_noscreenlock_bt").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
+				if (!Helpers.checkBluetoothPerm((AppCompatActivity) getActivity(), Helpers.REQUEST_PERMISSIONS_BLUETOOTH)) return false;
 				openBtNetworks();
 				return true;
 			}
