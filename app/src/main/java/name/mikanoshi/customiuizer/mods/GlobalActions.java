@@ -1,5 +1,11 @@
 package name.mikanoshi.customiuizer.mods;
 
+import static java.lang.System.currentTimeMillis;
+import static de.robv.android.xposed.XposedHelpers.findClass;
+import static de.robv.android.xposed.XposedHelpers.findClassIfExists;
+import static de.robv.android.xposed.XposedHelpers.findField;
+import static de.robv.android.xposed.XposedHelpers.findMethodExact;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -15,9 +21,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
-import android.graphics.LinearGradient;
-import android.graphics.Shader;
-import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.net.wifi.WifiManager;
 import android.nfc.NfcAdapter;
@@ -28,14 +31,12 @@ import android.os.Handler;
 import android.os.Process;
 import android.os.SystemClock;
 import android.os.UserHandle;
-import android.preference.PreferenceActivity.Header;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.WindowManager;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -46,25 +47,17 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
-
+import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 import name.mikanoshi.customiuizer.GateWaySettings;
 import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.Helpers.MethodHook;
-
-import static de.robv.android.xposed.XposedHelpers.findClass;
-import static de.robv.android.xposed.XposedHelpers.findClassIfExists;
-import static de.robv.android.xposed.XposedHelpers.findField;
-import static de.robv.android.xposed.XposedHelpers.findMethodExact;
-import static java.lang.System.currentTimeMillis;
 
 @SuppressWarnings("WeakerAccess")
 public class GlobalActions {

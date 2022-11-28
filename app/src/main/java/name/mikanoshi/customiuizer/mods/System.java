@@ -147,7 +147,6 @@ import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
@@ -175,12 +174,9 @@ import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import miui.telephony.TelephonyManager;
 
 import de.robv.android.xposed.XC_MethodHook.MethodHookParam;
 import de.robv.android.xposed.XC_MethodReplacement;
@@ -188,6 +184,7 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 import de.robv.android.xposed.callbacks.XCallback;
+import miui.telephony.TelephonyManager;
 import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.AudioVisualizer;
@@ -1208,26 +1205,17 @@ public class System {
     }
 
     public static void ExpandNotificationsHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.NotificationViewHierarchyManager", lpparam.classLoader, "updateRowStatesInternal", new MethodHook() {
+        Helpers.hookAllMethods("com.android.systemui.statusbar.notification.row.ExpandableNotificationRow", lpparam.classLoader, "showFeedbackIcon", new MethodHook() {
             @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                Object mListContainer = XposedHelpers.getObjectField(param.thisObject, "mListContainer");
-                int containerChildCount = (int)XposedHelpers.callMethod(mListContainer, "getContainerChildCount");
-                int statusbarState = (int)XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mStatusBarStateController"), "getCurrentOrUpcomingState");
-                if (statusbarState != 1) {
-                    for (int i = containerChildCount - 1; i >= 0; i--) {
-                        View enotificationrow = (View)XposedHelpers.callMethod(mListContainer, "getContainerChildAt", i);
-                        if (enotificationrow != null && enotificationrow.getClass().getSimpleName().equalsIgnoreCase("MiuiExpandableNotificationRow")) try {
-                            Object notification = XposedHelpers.getObjectField(XposedHelpers.callMethod(enotificationrow, "getEntry"), "mSbn");
-                            String pkgName = (String)XposedHelpers.callMethod(notification, "getPackageName");
-                            int opt = Integer.parseInt(MainModule.mPrefs.getString("system_expandnotifs", "1"));
-                            boolean isSelected = MainModule.mPrefs.getStringSet("system_expandnotifs_apps").contains(pkgName);
-                            if (opt == 2 && !isSelected || opt == 3 && isSelected)
-                                XposedHelpers.callMethod(enotificationrow, "setSystemExpanded", true);
-                        } catch (Throwable t) {
-                            XposedBridge.log(t);
-                        }
-                    }
+            protected void before(MethodHookParam param) throws Throwable {
+                boolean mOnKeyguard = (boolean) XposedHelpers.callMethod(param.thisObject, "isOnKeyguard");
+                if (!mOnKeyguard) {
+                    Object notification = XposedHelpers.getObjectField(XposedHelpers.callMethod(param.thisObject, "getEntry"), "mSbn");
+                    String pkgName = (String)XposedHelpers.callMethod(notification, "getPackageName");
+                    int opt = Integer.parseInt(MainModule.mPrefs.getString("system_expandnotifs", "1"));
+                    boolean isSelected = MainModule.mPrefs.getStringSet("system_expandnotifs_apps").contains(pkgName);
+                    if (opt == 2 && !isSelected || opt == 3 && isSelected)
+                        XposedHelpers.callMethod(param.thisObject, "setSystemExpanded", true);
                 }
             }
         });
@@ -2744,8 +2732,7 @@ public class System {
                     XposedHelpers.callMethod(mService, "reboot", false, "bootloader", false);
                     custom = true;
                 } else if ("softreboot".equals(cmd)) {
-                    Helpers.proxySystemProperties("set", "ctl.restart", "surfaceflinger", null);
-                    Helpers.proxySystemProperties("set", "ctl.restart", "zygote", null);
+                    mContext.sendBroadcast(new Intent(ACTION_PREFIX + "FastReboot"));
                     custom = true;
                 } else if ("killsysui".equals(cmd)) {
                     mContext.sendBroadcast(new Intent(ACTION_PREFIX + "RestartSystemUI"));
