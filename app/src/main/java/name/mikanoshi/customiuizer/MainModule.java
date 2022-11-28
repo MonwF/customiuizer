@@ -419,6 +419,13 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getInt("system_screenshot_floattime", 0) > 0) System.ScreenshotFloatTimeHook(lpparam);
         }
 
+        if (pkg.equals("com.miui.gallery")) {
+            int folder = mPrefs.getStringAsInt("system_gallery_screenshots_path", 1);
+            if (folder > 1) {
+                System.GalleryScreenshotPathHook(lpparam);
+            }
+        }
+
         final boolean isMIUILauncherPkg = pkg.equals("com.miui.home");
         final boolean isLauncherPkg = isMIUILauncherPkg || pkg.equals("com.mi.android.globallauncher");
         final boolean isLauncherPerf = mPrefs.getBoolean("launcher_compat");

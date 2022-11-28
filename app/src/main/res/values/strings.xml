@@ -177,6 +177,7 @@
     <string name="system_screenshot_format_title">Format</string>
     <string name="system_screenshot_quality_title">Quality</string>
     <string name="system_screenshot_path_title">Save folder</string>
+    <string name="system_gallery_screenshots_path_title">Gallery screenshots folder</string>
     <string name="system_screenshot_overlay_title">Hide overlays on screenshots</string>
     <string name="system_screenshot_overlay_summ">Temporarily hide overlays while taking a screenshot(Add apps that have overlays to LSPosed scope first)</string>
     <string name="system_screenshot_floattime_title">Floating screenshot display time</string>

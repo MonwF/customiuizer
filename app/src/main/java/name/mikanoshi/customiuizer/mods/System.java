@@ -6851,6 +6851,21 @@ public class System {
         Helpers.hookAllMethods("android.view.WindowManagerGlobal", lpparam.classLoader, "removeView", removeViewHook);
     }
 
+    public static void GalleryScreenshotPathHook(LoadPackageParam lpparam) {
+        Class<?> MIUIStorageConstants = findClass("com.miui.gallery.storage.constants.MIUIStorageConstants", lpparam.classLoader);
+        int folder = MainModule.mPrefs.getStringAsInt("system_gallery_screenshots_path", 1);
+        String ssPath = "";
+        if (folder == 2) {
+            ssPath = Environment.DIRECTORY_PICTURES + File.separator + "Screenshots";
+        }
+        else if (folder == 3) {
+            ssPath = Environment.DIRECTORY_DCIM + File.separator + "Screenshots";
+        }
+        if (folder > 1) {
+            XposedHelpers.setStaticObjectField(MIUIStorageConstants, "DIRECTORY_SCREENSHOT_PATH", ssPath);
+        }
+    }
+
     public static void ScreenshotFloatTimeHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethod("com.miui.screenshot.GlobalScreenshot", lpparam.classLoader, "startGotoThumbnailAnimation", Runnable.class, new MethodHook() {
             @Override
