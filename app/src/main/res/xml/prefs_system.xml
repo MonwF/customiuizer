@@ -1318,6 +1318,14 @@
 			android:summary="@string/system_screenshot_overlay_summ"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_gallery_screenshots_path"
+			android:title="@string/system_gallery_screenshots_path_title"
+			android:entries="@array/screenshotpath"
+			android:entryValues="@array/screenshotpath_val"
+			android:defaultValue="1"
+			miuizer:valueAsSummary="true" />
+
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_system_screenshot_floattime"
 			android:title="@string/system_screenshot_floattime_title"
