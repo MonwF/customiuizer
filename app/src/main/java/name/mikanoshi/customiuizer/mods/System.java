@@ -1390,11 +1390,13 @@ public class System {
             protected void after(MethodHookParam param) throws Throwable {
                 TextView meter = (TextView)param.thisObject;
                 if (meter == null) return;
-                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)meter.getLayoutParams();
-                int margin = Math.round(meter.getResources().getDisplayMetrics().density * 4);
-                lp.rightMargin = margin;
-                lp.leftMargin = margin;
-                meter.setLayoutParams(lp);
+                if (meter.getTag() == null || !"slot_text_icon".equals(meter.getTag())) {
+                    LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)meter.getLayoutParams();
+                    int margin = Math.round(meter.getResources().getDisplayMetrics().density * 4);
+                    lp.rightMargin = margin;
+                    lp.leftMargin = margin;
+                    meter.setLayoutParams(lp);
+                }
             }
         });
     }
@@ -1649,22 +1651,24 @@ public class System {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
                 TextView meter = (TextView)param.thisObject;
-                float density = meter.getResources().getDisplayMetrics().density;
-                int font = Integer.parseInt(MainModule.mPrefs.getString("system_detailednetspeed_font", "3"));
-                float size = 8.0f;
-                float spacing = 0.9f;
-                int top = 0;
-                switch (font) {
-                    case 1: size = 9f; spacing = 0.85f; top = Math.round(density);break;
-                    case 2: size = 8.5f; break;
-                    case 4: size = 7.5f; break;
+                if (meter.getTag() == null || !"slot_text_icon".equals(meter.getTag())) {
+                    float density = meter.getResources().getDisplayMetrics().density;
+                    int font = Integer.parseInt(MainModule.mPrefs.getString("system_detailednetspeed_font", "3"));
+                    float size = 8.0f;
+                    float spacing = 0.9f;
+                    int top = 0;
+                    switch (font) {
+                        case 1: size = 9f; spacing = 0.85f; top = Math.round(density);break;
+                        case 2: size = 8.5f; break;
+                        case 4: size = 7.5f; break;
+                    }
+                    meter.setTextSize(TypedValue.COMPLEX_UNIT_DIP, size);
+                    meter.setSingleLine(false);
+                    meter.setLines(2);
+                    meter.setMaxLines(2);
+                    meter.setLineSpacing(0, spacing);
+                    meter.setPadding(meter.getPaddingLeft(), meter.getPaddingTop() - top, meter.getPaddingRight(), meter.getPaddingBottom());
                 }
-                meter.setTextSize(TypedValue.COMPLEX_UNIT_DIP, size);
-                meter.setSingleLine(false);
-                meter.setLines(2);
-                meter.setMaxLines(2);
-                meter.setLineSpacing(0, spacing);
-                meter.setPadding(meter.getPaddingLeft(), meter.getPaddingTop() - top, meter.getPaddingRight(), meter.getPaddingBottom());
             }
         });
         boolean reduceVis = MainModule.mPrefs.getBoolean("system_detailednetspeed_zero");
@@ -5060,13 +5064,11 @@ public class System {
             }
         });
     }
-    private static TextView createBatteryDetailView(Context mContext, Class <?> NetworkSpeedViewClass, LinearLayout.LayoutParams lp) {
-        TextView batteryView = (TextView) XposedHelpers.newInstance(NetworkSpeedViewClass, mContext, null);
-        batteryView.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+    private static TextView createBatteryDetailView(Context mContext, LinearLayout.LayoutParams lp) {
+        TextView batteryView = (TextView) LayoutInflater.from(mContext).inflate(statusbarTextIconLayoutResId, null);
         XposedHelpers.setObjectField(batteryView, "mVisibilityByDisableInfo", 0);
         XposedHelpers.setObjectField(batteryView, "mVisibleByController", true);
         XposedHelpers.setObjectField(batteryView, "mShown", true);
-        batteryView.setSingleLine(false);
         XposedHelpers.setAdditionalInstanceField(batteryView, "mCustomSlot", "battery_detail");
         Resources res = mContext.getResources();
         int styleId = res.getIdentifier("TextAppearance.StatusBar.Clock", "style", "com.android.systemui");
@@ -5075,12 +5077,11 @@ public class System {
         if (opt == 1) {
             batteryView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 8.5f);
             batteryView.setLineSpacing(0, 0.9f);
+            batteryView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         }
         else {
             batteryView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13.45f);
-            batteryView.setLineSpacing(0, 1.0f);
         }
-        batteryView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         int horizonMargin = (int) TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
             2.5f,
@@ -5137,8 +5138,11 @@ public class System {
         };
         handler.post(refreshRunner);
     }
+    private static int statusbarTextIconLayoutResId = 0;
+    public static void setupStatusBar(LoadPackageParam lpparam) {
+        statusbarTextIconLayoutResId = MainModule.resHooks.addResource("statusbar_text_icon", R.layout.statusbar_text_icon);
+    }
     public static void DisplayBatteryDetailHook(LoadPackageParam lpparam) {
-        Class <?> NetworkSpeedViewClass = XposedHelpers.findClass("com.android.systemui.statusbar.views.NetworkSpeedView", lpparam.classLoader);
         Class <?> DarkIconDispatcherClass = XposedHelpers.findClass("com.android.systemui.plugins.DarkIconDispatcher", lpparam.classLoader);
         Class <?> Dependency = findClass("com.android.systemui.Dependency", lpparam.classLoader);
         Class <?> StatusBarIconHolder = XposedHelpers.findClass("com.android.systemui.statusbar.phone.StatusBarIconHolder", lpparam.classLoader);
@@ -5172,7 +5176,7 @@ public class System {
                     if (type == 91) {
                         Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
                         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) XposedHelpers.callMethod(param.thisObject, "onCreateLayoutParams");
-                        TextView batteryView = createBatteryDetailView(mContext, NetworkSpeedViewClass, lp);
+                        TextView batteryView = createBatteryDetailView(mContext, lp);
                         int i = (int) param.args[0];
                         ViewGroup mGroup = (ViewGroup) XposedHelpers.getObjectField(param.thisObject, "mGroup");
                         mGroup.addView(batteryView, i);
@@ -5181,7 +5185,8 @@ public class System {
                     }
                 }
             });
-            Helpers.findAndHookMethod("com.android.systemui.statusbar.views.NetworkSpeedView", lpparam.classLoader, "getSlot", new MethodHook() {
+            Class <?> NetworkSpeedViewClass = XposedHelpers.findClass("com.android.systemui.statusbar.views.NetworkSpeedView", lpparam.classLoader);
+            Helpers.findAndHookMethod(NetworkSpeedViewClass, "getSlot", new MethodHook() {
                 @Override
                 protected void before(MethodHookParam param) throws Throwable {
                     Object customSlot = XposedHelpers.getAdditionalInstanceField(param.thisObject, "mCustomSlot");
@@ -5200,7 +5205,7 @@ public class System {
                     ViewGroup batteryViewContainer = (ViewGroup) mPadClockView.getParent();
                     int bvIndex = batteryViewContainer.indexOfChild(mPadClockView) - 1;
                     LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mPadClockView.getLayoutParams();
-                    TextView batteryView = createBatteryDetailView(mContext, NetworkSpeedViewClass, lp);
+                    TextView batteryView = createBatteryDetailView(mContext, lp);
                     batteryViewContainer.addView(batteryView, bvIndex);
                     mBatteryDetailViews.add(batteryView);
                     Object DarkIconDispatcher = XposedHelpers.callStaticMethod(Dependency, "get", DarkIconDispatcherClass);
@@ -6407,10 +6412,10 @@ public class System {
     }
 
     public static void NoNetworkSpeedSeparatorHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.views.NetworkSpeedSplitter", lpparam.classLoader, "init", new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.views.NetworkSpeedSplitter", lpparam.classLoader, "updateVisibility", new MethodHook() {
             @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                ((TextView)param.thisObject).setText("");
+            protected void before(MethodHookParam param) throws Throwable {
+                XposedHelpers.setObjectField(param.thisObject, "mNetworkSpeedVisibility", View.GONE);
             }
         });
     }
