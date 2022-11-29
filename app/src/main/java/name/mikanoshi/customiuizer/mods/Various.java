@@ -322,18 +322,17 @@ public class Various {
 				param.args[0] = checkBundle((Context)param.thisObject, (Bundle)param.args[0]);
 
 				// Bruteforce class on MIUI 12.5
-				if (Helpers.is125()) {
-					String fragCls = null;
-					Class<?> xfragCls = findClassIfExists("androidx.fragment.app.Fragment", lpparam.classLoader);
-					Field[] fields = param.thisObject.getClass().getDeclaredFields();
-					for (Field field: fields)
+				String fragCls = null;
+				Class<?> xfragCls = findClassIfExists("androidx.fragment.app.Fragment", lpparam.classLoader);
+				Field[] fields = param.thisObject.getClass().getDeclaredFields();
+				for (Field field: fields)
 					if (Fragment.class.isAssignableFrom(field.getType()) ||
 					   (xfragCls != null && xfragCls.isAssignableFrom(field.getType()))) {
 						fragCls = field.getType().getCanonicalName();
 						break;
 					}
 
-					if (fragCls != null)
+				if (fragCls != null)
 					Helpers.hookAllMethods(fragCls, lpparam.classLoader, "onActivityCreated", new MethodHook() {
 						@Override
 						protected void before(final MethodHookParam param) throws Throwable {
@@ -344,7 +343,6 @@ public class Various {
 							}
 						}
 					});
-				}
 			}
 		});
 

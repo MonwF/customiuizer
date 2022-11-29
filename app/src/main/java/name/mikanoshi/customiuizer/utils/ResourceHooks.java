@@ -53,6 +53,7 @@ public class ResourceHooks {
 		if (hooksApplied) return;
 		hooksApplied = true;
 		Helpers.findAndHookMethod(Resources.class, "getInteger", int.class, mReplaceHook);
+		Helpers.findAndHookMethod(Resources.class, "getLayout", int.class, mReplaceHook);
 		Helpers.findAndHookMethod(Resources.class, "getFraction", int.class, int.class, int.class, mReplaceHook);
 		Helpers.findAndHookMethod(Resources.class, "getBoolean", int.class, mReplaceHook);
 		Helpers.findAndHookMethod(Resources.class, "getDimension", int.class, mReplaceHook);

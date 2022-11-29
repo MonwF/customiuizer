@@ -182,6 +182,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         }
 
         if (pkg.equals("com.android.systemui")) {
+            System.setupStatusBar(lpparam);
             GlobalActions.setupStatusBar(lpparam);
 
             if (mPrefs.getBoolean("system_screenshot_overlay")) {
