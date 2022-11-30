@@ -2675,12 +2675,12 @@ public class System {
 
     public static void ExtendedPowerMenuHook(LoadPackageParam lpparam) {
         final boolean[] isListened = {false};
-        Helpers.findAndHookMethod("com.android.systemui.SystemUIFactory", lpparam.classLoader, "createFromConfig", Context.class, new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.SystemUIApplication", lpparam.classLoader, "onCreate", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 if (!isListened[0]) {
                     isListened[0] = true;
-                    Context mContext = (Context)param.args[0];
+                    Context mContext = (Context) XposedHelpers.callMethod(param.thisObject, "getApplicationContext");
                     File powermenu = new File(mContext.getCacheDir(), "extended_power_menu");
                     if (powermenu == null) {
                         Helpers.log("ExtendedPowerMenuHook", "No writable path found!");
@@ -5256,12 +5256,12 @@ public class System {
         });
 
         final boolean[] isListened = {false};
-        Helpers.findAndHookMethod("com.android.systemui.SystemUIFactory", lpparam.classLoader, "createFromConfig", Context.class, new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.SystemUIApplication", lpparam.classLoader, "onCreate", new MethodHook() {
             @Override
-            protected void before(MethodHookParam param) throws Throwable {
+            protected void after(MethodHookParam param) throws Throwable {
                 if (!isListened[0]) {
                     isListened[0] = true;
-                    Context mContext = (Context) param.args[0];
+                    Context mContext = (Context) XposedHelpers.callMethod(param.thisObject, "getApplicationContext");
                     Class <?> MiuiEndIconManager = findClass("com.android.systemui.statusbar.phone.MiuiEndIconManager", lpparam.classLoader);
                     Object blockList = Helpers.getStaticObjectFieldSilently(MiuiEndIconManager, "RIGHT_BLOCK_LIST");
                     ArrayList rightBlockList;
@@ -8399,12 +8399,12 @@ public class System {
     public static void AddFiveGTileHook(LoadPackageParam lpparam) {
         final boolean[] isListened = {false};
 
-        Helpers.findAndHookMethod("com.android.systemui.SystemUIFactory", lpparam.classLoader, "createFromConfig", Context.class, new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.SystemUIApplication", lpparam.classLoader, "onCreate", new MethodHook() {
             @Override
-            protected void before(MethodHookParam param) throws Throwable {
+            protected void after(MethodHookParam param) throws Throwable {
                 if (!isListened[0]) {
                     isListened[0] = true;
-                    Context mContext = (Context) param.args[0];
+                    Context mContext = (Context) XposedHelpers.callMethod(param.thisObject, "getApplicationContext");
                     int stockTilesResId = mContext.getResources().getIdentifier("miui_quick_settings_tiles_stock", "string", lpparam.packageName);
                     String stockTiles = mContext.getString(stockTilesResId) + ",custom_5G";
                     MainModule.resHooks.setObjectReplacement(lpparam.packageName, "string", "miui_quick_settings_tiles_stock", stockTiles);
@@ -8555,12 +8555,12 @@ public class System {
         }
 
         final boolean[] isListened = {false};
-        Helpers.findAndHookMethod("com.android.systemui.SystemUIFactory", lpparam.classLoader, "createFromConfig", Context.class, new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.SystemUIApplication", lpparam.classLoader, "onCreate", new MethodHook() {
             @Override
-            protected void before(MethodHookParam param) throws Throwable {
+            protected void after(MethodHookParam param) throws Throwable {
                 if (!isListened[0]) {
                     isListened[0] = true;
-                    Context mContext = (Context) param.args[0];
+                    Context mContext = (Context) XposedHelpers.callMethod(param.thisObject, "getApplicationContext");
                     Resources res = mContext.getResources();
                     float density = res.getDisplayMetrics().density;
                     int tileWidthResId = res.getIdentifier("qs_control_center_tile_width", "dimen", "com.android.systemui");
