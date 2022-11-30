@@ -6708,7 +6708,7 @@ public class System {
         int action = event.getActionMasked();
         if (action != MotionEvent.ACTION_DOWN && action != MotionEvent.ACTION_UP) return;
 
-        ViewGroup mKeyguardBottomArea = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mKeyguardBottomArea");
+        ViewGroup mKeyguardBottomArea = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mBottomAreaView");
         if (mKeyguardBottomArea == null) return;
         ViewGroup mIndicationArea = (ViewGroup)XposedHelpers.getObjectField(mKeyguardBottomArea, "mIndicationArea");
         if (!Helpers.isReallyVisible(mIndicationArea)) return;
@@ -6725,22 +6725,24 @@ public class System {
             Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
             int slop = ViewConfiguration.get(mContext).getScaledTouchSlop();
             if (Math.abs(event.getX() - startPos[0]) > slop || Math.abs(event.getY() - startPos[1]) > slop) return;
-            Object mStatusBar = XposedHelpers.getObjectField(param.thisObject, "mStatusBar");
-            XposedHelpers.callMethod(mStatusBar, "showBouncer");
+            Object mPanelViewController = XposedHelpers.getObjectField(param.thisObject, "mPanelViewController");
+            Object statusBarKeyguardViewManager = XposedHelpers.getObjectField(mPanelViewController, "statusBarKeyguardViewManager");
+
+            XposedHelpers.callMethod(statusBarKeyguardViewManager, "showGenericBouncer", true);
         } catch (Throwable t) {
             XposedBridge.log(t);
         }
     }
 
     public static void TapToUnlockHook(LoadPackageParam lpparam) {
-        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, "onTouchEvent", new MethodHook() {
+        Helpers.hookAllMethods("com.android.keyguard.injector.KeyguardPanelViewInjector", lpparam.classLoader, "onTouchEvent", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 processLSEvent(param);
             }
         });
 
-        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, "onInterceptTouchEvent", new MethodHook() {
+        Helpers.hookAllMethods("com.android.keyguard.injector.KeyguardPanelViewInjector", lpparam.classLoader, "onInterceptTouchEvent", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 processLSEvent(param);
