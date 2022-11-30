@@ -447,6 +447,11 @@
 			android:title="@string/system_clockseconds_title"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_clockleadingzero"
+			android:title="@string/system_clockleadingzero_title"
+			android:defaultValue="false" />
+
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_system_maxsbicons"
 			android:title="@string/system_maxsbicons_title"
