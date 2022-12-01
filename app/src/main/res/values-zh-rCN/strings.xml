@@ -1062,6 +1062,7 @@
     <string name="system_statusbar_dualsimin2rows_rightmargin_title">右侧间距</string>
     <string name="system_statusbar_mobiletype_single_title">移动网络类型单独显示</string>
     <string name="system_statusbar_mobiletype_single_leftmargin_title">左侧间距</string>
+    <string name="system_statusbar_mobiletype_single_verticaloffset">上下偏移量</string>
     <string name="system_notifrowmenu_appinfo">应用信息</string>
     <string name="system_notifrowmenu_forceclose">强制关闭</string>
     <string name="restart_systemui">重启系统界面</string>

@@ -8203,6 +8203,24 @@ public class System {
                     res.getDisplayMetrics()
                 );
                 mlp.leftMargin = (int) marginLeft;
+                int rightMargin = MainModule.mPrefs.getInt("system_statusbar_mobiletype_single_rightmargin", 0);
+                if (rightMargin > 0) {
+                    float marginRight = TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        rightMargin * 0.5f,
+                        res.getDisplayMetrics()
+                    );
+                    mlp.rightMargin = (int) marginRight;
+                }
+                int verticalOffset = MainModule.mPrefs.getInt("system_statusbar_mobiletype_single_verticaloffset", 8);
+                if (verticalOffset != 8) {
+                    float marginTop = TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        (verticalOffset - 8) * 0.5f,
+                        res.getDisplayMetrics()
+                    );
+                    mlp.topMargin = (int) marginTop;
+                }
                 mMobileTypeSingle.setLayoutParams(mlp);
                 int fontSize = MainModule.mPrefs.getInt("system_statusbar_mobiletype_single_fontsize", 27);
                 mMobileTypeSingle.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize * 0.5f);
