@@ -77,7 +77,7 @@
     <string name="system_calendar_app_title">日历应用</string>
     <string name="system_calendar_app_summ">点击通知抽屉上方的日期时打开所选应用</string>
     <string name="system_clockseconds_title">显示秒</string>
-    <string name="system_clockleadingzero_title">时钟补0(小时)</string>
+    <string name="system_clockleadingzero_title">小时补0</string>
     <string name="system_clockseconds_summ">状态栏显示秒钟</string>
     <string name="system_maxsbicons_title">通知图标限制</string>
     <string name="system_maxsbicons_summ">变成点前显示的通知图标的数目</string>
@@ -454,6 +454,7 @@
     <string name="system_qqsgridcolumns_title">折叠面板中的列数</string>
     <string name="system_qqsgridcolumns_note">横屏时将会额外增加一列。</string>
     <string name="system_qsnolabels_title">彻底移除标签</string>
+    <string name="system_qs_hideoperator_title">隐藏运营商名称</string>
     <string name="system_qshaptic_title">快速设置触觉反馈</string>
     <string name="system_qshaptic_summ">点击快速设置磁贴时振动</string>
     <string name="system_mods_other">其他</string>

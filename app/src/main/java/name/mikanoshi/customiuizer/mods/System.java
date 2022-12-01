@@ -2263,6 +2263,36 @@ public class System {
         });
     }
 
+    public static void HideCCOperatorHook(LoadPackageParam lpparam) {
+        MethodHook hideOperatorHook = new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                Object carrierView;
+                TextView mCarrierText;
+                try {
+                    carrierView = XposedHelpers.getObjectField(param.thisObject, "carrierText");
+                }
+                catch (Throwable e) {
+                    carrierView = XposedHelpers.getObjectField(param.thisObject, "mCarrierText");
+                }
+                mCarrierText = (TextView) carrierView;
+                mCarrierText.setVisibility(View.GONE);
+            }
+        };
+
+        boolean hookedFlaresInfo = Helpers.hookAllMethodsSilently("com.android.systemui.controlcenter.phone.widget.ControlCenterStatusBar", lpparam.classLoader, "updateFlaresInfo", hideOperatorHook);
+        if (!hookedFlaresInfo) {
+            Helpers.findAndHookMethod("com.android.systemui.controlcenter.phone.widget.ControlCenterStatusBar", lpparam.classLoader, "onFinishInflate", hideOperatorHook);
+        }
+
+        Helpers.findAndHookMethod("com.android.systemui.qs.MiuiNotificationHeaderView", lpparam.classLoader, "updateCarrierTextVisibility", hideOperatorHook);
+
+        hookedFlaresInfo = Helpers.hookAllMethodsSilently("com.android.systemui.qs.MiuiQSHeaderView", lpparam.classLoader, "updateFlaresInfo", hideOperatorHook);
+        if (!hookedFlaresInfo) {
+            Helpers.findAndHookMethod("com.android.systemui.qs.MiuiQSHeaderView", lpparam.classLoader, "onFinishInflate", hideOperatorHook);
+        }
+    }
+
     public static void AutoGroupNotificationsHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethod("com.android.server.notification.GroupHelper", lpparam.classLoader, "adjustAutogroupingSummary", int.class, String.class, String.class, boolean.class, new MethodHook() {
             @Override
