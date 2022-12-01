@@ -770,6 +770,7 @@
     <string name="array_global_actions_forceclose">Force close current app</string>
     <string name="array_global_actions_powermenu">Open power menu</string>
     <string name="array_global_actions_powermenu_short">Power menu</string>
+    <string name="array_global_actions_scrolltotop">Scroll to top</string>
     <string name="array_global_actions_clearmemory">Clear memory</string>
     <string name="array_global_actions_invertcolors">Invert colors</string>
     <string name="array_global_actions_switchkeyboard">Switch keyboard</string>

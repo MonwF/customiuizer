@@ -21,6 +21,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
+import android.hardware.input.InputManager;
 import android.media.AudioManager;
 import android.net.wifi.WifiManager;
 import android.nfc.NfcAdapter;
@@ -33,6 +34,7 @@ import android.os.SystemClock;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.view.InputEvent;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -88,7 +90,6 @@ public class GlobalActions {
 			case 7: return openRecents(context);
 			case 8: return launchAppIntent(context, key, skipLock);
 			case 9: return launchShortcutIntent(context, key, skipLock);
-			case 20: return launchActivityIntent(context, key, skipLock);
 			case 10: return toggleThis(context, Helpers.getSharedIntPref(context, key + "_toggle", 0));
 			case 11: return switchToPrevApp(context);
 			case 12: return openPowerMenu(context);
@@ -99,10 +100,12 @@ public class GlobalActions {
 			case 17: return openVolumeDialog(context);
 			case 18: return volumeUp(context);
 			case 19: return volumeDown(context);
+			case 20: return launchActivityIntent(context, key, skipLock);
 			case 21: return switchKeyboard(context);
 			case 22: return switchOneHandedLeft(context);
 			case 23: return switchOneHandedRight(context);
 			case 24: return forceClose(context);
+			case 25: return scrollToTop(context);
 			default: return false;
 		}
 	}
@@ -130,6 +133,7 @@ public class GlobalActions {
 			case 22: return R.string.array_global_actions_onehanded_left;
 			case 23: return R.string.array_global_actions_onehanded_right;
 			case 24: return R.string.array_global_actions_forceclose;
+			case 25: return R.string.array_global_actions_scrolltotop;
 			default: return 0;
 		}
 	}
@@ -400,6 +404,28 @@ public class GlobalActions {
 						new Instrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_BACK);
 					}
 				}).start();
+			}
+
+			if (action.equals(ACTION_PREFIX + "ScrollToTop")) {
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							Helpers.log("scrollToTop action");
+							Method injectInputEventMethod = InputManager.class.getDeclaredMethod("injectInputEvent", InputEvent.class, int.class);
+							Method instanceMethod = InputManager.class.getDeclaredMethod("getInstance");
+							InputManager im = (InputManager) instanceMethod.invoke(InputManager.class);
+							long uptimeMillis = SystemClock.uptimeMillis();
+							KeyEvent downEvent = new KeyEvent(uptimeMillis, uptimeMillis, 0, 122, 0, 4096);
+							KeyEvent upEvent = new KeyEvent(uptimeMillis, uptimeMillis, 1, 122, 0, 4096);
+							injectInputEventMethod.invoke(im, downEvent, 0);
+							injectInputEventMethod.invoke(im, upEvent, 0);
+						}
+						catch (Throwable e) {
+							Helpers.log("err: " + e);
+						}
+					}
+				}, 150L);
 			}
 
 			if (action.equals(ACTION_PREFIX + "SwitchToPrevApp")) {
@@ -867,6 +893,7 @@ public class GlobalActions {
 				intentfilter.addAction(ACTION_PREFIX + "SwitchToPrevApp");
 				intentfilter.addAction(ACTION_PREFIX + "GoBack");
 				intentfilter.addAction(ACTION_PREFIX + "OpenPowerMenu");
+				intentfilter.addAction(ACTION_PREFIX + "ScrollToTop");
 				intentfilter.addAction(ACTION_PREFIX + "SwitchKeyboard");
 				intentfilter.addAction(ACTION_PREFIX + "SwitchOneHandedLeft");
 				intentfilter.addAction(ACTION_PREFIX + "SwitchOneHandedRight");
@@ -1182,6 +1209,17 @@ public class GlobalActions {
 	public static boolean switchToPrevApp(Context context) {
 		try {
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "SwitchToPrevApp"));
+			return true;
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+			return false;
+		}
+	}
+
+	public static boolean scrollToTop(Context context) {
+		try {
+			Helpers.log("scrollToTop func");
+			context.sendBroadcast(new Intent(ACTION_PREFIX + "ScrollToTop"));
 			return true;
 		} catch (Throwable t) {
 			XposedBridge.log(t);

@@ -187,6 +187,7 @@
 		<item>@string/array_global_actions_back</item>
 		<item>@string/array_global_actions_forceclose</item>
 		<item>@string/array_global_actions_powermenu</item>
+		<item>@string/array_global_actions_scrolltotop</item>
 		<item>@string/array_global_actions_clearmemory</item>
 		<item>@string/array_global_actions_invertcolors</item>
 		<item>@string/array_global_actions_switchkeyboard</item>
@@ -214,6 +215,7 @@
 		<item>11</item>
 		<item>24</item>
 		<item>12</item>
+		<item>25</item>
 		<item>13</item>
 		<item>14</item>
 		<item>21</item>
