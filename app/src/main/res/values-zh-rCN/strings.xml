@@ -715,6 +715,7 @@
     <string name="array_global_actions_forceclose">强制关闭当前应用</string>
     <string name="array_global_actions_powermenu">打开电源菜单</string>
     <string name="array_global_actions_powermenu_short">电源菜单</string>
+    <string name="array_global_actions_scrolltotop">回到顶部</string>
     <string name="array_global_actions_clearmemory">清理内存</string>
     <string name="array_global_actions_invertcolors">颜色反转</string>
     <string name="array_global_actions_switchkeyboard">切换键盘</string>
