@@ -107,6 +107,11 @@
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_gps"
+		android:title="@string/system_statusbaricons_gps_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbaricons_hotspot"
 		android:title="@string/system_statusbaricons_hotspot_title"
 		android:defaultValue="false" />

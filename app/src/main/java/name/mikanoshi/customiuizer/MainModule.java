@@ -299,7 +299,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_statusbaricons_battery1")) System.HideIconsBattery1Hook(lpparam);
             if (mPrefs.getBoolean("system_statusbaricons_battery3") || mPrefs.getBoolean("system_statusbaricons_battery2")) System.HideIconsBattery2Hook(lpparam);
             if (mPrefs.getStringAsInt("system_statusbaricons_wifistandard", 1) > 1) System.DisplayWifiStandardHook(lpparam);
-            if (mPrefs.getBoolean("system_statusbaricons_nosims")) System.HideIconsNoSIMsHook(lpparam);
             if (mPrefs.getBoolean("system_statusbaricons_signal")
                 || mPrefs.getBoolean("system_statusbaricons_sim1")
                 || mPrefs.getBoolean("system_statusbaricons_sim2")
@@ -331,6 +330,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 mPrefs.getBoolean("system_statusbaricons_nfc") ||
                 mPrefs.getBoolean("system_statusbaricons_vpn") ||
                 mPrefs.getBoolean("system_statusbaricons_hotspot") ||
+                mPrefs.getBoolean("system_statusbaricons_nosims") ||
+                mPrefs.getBoolean("system_statusbaricons_gps") ||
                 mPrefs.getBoolean("system_statusbaricons_volte");
             if (hideIconsActive) System.HideIconsHook(lpparam);
 

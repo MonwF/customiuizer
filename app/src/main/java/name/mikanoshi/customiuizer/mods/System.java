@@ -2673,23 +2673,6 @@ public class System {
                 applyHeight(param.thisObject);
             }
         });
-
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.SignalClusterView", lpparam.classLoader, "onFinishInflate", new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                try {
-                    ViewGroup mSignalDualNotchGroup = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mSignalDualNotchGroup");
-                    applyHeight(mSignalDualNotchGroup.findViewById(mSignalDualNotchGroup.getResources().getIdentifier("notch_mobile", "id", lpparam.packageName)));
-                } catch (Throwable t) {
-                    XposedBridge.log(t);
-                }
-
-                try {
-                    ViewGroup mSignalSimpleDualMobileContainer = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mSignalSimpleDualMobileContainer");
-                    applyHeight(mSignalSimpleDualMobileContainer);
-                } catch (Throwable ignore) {}
-            }
-        });
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -3961,21 +3944,6 @@ public class System {
         });
     }
 
-    public static void HideIconsNoSIMsHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.SignalClusterView", lpparam.classLoader, "apply", new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                try {
-                    View mNoSimsCombo = (View)XposedHelpers.getObjectField(param.thisObject, "mNoSimsCombo");
-                    if (mNoSimsCombo != null) mNoSimsCombo.setVisibility(View.GONE);
-                } catch (Throwable t) {
-                    View mNoSims = (View)XposedHelpers.getObjectField(param.thisObject, "mNoSims");
-                    if (mNoSims != null) mNoSims.setVisibility(View.GONE);
-                }
-            }
-        });
-    }
-
     public static void HideIconsPrivacyHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethod("android.app.StatusBarManager", lpparam.classLoader, "setIconVisibility", String.class, boolean.class, new MethodHook() {
             @Override
@@ -4032,8 +4000,10 @@ public class System {
                 "managed_profile".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_profile") ||
                 "vpn".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_vpn") ||
                 "nfc".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_nfc") ||
+                "location".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_gps") ||
                 "wifi".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_wifi") ||
                 "hotspot".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_hotspot") ||
+                "no_sim".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_nosims") ||
                 "hd".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_volte");
         } catch (Throwable t) {
             XposedBridge.log(t);
