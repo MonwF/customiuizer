@@ -1108,9 +1108,10 @@
     <string name="system_statusbar_batterytempandcurrentatright_title">Display on the right</string>
     <string name="system_statusbar_dttosleep_title">Double tap to sleep</string>
     <string name="system_statusbar_dualsimin2rows_title">Dual SIM signal bars in dual rows</string>
-    <string name="system_statusbar_dualsimin2rows_rightmargin_title">right margin</string>
+    <string name="system_statusbar_dualsimin2rows_rightmargin_title">Right margin</string>
     <string name="system_statusbar_mobiletype_single_title">Put mobile network type at the right of signal icon</string>
-    <string name="system_statusbar_mobiletype_single_leftmargin_title">left margin</string>
+    <string name="system_statusbar_mobiletype_single_leftmargin_title">Left margin</string>
+    <string name="system_statusbar_mobiletype_single_verticaloffset">Vertical offset</string>
     <string name="system_statusbaricons_atright_title">Move some icons to the right</string>
     <string name="system_statusbaricons_atright_summ">Mainly for devices with cutout at the center of the top edge</string>
     <string name="system_statusbaricons_netspeed_title">Network speed indicator</string>
