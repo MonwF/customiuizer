@@ -201,6 +201,26 @@ public class GlobalActions {
 					ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
 					XposedHelpers.callMethod(am, "forceStopPackage", "com.miui.home");
 				}
+				else if (action.equals(ACTION_PREFIX + "ScrollToTop")) {
+					new Handler().postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							try {
+								Method injectInputEventMethod = InputManager.class.getDeclaredMethod("injectInputEvent", InputEvent.class, int.class);
+								Method instanceMethod = InputManager.class.getDeclaredMethod("getInstance");
+								InputManager im = (InputManager) instanceMethod.invoke(InputManager.class);
+								long uptimeMillis = SystemClock.uptimeMillis();
+								KeyEvent downEvent = new KeyEvent(uptimeMillis, uptimeMillis, 0, 122, 0, 4096);
+								KeyEvent upEvent = new KeyEvent(uptimeMillis, uptimeMillis, 1, 122, 0, 4096);
+								injectInputEventMethod.invoke(im, downEvent, 0);
+								injectInputEventMethod.invoke(im, upEvent, 0);
+							}
+							catch (Throwable e) {
+								Helpers.log("err: " + e);
+							}
+						}
+					}, 150L);
+				}
 
 				if (mStatusBar != null) {
 					if (action.equals(ACTION_PREFIX + "ExpandNotifications")) try {
@@ -226,16 +246,14 @@ public class GlobalActions {
 
 					if (action.equals(ACTION_PREFIX + "ExpandSettings")) try {
 						boolean forceExpand = intent.getBooleanExtra("forceExpand", false);
-						if (Helpers.is12()) {
-							Object controller = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", context.getClassLoader()), "get", findClassIfExists("com.android.systemui.miui.statusbar.policy.ControlPanelController", context.getClassLoader()));
-							boolean isUseControlCenter = (boolean)XposedHelpers.callMethod(controller, "isUseControlCenter");
-							if (isUseControlCenter) {
-								if (forceExpand || (boolean)XposedHelpers.callMethod(controller, "isQSFullyCollapsed"))
-									XposedHelpers.callMethod(controller, "openPanel");
-								else
-									XposedHelpers.callMethod(controller, "collapsePanel", true);
-								return;
-							}
+						Object controller = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", context.getClassLoader()), "get", findClassIfExists("com.android.systemui.miui.statusbar.policy.ControlPanelController", context.getClassLoader()));
+						boolean isUseControlCenter = (boolean)XposedHelpers.callMethod(controller, "isUseControlCenter");
+						if (isUseControlCenter) {
+							if (forceExpand || (boolean)XposedHelpers.callMethod(controller, "isQSFullyCollapsed"))
+								XposedHelpers.callMethod(controller, "openPanel");
+							else
+								XposedHelpers.callMethod(controller, "collapsePanel", true);
+							return;
 						}
 
 						Object mNotificationPanel = XposedHelpers.getObjectField(mStatusBar, "mNotificationPanel");
@@ -406,28 +424,6 @@ public class GlobalActions {
 				}).start();
 			}
 
-			if (action.equals(ACTION_PREFIX + "ScrollToTop")) {
-				new Handler().postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						try {
-							Helpers.log("scrollToTop action");
-							Method injectInputEventMethod = InputManager.class.getDeclaredMethod("injectInputEvent", InputEvent.class, int.class);
-							Method instanceMethod = InputManager.class.getDeclaredMethod("getInstance");
-							InputManager im = (InputManager) instanceMethod.invoke(InputManager.class);
-							long uptimeMillis = SystemClock.uptimeMillis();
-							KeyEvent downEvent = new KeyEvent(uptimeMillis, uptimeMillis, 0, 122, 0, 4096);
-							KeyEvent upEvent = new KeyEvent(uptimeMillis, uptimeMillis, 1, 122, 0, 4096);
-							injectInputEventMethod.invoke(im, downEvent, 0);
-							injectInputEventMethod.invoke(im, upEvent, 0);
-						}
-						catch (Throwable e) {
-							Helpers.log("err: " + e);
-						}
-					}
-				}, 150L);
-			}
-
 			if (action.equals(ACTION_PREFIX + "SwitchToPrevApp")) {
 				PackageManager pm = context.getPackageManager();
 				Intent intent_home = new Intent(Intent.ACTION_MAIN);
@@ -508,8 +504,6 @@ public class GlobalActions {
 
 			if (action.equals(ACTION_PREFIX + "SwitchKeyboard")) {
 				context.sendBroadcast(
-					Helpers.isNougat() ?
-					new Intent("android.settings.SHOW_INPUT_METHOD_PICKER") :
 					new Intent("com.android.server.InputMethodManagerService.SHOW_INPUT_METHOD_PICKER").setPackage("android")
 				);
 			}
@@ -828,7 +822,7 @@ public class GlobalActions {
 	}
 
 	public static void setupForegroundMonitor(LoadPackageParam lpparam) {
-		String windowClass = Helpers.isQPlus() ? "com.android.server.wm.DisplayPolicy" : "com.android.server.policy.PhoneWindowManager";
+		String windowClass = "com.android.server.wm.DisplayPolicy";
 		Helpers.hookAllMethods(windowClass, lpparam.classLoader, "focusChangedLw", new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
@@ -893,7 +887,6 @@ public class GlobalActions {
 				intentfilter.addAction(ACTION_PREFIX + "SwitchToPrevApp");
 				intentfilter.addAction(ACTION_PREFIX + "GoBack");
 				intentfilter.addAction(ACTION_PREFIX + "OpenPowerMenu");
-				intentfilter.addAction(ACTION_PREFIX + "ScrollToTop");
 				intentfilter.addAction(ACTION_PREFIX + "SwitchKeyboard");
 				intentfilter.addAction(ACTION_PREFIX + "SwitchOneHandedLeft");
 				intentfilter.addAction(ACTION_PREFIX + "SwitchOneHandedRight");
@@ -995,6 +988,8 @@ public class GlobalActions {
 				intentfilter.addAction(ACTION_PREFIX + "RestartSystemUI");
 				intentfilter.addAction(ACTION_PREFIX + "RestartLauncher");
 				intentfilter.addAction(ACTION_PREFIX + "CopyToExternal");
+
+				intentfilter.addAction(ACTION_PREFIX + "ScrollToTop");
 
 				mStatusBarContext.registerReceiver(mSBReceiver, intentfilter);
 			}
@@ -1218,7 +1213,6 @@ public class GlobalActions {
 
 	public static boolean scrollToTop(Context context) {
 		try {
-			Helpers.log("scrollToTop func");
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "ScrollToTop"));
 			return true;
 		} catch (Throwable t) {
