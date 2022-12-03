@@ -2817,25 +2817,24 @@ public class System {
     }
 
     public static void HideDismissViewHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "inflateDismissView", new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController", lpparam.classLoader, "updateDismissView", new MethodHook() {
             @Override
-            protected void after(MethodHookParam param) throws Throwable {
+            protected void before(MethodHookParam param) throws Throwable {
                 View mDismissView = (View)XposedHelpers.getObjectField(param.thisObject, "mDismissView");
-                if (mDismissView != null) mDismissView.setVisibility(View.GONE);
+                if (mDismissView != null) {
+                    Object mKeyguardShowing = XposedHelpers.getObjectField(param.thisObject, "mKeyguardShowing");
+                    XposedHelpers.setAdditionalInstanceField(param.thisObject, "currentKeyguard", mKeyguardShowing);
+                    XposedHelpers.setObjectField(param.thisObject, "mKeyguardShowing", true);
+                }
             }
-        });
 
-        if (!Helpers.findAndHookMethodSilently("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, "updateDismissView", boolean.class, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 View mDismissView = (View)XposedHelpers.getObjectField(param.thisObject, "mDismissView");
-                if (mDismissView != null) mDismissView.setVisibility(View.GONE);
-            }
-        })) Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, "updateDismissView", new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                View mDismissView = (View)XposedHelpers.getObjectField(param.thisObject, "mDismissView");
-                if (mDismissView != null) mDismissView.setVisibility(View.GONE);
+                if (mDismissView != null) {
+                    Object mKeyguardShowing = XposedHelpers.getAdditionalInstanceField(param.thisObject, "currentKeyguard");
+                    XposedHelpers.setObjectField(param.thisObject, "mKeyguardShowing", mKeyguardShowing);
+                }
             }
         });
     }
