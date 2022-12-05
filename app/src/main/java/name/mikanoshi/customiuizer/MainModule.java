@@ -137,6 +137,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (!mPrefs.getString("system_defaultusb", "none").equals("none")) System.USBConfigHook(lpparam);
             if (mPrefs.getBoolean("system_nolightuponheadset")) System.NoLightUpOnHeadsetHook(lpparam);
             if (mPrefs.getBoolean("system_removesecure")) System.RemoveSecureHook(lpparam);
+            if (mPrefs.getBoolean("system_remove_startactconfirm")) System.RemoveActStartConfirmHook(lpparam);
             if (mPrefs.getBoolean("system_securelock")) System.EnhancedSecurityHook(lpparam);
             if (mPrefs.getBoolean("system_separatevolume")) System.NotificationVolumeServiceHook(lpparam);
             if (mPrefs.getBoolean("system_downgrade")) System.NoVersionCheckHook(lpparam);

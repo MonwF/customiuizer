@@ -1243,6 +1243,11 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_remove_startactconfirm"
+			android:title="@string/system_remove_startactconfirm_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_resizablewidgets"
 			android:title="@string/system_resizablewidgets_title"
 			android:summary="@string/system_resizablewidgets_summ"
