@@ -2293,6 +2293,23 @@ public class System {
         }
     }
 
+    public static void CollapseCCAfterClickHook(LoadPackageParam lpparam) {
+        Helpers.findAndHookMethod("com.android.systemui.qs.tileimpl.QSTileImpl", lpparam.classLoader, "click", View.class, new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                Object mState = XposedHelpers.callMethod(param.thisObject, "getState");
+                int state = XposedHelpers.getIntField(mState, "state");
+                if (state != 0) {
+                    String tileSpec = (String) XposedHelpers.callMethod(param.thisObject, "getTileSpec");
+                    if (!"edit".equals(tileSpec)) {
+                        Object mHost = XposedHelpers.getObjectField(param.thisObject, "mHost");
+                        XposedHelpers.callMethod(mHost, "collapsePanels");
+                    }
+                }
+            }
+        });
+    }
+
     public static void AutoGroupNotificationsHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethod("com.android.server.notification.GroupHelper", lpparam.classLoader, "adjustAutogroupingSummary", int.class, String.class, String.class, boolean.class, new MethodHook() {
             @Override

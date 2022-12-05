@@ -215,10 +215,10 @@ public class GlobalActions {
 								MotionEvent swipeDownEvt = MotionEvent.obtain(uptimeMillis, uptimeMillis, MotionEvent.ACTION_DOWN, 500, 500, 0);
 								swipeDownEvt.setSource(InputDevice.SOURCE_TOUCHSCREEN);
 								injectInputEventMethod.invoke(im, swipeDownEvt, 1);
-								MotionEvent swipeMoveEvt = MotionEvent.obtain(uptimeMillis, uptimeMillis + 25, MotionEvent.ACTION_MOVE, 500, 36000, 0);
+								MotionEvent swipeMoveEvt = MotionEvent.obtain(uptimeMillis, uptimeMillis + 25, MotionEvent.ACTION_MOVE, 500, 240000, 0);
 								swipeMoveEvt.setSource(InputDevice.SOURCE_TOUCHSCREEN);
 								injectInputEventMethod.invoke(im, swipeMoveEvt, 2);
-								MotionEvent swipeUpEvt = MotionEvent.obtain(uptimeMillis, uptimeMillis + 25, MotionEvent.ACTION_UP, 500, 36000, 0);
+								MotionEvent swipeUpEvt = MotionEvent.obtain(uptimeMillis, uptimeMillis + 25, MotionEvent.ACTION_UP, 500, 240000, 0);
 								swipeUpEvt.setSource(InputDevice.SOURCE_TOUCHSCREEN);
 								injectInputEventMethod.invoke(im, swipeUpEvt, 2);
 								swipeDownEvt.recycle();
