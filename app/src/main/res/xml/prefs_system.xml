@@ -829,6 +829,11 @@
 			android:title="@string/system_qs_hideoperator_title"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_cc_collapse_after_clicked"
+			android:title="@string/system_cc_collapse_after_clicked_title"
+			android:defaultValue="false" />
+
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_system_qshaptics"
 			android:summary="@string/system_qshaptic_summ"
