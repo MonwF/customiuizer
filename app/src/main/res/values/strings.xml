@@ -350,6 +350,7 @@
     <string name="system_nooverscroll_title">Disable overscroll</string>
     <string name="system_nooverscroll_summ">Prevent list views from overscrolling</string>
     <string name="system_removesecure_title">Disable secure content protection</string>
+    <string name="system_remove_startactconfirm_title">Remove open app confirm</string>
     <string name="system_removesecure_summ">Allow to screenshot and record video of any app</string>
     <string name="system_hidelowbatwarn_title">Hide warning about low battery level</string>
     <string name="system_hidelowbatwarn_summ">Do not display a warning dialog that asks to turn on Battery saver</string>

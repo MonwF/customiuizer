@@ -5941,6 +5941,10 @@ public class System {
         Helpers.findAndHookMethod("com.android.server.wm.WindowState", lpparam.classLoader, "isSecureLocked", XC_MethodReplacement.returnConstant(false));
     }
 
+    public static void RemoveActStartConfirmHook(LoadPackageParam lpparam) {
+        Helpers.hookAllMethodsSilently("com.miui.server.SecurityManagerService", lpparam.classLoader, "checkAllowStartActivity", XC_MethodReplacement.returnConstant(true));
+    }
+
     public static void AllowAllKeyguardHook(LoadPackageParam lpparam) {
         //noinspection ResultOfMethodCallIgnored
         Helpers.findAndHookMethodSilently("com.android.systemui.statusbar.notification.MiuiNotificationCompat", lpparam.classLoader, "isEnableKeyguard", Notification.class, XC_MethodReplacement.returnConstant(true));

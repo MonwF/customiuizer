@@ -333,6 +333,7 @@
     <string name="system_nooverscroll_title">禁用弹性滚动</string>
     <string name="system_nooverscroll_summ">阻止列表视图越界回弹</string>
     <string name="system_removesecure_title">禁用安全内容保护</string>
+    <string name="system_remove_startactconfirm_title">移除启动应用确认</string>
     <string name="system_removesecure_summ">允许对任意应用进行截图和录屏</string>
     <string name="system_hidelowbatwarn_title">隐藏低电量警告</string>
     <string name="system_hidelowbatwarn_summ">不显示打开省电模式的警告对话框</string>
