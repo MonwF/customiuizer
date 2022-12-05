@@ -34,8 +34,10 @@ import android.os.SystemClock;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.view.InputDevice;
 import android.view.InputEvent;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.WindowManager;
@@ -210,16 +212,24 @@ public class GlobalActions {
 								Method instanceMethod = InputManager.class.getDeclaredMethod("getInstance");
 								InputManager im = (InputManager) instanceMethod.invoke(InputManager.class);
 								long uptimeMillis = SystemClock.uptimeMillis();
-								KeyEvent downEvent = new KeyEvent(uptimeMillis, uptimeMillis, 0, 122, 0, 4096);
-								KeyEvent upEvent = new KeyEvent(uptimeMillis, uptimeMillis, 1, 122, 0, 4096);
-								injectInputEventMethod.invoke(im, downEvent, 0);
-								injectInputEventMethod.invoke(im, upEvent, 0);
+								MotionEvent swipeDownEvt = MotionEvent.obtain(uptimeMillis, uptimeMillis, MotionEvent.ACTION_DOWN, 500, 500, 0);
+								swipeDownEvt.setSource(InputDevice.SOURCE_TOUCHSCREEN);
+								injectInputEventMethod.invoke(im, swipeDownEvt, 1);
+								MotionEvent swipeMoveEvt = MotionEvent.obtain(uptimeMillis, uptimeMillis + 25, MotionEvent.ACTION_MOVE, 500, 36000, 0);
+								swipeMoveEvt.setSource(InputDevice.SOURCE_TOUCHSCREEN);
+								injectInputEventMethod.invoke(im, swipeMoveEvt, 2);
+								MotionEvent swipeUpEvt = MotionEvent.obtain(uptimeMillis, uptimeMillis + 25, MotionEvent.ACTION_UP, 500, 36000, 0);
+								swipeUpEvt.setSource(InputDevice.SOURCE_TOUCHSCREEN);
+								injectInputEventMethod.invoke(im, swipeUpEvt, 2);
+								swipeDownEvt.recycle();
+								swipeMoveEvt.recycle();
+								swipeUpEvt.recycle();
 							}
 							catch (Throwable e) {
 								Helpers.log("err: " + e);
 							}
 						}
-					}, 150L);
+					}, 100L);
 				}
 
 				if (mStatusBar != null) {
