@@ -159,6 +159,7 @@ public class Helpers {
 		put("ru-RU", "100");
 		put("zh-CN", "99");
 		put("zh-TW", "99");
+		put("pl-PL", "99");
 	}};
 
 	public static final ArrayList<String> shortcutIcons = new ArrayList<String>();

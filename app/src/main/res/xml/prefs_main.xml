@@ -69,7 +69,6 @@
 			android:key="pref_key_github" />
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:title="@string/support_donate_me_title"
-			app:isPreferenceVisible="false"
 			android:key="pref_key_donate" />
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
