@@ -891,7 +891,7 @@
     <string name="support_bug_title">报告错误</string>
     <string name="support_bug_summ">通过官方问题跟踪器向我们发送错误报告或者功能请求</string>
     <string name="support_donate">捐出$%1$d</string>
-    <string name="support_donate_me_title">赞赏</string>
+    <string name="support_donate_me_title">微信赞赏</string>
     <string name="support_donate_title">捐赠 Mikanoshi</string>
     <string name="support_donate_summ">表达您对这个高大上模块感激之情的最好方式 :)</string>
     <string name="support_donate_inapp_title">应用内</string>

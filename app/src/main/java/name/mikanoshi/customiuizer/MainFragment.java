@@ -46,6 +46,7 @@ import java.util.Locale;
 import name.mikanoshi.customiuizer.prefs.ListPreferenceEx;
 import name.mikanoshi.customiuizer.prefs.PreferenceEx;
 import name.mikanoshi.customiuizer.subs.CategorySelector;
+import name.mikanoshi.customiuizer.subs.CommonActivity;
 import name.mikanoshi.customiuizer.subs.Controls;
 import name.mikanoshi.customiuizer.subs.Launcher;
 import name.mikanoshi.customiuizer.subs.System;
@@ -280,7 +281,7 @@ public class MainFragment extends PreferenceFragmentBase {
 			}
 		});
 
-		String[] locales = new String[] { "ru-RU", "zh-CN", "zh-TW" };
+		String[] locales = new String[] { "ru-RU", "zh-CN", "zh-TW", "pl-PL" };
 
 		ArrayList<String> localesArr = new ArrayList<String>(Arrays.asList(locales));
 		ArrayList<SpannableString> localeNames = new ArrayList<SpannableString>();
@@ -370,17 +371,19 @@ public class MainFragment extends PreferenceFragmentBase {
 				}
 			});
 		}
-		else {
-			PreferenceEx donateEntry = findPreference("pref_key_donate");
-			donateEntry.setVisible(true);
-			donateEntry.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-				@Override
-				public boolean onPreferenceClick(Preference pref) {
+		PreferenceEx donateEntry = findPreference("pref_key_donate");
+		donateEntry.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference pref) {
+				if (!config.getLocales().get(0).getCountry().equals("CN")) {
 					Helpers.openURL(act, "https://www.paypal.com/paypalme/tpsxj");
-					return true;
 				}
-			});
-		}
+				else {
+					openSubFragment(new CommonActivity(), null, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, pref.getTitle().toString(), R.layout.fragment_donate);
+				}
+				return true;
+			}
+		});
 	}
 
 	void findMod(String filter) {
