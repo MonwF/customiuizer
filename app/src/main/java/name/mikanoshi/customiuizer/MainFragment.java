@@ -46,7 +46,6 @@ import java.util.Locale;
 import name.mikanoshi.customiuizer.prefs.ListPreferenceEx;
 import name.mikanoshi.customiuizer.prefs.PreferenceEx;
 import name.mikanoshi.customiuizer.subs.CategorySelector;
-import name.mikanoshi.customiuizer.subs.CommonActivity;
 import name.mikanoshi.customiuizer.subs.Controls;
 import name.mikanoshi.customiuizer.subs.Launcher;
 import name.mikanoshi.customiuizer.subs.System;
@@ -379,7 +378,7 @@ public class MainFragment extends PreferenceFragmentBase {
 					Helpers.openURL(act, "https://www.paypal.com/paypalme/tpsxj");
 				}
 				else {
-					openSubFragment(new CommonActivity(), null, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, pref.getTitle().toString(), R.layout.fragment_donate);
+					openSubFragment(new SubFragment(), null, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, pref.getTitle().toString(), R.layout.fragment_donate);
 				}
 				return true;
 			}

@@ -41,6 +41,12 @@
 		android:title="@string/system_statusbaricons_dnd_title"
 		android:defaultValue="false" />
 
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbar_btbattery_atright"
+		android:title="@string/system_statusbaricons_btbattery_title"
+		android:defaultValue="false" />
+
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_nfc_atright"
 		android:title="@string/system_statusbaricons_nfc_title"
