@@ -5334,6 +5334,9 @@ public class System {
                     if (MainModule.mPrefs.getBoolean("system_statusbar_dnd_atright")) {
                         rightBlockList.remove("zen");
                     }
+                    if (MainModule.mPrefs.getBoolean("system_statusbar_btbattery_atright")) {
+                        rightBlockList.remove("bluetooth_handsfree_battery");
+                    }
                     if (MainModule.mPrefs.getBoolean("system_statusbar_nfc_atright")) {
                         rightBlockList.remove("nfc");
                     }
