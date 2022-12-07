@@ -5407,200 +5407,6 @@ public class System {
         });
     }
 
-    private static final TextView[] lux = { null, null, null };
-    private static class LuxListener implements SensorEventListener {
-        @Override
-        public void onSensorChanged(SensorEvent event) {
-            long cTime = currentTimeMillis();
-            String caption = null;
-
-            if (lux[0] != null && lux[0].isAttachedToWindow()) try {
-                Long last = (Long)lux[0].getTag();
-                if (last != null && cTime - last < 750) return;
-                caption = Helpers.getModuleRes(lux[0].getContext()).getString(R.string.lux, String.valueOf(Math.round(event.values[0])));
-                lux[0].setText(caption);
-                lux[0].setTag(cTime);
-            } catch (Throwable t) {
-                XposedBridge.log(t);
-            }
-
-            if (lux[1] != null && lux[1].isAttachedToWindow()) try {
-                Long last = (Long)lux[1].getTag();
-                if (last != null && cTime - last < 750) return;
-                if (caption == null)
-                    caption = Helpers.getModuleRes(lux[1].getContext()).getString(R.string.lux, String.valueOf(Math.round(event.values[0])));
-                lux[1].setText(caption);
-                lux[1].setTag(cTime);
-            } catch (Throwable t) {
-                XposedBridge.log(t);
-            }
-
-            if (lux[2] != null && lux[2].isAttachedToWindow()) try {
-                Long last = (Long)lux[2].getTag();
-                if (last != null && cTime - last < 750) return;
-                if (caption == null)
-                    caption = Helpers.getModuleRes(lux[2].getContext()).getString(R.string.lux, String.valueOf(Math.round(event.values[0])));
-                lux[2].setText(caption);
-                lux[2].setTag(cTime);
-            } catch (Throwable t) {
-                XposedBridge.log(t);
-            }
-        }
-
-        @Override
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {}
-    }
-
-    private static void registerLuxListener(Object statusBar) {
-        try {
-            Context mContext = (Context)XposedHelpers.getObjectField(statusBar, "mContext");
-            PowerManager powerMgr = (PowerManager)mContext.getSystemService(Context.POWER_SERVICE);
-            if (!powerMgr.isInteractive()) return;
-            boolean sBootCompleted = XposedHelpers.getBooleanField(statusBar, "sBootCompleted");
-            if (!sBootCompleted) return;
-            SensorManager sensorMgr = (SensorManager)mContext.getSystemService(Context.SENSOR_SERVICE);
-            LuxListener mLuxListener = (LuxListener)XposedHelpers.getAdditionalInstanceField(statusBar, "mLuxListener");
-            sensorMgr.registerListener(mLuxListener, sensorMgr.getDefaultSensor(Sensor.TYPE_LIGHT), SensorManager.SENSOR_DELAY_NORMAL);
-            XposedHelpers.setAdditionalInstanceField(statusBar, "mListenerEnabled", true);
-        } catch (Throwable t) {
-            XposedBridge.log(t);
-        }
-    }
-
-    private static void unregisterLuxListener(Object statusBar) {
-        try {
-            Context mContext = (Context)XposedHelpers.getObjectField(statusBar, "mContext");
-            SensorManager sensorMgr = (SensorManager)mContext.getSystemService(Context.SENSOR_SERVICE);
-            LuxListener mLuxListener = (LuxListener)XposedHelpers.getAdditionalInstanceField(statusBar, "mLuxListener");
-            sensorMgr.unregisterListener(mLuxListener);
-            XposedHelpers.setAdditionalInstanceField(statusBar, "mListenerEnabled", false);
-        } catch (Throwable t) {
-            XposedBridge.log(t);
-        }
-    }
-
-    public static void setTextColors(Context context, TextView textView) {
-        textView.setTextColor(Helpers.isNightMode(context) ? 0xFFDDDDDD : 0xFF606060);
-        if (Helpers.isNightMode(context))
-            textView.setShadowLayer(context.getResources().getDisplayMetrics().density, 1f, 1f, 0xEE222224);
-        else
-            textView.setShadowLayer(0, 0, 0, Color.WHITE);
-    }
-
-    public static void BrightnessLuxHook(LoadPackageParam lpparam) {
-        MethodHook hook = new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                Context context = (Context)param.args[0];
-                ViewGroup container = (ViewGroup)param.thisObject;
-                int port = context.getResources().getIdentifier("qs_brightness", "id", lpparam.packageName);
-                int land = context.getResources().getIdentifier("qs_brightness_land", "id", lpparam.packageName);
-                if (container.getId() != port && container.getId() != land) return;
-
-                TextView clux = new TextView(context);
-                RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                lp.alignWithParent = true;
-                lp.addRule(RelativeLayout.CENTER_IN_PARENT);
-                clux.setLayoutParams(lp);
-                clux.setGravity(Gravity.CENTER);
-
-                boolean isAlt = MainModule.mPrefs.getBoolean("system_showlux_style");
-                setTextColors(context, clux);
-                if (isAlt) {
-                    clux.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-                    clux.setAlpha(0.33f);
-                }
-
-                container.addView(clux);
-
-                if ("QCToggleSliderView".equals(param.thisObject.getClass().getSimpleName())) {
-                    if (container.getId() == land)
-                        lux[2] = clux;
-                    else
-                        lux[1] = clux;
-                } else {
-                    lux[0] = clux;
-                }
-            }
-        };
-
-        Helpers.findAndHookConstructor("com.android.systemui.settings.ToggleSliderView", lpparam.classLoader, Context.class, AttributeSet.class, int.class, hook);
-        Helpers.findAndHookConstructor("com.android.systemui.miui.controlcenter.QCToggleSliderView", lpparam.classLoader, Context.class, AttributeSet.class, int.class, hook);
-
-        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "makeStatusBarView", new MethodHook() {
-            @Override
-            protected void after(final MethodHookParam param) throws Throwable {
-            LuxListener mLuxListener = new LuxListener();
-            XposedHelpers.setAdditionalInstanceField(param.thisObject, "mLuxListener", mLuxListener);
-            XposedHelpers.setAdditionalInstanceField(param.thisObject, "mListenerEnabled", false);
-            }
-        });
-
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "setPanelExpanded", boolean.class, new MethodHook() {
-            @Override
-            protected void after(final MethodHookParam param) throws Throwable {
-            boolean isExpanded = (boolean)param.args[0];
-            boolean mListenerEnabled = (boolean)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mListenerEnabled");
-
-            if (isExpanded && !mListenerEnabled)
-                registerLuxListener(param.thisObject);
-            else if (!isExpanded && mListenerEnabled)
-                unregisterLuxListener(param.thisObject);
-            }
-        });
-
-        if (Helpers.is12()) {
-            Helpers.findAndHookMethod("com.android.systemui.miui.controlcenter.QSControlCenterPanel", lpparam.classLoader, "setListening", boolean.class, new MethodHook() {
-                @Override
-                protected void after(final MethodHookParam param) throws Throwable {
-                boolean isExpanded = (boolean)param.args[0];
-                Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-                Object mApplication = XposedHelpers.callMethod(mContext.getApplicationContext(), "getSystemUIApplication");
-                Object mStatusBar = XposedHelpers.callMethod(mApplication, "getComponent", findClassIfExists("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader));
-                boolean mListenerEnabled = (boolean)XposedHelpers.getAdditionalInstanceField(mStatusBar, "mListenerEnabled");
-                if (isExpanded && !mListenerEnabled)
-                    registerLuxListener(mStatusBar);
-                else if (!isExpanded && mListenerEnabled)
-                    unregisterLuxListener(mStatusBar);
-                }
-            });
-
-            Helpers.findAndHookMethod("com.android.systemui.miui.controlcenter.QSControlCenterPanel", lpparam.classLoader, "updateResources", new MethodHook() {
-                @Override
-                protected void after(final MethodHookParam param) throws Throwable {
-                Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-                if (lux[1] != null) setTextColors(mContext, lux[1]);
-                if (lux[2] != null) setTextColors(mContext, lux[2]);
-                }
-            });
-        }
-
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "onScreenTurnedOff", new MethodHook() {
-            @Override
-            protected void after(final MethodHookParam param) throws Throwable {
-            unregisterLuxListener(param.thisObject);
-            }
-        });
-
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "onScreenTurnedOn", new MethodHook() {
-            @Override
-            protected void after(final MethodHookParam param) throws Throwable {
-            boolean mPanelExpanded = XposedHelpers.getBooleanField(param.thisObject, "mPanelExpanded");
-            boolean mListenerEnabled = (boolean)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mListenerEnabled");
-            if (mPanelExpanded && !mListenerEnabled) registerLuxListener(param.thisObject);
-            }
-        });
-
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "onBootCompleted", new MethodHook() {
-            @Override
-            protected void after(final MethodHookParam param) throws Throwable {
-            boolean mPanelExpanded = XposedHelpers.getBooleanField(param.thisObject, "mPanelExpanded");
-            boolean mListenerEnabled = (boolean)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mListenerEnabled");
-            if (mPanelExpanded && !mListenerEnabled) registerLuxListener(param.thisObject);
-            }
-        });
-    }
-
     @SuppressLint("StaticFieldLeak")
     private static TextView mPct = null;
     private static void initPct(ViewGroup container, int source, Context context) {
@@ -8187,6 +7993,32 @@ public class System {
                 int maxPopupHeight = res.getDimensionPixelSize(res.getIdentifier("notification_max_heads_up_height", "dimen", "com.android.systemui"));
                 if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) maxPopupHeight /= 3;
                 param.setResult(Math.round(context.getResources().getDisplayMetrics().heightPixels / 2.0f - maxPopupHeight / 2.0f));
+            }
+        });
+    }
+
+    public static void HorizMarginHook(LoadPackageParam lpparam) {
+        MainModule.resHooks.setDensityReplacement(lpparam.packageName, "dimen", "status_bar_padding_start", 0);
+        MainModule.resHooks.setDensityReplacement(lpparam.packageName, "dimen", "status_bar_padding_end", 0);
+        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.StatusBarWindowView", lpparam.classLoader, "paddingNeededForCutoutAndRoundedCorner", new MethodHook() {
+            @Override
+            protected void before(final MethodHookParam param) throws Throwable {
+                Context context = Helpers.findContext();
+                int leftMargin = MainModule.mPrefs.getInt("system_statusbar_horizmargin_left", 16);
+                float marginLeft = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    leftMargin,
+                    context.getResources().getDisplayMetrics()
+                );
+                leftMargin = (int) marginLeft;
+                int rightMargin = MainModule.mPrefs.getInt("system_statusbar_horizmargin_right", 16);
+                float marginRight = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    rightMargin,
+                    context.getResources().getDisplayMetrics()
+                );
+                rightMargin = (int) marginRight;
+                param.setResult(new Pair<Integer, Integer>(Integer.valueOf(leftMargin), Integer.valueOf(rightMargin)));
             }
         });
     }

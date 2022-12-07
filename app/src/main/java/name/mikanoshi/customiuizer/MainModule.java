@@ -273,7 +273,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 System.StatusBarClockAtRightHook(lpparam);
             }
             if (mPrefs.getBoolean("system_statusbar_batterytempandcurrent")) System.DisplayBatteryDetailHook(lpparam);
-            if (mPrefs.getBoolean("system_showlux")) System.BrightnessLuxHook(lpparam);
+            if (mPrefs.getBoolean("system_statusbar_horizmargin")) System.HorizMarginHook(lpparam);
             if (mPrefs.getBoolean("system_showpct")) System.BrightnessPctHook(lpparam);
             if (mPrefs.getBoolean("system_cleanmirror")) System.ClearBrightnessMirrorHook(lpparam);
             if (mPrefs.getBoolean("system_hidelsstatusbar")) System.HideLockScreenStatusBarHook(lpparam);

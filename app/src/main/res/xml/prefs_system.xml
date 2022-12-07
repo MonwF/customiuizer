@@ -483,11 +483,38 @@
 			android:key="pref_key_system_statusbarheight"
 			android:title="@string/system_statusbarheight_title"
 			android:defaultValue="19"
+			app:isPreferenceVisible="false"
 			miuizer:offtext="@string/array_default"
 			miuizer:minValue="19"
 			miuizer:maxValue="100"
 			miuizer:stepValue="1"
 			miuizer:format="%d dip" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_statusbar_horizmargin"
+			android:title="@string/system_statusbar_horizmargin_title" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_statusbar_horizmargin_left"
+			android:title="@string/system_statusbar_mobiletype_single_leftmargin_title"
+			android:dependency="pref_key_system_statusbar_horizmargin"
+			android:defaultValue="16"
+			miuizer:child="true"
+			miuizer:minValue="0"
+			miuizer:maxValue="60"
+			miuizer:stepValue="1"
+			miuizer:format="%s dip" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_statusbar_horizmargin_right"
+			android:title="@string/system_statusbar_dualsimin2rows_rightmargin_title"
+			android:dependency="pref_key_system_statusbar_horizmargin"
+			android:defaultValue="16"
+			miuizer:child="true"
+			miuizer:minValue="0"
+			miuizer:maxValue="30"
+			miuizer:stepValue="1"
+			miuizer:format="%s dip" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_statusbarcolor"
@@ -586,20 +613,6 @@
 			android:title="@string/system_cleanmirror_title"
 			android:summary="@string/system_cleanmirror_summ"
 			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_showlux"
-			android:title="@string/system_showlux_title"
-			android:summary="@string/system_showlux_summ"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_showlux_style"
-			android:title="@string/system_showlux_style_title"
-			android:summary="@string/system_showlux_style_summ"
-			android:dependency="pref_key_system_showlux"
-			android:defaultValue="false"
-			miuizer:child="true" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_showpct"
