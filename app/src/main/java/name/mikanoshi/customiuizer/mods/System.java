@@ -4050,6 +4050,7 @@ public class System {
                 "wifi".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_wifi") ||
                 "hotspot".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_hotspot") ||
                 "no_sim".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_nosims") ||
+                "bluetooth_handsfree_battery".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_btbattery") ||
                 "hd".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_volte");
         } catch (Throwable t) {
             XposedBridge.log(t);
