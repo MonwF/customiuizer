@@ -38,6 +38,7 @@
     <string name="system_statusbaricons_alarm_summ">完全隐藏</string>
     <string name="system_statusbaricons_alarmn_title">选择闹钟图标的可见性</string>
     <string name="system_statusbaricons_alarmn_summ">仅在闹钟响铃前显示闹钟图标</string>
+    <string name="system_statusbaricons_btbattery_title">蓝牙电量</string>
     <string name="system_statusbaricons_signal_title">移动网络信号</string>
     <string name="system_statusbaricons_nosims_title">无SIM卡</string>
     <string name="system_statusbaricons_hotspot_title">热点</string>

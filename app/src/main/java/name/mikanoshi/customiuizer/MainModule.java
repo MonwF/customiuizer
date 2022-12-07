@@ -335,6 +335,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 mPrefs.getBoolean("system_statusbaricons_hotspot") ||
                 mPrefs.getBoolean("system_statusbaricons_nosims") ||
                 mPrefs.getBoolean("system_statusbaricons_gps") ||
+                mPrefs.getBoolean("system_statusbaricons_btbattery") ||
                 mPrefs.getBoolean("system_statusbaricons_volte");
             if (hideIconsActive) System.HideIconsHook(lpparam);
 

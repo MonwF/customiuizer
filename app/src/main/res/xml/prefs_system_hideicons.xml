@@ -54,6 +54,11 @@
 		android:defaultValue="1" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_btbattery"
+		android:title="@string/system_statusbaricons_btbattery_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbaricons_signal"
 		android:title="@string/system_statusbaricons_signal_title"
 		android:disableDependentsState="true"
