@@ -438,6 +438,42 @@
 			miuizer:child="true"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_statusbar_batterytempandcurrent_fontsize"
+			android:title="@string/system_detailednetspeed_font_title"
+			android:dependency="pref_key_system_statusbar_batterytempandcurrent"
+			android:defaultValue="16"
+			miuizer:child="true"
+			miuizer:minValue="15"
+			miuizer:maxValue="30"
+			miuizer:stepValue="1"
+			miuizer:displayDividerValue="2"
+			miuizer:format="%s dip" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_statusbar_batterytempandcurrent_leftmargin"
+			android:title="@string/system_statusbar_mobiletype_single_leftmargin_title"
+			android:dependency="pref_key_system_statusbar_batterytempandcurrent"
+			android:defaultValue="8"
+			miuizer:child="true"
+			miuizer:minValue="0"
+			miuizer:maxValue="10"
+			miuizer:stepValue="1"
+			miuizer:displayDividerValue="2"
+			miuizer:format="%s dip" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_statusbar_batterytempandcurrent_rightmargin"
+			android:title="@string/system_statusbar_dualsimin2rows_rightmargin_title"
+			android:dependency="pref_key_system_statusbar_batterytempandcurrent"
+			android:defaultValue="8"
+			miuizer:child="true"
+			miuizer:minValue="0"
+			miuizer:maxValue="10"
+			miuizer:stepValue="1"
+			miuizer:displayDividerValue="2"
+			miuizer:format="%s dip" />
+
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_batteryindicator_cat"
 			android:title="@string/system_batteryindicator_title"

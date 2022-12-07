@@ -1423,11 +1423,8 @@ public class System {
                 TextView meter = (TextView)param.thisObject;
                 if (meter == null) return;
                 if (meter.getTag() == null || !"slot_text_icon".equals(meter.getTag())) {
-                    LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)meter.getLayoutParams();
                     int margin = Math.round(meter.getResources().getDisplayMetrics().density * 4);
-                    lp.rightMargin = margin;
-                    lp.leftMargin = margin;
-                    meter.setLayoutParams(lp);
+                    meter.setPaddingRelative(margin, 0, margin, 0);
                 }
             }
         });
@@ -5122,22 +5119,26 @@ public class System {
         Resources res = mContext.getResources();
         int styleId = res.getIdentifier("TextAppearance.StatusBar.Clock", "style", "com.android.systemui");
         batteryView.setTextAppearance(styleId);
+        float fontSize = MainModule.mPrefs.getInt("system_statusbar_batterytempandcurrent_fontsize", 16) * 0.5f;
         int opt = MainModule.mPrefs.getStringAsInt("system_statusbar_batterytempandcurrent_content", 1);
         if (opt == 1) {
-            batteryView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 8.5f);
-            batteryView.setLineSpacing(0, 0.9f);
+            batteryView.setLineSpacing(0, fontSize > 8.5f ? 0.85f : 0.9f);
             batteryView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         }
-        else {
-            batteryView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13.45f);
-        }
-        int horizonMargin = (int) TypedValue.applyDimension(
+        batteryView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize);
+        int leftMargin = MainModule.mPrefs.getInt("system_statusbar_batterytempandcurrent_leftmargin", 8);
+        leftMargin = (int)TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
-            2.5f,
+            leftMargin * 0.5f,
             res.getDisplayMetrics()
         );
-        lp.leftMargin = horizonMargin;
-        lp.rightMargin = horizonMargin;
+        int rightMargin = MainModule.mPrefs.getInt("system_statusbar_batterytempandcurrent_rightmargin", 8);
+        rightMargin = (int) TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            rightMargin * 0.5f,
+            res.getDisplayMetrics()
+        );
+        batteryView.setPaddingRelative(leftMargin, 0, rightMargin, 0);
         batteryView.setLayoutParams(lp);
         return batteryView;
     }
