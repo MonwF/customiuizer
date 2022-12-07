@@ -1117,6 +1117,7 @@
     <string name="system_statusbar_mobiletype_single_title">Put mobile network type at the right of signal icon</string>
     <string name="system_statusbar_mobiletype_single_leftmargin_title">Left margin</string>
     <string name="system_statusbar_mobiletype_single_verticaloffset">Vertical offset</string>
+    <string name="system_statusbar_horizmargin_title">Statusbar horizontal padding</string>
     <string name="system_statusbaricons_atright_title">Move some icons to the right</string>
     <string name="system_statusbaricons_atright_summ">Mainly for devices with cutout at the center of the top edge</string>
     <string name="system_statusbaricons_netspeed_title">Network speed indicator</string>
