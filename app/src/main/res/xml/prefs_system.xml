@@ -501,7 +501,7 @@
 			android:defaultValue="16"
 			miuizer:child="true"
 			miuizer:minValue="0"
-			miuizer:maxValue="60"
+			miuizer:maxValue="80"
 			miuizer:stepValue="1"
 			miuizer:format="%s dip" />
 
@@ -578,11 +578,6 @@
 			android:key="pref_key_system_statusbarcontrols_cat"
 			android:summary="@string/system_statusbarcontrols_summ"
 			android:title="@string/system_statusbarcontrols_title" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_statusbar_dttosleep"
-			android:title="@string/system_statusbar_dttosleep_title"
-			android:defaultValue="false" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 

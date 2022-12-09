@@ -1104,7 +1104,6 @@
     <string name="system_statusbar_batterytempandcurrent_title">Wyświetl temperaturę i prąd baterii</string>
     <string name="system_statusbar_batterytempandcurrent_content_title">Wyświetl informacje</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">Wyświetlacz po prawej stronie</string>
-    <string name="system_statusbar_dttosleep_title">Kliknij dwukrotnie, aby spać</string>
     <string name="system_statusbar_dualsimin2rows_title">Paski sygnałowe Dual SIM w dwóch rzędach</string>
     <string name="system_statusbar_dualsimin2rows_rightmargin_title">prawy margines</string>
     <string name="system_statusbar_mobiletype_single_title">Umieść typ sieci komórkowej po prawej stronie ikony sygnału</string>

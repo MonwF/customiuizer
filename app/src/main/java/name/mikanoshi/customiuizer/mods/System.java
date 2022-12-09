@@ -5087,29 +5087,7 @@ public class System {
             }
         });
     }
-    public static void StatusBarDoubleTapToSleepHook(LoadPackageParam lpparam) {
-        Helpers.hookAllConstructors("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView", lpparam.classLoader, new MethodHook() {
-            @Override
-            protected void after(final MethodHookParam param) throws Throwable {
-                Object mDoubleTapControllerEx = XposedHelpers.getAdditionalInstanceField(param.thisObject, "mDoubleTapControllerEx");
-                if (mDoubleTapControllerEx != null) return;
-                mDoubleTapControllerEx = new Launcher.DoubleTapController((Context)param.args[0], "");
-                XposedHelpers.setAdditionalInstanceField(param.thisObject, "mDoubleTapControllerEx", mDoubleTapControllerEx);
-            }
-        });
 
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView", lpparam.classLoader, "handleEvent", MotionEvent.class, new MethodHook() {
-            @Override
-            protected void before(final MethodHookParam param) throws Throwable {
-                Launcher.DoubleTapController mDoubleTapControllerEx = (Launcher.DoubleTapController)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mDoubleTapControllerEx");
-                if (mDoubleTapControllerEx == null) return;
-                boolean isPanelVisible = (boolean)XposedHelpers.callMethod(param.thisObject, "shouldPanelBeVisible");
-                if (isPanelVisible) return;
-                if (!mDoubleTapControllerEx.isDoubleTapEvent((MotionEvent)param.args[0])) return;
-                GlobalActions.goToSleep(mDoubleTapControllerEx.mContext);
-            }
-        });
-    }
     private static TextView createBatteryDetailView(Context mContext, LinearLayout.LayoutParams lp) {
         TextView batteryView = (TextView) LayoutInflater.from(mContext).inflate(statusbarTextIconLayoutResId, null);
         XposedHelpers.setObjectField(batteryView, "mVisibilityByDisableInfo", 0);
@@ -6147,9 +6125,9 @@ public class System {
                         currentTouchTime = currentTimeMillis();
                         currentTouchX = event.getX();
                         if (currentTouchTime - lastTouchTime < 250L && Math.abs(currentTouchX - lastTouchX) < 100F) {
-                            GlobalActions.handleAction(mContext, "pref_key_system_statusbarcontrols_dt");
                             currentTouchTime = 0L;
                             currentTouchX = 0F;
+                            GlobalActions.handleAction(mContext, "pref_key_system_statusbarcontrols_dt");
                         }
                     case MotionEvent.ACTION_POINTER_UP:
                     case MotionEvent.ACTION_CANCEL:
