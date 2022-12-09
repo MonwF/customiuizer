@@ -858,7 +858,6 @@
     <string name="system_showpct_top_title">百分比面板的上邊距</string>
     <string name="system_snoozedmanager_summ">增大延遲間隔的數字並添加開啟目前延遲通知列表的圖示到啟動器</string>
     <string name="system_snoozedmanager_title">延遲通知管理器</string>
-    <string name="system_statusbar_dttosleep_title">雙擊鎖屏</string>
     <string name="system_statusbarcolor_apps_title">黑名單</string>
     <string name="system_statusbarcolor_summ">盡量將狀態欄和應用操作欄的背景顏色保持一致</string>
     <string name="system_statusbarcolor_title">狀態欄背景顏色</string>

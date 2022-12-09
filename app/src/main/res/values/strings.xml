@@ -1111,7 +1111,6 @@
     <string name="system_statusbar_batterytempandcurrent_title">Display battery temp and current</string>
     <string name="system_statusbar_batterytempandcurrent_content_title">Display info</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">Display on the right</string>
-    <string name="system_statusbar_dttosleep_title">Double tap to sleep</string>
     <string name="system_statusbar_dualsimin2rows_title">Dual SIM signal bars in dual rows</string>
     <string name="system_statusbar_dualsimin2rows_rightmargin_title">Right margin</string>
     <string name="system_statusbar_mobiletype_single_title">Put mobile network type at the right of signal icon</string>

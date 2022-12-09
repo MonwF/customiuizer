@@ -259,7 +259,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_disableanynotif")) System.DisableAnyNotificationHook(lpparam);
             if (mPrefs.getBoolean("system_lockscreenshortcuts")) System.LockScreenShortcutHook(lpparam);
             if (mPrefs.getBoolean("system_4gtolte")) System.Network4GtoLTEHook(lpparam);
-            if (mPrefs.getBoolean("system_statusbar_dttosleep")) System.StatusBarDoubleTapToSleepHook(lpparam);
             if (mPrefs.getBoolean("system_statusbar_netspeed_atright")
                 || mPrefs.getBoolean("system_statusbar_alarm_atright")
                 || mPrefs.getBoolean("system_statusbar_sound_atright")
@@ -388,7 +387,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("various_restrictapp")) Various.AppsRestrictPowerHook(lpparam);
         }
 
-        if (pkg.equals("com.android.settings")) {
+        if (pkg.equals("com.android.settings") && lpparam.processName.equals("com.android.settings")) {
             GlobalActions.miuizerSettingsRes();
             GlobalActions.miuizerSettings12Hook(lpparam);
             if (mPrefs.getBoolean("system_separatevolume")) {
