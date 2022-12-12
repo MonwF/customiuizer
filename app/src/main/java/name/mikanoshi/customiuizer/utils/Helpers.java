@@ -73,6 +73,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -242,16 +243,12 @@ public class Helpers {
 		return (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
 	}
 
-	public static boolean isNougat() {
-		return false;
-	}
-
 	public static boolean isQPlus() {
 		return true;
 	}
 
-	public static boolean isRPlus() {
-		return Build.VERSION.SDK_INT >= 31;
+	public static boolean isTPlus() {
+		return Build.VERSION.SDK_INT >= 33;
 	}
 
 	public static boolean isDeviceEncrypted(Context context) {
@@ -1155,13 +1152,12 @@ public class Helpers {
 				pattern = getVibrationPattern(ownPattern);
 				break;
 		}
-		if (!isNougat()) try {
+		try {
 			vibrator.vibrate(VibrationEffect.createWaveform(pattern, -1));
 		} catch (Throwable t) {
 			//noinspection deprecation
 			vibrator.vibrate(200);
-		} else
-			vibrator.vibrate(200);
+		}
 	}
 
 	public static long[] getVibrationPattern(String patternStr) {
@@ -1628,7 +1624,7 @@ public class Helpers {
 		}
 	}
 
-	public static void hookMethod(Method method, MethodHook callback) {
+	public static void hookMethod(Member method, MethodHook callback) {
 		try {
 			XposedBridge.hookMethod(method, callback);
 		} catch (Throwable t) {

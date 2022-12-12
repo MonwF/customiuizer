@@ -122,7 +122,6 @@ public class Various_CallReminder extends SubFragment {
 				dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						if (Helpers.isNougat()) return;
 						EditText edit = dialog.findViewById(android.R.id.edit);
 						Vibrator vibrator = (Vibrator)getContext().getSystemService(Context.VIBRATOR_SERVICE);
 						try {
