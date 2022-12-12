@@ -8291,20 +8291,23 @@ public class System {
                 }
             }
         });
+        String QSFactoryCls = Helpers.isTPlus() ? "com.android.systemui.qs.tileimpl.MiuiQSFactory" : "com.android.systemui.qs.tileimpl.QSFactoryImpl";
         Class<?> ResourceIconClass = findClass("com.android.systemui.qs.tileimpl.QSTileImpl$ResourceIcon", lpparam.classLoader);
-        Helpers.findAndHookMethod("com.android.systemui.qs.tileimpl.QSFactoryImpl", lpparam.classLoader, "createTileInternal", String.class, new MethodHook() {
+        Helpers.findAndHookMethod(QSFactoryCls, lpparam.classLoader, "createTileInternal", String.class, new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 String tileName = (String) param.args[0];
                 if (tileName.startsWith("custom_")) {
-                    Object provider = XposedHelpers.getObjectField(param.thisObject, "mNfcTileProvider");
+                    String nfcField = Helpers.isTPlus() ? "nfcTileProvider" : "mNfcTileProvider";
+                    Object provider = XposedHelpers.getObjectField(param.thisObject, nfcField);
                     Object tile = XposedHelpers.callMethod(provider, "get");
                     XposedHelpers.setAdditionalInstanceField(tile, "customName", tileName);
                     param.setResult(tile);
                 }
             }
         });
-        Helpers.findAndHookMethod("com.android.systemui.qs.tiles.NfcTile", lpparam.classLoader, "isAvailable", new MethodHook() {
+        String NfcTileCls = Helpers.isTPlus() ? "com.android.systemui.qs.tiles.MiuiNfcTile" : "com.android.systemui.qs.tiles.NfcTile";
+        Helpers.findAndHookMethod(NfcTileCls, lpparam.classLoader, "isAvailable", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 Object customName = XposedHelpers.getAdditionalInstanceField(param.thisObject, "customName");
@@ -8319,7 +8322,7 @@ public class System {
                 }
             }
         });
-        Helpers.findAndHookMethod("com.android.systemui.qs.tiles.NfcTile", lpparam.classLoader, "getTileLabel", new MethodHook() {
+        Helpers.findAndHookMethod(NfcTileCls, lpparam.classLoader, "getTileLabel", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 Object customName = XposedHelpers.getAdditionalInstanceField(param.thisObject, "customName");
@@ -8333,7 +8336,7 @@ public class System {
                 }
             }
         });
-        Helpers.findAndHookMethod("com.android.systemui.qs.tiles.NfcTile", lpparam.classLoader, "handleSetListening", boolean.class, new MethodHook() {
+        Helpers.findAndHookMethod(NfcTileCls, lpparam.classLoader, "handleSetListening", boolean.class, new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 Object customName = XposedHelpers.getAdditionalInstanceField(param.thisObject, "customName");
@@ -8362,7 +8365,7 @@ public class System {
                 }
             }
         });
-        Helpers.findAndHookMethod("com.android.systemui.qs.tiles.NfcTile", lpparam.classLoader, "getLongClickIntent", new MethodHook() {
+        Helpers.findAndHookMethod(NfcTileCls, lpparam.classLoader, "getLongClickIntent", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 Object customName = XposedHelpers.getAdditionalInstanceField(param.thisObject, "customName");
@@ -8380,7 +8383,7 @@ public class System {
                 }
             }
         });
-        Helpers.findAndHookMethod("com.android.systemui.qs.tiles.NfcTile", lpparam.classLoader, "handleClick", View.class, new MethodHook() {
+        Helpers.findAndHookMethod(NfcTileCls, lpparam.classLoader, "handleClick", View.class, new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 Object customName = XposedHelpers.getAdditionalInstanceField(param.thisObject, "customName");
@@ -8397,7 +8400,7 @@ public class System {
 
         int fiveGIconResId = MainModule.resHooks.addResource("ic_qs_5g_on", R.drawable.ic_qs_5g_on);
         int fiveGIconOffResId = MainModule.resHooks.addResource("ic_qs_5g_off", R.drawable.ic_qs_5g_off);
-        Helpers.hookAllMethods("com.android.systemui.qs.tiles.NfcTile", lpparam.classLoader, "handleUpdateState", new MethodHook() {
+        Helpers.hookAllMethods(NfcTileCls, lpparam.classLoader, "handleUpdateState", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 Object customName = XposedHelpers.getAdditionalInstanceField(param.thisObject, "customName");
