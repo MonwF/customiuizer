@@ -975,7 +975,15 @@ public class GlobalActions {
 	}
 
 	public static void setupStatusBar(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "start", new MethodHook() {
+		Class<?> StatusBarClass;
+		if (Helpers.isTPlus()) {
+			StatusBarClass = findClassIfExists("com.android.systemui.statusbar.phone.CentralSurfacesImpl", lpparam.classLoader);
+		}
+		else {
+			StatusBarClass = findClassIfExists("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader);
+		}
+		if (StatusBarClass == null) return;
+		Helpers.findAndHookMethod(StatusBarClass, "start", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				mStatusBar = param.thisObject;

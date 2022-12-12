@@ -909,15 +909,20 @@ public class System {
     private static ClassLoader pluginLoader = null;
 
     public static void MIUIVolumeDialogHook(LoadPackageParam lpparam) {
-        final boolean[] isHooked = {false};
-        Helpers.findAndHookMethod("com.android.systemui.shared.plugins.PluginManagerImpl", lpparam.classLoader, "getClassLoader", ApplicationInfo.class, new MethodHook() {
+        Constructor<?> PluginContextWrapper = XposedHelpers.findConstructorExactIfExists("com.android.systemui.shared.plugins.PluginActionManager$PluginContextWrapper", lpparam.classLoader, Context.class, ClassLoader.class);
+        if (PluginContextWrapper == null) {
+            PluginContextWrapper = XposedHelpers.findConstructorExactIfExists("com.android.systemui.shared.plugins.PluginInstanceManager$PluginContextWrapper", lpparam.classLoader, Context.class, ClassLoader.class);
+        }
+        if (PluginContextWrapper == null) return;
+        Helpers.hookMethod(PluginContextWrapper, new MethodHook() {
+            private boolean isHooked = false;
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                ApplicationInfo appInfo = (ApplicationInfo) param.args[0];
-                if ("miui.systemui.plugin".equals(appInfo.packageName) && !isHooked[0]) {
-                    isHooked[0] = true;
+                Context pluginContext = (Context) param.args[0];
+                if ("miui.systemui.plugin".equals(pluginContext.getPackageName()) && !isHooked) {
+                    isHooked = true;
                     if (pluginLoader == null) {
-                        pluginLoader = (ClassLoader) param.getResult();
+                        pluginLoader = (ClassLoader) param.args[1];
                     }
                     Class<?> MiuiVolumeDialogImpl = XposedHelpers.findClassIfExists("com.android.systemui.miui.volume.MiuiVolumeDialogImpl", pluginLoader);
                     if (MainModule.mPrefs.getBoolean("system_separatevolume") && MainModule.mPrefs.getBoolean("system_separatevolume_slider")) {
@@ -2607,16 +2612,20 @@ public class System {
                 }
             });
 
-
-        final boolean[] isHooked = {false};
-        Helpers.findAndHookMethod("com.android.systemui.shared.plugins.PluginManagerImpl", lpparam.classLoader, "getClassLoader", ApplicationInfo.class, new MethodHook() {
+        Constructor<?> PluginContextWrapper = XposedHelpers.findConstructorExactIfExists("com.android.systemui.shared.plugins.PluginActionManager$PluginContextWrapper", lpparam.classLoader, Context.class, ClassLoader.class);
+        if (PluginContextWrapper == null) {
+            PluginContextWrapper = XposedHelpers.findConstructorExactIfExists("com.android.systemui.shared.plugins.PluginInstanceManager$PluginContextWrapper", lpparam.classLoader, Context.class, ClassLoader.class);
+        }
+        if (PluginContextWrapper == null) return;
+        Helpers.hookMethod(PluginContextWrapper, new MethodHook() {
+            private boolean isHooked = false;
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                ApplicationInfo appInfo = (ApplicationInfo) param.args[0];
-                if ("miui.systemui.plugin".equals(appInfo.packageName) && !isHooked[0]) {
-                    isHooked[0] = true;
+                Context pluginContext = (Context) param.args[0];
+                if ("miui.systemui.plugin".equals(pluginContext.getPackageName()) && !isHooked) {
+                    isHooked = true;
                     if (pluginLoader == null) {
-                        pluginLoader = (ClassLoader) param.getResult();
+                        pluginLoader = (ClassLoader) param.args[1];
                     }
                     MainModule.resHooks.setDensityReplacement("miui.systemui.plugin", "dimen", "qs_cell_height", 85.0f);
                     Class<?> QSController = XposedHelpers.findClassIfExists("miui.systemui.controlcenter.qs.tileview.StandardTileView", pluginLoader);
@@ -3458,15 +3467,20 @@ public class System {
     public static void VolumeTimerValuesRes(LoadPackageParam lpparam) {
         MainModule.resHooks.setResReplacement("miui.systemui.plugin", "array", "miui_volume_timer_segments", R.array.miui_volume_timer_segments);
 
-        final boolean[] isHooked = {false};
-        Helpers.findAndHookMethod("com.android.systemui.shared.plugins.PluginManagerImpl", lpparam.classLoader, "getClassLoader", ApplicationInfo.class, new MethodHook() {
+        Constructor<?> PluginContextWrapper = XposedHelpers.findConstructorExactIfExists("com.android.systemui.shared.plugins.PluginActionManager$PluginContextWrapper", lpparam.classLoader, Context.class, ClassLoader.class);
+        if (PluginContextWrapper == null) {
+            PluginContextWrapper = XposedHelpers.findConstructorExactIfExists("com.android.systemui.shared.plugins.PluginInstanceManager$PluginContextWrapper", lpparam.classLoader, Context.class, ClassLoader.class);
+        }
+        if (PluginContextWrapper == null) return;
+        Helpers.hookMethod(PluginContextWrapper, new MethodHook() {
+            private boolean isHooked = false;
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                ApplicationInfo appInfo = (ApplicationInfo) param.args[0];
-                if ("miui.systemui.plugin".equals(appInfo.packageName) && !isHooked[0]) {
-                    isHooked[0] = true;
+                Context pluginContext = (Context) param.args[0];
+                if ("miui.systemui.plugin".equals(pluginContext.getPackageName()) && !isHooked) {
+                    isHooked = true;
                     if (pluginLoader == null) {
-                        pluginLoader = (ClassLoader) param.getResult();
+                        pluginLoader = (ClassLoader) param.args[1];
                     }
                     Helpers.findAndHookMethod("com.android.systemui.miui.volume.MiuiVolumeTimerDrawableHelper", pluginLoader, "initTimerString", new MethodHook() {
                         @Override
@@ -3815,7 +3829,7 @@ public class System {
             }
         });
 
-        if (!Helpers.isNougat() && MainModule.mPrefs.getBoolean("system_defaultusb_unsecure")) {
+        if (MainModule.mPrefs.getBoolean("system_defaultusb_unsecure")) {
             if (!Helpers.findAndHookMethodSilently("com.android.server.usb.UsbDeviceManager$UsbHandler", lpparam.classLoader, "isUsbDataTransferActive", long.class, XC_MethodReplacement.returnConstant(true)))
                 Helpers.findAndHookMethod("com.android.server.usb.UsbDeviceManager$UsbHandler", lpparam.classLoader, "isUsbDataTransferActive", XC_MethodReplacement.returnConstant(true));
             Helpers.findAndHookMethod("com.android.server.usb.UsbDeviceManager$UsbHandler", lpparam.classLoader, "handleMessage", Message.class, new MethodHook() {
@@ -8295,6 +8309,7 @@ public class System {
                     int stockTilesResId = mContext.getResources().getIdentifier("miui_quick_settings_tiles_stock", "string", lpparam.packageName);
                     String stockTiles = mContext.getString(stockTilesResId) + ",custom_5G";
                     MainModule.resHooks.setObjectReplacement(lpparam.packageName, "string", "miui_quick_settings_tiles_stock", stockTiles);
+                    MainModule.resHooks.setObjectReplacement("miui.systemui.plugin", "string", "miui_quick_settings_tiles_stock", stockTiles);
                     MainModule.resHooks.setObjectReplacement("miui.systemui.plugin", "string", "quick_settings_tiles_stock", stockTiles);
                 }
             }
@@ -8465,15 +8480,20 @@ public class System {
             }
         });
 
-        final boolean[] isHooked = {false};
-        Helpers.findAndHookMethod("com.android.systemui.shared.plugins.PluginManagerImpl", lpparam.classLoader, "getClassLoader", ApplicationInfo.class, new MethodHook() {
+        Constructor<?> PluginContextWrapper = XposedHelpers.findConstructorExactIfExists("com.android.systemui.shared.plugins.PluginActionManager$PluginContextWrapper", lpparam.classLoader, Context.class, ClassLoader.class);
+        if (PluginContextWrapper == null) {
+            PluginContextWrapper = XposedHelpers.findConstructorExactIfExists("com.android.systemui.shared.plugins.PluginInstanceManager$PluginContextWrapper", lpparam.classLoader, Context.class, ClassLoader.class);
+        }
+        if (PluginContextWrapper == null) return;
+        Helpers.hookMethod(PluginContextWrapper, new MethodHook() {
+            private boolean isHooked = false;
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                ApplicationInfo appInfo = (ApplicationInfo) param.args[0];
-                if ("miui.systemui.plugin".equals(appInfo.packageName) && !isHooked[0]) {
-                    isHooked[0] = true;
+                Context pluginContext = (Context) param.args[0];
+                if ("miui.systemui.plugin".equals(pluginContext.getPackageName()) && !isHooked) {
+                    isHooked = true;
                     if (pluginLoader == null) {
-                        pluginLoader = (ClassLoader) param.getResult();
+                        pluginLoader = (ClassLoader) param.args[1];
                     }
                     if (cols > 4) {
                         Helpers.findAndHookConstructor("miui.systemui.controlcenter.qs.QSPager", pluginLoader, Context.class, AttributeSet.class, new MethodHook() {
@@ -8565,15 +8585,20 @@ public class System {
         MainModule.resHooks.setResReplacement("miui.systemui.plugin", "drawable", "qs_background_disabled", R.drawable.ic_qs_tile_bg_disabled);
         MainModule.resHooks.setResReplacement("miui.systemui.plugin", "drawable", "qs_background_warning", R.drawable.ic_qs_tile_bg_warning);
 
-        final boolean[] isHooked = {false};
-        Helpers.findAndHookMethod("com.android.systemui.shared.plugins.PluginManagerImpl", lpparam.classLoader, "getClassLoader", ApplicationInfo.class, new MethodHook() {
+        Constructor<?> PluginContextWrapper = XposedHelpers.findConstructorExactIfExists("com.android.systemui.shared.plugins.PluginActionManager$PluginContextWrapper", lpparam.classLoader, Context.class, ClassLoader.class);
+        if (PluginContextWrapper == null) {
+            PluginContextWrapper = XposedHelpers.findConstructorExactIfExists("com.android.systemui.shared.plugins.PluginInstanceManager$PluginContextWrapper", lpparam.classLoader, Context.class, ClassLoader.class);
+        }
+        if (PluginContextWrapper == null) return;
+        Helpers.hookMethod(PluginContextWrapper, new MethodHook() {
+            private boolean isHooked = false;
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                ApplicationInfo appInfo = (ApplicationInfo) param.args[0];
-                if ("miui.systemui.plugin".equals(appInfo.packageName) && !isHooked[0]) {
-                    isHooked[0] = true;
+                Context pluginContext = (Context) param.args[0];
+                if ("miui.systemui.plugin".equals(pluginContext.getPackageName()) && !isHooked) {
+                    isHooked = true;
                     if (pluginLoader == null) {
-                        pluginLoader = (ClassLoader) param.getResult();
+                        pluginLoader = (ClassLoader) param.args[1];
                     }
                     Helpers.findAndHookMethod("miui.systemui.controlcenter.qs.tileview.ExpandableIconView", pluginLoader, "setCornerRadius", float.class, new MethodHook() {
                         @Override
