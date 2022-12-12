@@ -243,10 +243,6 @@ public class Helpers {
 		return (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
 	}
 
-	public static boolean isQPlus() {
-		return true;
-	}
-
 	public static boolean isTPlus() {
 		return Build.VERSION.SDK_INT >= 33;
 	}

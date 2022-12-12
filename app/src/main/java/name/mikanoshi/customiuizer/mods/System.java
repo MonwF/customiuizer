@@ -314,7 +314,7 @@ public class System {
     }
 
     public static void NoPasswordHook() {
-        String isAllowed = Helpers.isQPlus() ? "isBiometricAllowedForUser" : "isFingerprintAllowedForUser";
+        String isAllowed = "isBiometricAllowedForUser";
         Helpers.findAndHookMethod("com.android.internal.widget.LockPatternUtils$StrongAuthTracker", null, isAllowed, boolean.class, int.class, XC_MethodReplacement.returnConstant(true));
         Helpers.findAndHookMethod("com.android.internal.widget.LockPatternUtils", null, isAllowed, int.class, XC_MethodReplacement.returnConstant(true));
     }
@@ -2673,8 +2673,8 @@ public class System {
             }
         });
 
-        String windowClass = Helpers.isQPlus() ? "com.android.server.wm.DisplayRotation" : "com.android.server.policy.PhoneWindowManager";
-        String rotMethod = Helpers.isQPlus() ? "rotationForOrientation" : "rotationForOrientationLw";
+        String windowClass = "com.android.server.wm.DisplayRotation";
+        String rotMethod = "rotationForOrientation";
         Helpers.hookAllMethods(windowClass, lpparam.classLoader, rotMethod, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
@@ -3780,20 +3780,12 @@ public class System {
     }
 
     public static void AllRotationsHook(LoadPackageParam lpparam) {
-        if (Helpers.isQPlus())
-            Helpers.hookAllConstructors("com.android.server.wm.DisplayRotation", lpparam.classLoader, new MethodHook() {
-                @Override
-                protected void after(MethodHookParam param) throws Throwable {
-                    XposedHelpers.setIntField(param.thisObject, "mAllowAllRotations", MainModule.mPrefs.getStringAsInt("system_allrotations2", 1) == 2 ? 1 : 0);
-                }
-            });
-        else
-            Helpers.hookAllMethods("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "init", new MethodHook() {
-                @Override
-                protected void after(MethodHookParam param) throws Throwable {
-                    XposedHelpers.setIntField(param.thisObject, "mAllowAllRotations", MainModule.mPrefs.getStringAsInt("system_allrotations2", 1) == 2 ? 1 : 0);
-                }
-            });
+        Helpers.hookAllConstructors("com.android.server.wm.DisplayRotation", lpparam.classLoader, new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                XposedHelpers.setIntField(param.thisObject, "mAllowAllRotations", MainModule.mPrefs.getStringAsInt("system_allrotations2", 1) == 2 ? 1 : 0);
+            }
+        });
     }
 
     private static boolean mUSBConnected = false;
@@ -4243,21 +4235,16 @@ public class System {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
                 Point mClampedCenterZoomCoords = (Point)XposedHelpers.getObjectField(param.thisObject, "mClampedCenterZoomCoords");
-                if (Helpers.isQPlus()) {
-                    Object mView = XposedHelpers.getObjectField(param.thisObject, "mView");
-                    float f = (float)param.args[0];
-                    int x;
-                    if (mView instanceof SurfaceView) {
-                        x = Math.round(f);
-                    } else {
-                        int[] mViewCoordinatesInSurface = (int[])XposedHelpers.getObjectField(param.thisObject, "mViewCoordinatesInSurface");
-                        x = Math.round(f + (float)mViewCoordinatesInSurface[0]);
-                    }
-                    mClampedCenterZoomCoords.x = x;
+                Object mView = XposedHelpers.getObjectField(param.thisObject, "mView");
+                float f = (float)param.args[0];
+                int x;
+                if (mView instanceof SurfaceView) {
+                    x = Math.round(f);
                 } else {
-                    Point mCenterZoomCoords = (Point)XposedHelpers.getObjectField(param.thisObject, "mCenterZoomCoords");
-                    mClampedCenterZoomCoords.x = mCenterZoomCoords.x;
+                    int[] mViewCoordinatesInSurface = (int[])XposedHelpers.getObjectField(param.thisObject, "mViewCoordinatesInSurface");
+                    x = Math.round(f + (float)mViewCoordinatesInSurface[0]);
                 }
+                mClampedCenterZoomCoords.x = x;
             }
         });
 
@@ -5049,11 +5036,7 @@ public class System {
             }
         };
 
-        if (Helpers.isQPlus())
-            Helpers.findAndHookConstructor("android.media.session.MediaSession", null, Context.class, String.class, Bundle.class, hook);
-        else
-            Helpers.findAndHookConstructor("android.media.session.MediaSession", null, Context.class, String.class, int.class, hook);
-
+        Helpers.findAndHookConstructor("android.media.session.MediaSession", null, Context.class, String.class, Bundle.class, hook);
         Helpers.findAndHookMethod("android.media.session.MediaSession", null, "setActive", boolean.class, new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
@@ -5620,20 +5603,12 @@ public class System {
     }
 
     public static void NoOverscrollHook() {
-        if (Helpers.isQPlus())
-            Helpers.findAndHookMethod("android.widget.AbsListView", null, "initAbsListView", new MethodHook() {
-                @Override
-                protected void before(MethodHookParam param) throws Throwable {
-                    ((AbsListView)param.thisObject).setOverScrollMode(View.OVER_SCROLL_NEVER);
-                }
-            });
-        else
-            Helpers.findAndHookMethod("android.widget.AbsListView", null, "setOverScrollMode", int.class, new MethodHook() {
-                @Override
-                protected void before(MethodHookParam param) throws Throwable {
-                    param.args[0] = View.OVER_SCROLL_NEVER;
-                }
-            });
+        Helpers.findAndHookMethod("android.widget.AbsListView", null, "initAbsListView", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                ((AbsListView)param.thisObject).setOverScrollMode(View.OVER_SCROLL_NEVER);
+            }
+        });
     }
 
     public static void NoOverscrollAppHook(LoadPackageParam lpparam) {
@@ -6310,7 +6285,7 @@ public class System {
             }
         });
 
-        String windowClass = Helpers.isQPlus() ? "com.android.server.wm.DisplayPolicy" : "com.android.server.policy.PhoneWindowManager";
+        String windowClass = "com.android.server.wm.DisplayPolicy";
         Helpers.hookAllMethods(windowClass, lpparam.classLoader, "adjustWindowParamsLw", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
@@ -6334,7 +6309,7 @@ public class System {
     }
 
     public static void ClearAllTasksHook(LoadPackageParam lpparam) {
-        String wpuClass = Helpers.isQPlus() ? "com.android.server.wm.WindowProcessUtils" : "com.android.server.am.ProcessUtils";
+        String wpuClass = "com.android.server.wm.WindowProcessUtils";
         Helpers.hookAllMethods(wpuClass, lpparam.classLoader, "getPerceptibleRecentAppList", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
@@ -7992,7 +7967,8 @@ public class System {
     public static void HorizMarginHook(LoadPackageParam lpparam) {
         MainModule.resHooks.setDensityReplacement(lpparam.packageName, "dimen", "status_bar_padding_start", 0);
         MainModule.resHooks.setDensityReplacement(lpparam.packageName, "dimen", "status_bar_padding_end", 0);
-        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.StatusBarWindowView", lpparam.classLoader, "paddingNeededForCutoutAndRoundedCorner", new MethodHook() {
+        String StatusBarWindowViewCls = Helpers.isTPlus() ? "com.android.systemui.statusbar.window.StatusBarWindowView" : "com.android.systemui.statusbar.phone.StatusBarWindowView";
+        Helpers.hookAllMethods(StatusBarWindowViewCls, lpparam.classLoader, "paddingNeededForCutoutAndRoundedCorner", new MethodHook() {
             @Override
             protected void before(final MethodHookParam param) throws Throwable {
                 Context context = Helpers.findContext();
