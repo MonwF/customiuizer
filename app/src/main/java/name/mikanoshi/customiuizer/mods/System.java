@@ -6955,7 +6955,8 @@ public class System {
                     opt = opt == -1 ? 999 : opt;
                     XposedHelpers.setObjectField(param.thisObject, "MAX_DOTS", 3);
                     XposedHelpers.setObjectField(param.thisObject, "MAX_STATIC_ICONS", opt);
-                    XposedHelpers.setObjectField(param.thisObject, "MAX_VISIBLE_ICONS_ON_LOCK", opt);
+                    String fieldLockVisible = Helpers.isTPlus() ? "MAX_ICONS_ON_LOCKSCREEN" : "MAX_VISIBLE_ICONS_ON_LOCK";
+                    XposedHelpers.setObjectField(param.thisObject, fieldLockVisible, opt);
                     XposedHelpers.callMethod(param.thisObject, "updateState");
                     param.setResult(null);
                 }
