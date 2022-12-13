@@ -195,6 +195,7 @@ import name.mikanoshi.customiuizer.utils.Helpers.MimeType;
 import name.mikanoshi.customiuizer.utils.SoundData;
 
 public class System {
+    private static String StatusBarCls = Helpers.isTPlus() ? "com.android.systemui.statusbar.phone.CentralSurfacesImpl" : "com.android.systemui.statusbar.phone.StatusBar";
 
     public static void ScreenAnimHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethod("com.android.server.display.DisplayPowerController", lpparam.classLoader, "initialize", new MethodHook() {
@@ -909,20 +910,16 @@ public class System {
     private static ClassLoader pluginLoader = null;
 
     public static void MIUIVolumeDialogHook(LoadPackageParam lpparam) {
-        Constructor<?> PluginContextWrapper = XposedHelpers.findConstructorExactIfExists("com.android.systemui.shared.plugins.PluginActionManager$PluginContextWrapper", lpparam.classLoader, Context.class, ClassLoader.class);
-        if (PluginContextWrapper == null) {
-            PluginContextWrapper = XposedHelpers.findConstructorExactIfExists("com.android.systemui.shared.plugins.PluginInstanceManager$PluginContextWrapper", lpparam.classLoader, Context.class, ClassLoader.class);
-        }
-        if (PluginContextWrapper == null) return;
-        Helpers.hookMethod(PluginContextWrapper, new MethodHook() {
+        String pluginLoaderClass = Helpers.isTPlus() ? "com.android.systemui.shared.plugins.PluginInstance$Factory" : "com.android.systemui.shared.plugins.PluginManagerImpl";
+        Helpers.hookAllMethods(pluginLoaderClass, lpparam.classLoader, "getClassLoader", new MethodHook() {
             private boolean isHooked = false;
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                Context pluginContext = (Context) param.args[0];
-                if ("miui.systemui.plugin".equals(pluginContext.getPackageName()) && !isHooked) {
+                ApplicationInfo appInfo = (ApplicationInfo) param.args[0];
+                if ("miui.systemui.plugin".equals(appInfo.packageName) && !isHooked) {
                     isHooked = true;
                     if (pluginLoader == null) {
-                        pluginLoader = (ClassLoader) param.args[1];
+                        pluginLoader = (ClassLoader) param.getResult();
                     }
                     Class<?> MiuiVolumeDialogImpl = XposedHelpers.findClassIfExists("com.android.systemui.miui.volume.MiuiVolumeDialogImpl", pluginLoader);
                     if (MainModule.mPrefs.getBoolean("system_separatevolume") && MainModule.mPrefs.getBoolean("system_separatevolume_slider")) {
@@ -1260,7 +1257,7 @@ public class System {
     }
 
     public static void PopupNotificationsHook(LoadPackageParam lpparam) {
-        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "addNotification", new MethodHook() {
+        Helpers.hookAllMethods(StatusBarCls, lpparam.classLoader, "addNotification", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 if (param.args[0] == null) return;
@@ -2613,20 +2610,16 @@ public class System {
                 }
             });
 
-        Constructor<?> PluginContextWrapper = XposedHelpers.findConstructorExactIfExists("com.android.systemui.shared.plugins.PluginActionManager$PluginContextWrapper", lpparam.classLoader, Context.class, ClassLoader.class);
-        if (PluginContextWrapper == null) {
-            PluginContextWrapper = XposedHelpers.findConstructorExactIfExists("com.android.systemui.shared.plugins.PluginInstanceManager$PluginContextWrapper", lpparam.classLoader, Context.class, ClassLoader.class);
-        }
-        if (PluginContextWrapper == null) return;
-        Helpers.hookMethod(PluginContextWrapper, new MethodHook() {
+        String pluginLoaderClass = Helpers.isTPlus() ? "com.android.systemui.shared.plugins.PluginInstance$Factory" : "com.android.systemui.shared.plugins.PluginManagerImpl";
+        Helpers.hookAllMethods(pluginLoaderClass, lpparam.classLoader, "getClassLoader", new MethodHook() {
             private boolean isHooked = false;
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                Context pluginContext = (Context) param.args[0];
-                if ("miui.systemui.plugin".equals(pluginContext.getPackageName()) && !isHooked) {
+                ApplicationInfo appInfo = (ApplicationInfo) param.args[0];
+                if ("miui.systemui.plugin".equals(appInfo.packageName) && !isHooked) {
                     isHooked = true;
                     if (pluginLoader == null) {
-                        pluginLoader = (ClassLoader) param.args[1];
+                        pluginLoader = (ClassLoader) param.getResult();
                     }
                     MainModule.resHooks.setDensityReplacement("miui.systemui.plugin", "dimen", "qs_cell_height", 85.0f);
                     Class<?> QSController = XposedHelpers.findClassIfExists("miui.systemui.controlcenter.qs.tileview.StandardTileView", pluginLoader);
@@ -2867,7 +2860,7 @@ public class System {
         MethodHook openAppHook = new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
-                Context mContext = (Context) AndroidAppHelper.currentApplication();
+                Context mContext = AndroidAppHelper.currentApplication();
                 int user = 0;
                 String pkgAppName = "";
                 if (param.method.getName().equals("startCalendarApp")) {
@@ -3468,20 +3461,16 @@ public class System {
     public static void VolumeTimerValuesRes(LoadPackageParam lpparam) {
         MainModule.resHooks.setResReplacement("miui.systemui.plugin", "array", "miui_volume_timer_segments", R.array.miui_volume_timer_segments);
 
-        Constructor<?> PluginContextWrapper = XposedHelpers.findConstructorExactIfExists("com.android.systemui.shared.plugins.PluginActionManager$PluginContextWrapper", lpparam.classLoader, Context.class, ClassLoader.class);
-        if (PluginContextWrapper == null) {
-            PluginContextWrapper = XposedHelpers.findConstructorExactIfExists("com.android.systemui.shared.plugins.PluginInstanceManager$PluginContextWrapper", lpparam.classLoader, Context.class, ClassLoader.class);
-        }
-        if (PluginContextWrapper == null) return;
-        Helpers.hookMethod(PluginContextWrapper, new MethodHook() {
+        String pluginLoaderClass = Helpers.isTPlus() ? "com.android.systemui.shared.plugins.PluginInstance$Factory" : "com.android.systemui.shared.plugins.PluginManagerImpl";
+        Helpers.hookAllMethods(pluginLoaderClass, lpparam.classLoader, "getClassLoader", new MethodHook() {
             private boolean isHooked = false;
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                Context pluginContext = (Context) param.args[0];
-                if ("miui.systemui.plugin".equals(pluginContext.getPackageName()) && !isHooked) {
+                ApplicationInfo appInfo = (ApplicationInfo) param.args[0];
+                if ("miui.systemui.plugin".equals(appInfo.packageName) && !isHooked) {
                     isHooked = true;
                     if (pluginLoader == null) {
-                        pluginLoader = (ClassLoader) param.args[1];
+                        pluginLoader = (ClassLoader) param.getResult();
                     }
                     Helpers.findAndHookMethod("com.android.systemui.miui.volume.MiuiVolumeTimerDrawableHelper", pluginLoader, "initTimerString", new MethodHook() {
                         @Override
@@ -3626,7 +3615,7 @@ public class System {
         audioViz.updateViewState(isPlaying, isKeyguardShowing, isNotificationPanelExpanded);
     }
     public static void AudioVisualizerHook(LoadPackageParam lpparam) {
-        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "makeStatusBarView", new MethodHook() {
+        Helpers.hookAllMethods(StatusBarCls, lpparam.classLoader, "makeStatusBarView", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
                 Object viewController = XposedHelpers.getObjectField(param.thisObject, "mNotificationPanelViewController");
@@ -3683,14 +3672,14 @@ public class System {
             }
         });
 
-        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "setPanelExpanded", new MethodHook() {
+        Helpers.hookAllMethods(StatusBarCls, lpparam.classLoader, "setPanelExpanded", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
-            boolean isNotificationPanelExpandedNew = XposedHelpers.getBooleanField(param.thisObject, "mPanelExpanded");
-            if (isNotificationPanelExpanded != isNotificationPanelExpandedNew) {
-                isNotificationPanelExpanded = isNotificationPanelExpandedNew;
-                updateAudioVisualizerState((Context)XposedHelpers.getObjectField(param.thisObject, "mContext"));
-            }
+                boolean isNotificationPanelExpandedNew = XposedHelpers.getBooleanField(param.thisObject, "mPanelExpanded");
+                if (isNotificationPanelExpanded != isNotificationPanelExpandedNew) {
+                    isNotificationPanelExpanded = isNotificationPanelExpandedNew;
+                    updateAudioVisualizerState((Context)XposedHelpers.getObjectField(param.thisObject, "mContext"));
+                }
             }
         });
 
@@ -4077,7 +4066,7 @@ public class System {
     }
 
     public static void BatteryIndicatorHook(LoadPackageParam lpparam) {
-        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "makeStatusBarView", new MethodHook() {
+        Helpers.hookAllMethods(StatusBarCls, lpparam.classLoader, "makeStatusBarView", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
                 Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
@@ -4098,7 +4087,7 @@ public class System {
             }
         });
 
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "setPanelExpanded", boolean.class, new MethodHook() {
+        Helpers.findAndHookMethod(StatusBarCls, lpparam.classLoader, "setPanelExpanded", boolean.class, new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
                 boolean isKeyguardShowing = (boolean)XposedHelpers.callMethod(param.thisObject, "isKeyguardShowing");
@@ -4107,7 +4096,7 @@ public class System {
             }
         });
 
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "setQsExpanded", boolean.class, new MethodHook() {
+        Helpers.findAndHookMethod(StatusBarCls, lpparam.classLoader, "setQsExpanded", boolean.class, new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
                 boolean isKeyguardShowing = (boolean)XposedHelpers.callMethod(param.thisObject, "isKeyguardShowing");
@@ -4117,7 +4106,7 @@ public class System {
             }
         });
 
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "updateKeyguardState", new MethodHook() {
+        Helpers.findAndHookMethod(StatusBarCls, lpparam.classLoader, "updateKeyguardState", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
                 boolean isKeyguardShowing = (boolean)XposedHelpers.callMethod(param.thisObject, "isKeyguardShowing");
@@ -5764,7 +5753,7 @@ public class System {
     }
 
     public static void HideQSHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "onStateChanged", int.class, new MethodHook() {
+        Helpers.findAndHookMethod(StatusBarCls, lpparam.classLoader, "onStateChanged", int.class, new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 Object mNotificationPanel = XposedHelpers.getObjectField(param.thisObject, "mQSContainer");
@@ -6033,7 +6022,7 @@ public class System {
 
     public static void StatusBarGesturesHook(LoadPackageParam lpparam) {
 
-        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "makeStatusBarView", new MethodHook() {
+        Helpers.hookAllMethods(StatusBarCls, lpparam.classLoader, "makeStatusBarView", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
                 Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
@@ -7799,7 +7788,7 @@ public class System {
     }
 
     public static void HideLockScreenStatusBarHook(LoadPackageParam lpparam) {
-        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "makeStatusBarView", new MethodHook() {
+        Helpers.hookAllMethods(StatusBarCls, lpparam.classLoader, "makeStatusBarView", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
             View mKeyguardStatusBar = (View) XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.thisObject, "mNotificationPanelViewController"), "mKeyguardStatusBar");
@@ -8063,7 +8052,6 @@ public class System {
             MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "status_bar_mobile_type_middle_to_strength_start", -0.4f);
         }
 
-        final boolean[] isListened = {false};
         SparseIntArray signalResToLevelMap = new SparseIntArray();
         int signalRes1_0 = MainModule.resHooks.addResource("signalRes1_0", R.drawable.statusbar_signal_1_0);
         int signalRes1_1 = MainModule.resHooks.addResource("signalRes1_1", R.drawable.statusbar_signal_1_1);
@@ -8153,10 +8141,11 @@ public class System {
         signalDarkLevelToRes2Map.put(6, signalDarkRes2_0);
 
         Helpers.hookAllMethods("com.android.systemui.statusbar.phone.StatusBarIconControllerImpl", lpparam.classLoader, "setMobileIcons", new MethodHook() {
+            private boolean isHooked = false;
             @Override
             protected void before(MethodHookParam param) throws Throwable {
-                if (!isListened[0]) {
-                    isListened[0] = true;
+                if (!isHooked) {
+                    isHooked = true;
                     Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
                     Resources res = mContext.getResources();
                     signalResToLevelMap.put(res.getIdentifier("stat_sys_signal_0", "drawable", lpparam.packageName), 0);
@@ -8437,12 +8426,12 @@ public class System {
             MainModule.resHooks.setObjectReplacement(lpparam.packageName, "dimen", "qs_control_tiles_min_rows", rows);
         }
 
-        final boolean[] isListened = {false};
         Helpers.findAndHookMethod("com.android.systemui.SystemUIApplication", lpparam.classLoader, "onCreate", new MethodHook() {
+            private boolean isHooked = false;
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                if (!isListened[0]) {
-                    isListened[0] = true;
+                if (!isHooked) {
+                    isHooked = true;
                     Context mContext = (Context) XposedHelpers.callMethod(param.thisObject, "getApplicationContext");
                     Resources res = mContext.getResources();
                     float density = res.getDisplayMetrics().density;
@@ -8461,20 +8450,16 @@ public class System {
             }
         });
 
-        Constructor<?> PluginContextWrapper = XposedHelpers.findConstructorExactIfExists("com.android.systemui.shared.plugins.PluginActionManager$PluginContextWrapper", lpparam.classLoader, Context.class, ClassLoader.class);
-        if (PluginContextWrapper == null) {
-            PluginContextWrapper = XposedHelpers.findConstructorExactIfExists("com.android.systemui.shared.plugins.PluginInstanceManager$PluginContextWrapper", lpparam.classLoader, Context.class, ClassLoader.class);
-        }
-        if (PluginContextWrapper == null) return;
-        Helpers.hookMethod(PluginContextWrapper, new MethodHook() {
-            private boolean isHooked = false;
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                Context pluginContext = (Context) param.args[0];
-                if ("miui.systemui.plugin".equals(pluginContext.getPackageName()) && !isHooked) {
+        String pluginLoaderClass = Helpers.isTPlus() ? "com.android.systemui.shared.plugins.PluginInstance$Factory" : "com.android.systemui.shared.plugins.PluginManagerImpl";
+        Helpers.hookAllMethods(pluginLoaderClass, lpparam.classLoader, "getClassLoader", new MethodHook() {
+        private boolean isHooked = false;
+        @Override
+        protected void after(MethodHookParam param) throws Throwable {
+                ApplicationInfo appInfo = (ApplicationInfo) param.args[0];
+                if ("miui.systemui.plugin".equals(appInfo.packageName) && !isHooked) {
                     isHooked = true;
                     if (pluginLoader == null) {
-                        pluginLoader = (ClassLoader) param.args[1];
+                        pluginLoader = (ClassLoader) param.getResult();
                     }
                     if (cols > 4) {
                         Helpers.findAndHookConstructor("miui.systemui.controlcenter.qs.QSPager", pluginLoader, Context.class, AttributeSet.class, new MethodHook() {
@@ -8566,20 +8551,16 @@ public class System {
         MainModule.resHooks.setResReplacement("miui.systemui.plugin", "drawable", "qs_background_disabled", R.drawable.ic_qs_tile_bg_disabled);
         MainModule.resHooks.setResReplacement("miui.systemui.plugin", "drawable", "qs_background_warning", R.drawable.ic_qs_tile_bg_warning);
 
-        Constructor<?> PluginContextWrapper = XposedHelpers.findConstructorExactIfExists("com.android.systemui.shared.plugins.PluginActionManager$PluginContextWrapper", lpparam.classLoader, Context.class, ClassLoader.class);
-        if (PluginContextWrapper == null) {
-            PluginContextWrapper = XposedHelpers.findConstructorExactIfExists("com.android.systemui.shared.plugins.PluginInstanceManager$PluginContextWrapper", lpparam.classLoader, Context.class, ClassLoader.class);
-        }
-        if (PluginContextWrapper == null) return;
-        Helpers.hookMethod(PluginContextWrapper, new MethodHook() {
+        String pluginLoaderClass = Helpers.isTPlus() ? "com.android.systemui.shared.plugins.PluginInstance$Factory" : "com.android.systemui.shared.plugins.PluginManagerImpl";
+        Helpers.hookAllMethods(pluginLoaderClass, lpparam.classLoader, "getClassLoader", new MethodHook() {
             private boolean isHooked = false;
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                Context pluginContext = (Context) param.args[0];
-                if ("miui.systemui.plugin".equals(pluginContext.getPackageName()) && !isHooked) {
+                ApplicationInfo appInfo = (ApplicationInfo) param.args[0];
+                if ("miui.systemui.plugin".equals(appInfo.packageName) && !isHooked) {
                     isHooked = true;
                     if (pluginLoader == null) {
-                        pluginLoader = (ClassLoader) param.args[1];
+                        pluginLoader = (ClassLoader) param.getResult();
                     }
                     Helpers.findAndHookMethod("miui.systemui.controlcenter.qs.tileview.ExpandableIconView", pluginLoader, "setCornerRadius", float.class, new MethodHook() {
                         @Override
