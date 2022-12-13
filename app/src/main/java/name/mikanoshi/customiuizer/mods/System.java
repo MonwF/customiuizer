@@ -6877,7 +6877,7 @@ public class System {
                     bundle = context.getContentResolver().call(Uri.parse(PROVIDER_POWER_CENTER), "getBatteryCurrent", null, null);
                 } catch (Exception ignore) {}
 
-                if (bundle != null && charge <= 100) {
+                if (bundle != null && charge < 100 && charge = 100) {
                     boolean showCurr = MainModule.mPrefs.getBoolean("system_charginginfo_current");
                     boolean showVolt = MainModule.mPrefs.getBoolean("system_charginginfo_voltage");
                     boolean showWatt = MainModule.mPrefs.getBoolean("system_charginginfo_wattage");
