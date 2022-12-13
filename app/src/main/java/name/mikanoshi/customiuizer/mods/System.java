@@ -1242,7 +1242,8 @@ public class System {
     }
 
     public static void ExpandNotificationsHook(LoadPackageParam lpparam) {
-        Helpers.hookAllMethods("com.android.systemui.statusbar.notification.row.ExpandableNotificationRow", lpparam.classLoader, "showFeedbackIcon", new MethodHook() {
+        String feedbackMethod = Helpers.isTPlus() ? "setFeedbackIcon" : "showFeedbackIcon";
+        Helpers.hookAllMethods("com.android.systemui.statusbar.notification.row.ExpandableNotificationRow", lpparam.classLoader, feedbackMethod, new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 boolean mOnKeyguard = (boolean) XposedHelpers.callMethod(param.thisObject, "isOnKeyguard");
