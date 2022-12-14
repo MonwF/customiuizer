@@ -2310,6 +2310,10 @@ public class System {
         });
     }
 
+    public static void DisableBluetoothRestrictHook(LoadPackageParam lpparam) {
+        Helpers.findAndHookMethod("com.android.settingslib.bluetooth.LocalBluetoothAdapter", lpparam.classLoader, "isSupportBluetoothRestrict", Context.class, XC_MethodReplacement.returnConstant(false));
+    }
+
     public static void AutoGroupNotificationsHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethod("com.android.server.notification.GroupHelper", lpparam.classLoader, "adjustAutogroupingSummary", int.class, String.class, String.class, boolean.class, new MethodHook() {
             @Override
