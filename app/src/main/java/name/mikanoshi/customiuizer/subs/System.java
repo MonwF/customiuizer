@@ -244,6 +244,10 @@ public class System extends SubFragment {
 					@Override
 					public void onStopTrackingTouch(SeekBar seekBar) {}
 				});
+
+				if (Helpers.isTPlus()) {
+					findPreference("pref_key_system_cc_disable_bluetooth_restrict").setVisible(true);
+				}
 				break;
 			case "pref_key_system_cat_recents":
 				findPreference("pref_key_system_hidefromrecents_apps").setOnPreferenceClickListener(openAppsEdit);
