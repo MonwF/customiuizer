@@ -1101,6 +1101,8 @@ public class Launcher {
 	public static void HorizontalSpacingRes() {
 		int opt = MainModule.mPrefs.getInt("launcher_horizmargin", 0) - 21;
 		MainModule.resHooks.setDensityReplacement("com.miui.home", "dimen", "workspace_cell_padding_side", opt);
+		MainModule.resHooks.setDensityReplacement("com.miui.home", "dimen", "workspace_cell_padding_side_no_word", opt);
+		MainModule.resHooks.setDensityReplacement("com.miui.home", "dimen", "workspace_cell_padding_side_rotatable", opt);
 		MainModule.resHooks.setDensityReplacement("com.mi.android.globallauncher", "dimen", "workspace_cell_padding_side", opt);
 	}
 
