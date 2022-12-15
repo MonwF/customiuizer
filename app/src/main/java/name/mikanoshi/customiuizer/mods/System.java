@@ -7760,7 +7760,12 @@ public class System {
                 XposedHelpers.setObjectField(param.thisObject, "mUpArrowIndication", null);
             }
         };
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.KeyguardIndicationController", lpparam.classLoader, "updateIndication", boolean.class, boolean.class, hook);
+        if (Helpers.isTPlus()) {
+            Helpers.findAndHookMethod("com.android.systemui.keyguard.KeyguardIndicationRotateTextViewController", lpparam.classLoader, "hasIndicationsExceptResting", XC_MethodReplacement.returnConstant(true));
+        }
+        else {
+            Helpers.findAndHookMethod("com.android.systemui.statusbar.KeyguardIndicationController", lpparam.classLoader, "updateIndication", boolean.class, boolean.class, hook);
+        }
     }
 
     public static void HideLockScreenStatusBarHook(LoadPackageParam lpparam) {
