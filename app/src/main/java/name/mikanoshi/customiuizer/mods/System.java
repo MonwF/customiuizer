@@ -2353,8 +2353,8 @@ public class System {
     }
 
     public static void ShowNotificationsAfterUnlockHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.miui.statusbar.notification.ExpandedNotification", lpparam.classLoader, "hasShownAfterUnlock", XC_MethodReplacement.returnConstant(false));
-        Helpers.findAndHookMethod("com.android.systemui.miui.statusbar.notification.ExpandedNotification", lpparam.classLoader, "setHasShownAfterUnlock", boolean.class, new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.notification.ExpandedNotification", lpparam.classLoader, "hasShownAfterUnlock", XC_MethodReplacement.returnConstant(false));
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.notification.ExpandedNotification", lpparam.classLoader, "setHasShownAfterUnlock", boolean.class, new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
                 XposedHelpers.setBooleanField(param.thisObject, "mHasShownAfterUnlock", false);
