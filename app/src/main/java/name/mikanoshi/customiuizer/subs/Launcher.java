@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.Preference;
 import android.widget.SeekBar;
 
@@ -30,6 +31,7 @@ public class Launcher extends SubFragment {
 		Preference.OnPreferenceClickListener openPrivacyAppEdit = new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
+				if (!Helpers.checkPermAndRequest((AppCompatActivity) getActivity(), Helpers.ACCESS_SECURITY_CENTER, Helpers.REQUEST_PERMISSIONS_SECURITY_CENTER)) return false;
 				openPrivacyAppEdit(Launcher.this, 0);
 				return true;
 			}
@@ -47,7 +49,7 @@ public class Launcher extends SubFragment {
 
 		switch (sub) {
 			case "pref_key_launcher_cat_folders":
-				SeekBarPreference folderCols = (SeekBarPreference)findPreference("pref_key_launcher_folder_cols");
+				SeekBarPreference folderCols = findPreference("pref_key_launcher_folder_cols");
 				findPreference("pref_key_launcher_folderwidth").setEnabled(Helpers.prefs.getInt("pref_key_launcher_folder_cols", 1) > 1);
 				findPreference("pref_key_launcher_folderspace").setEnabled(Helpers.prefs.getInt("pref_key_launcher_folder_cols", 1) > 3);
 				folderCols.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -96,11 +98,6 @@ public class Launcher extends SubFragment {
 			case "pref_key_launcher_cat_privacyapps":
 				findPreference("pref_key_launcher_cat_privacyapps").setEnabled(opt == 1);
 				findPreference("pref_key_launcher_privacyapps_list").setOnPreferenceClickListener(openPrivacyAppEdit);
-				if (!checkPermissions()) {
-					Preference pref = findPreference("pref_key_launcher_privacyapps_list");
-					pref.setSummary(R.string.launcher_privacyapps_fail);
-					pref.setEnabled(false);
-				}
 				break;
 			case "pref_key_launcher_cat_titles":
 				findPreference("pref_key_launcher_renameapps_list").setOnPreferenceClickListener(openLaunchableList);
@@ -127,10 +124,4 @@ public class Launcher extends SubFragment {
 				break;
 		}
 	}
-
-	private boolean checkPermissions() {
-		PackageManager pm = getActivity().getPackageManager();
-		return pm.checkPermission(Helpers.ACCESS_SECURITY_CENTER, Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED;
-	}
-
 }

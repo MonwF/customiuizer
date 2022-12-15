@@ -270,13 +270,6 @@ public class System extends SubFragment {
 				});
 
 				findPreference("pref_key_system_applock_skip_activities").setOnPreferenceClickListener(openActivitiesList);
-
-				if (!checkSecurityPermission()) {
-					Preference pref = findPreference("pref_key_system_applock_list");
-					pref.setEnabled(false);
-					pref.setSummary(R.string.launcher_privacyapps_fail);
-				}
-
 				break;
 			case "pref_key_system_cat_lockscreen":
 				findPreference("pref_key_system_noscreenlock_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -501,11 +494,6 @@ public class System extends SubFragment {
 			if (key != null) Helpers.prefs.edit().putString(key, data.getStringExtra("app")).putInt(key + "_user", data.getIntExtra("user", 0)).apply();
 		}
 		super.onActivityResult(requestCode, resultCode, data);
-	}
-
-	private boolean checkSecurityPermission() {
-		PackageManager pm = getActivity().getPackageManager();
-		return pm.checkPermission(Helpers.ACCESS_SECURITY_CENTER, Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED;
 	}
 
 	private boolean checkUSBPermission() {

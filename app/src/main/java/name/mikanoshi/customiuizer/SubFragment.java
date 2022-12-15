@@ -245,6 +245,7 @@ public class SubFragment extends PreferenceFragmentBase {
     public Preference.OnPreferenceClickListener openActivitiesList = new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
+            if (!Helpers.checkPermAndRequest((AppCompatActivity) getActivity(), Helpers.ACCESS_SECURITY_CENTER, Helpers.REQUEST_PERMISSIONS_SECURITY_CENTER)) return false;
             openActivitiesItemList(preference);
             return true;
         }

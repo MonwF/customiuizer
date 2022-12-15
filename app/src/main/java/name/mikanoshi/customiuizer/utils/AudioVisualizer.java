@@ -317,12 +317,6 @@ public class AudioVisualizer extends View {
 	}
 
 	@Override
-	protected void onAttachedToWindow() {
-		super.onAttachedToWindow();
-	}
-
-
-	@Override
 	protected void onDetachedFromWindow() {
 		super.onDetachedFromWindow();
 		mArt = null;
@@ -377,7 +371,7 @@ public class AudioVisualizer extends View {
 		else if (renderType == RenderType.PATH)
 			drawAsLines = false;
 		else
-			drawAsLines = glowLevel == 0 && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P || (barStyle != BarStyle.DASHED && barStyle != BarStyle.CIRCLES));
+			drawAsLines = glowLevel == 0;
 
 		if (drawAsLines) {
 			if (glowLevel > 0)
@@ -498,7 +492,7 @@ public class AudioVisualizer extends View {
 	private void updateRainbowColors() {
 		float jump = 300f / (float)mBandsNum;
 		for (int i = 0; i < mRainbow.length; i++)
-		mRainbow[i] = Color.HSVToColor(transparency, new float[]{jump * i, 1.0f, 1.0f});
+			mRainbow[i] = Color.HSVToColor(transparency, new float[]{jump * i, 1.0f, 1.0f});
 
 		for (int i = 0; i < mRainbowVertical.length; i++) {
 			float h = 140 + jump * i;
