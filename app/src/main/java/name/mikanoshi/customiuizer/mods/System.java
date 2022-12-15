@@ -6034,13 +6034,17 @@ public class System {
 
         MethodHook hook = new MethodHook() {
             Object mBrightnessController = null;
+            private int sbHeight = 0;
             @Override
             @SuppressLint("SetTextI18n")
             protected void before(final MethodHookParam param) throws Throwable {
-                boolean isInControlCenter = "ControlPanelWindowView".equals(param.thisObject.getClass().getSimpleName());
+                String clsName = param.thisObject.getClass().getSimpleName();
+                boolean isInControlCenter = "ControlPanelWindowView".equals(clsName) || "ControlCenterWindowViewImpl".equals(clsName);
                 Context mContext = isInControlCenter ? ((View)param.thisObject).getContext() : (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
                 Resources res = mContext.getResources();
-                int sbHeight = res.getDimensionPixelSize(res.getIdentifier("status_bar_height", "dimen", "android"));
+                if (sbHeight == 0) {
+                    sbHeight = res.getDimensionPixelSize(res.getIdentifier("status_bar_height", "dimen", "android"));
+                }
                 MotionEvent event = (MotionEvent)param.args[0];
                 switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN:
@@ -6049,7 +6053,13 @@ public class System {
                         isSlidingStart = isInControlCenter ? tapStartY <= sbHeight : !XposedHelpers.getBooleanField(param.thisObject, "mPanelExpanded");
                         tapStartPointers = 1;
                         if (mBrightnessController == null) {
-                            Object mControlCenterController = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", lpparam.classLoader), "get", findClassIfExists("com.android.systemui.controlcenter.policy.ControlCenterControllerImpl", lpparam.classLoader));
+                            Object mControlCenterController;
+                            if (Helpers.isTPlus() && isInControlCenter) {
+                                mControlCenterController = XposedHelpers.getObjectField(param.thisObject, "controlCenterController");
+                            }
+                            else {
+                                mControlCenterController = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", lpparam.classLoader), "get", findClassIfExists("com.android.systemui.controlcenter.policy.ControlCenterControllerImpl", lpparam.classLoader));
+                            }
                             mBrightnessController = XposedHelpers.callMethod(XposedHelpers.getObjectField(mControlCenterController, "brightnessController"), "get");
                         }
                         Object mDisplayManager = XposedHelpers.getObjectField(mBrightnessController, "mDisplayManager");
@@ -6135,9 +6145,28 @@ public class System {
                 }
             }
         };
-
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "interceptTouchEvent", MotionEvent.class, hook);
-        Helpers.findAndHookMethod("com.android.systemui.controlcenter.phone.ControlPanelWindowView", lpparam.classLoader, "onTouchEvent", MotionEvent.class, hook);
+        String eventMethod = Helpers.isTPlus() ? "onTouchEvent" : "interceptTouchEvent";
+        Helpers.findAndHookMethod(StatusBarCls, lpparam.classLoader, eventMethod, MotionEvent.class, hook);
+        if (Helpers.isTPlus()) {
+            String pluginLoaderClass = "com.android.systemui.shared.plugins.PluginInstance$Factory";
+            Helpers.hookAllMethods(pluginLoaderClass, lpparam.classLoader, "getClassLoader", new MethodHook() {
+                private boolean isHooked = false;
+                @Override
+                protected void after(MethodHookParam param) throws Throwable {
+                    ApplicationInfo appInfo = (ApplicationInfo) param.args[0];
+                    if ("miui.systemui.plugin".equals(appInfo.packageName) && !isHooked) {
+                        isHooked = true;
+                        if (pluginLoader == null) {
+                            pluginLoader = (ClassLoader) param.getResult();
+                        }
+                        Helpers.findAndHookMethod("miui.systemui.controlcenter.windowview.ControlCenterWindowViewImpl", pluginLoader, "handleMotionEvent", MotionEvent.class, boolean.class, hook);
+                    }
+                }
+            });
+        }
+        else {
+            Helpers.findAndHookMethod("com.android.systemui.controlcenter.phone.ControlPanelWindowView", lpparam.classLoader, "onTouchEvent", MotionEvent.class, hook);
+        }
     }
 
     public static void ScreenshotConfigHook(LoadPackageParam lpparam) {
