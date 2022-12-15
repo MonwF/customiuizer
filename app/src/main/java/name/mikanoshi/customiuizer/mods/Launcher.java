@@ -1268,21 +1268,6 @@ public class Launcher {
 		});
 	}
 
-	public static void StatusBarHeightHook(LoadPackageParam lpparam) {
-		Helpers.hookAllConstructors("com.miui.home.launcher.Workspace", lpparam.classLoader, new MethodHook() {
-			@Override
-			protected void after(MethodHookParam param) throws Throwable {
-				ViewGroup workspace = (ViewGroup)param.thisObject;
-				workspace.setPadding(
-					workspace.getPaddingLeft(),
-					workspace.getResources().getDimensionPixelSize(workspace.getResources().getIdentifier("status_bar_height", "dimen", "android")),
-					workspace.getPaddingRight(),
-					workspace.getPaddingBottom()
-				);
-			}
-		});
-	}
-
 	private static float scaleStiffness(float val, float scale) {
 		return (scale < 1.0f ? 2f / scale : 1.0f / scale) * val;
 	}

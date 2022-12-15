@@ -2701,31 +2701,6 @@ public class System {
         MainModule.resHooks.setDensityReplacement("*", "dimen", "status_bar_height_landscape", heightDpi);
     }
 
-    private static void applyHeight(Object thisObject) {
-        if (thisObject == null) return;
-        ViewGroup view = (ViewGroup)thisObject;
-        ViewGroup.LayoutParams lp = view.getLayoutParams();
-        Resources res = view.getResources();
-        lp.height = res.getDimensionPixelSize(res.getIdentifier("status_bar_height", "dimen", "android"));
-        view.setLayoutParams(lp);
-    }
-
-    public static void StatusBarHeightHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.KeyguardStatusBarView", lpparam.classLoader, "onFinishInflate", new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                applyHeight(param.thisObject);
-            }
-        });
-
-        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.PhoneStatusBarView", lpparam.classLoader, "setBar", new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                applyHeight(param.thisObject);
-            }
-        });
-    }
-
     @SuppressWarnings("ConstantConditions")
     public static void HideMemoryCleanHook(LoadPackageParam lpparam, boolean isInLauncher) {
         String raClass = isInLauncher ? "com.miui.home.recents.views.RecentsContainer" : "com.android.systemui.recents.RecentsActivity";
@@ -5220,10 +5195,10 @@ public class System {
                 @Override
                 protected void after(MethodHookParam param) throws Throwable {
                     Context mContext = (Context) XposedHelpers.callMethod(param.thisObject, "getContext");
-                    TextView mPadClockView = (TextView) XposedHelpers.getObjectField(param.thisObject, "mDripNetworkSpeedSplitter");
-                    ViewGroup batteryViewContainer = (ViewGroup) mPadClockView.getParent();
-                    int bvIndex = batteryViewContainer.indexOfChild(mPadClockView) - 1;
-                    LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mPadClockView.getLayoutParams();
+                    TextView mSplitter = (TextView) XposedHelpers.getObjectField(param.thisObject, "mDripNetworkSpeedSplitter");
+                    ViewGroup batteryViewContainer = (ViewGroup) mSplitter.getParent();
+                    int bvIndex = batteryViewContainer.indexOfChild(mSplitter);
+                    LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mSplitter.getLayoutParams();
                     TextView batteryView = createBatteryDetailView(mContext, lp);
                     batteryViewContainer.addView(batteryView, bvIndex);
                     mBatteryDetailViews.add(batteryView);
