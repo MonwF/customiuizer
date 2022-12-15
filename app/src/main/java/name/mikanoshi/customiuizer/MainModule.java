@@ -61,13 +61,13 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (mPrefs.getStringAsInt("system_rotateanim", 1) > 1) System.RotationAnimationRes();
 
         if (mPrefs.getInt("system_betterpopups_delay", 0) > 0 && !mPrefs.getBoolean("system_betterpopups_nohide")) System.BetterPopupsHideDelaySysHook();
-        if (mPrefs.getInt("system_messagingstylelines", 0) > 0 && Helpers.is12()) System.MessagingStyleLinesSysHook();
+        if (mPrefs.getInt("system_messagingstylelines", 0) > 0) System.MessagingStyleLinesSysHook();
         if (mPrefs.getBoolean("system_colorizenotiftitle")) System.ColorizedNotificationTitlesHook();
         if (mPrefs.getBoolean("system_nopassword")) System.NoPasswordHook();
         if (mPrefs.getBoolean("system_statusbarcolor")) System.StatusBarBackgroundHook();
         if (mPrefs.getBoolean("system_magnifier")) System.TextMagnifierHook();
         if (mPrefs.getBoolean("system_lockscreenshortcuts") || mPrefs.getInt("controls_powerdt_action", 1) > 1) System.LockScreenSecureLaunchHook();
-        if (mPrefs.getBoolean("system_notifmediaseekbar") && !Helpers.is12()) System.MediaNotificationSeekBarHook();
+        if (mPrefs.getBoolean("system_notifmediaseekbar")) System.MediaNotificationSeekBarHook();
         if (mPrefs.getBoolean("system_disableanynotif")) System.DisableAnyNotificationBlockHook();
         if (mPrefs.getBoolean("system_apksign")) System.NoSignatureVerifyHook();
         if (mPrefs.getBoolean("system_nooverscroll")) System.NoOverscrollHook();
