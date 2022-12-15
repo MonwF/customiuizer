@@ -866,7 +866,14 @@ public class Controls {
 		Helpers.hookAllMethods(authClient, lpparam.classLoader, "onAuthenticated", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
-				if (!((boolean)param.getResult())) return;
+				boolean mAuthSuccess;
+				if (Helpers.isTPlus()) {
+					mAuthSuccess = XposedHelpers.getBooleanField(param.thisObject, "mAuthSuccess");
+				}
+				else {
+					mAuthSuccess = (boolean)param.getResult();
+				}
+				if (!mAuthSuccess) return;
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 
 				boolean ignoreSystem = MainModule.mPrefs.getBoolean("controls_fingerprintsuccess_ignore");
@@ -900,7 +907,14 @@ public class Controls {
 		Helpers.hookAllMethods(authClient, lpparam.classLoader, "onAuthenticated", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
-				if ((boolean)param.getResult()) return;
+				boolean mAuthSuccess;
+				if (Helpers.isTPlus()) {
+					mAuthSuccess = XposedHelpers.getBooleanField(param.thisObject, "mAuthSuccess");
+				}
+				else {
+					mAuthSuccess = (boolean)param.getResult();
+				}
+				if (mAuthSuccess) return;
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 				PowerManager mPowerManager = (PowerManager)mContext.getSystemService(Context.POWER_SERVICE);
 				if (mPowerManager.isInteractive()) return;
