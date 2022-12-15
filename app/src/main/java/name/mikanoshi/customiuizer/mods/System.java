@@ -1157,6 +1157,9 @@ public class System {
                 if (clock.getId() == clockId && MainModule.mPrefs.getBoolean("system_clockleadingzero")) {
                     XposedHelpers.setAdditionalInstanceField(clock, "showLeadingZero", true);
                 }
+                if (clock.getId() == clockId && MainModule.mPrefs.getBoolean("system_clock_show_ampm")) {
+                    XposedHelpers.setAdditionalInstanceField(clock, "showAmPm", true);
+                }
             }
         });
 
@@ -1166,6 +1169,7 @@ public class System {
                 TextView clock = (TextView)param.thisObject;
                 boolean clockShowSeconds = XposedHelpers.getAdditionalInstanceField(clock, "showSeconds") != null;
                 boolean clockShowLeadingZero = XposedHelpers.getAdditionalInstanceField(clock, "showLeadingZero") != null;
+                boolean clockShowAmPm = XposedHelpers.getAdditionalInstanceField(clock, "showAmPm") != null;
                 if (clockShowSeconds || clockShowLeadingZero) {
                     Context mContext = clock.getContext();
                     Object mMiuiStatusBarClockController = XposedHelpers.getObjectField(clock, "mMiuiStatusBarClockController");
@@ -1208,6 +1212,9 @@ public class System {
                         timeFmt = timeFmt.replaceFirst("^H:mm", "HH:mm").replaceFirst("^h:mm", "hh:mm")
                             .replaceFirst("ah:mm", "ahh:mm").replaceFirst(" h:mm", " hh:mm");
                     }
+                    if (clockShowAmPm) {
+                        timeFmt = "aa" + timeFmt;
+                    }
                     StringBuilder formatSb = new StringBuilder(timeFmt);
                     StringBuilder textSb = new StringBuilder();
                     XposedHelpers.callMethod(mCalendar, "format", mContext, textSb, formatSb);
@@ -1219,7 +1226,7 @@ public class System {
                         String hour = textSb.toString().replaceFirst(".*?(\\d+):\\d+:\\d+.*", "$1");
                         if (
                             mTextLength == null || (int) mTextLength != len
-                            || mHourText == null || !hour.equals((String)mHourText)
+                            || mHourText == null || !hour.equals(mHourText)
                         ) {
                             XposedHelpers.setAdditionalInstanceField(clock, "mTextLength", len);
                             XposedHelpers.setAdditionalInstanceField(clock, "mHourText", hour);

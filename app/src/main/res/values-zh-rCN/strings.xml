@@ -78,6 +78,7 @@
     <string name="system_calendar_app_title">日历应用</string>
     <string name="system_calendar_app_summ">点击通知抽屉上方的日期时打开所选应用</string>
     <string name="system_clockseconds_title">显示秒</string>
+    <string name="system_clock_show_ampm_title">显示时段</string>
     <string name="system_clockleadingzero_title">小时补0</string>
     <string name="system_clockseconds_summ">状态栏显示秒钟</string>
     <string name="system_maxsbicons_title">通知图标限制</string>

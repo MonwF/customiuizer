@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -157,6 +158,11 @@ public class System extends SubFragment {
 						return true;
 					}
 				});
+
+				Configuration config = getResources().getConfiguration();
+				if (config.getLocales().get(0).getCountry().equals("CN")) {
+					findPreference("pref_key_system_clock_show_ampm").setVisible(true);
+				}
 
 				break;
 			case "pref_key_system_cat_drawer":

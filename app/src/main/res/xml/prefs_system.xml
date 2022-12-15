@@ -535,6 +535,14 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_clock_show_ampm"
+			app:isPreferenceVisible="false"
+			miuizer:child="true"
+			android:title="@string/system_clock_show_ampm_title"
+			android:dependency="pref_key_system_clockseconds"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_clockleadingzero"
 			android:title="@string/system_clockleadingzero_title"
 			android:defaultValue="false" />
