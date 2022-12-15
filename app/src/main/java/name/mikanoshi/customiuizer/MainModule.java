@@ -202,7 +202,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_snoozedmanager")) System.MoreSnoozeOptionsRes();
             if (mPrefs.getStringAsInt("system_networkindicator", 1) == 3) System.NetworkIndicatorRes(lpparam);
 
-            if (mPrefs.getInt("system_statusbarheight", 19) > 19) System.StatusBarHeightHook(lpparam);
             if (mPrefs.getInt("system_recents_blur", 100) < 100) System.RecentsBlurRatioHook(lpparam);
             if (mPrefs.getInt("system_drawer_blur", 100) < 100) System.DrawerBlurRatioHook(lpparam);
             if (mPrefs.getInt("system_drawer_opacity", 100) < 100) System.DrawerThemeBackgroundHook(lpparam);
@@ -484,7 +483,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (mPrefs.getInt("launcher_iconscale", 45) > 45) Launcher.IconScaleHook(lpparam);
         if (mPrefs.getInt("launcher_titlefontsize", 5) > 5) Launcher.TitleFontSizeHook(lpparam);
         if (mPrefs.getInt("launcher_titletopmargin", 0) > 0) Launcher.TitleTopMarginHook(lpparam);
-        if (mPrefs.getInt("system_statusbarheight", 19) > 19) Launcher.StatusBarHeightHook(lpparam);
         if (mPrefs.getBoolean("launcher_noclockhide")) Launcher.NoClockHideHook(lpparam);
         if (mPrefs.getBoolean("launcher_renameapps")) Launcher.RenameShortcutsHook(lpparam);
         if (mPrefs.getBoolean("launcher_darkershadow")) Launcher.TitleShadowHook(lpparam);

@@ -483,10 +483,9 @@
 			android:key="pref_key_system_statusbarheight"
 			android:title="@string/system_statusbarheight_title"
 			android:defaultValue="19"
-			app:isPreferenceVisible="false"
 			miuizer:offtext="@string/array_default"
 			miuizer:minValue="19"
-			miuizer:maxValue="100"
+			miuizer:maxValue="80"
 			miuizer:stepValue="1"
 			miuizer:format="%d dip" />
 
