@@ -444,7 +444,7 @@
 			android:dependency="pref_key_system_statusbar_batterytempandcurrent"
 			android:defaultValue="16"
 			miuizer:child="true"
-			miuizer:minValue="15"
+			miuizer:minValue="14"
 			miuizer:maxValue="30"
 			miuizer:stepValue="1"
 			miuizer:displayDividerValue="2"

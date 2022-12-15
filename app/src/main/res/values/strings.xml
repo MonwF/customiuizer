@@ -1019,7 +1019,7 @@
     <string name="open_inweb">Open in browser</string>
     <string name="restart_systemui">Restart systemui</string>
     <string name="backup_restore">Settings management</string>
-    <string name="backup_restore_choose">Choose the desired routine</string>
+    <string name="backup_restore_choose">Backups are stored in /sdcard/Documents/CustoMIUIzer/</string>
     <string name="do_backup">Backup</string>
     <string name="do_restore">Restore</string>
     <string name="storage_read_only">Your external storage is read-only</string>

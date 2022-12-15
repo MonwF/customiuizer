@@ -139,6 +139,7 @@ public class Helpers {
 	public static final int REQUEST_PERMISSIONS_WIFI = 3;
 	public static final int REQUEST_PERMISSIONS_REPORT = 4;
 	public static final int REQUEST_PERMISSIONS_BLUETOOTH = 5;
+	public static final int REQUEST_PERMISSIONS_SECURITY_CENTER = 6;
 	public static LruCache<String, Bitmap> memoryCache = new LruCache<String, Bitmap>((int)(Runtime.getRuntime().maxMemory() / 1024) / 2) {
 		@Override
 		protected int sizeOf(String key, Bitmap icon) {
@@ -400,33 +401,20 @@ public class Helpers {
 		}
 	}
 
-	public static boolean checkStoragePerm(AppCompatActivity act, int action) {
-		if (act.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-			act.requestPermissions(new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE }, action);
-			return false;
-		} else return true;
-	}
-
 	public static boolean checkSettingsPerm(AppCompatActivity act) {
 		return act.checkSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED;
 	}
 
-	public static boolean checkBluetoothPerm(AppCompatActivity act, int action) {
-		if (act.checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-			act.requestPermissions(new String[]{ Manifest.permission.BLUETOOTH_CONNECT }, action);
+	public static boolean checkPermAndRequest(AppCompatActivity act, String perm, int action) {
+		if (act.checkSelfPermission(perm) != PackageManager.PERMISSION_GRANTED) {
+			act.requestPermissions(new String[]{ perm }, action);
 			return false;
-		} else return true;
-	}
-
-	public static boolean checkFinePerm(AppCompatActivity act, int action) {
-		if (act.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-			act.requestPermissions(new String[]{ Manifest.permission.ACCESS_FINE_LOCATION }, action);
-			return false;
-		} else return true;
+		}
+		return true;
 	}
 
 	public static boolean preparePathForBackup(AppCompatActivity act, String path) {
-		if (!checkStoragePerm(act, REQUEST_PERMISSIONS_BACKUP)) return false;
+		if (!checkPermAndRequest(act, Manifest.permission.WRITE_EXTERNAL_STORAGE, REQUEST_PERMISSIONS_BACKUP)) return false;
 
 		String state = Environment.getExternalStorageState();
 		switch (state) {

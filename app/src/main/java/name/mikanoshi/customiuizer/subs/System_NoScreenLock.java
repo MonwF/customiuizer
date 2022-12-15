@@ -1,5 +1,6 @@
 package name.mikanoshi.customiuizer.subs;
 
+import android.Manifest;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,7 +33,7 @@ public class System_NoScreenLock extends SubFragment {
 		findPreference("pref_key_system_noscreenlock_wifi").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				if (!Helpers.checkFinePerm((AppCompatActivity) getActivity(), Helpers.REQUEST_PERMISSIONS_WIFI)) return false;
+				if (!Helpers.checkPermAndRequest((AppCompatActivity) getActivity(), Manifest.permission.ACCESS_FINE_LOCATION, Helpers.REQUEST_PERMISSIONS_WIFI)) return false;
 				openWifiNetworks();
 				return true;
 			}
@@ -41,14 +42,14 @@ public class System_NoScreenLock extends SubFragment {
 		findPreference("pref_key_system_noscreenlock_bt").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				if (!Helpers.checkBluetoothPerm((AppCompatActivity) getActivity(), Helpers.REQUEST_PERMISSIONS_BLUETOOTH)) return false;
+				if (!Helpers.checkPermAndRequest((AppCompatActivity) getActivity(), Manifest.permission.BLUETOOTH_CONNECT, Helpers.REQUEST_PERMISSIONS_BLUETOOTH)) return false;
 				openBtNetworks();
 				return true;
 			}
 		});
 
 		if (Helpers.isDeviceEncrypted(getContext())) {
-			ListPreferenceEx req = (ListPreferenceEx)findPreference("pref_key_system_noscreenlock_req");
+			ListPreferenceEx req = findPreference("pref_key_system_noscreenlock_req");
 			req.setValue("3");
 			req.setEnabled(false);
 		}

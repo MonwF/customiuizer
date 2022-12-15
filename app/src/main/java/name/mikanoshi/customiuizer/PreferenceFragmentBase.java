@@ -1,5 +1,6 @@
 package name.mikanoshi.customiuizer;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -385,7 +386,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
     }
 
     public void restoreSettings(final AppCompatActivity act) {
-        if (!Helpers.checkStoragePerm(act, Helpers.REQUEST_PERMISSIONS_RESTORE)) return;
+        if (!Helpers.checkPermAndRequest(act, Manifest.permission.WRITE_EXTERNAL_STORAGE, Helpers.REQUEST_PERMISSIONS_RESTORE)) return;
         if (!Helpers.checkStorageReadable(act)) return;
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
