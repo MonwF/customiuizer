@@ -394,7 +394,10 @@ public class Launcher {
 	}
 
 	public static void NoClockHideHook(final LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.miui.home.launcher.Workspace", lpparam.classLoader, "isScreenHasClockGadget", long.class, XC_MethodReplacement.returnConstant(false));
+		boolean latestHome = Helpers.findAndHookMethodSilently("com.miui.home.launcher.Workspace", lpparam.classLoader, "isScreenHasClockWidget", long.class, XC_MethodReplacement.returnConstant(false));
+		if (!latestHome) {
+			Helpers.findAndHookMethodSilently("com.miui.home.launcher.Workspace", lpparam.classLoader, "isScreenHasClockGadget", long.class, XC_MethodReplacement.returnConstant(false));
+		}
 	}
 
 	private static void modifyTitle(Object thisObject) {

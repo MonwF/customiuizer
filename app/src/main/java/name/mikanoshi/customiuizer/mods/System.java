@@ -2121,7 +2121,8 @@ public class System {
     }
 
     public static void NoVersionCheckHook(LoadPackageParam lpparam) {
-        Helpers.hookAllMethods("com.android.server.pm.PackageManagerService", lpparam.classLoader, "checkDowngrade", XC_MethodReplacement.DO_NOTHING);
+        String PMSCls = Helpers.isTPlus() ? "com.android.server.pm.PackageManagerServiceUtils" : "com.android.server.pm.PackageManagerService";
+        Helpers.hookAllMethods(PMSCls, lpparam.classLoader, "checkDowngrade", XC_MethodReplacement.DO_NOTHING);
     }
 
     public static void ColorizedNotificationTitlesHook() {
@@ -2138,7 +2139,6 @@ public class System {
                 RemoteViews rv = (RemoteViews)param.args[0];
                 Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
                 if (rv != null && mContext != null) {
-                    Helpers.log("Colorize Notify Header");
                     int contrastColor = (int)XposedHelpers.callMethod(param.thisObject, "getPrimaryAccentColor", param.args[1]);
                     rv.setTextColor(mContext.getResources().getIdentifier("app_name_text", "id", "android"), contrastColor);
                 }

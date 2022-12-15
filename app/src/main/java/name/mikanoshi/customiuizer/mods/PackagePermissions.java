@@ -49,11 +49,12 @@ public class PackagePermissions {
 		//systemPackages.add("com.miui.packageinstaller");
 
 		// Allow signature level permissions for module
-		Helpers.hookAllMethods("com.android.server.pm.permission.PermissionManagerService", lpparam.classLoader, "shouldGrantPermissionBySignature",
+		String PMSCls = Helpers.isTPlus() ? "com.android.server.pm.permission.PermissionManagerServiceImpl" : "com.android.server.pm.permission.PermissionManagerService";
+		Helpers.hookAllMethods(PMSCls, lpparam.classLoader, "shouldGrantPermissionBySignature",
 			new MethodHook() {
 				@Override
 				protected void before(MethodHookParam param) throws Throwable {
-					String pkgName = (String)XposedHelpers.getObjectField(param.args[0], "packageName");
+					String pkgName = (String)XposedHelpers.callMethod(param.args[0], "getPackageName");
 					if (systemPackages.contains(pkgName)) param.setResult(true);
 				}
 			}
@@ -63,7 +64,7 @@ public class PackagePermissions {
 			new MethodHook() {
 				@Override
 				protected void before(MethodHookParam param) throws Throwable {
-					String pkgName = (String)XposedHelpers.getObjectField(param.args[0], "name");
+					String pkgName = (String)XposedHelpers.callMethod(param.args[0], "getName");
 					if (systemPackages.contains(pkgName)) param.setResult(true);
 				}
 			}
@@ -109,10 +110,12 @@ public class PackagePermissions {
 //		);
 
 		// Make module appear as system app
-		Helpers.hookAllMethods("com.android.server.pm.PackageManagerService", lpparam.classLoader, "queryIntentActivitiesInternal", new MethodHook() {
+		String ActQueryService = Helpers.isTPlus() ? "com.android.server.pm.ComputerEngine" : "com.android.server.pm.PackageManagerService";
+		Helpers.hookAllMethods(ActQueryService, lpparam.classLoader, "queryIntentActivitiesInternal", new MethodHook() {
 			@Override
 			@SuppressWarnings("unchecked")
 			protected void after(MethodHookParam param) throws Throwable {
+				if (param.args.length < 6) return;
 				List<ResolveInfo> infos = (List<ResolveInfo>)param.getResult();
 				if (infos != null) {
 					for (ResolveInfo info: infos)
