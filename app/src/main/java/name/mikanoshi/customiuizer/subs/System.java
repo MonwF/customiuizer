@@ -220,7 +220,6 @@ public class System extends SubFragment {
 						return true;
 					}
 				});
-
 				break;
 			case "pref_key_system_cat_qs":
 				findPreference("pref_key_system_qshaptics_ignore").setEnabled(!Objects.equals(Helpers.prefs.getString("pref_key_system_qshaptics", "1"), "1"));
@@ -264,7 +263,15 @@ public class System extends SubFragment {
 				break;
 			case "pref_key_system_cat_betterpopups":
 				findPreference("pref_key_system_betterpopups_allowfloat_apps").setOnPreferenceClickListener(openAppsBWEdit);
-
+				findPreference("pref_key_system_expandheadups_apps").setOnPreferenceClickListener(openAppsEdit);
+				findPreference("pref_key_system_expandheadups_apps").setEnabled(!Objects.equals(Helpers.prefs.getString("pref_key_system_expandheadups", "1"), "1"));
+				findPreference("pref_key_system_expandheadups").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+					@Override
+					public boolean onPreferenceChange(Preference preference, Object newValue) {
+						findPreference("pref_key_system_expandheadups_apps").setEnabled(!newValue.equals("1"));
+						return true;
+					}
+				});
 				break;
 			case "pref_key_system_cat_applock":
 				findPreference("pref_key_system_applock_list").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

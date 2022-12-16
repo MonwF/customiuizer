@@ -1023,6 +1023,20 @@
 			android:title="@string/system_betterpopups_center_title"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_expandheadups"
+			android:summary="@string/system_expandnotifs_summ"
+			android:title="@string/system_expandnotifs_title"
+			android:entries="@array/expandnotifs"
+			android:entryValues="@array/expandnotifs_val"
+			android:defaultValue="1" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_expandnotifs_apps_title"
+			android:key="pref_key_system_expandheadups_apps"
+			miuizer:child="true"
+			miuizer:countAsSummary="true" />
+
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_betterpopups_allowfloat"
 			android:title="@string/system_betterpopups_allowfloat_title"
