@@ -1263,6 +1263,32 @@ public class System {
         });
     }
 
+    public static void ExpandHeadsUpHook(LoadPackageParam lpparam) {
+        Helpers.hookAllMethods("com.android.systemui.statusbar.notification.row.ExpandableNotificationRow", lpparam.classLoader, "setHeadsUp", new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                boolean mOnKeyguard = (boolean) XposedHelpers.callMethod(param.thisObject, "isOnKeyguard");
+                boolean showHeadsUp = (boolean) param.args[0];
+                if (!mOnKeyguard && showHeadsUp) {
+                    View notifyRow = (View) param.thisObject;
+                    Object notification = XposedHelpers.getObjectField(XposedHelpers.callMethod(param.thisObject, "getEntry"), "mSbn");
+                    String pkgName = (String)XposedHelpers.callMethod(notification, "getPackageName");
+                    int opt = Integer.parseInt(MainModule.mPrefs.getString("system_expandheadups", "1"));
+                    boolean isSelected = MainModule.mPrefs.getStringSet("system_expandheadups_apps").contains(pkgName);
+                    if (opt == 2 && !isSelected || opt == 3 && isSelected) {
+                        Runnable expandNotify = new Runnable() {
+                            @Override
+                            public void run() {
+                                XposedHelpers.callMethod(param.thisObject, "expandNotification");
+                            }
+                        };
+                        notifyRow.postDelayed(expandNotify, 60);
+                    }
+                }
+            }
+        });
+    }
+
     public static void PopupNotificationsHook(LoadPackageParam lpparam) {
         Helpers.hookAllMethods(StatusBarCls, lpparam.classLoader, "addNotification", new MethodHook() {
             @Override
@@ -2021,7 +2047,7 @@ public class System {
                 MotionEvent me = (MotionEvent)param.args[0];
                 if (me.getActionMasked() == MotionEvent.ACTION_DOWN) {
                     boolean mAllowSwipingDown = true;
-                    if (Helpers.is12()) try {
+                    try {
                         Object mPickedChild = XposedHelpers.getObjectField(param.thisObject, "mPickedChild");
                         if (mPickedChild != null) {
                             View mMiniBar = (View)XposedHelpers.callMethod(mPickedChild, "getMiniWindowBar");
