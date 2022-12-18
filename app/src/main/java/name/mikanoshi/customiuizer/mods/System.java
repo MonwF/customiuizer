@@ -275,10 +275,11 @@ public class System {
             protected void after(MethodHookParam param) throws Throwable {
                 View[][] mViews = (View[][])XposedHelpers.getObjectField(param.thisObject, "mViews");
                 ArrayList<View> mRandomViews = new ArrayList<View>();
-                for (int row = 1; row <= 4; row++)
+                for (int row = 1; row <= 3; row++)
                     for (int col = 0; col <= 2; col++)
                         if (mViews[row][col] != null)
                             mRandomViews.add(mViews[row][col]);
+                mRandomViews.add(mViews[4][1]);
                 Collections.shuffle(mRandomViews);
 
                 View pinview = (View)param.thisObject;
@@ -290,7 +291,7 @@ public class System {
                 row1.removeAllViews();
                 row2.removeAllViews();
                 row3.removeAllViews();
-                row4.removeAllViews();
+                row4.removeViewAt(1);
 
                 mViews[1] = new View[]{ mRandomViews.get(0), mRandomViews.get(1), mRandomViews.get(2)};
                 row1.addView(mRandomViews.get(0));
@@ -307,8 +308,8 @@ public class System {
                 row3.addView(mRandomViews.get(7));
                 row3.addView(mRandomViews.get(8));
 
-                mViews[4] = new View[]{ null, mRandomViews.get(9), null};
-                row4.addView(mRandomViews.get(9));
+                mViews[4] = new View[]{ null, mRandomViews.get(9), mViews[4][2]};
+                row4.addView(mRandomViews.get(9), 1);
 
                 XposedHelpers.setObjectField(param.thisObject, "mViews", mViews);
             }
