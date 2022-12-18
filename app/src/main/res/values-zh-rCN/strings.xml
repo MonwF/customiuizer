@@ -836,6 +836,7 @@
     <string name="array_path">所选路径</string>
     <string name="array_collapse_initial">原本</string>
     <string name="array_collapse_permanent">永久</string>
+    <string name="array_dualsimin2rows_style_thick">加粗</string>
     <string name="unlimited">无限制</string>
     <string name="toggle_wifi_on">Wi-Fi已启用</string>
     <string name="toggle_wifi_off">Wi-Fi已禁用</string>
@@ -1066,6 +1067,7 @@
     <string name="array_current">仅电流</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">右侧显示</string>
     <string name="system_statusbar_dualsimin2rows_title">双排信号栏</string>
+    <string name="system_statusbar_dualsimin2rows_style_title">图标样式</string>
     <string name="system_statusbar_dualsimin2rows_rightmargin_title">右侧间距</string>
     <string name="system_statusbar_mobiletype_single_title">移动网络类型单独显示</string>
     <string name="system_statusbar_mobiletype_single_leftmargin_title">左侧间距</string>

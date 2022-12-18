@@ -467,6 +467,15 @@
 		<item>3</item>
 	</string-array>
 
+	<string-array name="dualsimin2rows_style">
+		<item>@string/array_default</item>
+		<item>@string/array_dualsimin2rows_style_thick</item>
+	</string-array>
+	<string-array name="dualsimin2rows_style_val">
+		<item />
+		<item>thick</item>
+	</string-array>
+
 	<string-array name="autogroupnotif">
 		<item>@string/array_system_default</item>
 		<item>@string/array_autogroupnotif_no</item>
