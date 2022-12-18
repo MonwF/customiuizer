@@ -1234,7 +1234,8 @@ public class System {
                             clock.setText(maxLenText);
                             clock.measure(0, 0);
                             ViewGroup.LayoutParams lp = clock.getLayoutParams();
-                            lp.width = clock.getMeasuredWidth() + (int)Math.ceil(mContext.getResources().getDisplayMetrics().density);
+                            float extraWidth = MainModule.mPrefs.getInt("system_clock_extra_width", 2) * 0.5f;
+                            lp.width = clock.getMeasuredWidth() + (int)(mContext.getResources().getDisplayMetrics().density * extraWidth);
                             clock.setLayoutParams(lp);
                         }
                     }
