@@ -91,10 +91,6 @@ public class Various {
 			return;
 		}
 
-		boolean oldMethodFound = false;
-		for (Member method: amaCls.getDeclaredMethods())
-		if (method.getName().equals("onLoadFinished")) oldMethodFound = true;
-
 		if (findClassIfExists("androidx.fragment.app.Fragment", lpparam.classLoader) != null)
 		Helpers.findAndHookConstructor("androidx.fragment.app.Fragment", lpparam.classLoader, new MethodHook() {
 			@Override
@@ -106,201 +102,113 @@ public class Various {
 			}
 		});
 
-		if (Helpers.is12() || !oldMethodFound)
-			Helpers.findAndHookMethod(amaCls, "onCreate", Bundle.class, new MethodHook() {
-				@Override
-				protected void after(final MethodHookParam param) throws Throwable {
-					Handler handler = new Handler(Looper.getMainLooper());
-					handler.post(new Runnable() {
-						@Override
-						public void run() {
-							final Activity act = (Activity)param.thisObject;
-							Object contentFrag = act.getFragmentManager().findFragmentById(android.R.id.content);
-							Object frag = contentFrag != null ? contentFrag : mSupportFragment;
-							if (frag == null) {
-								Helpers.log("AppInfoHook", "Unable to find fragment");
-								return;
-							}
+		Helpers.findAndHookMethod(amaCls, "onCreate", Bundle.class, new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				Handler handler = new Handler(Looper.getMainLooper());
+				handler.post(new Runnable() {
+					@Override
+					public void run() {
+						final Activity act = (Activity)param.thisObject;
+						Object contentFrag = act.getFragmentManager().findFragmentById(android.R.id.content);
+						Object frag = contentFrag != null ? contentFrag : mSupportFragment;
+						if (frag == null) {
+							Helpers.log("AppInfoHook", "Unable to find fragment");
+							return;
+						}
 
-							final Resources modRes;
-							try {
-								modRes = Helpers.getModuleRes(act);
-								Field piField = XposedHelpers.findFirstFieldByExactType(frag.getClass(), PackageInfo.class);
-								mLastPackageInfo = (PackageInfo)piField.get(frag);
-								Method[] addPref = XposedHelpers.findMethodsByExactParameters(frag.getClass(), void.class, String.class, String.class, String.class);
-								if (mLastPackageInfo == null || addPref.length == 0) {
-									Helpers.log("AppInfoHook", "Unable to find field/class/method in SecurityCenter to hook");
-									return;
-								} else {
-									addPref[0].setAccessible(true);
-								}
-								addPref[0].invoke(frag, "apk_versioncode", modRes.getString(R.string.appdetails_apk_version_code), String.valueOf(mLastPackageInfo.versionCode));
-								addPref[0].invoke(frag, "apk_filename", modRes.getString(R.string.appdetails_apk_file), mLastPackageInfo.applicationInfo.sourceDir);
-								addPref[0].invoke(frag, "data_path", modRes.getString(R.string.appdetails_data_path), mLastPackageInfo.applicationInfo.dataDir);
-								addPref[0].invoke(frag, "app_uid", modRes.getString(R.string.appdetails_app_uid), String.valueOf(mLastPackageInfo.applicationInfo.uid));
-								addPref[0].invoke(frag, "target_sdk", modRes.getString(R.string.appdetails_sdk), String.valueOf(mLastPackageInfo.applicationInfo.targetSdkVersion));
-								handler.post(new Runnable() {
-									@Override
-									public void run() {
-										try {
-											addPref[0].invoke(frag, "open_in_store", modRes.getString(R.string.appdetails_playstore), "");
-											addPref[0].invoke(frag, "launch_app", modRes.getString(R.string.appdetails_launch), "");
-										} catch (Throwable t) {
-											XposedBridge.log(t);
-										}
-									}
-								});
-							} catch (Throwable t) {
-								XposedBridge.log(t);
+						final Resources modRes;
+						try {
+							modRes = Helpers.getModuleRes(act);
+							Field piField = XposedHelpers.findFirstFieldByExactType(frag.getClass(), PackageInfo.class);
+							mLastPackageInfo = (PackageInfo)piField.get(frag);
+							Method[] addPref = XposedHelpers.findMethodsByExactParameters(frag.getClass(), void.class, String.class, String.class, String.class);
+							if (mLastPackageInfo == null || addPref.length == 0) {
+								Helpers.log("AppInfoHook", "Unable to find field/class/method in SecurityCenter to hook");
 								return;
+							} else {
+								addPref[0].setAccessible(true);
 							}
-
-							XposedBridge.hookAllMethods(frag.getClass(), "onPreferenceTreeClick", new MethodHook() {
+							addPref[0].invoke(frag, "apk_versioncode", modRes.getString(R.string.appdetails_apk_version_code), String.valueOf(mLastPackageInfo.versionCode));
+							addPref[0].invoke(frag, "apk_filename", modRes.getString(R.string.appdetails_apk_file), mLastPackageInfo.applicationInfo.sourceDir);
+							addPref[0].invoke(frag, "data_path", modRes.getString(R.string.appdetails_data_path), mLastPackageInfo.applicationInfo.dataDir);
+							addPref[0].invoke(frag, "app_uid", modRes.getString(R.string.appdetails_app_uid), String.valueOf(mLastPackageInfo.applicationInfo.uid));
+							addPref[0].invoke(frag, "target_sdk", modRes.getString(R.string.appdetails_sdk), String.valueOf(mLastPackageInfo.applicationInfo.targetSdkVersion));
+							handler.post(new Runnable() {
 								@Override
-								protected void before(final MethodHookParam param) throws Throwable {
-									String key = (String)XposedHelpers.callMethod(param.args[0], "getKey");
-									String title = (String)XposedHelpers.callMethod(param.args[0], "getTitle");
-									switch (key) {
-										case "apk_filename":
-											((ClipboardManager)act.getSystemService(Context.CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText(title, mLastPackageInfo.applicationInfo.sourceDir));
-											Toast.makeText(act, act.getResources().getIdentifier("app_manager_copy_pkg_to_clip", "string", act.getPackageName()), Toast.LENGTH_SHORT).show();
-											param.setResult(true);
-											break;
-										case "data_path":
-											((ClipboardManager)act.getSystemService(Context.CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText(title, mLastPackageInfo.applicationInfo.dataDir));
-											Toast.makeText(act, act.getResources().getIdentifier("app_manager_copy_pkg_to_clip", "string", act.getPackageName()), Toast.LENGTH_SHORT).show();
-											param.setResult(true);
-											break;
-										case "open_in_store":
-											try {
-												Intent launchIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + mLastPackageInfo.packageName));
-												launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-												act.startActivity(launchIntent);
-											} catch (android.content.ActivityNotFoundException anfe) {
-												Intent launchIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + mLastPackageInfo.packageName));
-												launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-												act.startActivity(launchIntent);
-											}
-											param.setResult(true);
-											break;
-										case "launch_app":
-											Intent launchIntent = act.getPackageManager().getLaunchIntentForPackage(mLastPackageInfo.packageName);
-											if (launchIntent == null) {
-												Toast.makeText(act, modRes.getString(R.string.appdetails_nolaunch), Toast.LENGTH_SHORT).show();
-											} else {
-												int user = 0;
-												try {
-													int uid = act.getIntent().getIntExtra("am_app_uid", -1);
-													user = (int)XposedHelpers.callStaticMethod(UserHandle.class, "getUserId", uid);
-												} catch (Throwable t) {
-													XposedBridge.log(t);
-												}
-
-												launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-												if (user != 0) try {
-													XposedHelpers.callMethod(act, "startActivityAsUser", launchIntent, XposedHelpers.newInstance(UserHandle.class, user));
-												} catch (Throwable t) {
-													XposedBridge.log(t);
-												} else {
-													act.startActivity(launchIntent);
-												}
-											}
-											param.setResult(true);
-											break;
+								public void run() {
+									try {
+										addPref[0].invoke(frag, "open_in_store", modRes.getString(R.string.appdetails_playstore), "");
+										addPref[0].invoke(frag, "launch_app", modRes.getString(R.string.appdetails_launch), "");
+									} catch (Throwable t) {
+										XposedBridge.log(t);
 									}
 								}
 							});
+						} catch (Throwable t) {
+							XposedBridge.log(t);
+							return;
 						}
-					});
-				}
-			});
-		else
-			Helpers.hookAllMethods(amaCls, "onLoadFinished", new MethodHook() {
-				@Override
-				@SuppressWarnings("deprecation")
-				protected void after(final MethodHookParam param) throws Throwable {
-					final PreferenceActivity act = (PreferenceActivity)param.thisObject;
-					Field piField = XposedHelpers.findFirstFieldByExactType(act.getClass(), PackageInfo.class);
-					final PackageInfo mPackageInfo = (PackageInfo)piField.get(act);
-					final Resources modRes = Helpers.getModuleRes(act);
-					Method[] addPref = XposedHelpers.findMethodsByExactParameters(act.getClass(), void.class, String.class, String.class, String.class);
-					if (mPackageInfo == null || addPref.length == 0) {
-						Helpers.log("AppInfoHook", "Unable to find field/class/method in SecurityCenter to hook");
-						return;
-					} else {
-						addPref[0].setAccessible(true);
+
+						XposedBridge.hookAllMethods(frag.getClass(), "onPreferenceTreeClick", new MethodHook() {
+							@Override
+							protected void before(final MethodHookParam param) throws Throwable {
+								String key = (String)XposedHelpers.callMethod(param.args[0], "getKey");
+								String title = (String)XposedHelpers.callMethod(param.args[0], "getTitle");
+								switch (key) {
+									case "apk_filename":
+										((ClipboardManager)act.getSystemService(Context.CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText(title, mLastPackageInfo.applicationInfo.sourceDir));
+										Toast.makeText(act, act.getResources().getIdentifier("app_manager_copy_pkg_to_clip", "string", act.getPackageName()), Toast.LENGTH_SHORT).show();
+										param.setResult(true);
+										break;
+									case "data_path":
+										((ClipboardManager)act.getSystemService(Context.CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText(title, mLastPackageInfo.applicationInfo.dataDir));
+										Toast.makeText(act, act.getResources().getIdentifier("app_manager_copy_pkg_to_clip", "string", act.getPackageName()), Toast.LENGTH_SHORT).show();
+										param.setResult(true);
+										break;
+									case "open_in_store":
+										try {
+											Intent launchIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + mLastPackageInfo.packageName));
+											launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+											act.startActivity(launchIntent);
+										} catch (android.content.ActivityNotFoundException anfe) {
+											Intent launchIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + mLastPackageInfo.packageName));
+											launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+											act.startActivity(launchIntent);
+										}
+										param.setResult(true);
+										break;
+									case "launch_app":
+										Intent launchIntent = act.getPackageManager().getLaunchIntentForPackage(mLastPackageInfo.packageName);
+										if (launchIntent == null) {
+											Toast.makeText(act, modRes.getString(R.string.appdetails_nolaunch), Toast.LENGTH_SHORT).show();
+										} else {
+											int user = 0;
+											try {
+												int uid = act.getIntent().getIntExtra("am_app_uid", -1);
+												user = (int)XposedHelpers.callStaticMethod(UserHandle.class, "getUserId", uid);
+											} catch (Throwable t) {
+												XposedBridge.log(t);
+											}
+
+											launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+											if (user != 0) try {
+												XposedHelpers.callMethod(act, "startActivityAsUser", launchIntent, XposedHelpers.newInstance(UserHandle.class, user));
+											} catch (Throwable t) {
+												XposedBridge.log(t);
+											} else {
+												act.startActivity(launchIntent);
+											}
+										}
+										param.setResult(true);
+										break;
+								}
+							}
+						});
 					}
-					addPref[0].invoke(act, "apk_versioncode", modRes.getString(R.string.appdetails_apk_version_code), String.valueOf(mPackageInfo.versionCode));
-					addPref[0].invoke(act, "apk_filename", modRes.getString(R.string.appdetails_apk_file), mPackageInfo.applicationInfo.sourceDir);
-					addPref[0].invoke(act, "data_path", modRes.getString(R.string.appdetails_data_path), mPackageInfo.applicationInfo.dataDir);
-					addPref[0].invoke(act, "app_uid", modRes.getString(R.string.appdetails_app_uid), String.valueOf(mPackageInfo.applicationInfo.uid));
-					addPref[0].invoke(act, "target_sdk", modRes.getString(R.string.appdetails_sdk), String.valueOf(mPackageInfo.applicationInfo.targetSdkVersion));
-					addPref[0].invoke(act, "open_in_store", modRes.getString(R.string.appdetails_playstore), "");
-					addPref[0].invoke(act, "launch_app", modRes.getString(R.string.appdetails_launch), "");
-
-					act.findPreference("apk_filename").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-						@Override
-						public boolean onPreferenceClick(Preference preference) {
-							((ClipboardManager)act.getSystemService(Context.CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText(preference.getTitle(), mPackageInfo.applicationInfo.sourceDir));
-							Toast.makeText(act, act.getResources().getIdentifier("app_manager_copy_pkg_to_clip", "string", act.getPackageName()), Toast.LENGTH_SHORT).show();
-							return true;
-						}
-					});
-
-					act.findPreference("data_path").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-						@Override
-						public boolean onPreferenceClick(Preference preference) {
-							((ClipboardManager)act.getSystemService(Context.CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText(preference.getTitle(), mPackageInfo.applicationInfo.dataDir));
-							Toast.makeText(act, act.getResources().getIdentifier("app_manager_copy_pkg_to_clip", "string", act.getPackageName()), Toast.LENGTH_SHORT).show();
-							return true;
-						}
-					});
-
-					act.findPreference("open_in_store").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-						@Override
-						public boolean onPreferenceClick(Preference preference) {
-							try {
-								Intent launchIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + mPackageInfo.packageName));
-								launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-								act.startActivity(launchIntent);
-							} catch (android.content.ActivityNotFoundException anfe) {
-								Intent launchIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + mPackageInfo.packageName));
-								launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-								act.startActivity(launchIntent);
-							}
-							return true;
-						}
-					});
-
-					act.findPreference("launch_app").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-						@Override
-						public boolean onPreferenceClick(Preference preference) {
-							Intent launchIntent = act.getPackageManager().getLaunchIntentForPackage(mPackageInfo.packageName);
-							if (launchIntent == null) {
-								Toast.makeText(act, modRes.getString(R.string.appdetails_nolaunch), Toast.LENGTH_SHORT).show();
-							} else {
-								int user = 0;
-								try {
-									int uid = act.getIntent().getIntExtra("am_app_uid", -1);
-									user = (int)XposedHelpers.callStaticMethod(UserHandle.class, "getUserId", uid);
-								} catch (Throwable t) {
-									XposedBridge.log(t);
-								}
-
-								launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-								if (user != 0) try {
-									XposedHelpers.callMethod(act, "startActivityAsUser", launchIntent, XposedHelpers.newInstance(UserHandle.class, user));
-								} catch (Throwable t) {
-									XposedBridge.log(t);
-								} else {
-									act.startActivity(launchIntent);
-								}
-							}
-							return true;
-						}
-					});
-				}
-			});
+				});
+			}
+		});
 	}
 
 	public static Bundle checkBundle(Context context, Bundle bundle) {

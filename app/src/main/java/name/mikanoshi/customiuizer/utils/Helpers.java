@@ -202,23 +202,21 @@ public class Helpers {
 	public static void setMiuiPrefItem(View item) {
 		item.setBackgroundResource(R.drawable.list_item_bg);
 		TextView title = item.findViewById(android.R.id.title);
-		if (is12()) {
-			int resId = item.getResources().getIdentifier("preference_item_bg", "drawable", "miui");
-			if (resId != 0) item.setBackgroundResource(resId);
-			resId = item.getResources().getIdentifier("normal_text_size", "dimen", "miui");
-			if (resId != 0 && title != null) {
-				title.setTextSize(TypedValue.COMPLEX_UNIT_PX, item.getResources().getDimensionPixelSize(resId));
-			}
-			resId = item.getResources().getIdentifier("secondary_text_size", "dimen", "miui");
-			if (resId != 0) {
-				TextView summary = item.findViewById(android.R.id.summary);
-				TextView text1 = item.findViewById(android.R.id.text1);
-				TextView text2 = item.findViewById(android.R.id.text2);
-				int size = item.getResources().getDimensionPixelSize(resId);
-				if (summary != null) summary.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
-				if (text1 != null) text1.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
-				if (text2 != null) text2.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
-			}
+		int resId = item.getResources().getIdentifier("preference_item_bg", "drawable", "miui");
+		if (resId != 0) item.setBackgroundResource(resId);
+		resId = item.getResources().getIdentifier("normal_text_size", "dimen", "miui");
+		if (resId != 0 && title != null) {
+			title.setTextSize(TypedValue.COMPLEX_UNIT_PX, item.getResources().getDimensionPixelSize(resId));
+		}
+		resId = item.getResources().getIdentifier("secondary_text_size", "dimen", "miui");
+		if (resId != 0) {
+			TextView summary = item.findViewById(android.R.id.summary);
+			TextView text1 = item.findViewById(android.R.id.text1);
+			TextView text2 = item.findViewById(android.R.id.text2);
+			int size = item.getResources().getDimensionPixelSize(resId);
+			if (summary != null) summary.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+			if (text1 != null) text1.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+			if (text2 != null) text2.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
 		}
 		if (title != null && "header".equals(title.getTag())) {
 			int resIdSize = item.getResources().getIdentifier("preference_category_text_size", "dimen", "miui");
@@ -234,10 +232,6 @@ public class Helpers {
 		int paddingTop = resIdTop == 0 ? item.getPaddingTop() : item.getResources().getDimensionPixelSize(resIdTop);
 		int paddingBottom = resIdBottom == 0 ? item.getPaddingBottom() : item.getResources().getDimensionPixelSize(resIdBottom);
 		item.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
-	}
-
-	public static boolean is12() {
-		return true;
 	}
 
 	public static boolean isNightMode(Context context) {

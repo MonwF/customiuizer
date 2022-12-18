@@ -907,6 +907,7 @@
     <string name="array_turn_off_disable">Turn off and disable</string>
     <string name="array_temperature">Temperature Only</string>
     <string name="array_current">Current Only</string>
+    <string name="array_dualsimin2rows_style_thick">Thick</string>
     <string name="unlimited">Unlimited</string>
 
     <string name="toggle_wifi_on">Wi-Fi enabled</string>
@@ -1116,6 +1117,7 @@
     <string name="system_statusbar_batterytempandcurrentatright_title">Display on the right</string>
     <string name="system_statusbar_batterytempandcurrent_incharge_title">Show when charging only</string>
     <string name="system_statusbar_dualsimin2rows_title">Dual SIM signal bars in dual rows</string>
+    <string name="system_statusbar_dualsimin2rows_style_title">Icon style</string>
     <string name="system_statusbar_dualsimin2rows_rightmargin_title">Right margin</string>
     <string name="system_statusbar_mobiletype_single_title">Put mobile network type at the right of signal icon</string>
     <string name="system_statusbar_mobiletype_single_leftmargin_title">Left margin</string>

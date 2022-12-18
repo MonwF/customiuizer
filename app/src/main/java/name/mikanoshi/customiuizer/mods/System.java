@@ -161,6 +161,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -608,7 +609,7 @@ public class System {
                 protected void before(MethodHookParam param) throws Throwable {
                     boolean skip = MainModule.mPrefs.getBoolean("system_noscreenlock_nofaceunlock");
                     if (!skip) return;
-                    if (Helpers.is12() && param.args.length == 0) return;
+                    if (param.args.length == 0) return;
                     Boolean isScreenLockDisabled = (Boolean)XposedHelpers.getAdditionalStaticField(findClass("com.android.systemui.keyguard.KeyguardViewMediator", lpparam.classLoader), "isScreenLockDisabled");
                     isScreenLockDisabled = isScreenLockDisabled != null && isScreenLockDisabled;
                     if (isScreenLockDisabled) param.setResult(null);
@@ -852,10 +853,8 @@ public class System {
         notifVolumeOffResId = MainModule.resHooks.addResource("ic_miui_volume_notification_mute", R.drawable.ic_miui_volume_notification_mute);
     }
 
-    private static int settingsSystemResId;
     private static int callsResId;
     public static void NotificationVolumeSettingsRes() {
-        settingsSystemResId = MainModule.resHooks.addResource("ic_audio_system", R.drawable.ic_audio_system);
         callsResId = MainModule.resHooks.addResource("ring_volume_option_newtitle", R.string.calls);
     }
 
@@ -999,7 +998,7 @@ public class System {
                 XposedHelpers.callMethod(pref, "setTitle", modRes.getString(R.string.system_volume));
                 XposedHelpers.callMethod(pref, "setPersistent", true);
                 XposedHelpers.callMethod(prefScreen, addPreference, pref);
-                initSeekBar[0].invoke(fragment, "system_volume", 1, Helpers.is12() ? context.getResources().getIdentifier("ic_audio_vol", "drawable", context.getPackageName()) : settingsSystemResId);
+                initSeekBar[0].invoke(fragment, "system_volume", 1, context.getResources().getIdentifier("ic_audio_vol", "drawable", context.getPackageName()));
                 XposedHelpers.callMethod(pref, "setOrder", order);
 
                 Object mRingVolume = XposedHelpers.callMethod(param.thisObject, "findPreference", "ring_volume");
@@ -1352,10 +1351,8 @@ public class System {
                     public void onChange(String name, int defValue) {
                         int opt = Helpers.getSharedIntPref(mContext, name, defValue);
                         XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomBlurModifier", opt);
-                        if (Helpers.is12()) {
-                            Object mControlPanelWindowManager = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", lpparam.classLoader), "get", findClass("com.android.systemui.miui.statusbar.phone.ControlPanelWindowManager", lpparam.classLoader));
-                            XposedHelpers.setAdditionalInstanceField(mControlPanelWindowManager, "mCustomBlurModifier", opt);
-                        }
+                        Object mControlPanelWindowManager = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", lpparam.classLoader), "get", findClass("com.android.systemui.miui.statusbar.phone.ControlPanelWindowManager", lpparam.classLoader));
+                        XposedHelpers.setAdditionalInstanceField(mControlPanelWindowManager, "mCustomBlurModifier", opt);
                     }
                 };
             }
@@ -6404,31 +6401,30 @@ public class System {
             }
         });
 
-        if (Helpers.is12())
-            Helpers.findAndHookMethod("com.android.systemui.statusbar.NotificationSnooze", lpparam.classLoader, "createOptionViews", new MethodHook() {
-                @Override
-                protected void after(MethodHookParam param) throws Throwable {
-                    LinearLayout mSnoozeOptionContainer = (LinearLayout)XposedHelpers.getObjectField(param.thisObject, "mSnoozeOptionContainer");
-                    ViewGroup parent = ((ViewGroup)mSnoozeOptionContainer.getParent());
-                    if (parent.getClass() == ScrollView.class) return;
-                    parent.removeView(mSnoozeOptionContainer);
-                    HorizontalScrollView scrollView = new HorizontalScrollView(mSnoozeOptionContainer.getContext());
-                    scrollView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-                    scrollView.setVerticalScrollBarEnabled(false);
-                    scrollView.setHorizontalScrollBarEnabled(false);
-                    scrollView.addView(mSnoozeOptionContainer);
-                    parent.addView(scrollView);
-                    ViewGroup.LayoutParams lp1 = scrollView.getLayoutParams();
-                    lp1.width = ViewGroup.LayoutParams.MATCH_PARENT;
-                    lp1.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                    scrollView.setLayoutParams(lp1);
-                    ViewGroup.MarginLayoutParams lp2 = (ViewGroup.MarginLayoutParams)mSnoozeOptionContainer.getLayoutParams();
-                    lp2.setMarginStart(0);
-                    lp2.width = ViewGroup.LayoutParams.MATCH_PARENT;
-                    lp2.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                    mSnoozeOptionContainer.setLayoutParams(lp2);
-                }
-            });
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.NotificationSnooze", lpparam.classLoader, "createOptionViews", new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                LinearLayout mSnoozeOptionContainer = (LinearLayout)XposedHelpers.getObjectField(param.thisObject, "mSnoozeOptionContainer");
+                ViewGroup parent = ((ViewGroup)mSnoozeOptionContainer.getParent());
+                if (parent.getClass() == ScrollView.class) return;
+                parent.removeView(mSnoozeOptionContainer);
+                HorizontalScrollView scrollView = new HorizontalScrollView(mSnoozeOptionContainer.getContext());
+                scrollView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+                scrollView.setVerticalScrollBarEnabled(false);
+                scrollView.setHorizontalScrollBarEnabled(false);
+                scrollView.addView(mSnoozeOptionContainer);
+                parent.addView(scrollView);
+                ViewGroup.LayoutParams lp1 = scrollView.getLayoutParams();
+                lp1.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                lp1.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                scrollView.setLayoutParams(lp1);
+                ViewGroup.MarginLayoutParams lp2 = (ViewGroup.MarginLayoutParams)mSnoozeOptionContainer.getLayoutParams();
+                lp2.setMarginStart(0);
+                lp2.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                lp2.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                mSnoozeOptionContainer.setLayoutParams(lp2);
+            }
+        });
     }
 
     public static void MoreSnoozeOptionsServiceHook(LoadPackageParam lpparam) {
@@ -8116,94 +8112,36 @@ public class System {
             MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "status_bar_mobile_type_middle_to_strength_start", -0.4f);
         }
 
+        HashMap<String, Integer> dualSignalResMap = new HashMap<String, Integer>();
+        String[] colorModeList = {"", "dark", "tint"};
+        String[] iconStyles = {"", "thick"};
+        String selectedIconStyle = MainModule.mPrefs.getString("system_statusbar_dualsimin2rows_style", "");
+
+        Helpers.findAndHookMethod("com.android.systemui.SystemUIApplication", lpparam.classLoader, "onCreate", new MethodHook() {
+            private boolean isHooked = false;
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                if (!isHooked) {
+                    isHooked = true;
+                    Context mContext = (Context) XposedHelpers.callMethod(param.thisObject, "getApplicationContext");
+                    Resources modRes = Helpers.getModuleRes(mContext);
+                    for (int slot = 1;slot <= 2;slot++) {
+                        for (int lvl = 0;lvl <= 5;lvl++) {
+                            for (String colorMode : colorModeList) {
+                                for (String iconStyle : iconStyles) {
+                                    String dualIconId = "statusbar_signal_" + slot + "_" + lvl + (!colorMode.equals("") ? ("_" + colorMode) : "") + (!iconStyle.equals("") ? ("_" + iconStyle) : "");
+                                    int iconResId = modRes.getIdentifier(dualIconId, "drawable", Helpers.modulePkg);
+                                    String statusbarFakeId = "cust_" + dualIconId;
+                                    dualSignalResMap.put(statusbarFakeId, MainModule.resHooks.addResource(statusbarFakeId, iconResId));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
         SparseIntArray signalResToLevelMap = new SparseIntArray();
-        int signalRes1_0 = MainModule.resHooks.addResource("signalRes1_0", R.drawable.statusbar_signal_1_0);
-        int signalRes1_1 = MainModule.resHooks.addResource("signalRes1_1", R.drawable.statusbar_signal_1_1);
-        int signalRes1_2 = MainModule.resHooks.addResource("signalRes1_2", R.drawable.statusbar_signal_1_2);
-        int signalRes1_3 = MainModule.resHooks.addResource("signalRes1_3", R.drawable.statusbar_signal_1_3);
-        int signalRes1_4 = MainModule.resHooks.addResource("signalRes1_4", R.drawable.statusbar_signal_1_4);
-        int signalRes1_5 = MainModule.resHooks.addResource("signalRes1_5", R.drawable.statusbar_signal_1_5);
-        int signalRes2_0 = MainModule.resHooks.addResource("signalRes2_0", R.drawable.statusbar_signal_2_0);
-        int signalRes2_1 = MainModule.resHooks.addResource("signalRes2_1", R.drawable.statusbar_signal_2_1);
-        int signalRes2_2 = MainModule.resHooks.addResource("signalRes2_2", R.drawable.statusbar_signal_2_2);
-        int signalRes2_3 = MainModule.resHooks.addResource("signalRes2_3", R.drawable.statusbar_signal_2_3);
-        int signalRes2_4 = MainModule.resHooks.addResource("signalRes2_4", R.drawable.statusbar_signal_2_4);
-        int signalRes2_5 = MainModule.resHooks.addResource("signalRes2_5", R.drawable.statusbar_signal_2_5);
-        SparseIntArray signalLevelToRes1Map = new SparseIntArray();
-        SparseIntArray signalLevelToRes2Map = new SparseIntArray();
-        signalLevelToRes1Map.put(0, signalRes1_0);
-        signalLevelToRes1Map.put(1, signalRes1_1);
-        signalLevelToRes1Map.put(2, signalRes1_2);
-        signalLevelToRes1Map.put(3, signalRes1_3);
-        signalLevelToRes1Map.put(4, signalRes1_4);
-        signalLevelToRes1Map.put(5, signalRes1_5);
-        signalLevelToRes1Map.put(6, signalRes1_0);
-        signalLevelToRes2Map.put(0, signalRes2_0);
-        signalLevelToRes2Map.put(1, signalRes2_1);
-        signalLevelToRes2Map.put(2, signalRes2_2);
-        signalLevelToRes2Map.put(3, signalRes2_3);
-        signalLevelToRes2Map.put(4, signalRes2_4);
-        signalLevelToRes2Map.put(5, signalRes2_5);
-        signalLevelToRes2Map.put(6, signalRes2_0);
-
-        int signalTintRes1_0 = MainModule.resHooks.addResource("signalTintRes1_0", R.drawable.statusbar_signal_1_0_tint);
-        int signalTintRes1_1 = MainModule.resHooks.addResource("signalTintRes1_1", R.drawable.statusbar_signal_1_1_tint);
-        int signalTintRes1_2 = MainModule.resHooks.addResource("signalTintRes1_2", R.drawable.statusbar_signal_1_2_tint);
-        int signalTintRes1_3 = MainModule.resHooks.addResource("signalTintRes1_3", R.drawable.statusbar_signal_1_3_tint);
-        int signalTintRes1_4 = MainModule.resHooks.addResource("signalTintRes1_4", R.drawable.statusbar_signal_1_4_tint);
-        int signalTintRes1_5 = MainModule.resHooks.addResource("signalTintRes1_5", R.drawable.statusbar_signal_1_5_tint);
-        int signalTintRes2_0 = MainModule.resHooks.addResource("signalTintRes2_0", R.drawable.statusbar_signal_2_0_tint);
-        int signalTintRes2_1 = MainModule.resHooks.addResource("signalTintRes2_1", R.drawable.statusbar_signal_2_1_tint);
-        int signalTintRes2_2 = MainModule.resHooks.addResource("signalTintRes2_2", R.drawable.statusbar_signal_2_2_tint);
-        int signalTintRes2_3 = MainModule.resHooks.addResource("signalTintRes2_3", R.drawable.statusbar_signal_2_3_tint);
-        int signalTintRes2_4 = MainModule.resHooks.addResource("signalTintRes2_4", R.drawable.statusbar_signal_2_4_tint);
-        int signalTintRes2_5 = MainModule.resHooks.addResource("signalTintRes2_5", R.drawable.statusbar_signal_2_5_tint);
-        SparseIntArray signalTintLevelToRes1Map = new SparseIntArray();
-        SparseIntArray signalTintLevelToRes2Map = new SparseIntArray();
-        signalTintLevelToRes1Map.put(0, signalTintRes1_0);
-        signalTintLevelToRes1Map.put(1, signalTintRes1_1);
-        signalTintLevelToRes1Map.put(2, signalTintRes1_2);
-        signalTintLevelToRes1Map.put(3, signalTintRes1_3);
-        signalTintLevelToRes1Map.put(4, signalTintRes1_4);
-        signalTintLevelToRes1Map.put(5, signalTintRes1_5);
-        signalTintLevelToRes1Map.put(6, signalTintRes1_0);
-        signalTintLevelToRes2Map.put(0, signalTintRes2_0);
-        signalTintLevelToRes2Map.put(1, signalTintRes2_1);
-        signalTintLevelToRes2Map.put(2, signalTintRes2_2);
-        signalTintLevelToRes2Map.put(3, signalTintRes2_3);
-        signalTintLevelToRes2Map.put(4, signalTintRes2_4);
-        signalTintLevelToRes2Map.put(5, signalTintRes2_5);
-        signalTintLevelToRes2Map.put(6, signalTintRes2_0);
-
-        int signalDarkRes1_0 = MainModule.resHooks.addResource("signalDarkRes1_0", R.drawable.statusbar_signal_1_0_dark);
-        int signalDarkRes1_1 = MainModule.resHooks.addResource("signalDarkRes1_1", R.drawable.statusbar_signal_1_1_dark);
-        int signalDarkRes1_2 = MainModule.resHooks.addResource("signalDarkRes1_2", R.drawable.statusbar_signal_1_2_dark);
-        int signalDarkRes1_3 = MainModule.resHooks.addResource("signalDarkRes1_3", R.drawable.statusbar_signal_1_3_dark);
-        int signalDarkRes1_4 = MainModule.resHooks.addResource("signalDarkRes1_4", R.drawable.statusbar_signal_1_4_dark);
-        int signalDarkRes1_5 = MainModule.resHooks.addResource("signalDarkRes1_5", R.drawable.statusbar_signal_1_5_dark);
-        int signalDarkRes2_0 = MainModule.resHooks.addResource("signalDarkRes2_0", R.drawable.statusbar_signal_2_0_dark);
-        int signalDarkRes2_1 = MainModule.resHooks.addResource("signalDarkRes2_1", R.drawable.statusbar_signal_2_1_dark);
-        int signalDarkRes2_2 = MainModule.resHooks.addResource("signalDarkRes2_2", R.drawable.statusbar_signal_2_2_dark);
-        int signalDarkRes2_3 = MainModule.resHooks.addResource("signalDarkRes2_3", R.drawable.statusbar_signal_2_3_dark);
-        int signalDarkRes2_4 = MainModule.resHooks.addResource("signalDarkRes2_4", R.drawable.statusbar_signal_2_4_dark);
-        int signalDarkRes2_5 = MainModule.resHooks.addResource("signalDarkRes2_5", R.drawable.statusbar_signal_2_5_dark);
-        SparseIntArray signalDarkLevelToRes1Map = new SparseIntArray();
-        SparseIntArray signalDarkLevelToRes2Map = new SparseIntArray();
-        signalDarkLevelToRes1Map.put(0, signalDarkRes1_0);
-        signalDarkLevelToRes1Map.put(1, signalDarkRes1_1);
-        signalDarkLevelToRes1Map.put(2, signalDarkRes1_2);
-        signalDarkLevelToRes1Map.put(3, signalDarkRes1_3);
-        signalDarkLevelToRes1Map.put(4, signalDarkRes1_4);
-        signalDarkLevelToRes1Map.put(5, signalDarkRes1_5);
-        signalDarkLevelToRes1Map.put(6, signalDarkRes1_0);
-        signalDarkLevelToRes2Map.put(0, signalDarkRes2_0);
-        signalDarkLevelToRes2Map.put(1, signalDarkRes2_1);
-        signalDarkLevelToRes2Map.put(2, signalDarkRes2_2);
-        signalDarkLevelToRes2Map.put(3, signalDarkRes2_3);
-        signalDarkLevelToRes2Map.put(4, signalDarkRes2_4);
-        signalDarkLevelToRes2Map.put(5, signalDarkRes2_5);
-        signalDarkLevelToRes2Map.put(6, signalDarkRes2_0);
-
         Helpers.hookAllMethods("com.android.systemui.statusbar.phone.StatusBarIconControllerImpl", lpparam.classLoader, "setMobileIcons", new MethodHook() {
             private boolean isHooked = false;
             @Override
@@ -8285,25 +8223,25 @@ public class System {
                 Object mobileIconState = XposedHelpers.getObjectField(param.thisObject, "mState");
                 int level1 = (int) XposedHelpers.getObjectField(mobileIconState, "strengthId");
                 level1 = level1 / 10;
-                int level2 = subStrengthId;
                 boolean mLight = (boolean) XposedHelpers.getObjectField(param.thisObject, "mLight");
                 boolean mUseTint = (boolean) XposedHelpers.getObjectField(param.thisObject, "mUseTint");
                 Object mSmallRoaming = XposedHelpers.getObjectField(param.thisObject, "mSmallRoaming");
                 Object mMobile = XposedHelpers.getObjectField(param.thisObject, "mMobile");
-                int sim1ResId;
-                int sim2ResId;
+                String colorMode = "";
                 if (mUseTint) {
-                    sim1ResId = signalTintLevelToRes1Map.get(level1);
-                    sim2ResId = signalTintLevelToRes2Map.get(level2);
+                    colorMode = "_tint";
                 }
-                else if (mLight) {
-                    sim1ResId = signalLevelToRes1Map.get(level1);
-                    sim2ResId = signalLevelToRes2Map.get(level2);
+                else if (!mLight) {
+                    colorMode = "_dark";
                 }
-                else {
-                    sim1ResId = signalDarkLevelToRes1Map.get(level1);
-                    sim2ResId = signalDarkLevelToRes2Map.get(level2);
+                String iconStyle = "";
+                if (!selectedIconStyle.equals("")) {
+                    iconStyle = "_" + selectedIconStyle;
                 }
+                String sim1IconId = "cust_statusbar_signal_1_" + level1 + colorMode + iconStyle;
+                String sim2IconId = "cust_statusbar_signal_2_" + subStrengthId + colorMode + iconStyle;
+                int sim1ResId = dualSignalResMap.get(sim1IconId);
+                int sim2ResId = dualSignalResMap.get(sim2IconId);
                 XposedHelpers.callMethod(mMobile, "setImageResource", sim1ResId);
                 XposedHelpers.callMethod(mSmallRoaming, "setImageResource", sim2ResId);
             }

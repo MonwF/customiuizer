@@ -404,6 +404,16 @@
 			android:title="@string/system_statusbar_dualsimin2rows_title"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_statusbar_dualsimin2rows_style"
+			android:dependency="pref_key_system_statusbar_dualsimin2rows"
+			android:title="@string/system_statusbar_dualsimin2rows_style_title"
+			android:entries="@array/dualsimin2rows_style"
+			android:entryValues="@array/dualsimin2rows_style_val"
+			miuizer:child="true"
+			miuizer:valueAsSummary="true"
+			android:defaultValue="" />
+
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_system_statusbar_dualsimin2rows_rightmargin"
 			android:title="@string/system_statusbar_dualsimin2rows_rightmargin_title"
