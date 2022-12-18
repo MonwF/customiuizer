@@ -88,6 +88,8 @@
     <string name="system_clockseconds_title">Show seconds</string>
     <string name="system_clock_show_ampm_title">Show AM|PM</string>
     <string name="system_clockleadingzero_title">Show leading zero to hours</string>
+    <string name="system_clock_extra_width_title">Extra width</string>
+    <string name="system_clock_extra_width_summ">Avoid to display an ellipsis</string>
     <string name="system_clockseconds_summ">Display seconds in the status bar clock</string>
     <string name="system_maxsbicons_title">Notification icons limit</string>
     <string name="system_maxsbicons_summ">Number of notification icons to display before turning them into dots</string>

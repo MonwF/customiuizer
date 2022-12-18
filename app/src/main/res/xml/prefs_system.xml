@@ -542,6 +542,19 @@
 			android:dependency="pref_key_system_clockseconds"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_clock_extra_width"
+			android:title="@string/system_clock_extra_width_title"
+			android:summary="@string/system_clock_extra_width_summ"
+			android:defaultValue="2"
+			miuizer:child="true"
+			miuizer:minValue="1"
+			miuizer:maxValue="8"
+			miuizer:stepValue="1"
+			android:dependency="pref_key_system_clockseconds"
+			miuizer:displayDividerValue="2"
+			miuizer:format="%s dp" />
+
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_clockleadingzero"
 			android:title="@string/system_clockleadingzero_title"
