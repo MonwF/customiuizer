@@ -491,10 +491,28 @@
 			miuizer:displayDividerValue="2"
 			miuizer:format="%s dip" />
 
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_statusbar_batterytempandcurrent_verticaloffset"
+			android:title="@string/system_statusbar_mobiletype_single_verticaloffset"
+			android:dependency="pref_key_system_statusbar_batterytempandcurrent"
+			android:defaultValue="8"
+			miuizer:child="true"
+			miuizer:minValue="0"
+			miuizer:maxValue="16"
+			miuizer:stepValue="1"
+			miuizer:negativeShift="8"
+			miuizer:displayDividerValue="2"
+			miuizer:format="%s dip" />
+
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_batteryindicator_cat"
 			android:title="@string/system_batteryindicator_title"
 			android:summary="@string/system_batteryindicator_summ" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_statusbar_dualrows"
+			android:title="@string/system_statusbar_dualrows_title"
+			android:summary="@string/system_statusbar_dualrows_summ" />
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_system_statusbarheight"

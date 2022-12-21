@@ -5112,6 +5112,16 @@ public class System {
             res.getDisplayMetrics()
         );
         batteryView.setPaddingRelative(leftMargin, 0, rightMargin, 0);
+
+        int verticalOffset = MainModule.mPrefs.getInt("system_statusbar_batterytempandcurrent_verticaloffset", 8);
+        if (verticalOffset != 8) {
+            float marginTop = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                (verticalOffset - 8) * 0.5f,
+                res.getDisplayMetrics()
+            );
+            lp.topMargin = (int) (marginTop);
+        }
         batteryView.setLayoutParams(lp);
         return batteryView;
     }
@@ -5189,7 +5199,7 @@ public class System {
         Class <?> Dependency = findClass("com.android.systemui.Dependency", lpparam.classLoader);
         Class <?> StatusBarIconHolder = XposedHelpers.findClass("com.android.systemui.statusbar.phone.StatusBarIconHolder", lpparam.classLoader);
         boolean atRight = MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_atright");
-        if (atRight) {
+        if (atRight && !MainModule.mPrefs.getBoolean("system_statusbar_dualsimin2rows")) {
             Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiCollapsedStatusBarFragment", lpparam.classLoader, "initMiuiViewsOnViewCreated", View.class, new MethodHook() {
                 private boolean isHooked = false;
                 @Override
@@ -5238,7 +5248,7 @@ public class System {
                 }
             });
         }
-        else {
+        else if (!atRight) {
             Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiCollapsedStatusBarFragment", lpparam.classLoader, "initMiuiViewsOnViewCreated", View.class, new MethodHook() {
                 private boolean isHooked = false;
                 @Override
@@ -8598,6 +8608,185 @@ public class System {
                         }
                     });
                 }
+            }
+        });
+    }
+
+    public static void DualRowStatusbarHook(LoadPackageParam lpparam) {
+        final int[] statusBarPaddingTop = new int[1];
+        Helpers.findAndHookMethod("com.android.systemui.SystemUIApplication", lpparam.classLoader, "onCreate", new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                Context mContext = (Context) XposedHelpers.callMethod(param.thisObject, "getApplicationContext");
+                int dimenResId = mContext.getResources().getIdentifier("status_bar_padding_top", "dimen", lpparam.packageName);
+                statusBarPaddingTop[0] = mContext.getResources().getDimensionPixelSize(dimenResId);
+                MainModule.resHooks.setDensityReplacement(lpparam.packageName, "dimen", "status_bar_padding_top", 2);
+            }
+        });
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView", lpparam.classLoader, "onFinishInflate", new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                FrameLayout sbView = (FrameLayout) param.thisObject;
+                Context mContext = sbView.getContext();
+                LinearLayout leftLayout = new LinearLayout(mContext);
+                LinearLayout rightLayout = new LinearLayout(mContext);
+                LinearLayout leftContainer = (LinearLayout) XposedHelpers.getObjectField(param.thisObject, "mStatusBarLeftContainer");
+                ViewGroup rightContainer = (ViewGroup) XposedHelpers.getObjectField(param.thisObject, "mSystemIconArea");
+                LinearLayout statusBarcontents = (LinearLayout) rightContainer.getParent();
+                statusBarcontents.removeView(leftContainer);
+                statusBarcontents.removeView(rightContainer);
+                statusBarcontents.addView(leftLayout, 0);
+                statusBarcontents.addView(rightLayout);
+                XposedHelpers.setObjectField(param.thisObject, "mSystemIconArea", rightLayout);
+                leftLayout.addView(leftContainer);
+                LinearLayout secondLeft = new LinearLayout(mContext);
+                leftLayout.addView(secondLeft);
+                LinearLayout firstRight = new LinearLayout(mContext);
+                rightLayout.addView(firstRight);
+                firstRight.setGravity(Gravity.END);
+                LinearLayout secondRight = new LinearLayout(mContext);
+                rightLayout.addView(secondRight);
+                secondRight.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
+                View mBattery = (View) XposedHelpers.getObjectField(param.thisObject, "mBattery");
+                ((ViewGroup) mBattery.getParent()).removeView(mBattery);
+                if (MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_atright") && MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent")) {
+                    TextView batteryView = createBatteryDetailView(mContext, new LinearLayout.LayoutParams(-2, -2));
+                    secondRight.addView(batteryView);
+                    mBatteryDetailViews.add(batteryView);
+                    Class <?> ChargeUtilsClass = findClass("com.android.keyguard.charge.ChargeUtils", lpparam.classLoader);
+                    Class <?> DarkIconDispatcherClass = XposedHelpers.findClass("com.android.systemui.plugins.DarkIconDispatcher", lpparam.classLoader);
+                    Class <?> Dependency = findClass("com.android.systemui.Dependency", lpparam.classLoader);
+                    Object DarkIconDispatcher = XposedHelpers.callStaticMethod(Dependency, "get", DarkIconDispatcherClass);
+                    XposedHelpers.callMethod(DarkIconDispatcher, "addDarkReceiver", batteryView);
+                    updateTempAndCurrent(ChargeUtilsClass);
+                }
+                secondRight.addView(mBattery);
+
+                XposedHelpers.setAdditionalInstanceField(param.thisObject, "leftLayout", leftLayout);
+                XposedHelpers.setAdditionalInstanceField(param.thisObject, "rightLayout", rightLayout);
+                XposedHelpers.setAdditionalInstanceField(param.thisObject, "firstRight", firstRight);
+                XposedHelpers.setAdditionalInstanceField(param.thisObject, "secondLeft", secondLeft);
+
+                View mFullscreenStatusBarNotificationIconArea = (View) XposedHelpers.getObjectField(param.thisObject, "mFullscreenStatusBarNotificationIconArea");
+                ((ViewGroup) mFullscreenStatusBarNotificationIconArea.getParent()).removeView(mFullscreenStatusBarNotificationIconArea);
+                secondLeft.addView(mFullscreenStatusBarNotificationIconArea);
+                View mDripStatusBarNotificationIconArea = (View) XposedHelpers.getObjectField(param.thisObject, "mDripStatusBarNotificationIconArea");
+                ((ViewGroup) mDripStatusBarNotificationIconArea.getParent()).removeView(mDripStatusBarNotificationIconArea);
+                secondLeft.addView(mDripStatusBarNotificationIconArea);
+                View mStatusBarStatusIcons = (View) XposedHelpers.getObjectField(param.thisObject, "mStatusBarStatusIcons");
+                ((ViewGroup) mStatusBarStatusIcons.getParent()).removeView(mStatusBarStatusIcons);
+                firstRight.addView(mStatusBarStatusIcons);
+                int resSystemIconsId = sbView.getResources().getIdentifier("system_icons", "id", lpparam.packageName);
+                firstRight.setId(resSystemIconsId);
+            }
+        });
+
+        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView", lpparam.classLoader, "updateCutoutLocation", new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                int mCurrentStatusBarType = (int) XposedHelpers.getObjectField(param.thisObject, "mCurrentStatusBarType");
+                LinearLayout leftContainer = (LinearLayout) XposedHelpers.getObjectField(param.thisObject, "mStatusBarLeftContainer");
+                LinearLayout leftLayout = (LinearLayout) leftContainer.getParent();
+                LinearLayout rightLayout = (LinearLayout) XposedHelpers.getAdditionalInstanceField(param.thisObject, "rightLayout");
+                LinearLayout rightContainer = (LinearLayout) XposedHelpers.getAdditionalInstanceField(param.thisObject, "firstRight");
+                LinearLayout secondLeft = (LinearLayout) XposedHelpers.getAdditionalInstanceField(param.thisObject, "secondLeft");
+                LinearLayout secondRight = (LinearLayout) rightLayout.getChildAt(1);
+                LinearLayout statusBarcontents = (LinearLayout) leftLayout.getParent();
+
+                statusBarcontents.setOrientation(mCurrentStatusBarType == 0 ? LinearLayout.VERTICAL : LinearLayout.HORIZONTAL);
+                if (mCurrentStatusBarType == 0) {
+                    if (leftLayout.getChildAt(1) != rightContainer) {
+                        leftLayout.removeViewAt(1);
+                        rightLayout.removeViewAt(0);
+                        leftLayout.addView(rightContainer);
+                        rightLayout.addView(secondLeft, 0);
+                    }
+                    leftLayout.setOrientation(LinearLayout.HORIZONTAL);
+                    rightLayout.setOrientation(LinearLayout.HORIZONTAL);
+                    LinearLayout.LayoutParams leftLayoutLp = new LinearLayout.LayoutParams(-1, 0, 1);
+                    leftLayout.setLayoutParams(leftLayoutLp);
+                    LinearLayout.LayoutParams rightLayoutLp = new LinearLayout.LayoutParams(-1, 0, 1);
+                    rightLayout.setLayoutParams(rightLayoutLp);
+
+                    LinearLayout.LayoutParams firstRowlp = new LinearLayout.LayoutParams(-2, -1, 0);
+                    leftContainer.setLayoutParams(firstRowlp);
+                    firstRowlp = new LinearLayout.LayoutParams(0, -1, 1);
+                    rightContainer.setLayoutParams(firstRowlp);
+
+                    LinearLayout.LayoutParams secondRowLp = new LinearLayout.LayoutParams(0, -1, 1);
+                    secondLeft.setLayoutParams(secondRowLp);
+                    secondRight.setLayoutParams(secondRowLp);
+                }
+                else {
+                    if (leftLayout.getChildAt(1) != secondLeft) {
+                        Helpers.log("horiz two cols");
+                        leftLayout.removeViewAt(1);
+                        rightLayout.removeViewAt(0);
+                        leftLayout.addView(secondLeft);
+                        rightLayout.addView(rightContainer, 0);
+                    }
+                    Object mMiuiEndIconManager = XposedHelpers.getObjectField(param.thisObject, "mMiuiEndIconManager");
+                    XposedHelpers.callMethod(mMiuiEndIconManager, "setDripEnd", false);
+                    Object mDripNetworkSpeedView = XposedHelpers.getObjectField(param.thisObject, "mDripNetworkSpeedView");
+                    XposedHelpers.callMethod(mDripNetworkSpeedView, "setBlocked", true);
+                    View mDripStatusBarLeftStatusIconArea = (View) XposedHelpers.getObjectField(param.thisObject, "mDripStatusBarLeftStatusIconArea");
+                    mDripStatusBarLeftStatusIconArea.setVisibility(View.GONE);
+                    leftLayout.setOrientation(LinearLayout.VERTICAL);
+                    rightLayout.setOrientation(LinearLayout.VERTICAL);
+                    LinearLayout.LayoutParams leftLayoutLp = new LinearLayout.LayoutParams(0, -1, 1);
+                    leftLayout.setLayoutParams(leftLayoutLp);
+                    LinearLayout.LayoutParams rightLayoutLp = new LinearLayout.LayoutParams(0, -1, 1);
+                    rightLayout.setLayoutParams(rightLayoutLp);
+
+                    LinearLayout.LayoutParams leftLp = new LinearLayout.LayoutParams(-1, 0, 1);
+                    leftContainer.setLayoutParams(leftLp);
+                    secondLeft.setLayoutParams(leftLp);
+
+                    LinearLayout.LayoutParams rightLp = new LinearLayout.LayoutParams(-1, 0, 1);
+                    rightContainer.setLayoutParams(rightLp);
+                    secondRight.setLayoutParams(rightLp);
+                }
+                secondLeft.setGravity(Gravity.CENTER_VERTICAL | Gravity.START);
+            }
+        });
+
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiCollapsedStatusBarFragment", lpparam.classLoader, "showSystemIconArea", boolean.class, new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                Object mStatusBar = XposedHelpers.getObjectField(param.thisObject, "mStatusBar");
+                View rightLayout = (View) XposedHelpers.getAdditionalInstanceField(mStatusBar, "rightLayout");
+                View leftLayout = (View) XposedHelpers.getAdditionalInstanceField(mStatusBar, "leftLayout");
+                leftLayout.setVisibility(LinearLayout.VISIBLE);
+                rightLayout.setVisibility(LinearLayout.VISIBLE);
+            }
+        });
+
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiCollapsedStatusBarFragment", lpparam.classLoader, "hideSystemIconArea", boolean.class, new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                Object mStatusBar = XposedHelpers.getObjectField(param.thisObject, "mStatusBar");
+                View rightLayout = (View) XposedHelpers.getAdditionalInstanceField(mStatusBar, "rightLayout");
+                View leftLayout = (View) XposedHelpers.getAdditionalInstanceField(mStatusBar, "leftLayout");
+                leftLayout.setVisibility(LinearLayout.GONE);
+                rightLayout.setVisibility(LinearLayout.GONE);
+            }
+        });
+
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiKeyguardStatusBarView", lpparam.classLoader, "updateViewStatusBarPaddingTop", View.class, new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                View view = (View) param.args[0];
+                if (view != null) {
+                    view.setPadding(view.getPaddingLeft(), statusBarPaddingTop[0], view.getPaddingRight(), view.getPaddingBottom());
+                    param.setResult(null);
+                }
+            }
+        });
+
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiKeyguardStatusBarView", lpparam.classLoader, "onFinishInflate", new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                XposedHelpers.callMethod(param.thisObject, "onDensityOrFontScaleChanged");
             }
         });
     }

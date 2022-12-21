@@ -1067,6 +1067,8 @@
     <string name="array_current">仅电流</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">右侧显示</string>
     <string name="system_statusbar_dualsimin2rows_title">双排信号栏</string>
+    <string name="system_statusbar_dualrows_title">双排状态栏</string>
+    <string name="system_statusbar_dualrows_summ">如有必要请适当增加状态栏高度</string>
     <string name="system_statusbar_dualsimin2rows_style_title">图标样式</string>
     <string name="system_statusbar_dualsimin2rows_rightmargin_title">右侧间距</string>
     <string name="system_statusbar_mobiletype_single_title">移动网络类型单独显示</string>
