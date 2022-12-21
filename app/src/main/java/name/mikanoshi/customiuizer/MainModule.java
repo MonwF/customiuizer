@@ -76,7 +76,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (mPrefs.getBoolean("system_allownotifonkeyguard")) System.AllowAllKeyguardSysHook();
         if (mPrefs.getBoolean("system_allownotiffloat")) System.AllowAllFloatSysHook();
         if (mPrefs.getBoolean("system_resizablewidgets")) System.ResizableWidgetsHook();
-        if (mPrefs.getBoolean("system_hidelowbatwarn")) System.NoLowBatteryWarningHook();
         if (mPrefs.getBoolean("system_nomediamute")) System.NoMediaMuteInDNDHook();
         if (mPrefs.getBoolean("system_audiosilencer")) System.AudioSilencerHook();
         if (mPrefs.getBoolean("controls_volumecursor")) Controls.VolumeCursorHook();
@@ -192,6 +191,10 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 
             if (mPrefs.getBoolean("system_fivegtile")) {
                 System.AddFiveGTileHook(lpparam);
+            }
+
+            if (mPrefs.getBoolean("system_hidelowbatwarn")) {
+                System.NoLowBatteryWarningHook(lpparam);
             }
 
             if (mPrefs.getInt("system_qsgridcolumns", 2) > 2 || mPrefs.getInt("system_qsgridrows", 1) > 1) System.QSGridRes();
