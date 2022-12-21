@@ -158,13 +158,11 @@ public class Helpers {
 		"pref_key_launcher_horizwidgetmargin"
 	));
 	public static final HashMap<String, String> l10nProgress = new HashMap<String, String>() {{
-		put("ru-RU", "100");
+		put("ru-RU", "99");
 		put("zh-CN", "99");
 		put("zh-TW", "99");
 		put("pl-PL", "99");
 	}};
-
-	public static final ArrayList<String> shortcutIcons = new ArrayList<String>();
 
 	public enum SettingsType {
 		Preference, Edit
