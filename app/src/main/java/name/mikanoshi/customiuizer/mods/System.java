@@ -6641,14 +6641,8 @@ public class System {
         MainModule.resHooks.setObjectReplacement("android", "bool", "config_safe_media_disable_on_volume_up", false);
     }
 
-    public static void NoLowBatteryWarningHook() {
-        Helpers.hookAllMethods(Settings.System.class, "getIntForUser", new MethodHook() {
-            @Override
-            protected void before(MethodHookParam param) throws Throwable {
-                String key = (String)param.args[1];
-                if ("low_battery_dialog_disabled".equals(key)) param.setResult(1);
-            }
-        });
+    public static void NoLowBatteryWarningHook(LoadPackageParam lpparam) {
+        Helpers.findAndHookMethod("com.android.systemui.power.PowerNotificationWarnings", lpparam.classLoader, "showLowBatteryWarning", boolean.class, XC_MethodReplacement.DO_NOTHING);
     }
 
     public static void TempHideOverlaySystemUIHook(LoadPackageParam lpparam) {
