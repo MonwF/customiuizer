@@ -8048,6 +8048,40 @@ public class System {
         });
     }
 
+    public static void TopMarginHook(LoadPackageParam lpparam) {
+        int topMargin = MainModule.mPrefs.getInt("system_statusbar_topmargin_val", 1);
+        boolean unsetLS = MainModule.mPrefs.getBoolean("system_statusbar_topmargin_unset_lockscreen");
+        final int[] statusBarPaddingTop = new int[1];
+        Helpers.findAndHookMethod("com.android.systemui.SystemUIApplication", lpparam.classLoader, "onCreate", new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                Context mContext = (Context) XposedHelpers.callMethod(param.thisObject, "getApplicationContext");
+                int dimenResId = mContext.getResources().getIdentifier("status_bar_padding_top", "dimen", lpparam.packageName);
+                statusBarPaddingTop[0] = mContext.getResources().getDimensionPixelSize(dimenResId);
+                MainModule.resHooks.setDensityReplacement(lpparam.packageName, "dimen", "status_bar_padding_top", topMargin);
+            }
+        });
+        if (unsetLS) {
+            Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiKeyguardStatusBarView", lpparam.classLoader, "updateViewStatusBarPaddingTop", View.class, new MethodHook() {
+                @Override
+                protected void before(MethodHookParam param) throws Throwable {
+                    View view = (View) param.args[0];
+                    if (view != null) {
+                        view.setPadding(view.getPaddingLeft(), statusBarPaddingTop[0], view.getPaddingRight(), view.getPaddingBottom());
+                        param.setResult(null);
+                    }
+                }
+            });
+            Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiKeyguardStatusBarView", lpparam.classLoader, "onFinishInflate", new MethodHook() {
+                @Override
+                protected void after(MethodHookParam param) throws Throwable {
+                    XposedHelpers.callMethod(param.thisObject, "onDensityOrFontScaleChanged");
+                }
+            });
+        }
+    }
+
+
     public static void MobileTypeSingleHook(LoadPackageParam lpparam) {
         MethodHook showSingleMobileType = new MethodHook(MethodHook.PRIORITY_HIGHEST) {
             @Override
@@ -8608,16 +8642,6 @@ public class System {
     }
 
     public static void DualRowStatusbarHook(LoadPackageParam lpparam) {
-        final int[] statusBarPaddingTop = new int[1];
-        Helpers.findAndHookMethod("com.android.systemui.SystemUIApplication", lpparam.classLoader, "onCreate", new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                Context mContext = (Context) XposedHelpers.callMethod(param.thisObject, "getApplicationContext");
-                int dimenResId = mContext.getResources().getIdentifier("status_bar_padding_top", "dimen", lpparam.packageName);
-                statusBarPaddingTop[0] = mContext.getResources().getDimensionPixelSize(dimenResId);
-                MainModule.resHooks.setDensityReplacement(lpparam.packageName, "dimen", "status_bar_padding_top", 2);
-            }
-        });
         Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView", lpparam.classLoader, "onFinishInflate", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
@@ -8764,24 +8788,6 @@ public class System {
                 View leftLayout = (View) XposedHelpers.getAdditionalInstanceField(mStatusBar, "leftLayout");
                 leftLayout.setVisibility(LinearLayout.GONE);
                 rightLayout.setVisibility(LinearLayout.GONE);
-            }
-        });
-
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiKeyguardStatusBarView", lpparam.classLoader, "updateViewStatusBarPaddingTop", View.class, new MethodHook() {
-            @Override
-            protected void before(MethodHookParam param) throws Throwable {
-                View view = (View) param.args[0];
-                if (view != null) {
-                    view.setPadding(view.getPaddingLeft(), statusBarPaddingTop[0], view.getPaddingRight(), view.getPaddingBottom());
-                    param.setResult(null);
-                }
-            }
-        });
-
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiKeyguardStatusBarView", lpparam.classLoader, "onFinishInflate", new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                XposedHelpers.callMethod(param.thisObject, "onDensityOrFontScaleChanged");
             }
         });
     }
