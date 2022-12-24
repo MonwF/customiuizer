@@ -5073,7 +5073,8 @@ public class System {
     }
 
     public static void Network4GtoLTEHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.MobileSignalController", lpparam.classLoader, "getMobileTypeName", int.class, new MethodHook() {
+        String MobileController = Helpers.isTPlus() ? "com.android.systemui.statusbar.connectivity.MobileSignalController" : "com.android.systemui.statusbar.policy.MobileSignalController";
+        Helpers.findAndHookMethod(MobileController, lpparam.classLoader, "getMobileTypeName", int.class, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 String net = (String)param.getResult();
