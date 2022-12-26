@@ -8738,7 +8738,6 @@ public class System {
                 }
                 else {
                     if (leftLayout.getChildAt(1) != secondLeft) {
-                        Helpers.log("horiz two cols");
                         leftLayout.removeViewAt(1);
                         rightLayout.removeViewAt(0);
                         leftLayout.addView(secondLeft);

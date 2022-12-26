@@ -1,8 +1,5 @@
 <resources>
 
-	<dimen name="miui_volume_content_width_expanded">368.4792dp</dimen>
-	<dimen name="miui_volume_ringer_layout_width_expanded">368.4792dp</dimen>
-
 	<dimen name="action_icon_size">19.64dp</dimen>
 
 </resources>
