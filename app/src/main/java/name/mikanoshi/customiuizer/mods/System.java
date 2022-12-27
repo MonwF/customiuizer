@@ -5200,7 +5200,7 @@ public class System {
         Class <?> Dependency = findClass("com.android.systemui.Dependency", lpparam.classLoader);
         Class <?> StatusBarIconHolder = XposedHelpers.findClass("com.android.systemui.statusbar.phone.StatusBarIconHolder", lpparam.classLoader);
         boolean atRight = MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_atright");
-        if (atRight && !MainModule.mPrefs.getBoolean("system_statusbar_dualsimin2rows")) {
+        if (atRight && !MainModule.mPrefs.getBoolean("system_statusbar_dualrows")) {
             Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiCollapsedStatusBarFragment", lpparam.classLoader, "initMiuiViewsOnViewCreated", View.class, new MethodHook() {
                 private boolean isHooked = false;
                 @Override
@@ -7592,8 +7592,7 @@ public class System {
     }
 
     public static void SecureControlCenterHook(LoadPackageParam lpparam) {
-        XposedHelpers.findAndHookMethod("com.android.keyguard.utils.MiuiKeyguardUtils", lpparam.classLoader, "supportExpandableStatusbarUnderKeyguard", XC_MethodReplacement.returnConstant(false));
-
+        Helpers.findAndHookMethodSilently("com.android.keyguard.utils.MiuiKeyguardUtils", lpparam.classLoader, "supportExpandableStatusbarUnderKeyguard", XC_MethodReplacement.returnConstant(false));
         Helpers.hookAllMethods("com.android.systemui.controlcenter.policy.ControlCenterControllerImpl", lpparam.classLoader, "onContentChanged", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
