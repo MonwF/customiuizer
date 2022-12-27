@@ -5502,21 +5502,29 @@ public class System {
     }
 
     public static void HideLockScreenClockHook(LoadPackageParam lpparam) {
-        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, "setKeyguardStatusViewVisibility", new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                View mKeyguardClockView = (View)XposedHelpers.getObjectField(param.thisObject, "mKeyguardClockView");
-                if (mKeyguardClockView == null) {
-                    Helpers.log("HideLockScreenClockHook", "mKeyguardClockView is null");
-                    return;
+        if (!Helpers.isTPlus()) {
+            Helpers.findAndHookMethod("com.android.keyguard.clock.KeyguardClockContainer", lpparam.classLoader, "updateClock", float.class, int.class, new MethodHook() {
+                @Override
+                protected void before(MethodHookParam param) throws Throwable {
+                    param.args[0] = 0.0f;
                 }
-                ((ViewGroup)mKeyguardClockView).getChildAt(0).setVisibility(View.INVISIBLE);
-                mKeyguardClockView.animate().cancel();
-                XposedHelpers.setBooleanField(param.thisObject, "mKeyguardStatusViewAnimating", false);
-                mKeyguardClockView.setAlpha(0.0f);
-                mKeyguardClockView.setVisibility(View.INVISIBLE);
-            }
-        });
+            });
+            Helpers.hookAllMethods("com.android.keyguard.KeyguardVisibilityHelper", lpparam.classLoader, "setViewVisibility", new MethodHook() {
+                @Override
+                protected void after(MethodHookParam param) throws Throwable {
+                    Object KeyguardClockInjector = XposedHelpers.callStaticMethod(findClassIfExists("com.android.systemui.Dependency", lpparam.classLoader), "get", findClassIfExists("com.android.keyguard.injector.KeyguardClockInjector", lpparam.classLoader));
+                    View mKeyguardClockView = (View)XposedHelpers.callMethod(KeyguardClockInjector, "getView");
+                    if (mKeyguardClockView == null) {
+                        Helpers.log("HideLockScreenClockHook", "mKeyguardClockView is null");
+                        return;
+                    }
+                    mKeyguardClockView.animate().cancel();
+                    XposedHelpers.setBooleanField(param.thisObject, "mKeyguardViewVisibilityAnimating", false);
+                    mKeyguardClockView.setAlpha(0.0f);
+                    mKeyguardClockView.setVisibility(View.INVISIBLE);
+                }
+            });
+        }
     }
 
     public static void FirstVolumePressHook(LoadPackageParam lpparam) {
