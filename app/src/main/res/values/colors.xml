@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<color name="ic_launcher_background">#ff424a60</color>
-	<color name="color_window_background">@color/background_material_light</color>
+	<color name="color_window_background">@android:color/system_neutral1_10</color>
 	<color name="color_surface_variant">@android:color/system_neutral2_100</color>
 	<color name="color_on_surface">@android:color/system_neutral1_900</color>
 	<color name="color_on_surface_variant">@android:color/system_neutral1_700</color>
 	<color name="color_not_selected">#99000000</color>
 	<color name="about_divider">#33808080</color>
-	<color name="highlight_normal_light">#ff0d84ff</color>
+	<color name="highlight_normal_light">@android:color/system_accent1_600</color>
 
 	<color name="preference_category_text_color">@color/highlight_normal_light</color>
 	<color name="preference_primary_text_color">@android:color/system_neutral1_900</color>
