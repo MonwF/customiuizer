@@ -196,7 +196,7 @@ import name.mikanoshi.customiuizer.utils.Helpers.MimeType;
 import name.mikanoshi.customiuizer.utils.SoundData;
 
 public class System {
-    private static String StatusBarCls = Helpers.isTPlus() ? "com.android.systemui.statusbar.phone.CentralSurfacesImpl" : "com.android.systemui.statusbar.phone.StatusBar";
+    private final static String StatusBarCls = Helpers.isTPlus() ? "com.android.systemui.statusbar.phone.CentralSurfacesImpl" : "com.android.systemui.statusbar.phone.StatusBar";
 
     public static void ScreenAnimHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethod("com.android.server.display.DisplayPowerController", lpparam.classLoader, "initialize", new MethodHook() {
@@ -4074,11 +4074,19 @@ public class System {
     }
 
     public static void BatteryIndicatorHook(LoadPackageParam lpparam) {
-        Helpers.hookAllMethods(StatusBarCls, lpparam.classLoader, "makeStatusBarView", new MethodHook() {
+        Helpers.hookAllMethods(StatusBarCls, lpparam.classLoader, "createAndAddWindows", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
                 Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-                FrameLayout mStatusBarWindow = (FrameLayout)XposedHelpers.getObjectField(param.thisObject, "mPhoneStatusBarWindow");
+                ViewGroup mStatusBarWindow;
+                if (Helpers.isTPlus()) {
+                    Object sbWindowController = XposedHelpers.getObjectField(param.thisObject, "mStatusBarWindowController");
+                    mStatusBarWindow = (ViewGroup) XposedHelpers.getObjectField(sbWindowController, "mStatusBarWindowView");
+                }
+                else {
+                    mStatusBarWindow = (ViewGroup) XposedHelpers.getObjectField(param.thisObject, "mPhoneStatusBarWindow");
+                }
+
                 BatteryIndicator indicator = new BatteryIndicator(mContext);
                 View panel = mStatusBarWindow.findViewById(mContext.getResources().getIdentifier("notification_panel", "id", lpparam.packageName));
                 mStatusBarWindow.addView(indicator, panel != null ? mStatusBarWindow.indexOfChild(panel) + 1 : Math.max(mStatusBarWindow.getChildCount() - 1, 2));
@@ -4091,7 +4099,6 @@ public class System {
                 XposedHelpers.setAdditionalInstanceField(mBatteryController, "mBatteryIndicator", indicator);
                 XposedHelpers.callMethod(mBatteryController, "fireBatteryLevelChanged");
                 XposedHelpers.callMethod(mBatteryController, "firePowerSaveChanged");
-//                XposedHelpers.callMethod(mBatteryController, "fireExtremePowerSaveChanged");
             }
         });
 
@@ -4114,7 +4121,7 @@ public class System {
             }
         });
 
-        Helpers.findAndHookMethod(StatusBarCls, lpparam.classLoader, "updateKeyguardState", new MethodHook() {
+        Helpers.findAndHookMethod(StatusBarCls, lpparam.classLoader, "updateIsKeyguard", boolean.class, new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
                 boolean isKeyguardShowing = (boolean)XposedHelpers.callMethod(param.thisObject, "isKeyguardShowing");
@@ -4123,7 +4130,7 @@ public class System {
             }
         });
 
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.NotificationIconAreaController", lpparam.classLoader, "onDarkChanged", Rect.class, float.class, int.class, new MethodHook() {
+        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.NotificationIconAreaController", lpparam.classLoader, "onDarkChanged", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
                 BatteryIndicator indicator = (BatteryIndicator)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mBatteryIndicator");
@@ -4149,14 +4156,6 @@ public class System {
                 if (indicator != null) indicator.onPowerSaveChanged(XposedHelpers.getBooleanField(param.thisObject, "mPowerSave"));
             }
         });
-
-//        Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BatteryControllerImpl", lpparam.classLoader, "fireExtremePowerSaveChanged", new MethodHook() {
-//            @Override
-//            protected void after(final MethodHookParam param) throws Throwable {
-//                BatteryIndicator indicator = (BatteryIndicator)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mBatteryIndicator");
-//                if (indicator != null) indicator.onExtremePowerSaveChanged(XposedHelpers.getBooleanField(param.thisObject, "mIsExtremePowerSaveMode"));
-//            }
-//        });
     }
 
     private static boolean obtainMagnifierShowCoordinates(Object mEditor, int type, final MotionEvent event, final PointF showPosInView) {
