@@ -19,10 +19,10 @@
 
 	<dimen name="screen_color_preview_offset">11dp</dimen>
 
-	<dimen name="miui_volume_content_width_expanded">337.77dp</dimen>
-	<dimen name="miui_volume_ringer_layout_width_expanded">337.77dp</dimen>
-	<dimen name="miui_volume_column_width_expanded">60dp</dimen>
-	<dimen name="miui_volume_column_margin_horizontal_expanded">30dp</dimen>
+	<dimen name="miui_volume_content_width_expanded">283.625dp</dimen>
+	<dimen name="miui_volume_ringer_layout_width_expanded">@dimen/miui_volume_content_width_expanded</dimen>
+	<dimen name="miui_volume_column_width_expanded">56dp</dimen>
+	<dimen name="miui_volume_column_margin_horizontal_expanded">19.5dp</dimen>
 
 	<dimen name="screen_color_text_height">30dp</dimen>
 	<dimen name="searchbar_bg_height">40.0dp</dimen>

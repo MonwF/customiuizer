@@ -5199,7 +5199,7 @@ public class System {
         Class <?> Dependency = findClass("com.android.systemui.Dependency", lpparam.classLoader);
         Class <?> StatusBarIconHolder = XposedHelpers.findClass("com.android.systemui.statusbar.phone.StatusBarIconHolder", lpparam.classLoader);
         boolean atRight = MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_atright");
-        if (atRight && !MainModule.mPrefs.getBoolean("system_statusbar_dualsimin2rows")) {
+        if (atRight && !MainModule.mPrefs.getBoolean("system_statusbar_dualrows")) {
             Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiCollapsedStatusBarFragment", lpparam.classLoader, "initMiuiViewsOnViewCreated", View.class, new MethodHook() {
                 private boolean isHooked = false;
                 @Override
@@ -5501,21 +5501,29 @@ public class System {
     }
 
     public static void HideLockScreenClockHook(LoadPackageParam lpparam) {
-        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, "setKeyguardStatusViewVisibility", new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                View mKeyguardClockView = (View)XposedHelpers.getObjectField(param.thisObject, "mKeyguardClockView");
-                if (mKeyguardClockView == null) {
-                    Helpers.log("HideLockScreenClockHook", "mKeyguardClockView is null");
-                    return;
+        if (!Helpers.isTPlus()) {
+            Helpers.findAndHookMethod("com.android.keyguard.clock.KeyguardClockContainer", lpparam.classLoader, "updateClock", float.class, int.class, new MethodHook() {
+                @Override
+                protected void before(MethodHookParam param) throws Throwable {
+                    param.args[0] = 0.0f;
                 }
-                ((ViewGroup)mKeyguardClockView).getChildAt(0).setVisibility(View.INVISIBLE);
-                mKeyguardClockView.animate().cancel();
-                XposedHelpers.setBooleanField(param.thisObject, "mKeyguardStatusViewAnimating", false);
-                mKeyguardClockView.setAlpha(0.0f);
-                mKeyguardClockView.setVisibility(View.INVISIBLE);
-            }
-        });
+            });
+            Helpers.hookAllMethods("com.android.keyguard.KeyguardVisibilityHelper", lpparam.classLoader, "setViewVisibility", new MethodHook() {
+                @Override
+                protected void after(MethodHookParam param) throws Throwable {
+                    Object KeyguardClockInjector = XposedHelpers.callStaticMethod(findClassIfExists("com.android.systemui.Dependency", lpparam.classLoader), "get", findClassIfExists("com.android.keyguard.injector.KeyguardClockInjector", lpparam.classLoader));
+                    View mKeyguardClockView = (View)XposedHelpers.callMethod(KeyguardClockInjector, "getView");
+                    if (mKeyguardClockView == null) {
+                        Helpers.log("HideLockScreenClockHook", "mKeyguardClockView is null");
+                        return;
+                    }
+                    mKeyguardClockView.animate().cancel();
+                    XposedHelpers.setBooleanField(param.thisObject, "mKeyguardViewVisibilityAnimating", false);
+                    mKeyguardClockView.setAlpha(0.0f);
+                    mKeyguardClockView.setVisibility(View.INVISIBLE);
+                }
+            });
+        }
     }
 
     public static void FirstVolumePressHook(LoadPackageParam lpparam) {
@@ -7591,8 +7599,7 @@ public class System {
     }
 
     public static void SecureControlCenterHook(LoadPackageParam lpparam) {
-        XposedHelpers.findAndHookMethod("com.android.keyguard.utils.MiuiKeyguardUtils", lpparam.classLoader, "supportExpandableStatusbarUnderKeyguard", XC_MethodReplacement.returnConstant(false));
-
+        Helpers.findAndHookMethodSilently("com.android.keyguard.utils.MiuiKeyguardUtils", lpparam.classLoader, "supportExpandableStatusbarUnderKeyguard", XC_MethodReplacement.returnConstant(false));
         Helpers.hookAllMethods("com.android.systemui.controlcenter.policy.ControlCenterControllerImpl", lpparam.classLoader, "onContentChanged", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
@@ -8737,7 +8744,6 @@ public class System {
                 }
                 else {
                     if (leftLayout.getChildAt(1) != secondLeft) {
-                        Helpers.log("horiz two cols");
                         leftLayout.removeViewAt(1);
                         rightLayout.removeViewAt(0);
                         leftLayout.addView(secondLeft);
