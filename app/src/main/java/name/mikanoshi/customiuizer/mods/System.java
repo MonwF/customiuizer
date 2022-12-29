@@ -2727,6 +2727,7 @@ public class System {
     public static void StatusBarHeightRes() {
         int opt = MainModule.mPrefs.getInt("system_statusbarheight", 19);
         int heightDpi = opt == 19 ? 27 : opt;
+        MainModule.resHooks.setDensityReplacement("*", "dimen", "status_bar_height_default", heightDpi);
         MainModule.resHooks.setDensityReplacement("*", "dimen", "status_bar_height", heightDpi);
         MainModule.resHooks.setDensityReplacement("*", "dimen", "status_bar_height_portrait", heightDpi);
         MainModule.resHooks.setDensityReplacement("*", "dimen", "status_bar_height_landscape", heightDpi);
