@@ -5182,8 +5182,10 @@ public class System {
                 }
                 else {
                     for (TextView tv:mBatteryDetailViews) {
-                        tv.setVisibility(View.VISIBLE);
-                        XposedHelpers.callMethod(tv, "setNetworkSpeed", batteryInfo);
+                        if (!"HiddeninLS".equals(tv.getTag())) {
+                            tv.setVisibility(View.VISIBLE);
+                            XposedHelpers.callMethod(tv, "setNetworkSpeed", batteryInfo);
+                        }
                     }
                 }
                 handler.postDelayed(this, 1500);
@@ -5279,6 +5281,7 @@ public class System {
                     if (bv != null) {
                         TextView batteryView = (TextView) bv;
                         batteryView.setVisibility(View.VISIBLE);
+                        batteryView.setTag(null);
                     }
                 }
             });
@@ -5288,7 +5291,8 @@ public class System {
                     Object bv = XposedHelpers.getAdditionalInstanceField(param.thisObject, "mBatteryView");
                     if (bv != null) {
                         TextView batteryView = (TextView) bv;
-                        batteryView.setVisibility((Integer) param.args[0]);
+                        batteryView.setVisibility((int)param.args[0]);
+                        batteryView.setTag("HiddeninLS");
                     }
                 }
             });
