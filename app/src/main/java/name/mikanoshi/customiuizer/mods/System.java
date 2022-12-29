@@ -462,15 +462,15 @@ public class System {
             }
         });
 
-        Helpers.findAndHookMethod("com.android.keyguard.KeyguardSecurityContainer", lpparam.classLoader, "onFinishInflate", new MethodHook() {
+        Helpers.hookAllConstructors("com.android.keyguard.KeyguardSecurityContainerController", lpparam.classLoader, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+                Context mContext = (Context)XposedHelpers.callMethod(param.thisObject, "getContext");
                 mContext.registerReceiver(new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
                         try {
-                            Object mCallback = XposedHelpers.getObjectField(param.thisObject, "mCallback");
+                            Object mCallback = XposedHelpers.getObjectField(param.thisObject, "mKeyguardSecurityCallback");
                             XposedHelpers.callMethod(mCallback, "reportUnlockAttempt", 0, true, 0, 0);
                         } catch (Throwable t) {
                             XposedBridge.log(t);
