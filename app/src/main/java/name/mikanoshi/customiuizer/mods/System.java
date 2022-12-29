@@ -659,15 +659,15 @@ public class System {
         Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BluetoothControllerImpl", lpparam.classLoader, "updateConnected", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) {
-            checkBTConnections((Context)XposedHelpers.getObjectField(param.thisObject, "mContext"));
+                checkBTConnections((Context)XposedHelpers.getObjectField(param.thisObject, "mContext"));
             }
         });
 
         Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BluetoothControllerImpl", lpparam.classLoader, "onBluetoothStateChanged", int.class, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) {
-            int state = (int)param.args[0];
-            if (state != 10) checkBTConnections((Context)XposedHelpers.getObjectField(param.thisObject, "mContext"));
+                int state = (int)param.args[0];
+                if (state != 10) checkBTConnections((Context)XposedHelpers.getObjectField(param.thisObject, "mContext"));
             }
         });
     }
@@ -6112,6 +6112,16 @@ public class System {
             protected void before(final MethodHookParam param) throws Throwable {
                 String clsName = param.thisObject.getClass().getSimpleName();
                 boolean isInControlCenter = "ControlPanelWindowView".equals(clsName) || "ControlCenterWindowViewImpl".equals(clsName);
+                if (Helpers.isTPlus() && isInControlCenter) {
+                    if (param.args.length == 2 && (boolean) param.args[1]) {
+                        return ;
+                    }
+                    Object statusBarStateController = XposedHelpers.getObjectField(param.thisObject, "statusBarStateController");
+                    int state = (int) XposedHelpers.callMethod(statusBarStateController, "getState");
+                    if (state == 1 || state == 2) {
+                        return;
+                    }
+                }
                 Context mContext = isInControlCenter ? ((View)param.thisObject).getContext() : (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
                 Resources res = mContext.getResources();
                 if (sbHeight == 0) {
