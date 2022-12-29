@@ -3273,6 +3273,7 @@ public class System {
             protected void after(MethodHookParam param) throws Throwable {
                 try {
                     if (param.args[0] == null) return;
+                    if (param.args.length < 6) return;
                     Intent origIntent = (Intent)param.args[0];
                     String action = origIntent.getAction();
                     if (action == null) return;
@@ -3303,8 +3304,8 @@ public class System {
             }
         };
 
-        if (!Helpers.findAndHookMethodSilently("com.android.server.pm.PackageManagerService", lpparam.classLoader, "queryIntentActivitiesInternal", Intent.class, String.class, int.class, int.class, int.class, boolean.class, boolean.class, hook))
-            Helpers.findAndHookMethod("com.android.server.pm.PackageManagerService", lpparam.classLoader, "queryIntentActivitiesInternal", Intent.class, String.class, int.class, int.class, hook);
+        String ActQueryService = Helpers.isTPlus() ? "com.android.server.pm.ComputerEngine" : "com.android.server.pm.PackageManagerService";
+        Helpers.hookAllMethods(ActQueryService, lpparam.classLoader, "queryIntentActivitiesInternal", hook);
     }
 
     private static boolean hideMimeType(int mimeFlags, String mimeType) {
@@ -3427,6 +3428,7 @@ public class System {
             protected void after(MethodHookParam param) throws Throwable {
                 try {
                     if (param.args[0] == null) return;
+                    if (param.args.length < 6) return;
                     Intent origIntent = (Intent)param.args[0];
                     Intent intent = (Intent)origIntent.clone();
                     String action = intent.getAction();
@@ -3464,8 +3466,8 @@ public class System {
             }
         };
 
-        if (!Helpers.findAndHookMethodSilently("com.android.server.pm.PackageManagerService", lpparam.classLoader, "queryIntentActivitiesInternal", Intent.class, String.class, int.class, int.class, int.class, boolean.class, boolean.class, hook))
-            Helpers.findAndHookMethod("com.android.server.pm.PackageManagerService", lpparam.classLoader, "queryIntentActivitiesInternal", Intent.class, String.class, int.class, int.class, hook);
+        String ActQueryService = Helpers.isTPlus() ? "com.android.server.pm.ComputerEngine" : "com.android.server.pm.PackageManagerService";
+        Helpers.hookAllMethods(ActQueryService, lpparam.classLoader, "queryIntentActivitiesInternal", hook);
     }
 
     public static void VolumeTimerValuesRes(LoadPackageParam lpparam) {
@@ -8266,9 +8268,11 @@ public class System {
             protected void before(final MethodHookParam param) throws Throwable {
                 int subStrengthId = (int) XposedHelpers.getAdditionalInstanceField(param.thisObject, "subStrengthId");
                 if (subStrengthId < 0) return;
+                if (subStrengthId == 6) subStrengthId = 0;
                 Object mobileIconState = XposedHelpers.getObjectField(param.thisObject, "mState");
                 int level1 = (int) XposedHelpers.getObjectField(mobileIconState, "strengthId");
                 level1 = level1 / 10;
+                if (level1 == 6) level1 = 0;
                 boolean mLight = (boolean) XposedHelpers.getObjectField(param.thisObject, "mLight");
                 boolean mUseTint = (boolean) XposedHelpers.getObjectField(param.thisObject, "mUseTint");
                 Object mSmallRoaming = XposedHelpers.getObjectField(param.thisObject, "mSmallRoaming");
