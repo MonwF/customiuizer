@@ -8657,6 +8657,12 @@ public class System {
                 LinearLayout rightLayout = new LinearLayout(mContext);
                 LinearLayout leftContainer = (LinearLayout) XposedHelpers.getObjectField(param.thisObject, "mStatusBarLeftContainer");
                 ViewGroup rightContainer = (ViewGroup) XposedHelpers.getObjectField(param.thisObject, "mSystemIconArea");
+                View switchUserView = null;
+                if (Helpers.isTPlus()) {
+                    int userViewId = sbView.getResources().getIdentifier("user_switcher_container", "id", lpparam.packageName);
+                    switchUserView = sbView.findViewById(userViewId);
+                    ((ViewGroup) switchUserView.getParent()).removeView(switchUserView);
+                }
                 LinearLayout statusBarcontents = (LinearLayout) rightContainer.getParent();
                 statusBarcontents.removeView(leftContainer);
                 statusBarcontents.removeView(rightContainer);
@@ -8686,6 +8692,12 @@ public class System {
                     updateTempAndCurrent(ChargeUtilsClass);
                 }
                 secondRight.addView(mBattery);
+
+                if (Helpers.isTPlus()) {
+                    if (switchUserView != null) {
+                        secondRight.addView(switchUserView);
+                    }
+                }
 
                 XposedHelpers.setAdditionalInstanceField(param.thisObject, "leftLayout", leftLayout);
                 XposedHelpers.setAdditionalInstanceField(param.thisObject, "rightLayout", rightLayout);
