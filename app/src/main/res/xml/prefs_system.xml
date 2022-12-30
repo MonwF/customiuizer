@@ -48,6 +48,7 @@
 			android:key="pref_key_system_nolightuponheadset"
 			android:summary="@string/system_nolightuponheadset_summ"
 			android:title="@string/system_nolightuponheadset_title"
+			app:isPreferenceVisible="false"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx

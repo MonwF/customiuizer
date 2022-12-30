@@ -65,6 +65,10 @@ public class System extends SubFragment {
 					}
 				});
 
+				if (!Helpers.isTPlus()) {
+					findPreference("pref_key_system_nolightuponheadset").setVisible(true);
+				}
+
 				break;
 			case "pref_key_system_cat_audio":
 				findPreference("pref_key_system_ignorecalls_apps").setOnPreferenceClickListener(openAppsEdit);
