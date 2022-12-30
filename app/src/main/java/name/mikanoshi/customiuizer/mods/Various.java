@@ -11,6 +11,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -26,6 +27,7 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.os.UserHandle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -49,6 +51,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -410,9 +413,9 @@ public class Various {
 		Class<?> InterceptBaseFragmentClass = XposedHelpers.findClass("com.miui.permcenter.privacymanager.InterceptBaseFragment", lpparam.classLoader);
 		Class<?>[] innerClasses = InterceptBaseFragmentClass.getDeclaredClasses();
 		Class<?> HandlerClass = null;
-		for (int i = 0; i < innerClasses.length; i++) {
-			if (android.os.Handler.class.isAssignableFrom(innerClasses[i])) {
-				HandlerClass = innerClasses[i];
+		for (Class<?> innerClass : innerClasses) {
+			if (Handler.class.isAssignableFrom(innerClass)) {
+				HandlerClass = innerClass;
 				break;
 			}
 		}
@@ -434,6 +437,59 @@ public class Various {
 					}
 				});
 			}
+		}
+	}
+	public static void ShowTempInBatteryHook(LoadPackageParam lpparam) {
+		Class<?> InterceptBaseFragmentClass = XposedHelpers.findClass("com.miui.powercenter.BatteryFragment", lpparam.classLoader);
+		Class<?>[] innerClasses = InterceptBaseFragmentClass.getDeclaredClasses();
+		Class<?> HandlerClass = null;
+		for (Class<?> innerClass : innerClasses) {
+			if (Handler.class.isAssignableFrom(innerClass)) {
+				HandlerClass = innerClass;
+				break;
+			}
+		}
+		if (HandlerClass != null) {
+			Field[] fields = HandlerClass.getDeclaredFields();
+			String fieldName = null;
+			for (Field field: fields) {
+				if (WeakReference.class.isAssignableFrom(field.getType())) {
+					fieldName = field.getName();
+					break;
+				}
+			}
+			if (fieldName == null) {
+				return;
+			}
+			String finalFieldName = fieldName;
+			XposedHelpers.findAndHookMethod(HandlerClass, "handleMessage", Message.class, new MethodHook() {
+				@Override
+				protected void after(MethodHookParam param) throws Throwable {
+					Message msg = (Message) param.args[0];
+					int i = msg.what;
+					if (i == 1) {
+						Object wk = XposedHelpers.getObjectField(param.thisObject, finalFieldName);
+						Object frag = XposedHelpers.callMethod(wk, "get");
+						Activity batteryView = (Activity) XposedHelpers.callMethod(frag, "getActivity");
+						int temp = batteryView.registerReceiver(null, new IntentFilter("android.intent.action.BATTERY_CHANGED")).getIntExtra("temperature", 0) / 10;
+						int symbolResId = batteryView.getResources().getIdentifier("temp_symbol", "id", lpparam.packageName);
+						int stateResId = batteryView.getResources().getIdentifier("current_temperature_state", "id", lpparam.packageName);
+						TextView stateTv = batteryView.findViewById(stateResId);
+						if (symbolResId > 0) {
+							stateTv.setVisibility(View.GONE);
+							TextView symbolTv = batteryView.findViewById(symbolResId);
+							symbolTv.setVisibility(View.VISIBLE);
+							int digitResId = batteryView.getResources().getIdentifier("current_temperature_value", "id", lpparam.packageName);
+							TextView digitTv = batteryView.findViewById(digitResId);
+							digitTv.setText(temp + "");
+							digitTv.setVisibility(View.VISIBLE);
+						}
+						else {
+							stateTv.setText(temp + "℃");
+						}
+					}
+				}
+			});
 		}
 	}
 
