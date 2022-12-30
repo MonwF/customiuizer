@@ -5505,6 +5505,7 @@ public class System {
 
     public static void HideProximityWarningHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethod("com.android.server.policy.MiuiScreenOnProximityLock", lpparam.classLoader, "showHint", XC_MethodReplacement.DO_NOTHING);
+        Helpers.findAndHookMethod("com.android.server.policy.MiuiScreenOnProximityLock", lpparam.classLoader, "prepareHintWindow", XC_MethodReplacement.DO_NOTHING);
     }
 
     public static void HideLockScreenClockHook(LoadPackageParam lpparam) {
