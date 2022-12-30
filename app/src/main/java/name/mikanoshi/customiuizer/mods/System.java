@@ -260,10 +260,10 @@ public class System {
     }
 
     public static void NoLightUpOnHeadsetHook(LoadPackageParam lpparam) {
-        Helpers.hookAllMethods("com.android.server.power.PowerManagerService", lpparam.classLoader, "wakeUpNoUpdateLocked", new MethodHook() {
+        Helpers.hookAllMethods("com.android.server.power.PowerManagerService", lpparam.classLoader, "wakeDisplayGroupNoUpdateLocked", new MethodHook() {
             @Override
             protected void before(final MethodHookParam param) throws Throwable {
-                String reason = param.args[1] instanceof String ? (String)param.args[1] : (String)param.args[2];
+                String reason = (String)param.args[3];
                 if ("com.android.systemui:HEADSET".equals(reason)) param.setResult(false);
             }
         });
