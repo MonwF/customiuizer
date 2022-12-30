@@ -1085,6 +1085,7 @@
     <string name="launcher_nozoomanim_title">去除启动动画</string>
     <string name="launcher_nozoomanim_summ">app启动、关闭时不缩放图标</string>
     <string name="various_skip_interceptperm_title">跳过开启特殊权限的倒计时</string>
+    <string name="various_show_battery_temperature_title">电池页面显示温度值</string>
     <string name="system_lockscreenshortcuts_left_tapaction_title">点击左侧图标时切换手电筒</string>
     <string name="system_cc_tile_roundedrect_title">圆角矩形磁贴</string>
     <string name="system_cc_disable_bluetooth_restrict_title">禁用蓝牙临时关闭态</string>
