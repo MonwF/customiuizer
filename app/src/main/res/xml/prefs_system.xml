@@ -991,7 +991,7 @@
 			android:title="@string/system_qsgridrows_title"
 			android:defaultValue="4"
 			miuizer:offtext="@string/array_default"
-			miuizer:minValue="4"
+			miuizer:minValue="3"
 			miuizer:maxValue="6"
 			miuizer:stepValue="1"
 			miuizer:format="%d" />

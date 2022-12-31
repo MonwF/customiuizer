@@ -8502,7 +8502,7 @@ public class System {
         if (cols > 4) {
             MainModule.resHooks.setObjectReplacement(lpparam.packageName, "dimen", "qs_control_tiles_columns", cols);
         }
-        if (rows > 2) {
+        if (rows != 4) {
             MainModule.resHooks.setObjectReplacement(lpparam.packageName, "dimen", "qs_control_tiles_min_rows", rows);
         }
 
@@ -8564,7 +8564,7 @@ public class System {
                             });
                         }
                     }
-                    if (rows > 2) {
+                    if (rows != 4) {
                         Helpers.findAndHookMethod("miui.systemui.controlcenter.qs.QSPager", pluginLoader, "distributeTiles", new MethodHook() {
                             @Override
                             protected void after(MethodHookParam param) throws Throwable {

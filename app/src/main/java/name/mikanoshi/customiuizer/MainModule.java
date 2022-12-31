@@ -361,7 +361,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_statusbar_dualrows")) {
                 System.DualRowStatusbarHook(lpparam);
             }
-            if (mPrefs.getInt("system_ccgridcolumns", 4) > 4 || mPrefs.getInt("system_ccgridrows", 4) > 4) System.SystemCCGridHook(lpparam);
+            if (mPrefs.getInt("system_ccgridcolumns", 4) > 4 || mPrefs.getInt("system_ccgridrows", 4) != 4) System.SystemCCGridHook(lpparam);
             if (mPrefs.getBoolean("system_cc_tile_roundedrect")) {
                 System.CCTileCornerHook(lpparam);
             }
