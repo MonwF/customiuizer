@@ -256,22 +256,22 @@ public class GlobalActions {
 
 					if (action.equals(ACTION_PREFIX + "ExpandSettings")) try {
 						boolean forceExpand = intent.getBooleanExtra("forceExpand", false);
-						Object controller = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", context.getClassLoader()), "get", findClassIfExists("com.android.systemui.miui.statusbar.policy.ControlPanelController", context.getClassLoader()));
-						boolean isUseControlCenter = (boolean)XposedHelpers.callMethod(controller, "isUseControlCenter");
+						Object mControlCenterController = XposedHelpers.getObjectField(mStatusBar, "mControlCenterController");
+						boolean isUseControlCenter = (boolean)XposedHelpers.callMethod(mControlCenterController, "isUseControlCenter");
 						if (isUseControlCenter) {
-							if (forceExpand || (boolean)XposedHelpers.callMethod(controller, "isQSFullyCollapsed"))
-								XposedHelpers.callMethod(controller, "openPanel");
+							if (forceExpand || (boolean)XposedHelpers.callMethod(mControlCenterController, "isCollapsed"))
+								XposedHelpers.callMethod(mControlCenterController, "openPanel");
 							else
-								XposedHelpers.callMethod(controller, "collapsePanel", true);
+								XposedHelpers.callMethod(mControlCenterController, "collapseControlCenter", true);
 							return;
 						}
 
-						Object mNotificationPanel = XposedHelpers.getObjectField(mStatusBar, "mNotificationPanel");
+						Object mNotificationPanel = XposedHelpers.getObjectField(mStatusBar, "mNotificationPanelViewController");
 						boolean mPanelExpanded = (boolean)XposedHelpers.getObjectField(mNotificationPanel, "mPanelExpanded");
 						boolean mQsExpanded = (boolean)XposedHelpers.getObjectField(mNotificationPanel, "mQsExpanded");
 						if (!forceExpand && mPanelExpanded) {
 							if (mQsExpanded)
-								XposedHelpers.callMethod(mStatusBar, "animateCollapsePanels");
+								XposedHelpers.callMethod(mStatusBar, "animateCollapsePanels", 0, false);
 							else
 								XposedHelpers.callMethod(mNotificationPanel, "setQsExpanded", true);
 						} else {
