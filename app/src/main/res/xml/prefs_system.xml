@@ -1372,6 +1372,12 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_disableintegrity"
+			android:title="@string/system_disableintegrity_title"
+			app:isPreferenceVisible="false"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_nooverscroll"
 			android:title="@string/system_nooverscroll_title"
 			android:summary="@string/system_nooverscroll_summ"

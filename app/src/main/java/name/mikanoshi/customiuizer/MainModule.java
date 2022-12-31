@@ -69,7 +69,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (mPrefs.getBoolean("system_lockscreenshortcuts") || mPrefs.getInt("controls_powerdt_action", 1) > 1) System.LockScreenSecureLaunchHook();
         if (mPrefs.getBoolean("system_notifmediaseekbar")) System.MediaNotificationSeekBarHook();
         if (mPrefs.getBoolean("system_disableanynotif")) System.DisableAnyNotificationBlockHook();
-        if (mPrefs.getBoolean("system_apksign")) System.NoSignatureVerifyHook();
         if (mPrefs.getBoolean("system_nooverscroll")) System.NoOverscrollHook();
         if (mPrefs.getBoolean("system_cleanshare")) System.CleanShareMenuHook();
         if (mPrefs.getBoolean("system_cleanopenwith")) System.CleanOpenWithMenuHook();
@@ -156,6 +155,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_hideproxywarn")) System.HideProximityWarningHook(lpparam);
             if (mPrefs.getBoolean("system_firstpress")) System.FirstVolumePressHook(lpparam);
             if (mPrefs.getBoolean("system_apksign")) System.NoSignatureVerifyServiceHook(lpparam);
+            if (mPrefs.getBoolean("system_apksign") || mPrefs.getBoolean("system_disableintegrity")) System.DisableSystemIntegrityHook(lpparam);
             if (mPrefs.getBoolean("system_vibration_amp")) System.MuffledVibrationHook(lpparam);
             if (mPrefs.getBoolean("system_clearalltasks")) System.ClearAllTasksHook(lpparam);
             if (mPrefs.getBoolean("system_snoozedmanager")) System.MoreSnoozeOptionsServiceHook(lpparam);

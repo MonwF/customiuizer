@@ -331,6 +331,7 @@
     <string name="system_downgrade_title">允许降级</string>
     <string name="system_downgrade_summ">可以在新版本应用上安装旧版本应用</string>
     <string name="system_apksign_title">禁用签名认证</string>
+    <string name="system_disableintegrity_title">禁用系统完整性检查</string>
     <string name="system_apksign_summ">APK签名与已安装应用不同时允许对其进行更新</string>
     <string name="system_magnifier_title">文本放大镜</string>
     <string name="system_magnifier_summ">移动光标或进行选择时显示文本放大镜</string>
