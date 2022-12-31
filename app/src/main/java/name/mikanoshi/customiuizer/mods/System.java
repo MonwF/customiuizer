@@ -5163,7 +5163,10 @@ public class System {
                     }
                     if (props != null) {
                         int tempVal = Integer.parseInt(props.getProperty("POWER_SUPPLY_TEMP"));
-                        int currVal = Math.abs(Math.round(Integer.parseInt(props.getProperty("POWER_SUPPLY_CURRENT_NOW")) / 1000));
+                        int currVal = -1 * Math.round(Integer.parseInt(props.getProperty("POWER_SUPPLY_CURRENT_NOW")) / 1000);
+                        if (MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_positive")) {
+                            currVal = Math.abs(currVal);
+                        }
                         int opt = MainModule.mPrefs.getStringAsInt("system_statusbar_batterytempandcurrent_content", 1);
                         if (opt == 1) {
                             batteryInfo = tempVal / 10f + "℃" + "\n" + currVal + "mA";
