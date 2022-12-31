@@ -348,6 +348,7 @@
     <string name="system_downgrade_title">Allow downgrade</string>
     <string name="system_downgrade_summ">Make installing older app version on top of a newer one possible</string>
     <string name="system_apksign_title">Disable signature verification</string>
+    <string name="system_disableintegrity_title">Disable system integrity verification</string>
     <string name="system_apksign_summ">Allow app updating even when APK signature differs from installed one</string>
     <string name="system_magnifier_title">Text magnifier</string>
     <string name="system_magnifier_summ">Display magnified text when moving an input cursor or making a selection(Add InputMethod apps to LSPosed scope first)</string>

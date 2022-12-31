@@ -5571,18 +5571,30 @@ public class System {
         });
     }
 
-    public static void NoSignatureVerifyHook() {
-        Helpers.hookAllMethods("android.content.pm.PackageParser.SigningDetails", null, "checkCapability", XC_MethodReplacement.returnConstant(true));
-        Helpers.hookAllMethods("android.content.pm.PackageParser.SigningDetails", null, "checkCapabilityRecover", XC_MethodReplacement.returnConstant(true));
+    public static void DisableSystemIntegrityHook(LoadPackageParam lpparam) {
+        Helpers.findAndHookMethod("android.util.apk.ApkSignatureVerifier", lpparam.classLoader, "getMinimumSignatureSchemeVersionForTargetSdk", int.class, XC_MethodReplacement.returnConstant(1));
     }
 
     public static void NoSignatureVerifyServiceHook(LoadPackageParam lpparam) {
+        Helpers.hookAllMethods("android.content.pm.PackageParser.SigningDetails", lpparam.classLoader, "checkCapability", XC_MethodReplacement.returnConstant(true));
+        Helpers.hookAllMethods("android.content.pm.PackageParser.SigningDetails", lpparam.classLoader, "checkCapabilityRecover", XC_MethodReplacement.returnConstant(true));
         Helpers.hookAllMethodsSilently("com.miui.server.SecurityManagerService", lpparam.classLoader, "compareSignatures", XC_MethodReplacement.returnConstant(true));
         Helpers.hookAllMethodsSilently("com.miui.server.SecurityManagerService", lpparam.classLoader, "checkSysAppCrack", XC_MethodReplacement.returnConstant(true));
         Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "compareSignatures", XC_MethodReplacement.returnConstant(0));
         Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "matchSignaturesCompat", XC_MethodReplacement.returnConstant(true));
         Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "matchSignaturesRecover", XC_MethodReplacement.returnConstant(true));
         Helpers.hookAllMethodsSilently("miui.util.CertificateUtils", lpparam.classLoader, "compareSignatures", XC_MethodReplacement.returnConstant(true));
+        if (Helpers.isTPlus()) {
+            Helpers.hookAllMethods("android.content.pm.SigningDetails", lpparam.classLoader, "checkCapability", XC_MethodReplacement.returnConstant(true));
+            Helpers.hookAllConstructors("android.util.jar.StrictJarVerifier", lpparam.classLoader, new MethodHook() {
+                @Override
+                protected void after(MethodHookParam param) throws Throwable {
+                    XposedHelpers.setObjectField(param.thisObject, "signatureSchemeRollbackProtectionsEnforced", false);
+                }
+            });
+            Helpers.hookAllMethods("android.util.jar.StrictJarVerifier", lpparam.classLoader, "verifyMessageDigest", XC_MethodReplacement.returnConstant(true));
+            Helpers.hookAllMethods("android.util.jar.StrictJarVerifier", lpparam.classLoader, "verify", XC_MethodReplacement.returnConstant(true));
+        }
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
