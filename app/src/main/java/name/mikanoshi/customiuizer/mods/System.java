@@ -6365,6 +6365,20 @@ public class System {
         });
     }
 
+    public static void NetSpeedFontHook(LoadPackageParam lpparam) {
+        Helpers.hookAllConstructors("com.android.systemui.statusbar.views.NetworkSpeedView", lpparam.classLoader, new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                TextView meter = (TextView)param.thisObject;
+                if (meter == null) return;
+                if (meter.getTag() == null || !"slot_text_icon".equals(meter.getTag())) {
+                    int fontSize = MainModule.mPrefs.getInt("system_netspeed_fontsize", 17);
+                    meter.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize * 0.5f);
+                }
+            }
+        });
+    }
+
     public static void ToastTimeHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethod("com.android.server.notification.NotificationManagerService", lpparam.classLoader, "showNextToastLocked", new MethodHook() {
             @Override
