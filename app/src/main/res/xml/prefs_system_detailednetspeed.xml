@@ -44,12 +44,6 @@
 		miuizer:offtext="@string/oneKBs" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_detailednetspeed_secunit"
-		android:title="@string/system_detailednetspeed_secunit_title"
-		android:defaultValue="false"
-		android:dependency="pref_key_system_detailednetspeed" />
-
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_detailednetspeed_low"
 		android:summary="@string/system_detailednetspeed_low_summ"
 		android:title="@string/system_detailednetspeed_low_title"

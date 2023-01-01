@@ -93,7 +93,7 @@
     <string name="system_nonetspeedseparator_title">网速分隔符</string>
     <string name="system_nonetspeedseparator_summ">于水滴屏的设备上不显示时间和网速间的竖线</string>
     <string name="system_netspeedinterval_title">网速更新间隔</string>
-    <string name="system_detailednetspeed_title">详细的网速指示器</string>
+    <string name="system_detailednetspeed_title">网速双排显示</string>
     <string name="system_detailednetspeed_summ">分别显示传入和传出的网络速度</string>
     <string name="system_detailednetspeed_font_title">字体大小</string>
     <string name="system_detailednetspeed_icon_title">指示器图标</string>
