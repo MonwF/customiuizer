@@ -7123,7 +7123,13 @@ public class System {
                     param.setResult(16000);
                     return;
                 }
-                boolean mSafetyWarning = (boolean) XposedHelpers.getObjectField(param.thisObject, "mSafetyWarning");
+                boolean mSafetyWarning;
+                try {
+                    mSafetyWarning = (boolean) XposedHelpers.getObjectField(param.thisObject, "mIsSafetyShowing");
+                }
+                catch (Throwable e) {
+                    mSafetyWarning = (boolean) XposedHelpers.getObjectField(param.thisObject, "mSafetyWarning");
+                }
                 if (mSafetyWarning) {
                     int opt = MainModule.mPrefs.getInt("system_volumedialogdelay_expanded", 0);
                     param.setResult(opt > 0 ? opt : 5000);
