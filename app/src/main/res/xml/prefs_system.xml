@@ -653,6 +653,11 @@
 			miuizer:stepValue="1"
 			miuizer:format="@string/format_d_s" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_detailednetspeed_secunit"
+			android:title="@string/system_detailednetspeed_secunit_title"
+			android:defaultValue="false" />
+
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_detailednetspeed_cat"
 			android:summary="@string/system_detailednetspeed_summ"

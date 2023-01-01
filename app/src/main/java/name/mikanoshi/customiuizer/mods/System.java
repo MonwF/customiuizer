@@ -6348,6 +6348,16 @@ public class System {
         });
     }
 
+    public static void HideNetworkSpeedUnitHook(LoadPackageParam lpparam) {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.NetworkSpeedController", lpparam.classLoader, "formatSpeed", Context.class, long.class, new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                String speedText = (String) param.getResult();
+                param.setResult(speedText.replace("B/s", "B").replace("/s", ""));
+            }
+        });
+    }
+
     public static void ToastTimeHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethod("com.android.server.notification.NotificationManagerService", lpparam.classLoader, "showNextToastLocked", new MethodHook() {
             @Override
