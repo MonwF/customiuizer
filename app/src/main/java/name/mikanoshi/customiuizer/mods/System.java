@@ -1870,32 +1870,19 @@ public class System {
     }
 
     public static void LockScreenAlbumArtHook(LoadPackageParam lpparam) {
-        Class<?> MiuiThemeUtilsClass = XposedHelpers.findClassIfExists("com.android.keyguard.utils.MiuiKeyguardUtils", lpparam.classLoader);
+        Class<?> MiuiThemeUtilsClass = XposedHelpers.findClassIfExists("com.miui.systemui.util.MiuiThemeUtils", lpparam.classLoader);
 
         Helpers.hookAllConstructors("com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController", lpparam.classLoader, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                boolean isDefaultLockScreenTheme = (boolean) XposedHelpers.callStaticMethod(MiuiThemeUtilsClass, "isDefaultLockScreenTheme");
+                boolean isDefaultLockScreenTheme = (boolean) XposedHelpers.callStaticMethod(MiuiThemeUtilsClass, "isDefaultSysUiTheme");
                 if (isDefaultLockScreenTheme) {
                     Object mBlurRatioChangedListener = XposedHelpers.getObjectField(param.thisObject, "mBlurRatioChangedListener");
                     Object notificationShadeDepthController = XposedHelpers.getObjectField(param.thisObject, "notificationShadeDepthController");
                     XposedHelpers.callMethod(notificationShadeDepthController, "removeListener", mBlurRatioChangedListener);
                     View view = (View) XposedHelpers.getObjectField(param.thisObject, "mThemeBackgroundView");
                     view.setAlpha(1.0f);
-                }
-            }
-        });
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController", lpparam.classLoader, "updateThemeBackground", new MethodHook() {
-            private boolean isListened = false;
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                boolean isDefaultLockScreenTheme = (boolean) XposedHelpers.callStaticMethod(MiuiThemeUtilsClass, "isDefaultLockScreenTheme");
-                if (!isDefaultLockScreenTheme) {
-                    return ;
-                }
-                View view = (View) XposedHelpers.getObjectField(param.thisObject, "mThemeBackgroundView");
-                if (!isListened) {
-                    isListened = true;
+
                     IntentFilter intentFilter = new IntentFilter();
                     intentFilter.addAction(GlobalActions.EVENT_PREFIX + "UPDATE_LS_ALBUM_ART");
                     view.getContext().registerReceiver(new BroadcastReceiver() {
@@ -1904,11 +1891,26 @@ public class System {
                             String action = intent.getAction();
                             if (action == null) return;
                             if (action.equals(GlobalActions.EVENT_PREFIX + "UPDATE_LS_ALBUM_ART")) {
-                                XposedHelpers.callMethod(param.thisObject, "updateThemeBackground");
+                                try {
+                                    XposedHelpers.callMethod(param.thisObject, "updateThemeBackground");
+                                }
+                                catch (Throwable e) {
+                                    XposedHelpers.callMethod(param.thisObject, "updateThemeBackgroundVisibility");
+                                }
                             }
                         }
                     }, intentFilter);
                 }
+            }
+        });
+        MethodHook updateLockscreenHook = new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                boolean isDefaultLockScreenTheme = (boolean) XposedHelpers.callStaticMethod(MiuiThemeUtilsClass, "isDefaultSysUiTheme");
+                if (!isDefaultLockScreenTheme) {
+                    return ;
+                }
+                View view = (View) XposedHelpers.getObjectField(param.thisObject, "mThemeBackgroundView");
                 boolean isOnShade = (boolean) XposedHelpers.callMethod(param.thisObject, "isOnShade");
                 if (isOnShade) {
                     view.setVisibility(View.GONE);
@@ -1920,14 +1922,19 @@ public class System {
                     }
                     view.setVisibility(mAlbumArt != null ? View.VISIBLE : View.GONE);
                 }
+                param.setResult(null);
             }
-        });
+        };
+        Helpers.findAndHookMethodSilently("com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController", lpparam.classLoader, "updateThemeBackground", updateLockscreenHook);
 
+        if (Helpers.isTPlus()) {
+            Helpers.findAndHookMethodSilently("com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController", lpparam.classLoader, "updateThemeBackgroundVisibility", updateLockscreenHook);
+        }
         Helpers.findAndHookMethod("com.android.systemui.statusbar.NotificationMediaManager", lpparam.classLoader, "updateMediaMetaData", boolean.class, boolean.class, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-                boolean isDefaultLockScreenTheme = (boolean) XposedHelpers.callStaticMethod(MiuiThemeUtilsClass, "isDefaultLockScreenTheme");
+                boolean isDefaultLockScreenTheme = (boolean) XposedHelpers.callStaticMethod(MiuiThemeUtilsClass, "isDefaultSysUiTheme");
                 if (!isDefaultLockScreenTheme) {
                     XposedHelpers.setAdditionalStaticField(MiuiThemeUtilsClass, "mAlbumArtSource", null);
                     XposedHelpers.setAdditionalStaticField(MiuiThemeUtilsClass, "mAlbumArt", null);
@@ -1969,7 +1976,7 @@ public class System {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-                boolean isDefaultLockScreenTheme = (boolean) XposedHelpers.callStaticMethod(MiuiThemeUtilsClass, "isDefaultLockScreenTheme");
+                boolean isDefaultLockScreenTheme = (boolean) XposedHelpers.callStaticMethod(MiuiThemeUtilsClass, "isDefaultSysUiTheme");
                 XposedHelpers.setAdditionalStaticField(MiuiThemeUtilsClass, "mAlbumArtSource", null);
                 XposedHelpers.setAdditionalStaticField(MiuiThemeUtilsClass, "mAlbumArt", null);
                 if (isDefaultLockScreenTheme) {
