@@ -5719,45 +5719,43 @@ public class System {
         }
     }
 
-    private static Dialog mDialog = null;
     private static float blurCollapsed = 0.0f;
     private static float blurExpanded = 0.0f;
 
-    @SuppressWarnings("deprecation")
-    private static void updateBlurRatio(Object thisObject) {
-        if (mDialog == null || mDialog.getWindow() == null) return;
-        View rootView = mDialog.getWindow().getDecorView();
-        if (rootView.isAttachedToWindow() && rootView.getLayoutParams() instanceof WindowManager.LayoutParams) {
-            WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams)rootView.getLayoutParams();
-            layoutParams.flags |= WindowManager.LayoutParams.FLAG_BLUR_BEHIND;
-            boolean isExpanded = (boolean)XposedHelpers.callMethod(thisObject, "isExpanded");
-            XposedHelpers.setFloatField(layoutParams, "blurRatio", isExpanded ? blurExpanded : blurCollapsed);
-            mDialog.getWindow().getWindowManager().updateViewLayout(rootView, layoutParams);
-        }
-    }
-
     public static void BlurVolumeDialogBackgroundHook(ClassLoader classLoader) {
-        Helpers.hookAllMethods("com.android.systemui.miui.volume.MiuiVolumeDialogView", classLoader, "onAttachedToWindow", new MethodHook() {
+        MainModule.resHooks.setObjectReplacement("miui.systemui.plugin", "fraction", "miui_volume_dim_behind_collapsed", 0f);
+        MainModule.resHooks.setObjectReplacement("miui.systemui.plugin", "fraction", "miui_volume_dim_behind_expanded", 0f);
+
+        Helpers.findAndHookMethod("com.android.systemui.miui.volume.MiuiVolumeDialogImpl", classLoader, "updateDialogWindowH", boolean.class, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                updateBlurRatio(param.thisObject);
+                boolean mExpanded = XposedHelpers.getBooleanField(param.thisObject, "mExpanded");
+                float blurRatio = blurCollapsed;
+                boolean isVisible = (boolean) param.args[0];
+                if (mExpanded && !isVisible) {
+                    blurRatio = blurExpanded;
+                }
+                if (!mExpanded) {
+                    Window mWindow = (Window) XposedHelpers.getObjectField(param.thisObject, "mWindow");
+                    mWindow.clearFlags(8);
+                }
+                XposedHelpers.callMethod(param.thisObject, "startBlurAnim", 0f, blurRatio, 0);
             }
         });
-
-        Helpers.hookAllMethods("com.android.systemui.miui.volume.MiuiVolumeDialogView", classLoader, "onExpandStateUpdated", new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.miui.volume.MiuiVolumeDialogImpl", classLoader, "showH", int.class, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                updateBlurRatio(param.thisObject);
+                Window mWindow = (Window) XposedHelpers.getObjectField(param.thisObject, "mWindow");
+                mWindow.clearFlags(8);
+                XposedHelpers.callMethod(param.thisObject, "startBlurAnim", 0f, blurCollapsed, 0);
             }
         });
-
         Helpers.hookAllMethods("com.android.systemui.miui.volume.MiuiVolumeDialogImpl", classLoader, "initDialog", new MethodHook() {
             @Override
-            protected void after(MethodHookParam param) throws Throwable {
+            protected void before(MethodHookParam param) throws Throwable {
                 Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
                 Handler mHandler = new Handler(mContext.getMainLooper());
 
-                mDialog = (Dialog)XposedHelpers.getObjectField(param.thisObject, "mDialog");
                 blurCollapsed = MainModule.mPrefs.getInt("system_volumeblur_collapsed", 0) / 100f;
                 blurExpanded = MainModule.mPrefs.getInt("system_volumeblur_expanded", 0) / 100f;
                 new Helpers.SharedPrefObserver(mContext, mHandler) {
@@ -5774,11 +5772,6 @@ public class System {
                 };
             }
         });
-    }
-
-    public static void BlurVolumeDialogBackgroundRes() {
-        MainModule.resHooks.setObjectReplacement("miui.systemui.plugin", "fraction", "miui_volume_dim_behind_collapsed", 0.0f);
-        MainModule.resHooks.setObjectReplacement("miui.systemui.plugin", "fraction", "miui_volume_dim_behind_expanded", 0.0f);
     }
 
     public static void RemoveSecureHook(LoadPackageParam lpparam) {
