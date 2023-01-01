@@ -1436,7 +1436,7 @@ public class System {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
                 int opt = Integer.parseInt(MainModule.mPrefs.getString("system_mobiletypeicon", "1"));
-                TextView mMobileType = (TextView) XposedHelpers.getObjectField(param.thisObject, "mMobileType");
+                View mMobileType = (View) XposedHelpers.getObjectField(param.thisObject, "mMobileType");
                 TextView mMobileTypeSingle = (TextView) XposedHelpers.getObjectField(param.thisObject, "mMobileTypeSingle");
                 boolean isMobileConnected = false;
                 if (opt == 2) {
