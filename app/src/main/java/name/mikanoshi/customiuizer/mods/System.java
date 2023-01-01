@@ -8196,6 +8196,9 @@ public class System {
                 mMobileTypeSingle.setLayoutParams(mlp);
                 int fontSize = MainModule.mPrefs.getInt("system_statusbar_mobiletype_single_fontsize", 27);
                 mMobileTypeSingle.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize * 0.5f);
+                if (MainModule.mPrefs.getBoolean("system_statusbar_mobiletype_single_bold")) {
+                    mMobileTypeSingle.setTypeface(Typeface.DEFAULT_BOLD);
+                }
             }
         });
     }
