@@ -210,8 +210,6 @@
     <string name="system_separatevolume_slider_summ">Dodaj suwak powiadomień do rozszerzonego okna dialogowego głośności</string>
     <string name="system_nomediamute_title">Brak wyciszenia multimediów</string>
     <string name="system_nomediamute_summ">Nie ustawiaj głośności multimediów na zero w trybie nie przeszkadzać</string>
-    <string name="system_dndtoggle_title">Przełącznik trybu DND</string>
-    <string name="system_dndtoggle_summ">Ustaw przycisk w zwiniętym oknie dialogowym głośności, aby przełączać tryb nie przeszkadzać zamiast trybu cichego</string>
     <string name="system_volumetimer_title">Wydłużone timery</string>
     <string name="system_volumetimer_summ">Dodaj więcej interwałów do timerów dla trybu cichego i trybu nie przeszkadzać</string>
     <string name="system_volumedialogdelay_collapsed_title">Opóźnienie automatycznego ukrywania okna dialogowego głośności</string>

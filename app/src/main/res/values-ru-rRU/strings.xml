@@ -831,8 +831,6 @@
     <string name="system_separatevolume_slider_summ">Добавляет ползунок уведомлений в открытую панель громкости</string>
     <string name="system_nomediamute_title">Не заглушать музыку</string>
     <string name="system_nomediamute_summ">Предотвращает установку громкости музыки на ноль в режиме Не беспокоить</string>
-    <string name="system_dndtoggle_title">Переключатель режима Не беспокоить</string>
-    <string name="system_dndtoggle_summ">Кнопка в свёрнутом диалоге громкости переключает режим Не беспокоить вместо режима Без звука</string>
     <string name="system_volumetimer_title">Расширенные таймеры</string>
     <string name="system_volumetimer_summ">Добавляет больше интервалов в таймеры режимов Без звука и Не беспокоить</string>
     <string name="system_volumedialogdelay_collapsed_title">Задержка перед автоскрытием диалога громкости</string>
