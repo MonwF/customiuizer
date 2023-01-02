@@ -161,6 +161,11 @@
 			android:summary="@string/system_volumetimer_summ"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_volumebar_blur_mtk"
+			android:title="@string/system_volumebar_blur_mtk_title"
+			android:defaultValue="false" />
+
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_system_volumedialogdelay_collapsed"
 			android:title="@string/system_volumedialogdelay_collapsed_title"

@@ -209,6 +209,7 @@
     <string name="system_dndtoggle_summ">在折叠音量对话框显示勿扰模式开关按钮</string>
     <string name="system_volumetimer_title">扩展计时器</string>
     <string name="system_volumetimer_summ">添加更多间隔到静音和勿扰模式的定时器</string>
+    <string name="system_volumebar_blur_mtk_title">针对MTK设备开启音量条模糊</string>
     <string name="system_volumedialogdelay_collapsed_title">音量对话框自动隐藏延迟</string>
     <string name="system_volumedialogdelay_collapsed_summ">已折叠</string>
     <string name="system_volumedialogdelay_expanded_summ">已展开</string>

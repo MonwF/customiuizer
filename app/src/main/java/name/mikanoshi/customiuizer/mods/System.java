@@ -943,6 +943,9 @@ public class System {
                     if (MainModule.mPrefs.getInt("system_volumeblur_collapsed", 0) > 0 || MainModule.mPrefs.getInt("system_volumeblur_expanded", 0) > 0) {
                         BlurVolumeDialogBackgroundHook(pluginLoader);
                     }
+                    if (MainModule.mPrefs.getBoolean("system_volumebar_blur_mtk")) {
+                        BlurMTKVolumeBarHook(pluginLoader);
+                    }
                 }
             }
         });
@@ -5761,6 +5764,10 @@ public class System {
                 };
             }
         });
+    }
+
+    public static void BlurMTKVolumeBarHook(ClassLoader classLoader) {
+        Helpers.findAndHookMethod("com.android.systemui.miui.volume.Util", classLoader, "isSupportBlurS", XC_MethodReplacement.returnConstant(true));
     }
 
     public static void RemoveSecureHook(LoadPackageParam lpparam) {
