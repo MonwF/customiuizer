@@ -301,7 +301,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_nosos")) System.NoSOSHook(lpparam);
             if (mPrefs.getBoolean("system_usenativerecents")) System.UseNativeRecentsHook(lpparam);
             if (mPrefs.getBoolean("system_morenotif")) System.MoreNotificationsHook(lpparam);
-            if (mPrefs.getBoolean("system_dndtoggle")) System.VolumeDialogDNDSwitchHook(lpparam);
             if (mPrefs.getBoolean("system_charginginfo")) System.ChargingInfoHook(lpparam);
             if (mPrefs.getBoolean("system_secureqs")) System.SecureQSTilesHook(lpparam);
             if (mPrefs.getBoolean("system_mutevisiblenotif")) System.MuteVisibleNotificationsHook(lpparam);

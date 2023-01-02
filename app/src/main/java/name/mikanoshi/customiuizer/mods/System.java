@@ -5727,19 +5727,23 @@ public class System {
                 if (mExpanded && !isVisible) {
                     blurRatio = blurExpanded;
                 }
-                if (!mExpanded) {
+                if (!mExpanded && blurCollapsed > 0.001f) {
                     Window mWindow = (Window) XposedHelpers.getObjectField(param.thisObject, "mWindow");
                     mWindow.clearFlags(8);
                 }
-                XposedHelpers.callMethod(param.thisObject, "startBlurAnim", 0f, blurRatio, 0);
+                if (mExpanded) {
+                    XposedHelpers.callMethod(param.thisObject, "startBlurAnim", 0f, blurRatio, 0);
+                }
             }
         });
         Helpers.findAndHookMethod("com.android.systemui.miui.volume.MiuiVolumeDialogImpl", classLoader, "showH", int.class, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                Window mWindow = (Window) XposedHelpers.getObjectField(param.thisObject, "mWindow");
-                mWindow.clearFlags(8);
-                XposedHelpers.callMethod(param.thisObject, "startBlurAnim", 0f, blurCollapsed, 0);
+                if (blurCollapsed > 0.001f) {
+                    Window mWindow = (Window) XposedHelpers.getObjectField(param.thisObject, "mWindow");
+                    mWindow.clearFlags(8);
+                    XposedHelpers.callMethod(param.thisObject, "startBlurAnim", 0f, blurCollapsed, 0);
+                }
             }
         });
         Helpers.hookAllMethods("com.android.systemui.miui.volume.MiuiVolumeDialogImpl", classLoader, "initDialog", new MethodHook() {
@@ -5870,7 +5874,7 @@ public class System {
 
     private static final SimpleDateFormat formatter = new SimpleDateFormat("H:m", Locale.ENGLISH);
     public static void MuffledVibrationHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.server.VibratorService", lpparam.classLoader, "systemReady", new MethodHook() {
+        Helpers.findAndHookMethod("com.android.server.vibrator.VibratorManagerService", lpparam.classLoader, "systemReady", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
@@ -7109,20 +7113,6 @@ public class System {
                 }
             }).collect(Collectors.toList());
             if (list.size() < 24) param.setResult(null);
-            }
-        });
-    }
-
-    public static void VolumeDialogDNDSwitchHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.miui.volume.MiuiRingerModeLayout.RingerButtonHelper", lpparam.classLoader, "updateState", new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                boolean mExpanded = XposedHelpers.getBooleanField(param.thisObject, "mExpanded");
-                if (mExpanded) return;
-                View mStandardView = (View)XposedHelpers.getObjectField(param.thisObject, "mStandardView");
-                View mDndView = (View)XposedHelpers.getObjectField(param.thisObject, "mDndView");
-                if (mStandardView != null) mStandardView.setVisibility(View.GONE);
-                if (mDndView != null) mDndView.setVisibility(View.VISIBLE);
             }
         });
     }

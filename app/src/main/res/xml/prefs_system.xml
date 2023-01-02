@@ -150,12 +150,6 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_dndtoggle"
-			android:title="@string/system_dndtoggle_title"
-			android:summary="@string/system_dndtoggle_summ"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_volumetimer"
 			android:title="@string/system_volumetimer_title"
 			android:summary="@string/system_volumetimer_summ"

@@ -613,8 +613,6 @@
     <string name="system_dimtime_title">暗屏時長</string>
     <string name="system_disableanynotif_summ">同時允許禁用系統通知</string>
     <string name="system_disableanynotif_title">禁用任何通知</string>
-    <string name="system_dndtoggle_summ">在折疊音量對話框顯示勿擾模式開關按鈕</string>
-    <string name="system_dndtoggle_title">勿擾模式開關</string>
     <string name="system_downgrade_summ">可以在新版本應用上安裝舊版本應用</string>
     <string name="system_downgrade_title">允許降級</string>
     <string name="system_drawer_blur_summ">通知抽屜的背景模糊度</string>
