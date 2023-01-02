@@ -732,6 +732,7 @@
     <string name="various_restrictapp_summ">Allows to configure battery saver and access to Wi-Fi for system apps</string>
     <string name="various_disableapp_title">App state control</string>
     <string name="various_disableapp_summ">Allows to disable almost any app from its info page</string>
+    <string name="various_securitycenter_unlock_title">Unlock security center features</string>
     <string name="various_apps_title">Show additional app details</string>
     <string name="various_apps_summ">Add new fields to app info page:\n- version code\n- full path to apk\n- data path\n- user ID\n- target SDK version\n- link to Play Store page\n- launch an app</string>
     <string name="various_appsort_title">Installed apps initial sort order</string>
@@ -1141,6 +1142,7 @@
     <string name="various_allow_untrusted_touch_title">Allow untrusted touch</string>
     <string name="various_skip_interceptperm_title">Skip permission intercept timer</string>
     <string name="various_show_battery_temperature_title">Show temperature in battery</string>
+    <string name="various_enable_sc_ai_clipboard_blur_location_title">Enable AI clipboard and blur location</string>
     <string name="system_lockscreenshortcuts_left_tapaction_title">Tap left shortcut to toggle flashlight</string>
     <string name="system_cc_tile_roundedrect_title">Rounded rectangle tile</string>
     <string name="system_cc_disable_bluetooth_restrict_title">Disable disconnect bluetooth until tomorrow</string>

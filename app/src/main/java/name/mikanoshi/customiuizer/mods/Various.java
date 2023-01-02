@@ -64,6 +64,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 import de.robv.android.xposed.XC_MethodHook;
@@ -491,6 +492,26 @@ public class Various {
 				}
 			});
 		}
+	}
+	public static void UnlockClipboardAndLocationHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.miui.permcenter.settings.PrivacyLabActivity", lpparam.classLoader, "onCreateFragment", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				Class<?> utilCls = findClassIfExists("com.miui.permcenter.utils.h", lpparam.classLoader);
+				if (utilCls != null) {
+					Object fm = Helpers.getStaticObjectFieldSilently(utilCls, "b");
+					if (fm != null) {
+						try {
+							Map<String, Integer> featMap = (Map<String, Integer>) fm;
+							featMap.put("mi_lab_ai_clipboard_enable", 0);
+							featMap.put("mi_lab_blur_location_enable", 0);
+						}
+						catch (Throwable ignore) {
+						}
+					}
+				}
+			}
+		});
 	}
 
 	public static void AlarmCompatHook() {
