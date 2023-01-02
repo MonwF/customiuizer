@@ -334,7 +334,6 @@ public class Controls {
 	}
 
 	private static void addCustomNavBarKeys(boolean isVertical, Context mContext, FrameLayout navButtons, Class<?> kbrCls) {
-		String pkgName = "com.android.systemui";
 		float density = mContext.getResources().getDisplayMetrics().density;
 		int two = Math.round(2 * density);
 		int margin = Math.round(MainModule.mPrefs.getInt("controls_navbarmargin", 0) * density);
@@ -453,7 +452,7 @@ public class Controls {
 		boolean hasLeftAction = MainModule.mPrefs.getInt("controls_navbarleft_action", 1) > 1 || MainModule.mPrefs.getInt("controls_navbarleftlong_action", 1) > 1;
 		boolean hasRightAction = MainModule.mPrefs.getInt("controls_navbarright_action", 1) > 1 || MainModule.mPrefs.getInt("controls_navbarrightlong_action", 1) > 1;
 
-		float part = 0.55f;
+//		float part = 0.55f;
 		if (isVertical) {
 			if (hasRightAction) {
 				navButtons.addView(rightbtn, 0);
@@ -482,7 +481,8 @@ public class Controls {
 	}
 
 	public static void NavBarButtonsHook(LoadPackageParam lpparam) {
-		Helpers.hookAllMethods("com.android.systemui.navigationbar.NavigationBar", lpparam.classLoader, "onViewAttachedToWindow", new MethodHook() {
+
+		Helpers.hookAllMethods("com.android.systemui.navigationbar.NavigationBar", lpparam.classLoader, Helpers.isTPlus() ? "onViewAttached" : "onViewAttachedToWindow", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
@@ -490,7 +490,7 @@ public class Controls {
 					Helpers.log("NavBarButtonsHook", "Cannot find context");
 					return;
 				}
-				FrameLayout mNavigationBarView = (FrameLayout)XposedHelpers.getObjectField(param.thisObject, "mNavigationBarView");
+				FrameLayout mNavigationBarView = (FrameLayout)XposedHelpers.getObjectField(param.thisObject, Helpers.isTPlus() ? "mView" : "mNavigationBarView");
 				if (mNavigationBarView == null) {
 					Helpers.log("NavBarButtonsHook", "Cannot find navbar layout");
 					return;
@@ -506,11 +506,11 @@ public class Controls {
 			}
 		});
 
-		Helpers.hookAllMethods("com.android.systemui.navigationbar.NavigationBarInflaterView", lpparam.classLoader, "updateBackground", new MethodHook() {
+		Helpers.hookAllMethods("com.android.systemui.navigationbar.NavigationBarTransitions", lpparam.classLoader, "applyDarkIntensity", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
-				FrameLayout navbar = (FrameLayout)param.thisObject;
-				boolean isDark = (boolean)param.args[0];
+				FrameLayout navbar = (FrameLayout)XposedHelpers.getObjectField(param.thisObject, "mView");
+				boolean isDark = (float)param.args[0] > 0.5f;
 				ImageView hleft = navbar.findViewWithTag("custom_left_horiz");
 				ImageView vleft = navbar.findViewWithTag("custom_left_vert");
 				ImageView hright = navbar.findViewWithTag("custom_right_horiz");
