@@ -94,6 +94,7 @@
     <string name="system_nonetspeedseparator_summ">于水滴屏的设备上不显示时间和网速间的竖线</string>
     <string name="system_netspeedinterval_title">网速更新间隔</string>
     <string name="system_detailednetspeed_title">网速双排显示</string>
+    <string name="system_netspeed_cat_title">网速相关设置</string>
     <string name="system_detailednetspeed_summ">分别显示传入和传出的网络速度</string>
     <string name="system_detailednetspeed_font_title">字体大小</string>
     <string name="system_detailednetspeed_icon_title">指示器图标</string>
@@ -102,8 +103,6 @@
     <string name="system_detailednetspeed_low_summ">网速低时不再显示指示器</string>
     <string name="system_detailednetspeed_lowlevel_title">慢速水平</string>
     <string name="system_detailednetspeed_lowlevel_summ">网速值低于该水平时将被认为慢，并会显示不同的指示器图标</string>
-    <string name="system_detailednetspeed_zero_title">不活动时降低可见性</string>
-    <string name="system_detailednetspeed_zero_summ">速值均为0时指示器透明</string>
     <string name="system_detailednetspeed_secunit_title">网速隐藏 B/s 单位</string>
     <string name="system_netspeed_fontsize_title">网速字体大小</string>
     <string name="system_statusbarcontrols_title">手势控制</string>

@@ -645,41 +645,9 @@
 			android:title="@string/system_hidemoreicon_title"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_fixmeter"
-			android:summary="@string/system_fixmeter_summ"
-			android:title="@string/system_fixmeter_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_netspeedinterval"
-			android:title="@string/system_netspeedinterval_title"
-			android:defaultValue="4"
-			miuizer:minValue="1"
-			miuizer:maxValue="10"
-			miuizer:stepValue="1"
-			miuizer:format="@string/format_d_s" />
-
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_netspeed_fontsize"
-			android:title="@string/system_netspeed_fontsize_title"
-			android:defaultValue="17"
-			miuizer:minValue="17"
-			miuizer:maxValue="30"
-			miuizer:stepValue="1"
-			miuizer:offtext="@string/array_default"
-			miuizer:displayDividerValue="2"
-			miuizer:format="%s dip" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_detailednetspeed_secunit"
-			android:title="@string/system_detailednetspeed_secunit_title"
-			android:defaultValue="false" />
-
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_detailednetspeed_cat"
-			android:summary="@string/system_detailednetspeed_summ"
-			android:title="@string/system_detailednetspeed_title" />
+			android:title="@string/system_netspeed_cat_title" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_statusbarcontrols_cat"

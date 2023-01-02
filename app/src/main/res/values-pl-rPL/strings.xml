@@ -106,8 +106,6 @@
     <string name="system_detailednetspeed_low_summ">Nie pokazuj wskaźnika, jeśli prędkość jest niska</string>
     <string name="system_detailednetspeed_lowlevel_title">Niski poziom prędkości</string>
     <string name="system_detailednetspeed_lowlevel_summ">Wartości prędkości poniżej tego poziomu będą uważane za niskie i będą oznaczone inną ikoną wskazania</string>
-    <string name="system_detailednetspeed_zero_title">Zmniejsz widoczność, gdy nie jest aktywny</string>
-    <string name="system_detailednetspeed_zero_summ">Ustaw wskaźnik na półprzezroczysty, gdy obie prędkości są równe zeru</string>
     <string name="system_detailednetspeed_secunit_title">Ukryj przyrostek bajtów na sekundę (B/s)</string>
     <string name="system_statusbarcontrols_title">Sterowanie gestami</string>
     <string name="system_statusbarcontrols_summ">Wykonaj wybrane czynności, przesuwając i dwukrotnie stukając</string>

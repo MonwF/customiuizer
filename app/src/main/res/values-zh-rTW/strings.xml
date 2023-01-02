@@ -609,8 +609,6 @@
     <string name="system_detailednetspeed_lowlevel_title">慢速水平</string>
     <string name="system_detailednetspeed_summ">分別顯示傳入和傳出的網路速度</string>
     <string name="system_detailednetspeed_title">詳細的網速指示器</string>
-    <string name="system_detailednetspeed_zero_summ">速值均為0時指示器透明</string>
-    <string name="system_detailednetspeed_zero_title">不活動時降低可見性</string>
     <string name="system_dimtime_summ">自動滅屏前保持暗屏的時間(螢幕關閉超時總數的百分比)</string>
     <string name="system_dimtime_title">暗屏時長</string>
     <string name="system_disableanynotif_summ">同時允許禁用系統通知</string>
