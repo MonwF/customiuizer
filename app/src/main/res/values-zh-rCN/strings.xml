@@ -678,6 +678,7 @@
     <string name="various_callreminder_vibration_own_msg">格式：延迟,振动,延迟,振动,…</string>
     <string name="various_disableapp_title">应用状态控制</string>
     <string name="various_disableapp_summ">允许从应用信息页面禁用任何应用</string>
+    <string name="various_securitycenter_unlock_title">解锁手机管家特性</string>
     <string name="various_apps_title">显示附加应用详情</string>
     <string name="various_apps_summ">添加新字段到应用信息页面:\n- 版本代码\n- apk完整路径\n- 数据路径\n- 用户标识符\n- 目标SDK版本\n- 连结到Play商店页面\n- 启动应用</string>
     <string name="various_appsort_title">已安装应用的初始排列顺序</string>
@@ -1090,6 +1091,7 @@
     <string name="launcher_nozoomanim_summ">app启动、关闭时不缩放图标</string>
     <string name="various_skip_interceptperm_title">跳过开启特殊权限的倒计时</string>
     <string name="various_show_battery_temperature_title">电池页面显示温度值</string>
+    <string name="various_enable_sc_ai_clipboard_blur_location_title">剪切板隐私保护及模糊定位</string>
     <string name="system_lockscreenshortcuts_left_tapaction_title">点击左侧图标时切换手电筒</string>
     <string name="system_cc_tile_roundedrect_title">圆角矩形磁贴</string>
     <string name="system_cc_disable_bluetooth_restrict_title">禁用蓝牙临时关闭态</string>
