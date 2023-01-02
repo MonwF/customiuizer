@@ -225,6 +225,7 @@
     <string name="system_dndtoggle_summ">Make button in collapsed volume dialog toggle Do Not Disturb mode instead of Silent mode</string>
     <string name="system_volumetimer_title">Extended timers</string>
     <string name="system_volumetimer_summ">Add more intervals to timers for Silent and Do Not Disturb modes</string>
+    <string name="system_volumebar_blur_mtk_title">Enable volume bar blur support for MTK devices</string>
     <string name="system_volumedialogdelay_collapsed_title">Volume dialog autohide delay</string>
     <string name="system_volumedialogdelay_collapsed_summ">Collapsed</string>
     <string name="system_volumedialogdelay_expanded_summ">Expanded</string>
