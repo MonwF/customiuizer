@@ -6711,14 +6711,14 @@ public class System {
     }
 
     public static void TempHideOverlaySystemUIHook(LoadPackageParam lpparam) {
-        final boolean[] isActListened = {false};
 
         Helpers.hookAllMethods("com.android.wm.shell.pip.PipTaskOrganizer", lpparam.classLoader, "onTaskAppeared", new MethodHook() {
+            private boolean isActListened = false;
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
-                if (!isActListened[0]) {
-                    isActListened[0] = true;
+                if (!isActListened) {
+                    isActListened = true;
                     IntentFilter intentFilter = new IntentFilter();
                     intentFilter.addAction("miui.intent.TAKE_SCREENSHOT");
                     mContext.registerReceiver(new BroadcastReceiver() {
@@ -6728,7 +6728,13 @@ public class System {
                             if (action == null) return;
                             if (action.equals("miui.intent.TAKE_SCREENSHOT")) {
                                 boolean state = intent.getBooleanExtra("IsFinished", true);
-                                Object mState = XposedHelpers.getObjectField(param.thisObject, "mState");
+                                Object mState;
+                                if (Helpers.isTPlus()) {
+                                    mState = XposedHelpers.getObjectField(param.thisObject, "mPipTransitionState");
+                                }
+                                else {
+                                    mState = XposedHelpers.getObjectField(param.thisObject, "mState");
+                                }
                                 boolean isPip = (boolean) XposedHelpers.callMethod(mState, "isInPip");
                                 if (isPip) {
                                     Object mSurfaceControlTransactionFactory = XposedHelpers.getObjectField(param.thisObject, "mSurfaceControlTransactionFactory");
