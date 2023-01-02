@@ -1735,17 +1735,6 @@ public class System {
                 }
             }
         });
-        boolean reduceVis = MainModule.mPrefs.getBoolean("system_detailednetspeed_zero");
-        if (reduceVis) {
-            Helpers.hookAllMethods("com.android.systemui.statusbar.views.NetworkSpeedView", lpparam.classLoader, "applyNetworkSpeedState", new MethodHook() {
-                @Override
-                protected void after(MethodHookParam param) throws Throwable {
-                    TextView meter = (TextView) param.thisObject;
-                    boolean isZero = rxSpeed == 0 && txSpeed == 0;
-                    meter.setAlpha(isZero ? 0.3f : 1.0f);
-                }
-            });
-        }
 
         Class<?> nscCls = XposedHelpers.findClassIfExists("com.android.systemui.statusbar.policy.NetworkSpeedController", lpparam.classLoader);
         if (nscCls == null) {
@@ -6354,6 +6343,19 @@ public class System {
             protected void after(MethodHookParam param) throws Throwable {
                 String speedText = (String) param.getResult();
                 param.setResult(speedText.replace("B/s", "B").replace("/s", ""));
+            }
+        });
+    }
+
+    public static void HideLowNetworkSpeedHook(LoadPackageParam lpparam) {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.NetworkSpeedController", lpparam.classLoader, "formatSpeed", Context.class, long.class, new MethodHook(100) {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                int lowLevel = MainModule.mPrefs.getInt("system_detailednetspeed_lowlevel", 1) * 1024;
+                long speedVal = (long) param.args[1];
+                if (speedVal < lowLevel) {
+                    param.setResult("");
+                }
             }
         });
     }

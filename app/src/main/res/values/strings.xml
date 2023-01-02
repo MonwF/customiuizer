@@ -103,7 +103,8 @@
     <string name="system_nonetspeedseparator_title">Network speed separator</string>
     <string name="system_nonetspeedseparator_summ">Do not show vertical line between time and network speed on devices with waterdrop notches</string>
     <string name="system_netspeedinterval_title">Network speed update interval</string>
-    <string name="system_detailednetspeed_title">Detailed network speed indicator</string>
+    <string name="system_detailednetspeed_title">Display in dual rows</string>
+    <string name="system_netspeed_cat_title">Network speed mods</string>
     <string name="system_detailednetspeed_summ">Show incoming and outgoing network speeds separately</string>
     <string name="system_detailednetspeed_font_title">Font size</string>
     <string name="system_detailednetspeed_icon_title">Indicator icons</string>
