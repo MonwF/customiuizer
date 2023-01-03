@@ -96,7 +96,6 @@
     <string name="system_detailednetspeed_title">网速双排显示</string>
     <string name="system_netspeed_cat_title">网速相关设置</string>
     <string name="system_detailednetspeed_summ">分别显示传入和传出的网络速度</string>
-    <string name="system_detailednetspeed_font_title">字体大小</string>
     <string name="system_detailednetspeed_icon_title">指示器图标</string>
     <string name="system_detailednetspeed_icon_summ">网速旁显示上下行流量图标 (并非所有字体都含有对应图标)</string>
     <string name="system_detailednetspeed_low_title">隐藏慢速</string>

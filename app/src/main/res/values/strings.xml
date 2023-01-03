@@ -106,7 +106,6 @@
     <string name="system_detailednetspeed_title">Display in dual rows</string>
     <string name="system_netspeed_cat_title">Network speed mods</string>
     <string name="system_detailednetspeed_summ">Show incoming and outgoing network speeds separately</string>
-    <string name="system_detailednetspeed_font_title">Font size</string>
     <string name="system_detailednetspeed_icon_title">Indicator icons</string>
     <string name="system_detailednetspeed_icon_summ">Incoming/outgoing traffic icons displayed next to speed value (not all custom fonts have every icon)</string>
     <string name="system_detailednetspeed_low_title">Hide low speed</string>

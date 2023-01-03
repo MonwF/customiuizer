@@ -722,7 +722,6 @@
     <string name="system_netspeedinterval_title">Частота обновления индикатора скорости</string>
     <string name="system_detailednetspeed_title">Подробный индикатор скорости соединения</string>
     <string name="system_detailednetspeed_summ">Показыает входящую и исходящую скорости передачи данных</string>
-    <string name="system_detailednetspeed_font_title">Размер шрифта</string>
     <string name="system_detailednetspeed_icon_title">Иконки индикатора</string>
     <string name="system_detailednetspeed_icon_summ">Набор иконок входящего/исходящего трафика для отображения рядом со значением скорости (есть не во всех кастомных шрифтах)</string>
     <string name="system_detailednetspeed_low_title">Скрыть низкие скорости</string>
