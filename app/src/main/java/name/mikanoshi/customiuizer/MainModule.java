@@ -231,7 +231,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 || mPrefs.getBoolean("system_drawer_clockseconds")
                 || mPrefs.getBoolean("system_clockleadingzero")
             ) System.ClockSecondsHook(lpparam);
-            if (mPrefs.getBoolean("system_fixmeter")) System.TrafficSpeedSpacingHook(lpparam);
             if (mPrefs.getBoolean("system_noscreenlock_act")) System.NoScreenLockHook(lpparam);
             if (mPrefs.getBoolean("system_detailednetspeed")) System.DetailedNetSpeedHook(lpparam);
             if (mPrefs.getBoolean("system_albumartonlock")) System.LockScreenAlbumArtHook(lpparam);
@@ -295,7 +294,14 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_nonetspeedseparator")) System.NoNetworkSpeedSeparatorHook(lpparam);
             if (mPrefs.getBoolean("system_detailednetspeed_secunit") && !mPrefs.getBoolean("system_detailednetspeed")) System.HideNetworkSpeedUnitHook(lpparam);
             if (mPrefs.getBoolean("system_detailednetspeed_low") && !mPrefs.getBoolean("system_detailednetspeed")) System.HideLowNetworkSpeedHook(lpparam);
-            if (mPrefs.getInt("system_netspeed_fontsize", 17) > 17 && !mPrefs.getBoolean("system_detailednetspeed")) System.NetSpeedFontHook(lpparam);
+            if (
+                mPrefs.getInt("system_netspeed_fontsize", 14) > 14
+                || mPrefs.getInt("system_netspeed_verticaloffset", 8) != 8
+                || mPrefs.getBoolean("system_fixmeter")
+                || mPrefs.getBoolean("system_detailednetspeed")
+            ) {
+                System.NetSpeedStyleHook(lpparam);
+            }
             if (mPrefs.getBoolean("system_snoozedmanager")) System.MoreSnoozeOptionsHook(lpparam);
             if (mPrefs.getBoolean("system_taptounlock")) System.TapToUnlockHook(lpparam);
             if (mPrefs.getBoolean("system_nosos")) System.NoSOSHook(lpparam);

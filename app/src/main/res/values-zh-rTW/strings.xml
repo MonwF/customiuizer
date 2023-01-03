@@ -600,7 +600,6 @@
     <string name="system_defaultusb_title">預設USB配置</string>
     <string name="system_defaultusb_unsecure_summ">即使設備處於鎖定狀態時仍然應用</string>
     <string name="system_defaultusb_unsecure_title">忽略鎖定</string>
-    <string name="system_detailednetspeed_font_title">字體大小</string>
     <string name="system_detailednetspeed_icon_summ">網速旁顯示上下行流量圖示 (並非所有字體都含有對應圖示)</string>
     <string name="system_detailednetspeed_icon_title">指示器圖示</string>
     <string name="system_detailednetspeed_low_summ">網速低時不再顯示指示器</string>

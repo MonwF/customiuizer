@@ -1454,20 +1454,6 @@ public class System {
         Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyMobileState", hideMobileActivity);
     }
 
-    public static void TrafficSpeedSpacingHook(LoadPackageParam lpparam) {
-        Helpers.hookAllConstructors("com.android.systemui.statusbar.views.NetworkSpeedView", lpparam.classLoader, new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                TextView meter = (TextView)param.thisObject;
-                if (meter == null) return;
-                if (meter.getTag() == null || !"slot_text_icon".equals(meter.getTag())) {
-                    int margin = Math.round(meter.getResources().getDisplayMetrics().density * 4);
-                    meter.setPaddingRelative(margin, 0, margin, 0);
-                }
-            }
-        });
-    }
-
     public static void ChargeAnimationHook(LoadPackageParam lpparam) {
         Class<?> ccCls;
         try {
@@ -1714,31 +1700,6 @@ public class System {
     }
 
     public static void DetailedNetSpeedHook(LoadPackageParam lpparam) {
-        Helpers.hookAllConstructors("com.android.systemui.statusbar.views.NetworkSpeedView", lpparam.classLoader, new MethodHook() {
-            @Override
-            protected void after(final MethodHookParam param) throws Throwable {
-                TextView meter = (TextView)param.thisObject;
-                if (meter.getTag() == null || !"slot_text_icon".equals(meter.getTag())) {
-                    float density = meter.getResources().getDisplayMetrics().density;
-                    int font = Integer.parseInt(MainModule.mPrefs.getString("system_detailednetspeed_font", "3"));
-                    float size = 8.0f;
-                    float spacing = 0.9f;
-                    int top = 0;
-                    switch (font) {
-                        case 1: size = 9f; spacing = 0.85f; top = Math.round(density);break;
-                        case 2: size = 8.5f; break;
-                        case 4: size = 7.5f; break;
-                    }
-                    meter.setTextSize(TypedValue.COMPLEX_UNIT_DIP, size);
-                    meter.setSingleLine(false);
-                    meter.setLines(2);
-                    meter.setMaxLines(2);
-                    meter.setLineSpacing(0, spacing);
-                    meter.setPadding(meter.getPaddingLeft(), meter.getPaddingTop() - top, meter.getPaddingRight(), meter.getPaddingBottom());
-                }
-            }
-        });
-
         Class<?> nscCls = XposedHelpers.findClassIfExists("com.android.systemui.statusbar.policy.NetworkSpeedController", lpparam.classLoader);
         if (nscCls == null) {
             Helpers.log("DetailedNetSpeedHook", "No NetworkSpeed view or controller");
@@ -6371,15 +6332,44 @@ public class System {
         });
     }
 
-    public static void NetSpeedFontHook(LoadPackageParam lpparam) {
+    public static void NetSpeedStyleHook(LoadPackageParam lpparam) {
         Helpers.hookAllConstructors("com.android.systemui.statusbar.views.NetworkSpeedView", lpparam.classLoader, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 TextView meter = (TextView)param.thisObject;
                 if (meter == null) return;
                 if (meter.getTag() == null || !"slot_text_icon".equals(meter.getTag())) {
-                    int fontSize = MainModule.mPrefs.getInt("system_netspeed_fontsize", 17);
-                    meter.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize * 0.5f);
+                    int fontSize = MainModule.mPrefs.getInt("system_netspeed_fontsize", 14);
+                    if (fontSize != 14) {
+                        meter.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize * 0.5f);
+                    }
+
+                    int horizMargin = 0;
+                    if (MainModule.mPrefs.getBoolean("system_fixmeter")) {
+                        horizMargin = Math.round(meter.getResources().getDisplayMetrics().density * 4);
+                    }
+                    int topMargin = 0;
+                    int verticalOffset = MainModule.mPrefs.getInt("system_netspeed_verticaloffset", 8);
+                    if (verticalOffset != 8) {
+                        float marginTop = TypedValue.applyDimension(
+                            TypedValue.COMPLEX_UNIT_DIP,
+                            (verticalOffset - 8) * 0.5f,
+                            meter.getResources().getDisplayMetrics()
+                        );
+                        topMargin = (int) (marginTop);
+                    }
+                    meter.setPaddingRelative(horizMargin, topMargin, horizMargin, 0);
+
+                    if (MainModule.mPrefs.getBoolean("system_detailednetspeed")) {
+                        float spacing = 0.9f;
+                        meter.setSingleLine(false);
+                        meter.setLines(2);
+                        meter.setMaxLines(2);
+                        if (fontSize > 8.5f) {
+                            spacing = 0.85f;
+                        }
+                        meter.setLineSpacing(0, spacing);
+                    }
                 }
             }
         });

@@ -471,7 +471,7 @@
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_system_statusbar_batterytempandcurrent_fontsize"
-			android:title="@string/system_detailednetspeed_font_title"
+			android:title="@string/launcher_titlefontsize_title"
 			android:dependency="pref_key_system_statusbar_batterytempandcurrent"
 			android:defaultValue="16"
 			miuizer:child="true"

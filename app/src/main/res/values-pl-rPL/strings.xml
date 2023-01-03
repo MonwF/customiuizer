@@ -99,7 +99,6 @@
     <string name="system_netspeedinterval_title">Częstotliwość aktualizacji prędkości sieci</string>
     <string name="system_detailednetspeed_title">Szczegółowy wskaźnik prędkości sieci</string>
     <string name="system_detailednetspeed_summ">Pokaż osobno prędkości sieci przychodzącej i wychodzącej</string>
-    <string name="system_detailednetspeed_font_title">Rozmiar czcionki</string>
     <string name="system_detailednetspeed_icon_title">Ikony wskaźników</string>
     <string name="system_detailednetspeed_icon_summ">Ikony ruchu przychodzącego/wychodzącego wyświetlane obok wartości prędkości (nie wszystkie niestandardowe czcionki mają każdą ikonę)</string>
     <string name="system_detailednetspeed_low_title">Ukryj niską prędkość</string>
