@@ -386,7 +386,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (pkg.equals("com.android.incallui")) {
             if (mPrefs.getStringAsInt("various_showcallui", 0) > 0) Various.ShowCallUIHook(lpparam);
             if (mPrefs.getBoolean("various_calluibright")) Various.InCallBrightnessHook(lpparam);
-//			Various.LargeCallerPhotoHook(lpparam);
         }
 
         if (pkg.equals("com.miui.securitycenter")) {
