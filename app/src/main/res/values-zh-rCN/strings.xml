@@ -136,7 +136,7 @@
     <string name="system_showpct_top_title">百分比面板的上边距</string>
     <string name="system_inactivebrightness_title">停用亮度滑块</string>
     <string name="system_notifrowmenu_title">扩展通知菜单</string>
-    <string name="system_notifrowmenu_summ">从通知菜单打开应用信息并强制关闭应用(向左滑动通知将其打开)</string>
+    <string name="system_notifrowmenu_summ">从通知菜单打开应用信息、强制关闭应用和浮窗打开(向左滑动通知将其打开)</string>
     <string name="system_disableanynotif_title">禁用任何通知</string>
     <string name="system_disableanynotif_summ">同时允许禁用系统通知</string>
     <string name="system_expandnotifs_title">展开通知</string>
@@ -1081,6 +1081,7 @@
     <string name="system_statusbar_topmargin_val_title">上边距大小</string>
     <string name="system_statusbar_topmargin_unset_lockscreen_title">不修改锁屏状态栏</string>
     <string name="system_notifrowmenu_appinfo">应用信息</string>
+    <string name="system_notifrowmenu_openinfw">浮窗</string>
     <string name="system_notifrowmenu_forceclose">强制关闭</string>
     <string name="restart_systemui">重启系统界面</string>
     <string name="various_allow_untrusted_touch_title">允许不受信任的触摸操作</string>

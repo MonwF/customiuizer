@@ -201,7 +201,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 
             if (mPrefs.getInt("system_qsgridcolumns", 2) > 2 || mPrefs.getInt("system_qsgridrows", 1) > 1) System.QSGridRes();
             if (mPrefs.getInt("system_qqsgridcolumns", 2) > 2) System.QQSGridRes();
-            if (mPrefs.getBoolean("system_notifrowmenu")) System.NotificationRowMenuRes();
             if (mPrefs.getBoolean("system_volumetimer")) System.VolumeTimerValuesRes(lpparam);
             if (mPrefs.getBoolean("system_snoozedmanager")) System.MoreSnoozeOptionsRes();
             if (mPrefs.getStringAsInt("system_networkindicator", 1) == 3) System.NetworkIndicatorRes(lpparam);
