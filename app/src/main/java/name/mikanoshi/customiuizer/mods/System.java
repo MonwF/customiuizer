@@ -21,6 +21,7 @@ import android.app.KeyguardManager;
 import android.app.MiuiNotification;
 import android.app.Notification;
 import android.app.NotificationChannel;
+import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.app.WallpaperColors;
 import android.app.WallpaperManager;
@@ -2356,99 +2357,112 @@ public class System {
         Helpers.findAndHookMethodSilently("com.android.systemui.statusbar.notification.MiuiNotificationCompat", lpparam.classLoader, "isKeptOnKeyguard", Notification.class, XC_MethodReplacement.returnConstant(true));
     }
 
-    private static int appInfoIconResId;
-    private static int appInfoDescId;
-    private static int forceCloseIconResId;
-    private static int forceCloseDescId;
-    public static void NotificationRowMenuRes() {
-        appInfoIconResId = MainModule.resHooks.addResource("ic_appinfo", R.drawable.ic_appinfo12);
-        forceCloseIconResId = MainModule.resHooks.addResource("ic_forceclose", R.drawable.ic_forceclose12);
-        appInfoDescId = MainModule.resHooks.addResource("miui_notification_menu_appinfo_title", R.string.system_notifrowmenu_appinfo);
-        forceCloseDescId = MainModule.resHooks.addResource("miui_notification_menu_forceclose_title", R.string.system_notifrowmenu_forceclose);
-        MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "notification_menu_icon_padding", 0);
-    }
-
     public static void NotificationRowMenuHook(LoadPackageParam lpparam) {
-        MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "miui_notification_modal_menu_margin_left_right", 8);
+        int appInfoIconResId = MainModule.resHooks.addResource("ic_appinfo", R.drawable.ic_appinfo12);
+        int forceCloseIconResId = MainModule.resHooks.addResource("ic_forceclose", R.drawable.ic_forceclose12);
+        int openInFwIconResId = MainModule.resHooks.addResource("ic_openinfw", R.drawable.ic_openinfw);
+        int appInfoDescId = MainModule.resHooks.addResource("miui_notification_menu_appinfo_title", R.string.system_notifrowmenu_appinfo);
+        int forceCloseDescId = MainModule.resHooks.addResource("miui_notification_menu_forceclose_title", R.string.system_notifrowmenu_forceclose);
+        int openInFwDescId = MainModule.resHooks.addResource("miui_notification_menu_openinfw_title", R.string.system_notifrowmenu_openinfw);
+        MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "notification_menu_icon_padding", 0);
+        MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "miui_notification_modal_menu_margin_left_right", 3);
+        MainModule.resHooks.setResReplacement("com.android.systemui", "drawable", "miui_notification_menu_ic_bg_active", R.drawable.miui_notification_menu_ic_bg_active);
+        MainModule.resHooks.setResReplacement("com.android.systemui", "drawable", "miui_notification_menu_ic_bg_inactive", R.drawable.miui_notification_menu_ic_bg_inactive);
 
+        Class<?> MiuiNotificationMenuItem = findClass("com.android.systemui.statusbar.notification.row.MiuiNotificationMenuRow.MiuiNotificationMenuItem", lpparam.classLoader);
         Helpers.findAndHookMethod("com.android.systemui.statusbar.notification.row.MiuiNotificationMenuRow", lpparam.classLoader, "createMenuViews", boolean.class, boolean.class, new MethodHook() {
             @Override
             @SuppressWarnings("unchecked")
             protected void after(final MethodHookParam param) throws Throwable {
                 Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
                 ArrayList<Object> mMenuItems = (ArrayList<Object>)XposedHelpers.getObjectField(param.thisObject, "mMenuItems");
-                Class<?> nmiCls = findClass("com.android.systemui.statusbar.notification.row.MiuiNotificationMenuRow.MiuiNotificationMenuItem", lpparam.classLoader);
+
                 Object infoBtn = null;
                 Object forceCloseBtn = null;
-                Constructor MenuItem = nmiCls.getConstructors()[0];
+                Object openFwBtn = null;
+                Constructor MenuItem = MiuiNotificationMenuItem.getConstructors()[0];
                 try {
                     infoBtn = MenuItem.newInstance(param.thisObject, mContext, appInfoDescId, null, appInfoIconResId);
                     forceCloseBtn = MenuItem.newInstance(param.thisObject, mContext, forceCloseDescId, null, forceCloseIconResId);
+                    openFwBtn = MenuItem.newInstance(param.thisObject, mContext, openInFwDescId, null, openInFwIconResId);
                 } catch (Throwable t1) {
-                    XposedBridge.log(t1);
+                    Helpers.log(t1);
                 }
-                if (infoBtn == null || forceCloseBtn == null) return;
+                if (infoBtn == null || forceCloseBtn == null || openFwBtn == null) return;
                 Object notification = XposedHelpers.getObjectField(param.thisObject, "mSbn");
-                String pkgName = (String)XposedHelpers.callMethod(notification, "getPackageName");
-                int menuMargin = (int) XposedHelpers.getObjectField(param.thisObject, "mMenuMargin");
+                Object expandNotifyRow = XposedHelpers.getObjectField(param.thisObject, "mParent");
                 mMenuItems.add(infoBtn);
                 mMenuItems.add(forceCloseBtn);
+                mMenuItems.add(openFwBtn);
                 XposedHelpers.setObjectField(param.thisObject, "mMenuItems", mMenuItems);
+                int menuMargin = (int) XposedHelpers.getObjectField(param.thisObject, "mMenuMargin");
                 LinearLayout mMenuContainer = (LinearLayout)XposedHelpers.getObjectField(param.thisObject, "mMenuContainer");
-                if (mMenuContainer != null) {
-                    View mInfoBtn = (View) XposedHelpers.callMethod(infoBtn, "getMenuView");
-                    View mForceCloseBtn = (View) XposedHelpers.callMethod(forceCloseBtn, "getMenuView");
+                View mInfoBtn = (View) XposedHelpers.callMethod(infoBtn, "getMenuView");
+                View mForceCloseBtn = (View) XposedHelpers.callMethod(forceCloseBtn, "getMenuView");
+                View mOpenFwBtn = (View) XposedHelpers.callMethod(openFwBtn, "getMenuView");
 
-                    View.OnClickListener itemClick = new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (view == null) return;
-                            int uid = (int)XposedHelpers.callMethod(notification, "getAppUid");
-                            int user = 0;
+                View.OnClickListener itemClick = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (view == null) return;
+                        String pkgName = (String)XposedHelpers.callMethod(notification, "getPackageName");
+                        int uid = (int)XposedHelpers.callMethod(notification, "getAppUid");
+                        int user = 0;
+                        try {
+                            user = (int)XposedHelpers.callStaticMethod(UserHandle.class, "getUserId", uid);
+                        } catch (Throwable t) {
+                            Helpers.log(t);
+                        }
+
+                        if (view == mInfoBtn) {
+                            Helpers.openAppInfo(mContext, pkgName, user);
+                            mContext.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+                        } else if (view == mForceCloseBtn) {
+                            ActivityManager am = (ActivityManager)mContext.getSystemService(Context.ACTIVITY_SERVICE);
+                            if (user != 0)
+                                XposedHelpers.callMethod(am, "forceStopPackageAsUser", pkgName, user);
+                            else
+                                XposedHelpers.callMethod(am, "forceStopPackage", pkgName);
                             try {
-                                user = (int)XposedHelpers.callStaticMethod(UserHandle.class, "getUserId", uid);
-                            } catch (Throwable t) {
-                                XposedBridge.log(t);
-                            }
-
-                            if (view == mInfoBtn) {
-                                Helpers.openAppInfo(mContext, pkgName, user);
-                                mContext.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
-                            } else if (view == mForceCloseBtn) {
-                                ActivityManager am = (ActivityManager)mContext.getSystemService(Context.ACTIVITY_SERVICE);
-                                if (user != 0)
-                                    XposedHelpers.callMethod(am, "forceStopPackageAsUser", pkgName, user);
-                                else
-                                    XposedHelpers.callMethod(am, "forceStopPackage", pkgName);
-                                try {
-                                    CharSequence appName = mContext.getPackageManager().getApplicationLabel(mContext.getPackageManager().getApplicationInfo(pkgName, 0));
-                                    Toast.makeText(mContext, Helpers.getModuleRes(mContext).getString(R.string.force_closed, appName), Toast.LENGTH_SHORT).show();
-                                } catch (Throwable ignore) {}
-                            }
+                                CharSequence appName = mContext.getPackageManager().getApplicationLabel(mContext.getPackageManager().getApplicationInfo(pkgName, 0));
+                                Toast.makeText(mContext, Helpers.getModuleRes(mContext).getString(R.string.force_closed, appName), Toast.LENGTH_SHORT).show();
+                            } catch (Throwable ignore) {}
                         }
-                    };
-                    mInfoBtn.setOnClickListener(itemClick);
-                    mForceCloseBtn.setOnClickListener(itemClick);
-                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-2, -2);
-                    layoutParams.leftMargin = menuMargin;
-                    layoutParams.rightMargin = menuMargin;
-                    XposedHelpers.callMethod(mMenuContainer, "addView", mInfoBtn, layoutParams);
-                    XposedHelpers.callMethod(mMenuContainer, "addView", mForceCloseBtn, layoutParams);
-                    int size = mMenuItems.size();
-                    int dimensionPixelOffset = mContext.getResources().getDimensionPixelSize(mContext.getResources().getIdentifier("notification_panel_width", "dimen", lpparam.packageName));
-                    if (dimensionPixelOffset <= 0) {
-                        dimensionPixelOffset = mContext.getResources().getDisplayMetrics().widthPixels;
+                        else if (view == mOpenFwBtn) {
+                            Class<?> Dependency = findClass("com.android.systemui.Dependency", lpparam.classLoader);
+                            Object AppMiniWindowManager = XposedHelpers.callStaticMethod(Dependency, "get", findClassIfExists("com.android.systemui.statusbar.notification.policy.AppMiniWindowManager", lpparam.classLoader));
+                            String miniWindowPkg = (String) XposedHelpers.callMethod(expandNotifyRow, "getMiniWindowTargetPkg");
+                            PendingIntent notifyIntent = (PendingIntent) XposedHelpers.callMethod(expandNotifyRow, "getPendingIntent");
+                            String ModalControllerForDep = "com.android.systemui.statusbar.notification.modal.ModalController";
+                            Object ModalController = XposedHelpers.callStaticMethod(Dependency, "get", findClass(ModalControllerForDep, lpparam.classLoader));
+                            XposedHelpers.callMethod(ModalController, "animExitModelCollapsePanels");
+                            XposedHelpers.callMethod(AppMiniWindowManager, "launchMiniWindowActivity", miniWindowPkg, notifyIntent);
+//                            mContext.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+                        }
                     }
-                    int menuWidth = (dimensionPixelOffset / size) - (menuMargin * 2);
-                    int titleId = mContext.getResources().getIdentifier("modal_menu_title", "id", lpparam.packageName);
-                    mMenuItems.forEach(new Consumer() {
-                        @Override
-                        public void accept(Object obj) {
-                            View menuView = (View) XposedHelpers.callMethod(obj, "getMenuView");
-                            ((TextView) menuView.findViewById(titleId)).setMaxWidth(menuWidth);
-                        }
-                    });
-                }
+                };
+                mInfoBtn.setOnClickListener(itemClick);
+                mForceCloseBtn.setOnClickListener(itemClick);
+                mOpenFwBtn.setOnClickListener(itemClick);
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-2, -2);
+                layoutParams.leftMargin = menuMargin;
+                layoutParams.rightMargin = menuMargin;
+                mMenuContainer.addView(mInfoBtn, layoutParams);
+                mMenuContainer.addView(mForceCloseBtn, layoutParams);
+                mMenuContainer.addView(mOpenFwBtn, layoutParams);
+                int menuWidth = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    52,
+                    mContext.getResources().getDisplayMetrics()
+                );
+                int titleId = mContext.getResources().getIdentifier("modal_menu_title", "id", lpparam.packageName);
+                mMenuItems.forEach(new Consumer() {
+                    @Override
+                    public void accept(Object obj) {
+                        View menuView = (View) XposedHelpers.callMethod(obj, "getMenuView");
+                        ((TextView) menuView.findViewById(titleId)).setMaxWidth(menuWidth);
+                    }
+                });
             }
         });
     }
@@ -2857,7 +2871,9 @@ public class System {
                     intent.setComponent(name);
                     if (user != 0) {
                         try {
-                            Object mStatusBar = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", mContext.getClassLoader()), "get", findClass("com.android.systemui.statusbar.phone.StatusBar", mContext.getClassLoader()));
+                            Class<?> Dependency = findClass("com.android.systemui.Dependency", lpparam.classLoader);
+                            String StatusbarClsForDep = Helpers.isTPlus() ? "com.android.systemui.statusbar.phone.CentralSurfaces" : "com.android.systemui.statusbar.phone.StatusBar";
+                            Object mStatusBar = XposedHelpers.callStaticMethod(Dependency, "get", findClass(StatusbarClsForDep, lpparam.classLoader));
                             XposedHelpers.callMethod(mStatusBar, "collapsePanels");
                             XposedHelpers.callMethod(mContext, "startActivityAsUser", intent, XposedHelpers.newInstance(UserHandle.class, user));
                         } catch (Throwable t) {

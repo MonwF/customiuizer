@@ -1,5 +1,5 @@
 <resources>
 
 	<dimen name="action_icon_size">19.64dp</dimen>
-
+	<dimen name="miui_notification_modal_menu_icon_size">28.36dp</dimen>
 </resources>
