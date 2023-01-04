@@ -8807,6 +8807,12 @@ public class System {
                     switchUserView = sbView.findViewById(userViewId);
                     ((ViewGroup) switchUserView.getParent()).removeView(switchUserView);
                 }
+                int firstRowLeftPadding = 0;
+                int firstRowRightPadding = 0;
+                if (MainModule.mPrefs.getBoolean("system_statusbar_dualrows_firstrow_horizmargin")) {
+                    firstRowLeftPadding = MainModule.mPrefs.getInt("system_statusbar_dualrows_firstrow_horizmargin_left", 0);
+                    firstRowRightPadding = MainModule.mPrefs.getInt("system_statusbar_dualrows_firstrow_horizmargin_right", 0);
+                }
                 LinearLayout statusBarcontents = (LinearLayout) rightContainer.getParent();
                 statusBarcontents.removeView(leftContainer);
                 statusBarcontents.removeView(rightContainer);
@@ -8814,11 +8820,17 @@ public class System {
                 statusBarcontents.addView(rightLayout);
                 XposedHelpers.setObjectField(param.thisObject, "mSystemIconArea", rightLayout);
                 leftLayout.addView(leftContainer);
+                if (firstRowLeftPadding > 0) {
+                    leftContainer.setPaddingRelative(firstRowLeftPadding, 0, 0, 0);
+                }
                 LinearLayout secondLeft = new LinearLayout(mContext);
                 leftLayout.addView(secondLeft);
                 LinearLayout firstRight = new LinearLayout(mContext);
                 rightLayout.addView(firstRight);
                 firstRight.setGravity(Gravity.END);
+                if (firstRowRightPadding > 0) {
+                    firstRight.setPaddingRelative(0, 0, firstRowRightPadding, 0);
+                }
                 LinearLayout secondRight = new LinearLayout(mContext);
                 rightLayout.addView(secondRight);
                 secondRight.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
