@@ -5106,7 +5106,7 @@ public class System {
         batteryView.setTextAppearance(styleId);
         float fontSize = MainModule.mPrefs.getInt("system_statusbar_batterytempandcurrent_fontsize", 16) * 0.5f;
         int opt = MainModule.mPrefs.getStringAsInt("system_statusbar_batterytempandcurrent_content", 1);
-        if (opt == 1) {
+        if (opt == 1 && MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_singlerow")) {
             batteryView.setLineSpacing(0, fontSize > 8.5f ? 0.85f : 0.9f);
             batteryView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         }
@@ -5177,11 +5177,17 @@ public class System {
                             currVal = Math.abs(currVal);
                         }
                         int opt = MainModule.mPrefs.getStringAsInt("system_statusbar_batterytempandcurrent_content", 1);
+                        String simpleTempVal = tempVal % 10 == 0 ? (tempVal / 10 + "") : (tempVal / 10f + "");
                         if (opt == 1) {
-                            batteryInfo = tempVal / 10f + "℃" + "\n" + currVal + "mA";
+                            String splitChar = MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_singlerow")
+                                ? " " : "\n";
+                            batteryInfo = simpleTempVal + "℃" + splitChar + currVal + "mA";
+                            if (MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_reverseorder")) {
+                                batteryInfo = currVal + "mA" + splitChar + simpleTempVal + "℃";
+                            }
                         }
                         else if (opt == 2) {
-                            batteryInfo = tempVal / 10f + "℃";
+                            batteryInfo = simpleTempVal + "℃";
                         }
                         else {
                             batteryInfo = currVal + "mA";

@@ -1062,6 +1062,8 @@
     <string name="system_statusbar_batterytempandcurrent_title">显示电池温度和电流</string>
     <string name="system_statusbar_batterytempandcurrent_content_title">显示内容</string>
     <string name="system_statusbar_batterytempandcurrent_incharge_title">仅在充电时显示</string>
+    <string name="system_statusbar_batterytempandcurrent_singlerow_title">单排显示</string>
+    <string name="system_statusbar_batterytempandcurrent_reverseorder_title">反序</string>
     <string name="array_temperature">仅温度</string>
     <string name="array_current">仅电流</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">右侧显示</string>

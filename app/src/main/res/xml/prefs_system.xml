@@ -463,6 +463,20 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_statusbar_batterytempandcurrent_singlerow"
+			android:title="@string/system_statusbar_batterytempandcurrent_singlerow_title"
+			android:dependency="pref_key_system_statusbar_batterytempandcurrent"
+			miuizer:child="true"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_statusbar_batterytempandcurrent_reverseorder"
+			android:title="@string/system_statusbar_batterytempandcurrent_reverseorder_title"
+			android:dependency="pref_key_system_statusbar_batterytempandcurrent"
+			miuizer:child="true"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_statusbar_batterytempandcurrent_incharge"
 			android:title="@string/system_statusbar_batterytempandcurrent_incharge_title"
 			android:dependency="pref_key_system_statusbar_batterytempandcurrent"
