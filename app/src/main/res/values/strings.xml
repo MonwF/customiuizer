@@ -435,6 +435,7 @@
     <string name="system_usenativerecents_summ">Don\'t use recent apps list from MIUI Launcher. Works badly with full screen gestures.</string>
     <string name="system_removecleaner_title">Remove cleaner button</string>
     <string name="system_removecleaner_summ">Hide button that clears recent apps and cleans memory</string>
+    <string name="system_recents_disable_wallpaperscale_title">Disable wallpaper scale</string>
     <string name="system_clearalltasks_title">Clean all</string>
     <string name="system_clearalltasks_summ">Make cleaner button kill all running tasks</string>
     <string name="system_hidefromrecents_title">Hide from recents</string>
