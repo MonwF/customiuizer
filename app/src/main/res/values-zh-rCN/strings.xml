@@ -344,8 +344,6 @@
     <string name="system_hideproxywarn_summ">不显示耳机区域被覆盖的警告</string>
     <string name="system_resizablewidgets_title">解禁小部件调整</string>
     <string name="system_resizablewidgets_summ">解除小部件大小的限制</string>
-    <string name="system_unblockthird_title">解锁启动器</string>
-    <string name="system_unblockthird_summ">解除中国版ROM对第三方启动器的限制</string>
     <string name="system_cleanshare_title">清理共享菜单</string>
     <string name="system_cleanshare_summ">从共享菜单移除所选应用</string>
     <string name="system_clean_test">测试菜单</string>
