@@ -288,6 +288,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_statusbarcontrols")) System.StatusBarGesturesHook(lpparam);
             if (mPrefs.getBoolean("system_nodrawerbackground")) System.RemoveDrawerBackgroundHook(lpparam);
             if (mPrefs.getBoolean("system_nonetspeedseparator")) System.NoNetworkSpeedSeparatorHook(lpparam);
+            if (mPrefs.getBoolean("system_statusbaricons_clock")) System.HideIconsClockHook(lpparam);
             if (mPrefs.getBoolean("system_detailednetspeed_secunit") && !mPrefs.getBoolean("system_detailednetspeed")) System.HideNetworkSpeedUnitHook(lpparam);
             if (mPrefs.getBoolean("system_detailednetspeed_low") && !mPrefs.getBoolean("system_detailednetspeed")) System.HideLowNetworkSpeedHook(lpparam);
             if (

@@ -21,6 +21,11 @@
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_clock"
+		android:title="@string/system_statusbaricons_clock_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_nonetspeedseparator"
 		android:title="@string/system_nonetspeedseparator_title"
 		android:summary="@string/system_nonetspeedseparator_summ"

@@ -4004,6 +4004,17 @@ public class System {
         });
     }
 
+    public static void HideIconsClockHook(LoadPackageParam lpparam) {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiCollapsedStatusBarFragment", lpparam.classLoader, "showClock", boolean.class, new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                XposedHelpers.callMethod(param.thisObject, "hideClockInternal", 8, false);
+                XposedHelpers.callMethod(param.thisObject, "hideNetworkSpeedSplitter", 8, false);
+                param.setResult(null);
+            }
+        });
+    }
+
     public static void HideIconsVoWiFiHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethodSilently("com.android.systemui.MiuiOperatorCustomizedPolicy$MiuiOperatorConfig", lpparam.classLoader, "getHideVowifi", XC_MethodReplacement.returnConstant(true));
     }
