@@ -364,8 +364,6 @@
     <string name="system_hideproxywarn_summ">Do not display a warning that earphone area is covered</string>
     <string name="system_resizablewidgets_title">Free widget resize</string>
     <string name="system_resizablewidgets_summ">Remove any widget size limitations</string>
-    <string name="system_unblockthird_title">Unblock launchers</string>
-    <string name="system_unblockthird_summ">Remove restriction of 3rd party launchers on Chinese ROMs</string>
     <string name="system_cleanshare_title">Clean share menu</string>
     <string name="system_cleanshare_summ">Remove selected apps from share menu</string>
     <string name="system_clean_test">Test menu</string>

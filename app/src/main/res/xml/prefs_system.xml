@@ -1398,12 +1398,6 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_unblockthird"
-			android:title="@string/system_unblockthird_title"
-			android:summary="@string/system_unblockthird_summ"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_magnifier"
 			android:title="@string/system_magnifier_title"
 			android:summary="@string/system_magnifier_summ"

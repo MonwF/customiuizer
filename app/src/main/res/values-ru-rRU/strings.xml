@@ -576,8 +576,6 @@
     <string name="system_hideproxywarn_summ">Не показывать предупреждение о закрытой области динамика</string>
     <string name="system_resizablewidgets_title">Свободный размер виджетов</string>
     <string name="system_resizablewidgets_summ">Убирает все ограничения на размер виджетов</string>
-    <string name="system_unblockthird_title">Разблокировать ланчеры</string>
-    <string name="system_unblockthird_summ">Отключает ограничение на использование сторонних ланчеров на китайских прошивках</string>
     <string name="system_cleanshare_title">Очистка меню \"Поделиться\"</string>
     <string name="system_cleanshare_summ">Скрыть выбранные приложения в списке отправки данных</string>
     <string name="system_clean_test">Проверка меню</string>

@@ -891,8 +891,6 @@
     <string name="system_toasttime_note">顯示時長始終大於 1 秒</string>
     <string name="system_toasttime_summ">修改 Toast 顯示時長</string>
     <string name="system_toasttime_title">顯示時間修改</string>
-    <string name="system_unblockthird_summ">解除中國版ROM對第三方啟動器的限制</string>
-    <string name="system_unblockthird_title">解鎖啟動器</string>
     <string name="system_usenativerecents_summ">請不要使用MIUI啟動器的最近應用列表。使用全屏手勢效果不好。</string>
     <string name="system_usenativerecents_title">使用本地實現</string>
     <string name="system_vibration_amp_notif_title">通知</string>

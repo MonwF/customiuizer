@@ -349,8 +349,6 @@
     <string name="system_hideproxywarn_summ">Nie wyświetlaj ostrzeżenia, że obszar słuchawek jest zasłonięty</string>
     <string name="system_resizablewidgets_title">Dowolna zmiana rozmiaru widżetu</string>
     <string name="system_resizablewidgets_summ">Usuń wszelkie ograniczenia rozmiaru widżetu</string>
-    <string name="system_unblockthird_title">Odblokuj launcher</string>
-    <string name="system_unblockthird_summ">Usuń ograniczenia launcherów innych firm na chińskich ROMach</string>
     <string name="system_cleanshare_title">Wyczyść menu udostępniania</string>
     <string name="system_cleanshare_summ">Usuń wybrane aplikacje z menu udostępniania</string>
     <string name="system_clean_test">Menu testowe</string>
