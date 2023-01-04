@@ -195,10 +195,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 System.AddFiveGTileHook(lpparam);
             }
 
-            if (mPrefs.getBoolean("system_hidelowbatwarn")) {
-                System.NoLowBatteryWarningHook(lpparam);
-            }
-
             if (mPrefs.getInt("system_qsgridcolumns", 2) > 2 || mPrefs.getInt("system_qsgridrows", 1) > 1) System.QSGridRes();
             if (mPrefs.getInt("system_qqsgridcolumns", 2) > 2) System.QQSGridRes();
             if (mPrefs.getBoolean("system_volumetimer")) System.VolumeTimerValuesRes(lpparam);
@@ -399,6 +395,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("various_show_battery_temperature")) Various.ShowTempInBatteryHook(lpparam);
             if (mPrefs.getBoolean("various_enable_sc_ai_clipboard_location")) Various.UnlockClipboardAndLocationHook(lpparam);
             if (mPrefs.getBoolean("system_statusbaricons_privacy")) System.HideIconsPrivacyHook(lpparam);
+            if (mPrefs.getBoolean("system_hidelowbatwarn")) {
+                System.NoLowBatteryWarningHook(lpparam);
+            }
         }
 
         if (pkg.equals("com.miui.powerkeeper")) {
