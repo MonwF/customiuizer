@@ -6726,7 +6726,15 @@ public class System {
     }
 
     public static void NoLowBatteryWarningHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.power.PowerNotificationWarnings", lpparam.classLoader, "showLowBatteryWarning", boolean.class, XC_MethodReplacement.DO_NOTHING);
+        MethodHook settingHook = new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                String key = (String)param.args[1];
+                if ("low_battery_dialog_disabled".equals(key)) param.setResult(1);
+            }
+        };
+        Helpers.hookAllMethods(Settings.System.class, "getIntForUser", settingHook);
+        Helpers.hookAllMethods(Settings.System.class, "getInt", settingHook);
     }
 
     public static void TempHideOverlaySystemUIHook(LoadPackageParam lpparam) {
