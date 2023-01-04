@@ -195,6 +195,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 System.AddFiveGTileHook(lpparam);
             }
 
+            if (mPrefs.getBoolean("system_fw_splitscreen")) System.MultiWindowPlusHook(lpparam);
+
             if (mPrefs.getInt("system_qsgridcolumns", 2) > 2 || mPrefs.getInt("system_qsgridrows", 1) > 1) System.QSGridRes();
             if (mPrefs.getInt("system_qqsgridcolumns", 2) > 2) System.QQSGridRes();
             if (mPrefs.getBoolean("system_volumetimer")) System.VolumeTimerValuesRes(lpparam);
