@@ -542,6 +542,33 @@
 			android:title="@string/system_statusbar_dualrows_title"
 			android:summary="@string/system_statusbar_dualrows_summ" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_statusbar_dualrows_firstrow_horizmargin"
+			android:dependency="pref_key_system_statusbar_dualrows"
+			android:title="@string/system_statusbar_dualrows_firstrow_horizmargin_title" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_statusbar_dualrows_firstrow_horizmargin_left"
+			android:title="@string/system_statusbar_mobiletype_single_leftmargin_title"
+			android:dependency="pref_key_system_statusbar_dualrows_firstrow_horizmargin"
+			android:defaultValue="0"
+			miuizer:child="true"
+			miuizer:minValue="0"
+			miuizer:maxValue="40"
+			miuizer:stepValue="1"
+			miuizer:format="%s dip" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_statusbar_dualrows_firstrow_horizmargin_right"
+			android:title="@string/system_statusbar_dualsimin2rows_rightmargin_title"
+			android:dependency="pref_key_system_statusbar_dualrows_firstrow_horizmargin"
+			android:defaultValue="0"
+			miuizer:child="true"
+			miuizer:minValue="0"
+			miuizer:maxValue="40"
+			miuizer:stepValue="1"
+			miuizer:format="%s dip" />
+
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_system_statusbarheight"
 			android:title="@string/system_statusbarheight_title"
