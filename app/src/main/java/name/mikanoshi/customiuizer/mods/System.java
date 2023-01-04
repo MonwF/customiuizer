@@ -7378,7 +7378,7 @@ public class System {
     }
 
     public static String getTaskPackageName(Object thisObject, int taskId, ActivityOptions options) {
-        return getTaskPackageName(thisObject, taskId, true, options);
+        return getTaskPackageName(thisObject, taskId, options != null, options);
     }
 
     public static String getTaskPackageName(Object thisObject, int taskId, boolean withOptions, ActivityOptions options) {
@@ -7480,7 +7480,7 @@ public class System {
                         options = patchActivityOptions(mContext, options, pkgName, MiuiMultiWindowUtils);
                         param.setResult(options);
                     } catch (Throwable t) {
-                        XposedBridge.log(t);
+                        Helpers.log(t);
                     }
                 }
                 else if (windowingMode == 5 && !fwApps.containsKey(pkgName)) {
@@ -7495,9 +7495,16 @@ public class System {
             protected void after(MethodHookParam param) throws Throwable {
                 Object safeOptions = param.args[3];
                 ActivityOptions options = (ActivityOptions)XposedHelpers.callMethod(safeOptions, "getOptions", param.thisObject);
-                int windowingMode = options == null ? -1 : (int)XposedHelpers.callMethod(options, "getLaunchWindowingMode");
-                String pkgName = getTaskPackageName(param.thisObject, (int)param.args[2], options);
+                if (Helpers.isTPlus()) {
+                    if (options != null) {
+                        Object windowToken = XposedHelpers.callMethod(options, "getLaunchRootTask");
+                        if (windowToken != null) return;
+                    }
+                }
+                String pkgName = (String) XposedHelpers.getAdditionalInstanceField(param.thisObject, "startPackageName");
+                XposedHelpers.removeAdditionalInstanceField(param.thisObject, "startPackageName");
                 if (fwBlackList.contains(pkgName)) return;
+                int windowingMode = options == null ? -1 : (int)XposedHelpers.callMethod(options, "getLaunchWindowingMode");
                 if (windowingMode == 5 && pkgName != null) {
                     fwApps.put(pkgName, new Pair<Float, Rect>(0f, null));
                     Context mContext = (Context)XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.thisObject, "mService"), "mContext");
@@ -7508,17 +7515,26 @@ public class System {
             protected void before(MethodHookParam param) throws Throwable {
                 Object safeOptions = param.args[3];
                 ActivityOptions options = (ActivityOptions)XposedHelpers.callMethod(safeOptions, "getOptions", param.thisObject);
-                int windowingMode = options == null ? -1 : (int)XposedHelpers.callMethod(options, "getLaunchWindowingMode");
+                if (Helpers.isTPlus()) {
+                    if (options != null) {
+                        Object windowToken = XposedHelpers.callMethod(options, "getLaunchRootTask");
+                        if (windowToken != null) return;
+                    }
+                }
                 String pkgName = getTaskPackageName(param.thisObject, (int)param.args[2], options);
-                if (fwBlackList.contains(pkgName)) return;
-                if (windowingMode != 5 && fwApps.containsKey(pkgName)) {
-                    Context mContext = (Context)XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.thisObject, "mService"), "mContext");
-                    options = patchActivityOptions(mContext, options, pkgName, MiuiMultiWindowUtils);
-                    XposedHelpers.setObjectField(safeOptions, "mOriginalOptions", options);
-                    param.args[3] = safeOptions;
-                    Intent intent = new Intent(ACTION_PREFIX + "dismissRecentsWhenFreeWindowOpen");
-                    intent.putExtra("package", pkgName);
-                    mContext.sendBroadcast(intent);
+                XposedHelpers.setAdditionalInstanceField(param.thisObject, "startPackageName",  pkgName);
+                if (!fwBlackList.contains(pkgName)) {
+                    int windowingMode = options == null ? -1 : (int)XposedHelpers.callMethod(options, "getLaunchWindowingMode");
+                    if (windowingMode != 5 && fwApps.containsKey(pkgName)) {
+                        Object mService = XposedHelpers.getObjectField(param.thisObject, "mService");
+                        Context mContext = (Context)XposedHelpers.getObjectField(mService, "mContext");
+                        options = patchActivityOptions(mContext, options, pkgName, MiuiMultiWindowUtils);
+                        XposedHelpers.setObjectField(safeOptions, "mOriginalOptions", options);
+                        param.args[3] = safeOptions;
+                        Intent intent = new Intent(ACTION_PREFIX + "dismissRecentsWhenFreeWindowOpen");
+                        intent.putExtra("package", pkgName);
+                        mContext.sendBroadcast(intent);
+                    }
                 }
             }
         });
