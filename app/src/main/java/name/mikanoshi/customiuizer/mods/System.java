@@ -2720,6 +2720,28 @@ public class System {
         });
     }
 
+    public static void DisableLauncherWallpaperScale(LoadPackageParam lpparam) {
+        Class<?> WallpaperZoomManagerKtClass = findClassIfExists("com.miui.home.launcher.wallpaper.WallpaperZoomManagerKt", lpparam.classLoader);
+        if (MainModule.mPrefs.getBoolean("launcher_disable_wallpaperscale")) {
+            XposedHelpers.setStaticBooleanField(WallpaperZoomManagerKtClass, "ZOOM_ENABLED", false);
+            return;
+        }
+        Helpers.hookAllMethods("com.miui.home.recents.OverviewState", lpparam.classLoader, "onStateEnabled", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                if (WallpaperZoomManagerKtClass != null) {
+                    XposedHelpers.setStaticBooleanField(WallpaperZoomManagerKtClass, "ZOOM_ENABLED", false);
+                }
+            }
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                if (WallpaperZoomManagerKtClass != null) {
+                    XposedHelpers.setStaticBooleanField(WallpaperZoomManagerKtClass, "ZOOM_ENABLED", true);
+                }
+            }
+        });
+    }
+
     public static void ExtendedPowerMenuHook(LoadPackageParam lpparam) {
         final boolean[] isListened = {false};
         Helpers.findAndHookMethod("com.android.systemui.SystemUIApplication", lpparam.classLoader, "onCreate", new MethodHook() {

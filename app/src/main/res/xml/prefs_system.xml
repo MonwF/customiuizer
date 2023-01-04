@@ -1016,6 +1016,11 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_recents_disable_wallpaperscale"
+			android:title="@string/system_recents_disable_wallpaperscale_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_removecleaner"
 			android:title="@string/system_removecleaner_title"
 			android:summary="@string/system_removecleaner_summ"

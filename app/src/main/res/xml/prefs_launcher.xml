@@ -252,6 +252,11 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_launcher_disable_wallpaperscale"
+			android:title="@string/system_recents_disable_wallpaperscale_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_nozoomanim"
 			android:title="@string/launcher_nozoomanim_title"
 			android:summary="@string/launcher_nozoomanim_summ"
