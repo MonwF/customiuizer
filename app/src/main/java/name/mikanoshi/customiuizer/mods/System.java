@@ -6157,7 +6157,8 @@ public class System {
                         isSliding = false;
                         if (mPct != null) {
                             mPct.setVisibility(View.GONE);
-                            if (tapCurrentBrightness > -0.5f) {
+                            int opt = MainModule.mPrefs.getStringAsInt(tapStartPointers == 2 ? "system_statusbarcontrols_dual" : "system_statusbarcontrols_single", 1);
+                            if (tapCurrentBrightness > -0.5f && opt == 2) {
                                 mDisplayManager = XposedHelpers.getObjectField(mBrightnessController, "mDisplayManager");
                                 XposedHelpers.callMethod(mDisplayManager, "setBrightness", mContext.getDisplay().getDisplayId(), tapCurrentBrightness);
                             }

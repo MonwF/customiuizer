@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name" translatable="false">CustoMIUIzer13</string>
     <string name="app_about">O aplikacji</string>
     <string name="about_version">Wersja %1$s</string>
     <string name="about_dev">by Mikanoshi &amp; MonwF</string>
