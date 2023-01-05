@@ -23,28 +23,29 @@ public class CategorySelector extends SubFragment {
 
 		PreferenceScreen screen = findPreference("pref_key_cat");
 		int cnt = screen.getPreferenceCount();
-		for (int i = 0; i < cnt; i++)
-		screen.getPreference(i).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				if (!(preference instanceof PreferenceEx)) return false;
-				Bundle bundle = new Bundle();
-				bundle.putString("sub", preference.getKey());
-				MainFragment mainFrag = ((MainFragment)getTargetFragment());
-				switch (cat) {
-					case "pref_key_system":
-						openSubFragment(mainFrag.prefSystem, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_mods, R.xml.prefs_system);
-						break;
-					case "pref_key_launcher":
-						openSubFragment(mainFrag.prefLauncher, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.launcher_title, R.xml.prefs_launcher);
-						break;
-					case "pref_key_controls":
-						openSubFragment(mainFrag.prefControls, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.controls_mods, R.xml.prefs_controls);
-						break;
+		for (int i = 0; i < cnt; i++) {
+			screen.getPreference(i).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+				@Override
+				public boolean onPreferenceClick(Preference preference) {
+					if (!(preference instanceof PreferenceEx)) return false;
+					Bundle bundle = new Bundle();
+					bundle.putString("sub", preference.getKey());
+					MainFragment mainFrag = ((MainFragment)getTargetFragment());
+					switch (cat) {
+						case "pref_key_system":
+							openSubFragment(mainFrag.prefSystem, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_mods, R.xml.prefs_system);
+							break;
+						case "pref_key_launcher":
+							openSubFragment(mainFrag.prefLauncher, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.launcher_title, R.xml.prefs_launcher);
+							break;
+						case "pref_key_controls":
+							openSubFragment(mainFrag.prefControls, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.controls_mods, R.xml.prefs_controls);
+							break;
+					}
+					return true;
 				}
-				return true;
-			}
-		});
+			});
+		}
 	}
 
 }

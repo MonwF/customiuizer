@@ -26,6 +26,7 @@ import name.mikanoshi.customiuizer.SnoozedActivity;
 import name.mikanoshi.customiuizer.SubFragment;
 import name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx;
 import name.mikanoshi.customiuizer.prefs.ListPreferenceEx;
+import name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx;
 import name.mikanoshi.customiuizer.prefs.PreferenceEx;
 import name.mikanoshi.customiuizer.prefs.SeekBarPreference;
 import name.mikanoshi.customiuizer.qs.AutoRotateService;
@@ -42,7 +43,6 @@ public class System extends SubFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
 		switch (sub) {
 			case "pref_key_system_cat_screen":
 				findPreference("pref_key_system_orientationlock").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -123,11 +123,15 @@ public class System extends SubFragment {
 
 			case "pref_key_system_cat_statusbar":
 				findPreference("pref_key_system_statusbarcolor_apps").setOnPreferenceClickListener(openAppsEdit);
-
 				findPreference("pref_key_system_detailednetspeed_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
-						openSubFragment(new SubFragment(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_detailednetspeed_title, R.xml.prefs_system_detailednetspeed);
+						Bundle args = new Bundle();
+						args.putBoolean("isStandalone", true);
+						args.putString("sub", "pref_key_system_detailednetspeed_cat");
+						Bundle catInfo = new Bundle();
+						args.putBundle("catInfo", catInfo);
+						openSubFragment(new System(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_netspeed_cat_title, R.xml.prefs_system_detailednetspeed);
 						return true;
 					}
 				});
@@ -501,6 +505,21 @@ public class System extends SubFragment {
 					findPreference("pref_key_system_defaultusb_unsecure").setEnabled(false);
 				}
 
+				break;
+			case "pref_key_system_detailednetspeed_cat":
+				findPreference("pref_key_system_detailednetspeed").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+					@Override
+					public boolean onPreferenceChange(Preference preference, Object newValue) {
+						SeekBarPreference netspeedFontSizePref = findPreference("pref_key_system_netspeed_fontsize");
+						if ((Boolean)newValue) {
+							netspeedFontSizePref.setValue(16);
+						}
+						else {
+							netspeedFontSizePref.setValue(14);
+						}
+						return true;
+					}
+				});
 				break;
 		}
 	}
