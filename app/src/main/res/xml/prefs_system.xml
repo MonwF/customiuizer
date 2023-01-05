@@ -1062,6 +1062,11 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_recents_hide_statusbar"
+			android:title="@string/system_hidelsstatusbar_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_removecleaner"
 			android:title="@string/system_removecleaner_title"
 			android:summary="@string/system_removecleaner_summ"

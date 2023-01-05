@@ -1,5 +1,6 @@
 package name.mikanoshi.customiuizer.mods;
 
+import static de.robv.android.xposed.XposedHelpers.findClassIfExists;
 import static name.mikanoshi.customiuizer.mods.GlobalActions.ACTION_PREFIX;
 
 import android.annotation.SuppressLint;
@@ -1594,6 +1595,33 @@ public class Launcher {
 		};
 		Helpers.findAndHookMethod("com.miui.home.launcher.allapps.category.fragment.AppsListFragment", lpparam.classLoader, "onClick", View.class, hook);
 		Helpers.findAndHookMethod("com.miui.home.launcher.allapps.category.fragment.RecommendCategoryAppListFragment", lpparam.classLoader, "onClick", View.class, hook);
+	}
+
+	public static void DisableLauncherWallpaperScale(LoadPackageParam lpparam) {
+		Class<?> WallpaperZoomManagerKtClass = findClassIfExists("com.miui.home.launcher.wallpaper.WallpaperZoomManagerKt", lpparam.classLoader);
+		if (MainModule.mPrefs.getBoolean("launcher_disable_wallpaperscale")) {
+			XposedHelpers.setStaticBooleanField(WallpaperZoomManagerKtClass, "ZOOM_ENABLED", false);
+			return;
+		}
+		Helpers.hookAllMethods("com.miui.home.recents.OverviewState", lpparam.classLoader, "onStateEnabled", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				if (WallpaperZoomManagerKtClass != null) {
+					XposedHelpers.setStaticBooleanField(WallpaperZoomManagerKtClass, "ZOOM_ENABLED", false);
+				}
+			}
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				if (WallpaperZoomManagerKtClass != null) {
+					XposedHelpers.setStaticBooleanField(WallpaperZoomManagerKtClass, "ZOOM_ENABLED", true);
+				}
+			}
+		});
+	}
+
+	public static void HideStatusBarInRecentsHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.miui.home.launcher.common.DeviceLevelUtils", lpparam.classLoader, "isHideStatusBarWhenEnterRecents", XC_MethodReplacement.returnConstant(true));
+		Helpers.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "keepStatusBarShowingForBetterPerformance", XC_MethodReplacement.returnConstant(false));
 	}
 
 	public static void LauncherPinchHook(LoadPackageParam lpparam) {
