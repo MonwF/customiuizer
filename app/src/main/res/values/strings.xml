@@ -547,8 +547,6 @@
     <string name="launcher_folder_cols_title">Number of columns in folders</string>
     <string name="launcher_folderwidth_title">Use entire folder\'s width</string>
     <string name="launcher_folderspace_title">Reduce side padding</string>
-    <string name="launcher_fixstatusbarmode_title">Fix status bar mode</string>
-    <string name="launcher_fixstatusbarmode_summ">Adjust status bar contents color for light/dark wallpapers on developer launcher version</string>
     <string name="launcher_fixanim_title">Fix animation</string>
     <string name="launcher_fixanim_summ">Apply value animators\' duration scaling to some launcher animations</string>
     <string name="launcher_fixlaunch_title">Fix app info</string>

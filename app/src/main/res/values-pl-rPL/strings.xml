@@ -530,8 +530,6 @@
     <string name="launcher_folder_cols_title">Liczba kolumn w folderach</string>
     <string name="launcher_folderwidth_title">Użyj całej szerokości folderu</string>
     <string name="launcher_folderspace_title">Zmniejsz boczną wyściółkę</string>
-    <string name="launcher_fixstatusbarmode_title">Napraw tryb paska stanu</string>
-    <string name="launcher_fixstatusbarmode_summ">Dostosuj kolor zawartości paska stanu dla jasnych/ciemnych tapet w wersji dla programistów</string>
     <string name="launcher_fixanim_title">Napraw animację</string>
     <string name="launcher_fixanim_summ">Zastosuj skalowanie czasu trwania animatorów wartości do niektórych animacji launchera</string>
     <string name="launcher_fixlaunch_title">Napraw informacje o aplikacji</string>

@@ -524,9 +524,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("controls_fsg_horiz")) Launcher.FSGesturesHook(lpparam);
             if (mPrefs.getBoolean("system_removecleaner")) System.HideMemoryCleanHook(lpparam, true);
             if (mPrefs.getBoolean("system_recents_disable_wallpaperscale") || mPrefs.getBoolean("launcher_disable_wallpaperscale")) System.DisableLauncherWallpaperScale(lpparam);
-            if (mPrefs.getBoolean("system_fw_sticky")) System.StickyFloatingWindowsLauncherHook(lpparam);
+            if (mPrefs.getBoolean("system_fw_sticky")) Launcher.StickyFloatingWindowsLauncherHook(lpparam);
             if (mPrefs.getBoolean("system_fw_splitscreen")) System.MultiWindowPlusHook(lpparam);
-            //if (mPrefs.getBoolean("launcher_fixstatusbarmode")) Launcher.FixStatusBarModeHook(lpparam);
             if (mPrefs.getBoolean("launcher_fixanim")) Launcher.FixAnimHook(lpparam);
             if (mPrefs.getBoolean("launcher_hideseekpoints")) Launcher.HideSeekPointsHook(lpparam);
             if (mPrefs.getBoolean("launcher_privacyapps_gest") ||

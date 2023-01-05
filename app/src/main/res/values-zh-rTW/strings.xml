@@ -316,8 +316,6 @@
     <string name="launcher_fixanim_title">修復動畫</string>
     <string name="launcher_fixlaunch_summ">長按功能表始終開啟MIUI樣式應用訊息</string>
     <string name="launcher_fixlaunch_title">修復應用訊息</string>
-    <string name="launcher_fixstatusbarmode_summ">調整開發版啟動器上淺色/深色壁紙的狀態欄內容顏色</string>
-    <string name="launcher_fixstatusbarmode_title">修復狀態欄模式</string>
     <string name="launcher_folder_cols_title">資料夾排列數量</string>
     <string name="launcher_folderblur">背景模糊</string>
     <string name="launcher_folderblur_opacity_title">可見度</string>

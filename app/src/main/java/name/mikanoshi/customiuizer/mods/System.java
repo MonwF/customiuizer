@@ -7366,6 +7366,7 @@ public class System {
 
     public static void NoFloatingWindowBlacklistHook(LoadPackageParam lpparam) {
         MainModule.resHooks.setResReplacement("android", "array", "freeform_black_list", R.array.miui_resize_black_list);
+        MainModule.resHooks.setResReplacement("com.miui.rom", "array", "freeform_black_list", R.array.miui_resize_black_list);
         MethodHook clearHook = new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
@@ -7655,28 +7656,6 @@ public class System {
         });
     }
 
-    public static void StickyFloatingWindowsLauncherHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.miui.home.recents.views.RecentsContainer", lpparam.classLoader, "onAttachedToWindow", new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                Context mContext = (Context) XposedHelpers.callMethod(param.thisObject, "getContext");
-                mContext.registerReceiver(new BroadcastReceiver() {
-                    @Override
-                    public void onReceive(Context context, Intent intent) {
-                        try {
-                            String pkgName = intent.getStringExtra("package");
-                            if (pkgName != null) {
-                                XposedHelpers.callMethod(param.thisObject, "dismissRecentsToLaunchTargetTaskOrHome", pkgName, true);
-                            }
-                        } catch (Throwable t) {
-                            XposedBridge.log(t);
-                        }
-                    }
-                }, new IntentFilter(ACTION_PREFIX + "dismissRecentsWhenFreeWindowOpen"));
-            }
-        });
-    }
-
     public static void MessagingStyleLinesSysHook() {
         Helpers.findAndHookMethod("android.app.Notification.MessagingStyle", null, "makeMessagingView", boolean.class, boolean.class, new MethodHook() {
             @Override
@@ -7723,10 +7702,12 @@ public class System {
         }
         else if (lpparam.packageName.equals("android")) {
             MainModule.resHooks.setResReplacement("android", "array", "miui_resize_black_list", R.array.miui_resize_black_list);
+            MainModule.resHooks.setResReplacement("com.miui.rom", "array", "miui_resize_black_list", R.array.miui_resize_black_list);
             Class <?> AtmClass = XposedHelpers.findClassIfExists("com.android.server.wm.ActivityTaskManagerServiceImpl", lpparam.classLoader);
             if (AtmClass != null) {
+                Helpers.findAndHookMethod(AtmClass, "updateResizeBlackList", Context.class, XC_MethodReplacement.DO_NOTHING);
+                Helpers.findAndHookMethod(AtmClass, "getSplitScreenBlackListFromXml", XC_MethodReplacement.DO_NOTHING);
                 Helpers.hookAllMethods(AtmClass, "inResizeBlackList", XC_MethodReplacement.returnConstant(false));
-                Helpers.findAndHookMethod(AtmClass, "inResizeWhiteList", String.class, XC_MethodReplacement.returnConstant(true));
             }
         }
 //        else {

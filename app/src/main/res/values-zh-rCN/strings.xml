@@ -513,8 +513,6 @@
     <string name="launcher_folder_cols_title">文件夹排列数量</string>
     <string name="launcher_folderwidth_title">使用整个文件夹的宽度</string>
     <string name="launcher_folderspace_title">减少边距</string>
-    <string name="launcher_fixstatusbarmode_title">修复状态栏模式</string>
-    <string name="launcher_fixstatusbarmode_summ">调整开发版启动器上浅色/深色壁纸的状态栏内容颜色</string>
     <string name="launcher_fixanim_title">修复动画</string>
     <string name="launcher_fixanim_summ">将动画值时长比例应用到某些启动器动画</string>
     <string name="launcher_fixlaunch_title">修复应用信息</string>

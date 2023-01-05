@@ -502,8 +502,6 @@
     <string name="launcher_folder_cols_title">Число колонок в папках</string>
     <string name="launcher_folderwidth_title">Использовать всю ширину папки</string>
     <string name="launcher_folderspace_title">Уменьшить боковые отступы</string>
-    <string name="launcher_fixstatusbarmode_title">Исправить режим строки состояния</string>
-    <string name="launcher_fixstatusbarmode_summ">Изменяет цвет содержимого строки состояния в зависимости от светлых/тёмных обоев на версии ланчера для разработчиков</string>
     <string name="launcher_fixanim_title">Исправить анимацию</string>
     <string name="launcher_fixanim_summ">Применяет масштабирование продолжительности аниматоров значений к некоторым анимациям ланчера</string>
     <string name="launcher_fixlaunch_title">Исправить данные о приложении</string>
