@@ -1639,15 +1639,12 @@ public class Launcher {
 	}
 
 	public static void DisableLauncherLogHook(LoadPackageParam lpparam) {
-		Helpers.hookAllMethods("com.miui.home.launcher.AnalyticalDataCollectorJobService", lpparam.classLoader, "onStartJob", XC_MethodReplacement.DO_NOTHING);
+		Helpers.hookAllMethods("com.miui.home.launcher.AnalyticalDataCollectorJobService", lpparam.classLoader, "onStartJob", XC_MethodReplacement.returnConstant(false));
 		Helpers.findAndHookMethod("com.miui.home.launcher.AnalyticalDataCollector", lpparam.classLoader, "canTrackLaunchAppEvent", XC_MethodReplacement.returnConstant(false));
-		Helpers.findAndHookMethod("com.miui.home.launcher.common.OneTrackInterfaceUtils", lpparam.classLoader, "init", Context.class, new MethodHook() {
-			@Override
-			protected void before(MethodHookParam param) throws Throwable {
-				XposedHelpers.setObjectField(param.thisObject, "IS_ENABLE", false);
-				param.setResult(null);
-			}
-		});
+		Class <?> OneTrackInterfaceUtils = findClassIfExists("com.miui.home.launcher.common.OneTrackInterfaceUtils", lpparam.classLoader);
+		if (OneTrackInterfaceUtils != null) {
+			XposedHelpers.setStaticObjectField(OneTrackInterfaceUtils, "IS_ENABLE", false);
+		}
 	}
 
 	public static void LauncherPinchHook(LoadPackageParam lpparam) {
