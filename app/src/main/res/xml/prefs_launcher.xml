@@ -1,6 +1,6 @@
-<PreferenceScreen
-	xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:miuizer="http://schemas.android.com/apk/res-auto"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:key="pref_key_launcher">
@@ -195,6 +195,11 @@
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_launcher_cat_bugfixes"
 		android:title="@string/launcher_bugfixes">
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_launcher_disable_log"
+			android:title="@string/launcher_disable_log_title"
+			android:defaultValue="true" />
+
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_fixanim"
 			android:title="@string/launcher_fixanim_title"

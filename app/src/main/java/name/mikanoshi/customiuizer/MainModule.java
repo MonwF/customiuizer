@@ -275,18 +275,15 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_statusbar_horizmargin")) System.HorizMarginHook(lpparam);
             if (mPrefs.getBoolean("system_statusbar_topmargin")) System.TopMarginHook(lpparam);
             if (mPrefs.getBoolean("system_showpct")) System.BrightnessPctHook(lpparam);
-            if (mPrefs.getBoolean("system_cleanmirror")) System.ClearBrightnessMirrorHook(lpparam);
             if (mPrefs.getBoolean("system_hidelsstatusbar")) System.HideLockScreenStatusBarHook(lpparam);
             if (mPrefs.getBoolean("system_hidelsclock")) System.HideLockScreenClockHook(lpparam);
             if (mPrefs.getBoolean("system_hidelshint")) System.HideLockScreenHintHook(lpparam);
-            if (mPrefs.getBoolean("system_drawer_hidebackground")) System.HideThemeBackgroundBrightnessHook(lpparam);
             if (mPrefs.getBoolean("system_allowdirectreply")) System.AllowDirectReplyHook(lpparam);
             if (mPrefs.getBoolean("system_allownotifonkeyguard")) System.AllowAllKeyguardHook(lpparam);
             if (mPrefs.getBoolean("system_allownotiffloat")) System.AllowAllFloatHook(lpparam);
             if (mPrefs.getBoolean("system_hideqs")) System.HideQSHook(lpparam);
             if (mPrefs.getBoolean("system_lsalarm")) System.LockScreenAlaramHook(lpparam);
             if (mPrefs.getBoolean("system_statusbarcontrols")) System.StatusBarGesturesHook(lpparam);
-            if (mPrefs.getBoolean("system_nodrawerbackground")) System.RemoveDrawerBackgroundHook(lpparam);
             if (mPrefs.getBoolean("system_nonetspeedseparator")) System.NoNetworkSpeedSeparatorHook(lpparam);
             if (mPrefs.getBoolean("system_statusbaricons_clock")) System.HideIconsClockHook(lpparam);
             if (mPrefs.getBoolean("system_detailednetspeed_secunit") && !mPrefs.getBoolean("system_detailednetspeed")) System.HideNetworkSpeedUnitHook(lpparam);
@@ -467,9 +464,14 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getInt("launcher_topmargin", 0) > 0) Launcher.TopSpacingRes();
             if (mPrefs.getInt("launcher_bottommargin", 0) > 0) Launcher.BottomSpacingRes();
             if (mPrefs.getInt("launcher_indicatorheight", 9) > 9) Launcher.IndicatorHeightRes();
-            if (mPrefs.getBoolean("launcher_unlockgrids")) Launcher.UnlockGridsRes();
+            if (mPrefs.getBoolean("launcher_unlockgrids")) {
+                Launcher.UnlockGridsRes();
+                Launcher.UnlockGridsHook(lpparam);
+            }
             if (mPrefs.getBoolean("launcher_docktitles")) Launcher.ShowHotseatTitlesRes();
-            if (mPrefs.getBoolean("launcher_unlockgrids")) Launcher.UnlockGridsHook(lpparam);
+            if (mPrefs.getBoolean("launcher_disable_log")) {
+                Launcher.DisableLauncherLogHook(lpparam);
+            }
             if (isLauncherPerf) handleLoadLauncher(lpparam);
         }
 

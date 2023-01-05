@@ -5545,28 +5545,6 @@ public class System {
         });
     }
 
-    public static void HideThemeBackgroundBrightnessHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BrightnessMirrorController", lpparam.classLoader, "showMirror", new MethodHook() {
-            @Override
-            protected void before(MethodHookParam param) throws Throwable {
-                Object mNotificationPanel = XposedHelpers.getObjectField(param.thisObject, "mNotificationPanel");
-                if (mNotificationPanel == null) return;
-                View mThemeBackgroundView = (View)XposedHelpers.getObjectField(mNotificationPanel, "mThemeBackgroundView");
-                if (mThemeBackgroundView != null) mThemeBackgroundView.setVisibility(View.GONE);
-            }
-        });
-
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BrightnessMirrorController", lpparam.classLoader, "hideMirror", new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                Object mNotificationPanel = XposedHelpers.getObjectField(param.thisObject, "mNotificationPanel");
-                if (mNotificationPanel == null) return;
-                View mThemeBackgroundView = (View)XposedHelpers.getObjectField(mNotificationPanel, "mThemeBackgroundView");
-                if (mThemeBackgroundView != null) mThemeBackgroundView.setVisibility(View.VISIBLE);
-            }
-        });
-    }
-
     public static void DisableSystemIntegrityHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethod("android.util.apk.ApkSignatureVerifier", lpparam.classLoader, "getMinimumSignatureSchemeVersionForTargetSdk", int.class, XC_MethodReplacement.returnConstant(1));
     }
@@ -5831,24 +5809,6 @@ public class System {
                         }
                     }, 300);
                 }
-            }
-        });
-    }
-
-    public static void RemoveDrawerBackgroundHook(LoadPackageParam lpparam) {
-        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, "drawChild", new MethodHook() {
-            @Override
-            protected void before(MethodHookParam param) throws Throwable {
-                XposedHelpers.setAdditionalInstanceField(param.thisObject, "mStatusBarStateOrig", XposedHelpers.getIntField(param.thisObject, "mStatusBarState"));
-                XposedHelpers.setIntField(param.thisObject, "mStatusBarState", 0);
-                XposedHelpers.setAdditionalInstanceField(param.thisObject, "mKeyguardShowingOrig", XposedHelpers.getBooleanField(param.thisObject, "mKeyguardShowing"));
-                XposedHelpers.setBooleanField(param.thisObject, "mKeyguardShowing", false);
-            }
-
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                XposedHelpers.setIntField(param.thisObject, "mStatusBarState", (int)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mStatusBarStateOrig"));
-                XposedHelpers.setBooleanField(param.thisObject, "mKeyguardShowing", (boolean)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mKeyguardShowingOrig"));
             }
         });
     }
@@ -8011,17 +7971,6 @@ public class System {
             }
         };
         Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarWifiView", lpparam.classLoader, "applyWifiState", hideWifiActivity);
-    }
-
-    public static void ClearBrightnessMirrorHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BrightnessMirrorController", lpparam.classLoader, "showMirror", new MethodHook() {
-            @Override
-            protected void after(final MethodHookParam param) throws Throwable {
-                View mBrightnessMirror = (View)XposedHelpers.getObjectField(param.thisObject, "mBrightnessMirror");
-                mBrightnessMirror.setElevation(0);
-                mBrightnessMirror.setBackgroundColor(Color.TRANSPARENT);
-            }
-        });
     }
 
     public static void SetLockscreenWallpaperHook(LoadPackageParam lpparam) {

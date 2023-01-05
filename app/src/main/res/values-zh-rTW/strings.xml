@@ -573,8 +573,6 @@
     <string name="system_charginginfo_voltage_title">電池電壓</string>
     <string name="system_charginginfo_wattage_title">耗電量</string>
     <string name="system_clean_test">測試功能表</string>
-    <string name="system_cleanmirror_summ">更改亮度時移除滑塊的陰影和附加背景</string>
-    <string name="system_cleanmirror_title">一致的亮度滑塊風格</string>
     <string name="system_cleanopenwith_datatype">選擇要隱藏的數據類型</string>
     <string name="system_cleanopenwith_summ">從開啟方式功能表移除所選應用</string>
     <string name="system_cleanopenwith_testdata">選擇測試數據類型</string>
@@ -613,8 +611,6 @@
     <string name="system_downgrade_summ">可以在新版本應用上安裝舊版本應用</string>
     <string name="system_downgrade_title">允許降級</string>
     <string name="system_drawer_blur_summ">通知抽屜的背景模糊度</string>
-    <string name="system_drawer_hidebackground_summ">更改亮度時隱藏背景</string>
-    <string name="system_drawer_hidebackground_title">臨時隱藏主題背景</string>
     <string name="system_drawer_opacity_summ">主題通知抽屜背景的不透明度</string>
     <string name="system_drawer_opacity_title">主題背景不透明度</string>
     <string name="system_dttosleep_summ">雙擊鎖屏上任意空白處關閉螢幕</string>
@@ -725,8 +721,6 @@
     <string name="system_networkindicator_title">網路活動指示器</string>
     <string name="system_nodarkforce_summ">在黑暗模式中不反轉某些顏色</string>
     <string name="system_nodarkforce_title">禁用強制黑暗模式</string>
-    <string name="system_nodrawerbackground_summ">鎖屏時將背景從壁紙隨機生成的顏色更改為透明</string>
-    <string name="system_nodrawerbackground_title">禁用彩色背景</string>
     <string name="system_noducking_summ">播放通知聲音時不降低目前播放音樂的音量</string>
     <string name="system_noducking_title">禁用閃避</string>
     <string name="system_nolightuponcharges_summ">連接或者斷開充電器時不亮屏</string>
