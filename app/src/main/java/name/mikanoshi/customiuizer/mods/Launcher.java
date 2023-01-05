@@ -1,12 +1,17 @@
 package name.mikanoshi.customiuizer.mods;
 
+import static name.mikanoshi.customiuizer.mods.GlobalActions.ACTION_PREFIX;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.Application;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -44,7 +49,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
@@ -568,30 +575,6 @@ public class Launcher {
 				View stub = (View)param.thisObject;
 				String pkgName = Settings.Global.getString(stub.getContext().getContentResolver(), Helpers.modulePkg + ".foreground.package");
 				if (MainModule.mPrefs.getStringSet("controls_fsg_horiz_apps").contains(pkgName)) param.setResult(false);
-			}
-		});
-	}
-
-	public static void FixStatusBarModeHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.classLoader, "changeStatusBarMode", new MethodHook() {
-			@Override
-			protected void before(final MethodHookParam param) throws Throwable {
-				Activity act = (Activity)param.thisObject;
-				boolean mDuringMinusOneStartActivityForResult = XposedHelpers.getBooleanField(act, "mDuringMinusOneStartActivityForResult");
-				boolean isMinusScreenShowing = (boolean)XposedHelpers.callMethod(act, "isMinusScreenShowing");
-				if (!mDuringMinusOneStartActivityForResult) {
-					if (isMinusScreenShowing) {
-						XposedHelpers.setBooleanField(act, "mNeedChangeStatusBarMode", true);
-					} else {
-						XposedHelpers.callStaticMethod(XposedHelpers.findClass("com.miui.launcher.utils.MiuiWindowManagerUtils", lpparam.classLoader),
-							"changeStatusBarMode",
-							act.getWindow(),
-							XposedHelpers.callStaticMethod(XposedHelpers.findClass("com.miui.home.launcher.WallpaperUtils", lpparam.classLoader), "hasLightBgForStatusBar")
-						);
-						XposedHelpers.setBooleanField(act, "mNeedChangeStatusBarMode", false);
-					}
-				}
-				param.setResult(null);
 			}
 		});
 	}
@@ -1524,6 +1507,80 @@ public class Launcher {
 						if (MainModule.mPrefs.getStringAsInt("launcher_closefolders", 1) > 1) XposedHelpers.callMethod(launcher, "closeFolder");
 					}
 				});
+			}
+		});
+	}
+
+	public static void StickyFloatingWindowsLauncherHook(LoadPackageParam lpparam) {
+		final List<String> fwBlackList = new ArrayList<String>();
+		fwBlackList.add("com.miui.securitycenter");
+		fwBlackList.add("com.miui.home");
+		fwBlackList.add("com.android.camera");
+		Helpers.findAndHookMethod("com.miui.home.recents.views.RecentsContainer", lpparam.classLoader, "onAttachedToWindow", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				Context mContext = (Context) XposedHelpers.callMethod(param.thisObject, "getContext");
+				mContext.registerReceiver(new BroadcastReceiver() {
+					@Override
+					public void onReceive(Context context, Intent intent) {
+						try {
+							String pkgName = intent.getStringExtra("package");
+							if (pkgName != null) {
+								XposedHelpers.callMethod(param.thisObject, "dismissRecentsToLaunchTargetTaskOrHome", pkgName, true);
+							}
+						} catch (Throwable t) {
+							XposedBridge.log(t);
+						}
+					}
+				}, new IntentFilter(ACTION_PREFIX + "dismissRecentsWhenFreeWindowOpen"));
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.home.launcher.Launcher$PerformLaunchAction", lpparam.classLoader, "run", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				Intent intent = (Intent) XposedHelpers.getObjectField(param.thisObject, "mIntent");
+				if (intent != null) {
+					String pkgName = intent.getComponent().getPackageName();
+					if (fwBlackList.contains(pkgName)) {
+						return;
+					}
+					Object launcher = XposedHelpers.getSurroundingThis(param.thisObject);
+					Object mAppTransitionManager = XposedHelpers.getObjectField(launcher, "mAppTransitionManager");
+					String fwApps = (String) XposedHelpers.getAdditionalInstanceField(launcher, "fwApps");
+					if (fwApps != null && fwApps.contains(pkgName)) {
+						XposedHelpers.setAdditionalInstanceField(mAppTransitionManager, "isFwApps", true);
+					}
+				}
+			}
+
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				Object launcher = XposedHelpers.getSurroundingThis(param.thisObject);
+				Object mAppTransitionManager = XposedHelpers.getObjectField(launcher, "mAppTransitionManager");
+				XposedHelpers.removeAdditionalInstanceField(mAppTransitionManager, "isFwApps");
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.classLoader, "launch", "com.miui.home.launcher.ShortcutInfo", View.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				Activity act = (Activity) param.thisObject;
+				String fwApps = Settings.Global.getString(act.getContentResolver(), Helpers.modulePkg + ".fw.apps");
+				if (fwApps == null) {
+					fwApps = "";
+				}
+				XposedHelpers.setAdditionalInstanceField(param.thisObject, "fwApps", fwApps);
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.home.recents.QuickstepAppTransitionManagerImpl", lpparam.classLoader, "hasControlRemoteAppTransitionPermission", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				Object isFwApps = XposedHelpers.getAdditionalInstanceField(param.thisObject, "isFwApps");
+				if (isFwApps != null) {
+					param.setResult(false);
+				}
 			}
 		});
 	}
