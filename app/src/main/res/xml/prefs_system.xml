@@ -1377,6 +1377,7 @@
 			android:key="pref_key_system_nodarkforce"
 			android:title="@string/system_nodarkforce_title"
 			android:summary="@string/system_nodarkforce_summ"
+			app:isPreferenceVisible="false"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx

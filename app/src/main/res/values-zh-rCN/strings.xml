@@ -485,8 +485,8 @@
     <string name="launcher_googleminus_note">需要全球版(国际版)ROM</string>
     <string name="launcher_googlediscover_title">强制Google探索</string>
     <string name="launcher_googlediscover_summ">将App Vault替换为Google探索(需要安装Google应用)</string>
-    <string name="launcher_nowidgetonly_title">禁用小部件，仅屏幕</string>
-    <string name="launcher_nowidgetonly_summ">令所有屏幕平板上的支持小部件和应用</string>
+    <string name="launcher_nowidgetonly_title">禁用仅小部件页面</string>
+    <string name="launcher_nowidgetonly_summ">使平板上的所有页面都支持小部件和应用</string>
     <string name="launcher_nounlockanim_title">去除解锁动画</string>
     <string name="launcher_nounlockanim_summ">设备解锁时去除图标动画</string>
     <string name="launcher_oldlaunchanim_title">使用旧的启动动画</string>
@@ -1036,7 +1036,7 @@
     <string name="array_turn_off_disable">关闭并禁用</string>
     <string name="various_restrictapp_title">全限制</string>
     <string name="various_restrictapp_summ">允许为系统应用配置省电策略和Wi-Fi接入</string>
-    <string name="launcher_horizwidgetmargin_title">水平小部件边缘</string>
+    <string name="launcher_horizwidgetmargin_title">小部件水平间距</string>
     <string name="various_hiddenfeatures_title">隐藏特性</string>
     <string name="various_hiddenfeatures_not_found">该设备不支持</string>
     <string name="various_hiddenfeatures_summ">不易找到的界面</string>
@@ -1081,7 +1081,7 @@
     <string name="restart_systemui">重启系统界面</string>
     <string name="various_allow_untrusted_touch_title">允许不受信任的触摸操作</string>
     <string name="launcher_nozoomanim_title">去除启动动画</string>
-    <string name="launcher_nozoomanim_summ">app启动、关闭时不缩放图标</string>
+    <string name="launcher_nozoomanim_summ">App启动、关闭时不缩放图标</string>
     <string name="various_skip_interceptperm_title">跳过开启特殊权限的倒计时</string>
     <string name="various_show_battery_temperature_title">电池页面显示温度值</string>
     <string name="various_enable_sc_ai_clipboard_blur_location_title">剪切板隐私保护及模糊定位</string>
