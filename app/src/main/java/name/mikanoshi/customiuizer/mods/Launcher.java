@@ -1584,6 +1584,21 @@ public class Launcher {
 				}
 			}
 		});
+
+		Helpers.hookAllMethods("com.miui.home.recents.views.TaskView", lpparam.classLoader, "getActivityOptions", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				String pkgName = (String) XposedHelpers.callMethod(param.thisObject, "getBasePackageName");
+				if (fwBlackList.contains(pkgName)) {
+					return;
+				}
+				View taskView = (View) param.thisObject;
+				String fwApps = Settings.Global.getString(taskView.getContext().getContentResolver(), Helpers.modulePkg + ".fw.apps");
+				if (fwApps != null && fwApps.contains(pkgName)) {
+					param.setResult(XposedHelpers.callMethod(param.thisObject, "getActivityLaunchOptions", taskView));
+				}
+			}
+		});
 	}
 
 	public static void CloseDrawerOnLaunchHook(LoadPackageParam lpparam) {
