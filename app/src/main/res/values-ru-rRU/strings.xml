@@ -680,7 +680,7 @@
     <string name="system_batteryindicator_colorval4_title">Цвет при зарядке</string>
     <string name="system_batteryindicator_lowlevel_title">Уровень низкого заряда</string>
     <string name="system_batteryindicator_test_title">Тест</string>
-    <string name="system_batteryindicator_test_summ">Анимировать полоску от 100% до 0% в режиме разрядки</string>
+    <string name="system_batteryindicator_test_summ" formatted="false">Анимировать полоску от 100% до 0% в режиме разрядки</string>
     <string name="system_statusbarheight_title">Высота строки состояния</string>
     <string name="system_statusbarcolor_title">Фоновый цвет строки состояния</string>
     <string name="system_statusbarcolor_summ">Делает одинаковыми цвета фона строки состояния и панели действий приложения, где это возможно</string>
@@ -755,8 +755,6 @@
     <string name="system_showpct_title">Показывать процент яркости</string>
     <string name="system_showpct_summ">Отображает уровень яркости в процентах при изменении яркости слайдером</string>
     <string name="system_showpct_top_title">Отступ панели процентов сверху</string>
-    <string name="system_cleanmirror_title">Неизменный стиль слайдера яркости</string>
-    <string name="system_cleanmirror_summ">Убирает тень и дополнительный фон у слайдера при изменении яркости</string>
     <string name="system_inactivebrightness_title">Отключить ползунок яркости</string>
     <string name="system_notifrowmenu_title">Расширенное меню уведомления</string>
     <string name="system_notifrowmenu_summ">Добавляет новые действия в меню уведомления (открывается по свайпу влево) - открыть информацию о приложении и принудительно закрыть приложение</string>
@@ -873,8 +871,6 @@
     <string name="system_blur_title">Размытие фона</string>
     <string name="system_recents_blur_summ">Уровень размытия фона на экране последних приложений</string>
     <string name="system_drawer_blur_summ">Уровень размытия фона в панели уведомлений</string>
-    <string name="system_drawer_hidebackground_title">Временно скрывать фон из темы</string>
-    <string name="system_drawer_hidebackground_summ">Скрывать фон во время изменения яркости</string>
     <string name="system_drawer_opacity_title">Прозрачность фона из темы</string>
     <string name="system_drawer_opacity_summ">Уровень прозрачности фона панели уведомлений из текущей темы</string>
     <string name="system_securelock_title">Улучшенная блокировка</string>
@@ -976,8 +972,6 @@
     <string name="system_lswallpaper_summ">Позволяет сторонним приложениям устанавливать обои для экрана блокировки. Приложение Темы должно быть установлено с разрешением на доступ к памяти устройства.</string>
     <string name="system_hideqs_title">Очистить вид развёрнутого режима</string>
     <string name="system_hideqs_summ">Скрывает панель Быстрых Настроек и слайдер яркости в режиме развёрнутых уведомлений на экране блокировки</string>
-    <string name="system_nodrawerbackground_title">Отключить цветной фон</string>
-    <string name="system_nodrawerbackground_summ">Изменяет фон со сгенерированным цветом, взятым из обоев, на прозрачный на экране блокировки</string>
     <string name="system_taptounlock_title">Разблокировка нажатием</string>
     <string name="system_taptounlock_summ">Нажатие на нижнюю область экрана блокировки начинает разблокировку устройства</string>
     <string name="system_dttosleep_title">Сон по двойному нажатию</string>

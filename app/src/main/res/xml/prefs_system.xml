@@ -167,6 +167,7 @@
 			android:defaultValue="0"
 			miuizer:minValue="0"
 			miuizer:maxValue="30000"
+			miuizer:child="true"
 			miuizer:stepValue="500"
 			miuizer:format="@string/format_d_ms"
 			miuizer:offtext="@string/array_default" />
@@ -177,6 +178,7 @@
 			android:defaultValue="0"
 			miuizer:minValue="0"
 			miuizer:maxValue="30000"
+			miuizer:child="true"
 			miuizer:stepValue="500"
 			miuizer:format="@string/format_d_ms"
 			miuizer:offtext="@string/array_default" />
@@ -191,6 +193,7 @@
 			miuizer:stepValue="25"
 			miuizer:displayDividerValue="100"
 			miuizer:format="x%s"
+			app:isPreferenceVisible="false"
 			miuizer:offtext="@string/array_default" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
@@ -707,21 +710,9 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_nodrawerbackground"
-			android:summary="@string/system_nodrawerbackground_summ"
-			android:title="@string/system_nodrawerbackground_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_removedismiss"
 			android:summary="@string/system_removedismiss_summ"
 			android:title="@string/system_removedismiss_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_cleanmirror"
-			android:title="@string/system_cleanmirror_title"
-			android:summary="@string/system_cleanmirror_summ"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
@@ -800,12 +791,6 @@
 			miuizer:format="%d%%"
 			miuizer:offtext="@string/array_default"
 			miuizer:dynamic="true" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_drawer_hidebackground"
-			android:title="@string/system_drawer_hidebackground_title"
-			android:summary="@string/system_drawer_hidebackground_summ"
-			android:defaultValue="false" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 

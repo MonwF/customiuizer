@@ -136,8 +136,6 @@
     <string name="system_showpct_title">Pokaż procent jasności</string>
     <string name="system_showpct_summ">Wyświetl poziom jasności w procentach podczas przeciągania suwaka jasności</string>
     <string name="system_showpct_top_title">Górny margines panelu procentowego</string>
-    <string name="system_cleanmirror_title">Spójny styl suwaka jasności</string>
-    <string name="system_cleanmirror_summ">Usuń cień i dodatkowe tło z suwaka podczas zmiany jasności</string>
     <string name="system_inactivebrightness_title">Dezaktywuj suwak jasności</string>
     <string name="system_notifrowmenu_title">Rozszerzone menu powiadomień</string>
     <string name="system_notifrowmenu_summ">Otwórz informacje o aplikacji i wymuś zamknięcie aplikacji z menu powiadomień (przesuń powiadomienie w lewo, aby je otworzyć)</string>
@@ -309,8 +307,6 @@
     <string name="system_blur_title">Rozmycie tła</string>
     <string name="system_recents_blur_summ">Intensywność rozmycia tła w ostatnich aplikacjach</string>
     <string name="system_drawer_blur_summ">Intensywność rozmycia tła w szufladzie powiadomień</string>
-    <string name="system_drawer_hidebackground_title">Tymczasowo ukryj tematyczne tło</string>
-    <string name="system_drawer_hidebackground_summ">Ukryj tło podczas zmiany jasności</string>
     <string name="system_drawer_opacity_title">Przezroczystość tematycznego tła</string>
     <string name="system_drawer_opacity_summ">Przezroczystość tematycznego tła w szufladzie powiadomień</string>
     <string name="system_mods_lockscreen">Ekran blokady</string>
@@ -393,8 +389,6 @@
     <string name="system_lswallpaper_summ">Spraw, aby aplikacje innych firm mogły ustawiać tapetę ekranu blokady. Aplikacja Motywy musi być zainstalowana i mieć uprawnienia dostępu do pamięci masowej.</string>
     <string name="system_hideqs_title">Wyczyść widok trybu rozszerzonego</string>
     <string name="system_hideqs_summ">Ukryj szybkie ustawienia i suwak jasności w rozszerzonym trybie powiadomień na ekranie blokady</string>
-    <string name="system_nodrawerbackground_title">Wyłącz kolorowe tło</string>
-    <string name="system_nodrawerbackground_summ">Zmień tło z automatycznie generowanym kolorem z tapety na przezroczysty na ekranie blokady</string>
     <string name="system_taptounlock_title">Dotknij, aby odblokować</string>
     <string name="system_taptounlock_summ">Rozpocznij odblokowywanie urządzenia, dotykając dolnego obszaru ekranu blokady</string>
     <string name="system_dttosleep_title">Dotknij dwukrotnie, aby uśpić</string>
