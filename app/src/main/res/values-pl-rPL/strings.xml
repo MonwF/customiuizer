@@ -518,7 +518,6 @@
     <string name="launcher_topmargin_title">Górny margines siatki</string>
     <string name="launcher_bottommargin_title">Dolny margines dokowania</string>
     <string name="launcher_horizwidgetmargin_title">Poziomy margines widżetu</string>
-    <string name="launcher_horizwidgetmargin_summary">Działa tylko z najnowszymi wersjami launchera z dynamicznym pozycjonowaniem widżetów</string>
     <string name="launcher_indicatorheight_title">Wysokość wskaźnika strony</string>
     <string name="launcher_folders">Foldery</string>
     <string name="launcher_folder_cols_title">Liczba kolumn w folderach</string>
@@ -910,7 +909,6 @@
     <string name="qs_toggle_autorotate_portrait">Portret</string>
     <string name="qs_toggle_autorotate_landscape">Krajobraz</string>
     <string name="qs_toggle_5g">Sieć 5G</string>
-    <string name="qs_toggle_darkmode_noperm">CustoMIUIzer nie ma uprawnień do zmiany trybu ciemnego</string>
 
     <string name="miuizer">Ustawienia CustoMIUIzera</string>
     <string name="miuizer_show_newmods_title">Zaznacz nowe modyfikacje</string>

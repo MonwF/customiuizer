@@ -109,7 +109,6 @@
     <string name="qs_toggle_autorotate_portrait">Портрет</string>
     <string name="qs_toggle_autorotate_landscape">Ландшафт</string>
     <string name="qs_toggle_5g">5G</string>
-    <string name="qs_toggle_darkmode_noperm">У CustoMIUIzer нет прав на изменение тёмного режима</string>
     <string name="appdetails_playstore">Открыть в Play Маркет</string>
     <string name="appdetails_launch">Запустить</string>
     <string name="appdetails_apk_file">Имя APK файла</string>
@@ -496,7 +495,6 @@
     <string name="launcher_topmargin_title">Отступ сетки сверху</string>
     <string name="launcher_bottommargin_title">Отступ дока снизу</string>
     <string name="launcher_horizwidgetmargin_title">Горизонтальные отступы виджетов</string>
-    <string name="launcher_horizwidgetmargin_summary">Работает только на последних версиях ланчера с динамическим позиционироанием виджетов</string>
     <string name="launcher_indicatorheight_title">Высота индикатора страниц</string>
     <string name="launcher_folders">Папки</string>
     <string name="launcher_folder_cols_title">Число колонок в папках</string>
@@ -724,8 +722,6 @@
     <string name="system_detailednetspeed_low_summ">Полностью скрывает индикатор при низкой скорости</string>
     <string name="system_detailednetspeed_lowlevel_title">Низкий уровень скорости</string>
     <string name="system_detailednetspeed_lowlevel_summ">Задаёт уровень, ниже которого скорость будет считаться низкой и будет иметь другую иконку</string>
-    <string name="system_detailednetspeed_zero_title">Понизить видимость при неактивности</string>
-    <string name="system_detailednetspeed_zero_summ">Делает индикатор полупрозрачным, если обе скорости равны нулю</string>
     <string name="system_statusbarcontrols_title">Управление жестами</string>
     <string name="system_statusbarcontrols_summ">Выполняет выбранные действия на скольжение и двойное нажатие</string>
     <string name="system_statusbarcontrols_sens_title">Чувствительность регулировки</string>

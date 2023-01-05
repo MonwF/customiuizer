@@ -112,8 +112,6 @@
     <string name="system_detailednetspeed_low_summ">Do not show indicator if speed is low</string>
     <string name="system_detailednetspeed_lowlevel_title">Low speed level</string>
     <string name="system_detailednetspeed_lowlevel_summ">Speed values below this level will be considered low and will have a different indication icon</string>
-    <string name="system_detailednetspeed_zero_title">Reduce visibility when inactive</string>
-    <string name="system_detailednetspeed_zero_summ">Make indicator semitransparent when both speeds are zero</string>
     <string name="system_detailednetspeed_secunit_title">Hide Byte per second suffix(B/s)</string>
     <string name="system_netspeed_fontsize_title">Network speed\'s font size</string>
     <string name="system_statusbarcontrols_title">Gesture controls</string>
@@ -535,7 +533,6 @@
     <string name="launcher_topmargin_title">Top grid margin</string>
     <string name="launcher_bottommargin_title">Bottom dock margin</string>
     <string name="launcher_horizwidgetmargin_title">Horizontal widget margin</string>
-    <string name="launcher_horizwidgetmargin_summary">Works only on latest launcher versions with dynamic widget positioning</string>
     <string name="launcher_indicatorheight_title">Page indicator height</string>
     <string name="launcher_folders">Folders</string>
     <string name="launcher_folder_cols_title">Number of columns in folders</string>
@@ -931,7 +928,6 @@
     <string name="qs_toggle_autorotate_portrait">Portrait</string>
     <string name="qs_toggle_autorotate_landscape">Landscape</string>
     <string name="qs_toggle_5g">5G Network</string>
-    <string name="qs_toggle_darkmode_noperm">CustoMIUIzer has no permission to change dark mode</string>
 
     <string name="miuizer">CustoMIUIzer settings</string>
     <string name="miuizer_show_newmods_title">Mark new mods</string>
