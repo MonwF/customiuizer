@@ -395,15 +395,12 @@ public class MainFragment extends PreferenceFragmentBase {
 		((ModSearchAdapter)resultView.getAdapter()).getFilter().filter(filter);
 	}
 
-	// PreferenceScreens management
-	private boolean openModCat(String cat) {
-		return openModCat(cat, null, null);
-	}
-
 	private boolean openModCat(String cat, String sub, String mod) {
 		Bundle bundle = new Bundle();
 		bundle.putString("cat", cat);
-		bundle.putString("sub", sub);
+		if (sub != null) {
+			bundle.putString("sub", sub);
+		}
 		bundle.putString("mod", mod);
 		catSelector.setTargetFragment(this, 0);
 		switch (cat) {
@@ -437,7 +434,7 @@ public class MainFragment extends PreferenceFragmentBase {
 	public boolean onPreferenceTreeClick(Preference preference) {
 		if (preference != null) {
 			PreferenceCategory modsCat = findPreference("prefs_cat");
-			if (modsCat.findPreference(preference.getKey()) != null && openModCat(preference.getKey())) {
+			if (modsCat.findPreference(preference.getKey()) != null && openModCat(preference.getKey(), null, null)) {
 				return true;
 			}
 		}

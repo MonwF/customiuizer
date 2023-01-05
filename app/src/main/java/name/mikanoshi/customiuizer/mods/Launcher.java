@@ -1400,8 +1400,7 @@ public class Launcher {
 	}
 
 	public static void NoUnlockAnimationHook(LoadPackageParam lpparam) {
-		if (!Helpers.findAndHookMethodSilently("com.miui.home.launcher.common.Utilities", lpparam.classLoader, "notShowUserPresentAnimation", Context.class, XC_MethodReplacement.returnConstant(true)))
-		Helpers.hookAllMethods("com.miui.launcher.utils.MiuiSettingsUtils", lpparam.classLoader, "isSystemAnimationOpen", XC_MethodReplacement.returnConstant(false));
+			Helpers.hookAllMethods("com.miui.launcher.utils.MiuiSettingsUtils", lpparam.classLoader, "isSystemAnimationOpen", XC_MethodReplacement.returnConstant(false));
 	}
 
 	public static void NoZoomAnimationHook(LoadPackageParam lpparam) {
