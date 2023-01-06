@@ -201,7 +201,7 @@
 
 		<meta-data android:name="xposedmodule" android:value="true" />
 		<meta-data android:name="xposedminversion" android:value="93" />
-		<meta-data android:name="xposeddescription" android:value="Customize MIUI to your liking" />
+		<meta-data android:name="xposeddescription" android:value="@string/app_slogan" />
 		<meta-data android:name="xposedsharedprefs" android:value="true" />
 		<meta-data android:name="xposedscope" android:resource="@array/xposed_scope" />
 		<meta-data android:name="com.google.android.backup.api_key" android:value="AEdPqrEAAAAIRIa0lKCzoQ_qe_xfqaQCC4EQhwk3CWeRwzFrww" />

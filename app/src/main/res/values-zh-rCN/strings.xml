@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name" translatable="false">米客</string>
+    <string name="app_slogan" translatable="false">米客 - 客制化你的MIUI</string>
     <string name="app_about">关于</string>
     <string name="about_version">版本：%1$s</string>
     <string name="about_dev">作者：Mikanoshi &amp; MonwF</string>
@@ -852,7 +854,7 @@
     <string name="qs_toggle_autorotate_portrait">竖屏</string>
     <string name="qs_toggle_autorotate_landscape">横屏</string>
     <string name="qs_toggle_5g">5G网络</string>
-    <string name="miuizer">CustoMIUIzer设置</string>
+    <string name="miuizer">米客设置</string>
     <string name="miuizer_show_newmods_title">标记新模块</string>
     <string name="miuizer_show_newmods_summ">添加到当前版本中的模块在标题处显示\"新!\"标签</string>
     <string name="miuizer_new_mod">新！</string>
