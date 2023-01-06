@@ -219,6 +219,10 @@ public class System extends SubFragment {
 					}
 				});
 
+				if (!Helpers.isTPlus()) {
+					findPreference("pref_key_system_drawer_blur").setVisible(false);
+				}
+
 				break;
 			case "pref_key_system_cat_notifications":
 				findPreference("pref_key_system_expandnotifs_apps").setOnPreferenceClickListener(openAppsEdit);
