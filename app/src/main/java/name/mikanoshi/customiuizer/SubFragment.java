@@ -73,7 +73,7 @@ public class SubFragment extends PreferenceFragmentBase {
         loadSharedPrefs();
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
-            if (isStandalone && catInfo.getBoolean("isDynamic")) {
+            if (isStandalone && catInfo != null && catInfo.getBoolean("isDynamic")) {
                 actionBar.setTitle(settingTitle + " ⟲");
             }
             else if (!isStandalone && sub != null) {
