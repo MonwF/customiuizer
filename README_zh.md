@@ -1,8 +1,12 @@
-## CustoMIUIzer for MIUI 13
-由于`Mikanoshi`的 [CustoMIUIzer](code.highspec.ru/Mikanoshi/CustoMIUIzer) 一直不支持 Android 12，只好自行修改。感谢原作者带来的无限可能。
-**仅支持**基于`Android 12`的MIUI 13，且某些功能依然失效
+## 米客
+客制化你的MIUI
+
+> 由于`Mikanoshi`的 [CustoMIUIzer](code.highspec.ru/Mikanoshi/CustoMIUIzer) 一直不支持 Android 12，只好自行修改。感谢原作者带来的无限可能。
+
+支持基于`android 12`以上的 MIUI 13和14
 
 ### 主要功能
+* 双排状态栏
 * 信任蓝牙和Wi-Fi禁止锁屏
 * 查看已保存Wi-Fi密码
 * 自动亮度范围限制
@@ -10,7 +14,8 @@
 * 状态栏显示电池温度和电池
 * 跳过10s安全警告
 * 音乐可视化
-* 单独通知音量
+* 独立通知音量
+* 专辑封面设置为壁纸
 * 状态栏显秒与图标隐藏
 * 彩色电池条
 * 使用导航栏同时启用返回手势
@@ -18,6 +23,7 @@
 * 通知
   * 通知重要性设置
   * 自动展开
+  * 小窗打开通知
   * 直接打开频道设置
 * 浮窗记住打开状态和位置、移除黑名单（含分屏)
 * 扩展电源菜单
