@@ -151,29 +151,29 @@ public class GlobalActions {
 				if (action.equals(ACTION_PREFIX + "RestartSystemUI")) {
 					Process.sendSignal(Process.myPid(), Process.SIGNAL_KILL);
 				}
-				else if (action.equals(ACTION_PREFIX + "CopyToExternal")) {
-					try {
-						String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + Helpers.externalFolder;
-						new File(dir).mkdirs();
-
-						int copyAction = intent.getIntExtra("action", 0);
-						if (copyAction == 1) {
-							Helpers.copyFile(intent.getStringExtra("from"), dir + Helpers.wallpaperFile);
-							Intent lockIntent = new Intent("miui.intent.action.SET_LOCK_WALLPAPER");
-							lockIntent.setPackage("com.android.thememanager");
-							lockIntent.putExtra("lockWallpaperPath", dir + Helpers.wallpaperFile);
-							context.sendBroadcast(lockIntent);
-						} else if (copyAction == 2) {
-							File xposedVersion = new File(dir + Helpers.versionFile);
-							xposedVersion.createNewFile();
-							try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(xposedVersion, false))) {
-								out.write(intent.getStringExtra("data"));
-							}
-						}
-					} catch (Throwable t) {
-						XposedBridge.log(t);
-					}
-				}
+//				else if (action.equals(ACTION_PREFIX + "CopyToExternal")) {
+//					try {
+//						String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + Helpers.externalFolder;
+//						new File(dir).mkdirs();
+//
+//						int copyAction = intent.getIntExtra("action", 0);
+//						if (copyAction == 1) {
+//							Helpers.copyFile(intent.getStringExtra("from"), dir + Helpers.wallpaperFile);
+//							Intent lockIntent = new Intent("miui.intent.action.SET_LOCK_WALLPAPER");
+//							lockIntent.setPackage("com.android.thememanager");
+//							lockIntent.putExtra("lockWallpaperPath", dir + Helpers.wallpaperFile);
+//							context.sendBroadcast(lockIntent);
+//						} else if (copyAction == 2) {
+//							File xposedVersion = new File(dir + Helpers.versionFile);
+//							xposedVersion.createNewFile();
+//							try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(xposedVersion, false))) {
+//								out.write(intent.getStringExtra("data"));
+//							}
+//						}
+//					} catch (Throwable t) {
+//						XposedBridge.log(t);
+//					}
+//				}
 				else if (action.equals(ACTION_PREFIX + "CollectXposedLog")) {
 					try {
 						String errorLogPath = Helpers.getXposedInstallerErrorLog(context);
@@ -749,7 +749,7 @@ public class GlobalActions {
 	public static void miuizerHook(LoadPackageParam lpparam) {
 		try {
 			XposedHelpers.setStaticBooleanField(findClass(Helpers.modulePackage + ".utils.Helpers", lpparam.classLoader), "miuizerModuleActive", true);
-			XposedHelpers.setStaticObjectField(findClass(Helpers.modulePackage + ".utils.Helpers", lpparam.classLoader), "xposedVersion", XposedBridge.getXposedVersion());
+//			XposedHelpers.setStaticObjectField(findClass(Helpers.modulePackage + ".utils.Helpers", lpparam.classLoader), "xposedVersion", XposedBridge.getXposedVersion());
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
@@ -1005,7 +1005,7 @@ public class GlobalActions {
 				intentfilter.addAction(ACTION_PREFIX + "CollectXposedLog");
 				intentfilter.addAction(ACTION_PREFIX + "RestartSystemUI");
 				intentfilter.addAction(ACTION_PREFIX + "RestartLauncher");
-				intentfilter.addAction(ACTION_PREFIX + "CopyToExternal");
+//				intentfilter.addAction(ACTION_PREFIX + "CopyToExternal");
 
 				intentfilter.addAction(ACTION_PREFIX + "ScrollToTop");
 
