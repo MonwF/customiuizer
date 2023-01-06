@@ -611,8 +611,6 @@
     <string name="system_downgrade_summ">可以在新版本應用上安裝舊版本應用</string>
     <string name="system_downgrade_title">允許降級</string>
     <string name="system_drawer_blur_summ">通知抽屜的背景模糊度</string>
-    <string name="system_drawer_opacity_summ">主題通知抽屜背景的不透明度</string>
-    <string name="system_drawer_opacity_title">主題背景不透明度</string>
     <string name="system_dttosleep_summ">雙擊鎖屏上任意空白處關閉螢幕</string>
     <string name="system_dttosleep_title">雙擊熄屏</string>
     <string name="system_epm_summ">新增以下重啟選項到電源功能表(引導模式、恢復模式、軟重啟)</string>
@@ -883,8 +881,6 @@
     <string name="system_toasttime_note">顯示時長始終大於 1 秒</string>
     <string name="system_toasttime_summ">修改 Toast 顯示時長</string>
     <string name="system_toasttime_title">顯示時間修改</string>
-    <string name="system_usenativerecents_summ">請不要使用MIUI啟動器的最近應用列表。使用全屏手勢效果不好。</string>
-    <string name="system_usenativerecents_title">使用本地實現</string>
     <string name="system_vibration_amp_notif_title">通知</string>
     <string name="system_vibration_amp_other_title">其他</string>
     <string name="system_vibration_amp_period_title">時段</string>
@@ -987,8 +983,6 @@
     <string name="various_calluibright_type_title">通話類型</string>
     <string name="various_calluibright_val_title">亮度值</string>
     <string name="various_clearspeaker_title">清理揚聲器</string>
-    <string name="various_collapsemiuititles_summ">調整 MIUI13 應用中頂欄的標題</string>
-    <string name="various_collapsemiuititles_title">折疊 MIUI 標題</string>
     <string name="various_disableapp_summ">允許從應用訊息頁面禁用任何應用</string>
     <string name="various_disableapp_title">應用狀態控制</string>
     <string name="various_gboardpadding_land_title">橫屏時底部補充</string>

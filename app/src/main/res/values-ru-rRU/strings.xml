@@ -611,8 +611,6 @@
     <string name="system_mods_statusbar_drawer">Панель уведомлений</string>
     <string name="system_mods_notifications">Уведомления</string>
     <string name="system_mods_recents">Список последних приложений</string>
-    <string name="system_usenativerecents_title">Использовать родной список</string>
-    <string name="system_usenativerecents_summ">Не использовать список последних приложений, встроенный в Рабочий стол MIUI. Плохо работает с полноэкранными жестами.</string>
     <string name="system_removecleaner_title">Убрать кнопку очистки</string>
     <string name="system_removecleaner_summ">Скрывает кнопку для очистки списка последних приложений и памяти</string>
     <string name="system_clearalltasks_title">Очистить все</string>
@@ -777,8 +775,6 @@
     <string name="system_popupnotif_fs_title">Определение полноэкранного режима</string>
     <string name="system_popupnotif_fs_summ">Не открывать панель уведомлений, если запущено полноэкранное приложение (не распространяется на \"режим погружения\" со скрытыми панелями статуса и навигации)</string>
     <string name="system_popupnotif_apps_title">Выбранные приложения</string>
-    <string name="various_collapsemiuititles_title">Свернуть заголовки MIUI</string>
-    <string name="various_collapsemiuititles_summ">Настройка вида заголовков во всех MIUI 12 приложениях</string>
     <string name="system_mods_screenshots">Снимки экрана</string>
     <string name="system_screenshot_title">Конфигурация снимков экрана</string>
     <string name="system_screenshot_summ">Настройка формата, качества и папки сохранения скриншотов</string>
@@ -867,8 +863,6 @@
     <string name="system_blur_title">Размытие фона</string>
     <string name="system_recents_blur_summ">Уровень размытия фона на экране последних приложений</string>
     <string name="system_drawer_blur_summ">Уровень размытия фона в панели уведомлений</string>
-    <string name="system_drawer_opacity_title">Прозрачность фона из темы</string>
-    <string name="system_drawer_opacity_summ">Уровень прозрачности фона панели уведомлений из текущей темы</string>
     <string name="system_securelock_title">Улучшенная блокировка</string>
     <string name="system_securelock_summ">Отключает меню управления питанием во время блокировки</string>
     <string name="system_securecontrolcenter_title">Безопасный Центр управления</string>

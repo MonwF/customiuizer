@@ -1315,34 +1315,6 @@ public class System {
         });
     }
 
-    public static void RecentsBlurRatioHook(LoadPackageParam lpparam) {
-        Helpers.hookAllConstructors("com.android.systemui.recents.views.RecentsView", lpparam.classLoader, new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                Context mContext = (Context)param.args[0];
-                Handler mHandler = new Handler(mContext.getMainLooper());
-
-                XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomBlurModifier", MainModule.mPrefs.getInt("system_recents_blur", 100));
-                new Helpers.SharedPrefObserver(mContext, mHandler, "pref_key_system_recents_blur", 100) {
-                    @Override
-                    public void onChange(String name, int defValue) {
-                        XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomBlurModifier", Helpers.getSharedIntPref(mContext, name, defValue));
-                    }
-                };
-
-                XposedHelpers.setFloatField(param.thisObject, "mDefaultScrimAlpha", 0.15f);
-                XposedHelpers.setObjectField(param.thisObject, "mBackgroundScrim", new ColorDrawable(Color.argb(38, 0, 0, 0)).mutate());
-            }
-        });
-
-        Helpers.findAndHookMethod("com.android.systemui.recents.views.RecentsView", lpparam.classLoader, "updateBlurRatio", float.class, new MethodHook() {
-            @Override
-            protected void before(MethodHookParam param) throws Throwable {
-                param.args[0] = (float)param.args[0] * (int)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mCustomBlurModifier") / 100f;
-            }
-        });
-    }
-
     public static void DrawerBlurRatioHook(LoadPackageParam lpparam) {
         Helpers.hookAllConstructors("com.android.systemui.statusbar.phone.StatusBarWindowManager", lpparam.classLoader, new MethodHook() {
             @Override
@@ -1397,40 +1369,6 @@ public class System {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 param.args[0] = (float)param.args[0] * (int)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mCustomBlurModifier") / 100f;
-            }
-        });
-    }
-
-    public static void DrawerThemeBackgroundHook(LoadPackageParam lpparam) {
-        Helpers.hookAllConstructors("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, new MethodHook() {
-            @Override
-            protected void after(final MethodHookParam param) throws Throwable {
-                Context mContext = (Context)param.args[0];
-                Handler mHandler = new Handler(mContext.getMainLooper());
-
-                XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomOpacityModifier", MainModule.mPrefs.getInt("system_drawer_opacity", 100));
-                new Helpers.SharedPrefObserver(mContext, mHandler, "pref_key_system_drawer_opacity", 100) {
-                    @Override
-                    public void onChange(String name, int defValue) {
-                        XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomOpacityModifier", Helpers.getSharedIntPref(mContext, name, defValue));
-                    }
-                };
-            }
-        });
-
-        if (!Helpers.findAndHookMethodSilently("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, "onBlurRatioChanged", float.class, new MethodHook(100) {
-            @Override
-            protected void before(MethodHookParam param) throws Throwable {
-                param.args[0] = (float)param.args[0] * (int)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mCustomOpacityModifier") / 100f;
-            }
-        })) Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, "updateStatusBarWindowBlur", new MethodHook(1000) {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                int mStatusBarState = XposedHelpers.getIntField(param.thisObject, "mStatusBarState");
-                if (mStatusBarState != 0) return;
-                View mThemeBackgroundView = (View)XposedHelpers.getObjectField(param.thisObject, "mThemeBackgroundView");
-                if (mThemeBackgroundView != null)
-                    mThemeBackgroundView.setAlpha(mThemeBackgroundView.getAlpha() * (int)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mCustomOpacityModifier") / 100f);
             }
         });
     }
@@ -7011,26 +6949,6 @@ public class System {
                 if (opt != 1) return;
                 TextView indicator = (TextView)param.thisObject;
                 if (indicator != null) indicator.setSingleLine(false);
-            }
-        });
-    }
-
-    public static void UseNativeRecentsHook(LoadPackageParam lpparam) {
-        //noinspection ResultOfMethodCallIgnored
-        Helpers.findAndHookMethodSilently("com.android.systemui.recents.misc.SystemServicesProxy", lpparam.classLoader, "isRecentsWithinLauncher", Context.class, XC_MethodReplacement.returnConstant(false));
-    }
-
-    public static void UseNativeRecentsFixHook(LoadPackageParam lpparam) {
-        Helpers.hookAllMethods("com.android.server.wm.TaskRecord", lpparam.classLoader, "isVisible", new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                if ((boolean)param.getResult()) return;
-                StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-                for (StackTraceElement el: stackTrace)
-                    if (el != null) if ("getPerceptibleRecentAppList".equals(el.getMethodName())) {
-                        param.setResult(true);
-                        return;
-                    }
             }
         });
     }

@@ -163,8 +163,6 @@
     <string name="system_popupnotif_fs_title">Uwzględnij pełny ekran</string>
     <string name="system_popupnotif_fs_summ">Nie otwieraj szuflady powiadomień, gdy aplikacja pełnoekranowa jest aktywna (nie dotyczy aplikacji immersyjnych z ukrytymi paskami stanu i nawigacji)</string>
     <string name="system_popupnotif_apps_title">Wybrane aplikacje</string>
-    <string name="various_collapsemiuititles_title">Zwiń tytuły MIUI</string>
-    <string name="various_collapsemiuititles_summ">Skonfiguruj stan tytułu paska akcji we wszystkich aplikacjach MIUI 12</string>
     <string name="system_mods_screenshots">Zrzuty ekranu</string>
     <string name="system_screenshot_title">Konfiguracja zrzutów ekranu</string>
     <string name="system_screenshot_summ">Dostosuj format, jakość i zapisz ścieżkę folderu dla zrzutów ekranu</string>
@@ -306,8 +304,6 @@
     <string name="system_blur_title">Rozmycie tła</string>
     <string name="system_recents_blur_summ">Intensywność rozmycia tła w ostatnich aplikacjach</string>
     <string name="system_drawer_blur_summ">Intensywność rozmycia tła w szufladzie powiadomień</string>
-    <string name="system_drawer_opacity_title">Przezroczystość tematycznego tła</string>
-    <string name="system_drawer_opacity_summ">Przezroczystość tematycznego tła w szufladzie powiadomień</string>
     <string name="system_mods_lockscreen">Ekran blokady</string>
     <string name="system_mods_lockscreen_functionality">Dodatkowa funkcjonalność</string>
     <string name="system_mods_lockscreen_security">Bezpieczeństwo</string>
@@ -409,8 +405,6 @@
     <string name="system_mods_statusbar_drawer">Szuflada powiadomień</string>
     <string name="system_mods_notifications">Powiadomienia</string>
     <string name="system_mods_recents">Lista ostatnich aplikacji</string>
-    <string name="system_usenativerecents_title">Użyj natywnej implementacji</string>
-    <string name="system_usenativerecents_summ">Nie używaj listy ostatnich aplikacji z Launchera MIUI. Źle działa z gestami pełnoekranowymi.</string>
     <string name="system_removecleaner_title">Usuń przycisk czyszczenia</string>
     <string name="system_removecleaner_summ">Ukryj przycisk, który usuwa ostatnie aplikacje i czyści pamięć</string>
     <string name="system_clearalltasks_title">Wyczyść wszystko</string>
