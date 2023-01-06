@@ -160,8 +160,6 @@
     <string name="system_popupnotif_fs_title">遵循全屏</string>
     <string name="system_popupnotif_fs_summ">应用激活全屏模式时不打开通知抽屉(不适用于具有隐藏状态和导航栏的沉浸式应用)</string>
     <string name="system_popupnotif_apps_title">已选应用</string>
-    <string name="various_collapsemiuititles_title">折叠 MIUI 标题</string>
-    <string name="various_collapsemiuititles_summ">调整 MIUI13 应用中顶栏的标题</string>
     <string name="system_mods_screenshots">截图</string>
     <string name="system_screenshot_title">截图配置</string>
     <string name="system_screenshot_summ">自定义截图的格式、质量和存放目录</string>
@@ -303,10 +301,8 @@
     <string name="system_screenanim_duration_summ">配置动画长度</string>
     <string name="system_screenanim_desc">值过低等同于禁用动画</string>
     <string name="system_blur_title">背景模糊</string>
-    <string name="system_recents_blur_summ">最近应用的背景模糊度</string>
+    <string name="system_recents_blur_summ">最近任务的背景模糊度</string>
     <string name="system_drawer_blur_summ">通知抽屉的背景模糊度</string>
-    <string name="system_drawer_opacity_title">主题背景不透明度</string>
-    <string name="system_drawer_opacity_summ">主题通知抽屉背景的不透明度</string>
     <string name="system_mods_lockscreen">锁屏</string>
     <string name="system_mods_lockscreen_functionality">附加功能</string>
     <string name="system_mods_lockscreen_security">安全</string>
@@ -402,8 +398,6 @@
     <string name="system_mods_statusbar_drawer">通知抽屉</string>
     <string name="system_mods_notifications">通知</string>
     <string name="system_mods_recents">最近任务</string>
-    <string name="system_usenativerecents_title">使用原生实现</string>
-    <string name="system_usenativerecents_summ">请不要使用MIUI启动器的最近应用列表。使用全屏手势效果不好。</string>
     <string name="system_removecleaner_title">移除清理按钮</string>
     <string name="system_recents_disable_wallpaperscale_title">禁用壁纸缩放</string>
     <string name="system_removecleaner_summ">隐藏清理最近应用和内存的按钮</string>

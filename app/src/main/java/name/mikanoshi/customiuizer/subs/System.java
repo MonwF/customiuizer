@@ -129,9 +129,22 @@ public class System extends SubFragment {
 						Bundle args = new Bundle();
 						args.putBoolean("isStandalone", true);
 						args.putString("sub", "pref_key_system_detailednetspeed_cat");
+						String title = preference.getTitle().toString();
+						openSubFragment(new System(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, title, R.xml.prefs_system_detailednetspeed);
+						return true;
+					}
+				});
+				findPreference("pref_key_system_statusbar_batterytempandcurrent_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						Bundle args = new Bundle();
+						args.putBoolean("isStandalone", true);
 						Bundle catInfo = new Bundle();
+						catInfo.putBoolean("isDynamic", true);
 						args.putBundle("catInfo", catInfo);
-						openSubFragment(new System(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_netspeed_cat_title, R.xml.prefs_system_detailednetspeed);
+						args.putString("sub", "pref_key_system_statusbar_batterytempandcurrent_cat");
+						String title = preference.getTitle().toString();
+						openSubFragment(new System(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, title, R.xml.prefs_system_statusbar_batterytempandcurrent);
 						return true;
 					}
 				});
@@ -217,17 +230,17 @@ public class System extends SubFragment {
 						return true;
 					}
 				});
-				findPreference("pref_key_system_snoozedmanager").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-					@Override
-					public boolean onPreferenceChange(Preference preference, Object newValue) {
-						PackageManager pm = getActivity().getPackageManager();
-						if ((Boolean)newValue)
-							pm.setComponentEnabledSetting(new ComponentName(getActivity(), SnoozedActivity.class), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-						else
-							pm.setComponentEnabledSetting(new ComponentName(getActivity(), SnoozedActivity.class), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-						return true;
-					}
-				});
+//				findPreference("pref_key_system_snoozedmanager").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+//					@Override
+//					public boolean onPreferenceChange(Preference preference, Object newValue) {
+//						PackageManager pm = getActivity().getPackageManager();
+//						if ((Boolean)newValue)
+//							pm.setComponentEnabledSetting(new ComponentName(getActivity(), SnoozedActivity.class), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+//						else
+//							pm.setComponentEnabledSetting(new ComponentName(getActivity(), SnoozedActivity.class), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+//						return true;
+//					}
+//				});
 				break;
 			case "pref_key_system_cat_qs":
 				findPreference("pref_key_system_qshaptics_ignore").setEnabled(!Objects.equals(Helpers.prefs.getString("pref_key_system_qshaptics", "1"), "1"));

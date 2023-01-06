@@ -1014,10 +1014,6 @@ public class Various {
 		});
 	}
 
-	public static void CollapseMIUITitlesHook(LoadPackageParam lpparam, XC_MethodHook.MethodHookParam param, int opt) {
-
-	}
-
 	public static void GboardPaddingHook() {
 		Helpers.findAndHookMethod(findClass("android.os.SystemProperties", null), "get", String.class, new MethodHook() {
 			@Override

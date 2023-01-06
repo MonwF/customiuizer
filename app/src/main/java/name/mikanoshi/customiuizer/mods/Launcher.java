@@ -1190,13 +1190,6 @@ public class Launcher {
 
 		Class<?> buCls = XposedHelpers.findClassIfExists("com.miui.home.launcher.common.BlurUtils", lpparam.classLoader);
 		if (buCls != null) {
-			Helpers.findAndHookMethod("com.miui.home.launcher.common.BlurUtils", lpparam.classLoader, "isUserBlurWhenOpenFolder", new MethodHook() {
-				@Override
-				protected void after(MethodHookParam param) throws Throwable {
-					param.setResult(true);
-				}
-			});
-
 			Method[] methods = buCls.getDeclaredMethods();
 			Method fastBlur = null;
     		for (Method method: methods)
@@ -1221,13 +1214,6 @@ public class Launcher {
 			return;
 		}
 
-		Helpers.findAndHookMethod("com.miui.home.launcher.blur.BlockingBlurController", lpparam.classLoader, "setBlurEnabled", boolean.class, new MethodHook() {
-			@Override
-			protected void before(MethodHookParam param) throws Throwable {
-				if (MainModule.mPrefs.getBoolean("launcher_folderblur_disable")) param.args[0] = false;
-			}
-		});
-
 		Helpers.findAndHookMethod("com.miui.home.launcher.view.BlurFrameLayout", lpparam.classLoader, "setBlurAlpha", float.class, new MethodHook(10) {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
@@ -1241,18 +1227,6 @@ public class Launcher {
 			protected void before(MethodHookParam param) throws Throwable {
 				float ratio = 5 * MainModule.mPrefs.getInt("launcher_folderblur_radius", 0) / 100f;
 				if (ratio > 0) param.args[0] = ratio;
-			}
-		});
-
-		Helpers.findAndHookMethod("com.miui.home.launcher.common.Utilities", lpparam.classLoader, "fastBlur", float.class, Window.class, new MethodHook() {
-			@Override
-			protected void before(MethodHookParam param) throws Throwable {
-				if (MainModule.mPrefs.getBoolean("launcher_folderwallblur_disable")) {
-					param.args[0] = 0.0f;
-					return;
-				}
-				float ratio = MainModule.mPrefs.getInt("launcher_folderwallblur_radius", 0) / 100f;
-				if (ratio > 0) param.args[0] = (float)param.args[0] * ratio;
 			}
 		});
 	}
@@ -1451,16 +1425,6 @@ public class Launcher {
 	}
 
 	public static void RecentsBlurRatioHook(LoadPackageParam lpparam) {
-		Helpers.hookAllConstructors("com.miui.home.recents.views.RecentsView", lpparam.classLoader, new MethodHook() {
-			@Override
-			protected void after(MethodHookParam param) throws Throwable {
-				try {
-					XposedHelpers.setFloatField(param.thisObject, "mDefaultScrimAlpha", 0.15f);
-					XposedHelpers.setObjectField(param.thisObject, "mBackgroundScrim", new ColorDrawable(Color.argb(38, 0, 0, 0)).mutate());
-				} catch (Throwable ignore) {}
-			}
-		});
-
 		Helpers.hookAllConstructors("com.miui.home.recents.RecentsViewStateController", lpparam.classLoader, new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
@@ -1477,16 +1441,15 @@ public class Launcher {
 		});
 
 		Class<?> utilsClass = XposedHelpers.findClassIfExists("com.miui.home.launcher.common.BlurUtils", lpparam.classLoader);
-		if (utilsClass == null) utilsClass = XposedHelpers.findClassIfExists("com.miui.home.launcher.common.Utilities", lpparam.classLoader);
 		if (utilsClass == null) {
 			Helpers.log("RecentsBlurRatioHook", "Cannot find blur utility class");
 			return;
 		}
 
-		Helpers.hookAllMethods(utilsClass, "fastBlur", new MethodHook() {
+		Helpers.hookAllMethods(utilsClass, "fastBlurWhenUseCompleteRecentsBlur", new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
-				param.args[0] = (float)param.args[0] * MainModule.mPrefs.getInt("system_recents_blur", 100) / 100f;
+				param.args[1] = MainModule.mPrefs.getInt("system_recents_blur", 100) / 100f;
 			}
 		});
 	}
@@ -1615,6 +1578,7 @@ public class Launcher {
 		Class<?> WallpaperZoomManagerKtClass = findClassIfExists("com.miui.home.launcher.wallpaper.WallpaperZoomManagerKt", lpparam.classLoader);
 		if (MainModule.mPrefs.getBoolean("launcher_disable_wallpaperscale")) {
 			XposedHelpers.setStaticBooleanField(WallpaperZoomManagerKtClass, "ZOOM_ENABLED", false);
+			Helpers.findAndHookMethod("com.miui.home.recents.DimLayer", lpparam.classLoader, "isSupportDim", XC_MethodReplacement.returnConstant(false));
 			return;
 		}
 		Helpers.hookAllMethods("com.miui.home.recents.OverviewState", lpparam.classLoader, "onStateEnabled", new MethodHook() {

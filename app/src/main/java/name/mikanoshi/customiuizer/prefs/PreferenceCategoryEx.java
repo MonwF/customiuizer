@@ -15,8 +15,7 @@ import name.mikanoshi.customiuizer.R;
 
 public class PreferenceCategoryEx extends PreferenceCategory {
 	private final boolean dynamic;
-	private final boolean empty;
-	private boolean hidden;
+	private int state; // 0-正常 1-纯区块 2-顶层隐藏
 	private boolean unsupported = false;
 	private final Resources res = getContext().getResources();
 	private final int childpadding = res.getDimensionPixelSize(R.dimen.preference_item_child_padding);
@@ -25,8 +24,7 @@ public class PreferenceCategoryEx extends PreferenceCategory {
 		super(context, attrs);
 		final TypedArray xmlAttrs = context.obtainStyledAttributes(attrs, R.styleable.PreferenceCategoryEx);
 		dynamic = xmlAttrs.getBoolean(R.styleable.PreferenceCategoryEx_dynamic, false);
-		empty = xmlAttrs.getBoolean(R.styleable.PreferenceCategoryEx_empty, false);
-		hidden = xmlAttrs.getBoolean(R.styleable.PreferenceCategoryEx_hidden, false);
+		state = xmlAttrs.getInt(R.styleable.PreferenceCategoryEx_state, 0);
 		xmlAttrs.recycle();
 		setLayoutResource(R.layout.preference_category);
 	}
@@ -42,10 +40,14 @@ public class PreferenceCategoryEx extends PreferenceCategory {
 		super.onBindViewHolder(view);
 		TextView title = (TextView) view.findViewById(android.R.id.title);
 		title.setText(getTitle() + (unsupported ? " ⨯" : (dynamic ? " ⟲" : "")));
-		title.setVisibility(hidden || empty ? View.GONE : View.VISIBLE);
+		title.setVisibility((state == 2 || state == 1) ? View.GONE : View.VISIBLE);
 		View finalView = view.itemView;
-		if (hidden) {
+		if (state == 2) {
 			finalView.setPadding(childpadding, 0, childpadding, 0);
+		}
+		else {
+			int vertialPadding = getContext().getResources().getDimensionPixelSize(R.dimen.preference_item_padding_top);
+			finalView.setPadding(childpadding, vertialPadding, childpadding, vertialPadding);
 		}
 	}
 
@@ -59,13 +61,7 @@ public class PreferenceCategoryEx extends PreferenceCategory {
 	}
 
 	public void hide() {
-		hidden = true;
+		state = 2;
 		this.notifyChanged();
 	}
-
-	public void show() {
-		hidden = false;
-		this.notifyChanged();
-	}
-
 }

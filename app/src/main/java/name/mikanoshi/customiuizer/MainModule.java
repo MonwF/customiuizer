@@ -158,13 +158,12 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_apksign") || mPrefs.getBoolean("system_disableintegrity")) System.DisableSystemIntegrityHook(lpparam);
             if (mPrefs.getBoolean("system_vibration_amp")) System.MuffledVibrationHook(lpparam);
             if (mPrefs.getBoolean("system_clearalltasks")) System.ClearAllTasksHook(lpparam);
-            if (mPrefs.getBoolean("system_snoozedmanager")) System.MoreSnoozeOptionsServiceHook(lpparam);
+//            if (mPrefs.getBoolean("system_snoozedmanager")) System.MoreSnoozeOptionsServiceHook(lpparam);
             if (mPrefs.getBoolean("system_nodarkforce")) System.NoDarkForceHook(lpparam);
             if (mPrefs.getBoolean("system_audiosilencer")) System.AudioSilencerServiceHook(lpparam);
             if (mPrefs.getBoolean("system_fw_sticky")) System.StickyFloatingWindowsHook(lpparam);
             if (mPrefs.getBoolean("system_charginginfo")) System.ChargingInfoServiceHook(lpparam);
             if (mPrefs.getBoolean("system_lswallpaper")) System.SetLockscreenWallpaperHook(lpparam);
-            if (mPrefs.getBoolean("system_usenativerecents")) System.UseNativeRecentsFixHook(lpparam);
             if (mPrefs.getBoolean("controls_powerflash")) Controls.PowerKeyHook(lpparam);
             if (mPrefs.getBoolean("controls_fingerprintfailure")) Controls.FingerprintHapticFailureHook(lpparam);
             if (mPrefs.getBoolean("controls_fingerprintscreen")) Controls.FingerprintScreenOnHook(lpparam);
@@ -200,12 +199,10 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getInt("system_qsgridcolumns", 2) > 2 || mPrefs.getInt("system_qsgridrows", 1) > 1) System.QSGridRes();
             if (mPrefs.getInt("system_qqsgridcolumns", 2) > 2) System.QQSGridRes();
             if (mPrefs.getBoolean("system_volumetimer")) System.VolumeTimerValuesRes(lpparam);
-            if (mPrefs.getBoolean("system_snoozedmanager")) System.MoreSnoozeOptionsRes();
+//            if (mPrefs.getBoolean("system_snoozedmanager")) System.MoreSnoozeOptionsRes();
             if (mPrefs.getStringAsInt("system_networkindicator", 1) == 3) System.NetworkIndicatorRes(lpparam);
 
-            if (mPrefs.getInt("system_recents_blur", 100) < 100) System.RecentsBlurRatioHook(lpparam);
             if (mPrefs.getInt("system_drawer_blur", 100) < 100) System.DrawerBlurRatioHook(lpparam);
-            if (mPrefs.getInt("system_drawer_opacity", 100) < 100) System.DrawerThemeBackgroundHook(lpparam);
             if (mPrefs.getInt("system_chargeanimtime", 20) < 20) System.ChargeAnimationHook(lpparam);
             if (mPrefs.getInt("system_betterpopups_delay", 0) > 0 && !mPrefs.getBoolean("system_betterpopups_nohide")) System.BetterPopupsHideDelayHook(lpparam);
             if (mPrefs.getInt("system_netspeedinterval", 4) != 4) System.NetSpeedIntervalHook(lpparam);
@@ -296,10 +293,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             ) {
                 System.NetSpeedStyleHook(lpparam);
             }
-            if (mPrefs.getBoolean("system_snoozedmanager")) System.MoreSnoozeOptionsHook(lpparam);
+//            if (mPrefs.getBoolean("system_snoozedmanager")) System.MoreSnoozeOptionsHook(lpparam);
             if (mPrefs.getBoolean("system_taptounlock")) System.TapToUnlockHook(lpparam);
             if (mPrefs.getBoolean("system_nosos")) System.NoSOSHook(lpparam);
-            if (mPrefs.getBoolean("system_usenativerecents")) System.UseNativeRecentsHook(lpparam);
             if (mPrefs.getBoolean("system_morenotif")) System.MoreNotificationsHook(lpparam);
             if (mPrefs.getBoolean("system_charginginfo")) System.ChargingInfoHook(lpparam);
             if (mPrefs.getBoolean("system_secureqs")) System.SecureQSTilesHook(lpparam);
@@ -454,8 +450,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         final boolean isLauncherPerf = mPrefs.getBoolean("launcher_compat");
         final boolean isGoogleMinus = mPrefs.getBoolean("launcher_googleminus");
         final boolean isStatusBarColor = mPrefs.getBoolean("system_statusbarcolor") && !mPrefs.getStringSet("system_statusbarcolor_apps").contains(pkg);
-        final int collapseTitlesOpt = mPrefs.getStringAsInt("various_collapsemiuititles", 1);
-        final boolean collapseTitles = collapseTitlesOpt > 1;
         final boolean noOverscroll = mPrefs.getBoolean("system_nooverscroll");
 
         if (isLauncherPkg) {
@@ -474,14 +468,13 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (isLauncherPerf) handleLoadLauncher(lpparam);
         }
 
-        if ((isLauncherPkg && !isLauncherPerf) || (isMIUILauncherPkg && isGoogleMinus) || isStatusBarColor || collapseTitles || noOverscroll)
+        if ((isLauncherPkg && !isLauncherPerf) || (isMIUILauncherPkg && isGoogleMinus) || isStatusBarColor || noOverscroll)
             Helpers.findAndHookMethod(Application.class, "attach", Context.class, new MethodHook() {
                 @Override
                 protected void after(MethodHookParam param) throws Throwable {
                     if (isLauncherPkg && !isLauncherPerf) handleLoadLauncher(lpparam);
                     if (isMIUILauncherPkg && isGoogleMinus) Launcher.GoogleMinusScreenHook(lpparam);
                     if (isStatusBarColor) System.StatusBarBackgroundCompatHook(lpparam);
-                    if (collapseTitles) Various.CollapseMIUITitlesHook(lpparam, param, collapseTitlesOpt);
                     if (noOverscroll) System.NoOverscrollAppHook(lpparam);
                 }
             });

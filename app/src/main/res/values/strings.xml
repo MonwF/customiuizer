@@ -173,8 +173,6 @@
     <string name="system_popupnotif_fs_title">Respect fullscreen</string>
     <string name="system_popupnotif_fs_summ">Do not open notification drawer when fullscreen app is active (does not apply to immersive apps with hidden status and navigation bars)</string>
     <string name="system_popupnotif_apps_title">Selected apps</string>
-    <string name="various_collapsemiuititles_title">Collapse MIUI titles</string>
-    <string name="various_collapsemiuititles_summ">Configure action bar title state in all MIUI 12 apps</string>
     <string name="system_mods_screenshots">Screenshots</string>
     <string name="system_screenshot_title">Screenshot configuration</string>
     <string name="system_screenshot_summ">Customize format, quality and save folder for screenshots</string>
@@ -318,8 +316,6 @@
     <string name="system_blur_title">Background blur</string>
     <string name="system_recents_blur_summ">Background blur intensity in recent apps</string>
     <string name="system_drawer_blur_summ">Background blur intensity in notification drawer</string>
-    <string name="system_drawer_opacity_title">Themed background opacity</string>
-    <string name="system_drawer_opacity_summ">Opacity of a themed notification drawer background</string>
     <string name="system_mods_lockscreen">Lock screen</string>
     <string name="system_mods_lockscreen_functionality">Additional functionality</string>
     <string name="system_mods_lockscreen_security">Security</string>
@@ -423,8 +419,6 @@
     <string name="system_mods_statusbar_drawer">Notification drawer</string>
     <string name="system_mods_notifications">Notifications</string>
     <string name="system_mods_recents">Recent apps list</string>
-    <string name="system_usenativerecents_title">Use native implementation</string>
-    <string name="system_usenativerecents_summ">Don\'t use recent apps list from MIUI Launcher. Works badly with full screen gestures.</string>
     <string name="system_removecleaner_title">Remove cleaner button</string>
     <string name="system_removecleaner_summ">Hide button that clears recent apps and cleans memory</string>
     <string name="system_recents_disable_wallpaperscale_title">Disable wallpaper scale</string>
