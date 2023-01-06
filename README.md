@@ -1,12 +1,14 @@
 ![logo](https://code.highspec.ru/customiuizer_promo.png)
 
-## CustoMIUIzer for MIUI 13 ([中文](./README_zh.md))
-tested on android 12 only ( **some hooks are not working** )
+## CustoMIUIzer14 ([中文](./README_zh.md))
+Customize MIUI to your liking
+
+For MIUI 13 & 14 based on android 12 and 13
 
 ### Dowload
-
 * [Releases](https://github.com/MonwF/customiuizer/releases)
 * LSPosed Repo
+* [Test Releases](https://tpsx.lanzouv.com/b021ly4gj) password: `miui`
 
 ### Backup functionality
 Backups are stored in /sdcard/Documents/CustoMIUIzer/
