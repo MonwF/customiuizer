@@ -109,7 +109,6 @@ public class Helpers {
 	public static Context mModuleContext = null;
 	public static final String modulePkg = BuildConfig.APPLICATION_ID;
 	public static final String modulePackage = "name.mikanoshi.customiuizer";
-	public static final String TAG = "CustoMIUIzer";
 	public static final String prefsName = "customiuizer_prefs";
 	public static final String prefsPath = "/data/user_de/0/" + modulePkg + "/shared_prefs";
 	public static final String prefsFile = prefsPath + "/" + prefsName + ".xml";
