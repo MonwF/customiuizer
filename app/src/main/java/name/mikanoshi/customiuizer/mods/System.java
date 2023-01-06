@@ -1316,56 +1316,59 @@ public class System {
     }
 
     public static void DrawerBlurRatioHook(LoadPackageParam lpparam) {
-        Helpers.hookAllConstructors("com.android.systemui.statusbar.phone.StatusBarWindowManager", lpparam.classLoader, new MethodHook() {
+        Helpers.hookAllConstructors("com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController", lpparam.classLoader, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                Context mContext = (Context)param.args[0];
+                View mView = (View) param.args[0];
+                Context mContext = mView.getContext();
                 Handler mHandler = new Handler(mContext.getMainLooper());
 
-                XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomBlurModifier", MainModule.mPrefs.getInt("system_drawer_blur", 100));
+                Object mControlPanelWindowManager = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", lpparam.classLoader), "get", findClass("com.android.systemui.controlcenter.phone.ControlPanelWindowManager", lpparam.classLoader));
+                Object notificationShadeDepthController = XposedHelpers.getObjectField(param.thisObject, "notificationShadeDepthController");
+                int initBlurRatio = MainModule.mPrefs.getInt("system_drawer_blur", 100);
+                XposedHelpers.setAdditionalInstanceField(notificationShadeDepthController, "mCustomBlurModifier", initBlurRatio);
+                XposedHelpers.setAdditionalInstanceField(mControlPanelWindowManager, "mCustomBlurModifier", initBlurRatio);
                 new Helpers.SharedPrefObserver(mContext, mHandler, "pref_key_system_drawer_blur", 100) {
                     @Override
                     public void onChange(String name, int defValue) {
                         int opt = Helpers.getSharedIntPref(mContext, name, defValue);
-                        XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomBlurModifier", opt);
-                        Object mControlPanelWindowManager = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", lpparam.classLoader), "get", findClass("com.android.systemui.miui.statusbar.phone.ControlPanelWindowManager", lpparam.classLoader));
+                        XposedHelpers.setAdditionalInstanceField(notificationShadeDepthController, "mCustomBlurModifier", opt);
                         XposedHelpers.setAdditionalInstanceField(mControlPanelWindowManager, "mCustomBlurModifier", opt);
                     }
                 };
             }
         });
 
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBarWindowManager", lpparam.classLoader, "setBlurRatio", float.class, new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.NotificationShadeDepthController$updateBlurCallback$1", lpparam.classLoader, "doFrame", long.class, new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
-                param.args[0] = (float)param.args[0] * (int)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mCustomBlurModifier") / 100f;
+                Object parentCtrl = XposedHelpers.getSurroundingThis(param.thisObject);
+                Object blurRatio = XposedHelpers.getAdditionalInstanceField(parentCtrl, "mCustomBlurModifier");
+                Object mBlurUtils = XposedHelpers.getObjectField(parentCtrl, "blurUtilsExt");
+                XposedHelpers.setAdditionalInstanceField(mBlurUtils, "mCustomBlurModifier", blurRatio);
+            }
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                Object parentCtrl = XposedHelpers.getSurroundingThis(param.thisObject);
+                Object mBlurUtils = XposedHelpers.getObjectField(parentCtrl, "blurUtilsExt");
+                XposedHelpers.removeAdditionalInstanceField(mBlurUtils, "mCustomBlurModifier");
             }
         });
 
-        if (!Helpers.findAndHookMethodSilently("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, "onBlurRatioChanged", float.class, new MethodHook(1000) {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BlurUtilsExt", lpparam.classLoader, "applyBlurByRadius", View.class, int.class, new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
-                param.args[0] = XposedHelpers.callMethod(param.thisObject, "getAppearFraction");
-            }
-        })) Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.NotificationPanelView", lpparam.classLoader, "updateStatusBarWindowBlur", new MethodHook(100) {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                int mStatusBarState = XposedHelpers.getIntField(param.thisObject, "mStatusBarState");
-                if (mStatusBarState != 0) return;
-                View mThemeBackgroundView = (View)XposedHelpers.getObjectField(param.thisObject, "mThemeBackgroundView");
-                if (mThemeBackgroundView != null)
-                    mThemeBackgroundView.setAlpha((float)XposedHelpers.callMethod(param.thisObject, "getAppearFraction"));
+                Object multiplier = XposedHelpers.getAdditionalInstanceField(param.thisObject, "mCustomBlurModifier");
+                if (multiplier != null) {
+                    Object blurUtils = XposedHelpers.getObjectField(param.thisObject, "blurUtils");
+                    float ratio = (float) XposedHelpers.callMethod(blurUtils, "ratioOfBlurRadius", 1.0f * (int)param.args[1]);
+                    float newRatio = ratio * (int)multiplier / 100f;
+                    param.args[1] = Math.round((float)XposedHelpers.callMethod(blurUtils, "blurRadiusOfRatio", newRatio));
+                }
             }
         });
 
-        Helpers.hookAllConstructors("com.android.systemui.miui.statusbar.phone.ControlPanelWindowManager", lpparam.classLoader, new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCustomBlurModifier", MainModule.mPrefs.getInt("system_drawer_blur", 100));
-            }
-        });
-
-        Helpers.findAndHookMethod("com.android.systemui.miui.statusbar.phone.ControlPanelWindowManager", lpparam.classLoader, "applyBlurRatio", float.class, new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.controlcenter.phone.ControlPanelWindowManager", lpparam.classLoader, "setBlurRatio", float.class, boolean.class, new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 param.args[0] = (float)param.args[0] * (int)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mCustomBlurModifier") / 100f;
