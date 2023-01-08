@@ -1299,8 +1299,9 @@ public class Helpers {
 	}
 
 	public static synchronized Context getModuleContext(Context context, Configuration config) throws Throwable {
-		if (mModuleContext == null)
-		mModuleContext = context.createPackageContext(modulePkg, Context.CONTEXT_IGNORE_SECURITY).createDeviceProtectedStorageContext();
+		if (mModuleContext == null) {
+			mModuleContext = context.createPackageContext(modulePkg, Context.CONTEXT_IGNORE_SECURITY).createDeviceProtectedStorageContext();
+		}
 		return config == null ? mModuleContext : mModuleContext.createConfigurationContext(config);
 	}
 

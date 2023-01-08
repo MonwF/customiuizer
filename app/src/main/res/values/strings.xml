@@ -895,6 +895,8 @@
     <string name="array_temperature">Temperature Only</string>
     <string name="array_current">Current Only</string>
     <string name="array_dualsimin2rows_style_thick">Thick</string>
+    <string name="array_dualsimin2rows_style_theme">Follow the theme</string>
+
     <string name="unlimited">Unlimited</string>
 
     <string name="toggle_wifi_on">Wi-Fi enabled</string>
