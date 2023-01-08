@@ -827,6 +827,7 @@
     <string name="array_collapse_initial">原本</string>
     <string name="array_collapse_permanent">永久</string>
     <string name="array_dualsimin2rows_style_thick">加粗</string>
+    <string name="array_dualsimin2rows_style_theme">跟随主题</string>
     <string name="unlimited">无限制</string>
     <string name="toggle_wifi_on">Wi-Fi已启用</string>
     <string name="toggle_wifi_off">Wi-Fi已禁用</string>

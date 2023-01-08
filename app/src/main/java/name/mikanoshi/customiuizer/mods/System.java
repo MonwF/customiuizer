@@ -16,7 +16,6 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityOptions;
 import android.app.AndroidAppHelper;
-import android.app.Dialog;
 import android.app.KeyguardManager;
 import android.app.MiuiNotification;
 import android.app.Notification;
@@ -57,10 +56,6 @@ import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.hardware.usb.UsbManager;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
@@ -194,6 +189,7 @@ import name.mikanoshi.customiuizer.utils.BatteryIndicator;
 import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.Helpers.MethodHook;
 import name.mikanoshi.customiuizer.utils.Helpers.MimeType;
+import name.mikanoshi.customiuizer.utils.ResourceHooks;
 import name.mikanoshi.customiuizer.utils.SoundData;
 
 public class System {
@@ -8131,8 +8127,9 @@ public class System {
         }
 
         HashMap<String, Integer> dualSignalResMap = new HashMap<String, Integer>();
+        HashMap<Integer, String> dualSignalId2NameMap = new HashMap<Integer, String>();
         String[] colorModeList = {"", "dark", "tint"};
-        String[] iconStyles = {"", "thick"};
+//        String[] iconStyles = {"", "thick", "theme"};
         String selectedIconStyle = MainModule.mPrefs.getString("system_statusbar_dualsimin2rows_style", "");
 
         Helpers.findAndHookMethod("com.android.systemui.SystemUIApplication", lpparam.classLoader, "onCreate", new MethodHook() {
@@ -8143,14 +8140,19 @@ public class System {
                     isHooked = true;
                     Context mContext = (Context) XposedHelpers.callMethod(param.thisObject, "getApplicationContext");
                     Resources modRes = Helpers.getModuleRes(mContext);
-                    for (int slot = 1;slot <= 2;slot++) {
-                        for (int lvl = 0;lvl <= 5;lvl++) {
+                    for (int slot = 1; slot <= 2; slot++) {
+                        for (int lvl = 0; lvl <= 5; lvl++) {
                             for (String colorMode : colorModeList) {
-                                for (String iconStyle : iconStyles) {
-                                    String dualIconId = "statusbar_signal_" + slot + "_" + lvl + (!colorMode.equals("") ? ("_" + colorMode) : "") + (!iconStyle.equals("") ? ("_" + iconStyle) : "");
-                                    int iconResId = modRes.getIdentifier(dualIconId, "drawable", Helpers.modulePkg);
-                                    String statusbarFakeId = "cust_" + dualIconId;
-                                    dualSignalResMap.put(statusbarFakeId, MainModule.resHooks.addResource(statusbarFakeId, iconResId));
+                                String iconStyle = selectedIconStyle;
+                                String dualIconResName = "statusbar_signal_" + slot + "_" + lvl + (!colorMode.equals("") ? ("_" + colorMode) : "") + (!iconStyle.equals("") ? ("_" + iconStyle) : "");
+                                if (iconStyle.equals("theme")) {
+                                    int fakeResId = ResourceHooks.getFakeResId(dualIconResName);
+                                    dualSignalResMap.put(dualIconResName, fakeResId);
+                                    dualSignalId2NameMap.put(fakeResId, dualIconResName);
+                                }
+                                else {
+                                    int iconResId = modRes.getIdentifier(dualIconResName, "drawable", Helpers.modulePkg);
+                                    dualSignalResMap.put(dualIconResName, MainModule.resHooks.addResource(dualIconResName, iconResId));
                                 }
                             }
                         }
@@ -8248,7 +8250,7 @@ public class System {
                 Object mSmallRoaming = XposedHelpers.getObjectField(param.thisObject, "mSmallRoaming");
                 Object mMobile = XposedHelpers.getObjectField(param.thisObject, "mMobile");
                 String colorMode = "";
-                if (mUseTint) {
+                if (mUseTint && !selectedIconStyle.equals("theme")) {
                     colorMode = "_tint";
                 }
                 else if (!mLight) {
@@ -8258,8 +8260,8 @@ public class System {
                 if (!selectedIconStyle.equals("")) {
                     iconStyle = "_" + selectedIconStyle;
                 }
-                String sim1IconId = "cust_statusbar_signal_1_" + level1 + colorMode + iconStyle;
-                String sim2IconId = "cust_statusbar_signal_2_" + subStrengthId + colorMode + iconStyle;
+                String sim1IconId = "statusbar_signal_1_" + level1 + colorMode + iconStyle;
+                String sim2IconId = "statusbar_signal_2_" + subStrengthId + colorMode + iconStyle;
                 int sim1ResId = dualSignalResMap.get(sim1IconId);
                 int sim2ResId = dualSignalResMap.get(sim2IconId);
                 XposedHelpers.callMethod(mMobile, "setImageResource", sim1ResId);
@@ -8281,6 +8283,42 @@ public class System {
                         res.getDisplayMetrics()
                     );
                     mobileView.setPadding(0, 0, rightSpacing, 0);
+                }
+            });
+        }
+
+        if (selectedIconStyle.equals("theme")) {
+            Helpers.findAndHookMethod("android.content.res.AssetManager", lpparam.classLoader, "getResourceValue", int.class, int.class, TypedValue.class, boolean.class, new MethodHook() {
+                @Override
+                protected void before(MethodHookParam param) throws Throwable {
+                    int resId = (int) param.args[0];
+                    String resName = dualSignalId2NameMap.get(resId);
+                    if (resName != null) {
+                        TypedValue tv = (TypedValue) param.args[2];
+                        tv.assetCookie = 17;
+                        tv.type = 3;
+                        tv.string = "res/drawable/" + resName + ".png";
+                        tv.resourceId = resId;
+                        tv.changingConfigurations = 0;
+                        tv.data = resId & 0x0000ffff;
+                        param.setResult(true);
+                    }
+                }
+            });
+            Helpers.hookAllMethods("android.content.res.ResourcesImpl", lpparam.classLoader, "loadDrawableForCookie", new MethodHook() {
+                @Override
+                protected void before(MethodHookParam param) throws Throwable {
+                    int resId = (int) param.args[2];
+                    String resName = dualSignalId2NameMap.get(resId);
+                    if (resName != null) {
+                        Object dr;
+                        Object mLookupStack = XposedHelpers.getObjectField(param.thisObject, "mLookupStack");
+                        Object stack = XposedHelpers.callMethod(mLookupStack, "get");
+                        XposedHelpers.callMethod(stack, "push", resId);
+                        dr = XposedHelpers.callMethod(param.args[0], "loadOverlayDrawable", param.args[1], param.args[2]);
+                        XposedHelpers.callMethod(stack, "pop");
+                        param.setResult(dr);
+                    }
                 }
             });
         }
