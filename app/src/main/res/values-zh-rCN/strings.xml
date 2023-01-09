@@ -33,9 +33,9 @@
     <string name="system_statusbaricons_summ">管理状态栏图标可见性</string>
     <string name="system_statusbaricons_wifistandard_title">显示Wi-Fi标准</string>
     <string name="system_statusbaricons_battery1_title">电池图片</string>
-    <string name="system_statusbaricons_battery2_title">电池充电百分比</string>
+    <string name="system_statusbaricons_battery2_title">电池电量数字</string>
+    <string name="system_statusbaricons_battery4_title">电池百分比符号</string>
     <string name="system_statusbaricons_battery3_title">充电指示器</string>
-    <string name="system_statusbaricons_battery_summ">可以叠加在某些ROM的电池图标上</string>
     <string name="system_statusbaricons_alarm_title">闹钟</string>
     <string name="system_statusbaricons_alarm_summ">完全隐藏</string>
     <string name="system_statusbaricons_alarmn_title">选择闹钟图标的可见性</string>

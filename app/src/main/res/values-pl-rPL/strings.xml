@@ -36,7 +36,6 @@
     <string name="system_statusbaricons_battery1_title">Ikona baterii</string>
     <string name="system_statusbaricons_battery2_title">Procent naładowania baterii</string>
     <string name="system_statusbaricons_battery3_title">Wskaźnik ładowania</string>
-    <string name="system_statusbaricons_battery_summ">Może być nałożone na ikonę baterii w niektórych ROMach</string>
     <string name="system_statusbaricons_alarm_title">Alarm</string>
     <string name="system_statusbaricons_alarm_summ">Ukryj się całkowicie</string>
     <string name="system_statusbaricons_alarmn_title">Selektywna widoczność ikony alarmu</string>
