@@ -1446,10 +1446,16 @@ public class Launcher {
 			return;
 		}
 
-		Helpers.hookAllMethods(utilsClass, "fastBlurWhenUseCompleteRecentsBlur", new MethodHook() {
+		Helpers.hookAllMethods(utilsClass, "fastBlurWhenEnterRecents", new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
-				param.args[1] = MainModule.mPrefs.getInt("system_recents_blur", 100) / 100f;
+				boolean mIsFromFsGesture = XposedHelpers.getBooleanField(param.args[1], "mIsFromFsGesture");
+				if (!mIsFromFsGesture) {
+					Activity launcher = (Activity) param.args[0];
+					float blurRatio = MainModule.mPrefs.getInt("system_recents_blur", 100) / 100f;
+					XposedHelpers.callStaticMethod(utilsClass, "fastBlur", blurRatio, launcher.getWindow(), param.args[2]);
+					param.setResult(null);
+				}
 			}
 		});
 	}
