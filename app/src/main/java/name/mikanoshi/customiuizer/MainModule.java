@@ -264,6 +264,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 || mPrefs.getBoolean("system_statusbar_dnd_atright")
                 || mPrefs.getBoolean("system_statusbar_nfc_atright")
                 || mPrefs.getBoolean("system_statusbar_btbattery_atright")
+                || mPrefs.getBoolean("system_statusbar_headset_atright")
             ) {
                 System.StatusBarIconsAtRightHook(lpparam);
             }
