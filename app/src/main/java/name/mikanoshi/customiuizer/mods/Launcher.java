@@ -1458,6 +1458,25 @@ public class Launcher {
 				}
 			}
 		});
+		Helpers.hookAllMethods(utilsClass, "fastBlurWhenGestureResetTaskView", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				XposedHelpers.setAdditionalStaticField(utilsClass, "customBlurRatio", true);
+			}
+		});
+
+		Helpers.hookAllMethods(utilsClass, "fastBlur", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				if (param.args.length == 3) {
+					if (XposedHelpers.getAdditionalStaticField(utilsClass, "customBlurRatio") != null) {
+						float blurRatio = MainModule.mPrefs.getInt("system_recents_blur", 100) / 100f;
+						param.args[0] = blurRatio;
+						XposedHelpers.removeAdditionalStaticField(utilsClass, "customBlurRatio");
+					}
+				}
+			}
+		});
 	}
 
     public static void CloseFolderOrDrawerOnLaunchShortcutMenuHook(LoadPackageParam lpparam) {
