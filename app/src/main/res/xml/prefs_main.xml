@@ -66,6 +66,7 @@
 			android:key="pref_key_releases" />
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:title="@string/support_github"
+			android:summary="@string/support_github_summ"
 			android:key="pref_key_github" />
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:title="@string/support_donate_me_title"

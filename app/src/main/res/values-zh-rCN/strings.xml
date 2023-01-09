@@ -875,6 +875,7 @@
     <string name="miuizer_acramail_tip">如果您希望收到对崩溃报告的回复，此项当然是必填的。请使用电子邮箱、ICQ、XDA或者4PDA的昵称。</string>
     <string name="support">支持</string>
     <string name="support_github">代码仓库</string>
+    <string name="support_github_summ">Star仓库，关注App更新</string>
     <string name="support_contact_title">酷安 @tpsxx</string>
     <string name="support_releases_title">版本下载</string>
     <string name="support_releases_summ">云盘密码: miui，可长按复制链接</string>
