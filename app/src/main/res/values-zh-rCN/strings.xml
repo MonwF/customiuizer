@@ -492,8 +492,8 @@
     <string name="launcher_hideseekpoints_title">动态页面指示器</string>
     <string name="launcher_hideseekpoints_summ">仅在滚动时显示页面指示器</string>
     <string name="launcher_hideseekpoints_edit_title">仅在编辑模式中显示</string>
-    <string name="launcher_unlockgrids_title">解锁网格大小</string>
-    <string name="launcher_unlockgrids_summ">可在主屏幕布局设置中使用3x4到10x10之间的所有网格大小</string>
+    <string name="launcher_unlockgrids_title">解锁桌面布局</string>
+    <string name="launcher_unlockgrids_summ">可在系统桌面布局设置中使用3x4到10x10之间的所有布局</string>
     <string name="launcher_unlockhotseat_title">增加底栏图标</string>
     <string name="launcher_unlockhotseat_summ">解除底栏图标数量的限制</string>
     <string name="launcher_iconscale_title">图标缩放</string>
