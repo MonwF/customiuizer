@@ -862,7 +862,6 @@
     <string name="system_statusbaricons_battery1_title">電池圖片</string>
     <string name="system_statusbaricons_battery2_title">電池充電百分比</string>
     <string name="system_statusbaricons_battery3_title">充電指示器</string>
-    <string name="system_statusbaricons_battery_summ">可以疊加在某些ROM的電池圖示上</string>
     <string name="system_statusbaricons_dnd_title">勿擾模式</string>
     <string name="system_statusbaricons_headset_title">耳機</string>
     <string name="system_statusbaricons_hotspot_title">熱點</string>

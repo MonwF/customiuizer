@@ -36,9 +36,9 @@
     <string name="system_statusbaricons_summ">Manage status bar icons visibility</string>
     <string name="system_statusbaricons_wifistandard_title">Show Wi-Fi standard</string>
     <string name="system_statusbaricons_battery1_title">Battery image</string>
-    <string name="system_statusbaricons_battery2_title">Battery charge percentage</string>
+    <string name="system_statusbaricons_battery2_title">Battery digit</string>
+    <string name="system_statusbaricons_battery4_title">Battery percentage mark</string>
     <string name="system_statusbaricons_battery3_title">Charging indicator</string>
-    <string name="system_statusbaricons_battery_summ">Can be overlayed on top of battery image on some ROMs</string>
     <string name="system_statusbaricons_alarm_title">Alarm</string>
     <string name="system_statusbaricons_alarm_summ">Hide completely</string>
     <string name="system_statusbaricons_alarmn_title">Selective alarm icon visibility</string>

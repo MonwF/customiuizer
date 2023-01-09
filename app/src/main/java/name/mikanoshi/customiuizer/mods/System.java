@@ -3783,7 +3783,13 @@ public class System {
             protected void after(MethodHookParam param) throws Throwable {
                 if (MainModule.mPrefs.getBoolean("system_statusbaricons_battery2")) {
                     TextView mBatteryTextDigitView = (TextView)XposedHelpers.getObjectField(param.thisObject, "mBatteryTextDigitView");
+                    TextView mBatteryPercentView = (TextView)XposedHelpers.getObjectField(param.thisObject, "mBatteryPercentView");
                     mBatteryTextDigitView.setVisibility(View.GONE);
+                    mBatteryPercentView.setVisibility(View.GONE);
+                }
+                if (MainModule.mPrefs.getBoolean("system_statusbaricons_battery2") || MainModule.mPrefs.getBoolean("system_statusbaricons_battery4")) {
+                    TextView mBatteryPercentMarkView = (TextView)XposedHelpers.getObjectField(param.thisObject, "mBatteryPercentMarkView");
+                    mBatteryPercentMarkView.setVisibility(View.GONE);
                 }
                 if (MainModule.mPrefs.getBoolean("system_statusbaricons_battery3")) {
                     ImageView mBatteryChargingView = (ImageView)XposedHelpers.getObjectField(param.thisObject, "mBatteryChargingView");
