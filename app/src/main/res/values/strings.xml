@@ -950,6 +950,7 @@
 
     <string name="support">Support</string>
     <string name="support_github">Code and Issues</string>
+    <string name="support_github_summ">Star repository to keep app updated</string>
     <string name="support_contact_title">Contact me</string>
     <string name="support_releases_title">Releases</string>
     <string name="support_releases_summ">Github Releases</string>
