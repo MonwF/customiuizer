@@ -5026,6 +5026,9 @@ public class System {
             batteryView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         }
         batteryView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize);
+        if (MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_bold")) {
+            batteryView.setTypeface(Typeface.DEFAULT_BOLD);
+        }
         int leftMargin = MainModule.mPrefs.getInt("system_statusbar_batterytempandcurrent_leftmargin", 8);
         leftMargin = (int)TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
@@ -6273,6 +6276,9 @@ public class System {
                     int fontSize = MainModule.mPrefs.getInt("system_netspeed_fontsize", 14);
                     if (fontSize != 14) {
                         meter.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize * 0.5f);
+                    }
+                    if (MainModule.mPrefs.getBoolean("system_netspeed_bold")) {
+                        meter.setTypeface(Typeface.DEFAULT_BOLD);
                     }
 
                     int horizMargin = 0;
@@ -8270,7 +8276,8 @@ public class System {
         };
         Helpers.findAndHookMethod("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyDarknessInternal", resetImageDrawable);
         int rightMargin = MainModule.mPrefs.getInt("system_statusbar_dualsimin2rows_rightmargin", 0);
-        if (rightMargin > 0) {
+        int leftMargin = MainModule.mPrefs.getInt("system_statusbar_dualsimin2rows_leftmargin", 0);
+        if (rightMargin > 0 || leftMargin > 0) {
             Helpers.findAndHookMethod("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "init", new MethodHook() {
                 @Override
                 protected void after(final MethodHookParam param) throws Throwable {
@@ -8282,7 +8289,12 @@ public class System {
                         rightMargin * 0.5f,
                         res.getDisplayMetrics()
                     );
-                    mobileView.setPadding(0, 0, rightSpacing, 0);
+                    int leftSpacing = (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        leftMargin * 0.5f,
+                        res.getDisplayMetrics()
+                    );
+                    mobileView.setPadding(leftSpacing, 0, rightSpacing, 0);
                 }
             });
         }

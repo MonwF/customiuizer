@@ -290,6 +290,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 || mPrefs.getInt("system_netspeed_verticaloffset", 8) != 8
                 || mPrefs.getBoolean("system_fixmeter")
                 || mPrefs.getBoolean("system_detailednetspeed")
+                || mPrefs.getBoolean("system_netspeed_bold")
             ) {
                 System.NetSpeedStyleHook(lpparam);
             }
