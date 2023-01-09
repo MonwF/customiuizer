@@ -8281,7 +8281,8 @@ public class System {
         Helpers.findAndHookMethod("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyDarknessInternal", resetImageDrawable);
         int rightMargin = MainModule.mPrefs.getInt("system_statusbar_dualsimin2rows_rightmargin", 0);
         int leftMargin = MainModule.mPrefs.getInt("system_statusbar_dualsimin2rows_leftmargin", 0);
-        if (rightMargin > 0 || leftMargin > 0) {
+        int iconScale = MainModule.mPrefs.getInt("system_statusbar_dualsimin2rows_scale", 10);
+        if (rightMargin > 0 || leftMargin > 0 || iconScale != 10) {
             Helpers.findAndHookMethod("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "init", new MethodHook() {
                 @Override
                 protected void after(final MethodHookParam param) throws Throwable {
@@ -8299,6 +8300,26 @@ public class System {
                         res.getDisplayMetrics()
                     );
                     mobileView.setPadding(leftSpacing, 0, rightSpacing, 0);
+
+                    if (iconScale != 10) {
+                        View mMobile = (View) XposedHelpers.getObjectField(param.thisObject, "mMobile");
+                        View mSmallRoaming = (View) XposedHelpers.getObjectField(param.thisObject, "mSmallRoaming");
+                        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mMobile.getLayoutParams();
+                        int mIconHeight = (int) TypedValue.applyDimension(
+                            TypedValue.COMPLEX_UNIT_DIP,
+                            20 * iconScale / 10f,
+                            res.getDisplayMetrics()
+                        );
+                        Helpers.log("fad " + (layoutParams != null));
+                        if (layoutParams == null) {
+                            layoutParams = new FrameLayout.LayoutParams(-2, mIconHeight);
+                        } else {
+                            layoutParams.height = mIconHeight;
+                        }
+                        layoutParams.gravity = Gravity.CENTER;
+                        mMobile.setLayoutParams(layoutParams);
+                        mSmallRoaming.setLayoutParams(layoutParams);
+                    }
                 }
             });
         }

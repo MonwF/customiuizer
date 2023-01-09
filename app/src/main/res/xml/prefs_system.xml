@@ -423,6 +423,18 @@
 			android:defaultValue="" />
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_statusbar_dualsimin2rows_scale"
+			android:title="@string/launcher_iconscale_title"
+			android:defaultValue="10"
+			miuizer:child="true"
+			miuizer:minValue="6"
+			miuizer:maxValue="16"
+			miuizer:stepValue="1"
+			miuizer:format="%s"
+			miuizer:displayDividerValue="10"
+			miuizer:offtext="@string/array_default" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_system_statusbar_dualsimin2rows_leftmargin"
 			android:title="@string/system_statusbar_mobiletype_single_leftmargin_title"
 			android:dependency="pref_key_system_statusbar_dualsimin2rows"
