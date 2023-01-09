@@ -64,6 +64,12 @@
 		miuizer:displayDividerValue="2"
 		miuizer:format="%s dip" />
 
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbar_batterytempandcurrent_bold"
+		android:title="@string/system_statusbar_mobiletype_single_bold_title"
+		android:dependency="pref_key_system_statusbar_batterytempandcurrent"
+		android:defaultValue="false" />
+
 	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_statusbar_batterytempandcurrent_leftmargin"
 		android:title="@string/system_statusbar_mobiletype_single_leftmargin_title"

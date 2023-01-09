@@ -31,6 +31,11 @@
 		miuizer:displayDividerValue="2"
 		miuizer:format="%s dip" />
 
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_netspeed_bold"
+		android:title="@string/system_statusbar_mobiletype_single_bold_title"
+		android:defaultValue="false" />
+
 	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_netspeed_verticaloffset"
 		android:title="@string/system_statusbar_mobiletype_single_verticaloffset"
