@@ -206,9 +206,15 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 	}
 
 	public void setValue(int value) {
+		setValue(value, false);
+	}
+	public void setValue(int value, boolean save) {
 		value = getBoundedValue(value) - mSteppedMinValue;
 		mSeekBar.setProgress(value);
 		updateDisplay(value);
+		if (save) {
+			saveValue();
+		}
 	}
 
 	public void setDefaultValue(int value) {
