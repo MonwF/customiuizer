@@ -5400,29 +5400,33 @@ public class System {
             }
         });
 
-        Helpers.hookAllMethods("com.android.systemui.controlcenter.policy.MiuiBrightnessController", lpparam.classLoader, "onStart", new MethodHook() {
-            @Override
-            protected void before(final MethodHookParam param) throws Throwable {
-                Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-                Object mMirror = XposedHelpers.getObjectField(param.thisObject, "mControl");
-                Object controlCenterWindowViewController = XposedHelpers.getObjectField(mMirror, "controlCenterWindowViewController");
-                Object windowView = XposedHelpers.callMethod(controlCenterWindowViewController, "getView");
-                if (windowView == null) {
-                    Helpers.log("BrightnessPctHook", "mControlPanelContentView is null");
-                    return;
-                }
-                initPct((ViewGroup) windowView, 1, mContext);
-                mPct.setVisibility(View.VISIBLE);
-                mPct.animate().alpha(1.0f).setDuration(300).start();
-            }
-        });
-
-        Helpers.hookAllMethods("com.android.systemui.controlcenter.policy.MiuiBrightnessController", lpparam.classLoader, "onStop", new MethodHook() {
-            @Override
-            protected void after(final MethodHookParam param) throws Throwable {
-                if (mPct != null) mPct.setVisibility(View.GONE);
-            }
-        });
+//        Helpers.hookAllMethods("com.android.systemui.controlcenter.policy.MiuiBrightnessController", lpparam.classLoader, "onStart", new MethodHook() {
+//            @Override
+//            protected void before(final MethodHookParam param) throws Throwable {
+//                Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+//                Object mMirror = XposedHelpers.getObjectField(param.thisObject, "mControl");
+//                Object controlCenterWindowViewController = XposedHelpers.getObjectField(mMirror, "controlCenterWindowViewController");
+//                String ClsName = controlCenterWindowViewController.getClass().getName();
+//                if (!ClsName.equals("ControlCenterWindowViewController")) {
+//                    controlCenterWindowViewController = XposedHelpers.callMethod(controlCenterWindowViewController, "get");
+//                }
+//                Object windowView = XposedHelpers.callMethod(controlCenterWindowViewController, "getView");
+//                if (windowView == null) {
+//                    Helpers.log("BrightnessPctHook", "mControlPanelContentView is null");
+//                    return;
+//                }
+//                initPct((ViewGroup) windowView, 1, mContext);
+//                mPct.setVisibility(View.VISIBLE);
+//                mPct.animate().alpha(1.0f).setDuration(300).start();
+//            }
+//        });
+//
+//        Helpers.hookAllMethods("com.android.systemui.controlcenter.policy.MiuiBrightnessController", lpparam.classLoader, "onStop", new MethodHook() {
+//            @Override
+//            protected void after(final MethodHookParam param) throws Throwable {
+//                if (mPct != null) mPct.setVisibility(View.GONE);
+//            }
+//        });
 
         final Class<?> BrightnessUtils = XposedHelpers.findClassIfExists("com.android.systemui.controlcenter.policy.BrightnessUtils", lpparam.classLoader);
         Helpers.hookAllMethods("com.android.systemui.controlcenter.policy.MiuiBrightnessController", lpparam.classLoader, "onChanged", new MethodHook() {
