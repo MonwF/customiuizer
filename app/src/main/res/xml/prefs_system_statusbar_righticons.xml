@@ -52,4 +52,9 @@
 		android:title="@string/system_statusbaricons_nfc_title"
 		android:defaultValue="false" />
 
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbar_headset_atright"
+		android:title="@string/system_statusbaricons_headset_title"
+		android:defaultValue="false" />
+
 </PreferenceScreen>

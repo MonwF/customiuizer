@@ -5251,6 +5251,7 @@ public class System {
                     || ("volume".equals(slot) && MainModule.mPrefs.getBoolean("system_statusbar_sound_atright"))
                     || ("zen".equals(slot) && MainModule.mPrefs.getBoolean("system_statusbar_dnd_atright"))
                     || ("nfc".equals(slot) && MainModule.mPrefs.getBoolean("system_statusbar_nfc_atright"))
+                    || ("headset".equals(slot) && MainModule.mPrefs.getBoolean("system_statusbar_headset_atright"))
                 ) {
                     param.args[1] = false;
                 }
@@ -5292,6 +5293,9 @@ public class System {
                     }
                     if (MainModule.mPrefs.getBoolean("system_statusbar_nfc_atright")) {
                         rightBlockList.remove("nfc");
+                    }
+                    if (MainModule.mPrefs.getBoolean("system_statusbar_headset_atright")) {
+                        rightBlockList.remove("headset");
                     }
                     if (blockList != null) {
                         XposedHelpers.setStaticObjectField(MiuiEndIconManager, "RIGHT_BLOCK_LIST", rightBlockList);
