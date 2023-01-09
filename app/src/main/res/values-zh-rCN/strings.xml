@@ -276,7 +276,7 @@
     <string name="system_lockscreenshortcuts_right_off_title">禁用向左滑动手势</string>
     <string name="system_lockscreenshortcuts_right_title">向左滑动作</string>
     <string name="system_lockscreenshortcuts_right_image_title">更改右侧图标</string>
-    <string name="system_lockscreenshortcuts_right_image_summ">用 CustoMIUIzer 图标替换相机图标</string>
+    <string name="system_lockscreenshortcuts_right_image_summ">用米客图标替换相机图标</string>
     <string name="system_lockscreenshortcuts_right_image_hint">拖动图标用以执行自定义动作</string>
     <string name="system_lockscreenshortcuts_left_off_title">禁用右滑手势</string>
     <string name="system_lockscreenshortcuts_left_title">左侧屏幕快捷方式</string>
@@ -967,7 +967,7 @@
     <string name="credentials_success">证书已解锁！</string>
     <string name="xposed_not_found">未找到Xposed应用</string>
     <string name="xposed_not_found_explain">您似乎没有安装Xposed Framework。\n\n请注意，模块仅适用于Xposed！</string>
-    <string name="module_not_active">CustoMIUIzer模块未被激活！\n请打开LSPosed应用，激活模块并重启。</string>
+    <string name="module_not_active">米客模块未被激活！\n请打开LSPosed应用，激活模块并重启。</string>
     <string name="no_browser">打开网址需要浏览器应用</string>
     <string name="okay">好的</string>
     <string name="cancel">取消</string>

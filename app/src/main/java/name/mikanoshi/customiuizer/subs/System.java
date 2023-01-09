@@ -533,10 +533,10 @@ public class System extends SubFragment {
 					public boolean onPreferenceChange(Preference preference, Object newValue) {
 						SeekBarPreference netspeedFontSizePref = findPreference("pref_key_system_netspeed_fontsize");
 						if ((Boolean)newValue) {
-							netspeedFontSizePref.setValue(16);
+							netspeedFontSizePref.setValue(16, true);
 						}
 						else {
-							netspeedFontSizePref.setValue(14);
+							netspeedFontSizePref.setValue(14, true);
 						}
 						return true;
 					}
