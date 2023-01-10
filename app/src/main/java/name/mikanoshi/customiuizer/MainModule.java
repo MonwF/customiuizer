@@ -271,7 +271,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             ) {
                 System.StatusBarIconsPositionAdjustHook(lpparam, moveRight);
             }
-            if (mPrefs.getBoolean("system_statusbar_clock_atright")) {
+            if (mPrefs.getBoolean("system_statusbar_clock_atright") && !mPrefs.getBoolean("system_statusbar_dualrows")) {
                 System.StatusBarClockAtRightHook(lpparam);
             }
             if (mPrefs.getBoolean("system_statusbar_batterytempandcurrent")) System.DisplayBatteryDetailHook(lpparam);
