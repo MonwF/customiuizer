@@ -25,7 +25,7 @@ public class ResourceHooks {
 	private final ConcurrentHashMap<String, Pair<ReplacementType, Object>> replacements = new ConcurrentHashMap<String, Pair<ReplacementType, Object>>();
 
 	public static int getFakeResId(String resourceName) {
-		return 0x7e000000 | (resourceName.hashCode() & 0x00ffffff);
+		return 0x7e00f000 | (resourceName.hashCode() & 0x00ffffff);
 	}
 
 	@SuppressWarnings("FieldCanBeLocal")

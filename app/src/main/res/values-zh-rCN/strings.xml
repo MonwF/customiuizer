@@ -1047,7 +1047,9 @@
     <string name="miuizer_show_assumelsposed_summ">假定已安装LSPosed框架以使用其管理器</string>
     <string name="various_runningservices_title">正在运行的服务</string>
     <string name="system_statusbaricons_atright_title">系统图标移至右侧显示</string>
-    <string name="system_statusbaricons_atright_summ">部分针对中置挖孔屏</string>
+    <string name="system_statusbaricons_change_position_title">图标位置调整</string>
+    <string name="system_statusbaricons_wifi_mobile_atleft_title">移动信号和Wi-Fi移至左侧显示</string>
+    <string name="system_statusbaricons_swap_wifi_mobile_title">交换移动信号和Wi-Fi位置</string>
     <string name="system_statusbaricons_netspeed_title">网速</string>
     <string name="system_statusbaricons_clock_title">时钟</string>
     <string name="system_statusbar_batterytempandcurrent_title">显示电池温度和电流</string>

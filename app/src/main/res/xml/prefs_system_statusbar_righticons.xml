@@ -5,6 +5,19 @@
 	android:layout_height="match_parent">
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_wifi_mobile_atleft"
+		android:title="@string/system_statusbaricons_wifi_mobile_atleft_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_swap_wifi_mobile"
+		android:title="@string/system_statusbaricons_swap_wifi_mobile_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:title="@string/system_statusbaricons_atright_title" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_clock_atright"
 		android:title="@string/system_statusbaricons_clock_title"
 		android:defaultValue="false" />

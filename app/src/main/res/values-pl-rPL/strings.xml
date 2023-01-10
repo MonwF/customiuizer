@@ -1084,7 +1084,6 @@
     <string name="system_statusbar_mobiletype_single_title">Umieść typ sieci komórkowej po prawej stronie ikony sygnału</string>
     <string name="system_statusbar_mobiletype_single_leftmargin_title">lewy margines</string>
     <string name="system_statusbaricons_atright_title">Przesuń niektóre ikony w prawo</string>
-    <string name="system_statusbaricons_atright_summ">Głównie do urządzeń z wycięciem na środku górnej krawędzi</string>
     <string name="system_statusbaricons_netspeed_title">Wskaźnik ruchu sieciowego</string>
     <string name="system_statusbaricons_clock_title">Zegar</string>
     <string name="various_allow_untrusted_touch_title">Zezwalaj na niezaufany dotyk</string>
