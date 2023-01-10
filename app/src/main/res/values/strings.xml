@@ -1123,7 +1123,9 @@
     <string name="system_statusbar_topmargin_val_title">Top padding</string>
     <string name="system_statusbar_topmargin_unset_lockscreen_title">Unset statusbar in Keyguard</string>
     <string name="system_statusbaricons_atright_title">Move some icons to the right</string>
-    <string name="system_statusbaricons_atright_summ">Mainly for devices with cutout at the center of the top edge</string>
+    <string name="system_statusbaricons_wifi_mobile_atleft_title">Move mobile and Wi-Fi to the left</string>
+    <string name="system_statusbaricons_swap_wifi_mobile_title">Swap Mobile Signal and Wi-Fi</string>
+    <string name="system_statusbaricons_change_position_title">Change icons\' position</string>
     <string name="system_statusbaricons_netspeed_title">Network speed indicator</string>
     <string name="system_statusbaricons_clock_title">Clock</string>
     <string name="various_allow_untrusted_touch_title">Allow untrusted touch</string>

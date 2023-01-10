@@ -1032,7 +1032,6 @@
     <string name="system_statusbar_dualsimin2rows_title">雙排訊號欄</string>
     <string name="system_statusbar_mobiletype_single_leftmargin_title">左側間距</string>
     <string name="system_statusbar_mobiletype_single_title">行動網路類型單獨顯示</string>
-    <string name="system_statusbaricons_atright_summ">僅針對中置挖孔屏</string>
     <string name="system_statusbaricons_atright_title">系統圖示移至右側顯示</string>
     <string name="system_statusbaricons_volte_title">HD圖示</string>
     <string name="system_statusbaricons_wifistandard_title">顯示Wi-Fi標準</string>

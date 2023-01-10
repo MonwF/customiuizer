@@ -313,8 +313,7 @@
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_statusbaricons_atright_cat"
-			android:title="@string/system_statusbaricons_atright_title"
-			android:summary="@string/system_statusbaricons_atright_summ" />
+			android:title="@string/system_statusbaricons_change_position_title" />
 
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_system_mobiletypeicon"

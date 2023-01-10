@@ -258,15 +258,18 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_disableanynotif")) System.DisableAnyNotificationHook(lpparam);
             if (mPrefs.getBoolean("system_lockscreenshortcuts")) System.LockScreenShortcutHook(lpparam);
             if (mPrefs.getBoolean("system_4gtolte")) System.Network4GtoLTEHook(lpparam);
-            if (mPrefs.getBoolean("system_statusbar_netspeed_atright")
+            boolean moveRight = mPrefs.getBoolean("system_statusbar_netspeed_atright")
                 || mPrefs.getBoolean("system_statusbar_alarm_atright")
                 || mPrefs.getBoolean("system_statusbar_sound_atright")
                 || mPrefs.getBoolean("system_statusbar_dnd_atright")
                 || mPrefs.getBoolean("system_statusbar_nfc_atright")
                 || mPrefs.getBoolean("system_statusbar_btbattery_atright")
-                || mPrefs.getBoolean("system_statusbar_headset_atright")
+                || mPrefs.getBoolean("system_statusbar_headset_atright");
+            if (moveRight
+                || mPrefs.getBoolean("system_statusbaricons_wifi_mobile_atleft")
+                || mPrefs.getBoolean("system_statusbaricons_swap_wifi_mobile")
             ) {
-                System.StatusBarIconsAtRightHook(lpparam);
+                System.StatusBarIconsPositionAdjustHook(lpparam, moveRight);
             }
             if (mPrefs.getBoolean("system_statusbar_clock_atright")) {
                 System.StatusBarClockAtRightHook(lpparam);
