@@ -7640,7 +7640,7 @@ public class System {
 
     public static void MultiWindowPlusHook(LoadPackageParam lpparam) {
         if (lpparam.packageName.equals("com.miui.home")) {
-            Helpers.findAndHookMethod("com.android.systemui.shared.recents.model.Task", lpparam.classLoader, "isSupportSplit", XC_MethodReplacement.returnConstant(true));
+            Helpers.findAndHookMethodSilently("com.android.systemui.shared.recents.model.Task", lpparam.classLoader, "isSupportSplit", XC_MethodReplacement.returnConstant(true));
             Helpers.hookAllMethods("com.miui.home.recents.views.RecentMenuView", lpparam.classLoader, "onMessageEvent", new MethodHook() {
                 @Override
                 protected void after(MethodHookParam param) throws Throwable {
