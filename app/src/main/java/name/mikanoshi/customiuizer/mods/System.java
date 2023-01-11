@@ -7851,7 +7851,8 @@ public class System {
 
         Helpers.hookAllConstructors(tileHostCls, hook);
 
-        Helpers.findAndHookMethod("com.android.systemui.qs.tileimpl.QSFactoryImpl", lpparam.classLoader, "createTileInternal", String.class, new MethodHook() {
+        String FactoryImpl = Helpers.isTPlus() ? "com.android.systemui.qs.tileimpl.MiuiQSFactory" : "com.android.systemui.qs.tileimpl.QSFactoryImpl";
+        Helpers.findAndHookMethod(FactoryImpl, lpparam.classLoader, "createTileInternal", String.class, new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
                 Object tile = param.getResult();
@@ -7896,7 +7897,8 @@ public class System {
                                 public void run() {
                                     try {
                                         Class<?> DependencyClass = findClass("com.android.systemui.Dependency", lpparam.classLoader);
-                                        Object mStatusBar = XposedHelpers.callStaticMethod(DependencyClass, "get", findClassIfExists("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader));
+                                        String StatusbarClsForDep = Helpers.isTPlus() ? "com.android.systemui.statusbar.phone.CentralSurfaces" : "com.android.systemui.statusbar.phone.StatusBar";
+                                        Object mStatusBar = XposedHelpers.callStaticMethod(DependencyClass, "get", findClassIfExists(StatusbarClsForDep, lpparam.classLoader));
                                         boolean usingControlCenter;
                                         Object mController = XposedHelpers.callStaticMethod(DependencyClass, "get", findClassIfExists("com.android.systemui.controlcenter.policy.ControlCenterControllerImpl", lpparam.classLoader));
                                         usingControlCenter = (boolean)XposedHelpers.callMethod(mController, "isUseControlCenter");
