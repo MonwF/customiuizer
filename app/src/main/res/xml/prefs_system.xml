@@ -424,6 +424,7 @@
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_system_statusbar_dualsimin2rows_scale"
 			android:title="@string/launcher_iconscale_title"
+			android:dependency="pref_key_system_statusbar_dualsimin2rows"
 			android:defaultValue="10"
 			miuizer:child="true"
 			miuizer:minValue="6"
