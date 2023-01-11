@@ -8196,8 +8196,10 @@ public class System {
                 Resources res = mContext.getResources();
                 LinearLayout mMobileGroup = (LinearLayout) XposedHelpers.getObjectField(param.thisObject, "mMobileGroup");
                 TextView mMobileTypeSingle = (TextView) XposedHelpers.getObjectField(param.thisObject, "mMobileTypeSingle");
-                mMobileGroup.removeView(mMobileTypeSingle);
-                mMobileGroup.addView(mMobileTypeSingle);
+                if (!MainModule.mPrefs.getBoolean("system_statusbar_mobiletype_single_atleft")) {
+                    mMobileGroup.removeView(mMobileTypeSingle);
+                    mMobileGroup.addView(mMobileTypeSingle);
+                }
                 ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) mMobileTypeSingle.getLayoutParams();
                 int leftMargin = MainModule.mPrefs.getInt("system_statusbar_mobiletype_single_leftmargin", 4);
                 float marginLeft = TypedValue.applyDimension(

@@ -328,6 +328,13 @@
 			android:title="@string/system_statusbar_mobiletype_single_title"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_statusbar_mobiletype_single_atleft"
+			android:title="@string/system_statusbar_mobiletype_single_atleft_title"
+			android:dependency="pref_key_system_statusbar_mobiletype_single"
+			miuizer:child="true"
+			android:defaultValue="false" />
+
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_system_statusbar_mobiletype_single_fontsize"
 			android:title="@string/launcher_titlefontsize_title"

@@ -1113,7 +1113,8 @@
     <string name="system_statusbar_dualrows_summ">Need increase statusbar height on some devices</string>
     <string name="system_statusbar_dualsimin2rows_style_title">Icon style</string>
     <string name="system_statusbar_dualsimin2rows_rightmargin_title">Right margin</string>
-    <string name="system_statusbar_mobiletype_single_title">Put mobile network type at right of signal icon</string>
+    <string name="system_statusbar_mobiletype_single_title">Display mobile network type independently</string>
+    <string name="system_statusbar_mobiletype_single_atleft_title">Display at left of signal</string>
     <string name="system_statusbar_mobiletype_single_leftmargin_title">Left margin</string>
     <string name="system_statusbar_mobiletype_single_verticaloffset">Vertical offset</string>
     <string name="system_statusbar_mobiletype_single_bold_title">Bold style</string>
