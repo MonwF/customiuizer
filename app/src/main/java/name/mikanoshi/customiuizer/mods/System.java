@@ -8109,8 +8109,7 @@ public class System {
             protected void before(final MethodHookParam param) throws Throwable {
                 Context context;
                 if (param.method.getName().equals("paddingNeededForCutoutAndRoundedCorner")) {
-                    View rc = (View) param.thisObject;
-                    context = rc.getContext();
+                    context = Helpers.findContext();
                 }
                 else {
                     context = (Context) XposedHelpers.getObjectField(param.thisObject, "context");
