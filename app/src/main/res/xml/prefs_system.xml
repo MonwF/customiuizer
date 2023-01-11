@@ -612,6 +612,7 @@
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_hidemoreicon"
 			android:summary="@string/system_hidemoreicon_summ"
+			app:isPreferenceVisible="false"
 			android:title="@string/system_hidemoreicon_title"
 			android:defaultValue="false" />
 
