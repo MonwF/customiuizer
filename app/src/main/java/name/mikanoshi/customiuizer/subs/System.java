@@ -43,7 +43,6 @@ public class System extends SubFragment {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d("myabc", sub);
 		if ("pref_key_system_cat_recents".equals(sub)) {
 			toolbarMenu = true;
 			activeMenus = "launcher";
