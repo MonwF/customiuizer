@@ -48,6 +48,14 @@ public class System extends SubFragment {
 			toolbarMenu = true;
 			activeMenus = "launcher";
 		}
+		else if ("pref_key_system_cat_statusbar".equals(sub)
+			|| "pref_key_system_cat_lockscreen".equals(sub)
+			|| "pref_key_system_cat_qs".equals(sub)
+			|| "pref_key_system_cat_drawer".equals(sub)
+		) {
+			toolbarMenu = true;
+			activeMenus = "systemui";
+		}
 		else {
 			toolbarMenu = false;
 		}
