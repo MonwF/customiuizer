@@ -151,9 +151,7 @@ public class Helpers {
 	public static boolean showNewMods = true;
 	public static boolean miuizerModuleActive = false;
 	public static final HashSet<String> newMods = new HashSet<String>(Arrays.asList(
-		"pref_key_various_hiddenfeatures_cat",
-		"pref_key_launcher_nozoomanim",
-		"pref_key_launcher_horizwidgetmargin"
+		"pref_key_launcher_nozoomanim"
 	));
 	public static final HashMap<String, String> l10nProgress = new HashMap<String, String>() {{
 		put("ru-RU", "99");

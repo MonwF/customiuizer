@@ -1,6 +1,8 @@
 package name.mikanoshi.customiuizer.subs;
 
 import android.os.Bundle;
+import android.util.Log;
+
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 
@@ -15,11 +17,26 @@ public class CategorySelector extends SubFragment {
 	String cat = null;
 
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-
+	public void onCreate(Bundle savedInstanceState) {
 		Bundle args = getArguments();
 		cat = args.getString("cat");
+		if ("pref_key_system".equals(cat)) {
+			toolbarMenu = true;
+			activeMenus ="systemui";
+		}
+		else if ("pref_key_launcher".equals(cat)) {
+			toolbarMenu = true;
+			activeMenus ="launcher";
+		}
+		else {
+			toolbarMenu = false;
+		}
+		super.onCreate(savedInstanceState);
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 
 		PreferenceScreen screen = findPreference("pref_key_cat");
 		int cnt = screen.getPreferenceCount();

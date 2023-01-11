@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.Preference;
 import android.provider.Settings;
+import android.util.Log;
 import android.widget.SeekBar;
 
 import androidx.appcompat.app.AlertDialog;
@@ -38,6 +39,18 @@ public class System extends SubFragment {
 	public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
 		super.onCreatePreferences(savedInstanceState, rootKey);
 		selectSub();
+	}
+
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		Log.d("myabc", sub);
+		if ("pref_key_system_cat_recents".equals(sub)) {
+			toolbarMenu = true;
+			activeMenus = "launcher";
+		}
+		else {
+			toolbarMenu = false;
+		}
 	}
 
 	@Override
