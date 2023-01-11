@@ -50,7 +50,10 @@ public class SubFragment extends PreferenceFragmentBase {
         catInfo = getArguments().getBundle("catInfo");
         sub = getArguments().getString("sub");
         isStandalone = getArguments().getBoolean("isStandalone");
-        supressMenu = supressMenu || abType == Helpers.ActionBarType.Edit;
+        if (abType == Helpers.ActionBarType.Edit) {
+            isCustomActionBar = true;
+        }
+        toolbarMenu = toolbarMenu || isCustomActionBar;
 
         if (contentResId == 0) {
             getActivity().finish();
@@ -61,9 +64,6 @@ public class SubFragment extends PreferenceFragmentBase {
             super.onCreate(savedInstanceState, contentResId);
         } else {
             super.onCreate(savedInstanceState);
-        }
-        if (abType == Helpers.ActionBarType.Edit) {
-            isCustomActionBar = true;
         }
     }
 

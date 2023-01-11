@@ -95,7 +95,8 @@ public class MainFragment extends PreferenceFragmentBase {
 	@Override
 	@SuppressLint("MissingSuperCall")
 	public void onCreate(Bundle savedInstanceState) {
-		supressMenu = true;
+		toolbarMenu = true;
+		activeMenus = "all";
 		super.onCreate(savedInstanceState, R.xml.prefs_main);
 		tailLayoutId = R.layout.prefs_main12;
 		final AppCompatActivity act = (AppCompatActivity) getActivity();
