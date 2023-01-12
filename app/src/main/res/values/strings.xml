@@ -694,6 +694,7 @@
     <string name="various_alarmcompat_summ">Make selected apps display correct next alarm time set by stock MIUI Clock app</string>
     <string name="various_gboardpadding_port_title">Bottom padding in portrait</string>
     <string name="various_gboardpadding_land_title">Bottom padding in landscape</string>
+    <string name="various_answerinheadup_title">Keep calls in notification when answer a call</string>
     <string name="various_showcallui_title">Show call UI</string>
     <string name="various_showcallui_summ">Define when UI for incoming call should be displayed instead of popup notification</string>
     <string name="various_calluibright_title">Screen brightness during call</string>

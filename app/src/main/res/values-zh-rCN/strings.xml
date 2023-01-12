@@ -647,6 +647,7 @@
     <string name="various_alarmcompat_summ">令所选应用正确显示MIUI时钟应用设置的下一次闹钟时间</string>
     <string name="various_gboardpadding_port_title">竖屏时底部填充</string>
     <string name="various_gboardpadding_land_title">横屏时底部填充</string>
+    <string name="various_answerinheadup_title">从浮动通知接听电话时不进入全屏(除桌面)</string>
     <string name="various_showcallui_title">显示通话界面</string>
     <string name="various_showcallui_summ">定义来电时应该显示的界面</string>
     <string name="various_calluibright_title">通话时屏幕亮度</string>

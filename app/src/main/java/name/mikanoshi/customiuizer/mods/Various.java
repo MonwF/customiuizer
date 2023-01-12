@@ -563,21 +563,39 @@ public class Various {
 		});
 	}
 
+	public static void AnswerCallInHeadUpHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.incallui.InCallPresenter", lpparam.classLoader, "answerIncomingCall", Context.class, String.class, int.class, boolean.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				boolean showUi = (boolean) param.args[3];
+				if (showUi) {
+					Context mContext = (Context) param.args[0];
+					String topPackage = Settings.Global.getString(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.package");
+					if (topPackage == null || !topPackage.equals("com.miui.home")) {
+						param.args[3] = false;
+					}
+				}
+			}
+		});
+	}
+
 	public static void ShowCallUIHook(LoadPackageParam lpparam) {
 		Helpers.hookAllMethods("com.android.incallui.InCallPresenter", lpparam.classLoader, "startUi", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				if (!(boolean)param.getResult() || !"INCOMING".equals(param.args[0].toString())) return;
 				try {
-					boolean isCarMode = (boolean)XposedHelpers.callStaticMethod(XposedHelpers.findClass("com.android.incallui.util.Utils.CarMode", lpparam.classLoader), "isCarMode");
+					boolean isCarMode = (boolean)XposedHelpers.callStaticMethod(XposedHelpers.findClass("com.android.incallui.carmode.CarModeUtils", lpparam.classLoader), "isCarMode");
 					if (isCarMode) return;
 				} catch (Throwable t) {
-					XposedBridge.log(t);
+					Helpers.log(t);
 				}
 
-				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-				if (MainModule.mPrefs.getStringAsInt("various_showcallui", 0) == 1)
-				if (Settings.Global.getInt(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.fullscreen", 0) == 1) return;
+				if (MainModule.mPrefs.getStringAsInt("various_showcallui", 0) == 1) {
+					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+					int fullScreen = Settings.Global.getInt(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.fullscreen", 0);
+					if (fullScreen == 1) return;
+				}
 
 				XposedHelpers.callMethod(param.thisObject, "showInCall", false, false);
 				Object mStatusBarNotifier = XposedHelpers.getObjectField(param.thisObject, "mStatusBarNotifier");
