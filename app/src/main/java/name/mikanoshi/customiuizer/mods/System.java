@@ -5156,6 +5156,9 @@ public class System {
             MainModule.resHooks.setDensityReplacement(lpparam.packageName, "dimen", "status_bar_padding_start", 0);
             MainModule.resHooks.setDensityReplacement(lpparam.packageName, "dimen", "status_bar_padding_end", 0);
         }
+        if (MainModule.mPrefs.getBoolean("system_cc_enable_style_switch")) {
+            MainModule.resHooks.setObjectReplacement(lpparam.packageName, "integer", "force_use_control_panel", 0);
+        }
     }
     public static void DisplayBatteryDetailHook(LoadPackageParam lpparam) {
         Class <?> ChargeUtilsClass = findClass("com.android.keyguard.charge.ChargeUtils", lpparam.classLoader);
@@ -8758,17 +8761,6 @@ public class System {
                         });
                     }
                 }
-            }
-        });
-    }
-
-    public static void EnableCCStyleSwitchHook(LoadPackageParam lpparam) {
-        Helpers.hookAllConstructors("com.android.systemui.controlcenter.policy.ControlCenterControllerImpl", lpparam.classLoader, new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                XposedHelpers.setObjectField(param.thisObject, "forceUseControlCenterPanel", false);
-                Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "context");
-                Settings.System.putInt(mContext.getContentResolver(), "force_use_control_panel", 0);
             }
         });
     }
