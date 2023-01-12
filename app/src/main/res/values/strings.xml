@@ -1130,6 +1130,7 @@
     <string name="system_statusbaricons_netspeed_title">Network speed indicator</string>
     <string name="system_statusbaricons_clock_title">Clock</string>
     <string name="various_allow_untrusted_touch_title">Allow untrusted touch</string>
+    <string name="various_disable_access_devicelogs_title">Dismiss access device logs request dialog</string>
     <string name="various_skip_interceptperm_title">Skip permission intercept timer</string>
     <string name="various_show_battery_temperature_title">Show temperature in battery</string>
     <string name="various_enable_sc_ai_clipboard_blur_location_title">Enable AI clipboard and blur location</string>

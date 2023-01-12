@@ -232,6 +232,15 @@ public class System {
         });
     }
 
+    public static void NoAccessDeviceLogsRequest(LoadPackageParam lpparam) {
+        Helpers.hookAllMethods("com.android.server.logcat.LogcatManagerService", lpparam.classLoader, "onLogAccessRequested", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                XposedHelpers.callMethod(param.thisObject, "declineRequest", param.args[0]);
+                param.setResult(null);
+            }
+        });
+    }
     public static void NoLightUpOnChargeHook(LoadPackageParam lpparam) {
         Helpers.hookAllMethods("com.android.server.power.PowerManagerService", lpparam.classLoader, "wakeUpNoUpdateLocked", new MethodHook() {
             @Override
