@@ -1136,6 +1136,7 @@
     <string name="various_enable_sc_ai_clipboard_blur_location_title">Enable AI clipboard and blur location</string>
     <string name="system_lockscreenshortcuts_left_tapaction_title">Tap left shortcut to toggle flashlight</string>
     <string name="system_cc_tile_roundedrect_title">Rounded rectangle tile</string>
+    <string name="system_cc_enable_style_switch_title">Enable CC style switch</string>
     <string name="system_cc_disable_bluetooth_restrict_title">Disable disconnect bluetooth until tomorrow</string>
     <string name="system_cc_collapse_after_clicked_title">Collapse after touch</string>
 </resources>

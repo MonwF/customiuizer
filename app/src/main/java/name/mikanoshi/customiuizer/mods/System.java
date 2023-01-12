@@ -8762,6 +8762,17 @@ public class System {
         });
     }
 
+    public static void EnableCCStyleSwitchHook(LoadPackageParam lpparam) {
+        Helpers.hookAllConstructors("com.android.systemui.controlcenter.policy.ControlCenterControllerImpl", lpparam.classLoader, new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                XposedHelpers.setObjectField(param.thisObject, "forceUseControlCenterPanel", false);
+                Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "context");
+                Settings.System.putInt(mContext.getContentResolver(), "force_use_control_panel", 0);
+            }
+        });
+    }
+
     public static void CCTileCornerHook(LoadPackageParam lpparam) {
         MainModule.resHooks.setResReplacement("miui.systemui.plugin", "drawable", "qs_background_unavailable", R.drawable.ic_qs_tile_bg_disabled);
         MainModule.resHooks.setResReplacement("miui.systemui.plugin", "drawable", "qs_background_disabled", R.drawable.ic_qs_tile_bg_disabled);
