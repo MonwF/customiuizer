@@ -372,9 +372,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_cc_tile_roundedrect")) {
                 System.CCTileCornerHook(lpparam);
             }
-            if (mPrefs.getBoolean("system_cc_enable_style_switch")) {
-                System.EnableCCStyleSwitchHook(lpparam);
-            }
         }
 
         if (pkg.equals(Helpers.modulePkg)) {
