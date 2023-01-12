@@ -70,6 +70,11 @@
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/calls"/>
 
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_various_answerinheadup"
+		android:title="@string/various_answerinheadup_title"
+		android:defaultValue="false" />
+
 	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_various_showcallui"
 		android:title="@string/various_showcallui_title"

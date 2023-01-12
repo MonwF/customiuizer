@@ -115,6 +115,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_popupnotif_fs") ||
                     mPrefs.getBoolean("controls_volumecursor") ||
                     mPrefs.getBoolean("controls_fsg_horiz") ||
+                    mPrefs.getBoolean("various_answerinheadup") ||
                     mPrefs.getStringAsInt("various_showcallui", 0) > 0) GlobalActions.setupForegroundMonitor(lpparam);
 
             if (mPrefs.getInt("controls_fingerprint1_action", 1) > 1 ||
@@ -385,6 +386,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (pkg.equals("com.android.incallui")) {
             if (mPrefs.getStringAsInt("various_showcallui", 0) > 0) Various.ShowCallUIHook(lpparam);
             if (mPrefs.getBoolean("various_calluibright")) Various.InCallBrightnessHook(lpparam);
+            if (mPrefs.getBoolean("various_answerinheadup")) Various.AnswerCallInHeadUpHook(lpparam);
         }
 
         if (pkg.equals("com.miui.securitycenter")) {
