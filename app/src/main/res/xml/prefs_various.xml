@@ -27,6 +27,11 @@
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_various_disable_access_devicelogs"
+		android:title="@string/various_disable_access_devicelogs_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_various_allow_untrusted_touch"
 		android:title="@string/various_allow_untrusted_touch_title"
 		android:defaultValue="false" />

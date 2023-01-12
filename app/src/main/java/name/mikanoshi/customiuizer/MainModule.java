@@ -182,6 +182,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 
             if (mPrefs.getBoolean("system_fw_splitscreen")) System.MultiWindowPlusHook(lpparam);
             if (mPrefs.getBoolean("system_fw_noblacklist")) System.NoFloatingWindowBlacklistHook(lpparam);
+            if (mPrefs.getBoolean("various_disable_access_devicelogs")) {
+                System.NoAccessDeviceLogsRequest(lpparam);
+            }
         }
 
         if (pkg.equals("com.android.systemui")) {

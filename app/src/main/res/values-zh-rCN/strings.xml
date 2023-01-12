@@ -1081,6 +1081,7 @@
     <string name="system_notifrowmenu_forceclose">强制关闭</string>
     <string name="restart_systemui">重启系统界面</string>
     <string name="various_allow_untrusted_touch_title">允许不受信任的触摸操作</string>
+    <string name="various_disable_access_devicelogs_title">关闭访问设备日志确认</string>
     <string name="launcher_nozoomanim_title">去除启动动画</string>
     <string name="launcher_nozoomanim_summ">App启动、关闭时不缩放图标</string>
     <string name="various_skip_interceptperm_title">跳过开启特殊权限的倒计时</string>
