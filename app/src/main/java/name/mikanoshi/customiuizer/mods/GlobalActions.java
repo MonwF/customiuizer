@@ -151,14 +151,6 @@ public class GlobalActions {
 				if (action.equals(ACTION_PREFIX + "RestartSystemUI")) {
 					Process.sendSignal(Process.myPid(), Process.SIGNAL_KILL);
 				}
-				else if (action.equals(ACTION_PREFIX + "UpdateForeground")) {
-					String pkgName = intent.getStringExtra("pkgName");
-					boolean fullScreen = intent.getBooleanExtra("fullScreen", false);
-					if (pkgName != null) {
-						Settings.Global.putString(context.getContentResolver(), Helpers.modulePkg + ".foreground.package", pkgName);
-					}
-					Settings.Global.putInt(context.getContentResolver(), Helpers.modulePkg + ".foreground.fullscreen", fullScreen ? 1 : 0);
-				}
 //				else if (action.equals(ACTION_PREFIX + "CopyToExternal")) {
 //					try {
 //						String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + Helpers.externalFolder;
@@ -848,23 +840,33 @@ public class GlobalActions {
 				Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
 				if (mContext != null) try {
 					String focusedApp = (String) XposedHelpers.getObjectField(param.thisObject, "mFocusedApp");
-					Intent updateForeIntent = new Intent(ACTION_PREFIX + "UpdateForeground");
 
-					boolean changed = false;
+					boolean focusAppChanged = false;
+					boolean fullscreenChanged = false;
 					if (focusedApp != null && !focusedApp.equals(pkgName)) {
 						pkgName = focusedApp;
-						changed = true;
-						updateForeIntent.putExtra("pkgName", pkgName);
+						focusAppChanged = true;
 					}
 					boolean isFullScreen = XposedHelpers.getBooleanField(param.thisObject, "mTopIsFullscreen");
 					if (fullScreen != isFullScreen) {
 						fullScreen = isFullScreen;
-						changed = true;
-						updateForeIntent.putExtra("fullScreen", fullScreen);
+						fullscreenChanged = true;
 					}
-					if (changed) {
-						updateForeIntent.setPackage("com.android.systemui");
-						mContext.sendBroadcast(updateForeIntent);
+					if (fullscreenChanged || focusAppChanged) {
+						Handler mHandler = (Handler) XposedHelpers.getObjectField(param.thisObject, "mHandler");
+						boolean finalFullscreenChanged = fullscreenChanged;
+						boolean finalFocusAppChanged = focusAppChanged;
+						mHandler.post(new Runnable() {
+							@Override
+							public void run() {
+								if (finalFullscreenChanged) {
+									Settings.Global.putInt(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.fullscreen", fullScreen ? 1 : 0);
+								}
+								if (finalFocusAppChanged) {
+									Settings.Global.putString(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.package", pkgName);
+								}
+							}
+						});
 					}
 				} catch (Throwable t) {
 					Helpers.log("ForegroundMonitor", t);
@@ -998,7 +1000,6 @@ public class GlobalActions {
 				intentfilter.addAction(ACTION_PREFIX + "CollectXposedLog");
 				intentfilter.addAction(ACTION_PREFIX + "RestartSystemUI");
 				intentfilter.addAction(ACTION_PREFIX + "RestartLauncher");
-				intentfilter.addAction(ACTION_PREFIX + "UpdateForeground");
 //				intentfilter.addAction(ACTION_PREFIX + "CopyToExternal");
 
 				intentfilter.addAction(ACTION_PREFIX + "ScrollToTop");
