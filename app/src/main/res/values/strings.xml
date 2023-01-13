@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name" translatable="false">CustoMIUIzer13</string>
+    <string name="app_name" translatable="false">CustoMIUIzer14</string>
+    <string name="app_slogan" translatable="false">Customize MIUI to your liking</string>
     <string name="app_about">About</string>
     <string name="about_version">Version %1$s</string>
     <string name="about_dev">by Mikanoshi &amp; MonwF</string>
@@ -35,9 +36,9 @@
     <string name="system_statusbaricons_summ">Manage status bar icons visibility</string>
     <string name="system_statusbaricons_wifistandard_title">Show Wi-Fi standard</string>
     <string name="system_statusbaricons_battery1_title">Battery image</string>
-    <string name="system_statusbaricons_battery2_title">Battery charge percentage</string>
+    <string name="system_statusbaricons_battery2_title">Battery digit</string>
+    <string name="system_statusbaricons_battery4_title">Battery percentage mark</string>
     <string name="system_statusbaricons_battery3_title">Charging indicator</string>
-    <string name="system_statusbaricons_battery_summ">Can be overlayed on top of battery image on some ROMs</string>
     <string name="system_statusbaricons_alarm_title">Alarm</string>
     <string name="system_statusbaricons_alarm_summ">Hide completely</string>
     <string name="system_statusbaricons_alarmn_title">Selective alarm icon visibility</string>
@@ -74,7 +75,7 @@
     <string name="system_batteryindicator_colorval4_title">Charging color</string>
     <string name="system_batteryindicator_lowlevel_title">Low charge level</string>
     <string name="system_batteryindicator_test_title">Test</string>
-    <string name="system_batteryindicator_test_summ">Animate bar from 100% to 0% in discharging state</string>
+    <string name="system_batteryindicator_test_summ" formatted="false">Animate bar from 100% to 0% in discharging state</string>
     <string name="system_statusbarheight_title">Status bar height</string>
     <string name="system_statusbarcolor_title">Status bar background color</string>
     <string name="system_statusbarcolor_summ">Make status bar and app\'s action bar background colors the same where possible</string>
@@ -106,15 +107,12 @@
     <string name="system_detailednetspeed_title">Display in dual rows</string>
     <string name="system_netspeed_cat_title">Network speed mods</string>
     <string name="system_detailednetspeed_summ">Show incoming and outgoing network speeds separately</string>
-    <string name="system_detailednetspeed_font_title">Font size</string>
     <string name="system_detailednetspeed_icon_title">Indicator icons</string>
     <string name="system_detailednetspeed_icon_summ">Incoming/outgoing traffic icons displayed next to speed value (not all custom fonts have every icon)</string>
     <string name="system_detailednetspeed_low_title">Hide low speed</string>
     <string name="system_detailednetspeed_low_summ">Do not show indicator if speed is low</string>
     <string name="system_detailednetspeed_lowlevel_title">Low speed level</string>
     <string name="system_detailednetspeed_lowlevel_summ">Speed values below this level will be considered low and will have a different indication icon</string>
-    <string name="system_detailednetspeed_zero_title">Reduce visibility when inactive</string>
-    <string name="system_detailednetspeed_zero_summ">Make indicator semitransparent when both speeds are zero</string>
     <string name="system_detailednetspeed_secunit_title">Hide Byte per second suffix(B/s)</string>
     <string name="system_netspeed_fontsize_title">Network speed\'s font size</string>
     <string name="system_statusbarcontrols_title">Gesture controls</string>
@@ -147,12 +145,11 @@
     <string name="system_showpct_title">Show brightness percentage</string>
     <string name="system_showpct_summ">Display brightness level in percentages while dragging brightness slider</string>
     <string name="system_showpct_top_title">Percentages panel\'s top margin</string>
-    <string name="system_cleanmirror_title">Consistent brightness slider style</string>
-    <string name="system_cleanmirror_summ">Remove shadow and additional background from slider while changing brightness</string>
     <string name="system_inactivebrightness_title">Deactivate brightness slider</string>
     <string name="system_notifrowmenu_title">Extended notification menu</string>
-    <string name="system_notifrowmenu_summ">Open app info and force close app from notification menu (swipe notification to the left to open it)</string>
+    <string name="system_notifrowmenu_summ">Open app info, force close app and open in floating window from notification menu (swipe notification to the left to open it)</string>
     <string name="system_notifrowmenu_appinfo">App info</string>
+    <string name="system_notifrowmenu_openinfw">Floating window</string>
     <string name="system_notifrowmenu_forceclose">Force close</string>
     <string name="system_disableanynotif_title">Disable any notification</string>
     <string name="system_disableanynotif_summ">Allow to disable system notifications too</string>
@@ -177,8 +174,6 @@
     <string name="system_popupnotif_fs_title">Respect fullscreen</string>
     <string name="system_popupnotif_fs_summ">Do not open notification drawer when fullscreen app is active (does not apply to immersive apps with hidden status and navigation bars)</string>
     <string name="system_popupnotif_apps_title">Selected apps</string>
-    <string name="various_collapsemiuititles_title">Collapse MIUI titles</string>
-    <string name="various_collapsemiuititles_summ">Configure action bar title state in all MIUI 12 apps</string>
     <string name="system_mods_screenshots">Screenshots</string>
     <string name="system_screenshot_title">Screenshot configuration</string>
     <string name="system_screenshot_summ">Customize format, quality and save folder for screenshots</string>
@@ -322,10 +317,6 @@
     <string name="system_blur_title">Background blur</string>
     <string name="system_recents_blur_summ">Background blur intensity in recent apps</string>
     <string name="system_drawer_blur_summ">Background blur intensity in notification drawer</string>
-    <string name="system_drawer_hidebackground_title">Temporarily hide themed background</string>
-    <string name="system_drawer_hidebackground_summ">Hide background while brightness is being changed</string>
-    <string name="system_drawer_opacity_title">Themed background opacity</string>
-    <string name="system_drawer_opacity_summ">Opacity of a themed notification drawer background</string>
     <string name="system_mods_lockscreen">Lock screen</string>
     <string name="system_mods_lockscreen_functionality">Additional functionality</string>
     <string name="system_mods_lockscreen_security">Security</string>
@@ -364,8 +355,6 @@
     <string name="system_hideproxywarn_summ">Do not display a warning that earphone area is covered</string>
     <string name="system_resizablewidgets_title">Free widget resize</string>
     <string name="system_resizablewidgets_summ">Remove any widget size limitations</string>
-    <string name="system_unblockthird_title">Unblock launchers</string>
-    <string name="system_unblockthird_summ">Remove restriction of 3rd party launchers on Chinese ROMs</string>
     <string name="system_cleanshare_title">Clean share menu</string>
     <string name="system_cleanshare_summ">Remove selected apps from share menu</string>
     <string name="system_clean_test">Test menu</string>
@@ -410,8 +399,6 @@
     <string name="system_lswallpaper_summ">Make third-party apps be able to set lock screen wallpaper. Themes app must be installed and given storage access permission.</string>
     <string name="system_hideqs_title">Clean expanded mode view</string>
     <string name="system_hideqs_summ">Hide Quick Settings and brightness slider in expanded notifications mode on lock screen</string>
-    <string name="system_nodrawerbackground_title">Disable colored background</string>
-    <string name="system_nodrawerbackground_summ">Change background with autogenerated color from wallpaper to transparent one while on lock screen</string>
     <string name="system_taptounlock_title">Tap to unlock</string>
     <string name="system_taptounlock_summ">Start device unlocking by tapping on bottom lock screen area</string>
     <string name="system_dttosleep_title">Double tap to sleep</string>
@@ -433,10 +420,9 @@
     <string name="system_mods_statusbar_drawer">Notification drawer</string>
     <string name="system_mods_notifications">Notifications</string>
     <string name="system_mods_recents">Recent apps list</string>
-    <string name="system_usenativerecents_title">Use native implementation</string>
-    <string name="system_usenativerecents_summ">Don\'t use recent apps list from MIUI Launcher. Works badly with full screen gestures.</string>
     <string name="system_removecleaner_title">Remove cleaner button</string>
     <string name="system_removecleaner_summ">Hide button that clears recent apps and cleans memory</string>
+    <string name="system_recents_disable_wallpaperscale_title">Disable wallpaper scale</string>
     <string name="system_clearalltasks_title">Clean all</string>
     <string name="system_clearalltasks_summ">Make cleaner button kill all running tasks</string>
     <string name="system_hidefromrecents_title">Hide from recents</string>
@@ -542,14 +528,12 @@
     <string name="launcher_topmargin_title">Top grid margin</string>
     <string name="launcher_bottommargin_title">Bottom dock margin</string>
     <string name="launcher_horizwidgetmargin_title">Horizontal widget margin</string>
-    <string name="launcher_horizwidgetmargin_summary">Works only on latest launcher versions with dynamic widget positioning</string>
     <string name="launcher_indicatorheight_title">Page indicator height</string>
     <string name="launcher_folders">Folders</string>
     <string name="launcher_folder_cols_title">Number of columns in folders</string>
     <string name="launcher_folderwidth_title">Use entire folder\'s width</string>
     <string name="launcher_folderspace_title">Reduce side padding</string>
-    <string name="launcher_fixstatusbarmode_title">Fix status bar mode</string>
-    <string name="launcher_fixstatusbarmode_summ">Adjust status bar contents color for light/dark wallpapers on developer launcher version</string>
+    <string name="launcher_disable_log_title">Disable analytics</string>
     <string name="launcher_fixanim_title">Fix animation</string>
     <string name="launcher_fixanim_summ">Apply value animators\' duration scaling to some launcher animations</string>
     <string name="launcher_fixlaunch_title">Fix app info</string>
@@ -710,6 +694,7 @@
     <string name="various_alarmcompat_summ">Make selected apps display correct next alarm time set by stock MIUI Clock app</string>
     <string name="various_gboardpadding_port_title">Bottom padding in portrait</string>
     <string name="various_gboardpadding_land_title">Bottom padding in landscape</string>
+    <string name="various_answerinheadup_title">Keep calls in notification when answer a call</string>
     <string name="various_showcallui_title">Show call UI</string>
     <string name="various_showcallui_summ">Define when UI for incoming call should be displayed instead of popup notification</string>
     <string name="various_calluibright_title">Screen brightness during call</string>
@@ -911,6 +896,8 @@
     <string name="array_temperature">Temperature Only</string>
     <string name="array_current">Current Only</string>
     <string name="array_dualsimin2rows_style_thick">Thick</string>
+    <string name="array_dualsimin2rows_style_theme">Follow the theme</string>
+
     <string name="unlimited">Unlimited</string>
 
     <string name="toggle_wifi_on">Wi-Fi enabled</string>
@@ -939,7 +926,6 @@
     <string name="qs_toggle_autorotate_portrait">Portrait</string>
     <string name="qs_toggle_autorotate_landscape">Landscape</string>
     <string name="qs_toggle_5g">5G Network</string>
-    <string name="qs_toggle_darkmode_noperm">CustoMIUIzer has no permission to change dark mode</string>
 
     <string name="miuizer">CustoMIUIzer settings</string>
     <string name="miuizer_show_newmods_title">Mark new mods</string>
@@ -965,6 +951,7 @@
 
     <string name="support">Support</string>
     <string name="support_github">Code and Issues</string>
+    <string name="support_github_summ">Star repository to keep app updated</string>
     <string name="support_contact_title">Contact me</string>
     <string name="support_releases_title">Releases</string>
     <string name="support_releases_summ">Github Releases</string>
@@ -1116,33 +1103,43 @@
 
     <string name="dummy" translatable="false" />
     <string name="system_statusbar_batterytempandcurrent_title">Display battery temp and current</string>
-    <string name="system_statusbar_batterytempandcurrent_content_title">Display info</string>
+    <string name="system_statusbar_batterytempandcurrent_content_title">Display Content</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">Display on the right</string>
     <string name="system_statusbar_batterytempandcurrent_positive_title">Current value is always positive</string>
     <string name="system_statusbar_batterytempandcurrent_incharge_title">Show when charging only</string>
+    <string name="system_statusbar_batterytempandcurrent_singlerow_title">Display in single row</string>
+    <string name="system_statusbar_batterytempandcurrent_reverseorder_title">Reverse order</string>
     <string name="system_statusbar_dualsimin2rows_title">Dual SIM signal bars in dual rows</string>
     <string name="system_statusbar_dualrows_title">Dual rows in status bar</string>
     <string name="system_statusbar_dualrows_summ">Need increase statusbar height on some devices</string>
     <string name="system_statusbar_dualsimin2rows_style_title">Icon style</string>
     <string name="system_statusbar_dualsimin2rows_rightmargin_title">Right margin</string>
-    <string name="system_statusbar_mobiletype_single_title">Put mobile network type at right of signal icon</string>
+    <string name="system_statusbar_mobiletype_single_title">Display mobile network type independently</string>
+    <string name="system_statusbar_mobiletype_single_atleft_title">Display at left of signal</string>
     <string name="system_statusbar_mobiletype_single_leftmargin_title">Left margin</string>
     <string name="system_statusbar_mobiletype_single_verticaloffset">Vertical offset</string>
     <string name="system_statusbar_mobiletype_single_bold_title">Bold style</string>
     <string name="system_statusbar_horizmargin_title">Statusbar horizontal padding</string>
+    <string name="system_statusbar_dualrows_firstrow_horizmargin_title">First row horizontal padding</string>
     <string name="system_statusbar_topmargin_title">Statusbar top padding</string>
     <string name="system_statusbar_topmargin_val_title">Top padding</string>
     <string name="system_statusbar_topmargin_unset_lockscreen_title">Unset statusbar in Keyguard</string>
     <string name="system_statusbaricons_atright_title">Move some icons to the right</string>
-    <string name="system_statusbaricons_atright_summ">Mainly for devices with cutout at the center of the top edge</string>
+    <string name="system_statusbaricons_wifi_mobile_atleft_title">Move mobile and Wi-Fi to the left</string>
+    <string name="system_statusbaricons_swap_wifi_mobile_title">Swap Mobile Signal and Wi-Fi</string>
+    <string name="system_statusbaricons_change_position_title">Change icons\' position</string>
+    <string name="system_statusbar_mobile_signal_cat_title">Mobile signal icon display settings</string>
+    <string name="system_statusbar_clocktweak_title">Clock settings</string>
     <string name="system_statusbaricons_netspeed_title">Network speed indicator</string>
     <string name="system_statusbaricons_clock_title">Clock</string>
     <string name="various_allow_untrusted_touch_title">Allow untrusted touch</string>
+    <string name="various_disable_access_devicelogs_title">Dismiss access device logs request dialog</string>
     <string name="various_skip_interceptperm_title">Skip permission intercept timer</string>
     <string name="various_show_battery_temperature_title">Show temperature in battery</string>
     <string name="various_enable_sc_ai_clipboard_blur_location_title">Enable AI clipboard and blur location</string>
     <string name="system_lockscreenshortcuts_left_tapaction_title">Tap left shortcut to toggle flashlight</string>
     <string name="system_cc_tile_roundedrect_title">Rounded rectangle tile</string>
+    <string name="system_cc_enable_style_switch_title">Enable CC style switch</string>
     <string name="system_cc_disable_bluetooth_restrict_title">Disable disconnect bluetooth until tomorrow</string>
     <string name="system_cc_collapse_after_clicked_title">Collapse after touch</string>
 </resources>

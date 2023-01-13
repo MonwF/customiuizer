@@ -20,14 +20,14 @@ android {
             v2SigningEnabled true
         }
     }
-    compileSdkVersion 32
+    compileSdkVersion 33
     defaultConfig {
         applicationId "name.monwf.customiuizer"
         minSdkVersion 31
         //noinspection OldTargetApi,ExpiredTargetSdkVersion
-        targetSdkVersion 31
-        versionCode 49
-        versionName "23.01.01"
+        targetSdkVersion 33
+        versionCode 50
+        versionName "23.01.06"
         resConfigs 'ru-rRU', 'zh-rCN', 'zh-rTW', 'pl-rPL'
         ndk { abiFilters "arm64-v8a" }
     }
@@ -71,6 +71,7 @@ dependencies {
 
     implementation "androidx.preference:preference:1.2.0"
     implementation 'androidx.palette:palette:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'androidx.appcompat:appcompat:1.6.0'
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
 //    implementation 'com.google.android.material:material:1.6.1'
 }

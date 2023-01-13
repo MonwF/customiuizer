@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name" translatable="false">米客</string>
+    <string name="app_slogan" translatable="false">米客 - 客制化你的MIUI</string>
     <string name="app_about">关于</string>
     <string name="about_version">版本：%1$s</string>
     <string name="about_dev">作者：Mikanoshi &amp; MonwF</string>
@@ -31,9 +33,9 @@
     <string name="system_statusbaricons_summ">管理状态栏图标可见性</string>
     <string name="system_statusbaricons_wifistandard_title">显示Wi-Fi标准</string>
     <string name="system_statusbaricons_battery1_title">电池图片</string>
-    <string name="system_statusbaricons_battery2_title">电池充电百分比</string>
+    <string name="system_statusbaricons_battery2_title">电池电量数字</string>
+    <string name="system_statusbaricons_battery4_title">电池百分比符号</string>
     <string name="system_statusbaricons_battery3_title">充电指示器</string>
-    <string name="system_statusbaricons_battery_summ">可以叠加在某些ROM的电池图标上</string>
     <string name="system_statusbaricons_alarm_title">闹钟</string>
     <string name="system_statusbaricons_alarm_summ">完全隐藏</string>
     <string name="system_statusbaricons_alarmn_title">选择闹钟图标的可见性</string>
@@ -96,7 +98,6 @@
     <string name="system_detailednetspeed_title">网速双排显示</string>
     <string name="system_netspeed_cat_title">网速相关设置</string>
     <string name="system_detailednetspeed_summ">分别显示传入和传出的网络速度</string>
-    <string name="system_detailednetspeed_font_title">字体大小</string>
     <string name="system_detailednetspeed_icon_title">指示器图标</string>
     <string name="system_detailednetspeed_icon_summ">网速旁显示上下行流量图标 (并非所有字体都含有对应图标)</string>
     <string name="system_detailednetspeed_low_title">隐藏慢速</string>
@@ -106,7 +107,7 @@
     <string name="system_detailednetspeed_secunit_title">网速隐藏 B/s 单位</string>
     <string name="system_netspeed_fontsize_title">网速字体大小</string>
     <string name="system_statusbarcontrols_title">手势控制</string>
-    <string name="system_statusbarcontrols_summ">滑动双击时执行所选动作</string>
+    <string name="system_statusbarcontrols_summ">滑动与双击时执行所选动作</string>
     <string name="system_statusbarcontrols_sens_title">调整灵敏度</string>
     <string name="system_statusbarcontrols_sens_bright_title">亮度</string>
     <string name="system_statusbarcontrols_sens_vol_title">音量</string>
@@ -137,7 +138,7 @@
     <string name="system_showpct_top_title">百分比面板的上边距</string>
     <string name="system_inactivebrightness_title">停用亮度滑块</string>
     <string name="system_notifrowmenu_title">扩展通知菜单</string>
-    <string name="system_notifrowmenu_summ">从通知菜单打开应用信息并强制关闭应用(向左滑动通知将其打开)</string>
+    <string name="system_notifrowmenu_summ">从通知菜单打开应用信息、强制关闭应用和浮窗打开(向左滑动通知将其打开)</string>
     <string name="system_disableanynotif_title">禁用任何通知</string>
     <string name="system_disableanynotif_summ">同时允许禁用系统通知</string>
     <string name="system_expandnotifs_title">展开通知</string>
@@ -161,8 +162,6 @@
     <string name="system_popupnotif_fs_title">遵循全屏</string>
     <string name="system_popupnotif_fs_summ">应用激活全屏模式时不打开通知抽屉(不适用于具有隐藏状态和导航栏的沉浸式应用)</string>
     <string name="system_popupnotif_apps_title">已选应用</string>
-    <string name="various_collapsemiuititles_title">折叠 MIUI 标题</string>
-    <string name="various_collapsemiuititles_summ">调整 MIUI13 应用中顶栏的标题</string>
     <string name="system_mods_screenshots">截图</string>
     <string name="system_screenshot_title">截图配置</string>
     <string name="system_screenshot_summ">自定义截图的格式、质量和存放目录</string>
@@ -277,7 +276,7 @@
     <string name="system_lockscreenshortcuts_right_off_title">禁用向左滑动手势</string>
     <string name="system_lockscreenshortcuts_right_title">向左滑动作</string>
     <string name="system_lockscreenshortcuts_right_image_title">更改右侧图标</string>
-    <string name="system_lockscreenshortcuts_right_image_summ">用 CustoMIUIzer 图标替换相机图标</string>
+    <string name="system_lockscreenshortcuts_right_image_summ">用米客图标替换相机图标</string>
     <string name="system_lockscreenshortcuts_right_image_hint">拖动图标用以执行自定义动作</string>
     <string name="system_lockscreenshortcuts_left_off_title">禁用右滑手势</string>
     <string name="system_lockscreenshortcuts_left_title">左侧屏幕快捷方式</string>
@@ -304,12 +303,8 @@
     <string name="system_screenanim_duration_summ">配置动画长度</string>
     <string name="system_screenanim_desc">值过低等同于禁用动画</string>
     <string name="system_blur_title">背景模糊</string>
-    <string name="system_recents_blur_summ">最近应用的背景模糊度</string>
+    <string name="system_recents_blur_summ">最近任务的背景模糊度</string>
     <string name="system_drawer_blur_summ">通知抽屉的背景模糊度</string>
-    <string name="system_drawer_hidebackground_title">临时隐藏主题背景</string>
-    <string name="system_drawer_hidebackground_summ">更改亮度时隐藏背景</string>
-    <string name="system_drawer_opacity_title">主题背景不透明度</string>
-    <string name="system_drawer_opacity_summ">主题通知抽屉背景的不透明度</string>
     <string name="system_mods_lockscreen">锁屏</string>
     <string name="system_mods_lockscreen_functionality">附加功能</string>
     <string name="system_mods_lockscreen_security">安全</string>
@@ -345,8 +340,6 @@
     <string name="system_hideproxywarn_summ">不显示耳机区域被覆盖的警告</string>
     <string name="system_resizablewidgets_title">解禁小部件调整</string>
     <string name="system_resizablewidgets_summ">解除小部件大小的限制</string>
-    <string name="system_unblockthird_title">解锁启动器</string>
-    <string name="system_unblockthird_summ">解除中国版ROM对第三方启动器的限制</string>
     <string name="system_cleanshare_title">清理共享菜单</string>
     <string name="system_cleanshare_summ">从共享菜单移除所选应用</string>
     <string name="system_clean_test">测试菜单</string>
@@ -384,10 +377,8 @@
     <string name="system_hidelshint_summ">隐藏“上滑解锁”提示</string>
     <string name="system_nosos_title">移除紧急呼叫</string>
     <string name="system_nosos_summ">锁屏时禁用紧急呼叫按钮</string>
-    <string name="system_hideqs_title">净化扩展模式视图</string>
-    <string name="system_hideqs_summ">隐藏锁屏上展开通知模式中的快速设置和亮度滑块</string>
-    <string name="system_nodrawerbackground_title">禁用彩色背景</string>
-    <string name="system_nodrawerbackground_summ">锁屏时将背景从壁纸随机生成的颜色更改为透明</string>
+    <string name="system_hideqs_title">净化展开模式视图</string>
+    <string name="system_hideqs_summ">隐藏锁屏时展开通知抽屉中的快速设置和亮度滑块</string>
     <string name="system_taptounlock_title">点击解锁</string>
     <string name="system_taptounlock_summ">点击屏幕底部锁屏区域解锁设备</string>
     <string name="system_dttosleep_title">双击熄屏</string>
@@ -408,13 +399,12 @@
     <string name="system_mods_statusbar_statusbar">状态栏</string>
     <string name="system_mods_statusbar_drawer">通知抽屉</string>
     <string name="system_mods_notifications">通知</string>
-    <string name="system_mods_recents">最近应用列表</string>
-    <string name="system_usenativerecents_title">使用本地实现</string>
-    <string name="system_usenativerecents_summ">请不要使用MIUI启动器的最近应用列表。使用全屏手势效果不好。</string>
+    <string name="system_mods_recents">最近任务</string>
     <string name="system_removecleaner_title">移除清理按钮</string>
+    <string name="system_recents_disable_wallpaperscale_title">禁用壁纸缩放</string>
     <string name="system_removecleaner_summ">隐藏清理最近应用和内存的按钮</string>
-    <string name="system_clearalltasks_title">清空</string>
-    <string name="system_clearalltasks_summ">使清洁器按钮结束所有正在运行中的任务</string>
+    <string name="system_clearalltasks_title">清空所有任务</string>
+    <string name="system_clearalltasks_summ">使清理按钮结束所有正在运行中的任务</string>
     <string name="system_hidefromrecents_title">隐藏最近</string>
     <string name="system_hidefromrecents_summ">隐藏最近任务列表中的所选应用</string>
     <string name="system_recommended_first_title">第一个快捷方式动作</string>
@@ -491,8 +481,8 @@
     <string name="launcher_googleminus_note">需要全球版(国际版)ROM</string>
     <string name="launcher_googlediscover_title">强制Google探索</string>
     <string name="launcher_googlediscover_summ">将App Vault替换为Google探索(需要安装Google应用)</string>
-    <string name="launcher_nowidgetonly_title">禁用小部件，仅屏幕</string>
-    <string name="launcher_nowidgetonly_summ">令所有屏幕平板上的支持小部件和应用</string>
+    <string name="launcher_nowidgetonly_title">禁用仅小部件页面</string>
+    <string name="launcher_nowidgetonly_summ">使平板上的所有页面都支持小部件和应用</string>
     <string name="launcher_nounlockanim_title">去除解锁动画</string>
     <string name="launcher_nounlockanim_summ">设备解锁时去除图标动画</string>
     <string name="launcher_oldlaunchanim_title">使用旧的启动动画</string>
@@ -502,8 +492,8 @@
     <string name="launcher_hideseekpoints_title">动态页面指示器</string>
     <string name="launcher_hideseekpoints_summ">仅在滚动时显示页面指示器</string>
     <string name="launcher_hideseekpoints_edit_title">仅在编辑模式中显示</string>
-    <string name="launcher_unlockgrids_title">解锁网格大小</string>
-    <string name="launcher_unlockgrids_summ">可在主屏幕布局设置中使用3x4到10x10之间的所有网格大小</string>
+    <string name="launcher_unlockgrids_title">解锁桌面布局</string>
+    <string name="launcher_unlockgrids_summ">可在系统桌面布局设置中使用3x4到10x10之间的所有布局</string>
     <string name="launcher_unlockhotseat_title">增加底栏图标</string>
     <string name="launcher_unlockhotseat_summ">解除底栏图标数量的限制</string>
     <string name="launcher_iconscale_title">图标缩放</string>
@@ -515,8 +505,7 @@
     <string name="launcher_folder_cols_title">文件夹排列数量</string>
     <string name="launcher_folderwidth_title">使用整个文件夹的宽度</string>
     <string name="launcher_folderspace_title">减少边距</string>
-    <string name="launcher_fixstatusbarmode_title">修复状态栏模式</string>
-    <string name="launcher_fixstatusbarmode_summ">调整开发版启动器上浅色/深色壁纸的状态栏内容颜色</string>
+    <string name="launcher_disable_log_title">禁用日志和统计</string>
     <string name="launcher_fixanim_title">修复动画</string>
     <string name="launcher_fixanim_summ">将动画值时长比例应用到某些启动器动画</string>
     <string name="launcher_fixlaunch_title">修复应用信息</string>
@@ -658,6 +647,7 @@
     <string name="various_alarmcompat_summ">令所选应用正确显示MIUI时钟应用设置的下一次闹钟时间</string>
     <string name="various_gboardpadding_port_title">竖屏时底部填充</string>
     <string name="various_gboardpadding_land_title">横屏时底部填充</string>
+    <string name="various_answerinheadup_title">从浮动通知接听电话时不进入全屏(除桌面)</string>
     <string name="various_showcallui_title">显示通话界面</string>
     <string name="various_showcallui_summ">定义来电时应该显示的界面</string>
     <string name="various_calluibright_title">通话时屏幕亮度</string>
@@ -838,6 +828,7 @@
     <string name="array_collapse_initial">原本</string>
     <string name="array_collapse_permanent">永久</string>
     <string name="array_dualsimin2rows_style_thick">加粗</string>
+    <string name="array_dualsimin2rows_style_theme">跟随主题</string>
     <string name="unlimited">无限制</string>
     <string name="toggle_wifi_on">Wi-Fi已启用</string>
     <string name="toggle_wifi_off">Wi-Fi已禁用</string>
@@ -865,7 +856,7 @@
     <string name="qs_toggle_autorotate_portrait">竖屏</string>
     <string name="qs_toggle_autorotate_landscape">横屏</string>
     <string name="qs_toggle_5g">5G网络</string>
-    <string name="miuizer">CustoMIUIzer设置</string>
+    <string name="miuizer">米客设置</string>
     <string name="miuizer_show_newmods_title">标记新模块</string>
     <string name="miuizer_show_newmods_summ">添加到当前版本中的模块在标题处显示\"新!\"标签</string>
     <string name="miuizer_new_mod">新！</string>
@@ -885,6 +876,7 @@
     <string name="miuizer_acramail_tip">如果您希望收到对崩溃报告的回复，此项当然是必填的。请使用电子邮箱、ICQ、XDA或者4PDA的昵称。</string>
     <string name="support">支持</string>
     <string name="support_github">代码仓库</string>
+    <string name="support_github_summ">Star仓库，关注App更新</string>
     <string name="support_contact_title">酷安 @tpsxx</string>
     <string name="support_releases_title">版本下载</string>
     <string name="support_releases_summ">云盘密码: miui，可长按复制链接</string>
@@ -977,7 +969,7 @@
     <string name="credentials_success">证书已解锁！</string>
     <string name="xposed_not_found">未找到Xposed应用</string>
     <string name="xposed_not_found_explain">您似乎没有安装Xposed Framework。\n\n请注意，模块仅适用于Xposed！</string>
-    <string name="module_not_active">CustoMIUIzer模块未被激活！\n请打开LSPosed应用，激活模块并重启。</string>
+    <string name="module_not_active">米客模块未被激活！\n请打开LSPosed应用，激活模块并重启。</string>
     <string name="no_browser">打开网址需要浏览器应用</string>
     <string name="okay">好的</string>
     <string name="cancel">取消</string>
@@ -1026,8 +1018,6 @@
     <string name="warning_scope">此模块的激活范围已激活，可能会阻止某些模块正常运行。</string>
     <string name="system_networkindicator_title">网络活动指示器</string>
     <string name="system_networkindicator_summ">配置移动数据和Wi-Fi流量指示器</string>
-    <string name="system_cleanmirror_title">一致的亮度滑块风格</string>
-    <string name="system_cleanmirror_summ">更改亮度时移除滑块的阴影和附加背景</string>
     <string name="system_airplanemodeconfig_title">飞行模式配置</string>
     <string name="system_airplanemodeconfig_summ">定义在飞行模式下允许的通信。不需要重启。</string>
     <string name="system_airplanemodeconfig_note">模块只能修改现有的系统设置，某些选项可能无效</string>
@@ -1045,7 +1035,7 @@
     <string name="array_turn_off_disable">关闭并禁用</string>
     <string name="various_restrictapp_title">全限制</string>
     <string name="various_restrictapp_summ">允许为系统应用配置省电策略和Wi-Fi接入</string>
-    <string name="launcher_horizwidgetmargin_title">水平小部件边缘</string>
+    <string name="launcher_horizwidgetmargin_title">小部件水平间距</string>
     <string name="various_hiddenfeatures_title">隐藏特性</string>
     <string name="various_hiddenfeatures_not_found">该设备不支持</string>
     <string name="various_hiddenfeatures_summ">不易找到的界面</string>
@@ -1058,12 +1048,18 @@
     <string name="miuizer_show_assumelsposed_summ">假定已安装LSPosed框架以使用其管理器</string>
     <string name="various_runningservices_title">正在运行的服务</string>
     <string name="system_statusbaricons_atright_title">系统图标移至右侧显示</string>
-    <string name="system_statusbaricons_atright_summ">部分针对中置挖孔屏</string>
+    <string name="system_statusbar_mobile_signal_cat_title">移动网络信号图标设置</string>
+    <string name="system_statusbar_clocktweak_title">时钟设置</string>
+    <string name="system_statusbaricons_change_position_title">图标位置调整</string>
+    <string name="system_statusbaricons_wifi_mobile_atleft_title">移动信号和Wi-Fi移至左侧显示</string>
+    <string name="system_statusbaricons_swap_wifi_mobile_title">交换移动信号和Wi-Fi位置</string>
     <string name="system_statusbaricons_netspeed_title">网速</string>
     <string name="system_statusbaricons_clock_title">时钟</string>
     <string name="system_statusbar_batterytempandcurrent_title">显示电池温度和电流</string>
     <string name="system_statusbar_batterytempandcurrent_content_title">显示内容</string>
     <string name="system_statusbar_batterytempandcurrent_incharge_title">仅在充电时显示</string>
+    <string name="system_statusbar_batterytempandcurrent_singlerow_title">单排显示</string>
+    <string name="system_statusbar_batterytempandcurrent_reverseorder_title">反序</string>
     <string name="array_temperature">仅温度</string>
     <string name="array_current">仅电流</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">右侧显示</string>
@@ -1074,24 +1070,29 @@
     <string name="system_statusbar_dualsimin2rows_style_title">图标样式</string>
     <string name="system_statusbar_dualsimin2rows_rightmargin_title">右侧间距</string>
     <string name="system_statusbar_mobiletype_single_title">移动网络类型单独显示</string>
+    <string name="system_statusbar_mobiletype_single_atleft_title">显示在信号左侧</string>
     <string name="system_statusbar_mobiletype_single_leftmargin_title">左侧间距</string>
     <string name="system_statusbar_mobiletype_single_verticaloffset">上下偏移量</string>
     <string name="system_statusbar_mobiletype_single_bold_title">加粗</string>
+    <string name="system_statusbar_dualrows_firstrow_horizmargin_title">第一排水平边距</string>
     <string name="system_statusbar_horizmargin_title">状态栏水平边距</string>
     <string name="system_statusbar_topmargin_title">状态栏上边距</string>
     <string name="system_statusbar_topmargin_val_title">上边距大小</string>
     <string name="system_statusbar_topmargin_unset_lockscreen_title">不修改锁屏状态栏</string>
     <string name="system_notifrowmenu_appinfo">应用信息</string>
+    <string name="system_notifrowmenu_openinfw">浮窗</string>
     <string name="system_notifrowmenu_forceclose">强制关闭</string>
     <string name="restart_systemui">重启系统界面</string>
     <string name="various_allow_untrusted_touch_title">允许不受信任的触摸操作</string>
+    <string name="various_disable_access_devicelogs_title">关闭访问设备日志确认</string>
     <string name="launcher_nozoomanim_title">去除启动动画</string>
-    <string name="launcher_nozoomanim_summ">app启动、关闭时不缩放图标</string>
+    <string name="launcher_nozoomanim_summ">App启动、关闭时不缩放图标</string>
     <string name="various_skip_interceptperm_title">跳过开启特殊权限的倒计时</string>
     <string name="various_show_battery_temperature_title">电池页面显示温度值</string>
     <string name="various_enable_sc_ai_clipboard_blur_location_title">剪切板隐私保护及模糊定位</string>
     <string name="system_lockscreenshortcuts_left_tapaction_title">点击左侧图标时切换手电筒</string>
     <string name="system_cc_tile_roundedrect_title">圆角矩形磁贴</string>
+    <string name="system_cc_enable_style_switch_title">开启控制中心样式切换</string>
     <string name="system_cc_disable_bluetooth_restrict_title">禁用蓝牙临时关闭态</string>
     <string name="system_cc_collapse_after_clicked_title">单击开关后自动收起</string>
 </resources>

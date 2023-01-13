@@ -2,7 +2,6 @@ package name.mikanoshi.customiuizer.mods;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -22,7 +21,7 @@ import android.telecom.TelecomManager;
 import android.telephony.TelephonyManager;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
+import android.view.Surface;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
@@ -333,11 +332,65 @@ public class Controls {
 		}
 	}
 
-	private static void addCustomNavBarKeys(boolean isVertical, Context mContext, FrameLayout navButtons, Class<?> kbrCls) {
+	private static void reposNavBarButtons(FrameLayout navbar) {
+		Context mContext = navbar.getContext();
+		int displayRotation = navbar.getContext().getDisplay().getRotation();
 		float density = mContext.getResources().getDisplayMetrics().density;
-		int two = Math.round(2 * density);
 		int margin = Math.round(MainModule.mPrefs.getInt("controls_navbarmargin", 0) * density);
+		if (displayRotation == Surface.ROTATION_0) {
+			ImageView hleft = navbar.findViewWithTag("custom_left_horiz");
+			if (hleft != null) {
+				LinearLayout leftbtn = (LinearLayout) hleft.getParent();
+				FrameLayout.LayoutParams lpl = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.MATCH_PARENT);
+				lpl.leftMargin += margin;
+				lpl.gravity = Gravity.START | Gravity.CENTER_VERTICAL;
+				leftbtn.setLayoutParams(lpl);
+			}
 
+			ImageView hright = navbar.findViewWithTag("custom_right_horiz");
+			if (hright != null) {
+				LinearLayout rightbtn = (LinearLayout) hright.getParent();
+				FrameLayout.LayoutParams lpr = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.MATCH_PARENT);
+				lpr.rightMargin += margin;
+				lpr.gravity = Gravity.END | Gravity.CENTER_VERTICAL;
+				rightbtn.setLayoutParams(lpr);
+			}
+		}
+		else  {
+			ImageView vleft = navbar.findViewWithTag("custom_left_vert");
+			ImageView vright = navbar.findViewWithTag("custom_right_vert");
+
+			LinearLayout leftbtn = null;
+			if (vleft != null) {
+				leftbtn = (LinearLayout) vleft.getParent();
+			}
+			FrameLayout.LayoutParams lpl = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+
+			LinearLayout rightbtn = null;
+			if (vright != null) {
+				rightbtn = (LinearLayout) vright.getParent();
+			}
+			FrameLayout.LayoutParams lpr = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+			if (displayRotation == Surface.ROTATION_270) {
+				lpl.topMargin += margin;
+				lpl.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
+
+				lpr.bottomMargin += margin;
+				lpr.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+			}
+			else if (displayRotation == Surface.ROTATION_90) {
+				lpr.topMargin += margin;
+				lpr.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
+
+				lpl.bottomMargin += margin;
+				lpl.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+			}
+			if (leftbtn != null) leftbtn.setLayoutParams(lpl);
+			if (rightbtn != null) rightbtn.setLayoutParams(lpr);
+		}
+	}
+
+	private static void addCustomNavBarKeys(boolean isVertical, Context mContext, FrameLayout navButtons, Class<?> kbrCls) {
 		Drawable dot1;
 		Drawable dot2;
 		try {
@@ -350,8 +403,6 @@ public class Controls {
 			return;
 		}
 
-		int diff1 = (dot1.getIntrinsicWidth() - dot1.getIntrinsicHeight()) / 2;
-		int diff2 = (dot2.getIntrinsicWidth() - dot2.getIntrinsicHeight()) / 2;
 		LinearLayout leftbtn = new LinearLayout(mContext);
 		ImageView left = new ImageView(mContext);
 
@@ -361,20 +412,8 @@ public class Controls {
 		else
 			lplc = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
 		left.setLayoutParams(lplc);
-
-		LinearLayout.LayoutParams lpl = new LinearLayout.LayoutParams(lplc);
-		if (isVertical)
-			lpl.bottomMargin += margin;
-		else
-			lpl.leftMargin += margin;
-		leftbtn.setLayoutParams(lpl);
-
-		left.setScaleType(ImageView.ScaleType.CENTER);
 		left.setImageDrawable(dot1);
-		left.setScaleX(0.7f);
-		left.setScaleY(0.7f);
 		left.setAlpha(0.9f);
-		left.setPadding(isVertical ? 0 : two, isVertical ? two + diff1 : 0, isVertical ? 0 : two, isVertical ? two + diff1 : 0);
 		left.setTag("custom_left" + (isVertical ? "_vert" : "_horiz"));
 		if (kbrCls != null) try {
 			Drawable lripple = (Drawable)kbrCls.getConstructor(Context.class, View.class).newInstance(mContext, leftbtn);
@@ -404,24 +443,8 @@ public class Controls {
 		else
 			lprc = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
 		right.setLayoutParams(lprc);
-
-		FrameLayout.LayoutParams lpr = new FrameLayout.LayoutParams(lprc);
-		if (isVertical) {
-			lpr.topMargin += margin;
-			lpr.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
-		}
-		else {
-			lpr.rightMargin += margin;
-			lpr.gravity = Gravity.RIGHT | Gravity.CENTER_VERTICAL;
-		}
-		rightbtn.setLayoutParams(lpr);
-
-		right.setScaleType(ImageView.ScaleType.CENTER);
 		right.setImageDrawable(dot2);
-		right.setScaleX(0.7f);
-		right.setScaleY(0.7f);
 		right.setAlpha(0.9f);
-		right.setPadding(isVertical ? 0 : two, isVertical ? two + diff2 : 0, isVertical ? 0 : two, isVertical ? two + diff2 : 0);
 		right.setTag("custom_right" + (isVertical ? "_vert" : "_horiz"));
 		if (kbrCls != null) try {
 			Drawable rripple = (Drawable)kbrCls.getConstructor(Context.class, View.class).newInstance(mContext, rightbtn);
@@ -443,12 +466,6 @@ public class Controls {
 		});
 		rightbtn.addView(right);
 
-//		View startPadding = navButtons.findViewById(navButtons.getResources().getIdentifier("start_padding", "id", pkgName));
-//		View sidePadding = navButtons.findViewById(navButtons.getResources().getIdentifier("side_padding", "id", pkgName));
-//
-//		LinearLayout.LayoutParams lp1 = (LinearLayout.LayoutParams)startPadding.getLayoutParams();
-//		LinearLayout.LayoutParams lp2 = (LinearLayout.LayoutParams)sidePadding.getLayoutParams();
-
 		boolean hasLeftAction = MainModule.mPrefs.getInt("controls_navbarleft_action", 1) > 1 || MainModule.mPrefs.getInt("controls_navbarleftlong_action", 1) > 1;
 		boolean hasRightAction = MainModule.mPrefs.getInt("controls_navbarright_action", 1) > 1 || MainModule.mPrefs.getInt("controls_navbarrightlong_action", 1) > 1;
 
@@ -457,52 +474,39 @@ public class Controls {
 			if (hasRightAction) {
 				navButtons.addView(rightbtn, 0);
 //				lp2.weight = Math.round(lp2.weight * part);
-//				sidePadding.setLayoutParams(lp2);
-//				sidePadding.setPadding(sidePadding.getPaddingLeft(), sidePadding.getPaddingTop() / 3, sidePadding.getPaddingRight(), sidePadding.getPaddingBottom());
 			}
 			if (hasLeftAction) {
 				navButtons.addView(leftbtn, navButtons.getChildCount());
 //				lp1.weight = Math.round(lp1.weight * part);
-//				startPadding.setLayoutParams(lp1);
 			}
 		} else {
 			if (hasLeftAction) {
 				navButtons.addView(leftbtn, 0);
 //				lp1.weight = Math.round(lp1.weight * part);
-//				startPadding.setLayoutParams(lp1);
 			}
 			if (hasRightAction) {
 				navButtons.addView(rightbtn, navButtons.getChildCount());
 //				lp2.weight = Math.round(lp2.weight * part);
-//				sidePadding.setLayoutParams(lp2);
-//				sidePadding.setPadding(sidePadding.getPaddingLeft(), sidePadding.getPaddingTop(), sidePadding.getPaddingRight() / 3, sidePadding.getPaddingBottom());
 			}
 		}
 	}
 
 	public static void NavBarButtonsHook(LoadPackageParam lpparam) {
-
-		Helpers.hookAllMethods("com.android.systemui.navigationbar.NavigationBar", lpparam.classLoader, Helpers.isTPlus() ? "onViewAttached" : "onViewAttachedToWindow", new MethodHook() {
+		Helpers.hookAllMethods("com.android.systemui.navigationbar.NavigationBarView", lpparam.classLoader, "updateOrientationViews", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
-				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-				if (mContext == null) {
-					Helpers.log("NavBarButtonsHook", "Cannot find context");
-					return;
-				}
-				FrameLayout mNavigationBarView = (FrameLayout)XposedHelpers.getObjectField(param.thisObject, Helpers.isTPlus() ? "mView" : "mNavigationBarView");
-				if (mNavigationBarView == null) {
-					Helpers.log("NavBarButtonsHook", "Cannot find navbar layout");
-					return;
-				}
-				ViewGroup mHorizontal = mNavigationBarView.findViewById(mNavigationBarView.getResources().getIdentifier("horizontal", "id", lpparam.packageName));
-				ViewGroup mVertical = mNavigationBarView.findViewById(mNavigationBarView.getResources().getIdentifier("vertical", "id", lpparam.packageName));
-				FrameLayout navButtons0 = mHorizontal.findViewById(mNavigationBarView.getResources().getIdentifier("nav_buttons", "id", lpparam.packageName));
-				FrameLayout navButtons90 = mVertical.findViewById(mNavigationBarView.getResources().getIdentifier("nav_buttons", "id", lpparam.packageName));
+				FrameLayout navBar = (FrameLayout) param.thisObject;
+				Context mContext = navBar.getContext();
+				ViewGroup mHorizontal = (ViewGroup) XposedHelpers.getObjectField(param.thisObject, "mHorizontal");
+				ViewGroup mVertical = (ViewGroup) XposedHelpers.getObjectField(param.thisObject, "mVertical");
+				int navButtonsId = navBar.getResources().getIdentifier("nav_buttons", "id", lpparam.packageName);
+				FrameLayout navButtons0 = mHorizontal.findViewById(navButtonsId);
+				FrameLayout navButtons90 = mVertical.findViewById(navButtonsId);
 
 				Class<?> kbrCls = XposedHelpers.findClassIfExists("com.android.systemui.statusbar.phone.MiuiKeyButtonRipple", lpparam.classLoader);
 				addCustomNavBarKeys(false, mContext, navButtons0, kbrCls);
 				addCustomNavBarKeys(true, mContext, navButtons90, kbrCls);
+				reposNavBarButtons(navBar);
 			}
 		});
 
@@ -533,6 +537,17 @@ public class Controls {
 					if (hright != null) hright.setImageDrawable(lightImg2);
 					if (vright != null) vright.setImageDrawable(lightImg2);
 				}
+			}
+		});
+		Helpers.hookAllMethods("com.android.systemui.navigationbar.NavigationBarView", lpparam.classLoader, "onConfigurationChanged", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				FrameLayout navbar = (FrameLayout) param.thisObject;
+//				int displayRotation = navbar.getContext().getDisplay().getRotation();
+//				int mCurrentRotation = XposedHelpers.getIntField(param.thisObject, "mCurrentRotation");
+//				if (mCurrentRotation != displayRotation) {
+					reposNavBarButtons(navbar);
+//				}
 			}
 		});
 	}

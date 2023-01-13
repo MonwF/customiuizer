@@ -191,6 +191,7 @@
 			miuizer:stepValue="25"
 			miuizer:displayDividerValue="100"
 			miuizer:format="x%s"
+			app:isPreferenceVisible="false"
 			miuizer:offtext="@string/array_default" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
@@ -312,77 +313,11 @@
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_statusbaricons_atright_cat"
-			android:title="@string/system_statusbaricons_atright_title"
-			android:summary="@string/system_statusbaricons_atright_summ" />
+			android:title="@string/system_statusbaricons_change_position_title" />
 
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
-			android:key="pref_key_system_mobiletypeicon"
-			android:summary="@string/system_mobiletypeicon_summ"
-			android:title="@string/system_mobiletypeicon_title"
-			android:entries="@array/mobiletypeicon"
-			android:entryValues="@array/mobiletypeicon_val"
-			android:defaultValue="1" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_statusbar_mobiletype_single"
-			android:title="@string/system_statusbar_mobiletype_single_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_statusbar_mobiletype_single_fontsize"
-			android:title="@string/launcher_titlefontsize_title"
-			android:dependency="pref_key_system_statusbar_mobiletype_single"
-			android:defaultValue="27"
-			miuizer:child="true"
-			miuizer:minValue="18"
-			miuizer:maxValue="30"
-			miuizer:stepValue="1"
-			miuizer:displayDividerValue="2"
-			miuizer:format="%s dip" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_statusbar_mobiletype_single_bold"
-			android:title="@string/system_statusbar_mobiletype_single_bold_title"
-			android:dependency="pref_key_system_statusbar_mobiletype_single"
-			miuizer:child="true"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_statusbar_mobiletype_single_leftmargin"
-			android:title="@string/system_statusbar_mobiletype_single_leftmargin_title"
-			android:dependency="pref_key_system_statusbar_mobiletype_single"
-			android:defaultValue="7"
-			miuizer:child="true"
-			miuizer:minValue="2"
-			miuizer:maxValue="10"
-			miuizer:stepValue="1"
-			miuizer:displayDividerValue="2"
-			miuizer:format="%s dip" />
-
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_statusbar_mobiletype_single_rightmargin"
-			android:title="@string/system_statusbar_dualsimin2rows_rightmargin_title"
-			android:dependency="pref_key_system_statusbar_mobiletype_single"
-			android:defaultValue="0"
-			miuizer:child="true"
-			miuizer:minValue="0"
-			miuizer:maxValue="10"
-			miuizer:stepValue="1"
-			miuizer:displayDividerValue="2"
-			miuizer:format="%s dip" />
-
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_statusbar_mobiletype_single_verticaloffset"
-			android:title="@string/system_statusbar_mobiletype_single_verticaloffset"
-			android:dependency="pref_key_system_statusbar_mobiletype_single"
-			android:defaultValue="8"
-			miuizer:child="true"
-			miuizer:minValue="0"
-			miuizer:maxValue="16"
-			miuizer:stepValue="1"
-			miuizer:negativeShift="8"
-			miuizer:displayDividerValue="2"
-			miuizer:format="%s dip" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_statusbar_mobile_signal_cat"
+			android:title="@string/system_statusbar_mobile_signal_cat_title" />
 
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_system_networkindicator"
@@ -401,122 +336,22 @@
 			miuizer:valueAsSummary="true"
 			android:defaultValue="1" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_4gtolte"
-			android:title="@string/system_4gtolte_title"
-			android:defaultValue="false" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_statusbar_clocktweak_cat"
+			android:title="@string/system_statusbar_clocktweak_title" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_statusbar_dualsimin2rows"
-			android:title="@string/system_statusbar_dualsimin2rows_title"
-			android:defaultValue="false" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_detailednetspeed_cat"
+			android:title="@string/system_netspeed_cat_title" />
 
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
-			android:key="pref_key_system_statusbar_dualsimin2rows_style"
-			android:dependency="pref_key_system_statusbar_dualsimin2rows"
-			android:title="@string/system_statusbar_dualsimin2rows_style_title"
-			android:entries="@array/dualsimin2rows_style"
-			android:entryValues="@array/dualsimin2rows_style_val"
-			miuizer:child="true"
-			miuizer:valueAsSummary="true"
-			android:defaultValue="" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_statusbarcontrols_cat"
+			android:summary="@string/system_statusbarcontrols_summ"
+			android:title="@string/system_statusbarcontrols_title" />
 
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_statusbar_dualsimin2rows_rightmargin"
-			android:title="@string/system_statusbar_dualsimin2rows_rightmargin_title"
-			android:dependency="pref_key_system_statusbar_dualsimin2rows"
-			android:defaultValue="0"
-			miuizer:child="true"
-			miuizer:minValue="0"
-			miuizer:maxValue="10"
-			miuizer:stepValue="1"
-			miuizer:displayDividerValue="2"
-			miuizer:format="%s dip" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_statusbar_batterytempandcurrent"
-			android:title="@string/system_statusbar_batterytempandcurrent_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
-			android:key="pref_key_system_statusbar_batterytempandcurrent_content"
-			android:title="@string/system_statusbar_batterytempandcurrent_content_title"
-			android:entries="@array/batterydetails"
-			android:entryValues="@array/onoff_val"
-			miuizer:valueAsSummary="true"
-			android:dependency="pref_key_system_statusbar_batterytempandcurrent"
-			miuizer:child="true"
-			android:defaultValue="1" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_statusbar_batterytempandcurrent_atright"
-			android:title="@string/system_statusbar_batterytempandcurrentatright_title"
-			android:dependency="pref_key_system_statusbar_batterytempandcurrent"
-			miuizer:child="true"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_statusbar_batterytempandcurrent_positive"
-			android:title="@string/system_statusbar_batterytempandcurrent_positive_title"
-			android:dependency="pref_key_system_statusbar_batterytempandcurrent"
-			miuizer:child="true"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_statusbar_batterytempandcurrent_incharge"
-			android:title="@string/system_statusbar_batterytempandcurrent_incharge_title"
-			android:dependency="pref_key_system_statusbar_batterytempandcurrent"
-			miuizer:child="true"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_statusbar_batterytempandcurrent_fontsize"
-			android:title="@string/system_detailednetspeed_font_title"
-			android:dependency="pref_key_system_statusbar_batterytempandcurrent"
-			android:defaultValue="16"
-			miuizer:child="true"
-			miuizer:minValue="14"
-			miuizer:maxValue="30"
-			miuizer:stepValue="1"
-			miuizer:displayDividerValue="2"
-			miuizer:format="%s dip" />
-
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_statusbar_batterytempandcurrent_leftmargin"
-			android:title="@string/system_statusbar_mobiletype_single_leftmargin_title"
-			android:dependency="pref_key_system_statusbar_batterytempandcurrent"
-			android:defaultValue="8"
-			miuizer:child="true"
-			miuizer:minValue="0"
-			miuizer:maxValue="10"
-			miuizer:stepValue="1"
-			miuizer:displayDividerValue="2"
-			miuizer:format="%s dip" />
-
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_statusbar_batterytempandcurrent_rightmargin"
-			android:title="@string/system_statusbar_dualsimin2rows_rightmargin_title"
-			android:dependency="pref_key_system_statusbar_batterytempandcurrent"
-			android:defaultValue="8"
-			miuizer:child="true"
-			miuizer:minValue="0"
-			miuizer:maxValue="10"
-			miuizer:stepValue="1"
-			miuizer:displayDividerValue="2"
-			miuizer:format="%s dip" />
-
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_statusbar_batterytempandcurrent_verticaloffset"
-			android:title="@string/system_statusbar_mobiletype_single_verticaloffset"
-			android:dependency="pref_key_system_statusbar_batterytempandcurrent"
-			android:defaultValue="8"
-			miuizer:child="true"
-			miuizer:minValue="0"
-			miuizer:maxValue="16"
-			miuizer:stepValue="1"
-			miuizer:negativeShift="8"
-			miuizer:displayDividerValue="2"
-			miuizer:format="%s dip" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_statusbar_batterytempandcurrent_cat"
+			android:title="@string/system_statusbar_batterytempandcurrent_title" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_batteryindicator_cat"
@@ -527,6 +362,33 @@
 			android:key="pref_key_system_statusbar_dualrows"
 			android:title="@string/system_statusbar_dualrows_title"
 			android:summary="@string/system_statusbar_dualrows_summ" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_statusbar_dualrows_firstrow_horizmargin"
+			android:dependency="pref_key_system_statusbar_dualrows"
+			android:title="@string/system_statusbar_dualrows_firstrow_horizmargin_title" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_statusbar_dualrows_firstrow_horizmargin_left"
+			android:title="@string/system_statusbar_mobiletype_single_leftmargin_title"
+			android:dependency="pref_key_system_statusbar_dualrows_firstrow_horizmargin"
+			android:defaultValue="0"
+			miuizer:child="true"
+			miuizer:minValue="0"
+			miuizer:maxValue="40"
+			miuizer:stepValue="1"
+			miuizer:format="%s dip" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_statusbar_dualrows_firstrow_horizmargin_right"
+			android:title="@string/system_statusbar_dualsimin2rows_rightmargin_title"
+			android:dependency="pref_key_system_statusbar_dualrows_firstrow_horizmargin"
+			android:defaultValue="0"
+			miuizer:child="true"
+			miuizer:minValue="0"
+			miuizer:maxValue="40"
+			miuizer:stepValue="1"
+			miuizer:format="%s dip" />
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_system_statusbarheight"
@@ -585,6 +447,15 @@
 			miuizer:stepValue="1"
 			miuizer:format="%s dip" />
 
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_maxsbicons"
+			android:title="@string/system_maxsbicons_title"
+			android:summary="@string/system_maxsbicons_summ"
+			android:entries="@array/maxsbicons"
+			android:entryValues="@array/maxsbicons_val"
+			miuizer:valueAsSummary="true"
+			android:defaultValue="0" />
+
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_statusbarcolor"
 			android:title="@string/system_statusbarcolor_title"
@@ -599,59 +470,11 @@
 			miuizer:countAsSummary="true" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_clockseconds"
-			android:summary="@string/system_clockseconds_summ"
-			android:title="@string/system_clockseconds_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_clock_show_ampm"
-			app:isPreferenceVisible="false"
-			miuizer:child="true"
-			android:title="@string/system_clock_show_ampm_title"
-			android:dependency="pref_key_system_clockseconds"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_clock_extra_width"
-			android:title="@string/system_clock_extra_width_title"
-			android:summary="@string/system_clock_extra_width_summ"
-			android:defaultValue="2"
-			miuizer:child="true"
-			miuizer:minValue="1"
-			miuizer:maxValue="8"
-			miuizer:stepValue="1"
-			android:dependency="pref_key_system_clockseconds"
-			miuizer:displayDividerValue="2"
-			miuizer:format="%s dp" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_clockleadingzero"
-			android:title="@string/system_clockleadingzero_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
-			android:key="pref_key_system_maxsbicons"
-			android:title="@string/system_maxsbicons_title"
-			android:summary="@string/system_maxsbicons_summ"
-			android:entries="@array/maxsbicons"
-			android:entryValues="@array/maxsbicons_val"
-			android:defaultValue="0" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_hidemoreicon"
 			android:summary="@string/system_hidemoreicon_summ"
+			app:isPreferenceVisible="false"
 			android:title="@string/system_hidemoreicon_title"
 			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
-			android:key="pref_key_system_detailednetspeed_cat"
-			android:title="@string/system_netspeed_cat_title" />
-
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
-			android:key="pref_key_system_statusbarcontrols_cat"
-			android:summary="@string/system_statusbarcontrols_summ"
-			android:title="@string/system_statusbarcontrols_title" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
@@ -666,21 +489,9 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_nodrawerbackground"
-			android:summary="@string/system_nodrawerbackground_summ"
-			android:title="@string/system_nodrawerbackground_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_removedismiss"
 			android:summary="@string/system_removedismiss_summ"
 			android:title="@string/system_removedismiss_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_cleanmirror"
-			android:title="@string/system_cleanmirror_title"
-			android:summary="@string/system_cleanmirror_summ"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
@@ -747,24 +558,6 @@
 			miuizer:format="%d%%"
 			miuizer:offtext="@string/array_default"
 			miuizer:dynamic="true" />
-
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_drawer_opacity"
-			android:title="@string/system_drawer_opacity_title"
-			android:summary="@string/system_drawer_opacity_summ"
-			android:defaultValue="100"
-			miuizer:minValue="0"
-			miuizer:maxValue="100"
-			miuizer:stepValue="1"
-			miuizer:format="%d%%"
-			miuizer:offtext="@string/array_default"
-			miuizer:dynamic="true" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_drawer_hidebackground"
-			android:title="@string/system_drawer_hidebackground_title"
-			android:summary="@string/system_drawer_hidebackground_summ"
-			android:defaultValue="false" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
@@ -873,6 +666,7 @@
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_snoozedmanager"
 			android:title="@string/system_snoozedmanager_title"
+			app:isPreferenceVisible="false"
 			android:summary="@string/system_snoozedmanager_summ"
 			android:defaultValue="false" />
 
@@ -978,6 +772,11 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_cc_enable_style_switch"
+			android:title="@string/system_cc_enable_style_switch_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_cc_disable_bluetooth_restrict"
 			android:title="@string/system_cc_disable_bluetooth_restrict_title"
 			app:isPreferenceVisible="false"
@@ -1010,9 +809,13 @@
 		android:title="@string/system_mods_recents">
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_usenativerecents"
-			android:title="@string/system_usenativerecents_title"
-			android:summary="@string/system_usenativerecents_summ"
+			android:key="pref_key_system_recents_disable_wallpaperscale"
+			android:title="@string/system_recents_disable_wallpaperscale_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_recents_hide_statusbar"
+			android:title="@string/system_hidelsstatusbar_title"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
@@ -1343,6 +1146,7 @@
 			android:key="pref_key_system_nodarkforce"
 			android:title="@string/system_nodarkforce_title"
 			android:summary="@string/system_nodarkforce_summ"
+			app:isPreferenceVisible="false"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
@@ -1389,24 +1193,6 @@
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_remove_startactconfirm"
 			android:title="@string/system_remove_startactconfirm_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_resizablewidgets"
-			android:title="@string/system_resizablewidgets_title"
-			android:summary="@string/system_resizablewidgets_summ"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_unblockthird"
-			android:title="@string/system_unblockthird_title"
-			android:summary="@string/system_unblockthird_summ"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_magnifier"
-			android:title="@string/system_magnifier_title"
-			android:summary="@string/system_magnifier_summ"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
@@ -1489,6 +1275,18 @@
 			android:dependency="pref_key_system_forceclose"
 			miuizer:child="true"
 			miuizer:countAsSummary="true" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_resizablewidgets"
+			android:title="@string/system_resizablewidgets_title"
+			android:summary="@string/system_resizablewidgets_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_magnifier"
+			android:title="@string/system_magnifier_title"
+			android:summary="@string/system_magnifier_summ"
+			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 			android:title="@string/system_mods_screenshots" />

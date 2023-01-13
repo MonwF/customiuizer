@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name" translatable="false">CustoMIUIzer13</string>
     <string name="app_about">O aplikacji</string>
     <string name="about_version">Wersja %1$s</string>
     <string name="about_dev">by Mikanoshi &amp; MonwF</string>
@@ -37,7 +36,6 @@
     <string name="system_statusbaricons_battery1_title">Ikona baterii</string>
     <string name="system_statusbaricons_battery2_title">Procent naładowania baterii</string>
     <string name="system_statusbaricons_battery3_title">Wskaźnik ładowania</string>
-    <string name="system_statusbaricons_battery_summ">Może być nałożone na ikonę baterii w niektórych ROMach</string>
     <string name="system_statusbaricons_alarm_title">Alarm</string>
     <string name="system_statusbaricons_alarm_summ">Ukryj się całkowicie</string>
     <string name="system_statusbaricons_alarmn_title">Selektywna widoczność ikony alarmu</string>
@@ -99,7 +97,6 @@
     <string name="system_netspeedinterval_title">Częstotliwość aktualizacji prędkości sieci</string>
     <string name="system_detailednetspeed_title">Szczegółowy wskaźnik prędkości sieci</string>
     <string name="system_detailednetspeed_summ">Pokaż osobno prędkości sieci przychodzącej i wychodzącej</string>
-    <string name="system_detailednetspeed_font_title">Rozmiar czcionki</string>
     <string name="system_detailednetspeed_icon_title">Ikony wskaźników</string>
     <string name="system_detailednetspeed_icon_summ">Ikony ruchu przychodzącego/wychodzącego wyświetlane obok wartości prędkości (nie wszystkie niestandardowe czcionki mają każdą ikonę)</string>
     <string name="system_detailednetspeed_low_title">Ukryj niską prędkość</string>
@@ -137,8 +134,6 @@
     <string name="system_showpct_title">Pokaż procent jasności</string>
     <string name="system_showpct_summ">Wyświetl poziom jasności w procentach podczas przeciągania suwaka jasności</string>
     <string name="system_showpct_top_title">Górny margines panelu procentowego</string>
-    <string name="system_cleanmirror_title">Spójny styl suwaka jasności</string>
-    <string name="system_cleanmirror_summ">Usuń cień i dodatkowe tło z suwaka podczas zmiany jasności</string>
     <string name="system_inactivebrightness_title">Dezaktywuj suwak jasności</string>
     <string name="system_notifrowmenu_title">Rozszerzone menu powiadomień</string>
     <string name="system_notifrowmenu_summ">Otwórz informacje o aplikacji i wymuś zamknięcie aplikacji z menu powiadomień (przesuń powiadomienie w lewo, aby je otworzyć)</string>
@@ -167,8 +162,6 @@
     <string name="system_popupnotif_fs_title">Uwzględnij pełny ekran</string>
     <string name="system_popupnotif_fs_summ">Nie otwieraj szuflady powiadomień, gdy aplikacja pełnoekranowa jest aktywna (nie dotyczy aplikacji immersyjnych z ukrytymi paskami stanu i nawigacji)</string>
     <string name="system_popupnotif_apps_title">Wybrane aplikacje</string>
-    <string name="various_collapsemiuititles_title">Zwiń tytuły MIUI</string>
-    <string name="various_collapsemiuititles_summ">Skonfiguruj stan tytułu paska akcji we wszystkich aplikacjach MIUI 12</string>
     <string name="system_mods_screenshots">Zrzuty ekranu</string>
     <string name="system_screenshot_title">Konfiguracja zrzutów ekranu</string>
     <string name="system_screenshot_summ">Dostosuj format, jakość i zapisz ścieżkę folderu dla zrzutów ekranu</string>
@@ -310,10 +303,6 @@
     <string name="system_blur_title">Rozmycie tła</string>
     <string name="system_recents_blur_summ">Intensywność rozmycia tła w ostatnich aplikacjach</string>
     <string name="system_drawer_blur_summ">Intensywność rozmycia tła w szufladzie powiadomień</string>
-    <string name="system_drawer_hidebackground_title">Tymczasowo ukryj tematyczne tło</string>
-    <string name="system_drawer_hidebackground_summ">Ukryj tło podczas zmiany jasności</string>
-    <string name="system_drawer_opacity_title">Przezroczystość tematycznego tła</string>
-    <string name="system_drawer_opacity_summ">Przezroczystość tematycznego tła w szufladzie powiadomień</string>
     <string name="system_mods_lockscreen">Ekran blokady</string>
     <string name="system_mods_lockscreen_functionality">Dodatkowa funkcjonalność</string>
     <string name="system_mods_lockscreen_security">Bezpieczeństwo</string>
@@ -350,8 +339,6 @@
     <string name="system_hideproxywarn_summ">Nie wyświetlaj ostrzeżenia, że obszar słuchawek jest zasłonięty</string>
     <string name="system_resizablewidgets_title">Dowolna zmiana rozmiaru widżetu</string>
     <string name="system_resizablewidgets_summ">Usuń wszelkie ograniczenia rozmiaru widżetu</string>
-    <string name="system_unblockthird_title">Odblokuj launcher</string>
-    <string name="system_unblockthird_summ">Usuń ograniczenia launcherów innych firm na chińskich ROMach</string>
     <string name="system_cleanshare_title">Wyczyść menu udostępniania</string>
     <string name="system_cleanshare_summ">Usuń wybrane aplikacje z menu udostępniania</string>
     <string name="system_clean_test">Menu testowe</string>
@@ -396,8 +383,6 @@
     <string name="system_lswallpaper_summ">Spraw, aby aplikacje innych firm mogły ustawiać tapetę ekranu blokady. Aplikacja Motywy musi być zainstalowana i mieć uprawnienia dostępu do pamięci masowej.</string>
     <string name="system_hideqs_title">Wyczyść widok trybu rozszerzonego</string>
     <string name="system_hideqs_summ">Ukryj szybkie ustawienia i suwak jasności w rozszerzonym trybie powiadomień na ekranie blokady</string>
-    <string name="system_nodrawerbackground_title">Wyłącz kolorowe tło</string>
-    <string name="system_nodrawerbackground_summ">Zmień tło z automatycznie generowanym kolorem z tapety na przezroczysty na ekranie blokady</string>
     <string name="system_taptounlock_title">Dotknij, aby odblokować</string>
     <string name="system_taptounlock_summ">Rozpocznij odblokowywanie urządzenia, dotykając dolnego obszaru ekranu blokady</string>
     <string name="system_dttosleep_title">Dotknij dwukrotnie, aby uśpić</string>
@@ -419,8 +404,6 @@
     <string name="system_mods_statusbar_drawer">Szuflada powiadomień</string>
     <string name="system_mods_notifications">Powiadomienia</string>
     <string name="system_mods_recents">Lista ostatnich aplikacji</string>
-    <string name="system_usenativerecents_title">Użyj natywnej implementacji</string>
-    <string name="system_usenativerecents_summ">Nie używaj listy ostatnich aplikacji z Launchera MIUI. Źle działa z gestami pełnoekranowymi.</string>
     <string name="system_removecleaner_title">Usuń przycisk czyszczenia</string>
     <string name="system_removecleaner_summ">Ukryj przycisk, który usuwa ostatnie aplikacje i czyści pamięć</string>
     <string name="system_clearalltasks_title">Wyczyść wszystko</string>
@@ -527,14 +510,11 @@
     <string name="launcher_topmargin_title">Górny margines siatki</string>
     <string name="launcher_bottommargin_title">Dolny margines dokowania</string>
     <string name="launcher_horizwidgetmargin_title">Poziomy margines widżetu</string>
-    <string name="launcher_horizwidgetmargin_summary">Działa tylko z najnowszymi wersjami launchera z dynamicznym pozycjonowaniem widżetów</string>
     <string name="launcher_indicatorheight_title">Wysokość wskaźnika strony</string>
     <string name="launcher_folders">Foldery</string>
     <string name="launcher_folder_cols_title">Liczba kolumn w folderach</string>
     <string name="launcher_folderwidth_title">Użyj całej szerokości folderu</string>
     <string name="launcher_folderspace_title">Zmniejsz boczną wyściółkę</string>
-    <string name="launcher_fixstatusbarmode_title">Napraw tryb paska stanu</string>
-    <string name="launcher_fixstatusbarmode_summ">Dostosuj kolor zawartości paska stanu dla jasnych/ciemnych tapet w wersji dla programistów</string>
     <string name="launcher_fixanim_title">Napraw animację</string>
     <string name="launcher_fixanim_summ">Zastosuj skalowanie czasu trwania animatorów wartości do niektórych animacji launchera</string>
     <string name="launcher_fixlaunch_title">Napraw informacje o aplikacji</string>
@@ -921,7 +901,6 @@
     <string name="qs_toggle_autorotate_portrait">Portret</string>
     <string name="qs_toggle_autorotate_landscape">Krajobraz</string>
     <string name="qs_toggle_5g">Sieć 5G</string>
-    <string name="qs_toggle_darkmode_noperm">CustoMIUIzer nie ma uprawnień do zmiany trybu ciemnego</string>
 
     <string name="miuizer">Ustawienia CustoMIUIzera</string>
     <string name="miuizer_show_newmods_title">Zaznacz nowe modyfikacje</string>
@@ -1105,7 +1084,6 @@
     <string name="system_statusbar_mobiletype_single_title">Umieść typ sieci komórkowej po prawej stronie ikony sygnału</string>
     <string name="system_statusbar_mobiletype_single_leftmargin_title">lewy margines</string>
     <string name="system_statusbaricons_atright_title">Przesuń niektóre ikony w prawo</string>
-    <string name="system_statusbaricons_atright_summ">Głównie do urządzeń z wycięciem na środku górnej krawędzi</string>
     <string name="system_statusbaricons_netspeed_title">Wskaźnik ruchu sieciowego</string>
     <string name="system_statusbaricons_clock_title">Zegar</string>
     <string name="various_allow_untrusted_touch_title">Zezwalaj na niezaufany dotyk</string>

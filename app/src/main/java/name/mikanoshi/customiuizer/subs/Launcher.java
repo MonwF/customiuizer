@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.Preference;
 import android.widget.SeekBar;
 
+import miui.os.Build;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SubFragment;
 import name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx;
@@ -103,7 +104,6 @@ public class Launcher extends SubFragment {
 				findPreference("pref_key_launcher_renameapps_list").setOnPreferenceClickListener(openLaunchableList);
 				break;
 			case "pref_key_launcher_cat_bugfixes":
-				//findPreference("pref_key_launcher_fixstatusbarmode").setEnabled(opt == 1);
 				findPreference("pref_key_launcher_fixanim").setEnabled(opt == 1);
 				break;
 			case "pref_key_launcher_cat_other":
@@ -112,15 +112,13 @@ public class Launcher extends SubFragment {
 				findPreference("pref_key_launcher_bottommargin").setEnabled(opt == 1);
 				findPreference("pref_key_launcher_nounlockanim").setEnabled(opt == 1);
 				findPreference("pref_key_launcher_oldlaunchanim").setEnabled(opt == 1);
-				findPreference("pref_key_launcher_googlediscover").setEnabled(opt == 1);
-				findPreference("pref_key_launcher_googleminus").setEnabled(opt == 1);
-				findPreference("pref_key_launcher_closedrawer").setEnabled(opt == 1);
-				Preference pref = findPreference("pref_key_launcher_googleminus");
-				pref.setEnabled(opt == 1);
-				if (!miui.os.Build.IS_INTERNATIONAL_BUILD) {
-					((CheckBoxPreferenceEx)pref).setUnsupported(true);
-					pref.setSummary(R.string.launcher_googleminus_note);
+				CheckBoxPreferenceEx minusPref = findPreference("pref_key_launcher_googleminus");
+				CheckBoxPreferenceEx discoverPref = findPreference("pref_key_launcher_googlediscover");
+				if (Build.IS_INTERNATIONAL_BUILD) {
+					discoverPref.setEnabled(opt == 1);
+					minusPref.setEnabled(opt == 1);
 				}
+				findPreference("pref_key_launcher_closedrawer").setEnabled(opt == 1);
 				break;
 		}
 	}

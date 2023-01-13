@@ -37,7 +37,7 @@ public class SortableList extends SubFragment {
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		supressMenu = true;
+		toolbarMenu = true;
 		super.onActivityCreated(savedInstanceState);
 
 		Bundle args = getArguments();

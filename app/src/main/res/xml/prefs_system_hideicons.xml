@@ -12,12 +12,21 @@
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbaricons_battery2"
 		android:title="@string/system_statusbaricons_battery2_title"
-		android:summary="@string/system_statusbaricons_battery_summ"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_battery4"
+		android:title="@string/system_statusbaricons_battery4_title"
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbaricons_battery3"
 		android:title="@string/system_statusbaricons_battery3_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_clock"
+		android:title="@string/system_statusbaricons_clock_title"
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx

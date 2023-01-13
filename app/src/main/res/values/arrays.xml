@@ -401,19 +401,6 @@
 		<item>3</item>
 	</string-array>
 
-	<string-array name="netspeedfonts">
-		<item>@string/array_max</item>
-		<item>@string/array_large</item>
-		<item>@string/array_normal</item>
-		<item>@string/array_small</item>
-	</string-array>
-	<string-array name="netspeedfonts_val">
-		<item>1</item>
-		<item>2</item>
-		<item>3</item>
-		<item>4</item>
-	</string-array>
-
 	<string-array name="launchers">
 		<item>@string/launcher_mods</item>
 		<item>@string/poco_mods</item>
@@ -470,10 +457,12 @@
 	<string-array name="dualsimin2rows_style">
 		<item>@string/array_default</item>
 		<item>@string/array_dualsimin2rows_style_thick</item>
+		<item>@string/array_dualsimin2rows_style_theme</item>
 	</string-array>
 	<string-array name="dualsimin2rows_style_val">
 		<item />
 		<item>thick</item>
+		<item>theme</item>
 	</string-array>
 
 	<string-array name="autogroupnotif">

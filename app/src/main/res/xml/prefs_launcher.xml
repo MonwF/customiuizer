@@ -1,6 +1,6 @@
-<PreferenceScreen
-	xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:miuizer="http://schemas.android.com/apk/res-auto"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:key="pref_key_launcher">
@@ -196,6 +196,11 @@
 		android:key="pref_key_launcher_cat_bugfixes"
 		android:title="@string/launcher_bugfixes">
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_launcher_disable_log"
+			android:title="@string/launcher_disable_log_title"
+			android:defaultValue="true" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_fixanim"
 			android:title="@string/launcher_fixanim_title"
 			android:summary="@string/launcher_fixanim_summ"
@@ -229,12 +234,14 @@
 			android:key="pref_key_launcher_googleminus"
 			android:title="@string/launcher_googleminus_title"
 			android:summary="@string/launcher_googleminus_summ"
+			app:isPreferenceVisible="false"
 			android:disableDependentsState="true"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_googlediscover"
 			android:title="@string/launcher_googlediscover_title"
+			app:isPreferenceVisible="false"
 			android:summary="@string/launcher_googlediscover_summ"
 			android:dependency="pref_key_launcher_googleminus"
 			android:defaultValue="false" />
@@ -249,6 +256,11 @@
 			android:key="pref_key_launcher_nounlockanim"
 			android:title="@string/launcher_nounlockanim_title"
 			android:summary="@string/launcher_nounlockanim_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_launcher_disable_wallpaperscale"
+			android:title="@string/system_recents_disable_wallpaperscale_title"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
@@ -345,7 +357,6 @@
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_launcher_horizwidgetmargin"
 			android:title="@string/launcher_horizwidgetmargin_title"
-			android:summary="@string/launcher_horizwidgetmargin_summary"
 			android:defaultValue="0"
 			miuizer:minValue="0"
 			miuizer:maxValue="41"

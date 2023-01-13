@@ -1,9 +1,7 @@
 package name.mikanoshi.customiuizer.subs;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.webkit.DownloadListener;
-import android.webkit.ValueCallback;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
@@ -26,7 +24,8 @@ public class WebPage extends SubFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		this.padded = false;
-		supressMenu = true;
+		toolbarMenu = true;
+		activeMenus = "openinweb";
 		super.onCreate(savedInstanceState);
 		pageUrl = getArguments().getString("pageUrl");
 		OnBackPressedCallback callback = new OnBackPressedCallback(true) {

@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,6 +31,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,14 +42,25 @@ import name.mikanoshi.customiuizer.utils.Helpers;
 public class PreferenceFragmentBase extends PreferenceFragmentCompat {
 
     private Context actContext = null;
-    public boolean supressMenu = false;
-    public int animDur = 350;
+    protected boolean toolbarMenu = false;
+    protected int animDur = 350;
+    protected String activeMenus = "";
 
     public static final int PICK_BACKFILE = 11;
-    public boolean isCustomActionBar = false;
+    protected boolean isCustomActionBar = false;
     protected int headLayoutId = 0;
     protected int tailLayoutId = 0;
     protected String pageUrl;
+    protected HashMap<Integer, String> mapKeys = new HashMap<Integer, String>() {{
+        put(R.id.search_btn, "search");
+        put(R.id.restartlauncher, "launcher");
+        put(R.id.restartsystemui, "systemui");
+        put(R.id.edit_confirm, "edit");
+        put(R.id.softreboot, "reboot");
+        put(R.id.backuprestore, "settings");
+        put(R.id.about, "about");
+        put(R.id.openinweb, "openinweb");
+    }};
 
     protected ActionBar getActionBar() {
         AppCompatActivity act = (AppCompatActivity) getActivity();
@@ -55,32 +68,40 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
     }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (supressMenu) {
+        if (toolbarMenu) {
             inflater.inflate(R.menu.menu_mods, menu);
         }
         if (isCustomActionBar) {
             MenuItem item;
-            boolean webPage = this instanceof WebPage;
             for (int i = 0; i < menu.size(); i++) {
                 item = menu.getItem(i);
-                if (webPage) {
-                    item.setVisible(item.getItemId() == R.id.openinweb);
-                }
-                else {
-                    item.setVisible(item.getItemId() == R.id.edit_confirm);
-                }
+                item.setVisible(item.getItemId() == R.id.edit_confirm);
             }
-            if (!webPage) {
-                MenuItem confirmMenu = menu.findItem(R.id.edit_confirm);
-                int applyResId = getResources().getIdentifier(Helpers.isNightMode(getValidContext()) ? "action_mode_title_button_confirm_dark" : "action_mode_title_button_confirm_light", "drawable", "miui");
-                if (applyResId == 0)
-                    applyResId = getResources().getIdentifier(Helpers.isNightMode(getValidContext()) ? "action_mode_immersion_done_dark" : "action_mode_immersion_done_light", "drawable", "miui");
-                confirmMenu.setIcon(applyResId);
-            }
+            MenuItem confirmMenu = menu.findItem(R.id.edit_confirm);
+            int applyResId = getResources().getIdentifier(Helpers.isNightMode(getValidContext()) ? "action_mode_title_button_confirm_dark" : "action_mode_title_button_confirm_light", "drawable", "miui");
+            if (applyResId == 0)
+                applyResId = getResources().getIdentifier(Helpers.isNightMode(getValidContext()) ? "action_mode_immersion_done_dark" : "action_mode_immersion_done_light", "drawable", "miui");
+            confirmMenu.setIcon(applyResId);
         }
         else {
-            MenuItem openInWebMenu = menu.findItem(R.id.openinweb);
-            openInWebMenu.setVisible(false);
+            MenuItem item;
+            for (int i = 0; i < menu.size(); i++) {
+                item = menu.getItem(i);
+                int menuId = item.getItemId();
+                String menuKey = mapKeys.get(menuId);
+                if (activeMenus.equals("all") && (menuId == R.id.edit_confirm || menuId == R.id.openinweb)) {
+                    item.setVisible(false);
+                }
+                else if (activeMenus.equals("all")) {
+                    item.setVisible(true);
+                }
+                else if (menuKey != null && activeMenus.contains(menuKey)) {
+                    item.setVisible(true);
+                }
+                else {
+                    item.setVisible(false);
+                }
+            }
         }
     }
 
@@ -95,15 +116,20 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent actionIntent;
         switch (item.getItemId()) {
             case R.id.edit_confirm:
                 confirmEdit();
                 return true;
             case R.id.restartlauncher:
-                getValidContext().sendBroadcast(new Intent(GlobalActions.ACTION_PREFIX + "RestartLauncher"));
+                actionIntent = new Intent(GlobalActions.ACTION_PREFIX + "RestartLauncher");
+                actionIntent.setPackage("com.android.systemui");
+                getValidContext().sendBroadcast(actionIntent);
                 return true;
             case R.id.restartsystemui:
-                getValidContext().sendBroadcast(new Intent(GlobalActions.ACTION_PREFIX + "RestartSystemUI"));
+                actionIntent = new Intent(GlobalActions.ACTION_PREFIX + "RestartSystemUI");
+                actionIntent.setPackage("com.android.systemui");
+                getValidContext().sendBroadcast(actionIntent);
                 return true;
             case R.id.backuprestore:
                 showBackupRestoreDialog();
@@ -173,7 +199,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
     }
 
     private void initFragment() {
-        setHasOptionsMenu(supressMenu);
+        setHasOptionsMenu(toolbarMenu);
         ActionBar actionBar = getActionBar();
 
         boolean showBack = false;
@@ -226,7 +252,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
     public void openWebPage(String url) {
         Bundle args = new Bundle();
         args.putString("pageUrl", url);
-        openSubFragment(new WebPage(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.Edit, "", R.layout.fragment_webpage);
+        openSubFragment(new WebPage(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, "", R.layout.fragment_webpage);
     }
 
     public void openSubFragment(Fragment fragment, Bundle args, Helpers.SettingsType settingsType, Helpers.ActionBarType abType, int titleResId, int contentResId) {

@@ -91,7 +91,7 @@ public class SnoozedFragment extends PreferenceFragmentBase {
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		supressMenu = true;
+		toolbarMenu = true;
 		super.onActivityCreated(savedInstanceState);
 
 		if (getView() == null) return;

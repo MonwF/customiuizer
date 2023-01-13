@@ -7,7 +7,7 @@
 	<declare-styleable name="PreferenceCategoryEx">
 		<attr name="dynamic" />
 		<attr name="empty" format="boolean" />
-		<attr name="hidden" format="boolean" />
+		<attr name="state" format="integer"/>
 	</declare-styleable>
 
 	<declare-styleable name="PreferenceEx">

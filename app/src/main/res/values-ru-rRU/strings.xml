@@ -109,7 +109,6 @@
     <string name="qs_toggle_autorotate_portrait">Портрет</string>
     <string name="qs_toggle_autorotate_landscape">Ландшафт</string>
     <string name="qs_toggle_5g">5G</string>
-    <string name="qs_toggle_darkmode_noperm">У CustoMIUIzer нет прав на изменение тёмного режима</string>
     <string name="appdetails_playstore">Открыть в Play Маркет</string>
     <string name="appdetails_launch">Запустить</string>
     <string name="appdetails_apk_file">Имя APK файла</string>
@@ -496,14 +495,11 @@
     <string name="launcher_topmargin_title">Отступ сетки сверху</string>
     <string name="launcher_bottommargin_title">Отступ дока снизу</string>
     <string name="launcher_horizwidgetmargin_title">Горизонтальные отступы виджетов</string>
-    <string name="launcher_horizwidgetmargin_summary">Работает только на последних версиях ланчера с динамическим позиционироанием виджетов</string>
     <string name="launcher_indicatorheight_title">Высота индикатора страниц</string>
     <string name="launcher_folders">Папки</string>
     <string name="launcher_folder_cols_title">Число колонок в папках</string>
     <string name="launcher_folderwidth_title">Использовать всю ширину папки</string>
     <string name="launcher_folderspace_title">Уменьшить боковые отступы</string>
-    <string name="launcher_fixstatusbarmode_title">Исправить режим строки состояния</string>
-    <string name="launcher_fixstatusbarmode_summ">Изменяет цвет содержимого строки состояния в зависимости от светлых/тёмных обоев на версии ланчера для разработчиков</string>
     <string name="launcher_fixanim_title">Исправить анимацию</string>
     <string name="launcher_fixanim_summ">Применяет масштабирование продолжительности аниматоров значений к некоторым анимациям ланчера</string>
     <string name="launcher_fixlaunch_title">Исправить данные о приложении</string>
@@ -576,8 +572,6 @@
     <string name="system_hideproxywarn_summ">Не показывать предупреждение о закрытой области динамика</string>
     <string name="system_resizablewidgets_title">Свободный размер виджетов</string>
     <string name="system_resizablewidgets_summ">Убирает все ограничения на размер виджетов</string>
-    <string name="system_unblockthird_title">Разблокировать ланчеры</string>
-    <string name="system_unblockthird_summ">Отключает ограничение на использование сторонних ланчеров на китайских прошивках</string>
     <string name="system_cleanshare_title">Очистка меню \"Поделиться\"</string>
     <string name="system_cleanshare_summ">Скрыть выбранные приложения в списке отправки данных</string>
     <string name="system_clean_test">Проверка меню</string>
@@ -617,8 +611,6 @@
     <string name="system_mods_statusbar_drawer">Панель уведомлений</string>
     <string name="system_mods_notifications">Уведомления</string>
     <string name="system_mods_recents">Список последних приложений</string>
-    <string name="system_usenativerecents_title">Использовать родной список</string>
-    <string name="system_usenativerecents_summ">Не использовать список последних приложений, встроенный в Рабочий стол MIUI. Плохо работает с полноэкранными жестами.</string>
     <string name="system_removecleaner_title">Убрать кнопку очистки</string>
     <string name="system_removecleaner_summ">Скрывает кнопку для очистки списка последних приложений и памяти</string>
     <string name="system_clearalltasks_title">Очистить все</string>
@@ -655,7 +647,6 @@
     <string name="system_statusbaricons_battery1_title">Изображение батареи</string>
     <string name="system_statusbaricons_battery2_title">Процент заряда батареи</string>
     <string name="system_statusbaricons_battery3_title">Индикатор зарядки</string>
-    <string name="system_statusbaricons_battery_summ">На некоторых прошивках может быть наложен поверх изображения батареи</string>
     <string name="system_statusbaricons_alarm_title">Будильник</string>
     <string name="system_statusbaricons_alarm_summ">Скрыть полностью</string>
     <string name="system_statusbaricons_alarmn_title">Избирательное отображение будильника</string>
@@ -684,7 +675,7 @@
     <string name="system_batteryindicator_colorval4_title">Цвет при зарядке</string>
     <string name="system_batteryindicator_lowlevel_title">Уровень низкого заряда</string>
     <string name="system_batteryindicator_test_title">Тест</string>
-    <string name="system_batteryindicator_test_summ">Анимировать полоску от 100% до 0% в режиме разрядки</string>
+    <string name="system_batteryindicator_test_summ" formatted="false">Анимировать полоску от 100% до 0% в режиме разрядки</string>
     <string name="system_statusbarheight_title">Высота строки состояния</string>
     <string name="system_statusbarcolor_title">Фоновый цвет строки состояния</string>
     <string name="system_statusbarcolor_summ">Делает одинаковыми цвета фона строки состояния и панели действий приложения, где это возможно</string>
@@ -722,15 +713,12 @@
     <string name="system_netspeedinterval_title">Частота обновления индикатора скорости</string>
     <string name="system_detailednetspeed_title">Подробный индикатор скорости соединения</string>
     <string name="system_detailednetspeed_summ">Показыает входящую и исходящую скорости передачи данных</string>
-    <string name="system_detailednetspeed_font_title">Размер шрифта</string>
     <string name="system_detailednetspeed_icon_title">Иконки индикатора</string>
     <string name="system_detailednetspeed_icon_summ">Набор иконок входящего/исходящего трафика для отображения рядом со значением скорости (есть не во всех кастомных шрифтах)</string>
     <string name="system_detailednetspeed_low_title">Скрыть низкие скорости</string>
     <string name="system_detailednetspeed_low_summ">Полностью скрывает индикатор при низкой скорости</string>
     <string name="system_detailednetspeed_lowlevel_title">Низкий уровень скорости</string>
     <string name="system_detailednetspeed_lowlevel_summ">Задаёт уровень, ниже которого скорость будет считаться низкой и будет иметь другую иконку</string>
-    <string name="system_detailednetspeed_zero_title">Понизить видимость при неактивности</string>
-    <string name="system_detailednetspeed_zero_summ">Делает индикатор полупрозрачным, если обе скорости равны нулю</string>
     <string name="system_statusbarcontrols_title">Управление жестами</string>
     <string name="system_statusbarcontrols_summ">Выполняет выбранные действия на скольжение и двойное нажатие</string>
     <string name="system_statusbarcontrols_sens_title">Чувствительность регулировки</string>
@@ -760,8 +748,6 @@
     <string name="system_showpct_title">Показывать процент яркости</string>
     <string name="system_showpct_summ">Отображает уровень яркости в процентах при изменении яркости слайдером</string>
     <string name="system_showpct_top_title">Отступ панели процентов сверху</string>
-    <string name="system_cleanmirror_title">Неизменный стиль слайдера яркости</string>
-    <string name="system_cleanmirror_summ">Убирает тень и дополнительный фон у слайдера при изменении яркости</string>
     <string name="system_inactivebrightness_title">Отключить ползунок яркости</string>
     <string name="system_notifrowmenu_title">Расширенное меню уведомления</string>
     <string name="system_notifrowmenu_summ">Добавляет новые действия в меню уведомления (открывается по свайпу влево) - открыть информацию о приложении и принудительно закрыть приложение</string>
@@ -788,8 +774,6 @@
     <string name="system_popupnotif_fs_title">Определение полноэкранного режима</string>
     <string name="system_popupnotif_fs_summ">Не открывать панель уведомлений, если запущено полноэкранное приложение (не распространяется на \"режим погружения\" со скрытыми панелями статуса и навигации)</string>
     <string name="system_popupnotif_apps_title">Выбранные приложения</string>
-    <string name="various_collapsemiuititles_title">Свернуть заголовки MIUI</string>
-    <string name="various_collapsemiuititles_summ">Настройка вида заголовков во всех MIUI 12 приложениях</string>
     <string name="system_mods_screenshots">Снимки экрана</string>
     <string name="system_screenshot_title">Конфигурация снимков экрана</string>
     <string name="system_screenshot_summ">Настройка формата, качества и папки сохранения скриншотов</string>
@@ -878,10 +862,6 @@
     <string name="system_blur_title">Размытие фона</string>
     <string name="system_recents_blur_summ">Уровень размытия фона на экране последних приложений</string>
     <string name="system_drawer_blur_summ">Уровень размытия фона в панели уведомлений</string>
-    <string name="system_drawer_hidebackground_title">Временно скрывать фон из темы</string>
-    <string name="system_drawer_hidebackground_summ">Скрывать фон во время изменения яркости</string>
-    <string name="system_drawer_opacity_title">Прозрачность фона из темы</string>
-    <string name="system_drawer_opacity_summ">Уровень прозрачности фона панели уведомлений из текущей темы</string>
     <string name="system_securelock_title">Улучшенная блокировка</string>
     <string name="system_securelock_summ">Отключает меню управления питанием во время блокировки</string>
     <string name="system_securecontrolcenter_title">Безопасный Центр управления</string>
@@ -981,8 +961,6 @@
     <string name="system_lswallpaper_summ">Позволяет сторонним приложениям устанавливать обои для экрана блокировки. Приложение Темы должно быть установлено с разрешением на доступ к памяти устройства.</string>
     <string name="system_hideqs_title">Очистить вид развёрнутого режима</string>
     <string name="system_hideqs_summ">Скрывает панель Быстрых Настроек и слайдер яркости в режиме развёрнутых уведомлений на экране блокировки</string>
-    <string name="system_nodrawerbackground_title">Отключить цветной фон</string>
-    <string name="system_nodrawerbackground_summ">Изменяет фон со сгенерированным цветом, взятым из обоев, на прозрачный на экране блокировки</string>
     <string name="system_taptounlock_title">Разблокировка нажатием</string>
     <string name="system_taptounlock_summ">Нажатие на нижнюю область экрана блокировки начинает разблокировку устройства</string>
     <string name="system_dttosleep_title">Сон по двойному нажатию</string>

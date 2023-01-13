@@ -151,29 +151,29 @@ public class GlobalActions {
 				if (action.equals(ACTION_PREFIX + "RestartSystemUI")) {
 					Process.sendSignal(Process.myPid(), Process.SIGNAL_KILL);
 				}
-				else if (action.equals(ACTION_PREFIX + "CopyToExternal")) {
-					try {
-						String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + Helpers.externalFolder;
-						new File(dir).mkdirs();
-
-						int copyAction = intent.getIntExtra("action", 0);
-						if (copyAction == 1) {
-							Helpers.copyFile(intent.getStringExtra("from"), dir + Helpers.wallpaperFile);
-							Intent lockIntent = new Intent("miui.intent.action.SET_LOCK_WALLPAPER");
-							lockIntent.setPackage("com.android.thememanager");
-							lockIntent.putExtra("lockWallpaperPath", dir + Helpers.wallpaperFile);
-							context.sendBroadcast(lockIntent);
-						} else if (copyAction == 2) {
-							File xposedVersion = new File(dir + Helpers.versionFile);
-							xposedVersion.createNewFile();
-							try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(xposedVersion, false))) {
-								out.write(intent.getStringExtra("data"));
-							}
-						}
-					} catch (Throwable t) {
-						XposedBridge.log(t);
-					}
-				}
+//				else if (action.equals(ACTION_PREFIX + "CopyToExternal")) {
+//					try {
+//						String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + Helpers.externalFolder;
+//						new File(dir).mkdirs();
+//
+//						int copyAction = intent.getIntExtra("action", 0);
+//						if (copyAction == 1) {
+//							Helpers.copyFile(intent.getStringExtra("from"), dir + Helpers.wallpaperFile);
+//							Intent lockIntent = new Intent("miui.intent.action.SET_LOCK_WALLPAPER");
+//							lockIntent.setPackage("com.android.thememanager");
+//							lockIntent.putExtra("lockWallpaperPath", dir + Helpers.wallpaperFile);
+//							context.sendBroadcast(lockIntent);
+//						} else if (copyAction == 2) {
+//							File xposedVersion = new File(dir + Helpers.versionFile);
+//							xposedVersion.createNewFile();
+//							try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(xposedVersion, false))) {
+//								out.write(intent.getStringExtra("data"));
+//							}
+//						}
+//					} catch (Throwable t) {
+//						XposedBridge.log(t);
+//					}
+//				}
 				else if (action.equals(ACTION_PREFIX + "CollectXposedLog")) {
 					try {
 						String errorLogPath = Helpers.getXposedInstallerErrorLog(context);
@@ -749,7 +749,7 @@ public class GlobalActions {
 	public static void miuizerHook(LoadPackageParam lpparam) {
 		try {
 			XposedHelpers.setStaticBooleanField(findClass(Helpers.modulePackage + ".utils.Helpers", lpparam.classLoader), "miuizerModuleActive", true);
-			XposedHelpers.setStaticObjectField(findClass(Helpers.modulePackage + ".utils.Helpers", lpparam.classLoader), "xposedVersion", XposedBridge.getXposedVersion());
+//			XposedHelpers.setStaticObjectField(findClass(Helpers.modulePackage + ".utils.Helpers", lpparam.classLoader), "xposedVersion", XposedBridge.getXposedVersion());
 		} catch (Throwable t) {
 			XposedBridge.log(t);
 		}
@@ -832,53 +832,48 @@ public class GlobalActions {
 	}
 
 	public static void setupForegroundMonitor(LoadPackageParam lpparam) {
-		String windowClass = "com.android.server.wm.DisplayPolicy";
-		Helpers.hookAllMethods(windowClass, lpparam.classLoader, "focusChangedLw", new MethodHook() {
+		Helpers.hookAllMethods("com.android.server.wm.DisplayPolicy", lpparam.classLoader, "updateSystemBarsLw", new MethodHook() {
+			private String pkgName = null;
+			private boolean fullScreen = false;
 			@Override
-			protected void before(MethodHookParam param) throws Throwable {
-				if (param.args[1] == null) return;
-				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+			protected void after(MethodHookParam param) throws Throwable {
+				Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
 				if (mContext != null) try {
-					WindowManager.LayoutParams mAttrs = (WindowManager.LayoutParams)XposedHelpers.callMethod(param.args[1], "getAttrs");
-					boolean isFullScreen = mAttrs.flags != 0 && !"com.android.systemui".equals(mAttrs.packageName) && (mAttrs.flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN;
-					Settings.Global.putString(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.package", mAttrs.packageName);
-					Settings.Global.putInt(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.fullscreen", isFullScreen ? 1 : 0);
+					String focusedApp = (String) XposedHelpers.getObjectField(param.thisObject, "mFocusedApp");
+
+					boolean focusAppChanged = false;
+					boolean fullscreenChanged = false;
+					if (focusedApp != null && !focusedApp.equals(pkgName)) {
+						pkgName = focusedApp;
+						focusAppChanged = true;
+					}
+					boolean isFullScreen = XposedHelpers.getBooleanField(param.thisObject, "mTopIsFullscreen");
+					if (fullScreen != isFullScreen) {
+						fullScreen = isFullScreen;
+						fullscreenChanged = true;
+					}
+					if (fullscreenChanged || focusAppChanged) {
+						Handler mHandler = (Handler) XposedHelpers.getObjectField(param.thisObject, "mHandler");
+						boolean finalFullscreenChanged = fullscreenChanged;
+						boolean finalFocusAppChanged = focusAppChanged;
+						mHandler.post(new Runnable() {
+							@Override
+							public void run() {
+								if (finalFullscreenChanged) {
+									Settings.Global.putInt(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.fullscreen", fullScreen ? 1 : 0);
+								}
+								if (finalFocusAppChanged) {
+									Settings.Global.putString(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.package", pkgName);
+								}
+							}
+						});
+					}
 				} catch (Throwable t) {
 					Helpers.log("ForegroundMonitor", t);
 				}
 			}
 		});
-
-//		Helpers.hookAllMethods("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "init", new MethodHook() {
-//			@Override
-//			protected void after(MethodHookParam param) throws Throwable {
-//				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-//				mContext.registerReceiver(new BroadcastReceiver() {
-//					public void onReceive(final Context context, Intent intent) {
-//						Settings.Global.putString(context.getContentResolver(), Helpers.modulePkg + ".foreground.package", intent.getStringExtra("package"));
-//						Settings.Global.putInt(context.getContentResolver(), Helpers.modulePkg + ".foreground.fullscreen", intent.getBooleanExtra("fullscreen", false) ? 1 : 0);
-//					}
-//				}, new IntentFilter(GlobalActions.EVENT_PREFIX + "CHANGE_FOCUSED_APP"));
-//			}
-//		});
 	}
-
-//	public static void setupMonitors() {
-//		Helpers.findAndHookMethod(Activity.class, "onResume", new MethodHook() {
-//			@Override
-//			protected void after(MethodHookParam param) throws Throwable {
-//				Activity act = (Activity)param.thisObject;
-//				if (act == null) return;
-//				int flags = act.getWindow().getAttributes().flags;
-//				boolean isFullScreen = flags != 0 && !"com.android.systemui".equals(act.getPackageName()) && (flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN;
-//				Intent intent = new Intent(GlobalActions.EVENT_PREFIX + "CHANGE_FOCUSED_APP");
-//				intent.putExtra("package", act.getPackageName());
-//				intent.putExtra("fullscreen", isFullScreen);
-//				intent.setPackage("android");
-//				act.sendBroadcast(intent);
-//			}
-//		});
-//	}
 
 	public static void setupGlobalActions(LoadPackageParam lpparam) {
 		Helpers.hookAllConstructors("com.android.server.accessibility.AccessibilityManagerService", lpparam.classLoader, new MethodHook() {
@@ -1005,7 +1000,7 @@ public class GlobalActions {
 				intentfilter.addAction(ACTION_PREFIX + "CollectXposedLog");
 				intentfilter.addAction(ACTION_PREFIX + "RestartSystemUI");
 				intentfilter.addAction(ACTION_PREFIX + "RestartLauncher");
-				intentfilter.addAction(ACTION_PREFIX + "CopyToExternal");
+//				intentfilter.addAction(ACTION_PREFIX + "CopyToExternal");
 
 				intentfilter.addAction(ACTION_PREFIX + "ScrollToTop");
 

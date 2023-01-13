@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.Preference;
 import android.provider.Settings;
+import android.util.Log;
 import android.widget.SeekBar;
 
 import androidx.appcompat.app.AlertDialog;
@@ -26,6 +27,7 @@ import name.mikanoshi.customiuizer.SnoozedActivity;
 import name.mikanoshi.customiuizer.SubFragment;
 import name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx;
 import name.mikanoshi.customiuizer.prefs.ListPreferenceEx;
+import name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx;
 import name.mikanoshi.customiuizer.prefs.PreferenceEx;
 import name.mikanoshi.customiuizer.prefs.SeekBarPreference;
 import name.mikanoshi.customiuizer.qs.AutoRotateService;
@@ -39,10 +41,28 @@ public class System extends SubFragment {
 		selectSub();
 	}
 
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if ("pref_key_system_cat_recents".equals(sub)) {
+			toolbarMenu = true;
+			activeMenus = "launcher";
+		}
+		else if ("pref_key_system_cat_statusbar".equals(sub)
+			|| "pref_key_system_cat_lockscreen".equals(sub)
+			|| "pref_key_system_cat_qs".equals(sub)
+			|| "pref_key_system_cat_drawer".equals(sub)
+		) {
+			toolbarMenu = true;
+			activeMenus = "systemui";
+		}
+		else {
+			toolbarMenu = false;
+		}
+	}
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
 		switch (sub) {
 			case "pref_key_system_cat_screen":
 				findPreference("pref_key_system_orientationlock").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -123,30 +143,87 @@ public class System extends SubFragment {
 
 			case "pref_key_system_cat_statusbar":
 				findPreference("pref_key_system_statusbarcolor_apps").setOnPreferenceClickListener(openAppsEdit);
-
 				findPreference("pref_key_system_detailednetspeed_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
-						openSubFragment(new SubFragment(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_detailednetspeed_title, R.xml.prefs_system_detailednetspeed);
+						Bundle args = new Bundle();
+						args.putBoolean("isStandalone", true);
+						args.putString("sub", preference.getKey());
+						String title = preference.getTitle().toString();
+						openSubFragment(new System(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, title, R.xml.prefs_system_detailednetspeed);
 						return true;
 					}
 				});
-
+				findPreference("pref_key_system_statusbar_batterytempandcurrent_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						Bundle args = new Bundle();
+						args.putBoolean("isStandalone", true);
+						Bundle catInfo = new Bundle();
+						catInfo.putBoolean("isDynamic", true);
+						args.putBundle("catInfo", catInfo);
+						args.putString("sub", preference.getKey());
+						String title = preference.getTitle().toString();
+						openSubFragment(new System(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, title, R.xml.prefs_system_statusbar_batterytempandcurrent);
+						return true;
+					}
+				});
+				findPreference("pref_key_system_statusbar_mobile_signal_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						Bundle args = new Bundle();
+						args.putBoolean("isStandalone", true);
+						Bundle catInfo = new Bundle();
+						catInfo.putBoolean("isDynamic", true);
+						args.putBundle("catInfo", catInfo);
+						args.putString("sub", preference.getKey());
+						String title = preference.getTitle().toString();
+						openSubFragment(new System(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, title, R.xml.prefs_system_statusbar_mobilesignal);
+						return true;
+					}
+				});
 				findPreference("pref_key_system_statusbaricons_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
-						openSubFragment(new SubFragment(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_statusbaricons_title, R.xml.prefs_system_hideicons);
+						Bundle args = new Bundle();
+						args.putBoolean("isStandalone", true);
+						Bundle catInfo = new Bundle();
+						catInfo.putBoolean("isDynamic", true);
+						args.putBundle("catInfo", catInfo);
+						args.putString("sub", preference.getKey());
+						String title = preference.getTitle().toString();
+						openSubFragment(new System(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, title, R.xml.prefs_system_hideicons);
 						return true;
 					}
 				});
 				findPreference("pref_key_system_statusbaricons_atright_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
-						openSubFragment(new SubFragment(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_statusbaricons_atright_title, R.xml.prefs_system_statusbar_righticons);
+						Bundle args = new Bundle();
+						args.putBoolean("isStandalone", true);
+						Bundle catInfo = new Bundle();
+						catInfo.putBoolean("isDynamic", true);
+						args.putBundle("catInfo", catInfo);
+						args.putString("sub", preference.getKey());
+						String title = preference.getTitle().toString();
+						openSubFragment(new System(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, title, R.xml.prefs_system_statusbar_righticons);
 						return true;
 					}
 				});
-
+				findPreference("pref_key_system_statusbar_clocktweak_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						Bundle args = new Bundle();
+						args.putBoolean("isStandalone", true);
+						Bundle catInfo = new Bundle();
+						catInfo.putBoolean("isDynamic", true);
+						args.putBundle("catInfo", catInfo);
+						args.putString("sub", preference.getKey());
+						String title = preference.getTitle().toString();
+						openSubFragment(new System(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, title, R.xml.prefs_system_statusbar_clock);
+						return true;
+					}
+				});
 				findPreference("pref_key_system_batteryindicator_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
@@ -162,11 +239,6 @@ public class System extends SubFragment {
 						return true;
 					}
 				});
-
-				Configuration config = getResources().getConfiguration();
-				if (config.getLocales().get(0).getCountry().equals("CN")) {
-					findPreference("pref_key_system_clock_show_ampm").setVisible(true);
-				}
 
 				break;
 			case "pref_key_system_cat_drawer":
@@ -202,6 +274,10 @@ public class System extends SubFragment {
 					}
 				});
 
+				if (!Helpers.isTPlus()) {
+					findPreference("pref_key_system_drawer_blur").setVisible(false);
+				}
+
 				break;
 			case "pref_key_system_cat_notifications":
 				findPreference("pref_key_system_expandnotifs_apps").setOnPreferenceClickListener(openAppsEdit);
@@ -213,17 +289,17 @@ public class System extends SubFragment {
 						return true;
 					}
 				});
-				findPreference("pref_key_system_snoozedmanager").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-					@Override
-					public boolean onPreferenceChange(Preference preference, Object newValue) {
-						PackageManager pm = getActivity().getPackageManager();
-						if ((Boolean)newValue)
-							pm.setComponentEnabledSetting(new ComponentName(getActivity(), SnoozedActivity.class), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-						else
-							pm.setComponentEnabledSetting(new ComponentName(getActivity(), SnoozedActivity.class), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-						return true;
-					}
-				});
+//				findPreference("pref_key_system_snoozedmanager").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+//					@Override
+//					public boolean onPreferenceChange(Preference preference, Object newValue) {
+//						PackageManager pm = getActivity().getPackageManager();
+//						if ((Boolean)newValue)
+//							pm.setComponentEnabledSetting(new ComponentName(getActivity(), SnoozedActivity.class), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+//						else
+//							pm.setComponentEnabledSetting(new ComponentName(getActivity(), SnoozedActivity.class), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+//						return true;
+//					}
+//				});
 				break;
 			case "pref_key_system_cat_qs":
 				findPreference("pref_key_system_qshaptics_ignore").setEnabled(!Objects.equals(Helpers.prefs.getString("pref_key_system_qshaptics", "1"), "1"));
@@ -359,6 +435,10 @@ public class System extends SubFragment {
 				break;
 			case "pref_key_system_cat_other":
 				findPreference("pref_key_system_forceclose_apps").setOnPreferenceClickListener(openAppsEdit);
+
+				if (Helpers.isTPlus()) {
+					((CheckBoxPreferenceEx)findPreference("pref_key_system_apksign")).setUnsupported(true);
+				}
 
 				findPreference("pref_key_system_cleanshare_apps").setOnPreferenceClickListener(openShareEdit);
 				findPreference("pref_key_system_cleanshare_test").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -501,6 +581,21 @@ public class System extends SubFragment {
 					findPreference("pref_key_system_defaultusb_unsecure").setEnabled(false);
 				}
 
+				break;
+			case "pref_key_system_detailednetspeed_cat":
+				findPreference("pref_key_system_detailednetspeed").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+					@Override
+					public boolean onPreferenceChange(Preference preference, Object newValue) {
+						SeekBarPreference netspeedFontSizePref = findPreference("pref_key_system_netspeed_fontsize");
+						if ((Boolean)newValue) {
+							netspeedFontSizePref.setValue(16, true);
+						}
+						else {
+							netspeedFontSizePref.setValue(14, true);
+						}
+						return true;
+					}
+				});
 				break;
 		}
 	}

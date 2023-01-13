@@ -31,8 +31,10 @@ import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class SubFragment extends PreferenceFragmentBase {
     private int contentResId = 0;
-    public String titleId = "";
+    public String settingTitle = "";
     protected String sub;
+    protected Bundle catInfo = null;
+    protected boolean isStandalone = false;
     private float order = 100.0f;
     public boolean padded = true;
     Helpers.SettingsType settingsType = Helpers.SettingsType.Preference;
@@ -43,10 +45,15 @@ public class SubFragment extends PreferenceFragmentBase {
         settingsType = Helpers.SettingsType.values()[getArguments().getInt("settingsType")];
         abType = Helpers.ActionBarType.values()[getArguments().getInt("abType")];
         contentResId = getArguments().getInt("contentResId");
-        titleId = getArguments().getString("titleResId");
+        settingTitle = getArguments().getString("titleResId");
         order = getArguments().getFloat("order") + 10.0f;
+        catInfo = getArguments().getBundle("catInfo");
         sub = getArguments().getString("sub");
-        supressMenu = supressMenu || abType == Helpers.ActionBarType.Edit;
+        isStandalone = getArguments().getBoolean("isStandalone");
+        if (abType == Helpers.ActionBarType.Edit) {
+            isCustomActionBar = true;
+        }
+        toolbarMenu = toolbarMenu || isCustomActionBar;
 
         if (contentResId == 0) {
             getActivity().finish();
@@ -58,9 +65,6 @@ public class SubFragment extends PreferenceFragmentBase {
         } else {
             super.onCreate(savedInstanceState);
         }
-        if (abType == Helpers.ActionBarType.Edit) {
-            isCustomActionBar = true;
-        }
     }
 
     @Override
@@ -69,18 +73,19 @@ public class SubFragment extends PreferenceFragmentBase {
         loadSharedPrefs();
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
-            Bundle args = getArguments();
-            String sub = args.getString("sub");
-            if (sub != null) {
+            if (isStandalone && catInfo != null && catInfo.getBoolean("isDynamic")) {
+                actionBar.setTitle(settingTitle + " ⟲");
+            }
+            else if (!isStandalone && sub != null) {
                 PreferenceScreen screen = getPreferenceScreen();
                 PreferenceCategoryEx category = (PreferenceCategoryEx)screen.getPreference(0);
                 if (category.isDynamic())
-                    getActionBar().setTitle(category.getTitle() + " ⟲");
+                    actionBar.setTitle(category.getTitle() + " ⟲");
                 else
-                    getActionBar().setTitle(category.getTitle());
+                    actionBar.setTitle(category.getTitle());
             }
             else {
-                actionBar.setTitle(titleId);
+                actionBar.setTitle(settingTitle);
             }
         }
     }
@@ -361,6 +366,7 @@ public class SubFragment extends PreferenceFragmentBase {
     }
 
     public void selectSub() {
+        if (isStandalone) return;
         PreferenceScreen screen = getPreferenceScreen();
         int cnt = screen.getPreferenceCount();
         for (int i = cnt - 1; i >= 0; i--) {

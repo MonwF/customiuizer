@@ -109,15 +109,14 @@ public class Helpers {
 	public static Context mModuleContext = null;
 	public static final String modulePkg = BuildConfig.APPLICATION_ID;
 	public static final String modulePackage = "name.mikanoshi.customiuizer";
-	public static final String TAG = "CustoMIUIzer";
 	public static final String prefsName = "customiuizer_prefs";
 	public static final String prefsPath = "/data/user_de/0/" + modulePkg + "/shared_prefs";
 	public static final String prefsFile = prefsPath + "/" + prefsName + ".xml";
 	public static final String externalFolder = "/CustoMIUIzer/";
 	public static final String backupFile = "settings_backup";
 	public static final String logFile = "xposed_log";
-	public static final String versionFile = "xposed_version";
-	public static final String wallpaperFile = "lockscreen_wallpaper";
+//	public static final String versionFile = "xposed_version";
+//	public static final String wallpaperFile = "lockscreen_wallpaper";
 	//public static final String xposedRepo = "https://code.highspec.ru/repo/full.xml.gz";
 	public static final String ANDROID_NS = "http://schemas.android.com/apk/res/android";
 	public static final String MIUIZER_NS = "http://schemas.android.com/apk/res-auto";
@@ -131,7 +130,6 @@ public class Helpers {
 	public static ArrayList<AppData> installedAppsList = null;
 	public static ArrayList<AppData> launchableAppsList = null;
 	public static ArrayList<ModData> allModsList = new ArrayList<ModData>();
-	public static int xposedVersion = 0;
 	public static final int markColor = Color.rgb(205, 73, 97);
 	public static final int markColorVibrant = Color.rgb(255, 0, 0);
 	public static final int REQUEST_PERMISSIONS_BACKUP = 1;
@@ -153,9 +151,7 @@ public class Helpers {
 	public static boolean showNewMods = true;
 	public static boolean miuizerModuleActive = false;
 	public static final HashSet<String> newMods = new HashSet<String>(Arrays.asList(
-		"pref_key_various_hiddenfeatures_cat",
-		"pref_key_launcher_nozoomanim",
-		"pref_key_launcher_horizwidgetmargin"
+		"pref_key_launcher_nozoomanim"
 	));
 	public static final HashMap<String, String> l10nProgress = new HashMap<String, String>() {{
 		put("ru-RU", "99");
@@ -1301,8 +1297,9 @@ public class Helpers {
 	}
 
 	public static synchronized Context getModuleContext(Context context, Configuration config) throws Throwable {
-		if (mModuleContext == null)
-		mModuleContext = context.createPackageContext(modulePkg, Context.CONTEXT_IGNORE_SECURITY).createDeviceProtectedStorageContext();
+		if (mModuleContext == null) {
+			mModuleContext = context.createPackageContext(modulePkg, Context.CONTEXT_IGNORE_SECURITY).createDeviceProtectedStorageContext();
+		}
 		return config == null ? mModuleContext : mModuleContext.createConfigurationContext(config);
 	}
 

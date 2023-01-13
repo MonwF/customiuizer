@@ -316,8 +316,6 @@
     <string name="launcher_fixanim_title">修復動畫</string>
     <string name="launcher_fixlaunch_summ">長按功能表始終開啟MIUI樣式應用訊息</string>
     <string name="launcher_fixlaunch_title">修復應用訊息</string>
-    <string name="launcher_fixstatusbarmode_summ">調整開發版啟動器上淺色/深色壁紙的狀態欄內容顏色</string>
-    <string name="launcher_fixstatusbarmode_title">修復狀態欄模式</string>
     <string name="launcher_folder_cols_title">資料夾排列數量</string>
     <string name="launcher_folderblur">背景模糊</string>
     <string name="launcher_folderblur_opacity_title">可見度</string>
@@ -575,8 +573,6 @@
     <string name="system_charginginfo_voltage_title">電池電壓</string>
     <string name="system_charginginfo_wattage_title">耗電量</string>
     <string name="system_clean_test">測試功能表</string>
-    <string name="system_cleanmirror_summ">更改亮度時移除滑塊的陰影和附加背景</string>
-    <string name="system_cleanmirror_title">一致的亮度滑塊風格</string>
     <string name="system_cleanopenwith_datatype">選擇要隱藏的數據類型</string>
     <string name="system_cleanopenwith_summ">從開啟方式功能表移除所選應用</string>
     <string name="system_cleanopenwith_testdata">選擇測試數據類型</string>
@@ -600,7 +596,6 @@
     <string name="system_defaultusb_title">預設USB配置</string>
     <string name="system_defaultusb_unsecure_summ">即使設備處於鎖定狀態時仍然應用</string>
     <string name="system_defaultusb_unsecure_title">忽略鎖定</string>
-    <string name="system_detailednetspeed_font_title">字體大小</string>
     <string name="system_detailednetspeed_icon_summ">網速旁顯示上下行流量圖示 (並非所有字體都含有對應圖示)</string>
     <string name="system_detailednetspeed_icon_title">指示器圖示</string>
     <string name="system_detailednetspeed_low_summ">網速低時不再顯示指示器</string>
@@ -616,10 +611,6 @@
     <string name="system_downgrade_summ">可以在新版本應用上安裝舊版本應用</string>
     <string name="system_downgrade_title">允許降級</string>
     <string name="system_drawer_blur_summ">通知抽屜的背景模糊度</string>
-    <string name="system_drawer_hidebackground_summ">更改亮度時隱藏背景</string>
-    <string name="system_drawer_hidebackground_title">臨時隱藏主題背景</string>
-    <string name="system_drawer_opacity_summ">主題通知抽屜背景的不透明度</string>
-    <string name="system_drawer_opacity_title">主題背景不透明度</string>
     <string name="system_dttosleep_summ">雙擊鎖屏上任意空白處關閉螢幕</string>
     <string name="system_dttosleep_title">雙擊熄屏</string>
     <string name="system_epm_summ">新增以下重啟選項到電源功能表(引導模式、恢復模式、軟重啟)</string>
@@ -728,8 +719,6 @@
     <string name="system_networkindicator_title">網路活動指示器</string>
     <string name="system_nodarkforce_summ">在黑暗模式中不反轉某些顏色</string>
     <string name="system_nodarkforce_title">禁用強制黑暗模式</string>
-    <string name="system_nodrawerbackground_summ">鎖屏時將背景從壁紙隨機生成的顏色更改為透明</string>
-    <string name="system_nodrawerbackground_title">禁用彩色背景</string>
     <string name="system_noducking_summ">播放通知聲音時不降低目前播放音樂的音量</string>
     <string name="system_noducking_title">禁用閃避</string>
     <string name="system_nolightuponcharges_summ">連接或者斷開充電器時不亮屏</string>
@@ -873,7 +862,6 @@
     <string name="system_statusbaricons_battery1_title">電池圖片</string>
     <string name="system_statusbaricons_battery2_title">電池充電百分比</string>
     <string name="system_statusbaricons_battery3_title">充電指示器</string>
-    <string name="system_statusbaricons_battery_summ">可以疊加在某些ROM的電池圖示上</string>
     <string name="system_statusbaricons_dnd_title">勿擾模式</string>
     <string name="system_statusbaricons_headset_title">耳機</string>
     <string name="system_statusbaricons_hotspot_title">熱點</string>
@@ -892,10 +880,6 @@
     <string name="system_toasttime_note">顯示時長始終大於 1 秒</string>
     <string name="system_toasttime_summ">修改 Toast 顯示時長</string>
     <string name="system_toasttime_title">顯示時間修改</string>
-    <string name="system_unblockthird_summ">解除中國版ROM對第三方啟動器的限制</string>
-    <string name="system_unblockthird_title">解鎖啟動器</string>
-    <string name="system_usenativerecents_summ">請不要使用MIUI啟動器的最近應用列表。使用全屏手勢效果不好。</string>
-    <string name="system_usenativerecents_title">使用本地實現</string>
     <string name="system_vibration_amp_notif_title">通知</string>
     <string name="system_vibration_amp_other_title">其他</string>
     <string name="system_vibration_amp_period_title">時段</string>
@@ -998,8 +982,6 @@
     <string name="various_calluibright_type_title">通話類型</string>
     <string name="various_calluibright_val_title">亮度值</string>
     <string name="various_clearspeaker_title">清理揚聲器</string>
-    <string name="various_collapsemiuititles_summ">調整 MIUI13 應用中頂欄的標題</string>
-    <string name="various_collapsemiuititles_title">折疊 MIUI 標題</string>
     <string name="various_disableapp_summ">允許從應用訊息頁面禁用任何應用</string>
     <string name="various_disableapp_title">應用狀態控制</string>
     <string name="various_gboardpadding_land_title">橫屏時底部補充</string>
@@ -1050,7 +1032,6 @@
     <string name="system_statusbar_dualsimin2rows_title">雙排訊號欄</string>
     <string name="system_statusbar_mobiletype_single_leftmargin_title">左側間距</string>
     <string name="system_statusbar_mobiletype_single_title">行動網路類型單獨顯示</string>
-    <string name="system_statusbaricons_atright_summ">僅針對中置挖孔屏</string>
     <string name="system_statusbaricons_atright_title">系統圖示移至右側顯示</string>
     <string name="system_statusbaricons_volte_title">HD圖示</string>
     <string name="system_statusbaricons_wifistandard_title">顯示Wi-Fi標準</string>
