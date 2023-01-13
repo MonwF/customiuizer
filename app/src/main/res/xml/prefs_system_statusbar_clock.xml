@@ -12,7 +12,8 @@
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/settings"
-		/>
+		android:dependency="pref_key_system_statusbar_clocktweak"
+		>
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_clockseconds"
@@ -44,5 +45,7 @@
 		android:key="pref_key_system_clockleadingzero"
 		android:title="@string/system_clockleadingzero_title"
 		android:defaultValue="false" />
+
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>
