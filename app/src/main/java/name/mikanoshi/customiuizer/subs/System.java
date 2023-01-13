@@ -148,7 +148,7 @@ public class System extends SubFragment {
 					public boolean onPreferenceClick(Preference preference) {
 						Bundle args = new Bundle();
 						args.putBoolean("isStandalone", true);
-						args.putString("sub", "pref_key_system_detailednetspeed_cat");
+						args.putString("sub", preference.getKey());
 						String title = preference.getTitle().toString();
 						openSubFragment(new System(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, title, R.xml.prefs_system_detailednetspeed);
 						return true;
@@ -162,28 +162,68 @@ public class System extends SubFragment {
 						Bundle catInfo = new Bundle();
 						catInfo.putBoolean("isDynamic", true);
 						args.putBundle("catInfo", catInfo);
-						args.putString("sub", "pref_key_system_statusbar_batterytempandcurrent_cat");
+						args.putString("sub", preference.getKey());
 						String title = preference.getTitle().toString();
 						openSubFragment(new System(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, title, R.xml.prefs_system_statusbar_batterytempandcurrent);
 						return true;
 					}
 				});
-
+				findPreference("pref_key_system_statusbar_mobile_signal_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						Bundle args = new Bundle();
+						args.putBoolean("isStandalone", true);
+						Bundle catInfo = new Bundle();
+						catInfo.putBoolean("isDynamic", true);
+						args.putBundle("catInfo", catInfo);
+						args.putString("sub", preference.getKey());
+						String title = preference.getTitle().toString();
+						openSubFragment(new System(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, title, R.xml.prefs_system_statusbar_mobilesignal);
+						return true;
+					}
+				});
 				findPreference("pref_key_system_statusbaricons_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
-						openSubFragment(new SubFragment(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_statusbaricons_title, R.xml.prefs_system_hideicons);
+						Bundle args = new Bundle();
+						args.putBoolean("isStandalone", true);
+						Bundle catInfo = new Bundle();
+						catInfo.putBoolean("isDynamic", true);
+						args.putBundle("catInfo", catInfo);
+						args.putString("sub", preference.getKey());
+						String title = preference.getTitle().toString();
+						openSubFragment(new System(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, title, R.xml.prefs_system_hideicons);
 						return true;
 					}
 				});
 				findPreference("pref_key_system_statusbaricons_atright_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
-						openSubFragment(new SubFragment(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_statusbaricons_change_position_title, R.xml.prefs_system_statusbar_righticons);
+						Bundle args = new Bundle();
+						args.putBoolean("isStandalone", true);
+						Bundle catInfo = new Bundle();
+						catInfo.putBoolean("isDynamic", true);
+						args.putBundle("catInfo", catInfo);
+						args.putString("sub", preference.getKey());
+						String title = preference.getTitle().toString();
+						openSubFragment(new System(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, title, R.xml.prefs_system_statusbar_righticons);
 						return true;
 					}
 				});
-
+				findPreference("pref_key_system_statusbar_clocktweak_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						Bundle args = new Bundle();
+						args.putBoolean("isStandalone", true);
+						Bundle catInfo = new Bundle();
+						catInfo.putBoolean("isDynamic", true);
+						args.putBundle("catInfo", catInfo);
+						args.putString("sub", preference.getKey());
+						String title = preference.getTitle().toString();
+						openSubFragment(new System(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, title, R.xml.prefs_system_statusbar_clock);
+						return true;
+					}
+				});
 				findPreference("pref_key_system_batteryindicator_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
@@ -199,11 +239,6 @@ public class System extends SubFragment {
 						return true;
 					}
 				});
-
-				Configuration config = getResources().getConfiguration();
-				if (config.getLocales().get(0).getCountry().equals("CN")) {
-					findPreference("pref_key_system_clock_show_ampm").setVisible(true);
-				}
 
 				break;
 			case "pref_key_system_cat_drawer":
