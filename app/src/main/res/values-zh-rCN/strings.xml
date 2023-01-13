@@ -107,7 +107,7 @@
     <string name="system_detailednetspeed_secunit_title">网速隐藏 B/s 单位</string>
     <string name="system_netspeed_fontsize_title">网速字体大小</string>
     <string name="system_statusbarcontrols_title">手势控制</string>
-    <string name="system_statusbarcontrols_summ">滑动双击时执行所选动作</string>
+    <string name="system_statusbarcontrols_summ">滑动与双击时执行所选动作</string>
     <string name="system_statusbarcontrols_sens_title">调整灵敏度</string>
     <string name="system_statusbarcontrols_sens_bright_title">亮度</string>
     <string name="system_statusbarcontrols_sens_vol_title">音量</string>
@@ -1048,6 +1048,8 @@
     <string name="miuizer_show_assumelsposed_summ">假定已安装LSPosed框架以使用其管理器</string>
     <string name="various_runningservices_title">正在运行的服务</string>
     <string name="system_statusbaricons_atright_title">系统图标移至右侧显示</string>
+    <string name="system_statusbar_mobile_signal_cat_title">移动网络信号图标设置</string>
+    <string name="system_statusbar_clocktweak_title">时钟设置</string>
     <string name="system_statusbaricons_change_position_title">图标位置调整</string>
     <string name="system_statusbaricons_wifi_mobile_atleft_title">移动信号和Wi-Fi移至左侧显示</string>
     <string name="system_statusbaricons_swap_wifi_mobile_title">交换移动信号和Wi-Fi位置</string>
