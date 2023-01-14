@@ -590,9 +590,15 @@ public class Various {
 				} catch (Throwable t) {
 					Helpers.log(t);
 				}
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				if (MainModule.mPrefs.getStringAsInt("various_showcallui", 0) == 3) {
+					String topPackage = Settings.Global.getString(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.package");
+					if (topPackage != null && !topPackage.equals("com.miui.home")) {
+						return;
+					}
+				}
 
 				if (MainModule.mPrefs.getStringAsInt("various_showcallui", 0) == 1) {
-					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 					int fullScreen = Settings.Global.getInt(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.fullscreen", 0);
 					if (fullScreen == 1) return;
 				}

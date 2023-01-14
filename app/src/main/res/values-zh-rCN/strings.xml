@@ -829,6 +829,7 @@
     <string name="array_any">任何</string>
     <string name="array_others">其他</string>
     <string name="array_nofs">未处于全屏模式时</string>
+    <string name="array_home">在桌面</string>
     <string name="array_incoming">来电</string>
     <string name="array_outgoing">去电</string>
     <string name="array_both">两者</string>
