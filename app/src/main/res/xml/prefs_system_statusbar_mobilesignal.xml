@@ -13,6 +13,11 @@
 		android:defaultValue="1" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_networkindicator_mobile"
+		android:title="@string/system_networkindicator_mobile_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_4gtolte"
 		android:title="@string/system_4gtolte_title"
 		android:defaultValue="false" />

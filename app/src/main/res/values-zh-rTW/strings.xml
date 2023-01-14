@@ -715,8 +715,6 @@
     <string name="system_mutevisiblenotif_summ">亮屏時彈出通知不播放提示音</string>
     <string name="system_mutevisiblenotif_title">亮屏時靜音</string>
     <string name="system_netspeedinterval_title">網速更新間隔</string>
-    <string name="system_networkindicator_summ">配置行動數據和Wi-Fi流量指示器</string>
-    <string name="system_networkindicator_title">網路活動指示器</string>
     <string name="system_nodarkforce_summ">在黑暗模式中不反轉某些顏色</string>
     <string name="system_nodarkforce_title">禁用強制黑暗模式</string>
     <string name="system_noducking_summ">播放通知聲音時不降低目前播放音樂的音量</string>

@@ -319,14 +319,10 @@
 			android:key="pref_key_system_statusbar_mobile_signal_cat"
 			android:title="@string/system_statusbar_mobile_signal_cat_title" />
 
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
-			android:key="pref_key_system_networkindicator"
-			android:title="@string/system_networkindicator_title"
-			android:summary="@string/system_networkindicator_summ"
-			android:entries="@array/onoff"
-			android:entryValues="@array/onoff_val"
-			miuizer:valueAsSummary="true"
-			android:defaultValue="1" />
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_networkindicator_wifi"
+			android:title="@string/system_networkindicator_wifi_title"
+			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_system_statusbaricons_wifistandard"
