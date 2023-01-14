@@ -5669,6 +5669,19 @@ public class System {
                 }
             });
         }
+        else {
+            MethodHook hideClockHook = new MethodHook() {
+                @Override
+                protected void after(MethodHookParam param) throws Throwable {
+                    View mClockFrame = (View) XposedHelpers.getObjectField(param.thisObject, "mClockFrame");
+                    mClockFrame.setVisibility(4);
+                    mClockFrame = (View) XposedHelpers.getObjectField(param.thisObject, "mLargeClockFrame");
+                    mClockFrame.setVisibility(4);
+                }
+            };
+            Helpers.hookAllMethods("com.android.keyguard.KeyguardClockSwitch", lpparam.classLoader, "setClockPlugin", hideClockHook);
+            Helpers.findAndHookMethod("com.android.keyguard.KeyguardClockSwitch", lpparam.classLoader, "updateClockViews", boolean.class, boolean.class, hideClockHook);
+        }
     }
 
     public static void FirstVolumePressHook(LoadPackageParam lpparam) {
