@@ -53,6 +53,7 @@ import android.util.Log;
 import android.util.LruCache;
 import android.util.Pair;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +61,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -352,16 +354,29 @@ public class Helpers {
 		void onInputFinished(String key, String text);
 	}
 
-	public static void showInputDialog(Context context, final String key, int titleRes, InputCallback callback) {
+	public static void showInputDialog(Context context, final String key, int titleRes, int summRes, int maxLines, InputCallback callback) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setTitle(titleRes);
 		final EditText input = new EditText(context);
-		input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
 		input.setText(prefs.getString(key, ""));
-		FrameLayout container = new FrameLayout(context);
-		FrameLayout.LayoutParams params = new  FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		params.leftMargin = params.rightMargin = context.getResources().getDimensionPixelSize(R.dimen.preference_item_child_padding);
-		input.setLayoutParams(params);
+		if (maxLines > 1) {
+			input.setSingleLine(false);
+			input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+		}
+		else {
+			input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
+		}
+
+		LinearLayout container = new LinearLayout(context);
+		int horizPadding = context.getResources().getDimensionPixelSize(R.dimen.preference_item_child_padding);
+		container.setPadding(horizPadding, 0, horizPadding, 0);
+		container.setOrientation(LinearLayout.VERTICAL);
+		if (summRes > 0) {
+			final TextView msg = new TextView(context);
+			msg.setText(summRes);
+			msg.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+			container.addView(msg);
+		}
 		container.addView(input);
 		builder.setView(container);
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {

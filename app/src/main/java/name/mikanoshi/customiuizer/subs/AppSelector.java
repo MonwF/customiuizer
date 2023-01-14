@@ -194,7 +194,7 @@ public class AppSelector extends SubFragmentWithSearch {
 							}
 						} else if (customTitles) {
 							AppData app = (AppData)parent.getAdapter().getItem(position);
-							Helpers.showInputDialog(getActivity(), key + ":" + app.pkgName + "|" + app.actName + "|" + app.user, R.string.launcher_renameapps_modified, new Helpers.InputCallback() {
+							Helpers.showInputDialog(getActivity(), key + ":" + app.pkgName + "|" + app.actName + "|" + app.user, R.string.launcher_renameapps_modified, 0, 1, new Helpers.InputCallback() {
 								@Override
 								public void onInputFinished(String key, String text){
 									if (TextUtils.isEmpty(text))

@@ -23,6 +23,9 @@
 
     <string name="mods">Mods</string>
     <string name="mods_actions">Actions</string>
+    <string name="value_is_empty">Value unconfigured</string>
+    <string name="value_is_set">Value configured</string>
+    <string name="clear_value">Clear</string>
 
     <string name="enable_mod">Enable mod</string>
     <string name="system_mods">System</string>
@@ -88,7 +91,33 @@
     <string name="system_calendar_app_summ">Open selected app when date in notification drawer\'s header is tapped</string>
     <string name="system_clockseconds_title">Show seconds</string>
     <string name="system_clock_show_ampm_title">Show AM|PM</string>
-    <string name="system_clockleadingzero_title">Show leading zero to hours</string>
+    <string name="system_clock_time_format_title">24-hour time format</string>
+    <string name="system_clock_leadingzero_title">Show leading zero to hours</string>
+    <string name="system_clock_customformat_enable_title">Enable custom format</string>
+    <string name="system_clock_customformat_setting_title">Set format</string>
+    <string name="system_clock_customformat_help_summ">
+        Can enter newline，content after 2 lines will be truncated
+        \nyyyy - four-digit year(2023)
+        \nyy - two-digit year(23)
+        \nMM - two-digit month(02、12)
+        \nM - one-digit month(2、12)
+        \ndd - two-digit day(02、23)
+        \nd - one-digit day(2、23)
+        \nE - short week(Sun)
+        \na - AM、PM
+        \nHH - 24-hour two-digit hour(09、14)
+        \nH - 24-hour one-digit hour(9、14)
+        \nhh - 12-hour two-digit hour(09、2)
+        \nh - 24-hour one-digit hour(9、2)
+        \nmm - two-digit minute(09)
+        \nss - two-digit second(09)
+    </string>
+    <string name="system_clock_dualrow_title">Show in dual rows</string>
+    <string name="system_clock_show_week_title">Show week</string>
+    <string name="system_clock_show_date_title">Show date</string>
+    <string name="system_clock_show_year_title">Show year</string>
+    <string name="system_clock_fixedwidth_title">Fixed width to prevent horizontal jitter</string>
+    <string name="system_statusbar_clock_align_title">Horizontal alignment</string>
     <string name="system_clock_extra_width_title">Extra width</string>
     <string name="system_clock_extra_width_summ">Avoid to display an ellipsis</string>
     <string name="system_clockseconds_summ">Display seconds in the status bar clock</string>
@@ -865,6 +894,9 @@
     <string name="array_scale_cover">Cover whole screen</string>
     <string name="array_align_top">Top</string>
     <string name="array_align_bottom">Bottom</string>
+    <string name="array_align_left">Left</string>
+    <string name="array_align_right">Right</string>
+    <string name="array_align_center">Center</string>
     <string name="array_adjust_brightness">Adjust brightness</string>
     <string name="array_adjust_volume">Adjust volume</string>
     <string name="array_alarm_absolute">Regular time</string>
