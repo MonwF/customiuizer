@@ -879,6 +879,7 @@
     <string name="array_any">Any</string>
     <string name="array_others">Others</string>
     <string name="array_nofs">When not in fullscreen mode</string>
+    <string name="array_home">On homescreen</string>
     <string name="array_incoming">Incoming</string>
     <string name="array_outgoing">Outgoing</string>
     <string name="array_both">Both</string>
