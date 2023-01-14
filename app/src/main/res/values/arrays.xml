@@ -313,11 +313,13 @@
 
 	<string-array name="incallui">
 		<item>@string/array_default</item>
+		<item>@string/array_home</item>
 		<item>@string/array_nofs</item>
 		<item>@string/array_always</item>
 	</string-array>
 	<string-array name="incallui_val">
 		<item>0</item>
+		<item>3</item>
 		<item>1</item>
 		<item>2</item>
 	</string-array>
@@ -686,6 +688,19 @@
 	<string-array name="verticalalign_val">
 		<item>1</item>
 		<item>2</item>
+	</string-array>
+
+	<string-array name="horizontalalign">
+		<item>@string/array_default</item>
+		<item>@string/array_align_left</item>
+		<item>@string/array_align_center</item>
+		<item>@string/array_align_right</item>
+	</string-array>
+	<string-array name="horizontalalign_val">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+		<item>4</item>
 	</string-array>
 
 	<string-array name="slideoptions">

@@ -124,6 +124,11 @@ public class PreferenceEx extends Preference implements PreferenceState {
 		notice = value;
 		setEnabled(!value);
 	}
+	public void saveString(String val) {
+		if (val != null) {
+			persistString(val);
+		}
+	}
 
 	public void setUnsupported(boolean value) {
 		unsupported = value;
