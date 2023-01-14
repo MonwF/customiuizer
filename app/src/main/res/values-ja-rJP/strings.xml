@@ -22,6 +22,9 @@
 
     <string name="mods">Mods</string>
     <string name="mods_actions">Actions</string>
+    <string name="value_is_empty">Value unconfigured</string>
+    <string name="value_is_set">Value configured</string>
+    <string name="clear_value">Clear</string>
 
     <string name="enable_mod">有効化</string>
     <string name="system_mods">システム</string>
@@ -74,7 +77,7 @@
     <string name="system_batteryindicator_colorval4_title">充電中の色</string>
     <string name="system_batteryindicator_lowlevel_title">Low charge level</string>
     <string name="system_batteryindicator_test_title">テスト</string>
-    <string name="system_batteryindicator_test_summ">100%から0%へのアニメーション</string>
+    <string name="system_batteryindicator_test_summ" formatted="false">100%から0%へのアニメーション</string>
     <string name="system_statusbarheight_title">ステータスバーの高さ</string>
     <string name="system_statusbarcolor_title">ステータスバーの背景色</string>
     <string name="system_statusbarcolor_summ">ステータスバーとアクションバーの色を可能な限り同一にする</string>
@@ -87,7 +90,33 @@
     <string name="system_calendar_app_summ">ドロワーの日付をタップすると、選択したアプリを開くことができます｡</string>
     <string name="system_clockseconds_title">秒数を表示</string>
     <string name="system_clock_show_ampm_title">AM/PMの表示</string>
-    <string name="system_clockleadingzero_title">先行ゼロを表示(例: 01:11)</string>
+    <string name="system_clock_time_format_title">24時制で表示</string>
+    <string name="system_clock_leadingzero_title">先行ゼロを表示(例: 01:11)</string>
+    <string name="system_clock_customformat_enable_title">Enable custom format</string>
+    <string name="system_clock_customformat_setting_title">Set format</string>
+    <string name="system_clock_customformat_help_summ">
+        Can enter newline，content after 2 lines will be truncated
+        \nyyyy - four-digit year(2023)
+        \nyy - two-digit year(23)
+        \nMM - two-digit month(02、12)
+        \nM - one-digit month(2、12)
+        \ndd - two-digit day(02、23)
+        \nd - one-digit day(2、23)
+        \nE - short week(Sun)
+        \na - AM、PM
+        \nHH - 24-hour two-digit hour(09、14)
+        \nH - 24-hour one-digit hour(9、14)
+        \nhh - 12-hour two-digit hour(09、2)
+        \nh - 24-hour one-digit hour(9、2)
+        \nmm - two-digit minute(09)
+        \nss - two-digit second(09)
+    </string>
+    <string name="system_clock_dualrow_title">Show in dual rows</string>
+    <string name="system_clock_show_week_title">Show week</string>
+    <string name="system_clock_show_date_title">Show date</string>
+    <string name="system_clock_show_year_title">Show year</string>
+    <string name="system_clock_fixedwidth_title">Fixed width to prevent horizontal jitter</string>
+    <string name="system_statusbar_clock_align_title">Horizontal alignment</string>
     <string name="system_clock_extra_width_title">Extra width</string>
     <string name="system_clock_extra_width_summ">省略記号を非表示</string>
     <string name="system_clockseconds_summ">ステータスバーの時計に秒数を表示</string>
@@ -849,6 +878,7 @@
     <string name="array_any">Any</string>
     <string name="array_others">Others</string>
     <string name="array_nofs">When not in fullscreen mode</string>
+    <string name="array_home">On homescreen</string>
     <string name="array_incoming">Incoming</string>
     <string name="array_outgoing">Outgoing</string>
     <string name="array_both">Both</string>
@@ -864,6 +894,9 @@
     <string name="array_scale_cover">Cover whole screen</string>
     <string name="array_align_top">Top</string>
     <string name="array_align_bottom">Bottom</string>
+    <string name="array_align_left">Left</string>
+    <string name="array_align_right">Right</string>
+    <string name="array_align_center">Center</string>
     <string name="array_adjust_brightness">Adjust brightness</string>
     <string name="array_adjust_volume">Adjust volume</string>
     <string name="array_alarm_absolute">Regular time</string>
