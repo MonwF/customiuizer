@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.Preference;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.SeekBar;
 
@@ -593,6 +594,33 @@ public class System extends SubFragment {
 						else {
 							netspeedFontSizePref.setValue(14, true);
 						}
+						return true;
+					}
+				});
+				break;
+			case "pref_key_system_statusbar_clocktweak_cat":
+				PreferenceEx pref = findPreference("pref_key_system_statusbar_clock_customformat");
+				String format = Helpers.prefs.getString(pref.getKey(), "");
+				pref.setCustomSummary(getResources().getString(TextUtils.isEmpty(format) ? R.string.value_is_empty : R.string.value_is_set));
+				int formatSummId = R.string.system_clock_customformat_help_summ;
+				pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						Helpers.showInputDialog(getActivity(), pref.getKey(), R.string.system_clock_customformat_setting_title, formatSummId, 2, new Helpers.InputCallback() {
+							@Override
+							public void onInputFinished(String key, String text) {
+								if (TextUtils.isEmpty(text))
+									Helpers.prefs.edit().remove(key).apply();
+								else {
+									String[] lines = text.split("\n");
+									if (lines.length > 2) {
+										text = lines[0] + "\n" + lines[1];
+									}
+									Helpers.prefs.edit().putString(key, text).apply();
+								}
+								pref.setCustomSummary(getResources().getString(TextUtils.isEmpty(text) ? R.string.value_is_empty : R.string.value_is_set));
+							}
+						});
 						return true;
 					}
 				});

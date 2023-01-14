@@ -688,6 +688,19 @@
 		<item>2</item>
 	</string-array>
 
+	<string-array name="horizontalalign">
+		<item>@string/array_default</item>
+		<item>@string/array_align_left</item>
+		<item>@string/array_align_center</item>
+		<item>@string/array_align_right</item>
+	</string-array>
+	<string-array name="horizontalalign_val">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+		<item>4</item>
+	</string-array>
+
 	<string-array name="slideoptions">
 		<item>@string/array_disable</item>
 		<item>@string/array_adjust_brightness</item>

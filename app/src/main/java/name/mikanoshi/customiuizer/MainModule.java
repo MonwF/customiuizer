@@ -227,10 +227,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                     mPrefs.getInt("system_recommended_fourth_action", 1) > 1) System.CustomRecommendedHook(lpparam, false);
             if (mPrefs.getBoolean("system_scramblepin")) System.ScramblePINHook(lpparam);
             if (mPrefs.getBoolean("system_dttosleep")) System.DoubleTapToSleepHook(lpparam);
-            if (mPrefs.getBoolean("system_clockseconds")
+            if (mPrefs.getBoolean("system_statusbar_clocktweak")
                 || mPrefs.getBoolean("system_drawer_clockseconds")
-                || mPrefs.getBoolean("system_clockleadingzero")
-            ) System.ClockSecondsHook(lpparam);
+            ) System.StatusBarClockTweakHook(lpparam);
             if (mPrefs.getBoolean("system_noscreenlock_act")) System.NoScreenLockHook(lpparam);
             if (mPrefs.getBoolean("system_detailednetspeed")) System.DetailedNetSpeedHook(lpparam);
             if (mPrefs.getBoolean("system_albumartonlock")) System.LockScreenAlbumArtHook(lpparam);
