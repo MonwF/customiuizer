@@ -206,7 +206,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getInt("system_qqsgridcolumns", 2) > 2) System.QQSGridRes();
             if (mPrefs.getBoolean("system_volumetimer")) System.VolumeTimerValuesRes(lpparam);
 //            if (mPrefs.getBoolean("system_snoozedmanager")) System.MoreSnoozeOptionsRes();
-            if (mPrefs.getStringAsInt("system_networkindicator", 1) == 3) System.NetworkIndicatorRes(lpparam);
+            if (mPrefs.getBoolean("system_networkindicator_wifi")) System.NetworkIndicatorWifi(lpparam);
 
             if (mPrefs.getInt("system_drawer_blur", 100) < 100) System.DrawerBlurRatioHook(lpparam);
             if (mPrefs.getInt("system_chargeanimtime", 20) < 20) System.ChargeAnimationHook(lpparam);
@@ -330,7 +330,11 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_cc_collapse_after_clicked")) System.CollapseCCAfterClickHook(lpparam);
             if (mPrefs.getStringAsInt("system_expandnotifs", 1) > 1) System.ExpandNotificationsHook(lpparam);
             if (mPrefs.getStringAsInt("system_inactivebrightness", 1) > 1) System.InactiveBrightnessSliderHook(lpparam);
-            if (mPrefs.getStringAsInt("system_mobiletypeicon", 1) > 1) System.HideNetworkTypeHook(lpparam);
+            if (mPrefs.getStringAsInt("system_mobiletypeicon", 1) > 1
+                || mPrefs.getBoolean("system_networkindicator_mobile")
+            ) {
+                System.HideNetworkIndicatorHook(lpparam);
+            }
             if (mPrefs.getStringAsInt("system_statusbaricons_bluetooth", 1) > 1) System.HideIconsBluetoothHook(lpparam);
             if (mPrefs.getBoolean("system_epm")) System.ExtendedPowerMenuHook(lpparam);
 

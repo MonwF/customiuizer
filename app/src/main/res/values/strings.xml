@@ -125,8 +125,8 @@
     <string name="system_maxsbicons_summ">Number of notification icons to display before turning them into dots</string>
     <string name="system_mobiletypeicon_title">Hide mobile network type</string>
     <string name="system_mobiletypeicon_summ">Remove mobile network type icon from status bar</string>
-    <string name="system_networkindicator_title">Network activity indicators</string>
-    <string name="system_networkindicator_summ">Configure Mobile data and Wi-Fi traffic indicators</string>
+    <string name="system_networkindicator_wifi_title">Hide WiFi network activity indicators</string>
+    <string name="system_networkindicator_mobile_title">Hide mobile network activity indicators</string>
     <string name="system_4gtolte_title">Show LTE icon for 4G</string>
     <string name="system_hidemoreicon_title">No hidden icons indicator</string>
     <string name="system_hidemoreicon_summ">Do not show icon with 3 dots when notification icons are hidden</string>

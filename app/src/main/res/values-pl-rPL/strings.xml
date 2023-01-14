@@ -87,8 +87,6 @@
     <string name="system_maxsbicons_summ">Liczba ikon powiadomień do wyświetlenia przed zamianą ich w kropki</string>
     <string name="system_mobiletypeicon_title">Ukryj typ sieci komórkowej</string>
     <string name="system_mobiletypeicon_summ">Usuń ikonę typu sieci komórkowej z paska stanu</string>
-    <string name="system_networkindicator_title">Wskaźniki ruchu sieciowego</string>
-    <string name="system_networkindicator_summ">Skonfiguruj dane mobilne i wskaźnik ruchu Wi-Fi</string>
     <string name="system_4gtolte_title">Pokaż ikonę LTE dla 4G</string>
     <string name="system_hidemoreicon_title">Brak wskaźnika ukrytych ikon</string>
     <string name="system_hidemoreicon_summ">Nie pokazuj ikony z trzema kropkami, gdy ikony powiadomień są ukryte</string>

@@ -1450,20 +1450,35 @@ public class System {
         });
     }
 
-    public static void HideNetworkTypeHook(LoadPackageParam lpparam) {
+    public static void HideNetworkIndicatorHook(LoadPackageParam lpparam) {
         MethodHook hideMobileActivity = new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
-                int opt = Integer.parseInt(MainModule.mPrefs.getString("system_mobiletypeicon", "1"));
-                View mMobileType = (View) XposedHelpers.getObjectField(param.thisObject, "mMobileType");
-                TextView mMobileTypeSingle = (TextView) XposedHelpers.getObjectField(param.thisObject, "mMobileTypeSingle");
-                boolean isMobileConnected = false;
-                if (opt == 2) {
-                    isMobileConnected = (boolean) XposedHelpers.getObjectField(param.args[0], "dataConnected");
+                int opt = MainModule.mPrefs.getStringAsInt("system_mobiletypeicon", 1);
+                boolean hideIndicator = MainModule.mPrefs.getBoolean("system_networkindicator_mobile");
+                boolean hideNetworkType = false;
+                if (opt > 1) {
+                    View mMobileType = (View) XposedHelpers.getObjectField(param.thisObject, "mMobileType");
+                    TextView mMobileTypeSingle = (TextView) XposedHelpers.getObjectField(param.thisObject, "mMobileTypeSingle");
+                    boolean isMobileConnected = false;
+                    if (opt == 2) {
+                        isMobileConnected = (boolean) XposedHelpers.getObjectField(param.args[0], "dataConnected");
+                    }
+                    if (opt == 3 || (opt == 2 && !isMobileConnected)) {
+                        hideNetworkType = true;
+                        mMobileTypeSingle.setVisibility(View.GONE);
+                        mMobileType.setVisibility(View.GONE);
+                    }
                 }
-                if (opt == 3 || (opt == 2 && !isMobileConnected)) {
-                    mMobileTypeSingle.setVisibility(View.GONE);
-                    mMobileType.setVisibility(View.GONE);
+                if (hideIndicator) {
+                    View mLeftInOut = (View) XposedHelpers.getObjectField(param.thisObject, "mLeftInOut");
+                    View mRightInOut = (View) XposedHelpers.getObjectField(param.thisObject, "mRightInOut");
+                    mLeftInOut.setVisibility(View.GONE);
+                    mRightInOut.setVisibility(View.GONE);
+                }
+                if (hideIndicator && hideNetworkType) {
+                    View mMobileLeftContainer = (View) XposedHelpers.getObjectField(param.thisObject, "mMobileLeftContainer");
+                    mMobileLeftContainer.setVisibility(View.GONE);
                 }
             }
         };
@@ -8063,18 +8078,7 @@ public class System {
         });
     }
 
-    public static void NetworkIndicatorRes(LoadPackageParam lpparam) {
-        MethodHook hideMobileActivity = new MethodHook() {
-            @Override
-            protected void after(final MethodHookParam param) throws Throwable {
-                Object mLeftInOut = XposedHelpers.getObjectField(param.thisObject, "mLeftInOut");
-                Object mRightInOut = XposedHelpers.getObjectField(param.thisObject, "mRightInOut");
-                XposedHelpers.callMethod(mLeftInOut, "setVisibility", 8);
-                XposedHelpers.callMethod(mRightInOut, "setVisibility", 8);
-            }
-        };
-        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyMobileState", hideMobileActivity);
-
+    public static void NetworkIndicatorWifi(LoadPackageParam lpparam) {
         MethodHook hideWifiActivity = new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {

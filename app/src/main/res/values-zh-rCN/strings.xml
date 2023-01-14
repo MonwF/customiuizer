@@ -1056,8 +1056,8 @@
     <string name="array_second_end">结束秒</string>
     <string name="array_alarm_both">定时和相对时间</string>
     <string name="warning_scope">此模块的激活范围已激活，可能会阻止某些模块正常运行。</string>
-    <string name="system_networkindicator_title">网络活动指示器</string>
-    <string name="system_networkindicator_summ">配置移动数据和Wi-Fi流量指示器</string>
+    <string name="system_networkindicator_wifi_title">隐藏Wi-Fi网络活动指示器</string>
+    <string name="system_networkindicator_mobile_title">隐藏移动网络活动指示器</string>
     <string name="system_airplanemodeconfig_title">飞行模式配置</string>
     <string name="system_airplanemodeconfig_summ">定义在飞行模式下允许的通信。不需要重启。</string>
     <string name="system_airplanemodeconfig_note">模块只能修改现有的系统设置，某些选项可能无效</string>
