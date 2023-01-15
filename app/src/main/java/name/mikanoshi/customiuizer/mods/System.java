@@ -952,6 +952,20 @@ public class System {
                     if (MainModule.mPrefs.getBoolean("system_volumebar_blur_mtk")) {
                         BlurMTKVolumeBarHook(pluginLoader);
                     }
+                    if (MainModule.mPrefs.getBoolean("system_qs_force_systemfonts")) {
+                        Helpers.findAndHookMethod("miui.systemui.util.SystemUIResourcesHelperImpl", pluginLoader, "getBoolean", String.class, new MethodHook() {
+                            @Override
+                            protected void before(MethodHookParam param) throws Throwable {
+                                String key = (String) param.args[0];
+                                if (key.equals("header_big_time_use_system_font")) {
+                                    param.setResult(Boolean.TRUE);
+                                }
+                            }
+                        });
+                    }
+                    if (MainModule.mPrefs.getBoolean("system_qsnolabels")) {
+                        HideCCLabelsHook(pluginLoader);
+                    }
                 }
             }
         });
@@ -2603,6 +2617,20 @@ public class System {
         }
     }
 
+    private static void HideCCLabelsHook(ClassLoader pluginLoader) {
+        Class<?> QSController = XposedHelpers.findClassIfExists("miui.systemui.controlcenter.qs.tileview.StandardTileView", pluginLoader);
+        Helpers.hookAllMethods(QSController, "init", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                if (param.args.length != 1) return;
+                View mLabelContainer = (View)XposedHelpers.getObjectField(param.thisObject, "labelContainer");
+                if (mLabelContainer != null) {
+                    mLabelContainer.setVisibility(View.GONE);
+                }
+            }
+        });
+    }
+
     public static void QSGridLabelsHook(LoadPackageParam lpparam) {
         Helpers.hookAllMethods("com.android.systemui.qs.MiuiTileLayout", lpparam.classLoader, "addTile", new MethodHook() {
             @Override
@@ -2648,35 +2676,6 @@ public class System {
                     );
                 }
             });
-
-        String pluginLoaderClass = Helpers.isTPlus() ? "com.android.systemui.shared.plugins.PluginInstance$Factory" : "com.android.systemui.shared.plugins.PluginManagerImpl";
-        Helpers.hookAllMethods(pluginLoaderClass, lpparam.classLoader, "getClassLoader", new MethodHook() {
-            private boolean isHooked = false;
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                ApplicationInfo appInfo = (ApplicationInfo) param.args[0];
-                if ("miui.systemui.plugin".equals(appInfo.packageName) && !isHooked) {
-                    isHooked = true;
-                    if (pluginLoader == null) {
-                        pluginLoader = (ClassLoader) param.getResult();
-                    }
-                    MainModule.resHooks.setDensityReplacement("miui.systemui.plugin", "dimen", "qs_cell_height", 85.0f);
-                    Class<?> QSController = XposedHelpers.findClassIfExists("miui.systemui.controlcenter.qs.tileview.StandardTileView", pluginLoader);
-                    Helpers.hookAllMethods(QSController, "init", new MethodHook() {
-                        @Override
-                        protected void before(MethodHookParam param) throws Throwable {
-                            if (param.args.length != 1) return;
-                            View mLabelContainer = (View)XposedHelpers.getObjectField(param.thisObject, "labelContainer");
-                            if (mLabelContainer != null) {
-                                mLabelContainer.setVisibility(
-                                    MainModule.mPrefs.getBoolean("system_qsnolabels")? View.GONE : View.VISIBLE
-                                );
-                            }
-                        }
-                    });
-                }
-            }
-        });
     }
 
     public static void NoDuckingHook(LoadPackageParam lpparam) {
@@ -5242,6 +5241,9 @@ public class System {
         }
         if (MainModule.mPrefs.getBoolean("system_cc_enable_style_switch")) {
             MainModule.resHooks.setObjectReplacement(lpparam.packageName, "integer", "force_use_control_panel", 0);
+        }
+        if (MainModule.mPrefs.getBoolean("system_qs_force_systemfonts")) {
+            MainModule.resHooks.setObjectReplacement(lpparam.packageName, "bool", "header_big_time_use_system_font", true);
         }
     }
     public static void DisplayBatteryDetailHook(LoadPackageParam lpparam) {
