@@ -1155,6 +1155,7 @@
     <string name="system_statusbar_mobiletype_single_bold_title">Bold style</string>
     <string name="system_statusbar_horizmargin_title">Statusbar horizontal padding</string>
     <string name="system_statusbar_dualrows_firstrow_horizmargin_title">First row horizontal padding</string>
+    <string name="system_statusbar_clock_spread2rows_title">Spread clock over two rows</string>
     <string name="system_statusbar_topmargin_title">Statusbar top padding</string>
     <string name="system_statusbar_topmargin_val_title">Top padding</string>
     <string name="system_statusbar_topmargin_unset_lockscreen_title">Unset statusbar in Keyguard</string>
