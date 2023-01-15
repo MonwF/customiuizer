@@ -7463,6 +7463,14 @@ public class System {
         });
         Helpers.findAndHookMethod("android.util.MiuiMultiWindowUtils", lpparam.classLoader, "isForceResizeable", XC_MethodReplacement.returnConstant(true));
         Helpers.findAndHookMethod("android.util.MiuiMultiWindowUtils", lpparam.classLoader, "supportFreeform", XC_MethodReplacement.returnConstant(true));
+        if (Helpers.isTPlus()) {
+            Helpers.findAndHookMethod("com.android.server.wm.MiuiFreeformServicesUtils", lpparam.classLoader, "supportsFreeform", new MethodHook() {
+                @Override
+                protected void before(MethodHookParam param) throws Throwable {
+                    param.setResult(true);
+                }
+            });
+        }
     }
 
     public static ConcurrentHashMap<String, Pair<Float, Rect>> fwApps = new ConcurrentHashMap<String, Pair<Float, Rect>>();
