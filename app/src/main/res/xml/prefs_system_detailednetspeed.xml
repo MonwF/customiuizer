@@ -23,8 +23,8 @@
 	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_netspeed_fontsize"
 		android:title="@string/system_netspeed_fontsize_title"
-		android:defaultValue="14"
-		miuizer:minValue="14"
+		android:defaultValue="13"
+		miuizer:minValue="13"
 		miuizer:maxValue="30"
 		miuizer:stepValue="1"
 		miuizer:offtext="@string/array_default"
