@@ -1116,6 +1116,7 @@
     <string name="system_statusbar_mobiletype_single_verticaloffset">上下偏移量</string>
     <string name="system_statusbar_mobiletype_single_bold_title">加粗</string>
     <string name="system_statusbar_dualrows_firstrow_horizmargin_title">第一排水平边距</string>
+    <string name="system_statusbar_clock_spread2rows_title">时钟跨双排显示</string>
     <string name="system_statusbar_horizmargin_title">状态栏水平边距</string>
     <string name="system_statusbar_topmargin_title">状态栏上边距</string>
     <string name="system_statusbar_topmargin_val_title">上边距大小</string>

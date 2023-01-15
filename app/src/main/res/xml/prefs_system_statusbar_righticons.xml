@@ -22,18 +22,6 @@
 		android:title="@string/system_statusbaricons_clock_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-		android:key="pref_key_system_statusbar_clock_leftmargin"
-		android:title="@string/system_statusbar_mobiletype_single_leftmargin_title"
-		android:dependency="pref_key_system_statusbar_clock_atright"
-		android:defaultValue="6"
-		miuizer:child="true"
-		miuizer:minValue="2"
-		miuizer:maxValue="10"
-		miuizer:stepValue="1"
-		miuizer:displayDividerValue="2"
-		miuizer:format="%s dip" />
-
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_netspeed_atright"
 		android:title="@string/system_statusbaricons_netspeed_title"
