@@ -295,7 +295,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_detailednetspeed_secunit") && !mPrefs.getBoolean("system_detailednetspeed")) System.HideNetworkSpeedUnitHook(lpparam);
             if (mPrefs.getBoolean("system_detailednetspeed_low") && !mPrefs.getBoolean("system_detailednetspeed")) System.HideLowNetworkSpeedHook(lpparam);
             if (
-                mPrefs.getInt("system_netspeed_fontsize", 14) > 14
+                mPrefs.getInt("system_netspeed_fontsize", 13) > 13
                 || mPrefs.getInt("system_netspeed_verticaloffset", 8) != 8
                 || mPrefs.getBoolean("system_fixmeter")
                 || mPrefs.getBoolean("system_detailednetspeed")

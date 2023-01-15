@@ -6462,7 +6462,7 @@ public class System {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 String speedText = (String) param.getResult();
-                param.setResult(speedText.replace("B/s", "B").replace("/s", ""));
+                param.setResult(speedText.replaceFirst("B?[/']s", ""));
             }
         });
     }
@@ -6487,8 +6487,14 @@ public class System {
                 TextView meter = (TextView)param.thisObject;
                 if (meter == null) return;
                 if (meter.getTag() == null || !"slot_text_icon".equals(meter.getTag())) {
-                    int fontSize = MainModule.mPrefs.getInt("system_netspeed_fontsize", 14);
-                    if (fontSize != 14) {
+                    int fontSize = MainModule.mPrefs.getInt("system_netspeed_fontsize", 13);
+                    if (MainModule.mPrefs.getBoolean("system_detailednetspeed")) {
+                        if (fontSize > 20) fontSize = 16;
+                    }
+                    else {
+                        if (fontSize < 20) fontSize = 27;
+                    }
+                    if (fontSize != 13) {
                         meter.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize * 0.5f);
                     }
                     if (MainModule.mPrefs.getBoolean("system_netspeed_bold")) {
