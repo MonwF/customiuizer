@@ -1470,27 +1470,25 @@ public class System {
             protected void after(final MethodHookParam param) throws Throwable {
                 int opt = MainModule.mPrefs.getStringAsInt("system_mobiletypeicon", 1);
                 boolean hideIndicator = MainModule.mPrefs.getBoolean("system_networkindicator_mobile");
-                boolean hideNetworkType = false;
+                View mMobileType = (View) XposedHelpers.getObjectField(param.thisObject, "mMobileType");
                 if (opt > 1) {
-                    View mMobileType = (View) XposedHelpers.getObjectField(param.thisObject, "mMobileType");
-                    TextView mMobileTypeSingle = (TextView) XposedHelpers.getObjectField(param.thisObject, "mMobileTypeSingle");
                     boolean isMobileConnected = false;
+                    TextView mMobileTypeSingle = (TextView) XposedHelpers.getObjectField(param.thisObject, "mMobileTypeSingle");
                     if (opt == 2) {
                         isMobileConnected = (boolean) XposedHelpers.getObjectField(param.args[0], "dataConnected");
                     }
                     if (opt == 3 || (opt == 2 && !isMobileConnected)) {
-                        hideNetworkType = true;
                         mMobileTypeSingle.setVisibility(View.GONE);
                         mMobileType.setVisibility(View.GONE);
                     }
                 }
+                View mLeftInOut = (View) XposedHelpers.getObjectField(param.thisObject, "mLeftInOut");
                 if (hideIndicator) {
-                    View mLeftInOut = (View) XposedHelpers.getObjectField(param.thisObject, "mLeftInOut");
                     View mRightInOut = (View) XposedHelpers.getObjectField(param.thisObject, "mRightInOut");
                     mLeftInOut.setVisibility(View.GONE);
                     mRightInOut.setVisibility(View.GONE);
                 }
-                if (hideIndicator && hideNetworkType) {
+                if (mMobileType.getVisibility() == View.GONE && mLeftInOut.getVisibility() == View.GONE) {
                     View mMobileLeftContainer = (View) XposedHelpers.getObjectField(param.thisObject, "mMobileLeftContainer");
                     mMobileLeftContainer.setVisibility(View.GONE);
                 }
