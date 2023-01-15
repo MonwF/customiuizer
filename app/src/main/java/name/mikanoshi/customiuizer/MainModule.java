@@ -250,6 +250,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 System.NotificationVolumeDialogRes();
             }
             if (mPrefs.getBoolean("system_nosilentvibrate")
+                || mPrefs.getBoolean("system_qs_force_systemfonts")
+                || mPrefs.getBoolean("system_qsnolabels")
                 || mPrefs.getBoolean("system_volumebar_blur_mtk")
                 || (mPrefs.getBoolean("system_separatevolume") && mPrefs.getBoolean("system_separatevolume_slider"))
                 || (mPrefs.getInt("system_volumedialogdelay_collapsed", 0) > 0 || mPrefs.getInt("system_volumedialogdelay_expanded", 0) > 0)

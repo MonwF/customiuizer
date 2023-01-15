@@ -694,6 +694,12 @@
 			android:defaultValue="false"
 			/>
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_qs_force_systemfonts"
+			android:title="@string/system_qs_force_systemfonts_title"
+			android:defaultValue="false"
+			/>
+
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_system_qsgridrows"
 			android:title="@string/system_qsgridrows_title"
