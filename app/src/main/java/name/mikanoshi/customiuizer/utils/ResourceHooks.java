@@ -96,7 +96,7 @@ public class ResourceHooks {
 				value = XposedHelpers.callMethod(modRes, method, modResId);
 			return value;
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			Helpers.log(t);
 			return null;
 		}
 	}
@@ -170,7 +170,7 @@ public class ResourceHooks {
 				value = XposedHelpers.callMethod(modRes, method, modResId);
 			return value;
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			Helpers.log(t);
 			return null;
 		}
 	}

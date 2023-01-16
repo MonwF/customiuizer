@@ -437,10 +437,6 @@ public class System extends SubFragment {
 			case "pref_key_system_cat_other":
 				findPreference("pref_key_system_forceclose_apps").setOnPreferenceClickListener(openAppsEdit);
 
-				if (Helpers.isTPlus()) {
-					((CheckBoxPreferenceEx)findPreference("pref_key_system_apksign")).setUnsupported(true);
-				}
-
 				findPreference("pref_key_system_cleanshare_apps").setOnPreferenceClickListener(openShareEdit);
 				findPreference("pref_key_system_cleanshare_test").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 					@Override
