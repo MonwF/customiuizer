@@ -41,7 +41,7 @@
 		android:defaultValue="27"
 		miuizer:child="true"
 		miuizer:minValue="18"
-		miuizer:maxValue="30"
+		miuizer:maxValue="32"
 		miuizer:stepValue="1"
 		miuizer:displayDividerValue="2"
 		miuizer:format="%s dip" />
