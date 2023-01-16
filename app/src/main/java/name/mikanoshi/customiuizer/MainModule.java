@@ -155,10 +155,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_forceclose")) System.ForceCloseHook(lpparam);
             if (mPrefs.getBoolean("system_hideproxywarn")) System.HideProximityWarningHook(lpparam);
             if (mPrefs.getBoolean("system_firstpress")) System.FirstVolumePressHook(lpparam);
-            if (Helpers.isTPlus()) {
-                if (mPrefs.getBoolean("system_apksign")) System.NoSignatureVerifyServiceHook(lpparam);
-            }
-            if (mPrefs.getBoolean("system_apksign") || mPrefs.getBoolean("system_disableintegrity")) System.DisableSystemIntegrityHook(lpparam);
+            if (mPrefs.getBoolean("system_apksign")) System.NoSignatureVerifyServiceHook(lpparam);
+            if (mPrefs.getBoolean("system_disableintegrity")) System.DisableSystemIntegrityHook(lpparam);
             if (mPrefs.getBoolean("system_vibration_amp")) System.MuffledVibrationHook(lpparam);
             if (mPrefs.getBoolean("system_clearalltasks")) System.ClearAllTasksHook(lpparam);
 //            if (mPrefs.getBoolean("system_snoozedmanager")) System.MoreSnoozeOptionsServiceHook(lpparam);

@@ -5720,6 +5720,7 @@ public class System {
             });
             Helpers.hookAllMethods("android.util.jar.StrictJarVerifier", lpparam.classLoader, "verifyMessageDigest", XC_MethodReplacement.returnConstant(true));
             Helpers.hookAllMethods("android.util.jar.StrictJarVerifier", lpparam.classLoader, "verify", XC_MethodReplacement.returnConstant(true));
+            Helpers.hookAllMethods("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "verifySignatures", XC_MethodReplacement.returnConstant(true));
         }
     }
 
