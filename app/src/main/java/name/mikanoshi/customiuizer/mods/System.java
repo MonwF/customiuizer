@@ -5706,7 +5706,25 @@ public class System {
         Helpers.hookAllMethods("android.content.pm.PackageParser.SigningDetails", lpparam.classLoader, "checkCapabilityRecover", XC_MethodReplacement.returnConstant(true));
         Helpers.hookAllMethodsSilently("com.miui.server.SecurityManagerService", lpparam.classLoader, "compareSignatures", XC_MethodReplacement.returnConstant(true));
         Helpers.hookAllMethodsSilently("com.miui.server.SecurityManagerService", lpparam.classLoader, "checkSysAppCrack", XC_MethodReplacement.returnConstant(true));
-        Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "compareSignatures", XC_MethodReplacement.returnConstant(0));
+        Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "compareSignatures", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                Object s1 = param.args[0];
+                Object s2 = param.args[1];
+                int ret = 0;
+                if (s1 == null) {
+                    if (s2 == null) {
+                        ret = 1;
+                    }
+                    else {
+                        ret = -1;
+                    }
+                } else if (s2 == null) {
+                    ret = -2;
+                }
+                param.setResult(ret);
+            }
+        });
         Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "matchSignaturesCompat", XC_MethodReplacement.returnConstant(true));
         Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "matchSignaturesRecover", XC_MethodReplacement.returnConstant(true));
         Helpers.hookAllMethodsSilently("miui.util.CertificateUtils", lpparam.classLoader, "compareSignatures", XC_MethodReplacement.returnConstant(true));
@@ -5720,7 +5738,31 @@ public class System {
             });
             Helpers.hookAllMethods("android.util.jar.StrictJarVerifier", lpparam.classLoader, "verifyMessageDigest", XC_MethodReplacement.returnConstant(true));
             Helpers.hookAllMethods("android.util.jar.StrictJarVerifier", lpparam.classLoader, "verify", XC_MethodReplacement.returnConstant(true));
-            Helpers.hookAllMethods("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "verifySignatures", XC_MethodReplacement.returnConstant(true));
+            Helpers.hookAllMethods("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "verifySignatures", new MethodHook() {
+                @Override
+                protected void before(MethodHookParam param) throws Throwable {
+                    Object pkgSetting = param.args[0];
+                    boolean compareRecover = (boolean) param.args[5];
+                    Object signDetails = XposedHelpers.callMethod(pkgSetting, "getSigningDetails");
+                    Object signatures = XposedHelpers.callMethod(signDetails, "getSignatures");
+                    if (signatures == null && !compareRecover) {
+                        param.setResult(false);
+                    }
+                    else {
+                        param.setResult(true);
+                    }
+                }
+            });
+            Helpers.hookAllMethods("com.android.server.pm.InstallPackageHelper", lpparam.classLoader, "doesSignatureMatchForPermissions", new MethodHook() {
+                @Override
+                protected void before(MethodHookParam param) throws Throwable {
+                    String packageName = (String) XposedHelpers.callMethod(param.args[1], "getPackageName");
+                    String sourcePackageName = (String) param.args[0];
+                    if (sourcePackageName.equals(packageName)) {
+                        param.setResult(true);
+                    }
+                }
+            });
         }
     }
 
