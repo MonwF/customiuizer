@@ -1171,4 +1171,6 @@
     <string name="system_show_step_count_title">Show step count</string>
     <string name="system_cc_switch_ccandnotification_title">Switch control center and notification drawer</string>
     <string name="system_cc_clock_topmargin_indrawer_title">Top margin of clock in notification drawer</string>
+    <string name="various_remove_apk_handler_restriction_summ">Allow opening APK files with apps other than installers</string>
+    <string name="various_remove_apk_handler_restriction_title">Remove restriction on APK file handlers</string>
 </resources>

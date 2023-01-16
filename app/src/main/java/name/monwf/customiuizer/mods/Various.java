@@ -20,6 +20,7 @@ import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.database.ContentObserver;
@@ -63,6 +64,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -1104,6 +1106,15 @@ public class Various {
 			@Override
 			protected void before(final BeforeHookCallback param) throws Throwable {
 				param.returnAndSkip("com.android.fileexplorer");
+			}
+		});
+	}
+
+	public static void RemoveInstallerRestrictionHook(SystemServerLoadedParam lpparam) {
+		ModuleHelper.findAndHookMethod("com.android.server.pm.PackageManagerServiceImpl", lpparam.getClassLoader(), "hookChooseBestActivity", Intent.class, String.class, long.class, List.class, int.class, ResolveInfo.class, new MethodHook() {
+			@Override
+			protected void before(final BeforeHookCallback param) throws Throwable {
+				param.returnAndSkip(param.getArgs()[5]);
 			}
 		});
 	}
