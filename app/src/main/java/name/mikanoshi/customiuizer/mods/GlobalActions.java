@@ -399,13 +399,10 @@ public class GlobalActions {
 				XposedHelpers.callMethod(context.getSystemService(Context.POWER_SERVICE), "wakeUp", SystemClock.uptimeMillis());
 			}
 			if (action.equals(ACTION_PREFIX + "GoToSleep")) {
-				XposedHelpers.callMethod(context.getSystemService(Context.POWER_SERVICE), "goToSleep", SystemClock.uptimeMillis());
+				XposedHelpers.callMethod(context.getSystemService(Context.POWER_SERVICE), "goToSleep", SystemClock.uptimeMillis(), 4, 0);
 			}
 			if (action.equals(ACTION_PREFIX + "LockDevice")) {
-				XposedHelpers.callMethod(context.getSystemService(Context.POWER_SERVICE), "goToSleep", SystemClock.uptimeMillis());
-				Class<?> clsWMG = XposedHelpers.findClass("android.view.WindowManagerGlobal", null);
-				Object wms = XposedHelpers.callStaticMethod(clsWMG, "getWindowManagerService");
-				XposedHelpers.callMethod(wms, "lockNow", (Object)null);
+				XposedHelpers.callMethod(context.getSystemService(Context.POWER_SERVICE), "goToSleep", SystemClock.uptimeMillis(), 7, 0);
 			}
 			if (action.equals(ACTION_PREFIX + "TakeScreenshot")) {
 				context.sendBroadcast(new Intent("android.intent.action.CAPTURE_SCREENSHOT"));

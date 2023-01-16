@@ -1104,21 +1104,25 @@ public class System {
     }
 
     private static void initClockStyle(TextView mClock) {
-        mClock.setSingleLine(false);
-        mClock.setMaxLines(2);
         Resources res = mClock.getResources();
         int fontSize = MainModule.mPrefs.getInt("system_statusbar_clock_fontsize", 27);
         float finalSize = fontSize * 0.5f;
-        if (fontSize != 27) {
-            mClock.setTextSize(TypedValue.COMPLEX_UNIT_DIP, finalSize);
-        }
         String customFormat = MainModule.mPrefs.getString("system_statusbar_clock_customformat", "");
         boolean enableCustomFormat = MainModule.mPrefs.getBoolean("system_statusbar_clock_customformat_enable");
-        if (enableCustomFormat && customFormat.contains("\n")) {
-            if (finalSize > 10) {
-                finalSize = 8f;
-            }
+        boolean dualRows = enableCustomFormat && customFormat.contains("\n");
+        if (dualRows && finalSize > 10f) {
+            finalSize = 8;
+        }
+        else if (!dualRows && finalSize < 10f) {
+            finalSize = 13.5f;
+        }
+        if (fontSize != 27 || dualRows) {
+            mClock.setTextSize(TypedValue.COMPLEX_UNIT_DIP, finalSize);
+        }
+        if (dualRows) {
             mClock.setLineSpacing(0, finalSize > 8.5f ? 0.85f : 0.9f);
+            mClock.setSingleLine(false);
+            mClock.setMaxLines(2);
         }
         int align = MainModule.mPrefs.getStringAsInt("system_statusbar_clock_align", 1);
         if (align == 2) {

@@ -52,7 +52,7 @@
 		android:title="@string/launcher_titlefontsize_title"
 		android:defaultValue="16"
 		miuizer:minValue="14"
-		miuizer:maxValue="30"
+		miuizer:maxValue="32"
 		miuizer:stepValue="1"
 		miuizer:displayDividerValue="2"
 		miuizer:format="%s dip" />

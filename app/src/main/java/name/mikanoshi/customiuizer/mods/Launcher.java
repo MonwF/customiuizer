@@ -639,6 +639,7 @@ public class Launcher {
 		Helpers.hookAllConstructors("com.miui.home.launcher.Workspace", lpparam.classLoader, new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
+				if (param.args.length != 3) return;
 				Object mDoubleTapControllerEx = XposedHelpers.getAdditionalInstanceField(param.thisObject, "mDoubleTapControllerEx");
 				if (mDoubleTapControllerEx != null) return;
 				mDoubleTapControllerEx = new DoubleTapController((Context)param.args[0], "pref_key_launcher_doubletap");
