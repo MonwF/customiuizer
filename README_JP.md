@@ -11,7 +11,7 @@ Android 12/13ベースなMIUI 13/14に対応しています。
 * [テスト版リリース](https://tpsx.lanzouv.com/b021ly4gj) パスワード: `miui`
 
 ### バックアップ機能
-バックアップは「/sdcard/Documents/CustoMIUIzer/」に保存されます
+バックアップは「/sdcard/Documents/CustoMIUIzer/」に保存されます。
 
 ### 寄付
 PayPalから行えます
@@ -45,15 +45,15 @@ CustoMIUIzer上から問題の詳細を報告か、<a href="https://code.highspe
 
 <i>モジュールとModを起動したが、デバイスの再起動後のどのModも動作がしていない。</i>
 <hr>
-Go to (Ed)Xposed Installer > Log and check information there.<br>
-Find line "Loading modules from .../name.mikanoshi.customiuizer/...".<br>
-If next line contains "File does not exist", then just reinstall CustoMIUIzer.<br>
-If next line contains something else (error, exception, etc), then send detailed report from CustoMIUIzer and hope this problem can be fixed :)
+(Ed)Xposed Installer > ログを開き、情報を確認します。<br>
+"Loading modules from .../name.mikanoshi.customiuizer/..."と言う行を探します。<br>
+もし、次の行に「File does not exist」が含まれている場合はCustoMIUIzerを再インストールをしてみると良いかもしれません。<br>
+次の行が何か他の物(error, exceptionなど)を含んでいた場合は、CustoMIUIzerから詳細なレポートを送信してください。問題が解決されることを願っています:)
 <br><br>
-<i>I sent a report from CustoMIUIzer and now waiting for response, where is it?</i>
+<i>CustoMIUIzerからレポートを送信し、返答を待っています。レポートは届いていますか?</i>
 <hr>
-You will never get a response if you don't enter your contact info.<br>
-Main CustoMIUIzer screen > Contact information. Write your e-mail, ICQ or XDA/4PDA nickname there.<br>
+連絡先を入力しないと絶対に返信は届きません。<br>
+CustoMIUIzerのメイン画面 > 連絡先の情報にメールアドレス、ICQ、XDAまたは4PDAのニックネームを入力してください。
 <br>
 <a href="https://repo.xposed.info/module/name.mikanoshi.customiuizer" target="_blank">Xposedモジュールのリポジトリ</a><br>
 <a href="https://play.google.com/store/apps/details?id=name.mikanoshi.customiuizer" target="_blank">Google Playストア</a><br>
