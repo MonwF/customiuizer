@@ -27,7 +27,7 @@ PayPalから行えます
 CustoMIUIzerモジュールは、あなたのMIUIデバイスに様々な追加機能を提供するMODが含まれています。これらのModを使用するには(Ed)Xposed Frameworkをインストールする必要があります。Xposedについては、<a href="http://forum.xda-developers.com/xposed/xposed-installer-versions-changelog-t2714053" target="_blank">オリジナル版のスレッド</a>または、EdXposedの<a href="https://github.com/ElderDrivers/EdXposed" target="_blank">EdXposedのGitHubリポジトリ</a>をご参照ください。(Android 8-10用)
 
 ### 互換性 ###
-このモジュールは、Android 9-10がベースのMIUI 10-12.5を対象に作成とテストしています。<br>
+このモジュールは、Android 9-10がベースのMIUI 10-12.5を対象に作成と動作確認をしています。<br>
 Modは、他のバージョンや下位バージョンのMIUIで完全に動作する事は保証していません。<br>
 APKのインストールはAndroid 7以降に限定されます。<br>
 
