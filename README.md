@@ -43,7 +43,7 @@ CustoMIUIzer上から問題の詳細を報告か、<a href="https://code.highspe
 <br><br>
 <u>よくある問題</u><br><br>
 
-<i>モジュールとModを起動したが、デバイスの再起動後のどのModも動作がしていない。</i>
+<i>モジュールとModを起動したが、デバイスの再起動後にどのModも一切動作をしていない。</i>
 <hr>
 (Ed)Xposed Installer > ログを開き、情報を確認します。<br>
 "Loading modules from .../name.mikanoshi.customiuizer/..."と言う行を探します。<br>
