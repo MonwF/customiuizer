@@ -822,7 +822,8 @@
   <string name="array_high">高</string>
   <string name="array_match">アルバムアートや壁紙を合わせる</string>
   <string name="array_static">カスタムカラー</string>
-  <string name="array_rainbowh">レインボーカラー (水平)</string><string name="array_rainbowv">レインボーカラー (縦)</string>
+  <string name="array_rainbowh">レインボーカラー (水平)</string>
+  <string name="array_rainbowv">レインボーカラー (縦)</string>
   <string name="array_rainbow">レインボー</string>
   <string name="array_dynamic">ダイナミックカラー</string>
   <string name="array_discrete">個別</string>
