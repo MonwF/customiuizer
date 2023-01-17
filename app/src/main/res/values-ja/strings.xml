@@ -1097,7 +1097,7 @@
   <string name="system_statusbar_topmargin_unset_lockscreen_title">キーガードでステータスバーを非設定にする</string>
   <string name="system_statusbaricons_atright_title">一部のアイコンを右側へ移動</string>
   <string name="system_statusbaricons_wifi_mobile_atleft_title">モバイルデータとWi-Fiを左側に移動</string>
-  <string name="system_statusbaricons_swap_wifi_mobile_title">モバイルデータとWi-Fiの表示を入れ替えます</string>
+  <string name="system_statusbaricons_swap_wifi_mobile_title">モバイルデータとWi-Fiの表示を入れ替える</string>
   <string name="system_statusbaricons_change_position_title">アイコンの表示位置を変更</string>
   <string name="system_statusbaricons_netspeed_title">ネットワーク速度のインジケーター</string>
   <string name="system_statusbaricons_clock_title">時計</string>
