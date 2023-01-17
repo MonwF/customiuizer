@@ -50,7 +50,7 @@ CustoMIUIzer上から問題の詳細を報告か、<a href="https://code.highspe
 もし、次の行に「File does not exist」が含まれている場合はCustoMIUIzerを再インストールをしてみると良いかもしれません。<br>
 次の行が何か他の物(error, exceptionなど)を含んでいた場合は、CustoMIUIzerから詳細なレポートを送信してください。問題が解決されることを願っています:)
 <br><br>
-<i>CustoMIUIzerからレポートを送信し、返答を待っています。レポートは届いていますか?</i>
+<i>CustoMIUIzerからレポートを送信し、返信を待っています。レポートは届いていますか?</i>
 <hr>
 連絡先を入力しないと絶対に返信は届きません。<br>
 CustoMIUIzerのメイン画面 > 連絡先の情報にメールアドレス、ICQ、XDAまたは4PDAのニックネームを入力してください。
