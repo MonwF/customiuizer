@@ -1,6 +1,6 @@
 ![logo](https://code.highspec.ru/customiuizer_promo.png)
 
-## CustoMIUIzer14 ([中文](./README_zh.md))
+## CustoMIUIzer14 ([中国語](./README_zh.md))
 MIUIを自分好みにカスタマイズ
 
 Android 12/13ベースなMIUI 13/14に対応しています。
