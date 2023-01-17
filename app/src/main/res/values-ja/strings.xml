@@ -8,6 +8,7 @@
   <string name="about_dynamic">一般的なModの有効化/無効化はソフトリブートが必要です。⟲のマークがある物はデフォルトからカスタムをした値に変更後、1回のソフトリブートが必要です。その後に設定が適用されます。</string>
   <string name="about_unsupported">⨯の付いたModは使用中のデバイスでは非対応です。</string>
   <string name="title_activity_main" translatable="false">@string/app_name</string>
+
   <string name="title_snoozed">通知のスヌーズ</string>
   <string name="menu_update">アップデート</string>
   <string name="snooze_unsnooze">このスヌーズ通知を解除する</string>
@@ -20,8 +21,10 @@
   <string name="snooze_created">作成済み</string>
   <string name="snooze_updated">更新</string>
   <string name="snooze_repost">再投稿</string>
+  
   <string name="mods">Mod</string>
   <string name="mods_actions">アクション</string>
+  
   <string name="enable_mod">Modを有効化</string>
   <string name="system_mods">システム</string>
   <string name="system_mods_screen">画面</string>
@@ -661,6 +664,7 @@
   <string name="controls_fsg_horiz_summ">水平方向のジェスチャーとナビゲーションバーの両方を有効にします</string>
   <string name="controls_fsg_assist_title">コーナースワイプのアクション</string>
   <string name="controls_fsg_assist_summ">Googleアシスタントを開く代わりに選択をしたアクションを実行します</string>
+
   <string name="various_mods">各種のMod</string>
   <string name="various_hiddenfeatures_title">隠された機能</string>
   <string name="various_hiddenfeatures_summ">簡単にアクセスできないアクティビティを開きます</string>
@@ -730,9 +734,11 @@
   <string name="appsort_frequency">使用頻度</string>
   <string name="appsort_storage">使用済みのストレージ</string>
   <string name="appsort_install">インストール時間</string>
-  <string name="gboard">Googleキーボード</string>
+
+  <string name="gboard">Gboard</string>
   <string name="calls">通話</string>
   <string name="settings">設定</string>
+
   <string name="array_default">デフォルト</string>
   <string name="array_system_default">システム</string>
   <string name="array_global_actions_none">アクションなし</string>
@@ -887,7 +893,9 @@
   <string name="array_current">現在のみ</string>
   <string name="array_dualsimin2rows_style_thick">Thick</string>
   <string name="array_dualsimin2rows_style_theme">システムのテーマ</string>
+
   <string name="unlimited">無制限</string>
+
   <string name="toggle_wifi_on">Wi-Fiを有効</string>
   <string name="toggle_wifi_off">Wi-Fiを無効</string>
   <string name="toggle_bt_on">Bluetoothを有効</string>
@@ -914,6 +922,7 @@
   <string name="qs_toggle_autorotate_portrait">縦方向の画面</string>
   <string name="qs_toggle_autorotate_landscape">横方向の画面</string>
   <string name="qs_toggle_5g">5Gネットワーク</string>
+
   <string name="miuizer">CustoMIUIzerの設定</string>
   <string name="miuizer_show_newmods_title">新しいModをマークする</string>
   <string name="miuizer_show_newmods_summ">現在のバージョンで追加されたModのタイトルに\"New!\"とラベルを表示するようにします</string>
@@ -928,12 +937,14 @@
   <string name="miuizer_locale_summ">選択された言語で常にモジュールのインターフェースを表示します</string>
   <string name="miuizer_holiday_title">ホリデーデザイン</string>
   <string name="miuizer_holiday_summ">シーンに合わせてモジュールのインターフェースを飾ります</string>
+
   <string name="troubleshoot">トラブルシューティング</string>
   <string name="miuizer_acrasend_title">詳細なレポートを送信</string>
   <string name="miuizer_acrasend_summ">デバイス、使用環境、logcat、Xposedのログを収集して開発者に送信をします。インターネットの接続が必要です。</string>
   <string name="miuizer_acramail_summ">デバイス、使用環境、logcat、Xposedのログを収集して開発者に送信をします。インターネットの接続が必要です。</string>
   <string name="miuizer_acramail_title">連絡先</string>
   <string name="miuizer_acramail_tip">クラッシュレポートの返信を希望する場合は、メール、ICQ、XDA、4PDAのニックネームを必ず記入してください。</string>
+
   <string name="support">サポート</string>
   <string name="support_github">コードと問題の報告</string>
   <string name="support_github_summ">アプリを最新の状態に保つスターリポジトリです</string>
@@ -945,7 +956,8 @@
   <string name="support_xda_title">XDAのスレッド</string>
   <string name="support_xda_summ">XDA上のモジュールに関するスレッド</string>
   <string name="support_4pda_title">4PDAのスレッド</string>
-  <string name="support_4pda_summ">4PDA上のモジュールに関するスレッド</string><string name="support_bug_title">バグを報告</string>
+  <string name="support_4pda_summ">4PDA上のモジュールに関するスレッド</string>
+  <string name="support_bug_title">バグを報告</string>
   <string name="support_bug_summ">バグの報告や機能の要望は、公式のIssue Trackerからお願いします。</string>
   <string name="support_donate">寄付 $%1$d</string>
   <string name="support_donate_me_title">PayPalで寄付をする</string>
@@ -955,11 +967,13 @@
   <string name="support_donate_inapp_summ">Google上ですべて任せます</string>
   <string name="support_donate_other_title">旧通貨</string>
   <string name="support_donate_other_summ" translatable="false">PayPal, WebMoney, QIWI</string>
+
   <string name="donate_level1">寄付をして頂き激しく感謝します!</string>
   <string name="donate_level2">寛大な寄付をして頂き激しく感謝します!</string>
   <string name="donate_level3">凄まじい寛大な寄付をして頂き激しく感謝します! 😮</string>
   <string name="billing_error">課金情報の取得に失敗しました。インターネット接続を確認してください。</string>
   <string name="billing_canceled">気が変りましたか? ;)</string>
+
   <string name="crash_dialog">CustoMIUIzerがクラッシュしました!</string>
   <string name="crash_dialog_manual">必要なデータはすべて収集されています</string>
   <string name="crash_dialog_manual_size">生成されるレポートのサイズ</string>
@@ -976,9 +990,11 @@
   <string name="crash_confirm">確認</string>
   <string name="crash_collecting_report">レポートをビルド中です…</string>
   <string name="crash_sending_report">レポートを送信中です…</string>
+
   <string name="array_color_auto">自動</string>
   <string name="array_color_dark">ダーク</string>
   <string name="array_color_light">ライト</string>
+
   <string name="notselected">未選択</string>
   <string name="warning">警告!</string>
   <string name="warning_blacklist">Xposed Framework上で「ブラック/ホワイトリスト オプション」が有効化されているため、Modが正常に動作しない可能性があります。</string>
@@ -1030,6 +1046,7 @@
   <string name="credentials_ok">認証情報は既に解除されています。</string>
   <string name="credentials_unlock">認証情報を解除する</string>
   <string name="credentials_success">認証情報を解除しました!</string>
+
   <string name="xposed_not_found">Xposedアプリがありません。</string>
   <string name="xposed_not_found_explain">Xposed Frameworkがインストールされていないようです。\n\nModはXposedがないと動作がしないのでご注意ください。</string>
   <string name="module_not_active">CustoMIUIzerモジュールが有効化されていません!\nLSPosedアプリを開き、モジュールを有効化後に再起動をしてください。</string>
@@ -1040,13 +1057,16 @@
   <string name="delete">削除</string>
   <string name="delete_item_info">削除をする項目を長押しします</string>
   <string name="change_icon">アイコンの変更</string>
+
   <string name="guide_search">Modを名前で検索します。\n長押しで新しいModの一覧を表示します。</string>
   <string name="guide_softreboot">ソフトリブートでModの適用を忘れないでください。\n動的な⟲のModは1度だけソフトリブートが必要です。\n詳細はアプリについての項目にあります。</string>
   <string name="guide_marknew">前回のアップデート以降のModは\nマークをする事でよりわかりやすくなります。</string>
+
   <string name="permission_save">バックアップを保存しますか?</string>
   <string name="permission_restore">バックアップを復元しますか?</string>
   <string name="permission_scan">ネットワークまたはデバイスのリストを取得しますか?</string>
   <string name="permission_permanent">このオプションは手動で許可をする必要があります。グッジョブ!!</string>
+
   <string name="format_d_ms">%d 秒</string>
   <string name="format_d_s">%d 秒</string>
   <string name="format_d_m">%d 分</string>
@@ -1055,6 +1075,7 @@
   <string name="Bs">B/s</string>
   <string name="speedunits">KMGTPE</string>
   <string name="lux">%s lux</string>
+
   <string name="off">OFF</string>
   <string name="time_30m">30分</string>
   <string name="time_1h">1時間</string>
@@ -1067,11 +1088,14 @@
   <string name="time_10h">10時間</string>
   <string name="time_12h">12時間</string>
   <string name="time_forever" translatable="false">無制限</string>
+
   <string name="white_color">ホワイト</string>
   <string name="black_color">ブラック</string>
   <string name="auto_color">ステータスバーの色</string>
+
   <string name="type_file">ファイル</string>
   <string name="type_res">リソース</string>
+
   <string name="dummy" translatable="false" />
   <string name="system_statusbar_batterytempandcurrent_title">バッテリーの温度と電流を表示</string>
   <string name="system_statusbar_batterytempandcurrent_content_title">表示をする内容</string>
