@@ -5,8 +5,8 @@
   <string name="app_about">このアプリについて</string>
   <string name="about_version">バージョン %1$s</string>
   <string name="about_dev">by Mikanoshi &amp; MonwF</string>
-  <string name="about_dynamic">一般的なModの有効化/無効化はソフトリブートが必要です。⟲のマークがある物はデフォルトからカスタムをした値に変更後、1回のソフトリブートが必要です。その後に設定が適用されます。</string>
-  <string name="about_unsupported">⨯の付いたModは使用中のデバイスでは非対応です。</string>
+  <string name="about_dynamic">一般的なModの有効化/無効化にはソフトリブートが必要です。⟲のマークがある物は値の変更後、ソフトリブートすることで設定が適用されます。</string>
+  <string name="about_unsupported">⨯の付いたModはご利用のデバイスに対応していません。</string>
   <string name="title_activity_main" translatable="false">@string/app_name</string>
 
   <string name="title_snoozed">通知のスヌーズ</string>
@@ -38,11 +38,11 @@
   <string name="system_statusbaricons_wifistandard_title">Wi-Fi標準規格を表示する</string>
   <string name="system_statusbaricons_battery1_title">バッテリー画像</string>
   <string name="system_statusbaricons_battery2_title">バッテリーの桁</string>
-  <string name="system_statusbaricons_battery4_title">バッテリーのパーセントマーク</string>
+  <string name="system_statusbaricons_battery4_title">バッテリーのパーセンテージ</string>
   <string name="system_statusbaricons_battery3_title">充電中のインジケーター</string>
   <string name="system_statusbaricons_alarm_title">アラーム</string>
   <string name="system_statusbaricons_alarm_summ">完全に非表示にする</string>
-  <string name="system_statusbaricons_alarmn_title">アラームアイコンの可視化の選択</string>
+  <string name="system_statusbaricons_alarmn_title">アラームアイコンの可視性</string>
   <string name="system_statusbaricons_alarmn_summ">次のアラームが鳴るまでの規定時間のみアラームアイコンを表示します</string>
   <string name="system_statusbaricons_btbattery_title">Bluetoothデバイスのバッテリー残量表示</string>
   <string name="system_statusbaricons_signal_title">モバイルネットワーク信号の表示</string>
@@ -72,7 +72,7 @@
   <string name="system_batteryindicator_padding_title">水平方向のパディング</string>
   <string name="system_batteryindicator_colorval1_title">満充電時の色</string>
   <string name="system_batteryindicator_colorval2_title">低速充電時の色</string>
-  <string name="system_batteryindicator_colorval3_title">バッテリーセーバー時の色</string>
+  <string name="system_batteryindicator_colorval3_title">バッテリーセーバー有効時の色</string>
   <string name="system_batteryindicator_colorval4_title">充電時の色</string>
   <string name="system_batteryindicator_lowlevel_title">バッテリー残量低下時の色</string>
   <string name="system_batteryindicator_test_title">テスト</string>
@@ -243,7 +243,7 @@
   <string name="system_visualizer_colorval_title">カスタムカラーを選択</string>
   <string name="system_visualizer_dyntime_title">ダイナミックカラーの変更間隔</string>
   <string name="system_ignorecalls_title">通話を無視</string>
-  <string name="system_ignorecalls_summ">選択をしたアプリを起動時に着信があった場合、通話状態の通知を停止する事でオーディオフォーカスの変更を抑えるようにします</string>
+  <string name="system_ignorecalls_summ">選択したアプリを利用中に着信があった場合、通話状態の通知を停止する事でオーディオフォーカスの変更を抑制します</string>
   <string name="system_nosilentvibrate_title">テストバイブレーションをしない</string>
   <string name="system_nosilentvibrate_summ">着信モードの変更時やバイブレーションをオンにした時のバイブレーションを無効化します</string>
   <string name="system_vibration_amp_title">消音時のバイブレーション</string>
@@ -306,9 +306,9 @@
   <string name="system_noscreenlock_nofaceunlock_title">顔認証をスキップ</string>
   <string name="system_noscreenlock_nofaceunlock_summ">スクリーンロックが無効の場合は顔認証を開始しないようにします</string>
   <string name="system_noscreenlock_wifi_title">信頼できるWi-Fiネットワーク</string>
-  <string name="system_noscreenlock_wifi_summ">信頼できるWi-Fiネットワークに接続時はスクリーンロックを一時的に無効化する事ができます</string>
+  <string name="system_noscreenlock_wifi_summ">信頼できるWi-Fiネットワークへの接続時、スクリーンロックを一時的に無効化します</string>
   <string name="system_noscreenlock_bt_title">信頼できるBluetoothデバイス</string>
-  <string name="system_noscreenlock_bt_summ">信頼できるBluetoothデバイスに接続時はスクリーンロックを一時的に無効化する事ができます</string>
+  <string name="system_noscreenlock_bt_summ">信頼できるBluetoothデバイスへの接続時、スクリーンロックを一時的に無効化します</string>
   <string name="system_noscreenlock_force_locked">強制ロック</string>
   <string name="system_noscreenlock_force_unlocked">強制ロックを解除</string>
   <string name="system_noscreenlock_force_off">強制しない</string>
@@ -492,7 +492,7 @@
   <string name="launcher_gestures_shortcut">起動をするショートカット</string>
   <string name="launcher_gestures_activity">起動をするアクティビティ</string>
   <string name="launcher_title">ランチャー</string>
-  <string name="launcher_summ">選択をしたランチャーのModを表示します。視覚的な補助のみなのでModには影響しません。</string>
+  <string name="launcher_summ">選択をしたランチャーのModを表示します。視覚的な補助のみでModには影響しません。</string>
   <string name="launcher_compat_title">パフォーマンスモード</string>
   <string name="launcher_compat_summ">すべてのランチャーModを適用する別の方法です</string>
   <string name="launcher_infinitescroll_title">無制限スクロール</string>
@@ -678,7 +678,7 @@
   <string name="various_aospnotiflog_title">通知ログ</string>
   <string name="various_clearspeaker_title">スピーカーをクリーニング</string>
   <string name="various_unlockfps_title">フレームレートの制限を解除</string>
-  <string name="various_unlockfps_summ">スクリーンレコーダーアプリでフレームレートを90まで使用可能にします。実際に高フレームレートが動作するかは、デバイスとビデオドライバに依存します。</string>
+  <string name="various_unlockfps_summ">スクリーンレコーダーアプリでフレームレートを90まで使用可能にします。実際に高フレームレートで動作するかは、デバイスの性能とビデオドライバに依存します。</string>
   <string name="various_miuiinstaller_title">MIUIパッケージインストーラーを使用する</string>
   <string name="various_miuiinstaller_summ">システムアプリのアップデートを可能にします</string>
   <string name="various_miuiinstaller_error">必要なアプリが未インストールまたは無効化されています</string>
@@ -718,7 +718,7 @@
   <string name="various_apps_summ">アプリ情報に以下の項目を追加します:\n- バージョンコード\n- APKのフルパス\n- データのパス\n- ユーザーID\n- ターゲットSDKのバージョン\n- Playストアで開く\n- アプリの起動</string>
   <string name="various_appsort_title">インストールされているアプリのソート順</string>
   <string name="disable_app_title">アプリを無効化しますか?</string>
-  <string name="disable_app_text">これが重要なシステムアプリである場合、無効化をする事でMIUIが起動をしなくなる可能性があります :)</string>
+  <string name="disable_app_text">これが重要なシステムアプリである場合、無効化する事でMIUIが起動しなくなる可能性があります :)</string>
   <string name="disable_app_settings">それはマズいですよ! :)</string>
   <string name="disable_app_fail">アプリの状態の変更に失敗しました</string>
   <string name="appdetails_playstore">Playストアで開く</string>
@@ -791,7 +791,7 @@
   <string name="array_screenlock_no">システムのデフォルト</string>
   <string name="array_screenlock_none">完全に無効化する</string>
   <string name="array_screenlock_bootonly">再起動後に認証を要求</string>
-  <string name="array_screenlock_trusted">信頼できるネットワーク/デバイスで無効化</string>
+  <string name="array_screenlock_trusted">信頼できるネットワーク/デバイスで認証を無効化</string>
   <string name="array_screenlock_noreq">不要です</string>
   <string name="array_screenlock_weak">弱い (指紋認証)</string>
   <string name="array_screenlock_strong">強力 (PIN/パスワード/パターン)</string>
@@ -1049,14 +1049,14 @@
   <string name="credentials_success">認証情報を解除しました!</string>
 
   <string name="xposed_not_found">Xposedアプリがありません。</string>
-  <string name="xposed_not_found_explain">Xposed Frameworkがインストールされていないようです。\n\nModはXposedがないと動作がしないのでご注意ください。</string>
-  <string name="module_not_active">CustoMIUIzerモジュールが有効化されていません!\nLSPosedアプリを開き、モジュールを有効化後に再起動をしてください。</string>
+  <string name="xposed_not_found_explain">Xposed Frameworkがインストールされていないようです。\n\nModはXposedがないと動作しないのでご注意ください。</string>
+  <string name="module_not_active">CustoMIUIzerモジュールが有効化されていません!\nLSPosedアプリを開き、モジュール有効化後に再起動をしてください。</string>
   <string name="no_browser">URLを開くにはブラウザアプリが必要です</string>
   <string name="okay">OK</string>
   <string name="cancel">キャンセル</string>
   <string name="add">追加</string>
   <string name="delete">削除</string>
-  <string name="delete_item_info">削除をする項目を長押しします</string>
+  <string name="delete_item_info">削除する項目を長押しします</string>
   <string name="change_icon">アイコンの変更</string>
 
   <string name="guide_search">Modを名前で検索します。\n長押しで新しいModの一覧を表示します。</string>
@@ -1066,7 +1066,7 @@
   <string name="permission_save">バックアップを保存しますか?</string>
   <string name="permission_restore">バックアップを復元しますか?</string>
   <string name="permission_scan">ネットワークまたはデバイスのリストを取得しますか?</string>
-  <string name="permission_permanent">このオプションは手動で許可をする必要があります。グッジョブ!!</string>
+  <string name="permission_permanent">このオプションは手動で許可する必要があります。グッジョブ!!</string>
 
   <string name="format_d_ms">%d 秒</string>
   <string name="format_d_s">%d 秒</string>
