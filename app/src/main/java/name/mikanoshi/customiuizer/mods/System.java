@@ -5212,18 +5212,9 @@ public class System {
                         }
                     }
                 }
-                if (!showInfo || batteryInfo.isEmpty()) {
-                    for (TextView tv:mBatteryDetailViews) {
-                        tv.setVisibility(View.GONE);
-                    }
-                }
-                else {
-                    for (TextView tv:mBatteryDetailViews) {
-                        if (!"HiddeninLS".equals(tv.getTag())) {
-                            tv.setVisibility(View.VISIBLE);
-                            XposedHelpers.callMethod(tv, "setNetworkSpeed", batteryInfo);
-                        }
-                    }
+                for (TextView tv:mBatteryDetailViews) {
+                    XposedHelpers.callMethod(tv, "setBlocked", !showInfo);
+                    XposedHelpers.callMethod(tv, "setNetworkSpeed", batteryInfo);
                 }
                 handler.postDelayed(this, 1500);
             }
@@ -5330,9 +5321,7 @@ public class System {
                 protected void after(MethodHookParam param) throws Throwable {
                     Object bv = XposedHelpers.getAdditionalInstanceField(param.thisObject, "mBatteryView");
                     if (bv != null) {
-                        TextView batteryView = (TextView) bv;
-                        batteryView.setVisibility(View.VISIBLE);
-                        batteryView.setTag(null);
+                        XposedHelpers.callMethod(bv, "setVisibilityByController", true);
                     }
                 }
             });
@@ -5341,9 +5330,7 @@ public class System {
                 protected void after(MethodHookParam param) throws Throwable {
                     Object bv = XposedHelpers.getAdditionalInstanceField(param.thisObject, "mBatteryView");
                     if (bv != null) {
-                        TextView batteryView = (TextView) bv;
-                        batteryView.setVisibility((int)param.args[0]);
-                        batteryView.setTag("HiddeninLS");
+                        XposedHelpers.callMethod(bv, "setVisibilityByController", false);
                     }
                 }
             });
