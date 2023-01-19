@@ -242,10 +242,11 @@ public class System {
         });
     }
     public static void NoLightUpOnChargeHook(LoadPackageParam lpparam) {
-        Helpers.hookAllMethods("com.android.server.power.PowerManagerService", lpparam.classLoader, "wakeUpNoUpdateLocked", new MethodHook() {
+        String methodName = Helpers.isTPlus() ? "wakePowerGroupLocked" : "wakeDisplayGroupNoUpdateLocked";
+        Helpers.hookAllMethods("com.android.server.power.PowerManagerService", lpparam.classLoader, methodName, new MethodHook() {
             @Override
             protected void before(final MethodHookParam param) throws Throwable {
-                String reason = param.args[1] instanceof String ? (String)param.args[1] : (String)param.args[2];
+                String reason = (String)param.args[3];
                 if (reason == null) return;
 
                 if (Integer.parseInt(MainModule.mPrefs.getString("system_nolightuponcharges", "1")) == 3 &&
@@ -260,7 +261,6 @@ public class System {
                                 reason.equals("com.android.systemui:WIRELESS_CHARGE") ||
                                 reason.equals("com.android.systemui:WIRELESS_RAPID_CHARGE")
                 )) param.setResult(false);
-                //Helpers.log("wakeUpNoUpdateLocked: " + param.args[0] + " | " + param.args[1] + " | " + param.args[2] + " | " + param.args[3] + " | " + param.args[4]);
             }
         });
     }
