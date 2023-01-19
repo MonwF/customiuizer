@@ -719,8 +719,7 @@
     <string name="appdetails_data_path">数据路径</string>
     <string name="appdetails_app_uid">用户标识符</string>
     <string name="appdetails_sdk">目标SDK版本</string>
-    <string name="appsort_running">状态(默认)</string>
-    <string name="appsort_name">应用名称</string>
+    <string name="appsort_name">应用名称(默认)</string>
     <string name="appsort_frequency">使用频率</string>
     <string name="appsort_storage">存储占用</string>
     <string name="appsort_install">安装时间</string>

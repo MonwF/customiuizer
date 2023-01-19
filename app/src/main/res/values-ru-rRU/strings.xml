@@ -374,8 +374,7 @@
     <string name="appdetails_nolaunch">Стандартный запуск данного приложения невозможен</string>
     <string name="appsort_frequency">Частота использования</string>
     <string name="appsort_install">Время установки</string>
-    <string name="appsort_name">Имя приложения</string>
-    <string name="appsort_running">Состояние (по умолчанию)</string>
+    <string name="appsort_name">Имя приложения (по умолчанию)</string>
     <string name="appsort_storage">Занимаемое место</string>
     <string name="cancel">Отмена</string>
     <string name="add">Добавить</string>
