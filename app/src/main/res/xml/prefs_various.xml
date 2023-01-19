@@ -119,7 +119,7 @@
 		android:title="@string/various_appsort_title"
 		android:entries="@array/appsort"
 		android:entryValues="@array/appsort_val"
-		android:defaultValue="0"
+		android:defaultValue="1"
 		miuizer:valueAsSummary="true"
 		miuizer:dynamic="true" />
 

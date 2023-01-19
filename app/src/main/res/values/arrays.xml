@@ -286,14 +286,12 @@
 	</integer-array>
 
 	<string-array name="appsort">
-		<item>@string/appsort_running</item>
 		<item>@string/appsort_name</item>
 		<item>@string/appsort_frequency</item>
 		<item>@string/appsort_storage</item>
 		<item>@string/appsort_install</item>
 	</string-array>
 	<string-array name="appsort_val">
-		<item>0</item>
 		<item>1</item>
 		<item>2</item>
 		<item>3</item>

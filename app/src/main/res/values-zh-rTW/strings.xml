@@ -17,8 +17,7 @@
     <string name="appdetails_sdk">目標SDK版本</string>
     <string name="appsort_frequency">使用頻率</string>
     <string name="appsort_install">安裝時間</string>
-    <string name="appsort_name">應用名稱</string>
-    <string name="appsort_running">狀態(預設)</string>
+    <string name="appsort_name">應用名稱(預設)</string>
     <string name="appsort_storage">儲存佔用</string>
     <string name="array_1day">更新後1天</string>
     <string name="array_3days">更新後3天</string>

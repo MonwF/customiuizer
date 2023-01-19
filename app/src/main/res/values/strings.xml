@@ -762,8 +762,7 @@
     <string name="appdetails_data_path">Data path</string>
     <string name="appdetails_app_uid">User id</string>
     <string name="appdetails_sdk">Target SDK Version</string>
-    <string name="appsort_running">Status (Default)</string>
-    <string name="appsort_name">App name</string>
+    <string name="appsort_name">App name (Default)</string>
     <string name="appsort_frequency">Usage frequency</string>
     <string name="appsort_storage">Used storage</string>
     <string name="appsort_install">Installation time</string>

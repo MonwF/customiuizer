@@ -709,7 +709,6 @@
     <string name="appdetails_data_path">Ścieżka do danych</string>
     <string name="appdetails_app_uid">ID użytkownika</string>
     <string name="appdetails_sdk">Docelowa wersja SDK</string>
-    <string name="appsort_running">Status (domyślny)</string>
     <string name="appsort_name">Nazwa aplikacji</string>
     <string name="appsort_frequency">Częstotliwość użytkowania</string>
     <string name="appsort_storage">Użycie pamięci</string>

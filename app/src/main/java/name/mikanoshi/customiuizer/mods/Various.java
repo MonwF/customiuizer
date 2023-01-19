@@ -221,7 +221,8 @@ public class Various {
 			return null;
 		}
 		if (bundle == null) bundle = new Bundle();
-		int order = Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_various_appsort", "0"));
+		int order = Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_various_appsort", "1"));
+		order = order - 1;
 		bundle.putInt("current_sory_type", order); // Xiaomi noob typos :)
 		bundle.putInt("current_sort_type", order); // Future proof, they may fix it someday :D
 		return bundle;
