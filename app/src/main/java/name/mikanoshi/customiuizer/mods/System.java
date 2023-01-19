@@ -5729,15 +5729,13 @@ public class System {
                 @Override
                 protected void before(MethodHookParam param) throws Throwable {
                     Object pkgSetting = param.args[0];
-                    boolean compareRecover = (boolean) param.args[5];
                     Object signDetails = XposedHelpers.callMethod(pkgSetting, "getSigningDetails");
                     Object signatures = XposedHelpers.callMethod(signDetails, "getSignatures");
-                    if (signatures == null && !compareRecover) {
+                    if (signatures == null) {
                         param.setResult(false);
+                        return;
                     }
-                    else {
-                        param.setResult(true);
-                    }
+                    param.setResult(true);
                 }
             });
             Helpers.hookAllMethods("com.android.server.pm.InstallPackageHelper", lpparam.classLoader, "doesSignatureMatchForPermissions", new MethodHook() {
