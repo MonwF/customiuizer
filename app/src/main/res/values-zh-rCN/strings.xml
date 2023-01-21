@@ -355,6 +355,7 @@
     <string name="system_wifipassword_btn_title">查看</string>
     <string name="system_wifi_password_label">密码</string>
     <string name="system_wifi_password_dlgtitle">Wi-Fi 详情</string>
+    <string name="system_other_wallpaper_scale_title">壁纸缩放级别</string>
     <string name="system_nodarkforce_title">禁用强制黑暗模式</string>
     <string name="system_nodarkforce_summ">在黑暗模式中不反转某些颜色</string>
     <string name="system_epm_title">扩展电源菜单</string>

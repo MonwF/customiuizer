@@ -363,6 +363,7 @@
     <string name="system_wifipassword_btn_title">View</string>
     <string name="system_wifi_password_label">Password</string>
     <string name="system_wifi_password_dlgtitle">Wi-Fi detail</string>
+    <string name="system_other_wallpaper_scale_title">Wallpaper zoom level</string>
     <string name="system_nodarkforce_title">Disable forced dark mode</string>
     <string name="system_nodarkforce_summ">Do not invert some colors in dark mode</string>
     <string name="system_epm_title">Extended power menu</string>
