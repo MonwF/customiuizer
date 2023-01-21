@@ -885,9 +885,8 @@
 		<item>com.android.server.telecom</item>
 		<item>com.android.settings</item>
 		<item>com.android.systemui</item>
-		<item>com.android.thememanager</item>
 		<item>com.google.android.packageinstaller</item>
-		<item>com.miui.cleanmaster</item>
+		<item>com.miui.miwallpaper</item>
 		<item>com.miui.packageinstaller</item>
 		<item>com.miui.powerkeeper</item>
 		<item>com.miui.securitycenter</item>

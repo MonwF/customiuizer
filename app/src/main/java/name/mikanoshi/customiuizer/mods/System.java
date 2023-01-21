@@ -9118,4 +9118,22 @@ public class System {
             }
         });
     }
+    public static void WallpaperScaleLevelHook(LoadPackageParam lpparam) {
+        Helpers.hookAllConstructors("com.android.server.wm.WallpaperController", lpparam.classLoader, new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                float scale = MainModule.mPrefs.getInt("system_other_wallpaper_scale", 6) / 10.0f;
+                XposedHelpers.setObjectField(param.thisObject, "mMaxWallpaperScale", scale);
+                Context mContext = (Context) XposedHelpers.getObjectField(param.args[0], "mContext");
+                Handler mHandler = new Handler(mContext.getMainLooper());
+                new Helpers.SharedPrefObserver(mContext, mHandler, "pref_key_system_other_wallpaper_scale", 6) {
+                    @Override
+                    public void onChange(String name, int defValue) {
+                        int val = Helpers.getSharedIntPref(mContext, name, defValue);
+                        XposedHelpers.setObjectField(param.thisObject, "mMaxWallpaperScale", val / 10.0f);
+                    }
+                };
+            }
+        });
+    }
 }

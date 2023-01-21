@@ -184,6 +184,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("various_disable_access_devicelogs")) {
                 System.NoAccessDeviceLogsRequest(lpparam);
             }
+            if (mPrefs.getInt("system_other_wallpaper_scale", 6) > 6) System.WallpaperScaleLevelHook(lpparam);
         }
 
         if (pkg.equals("com.miui.miwallpaper")) {

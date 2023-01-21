@@ -1209,6 +1209,17 @@
 			android:summary="@string/system_hideproxywarn_summ"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_other_wallpaper_scale"
+			android:title="@string/system_other_wallpaper_scale_title"
+			android:defaultValue="6"
+			miuizer:minValue="6"
+			miuizer:maxValue="30"
+			miuizer:stepValue="1"
+			miuizer:displayDividerValue="10"
+			miuizer:offtext="@string/array_default"
+			miuizer:format="x%s" />
+
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_cleanshare"
 			android:title="@string/system_cleanshare_title"
