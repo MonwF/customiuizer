@@ -5098,14 +5098,20 @@ public class System {
         });
     }
 
-    public static void Network4GtoLTEHook(LoadPackageParam lpparam) {
+    public static void MobileNetworkTypeHook(LoadPackageParam lpparam) {
         String MobileController = Helpers.isTPlus() ? "com.android.systemui.statusbar.connectivity.MobileSignalController" : "com.android.systemui.statusbar.policy.MobileSignalController";
         Helpers.findAndHookMethod(MobileController, lpparam.classLoader, "getMobileTypeName", int.class, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 String net = (String)param.getResult();
-                if ("4G".equals(net)) param.setResult("LTE");
-                else if ("4G+".equals(net)) param.setResult("LTE+");
+                if (MainModule.mPrefs.getBoolean("system_4gtolte")) {
+                    if ("4G".equals(net)) param.setResult("LTE");
+                    else if ("4G+".equals(net)) param.setResult("LTE+");
+                }
+                else {
+                    String mobileType = MainModule.mPrefs.getString("system_statusbar_mobile_showname", "");
+                    param.setResult(mobileType);
+                }
             }
         });
     }

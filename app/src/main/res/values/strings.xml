@@ -128,6 +128,7 @@
     <string name="system_networkindicator_wifi_title">Hide WiFi network activity indicators</string>
     <string name="system_networkindicator_mobile_title">Hide mobile network activity indicators</string>
     <string name="system_4gtolte_title">Show LTE icon for 4G</string>
+    <string name="system_statusbar_mobile_showname_title">Custom mobile network type</string>
     <string name="system_hidemoreicon_title">No hidden icons indicator</string>
     <string name="system_hidemoreicon_summ">Do not show icon with 3 dots when notification icons are hidden</string>
     <string name="system_nonetspeedseparator_title">Network speed separator</string>
