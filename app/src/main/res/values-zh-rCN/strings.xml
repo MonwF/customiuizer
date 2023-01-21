@@ -481,6 +481,8 @@
     <string name="system_applock_activities">已选中活动</string>
     <string name="system_mods_qs">快速设置</string>
     <string name="system_mods_cc">控制中心</string>
+    <string name="system_mods_cc_new">新控制中心</string>
+    <string name="system_mods_cc_legacy">经典控制中心</string>
     <string name="system_qsgridrows_title">行数</string>
     <string name="system_qsgridrows_note">竖屏显示5行时会隐藏标签，横屏时则限制为3行。</string>
     <string name="system_qsgridcolumns_title">列数</string>
@@ -1135,7 +1137,7 @@
     <string name="various_enable_sc_ai_clipboard_blur_location_title">剪切板隐私保护及模糊定位</string>
     <string name="system_lockscreenshortcuts_left_tapaction_title">点击左侧图标时切换手电筒</string>
     <string name="system_cc_tile_roundedrect_title">圆角矩形磁贴</string>
-    <string name="system_cc_enable_style_switch_title">开启控制中心样式切换</string>
+    <string name="system_cc_enable_style_switch_title">强制开启控制中心样式切换</string>
     <string name="system_cc_disable_bluetooth_restrict_title">禁用蓝牙临时关闭态</string>
     <string name="system_cc_collapse_after_clicked_title">单击开关后自动收起</string>
 </resources>

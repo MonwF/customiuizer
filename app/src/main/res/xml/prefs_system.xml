@@ -685,7 +685,7 @@
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_system_cat_qs"
-		android:title="@string/system_mods_qs">
+		android:title="@string/system_mods_cc">
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_fivegtile"
@@ -699,6 +699,80 @@
 			android:title="@string/system_qs_force_systemfonts_title"
 			android:defaultValue="false"
 			/>
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_qsnolabels"
+			android:title="@string/system_qsnolabels_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_qs_hideoperator"
+			android:title="@string/system_qs_hideoperator_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_cc_collapse_after_clicked"
+			android:title="@string/system_cc_collapse_after_clicked_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_cc_enable_style_switch"
+			android:title="@string/system_cc_enable_style_switch_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_cc_disable_bluetooth_restrict"
+			android:title="@string/system_cc_disable_bluetooth_restrict_title"
+			app:isPreferenceVisible="false"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_qshaptics"
+			android:summary="@string/system_qshaptic_summ"
+			android:title="@string/system_qshaptic_title"
+			android:entries="@array/qshaptic"
+			android:entryValues="@array/qshaptic_val"
+			android:defaultValue="1"
+			miuizer:dynamic="true" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_qshaptics_ignore"
+			android:title="@string/controls_fingerprintsuccess_ignore_title"
+			android:summary="@string/controls_fingerprintsuccess_ignore_summ"
+			android:defaultValue="false"
+			miuizer:dynamic="true"
+			miuizer:child="true" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+			android:title="@string/system_mods_cc_new" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_cc_tile_roundedrect"
+			android:title="@string/system_cc_tile_roundedrect_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_ccgridrows"
+			android:title="@string/system_qsgridrows_title"
+			android:defaultValue="4"
+			miuizer:offtext="@string/array_default"
+			miuizer:minValue="3"
+			miuizer:maxValue="6"
+			miuizer:stepValue="1"
+			miuizer:format="%d" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_ccgridcolumns"
+			android:title="@string/system_qsgridcolumns_title"
+			android:defaultValue="4"
+			miuizer:offtext="@string/array_default"
+			miuizer:minValue="4"
+			miuizer:maxValue="6"
+			miuizer:stepValue="1"
+			miuizer:format="%d" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+			android:title="@string/system_mods_cc_legacy" />
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_system_qsgridrows"
@@ -730,77 +804,6 @@
 			miuizer:offtext="@string/array_default"
 			miuizer:minValue="2"
 			miuizer:maxValue="7"
-			miuizer:stepValue="1"
-			miuizer:format="%d" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_qsnolabels"
-			android:title="@string/system_qsnolabels_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_qs_hideoperator"
-			android:title="@string/system_qs_hideoperator_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_cc_collapse_after_clicked"
-			android:title="@string/system_cc_collapse_after_clicked_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
-			android:key="pref_key_system_qshaptics"
-			android:summary="@string/system_qshaptic_summ"
-			android:title="@string/system_qshaptic_title"
-			android:entries="@array/qshaptic"
-			android:entryValues="@array/qshaptic_val"
-			android:defaultValue="1"
-			miuizer:dynamic="true" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_qshaptics_ignore"
-			android:title="@string/controls_fingerprintsuccess_ignore_title"
-			android:summary="@string/controls_fingerprintsuccess_ignore_summ"
-			android:defaultValue="false"
-			miuizer:dynamic="true"
-			miuizer:child="true" />
-
-		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
-			android:title="@string/system_mods_cc" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_cc_tile_roundedrect"
-			android:title="@string/system_cc_tile_roundedrect_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_cc_enable_style_switch"
-			android:title="@string/system_cc_enable_style_switch_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_cc_disable_bluetooth_restrict"
-			android:title="@string/system_cc_disable_bluetooth_restrict_title"
-			app:isPreferenceVisible="false"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_ccgridrows"
-			android:title="@string/system_qsgridrows_title"
-			android:defaultValue="4"
-			miuizer:offtext="@string/array_default"
-			miuizer:minValue="3"
-			miuizer:maxValue="6"
-			miuizer:stepValue="1"
-			miuizer:format="%d" />
-
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_ccgridcolumns"
-			android:title="@string/system_qsgridcolumns_title"
-			android:defaultValue="4"
-			miuizer:offtext="@string/array_default"
-			miuizer:minValue="4"
-			miuizer:maxValue="6"
 			miuizer:stepValue="1"
 			miuizer:format="%d" />
 
