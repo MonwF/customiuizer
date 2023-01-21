@@ -264,7 +264,10 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_batteryindicator")) System.BatteryIndicatorHook(lpparam);
             if (mPrefs.getBoolean("system_disableanynotif")) System.DisableAnyNotificationHook(lpparam);
             if (mPrefs.getBoolean("system_lockscreenshortcuts")) System.LockScreenShortcutHook(lpparam);
-            if (mPrefs.getBoolean("system_4gtolte")) System.Network4GtoLTEHook(lpparam);
+            if (mPrefs.getBoolean("system_4gtolte")
+                || (mPrefs.getBoolean("system_statusbar_mobiletype_single") &&
+                    !mPrefs.getString("system_statusbar_mobile_showname", "").equals(""))
+            ) System.MobileNetworkTypeHook(lpparam);
             boolean moveRight = mPrefs.getBoolean("system_statusbar_netspeed_atright")
                 || mPrefs.getBoolean("system_statusbar_alarm_atright")
                 || mPrefs.getBoolean("system_statusbar_sound_atright")

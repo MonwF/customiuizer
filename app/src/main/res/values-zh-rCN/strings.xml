@@ -126,6 +126,7 @@
     <string name="system_mobiletypeicon_title">隐藏移动网络类型</string>
     <string name="system_mobiletypeicon_summ">状态栏隐藏网络类型图标</string>
     <string name="system_4gtolte_title">4G显示LTE图标</string>
+    <string name="system_statusbar_mobile_showname_title">自定义移动网络类型</string>
     <string name="system_hidemoreicon_title">不显示隐藏图标指示器</string>
     <string name="system_hidemoreicon_summ">隐藏通知图标时不显示3点图标</string>
     <string name="system_nonetspeedseparator_title">网速分隔符</string>
