@@ -1600,6 +1600,12 @@ public class Launcher {
 		Helpers.findAndHookMethod("com.miui.home.launcher.allapps.category.fragment.RecommendCategoryAppListFragment", lpparam.classLoader, "onClick", View.class, hook);
 	}
 
+	public static void DisableUnlockWallpaperScale(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.miui.miwallpaper.manager.WallpaperServiceController", lpparam.classLoader, "noNeedDesktopWallpaperScaleAnim",
+			XC_MethodReplacement.returnConstant(true)
+			);
+	}
+
 	public static void DisableLauncherWallpaperScale(LoadPackageParam lpparam) {
 		Class<?> WallpaperZoomManagerKtClass = findClassIfExists("com.miui.home.launcher.wallpaper.WallpaperZoomManagerKt", lpparam.classLoader);
 		if (MainModule.mPrefs.getBoolean("launcher_disable_wallpaperscale")) {

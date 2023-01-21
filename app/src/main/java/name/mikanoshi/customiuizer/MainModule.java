@@ -186,6 +186,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             }
         }
 
+        if (pkg.equals("com.miui.miwallpaper")) {
+            if (mPrefs.getBoolean("launcher_disable_wallpaperscale")) Launcher.DisableUnlockWallpaperScale(lpparam);
+        }
         if (pkg.equals("com.android.systemui")) {
             System.setupStatusBar(lpparam);
             GlobalActions.setupStatusBar(lpparam);
