@@ -1164,12 +1164,16 @@ public class System {
         }
     }
 
-    private static void initSecondTimer(Object clockController) {
-        boolean ccShowSeconds = MainModule.mPrefs.getBoolean("system_drawer_clockseconds");
+    private static boolean getShowSeconds() {
         boolean sbShowSeconds = MainModule.mPrefs.getBoolean("system_statusbar_clock_show_seconds");
         String customFormat = MainModule.mPrefs.getString("system_statusbar_clock_customformat", "");
         boolean enableCustomFormat = MainModule.mPrefs.getBoolean("system_statusbar_clock_customformat_enable");
-        boolean finalSbShowSeconds = (enableCustomFormat && customFormat.contains(":ss")) || (!enableCustomFormat && sbShowSeconds);
+        return (enableCustomFormat && customFormat.contains(":ss")) || (!enableCustomFormat && sbShowSeconds);
+    }
+
+    private static void initSecondTimer(Object clockController) {
+        boolean ccShowSeconds = MainModule.mPrefs.getBoolean("system_drawer_clockseconds");
+        boolean finalSbShowSeconds = getShowSeconds();
         Context mContext = (Context) XposedHelpers.getObjectField(clockController, "mContext");
         Timer scheduleTimer = (Timer) XposedHelpers.getAdditionalInstanceField(clockController, "scheduleTimer");
         if (scheduleTimer != null) {
@@ -1192,14 +1196,9 @@ public class System {
                             Iterator<Object> it = mClockListeners.iterator();
                             while (it.hasNext()) {
                                 Object clock = it.next();
-                                String clockName = (String) XposedHelpers.getAdditionalInstanceField(clock, "clockName");
-                                if (clock != null) {
-                                    if ("ccClock".equals(clockName) && ccShowSeconds) {
-                                        XposedHelpers.callMethod(clock, "onTimeChange");
-                                    }
-                                    else if ("clock".equals(clockName) && finalSbShowSeconds) {
-                                        XposedHelpers.callMethod(clock, "onTimeChange");
-                                    }
+                                Object showSeconds = XposedHelpers.getAdditionalInstanceField(clock, "showSeconds");
+                                if (showSeconds != null) {
+                                    XposedHelpers.callMethod(clock, "onTimeChange");
                                 }
                             }
                         }
@@ -1230,6 +1229,23 @@ public class System {
         };
         if (ccShowSeconds || statusbarClockTweak) {
             Helpers.hookAllConstructors("com.android.systemui.statusbar.policy.MiuiStatusBarClockController", lpparam.classLoader, ScheduleHook);
+
+            Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.MiuiStatusBarClockController", lpparam.classLoader, "fireTimeChange", new MethodHook() {
+                @Override
+                protected void before(MethodHookParam param) throws Throwable {
+                    Object clockController = param.thisObject;
+                    ArrayList<Object> mClockListeners = (ArrayList<Object>) XposedHelpers.getObjectField(clockController, "mClockListeners");
+                    Iterator<Object> it = mClockListeners.iterator();
+                    while (it.hasNext()) {
+                        Object clock = it.next();
+                        Object showSeconds = XposedHelpers.getAdditionalInstanceField(clock, "showSeconds");
+                        if (showSeconds == null) {
+                            XposedHelpers.callMethod(clock, "onTimeChange");
+                        }
+                    }
+                    param.setResult(null);
+                }
+            });
         }
 
         if (statusbarClockTweak) {
@@ -1251,9 +1267,13 @@ public class System {
                 int thisClockId = clock.getId();
                 if (clockId == thisClockId && statusbarClockTweak) {
                     XposedHelpers.setAdditionalInstanceField(clock, "clockName", "clock");
+                    if (getShowSeconds()) {
+                        XposedHelpers.setAdditionalInstanceField(clock, "showSeconds", true);
+                    }
                 }
                 else if (bigClockId == thisClockId && ccShowSeconds) {
                     XposedHelpers.setAdditionalInstanceField(clock, "clockName", "ccClock");
+                    XposedHelpers.setAdditionalInstanceField(clock, "showSeconds", true);
                 }
             }
         });
