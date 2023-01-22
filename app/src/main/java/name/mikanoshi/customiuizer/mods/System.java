@@ -8409,7 +8409,6 @@ public class System {
         }
 
         HashMap<String, Integer> dualSignalResMap = new HashMap<String, Integer>();
-        HashMap<Integer, String> dualSignalId2NameMap = new HashMap<Integer, String>();
         String[] colorModeList = {"", "dark", "tint"};
 //        String[] iconStyles = {"", "thick", "theme"};
         String selectedIconStyle = MainModule.mPrefs.getString("system_statusbar_dualsimin2rows_style", "");
@@ -8425,14 +8424,8 @@ public class System {
                     for (int slot = 1; slot <= 2; slot++) {
                         for (int lvl = 0; lvl <= 5; lvl++) {
                             for (String colorMode : colorModeList) {
-                                String iconStyle = selectedIconStyle;
-                                String dualIconResName = "statusbar_signal_" + slot + "_" + lvl + (!colorMode.equals("") ? ("_" + colorMode) : "") + (!iconStyle.equals("") ? ("_" + iconStyle) : "");
-                                if (iconStyle.equals("theme")) {
-                                    int fakeResId = ResourceHooks.getFakeResId(dualIconResName);
-                                    dualSignalResMap.put(dualIconResName, fakeResId);
-                                    dualSignalId2NameMap.put(fakeResId, dualIconResName);
-                                }
-                                else {
+                                if (!selectedIconStyle.equals("theme") || !colorMode.equals("tint") ) {
+                                    String dualIconResName = "statusbar_signal_" + slot + "_" + lvl + (!colorMode.equals("") ? ("_" + colorMode) : "") + (!selectedIconStyle.equals("") ? ("_" + selectedIconStyle) : "");
                                     int iconResId = modRes.getIdentifier(dualIconResName, "drawable", Helpers.modulePkg);
                                     dualSignalResMap.put(dualIconResName, MainModule.resHooks.addResource(dualIconResName, iconResId));
                                 }
@@ -8593,42 +8586,6 @@ public class System {
                         layoutParams.gravity = Gravity.CENTER;
                         mMobile.setLayoutParams(layoutParams);
                         mSmallRoaming.setLayoutParams(layoutParams);
-                    }
-                }
-            });
-        }
-
-        if (selectedIconStyle.equals("theme")) {
-            Helpers.findAndHookMethod("android.content.res.AssetManager", lpparam.classLoader, "getResourceValue", int.class, int.class, TypedValue.class, boolean.class, new MethodHook() {
-                @Override
-                protected void before(MethodHookParam param) throws Throwable {
-                    int resId = (int) param.args[0];
-                    String resName = dualSignalId2NameMap.get(resId);
-                    if (resName != null) {
-                        TypedValue tv = (TypedValue) param.args[2];
-                        tv.assetCookie = 17;
-                        tv.type = 3;
-                        tv.string = "res/drawable/" + resName + ".png";
-                        tv.resourceId = resId;
-                        tv.changingConfigurations = 0;
-                        tv.data = resId & 0x0000ffff;
-                        param.setResult(true);
-                    }
-                }
-            });
-            Helpers.hookAllMethods("android.content.res.ResourcesImpl", lpparam.classLoader, "loadDrawableForCookie", new MethodHook() {
-                @Override
-                protected void before(MethodHookParam param) throws Throwable {
-                    int resId = (int) param.args[2];
-                    String resName = dualSignalId2NameMap.get(resId);
-                    if (resName != null) {
-                        Object dr;
-                        Object mLookupStack = XposedHelpers.getObjectField(param.thisObject, "mLookupStack");
-                        Object stack = XposedHelpers.callMethod(mLookupStack, "get");
-                        XposedHelpers.callMethod(stack, "push", resId);
-                        dr = XposedHelpers.callMethod(param.args[0], "loadOverlayDrawable", param.args[1], param.args[2]);
-                        XposedHelpers.callMethod(stack, "pop");
-                        param.setResult(dr);
                     }
                 }
             });
