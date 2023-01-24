@@ -5718,9 +5718,20 @@ public class System {
     public static void NoSignatureVerifyServiceHook(LoadPackageParam lpparam) {
         Helpers.hookAllMethods("android.content.pm.PackageParser.SigningDetails", lpparam.classLoader, "checkCapability", XC_MethodReplacement.returnConstant(true));
         Helpers.hookAllMethods("android.content.pm.PackageParser.SigningDetails", lpparam.classLoader, "checkCapabilityRecover", XC_MethodReplacement.returnConstant(true));
-        Helpers.hookAllMethodsSilently("com.miui.server.SecurityManagerService", lpparam.classLoader, "compareSignatures", XC_MethodReplacement.returnConstant(true));
-        Helpers.hookAllMethodsSilently("com.miui.server.SecurityManagerService", lpparam.classLoader, "checkSysAppCrack", XC_MethodReplacement.returnConstant(true));
-        Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "compareSignatures", new MethodHook() {
+        Helpers.hookAllMethodsSilently("com.miui.server.SecurityManagerService", lpparam.classLoader, "checkSysAppCrack", XC_MethodReplacement.returnConstant(false));
+        Helpers.hookAllMethodsSilently("com.miui.server.SecurityManagerService", lpparam.classLoader, "compareSignatures",  new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                Object s1 = param.args[0];
+                Object s2 = param.args[1];
+                int ret = 0;
+                if (s1 == null || s2 == null) {
+                    ret = -3;
+                }
+                param.setResult(ret);
+            }
+        });
+        MethodHook compareHook = new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 Object s1 = param.args[0];
@@ -5738,12 +5749,21 @@ public class System {
                 }
                 param.setResult(ret);
             }
+        };
+        Helpers.hookAllMethodsSilently("miui.util.CertificateUtils", lpparam.classLoader, "compareSignatures", compareHook);
+        Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "compareSignatures", compareHook);
+
+        Class <?> SignDetails = findClassIfExists("android.content.pm.SigningDetails", lpparam.classLoader);
+        Object signUnknown = XposedHelpers.getStaticObjectField(SignDetails, "UNKNOWN");
+        Helpers.hookAllMethods(SignDetails, "checkCapability", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                if (param.thisObject == signUnknown || param.args[0] == signUnknown) param.setResult(false);
+                else param.setResult(true);
+            }
         });
-        Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "matchSignaturesCompat", XC_MethodReplacement.returnConstant(true));
-        Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "matchSignaturesRecover", XC_MethodReplacement.returnConstant(true));
-        Helpers.hookAllMethodsSilently("miui.util.CertificateUtils", lpparam.classLoader, "compareSignatures", XC_MethodReplacement.returnConstant(true));
+
         if (Helpers.isTPlus()) {
-            Helpers.hookAllMethods("android.content.pm.SigningDetails", lpparam.classLoader, "checkCapability", XC_MethodReplacement.returnConstant(true));
             Helpers.hookAllConstructors("android.util.jar.StrictJarVerifier", lpparam.classLoader, new MethodHook() {
                 @Override
                 protected void after(MethodHookParam param) throws Throwable {
@@ -5752,19 +5772,7 @@ public class System {
             });
             Helpers.hookAllMethods("android.util.jar.StrictJarVerifier", lpparam.classLoader, "verifyMessageDigest", XC_MethodReplacement.returnConstant(true));
             Helpers.hookAllMethods("android.util.jar.StrictJarVerifier", lpparam.classLoader, "verify", XC_MethodReplacement.returnConstant(true));
-            Helpers.hookAllMethods("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "verifySignatures", new MethodHook() {
-                @Override
-                protected void before(MethodHookParam param) throws Throwable {
-                    Object pkgSetting = param.args[0];
-                    Object signDetails = XposedHelpers.callMethod(pkgSetting, "getSigningDetails");
-                    Object signatures = XposedHelpers.callMethod(signDetails, "getSignatures");
-                    if (signatures == null) {
-                        param.setResult(false);
-                        return;
-                    }
-                    param.setResult(true);
-                }
-            });
+            Helpers.hookAllMethods("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "verifySignatures", XC_MethodReplacement.returnConstant(false));
             Helpers.hookAllMethods("com.android.server.pm.InstallPackageHelper", lpparam.classLoader, "doesSignatureMatchForPermissions", new MethodHook() {
                 @Override
                 protected void before(MethodHookParam param) throws Throwable {
@@ -5776,37 +5784,6 @@ public class System {
                 }
             });
         }
-    }
-
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static void NoSignatureVerifyMiuiHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethodSilently("com.android.packageinstaller.InstallAppProgress.a", lpparam.classLoader, "a", Boolean.class, new MethodHook() {
-            @Override
-            protected void before(MethodHookParam param) throws Throwable {
-                param.args[0] = true;
-            }
-        });
-
-        Helpers.findAndHookMethodSilently("com.android.packageinstaller.InstallAppProgress.a", lpparam.classLoader, "onPostExecute", Boolean.class, new MethodHook() {
-            @Override
-            protected void before(MethodHookParam param) throws Throwable {
-                param.args[0] = true;
-            }
-        });
-
-        Helpers.findAndHookMethodSilently("com.android.packageinstaller.IncrementInstallProgress.a", lpparam.classLoader, "a", Boolean.class, new MethodHook() {
-            @Override
-            protected void before(MethodHookParam param) throws Throwable {
-                param.args[0] = true;
-            }
-        });
-
-        Helpers.findAndHookMethodSilently("com.android.packageinstaller.IncrementInstallProgress.a", lpparam.classLoader, "onPostExecute", Boolean.class, new MethodHook() {
-            @Override
-            protected void before(MethodHookParam param) throws Throwable {
-                param.args[0] = true;
-            }
-        });
     }
 
     public static void ScreenDimTimeHook(LoadPackageParam lpparam) {
