@@ -1182,6 +1182,8 @@ public class System {
         if (ccShowSeconds || finalSbShowSeconds) {
             final Handler mClockHandler = new Handler(mContext.getMainLooper());
             long delay = 1000 - SystemClock.elapsedRealtime() % 1000;
+            boolean beginOfSecond =  MainModule.mPrefs.getBoolean("system_statusbar_clock_seconds_sync_beginning");
+            delay += beginOfSecond ? 950 : 50;
             Timer timer = new Timer();
             timer.scheduleAtFixedRate(new TimerTask() {
                 @Override

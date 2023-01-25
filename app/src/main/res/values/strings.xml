@@ -118,6 +118,7 @@
     <string name="system_clock_show_year_title">Show year</string>
     <string name="system_clock_fixedwidth_title">Fixed width to prevent horizontal jitter</string>
     <string name="system_statusbar_clock_align_title">Horizontal alignment</string>
+    <string name="system_statusbar_clock_seconds_sync_title">Synchronization at the beginning of second</string>
     <string name="system_clock_extra_width_title">Extra width</string>
     <string name="system_clock_extra_width_summ">Avoid to display an ellipsis</string>
     <string name="system_clockseconds_summ">Display seconds in the status bar clock</string>
