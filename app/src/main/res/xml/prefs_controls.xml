@@ -255,7 +255,8 @@
 			miuizer:minValue="0"
 			miuizer:maxValue="50"
 			miuizer:stepValue="1"
-			miuizer:format="%d dp" />
+			miuizer:format="%d dp"
+			android:dependency="pref_key_controls_nonavbar" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 			android:title="@string/mods_actions"
