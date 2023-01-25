@@ -2773,12 +2773,12 @@ public class System {
     }
 
     public static void ExtendedPowerMenuHook(LoadPackageParam lpparam) {
-        final boolean[] isListened = {false};
         Helpers.findAndHookMethod("com.android.systemui.SystemUIApplication", lpparam.classLoader, "onCreate", new MethodHook() {
+            private boolean isListened = false;
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                if (!isListened[0]) {
-                    isListened[0] = true;
+                if (!isListened) {
+                    isListened = true;
                     Context mContext = (Context) XposedHelpers.callMethod(param.thisObject, "getApplicationContext");
                     File powermenu = new File(mContext.getCacheDir(), "extended_power_menu");
                     if (powermenu == null) {
