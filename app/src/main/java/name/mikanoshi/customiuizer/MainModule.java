@@ -347,6 +347,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 
             boolean hideIconsActive =
                 mPrefs.getBoolean("system_statusbaricons_wifi") ||
+                mPrefs.getBoolean("system_statusbaricons_dualwifi") ||
                 mPrefs.getBoolean("system_statusbaricons_alarm") ||
                 mPrefs.getBoolean("system_statusbaricons_profile") ||
                 mPrefs.getBoolean("system_statusbaricons_sound") ||

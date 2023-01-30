@@ -96,6 +96,11 @@
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_dualwifi"
+		android:title="@string/system_statusbaricons_dualwifi_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbaricons_vowifi"
 		android:title="@string/system_statusbaricons_vowifi_title"
 		android:defaultValue="false" />
