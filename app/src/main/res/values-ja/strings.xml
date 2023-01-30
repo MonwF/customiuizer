@@ -20,8 +20,13 @@
   <string name="snooze_created">作成済み</string>
   <string name="snooze_updated">更新</string>
   <string name="snooze_repost">再投稿</string>
+
   <string name="mods">Mod</string>
   <string name="mods_actions">アクション</string>
+  <string name="value_is_empty">値は未設定です</string>
+  <string name="value_is_set">値は設定されています</string>
+  <string name="clear_value">クリア</string>
+
   <string name="enable_mod">Modを有効化</string>
   <string name="system_mods">システム</string>
   <string name="system_mods_screen">画面</string>
@@ -87,7 +92,7 @@
   <string name="system_clockseconds_title">秒を表示</string>
   <string name="system_clock_show_ampm_title">AM|PMを表示</string>
   <string name="system_clock_time_format_title">24時間形式で表示</string>
-  <string name="system_clockleadingzero_title">ゼロから始まる時刻で表示</string>
+  <string name="system_clock_leadingzero_title">ゼロから始まる時刻で表示</string>
   <string name="system_clock_customformat_enable_title">カスタムをした形式を有効</string>
   <string name="system_clock_customformat_setting_title">形式を設定</string>
   <string name="system_clock_customformat_help_summ">
