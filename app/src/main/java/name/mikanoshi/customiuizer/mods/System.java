@@ -2878,18 +2878,8 @@ public class System {
             protected void before(MethodHookParam param) throws Throwable {
                 View mDismissView = (View)XposedHelpers.getObjectField(param.thisObject, "mDismissView");
                 if (mDismissView != null) {
-                    Object mKeyguardShowing = XposedHelpers.getObjectField(param.thisObject, "mKeyguardShowing");
-                    XposedHelpers.setAdditionalInstanceField(param.thisObject, "currentKeyguard", mKeyguardShowing);
-                    XposedHelpers.setObjectField(param.thisObject, "mKeyguardShowing", true);
-                }
-            }
-
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                View mDismissView = (View)XposedHelpers.getObjectField(param.thisObject, "mDismissView");
-                if (mDismissView != null) {
-                    Object mKeyguardShowing = XposedHelpers.getAdditionalInstanceField(param.thisObject, "currentKeyguard");
-                    XposedHelpers.setObjectField(param.thisObject, "mKeyguardShowing", mKeyguardShowing);
+                    mDismissView.setVisibility(View.GONE);
+                    param.setResult(null);
                 }
             }
         });
