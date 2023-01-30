@@ -4089,6 +4089,7 @@ public class System {
                 "nfc".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_nfc") ||
                 "location".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_gps") ||
                 "wifi".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_wifi") ||
+                "slave_wifi".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_dualwifi") ||
                 "hotspot".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_hotspot") ||
                 "no_sim".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_nosims") ||
                 "bluetooth_handsfree_battery".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_btbattery") ||

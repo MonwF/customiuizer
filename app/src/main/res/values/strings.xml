@@ -52,6 +52,7 @@
     <string name="system_statusbaricons_volte_title">VoLTE</string>
     <string name="system_statusbaricons_vowifi_title" translatable="false">VoWiFi</string>
     <string name="system_statusbaricons_roaming_title">Roaming</string>
+    <string name="system_statusbaricons_dualwifi_title">Dual Wi-Fi</string>
     <string name="system_statusbaricons_gps_title" translatable="false">GPS</string>
     <string name="system_statusbaricons_vpn_title" translatable="false">VPN</string>
     <string name="system_statusbaricons_nfc_title" translatable="false">NFC</string>
