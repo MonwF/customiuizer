@@ -362,6 +362,7 @@
   <string name="system_airplanemodeconfig_note">Modは既存のシステム設定を変更するだけになるため、一部のオプションは正常に動作しない場合があります。</string>
   <string name="system_fivegtile_title">5Gタイル</string>
   <string name="system_fivegtile_summ">クイック設定に5Gタイルのパネルを追加</string>
+  <string name="system_qs_force_systemfonts_title">システムフォントを時計に強制使用する</string>
   <string name="system_wifipassword_title">保存されたWi-Fiパスワードを表示する</string>
   <string name="system_wifipassword_btn_title">表示</string>
   <string name="system_wifi_password_label">パスワード</string>
