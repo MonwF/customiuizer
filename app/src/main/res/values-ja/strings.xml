@@ -382,7 +382,7 @@
   <string name="system_nooverscroll_title">オーバースクロールを無効</string>
   <string name="system_nooverscroll_summ">リストビューをオーバースクロールしないようにします</string>
   <string name="system_removesecure_title">セキュアコンテンツ保護を無効化</string>
-  <string name="system_remove_startactconfirm_title">開いているアプリの確認を無効</string>
+  <string name="system_remove_startactconfirm_title">開いているアプリの確認を無効化</string>
   <string name="system_removesecure_summ">あらゆるアプリのスクリーンショットやスクリーンレコードを可能にします</string>
   <string name="system_hidelowbatwarn_title">バッテリー残量低下の警告を非表示</string>
   <string name="system_hidelowbatwarn_summ">バッテリーセーバーをオンにするように求める警告ダイアログ表示しないようにします</string>
