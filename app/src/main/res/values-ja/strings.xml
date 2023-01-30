@@ -751,14 +751,14 @@
   <string name="various_disableapp_summ">アプリ情報から殆どのアプリの無効化を可能にします</string>
   <string name="various_securitycenter_unlock_title">セキュリティセンター機能のアンロック</string>
   <string name="various_apps_title">アプリの詳細を表示</string>
-  <string name="various_apps_summ">アプリ情報に以下の項目を追加します:\n- バージョンコード\n- APKのフルパス\n- データのパス\n- ユーザーID\n- ターゲットSDKのバージョン\n- Playストアで開く\n- アプリの起動</string>
+  <string name="various_apps_summ">アプリ情報に以下の項目を追加します:\n- バージョンコード\n- APKのフルパス\n- データのパス\n- ユーザーID\n- ターゲットSDKのバージョン\n- Google Play ストアを開く\n- アプリの起動</string>
   <string name="various_appsort_title">インストール済みアプリのソート順</string>
   <string name="disable_app_title">アプリを無効化しますか?</string>
   <string name="disable_app_text">これが重要なシステムアプリである場合、無効化する事でMIUIが起動しなくなる可能性があります :)</string>
   <string name="disable_app_settings">それはマズいですよ! :)</string>
   <string name="disable_app_fail">アプリの状態の変更に失敗しました</string>
-  <string name="appdetails_playstore">Playストアで開く</string>
-  <string name="appdetails_launch">起動</string>
+  <string name="appdetails_playstore">Google Play ストアを開く</string>
+  <string name="appdetails_launch">アプリを起動</string>
   <string name="appdetails_nolaunch">アプリにデフォルトで起動可能なアクティビティが存在しません</string>
   <string name="appdetails_apk_file">APKファイル名</string>
   <string name="appdetails_apk_version_code">APKバージョンコード</string>
