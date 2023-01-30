@@ -288,7 +288,7 @@
   <string name="system_vibration_amp_period_title">時間帯</string>
   <string name="system_vibration_title">バイブレーションのブロック</string>
   <string name="system_vibration_summ">選択をしたアプリのバイブレーションをブロックします</string>
-  <string name="system_volume">システムサウンド</string>
+  <string name="system_volume">システム</string>
   <string name="system_scramblepin_title">スクランブルPIN</string>
   <string name="system_scramblepin_summ">PINボタンの配列をランダムに変更します</string>
   <string name="system_securelock_title">ロック画面の強化</string>
