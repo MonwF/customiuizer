@@ -746,9 +746,9 @@
   <string name="various_callreminder_vibration_own_title">独自のパターン</string>
   <string name="various_callreminder_vibration_own_msg">フォーマット: 遅延、バイブレーション、遅延、バイブレーション…</string>
   <string name="various_restrictapp_title">制限事項</string>
-  <string name="various_restrictapp_summ">バッテリーセーバーの設定やシステムアプリのWi-Fiのアクセスも可能になります</string>
+  <string name="various_restrictapp_summ">バッテリーセーバーの設定やシステムアプリのWi-Fi設定のアクセスが可能になります</string>
   <string name="various_disableapp_title">アプリの状態制御</string>
-  <string name="various_disableapp_summ">アプリ情報から殆どのアプリを無効化を可能にします</string>
+  <string name="various_disableapp_summ">アプリ情報から殆どのアプリの無効化を可能にします</string>
   <string name="various_securitycenter_unlock_title">セキュリティセンター機能のアンロック</string>
   <string name="various_apps_title">アプリの詳細を表示</string>
   <string name="various_apps_summ">アプリ情報に以下の項目を追加します:\n- バージョンコード\n- APKのフルパス\n- データのパス\n- ユーザーID\n- ターゲットSDKのバージョン\n- Playストアで開く\n- アプリの起動</string>
