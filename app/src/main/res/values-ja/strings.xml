@@ -881,6 +881,7 @@
   <string name="array_any">任意</string>
   <string name="array_others">その他</string>
   <string name="array_nofs">フルスクリーンモードでない時</string>
+  <string name="array_home">ホーム画面上</string>
   <string name="array_incoming">着信中</string>
   <string name="array_outgoing">発信中</string>
   <string name="array_both">両方</string>
