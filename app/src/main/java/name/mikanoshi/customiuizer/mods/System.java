@@ -8721,9 +8721,6 @@ public class System {
         if (cols > 4) {
             MainModule.resHooks.setObjectReplacement(lpparam.packageName, "dimen", "qs_control_tiles_columns", cols);
         }
-        if (rows != 4) {
-            MainModule.resHooks.setObjectReplacement(lpparam.packageName, "dimen", "qs_control_tiles_min_rows", rows);
-        }
 
         Helpers.findAndHookMethod("com.android.systemui.SystemUIApplication", lpparam.classLoader, "onCreate", new MethodHook() {
             private boolean isHooked = false;
