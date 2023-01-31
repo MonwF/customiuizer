@@ -653,12 +653,7 @@
     <string name="system_ignorecalls_title">忽略通話</string>
     <string name="system_inactivebrightness_title">停用亮度滑塊</string>
     <string name="system_lockscreenshortcuts_left_align_title">垂直對齊</string>
-    <string name="system_lockscreenshortcuts_left_center_title">水平置中</string>
     <string name="system_lockscreenshortcuts_left_off_title">禁用右滑手勢</string>
-    <string name="system_lockscreenshortcuts_left_skiplock_summ">設備鎖定時可以訪問啟動的應用</string>
-    <string name="system_lockscreenshortcuts_left_skiplock_title">不需解鎖</string>
-    <string name="system_lockscreenshortcuts_left_summ">管理快捷方式列表</string>
-    <string name="system_lockscreenshortcuts_left_title">左側螢幕快捷方式</string>
     <string name="system_lockscreenshortcuts_right_image_hint">拖動圖示用以執行自定義動作</string>
     <string name="system_lockscreenshortcuts_right_image_summ">用 CustoMIUIzer 圖示替換相機圖示</string>
     <string name="system_lockscreenshortcuts_right_image_title">更改右側圖示</string>
@@ -1021,7 +1016,7 @@
 
     <string name="array_current">僅電流</string>
     <string name="array_temperature">僅溫度</string>
-    <string name="system_lockscreenshortcuts_left_tapaction_title">點選左側圖示時切換手電筒</string>
+    <string name="system_lockscreenshortcuts_left_tapaction_title">長按左側圖示時切換手電筒</string>
     <string name="system_statusbar_batterytempandcurrent_content_title">顯示內容</string>
     <string name="system_statusbar_batterytempandcurrent_title">顯示電池溫度和電流</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">右側顯示</string>

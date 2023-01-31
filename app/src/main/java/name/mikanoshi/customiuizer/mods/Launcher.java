@@ -67,37 +67,9 @@ import name.mikanoshi.customiuizer.utils.ShakeManager;
 
 public class Launcher {
 
-//	private static GestureDetector mDetector;
 	private static GestureDetector mDetectorHorizontal;
 
-	@SuppressWarnings("ResultOfMethodCallIgnored")
 	public static void HomescreenSwipesHook(final LoadPackageParam lpparam) {
-//		// Detect vertical swipes
-//		Helpers.findAndHookMethod("com.miui.home.launcher.ForceTouchLayer", lpparam.classLoader, "onInterceptTouchEvent", MotionEvent.class, new MethodHook() {
-//			@Override
-//			protected void before(final MethodHookParam param) throws Throwable {
-//				Context helperContext = ((ViewGroup)param.thisObject).getContext();
-//
-//				if (helperContext == null) return;
-//				if (mDetector == null) mDetector = new GestureDetector(helperContext, new SwipeListener(helperContext));
-//
-//				MotionEvent ev = (MotionEvent)param.args[0];
-//				if (ev == null) return;
-//				mDetector.onTouchEvent(ev);
-//			}
-//		});
-
-//		if (MainModule.pref_swipedown != 1)
-//		Helpers.findAndHookMethod("com.miui.launcher.utils.LauncherUtils", lpparam.classLoader, "expandStatusBar", Context.class, XC_MethodReplacement.DO_NOTHING);
-//
-//		if (MainModule.pref_swipeup != 1)
-//		Helpers.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "allowedSlidingUpToStartGolbalSearch", Context.class, new MethodHook() {
-//			@Override
-//			protected void before(final MethodHookParam param) throws Throwable {
-//				param.setResult(false);
-//			}
-//		});
-
 		Helpers.findAndHookMethod("com.miui.home.launcher.Workspace", lpparam.classLoader, "onVerticalGesture", int.class, MotionEvent.class, new MethodHook() {
 			@Override
 			protected void before(final MethodHookParam param) throws Throwable {
@@ -133,17 +105,18 @@ public class Launcher {
 						try {
 							String type = uri.getPathSegments().get(1);
 							String key = uri.getPathSegments().get(2);
-							if (key.contains("pref_key_launcher_swipedown"))
-							switch (type) {
-								case "string":
-									MainModule.mPrefs.put(key, Helpers.getSharedStringPref(act, key, ""));
-									break;
-								case "integer":
-									MainModule.mPrefs.put(key, Helpers.getSharedIntPref(act, key, 1));
-									break;
-								case "boolean":
-									MainModule.mPrefs.put(key, Helpers.getSharedBoolPref(act, key, false));
-									break;
+							if (key.contains("pref_key_launcher_swipedown")) {
+								switch (type) {
+									case "string":
+										MainModule.mPrefs.put(key, Helpers.getSharedStringPref(act, key, ""));
+										break;
+									case "integer":
+										MainModule.mPrefs.put(key, Helpers.getSharedIntPref(act, key, 1));
+										break;
+									case "boolean":
+										MainModule.mPrefs.put(key, Helpers.getSharedBoolPref(act, key, false));
+										break;
+								}
 							}
 						} catch (Throwable t) {
 							XposedBridge.log(t);
@@ -157,6 +130,13 @@ public class Launcher {
 			@Override
 			protected void before(final MethodHookParam param) throws Throwable {
 				if (MainModule.mPrefs.getInt("launcher_swipedown_action", 1) > 1) param.setResult(false);
+			}
+		});
+
+		Helpers.findAndHookMethodSilently("com.miui.home.launcher.uioverrides.AllAppsSwipeController", lpparam.classLoader, "canInterceptTouch", MotionEvent.class, new MethodHook() {
+			@Override
+			protected void before(final MethodHookParam param) throws Throwable {
+				if (MainModule.mPrefs.getInt("launcher_swipeup_action", 1) > 1) param.setResult(false);
 			}
 		});
 
@@ -515,14 +495,6 @@ public class Launcher {
 				if (MainModule.mPrefs.getStringAsInt("launcher_closefolders", 1) != 2) return;
 				boolean mHasLaunchedAppFromFolder = XposedHelpers.getBooleanField(param.thisObject, "mHasLaunchedAppFromFolder");
 				if (mHasLaunchedAppFromFolder) XposedHelpers.callMethod(param.thisObject, "closeFolder");
-			}
-		});
-
-		//noinspection ResultOfMethodCallIgnored
-		Helpers.findAndHookMethodSilently("com.miui.home.launcher.common.CloseFolderStateMachine", lpparam.classLoader, "onPause", new MethodHook() {
-			@Override
-			protected void before(final MethodHookParam param) throws Throwable {
-				if (MainModule.mPrefs.getStringAsInt("launcher_closefolders", 1) == 3) param.setResult(null);
 			}
 		});
 	}

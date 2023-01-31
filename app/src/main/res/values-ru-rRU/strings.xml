@@ -909,12 +909,7 @@
     <string name="system_lockscreenshortcuts_right_image_summ">Заменить иконку камеры на иконку CustoMIUIzer</string>
     <string name="system_lockscreenshortcuts_right_image_hint">Потяните иконку для запуска действия</string>
     <string name="system_lockscreenshortcuts_left_off_title">Отключить свайп вправо</string>
-    <string name="system_lockscreenshortcuts_left_title">Ярлыки на левом экране</string>
-    <string name="system_lockscreenshortcuts_left_summ">Настройка списка ярлыков</string>
     <string name="system_lockscreenshortcuts_left_align_title">Выравнивание по вертикали</string>
-    <string name="system_lockscreenshortcuts_left_center_title">Горизонтально по центру</string>
-    <string name="system_lockscreenshortcuts_left_skiplock_title">Не требовать разблокировки</string>
-    <string name="system_lockscreenshortcuts_left_skiplock_summ">Запущенные приложения будут доступны даже при заблокированном устройстве</string>
     <string name="system_noscreenlock_title">Отключить блокировку</string>
     <string name="system_noscreenlock_req_summ">Некоторые устройства могут не работать без разблокировки один раз после перезагрузки</string>
     <string name="system_noscreenlock_summ">Выборочно пропускает блокировку устройства (не влияет на безопасность приложений и не удаляет данные отпечатков пальцев)</string>
