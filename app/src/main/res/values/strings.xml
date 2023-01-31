@@ -323,12 +323,7 @@
     <string name="system_lockscreenshortcuts_right_image_summ">Replace camera icon with CustoMIUIzer icon</string>
     <string name="system_lockscreenshortcuts_right_image_hint">Drag the icon to execute custom action</string>
     <string name="system_lockscreenshortcuts_left_off_title">Disable swipe right gesture</string>
-    <string name="system_lockscreenshortcuts_left_title">Left screen shortcuts</string>
-    <string name="system_lockscreenshortcuts_left_summ">Manage shortcuts list</string>
     <string name="system_lockscreenshortcuts_left_align_title">Vertical alignment</string>
-    <string name="system_lockscreenshortcuts_left_center_title">Center horizontally</string>
-    <string name="system_lockscreenshortcuts_left_skiplock_title">Do not require unlock</string>
-    <string name="system_lockscreenshortcuts_left_skiplock_summ">Launched apps could be accessed while device is still locked</string>
     <string name="system_noscreenlock_title">Disable screen lock</string>
     <string name="system_noscreenlock_req_summ">Some devices might not work without unlocking once after boot</string>
     <string name="system_noscreenlock_summ">Selectively disable screen lock (does not change security for any apps and does not remove fingerprint data)</string>
@@ -1177,7 +1172,7 @@
     <string name="various_skip_interceptperm_title">Skip permission intercept timer</string>
     <string name="various_show_battery_temperature_title">Show temperature in battery</string>
     <string name="various_enable_sc_ai_clipboard_blur_location_title">Enable AI clipboard and blur location</string>
-    <string name="system_lockscreenshortcuts_left_tapaction_title">Tap left shortcut to toggle flashlight</string>
+    <string name="system_lockscreenshortcuts_left_tapaction_title">Long click left shortcut to toggle flashlight</string>
     <string name="system_cc_tile_roundedrect_title">Rounded rectangle tile</string>
     <string name="system_cc_enable_style_switch_title">Force Enable CC style switch</string>
     <string name="system_cc_disable_bluetooth_restrict_title">Disable disconnect bluetooth until tomorrow</string>

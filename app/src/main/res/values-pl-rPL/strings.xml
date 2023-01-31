@@ -275,12 +275,7 @@
     <string name="system_lockscreenshortcuts_right_image_summ">Zastąp ikonę aparatu ikoną CustoMIUIzer</string>
     <string name="system_lockscreenshortcuts_right_image_hint">Przeciągnij ikonę, aby wykonać niestandardową akcję</string>
     <string name="system_lockscreenshortcuts_left_off_title">Wyłącz gest przeciągnięcia palcem w prawo</string>
-    <string name="system_lockscreenshortcuts_left_title">Skróty w lewej części ekranu</string>
-    <string name="system_lockscreenshortcuts_left_summ">Zarządzaj listą skrótów</string>
     <string name="system_lockscreenshortcuts_left_align_title">Wyrównanie w pionie</string>
-    <string name="system_lockscreenshortcuts_left_center_title">Wyśrodkuj poziomo</string>
-    <string name="system_lockscreenshortcuts_left_skiplock_title">Nie wymagaj odblokowania</string>
-    <string name="system_lockscreenshortcuts_left_skiplock_summ">Dostęp do uruchomionych aplikacji można uzyskać, gdy urządzenie jest nadal zablokowane</string>
     <string name="system_noscreenlock_title">Wyłącz blokadę ekranu</string>
     <string name="system_noscreenlock_req_summ">Niektóre urządzenia mogą nie działać bez odblokowania raz po uruchomieniu</string>
     <string name="system_noscreenlock_summ">Selektywnie wyłącz blokadę ekranu (nie zmienia zabezpieczeń dla żadnych aplikacji i nie usuwa danych odcisków palców)</string>

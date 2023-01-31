@@ -11,7 +11,6 @@ public class System_LockScreenShortcuts extends SubFragment {
 		super.onActivityCreated(savedInstanceState);
 
 		findPreference("pref_key_system_lockscreenshortcuts_right").setOnPreferenceClickListener(openLockScreenActions);
-		findPreference("pref_key_system_lockscreenshortcuts_left").setOnPreferenceClickListener(openSortableList);
 	}
 
 }
