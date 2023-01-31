@@ -508,7 +508,7 @@
   <string name="system_qqsgridcolumns_title">折りたたまれたパネルの行数</string>
   <string name="system_qqsgridcolumns_note">横方向の場合は1列が追加されます</string>
   <string name="system_qsnolabels_title">ラベルを完全に非表示</string>
-  <string name="system_qs_hideoperator_title">キャリア名を非表示にする</string>
+  <string name="system_qs_hideoperator_title">通信事業者名を非表示にする</string>
   <string name="system_qshaptic_title">クイック設定の触覚フィードバック</string>
   <string name="system_qshaptic_summ">クイック設定のバイブレーションのタイルをタップ時の触覚フィードバック</string>
   <string name="system_mods_other">その他</string>
