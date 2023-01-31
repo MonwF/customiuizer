@@ -871,7 +871,7 @@
   <string name="array_1day">アップデート後、1日間</string>
   <string name="array_3days">アップデート後、3日間</string>
   <string name="array_week">アップデート後、1週間</string>
-  <string name="array_always">常に</string>
+  <string name="array_always">常に表示</string>
   <string name="array_image">画像</string>
   <string name="array_audio">オーディオ</string>
   <string name="array_video">動画</string>
