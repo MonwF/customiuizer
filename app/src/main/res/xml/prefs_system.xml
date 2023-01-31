@@ -723,7 +723,6 @@
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_cc_disable_bluetooth_restrict"
 			android:title="@string/system_cc_disable_bluetooth_restrict_title"
-			app:isPreferenceVisible="false"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
