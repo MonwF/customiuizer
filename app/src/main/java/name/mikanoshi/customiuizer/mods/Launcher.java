@@ -1141,67 +1141,48 @@ public class Launcher {
 						try {
 							String type = uri.getPathSegments().get(1);
 							String key = uri.getPathSegments().get(2);
-							if (key.contains("pref_key_launcher_folder"))
-							switch (type) {
-								case "string":
-									MainModule.mPrefs.put(key, Helpers.getSharedStringPref(act, key, ""));
-									break;
-								case "integer":
-									MainModule.mPrefs.put(key, Helpers.getSharedIntPref(act, key, 1));
-									break;
-								case "boolean":
-									MainModule.mPrefs.put(key, Helpers.getSharedBoolPref(act, key, false));
-									break;
+							if (key.contains("pref_key_launcher_folderblur_")) {
+								switch (type) {
+									case "string":
+										MainModule.mPrefs.put(key, Helpers.getSharedStringPref(act, key, ""));
+										break;
+									case "integer":
+										MainModule.mPrefs.put(key, Helpers.getSharedIntPref(act, key, 1));
+										break;
+									case "boolean":
+										MainModule.mPrefs.put(key, Helpers.getSharedBoolPref(act, key, false));
+										break;
+								}
 							}
 						} catch (Throwable t) {
-							XposedBridge.log(t);
+							Helpers.log(t);
 						}
 					}
 				};
 			}
 		});
 
-		Class<?> buCls = XposedHelpers.findClassIfExists("com.miui.home.launcher.common.BlurUtils", lpparam.classLoader);
-		if (buCls != null) {
-			Method[] methods = buCls.getDeclaredMethods();
-			Method fastBlur = null;
-    		for (Method method: methods)
-    		if ("fastBlur".equals(method.getName())) {
-    			fastBlur = method;
-    			if (method.getParameterTypes().length == 4) break;
-    		}
-
-			if (fastBlur == null) Helpers.log("FolderBlurHook", "Cannot find fastBlur util method!"); else
-			Helpers.hookMethod(fastBlur, new MethodHook() {
+		Class<?> BlurUtils = XposedHelpers.findClassIfExists("com.miui.home.launcher.common.BlurUtils", lpparam.classLoader);
+		if (BlurUtils != null) {
+			Helpers.findAndHookMethod("com.miui.home.launcher.FolderCling", lpparam.classLoader, "open", new MethodHook() {
 				@Override
-				protected void before(MethodHookParam param) throws Throwable {
-					if (MainModule.mPrefs.getBoolean("launcher_folderwallblur_disable")) {
-						param.args[0] = 0.0f;
-						return;
-					}
-					float ratio = MainModule.mPrefs.getInt("launcher_folderwallblur_radius", 0) / 100f;
-					if (ratio > 0) param.args[0] = (float)param.args[0] * ratio;
+				protected void after(MethodHookParam param) throws Throwable {
+					Activity launcher = (Activity) XposedHelpers.getObjectField(param.thisObject, "mLauncher");
+
+					int blurPct = MainModule.mPrefs.getInt("launcher_folderblur_opacity", 0);
+					float blurRatio = blurPct / 100f;
+					XposedHelpers.callStaticMethod(BlurUtils, "fastBlur", blurRatio, launcher.getWindow(), true);
 				}
 			});
 
-			return;
+			Helpers.findAndHookMethod("com.miui.home.launcher.FolderCling", lpparam.classLoader, "close", boolean.class, new MethodHook() {
+				@Override
+				protected void after(MethodHookParam param) throws Throwable {
+					Activity launcher = (Activity) XposedHelpers.getObjectField(param.thisObject, "mLauncher");
+					XposedHelpers.callStaticMethod(BlurUtils, "fastBlur", 0f, launcher.getWindow(), param.args[0]);
+				}
+			});
 		}
-
-		Helpers.findAndHookMethod("com.miui.home.launcher.view.BlurFrameLayout", lpparam.classLoader, "setBlurAlpha", float.class, new MethodHook(10) {
-			@Override
-			protected void before(MethodHookParam param) throws Throwable {
-				float ratio = MainModule.mPrefs.getInt("launcher_folderblur_opacity", 0) / 100f;
-				if (ratio > 0) param.args[0] = ratio + (float)param.args[0] * (1.0f - ratio);
-			}
-		});
-
-		Helpers.findAndHookMethod("com.miui.home.launcher.view.BlurFrameLayout", lpparam.classLoader, "setBlurRadius", float.class, new MethodHook() {
-			@Override
-			protected void before(MethodHookParam param) throws Throwable {
-				float ratio = 5 * MainModule.mPrefs.getInt("launcher_folderblur_radius", 0) / 100f;
-				if (ratio > 0) param.args[0] = ratio;
-			}
-		});
 	}
 
 	private static float scaleStiffness(float val, float scale) {

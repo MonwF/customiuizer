@@ -317,17 +317,11 @@
     <string name="launcher_fixlaunch_title">修復應用訊息</string>
     <string name="launcher_folder_cols_title">資料夾排列數量</string>
     <string name="launcher_folderblur">背景模糊</string>
-    <string name="launcher_folderblur_opacity_title">可見度</string>
-    <string name="launcher_folderblur_radius_title">半徑</string>
-    <string name="launcher_folderblur_summ">壁紙和背景模糊選項。啟動器必須支持資料夾模糊。</string>
-    <string name="launcher_folderblur_title">模糊</string>
     <string name="launcher_folders">資料夾</string>
     <string name="launcher_foldershade_level_title">色彩強度</string>
     <string name="launcher_foldershade_summ">增強或減弱背景</string>
     <string name="launcher_foldershade_title">顏色覆蓋</string>
     <string name="launcher_folderspace_title">減少邊距</string>
-    <string name="launcher_folderwallblur">壁紙模糊</string>
-    <string name="launcher_folderwallblur_radius_summ">特效編輯模式，支持壁紙模糊</string>
     <string name="launcher_folderwidth_title">使用整個資料夾的寬度</string>
     <string name="launcher_gestures">手勢</string>
     <string name="launcher_gestures_action">動作</string>

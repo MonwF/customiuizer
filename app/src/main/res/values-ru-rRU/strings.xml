@@ -506,13 +506,7 @@
     <string name="launcher_foldershade_title">Наложение цвета</string>
     <string name="launcher_foldershade_summ">Затемняет или осветляет фон</string>
     <string name="launcher_foldershade_level_title">Интенсивность цвета</string>
-    <string name="launcher_folderblur_title">Размытие</string>
-    <string name="launcher_folderblur_summ">Настройки размытия фона и обоев. Рабочий стол должен поддерживать размытие в папках.</string>
     <string name="launcher_folderblur">Размытие фона</string>
-    <string name="launcher_folderwallblur">Размытие обоев</string>
-    <string name="launcher_folderblur_opacity_title">Видимость размытого фона</string>
-    <string name="launcher_folderblur_radius_title">Радиус размытия фона</string>
-    <string name="launcher_folderwallblur_radius_summ">Также влияет на размытие обоев в режиме редактирования</string>
     <string name="launcher_closefolder_title">Закрывать папки автоматом</string>
     <string name="launcher_closefolder_summ">Закрывает папку приложения после его запуска</string>
     <string name="launcher_titles">Названия приложений</string>
