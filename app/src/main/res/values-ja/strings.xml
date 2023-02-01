@@ -74,7 +74,7 @@
   <string name="system_batteryindicator_padding_title">水平方向のパディング</string>
   <string name="system_batteryindicator_colorval1_title">満充電時の色</string>
   <string name="system_batteryindicator_colorval2_title">低速充電時の色</string>
-  <string name="system_batteryindicator_colorval3_title">バッテリーセーバー有効時の色</string>
+  <string name="system_batteryindicator_colorval3_title">バッテリーセーバー有効化時の色</string>
   <string name="system_batteryindicator_colorval4_title">充電時の色</string>
   <string name="system_batteryindicator_lowlevel_title">バッテリー残量低下時の色</string>
   <string name="system_batteryindicator_test_title">テスト</string>
@@ -93,7 +93,7 @@
   <string name="system_clock_show_ampm_title">AM|PMを表示</string>
   <string name="system_clock_time_format_title">24時間形式で表示</string>
   <string name="system_clock_leadingzero_title">ゼロから始まる時刻で表示</string>
-  <string name="system_clock_customformat_enable_title">カスタムをした形式を有効</string>
+  <string name="system_clock_customformat_enable_title">カスタムをした形式を有効化</string>
   <string name="system_clock_customformat_setting_title">形式を設定</string>
   <string name="system_clock_customformat_help_summ">
         改行が可能です、2行目以降は切り捨てとなります
@@ -184,7 +184,7 @@
   <string name="system_notifrowmenu_appinfo">アプリ情報</string>
   <string name="system_notifrowmenu_openinfw">フローティングウィンドウ</string>
   <string name="system_notifrowmenu_forceclose">強制的に閉じる</string>
-  <string name="system_disableanynotif_title">すべての通知を無効にする</string>
+  <string name="system_disableanynotif_title">すべての通知を無効化可能にする</string>
   <string name="system_disableanynotif_summ">システム通知も無効化可能にします</string>
   <string name="system_expandnotifs_title">通知を拡張した状態で表示</string>
   <string name="system_expandnotifs_summ">通知を展開した状態で表示します</string>
@@ -247,7 +247,7 @@
   <string name="system_separatevolume_summ">着信音、通知音、システムの音量を個別で設定可能にします</string>
   <string name="system_separatevolume_slider_title">通知の音量スライダー</string>
   <string name="system_separatevolume_slider_summ">拡張音量ダイアログに通知のスライダーを追加します</string>
-  <string name="system_nomediamute_title">メディアのミュートを無効にする</string>
+  <string name="system_nomediamute_title">メディアのミュートを無効化する</string>
   <string name="system_nomediamute_summ">Do Not Disturbモードでメディアの音量をミュートにしないようにします</string>
   <string name="system_volumetimer_title">拡張タイマー</string>
   <string name="system_volumetimer_summ">サイレントとDo Not Disturbモードに間隔を追加します</string>
@@ -292,11 +292,11 @@
   <string name="system_scramblepin_title">スクランブルPIN</string>
   <string name="system_scramblepin_summ">PINボタンの配列をランダムに変更します</string>
   <string name="system_securelock_title">ロック画面の強化</string>
-  <string name="system_securelock_summ">ロック中に電源メニューを無効にします</string>
+  <string name="system_securelock_summ">ロック中に電源メニューを無効化します</string>
   <string name="system_securecontrolcenter_title">セキュアなコントロールセンター</string>
-  <string name="system_securecontrolcenter_summ">ロック中にコントロールセンターを無効にします</string>
+  <string name="system_securecontrolcenter_summ">ロック中にコントロールセンターを無効化します</string>
   <string name="system_secureqs_title">セキュアなクイック設定</string>
-  <string name="system_secureqs_summ">ロック中にセキュリティに配慮したタイルを無効にします</string>
+  <string name="system_secureqs_summ">ロック中にセキュリティに配慮したタイルを無効化します</string>
   <string name="system_secureqs_custom_title">すべてのサードパーティータイル</string>
   <string name="system_secureqs_edit_title">タイルの編集</string>
   <string name="system_secureqs_edit_summ">コントロールセンターには適用されません</string>
@@ -368,7 +368,7 @@
   <string name="system_wifi_password_label">パスワード</string>
   <string name="system_wifi_password_dlgtitle">Wi-Fiの詳細情報</string>
   <string name="system_other_wallpaper_scale_title">壁紙の拡大レベル</string>
-  <string name="system_nodarkforce_title">強制ダークモードを無効</string>
+  <string name="system_nodarkforce_title">強制ダークモードを無効化</string>
   <string name="system_nodarkforce_summ">ダークモード時に一部の色を反転させないようにします</string>
   <string name="system_epm_title">拡張された電源メニュー</string>
   <string name="system_epm_summ">電源メニューに拡張された再起動オプションを追加します (Fastboot、Recovery、ソフトリブート)</string>
@@ -379,7 +379,7 @@
   <string name="system_apksign_summ">APKの署名がインストールされているアプリと異なる場合でもアップデートが可能になります</string>
   <string name="system_magnifier_title">テキストの拡大</string>
   <string name="system_magnifier_summ">入力カーソルの移動時や選択時にテキストを拡大表示します (LSPosedのスコープに文字入力アプリを追加する必要があります)</string>
-  <string name="system_nooverscroll_title">オーバースクロールを無効</string>
+  <string name="system_nooverscroll_title">オーバースクロールを無効化</string>
   <string name="system_nooverscroll_summ">リストビューをオーバースクロールしないようにします</string>
   <string name="system_removesecure_title">セキュアコンテンツ保護を無効化</string>
   <string name="system_remove_startactconfirm_title">開いているアプリの確認を無効化</string>
@@ -389,7 +389,7 @@
   <string name="system_hideproxywarn_title">タッチ操作不可の警告を非表示</string>
   <string name="system_hideproxywarn_summ">イヤホン部分が覆われている事を示す警告を非表示</string>
   <string name="system_resizablewidgets_title">ウィジェットのリサイズを無制限にする</string>
-  <string name="system_resizablewidgets_summ">ウィジェットのリサイズ制限を無効にします</string>
+  <string name="system_resizablewidgets_summ">ウィジェットのリサイズ制限を無効化します</string>
   <string name="system_cleanshare_title">クリーンな共有メニュー</string>
   <string name="system_cleanshare_summ">選択したアプリを共有メニューから削除します</string>
   <string name="system_clean_test">メニューをテスト</string>
@@ -476,7 +476,7 @@
   <string name="system_betterpopups_nohide_summ">ポップアップウィンドウを自動的に消去しないようにします</string>
   <string name="system_betterpopups_allowfloat_title">フローティングウィンドウを許可</string>
   <string name="system_betterpopups_allowfloat_summ">通知で適切なクリックアクションが定義されている場合に下にスワイプのジェスチャーでアプリをフローティングウィンドウで開く事ができるようになります</string>
-  <string name="system_betterpopups_swipedown_title">下にスワイプを有効</string>
+  <string name="system_betterpopups_swipedown_title">下にスワイプを有効化</string>
   <string name="system_betterpopups_swipedown_summ">下にスワイプのジェスチャーで通知シェードを開きます</string>
   <string name="system_betterpopups_center_title">中央に表示</string>
   <string name="system_betterpopups_center_summ">画面中央にポップアップを表示します</string>
@@ -544,7 +544,7 @@
   <string name="launcher_nowidgetonly_summ">すべての画面でタブレットのウィジェットとアプリのウィジェットの両方をサポートするようにします</string>
   <string name="launcher_nounlockanim_title">ロック解除時のアニメーションを無効化</string>
   <string name="launcher_nounlockanim_summ">ロック解除時にアイコンをアニメーションさせないようにします</string>
-  <string name="launcher_nozoomanim_title">起動時のアニメーションを無効</string>
+  <string name="launcher_nozoomanim_title">起動時のアニメーションを無効化</string>
   <string name="launcher_nozoomanim_summ">アプリの起動時、終了時にアイコンを拡大・縮小表示させないようにします</string>
   <string name="launcher_oldlaunchanim_title">古い起動アニメーションを使用する</string>
   <string name="launcher_oldlaunchanim_summ">アプリの起動時の遷移を以前の物に戻します</string>
@@ -1154,6 +1154,6 @@
   <string name="system_lockscreenshortcuts_left_tapaction_title">左側のショートカットをタップで懐中電灯の切り替え</string>
   <string name="system_cc_tile_roundedrect_title">丸みを帯びた長方形のタイル</string>
   <string name="system_cc_enable_style_switch_title">CCスタイルの切り替えを有効</string>
-  <string name="system_cc_disable_bluetooth_restrict_title">明日までBluetoothの切断を無効</string>
+  <string name="system_cc_disable_bluetooth_restrict_title">明日までBluetoothの切断を無効化</string>
   <string name="system_cc_collapse_after_clicked_title">タッチ後に折りたたむ</string>
 </resources>
