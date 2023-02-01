@@ -39,7 +39,7 @@
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_various_callreminder_vibration_own"
 		android:title="@string/various_callreminder_vibration_own_title"
-		miuizer:child="true" />
+		miuizer:indentLevel="1" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 

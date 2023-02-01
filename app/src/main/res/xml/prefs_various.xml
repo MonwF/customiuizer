@@ -46,7 +46,7 @@
 		android:title="@string/system_popupnotif_apps_title"
 		android:key="pref_key_various_alarmcompat_apps"
 		android:dependency="pref_key_various_alarmcompat"
-		miuizer:child="true"
+		miuizer:indentLevel="1"
 		miuizer:countAsSummary="true" />
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx

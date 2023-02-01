@@ -121,7 +121,7 @@
 			android:title="@string/controls_fingerprintsuccess_ignore_title"
 			android:summary="@string/controls_fingerprintsuccess_ignore_summ"
 			android:defaultValue="false"
-			miuizer:child="true" />
+			miuizer:indentLevel="1" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
@@ -154,7 +154,7 @@
 			android:defaultValue="false"
 			android:dependency="pref_key_controls_powerflash"
 			miuizer:dynamic="true"
-			miuizer:child="true" />
+			miuizer:indentLevel="1" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
@@ -174,13 +174,13 @@
 			android:title="@string/controls_volumecursor_reverse_title"
 			android:defaultValue="false"
 			android:dependency="pref_key_controls_volumecursor"
-			miuizer:child="true" />
+			miuizer:indentLevel="1" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:title="@string/system_statusbarcolor_apps_title"
 			android:key="pref_key_controls_volumecursor_apps"
 			android:dependency="pref_key_controls_volumecursor"
-			miuizer:child="true"
+			miuizer:indentLevel="1"
 			miuizer:countAsSummary="true" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
@@ -215,7 +215,7 @@
 			android:summary="@string/controls_fingerprintsuccess_ignore_summ"
 			android:dependency="pref_key_controls_volumemedia_vibrate"
 			android:defaultValue="false"
-			miuizer:child="true" />
+			miuizer:indentLevel="1" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
@@ -312,7 +312,7 @@
 			android:title="@string/system_statusbarcolor_apps_title"
 			android:key="pref_key_controls_fsg_horiz_apps"
 			android:dependency="pref_key_controls_fsg_horiz"
-			miuizer:child="true"
+			miuizer:indentLevel="1"
 			miuizer:countAsSummary="true" />
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference

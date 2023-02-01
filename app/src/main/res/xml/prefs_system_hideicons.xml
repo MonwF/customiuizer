@@ -52,7 +52,7 @@
 		miuizer:minValue="0"
 		miuizer:maxValue="48"
 		miuizer:stepValue="1"
-		miuizer:child="true"
+		miuizer:indentLevel="1"
 		miuizer:format="%d" />
 
 	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx

@@ -24,13 +24,12 @@ public class PreferenceEx extends Preference implements PreferenceState {
 	private final int disableColor = res.getColor(R.color.preference_primary_text_disable, getContext().getTheme());
 	private final int childpadding = res.getDimensionPixelSize(R.dimen.preference_item_child_padding);
 
-	private final boolean child;
+	private final int indentLevel;
 	private final boolean dynamic;
 	private final boolean warning;
 	private final boolean countAsSummary;
 	private final boolean longClickable;
 	private String customSummary = null;
-	private boolean notice;
 	private boolean newmod = false;
 	private boolean unsupported = false;
 	View.OnLongClickListener longPressListener;
@@ -39,9 +38,8 @@ public class PreferenceEx extends Preference implements PreferenceState {
 		super(context, attrs);
 		final TypedArray xmlAttrs = context.obtainStyledAttributes(attrs, R.styleable.PreferenceEx);
 		dynamic = xmlAttrs.getBoolean(R.styleable.PreferenceEx_dynamic, false);
-		child = xmlAttrs.getBoolean(R.styleable.PreferenceEx_child, false);
+		indentLevel = xmlAttrs.getInt(R.styleable.PreferenceEx_indentLevel, 0);
 		warning = xmlAttrs.getBoolean(R.styleable.PreferenceEx_warning, false);
-		notice = xmlAttrs.getBoolean(R.styleable.PreferenceEx_notice, false);
 		countAsSummary = xmlAttrs.getBoolean(R.styleable.PreferenceEx_countAsSummary, false);
 		longClickable = xmlAttrs.getBoolean(R.styleable.PreferenceEx_longClickable, false);
 		xmlAttrs.recycle();
@@ -71,7 +69,7 @@ public class PreferenceEx extends Preference implements PreferenceState {
 		title.setText(getTitle() +  (unsupported ? " ⨯" : (dynamic ? " ⟲" : "")));
 		if (newmod) Helpers.applyNewMod(title);
 
-		int hrzPadding = childpadding + (child ? childpadding : 0);
+		int hrzPadding = (indentLevel + 1) * childpadding;
 		finalView.setPadding(hrzPadding, 0, childpadding, 0);
 		if (longClickable) {
 			finalView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -120,10 +118,10 @@ public class PreferenceEx extends Preference implements PreferenceState {
 		newmod = true;
 	}
 
-	public void setNotice(boolean value) {
-		notice = value;
-		setEnabled(!value);
-	}
+//	public void setNotice(boolean value) {
+//		notice = value;
+//		setEnabled(!value);
+//	}
 	public void saveString(String val) {
 		if (val != null) {
 			persistString(val);

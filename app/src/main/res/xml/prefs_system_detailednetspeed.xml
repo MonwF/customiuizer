@@ -83,7 +83,7 @@
 		android:entries="@array/netspeedicons"
 		android:entryValues="@array/netspeedicons_val"
 		android:defaultValue="2"
-		miuizer:child="true"
+		miuizer:indentLevel="1"
 		android:dependency="pref_key_system_detailednetspeed" />
 
 </PreferenceScreen>

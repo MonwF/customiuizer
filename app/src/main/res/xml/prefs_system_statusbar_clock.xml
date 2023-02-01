@@ -90,7 +90,7 @@
 		android:title="@string/system_clock_extra_width_title"
 		android:summary="@string/system_clock_extra_width_summ"
 		android:defaultValue="0"
-		miuizer:child="true"
+		miuizer:indentLevel="1"
 		miuizer:minValue="0"
 		miuizer:maxValue="12"
 		miuizer:stepValue="1"
@@ -122,7 +122,7 @@
 		android:key="pref_key_system_statusbar_clock_customformat"
 		android:title="@string/system_clock_customformat_setting_title"
 		android:dependency="pref_key_system_statusbar_clock_customformat_enable"
-		miuizer:child="true"
+		miuizer:indentLevel="1"
 		miuizer:customSummary="true" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
