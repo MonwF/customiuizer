@@ -548,7 +548,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                     mPrefs.getInt("launcher_spread_action", 1) != 1) Launcher.PrivacyFolderHook(lpparam);
             if (!mPrefs.getBoolean("launcher_googleminus") && mPrefs.getBoolean("launcher_googlediscover")) Launcher.GoogleDiscoverHook(lpparam);
             if (mPrefs.getBoolean("launcher_docktitles") && mPrefs.getInt("launcher_bottommargin", 0) == 0) Launcher.ShowHotseatTitlesHook(lpparam);
-            if (mPrefs.getBoolean("launcher_folderblur")) Launcher.FolderBlurHook(lpparam);
+            if (mPrefs.getInt("launcher_folderblur_opacity", 0) > 0) Launcher.FolderBlurHook(lpparam);
             if (mPrefs.getBoolean("launcher_nounlockanim")) Launcher.NoUnlockAnimationHook(lpparam);
             if (mPrefs.getBoolean("launcher_nozoomanim")) Launcher.NoZoomAnimationHook(lpparam);
             if (mPrefs.getBoolean("launcher_oldlaunchanim")) Launcher.UseOldLaunchAnimationHook(lpparam);

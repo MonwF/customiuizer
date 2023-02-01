@@ -515,13 +515,7 @@
     <string name="launcher_foldershade_title">Kolorowa nakładka</string>
     <string name="launcher_foldershade_summ">Przyciemnij lub rozjaśnij tło</string>
     <string name="launcher_foldershade_level_title">Intensywność koloru</string>
-    <string name="launcher_folderblur_title">Rozmycie</string>
-    <string name="launcher_folderblur_summ">Opcje rozmycia tła i tapety. Launcher musi obsługiwać rozmycie w folderach.</string>
     <string name="launcher_folderblur">Rozmycie tła</string>
-    <string name="launcher_folderwallblur">Rozmycie tapety</string>
-    <string name="launcher_folderblur_opacity_title">Widoczność</string>
-    <string name="launcher_folderblur_radius_title">Promień</string>
-    <string name="launcher_folderwallblur_radius_summ">Wpływa również na rozmycie tapety w trybie edycji</string>
     <string name="launcher_closefolder_title">Automatyczne zamykanie folderów</string>
     <string name="launcher_closefolder_summ">Po uruchomieniu zamknij folder aplikacji</string>
     <string name="launcher_titles">Tytuły aplikacji</string>

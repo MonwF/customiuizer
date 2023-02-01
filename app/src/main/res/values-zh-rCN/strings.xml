@@ -97,7 +97,7 @@
     <string name="system_clock_customformat_setting_title">设置格式</string>
     <string name="system_clock_customformat_help_summ">
         回车换行，超过2行会被截断
-        \nyy/M/d N月e E a aaH:mm I时 → 2023/2/23 二月初四 周一 下午 傍晚18:08 酉时
+        \nyy/M/d N月e E a aaH:mm I时 → 23/2/23 二月初四 周一 下午 傍晚18:08 酉时
         \n
         \nyyyy - 4位年份(2023)
         \nyy - 2位年份(23)
@@ -551,13 +551,7 @@
     <string name="launcher_foldershade_title">颜色覆盖</string>
     <string name="launcher_foldershade_summ">增强或减弱背景</string>
     <string name="launcher_foldershade_level_title">色彩强度</string>
-    <string name="launcher_folderblur_title">模糊</string>
-    <string name="launcher_folderblur_summ">壁纸和背景模糊选项。启动器必须支持文件夹模糊。</string>
     <string name="launcher_folderblur">背景模糊</string>
-    <string name="launcher_folderwallblur">壁纸模糊</string>
-    <string name="launcher_folderblur_opacity_title">可见度</string>
-    <string name="launcher_folderblur_radius_title">半径</string>
-    <string name="launcher_folderwallblur_radius_summ">特效编辑模式，支持壁纸模糊</string>
     <string name="launcher_closefolder_title">自动关闭文件夹</string>
     <string name="launcher_closefolder_summ">启动后关闭应用的文件夹</string>
     <string name="launcher_titles">应用标题</string>

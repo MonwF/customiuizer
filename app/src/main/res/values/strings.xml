@@ -572,13 +572,7 @@
     <string name="launcher_foldershade_title">Color overlay</string>
     <string name="launcher_foldershade_summ">Darken or lighten background</string>
     <string name="launcher_foldershade_level_title">Color intensity</string>
-    <string name="launcher_folderblur_title">Blur</string>
-    <string name="launcher_folderblur_summ">Background and wallpaper blur options. Launcher must support blur in folders.</string>
     <string name="launcher_folderblur">Background blur</string>
-    <string name="launcher_folderwallblur">Wallpaper blur</string>
-    <string name="launcher_folderblur_opacity_title">Visibility</string>
-    <string name="launcher_folderblur_radius_title">Radius</string>
-    <string name="launcher_folderwallblur_radius_summ">Affects edit mode wallpaper blur too</string>
     <string name="launcher_closefolder_title">Auto close folders</string>
     <string name="launcher_closefolder_summ">Close app\'s folder after launch</string>
     <string name="launcher_titles">App titles</string>
