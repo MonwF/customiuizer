@@ -32,8 +32,8 @@ public class DropDownPreferenceEx extends DropDownPreference implements Preferen
 	public DropDownPreferenceEx(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		final TypedArray xmlAttrs = context.obtainStyledAttributes(attrs, R.styleable.ListPreferenceEx);
-		indentLevel = xmlAttrs.getInt(R.styleable.DropDownPreferenceEx_indentLevel, 0);
-		dynamic = xmlAttrs.getBoolean(R.styleable.DropDownPreferenceEx_dynamic, false);
+		indentLevel = xmlAttrs.getInt(R.styleable.ListPreferenceEx_indentLevel, 0);
+		dynamic = xmlAttrs.getBoolean(R.styleable.ListPreferenceEx_dynamic, false);
 		valueAsSummary = xmlAttrs.getBoolean(R.styleable.ListPreferenceEx_valueAsSummary, false);
 		xmlAttrs.recycle();
 		setIconSpaceReserved(false);
