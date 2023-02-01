@@ -85,22 +85,22 @@
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_system_batteryindicator_colorval1"
 		android:title="@string/system_batteryindicator_colorval1_title"
-		miuizer:child="true" />
+		miuizer:indentLevel="1" />
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_system_batteryindicator_colorval2"
 		android:title="@string/system_batteryindicator_colorval2_title"
-		miuizer:child="true" />
+		miuizer:indentLevel="1" />
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_system_batteryindicator_colorval3"
 		android:title="@string/system_batteryindicator_colorval3_title"
-		miuizer:child="true" />
+		miuizer:indentLevel="1" />
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_system_batteryindicator_colorval4"
 		android:title="@string/system_batteryindicator_colorval4_title"
-		miuizer:child="true" />
+		miuizer:indentLevel="1" />
 
 	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_batteryindicator_lowlevel"

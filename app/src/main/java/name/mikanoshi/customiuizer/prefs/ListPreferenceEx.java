@@ -22,7 +22,7 @@ public class ListPreferenceEx extends ListPreference implements PreferenceState 
 	private final int childpadding = res.getDimensionPixelSize(R.dimen.preference_item_child_padding);
 	private final int secondary = res.getColor(R.color.preference_secondary_text, getContext().getTheme());
 	private final int disableColor = res.getColor(R.color.preference_primary_text_disable, getContext().getTheme());
-	private final boolean child;
+	private final int indentLevel;
 	private final boolean dynamic;
 	private boolean newmod = false;
 	private boolean unsupported = false;
@@ -31,7 +31,7 @@ public class ListPreferenceEx extends ListPreference implements PreferenceState 
 	public ListPreferenceEx(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		final TypedArray xmlAttrs = context.obtainStyledAttributes(attrs, R.styleable.ListPreferenceEx);
-		child = xmlAttrs.getBoolean(R.styleable.ListPreferenceEx_child, false);
+		indentLevel = xmlAttrs.getInt(R.styleable.ListPreferenceEx_indentLevel, 0);
 		dynamic = xmlAttrs.getBoolean(R.styleable.ListPreferenceEx_dynamic, false);
 		valueAsSummary = xmlAttrs.getBoolean(R.styleable.ListPreferenceEx_valueAsSummary, false);
 		xmlAttrs.recycle();
@@ -65,7 +65,7 @@ public class ListPreferenceEx extends ListPreference implements PreferenceState 
 		title.setText(getTitle() + (unsupported ? " ⨯" : (dynamic ? " ⟲" : "")));
 		if (newmod) Helpers.applyNewMod(title);
 
-		int hrzPadding = childpadding + (child ? childpadding : 0);
+		int hrzPadding = (indentLevel + 1) * childpadding;
 		finalView.setPadding(hrzPadding, 0, childpadding, 0);
 	}
 

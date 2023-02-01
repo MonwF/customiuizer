@@ -55,13 +55,13 @@
 			android:key="pref_key_launcher_folderwidth"
 			android:title="@string/launcher_folderwidth_title"
 			android:defaultValue="false"
-			miuizer:child="true" />
+			miuizer:indentLevel="1" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_folderspace"
 			android:title="@string/launcher_folderspace_title"
 			android:defaultValue="false"
-			miuizer:child="true" />
+			miuizer:indentLevel="1" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
@@ -122,7 +122,7 @@
 			android:title="@string/launcher_renameapps_list_title"
 			android:dependency="pref_key_launcher_renameapps"
 			miuizer:dynamic="true"
-			miuizer:child="true" />
+			miuizer:indentLevel="1" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
@@ -292,7 +292,7 @@
 			android:title="@string/launcher_hideseekpoints_edit_title"
 			android:defaultValue="false"
 			android:dependency="pref_key_launcher_hideseekpoints"
-			miuizer:child="true" />
+			miuizer:indentLevel="1" />
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_launcher_indicatorheight"

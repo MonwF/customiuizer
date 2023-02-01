@@ -32,7 +32,7 @@
 		android:key="pref_key_system_statusbar_mobiletype_single_atleft"
 		android:title="@string/system_statusbar_mobiletype_single_atleft_title"
 		android:dependency="pref_key_system_statusbar_mobiletype_single"
-		miuizer:child="true"
+		miuizer:indentLevel="1"
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.EditTextPreferenceEx
@@ -40,7 +40,7 @@
 		android:title="@string/system_statusbar_mobile_showname_title"
 		android:dependency="pref_key_system_statusbar_mobiletype_single"
 		app:useSimpleSummaryProvider="true"
-		miuizer:child="true"
+		miuizer:indentLevel="1"
 		android:defaultValue="" />
 	/>
 
@@ -49,7 +49,7 @@
 		android:title="@string/launcher_titlefontsize_title"
 		android:dependency="pref_key_system_statusbar_mobiletype_single"
 		android:defaultValue="27"
-		miuizer:child="true"
+		miuizer:indentLevel="1"
 		miuizer:minValue="18"
 		miuizer:maxValue="32"
 		miuizer:stepValue="1"
@@ -60,7 +60,7 @@
 		android:key="pref_key_system_statusbar_mobiletype_single_bold"
 		android:title="@string/system_statusbar_mobiletype_single_bold_title"
 		android:dependency="pref_key_system_statusbar_mobiletype_single"
-		miuizer:child="true"
+		miuizer:indentLevel="1"
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
@@ -68,7 +68,7 @@
 		android:title="@string/system_statusbar_mobiletype_single_leftmargin_title"
 		android:dependency="pref_key_system_statusbar_mobiletype_single"
 		android:defaultValue="7"
-		miuizer:child="true"
+		miuizer:indentLevel="1"
 		miuizer:minValue="2"
 		miuizer:maxValue="16"
 		miuizer:stepValue="1"
@@ -80,7 +80,7 @@
 		android:title="@string/system_statusbar_dualsimin2rows_rightmargin_title"
 		android:dependency="pref_key_system_statusbar_mobiletype_single"
 		android:defaultValue="0"
-		miuizer:child="true"
+		miuizer:indentLevel="1"
 		miuizer:minValue="0"
 		miuizer:maxValue="10"
 		miuizer:stepValue="1"
@@ -92,7 +92,7 @@
 		android:title="@string/system_statusbar_mobiletype_single_verticaloffset"
 		android:dependency="pref_key_system_statusbar_mobiletype_single"
 		android:defaultValue="8"
-		miuizer:child="true"
+		miuizer:indentLevel="1"
 		miuizer:minValue="0"
 		miuizer:maxValue="16"
 		miuizer:stepValue="1"
@@ -111,7 +111,7 @@
 		android:title="@string/system_statusbar_dualsimin2rows_style_title"
 		android:entries="@array/dualsimin2rows_style"
 		android:entryValues="@array/dualsimin2rows_style_val"
-		miuizer:child="true"
+		miuizer:indentLevel="1"
 		miuizer:valueAsSummary="true"
 		android:defaultValue="" />
 
@@ -120,7 +120,7 @@
 		android:title="@string/launcher_iconscale_title"
 		android:dependency="pref_key_system_statusbar_dualsimin2rows"
 		android:defaultValue="10"
-		miuizer:child="true"
+		miuizer:indentLevel="1"
 		miuizer:minValue="6"
 		miuizer:maxValue="16"
 		miuizer:stepValue="1"
@@ -133,7 +133,7 @@
 		android:title="@string/system_statusbar_mobiletype_single_leftmargin_title"
 		android:dependency="pref_key_system_statusbar_dualsimin2rows"
 		android:defaultValue="0"
-		miuizer:child="true"
+		miuizer:indentLevel="1"
 		miuizer:minValue="0"
 		miuizer:maxValue="16"
 		miuizer:stepValue="1"
@@ -145,7 +145,7 @@
 		android:title="@string/system_statusbar_dualsimin2rows_rightmargin_title"
 		android:dependency="pref_key_system_statusbar_dualsimin2rows"
 		android:defaultValue="0"
-		miuizer:child="true"
+		miuizer:indentLevel="1"
 		miuizer:minValue="0"
 		miuizer:maxValue="16"
 		miuizer:stepValue="1"

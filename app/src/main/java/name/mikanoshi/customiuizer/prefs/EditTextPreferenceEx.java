@@ -18,7 +18,7 @@ public class EditTextPreferenceEx extends EditTextPreference implements Preferen
 
 	private final int childpadding = res.getDimensionPixelSize(R.dimen.preference_item_child_padding);
 
-	private final boolean child;
+	private final int indentLevel;
 	private final boolean dynamic;
 	private boolean newmod = false;
 	private boolean unsupported = false;
@@ -26,8 +26,8 @@ public class EditTextPreferenceEx extends EditTextPreference implements Preferen
 	public EditTextPreferenceEx(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		final TypedArray xmlAttrs = context.obtainStyledAttributes(attrs, R.styleable.CheckBoxPreferenceEx);
-		dynamic = xmlAttrs.getBoolean(R.styleable.CheckBoxPreferenceEx_dynamic, false);
-		child = xmlAttrs.getBoolean(R.styleable.CheckBoxPreferenceEx_child, false);
+		dynamic = xmlAttrs.getBoolean(R.styleable.PreferenceEx_dynamic, false);
+		indentLevel = xmlAttrs.getInt(R.styleable.PreferenceEx_indentLevel, 0);
 		xmlAttrs.recycle();
 		setIconSpaceReserved(false);
 	}
@@ -37,7 +37,7 @@ public class EditTextPreferenceEx extends EditTextPreference implements Preferen
 		title.setText(getTitle() + (unsupported ? " ⨯" : (dynamic ? " ⟲" : "")));
 		if (newmod) Helpers.applyNewMod(title);
 
-		int hrzPadding = childpadding + (child ? childpadding : 0);
+		int hrzPadding = (indentLevel + 1) * childpadding;
 		finalView.setPadding(hrzPadding, 0, childpadding, 0);
 	}
 

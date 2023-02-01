@@ -28,7 +28,7 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 	private int mMaxValue;
 	private int mStepValue;
 	private int mNegativeShift;
-	private final boolean child;
+	private final int indentLevel;
 
 	private int mDisplayDividerValue;
 	private boolean mUseDisplayDividerValue;
@@ -56,20 +56,20 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 		mListener = null;
 
 		if (attrs != null) {
-			TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.SeekBarPreference);
+			TypedArray xmlAttrs = getContext().obtainStyledAttributes(attrs, R.styleable.SeekBarPreference);
 
-			child = a.getBoolean(R.styleable.SeekBarPreference_child, false);
-			dynamic = a.getBoolean(R.styleable.SeekBarPreference_dynamic, false);
-			mMinValue = a.getInt(R.styleable.SeekBarPreference_minValue, 0);
-			mMaxValue = a.getInt(R.styleable.SeekBarPreference_maxValue, 10);
-			mStepValue = a.getInt(R.styleable.SeekBarPreference_stepValue, 1);
-			mDefaultValue = a.getInt(R.styleable.SeekBarPreference_android_defaultValue, 0);
-			mNegativeShift = a.getInt(R.styleable.SeekBarPreference_negativeShift, 0);
-			mShowPlus = a.getBoolean(R.styleable.SeekBarPreference_showplus, false);
+			indentLevel = xmlAttrs.getInt(R.styleable.SeekBarPreference_indentLevel, 0);
+			dynamic = xmlAttrs.getBoolean(R.styleable.SeekBarPreference_dynamic, false);
+			mMinValue = xmlAttrs.getInt(R.styleable.SeekBarPreference_minValue, 0);
+			mMaxValue = xmlAttrs.getInt(R.styleable.SeekBarPreference_maxValue, 10);
+			mStepValue = xmlAttrs.getInt(R.styleable.SeekBarPreference_stepValue, 1);
+			mDefaultValue = xmlAttrs.getInt(R.styleable.SeekBarPreference_android_defaultValue, 0);
+			mNegativeShift = xmlAttrs.getInt(R.styleable.SeekBarPreference_negativeShift, 0);
+			mShowPlus = xmlAttrs.getBoolean(R.styleable.SeekBarPreference_showplus, false);
 
-			if (a.hasValue(R.styleable.SeekBarPreference_displayDividerValue)) {
+			if (xmlAttrs.hasValue(R.styleable.SeekBarPreference_displayDividerValue)) {
 				mUseDisplayDividerValue = true;
-				mDisplayDividerValue = a.getInt(R.styleable.SeekBarPreference_displayDividerValue, 1);
+				mDisplayDividerValue = xmlAttrs.getInt(R.styleable.SeekBarPreference_displayDividerValue, 1);
 			} else {
 				mUseDisplayDividerValue = false;
 				mDisplayDividerValue = 1;
@@ -85,13 +85,13 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 
 			if (mStepValue <= 0) mStepValue = 1;
 
-			mFormat = a.getString(R.styleable.SeekBarPreference_format);
-			mNote = a.getString(R.styleable.SeekBarPreference_note);
-			mOffText = a.getString(R.styleable.SeekBarPreference_offtext);
+			mFormat = xmlAttrs.getString(R.styleable.SeekBarPreference_format);
+			mNote = xmlAttrs.getString(R.styleable.SeekBarPreference_note);
+			mOffText = xmlAttrs.getString(R.styleable.SeekBarPreference_offtext);
 
-			a.recycle();
+			xmlAttrs.recycle();
 		} else {
-			child = false;
+			indentLevel = 0;
 			mMinValue = 0;
 			mMaxValue = 10;
 			mStepValue = 1;
@@ -109,7 +109,7 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 		mSeekBar.setAlpha(isEnabled() ? 1.0f : 0.75f);
 		if (newmod) Helpers.applyNewMod(mTitle);
 
-		int hrzPadding = childpadding + (child ? childpadding : 0);
+		int hrzPadding = (indentLevel + 1) * childpadding;
 		finalView.setPadding(hrzPadding, 0, childpadding, 0);
 	}
 

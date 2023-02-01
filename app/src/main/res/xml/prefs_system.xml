@@ -141,7 +141,7 @@
 			android:summary="@string/system_separatevolume_slider_summ"
 			android:defaultValue="false"
 			android:dependency="pref_key_system_separatevolume"
-			miuizer:child="true" />
+			miuizer:indentLevel="1" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_nomediamute"
@@ -209,7 +209,7 @@
 			android:title="@string/system_popupnotif_apps_title"
 			android:key="pref_key_system_ignorecalls_apps"
 			android:dependency="pref_key_system_ignorecalls"
-			miuizer:child="true"
+			miuizer:indentLevel="1"
 			miuizer:countAsSummary="true" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
@@ -223,7 +223,7 @@
 			android:title="@string/system_audiosilencer_silenced"
 			android:dependency="pref_key_system_audiosilencer"
 			miuizer:dynamic="true"
-			miuizer:child="true" />
+			miuizer:indentLevel="1" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
@@ -254,7 +254,7 @@
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:title="@string/system_expandnotifs_apps_title"
 			android:key="pref_key_system_vibration_apps"
-			miuizer:child="true"
+			miuizer:indentLevel="1"
 			miuizer:countAsSummary="true" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
@@ -297,7 +297,7 @@
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:title="@string/system_expandnotifs_apps_title"
 			android:key="pref_key_system_blocktoasts_apps"
-			miuizer:child="true"
+			miuizer:indentLevel="1"
 			miuizer:countAsSummary="true" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
@@ -362,6 +362,7 @@
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_statusbar_dualrows_firstrow_horizmargin"
 			android:dependency="pref_key_system_statusbar_dualrows"
+			miuizer:indentLevel="1"
 			android:title="@string/system_statusbar_dualrows_firstrow_horizmargin_title" />
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
@@ -369,7 +370,7 @@
 			android:title="@string/system_statusbar_mobiletype_single_leftmargin_title"
 			android:dependency="pref_key_system_statusbar_dualrows_firstrow_horizmargin"
 			android:defaultValue="0"
-			miuizer:child="true"
+			miuizer:indentLevel="2"
 			miuizer:minValue="0"
 			miuizer:maxValue="40"
 			miuizer:stepValue="1"
@@ -380,7 +381,7 @@
 			android:title="@string/system_statusbar_dualsimin2rows_rightmargin_title"
 			android:dependency="pref_key_system_statusbar_dualrows_firstrow_horizmargin"
 			android:defaultValue="0"
-			miuizer:child="true"
+			miuizer:indentLevel="2"
 			miuizer:minValue="0"
 			miuizer:maxValue="40"
 			miuizer:stepValue="1"
@@ -404,7 +405,7 @@
 			android:key="pref_key_system_statusbar_topmargin_val"
 			android:title="@string/system_statusbar_topmargin_val_title"
 			android:defaultValue="1"
-			miuizer:child="true"
+			miuizer:indentLevel="1"
 			android:dependency="pref_key_system_statusbar_topmargin"
 			miuizer:minValue="0"
 			miuizer:maxValue="15"
@@ -413,7 +414,7 @@
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_statusbar_topmargin_unset_lockscreen"
-			miuizer:child="true"
+			miuizer:indentLevel="1"
 			android:dependency="pref_key_system_statusbar_topmargin"
 			android:title="@string/system_statusbar_topmargin_unset_lockscreen_title" />
 
@@ -426,7 +427,7 @@
 			android:title="@string/system_statusbar_mobiletype_single_leftmargin_title"
 			android:dependency="pref_key_system_statusbar_horizmargin"
 			android:defaultValue="16"
-			miuizer:child="true"
+			miuizer:indentLevel="1"
 			miuizer:minValue="0"
 			miuizer:maxValue="80"
 			miuizer:stepValue="1"
@@ -437,7 +438,7 @@
 			android:title="@string/system_statusbar_dualsimin2rows_rightmargin_title"
 			android:dependency="pref_key_system_statusbar_horizmargin"
 			android:defaultValue="16"
-			miuizer:child="true"
+			miuizer:indentLevel="1"
 			miuizer:minValue="0"
 			miuizer:maxValue="30"
 			miuizer:stepValue="1"
@@ -462,7 +463,7 @@
 			android:title="@string/system_statusbarcolor_apps_title"
 			android:key="pref_key_system_statusbarcolor_apps"
 			android:dependency="pref_key_system_statusbarcolor"
-			miuizer:child="true"
+			miuizer:indentLevel="1"
 			miuizer:countAsSummary="true" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
@@ -502,7 +503,7 @@
 			android:dependency="pref_key_system_showpct"
 			android:defaultValue="26"
 			miuizer:minValue="0"
-			miuizer:child="true"
+			miuizer:indentLevel="1"
 			miuizer:maxValue="50"
 			miuizer:stepValue="1"
 			miuizer:format="%d dp" />
@@ -648,7 +649,7 @@
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:title="@string/system_expandnotifs_apps_title"
 			android:key="pref_key_system_expandnotifs_apps"
-			miuizer:child="true"
+			miuizer:indentLevel="1"
 			miuizer:countAsSummary="true" />
 
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
@@ -740,7 +741,7 @@
 			android:summary="@string/controls_fingerprintsuccess_ignore_summ"
 			android:defaultValue="false"
 			miuizer:dynamic="true"
-			miuizer:child="true" />
+			miuizer:indentLevel="1" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 			android:title="@string/system_mods_cc_new" />
@@ -846,7 +847,7 @@
 			android:title="@string/system_popupnotif_apps_title"
 			android:key="pref_key_system_hidefromrecents_apps"
 			android:dependency="pref_key_system_hidefromrecents"
-			miuizer:child="true"
+			miuizer:indentLevel="1"
 			miuizer:countAsSummary="true" />
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
@@ -908,7 +909,7 @@
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:title="@string/system_expandnotifs_apps_title"
 			android:key="pref_key_system_expandheadups_apps"
-			miuizer:child="true"
+			miuizer:indentLevel="1"
 			miuizer:countAsSummary="true" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
@@ -922,7 +923,7 @@
 			android:key="pref_key_system_betterpopups_allowfloat_apps"
 			android:dependency="pref_key_system_betterpopups_allowfloat"
 			miuizer:dynamic="true"
-			miuizer:child="true"
+			miuizer:indentLevel="1"
 			miuizer:countAsSummary="true" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
@@ -1019,7 +1020,7 @@
 			android:key="pref_key_system_applock_skip_activities"
 			android:dependency="pref_key_system_applock_skip"
 			miuizer:dynamic="true"
-			miuizer:child="true" />
+			miuizer:indentLevel="1" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
@@ -1233,14 +1234,14 @@
 			android:key="pref_key_system_cleanshare_apps"
 			android:dependency="pref_key_system_cleanshare"
 			miuizer:dynamic="true"
-			miuizer:child="true"
+			miuizer:indentLevel="1"
 			miuizer:countAsSummary="true" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:title="@string/system_clean_test"
 			android:key="pref_key_system_cleanshare_test"
 			android:dependency="pref_key_system_cleanshare"
-			miuizer:child="true" />
+			miuizer:indentLevel="1" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_cleanopenwith"
@@ -1253,14 +1254,14 @@
 			android:key="pref_key_system_cleanopenwith_apps"
 			android:dependency="pref_key_system_cleanopenwith"
 			miuizer:dynamic="true"
-			miuizer:child="true"
+			miuizer:indentLevel="1"
 			miuizer:countAsSummary="true" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:title="@string/system_clean_test"
 			android:key="pref_key_system_cleanopenwith_test"
 			android:dependency="pref_key_system_cleanopenwith"
-			miuizer:child="true" />
+			miuizer:indentLevel="1" />
 
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_system_defaultusb"
@@ -1276,7 +1277,7 @@
 			android:summary="@string/system_defaultusb_unsecure_summ"
 			android:defaultValue="false"
 			android:dependency="pref_key_system_defaultusb"
-			miuizer:child="true" />
+			miuizer:indentLevel="1" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_forceclose"
@@ -1288,7 +1289,7 @@
 			android:title="@string/system_popupnotif_apps_title"
 			android:key="pref_key_system_forceclose_apps"
 			android:dependency="pref_key_system_forceclose"
-			miuizer:child="true"
+			miuizer:indentLevel="1"
 			miuizer:countAsSummary="true" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx

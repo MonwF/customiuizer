@@ -41,13 +41,13 @@
 		android:key="pref_key_various_calluibright_night_start"
 		android:title="@string/various_calluibright_night_start_title"
 		android:dependency="pref_key_various_calluibright_night"
-		miuizer:child="true" />
+		miuizer:indentLevel="1" />
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_various_calluibright_night_end"
 		android:title="@string/various_calluibright_night_end_title"
 		android:dependency="pref_key_various_calluibright_night"
-		miuizer:child="true" />
+		miuizer:indentLevel="1" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
