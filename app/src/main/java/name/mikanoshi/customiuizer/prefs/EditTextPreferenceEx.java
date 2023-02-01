@@ -26,8 +26,8 @@ public class EditTextPreferenceEx extends EditTextPreference implements Preferen
 	public EditTextPreferenceEx(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		final TypedArray xmlAttrs = context.obtainStyledAttributes(attrs, R.styleable.CheckBoxPreferenceEx);
-		dynamic = xmlAttrs.getBoolean(R.styleable.PreferenceEx_dynamic, false);
-		indentLevel = xmlAttrs.getInt(R.styleable.PreferenceEx_indentLevel, 0);
+		dynamic = xmlAttrs.getBoolean(R.styleable.CheckBoxPreferenceEx_dynamic, false);
+		indentLevel = xmlAttrs.getInt(R.styleable.CheckBoxPreferenceEx_indentLevel, 0);
 		xmlAttrs.recycle();
 		setIconSpaceReserved(false);
 	}

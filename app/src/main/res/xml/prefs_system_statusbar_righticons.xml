@@ -14,13 +14,16 @@
 		android:title="@string/system_statusbaricons_swap_wifi_mobile_title"
 		android:defaultValue="false" />
 
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_system_statusbar_clock_position"
+		android:title="@string/system_statusbaricons_clock_title"
+		android:entries="@array/statusbar_clock_position"
+		android:entryValues="@array/statusbar_clock_position_val"
+		miuizer:valueAsSummary="true"
+		android:defaultValue="1" />
+
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/system_statusbaricons_atright_title" />
-
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_statusbar_clock_atright"
-		android:title="@string/system_statusbaricons_clock_title"
-		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_netspeed_atright"

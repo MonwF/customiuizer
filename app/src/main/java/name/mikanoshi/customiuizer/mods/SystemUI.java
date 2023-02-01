@@ -10,37 +10,22 @@ import static name.mikanoshi.customiuizer.mods.GlobalActions.ACTION_PREFIX;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.ActivityOptions;
 import android.app.AndroidAppHelper;
 import android.app.KeyguardManager;
-import android.app.MiuiNotification;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.app.WallpaperColors;
-import android.app.WallpaperManager;
-import android.appwidget.AppWidgetProviderInfo;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -50,147 +35,74 @@ import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.hardware.usb.UsbManager;
-import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaMetadata;
-import android.media.MediaPlayer;
-import android.media.SoundPool;
-import android.media.session.MediaController;
-import android.media.session.PlaybackState;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
-import android.net.NetworkInfo;
 import android.net.TrafficStats;
 import android.net.Uri;
-import android.net.wifi.WifiManager;
-import android.os.BadParcelableException;
-import android.os.BatteryManager;
-import android.os.Binder;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
-import android.os.Parcelable;
 import android.os.PowerManager;
-import android.os.PowerManager.WakeLock;
-import android.os.SystemClock;
 import android.os.UserHandle;
-import android.provider.MediaStore;
 import android.provider.Settings;
-import android.telephony.PhoneStateListener;
-import android.text.Layout;
-import android.text.SpannableString;
 import android.text.TextUtils;
-import android.text.format.DateFormat;
-import android.text.format.DateUtils;
-import android.text.style.AbsoluteSizeSpan;
-import android.text.style.TypefaceSpan;
-import android.util.ArrayMap;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Pair;
-import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceControl;
-import android.view.SurfaceView;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.Interpolator;
-import android.widget.AbsListView;
-import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Magnifier;
-import android.widget.RelativeLayout;
-import android.widget.RemoteViews;
-import android.widget.ScrollView;
-import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.json.JSONObject;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.lang.ref.WeakReference;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Proxy;
 import java.net.NetworkInterface;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
-import de.robv.android.xposed.XC_MethodHook.MethodHookParam;
 import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
-import de.robv.android.xposed.callbacks.XCallback;
 import miui.telephony.TelephonyManager;
 import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
-import name.mikanoshi.customiuizer.utils.AudioVisualizer;
 import name.mikanoshi.customiuizer.utils.BatteryIndicator;
 import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.Helpers.MethodHook;
-import name.mikanoshi.customiuizer.utils.Helpers.MimeType;
-import name.mikanoshi.customiuizer.utils.ResourceHooks;
-import name.mikanoshi.customiuizer.utils.SoundData;
 
 public class SystemUI {
     private final static String StatusBarCls = Helpers.isTPlus() ? "com.android.systemui.statusbar.phone.CentralSurfacesImpl" : "com.android.systemui.statusbar.phone.StatusBar";
@@ -1121,7 +1033,8 @@ public class SystemUI {
         }
     }
 
-    public static void StatusBarClockAtRightHook(LoadPackageParam lpparam) {
+    public static void StatusBarClockPositionHook(LoadPackageParam lpparam) {
+        final int pos = MainModule.mPrefs.getStringAsInt("system_statusbar_clock_position", 1);
         Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView", lpparam.classLoader, "onFinishInflate", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
@@ -1132,23 +1045,77 @@ public class SystemUI {
                 ((ViewGroup)mClockView.getParent()).removeView(mClockView);
                 int contentId = res.getIdentifier("status_bar_contents", "id", lpparam.packageName);
                 LinearLayout mContentsContainer = sbView.findViewById(contentId);
+                View spaceView = (View) XposedHelpers.getObjectField(param.thisObject, "mCutoutSpace");
+                int spaceIndex = mContentsContainer.indexOfChild(spaceView);
+                LinearLayout rightContainer = new LinearLayout(mContext);
+                LinearLayout.LayoutParams rightLp = new LinearLayout.LayoutParams(0, -1, 1.0f);
+                View mSystemIconArea = (View) XposedHelpers.getObjectField(param.thisObject, "mSystemIconArea");
+                mContentsContainer.removeView(mSystemIconArea);
+                mContentsContainer.addView(rightContainer, spaceIndex + 1, rightLp);
+                rightContainer.addView(mSystemIconArea);
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                mContentsContainer.addView(mClockView, lp);
-            }
-        });
-
-        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView", lpparam.classLoader, "updateCutoutLocation", new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                int mCurrentStatusBarType = (int) XposedHelpers.getObjectField(param.thisObject, "mCurrentStatusBarType");
-                if (mCurrentStatusBarType == 0) {
-                    View mSystemIconArea = (View) XposedHelpers.getObjectField(param.thisObject, "mSystemIconArea");
-                    LinearLayout.LayoutParams mSystemIconAreaLp = (LinearLayout.LayoutParams) mSystemIconArea.getLayoutParams();
-                    mSystemIconAreaLp.width = 0;
-                    mSystemIconAreaLp.weight = 1.0f;
+                if (pos == 2) {
+                    lp.gravity = Gravity.CENTER;
+                    mContentsContainer.addView(mClockView, spaceIndex, lp);
+                }
+                else {
+                    rightContainer.addView(mClockView, lp);
                 }
             }
         });
+
+        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.PhoneStatusBarView", lpparam.classLoader, "updateLayoutForCutout", new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                int mCurrentStatusBarType = (int) XposedHelpers.getObjectField(param.thisObject, "mCurrentStatusBarType");
+                View mSystemIconArea = (View) XposedHelpers.getObjectField(param.thisObject, "mSystemIconArea");
+                if (mCurrentStatusBarType == 0) {
+                    LinearLayout.LayoutParams mSystemIconAreaLp = (LinearLayout.LayoutParams) mSystemIconArea.getLayoutParams();
+                    mSystemIconAreaLp.width = 0;
+                    mSystemIconAreaLp.weight = 1.0f;
+                    if (pos == 2) {
+                        LinearLayout rightContainer = (LinearLayout) mSystemIconArea.getParent();
+                        View mStatusBarLeftContainer = (View) XposedHelpers.getObjectField(param.thisObject, "mStatusBarLeftContainer");
+                        View mDripStatusBarNotificationIconArea = (View) XposedHelpers.getObjectField(param.thisObject, "mDripStatusBarNotificationIconArea");
+                        mDripStatusBarNotificationIconArea.setVisibility(View.VISIBLE);
+                        LinearLayout.LayoutParams mStatusBarLeftContainerLp = (LinearLayout.LayoutParams) mStatusBarLeftContainer.getLayoutParams();
+                        mStatusBarLeftContainerLp.width = 0;
+                        mStatusBarLeftContainerLp.weight = 1.0f;
+                        FrameLayout sbView = (FrameLayout) param.thisObject;
+                        int leftPadding = sbView.getPaddingStart();
+                        int rightPadding = sbView.getPaddingEnd();
+                        int topPadding = sbView.getPaddingTop();
+                        int bottomPadding = sbView.getPaddingBottom();
+                        mStatusBarLeftContainer.setPadding(leftPadding, 0, 0, 0);
+                        rightContainer.setPadding(0, 0, rightPadding, 0);
+                        sbView.setPadding(0, topPadding, 0, bottomPadding);
+                    }
+                }
+                else {
+                    View mCutoutSpace = (View) XposedHelpers.getObjectField(param.thisObject, "mCutoutSpace");
+                    if (pos == 2) {
+                        mCutoutSpace.setVisibility(View.GONE);
+                    }
+                }
+            }
+        });
+        if (pos == 2) {
+            Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView", lpparam.classLoader, "updateNotificationIconAreaInnnerParent", new MethodHook() {
+                private int originType = 0;
+                @Override
+                protected void before(MethodHookParam param) throws Throwable {
+                    int mCurrentStatusBarType = XposedHelpers.getIntField(param.thisObject, "mCurrentStatusBarType");
+                    if (mCurrentStatusBarType == 0) {
+                        XposedHelpers.setObjectField(param.thisObject, "mCurrentStatusBarType", 1);
+                    }
+                    originType = mCurrentStatusBarType;
+                }
+                @Override
+                protected void after(MethodHookParam param) throws Throwable {
+                    XposedHelpers.setObjectField(param.thisObject, "mCurrentStatusBarType", originType);
+                }
+            });
+        }
     }
 
     public static void NoNetworkSpeedSeparatorHook(LoadPackageParam lpparam) {
