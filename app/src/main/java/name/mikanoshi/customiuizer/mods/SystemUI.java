@@ -332,7 +332,9 @@ public class SystemUI {
         batteryView.setTextAppearance(styleId);
         float fontSize = MainModule.mPrefs.getInt("system_statusbar_batterytempandcurrent_fontsize", 16) * 0.5f;
         int opt = MainModule.mPrefs.getStringAsInt("system_statusbar_batterytempandcurrent_content", 1);
-        if (opt == 1 && MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_singlerow")) {
+        if (opt == 1 && !MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_singlerow")) {
+            batteryView.setSingleLine(false);
+            batteryView.setMaxLines(2);
             batteryView.setLineSpacing(0, fontSize > 8.5f ? 0.85f : 0.9f);
             batteryView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         }
@@ -1221,7 +1223,6 @@ public class SystemUI {
                     if (MainModule.mPrefs.getBoolean("system_detailednetspeed")) {
                         float spacing = 0.9f;
                         meter.setSingleLine(false);
-                        meter.setLines(2);
                         meter.setMaxLines(2);
                         if (fontSize > 8.5f) {
                             spacing = 0.85f;
