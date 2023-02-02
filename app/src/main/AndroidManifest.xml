@@ -173,7 +173,7 @@
 
 		<provider
 			android:name=".SharedPrefsProvider"
-			android:authorities="name.mikanoshi.customiuizer.provider.sharedprefs"
+			android:authorities="name.monwf.customiuizer.provider.sharedprefs"
 			android:grantUriPermissions="true"
 			android:exported="true"
 			android:directBootAware="true"
