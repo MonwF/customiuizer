@@ -878,7 +878,6 @@
     <string name="various_aospsearch_title">Поиск</string>
     <string name="various_aospnotif_title">Приложения и уведомления</string>
     <string name="various_aospnotiflog_title">Журнал уведомлений</string>
-    <string name="various_clearspeaker_title">Очистка динамика</string>
     <string name="various_hiddenfeatures_not_found">Недоступно на данном устройстве</string>
     <string name="disable_app_title">Отключить приложение?</string>
     <string name="disable_app_text">Если данное приложение является важным системным, то его отключение может что-нибудь поломать :)</string>

@@ -108,8 +108,8 @@
         \na - AM、PM
         \nHH - 24-hour two-digit hour(09、14)
         \nH - 24-hour one-digit hour(9、14)
-        \nhh - 12-hour two-digit hour(09、2)
-        \nh - 24-hour one-digit hour(9、2)
+        \nhh - 12-hour two-digit hour(09、02)
+        \nh - 12-hour one-digit hour(9、2)
         \nmm - two-digit minute(09)
         \nss - two-digit second(09)
     </string>
@@ -702,7 +702,6 @@
     <string name="various_aospsearch_title">Search</string>
     <string name="various_aospnotif_title">Apps &amp; notifications</string>
     <string name="various_aospnotiflog_title">Notification log</string>
-    <string name="various_clearspeaker_title">Clear speaker</string>
     <string name="various_unlockfps_title">Unlock frame rate</string>
     <string name="various_unlockfps_summ">Make fps up to 90 available in Screen Recorder app. Whether higher fps will actually work depends on device and video driver.</string>
     <string name="various_miuiinstaller_title">Use MIUI package installer</string>

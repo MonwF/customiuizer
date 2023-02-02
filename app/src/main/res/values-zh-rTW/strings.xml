@@ -967,7 +967,6 @@
     <string name="various_calluibright_title">通話時螢幕亮度</string>
     <string name="various_calluibright_type_title">通話類型</string>
     <string name="various_calluibright_val_title">亮度值</string>
-    <string name="various_clearspeaker_title">清理揚聲器</string>
     <string name="various_disableapp_summ">允許從應用訊息頁面禁用任何應用</string>
     <string name="various_disableapp_title">應用狀態控制</string>
     <string name="various_gboardpadding_land_title">橫屏時底部補充</string>

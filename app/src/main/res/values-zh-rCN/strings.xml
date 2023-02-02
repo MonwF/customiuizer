@@ -111,9 +111,9 @@
         \na - 时段(上午、下午)
         \naa - 精确时段(傍晚、凌晨等)
         \nHH - 24小时制补0小时(09、14)
-        \nH - 24小时制不补0小时(9、14)
-        \nhh - 12小时制补0小时(09、2)
-        \nh - 12小时制不补0小时(9、2)
+        \nH - 24小时制小时(9、14)
+        \nhh - 12小时制补0小时(09、02)
+        \nh - 12小时制小时(9、2)
         \nmm - 补0分钟(09)
         \nss - 补0秒数(09)
         \nI - 时辰(卯、亥)
@@ -1076,7 +1076,6 @@
     <string name="various_hiddenfeatures_summ">不易找到的界面</string>
     <string name="various_memorystats_title">内存统计</string>
     <string name="various_aospnotiflog_title">通知记录</string>
-    <string name="various_clearspeaker_title">清理扬声器</string>
     <string name="various_aospnotif_title">应用通知</string>
     <string name="various_appusagestats_title">使用统计</string>
     <string name="miuizer_show_assumelsposed_title">LSPosed模式</string>
