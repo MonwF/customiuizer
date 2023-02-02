@@ -3799,20 +3799,6 @@ public class System {
 
     public static void NoSignatureVerifyServiceHook(LoadPackageParam lpparam) {
         Helpers.hookAllMethods("android.content.pm.PackageParser.SigningDetails", lpparam.classLoader, "checkCapability", XC_MethodReplacement.returnConstant(true));
-        Helpers.hookAllMethods("android.content.pm.PackageParser.SigningDetails", lpparam.classLoader, "checkCapabilityRecover", XC_MethodReplacement.returnConstant(true));
-        Helpers.hookAllMethodsSilently("com.miui.server.SecurityManagerService", lpparam.classLoader, "checkSysAppCrack", XC_MethodReplacement.returnConstant(false));
-        Helpers.hookAllMethodsSilently("com.miui.server.SecurityManagerService", lpparam.classLoader, "compareSignatures",  new MethodHook() {
-            @Override
-            protected void before(MethodHookParam param) throws Throwable {
-                Object s1 = param.args[0];
-                Object s2 = param.args[1];
-                int ret = 0;
-                if (s1 == null || s2 == null) {
-                    ret = -3;
-                }
-                param.setResult(ret);
-            }
-        });
         MethodHook compareHook = new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
@@ -3832,7 +3818,6 @@ public class System {
                 param.setResult(ret);
             }
         };
-        Helpers.hookAllMethodsSilently("miui.util.CertificateUtils", lpparam.classLoader, "compareSignatures", compareHook);
         Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "compareSignatures", compareHook);
 
         Class <?> SignDetails = findClassIfExists("android.content.pm.SigningDetails", lpparam.classLoader);
@@ -3840,8 +3825,12 @@ public class System {
         Helpers.hookAllMethods(SignDetails, "checkCapability", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
-                if (param.thisObject == signUnknown || param.args[0] == signUnknown) param.setResult(false);
-                else param.setResult(true);
+                if (param.thisObject == signUnknown || param.args[0] == signUnknown) {
+                    param.setResult(false);
+                    return;
+                }
+                int flags = (int) param.args[1];
+                if (flags != 4) param.setResult(true);
             }
         });
 
