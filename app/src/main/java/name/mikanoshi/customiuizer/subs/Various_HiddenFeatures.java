@@ -77,14 +77,6 @@ public class Various_HiddenFeatures extends SubFragment {
 			}
 		});
 
-		findPreference("pref_key_various_clearspeaker").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				Helpers.launchActivity(act, "com.android.settings", "com.android.settings.Settings$SpeakerSettingsActivity");
-				return true;
-			}
-		});
-
 	}
 
 }

@@ -645,7 +645,6 @@
     <string name="various_aospsearch_title">Szukaj</string>
     <string name="various_aospnotif_title">Aplikacje &amp; powiadomienia</string>
     <string name="various_aospnotiflog_title">Dziennik powiadomień</string>
-    <string name="various_clearspeaker_title">Wyczyść głośnik</string>
     <string name="various_unlockfps_title">Odblokuj liczbę kl./s</string>
     <string name="various_unlockfps_summ">Zwiększ do 90 klatek na sekundę w aplikacji Screen Recorder. To, czy wyższa liczba klatek na sekundę rzeczywiście zadziała, zależy od urządzenia i sterownika wideo.</string>
     <string name="various_miuiinstaller_title">Użyj instalatora pakietów MIUI</string>

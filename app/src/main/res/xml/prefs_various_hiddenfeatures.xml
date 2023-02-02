@@ -24,8 +24,4 @@
 		android:key="pref_key_various_aospnotiflog"
 		android:title="@string/various_aospnotiflog_title" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
-		android:key="pref_key_various_clearspeaker"
-		android:title="@string/various_clearspeaker_title" />
-
 </PreferenceScreen>
