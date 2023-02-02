@@ -281,7 +281,7 @@ public class MainFragment extends PreferenceFragmentBase {
 			}
 		});
 
-		String[] locales = new String[] { "ru-RU", "zh-CN", "zh-TW", "pl-PL" };
+		String[] locales = new String[] { "zh-CN", "zh-TW", "ru-RU", "pl-PL", "ja-JP" };
 
 		ArrayList<String> localesArr = new ArrayList<String>(Arrays.asList(locales));
 		ArrayList<SpannableString> localeNames = new ArrayList<SpannableString>();
@@ -328,8 +328,12 @@ public class MainFragment extends PreferenceFragmentBase {
 			@Override
 			public boolean onPreferenceClick(Preference pref) {
 				Configuration config = act.getResources().getConfiguration();
-				if (config.getLocales().get(0).getLanguage() == "zh") {
+				String lang = config.getLocales().get(0).getLanguage();
+				if ("zh".equals(lang)) {
 					Helpers.openURL(act, "https://github.com/MonwF/customiuizer/blob/main/README_zh.md");
+				}
+				else if ("ja".equals(lang)) {
+					Helpers.openURL(act, "https://github.com/MonwF/customiuizer/blob/main/README_jp.md");
 				}
 				else {
 					Helpers.openURL(act, "https://github.com/MonwF/customiuizer");
