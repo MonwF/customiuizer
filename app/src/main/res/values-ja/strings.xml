@@ -126,8 +126,6 @@
   <string name="system_maxsbicons_summ">ドットで表示する前に表示をする最大のアイコン数を設定します</string>
   <string name="system_mobiletypeicon_title">モバイルネットワークの種類を非表示</string>
   <string name="system_mobiletypeicon_summ">ステータスバーからモバイルネットワークタイプのアイコンを削除します</string>
-  <string name="system_networkindicator_title">ネットワークアクティビティのインジケーター</string>
-  <string name="system_networkindicator_summ">モバイルデータまたはWi-Fi通信のインジケーターを設定します</string>
   <string name="system_networkindicator_wifi_title">Wi-Fiネットワークアクティビティインジケーターを非表示</string>
   <string name="system_networkindicator_mobile_title">モバイルネットワークアクティビティインジケーターを非表示</string>
   <string name="system_4gtolte_title">4GアイコンをLTEアイコンで表示する</string>
@@ -324,12 +322,7 @@
   <string name="system_lockscreenshortcuts_right_image_summ">カメラのアイコンをCustoMIUIzerのアイコンに置き換えます</string>
   <string name="system_lockscreenshortcuts_right_image_hint">アイコンをドラッグでカスタムアクションを実行</string>
   <string name="system_lockscreenshortcuts_left_off_title">右スワイプのジェスチャーを無効化</string>
-  <string name="system_lockscreenshortcuts_left_title">左画面上のショートカット</string>
-  <string name="system_lockscreenshortcuts_left_summ">ショートカットリストを管理</string>
   <string name="system_lockscreenshortcuts_left_align_title">垂直方向の位置調整</string>
-  <string name="system_lockscreenshortcuts_left_center_title">左右中央揃え</string>
-  <string name="system_lockscreenshortcuts_left_skiplock_title">ロック解除のスキップ</string>
-  <string name="system_lockscreenshortcuts_left_skiplock_summ">デバイスをロックしたままでアプリを開く事ができます</string>
   <string name="system_noscreenlock_title">スクリーンロックを無効化</string>
   <string name="system_noscreenlock_req_summ">一部のデバイスでは起動後に一度ロックの解除を行なわないと動作しない場合があります</string>
   <string name="system_noscreenlock_summ">スクリーンロックを選択的に無効化します (アプリのセキュリティ変更や指紋データの削除はされません)</string>
@@ -577,13 +570,7 @@
   <string name="launcher_foldershade_title">カラーオーバーレイ</string>
   <string name="launcher_foldershade_summ">背景を明るくまたは暗くします</string>
   <string name="launcher_foldershade_level_title">色の濃度</string>
-  <string name="launcher_folderblur_title">ぼかし</string>
-  <string name="launcher_folderblur_summ">背景と壁紙のぼかしのオプションです。ランチャーはフォルダのぼかし効果に対応している必要があります。</string>
   <string name="launcher_folderblur">背景のぼかし</string>
-  <string name="launcher_folderwallblur">壁紙のぼかし</string>
-  <string name="launcher_folderblur_opacity_title">可視化</string>
-  <string name="launcher_folderblur_radius_title">半径</string>
-  <string name="launcher_folderwallblur_radius_summ">編集モード時の壁紙のぼかしにも影響します</string>
   <string name="launcher_closefolder_title">フォルダを自動で閉じる</string>
   <string name="launcher_closefolder_summ">アプリの起動後にフォルダを自動で閉じるようにします</string>
   <string name="launcher_titles">アプリのタイトル</string>
@@ -711,7 +698,6 @@
   <string name="various_aospsearch_title">検索</string>
   <string name="various_aospnotif_title">アプリと通知</string>
   <string name="various_aospnotiflog_title">通知ログ</string>
-  <string name="various_clearspeaker_title">スピーカーをクリーニング</string>
   <string name="various_unlockfps_title">フレームレートの制限を解除</string>
   <string name="various_unlockfps_summ">スクリーンレコーダーアプリでフレームレートを90まで使用可能にします。実際に高フレームレートで動作するかは、デバイスの性能とビデオドライバに依存します。</string>
   <string name="various_miuiinstaller_title">MIUIパッケージインストーラーを使用する</string>
@@ -765,7 +751,6 @@
   <string name="appdetails_data_path">データのパス</string>
   <string name="appdetails_app_uid">ユーザーID</string>
   <string name="appdetails_sdk">ターゲットSDKバージョン</string>
-  <string name="appsort_running">状態 (デフォルト)</string>
   <string name="appsort_name">アプリ名</string>
   <string name="appsort_frequency">使用頻度</string>
   <string name="appsort_storage">使用済みのストレージ</string>
