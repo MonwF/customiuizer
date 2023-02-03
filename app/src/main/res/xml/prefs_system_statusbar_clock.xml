@@ -76,11 +76,6 @@
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_statusbar_clock_seconds_sync_beginning"
-		android:title="@string/system_statusbar_clock_seconds_sync_title"
-		android:defaultValue="false" />
-
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_clock_fixed_width"
 		android:title="@string/system_clock_fixedwidth_title"
 		android:defaultValue="false" />
