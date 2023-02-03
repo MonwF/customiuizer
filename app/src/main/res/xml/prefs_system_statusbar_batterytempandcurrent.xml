@@ -22,6 +22,14 @@
 		miuizer:valueAsSummary="true"
 		android:defaultValue="1" />
 
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_system_statusbar_batterytempandcurrent_hideunit"
+		android:title="@string/system_statusbar_batterytempandcurrent_hideunit_title"
+		android:entries="@array/batteryhideunit"
+		android:entryValues="@array/batteryhideunit_val"
+		miuizer:valueAsSummary="true"
+		android:defaultValue="0" />
+
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_batterytempandcurrent_atright"
 		android:title="@string/system_statusbar_batterytempandcurrentatright_title"
