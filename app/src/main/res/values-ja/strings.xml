@@ -118,7 +118,6 @@
   <string name="system_clock_show_year_title">年を表示</string>
   <string name="system_clock_fixedwidth_title">水平方向のジッターを防ぐために幅を固定</string>
   <string name="system_statusbar_clock_align_title">水平方向の整列</string>
-  <string name="system_statusbar_clock_seconds_sync_title">秒の開始に同期をする</string>
   <string name="system_clock_extra_width_title">余幅</string>
   <string name="system_clock_extra_width_summ">省力記号を表示しないようにします</string>
   <string name="system_clockseconds_summ">ステータスバーの時計に秒を表示します</string>
