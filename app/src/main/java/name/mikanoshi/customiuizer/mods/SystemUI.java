@@ -1467,7 +1467,7 @@ public class SystemUI {
                             }
                         });
                         if (!MainModule.mPrefs.getBoolean("system_qsnolabels")) {
-                            Helpers.hookAllMethods("miui.systemui.controlcenter.qs.tileview.StandardTileView", pluginLoader, "handleStateChanged", new MethodHook() {
+                            Helpers.findAndHookMethod("miui.systemui.controlcenter.qs.tileview.StandardTileView", pluginLoader, "createLabel", boolean.class, new MethodHook() {
                                 @Override
                                 protected void after(MethodHookParam param) throws Throwable {
                                     Object label = XposedHelpers.getObjectField(param.thisObject, "label");
@@ -1477,6 +1477,9 @@ public class SystemUI {
                                         lb.setSingleLine(true);
                                         lb.setEllipsize(TextUtils.TruncateAt.MARQUEE);
                                         lb.setMarqueeRepeatLimit(0);
+
+                                        View labelContainer = (View) XposedHelpers.getObjectField(param.thisObject, "labelContainer");
+                                        labelContainer.setPadding(4, 0 , 4, 0);
                                     }
                                 }
                             });
