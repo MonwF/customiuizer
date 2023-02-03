@@ -289,7 +289,6 @@ public class SystemUI {
             public void run() {
                 String batteryInfo = "";
                 FileInputStream fis = null;
-                Properties props = null;
                 boolean showInfo = true;
                 if (MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_incharge") && ChargeUtilsClass != null) {
                     Object batteryStatus = Helpers.getStaticObjectFieldSilently(ChargeUtilsClass, "sBatteryStatus");
@@ -301,17 +300,24 @@ public class SystemUI {
                     }
                 }
                 if (showInfo) {
-                    try {
-                        fis = new FileInputStream("/sys/class/power_supply/battery/uevent");
-                        props = new Properties();
-                        props.load(fis);
-                    }
-                    catch (Throwable ign) {}
-                    finally {
+                    Properties props = null;
+                    TextView batteryIcn = mBatteryDetailViews.get(0);
+                    Context mContext = batteryIcn.getContext();
+                    PowerManager powerMgr = (PowerManager)mContext.getSystemService(Context.POWER_SERVICE);
+                    boolean isScreenOn = powerMgr.isInteractive();
+                    if (isScreenOn) {
                         try {
-                            fis.close();
+                            fis = new FileInputStream("/sys/class/power_supply/battery/uevent");
+                            props = new Properties();
+                            props.load(fis);
                         }
                         catch (Throwable ign) {}
+                        finally {
+                            try {
+                                fis.close();
+                            }
+                            catch (Throwable ign) {}
+                        }
                     }
                     if (props != null) {
                         int tempVal = Integer.parseInt(props.getProperty("POWER_SUPPLY_TEMP"));
@@ -321,19 +327,22 @@ public class SystemUI {
                         }
                         int opt = MainModule.mPrefs.getStringAsInt("system_statusbar_batterytempandcurrent_content", 1);
                         String simpleTempVal = tempVal % 10 == 0 ? (tempVal / 10 + "") : (tempVal / 10f + "");
+                        int hideUnit = MainModule.mPrefs.getStringAsInt("system_statusbar_batterytempandcurrent_hideunit", 0);
+                        String tempUnit = (hideUnit == 1 || hideUnit == 2) ? "" : "℃";
+                        String currUnit = (hideUnit == 1 || hideUnit == 3) ? "" : "mA";
                         if (opt == 1) {
                             String splitChar = MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_singlerow")
                                 ? " " : "\n";
-                            batteryInfo = simpleTempVal + "℃" + splitChar + currVal + "mA";
+                            batteryInfo = simpleTempVal + tempUnit + splitChar + currVal + currUnit;
                             if (MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_reverseorder")) {
-                                batteryInfo = currVal + "mA" + splitChar + simpleTempVal + "℃";
+                                batteryInfo = currVal + currUnit + splitChar + simpleTempVal + tempUnit;
                             }
                         }
                         else if (opt == 2) {
-                            batteryInfo = simpleTempVal + "℃";
+                            batteryInfo = simpleTempVal + tempUnit;
                         }
                         else {
-                            batteryInfo = currVal + "mA";
+                            batteryInfo = currVal + currUnit;
                         }
                     }
                 }

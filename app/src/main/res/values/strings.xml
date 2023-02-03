@@ -1133,6 +1133,7 @@
     <string name="system_statusbar_batterytempandcurrentatright_title">Display on the right</string>
     <string name="system_statusbar_batterytempandcurrent_positive_title">Current value is always positive</string>
     <string name="system_statusbar_batterytempandcurrent_incharge_title">Show when charging only</string>
+    <string name="system_statusbar_batterytempandcurrent_hideunit_title">Hide unit</string>
     <string name="system_statusbar_batterytempandcurrent_singlerow_title">Display in single row</string>
     <string name="system_statusbar_batterytempandcurrent_reverseorder_title">Reverse order</string>
     <string name="system_statusbar_dualsimin2rows_title">Dual SIM signal bars in dual rows</string>
