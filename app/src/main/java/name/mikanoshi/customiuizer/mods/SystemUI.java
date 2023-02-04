@@ -1763,18 +1763,21 @@ public class SystemUI {
                             Context mContext = (Context) param.args[0];
                             int enabledTileBackgroundResId = mContext.getResources().getIdentifier("qs_background_enabled", "drawable", "miui.systemui.plugin");
                             int enabledTileColorResId = mContext.getResources().getIdentifier("qs_enabled_color", "color", "miui.systemui.plugin");
-                            Helpers.findAndHookMethod("android.content.res.Resources", pluginLoader, "getDrawable", int.class, new MethodHook() {
+                            int tintColor = mContext.getResources().getColor(enabledTileColorResId, null);
+                            Resources modRes = Helpers.getModuleRes(mContext);
+                            MethodHook imgHook = new MethodHook() {
                                 @Override
                                 protected void before(MethodHookParam param) throws Throwable {
                                     int resId = (int) param.args[0];
                                     if (resId == enabledTileBackgroundResId && resId != 0) {
-                                        Resources modRes = Helpers.getModuleRes(mContext);
                                         Drawable enableTile = modRes.getDrawable(R.drawable.ic_qs_tile_bg_enabled, null);
-                                        enableTile.setTint(mContext.getResources().getColor(enabledTileColorResId, null));
+                                        enableTile.setTint(tintColor);
                                         param.setResult(enableTile);
                                     }
                                 }
-                            });
+                            };
+                            Helpers.findAndHookMethod("android.content.res.Resources", pluginLoader, "getDrawable", int.class, imgHook);
+                            Helpers.findAndHookMethod("android.content.res.Resources.Theme", pluginLoader, "getDrawable", int.class, imgHook);
                         }
                     });
                 }
@@ -1788,7 +1791,6 @@ public class SystemUI {
     private static float tapStartY = 0;
     private static float tapStartPointers = 0;
     private static float tapStartBrightness = 0;
-    private static float tapCurrentBrightness = 0;
     private static float topMinimumBacklight = 0.0f;
     private static float topMaximumBacklight = 1.0f;
     private static float currentTouchX = 0;
@@ -1907,9 +1909,7 @@ public class SystemUI {
                             ratio = (sens == 1 ? 0.66f : (sens == 3 ? 1.66f : 1.0f)) * ratio * 0.618f;
                             float nextLevel = Math.min(topMaximumBacklight, Math.max(topMinimumBacklight, tapStartBrightness + (topMaximumBacklight - topMinimumBacklight) * ratio));
                             XposedHelpers.callMethod(mBrightnessController, "setBrightness", nextLevel);
-                            tapCurrentBrightness = nextLevel;
                         } else if (opt == 3) {
-                            tapCurrentBrightness = -1.0f;
                             int sens = MainModule.mPrefs.getStringAsInt("system_statusbarcontrols_sens_vol", 2);
                             if (Math.abs(delta) < metrics.widthPixels / ((sens == 1 ? 0.66f : (sens == 3 ? 1.66f : 1.0f)) * 20 * metrics.density)) return;
                             tapStartX = event.getX();
