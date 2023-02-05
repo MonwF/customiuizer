@@ -351,9 +351,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 mPrefs.getBoolean("system_statusbaricons_sound") ||
                 mPrefs.getBoolean("system_statusbaricons_dnd") ||
                 mPrefs.getBoolean("system_statusbaricons_headset") ||
-                mPrefs.getBoolean("system_statusbaricons_mute") ||
-                mPrefs.getBoolean("system_statusbaricons_speaker") ||
-                mPrefs.getBoolean("system_statusbaricons_record") ||
                 mPrefs.getBoolean("system_statusbaricons_nfc") ||
                 mPrefs.getBoolean("system_statusbaricons_vpn") ||
                 mPrefs.getBoolean("system_statusbaricons_hotspot") ||
@@ -363,6 +360,12 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 mPrefs.getBoolean("system_statusbaricons_volte");
             if (hideIconsActive) SystemUI.HideIconsHook(lpparam);
 
+            if (
+                mPrefs.getBoolean("system_statusbaricons_privacy")
+                || mPrefs.getBoolean("system_statusbaricons_mute")
+                || mPrefs.getBoolean("system_statusbaricons_speaker")
+                || mPrefs.getBoolean("system_statusbaricons_record")
+            ) SystemUI.HideIconsFromSystemManager(lpparam);
             if (mPrefs.getInt("system_messagingstylelines", 0) > 0) System.MessagingStyleLinesHook(lpparam);
             if (mPrefs.getBoolean("system_betterpopups_allowfloat")) System.BetterPopupsAllowFloatHook(lpparam);
             if (mPrefs.getBoolean("system_securecontrolcenter")) System.SecureControlCenterHook(lpparam);
@@ -408,7 +411,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("various_skip_interceptperm")) Various.InterceptPermHook(lpparam);
             if (mPrefs.getBoolean("various_show_battery_temperature")) Various.ShowTempInBatteryHook(lpparam);
             if (mPrefs.getBoolean("various_enable_sc_ai_clipboard_location")) Various.UnlockClipboardAndLocationHook(lpparam);
-            if (mPrefs.getBoolean("system_statusbaricons_privacy")) System.HideIconsPrivacyHook(lpparam);
             if (mPrefs.getBoolean("system_hidelowbatwarn")) {
                 System.NoLowBatteryWarningHook();
             }

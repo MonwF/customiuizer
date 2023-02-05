@@ -65,7 +65,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import android.os.SystemClock;
 import android.os.UserHandle;
 import android.provider.MediaStore;
 import android.provider.Settings;
@@ -1002,7 +1001,7 @@ public class System {
         String customFormat = MainModule.mPrefs.getString("system_statusbar_clock_customformat", "");
         boolean enableCustomFormat = MainModule.mPrefs.getBoolean("system_statusbar_clock_customformat_enable");
         boolean dualRows = enableCustomFormat && customFormat.contains("\n");
-        if (dualRows && finalSize > 10f) {
+        if (dualRows && finalSize > 11.5f) {
             finalSize = 8;
         }
         else if (!dualRows && finalSize < 10f) {
@@ -3259,18 +3258,6 @@ public class System {
                     if (opt == 1) return;
                     int wifiStandard = (int) XposedHelpers.getObjectField(wifiState, "wifiStandard");
                     XposedHelpers.setObjectField(wifiState, "showWifiStandard", opt == 2 && wifiStandard > 0);
-                }
-            }
-        });
-    }
-
-    public static void HideIconsPrivacyHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("android.app.StatusBarManager", lpparam.classLoader, "setIconVisibility", String.class, boolean.class, new MethodHook() {
-            @Override
-            protected void before(MethodHookParam param) throws Throwable {
-                String iconType = (String)param.args[0];
-                if (iconType.equals("stealth")) {
-                    param.args[1] = false;
                 }
             }
         });
