@@ -106,6 +106,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.res.ResourcesCompat;
+
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -3654,11 +3656,17 @@ public class System {
             lp.gravity = Gravity.CENTER_HORIZONTAL|Gravity.TOP;
             mPct.setPadding(Math.round(20 * density), Math.round(10 * density), Math.round(18 * density), Math.round(12 * density));
             mPct.setLayoutParams(lp);
+            try {
+                Resources modRes = Helpers.getModuleRes(context);
+                mPct.setTextColor(modRes.getColor(R.color.color_on_surface_variant, context.getTheme()));
+                mPct.setBackground(ResourcesCompat.getDrawable(modRes, R.drawable.input_background, context.getTheme()));
+            }
+            catch (Throwable err) {
+                Helpers.log(err);
+            }
             container.addView(mPct);
         }
         mPct.setTag(source);
-        int panelResId = res.getIdentifier("panel_round_corner_bg", "drawable", "com.android.systemui");
-        mPct.setBackground(res.getDrawable(panelResId, context.getTheme()));
         mPct.setAlpha(0.0f);
         mPct.setVisibility(View.GONE);
     }
@@ -3681,7 +3689,10 @@ public class System {
         Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BrightnessMirrorController", lpparam.classLoader, "hideMirror", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
-                if (mPct != null) mPct.setVisibility(View.GONE);
+                if (mPct != null) {
+                    mPct.setVisibility(View.GONE);
+                    mPct = null;
+                }
             }
         });
 
@@ -3709,7 +3720,10 @@ public class System {
         Helpers.hookAllMethods("com.android.systemui.controlcenter.policy.MiuiBrightnessController", lpparam.classLoader, "onStop", new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
-                if (mPct != null) mPct.setVisibility(View.GONE);
+                if (mPct != null) {
+                    mPct.setVisibility(View.GONE);
+                    mPct = null;
+                }
             }
         });
 
@@ -3719,10 +3733,10 @@ public class System {
             @SuppressLint("SetTextI18n")
             protected void after(final MethodHookParam param) throws Throwable {
                 int pctTag = 0;
-                if (mPct != null) {
+                if (mPct != null && mPct.getTag() != null) {
                     pctTag = (int) mPct.getTag();
                 }
-                if (pctTag == 0) return;
+                if (pctTag == 0 || mPct == null) return;
                 int currentLevel = (int)param.args[3];
                 if (BrightnessUtils != null) {
                     int maxLevel = (int) XposedHelpers.getStaticObjectField(BrightnessUtils, "GAMMA_SPACE_MAX");
