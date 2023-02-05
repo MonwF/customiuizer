@@ -2055,9 +2055,6 @@ public class SystemUI {
             return "headset".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_headset") ||
                 "volume".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_sound") ||
                 "zen".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_dnd") ||
-                "volume".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_mute") ||
-                "speakerphone".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_speaker") ||
-                "call_record".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_record") ||
                 "alarm_clock".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_alarm") ||
                 "managed_profile".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_profile") ||
                 "vpn".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_vpn") ||
@@ -2087,6 +2084,24 @@ public class SystemUI {
         };
         Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBarIconControllerImpl", lpparam.classLoader, "setIconVisibility", String.class, boolean.class, iconHook);
         Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiDripLeftStatusBarIconControllerImpl", lpparam.classLoader, "setIconVisibility", String.class, boolean.class, iconHook);
+    }
+
+
+    public static void HideIconsFromSystemManager(LoadPackageParam lpparam) {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBarIconControllerImpl", lpparam.classLoader, "setIcon", String.class, "com.android.internal.statusbar.StatusBarIcon", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                String slotName = (String)param.args[0];
+                if (
+                    ("stealth".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_privacy"))
+                        || "mute".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_mute")
+                        || "speakerphone".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_speaker")
+                        || "call_record".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_record")
+                ){
+                    XposedHelpers.setObjectField(param.args[1], "visible", false);
+                }
+            }
+        });
     }
 
     public static void BatteryIndicatorHook(LoadPackageParam lpparam) {
