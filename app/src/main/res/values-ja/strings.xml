@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<resources>
+﻿<resources>
   <string name="app_name" translatable="false">CustoMIUIzer14</string>
   <string name="app_slogan" translatable="false">MIUIを自分好みにカスタマイズ</string>
   <string name="app_about">このアプリについて</string>
@@ -8,6 +7,7 @@
   <string name="about_dynamic">一般的なModの有効化/無効化にはソフトリブートが必要です。⟲のマークがある物は値の変更後、ソフトリブートすることで設定が適用されます。</string>
   <string name="about_unsupported">⨯の付いたModはご利用のデバイスに対応していません。</string>
   <string name="title_activity_main" translatable="false">@string/app_name</string>
+
   <string name="title_snoozed">通知のスヌーズ</string>
   <string name="menu_update">アップデート</string>
   <string name="snooze_unsnooze">このスヌーズ通知を解除する</string>
@@ -52,6 +52,7 @@
   <string name="system_statusbaricons_volte_title">VoLTE</string>
   <string name="system_statusbaricons_vowifi_title" translatable="false">Wi-Fi通話</string>
   <string name="system_statusbaricons_roaming_title">ローミング</string>
+  <string name="system_statusbaricons_dualwifi_title">デュアルWi-Fi</string>
   <string name="system_statusbaricons_gps_title" translatable="false">位置情報</string>
   <string name="system_statusbaricons_vpn_title" translatable="false">VPN</string>
   <string name="system_statusbaricons_nfc_title" translatable="false">NFC</string>
@@ -757,6 +758,7 @@
   <string name="disable_app_text">これが重要なシステムアプリである場合、無効化する事でMIUIが起動しなくなる可能性があります :)</string>
   <string name="disable_app_settings">それはマズいですよ! :)</string>
   <string name="disable_app_fail">アプリの状態の変更に失敗しました</string>
+
   <string name="appdetails_playstore">Google Play ストアを開く</string>
   <string name="appdetails_launch">アプリを起動</string>
   <string name="appdetails_nolaunch">アプリにデフォルトで起動可能なアクティビティが存在しません</string>
@@ -770,9 +772,11 @@
   <string name="appsort_frequency">使用頻度</string>
   <string name="appsort_storage">使用済みのストレージ</string>
   <string name="appsort_install">インストール日時</string>
+
   <string name="gboard">Gboard</string>
   <string name="calls">通話</string>
   <string name="settings">設定</string>
+
   <string name="array_default">デフォルト</string>
   <string name="array_system_default">システム</string>
   <string name="array_global_actions_none">アクションなし</string>
@@ -844,9 +848,9 @@
   <string name="array_qshaptic_strong">強いバイブレーション</string>
   <string name="array_enable">有効</string>
   <string name="array_disable">無効</string>
-  <string name="array_top">最上部</string>
+  <string name="array_top">上部</string>
   <string name="array_middle">中央</string>
-  <string name="array_bottom">最下部</string>
+  <string name="array_bottom">下部</string>
   <string name="array_max">最大</string>
   <string name="array_large">大</string>
   <string name="array_normal">普通</string>
@@ -929,7 +933,9 @@
   <string name="array_current">現在のみ</string>
   <string name="array_dualsimin2rows_style_thick">Thick</string>
   <string name="array_dualsimin2rows_style_theme">システムのテーマ</string>
+
   <string name="unlimited">無制限</string>
+
   <string name="toggle_wifi_on">Wi-Fiを有効</string>
   <string name="toggle_wifi_off">Wi-Fiを無効</string>
   <string name="toggle_bt_on">Bluetoothを有効</string>
@@ -956,6 +962,7 @@
   <string name="qs_toggle_autorotate_portrait">縦方向の画面</string>
   <string name="qs_toggle_autorotate_landscape">横方向の画面</string>
   <string name="qs_toggle_5g">5Gネットワーク</string>
+
   <string name="miuizer">CustoMIUIzerの設定</string>
   <string name="miuizer_show_newmods_title">新しいModをマークする</string>
   <string name="miuizer_show_newmods_summ">現在のバージョンで追加されたModのタイトルに\"New!\"とラベルを表示するようにします</string>
@@ -970,12 +977,14 @@
   <string name="miuizer_locale_summ">選択された言語で常にモジュールのインターフェースを表示します</string>
   <string name="miuizer_holiday_title">ホリデーデザイン</string>
   <string name="miuizer_holiday_summ">シーンに合わせてモジュールのインターフェースを飾ります</string>
+
   <string name="troubleshoot">トラブルシューティング</string>
   <string name="miuizer_acrasend_title">詳細なレポートを送信</string>
   <string name="miuizer_acrasend_summ">デバイス、使用環境、logcat、Xposedのログを収集して開発者に送信をします。インターネットの接続が必要です。</string>
   <string name="miuizer_acramail_summ">デバイス、使用環境、logcat、Xposedのログを収集して開発者に送信をします。インターネットの接続が必要です。</string>
   <string name="miuizer_acramail_title">連絡先</string>
   <string name="miuizer_acramail_tip">クラッシュレポートの返信を希望する場合は、メール、ICQ、XDA、4PDAのニックネームを必ず記入してください。</string>
+
   <string name="support">サポート</string>
   <string name="support_github">コードと問題の報告</string>
   <string name="support_github_summ">アプリを最新の状態に保つスターリポジトリです</string>
@@ -988,6 +997,7 @@
   <string name="support_xda_summ">XDA上のモジュールに関するスレッド</string>
   <string name="support_4pda_title">4PDAのスレッド</string>
   <string name="support_4pda_summ">4PDA上のモジュールに関するスレッド</string>
+
   <string name="support_bug_title">バグを報告</string>
   <string name="support_bug_summ">バグの報告や機能の要望は、公式のIssue Trackerからお願いします。</string>
   <string name="support_donate">寄付 $%1$d</string>
@@ -1003,6 +1013,7 @@
   <string name="donate_level3">凄まじい寛大な寄付をして頂き激しく感謝します! 😮</string>
   <string name="billing_error">課金情報の取得に失敗しました。インターネット接続を確認してください。</string>
   <string name="billing_canceled">気が変りましたか? ;)</string>
+
   <string name="crash_dialog">CustoMIUIzerがクラッシュしました!</string>
   <string name="crash_dialog_manual">必要なデータはすべて収集されています</string>
   <string name="crash_dialog_manual_size">生成されるレポートのサイズ</string>
@@ -1019,14 +1030,16 @@
   <string name="crash_confirm">確認</string>
   <string name="crash_collecting_report">レポートをビルド中です…</string>
   <string name="crash_sending_report">レポートを送信中です…</string>
+
   <string name="array_color_auto">自動</string>
   <string name="array_color_dark">ダーク</string>
   <string name="array_color_light">ライト</string>
+
   <string name="notselected">未選択</string>
   <string name="warning">警告!</string>
   <string name="warning_blacklist">Xposed Framework上で「ブラック/ホワイトリスト オプション」が有効化されているため、Modが正常に動作しない可能性があります。</string>
   <string name="warning_blacklist_sdk">インストールされたモジュールはGoogle Play版です。このバージョンは多くの制限事項があります。他のソースからインストールを検討してください。</string>
-  <string name="warning_scope">このモジュールはアクティベーションスコープが有効になっているため、一部のModが正常に動作しない可能性があります。</string>
+  <string name="warning_scope">このモジュールはアクティベーションスコープが有効化されているため、一部のModが正常に動作しない可能性があります。</string>
   <string name="warning_unsupported_os">Android %1$sは非対応です。Modが正しく動作しない可能性があります。</string>
   <string name="open_xposed">Xposedモジュールの管理</string>
   <string name="soft_reboot">ソフトリブート</string>
@@ -1045,7 +1058,7 @@
   <string name="storage_cannot_restore">設定のバックアップがありません</string>
   <string name="backup_ok">設定のバックアップが完了しました!</string>
   <string name="restore_ok">設定の復元が完了しました!</string>
-  <string name="backup_restore_info">Googleクラウドバックアップ経由で設定が復元されました。Xposedモジュールの有効後にソフトリブートを行なってください。</string>
+  <string name="backup_restore_info">Googleクラウドバックアップ経由で設定が復元されました。Xposedモジュールの有効化後にソフトリブートを行なってください。</string>
   <string name="prefs_migration_success">LSPosed、EdXposedの新しいバージョンで動作するようにモジュールの設定を移行させる作業に成功しました。再起動後に変更が適用されます。</string>
   <string name="prefs_migration_failure">LSPosed、EdXposedの新しいバージョンで動作するようにモジュールの設定を移行させる作業に失敗しました。復元機能を使用するか、再度Modの設定をし直す必要があります。</string>
   <string name="update_available">アップデートが可能です ⚠</string>
@@ -1069,10 +1082,12 @@
   <string name="request_bt">始めにBluetoothをONにしてください</string>
   <string name="request_wifi">始めにWi-FiをONにしてください</string>
   <string name="request_location">位置情報のアクセス権が許可されていないとスキャンできません</string>
+
   <string name="force_closed">%s を強制終了しました</string>
   <string name="credentials_ok">認証情報は既に解除されています。</string>
   <string name="credentials_unlock">認証情報を解除する</string>
   <string name="credentials_success">認証情報を解除しました!</string>
+
   <string name="xposed_not_found">Xposedアプリがありません。</string>
   <string name="xposed_not_found_explain">Xposed Frameworkがインストールされていないようです。\n\nModはXposedがないと動作しないのでご注意ください。</string>
   <string name="module_not_active">CustoMIUIzerモジュールが有効化されていません!\nLSPosedアプリを開き、モジュールを有効化後に再起動をしてください。</string>
@@ -1083,13 +1098,16 @@
   <string name="delete">削除</string>
   <string name="delete_item_info">削除する項目を長押しします</string>
   <string name="change_icon">アイコンの変更</string>
+
   <string name="guide_search">Modを名前で検索します。\n長押しで新しいModの一覧を表示します。</string>
   <string name="guide_softreboot">ソフトリブートでModの適用を忘れないでください。\n動的な⟲のModは1度だけソフトリブートが必要です。\n詳細はアプリについての項目にあります。</string>
   <string name="guide_marknew">前回のアップデート以降のModは\nマークをする事でよりわかりやすくなります。</string>
+
   <string name="permission_save">バックアップを保存しますか?</string>
   <string name="permission_restore">バックアップを復元しますか?</string>
   <string name="permission_scan">ネットワークまたはデバイスのリストを取得しますか?</string>
   <string name="permission_permanent">このオプションは手動で許可する必要があります。グッジョブ!!</string>
+
   <string name="format_d_ms">%d 秒</string>
   <string name="format_d_s">%d 秒</string>
   <string name="format_d_m">%d 分</string>
@@ -1098,6 +1116,7 @@
   <string name="Bs">B/s</string>
   <string name="speedunits">KMGTPE</string>
   <string name="lux">%s lux</string>
+
   <string name="off">OFF</string>
   <string name="time_30m">30分</string>
   <string name="time_1h">1時間</string>
@@ -1110,17 +1129,21 @@
   <string name="time_10h">10時間</string>
   <string name="time_12h">12時間</string>
   <string name="time_forever" translatable="false">無制限</string>
+
   <string name="white_color">ホワイト</string>
   <string name="black_color">ブラック</string>
   <string name="auto_color">ステータスバーの色</string>
+
   <string name="type_file">ファイル</string>
   <string name="type_res">リソース</string>
+
   <string name="dummy" translatable="false" />
   <string name="system_statusbar_batterytempandcurrent_title">バッテリーの温度と電流を表示</string>
   <string name="system_statusbar_batterytempandcurrent_content_title">表示をする内容</string>
   <string name="system_statusbar_batterytempandcurrentatright_title">右側の表示</string>
   <string name="system_statusbar_batterytempandcurrent_positive_title">電流値を常に正の値にする</string>
   <string name="system_statusbar_batterytempandcurrent_incharge_title">充電時のみ表示</string>
+  <string name="system_statusbar_batterytempandcurrent_hideunit_title">ユニットを非表示</string>
   <string name="system_statusbar_batterytempandcurrent_singlerow_title">一列に並べて表示</string>
   <string name="system_statusbar_batterytempandcurrent_reverseorder_title">逆順</string>
   <string name="system_statusbar_dualsimin2rows_title">デュアルSIMの信号バーを2段で配置</string>
@@ -1150,10 +1173,10 @@
   <string name="various_disable_access_devicelogs_title">アクセスデバイスログの要求ダイアログを解除</string>
   <string name="various_skip_interceptperm_title">パーミッション許可の待機時間をスキップ</string>
   <string name="various_show_battery_temperature_title">バッテリーの温度を表示</string>
-  <string name="various_enable_sc_ai_clipboard_blur_location_title">AIクリップボードと位置のぼかしを有効にする</string>
+  <string name="various_enable_sc_ai_clipboard_blur_location_title">AIクリップボードと位置のぼかしを有効化</string>
   <string name="system_lockscreenshortcuts_left_tapaction_title">左側のショートカットをタップで懐中電灯の切り替え</string>
   <string name="system_cc_tile_roundedrect_title">丸みを帯びた長方形のタイル</string>
-  <string name="system_cc_enable_style_switch_title">CCスタイルの切り替えを有効</string>
+  <string name="system_cc_enable_style_switch_title">強制的にCCスタイルの切り替えを有効化</string>
   <string name="system_cc_disable_bluetooth_restrict_title">明日までBluetoothの切断を無効化</string>
-  <string name="system_cc_collapse_after_clicked_title">タッチ後に折りたたむ</string>
+  <string name="system_cc_collapse_after_clicked_title">タップ後に折りたたむ</string>
 </resources>
