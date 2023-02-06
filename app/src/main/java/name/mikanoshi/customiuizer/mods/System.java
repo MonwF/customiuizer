@@ -3797,28 +3797,6 @@ public class System {
     }
 
     public static void NoSignatureVerifyServiceHook(LoadPackageParam lpparam) {
-        Helpers.hookAllMethods("android.content.pm.PackageParser.SigningDetails", lpparam.classLoader, "checkCapability", XC_MethodReplacement.returnConstant(true));
-        MethodHook compareHook = new MethodHook() {
-            @Override
-            protected void before(MethodHookParam param) throws Throwable {
-                Object s1 = param.args[0];
-                Object s2 = param.args[1];
-                int ret = 0;
-                if (s1 == null) {
-                    if (s2 == null) {
-                        ret = 1;
-                    }
-                    else {
-                        ret = -1;
-                    }
-                } else if (s2 == null) {
-                    ret = -2;
-                }
-                param.setResult(ret);
-            }
-        };
-        Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "compareSignatures", compareHook);
-
         Class <?> SignDetails = findClassIfExists("android.content.pm.SigningDetails", lpparam.classLoader);
         Object signUnknown = XposedHelpers.getStaticObjectField(SignDetails, "UNKNOWN");
         Helpers.hookAllMethods(SignDetails, "checkCapability", new MethodHook() {
@@ -3833,27 +3811,35 @@ public class System {
             }
         });
 
-        if (Helpers.isTPlus()) {
-            Helpers.hookAllConstructors("android.util.jar.StrictJarVerifier", lpparam.classLoader, new MethodHook() {
-                @Override
-                protected void after(MethodHookParam param) throws Throwable {
-                    XposedHelpers.setObjectField(param.thisObject, "signatureSchemeRollbackProtectionsEnforced", false);
+        Helpers.hookAllConstructors("android.util.jar.StrictJarVerifier", lpparam.classLoader, new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                XposedHelpers.setObjectField(param.thisObject, "signatureSchemeRollbackProtectionsEnforced", false);
+            }
+        });
+        Helpers.hookAllMethods("android.util.jar.StrictJarVerifier", lpparam.classLoader, "verifyMessageDigest", XC_MethodReplacement.returnConstant(true));
+        Helpers.hookAllMethods("android.util.jar.StrictJarVerifier", lpparam.classLoader, "verify", XC_MethodReplacement.returnConstant(true));
+        Helpers.hookAllMethods("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "verifySignatures", XC_MethodReplacement.returnConstant(false));
+        Helpers.hookAllMethods("com.android.server.pm.InstallPackageHelper", lpparam.classLoader, "doesSignatureMatchForPermissions", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                String packageName = (String) XposedHelpers.callMethod(param.args[1], "getPackageName");
+                String sourcePackageName = (String) param.args[0];
+                if (sourcePackageName.equals(packageName)) {
+                    param.setResult(true);
                 }
-            });
-            Helpers.hookAllMethods("android.util.jar.StrictJarVerifier", lpparam.classLoader, "verifyMessageDigest", XC_MethodReplacement.returnConstant(true));
-            Helpers.hookAllMethods("android.util.jar.StrictJarVerifier", lpparam.classLoader, "verify", XC_MethodReplacement.returnConstant(true));
-            Helpers.hookAllMethods("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "verifySignatures", XC_MethodReplacement.returnConstant(false));
-            Helpers.hookAllMethods("com.android.server.pm.InstallPackageHelper", lpparam.classLoader, "doesSignatureMatchForPermissions", new MethodHook() {
-                @Override
-                protected void before(MethodHookParam param) throws Throwable {
-                    String packageName = (String) XposedHelpers.callMethod(param.args[1], "getPackageName");
-                    String sourcePackageName = (String) param.args[0];
-                    if (sourcePackageName.equals(packageName)) {
-                        param.setResult(true);
-                    }
+            }
+        });
+        Helpers.hookAllMethods("com.android.server.pm.InstallPackageHelper", lpparam.classLoader, "cannotInstallWithBadPermissionGroups", XC_MethodReplacement.returnConstant(false));
+        Helpers.hookAllMethods("com.android.server.pm.permission.PermissionManagerServiceImpl", lpparam.classLoader, "shouldGrantPermissionBySignature", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                boolean isSystem = (boolean) XposedHelpers.callMethod(param.args[0], "isSystem");
+                if (isSystem) {
+                    param.setResult(true);
                 }
-            });
-        }
+            }
+        });
     }
 
     public static void ScreenDimTimeHook(LoadPackageParam lpparam) {
