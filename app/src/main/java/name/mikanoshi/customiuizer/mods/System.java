@@ -111,6 +111,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
@@ -129,6 +130,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.Timer;
@@ -4577,36 +4579,6 @@ public class System {
         });
     }
 
-    public static void ChargingInfoServiceHook(LoadPackageParam lpparam) {
-        if (!Helpers.hookAllMethodsSilently("com.android.server.BatteryService$BatteryPropertiesRegistrar", lpparam.classLoader, "getProperty", new MethodHook() {
-            @Override
-            protected void before(MethodHookParam param) throws Throwable {
-                int req = (int)param.args[0];
-                if (req < 1000) return;
-                long value = Long.MIN_VALUE;
-                if (req == 1001)
-                    value = XposedHelpers.getIntField(XposedHelpers.getSurroundingThis(param.thisObject), "mLastBatteryVoltage");
-                else if (req == 1002)
-                    value = XposedHelpers.getIntField(XposedHelpers.getSurroundingThis(param.thisObject), "mLastBatteryTemperature");
-                else if (req == 1003)
-                    value = XposedHelpers.getIntField(XposedHelpers.getSurroundingThis(param.thisObject), "mLastBatteryHealth");
-                XposedHelpers.callMethod(param.args[1], "setLong", value);
-                param.setResult(0);
-            }
-        })) Helpers.findAndHookMethod("com.android.server.BatteryService", lpparam.classLoader, "processValuesLocked", boolean.class, new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                try {
-                    Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-                    ContentResolver provider = mContext.getContentResolver();
-                    Settings.Global.putInt(provider, Helpers.modulePkg + ".battery.voltage", XposedHelpers.getIntField(param.thisObject, "mLastBatteryVoltage"));
-                    Settings.Global.putInt(provider, Helpers.modulePkg + ".battery.temperature", XposedHelpers.getIntField(param.thisObject, "mLastBatteryTemperature"));
-                    Settings.Global.putInt(provider, Helpers.modulePkg + ".battery.health", XposedHelpers.getIntField(param.thisObject, "mLastBatteryHealth"));
-                } catch (Throwable ignore) {}
-            }
-        });
-    }
-
     public static void ChargingInfoHook(LoadPackageParam lpparam) {
         Helpers.hookAllConstructors("com.android.keyguard.KeyguardUpdateMonitor", lpparam.classLoader, new MethodHook() {
             @Override
@@ -4647,14 +4619,8 @@ public class System {
                 Context context = (Context)param.args[0];
                 int charge = (int)param.args[2];
                 String hint = (String)param.getResult();
-                String PROVIDER_POWER_CENTER = (String)XposedHelpers.getStaticObjectField(findClass("com.android.keyguard.charge.ChargeUtils", lpparam.classLoader), "PROVIDER_POWER_CENTER");
 
-                Bundle bundle = null;
-                try {
-                    bundle = context.getContentResolver().call(Uri.parse(PROVIDER_POWER_CENTER), "getBatteryCurrent", null, null);
-                } catch (Exception ignore) {}
-
-                if (bundle != null && charge < 100) {
+                if (charge < 100) {
                     boolean showCurr = MainModule.mPrefs.getBoolean("system_charginginfo_current");
                     boolean showVolt = MainModule.mPrefs.getBoolean("system_charginginfo_voltage");
                     boolean showWatt = MainModule.mPrefs.getBoolean("system_charginginfo_wattage");
@@ -4662,18 +4628,33 @@ public class System {
 
                     ArrayList<String> values = new ArrayList<>();
                     BatteryManager btrMgr = (BatteryManager)context.getSystemService(Context.BATTERY_SERVICE);
-                    int currVal = Math.abs(bundle.getInt("current_now"));
-                    long voltVal = btrMgr.getLongProperty(1001);
-                    if (voltVal == Long.MIN_VALUE) voltVal = Settings.Global.getInt(context.getContentResolver(), Helpers.modulePkg + ".battery.voltage", 0);
-                    if (voltVal == Long.MIN_VALUE) voltVal = 0;
-                    long tempVal = btrMgr.getLongProperty(1002);
-                    if (tempVal == Long.MIN_VALUE) tempVal = Settings.Global.getInt(context.getContentResolver(), Helpers.modulePkg + ".battery.temperature", 0);
-                    if (tempVal == Long.MIN_VALUE) tempVal = 0;
-
-                    if (showCurr) values.add(currVal + " mA");
-                    if (showVolt) values.add(String.format(Locale.getDefault(), "%.1f", voltVal / 1000f) + " V");
-                    if (showWatt) values.add(String.format(Locale.getDefault(), "%.1f", voltVal / 1000f * currVal / 1000f) + " W");
-                    if (showTemp) values.add(Math.round(tempVal / 10f) + " ℃");
+                    Properties props = null;
+                    FileInputStream fis = null;
+                    try {
+                        fis = new FileInputStream("/sys/class/power_supply/battery/uevent");
+                        props = new Properties();
+                        props.load(fis);
+                    }
+                    catch (Throwable ign) {}
+                    finally {
+                        try {
+                            fis.close();
+                        }
+                        catch (Throwable ign) {}
+                    }
+                    if (props != null) {
+                        float currVal = Math.abs(Integer.parseInt(props.getProperty("POWER_SUPPLY_CURRENT_NOW")) / 1000f / 1000f);
+                        if (showCurr) values.add(String.format(Locale.getDefault(), "%.2f", currVal) + " A");
+                        float voltVal = Integer.parseInt(props.getProperty("POWER_SUPPLY_VOLTAGE_NOW")) / 1000f / 1000f;
+                        if (showVolt)
+                            values.add(String.format(Locale.getDefault(), "%.1f", voltVal) + " V");
+                        if (showWatt)
+                            values.add(String.format(Locale.getDefault(), "%.1f", voltVal * currVal) + " W");
+                        if (showTemp) {
+                            int tempVal = Integer.parseInt(props.getProperty("POWER_SUPPLY_TEMP"));
+                            values.add(Math.round(tempVal / 10f) + " ℃");
+                        }
+                    }
                     if (values.size() == 0) return;
                     String info = TextUtils.join(" · ", values);
 

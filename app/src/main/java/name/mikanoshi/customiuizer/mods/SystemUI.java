@@ -288,7 +288,6 @@ public class SystemUI {
             @Override
             public void run() {
                 String batteryInfo = "";
-                FileInputStream fis = null;
                 boolean showInfo = true;
                 if (MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_incharge") && ChargeUtilsClass != null) {
                     Object batteryStatus = Helpers.getStaticObjectFieldSilently(ChargeUtilsClass, "sBatteryStatus");
@@ -306,6 +305,7 @@ public class SystemUI {
                     PowerManager powerMgr = (PowerManager)mContext.getSystemService(Context.POWER_SERVICE);
                     boolean isScreenOn = powerMgr.isInteractive();
                     if (isScreenOn) {
+                        FileInputStream fis = null;
                         try {
                             fis = new FileInputStream("/sys/class/power_supply/battery/uevent");
                             props = new Properties();
@@ -321,7 +321,7 @@ public class SystemUI {
                     }
                     if (props != null) {
                         int tempVal = Integer.parseInt(props.getProperty("POWER_SUPPLY_TEMP"));
-                        int currVal = -1 * Math.round(Integer.parseInt(props.getProperty("POWER_SUPPLY_CURRENT_NOW")) / 1000);
+                        int currVal = -1 * Math.round(Integer.parseInt(props.getProperty("POWER_SUPPLY_CURRENT_NOW")) / 1000f);
                         if (MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_positive")) {
                             currVal = Math.abs(currVal);
                         }
