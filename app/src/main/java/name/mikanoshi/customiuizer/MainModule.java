@@ -202,8 +202,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 SystemUI.AddFiveGTileHook(lpparam);
             }
 
-            if (mPrefs.getBoolean("system_fw_splitscreen")) System.MultiWindowPlusHook(lpparam);
-
             if (mPrefs.getInt("system_qsgridcolumns", 2) > 2 || mPrefs.getInt("system_qsgridrows", 1) > 1) SystemUI.QSGridRes();
             if (mPrefs.getInt("system_qqsgridcolumns", 2) > 2) SystemUI.QQSGridRes();
             if (mPrefs.getBoolean("system_volumetimer")) SystemUI.VolumeTimerValuesRes(lpparam);
@@ -410,6 +408,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("various_skip_interceptperm")) Various.InterceptPermHook(lpparam);
             if (mPrefs.getBoolean("various_show_battery_temperature")) Various.ShowTempInBatteryHook(lpparam);
             if (mPrefs.getBoolean("various_enable_sc_ai_clipboard_location")) Various.UnlockClipboardAndLocationHook(lpparam);
+            if (mPrefs.getBoolean("various_disable_freeform_suggest_blacklist")) System.DisableSideBarSuggestionHook(lpparam);
             if (mPrefs.getBoolean("system_hidelowbatwarn")) {
                 System.NoLowBatteryWarningHook();
             }

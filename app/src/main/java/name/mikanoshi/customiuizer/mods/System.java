@@ -4919,29 +4919,38 @@ public class System {
         });
     }
 
-    public static void NoFloatingWindowBlacklistHook(LoadPackageParam lpparam) {
-        MainModule.resHooks.setResReplacement("android", "array", "freeform_black_list", R.array.miui_resize_black_list);
-        MainModule.resHooks.setResReplacement("com.miui.rom", "array", "freeform_black_list", R.array.miui_resize_black_list);
+    private static void DisableFloatingWindowBlacklistHook(LoadPackageParam lpparam) {
         MethodHook clearHook = new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 List<String> blackList = (List<String>)param.getResult();
                 if (blackList != null) blackList.clear();
+                blackList.add("com.android.camera");
                 param.setResult(blackList);
             }
         };
+        Helpers.hookAllMethods("android.util.MiuiMultiWindowAdapter", lpparam.classLoader, "getStartFromFreeformBlackListFromCloud", clearHook);
         Helpers.hookAllMethods("android.util.MiuiMultiWindowAdapter", lpparam.classLoader, "getFreeformBlackList", clearHook);
         Helpers.hookAllMethods("android.util.MiuiMultiWindowAdapter", lpparam.classLoader, "getFreeformBlackListFromCloud", clearHook);
         Helpers.hookAllMethods("android.util.MiuiMultiWindowAdapter", lpparam.classLoader, "setFreeformBlackList", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 List<String> blackList = new ArrayList<String>();
-                blackList.add("ab.cd.xyz");
+                blackList.add("com.android.camera");
                 param.args[0] = blackList;
             }
         });
         Helpers.findAndHookMethod("android.util.MiuiMultiWindowUtils", lpparam.classLoader, "isForceResizeable", XC_MethodReplacement.returnConstant(true));
-        Helpers.findAndHookMethod("android.util.MiuiMultiWindowUtils", lpparam.classLoader, "supportFreeform", XC_MethodReplacement.returnConstant(true));
+    }
+
+    public static void DisableSideBarSuggestionHook(LoadPackageParam lpparam) {
+        DisableFloatingWindowBlacklistHook(lpparam);
+    }
+
+    public static void NoFloatingWindowBlacklistHook(LoadPackageParam lpparam) {
+        MainModule.resHooks.setResReplacement("android", "array", "freeform_black_list", R.array.miui_resize_black_list);
+        MainModule.resHooks.setResReplacement("com.miui.rom", "array", "freeform_black_list", R.array.miui_resize_black_list);
+        DisableFloatingWindowBlacklistHook(lpparam);
         if (Helpers.isTPlus()) {
             Helpers.findAndHookMethod("com.android.server.wm.MiuiFreeformServicesUtils", lpparam.classLoader, "supportsFreeform", new MethodHook() {
                 @Override
