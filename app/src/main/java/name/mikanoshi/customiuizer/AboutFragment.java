@@ -9,6 +9,10 @@ import android.widget.TextView;
 
 import androidx.preference.Preference;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class AboutFragment extends SubFragment {
@@ -76,7 +80,12 @@ public class AboutFragment extends SubFragment {
 		View view = getView();
 		if (view != null) try {
 			TextView version = view.findViewById(R.id.about_version);
-			version.setText(String.format(getResources().getString(R.string.about_version), act.getPackageManager().getPackageInfo(act.getPackageName(), 0).versionName));
+			String versionName = BuildConfig.VERSION_NAME;
+			if (BuildConfig.BUILD_TYPE.equals("develop")) {
+				SimpleDateFormat formatter = new SimpleDateFormat("yy.MM.dd", Locale.getDefault());
+				versionName = formatter.format(new Date()) + "-test";
+			}
+			version.setText(String.format(getResources().getString(R.string.about_version), versionName));
 		} catch (Throwable e) {
 			//Shouldn't happen...
 			e.printStackTrace();

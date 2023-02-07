@@ -5420,25 +5420,14 @@ public class System {
     }
 
     public static void MuteVisibleNotificationsHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.media.NotificationPlayer$CreationAndCompletionThread", lpparam.classLoader, "run", new MethodHook() {
+        Helpers.hookAllMethods("com.android.systemui.statusbar.notification.policy.NotificationAlertController", lpparam.classLoader, "buzzBeepBlink", new MethodHook() {
             @Override
-            @SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
-            protected void before(final MethodHookParam param) throws Throwable {
-                Object mCmd = XposedHelpers.getObjectField(param.thisObject, "mCmd");
-                if (mCmd == null) return;
-                int code = XposedHelpers.getIntField(mCmd, "code");
-                if (code != 1) return;
-                AudioAttributes attributes = (AudioAttributes)XposedHelpers.getObjectField(mCmd, "attributes");
-                if (attributes.getUsage() == AudioAttributes.USAGE_NOTIFICATION || attributes.getUsage() == AudioAttributes.USAGE_NOTIFICATION_RINGTONE || attributes.getUsage() == AudioAttributes.USAGE_UNKNOWN)
-                    if (attributes.getContentType() == AudioAttributes.CONTENT_TYPE_SONIFICATION || attributes.getContentType() == AudioAttributes.CONTENT_TYPE_UNKNOWN) {
-                        Context context = (Context)XposedHelpers.getObjectField(mCmd, "context");
-                        PowerManager powerMgr = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
-                        if (powerMgr.isInteractive()) {
-                            Thread thread = (Thread)param.thisObject;
-                            synchronized (thread) { thread.notify(); }
-                            param.setResult(null);
-                        }
-                    }
+            protected void before(MethodHookParam param) throws Throwable {
+                Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+                PowerManager powerMgr = (PowerManager)mContext.getSystemService(Context.POWER_SERVICE);
+                if (powerMgr.isInteractive()) {
+                    param.setResult(null);
+                }
             }
         });
     }

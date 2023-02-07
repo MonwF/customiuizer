@@ -13,7 +13,6 @@ def lastVersionName = "23.02.03"
 
 if (gradle.startParameter.taskNames.contains(":app:assembleDevelop")) {
     lastVersion += 1
-    lastVersionName = new Date().format('yy.MM.dd')
 }
 
 android {
@@ -44,7 +43,6 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            versionNameSuffix "-test"
         }
         release {
             debuggable false
