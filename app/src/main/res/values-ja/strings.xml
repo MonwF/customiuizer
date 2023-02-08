@@ -166,8 +166,8 @@
   <string name="system_colorizenotiftitle_summ">タイトルテキストにアイコンカラーを適用します (Android通知スタイルのみ)</string>
   <string name="system_minimalnotifview_title">最小限の折りたたみ表示を復活させる</string>
   <string name="system_minimalnotifview_summ">重要度が低い通知は再度一行のみの表示に折りたためるようになります</string>
-  <string name="system_notifchannelsettings_title">チャンネル設定を開く</string>
-  <string name="system_notifchannelsettings_summ">通知メニューから設定を開くとアプリ共通の通知設定ではなくチャンネル設定を表示します</string>
+  <string name="system_notifchannelsettings_title">通知チャネルの設定を開く</string>
+  <string name="system_notifchannelsettings_summ">通知メニューから設定を開くとアプリ共通の通知設定ではなく通知チャネルの設定を表示します</string>
   <string name="system_messagingstylelines_title">メッセージングスタイルの最大行数</string>
   <string name="system_messagingstylelines_summ">メッセージング表示通知の表示行数の制限を設定します</string>
   <string name="system_removedismiss_title">消去ボタンを非表示</string>
