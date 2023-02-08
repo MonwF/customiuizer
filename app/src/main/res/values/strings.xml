@@ -664,7 +664,7 @@
     <string name="controls_volumemedia_vibrate_title">Long press vibration</string>
     <string name="controls_volumemedia_vibrate_summ">Vibrate when long press action is executed</string>
     <string name="controls_mods_navbar">Navigation bar</string>
-    <string name="controls_nonavbar_title">Hide navbar</string>
+    <string name="controls_nonavbar_title">Hide navbar and fullscreen indicator</string>
     <string name="controls_imebackalticon_title">Reactive Back button</string>
     <string name="controls_imebackalticon_summ">Switch back button icon to alternative one in input mode</string>
     <string name="controls_navbarheight_title">Navbar height</string>
