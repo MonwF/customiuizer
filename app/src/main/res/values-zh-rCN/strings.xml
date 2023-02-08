@@ -638,7 +638,7 @@
     <string name="controls_volumemedia_vibrate_title">长按振动</string>
     <string name="controls_volumemedia_vibrate_summ">执行长按动作时振动</string>
     <string name="controls_mods_navbar">导航栏</string>
-    <string name="controls_nonavbar_title">隐藏导航栏</string>
+    <string name="controls_nonavbar_title">隐藏导航栏或手势提示线</string>
     <string name="controls_imebackalticon_title">反应性返回键</string>
     <string name="controls_imebackalticon_summ">切换返回键图标为输入模式中的替代方案</string>
     <string name="controls_navbarheight_title">导航栏高度</string>

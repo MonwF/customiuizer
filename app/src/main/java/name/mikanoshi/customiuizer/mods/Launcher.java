@@ -661,6 +661,7 @@ public class Launcher {
 			Settings.Global.putInt(((Context)param.args[0]).getContentResolver(), "force_immersive_nav_bar", 1);
 			}
 		});
+		Helpers.findAndHookMethod("com.miui.home.recents.views.RecentsContainer", lpparam.classLoader, "showLandscapeOverviewGestureView", boolean.class, XC_MethodReplacement.DO_NOTHING);
 	}
 
 	private static void showSeekBar(View workspace) {
