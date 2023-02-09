@@ -1554,6 +1554,10 @@ public class Launcher {
 		Helpers.findAndHookMethod("com.miui.home.launcher.allapps.category.fragment.RecommendCategoryAppListFragment", lpparam.classLoader, "onClick", View.class, hook);
 	}
 
+	public static void AssistGestureActionHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.shared.recents.system.AssistManager", lpparam.classLoader, "isSupportGoogleAssist", int.class, XC_MethodReplacement.returnConstant(true));
+	}
+
 	public static void DisableUnlockWallpaperScale(LoadPackageParam lpparam) {
 		Helpers.findAndHookMethod("com.miui.miwallpaper.manager.WallpaperServiceController", lpparam.classLoader, "noNeedDesktopWallpaperScaleAnim",
 			XC_MethodReplacement.returnConstant(true)
