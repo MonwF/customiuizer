@@ -3967,7 +3967,8 @@ public class System {
     }
 
     public static void AllowDirectReplyHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader, "setLockScreenAllowRemoteInput", boolean.class, new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl", lpparam.classLoader, "shouldAllowLockscreenRemoteInput", XC_MethodReplacement.returnConstant(true));
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl", lpparam.classLoader, "setLockScreenAllowRemoteInput", boolean.class, new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 param.args[0] = true;
