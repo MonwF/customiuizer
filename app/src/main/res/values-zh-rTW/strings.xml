@@ -846,7 +846,6 @@
     <string name="system_statusbaricons_alarmn_summ">僅在鬧鐘響鈴前顯示鬧鐘圖示</string>
     <string name="system_statusbaricons_alarmn_title">選擇鬧鐘圖示的可見性</string>
     <string name="system_statusbaricons_battery1_title">電池圖片</string>
-    <string name="system_statusbaricons_battery2_title">電池充電百分比</string>
     <string name="system_statusbaricons_battery3_title">充電指示器</string>
     <string name="system_statusbaricons_dnd_title">勿擾模式</string>
     <string name="system_statusbaricons_headset_title">耳機</string>

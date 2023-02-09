@@ -638,7 +638,6 @@
     <string name="system_statusbaricons_title">Скрытие иконок</string>
     <string name="system_statusbaricons_summ">Управление видимостью иконок в строке состояния</string>
     <string name="system_statusbaricons_battery1_title">Изображение батареи</string>
-    <string name="system_statusbaricons_battery2_title">Процент заряда батареи</string>
     <string name="system_statusbaricons_battery3_title">Индикатор зарядки</string>
     <string name="system_statusbaricons_alarm_title">Будильник</string>
     <string name="system_statusbaricons_alarm_summ">Скрыть полностью</string>

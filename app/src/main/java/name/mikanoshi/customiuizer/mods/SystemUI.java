@@ -248,7 +248,6 @@ public class SystemUI {
             batteryView.setSingleLine(false);
             batteryView.setMaxLines(2);
             batteryView.setLineSpacing(0, fontSize > 8.5f ? 0.85f : 0.9f);
-            batteryView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         }
         batteryView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize);
         if (MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_bold")) {
@@ -278,6 +277,17 @@ public class SystemUI {
             lp.topMargin = (int) (marginTop);
         }
         batteryView.setLayoutParams(lp);
+
+        int align = MainModule.mPrefs.getStringAsInt("system_statusbar_batterytempandcurrent_align", 1);
+        if (align == 2) {
+            batteryView.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+        }
+        else if (align == 3) {
+            batteryView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        }
+        else if (align == 4) {
+            batteryView.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+        }
         return batteryView;
     }
     static final ArrayList<TextView> mBatteryDetailViews = new ArrayList<TextView>();
@@ -321,15 +331,24 @@ public class SystemUI {
                     }
                     if (props != null) {
                         int tempVal = Integer.parseInt(props.getProperty("POWER_SUPPLY_TEMP"));
-                        int currVal = -1 * Math.round(Integer.parseInt(props.getProperty("POWER_SUPPLY_CURRENT_NOW")) / 1000f);
+                        String currVal;
+                        int rawCurr = -1 * Math.round(Integer.parseInt(props.getProperty("POWER_SUPPLY_CURRENT_NOW")) / 1000f);
+                        String preferred = "mA";
                         if (MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_positive")) {
-                            currVal = Math.abs(currVal);
+                            rawCurr = Math.abs(rawCurr);
+                        }
+                        if (Math.abs(rawCurr) > 999) {
+                            currVal = String.format("%.2f", rawCurr / 1000f);
+                            preferred = "A";
+                        }
+                        else {
+                            currVal = "" + rawCurr;
                         }
                         int opt = MainModule.mPrefs.getStringAsInt("system_statusbar_batterytempandcurrent_content", 1);
                         String simpleTempVal = tempVal % 10 == 0 ? (tempVal / 10 + "") : (tempVal / 10f + "");
                         int hideUnit = MainModule.mPrefs.getStringAsInt("system_statusbar_batterytempandcurrent_hideunit", 0);
                         String tempUnit = (hideUnit == 1 || hideUnit == 2) ? "" : "℃";
-                        String currUnit = (hideUnit == 1 || hideUnit == 3) ? "" : "mA";
+                        String currUnit = (hideUnit == 1 || hideUnit == 3) ? "" : preferred;
                         if (opt == 1) {
                             String splitChar = MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_singlerow")
                                 ? " " : "\n";
@@ -1136,24 +1155,25 @@ public class SystemUI {
         });
     }
 
-    public static void HideNetworkSpeedUnitHook(LoadPackageParam lpparam) {
+    public static void FormatNetworkSpeedHook(LoadPackageParam lpparam) {
+        boolean hideLow = MainModule.mPrefs.getBoolean("system_detailednetspeed_low");
+        boolean hideUnit = MainModule.mPrefs.getBoolean("system_detailednetspeed_secunit");
         Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.NetworkSpeedController", lpparam.classLoader, "formatSpeed", Context.class, long.class, new MethodHook() {
             @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                String speedText = (String) param.getResult();
-                param.setResult(speedText.replaceFirst("B?[/']s", ""));
-            }
-        });
-    }
-
-    public static void HideLowNetworkSpeedHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.NetworkSpeedController", lpparam.classLoader, "formatSpeed", Context.class, long.class, new MethodHook(100) {
-            @Override
             protected void before(MethodHookParam param) throws Throwable {
-                int lowLevel = MainModule.mPrefs.getInt("system_detailednetspeed_lowlevel", 1) * 1024;
-                long speedVal = (long) param.args[1];
-                if (speedVal < lowLevel) {
-                    param.setResult("");
+                if (hideLow) {
+                    int lowLevel = MainModule.mPrefs.getInt("system_detailednetspeed_lowlevel", 1) * 1024;
+                    long speedVal = (long) param.args[1];
+                    if (speedVal < lowLevel) {
+                        param.setResult("");
+                    }
+                }
+            }
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                if (hideUnit) {
+                    String speedText = (String) param.getResult();
+                    param.setResult(speedText.replaceFirst("B?[/']s", ""));
                 }
             }
         });
@@ -1204,6 +1224,16 @@ public class SystemUI {
                             spacing = 0.85f;
                         }
                         meter.setLineSpacing(0, spacing);
+                        int align = MainModule.mPrefs.getStringAsInt("system_detailednetspeed_align", 1);
+                        if (align == 2) {
+                            meter.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+                        }
+                        else if (align == 3) {
+                            meter.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        }
+                        else if (align == 4) {
+                            meter.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+                        }
                     }
                 }
             }
@@ -2265,15 +2295,16 @@ public class SystemUI {
             if (hideSecUnit) {
                 unitSuffix = "";
             }
-            if (bytes < 1024) return bytes + " " + (hideSecUnit ? "B" : unitSuffix);
-            int exp = (int) (Math.log(bytes) / Math.log(1024));
-            char pre = modRes.getString(R.string.speedunits).charAt(exp-1);
-            DecimalFormat df = new DecimalFormat("0.#", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
-            df.setMinimumFractionDigits(0);
-            df.setMaximumFractionDigits(1);
-            return df.format(bytes / Math.pow(1024, exp)) + " " + String.format("%s" + unitSuffix, pre);
+            float f = (bytes) / 1024.0f;
+            int expIndex = 0;
+            if (f > 999.0f) {
+                expIndex = 1;
+                f /= 1024.0f;
+            }
+            char pre = modRes.getString(R.string.speedunits).charAt(expIndex);
+            return (f < 100.0f ? String.format("%.1f", f) : String.format("%.0f", f)) + String.format("%s" + unitSuffix, pre);
         } catch (Throwable t) {
-            XposedBridge.log(t);
+            Helpers.log(t);
             return "";
         }
     }
@@ -3200,5 +3231,19 @@ public class SystemUI {
         if (!MainModule.mPrefs.getString("system_clock_app", "").equals("")) {
             Helpers.findAndHookMethod("com.miui.systemui.util.CommonUtil", lpparam.classLoader, "startClockApp", openAppHook);
         }
+    }
+    public static void StatusBarSwapBatteryIconAndPctHook(LoadPackageParam lpparam) {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.views.MiuiBatteryMeterView", lpparam.classLoader, "initMiuiView", new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                LinearLayout batteryView = (LinearLayout) param.thisObject;
+                TextView mBatteryPercentView = (TextView) XposedHelpers.getObjectField(param.thisObject, "mBatteryPercentView");
+                TextView mBatteryPercentMarkView = (TextView) XposedHelpers.getObjectField(param.thisObject, "mBatteryPercentMarkView");
+                batteryView.removeView(mBatteryPercentView);
+                batteryView.removeView(mBatteryPercentMarkView);
+                batteryView.addView(mBatteryPercentMarkView, 0);
+                batteryView.addView(mBatteryPercentView, 0);
+            }
+        });
     }
 }

@@ -34,7 +34,6 @@
     <string name="system_statusbaricons_summ">Zarządzaj widocznością ikon na pasku stanu</string>
     <string name="system_statusbaricons_wifistandard_title">Pokaż standard Wi-Fi</string>
     <string name="system_statusbaricons_battery1_title">Ikona baterii</string>
-    <string name="system_statusbaricons_battery2_title">Procent naładowania baterii</string>
     <string name="system_statusbaricons_battery3_title">Wskaźnik ładowania</string>
     <string name="system_statusbaricons_alarm_title">Alarm</string>
     <string name="system_statusbaricons_alarm_summ">Ukryj się całkowicie</string>

@@ -279,6 +279,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getStringAsInt("system_statusbar_clock_position", 1) > 1 && !mPrefs.getBoolean("system_statusbar_dualrows")) {
                 SystemUI.StatusBarClockPositionHook(lpparam);
             }
+            if (mPrefs.getBoolean("system_statusbaricons_swap_batteryicon_percentage")) {
+                SystemUI.StatusBarSwapBatteryIconAndPctHook(lpparam);
+            }
             if (mPrefs.getBoolean("system_statusbar_batterytempandcurrent")) SystemUI.DisplayBatteryDetailHook(lpparam);
             if (mPrefs.getBoolean("system_statusbar_topmargin") && mPrefs.getBoolean("system_statusbar_topmargin_unset_lockscreen")) SystemUI.LockScreenTopMarginHook(lpparam);
             if (mPrefs.getBoolean("system_statusbar_horizmargin")) SystemUI.HorizMarginHook(lpparam);
@@ -294,8 +297,11 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_statusbarcontrols")) SystemUI.StatusBarGesturesHook(lpparam);
             if (mPrefs.getBoolean("system_nonetspeedseparator")) SystemUI.NoNetworkSpeedSeparatorHook(lpparam);
             if (mPrefs.getBoolean("system_statusbaricons_clock")) SystemUI.HideIconsClockHook(lpparam);
-            if (mPrefs.getBoolean("system_detailednetspeed_secunit") && !mPrefs.getBoolean("system_detailednetspeed")) SystemUI.HideNetworkSpeedUnitHook(lpparam);
-            if (mPrefs.getBoolean("system_detailednetspeed_low") && !mPrefs.getBoolean("system_detailednetspeed")) SystemUI.HideLowNetworkSpeedHook(lpparam);
+            if (!mPrefs.getBoolean("system_detailednetspeed") &&
+                (mPrefs.getBoolean("system_detailednetspeed_secunit") || mPrefs.getBoolean("system_detailednetspeed_low"))
+            ) {
+                SystemUI.FormatNetworkSpeedHook(lpparam);
+            }
             if (
                 mPrefs.getInt("system_netspeed_fontsize", 13) > 13
                 || mPrefs.getInt("system_netspeed_verticaloffset", 8) != 8
@@ -313,7 +319,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_secureqs")) SystemUI.SecureQSTilesHook(lpparam);
             if (mPrefs.getBoolean("system_mutevisiblenotif")) System.MuteVisibleNotificationsHook(lpparam);
             if (mPrefs.getBoolean("system_statusbaricons_battery1")) System.HideIconsBattery1Hook(lpparam);
-            if (mPrefs.getBoolean("system_statusbaricons_battery3") || mPrefs.getBoolean("system_statusbaricons_battery2") || mPrefs.getBoolean("system_statusbaricons_battery4")) System.HideIconsBattery2Hook(lpparam);
+            if (mPrefs.getBoolean("system_statusbaricons_battery3") || mPrefs.getBoolean("system_statusbaricons_battery4")) System.HideIconsBattery2Hook(lpparam);
             if (mPrefs.getStringAsInt("system_statusbaricons_wifistandard", 1) > 1) System.DisplayWifiStandardHook(lpparam);
             if (mPrefs.getBoolean("system_statusbaricons_signal")
                 || mPrefs.getBoolean("system_statusbaricons_sim1")

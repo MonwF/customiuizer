@@ -1061,7 +1061,7 @@ public class System {
         boolean sbShowSeconds = MainModule.mPrefs.getBoolean("system_statusbar_clock_show_seconds");
         String customFormat = MainModule.mPrefs.getString("system_statusbar_clock_customformat", "");
         boolean enableCustomFormat = MainModule.mPrefs.getBoolean("system_statusbar_clock_customformat_enable");
-        return (enableCustomFormat && customFormat.contains(":ss")) || (!enableCustomFormat && sbShowSeconds);
+        return (enableCustomFormat && customFormat.contains("ss")) || (!enableCustomFormat && sbShowSeconds);
     }
 
     private static void initSecondTimer(Object clockController) {
@@ -3133,13 +3133,7 @@ public class System {
         Helpers.findAndHookMethod("com.android.systemui.statusbar.views.MiuiBatteryMeterView", lpparam.classLoader, "updateChargeAndText", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                if (MainModule.mPrefs.getBoolean("system_statusbaricons_battery2")) {
-                    TextView mBatteryTextDigitView = (TextView)XposedHelpers.getObjectField(param.thisObject, "mBatteryTextDigitView");
-                    TextView mBatteryPercentView = (TextView)XposedHelpers.getObjectField(param.thisObject, "mBatteryPercentView");
-                    mBatteryTextDigitView.setVisibility(View.GONE);
-                    mBatteryPercentView.setVisibility(View.GONE);
-                }
-                if (MainModule.mPrefs.getBoolean("system_statusbaricons_battery2") || MainModule.mPrefs.getBoolean("system_statusbaricons_battery4")) {
+                if (MainModule.mPrefs.getBoolean("system_statusbaricons_battery4")) {
                     TextView mBatteryPercentMarkView = (TextView)XposedHelpers.getObjectField(param.thisObject, "mBatteryPercentMarkView");
                     mBatteryPercentMarkView.setVisibility(View.GONE);
                 }
