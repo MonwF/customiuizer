@@ -347,6 +347,7 @@
     <string name="system_fivegtile_title">5G开关</string>
     <string name="system_fivegtile_summ">添加5G开关磁贴至快速设置</string>
     <string name="system_qs_force_systemfonts_title">时钟强制使用系统字体</string>
+    <string name="system_cc_dateformat_title">自定义日期格式</string>
     <string name="system_wifipassword_title">查看已保存Wi-Fi密码</string>
     <string name="system_wifipassword_btn_title">查看</string>
     <string name="system_wifi_password_label">密码</string>
