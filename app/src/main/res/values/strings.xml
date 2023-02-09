@@ -355,6 +355,7 @@
     <string name="system_fivegtile_title">5G tile</string>
     <string name="system_fivegtile_summ">Add 5G tile to qs panel</string>
     <string name="system_qs_force_systemfonts_title">Force clock use system fonts</string>
+    <string name="system_cc_dateformat_title">Custom date format</string>
     <string name="system_wifipassword_title">View password of saved Wi-Fi network</string>
     <string name="system_wifipassword_btn_title">View</string>
     <string name="system_wifi_password_label">Password</string>

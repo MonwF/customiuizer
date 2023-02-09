@@ -1150,6 +1150,8 @@ public class System {
                 }
             });
         }
+        String ccDateFormat = MainModule.mPrefs.getString("system_cc_dateformat", "").trim();
+        boolean ccDateCustom = ccDateFormat.length() > 0;
         Helpers.hookAllConstructors("com.android.systemui.statusbar.views.MiuiClock", lpparam.classLoader, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) {
@@ -1157,6 +1159,7 @@ public class System {
                 if (param.args.length != 3) return;
                 int clockId = clock.getResources().getIdentifier("clock", "id", "com.android.systemui");
                 int bigClockId = clock.getResources().getIdentifier("big_time", "id", "com.android.systemui");
+                int dateClockId = clock.getResources().getIdentifier("date_time", "id", "com.android.systemui");
                 int thisClockId = clock.getId();
                 if (clockId == thisClockId && statusbarClockTweak) {
                     XposedHelpers.setAdditionalInstanceField(clock, "clockName", "clock");
@@ -1167,6 +1170,9 @@ public class System {
                 else if (bigClockId == thisClockId && ccShowSeconds) {
                     XposedHelpers.setAdditionalInstanceField(clock, "clockName", "ccClock");
                     XposedHelpers.setAdditionalInstanceField(clock, "showSeconds", true);
+                }
+                else if (dateClockId == thisClockId && ccDateCustom) {
+                    XposedHelpers.setAdditionalInstanceField(clock, "clockName", "ccDate");
                 }
             }
         });
@@ -1197,6 +1203,9 @@ public class System {
                     int fmtResId = mContext.getResources().getIdentifier(fmt, "string", "com.android.systemui");
                     timeFmt = mContext.getString(fmtResId);
                     timeFmt = timeFmt.replaceFirst(":mm", ":mm:ss");
+                }
+                else if ("ccDate".equals(clockName) && ccDateCustom) {
+                    timeFmt = ccDateFormat;
                 }
                 else if ("clock".equals(clockName) && statusbarClockTweak) {
                     String customFormat = MainModule.mPrefs.getString("system_statusbar_clock_customformat", "");

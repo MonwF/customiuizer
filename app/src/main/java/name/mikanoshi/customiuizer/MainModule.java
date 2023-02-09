@@ -229,6 +229,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_dttosleep")) System.DoubleTapToSleepHook(lpparam);
             if (mPrefs.getBoolean("system_statusbar_clocktweak")
                 || mPrefs.getBoolean("system_drawer_clockseconds")
+                || mPrefs.getBoolean("system_cc_dateformat")
             ) System.StatusBarClockTweakHook(lpparam);
             if (mPrefs.getBoolean("system_noscreenlock_act")) System.NoScreenLockHook(lpparam);
             if (mPrefs.getBoolean("system_detailednetspeed")) SystemUI.DetailedNetSpeedHook(lpparam);

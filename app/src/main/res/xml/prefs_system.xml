@@ -701,6 +701,14 @@
 			android:defaultValue="false"
 			/>
 
+		<name.mikanoshi.customiuizer.prefs.EditTextPreferenceEx
+			android:dialogMessage="@string/system_clock_customformat_help_summ"
+			android:key="pref_key_system_cc_dateformat"
+			android:title="@string/system_cc_dateformat_title"
+			app:useSimpleSummaryProvider="true"
+			android:defaultValue="" />
+		/>
+
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_qsnolabels"
 			android:title="@string/system_qsnolabels_title"
