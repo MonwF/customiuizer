@@ -39,7 +39,6 @@
   <string name="system_statusbaricons_summ">ステータスバーアイコン表示の管理</string>
   <string name="system_statusbaricons_wifistandard_title">Wi-Fi標準規格を表示する</string>
   <string name="system_statusbaricons_battery1_title">バッテリー画像</string>
-  <string name="system_statusbaricons_battery2_title">バッテリーの桁</string>
   <string name="system_statusbaricons_battery4_title">バッテリーのパーセント表示</string>
   <string name="system_statusbaricons_battery3_title">充電中のインジケーター</string>
   <string name="system_statusbaricons_alarm_title">アラーム</string>

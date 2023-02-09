@@ -70,6 +70,14 @@
 		android:title="@string/system_statusbar_mobiletype_single_bold_title"
 		android:defaultValue="false" />
 
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_system_statusbar_batterytempandcurrent_align"
+		android:title="@string/system_statusbar_clock_align_title"
+		android:entries="@array/horizontalalign"
+		android:entryValues="@array/horizontalalign_val"
+		miuizer:valueAsSummary="true"
+		android:defaultValue="1" />
+
 	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_statusbar_batterytempandcurrent_leftmargin"
 		android:title="@string/system_statusbar_mobiletype_single_leftmargin_title"

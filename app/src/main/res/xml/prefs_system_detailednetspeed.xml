@@ -86,4 +86,14 @@
 		miuizer:indentLevel="1"
 		android:dependency="pref_key_system_detailednetspeed" />
 
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_system_detailednetspeed_align"
+		android:title="@string/system_statusbar_clock_align_title"
+		android:entries="@array/horizontalalign"
+		android:entryValues="@array/horizontalalign_val"
+		miuizer:valueAsSummary="true"
+		miuizer:indentLevel="1"
+		android:dependency="pref_key_system_detailednetspeed"
+		android:defaultValue="1" />
+
 </PreferenceScreen>

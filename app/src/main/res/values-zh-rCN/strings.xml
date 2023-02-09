@@ -37,7 +37,6 @@
     <string name="system_statusbaricons_summ">管理状态栏图标可见性</string>
     <string name="system_statusbaricons_wifistandard_title">显示Wi-Fi标准</string>
     <string name="system_statusbaricons_battery1_title">电池图片</string>
-    <string name="system_statusbaricons_battery2_title">电池电量数字</string>
     <string name="system_statusbaricons_battery4_title">电池百分比符号</string>
     <string name="system_statusbaricons_battery3_title">充电指示器</string>
     <string name="system_statusbaricons_alarm_title">闹钟</string>
@@ -1024,7 +1023,7 @@
     <string name="format_KBs">%d KB/s</string>
     <string name="oneKBs">1 KB/s</string>
     <string name="Bs">B/s</string>
-    <string name="speedunits">KMGTPE</string>
+    <string name="speedunits">KMG</string>
     <string name="lux">%s lux</string>
     <string name="off">关</string>
     <string name="time_30m">30分钟</string>
@@ -1086,6 +1085,7 @@
     <string name="system_statusbaricons_change_position_title">图标位置调整</string>
     <string name="system_statusbaricons_wifi_mobile_atleft_title">移动信号和Wi-Fi移至左侧显示</string>
     <string name="system_statusbaricons_swap_wifi_mobile_title">交换移动信号和Wi-Fi位置</string>
+    <string name="system_statusbaricons_swap_batteryicon_percentage_title">交换电池的图标和百分比位置</string>
     <string name="system_statusbaricons_netspeed_title">网速</string>
     <string name="system_statusbaricons_clock_title">时钟</string>
     <string name="system_statusbar_batterytempandcurrent_title">显示电池温度和电流</string>

@@ -39,7 +39,6 @@
     <string name="system_statusbaricons_summ">Manage status bar icons visibility</string>
     <string name="system_statusbaricons_wifistandard_title">Show Wi-Fi standard</string>
     <string name="system_statusbaricons_battery1_title">Battery image</string>
-    <string name="system_statusbaricons_battery2_title">Battery digit</string>
     <string name="system_statusbaricons_battery4_title">Battery percentage mark</string>
     <string name="system_statusbaricons_battery3_title">Charging indicator</string>
     <string name="system_statusbaricons_alarm_title">Alarm</string>
@@ -1104,7 +1103,7 @@
     <string name="format_KBs">%d KB/s</string>
     <string name="oneKBs">1 KB/s</string>
     <string name="Bs">B/s</string>
-    <string name="speedunits">KMGTPE</string>
+    <string name="speedunits">KMG</string>
     <string name="lux">%s lux</string>
 
     <string name="off">Off</string>
@@ -1155,6 +1154,7 @@
     <string name="system_statusbaricons_atright_title">Move some icons to the right</string>
     <string name="system_statusbaricons_wifi_mobile_atleft_title">Move mobile and Wi-Fi to the left</string>
     <string name="system_statusbaricons_swap_wifi_mobile_title">Swap Mobile Signal and Wi-Fi</string>
+    <string name="system_statusbaricons_swap_batteryicon_percentage_title">Swap icon and percentage of battery</string>
     <string name="system_statusbaricons_change_position_title">Change icons\' position</string>
     <string name="system_statusbar_mobile_signal_cat_title">Mobile signal icon display settings</string>
     <string name="system_statusbar_clocktweak_title">Clock settings</string>
