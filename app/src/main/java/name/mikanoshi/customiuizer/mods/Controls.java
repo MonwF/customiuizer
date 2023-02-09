@@ -1036,6 +1036,8 @@ public class Controls {
 			}
 		});
 
+		Helpers.findAndHookMethod("com.android.systemui.assist.ui.DefaultUiController", lpparam.classLoader, "logInvocationProgressMetrics", int.class, float.class, boolean.class, XC_MethodReplacement.DO_NOTHING);
+
 		Helpers.hookAllConstructors("com.android.systemui.assist.ui.DefaultUiController", lpparam.classLoader, new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
