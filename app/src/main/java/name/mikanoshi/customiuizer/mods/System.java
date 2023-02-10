@@ -1150,7 +1150,7 @@ public class System {
                 }
             });
         }
-        String ccDateFormat = MainModule.mPrefs.getString("system_cc_dateformat", "").trim();
+        String ccDateFormat = MainModule.mPrefs.getString("system_cc_dateformat", "");
         boolean ccDateCustom = ccDateFormat.length() > 0;
         Helpers.hookAllConstructors("com.android.systemui.statusbar.views.MiuiClock", lpparam.classLoader, new MethodHook() {
             @Override
