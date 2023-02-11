@@ -1863,32 +1863,6 @@ public class System {
 //        Helpers.findAndHookMethod("com.android.systemui.statusbar.notification.row.wrapper.NotificationTemplateViewWrapper$MiuiStyleProcessor", lpparam.classLoader, "setMiuiContentMargins", View.class, hook);
     }
 
-    public static void HideFromRecentsHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.server.wm.Task", lpparam.classLoader, "setIntent", Intent.class, ActivityInfo.class, new MethodHook() {
-            @Override
-            @SuppressLint("WrongConstant")
-            protected void after(final MethodHookParam param) throws Throwable {
-            String pkgName = null;
-            Intent newIntent = (Intent) param.args[0];
-            ActivityInfo activityInfo = (ActivityInfo) param.args[1];
-
-            if (newIntent != null && newIntent.getComponent() != null) {
-                pkgName = newIntent.getComponent().getPackageName();
-            }
-            if (pkgName == null && activityInfo != null) {
-                pkgName = activityInfo.packageName;
-            }
-            if (pkgName != null) {
-                Set<String> selectedApps = MainModule.mPrefs.getStringSet("system_hidefromrecents_apps");
-                if (selectedApps.contains(pkgName)) {
-                    Intent intent = (Intent)XposedHelpers.getObjectField(param.thisObject, "intent");
-                    if (intent != null) intent.addFlags(8388608);
-                }
-            }
-            }
-        });
-    }
-
     private static final List<String> hookedTiles = new ArrayList<String>();
 
     @SuppressLint("MissingPermission")

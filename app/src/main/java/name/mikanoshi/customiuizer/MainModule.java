@@ -143,7 +143,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_securelock")) System.EnhancedSecurityHook(lpparam);
             if (mPrefs.getBoolean("system_separatevolume")) System.NotificationVolumeServiceHook(lpparam);
             if (mPrefs.getBoolean("system_downgrade")) System.NoVersionCheckHook(lpparam);
-            if (mPrefs.getBoolean("system_hidefromrecents")) System.HideFromRecentsHook(lpparam);
             if (mPrefs.getBoolean("system_orientationlock")) System.OrientationLockHook(lpparam);
             if (mPrefs.getBoolean("system_noducking")) System.NoDuckingHook(lpparam);
             if (mPrefs.getBoolean("system_cleanshare")) System.CleanShareMenuServiceHook(lpparam);
@@ -553,6 +552,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("launcher_hideseekpoints")) Launcher.HideSeekPointsHook(lpparam);
             if (mPrefs.getBoolean("launcher_privacyapps_gest") ||
                     mPrefs.getInt("launcher_spread_action", 1) != 1) Launcher.PrivacyFolderHook(lpparam);
+            if (mPrefs.getBoolean("system_hidefromrecents")) Launcher.HideFromRecentsHook(lpparam);
             if (!mPrefs.getBoolean("launcher_googleminus") && mPrefs.getBoolean("launcher_googlediscover")) Launcher.GoogleDiscoverHook(lpparam);
             if (mPrefs.getBoolean("launcher_docktitles") && mPrefs.getInt("launcher_bottommargin", 0) == 0) Launcher.ShowHotseatTitlesHook(lpparam);
             if (mPrefs.getInt("launcher_folderblur_opacity", 0) > 0) Launcher.FolderBlurHook(lpparam);
