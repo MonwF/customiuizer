@@ -52,7 +52,9 @@ import android.widget.TextView;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
@@ -1348,6 +1350,40 @@ public class Launcher {
 			protected void after(XC_MethodHook.MethodHookParam param) throws Throwable {
 				Activity act = (Activity)param.thisObject;
 				act.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+			}
+		});
+	}
+
+	public static void HideFromRecentsHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.classLoader, "onCreate", Bundle.class, new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				final Activity act = (Activity)param.thisObject;
+				Handler mHandler = (Handler)XposedHelpers.getObjectField(act, "mHandler");
+				new Helpers.SharedPrefObserver(act, mHandler, "pref_key_system_hidefromrecents_apps") {
+					@Override
+					public void onChange(String name) {
+						MainModule.mPrefs.put(name, Helpers.getSharedStringSetPref(act, name));
+					}
+				};
+			}
+		});
+		Helpers.findAndHookMethod("com.android.systemui.shared.recents.system.ActivityManagerWrapper", lpparam.classLoader, "needRemoveTask", "com.android.systemui.shared.recents.model.GroupedRecentTaskInfoCompat", new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				if (param.args[0] != null) {
+					Object mainTask = XposedHelpers.getObjectField(param.args[0], "mMainTaskInfo");
+					if (mainTask != null) {
+						ComponentName componentName = (ComponentName) XposedHelpers.getObjectField(mainTask, "topActivity");
+						if (componentName != null) {
+							String pkgName = componentName.getPackageName();
+							Set<String> selectedApps = MainModule.mPrefs.getStringSet("system_hidefromrecents_apps");
+							if (selectedApps.contains(pkgName)) {
+								param.setResult(true);
+							}
+						}
+					}
+				}
 			}
 		});
 	}
