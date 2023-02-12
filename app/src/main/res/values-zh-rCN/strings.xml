@@ -1081,6 +1081,7 @@
     <string name="miuizer_show_assumelsposed_summ">假定已安装LSPosed框架以使用其管理器</string>
     <string name="various_runningservices_title">正在运行的服务</string>
     <string name="system_statusbaricons_atright_title">系统图标移至右侧显示</string>
+    <string name="system_statusbaricons_atsecondrow_title">系统图标移到第2排显示</string>
     <string name="system_statusbar_mobile_signal_cat_title">移动网络信号图标设置</string>
     <string name="system_statusbar_clocktweak_title">时钟设置</string>
     <string name="system_statusbaricons_change_position_title">图标位置调整</string>
