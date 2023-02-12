@@ -18,6 +18,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
+import android.app.WallpaperColors;
 import android.app.WallpaperManager;
 import android.appwidget.AppWidgetProviderInfo;
 import android.bluetooth.BluetoothAdapter;
@@ -29,6 +30,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
@@ -44,6 +46,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.Icon;
 import android.hardware.usb.UsbManager;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
@@ -114,6 +117,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -1781,22 +1785,57 @@ public class System {
         Helpers.hookAllMethods(PMSCls, lpparam.classLoader, "checkDowngrade", XC_MethodReplacement.DO_NOTHING);
     }
 
-    public static void ColorizedNotificationTitlesHook() {
-        Helpers.hookAllMethods("android.app.Notification.Builder", null, "bindHeaderAppName", new MethodHook() {
+    public static void ColorizedNotificationTitlesHook(LoadPackageParam lpparam) {
+        Class<?> ColorScheme = findClassIfExists("com.android.systemui.monet.ColorScheme", lpparam.classLoader);
+        Class<?> MonetStyle = findClassIfExists("com.android.systemui.monet.Style", lpparam.classLoader);
+        Object[] styles = MonetStyle.getEnumConstants();
+        Object contentStyle = null;
+        for (Object o:styles) {
+            if (o.toString().contains("CONTENT")) {
+                contentStyle = o;
+                break;
+            }
+        }
+        Object finalContentStyle = contentStyle;
+        Helpers.hookAllMethods("com.android.systemui.statusbar.notification.row.NotificationContentInflaterInjector", lpparam.classLoader, "handle3thThemeColor", new MethodHook() {
+            private Object sAppIconManager = null;
             @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                try {
-                    Object mN = XposedHelpers.getObjectField(param.thisObject, "mN");
-                    if (mN != null) {
-                        if ((boolean)XposedHelpers.callMethod(mN, "isColorized")) return;
+            protected void before(MethodHookParam param) throws Throwable {
+                Notification.Builder builder = (Notification.Builder) param.args[1];
+                Notification mN = (Notification) XposedHelpers.getObjectField(builder, "mN");
+                if ((boolean)XposedHelpers.callMethod(mN, "isColorized")) return;
+                if ((boolean)XposedHelpers.callMethod(mN, "isMediaNotification")) return;
+                ApplicationInfo applicationInfo = (ApplicationInfo) mN.extras.getParcelable("android.appInfo");
+                if (applicationInfo == null) {
+                    return;
+                }
+                String pkgName = applicationInfo.packageName;
+                int opt = Integer.parseInt(MainModule.mPrefs.getString("system_colorizenotifs", "1"));
+                boolean isSelected = MainModule.mPrefs.getStringSet("system_colorizenotifs_apps").contains(pkgName);
+                if (opt == 2 && !isSelected || opt == 3 && isSelected) {
+                    XposedHelpers.callMethod(builder, "makeNotificationGroupHeader");
+                    if (sAppIconManager == null) {
+                        Class<?> Dependency = findClass("com.android.systemui.Dependency", lpparam.classLoader);
+                        Class<?> AppIconManager = findClassIfExists("com.miui.systemui.graphics.AppIconsManager", lpparam.classLoader);
+                        sAppIconManager = XposedHelpers.callStaticMethod(Dependency, "get", AppIconManager);
                     }
-                } catch (Throwable ignore) {}
-
-                RemoteViews rv = (RemoteViews)param.args[0];
-                Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-                if (rv != null && mContext != null) {
-                    int contrastColor = (int)XposedHelpers.callMethod(param.thisObject, "getPrimaryAccentColor", param.args[1]);
-                    rv.setTextColor(mContext.getResources().getIdentifier("app_name_text", "id", "android"), contrastColor);
+                    Bitmap notifyIcon = (Bitmap) XposedHelpers.callMethod(sAppIconManager, "getAppIconBitmap", pkgName);
+                    WallpaperColors wc = WallpaperColors.fromBitmap(notifyIcon);
+                    builder.setColor(wc.getPrimaryColor().toArgb());
+                    builder.setColorized(true);
+                    int mFlags = XposedHelpers.getIntField(mN, "flags");
+                    mFlags = mFlags | 2048;
+                    XposedHelpers.setIntField(mN, "flags", mFlags);
+                    Object mParams = XposedHelpers.getObjectField(builder, "mParams");
+                    XposedHelpers.callMethod(mParams, "reset");
+                    XposedHelpers.callMethod(builder, "getColors", mParams);
+                    Object cs = XposedHelpers.newInstance(ColorScheme, wc, true, finalContentStyle);
+                    List<Integer> n1 = (List<Integer>) XposedHelpers.callMethod(cs, "getNeutral1");
+                    List<Integer> n2 = (List<Integer>) XposedHelpers.callMethod(cs, "getNeutral2");
+                    Object mColors = XposedHelpers.getObjectField(builder, "mColors");
+                    XposedHelpers.setObjectField(mColors, "mPrimaryTextColor", n1.get(1));
+                    XposedHelpers.setObjectField(mColors, "mSecondaryTextColor", n2.get(3));
+                    param.setResult(null);
                 }
             }
         });

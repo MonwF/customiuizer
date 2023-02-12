@@ -63,7 +63,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 
         if (mPrefs.getInt("system_betterpopups_delay", 0) > 0 && !mPrefs.getBoolean("system_betterpopups_nohide")) System.BetterPopupsHideDelaySysHook();
         if (mPrefs.getInt("system_messagingstylelines", 0) > 0) System.MessagingStyleLinesSysHook();
-        if (mPrefs.getBoolean("system_colorizenotiftitle")) System.ColorizedNotificationTitlesHook();
         if (mPrefs.getBoolean("system_nopassword")) System.NoPasswordHook();
         if (mPrefs.getBoolean("system_statusbarcolor")) System.StatusBarBackgroundHook();
         if (mPrefs.getBoolean("system_magnifier")) System.TextMagnifierHook();
@@ -388,6 +387,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_cc_tile_roundedrect")) {
                 SystemUI.CCTileCornerHook(lpparam);
             }
+            if (mPrefs.getStringAsInt("system_colorizenotifs", 1) > 1) System.ColorizedNotificationTitlesHook(lpparam);
         }
 
         if (pkg.equals(Helpers.modulePkg)) {

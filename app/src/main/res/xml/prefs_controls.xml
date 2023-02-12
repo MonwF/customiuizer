@@ -320,7 +320,7 @@
 			android:title="@string/controls_fsg_coverage_title"
 			android:defaultValue="60"
 			miuizer:minValue="20"
-			miuizer:maxValue="80"
+			miuizer:maxValue="95"
 			miuizer:stepValue="5"
 			miuizer:format="%d%%"
 			miuizer:offtext="@string/array_default" />

@@ -290,6 +290,16 @@ public class System extends SubFragment {
 						return true;
 					}
 				});
+
+				findPreference("pref_key_system_colorizenotifs_apps").setOnPreferenceClickListener(openAppsEdit);
+				findPreference("pref_key_system_colorizenotifs_apps").setEnabled(!Objects.equals(Helpers.prefs.getString("pref_key_system_colorizenotifs", "1"), "1"));
+				findPreference("pref_key_system_colorizenotifs").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+					@Override
+					public boolean onPreferenceChange(Preference preference, Object newValue) {
+						findPreference("pref_key_system_colorizenotifs_apps").setEnabled(!newValue.equals("1"));
+						return true;
+					}
+				});
 //				findPreference("pref_key_system_snoozedmanager").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
 //					@Override
 //					public boolean onPreferenceChange(Preference preference, Object newValue) {
