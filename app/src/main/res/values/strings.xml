@@ -1153,6 +1153,7 @@
     <string name="system_statusbar_topmargin_val_title">Top padding</string>
     <string name="system_statusbar_topmargin_unset_lockscreen_title">Unset statusbar in Keyguard</string>
     <string name="system_statusbaricons_atright_title">Move some icons to the right</string>
+    <string name="system_statusbaricons_atsecondrow_title">Move some icons to the second row</string>
     <string name="system_statusbaricons_wifi_mobile_atleft_title">Move mobile and Wi-Fi to the left</string>
     <string name="system_statusbaricons_swap_wifi_mobile_title">Swap Mobile Signal and Wi-Fi</string>
     <string name="system_statusbaricons_swap_batteryicon_percentage_title">Swap icon and percentage of battery</string>

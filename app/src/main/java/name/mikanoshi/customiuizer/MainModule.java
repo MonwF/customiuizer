@@ -270,6 +270,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 || mPrefs.getBoolean("system_statusbar_btbattery_atright")
                 || mPrefs.getBoolean("system_statusbar_headset_atright");
             if (moveRight
+                && (mPrefs.getBoolean("system_statusbar_dualrows") && mPrefs.getBoolean("system_statusbar_netspeed_atsecondrow"))
                 || mPrefs.getBoolean("system_statusbaricons_wifi_mobile_atleft")
                 || mPrefs.getBoolean("system_statusbaricons_swap_wifi_mobile")
             ) {

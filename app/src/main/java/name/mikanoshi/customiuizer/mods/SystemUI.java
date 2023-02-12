@@ -894,8 +894,12 @@ public class SystemUI {
     }
 
     public static void StatusBarIconsPositionAdjustHook(LoadPackageParam lpparam, boolean moveRight) {
+        boolean dualRows = MainModule.mPrefs.getBoolean("system_statusbar_dualrows");
         boolean swapWifiSignal = MainModule.mPrefs.getBoolean("system_statusbaricons_swap_wifi_mobile");
         boolean moveSignalLeft = MainModule.mPrefs.getBoolean("system_statusbaricons_wifi_mobile_atleft");
+        boolean netspeedAtRow2 = dualRows && MainModule.mPrefs.getBoolean("system_statusbar_netspeed_atsecondrow");
+        boolean netspeedRight = !netspeedAtRow2 && MainModule.mPrefs.getBoolean("system_statusbar_netspeed_atright");
+
         String[] signalIcons;
         if (!swapWifiSignal) {
             signalIcons = new String[]{"no_sim", "mobile", "demo_mobile", "airplane", "hotspot", "slave_wifi", "wifi", "demo_wifi"};
@@ -938,7 +942,7 @@ public class SystemUI {
                             int blockResId = res.getIdentifier("config_drip_right_block_statusBarIcons", "array", lpparam.packageName);
                             rightBlockList = new ArrayList<String>(Arrays.asList(res.getStringArray(blockResId)));
                         }
-                        if (MainModule.mPrefs.getBoolean("system_statusbar_netspeed_atright")) {
+                        if (netspeedRight) {
                             rightBlockList.remove("network_speed");
                         }
                         if (MainModule.mPrefs.getBoolean("system_statusbar_alarm_atright")) {
@@ -1028,7 +1032,6 @@ public class SystemUI {
             });
         }
 
-        boolean netspeedRight = MainModule.mPrefs.getBoolean("system_statusbar_netspeed_atright");
         if (moveSignalLeft || netspeedRight) {
             Helpers.hookAllMethods("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView", lpparam.classLoader, "updateCutoutLocation", new MethodHook() {
                 @Override
@@ -1041,7 +1044,6 @@ public class SystemUI {
                         }
                     }
                     else {
-                        boolean dualRows = MainModule.mPrefs.getBoolean("system_statusbar_dualrows");
                         if (moveSignalLeft && !dualRows) {
                             View mDripStatusBarLeftStatusIconArea = (View) XposedHelpers.getObjectField(param.thisObject, "mDripStatusBarLeftStatusIconArea");
                             mDripStatusBarLeftStatusIconArea.setVisibility(View.VISIBLE);
