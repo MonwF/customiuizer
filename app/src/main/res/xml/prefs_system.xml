@@ -609,11 +609,19 @@
 			android:title="@string/system_compactnotif_title"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_colorizenotiftitle"
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_colorizenotifs"
 			android:summary="@string/system_colorizenotiftitle_summ"
 			android:title="@string/system_colorizenotiftitle_title"
-			android:defaultValue="false" />
+			android:entries="@array/expandnotifs"
+			android:entryValues="@array/expandnotifs_val"
+			android:defaultValue="1" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_expandnotifs_apps_title"
+			android:key="pref_key_system_colorizenotifs_apps"
+			miuizer:indentLevel="1"
+			miuizer:countAsSummary="true" />
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_system_messagingstylelines"

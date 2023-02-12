@@ -159,7 +159,7 @@
     <string name="system_compactnotif_title">Compact notifications</string>
     <string name="system_compactnotif_summ">Reduce notifications\' vertical paddings</string>
     <string name="system_colorizenotiftitle_title">Colorize notification title</string>
-    <string name="system_colorizenotiftitle_summ">Apply icon\'s color to title text (Android notification style only)</string>
+    <string name="system_colorizenotiftitle_summ">Apply icon\'s color to card (Android notification style only)</string>
     <string name="system_minimalnotifview_title">Bring back minimalistic collapsed view</string>
     <string name="system_minimalnotifview_summ">Notifications of minimal importance could be collapsed into one-line view again</string>
     <string name="system_notifchannelsettings_title">Open channel settings</string>
