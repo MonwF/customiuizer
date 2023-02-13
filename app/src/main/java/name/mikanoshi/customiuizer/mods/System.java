@@ -1836,6 +1836,19 @@ public class System {
                 param.setResult(null);
             }
         });
+        Helpers.hookAllMethods("com.android.systemui.statusbar.notification.row.HybridGroupManager", lpparam.classLoader, "bindFromNotificationWithStyle", new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                Notification mN = (Notification) XposedHelpers.callMethod(param.args[2], "getNotification");
+                if (XposedHelpers.getAdditionalInstanceField(mN, "mSecondaryTextColor") != null) {
+                    LinearLayout hybridNotificationView = (LinearLayout) param.getResult();
+                    TextView mTitleView = (TextView) XposedHelpers.getObjectField(hybridNotificationView, "mTitleView");
+                    TextView mTextView = (TextView) XposedHelpers.getObjectField(hybridNotificationView, "mTextView");
+                    mTitleView.setTextColor((int)XposedHelpers.getAdditionalInstanceField(mN, "mPrimaryTextColor"));
+                    mTextView.setTextColor((int)XposedHelpers.getAdditionalInstanceField(mN, "mSecondaryTextColor"));
+                }
+            }
+        });
         Helpers.hookAllMethods("com.android.systemui.statusbar.notification.row.NotificationContentInflaterInjector", lpparam.classLoader, "handle3thThemeColor", new MethodHook() {
             private Object sAppIconManager = null;
             @Override
@@ -1844,7 +1857,7 @@ public class System {
                 Notification mN = (Notification) XposedHelpers.getObjectField(builder, "mN");
                 if ((boolean)XposedHelpers.callMethod(mN, "isColorized")) return;
                 if ((boolean)XposedHelpers.callMethod(mN, "isMediaNotification")) return;
-                ApplicationInfo applicationInfo = (ApplicationInfo) mN.extras.getParcelable("android.appInfo");
+                ApplicationInfo applicationInfo = mN.extras.getParcelable("android.appInfo");
                 if (applicationInfo == null) {
                     return;
                 }
@@ -1861,6 +1874,13 @@ public class System {
                     Bitmap notifyIcon = (Bitmap) XposedHelpers.callMethod(sAppIconManager, "getAppIconBitmap", pkgName);
                     WallpaperColors wc = WallpaperColors.fromBitmap(notifyIcon);
                     int bgColor = wc.getPrimaryColor().toArgb();
+                    float lux = Color.luminance(bgColor);
+                    if (lux > 0.9) {
+                        Color secColor = wc.getSecondaryColor();
+                        if (secColor != null) {
+                            bgColor = secColor.toArgb();
+                        }
+                    }
                     builder.setColor(bgColor);
                     builder.setColorized(true);
                     int mFlags = XposedHelpers.getIntField(mN, "flags");
