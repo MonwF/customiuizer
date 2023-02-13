@@ -265,8 +265,7 @@ public class SystemUI {
             rightMargin * 0.5f,
             res.getDisplayMetrics()
         );
-        batteryView.setPaddingRelative(leftMargin, 0, rightMargin, 0);
-
+        int topMargin = 0;
         int verticalOffset = MainModule.mPrefs.getInt("system_statusbar_batterytempandcurrent_verticaloffset", 8);
         if (verticalOffset != 8) {
             float marginTop = TypedValue.applyDimension(
@@ -274,8 +273,9 @@ public class SystemUI {
                 (verticalOffset - 8) * 0.5f,
                 res.getDisplayMetrics()
             );
-            lp.topMargin = (int) (marginTop);
+            topMargin = (int) marginTop;
         }
+        batteryView.setPaddingRelative(leftMargin, topMargin, rightMargin, 0);
         batteryView.setLayoutParams(lp);
 
         int align = MainModule.mPrefs.getStringAsInt("system_statusbar_batterytempandcurrent_align", 1);
