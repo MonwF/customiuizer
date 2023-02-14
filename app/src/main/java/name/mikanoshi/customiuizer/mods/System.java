@@ -4025,6 +4025,23 @@ public class System {
 
     public static void RemoveSecureHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethod("com.android.server.wm.WindowState", lpparam.classLoader, "isSecureLocked", XC_MethodReplacement.returnConstant(false));
+        if (Helpers.isTPlus()) {
+            Helpers.findAndHookMethod("com.android.server.wm.WindowSurfaceController", lpparam.classLoader, "setSecure", boolean.class, new MethodHook() {
+                @Override
+                protected void before(MethodHookParam param) throws Throwable {
+                    param.args[0] = false;
+                }
+            });
+            Helpers.hookAllConstructors("com.android.server.wm.WindowSurfaceController", lpparam.classLoader, new MethodHook() {
+                @Override
+                protected void before(MethodHookParam param) throws Throwable {
+                    int flags = (int) param.args[2];
+                    int secureFlag = 128;
+                    flags &= ~secureFlag;
+                    param.args[2] = flags;
+                }
+            });
+        }
     }
 
     public static void RemoveActStartConfirmHook(LoadPackageParam lpparam) {
@@ -4533,10 +4550,8 @@ public class System {
             protected void before(MethodHookParam param) throws Throwable {
                 String key = (String)param.args[1];
                 if ("low_battery_dialog_disabled".equals(key)) param.setResult(1);
-                else if ("power_sounds_enabled".equals(key)) param.setResult(0);
             }
         };
-        Helpers.hookAllMethods(Settings.System.class, "getIntForUser", settingHook);
         Helpers.hookAllMethods(Settings.System.class, "getInt", settingHook);
     }
 
