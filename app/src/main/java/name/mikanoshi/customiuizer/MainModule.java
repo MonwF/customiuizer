@@ -272,12 +272,16 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 || mPrefs.getBoolean("system_statusbar_nfc_atright")
                 || mPrefs.getBoolean("system_statusbar_btbattery_atright")
                 || mPrefs.getBoolean("system_statusbar_headset_atright");
-            if (moveRight
+            boolean moveLeft = mPrefs.getBoolean("system_statusbar_alarm_atleft")
+                || mPrefs.getBoolean("system_statusbar_sound_atleft")
+                || mPrefs.getBoolean("system_statusbar_dnd_atleft");
+            if (moveRight || moveLeft
+                || mPrefs.getBoolean("system_statusbar_netspeed_atleft")
                 || (mPrefs.getBoolean("system_statusbar_dualrows") && mPrefs.getBoolean("system_statusbar_netspeed_atsecondrow"))
                 || mPrefs.getBoolean("system_statusbaricons_wifi_mobile_atleft")
                 || mPrefs.getBoolean("system_statusbaricons_swap_wifi_mobile")
             ) {
-                SystemUI.StatusBarIconsPositionAdjustHook(lpparam, moveRight);
+                SystemUI.StatusBarIconsPositionAdjustHook(lpparam, moveRight, moveLeft);
             }
             if (mPrefs.getStringAsInt("system_statusbar_clock_position", 1) > 1 && !mPrefs.getBoolean("system_statusbar_dualrows")) {
                 SystemUI.StatusBarClockPositionHook(lpparam);
