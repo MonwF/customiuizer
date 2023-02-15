@@ -4548,9 +4548,11 @@ public class System {
             protected void before(MethodHookParam param) throws Throwable {
                 String key = (String)param.args[1];
                 if ("low_battery_dialog_disabled".equals(key)) param.setResult(1);
+                else if ("low_battery_sound".equals(key)) param.setResult(null);
             }
         };
         Helpers.hookAllMethods(Settings.System.class, "getInt", settingHook);
+        Helpers.hookAllMethods(Settings.Global.class, "getString", settingHook);
     }
 
     public static void TempHideOverlayAppHook(LoadPackageParam lpparam) {
