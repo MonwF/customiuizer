@@ -907,12 +907,13 @@ public class SystemUI {
         }
     }
 
-    public static void StatusBarIconsPositionAdjustHook(LoadPackageParam lpparam, boolean moveRight) {
+    public static void StatusBarIconsPositionAdjustHook(LoadPackageParam lpparam, boolean moveRight, boolean moveLeft) {
         boolean dualRows = MainModule.mPrefs.getBoolean("system_statusbar_dualrows");
         boolean swapWifiSignal = MainModule.mPrefs.getBoolean("system_statusbaricons_swap_wifi_mobile");
         boolean moveSignalLeft = MainModule.mPrefs.getBoolean("system_statusbaricons_wifi_mobile_atleft");
         boolean netspeedAtRow2 = dualRows && MainModule.mPrefs.getBoolean("system_statusbar_netspeed_atsecondrow");
         boolean netspeedRight = !netspeedAtRow2 && MainModule.mPrefs.getBoolean("system_statusbar_netspeed_atright");
+        boolean netspeedLeft = !netspeedAtRow2 && MainModule.mPrefs.getBoolean("system_statusbar_netspeed_atleft");
 
         String[] signalIcons;
         if (!swapWifiSignal) {
@@ -987,6 +988,22 @@ public class SystemUI {
                 }
             });
         }
+        if (moveLeft) {
+            Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBarIconControllerImpl", lpparam.classLoader, "setIconVisibility", String.class, boolean.class, new MethodHook() {
+                @Override
+                protected void before(MethodHookParam param) throws Throwable {
+                    String slot = (String) param.args[0];
+                    if (("alarm_clock".equals(slot) && MainModule.mPrefs.getBoolean("system_statusbar_alarm_atleft"))
+                        || ("volume".equals(slot) && MainModule.mPrefs.getBoolean("system_statusbar_sound_atleft"))
+                        || ("zen".equals(slot) && MainModule.mPrefs.getBoolean("system_statusbar_dnd_atleft"))
+                        || ("nfc".equals(slot) && MainModule.mPrefs.getBoolean("system_statusbar_nfc_atleft"))
+                        || ("headset".equals(slot) && MainModule.mPrefs.getBoolean("system_statusbar_headset_atleft"))
+                    ) {
+                        param.args[1] = false;
+                    }
+                }
+            });
+        }
         ArrayList<String> dripLeftIcons = new ArrayList<String>();
         if (swapWifiSignal || moveSignalLeft) {
             Helpers.findAndHookConstructor("com.android.systemui.statusbar.phone.StatusBarIconList", lpparam.classLoader, String[].class, new MethodHook() {
@@ -1046,7 +1063,7 @@ public class SystemUI {
             });
         }
 
-        if (moveSignalLeft || netspeedRight) {
+        if (moveSignalLeft || netspeedRight || netspeedLeft) {
             Helpers.hookAllMethods("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView", lpparam.classLoader, "updateCutoutLocation", new MethodHook() {
                 @Override
                 protected void after(MethodHookParam param) throws Throwable {
@@ -1058,9 +1075,13 @@ public class SystemUI {
                         }
                     }
                     else {
-                        if (moveSignalLeft && !dualRows) {
+                        if ((moveSignalLeft || netspeedLeft) && !dualRows) {
                             View mDripStatusBarLeftStatusIconArea = (View) XposedHelpers.getObjectField(param.thisObject, "mDripStatusBarLeftStatusIconArea");
                             mDripStatusBarLeftStatusIconArea.setVisibility(View.VISIBLE);
+                        }
+                        if (netspeedLeft && !dualRows) {
+                            Object mDripNetworkSpeedView = XposedHelpers.getObjectField(param.thisObject, "mDripNetworkSpeedView");
+                            XposedHelpers.callMethod(mDripNetworkSpeedView, "setBlocked", false);
                         }
                     }
                 }
@@ -1072,6 +1093,22 @@ public class SystemUI {
                 @Override
                 protected void before(MethodHookParam param) throws Throwable {
                     param.args[0] = null;
+                }
+            });
+        }
+        if (netspeedLeft) {
+            Helpers.hookAllMethods("com.android.systemui.statusbar.views.NetworkSpeedView", lpparam.classLoader, "setVisibilityByController", new MethodHook() {
+                int leftViewId = 0;
+                @Override
+                protected void before(MethodHookParam param) throws Throwable {
+                    TextView meter = (TextView) param.thisObject;
+                    String slot = (String) XposedHelpers.callMethod(param.thisObject, "getSlot");
+                    if (leftViewId == 0) {
+                        leftViewId = meter.getResources().getIdentifier("drip_network_speed_view", "id", lpparam.packageName);
+                    }
+                    if (slot.equals("network_speed") && meter.getId() != leftViewId) {
+                        param.args[0] = false;
+                    }
                 }
             });
         }

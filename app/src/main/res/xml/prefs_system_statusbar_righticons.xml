@@ -51,7 +51,6 @@
 		android:title="@string/system_statusbaricons_dnd_title"
 		android:defaultValue="false" />
 
-
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_btbattery_atright"
 		android:title="@string/system_statusbaricons_btbattery_title"
@@ -65,6 +64,29 @@
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_headset_atright"
 		android:title="@string/system_statusbaricons_headset_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:title="@string/system_statusbaricons_atleft_title" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbar_netspeed_atleft"
+		android:title="@string/system_statusbaricons_netspeed_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbar_alarm_atleft"
+		android:title="@string/system_statusbaricons_alarm_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbar_sound_atleft"
+		android:title="@string/system_statusbaricons_sound_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbar_dnd_atleft"
+		android:title="@string/system_statusbaricons_dnd_title"
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
