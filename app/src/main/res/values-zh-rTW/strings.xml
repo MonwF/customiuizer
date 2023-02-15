@@ -615,8 +615,6 @@
     <string name="system_firstpress_title">即時音量調整</string>
     <string name="system_fivegtile_summ">添加5G開關磁貼至快速設置</string>
     <string name="system_fivegtile_title">5G開關</string>
-    <string name="system_fixmeter_summ">增加網速指示器的水平邊距</string>
-    <string name="system_fixmeter_title">網速間距</string>
     <string name="system_forceclose_summ">不允許預置的MIUI動作關閉所選應用</string>
     <string name="system_forceclose_title">阻止應用強制關閉</string>
     <string name="system_fw_noblacklist_summ">允許在浮動視窗中開啟任意應用</string>

@@ -116,10 +116,9 @@
     <string name="system_clock_show_week_title">Show week</string>
     <string name="system_clock_show_date_title">Show date</string>
     <string name="system_clock_show_year_title">Show year</string>
-    <string name="system_clock_fixedwidth_title">Fixed width to prevent horizontal jitter</string>
+    <string name="system_clock_fixedwidth_title">Fix content width to prevent horizontal jitter</string>
+    <string name="system_clock_fixedwidth_summ">Adjust width when seconds is displayed</string>
     <string name="system_statusbar_clock_align_title">Horizontal alignment</string>
-    <string name="system_clock_extra_width_title">Extra width</string>
-    <string name="system_clock_extra_width_summ">Avoid to display an ellipsis</string>
     <string name="system_clockseconds_summ">Display seconds in the status bar clock</string>
     <string name="system_maxsbicons_title">Notification icons limit</string>
     <string name="system_maxsbicons_summ">Number of notification icons to display before turning them into dots</string>
@@ -134,7 +133,8 @@
     <string name="system_nonetspeedseparator_title">Network speed separator</string>
     <string name="system_nonetspeedseparator_summ">Do not show vertical line between time and network speed on devices with waterdrop notches</string>
     <string name="system_netspeedinterval_title">Network speed update interval</string>
-    <string name="system_detailednetspeed_title">Display in dual rows</string>
+    <string name="system_detailednetspeed_title">Upload and download speed are displayed in dual rows</string>
+    <string name="system_detailednetspeed_fakedualrow_title">Value and unit are displayed in dual rows</string>
     <string name="system_netspeed_cat_title">Network speed mods</string>
     <string name="system_detailednetspeed_summ">Show incoming and outgoing network speeds separately</string>
     <string name="system_detailednetspeed_icon_title">Indicator icons</string>
@@ -153,8 +153,6 @@
     <string name="system_statusbarcontrols_single_title">Horizontal slide with one finger</string>
     <string name="system_statusbarcontrols_dual_title">Horizontal slide with two fingers</string>
     <string name="system_statusbarcontrols_dt_title">Double tap action</string>
-    <string name="system_fixmeter_title">Network speed spacing</string>
-    <string name="system_fixmeter_summ">Increase horizontal margins for network speed indicator</string>
     <string name="system_notifimportance_title">Show notification importance</string>
     <string name="system_compactnotif_title">Compact notifications</string>
     <string name="system_compactnotif_summ">Reduce notifications\' vertical paddings</string>
@@ -181,7 +179,7 @@
     <string name="system_notifrowmenu_appinfo">App info</string>
     <string name="system_notifrowmenu_openinfw">Floating window</string>
     <string name="system_notifrowmenu_forceclose">Force close</string>
-    <string name="system_disableanynotif_title">Disable any notification</string>
+    <string name="system_disableanynotif_title">Allow to disable any notification</string>
     <string name="system_disableanynotif_summ">Allow to disable system notifications too</string>
     <string name="system_expandnotifs_title">Expand notifications</string>
     <string name="system_expandnotifs_summ">Show notifications fully expanded</string>

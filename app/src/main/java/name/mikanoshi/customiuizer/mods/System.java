@@ -1060,6 +1060,12 @@ public class System {
             lp.topMargin = (int) (marginTop);
             mClock.setLayoutParams(lp);
         }
+        int fixedWidth = MainModule.mPrefs.getInt("system_statusbar_clock_fixedcontent_width", 10);
+        if (fixedWidth > 10) {
+            ViewGroup.LayoutParams lp = mClock.getLayoutParams();
+            lp.width = (int)(mClock.getResources().getDisplayMetrics().density * fixedWidth);
+            mClock.setLayoutParams(lp);
+        }
     }
 
     private static boolean getShowSeconds() {
@@ -1250,18 +1256,6 @@ public class System {
                     StringBuilder formatSb = new StringBuilder(timeFmt);
                     StringBuilder textSb = new StringBuilder();
                     XposedHelpers.callMethod(mCalendar, "format", mContext, textSb, formatSb);
-                    if ("clock".equals(clockName) && MainModule.mPrefs.getBoolean("system_statusbar_clock_fixed_width")) {
-                        Object mFixedWidth = XposedHelpers.getAdditionalInstanceField(clock, "mFixedWidth");
-                        if (mFixedWidth == null) {
-                            clock.setText(textSb.toString());
-                            clock.measure(0, 0);
-                            float extraWidth = MainModule.mPrefs.getInt("system_statusbar_clock_extra_width", 0) * 0.5f;
-                            ViewGroup.LayoutParams lp = clock.getLayoutParams();
-                            lp.width = clock.getMeasuredWidth() + (int)(mContext.getResources().getDisplayMetrics().density * extraWidth);
-                            clock.setLayoutParams(lp);
-                            XposedHelpers.setAdditionalInstanceField(clock, "mFixedWidth", true);
-                        }
-                    }
                     clock.setText(textSb.toString());
                     param.setResult(null);
                 }
@@ -3494,23 +3488,27 @@ public class System {
         });
     }
 
-    public static void DisableAnyNotificationBlockHook() {
-        Helpers.hookAllConstructors("android.app.NotificationChannel", null, new MethodHook() {
+    public static void DisableAnyNotificationBlockHook(LoadPackageParam lpparam) {
+        Helpers.findAndHookMethod("android.app.NotificationChannel", lpparam.classLoader, "isBlockable", XC_MethodReplacement.returnConstant(true));
+        Helpers.findAndHookMethod("android.app.NotificationChannel", lpparam.classLoader, "setBlockable", boolean.class, new MethodHook() {
             @Override
-            protected void after(final MethodHookParam param) throws Throwable {
-            XposedHelpers.setBooleanField(param.thisObject, "mBlockableSystem", true);
-            }
-        });
-
-        Helpers.findAndHookMethod("android.app.NotificationChannel", null, "setBlockable", boolean.class, new MethodHook() {
-            @Override
-            protected void after(final MethodHookParam param) throws Throwable {
-            XposedHelpers.setBooleanField(param.thisObject, "mBlockableSystem", true);
+            protected void before(final MethodHookParam param) throws Throwable {
+                param.args[0] = true;
             }
         });
     }
 
     public static void DisableAnyNotificationHook(LoadPackageParam lpparam) {
+        if (lpparam.packageName.contains("systemui")) {
+            Class<?> NotifyManagerCls = findClass("com.android.systemui.statusbar.notification.NotificationSettingsManager", lpparam.classLoader);
+            XposedHelpers.setStaticBooleanField(NotifyManagerCls, "USE_WHITE_LISTS", false);
+            Helpers.findAndHookMethod("com.miui.systemui.NotificationCloudData$Companion", lpparam.classLoader, "getFloatBlacklist", Context.class, new MethodHook() {
+                @Override
+                protected void before(MethodHookParam param) throws Throwable {
+                    param.setResult(new ArrayList<String>());
+                }
+            });
+        }
         Helpers.hookAllMethods("miui.util.NotificationFilterHelper", lpparam.classLoader, "isNotificationForcedEnabled", XC_MethodReplacement.returnConstant(false));
         Helpers.findAndHookMethod("miui.util.NotificationFilterHelper", lpparam.classLoader, "isNotificationForcedFor", Context.class, String.class, XC_MethodReplacement.returnConstant(false));
         Helpers.findAndHookMethod("miui.util.NotificationFilterHelper", lpparam.classLoader, "canSystemNotificationBeBlocked", String.class, XC_MethodReplacement.returnConstant(true));
@@ -3518,7 +3516,7 @@ public class System {
         Helpers.findAndHookMethod("miui.util.NotificationFilterHelper", lpparam.classLoader, "getNotificationForcedEnabledList", new MethodHook() {
             @Override
             protected void before(final MethodHookParam param) throws Throwable {
-            param.setResult(new HashSet<String>());
+                param.setResult(new HashSet<String>());
             }
         });
     }
