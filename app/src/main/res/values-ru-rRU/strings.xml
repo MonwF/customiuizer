@@ -717,8 +717,6 @@
     <string name="system_statusbarcontrols_single_title">Горизонтальное скольжение одним пальцем</string>
     <string name="system_statusbarcontrols_dual_title">Горизонтальное скольжение двумя пальцами</string>
     <string name="system_statusbarcontrols_dt_title">Действие на двойное нажатие</string>
-    <string name="system_fixmeter_title">Отступ скорости соединения</string>
-    <string name="system_fixmeter_summ">Увеличивает горизонтальные отступы для индикатора скорости соединения</string>
     <string name="system_compactnotif_title">Компактные уведомления</string>
     <string name="system_compactnotif_summ">Уменьшает вертикальные отступы в уведомлениях</string>
     <string name="system_colorizenotiftitle_title">Раскрасить заголовок уведомления</string>

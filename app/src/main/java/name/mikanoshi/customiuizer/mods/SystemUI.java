@@ -126,6 +126,9 @@ public class SystemUI {
         if (MainModule.mPrefs.getBoolean("system_qs_force_systemfonts")) {
             MainModule.resHooks.setObjectReplacement(lpparam.packageName, "bool", "header_big_time_use_system_font", true);
         }
+        if (MainModule.mPrefs.getBoolean("system_detailednetspeed_fakedualrow")) {
+            MainModule.resHooks.setObjectReplacement(lpparam.packageName, "string", "network_speed_suffix", "%1$s\n%2$s");
+        }
         if (MainModule.mPrefs.getBoolean("system_separatevolume") && MainModule.mPrefs.getBoolean("system_separatevolume_slider")) {
             MainModule.resHooks.setResReplacement("miui.systemui.plugin", "dimen", "miui_volume_content_width_expanded", R.dimen.miui_volume_content_width_expanded);
             MainModule.resHooks.setResReplacement("miui.systemui.plugin", "dimen", "miui_volume_ringer_layout_width_expanded", R.dimen.miui_volume_ringer_layout_width_expanded);
@@ -276,6 +279,10 @@ public class SystemUI {
             topMargin = (int) marginTop;
         }
         batteryView.setPaddingRelative(leftMargin, topMargin, rightMargin, 0);
+        int fixedWidth = MainModule.mPrefs.getInt("system_statusbar_batterytempandcurrent_fixedcontent_width", 10);
+        if (fixedWidth > 10) {
+            lp.width = (int)(batteryView.getResources().getDisplayMetrics().density * fixedWidth);
+        }
         batteryView.setLayoutParams(lp);
 
         int align = MainModule.mPrefs.getStringAsInt("system_statusbar_batterytempandcurrent_align", 1);
@@ -1173,52 +1180,102 @@ public class SystemUI {
             }
             @Override
             protected void after(MethodHookParam param) throws Throwable {
+                String speedText = (String) param.getResult();
                 if (hideUnit) {
-                    String speedText = (String) param.getResult();
-                    param.setResult(speedText.replaceFirst("B?[/']s", ""));
+                    speedText = speedText.replaceFirst("B?[/']s", "");
+                    param.setResult(speedText);
                 }
             }
         });
     }
 
     public static void NetSpeedStyleHook(LoadPackageParam lpparam) {
+        if (MainModule.mPrefs.getInt("system_netspeed_fixedcontent_width", 10) > 10) {
+            Helpers.hookAllMethods("com.android.systemui.statusbar.views.NetworkSpeedView", lpparam.classLoader, "applyNetworkSpeedState", new MethodHook() {
+                @Override
+                protected void before(MethodHookParam param) throws Throwable {
+                    TextView meter = (TextView) param.thisObject;
+                    if ((meter.getTag() == null || !"slot_text_icon".equals(meter.getTag()))
+                        && XposedHelpers.getAdditionalInstanceField(param.thisObject, "inited") == null) {
+                        XposedHelpers.setAdditionalInstanceField(param.thisObject, "inited", true);
+                        int fixedWidth = MainModule.mPrefs.getInt("system_netspeed_fixedcontent_width", 10);
+                        if (fixedWidth > 10) {
+                            ViewGroup.LayoutParams lp = meter.getLayoutParams();
+                            int viewWidth = (int)(meter.getResources().getDisplayMetrics().density * fixedWidth);
+                            if (lp == null) {
+                                Helpers.log("width1: " + viewWidth);
+                                lp = new ViewGroup.LayoutParams(viewWidth, -1);
+                            }
+                            else {
+                                Helpers.log("width2: " + viewWidth);
+                                lp.width = viewWidth;
+                            }
+                            meter.setLayoutParams(lp);
+                        }
+                    }
+                }
+            });
+        }
         Helpers.hookAllConstructors("com.android.systemui.statusbar.views.NetworkSpeedView", lpparam.classLoader, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
+                boolean dualRow = MainModule.mPrefs.getBoolean("system_detailednetspeed")
+                    || MainModule.mPrefs.getBoolean("system_detailednetspeed_fakedualrow");
                 TextView meter = (TextView)param.thisObject;
                 if (meter == null) return;
                 if (meter.getTag() == null || !"slot_text_icon".equals(meter.getTag())) {
                     int fontSize = MainModule.mPrefs.getInt("system_netspeed_fontsize", 13);
-                    if (MainModule.mPrefs.getBoolean("system_detailednetspeed")) {
-                        if (fontSize > 20) fontSize = 16;
+                    if (dualRow) {
+                        if (fontSize > 23 || fontSize == 13) fontSize = 16;
                     }
                     else {
-                        if (fontSize < 20) fontSize = 27;
+                        if (fontSize < 20 && fontSize != 13) fontSize = 27;
                     }
-                    if (fontSize != 13) {
+                    if (dualRow || fontSize != 13) {
                         meter.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize * 0.5f);
                     }
                     if (MainModule.mPrefs.getBoolean("system_netspeed_bold")) {
                         meter.setTypeface(Typeface.DEFAULT_BOLD);
                     }
 
-                    int horizMargin = 0;
-                    if (MainModule.mPrefs.getBoolean("system_fixmeter")) {
-                        horizMargin = Math.round(meter.getResources().getDisplayMetrics().density * 4);
-                    }
+                    Resources res = meter.getResources();
+
+                    int leftMargin = MainModule.mPrefs.getInt("system_netspeed_leftmargin", 0);
+                    leftMargin = (int)TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        leftMargin * 0.5f,
+                        res.getDisplayMetrics()
+                    );
+                    int rightMargin = MainModule.mPrefs.getInt("system_netspeed_rightmargin", 0);
+                    rightMargin = (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        rightMargin * 0.5f,
+                        res.getDisplayMetrics()
+                    );
                     int topMargin = 0;
                     int verticalOffset = MainModule.mPrefs.getInt("system_netspeed_verticaloffset", 8);
                     if (verticalOffset != 8) {
                         float marginTop = TypedValue.applyDimension(
                             TypedValue.COMPLEX_UNIT_DIP,
                             (verticalOffset - 8) * 0.5f,
-                            meter.getResources().getDisplayMetrics()
+                            res.getDisplayMetrics()
                         );
                         topMargin = (int) (marginTop);
                     }
-                    meter.setPaddingRelative(horizMargin, topMargin, horizMargin, 0);
+                    meter.setPaddingRelative(leftMargin, topMargin, rightMargin, 0);
 
-                    if (MainModule.mPrefs.getBoolean("system_detailednetspeed")) {
+                    int align = MainModule.mPrefs.getStringAsInt("system_detailednetspeed_align", 1);
+                    if (align == 2) {
+                        meter.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+                    }
+                    else if (align == 3) {
+                        meter.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    }
+                    else if (align == 4) {
+                        meter.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+                    }
+
+                    if (dualRow) {
                         float spacing = 0.9f;
                         meter.setSingleLine(false);
                         meter.setMaxLines(2);
@@ -1226,16 +1283,6 @@ public class SystemUI {
                             spacing = 0.85f;
                         }
                         meter.setLineSpacing(0, spacing);
-                        int align = MainModule.mPrefs.getStringAsInt("system_detailednetspeed_align", 1);
-                        if (align == 2) {
-                            meter.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
-                        }
-                        else if (align == 3) {
-                            meter.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                        }
-                        else if (align == 4) {
-                            meter.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
-                        }
                     }
                 }
             }

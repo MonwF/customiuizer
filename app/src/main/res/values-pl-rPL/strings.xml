@@ -109,8 +109,6 @@
     <string name="system_statusbarcontrols_single_title">Poziome przesuwanie jednym palcem</string>
     <string name="system_statusbarcontrols_dual_title">Poziome przesuwanie dwoma palcami</string>
     <string name="system_statusbarcontrols_dt_title">Akcja podwójnego dotknięcia</string>
-    <string name="system_fixmeter_title">Odstęp prędkości sieci</string>
-    <string name="system_fixmeter_summ">Zwiększ poziome marginesy dla wskaźnika prędkości sieci</string>
     <string name="system_notifimportance_title">Pokaż ważność powiadomienia</string>
     <string name="system_compactnotif_title">Kompaktowe powiadomienia</string>
     <string name="system_compactnotif_summ">Zmniejsz pionowe odstępy powiadomień</string>

@@ -79,6 +79,16 @@
 		android:defaultValue="1" />
 
 	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		android:key="pref_key_system_statusbar_batterytempandcurrent_fixedcontent_width"
+		android:title="@string/system_clock_fixedwidth_title"
+		android:defaultValue="10"
+		miuizer:minValue="10"
+		miuizer:maxValue="120"
+		miuizer:stepValue="2"
+		miuizer:offtext="@string/array_default"
+		miuizer:format="%s dp" />
+
+	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_statusbar_batterytempandcurrent_leftmargin"
 		android:title="@string/system_statusbar_mobiletype_single_leftmargin_title"
 		android:defaultValue="8"

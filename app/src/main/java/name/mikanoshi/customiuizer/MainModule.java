@@ -68,7 +68,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (mPrefs.getBoolean("system_magnifier")) System.TextMagnifierHook();
         if (mPrefs.getBoolean("system_lockscreenshortcuts") || mPrefs.getInt("controls_powerdt_action", 1) > 1) SystemUI.LockScreenSecureLaunchHook();
         if (mPrefs.getBoolean("system_notifmediaseekbar")) System.MediaNotificationSeekBarHook();
-        if (mPrefs.getBoolean("system_disableanynotif")) System.DisableAnyNotificationBlockHook();
         if (mPrefs.getBoolean("system_nooverscroll")) System.NoOverscrollHook();
         if (mPrefs.getBoolean("system_cleanshare")) System.CleanShareMenuHook();
         if (mPrefs.getBoolean("system_cleanopenwith")) System.CleanOpenWithMenuHook();
@@ -168,6 +167,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("controls_fingerprintscreen")) Controls.FingerprintScreenOnHook(lpparam);
             if (mPrefs.getBoolean("controls_fingerprintwake")) Controls.NoFingerprintWakeHook(lpparam);
             if (mPrefs.getBoolean("various_disableapp")) Various.AppsDisableServiceHook(lpparam);
+            if (mPrefs.getBoolean("system_disableanynotif")) System.DisableAnyNotificationBlockHook(lpparam);
             if (mPrefs.getStringAsInt("system_allrotations2", 1) > 1) System.AllRotationsHook(lpparam);
             if (mPrefs.getStringAsInt("system_nolightuponcharges", 1) > 1) System.NoLightUpOnChargeHook(lpparam);
             if (mPrefs.getStringAsInt("system_autogroupnotif", 1) > 1) System.AutoGroupNotificationsHook(lpparam);
@@ -230,7 +230,10 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 || mPrefs.getString("system_cc_dateformat", "").length() > 0
             ) System.StatusBarClockTweakHook(lpparam);
             if (mPrefs.getBoolean("system_noscreenlock_act")) System.NoScreenLockHook(lpparam);
-            if (mPrefs.getBoolean("system_detailednetspeed")) SystemUI.DetailedNetSpeedHook(lpparam);
+            if (
+                mPrefs.getBoolean("system_detailednetspeed")
+                && !mPrefs.getBoolean("system_detailednetspeed_fakedualrow")
+            ) SystemUI.DetailedNetSpeedHook(lpparam);
             if (mPrefs.getBoolean("system_albumartonlock")) SystemUI.LockScreenAlbumArtHook(lpparam);
             if (mPrefs.getBoolean("system_popupnotif")) System.PopupNotificationsHook(lpparam);
             if (mPrefs.getStringAsInt("system_expandheadups", 1) > 1) System.ExpandHeadsUpHook(lpparam);
@@ -297,17 +300,25 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_statusbarcontrols")) SystemUI.StatusBarGesturesHook(lpparam);
             if (mPrefs.getBoolean("system_nonetspeedseparator")) SystemUI.NoNetworkSpeedSeparatorHook(lpparam);
             if (mPrefs.getBoolean("system_statusbaricons_clock")) SystemUI.HideIconsClockHook(lpparam);
-            if (!mPrefs.getBoolean("system_detailednetspeed") &&
-                (mPrefs.getBoolean("system_detailednetspeed_secunit") || mPrefs.getBoolean("system_detailednetspeed_low"))
+            if (mPrefs.getBoolean("system_detailednetspeed_fakedualrow")
+                || (!mPrefs.getBoolean("system_detailednetspeed")
+                    && (mPrefs.getBoolean("system_detailednetspeed_secunit")
+                        || mPrefs.getBoolean("system_detailednetspeed_low")
+                        )
+                    )
             ) {
                 SystemUI.FormatNetworkSpeedHook(lpparam);
             }
             if (
                 mPrefs.getInt("system_netspeed_fontsize", 13) > 13
                 || mPrefs.getInt("system_netspeed_verticaloffset", 8) != 8
-                || mPrefs.getBoolean("system_fixmeter")
                 || mPrefs.getBoolean("system_detailednetspeed")
+                || mPrefs.getBoolean("system_detailednetspeed_fakedualrow")
                 || mPrefs.getBoolean("system_netspeed_bold")
+                || mPrefs.getInt("system_netspeed_leftmargin", 0) > 0
+                || mPrefs.getInt("system_netspeed_fixedcontent_width", 10) > 10
+                || mPrefs.getInt("system_netspeed_rightmargin", 0) > 0
+                || mPrefs.getStringAsInt("system_detailednetspeed_align", 1) > 1
             ) {
                 SystemUI.NetSpeedStyleHook(lpparam);
             }

@@ -117,8 +117,6 @@
   <string name="system_clock_show_year_title">年を表示</string>
   <string name="system_clock_fixedwidth_title">水平方向のジッターを防ぐために幅を固定</string>
   <string name="system_statusbar_clock_align_title">水平方向の整列</string>
-  <string name="system_clock_extra_width_title">余幅</string>
-  <string name="system_clock_extra_width_summ">省力記号を表示しないようにします</string>
   <string name="system_clockseconds_summ">ステータスバーの時計に秒を表示します</string>
   <string name="system_maxsbicons_title">通知アイコン数の制限</string>
   <string name="system_maxsbicons_summ">ドットで表示する前に表示をする最大のアイコン数を設定します</string>
@@ -152,8 +150,6 @@
   <string name="system_statusbarcontrols_single_title">1本の指で水平にスワイプ</string>
   <string name="system_statusbarcontrols_dual_title">2本の指で水平にスワイプ</string>
   <string name="system_statusbarcontrols_dt_title">ダブルタップ時のアクション</string>
-  <string name="system_fixmeter_title">ネットワーク速度の間隔</string>
-  <string name="system_fixmeter_summ">ネットワーク速度表示の水平方向の余白を増やします</string>
   <string name="system_notifimportance_title">通知の重要度を表示する</string>
   <string name="system_compactnotif_title">コンパクトな通知</string>
   <string name="system_compactnotif_summ">通知の縦方向の余白を減らします</string>
