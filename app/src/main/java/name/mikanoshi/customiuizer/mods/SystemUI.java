@@ -298,7 +298,7 @@ public class SystemUI {
                     XposedHelpers.setAdditionalInstanceField(param.thisObject, "mBatteryView", batteryView);
                 }
             });
-            Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiCollapsedStatusBarFragment", lpparam.classLoader, "showClock", boolean.class, new MethodHook() {
+            Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiCollapsedStatusBarFragment", lpparam.classLoader, "showSystemIconArea", boolean.class, new MethodHook() {
                 @Override
                 protected void after(MethodHookParam param) throws Throwable {
                     Object bv = XposedHelpers.getAdditionalInstanceField(param.thisObject, "mBatteryView");
@@ -307,7 +307,7 @@ public class SystemUI {
                     }
                 }
             });
-            Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiCollapsedStatusBarFragment", lpparam.classLoader, "hideClockInternal", int.class, boolean.class, new MethodHook() {
+            Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiCollapsedStatusBarFragment", lpparam.classLoader, "hideSystemIconArea", boolean.class, new MethodHook() {
                 @Override
                 protected void after(MethodHookParam param) throws Throwable {
                     Object bv = XposedHelpers.getAdditionalInstanceField(param.thisObject, "mBatteryView");
