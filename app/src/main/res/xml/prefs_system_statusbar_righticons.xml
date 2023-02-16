@@ -90,7 +90,6 @@
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
-		app:isPreferenceVisible="false"
 		android:title="@string/system_statusbaricons_atsecondrow_title">
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
