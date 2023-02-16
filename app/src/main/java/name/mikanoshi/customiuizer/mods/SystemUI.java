@@ -921,22 +921,6 @@ public class SystemUI {
             signalIcons = new String[]{"hotspot", "slave_wifi", "wifi", "demo_wifi", "no_sim", "mobile", "demo_mobile", "airplane"};
         }
         ArrayList<String> signalRelatedIcons = new ArrayList<String>(Arrays.asList(signalIcons));
-        if (moveRight) {
-            Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiDripLeftStatusBarIconControllerImpl", lpparam.classLoader, "setIconVisibility", String.class, boolean.class, new MethodHook() {
-                @Override
-                protected void before(MethodHookParam param) throws Throwable {
-                    String slot = (String) param.args[0];
-                    if (("alarm_clock".equals(slot) && MainModule.mPrefs.getBoolean("system_statusbar_alarm_atright"))
-                        || ("volume".equals(slot) && MainModule.mPrefs.getBoolean("system_statusbar_sound_atright"))
-                        || ("zen".equals(slot) && MainModule.mPrefs.getBoolean("system_statusbar_dnd_atright"))
-                        || ("nfc".equals(slot) && MainModule.mPrefs.getBoolean("system_statusbar_nfc_atright"))
-                        || ("headset".equals(slot) && MainModule.mPrefs.getBoolean("system_statusbar_headset_atright"))
-                    ) {
-                        param.args[1] = false;
-                    }
-                }
-            });
-        }
         if (moveLeft) {
             Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBarIconControllerImpl", lpparam.classLoader, "setIconVisibility", String.class, boolean.class, new MethodHook() {
                 @Override
@@ -954,6 +938,22 @@ public class SystemUI {
             });
         }
         if (moveRight) {
+            Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiDripLeftStatusBarIconControllerImpl", lpparam.classLoader, "setIconVisibility", String.class, boolean.class, new MethodHook() {
+                @Override
+                protected void before(MethodHookParam param) throws Throwable {
+                    String slot = (String) param.args[0];
+                    if (("alarm_clock".equals(slot) && MainModule.mPrefs.getBoolean("system_statusbar_alarm_atright"))
+                        || ("volume".equals(slot) && MainModule.mPrefs.getBoolean("system_statusbar_sound_atright"))
+                        || ("zen".equals(slot) && MainModule.mPrefs.getBoolean("system_statusbar_dnd_atright"))
+                        || ("nfc".equals(slot) && MainModule.mPrefs.getBoolean("system_statusbar_nfc_atright"))
+                        || ("headset".equals(slot) && MainModule.mPrefs.getBoolean("system_statusbar_headset_atright"))
+                    ) {
+                        param.args[1] = false;
+                    }
+                }
+            });
+        }
+        if (moveRight || netspeedRight) {
             Helpers.findAndHookMethod("com.android.systemui.SystemUIApplication", lpparam.classLoader, "onCreate", new MethodHook() {
                 private boolean isHooked = false;
 
@@ -972,6 +972,9 @@ public class SystemUI {
                         else {
                             int blockResId = res.getIdentifier("config_drip_right_block_statusBarIcons", "array", lpparam.packageName);
                             rightBlockList = new ArrayList<String>(Arrays.asList(res.getStringArray(blockResId)));
+                        }
+                        if (netspeedRight) {
+                            rightBlockList.remove("network_speed");
                         }
                         if (MainModule.mPrefs.getBoolean("system_statusbar_alarm_atright")) {
                             rightBlockList.remove("alarm_clock");
