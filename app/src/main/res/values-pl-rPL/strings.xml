@@ -6,18 +6,7 @@
     <string name="about_unsupported">Modyfikacje oznaczone ⨯ nie są obsługiwane na tym urządzeniu.</string>
     <string name="title_activity_main" translatable="false">@string/app_name</string>
 
-    <string name="title_snoozed">Odłożone powiadomienia</string>
     <string name="menu_update">Aktualizacja</string>
-    <string name="snooze_unsnooze">Odłóż to powiadomienie</string>
-    <string name="snooze_cancel">Oznacz jako odrzucone</string>
-    <string name="snooze_restore">Oznacz jako oczekujące</string>
-    <string name="snooze_fetch_fail">Nie można pobrać listy odłożonych powiadomień</string>
-    <string name="snooze_empty">Brak odłożonych powiadomień</string>
-    <string name="snooze_messages">Wiadomości</string>
-    <string name="snooze_channel">Kanał</string>
-    <string name="snooze_created">Utworzony</string>
-    <string name="snooze_updated">Zaktualizowany</string>
-    <string name="snooze_repost">Repost</string>
 
     <string name="mods">Modyfikacje</string>
     <string name="mods_actions">Działania</string>
@@ -144,8 +133,6 @@
     <string name="system_toasttime_note">Wynikający z tego czas trwania nie spadnie poniżej 1 sekundy</string>
     <string name="system_autogroupnotif_title">Automatyczne powiadomienia grupowe</string>
     <string name="system_autogroupnotif_summ">Liczba powiadomień z jednej aplikacji, która uruchamia automatyczne grupowanie</string>
-    <string name="system_snoozedmanager_title">Menedżer odłożonych powiadomień</string>
-    <string name="system_snoozedmanager_summ">Zwiększ liczbę interwałów drzemki i dodaj ikonę do launchera, który otwiera listę aktualnie odłożonych powiadomień</string>
     <string name="system_mutevisiblenotif_title">Wycisz, jeśli jest widoczny</string>
     <string name="system_mutevisiblenotif_summ">Nie odtwarzaj dźwięku powiadomienia, jeśli ekran jest włączony</string>
     <string name="system_notifmediaseekbar_title">Suwak pozycji mediów</string>

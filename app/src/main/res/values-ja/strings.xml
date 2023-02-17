@@ -8,18 +8,7 @@
   <string name="about_dynamic">一般的なModの有効化/無効化にはソフトリブートが必要です。⟲のマークがある物は値の変更後、ソフトリブートすることで設定が適用されます。</string>
   <string name="about_unsupported">⨯の付いたModはご利用のデバイスに対応していません。</string>
   <string name="title_activity_main" translatable="false">@string/app_name</string>
-  <string name="title_snoozed">通知のスヌーズ</string>
   <string name="menu_update">アップデート</string>
-  <string name="snooze_unsnooze">このスヌーズ通知を解除する</string>
-  <string name="snooze_cancel">却下する</string>
-  <string name="snooze_restore">保留にする</string>
-  <string name="snooze_fetch_fail">スヌーズされた通知のリストが取得できません</string>
-  <string name="snooze_empty">通知をスヌーズしない</string>
-  <string name="snooze_messages">メッセージ</string>
-  <string name="snooze_channel">キャンセル</string>
-  <string name="snooze_created">作成済み</string>
-  <string name="snooze_updated">更新</string>
-  <string name="snooze_repost">再投稿</string>
 
   <string name="mods">Mod</string>
   <string name="mods_actions">アクション</string>
@@ -186,8 +175,6 @@
   <string name="system_toasttime_note">1秒以下に下回らせる事はできません</string>
   <string name="system_autogroupnotif_title">自動グループ通知</string>
   <string name="system_autogroupnotif_summ">自動グループ化のトリガーにするアプリの通知数</string>
-  <string name="system_snoozedmanager_title">スヌーズ通知の管理</string>
-  <string name="system_snoozedmanager_summ">スヌーズ間隔を長く変更し、現在のスヌーズ中の通知の一覧を開くアイコンをランチャーに追加します</string>
   <string name="system_mutevisiblenotif_title">表示中はミュートにする</string>
   <string name="system_mutevisiblenotif_summ">画面の表示中は通知音を鳴らさないようにします</string>
   <string name="system_notifmediaseekbar_title">シーク可能なメディア通知スライダー</string>

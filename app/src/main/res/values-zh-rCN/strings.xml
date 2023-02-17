@@ -7,18 +7,7 @@
     <string name="about_dev">作者：Mikanoshi &amp; MonwF</string>
     <string name="about_dynamic">标记有⟲的模块由默认值修改为其他值后只需软重启一次，之后的更改将立即应用；其他选项始终需要软重启。</string>
     <string name="about_unsupported">标记⨯的模块不支持此设备。</string>
-    <string name="title_snoozed">通知已延迟</string>
     <string name="menu_update">更新</string>
-    <string name="snooze_unsnooze">取消延迟此通知</string>
-    <string name="snooze_cancel">标记为已读</string>
-    <string name="snooze_restore">标记为未读</string>
-    <string name="snooze_fetch_fail">无法获取延迟通知列表</string>
-    <string name="snooze_empty">无延迟通知</string>
-    <string name="snooze_messages">消息</string>
-    <string name="snooze_channel">频道</string>
-    <string name="snooze_created">已创建</string>
-    <string name="snooze_updated">已更新</string>
-    <string name="snooze_repost">转发</string>
     <string name="value_is_empty">未设置</string>
     <string name="value_is_set">已设置</string>
     <string name="clear_value">清空</string>
@@ -184,8 +173,6 @@
     <string name="system_toasttime_note">显示时长始终大于 1 秒</string>
     <string name="system_autogroupnotif_title">自动分组通知</string>
     <string name="system_autogroupnotif_summ">触发自动分组的应用的通知数量</string>
-    <string name="system_snoozedmanager_title">延迟通知管理器</string>
-    <string name="system_snoozedmanager_summ">增大延迟间隔的数字并添加打开当前延迟通知列表的图标到启动器</string>
     <string name="system_mutevisiblenotif_title">亮屏时静音</string>
     <string name="system_mutevisiblenotif_summ">亮屏时弹出通知不播放提示音</string>
     <string name="system_notifmediaseekbar_title">媒体位置滑块</string>

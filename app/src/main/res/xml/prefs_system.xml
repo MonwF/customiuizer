@@ -668,13 +668,6 @@
 			android:entryValues="@array/autogroupnotif_val"
 			android:defaultValue="1" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_snoozedmanager"
-			android:title="@string/system_snoozedmanager_title"
-			app:isPreferenceVisible="false"
-			android:summary="@string/system_snoozedmanager_summ"
-			android:defaultValue="false" />
-
 		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 			android:title="@string/launcher_bugfixes" />
 

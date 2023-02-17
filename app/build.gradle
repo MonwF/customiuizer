@@ -82,13 +82,13 @@ dependencies {
     //    implementation "ch.acra:acra-core:$acraVersion"
 //    noinspection DifferentStdlibGradleVersion
     compileOnly 'de.robv.android.xposed:api:82'
-    compileOnly files('lib/miui.jar')
+//    compileOnly files('lib/miui.jar')
     compileOnly files('lib/miuisystem.jar')
     compileOnly files('lib/framework.jar')
 
     implementation "androidx.preference:preference:1.2.0"
     implementation 'androidx.palette:palette:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.6.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
 //    implementation "androidx.recyclerview:recyclerview:1.2.1"
 //    implementation 'com.google.android.flexbox:flexbox:3.0.0'
 //    implementation 'com.google.android.material:material:1.6.1'

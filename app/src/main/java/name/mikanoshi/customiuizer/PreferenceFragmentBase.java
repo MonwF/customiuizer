@@ -212,7 +212,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
-        } else showBack = !(this instanceof SnoozedFragment);
+        } else showBack = true;
 
         actionBar.setDisplayHomeAsUpEnabled(showBack);
     }

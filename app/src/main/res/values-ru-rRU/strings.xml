@@ -16,18 +16,7 @@
     <string name="storage_cannot_restore">Не найдено сохранённых настроек</string>
     <string name="backup_ok">Настройки успешно сохранены!</string>
     <string name="restore_ok">Настройки успешно восстановлены!</string>
-    <string name="title_snoozed">Отложенные уведомления</string>
     <string name="menu_update">Обновить</string>
-    <string name="snooze_unsnooze">Вернуть данное уведомление</string>
-    <string name="snooze_cancel">Пометить как отменённое</string>
-    <string name="snooze_restore">Пометить как ожидающее</string>
-    <string name="snooze_fetch_fail">Не удалось получить список отложенных уведомлений</string>
-    <string name="snooze_empty">Нет отложенных уведомлений</string>
-    <string name="snooze_messages">Сообщений</string>
-    <string name="snooze_channel">Канал</string>
-    <string name="snooze_created">Создано</string>
-    <string name="snooze_updated">Обновлено</string>
-    <string name="snooze_repost">Возобновление</string>
     <string name="warning">Внимание!</string>
     <string name="warning_blacklist">Опция чёрного/белого списка активна в Xposed Framework, это может привести к неработоспособности модов.</string>
     <string name="warning_blacklist_sdk">Кроме того, модуль был установлен из маркета, где находится более ограниченная версия. Рекомендуется переустановить модуль из любого другого источника.</string>
@@ -749,8 +738,6 @@
     <string name="system_toasttime_note">Итоговая продолжительность не опустится ниже 1 секунды</string>
     <string name="system_autogroupnotif_title">Автогруппировка уведомлений</string>
     <string name="system_autogroupnotif_summ">Число уведомлений от одного приложения при котором срабатывает их автоматическая группировка</string>
-    <string name="system_snoozedmanager_title">Менеджер отложенных уведомлений</string>
-    <string name="system_snoozedmanager_summ">Увеличивает число отложенных интервалов и добавляет иконку на рабочий стол, которая открывает список текущих отложенных уведомлений</string>
     <string name="system_mutevisiblenotif_title">Заглушить видимые</string>
     <string name="system_mutevisiblenotif_summ">Не проигрывать звук уведомления при включенном экране</string>
     <string name="system_notifmediaseekbar_title">Слайдер медиа позиции</string>

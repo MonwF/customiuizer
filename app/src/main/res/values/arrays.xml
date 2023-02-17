@@ -877,12 +877,6 @@
 		<item>3</item>
 	</string-array>
 
-	<string-array name="snoozedactions">
-		<item>@string/snooze_unsnooze</item>
-		<item>@string/snooze_cancel</item>
-		<item>@string/snooze_restore</item>
-	</string-array>
-
 	<string-array name="mimetypes">
 		<item>@string/array_image</item>
 		<item>@string/array_audio</item>
