@@ -450,16 +450,6 @@
     <string name="select_apps">選擇應用</string>
     <string name="select_shortcut">選擇快捷方式</string>
     <string name="settings">設置</string>
-    <string name="snooze_cancel">標記為已讀</string>
-    <string name="snooze_channel">頻道</string>
-    <string name="snooze_created">已建立</string>
-    <string name="snooze_empty">無延遲通知</string>
-    <string name="snooze_fetch_fail">無法獲取延遲通知列表</string>
-    <string name="snooze_messages">消息</string>
-    <string name="snooze_repost">轉發</string>
-    <string name="snooze_restore">標記為未讀</string>
-    <string name="snooze_unsnooze">取消延遲此通知</string>
-    <string name="snooze_updated">已更新</string>
     <string name="soft_reboot">軟重啟</string>
     <string name="soft_reboot_ask">現在執行軟重啟嗎？</string>
     <string name="speedunits">KMGTPE</string>
@@ -825,8 +815,6 @@
     <string name="system_showpct_summ">拖動亮度滑塊時以百分比顯示亮度</string>
     <string name="system_showpct_title">顯示亮度百分比</string>
     <string name="system_showpct_top_title">百分比面板的上邊距</string>
-    <string name="system_snoozedmanager_summ">增大延遲間隔的數字並添加開啟目前延遲通知列表的圖示到啟動器</string>
-    <string name="system_snoozedmanager_title">延遲通知管理器</string>
     <string name="system_statusbarcolor_apps_title">黑名單</string>
     <string name="system_statusbarcolor_summ">盡量將狀態欄和應用操作欄的背景顏色保持一致</string>
     <string name="system_statusbarcolor_title">狀態欄背景顏色</string>
@@ -914,7 +902,6 @@
     <string name="time_5h">5小時</string>
     <string name="time_6h">6小時</string>
     <string name="time_8h">8小時</string>
-    <string name="title_snoozed">通知已延遲</string>
     <string name="toggle_autobright_off">自動亮度已禁用</string>
     <string name="toggle_autobright_on">自動亮度已啟用</string>
     <string name="toggle_autorotate_off">自動旋轉已禁用</string>

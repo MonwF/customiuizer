@@ -8,18 +8,7 @@
     <string name="about_unsupported">Mods marked with ⨯ are not supported on this device.</string>
     <string name="title_activity_main" translatable="false">@string/app_name</string>
 
-    <string name="title_snoozed">Snoozed notifications</string>
     <string name="menu_update">Update</string>
-    <string name="snooze_unsnooze">Unsnooze this notification</string>
-    <string name="snooze_cancel">Mark as dismissed</string>
-    <string name="snooze_restore">Mark as pending</string>
-    <string name="snooze_fetch_fail">Unable to fetch snoozed notifications list</string>
-    <string name="snooze_empty">No snoozed notifications</string>
-    <string name="snooze_messages">Messages</string>
-    <string name="snooze_channel">Channel</string>
-    <string name="snooze_created">Created</string>
-    <string name="snooze_updated">Updated</string>
-    <string name="snooze_repost">Repost</string>
 
     <string name="mods">Mods</string>
     <string name="mods_actions">Actions</string>
@@ -189,8 +178,6 @@
     <string name="system_toasttime_note">Resulting duration won\'t fall below 1 second</string>
     <string name="system_autogroupnotif_title">Auto group notifications</string>
     <string name="system_autogroupnotif_summ">Number of notifications from one app that triggers auto grouping</string>
-    <string name="system_snoozedmanager_title">Snoozed notifications manager</string>
-    <string name="system_snoozedmanager_summ">Increase number of snooze intervals and add icon to launcher that opens a list of currently snoozed notifications</string>
     <string name="system_mutevisiblenotif_title">Mute if visible</string>
     <string name="system_mutevisiblenotif_summ">Do not play notification sound if screen is on</string>
     <string name="system_notifmediaseekbar_title">Media position slider</string>
