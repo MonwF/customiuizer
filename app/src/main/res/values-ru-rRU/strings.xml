@@ -857,7 +857,6 @@
     <string name="various_hiddenfeatures_summ">Запуск активностей, которые не всегда легко доступны</string>
     <string name="various_appsort_title">Порядок сортировки Всех приложений</string>
     <string name="various_memorystats_title">Статистика потребления памяти</string>
-    <string name="various_memorystats_summ">Использование памяти каждым приложением</string>
     <string name="various_appusagestats_title">Статистика использования</string>
     <string name="various_aospsearch_title">Поиск</string>
     <string name="various_aospnotif_title">Приложения и уведомления</string>
