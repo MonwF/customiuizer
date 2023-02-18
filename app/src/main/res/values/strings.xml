@@ -680,8 +680,8 @@
     <string name="various_hiddenfeatures_summ">Activities that are not always easily accessible</string>
     <string name="various_hiddenfeatures_not_found">Not available on this device</string>
     <string name="various_runningservices_title">Running services</string>
+    <string name="various_batteryoptimization_title">Battery optimization</string>
     <string name="various_memorystats_title">Memory statistics</string>
-    <string name="various_memorystats_summ">Per app memory usage</string>
     <string name="various_appusagestats_title">Usage statistics</string>
     <string name="various_aospsearch_title">Search</string>
     <string name="various_aospnotif_title">Apps &amp; notifications</string>

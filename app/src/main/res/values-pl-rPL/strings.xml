@@ -624,7 +624,6 @@
     <string name="various_hiddenfeatures_not_found">Niedostępne na tym urządzeniu</string>
     <string name="various_runningservices_title">Uruchomione usługi</string>
     <string name="various_memorystats_title">Statystyki pamięci</string>
-    <string name="various_memorystats_summ">Użycie pamięci przez aplikację</string>
     <string name="various_appusagestats_title">Statystyki użytkownika</string>
     <string name="various_aospsearch_title">Szukaj</string>
     <string name="various_aospnotif_title">Aplikacje &amp; powiadomienia</string>

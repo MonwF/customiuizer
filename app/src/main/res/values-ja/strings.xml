@@ -674,7 +674,6 @@
   <string name="various_hiddenfeatures_not_found">このデバイスでは使用できません</string>
   <string name="various_runningservices_title">実行中のサービス</string>
   <string name="various_memorystats_title">メモリの使用状況</string>
-  <string name="various_memorystats_summ">アプリごとのメモリ使用量</string>
   <string name="various_appusagestats_title">使用統計情報</string>
   <string name="various_aospsearch_title">検索</string>
   <string name="various_aospnotif_title">アプリと通知</string>
