@@ -4989,6 +4989,26 @@ public class System {
         });
     }
 
+    public static void AutoDismissExpandedPopupsHook(LoadPackageParam lpparam) {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.HeadsUpManagerPhone$HeadsUpEntryPhone", lpparam.classLoader, "setExpanded", boolean.class, new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                boolean newValue = (boolean) param.args[0];
+                if (newValue) {
+                    boolean expanded = XposedHelpers.getBooleanField(param.thisObject, "expanded");
+                    if (expanded != newValue) {
+                        XposedHelpers.callMethod(param.thisObject, "removeAutoRemovalCallbacks");
+                        Object nm = XposedHelpers.getSurroundingThis(param.thisObject);
+                        Handler mHandler = (Handler) XposedHelpers.getObjectField(nm, "mHandler");
+                        Runnable mRemoveAlertRunnable = (Runnable) XposedHelpers.getObjectField(param.thisObject, "mRemoveAlertRunnable");
+                        mHandler.postDelayed(mRemoveAlertRunnable, 5000);
+                    }
+                    param.setResult(null);
+                }
+            }
+        });
+    }
+
     public static void BetterPopupsAllowFloatHook(LoadPackageParam lpparam) {
         Helpers.hookAllConstructors("com.android.systemui.statusbar.notification.policy.AppMiniWindowManager", lpparam.classLoader, new MethodHook() {
             @Override

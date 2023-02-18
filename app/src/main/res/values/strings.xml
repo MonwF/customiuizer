@@ -452,6 +452,7 @@
     <string name="system_betterpopups_delay_title">Auto hide delay</string>
     <string name="system_betterpopups_nohide_title">No auto hide</string>
     <string name="system_betterpopups_nohide_summ">Do not dismiss popups automatically</string>
+    <string name="system_betterpopups_autoclose_expanded_title">Dismiss expanded popups automatically</string>
     <string name="system_betterpopups_allowfloat_title">Allow floating window</string>
     <string name="system_betterpopups_allowfloat_summ">Open app in a floating window on swipe down gesture if notification has an appropriate click action defined</string>
     <string name="system_betterpopups_swipedown_title">Enable swipe down</string>

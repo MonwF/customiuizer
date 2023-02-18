@@ -439,6 +439,7 @@
     <string name="system_betterpopups_delay_title">自动隐藏延迟</string>
     <string name="system_betterpopups_nohide_title">不自动隐藏</string>
     <string name="system_betterpopups_nohide_summ">不自动关闭弹窗</string>
+    <string name="system_betterpopups_autoclose_expanded_title">自动隐藏展开的通知</string>
     <string name="system_betterpopups_allowfloat_title">允许浮窗中打开</string>
     <string name="system_betterpopups_allowfloat_summ">如果通知定义了适当的点击动作，向下滑动手势时在浮动窗口中打开应用</string>
     <string name="system_betterpopups_swipedown_title">启用下滑手势</string>
