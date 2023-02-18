@@ -922,6 +922,11 @@
 			miuizer:countAsSummary="true" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_betterpopups_autoclose_expanded"
+			android:title="@string/system_betterpopups_autoclose_expanded_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_betterpopups_allowfloat"
 			android:title="@string/system_betterpopups_allowfloat_title"
 			android:summary="@string/system_betterpopups_allowfloat_summ"
