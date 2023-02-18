@@ -2233,7 +2233,7 @@ public class System {
     }
 
     public static void SelectiveVibrationHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookConstructor("android.os.SystemVibrator", lpparam.classLoader, Context.class, new MethodHook() {
+        Helpers.findAndHookMethod("com.android.server.vibrator.VibratorManagerService", lpparam.classLoader, "systemReady", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
@@ -2257,7 +2257,7 @@ public class System {
             }
         });
 
-        Helpers.hookAllMethods("android.os.SystemVibrator", lpparam.classLoader, "vibrate", new MethodHook() {
+        Helpers.hookAllMethods("com.android.server.vibrator.VibratorManagerService", lpparam.classLoader, "vibrate", new MethodHook() {
             @Override
             protected void before(final MethodHookParam param) throws Throwable {
                 String pkgName = (String)param.args[1];
@@ -2488,12 +2488,12 @@ public class System {
         }
     }
 
-    public static void SelectiveToastsHook() {
-        Helpers.findAndHookMethod("android.widget.Toast", null, "show", new MethodHook() {
+    public static void SelectiveToastsHook(LoadPackageParam lpparam) {
+        Helpers.hookAllMethods("com.android.systemui.toast.ToastUI", lpparam.classLoader, "showToast", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-                String pkgName = (String)XposedHelpers.callMethod(mContext, "getOpPackageName");
+                String pkgName = (String) param.args[1];
                 if (pkgName == null) return;
                 if (checkToast(mContext, pkgName)) param.setResult(null);
             }
@@ -4078,12 +4078,9 @@ public class System {
 
     public static void AllowDirectReplyHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethod("com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl", lpparam.classLoader, "shouldAllowLockscreenRemoteInput", XC_MethodReplacement.returnConstant(true));
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl", lpparam.classLoader, "setLockScreenAllowRemoteInput", boolean.class, new MethodHook() {
-            @Override
-            protected void before(MethodHookParam param) throws Throwable {
-                param.args[0] = true;
-            }
-        });
+        if (!Helpers.findAndHookMethodSilently("com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl", lpparam.classLoader, "setLockscreenAllowRemoteInput", XC_MethodReplacement.returnConstant(true))) {
+            Helpers.findAndHookMethod("com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl", lpparam.classLoader, "setLockScreenAllowRemoteInput", XC_MethodReplacement.returnConstant(true));
+        }
     }
 
     public static void HideQSHook(LoadPackageParam lpparam) {
@@ -5043,7 +5040,8 @@ public class System {
                 param.setResult(blackList);
             }
         };
-        Helpers.hookAllMethods("android.util.MiuiMultiWindowAdapter", lpparam.classLoader, "getStartFromFreeformBlackListFromCloud", clearHook);
+        Helpers.hookAllMethodsSilently("android.util.MiuiMultiWindowAdapter", lpparam.classLoader, "getListFromCloudData", clearHook);
+        Helpers.hookAllMethodsSilently("android.util.MiuiMultiWindowAdapter", lpparam.classLoader, "getStartFromFreeformBlackListFromCloud", clearHook);
         Helpers.hookAllMethods("android.util.MiuiMultiWindowAdapter", lpparam.classLoader, "getFreeformBlackList", clearHook);
         Helpers.hookAllMethods("android.util.MiuiMultiWindowAdapter", lpparam.classLoader, "getFreeformBlackListFromCloud", clearHook);
         Helpers.hookAllMethods("android.util.MiuiMultiWindowAdapter", lpparam.classLoader, "setFreeformBlackList", new MethodHook() {
@@ -5055,6 +5053,7 @@ public class System {
             }
         });
         Helpers.findAndHookMethod("android.util.MiuiMultiWindowUtils", lpparam.classLoader, "isForceResizeable", XC_MethodReplacement.returnConstant(true));
+        Helpers.hookAllMethodsSilently("android.util.MiuiMultiWindowUtils", lpparam.classLoader, "isPkgMainActivityResizeable", XC_MethodReplacement.returnConstant(true));
     }
 
     public static void DisableSideBarSuggestionHook(LoadPackageParam lpparam) {

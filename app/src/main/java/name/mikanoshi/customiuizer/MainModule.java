@@ -79,7 +79,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (mPrefs.getBoolean("controls_volumecursor")) Controls.VolumeCursorHook();
         if (mPrefs.getBoolean("various_alarmcompat")) Various.AlarmCompatHook();
         if (mPrefs.getStringAsInt("system_iconlabletoasts", 1) > 1) System.IconLabelToastsHook();
-        if (mPrefs.getStringAsInt("system_blocktoasts", 1) > 1) System.SelectiveToastsHook();
 
         if (mPrefs.getStringAsInt("controls_volumemedia_up", 0) > 0 ||
             mPrefs.getStringAsInt("controls_volumemedia_down", 0) > 0) {
@@ -401,6 +400,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 SystemUI.CCTileCornerHook(lpparam);
             }
             if (mPrefs.getStringAsInt("system_colorizenotifs", 1) > 1) System.ColorizedNotificationTitlesHook(lpparam);
+            if (mPrefs.getStringAsInt("system_blocktoasts", 1) > 1) System.SelectiveToastsHook(lpparam);
         }
 
         if (pkg.equals(Helpers.modulePkg)) {
