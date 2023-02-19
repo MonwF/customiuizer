@@ -344,7 +344,7 @@
 			android:title="@string/launcher_topmargin_title"
 			android:defaultValue="0"
 			miuizer:minValue="0"
-			miuizer:maxValue="41"
+			miuizer:maxValue="81"
 			miuizer:negativeShift="21"
 			miuizer:stepValue="1"
 			miuizer:format="%d dp"
