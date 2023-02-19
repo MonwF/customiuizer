@@ -441,6 +441,41 @@ public class Various {
 			}
 		}
 	}
+
+	public static void SmartClipboardActionHook(LoadPackageParam lpparam) {
+		int opt = MainModule.mPrefs.getStringAsInt("various_clipboard_defaultaction", 1);
+		if (opt == 3) {
+			Helpers.findAndHookMethod("com.lbe.security.ui.ClipboardTipDialog", lpparam.classLoader, "customReadClipboardDialog", Context.class, String.class, XC_MethodReplacement.returnConstant(false));
+		}
+		else {
+			Helpers.findAndHookMethod("com.lbe.security.ui.ClipboardTipDialog", lpparam.classLoader, "customReadClipboardDialog", Context.class, String.class, XC_MethodReplacement.returnConstant(true));
+
+			Class<?> SecurityPromptHandler = findClass("com.lbe.security.ui.SecurityPromptHandler", lpparam.classLoader);
+			Helpers.hookAllMethods(SecurityPromptHandler, "handleNewRequest", new MethodHook() {
+				@Override
+				protected void before(MethodHookParam param) throws Throwable {
+					Object permissionRequest = param.args[0];
+					long permId = (long) XposedHelpers.callMethod(permissionRequest, "getPermission");
+					if (permId == 274877906944L) {
+						XposedHelpers.setAdditionalInstanceField(param.thisObject, "currentStopped", XposedHelpers.getBooleanField(param.thisObject, "mStopped"));
+					}
+				}
+				@Override
+				protected void after(MethodHookParam param) throws Throwable {
+					Object permissionRequest = param.args[0];
+					long permId = (long) XposedHelpers.callMethod(permissionRequest, "getPermission");
+					if (permId == 274877906944L) {
+						boolean mStopped = (boolean) XposedHelpers.getAdditionalInstanceField(param.thisObject, "currentStopped");
+						if (mStopped) {
+							XposedHelpers.callMethod(param.thisObject, "gotChoice", 3, true, true);
+						}
+						XposedHelpers.removeAdditionalInstanceField(param.thisObject, "currentStopped");
+					}
+				}
+			});
+		}
+	}
+
 	public static void ShowTempInBatteryHook(LoadPackageParam lpparam) {
 		Class<?> InterceptBaseFragmentClass = XposedHelpers.findClass("com.miui.powercenter.BatteryFragment", lpparam.classLoader);
 		Class<?>[] innerClasses = InterceptBaseFragmentClass.getDeclaredClasses();

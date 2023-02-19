@@ -408,6 +408,12 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             GlobalActions.miuizerHook(lpparam);
         }
 
+        if (pkg.equals("com.lbe.security.miui")) {
+            if (mPrefs.getStringAsInt("various_clipboard_defaultaction", 1) > 1) {
+                Various.SmartClipboardActionHook(lpparam);
+            }
+        }
+
         if (pkg.equals("com.android.server.telecom")) {
             if (mPrefs.getBoolean("various_callreminder")) Various.CallReminderHook(lpparam);
         }

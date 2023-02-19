@@ -751,6 +751,8 @@
     <string name="settings">Settings</string>
 
     <string name="array_default">Default</string>
+    <string name="array_allow">Allow</string>
+    <string name="array_deny">Deny</string>
     <string name="array_system_default">System</string>
     <string name="array_global_actions_none">No action</string>
     <string name="array_global_actions_notif">Expand notification drawer</string>
@@ -1150,6 +1152,7 @@
     <string name="system_statusbaricons_netspeed_title">Network speed indicator</string>
     <string name="system_statusbaricons_clock_title">Clock</string>
     <string name="various_allow_untrusted_touch_title">Allow untrusted touch</string>
+    <string name="various_clipboard_defaultaction_title">Default action of ai clipboard</string>
     <string name="various_disable_access_devicelogs_title">Dismiss access device logs request dialog</string>
     <string name="various_skip_interceptperm_title">Skip permission intercept timer</string>
     <string name="various_show_battery_temperature_title">Show temperature in battery</string>
