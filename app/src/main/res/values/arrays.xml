@@ -309,6 +309,17 @@
 		<item>3</item>
 	</string-array>
 
+	<string-array name="defaultactions">
+		<item>@string/array_default</item>
+		<item>@string/array_allow</item>
+		<item>@string/array_deny</item>
+	</string-array>
+	<string-array name="defaultactions_val">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+	</string-array>
+
 	<string-array name="incallui">
 		<item>@string/array_default</item>
 		<item>@string/array_home</item>
@@ -913,5 +924,6 @@
 		<item>com.miui.screenshot</item>
 		<item>com.mi.android.globallauncher</item>
 		<item>com.miui.gallery</item>
+		<item>com.lbe.security.miui</item>
 	</string-array>
 </resources>

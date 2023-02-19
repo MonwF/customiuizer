@@ -707,6 +707,8 @@
     <string name="calls">通话</string>
     <string name="settings">设置</string>
     <string name="array_default">默认</string>
+    <string name="array_allow">允许</string>
+    <string name="array_deny">拒绝</string>
     <string name="array_system_default">系统</string>
     <string name="array_global_actions_none">无动作</string>
     <string name="array_global_actions_notif">展开通知抽屉</string>
@@ -1109,6 +1111,7 @@
     <string name="system_notifrowmenu_forceclose">强制关闭</string>
     <string name="restart_systemui">重启系统界面</string>
     <string name="various_allow_untrusted_touch_title">允许不受信任的触摸操作</string>
+    <string name="various_clipboard_defaultaction_title">智能剪切板默认行为</string>
     <string name="various_disable_access_devicelogs_title">关闭访问设备日志确认</string>
     <string name="launcher_nozoomanim_title">去除启动动画</string>
     <string name="launcher_nozoomanim_summ">App启动、关闭时不缩放图标</string>

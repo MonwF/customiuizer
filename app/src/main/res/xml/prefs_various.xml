@@ -36,6 +36,15 @@
 		android:title="@string/various_allow_untrusted_touch_title"
 		android:defaultValue="false" />
 
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_various_clipboard_defaultaction"
+		android:title="@string/various_clipboard_defaultaction_title"
+		android:entries="@array/defaultactions"
+		android:entryValues="@array/defaultactions_val"
+		android:defaultValue="1"
+		android:summary=""
+		miuizer:valueAsSummary="true" />
+
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_various_alarmcompat"
 		android:title="@string/various_alarmcompat_title"
