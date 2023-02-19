@@ -284,15 +284,10 @@ public class GlobalActions {
 						Binder.restoreCallingIdentity(token);
 					}
 
-					if (action.equals(ACTION_PREFIX + "OpenRecents")) try {
-						Object mRecents = XposedHelpers.getObjectField(mStatusBar, "mRecents");
-						XposedHelpers.callMethod(mRecents, "toggleRecentApps");
-					} catch (Throwable t) {
-						// Open only
-						Intent recents = new Intent("com.android.systemui.recents.TOGGLE_RECENTS");
-						recents.setComponent(new ComponentName ("com.android.systemui", "com.android.systemui.recents.RecentsActivity"));
-						recents.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-						context.startActivity(recents);
+					if (action.equals(ACTION_PREFIX + "OpenRecents")) {
+						Intent recentIntent = new Intent("SYSTEM_ACTION_RECENTS");
+						recentIntent.setPackage("com.android.systemui");
+						context.sendBroadcast(recentIntent);
 					}
 
 					if (action.equals(ACTION_PREFIX + "OpenVolumeDialog")) try {
@@ -999,8 +994,6 @@ public class GlobalActions {
 				intentfilter.addAction(ACTION_PREFIX + "ToggleGPS");
 				intentfilter.addAction(ACTION_PREFIX + "ToggleHotspot");
 				intentfilter.addAction(ACTION_PREFIX + "ToggleFlashlight");
-				intentfilter.addAction(ACTION_PREFIX + "ShowQuickRecents");
-				intentfilter.addAction(ACTION_PREFIX + "HideQuickRecents");
 
 				intentfilter.addAction(ACTION_PREFIX + "ClearMemory");
 				intentfilter.addAction(ACTION_PREFIX + "CollectXposedLog");
@@ -1299,26 +1292,6 @@ public class GlobalActions {
 			return false;
 		}
 	}
-
-//	public static boolean showQuickRecents(Context context) {
-//		try {
-//			context.sendBroadcast(new Intent(ACTION_PREFIX + "ShowQuickRecents"));
-//			return true;
-//		} catch (Throwable t) {
-//			XposedBridge.log(t);
-//			return false;
-//		}
-//	}
-//
-//	public static boolean hideQuickRecents(Context context) {
-//		try {
-//			context.sendBroadcast(new Intent(ACTION_PREFIX + "HideQuickRecents"));
-//			return true;
-//		} catch (Throwable t) {
-//			XposedBridge.log(t);
-//			return false;
-//		}
-//	}
 
 	public static boolean toggleThis(Context context, int what) {
 		try {
