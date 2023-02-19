@@ -1137,7 +1137,9 @@ public class SystemUI {
                 Context mContext = sbView.getContext();
                 Resources res = mContext.getResources();
                 TextView mClockView = (TextView) XposedHelpers.getObjectField(param.thisObject, "mMiuiClock");
-                ((ViewGroup)mClockView.getParent()).removeView(mClockView);
+                LinearLayout mStatusBarLeftContainer = (LinearLayout) mClockView.getParent();
+                int clockIndex = mStatusBarLeftContainer.indexOfChild(mClockView);
+                mStatusBarLeftContainer.removeView(mClockView);
                 int contentId = res.getIdentifier("status_bar_contents", "id", lpparam.packageName);
                 LinearLayout mContentsContainer = sbView.findViewById(contentId);
                 View spaceView = (View) XposedHelpers.getObjectField(param.thisObject, "mCutoutSpace");
@@ -1148,6 +1150,10 @@ public class SystemUI {
                 mContentsContainer.removeView(mSystemIconArea);
                 mContentsContainer.addView(rightContainer, spaceIndex + 1, rightLp);
                 rightContainer.addView(mSystemIconArea);
+                View mDripStatusBarLeftStatusIconArea = (View) XposedHelpers.getObjectField(param.thisObject, "mDripStatusBarLeftStatusIconArea");
+                mStatusBarLeftContainer.removeView(mDripStatusBarLeftStatusIconArea);
+                mStatusBarLeftContainer.addView(mDripStatusBarLeftStatusIconArea, clockIndex);
+
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
                 if (pos == 2) {
                     lp.gravity = Gravity.CENTER;
