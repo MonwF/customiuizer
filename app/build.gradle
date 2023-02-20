@@ -8,6 +8,12 @@ def sFile = file(keystoreProperties['storeFile'])
 def sPassword = keystoreProperties['storePassword']
 def kAlias = keystoreProperties['keyAlias']
 def kPassword = keystoreProperties['keyPassword']
+def lastVersion = 55
+def lastVersionName = "23.02.19"
+
+if (gradle.startParameter.taskNames.contains(":app:assembleDevelop")) {
+    lastVersion += 1
+}
 
 android {
     signingConfigs {
@@ -20,18 +26,25 @@ android {
             v2SigningEnabled true
         }
     }
-    compileSdkVersion 32
+    compileSdkVersion 33
     defaultConfig {
         applicationId "name.monwf.customiuizer"
         minSdkVersion 31
         //noinspection OldTargetApi,ExpiredTargetSdkVersion
-        targetSdkVersion 31
-        versionCode 50
-        versionName "23.01.06"
-        resConfigs 'ru-rRU', 'zh-rCN', 'zh-rTW', 'pl-rPL'
+        targetSdkVersion 33
+        versionCode lastVersion
+        versionName lastVersionName
+        resConfigs 'ru-rRU', 'zh-rCN', 'zh-rTW', 'pl-rPL', 'ja_JP'
         ndk { abiFilters "arm64-v8a" }
     }
     buildTypes {
+        develop {
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            crunchPngs false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
         release {
             debuggable false
             minifyEnabled true
@@ -45,7 +58,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    flavorDimensions 'api'
     packagingOptions {
         resources {
             excludes += ['META-INF/*.kotlin_module', '**.kotlin_builtins', '**.kotlin_metadata']
@@ -55,6 +67,11 @@ android {
         noCompress 'zip'
     }
     buildToolsVersion '33.0.0'
+//    gradle.projectsEvaluated {
+//        tasks.withType(JavaCompile) {
+//            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+//        }
+//    }
 //    compileOptions {
 //        sourceCompatibility JavaVersion.VERSION_1_8
 //        targetCompatibility JavaVersion.VERSION_1_8
@@ -65,12 +82,14 @@ dependencies {
     //    implementation "ch.acra:acra-core:$acraVersion"
 //    noinspection DifferentStdlibGradleVersion
     compileOnly 'de.robv.android.xposed:api:82'
-    compileOnly files('lib/miui.jar')
+//    compileOnly files('lib/miui.jar')
     compileOnly files('lib/miuisystem.jar')
     compileOnly files('lib/framework.jar')
 
     implementation "androidx.preference:preference:1.2.0"
     implementation 'androidx.palette:palette:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+//    implementation "androidx.recyclerview:recyclerview:1.2.1"
+//    implementation 'com.google.android.flexbox:flexbox:3.0.0'
 //    implementation 'com.google.android.material:material:1.6.1'
 }

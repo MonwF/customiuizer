@@ -143,22 +143,6 @@
 			</intent-filter>
 		</activity>
 
-		<activity
-			android:name=".SnoozedActivity"
-			android:enabled="false"
-			android:exported="true"
-			android:label="@string/title_snoozed"
-			android:theme="@style/AppTheme"
-			android:icon="@mipmap/ic_snooze"
-			android:taskAffinity="name.mikanoshi.customiuizer.snoozed"
-			android:launchMode="singleTop"
-			android:allowTaskReparenting="false">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN"/>
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
-		</activity>
-
 		<service
 			android:exported="true"
 			android:name=".qs.AutoRotateService"
@@ -173,7 +157,7 @@
 
 		<provider
 			android:name=".SharedPrefsProvider"
-			android:authorities="name.mikanoshi.customiuizer.provider.sharedprefs"
+			android:authorities="name.monwf.customiuizer.provider.sharedprefs"
 			android:grantUriPermissions="true"
 			android:exported="true"
 			android:directBootAware="true"

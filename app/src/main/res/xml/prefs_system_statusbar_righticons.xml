@@ -1,6 +1,7 @@
 <PreferenceScreen
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:miuizer="http://schemas.android.com/apk/res-auto"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
@@ -14,25 +15,21 @@
 		android:title="@string/system_statusbaricons_swap_wifi_mobile_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
-		android:title="@string/system_statusbaricons_atright_title" />
-
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_statusbar_clock_atright"
-		android:title="@string/system_statusbaricons_clock_title"
+		android:key="pref_key_system_statusbaricons_swap_batteryicon_percentage"
+		android:title="@string/system_statusbaricons_swap_batteryicon_percentage_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-		android:key="pref_key_system_statusbar_clock_leftmargin"
-		android:title="@string/system_statusbar_mobiletype_single_leftmargin_title"
-		android:dependency="pref_key_system_statusbar_clock_atright"
-		android:defaultValue="6"
-		miuizer:child="true"
-		miuizer:minValue="2"
-		miuizer:maxValue="10"
-		miuizer:stepValue="1"
-		miuizer:displayDividerValue="2"
-		miuizer:format="%s dip" />
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_system_statusbar_clock_position"
+		android:title="@string/system_statusbaricons_clock_title"
+		android:entries="@array/statusbar_clock_position"
+		android:entryValues="@array/statusbar_clock_position_val"
+		miuizer:valueAsSummary="true"
+		android:defaultValue="1" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:title="@string/system_statusbaricons_atright_title" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_netspeed_atright"
@@ -54,7 +51,6 @@
 		android:title="@string/system_statusbaricons_dnd_title"
 		android:defaultValue="false" />
 
-
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_btbattery_atright"
 		android:title="@string/system_statusbaricons_btbattery_title"
@@ -69,5 +65,38 @@
 		android:key="pref_key_system_statusbar_headset_atright"
 		android:title="@string/system_statusbaricons_headset_title"
 		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:title="@string/system_statusbaricons_atleft_title" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbar_netspeed_atleft"
+		android:title="@string/system_statusbaricons_netspeed_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbar_alarm_atleft"
+		android:title="@string/system_statusbaricons_alarm_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbar_sound_atleft"
+		android:title="@string/system_statusbaricons_sound_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbar_dnd_atleft"
+		android:title="@string/system_statusbaricons_dnd_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:title="@string/system_statusbaricons_atsecondrow_title">
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbar_netspeed_atsecondrow"
+		android:title="@string/system_statusbaricons_netspeed_title"
+		android:defaultValue="false" />
+
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 		prefsChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
 			@Override
 			public void onSharedPreferenceChanged(SharedPreferences sharedPrefs, String key) {
-				Log.i("prefs", "Changed: " + key);
+				Log.i("customiuizer-prefs", "Changed: " + key);
 				Object val = sharedPrefs.getAll().get(key);
 				String path = "";
 				if (val instanceof String)

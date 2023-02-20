@@ -903,7 +903,7 @@ public class Controls {
 
 	public static void FingerprintHapticFailureHook(LoadPackageParam lpparam) {
 		String monitorClass = "com.android.server.biometrics.sensors.AcquisitionClient";
-		Helpers.hookAllMethods("android.os.SystemVibrator", lpparam.classLoader, "vibrate", new MethodHook() {
+		Helpers.hookAllMethods("com.android.server.vibrator.VibratorManagerService", lpparam.classLoader, "vibrate", new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
 				StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
@@ -1035,6 +1035,8 @@ public class Controls {
 				}
 			}
 		});
+
+		Helpers.findAndHookMethod("com.android.systemui.assist.ui.DefaultUiController", lpparam.classLoader, "logInvocationProgressMetrics", int.class, float.class, boolean.class, XC_MethodReplacement.DO_NOTHING);
 
 		Helpers.hookAllConstructors("com.android.systemui.assist.ui.DefaultUiController", lpparam.classLoader, new MethodHook() {
 			@Override

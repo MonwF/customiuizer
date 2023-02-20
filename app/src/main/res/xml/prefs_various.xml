@@ -36,6 +36,15 @@
 		android:title="@string/various_allow_untrusted_touch_title"
 		android:defaultValue="false" />
 
+	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_various_clipboard_defaultaction"
+		android:title="@string/various_clipboard_defaultaction_title"
+		android:entries="@array/defaultactions"
+		android:entryValues="@array/defaultactions_val"
+		android:defaultValue="1"
+		android:summary=""
+		miuizer:valueAsSummary="true" />
+
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_various_alarmcompat"
 		android:title="@string/various_alarmcompat_title"
@@ -46,7 +55,7 @@
 		android:title="@string/system_popupnotif_apps_title"
 		android:key="pref_key_various_alarmcompat_apps"
 		android:dependency="pref_key_various_alarmcompat"
-		miuizer:child="true"
+		miuizer:indentLevel="1"
 		miuizer:countAsSummary="true" />
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
@@ -67,8 +76,18 @@
 		android:title="@string/various_enable_sc_ai_clipboard_blur_location_title"
 		android:defaultValue="false" />
 
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_various_disable_freeform_suggest_blacklist"
+		android:title="@string/various_disable_freeform_suggest_blacklist_title"
+		android:defaultValue="false" />
+
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/calls"/>
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_various_answerinheadup"
+		android:title="@string/various_answerinheadup_title"
+		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_various_showcallui"
@@ -114,7 +133,7 @@
 		android:title="@string/various_appsort_title"
 		android:entries="@array/appsort"
 		android:entryValues="@array/appsort_val"
-		android:defaultValue="0"
+		android:defaultValue="1"
 		miuizer:valueAsSummary="true"
 		miuizer:dynamic="true" />
 

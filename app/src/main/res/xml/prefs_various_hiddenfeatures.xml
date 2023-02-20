@@ -8,8 +8,11 @@
 		android:title="@string/various_runningservices_title" />
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:key="pref_key_various_batteryoptimization"
+		android:title="@string/various_batteryoptimization_title" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_various_memorystats"
-		android:summary="@string/various_memorystats_summ"
 		android:title="@string/various_memorystats_title" />
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
@@ -23,9 +26,5 @@
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_various_aospnotiflog"
 		android:title="@string/various_aospnotiflog_title" />
-
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
-		android:key="pref_key_various_clearspeaker"
-		android:title="@string/various_clearspeaker_title" />
 
 </PreferenceScreen>

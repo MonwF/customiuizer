@@ -59,7 +59,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -158,6 +158,7 @@ public class Helpers {
 		put("zh-CN", "99");
 		put("zh-TW", "99");
 		put("pl-PL", "99");
+		put("ja-JP", "99");
 	}};
 
 	public enum SettingsType {
@@ -352,16 +353,29 @@ public class Helpers {
 		void onInputFinished(String key, String text);
 	}
 
-	public static void showInputDialog(Context context, final String key, int titleRes, InputCallback callback) {
+	public static void showInputDialog(Context context, final String key, int titleRes, int summRes, int maxLines, InputCallback callback) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setTitle(titleRes);
 		final EditText input = new EditText(context);
-		input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
 		input.setText(prefs.getString(key, ""));
-		FrameLayout container = new FrameLayout(context);
-		FrameLayout.LayoutParams params = new  FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		params.leftMargin = params.rightMargin = context.getResources().getDimensionPixelSize(R.dimen.preference_item_child_padding);
-		input.setLayoutParams(params);
+		if (maxLines > 1) {
+			input.setSingleLine(false);
+			input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+		}
+		else {
+			input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
+		}
+
+		LinearLayout container = new LinearLayout(context);
+		int horizPadding = context.getResources().getDimensionPixelSize(R.dimen.preference_item_child_padding);
+		container.setPadding(horizPadding, 0, horizPadding, 0);
+		container.setOrientation(LinearLayout.VERTICAL);
+		if (summRes > 0) {
+			final TextView msg = new TextView(context);
+			msg.setText(summRes);
+			msg.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+			container.addView(msg);
+		}
 		container.addView(input);
 		builder.setView(container);
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -1448,7 +1462,7 @@ public class Helpers {
 	public static class SharedPrefObserver extends ContentObserver {
 
 		enum PrefType {
-			Any, String, StringSet, Integer//, Boolean
+			Any, String, StringSet, Integer, Boolean
 		}
 
 		PrefType prefType;
@@ -1456,7 +1470,7 @@ public class Helpers {
 		String prefName;
 		String prefDefValueString;
 		int prefDefValueInt;
-//		boolean prefDefValueBool;
+		boolean prefDefValueBool;
 
 		public SharedPrefObserver(Context context, Handler handler) {
 			super(handler);
@@ -1491,14 +1505,14 @@ public class Helpers {
 			registerObserver();
 		}
 
-//		public SharedPrefObserver(Context context, Handler handler, String name, boolean defValue) {
-//			super(handler);
-//			ctx = context;
-//			prefType = PrefType.Boolean;
-//			prefName = name;
-//			prefDefValueBool = defValue;
-//			registerObserver();
-//		}
+		public SharedPrefObserver(Context context, Handler handler, String name, boolean defValue) {
+			super(handler);
+			ctx = context;
+			prefType = PrefType.Boolean;
+			prefName = name;
+			prefDefValueBool = defValue;
+			registerObserver();
+		}
 
 		void registerObserver() {
 			Uri uri = null;
@@ -1508,8 +1522,8 @@ public class Helpers {
 				uri = stringSetPrefToUri(prefName);
 			else if (prefType == PrefType.Integer)
 				uri = intPrefToUri(prefName, prefDefValueInt);
-//			else if (prefType == PrefType.Boolean)
-//				uri = boolPrefToUri(prefName, prefDefValueBool);
+			else if (prefType == PrefType.Boolean)
+				uri = boolPrefToUri(prefName, prefDefValueBool);
 			else if (prefType == PrefType.Any)
 				uri = anyPrefToUri();
 			if (uri != null) ctx.getContentResolver().registerContentObserver(uri, prefType == PrefType.Any, this);
@@ -1532,15 +1546,15 @@ public class Helpers {
 				onChange(prefName);
 			else if (prefType == PrefType.Integer)
 				onChange(prefName, prefDefValueInt);
-//			else if (prefType == PrefType.Boolean)
-//				onChange(prefName, prefDefValueBool);
+			else if (prefType == PrefType.Boolean)
+				onChange(prefName, prefDefValueBool);
 		}
 
 		public void onChange(Uri uri) {}
 		public void onChange(String name) {}
 		public void onChange(String name, String defValue) {}
 		public void onChange(String name, int defValue) {}
-//		public void onChange(String name, boolean defValue) {}
+		public void onChange(String name, boolean defValue) {}
 	}
 
 	private static String getCallerMethod() {

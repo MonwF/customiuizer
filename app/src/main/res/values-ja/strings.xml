@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="app_name" translatable="false">CustoMIUIzer14</string>
   <string name="app_slogan" translatable="false">MIUIを自分好みにカスタマイズ</string>
@@ -20,6 +20,7 @@
   <string name="snooze_created">作成済み</string>
   <string name="snooze_updated">更新</string>
   <string name="snooze_repost">再投稿</string>
+  <string name="menu_update">アップデート</string>
   <string name="mods">Mod</string>
   <string name="mods_actions">アクション</string>
   <string name="value_is_empty">値は未設定です</string>
@@ -166,6 +167,15 @@
   <string name="system_minimalnotifview_summ">重要度が低い通知は再度一行のみの表示に折りたためるようになります</string>
   <string name="system_notifchannelsettings_title">通知チャネルの設定を開く</string>
   <string name="system_notifchannelsettings_summ">通知メニューから設定を開くとアプリ共通の通知設定ではなく通知チャネルの設定を表示します</string>
+  <string name="system_notifimportance_title">通知の重要度を表示する</string>
+  <string name="system_compactnotif_title">コンパクトな通知</string>
+  <string name="system_compactnotif_summ">通知の縦方向の余白を減らします</string>
+  <string name="system_colorizenotiftitle_title">通知のタイトルをカラー化する</string>
+  <string name="system_colorizenotiftitle_summ">タイトルテキストにアイコンカラーを適用します (Android通知スタイルのみ)</string>
+  <string name="system_minimalnotifview_title">最小限の折りたたみ表示を復活させる</string>
+  <string name="system_minimalnotifview_summ">重要度が低い通知は再度一行のみの表示に折りたためるようになります</string>
+  <string name="system_notifchannelsettings_title">チャンネル設定を開く</string>
+  <string name="system_notifchannelsettings_summ">通知メニューから設定を開くとアプリ共通の通知設定ではなくチャンネル設定を表示します</string>
   <string name="system_messagingstylelines_title">メッセージングスタイルの最大行数</string>
   <string name="system_messagingstylelines_summ">メッセージング表示通知の表示行数の制限を設定します</string>
   <string name="system_removedismiss_title">消去ボタンを非表示</string>
@@ -246,11 +256,11 @@
   <string name="system_separatevolume_summ">着信音、通知音、システムの音量を個別で設定可能にします</string>
   <string name="system_separatevolume_slider_title">通知の音量スライダー</string>
   <string name="system_separatevolume_slider_summ">拡張音量ダイアログに通知のスライダーを追加します</string>
-  <string name="system_nomediamute_title">メディアのミュートを無効化</string>
+  <string name="system_nomediamute_title">メディアのミュートを無効化する</string>
   <string name="system_nomediamute_summ">Do Not Disturbモードでメディアの音量をミュートにしないようにします</string>
   <string name="system_volumetimer_title">拡張タイマー</string>
   <string name="system_volumetimer_summ">サイレントとDo Not Disturbモードに間隔を追加します</string>
-  <string name="system_volumebar_blur_mtk_title">MTKデバイスの音量バーのぼかし効果の対応を有効化</string>
+  <string name="system_volumebar_blur_mtk_title">MTKデバイスの音量バーのぼかし効果の対応を有効化する</string>
   <string name="system_volumedialogdelay_collapsed_title">音量ダイアログの自動非表示までの遅延時間</string>
   <string name="system_volumedialogdelay_collapsed_summ">折りたたむ</string>
   <string name="system_volumedialogdelay_expanded_summ">展開</string>
@@ -329,6 +339,7 @@
   <string name="system_lockscreenshortcuts_left_center_title">左右中央揃え</string>
   <string name="system_lockscreenshortcuts_left_skiplock_title">ロック解除のスキップ</string>
   <string name="system_lockscreenshortcuts_left_skiplock_summ">デバイスをロックしたままでアプリを開く事ができます</string>
+  <string name="system_lockscreenshortcuts_left_align_title">垂直方向の位置調整</string>
   <string name="system_noscreenlock_title">スクリーンロックを無効化</string>
   <string name="system_noscreenlock_req_summ">一部のデバイスでは起動後に一度ロックの解除を行なわないと動作しない場合があります</string>
   <string name="system_noscreenlock_summ">スクリーンロックを選択的に無効化します (アプリのセキュリティ変更や指紋データの削除はされません)</string>
@@ -576,7 +587,7 @@
   <string name="launcher_foldershade_title">カラーオーバーレイ</string>
   <string name="launcher_foldershade_summ">背景を明るくまたは暗くします</string>
   <string name="launcher_foldershade_level_title">色の濃度</string>
-  <string name="launcher_folderblur_title">ぼかし</string>
+  <string name="launcher_folderblur">背景のぼかし</string>
   <string name="launcher_folderblur_summ">背景と壁紙のぼかしのオプションです。ランチャーはフォルダのぼかし効果に対応している必要があります。</string>
   <string name="launcher_folderblur">背景のぼかし</string>
   <string name="launcher_folderwallblur">壁紙のぼかし</string>
@@ -822,7 +833,7 @@
   <string name="array_all">すべての充電イベント</string>
   <string name="array_allbutanim">アニメーションを使用しないイベントのみ</string>
   <string name="array_screenlock_no">システムのデフォルト</string>
-  <string name="array_screenlock_none">完全に無効化</string>
+  <string name="array_screenlock_none">完全に無効化する</string>
   <string name="array_screenlock_bootonly">再起動後に認証を要求</string>
   <string name="array_screenlock_trusted">信頼できるネットワーク/デバイスで認証を無効化</string>
   <string name="array_screenlock_noreq">不要です</string>
@@ -1025,7 +1036,7 @@
   <string name="warning">警告!</string>
   <string name="warning_blacklist">Xposed Framework上で「ブラック/ホワイトリスト オプション」が有効化されているため、Modが正常に動作しない可能性があります。</string>
   <string name="warning_blacklist_sdk">インストールされたモジュールはGoogle Play版です。このバージョンは多くの制限事項があります。他のソースからインストールを検討してください。</string>
-  <string name="warning_scope">このモジュールはアクティベーションスコープが有効化されているため、一部のModが正常に動作しない可能性があります。</string>
+  <string name="warning_scope">このモジュールはアクティベーションスコープが有効になっているため、一部のModが正常に動作しない可能性があります。</string>
   <string name="warning_unsupported_os">Android %1$sは非対応です。Modが正しく動作しない可能性があります。</string>
   <string name="open_xposed">Xposedモジュールの管理</string>
   <string name="soft_reboot">ソフトリブート</string>
@@ -1044,7 +1055,7 @@
   <string name="storage_cannot_restore">設定のバックアップがありません</string>
   <string name="backup_ok">設定のバックアップが完了しました!</string>
   <string name="restore_ok">設定の復元が完了しました!</string>
-  <string name="backup_restore_info">Googleクラウドバックアップ経由で設定が復元されました。Xposedモジュールの有効化後にソフトリブートを行なってください。</string>
+  <string name="backup_restore_info">Googleクラウドバックアップ経由で設定が復元されました。Xposedモジュールの有効後にソフトリブートを行なってください。</string>
   <string name="prefs_migration_success">LSPosed、EdXposedの新しいバージョンで動作するようにモジュールの設定を移行させる作業に成功しました。再起動後に変更が適用されます。</string>
   <string name="prefs_migration_failure">LSPosed、EdXposedの新しいバージョンで動作するようにモジュールの設定を移行させる作業に失敗しました。復元機能を使用するか、再度Modの設定をし直す必要があります。</string>
   <string name="update_available">アップデートが可能です ⚠</string>

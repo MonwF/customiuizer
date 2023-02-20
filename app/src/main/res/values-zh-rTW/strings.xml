@@ -17,8 +17,7 @@
     <string name="appdetails_sdk">目標SDK版本</string>
     <string name="appsort_frequency">使用頻率</string>
     <string name="appsort_install">安裝時間</string>
-    <string name="appsort_name">應用名稱</string>
-    <string name="appsort_running">狀態(預設)</string>
+    <string name="appsort_name">應用名稱(預設)</string>
     <string name="appsort_storage">儲存佔用</string>
     <string name="array_1day">更新後1天</string>
     <string name="array_3days">更新後3天</string>
@@ -318,17 +317,11 @@
     <string name="launcher_fixlaunch_title">修復應用訊息</string>
     <string name="launcher_folder_cols_title">資料夾排列數量</string>
     <string name="launcher_folderblur">背景模糊</string>
-    <string name="launcher_folderblur_opacity_title">可見度</string>
-    <string name="launcher_folderblur_radius_title">半徑</string>
-    <string name="launcher_folderblur_summ">壁紙和背景模糊選項。啟動器必須支持資料夾模糊。</string>
-    <string name="launcher_folderblur_title">模糊</string>
     <string name="launcher_folders">資料夾</string>
     <string name="launcher_foldershade_level_title">色彩強度</string>
     <string name="launcher_foldershade_summ">增強或減弱背景</string>
     <string name="launcher_foldershade_title">顏色覆蓋</string>
     <string name="launcher_folderspace_title">減少邊距</string>
-    <string name="launcher_folderwallblur">壁紙模糊</string>
-    <string name="launcher_folderwallblur_radius_summ">特效編輯模式，支持壁紙模糊</string>
     <string name="launcher_folderwidth_title">使用整個資料夾的寬度</string>
     <string name="launcher_gestures">手勢</string>
     <string name="launcher_gestures_action">動作</string>
@@ -457,16 +450,6 @@
     <string name="select_apps">選擇應用</string>
     <string name="select_shortcut">選擇快捷方式</string>
     <string name="settings">設置</string>
-    <string name="snooze_cancel">標記為已讀</string>
-    <string name="snooze_channel">頻道</string>
-    <string name="snooze_created">已建立</string>
-    <string name="snooze_empty">無延遲通知</string>
-    <string name="snooze_fetch_fail">無法獲取延遲通知列表</string>
-    <string name="snooze_messages">消息</string>
-    <string name="snooze_repost">轉發</string>
-    <string name="snooze_restore">標記為未讀</string>
-    <string name="snooze_unsnooze">取消延遲此通知</string>
-    <string name="snooze_updated">已更新</string>
     <string name="soft_reboot">軟重啟</string>
     <string name="soft_reboot_ask">現在執行軟重啟嗎？</string>
     <string name="speedunits">KMGTPE</string>
@@ -622,8 +605,6 @@
     <string name="system_firstpress_title">即時音量調整</string>
     <string name="system_fivegtile_summ">添加5G開關磁貼至快速設置</string>
     <string name="system_fivegtile_title">5G開關</string>
-    <string name="system_fixmeter_summ">增加網速指示器的水平邊距</string>
-    <string name="system_fixmeter_title">網速間距</string>
     <string name="system_forceclose_summ">不允許預置的MIUI動作關閉所選應用</string>
     <string name="system_forceclose_title">阻止應用強制關閉</string>
     <string name="system_fw_noblacklist_summ">允許在浮動視窗中開啟任意應用</string>
@@ -654,12 +635,7 @@
     <string name="system_ignorecalls_title">忽略通話</string>
     <string name="system_inactivebrightness_title">停用亮度滑塊</string>
     <string name="system_lockscreenshortcuts_left_align_title">垂直對齊</string>
-    <string name="system_lockscreenshortcuts_left_center_title">水平置中</string>
     <string name="system_lockscreenshortcuts_left_off_title">禁用右滑手勢</string>
-    <string name="system_lockscreenshortcuts_left_skiplock_summ">設備鎖定時可以訪問啟動的應用</string>
-    <string name="system_lockscreenshortcuts_left_skiplock_title">不需解鎖</string>
-    <string name="system_lockscreenshortcuts_left_summ">管理快捷方式列表</string>
-    <string name="system_lockscreenshortcuts_left_title">左側螢幕快捷方式</string>
     <string name="system_lockscreenshortcuts_right_image_hint">拖動圖示用以執行自定義動作</string>
     <string name="system_lockscreenshortcuts_right_image_summ">用 CustoMIUIzer 圖示替換相機圖示</string>
     <string name="system_lockscreenshortcuts_right_image_title">更改右側圖示</string>
@@ -715,8 +691,6 @@
     <string name="system_mutevisiblenotif_summ">亮屏時彈出通知不播放提示音</string>
     <string name="system_mutevisiblenotif_title">亮屏時靜音</string>
     <string name="system_netspeedinterval_title">網速更新間隔</string>
-    <string name="system_networkindicator_summ">配置行動數據和Wi-Fi流量指示器</string>
-    <string name="system_networkindicator_title">網路活動指示器</string>
     <string name="system_nodarkforce_summ">在黑暗模式中不反轉某些顏色</string>
     <string name="system_nodarkforce_title">禁用強制黑暗模式</string>
     <string name="system_noducking_summ">播放通知聲音時不降低目前播放音樂的音量</string>
@@ -841,8 +815,6 @@
     <string name="system_showpct_summ">拖動亮度滑塊時以百分比顯示亮度</string>
     <string name="system_showpct_title">顯示亮度百分比</string>
     <string name="system_showpct_top_title">百分比面板的上邊距</string>
-    <string name="system_snoozedmanager_summ">增大延遲間隔的數字並添加開啟目前延遲通知列表的圖示到啟動器</string>
-    <string name="system_snoozedmanager_title">延遲通知管理器</string>
     <string name="system_statusbarcolor_apps_title">黑名單</string>
     <string name="system_statusbarcolor_summ">盡量將狀態欄和應用操作欄的背景顏色保持一致</string>
     <string name="system_statusbarcolor_title">狀態欄背景顏色</string>
@@ -860,7 +832,6 @@
     <string name="system_statusbaricons_alarmn_summ">僅在鬧鐘響鈴前顯示鬧鐘圖示</string>
     <string name="system_statusbaricons_alarmn_title">選擇鬧鐘圖示的可見性</string>
     <string name="system_statusbaricons_battery1_title">電池圖片</string>
-    <string name="system_statusbaricons_battery2_title">電池充電百分比</string>
     <string name="system_statusbaricons_battery3_title">充電指示器</string>
     <string name="system_statusbaricons_dnd_title">勿擾模式</string>
     <string name="system_statusbaricons_headset_title">耳機</string>
@@ -931,7 +902,6 @@
     <string name="time_5h">5小時</string>
     <string name="time_6h">6小時</string>
     <string name="time_8h">8小時</string>
-    <string name="title_snoozed">通知已延遲</string>
     <string name="toggle_autobright_off">自動亮度已禁用</string>
     <string name="toggle_autobright_on">自動亮度已啟用</string>
     <string name="toggle_autorotate_off">自動旋轉已禁用</string>
@@ -981,7 +951,6 @@
     <string name="various_calluibright_title">通話時螢幕亮度</string>
     <string name="various_calluibright_type_title">通話類型</string>
     <string name="various_calluibright_val_title">亮度值</string>
-    <string name="various_clearspeaker_title">清理揚聲器</string>
     <string name="various_disableapp_summ">允許從應用訊息頁面禁用任何應用</string>
     <string name="various_disableapp_title">應用狀態控制</string>
     <string name="various_gboardpadding_land_title">橫屏時底部補充</string>
@@ -1024,7 +993,7 @@
 
     <string name="array_current">僅電流</string>
     <string name="array_temperature">僅溫度</string>
-    <string name="system_lockscreenshortcuts_left_tapaction_title">點選左側圖示時切換手電筒</string>
+    <string name="system_lockscreenshortcuts_left_tapaction_title">長按左側圖示時切換手電筒</string>
     <string name="system_statusbar_batterytempandcurrent_content_title">顯示內容</string>
     <string name="system_statusbar_batterytempandcurrent_title">顯示電池溫度和電流</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">右側顯示</string>

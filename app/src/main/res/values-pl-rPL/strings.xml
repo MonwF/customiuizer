@@ -6,18 +6,7 @@
     <string name="about_unsupported">Modyfikacje oznaczone ⨯ nie są obsługiwane na tym urządzeniu.</string>
     <string name="title_activity_main" translatable="false">@string/app_name</string>
 
-    <string name="title_snoozed">Odłożone powiadomienia</string>
     <string name="menu_update">Aktualizacja</string>
-    <string name="snooze_unsnooze">Odłóż to powiadomienie</string>
-    <string name="snooze_cancel">Oznacz jako odrzucone</string>
-    <string name="snooze_restore">Oznacz jako oczekujące</string>
-    <string name="snooze_fetch_fail">Nie można pobrać listy odłożonych powiadomień</string>
-    <string name="snooze_empty">Brak odłożonych powiadomień</string>
-    <string name="snooze_messages">Wiadomości</string>
-    <string name="snooze_channel">Kanał</string>
-    <string name="snooze_created">Utworzony</string>
-    <string name="snooze_updated">Zaktualizowany</string>
-    <string name="snooze_repost">Repost</string>
 
     <string name="mods">Modyfikacje</string>
     <string name="mods_actions">Działania</string>
@@ -34,7 +23,6 @@
     <string name="system_statusbaricons_summ">Zarządzaj widocznością ikon na pasku stanu</string>
     <string name="system_statusbaricons_wifistandard_title">Pokaż standard Wi-Fi</string>
     <string name="system_statusbaricons_battery1_title">Ikona baterii</string>
-    <string name="system_statusbaricons_battery2_title">Procent naładowania baterii</string>
     <string name="system_statusbaricons_battery3_title">Wskaźnik ładowania</string>
     <string name="system_statusbaricons_alarm_title">Alarm</string>
     <string name="system_statusbaricons_alarm_summ">Ukryj się całkowicie</string>
@@ -87,8 +75,6 @@
     <string name="system_maxsbicons_summ">Liczba ikon powiadomień do wyświetlenia przed zamianą ich w kropki</string>
     <string name="system_mobiletypeicon_title">Ukryj typ sieci komórkowej</string>
     <string name="system_mobiletypeicon_summ">Usuń ikonę typu sieci komórkowej z paska stanu</string>
-    <string name="system_networkindicator_title">Wskaźniki ruchu sieciowego</string>
-    <string name="system_networkindicator_summ">Skonfiguruj dane mobilne i wskaźnik ruchu Wi-Fi</string>
     <string name="system_4gtolte_title">Pokaż ikonę LTE dla 4G</string>
     <string name="system_hidemoreicon_title">Brak wskaźnika ukrytych ikon</string>
     <string name="system_hidemoreicon_summ">Nie pokazuj ikony z trzema kropkami, gdy ikony powiadomień są ukryte</string>
@@ -112,8 +98,6 @@
     <string name="system_statusbarcontrols_single_title">Poziome przesuwanie jednym palcem</string>
     <string name="system_statusbarcontrols_dual_title">Poziome przesuwanie dwoma palcami</string>
     <string name="system_statusbarcontrols_dt_title">Akcja podwójnego dotknięcia</string>
-    <string name="system_fixmeter_title">Odstęp prędkości sieci</string>
-    <string name="system_fixmeter_summ">Zwiększ poziome marginesy dla wskaźnika prędkości sieci</string>
     <string name="system_notifimportance_title">Pokaż ważność powiadomienia</string>
     <string name="system_compactnotif_title">Kompaktowe powiadomienia</string>
     <string name="system_compactnotif_summ">Zmniejsz pionowe odstępy powiadomień</string>
@@ -149,8 +133,6 @@
     <string name="system_toasttime_note">Wynikający z tego czas trwania nie spadnie poniżej 1 sekundy</string>
     <string name="system_autogroupnotif_title">Automatyczne powiadomienia grupowe</string>
     <string name="system_autogroupnotif_summ">Liczba powiadomień z jednej aplikacji, która uruchamia automatyczne grupowanie</string>
-    <string name="system_snoozedmanager_title">Menedżer odłożonych powiadomień</string>
-    <string name="system_snoozedmanager_summ">Zwiększ liczbę interwałów drzemki i dodaj ikonę do launchera, który otwiera listę aktualnie odłożonych powiadomień</string>
     <string name="system_mutevisiblenotif_title">Wycisz, jeśli jest widoczny</string>
     <string name="system_mutevisiblenotif_summ">Nie odtwarzaj dźwięku powiadomienia, jeśli ekran jest włączony</string>
     <string name="system_notifmediaseekbar_title">Suwak pozycji mediów</string>
@@ -277,12 +259,7 @@
     <string name="system_lockscreenshortcuts_right_image_summ">Zastąp ikonę aparatu ikoną CustoMIUIzer</string>
     <string name="system_lockscreenshortcuts_right_image_hint">Przeciągnij ikonę, aby wykonać niestandardową akcję</string>
     <string name="system_lockscreenshortcuts_left_off_title">Wyłącz gest przeciągnięcia palcem w prawo</string>
-    <string name="system_lockscreenshortcuts_left_title">Skróty w lewej części ekranu</string>
-    <string name="system_lockscreenshortcuts_left_summ">Zarządzaj listą skrótów</string>
     <string name="system_lockscreenshortcuts_left_align_title">Wyrównanie w pionie</string>
-    <string name="system_lockscreenshortcuts_left_center_title">Wyśrodkuj poziomo</string>
-    <string name="system_lockscreenshortcuts_left_skiplock_title">Nie wymagaj odblokowania</string>
-    <string name="system_lockscreenshortcuts_left_skiplock_summ">Dostęp do uruchomionych aplikacji można uzyskać, gdy urządzenie jest nadal zablokowane</string>
     <string name="system_noscreenlock_title">Wyłącz blokadę ekranu</string>
     <string name="system_noscreenlock_req_summ">Niektóre urządzenia mogą nie działać bez odblokowania raz po uruchomieniu</string>
     <string name="system_noscreenlock_summ">Selektywnie wyłącz blokadę ekranu (nie zmienia zabezpieczeń dla żadnych aplikacji i nie usuwa danych odcisków palców)</string>
@@ -522,13 +499,7 @@
     <string name="launcher_foldershade_title">Kolorowa nakładka</string>
     <string name="launcher_foldershade_summ">Przyciemnij lub rozjaśnij tło</string>
     <string name="launcher_foldershade_level_title">Intensywność koloru</string>
-    <string name="launcher_folderblur_title">Rozmycie</string>
-    <string name="launcher_folderblur_summ">Opcje rozmycia tła i tapety. Launcher musi obsługiwać rozmycie w folderach.</string>
     <string name="launcher_folderblur">Rozmycie tła</string>
-    <string name="launcher_folderwallblur">Rozmycie tapety</string>
-    <string name="launcher_folderblur_opacity_title">Widoczność</string>
-    <string name="launcher_folderblur_radius_title">Promień</string>
-    <string name="launcher_folderwallblur_radius_summ">Wpływa również na rozmycie tapety w trybie edycji</string>
     <string name="launcher_closefolder_title">Automatyczne zamykanie folderów</string>
     <string name="launcher_closefolder_summ">Po uruchomieniu zamknij folder aplikacji</string>
     <string name="launcher_titles">Tytuły aplikacji</string>
@@ -653,12 +624,10 @@
     <string name="various_hiddenfeatures_not_found">Niedostępne na tym urządzeniu</string>
     <string name="various_runningservices_title">Uruchomione usługi</string>
     <string name="various_memorystats_title">Statystyki pamięci</string>
-    <string name="various_memorystats_summ">Użycie pamięci przez aplikację</string>
     <string name="various_appusagestats_title">Statystyki użytkownika</string>
     <string name="various_aospsearch_title">Szukaj</string>
     <string name="various_aospnotif_title">Aplikacje &amp; powiadomienia</string>
     <string name="various_aospnotiflog_title">Dziennik powiadomień</string>
-    <string name="various_clearspeaker_title">Wyczyść głośnik</string>
     <string name="various_unlockfps_title">Odblokuj liczbę kl./s</string>
     <string name="various_unlockfps_summ">Zwiększ do 90 klatek na sekundę w aplikacji Screen Recorder. To, czy wyższa liczba klatek na sekundę rzeczywiście zadziała, zależy od urządzenia i sterownika wideo.</string>
     <string name="various_miuiinstaller_title">Użyj instalatora pakietów MIUI</string>
@@ -711,7 +680,6 @@
     <string name="appdetails_data_path">Ścieżka do danych</string>
     <string name="appdetails_app_uid">ID użytkownika</string>
     <string name="appdetails_sdk">Docelowa wersja SDK</string>
-    <string name="appsort_running">Status (domyślny)</string>
     <string name="appsort_name">Nazwa aplikacji</string>
     <string name="appsort_frequency">Częstotliwość użytkowania</string>
     <string name="appsort_storage">Użycie pamięci</string>

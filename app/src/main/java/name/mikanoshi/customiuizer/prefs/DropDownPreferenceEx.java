@@ -23,7 +23,7 @@ public class DropDownPreferenceEx extends DropDownPreference implements Preferen
 	private final int secondary = res.getColor(R.color.preference_secondary_text, getContext().getTheme());
 	private final int childpadding = res.getDimensionPixelSize(R.dimen.preference_item_child_padding);
 
-	private final boolean child;
+	private final int indentLevel;
 	private final boolean dynamic;
 	private boolean newmod = false;
 	private boolean unsupported = false;
@@ -32,8 +32,8 @@ public class DropDownPreferenceEx extends DropDownPreference implements Preferen
 	public DropDownPreferenceEx(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		final TypedArray xmlAttrs = context.obtainStyledAttributes(attrs, R.styleable.ListPreferenceEx);
-		child = xmlAttrs.getBoolean(R.styleable.DropDownPreferenceEx_child, false);
-		dynamic = xmlAttrs.getBoolean(R.styleable.DropDownPreferenceEx_child, false);
+		indentLevel = xmlAttrs.getInt(R.styleable.ListPreferenceEx_indentLevel, 0);
+		dynamic = xmlAttrs.getBoolean(R.styleable.ListPreferenceEx_dynamic, false);
 		valueAsSummary = xmlAttrs.getBoolean(R.styleable.ListPreferenceEx_valueAsSummary, false);
 		xmlAttrs.recycle();
 		setIconSpaceReserved(false);
@@ -65,7 +65,7 @@ public class DropDownPreferenceEx extends DropDownPreference implements Preferen
 		title.setText(getTitle() + (unsupported ? " ⨯" : (dynamic ? " ⟲" : "")));
 		if (newmod) Helpers.applyNewMod(title);
 
-		int hrzPadding = child ? childpadding : 0;
+		int hrzPadding = (indentLevel + 1) * childpadding;
 		finalView.setPadding(hrzPadding, 0, childpadding, 0);
 	}
 

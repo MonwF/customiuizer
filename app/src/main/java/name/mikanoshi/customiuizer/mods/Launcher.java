@@ -52,7 +52,9 @@ import android.widget.TextView;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
@@ -67,37 +69,9 @@ import name.mikanoshi.customiuizer.utils.ShakeManager;
 
 public class Launcher {
 
-//	private static GestureDetector mDetector;
 	private static GestureDetector mDetectorHorizontal;
 
-	@SuppressWarnings("ResultOfMethodCallIgnored")
 	public static void HomescreenSwipesHook(final LoadPackageParam lpparam) {
-//		// Detect vertical swipes
-//		Helpers.findAndHookMethod("com.miui.home.launcher.ForceTouchLayer", lpparam.classLoader, "onInterceptTouchEvent", MotionEvent.class, new MethodHook() {
-//			@Override
-//			protected void before(final MethodHookParam param) throws Throwable {
-//				Context helperContext = ((ViewGroup)param.thisObject).getContext();
-//
-//				if (helperContext == null) return;
-//				if (mDetector == null) mDetector = new GestureDetector(helperContext, new SwipeListener(helperContext));
-//
-//				MotionEvent ev = (MotionEvent)param.args[0];
-//				if (ev == null) return;
-//				mDetector.onTouchEvent(ev);
-//			}
-//		});
-
-//		if (MainModule.pref_swipedown != 1)
-//		Helpers.findAndHookMethod("com.miui.launcher.utils.LauncherUtils", lpparam.classLoader, "expandStatusBar", Context.class, XC_MethodReplacement.DO_NOTHING);
-//
-//		if (MainModule.pref_swipeup != 1)
-//		Helpers.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "allowedSlidingUpToStartGolbalSearch", Context.class, new MethodHook() {
-//			@Override
-//			protected void before(final MethodHookParam param) throws Throwable {
-//				param.setResult(false);
-//			}
-//		});
-
 		Helpers.findAndHookMethod("com.miui.home.launcher.Workspace", lpparam.classLoader, "onVerticalGesture", int.class, MotionEvent.class, new MethodHook() {
 			@Override
 			protected void before(final MethodHookParam param) throws Throwable {
@@ -133,17 +107,18 @@ public class Launcher {
 						try {
 							String type = uri.getPathSegments().get(1);
 							String key = uri.getPathSegments().get(2);
-							if (key.contains("pref_key_launcher_swipedown"))
-							switch (type) {
-								case "string":
-									MainModule.mPrefs.put(key, Helpers.getSharedStringPref(act, key, ""));
-									break;
-								case "integer":
-									MainModule.mPrefs.put(key, Helpers.getSharedIntPref(act, key, 1));
-									break;
-								case "boolean":
-									MainModule.mPrefs.put(key, Helpers.getSharedBoolPref(act, key, false));
-									break;
+							if (key.contains("pref_key_launcher_swipedown")) {
+								switch (type) {
+									case "string":
+										MainModule.mPrefs.put(key, Helpers.getSharedStringPref(act, key, ""));
+										break;
+									case "integer":
+										MainModule.mPrefs.put(key, Helpers.getSharedIntPref(act, key, 1));
+										break;
+									case "boolean":
+										MainModule.mPrefs.put(key, Helpers.getSharedBoolPref(act, key, false));
+										break;
+								}
 							}
 						} catch (Throwable t) {
 							XposedBridge.log(t);
@@ -157,6 +132,13 @@ public class Launcher {
 			@Override
 			protected void before(final MethodHookParam param) throws Throwable {
 				if (MainModule.mPrefs.getInt("launcher_swipedown_action", 1) > 1) param.setResult(false);
+			}
+		});
+
+		Helpers.findAndHookMethodSilently("com.miui.home.launcher.uioverrides.AllAppsSwipeController", lpparam.classLoader, "canInterceptTouch", MotionEvent.class, new MethodHook() {
+			@Override
+			protected void before(final MethodHookParam param) throws Throwable {
+				if (MainModule.mPrefs.getInt("launcher_swipeup_action", 1) > 1) param.setResult(false);
 			}
 		});
 
@@ -517,14 +499,6 @@ public class Launcher {
 				if (mHasLaunchedAppFromFolder) XposedHelpers.callMethod(param.thisObject, "closeFolder");
 			}
 		});
-
-		//noinspection ResultOfMethodCallIgnored
-		Helpers.findAndHookMethodSilently("com.miui.home.launcher.common.CloseFolderStateMachine", lpparam.classLoader, "onPause", new MethodHook() {
-			@Override
-			protected void before(final MethodHookParam param) throws Throwable {
-				if (MainModule.mPrefs.getStringAsInt("launcher_closefolders", 1) == 3) param.setResult(null);
-			}
-		});
 	}
 
 	@SuppressWarnings("ResultOfMethodCallIgnored")
@@ -639,6 +613,7 @@ public class Launcher {
 		Helpers.hookAllConstructors("com.miui.home.launcher.Workspace", lpparam.classLoader, new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
+				if (param.args.length != 3) return;
 				Object mDoubleTapControllerEx = XposedHelpers.getAdditionalInstanceField(param.thisObject, "mDoubleTapControllerEx");
 				if (mDoubleTapControllerEx != null) return;
 				mDoubleTapControllerEx = new DoubleTapController((Context)param.args[0], "pref_key_launcher_doubletap");
@@ -688,6 +663,7 @@ public class Launcher {
 			Settings.Global.putInt(((Context)param.args[0]).getContentResolver(), "force_immersive_nav_bar", 1);
 			}
 		});
+		Helpers.findAndHookMethod("com.miui.home.recents.views.RecentsContainer", lpparam.classLoader, "showLandscapeOverviewGestureView", boolean.class, XC_MethodReplacement.DO_NOTHING);
 	}
 
 	private static void showSeekBar(View workspace) {
@@ -1168,67 +1144,48 @@ public class Launcher {
 						try {
 							String type = uri.getPathSegments().get(1);
 							String key = uri.getPathSegments().get(2);
-							if (key.contains("pref_key_launcher_folder"))
-							switch (type) {
-								case "string":
-									MainModule.mPrefs.put(key, Helpers.getSharedStringPref(act, key, ""));
-									break;
-								case "integer":
-									MainModule.mPrefs.put(key, Helpers.getSharedIntPref(act, key, 1));
-									break;
-								case "boolean":
-									MainModule.mPrefs.put(key, Helpers.getSharedBoolPref(act, key, false));
-									break;
+							if (key.contains("pref_key_launcher_folderblur_")) {
+								switch (type) {
+									case "string":
+										MainModule.mPrefs.put(key, Helpers.getSharedStringPref(act, key, ""));
+										break;
+									case "integer":
+										MainModule.mPrefs.put(key, Helpers.getSharedIntPref(act, key, 1));
+										break;
+									case "boolean":
+										MainModule.mPrefs.put(key, Helpers.getSharedBoolPref(act, key, false));
+										break;
+								}
 							}
 						} catch (Throwable t) {
-							XposedBridge.log(t);
+							Helpers.log(t);
 						}
 					}
 				};
 			}
 		});
 
-		Class<?> buCls = XposedHelpers.findClassIfExists("com.miui.home.launcher.common.BlurUtils", lpparam.classLoader);
-		if (buCls != null) {
-			Method[] methods = buCls.getDeclaredMethods();
-			Method fastBlur = null;
-    		for (Method method: methods)
-    		if ("fastBlur".equals(method.getName())) {
-    			fastBlur = method;
-    			if (method.getParameterTypes().length == 4) break;
-    		}
-
-			if (fastBlur == null) Helpers.log("FolderBlurHook", "Cannot find fastBlur util method!"); else
-			Helpers.hookMethod(fastBlur, new MethodHook() {
+		Class<?> BlurUtils = XposedHelpers.findClassIfExists("com.miui.home.launcher.common.BlurUtils", lpparam.classLoader);
+		if (BlurUtils != null) {
+			Helpers.findAndHookMethod("com.miui.home.launcher.FolderCling", lpparam.classLoader, "open", new MethodHook() {
 				@Override
-				protected void before(MethodHookParam param) throws Throwable {
-					if (MainModule.mPrefs.getBoolean("launcher_folderwallblur_disable")) {
-						param.args[0] = 0.0f;
-						return;
-					}
-					float ratio = MainModule.mPrefs.getInt("launcher_folderwallblur_radius", 0) / 100f;
-					if (ratio > 0) param.args[0] = (float)param.args[0] * ratio;
+				protected void after(MethodHookParam param) throws Throwable {
+					Activity launcher = (Activity) XposedHelpers.getObjectField(param.thisObject, "mLauncher");
+
+					int blurPct = MainModule.mPrefs.getInt("launcher_folderblur_opacity", 0);
+					float blurRatio = blurPct / 100f;
+					XposedHelpers.callStaticMethod(BlurUtils, "fastBlur", blurRatio, launcher.getWindow(), true);
 				}
 			});
 
-			return;
+			Helpers.findAndHookMethod("com.miui.home.launcher.FolderCling", lpparam.classLoader, "close", boolean.class, new MethodHook() {
+				@Override
+				protected void after(MethodHookParam param) throws Throwable {
+					Activity launcher = (Activity) XposedHelpers.getObjectField(param.thisObject, "mLauncher");
+					XposedHelpers.callStaticMethod(BlurUtils, "fastBlur", 0f, launcher.getWindow(), param.args[0]);
+				}
+			});
 		}
-
-		Helpers.findAndHookMethod("com.miui.home.launcher.view.BlurFrameLayout", lpparam.classLoader, "setBlurAlpha", float.class, new MethodHook(10) {
-			@Override
-			protected void before(MethodHookParam param) throws Throwable {
-				float ratio = MainModule.mPrefs.getInt("launcher_folderblur_opacity", 0) / 100f;
-				if (ratio > 0) param.args[0] = ratio + (float)param.args[0] * (1.0f - ratio);
-			}
-		});
-
-		Helpers.findAndHookMethod("com.miui.home.launcher.view.BlurFrameLayout", lpparam.classLoader, "setBlurRadius", float.class, new MethodHook() {
-			@Override
-			protected void before(MethodHookParam param) throws Throwable {
-				float ratio = 5 * MainModule.mPrefs.getInt("launcher_folderblur_radius", 0) / 100f;
-				if (ratio > 0) param.args[0] = ratio;
-			}
-		});
 	}
 
 	private static float scaleStiffness(float val, float scale) {
@@ -1393,6 +1350,40 @@ public class Launcher {
 			protected void after(XC_MethodHook.MethodHookParam param) throws Throwable {
 				Activity act = (Activity)param.thisObject;
 				act.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+			}
+		});
+	}
+
+	public static void HideFromRecentsHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.classLoader, "onCreate", Bundle.class, new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				final Activity act = (Activity)param.thisObject;
+				Handler mHandler = (Handler)XposedHelpers.getObjectField(act, "mHandler");
+				new Helpers.SharedPrefObserver(act, mHandler, "pref_key_system_hidefromrecents_apps") {
+					@Override
+					public void onChange(String name) {
+						MainModule.mPrefs.put(name, Helpers.getSharedStringSetPref(act, name));
+					}
+				};
+			}
+		});
+		Helpers.findAndHookMethod("com.android.systemui.shared.recents.system.ActivityManagerWrapper", lpparam.classLoader, "needRemoveTask", "com.android.systemui.shared.recents.model.GroupedRecentTaskInfoCompat", new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				if (param.args[0] != null) {
+					Object mainTask = XposedHelpers.getObjectField(param.args[0], "mMainTaskInfo");
+					if (mainTask != null) {
+						ComponentName componentName = (ComponentName) XposedHelpers.getObjectField(mainTask, "topActivity");
+						if (componentName != null) {
+							String pkgName = componentName.getPackageName();
+							Set<String> selectedApps = MainModule.mPrefs.getStringSet("system_hidefromrecents_apps");
+							if (selectedApps.contains(pkgName)) {
+								param.setResult(true);
+							}
+						}
+					}
+				}
 			}
 		});
 	}
@@ -1597,6 +1588,16 @@ public class Launcher {
 		};
 		Helpers.findAndHookMethod("com.miui.home.launcher.allapps.category.fragment.AppsListFragment", lpparam.classLoader, "onClick", View.class, hook);
 		Helpers.findAndHookMethod("com.miui.home.launcher.allapps.category.fragment.RecommendCategoryAppListFragment", lpparam.classLoader, "onClick", View.class, hook);
+	}
+
+	public static void AssistGestureActionHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.systemui.shared.recents.system.AssistManager", lpparam.classLoader, "isSupportGoogleAssist", int.class, XC_MethodReplacement.returnConstant(true));
+	}
+
+	public static void DisableUnlockWallpaperScale(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.miui.miwallpaper.manager.WallpaperServiceController", lpparam.classLoader, "noNeedDesktopWallpaperScaleAnim",
+			XC_MethodReplacement.returnConstant(true)
+			);
 	}
 
 	public static void DisableLauncherWallpaperScale(LoadPackageParam lpparam) {

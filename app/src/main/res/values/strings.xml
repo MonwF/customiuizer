@@ -8,21 +8,13 @@
     <string name="about_unsupported">Mods marked with ⨯ are not supported on this device.</string>
     <string name="title_activity_main" translatable="false">@string/app_name</string>
 
-    <string name="title_snoozed">Snoozed notifications</string>
     <string name="menu_update">Update</string>
-    <string name="snooze_unsnooze">Unsnooze this notification</string>
-    <string name="snooze_cancel">Mark as dismissed</string>
-    <string name="snooze_restore">Mark as pending</string>
-    <string name="snooze_fetch_fail">Unable to fetch snoozed notifications list</string>
-    <string name="snooze_empty">No snoozed notifications</string>
-    <string name="snooze_messages">Messages</string>
-    <string name="snooze_channel">Channel</string>
-    <string name="snooze_created">Created</string>
-    <string name="snooze_updated">Updated</string>
-    <string name="snooze_repost">Repost</string>
 
     <string name="mods">Mods</string>
     <string name="mods_actions">Actions</string>
+    <string name="value_is_empty">Value unconfigured</string>
+    <string name="value_is_set">Value configured</string>
+    <string name="clear_value">Clear</string>
 
     <string name="enable_mod">Enable mod</string>
     <string name="system_mods">System</string>
@@ -36,7 +28,6 @@
     <string name="system_statusbaricons_summ">Manage status bar icons visibility</string>
     <string name="system_statusbaricons_wifistandard_title">Show Wi-Fi standard</string>
     <string name="system_statusbaricons_battery1_title">Battery image</string>
-    <string name="system_statusbaricons_battery2_title">Battery digit</string>
     <string name="system_statusbaricons_battery4_title">Battery percentage mark</string>
     <string name="system_statusbaricons_battery3_title">Charging indicator</string>
     <string name="system_statusbaricons_alarm_title">Alarm</string>
@@ -49,6 +40,7 @@
     <string name="system_statusbaricons_volte_title">VoLTE</string>
     <string name="system_statusbaricons_vowifi_title" translatable="false">VoWiFi</string>
     <string name="system_statusbaricons_roaming_title">Roaming</string>
+    <string name="system_statusbaricons_dualwifi_title">Dual Wi-Fi</string>
     <string name="system_statusbaricons_gps_title" translatable="false">GPS</string>
     <string name="system_statusbaricons_vpn_title" translatable="false">VPN</string>
     <string name="system_statusbaricons_nfc_title" translatable="false">NFC</string>
@@ -88,23 +80,50 @@
     <string name="system_calendar_app_summ">Open selected app when date in notification drawer\'s header is tapped</string>
     <string name="system_clockseconds_title">Show seconds</string>
     <string name="system_clock_show_ampm_title">Show AM|PM</string>
-    <string name="system_clockleadingzero_title">Show leading zero to hours</string>
-    <string name="system_clock_extra_width_title">Extra width</string>
-    <string name="system_clock_extra_width_summ">Avoid to display an ellipsis</string>
+    <string name="system_clock_time_format_title">24-hour time format</string>
+    <string name="system_clock_leadingzero_title">Show leading zero to hours</string>
+    <string name="system_clock_customformat_enable_title">Enable custom format</string>
+    <string name="system_clock_customformat_setting_title">Set format</string>
+    <string name="system_clock_customformat_help_summ">
+        Can enter newline，content after 2 lines will be truncated
+        \nyyyy - four-digit year(2023)
+        \nyy - two-digit year(23)
+        \nMM - two-digit month(02、12)
+        \nM - one-digit month(2、12)
+        \ndd - two-digit day(02、23)
+        \nd - one-digit day(2、23)
+        \nE - short week(Sun)
+        \na - AM、PM
+        \nHH - 24-hour two-digit hour(09、14)
+        \nH - 24-hour one-digit hour(9、14)
+        \nhh - 12-hour two-digit hour(09、02)
+        \nh - 12-hour one-digit hour(9、2)
+        \nmm - two-digit minute(09)
+        \nss - two-digit second(09)
+    </string>
+    <string name="system_clock_dualrow_title">Show in dual rows</string>
+    <string name="system_clock_show_week_title">Show week</string>
+    <string name="system_clock_show_date_title">Show date</string>
+    <string name="system_clock_show_year_title">Show year</string>
+    <string name="system_clock_fixedwidth_title">Fix content width to prevent horizontal jitter</string>
+    <string name="system_clock_fixedwidth_summ">Adjust width when seconds is displayed</string>
+    <string name="system_statusbar_clock_align_title">Horizontal alignment</string>
     <string name="system_clockseconds_summ">Display seconds in the status bar clock</string>
     <string name="system_maxsbicons_title">Notification icons limit</string>
     <string name="system_maxsbicons_summ">Number of notification icons to display before turning them into dots</string>
     <string name="system_mobiletypeicon_title">Hide mobile network type</string>
     <string name="system_mobiletypeicon_summ">Remove mobile network type icon from status bar</string>
-    <string name="system_networkindicator_title">Network activity indicators</string>
-    <string name="system_networkindicator_summ">Configure Mobile data and Wi-Fi traffic indicators</string>
+    <string name="system_networkindicator_wifi_title">Hide WiFi network activity indicators</string>
+    <string name="system_networkindicator_mobile_title">Hide mobile network activity indicators</string>
     <string name="system_4gtolte_title">Show LTE icon for 4G</string>
+    <string name="system_statusbar_mobile_showname_title">Custom mobile network type</string>
     <string name="system_hidemoreicon_title">No hidden icons indicator</string>
     <string name="system_hidemoreicon_summ">Do not show icon with 3 dots when notification icons are hidden</string>
     <string name="system_nonetspeedseparator_title">Network speed separator</string>
     <string name="system_nonetspeedseparator_summ">Do not show vertical line between time and network speed on devices with waterdrop notches</string>
     <string name="system_netspeedinterval_title">Network speed update interval</string>
-    <string name="system_detailednetspeed_title">Display in dual rows</string>
+    <string name="system_detailednetspeed_title">Upload and download speed are displayed in dual rows</string>
+    <string name="system_detailednetspeed_fakedualrow_title">Value and unit are displayed in dual rows</string>
     <string name="system_netspeed_cat_title">Network speed mods</string>
     <string name="system_detailednetspeed_summ">Show incoming and outgoing network speeds separately</string>
     <string name="system_detailednetspeed_icon_title">Indicator icons</string>
@@ -123,13 +142,11 @@
     <string name="system_statusbarcontrols_single_title">Horizontal slide with one finger</string>
     <string name="system_statusbarcontrols_dual_title">Horizontal slide with two fingers</string>
     <string name="system_statusbarcontrols_dt_title">Double tap action</string>
-    <string name="system_fixmeter_title">Network speed spacing</string>
-    <string name="system_fixmeter_summ">Increase horizontal margins for network speed indicator</string>
     <string name="system_notifimportance_title">Show notification importance</string>
     <string name="system_compactnotif_title">Compact notifications</string>
     <string name="system_compactnotif_summ">Reduce notifications\' vertical paddings</string>
-    <string name="system_colorizenotiftitle_title">Colorize notification title</string>
-    <string name="system_colorizenotiftitle_summ">Apply icon\'s color to title text (Android notification style only)</string>
+    <string name="system_colorizenotiftitle_title">Colorize notification card</string>
+    <string name="system_colorizenotiftitle_summ">Apply icon\'s color to card (Android notification style only)</string>
     <string name="system_minimalnotifview_title">Bring back minimalistic collapsed view</string>
     <string name="system_minimalnotifview_summ">Notifications of minimal importance could be collapsed into one-line view again</string>
     <string name="system_notifchannelsettings_title">Open channel settings</string>
@@ -151,7 +168,7 @@
     <string name="system_notifrowmenu_appinfo">App info</string>
     <string name="system_notifrowmenu_openinfw">Floating window</string>
     <string name="system_notifrowmenu_forceclose">Force close</string>
-    <string name="system_disableanynotif_title">Disable any notification</string>
+    <string name="system_disableanynotif_title">Allow to disable any notification</string>
     <string name="system_disableanynotif_summ">Allow to disable system notifications too</string>
     <string name="system_expandnotifs_title">Expand notifications</string>
     <string name="system_expandnotifs_summ">Show notifications fully expanded</string>
@@ -161,8 +178,6 @@
     <string name="system_toasttime_note">Resulting duration won\'t fall below 1 second</string>
     <string name="system_autogroupnotif_title">Auto group notifications</string>
     <string name="system_autogroupnotif_summ">Number of notifications from one app that triggers auto grouping</string>
-    <string name="system_snoozedmanager_title">Snoozed notifications manager</string>
-    <string name="system_snoozedmanager_summ">Increase number of snooze intervals and add icon to launcher that opens a list of currently snoozed notifications</string>
     <string name="system_mutevisiblenotif_title">Mute if visible</string>
     <string name="system_mutevisiblenotif_summ">Do not play notification sound if screen is on</string>
     <string name="system_notifmediaseekbar_title">Media position slider</string>
@@ -291,12 +306,7 @@
     <string name="system_lockscreenshortcuts_right_image_summ">Replace camera icon with CustoMIUIzer icon</string>
     <string name="system_lockscreenshortcuts_right_image_hint">Drag the icon to execute custom action</string>
     <string name="system_lockscreenshortcuts_left_off_title">Disable swipe right gesture</string>
-    <string name="system_lockscreenshortcuts_left_title">Left screen shortcuts</string>
-    <string name="system_lockscreenshortcuts_left_summ">Manage shortcuts list</string>
     <string name="system_lockscreenshortcuts_left_align_title">Vertical alignment</string>
-    <string name="system_lockscreenshortcuts_left_center_title">Center horizontally</string>
-    <string name="system_lockscreenshortcuts_left_skiplock_title">Do not require unlock</string>
-    <string name="system_lockscreenshortcuts_left_skiplock_summ">Launched apps could be accessed while device is still locked</string>
     <string name="system_noscreenlock_title">Disable screen lock</string>
     <string name="system_noscreenlock_req_summ">Some devices might not work without unlocking once after boot</string>
     <string name="system_noscreenlock_summ">Selectively disable screen lock (does not change security for any apps and does not remove fingerprint data)</string>
@@ -329,10 +339,13 @@
     <string name="system_airplanemodeconfig_note">Mod only changes existing system setting, some options might not work</string>
     <string name="system_fivegtile_title">5G tile</string>
     <string name="system_fivegtile_summ">Add 5G tile to qs panel</string>
+    <string name="system_qs_force_systemfonts_title">Force clock use system fonts</string>
+    <string name="system_cc_dateformat_title">Custom date format</string>
     <string name="system_wifipassword_title">View password of saved Wi-Fi network</string>
     <string name="system_wifipassword_btn_title">View</string>
     <string name="system_wifi_password_label">Password</string>
     <string name="system_wifi_password_dlgtitle">Wi-Fi detail</string>
+    <string name="system_other_wallpaper_scale_title">Wallpaper zoom level</string>
     <string name="system_nodarkforce_title">Disable forced dark mode</string>
     <string name="system_nodarkforce_summ">Do not invert some colors in dark mode</string>
     <string name="system_epm_title">Extended power menu</string>
@@ -439,6 +452,7 @@
     <string name="system_betterpopups_delay_title">Auto hide delay</string>
     <string name="system_betterpopups_nohide_title">No auto hide</string>
     <string name="system_betterpopups_nohide_summ">Do not dismiss popups automatically</string>
+    <string name="system_betterpopups_autoclose_expanded_title">Dismiss expanded popups automatically</string>
     <string name="system_betterpopups_allowfloat_title">Allow floating window</string>
     <string name="system_betterpopups_allowfloat_summ">Open app in a floating window on swipe down gesture if notification has an appropriate click action defined</string>
     <string name="system_betterpopups_swipedown_title">Enable swipe down</string>
@@ -464,6 +478,8 @@
     <string name="system_applock_activities">Selected activities</string>
     <string name="system_mods_qs">Quick Settings</string>
     <string name="system_mods_cc">Control Center</string>
+    <string name="system_mods_cc_new">New control center</string>
+    <string name="system_mods_cc_legacy">Legacy control center</string>
     <string name="system_qsgridrows_title">Number of rows</string>
     <string name="system_qsgridrows_note">Labels will be hidden for 5 rows in a portrait orientation. Number of rows is limited to 3 with hidden labels in a landscape orientation.</string>
     <string name="system_qsgridcolumns_title">Number of columns</string>
@@ -541,13 +557,7 @@
     <string name="launcher_foldershade_title">Color overlay</string>
     <string name="launcher_foldershade_summ">Darken or lighten background</string>
     <string name="launcher_foldershade_level_title">Color intensity</string>
-    <string name="launcher_folderblur_title">Blur</string>
-    <string name="launcher_folderblur_summ">Background and wallpaper blur options. Launcher must support blur in folders.</string>
     <string name="launcher_folderblur">Background blur</string>
-    <string name="launcher_folderwallblur">Wallpaper blur</string>
-    <string name="launcher_folderblur_opacity_title">Visibility</string>
-    <string name="launcher_folderblur_radius_title">Radius</string>
-    <string name="launcher_folderwallblur_radius_summ">Affects edit mode wallpaper blur too</string>
     <string name="launcher_closefolder_title">Auto close folders</string>
     <string name="launcher_closefolder_summ">Close app\'s folder after launch</string>
     <string name="launcher_titles">App titles</string>
@@ -640,7 +650,7 @@
     <string name="controls_volumemedia_vibrate_title">Long press vibration</string>
     <string name="controls_volumemedia_vibrate_summ">Vibrate when long press action is executed</string>
     <string name="controls_mods_navbar">Navigation bar</string>
-    <string name="controls_nonavbar_title">Hide navbar</string>
+    <string name="controls_nonavbar_title">Hide navbar and fullscreen indicator</string>
     <string name="controls_imebackalticon_title">Reactive Back button</string>
     <string name="controls_imebackalticon_summ">Switch back button icon to alternative one in input mode</string>
     <string name="controls_navbarheight_title">Navbar height</string>
@@ -671,13 +681,12 @@
     <string name="various_hiddenfeatures_summ">Activities that are not always easily accessible</string>
     <string name="various_hiddenfeatures_not_found">Not available on this device</string>
     <string name="various_runningservices_title">Running services</string>
+    <string name="various_batteryoptimization_title">Battery optimization</string>
     <string name="various_memorystats_title">Memory statistics</string>
-    <string name="various_memorystats_summ">Per app memory usage</string>
     <string name="various_appusagestats_title">Usage statistics</string>
     <string name="various_aospsearch_title">Search</string>
     <string name="various_aospnotif_title">Apps &amp; notifications</string>
     <string name="various_aospnotiflog_title">Notification log</string>
-    <string name="various_clearspeaker_title">Clear speaker</string>
     <string name="various_unlockfps_title">Unlock frame rate</string>
     <string name="various_unlockfps_summ">Make fps up to 90 available in Screen Recorder app. Whether higher fps will actually work depends on device and video driver.</string>
     <string name="various_miuiinstaller_title">Use MIUI package installer</string>
@@ -694,6 +703,7 @@
     <string name="various_alarmcompat_summ">Make selected apps display correct next alarm time set by stock MIUI Clock app</string>
     <string name="various_gboardpadding_port_title">Bottom padding in portrait</string>
     <string name="various_gboardpadding_land_title">Bottom padding in landscape</string>
+    <string name="various_answerinheadup_title">Keep calls in notification when answer a call</string>
     <string name="various_showcallui_title">Show call UI</string>
     <string name="various_showcallui_summ">Define when UI for incoming call should be displayed instead of popup notification</string>
     <string name="various_calluibright_title">Screen brightness during call</string>
@@ -731,8 +741,7 @@
     <string name="appdetails_data_path">Data path</string>
     <string name="appdetails_app_uid">User id</string>
     <string name="appdetails_sdk">Target SDK Version</string>
-    <string name="appsort_running">Status (Default)</string>
-    <string name="appsort_name">App name</string>
+    <string name="appsort_name">App name (Default)</string>
     <string name="appsort_frequency">Usage frequency</string>
     <string name="appsort_storage">Used storage</string>
     <string name="appsort_install">Installation time</string>
@@ -742,6 +751,8 @@
     <string name="settings">Settings</string>
 
     <string name="array_default">Default</string>
+    <string name="array_allow">Allow</string>
+    <string name="array_deny">Deny</string>
     <string name="array_system_default">System</string>
     <string name="array_global_actions_none">No action</string>
     <string name="array_global_actions_notif">Expand notification drawer</string>
@@ -849,6 +860,7 @@
     <string name="array_any">Any</string>
     <string name="array_others">Others</string>
     <string name="array_nofs">When not in fullscreen mode</string>
+    <string name="array_home">On homescreen</string>
     <string name="array_incoming">Incoming</string>
     <string name="array_outgoing">Outgoing</string>
     <string name="array_both">Both</string>
@@ -864,6 +876,9 @@
     <string name="array_scale_cover">Cover whole screen</string>
     <string name="array_align_top">Top</string>
     <string name="array_align_bottom">Bottom</string>
+    <string name="array_align_left">Left</string>
+    <string name="array_align_right">Right</string>
+    <string name="array_align_center">Center</string>
     <string name="array_adjust_brightness">Adjust brightness</string>
     <string name="array_adjust_volume">Adjust volume</string>
     <string name="array_alarm_absolute">Regular time</string>
@@ -1077,7 +1092,7 @@
     <string name="format_KBs">%d KB/s</string>
     <string name="oneKBs">1 KB/s</string>
     <string name="Bs">B/s</string>
-    <string name="speedunits">KMGTPE</string>
+    <string name="speedunits">KMG</string>
     <string name="lux">%s lux</string>
 
     <string name="off">Off</string>
@@ -1106,6 +1121,7 @@
     <string name="system_statusbar_batterytempandcurrentatright_title">Display on the right</string>
     <string name="system_statusbar_batterytempandcurrent_positive_title">Current value is always positive</string>
     <string name="system_statusbar_batterytempandcurrent_incharge_title">Show when charging only</string>
+    <string name="system_statusbar_batterytempandcurrent_hideunit_title">Hide unit</string>
     <string name="system_statusbar_batterytempandcurrent_singlerow_title">Display in single row</string>
     <string name="system_statusbar_batterytempandcurrent_reverseorder_title">Reverse order</string>
     <string name="system_statusbar_dualsimin2rows_title">Dual SIM signal bars in dual rows</string>
@@ -1120,23 +1136,31 @@
     <string name="system_statusbar_mobiletype_single_bold_title">Bold style</string>
     <string name="system_statusbar_horizmargin_title">Statusbar horizontal padding</string>
     <string name="system_statusbar_dualrows_firstrow_horizmargin_title">First row horizontal padding</string>
+    <string name="system_statusbar_clock_spread2rows_title">Spread clock over two rows</string>
     <string name="system_statusbar_topmargin_title">Statusbar top padding</string>
     <string name="system_statusbar_topmargin_val_title">Top padding</string>
     <string name="system_statusbar_topmargin_unset_lockscreen_title">Unset statusbar in Keyguard</string>
     <string name="system_statusbaricons_atright_title">Move some icons to the right</string>
+    <string name="system_statusbaricons_atleft_title">Move some icons to the left</string>
+    <string name="system_statusbaricons_atsecondrow_title">Move some icons to the second row</string>
     <string name="system_statusbaricons_wifi_mobile_atleft_title">Move mobile and Wi-Fi to the left</string>
     <string name="system_statusbaricons_swap_wifi_mobile_title">Swap Mobile Signal and Wi-Fi</string>
+    <string name="system_statusbaricons_swap_batteryicon_percentage_title">Swap icon and percentage of battery</string>
     <string name="system_statusbaricons_change_position_title">Change icons\' position</string>
+    <string name="system_statusbar_mobile_signal_cat_title">Mobile signal icon display settings</string>
+    <string name="system_statusbar_clocktweak_title">Clock settings</string>
     <string name="system_statusbaricons_netspeed_title">Network speed indicator</string>
     <string name="system_statusbaricons_clock_title">Clock</string>
     <string name="various_allow_untrusted_touch_title">Allow untrusted touch</string>
+    <string name="various_clipboard_defaultaction_title">Default action of ai clipboard</string>
     <string name="various_disable_access_devicelogs_title">Dismiss access device logs request dialog</string>
     <string name="various_skip_interceptperm_title">Skip permission intercept timer</string>
     <string name="various_show_battery_temperature_title">Show temperature in battery</string>
     <string name="various_enable_sc_ai_clipboard_blur_location_title">Enable AI clipboard and blur location</string>
-    <string name="system_lockscreenshortcuts_left_tapaction_title">Tap left shortcut to toggle flashlight</string>
+    <string name="various_disable_freeform_suggest_blacklist_title">Disable suggestion blacklist of sidebar</string>
+    <string name="system_lockscreenshortcuts_left_tapaction_title">Long click left shortcut to toggle flashlight</string>
     <string name="system_cc_tile_roundedrect_title">Rounded rectangle tile</string>
-    <string name="system_cc_enable_style_switch_title">Enable CC style switch</string>
+    <string name="system_cc_enable_style_switch_title">Force Enable CC style switch</string>
     <string name="system_cc_disable_bluetooth_restrict_title">Disable disconnect bluetooth until tomorrow</string>
     <string name="system_cc_collapse_after_clicked_title">Collapse after touch</string>
 </resources>

@@ -5,7 +5,7 @@
 		<item name="android:windowIsTranslucent">false</item>
 		<item name="android:colorBackground">@color/color_window_background</item>
 		<item name="android:windowTranslucentStatus">true</item>
-		<item name="android:windowDrawsSystemBarBackgrounds">true</item>
+		<item name="android:windowTranslucentNavigation">true</item>
 		<item name="android:windowLightStatusBar">true</item>
 		<item name="android:windowDisablePreview">true</item>
 		<item name="android:colorBackgroundCacheHint">@null</item>

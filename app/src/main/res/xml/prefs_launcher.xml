@@ -30,16 +30,22 @@
 			android:key="pref_key_launcher_foldershade_level"
 			android:title="@string/launcher_foldershade_level_title"
 			android:defaultValue="40"
+			miuizer:indentLevel="1"
 			miuizer:minValue="0"
 			miuizer:maxValue="100"
 			miuizer:stepValue="1"
 			miuizer:format="%d%%"
 			miuizer:dynamic="true" />
 
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
-			android:key="pref_key_launcher_folderblur_cat"
-			android:summary="@string/launcher_folderblur_summ"
-			android:title="@string/launcher_folderblur_title" />
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_launcher_folderblur_opacity"
+			android:title="@string/launcher_folderblur"
+			android:defaultValue="0"
+			miuizer:minValue="0"
+			miuizer:maxValue="100"
+			miuizer:stepValue="1"
+			miuizer:format="%d%%"
+			miuizer:offtext="@string/array_default" />
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_launcher_folder_cols"
@@ -55,13 +61,13 @@
 			android:key="pref_key_launcher_folderwidth"
 			android:title="@string/launcher_folderwidth_title"
 			android:defaultValue="false"
-			miuizer:child="true" />
+			miuizer:indentLevel="1" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_folderspace"
 			android:title="@string/launcher_folderspace_title"
 			android:defaultValue="false"
-			miuizer:child="true" />
+			miuizer:indentLevel="1" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
@@ -122,7 +128,7 @@
 			android:title="@string/launcher_renameapps_list_title"
 			android:dependency="pref_key_launcher_renameapps"
 			miuizer:dynamic="true"
-			miuizer:child="true" />
+			miuizer:indentLevel="1" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
@@ -292,7 +298,7 @@
 			android:title="@string/launcher_hideseekpoints_edit_title"
 			android:defaultValue="false"
 			android:dependency="pref_key_launcher_hideseekpoints"
-			miuizer:child="true" />
+			miuizer:indentLevel="1" />
 
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_launcher_indicatorheight"
@@ -338,7 +344,7 @@
 			android:title="@string/launcher_topmargin_title"
 			android:defaultValue="0"
 			miuizer:minValue="0"
-			miuizer:maxValue="41"
+			miuizer:maxValue="81"
 			miuizer:negativeShift="21"
 			miuizer:stepValue="1"
 			miuizer:format="%d dp"

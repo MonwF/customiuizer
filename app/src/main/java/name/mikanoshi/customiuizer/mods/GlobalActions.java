@@ -284,15 +284,10 @@ public class GlobalActions {
 						Binder.restoreCallingIdentity(token);
 					}
 
-					if (action.equals(ACTION_PREFIX + "OpenRecents")) try {
-						Object mRecents = XposedHelpers.getObjectField(mStatusBar, "mRecents");
-						XposedHelpers.callMethod(mRecents, "toggleRecentApps");
-					} catch (Throwable t) {
-						// Open only
-						Intent recents = new Intent("com.android.systemui.recents.TOGGLE_RECENTS");
-						recents.setComponent(new ComponentName ("com.android.systemui", "com.android.systemui.recents.RecentsActivity"));
-						recents.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-						context.startActivity(recents);
+					if (action.equals(ACTION_PREFIX + "OpenRecents")) {
+						Intent recentIntent = new Intent("SYSTEM_ACTION_RECENTS");
+						recentIntent.setPackage("com.android.systemui");
+						context.sendBroadcast(recentIntent);
 					}
 
 					if (action.equals(ACTION_PREFIX + "OpenVolumeDialog")) try {
@@ -399,13 +394,10 @@ public class GlobalActions {
 				XposedHelpers.callMethod(context.getSystemService(Context.POWER_SERVICE), "wakeUp", SystemClock.uptimeMillis());
 			}
 			if (action.equals(ACTION_PREFIX + "GoToSleep")) {
-				XposedHelpers.callMethod(context.getSystemService(Context.POWER_SERVICE), "goToSleep", SystemClock.uptimeMillis());
+				XposedHelpers.callMethod(context.getSystemService(Context.POWER_SERVICE), "goToSleep", SystemClock.uptimeMillis(), 4, 0);
 			}
 			if (action.equals(ACTION_PREFIX + "LockDevice")) {
-				XposedHelpers.callMethod(context.getSystemService(Context.POWER_SERVICE), "goToSleep", SystemClock.uptimeMillis());
-				Class<?> clsWMG = XposedHelpers.findClass("android.view.WindowManagerGlobal", null);
-				Object wms = XposedHelpers.callStaticMethod(clsWMG, "getWindowManagerService");
-				XposedHelpers.callMethod(wms, "lockNow", (Object)null);
+				XposedHelpers.callMethod(context.getSystemService(Context.POWER_SERVICE), "goToSleep", SystemClock.uptimeMillis(), 7, 0);
 			}
 			if (action.equals(ACTION_PREFIX + "TakeScreenshot")) {
 				context.sendBroadcast(new Intent("android.intent.action.CAPTURE_SCREENSHOT"));
@@ -832,53 +824,57 @@ public class GlobalActions {
 	}
 
 	public static void setupForegroundMonitor(LoadPackageParam lpparam) {
-		String windowClass = "com.android.server.wm.DisplayPolicy";
-		Helpers.hookAllMethods(windowClass, lpparam.classLoader, "focusChangedLw", new MethodHook() {
+		String methodSystemuiChange = Helpers.isTPlus() ? "updateSystemBarAttributes" : "updateSystemUiVisibilityLw";
+		Helpers.hookAllMethods("com.android.server.wm.DisplayPolicy", lpparam.classLoader, methodSystemuiChange, new MethodHook() {
+			private String pkgName = null;
+			private boolean fullScreen = false;
 			@Override
-			protected void before(MethodHookParam param) throws Throwable {
-				if (param.args[1] == null) return;
-				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+			protected void after(MethodHookParam param) throws Throwable {
+				Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
 				if (mContext != null) try {
-					WindowManager.LayoutParams mAttrs = (WindowManager.LayoutParams)XposedHelpers.callMethod(param.args[1], "getAttrs");
-					boolean isFullScreen = mAttrs.flags != 0 && !"com.android.systemui".equals(mAttrs.packageName) && (mAttrs.flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN;
-					Settings.Global.putString(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.package", mAttrs.packageName);
-					Settings.Global.putInt(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.fullscreen", isFullScreen ? 1 : 0);
+					String focusedApp;
+					if (Helpers.isTPlus()) {
+						focusedApp = (String) XposedHelpers.getObjectField(param.thisObject, "mFocusedApp");
+					}
+					else {
+						Object mSystemUiControllingWindow = XposedHelpers.getObjectField(param.thisObject, "mSystemUiControllingWindow");
+						WindowManager.LayoutParams mAttrs = (WindowManager.LayoutParams)XposedHelpers.getObjectField(mSystemUiControllingWindow, "mAttrs");
+						focusedApp = mAttrs.packageName;
+					}
+
+					boolean focusAppChanged = false;
+					boolean fullscreenChanged = false;
+					if (focusedApp != null && !focusedApp.equals(pkgName)) {
+						pkgName = focusedApp;
+						focusAppChanged = true;
+					}
+					boolean isFullScreen = XposedHelpers.getBooleanField(param.thisObject, Helpers.isTPlus() ? "mTopIsFullscreen" : "mLastFocusIsFullscreen");
+					if (fullScreen != isFullScreen) {
+						fullScreen = isFullScreen;
+						fullscreenChanged = true;
+					}
+					if (fullscreenChanged || focusAppChanged) {
+						Handler mHandler = (Handler) XposedHelpers.getObjectField(param.thisObject, "mHandler");
+						boolean finalFullscreenChanged = fullscreenChanged;
+						boolean finalFocusAppChanged = focusAppChanged;
+						mHandler.post(new Runnable() {
+							@Override
+							public void run() {
+								if (finalFullscreenChanged) {
+									Settings.Global.putInt(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.fullscreen", fullScreen ? 1 : 0);
+								}
+								if (finalFocusAppChanged) {
+									Settings.Global.putString(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.package", pkgName);
+								}
+							}
+						});
+					}
 				} catch (Throwable t) {
 					Helpers.log("ForegroundMonitor", t);
 				}
 			}
 		});
-
-//		Helpers.hookAllMethods("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "init", new MethodHook() {
-//			@Override
-//			protected void after(MethodHookParam param) throws Throwable {
-//				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-//				mContext.registerReceiver(new BroadcastReceiver() {
-//					public void onReceive(final Context context, Intent intent) {
-//						Settings.Global.putString(context.getContentResolver(), Helpers.modulePkg + ".foreground.package", intent.getStringExtra("package"));
-//						Settings.Global.putInt(context.getContentResolver(), Helpers.modulePkg + ".foreground.fullscreen", intent.getBooleanExtra("fullscreen", false) ? 1 : 0);
-//					}
-//				}, new IntentFilter(GlobalActions.EVENT_PREFIX + "CHANGE_FOCUSED_APP"));
-//			}
-//		});
 	}
-
-//	public static void setupMonitors() {
-//		Helpers.findAndHookMethod(Activity.class, "onResume", new MethodHook() {
-//			@Override
-//			protected void after(MethodHookParam param) throws Throwable {
-//				Activity act = (Activity)param.thisObject;
-//				if (act == null) return;
-//				int flags = act.getWindow().getAttributes().flags;
-//				boolean isFullScreen = flags != 0 && !"com.android.systemui".equals(act.getPackageName()) && (flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN;
-//				Intent intent = new Intent(GlobalActions.EVENT_PREFIX + "CHANGE_FOCUSED_APP");
-//				intent.putExtra("package", act.getPackageName());
-//				intent.putExtra("fullscreen", isFullScreen);
-//				intent.setPackage("android");
-//				act.sendBroadcast(intent);
-//			}
-//		});
-//	}
 
 	public static void setupGlobalActions(LoadPackageParam lpparam) {
 		Helpers.hookAllConstructors("com.android.server.accessibility.AccessibilityManagerService", lpparam.classLoader, new MethodHook() {
@@ -998,8 +994,6 @@ public class GlobalActions {
 				intentfilter.addAction(ACTION_PREFIX + "ToggleGPS");
 				intentfilter.addAction(ACTION_PREFIX + "ToggleHotspot");
 				intentfilter.addAction(ACTION_PREFIX + "ToggleFlashlight");
-				intentfilter.addAction(ACTION_PREFIX + "ShowQuickRecents");
-				intentfilter.addAction(ACTION_PREFIX + "HideQuickRecents");
 
 				intentfilter.addAction(ACTION_PREFIX + "ClearMemory");
 				intentfilter.addAction(ACTION_PREFIX + "CollectXposedLog");
@@ -1298,26 +1292,6 @@ public class GlobalActions {
 			return false;
 		}
 	}
-
-//	public static boolean showQuickRecents(Context context) {
-//		try {
-//			context.sendBroadcast(new Intent(ACTION_PREFIX + "ShowQuickRecents"));
-//			return true;
-//		} catch (Throwable t) {
-//			XposedBridge.log(t);
-//			return false;
-//		}
-//	}
-//
-//	public static boolean hideQuickRecents(Context context) {
-//		try {
-//			context.sendBroadcast(new Intent(ACTION_PREFIX + "HideQuickRecents"));
-//			return true;
-//		} catch (Throwable t) {
-//			XposedBridge.log(t);
-//			return false;
-//		}
-//	}
 
 	public static boolean toggleThis(Context context, int what) {
 		try {

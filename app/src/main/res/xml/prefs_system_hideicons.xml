@@ -10,11 +10,6 @@
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_statusbaricons_battery2"
-		android:title="@string/system_statusbaricons_battery2_title"
-		android:defaultValue="false" />
-
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbaricons_battery4"
 		android:title="@string/system_statusbaricons_battery4_title"
 		android:defaultValue="false" />
@@ -52,7 +47,7 @@
 		miuizer:minValue="0"
 		miuizer:maxValue="48"
 		miuizer:stepValue="1"
-		miuizer:child="true"
+		miuizer:indentLevel="1"
 		miuizer:format="%d" />
 
 	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
@@ -93,6 +88,11 @@
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbaricons_wifi"
 		android:title="@string/array_global_toggle_wifi"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_dualwifi"
+		android:title="@string/system_statusbaricons_dualwifi_title"
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx

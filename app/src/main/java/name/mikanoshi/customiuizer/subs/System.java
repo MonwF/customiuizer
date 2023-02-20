@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.Preference;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.SeekBar;
 
@@ -23,11 +24,9 @@ import java.util.Objects;
 import name.mikanoshi.customiuizer.CredentialsLauncher;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SharedPrefsProvider;
-import name.mikanoshi.customiuizer.SnoozedActivity;
 import name.mikanoshi.customiuizer.SubFragment;
 import name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx;
 import name.mikanoshi.customiuizer.prefs.ListPreferenceEx;
-import name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx;
 import name.mikanoshi.customiuizer.prefs.PreferenceEx;
 import name.mikanoshi.customiuizer.prefs.SeekBarPreference;
 import name.mikanoshi.customiuizer.qs.AutoRotateService;
@@ -148,7 +147,7 @@ public class System extends SubFragment {
 					public boolean onPreferenceClick(Preference preference) {
 						Bundle args = new Bundle();
 						args.putBoolean("isStandalone", true);
-						args.putString("sub", "pref_key_system_detailednetspeed_cat");
+						args.putString("sub", preference.getKey());
 						String title = preference.getTitle().toString();
 						openSubFragment(new System(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, title, R.xml.prefs_system_detailednetspeed);
 						return true;
@@ -162,28 +161,68 @@ public class System extends SubFragment {
 						Bundle catInfo = new Bundle();
 						catInfo.putBoolean("isDynamic", true);
 						args.putBundle("catInfo", catInfo);
-						args.putString("sub", "pref_key_system_statusbar_batterytempandcurrent_cat");
+						args.putString("sub", preference.getKey());
 						String title = preference.getTitle().toString();
 						openSubFragment(new System(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, title, R.xml.prefs_system_statusbar_batterytempandcurrent);
 						return true;
 					}
 				});
-
+				findPreference("pref_key_system_statusbar_mobile_signal_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						Bundle args = new Bundle();
+						args.putBoolean("isStandalone", true);
+						Bundle catInfo = new Bundle();
+						catInfo.putBoolean("isDynamic", true);
+						args.putBundle("catInfo", catInfo);
+						args.putString("sub", preference.getKey());
+						String title = preference.getTitle().toString();
+						openSubFragment(new System(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, title, R.xml.prefs_system_statusbar_mobilesignal);
+						return true;
+					}
+				});
 				findPreference("pref_key_system_statusbaricons_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
-						openSubFragment(new SubFragment(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_statusbaricons_title, R.xml.prefs_system_hideicons);
+						Bundle args = new Bundle();
+						args.putBoolean("isStandalone", true);
+						Bundle catInfo = new Bundle();
+						catInfo.putBoolean("isDynamic", true);
+						args.putBundle("catInfo", catInfo);
+						args.putString("sub", preference.getKey());
+						String title = preference.getTitle().toString();
+						openSubFragment(new System(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, title, R.xml.prefs_system_hideicons);
 						return true;
 					}
 				});
 				findPreference("pref_key_system_statusbaricons_atright_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
-						openSubFragment(new SubFragment(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_statusbaricons_change_position_title, R.xml.prefs_system_statusbar_righticons);
+						Bundle args = new Bundle();
+						args.putBoolean("isStandalone", true);
+						Bundle catInfo = new Bundle();
+						catInfo.putBoolean("isDynamic", true);
+						args.putBundle("catInfo", catInfo);
+						args.putString("sub", preference.getKey());
+						String title = preference.getTitle().toString();
+						openSubFragment(new System(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, title, R.xml.prefs_system_statusbar_righticons);
 						return true;
 					}
 				});
-
+				findPreference("pref_key_system_statusbar_clocktweak_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						Bundle args = new Bundle();
+						args.putBoolean("isStandalone", true);
+						Bundle catInfo = new Bundle();
+						catInfo.putBoolean("isDynamic", true);
+						args.putBundle("catInfo", catInfo);
+						args.putString("sub", preference.getKey());
+						String title = preference.getTitle().toString();
+						openSubFragment(new System(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, title, R.xml.prefs_system_statusbar_clock);
+						return true;
+					}
+				});
 				findPreference("pref_key_system_batteryindicator_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
@@ -199,11 +238,6 @@ public class System extends SubFragment {
 						return true;
 					}
 				});
-
-				Configuration config = getResources().getConfiguration();
-				if (config.getLocales().get(0).getCountry().equals("CN")) {
-					findPreference("pref_key_system_clock_show_ampm").setVisible(true);
-				}
 
 				break;
 			case "pref_key_system_cat_drawer":
@@ -254,17 +288,16 @@ public class System extends SubFragment {
 						return true;
 					}
 				});
-//				findPreference("pref_key_system_snoozedmanager").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-//					@Override
-//					public boolean onPreferenceChange(Preference preference, Object newValue) {
-//						PackageManager pm = getActivity().getPackageManager();
-//						if ((Boolean)newValue)
-//							pm.setComponentEnabledSetting(new ComponentName(getActivity(), SnoozedActivity.class), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-//						else
-//							pm.setComponentEnabledSetting(new ComponentName(getActivity(), SnoozedActivity.class), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-//						return true;
-//					}
-//				});
+
+				findPreference("pref_key_system_colorizenotifs_apps").setOnPreferenceClickListener(openAppsEdit);
+				findPreference("pref_key_system_colorizenotifs_apps").setEnabled(!Objects.equals(Helpers.prefs.getString("pref_key_system_colorizenotifs", "1"), "1"));
+				findPreference("pref_key_system_colorizenotifs").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+					@Override
+					public boolean onPreferenceChange(Preference preference, Object newValue) {
+						findPreference("pref_key_system_colorizenotifs_apps").setEnabled(!newValue.equals("1"));
+						return true;
+					}
+				});
 				break;
 			case "pref_key_system_cat_qs":
 				findPreference("pref_key_system_qshaptics_ignore").setEnabled(!Objects.equals(Helpers.prefs.getString("pref_key_system_qshaptics", "1"), "1"));
@@ -294,10 +327,6 @@ public class System extends SubFragment {
 					@Override
 					public void onStopTrackingTouch(SeekBar seekBar) {}
 				});
-
-				if (Helpers.isTPlus()) {
-					findPreference("pref_key_system_cc_disable_bluetooth_restrict").setVisible(true);
-				}
 				break;
 			case "pref_key_system_cat_recents":
 				findPreference("pref_key_system_hidefromrecents_apps").setOnPreferenceClickListener(openAppsEdit);
@@ -400,10 +429,6 @@ public class System extends SubFragment {
 				break;
 			case "pref_key_system_cat_other":
 				findPreference("pref_key_system_forceclose_apps").setOnPreferenceClickListener(openAppsEdit);
-
-				if (Helpers.isTPlus()) {
-					((CheckBoxPreferenceEx)findPreference("pref_key_system_apksign")).setUnsupported(true);
-				}
 
 				findPreference("pref_key_system_cleanshare_apps").setOnPreferenceClickListener(openShareEdit);
 				findPreference("pref_key_system_cleanshare_test").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -558,6 +583,33 @@ public class System extends SubFragment {
 						else {
 							netspeedFontSizePref.setValue(14, true);
 						}
+						return true;
+					}
+				});
+				break;
+			case "pref_key_system_statusbar_clocktweak_cat":
+				PreferenceEx pref = findPreference("pref_key_system_statusbar_clock_customformat");
+				String format = Helpers.prefs.getString(pref.getKey(), "");
+				pref.setCustomSummary(getResources().getString(TextUtils.isEmpty(format) ? R.string.value_is_empty : R.string.value_is_set));
+				int formatSummId = R.string.system_clock_customformat_help_summ;
+				pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						Helpers.showInputDialog(getActivity(), pref.getKey(), R.string.system_clock_customformat_setting_title, formatSummId, 2, new Helpers.InputCallback() {
+							@Override
+							public void onInputFinished(String key, String text) {
+								if (TextUtils.isEmpty(text))
+									Helpers.prefs.edit().remove(key).apply();
+								else {
+									String[] lines = text.split("\n");
+									if (lines.length > 2) {
+										text = lines[0] + "\n" + lines[1];
+									}
+									Helpers.prefs.edit().putString(key, text).apply();
+								}
+								pref.setCustomSummary(getResources().getString(TextUtils.isEmpty(text) ? R.string.value_is_empty : R.string.value_is_set));
+							}
+						});
 						return true;
 					}
 				});

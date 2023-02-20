@@ -2,7 +2,7 @@
 <resources>
 
 	<attr name="dynamic" format="boolean" />
-	<attr name="child" format="boolean" />
+	<attr name="indentLevel" format="integer" />
 
 	<declare-styleable name="PreferenceCategoryEx">
 		<attr name="dynamic" />
@@ -12,7 +12,7 @@
 
 	<declare-styleable name="PreferenceEx">
 		<attr name="dynamic" />
-		<attr name="child" />
+		<attr name="indentLevel" />
 		<attr name="longClickable" format="boolean" />
 		<attr name="warning" format="boolean" />
 		<attr name="notice" format="boolean" />
@@ -22,18 +22,18 @@
 
 	<declare-styleable name="CheckBoxPreferenceEx">
 		<attr name="dynamic" />
-		<attr name="child" />
+		<attr name="indentLevel" />
 	</declare-styleable>
 
 	<declare-styleable name="ListPreferenceEx">
 		<attr name="dynamic" />
-		<attr name="child" />
+		<attr name="indentLevel" />
 		<attr name="valueAsSummary" format="boolean" />
 	</declare-styleable>
 
 	<declare-styleable name="DropDownPreferenceEx">
 		<attr name="dynamic" />
-		<attr name="child" />
+		<attr name="indentLevel" />
 	</declare-styleable>
 
 	<declare-styleable name="SpinnerEx">
@@ -51,8 +51,8 @@
 		<attr name="format" format="string" />
 		<attr name="note" format="string" />
 		<attr name="offtext" format="string" />
-		<attr name="child" />
 		<attr name="dynamic" />
+		<attr name="indentLevel" />
 	</declare-styleable>
 
 	<attr name="preferenceSecondaryTextColor" format="reference|color" />

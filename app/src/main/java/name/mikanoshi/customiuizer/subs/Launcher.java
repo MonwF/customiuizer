@@ -74,14 +74,6 @@ public class Launcher extends SubFragment {
 						return true;
 					}
 				});
-				findPreference("pref_key_launcher_folderblur_cat").setEnabled(opt == 1);
-				findPreference("pref_key_launcher_folderblur_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-					@Override
-					public boolean onPreferenceClick(Preference preference) {
-						openSubFragment(new Launcher_FolderBlur(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.launcher_folderblur_title, R.xml.prefs_launcher_folderblur);
-						return true;
-					}
-				});
 				break;
 			case "pref_key_launcher_cat_gestures":
 				findPreference("pref_key_launcher_swipedown").setOnPreferenceClickListener(openLauncherActions);

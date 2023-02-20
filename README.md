@@ -5,6 +5,11 @@ Customize MIUI to your liking
 
 For MIUI 13 & 14 based on android 12 and 13
 
+> Thanks for the awesome module from [Mikanoshi](https://code.highspec.ru/Mikanoshi/CustoMIUIzer)
+
+### Translations
+[![Crowdin](https://badges.crowdin.net/customiuizer14/localized.svg)](https://crowdin.com/project/customiuizer14)
+
 ### Dowload
 * [Releases](https://github.com/MonwF/customiuizer/releases)
 * LSPosed Repo

@@ -286,14 +286,12 @@
 	</integer-array>
 
 	<string-array name="appsort">
-		<item>@string/appsort_running</item>
 		<item>@string/appsort_name</item>
 		<item>@string/appsort_frequency</item>
 		<item>@string/appsort_storage</item>
 		<item>@string/appsort_install</item>
 	</string-array>
 	<string-array name="appsort_val">
-		<item>0</item>
 		<item>1</item>
 		<item>2</item>
 		<item>3</item>
@@ -311,13 +309,26 @@
 		<item>3</item>
 	</string-array>
 
+	<string-array name="defaultactions">
+		<item>@string/array_default</item>
+		<item>@string/array_allow</item>
+		<item>@string/array_deny</item>
+	</string-array>
+	<string-array name="defaultactions_val">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+	</string-array>
+
 	<string-array name="incallui">
 		<item>@string/array_default</item>
+		<item>@string/array_home</item>
 		<item>@string/array_nofs</item>
 		<item>@string/array_always</item>
 	</string-array>
 	<string-array name="incallui_val">
 		<item>0</item>
+		<item>3</item>
 		<item>1</item>
 		<item>2</item>
 	</string-array>
@@ -688,6 +699,30 @@
 		<item>2</item>
 	</string-array>
 
+	<string-array name="horizontalalign">
+		<item>@string/array_default</item>
+		<item>@string/array_align_left</item>
+		<item>@string/array_align_center</item>
+		<item>@string/array_align_right</item>
+	</string-array>
+	<string-array name="horizontalalign_val">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+		<item>4</item>
+	</string-array>
+
+	<string-array name="statusbar_clock_position">
+		<item>@string/array_default</item>
+		<item>@string/array_align_center</item>
+		<item>@string/array_align_right</item>
+	</string-array>
+	<string-array name="statusbar_clock_position_val">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+	</string-array>
+
 	<string-array name="slideoptions">
 		<item>@string/array_disable</item>
 		<item>@string/array_adjust_brightness</item>
@@ -840,10 +875,17 @@
 		<item>@string/array_current</item>
 	</string-array>
 
-	<string-array name="snoozedactions">
-		<item>@string/snooze_unsnooze</item>
-		<item>@string/snooze_cancel</item>
-		<item>@string/snooze_restore</item>
+	<string-array name="batteryhideunit">
+		<item>@string/array_default</item>
+		<item>@string/array_both</item>
+		<item>@string/array_temperature</item>
+		<item>@string/array_current</item>
+	</string-array>
+	<string-array name="batteryhideunit_val">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
 	</string-array>
 
 	<string-array name="mimetypes">
@@ -872,9 +914,8 @@
 		<item>com.android.server.telecom</item>
 		<item>com.android.settings</item>
 		<item>com.android.systemui</item>
-		<item>com.android.thememanager</item>
 		<item>com.google.android.packageinstaller</item>
-		<item>com.miui.cleanmaster</item>
+		<item>com.miui.miwallpaper</item>
 		<item>com.miui.packageinstaller</item>
 		<item>com.miui.powerkeeper</item>
 		<item>com.miui.securitycenter</item>
@@ -883,5 +924,6 @@
 		<item>com.miui.screenshot</item>
 		<item>com.mi.android.globallauncher</item>
 		<item>com.miui.gallery</item>
+		<item>com.lbe.security.miui</item>
 	</string-array>
 </resources>

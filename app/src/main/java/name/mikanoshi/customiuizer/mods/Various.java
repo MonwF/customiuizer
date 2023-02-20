@@ -221,7 +221,8 @@ public class Various {
 			return null;
 		}
 		if (bundle == null) bundle = new Bundle();
-		int order = Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_various_appsort", "0"));
+		int order = Integer.parseInt(Helpers.getSharedStringPref(context, "pref_key_various_appsort", "1"));
+		order = order - 1;
 		bundle.putInt("current_sory_type", order); // Xiaomi noob typos :)
 		bundle.putInt("current_sort_type", order); // Future proof, they may fix it someday :D
 		return bundle;
@@ -440,6 +441,41 @@ public class Various {
 			}
 		}
 	}
+
+	public static void SmartClipboardActionHook(LoadPackageParam lpparam) {
+		int opt = MainModule.mPrefs.getStringAsInt("various_clipboard_defaultaction", 1);
+		if (opt == 3) {
+			Helpers.findAndHookMethod("com.lbe.security.ui.ClipboardTipDialog", lpparam.classLoader, "customReadClipboardDialog", Context.class, String.class, XC_MethodReplacement.returnConstant(false));
+		}
+		else {
+			Helpers.findAndHookMethod("com.lbe.security.ui.ClipboardTipDialog", lpparam.classLoader, "customReadClipboardDialog", Context.class, String.class, XC_MethodReplacement.returnConstant(true));
+
+			Class<?> SecurityPromptHandler = findClass("com.lbe.security.ui.SecurityPromptHandler", lpparam.classLoader);
+			Helpers.hookAllMethods(SecurityPromptHandler, "handleNewRequest", new MethodHook() {
+				@Override
+				protected void before(MethodHookParam param) throws Throwable {
+					Object permissionRequest = param.args[0];
+					long permId = (long) XposedHelpers.callMethod(permissionRequest, "getPermission");
+					if (permId == 274877906944L) {
+						XposedHelpers.setAdditionalInstanceField(param.thisObject, "currentStopped", XposedHelpers.getBooleanField(param.thisObject, "mStopped"));
+					}
+				}
+				@Override
+				protected void after(MethodHookParam param) throws Throwable {
+					Object permissionRequest = param.args[0];
+					long permId = (long) XposedHelpers.callMethod(permissionRequest, "getPermission");
+					if (permId == 274877906944L) {
+						boolean mStopped = (boolean) XposedHelpers.getAdditionalInstanceField(param.thisObject, "currentStopped");
+						if (mStopped) {
+							XposedHelpers.callMethod(param.thisObject, "gotChoice", 3, true, true);
+						}
+						XposedHelpers.removeAdditionalInstanceField(param.thisObject, "currentStopped");
+					}
+				}
+			});
+		}
+	}
+
 	public static void ShowTempInBatteryHook(LoadPackageParam lpparam) {
 		Class<?> InterceptBaseFragmentClass = XposedHelpers.findClass("com.miui.powercenter.BatteryFragment", lpparam.classLoader);
 		Class<?>[] innerClasses = InterceptBaseFragmentClass.getDeclaredClasses();
@@ -563,21 +599,45 @@ public class Various {
 		});
 	}
 
+	public static void AnswerCallInHeadUpHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.android.incallui.InCallPresenter", lpparam.classLoader, "answerIncomingCall", Context.class, String.class, int.class, boolean.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				boolean showUi = (boolean) param.args[3];
+				if (showUi) {
+					Context mContext = (Context) param.args[0];
+					String topPackage = Settings.Global.getString(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.package");
+					if (topPackage == null || !topPackage.equals("com.miui.home")) {
+						param.args[3] = false;
+					}
+				}
+			}
+		});
+	}
+
 	public static void ShowCallUIHook(LoadPackageParam lpparam) {
 		Helpers.hookAllMethods("com.android.incallui.InCallPresenter", lpparam.classLoader, "startUi", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				if (!(boolean)param.getResult() || !"INCOMING".equals(param.args[0].toString())) return;
 				try {
-					boolean isCarMode = (boolean)XposedHelpers.callStaticMethod(XposedHelpers.findClass("com.android.incallui.util.Utils.CarMode", lpparam.classLoader), "isCarMode");
+					boolean isCarMode = (boolean)XposedHelpers.callStaticMethod(XposedHelpers.findClass("com.android.incallui.carmode.CarModeUtils", lpparam.classLoader), "isCarMode");
 					if (isCarMode) return;
 				} catch (Throwable t) {
-					XposedBridge.log(t);
+					Helpers.log(t);
+				}
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+				if (MainModule.mPrefs.getStringAsInt("various_showcallui", 0) == 3) {
+					String topPackage = Settings.Global.getString(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.package");
+					if (topPackage != null && !topPackage.equals("com.miui.home")) {
+						return;
+					}
 				}
 
-				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-				if (MainModule.mPrefs.getStringAsInt("various_showcallui", 0) == 1)
-				if (Settings.Global.getInt(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.fullscreen", 0) == 1) return;
+				if (MainModule.mPrefs.getStringAsInt("various_showcallui", 0) == 1) {
+					int fullScreen = Settings.Global.getInt(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.fullscreen", 0);
+					if (fullScreen == 1) return;
+				}
 
 				XposedHelpers.callMethod(param.thisObject, "showInCall", false, false);
 				Object mStatusBarNotifier = XposedHelpers.getObjectField(param.thisObject, "mStatusBarNotifier");
