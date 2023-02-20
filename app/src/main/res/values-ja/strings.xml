@@ -256,11 +256,11 @@
   <string name="system_separatevolume_summ">着信音、通知音、システムの音量を個別で設定可能にします</string>
   <string name="system_separatevolume_slider_title">通知の音量スライダー</string>
   <string name="system_separatevolume_slider_summ">拡張音量ダイアログに通知のスライダーを追加します</string>
-  <string name="system_nomediamute_title">メディアのミュートを無効化する</string>
+  <string name="system_nomediamute_title">メディアのミュートを無効化</string>
   <string name="system_nomediamute_summ">Do Not Disturbモードでメディアの音量をミュートにしないようにします</string>
   <string name="system_volumetimer_title">拡張タイマー</string>
   <string name="system_volumetimer_summ">サイレントとDo Not Disturbモードに間隔を追加します</string>
-  <string name="system_volumebar_blur_mtk_title">MTKデバイスの音量バーのぼかし効果の対応を有効化する</string>
+  <string name="system_volumebar_blur_mtk_title">MTKデバイスの音量バーのぼかし効果の対応を有効化</string>
   <string name="system_volumedialogdelay_collapsed_title">音量ダイアログの自動非表示までの遅延時間</string>
   <string name="system_volumedialogdelay_collapsed_summ">折りたたむ</string>
   <string name="system_volumedialogdelay_expanded_summ">展開</string>
