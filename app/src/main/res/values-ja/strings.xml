@@ -517,7 +517,7 @@
   <string name="system_mods_animationscale">アニメーションスケール</string>
   <string name="system_animationscale_window_title">ウィンドウ</string>
   <string name="system_animationscale_transition_title">トランジション</string>
-  <string name="system_animationscale_animator_title">Animator再生時間</string
+  <string name="system_animationscale_animator_title">Animator再生時間</string>
   <string name="poco_mods">POCO Launcher</string>
   <string name="launcher_mods">MIUI Launcher</string>
   <string name="launcher_gestures">ジェスチャー</string>
