@@ -451,7 +451,10 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 System.NotificationVolumeSettingsRes();
                 System.NotificationVolumeSettingsHook(lpparam);
             }
-            if (mPrefs.getBoolean("system_disableanynotif")) System.DisableAnyNotificationHook(lpparam);
+            if (mPrefs.getBoolean("system_disableanynotif")) {
+                System.DisableAnyNotificationHook(lpparam);
+                System.DisableAnyNotificationBlockHook(lpparam);
+            }
             if (!mPrefs.getString("system_defaultusb", "none").equals("none")) System.USBConfigSettingsHook(lpparam);
             if (mPrefs.getBoolean("system_notifimportance")) {
                 System.NotificationImportanceHook(lpparam);
