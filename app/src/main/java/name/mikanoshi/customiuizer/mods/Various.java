@@ -75,6 +75,8 @@ import de.robv.android.xposed.XposedHelpers;
 
 import android.app.AlertDialog;
 
+import miui.process.ForegroundInfo;
+import miui.process.ProcessManager;
 import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
@@ -605,10 +607,12 @@ public class Various {
 			protected void before(MethodHookParam param) throws Throwable {
 				boolean showUi = (boolean) param.args[3];
 				if (showUi) {
-					Context mContext = (Context) param.args[0];
-					String topPackage = Settings.Global.getString(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.package");
-					if (topPackage == null || !topPackage.equals("com.miui.home")) {
-						param.args[3] = false;
+					ForegroundInfo foregroundInfo = ProcessManager.getForegroundInfo();
+					if (foregroundInfo != null) {
+						String topPackage = foregroundInfo.mForegroundPackageName;
+						if (!"com.miui.home".equals(topPackage)) {
+							param.args[3] = false;
+						}
 					}
 				}
 			}

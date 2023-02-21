@@ -1307,27 +1307,6 @@ public class System {
         });
     }
 
-    public static void PopupNotificationsHook(LoadPackageParam lpparam) {
-        Helpers.hookAllMethods(StatusBarCls, lpparam.classLoader, "addNotification", new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                if (param.args[0] == null) return;
-
-                Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-                if (MainModule.mPrefs.getBoolean("system_popupnotif_fs"))
-                    if (Settings.Global.getInt(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.fullscreen", 0) == 1) return;
-
-                Set<String> selectedApps = Helpers.getSharedStringSetPref(mContext, "pref_key_system_popupnotif_apps");
-                String pkgName = (String)XposedHelpers.callMethod(param.args[0], "getPackageName");
-                if (selectedApps.contains(pkgName)) {
-                    Intent expandNotif = new Intent(ACTION_PREFIX + "ExpandNotifications");
-                    expandNotif.putExtra("expand_only", true);
-                    mContext.sendBroadcast(expandNotif);
-                }
-            }
-        });
-    }
-
     public static void DrawerBlurRatioHook(LoadPackageParam lpparam) {
         Helpers.hookAllConstructors("com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController", lpparam.classLoader, new MethodHook() {
             @Override

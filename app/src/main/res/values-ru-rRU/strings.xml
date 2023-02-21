@@ -743,10 +743,6 @@
     <string name="system_notifmediaseekbar_summ">Добавляет слайдер в медиа уведомление для отображения и изменения текущей позиции</string>
     <string name="system_notifmediaseekbar_full_title">Использовать системный стиль</string>
     <string name="system_notifmediaseekbar_full_summ">Не применять специальный тонкий стиль к слайдеру</string>
-    <string name="system_popupnotif_title">Автооткрытие панели уведомлений</string>
-    <string name="system_popupnotif_summ">Открывает панель уведомлений автоматически при получении уведомлений от выбранных приложений</string>
-    <string name="system_popupnotif_fs_title">Определение полноэкранного режима</string>
-    <string name="system_popupnotif_fs_summ">Не открывать панель уведомлений, если запущено полноэкранное приложение (не распространяется на \"режим погружения\" со скрытыми панелями статуса и навигации)</string>
     <string name="system_popupnotif_apps_title">Выбранные приложения</string>
     <string name="system_mods_screenshots">Снимки экрана</string>
     <string name="system_screenshot_title">Конфигурация снимков экрана</string>

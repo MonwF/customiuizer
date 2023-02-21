@@ -824,54 +824,28 @@ public class GlobalActions {
 	}
 
 	public static void setupForegroundMonitor(LoadPackageParam lpparam) {
-		String methodSystemuiChange = Helpers.isTPlus() ? "updateSystemBarAttributes" : "updateSystemUiVisibilityLw";
-		Helpers.hookAllMethods("com.android.server.wm.DisplayPolicy", lpparam.classLoader, methodSystemuiChange, new MethodHook() {
-			private String pkgName = null;
-			private boolean fullScreen = false;
+		Helpers.hookAllConstructors("com.android.systemui.statusbar.policy.NetworkSpeedController", lpparam.classLoader, new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
-				Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
-				if (mContext != null) try {
-					String focusedApp;
-					if (Helpers.isTPlus()) {
-						focusedApp = (String) XposedHelpers.getObjectField(param.thisObject, "mFocusedApp");
-					}
-					else {
-						Object mSystemUiControllingWindow = XposedHelpers.getObjectField(param.thisObject, "mSystemUiControllingWindow");
-						WindowManager.LayoutParams mAttrs = (WindowManager.LayoutParams)XposedHelpers.getObjectField(mSystemUiControllingWindow, "mAttrs");
-						focusedApp = mAttrs.packageName;
-					}
-
-					boolean focusAppChanged = false;
-					boolean fullscreenChanged = false;
-					if (focusedApp != null && !focusedApp.equals(pkgName)) {
-						pkgName = focusedApp;
-						focusAppChanged = true;
-					}
-					boolean isFullScreen = XposedHelpers.getBooleanField(param.thisObject, Helpers.isTPlus() ? "mTopIsFullscreen" : "mLastFocusIsFullscreen");
-					if (fullScreen != isFullScreen) {
-						fullScreen = isFullScreen;
-						fullscreenChanged = true;
-					}
-					if (fullscreenChanged || focusAppChanged) {
-						Handler mHandler = (Handler) XposedHelpers.getObjectField(param.thisObject, "mHandler");
-						boolean finalFullscreenChanged = fullscreenChanged;
-						boolean finalFocusAppChanged = focusAppChanged;
-						mHandler.post(new Runnable() {
-							@Override
-							public void run() {
-								if (finalFullscreenChanged) {
+				final Context mContext = (Context) param.args[0];
+				final Handler mBgHandler = (Handler) XposedHelpers.getObjectField(param.thisObject, "mBgHandler");
+				final String methodSystemuiChange = Helpers.isTPlus() ? "setSystemBarAttributes" : "setFullscreenState";
+				Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarStateControllerImpl", lpparam.classLoader, methodSystemuiChange, new MethodHook() {
+					private boolean fullScreen = false;
+					@Override
+					protected void after(MethodHookParam param) throws Throwable {
+						boolean isFullScreen = XposedHelpers.getBooleanField(param.thisObject, "mIsFullscreen");
+						if (fullScreen != isFullScreen) {
+							mBgHandler.post(new Runnable() {
+								@Override
+								public void run() {
 									Settings.Global.putInt(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.fullscreen", fullScreen ? 1 : 0);
 								}
-								if (finalFocusAppChanged) {
-									Settings.Global.putString(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.package", pkgName);
-								}
-							}
-						});
+							});
+						}
+						fullScreen = isFullScreen;
 					}
-				} catch (Throwable t) {
-					Helpers.log("ForegroundMonitor", t);
-				}
+				});
 			}
 		});
 	}

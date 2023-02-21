@@ -184,10 +184,6 @@
     <string name="system_notifmediaseekbar_summ">Add media notification slider that indicates current position and allows to change it</string>
     <string name="system_notifmediaseekbar_full_title">Use system style</string>
     <string name="system_notifmediaseekbar_full_summ">Do not apply custom thin style to slider</string>
-    <string name="system_popupnotif_title">Auto open notification drawer</string>
-    <string name="system_popupnotif_summ">Open notification drawer automatically on notifications from selected apps</string>
-    <string name="system_popupnotif_fs_title">Respect fullscreen</string>
-    <string name="system_popupnotif_fs_summ">Do not open notification drawer when fullscreen app is active (does not apply to immersive apps with hidden status and navigation bars)</string>
     <string name="system_popupnotif_apps_title">Selected apps</string>
     <string name="system_mods_screenshots">Screenshots</string>
     <string name="system_screenshot_title">Screenshot configuration</string>

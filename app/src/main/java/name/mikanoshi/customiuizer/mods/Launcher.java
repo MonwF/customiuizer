@@ -62,6 +62,8 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
+import miui.process.ForegroundInfo;
+import miui.process.ProcessManager;
 import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.Helpers.MethodHook;
@@ -533,11 +535,12 @@ public class Launcher {
 			protected void after(MethodHookParam param) throws Throwable {
 				if (!"force_fsg_nav_bar".equals(param.args[1])) return;
 
-				for (StackTraceElement el: Thread.currentThread().getStackTrace())
-				if ("com.miui.home.recents.BaseRecentsImpl".equals(el.getClassName())) {
-					XposedHelpers.setAdditionalStaticField(XposedHelpers.findClass("com.miui.home.recents.BaseRecentsImpl", lpparam.classLoader), "REAL_FORCE_FSG_NAV_BAR", param.getResult());
-					param.setResult(true);
-					return;
+				for (StackTraceElement el: Thread.currentThread().getStackTrace()) {
+					if ("com.miui.home.recents.BaseRecentsImpl".equals(el.getClassName())) {
+						XposedHelpers.setAdditionalStaticField(XposedHelpers.findClass("com.miui.home.recents.BaseRecentsImpl", lpparam.classLoader), "REAL_FORCE_FSG_NAV_BAR", param.getResult());
+						param.setResult(true);
+						return;
+					}
 				}
 			}
 		});
@@ -547,9 +550,11 @@ public class Launcher {
 			protected void before(MethodHookParam param) throws Throwable {
 				MotionEvent event = (MotionEvent)param.args[0];
 				if (event.getAction() != MotionEvent.ACTION_DOWN) return;
-				View stub = (View)param.thisObject;
-				String pkgName = Settings.Global.getString(stub.getContext().getContentResolver(), Helpers.modulePkg + ".foreground.package");
-				if (MainModule.mPrefs.getStringSet("controls_fsg_horiz_apps").contains(pkgName)) param.setResult(false);
+				ForegroundInfo foregroundInfo = ProcessManager.getForegroundInfo();
+				if (foregroundInfo != null) {
+					String pkgName = foregroundInfo.mForegroundPackageName;
+					if (MainModule.mPrefs.getStringSet("controls_fsg_horiz_apps").contains(pkgName)) param.setResult(false);
+				}
 			}
 		});
 	}
