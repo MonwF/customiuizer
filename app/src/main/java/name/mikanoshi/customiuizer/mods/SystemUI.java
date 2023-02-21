@@ -1164,19 +1164,18 @@ public class SystemUI {
                 }
             }
         });
-
-        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.PhoneStatusBarView", lpparam.classLoader, "updateLayoutForCutout", new MethodHook() {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.PhoneStatusBarView", lpparam.classLoader, "updateLayoutForCutout", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 int mCurrentStatusBarType = (int) XposedHelpers.getObjectField(param.thisObject, "mCurrentStatusBarType");
                 View mSystemIconArea = (View) XposedHelpers.getObjectField(param.thisObject, "mSystemIconArea");
+                View mStatusBarLeftContainer = (View) XposedHelpers.getObjectField(param.thisObject, "mStatusBarLeftContainer");
                 if (mCurrentStatusBarType == 0) {
                     LinearLayout.LayoutParams mSystemIconAreaLp = (LinearLayout.LayoutParams) mSystemIconArea.getLayoutParams();
                     mSystemIconAreaLp.width = 0;
                     mSystemIconAreaLp.weight = 1.0f;
                     if (pos == 2) {
                         LinearLayout rightContainer = (LinearLayout) mSystemIconArea.getParent();
-                        View mStatusBarLeftContainer = (View) XposedHelpers.getObjectField(param.thisObject, "mStatusBarLeftContainer");
                         View mDripStatusBarNotificationIconArea = (View) XposedHelpers.getObjectField(param.thisObject, "mDripStatusBarNotificationIconArea");
                         mDripStatusBarNotificationIconArea.setVisibility(View.VISIBLE);
                         LinearLayout.LayoutParams mStatusBarLeftContainerLp = (LinearLayout.LayoutParams) mStatusBarLeftContainer.getLayoutParams();
@@ -1196,6 +1195,9 @@ public class SystemUI {
                     View mCutoutSpace = (View) XposedHelpers.getObjectField(param.thisObject, "mCutoutSpace");
                     if (pos == 2) {
                         mCutoutSpace.setVisibility(View.GONE);
+                        mStatusBarLeftContainer.setPadding(0, 0, 0, 0);
+                        LinearLayout rightContainer = (LinearLayout) mSystemIconArea.getParent();
+                        rightContainer.setPadding(0, 0, 0, 0);
                     }
                 }
             }
