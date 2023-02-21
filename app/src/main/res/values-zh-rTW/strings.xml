@@ -211,7 +211,6 @@
     <string name="controls_fingerprintsuccess_title">成功時振動</string>
     <string name="controls_fingerprintwake_summ">未錄入指紋時不開啟螢幕</string>
     <string name="controls_fingerprintwake_title">需要實際指紋</string>
-    <string name="controls_fsg_assist_summ">執行選定的動作而不是開啟Google Assistant</string>
     <string name="controls_fsg_assist_title">螢幕角落滑動動作</string>
     <string name="controls_fsg_coverage_title">返回手勢區域高度</string>
     <string name="controls_fsg_horiz_summ">啟用水平手勢和導航欄</string>

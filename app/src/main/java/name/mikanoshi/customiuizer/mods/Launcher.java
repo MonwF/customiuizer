@@ -1592,6 +1592,23 @@ public class Launcher {
 
 	public static void AssistGestureActionHook(LoadPackageParam lpparam) {
 		Helpers.findAndHookMethod("com.android.systemui.shared.recents.system.AssistManager", lpparam.classLoader, "isSupportGoogleAssist", int.class, XC_MethodReplacement.returnConstant(true));
+		final Class<?> FsGestureHelper = findClassIfExists("com.miui.home.recents.FsGestureAssistHelper", lpparam.classLoader);
+		Helpers.findAndHookMethod(FsGestureHelper, "canTriggerAssistantAction", float.class, float.class, int.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				boolean isDisabled = (boolean) XposedHelpers.callStaticMethod(FsGestureHelper, "isAssistantGestureDisabled", param.args[2]);
+				if (!isDisabled) {
+					int mAssistantWidth = XposedHelpers.getIntField(param.thisObject, "mAssistantWidth");
+					float f = (float) param.args[0];
+					float f2 = (float) param.args[1];
+					if (f < mAssistantWidth || f > f2 - mAssistantWidth) {
+						param.setResult(true);
+						return;
+					}
+				}
+				param.setResult(false);
+			}
+		});
 	}
 
 	public static void DisableUnlockWallpaperScale(LoadPackageParam lpparam) {

@@ -667,8 +667,7 @@
   <string name="controls_fsg_horiz_title">水平方向のジェスチャー</string>
   <string name="controls_fsg_horiz_summ">水平方向のジェスチャーとナビゲーションバーの両方を有効にします</string>
   <string name="controls_fsg_assist_title">コーナースワイプのアクション</string>
-  <string name="controls_fsg_assist_summ">Googleアシスタントを開く代わりに選択をしたアクションを実行します</string>
-  <string name="various_mods">各種のMod</string>
+    <string name="various_mods">各種のMod</string>
   <string name="various_hiddenfeatures_title">隠された機能</string>
   <string name="various_hiddenfeatures_summ">簡単にアクセスできないアクティビティを開きます</string>
   <string name="various_hiddenfeatures_not_found">このデバイスでは使用できません</string>

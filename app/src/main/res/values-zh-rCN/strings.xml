@@ -642,13 +642,12 @@
     <string name="controls_navbarmargin_title">附加边距</string>
     <string name="controls_navbarmargin_summ">增大附加按钮到屏幕边缘的距离</string>
     <string name="controls_navbar_noaction">无定义的动作</string>
-    <string name="controls_mods_fsg">全屏导航手势</string>
+    <string name="controls_mods_fsg">全面屏导航手势</string>
     <string name="controls_fsg_coverage_title">返回手势区域高度</string>
     <string name="controls_fsg_width_title">返回手势区域宽度</string>
     <string name="controls_fsg_horiz_title">水平手势</string>
-    <string name="controls_fsg_horiz_summ">启用水平手势和导航栏</string>
-    <string name="controls_fsg_assist_title">屏幕角落滑动动作</string>
-    <string name="controls_fsg_assist_summ">执行选定的动作而不是打开Google Assistant</string>
+    <string name="controls_fsg_horiz_summ">同时启用水平手势和导航栏</string>
+    <string name="controls_fsg_assist_title">屏幕左下角或右下角上划动作</string>
     <string name="various_mods">杂项</string>
     <string name="various_miuiinstaller_title">使用MIUI应用包安装器</string>
     <string name="various_miuiinstaller_summ">允许其更新系统应用</string>
