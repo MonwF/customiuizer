@@ -984,6 +984,19 @@
 			android:summary="@string/system_fw_splitscreen_summ"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_fw_forcein_actionsend"
+			android:title="@string/system_fw_forcein_actionsend_title"
+			android:summary="@string/array_expandnotifs_allbutblack"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_fw_forcein_actionsend_apps"
+			android:title="@string/system_popupnotif_apps_title"
+			android:dependency="pref_key_system_fw_forcein_actionsend"
+			miuizer:indentLevel="1"
+			miuizer:countAsSummary="true" />
+
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx

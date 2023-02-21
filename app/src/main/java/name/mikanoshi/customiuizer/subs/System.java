@@ -339,6 +339,9 @@ public class System extends SubFragment {
 					}
 				});
 				break;
+			case "pref_key_system_cat_floatingwindows":
+				findPreference("pref_key_system_fw_forcein_actionsend_apps").setOnPreferenceClickListener(openAppsEdit);
+				break;
 			case "pref_key_system_cat_applock":
 				findPreference("pref_key_system_applock_list").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 					@Override

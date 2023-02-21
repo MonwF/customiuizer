@@ -462,6 +462,7 @@
     <string name="system_fw_sticky_summ">Keep opening apps in floating windows until they are swicthed back to full screen manually</string>
     <string name="system_fw_splitscreen_title">Multiwindow+</string>
     <string name="system_fw_splitscreen_summ">Allow using split screen and floating windows together, disable backlist for splitscreen</string>
+    <string name="system_fw_forcein_actionsend_title">Open in floating window when sharing</string>
     <string name="system_mods_applock">App lock</string>
     <string name="system_applock_title">Less strict app lock</string>
     <string name="system_applock_summ">Do not lock apps when device is locked if option with app locking after exit is selected</string>
