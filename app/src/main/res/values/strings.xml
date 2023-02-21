@@ -674,7 +674,6 @@
     <string name="controls_fsg_horiz_title">Horizontal gestures</string>
     <string name="controls_fsg_horiz_summ">Enable both horizontal gestures and navigation bar</string>
     <string name="controls_fsg_assist_title">Corner swipe action</string>
-    <string name="controls_fsg_assist_summ">Perform selected action instead of opening Google Assistant</string>
 
     <string name="various_mods">Various</string>
     <string name="various_hiddenfeatures_title">Hidden features</string>

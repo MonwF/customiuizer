@@ -338,7 +338,6 @@
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_fsg_assist"
 			android:title="@string/controls_fsg_assist_title"
-			android:summary="@string/controls_fsg_assist_summ"
 			miuizer:dynamic="true" />
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>

@@ -209,8 +209,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getInt("system_netspeedinterval", 4) != 4) SystemUI.NetSpeedIntervalHook(lpparam);
             if (mPrefs.getInt("system_qsgridrows", 1) > 1 || mPrefs.getBoolean("system_qsnolabels")) SystemUI.QSGridLabelsHook(lpparam);
             if (mPrefs.getInt("system_lstimeout", 9) > 9) System.LockScreenTimeoutHook(lpparam);
-            if (mPrefs.getInt("controls_fsg_coverage", 60) != 60) Controls.BackGestureAreaHeightHook(lpparam, true);
-            if (mPrefs.getInt("controls_fsg_width", 100) > 100) Controls.BackGestureAreaWidthHook(lpparam, true);
             if (mPrefs.getInt("controls_fsg_assist_action", 1) > 1) Controls.AssistGestureActionHook(lpparam);
             if (mPrefs.getInt("controls_navbarleft_action", 1) > 1 ||
                     mPrefs.getInt("controls_navbarleftlong_action", 1) > 1 ||
@@ -563,8 +561,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                     mPrefs.getInt("system_recommended_second_action", 1) > 1 ||
                     mPrefs.getInt("system_recommended_third_action", 1) > 1 ||
                     mPrefs.getInt("system_recommended_fourth_action", 1) > 1) System.CustomRecommendedHook(lpparam, true);
-            if (mPrefs.getInt("controls_fsg_coverage", 60) != 60) Controls.BackGestureAreaHeightHook(lpparam, false);
-            if (mPrefs.getInt("controls_fsg_width", 100) > 100) Controls.BackGestureAreaWidthHook(lpparam, false);
+            if (mPrefs.getInt("controls_fsg_coverage", 60) != 60) Controls.BackGestureAreaHeightHook(lpparam);
+            if (mPrefs.getInt("controls_fsg_width", 100) > 100) Controls.BackGestureAreaWidthHook(lpparam);
             if (mPrefs.getBoolean("controls_fsg_horiz")) Launcher.FSGesturesHook(lpparam);
             if (mPrefs.getBoolean("system_removecleaner")) System.HideMemoryCleanHook(lpparam, true);
             if (mPrefs.getBoolean("system_recents_disable_wallpaperscale") || mPrefs.getBoolean("launcher_disable_wallpaperscale")) Launcher.DisableLauncherWallpaperScale(lpparam);

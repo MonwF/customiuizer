@@ -938,8 +938,8 @@ public class Controls {
 		});
 	}
 
-	public static void BackGestureAreaHeightHook(LoadPackageParam lpparam, boolean isNative) {
-		if (!Helpers.findAndHookMethodSilently(isNative ? "com.android.systemui.fsgesture.GestureStubView" : "com.miui.home.recents.GestureStubView", lpparam.classLoader, "getGestureStubWindowParam", new MethodHook() {
+	public static void BackGestureAreaHeightHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethodSilently("com.miui.home.recents.GestureStubView", lpparam.classLoader, "getGestureStubWindowParam", new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
 				WindowManager.LayoutParams lp = (WindowManager.LayoutParams)param.getResult();
@@ -947,11 +947,11 @@ public class Controls {
 				lp.height = Math.round(lp.height / 60.0f * pct);
 				param.setResult(lp);
 			}
-		})) if (isNative) Helpers.log("BackGestureAreaHeightHook", "Cannot hook GestureStubView");
+		});
 	}
 
-	public static void BackGestureAreaWidthHook(LoadPackageParam lpparam, boolean isNative) {
-		if (!Helpers.findAndHookMethodSilently(isNative ? "com.android.systemui.fsgesture.GestureStubView" : "com.miui.home.recents.GestureStubView", lpparam.classLoader, "initScreenSizeAndDensity", int.class, new MethodHook() {
+	public static void BackGestureAreaWidthHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethodSilently("com.miui.home.recents.GestureStubView", lpparam.classLoader, "initScreenSizeAndDensity", int.class, new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
 				int pct = MainModule.mPrefs.getInt("controls_fsg_width", 100);
@@ -963,9 +963,9 @@ public class Controls {
 				XposedHelpers.setIntField(param.thisObject, "mGestureStubDefaultSize", mGestureStubDefaultSize);
 				XposedHelpers.setIntField(param.thisObject, "mGestureStubSize", mGestureStubSize);
 			}
-		})) if (isNative) Helpers.log("BackGestureAreaWidthHook", "Cannot hook GestureStubView1");
+		});
 
-		if (!Helpers.findAndHookMethodSilently(isNative ? "com.android.systemui.fsgesture.GestureStubView" : "com.miui.home.recents.GestureStubView", lpparam.classLoader, "setSize", int.class, new MethodHook() {
+		Helpers.findAndHookMethodSilently("com.miui.home.recents.GestureStubView", lpparam.classLoader, "setSize", int.class, new MethodHook() {
 			@Override
 			protected void before(final MethodHookParam param) throws Throwable {
 				int pct = MainModule.mPrefs.getInt("controls_fsg_width", 100);
@@ -974,7 +974,7 @@ public class Controls {
 				if ((int)param.args[0] == mGestureStubDefaultSize) return;
 				param.args[0] = Math.round((int)param.args[0] * pct / 100f);
 			}
-		})) if (isNative) Helpers.log("BackGestureAreaWidthHook", "Cannot hook GestureStubView2");
+		});
 	}
 
 	public static void HideNavBarHook(LoadPackageParam lpparam) {
@@ -992,7 +992,7 @@ public class Controls {
 	}
 
 	public static void PowerDoubleTapActionHook(LoadPackageParam lpparam) {
-		ArrayList<String> doubleTapResons = new ArrayList<String>();
+		final ArrayList<String> doubleTapResons = new ArrayList<String>();
 		doubleTapResons.add("double_click_power");
 		doubleTapResons.add("power_double_tap");
 		doubleTapResons.add("double_click_power_key");

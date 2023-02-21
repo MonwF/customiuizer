@@ -351,7 +351,6 @@
     <string name="controls_fsg_horiz_title">Горизонтальные жесты</string>
     <string name="controls_fsg_horiz_summ">Активировать вместе горизонтальные жесты и панель навигации</string>
     <string name="controls_fsg_assist_title">Действие на свайп вверх в углу</string>
-    <string name="controls_fsg_assist_summ">Выполнить выбранное действие вместо запуска Google Ассистента</string>
     <string name="array_color_auto">Автоматический</string>
     <string name="array_color_dark">Тёмный</string>
     <string name="array_color_light">Светлый</string>
