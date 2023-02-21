@@ -751,7 +751,7 @@ public class GlobalActions {
 
 	private static int settingsIconResId;
 	public static void miuizerSettingsRes() {
-		settingsIconResId = MainModule.resHooks.addResource("ic_miuizer_settings", R.drawable.ic_miuizer_settings11);
+		settingsIconResId = MainModule.resHooks.addResource("ic_miuizer_settings", Helpers.isTPlus() ? R.drawable.ic_miuizer_settings11 : R.drawable.ic_miuizer_settings_legacy);
 	}
 
 	public static void miuizerSettings12Hook(LoadPackageParam lpparam) {
