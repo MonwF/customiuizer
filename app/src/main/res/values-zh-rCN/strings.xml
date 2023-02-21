@@ -447,6 +447,7 @@
     <string name="system_fw_sticky_summ">保持在浮动窗口中打开应用，直至手动将其切换回全屏</string>
     <string name="system_fw_splitscreen_title">多窗口</string>
     <string name="system_fw_splitscreen_summ">允许同时使用分屏和浮窗，同时禁用分屏黑名单</string>
+    <string name="system_fw_forcein_actionsend_title">应用间分享时以小窗打开</string>
     <string name="system_mods_applock">应用锁</string>
     <string name="system_applock_title">不严格的应用锁</string>
     <string name="system_applock_summ">如果选择了退出后应用锁定的选项，设备锁定时不要锁定应用</string>

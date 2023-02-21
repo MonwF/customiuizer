@@ -81,6 +81,7 @@ import android.text.style.AbsoluteSizeSpan;
 import android.text.style.TypefaceSpan;
 import android.util.ArrayMap;
 import android.util.AttributeSet;
+import android.util.MiuiMultiWindowUtils;
 import android.util.Pair;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
@@ -5126,7 +5127,7 @@ public class System {
     public static void restoreFwAppsInSetting(Context context) {
         unserializeFwApps(Settings.Global.getString(context.getContentResolver(), Helpers.modulePkg + ".fw.apps"));
     }
-    private static ActivityOptions patchActivityOptions(Context mContext, ActivityOptions options, String pkgName, Class<?> MiuiMultiWindowUtils) {
+    private static ActivityOptions patchActivityOptions(Context mContext, ActivityOptions options, String pkgName) {
         if (options == null) options = ActivityOptions.makeBasic();
         XposedHelpers.callMethod(options, "setLaunchWindowingMode", 5);
         XposedHelpers.callMethod(options, "setMiuiConfigFlag", 2);
@@ -5135,8 +5136,8 @@ public class System {
         Rect rect;
         Pair<Float, Rect> values = fwApps.get(pkgName);
         if (values == null || values.first == 0f || values.second == null) {
-            scale = 0.7f;
-            rect = (Rect)XposedHelpers.callStaticMethod(MiuiMultiWindowUtils, "getFreeformRect", mContext);
+                scale = 0.7f;
+            rect = MiuiMultiWindowUtils.getFreeformRect(mContext);
         } else {
             scale = values.first;
             rect = values.second;
@@ -5151,35 +5152,61 @@ public class System {
         return options;
     }
 
+    public static void OpenInFwWhenShareHook(LoadPackageParam lpparam) {
+        Helpers.hookAllMethods("com.android.server.wm.ActivityStarterInjector", lpparam.classLoader, "modifyLaunchActivityOptionIfNeed", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                if (param.args.length != 8) return;
+                Intent intent = (Intent) param.args[5];
+                if (intent == null || intent.getComponent() == null) return;
+                String pkgName = intent.getComponent().getPackageName();
+                if (MainModule.mPrefs.getStringSet("system_fw_forcein_actionsend_apps").contains(pkgName)) return;
+                if (Intent.ACTION_SEND.equals(intent.getAction())) {
+                    Context mContext;
+                    try {
+                        mContext = (Context) XposedHelpers.getObjectField(param.args[0], "mContext");
+                    } catch (Throwable ignore) {
+                        mContext = (Context) XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.args[0], "mService"), "mContext");
+                    }
+                    ActivityOptions options = MiuiMultiWindowUtils.getActivityOptions(mContext, intent.getComponent().getPackageName(), true, false);
+                    param.setResult(options);
+                }
+            }
+        });
+    }
+
     public static void StickyFloatingWindowsHook(LoadPackageParam lpparam) {
         final List<String> fwBlackList = new ArrayList<String>();
         fwBlackList.add("com.miui.securitycenter");
         fwBlackList.add("com.miui.home");
         fwBlackList.add("com.android.camera");
-        Class<?> MiuiMultiWindowUtils = findClass("android.util.MiuiMultiWindowUtils", lpparam.classLoader);
+        final boolean openFwWhenShare = MainModule.mPrefs.getBoolean("system_fw_forcein_actionsend");
         Helpers.hookAllMethods("com.android.server.wm.ActivityStarterInjector", lpparam.classLoader, "modifyLaunchActivityOptionIfNeed", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 if (param.args.length != 8) return;
                 Intent intent = (Intent)param.args[5];
                 if (intent == null || intent.getComponent() == null) return;
-                ActivityOptions options = (ActivityOptions)param.getResult();
-                int windowingMode = options == null ? -1 : (int)XposedHelpers.callMethod(options, "getLaunchWindowingMode");
+                boolean shareAction = openFwWhenShare && Intent.ACTION_SEND.equals(intent.getAction());
                 String pkgName = intent.getComponent().getPackageName();
-                if (fwBlackList.contains(pkgName)) return;
                 Context mContext;
                 try {
                     mContext = (Context)XposedHelpers.getObjectField(param.args[0], "mContext");
                 } catch (Throwable ignore) {
                     mContext = (Context)XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.args[0], "mService"), "mContext");
                 }
+                if (shareAction) {
+                    if (MainModule.mPrefs.getStringSet("system_fw_forcein_actionsend_apps").contains(pkgName)) return;
+                    param.setResult(MiuiMultiWindowUtils.getActivityOptions(mContext, pkgName, true, false));
+                    return;
+                }
+                if (fwBlackList.contains(pkgName)) return;
+                ActivityOptions options = (ActivityOptions)param.getResult();
+                int windowingMode = options == null ? -1 : (int)XposedHelpers.callMethod(options, "getLaunchWindowingMode");
+
                 if (windowingMode != 5 && fwApps.containsKey(pkgName)) {
                     try {
-                        if (MiuiMultiWindowUtils == null) {
-                            Helpers.log("StickyFloatingWindowsHook", "Cannot find MiuiMultiWindowUtils class");
-                            return;
-                        }
-                        options = patchActivityOptions(mContext, options, pkgName, MiuiMultiWindowUtils);
+                        options = patchActivityOptions(mContext, options, pkgName);
                         param.setResult(options);
                     } catch (Throwable t) {
                         Helpers.log(t);
@@ -5230,7 +5257,7 @@ public class System {
                     if (windowingMode != 5 && fwApps.containsKey(pkgName)) {
                         Object mService = XposedHelpers.getObjectField(param.thisObject, "mService");
                         Context mContext = (Context)XposedHelpers.getObjectField(mService, "mContext");
-                        options = patchActivityOptions(mContext, options, pkgName, MiuiMultiWindowUtils);
+                        options = patchActivityOptions(mContext, options, pkgName);
                         XposedHelpers.setObjectField(safeOptions, "mOriginalOptions", options);
                         param.args[3] = safeOptions;
                         Intent intent = new Intent(ACTION_PREFIX + "dismissRecentsWhenFreeWindowOpen");
