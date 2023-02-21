@@ -522,11 +522,6 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
-			android:key="pref_key_system_popupnotif_cat"
-			android:summary="@string/system_popupnotif_summ"
-			android:title="@string/system_popupnotif_title" />
-
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_shortcut_app"
 			android:title="@string/system_shortcut_app_title"
 			android:summary="@string/system_shortcut_app_summ"

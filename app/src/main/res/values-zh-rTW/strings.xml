@@ -742,10 +742,6 @@
     <string name="system_orientationlock_summ">添加快速設置磁貼，可以豎屏或者橫屏模式鎖定方向</string>
     <string name="system_orientationlock_title">方向鎖定</string>
     <string name="system_popupnotif_apps_title">已選應用</string>
-    <string name="system_popupnotif_fs_summ">應用啟用全屏模式時不開啟通知抽屜(不適用於具有隱藏狀態和導航欄的沉浸式應用)</string>
-    <string name="system_popupnotif_fs_title">遵循全屏</string>
-    <string name="system_popupnotif_summ">從所選應用的通知中自動開啟應用抽屜</string>
-    <string name="system_popupnotif_title">自動開啟通知抽屜</string>
     <string name="system_qqsgridcolumns_note">橫屏時將會額外增加一列。</string>
     <string name="system_qqsgridcolumns_title">折疊面板中的列數</string>
     <string name="system_qsgridcolumns_note">豎屏時會額外增加一列。如果您的ROM具有快速設置緊湊佈局選項，不管是橫屏還是豎屏都會增加其他列。</string>

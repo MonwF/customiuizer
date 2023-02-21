@@ -110,12 +110,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             PackagePermissions.hook(lpparam);
             GlobalActions.setupGlobalActions(lpparam);
 
-            if (mPrefs.getBoolean("system_popupnotif_fs") ||
-                    mPrefs.getBoolean("controls_volumecursor") ||
-                    mPrefs.getBoolean("controls_fsg_horiz") ||
-                    mPrefs.getBoolean("various_answerinheadup") ||
-                    mPrefs.getStringAsInt("various_showcallui", 0) > 0) GlobalActions.setupForegroundMonitor(lpparam);
-
             if (mPrefs.getInt("controls_fingerprint1_action", 1) > 1 ||
                     mPrefs.getInt("controls_fingerprint2_action", 1) > 1 ||
                     mPrefs.getInt("controls_fingerprintlong_action", 1) > 1 ||
@@ -189,6 +183,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (pkg.equals("com.android.systemui")) {
             SystemUI.setupStatusBar(lpparam);
             GlobalActions.setupStatusBar(lpparam);
+            if (mPrefs.getStringAsInt("various_showcallui", 0) > 0) GlobalActions.setupForegroundMonitor(lpparam);
 
             if (mPrefs.getBoolean("system_screenshot_overlay")) {
                 SystemUI.TempHideOverlaySystemUIHook(lpparam);
@@ -230,7 +225,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 && !mPrefs.getBoolean("system_detailednetspeed_fakedualrow")
             ) SystemUI.DetailedNetSpeedHook(lpparam);
             if (mPrefs.getBoolean("system_albumartonlock")) SystemUI.LockScreenAlbumArtHook(lpparam);
-            if (mPrefs.getBoolean("system_popupnotif")) System.PopupNotificationsHook(lpparam);
             if (mPrefs.getStringAsInt("system_expandheadups", 1) > 1) System.ExpandHeadsUpHook(lpparam);
             if (mPrefs.getBoolean("system_betterpopups_nohide")) System.BetterPopupsNoHideHook(lpparam);
             if (mPrefs.getBoolean("system_betterpopups_swipedown")) System.BetterPopupsSwipeDownHook(lpparam);

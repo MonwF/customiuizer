@@ -41,6 +41,8 @@ import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 
+import miui.process.ForegroundInfo;
+import miui.process.ProcessManager;
 import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
@@ -294,11 +296,14 @@ public class Controls {
 				InputMethodService ims = (InputMethodService)param.thisObject;
 				int code = (int)param.args[0];
 				if ((code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN) && ims.isInputViewShown()) {
-					String pkgName = Settings.Global.getString(ims.getContentResolver(), Helpers.modulePkg + ".foreground.package");
-					if (MainModule.mPrefs.getStringSet("controls_volumecursor_apps").contains(pkgName)) return;
-					boolean swapDir = MainModule.mPrefs.getBoolean("controls_volumecursor_reverse");
-					ims.sendDownUpKeyEvents(code == (swapDir ? KeyEvent.KEYCODE_VOLUME_DOWN : KeyEvent.KEYCODE_VOLUME_UP) ? KeyEvent.KEYCODE_DPAD_LEFT : KeyEvent.KEYCODE_DPAD_RIGHT);
-					param.setResult(true);
+					ForegroundInfo foregroundInfo = ProcessManager.getForegroundInfo();
+					if (foregroundInfo != null) {
+						String pkgName = foregroundInfo.mForegroundPackageName;
+						if (MainModule.mPrefs.getStringSet("controls_volumecursor_apps").contains(pkgName)) return;
+						boolean swapDir = MainModule.mPrefs.getBoolean("controls_volumecursor_reverse");
+						ims.sendDownUpKeyEvents(code == (swapDir ? KeyEvent.KEYCODE_VOLUME_DOWN : KeyEvent.KEYCODE_VOLUME_UP) ? KeyEvent.KEYCODE_DPAD_LEFT : KeyEvent.KEYCODE_DPAD_RIGHT);
+						param.setResult(true);
+					}
 				}
 			}
 		});
@@ -309,8 +314,12 @@ public class Controls {
 				InputMethodService ims = (InputMethodService)param.thisObject;
 				int code = (int)param.args[0];
 				if ((code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN) && ims.isInputViewShown()) {
-					String pkgName = Settings.Global.getString(ims.getContentResolver(), Helpers.modulePkg + ".foreground.package");
-					if (!MainModule.mPrefs.getStringSet("controls_volumecursor_apps").contains(pkgName)) param.setResult(true);
+					ForegroundInfo foregroundInfo = ProcessManager.getForegroundInfo();
+					if (foregroundInfo != null) {
+						String pkgName = foregroundInfo.mForegroundPackageName;
+						if (!MainModule.mPrefs.getStringSet("controls_volumecursor_apps").contains(pkgName))
+							param.setResult(true);
+					}
 				}
 			}
 		});

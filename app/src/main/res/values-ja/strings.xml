@@ -181,10 +181,6 @@
   <string name="system_notifmediaseekbar_summ">メディア通知にシーク操作が行なえるスライダーを追加します</string>
   <string name="system_notifmediaseekbar_full_title">システムのスタイルを使用する</string>
   <string name="system_notifmediaseekbar_full_summ">細いデザインのスライダーではなく標準のデザインのスライダーを使用するようにします</string>
-  <string name="system_popupnotif_title">通知シェードを自動で展開</string>
-  <string name="system_popupnotif_summ">選択をしたアプリからの通知時に通知シェードを自動的に展開させるようにします</string>
-  <string name="system_popupnotif_fs_title">フルスクリーンの尊重</string>
-  <string name="system_popupnotif_fs_summ">フルスクリーンで表示をするアプリを起動中に通知シェードを開かないようにします (ステータスバーとナビゲーションバーを没入型で隠しているアプリには適用されません)</string>
   <string name="system_popupnotif_apps_title">選択されたアプリ</string>
   <string name="system_mods_screenshots">スクリーンショット</string>
   <string name="system_screenshot_title">スクリーンショットの設定</string>
