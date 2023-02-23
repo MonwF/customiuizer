@@ -911,17 +911,10 @@ public class Controls {
 	}
 
 	public static void FingerprintHapticFailureHook(LoadPackageParam lpparam) {
-		String monitorClass = "com.android.server.biometrics.sensors.AcquisitionClient";
-		Helpers.hookAllMethods("com.android.server.vibrator.VibratorManagerService", lpparam.classLoader, "vibrate", new MethodHook() {
+		Helpers.findAndHookMethod("com.android.server.biometrics.sensors.AcquisitionClient", lpparam.classLoader, "vibrateError", new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
-				StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-				for (StackTraceElement el : stackTrace) {
-					if (monitorClass.equals(el.getClassName()) && "vibrateError".equals(el.getMethodName())) {
-						param.setResult(null);
-						return;
-					}
-				}
+				param.setResult(null);
 			}
 		});
 	}
