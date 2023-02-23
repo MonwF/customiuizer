@@ -397,6 +397,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 SystemUI.CCTileCornerHook(lpparam);
             }
             if (mPrefs.getStringAsInt("system_colorizenotifs", 1) > 1) System.ColorizedNotificationTitlesHook(lpparam);
+            if (mPrefs.getBoolean("system_fw_noblacklist")) System.DisableSideBarSuggestionHook(lpparam);
         }
 
         if (pkg.equals(Helpers.modulePkg)) {
