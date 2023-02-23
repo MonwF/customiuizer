@@ -32,6 +32,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
@@ -1377,6 +1378,18 @@ public class Helpers {
 			return (String)MainModule.mPrefs.getObject(name, defValue);
 		else
 			return defValue;
+	}
+
+	public static String stringifyBundle(Bundle bundle) {
+		if (bundle == null) {
+			return null;
+		}
+		String string = "Bundle{";
+		for (String key : bundle.keySet()) {
+			string = string + " " + key + " -> " + bundle.get(key) + ";";
+		}
+		string += " }Bundle";
+		return string;
 	}
 
 	@SuppressWarnings("unchecked")

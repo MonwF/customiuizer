@@ -5158,7 +5158,7 @@ public class System {
         Rect rect;
         Pair<Float, Rect> values = fwApps.get(pkgName);
         if (values == null || values.first == 0f || values.second == null) {
-                scale = 0.7f;
+            scale = 0.7f;
             rect = MiuiMultiWindowUtils.getFreeformRect(mContext);
         } else {
             scale = values.first;
@@ -5174,27 +5174,59 @@ public class System {
         return options;
     }
 
+    private static boolean shouldOpenInFwWhenShare(Intent intent, String callingPackage) {
+        if (intent == null || intent.getComponent() == null) return false;
+        String pkgName = intent.getComponent().getPackageName();
+        if (MainModule.mPrefs.getStringSet("system_fw_forcein_actionsend_apps").contains(pkgName)) return false;
+        boolean openInFw = false;
+        if (Intent.ACTION_SEND.equals(intent.getAction()) && !pkgName.equals(callingPackage)) {
+            openInFw = true;
+        }
+        else if ("com.tencent.mm".equals(pkgName) && intent.getComponent().getClassName().contains(".plugin.base.stub.WXEntryActivity")) {
+            openInFw = true;
+        }
+        return openInFw;
+    }
+
     public static void OpenInFwWhenShareHook(LoadPackageParam lpparam) {
-        Helpers.hookAllMethods("com.android.server.wm.ActivityStarterInjector", lpparam.classLoader, "modifyLaunchActivityOptionIfNeed", new MethodHook() {
+        Helpers.hookAllMethods("com.android.server.wm.ActivityStarter", lpparam.classLoader, "executeRequest", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
-                if (param.args.length != 8) return;
-                Intent intent = (Intent) param.args[5];
-                if (intent == null || intent.getComponent() == null) return;
-                String pkgName = intent.getComponent().getPackageName();
-                if (MainModule.mPrefs.getStringSet("system_fw_forcein_actionsend_apps").contains(pkgName)) return;
-                if (Intent.ACTION_SEND.equals(intent.getAction())) {
-                    Context mContext;
-                    try {
-                        mContext = (Context) XposedHelpers.getObjectField(param.args[0], "mContext");
-                    } catch (Throwable ignore) {
-                        mContext = (Context) XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.args[0], "mService"), "mContext");
-                    }
+                Object request = param.args[0];
+                Intent intent = (Intent) XposedHelpers.getObjectField(request, "intent");
+                String callingPackage = (String) XposedHelpers.getObjectField(request, "callingPackage");
+                boolean openInFw = shouldOpenInFwWhenShare(intent, callingPackage);
+//                Object safeOptions = XposedHelpers.getObjectField(request, "activityOptions");
+//                Bundle ao = safeOptions != null ? (Bundle) XposedHelpers.callMethod(safeOptions, "getActivityOptionsBundle") : null;
+//                String reason = (String) XposedHelpers.getObjectField(request, "reason");
+//                Helpers.log("startAct: " + callingPackage
+//                    + " reason| " + reason
+//                    + " intent| " + intent
+//                    + " activityOptions| " + Helpers.stringifyBundle(ao)
+//                    + " intentExtra| " + Helpers.stringifyBundle(intent.getExtras())
+//                );
+                if (openInFw) {
+                    Context mContext = (Context) XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.thisObject, "mService"), "mContext");
                     ActivityOptions options = MiuiMultiWindowUtils.getActivityOptions(mContext, intent.getComponent().getPackageName(), true, false);
-                    param.setResult(options);
+                    XposedHelpers.callMethod(param.thisObject, "setActivityOptions", options.toBundle());
                 }
             }
         });
+//        Helpers.hookAllMethods("com.android.server.wm.ActivityStarterInjector", lpparam.classLoader, "modifyLaunchActivityOptionIfNeed", new MethodHook() {
+//            @Override
+//            protected void after(MethodHookParam param) throws Throwable {
+//                if (param.args.length != 8) return;
+//                Intent intent = (Intent)param.args[5];
+//                if (intent == null || intent.getComponent() == null) return;
+//                ActivityOptions ao = (ActivityOptions) param.getResult();
+//                String callingPackage = (String) param.args[2];
+//                Helpers.log("modifyOptions: " + callingPackage
+//                    + " intent| " + intent
+//                    + " activityOptions| " + Helpers.stringifyBundle(ao != null ? ao.toBundle() : null)
+//                    + " intentExtra| " + Helpers.stringifyBundle(intent.getExtras())
+//                );
+//            }
+//        });
     }
 
     public static void StickyFloatingWindowsHook(LoadPackageParam lpparam) {
@@ -5209,7 +5241,6 @@ public class System {
                 if (param.args.length != 8) return;
                 Intent intent = (Intent)param.args[5];
                 if (intent == null || intent.getComponent() == null) return;
-                boolean shareAction = openFwWhenShare && Intent.ACTION_SEND.equals(intent.getAction());
                 String pkgName = intent.getComponent().getPackageName();
                 Context mContext;
                 try {
@@ -5217,8 +5248,8 @@ public class System {
                 } catch (Throwable ignore) {
                     mContext = (Context)XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.args[0], "mService"), "mContext");
                 }
-                if (shareAction) {
-                    if (MainModule.mPrefs.getStringSet("system_fw_forcein_actionsend_apps").contains(pkgName)) return;
+                String callingPackage = (String) param.args[2];
+                if (openFwWhenShare && shouldOpenInFwWhenShare(intent, callingPackage)) {
                     param.setResult(MiuiMultiWindowUtils.getActivityOptions(mContext, pkgName, true, false));
                     return;
                 }
