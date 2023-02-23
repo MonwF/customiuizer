@@ -2456,10 +2456,10 @@ public class System {
         }
     }
 
-    private static boolean checkToast(Context mContext, String pkgName) {
+    private static boolean checkToast(String pkgName) {
         try {
-            int opt = Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_system_blocktoasts", "1"));
-            Set<String> selectedApps = Helpers.getSharedStringSetPref(mContext, "pref_key_system_blocktoasts_apps");
+            int opt = MainModule.mPrefs.getStringAsInt("system_blocktoasts", 1);
+            Set<String> selectedApps = MainModule.mPrefs.getStringSet("system_blocktoasts_apps");
             boolean isSelected = selectedApps != null && selectedApps.contains(pkgName);
             return opt == 2 && !isSelected || opt == 3 && isSelected;
         } catch (Throwable t) {
@@ -2469,13 +2469,35 @@ public class System {
     }
 
     public static void SelectiveToastsHook(LoadPackageParam lpparam) {
-        Helpers.hookAllMethods("com.android.systemui.toast.ToastUI", lpparam.classLoader, "showToast", new MethodHook() {
+        Helpers.findAndHookMethod("com.android.server.notification.NotificationManagerServiceImpl", lpparam.classLoader, "registerPrivacyInputMode", Handler.class, new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                Handler mHandler = (Handler) param.args[0];
+                Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
+
+                new Helpers.SharedPrefObserver(mContext, mHandler) {
+                    @Override
+                    public void onChange(Uri uri) {
+                        try {
+                            String key = uri.getPathSegments().get(2);
+                            if (key.equals("pref_key_system_blocktoasts_apps"))
+                                MainModule.mPrefs.put(key, Helpers.getSharedStringSetPref(mContext, key));
+                            else if (key.equals("pref_key_system_blocktoasts")) {
+                                MainModule.mPrefs.put(key, Helpers.getSharedStringPref(mContext, key, "1"));
+                            }
+                        } catch (Throwable t) {
+                            Helpers.log(t);
+                        }
+                    }
+                };
+            }
+        });
+        Helpers.hookAllMethods("com.android.server.notification.NotificationManagerService", lpparam.classLoader, "tryShowToast", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
-                Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-                String pkgName = (String) param.args[1];
+                String pkgName = (String) XposedHelpers.getObjectField(param.args[0], "pkg");
                 if (pkgName == null) return;
-                if (checkToast(mContext, pkgName)) param.setResult(null);
+                if (checkToast(pkgName)) param.setResult(false);
             }
         });
     }

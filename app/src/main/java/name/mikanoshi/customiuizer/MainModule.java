@@ -167,6 +167,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getStringAsInt("system_nolightuponcharges", 1) > 1) System.NoLightUpOnChargeHook(lpparam);
             if (mPrefs.getStringAsInt("system_autogroupnotif", 1) > 1) System.AutoGroupNotificationsHook(lpparam);
             if (mPrefs.getStringAsInt("system_vibration", 1) > 1) System.SelectiveVibrationHook(lpparam);
+            if (mPrefs.getStringAsInt("system_blocktoasts", 1) > 1) System.SelectiveToastsHook(lpparam);
             if (mPrefs.getStringAsInt("system_rotateanim", 1) > 1) System.RotationAnimationHook(lpparam);
             if (mPrefs.getStringAsInt("controls_fingerprintsuccess", 1) > 1) Controls.FingerprintHapticSuccessHook(lpparam);
             if (mPrefs.getStringAsInt("controls_volumemedia_up", 0) > 0 ||
@@ -396,7 +397,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 SystemUI.CCTileCornerHook(lpparam);
             }
             if (mPrefs.getStringAsInt("system_colorizenotifs", 1) > 1) System.ColorizedNotificationTitlesHook(lpparam);
-            if (mPrefs.getStringAsInt("system_blocktoasts", 1) > 1) System.SelectiveToastsHook(lpparam);
         }
 
         if (pkg.equals(Helpers.modulePkg)) {
