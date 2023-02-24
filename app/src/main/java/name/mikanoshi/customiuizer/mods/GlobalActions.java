@@ -41,6 +41,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -48,7 +49,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -749,12 +749,8 @@ public class GlobalActions {
 		Helpers.emptyFile(lpparam.appInfo.dataDir + "/files/uncaught_exceptions", false);
 	}
 
-	private static int settingsIconResId;
-	public static void miuizerSettingsRes() {
-		settingsIconResId = MainModule.resHooks.addResource("ic_miuizer_settings", Helpers.isTPlus() ? R.drawable.ic_miuizer_settings11 : R.drawable.ic_miuizer_settings_legacy);
-	}
-
-	public static void miuizerSettings12Hook(LoadPackageParam lpparam) {
+	public static void miuizerSettingsHook(LoadPackageParam lpparam) {
+		int settingsIconResId = MainModule.resHooks.addResource("ic_miuizer_settings", Helpers.isTPlus() ? R.drawable.ic_miuizer_settings11 : R.drawable.ic_miuizer_settings_legacy);
 		Helpers.findAndHookMethod("com.android.settings.MiuiSettings", lpparam.classLoader, "updateHeaderList", List.class, new MethodHook() {
 			@Override
 			@SuppressWarnings("unchecked")
@@ -762,8 +758,7 @@ public class GlobalActions {
 				if (param.args[0] == null) return;
 
 				Context mContext = ((Activity)param.thisObject).getBaseContext();
-				int opt = Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_miuizer_settingsiconpos", "1"));
-				if (opt == 0) return;
+				int opt = MainModule.mPrefs.getStringAsInt("key_miuizer_settingsiconpos", 1);
 
 				Resources modRes = Helpers.getModuleRes(mContext);
 				Class<?> headerCls = XposedHelpers.findClassIfExists("com.android.settingslib.miuisettings.preference.PreferenceActivity$Header", lpparam.classLoader);
@@ -798,6 +793,19 @@ public class GlobalActions {
 					headers.add(header);
 			}
 		});
+		if (Helpers.isTPlus()) {
+			Helpers.hookAllMethods("com.android.settings.MiuiSettings$HeaderAdapter", lpparam.classLoader, "setIcon", new MethodHook() {
+				@Override
+				protected void after(MethodHookParam param) throws Throwable {
+					int iconRes = XposedHelpers.getIntField(param.args[1], "iconRes");
+					if (iconRes == settingsIconResId) {
+						ImageView icon = (ImageView) XposedHelpers.getObjectField(param.args[0], "icon");
+						int iconSize = XposedHelpers.getIntField(XposedHelpers.getSurroundingThis(param.thisObject), "mNormalIconSize");
+						icon.getLayoutParams().height = iconSize;
+					}
+				}
+			});
+		}
 	}
 
 	public static void setupSystemHelpers() {

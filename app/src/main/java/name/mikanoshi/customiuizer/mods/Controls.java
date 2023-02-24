@@ -981,6 +981,27 @@ public class Controls {
 
 	public static void HideNavBarHook(LoadPackageParam lpparam) {
 		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.NavigationModeControllerExt", lpparam.classLoader, "hideNavigationBar", XC_MethodReplacement.returnConstant(true));
+		Helpers.hookAllMethods("com.android.systemui.navigationbar.NavigationBarController", lpparam.classLoader, "createNavigationBar", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				if (param.args.length >= 3) {
+					param.setResult(null);
+				}
+			}
+		});
+		Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiDockIndicatorService", lpparam.classLoader, "onNavigationModeChanged", int.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				XposedHelpers.setObjectField(param.thisObject, "mNavMode", param.args[0]);
+				if (XposedHelpers.getObjectField(param.thisObject, "mNavigationBarView") != null) {
+					XposedHelpers.callMethod(param.thisObject, "setNavigationBarView", null);
+				}
+				else {
+					XposedHelpers.callMethod(param.thisObject, "checkAndApplyNavigationMode");
+				}
+				param.setResult(null);
+			}
+		});
 	}
 
 	public static void ImeBackAltIconHook(LoadPackageParam lpparam) {
