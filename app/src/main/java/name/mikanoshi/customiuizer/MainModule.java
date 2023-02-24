@@ -441,8 +441,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         }
 
         if (pkg.equals("com.android.settings") && lpparam.processName.equals("com.android.settings")) {
-            GlobalActions.miuizerSettingsRes();
-            GlobalActions.miuizerSettings12Hook(lpparam);
+            if (mPrefs.getStringAsInt("miuizer_settingsiconpos", 1) > 0) {
+                GlobalActions.miuizerSettingsHook(lpparam);
+            }
             if (mPrefs.getBoolean("system_separatevolume")) {
                 System.NotificationVolumeSettingsRes();
                 System.NotificationVolumeSettingsHook(lpparam);
