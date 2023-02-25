@@ -758,7 +758,7 @@ public class GlobalActions {
 				if (param.args[0] == null) return;
 
 				Context mContext = ((Activity)param.thisObject).getBaseContext();
-				int opt = MainModule.mPrefs.getStringAsInt("key_miuizer_settingsiconpos", 1);
+				int opt = MainModule.mPrefs.getStringAsInt("miuizer_settingsiconpos", 1);
 
 				Resources modRes = Helpers.getModuleRes(mContext);
 				Class<?> headerCls = XposedHelpers.findClassIfExists("com.android.settingslib.miuisettings.preference.PreferenceActivity$Header", lpparam.classLoader);
