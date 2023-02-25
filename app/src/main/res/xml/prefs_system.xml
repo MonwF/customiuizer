@@ -73,9 +73,9 @@
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_system_lstimeout"
 			android:title="@string/system_lstimeout_title"
-			android:defaultValue="0"
+			android:defaultValue="3"
 			miuizer:offtext="@string/array_default"
-			miuizer:minValue="9"
+			miuizer:minValue="3"
 			miuizer:maxValue="180"
 			miuizer:stepValue="1"
 			miuizer:format="@string/format_d_s"/>

@@ -4106,14 +4106,14 @@ public class System {
     }
 
     public static void LockScreenTimeoutHook(LoadPackageParam lpparam) {
-        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.StatusBarWindowManager", lpparam.classLoader, "applyUserActivityTimeout", new MethodHook() {
+        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.NotificationShadeWindowControllerImpl", lpparam.classLoader, "applyUserActivityTimeout", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 Object mLpChanged = XposedHelpers.getObjectField(param.thisObject, "mLpChanged");
                 if (mLpChanged == null) return;
                 long userActivityTimeout = XposedHelpers.getLongField(mLpChanged, "userActivityTimeout");
                 if (userActivityTimeout > 0)
-                    XposedHelpers.setLongField(mLpChanged, "userActivityTimeout", MainModule.mPrefs.getInt("system_lstimeout", 9) * 1000L);
+                    XposedHelpers.setLongField(mLpChanged, "userActivityTimeout", MainModule.mPrefs.getInt("system_lstimeout", 3) * 1000L);
             }
         });
     }
