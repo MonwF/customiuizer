@@ -160,6 +160,7 @@ public class Helpers {
 		put("zh-TW", "99");
 		put("pl-PL", "99");
 		put("ja-JP", "99");
+		put("vi-VN", "99");
 	}};
 
 	public enum SettingsType {
