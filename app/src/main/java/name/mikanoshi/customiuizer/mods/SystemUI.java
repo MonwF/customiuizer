@@ -3245,19 +3245,6 @@ public class SystemUI {
                 } else if ("softreboot".equals(cmd)) {
                     mContext.sendBroadcast(new Intent(ACTION_PREFIX + "FastReboot"));
                     custom = true;
-                } else if ("killsysui".equals(cmd)) {
-                    mContext.sendBroadcast(new Intent(ACTION_PREFIX + "RestartSystemUI"));
-                    custom = true;
-                } else if ("killlauncher".equals(cmd)) {
-                    ActivityManager am = (ActivityManager)mContext.getSystemService(Context.ACTIVITY_SERVICE);
-                    Intent intent = new Intent(Intent.ACTION_MAIN);
-                    intent.addCategory(Intent.CATEGORY_HOME);
-                    ResolveInfo launcherInfo = mContext.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
-                    if (launcherInfo != null) {
-                        String pkgName = launcherInfo.activityInfo.packageName;
-                        if (pkgName != null) XposedHelpers.callMethod(am, "forceStopPackage", pkgName);
-                    }
-                    custom = true;
                 }
 
                 if (custom) {

@@ -1023,6 +1023,7 @@
     <string name="restart_launcher">Restart launcher</string>
     <string name="open_inweb">Open in browser</string>
     <string name="restart_systemui">Restart systemui</string>
+    <string name="restart_securitycenter">Restart security center</string>
     <string name="backup_restore">Settings management</string>
     <string name="backup_restore_choose">Backups are stored in /sdcard/Documents/CustoMIUIzer/</string>
     <string name="do_backup">Backup</string>

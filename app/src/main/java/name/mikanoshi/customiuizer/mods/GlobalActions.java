@@ -205,6 +205,10 @@ public class GlobalActions {
 					ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
 					XposedHelpers.callMethod(am, "forceStopPackage", "com.miui.home");
 				}
+				else if (action.equals(ACTION_PREFIX + "RestartSecurityCenter")) {
+					ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+					XposedHelpers.callMethod(am, "forceStopPackage", "com.miui.securitycenter");
+				}
 				else if (action.equals(ACTION_PREFIX + "ScrollToTop")) {
 					new Handler().postDelayed(new Runnable() {
 						@Override
@@ -983,6 +987,7 @@ public class GlobalActions {
 				intentfilter.addAction(ACTION_PREFIX + "CollectXposedLog");
 				intentfilter.addAction(ACTION_PREFIX + "RestartSystemUI");
 				intentfilter.addAction(ACTION_PREFIX + "RestartLauncher");
+				intentfilter.addAction(ACTION_PREFIX + "RestartSecurityCenter");
 //				intentfilter.addAction(ACTION_PREFIX + "CopyToExternal");
 
 				intentfilter.addAction(ACTION_PREFIX + "ScrollToTop");

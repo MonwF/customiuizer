@@ -20,6 +20,10 @@
 		app:showAsAction="never"
 		android:title="@string/restart_systemui" />
 	<item
+		android:id="@+id/restartsecuritycenter"
+		app:showAsAction="never"
+		android:title="@string/restart_securitycenter" />
+	<item
 		android:id="@+id/softreboot"
 		android:title="@string/soft_reboot"
 		app:showAsAction="never" />
