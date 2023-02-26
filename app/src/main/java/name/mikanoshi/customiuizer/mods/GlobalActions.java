@@ -108,6 +108,7 @@ public class GlobalActions {
 			case 23: return switchOneHandedRight(context);
 			case 24: return forceClose(context);
 			case 25: return scrollToTop(context);
+			case 26: return showSidebar(context);
 			default: return false;
 		}
 	}
@@ -136,6 +137,7 @@ public class GlobalActions {
 			case 23: return R.string.array_global_actions_onehanded_right;
 			case 24: return R.string.array_global_actions_forceclose;
 			case 25: return R.string.array_global_actions_scrolltotop;
+			case 26: return R.string.array_global_actions_expandsidebar;
 			default: return 0;
 		}
 	}
@@ -1208,6 +1210,18 @@ public class GlobalActions {
 	public static boolean scrollToTop(Context context) {
 		try {
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "ScrollToTop"));
+			return true;
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+			return false;
+		}
+	}
+
+	public static boolean showSidebar(Context context) {
+		try {
+			Intent showIntent = new Intent(ACTION_PREFIX + "ShowSideBar");
+			showIntent.setPackage("com.miui.securitycenter");
+			context.sendBroadcast(showIntent);
 			return true;
 		} catch (Throwable t) {
 			XposedBridge.log(t);

@@ -431,6 +431,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("various_show_battery_temperature")) Various.ShowTempInBatteryHook(lpparam);
             if (mPrefs.getBoolean("various_enable_sc_ai_clipboard_location")) Various.UnlockClipboardAndLocationHook(lpparam);
             if (mPrefs.getBoolean("various_disable_freeform_suggest_blacklist")) System.DisableSideBarSuggestionHook(lpparam);
+            if (mPrefs.getBoolean("various_enable_expand_sidebar")) {
+                Various.AddSideBarExpandReceiverHook(lpparam);
+            }
             if (mPrefs.getBoolean("system_hidelowbatwarn")) {
                 System.NoLowBatteryWarningHook();
             }
