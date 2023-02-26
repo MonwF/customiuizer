@@ -55,6 +55,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
         put(R.id.search_btn, "search");
         put(R.id.restartlauncher, "launcher");
         put(R.id.restartsystemui, "systemui");
+        put(R.id.restartsecuritycenter, "securitycenter");
         put(R.id.edit_confirm, "edit");
         put(R.id.softreboot, "reboot");
         put(R.id.backuprestore, "settings");
@@ -128,6 +129,11 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
                 return true;
             case R.id.restartsystemui:
                 actionIntent = new Intent(GlobalActions.ACTION_PREFIX + "RestartSystemUI");
+                actionIntent.setPackage("com.android.systemui");
+                getValidContext().sendBroadcast(actionIntent);
+                return true;
+            case R.id.restartsecuritycenter:
+                actionIntent = new Intent(GlobalActions.ACTION_PREFIX + "RestartSecurityCenter");
                 actionIntent.setPackage("com.android.systemui");
                 getValidContext().sendBroadcast(actionIntent);
                 return true;

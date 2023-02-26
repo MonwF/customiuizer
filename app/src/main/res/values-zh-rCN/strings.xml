@@ -1107,6 +1107,7 @@
     <string name="system_notifrowmenu_openinfw">浮窗</string>
     <string name="system_notifrowmenu_forceclose">强制关闭</string>
     <string name="restart_systemui">重启系统界面</string>
+    <string name="restart_securitycenter">重启手机管家</string>
     <string name="various_allow_untrusted_touch_title">允许不受信任的触摸操作</string>
     <string name="various_clipboard_defaultaction_title">智能剪切板默认行为</string>
     <string name="various_disable_access_devicelogs_title">关闭访问设备日志确认</string>
