@@ -63,6 +63,7 @@
 		<item>@string/array_global_actions_toggle</item>
 		<item>@string/array_global_actions_onehanded_left</item>
 		<item>@string/array_global_actions_onehanded_right</item>
+		<item>@string/array_global_actions_expandsidebar</item>
 		<item>@string/array_media_playpause</item>
 		<item>@string/array_media_next</item>
 		<item>@string/array_media_prev</item>
@@ -92,6 +93,7 @@
 		<item>10</item>
 		<item>22</item>
 		<item>23</item>
+		<item>26</item>
 		<item>85</item>
 		<item>87</item>
 		<item>88</item>

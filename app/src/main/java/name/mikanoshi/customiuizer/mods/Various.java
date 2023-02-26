@@ -1,10 +1,17 @@
 package name.mikanoshi.customiuizer.mods;
 
+import static java.lang.System.currentTimeMillis;
+import static de.robv.android.xposed.XposedHelpers.findClass;
+import static de.robv.android.xposed.XposedHelpers.findClassIfExists;
+import static name.mikanoshi.customiuizer.mods.GlobalActions.ACTION_PREFIX;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ContentResolver;
@@ -28,9 +35,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.os.SystemClock;
 import android.os.UserHandle;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
 import android.provider.Settings;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -41,6 +47,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -53,38 +60,26 @@ import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
-import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
-import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
-
-import android.app.AlertDialog;
-
+import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 import miui.process.ForegroundInfo;
 import miui.process.ProcessManager;
 import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.Helpers.MethodHook;
-
-import static de.robv.android.xposed.XposedHelpers.findClass;
-import static de.robv.android.xposed.XposedHelpers.findClassIfExists;
-import static java.lang.System.currentTimeMillis;
 
 public class Various {
 
@@ -411,6 +406,59 @@ public class Various {
 
 		Helpers.findAndHookMethod("com.miui.powerkeeper.provider.PreSetApp", lpparam.classLoader, "isPreSetApp", String.class, XC_MethodReplacement.returnConstant(false));
 		Helpers.hookAllMethods("com.miui.powerkeeper.utils.Utils", lpparam.classLoader, "pkgHasIcon", XC_MethodReplacement.returnConstant(true));
+	}
+
+	public static void AddSideBarExpandReceiverHook(LoadPackageParam lpparam) {
+		final boolean[] isHooked = {false};
+		Helpers.hookAllConstructors("com.android.systemui.navigationbar.gestural.RegionSamplingHelper", lpparam.classLoader, new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				if (!isHooked[0]) {
+					isHooked[0] = true;
+					View view = (View) param.args[0];
+					BroadcastReceiver showReceiver = new BroadcastReceiver() {
+						@Override
+						public void onReceive(Context context, Intent intent) {
+							int[] location = new int[2];
+							view.getLocationOnScreen(location);
+							int x = location[0];
+							int y = location[1];
+							long uptimeMillis = SystemClock.uptimeMillis();
+							MotionEvent downEvent, moveEvent, upEvent;
+							if (x == 0) { // left
+								downEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis, MotionEvent.ACTION_DOWN, x + 4, y + 30, 0);
+								moveEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis + 20, MotionEvent.ACTION_MOVE, x + 300, y + 30, 0);
+								upEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis + 21, MotionEvent.ACTION_UP, x + 300, y + 30, 0);
+							}
+							else {
+								downEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis, MotionEvent.ACTION_DOWN, x - 4, y + 30, 0);
+								moveEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis + 20, MotionEvent.ACTION_MOVE, x - 300, y + 30, 0);
+								upEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis + 21, MotionEvent.ACTION_UP, x - 300, y + 30, 0);
+							}
+							view.dispatchTouchEvent(downEvent);
+							view.dispatchTouchEvent(moveEvent);
+							view.dispatchTouchEvent(upEvent);
+							downEvent.recycle();
+							moveEvent.recycle();
+							upEvent.recycle();
+						}
+					};
+					view.getContext().registerReceiver(showReceiver, new IntentFilter(ACTION_PREFIX + "ShowSideBar"));
+					XposedHelpers.setAdditionalInstanceField(param.thisObject, "showReceiver", showReceiver);
+				}
+			}
+		});
+		Helpers.findAndHookMethod("com.android.systemui.navigationbar.gestural.RegionSamplingHelper", lpparam.classLoader, "onViewDetachedFromWindow", android.view.View.class, new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				isHooked[0] = false;
+				BroadcastReceiver showReceiver = (BroadcastReceiver) XposedHelpers.getAdditionalInstanceField(param.thisObject, "showReceiver");
+				if (showReceiver != null) {
+					View view = (View) param.args[0];
+					view.getContext().unregisterReceiver(showReceiver);
+				}
+			}
+		});
 	}
 
 	public static void InterceptPermHook(LoadPackageParam lpparam) {
