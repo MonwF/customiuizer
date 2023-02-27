@@ -586,6 +586,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getInt("launcher_bottommargin", 0) > 0) Launcher.BottomSpacingHook(lpparam);
             if (mPrefs.getInt("launcher_horizwidgetmargin", 0) > 0) Launcher.HorizontalWidgetSpacingHook(lpparam);
             if (mPrefs.getInt("controls_fsg_assist_action", 1) > 1) Launcher.AssistGestureActionHook(lpparam);
+            if (mPrefs.getInt("controls_fsg_swipeandstop_action", 1) > 1) Launcher.SwipeAndStopActionHook(lpparam);
         }
         if (closeOnLaunch) Launcher.CloseFolderOrDrawerOnLaunchShortcutMenuHook(lpparam);
         //if (!mPrefs.getString("system_clock_app", "").equals("")) Launcher.ReplaceClockAppHook(lpparam);

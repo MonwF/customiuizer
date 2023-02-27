@@ -645,6 +645,7 @@
     <string name="controls_fsg_horiz_title">水平手势</string>
     <string name="controls_fsg_horiz_summ">同时启用水平手势和导航栏</string>
     <string name="controls_fsg_assist_title">屏幕左下角或右下角上划动作</string>
+    <string name="controls_fsg_swipeandstop_title">屏幕两侧向内滑动并停顿</string>
     <string name="various_mods">杂项</string>
     <string name="various_miuiinstaller_title">使用MIUI应用包安装器</string>
     <string name="various_miuiinstaller_summ">允许其更新系统应用</string>

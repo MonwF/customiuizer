@@ -88,6 +88,7 @@ public class Controls extends SubFragment {
 			case "pref_key_controls_cat_fsg":
 				findPreference("pref_key_controls_fsg_horiz_apps").setOnPreferenceClickListener(openAppsEdit);
 				findPreference("pref_key_controls_fsg_assist").setOnPreferenceClickListener(openNavbarActions);
+				findPreference("pref_key_controls_fsg_swipeandstop").setOnPreferenceClickListener(openNavbarActions);
 				break;
 		}
 	}
