@@ -9,6 +9,7 @@
 		<item>@string/array_global_actions_recents</item>
 		<item>@string/array_global_actions_volume</item>
 		<item>@string/array_global_actions_powermenu</item>
+		<item>@string/array_global_actions_expandsidebar</item>
 		<item>@string/array_global_actions_launch</item>
 		<item>@string/array_global_actions_shortcut</item>
 		<item>@string/array_global_actions_activity</item>
@@ -28,6 +29,7 @@
 		<item>7</item>
 		<item>17</item>
 		<item>12</item>
+		<item>26</item>
 		<item>8</item>
 		<item>9</item>
 		<item>20</item>
@@ -46,6 +48,7 @@
 		<item>@string/array_global_actions_sleep</item>
 		<item>@string/array_global_actions_screenshot</item>
 		<item>@string/array_global_actions_recents</item>
+		<item>@string/array_global_actions_expandsidebar</item>
 		<item>@string/array_global_actions_volume</item>
 		<item>@string/array_global_actions_volume_up</item>
 		<item>@string/array_global_actions_volume_down</item>
@@ -63,7 +66,6 @@
 		<item>@string/array_global_actions_toggle</item>
 		<item>@string/array_global_actions_onehanded_left</item>
 		<item>@string/array_global_actions_onehanded_right</item>
-		<item>@string/array_global_actions_expandsidebar</item>
 		<item>@string/array_media_playpause</item>
 		<item>@string/array_media_next</item>
 		<item>@string/array_media_prev</item>
@@ -76,6 +78,7 @@
 		<item>5</item>
 		<item>6</item>
 		<item>7</item>
+		<item>26</item>
 		<item>17</item>
 		<item>18</item>
 		<item>19</item>
@@ -93,7 +96,6 @@
 		<item>10</item>
 		<item>22</item>
 		<item>23</item>
-		<item>26</item>
 		<item>85</item>
 		<item>87</item>
 		<item>88</item>

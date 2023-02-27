@@ -340,6 +340,11 @@
 			android:title="@string/controls_fsg_assist_title"
 			miuizer:dynamic="true" />
 
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_controls_fsg_swipeandstop"
+			android:title="@string/controls_fsg_swipeandstop_title"
+			miuizer:dynamic="true" />
+
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

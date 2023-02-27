@@ -1616,6 +1616,31 @@ public class Launcher {
 		});
 	}
 
+	public static void SwipeAndStopActionHook(LoadPackageParam lpparam) {
+		Helpers.findAndHookMethod("com.miui.home.recents.GestureStubView", lpparam.classLoader, "disableQuickSwitch", boolean.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				param.args[0] = false;
+			}
+		});
+		Helpers.findAndHookMethod("com.miui.home.recents.GestureStubView", lpparam.classLoader, "isDisableQuickSwitch", XC_MethodReplacement.returnConstant(false));
+		Helpers.findAndHookMethod("com.miui.home.recents.GestureStubView", lpparam.classLoader, "getNextTask", Context.class, boolean.class, int.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				boolean switchApp = (boolean) param.args[1];
+				if (switchApp) {
+					Context mContext = (Context) param.args[0];
+					if (GlobalActions.handleAction(mContext, "pref_key_controls_fsg_swipeandstop")) {
+						Class<?> Task = findClassIfExists("com.android.systemui.shared.recents.model.Task", lpparam.classLoader);
+						param.setResult(XposedHelpers.newInstance(Task));
+						return;
+					}
+				}
+				param.setResult(null);
+			}
+		});
+	}
+
 	public static void DisableUnlockWallpaperScale(LoadPackageParam lpparam) {
 		Helpers.findAndHookMethod("com.miui.miwallpaper.manager.WallpaperServiceController", lpparam.classLoader, "noNeedDesktopWallpaperScaleAnim",
 			XC_MethodReplacement.returnConstant(true)
