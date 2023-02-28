@@ -728,6 +728,7 @@
     <string name="array_global_actions_powermenu_short">电源菜单</string>
     <string name="array_global_actions_scrolltotop">回到顶部</string>
     <string name="array_global_actions_expandsidebar">展开侧边栏</string>
+    <string name="array_global_actions_floatingwindow">迷你小窗</string>
     <string name="array_global_actions_clearmemory">清理内存</string>
     <string name="array_global_actions_invertcolors">颜色反转</string>
     <string name="array_global_actions_switchkeyboard">切换键盘</string>

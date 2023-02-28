@@ -34,6 +34,7 @@ import android.os.SystemClock;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.util.MiuiMultiWindowUtils;
 import android.view.InputDevice;
 import android.view.InputEvent;
 import android.view.KeyEvent;
@@ -109,6 +110,7 @@ public class GlobalActions {
 			case 24: return forceClose(context);
 			case 25: return scrollToTop(context);
 			case 26: return showSidebar(context);
+			case 27: return floatingWindow(context);
 			default: return false;
 		}
 	}
@@ -138,6 +140,7 @@ public class GlobalActions {
 			case 24: return R.string.array_global_actions_forceclose;
 			case 25: return R.string.array_global_actions_scrolltotop;
 			case 26: return R.string.array_global_actions_expandsidebar;
+			case 27: return R.string.array_global_actions_floatingwindow;
 			default: return 0;
 		}
 	}
@@ -208,6 +211,13 @@ public class GlobalActions {
 				else if (action.equals(ACTION_PREFIX + "RestartSecurityCenter")) {
 					ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
 					XposedHelpers.callMethod(am, "forceStopPackage", "com.miui.securitycenter");
+				}
+				else if (action.equals(ACTION_PREFIX + "FloatingWindow")) {
+					try {
+						MiuiMultiWindowUtils.startSmallFreeform(context);
+					} catch (Throwable err) {
+						Helpers.log(err);
+					}
 				}
 				else if (action.equals(ACTION_PREFIX + "ScrollToTop")) {
 					new Handler().postDelayed(new Runnable() {
@@ -988,6 +998,7 @@ public class GlobalActions {
 				intentfilter.addAction(ACTION_PREFIX + "RestartSystemUI");
 				intentfilter.addAction(ACTION_PREFIX + "RestartLauncher");
 				intentfilter.addAction(ACTION_PREFIX + "RestartSecurityCenter");
+				intentfilter.addAction(ACTION_PREFIX + "FloatingWindow");
 //				intentfilter.addAction(ACTION_PREFIX + "CopyToExternal");
 
 				intentfilter.addAction(ACTION_PREFIX + "ScrollToTop");
@@ -1003,7 +1014,7 @@ public class GlobalActions {
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "ExpandNotifications"));
 			return true;
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			Helpers.log(t);
 			return false;
 		}
 	}
@@ -1013,7 +1024,7 @@ public class GlobalActions {
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "ExpandSettings"));
 			return true;
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			Helpers.log(t);
 			return false;
 		}
 	}
@@ -1023,7 +1034,7 @@ public class GlobalActions {
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "LockDevice"));
 			return true;
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			Helpers.log(t);
 			return false;
 		}
 	}
@@ -1033,7 +1044,7 @@ public class GlobalActions {
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "WakeUp"));
 			return true;
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			Helpers.log(t);
 			return false;
 		}
 	}
@@ -1043,7 +1054,7 @@ public class GlobalActions {
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "GoToSleep"));
 			return true;
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			Helpers.log(t);
 			return false;
 		}
 	}
@@ -1087,7 +1098,7 @@ public class GlobalActions {
 
 			return intent;
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			Helpers.log(t);
 			return null;
 		}
 	}
@@ -1097,7 +1108,7 @@ public class GlobalActions {
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "TakeScreenshot"));
 			return true;
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			Helpers.log(t);
 			return false;
 		}
 	}
@@ -1117,7 +1128,7 @@ public class GlobalActions {
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "SimulateMenu"));
 			return true;
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			Helpers.log(t);
 			return false;
 		}
 	}
@@ -1127,7 +1138,7 @@ public class GlobalActions {
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "ForceClose"));
 			return true;
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			Helpers.log(t);
 			return false;
 		}
 	}
@@ -1137,7 +1148,7 @@ public class GlobalActions {
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "OpenRecents"));
 			return true;
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			Helpers.log(t);
 			return false;
 		}
 	}
@@ -1167,7 +1178,7 @@ public class GlobalActions {
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "OpenVolumeDialog"));
 			return true;
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			Helpers.log(t);
 			return false;
 		}
 	}
@@ -1177,7 +1188,7 @@ public class GlobalActions {
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "VolumeUp"));
 			return true;
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			Helpers.log(t);
 			return false;
 		}
 	}
@@ -1187,7 +1198,7 @@ public class GlobalActions {
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "VolumeDown"));
 			return true;
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			Helpers.log(t);
 			return false;
 		}
 	}
@@ -1197,7 +1208,7 @@ public class GlobalActions {
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "GoBack"));
 			return true;
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			Helpers.log(t);
 			return false;
 		}
 	}
@@ -1207,7 +1218,7 @@ public class GlobalActions {
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "SwitchToPrevApp"));
 			return true;
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			Helpers.log(t);
 			return false;
 		}
 	}
@@ -1217,7 +1228,17 @@ public class GlobalActions {
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "ScrollToTop"));
 			return true;
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			Helpers.log(t);
+			return false;
+		}
+	}
+
+	public static boolean floatingWindow(Context context) {
+		try {
+			context.sendBroadcast(new Intent(ACTION_PREFIX + "FloatingWindow"));
+			return true;
+		} catch (Throwable t) {
+			Helpers.log(t);
 			return false;
 		}
 	}
@@ -1229,7 +1250,7 @@ public class GlobalActions {
 			context.sendBroadcast(showIntent);
 			return true;
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			Helpers.log(t);
 			return false;
 		}
 	}
@@ -1239,7 +1260,7 @@ public class GlobalActions {
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "OpenPowerMenu"));
 			return true;
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			Helpers.log(t);
 			return false;
 		}
 	}
@@ -1249,7 +1270,7 @@ public class GlobalActions {
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "SwitchKeyboard"));
 			return true;
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			Helpers.log(t);
 			return false;
 		}
 	}
@@ -1259,7 +1280,7 @@ public class GlobalActions {
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "SwitchOneHandedLeft"));
 			return true;
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			Helpers.log(t);
 			return false;
 		}
 	}
@@ -1269,7 +1290,7 @@ public class GlobalActions {
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "SwitchOneHandedRight"));
 			return true;
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			Helpers.log(t);
 			return false;
 		}
 	}
@@ -1279,7 +1300,7 @@ public class GlobalActions {
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "ToggleColorInversion"));
 			return true;
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			Helpers.log(t);
 			return false;
 		}
 	}
@@ -1289,7 +1310,7 @@ public class GlobalActions {
 			context.sendBroadcast(new Intent(ACTION_PREFIX + "ClearMemory"));
 			return true;
 		} catch (Throwable t) {
-			XposedBridge.log(t);
+			Helpers.log(t);
 			return false;
 		}
 	}
