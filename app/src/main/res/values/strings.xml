@@ -772,6 +772,7 @@
     <string name="array_global_actions_powermenu_short">Power menu</string>
     <string name="array_global_actions_scrolltotop">Scroll to top</string>
     <string name="array_global_actions_expandsidebar">Show sidebar</string>
+    <string name="array_global_actions_floatingwindow">Floating window</string>
     <string name="array_global_actions_clearmemory">Clear memory</string>
     <string name="array_global_actions_invertcolors">Invert colors</string>
     <string name="array_global_actions_switchkeyboard">Switch keyboard</string>
