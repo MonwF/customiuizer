@@ -669,6 +669,40 @@ public class Launcher {
 			}
 		});
 		Helpers.findAndHookMethod("com.miui.home.recents.views.RecentsContainer", lpparam.classLoader, "showLandscapeOverviewGestureView", boolean.class, XC_MethodReplacement.DO_NOTHING);
+		Helpers.findAndHookMethod("com.miui.home.recents.NavStubView", lpparam.classLoader, "isMistakeTouch", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				View navView = (View) param.thisObject;
+				boolean misTouch = false;
+				boolean setting = Settings.Global.getInt(navView.getContext().getContentResolver(), "show_mistake_touch_toast", 1) != 0;
+				if (setting) {
+					boolean mIsShowStatusBar = XposedHelpers.getBooleanField(param.thisObject, "mIsShowStatusBar");
+					if (mIsShowStatusBar) {
+						misTouch = (boolean) XposedHelpers.callMethod(param.thisObject, "isLandScapeActually");
+					}
+				}
+				param.setResult(misTouch);
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.home.recents.NavStubView", lpparam.classLoader, "onPointerEvent", MotionEvent.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				boolean mIsInFsMode = XposedHelpers.getBooleanField(param.thisObject, "mIsInFsMode");
+				if (!mIsInFsMode) {
+					MotionEvent motionEvent = (MotionEvent) param.args[0];
+					if (motionEvent.getAction() == 0) {
+						XposedHelpers.setObjectField(param.thisObject, "mHideGestureLine", true);
+					}
+				}
+			}
+		});
+		Helpers.findAndHookMethod("com.miui.home.recents.NavStubView", lpparam.classLoader, "updateScreenSize", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				XposedHelpers.setObjectField(param.thisObject, "mHideGestureLine", false);
+			}
+		});
 	}
 
 	private static void showSeekBar(View workspace) {
