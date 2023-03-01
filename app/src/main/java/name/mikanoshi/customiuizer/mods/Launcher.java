@@ -1172,6 +1172,18 @@ public class Launcher {
 
 		Class<?> BlurUtils = XposedHelpers.findClassIfExists("com.miui.home.launcher.common.BlurUtils", lpparam.classLoader);
 		if (BlurUtils != null) {
+			Helpers.hookAllMethods(BlurUtils, "getLauncherBlur", new MethodHook() {
+				@Override
+				protected void before(MethodHookParam param) throws Throwable {
+					boolean isFolderShowing = (boolean) XposedHelpers.callMethod(param.args[0], "isFolderShowing");
+					if (isFolderShowing) {
+						int blurPct = MainModule.mPrefs.getInt("launcher_folderblur_opacity", 0);
+						float blurRatio = blurPct / 100f;
+						param.setResult(blurRatio);
+					}
+				}
+			});
+
 			Helpers.findAndHookMethod("com.miui.home.launcher.FolderCling", lpparam.classLoader, "open", new MethodHook() {
 				@Override
 				protected void after(MethodHookParam param) throws Throwable {
