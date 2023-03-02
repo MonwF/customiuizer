@@ -56,7 +56,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (mPrefs.getInt("controls_navbarheight", 19) > 19) Controls.NavbarHeightRes();
         if (mPrefs.getBoolean("system_compactnotif")) System.CompactNotificationsRes();
         if (mPrefs.getBoolean("system_nosafevolume")) System.NoSafeVolumeWarningRes();
-        if (mPrefs.getBoolean("controls_powerflash")) Controls.PowerKeyRes();
         if (mPrefs.getStringAsInt("system_allrotations2", 1) > 1) System.AllRotationsRes();
         if (mPrefs.getStringAsInt("system_rotateanim", 1) > 1) System.RotationAnimationRes();
 
@@ -65,7 +64,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (mPrefs.getBoolean("system_nopassword")) System.NoPasswordHook();
         if (mPrefs.getBoolean("system_statusbarcolor")) System.StatusBarBackgroundHook();
         if (mPrefs.getBoolean("system_magnifier")) System.TextMagnifierHook();
-        if (mPrefs.getBoolean("system_lockscreenshortcuts") || mPrefs.getInt("controls_powerdt_action", 1) > 1) SystemUI.LockScreenSecureLaunchHook();
+        if (mPrefs.getBoolean("system_lockscreenshortcuts")) SystemUI.LockScreenSecureLaunchHook();
         if (mPrefs.getBoolean("system_notifmediaseekbar")) System.MediaNotificationSeekBarHook();
         if (mPrefs.getBoolean("system_nooverscroll")) System.NoOverscrollHook();
         if (mPrefs.getBoolean("system_cleanshare")) System.CleanShareMenuHook();

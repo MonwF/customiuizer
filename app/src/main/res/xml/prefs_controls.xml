@@ -22,8 +22,33 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+			android:title="@string/system_mods_vibration" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_controls_fingerprintfailure"
+			android:title="@string/controls_fingerprintfailure_title"
+			android:summary="@string/controls_fingerprintfailure_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_controls_fingerprintsuccess"
+			android:title="@string/controls_fingerprintsuccess_title"
+			android:summary="@string/controls_fingerprintsuccess_summ"
+			android:entries="@array/qshaptic"
+			android:entryValues="@array/qshaptic_val"
+			android:defaultValue="1" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_controls_fingerprintsuccess_ignore"
+			android:title="@string/controls_fingerprintsuccess_ignore_title"
+			android:summary="@string/controls_fingerprintsuccess_ignore_summ"
+			android:defaultValue="false"
+			miuizer:indentLevel="1" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 			android:title="@string/mods_actions"
-			miuizer:dynamic="true" />
+			android:enabled="false"
+			miuizer:dynamic="true" >
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_fingerprint1"
@@ -74,9 +99,12 @@
 			android:disableDependentsState="true"
 			android:defaultValue="false" />
 
+		</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+
 		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 			android:title="@string/calls"
-			miuizer:dynamic="true" />
+			android:enabled="false"
+			miuizer:dynamic="true" >
 
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_controls_fingerprint_accept"
@@ -99,29 +127,7 @@
 			android:entryValues="@array/callactions_val"
 			android:defaultValue="1" />
 
-		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
-			android:title="@string/system_mods_vibration" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_controls_fingerprintfailure"
-			android:title="@string/controls_fingerprintfailure_title"
-			android:summary="@string/controls_fingerprintfailure_summ"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
-			android:key="pref_key_controls_fingerprintsuccess"
-			android:title="@string/controls_fingerprintsuccess_title"
-			android:summary="@string/controls_fingerprintsuccess_summ"
-			android:entries="@array/qshaptic"
-			android:entryValues="@array/qshaptic_val"
-			android:defaultValue="1" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_controls_fingerprintsuccess_ignore"
-			android:title="@string/controls_fingerprintsuccess_ignore_title"
-			android:summary="@string/controls_fingerprintsuccess_ignore_summ"
-			android:defaultValue="false"
-			miuizer:indentLevel="1" />
+		</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
