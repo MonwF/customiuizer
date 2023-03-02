@@ -409,7 +409,7 @@ public class Various {
 	}
 
 	public static void AddSideBarExpandReceiverHook(LoadPackageParam lpparam) {
-		final boolean[] isHooked = {false};
+		final boolean[] isHooked = {false, false};
 		Helpers.hookAllConstructors("com.android.systemui.navigationbar.gestural.RegionSamplingHelper", lpparam.classLoader, new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
@@ -435,6 +435,9 @@ public class Various {
 								moveEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis + 20, MotionEvent.ACTION_MOVE, x - 300, y + 30, 0);
 								upEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis + 21, MotionEvent.ACTION_UP, x - 300, y + 30, 0);
 							}
+							downEvent.setSource(9999);
+							moveEvent.setSource(9999);
+							upEvent.setSource(9999);
 							view.dispatchTouchEvent(downEvent);
 							view.dispatchTouchEvent(moveEvent);
 							view.dispatchTouchEvent(upEvent);
@@ -445,6 +448,31 @@ public class Various {
 					};
 					view.getContext().registerReceiver(showReceiver, new IntentFilter(ACTION_PREFIX + "ShowSideBar"));
 					XposedHelpers.setAdditionalInstanceField(param.thisObject, "showReceiver", showReceiver);
+
+					Handler myhandler = new Handler(Looper.myLooper());
+					Runnable removeBg = new Runnable() {
+						@Override
+						public void run() {
+							view.setBackground(null);
+							myhandler.removeCallbacks(this);;
+
+							if (!isHooked[1]) {
+								isHooked[1] = true;
+								Object li = XposedHelpers.getObjectField(view, "mListenerInfo");
+								Object mOnTouchListener = XposedHelpers.getObjectField(li, "mOnTouchListener");
+								XposedHelpers.findAndHookMethod(mOnTouchListener.getClass(), "onTouch", View.class, MotionEvent.class, new MethodHook() {
+									@Override
+									protected void before(MethodHookParam param) throws Throwable {
+										MotionEvent me = (MotionEvent) param.args[1];
+										if (me.getSource() != 9999) {
+											param.setResult(true);
+										}
+									}
+								});
+							}
+						}
+					};
+					myhandler.postDelayed(removeBg, 200);
 				}
 			}
 		});
@@ -456,6 +484,7 @@ public class Various {
 				if (showReceiver != null) {
 					View view = (View) param.args[0];
 					view.getContext().unregisterReceiver(showReceiver);
+					XposedHelpers.removeAdditionalInstanceField(param.thisObject, "showReceiver");
 				}
 			}
 		});
