@@ -57,7 +57,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (mPrefs.getBoolean("system_compactnotif")) System.CompactNotificationsRes();
         if (mPrefs.getBoolean("system_nosafevolume")) System.NoSafeVolumeWarningRes();
         if (mPrefs.getBoolean("controls_powerflash")) Controls.PowerKeyRes();
-        if (mPrefs.getBoolean("controls_noscrchord")) Controls.NoScreenshotChordRes();
         if (mPrefs.getStringAsInt("system_allrotations2", 1) > 1) System.AllRotationsRes();
         if (mPrefs.getStringAsInt("system_rotateanim", 1) > 1) System.RotationAnimationRes();
 

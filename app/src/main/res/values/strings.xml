@@ -599,8 +599,6 @@
     <string name="controls_mods">Controls</string>
     <string name="controls_powerdt_title">Double press action</string>
     <string name="controls_powerdt_summ">Replace camera launch on power key double press. Requires stock button shortcut to be enabled.</string>
-    <string name="controls_noscrchord_title">Disable screenshot combination</string>
-    <string name="controls_noscrchord_summ">Don\'t make a screen capture when power key is pressed together with volume down key</string>
     <string name="controls_powerflash_title">Quick flashlight</string>
     <string name="controls_powerflash_summ">Long press power button while screen is off to turn flashlight on</string>
     <string name="controls_powerflash_delay_title">Longer quick flashlight delay</string>

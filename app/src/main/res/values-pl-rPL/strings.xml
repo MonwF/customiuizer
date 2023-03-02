@@ -539,8 +539,6 @@
     <string name="controls_mods">Sterowanie</string>
     <string name="controls_powerdt_title">Podwójnego naciśnięcie</string>
     <string name="controls_powerdt_summ">Zastąp uruchamianie aparatu po dwukrotnym naciśnięciu klawisza zasilania. Wymaga włączenia skrótu przycisku akcji.</string>
-    <string name="controls_noscrchord_title">Wyłącz kombinację zrzutów ekranu</string>
-    <string name="controls_noscrchord_summ">Nie rób zrzutu ekranu, gdy klawisz zasilania jest wciśnięty razem z klawiszem zmniejszania głośności</string>
     <string name="controls_powerflash_title">Latarka</string>
     <string name="controls_powerflash_summ">Długie naciśnięcie przycisku zasilania, gdy ekran jest wyłączony, aby włączyć latarkę</string>
     <string name="controls_powerflash_delay_title">Longer quick flashlight delay</string>

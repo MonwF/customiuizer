@@ -582,8 +582,6 @@
     <string name="controls_mods">Điều khiển</string>
     <string name="controls_powerdt_title">Hành động nhấn đúp</string>
     <string name="controls_powerdt_summ">Nhấn nút nguồn hai lần để khởi động máy ảnh. Yêu cầu bật các phím tắt tích hợp.</string>
-    <string name="controls_noscrchord_title">Vô hiệu hóa tổ hợp phím chụp màn hình</string>
-    <string name="controls_noscrchord_summ">Không chụp ảnh màn hình khi nhấn đồng thời nút nguồn và nút giảm âm lượng</string>
     <string name="controls_powerflash_title">Mở đèn pin nhanh</string>
     <string name="controls_powerflash_summ">Khi màn hình tắt, nhấn và giữ nút nguồn để bật đèn pin</string>
     <string name="controls_powerflash_delay_title">Độ trễ mở đèn pin lâu hơn</string>

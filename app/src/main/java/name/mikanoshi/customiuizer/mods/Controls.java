@@ -1031,10 +1031,6 @@ public class Controls {
 		});
 	}
 
-	public static void NoScreenshotChordRes() {
-		MainModule.resHooks.setObjectReplacement("android", "bool", "config_enableScreenshotChord", false);
-	}
-
 	public static void NoFingerprintWakeHook(LoadPackageParam lpparam) {
 		Helpers.findAndHookMethod("com.android.server.policy.MiuiPhoneWindowManager", lpparam.classLoader, "processBackFingerprintDpcenterEvent", KeyEvent.class, boolean.class, new MethodHook() {
 			@Override
