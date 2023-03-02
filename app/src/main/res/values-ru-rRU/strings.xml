@@ -278,8 +278,6 @@
     <string name="controls_mods">Управление</string>
     <string name="controls_powerdt_title">Действие на двойное нажатие</string>
     <string name="controls_powerdt_summ">Заменяет запуск камеры по двойному нажатию кнопки питания. Родное действие должно быть активно.</string>
-    <string name="controls_noscrchord_title">Отключить комбинацию для скриншота</string>
-    <string name="controls_noscrchord_summ">Не делать снимок экрана при нажатии кнопки питания вместе с кнопкой понижения громкости</string>
     <string name="controls_powerflash_title">Быстрый фонарик</string>
     <string name="controls_powerflash_summ">Позволяет активировать фонарик при отключенном экране долгим нажатием на кнопку питания</string>
     <string name="controls_powerflash_delay_title">Задержка активации фонарика</string>

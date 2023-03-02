@@ -239,8 +239,6 @@
     <string name="controls_navbarrightlong_summ">長按右側導航鍵的動作</string>
     <string name="controls_navbarrightlong_title">長按右鍵動作</string>
     <string name="controls_nonavbar_title">隱藏導航欄</string>
-    <string name="controls_noscrchord_summ">同時按住電源鍵和音量下鍵時不進行截圖</string>
-    <string name="controls_noscrchord_title">禁用截圖組合鍵</string>
     <string name="controls_powerdt_summ">按壓兩次電源鍵替代啟動相機。需要啟用內置的快捷鍵。</string>
     <string name="controls_powerdt_title">按壓兩次動作</string>
     <string name="controls_powerflash_delay_summ">增加長按電源鍵延遲</string>

@@ -136,12 +136,6 @@
 			miuizer:dynamic="true" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_controls_noscrchord"
-			android:title="@string/controls_noscrchord_title"
-			android:summary="@string/controls_noscrchord_summ"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_powerflash"
 			android:summary="@string/controls_powerflash_summ"
 			android:title="@string/controls_powerflash_title"

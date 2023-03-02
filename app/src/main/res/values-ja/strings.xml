@@ -590,8 +590,6 @@
   <string name="controls_mods">コントロール</string>
   <string name="controls_powerdt_title">電源ボタンを2回押しのアクション</string>
   <string name="controls_powerdt_summ">電源ボタンを2回押しでカメラの起動を置き換えます。純正ボタンのショートカットを有効化する必要があります。</string>
-  <string name="controls_noscrchord_title">スクリーンショットのコンボボタンを無効化</string>
-  <string name="controls_noscrchord_summ">電源ボタンと音量ダウンボタン同時押しのスクリーンショット操作を無効化します</string>
   <string name="controls_powerflash_title">懐中電灯のクイック起動</string>
   <string name="controls_powerflash_summ">画面消灯中に電源を長押しで懐中電灯を点灯させるようにします</string>
   <string name="controls_powerflash_delay_title">懐中電灯のクイック起動の遅延</string>

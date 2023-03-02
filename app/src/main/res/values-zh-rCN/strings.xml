@@ -573,8 +573,6 @@
     <string name="controls_mods">控制</string>
     <string name="controls_powerdt_title">按压两次动作</string>
     <string name="controls_powerdt_summ">按压两次电源键替代启动相机。需要启用内置的快捷键。</string>
-    <string name="controls_noscrchord_title">禁用截图组合键</string>
-    <string name="controls_noscrchord_summ">同时按住电源键和音量下键时不进行截图</string>
     <string name="controls_powerflash_title">快速手电筒</string>
     <string name="controls_powerflash_summ">屏幕关闭时长按电源键打开手电筒</string>
     <string name="controls_powerflash_delay_title">加长快速手电筒延迟</string>
