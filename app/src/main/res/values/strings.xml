@@ -639,6 +639,7 @@
     <string name="controls_volumecursor_summ">Move text input cursor using volume keys</string>
     <string name="controls_volumecursor_reverse_title">Change directions</string>
     <string name="controls_volumecursor_reverse_summ">Swap directions of cursor movements</string>
+    <string name="controls_volumedowndt_turnon_torch_title">Double tap volume down to turn on torch</string>
     <string name="controls_volumemedia_up_title">Volume Up long press action</string>
     <string name="controls_volumemedia_up_summ">Action for Volume Up long press when screen is off</string>
     <string name="controls_volumemedia_down_title">Volume Down long press action</string>

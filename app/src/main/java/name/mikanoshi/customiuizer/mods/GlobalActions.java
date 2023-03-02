@@ -1092,8 +1092,7 @@ public class GlobalActions {
 			}
 
 			if (skipLock) {
-				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-				intent.addFlags(343932928);
+				intent.addFlags(335544320);
 				intent.putExtra("StartActivityWhenLocked", true);
 			}
 

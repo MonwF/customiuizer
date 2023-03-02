@@ -187,6 +187,11 @@
 			android:title="@string/mods_actions"
 			miuizer:dynamic="true" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_controls_volumedowndt_torch"
+			android:title="@string/controls_volumedowndt_turnon_torch_title"
+			android:defaultValue="false" />
+
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_controls_volumemedia_up"
 			android:summary="@string/controls_volumemedia_up_summ"

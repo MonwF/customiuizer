@@ -89,29 +89,12 @@ public class Controls {
 		Helpers.hookAllMethods("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "init", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
-				XposedHelpers.setObjectField(param.thisObject, "mSupportLongPressPowerWhenNonInteractive", true);
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 				mContext.registerReceiver(mScreenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
 			}
 		});
 
-//		Helpers.findAndHookMethod("com.android.server.input.InputManagerService", lpparam.classLoader, "interceptKeyBeforeQueueing", KeyEvent.class, int.class, new MethodHook() {
-//			@Override
-//			protected void before(final MethodHookParam param) throws Throwable {
-//				KeyEvent keyEvent = (KeyEvent)param.args[0];
-//				Helpers.log("PowerKeyHook", "InputManagerService interceptKeyBeforeQueueing: | KeyCode: " + keyEvent.getKeyCode() + " | Action: " + keyEvent.getAction() + " | RepeatCount: " + keyEvent.getRepeatCount()+ " | Flags: " + keyEvent.getFlags());
-//			}
-//		});
-//
-//		Helpers.findAndHookMethod("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.classLoader, "interceptKeyBeforeQueueingInternal", KeyEvent.class, int.class, boolean.class, new MethodHook() {
-//			@Override
-//			protected void before(final MethodHookParam param) throws Throwable {
-//				KeyEvent keyEvent = (KeyEvent)param.args[0];
-//				Helpers.log("PowerKeyHook", "interceptKeyBeforeQueueingInternal: " + param.args[2] + " | KeyCode: " + keyEvent.getKeyCode() + " | Action: " + keyEvent.getAction() + " | RepeatCount: " + keyEvent.getRepeatCount()+ " | Flags: " + keyEvent.getFlags());
-//			}
-//		});
-
-		Helpers.findAndHookMethod("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "interceptKeyBeforeQueueing", KeyEvent.class, int.class, new MethodHook() {
+		Helpers.findAndHookMethod("com.android.server.policy.MiuiPhoneWindowManager", lpparam.classLoader, "interceptKeyBeforeQueueing", KeyEvent.class, int.class, new MethodHook() {
 			@Override
 			protected void before(final MethodHookParam param) throws Throwable {
 				// Power and volkeys are pressed at the same time
@@ -1012,20 +995,29 @@ public class Controls {
 	}
 
 	public static void PowerDoubleTapActionHook(LoadPackageParam lpparam) {
+		boolean dtFromVolumeDown = MainModule.mPrefs.getBoolean("controls_volumedowndt_torch");
 		final ArrayList<String> doubleTapResons = new ArrayList<String>();
 		doubleTapResons.add("double_click_power");
 		doubleTapResons.add("power_double_tap");
 		doubleTapResons.add("double_click_power_key");
-		Helpers.findAndHookMethod("com.miui.server.util.ShortCutActionsUtils", lpparam.classLoader, "triggerFunction", String.class, String.class, Bundle.class, boolean.class, new MethodHook() {
+		String className = Helpers.isTPlus() ? "com.miui.server.input.util.ShortCutActionsUtils" : "com.miui.server.util.ShortCutActionsUtils";
+		Helpers.findAndHookMethod(className, lpparam.classLoader, "triggerFunction", String.class, String.class, Bundle.class, boolean.class, new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
-				if (doubleTapResons.contains(param.args[1])) {
+				if (dtFromVolumeDown && "double_click_volume_down".equals(param.args[1])) {
+					param.args[0] = "turn_on_torch";
+				}
+				else if (!dtFromVolumeDown && doubleTapResons.contains(param.args[1])) {
 					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 					GlobalActions.handleAction(mContext, "pref_key_controls_powerdt", true);
 					param.setResult(true);
 				}
 			}
 		});
+
+		if (dtFromVolumeDown) {
+			Helpers.findAndHookMethod("com.android.server.policy.MiuiKeyShortcutManager", lpparam.classLoader, "getVolumeKeyLaunchCamera", XC_MethodReplacement.returnConstant(true));
+		}
 	}
 
 	public static void NoFingerprintWakeHook(LoadPackageParam lpparam) {

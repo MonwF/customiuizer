@@ -571,8 +571,8 @@
     <string name="launcher_doubletap_summ">双击任意主屏幕空白处的动作</string>
     <string name="launcher_bugfixes">错误修复</string>
     <string name="controls_mods">控制</string>
-    <string name="controls_powerdt_title">按压两次动作</string>
-    <string name="controls_powerdt_summ">按压两次电源键替代启动相机。需要启用内置的快捷键。</string>
+    <string name="controls_powerdt_title">双击动作</string>
+    <string name="controls_powerdt_summ">双击电源键替代启动相机。需要启用内置的快捷键。</string>
     <string name="controls_powerflash_title">快速手电筒</string>
     <string name="controls_powerflash_summ">屏幕关闭时长按电源键打开手电筒</string>
     <string name="controls_powerflash_delay_title">加长快速手电筒延迟</string>
@@ -613,6 +613,7 @@
     <string name="controls_volumecursor_summ">使用音量键移动文本输入法光标(请将输入法App加入作用域)</string>
     <string name="controls_volumecursor_reverse_title">改变方向</string>
     <string name="controls_volumecursor_reverse_summ">交换光标移动的方向</string>
+    <string name="controls_volumedowndt_turnon_torch_title">双击音量下键开启手电筒</string>
     <string name="controls_volumemedia_up_title">长按音量上键动作</string>
     <string name="controls_volumemedia_up_summ">屏幕关闭时长按音量上键的动作</string>
     <string name="controls_volumemedia_down_title">长按音量下键动作</string>
