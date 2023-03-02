@@ -85,14 +85,11 @@ public class Controls {
 		}
 	};
 
-	public static void PowerKeyRes() {
-		MainModule.resHooks.setObjectReplacement("android", "bool", "config_supportLongPressPowerWhenNonInteractive", true);
-	}
-
 	public static void PowerKeyHook(LoadPackageParam lpparam) {
 		Helpers.hookAllMethods("com.android.server.policy.PhoneWindowManager", lpparam.classLoader, "init", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
+				XposedHelpers.setObjectField(param.thisObject, "mSupportLongPressPowerWhenNonInteractive", true);
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 				mContext.registerReceiver(mScreenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
 			}

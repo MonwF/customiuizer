@@ -1063,6 +1063,7 @@ public class GlobalActions {
 		APP, ACTIVITY, SHORTCUT
 	}
 
+	@SuppressLint("WrongConstant")
 	public static Intent getIntent(Context context, String pref, IntentType intentType, boolean skipLock) {
 		try {
 			if (intentType == IntentType.APP) pref += "_app";
@@ -1092,7 +1093,7 @@ public class GlobalActions {
 
 			if (skipLock) {
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-				intent.putExtra("ShowCameraWhenLocked", true);
+				intent.addFlags(343932928);
 				intent.putExtra("StartActivityWhenLocked", true);
 			}
 
