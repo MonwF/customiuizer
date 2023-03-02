@@ -1794,23 +1794,12 @@ public class SystemUI {
             }
         });
 
-        Helpers.findAndHookMethod("com.android.systemui.qs.MiuiTileLayout", lpparam.classLoader, "updateResources", new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                if (MainModule.mPrefs.getInt("system_qsgridrows", 1) != 2) return;
-                if (!(boolean)param.getResult()) return;
-                Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-                if (mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) return;
-                XposedHelpers.setIntField(param.thisObject, "mCellHeight", Math.round(XposedHelpers.getIntField(param.thisObject, "mCellHeight") / 1.5f));
-                ((ViewGroup)param.thisObject).requestLayout();
-            }
-        });
-
-        if (MainModule.mPrefs.getInt("system_qsgridrows", 1) == 4)
+        int rows = MainModule.mPrefs.getInt("system_qsgridrows", 1);
+        if (rows == 4) {
             Helpers.findAndHookMethod("com.android.systemui.qs.tileimpl.MiuiQSTileView", lpparam.classLoader, "createLabel", new MethodHook() {
                 @Override
                 protected void after(MethodHookParam param) throws Throwable {
-                    ViewGroup mLabelContainer = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mLabelContainer");
+                    ViewGroup mLabelContainer = (ViewGroup) XposedHelpers.getObjectField(param.thisObject, "mLabelContainer");
                     if (mLabelContainer != null) mLabelContainer.setPadding(
                         mLabelContainer.getPaddingLeft(),
                         Math.round(mLabelContainer.getResources().getDisplayMetrics().density * 2),
@@ -1819,6 +1808,7 @@ public class SystemUI {
                     );
                 }
             });
+        }
     }
 
     public static void VolumeTimerValuesRes(LoadPackageParam lpparam) {
