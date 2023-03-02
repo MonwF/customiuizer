@@ -1179,6 +1179,7 @@
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_wifipassword"
 			android:title="@string/system_wifipassword_title"
+			android:summary="@string/system_wifipassword_summ"
 			android:defaultValue="true" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx

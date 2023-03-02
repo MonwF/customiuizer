@@ -98,8 +98,13 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             && !pkg.equals(Helpers.modulePkg)
             && !pkg.equals("com.miui.securitycenter")
             && !pkg.equals("com.miui.powerkeeper")
+            && !pkg.equals("com.android.incallui")
+            && !pkg.equals("com.miui.miwallpaper")
+            && !pkg.equals("com.android.server.telecom")
             && !pkg.equals("com.android.settings")
             && !pkg.equals("com.miui.screenshot")
+            && !pkg.equals("com.miui.gallery")
+            && !pkg.equals("com.lbe.security.miui")
             && !pkg.equals("com.miui.packageinstaller")
             && !pkg.equals("com.miui.home")
         ) {

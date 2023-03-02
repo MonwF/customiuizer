@@ -330,6 +330,7 @@
     <string name="system_qs_force_systemfonts_title">时钟强制使用系统字体</string>
     <string name="system_cc_dateformat_title">自定义日期格式</string>
     <string name="system_wifipassword_title">查看已保存Wi-Fi密码</string>
+    <string name="system_wifipassword_summ">路径: 设置-WLAN-高级设置-管理已保存网络</string>
     <string name="system_wifipassword_btn_title">查看</string>
     <string name="system_wifi_password_label">密码</string>
     <string name="system_wifi_password_dlgtitle">Wi-Fi 详情</string>
@@ -1091,7 +1092,7 @@
     <string name="system_statusbar_batterytempandcurrent_positive_title">电流总显示正值</string>
     <string name="system_statusbar_dualsimin2rows_title">双排信号栏</string>
     <string name="system_statusbar_dualrows_title">双排状态栏</string>
-    <string name="system_statusbar_dualrows_summ">如有必要请适当增加状态栏高度</string>
+    <string name="system_statusbar_dualrows_summ">状态栏高度建议值34–40，上边距建议值2</string>
     <string name="system_statusbar_dualsimin2rows_style_title">图标样式</string>
     <string name="system_statusbar_dualsimin2rows_rightmargin_title">右侧间距</string>
     <string name="system_statusbar_mobiletype_single_title">移动网络类型单独显示</string>
