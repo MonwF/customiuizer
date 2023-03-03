@@ -1629,19 +1629,21 @@ public class Helpers {
 		}
 	}
 
-	public static void findAndHookMethod(String className, ClassLoader classLoader, String methodName, Object... parameterTypesAndCallback) {
+	public static XC_MethodHook.Unhook findAndHookMethod(String className, ClassLoader classLoader, String methodName, Object... parameterTypesAndCallback) {
 		try {
-			XposedHelpers.findAndHookMethod(className, classLoader, methodName, parameterTypesAndCallback);
+			return XposedHelpers.findAndHookMethod(className, classLoader, methodName, parameterTypesAndCallback);
 		} catch (Throwable t) {
 			log(getCallerMethod(), "Failed to hook " + methodName + " method in " + className);
+			return null;
 		}
 	}
 
-	public static void findAndHookMethod(Class<?> clazz, String methodName, Object... parameterTypesAndCallback) {
+	public static XC_MethodHook.Unhook findAndHookMethod(Class<?> clazz, String methodName, Object... parameterTypesAndCallback) {
 		try {
-			XposedHelpers.findAndHookMethod(clazz, methodName, parameterTypesAndCallback);
+			return XposedHelpers.findAndHookMethod(clazz, methodName, parameterTypesAndCallback);
 		} catch (Throwable t) {
 			log(getCallerMethod(), "Failed to hook " + methodName + " method in " + clazz.getCanonicalName());
+			return null;
 		}
 	}
 

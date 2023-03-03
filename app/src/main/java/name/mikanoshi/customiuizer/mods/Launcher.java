@@ -843,7 +843,7 @@ public class Launcher {
 				ArrayList<CharSequence> arrayList = new ArrayList<>();
 				int cellCountXMin = 3;
 				int cellCountXMax = 8;
-				int cellCountYMin = 3;
+				int cellCountYMin = 4;
 				int cellCountYMax = 10;
 				while (cellCountXMin <= cellCountXMax) {
 					for (int i = cellCountYMin; i <= cellCountYMax; i++) {
@@ -852,6 +852,26 @@ public class Launcher {
 					cellCountXMin++;
 				}
 				param.setResult(arrayList);
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.home.launcher.compat.LauncherCellCountCompatNoWord", lpparam.classLoader, "setLoadResCellConfig", boolean.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				param.args[0] = true;
+			}
+		});
+
+		Helpers.hookAllMethods("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "isCellSizeChangedByTheme", new MethodHook() {
+			XC_MethodHook.Unhook nowordHook;
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				nowordHook = Helpers.findAndHookMethod("com.miui.home.launcher.common.Utilities", lpparam.classLoader, "isNoWordModel", XC_MethodReplacement.returnConstant(false));
+			}
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				if (nowordHook != null) nowordHook.unhook();
+				nowordHook = null;
 			}
 		});
 	}
