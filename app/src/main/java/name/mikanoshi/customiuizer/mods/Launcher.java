@@ -814,7 +814,7 @@ public class Launcher {
 		MainModule.resHooks.setObjectReplacement("com.miui.home", "integer", "config_cell_count_y", 4);
 		MainModule.resHooks.setObjectReplacement("com.miui.home", "integer", "config_cell_count_x_min", 3);
 		MainModule.resHooks.setObjectReplacement("com.miui.home", "integer", "config_cell_count_y_min", 4);
-		MainModule.resHooks.setObjectReplacement("com.miui.home", "integer", "config_cell_count_x_max", 10);
+		MainModule.resHooks.setObjectReplacement("com.miui.home", "integer", "config_cell_count_x_max", 8);
 		MainModule.resHooks.setObjectReplacement("com.miui.home", "integer", "config_cell_count_y_max", 10);
 	}
 
@@ -835,6 +835,23 @@ public class Launcher {
 					int cellHeight = (int) XposedHelpers.callStaticMethod(DeviceConfigClass, "getCellHeight");
 					XposedHelpers.setStaticObjectField(DeviceConfigClass, "sFolderCellHeight", cellHeight);
 				}
+			}
+		});
+		Helpers.findAndHookMethod("com.miui.home.launcher.ScreenUtils", lpparam.classLoader, "getScreenCellsSizeOptions", Context.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				ArrayList<CharSequence> arrayList = new ArrayList<>();
+				int cellCountXMin = 3;
+				int cellCountXMax = 8;
+				int cellCountYMin = 3;
+				int cellCountYMax = 10;
+				while (cellCountXMin <= cellCountXMax) {
+					for (int i = cellCountYMin; i <= cellCountYMax; i++) {
+						arrayList.add(cellCountXMin + "x" + i);
+					}
+					cellCountXMin++;
+				}
+				param.setResult(arrayList);
 			}
 		});
 	}

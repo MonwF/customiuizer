@@ -532,7 +532,7 @@
     <string name="launcher_hideseekpoints_summ">Show page indicator only during scrolling</string>
     <string name="launcher_hideseekpoints_edit_title">Show only in edit mode</string>
     <string name="launcher_unlockgrids_title">Unlock grid sizes</string>
-    <string name="launcher_unlockgrids_summ">Make all grid sizes from 3x4 to 10x10 available in home screen layout setting</string>
+    <string name="launcher_unlockgrids_summ">Make all grid sizes from 3x4 to 8x10 available in home screen layout setting</string>
     <string name="launcher_unlockhotseat_title">More icons in dock</string>
     <string name="launcher_unlockhotseat_summ">Unlimited number of dock icons</string>
     <string name="launcher_closedrawer_title">Auto close app drawer</string>
@@ -1158,7 +1158,7 @@
     <string name="various_show_battery_temperature_title">Show temperature in battery</string>
     <string name="various_enable_sc_ai_clipboard_blur_location_title">Enable AI clipboard and blur location</string>
     <string name="various_disable_freeform_suggest_blacklist_title">Disable suggestion blacklist of sidebar</string>
-    <string name="various_enable_expand_sidebar_title">Enable sidebar expand receiver</string>
+    <string name="various_enable_expand_sidebar_title">Hide sidebar and disable swipe action</string>
     <string name="system_lockscreenshortcuts_left_tapaction_title">Long click left shortcut to toggle flashlight</string>
     <string name="system_cc_tile_roundedrect_title">Rounded rectangle tile</string>
     <string name="system_cc_enable_style_switch_title">Force Enable CC style switch</string>
