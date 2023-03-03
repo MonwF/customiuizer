@@ -133,8 +133,6 @@ public class Helpers {
 	public static ArrayList<ModData> allModsList = new ArrayList<ModData>();
 	public static final int markColor = Color.rgb(205, 73, 97);
 	public static final int markColorVibrant = Color.rgb(255, 0, 0);
-	public static final int REQUEST_PERMISSIONS_BACKUP = 1;
-	public static final int REQUEST_PERMISSIONS_RESTORE = 2;
 	public static final int REQUEST_PERMISSIONS_WIFI = 3;
 	public static final int REQUEST_PERMISSIONS_REPORT = 4;
 	public static final int REQUEST_PERMISSIONS_BLUETOOTH = 5;
@@ -418,8 +416,6 @@ public class Helpers {
 	}
 
 	public static boolean preparePathForBackup(AppCompatActivity act, String path) {
-		if (!checkPermAndRequest(act, Manifest.permission.WRITE_EXTERNAL_STORAGE, REQUEST_PERMISSIONS_BACKUP)) return false;
-
 		String state = Environment.getExternalStorageState();
 		switch (state) {
 			case Environment.MEDIA_MOUNTED_READ_ONLY:

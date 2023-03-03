@@ -1002,8 +1002,6 @@
     <string name="guide_softreboot">Nie, że aby zastosować modyfikacje musisz zrobić miękki restart.\nDynamiczne ⟲ modyfikacje wymagają tego tylko raz.\nWięcej informacji znajduje się na stronie "Informacje".</string>
     <string name="guide_marknew">Nowe modyfikacje od poprzedniej aktualizacji \ncan be marked for better visibility</string>
 
-    <string name="permission_save">Czy chcesz utworzyć kopię zapasową, czy nie?</string>
-    <string name="permission_restore">Czy chcesz przywrócić kopię zapasową, czy nie?</string>
     <string name="permission_scan">Czy chcesz otrzymać listę sieci/urządzeń, czy nie?</string>
     <string name="permission_permanent">Będziesz musiał teraz ręcznie włączyć uprawnienia dla tej opcji. Dobra robota!</string>
 

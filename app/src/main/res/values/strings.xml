@@ -1081,8 +1081,6 @@
     <string name="guide_softreboot">Don\'t forget to apply mods by using soft reboot.\nDynamic ⟲ mods require it only once.\nMore information is on About page.</string>
     <string name="guide_marknew">New mods since previous update\ncan be marked for better visibility</string>
 
-    <string name="permission_save">Do you want to write backup or not?</string>
-    <string name="permission_restore">Do you want to restore backup or not?</string>
     <string name="permission_scan">Do you want to get a list of networks/devices or not?</string>
     <string name="permission_permanent">You\'ll have to manually enable permission for this option now. Good job!</string>
 

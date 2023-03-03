@@ -1044,8 +1044,6 @@
   <string name="guide_search">Modを名前で検索します。\n長押しで新しいModの一覧を表示します。</string>
   <string name="guide_softreboot">ソフトリブートでModの適用を忘れないでください。\n動的な⟲のModは1度だけソフトリブートが必要です。\n詳細はアプリについての項目にあります。</string>
   <string name="guide_marknew">前回のアップデート以降のModは\nマークをする事でよりわかりやすくなります。</string>
-  <string name="permission_save">バックアップを保存しますか?</string>
-  <string name="permission_restore">バックアップを復元しますか?</string>
   <string name="permission_scan">ネットワークまたはデバイスのリストを取得しますか?</string>
   <string name="permission_permanent">このオプションは手動で許可する必要があります。グッジョブ!!</string>
   <string name="format_d_ms">%d 秒</string>

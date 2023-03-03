@@ -1001,8 +1001,6 @@
     <string name="guide_search">按名称搜索模块。\n长按显示新模块的列表。</string>
     <string name="guide_softreboot">别忘了使用软重启应用模块。\n动态⟲模块仅需执行一次。\n更多信息请查看关于页面。</string>
     <string name="guide_marknew">醒目显示新模块</string>
-    <string name="permission_save">您是否要写入备份？</string>
-    <string name="permission_restore">您是否要恢复备份？</string>
     <string name="permission_scan">您是否要获取网络/设备列表?</string>
     <string name="permission_permanent">现在您必须手动启用此选项的权限。很好！</string>
     <string name="format_d_ms">%d ms</string>

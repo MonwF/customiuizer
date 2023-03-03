@@ -1033,8 +1033,6 @@
     <string name="guide_search">Tìm kiếm mod theo tên.\nNhấn và giữ để hiển thị danh sách các mod mới.</string>
     <string name="guide_softreboot">Đừng quên áp dụng mod bằng cách khởi động lại mềm.\nDynamic ⟲ module chỉ cần được thực thi một lần.\nXem trang Giới thiệu để biết thêm thông tin.</string>
     <string name="guide_marknew">Làm nổi bật các mod mới</string>
-    <string name="permission_save">Bạn có muốn tạo một bản sao lưu?</string>
-    <string name="permission_restore">Bạn có muốn khôi phục bản sao lưu của mình không?</string>
     <string name="permission_scan">Bạn có muốn nhận danh sách mạng/thiết bị không?</string>
     <string name="permission_permanent">Bây giờ bạn phải bật quyền cho tùy chọn này theo cách thủ công. Tốt lắm!</string>
     <string name="format_d_ms">%d ms</string>
