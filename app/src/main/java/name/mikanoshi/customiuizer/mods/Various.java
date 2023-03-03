@@ -454,7 +454,7 @@ public class Various {
 						@Override
 						public void run() {
 							view.setBackground(null);
-							myhandler.removeCallbacks(this);;
+							myhandler.removeCallbacks(this);
 
 							if (!isHooked[1]) {
 								isHooked[1] = true;
@@ -465,7 +465,7 @@ public class Various {
 									protected void before(MethodHookParam param) throws Throwable {
 										MotionEvent me = (MotionEvent) param.args[1];
 										if (me.getSource() != 9999) {
-											param.setResult(true);
+											param.setResult(false);
 										}
 									}
 								});
