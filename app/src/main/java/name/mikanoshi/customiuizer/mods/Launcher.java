@@ -677,7 +677,7 @@ public class Launcher {
 				boolean setting = Settings.Global.getInt(navView.getContext().getContentResolver(), "show_mistake_touch_toast", 1) != 0;
 				if (setting) {
 					boolean mIsShowStatusBar = XposedHelpers.getBooleanField(param.thisObject, "mIsShowStatusBar");
-					if (mIsShowStatusBar) {
+					if (!mIsShowStatusBar) {
 						misTouch = (boolean) XposedHelpers.callMethod(param.thisObject, "isLandScapeActually");
 					}
 				}
