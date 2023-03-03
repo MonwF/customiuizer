@@ -949,8 +949,6 @@
     <string name="guide_search">Поиск модов по названию.\nДолгое нажатие покажет список новых модов.</string>
     <string name="guide_softreboot">Не забудьте перезагрузиться для применения модов.\nДинамические ⟲ моды требуют только одну перезагрузку.\nБолее подробно об этом на странице О приложении.</string>
     <string name="guide_marknew">Новые моды с предыдушего обновления\nмогут быть выделены для лучшей видимости</string>
-    <string name="permission_save">Вы хотите сохранить бэкап или нет?</string>
-    <string name="permission_restore">Вы хотите восстановить бэкап или нет?</string>
     <string name="permission_scan">Вы хотите получить список сетей/устройств или нет?</string>
     <string name="permission_permanent">Теперь Вам придётся искать где вручную дать разрешение для данной функции. Так держать!</string>
     <string name="format_d_ms">%d мс</string>

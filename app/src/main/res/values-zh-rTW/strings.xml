@@ -423,8 +423,6 @@
     <string name="oneKBs">1 KB/s</string>
     <string name="open_xposed">管理Xposed模組</string>
     <string name="permission_permanent">現在您必須手動啟用此選項的權限。很好！</string>
-    <string name="permission_restore">您是否要恢復備份？</string>
-    <string name="permission_save">您是否要寫入備份？</string>
     <string name="permission_scan">您是否要獲取網路/設備列表?</string>
     <string name="poco_mods">POCO桌面</string>
     <string name="prefs_migration_failure">模組設置無法遷移到EdXposed新版本。您必須使用恢復功能或從頭開始配置模組。</string>

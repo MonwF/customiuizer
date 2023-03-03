@@ -148,22 +148,6 @@ public class MainActivity extends AppCompatActivity {
 		}
 
 		switch (requestCode) {
-			case Helpers.REQUEST_PERMISSIONS_BACKUP:
-				if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-					mainFrag.backupSettings(this);
-				else if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE))
-					Toast.makeText(this, R.string.permission_save, Toast.LENGTH_SHORT).show();
-				else
-					Toast.makeText(this, R.string.permission_permanent, Toast.LENGTH_LONG).show();
-				break;
-			case Helpers.REQUEST_PERMISSIONS_RESTORE:
-				if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-					mainFrag.restoreSettings(this);
-				else if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE))
-					Toast.makeText(this, R.string.permission_restore, Toast.LENGTH_SHORT).show();
-				else
-					Toast.makeText(this, R.string.permission_permanent, Toast.LENGTH_LONG).show();
-				break;
 			case Helpers.REQUEST_PERMISSIONS_WIFI:
 				if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
 					if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION))

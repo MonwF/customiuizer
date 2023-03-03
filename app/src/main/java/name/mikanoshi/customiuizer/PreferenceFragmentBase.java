@@ -418,7 +418,6 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
     }
 
     public void restoreSettings(final AppCompatActivity act) {
-        if (!Helpers.checkPermAndRequest(act, Manifest.permission.WRITE_EXTERNAL_STORAGE, Helpers.REQUEST_PERMISSIONS_RESTORE)) return;
         if (!Helpers.checkStorageReadable(act)) return;
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
