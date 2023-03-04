@@ -411,6 +411,11 @@ public class Various {
 
 	public static void AddSideBarExpandReceiverHook(LoadPackageParam lpparam) {
 		final boolean[] isHooked = {false, false};
+		boolean enableSideBar = MainModule.mPrefs.getBoolean("various_swipe_expand_sidebar");
+		if (!enableSideBar) {
+			MainModule.resHooks.setDensityReplacement("com.miui.securitycenter", "dimen", "sidebar_height_default", 8);
+			MainModule.resHooks.setDensityReplacement("com.miui.securitycenter", "dimen", "sidebar_height_vertical", 8);
+		}
 		Helpers.hookAllConstructors("com.android.systemui.navigationbar.gestural.RegionSamplingHelper", lpparam.classLoader, new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
@@ -427,14 +432,14 @@ public class Various {
 							long uptimeMillis = SystemClock.uptimeMillis();
 							MotionEvent downEvent, moveEvent, upEvent;
 							if (x == 0) { // left
-								downEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis, MotionEvent.ACTION_DOWN, x + 4, y + 30, 0);
-								moveEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis + 20, MotionEvent.ACTION_MOVE, x + 300, y + 30, 0);
-								upEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis + 21, MotionEvent.ACTION_UP, x + 300, y + 30, 0);
+								downEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis, MotionEvent.ACTION_DOWN, x + 4, y + 15, 0);
+								moveEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis + 20, MotionEvent.ACTION_MOVE, x + 300, y + 15, 0);
+								upEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis + 21, MotionEvent.ACTION_UP, x + 300, y + 15, 0);
 							}
 							else {
-								downEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis, MotionEvent.ACTION_DOWN, x - 4, y + 30, 0);
-								moveEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis + 20, MotionEvent.ACTION_MOVE, x - 300, y + 30, 0);
-								upEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis + 21, MotionEvent.ACTION_UP, x - 300, y + 30, 0);
+								downEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis, MotionEvent.ACTION_DOWN, x - 4, y + 15, 0);
+								moveEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis + 20, MotionEvent.ACTION_MOVE, x - 300, y + 15, 0);
+								upEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis + 21, MotionEvent.ACTION_UP, x - 300, y + 15, 0);
 							}
 							downEvent.setSource(9999);
 							moveEvent.setSource(9999);
@@ -450,15 +455,14 @@ public class Various {
 					view.getContext().registerReceiver(showReceiver, new IntentFilter(ACTION_PREFIX + "ShowSideBar"));
 					XposedHelpers.setAdditionalInstanceField(param.thisObject, "showReceiver", showReceiver);
 
-					Handler myhandler = new Handler(Looper.myLooper());
-					Runnable removeBg = new Runnable() {
-						@Override
-						public void run() {
-							myhandler.removeCallbacks(this);
-
-							if (!isHooked[1]) {
-								isHooked[1] = true;
-								if (!MainModule.mPrefs.getBoolean("various_swipe_expand_sidebar")) {
+					if (!isHooked[1]) {
+						isHooked[1] = true;
+						Handler myhandler = new Handler(Looper.myLooper());
+						Runnable removeBg = new Runnable() {
+							@Override
+							public void run() {
+								myhandler.removeCallbacks(this);
+								if (!enableSideBar) {
 									Object li = XposedHelpers.getObjectField(view, "mListenerInfo");
 									Object mOnTouchListener = XposedHelpers.getObjectField(li, "mOnTouchListener");
 									Helpers.findAndHookMethod(mOnTouchListener.getClass(), "onTouch", View.class, MotionEvent.class, new MethodHook() {
@@ -479,9 +483,9 @@ public class Various {
 									}
 								});
 							}
-						}
-					};
-					myhandler.postDelayed(removeBg, 200);
+						};
+						myhandler.postDelayed(removeBg, 200);
+					}
 				}
 			}
 		});
