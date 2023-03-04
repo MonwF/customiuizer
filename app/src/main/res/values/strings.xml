@@ -1122,6 +1122,10 @@
     <string name="system_statusbar_batterytempandcurrent_hideunit_title">Hide unit</string>
     <string name="system_statusbar_batterytempandcurrent_singlerow_title">Display in single row</string>
     <string name="system_statusbar_batterytempandcurrent_reverseorder_title">Reverse order</string>
+    <string name="system_statusbar_batterystyle_title">style the battery icon</string>
+    <string name="system_statusbar_batterystyle_digit_title">Battery digit</string>
+    <string name="system_statusbar_batterystyle_mark_fontsize_title">Percentage mark\'s font size</string>
+    <string name="system_statusbar_batterystyle_mark_verticaloffset_title">Percentage mark\'s vertical offset</string>
     <string name="system_statusbar_dualsimin2rows_title">Dual SIM signal bars in dual rows</string>
     <string name="system_statusbar_dualrows_title">Dual rows in status bar</string>
     <string name="system_statusbar_dualrows_summ">Need increase statusbar height on some devices</string>

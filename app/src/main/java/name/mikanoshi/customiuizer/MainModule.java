@@ -282,8 +282,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getStringAsInt("system_statusbar_clock_position", 1) > 1 && !mPrefs.getBoolean("system_statusbar_dualrows")) {
                 SystemUI.StatusBarClockPositionHook(lpparam);
             }
-            if (mPrefs.getBoolean("system_statusbaricons_swap_batteryicon_percentage")) {
-                SystemUI.StatusBarSwapBatteryIconAndPctHook(lpparam);
+            if (mPrefs.getBoolean("system_statusbar_batterystyle")) {
+                SystemUI.StatusBarStyleBatteryIconHook(lpparam);
             }
             if (mPrefs.getBoolean("system_statusbar_batterytempandcurrent")) SystemUI.DisplayBatteryDetailHook(lpparam);
             if (mPrefs.getBoolean("system_statusbar_topmargin") && mPrefs.getBoolean("system_statusbar_topmargin_unset_lockscreen")) SystemUI.LockScreenTopMarginHook(lpparam);

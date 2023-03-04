@@ -167,6 +167,19 @@ public class System extends SubFragment {
 						return true;
 					}
 				});
+				findPreference("pref_key_system_statusbar_batterystyle_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						Bundle args = new Bundle();
+						args.putBoolean("isStandalone", true);
+						Bundle catInfo = new Bundle();
+						args.putBundle("catInfo", catInfo);
+						args.putString("sub", preference.getKey());
+						String title = preference.getTitle().toString();
+						openSubFragment(new System(), args, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, title, R.xml.prefs_system_statusbar_batterystyle);
+						return true;
+					}
+				});
 				findPreference("pref_key_system_statusbar_mobile_signal_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
