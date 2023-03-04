@@ -193,7 +193,7 @@
     <string name="system_screenshot_path_title">Save folder</string>
     <string name="system_gallery_screenshots_path_title">Gallery screenshots folder</string>
     <string name="system_screenshot_overlay_title">Hide overlays on screenshots</string>
-    <string name="system_screenshot_overlay_summ">Temporarily hide overlays while taking a screenshot(Add apps that have overlays to LSPosed scope first)</string>
+    <string name="system_screenshot_overlay_summ">Temporarily hide overlays while taking a screenshot</string>
     <string name="system_screenshot_floattime_title">Floating screenshot display time</string>
     <string name="system_screenshot_floattime_summ">Delay before a floating window with newly created screenshot disappears</string>
     <string name="system_chargeanimtime_title">Charge animation screen timeout</string>
