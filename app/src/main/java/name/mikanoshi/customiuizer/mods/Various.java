@@ -25,6 +25,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.database.ContentObserver;
+import android.graphics.Canvas;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.Ringtone;
@@ -453,20 +454,28 @@ public class Various {
 					Runnable removeBg = new Runnable() {
 						@Override
 						public void run() {
-							view.setBackground(null);
 							myhandler.removeCallbacks(this);
 
 							if (!isHooked[1]) {
 								isHooked[1] = true;
-								Object li = XposedHelpers.getObjectField(view, "mListenerInfo");
-								Object mOnTouchListener = XposedHelpers.getObjectField(li, "mOnTouchListener");
-								XposedHelpers.findAndHookMethod(mOnTouchListener.getClass(), "onTouch", View.class, MotionEvent.class, new MethodHook() {
+								if (!MainModule.mPrefs.getBoolean("various_swipe_expand_sidebar")) {
+									Object li = XposedHelpers.getObjectField(view, "mListenerInfo");
+									Object mOnTouchListener = XposedHelpers.getObjectField(li, "mOnTouchListener");
+									Helpers.findAndHookMethod(mOnTouchListener.getClass(), "onTouch", View.class, MotionEvent.class, new MethodHook() {
+										@Override
+										protected void before(MethodHookParam param) throws Throwable {
+											MotionEvent me = (MotionEvent) param.args[1];
+											if (me.getSource() != 9999) {
+												param.setResult(false);
+											}
+										}
+									});
+								}
+								Class <?> bgDrawable = view.getBackground().getClass();
+								Helpers.findAndHookMethod(bgDrawable, "draw", Canvas.class, new MethodHook() {
 									@Override
 									protected void before(MethodHookParam param) throws Throwable {
-										MotionEvent me = (MotionEvent) param.args[1];
-										if (me.getSource() != 9999) {
-											param.setResult(false);
-										}
+										param.setResult(null);
 									}
 								});
 							}
