@@ -15,11 +15,6 @@
 		android:title="@string/system_statusbaricons_swap_wifi_mobile_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_statusbaricons_swap_batteryicon_percentage"
-		android:title="@string/system_statusbaricons_swap_batteryicon_percentage_title"
-		android:defaultValue="false" />
-
 	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_statusbar_clock_position"
 		android:title="@string/system_statusbaricons_clock_title"

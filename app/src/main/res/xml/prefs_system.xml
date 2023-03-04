@@ -350,6 +350,10 @@
 			android:title="@string/system_statusbar_batterytempandcurrent_title" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_statusbar_batterystyle_cat"
+			android:title="@string/system_statusbar_batterystyle_title" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_batteryindicator_cat"
 			android:title="@string/system_batteryindicator_title"
 			android:summary="@string/system_batteryindicator_summ" />

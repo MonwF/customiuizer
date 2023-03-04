@@ -3324,17 +3324,80 @@ public class SystemUI {
             Helpers.findAndHookMethod("com.miui.systemui.util.CommonUtil", lpparam.classLoader, "startClockApp", openAppHook);
         }
     }
-    public static void StatusBarSwapBatteryIconAndPctHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.views.MiuiBatteryMeterView", lpparam.classLoader, "initMiuiView", new MethodHook() {
+    public static void StatusBarStyleBatteryIconHook(LoadPackageParam lpparam) {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.views.MiuiBatteryMeterView", lpparam.classLoader, "updateAll", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 LinearLayout batteryView = (LinearLayout) param.thisObject;
+                TextView mBatteryTextDigitView = (TextView) XposedHelpers.getObjectField(param.thisObject, "mBatteryTextDigitView");
                 TextView mBatteryPercentView = (TextView) XposedHelpers.getObjectField(param.thisObject, "mBatteryPercentView");
                 TextView mBatteryPercentMarkView = (TextView) XposedHelpers.getObjectField(param.thisObject, "mBatteryPercentMarkView");
-                batteryView.removeView(mBatteryPercentView);
-                batteryView.removeView(mBatteryPercentMarkView);
-                batteryView.addView(mBatteryPercentMarkView, 0);
-                batteryView.addView(mBatteryPercentView, 0);
+                if (MainModule.mPrefs.getBoolean("system_statusbaricons_swap_batteryicon_percentage")) {
+                    batteryView.removeView(mBatteryPercentView);
+                    batteryView.removeView(mBatteryPercentMarkView);
+                    batteryView.addView(mBatteryPercentMarkView, 0);
+                    batteryView.addView(mBatteryPercentView, 0);
+                }
+                float fontSize = MainModule.mPrefs.getInt("system_statusbar_batterystyle_fontsize", 15) * 0.5f;
+                if (fontSize > 7.5) {
+                    mBatteryTextDigitView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize);
+                    mBatteryPercentView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize);
+                }
+                fontSize = MainModule.mPrefs.getInt("system_statusbar_batterystyle_mark_fontsize", 15) * 0.5f;
+                if (fontSize > 7.5) {
+                    mBatteryPercentMarkView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize);
+                }
+                if (MainModule.mPrefs.getBoolean("system_statusbar_batterystyle_bold")) {
+                    mBatteryTextDigitView.setTypeface(Typeface.DEFAULT_BOLD);
+                    mBatteryPercentView.setTypeface(Typeface.DEFAULT_BOLD);
+                }
+                Resources res = batteryView.getResources();
+                int leftMargin = MainModule.mPrefs.getInt("system_statusbar_batterystyle_leftmargin", 0);
+                leftMargin = (int)TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    leftMargin * 0.5f,
+                    res.getDisplayMetrics()
+                );
+                int rightMargin = MainModule.mPrefs.getInt("system_statusbar_batterystyle_rightmargin", 0);
+                rightMargin = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    rightMargin * 0.5f,
+                    res.getDisplayMetrics()
+                );
+                int topMargin = 0;
+                int verticalOffset = MainModule.mPrefs.getInt("system_statusbar_batterystyle_verticaloffset", 8);
+                if (verticalOffset != 8) {
+                    float marginTop = TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        (verticalOffset - 8) * 0.5f,
+                        res.getDisplayMetrics()
+                    );
+                    topMargin = (int) marginTop;
+                }
+                int digitRightMargin = 0;
+                int markRightMargin = 0;
+                if (MainModule.mPrefs.getBoolean("system_statusbaricons_battery4")) {
+                    digitRightMargin = rightMargin;
+                }
+                else {
+                    markRightMargin = rightMargin;
+                }
+                if (leftMargin > 0 || topMargin != 8 || digitRightMargin > 0) {
+                    mBatteryPercentView.setPaddingRelative(leftMargin, topMargin, digitRightMargin, 0);
+                }
+
+                verticalOffset = MainModule.mPrefs.getInt("system_statusbar_batterystyle_mark_verticaloffset", 17);
+                if (verticalOffset < 17) {
+                    float marginTop = TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        (verticalOffset - 8) * 0.5f,
+                        res.getDisplayMetrics()
+                    );
+                    topMargin = (int) marginTop;
+                }
+                if (verticalOffset < 17 || markRightMargin > 0) {
+                    mBatteryPercentMarkView.setPaddingRelative(0, topMargin, markRightMargin, 0);
+                }
             }
         });
     }

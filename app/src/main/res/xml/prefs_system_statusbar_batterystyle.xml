@@ -1,0 +1,99 @@
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:miuizer="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbar_batterystyle"
+		android:title="@string/enable_mod"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:title="@string/settings"
+		android:dependency="pref_key_system_statusbar_batterystyle"
+		/>
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_swap_batteryicon_percentage"
+		android:title="@string/system_statusbaricons_swap_batteryicon_percentage_title"
+		android:dependency="pref_key_system_statusbar_batterystyle"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		android:title="@string/system_statusbar_batterystyle_digit_title"
+		android:dependency="pref_key_system_statusbar_batterystyle"
+		>
+
+	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		android:key="pref_key_system_statusbar_batterystyle_fontsize"
+		android:title="@string/launcher_titlefontsize_title"
+		android:defaultValue="15"
+		miuizer:minValue="15"
+		miuizer:maxValue="32"
+		miuizer:stepValue="1"
+		miuizer:offtext="@string/array_default"
+		miuizer:displayDividerValue="2"
+		miuizer:format="%s dip" />
+
+	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		android:key="pref_key_system_statusbar_batterystyle_mark_fontsize"
+		android:title="@string/system_statusbar_batterystyle_mark_fontsize_title"
+		android:defaultValue="15"
+		miuizer:minValue="15"
+		miuizer:maxValue="32"
+		miuizer:stepValue="1"
+		miuizer:offtext="@string/array_default"
+		miuizer:displayDividerValue="2"
+		miuizer:format="%s dip" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbar_batterystyle_bold"
+		android:title="@string/system_statusbar_mobiletype_single_bold_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		android:key="pref_key_system_statusbar_batterystyle_leftmargin"
+		android:title="@string/system_statusbar_mobiletype_single_leftmargin_title"
+		android:defaultValue="0"
+		miuizer:minValue="0"
+		miuizer:maxValue="16"
+		miuizer:stepValue="1"
+		miuizer:displayDividerValue="2"
+		miuizer:format="%s dip" />
+
+	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		android:key="pref_key_system_statusbar_batterystyle_rightmargin"
+		android:title="@string/system_statusbar_dualsimin2rows_rightmargin_title"
+		android:defaultValue="0"
+		miuizer:minValue="0"
+		miuizer:maxValue="16"
+		miuizer:stepValue="1"
+		miuizer:displayDividerValue="2"
+		miuizer:format="%s dip" />
+
+	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		android:key="pref_key_system_statusbar_batterystyle_verticaloffset"
+		android:title="@string/system_statusbar_mobiletype_single_verticaloffset"
+		android:defaultValue="8"
+		miuizer:minValue="0"
+		miuizer:maxValue="16"
+		miuizer:stepValue="1"
+		miuizer:negativeShift="8"
+		miuizer:displayDividerValue="2"
+		miuizer:format="%s dip" />
+
+	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		android:key="pref_key_system_statusbar_batterystyle_mark_verticaloffset"
+		android:title="@string/system_statusbar_batterystyle_mark_verticaloffset_title"
+		android:defaultValue="17"
+		miuizer:minValue="0"
+		miuizer:maxValue="17"
+		miuizer:stepValue="1"
+		miuizer:negativeShift="8"
+		miuizer:displayDividerValue="2"
+		miuizer:offtext="@string/array_default"
+		miuizer:format="%s dip" />
+
+	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+</PreferenceScreen>
