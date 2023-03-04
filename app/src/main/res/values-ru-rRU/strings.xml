@@ -1108,7 +1108,6 @@
     <string name="various_show_battery_temperature_title">Показывать температуру в батарее</string>
     <string name="various_enable_sc_ai_clipboard_blur_location_title">Включить буфер обмена ИИ и размытие местоположения</string>
     <string name="various_disable_freeform_suggest_blacklist_title">Отключить чёрный список предложений боковой панели</string>
-    <string name="various_enable_expand_sidebar_title">Hide sidebar and disable swipe action</string>
     <string name="system_lockscreenshortcuts_left_tapaction_title">Удерживайте клавишу слева для переключения фонарика</string>
     <string name="system_cc_tile_roundedrect_title">Скругленная прямоугольная плитка</string>
     <string name="system_cc_enable_style_switch_title">Принудительно включить переключатель стиля CC</string>

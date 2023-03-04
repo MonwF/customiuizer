@@ -1117,7 +1117,8 @@
     <string name="various_show_battery_temperature_title">电池页面显示温度值</string>
     <string name="various_enable_sc_ai_clipboard_blur_location_title">剪切板隐私保护及模糊定位</string>
     <string name="various_disable_freeform_suggest_blacklist_title">禁用侧边栏推荐App黑名单</string>
-    <string name="various_enable_expand_sidebar_title">隐藏侧边栏和禁用侧滑展开</string>
+    <string name="various_enable_expand_sidebar_title">隐藏侧边栏</string>
+    <string name="various_swipe_expand_sidebar_title">保留侧滑展开</string>
     <string name="system_lockscreenshortcuts_left_tapaction_title">长按左侧图标时切换手电筒</string>
     <string name="system_cc_tile_roundedrect_title">圆角矩形磁贴</string>
     <string name="system_cc_enable_style_switch_title">强制开启控制中心样式切换</string>

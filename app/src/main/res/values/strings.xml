@@ -1156,7 +1156,8 @@
     <string name="various_show_battery_temperature_title">Show temperature in battery</string>
     <string name="various_enable_sc_ai_clipboard_blur_location_title">Enable AI clipboard and blur location</string>
     <string name="various_disable_freeform_suggest_blacklist_title">Disable suggestion blacklist of sidebar</string>
-    <string name="various_enable_expand_sidebar_title">Hide sidebar and disable swipe action</string>
+    <string name="various_enable_expand_sidebar_title">Hide sidebar</string>
+    <string name="various_swipe_expand_sidebar_title">Allow swipe to expand sidebar</string>
     <string name="system_lockscreenshortcuts_left_tapaction_title">Long click left shortcut to toggle flashlight</string>
     <string name="system_cc_tile_roundedrect_title">Rounded rectangle tile</string>
     <string name="system_cc_enable_style_switch_title">Force Enable CC style switch</string>
