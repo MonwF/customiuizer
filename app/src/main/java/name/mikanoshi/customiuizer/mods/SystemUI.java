@@ -2324,7 +2324,6 @@ public class SystemUI {
         });
     }
     public static void TempHideOverlaySystemUIHook(LoadPackageParam lpparam) {
-
         Helpers.hookAllMethods("com.android.wm.shell.pip.PipTaskOrganizer", lpparam.classLoader, "onTaskAppeared", new MethodHook() {
             private boolean isActListened = false;
             @Override

@@ -4555,62 +4555,20 @@ public class System {
     }
 
     public static void TempHideOverlayAppHook(LoadPackageParam lpparam) {
-        final boolean[] isListened = {false};
-        final ArrayList<View> mViews = new ArrayList<>();
-        MethodHook addViewHook = new MethodHook() {
+        Helpers.hookAllConstructors("com.android.server.wm.WindowSurfaceController", lpparam.classLoader, new MethodHook() {
             @Override
-            protected void after(final MethodHookParam param) throws Throwable {
-                if (param.args[0] == null || !(param.args[1] instanceof WindowManager.LayoutParams) || param.getThrowable() != null) return;
-                WindowManager.LayoutParams params = (WindowManager.LayoutParams)param.args[1];
-                if (params.type != WindowManager.LayoutParams.TYPE_PHONE
-                    && params.type != WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY
-                    && params.type != WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY) return;
-                View view = (View)param.args[0];
-                Context mContext = view.getContext();
-                mViews.add(view);
-
-                if (!isListened[0]) {
-                    isListened[0] = true;
-                    IntentFilter intentFilter = new IntentFilter();
-                    intentFilter.addAction("miui.intent.TAKE_SCREENSHOT");
-                    mContext.registerReceiver(new BroadcastReceiver() {
-                        @Override
-                        public void onReceive(Context context, Intent intent) {
-                            String action = intent.getAction();
-                            if (action == null) return;
-                            if (action.equals("miui.intent.TAKE_SCREENSHOT")) {
-                                boolean state = intent.getBooleanExtra("IsFinished", true);
-                                for (int size = mViews.size() - 1; size >= 0; size--) {
-                                    View vs = mViews.get(size);
-                                    if (vs != null) {
-                                        if (state) {
-                                            if (vs.getVisibility() != View.VISIBLE && XposedHelpers.getAdditionalInstanceField(vs, "mSavedVisibility") != null) {
-                                                XposedHelpers.removeAdditionalInstanceField(vs, "mSavedVisibility");
-                                                vs.setVisibility(View.VISIBLE);
-                                            }
-                                        }
-                                        else {
-                                            if (vs.getVisibility() == View.VISIBLE) {
-                                                vs.setVisibility(View.INVISIBLE);
-                                                XposedHelpers.setAdditionalInstanceField(vs, "mSavedVisibility", true);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }, intentFilter);
-                }
+            protected void before(MethodHookParam param) throws Throwable {
+                int windowType = (int) param.args[4];
+                if (windowType != WindowManager.LayoutParams.TYPE_PHONE
+                    && windowType != WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY
+                    && windowType != WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
+                    && windowType != WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY) return;
+                int flags = (int) param.args[2];
+                int skipFlag = 64;
+                flags |= skipFlag;
+                param.args[2] = flags;
             }
-        };
-        MethodHook removeViewHook = new MethodHook() {
-            @Override
-            protected void before(final MethodHookParam param) throws Throwable {
-                mViews.remove(param.args[0]);
-            }
-        };
-        Helpers.hookAllMethods("android.view.WindowManagerGlobal", lpparam.classLoader, "addView", addViewHook);
-        Helpers.hookAllMethods("android.view.WindowManagerGlobal", lpparam.classLoader, "removeView", removeViewHook);
+        });
     }
 
     public static void GalleryScreenshotPathHook(LoadPackageParam lpparam) {

@@ -89,29 +89,13 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
     public void handleLoadPackage(final LoadPackageParam lpparam) {
         String pkg = lpparam.packageName;
 
-        if (
-            mPrefs.getBoolean("system_screenshot_overlay")
-            && !pkg.equals("android")
-            && !pkg.equals("com.android.systemui")
-            && !pkg.equals(Helpers.modulePkg)
-            && !pkg.equals("com.miui.securitycenter")
-            && !pkg.equals("com.miui.powerkeeper")
-            && !pkg.equals("com.android.incallui")
-            && !pkg.equals("com.miui.miwallpaper")
-            && !pkg.equals("com.android.server.telecom")
-            && !pkg.equals("com.android.settings")
-            && !pkg.equals("com.miui.screenshot")
-            && !pkg.equals("com.miui.gallery")
-            && !pkg.equals("com.lbe.security.miui")
-            && !pkg.equals("com.miui.packageinstaller")
-            && !pkg.equals("com.miui.home")
-        ) {
-            System.TempHideOverlayAppHook(lpparam);
-        }
-
         if (pkg.equals("android") && lpparam.processName.equals("android")) {
             PackagePermissions.hook(lpparam);
             GlobalActions.setupGlobalActions(lpparam);
+
+            if (mPrefs.getBoolean("system_screenshot_overlay")) {
+                System.TempHideOverlayAppHook(lpparam);
+            }
 
             if (mPrefs.getInt("controls_fingerprint1_action", 1) > 1 ||
                     mPrefs.getInt("controls_fingerprint2_action", 1) > 1 ||
