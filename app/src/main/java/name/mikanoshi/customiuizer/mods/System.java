@@ -4080,8 +4080,8 @@ public class System {
 
     public static void AllowDirectReplyHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethod("com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl", lpparam.classLoader, "shouldAllowLockscreenRemoteInput", XC_MethodReplacement.returnConstant(true));
-        if (!Helpers.findAndHookMethodSilently("com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl", lpparam.classLoader, "setLockscreenAllowRemoteInput", XC_MethodReplacement.returnConstant(true))) {
-            Helpers.findAndHookMethod("com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl", lpparam.classLoader, "setLockScreenAllowRemoteInput", XC_MethodReplacement.returnConstant(true));
+        if (!Helpers.findAndHookMethodSilently("com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl", lpparam.classLoader, "setLockscreenAllowRemoteInput", boolean.class, XC_MethodReplacement.returnConstant(true))) {
+            Helpers.findAndHookMethod("com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl", lpparam.classLoader, "setLockScreenAllowRemoteInput", boolean.class, XC_MethodReplacement.returnConstant(true));
         }
     }
 
@@ -5196,7 +5196,9 @@ public class System {
         Helpers.hookAllMethods("com.android.server.wm.ActivityStarterInjector", lpparam.classLoader, "modifyLaunchActivityOptionIfNeed", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                if (param.args.length != 8) return;
+                if (!Modifier.isPublic(param.method.getModifiers())) {
+                    return;
+                }
                 Intent intent = (Intent)param.args[5];
                 if (intent == null || intent.getComponent() == null) return;
                 String pkgName = intent.getComponent().getPackageName();
