@@ -275,6 +275,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_showpct")) System.BrightnessPctHook(lpparam);
             if (mPrefs.getBoolean("system_hidelsstatusbar")) System.HideLockScreenStatusBarHook(lpparam);
             if (mPrefs.getBoolean("system_hidelsclock")) System.HideLockScreenClockHook(lpparam);
+            if (mPrefs.getBoolean("system_ls_force_systemfonts")) SystemUI.ForceClockUseSystemFontsHook(lpparam);
             if (mPrefs.getBoolean("system_hidelshint")) System.HideLockScreenHintHook(lpparam);
             if (mPrefs.getBoolean("system_allowdirectreply")) System.AllowDirectReplyHook(lpparam);
             if (mPrefs.getBoolean("system_allownotifonkeyguard")) System.AllowAllKeyguardHook(lpparam);
