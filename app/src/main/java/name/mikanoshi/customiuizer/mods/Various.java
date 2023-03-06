@@ -26,6 +26,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.database.ContentObserver;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.Ringtone;
@@ -416,7 +417,11 @@ public class Various {
 			MainModule.resHooks.setDensityReplacement("com.miui.securitycenter", "dimen", "sidebar_height_default", 8);
 			MainModule.resHooks.setDensityReplacement("com.miui.securitycenter", "dimen", "sidebar_height_vertical", 8);
 		}
-		Helpers.hookAllConstructors("com.android.systemui.navigationbar.gestural.RegionSamplingHelper", lpparam.classLoader, new MethodHook() {
+		Class <?> RegionSamplingHelper = findClassIfExists("com.android.systemui.navigationbar.gestural.RegionSamplingHelper", lpparam.classLoader);
+		if (RegionSamplingHelper == null) {
+			Helpers.log("AddSideBarExpandReceiverHook", "failed to find RegionSamplingHelper");
+		}
+		Helpers.hookAllConstructors(RegionSamplingHelper, new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				if (!isHooked[0]) {
@@ -489,7 +494,7 @@ public class Various {
 				}
 			}
 		});
-		Helpers.findAndHookMethod("com.android.systemui.navigationbar.gestural.RegionSamplingHelper", lpparam.classLoader, "onViewDetachedFromWindow", android.view.View.class, new MethodHook() {
+		Helpers.findAndHookMethod(RegionSamplingHelper, "onViewDetachedFromWindow", android.view.View.class, new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				isHooked[0] = false;
@@ -499,6 +504,17 @@ public class Various {
 					view.getContext().unregisterReceiver(showReceiver);
 					XposedHelpers.removeAdditionalInstanceField(param.thisObject, "showReceiver");
 				}
+			}
+		});
+		Method[] methods = XposedHelpers.findMethodsByExactParameters(RegionSamplingHelper, void.class, Rect.class);
+		if (methods.length == 0) {
+			Helpers.log("AddSideBarExpandReceiverHook", "Cannot find appropriate start method");
+			return;
+		}
+		Helpers.hookMethod(methods[0], new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				param.setResult(null);
 			}
 		});
 	}
