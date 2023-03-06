@@ -3400,4 +3400,13 @@ public class SystemUI {
             }
         });
     }
+    public static void ForceClockUseSystemFontsHook(LoadPackageParam lpparam) {
+        Helpers.findAndHookMethod("com.miui.clock.MiuiBaseClock", lpparam.classLoader, "updateViewsTextSize", new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                TextView mTimeText = (TextView) XposedHelpers.getObjectField(param.thisObject, "mTimeText");
+                mTimeText.setTypeface(Typeface.DEFAULT);
+            }
+        });
+    }
 }
