@@ -1828,7 +1828,6 @@ public class System {
                         int bgColor = (int) mNotifyBackgroundColor;
                         int mCurrentBackgroundTint = XposedHelpers.getIntField(param.thisObject, "mCurrentBackgroundTint");
                         if (mCurrentBackgroundTint != bgColor) {
-                            Helpers.log("appName: " + XposedHelpers.getObjectField(param.thisObject, "mAppName") + " - " + mNotifyBackgroundColor);
                             XposedHelpers.callMethod(param.thisObject, "setBackgroundTintColor", bgColor);
                         }
                     }
