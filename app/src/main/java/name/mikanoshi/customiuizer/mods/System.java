@@ -1760,15 +1760,19 @@ public class System {
         Helpers.hookAllMethods(PMSCls, lpparam.classLoader, "checkDowngrade", XC_MethodReplacement.DO_NOTHING);
     }
 
-    public static void ColorizedNotificationTitlesHook(LoadPackageParam lpparam) {
+    public static void ColorizeNotificationCardHook(LoadPackageParam lpparam) {
         Class<?> ColorScheme = findClassIfExists("com.android.systemui.monet.ColorScheme", lpparam.classLoader);
-        Class<?> MonetStyle = findClassIfExists("com.android.systemui.monet.Style", lpparam.classLoader);
-        Object[] styles = MonetStyle.getEnumConstants();
         Object contentStyle = null;
-        for (Object o:styles) {
-            if (o.toString().contains("CONTENT")) {
-                contentStyle = o;
-                break;
+        if (Helpers.isTPlus()) {
+            Class<?> MonetStyle = findClassIfExists("com.android.systemui.monet.Style", lpparam.classLoader);
+            Object[] styles = MonetStyle.getEnumConstants();
+            for (Object o:styles) {
+//                if (o.toString().contains("VIBRANT")) {
+//                if (o.toString().contains("TONAL_SPOT")) {
+                if (o.toString().contains("CONTENT")) {
+                    contentStyle = o;
+                    break;
+                }
             }
         }
         Object finalContentStyle = contentStyle;
@@ -1797,6 +1801,7 @@ public class System {
                 }
             }
         });
+
         Helpers.findAndHookMethod("com.android.systemui.statusbar.notification.row.ExpandableNotificationRow", lpparam.classLoader, "updateNotificationColor", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
@@ -1806,10 +1811,31 @@ public class System {
                 Object overflowColor = XposedHelpers.getAdditionalInstanceField(notify, "mSecondaryTextColor");
                 if (overflowColor != null) {
                     XposedHelpers.setObjectField(param.thisObject, "mNotificationColor", overflowColor);
+                    param.setResult(null);
                 }
-                param.setResult(null);
             }
         });
+
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.notification.row.ExpandableNotificationRow", lpparam.classLoader, "onNotificationUpdated", new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                Object mEntry = XposedHelpers.getObjectField(param.thisObject, "mEntry");
+                if (mEntry != null) {
+                    Object mSbn = XposedHelpers.getObjectField(mEntry, "mSbn");
+                    Notification notify = (Notification) XposedHelpers.callMethod(mSbn, "getNotification");
+                    Object mNotifyBackgroundColor = XposedHelpers.getAdditionalInstanceField(notify, "mNotifyBackgroundColor");
+                    if (mNotifyBackgroundColor != null) {
+                        int bgColor = (int) mNotifyBackgroundColor;
+                        int mCurrentBackgroundTint = XposedHelpers.getIntField(param.thisObject, "mCurrentBackgroundTint");
+                        if (mCurrentBackgroundTint != bgColor) {
+                            Helpers.log("appName: " + XposedHelpers.getObjectField(param.thisObject, "mAppName") + " - " + mNotifyBackgroundColor);
+                            XposedHelpers.callMethod(param.thisObject, "setBackgroundTintColor", bgColor);
+                        }
+                    }
+                }
+            }
+        });
+
         Helpers.hookAllMethods("com.android.systemui.statusbar.notification.row.HybridGroupManager", lpparam.classLoader, "bindFromNotificationWithStyle", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
@@ -1823,6 +1849,7 @@ public class System {
                 }
             }
         });
+
         Helpers.hookAllMethods("com.android.systemui.statusbar.notification.row.NotificationContentInflaterInjector", lpparam.classLoader, "handle3thThemeColor", new MethodHook() {
             private Object sAppIconManager = null;
             @Override
@@ -1835,26 +1862,41 @@ public class System {
                 if (applicationInfo == null) {
                     return;
                 }
+                Context mContext = (Context) param.args[0];
                 String pkgName = applicationInfo.packageName;
                 int opt = Integer.parseInt(MainModule.mPrefs.getString("system_colorizenotifs", "1"));
                 boolean isSelected = MainModule.mPrefs.getStringSet("system_colorizenotifs_apps").contains(pkgName);
                 if (opt == 2 && !isSelected || opt == 3 && isSelected) {
                     XposedHelpers.callMethod(builder, "makeNotificationGroupHeader");
                     if (sAppIconManager == null) {
-                        Class<?> Dependency = findClass("com.android.systemui.Dependency", lpparam.classLoader);
+                        Class<?> Dependency = findClassIfExists("com.android.systemui.Dependency", lpparam.classLoader);
                         Class<?> AppIconManager = findClassIfExists("com.miui.systemui.graphics.AppIconsManager", lpparam.classLoader);
                         sAppIconManager = XposedHelpers.callStaticMethod(Dependency, "get", AppIconManager);
                     }
                     Bitmap notifyIcon = (Bitmap) XposedHelpers.callMethod(sAppIconManager, "getAppIconBitmap", pkgName);
                     WallpaperColors wc = WallpaperColors.fromBitmap(notifyIcon);
-                    int bgColor = wc.getPrimaryColor().toArgb();
-                    float lux = Color.luminance(bgColor);
+                    int primaryColor = wc.getPrimaryColor().toArgb();
+                    float lux = Color.luminance(primaryColor);
                     if (lux > 0.9) {
                         Color secColor = wc.getSecondaryColor();
                         if (secColor != null) {
-                            bgColor = secColor.toArgb();
+                            primaryColor = secColor.toArgb();
                         }
                     }
+                    Object cs;
+                    boolean dark = mContext.getResources().getConfiguration().isNightModeActive();
+                    if (Helpers.isTPlus()) {
+                        cs = XposedHelpers.newInstance(ColorScheme, primaryColor, dark, finalContentStyle);
+                    }
+                    else {
+                        cs = XposedHelpers.newInstance(ColorScheme, primaryColor, dark);
+                    }
+                    List<Integer> accent1 = (List<Integer>) XposedHelpers.callMethod(cs, "getAccent1");
+//                    List<Integer> accent2 = (List<Integer>) XposedHelpers.callMethod(cs, "getAccent2");
+                    List<Integer> n1 = (List<Integer>) XposedHelpers.callMethod(cs, "getNeutral1");
+                    List<Integer> n2 = (List<Integer>) XposedHelpers.callMethod(cs, "getNeutral2");
+
+                    int bgColor = accent1.get(dark ? 6 : 5);
                     builder.setColor(bgColor);
                     builder.setColorized(true);
                     int mFlags = XposedHelpers.getIntField(mN, "flags");
@@ -1863,38 +1905,48 @@ public class System {
                     Object mParams = XposedHelpers.getObjectField(builder, "mParams");
                     XposedHelpers.callMethod(mParams, "reset");
                     XposedHelpers.callMethod(builder, "getColors", mParams);
-                    Object cs = XposedHelpers.newInstance(ColorScheme, wc, true, finalContentStyle);
-                    List<Integer> n1 = (List<Integer>) XposedHelpers.callMethod(cs, "getNeutral1");
-                    List<Integer> n2 = (List<Integer>) XposedHelpers.callMethod(cs, "getNeutral2");
                     Object mColors = XposedHelpers.getObjectField(builder, "mColors");
                     int mProtectionColor = ColorUtils.blendARGB(n1.get(1), bgColor, 0.8f);
+                    int mPrimaryTextColor = n1.get(dark ? 1 : 10);
+                    int mSecondaryTextColor = n2.get(dark ? 3 : 8);
                     XposedHelpers.setObjectField(mColors, "mProtectionColor", mProtectionColor);
                     XposedHelpers.setAdditionalInstanceField(mN, "mProtectionColor", mProtectionColor);
-                    XposedHelpers.setObjectField(mColors, "mPrimaryTextColor", n1.get(1));
-                    XposedHelpers.setAdditionalInstanceField(mN, "mPrimaryTextColor", n1.get(1));
-                    XposedHelpers.setObjectField(mColors, "mSecondaryTextColor", n2.get(3));
-                    XposedHelpers.setAdditionalInstanceField(mN, "mSecondaryTextColor", n2.get(3));
+                    XposedHelpers.setObjectField(mColors, "mPrimaryTextColor", mPrimaryTextColor);
+                    XposedHelpers.setAdditionalInstanceField(mN, "mPrimaryTextColor", mPrimaryTextColor);
+                    XposedHelpers.setObjectField(mColors, "mSecondaryTextColor", mSecondaryTextColor);
+                    XposedHelpers.setAdditionalInstanceField(mN, "mSecondaryTextColor", mSecondaryTextColor);
+                    XposedHelpers.setAdditionalInstanceField(mN, "mNotifyBackgroundColor", bgColor);
                     param.setResult(null);
                 }
             }
         });
 
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper", lpparam.classLoader, "getCustomBackgroundColor", new MethodHook() {
+        MethodHook textColorHook = new MethodHook() {
+            private int titleResId = 0;
+            private int subTextResId = 0;
             @Override
-            protected void before(MethodHookParam param) throws Throwable {
-                Object mRow = XposedHelpers.getObjectField(param.thisObject, "mRow");
-                boolean isGroupChild = (boolean) XposedHelpers.callMethod(mRow, "isSummaryWithChildren");
-                if (isGroupChild) {
-                    String pkgName = (String) XposedHelpers.callMethod(mRow, "getAppName");
-                    int opt = Integer.parseInt(MainModule.mPrefs.getString("system_colorizenotifs", "1"));
-                    boolean isSelected = MainModule.mPrefs.getStringSet("system_colorizenotifs_apps").contains(pkgName);
-                    if (opt == 2 && !isSelected || opt == 3 && isSelected) {
-                        int mBackgroundColor = XposedHelpers.getIntField(param.thisObject, "mBackgroundColor");
-                        param.setResult(mBackgroundColor);
+            protected void after(MethodHookParam param) throws Throwable {
+                RemoteViews baseContent = (RemoteViews) param.getResult();
+                if (baseContent != null) {
+                    Context mContext = (Context) param.args[param.args.length - 1];
+                    if (titleResId == 0) {
+                        titleResId = mContext.getResources().getIdentifier("title", "id", "com.android.systemui");
+                        subTextResId = mContext.getResources().getIdentifier("text", "id", "com.android.systemui");
+                    }
+                    Notification.Builder builder = (Notification.Builder) param.args[0];
+                    Notification mN = (Notification) XposedHelpers.getObjectField(builder, "mN");
+                    if ((boolean)XposedHelpers.callMethod(mN, "isMediaNotification")) return;
+                    if (XposedHelpers.getAdditionalInstanceField(mN, "mPrimaryTextColor") != null) {
+                        baseContent.setTextColor(titleResId, (int)XposedHelpers.getAdditionalInstanceField(mN, "mPrimaryTextColor"));
+                        baseContent.setTextColor(subTextResId, (int)XposedHelpers.getAdditionalInstanceField(mN, "mSecondaryTextColor"));
                     }
                 }
             }
-        });
+        };
+
+        Helpers.hookAllMethods("com.android.systemui.statusbar.notification.row.NotificationContentInflaterInjector", lpparam.classLoader, "createMiuiContentView", textColorHook);
+        Helpers.hookAllMethods("com.android.systemui.statusbar.notification.row.NotificationContentInflaterInjector", lpparam.classLoader, "createMiuiExpandedView", textColorHook);
+        Helpers.hookAllMethods("com.android.systemui.statusbar.notification.row.NotificationContentInflaterInjector", lpparam.classLoader, "createMiuiPublicView", textColorHook);
     }
 
     public static int abHeight = 39;
