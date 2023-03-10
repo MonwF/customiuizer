@@ -134,6 +134,7 @@
 
 		<activity
 			android:name=".tasker.UnlockSettings"
+			android:theme="@style/AppTheme"
 			android:exported="true"
 			android:icon="@mipmap/ic_launcher"
 			android:label="@string/system_noscreenlock_scr_title">
