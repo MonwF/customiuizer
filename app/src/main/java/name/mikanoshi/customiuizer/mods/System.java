@@ -1776,20 +1776,13 @@ public class System {
             }
         }
         Object finalContentStyle = contentStyle;
-        Helpers.hookAllMethods("android.app.Notification$Builder", lpparam.classLoader, "bindNotificationHeader", new MethodHook() {
-            @Override
-            protected void before(MethodHookParam param) throws Throwable {
-                Object mParams = param.args[1];
-                XposedHelpers.setObjectField(mParams, "allowColorization", true);
-            }
-        });
 
         Helpers.findAndHookConstructor("android.app.Notification$Builder", lpparam.classLoader, Context.class, Notification.class, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 if (param.args[1] != null) {
                     Notification mN = (Notification) param.args[1];
-                    if (XposedHelpers.getAdditionalInstanceField(mN, "mSecondaryTextColor") != null) {
+                    if (XposedHelpers.getAdditionalInstanceField(mN, "mPrimaryTextColor") != null) {
                         Object builder = param.thisObject;
                         Object mParams = XposedHelpers.getObjectField(builder, "mParams");
                         XposedHelpers.callMethod(builder, "getColors", mParams);
@@ -1828,6 +1821,7 @@ public class System {
                         int bgColor = (int) mNotifyBackgroundColor;
                         int mCurrentBackgroundTint = XposedHelpers.getIntField(param.thisObject, "mCurrentBackgroundTint");
                         if (mCurrentBackgroundTint != bgColor) {
+                            bgColor = Color.argb(158, Color.red(bgColor), Color.green(bgColor), Color.blue(bgColor));
                             XposedHelpers.callMethod(param.thisObject, "setBackgroundTintColor", bgColor);
                         }
                     }
@@ -1895,17 +1889,12 @@ public class System {
                     List<Integer> n1 = (List<Integer>) XposedHelpers.callMethod(cs, "getNeutral1");
                     List<Integer> n2 = (List<Integer>) XposedHelpers.callMethod(cs, "getNeutral2");
 
-                    int bgColor = accent1.get(dark ? 6 : 5);
-                    builder.setColor(bgColor);
-                    builder.setColorized(true);
-                    int mFlags = XposedHelpers.getIntField(mN, "flags");
-                    mFlags = mFlags | 2048;
-                    XposedHelpers.setIntField(mN, "flags", mFlags);
+                    int bgColor = accent1.get(dark ? 5 : 6);
                     Object mParams = XposedHelpers.getObjectField(builder, "mParams");
                     XposedHelpers.callMethod(mParams, "reset");
                     XposedHelpers.callMethod(builder, "getColors", mParams);
                     Object mColors = XposedHelpers.getObjectField(builder, "mColors");
-                    int mProtectionColor = ColorUtils.blendARGB(n1.get(1), bgColor, 0.8f);
+                    int mProtectionColor = ColorUtils.blendARGB(n1.get(1), bgColor, 0.7f);
                     int mPrimaryTextColor = n1.get(dark ? 1 : 10);
                     int mSecondaryTextColor = n2.get(dark ? 3 : 8);
                     XposedHelpers.setObjectField(mColors, "mProtectionColor", mProtectionColor);
