@@ -853,23 +853,38 @@ public class GlobalActions {
 			protected void after(MethodHookParam param) throws Throwable {
 				final Context mContext = (Context) param.args[0];
 				final Handler mBgHandler = (Handler) XposedHelpers.getObjectField(param.thisObject, "mBgHandler");
-				final String methodSystemuiChange = Helpers.isTPlus() ? "setSystemBarAttributes" : "setFullscreenState";
-				Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarStateControllerImpl", lpparam.classLoader, methodSystemuiChange, new MethodHook() {
-					private boolean fullScreen = false;
-					@Override
-					protected void after(MethodHookParam param) throws Throwable {
-						boolean isFullScreen = XposedHelpers.getBooleanField(param.thisObject, "mIsFullscreen");
-						if (fullScreen != isFullScreen) {
-							mBgHandler.post(new Runnable() {
-								@Override
-								public void run() {
-									Settings.Global.putInt(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.fullscreen", fullScreen ? 1 : 0);
-								}
-							});
+				if (MainModule.mPrefs.getBoolean("controls_volumecursor")) {
+					Helpers.hookAllMethods("com.miui.systemui.util.MiuiActivityUtil", lpparam.classLoader, "updateTopActivity", new MethodHook() {
+						private String pkgName = "";
+						@Override
+						protected void after(MethodHookParam param) throws Throwable {
+							ComponentName mTopActivity = (ComponentName) XposedHelpers.getObjectField(param.thisObject, "mTopActivity");
+							if (mTopActivity != null && !pkgName.equals(mTopActivity.getPackageName())) {
+								pkgName = mTopActivity.getPackageName();
+								Settings.Global.putString(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.package", pkgName);
+							}
 						}
-						fullScreen = isFullScreen;
-					}
-				});
+					});
+				}
+				else {
+					final String methodSystemuiChange = Helpers.isTPlus() ? "setSystemBarAttributes" : "setFullscreenState";
+					Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarStateControllerImpl", lpparam.classLoader, methodSystemuiChange, new MethodHook() {
+						private boolean fullScreen = false;
+						@Override
+						protected void after(MethodHookParam param) throws Throwable {
+							boolean isFullScreen = XposedHelpers.getBooleanField(param.thisObject, "mIsFullscreen");
+							if (fullScreen != isFullScreen) {
+								mBgHandler.post(new Runnable() {
+									@Override
+									public void run() {
+										Settings.Global.putInt(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.fullscreen", fullScreen ? 1 : 0);
+									}
+								});
+							}
+							fullScreen = isFullScreen;
+						}
+					});
+				}
 			}
 		});
 	}

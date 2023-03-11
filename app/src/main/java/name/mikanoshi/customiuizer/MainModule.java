@@ -174,7 +174,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (pkg.equals("com.android.systemui")) {
             SystemUI.setupStatusBar(lpparam);
             GlobalActions.setupStatusBar(lpparam);
-            if (mPrefs.getStringAsInt("various_showcallui", 0) > 0) GlobalActions.setupForegroundMonitor(lpparam);
+            if (mPrefs.getStringAsInt("various_showcallui", 0) > 0
+                || mPrefs.getBoolean("controls_volumecursor")
+            ) GlobalActions.setupForegroundMonitor(lpparam);
 
             if (mPrefs.getBoolean("system_screenshot_overlay")) {
                 SystemUI.TempHideOverlaySystemUIHook(lpparam);
