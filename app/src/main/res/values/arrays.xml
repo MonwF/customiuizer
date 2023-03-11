@@ -17,7 +17,6 @@
 		<item>@string/array_global_actions_clearmemory</item>
 		<item>@string/array_global_actions_invertcolors</item>
 		<item>@string/array_global_actions_onehanded_left</item>
-		<item>@string/array_global_actions_onehanded_right</item>
 	</string-array>
 	<integer-array name="global_actions_launcher_val">
 		<item>1</item>
@@ -37,7 +36,6 @@
 		<item>13</item>
 		<item>14</item>
 		<item>22</item>
-		<item>23</item>
 	</integer-array>
 
 	<string-array name="global_actions_navbar">
@@ -66,7 +64,6 @@
 		<item>@string/array_global_actions_activity</item>
 		<item>@string/array_global_actions_toggle</item>
 		<item>@string/array_global_actions_onehanded_left</item>
-		<item>@string/array_global_actions_onehanded_right</item>
 		<item>@string/array_media_playpause</item>
 		<item>@string/array_media_next</item>
 		<item>@string/array_media_prev</item>
@@ -97,7 +94,6 @@
 		<item>20</item>
 		<item>10</item>
 		<item>22</item>
-		<item>23</item>
 		<item>85</item>
 		<item>87</item>
 		<item>88</item>
@@ -125,7 +121,6 @@
 		<item>@string/array_global_actions_activity</item>
 		<item>@string/array_global_actions_toggle</item>
 		<item>@string/array_global_actions_onehanded_left</item>
-		<item>@string/array_global_actions_onehanded_right</item>
 	</string-array>
 	<integer-array name="global_actions_controls_val">
 		<item>1</item>
@@ -149,7 +144,6 @@
 		<item>20</item>
 		<item>10</item>
 		<item>22</item>
-		<item>23</item>
 	</integer-array>
 
 	<string-array name="global_actions_recents">
@@ -163,7 +157,6 @@
 		<item>@string/array_global_actions_activity</item>
 		<item>@string/array_global_actions_toggle</item>
 		<item>@string/array_global_actions_onehanded_left</item>
-		<item>@string/array_global_actions_onehanded_right</item>
 	</string-array>
 	<integer-array name="global_actions_recents_val">
 		<item>1</item>
@@ -176,7 +169,6 @@
 		<item>20</item>
 		<item>10</item>
 		<item>22</item>
-		<item>23</item>
 	</integer-array>
 
 	<string-array name="global_actions_statusbar">
@@ -202,7 +194,6 @@
 		<item>@string/array_global_actions_activity</item>
 		<item>@string/array_global_actions_toggle</item>
 		<item>@string/array_global_actions_onehanded_left</item>
-		<item>@string/array_global_actions_onehanded_right</item>
 		<item>@string/array_media_playpause</item>
 		<item>@string/array_media_next</item>
 		<item>@string/array_media_prev</item>
@@ -230,7 +221,6 @@
 		<item>20</item>
 		<item>10</item>
 		<item>22</item>
-		<item>23</item>
 		<item>85</item>
 		<item>87</item>
 		<item>88</item>

@@ -74,8 +74,7 @@
     <string name="array_global_actions_menu">開啟功能表</string>
     <string name="array_global_actions_none">無動作</string>
     <string name="array_global_actions_notif">展開通知抽屜</string>
-    <string name="array_global_actions_onehanded_left">單手模式(左)</string>
-    <string name="array_global_actions_onehanded_right">單手模式(右)</string>
+    <string name="array_global_actions_onehanded_left">單手模式</string>
     <string name="array_global_actions_powermenu">開啟電源功能表</string>
     <string name="array_global_actions_powermenu_short">電源功能表</string>
     <string name="array_global_actions_recents">開啟最近</string>

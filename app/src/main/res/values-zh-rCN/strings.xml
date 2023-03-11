@@ -733,8 +733,7 @@
     <string name="array_global_actions_invertcolors">颜色反转</string>
     <string name="array_global_actions_switchkeyboard">切换键盘</string>
     <string name="array_global_actions_goback">返回</string>
-    <string name="array_global_actions_onehanded_left">单手模式(左)</string>
-    <string name="array_global_actions_onehanded_right">单手模式(右)</string>
+    <string name="array_global_actions_onehanded_left">单手模式</string>
     <string name="array_global_toggle_bt">蓝牙</string>
     <string name="array_global_toggle_sound">声音情景</string>
     <string name="array_global_toggle_brightness">自动亮度</string>

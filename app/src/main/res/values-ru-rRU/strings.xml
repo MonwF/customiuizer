@@ -758,8 +758,7 @@
     <string name="array_global_actions_invertcolors">Ин\u200Bвер\u200Bти\u200Bро\u200Bвать цвета</string>
     <string name="array_global_actions_switchkeyboard">Выбор клавиатуры</string>
     <string name="array_global_actions_goback">Вернуться назад</string>
-    <string name="array_global_actions_onehanded_left">Управление одной рукой (слева)</string>
-    <string name="array_global_actions_onehanded_right">Управление одной рукой (справа)</string>
+    <string name="array_global_actions_onehanded_left">Управление одной рукой</string>
     <string name="array_global_toggle_bt">Bluetooth</string>
     <string name="array_global_toggle_sound">Профиль звука</string>
     <string name="array_global_toggle_brightness">Автояркость</string>

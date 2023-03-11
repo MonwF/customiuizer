@@ -105,8 +105,7 @@ public class GlobalActions {
 			case 19: return volumeDown(context);
 			case 20: return launchActivityIntent(context, key, skipLock);
 			case 21: return switchKeyboard(context);
-			case 22: return switchOneHandedLeft(context);
-			case 23: return switchOneHandedRight(context);
+			case 22: return switchOneHanded(context);
 			case 24: return forceClose(context);
 			case 25: return scrollToTop(context);
 			case 26: return showSidebar(context);
@@ -136,7 +135,6 @@ public class GlobalActions {
 			case 19: return R.string.array_global_actions_volume_down;
 			case 21: return R.string.array_global_actions_switchkeyboard;
 			case 22: return R.string.array_global_actions_onehanded_left;
-			case 23: return R.string.array_global_actions_onehanded_right;
 			case 24: return R.string.array_global_actions_forceclose;
 			case 25: return R.string.array_global_actions_scrolltotop;
 			case 26: return R.string.array_global_actions_expandsidebar;
@@ -218,6 +216,10 @@ public class GlobalActions {
 					} catch (Throwable err) {
 						Helpers.log(err);
 					}
+				}
+				else if (action.equals(ACTION_PREFIX + "SwitchOneHanded")) {
+					Settings.Secure.putInt(context.getContentResolver(), "one_handed_mode_activated", 1);
+					return;
 				}
 				else if (action.equals(ACTION_PREFIX + "ScrollToTop")) {
 					new Handler().postDelayed(new Runnable() {
@@ -524,18 +526,6 @@ public class GlobalActions {
 				context.sendBroadcast(
 					new Intent("com.android.server.InputMethodManagerService.SHOW_INPUT_METHOD_PICKER").setPackage("android")
 				);
-			}
-
-			if (action.equals(ACTION_PREFIX + "SwitchOneHandedLeft")) {
-				Intent handyIntent = new Intent("miui.action.handymode.changemode");
-				handyIntent.putExtra("mode", 1);
-				context.sendBroadcast(handyIntent);
-			}
-
-			if (action.equals(ACTION_PREFIX + "SwitchOneHandedRight")) {
-				Intent handyIntent = new Intent("miui.action.handymode.changemode");
-				handyIntent.putExtra("mode", 2);
-				context.sendBroadcast(handyIntent);
 			}
 
 			if (action.equals(ACTION_PREFIX + "ToggleColorInversion")) {
@@ -907,8 +897,6 @@ public class GlobalActions {
 				intentfilter.addAction(ACTION_PREFIX + "GoBack");
 				intentfilter.addAction(ACTION_PREFIX + "OpenPowerMenu");
 				intentfilter.addAction(ACTION_PREFIX + "SwitchKeyboard");
-				intentfilter.addAction(ACTION_PREFIX + "SwitchOneHandedLeft");
-				intentfilter.addAction(ACTION_PREFIX + "SwitchOneHandedRight");
 				intentfilter.addAction(ACTION_PREFIX + "ToggleColorInversion");
 				intentfilter.addAction(ACTION_PREFIX + "VolumeUp");
 				intentfilter.addAction(ACTION_PREFIX + "VolumeDown");
@@ -1014,6 +1002,7 @@ public class GlobalActions {
 				intentfilter.addAction(ACTION_PREFIX + "RestartLauncher");
 				intentfilter.addAction(ACTION_PREFIX + "RestartSecurityCenter");
 				intentfilter.addAction(ACTION_PREFIX + "FloatingWindow");
+				intentfilter.addAction(ACTION_PREFIX + "SwitchOneHanded");
 //				intentfilter.addAction(ACTION_PREFIX + "CopyToExternal");
 
 				intentfilter.addAction(ACTION_PREFIX + "ScrollToTop");
@@ -1290,19 +1279,9 @@ public class GlobalActions {
 		}
 	}
 
-	public static boolean switchOneHandedLeft(Context context) {
+	public static boolean switchOneHanded(Context context) {
 		try {
-			context.sendBroadcast(new Intent(ACTION_PREFIX + "SwitchOneHandedLeft"));
-			return true;
-		} catch (Throwable t) {
-			Helpers.log(t);
-			return false;
-		}
-	}
-
-	public static boolean switchOneHandedRight(Context context) {
-		try {
-			context.sendBroadcast(new Intent(ACTION_PREFIX + "SwitchOneHandedRight"));
+			context.sendBroadcast(new Intent(ACTION_PREFIX + "SwitchOneHanded"));
 			return true;
 		} catch (Throwable t) {
 			Helpers.log(t);

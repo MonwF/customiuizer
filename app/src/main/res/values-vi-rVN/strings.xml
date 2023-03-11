@@ -752,8 +752,7 @@
     <string name="array_global_actions_invertcolors">Đảo ngược màu</string>
     <string name="array_global_actions_switchkeyboard">Chuyển đổi bàn phím</string>
     <string name="array_global_actions_goback">Quay lại</string>
-    <string name="array_global_actions_onehanded_left">Chế độ một tay (trái)</string>
-    <string name="array_global_actions_onehanded_right">Chế độ một tay (phải)</string>
+    <string name="array_global_actions_onehanded_left">Chế độ một tay</string>
     <string name="array_global_toggle_bt">Bluetooth</string>
     <string name="array_global_toggle_sound">Cấu hình âm thanh</string>
     <string name="array_global_toggle_brightness">Độ sáng tự động</string>
