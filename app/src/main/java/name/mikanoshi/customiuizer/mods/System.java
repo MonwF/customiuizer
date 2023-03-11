@@ -4595,6 +4595,7 @@ public class System {
     }
 
     public static void TempHideOverlayAppHook(LoadPackageParam lpparam) {
+        final int flagIndex = Helpers.isTPlus() ? 2 : 4;
         Helpers.hookAllConstructors("com.android.server.wm.WindowSurfaceController", lpparam.classLoader, new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
@@ -4603,10 +4604,10 @@ public class System {
                     && windowType != WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY
                     && windowType != WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
                     && windowType != WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY) return;
-                int flags = (int) param.args[2];
+                int flags = (int) param.args[flagIndex];
                 int skipFlag = 64;
                 flags |= skipFlag;
-                param.args[2] = flags;
+                param.args[flagIndex] = flags;
             }
         });
     }
