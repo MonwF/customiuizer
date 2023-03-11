@@ -707,8 +707,7 @@
     <string name="array_global_actions_invertcolors">Odwróć kolory</string>
     <string name="array_global_actions_switchkeyboard">Zmień klawiaturę</string>
     <string name="array_global_actions_goback">Wróć</string>
-    <string name="array_global_actions_onehanded_left">Tryb jednoręczny (lewa strona)</string>
-    <string name="array_global_actions_onehanded_right">Tryb jednoręczny (prawa strona)</string>
+    <string name="array_global_actions_onehanded_left">Tryb jednoręczny</string>
     <string name="array_global_toggle_wifi" translatable="false">Wi-Fi</string>
     <string name="array_global_toggle_bt">Bluetooth</string>
     <string name="array_global_toggle_gps" translatable="false">GPS</string>

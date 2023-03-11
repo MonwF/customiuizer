@@ -777,8 +777,7 @@
     <string name="array_global_actions_invertcolors">Invert colors</string>
     <string name="array_global_actions_switchkeyboard">Switch keyboard</string>
     <string name="array_global_actions_goback">Go back</string>
-    <string name="array_global_actions_onehanded_left">One-handed mode (left)</string>
-    <string name="array_global_actions_onehanded_right">One-handed mode (right)</string>
+    <string name="array_global_actions_onehanded_left">One-handed mode</string>
     <string name="array_global_toggle_wifi" translatable="false">Wi-Fi</string>
     <string name="array_global_toggle_bt">Bluetooth</string>
     <string name="array_global_toggle_gps" translatable="false">GPS</string>

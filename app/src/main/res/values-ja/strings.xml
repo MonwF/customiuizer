@@ -757,8 +757,7 @@
   <string name="array_global_actions_invertcolors">色の反転</string>
   <string name="array_global_actions_switchkeyboard">キーボードの切り替え</string>
   <string name="array_global_actions_goback">戻る</string>
-  <string name="array_global_actions_onehanded_left">片手操作モード (左)</string>
-  <string name="array_global_actions_onehanded_right">片手操作モード (右)</string>
+  <string name="array_global_actions_onehanded_left">片手操作モード</string>
   <string name="array_global_toggle_wifi" translatable="false">Wi-Fi</string>
   <string name="array_global_toggle_bt">Bluetooth</string>
   <string name="array_global_toggle_gps" translatable="false">位置情報</string>
