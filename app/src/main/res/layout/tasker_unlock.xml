@@ -5,7 +5,8 @@
 	android:animateLayoutChanges="true"
 	android:fitsSystemWindows="false"
 	android:orientation="vertical"
-	android:padding="10dp"
+	android:paddingTop="60dp"
+	android:paddingLeft="@dimen/preference_item_child_padding"
 	tools:ignore="RtlHardcoded,RtlSymmetry">
 
 	<RadioGroup
