@@ -68,6 +68,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -636,6 +637,27 @@ public class Various {
 				}
 			});
 		}
+	}
+	public static void DisableDockSuggestHook(LoadPackageParam lpparam) {
+		MethodHook clearHook = new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				ArrayList<String> blackList = new ArrayList<String>();
+				blackList.add("xx.yy.zz");
+				int topMethod = 10;
+				StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+				for (StackTraceElement el: stackTrace) {
+					if (el != null && topMethod < 20
+						&& (el.getClassName().contains("edit.DockAppEditActivity") || el.getClassName().contains("BubblesSettings"))
+					) {
+						return;
+					}
+					topMethod++;
+				}
+				param.setResult(blackList);
+			}
+		};
+		Helpers.hookAllMethodsSilently("android.util.MiuiMultiWindowUtils", lpparam.classLoader, "getFreeformSuggestionList", clearHook);
 	}
 	public static void UnlockClipboardAndLocationHook(LoadPackageParam lpparam) {
 		Helpers.findAndHookMethod("com.miui.permcenter.settings.PrivacyLabActivity", lpparam.classLoader, "onCreateFragment", new MethodHook() {

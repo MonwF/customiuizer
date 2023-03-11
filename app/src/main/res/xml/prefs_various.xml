@@ -82,6 +82,11 @@
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_various_disable_dock_suggest"
+		android:title="@string/various_disable_dock_suggest_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_various_enable_expand_sidebar"
 		android:title="@string/various_enable_expand_sidebar_title"
 		android:defaultValue="false" />
