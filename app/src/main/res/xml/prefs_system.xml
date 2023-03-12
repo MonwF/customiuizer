@@ -696,6 +696,13 @@
 			/>
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_cc_fpstile"
+			android:title="@string/system_cc_fpstile_title"
+			android:summary="@string/system_cc_fpstile_summ"
+			android:defaultValue="false"
+			/>
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_qs_force_systemfonts"
 			android:title="@string/system_qs_force_systemfonts_title"
 			android:defaultValue="false"
