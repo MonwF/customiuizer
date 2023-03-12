@@ -326,7 +326,9 @@
     <string name="system_blocktoasts_title">阻止toast</string>
     <string name="system_blocktoasts_summ">阻止所选应用显示toast</string>
     <string name="system_fivegtile_title">5G开关</string>
-    <string name="system_fivegtile_summ">添加5G开关磁贴至快速设置</string>
+    <string name="system_fivegtile_summ">添加5G网络磁贴至控制中心</string>
+    <string name="system_cc_fpstile_title">刷新频率开关</string>
+    <string name="system_cc_fpstile_summ">添加显示当前刷新频率磁贴至控制中心</string>
     <string name="system_qs_force_systemfonts_title">时钟强制使用系统字体</string>
     <string name="system_cc_dateformat_title">自定义日期格式</string>
     <string name="system_wifipassword_title">查看已保存Wi-Fi密码</string>
@@ -876,6 +878,8 @@
     <string name="qs_toggle_autorotate_portrait">竖屏</string>
     <string name="qs_toggle_autorotate_landscape">横屏</string>
     <string name="qs_toggle_5g">5G网络</string>
+    <string name="qs_toggle_fps">刷新频率</string>
+
     <string name="miuizer">米客设置</string>
     <string name="miuizer_show_newmods_title">标记新模块</string>
     <string name="miuizer_show_newmods_summ">添加到当前版本中的模块在标题处显示\"新!\"标签</string>

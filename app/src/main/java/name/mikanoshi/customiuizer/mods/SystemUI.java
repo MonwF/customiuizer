@@ -48,12 +48,15 @@ import android.net.TrafficStats;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.os.Parcel;
 import android.os.PowerManager;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.ArrayMap;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Pair;
@@ -392,7 +395,9 @@ public class SystemUI {
     }
     static final ArrayList<TextView> mBatteryDetailViews = new ArrayList<TextView>();
 
-    public static void AddFiveGTileHook(LoadPackageParam lpparam) {
+    public static void AddCustomTileHook(LoadPackageParam lpparam) {
+        final boolean enable5G = MainModule.mPrefs.getBoolean("system_fivegtile");
+        final boolean enableFps = MainModule.mPrefs.getBoolean("system_cc_fpstile");
         Helpers.findAndHookMethod("com.android.systemui.SystemUIApplication", lpparam.classLoader, "onCreate", new MethodHook() {
             private boolean isListened = false;
             @Override
@@ -401,8 +406,14 @@ public class SystemUI {
                     isListened = true;
                     Context mContext = (Context) XposedHelpers.callMethod(param.thisObject, "getApplicationContext");
                     int stockTilesResId = mContext.getResources().getIdentifier("miui_quick_settings_tiles_stock", "string", lpparam.packageName);
-                    String stockTiles = mContext.getString(stockTilesResId) + ",custom_5G";
-                    MainModule.resHooks.setObjectReplacement(lpparam.packageName, "string", "miui_quick_settings_tiles_stock", stockTiles);
+                    String stockTiles = mContext.getString(stockTilesResId);
+                    if (enable5G) {
+                        stockTiles = stockTiles  + ",custom_5G";
+                    }
+                    if (enableFps) {
+                        stockTiles = stockTiles + ",custom_FPS";
+                    }
+                    MainModule.resHooks.setObjectReplacement("com.android.systemui", "string", "miui_quick_settings_tiles_stock", stockTiles);
                     MainModule.resHooks.setObjectReplacement("miui.systemui.plugin", "string", "miui_quick_settings_tiles_stock", stockTiles);
                     MainModule.resHooks.setObjectReplacement("miui.systemui.plugin", "string", "quick_settings_tiles_stock", stockTiles);
                 }
@@ -427,11 +438,13 @@ public class SystemUI {
         Helpers.findAndHookMethod(NfcTileCls, lpparam.classLoader, "isAvailable", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
-                Object customName = XposedHelpers.getAdditionalInstanceField(param.thisObject, "customName");
-                if (customName != null) {
-                    String tileName = (String) customName;
+                String tileName = (String) XposedHelpers.getAdditionalInstanceField(param.thisObject, "customName");
+                if (tileName != null) {
                     if ("custom_5G".equals(tileName)) {
-                        param.setResult(TelephonyManager.getDefault().isFiveGCapable());
+                        param.setResult(enable5G && TelephonyManager.getDefault().isFiveGCapable());
+                    }
+                    else if ("custom_FPS".equals(tileName)) {
+                        param.setResult(enableFps);
                     }
                     else {
                         param.setResult(false);
@@ -442,13 +455,15 @@ public class SystemUI {
         Helpers.findAndHookMethod(NfcTileCls, lpparam.classLoader, "getTileLabel", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
-                Object customName = XposedHelpers.getAdditionalInstanceField(param.thisObject, "customName");
-                if (customName != null) {
-                    String tileName = (String) customName;
+                String tileName = (String) XposedHelpers.getAdditionalInstanceField(param.thisObject, "customName");
+                if (tileName != null) {
+                    Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
+                    Resources modRes = Helpers.getModuleRes(mContext);
                     if ("custom_5G".equals(tileName)) {
-                        Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
-                        Resources modRes = Helpers.getModuleRes(mContext);
                         param.setResult(modRes.getString(R.string.qs_toggle_5g));
+                    }
+                    else if ("custom_FPS".equals(tileName)) {
+                        param.setResult(modRes.getString(R.string.qs_toggle_fps));
                     }
                 }
             }
@@ -456,9 +471,8 @@ public class SystemUI {
         Helpers.findAndHookMethod(NfcTileCls, lpparam.classLoader, "handleSetListening", boolean.class, new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
-                Object customName = XposedHelpers.getAdditionalInstanceField(param.thisObject, "customName");
-                if (customName != null) {
-                    String tileName = (String) customName;
+                String tileName = (String) XposedHelpers.getAdditionalInstanceField(param.thisObject, "customName");
+                if (tileName != null) {
                     if ("custom_5G".equals(tileName)) {
                         Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
                         boolean mListening = (boolean) param.args[0];
@@ -478,6 +492,18 @@ public class SystemUI {
                             mContext.getContentResolver().unregisterContentObserver(contentObserver);
                         }
                     }
+                    else if ("custom_FPS".equals(tileName)) {
+                        boolean mListening = (boolean) param.args[0];
+                        if (mListening) {
+                            Class<?> ServiceManager = findClass("android.os.ServiceManager", lpparam.classLoader);
+                            Object mSurfaceFlinger = XposedHelpers.callStaticMethod(ServiceManager, "getService", "SurfaceFlinger");
+                            XposedHelpers.setAdditionalInstanceField(param.thisObject, "mSurfaceFlinger", mSurfaceFlinger);
+                        }
+                        else {
+                            XposedHelpers.removeAdditionalInstanceField(param.thisObject, "mSurfaceFlinger");
+                        }
+                    }
+
                     param.setResult(null);
                 }
             }
@@ -485,9 +511,8 @@ public class SystemUI {
         Helpers.findAndHookMethod(NfcTileCls, lpparam.classLoader, "getLongClickIntent", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
-                Object customName = XposedHelpers.getAdditionalInstanceField(param.thisObject, "customName");
-                if (customName != null) {
-                    String tileName = (String) customName;
+                String tileName = (String) XposedHelpers.getAdditionalInstanceField(param.thisObject, "customName");
+                if (tileName != null) {
                     if ("custom_5G".equals(tileName)) {
                         Intent intent = new Intent(Intent.ACTION_MAIN);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
@@ -503,37 +528,75 @@ public class SystemUI {
         Helpers.findAndHookMethod(NfcTileCls, lpparam.classLoader, "handleClick", View.class, new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
-                Object customName = XposedHelpers.getAdditionalInstanceField(param.thisObject, "customName");
-                if (customName != null) {
-                    String tileName = (String) customName;
+                String tileName = (String) XposedHelpers.getAdditionalInstanceField(param.thisObject, "customName");
+                if (tileName != null) {
                     if ("custom_5G".equals(tileName)) {
                         TelephonyManager manager = TelephonyManager.getDefault();
                         manager.setUserFiveGEnabled(!manager.isUserFiveGEnabled());
+                    }
+                    else if ("custom_FPS".equals(tileName)) {
+                        IBinder mSurfaceFlinger = (IBinder) XposedHelpers.getAdditionalInstanceField(param.thisObject, "mSurfaceFlinger");
+                        if (mSurfaceFlinger != null) {
+                            Object mState = XposedHelpers.getObjectField(param.thisObject, "mState");
+                            boolean enabled = XposedHelpers.getBooleanField(mState, "value");
+                            Parcel obtain = Parcel.obtain();
+                            obtain.writeInterfaceToken("android.ui.ISurfaceComposer");
+                            obtain.writeInt(enabled ? 0 : 1);
+                            mSurfaceFlinger.transact(1034, obtain, null, 0);
+                            obtain.recycle();
+                            XposedHelpers.callMethod(param.thisObject, "refreshState");
+                        }
                     }
                     param.setResult(null);
                 }
             }
         });
 
-        int fiveGIconResId = MainModule.resHooks.addResource("ic_qs_5g_on", R.drawable.ic_qs_5g_on);
-        int fiveGIconOffResId = MainModule.resHooks.addResource("ic_qs_5g_off", R.drawable.ic_qs_5g_off);
+        ArrayMap<String, Integer> tileOnResMap =  new ArrayMap<String, Integer>();
+        ArrayMap<String, Integer> tileOffResMap =  new ArrayMap<String, Integer>();
+        if (enable5G) {
+            tileOnResMap.put("custom_5G", MainModule.resHooks.addResource("ic_qs_m5g_on", R.drawable.ic_qs_5g_on));
+            tileOffResMap.put("custom_5G", MainModule.resHooks.addResource("ic_qs_m5g_off", R.drawable.ic_qs_5g_off));
+        }
+        if (enableFps) {
+            tileOnResMap.put("custom_FPS", MainModule.resHooks.addResource("ic_qs_mfps_on", R.drawable.ic_qs_fps_on));
+            tileOffResMap.put("custom_FPS", MainModule.resHooks.addResource("ic_qs_mfps_off", R.drawable.ic_qs_fps_off));
+        }
         Helpers.hookAllMethods(NfcTileCls, lpparam.classLoader, "handleUpdateState", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
-                Object customName = XposedHelpers.getAdditionalInstanceField(param.thisObject, "customName");
-                if (customName != null) {
-                    String tileName = (String) customName;
+                String tileName = (String) XposedHelpers.getAdditionalInstanceField(param.thisObject, "customName");
+                if (tileName != null) {
+                    boolean isEnable = false;
                     if ("custom_5G".equals(tileName)) {
-                        Object booleanState = param.args[0];
                         TelephonyManager manager = TelephonyManager.getDefault();
-                        boolean isEnable = manager.isUserFiveGEnabled();
+                        isEnable = manager.isUserFiveGEnabled();
+                    }
+                    else if ("custom_FPS".equals(tileName)) {
+                        IBinder mSurfaceFlinger = (IBinder) XposedHelpers.getAdditionalInstanceField(param.thisObject, "mSurfaceFlinger");
+                        if (mSurfaceFlinger == null) {
+                            isEnable = false;
+                        }
+                        else {
+                            Parcel obtain = Parcel.obtain();
+                            Parcel obtain2 = Parcel.obtain();
+                            obtain.writeInterfaceToken("android.ui.ISurfaceComposer");
+                            obtain.writeInt(2);
+                            mSurfaceFlinger.transact(1034, obtain, obtain2, 0);
+                            isEnable = obtain2.readBoolean();
+                            obtain2.recycle();
+                            obtain.recycle();
+                        }
+                    }
+                    if (tileName.startsWith("custom_")) {
+                        Object booleanState = param.args[0];
                         XposedHelpers.setObjectField(booleanState, "value", isEnable);
                         XposedHelpers.setObjectField(booleanState, "state", isEnable ? 2 : 1);
                         String tileLabel = (String) XposedHelpers.callMethod(param.thisObject, "getTileLabel");
                         XposedHelpers.setObjectField(booleanState, "label", tileLabel);
                         XposedHelpers.setObjectField(booleanState, "contentDescription", tileLabel);
                         XposedHelpers.setObjectField(booleanState, "expandedAccessibilityClassName", Switch.class.getName());
-                        Object mIcon = XposedHelpers.callStaticMethod(ResourceIconClass, "get", isEnable ? fiveGIconResId : fiveGIconOffResId);
+                        Object mIcon = XposedHelpers.callStaticMethod(ResourceIconClass, "get", isEnable ? tileOnResMap.get(tileName) : tileOffResMap.get(tileName));
                         XposedHelpers.setObjectField(booleanState, "icon", mIcon);
                     }
                     param.setResult(null);

@@ -182,8 +182,11 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 SystemUI.TempHideOverlaySystemUIHook(lpparam);
             }
 
-            if (mPrefs.getBoolean("system_fivegtile")) {
-                SystemUI.AddFiveGTileHook(lpparam);
+            if (
+                mPrefs.getBoolean("system_fivegtile")
+                || mPrefs.getBoolean("system_cc_fpstile")
+            ) {
+                SystemUI.AddCustomTileHook(lpparam);
             }
 
             if (mPrefs.getInt("system_qsgridcolumns", 2) > 2 || mPrefs.getInt("system_qsgridrows", 1) > 1) SystemUI.QSGridRes();

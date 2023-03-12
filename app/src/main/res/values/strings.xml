@@ -334,7 +334,9 @@
     <string name="system_airplanemodeconfig_summ">Define allowed communications in airplane mode. No reboot required.</string>
     <string name="system_airplanemodeconfig_note">Mod only changes existing system setting, some options might not work</string>
     <string name="system_fivegtile_title">5G tile</string>
-    <string name="system_fivegtile_summ">Add 5G tile to qs panel</string>
+    <string name="system_fivegtile_summ">Add 5G tile to control center</string>
+    <string name="system_cc_fpstile_title">Show refresh rate tile</string>
+    <string name="system_cc_fpstile_summ">show the current display refresh rate</string>
     <string name="system_qs_force_systemfonts_title">Force clock use system fonts</string>
     <string name="system_cc_dateformat_title">Custom date format</string>
     <string name="system_wifipassword_title">View password of saved Wi-Fi network</string>
@@ -938,6 +940,7 @@
     <string name="qs_toggle_autorotate_portrait">Portrait</string>
     <string name="qs_toggle_autorotate_landscape">Landscape</string>
     <string name="qs_toggle_5g">5G Network</string>
+    <string name="qs_toggle_fps">Refresh rate</string>
 
     <string name="miuizer">CustoMIUIzer settings</string>
     <string name="miuizer_show_newmods_title">Mark new mods</string>
