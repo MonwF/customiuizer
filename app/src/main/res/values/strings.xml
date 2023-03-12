@@ -1159,6 +1159,7 @@
     <string name="various_clipboard_defaultaction_title">Default action of ai clipboard</string>
     <string name="various_disable_access_devicelogs_title">Dismiss access device logs request dialog</string>
     <string name="various_skip_interceptperm_title">Skip permission intercept timer</string>
+    <string name="various_skip_securityscan_title">Skip security scanning</string>
     <string name="various_show_battery_temperature_title">Show temperature in battery</string>
     <string name="various_enable_sc_ai_clipboard_blur_location_title">Enable AI clipboard and blur location</string>
     <string name="various_disable_freeform_suggest_blacklist_title">Disable suggestion blacklist of sidebar</string>

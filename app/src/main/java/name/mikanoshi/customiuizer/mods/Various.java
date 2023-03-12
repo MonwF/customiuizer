@@ -550,6 +550,16 @@ public class Various {
 			}
 		}
 	}
+	public static void SkipSecurityScanHook(LoadPackageParam lpparam) {
+		MethodHook skipScan = new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				param.setResult(new ArrayList<>());
+			}
+		};
+		Helpers.findAndHookMethod("com.miui.securityscan.model.ModelFactory", lpparam.classLoader, "produceSystemGroupModel", Context.class, skipScan);
+		Helpers.findAndHookMethod("com.miui.securityscan.model.ModelFactory", lpparam.classLoader, "produceManualGroupModel", Context.class, skipScan);
+	}
 
 	public static void SmartClipboardActionHook(LoadPackageParam lpparam) {
 		int opt = MainModule.mPrefs.getStringAsInt("various_clipboard_defaultaction", 1);
