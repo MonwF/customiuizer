@@ -67,6 +67,11 @@
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_various_skip_securityscan"
+		android:title="@string/various_skip_securityscan_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_various_show_battery_temperature"
 		android:title="@string/various_show_battery_temperature_title"
 		android:defaultValue="false" />
