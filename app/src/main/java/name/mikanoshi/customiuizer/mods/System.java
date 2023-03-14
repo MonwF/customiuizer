@@ -3937,6 +3937,15 @@ public class System {
     }
 
     public static void NoSignatureVerifyServiceHook(LoadPackageParam lpparam) {
+        if (!Helpers.isTPlus()) {
+            Helpers.hookAllMethodsSilently("com.miui.server.SecurityManagerService", lpparam.classLoader, "compareSignatures", XC_MethodReplacement.returnConstant(0));
+            Helpers.hookAllMethodsSilently("com.miui.server.SecurityManagerService", lpparam.classLoader, "checkSysAppCrack", XC_MethodReplacement.returnConstant(false));
+            Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "compareSignatures", XC_MethodReplacement.returnConstant(0));
+            Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "matchSignaturesCompat", XC_MethodReplacement.returnConstant(true));
+            Helpers.hookAllMethodsSilently("com.android.server.pm.PackageManagerServiceUtils", lpparam.classLoader, "matchSignaturesRecover", XC_MethodReplacement.returnConstant(true));
+            Helpers.hookAllMethodsSilently("miui.util.CertificateUtils", lpparam.classLoader, "compareSignatures", XC_MethodReplacement.returnConstant(0));
+            return;
+        }
         Class <?> SignDetails = findClassIfExists("android.content.pm.SigningDetails", lpparam.classLoader);
         Object signUnknown = XposedHelpers.getStaticObjectField(SignDetails, "UNKNOWN");
         Helpers.hookAllMethods(SignDetails, "checkCapability", new MethodHook() {
