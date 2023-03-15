@@ -297,14 +297,7 @@ public class MainFragment extends PreferenceFragmentBase {
 				locStr = new StringBuilder(loc.getDisplayLanguage(loc));
 				locStr.setCharAt(0, Character.toUpperCase(locStr.charAt(0)));
 			}
-			if (!locale.equals("en")) {
-				String locStrPct = locStr + "\n" + Helpers.l10nProgress.get(locale) + "%";
-				int fullTextLength = locStrPct.length();
-				locSpanString = new SpannableString(locStrPct);
-				locSpanString.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_OPPOSITE), locStr.toString().length(), fullTextLength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				locSpanString.setSpan(new SetLineOverlap(true), 1, fullTextLength - 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				locSpanString.setSpan(new SetLineOverlap(false), fullTextLength - 1, fullTextLength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-			} else locSpanString = new SpannableString(locStr.toString());
+			locSpanString = new SpannableString(locStr.toString());
 			localeNames.add(locSpanString);
 		} catch (Throwable t) {
 			localeNames.add(new SpannableString(Locale.getDefault().getDisplayLanguage(Locale.getDefault())));
