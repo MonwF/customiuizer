@@ -325,10 +325,12 @@
     <string name="system_airplanemodeconfig_note">Мод всего лишь меняет уже существующий параметр системы, некоторые опции могут не работать</string>
     <string name="system_fivegtile_title">Плитка 5G</string>
     <string name="system_fivegtile_summ">Добавить плитку 5G на панель быстрых настроек</string>
+    <string name="system_cc_fpstile_title">Показать плитку частоты обновления</string>
+    <string name="system_cc_fpstile_summ">показать текущую частоту обновления экрана</string>
     <string name="system_qs_force_systemfonts_title">Заставить часы использовать системные шрифты</string>
     <string name="system_cc_dateformat_title">Другой формат даты</string>
     <string name="system_wifipassword_title">Просмотр пароля сохраненной сети Wi-Fi</string>
-    <string name="system_wifipassword_summ">View from Settings - Wi-Fi - Additional settings - Manage saved networks</string>
+    <string name="system_wifipassword_summ">Просмотр в Настройках - Wi-Fi - Дополнительные настройки - Управление сохраненными сетями</string>
     <string name="system_wifipassword_btn_title">Проверять</string>
     <string name="system_wifi_password_label">пароль</string>
     <string name="system_wifi_password_dlgtitle">детали Wi-Fi</string>
@@ -624,7 +626,7 @@
     <string name="controls_volumecursor_summ">Перемещать курсор ввода текста при нажатии кнопок громкости</string>
     <string name="controls_volumecursor_reverse_title">Сменить направления</string>
     <string name="controls_volumecursor_reverse_summ">Поменять местами направления движения курсора</string>
-    <string name="controls_volumedowndt_turnon_torch_title">Double tap volume down to turn on torch</string>
+    <string name="controls_volumedowndt_turnon_torch_title">Двойное нажатие на громкость вниз для включения фонарика</string>
     <string name="controls_volumemedia_up_title">Долгое нажатие на Повышение громкости</string>
     <string name="controls_volumemedia_up_summ">Действие на долгое нажатие клавиши повышения громкости при выключенном экране</string>
     <string name="controls_volumemedia_down_title">Долгое нажатие на Понижение громкости</string>
@@ -909,6 +911,7 @@
     <string name="qs_toggle_autorotate_portrait">Портрет</string>
     <string name="qs_toggle_autorotate_landscape">Ландшафт</string>
     <string name="qs_toggle_5g">5G</string>
+    <string name="qs_toggle_fps">Частота обновления</string>
     <string name="miuizer">Настройки CustoMIUIzer</string>
     <string name="miuizer_show_newmods_title">Отмечать новые моды</string>
     <string name="miuizer_show_newmods_summ">Делать пометку \"Новый!\" в заголовке модов, добавленных в текущей версии</string>
@@ -1073,6 +1076,10 @@
     <string name="system_statusbar_batterytempandcurrent_hideunit_title">Скрыть единицу</string>
     <string name="system_statusbar_batterytempandcurrent_singlerow_title">Отображать в одной строке</string>
     <string name="system_statusbar_batterytempandcurrent_reverseorder_title">Обратный порядок</string>
+    <string name="system_statusbar_batterystyle_title">Стиль значка батареи</string>
+    <string name="system_statusbar_batterystyle_digit_title">Цифра батареи</string>
+    <string name="system_statusbar_batterystyle_mark_fontsize_title">Размер шрифта знака в процентах</string>
+    <string name="system_statusbar_batterystyle_mark_verticaloffset_title">Смещение знака в процентах по вертикали</string>
     <string name="system_statusbar_dualsimin2rows_title">Двойной сигнал SIM-карты в двух рядах</string>
     <string name="system_statusbar_dualrows_title">Двойные строки в строке состояния</string>
     <string name="system_statusbar_dualrows_summ">Нужно увеличить высоту строки состояния на некоторых устройствах</string>
@@ -1104,9 +1111,13 @@
     <string name="various_clipboard_defaultaction_title">Действие по умолчанию для буфера обмена ai</string>
     <string name="various_disable_access_devicelogs_title">Отключить диалог запроса журнала доступа устройства</string>
     <string name="various_skip_interceptperm_title">Пропустить таймер перехвата разрешений</string>
+    <string name="various_skip_securityscan_title">Пропустить сканирование безопасности</string>
     <string name="various_show_battery_temperature_title">Показывать температуру в батарее</string>
     <string name="various_enable_sc_ai_clipboard_blur_location_title">Включить буфер обмена ИИ и размытие местоположения</string>
     <string name="various_disable_freeform_suggest_blacklist_title">Отключить чёрный список предложений боковой панели</string>
+    <string name="various_enable_expand_sidebar_title">Скрыть боковую панель</string>
+    <string name="various_disable_dock_suggest_title">Показывать закрепленные приложения только на боковой панели</string>
+    <string name="various_swipe_expand_sidebar_title">Разрешить смахивание для расширения боковой панели</string>
     <string name="system_lockscreenshortcuts_left_tapaction_title">Удерживайте клавишу слева для переключения фонарика</string>
     <string name="system_cc_tile_roundedrect_title">Скругленная прямоугольная плитка</string>
     <string name="system_cc_enable_style_switch_title">Принудительно включить переключатель стиля CC</string>
