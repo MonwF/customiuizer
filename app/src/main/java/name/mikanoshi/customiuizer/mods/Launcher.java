@@ -1456,7 +1456,12 @@ public class Launcher {
 				};
 			}
 		});
-		Helpers.findAndHookMethod("com.android.systemui.shared.recents.system.ActivityManagerWrapper", lpparam.classLoader, "needRemoveTask", "com.android.systemui.shared.recents.model.GroupedRecentTaskInfoCompat", new MethodHook() {
+		Class<?> TaskInfoCompat = findClassIfExists("com.android.systemui.shared.recents.model.GroupedRecentTaskInfoCompat", lpparam.classLoader);
+		if (TaskInfoCompat == null) {
+			Helpers.log("HideFromRecentsHook", "hook failed");
+			return;
+		}
+		Helpers.findAndHookMethod("com.android.systemui.shared.recents.system.ActivityManagerWrapper", lpparam.classLoader, "needRemoveTask", TaskInfoCompat, new MethodHook() {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
 				if (param.args[0] != null) {
