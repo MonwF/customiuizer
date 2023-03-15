@@ -325,9 +325,12 @@
     <string name="system_airplanemodeconfig_note">Mod chỉ có thể sửa đổi cài đặt hệ thống hiện có, một số tùy chọn có thể không hoạt động</string>
     <string name="system_fivegtile_title">Công tắc 5G</string>
     <string name="system_fivegtile_summ">Đã thêm ô chuyển đổi 5G vào cài đặt nhanh</string>
+    <string name="system_cc_fpstile_title">Hiển thị ô tốc độ làm mới</string>
+    <string name="system_cc_fpstile_summ">hiển thị tốc độ làm mới màn hình hiện tại</string>
     <string name="system_qs_force_systemfonts_title">Buộc đồng hồ sử dụng phông chữ hệ thống</string>
     <string name="system_cc_dateformat_title">Định dạng ngày tùy chỉnh</string>
     <string name="system_wifipassword_title">Xem mật khẩu Wi-Fi đã lưu</string>
+    <string name="system_wifipassword_summ">Xem từ Cài đặt - Wi-Fi - Cài đặt bổ sung - Quản lý mạng đã lưu</string>
     <string name="system_wifipassword_btn_title">Xem</string>
     <string name="system_wifi_password_label">Mật khẩu</string>
     <string name="system_wifi_password_dlgtitle">Chi tiết Wi-Fi</string>
@@ -449,6 +452,7 @@
     <string name="system_fw_sticky_summ">Giữ các ứng dụng mở trong cửa sổ nổi cho đến khi được chuyển trở lại toàn màn hình theo cách thủ công</string>
     <string name="system_fw_splitscreen_title">Cửa sổ đa nhiệm</string>
     <string name="system_fw_splitscreen_summ">Cho phép sử dụng màn hình chia nhỏ và lớp phủ cùng một lúc</string>
+    <string name="system_fw_forcein_actionsend_title">Mở trong cửa sổ nổi khi chia sẻ</string>
     <string name="system_mods_applock">Khoá ứng dụng</string>
     <string name="system_applock_title">Khóa ứng dụng ít nghiêm ngặt hơn</string>
     <string name="system_applock_summ">Không khóa ứng dụng khi thiết bị bị khóa nếu tùy chọn khóa ứng dụng sau khi thoát được chọn</string>
@@ -622,6 +626,7 @@
     <string name="controls_volumecursor_summ">Sử dụng các phím âm lượng để di chuyển con trỏ phương thức nhập văn bản</string>
     <string name="controls_volumecursor_reverse_title">Chuyển hướng</string>
     <string name="controls_volumecursor_reverse_summ">Hoán đổi hướng di chuyển của con trỏ</string>
+    <string name="controls_volumedowndt_turnon_torch_title">Nhấn đúp để giảm âm lượng để bật đèn pin</string>
     <string name="controls_volumemedia_up_title">Nhấn và giữ hành động nút tăng âm lượng</string>
     <string name="controls_volumemedia_up_summ">Nhấn và giữ nút tăng âm lượng khi màn hình tắt</string>
     <string name="controls_volumemedia_down_title">Nhấn và giữ hành động nút giảm âm lượng</string>
@@ -653,6 +658,7 @@
     <string name="controls_fsg_horiz_title">Cử chỉ ngang</string>
     <string name="controls_fsg_horiz_summ">Bật cử chỉ ngang và thanh điều hướng</string>
     <string name="controls_fsg_assist_title">Thao tác vuốt góc màn hình</string>
+    <string name="controls_fsg_swipeandstop_title">Vuốt trên màn hình bắt đầu từ cạnh và dừng hành động</string>
     <string name="various_mods">Các mod khác</string>
     <string name="various_hiddenfeatures_title">Tính năng ẩn</string>
     <string name="various_hiddenfeatures_summ">Các hoạt động không dễ truy cập</string>
@@ -748,6 +754,8 @@
     <string name="array_global_actions_powermenu">Mở menu nguồn</string>
     <string name="array_global_actions_powermenu_short">Trình đơn nguồn</string>
     <string name="array_global_actions_scrolltotop">Cuộn về đầu trang</string>
+    <string name="array_global_actions_expandsidebar">Hiện thanh công cụ</string>
+    <string name="array_global_actions_floatingwindow">Cửa sổ nổi</string>
     <string name="array_global_actions_clearmemory">Dọn dẹp bộ nhớ</string>
     <string name="array_global_actions_invertcolors">Đảo ngược màu</string>
     <string name="array_global_actions_switchkeyboard">Chuyển đổi bàn phím</string>
@@ -903,6 +911,7 @@
     <string name="qs_toggle_autorotate_portrait">Chiều dọc</string>
     <string name="qs_toggle_autorotate_landscape">Chiều ngang</string>
     <string name="qs_toggle_5g">Mạng 5G</string>
+    <string name="qs_toggle_fps">Tần số quét</string>
     <string name="miuizer">Cài đặt CustoMIUIzer</string>
     <string name="miuizer_show_newmods_title">Đánh dấu mod mới</string>
     <string name="miuizer_show_newmods_summ">Các mod được thêm vào bản dựng hiện tại có nhãn \"Mới!\" trong tiêu đề</string>
@@ -980,6 +989,7 @@
     <string name="restart_launcher">Khởi động lại trình khởi chạy</string>
     <string name="open_inweb">Mở trong trình duyệt</string>
     <string name="restart_systemui">Khởi động lại giao diện hệ thống</string>
+    <string name="restart_securitycenter">Khởi động lại trung tâm bảo mật</string>
     <string name="backup_restore">Quản lý cài đặt</string>
     <string name="backup_restore_choose">Vui lòng chọn hành động mong muốn</string>
     <string name="do_backup">Sao lưu</string>
@@ -1066,6 +1076,10 @@
     <string name="system_statusbar_batterytempandcurrent_hideunit_title">Ẩn đơn vị</string>
     <string name="system_statusbar_batterytempandcurrent_singlerow_title">Hiển thị trong một dòng</string>
     <string name="system_statusbar_batterytempandcurrent_reverseorder_title">Đảo ngược thứ tự</string>
+    <string name="system_statusbar_batterystyle_title">tạo kiểu cho biểu tượng pin</string>
+    <string name="system_statusbar_batterystyle_digit_title">Số ở pin</string>
+    <string name="system_statusbar_batterystyle_mark_fontsize_title">Cỡ chữ của dấu phần trăm</string>
+    <string name="system_statusbar_batterystyle_mark_verticaloffset_title">Rìa chiều dọc của dấu phần trăm</string>
     <string name="system_statusbar_dualsimin2rows_title">Thanh tín hiệu SIM kép trong hàng kép</string>
     <string name="system_statusbar_dualrows_title">Hiển thị thanh trạng thái kép</string>
     <string name="system_statusbar_dualrows_summ">Cần tăng chiều cao của thanh trạng thái trên một số thiết bị</string>
@@ -1097,9 +1111,13 @@
     <string name="various_clipboard_defaultaction_title">Hành động mặc định của ai clipboard</string>
     <string name="various_disable_access_devicelogs_title">Bỏ qua hộp thoại yêu cầu nhật ký thiết bị truy cập</string>
     <string name="various_skip_interceptperm_title">Bỏ qua đếm ngược để bật các quyền đặc biệt</string>
+    <string name="various_skip_securityscan_title">Bỏ qua quét bảo mật</string>
     <string name="various_show_battery_temperature_title">Hiển thị nhiệt độ pin</string>
     <string name="various_enable_sc_ai_clipboard_blur_location_title">Bật khay nhớ tạm AI và làm mờ vị trí</string>
     <string name="various_disable_freeform_suggest_blacklist_title">Vô hiệu hóa danh sách đen đề xuất của thanh bên</string>
+    <string name="various_enable_expand_sidebar_title">Ẩn thanh bên</string>
+    <string name="various_disable_dock_suggest_title">Chỉ hiển thị các ứng dụng được ghim trên thanh bên</string>
+    <string name="various_swipe_expand_sidebar_title">Cho phép vuốt để mở rộng thanh bên</string>
     <string name="system_lockscreenshortcuts_left_tapaction_title">Bật tắt đèn pin khi nhấn và giữ biểu tượng bên trái</string>
     <string name="system_cc_tile_roundedrect_title">Ô hình chữ nhật bo tròn</string>
     <string name="system_cc_enable_style_switch_title">Bật chuyển đổi kiểu CC</string>

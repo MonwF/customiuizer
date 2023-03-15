@@ -1,41 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_about">O aplikacji</string>
     <string name="about_version">Wersja %1$s</string>
-    <string name="about_dev">by Mikanoshi &amp; MonwF</string>
     <string name="about_dynamic">Ogólnie rzecz biorąc, modyfikacje wymagają ponownego uruchomienia urządzenia, aby były aktywowane lub dezaktywowane, ale te oznaczone ⟲ wymagają tylko jednego ponownego uruchomienia, a po zmianie ich wartości z domyślnej na niestandardową, kolejne zmiany są stosowane natychmiast.</string>
     <string name="about_unsupported">Modyfikacje oznaczone ⨯ nie są obsługiwane na tym urządzeniu.</string>
-    <string name="title_activity_main" translatable="false">@string/app_name</string>
-
     <string name="menu_update">Aktualizacja</string>
-
     <string name="mods">Modyfikacje</string>
     <string name="mods_actions">Działania</string>
-
     <string name="enable_mod">Aktywuj mod</string>
-    <string name="system_mods">System</string>
     <string name="system_mods_screen">Ekran</string>
     <string name="system_mods_screen_rotation">Obrót</string>
     <string name="system_mods_screen_backlight">Podświetlenie</string>
-    <string name="system_mods_audio">Audio</string>
     <string name="system_mods_vibration">Wibracje</string>
-    <string name="system_mods_toasts">Toasts</string>
     <string name="system_statusbaricons_title">Ukryj ikony</string>
     <string name="system_statusbaricons_summ">Zarządzaj widocznością ikon na pasku stanu</string>
     <string name="system_statusbaricons_wifistandard_title">Pokaż standard Wi-Fi</string>
     <string name="system_statusbaricons_battery1_title">Ikona baterii</string>
     <string name="system_statusbaricons_battery3_title">Wskaźnik ładowania</string>
-    <string name="system_statusbaricons_alarm_title">Alarm</string>
     <string name="system_statusbaricons_alarm_summ">Ukryj się całkowicie</string>
     <string name="system_statusbaricons_alarmn_title">Selektywna widoczność ikony alarmu</string>
     <string name="system_statusbaricons_alarmn_summ">Pokazuj ikonę alarmu tylko przez określoną liczbę godzin przed następnym alarmem</string>
     <string name="system_statusbaricons_signal_title">Sygnał sieci komórkowej</string>
     <string name="system_statusbaricons_nosims_title">Brak karty SIM</string>
-    <string name="system_statusbaricons_volte_title">VoLTE</string>
-    <string name="system_statusbaricons_vowifi_title" translatable="false">VoWiFi</string>
-    <string name="system_statusbaricons_roaming_title">Roaming</string>
-    <string name="system_statusbaricons_vpn_title" translatable="false">VPN</string>
-    <string name="system_statusbaricons_nfc_title" translatable="false">NFC</string>
-    <string name="system_statusbaricons_hotspot_title">Hotspot</string>
     <string name="system_statusbaricons_profile_title">Profil roboczy</string>
     <string name="system_statusbaricons_sound_title">Profile dźwiękowe</string>
     <string name="system_statusbaricons_dnd_title">Tryb nie przeszkadzać</string>
@@ -50,15 +36,12 @@
     <string name="system_batteryindicator_limitvis_summ">Pokaż tylko w szufladzie powiadomień i na ekranie blokady</string>
     <string name="system_batteryindicator_rounded_title">Zaokrąglone końcówki</string>
     <string name="system_batteryindicator_centered_title">Wyśrodkowany</string>
-    <string name="system_batteryindicator_height_title">Bar height</string>
-    <string name="system_batteryindicator_padding_title">Horizontal padding</string>
     <string name="system_batteryindicator_colorval1_title">Kolor pełnego naładowania</string>
     <string name="system_batteryindicator_colorval2_title">Kolor niskiego naładowania</string>
     <string name="system_batteryindicator_colorval3_title">Kolor oszczędzania baterii</string>
     <string name="system_batteryindicator_colorval4_title">Kolor ładowania</string>
     <string name="system_batteryindicator_lowlevel_title">Niski poziom naładowania</string>
-    <string name="system_batteryindicator_test_title">Test</string>
-    <string name="system_batteryindicator_test_summ">Animuj pasek od 100% do 0% w stanie rozładowania</string>
+    <string name="system_batteryindicator_test_summ" formatted="false">Animuj pasek od 100% do 0% w stanie rozładowania</string>
     <string name="system_statusbarheight_title">Wysokość paska stanu</string>
     <string name="system_statusbarcolor_title">Kolor tła paska stanu</string>
     <string name="system_statusbarcolor_summ">W miarę możliwości ustaw takie same kolory tła paska stanu i paska akcji aplikacji</string>
@@ -143,7 +126,6 @@
     <string name="system_mods_screenshots">Zrzuty ekranu</string>
     <string name="system_screenshot_title">Konfiguracja zrzutów ekranu</string>
     <string name="system_screenshot_summ">Dostosuj format, jakość i zapisz ścieżkę folderu dla zrzutów ekranu</string>
-    <string name="system_screenshot_format_title">Format</string>
     <string name="system_screenshot_quality_title">Jakość</string>
     <string name="system_screenshot_path_title">Zapisz folder</string>
     <string name="system_screenshot_overlay_title">Ukryj nakładki na zrzutach ekranu</string>
@@ -323,10 +305,6 @@
     <string name="system_defaultusb_summ">Zastosuj wybraną konfigurację po podłączeniu innego urządzenia</string>
     <string name="system_defaultusb_unsecure_title">Ignoruj blokadę</string>
     <string name="system_defaultusb_unsecure_summ">Zastosuj, nawet jeśli urządzenie jest nadal zablokowane</string>
-    <string name="system_defaultusb_config_rndis">RNDIS (USB Tethering)</string>
-    <string name="system_defaultusb_config_midi" translatable="false">MIDI</string>
-    <string name="system_defaultusb_config_mtp" translatable="false">MTP (Przesyłanie plików)</string>
-    <string name="system_defaultusb_config_ptp" translatable="false">PTP (Przesyłanie obrazów)</string>
     <string name="system_forceclose_title">Zapobiegaj wymuszaniu zamknięcia aplikacji</string>
     <string name="system_forceclose_summ">Nie zezwalaj MIUI na zamykanie wybranych aplikacji</string>
     <string name="system_rotateanim_title">Animacja rotacji</string>
@@ -349,7 +327,7 @@
     <string name="system_hidelsclock_title">Ukryj blok górny</string>
     <string name="system_hidelsclock_summ">Usuń górny blok zawierający zegar, datę i inne dane</string>
     <string name="system_hidelshint_title">Ukryj wskazówkę dotyczącą odblokowania</string>
-    <string name="system_hidelshint_summ">Usuń wskazówkę "Przesuń w górę, aby odblokować".</string>
+    <string name="system_hidelshint_summ">Usuń wskazówkę \"Przesuń w górę, aby odblokować\".</string>
     <string name="system_nosos_title">Brak połączeń alarmowych</string>
     <string name="system_nosos_summ">Wyłącz przycisk połączenia alarmowego na ekranie blokady</string>
     <string name="system_lswallpaper_title">Zastosuj tapetę za pomocą dowolnej aplikacji</string>
@@ -406,7 +384,6 @@
     <string name="system_fw_noblacklist_summ">Zezwalaj na otwieranie dowolnej aplikacji w pływającym oknie</string>
     <string name="system_fw_sticky_title">Zapamiętaj stan</string>
     <string name="system_fw_sticky_summ">Otwieraj aplikacje w ruchomych oknach, dopóki nie zostaną przełączone z powrotem do trybu pełnoekranowego</string>
-    <string name="system_fw_splitscreen_title">Multiwindow+</string>
     <string name="system_fw_splitscreen_summ">Zezwalaj na jednoczesne używanie podzielonego ekranu i pływających okien, wyłącz backlistę dla podzielonego ekranu</string>
     <string name="system_mods_applock">Blokada aplikacji</string>
     <string name="system_applock_title">Mniej rygorystyczna blokada aplikacji</string>
@@ -437,16 +414,12 @@
     <string name="system_animationscale_window_title">Okna</string>
     <string name="system_animationscale_transition_title">Przejścia</string>
     <string name="system_animationscale_animator_title">Wartości animatorów</string>
-
-    <string name="poco_mods">POCO Launcher</string>
-    <string name="launcher_mods">MIUI Launcher</string>
     <string name="launcher_gestures">Gesty</string>
     <string name="launcher_gestures_action">Czynność</string>
     <string name="launcher_gestures_setting">Ustawienie do przełączania</string>
     <string name="launcher_gestures_launch">Aplikacja do uruchomienia</string>
     <string name="launcher_gestures_shortcut">Skrót do uruchomienia</string>
     <string name="launcher_gestures_activity">Działanie do uruchomienia</string>
-    <string name="launcher_title">Launcher</string>
     <string name="launcher_summ">Wyświetl modyfikacje dla wybranego launchera. Tylko dla pomocy wizualnej, nie ma żadnego wpływu na modyfikacje.</string>
     <string name="launcher_compat_title">Tryb wydajności</string>
     <string name="launcher_compat_summ">Alternatywna metoda zastosowania wszystkich modyfikacji launchera</string>
@@ -535,13 +508,11 @@
     <string name="launcher_spread_title">Rozszerzanie dwoma palcami</string>
     <string name="launcher_spread_summ">Czynność polegająca na odsunięciu od siebie 2 palców na dowolnym ekranie głównym</string>
     <string name="launcher_bugfixes">Poprawki błędów</string>
-
     <string name="controls_mods">Sterowanie</string>
     <string name="controls_powerdt_title">Podwójnego naciśnięcie</string>
     <string name="controls_powerdt_summ">Zastąp uruchamianie aparatu po dwukrotnym naciśnięciu klawisza zasilania. Wymaga włączenia skrótu przycisku akcji.</string>
     <string name="controls_powerflash_title">Latarka</string>
     <string name="controls_powerflash_summ">Długie naciśnięcie przycisku zasilania, gdy ekran jest wyłączony, aby włączyć latarkę</string>
-    <string name="controls_powerflash_delay_title">Longer quick flashlight delay</string>
     <string name="controls_powerflash_delay_summ">Zwiększ opóźnienie długiego naciśnięcia przycisku zasilania</string>
     <string name="controls_mods_fingerprint">Skaner linii papilarnych</string>
     <string name="controls_fingerprint1_title">Pojedyncze dotknięcie</string>
@@ -610,7 +581,6 @@
     <string name="controls_fsg_horiz_title">Gesty poziome</string>
     <string name="controls_fsg_horiz_summ">Włącz gesty poziome i pasek nawigacyjny</string>
     <string name="controls_fsg_assist_title">Akcja przesuwania rogu</string>
-
     <string name="various_mods">Różne</string>
     <string name="various_hiddenfeatures_title">Ukryte funkcje</string>
     <string name="various_hiddenfeatures_summ">Działania, które nie zawsze są łatwo dostępne</string>
@@ -644,7 +614,6 @@
     <string name="various_calluibright_val_title">Wartość jasności</string>
     <string name="various_calluibright_night_title">Tryb nocny</string>
     <string name="various_calluibright_night_summ">Nie zmieniaj jasności w nocy</string>
-    <string name="various_calluibright_night_start_title">Start</string>
     <string name="various_calluibright_night_end_title">Koniec</string>
     <string name="various_callreminder_title">Przypomnienie o nieodebranym połączeniu</string>
     <string name="various_callreminder_summ">Zdefiniuj dźwięk, wibrację i interwał dla przypomnienia</string>
@@ -664,7 +633,6 @@
     <string name="disable_app_text">Jeśli jest to niezbędna aplikacja systemowa, wyłączenie jej może spowodować uszkodzenie</string>
     <string name="disable_app_settings">To zły pomysł!</string>
     <string name="disable_app_fail">Nie udało się zmienić stanu aplikacji</string>
-
     <string name="appdetails_playstore">Otwórz w Sklepie Play</string>
     <string name="appdetails_launch">Uruchom</string>
     <string name="appdetails_nolaunch">Aplikacja nie ma domyślnej aktywności, którą można uruchomić</string>
@@ -677,13 +645,10 @@
     <string name="appsort_frequency">Częstotliwość użytkowania</string>
     <string name="appsort_storage">Użycie pamięci</string>
     <string name="appsort_install">Czas instalacji</string>
-
     <string name="gboard">Klawiatura Google</string>
     <string name="calls">Połączenia</string>
     <string name="settings">Ustawienia</string>
-
     <string name="array_default">Domyślny</string>
-    <string name="array_system_default">System</string>
     <string name="array_global_actions_none">Brak działania</string>
     <string name="array_global_actions_notif">Rozwiń szufladę powiadomień</string>
     <string name="array_global_actions_eqs">Rozwiń panel szybkich ustawień</string>
@@ -708,21 +673,14 @@
     <string name="array_global_actions_switchkeyboard">Zmień klawiaturę</string>
     <string name="array_global_actions_goback">Wróć</string>
     <string name="array_global_actions_onehanded_left">Tryb jednoręczny</string>
-    <string name="array_global_toggle_wifi" translatable="false">Wi-Fi</string>
-    <string name="array_global_toggle_bt">Bluetooth</string>
-    <string name="array_global_toggle_gps" translatable="false">GPS</string>
-    <string name="array_global_toggle_nfc" translatable="false">NFC</string>
     <string name="array_global_toggle_sound">Profil dźwięku</string>
     <string name="array_global_toggle_brightness">Automatyczna jasność</string>
     <string name="array_global_toggle_rotation">Auromatyczne obracanie</string>
     <string name="array_global_toggle_torch">Latarka</string>
     <string name="array_global_toggle_mobiledata">Dane mobilne</string>
-    <string name="array_global_toggle_wimax" translatable="false">WiMAX</string>
     <string name="array_toasts_icon">Ikona</string>
     <string name="array_toasts_label">Etykieta</string>
     <string name="array_toasts_both">Ikona i etykieta</string>
-    <string name="array_screen_anim_none">None</string>
-    <string name="array_screen_anim_fade">Fade</string>
     <string name="array_media_none">Brak zmian</string>
     <string name="array_media_playpause">Odtwórz/wstrzymaj</string>
     <string name="array_media_next">Następny utwór</string>
@@ -738,8 +696,6 @@
     <string name="array_screenlock_strong">Silny (PIN/hasło/wzór)</string>
     <string name="array_noblur">Brak rozmycia</string>
     <string name="array_netspeedicons_no">Brak ikon</string>
-    <string name="array_netspeedicons_arrows" translatable="false">△▲▽▼</string>
-    <string name="array_netspeedicons_bullets" translatable="false">☖ ☗ ⛉ ⛊</string>
     <string name="array_foldershade_solid">Całe tło</string>
     <string name="array_foldershade_gradient">Tylko pośrodku</string>
     <string name="array_expandnotifs_allbutblack">Dla wszystkich aplikacji z wyjątkiem wymienionych</string>
@@ -761,7 +717,7 @@
     <string name="array_low">Niski</string>
     <string name="array_average">Średni</string>
     <string name="array_high">Wysoki</string>
-    <string name="array_match">Dopasuj okładkę albumu lub tapetę</string>s
+    <string name="array_match">Dopasuj okładkę albumu lub tapetę</string>
     <string name="array_static">Niestandardowy kolor</string>
     <string name="array_rainbowh">Kolory tęczy (w poziomie)</string>
     <string name="array_rainbowv">Kolory tęczy (w pionie)</string>
@@ -780,11 +736,9 @@
     <string name="array_week">Przez tydzień po aktualizacji</string>
     <string name="array_always">Zawsze</string>
     <string name="array_image">Obraz</string>
-    <string name="array_audio">Audio</string>
     <string name="array_video">Wideo</string>
     <string name="array_doc">Dokument</string>
     <string name="array_archive">Archiwum</string>
-    <string name="array_link">Link</string>
     <string name="array_any">Dowolny</string>
     <string name="array_others">Inne</string>
     <string name="array_nofs">Gdy nie jest w trybie pełnoekranowym</string>
@@ -797,7 +751,6 @@
     <string name="array_ticktock">TiK Tak</string>
     <string name="array_heartbeat">Bicie serca</string>
     <string name="array_waltz">Walc</string>
-    <string name="array_zig">Zig-zig-zig</string>
     <string name="array_own">Własny wzór</string>
     <string name="array_scale_fit">Dopasuj do ekranu</string>
     <string name="array_scale_cover">Zakryj cały ekran</string>
@@ -817,8 +770,6 @@
     <string name="array_displayonly">Wyświetl tylko</string>
     <string name="array_hide">Ukryj</string>
     <string name="array_render_auto">Wykryj automatycznie</string>
-    <string name="array_render_lines" translatable="false">drawLines</string>
-    <string name="array_render_path" translatable="false">drawPath</string>
     <string name="array_append">Dodaj</string>
     <string name="array_prepend">Dodaj przed</string>
     <string name="array_newline">Wstaw jako nowy wiersz</string>
@@ -834,7 +785,6 @@
     <string name="array_temperature">Tylko temperatura</string>
     <string name="array_current">Tylko bieżące</string>
     <string name="unlimited">Bez limitu</string>
-
     <string name="toggle_wifi_on">Wi-Fi włączone</string>
     <string name="toggle_wifi_off">Wi-Fi wyłączone</string>
     <string name="toggle_bt_on">Bluetooth włączone</string>
@@ -861,7 +811,6 @@
     <string name="qs_toggle_autorotate_portrait">Portret</string>
     <string name="qs_toggle_autorotate_landscape">Krajobraz</string>
     <string name="qs_toggle_5g">Sieć 5G</string>
-
     <string name="miuizer">Ustawienia CustoMIUIzera</string>
     <string name="miuizer_show_newmods_title">Zaznacz nowe modyfikacje</string>
     <string name="miuizer_show_newmods_summ">Wyświetl \"Nowy!\" etykietę w tytule dla modyfikacji dodanych w bieżącej wersji</string>
@@ -876,14 +825,12 @@
     <string name="miuizer_locale_summ">Zawsze wyświetlaj interfejs modułu w wybranym języku</string>
     <string name="miuizer_holiday_title">Wakacyjny design</string>
     <string name="miuizer_holiday_summ">Udekoruj interfejs modułu zgodnie z okazją</string>
-
     <string name="troubleshoot">Rozwiązywanie problemów</string>
     <string name="miuizer_acrasend_title">Wyślij szczegółowy raport</string>
     <string name="miuizer_acrasend_summ">Zbierz informacje o urządzeniu i środowisku, logcat i Xposed log, a następnie wyślij je do programisty. \nWymagane jest połączenie z Internetem</string>
     <string name="miuizer_acramail_summ">Wprowadź swoje dane kontaktowe, a zostaną one uwzględnione w szczegółowych raportach i raportach o awariach</string>
     <string name="miuizer_acramail_title">Dane kontaktowe</string>
     <string name="miuizer_acramail_tip">Wypełnienie tego pola jest absolutnie konieczne, jeśli oczekujesz odpowiedzi na swoje raporty o awariach. Użyj pseudonimu e-mail, ICQ, XDA lub 4PDA.</string>
-
     <string name="support">Wsparcie</string>
     <string name="support_github">Kod i problemy</string>
     <string name="support_contact_title">Skontaktuj się ze mną</string>
@@ -895,24 +842,17 @@
     <string name="support_xda_summ">Wątek modułu na forach XDA</string>
     <string name="support_4pda_title">Wątek 4PDA</string>
     <string name="support_4pda_summ">Wątek modułu na forach 4PDA</string>
-
     <string name="support_bug_title">Zgłoś błąd</string>
     <string name="support_bug_summ">Wyślij nam raport o błędzie lub prośbę o dodanie funkcji za pośrednictwem oficjalnego narzędzia do śledzenia problemów</string>
-    <string name="support_donate">Donate $%1$d</string>
-    <string name="support_donate_me_title">Donate via PayPal</string>
-    <string name="support_donate_title">Donate Mikanoshi</string>
     <string name="support_donate_summ">Najlepszy sposób, aby wyrazić swoją wdzięczność za ten niesamowity moduł</string>
     <string name="support_donate_inapp_title">W aplikacji</string>
     <string name="support_donate_inapp_summ">Pozwól Google zająć się wszystkim</string>
     <string name="support_donate_other_title">Przestarzałe waluty</string>
-    <string name="support_donate_other_summ" translatable="false">Paypal, Webmoney, QIWI</string>
-
     <string name="donate_level1">Dziękujemy za darowiznę!</string>
     <string name="donate_level2">Dziękujemy za hojną darowiznę!</string>
     <string name="donate_level3">Dziękujemy za niesamowicie hojną darowiznę! 😮</string>
     <string name="billing_error">Pobranie informacji rozliczeniowych nie powiodło się. Sprawdź połączenie internetowe</string>
     <string name="billing_canceled">Zmieniłeś zdanie?</string>
-
     <string name="crash_dialog">CustoMIUIzer właśnie uległ awarii!</string>
     <string name="crash_dialog_manual">Wszystkie niezbędne dane zostały zebrane</string>
     <string name="crash_dialog_manual_size">Wygenerowano rozmiar zgłoszenia</string>
@@ -929,11 +869,9 @@
     <string name="crash_confirm">Potwierdzenie</string>
     <string name="crash_collecting_report">Budowanie zgłoszenia…</string>
     <string name="crash_sending_report">Wysyłanie zgłoszenia…</string>
-
     <string name="array_color_auto">Automatyczny</string>
     <string name="array_color_dark">Ciemny</string>
     <string name="array_color_light">Jasny</string>
-
     <string name="notselected">Nie wybrano</string>
     <string name="warning">Ostrzeżenie!</string>
     <string name="warning_blacklist">Opcja czarnej/białej listy jest aktywna w Xposed Framework, może uniemożliwić prawidłowe działanie modyfikacji.</string>
@@ -943,7 +881,6 @@
     <string name="open_xposed">Zarządzaj modułami Xposed</string>
     <string name="soft_reboot">Miękki restart</string>
     <string name="soft_reboot_ask">Wykonać teraz miękki restart?</string>
-    <string name="restart_launcher">Restart launcher</string>
     <string name="open_inweb">Otwórz w przeglądarce</string>
     <string name="restart_systemui">Restart systemUI</string>
     <string name="backup_restore">Zarządzanie ustawieniami</string>
@@ -985,7 +922,6 @@
     <string name="credentials_ok">Dane uwierzytelniające są już odblokowane</string>
     <string name="credentials_unlock">Odblokuj dane uwierzytelniające</string>
     <string name="credentials_success">Odblokowano dane uwierzytelniające!</string>
-
     <string name="xposed_not_found">Nie znaleziono aplikacji Xposed</string>
     <string name="xposed_not_found_explain">Wygląda na to, że nie masz zainstalowanego Xposed Framework.\n\nPamiętaj, że modyfikacje działają tylko z Xposed!</string>
     <string name="module_not_active">Moduł CustoMIUIzer nie jest aktywny!\nOtwórz aplikację LSposed, aktywuj moduł i uruchom ponownie.</string>
@@ -996,23 +932,12 @@
     <string name="delete">Usuń</string>
     <string name="delete_item_info">Przytrymaj, aby usunąć</string>
     <string name="change_icon">Zmień ikonę</string>
-
     <string name="guide_search">Szukaj modyfikacji według nazwy.\nPrzytrzymaj, aby wyświetlić listę nowych modów.</string>
-    <string name="guide_softreboot">Nie, że aby zastosować modyfikacje musisz zrobić miękki restart.\nDynamiczne ⟲ modyfikacje wymagają tego tylko raz.\nWięcej informacji znajduje się na stronie "Informacje".</string>
+    <string name="guide_softreboot">Nie, że aby zastosować modyfikacje musisz zrobić miękki restart.\nDynamiczne ⟲ modyfikacje wymagają tego tylko raz.\nWięcej informacji znajduje się na stronie \"Informacje\".</string>
     <string name="guide_marknew">Nowe modyfikacje od poprzedniej aktualizacji \ncan be marked for better visibility</string>
-
     <string name="permission_scan">Czy chcesz otrzymać listę sieci/urządzeń, czy nie?</string>
     <string name="permission_permanent">Będziesz musiał teraz ręcznie włączyć uprawnienia dla tej opcji. Dobra robota!</string>
-
-    <string name="format_d_ms">%d ms</string>
-    <string name="format_d_s">%d s</string>
-    <string name="format_d_m">%d m</string>
-    <string name="format_KBs">%d KB/s</string>
-    <string name="oneKBs">1 KB/s</string>
-    <string name="Bs">B/s</string>
     <string name="speedunits">KMGTPE</string>
-    <string name="lux">%s lux</string>
-
     <string name="off">Wył</string>
     <string name="time_30m">30 minut</string>
     <string name="time_1h">1 godzina</string>
@@ -1024,16 +949,11 @@
     <string name="time_8h">8 godzin</string>
     <string name="time_10h">10 godzin</string>
     <string name="time_12h">12 godzin</string>
-    <string name="time_forever" translatable="false">∞</string>
-
     <string name="white_color">Biały</string>
     <string name="black_color">Czarny</string>
     <string name="auto_color">Kolor paska stanu</string>
-
     <string name="type_file">plik</string>
     <string name="type_res">zasób</string>
-
-    <string name="dummy" translatable="false" />
     <string name="system_statusbar_batterytempandcurrent_title">Wyświetl temperaturę i prąd baterii</string>
     <string name="system_statusbar_batterytempandcurrent_content_title">Wyświetl informacje</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">Wyświetlacz po prawej stronie</string>
