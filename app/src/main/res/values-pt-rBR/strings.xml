@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_about">Sobre</string>
+    <string name="about_version">Versão %1$s</string>
+    <string name="about_dev">por Mikanoshi &amp; MonwF</string>
+    <string name="about_dynamic">Geralmente, as modificações requerem uma reinicialização rápida para serem ativadas ou desativadas, mas aquelas marcadas com ⟲ requerem uma reinicialização rápida somente depois que seu valor for alterado do padrão para personalizado, as alterações subsequentes serão aplicadas imediatamente.</string>
+    <string name="about_unsupported">Modificações marcadas com ⨯ não são suportadas neste dispositivo.</string>
+    <string name="menu_update">Atualização</string>
+    <string name="mods">Modificações</string>
+    <string name="mods_actions">Ações</string>
+    <string name="value_is_empty">Valor desconfigurado</string>
+    <string name="value_is_set">Valor configurado</string>
+    <string name="clear_value">Limpar</string>
+    <string name="enable_mod">Habilitar modificação</string>
+    <string name="system_mods">Sistema</string>
+    <string name="system_mods_screen">Tela</string>
+    <string name="system_mods_screen_rotation">Rotação</string>
+    <string name="system_mods_screen_backlight">Luz de fundo</string>
+    <string name="system_mods_audio">Áudio</string>
+    <string name="system_mods_vibration">Vibração</string>
+    <string name="system_mods_toasts">Toasts</string>
+    <string name="system_statusbaricons_title">Ocultar ícones</string>
+    <string name="system_statusbaricons_summ">Gerenciar visibilidade dos ícones da barra de status</string>
+    <string name="system_statusbaricons_wifistandard_title">Mostrar o padrão do Wi-Fi</string>
+    <string name="system_statusbaricons_battery1_title">Imagem da bateria</string>
+    <string name="system_statusbaricons_battery4_title">Marcador de porcentagem da bateria</string>
+    <string name="system_statusbaricons_battery3_title">Indicador de carregamento</string>
+    <string name="system_statusbaricons_alarm_title">Alarme</string>
+    <string name="system_statusbaricons_alarm_summ">Ocultar completamente</string>
+    <string name="system_statusbaricons_alarmn_title">Visibilidade seletiva do ícone de alarme</string>
+    <string name="system_statusbaricons_alarmn_summ">Mostrar ícone do alarme apenas durante o número definido de horas antes do próximo alarme</string>
+    <string name="system_statusbaricons_btbattery_title">Bateria Bluetooth</string>
+    <string name="system_statusbaricons_signal_title">Sinal da rede móvel</string>
+    <string name="system_statusbaricons_nosims_title">Sem cartão SIM</string>
+    <string name="system_statusbaricons_volte_title">VoLTE</string>
+    <string name="system_statusbaricons_roaming_title">Roaming</string>
+    <string name="system_statusbaricons_dualwifi_title">Wi-Fi duplo</string>
+    <string name="system_statusbaricons_hotspot_title">Ponto de acesso</string>
+    <string name="system_statusbaricons_profile_title">Perfil de trabalho</string>
+    <string name="system_statusbaricons_sound_title">Perfis de som</string>
+    <string name="system_statusbaricons_dnd_title">Modo não perturbe</string>
+    <string name="system_statusbaricons_privacy_title">Modo incógnito</string>
+    <string name="system_statusbaricons_headset_title">Fones de ouvido</string>
+    <string name="system_statusbaricons_mute_title">Chamada: microfone silenciado</string>
+    <string name="system_statusbaricons_speaker_title">Chamada: viva-voz</string>
+    <string name="system_statusbaricons_record_title">Chamada: gravador</string>
+    <string name="system_batteryindicator_title">Barra indicadora de bateria</string>
+    <string name="system_batteryindicator_summ">Mostrar o nível de carregamento da bateria como uma barra colorida</string>
+    <string name="system_batteryindicator_limitvis_title">Visibilidade limitada</string>
+    <string name="system_batteryindicator_limitvis_summ">Mostrar apenas na tela de notificações e na tela de bloqueio</string>
+    <string name="system_batteryindicator_rounded_title">Cantos arredondados</string>
+    <string name="system_batteryindicator_centered_title">Centralizado</string>
+    <string name="system_batteryindicator_height_title">Altura da barra</string>
+    <string name="system_batteryindicator_padding_title">Preenchimento horizontal</string>
+    <string name="system_batteryindicator_colorval1_title">Cor de carga completa</string>
+    <string name="system_batteryindicator_colorval2_title">Cor de carga baixa</string>
+    <string name="system_batteryindicator_colorval3_title">Cor de economia de bateria</string>
+    <string name="system_batteryindicator_colorval4_title">Cor durante o carregamento</string>
+    <string name="system_batteryindicator_lowlevel_title">Nível de carga baixo</string>
+    <string name="system_batteryindicator_test_title">Teste</string>
+    <string name="system_batteryindicator_test_summ" formatted="false">Barra animada de 100% a 0% durante o descarregamento</string>
+    <string name="system_statusbarheight_title">Altura da barra de status</string>
+    <string name="system_statusbarcolor_title">Cor de fundo da barra de status</string>
+    <string name="system_statusbarcolor_summ">Fazer com que as cores de fundo da barra de status e da barra de ações do aplicativo sejam as mesmas sempre que possível</string>
+    <string name="system_statusbarcolor_apps_title">Lista negra</string>
+    <string name="system_shortcut_app_title">Aplicativo de atalho</string>
+    <string name="system_shortcut_app_summ">Abrir aplicativo selecionado quando tocar no ícone de atalho na tela de notificações</string>
+    <string name="system_clock_app_title">Aplicativo de relógio</string>
+    <string name="system_clock_app_summ">Abrir aplicativo selecionado quando tocar no relógio na tela de notificações</string>
+    <string name="system_calendar_app_title">Aplicativo de calendário</string>
+    <string name="system_calendar_app_summ">Abrir aplicativo selecionado quando tocar na data na tela de notificações</string>
+    <string name="system_clockseconds_title">Mostrar segundos</string>
+    <string name="system_clock_show_ampm_title">Mostrar AM|PM</string>
+    <string name="system_clock_time_format_title">Formato 24 horas</string>
+    <string name="system_clock_leadingzero_title">Mostrar zero à esquerda para as horas</string>
+    <string name="system_clock_customformat_enable_title">Habilitar formato personalizado</string>
+    <string name="system_clock_customformat_setting_title">Definir formato</string>
+    <string name="system_clock_customformat_help_summ">        Pode inserir nova linha, após 2 linhas o conteúdo da nova linha será truncado
+        \naaaa - ano com quatro dígitos(2023)
+        \naa - ano com dois dígitos(23)
+        \nMM - mês com dois dígitos(02, 12)
+        \nM - mês com um dígito(2, 12)
+        \ndd - dia com dois dígitos(02, 23)
+        \nd - dia com um dígito(2, 23)
+        \nE - dia da semana curto(Dom)
+        \na - AM, PM
+        \nHH - hora com dois dígitos no formato 24 horas(09, 14)
+        \nH - hora com um dígito no formato 24 horas(9, 14)
+        \nhh - hora com dois dígitos no formato 12 horas(09, 02)
+        \nh - hora com um dígito no formato 12 horas(9, 2)
+        \nmm - minutos com dois dígitos(09)
+        \nss - segundos com dois dígitos(09)
+    </string>
+    <string name="system_clock_dualrow_title">Exibir em duas linhas</string>
+    <string name="system_clock_show_week_title">Mostrar semana</string>
+    <string name="system_clock_show_date_title">Mostrar data</string>
+    <string name="system_clock_show_year_title">Mostrar ano</string>
+    <string name="system_clock_fixedwidth_title">Corrigir a largura do conteúdo para evitar instabilidade horizontal</string>
+    <string name="system_clock_fixedwidth_summ">Ajustar a largura quando os segundos forem exibidos</string>
+    <string name="system_statusbar_clock_align_title">Alinhamento horizontal</string>
+    <string name="system_clockseconds_summ">Mostrar segundos no relógio da barra de status</string>
+    <string name="system_maxsbicons_title">Limite de ícones de notificação</string>
+    <string name="system_maxsbicons_summ">Número de ícones de notificação a serem exibidos antes transformá-los em pontos</string>
+    <string name="system_mobiletypeicon_title">Ocultar o tipo de rede móvel</string>
+    <string name="system_mobiletypeicon_summ">Remover o ícone do tipo de rede móvel da barra de status</string>
+    <string name="system_networkindicator_wifi_title">Ocultar indicadores de atividade da rede Wi-Fi</string>
+    <string name="system_networkindicator_mobile_title">Ocultar indicadores de atividade da rede móvel</string>
+    <string name="system_4gtolte_title">Mostrar ícone LTE invés de 4G</string>
+    <string name="system_statusbar_mobile_showname_title">Personalizar tipo de rede móvel</string>
+    <string name="system_hidemoreicon_title">Nenhum indicador para ícones ocultos</string>
+    <string name="system_hidemoreicon_summ">Não mostrar ícone com 3 pontos quando os ícones de notificação estão ocultos</string>
+    <string name="system_nonetspeedseparator_title">Separador de velocidade da rede</string>
+    <string name="system_nonetspeedseparator_summ">Não mostrar linha vertical entre o tempo e a velocidade da rede em dispositivos com entalhe em formato de gota</string>
+    <string name="system_netspeedinterval_title">Intervalo de atualização da velocidade da rede</string>
+    <string name="system_detailednetspeed_title">Velocidade de upload e download serão exibidos em duas linhas</string>
+    <string name="system_detailednetspeed_fakedualrow_title">Valor e unidade serão exibidos em duas linhas</string>
+    <string name="system_netspeed_cat_title">Modificações de contador de velocidade da rede</string>
+    <string name="system_detailednetspeed_summ">Mostrar a velocidade de download e upload da rede separadamente</string>
+    <string name="system_detailednetspeed_icon_title">Ícones indicadores</string>
+    <string name="system_detailednetspeed_icon_summ">Ícones de tráfego de download/upload exibidos ao lado da velocidade(nem todas as fontes personalizadas tem todos os ícones)</string>
+    <string name="system_detailednetspeed_low_title">Ocultar em baixa velocidade</string>
+    <string name="system_detailednetspeed_low_summ">Não mostrar o indicador se a velocidade for baixa</string>
+    <string name="system_detailednetspeed_lowlevel_title">Nível da velocidade baixa</string>
+    <string name="system_detailednetspeed_lowlevel_summ">Valores de velocidade abaixo deste nível serão considerados baixos e terão um ícone de indicação diferente</string>
+    <string name="system_detailednetspeed_secunit_title">Ocultar sufixo de Byte por segundo(B/s)</string>
+    <string name="system_netspeed_fontsize_title">Tamanho da fonte da velocidade da rede</string>
+    <string name="system_statusbarcontrols_title">Controle de gestos</string>
+    <string name="system_statusbarcontrols_summ">Executar ações selecionadas no slide e toque duas vezes</string>
+    <string name="system_statusbarcontrols_sens_title">Ajuste de sensibilidade</string>
+    <string name="system_statusbarcontrols_sens_bright_title">Brilho</string>
+    <string name="system_statusbarcontrols_sens_vol_title">Volume</string>
+    <string name="system_statusbarcontrols_single_title">Deslizar horizontalmente com um dedo</string>
+    <string name="system_statusbarcontrols_dual_title">Deslizar horizontalmente com dois dedos</string>
+    <string name="system_statusbarcontrols_dt_title">Ação de toque duplo</string>
+    <string name="system_notifimportance_title">Mostrar importância da notificação</string>
+    <string name="system_compactnotif_title">Notificações compactas</string>
+    <string name="system_compactnotif_summ">Reduzir os preenchimentos verticais das notificações</string>
+    <string name="system_colorizenotiftitle_title">Colorir cartão de notificação</string>
+    <string name="system_colorizenotiftitle_summ">Aplicar a cor do ícone ao cartão (somente no estilo de notificação do Android)</string>
+    <string name="system_minimalnotifview_title">Trazer de volta a visualização minimalista recolhida</string>
+    <string name="system_minimalnotifview_summ">As notificações de importância mínima podem ser recolhidas em uma linha novamente</string>
+    <string name="system_mutevisiblenotif_title">Silenciar se visível</string>
+    <string name="system_mutevisiblenotif_summ">Não reproduzir som de notificação se a tela estiver ligada</string>
+    <string name="launcher_doubletap_title">Ação de toque duplo</string>
+    <string name="controls_fingerprint2_title">Ação de toque duplo</string>
+    <string name="array_system_default">Sistema</string>
+    <string name="array_mobiletypeicon_hide">Ocultar completamente</string>
+    <string name="array_audio">Áudio</string>
+    <string name="soft_reboot">Reinício rápido</string>
+</resources>
