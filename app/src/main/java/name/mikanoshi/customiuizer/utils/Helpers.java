@@ -152,14 +152,6 @@ public class Helpers {
 	public static final HashSet<String> newMods = new HashSet<String>(Arrays.asList(
 		"pref_key_launcher_nozoomanim"
 	));
-	public static final HashMap<String, String> l10nProgress = new HashMap<String, String>() {{
-		put("ru-RU", "99");
-		put("zh-CN", "99");
-		put("zh-TW", "99");
-		put("pl-PL", "99");
-		put("ja-JP", "99");
-		put("vi-VN", "99");
-	}};
 
 	public enum SettingsType {
 		Preference, Edit

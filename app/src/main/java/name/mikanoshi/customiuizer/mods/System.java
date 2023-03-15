@@ -29,7 +29,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -48,7 +47,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.hardware.usb.UsbManager;
-import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaMetadata;
 import android.media.MediaPlayer;
@@ -119,7 +117,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -5191,8 +5188,8 @@ public class System {
             openInFw = true;
         }
         else if ("com.tencent.mm".equals(pkgName) && intent.getComponent().getClassName().contains(".plugin.base.stub.WXEntryActivity")) {
-            openInFw = true;
-        }
+                openInFw = true;
+            }
         return openInFw;
     }
 
@@ -5203,7 +5200,6 @@ public class System {
                 Object request = param.args[0];
                 Intent intent = (Intent) XposedHelpers.getObjectField(request, "intent");
                 String callingPackage = (String) XposedHelpers.getObjectField(request, "callingPackage");
-                boolean openInFw = shouldOpenInFwWhenShare(intent, callingPackage);
 //                Object safeOptions = XposedHelpers.getObjectField(request, "activityOptions");
 //                Bundle ao = safeOptions != null ? (Bundle) XposedHelpers.callMethod(safeOptions, "getActivityOptionsBundle") : null;
 //                String reason = (String) XposedHelpers.getObjectField(request, "reason");
@@ -5213,9 +5209,11 @@ public class System {
 //                    + " activityOptions| " + Helpers.stringifyBundle(ao)
 //                    + " intentExtra| " + Helpers.stringifyBundle(intent.getExtras())
 //                );
+                boolean openInFw = shouldOpenInFwWhenShare(intent, callingPackage);
                 if (openInFw) {
                     Context mContext = (Context) XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.thisObject, "mService"), "mContext");
                     ActivityOptions options = MiuiMultiWindowUtils.getActivityOptions(mContext, intent.getComponent().getPackageName(), true, false);
+//                    Helpers.log("startActFwOptions: " + Helpers.stringifyBundle(options.toBundle()));
                     XposedHelpers.callMethod(param.thisObject, "setActivityOptions", options.toBundle());
                 }
             }
@@ -5223,12 +5221,16 @@ public class System {
 //        Helpers.hookAllMethods("com.android.server.wm.ActivityStarterInjector", lpparam.classLoader, "modifyLaunchActivityOptionIfNeed", new MethodHook() {
 //            @Override
 //            protected void after(MethodHookParam param) throws Throwable {
-//                if (param.args.length != 8) return;
+//                if (!Modifier.isPrivate(param.method.getModifiers())) {
+//                    return;
+//                }
 //                Intent intent = (Intent)param.args[5];
 //                if (intent == null || intent.getComponent() == null) return;
 //                ActivityOptions ao = (ActivityOptions) param.getResult();
-//                String callingPackage = (String) param.args[2];
+//                String callingPackage = (String) param.args[1];
+//                ActivityOptions baseAO = (ActivityOptions) param.args[2];
 //                Helpers.log("modifyOptions: " + callingPackage
+//                    + " baseOptions| " + Helpers.stringifyBundle(baseAO != null ? baseAO.toBundle() : null)
 //                    + " intent| " + intent
 //                    + " activityOptions| " + Helpers.stringifyBundle(ao != null ? ao.toBundle() : null)
 //                    + " intentExtra| " + Helpers.stringifyBundle(intent.getExtras())
