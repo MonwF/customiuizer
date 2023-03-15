@@ -146,4 +146,5 @@
     <string name="array_system_default">Sistema</string>
     <string name="array_mobiletypeicon_hide">Ocultar completamente</string>
     <string name="array_audio">Áudio</string>
+    <string name="soft_reboot">Reinício rápido</string>
 </resources>
