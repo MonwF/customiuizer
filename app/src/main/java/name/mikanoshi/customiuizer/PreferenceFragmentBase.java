@@ -47,6 +47,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
     protected String activeMenus = "";
 
     public static final int PICK_BACKFILE = 11;
+    public static final int SAVE_BACKFILE = 12;
     protected boolean isCustomActionBar = false;
     protected int headLayoutId = 0;
     protected int tailLayoutId = 0;
@@ -369,39 +370,11 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
     }
 
     public void backupSettings(AppCompatActivity act) {
-        String backupPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + Helpers.externalFolder;
-        if (!Helpers.preparePathForBackup(act, backupPath)) return;
-        ObjectOutputStream output = null;
-        try {
-            output = new ObjectOutputStream(new FileOutputStream(backupPath + Helpers.backupFile + new SimpleDateFormat("-MMddHHmmss").format(new java.util.Date())));
-            output.writeObject(Helpers.prefs.getAll());
-
-            AlertDialog.Builder alert = new AlertDialog.Builder(act);
-            alert.setTitle(R.string.do_backup);
-            alert.setMessage(R.string.backup_ok);
-            alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {}
-            });
-            alert.show();
-        } catch (Throwable e) {
-            e.printStackTrace();
-            AlertDialog.Builder alert = new AlertDialog.Builder(act);
-            alert.setTitle(R.string.warning);
-            alert.setMessage(getString(R.string.storage_cannot_backup) + "\n" + e.getMessage());
-            alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {}
-            });
-            alert.show();
-        } finally {
-            try {
-                if (output != null) {
-                    output.flush();
-                    output.close();
-                }
-            } catch (Throwable ex) {
-                ex.printStackTrace();
-            }
-        }
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("application/octet-stream");
+        intent.putExtra(Intent.EXTRA_TITLE, "customiuizer_backup_" + new SimpleDateFormat("MMddHHmmss").format(new java.util.Date()));
+        startActivityForResult(intent, SAVE_BACKFILE);
     }
 
     @Override
@@ -413,6 +386,40 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
             if (resultData != null) {
                 uri = resultData.getData();
                 doRestoreSettings(uri);
+            }
+        }
+        else if (requestCode == MainFragment.SAVE_BACKFILE
+            && resultCode == Activity.RESULT_OK) {
+            ObjectOutputStream output = null;
+            try {
+                output = new ObjectOutputStream(getValidContext().getContentResolver().openOutputStream(resultData.getData()));
+                output.writeObject(Helpers.prefs.getAll());
+
+                AlertDialog.Builder alert = new AlertDialog.Builder(getValidContext());
+                alert.setTitle(R.string.do_backup);
+                alert.setMessage(R.string.backup_ok);
+                alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {}
+                });
+                alert.show();
+            } catch (Throwable e) {
+                e.printStackTrace();
+                AlertDialog.Builder alert = new AlertDialog.Builder(getValidContext());
+                alert.setTitle(R.string.warning);
+                alert.setMessage(getString(R.string.storage_cannot_backup) + "\n" + e.getMessage());
+                alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {}
+                });
+                alert.show();
+            } finally {
+                try {
+                    if (output != null) {
+                        output.flush();
+                        output.close();
+                    }
+                } catch (Throwable ex) {
+                    ex.printStackTrace();
+                }
             }
         }
     }

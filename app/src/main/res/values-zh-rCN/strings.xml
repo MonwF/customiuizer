@@ -953,7 +953,7 @@
     <string name="restart_launcher">重启桌面</string>
     <string name="open_inweb">在浏览器中打开</string>
     <string name="backup_restore">备份与恢复</string>
-    <string name="backup_restore_choose">备份位于 /sdcard/Documents/CustoMIUIzer/</string>
+    <string name="backup_restore_choose">请选择所需操作</string>
     <string name="do_backup">备份</string>
     <string name="do_restore">恢复</string>
     <string name="storage_read_only">您的外部存储是只读的</string>
