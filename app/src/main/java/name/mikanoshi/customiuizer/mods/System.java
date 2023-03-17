@@ -5745,14 +5745,68 @@ public class System {
     }
 
     public static void BetterPopupsCenteredHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.HeadsUpManager", lpparam.classLoader, "getHeadsUpTopMargin", Context.class, new MethodHook() {
+        if (Helpers.isTPlus()) {
+            Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.HeadsUpManagerInjector", lpparam.classLoader, "miuiHeadsUpInset", android.content.Context.class, new MethodHook() {
+                private int mHeadsUpPaddingTop = 0;
+                private int mHeadsUpHeight = 0;
+                @Override
+                protected void after(MethodHookParam param) throws Throwable {
+                    Context context = (Context) param.args[0];
+                    Resources resources = context.getResources();
+                    if (mHeadsUpPaddingTop == 0) {
+                        int dimId = resources.getIdentifier("heads_up_status_bar_padding", "dimen", "com.android.systemui");
+                        mHeadsUpPaddingTop = resources.getDimensionPixelSize(dimId);
+                        mHeadsUpHeight = resources.getDimensionPixelSize(resources.getIdentifier("notification_max_heads_up_height", "dimen", "com.android.systemui"));
+                    }
+                    if (resources.getConfiguration().orientation != 2) {
+                        int mHeadsUpInset = (int) param.getResult();
+                        int mStatusBarHeight = mHeadsUpInset - mHeadsUpPaddingTop;
+                        int topMargin = (context.getResources().getDisplayMetrics().heightPixels + mStatusBarHeight - mHeadsUpHeight) / 2;
+                        param.setResult(topMargin);
+                    }
+                }
+            });
+            return;
+        }
+        MethodHook initViewHook = new MethodHook() {
+            private int mHeadsUpPaddingTop = 0;
+            private int mHeadsUpHeight = 0;
             @Override
-            protected void after(final MethodHookParam param) throws Throwable {
-                Context context = (Context)param.args[0];
-                Resources res = context.getResources();
-                int maxPopupHeight = res.getDimensionPixelSize(res.getIdentifier("notification_max_heads_up_height", "dimen", "com.android.systemui"));
-                if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) maxPopupHeight /= 3;
-                param.setResult(Math.round(context.getResources().getDisplayMetrics().heightPixels / 2.0f - maxPopupHeight / 2.0f));
+            protected void after(MethodHookParam param) throws Throwable {
+                Context context = (Context) param.args[0];
+                Resources resources = context.getResources();
+                if (mHeadsUpPaddingTop == 0) {
+                    int dimId = resources.getIdentifier("heads_up_status_bar_padding", "dimen", "com.android.systemui");
+                    mHeadsUpPaddingTop = resources.getDimensionPixelSize(dimId);
+                    mHeadsUpHeight = resources.getDimensionPixelSize(resources.getIdentifier("notification_max_heads_up_height", "dimen", "com.android.systemui"));
+                }
+                if (resources.getConfiguration().orientation != 2) {
+                    int mStatusBarHeight = XposedHelpers.getIntField(param.thisObject, "mStatusBarHeight");
+                    int topMargin = (context.getResources().getDisplayMetrics().heightPixels + mStatusBarHeight - mHeadsUpHeight) / 2;
+                    XposedHelpers.setObjectField(param.thisObject, "mHeadsUpInset", topMargin);
+                }
+            }
+        };
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.notification.stack.StackScrollAlgorithm", lpparam.classLoader, "initConstants", Context.class, initViewHook);
+        Helpers.hookAllMethods("com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout", lpparam.classLoader, "initView", initViewHook);
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.HeadsUpManagerPhone", lpparam.classLoader, "updateResources", new MethodHook() {
+            private int mHeadsUpPaddingTop = 0;
+            private int mHeadsUpHeight = 0;
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                Context context = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
+                Resources resources = context.getResources();
+                if (mHeadsUpPaddingTop == 0) {
+                    int dimId = resources.getIdentifier("heads_up_status_bar_padding", "dimen", "com.android.systemui");
+                    mHeadsUpPaddingTop = resources.getDimensionPixelSize(dimId);
+                    mHeadsUpHeight = resources.getDimensionPixelSize(resources.getIdentifier("notification_max_heads_up_height", "dimen", "com.android.systemui"));
+                }
+                if (resources.getConfiguration().orientation != 2) {
+                    int mHeadsUpInset = XposedHelpers.getIntField(param.thisObject, "mHeadsUpInset");
+                    int mStatusBarHeight = mHeadsUpInset - mHeadsUpPaddingTop;
+                    int topMargin = (context.getResources().getDisplayMetrics().heightPixels + mStatusBarHeight - mHeadsUpHeight) / 2;
+                    XposedHelpers.setObjectField(param.thisObject, "mHeadsUpInset", topMargin);
+                }
             }
         });
     }
