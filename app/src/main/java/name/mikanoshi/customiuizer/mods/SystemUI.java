@@ -953,7 +953,6 @@ public class SystemUI {
                             20 * iconScale / 10f,
                             res.getDisplayMetrics()
                         );
-                        Helpers.log("fad " + (layoutParams != null));
                         if (layoutParams == null) {
                             layoutParams = new FrameLayout.LayoutParams(-2, mIconHeight);
                         } else {
