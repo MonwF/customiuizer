@@ -411,6 +411,34 @@ public class Various {
 		Helpers.hookAllMethods("com.miui.powerkeeper.utils.Utils", lpparam.classLoader, "pkgHasIcon", XC_MethodReplacement.returnConstant(true));
 	}
 
+	private static void showSideBar(View view, int dockLocation) {
+		int[] location = new int[2];
+		view.getLocationOnScreen(location);
+		int y = location[1];
+		long uptimeMillis = SystemClock.uptimeMillis();
+		MotionEvent downEvent, moveEvent, upEvent;
+		if (dockLocation == 0) { // left
+			downEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis, MotionEvent.ACTION_DOWN,  4, y + 15, 0);
+			moveEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis + 20, MotionEvent.ACTION_MOVE, 160, y + 15, 0);
+			upEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis + 21, MotionEvent.ACTION_UP, 160, y + 15, 0);
+		}
+		else {
+			int x = location[0];
+			downEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis, MotionEvent.ACTION_DOWN, x - 4, y + 15, 0);
+			moveEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis + 20, MotionEvent.ACTION_MOVE, x - 160, y + 15, 0);
+			upEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis + 21, MotionEvent.ACTION_UP, x - 160, y + 15, 0);
+		}
+		downEvent.setSource(9999);
+		moveEvent.setSource(9999);
+		upEvent.setSource(9999);
+		view.dispatchTouchEvent(downEvent);
+		view.dispatchTouchEvent(moveEvent);
+		view.dispatchTouchEvent(upEvent);
+		downEvent.recycle();
+		moveEvent.recycle();
+		upEvent.recycle();
+	}
+
 	public static void AddSideBarExpandReceiverHook(LoadPackageParam lpparam) {
 		final boolean[] isHooked = {false, false};
 		boolean enableSideBar = MainModule.mPrefs.getBoolean("various_swipe_expand_sidebar");
@@ -423,39 +451,25 @@ public class Various {
 			Helpers.log("AddSideBarExpandReceiverHook", "failed to find RegionSamplingHelper");
 		}
 		Helpers.hookAllConstructors(RegionSamplingHelper, new MethodHook() {
+			private int originDockLocation = -1;
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				if (!isHooked[0]) {
 					isHooked[0] = true;
 					View view = (View) param.args[0];
+					if (originDockLocation == -1) {
+						originDockLocation = view.getContext().getSharedPreferences("sp_video_box", 0).getInt("dock_line_location", 0);;
+					}
 					BroadcastReceiver showReceiver = new BroadcastReceiver() {
 						@Override
 						public void onReceive(Context context, Intent intent) {
-							int[] location = new int[2];
-							view.getLocationOnScreen(location);
-							int x = location[0];
-							int y = location[1];
-							long uptimeMillis = SystemClock.uptimeMillis();
-							MotionEvent downEvent, moveEvent, upEvent;
-							if (x == 0) { // left
-								downEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis, MotionEvent.ACTION_DOWN, x + 4, y + 15, 0);
-								moveEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis + 20, MotionEvent.ACTION_MOVE, x + 300, y + 15, 0);
-								upEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis + 21, MotionEvent.ACTION_UP, x + 300, y + 15, 0);
+							Bundle bundle = intent.getBundleExtra("actionInfo");
+							int pos = originDockLocation;
+							if (bundle != null) {
+								pos = bundle.getInt("inDirection", 0);
+								view.getContext().getSharedPreferences("sp_video_box", 0).edit().putInt("dock_line_location", pos).commit();
 							}
-							else {
-								downEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis, MotionEvent.ACTION_DOWN, x - 4, y + 15, 0);
-								moveEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis + 20, MotionEvent.ACTION_MOVE, x - 300, y + 15, 0);
-								upEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis + 21, MotionEvent.ACTION_UP, x - 300, y + 15, 0);
-							}
-							downEvent.setSource(9999);
-							moveEvent.setSource(9999);
-							upEvent.setSource(9999);
-							view.dispatchTouchEvent(downEvent);
-							view.dispatchTouchEvent(moveEvent);
-							view.dispatchTouchEvent(upEvent);
-							downEvent.recycle();
-							moveEvent.recycle();
-							upEvent.recycle();
+							showSideBar(view, pos);
 						}
 					};
 					view.getContext().registerReceiver(showReceiver, new IntentFilter(ACTION_PREFIX + "ShowSideBar"));

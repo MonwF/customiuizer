@@ -1718,7 +1718,9 @@ public class Launcher {
 				boolean switchApp = (boolean) param.args[1];
 				if (switchApp) {
 					Context mContext = (Context) param.args[0];
-					if (GlobalActions.handleAction(mContext, "pref_key_controls_fsg_swipeandstop")) {
+					Bundle bundle = new Bundle();
+					bundle.putInt("inDirection", (int)param.args[2]);
+					if (GlobalActions.handleAction(mContext, "pref_key_controls_fsg_swipeandstop", false, bundle)) {
 						Class<?> Task = findClassIfExists("com.android.systemui.shared.recents.model.Task", lpparam.classLoader);
 						param.setResult(XposedHelpers.newInstance(Task));
 						return;
