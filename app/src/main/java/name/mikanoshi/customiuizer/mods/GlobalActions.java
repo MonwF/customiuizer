@@ -74,8 +74,11 @@ public class GlobalActions {
 	public static boolean handleAction(Context context, String key) {
 		return handleAction(context, key, false);
 	}
-
 	public static boolean handleAction(Context context, String key, boolean skipLock) {
+		return handleAction(context, key, skipLock, null);
+	}
+
+	public static boolean handleAction(Context context, String key, boolean skipLock, Bundle bundle) {
 		if (key == null || key.isEmpty()) return false;
 		int action = Helpers.getSharedIntPref(context, key + "_action", 1);
 		if (action <= 1) return false;
@@ -108,7 +111,7 @@ public class GlobalActions {
 			case 22: return switchOneHanded(context);
 			case 24: return forceClose(context);
 			case 25: return scrollToTop(context);
-			case 26: return showSidebar(context);
+			case 26: return showSidebar(context, bundle);
 			case 27: return floatingWindow(context);
 			default: return false;
 		}
@@ -1247,10 +1250,13 @@ public class GlobalActions {
 		}
 	}
 
-	public static boolean showSidebar(Context context) {
+	public static boolean showSidebar(Context context, Bundle bundle) {
 		try {
 			Intent showIntent = new Intent(ACTION_PREFIX + "ShowSideBar");
 			showIntent.setPackage("com.miui.securitycenter");
+			if (bundle != null) {
+				showIntent.putExtra("actionInfo", bundle);
+			}
 			context.sendBroadcast(showIntent);
 			return true;
 		} catch (Throwable t) {
