@@ -43,6 +43,7 @@ android {
             minifyEnabled true
             shrinkResources true
             crunchPngs false
+            buildConfigField "long", "BUILD_TIME", System.currentTimeMillis() + "L"
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         release {

@@ -83,7 +83,8 @@ public class AboutFragment extends SubFragment {
 			String versionName = BuildConfig.VERSION_NAME;
 			if (BuildConfig.BUILD_TYPE.equals("develop")) {
 				SimpleDateFormat formatter = new SimpleDateFormat("yy.MM.dd", Locale.getDefault());
-				versionName = formatter.format(new Date()) + "-test";
+				Date buildDate = new Date(BuildConfig.BUILD_TIME);
+				versionName = formatter.format(buildDate) + "-test";
 			}
 			version.setText(String.format(getResources().getString(R.string.about_version), versionName));
 		} catch (Throwable e) {
