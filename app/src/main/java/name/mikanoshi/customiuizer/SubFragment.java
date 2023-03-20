@@ -239,14 +239,6 @@ public class SubFragment extends PreferenceFragmentBase {
         }
     };
 
-    public Preference.OnPreferenceClickListener openSortableList = new Preference.OnPreferenceClickListener() {
-        @Override
-        public boolean onPreferenceClick(Preference preference) {
-            openSortableItemList(preference);
-            return true;
-        }
-    };
-
     public Preference.OnPreferenceClickListener openActivitiesList = new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
@@ -348,13 +340,6 @@ public class SubFragment extends PreferenceFragmentBase {
         Bundle args = new Bundle();
         args.putString("key", pref.getKey());
         openSubFragment(new ColorSelector(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.Edit, pref.getTitle().toString(), R.layout.fragment_selectcolor);
-    }
-
-    public void openSortableItemList(Preference pref) {
-        Bundle args = new Bundle();
-        args.putString("key", pref.getKey());
-        args.putString("titleResId", pref.getTitle().toString());
-        openSubFragment(new SortableList(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, pref.getTitle().toString(), R.layout.prefs_sortable_list);
     }
 
     public void openActivitiesItemList(Preference pref) {

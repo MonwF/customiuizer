@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.SortableListView;
 import android.widget.Toast;
 
 import java.lang.reflect.Field;
@@ -20,6 +19,7 @@ import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SubFragment;
 import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.PreferenceAdapter;
+import name.mikanoshi.customiuizer.utils.SortableListView;
 
 @SuppressWarnings("ConstantConditions")
 public class SortableList extends SubFragment {
