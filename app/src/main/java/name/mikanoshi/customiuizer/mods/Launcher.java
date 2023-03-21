@@ -5,7 +5,7 @@ import static name.mikanoshi.customiuizer.mods.GlobalActions.ACTION_PREFIX;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ActivityOptions;
+import android.os.Vibrator;
 import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -1705,6 +1705,22 @@ public class Launcher {
 	}
 
 	public static void SwipeAndStopActionHook(LoadPackageParam lpparam) {
+		if (MainModule.mPrefs.getBoolean("controls_fsg_swipeandstop_disablevibrate")) {
+			Class<?> VibratorCls = findClassIfExists("android.os.Vibrator", lpparam.classLoader);
+			Helpers.hookAllMethods("com.miui.home.recents.GestureBackArrowView", lpparam.classLoader, "setReadyFinish", new MethodHook() {
+				private XC_MethodHook.Unhook vibratorHook = null;
+				@Override
+				protected void before(MethodHookParam param) throws Throwable {
+					vibratorHook = Helpers.findAndHookMethod(VibratorCls, "vibrate", long.class, XC_MethodReplacement.DO_NOTHING);
+				}
+				@Override
+				protected void after(MethodHookParam param) throws Throwable {
+					if (vibratorHook != null) {
+						vibratorHook.unhook();
+					}
+				}
+			});
+		}
 		Helpers.findAndHookMethod("com.miui.home.recents.GestureStubView", lpparam.classLoader, "disableQuickSwitch", boolean.class, new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
