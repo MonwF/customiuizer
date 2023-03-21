@@ -356,17 +356,17 @@ public class MainFragment extends PreferenceFragmentBase {
 				}
 			});
 
-			PreferenceEx contactEntry = findPreference("pref_key_contact");
-			contactEntry.setVisible(true);
-			contactEntry.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-				@Override
-				public boolean onPreferenceClick(Preference pref) {
-					Intent schemeIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("coolmarket://u/217384"))
-						.setPackage("com.coolapk.market");
-					startActivity(schemeIntent);
-					return true;
-				}
-			});
+//			PreferenceEx contactEntry = findPreference("pref_key_contact");
+//			contactEntry.setVisible(true);
+//			contactEntry.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+//				@Override
+//				public boolean onPreferenceClick(Preference pref) {
+//					Intent schemeIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("coolmarket://u/217384"))
+//						.setPackage("com.coolapk.market");
+//					startActivity(schemeIntent);
+//					return true;
+//				}
+//			});
 		}
 		PreferenceEx donateEntry = findPreference("pref_key_donate");
 		donateEntry.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
