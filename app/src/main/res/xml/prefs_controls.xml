@@ -350,6 +350,11 @@
 			android:title="@string/controls_fsg_swipeandstop_title"
 			miuizer:dynamic="true" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_controls_fsg_swipeandstop_disablevibrate"
+			android:title="@string/controls_fsg_swipeandstop_disablevibrate_title"
+			miuizer:indentLevel="1" />
+
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

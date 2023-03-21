@@ -674,6 +674,7 @@
     <string name="controls_fsg_horiz_summ">Enable both horizontal gestures and navigation bar</string>
     <string name="controls_fsg_assist_title">Corner swipe action</string>
     <string name="controls_fsg_swipeandstop_title">Swipe across the screen starting from the edge and stop action</string>
+    <string name="controls_fsg_swipeandstop_disablevibrate_title">Do not vibrate</string>
 
     <string name="various_mods">Various</string>
     <string name="various_hiddenfeatures_title">Hidden features</string>
