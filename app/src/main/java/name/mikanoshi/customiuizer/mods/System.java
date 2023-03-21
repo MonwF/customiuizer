@@ -4582,11 +4582,6 @@ public class System {
         });
     }
 
-    public static void NoSafeVolumeWarningRes() {
-        MainModule.resHooks.setObjectReplacement("android", "bool", "config_safe_media_volume_enabled", false);
-        MainModule.resHooks.setObjectReplacement("android", "bool", "config_safe_media_disable_on_volume_up", false);
-    }
-
     public static void NoLowBatteryWarningHook() {
         MethodHook settingHook = new MethodHook() {
             @Override

@@ -141,6 +141,9 @@ public class SystemUI {
             notifVolumeOnResId = MainModule.resHooks.addResource("ic_miui_volume_notification", R.drawable.ic_miui_volume_notification);
             notifVolumeOffResId = MainModule.resHooks.addResource("ic_miui_volume_notification_mute", R.drawable.ic_miui_volume_notification_mute);
         }
+        if (MainModule.mPrefs.getBoolean("system_nosafevolume")) {
+            MainModule.resHooks.setObjectReplacement(lpparam.packageName, "bool", "enable_safety_warning", false);
+        }
     }
     public static void DisplayBatteryDetailHook(LoadPackageParam lpparam) {
         Class <?> ChargeUtilsClass = findClass("com.android.keyguard.charge.ChargeUtils", lpparam.classLoader);
