@@ -772,7 +772,7 @@
 			android:defaultValue="4"
 			miuizer:offtext="@string/array_default"
 			miuizer:minValue="3"
-			miuizer:maxValue="6"
+			miuizer:maxValue="8"
 			miuizer:stepValue="1"
 			miuizer:format="%d" />
 
