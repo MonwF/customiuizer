@@ -1,3 +1,5 @@
+import com.android.build.api.variant.BuildConfigField
+
 apply plugin: 'com.android.application'
 
 //def acraVersion = '5.7.0'
@@ -43,7 +45,6 @@ android {
             minifyEnabled true
             shrinkResources true
             crunchPngs false
-            buildConfigField "long", "BUILD_TIME", System.currentTimeMillis() + "L"
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         release {
@@ -67,7 +68,7 @@ android {
     androidResources {
         noCompress 'zip'
     }
-    buildToolsVersion '33.0.0'
+    buildToolsVersion '33.0.2'
 //    gradle.projectsEvaluated {
 //        tasks.withType(JavaCompile) {
 //            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
@@ -77,6 +78,11 @@ android {
 //        sourceCompatibility JavaVersion.VERSION_1_8
 //        targetCompatibility JavaVersion.VERSION_1_8
 //    }
+    androidComponents {
+        onVariants(selector().withBuildType("develop"), {
+            it.buildConfigFields.put("BUILD_TIME", new BuildConfigField("long", System.currentTimeMillis() + "L", null))
+        })
+    }
 }
 
 dependencies {

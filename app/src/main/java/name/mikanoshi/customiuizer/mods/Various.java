@@ -502,9 +502,10 @@ public class Various {
 										param.setResult(null);
 									}
 								});
+								view.setBackground(null);
 							}
 						};
-						myhandler.postDelayed(removeBg, 200);
+						myhandler.postDelayed(removeBg, 150);
 					}
 				}
 			}
