@@ -172,6 +172,10 @@
 				<action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
 				<action android:name="name.mikanoshi.customiuizer.SAVEEXCEPTION" />
 			</intent-filter>
+			<intent-filter>
+				<action android:name="android.telephony.action.SECRET_CODE"/>
+				<data android:scheme="android_secret_code" android:host="233233"/>
+			</intent-filter>
 		</receiver>
 
 		<receiver

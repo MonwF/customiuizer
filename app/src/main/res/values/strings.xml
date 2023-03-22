@@ -573,7 +573,7 @@
     <string name="launcher_privacyapps">Hidden apps</string>
     <string name="launcher_privacyapps_fail">Required permissions are not granted</string>
     <string name="launcher_privacyapps_gest_title">No hidden folder</string>
-    <string name="launcher_privacyapps_gest_summ">Disable two-finger gesture that opens hidden apps folder</string>
+    <string name="launcher_privacyapps_gest_summ">Disable two-finger gesture that opens hidden apps folder and secret phone code is 233233</string>
     <string name="launcher_privacyapps_list_title">List of apps to hide</string>
     <string name="launcher_privacyapps_list_summ">Enhanced version of Hidden apps option that allows to hide any installed app. No reboot is required.</string>
     <string name="launcher_swipedownaction_title">Swipe down action (1 finger)</string>

@@ -551,8 +551,8 @@
     <string name="launcher_renameapps_modified">修改标题</string>
     <string name="launcher_privacyapps">隐藏应用</string>
     <string name="launcher_privacyapps_fail">未授予所需权限</string>
-    <string name="launcher_privacyapps_gest_title">禁止手势进入隐藏应用列表</string>
-    <string name="launcher_privacyapps_gest_summ">禁用双指手势打开隐藏应用文件夹</string>
+    <string name="launcher_privacyapps_gest_title">禁止通过手势进入隐藏应用文件夹</string>
+    <string name="launcher_privacyapps_gest_summ">可通过暗码233233进入</string>
     <string name="launcher_privacyapps_list_title">隐藏应用列表</string>
     <string name="launcher_privacyapps_list_summ">隐藏应用选项的增强版，可以隐藏任何已安装的应用。无需重启。</string>
     <string name="launcher_swipedownaction_title">下滑动作(单指)</string>
