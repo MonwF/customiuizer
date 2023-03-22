@@ -88,6 +88,19 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
     public void handleLoadPackage(final LoadPackageParam lpparam) {
         String pkg = lpparam.packageName;
 
+        if ((pkg.equals("com.baidu.input")
+            || pkg.equals("com.baidu.input_mi")
+            || pkg.equals("com.iflytek.inputmethod")
+            || pkg.equals("com.iflytek.inputmethod.miui")
+            || pkg.equals("com.sohu.inputmethod.sogou")
+            || pkg.equals("com.sohu.inputmethod.sogou.xiaomi")
+            || pkg.startsWith("com.google.android.inputmethod")
+            ) && mPrefs.getBoolean("controls_nonavbar_fix_inputmethod")
+            && mPrefs.getBoolean("controls_nonavbar")
+        ) {
+            Various.FixInputMethodBottomMarginHook(lpparam);
+        }
+
         if (pkg.equals("android") && lpparam.processName.equals("android")) {
             PackagePermissions.hook(lpparam);
             GlobalActions.setupGlobalActions(lpparam);
