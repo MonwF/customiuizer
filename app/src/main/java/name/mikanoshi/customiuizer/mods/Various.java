@@ -1256,6 +1256,30 @@ public class Various {
 		});
 	}
 
+	public static void FixInputMethodBottomMarginHook(LoadPackageParam lpparam) {
+		Class<?> InputMethodServiceInjectorClass = findClassIfExists("android.inputmethodservice.InputMethodServiceInjector", lpparam.classLoader);
+		Helpers.hookAllMethods(InputMethodServiceInjectorClass, "addMiuiBottomView", new MethodHook() {
+			private boolean isHooked = false;
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				if (isHooked) return;
+				ClassLoader sClassLoader = (ClassLoader) XposedHelpers.getStaticObjectField(InputMethodServiceInjectorClass, "sClassLoader");
+				if (sClassLoader != null) {
+					isHooked = true;
+					Class<?> InputMethodUtil = XposedHelpers.findClassIfExists("com.miui.inputmethod.InputMethodUtil", sClassLoader);
+					XposedHelpers.setStaticBooleanField(InputMethodUtil, "sIsGestureLineEnable", false);
+					Helpers.findAndHookMethod(InputMethodUtil, "updateGestureLineEnable", Context.class, new MethodHook() {
+						@Override
+						protected void before(MethodHookParam param) throws Throwable {
+							XposedHelpers.setStaticBooleanField(InputMethodUtil, "sIsGestureLineEnable", false);
+							param.setResult(null);
+						}
+					});
+				}
+			}
+		});
+	}
+
 //	public static void LargeCallerPhotoHook(LoadPackageParam lpparam) {
 //		Helpers.findAndHookMethod("com.android.incallui.CallCardFragment", lpparam.classLoader, "setCallCardImage", Drawable.class, boolean.class, new MethodHook() {
 //			@Override
