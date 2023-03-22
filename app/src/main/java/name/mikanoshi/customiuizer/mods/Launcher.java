@@ -1111,9 +1111,39 @@ public class Launcher {
 	}
 
 	public static void PrivacyFolderHook(LoadPackageParam lpparam) {
+		if (MainModule.mPrefs.getBoolean("launcher_privacyapps_gest")) {
+			Helpers.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.classLoader, "registerBroadcastReceivers", new MethodHook() {
+				@Override
+				protected void after(MethodHookParam param) throws Throwable {
+					final Activity act = (Activity)param.thisObject;
+					String startAction = GlobalActions.EVENT_PREFIX + "START_PRIVACY_SPACE";
+					IntentFilter intentFilter = new IntentFilter();
+					intentFilter.addAction(startAction);
+					act.registerReceiver(new BroadcastReceiver() {
+						@Override
+						public void onReceive(Context context, Intent intent) {
+							try {
+								if (intent.getAction() == null) return;
+								Helpers.log(intent.getAction());
+								if (startAction.equals(intent.getAction())) {
+									XposedHelpers.setAdditionalInstanceField(param.thisObject, "fromSecretCode", true);
+									XposedHelpers.callMethod(param.thisObject, "startSecurityHide");
+								}
+							} catch (Throwable t) {
+								XposedBridge.log(t);
+							}
+						}
+					}, intentFilter);
+				}
+			});
+		}
 		Helpers.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.classLoader, "startSecurityHide", new MethodHook() {
 			@Override
 			protected void before(final MethodHookParam param) throws Throwable {
+				if (XposedHelpers.getAdditionalInstanceField(param.thisObject, "fromSecretCode") != null) {
+					XposedHelpers.removeAdditionalInstanceField(param.thisObject, "fromSecretCode");
+					return;
+				}
 				if (GlobalActions.handleAction((Activity)param.thisObject, "pref_key_launcher_spread")) {
 					param.setResult(null);
 					return;

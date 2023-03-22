@@ -9,12 +9,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import name.mikanoshi.customiuizer.mods.GlobalActions;
+
 public class HelperReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(final Context ctx, Intent intent) {
 		if (intent.getAction() == null) return;
-		
-		if (intent.getAction().equals("name.mikanoshi.customiuizer.SAVEEXCEPTION")) {
+
+		String action = intent.getAction();
+		if (action.equals("name.mikanoshi.customiuizer.SAVEEXCEPTION")) {
 			try {
 				Throwable thw = (Throwable)intent.getSerializableExtra("throwable");
 				if (thw == null) return;
@@ -29,8 +32,14 @@ public class HelperReceiver extends BroadcastReceiver {
 					}
 				}
 			} catch (Throwable t) {}
-		} else if (intent.getAction().equals(Intent.ACTION_LOCKED_BOOT_COMPLETED)) {
+		}
+		else if (action.equals(Intent.ACTION_LOCKED_BOOT_COMPLETED)) {
 			Helpers.fixPermissionsAsync(ctx);
+		}
+		else if ("android.telephony.action.SECRET_CODE".equals(action)) {
+			Intent startIntent = new Intent(GlobalActions.EVENT_PREFIX + "START_PRIVACY_SPACE");
+			startIntent.setPackage("com.miui.home");
+			ctx.sendBroadcast(startIntent);
 		}
 	}
 }
