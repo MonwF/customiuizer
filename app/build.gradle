@@ -18,6 +18,7 @@ if (gradle.startParameter.taskNames.contains(":app:assembleDevelop")) {
 }
 
 android {
+    namespace "name.mikanoshi.customiuizer"
     signingConfigs {
         v2 {
             storeFile sFile

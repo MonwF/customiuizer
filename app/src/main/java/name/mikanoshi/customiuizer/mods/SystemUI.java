@@ -1159,7 +1159,6 @@ public class SystemUI {
                         mDripStatusBarLeftStatusIconArea.setVisibility(View.VISIBLE);
                     }
                     if (netspeedLeft || netspeedAtRow2) {
-                        Helpers.log("unblock networkspeed");
                         Object mDripNetworkSpeedView = XposedHelpers.getObjectField(param.thisObject, "mDripNetworkSpeedView");
                         XposedHelpers.callMethod(mDripNetworkSpeedView, "setBlocked", false);
                     }
