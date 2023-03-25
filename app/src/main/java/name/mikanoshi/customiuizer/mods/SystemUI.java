@@ -928,7 +928,8 @@ public class SystemUI {
         int rightMargin = MainModule.mPrefs.getInt("system_statusbar_dualsimin2rows_rightmargin", 0);
         int leftMargin = MainModule.mPrefs.getInt("system_statusbar_dualsimin2rows_leftmargin", 0);
         int iconScale = MainModule.mPrefs.getInt("system_statusbar_dualsimin2rows_scale", 10);
-        if (rightMargin > 0 || leftMargin > 0 || iconScale != 10) {
+        int verticalOffset = MainModule.mPrefs.getInt("system_statusbar_dualsimin2rows_verticaloffset", 8);
+        if (rightMargin > 0 || leftMargin > 0 || iconScale != 10 || verticalOffset != 8) {
             Helpers.findAndHookMethod("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "init", new MethodHook() {
                 @Override
                 protected void after(final MethodHookParam param) throws Throwable {
@@ -946,9 +947,17 @@ public class SystemUI {
                         res.getDisplayMetrics()
                     );
                     mobileView.setPadding(leftSpacing, 0, rightSpacing, 0);
-
+                    View mMobile = (View) XposedHelpers.getObjectField(param.thisObject, "mMobile");
+                    if (verticalOffset != 8) {
+                        float marginTop = TypedValue.applyDimension(
+                            TypedValue.COMPLEX_UNIT_DIP,
+                            (verticalOffset - 8) * 0.5f,
+                            res.getDisplayMetrics()
+                        );
+                        FrameLayout mobileIcon = (FrameLayout) mMobile.getParent();
+                        mobileIcon.setTranslationY(marginTop);
+                    }
                     if (iconScale != 10) {
-                        View mMobile = (View) XposedHelpers.getObjectField(param.thisObject, "mMobile");
                         View mSmallRoaming = (View) XposedHelpers.getObjectField(param.thisObject, "mSmallRoaming");
                         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mMobile.getLayoutParams();
                         int mIconHeight = (int) TypedValue.applyDimension(
