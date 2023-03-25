@@ -1110,11 +1110,36 @@ public class SystemUI {
         }
 
         if (moveSignalLeft) {
+            ArrayList<String> signalSlots = new ArrayList<String>();
+            signalSlots.add("slave_wifi");
+            signalSlots.add("hotspot");
             Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiStatusBarSignalPolicy", lpparam.classLoader, "initMiuiSlot", new MethodHook() {
                 @Override
                 protected void before(MethodHookParam param) throws Throwable {
                     Object dripLeftController = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", lpparam.classLoader), "get", findClass("com.android.systemui.statusbar.phone.MiuiDripLeftStatusBarIconControllerImpl", lpparam.classLoader));
                     XposedHelpers.setObjectField(param.thisObject, "mIconController", dripLeftController);
+                }
+            });
+            Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBarIconControllerImpl", lpparam.classLoader, "setIcon", String.class, int.class, CharSequence.class, new MethodHook(MethodHook.PRIORITY_HIGHEST) {
+                @Override
+                protected void before(MethodHookParam param) throws Throwable {
+                    String slot = (String) param.args[0];
+                    if (signalSlots.contains(slot)) {
+                        Object dripLeftController = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", lpparam.classLoader), "get", findClass("com.android.systemui.statusbar.phone.MiuiDripLeftStatusBarIconControllerImpl", lpparam.classLoader));
+                        XposedHelpers.callMethod(dripLeftController, "setIcon", param.args[0], param.args[1], param.args[2]);
+                        param.setResult(null);
+                    }
+                }
+            });
+            Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBarIconControllerImpl", lpparam.classLoader, "setIconVisibility", String.class, boolean.class, new MethodHook(MethodHook.PRIORITY_HIGHEST) {
+                @Override
+                protected void before(MethodHookParam param) throws Throwable {
+                    String slot = (String) param.args[0];
+                    if (signalSlots.contains(slot)) {
+                        Object dripLeftController = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", lpparam.classLoader), "get", findClass("com.android.systemui.statusbar.phone.MiuiDripLeftStatusBarIconControllerImpl", lpparam.classLoader));
+                        XposedHelpers.callMethod(dripLeftController, "setIconVisibility", param.args[0], param.args[1]);
+                        param.setResult(null);
+                    }
                 }
             });
         }
