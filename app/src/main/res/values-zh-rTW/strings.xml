@@ -171,8 +171,6 @@
     <string name="system_separatevolume_summ">允許單獨配置設置中的鈴聲/通知/系統聲音的音量</string>
     <string name="system_separatevolume_slider_title">通知音量滑塊</string>
     <string name="system_separatevolume_slider_summ">將通知滑塊添加到擴展音量對話框</string>
-    <string name="system_nomediamute_title">不將媒體靜音</string>
-    <string name="system_nomediamute_summ">在勿擾模式中不將媒體音量設為零</string>
     <string name="system_volumetimer_title">擴展計時器</string>
     <string name="system_volumetimer_summ">添加更多間隔到靜音和勿擾模式的定時器</string>
     <string name="system_volumedialogdelay_collapsed_title">音量對話框自動隱藏延遲</string>

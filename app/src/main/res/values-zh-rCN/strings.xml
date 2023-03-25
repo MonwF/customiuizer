@@ -220,8 +220,6 @@
     <string name="system_separatevolume_summ">允许单独配置设置中的铃声/通知/系统声音的音量</string>
     <string name="system_separatevolume_slider_title">通知音量滑块</string>
     <string name="system_separatevolume_slider_summ">将通知滑块添加到扩展音量对话框</string>
-    <string name="system_nomediamute_title">不将媒体静音</string>
-    <string name="system_nomediamute_summ">在勿扰模式中不将媒体音量设为零</string>
     <string name="system_volumetimer_title">扩展计时器</string>
     <string name="system_volumetimer_summ">添加更多间隔到静音和勿扰模式的定时器</string>
     <string name="system_volumebar_blur_mtk_title">针对MTK设备开启音量条模糊</string>

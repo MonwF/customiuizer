@@ -215,8 +215,6 @@
     <string name="system_separatevolume_summ">Cho phép cấu hình riêng âm lượng nhạc chuông/thông báo/âm thanh hệ thống trong cài đặt</string>
     <string name="system_separatevolume_slider_title">Thanh trượt âm lượng thông báo</string>
     <string name="system_separatevolume_slider_summ">Thêm thanh trượt thông báo vào hộp thoại âm lượng mở rộng</string>
-    <string name="system_nomediamute_title">Không tắt tiếng phương tiện</string>
-    <string name="system_nomediamute_summ">Không đặt âm lượng phương tiện thành 0 ở chế độ không làm phiền</string>
     <string name="system_volumetimer_title">Hẹn giờ mở rộng</string>
     <string name="system_volumetimer_summ">Thêm nhiều khoảng thời gian hơn vào bộ hẹn giờ cho chế độ im lặng và không làm phiền</string>
     <string name="system_volumebar_blur_mtk_title">Bật hỗ trợ làm mờ thanh âm lượng cho các thiết bị MTK</string>

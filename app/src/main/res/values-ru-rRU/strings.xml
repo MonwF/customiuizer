@@ -215,8 +215,6 @@
     <string name="system_separatevolume_summ">Позволяет изменить громкость в Настройках отдельно для звонков/уведомлений/системных звуков</string>
     <string name="system_separatevolume_slider_title">Ползунок громкости уведомлений</string>
     <string name="system_separatevolume_slider_summ">Добавляет ползунок уведомлений в открытую панель громкости</string>
-    <string name="system_nomediamute_title">Не заглушать музыку</string>
-    <string name="system_nomediamute_summ">Предотвращает установку громкости музыки на ноль в режиме Не беспокоить</string>
     <string name="system_volumetimer_title">Расширенные таймеры</string>
     <string name="system_volumetimer_summ">Добавляет больше интервалов в таймеры режимов Без звука и Не беспокоить</string>
     <string name="system_volumebar_blur_mtk_title">Включить поддержку размытия панели громкости для устройств MTK</string>
