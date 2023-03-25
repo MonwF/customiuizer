@@ -705,79 +705,49 @@ public class Launcher {
 		});
 	}
 
-	private static void showSeekBar(View workspace) {
-		if (!"Workspace".equals(workspace.getClass().getSimpleName())) return;
-		boolean isInEditingMode = (boolean)XposedHelpers.callMethod(workspace, "isInNormalEditingMode");
-		View mScreenSeekBar = (View)XposedHelpers.getObjectField(workspace, "mScreenSeekBar");
-		if (mScreenSeekBar == null) {
-			Helpers.log("HideSeekPointsHook", "Cannot find seekbar");
-			return;
-		}
-		Context mContext = workspace.getContext();
-		Handler mHandler = (Handler)XposedHelpers.getAdditionalInstanceField(workspace, "mHandlerEx");
-		if (mHandler == null) {
-			mHandler = new Handler(mContext.getMainLooper()) {
-				@Override
-				public void handleMessage(Message msg) {
-					View seekBar = (View)msg.obj;
-					if (seekBar != null) {
-						seekBar.animate().alpha(0.0f).setDuration(600).withEndAction(new Runnable() {
-							@Override
-							public void run() {
-								seekBar.setVisibility(View.GONE);
-							}
-						});
-					}
-				}
-			};
-			XposedHelpers.setAdditionalInstanceField(workspace, "mHandlerEx", mHandler);
-		}
-		if (mHandler == null) {
-			Helpers.log("HideSeekPointsHook", "Cannot create handler");
-			return;
-		}
-		if (mHandler.hasMessages(666)) mHandler.removeMessages(666);
-		mScreenSeekBar.animate().cancel();
-		if (!isInEditingMode && MainModule.mPrefs.getBoolean("launcher_hideseekpoints_edit")) {
-			mScreenSeekBar.setAlpha(0.0f);
-			mScreenSeekBar.setVisibility(View.GONE);
-			return;
-		}
-		mScreenSeekBar.setVisibility(View.VISIBLE);
-		mScreenSeekBar.animate().alpha(1.0f).setDuration(300);
-		if (!isInEditingMode) {
-			Message msg = Message.obtain(mHandler, 666);
-			msg.obj = mScreenSeekBar;
-			mHandler.sendMessageDelayed(msg, 1500);
-		}
-	}
-
 	public static void HideSeekPointsHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.miui.home.launcher.ScreenView", lpparam.classLoader, "updateSeekPoints", int.class, new MethodHook() {
+		Helpers.findAndHookMethod("com.miui.home.launcher.pageindicators.AllAppsIndicator", lpparam.classLoader, "shouldHide", XC_MethodReplacement.returnConstant(true));
+		Helpers.findAndHookMethod("com.miui.home.launcher.pageindicators.AllAppsIndicator", lpparam.classLoader, "hideAllAppsArrow", new MethodHook() {
 			@Override
-			protected void before(final MethodHookParam param) throws Throwable {
-				showSeekBar((View)param.thisObject);
-			}
-		});
-
-		Helpers.findAndHookMethod("com.miui.home.launcher.ScreenView", lpparam.classLoader, "addView", View.class, int.class, ViewGroup.LayoutParams.class, new MethodHook() {
-			@Override
-			protected void before(final MethodHookParam param) throws Throwable {
-				showSeekBar((View)param.thisObject);
-			}
-		});
-
-		Helpers.findAndHookMethod("com.miui.home.launcher.ScreenView", lpparam.classLoader, "removeScreen", int.class, new MethodHook() {
-			@Override
-			protected void before(final MethodHookParam param) throws Throwable {
-				showSeekBar((View)param.thisObject);
-			}
-		});
-
-		Helpers.findAndHookMethod("com.miui.home.launcher.ScreenView", lpparam.classLoader, "removeScreensInLayout", int.class, int.class, new MethodHook() {
-			@Override
-			protected void before(final MethodHookParam param) throws Throwable {
-				showSeekBar((View)param.thisObject);
+			protected void after(MethodHookParam param) throws Throwable {
+				Object mLauncher = XposedHelpers.getObjectField(param.thisObject, "mLauncher");
+				if (mLauncher == null) return;
+				View workspace = (View) XposedHelpers.getObjectField(mLauncher, "mWorkspace");
+				boolean isInEditingMode = (boolean)XposedHelpers.callMethod(workspace, "isInNormalEditingMode");
+				Context mContext = workspace.getContext();
+				Handler mHandler = (Handler)XposedHelpers.getAdditionalInstanceField(workspace, "mHandlerEx");
+				if (mHandler == null) {
+					mHandler = new Handler(mContext.getMainLooper()) {
+						@Override
+						public void handleMessage(Message msg) {
+							View seekBar = (View)msg.obj;
+							if (seekBar != null) {
+								seekBar.animate().alpha(0.0f).setDuration(300).withEndAction(new Runnable() {
+									@Override
+									public void run() {
+										seekBar.setVisibility(View.GONE);
+									}
+								});
+							}
+						}
+					};
+					XposedHelpers.setAdditionalInstanceField(workspace, "mHandlerEx", mHandler);
+				}
+				if (mHandler.hasMessages(666)) mHandler.removeMessages(666);
+				View mScreenSeekBar = (View)XposedHelpers.getObjectField(param.thisObject, "mScreenIndicator");
+				mScreenSeekBar.animate().cancel();
+				if (!isInEditingMode && MainModule.mPrefs.getBoolean("launcher_hideseekpoints_edit")) {
+					mScreenSeekBar.setAlpha(0.0f);
+					mScreenSeekBar.setVisibility(View.GONE);
+					return;
+				}
+				mScreenSeekBar.setVisibility(View.VISIBLE);
+				mScreenSeekBar.animate().alpha(1.0f).setDuration(300);
+				if (!isInEditingMode) {
+					Message msg = Message.obtain(mHandler, 666);
+					msg.obj = mScreenSeekBar;
+					mHandler.sendMessageDelayed(msg, 600);
+				}
 			}
 		});
 	}
