@@ -1286,12 +1286,16 @@ public class SystemUI {
     }
 
     public static void NoNetworkSpeedSeparatorHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.views.NetworkSpeedSplitter", lpparam.classLoader, "updateVisibility", new MethodHook() {
+        MethodHook hideSplitterHook = new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
-                XposedHelpers.setObjectField(param.thisObject, "mNetworkSpeedVisibility", View.GONE);
+                TextView tv = (TextView) param.thisObject;
+                tv.setVisibility(View.GONE);
+                param.setResult(null);
             }
-        });
+        };
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.views.NetworkSpeedSplitter", lpparam.classLoader, "onClockVisibilityChanged", int.class, hideSplitterHook);
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.views.NetworkSpeedSplitter", lpparam.classLoader, "onNetworkSpeedVisibilityChanged", int.class, hideSplitterHook);
     }
 
     public static void FormatNetworkSpeedHook(LoadPackageParam lpparam) {
