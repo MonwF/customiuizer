@@ -152,4 +152,17 @@
 		miuizer:displayDividerValue="2"
 		miuizer:format="%s dip" />
 
+	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		android:key="pref_key_system_statusbar_dualsimin2rows_verticaloffset"
+		android:title="@string/system_statusbar_mobiletype_single_verticaloffset"
+		android:dependency="pref_key_system_statusbar_dualsimin2rows"
+		android:defaultValue="8"
+		miuizer:indentLevel="1"
+		miuizer:minValue="0"
+		miuizer:maxValue="16"
+		miuizer:stepValue="1"
+		miuizer:negativeShift="8"
+		miuizer:displayDividerValue="2"
+		miuizer:format="%s dip" />
+
 </PreferenceScreen>
