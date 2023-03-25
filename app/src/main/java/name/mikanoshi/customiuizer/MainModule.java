@@ -71,9 +71,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (mPrefs.getBoolean("system_allownotifonkeyguard")) System.AllowAllKeyguardSysHook();
         if (mPrefs.getBoolean("system_allownotiffloat")) System.AllowAllFloatSysHook();
         if (mPrefs.getBoolean("system_resizablewidgets")) System.ResizableWidgetsHook();
-        if (mPrefs.getBoolean("system_nomediamute")) System.NoMediaMuteInDNDHook();
         if (mPrefs.getBoolean("system_audiosilencer")) System.AudioSilencerHook();
-        if (mPrefs.getBoolean("controls_volumecursor")) Controls.VolumeCursorHook();
         if (mPrefs.getBoolean("various_alarmcompat")) Various.AlarmCompatHook();
         if (mPrefs.getStringAsInt("system_iconlabletoasts", 1) > 1) System.IconLabelToastsHook();
 
@@ -88,17 +86,20 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
     public void handleLoadPackage(final LoadPackageParam lpparam) {
         String pkg = lpparam.packageName;
 
-        if ((pkg.equals("com.baidu.input")
+        if (pkg.equals("com.baidu.input")
             || pkg.equals("com.baidu.input_mi")
             || pkg.equals("com.iflytek.inputmethod")
             || pkg.equals("com.iflytek.inputmethod.miui")
             || pkg.equals("com.sohu.inputmethod.sogou")
             || pkg.equals("com.sohu.inputmethod.sogou.xiaomi")
             || pkg.startsWith("com.google.android.inputmethod")
-            ) && mPrefs.getBoolean("controls_nonavbar_fix_inputmethod")
-            && mPrefs.getBoolean("controls_nonavbar")
+            || pkg.startsWith("com.touchtype.swiftkey")
         ) {
-            Various.FixInputMethodBottomMarginHook(lpparam);
+            if (mPrefs.getBoolean("controls_volumecursor")) Controls.VolumeCursorHook();
+            if (mPrefs.getBoolean("controls_nonavbar_fix_inputmethod")
+                && mPrefs.getBoolean("controls_nonavbar")) {
+                Various.FixInputMethodBottomMarginHook(lpparam);
+            }
         }
 
         if (pkg.equals("android") && lpparam.processName.equals("android")) {

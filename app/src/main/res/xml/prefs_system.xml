@@ -144,12 +144,6 @@
 			miuizer:indentLevel="1" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_nomediamute"
-			android:title="@string/system_nomediamute_title"
-			android:summary="@string/system_nomediamute_summ"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_volumetimer"
 			android:title="@string/system_volumetimer_title"
 			android:summary="@string/system_volumetimer_summ"

@@ -216,8 +216,6 @@
     <string name="system_separatevolume_summ">Povolit nastavení samostatné hlasitosti pro vyzvánění/oznámení/systémové zvuky</string>
     <string name="system_separatevolume_slider_title">Posuvník hlasitosti upozornění</string>
     <string name="system_separatevolume_slider_summ">Přidat posuvník hlasitosti oznámení do rozšířeného dialogu</string>
-    <string name="system_nomediamute_title">Žádné ztlumení médií</string>
-    <string name="system_nomediamute_summ">V režimu Nerušit nenastavovat hlasitost médií na nulu</string>
     <string name="system_volumetimer_title">Prodloužit časovač</string>
     <string name="system_volumetimer_summ">Přidat další intervaly do časovačů pro režimy Tichý a Nerušit</string>
     <string name="system_volumebar_blur_mtk_title">Povolit podporu rozostření panelu hlasitosti pro zařízení MTK</string>

@@ -4866,15 +4866,6 @@ public class System {
         });
     }
 
-    public static void NoMediaMuteInDNDHook() {
-        Helpers.hookAllMethods("android.media.AudioServiceInjector", null, "handleZenModeChangedForMusic", new MethodHook() {
-            @Override
-            protected void before(MethodHookParam param) throws Throwable {
-                if ((int)param.args[2] == 1 || (int)param.args[3] == 1) param.setResult(null);
-            }
-        });
-    }
-
     public static ArrayList<SoundData> mLastPlayedSounds = new ArrayList<SoundData>();
 
     public static void AudioSilencerServiceHook(LoadPackageParam lpparam) {
