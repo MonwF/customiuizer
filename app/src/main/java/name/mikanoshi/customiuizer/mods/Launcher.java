@@ -812,9 +812,9 @@ public class Launcher {
 			protected void before(MethodHookParam param) throws Throwable {
 				ArrayList<CharSequence> arrayList = new ArrayList<>();
 				int cellCountXMin = 3;
-				int cellCountXMax = 8;
+				int cellCountXMax = 16;
 				int cellCountYMin = 4;
-				int cellCountYMax = 10;
+				int cellCountYMax = 18;
 				while (cellCountXMin <= cellCountXMax) {
 					for (int i = cellCountYMin; i <= cellCountYMax; i++) {
 						arrayList.add(cellCountXMin + "x" + i);
