@@ -2032,6 +2032,8 @@ public class SystemUI {
     private static float topMaximumBacklight = 1.0f;
     private static float currentTouchX = 0;
     private static long currentTouchTime = 0;
+    private static long currentDownTime = 0;
+    private static float currentDownX = 0;
 
     public static void StatusBarGesturesHook(LoadPackageParam lpparam) {
 
@@ -2063,13 +2065,15 @@ public class SystemUI {
                 if (mExpandedFraction > 0.33f) {
                     currentTouchTime = 0;
                     currentTouchX = 0;
+                    currentDownTime = 0;
+                    currentDownX = 0;
                 }
             }
         });
 
         MethodHook hook = new MethodHook() {
             Object mBrightnessController = null;
-            private int sbHeight = 0;
+            private int sbHeight = -1;
             @Override
             @SuppressLint("SetTextI18n")
             protected void before(final MethodHookParam param) throws Throwable {
@@ -2087,7 +2091,7 @@ public class SystemUI {
                 }
                 Context mContext = isInControlCenter ? ((View)param.thisObject).getContext() : (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
                 Resources res = mContext.getResources();
-                if (sbHeight == 0) {
+                if (sbHeight == -1) {
                     sbHeight = res.getDimensionPixelSize(res.getIdentifier("status_bar_height", "dimen", "android"));
                 }
                 MotionEvent event = (MotionEvent)param.args[0];
@@ -2112,6 +2116,14 @@ public class SystemUI {
                         topMinimumBacklight = (float) XposedHelpers.getObjectField(mBrightnessController, "mMinimumBacklight");
                         topMaximumBacklight = (float) XposedHelpers.getObjectField(mBrightnessController, "mMaximumBacklight");
                         tapStartBrightness = (float) XposedHelpers.callMethod(mDisplayManager, "getBrightness", mDisplayId);
+                        if (isSlidingStart) {
+                            currentDownTime = currentTimeMillis();
+                            currentDownX = tapStartX;
+                        }
+                        else {
+                            currentDownTime = 0;
+                            currentDownX = 0;
+                        }
                         break;
                     case MotionEvent.ACTION_POINTER_DOWN:
                         tapStartPointers = event.getPointerCount();
@@ -2121,11 +2133,20 @@ public class SystemUI {
                         float lastTouchX = currentTouchX;
                         currentTouchTime = currentTimeMillis();
                         currentTouchX = event.getX();
-                        if (currentTouchTime - lastTouchTime < 250L && Math.abs(currentTouchX - lastTouchX) < 100F) {
+                        float mTouchX = currentTouchX;
+                        long mTouchTime = currentTouchTime;
+                        if (currentTouchTime - lastTouchTime < 250L && Math.abs(mTouchX - lastTouchX) < 100F) {
                             currentTouchTime = 0L;
                             currentTouchX = 0F;
                             GlobalActions.handleAction(mContext, "pref_key_system_statusbarcontrols_dt");
                         }
+                        if ((mTouchTime - currentDownTime > 600 && mTouchTime - currentDownTime < 4000)
+                            && Math.abs(mTouchX - currentDownX) < 100F)
+                        {
+                            GlobalActions.handleAction(mContext, "pref_key_system_statusbarcontrols_longpress");
+                        }
+                        currentDownTime = 0L;
+                        currentDownX = 0;
                     case MotionEvent.ACTION_POINTER_UP:
                     case MotionEvent.ACTION_CANCEL:
                         isSlidingStart = false;
@@ -2133,8 +2154,12 @@ public class SystemUI {
                         break;
                     case MotionEvent.ACTION_MOVE:
                         if (!isSlidingStart) return;
+                        if (event.getY() - tapStartY > sbHeight) {
+                            currentDownTime = 0;
+                            currentDownX = 0;
+                            return;
+                        }
                         DisplayMetrics metrics = res.getDisplayMetrics();
-                        if (event.getY() - tapStartY > sbHeight) return;
                         float delta = event.getX() - tapStartX;
                         if (delta == 0) return;
                         if (!isSliding && Math.abs(delta) > metrics.widthPixels / 10f) isSliding = true;

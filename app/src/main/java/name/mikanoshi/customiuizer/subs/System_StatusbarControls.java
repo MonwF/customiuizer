@@ -11,6 +11,7 @@ public class System_StatusbarControls extends SubFragment {
 		super.onActivityCreated(savedInstanceState);
 
 		findPreference("pref_key_system_statusbarcontrols_dt").setOnPreferenceClickListener(openStatusbarActions);
+		findPreference("pref_key_system_statusbarcontrols_longpress").setOnPreferenceClickListener(openStatusbarActions);
 	}
 
 }

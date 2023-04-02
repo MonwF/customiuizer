@@ -56,6 +56,11 @@
 		android:title="@string/system_statusbarcontrols_dt_title"
 		android:defaultValue="false" />
 
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:key="pref_key_system_statusbarcontrols_longpress"
+		android:title="@string/controls_fingerprintlong_title"
+		android:defaultValue="false" />
+
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

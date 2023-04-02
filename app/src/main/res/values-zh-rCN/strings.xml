@@ -133,7 +133,7 @@
     <string name="system_detailednetspeed_secunit_title">网速隐藏 B/s 单位</string>
     <string name="system_netspeed_fontsize_title">网速字体大小</string>
     <string name="system_statusbarcontrols_title">手势控制</string>
-    <string name="system_statusbarcontrols_summ">滑动与双击时执行所选动作</string>
+    <string name="system_statusbarcontrols_summ">滑动、双击与长按时执行所选动作</string>
     <string name="system_statusbarcontrols_sens_title">调整灵敏度</string>
     <string name="system_statusbarcontrols_sens_bright_title">亮度</string>
     <string name="system_statusbarcontrols_sens_vol_title">音量</string>
