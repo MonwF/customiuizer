@@ -5319,7 +5319,7 @@ public class System {
             }
         });
 
-        Helpers.findAndHookMethod("com.android.server.wm.MiuiFreeFormGestureController$FreeFormReceiver", lpparam.classLoader, "onReceive", new Object[]{Context.class, Intent.class, new MethodHook() {
+        Helpers.findAndHookMethod("com.android.server.wm.MiuiFreeFormGestureController$FreeFormReceiver", lpparam.classLoader, "onReceive", Context.class, Intent.class, new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 Intent intent = (Intent) param.args[1];
@@ -5329,7 +5329,7 @@ public class System {
                     XposedHelpers.setAdditionalInstanceField(parentThis, "skipFreeFormStateClear", true);
                 }
             }
-        }});
+        });
 
         Helpers.hookAllMethods("com.android.server.wm.MiuiFreeFormGestureController", lpparam.classLoader, "notifyFullScreenWidnowModeStart", new MethodHook() {
             @Override
