@@ -61,6 +61,8 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 import miui.app.MiuiFreeFormManager;
+import miui.process.ForegroundInfo;
+import miui.process.ProcessManager;
 import name.mikanoshi.customiuizer.GateWaySettings;
 import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
@@ -227,6 +229,16 @@ public class GlobalActions {
                 }
                 else if (action.equals(ACTION_PREFIX + "PinningWindow")) {
                     try {
+                        ForegroundInfo foregroundInfo = ProcessManager.getForegroundInfo();
+                        if (foregroundInfo != null) {
+                            String topPackage = foregroundInfo.mForegroundPackageName;
+                            if ("com.miui.home".equals(topPackage)) {
+                                return;
+                            }
+                        }
+                        else {
+                            return;
+                        }
                         Class <?> ActivityTaskManagerCls = findClassIfExists("android.app.ActivityTaskManager", context.getClassLoader());
                         Object activityTaskManager = XposedHelpers.callStaticMethod(ActivityTaskManagerCls, "getService");
                         List<Object> rootTaskInfos = (List<Object>) XposedHelpers.callMethod(activityTaskManager, "getAllRootTaskInfosOnDisplay", 0);
@@ -263,7 +275,7 @@ public class GlobalActions {
                                         catch (Throwable err) {}
                                     }
                                 };
-                                myhandler.postDelayed(removeBg, 250);
+                                myhandler.postDelayed(removeBg, 120);
                                 return;
                             }
                         }
