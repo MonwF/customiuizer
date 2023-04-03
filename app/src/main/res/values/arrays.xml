@@ -48,6 +48,7 @@
 		<item>@string/array_global_actions_recents</item>
 		<item>@string/array_global_actions_expandsidebar</item>
 		<item>@string/array_global_actions_floatingwindow</item>
+		<item>@string/array_global_actions_pinningwindow</item>
 		<item>@string/array_global_actions_volume</item>
 		<item>@string/array_global_actions_volume_up</item>
 		<item>@string/array_global_actions_volume_down</item>
@@ -78,6 +79,7 @@
 		<item>7</item>
 		<item>26</item>
 		<item>27</item>
+		<item>28</item>
 		<item>17</item>
 		<item>18</item>
 		<item>19</item>
