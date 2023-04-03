@@ -202,6 +202,10 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 SystemUI.AddCustomTileHook(lpparam);
             }
 
+            if (mPrefs.getBoolean("system_hidestatusbar_whenscreenshot")) {
+                SystemUI.HideStatusBarBeforeScreenshotHook(lpparam);
+            }
+
             if (mPrefs.getInt("system_qsgridcolumns", 2) > 2 || mPrefs.getInt("system_qsgridrows", 1) > 1) SystemUI.QSGridRes();
             if (mPrefs.getInt("system_qqsgridcolumns", 2) > 2) SystemUI.QQSGridRes();
             if (mPrefs.getBoolean("system_volumetimer")) SystemUI.VolumeTimerValuesRes(lpparam);
