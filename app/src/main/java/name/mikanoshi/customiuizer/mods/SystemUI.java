@@ -3536,4 +3536,22 @@ public class SystemUI {
             }
         });
     }
+    public static void HideStatusBarBeforeScreenshotHook(LoadPackageParam lpparam) {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiCollapsedStatusBarFragment", lpparam.classLoader, "initMiuiViewsOnViewCreated", View.class, new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                View view = (View) param.args[0];
+                BroadcastReceiver br = new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        if ("miui.intent.TAKE_SCREENSHOT".equals(intent.getAction())) {
+                            boolean finished = intent.getBooleanExtra("IsFinished", true);
+                            view.setVisibility(finished ? View.VISIBLE : View.INVISIBLE);
+                        }
+                    }
+                };
+                view.getContext().registerReceiver(br, new IntentFilter("miui.intent.TAKE_SCREENSHOT"));
+            }
+        });
+    }
 }

@@ -442,6 +442,12 @@
 			miuizer:stepValue="1"
 			miuizer:format="%s dip" />
 
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_hidestatusbar_whenscreenshot"
+			android:title="@string/system_hidestatusbar_whenscreenshot_title"
+			android:defaultValue="false" />
+
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_system_maxsbicons"
 			android:title="@string/system_maxsbicons_title"

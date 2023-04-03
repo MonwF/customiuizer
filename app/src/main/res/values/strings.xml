@@ -119,6 +119,7 @@
     <string name="system_statusbar_mobile_showname_title">Custom mobile network type</string>
     <string name="system_hidemoreicon_title">No hidden icons indicator</string>
     <string name="system_hidemoreicon_summ">Do not show icon with 3 dots when notification icons are hidden</string>
+    <string name="system_hidestatusbar_whenscreenshot_title">Hide status bar when screenshotting</string>
     <string name="system_nonetspeedseparator_title">Network speed separator</string>
     <string name="system_nonetspeedseparator_summ">Do not show vertical line between time and network speed on devices with waterdrop notches</string>
     <string name="system_netspeedinterval_title">Network speed update interval</string>
