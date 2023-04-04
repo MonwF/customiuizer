@@ -773,7 +773,6 @@
     <string name="array_keep">Zostaw tak jak jest</string>
     <string name="array_turn_off">Wyłącz</string>
     <string name="array_turn_off_disable">Wyłącz i dezaktywuj</string>
-    <string name="array_temperature">Tylko temperatura</string>
     <string name="array_current">Tylko bieżące</string>
     <string name="unlimited">Bez limitu</string>
     <string name="toggle_wifi_on">Wi-Fi włączone</string>
