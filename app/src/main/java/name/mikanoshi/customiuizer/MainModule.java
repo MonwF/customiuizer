@@ -72,8 +72,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (mPrefs.getBoolean("system_allownotiffloat")) System.AllowAllFloatSysHook();
         if (mPrefs.getBoolean("system_resizablewidgets")) System.ResizableWidgetsHook();
         if (mPrefs.getBoolean("system_audiosilencer")) System.AudioSilencerHook();
-        if (mPrefs.getBoolean("various_alarmcompat")) Various.AlarmCompatHook();
-        if (mPrefs.getStringAsInt("system_iconlabletoasts", 1) > 1) System.IconLabelToastsHook();
+//        if (mPrefs.getStringAsInt("system_iconlabletoasts", 1) > 1) System.IconLabelToastsHook();
 
         if (mPrefs.getStringAsInt("controls_volumemedia_up", 0) > 0 ||
             mPrefs.getStringAsInt("controls_volumemedia_down", 0) > 0) {
@@ -94,12 +93,17 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             || pkg.equals("com.sohu.inputmethod.sogou.xiaomi")
             || pkg.startsWith("com.google.android.inputmethod")
             || pkg.startsWith("com.touchtype.swiftkey")
+            || pkg.startsWith("com.tencent.wetype")
         ) {
             if (mPrefs.getBoolean("controls_volumecursor")) Controls.VolumeCursorHook();
             if (mPrefs.getBoolean("controls_nonavbar_fix_inputmethod")
                 && mPrefs.getBoolean("controls_nonavbar")) {
                 Various.FixInputMethodBottomMarginHook(lpparam);
             }
+        }
+
+        if (mPrefs.getBoolean("various_alarmcompat") && mPrefs.getStringSet("various_alarmcompat_apps").contains(pkg)) {
+            Various.AlarmCompatHook();
         }
 
         if (pkg.equals("android") && lpparam.processName.equals("android")) {
