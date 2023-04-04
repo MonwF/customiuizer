@@ -2394,8 +2394,8 @@ public class System {
             mActivity.getWindow().setStatusBarColor(actionBarColor);
     }
 
-    public static void StatusBarBackgroundHook() {
-        Helpers.findAndHookMethod("com.android.internal.policy.PhoneWindow", null, "generateLayout", "com.android.internal.policy.DecorView", new MethodHook() {
+    public static void StatusBarBackgroundHook(LoadPackageParam lpparam) {
+        Helpers.findAndHookMethod("com.android.internal.policy.PhoneWindow", lpparam.classLoader, "generateLayout", "com.android.internal.policy.DecorView", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 Window wnd = (Window)param.thisObject;
@@ -2408,7 +2408,7 @@ public class System {
             }
         });
 
-        Helpers.findAndHookMethod("com.android.internal.policy.PhoneWindow", null, "setStatusBarColor", int.class, new MethodHook() {
+        Helpers.findAndHookMethod("com.android.internal.policy.PhoneWindow", lpparam.classLoader, "setStatusBarColor", int.class, new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 Window wnd = (Window)param.thisObject;
@@ -2418,14 +2418,14 @@ public class System {
             }
         });
 
-        Helpers.findAndHookMethod("com.android.internal.app.ToolbarActionBar", null, "setBackgroundDrawable", Drawable.class, new MethodHook() {
+        Helpers.findAndHookMethod("com.android.internal.app.ToolbarActionBar", lpparam.classLoader, "setBackgroundDrawable", Drawable.class, new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 hookToolbar(param.thisObject, (Drawable)param.args[0]);
             }
         });
 
-        Helpers.findAndHookMethod("com.android.internal.app.WindowDecorActionBar", null, "setBackgroundDrawable", Drawable.class, new MethodHook() {
+        Helpers.findAndHookMethod("com.android.internal.app.WindowDecorActionBar", lpparam.classLoader, "setBackgroundDrawable", Drawable.class, new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 hookWindowDecor(param.thisObject, (Drawable)param.args[0]);
@@ -4012,15 +4012,6 @@ public class System {
 //		});
     }
 
-    public static void NoOverscrollHook() {
-        Helpers.findAndHookMethod("android.widget.AbsListView", null, "initAbsListView", new MethodHook() {
-            @Override
-            protected void before(MethodHookParam param) throws Throwable {
-                ((AbsListView)param.thisObject).setOverScrollMode(View.OVER_SCROLL_NEVER);
-            }
-        });
-    }
-
     public static void NoOverscrollAppHook(LoadPackageParam lpparam) {
         MethodHook hookParam = new MethodHook() {
             @Override
@@ -4061,6 +4052,13 @@ public class System {
             //noinspection ResultOfMethodCallIgnored
             Helpers.findAndHookMethodSilently(rrvCls, "setSpringEnabled", boolean.class, hookParam);
         }
+
+        Helpers.findAndHookMethod("android.widget.AbsListView", lpparam.classLoader, "initAbsListView", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                ((AbsListView)param.thisObject).setOverScrollMode(View.OVER_SCROLL_NEVER);
+            }
+        });
     }
 
     public static void RemoveSecureHook(LoadPackageParam lpparam) {
@@ -4240,21 +4238,7 @@ public class System {
     }
 
     public static void ResizableWidgetsHook() {
-        Helpers.findAndHookMethod("android.appwidget.AppWidgetHostView", null, "getAppWidgetInfo", new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                AppWidgetProviderInfo widgetInfo = (AppWidgetProviderInfo)param.getResult();
-                if (widgetInfo == null) return;
-                widgetInfo.resizeMode = AppWidgetProviderInfo.RESIZE_VERTICAL | AppWidgetProviderInfo.RESIZE_HORIZONTAL;
-                widgetInfo.minHeight = 0;
-                widgetInfo.minWidth = 0;
-                widgetInfo.minResizeHeight = 0;
-                widgetInfo.minResizeWidth = 0;
-                param.setResult(widgetInfo);
-            }
-        });
-
-        Helpers.findAndHookMethod("android.appwidget.AppWidgetManager", null, "getAppWidgetInfo", int.class, new MethodHook() {
+        Helpers.hookAllMethods("android.appwidget.AppWidgetHostView", null, "getAppWidgetInfo", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
                 AppWidgetProviderInfo widgetInfo = (AppWidgetProviderInfo)param.getResult();
