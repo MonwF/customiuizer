@@ -709,10 +709,8 @@ public class Various {
 		Helpers.findAndHookMethod(Settings.System.class, "getStringForUser", ContentResolver.class, String.class, int.class, new MethodHook() {
 			@Override
 			protected void before(final MethodHookParam param) throws Throwable {
-				ContentResolver resolver = (ContentResolver)param.args[0];
-				String pkgName = (String)XposedHelpers.callMethod(resolver, "getPackageName");
 				String key = (String)param.args[1];
-				if ("next_alarm_formatted".equals(key) && MainModule.mPrefs.getStringSet("various_alarmcompat_apps").contains(pkgName)) {
+				if ("next_alarm_formatted".equals(key)) {
 					param.args[1] = "next_alarm_clock_formatted";
 				}
 			}
