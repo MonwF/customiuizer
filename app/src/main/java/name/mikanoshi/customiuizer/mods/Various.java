@@ -712,8 +712,9 @@ public class Various {
 				ContentResolver resolver = (ContentResolver)param.args[0];
 				String pkgName = (String)XposedHelpers.callMethod(resolver, "getPackageName");
 				String key = (String)param.args[1];
-				if ("next_alarm_formatted".equals(key) && MainModule.mPrefs.getStringSet("various_alarmcompat_apps").contains(pkgName))
-				param.args[1] = "next_alarm_clock_formatted";
+				if ("next_alarm_formatted".equals(key) && MainModule.mPrefs.getStringSet("various_alarmcompat_apps").contains(pkgName)) {
+					param.args[1] = "next_alarm_clock_formatted";
+				}
 			}
 		});
 	}
@@ -847,67 +848,6 @@ public class Various {
 				if (val == 0) return;
 				params.screenBrightness = val / 100f;
 				act.getWindow().setAttributes(params);
-			}
-		});
-	}
-
-	public static void CallReminderHook(LoadPackageParam lpparam) {
-		Helpers.findAndHookMethod("com.android.server.telecom.MiuiMissedCallNotifierImpl", lpparam.classLoader, "startRepeatReminder", new MethodHook() {
-			@Override
-			protected void before(MethodHookParam param) throws Throwable {
-				param.setResult(null);
-				if ((int)XposedHelpers.callMethod(param.thisObject, "getRepeatTimes") > 0) {
-					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-					AlarmManager alarmManager = (AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE);
-					int interval = Helpers.getSharedIntPref(mContext, "pref_key_various_callreminder_interval", 5);
-					PendingIntent repeatAlarmPendingIntent = (PendingIntent)XposedHelpers.callMethod(param.thisObject, "getRepeatAlarmPendingIntent");
-					alarmManager.cancel(repeatAlarmPendingIntent);
-					alarmManager.setExact(AlarmManager.RTC_WAKEUP, currentTimeMillis() + interval * 60 * 1000L, repeatAlarmPendingIntent);
-				}
-			}
-		});
-
-		Helpers.findAndHookMethod("com.android.server.telecom.MiuiMissedCallNotifierImpl", lpparam.classLoader, "onRepeatReminder", new MethodHook() {
-			@Override
-			protected void before(MethodHookParam param) throws Throwable {
-				param.setResult(null);
-				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-
-				Object remindTime = XposedHelpers.callMethod(param.thisObject, "getMinAndIncreaseMissCallRemindTime", true);
-				int repeatTimes = remindTime == null ? -1 : (int)XposedHelpers.callMethod(param.thisObject, "getRepeatTimes") - XposedHelpers.getIntField(remindTime, "remindTimes");
-				if (repeatTimes >= 0) {
-					String uriStr = Helpers.getSharedStringPref(mContext, "pref_key_various_callreminder_sound", "");
-					if (!TextUtils.isEmpty(uriStr)) {
-						Uri uri = Uri.parse(uriStr);
-						Ringtone ringtone = RingtoneManager.getRingtone(mContext, uri);
-						if (ringtone != null) {
-							if (ringtone.isPlaying()) ringtone.stop();
-							ringtone.setAudioAttributes(new AudioAttributes.Builder().setLegacyStreamType(AudioManager.STREAM_NOTIFICATION).build());
-							ringtone.play();
-							XposedHelpers.setAdditionalInstanceField(param.thisObject, "mCurrentRingtone", ringtone);
-						}
-					}
-
-					Helpers.performCustomVibration(mContext,
-						Integer.parseInt(Helpers.getSharedStringPref(mContext, "pref_key_various_callreminder_vibration", "0")),
-						Helpers.getSharedStringPref(mContext, "pref_key_various_callreminder_vibration_own", "")
-					);
-				}
-
-				if (repeatTimes > 0) {
-					int interval = Helpers.getSharedIntPref(mContext, "pref_key_various_callreminder_interval", 5);
-					((AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE)).setExact(AlarmManager.RTC_WAKEUP, currentTimeMillis() + interval * 60 * 1000, (PendingIntent)XposedHelpers.callMethod(param.thisObject, "getRepeatAlarmPendingIntent"));
-				} else {
-					XposedHelpers.callMethod(param.thisObject, "cancelRepeatReminder");
-				}
-			}
-		});
-
-		Helpers.findAndHookMethod("com.android.server.telecom.MiuiMissedCallNotifierImpl", lpparam.classLoader, "cancelMissedCallNotification", String.class, boolean.class, new MethodHook() {
-			@Override
-			protected void after(MethodHookParam param) throws Throwable {
-				Ringtone ringtone = (Ringtone)XposedHelpers.getAdditionalInstanceField(param.thisObject, "mCurrentRingtone");
-				if (ringtone != null && ringtone.isPlaying()) ringtone.stop();
 			}
 		});
 	}

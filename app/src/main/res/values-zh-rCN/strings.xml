@@ -675,13 +675,6 @@
     <string name="various_calluibright_night_summ">晚上的时候不更改亮度</string>
     <string name="various_calluibright_night_start_title">开始</string>
     <string name="various_calluibright_night_end_title">结束</string>
-    <string name="various_callreminder_title">未接来电提醒</string>
-    <string name="various_callreminder_summ">定义提醒的声音、振动和间隔</string>
-    <string name="various_callreminder_interval_title">间隔</string>
-    <string name="various_callreminder_sound_title">声音</string>
-    <string name="various_callreminder_nosound">无声</string>
-    <string name="various_callreminder_vibration_own_title">自带</string>
-    <string name="various_callreminder_vibration_own_msg">格式：延迟,振动,延迟,振动,…</string>
     <string name="various_disableapp_title">应用状态控制</string>
     <string name="various_disableapp_summ">允许从应用信息页面禁用任何应用</string>
     <string name="various_securitycenter_unlock_title">解锁手机管家特性</string>

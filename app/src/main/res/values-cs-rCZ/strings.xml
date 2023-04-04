@@ -695,13 +695,6 @@
     <string name="various_calluibright_night_summ">Neměnit jas během noci</string>
     <string name="various_calluibright_night_start_title">Start</string>
     <string name="various_calluibright_night_end_title">Konec</string>
-    <string name="various_callreminder_title">Připomenutí zmeškaného hovoru</string>
-    <string name="various_callreminder_summ">Nastavení zvuku, vibrací a intervalu pro připomenutí</string>
-    <string name="various_callreminder_interval_title">Interval</string>
-    <string name="various_callreminder_sound_title">Zvuk</string>
-    <string name="various_callreminder_nosound">Ticho</string>
-    <string name="various_callreminder_vibration_own_title">Vlastní vzor</string>
-    <string name="various_callreminder_vibration_own_msg">Formát: zpoždění, vibrace, zpoždění, vibrace,…</string>
     <string name="various_restrictapp_title">Plná omezení</string>
     <string name="various_restrictapp_summ">Umožnit nastavit spořič baterie a přístup k Wi-Fi pro systémové aplikace</string>
     <string name="various_disableapp_title">Kontrola stavu aplikace</string>
