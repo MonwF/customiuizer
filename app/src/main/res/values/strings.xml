@@ -903,8 +903,8 @@
     <string name="array_keep">Keep as it is</string>
     <string name="array_turn_off">Turn off</string>
     <string name="array_turn_off_disable">Turn off and disable</string>
-    <string name="array_temperature">Temperature Only</string>
     <string name="array_current">Current Only</string>
+    <string name="array_power">Power Only</string>
     <string name="array_dualsimin2rows_style_thick">Thick</string>
     <string name="array_dualsimin2rows_style_theme">Follow the theme</string>
 
@@ -1112,7 +1112,7 @@
     <string name="type_res">resource</string>
 
     <string name="dummy" translatable="false" />
-    <string name="system_statusbar_batterytempandcurrent_title">Display battery temp and current</string>
+    <string name="system_statusbar_batterytempandcurrent_title">Display battery info</string>
     <string name="system_statusbar_batterytempandcurrent_content_title">Display Content</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">Display on the right</string>
     <string name="system_statusbar_batterytempandcurrent_positive_title">Current value is always positive</string>

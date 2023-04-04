@@ -406,7 +406,7 @@
     <string name="system_charginginfo_view_title">显示方式</string>
     <string name="system_charginginfo_current_title">充电电流</string>
     <string name="system_charginginfo_voltage_title">电池电压</string>
-    <string name="system_charginginfo_wattage_title">耗电量</string>
+    <string name="system_charginginfo_wattage_title">功率</string>
     <string name="system_charginginfo_temp_title">电池温度</string>
     <string name="system_lsalarm_title">显示下次闹钟</string>
     <string name="system_lsalarm_summ">显示离当前日期最近的闹钟</string>
@@ -1076,7 +1076,7 @@
     <string name="system_statusbaricons_swap_batteryicon_percentage_title">交换电池的图标和百分比位置</string>
     <string name="system_statusbaricons_netspeed_title">网速</string>
     <string name="system_statusbaricons_clock_title">时钟</string>
-    <string name="system_statusbar_batterytempandcurrent_title">显示电池温度和电流</string>
+    <string name="system_statusbar_batterytempandcurrent_title">显示电池信息</string>
     <string name="system_statusbar_batterytempandcurrent_content_title">显示内容</string>
     <string name="system_statusbar_batterytempandcurrent_incharge_title">仅在充电时显示</string>
     <string name="system_statusbar_batterytempandcurrent_hideunit_title">隐藏单位</string>
@@ -1086,7 +1086,7 @@
     <string name="system_statusbar_batterystyle_digit_title">电量数字样式</string>
     <string name="system_statusbar_batterystyle_mark_fontsize_title">百分比符号字体大小</string>
     <string name="system_statusbar_batterystyle_mark_verticaloffset_title">百分比符号上下偏移量</string>
-    <string name="array_temperature">仅温度</string>
+    <string name="array_power">仅功率</string>
     <string name="array_current">仅电流</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">右侧显示</string>
     <string name="system_statusbar_batterytempandcurrent_positive_title">电流总显示正值</string>

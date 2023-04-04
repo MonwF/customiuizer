@@ -871,8 +871,7 @@
     <string name="array_keep">そのままにする</string>
     <string name="array_turn_off">電源オフ</string>
     <string name="array_turn_off_disable">電源オフと無効</string>
-    <string name="array_temperature">温度のみ</string>
-    <string name="array_current">現在のみ</string>
+  <string name="array_current">現在のみ</string>
     <string name="array_dualsimin2rows_style_thick">Thick</string>
     <string name="array_dualsimin2rows_style_theme">システムのテーマ</string>
     <string name="unlimited">無制限</string>

@@ -871,7 +871,6 @@
     <string name="array_keep">Оставить как есть</string>
     <string name="array_turn_off">Выключить</string>
     <string name="array_turn_off_disable">Выключить и заблокировать</string>
-    <string name="array_temperature">Температура</string>
     <string name="array_current">Ток</string>
     <string name="array_dualsimin2rows_style_thick">Толстый</string>
     <string name="array_dualsimin2rows_style_theme">Следить за темой</string>

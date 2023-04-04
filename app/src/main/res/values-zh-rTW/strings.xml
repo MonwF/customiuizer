@@ -794,7 +794,6 @@
     <string name="array_keep">將其保持</string>
     <string name="array_turn_off">關閉</string>
     <string name="array_turn_off_disable">關閉並禁用</string>
-    <string name="array_temperature">僅溫度</string>
     <string name="array_current">僅電流</string>
     <string name="unlimited">無限制</string>
     <string name="toggle_wifi_on">Wi-Fi已啟用</string>

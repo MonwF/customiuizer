@@ -206,7 +206,6 @@ public class SystemUI {
                                     }
                                 }
                                 if (props != null) {
-                                    int tempVal = Integer.parseInt(props.getProperty("POWER_SUPPLY_TEMP"));
                                     String currVal;
                                     int rawCurr = -1 * Math.round(Integer.parseInt(props.getProperty("POWER_SUPPLY_CURRENT_NOW")) / 1000f);
                                     String preferred = "mA";
@@ -221,20 +220,23 @@ public class SystemUI {
                                         currVal = "" + rawCurr;
                                     }
                                     int opt = MainModule.mPrefs.getStringAsInt("system_statusbar_batterytempandcurrent_content", 1);
-                                    String simpleTempVal = tempVal % 10 == 0 ? (tempVal / 10 + "") : (tempVal / 10f + "");
                                     int hideUnit = MainModule.mPrefs.getStringAsInt("system_statusbar_batterytempandcurrent_hideunit", 0);
-                                    String tempUnit = (hideUnit == 1 || hideUnit == 2) ? "" : "℃";
+                                    String powerUnit = (hideUnit == 1 || hideUnit == 2) ? "" : "W";
                                     String currUnit = (hideUnit == 1 || hideUnit == 3) ? "" : preferred;
                                     if (opt == 1) {
+                                        float voltVal = Integer.parseInt(props.getProperty("POWER_SUPPLY_VOLTAGE_NOW")) / 1000f / 1000f;
+                                        String simpleWatt = String.format(Locale.getDefault(), "%.2f", Math.abs(voltVal * rawCurr) / 1000);
                                         String splitChar = MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_singlerow")
                                             ? " " : "\n";
-                                        batteryInfo = simpleTempVal + tempUnit + splitChar + currVal + currUnit;
+                                        batteryInfo = simpleWatt + powerUnit + splitChar + currVal + currUnit;
                                         if (MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_reverseorder")) {
-                                            batteryInfo = currVal + currUnit + splitChar + simpleTempVal + tempUnit;
+                                            batteryInfo = currVal + currUnit + splitChar + simpleWatt + powerUnit;
                                         }
                                     }
                                     else if (opt == 2) {
-                                        batteryInfo = simpleTempVal + tempUnit;
+                                        float voltVal = Integer.parseInt(props.getProperty("POWER_SUPPLY_VOLTAGE_NOW")) / 1000f / 1000f;
+                                        String simpleWatt = String.format(Locale.getDefault(), "%.2f", Math.abs(voltVal * rawCurr) / 1000);
+                                        batteryInfo = simpleWatt + powerUnit;
                                     }
                                     else {
                                         batteryInfo = currVal + currUnit;

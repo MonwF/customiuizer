@@ -869,14 +869,14 @@
 
 	<string-array name="batterydetails">
 		<item>@string/array_both</item>
-		<item>@string/array_temperature</item>
+		<item>@string/array_power</item>
 		<item>@string/array_current</item>
 	</string-array>
 
 	<string-array name="batteryhideunit">
 		<item>@string/array_default</item>
 		<item>@string/array_both</item>
-		<item>@string/array_temperature</item>
+		<item>@string/array_power</item>
 		<item>@string/array_current</item>
 	</string-array>
 	<string-array name="batteryhideunit_val">
