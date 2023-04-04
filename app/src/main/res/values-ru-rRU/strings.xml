@@ -694,13 +694,6 @@
     <string name="various_calluibright_night_summ">Не менять яркость в ночное время</string>
     <string name="various_calluibright_night_start_title">Начало</string>
     <string name="various_calluibright_night_end_title">Конец</string>
-    <string name="various_callreminder_title">Напоминание о пропущенном звонке</string>
-    <string name="various_callreminder_summ">Задать звук, вибрацию и интервал для напоминания</string>
-    <string name="various_callreminder_interval_title">Интервал</string>
-    <string name="various_callreminder_sound_title">Звук</string>
-    <string name="various_callreminder_nosound">Без звука</string>
-    <string name="various_callreminder_vibration_own_title">Свой шаблон</string>
-    <string name="various_callreminder_vibration_own_msg">Формат: задержка,вибрация,задержка,вибрация,…</string>
     <string name="various_restrictapp_title">Полноценные ограничения</string>
     <string name="various_restrictapp_summ">Позволяет настраивать контроль активности и доступ к Wi-Fi для системных приложений</string>
     <string name="various_disableapp_title">Контроль состояния приложений</string>

@@ -613,13 +613,6 @@
     <string name="various_calluibright_night_title">Tryb nocny</string>
     <string name="various_calluibright_night_summ">Nie zmieniaj jasności w nocy</string>
     <string name="various_calluibright_night_end_title">Koniec</string>
-    <string name="various_callreminder_title">Przypomnienie o nieodebranym połączeniu</string>
-    <string name="various_callreminder_summ">Zdefiniuj dźwięk, wibrację i interwał dla przypomnienia</string>
-    <string name="various_callreminder_interval_title">Interwał</string>
-    <string name="various_callreminder_sound_title">Dźwięk</string>
-    <string name="various_callreminder_nosound">Brak dźwięku</string>
-    <string name="various_callreminder_vibration_own_title">Własny wzór</string>
-    <string name="various_callreminder_vibration_own_msg">Format: opóźnienie,wibracja,opóźnienie,wibracja,…</string>
     <string name="various_restrictapp_title">Pełne ograniczenia</string>
     <string name="various_restrictapp_summ">Umożliwia skonfigurowanie oszczędzania baterii i dostępu do Wi-Fi dla aplikacji systemowych</string>
     <string name="various_disableapp_title">Kontrola stanu aplikacji</string>

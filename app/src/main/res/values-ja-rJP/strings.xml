@@ -694,14 +694,7 @@
     <string name="various_calluibright_night_summ">夜間に画面の明るさを変更しないようにします</string>
     <string name="various_calluibright_night_start_title">開始</string>
     <string name="various_calluibright_night_end_title">終了</string>
-    <string name="various_callreminder_title">不在着信のリマインダー</string>
-    <string name="various_callreminder_summ">音、バイブレーション、リマインダーの間隔が設定できます</string>
-    <string name="various_callreminder_interval_title">間隔</string>
-    <string name="various_callreminder_sound_title">サウンド</string>
-    <string name="various_callreminder_nosound">サウンドなし</string>
-    <string name="various_callreminder_vibration_own_title">独自のパターン</string>
-    <string name="various_callreminder_vibration_own_msg">フォーマット: 遅延、バイブレーション、遅延、バイブレーション…</string>
-    <string name="various_restrictapp_title">制限事項</string>
+  <string name="various_restrictapp_title">制限事項</string>
     <string name="various_restrictapp_summ">バッテリーセーバーの設定やシステムアプリのWi-Fi設定のアクセスが可能になります</string>
     <string name="various_disableapp_title">アプリの状態制御</string>
     <string name="various_disableapp_summ">アプリ情報から殆どのアプリの無効化を可能にします</string>

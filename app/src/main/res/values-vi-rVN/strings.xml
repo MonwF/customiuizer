@@ -694,13 +694,6 @@
     <string name="various_calluibright_night_summ">Không thay đổi độ sáng vào ban đêm</string>
     <string name="various_calluibright_night_start_title">Bắt đầu</string>
     <string name="various_calluibright_night_end_title">Kết thúc</string>
-    <string name="various_callreminder_title">Nhắc cuộc gọi nhỡ</string>
-    <string name="various_callreminder_summ">Xác định âm thanh, rung và khoảng thời gian cho lời nhắc</string>
-    <string name="various_callreminder_interval_title">Khoảng thời gian</string>
-    <string name="various_callreminder_sound_title">Âm thanh</string>
-    <string name="various_callreminder_nosound">Không có âm thanh</string>
-    <string name="various_callreminder_vibration_own_title">Mẫu riêng</string>
-    <string name="various_callreminder_vibration_own_msg">Định dạng: Trì hoãn, Rung, Trì hoãn, Rung,…</string>
     <string name="various_restrictapp_title">Đầy đủ giới hạn</string>
     <string name="various_restrictapp_summ">Cho phép cấu hình các chính sách tiết kiệm năng lượng và truy cập Wi-Fi cho các ứng dụng hệ thống</string>
     <string name="various_disableapp_title">Kiểm soát trạng thái ứng dụng</string>

@@ -714,13 +714,6 @@
     <string name="various_calluibright_night_summ">Do not change brightness during night time</string>
     <string name="various_calluibright_night_start_title">Start</string>
     <string name="various_calluibright_night_end_title">End</string>
-    <string name="various_callreminder_title">Missed call reminder</string>
-    <string name="various_callreminder_summ">Define sound, vibration and interval for reminder</string>
-    <string name="various_callreminder_interval_title">Interval</string>
-    <string name="various_callreminder_sound_title">Sound</string>
-    <string name="various_callreminder_nosound">No sound</string>
-    <string name="various_callreminder_vibration_own_title">Own pattern</string>
-    <string name="various_callreminder_vibration_own_msg">Format: delay,vibration,delay,vibration,…</string>
     <string name="various_restrictapp_title">Full restrictions</string>
     <string name="various_restrictapp_summ">Allows to configure battery saver and access to Wi-Fi for system apps</string>
     <string name="various_disableapp_title">App state control</string>

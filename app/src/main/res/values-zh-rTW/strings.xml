@@ -628,13 +628,6 @@
     <string name="various_calluibright_night_summ">晚上的時候不更改亮度</string>
     <string name="various_calluibright_night_start_title">開始</string>
     <string name="various_calluibright_night_end_title">結束</string>
-    <string name="various_callreminder_title">未接來電提醒</string>
-    <string name="various_callreminder_summ">定義提醒的聲音、振動和間隔</string>
-    <string name="various_callreminder_interval_title">間隔</string>
-    <string name="various_callreminder_sound_title">聲音</string>
-    <string name="various_callreminder_nosound">無聲</string>
-    <string name="various_callreminder_vibration_own_title">自帶</string>
-    <string name="various_callreminder_vibration_own_msg">格式：延遲,振動,延遲,振動,…</string>
     <string name="various_restrictapp_title">全限制</string>
     <string name="various_restrictapp_summ">允許為系統應用配置省電策略和Wi-Fi接入</string>
     <string name="various_disableapp_title">應用狀態控制</string>
