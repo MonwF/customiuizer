@@ -61,11 +61,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (mPrefs.getInt("system_betterpopups_delay", 0) > 0 && !mPrefs.getBoolean("system_betterpopups_nohide")) System.BetterPopupsHideDelaySysHook();
         if (mPrefs.getInt("system_messagingstylelines", 0) > 0) System.MessagingStyleLinesSysHook();
         if (mPrefs.getBoolean("system_nopassword")) System.NoPasswordHook();
-        if (mPrefs.getBoolean("system_statusbarcolor")) System.StatusBarBackgroundHook();
         if (mPrefs.getBoolean("system_magnifier")) System.TextMagnifierHook();
         if (mPrefs.getBoolean("system_lockscreenshortcuts")) SystemUI.LockScreenSecureLaunchHook();
         if (mPrefs.getBoolean("system_notifmediaseekbar")) System.MediaNotificationSeekBarHook();
-        if (mPrefs.getBoolean("system_nooverscroll")) System.NoOverscrollHook();
         if (mPrefs.getBoolean("system_cleanshare")) System.CleanShareMenuHook();
         if (mPrefs.getBoolean("system_cleanopenwith")) System.CleanOpenWithMenuHook();
         if (mPrefs.getBoolean("system_allownotifonkeyguard")) System.AllowAllKeyguardSysHook();
@@ -511,8 +509,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         final boolean isLauncherPkg = isMIUILauncherPkg || pkg.equals("com.mi.android.globallauncher");
         final boolean isLauncherPerf = mPrefs.getBoolean("launcher_compat");
         final boolean isGoogleMinus = mPrefs.getBoolean("launcher_googleminus");
-        final boolean isStatusBarColor = mPrefs.getBoolean("system_statusbarcolor") && !mPrefs.getStringSet("system_statusbarcolor_apps").contains(pkg);
-        final boolean noOverscroll = mPrefs.getBoolean("system_nooverscroll");
+        final boolean isStatusBarColor = mPrefs.getBoolean("system_statusbarcolor") && mPrefs.getStringSet("system_statusbarcolor_apps").contains(pkg);
+        final boolean isNoOverscroll = mPrefs.getBoolean("system_nooverscroll") && mPrefs.getStringSet("system_nooverscroll_apps").contains(pkg);
 
         if (isLauncherPkg) {
             if (mPrefs.getInt("launcher_horizmargin", 0) > 0) Launcher.HorizontalSpacingRes();
@@ -530,14 +528,17 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (isLauncherPerf) handleLoadLauncher(lpparam);
         }
 
-        if ((isLauncherPkg && !isLauncherPerf) || (isMIUILauncherPkg && isGoogleMinus) || isStatusBarColor || noOverscroll)
+        if ((isLauncherPkg && !isLauncherPerf) || (isMIUILauncherPkg && isGoogleMinus) || isStatusBarColor || isNoOverscroll)
             Helpers.findAndHookMethod(Application.class, "attach", Context.class, new MethodHook() {
                 @Override
                 protected void after(MethodHookParam param) throws Throwable {
                     if (isLauncherPkg && !isLauncherPerf) handleLoadLauncher(lpparam);
                     if (isMIUILauncherPkg && isGoogleMinus) Launcher.GoogleMinusScreenHook(lpparam);
-                    if (isStatusBarColor) System.StatusBarBackgroundCompatHook(lpparam);
-                    if (noOverscroll) System.NoOverscrollAppHook(lpparam);
+                    if (isStatusBarColor) {
+                        System.StatusBarBackgroundCompatHook(lpparam);
+                        System.StatusBarBackgroundHook(lpparam);
+                    }
+                    if (isNoOverscroll) System.NoOverscrollAppHook(lpparam);
                 }
             });
     }

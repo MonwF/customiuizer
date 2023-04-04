@@ -438,6 +438,8 @@ public class System extends SubFragment {
 			case "pref_key_system_cat_other":
 				findPreference("pref_key_system_forceclose_apps").setOnPreferenceClickListener(openAppsEdit);
 
+				findPreference("pref_key_system_nooverscroll_apps").setOnPreferenceClickListener(openAppsEdit);
+
 				findPreference("pref_key_system_cleanshare_apps").setOnPreferenceClickListener(openShareEdit);
 				findPreference("pref_key_system_cleanshare_test").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 					@Override

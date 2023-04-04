@@ -464,7 +464,7 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
-			android:title="@string/system_statusbarcolor_apps_title"
+			android:title="@string/system_popupnotif_apps_title"
 			android:key="pref_key_system_statusbarcolor_apps"
 			android:dependency="pref_key_system_statusbarcolor"
 			miuizer:indentLevel="1"
@@ -1228,6 +1228,13 @@
 			android:title="@string/system_nooverscroll_title"
 			android:summary="@string/system_nooverscroll_summ"
 			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:title="@string/system_popupnotif_apps_title"
+			android:key="pref_key_system_nooverscroll_apps"
+			android:dependency="pref_key_system_nooverscroll"
+			miuizer:indentLevel="1"
+			miuizer:countAsSummary="true" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_removesecure"
