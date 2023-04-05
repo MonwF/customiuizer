@@ -421,6 +421,7 @@
     <string name="system_charginginfo_voltage_title">Battery voltage</string>
     <string name="system_charginginfo_wattage_title">Power consumption</string>
     <string name="system_charginginfo_temp_title">Battery temperature</string>
+    <string name="array_cpu_temp">CPU temperature</string>
     <string name="system_lsalarm_title">Display next alarm</string>
     <string name="system_lsalarm_summ">Show nearest alarm time next to current date</string>
     <string name="system_lsalarm_format_title">Display format</string>
@@ -1120,6 +1121,7 @@
     <string name="system_statusbar_batterytempandcurrent_hideunit_title">Hide unit</string>
     <string name="system_statusbar_batterytempandcurrent_singlerow_title">Display in single row</string>
     <string name="system_statusbar_batterytempandcurrent_reverseorder_title">Reverse order</string>
+    <string name="system_statusbar_showdevicetemperature_title">Display device temperature</string>
     <string name="system_statusbar_batterystyle_title">style the battery icon</string>
     <string name="system_statusbar_batterystyle_digit_title">Battery digit</string>
     <string name="system_statusbar_batterystyle_mark_fontsize_title">Percentage mark\'s font size</string>

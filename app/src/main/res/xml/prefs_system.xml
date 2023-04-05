@@ -352,6 +352,10 @@
 			android:title="@string/system_batteryindicator_title"
 			android:summary="@string/system_batteryindicator_summ" />
 
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="prefs_system_statusbar_showdevicetemperature_cat"
+			android:title="@string/system_statusbar_showdevicetemperature_title" />
+
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_statusbar_dualrows"
 			android:title="@string/system_statusbar_dualrows_title"
