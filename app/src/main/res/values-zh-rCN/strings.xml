@@ -408,6 +408,7 @@
     <string name="system_charginginfo_voltage_title">电池电压</string>
     <string name="system_charginginfo_wattage_title">功率</string>
     <string name="system_charginginfo_temp_title">电池温度</string>
+    <string name="array_cpu_temp">CPU温度</string>
     <string name="system_lsalarm_title">显示下次闹钟</string>
     <string name="system_lsalarm_summ">显示离当前日期最近的闹钟</string>
     <string name="system_lsalarm_format_title">显示格式</string>
@@ -1082,6 +1083,7 @@
     <string name="system_statusbar_batterytempandcurrent_hideunit_title">隐藏单位</string>
     <string name="system_statusbar_batterytempandcurrent_singlerow_title">单排显示</string>
     <string name="system_statusbar_batterytempandcurrent_reverseorder_title">反序</string>
+    <string name="system_statusbar_showdevicetemperature_title">显示设备温度</string>
     <string name="system_statusbar_batterystyle_title">电量图标样式</string>
     <string name="system_statusbar_batterystyle_digit_title">电量数字样式</string>
     <string name="system_statusbar_batterystyle_mark_fontsize_title">百分比符号字体大小</string>
