@@ -5152,8 +5152,11 @@ public class System {
             openInFw = true;
         }
         else if ("com.tencent.mm".equals(pkgName) && intent.getComponent().getClassName().contains(".plugin.base.stub.WXEntryActivity")) {
-                openInFw = true;
-            }
+            openInFw = true;
+        }
+        else if ("com.miui.packageinstaller".equals(pkgName) && intent.getComponent().getClassName().contains("com.miui.packageInstaller.NewPackageInstallerActivity")) {
+            openInFw = true;
+        }
         return openInFw;
     }
 
