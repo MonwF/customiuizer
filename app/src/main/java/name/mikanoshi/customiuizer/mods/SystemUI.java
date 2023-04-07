@@ -363,30 +363,44 @@ public class SystemUI {
                                     }
                                 }
                                 if (showBatteryInfo && props != null) {
-                                    String currVal;
-                                    int rawCurr = -1 * Math.round(Integer.parseInt(props.getProperty("POWER_SUPPLY_CURRENT_NOW")) / 1000f);
-                                    String preferred = "mA";
-                                    if (MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_positive")) {
-                                        rawCurr = Math.abs(rawCurr);
-                                    }
-                                    if (Math.abs(rawCurr) > 999) {
-                                        currVal = String.format("%.2f", rawCurr / 1000f);
-                                        preferred = "A";
-                                    } else {
-                                        currVal = "" + rawCurr;
-                                    }
                                     int opt = MainModule.mPrefs.getStringAsInt("system_statusbar_batterytempandcurrent_content", 1);
+                                    String simpleTempVal = "";
+                                    if (opt == 1 || opt == 4) {
+                                        int tempVal = Integer.parseInt(props.getProperty("POWER_SUPPLY_TEMP"));
+                                        simpleTempVal = tempVal % 10 == 0 ? (tempVal / 10 + "") : (tempVal / 10f + "");
+                                    }
+                                    String currVal = "";
+                                    String preferred = "mA";
+                                    int rawCurr = -1 * Math.round(Integer.parseInt(props.getProperty("POWER_SUPPLY_CURRENT_NOW")) / 1000f);
+                                    if (opt == 1 || opt == 3) {
+                                        if (MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_positive")) {
+                                            rawCurr = Math.abs(rawCurr);
+                                        }
+                                        if (Math.abs(rawCurr) > 999) {
+                                            currVal = String.format("%.2f", rawCurr / 1000f);
+                                            preferred = "A";
+                                        } else {
+                                            currVal = "" + rawCurr;
+                                        }
+                                    }
                                     int hideUnit = MainModule.mPrefs.getStringAsInt("system_statusbar_batterytempandcurrent_hideunit", 0);
-                                    String powerUnit = (hideUnit == 1 || hideUnit == 2) ? "" : "W";
+                                    String tempUnit = (hideUnit == 1 || hideUnit == 2) ? "" : "℃";
+                                    String powerUnit = (hideUnit == 1 || hideUnit == 3) ? "" : "W";
                                     String currUnit = (hideUnit == 1 || hideUnit == 3) ? "" : preferred;
                                     if (opt == 1) {
+                                        String splitChar = MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_singlerow") ? " " : "\n";
+                                        batteryInfo = simpleTempVal + tempUnit + splitChar + currVal + currUnit;
+                                        if (MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_reverseorder")) {
+                                            batteryInfo = currVal + currUnit + splitChar + simpleTempVal + tempUnit;
+                                        }
+                                    }
+                                    else if (opt == 4) {
                                         float voltVal = Integer.parseInt(props.getProperty("POWER_SUPPLY_VOLTAGE_NOW")) / 1000f / 1000f;
                                         String simpleWatt = String.format(Locale.getDefault(), "%.2f", Math.abs(voltVal * rawCurr) / 1000);
-                                        String splitChar = MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_singlerow")
-                                            ? " " : "\n";
-                                        batteryInfo = simpleWatt + powerUnit + splitChar + currVal + currUnit;
+                                        String splitChar = MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_singlerow") ? " " : "\n";
+                                        batteryInfo = simpleTempVal + tempUnit + splitChar + simpleWatt + powerUnit;
                                         if (MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_reverseorder")) {
-                                            batteryInfo = currVal + currUnit + splitChar + simpleWatt + powerUnit;
+                                            batteryInfo = simpleWatt + powerUnit + splitChar + simpleTempVal + tempUnit;
                                         }
                                     } else if (opt == 2) {
                                         float voltVal = Integer.parseInt(props.getProperty("POWER_SUPPLY_VOLTAGE_NOW")) / 1000f / 1000f;

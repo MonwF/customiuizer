@@ -906,6 +906,9 @@
     <string name="array_turn_off_disable">Turn off and disable</string>
     <string name="array_current">Current Only</string>
     <string name="array_power">Power Only</string>
+    <string name="array_temp_current">Temperature and Current</string>
+    <string name="array_temp_power">Temperature and Power</string>
+    <string name="array_power_current">Power and Current</string>
     <string name="array_dualsimin2rows_style_thick">Thick</string>
     <string name="array_dualsimin2rows_style_theme">Follow the theme</string>
 
