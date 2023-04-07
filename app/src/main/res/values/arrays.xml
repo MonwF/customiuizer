@@ -867,10 +867,18 @@
 		<item>3</item>
 	</string-array>
 
+	<string-array name="four_state_val">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+		<item>4</item>
+	</string-array>
+
 	<string-array name="batterydetails">
-		<item>@string/array_both</item>
+		<item>@string/array_temp_current</item>
 		<item>@string/array_power</item>
 		<item>@string/array_current</item>
+		<item>@string/array_temp_power</item>
 	</string-array>
 
 	<string-array name="devicetempdetails">
@@ -882,8 +890,8 @@
 	<string-array name="batteryhideunit">
 		<item>@string/array_default</item>
 		<item>@string/array_both</item>
-		<item>@string/array_power</item>
-		<item>@string/array_current</item>
+		<item>@string/system_charginginfo_temp_title</item>
+		<item>@string/array_power_current</item>
 	</string-array>
 	<string-array name="batteryhideunit_val">
 		<item>0</item>

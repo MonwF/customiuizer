@@ -1090,6 +1090,9 @@
     <string name="system_statusbar_batterystyle_mark_verticaloffset_title">百分比符号上下偏移量</string>
     <string name="array_power">仅功率</string>
     <string name="array_current">仅电流</string>
+    <string name="array_temp_current">温度与电流</string>
+    <string name="array_temp_power">温度与功率</string>
+    <string name="array_power_current">电流与功率</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">右侧显示</string>
     <string name="system_statusbar_batterytempandcurrent_positive_title">电流总显示正值</string>
     <string name="system_statusbar_dualsimin2rows_title">双排信号栏</string>

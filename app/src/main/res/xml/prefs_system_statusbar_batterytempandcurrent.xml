@@ -18,7 +18,7 @@
 		android:key="pref_key_system_statusbar_batterytempandcurrent_content"
 		android:title="@string/system_statusbar_batterytempandcurrent_content_title"
 		android:entries="@array/batterydetails"
-		android:entryValues="@array/onoff_val"
+		android:entryValues="@array/four_state_val"
 		miuizer:valueAsSummary="true"
 		android:defaultValue="1" />
 
