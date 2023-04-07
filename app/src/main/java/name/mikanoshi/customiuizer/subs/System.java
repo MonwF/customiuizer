@@ -308,6 +308,7 @@ public class System extends SubFragment {
 					}
 				});
 
+				findPreference("pref_key_system_notify_openinfw_apps").setOnPreferenceClickListener(openAppsEdit);
 				findPreference("pref_key_system_colorizenotifs_apps").setOnPreferenceClickListener(openAppsEdit);
 				findPreference("pref_key_system_colorizenotifs_apps").setEnabled(!Objects.equals(Helpers.prefs.getString("pref_key_system_colorizenotifs", "1"), "1"));
 				findPreference("pref_key_system_colorizenotifs").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {

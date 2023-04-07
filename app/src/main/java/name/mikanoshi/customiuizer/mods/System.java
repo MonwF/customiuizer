@@ -5180,7 +5180,6 @@ public class System {
                 if (openInFw) {
                     Context mContext = (Context) XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.thisObject, "mService"), "mContext");
                     ActivityOptions options = MiuiMultiWindowUtils.getActivityOptions(mContext, intent.getComponent().getPackageName(), true, false);
-//                    Helpers.log("startActFwOptions: " + Helpers.stringifyBundle(options.toBundle()));
                     XposedHelpers.callMethod(param.thisObject, "setActivityOptions", options.toBundle());
                 }
             }

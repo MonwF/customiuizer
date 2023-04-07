@@ -626,16 +626,18 @@
 			miuizer:indentLevel="1"
 			miuizer:countAsSummary="true" />
 
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_messagingstylelines"
-			android:title="@string/system_messagingstylelines_title"
-			android:summary="@string/system_messagingstylelines_summ"
-			android:defaultValue="0"
-			miuizer:offtext="@string/unlimited"
-			miuizer:minValue="0"
-			miuizer:maxValue="8"
-			miuizer:stepValue="1"
-			miuizer:format="%d" />
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_notify_openinfw"
+			android:title="@string/system_notify_openinfw_title"
+			android:summary="@string/array_expandnotifs_allbutblack"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_notify_openinfw_apps"
+			android:title="@string/system_popupnotif_apps_title"
+			android:dependency="pref_key_system_notify_openinfw"
+			miuizer:indentLevel="1"
+			miuizer:countAsSummary="true" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_mutevisiblenotif"
@@ -662,6 +664,17 @@
 			android:key="pref_key_system_expandnotifs_apps"
 			miuizer:indentLevel="1"
 			miuizer:countAsSummary="true" />
+
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_messagingstylelines"
+			android:title="@string/system_messagingstylelines_title"
+			android:summary="@string/system_messagingstylelines_summ"
+			android:defaultValue="0"
+			miuizer:offtext="@string/unlimited"
+			miuizer:minValue="0"
+			miuizer:maxValue="8"
+			miuizer:stepValue="1"
+			miuizer:format="%d" />
 
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_system_autogroupnotif"
