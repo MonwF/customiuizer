@@ -4,7 +4,6 @@ import static java.lang.System.currentTimeMillis;
 import static java.lang.System.nanoTime;
 import static de.robv.android.xposed.XposedHelpers.findClass;
 import static de.robv.android.xposed.XposedHelpers.findClassIfExists;
-import static de.robv.android.xposed.XposedHelpers.findMethodExactIfExists;
 import static name.mikanoshi.customiuizer.mods.GlobalActions.ACTION_PREFIX;
 
 import android.animation.Animator;
@@ -12,8 +11,11 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.app.AndroidAppHelper;
 import android.app.KeyguardManager;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.WallpaperColors;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -56,6 +58,7 @@ import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.MiuiMultiWindowUtils;
 import android.util.Pair;
 import android.util.SparseIntArray;
 import android.util.TypedValue;
@@ -97,6 +100,9 @@ import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
+import miui.app.MiuiFreeFormManager;
+import miui.process.ForegroundInfo;
+import miui.process.ProcessManager;
 import miui.telephony.TelephonyManager;
 import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
@@ -3692,6 +3698,48 @@ public class SystemUI {
                     }
                 };
                 view.getContext().registerReceiver(br, new IntentFilter("miui.intent.TAKE_SCREENSHOT"));
+            }
+        });
+    }
+
+    public static void OpenNotifyInFloatingWindowHook(LoadPackageParam lpparam) {
+        Helpers.hookAllMethods("com.android.systemui.statusbar.phone.MiuiStatusBarNotificationActivityStarter", lpparam.classLoader, "startNotificationIntent", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                PendingIntent pendingIntent = (PendingIntent) param.args[0];
+                Intent intent = (Intent) param.args[1];
+                Object mSbn = XposedHelpers.getObjectField(param.args[2], "mSbn");
+                String pkgName;
+                boolean isSubstituteNotification = (boolean) XposedHelpers.callMethod(mSbn, "isSubstituteNotification");
+                if (isSubstituteNotification) {
+                    pkgName = (String) XposedHelpers.getObjectField(mSbn, "mPkgName");
+                }
+                else {
+                    pkgName = pendingIntent.getCreatorPackage();
+                }
+                if (MainModule.mPrefs.getStringSet("system_notify_openinfw_apps").contains(pkgName)) {
+                    return;
+                }
+                ForegroundInfo foregroundInfo = ProcessManager.getForegroundInfo();
+                if (foregroundInfo != null) {
+                    String topPackage = foregroundInfo.mForegroundPackageName;
+                    if (pkgName.equals(topPackage)) {
+                        return;
+                    }
+                }
+                Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
+                List<MiuiFreeFormManager.MiuiFreeFormStackInfo> freeFormStackInfoList = MiuiFreeFormManager.getAllFreeFormStackInfosOnDisplay(mContext.getDisplay() != null ? mContext.getDisplay().getDisplayId() : 0);
+                int freeFormCount = 0;
+                if (freeFormStackInfoList != null) {
+                    freeFormCount = freeFormStackInfoList.size();
+                }
+                if (freeFormCount == 2) return;
+                for (MiuiFreeFormManager.MiuiFreeFormStackInfo rootTaskInfo : freeFormStackInfoList) {
+                    if (pkgName.equals(rootTaskInfo.packageName)) return;
+                }
+                ActivityOptions options = MiuiMultiWindowUtils.getActivityOptions(mContext, pkgName, true, false);
+                pendingIntent.send(mContext, 0, intent, null, null, null, options != null ? options.toBundle() : null);
+                param.setResult(null);
             }
         });
     }

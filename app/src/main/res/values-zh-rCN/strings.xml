@@ -146,6 +146,7 @@
     <string name="system_compactnotif_summ">减小通知垂直边框</string>
     <string name="system_colorizenotiftitle_title">着色通知卡片</string>
     <string name="system_colorizenotiftitle_summ">将图标颜色应用到通知卡片(仅Android通知样式)</string>
+    <string name="system_notify_openinfw_title">点击通知时以小窗打开</string>
     <string name="system_minimalnotifview_title">还原简约的折叠视图</string>
     <string name="system_minimalnotifview_summ">最低重要性的通知可以重新折叠为单行视图</string>
     <string name="system_notifchannelsettings_title">打开频道设置</string>
