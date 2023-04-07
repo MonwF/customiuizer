@@ -281,7 +281,7 @@ public class MainFragment extends PreferenceFragmentBase {
 			}
 		});
 
-		String[] locales = new String[] { "zh-CN", "zh-TW", "ru-RU", "pl-PL", "ja-JP", "vi-VN", "cs-CZ" };
+		String[] locales = new String[] { "zh-CN", "zh-TW", "ru-RU", "pl-PL", "ja-JP", "vi-VN", "cs-CZ", "pt-BR" };
 
 		ArrayList<String> localesArr = new ArrayList<String>(Arrays.asList(locales));
 		ArrayList<SpannableString> localeNames = new ArrayList<SpannableString>();
@@ -291,11 +291,14 @@ public class MainFragment extends PreferenceFragmentBase {
 			StringBuilder locStr;
 			SpannableString locSpanString;
 			if (locale.equals("zh-TW")) {
-				locStr = new StringBuilder("繁體中文(台灣)");
+				locStr = new StringBuilder("繁體中文 (台灣)");
 			}
 			else {
 				locStr = new StringBuilder(loc.getDisplayLanguage(loc));
 				locStr.setCharAt(0, Character.toUpperCase(locStr.charAt(0)));
+				if (locale.equals("pt-BR")) {
+					locStr.append(" (Brasil)");
+				}
 			}
 			locSpanString = new SpannableString(locStr.toString());
 			localeNames.add(locSpanString);
