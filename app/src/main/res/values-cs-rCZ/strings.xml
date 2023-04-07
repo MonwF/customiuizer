@@ -48,7 +48,7 @@
     <string name="system_batteryindicator_title">Ukazatel stavu baterie</string>
     <string name="system_batteryindicator_summ">Zobrazení úrovně nabití baterie v podobě barevného pruhu</string>
     <string name="system_batteryindicator_limitvis_title">Omezená viditelnost</string>
-    <string name="system_batteryindicator_limitvis_summ">Zobrazit pouze v oznamovací zásuvce a na uzamčené obrazovce</string>
+    <string name="system_batteryindicator_limitvis_summ">Zobrazit pouze v oznamovací liště a na zamykací obrazovce</string>
     <string name="system_batteryindicator_rounded_title">Zaoblené konce</string>
     <string name="system_batteryindicator_centered_title">Vycentrováno</string>
     <string name="system_batteryindicator_height_title">Výška lišty</string>
@@ -69,7 +69,7 @@
     <string name="system_clock_app_title">Hodiny</string>
     <string name="system_clock_app_summ">Otevření vybrané aplikace po klepnutí na hodiny v záhlaví oznamovací zásuvky</string>
     <string name="system_calendar_app_title">Kalendář</string>
-    <string name="system_calendar_app_summ">Otevření vybrané aplikace po klepnutí na datum v záhlaví oznamovací zásuvky</string>
+    <string name="system_calendar_app_summ">Otevřít vybranou aplikaci po klepnutí na datum v záhlaví oznámení</string>
     <string name="system_clockseconds_title">Zobrazit vteřiny</string>
     <string name="system_clock_show_ampm_title">Zobrazit AM|PM</string>
     <string name="system_clock_time_format_title">24-hodinový formát</string>
@@ -92,11 +92,11 @@
         \nmm - dvouciferná minuta (09)
         \nss - dvouciferná sekunda (09)
     </string>
-    <string name="system_clock_dualrow_title">Zobrazit v dvojitých řádcích</string>
+    <string name="system_clock_dualrow_title">Zobrazit v dvojím řádku</string>
     <string name="system_clock_show_week_title">Zobrazit týden</string>
     <string name="system_clock_show_date_title">Zobrazit datum</string>
     <string name="system_clock_show_year_title">Zobrazit rok</string>
-    <string name="system_clock_fixedwidth_title">Opravit šířku obsahu pro zabránění horizontálnímu jitteru</string>
+    <string name="system_clock_fixedwidth_title">Opravit šířku obsahu pro zabránění horizontálnímu přesahu</string>
     <string name="system_clock_fixedwidth_summ">Upravit šířku, když jsou zobrazeny sekundy</string>
     <string name="system_statusbar_clock_align_title">Horizontální zarovnání</string>
     <string name="system_clockseconds_summ">Zobrazit vteřiny u času ve stavovém řádku</string>
@@ -110,6 +110,7 @@
     <string name="system_statusbar_mobile_showname_title">Vlastní typ mobilní sítě</string>
     <string name="system_hidemoreicon_title">Žádný ukazatel skrytých ikon</string>
     <string name="system_hidemoreicon_summ">Nezobrazovat ikonu se třemi tečkami, když jsou ikony oznámení skryté</string>
+    <string name="system_hidestatusbar_whenscreenshot_title">Skrýt stavový řádek při snímání obrazovky</string>
     <string name="system_nonetspeedseparator_title">Žádný oddělovač rychlosti sítě</string>
     <string name="system_nonetspeedseparator_summ">Nezobrazovat svislou čáru mezi časem a rychlostí sítě na zařízeních s výřezem kapky</string>
     <string name="system_netspeedinterval_title">Interval aktualizace rychlosti sítě</string>
@@ -229,7 +230,7 @@
     <string name="system_visualizer_lockscreen_summ">Vizualizér je nakreslen v horní části tapety zamčené obrazovky</string>
     <string name="system_visualizer_custom_title">Zobrazit na vlastní zamykací obrazovce</string>
     <string name="system_visualizer_custom_summ">Vizualizér spektra v horní části vlastní zamykací obrazovky</string>
-    <string name="system_visualizer_drawer_title">Zobrazit v oznamovací roletě</string>
+    <string name="system_visualizer_drawer_title">Zobrazit v oznamovací liště</string>
     <string name="system_visualizer_drawer_summ">Vizualizér spektra v rozšířené roletě oznámení</string>
     <string name="system_visualizer_controller_title">Zobrazit pouze v případě existence řadiče médií</string>
     <string name="system_visualizer_controller_summ">Zvukové přehrávače ji obvykle vytvářejí pro oznámení s ovládacími prvky médií</string>
@@ -408,6 +409,7 @@
     <string name="system_charginginfo_voltage_title">Napětí baterie</string>
     <string name="system_charginginfo_wattage_title">Spotřeba energie</string>
     <string name="system_charginginfo_temp_title">Teplota baterie</string>
+    <string name="array_cpu_temp">Teplota CPU</string>
     <string name="system_lsalarm_title">Zobrazení dalšího budíku</string>
     <string name="system_lsalarm_summ">Zobrazit nejbližší čas buzení vedle aktuálního data</string>
     <string name="system_lsalarm_format_title">Formát zobrazení</string>
@@ -465,7 +467,7 @@
     <string name="system_mods_qs">Rychlá nastavení</string>
     <string name="system_mods_cc">Centrum Ovládání</string>
     <string name="system_mods_cc_new">Nové Centrum ovládání</string>
-    <string name="system_mods_cc_legacy">Starší kontrolní centrum</string>
+    <string name="system_mods_cc_legacy">Starší centrum ovládání</string>
     <string name="system_qsgridrows_title">Počet řádků</string>
     <string name="system_qsgridrows_note">V orientaci na výšku budou štítky skryté pro 5 řádků. V orientaci na šířku je počet řádků se skrytými štítky omezen na 3.</string>
     <string name="system_qsgridcolumns_title">Počet sloupců</string>
@@ -558,7 +560,7 @@
     <string name="launcher_privacyapps">Skryté aplikace</string>
     <string name="launcher_privacyapps_fail">Nejsou udělena požadovaná oprávnění</string>
     <string name="launcher_privacyapps_gest_title">Žádná skrytá složka</string>
-    <string name="launcher_privacyapps_gest_summ">Zakázat gesto dvěma prsty, které otevírá složku skrytých aplikací</string>
+    <string name="launcher_privacyapps_gest_summ">Zakázat gesto dvěma prsty, které otevře skrytou složku aplikací a tajný telefonní kód je 233233</string>
     <string name="launcher_privacyapps_list_title">Seznam aplikací, které chcete skrýt</string>
     <string name="launcher_privacyapps_list_summ">Vylepšená verze možnosti Skrýt aplikace, která umožňuje skrýt jakoukoli nainstalovanou aplikaci. Není nutný restart.</string>
     <string name="launcher_swipedownaction_title">Tažení prstem dolů (1 prst)</string>
@@ -634,6 +636,8 @@
     <string name="controls_volumemedia_vibrate_summ">Vibrace při provedení akce dlouhého stisknutí</string>
     <string name="controls_mods_navbar">Navigační panel</string>
     <string name="controls_nonavbar_title">Skrýt navigační panel</string>
+    <string name="controls_nonavbar_fix_inputmethod_title">Opravit optimalizaci klávesnice na celou obrazovku</string>
+    <string name="controls_nonavbar_fix_inputmethod_summ">Přidat aplikace InputMethod do LSPosed rozsahu</string>
     <string name="controls_imebackalticon_title">Reaktivní tlačítko Zpět</string>
     <string name="controls_imebackalticon_summ">Přepnutí ikony tlačítka zpět na alternativní ikonu v režimu zadávání</string>
     <string name="controls_navbarheight_title">Výška navigačního panelu</string>
@@ -658,6 +662,7 @@
     <string name="controls_fsg_horiz_summ">Povolit horizontální gesta i navigační panel</string>
     <string name="controls_fsg_assist_title">Akce přejetí po rohu</string>
     <string name="controls_fsg_swipeandstop_title">Potáhnutím prstu z jednoho okraje displeje na druhý pro návrat k předchozí aplikaci</string>
+    <string name="controls_fsg_swipeandstop_disablevibrate_title">Nevibrovat</string>
     <string name="various_mods">Různé</string>
     <string name="various_hiddenfeatures_title">Skryté funkce</string>
     <string name="various_hiddenfeatures_summ">Činnosti, které nejsou vždy snadno dostupné</string>
@@ -755,6 +760,7 @@
     <string name="array_global_actions_scrolltotop">Přejít na začátek</string>
     <string name="array_global_actions_expandsidebar">Zobrazit postranní panel</string>
     <string name="array_global_actions_floatingwindow">Plovoucí okno</string>
+    <string name="array_global_actions_pinningwindow">Připnutí okna</string>
     <string name="array_global_actions_clearmemory">Vyčistit paměť</string>
     <string name="array_global_actions_invertcolors">Invertovat barvy</string>
     <string name="array_global_actions_switchkeyboard">Přepnout klávesnici</string>
@@ -880,6 +886,7 @@
     <string name="array_turn_off">Vypnout</string>
     <string name="array_turn_off_disable">Vypnout a zakázat</string>
     <string name="array_current">Pouze aktuální</string>
+    <string name="array_power">Pouze výkon</string>
     <string name="array_dualsimin2rows_style_thick">Silné</string>
     <string name="array_dualsimin2rows_style_theme">Podle motivu systému</string>
     <string name="unlimited">Neomezené</string>
@@ -1075,7 +1082,7 @@
     <string name="auto_color">Barva stavového řádku</string>
     <string name="type_file">Soubor</string>
     <string name="type_res">Zdroj</string>
-    <string name="system_statusbar_batterytempandcurrent_title">Zobrazit teplotu baterie a aktuální stav</string>
+    <string name="system_statusbar_batterytempandcurrent_title">Zobrazit informace o baterii</string>
     <string name="system_statusbar_batterytempandcurrent_content_title">Zobrazit obsah</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">Zobrazit na pravé straně</string>
     <string name="system_statusbar_batterytempandcurrent_positive_title">Aktuální hodnota je vždy kladná</string>
@@ -1083,6 +1090,7 @@
     <string name="system_statusbar_batterytempandcurrent_hideunit_title">Skrýt jednotku</string>
     <string name="system_statusbar_batterytempandcurrent_singlerow_title">Zobrazit v jednom řádku</string>
     <string name="system_statusbar_batterytempandcurrent_reverseorder_title">Obrátit pořadí</string>
+    <string name="system_statusbar_showdevicetemperature_title">Zobrazit teplotu zařízení</string>
     <string name="system_statusbar_batterystyle_title">Styl ikony baterie</string>
     <string name="system_statusbar_batterystyle_digit_title">Čísla baterie</string>
     <string name="system_statusbar_batterystyle_mark_fontsize_title">Velikost písma značky procenta</string>

@@ -205,7 +205,7 @@
     <string name="system_audiosilencer_last_summ">最近再生をしたサウンドの一覧を取得します</string>
     <string name="system_audiosilencer_silenced">消音</string>
     <string name="system_audiosilencer_played">再生音</string>
-    <string name="system_nosafevolume_title">音量の警告を無効化する</string>
+    <string name="system_nosafevolume_title">音量の警告を無効化</string>
     <string name="system_nosafevolume_summ">音量を最大で使用時に表示される警告ダイアログを非表示にします</string>
     <string name="system_noducking_title">ダッキングを無効化</string>
     <string name="system_noducking_summ">通知音の再生時に再生中の音楽の音量を下げないようにします</string>
@@ -215,7 +215,7 @@
     <string name="system_separatevolume_summ">着信音、通知音、システムの音量を個別で設定可能にします</string>
     <string name="system_separatevolume_slider_title">通知の音量スライダー</string>
     <string name="system_separatevolume_slider_summ">拡張音量ダイアログに通知のスライダーを追加します</string>
-  <string name="system_volumetimer_title">拡張タイマー</string>
+    <string name="system_volumetimer_title">拡張タイマー</string>
     <string name="system_volumetimer_summ">サイレントとDo Not Disturbモードに間隔を追加します</string>
     <string name="system_volumebar_blur_mtk_title">MTKデバイスの音量バーのぼかし効果の対応を有効化</string>
     <string name="system_volumedialogdelay_collapsed_title">音量ダイアログの自動非表示までの遅延時間</string>
@@ -407,6 +407,7 @@
     <string name="system_charginginfo_voltage_title">バッテリー電圧</string>
     <string name="system_charginginfo_wattage_title">消費電力</string>
     <string name="system_charginginfo_temp_title">バッテリー温度</string>
+    <string name="array_cpu_temp">CPU 温度</string>
     <string name="system_lsalarm_title">次のアラーム時刻を表示</string>
     <string name="system_lsalarm_summ">現在の日付の横に次のアラーム時刻を表示</string>
     <string name="system_lsalarm_format_title">表示のフォーマット</string>
@@ -557,7 +558,7 @@
     <string name="launcher_privacyapps">隠されたアプリ</string>
     <string name="launcher_privacyapps_fail">必要な権限が与えられていません</string>
     <string name="launcher_privacyapps_gest_title">隠しフォルダはありません</string>
-    <string name="launcher_privacyapps_gest_summ">2本の指のジェスチャーで隠しアプリフォルダを開かないようにします</string>
+    <string name="launcher_privacyapps_gest_summ">隠しフォルダを開く2本指のジェスチャーを無効化 、電話のシークレットコードは233233になります</string>
     <string name="launcher_privacyapps_list_title">非表示にするアプリの一覧</string>
     <string name="launcher_privacyapps_list_summ">隠しアプリオプションの強化版で、インストールをしている任意のアプリを隠す事ができます。再起動の必要はありません。</string>
     <string name="launcher_swipedownaction_title">下にスワイプのアクション (1本の指)</string>
@@ -633,6 +634,8 @@
     <string name="controls_volumemedia_vibrate_summ">長押しのアクションを実行時にバイブレーションをさせるようにします</string>
     <string name="controls_mods_navbar">ナビゲーションバー</string>
     <string name="controls_nonavbar_title">ナビゲーションバーを非表示</string>
+    <string name="controls_nonavbar_fix_inputmethod_title">フルスクリーンキーボードの最適化を修正</string>
+    <string name="controls_nonavbar_fix_inputmethod_summ">始めに文字入力アプリをLSPosedのスコープに追加してください</string>
     <string name="controls_imebackalticon_title">反応型の戻るボタン</string>
     <string name="controls_imebackalticon_summ">入力モード時に戻るボタンのアイコンを別の物に変更します</string>
     <string name="controls_navbarheight_title">ナビゲーションバーの高さ</string>
@@ -657,6 +660,7 @@
     <string name="controls_fsg_horiz_summ">水平方向のジェスチャーとナビゲーションバーの両方を有効にします</string>
     <string name="controls_fsg_assist_title">コーナースワイプのアクション</string>
     <string name="controls_fsg_swipeandstop_title">画面の端から順にスワイプをしてアクションを停止</string>
+    <string name="controls_fsg_swipeandstop_disablevibrate_title">バイブレーションをさせない</string>
     <string name="various_mods">各種のMod</string>
     <string name="various_hiddenfeatures_title">隠された機能</string>
     <string name="various_hiddenfeatures_summ">簡単にアクセスできないアクティビティを開きます</string>
@@ -694,7 +698,7 @@
     <string name="various_calluibright_night_summ">夜間に画面の明るさを変更しないようにします</string>
     <string name="various_calluibright_night_start_title">開始</string>
     <string name="various_calluibright_night_end_title">終了</string>
-  <string name="various_restrictapp_title">制限事項</string>
+    <string name="various_restrictapp_title">制限事項</string>
     <string name="various_restrictapp_summ">バッテリーセーバーの設定やシステムアプリのWi-Fi設定のアクセスが可能になります</string>
     <string name="various_disableapp_title">アプリの状態制御</string>
     <string name="various_disableapp_summ">アプリ情報から殆どのアプリの無効化を可能にします</string>
@@ -871,7 +875,7 @@
     <string name="array_keep">そのままにする</string>
     <string name="array_turn_off">電源オフ</string>
     <string name="array_turn_off_disable">電源オフと無効</string>
-  <string name="array_current">現在のみ</string>
+    <string name="array_current">現在のみ</string>
     <string name="array_dualsimin2rows_style_thick">Thick</string>
     <string name="array_dualsimin2rows_style_theme">システムのテーマ</string>
     <string name="unlimited">無制限</string>
@@ -1058,7 +1062,6 @@
     <string name="auto_color">ステータスバーの色</string>
     <string name="type_file">ファイル</string>
     <string name="type_res">リソース</string>
-    <string name="system_statusbar_batterytempandcurrent_title">バッテリーの温度と電流を表示</string>
     <string name="system_statusbar_batterytempandcurrent_content_title">表示をする内容</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">右側の表示</string>
     <string name="system_statusbar_batterytempandcurrent_positive_title">電流値を常に正の値にする</string>

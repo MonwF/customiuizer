@@ -482,7 +482,6 @@
     <string name="launcher_privacyapps">Ukryte aplikacje</string>
     <string name="launcher_privacyapps_fail">Wymagane uprawnienia nie zostały udzielone</string>
     <string name="launcher_privacyapps_gest_title">Brak ukrytego folderu</string>
-    <string name="launcher_privacyapps_gest_summ">Wyłącz gest z dwoma palcami, który otwiera ukryty folder aplikacji</string>
     <string name="launcher_privacyapps_list_title">Lista aplikacji do ukrycia</string>
     <string name="launcher_privacyapps_list_summ">Zaawansowana wersja opcji ukrywania aplikacji, która pozwala ukryć dowolną zainstalowaną aplikację. Nie wymaga restartu urządzenia.</string>
     <string name="launcher_swipedownaction_title">Przeciągnij w dół (1 palec)</string>
@@ -944,7 +943,6 @@
     <string name="auto_color">Kolor paska stanu</string>
     <string name="type_file">plik</string>
     <string name="type_res">zasób</string>
-    <string name="system_statusbar_batterytempandcurrent_title">Wyświetl temperaturę i prąd baterii</string>
     <string name="system_statusbar_batterytempandcurrent_content_title">Wyświetl informacje</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">Wyświetlacz po prawej stronie</string>
     <string name="system_statusbar_dualsimin2rows_title">Paski sygnałowe Dual SIM w dwóch rzędach</string>

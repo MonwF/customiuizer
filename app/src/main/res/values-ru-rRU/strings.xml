@@ -3,8 +3,8 @@
     <string name="app_about">О приложении</string>
     <string name="about_version">Версия %1$s</string>
     <string name="about_dev">от Mikanoshi &amp; MonwF</string>
-    <string name="about_dynamic">Обычно моды требуют быстрой перезагрузки для активации или деактивации, но те, что помечены ⟲, требуют только одной перезагрузки (после смены значения со стандартного на модифицированное), последующие изменения будут применяться сразу.</string>
-    <string name="about_unsupported">Моды, помеченные ⨯, не совместимы с данным устройством.</string>
+    <string name="about_dynamic">Для активации или деактивации большинства модов требуется быстрая перезагрузка устройства. Но для модов, помеченных ⟲, перезагрузка требуется только один раз — после смены значения со стандартного на модифицированное, а последующие изменения будут применяться сразу.</string>
+    <string name="about_unsupported">Моды, помеченные ⨯, несовместимы с данным устройством.</string>
     <string name="menu_update">Обновить</string>
     <string name="mods">Моды</string>
     <string name="mods_actions">Действия</string>
@@ -16,7 +16,7 @@
     <string name="system_mods_screen">Экран</string>
     <string name="system_mods_screen_rotation">Поворот</string>
     <string name="system_mods_screen_backlight">Подсветка</string>
-    <string name="system_mods_audio">Аудио</string>
+    <string name="system_mods_audio">Звук</string>
     <string name="system_mods_vibration">Вибрация</string>
     <string name="system_mods_toasts">Всплывающие сообщения</string>
     <string name="system_statusbaricons_title">Скрытие иконок</string>
@@ -103,12 +103,13 @@
     <string name="system_maxsbicons_summ">Число отображаемых иконок уведомлений до превращения их в точки</string>
     <string name="system_mobiletypeicon_title">Скрывать тип мобильной сети</string>
     <string name="system_mobiletypeicon_summ">Удаляет иконку типа мобильной сети из строки состояния</string>
-    <string name="system_networkindicator_wifi_title">Скрыть индикаторы сетевой активности WiFi</string>
+    <string name="system_networkindicator_wifi_title">Скрыть индикаторы сетевой активности Wi-Fi</string>
     <string name="system_networkindicator_mobile_title">Скрыть индикаторы активности мобильной сети</string>
     <string name="system_4gtolte_title">Показывать LTE вместо 4G</string>
     <string name="system_statusbar_mobile_showname_title">Другой тип мобильной сети</string>
     <string name="system_hidemoreicon_title">Убрать индикатор скрытых иконок</string>
     <string name="system_hidemoreicon_summ">Отключает показ иконки с 3 точками, когда активна опция скрытия иконок уведомлений</string>
+    <string name="system_hidestatusbar_whenscreenshot_title">Скрыть строку состояния при скриншоте</string>
     <string name="system_nonetspeedseparator_title">Убрать разделитель скорости соединения</string>
     <string name="system_nonetspeedseparator_summ">Отключает показ вертикальной линии между временем и индикатором скорости на устройствах с вырезом-каплей</string>
     <string name="system_netspeedinterval_title">Частота обновления индикатора скорости</string>
@@ -327,8 +328,8 @@
     <string name="system_cc_fpstile_summ">показать текущую частоту обновления экрана</string>
     <string name="system_qs_force_systemfonts_title">Заставить часы использовать системные шрифты</string>
     <string name="system_cc_dateformat_title">Другой формат даты</string>
-    <string name="system_wifipassword_title">Просмотр пароля сохраненной сети Wi-Fi</string>
-    <string name="system_wifipassword_summ">Просмотр в Настройках - Wi-Fi - Дополнительные настройки - Управление сохраненными сетями</string>
+    <string name="system_wifipassword_title">Показывать пароль сохранённой сети Wi-Fi</string>
+    <string name="system_wifipassword_summ">Просмотр: Настройки → Wi-Fi → Расширенные настройки → Сохранённые сети</string>
     <string name="system_wifipassword_btn_title">Проверять</string>
     <string name="system_wifi_password_label">пароль</string>
     <string name="system_wifi_password_dlgtitle">детали Wi-Fi</string>
@@ -343,7 +344,7 @@
     <string name="system_disableintegrity_title">Отключить проверку целостности системы</string>
     <string name="system_apksign_summ">Разрешает обновление приложений, даже если подпись в APK не совпадает с установленной</string>
     <string name="system_magnifier_title">Лупа для текста</string>
-    <string name="system_magnifier_summ">Показывает увеличенный текст при передвижении указателя ввода и при выделении</string>
+    <string name="system_magnifier_summ">Отображать увеличенный текст при перемещении курсора или создании выделения (сначала добавляйте приложение клавиатуры в LSPosed)</string>
     <string name="system_nooverscroll_title">Отключить избыточную прокрутку</string>
     <string name="system_nooverscroll_summ">Предотвращает чрезмерную прокрутку в списках</string>
     <string name="system_removesecure_title">Отключить защиту контента</string>
@@ -373,7 +374,7 @@
     <string name="system_allrotations_title">Все ориентации</string>
     <string name="system_allrotations_summ">Разрешает все ориентации экрана, включая обратную портретную</string>
     <string name="system_orientationlock_title">Закрепление ориентации</string>
-    <string name="system_orientationlock_summ">Добавляет переключатель в Быстрые Настройки для закрепления портретной или ландшафтной ориентации</string>
+    <string name="system_orientationlock_summ">Добавляет переключатель в Быстрые настройки для закрепления портретной или ландшафтной ориентации</string>
     <string name="system_notifafterunlock_title">Не скрывать уведомления</string>
     <string name="system_notifafterunlock_summ">Оставляет уведомления на экране блокировки даже после того как он был закрыт и потом открыт вновь</string>
     <string name="system_morenotif_title">Больше уведомлений</string>
@@ -407,6 +408,7 @@
     <string name="system_charginginfo_voltage_title">Напряжение батареи</string>
     <string name="system_charginginfo_wattage_title">Потребление энергии</string>
     <string name="system_charginginfo_temp_title">Температура батареи</string>
+    <string name="array_cpu_temp">Температура процессора</string>
     <string name="system_lsalarm_title">Показ будильника</string>
     <string name="system_lsalarm_summ">Отображает ближайшее время срабатывания будильника рядом с текущей датой</string>
     <string name="system_lsalarm_format_title">Формат отображения</string>
@@ -461,7 +463,7 @@
     <string name="system_applock_skip_title">Пропуск защиты</string>
     <string name="system_applock_skip_summ">Разрешить выбранным компонентам обходить защиту</string>
     <string name="system_applock_activities">Выбранные компоненты</string>
-    <string name="system_mods_qs">Быстрые Настройки</string>
+    <string name="system_mods_qs">Быстрые настройки</string>
     <string name="system_mods_cc">Быстрые настройки</string>
     <string name="system_mods_cc_new">Новый центр управления</string>
     <string name="system_mods_cc_legacy">Старый центр управления</string>
@@ -473,8 +475,8 @@
     <string name="system_qqsgridcolumns_note">В ландшафтной ориентации будет одна дополнительная колонка.</string>
     <string name="system_qsnolabels_title">Всегда скрывать подписи</string>
     <string name="system_qs_hideoperator_title">Скрыть имя оператора</string>
-    <string name="system_qshaptic_title">Виброотклик при переключении настроек</string>
-    <string name="system_qshaptic_summ">Включает вибрирование при нажатии на переключатели в Быстрых Настройках</string>
+    <string name="system_qshaptic_title">Вибрация при переключении настроек</string>
+    <string name="system_qshaptic_summ">Вибрировать при нажатии на переключатели в Быстрых настройках</string>
     <string name="system_mods_other">Другое</string>
     <string name="system_mods_volumeblur">Размытия фона диалога громкости</string>
     <string name="system_volumeblur_collapsed_title">Свёрнутый диалог</string>
@@ -557,7 +559,7 @@
     <string name="launcher_privacyapps">Скрытые приложения</string>
     <string name="launcher_privacyapps_fail">Не получены необходимые разрешения</string>
     <string name="launcher_privacyapps_gest_title">Убрать скрытую папку</string>
-    <string name="launcher_privacyapps_gest_summ">Отключает жест двумя пальцами для открытия папки со скрытыми приложениями</string>
+    <string name="launcher_privacyapps_gest_summ">Отключить жест двумя пальцами, который открывает папку скрытых приложений и секретный телефонный код, 233233</string>
     <string name="launcher_privacyapps_list_title">Список приложений для скрытия</string>
     <string name="launcher_privacyapps_list_summ">Улучшенная версия функции Скрытые приложения, позволяющая скрыть любое установленное приложение. Перезагрузка не требуется.</string>
     <string name="launcher_swipedownaction_title">Действие на свайп вниз (1 пальцем)</string>
@@ -633,6 +635,8 @@
     <string name="controls_volumemedia_vibrate_summ">Вибрировать при выполнении действия на долгое нажатие</string>
     <string name="controls_mods_navbar">Панель навигации</string>
     <string name="controls_nonavbar_title">Скрыть панель</string>
+    <string name="controls_nonavbar_fix_inputmethod_title">Исправление оптимизации полноэкранной клавиатуры</string>
+    <string name="controls_nonavbar_fix_inputmethod_summ">Сначала добавьте приложение клавиатуры в LSPosed</string>
     <string name="controls_imebackalticon_title">Динамическая кнопка Назад</string>
     <string name="controls_imebackalticon_summ">Переключает иконку кнопки Назад на альтернативную в режиме ввода</string>
     <string name="controls_navbarheight_title">Высота панели</string>
@@ -657,6 +661,7 @@
     <string name="controls_fsg_horiz_summ">Активировать вместе горизонтальные жесты и панель навигации</string>
     <string name="controls_fsg_assist_title">Действие на свайп вверх в углу</string>
     <string name="controls_fsg_swipeandstop_title">Проведите по экрану, начиная от края и заканчивая действием</string>
+    <string name="controls_fsg_swipeandstop_disablevibrate_title">Не вибрировать</string>
     <string name="various_mods">Различное</string>
     <string name="various_hiddenfeatures_title">Скрытые функции</string>
     <string name="various_hiddenfeatures_summ">Запуск активностей, которые не всегда легко доступны</string>
@@ -747,6 +752,7 @@
     <string name="array_global_actions_scrolltotop">Прокрутка вверх</string>
     <string name="array_global_actions_expandsidebar">Показать боковую панель</string>
     <string name="array_global_actions_floatingwindow">Плавающее окно</string>
+    <string name="array_global_actions_pinningwindow">Закрепить окно</string>
     <string name="array_global_actions_clearmemory">Очистить память</string>
     <string name="array_global_actions_invertcolors">Ин\u200Bвер\u200Bти\u200Bро\u200Bвать цвета</string>
     <string name="array_global_actions_switchkeyboard">Выбор клавиатуры</string>
@@ -872,6 +878,10 @@
     <string name="array_turn_off">Выключить</string>
     <string name="array_turn_off_disable">Выключить и заблокировать</string>
     <string name="array_current">Ток</string>
+    <string name="array_power">Только питание</string>
+    <string name="array_temp_current">Температура и ток</string>
+    <string name="array_temp_power">Температура и мощность</string>
+    <string name="array_power_current">Мощность и ток</string>
     <string name="array_dualsimin2rows_style_thick">Толстый</string>
     <string name="array_dualsimin2rows_style_theme">Следить за темой</string>
     <string name="unlimited">Неограниченно</string>
@@ -923,8 +933,8 @@
     <string name="miuizer_acramail_title">Контактная информация</string>
     <string name="miuizer_acramail_tip">Если Вы хотите получать ответы на отправленные отчёты об ошибках, то необходимо заполнить данное поле. Используйте e-mail, ICQ, свой ник с XDA или 4PDA.</string>
     <string name="support">Поддержка</string>
-    <string name="support_github">Код и задачи</string>
-    <string name="support_github_summ">Звездный репозиторий для обновления приложения</string>
+    <string name="support_github">Исходный код, пожелания</string>
+    <string name="support_github_summ">Поставьте звезду для поддержки приложения</string>
     <string name="support_contact_title">Связаться со мной</string>
     <string name="support_releases_title">Выпуски</string>
     <string name="support_releases_summ">Выпуски на Github</string>
@@ -978,7 +988,7 @@
     <string name="soft_reboot_ask">Выполнить быструю перезагрузку?</string>
     <string name="restart_launcher">Перезагрузить рабочий стол</string>
     <string name="open_inweb">Открыть в браузере</string>
-    <string name="restart_systemui">Перезапуск системы</string>
+    <string name="restart_systemui">Перезапуск интерфейса</string>
     <string name="restart_securitycenter">Перезапустить центр безопасности</string>
     <string name="backup_restore">Управление настройками</string>
     <string name="backup_restore_choose">Выберите желаемое дейстие</string>
@@ -1058,7 +1068,7 @@
     <string name="auto_color">Цвет статус бара</string>
     <string name="type_file">файл</string>
     <string name="type_res">ресурс</string>
-    <string name="system_statusbar_batterytempandcurrent_title">Отображение температуры и тока батареи</string>
+    <string name="system_statusbar_batterytempandcurrent_title">Показать информацию о батареи</string>
     <string name="system_statusbar_batterytempandcurrent_content_title">Показать содержимое</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">Отображать справа</string>
     <string name="system_statusbar_batterytempandcurrent_positive_title">Текущее значение всегда положительно</string>
@@ -1066,6 +1076,7 @@
     <string name="system_statusbar_batterytempandcurrent_hideunit_title">Скрыть единицу</string>
     <string name="system_statusbar_batterytempandcurrent_singlerow_title">Отображать в одной строке</string>
     <string name="system_statusbar_batterytempandcurrent_reverseorder_title">Обратный порядок</string>
+    <string name="system_statusbar_showdevicetemperature_title">Отображать температуру устройства</string>
     <string name="system_statusbar_batterystyle_title">Стиль значка батареи</string>
     <string name="system_statusbar_batterystyle_digit_title">Цифра батареи</string>
     <string name="system_statusbar_batterystyle_mark_fontsize_title">Размер шрифта знака в процентах</string>
@@ -1087,7 +1098,7 @@
     <string name="system_statusbar_topmargin_val_title">Верхний отступ</string>
     <string name="system_statusbar_topmargin_unset_lockscreen_title">Сбросить строку состояния на экране блокировки</string>
     <string name="system_statusbaricons_atright_title">Переместить некоторые значки вправо</string>
-    <string name="system_statusbaricons_atleft_title">Переместить несколько значков влево</string>
+    <string name="system_statusbaricons_atleft_title">Переместить некоторые значки влево</string>
     <string name="system_statusbaricons_atsecondrow_title">Переместить некоторые значки во второй ряд</string>
     <string name="system_statusbaricons_wifi_mobile_atleft_title">Перемещать мобильный и Wi-Fi влево</string>
     <string name="system_statusbaricons_swap_wifi_mobile_title">Поменять местами мобильный сигнал и Wi-Fi</string>
@@ -1109,7 +1120,7 @@
     <string name="various_disable_dock_suggest_title">Показывать закрепленные приложения только на боковой панели</string>
     <string name="various_swipe_expand_sidebar_title">Разрешить смахивание для расширения боковой панели</string>
     <string name="system_lockscreenshortcuts_left_tapaction_title">Удерживайте клавишу слева для переключения фонарика</string>
-    <string name="system_cc_tile_roundedrect_title">Скругленная прямоугольная плитка</string>
+    <string name="system_cc_tile_roundedrect_title">Скруглённые прямоугольные плитки</string>
     <string name="system_cc_enable_style_switch_title">Принудительно включить переключатель стиля CC</string>
     <string name="system_cc_disable_bluetooth_restrict_title">Выключить отключение Bluetooth до завтра</string>
     <string name="system_cc_collapse_after_clicked_title">Свернуть после касания</string>

@@ -8,6 +8,9 @@
     <string name="menu_update">更新</string>
     <string name="mods">模組</string>
     <string name="mods_actions">動作</string>
+    <string name="value_is_empty">未設定</string>
+    <string name="value_is_set">已設定</string>
+    <string name="clear_value">清空</string>
     <string name="enable_mod">啟用模組</string>
     <string name="system_mods">系統</string>
     <string name="system_mods_screen">螢幕</string>
@@ -28,6 +31,8 @@
     <string name="system_statusbaricons_signal_title">移動網路信號</string>
     <string name="system_statusbaricons_nosims_title">無SIM卡</string>
     <string name="system_statusbaricons_volte_title">HD圖示</string>
+    <string name="system_statusbaricons_roaming_title">漫游</string>
+    <string name="system_statusbaricons_dualwifi_title">輔助 WLAN</string>
     <string name="system_statusbaricons_hotspot_title">熱點</string>
     <string name="system_statusbaricons_profile_title">工作配置</string>
     <string name="system_statusbaricons_sound_title">聲音情景</string>
@@ -63,18 +68,57 @@
     <string name="system_calendar_app_title">日曆應用</string>
     <string name="system_calendar_app_summ">點擊通知抽屜上方的日期時開啟所選應用</string>
     <string name="system_clockseconds_title">顯示秒</string>
+    <string name="system_clock_show_ampm_title">顯示時段</string>
+    <string name="system_clock_time_format_title">24小時制</string>
+    <string name="system_clock_leadingzero_title">小時補0</string>
+    <string name="system_clock_customformat_enable_title">開啟自定義格式</string>
+    <string name="system_clock_customformat_setting_title">設定格式</string>
+    <string name="system_clock_customformat_help_summ">        回車換行，超過2行會被截斷
+        \nyy/M/d N月e E a aaH:mm I時 → 23/2/23 二月初四 周一 下午 傍晚18:08 酉時
+        \n
+        \nyyyy - 4位年份(2023)
+        \nyy - 2位年份(23)
+        \nMM - 補0月份(02、12)
+        \nM - 月份(2、12)
+        \nN - 農曆月份(正、二)
+        \ndd - 補0日期(02、23)
+        \nd - 日期(2、23)
+        \ne - 農曆日期(初十、十九)
+        \nE - 星期(周三)
+        \na - 時段(上午、下午)
+        \naa - 精確時段(傍晚、凌晨等)
+        \nHH - 24小時制補0小時(09、14)
+        \nH - 24小時制小時(9、14)
+        \nhh - 12小時制補0小時(09、02)
+        \nh - 12小時制小時(9、2)
+        \nmm - 補0分鐘(09)
+        \nss - 補0秒數(09)
+        \nI - 時辰(卯、亥)
+    </string>
+    <string name="system_clock_dualrow_title">雙排顯示</string>
+    <string name="system_clock_show_week_title">顯示星期</string>
+    <string name="system_clock_show_date_title">顯示日期</string>
+    <string name="system_clock_show_year_title">顯示年份</string>
+    <string name="system_clock_fixedwidth_title">固定寬度以防相鄰元素左右防抖</string>
+    <string name="system_clock_fixedwidth_summ">建議顯示秒時才調整寬度</string>
+    <string name="system_statusbar_clock_align_title">水平對齊</string>
     <string name="system_clockseconds_summ">狀態欄顯示秒鐘</string>
     <string name="system_maxsbicons_title">通知圖示限制</string>
     <string name="system_maxsbicons_summ">變成點前顯示的通知圖示的數目</string>
     <string name="system_mobiletypeicon_title">隱藏移動網路類型</string>
     <string name="system_mobiletypeicon_summ">狀態欄隱藏網路類型圖示</string>
+    <string name="system_networkindicator_wifi_title">隱藏Wi-Fi網路活動指示器</string>
+    <string name="system_networkindicator_mobile_title">隱藏移動網路活動指示器</string>
     <string name="system_4gtolte_title">4G顯示LTE圖示</string>
+    <string name="system_statusbar_mobile_showname_title">自定義移動網路類型</string>
     <string name="system_hidemoreicon_title">不顯示隱藏圖示指示器</string>
     <string name="system_hidemoreicon_summ">隱藏通知圖示時不顯示3點圖示</string>
     <string name="system_nonetspeedseparator_title">網速分隔符</string>
     <string name="system_nonetspeedseparator_summ">於水滴屏的設備上不顯示時間和網速間的豎線</string>
     <string name="system_netspeedinterval_title">網速更新間隔</string>
     <string name="system_detailednetspeed_title">詳細的網速指示器</string>
+    <string name="system_detailednetspeed_fakedualrow_title">值和單位雙排顯示</string>
+    <string name="system_netspeed_cat_title">網速相關設定</string>
     <string name="system_detailednetspeed_summ">分別顯示傳入和傳出的網路速度</string>
     <string name="system_detailednetspeed_icon_title">指示器圖示</string>
     <string name="system_detailednetspeed_icon_summ">網速旁顯示上下行流量圖示 (並非所有字體都含有對應圖示)</string>
@@ -82,6 +126,8 @@
     <string name="system_detailednetspeed_low_summ">網速低時不再顯示指示器</string>
     <string name="system_detailednetspeed_lowlevel_title">慢速水平</string>
     <string name="system_detailednetspeed_lowlevel_summ">網速值低於該水平時將被認為慢，並會顯示不同的指示器圖示</string>
+    <string name="system_detailednetspeed_secunit_title">網速隱藏 B/s 單位</string>
+    <string name="system_netspeed_fontsize_title">網速字體大小</string>
     <string name="system_statusbarcontrols_title">手勢控制</string>
     <string name="system_statusbarcontrols_summ">滑動雙擊時執行所選動作</string>
     <string name="system_statusbarcontrols_sens_title">調整靈敏度</string>
@@ -114,6 +160,7 @@
     <string name="system_notifrowmenu_title">擴展通知功能表</string>
     <string name="system_notifrowmenu_summ">從通知功能表開啟應用訊息並強制關閉應用(向左滑動通知將其開啟)</string>
     <string name="system_notifrowmenu_appinfo">應用訊息</string>
+    <string name="system_notifrowmenu_openinfw">浮窗</string>
     <string name="system_notifrowmenu_forceclose">強制關閉</string>
     <string name="system_disableanynotif_title">禁用任何通知</string>
     <string name="system_disableanynotif_summ">同時允許禁用系統通知</string>
@@ -138,6 +185,7 @@
     <string name="system_screenshot_format_title">格式</string>
     <string name="system_screenshot_quality_title">品質</string>
     <string name="system_screenshot_path_title">存放目錄</string>
+    <string name="system_gallery_screenshots_path_title">相簿截圖目錄</string>
     <string name="system_screenshot_overlay_title">截圖時隱藏疊加層</string>
     <string name="system_screenshot_overlay_summ">進行截圖時臨時隱藏疊加層</string>
     <string name="system_screenshot_floattime_title">截圖後的浮動視窗顯示時間</string>
@@ -278,10 +326,14 @@
     <string name="system_airplanemodeconfig_note">模組只能修改現有的系統設置，某些選項可能無效</string>
     <string name="system_fivegtile_title">5G開關</string>
     <string name="system_fivegtile_summ">添加5G開關磁貼至快速設置</string>
+    <string name="system_qs_force_systemfonts_title">時鐘強制使用系統字體</string>
+    <string name="system_cc_dateformat_title">自定義日期格式</string>
     <string name="system_wifipassword_title">檢視已儲存Wi-Fi密碼</string>
+    <string name="system_wifipassword_summ">路徑: 設定-WLAN-進階設定-管理已保存網路</string>
     <string name="system_wifipassword_btn_title">檢視</string>
     <string name="system_wifi_password_label">密碼</string>
     <string name="system_wifi_password_dlgtitle">Wi-Fi 詳情</string>
+    <string name="system_other_wallpaper_scale_title">壁紙縮放級別</string>
     <string name="system_nodarkforce_title">禁用強制黑暗模式</string>
     <string name="system_nodarkforce_summ">在黑暗模式中不反轉某些顏色</string>
     <string name="system_epm_title">擴展電源功能表</string>
@@ -289,12 +341,14 @@
     <string name="system_downgrade_title">允許降級</string>
     <string name="system_downgrade_summ">可以在新版本應用上安裝舊版本應用</string>
     <string name="system_apksign_title">禁用簽名認證</string>
+    <string name="system_disableintegrity_title">禁用系統完整性檢查</string>
     <string name="system_apksign_summ">APK簽名與已安裝應用不同時允許對其進行更新</string>
     <string name="system_magnifier_title">文字放大鏡</string>
     <string name="system_magnifier_summ">移動光標或進行選擇時顯示文字放大鏡</string>
     <string name="system_nooverscroll_title">禁用彈性滾動</string>
     <string name="system_nooverscroll_summ">阻止列表檢視越界回彈</string>
     <string name="system_removesecure_title">禁用安全內容保護</string>
+    <string name="system_remove_startactconfirm_title">移除啟動應用確認</string>
     <string name="system_removesecure_summ">允許對任意應用進行截圖和錄屏</string>
     <string name="system_hidelowbatwarn_title">隱藏低電量警告</string>
     <string name="system_hidelowbatwarn_summ">不顯示開啟省電模式的警告對話框</string>
@@ -366,6 +420,7 @@
     <string name="system_mods_recents">最近應用列表</string>
     <string name="system_removecleaner_title">移除清理按鈕</string>
     <string name="system_removecleaner_summ">隱藏清理最近應用和記憶體的按鈕</string>
+    <string name="system_recents_disable_wallpaperscale_title">禁用壁紙縮放</string>
     <string name="system_clearalltasks_title">清空</string>
     <string name="system_clearalltasks_summ">使清潔器按鈕結束所有正在執行中的任務</string>
     <string name="system_hidefromrecents_title">隱藏最近</string>
@@ -395,6 +450,7 @@
     <string name="system_fw_sticky_summ">保持在浮動視窗中開啟應用，直至手動將其切換回全屏</string>
     <string name="system_fw_splitscreen_title">多視窗</string>
     <string name="system_fw_splitscreen_summ">允許同時使用分屏和浮窗</string>
+    <string name="system_fw_forcein_actionsend_title">應用間分享時以小窗打開</string>
     <string name="system_mods_applock">應用鎖</string>
     <string name="system_applock_title">不嚴格的應用鎖</string>
     <string name="system_applock_summ">如果選擇了退出後應用鎖定的選項，設備鎖定時不要鎖定應用</string>
@@ -406,6 +462,9 @@
     <string name="system_applock_skip_summ">允許選中的活動跳過應用鎖定</string>
     <string name="system_applock_activities">已選中活動</string>
     <string name="system_mods_qs">快速設置</string>
+    <string name="system_mods_cc">控制中心</string>
+    <string name="system_mods_cc_new">新控制中心</string>
+    <string name="system_mods_cc_legacy">經典控制中心</string>
     <string name="system_qsgridrows_title">行數</string>
     <string name="system_qsgridrows_note">豎屏顯示5行時會隱藏標籤，橫屏時則限制為3行。</string>
     <string name="system_qsgridcolumns_title">列數</string>
@@ -413,6 +472,7 @@
     <string name="system_qqsgridcolumns_title">折疊面板中的列數</string>
     <string name="system_qqsgridcolumns_note">橫屏時將會額外增加一列。</string>
     <string name="system_qsnolabels_title">徹底移除標籤</string>
+    <string name="system_qs_hideoperator_title">隱藏運營商名稱</string>
     <string name="system_qshaptic_title">快速設置觸覺反饋</string>
     <string name="system_qshaptic_summ">點擊快速設置磁貼時振動</string>
     <string name="system_mods_other">其他</string>
@@ -473,6 +533,7 @@
     <string name="launcher_folder_cols_title">資料夾排列數量</string>
     <string name="launcher_folderwidth_title">使用整個資料夾的寬度</string>
     <string name="launcher_folderspace_title">減少邊距</string>
+    <string name="launcher_disable_log_title">禁用日誌和統計</string>
     <string name="launcher_fixanim_title">修復動畫</string>
     <string name="launcher_fixanim_summ">將動畫值時長比例應用到某些啟動器動畫</string>
     <string name="launcher_fixlaunch_title">修復應用訊息</string>
@@ -563,6 +624,7 @@
     <string name="controls_volumecursor_summ">使用音量鍵移動文字輸入法光標</string>
     <string name="controls_volumecursor_reverse_title">改變方向</string>
     <string name="controls_volumecursor_reverse_summ">交換光標移動的方向</string>
+    <string name="controls_volumedowndt_turnon_torch_title">雙擊音量下鍵開啟手電筒</string>
     <string name="controls_volumemedia_up_title">長按音量上鍵動作</string>
     <string name="controls_volumemedia_up_summ">螢幕關閉時長按音量上鍵的動作</string>
     <string name="controls_volumemedia_down_title">長按音量下鍵動作</string>
@@ -594,11 +656,13 @@
     <string name="controls_fsg_horiz_title">水平手勢</string>
     <string name="controls_fsg_horiz_summ">啟用水平手勢和導航欄</string>
     <string name="controls_fsg_assist_title">螢幕角落滑動動作</string>
+    <string name="controls_fsg_swipeandstop_title">螢幕兩側向內滑動並停頓</string>
     <string name="various_mods">雜項</string>
     <string name="various_hiddenfeatures_title">隱藏特性</string>
     <string name="various_hiddenfeatures_summ">不易找到的界面</string>
     <string name="various_hiddenfeatures_not_found">該設備不支援</string>
     <string name="various_runningservices_title">正在執行的服務</string>
+    <string name="various_batteryoptimization_title">電池優化</string>
     <string name="various_memorystats_title">記憶體統計</string>
     <string name="various_appusagestats_title">使用統計</string>
     <string name="various_aospnotif_title">應用通知</string>
@@ -619,6 +683,7 @@
     <string name="various_alarmcompat_summ">令所選應用正確顯示MIUI時鐘應用設置的下一次鬧鐘時間</string>
     <string name="various_gboardpadding_port_title">豎屏時底部補充</string>
     <string name="various_gboardpadding_land_title">橫屏時底部補充</string>
+    <string name="various_answerinheadup_title">從浮動通知接聽電話時不進入全屏(除桌面)</string>
     <string name="various_showcallui_title">顯示通話界面</string>
     <string name="various_showcallui_summ">定義來電時應該顯示的界面</string>
     <string name="various_calluibright_title">通話時螢幕亮度</string>
@@ -655,6 +720,8 @@
     <string name="calls">通話</string>
     <string name="settings">設置</string>
     <string name="array_default">預設</string>
+    <string name="array_allow">允許</string>
+    <string name="array_deny">拒絕</string>
     <string name="array_system_default">系統</string>
     <string name="array_global_actions_none">無動作</string>
     <string name="array_global_actions_notif">展開通知抽屜</string>
@@ -675,6 +742,9 @@
     <string name="array_global_actions_forceclose">強制關閉目前應用</string>
     <string name="array_global_actions_powermenu">開啟電源功能表</string>
     <string name="array_global_actions_powermenu_short">電源功能表</string>
+    <string name="array_global_actions_scrolltotop">回到頂部</string>
+    <string name="array_global_actions_expandsidebar">展開側邊欄</string>
+    <string name="array_global_actions_floatingwindow">迷你小窗</string>
     <string name="array_global_actions_clearmemory">清理記憶體</string>
     <string name="array_global_actions_invertcolors">顏色反轉</string>
     <string name="array_global_actions_switchkeyboard">切換鍵盤</string>
@@ -754,6 +824,7 @@
     <string name="array_any">任何</string>
     <string name="array_others">其他</string>
     <string name="array_nofs">未處於全屏模式時</string>
+    <string name="array_home">在桌面</string>
     <string name="array_incoming">來電</string>
     <string name="array_outgoing">去電</string>
     <string name="array_both">兩者</string>
@@ -768,6 +839,9 @@
     <string name="array_scale_cover">覆蓋全屏</string>
     <string name="array_align_top">頂部</string>
     <string name="array_align_bottom">底部</string>
+    <string name="array_align_left">左側</string>
+    <string name="array_align_right">右側</string>
+    <string name="array_align_center">居中</string>
     <string name="array_adjust_brightness">調整亮度</string>
     <string name="array_adjust_volume">調整音量</string>
     <string name="array_alarm_absolute">定時</string>
@@ -844,7 +918,10 @@
     <string name="miuizer_acramail_tip">如果您希望收到對崩潰報告的回覆，此項當然是必填的。請使用電子郵箱、ICQ、XDA或者4PDA的暱稱。</string>
     <string name="support">支持</string>
     <string name="support_github">Github 倉庫</string>
+    <string name="support_github_summ">Star倉庫，關注App更新</string>
+    <string name="support_contact_title">酷安 @tpsxx</string>
     <string name="support_releases_title">版本下载</string>
+    <string name="support_releases_summ">云盤密碼: miui，可長按複製連結</string>
     <string name="support_repo_title">原始的CustoMIUIzer倉庫</string>
     <string name="support_repo_summ">包含模組源碼和分發的Git儲存庫</string>
     <string name="support_xda_title">XDA帖子</string>
@@ -854,6 +931,7 @@
     <string name="support_bug_title">報告錯誤</string>
     <string name="support_bug_summ">通過官方問題跟蹤器向我們發送錯誤報告或者功能請求</string>
     <string name="support_donate">捐出$%1$d</string>
+    <string name="support_donate_me_title">微信贊賞</string>
     <string name="support_donate_title">捐贈 Mikanoshi</string>
     <string name="support_donate_summ">表達您對這個高大上模組感激之情的最好方式 :)</string>
     <string name="support_donate_inapp_title">應用內</string>
@@ -892,7 +970,9 @@
     <string name="soft_reboot">軟重啟</string>
     <string name="soft_reboot_ask">現在執行軟重啟嗎？</string>
     <string name="restart_launcher">重啟桌面</string>
+    <string name="open_inweb">在瀏覽器中打開</string>
     <string name="restart_systemui">重啟系統界面</string>
+    <string name="restart_securitycenter">重啟手機管家</string>
     <string name="backup_restore">設置管理</string>
     <string name="backup_restore_choose">請選擇所需操作</string>
     <string name="do_backup">備份</string>
@@ -967,12 +1047,55 @@
     <string name="system_statusbar_batterytempandcurrent_title">顯示電池溫度和電流</string>
     <string name="system_statusbar_batterytempandcurrent_content_title">顯示內容</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">右側顯示</string>
+    <string name="system_statusbar_batterytempandcurrent_positive_title">電流總顯示正值</string>
+    <string name="system_statusbar_batterytempandcurrent_incharge_title">僅在充電時顯示</string>
+    <string name="system_statusbar_batterytempandcurrent_hideunit_title">隱藏單位</string>
+    <string name="system_statusbar_batterytempandcurrent_singlerow_title">單排顯示</string>
+    <string name="system_statusbar_batterytempandcurrent_reverseorder_title">反序</string>
+    <string name="system_statusbar_batterystyle_title">電量圖示樣式</string>
+    <string name="system_statusbar_batterystyle_digit_title">電量數字樣式</string>
+    <string name="system_statusbar_batterystyle_mark_fontsize_title">百分比符號字體大小</string>
+    <string name="system_statusbar_batterystyle_mark_verticaloffset_title">百分比符號上下偏移量</string>
     <string name="system_statusbar_dualsimin2rows_title">雙排訊號欄</string>
+    <string name="system_statusbar_dualrows_title">雙排狀態欄</string>
+    <string name="system_statusbar_dualrows_summ">狀態欄高度建議值34–40，上邊距建議值2</string>
+    <string name="system_statusbar_dualsimin2rows_style_title">圖示樣式</string>
     <string name="system_statusbar_dualsimin2rows_rightmargin_title">右側間距</string>
     <string name="system_statusbar_mobiletype_single_title">行動網路類型單獨顯示</string>
+    <string name="system_statusbar_mobiletype_single_atleft_title">顯示在信號左側</string>
     <string name="system_statusbar_mobiletype_single_leftmargin_title">左側間距</string>
+    <string name="system_statusbar_mobiletype_single_bold_title">加粗</string>
+    <string name="system_statusbar_horizmargin_title">狀態欄水平邊距</string>
+    <string name="system_statusbar_dualrows_firstrow_horizmargin_title">第一排水平邊距</string>
+    <string name="system_statusbar_clock_spread2rows_title">時鐘跨雙排顯示</string>
+    <string name="system_statusbar_topmargin_title">狀態欄上邊距</string>
+    <string name="system_statusbar_topmargin_val_title">上邊距大小</string>
+    <string name="system_statusbar_topmargin_unset_lockscreen_title">不修改鎖屏狀態欄</string>
     <string name="system_statusbaricons_atright_title">系統圖示移至右側顯示</string>
+    <string name="system_statusbaricons_atleft_title">系統圖示移至左側顯示</string>
+    <string name="system_statusbaricons_atsecondrow_title">系統圖示移到第2排顯示</string>
+    <string name="system_statusbaricons_wifi_mobile_atleft_title">移動信號和Wi-Fi移至左側顯示</string>
+    <string name="system_statusbaricons_swap_wifi_mobile_title">交換移動信號和Wi-Fi位置</string>
+    <string name="system_statusbaricons_swap_batteryicon_percentage_title">交換電池的圖示和百分比位置</string>
+    <string name="system_statusbaricons_change_position_title">圖示位置調整</string>
+    <string name="system_statusbar_mobile_signal_cat_title">移動網路信號圖示設定</string>
+    <string name="system_statusbar_clocktweak_title">時鐘設定</string>
+    <string name="system_statusbaricons_netspeed_title">網速</string>
+    <string name="system_statusbaricons_clock_title">時鐘</string>
     <string name="various_allow_untrusted_touch_title">允許不受信任的觸摸操作</string>
+    <string name="various_clipboard_defaultaction_title">智慧剪貼簿預設行為</string>
+    <string name="various_disable_access_devicelogs_title">關閉訪問設備日誌確認</string>
     <string name="various_skip_interceptperm_title">跳過開啟特殊權限的倒計時</string>
+    <string name="various_skip_securityscan_title">跳過安全體檢</string>
+    <string name="various_show_battery_temperature_title">電池頁面顯示溫度值</string>
+    <string name="various_enable_sc_ai_clipboard_blur_location_title">剪貼簿隱私保護及模糊定位</string>
+    <string name="various_disable_freeform_suggest_blacklist_title">禁用側邊欄推薦App黑名單</string>
+    <string name="various_enable_expand_sidebar_title">隱藏側邊欄</string>
+    <string name="various_disable_dock_suggest_title">側邊欄不顯示推薦應用</string>
+    <string name="various_swipe_expand_sidebar_title">保留側滑展開</string>
     <string name="system_lockscreenshortcuts_left_tapaction_title">長按左側圖示時切換手電筒</string>
+    <string name="system_cc_tile_roundedrect_title">圓角矩形磁貼</string>
+    <string name="system_cc_enable_style_switch_title">強制開啟控制中心樣式切換</string>
+    <string name="system_cc_disable_bluetooth_restrict_title">禁用藍牙臨時關閉態</string>
+    <string name="system_cc_collapse_after_clicked_title">單擊開關後自動收起</string>
 </resources>
