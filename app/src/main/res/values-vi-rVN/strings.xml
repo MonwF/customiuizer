@@ -109,6 +109,7 @@
     <string name="system_statusbar_mobile_showname_title">Tùy chỉnh loại mạng di động</string>
     <string name="system_hidemoreicon_title">Không hiển thị chỉ báo biểu tượng ẩn</string>
     <string name="system_hidemoreicon_summ">Biểu tượng dấu 3 chấm không hiển thị khi biểu tượng thông báo bị ẩn</string>
+    <string name="system_hidestatusbar_whenscreenshot_title">Ẩn thanh trạng thái khi chụp màn hình</string>
     <string name="system_nonetspeedseparator_title">Bộ tách tốc độ internet</string>
     <string name="system_nonetspeedseparator_summ">Đường kẻ dọc giữa thời gian và tốc độ mạng không hiển thị trên thiết bị có màn hình giọt nước</string>
     <string name="system_netspeedinterval_title">Thời gian cập nhật tốc độ mạng</string>
@@ -407,6 +408,7 @@
     <string name="system_charginginfo_voltage_title">Điện áp pin</string>
     <string name="system_charginginfo_wattage_title">Tiêu thụ điện</string>
     <string name="system_charginginfo_temp_title">Nhiệt độ pin</string>
+    <string name="array_cpu_temp">Nhiệt độ CPU</string>
     <string name="system_lsalarm_title">Hiển thị báo thức tiếp theo</string>
     <string name="system_lsalarm_summ">Hiển thị báo thức gần nhất với ngày hiện tại</string>
     <string name="system_lsalarm_format_title">Định dạng hiển thị</string>
@@ -557,7 +559,7 @@
     <string name="launcher_privacyapps">Ứng dụng ẩn</string>
     <string name="launcher_privacyapps_fail">Quyền yêu cầu chưa được cấp</string>
     <string name="launcher_privacyapps_gest_title">Không có thư mục ẩn</string>
-    <string name="launcher_privacyapps_gest_summ">Bật ẩn thư mục ứng dụng, tắt cử chỉ hai ngón tay</string>
+    <string name="launcher_privacyapps_gest_summ">Vô hiệu hóa cử chỉ hai ngón tay để mở thư mục ứng dụng ẩn và mã điện thoại bí mật là 233233</string>
     <string name="launcher_privacyapps_list_title">Ẩn danh sách ứng dụng</string>
     <string name="launcher_privacyapps_list_summ">Phiên bản nâng cao của tùy chọn Ẩn ứng dụng, ẩn mọi ứng dụng đã cài đặt. Không cần khởi động lại.</string>
     <string name="launcher_swipedownaction_title">Thao tác vuốt xuống (một ngón tay)</string>
@@ -633,6 +635,8 @@
     <string name="controls_volumemedia_vibrate_summ">Rung khi nhấn lâu</string>
     <string name="controls_mods_navbar">Thanh điều hướng</string>
     <string name="controls_nonavbar_title">Ẩn thanh điều hướng và chỉ báo toàn màn hình</string>
+    <string name="controls_nonavbar_fix_inputmethod_title">Sửa lỗi tối ưu hóa bàn phím toàn màn hình</string>
+    <string name="controls_nonavbar_fix_inputmethod_summ">Trước tiên, thêm ứng dụng InputMethod vào phạm vi LSPosed</string>
     <string name="controls_imebackalticon_title">Phản ứng phím quay lại</string>
     <string name="controls_imebackalticon_summ">Chuyển đổi biểu tượng phím quay lại dưới dạng thay thế trong chế độ nhập liệu</string>
     <string name="controls_navbarheight_title">Chiều cao thanh điều hướng</string>
@@ -657,6 +661,7 @@
     <string name="controls_fsg_horiz_summ">Bật cử chỉ ngang và thanh điều hướng</string>
     <string name="controls_fsg_assist_title">Thao tác vuốt góc màn hình</string>
     <string name="controls_fsg_swipeandstop_title">Vuốt trên màn hình bắt đầu từ cạnh và dừng hành động</string>
+    <string name="controls_fsg_swipeandstop_disablevibrate_title">Không rung</string>
     <string name="various_mods">Các mod khác</string>
     <string name="various_hiddenfeatures_title">Tính năng ẩn</string>
     <string name="various_hiddenfeatures_summ">Các hoạt động không dễ truy cập</string>
@@ -747,6 +752,7 @@
     <string name="array_global_actions_scrolltotop">Cuộn về đầu trang</string>
     <string name="array_global_actions_expandsidebar">Hiện thanh công cụ</string>
     <string name="array_global_actions_floatingwindow">Cửa sổ nổi</string>
+    <string name="array_global_actions_pinningwindow">Ghim cửa sổ</string>
     <string name="array_global_actions_clearmemory">Dọn dẹp bộ nhớ</string>
     <string name="array_global_actions_invertcolors">Đảo ngược màu</string>
     <string name="array_global_actions_switchkeyboard">Chuyển đổi bàn phím</string>
@@ -872,6 +878,10 @@
     <string name="array_turn_off">Tắt</string>
     <string name="array_turn_off_disable">Tắt và vô hiệu hóa</string>
     <string name="array_current">Chỉ hiện tại</string>
+    <string name="array_power">Chỉ nguồn</string>
+    <string name="array_temp_current">Nhiệt độ và dòng điện</string>
+    <string name="array_temp_power">Nhiệt độ và điện năng</string>
+    <string name="array_power_current">Điện năng và dòng điện</string>
     <string name="array_dualsimin2rows_style_thick">Dày</string>
     <string name="array_dualsimin2rows_style_theme">Theo giao diện</string>
     <string name="unlimited">Không giới hạn</string>
@@ -1058,7 +1068,7 @@
     <string name="auto_color">Màu thanh trạng thái</string>
     <string name="type_file">Tập tin</string>
     <string name="type_res">Tài nguyên</string>
-    <string name="system_statusbar_batterytempandcurrent_title">Hiển thị nhiệt độ và dòng điện của pin</string>
+    <string name="system_statusbar_batterytempandcurrent_title">Hiển thị thông tin pin</string>
     <string name="system_statusbar_batterytempandcurrent_content_title">Hiển thị nội dung</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">Hiển thị bên phải</string>
     <string name="system_statusbar_batterytempandcurrent_positive_title">Làm cho giá trị hiện tại luôn dương</string>
@@ -1066,6 +1076,7 @@
     <string name="system_statusbar_batterytempandcurrent_hideunit_title">Ẩn đơn vị</string>
     <string name="system_statusbar_batterytempandcurrent_singlerow_title">Hiển thị trong một dòng</string>
     <string name="system_statusbar_batterytempandcurrent_reverseorder_title">Đảo ngược thứ tự</string>
+    <string name="system_statusbar_showdevicetemperature_title">Hiển thị nhiệt độ máy</string>
     <string name="system_statusbar_batterystyle_title">tạo kiểu cho biểu tượng pin</string>
     <string name="system_statusbar_batterystyle_digit_title">Số ở pin</string>
     <string name="system_statusbar_batterystyle_mark_fontsize_title">Cỡ chữ của dấu phần trăm</string>
