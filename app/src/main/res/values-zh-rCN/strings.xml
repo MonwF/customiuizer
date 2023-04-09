@@ -441,9 +441,9 @@
     <string name="system_betterpopups_nohide_summ">不自动关闭弹窗</string>
     <string name="system_betterpopups_autoclose_expanded_title">自动隐藏展开的通知</string>
     <string name="system_betterpopups_allowfloat_title">允许浮窗中打开</string>
-    <string name="system_betterpopups_allowfloat_summ">向下滑动时，在浮动窗口中打开应用(移除系统黑名单)</string>
+    <string name="system_betterpopups_allowfloat_summ">向下滑动时，强制在浮动窗口中打开应用</string>
     <string name="system_betterpopups_swipedown_title">启用下滑手势</string>
-    <string name="system_betterpopups_swipedown_summ">向下滑动手势时打开通知抽屉</string>
+    <string name="system_betterpopups_swipedown_summ">向下滑动时打开通知抽屉</string>
     <string name="system_mods_floatingwindows">浮动窗口与分屏</string>
     <string name="system_fw_noblacklist_title">禁用黑名单</string>
     <string name="system_fw_noblacklist_summ">允许在浮动窗口中打开任意应用</string>

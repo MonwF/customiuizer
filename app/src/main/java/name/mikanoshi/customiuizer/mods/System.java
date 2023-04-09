@@ -1635,47 +1635,7 @@ public class System {
     }
 
     public static void BetterPopupsSwipeDownHook(LoadPackageParam lpparam) {
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.HeadsUpTouchHelper", lpparam.classLoader, "onInterceptTouchEvent", MotionEvent.class, new MethodHook() {
-            @Override
-            protected void after(final MethodHookParam param) throws Throwable {
-                MotionEvent me = (MotionEvent)param.args[0];
-                if (me.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                    boolean mAllowSwipingDown = true;
-                    try {
-                        Object mPickedChild = XposedHelpers.getObjectField(param.thisObject, "mPickedChild");
-                        if (mPickedChild != null) {
-                            View mMiniBar = (View)XposedHelpers.callMethod(mPickedChild, "getMiniWindowBar");
-                            if (mMiniBar != null && mMiniBar.getVisibility() == View.VISIBLE) mAllowSwipingDown = false;
-                        }
-                    } catch (Throwable t) {
-                        XposedBridge.log(t);
-                    }
-                    XposedHelpers.setAdditionalInstanceField(param.thisObject, "mAllowSwipingDown", mAllowSwipingDown);
-                }
-                if (me.getActionMasked() == MotionEvent.ACTION_MOVE) {
-                    Object mAllowSwipingDown = XposedHelpers.getAdditionalInstanceField(param.thisObject, "mAllowSwipingDown");
-                    if (mAllowSwipingDown instanceof Boolean && !(boolean)mAllowSwipingDown) return;
-                    boolean mTouchingHeadsUpView = (boolean)XposedHelpers.getObjectField(param.thisObject, "mTouchingHeadsUpView");
-                    if (!mTouchingHeadsUpView) return;
-                    float mTouchSlop = (float)XposedHelpers.getObjectField(param.thisObject, "mTouchSlop");
-                    float mInitialTouchY = (float)XposedHelpers.getObjectField(param.thisObject, "mInitialTouchY");
-                    if (me.getY() - mInitialTouchY > mTouchSlop) {
-                        XposedHelpers.setObjectField(param.thisObject, "mTouchingHeadsUpView", false);
-
-                        ViewGroup mStackScroller = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mStackScroller");
-                        Context mContext = mStackScroller != null ? mStackScroller.getContext() : null;
-                        if (mContext == null) {
-                            Helpers.log("BetterPopupsSwipeDownHook", "Cannot get context!");
-                            return;
-                        }
-
-                        Intent expandNotif = new Intent(ACTION_PREFIX + "ExpandNotifications");
-                        expandNotif.putExtra("expand_only", true);
-                        mContext.sendBroadcast(expandNotif);
-                    }
-                }
-            }
-        });
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.notification.policy.AppMiniWindowManager", lpparam.classLoader, "canNotificationSlide", String.class, PendingIntent.class, XC_MethodReplacement.returnConstant(false));
     }
 
     public static void RotationAnimationRes() {
