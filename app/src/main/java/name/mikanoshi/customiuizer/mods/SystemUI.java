@@ -3707,7 +3707,6 @@ public class SystemUI {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 PendingIntent pendingIntent = (PendingIntent) param.args[0];
-                Intent intent = (Intent) param.args[1];
                 Object mSbn = XposedHelpers.getObjectField(param.args[2], "mSbn");
                 String pkgName;
                 boolean isSubstituteNotification = (boolean) XposedHelpers.callMethod(mSbn, "isSubstituteNotification");
@@ -3720,6 +3719,20 @@ public class SystemUI {
                 if (MainModule.mPrefs.getStringSet("system_notify_openinfw_apps").contains(pkgName)) {
                     return;
                 }
+                Class<?> Dependency = findClass("com.android.systemui.Dependency", lpparam.classLoader);
+                Object AppMiniWindowManager = XposedHelpers.callStaticMethod(Dependency, "get", findClassIfExists("com.android.systemui.statusbar.notification.policy.AppMiniWindowManager", lpparam.classLoader));
+                XposedHelpers.callMethod(AppMiniWindowManager, "launchMiniWindowActivity", pkgName, pendingIntent);
+                param.setResult(null);
+            }
+        });
+    }
+
+    public static void FixOpenNotifyInFreeFormHook(LoadPackageParam lpparam) {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.notification.policy.AppMiniWindowManager", lpparam.classLoader, "launchMiniWindowActivity", String.class, PendingIntent.class, new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                String pkgName = (String) param.args[0];
+                PendingIntent pendingIntent = (PendingIntent) param.args[1];
                 ForegroundInfo foregroundInfo = ProcessManager.getForegroundInfo();
                 if (foregroundInfo != null) {
                     String topPackage = foregroundInfo.mForegroundPackageName;
@@ -3727,7 +3740,7 @@ public class SystemUI {
                         return;
                     }
                 }
-                Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
+                Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "context");
                 List<MiuiFreeFormManager.MiuiFreeFormStackInfo> freeFormStackInfoList = MiuiFreeFormManager.getAllFreeFormStackInfosOnDisplay(mContext.getDisplay() != null ? mContext.getDisplay().getDisplayId() : 0);
                 int freeFormCount = 0;
                 if (freeFormStackInfoList != null) {
@@ -3742,6 +3755,12 @@ public class SystemUI {
                     bIntent.putExtra("package", pkgName);
                     bIntent.setPackage("android");
                     mContext.sendBroadcast(bIntent);
+                }
+                Intent intent = new Intent();
+                if (!"com.tencent.tim".equals(pkgName)) {
+                    XposedHelpers.callMethod(intent, "addFlags", 134217728);
+                    XposedHelpers.callMethod(intent, "addFlags", 268435456);
+                    XposedHelpers.callMethod(intent, "addMiuiFlags", 256);
                 }
                 ActivityOptions options = MiuiMultiWindowUtils.getActivityOptions(mContext, pkgName, true, false);
                 pendingIntent.send(mContext, 0, intent, null, null, null, options != null ? options.toBundle() : null);

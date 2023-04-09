@@ -114,6 +114,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 
             if (mPrefs.getBoolean("system_notify_openinfw")
                 || mPrefs.getBoolean("system_fw_forcein_actionsend")
+                || mPrefs.getBoolean("system_betterpopups_allowfloat")
             ) {
                 System.OpenAppInFreeFormHook(lpparam);
             }
@@ -416,6 +417,13 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getStringAsInt("system_colorizenotifs", 1) > 1) System.ColorizeNotificationCardHook(lpparam);
             if (mPrefs.getBoolean("system_notify_openinfw")) SystemUI.OpenNotifyInFloatingWindowHook(lpparam);
             if (mPrefs.getBoolean("system_fw_noblacklist")) System.DisableSideBarSuggestionHook(lpparam);
+
+            if (mPrefs.getBoolean("system_notify_openinfw")
+                || mPrefs.getBoolean("system_notifrowmenu")
+                || mPrefs.getBoolean("system_betterpopups_allowfloat")
+            ) {
+                SystemUI.FixOpenNotifyInFreeFormHook(lpparam);
+            }
         }
 
         if (pkg.equals(Helpers.modulePkg)) {

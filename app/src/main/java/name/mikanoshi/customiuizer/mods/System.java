@@ -5164,9 +5164,6 @@ public class System {
             else if ("com.tencent.mm".equals(pkgName) && intent.getComponent().getClassName().contains(".plugin.base.stub.WXEntryActivity")) {
                 openInFw = true;
             }
-            else if ("com.tencent.mobileqq".equals(pkgName) && intent.getComponent().getClassName().contains(".activity.JumpActivity")) {
-                openInFw = true;
-            }
         }
         if (!openInFw) {
             Object pkg = XposedHelpers.getAdditionalStaticField(MiuiFreeFormManager.class, "nextFreeformPackage");
