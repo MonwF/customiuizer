@@ -214,7 +214,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 
             if (mPrefs.getInt("system_qsgridcolumns", 2) > 2 || mPrefs.getInt("system_qsgridrows", 1) > 1) SystemUI.QSGridRes();
             if (mPrefs.getInt("system_qqsgridcolumns", 2) > 2) SystemUI.QQSGridRes();
-            if (mPrefs.getBoolean("system_volumetimer")) SystemUI.VolumeTimerValuesRes(lpparam);
             if (mPrefs.getBoolean("system_networkindicator_wifi")) System.NetworkIndicatorWifi(lpparam);
 
             if (mPrefs.getInt("system_drawer_blur", 100) < 100) System.DrawerBlurRatioHook(lpparam);
@@ -258,8 +257,10 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_visualizer")) System.AudioVisualizerHook(lpparam);
             if (mPrefs.getBoolean("system_nosilentvibrate")
                 || mPrefs.getBoolean("system_qs_force_systemfonts")
+                || mPrefs.getBoolean("system_volumetimer")
                 || mPrefs.getBoolean("system_qsnolabels")
                 || mPrefs.getBoolean("system_volumebar_blur_mtk")
+                || mPrefs.getBoolean("system_cc_tile_roundedrect")
                 || (mPrefs.getBoolean("system_separatevolume") && mPrefs.getBoolean("system_separatevolume_slider"))
                 || (mPrefs.getInt("system_volumedialogdelay_collapsed", 0) > 0 || mPrefs.getInt("system_volumedialogdelay_expanded", 0) > 0)
                 || (mPrefs.getInt("system_volumeblur_collapsed", 0) > 0 || mPrefs.getInt("system_volumeblur_expanded", 0) > 0)
@@ -411,9 +412,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 SystemUI.DualRowStatusbarHook(lpparam);
             }
             if (mPrefs.getInt("system_ccgridcolumns", 4) > 4 || mPrefs.getInt("system_ccgridrows", 4) != 4) SystemUI.SystemCCGridHook(lpparam);
-            if (mPrefs.getBoolean("system_cc_tile_roundedrect")) {
-                SystemUI.CCTileCornerHook(lpparam);
-            }
             if (mPrefs.getStringAsInt("system_colorizenotifs", 1) > 1) System.ColorizeNotificationCardHook(lpparam);
             if (mPrefs.getBoolean("system_notify_openinfw")) SystemUI.OpenNotifyInFloatingWindowHook(lpparam);
             if (mPrefs.getBoolean("system_fw_noblacklist")) System.DisableSideBarSuggestionHook(lpparam);
