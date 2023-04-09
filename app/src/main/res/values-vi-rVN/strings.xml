@@ -138,6 +138,7 @@
     <string name="system_compactnotif_summ">Giảm khoảng cách thông báo dọc</string>
     <string name="system_colorizenotiftitle_title">Tô màu thẻ thông báo</string>
     <string name="system_colorizenotiftitle_summ">Áp dụng màu biểu tượng cho thẻ (chỉ kiểu thông báo Android)</string>
+    <string name="system_notify_openinfw_title">Mở thông báo trong cửa sổ nổi</string>
     <string name="system_minimalnotifview_title">Khôi phục chế độ xem thu gọn đơn giản</string>
     <string name="system_minimalnotifview_summ">Thông báo ít quan trọng nhất có thể được thu gọn lại để xem một dòng</string>
     <string name="system_notifchannelsettings_title">Mở cài đặt kênh</string>
