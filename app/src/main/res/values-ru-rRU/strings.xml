@@ -138,6 +138,7 @@
     <string name="system_compactnotif_summ">Уменьшает вертикальные отступы в уведомлениях</string>
     <string name="system_colorizenotiftitle_title">Раскрасить заголовок уведомления</string>
     <string name="system_colorizenotiftitle_summ">Применяет цвет иконки к заголовку (только для стиля уведомлений Android)</string>
+    <string name="system_notify_openinfw_title">Открывать уведомление во всплывающем окне</string>
     <string name="system_minimalnotifview_title">Вернуть минималистичный свёрнутый вид</string>
     <string name="system_minimalnotifview_summ">Уведомления низкой важности при сворачивании смогут снова принимать вид в одну строку</string>
     <string name="system_notifchannelsettings_title">Открывать настройки канала</string>
