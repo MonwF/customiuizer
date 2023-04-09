@@ -146,6 +146,14 @@ public class SystemUI {
         if (MainModule.mPrefs.getBoolean("system_nosafevolume")) {
             MainModule.resHooks.setObjectReplacement(lpparam.packageName, "bool", "enable_safety_warning", false);
         }
+        if (MainModule.mPrefs.getBoolean("system_volumetimer")) {
+            MainModule.resHooks.setResReplacement("miui.systemui.plugin", "array", "miui_volume_timer_segments", R.array.miui_volume_timer_segments);
+        }
+        if (MainModule.mPrefs.getBoolean("system_cc_tile_roundedrect")) {
+            MainModule.resHooks.setResReplacement("miui.systemui.plugin", "drawable", "qs_background_unavailable", R.drawable.ic_qs_tile_bg_disabled);
+            MainModule.resHooks.setResReplacement("miui.systemui.plugin", "drawable", "qs_background_disabled", R.drawable.ic_qs_tile_bg_disabled);
+            MainModule.resHooks.setResReplacement("miui.systemui.plugin", "drawable", "qs_background_warning", R.drawable.ic_qs_tile_bg_warning);
+        }
     }
 
     private static String getSlotNameByType(int mIconType) {
@@ -480,7 +488,7 @@ public class SystemUI {
         }
         float fontSize = MainModule.mPrefs.getInt("system_statusbar_" + subKey + "_fontsize", 16) * 0.5f;
         int opt = MainModule.mPrefs.getStringAsInt("system_statusbar_" + subKey + "_content", 1);
-        if (opt == 1 && !MainModule.mPrefs.getBoolean("system_statusbar_" + subKey + "_singlerow")) {
+        if ((opt == 1 || opt == 4) && !MainModule.mPrefs.getBoolean("system_statusbar_" + subKey + "_singlerow")) {
             batteryView.setSingleLine(false);
             batteryView.setMaxLines(2);
             batteryView.setLineSpacing(0, fontSize > 8.5f ? 0.85f : 0.9f);
@@ -1814,6 +1822,12 @@ public class SystemUI {
                     if (MainModule.mPrefs.getBoolean("system_qsnolabels")) {
                         HideCCLabelsHook(pluginLoader);
                     }
+                    if (MainModule.mPrefs.getBoolean("system_volumetimer")) {
+                        VolumeTimerValuesRes(pluginLoader);
+                    }
+                    if (MainModule.mPrefs.getBoolean("system_cc_tile_roundedrect")) {
+                        CCTileCornerHook(pluginLoader);
+                    }
                 }
             }
         });
@@ -2060,111 +2074,77 @@ public class SystemUI {
         }
     }
 
-    public static void VolumeTimerValuesRes(LoadPackageParam lpparam) {
-        MainModule.resHooks.setResReplacement("miui.systemui.plugin", "array", "miui_volume_timer_segments", R.array.miui_volume_timer_segments);
-
-        String pluginLoaderClass = Helpers.isTPlus() ? "com.android.systemui.shared.plugins.PluginInstance$Factory" : "com.android.systemui.shared.plugins.PluginManagerImpl";
-        Helpers.hookAllMethods(pluginLoaderClass, lpparam.classLoader, "getClassLoader", new MethodHook() {
-            private boolean isHooked = false;
+    public static void VolumeTimerValuesRes(ClassLoader pluginLoader) {
+        Helpers.findAndHookMethod("com.android.systemui.miui.volume.MiuiVolumeTimerDrawableHelper", pluginLoader, "initTimerString", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
-                ApplicationInfo appInfo = (ApplicationInfo) param.args[0];
-                if ("miui.systemui.plugin".equals(appInfo.packageName) && !isHooked) {
-                    isHooked = true;
-                    if (pluginLoader == null) {
-                        pluginLoader = (ClassLoader) param.getResult();
-                    }
-                    Helpers.findAndHookMethod("com.android.systemui.miui.volume.MiuiVolumeTimerDrawableHelper", pluginLoader, "initTimerString", new MethodHook() {
-                        @Override
-                        protected void after(MethodHookParam param) throws Throwable {
-                            Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
-                            String[] mTimeSegmentTitle = new String[11];
-                            int timerOffId = mContext.getResources().getIdentifier("timer_off", "string", "miui.systemui.plugin");
-                            int minuteId = mContext.getResources().getIdentifier("timer_30_minutes", "string", "miui.systemui.plugin");
-                            int hourId = mContext.getResources().getIdentifier("timer_1_hour", "string", "miui.systemui.plugin");
-                            mTimeSegmentTitle[0] = mContext.getResources().getString(timerOffId);
-                            mTimeSegmentTitle[1] = mContext.getResources().getString(minuteId, 30);
-                            mTimeSegmentTitle[2] = mContext.getResources().getString(hourId, 1);
-                            mTimeSegmentTitle[3] = mContext.getResources().getString(hourId, 2);
-                            mTimeSegmentTitle[4] = mContext.getResources().getString(hourId, 3);
-                            mTimeSegmentTitle[5] = mContext.getResources().getString(hourId, 4);
-                            mTimeSegmentTitle[6] = mContext.getResources().getString(hourId, 5);
-                            mTimeSegmentTitle[7] = mContext.getResources().getString(hourId, 6);
-                            mTimeSegmentTitle[8] = mContext.getResources().getString(hourId, 8);
-                            mTimeSegmentTitle[9] = mContext.getResources().getString(hourId, 10);
-                            mTimeSegmentTitle[10] = mContext.getResources().getString(hourId, 12);
-                            XposedHelpers.setObjectField(param.thisObject, "mTimeSegmentTitle", mTimeSegmentTitle);
-                        }
-                    });
-                    Helpers.findAndHookMethod("com.android.systemui.miui.volume.TimerItem", pluginLoader, "getTimePos", int.class, new MethodHook() {
-                        @Override
-                        protected void before(MethodHookParam param) throws Throwable {
-                            Object timer = XposedHelpers.getObjectField(param.thisObject, "mTimerTime");
-                            float halfTimerWidth = ((int) XposedHelpers.callMethod(timer, "getWidth")) / 2.0f;
-                            Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
-                            float seekWidth = mContext.getResources().getDimension(mContext.getResources().getIdentifier("miui_volume_timer_seelbar_width", "dimen", "miui.systemui.plugin"));
-                            int marginLeft = mContext.getResources().getDimensionPixelSize(mContext.getResources().getIdentifier("miui_volume_timer_seekbar_margin_left", "dimen", "miui.systemui.plugin"));
-                            int seg = (int) XposedHelpers.getObjectField(param.thisObject, "mDeterminedSegment");
-                            param.setResult(seekWidth / 10 * seg + marginLeft - halfTimerWidth);
-                        }
-                    });
-                }
+                Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
+                String[] mTimeSegmentTitle = new String[11];
+                int timerOffId = mContext.getResources().getIdentifier("timer_off", "string", "miui.systemui.plugin");
+                int minuteId = mContext.getResources().getIdentifier("timer_30_minutes", "string", "miui.systemui.plugin");
+                int hourId = mContext.getResources().getIdentifier("timer_1_hour", "string", "miui.systemui.plugin");
+                mTimeSegmentTitle[0] = mContext.getResources().getString(timerOffId);
+                mTimeSegmentTitle[1] = mContext.getResources().getString(minuteId, 30);
+                mTimeSegmentTitle[2] = mContext.getResources().getString(hourId, 1);
+                mTimeSegmentTitle[3] = mContext.getResources().getString(hourId, 2);
+                mTimeSegmentTitle[4] = mContext.getResources().getString(hourId, 3);
+                mTimeSegmentTitle[5] = mContext.getResources().getString(hourId, 4);
+                mTimeSegmentTitle[6] = mContext.getResources().getString(hourId, 5);
+                mTimeSegmentTitle[7] = mContext.getResources().getString(hourId, 6);
+                mTimeSegmentTitle[8] = mContext.getResources().getString(hourId, 8);
+                mTimeSegmentTitle[9] = mContext.getResources().getString(hourId, 10);
+                mTimeSegmentTitle[10] = mContext.getResources().getString(hourId, 12);
+                XposedHelpers.setObjectField(param.thisObject, "mTimeSegmentTitle", mTimeSegmentTitle);
+            }
+        });
+        Helpers.findAndHookMethod("com.android.systemui.miui.volume.TimerItem", pluginLoader, "getTimePos", int.class, new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                Object timer = XposedHelpers.getObjectField(param.thisObject, "mTimerTime");
+                float halfTimerWidth = ((int) XposedHelpers.callMethod(timer, "getWidth")) / 2.0f;
+                Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
+                float seekWidth = mContext.getResources().getDimension(mContext.getResources().getIdentifier("miui_volume_timer_seelbar_width", "dimen", "miui.systemui.plugin"));
+                int marginLeft = mContext.getResources().getDimensionPixelSize(mContext.getResources().getIdentifier("miui_volume_timer_seekbar_margin_left", "dimen", "miui.systemui.plugin"));
+                int seg = (int) XposedHelpers.getObjectField(param.thisObject, "mDeterminedSegment");
+                param.setResult(seekWidth / 10 * seg + marginLeft - halfTimerWidth);
             }
         });
     }
 
-    public static void CCTileCornerHook(LoadPackageParam lpparam) {
-        MainModule.resHooks.setResReplacement("miui.systemui.plugin", "drawable", "qs_background_unavailable", R.drawable.ic_qs_tile_bg_disabled);
-        MainModule.resHooks.setResReplacement("miui.systemui.plugin", "drawable", "qs_background_disabled", R.drawable.ic_qs_tile_bg_disabled);
-        MainModule.resHooks.setResReplacement("miui.systemui.plugin", "drawable", "qs_background_warning", R.drawable.ic_qs_tile_bg_warning);
-
-        String pluginLoaderClass = Helpers.isTPlus() ? "com.android.systemui.shared.plugins.PluginInstance$Factory" : "com.android.systemui.shared.plugins.PluginManagerImpl";
-        Helpers.hookAllMethods(pluginLoaderClass, lpparam.classLoader, "getClassLoader", new MethodHook() {
-            private boolean isHooked = false;
+    public static void CCTileCornerHook(ClassLoader pluginLoader) {
+        Helpers.findAndHookMethod("miui.systemui.controlcenter.qs.tileview.ExpandableIconView", pluginLoader, "setCornerRadius", float.class, new MethodHook() {
             @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                ApplicationInfo appInfo = (ApplicationInfo) param.args[0];
-                if ("miui.systemui.plugin".equals(appInfo.packageName) && !isHooked) {
-                    isHooked = true;
-                    if (pluginLoader == null) {
-                        pluginLoader = (ClassLoader) param.getResult();
-                    }
-                    Helpers.findAndHookMethod("miui.systemui.controlcenter.qs.tileview.ExpandableIconView", pluginLoader, "setCornerRadius", float.class, new MethodHook() {
-                        @Override
-                        protected void before(MethodHookParam param) throws Throwable {
-                            Context mContext = (Context) XposedHelpers.callMethod(param.thisObject, "getPluginContext");
-                            float radius = 18;
-                            if (scaledTileWidthDim > 0) {
-                                radius *= scaledTileWidthDim / 65;
-                            }
-                            param.args[0] = mContext.getResources().getDisplayMetrics().density * radius;
-                        }
-                    });
-
-                    Helpers.findAndHookMethod("miui.systemui.dagger.PluginComponentFactory", pluginLoader, "create", Context.class, new MethodHook() {
-                        @Override
-                        protected void before(MethodHookParam param) throws Throwable {
-                            Context mContext = (Context) param.args[0];
-                            int enabledTileBackgroundResId = mContext.getResources().getIdentifier("qs_background_enabled", "drawable", "miui.systemui.plugin");
-                            int enabledTileColorResId = mContext.getResources().getIdentifier("qs_enabled_color", "color", "miui.systemui.plugin");
-                            int tintColor = mContext.getResources().getColor(enabledTileColorResId, null);
-                            Resources modRes = Helpers.getModuleRes(mContext);
-                            MethodHook imgHook = new MethodHook() {
-                                @Override
-                                protected void before(MethodHookParam param) throws Throwable {
-                                    int resId = (int) param.args[0];
-                                    if (resId == enabledTileBackgroundResId && resId != 0) {
-                                        Drawable enableTile = modRes.getDrawable(R.drawable.ic_qs_tile_bg_enabled, null);
-                                        enableTile.setTint(tintColor);
-                                        param.setResult(enableTile);
-                                    }
-                                }
-                            };
-                            Helpers.findAndHookMethod("android.content.res.Resources", pluginLoader, "getDrawable", int.class, imgHook);
-                            Helpers.findAndHookMethod("android.content.res.Resources.Theme", pluginLoader, "getDrawable", int.class, imgHook);
-                        }
-                    });
+            protected void before(MethodHookParam param) throws Throwable {
+                Context mContext = (Context) XposedHelpers.callMethod(param.thisObject, "getPluginContext");
+                float radius = 18;
+                if (scaledTileWidthDim > 0) {
+                    radius *= scaledTileWidthDim / 65;
                 }
+                param.args[0] = mContext.getResources().getDisplayMetrics().density * radius;
+            }
+        });
+
+        Helpers.findAndHookMethod("miui.systemui.dagger.PluginComponentFactory", pluginLoader, "create", Context.class, new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                Context mContext = (Context) param.args[0];
+                int enabledTileBackgroundResId = mContext.getResources().getIdentifier("qs_background_enabled", "drawable", "miui.systemui.plugin");
+                int enabledTileColorResId = mContext.getResources().getIdentifier("qs_enabled_color", "color", "miui.systemui.plugin");
+                int tintColor = mContext.getResources().getColor(enabledTileColorResId, null);
+                Resources modRes = Helpers.getModuleRes(mContext);
+                MethodHook imgHook = new MethodHook() {
+                    @Override
+                    protected void before(MethodHookParam param) throws Throwable {
+                        int resId = (int) param.args[0];
+                        if (resId == enabledTileBackgroundResId && resId != 0) {
+                            Drawable enableTile = modRes.getDrawable(R.drawable.ic_qs_tile_bg_enabled, null);
+                            enableTile.setTint(tintColor);
+                            param.setResult(enableTile);
+                        }
+                    }
+                };
+                Helpers.findAndHookMethod("android.content.res.Resources", pluginLoader, "getDrawable", int.class, imgHook);
+                Helpers.findAndHookMethod("android.content.res.Resources.Theme", pluginLoader, "getDrawable", int.class, imgHook);
             }
         });
     }
