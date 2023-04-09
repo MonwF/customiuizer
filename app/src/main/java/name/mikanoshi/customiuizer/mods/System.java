@@ -149,6 +149,7 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 import de.robv.android.xposed.callbacks.XCallback;
+import miui.app.MiuiFreeFormManager;
 import name.mikanoshi.customiuizer.MainModule;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.AudioVisualizer;
@@ -2200,7 +2201,6 @@ public class System {
                             Object ModalController = XposedHelpers.callStaticMethod(Dependency, "get", findClass(ModalControllerForDep, lpparam.classLoader));
                             XposedHelpers.callMethod(ModalController, "animExitModelCollapsePanels");
                             XposedHelpers.callMethod(AppMiniWindowManager, "launchMiniWindowActivity", miniWindowPkg, notifyIntent);
-//                            mContext.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
                         }
                     }
                 };
@@ -5143,40 +5143,88 @@ public class System {
         return options;
     }
 
-    private static boolean shouldOpenInFwWhenShare(Intent intent, String callingPackage) {
+    private static boolean shouldOpenInFreeForm(Intent intent, String callingPackage) {
         if (intent == null || intent.getComponent() == null) return false;
+        final List<String> fwBlackList = new ArrayList<String>();
+        fwBlackList.add("com.miui.home");
+        fwBlackList.add("com.android.camera");
+        fwBlackList.add("com.android.systemui");
         String pkgName = intent.getComponent().getPackageName();
-        if (MainModule.mPrefs.getStringSet("system_fw_forcein_actionsend_apps").contains(pkgName)) return false;
+        if (fwBlackList.contains(pkgName)) return false;
         boolean openInFw = false;
-        if (Intent.ACTION_SEND.equals(intent.getAction()) && !pkgName.equals(callingPackage)) {
-            openInFw = true;
+        final boolean openFwWhenShare = MainModule.mPrefs.getBoolean("system_fw_forcein_actionsend");
+        if (openFwWhenShare) {
+            if (MainModule.mPrefs.getStringSet("system_fw_forcein_actionsend_apps").contains(pkgName)) return false;
+            if ("com.miui.packageinstaller".equals(pkgName) && intent.getComponent().getClassName().contains("com.miui.packageInstaller.NewPackageInstallerActivity")) {
+                return true;
+            }
+            if (Intent.ACTION_SEND.equals(intent.getAction()) && !pkgName.equals(callingPackage)) {
+                openInFw = true;
+            }
+            else if ("com.tencent.mm".equals(pkgName) && intent.getComponent().getClassName().contains(".plugin.base.stub.WXEntryActivity")) {
+                openInFw = true;
+            }
+            else if ("com.tencent.mobileqq".equals(pkgName) && intent.getComponent().getClassName().contains(".activity.JumpActivity")) {
+                openInFw = true;
+            }
         }
-        else if ("com.tencent.mm".equals(pkgName) && intent.getComponent().getClassName().contains(".plugin.base.stub.WXEntryActivity")) {
-            openInFw = true;
-        }
-        else if ("com.miui.packageinstaller".equals(pkgName) && intent.getComponent().getClassName().contains("com.miui.packageInstaller.NewPackageInstallerActivity")) {
-            openInFw = true;
+        if (!openInFw) {
+            Object pkg = XposedHelpers.getAdditionalStaticField(MiuiFreeFormManager.class, "nextFreeformPackage");
+            openInFw = pkgName.equals(pkg);
+            if (openInFw) {
+                XposedHelpers.removeAdditionalStaticField(MiuiFreeFormManager.class, "nextFreeformPackage");
+            }
         }
         return openInFw;
     }
 
-    public static void OpenInFwWhenShareHook(LoadPackageParam lpparam) {
+    public static void OpenAppInFreeFormHook(LoadPackageParam lpparam) {
+        Helpers.findAndHookMethod("com.android.server.wm.ActivityTaskManagerService", lpparam.classLoader, "onSystemReady", new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+                IntentFilter intentFilter = new IntentFilter();
+                intentFilter.addAction(ACTION_PREFIX + "SetFreeFormPackage");
+                BroadcastReceiver mReceiver = new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        String action = intent.getAction();
+                        if (action == null) return;
+
+                        if (action.equals(ACTION_PREFIX + "SetFreeFormPackage")) {
+                            String pkg = intent.getStringExtra("package");
+                            XposedHelpers.setAdditionalStaticField(MiuiFreeFormManager.class, "nextFreeformPackage", pkg);
+                        }
+                    }
+                };
+                mContext.registerReceiver(mReceiver, intentFilter);
+            }
+        });
         Helpers.hookAllMethods("com.android.server.wm.ActivityStarter", lpparam.classLoader, "executeRequest", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 Object request = param.args[0];
                 Intent intent = (Intent) XposedHelpers.getObjectField(request, "intent");
+                Object safeOptions = XposedHelpers.getObjectField(request, "activityOptions");
+                if (safeOptions != null) {
+                    ActivityOptions ao = (ActivityOptions) XposedHelpers.getObjectField(safeOptions, "mOriginalOptions");
+                    if (ao != null && XposedHelpers.getIntField(ao, "mLaunchWindowingMode") == 5) {
+                        return;
+                    }
+                }
                 String callingPackage = (String) XposedHelpers.getObjectField(request, "callingPackage");
-//                Object safeOptions = XposedHelpers.getObjectField(request, "activityOptions");
+                boolean openInFw = shouldOpenInFreeForm(intent, callingPackage);
+
 //                Bundle ao = safeOptions != null ? (Bundle) XposedHelpers.callMethod(safeOptions, "getActivityOptionsBundle") : null;
 //                String reason = (String) XposedHelpers.getObjectField(request, "reason");
 //                Helpers.log("startAct: " + callingPackage
 //                    + " reason| " + reason
 //                    + " intent| " + intent
+//                    + " openInFw| " + openInFw
 //                    + " activityOptions| " + Helpers.stringifyBundle(ao)
 //                    + " intentExtra| " + Helpers.stringifyBundle(intent.getExtras())
 //                );
-                boolean openInFw = shouldOpenInFwWhenShare(intent, callingPackage);
+
                 if (openInFw) {
                     Context mContext = (Context) XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.thisObject, "mService"), "mContext");
                     ActivityOptions options = MiuiMultiWindowUtils.getActivityOptions(mContext, intent.getComponent().getPackageName(), true, false);
@@ -5210,7 +5258,7 @@ public class System {
         fwBlackList.add("com.miui.securitycenter");
         fwBlackList.add("com.miui.home");
         fwBlackList.add("com.android.camera");
-        final boolean openFwWhenShare = MainModule.mPrefs.getBoolean("system_fw_forcein_actionsend");
+
         Helpers.hookAllMethods("com.android.server.wm.ActivityStarterInjector", lpparam.classLoader, "modifyLaunchActivityOptionIfNeed", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
@@ -5225,11 +5273,6 @@ public class System {
                     mContext = (Context)XposedHelpers.getObjectField(param.args[0], "mContext");
                 } catch (Throwable ignore) {
                     mContext = (Context)XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.args[0], "mService"), "mContext");
-                }
-                String callingPackage = (String) param.args[2];
-                if (openFwWhenShare && shouldOpenInFwWhenShare(intent, callingPackage)) {
-                    param.setResult(MiuiMultiWindowUtils.getActivityOptions(mContext, pkgName, true, false));
-                    return;
                 }
                 if (fwBlackList.contains(pkgName)) return;
                 ActivityOptions options = (ActivityOptions)param.getResult();

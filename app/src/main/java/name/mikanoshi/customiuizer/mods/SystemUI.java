@@ -3737,6 +3737,12 @@ public class SystemUI {
                 for (MiuiFreeFormManager.MiuiFreeFormStackInfo rootTaskInfo : freeFormStackInfoList) {
                     if (pkgName.equals(rootTaskInfo.packageName)) return;
                 }
+                if (!pendingIntent.isActivity()) {
+                    Intent bIntent = new Intent(ACTION_PREFIX + "SetFreeFormPackage");
+                    bIntent.putExtra("package", pkgName);
+                    bIntent.setPackage("android");
+                    mContext.sendBroadcast(bIntent);
+                }
                 ActivityOptions options = MiuiMultiWindowUtils.getActivityOptions(mContext, pkgName, true, false);
                 pendingIntent.send(mContext, 0, intent, null, null, null, options != null ? options.toBundle() : null);
                 param.setResult(null);
