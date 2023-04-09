@@ -112,6 +112,12 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 System.TempHideOverlayAppHook(lpparam);
             }
 
+            if (mPrefs.getBoolean("system_notify_openinfw")
+                || mPrefs.getBoolean("system_fw_forcein_actionsend")
+            ) {
+                System.OpenAppInFreeFormHook(lpparam);
+            }
+
             if (mPrefs.getInt("controls_fingerprint1_action", 1) > 1 ||
                     mPrefs.getInt("controls_fingerprint2_action", 1) > 1 ||
                     mPrefs.getInt("controls_fingerprintlong_action", 1) > 1 ||
@@ -155,9 +161,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_nodarkforce")) System.NoDarkForceHook(lpparam);
             if (mPrefs.getBoolean("system_audiosilencer")) System.AudioSilencerServiceHook(lpparam);
             if (mPrefs.getBoolean("system_fw_sticky")) System.StickyFloatingWindowsHook(lpparam);
-            if (mPrefs.getBoolean("system_fw_forcein_actionsend") && !mPrefs.getBoolean("system_fw_sticky")) {
-                System.OpenInFwWhenShareHook(lpparam);
-            }
             if (mPrefs.getBoolean("system_lswallpaper")) System.SetLockscreenWallpaperHook(lpparam);
             if (mPrefs.getBoolean("controls_powerflash")) Controls.PowerKeyHook(lpparam);
             if (mPrefs.getBoolean("controls_fingerprintfailure")) Controls.FingerprintHapticFailureHook(lpparam);
