@@ -758,6 +758,11 @@
 			android:title="@string/system_cc_disable_bluetooth_restrict_title"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_cc_volume_showpct"
+			android:title="@string/system_cc_volume_showpct_title"
+			android:defaultValue="false" />
+
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_system_qshaptics"
 			android:summary="@string/system_qshaptic_summ"

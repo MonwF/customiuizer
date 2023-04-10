@@ -259,6 +259,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 || mPrefs.getBoolean("system_qs_force_systemfonts")
                 || mPrefs.getBoolean("system_volumetimer")
                 || mPrefs.getBoolean("system_qsnolabels")
+                || mPrefs.getBoolean("system_cc_volume_showpct")
                 || mPrefs.getBoolean("system_volumebar_blur_mtk")
                 || mPrefs.getBoolean("system_cc_tile_roundedrect")
                 || (mPrefs.getBoolean("system_separatevolume") && mPrefs.getBoolean("system_separatevolume_slider"))
@@ -303,7 +304,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             ) SystemUI.MonitorDeviceInfoHook(lpparam);
             if (mPrefs.getBoolean("system_statusbar_topmargin") && mPrefs.getBoolean("system_statusbar_topmargin_unset_lockscreen")) SystemUI.LockScreenTopMarginHook(lpparam);
             if (mPrefs.getBoolean("system_statusbar_horizmargin")) SystemUI.HorizMarginHook(lpparam);
-            if (mPrefs.getBoolean("system_showpct")) System.BrightnessPctHook(lpparam);
+            if (mPrefs.getBoolean("system_showpct")) SystemUI.BrightnessPctHook(lpparam);
             if (mPrefs.getBoolean("system_hidelsstatusbar")) System.HideLockScreenStatusBarHook(lpparam);
             if (mPrefs.getBoolean("system_hidelsclock")) System.HideLockScreenClockHook(lpparam);
             if (mPrefs.getBoolean("system_ls_force_systemfonts")) SystemUI.ForceClockUseSystemFontsHook(lpparam);

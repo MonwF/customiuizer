@@ -5,6 +5,7 @@ import static java.lang.System.nanoTime;
 import static de.robv.android.xposed.XposedHelpers.findClass;
 import static de.robv.android.xposed.XposedHelpers.findClassIfExists;
 import static name.mikanoshi.customiuizer.mods.GlobalActions.ACTION_PREFIX;
+import static name.mikanoshi.customiuizer.mods.GlobalActions.EVENT_PREFIX;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -14,7 +15,7 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.AndroidAppHelper;
 import android.app.KeyguardManager;
-import android.app.Notification;
+import android.animation.ObjectAnimator;
 import android.app.PendingIntent;
 import android.app.WallpaperColors;
 import android.content.BroadcastReceiver;
@@ -75,8 +76,11 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -1602,7 +1606,7 @@ public class SystemUI {
                         float spacing = 0.9f;
                         meter.setSingleLine(false);
                         meter.setMaxLines(2);
-                        if (fontSize > 8.5f) {
+                        if (0.5 * fontSize > 8.5f) {
                             spacing = 0.85f;
                         }
                         meter.setLineSpacing(0, spacing);
@@ -1827,6 +1831,9 @@ public class SystemUI {
                     }
                     if (MainModule.mPrefs.getBoolean("system_cc_tile_roundedrect")) {
                         CCTileCornerHook(pluginLoader);
+                    }
+                    if (MainModule.mPrefs.getBoolean("system_cc_volume_showpct")) {
+                        ShowVolumePctHook(pluginLoader);
                     }
                 }
             }
@@ -3745,6 +3752,157 @@ public class SystemUI {
                 ActivityOptions options = MiuiMultiWindowUtils.getActivityOptions(mContext, pkgName, true, false);
                 pendingIntent.send(mContext, 0, intent, null, null, null, options != null ? options.toBundle() : null);
                 param.setResult(null);
+            }
+        });
+    }
+    @SuppressLint("StaticFieldLeak")
+    private static TextView mPct = null;
+    private static void initPct(ViewGroup container, int source, Context context) {
+        Resources res = context.getResources();
+        if (mPct == null) {
+            mPct = new TextView(container.getContext());
+            mPct.setTextSize(TypedValue.COMPLEX_UNIT_SP, 40);
+            mPct.setGravity(Gravity.CENTER);
+            float density = res.getDisplayMetrics().density;
+            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+            lp.topMargin = Math.round(MainModule.mPrefs.getInt("system_showpct_top", 28) * density);
+            lp.gravity = Gravity.CENTER_HORIZONTAL|Gravity.TOP;
+            mPct.setPadding(Math.round(20 * density), Math.round(10 * density), Math.round(18 * density), Math.round(12 * density));
+            mPct.setLayoutParams(lp);
+            try {
+                Resources modRes = Helpers.getModuleRes(context);
+                mPct.setTextColor(modRes.getColor(R.color.color_on_surface_variant, context.getTheme()));
+                mPct.setBackground(ResourcesCompat.getDrawable(modRes, R.drawable.input_background, context.getTheme()));
+            }
+            catch (Throwable err) {
+                Helpers.log(err);
+            }
+            container.addView(mPct);
+        }
+        mPct.setTag(source);
+        mPct.setVisibility(View.GONE);
+    }
+
+    private static void removePct(TextView mPctText) {
+        if (mPctText != null) {
+            mPctText.setVisibility(View.GONE);
+            ViewGroup p = (ViewGroup) mPctText.getParent();
+            p.removeView(mPctText);
+            mPct = null;
+        }
+    }
+
+    public static void BrightnessPctHook(LoadPackageParam lpparam) {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BrightnessMirrorController", lpparam.classLoader, "showMirror", new MethodHook() {
+            @Override
+            protected void after(final MethodHookParam param) throws Throwable {
+                ViewGroup mStatusBarWindow = (ViewGroup)XposedHelpers.getObjectField(param.thisObject, "mStatusBarWindow");
+                if (mStatusBarWindow == null) {
+                    Helpers.log("BrightnessPctHook", "mStatusBarWindow is null");
+                    return;
+                }
+                initPct(mStatusBarWindow, 1, mStatusBarWindow.getContext());
+                mPct.setVisibility(View.VISIBLE);
+            }
+        });
+
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BrightnessMirrorController", lpparam.classLoader, "hideMirror", new MethodHook() {
+            @Override
+            protected void after(final MethodHookParam param) throws Throwable {
+                removePct(mPct);
+            }
+        });
+
+        Helpers.hookAllMethods("com.android.systemui.controlcenter.policy.MiuiBrightnessController", lpparam.classLoader, "onStart", new MethodHook() {
+            @Override
+            protected void before(final MethodHookParam param) throws Throwable {
+                Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+                Object mMirror = XposedHelpers.getObjectField(param.thisObject, "mControl");
+                Object controlCenterWindowViewController = XposedHelpers.getObjectField(mMirror, "controlCenterWindowViewController");
+                String ClsName = controlCenterWindowViewController.getClass().getName();
+                if (!ClsName.equals("ControlCenterWindowViewController")) {
+                    controlCenterWindowViewController = XposedHelpers.callMethod(controlCenterWindowViewController, "get");
+                }
+                Object windowView = XposedHelpers.callMethod(controlCenterWindowViewController, "getView");
+                if (windowView == null) {
+                    Helpers.log("BrightnessPctHook", "mControlPanelContentView is null");
+                    return;
+                }
+                initPct((ViewGroup) windowView, 2, mContext);
+                mPct.setVisibility(View.VISIBLE);
+            }
+        });
+
+        Helpers.hookAllMethods("com.android.systemui.controlcenter.policy.MiuiBrightnessController", lpparam.classLoader, "onStop", new MethodHook() {
+            @Override
+            protected void after(final MethodHookParam param) throws Throwable {
+                removePct(mPct);
+            }
+        });
+
+        final Class<?> BrightnessUtils = XposedHelpers.findClassIfExists("com.android.systemui.controlcenter.policy.BrightnessUtils", lpparam.classLoader);
+        Helpers.hookAllMethods("com.android.systemui.controlcenter.policy.MiuiBrightnessController", lpparam.classLoader, "onChanged", new MethodHook() {
+            @Override
+            @SuppressLint("SetTextI18n")
+            protected void after(final MethodHookParam param) throws Throwable {
+                int pctTag = 0;
+                if (mPct != null && mPct.getTag() != null) {
+                    pctTag = (int) mPct.getTag();
+                }
+                if (pctTag == 0 || mPct == null) return;
+                int currentLevel = (int)param.args[3];
+                if (BrightnessUtils != null) {
+                    int maxLevel = (int) XposedHelpers.getStaticObjectField(BrightnessUtils, "GAMMA_SPACE_MAX");
+                    mPct.setText(((currentLevel * 100) / maxLevel) + "%");
+                }
+            }
+        });
+    }
+    public static void ShowVolumePctHook(ClassLoader pluginLoader) {
+        Class<?> MiuiVolumeDialogImpl = findClassIfExists("com.android.systemui.miui.volume.MiuiVolumeDialogImpl", pluginLoader);
+        Helpers.findAndHookMethod(MiuiVolumeDialogImpl, "showVolumeDialogH", int.class, new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                View mDialogView = (View) XposedHelpers.getObjectField(param.thisObject, "mDialogView");
+                FrameLayout windowView = (FrameLayout) mDialogView.getParent();
+                initPct(windowView, 3, windowView.getContext());
+            }
+        });
+
+        Helpers.findAndHookMethod(MiuiVolumeDialogImpl, "dismissH", int.class, new MethodHook() {
+            @Override
+            protected void after(final MethodHookParam param) throws Throwable {
+                removePct(mPct);
+            }
+        });
+
+        Helpers.hookAllMethods("com.android.systemui.miui.volume.MiuiVolumeDialogImpl$VolumeSeekBarChangeListener", pluginLoader, "onProgressChanged", new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                int pctTag = 0;
+                if (mPct != null && mPct.getTag() != null) {
+                    pctTag = (int) mPct.getTag();
+                }
+                if (pctTag == 0 || mPct == null) return;
+                Object mColumn = XposedHelpers.getObjectField(param.thisObject, "mColumn");
+                Object ss = XposedHelpers.getObjectField(mColumn, "ss");
+                if (ss == null) return;
+                ObjectAnimator anim = (ObjectAnimator) XposedHelpers.getObjectField(mColumn, "anim");
+                if (anim != null && anim.isRunning()) return;
+                mPct.setVisibility(View.VISIBLE);
+                int currentLevel = (int)param.args[1];
+                int levelMin = XposedHelpers.getIntField(ss, "levelMin");
+                if (levelMin > 0 && currentLevel < levelMin * 1000) {
+                    currentLevel = levelMin * 1000;
+                }
+                SeekBar seekBar = (SeekBar) param.args[0];
+                int max = seekBar.getMax();
+                int maxLevel = max / 1000;
+                if (currentLevel != 0) {
+                    int i3 = maxLevel - 1;
+                    currentLevel = currentLevel == max ? maxLevel : (currentLevel * i3 / max) + 1;
+                }
+                mPct.setText(currentLevel + " / " + maxLevel);
             }
         });
     }

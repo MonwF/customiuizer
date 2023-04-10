@@ -1172,5 +1172,6 @@
     <string name="system_cc_tile_roundedrect_title">Rounded rectangle tile</string>
     <string name="system_cc_enable_style_switch_title">Force Enable CC style switch</string>
     <string name="system_cc_disable_bluetooth_restrict_title">Disable disconnect bluetooth until tomorrow</string>
+    <string name="system_cc_volume_showpct_title">Show volume percentage</string>
     <string name="system_cc_collapse_after_clicked_title">Collapse after touch</string>
 </resources>
