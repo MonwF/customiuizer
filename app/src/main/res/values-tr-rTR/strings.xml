@@ -1,2 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="app_about">Hakkında</string>
+    <string name="about_version">Sürüm: %1$s</string>
+    <string name="about_dev">Geliştirici hakkında</string>
+    <string name="menu_update">Güncellemeler</string>
+    <string name="mods">Modlar</string>
+    <string name="mods_actions">Eylemler</string>
+    <string name="clear_value">Temizle</string>
+    <string name="enable_mod">Modu etkinleştir</string>
+    <string name="system_mods">Sistem modları </string>
+    <string name="system_mods_vibration">Titreşim</string>
+    <string name="system_mods_toasts">Bildirim Kutucuğu</string>
+    <string name="array_system_default">Sistem modları </string>
+    <string name="soft_reboot">Hızlı yeniden başlat</string>
+</resources>
