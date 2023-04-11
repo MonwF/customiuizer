@@ -1,5 +1,3 @@
-import com.android.build.api.variant.BuildConfigField
-
 apply plugin: 'com.android.application'
 
 //def acraVersion = '5.7.0'
@@ -10,8 +8,8 @@ def sFile = file(keystoreProperties['storeFile'])
 def sPassword = keystoreProperties['storePassword']
 def kAlias = keystoreProperties['keyAlias']
 def kPassword = keystoreProperties['keyPassword']
-def lastVersion = 59
-def lastVersionName = "23.03.15"
+def lastVersion = 60
+def lastVersionName = "23.04.11"
 
 if (gradle.startParameter.taskNames.contains(":app:assembleDevelop")) {
     lastVersion += 1
@@ -37,6 +35,7 @@ android {
         targetSdkVersion 33
         versionCode lastVersion
         versionName lastVersionName
+        buildConfigField "long", "BUILD_TIME", System.currentTimeMillis() + "L"
         resConfigs 'ru-rRU', 'zh-rCN', 'zh-rTW', 'pl-rPL', 'ja-rJP', 'vi-rVN', 'cs-rCZ', 'pt-rBR'
         ndk { abiFilters "arm64-v8a" }
     }
@@ -79,11 +78,6 @@ android {
 //        sourceCompatibility JavaVersion.VERSION_1_8
 //        targetCompatibility JavaVersion.VERSION_1_8
 //    }
-    androidComponents {
-        onVariants(selector().withBuildType("develop"), {
-            it.buildConfigFields.put("BUILD_TIME", new BuildConfigField("long", System.currentTimeMillis() + "L", null))
-        })
-    }
 }
 
 dependencies {
