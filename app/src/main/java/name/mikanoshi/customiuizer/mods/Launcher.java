@@ -1273,6 +1273,19 @@ public class Launcher {
 					XposedHelpers.callStaticMethod(BlurUtils, "fastBlur", 0f, launcher.getWindow(), param.args[0]);
 				}
 			});
+
+			Helpers.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.classLoader, "cancelShortcutMenu", int.class, "com.miui.home.launcher.shortcuts.CancelShortcutMenuReason", new MethodHook() {
+				@Override
+				protected void after(MethodHookParam param) throws Throwable {
+					boolean isFolderShowing = (boolean) XposedHelpers.callMethod(param.thisObject, "isFolderShowing");
+					if (isFolderShowing) {
+						int blurPct = MainModule.mPrefs.getInt("launcher_folderblur_opacity", 0);
+						float blurRatio = blurPct / 100f;
+						Activity launcher = (Activity) param.thisObject;
+						XposedHelpers.callStaticMethod(BlurUtils, "fastBlur", blurRatio, launcher.getWindow(), true);
+					}
+				}
+			});
 		}
 	}
 
