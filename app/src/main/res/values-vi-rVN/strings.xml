@@ -405,7 +405,7 @@
     <string name="system_charginginfo_title">Hiển thị dữ liệu sạc</string>
     <string name="system_charginginfo_summ">Hiển thị thông báo sạc bổ sung ở cuối màn hình khóa</string>
     <string name="system_charginginfo_view_title">Phương pháp hiển thị</string>
-    <string name="system_charginginfo_current_title">Tình trạng sạc</string>
+    <string name="system_charginginfo_current_title">Dòng sạc</string>
     <string name="system_charginginfo_voltage_title">Điện áp pin</string>
     <string name="system_charginginfo_wattage_title">Tiêu thụ điện</string>
     <string name="system_charginginfo_temp_title">Nhiệt độ pin</string>
@@ -878,7 +878,7 @@
     <string name="array_keep">Giữ nó</string>
     <string name="array_turn_off">Tắt</string>
     <string name="array_turn_off_disable">Tắt và vô hiệu hóa</string>
-    <string name="array_current">Chỉ hiện tại</string>
+    <string name="array_current">Chỉ dòng điện</string>
     <string name="array_power">Chỉ nguồn</string>
     <string name="array_temp_current">Nhiệt độ và dòng điện</string>
     <string name="array_temp_power">Nhiệt độ và điện năng</string>
@@ -1072,13 +1072,13 @@
     <string name="system_statusbar_batterytempandcurrent_title">Hiển thị thông tin pin</string>
     <string name="system_statusbar_batterytempandcurrent_content_title">Hiển thị nội dung</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">Hiển thị bên phải</string>
-    <string name="system_statusbar_batterytempandcurrent_positive_title">Làm cho giá trị hiện tại luôn dương</string>
+    <string name="system_statusbar_batterytempandcurrent_positive_title">Làm cho giá trị dòng điện luôn dương</string>
     <string name="system_statusbar_batterytempandcurrent_incharge_title">Chỉ hiển thị khi sạc</string>
     <string name="system_statusbar_batterytempandcurrent_hideunit_title">Ẩn đơn vị</string>
     <string name="system_statusbar_batterytempandcurrent_singlerow_title">Hiển thị trong một dòng</string>
     <string name="system_statusbar_batterytempandcurrent_reverseorder_title">Đảo ngược thứ tự</string>
     <string name="system_statusbar_showdevicetemperature_title">Hiển thị nhiệt độ máy</string>
-    <string name="system_statusbar_batterystyle_title">tạo kiểu cho biểu tượng pin</string>
+    <string name="system_statusbar_batterystyle_title">Kiểu biểu tượng pin</string>
     <string name="system_statusbar_batterystyle_digit_title">Số ở pin</string>
     <string name="system_statusbar_batterystyle_mark_fontsize_title">Cỡ chữ của dấu phần trăm</string>
     <string name="system_statusbar_batterystyle_mark_verticaloffset_title">Rìa chiều dọc của dấu phần trăm</string>
@@ -1124,5 +1124,6 @@
     <string name="system_cc_tile_roundedrect_title">Ô hình chữ nhật bo tròn</string>
     <string name="system_cc_enable_style_switch_title">Bật chuyển đổi kiểu CC</string>
     <string name="system_cc_disable_bluetooth_restrict_title">Vô hiệu hóa ngắt kết nối bluetooth cho đến ngày mai</string>
+    <string name="system_cc_volume_showpct_title">Hiện phần trăm âm lượng</string>
     <string name="system_cc_collapse_after_clicked_title">Thu gọn sau khi chạm</string>
 </resources>
