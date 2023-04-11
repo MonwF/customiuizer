@@ -1031,7 +1031,7 @@ public class Controls {
 				Bundle bundle = (Bundle)param.args[0];
 				if (bundle == null || bundle.getInt("triggered_by", 0) != 83 || bundle.getInt("invocation_type", 0) != 1) return;
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-				if (GlobalActions.handleAction(mContext, "pref_key_controls_fsg_assist")) {
+				if (GlobalActions.handleAction(mContext, "pref_key_controls_fsg_assist", false, bundle)) {
 					Helpers.performLightVibration(mContext);
 					param.setResult(null);
 				}
@@ -1039,27 +1039,6 @@ public class Controls {
 		});
 
 		Helpers.findAndHookMethod("com.android.systemui.assist.ui.DefaultUiController", lpparam.classLoader, "logInvocationProgressMetrics", int.class, float.class, boolean.class, XC_MethodReplacement.DO_NOTHING);
-
-		Helpers.hookAllConstructors("com.android.systemui.assist.ui.DefaultUiController", lpparam.classLoader, new MethodHook() {
-			@Override
-			protected void after(MethodHookParam param) throws Throwable {
-				Context mContext = (Context)param.args[0];
-				Handler mHandler = new Handler(mContext.getMainLooper());
-
-				new Helpers.SharedPrefObserver(mContext, mHandler, "pref_key_controls_fsg_assist_action", 1) {
-					@Override
-					public void onChange(String name, int defValue) {
-						Object mInvocationLightsView = XposedHelpers.getObjectField(param.thisObject, "mInvocationLightsView");
-						if (mInvocationLightsView == null) return;
-						int opt = Helpers.getSharedIntPref(mContext, name, defValue);
-						if (opt > 1)
-							XposedHelpers.callMethod(mInvocationLightsView, "setColors", Color.parseColor("#424A60"), Color.parseColor("#EC7C6D"), Color.parseColor("#EC7C6D"), Color.parseColor("#424A60"));
-						else
-							XposedHelpers.callMethod(mInvocationLightsView, "setColors", -16776961, -65536, -256, -16711936);
-					}
-				}.onChange(false);
-			}
-		});
 	}
 
 //	public static void AIButtonHook(LoadPackageParam lpparam) {
