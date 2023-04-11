@@ -1124,5 +1124,6 @@
     <string name="system_cc_tile_roundedrect_title">Скруглённые прямоугольные плитки</string>
     <string name="system_cc_enable_style_switch_title">Принудительно включить переключатель стиля CC</string>
     <string name="system_cc_disable_bluetooth_restrict_title">Выключить отключение Bluetooth до завтра</string>
+    <string name="system_cc_volume_showpct_title">Показывать проценты громкости</string>
     <string name="system_cc_collapse_after_clicked_title">Свернуть после касания</string>
 </resources>
