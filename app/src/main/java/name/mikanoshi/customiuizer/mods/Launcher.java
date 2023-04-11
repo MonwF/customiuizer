@@ -1715,6 +1715,28 @@ public class Launcher {
 				param.setResult(false);
 			}
 		});
+
+		final int[] inDirection = {0};
+
+		Helpers.findAndHookMethod("com.miui.home.recents.FsGestureAssistHelper", lpparam.classLoader, "handleTouchEvent", MotionEvent.class, new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				MotionEvent motionEvent = (MotionEvent) param.args[0];
+				if (motionEvent.getAction() == 0) {
+					float mDownX = XposedHelpers.getFloatField(param.thisObject, "mDownX");
+					int mAssistantWidth = XposedHelpers.getIntField(param.thisObject, "mAssistantWidth");
+					inDirection[0] = mDownX < mAssistantWidth ? 0 : 1;
+				}
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.home.recents.SystemUiProxyWrapper", lpparam.classLoader, "startAssistant", Bundle.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				Bundle bundle = (Bundle) param.args[0];
+				bundle.putInt("inDirection", inDirection[0]);
+			}
+		});
 	}
 
 	public static void SwipeAndStopActionHook(LoadPackageParam lpparam) {
