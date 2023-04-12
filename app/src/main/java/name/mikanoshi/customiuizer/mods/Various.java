@@ -574,6 +574,42 @@ public class Various {
 		};
 		Helpers.findAndHookMethod("com.miui.securityscan.model.ModelFactory", lpparam.classLoader, "produceSystemGroupModel", Context.class, skipScan);
 		Helpers.findAndHookMethod("com.miui.securityscan.model.ModelFactory", lpparam.classLoader, "produceManualGroupModel", Context.class, skipScan);
+		Helpers.findAndHookMethod("com.miui.common.customview.ScoreTextView", lpparam.classLoader, "setScore", int.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				param.args[0] = 100;
+			}
+		});
+		Helpers.findAndHookMethod(ContentResolver.class, "call", Uri.class, String.class, String.class, Bundle.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				if ("callPreference".equals(param.args[1]) && "GET".equals(param.args[2])) {
+					Bundle extras = (Bundle) param.args[3];
+					if (extras != null && "latest_optimize_date".equals(extras.getString("key"))) {
+						Bundle res = new Bundle();
+						res.putLong("latest_optimize_date", java.lang.System.currentTimeMillis() - 10000);
+						param.setResult(res);
+					}
+				}
+			}
+		});
+		Helpers.findAndHookMethod("com.miui.securityscan.ui.main.MainContentFrame", lpparam.classLoader, "onClick", View.class, XC_MethodReplacement.DO_NOTHING);
+//		Helpers.findAndHookMethod("com.miui.securityscan.ui.main.MainContentFrame", lpparam.classLoader, "setActionButtonText", java.lang.String.class, new MethodHook() {
+//			int btnId = 0;
+//			@Override
+//			protected void after(MethodHookParam param) throws Throwable {
+//				View mainFrame = (View) param.thisObject;
+//				if (btnId == 0) {
+//					btnId = mainFrame.getResources().getIdentifier("btn_action", "id", lpparam.packageName);
+//				}
+//				View btn = mainFrame.findViewById(btnId);
+//				if (btn != null) {
+//					btn.setVisibility(View.GONE);
+//					btn.setOnClickListener(null);
+//				}
+//				XposedHelpers.callMethod(param.thisObject, "setContentMainClickable", false);
+//			}
+//		});
 	}
 
 	public static void SmartClipboardActionHook(LoadPackageParam lpparam) {
