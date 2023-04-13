@@ -3877,20 +3877,32 @@ public class SystemUI {
         });
 
         Helpers.hookAllMethods("com.android.systemui.miui.volume.MiuiVolumeDialogImpl$VolumeSeekBarChangeListener", pluginLoader, "onProgressChanged", new MethodHook() {
+            private int nowLevel = -233;
             @Override
             protected void after(MethodHookParam param) throws Throwable {
+                if (nowLevel == (int)param.args[1]) return;
                 int pctTag = 0;
                 if (mPct != null && mPct.getTag() != null) {
                     pctTag = (int) mPct.getTag();
                 }
-                if (pctTag == 0 || mPct == null) return;
+                if (pctTag != 3 || mPct == null) return;
                 Object mColumn = XposedHelpers.getObjectField(param.thisObject, "mColumn");
                 Object ss = XposedHelpers.getObjectField(mColumn, "ss");
                 if (ss == null) return;
-                ObjectAnimator anim = (ObjectAnimator) XposedHelpers.getObjectField(mColumn, "anim");
-                if (anim != null && anim.isRunning()) return;
+                if (XposedHelpers.getIntField(mColumn, "stream") == 10) return;
+
+                boolean fromUser = (boolean) param.args[2];
+                int currentLevel;
+                if (fromUser) {
+                    currentLevel = (int)param.args[1];
+                }
+                else {
+                    ObjectAnimator anim = (ObjectAnimator) XposedHelpers.getObjectField(mColumn, "anim");
+                    if (anim == null || !anim.isRunning()) return;
+                    currentLevel = XposedHelpers.getIntField(mColumn, "animTargetProgress");
+                }
+                nowLevel = currentLevel;
                 mPct.setVisibility(View.VISIBLE);
-                int currentLevel = (int)param.args[1];
                 int levelMin = XposedHelpers.getIntField(ss, "levelMin");
                 if (levelMin > 0 && currentLevel < levelMin * 1000) {
                     currentLevel = levelMin * 1000;
@@ -3902,7 +3914,7 @@ public class SystemUI {
                     int i3 = maxLevel - 1;
                     currentLevel = currentLevel == max ? maxLevel : (currentLevel * i3 / max) + 1;
                 }
-                mPct.setText(currentLevel + " / " + maxLevel);
+                mPct.setText(((currentLevel * 100) / maxLevel) + "%");
             }
         });
     }
