@@ -51,7 +51,7 @@
 		android:defaultValue="27"
 		miuizer:indentLevel="1"
 		miuizer:minValue="18"
-		miuizer:maxValue="32"
+		miuizer:maxValue="40"
 		miuizer:stepValue="1"
 		miuizer:displayDividerValue="2"
 		miuizer:format="%s dip" />
