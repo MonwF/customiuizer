@@ -4251,6 +4251,28 @@ public class System {
             }
         });
 
+        int format = MainModule.mPrefs.getStringAsInt("system_screenshot_format", 2);
+        if (format > 2) {
+            Helpers.findAndHookMethod("com.miui.screenshot.MiuiScreenshotApplication", lpparam.classLoader, "attachBaseContext", Context.class, new MethodHook() {
+                @Override
+                protected void after(MethodHookParam param) throws Throwable {
+                    Context mContext = (Context) param.args[0];
+                    String versionName = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName;
+                    if (versionName.contains("1.4.34")) {
+                        Helpers.hookAllMethods("com.miui.screenshot.x0.e$a", lpparam.classLoader, "a", new MethodHook() {
+                            @Override
+                            protected void before(MethodHookParam param) throws Throwable {
+                                Helpers.log(param.args.length + " hooked");
+                                if (param.args.length != 7) return;
+                                Bitmap.CompressFormat compress = format <= 2 ? Bitmap.CompressFormat.JPEG : (format == 3 ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.WEBP);
+                                param.args[4] = compress;
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
         Helpers.hookAllMethods("android.graphics.Bitmap", lpparam.classLoader, "compress", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
