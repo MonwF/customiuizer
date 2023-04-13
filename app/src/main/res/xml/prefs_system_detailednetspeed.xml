@@ -19,7 +19,7 @@
 		android:title="@string/system_netspeed_fontsize_title"
 		android:defaultValue="13"
 		miuizer:minValue="13"
-		miuizer:maxValue="32"
+		miuizer:maxValue="40"
 		miuizer:stepValue="1"
 		miuizer:offtext="@string/array_default"
 		miuizer:displayDividerValue="2"
