@@ -534,11 +534,6 @@
 			android:defaultValue="1"
 			miuizer:valueAsSummary="true" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_drawer_clockseconds"
-			android:title="@string/system_clockseconds_title"
-			android:defaultValue="false" />
-
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_shortcut_app"
 			android:title="@string/system_shortcut_app_title"
@@ -734,6 +729,16 @@
 			android:title="@string/system_qs_force_systemfonts_title"
 			android:defaultValue="false"
 			/>
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_drawer_clockseconds"
+			android:title="@string/system_clockseconds_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_cc_hidedate"
+			android:title="@string/system_cc_hidedate_title"
+			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.EditTextPreferenceEx
 			android:dialogMessage="@string/system_clock_customformat_help_summ"

@@ -235,6 +235,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_dttosleep")) System.DoubleTapToSleepHook(lpparam);
             if (mPrefs.getBoolean("system_statusbar_clocktweak")
                 || mPrefs.getBoolean("system_drawer_clockseconds")
+                || mPrefs.getBoolean("system_cc_hidedate")
                 || mPrefs.getString("system_cc_dateformat", "").length() > 0
             ) System.StatusBarClockTweakHook(lpparam);
             if (mPrefs.getBoolean("system_noscreenlock_act")) System.NoScreenLockHook(lpparam);
@@ -261,6 +262,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 || mPrefs.getBoolean("system_qsnolabels")
                 || mPrefs.getBoolean("system_cc_volume_showpct")
                 || mPrefs.getBoolean("system_volumebar_blur_mtk")
+                || mPrefs.getBoolean("system_cc_hidedate")
                 || mPrefs.getBoolean("system_cc_tile_roundedrect")
                 || (mPrefs.getBoolean("system_separatevolume") && mPrefs.getBoolean("system_separatevolume_slider"))
                 || (mPrefs.getInt("system_volumedialogdelay_collapsed", 0) > 0 || mPrefs.getInt("system_volumedialogdelay_expanded", 0) > 0)

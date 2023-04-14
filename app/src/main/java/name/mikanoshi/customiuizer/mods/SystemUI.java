@@ -1845,6 +1845,9 @@ public class SystemUI {
                     if (MainModule.mPrefs.getBoolean("system_cc_volume_showpct")) {
                         ShowVolumePctHook(pluginLoader);
                     }
+                    if (MainModule.mPrefs.getBoolean("system_cc_hidedate")) {
+                        HideCCDateView(pluginLoader);
+                    }
                 }
             }
         });
@@ -3927,5 +3930,37 @@ public class SystemUI {
                 mPct.setText(((currentLevel * 100) / maxLevel) + "%");
             }
         });
+    }
+    public static void HideCCDateView(ClassLoader pluginLoader) {
+        MethodHook hideDateView = new MethodHook() {
+            @Override
+            protected void after(final MethodHookParam param) throws Throwable {
+                TextView dateView = (TextView) XposedHelpers.getObjectField(param.thisObject, "dateView");
+                if (dateView != null) {
+                    dateView.setVisibility(View.GONE);
+                }
+            }
+        };
+        MethodHook initHideDateView = new MethodHook() {
+            @Override
+            protected void after(final MethodHookParam param) throws Throwable {
+                TextView dateView = (TextView) XposedHelpers.getObjectField(param.thisObject, "dateView");
+                TextView clockView = (TextView) XposedHelpers.getObjectField(param.thisObject, "clockView");
+                ViewGroup.LayoutParams lp = clockView.getLayoutParams();
+                lp.width = 0;
+                clockView.setLayoutParams(lp);
+                Handler myhandler = new Handler(Looper.myLooper());
+                Runnable hideRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        myhandler.removeCallbacks(this);
+                        dateView.setVisibility(View.GONE);
+                    }
+                };
+                myhandler.postDelayed(hideRunnable, 100);
+            }
+        };
+        Helpers.findAndHookMethod("miui.systemui.controlcenter.windowview.MainPanelHeaderController", pluginLoader, "updateVisibility", hideDateView);
+        Helpers.findAndHookMethod("miui.systemui.controlcenter.windowview.MainPanelHeaderController", pluginLoader, "onCreate", initHideDateView);
     }
 }
