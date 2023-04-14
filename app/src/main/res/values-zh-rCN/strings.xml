@@ -74,6 +74,7 @@
     <string name="system_calendar_app_title">日历应用</string>
     <string name="system_calendar_app_summ">点击通知抽屉上方的日期时打开所选应用</string>
     <string name="system_clockseconds_title">显示秒</string>
+    <string name="system_cc_hidedate_title">隐藏日期</string>
     <string name="system_clock_show_ampm_title">显示时段</string>
     <string name="system_clock_time_format_title">24小时制</string>
     <string name="system_clock_fixedwidth_title">固定宽度以防相邻元素左右防抖</string>
@@ -473,7 +474,7 @@
     <string name="system_qsgridcolumns_note">竖屏时会额外增加一列。如果您的ROM具有快速设置紧凑布局选项，不管是横屏还是竖屏都会增加其他列。</string>
     <string name="system_qqsgridcolumns_title">折叠面板中的列数</string>
     <string name="system_qqsgridcolumns_note">横屏时将会额外增加一列。</string>
-    <string name="system_qsnolabels_title">彻底移除标签</string>
+    <string name="system_qsnolabels_title">移除磁贴标签</string>
     <string name="system_qs_hideoperator_title">隐藏运营商名称</string>
     <string name="system_qshaptic_title">快速设置触觉反馈</string>
     <string name="system_qshaptic_summ">点击快速设置磁贴时振动</string>

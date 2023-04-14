@@ -1108,6 +1108,7 @@ public class System {
     public static void StatusBarClockTweakHook(LoadPackageParam lpparam) {
         boolean ccShowSeconds = MainModule.mPrefs.getBoolean("system_drawer_clockseconds");
         boolean statusbarClockTweak = MainModule.mPrefs.getBoolean("system_statusbar_clocktweak");
+        boolean hideDateView = MainModule.mPrefs.getBoolean("system_cc_hidedate");
         MethodHook ScheduleHook = new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
@@ -1175,7 +1176,7 @@ public class System {
                     XposedHelpers.setAdditionalInstanceField(clock, "clockName", "ccClock");
                     XposedHelpers.setAdditionalInstanceField(clock, "showSeconds", true);
                 }
-                else if (dateClockId == thisClockId && ccDateCustom) {
+                else if (dateClockId == thisClockId && (ccDateCustom || hideDateView)) {
                     XposedHelpers.setAdditionalInstanceField(clock, "clockName", "ccDate");
                 }
             }
@@ -1208,7 +1209,7 @@ public class System {
                     timeFmt = mContext.getString(fmtResId);
                     timeFmt = timeFmt.replaceFirst(":mm", ":mm:ss");
                 }
-                else if ("ccDate".equals(clockName) && ccDateCustom) {
+                else if ("ccDate".equals(clockName) && (!hideDateView && ccDateCustom)) {
                     timeFmt = ccDateFormat;
                 }
                 else if ("clock".equals(clockName) && statusbarClockTweak) {
@@ -1254,6 +1255,20 @@ public class System {
                 }
             }
         });
+        if (hideDateView) {
+            Helpers.findAndHookMethod("com.android.systemui.statusbar.views.MiuiClock", lpparam.classLoader, "setClockVisibility", int.class, new MethodHook() {
+                @Override
+                protected void before(MethodHookParam param) throws Throwable {
+                    TextView clock = (TextView)param.thisObject;
+                    String clockName = (String) XposedHelpers.getAdditionalInstanceField(param.thisObject, "clockName");
+                    if ("ccDate".equals(clockName)) {
+                        XposedHelpers.setObjectField(param.thisObject, "mVisibility", 8);
+                        clock.setVisibility(View.GONE);
+                        param.setResult(null);
+                    }
+                }
+            });
+        }
     }
 
     public static void ExpandNotificationsHook(LoadPackageParam lpparam) {
