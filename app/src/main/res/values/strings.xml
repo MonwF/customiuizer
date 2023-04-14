@@ -69,6 +69,7 @@
     <string name="system_batteryindicator_test_title">Test</string>
     <string name="system_batteryindicator_test_summ" formatted="false">Animate bar from 100% to 0% in discharging state</string>
     <string name="system_statusbarheight_title">Status bar height</string>
+    <string name="system_statusbar_iconsize_title">Status bar icon size</string>
     <string name="system_statusbarcolor_title">Status bar background color</string>
     <string name="system_statusbarcolor_summ">Make status bar and app\'s action bar background colors the same where possible</string>
     <string name="system_statusbarcolor_apps_title">Black list</string>

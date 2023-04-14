@@ -399,6 +399,16 @@
 			miuizer:stepValue="1"
 			miuizer:format="%d dip" />
 
+		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_statusbar_iconsize"
+			android:title="@string/system_statusbar_iconsize_title"
+			android:defaultValue="6"
+			miuizer:offtext="@string/array_default"
+			miuizer:minValue="6"
+			miuizer:maxValue="18"
+			miuizer:stepValue="1"
+			miuizer:format="%d dip" />
+
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_statusbar_topmargin"
 			android:title="@string/system_statusbar_topmargin_title" />
