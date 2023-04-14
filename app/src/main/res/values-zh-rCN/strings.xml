@@ -63,6 +63,7 @@
     <string name="system_batteryindicator_test_title">测试</string>
     <string name="system_batteryindicator_test_summ">未充电时显示电量条</string>
     <string name="system_statusbarheight_title">状态栏高度</string>
+    <string name="system_statusbar_iconsize_title">图标大小</string>
     <string name="system_statusbarcolor_title">状态栏背景颜色</string>
     <string name="system_statusbarcolor_summ">尽量将状态栏和应用操作栏的背景颜色保持一致</string>
     <string name="system_statusbarcolor_apps_title">黑名单</string>

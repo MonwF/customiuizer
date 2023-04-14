@@ -158,6 +158,16 @@ public class SystemUI {
             MainModule.resHooks.setResReplacement("miui.systemui.plugin", "drawable", "qs_background_disabled", R.drawable.ic_qs_tile_bg_disabled);
             MainModule.resHooks.setResReplacement("miui.systemui.plugin", "drawable", "qs_background_warning", R.drawable.ic_qs_tile_bg_warning);
         }
+        int iconSize = MainModule.mPrefs.getInt("system_statusbar_iconsize", 6);
+        if (iconSize > 6) {
+            MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "status_bar_icon_size", iconSize);
+            MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "status_bar_icon_drawing_size", iconSize);
+            MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "status_bar_icon_drawing_size_dark", iconSize);
+            float notifyPadding = 2.5f * iconSize / 13;
+            MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "status_bar_notification_icon_padding", notifyPadding);
+            float iconHeight = 20.5f * iconSize / 13;
+            MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "status_bar_icon_height", iconHeight);
+        }
     }
 
     private static String getSlotNameByType(int mIconType) {
