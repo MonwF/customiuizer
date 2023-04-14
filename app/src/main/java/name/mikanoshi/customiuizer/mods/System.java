@@ -4262,7 +4262,6 @@ public class System {
                         Helpers.hookAllMethods("com.miui.screenshot.x0.e$a", lpparam.classLoader, "a", new MethodHook() {
                             @Override
                             protected void before(MethodHookParam param) throws Throwable {
-                                Helpers.log(param.args.length + " hooked");
                                 if (param.args.length != 7) return;
                                 Bitmap.CompressFormat compress = format <= 2 ? Bitmap.CompressFormat.JPEG : (format == 3 ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.WEBP);
                                 param.args[4] = compress;
