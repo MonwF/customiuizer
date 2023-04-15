@@ -1581,6 +1581,14 @@ public class Helpers {
 		XposedBridge.log("[CustoMIUIzer][" + mod + "]\n" + Log.getStackTraceString(t));
 	}
 
+	public static void printCallStack() {
+		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+		for (StackTraceElement el: stackTrace)
+			if (el != null) {
+				Helpers.log(el.getClassName() + " $$ " + el.getMethodName());
+			}
+	}
+
 	public static class MethodHook extends XC_MethodHook {
 		protected void before(MethodHookParam param) throws Throwable {}
 		protected void after(MethodHookParam param) throws Throwable {}

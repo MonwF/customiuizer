@@ -1796,6 +1796,13 @@ public class System {
             }
         });
 
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper", lpparam.classLoader, "getCustomBackgroundColor", new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                param.setResult(XposedHelpers.getObjectField(param.thisObject, "mBackgroundColor"));
+            }
+        });
+
         Helpers.hookAllMethods("com.android.systemui.statusbar.notification.row.HybridGroupManager", lpparam.classLoader, "bindFromNotificationWithStyle", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
