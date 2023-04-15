@@ -161,6 +161,7 @@ public class SystemUI {
         int iconSize = MainModule.mPrefs.getInt("system_statusbar_iconsize", 6);
         if (iconSize > 6) {
             MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "status_bar_icon_size", iconSize);
+            MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "status_bar_clock_size", iconSize + 0.4f);
             MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "status_bar_icon_drawing_size", iconSize);
             MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "status_bar_icon_drawing_size_dark", iconSize);
             float notifyPadding = 2.5f * iconSize / 13;
