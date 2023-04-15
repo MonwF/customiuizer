@@ -1796,6 +1796,15 @@ public class System {
             }
         });
 
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.notification.row.NotificationBackgroundView", lpparam.classLoader, "setTint", int.class, new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                if ((int)param.args[0] == 0) {
+                    param.setResult(null);
+                }
+            }
+        });
+
         Helpers.findAndHookMethod("com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper", lpparam.classLoader, "getCustomBackgroundColor", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {

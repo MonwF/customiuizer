@@ -3938,6 +3938,7 @@ public class SystemUI {
             protected void after(final MethodHookParam param) throws Throwable {
                 TextView dateView = (TextView) XposedHelpers.getObjectField(param.thisObject, "dateView");
                 if (dateView != null) {
+                    XposedHelpers.setObjectField(dateView, "mVisibility", 8);
                     dateView.setVisibility(View.GONE);
                 }
             }
@@ -3945,20 +3946,10 @@ public class SystemUI {
         MethodHook initHideDateView = new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
-                TextView dateView = (TextView) XposedHelpers.getObjectField(param.thisObject, "dateView");
                 TextView clockView = (TextView) XposedHelpers.getObjectField(param.thisObject, "clockView");
                 ViewGroup.LayoutParams lp = clockView.getLayoutParams();
                 lp.width = 0;
                 clockView.setLayoutParams(lp);
-                Handler myhandler = new Handler(Looper.myLooper());
-                Runnable hideRunnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        myhandler.removeCallbacks(this);
-                        dateView.setVisibility(View.GONE);
-                    }
-                };
-                myhandler.postDelayed(hideRunnable, 100);
             }
         };
         Helpers.findAndHookMethod("miui.systemui.controlcenter.windowview.MainPanelHeaderController", pluginLoader, "updateVisibility", hideDateView);
