@@ -724,29 +724,23 @@
 			android:defaultValue="false"
 			/>
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_qs_force_systemfonts"
-			android:title="@string/system_qs_force_systemfonts_title"
-			android:defaultValue="false"
-			/>
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_drawer_clockseconds"
-			android:title="@string/system_clockseconds_title"
-			android:defaultValue="false" />
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_cc_clocktweak_cat"
+			android:title="@string/system_statusbar_clocktweak_title" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_cc_hidedate"
 			android:title="@string/system_cc_hidedate_title"
+			android:disableDependentsState="true"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.EditTextPreferenceEx
 			android:dialogMessage="@string/system_clock_customformat_help_summ"
 			android:key="pref_key_system_cc_dateformat"
 			android:title="@string/system_cc_dateformat_title"
+			android:dependency="pref_key_system_cc_hidedate"
 			app:useSimpleSummaryProvider="true"
 			android:defaultValue="" />
-		/>
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_qsnolabels"
