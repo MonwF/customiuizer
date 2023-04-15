@@ -996,26 +996,33 @@ public class System {
 
     private static void initClockStyle(TextView mClock) {
         Resources res = mClock.getResources();
-        int fontSize = MainModule.mPrefs.getInt("system_statusbar_clock_fontsize", 27);
-        float finalSize = fontSize * 0.5f;
-        String customFormat = MainModule.mPrefs.getString("system_statusbar_clock_customformat", "");
-        boolean enableCustomFormat = MainModule.mPrefs.getBoolean("system_statusbar_clock_customformat_enable");
+        String clockName = (String) XposedHelpers.getAdditionalInstanceField(mClock, "clockName");
+        String subKey = "statusbar";
+        boolean statusBarClock = clockName.equals("clock");
+        float dimStep = 1;
+        if (statusBarClock) {
+            dimStep = 0.5f;
+        }
+        else {
+            subKey = "cc";
+        }
+        boolean enableCustomFormat = !statusBarClock || MainModule.mPrefs.getBoolean("system_" + subKey + "_clock_customformat_enable");
+        String customFormat = MainModule.mPrefs.getString("system_" + subKey + "_clock_customformat", "");
         boolean dualRows = enableCustomFormat && customFormat.contains("\n");
-        if (dualRows && finalSize > 11.5f) {
-            finalSize = 8;
-        }
-        else if (!dualRows && finalSize < 10f) {
-            finalSize = 13.5f;
-        }
-        if (fontSize != 27 || dualRows) {
-            mClock.setTextSize(TypedValue.COMPLEX_UNIT_DIP, finalSize);
+        if (statusBarClock) {
+            int fontSize = MainModule.mPrefs.getInt("system_statusbar_clock_fontsize", 13);
+            if (fontSize > 13) {
+                mClock.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize * 0.5f);
+            }
+            if (dualRows) {
+                mClock.setLineSpacing(0, 0.5 * fontSize > 8.5f ? 0.85f : 0.9f);
+            }
         }
         if (dualRows) {
-            mClock.setLineSpacing(0, finalSize > 8.5f ? 0.85f : 0.9f);
             mClock.setSingleLine(false);
             mClock.setMaxLines(2);
         }
-        int align = MainModule.mPrefs.getStringAsInt("system_statusbar_clock_align", 1);
+        int align = MainModule.mPrefs.getStringAsInt("system_" + subKey + "_clock_align", 1);
         if (align == 2) {
             mClock.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
         }
@@ -1025,35 +1032,35 @@ public class System {
         else if (align == 4) {
             mClock.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
         }
-        if (MainModule.mPrefs.getBoolean("system_statusbar_clock_bold")) {
+        if (MainModule.mPrefs.getBoolean("system_" + subKey + "_clock_bold")) {
             mClock.setTypeface(Typeface.DEFAULT_BOLD);
         }
-        int leftMargin = MainModule.mPrefs.getInt("system_statusbar_clock_leftmargin", 0);
+        int leftMargin = MainModule.mPrefs.getInt("system_" + subKey + "_clock_leftmargin", 0);
         leftMargin = (int)TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
-            leftMargin * 0.5f,
+            leftMargin * dimStep,
             res.getDisplayMetrics()
         );
-        int rightMargin = MainModule.mPrefs.getInt("system_statusbar_clock_rightmargin", 0);
+        int rightMargin = MainModule.mPrefs.getInt("system_" + subKey + "_clock_rightmargin", 0);
         rightMargin = (int) TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
-            rightMargin * 0.5f,
+            rightMargin * dimStep,
             res.getDisplayMetrics()
         );
         mClock.setPadding(leftMargin, 0, rightMargin, 0);
 
-        int verticalOffset = MainModule.mPrefs.getInt("system_statusbar_clock_verticaloffset", 8);
+        int verticalOffset = MainModule.mPrefs.getInt("system_" + subKey + "_clock_verticaloffset", 8);
         if (verticalOffset != 8) {
             LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mClock.getLayoutParams();
             float marginTop = TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
-                (verticalOffset - 8) * 0.5f,
+                (verticalOffset - 8) * dimStep,
                 res.getDisplayMetrics()
             );
             lp.topMargin = (int) (marginTop);
             mClock.setLayoutParams(lp);
         }
-        int fixedWidth = MainModule.mPrefs.getInt("system_statusbar_clock_fixedcontent_width", 10);
+        int fixedWidth = MainModule.mPrefs.getInt("system_" + subKey + "_clock_fixedcontent_width", 10);
         if (fixedWidth > 10) {
             ViewGroup.LayoutParams lp = mClock.getLayoutParams();
             lp.width = (int)(mClock.getResources().getDisplayMetrics().density * fixedWidth);
@@ -1068,8 +1075,13 @@ public class System {
         return (enableCustomFormat && customFormat.contains("ss")) || (!enableCustomFormat && sbShowSeconds);
     }
 
+    private static boolean getCCShowSeconds() {
+        String customFormat = MainModule.mPrefs.getString("system_cc_clock_customformat", "");
+        return customFormat.contains("ss");
+    }
+
     private static void initSecondTimer(Object clockController) {
-        boolean ccShowSeconds = MainModule.mPrefs.getBoolean("system_drawer_clockseconds");
+        boolean ccShowSeconds = getCCShowSeconds();
         boolean finalSbShowSeconds = getShowSeconds();
         Context mContext = (Context) XposedHelpers.getObjectField(clockController, "mContext");
         Timer scheduleTimer = (Timer) XposedHelpers.getAdditionalInstanceField(clockController, "scheduleTimer");
@@ -1106,9 +1118,8 @@ public class System {
         }
     }
     public static void StatusBarClockTweakHook(LoadPackageParam lpparam) {
-        boolean ccShowSeconds = MainModule.mPrefs.getBoolean("system_drawer_clockseconds");
         boolean statusbarClockTweak = MainModule.mPrefs.getBoolean("system_statusbar_clocktweak");
-        boolean hideDateView = MainModule.mPrefs.getBoolean("system_cc_hidedate");
+        boolean ccClockTweak = MainModule.mPrefs.getBoolean("system_cc_clocktweak");
         MethodHook ScheduleHook = new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
@@ -1125,9 +1136,8 @@ public class System {
                 mContext.registerReceiver(mUpdateTimeReceiver, timeSetIntent);
             }
         };
-        if (ccShowSeconds || statusbarClockTweak) {
+        if (ccClockTweak || statusbarClockTweak) {
             Helpers.hookAllConstructors("com.android.systemui.statusbar.policy.MiuiStatusBarClockController", lpparam.classLoader, ScheduleHook);
-
             Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.MiuiStatusBarClockController", lpparam.classLoader, "fireTimeChange", new MethodHook() {
                 @Override
                 protected void before(MethodHookParam param) throws Throwable {
@@ -1145,18 +1155,9 @@ public class System {
                 }
             });
         }
-
-        if (statusbarClockTweak) {
-            Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView", lpparam.classLoader, "onAttachedToWindow", new MethodHook() {
-                @Override
-                protected void after(MethodHookParam param) throws Throwable {
-                    TextView clock = (TextView) XposedHelpers.getObjectField(param.thisObject, "mMiuiClock");
-                    initClockStyle(clock);
-                }
-            });
-        }
         String ccDateFormat = MainModule.mPrefs.getString("system_cc_dateformat", "");
         boolean ccDateCustom = ccDateFormat.length() > 0;
+        boolean hideDateView = MainModule.mPrefs.getBoolean("system_cc_hidedate");
         Helpers.hookAllConstructors("com.android.systemui.statusbar.views.MiuiClock", lpparam.classLoader, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) {
@@ -1171,10 +1172,14 @@ public class System {
                     if (getShowSeconds()) {
                         XposedHelpers.setAdditionalInstanceField(clock, "showSeconds", true);
                     }
+                    initClockStyle(clock);
                 }
-                else if (bigClockId == thisClockId && ccShowSeconds) {
+                else if (bigClockId == thisClockId && ccClockTweak) {
                     XposedHelpers.setAdditionalInstanceField(clock, "clockName", "ccClock");
-                    XposedHelpers.setAdditionalInstanceField(clock, "showSeconds", true);
+                    if (getCCShowSeconds()) {
+                        XposedHelpers.setAdditionalInstanceField(clock, "showSeconds", true);
+                    }
+                    initClockStyle(clock);
                 }
                 else if (dateClockId == thisClockId && (ccDateCustom || hideDateView)) {
                     XposedHelpers.setAdditionalInstanceField(clock, "clockName", "ccDate");
@@ -1190,24 +1195,11 @@ public class System {
                 Object mMiuiStatusBarClockController = XposedHelpers.getObjectField(clock, "mMiuiStatusBarClockController");
                 Object mCalendar = XposedHelpers.callMethod(mMiuiStatusBarClockController, "getCalendar");
                 String timeFmt = null;
-                if ("ccClock".equals(clockName) && ccShowSeconds) {
-                    String fmt;
-                    int mAmPmStyle = (int) XposedHelpers.getObjectField(clock, "mAmPmStyle");
-                    boolean is24 = (boolean) XposedHelpers.callMethod(mMiuiStatusBarClockController, "getIs24");
-                    if (is24) {
-                        fmt = "fmt_time_24hour_minute";
+                if ("ccClock".equals(clockName) && ccClockTweak) {
+                    String customFormat = MainModule.mPrefs.getString("system_cc_clock_customformat", "");
+                    if (customFormat.length() > 0) {
+                        timeFmt = customFormat;
                     }
-                    else {
-                        if (mAmPmStyle == 0) {
-                            fmt = "fmt_time_12hour_minute_pm";
-                        }
-                        else {
-                            fmt = "fmt_time_12hour_minute";
-                        }
-                    }
-                    int fmtResId = mContext.getResources().getIdentifier(fmt, "string", "com.android.systemui");
-                    timeFmt = mContext.getString(fmtResId);
-                    timeFmt = timeFmt.replaceFirst(":mm", ":mm:ss");
                 }
                 else if ("ccDate".equals(clockName) && (!hideDateView && ccDateCustom)) {
                     timeFmt = ccDateFormat;
@@ -1268,6 +1260,22 @@ public class System {
                     }
                 }
             });
+        }
+        if (ccClockTweak) {
+            int ccClockFontSize = MainModule.mPrefs.getInt("system_cc_clock_fontsize", 9);
+            if (ccClockFontSize > 9) {
+                MethodHook setSizeHook = new MethodHook() {
+                    @Override
+                    protected void after(MethodHookParam param) throws Throwable {
+                        TextView clock = (TextView)XposedHelpers.getObjectField(param.thisObject, "mBigTime");
+                        clock.setTextSize(TypedValue.COMPLEX_UNIT_DIP, ccClockFontSize);
+                    }
+                };
+                MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "qs_control_header_tiles_margin_top", 0);
+                MainModule.resHooks.setDensityReplacement("miui.systemui.plugin", "dimen", "qs_control_header_tiles_margin_top", 0);
+                Helpers.findAndHookMethod("com.android.systemui.qs.MiuiNotificationHeaderView", lpparam.classLoader, "updateResources", setSizeHook);
+                Helpers.findAndHookMethod("com.android.systemui.qs.MiuiQSHeaderView", lpparam.classLoader, "updateResources", setSizeHook);
+            }
         }
     }
 
