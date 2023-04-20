@@ -3723,6 +3723,13 @@ public class SystemUI {
                 else {
                     pkgName = pendingIntent.getCreatorPackage();
                 }
+                ForegroundInfo foregroundInfo = ProcessManager.getForegroundInfo();
+                if (foregroundInfo != null) {
+                    String topPackage = foregroundInfo.mForegroundPackageName;
+                    if (pkgName.equals(topPackage) || "com.miui.home".equals(topPackage)) {
+                        return;
+                    }
+                }
                 if (MainModule.mPrefs.getStringSet("system_notify_openinfw_apps").contains(pkgName)) {
                     return;
                 }
