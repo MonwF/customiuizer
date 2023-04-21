@@ -401,7 +401,7 @@ public class SystemUI {
                                     String currVal = "";
                                     String preferred = "mA";
                                     int rawCurr = -1 * Math.round(Integer.parseInt(props.getProperty("POWER_SUPPLY_CURRENT_NOW")) / 1000f);
-                                    if (opt == 1 || opt == 3) {
+                                    if (opt == 1 || opt == 3 || opt == 5) {
                                         if (MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_positive")) {
                                             rawCurr = Math.abs(rawCurr);
                                         }
@@ -435,7 +435,16 @@ public class SystemUI {
                                         float voltVal = Integer.parseInt(props.getProperty("POWER_SUPPLY_VOLTAGE_NOW")) / 1000f / 1000f;
                                         String simpleWatt = String.format(Locale.getDefault(), "%.2f", Math.abs(voltVal * rawCurr) / 1000);
                                         batteryInfo = simpleWatt + powerUnit;
-                                    } else {
+                                    } else if (opt == 5) {
+                                        float voltVal = Integer.parseInt(props.getProperty("POWER_SUPPLY_VOLTAGE_NOW")) / 1000f / 1000f;
+                                        String simpleWatt = String.format(Locale.getDefault(), "%.2f", Math.abs(voltVal * rawCurr) / 1000);
+                                        String splitChar = MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_singlerow") ? " " : "\n";
+                                        batteryInfo = currVal + currUnit + splitChar + simpleWatt + powerUnit;
+                                        if (MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_reverseorder")) {
+                                            batteryInfo = simpleWatt + powerUnit + splitChar + currVal + currUnit;
+                                        }
+                                    }
+                                    else {
                                         batteryInfo = currVal + currUnit;
                                     }
                                 }
