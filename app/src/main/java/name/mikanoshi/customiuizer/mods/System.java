@@ -999,17 +999,14 @@ public class System {
         String clockName = (String) XposedHelpers.getAdditionalInstanceField(mClock, "clockName");
         String subKey = "statusbar";
         boolean statusBarClock = clockName.equals("clock");
-        float dimStep = 1;
-        if (statusBarClock) {
-            dimStep = 0.5f;
-        }
-        else {
+        if (!statusBarClock) {
             subKey = "cc";
         }
         boolean enableCustomFormat = !statusBarClock || MainModule.mPrefs.getBoolean("system_" + subKey + "_clock_customformat_enable");
         String customFormat = MainModule.mPrefs.getString("system_" + subKey + "_clock_customformat", "");
         boolean dualRows = enableCustomFormat && customFormat.contains("\n");
         if (statusBarClock) {
+            float dimStep = 0.5f;
             int fontSize = MainModule.mPrefs.getInt("system_statusbar_clock_fontsize", 13);
             if (fontSize > 13) {
                 mClock.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize * 0.5f);
@@ -1017,49 +1014,67 @@ public class System {
             if (dualRows) {
                 mClock.setLineSpacing(0, 0.5 * fontSize > 8.5f ? 0.85f : 0.9f);
             }
+            int align = MainModule.mPrefs.getStringAsInt("system_" + subKey + "_clock_align", 1);
+            if (align == 2) {
+                mClock.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+            }
+            else if (align == 3) {
+                mClock.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            }
+            else if (align == 4) {
+                mClock.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+            }
+            if (MainModule.mPrefs.getBoolean("system_" + subKey + "_clock_bold")) {
+                mClock.setTypeface(Typeface.DEFAULT_BOLD);
+            }
+            int leftMargin = MainModule.mPrefs.getInt("system_" + subKey + "_clock_leftmargin", 0);
+            leftMargin = (int)TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                leftMargin * dimStep,
+                res.getDisplayMetrics()
+            );
+            int rightMargin = MainModule.mPrefs.getInt("system_" + subKey + "_clock_rightmargin", 0);
+            rightMargin = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                rightMargin * dimStep,
+                res.getDisplayMetrics()
+            );
+            mClock.setPadding(leftMargin, 0, rightMargin, 0);
+            int verticalOffset = MainModule.mPrefs.getInt("system_" + subKey + "_clock_verticaloffset", 8);
+            if (verticalOffset != 8) {
+                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mClock.getLayoutParams();
+                float marginTop = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    (verticalOffset - 8) * dimStep,
+                    res.getDisplayMetrics()
+                );
+                lp.topMargin = (int) (marginTop);
+                mClock.setLayoutParams(lp);
+            }
+        }
+        else {
+            int defaultVerticalOffset = 10;
+            int verticalOffset = MainModule.mPrefs.getInt("system_" + subKey + "_clock_verticaloffset", defaultVerticalOffset);
+            if (verticalOffset != defaultVerticalOffset) {
+                float marginTop = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    verticalOffset - defaultVerticalOffset,
+                    res.getDisplayMetrics()
+                );
+                if (marginTop > 0) {
+                    mClock.setPadding(0, (int)marginTop, 0, 0);
+                }
+                else {
+                    marginTop = marginTop * -1;
+                    mClock.setPadding(0, 0, 0, (int)marginTop);
+                }
+            }
         }
         if (dualRows) {
             mClock.setSingleLine(false);
             mClock.setMaxLines(2);
         }
-        int align = MainModule.mPrefs.getStringAsInt("system_" + subKey + "_clock_align", 1);
-        if (align == 2) {
-            mClock.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
-        }
-        else if (align == 3) {
-            mClock.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        }
-        else if (align == 4) {
-            mClock.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
-        }
-        if (MainModule.mPrefs.getBoolean("system_" + subKey + "_clock_bold")) {
-            mClock.setTypeface(Typeface.DEFAULT_BOLD);
-        }
-        int leftMargin = MainModule.mPrefs.getInt("system_" + subKey + "_clock_leftmargin", 0);
-        leftMargin = (int)TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            leftMargin * dimStep,
-            res.getDisplayMetrics()
-        );
-        int rightMargin = MainModule.mPrefs.getInt("system_" + subKey + "_clock_rightmargin", 0);
-        rightMargin = (int) TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            rightMargin * dimStep,
-            res.getDisplayMetrics()
-        );
-        mClock.setPadding(leftMargin, 0, rightMargin, 0);
 
-        int verticalOffset = MainModule.mPrefs.getInt("system_" + subKey + "_clock_verticaloffset", 8);
-        if (verticalOffset != 8) {
-            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mClock.getLayoutParams();
-            float marginTop = TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                (verticalOffset - 8) * dimStep,
-                res.getDisplayMetrics()
-            );
-            lp.topMargin = (int) (marginTop);
-            mClock.setLayoutParams(lp);
-        }
         int fixedWidth = MainModule.mPrefs.getInt("system_" + subKey + "_clock_fixedcontent_width", 10);
         if (fixedWidth > 10) {
             ViewGroup.LayoutParams lp = mClock.getLayoutParams();
@@ -1263,16 +1278,26 @@ public class System {
         }
         if (ccClockTweak) {
             int ccClockFontSize = MainModule.mPrefs.getInt("system_cc_clock_fontsize", 9);
-            if (ccClockFontSize > 9) {
+            int clockMarginTop = MainModule.mPrefs.getInt("system_cc_clock_topmargin_indrawer", 0);
+            if (ccClockFontSize > 9 || clockMarginTop > 0) {
                 MethodHook setSizeHook = new MethodHook() {
                     @Override
                     protected void after(MethodHookParam param) throws Throwable {
                         TextView clock = (TextView)XposedHelpers.getObjectField(param.thisObject, "mBigTime");
                         clock.setTextSize(TypedValue.COMPLEX_UNIT_DIP, ccClockFontSize);
+                        String clsName = param.thisObject.getClass().getSimpleName();
+                        if (clockMarginTop > 0 && "MiuiNotificationHeaderView".equals(clsName)) {
+                            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) clock.getLayoutParams();
+                            float marginTop = TypedValue.applyDimension(
+                                TypedValue.COMPLEX_UNIT_DIP,
+                                clockMarginTop,
+                                clock.getResources().getDisplayMetrics()
+                            );
+                            lp.topMargin = (int)marginTop;
+                            clock.setLayoutParams(lp);
+                        }
                     }
                 };
-                MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "qs_control_header_tiles_margin_top", 0);
-                MainModule.resHooks.setDensityReplacement("miui.systemui.plugin", "dimen", "qs_control_header_tiles_margin_top", 0);
                 Helpers.findAndHookMethod("com.android.systemui.qs.MiuiNotificationHeaderView", lpparam.classLoader, "updateResources", setSizeHook);
                 Helpers.findAndHookMethod("com.android.systemui.qs.MiuiQSHeaderView", lpparam.classLoader, "updateResources", setSizeHook);
             }

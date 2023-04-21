@@ -27,53 +27,27 @@
 		miuizer:minValue="9"
 		miuizer:maxValue="60"
 		miuizer:stepValue="1"
-		miuizer:displayDividerValue="1"
 		miuizer:offtext="@string/array_default"
-		miuizer:format="%s dip" />
-
-	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
-		android:key="pref_key_system_cc_clock_align"
-		android:title="@string/system_statusbar_clock_align_title"
-		android:entries="@array/horizontalalign"
-		android:entryValues="@array/horizontalalign_val"
-		miuizer:valueAsSummary="true"
-		android:defaultValue="1" />
-
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_cc_clock_bold"
-		android:title="@string/system_statusbar_mobiletype_single_bold_title"
-		android:defaultValue="false" />
+		miuizer:format="%d dip" />
 
 	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-		android:key="pref_key_system_cc_clock_leftmargin"
-		android:title="@string/system_statusbar_mobiletype_single_leftmargin_title"
+		android:key="pref_key_system_cc_clock_topmargin_indrawer"
+		android:title="@string/system_cc_clock_topmargin_indrawer_title"
 		android:defaultValue="0"
 		miuizer:minValue="0"
-		miuizer:maxValue="10"
+		miuizer:maxValue="60"
 		miuizer:stepValue="1"
-		miuizer:displayDividerValue="1"
-		miuizer:format="%s dip" />
-
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-		android:key="pref_key_system_cc_clock_rightmargin"
-		android:title="@string/system_statusbar_dualsimin2rows_rightmargin_title"
-		android:defaultValue="0"
-		miuizer:minValue="0"
-		miuizer:maxValue="10"
-		miuizer:stepValue="1"
-		miuizer:displayDividerValue="1"
-		miuizer:format="%s dip" />
+		miuizer:format="%d dip" />
 
 	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_cc_clock_verticaloffset"
 		android:title="@string/system_statusbar_mobiletype_single_verticaloffset"
-		android:defaultValue="8"
+		android:defaultValue="10"
 		miuizer:minValue="0"
-		miuizer:maxValue="16"
+		miuizer:maxValue="20"
 		miuizer:stepValue="1"
-		miuizer:negativeShift="8"
-		miuizer:displayDividerValue="1"
-		miuizer:format="%s dip" />
+		miuizer:negativeShift="10"
+		miuizer:format="%d dip" />
 
 	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_cc_clock_fixedcontent_width"

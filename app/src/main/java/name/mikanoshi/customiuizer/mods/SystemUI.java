@@ -1850,10 +1850,7 @@ public class SystemUI {
                         HideCCDateView(pluginLoader);
                     }
                     if (MainModule.mPrefs.getBoolean("system_cc_clocktweak")) {
-                        int ccClockFontSize = MainModule.mPrefs.getInt("system_cc_clock_fontsize", 9);
-                        if (ccClockFontSize > 9) {
-                            initCCClockStyle(pluginLoader);
-                        }
+                        initCCClockStyle(pluginLoader);
                     }
                 }
             }
@@ -3969,14 +3966,16 @@ public class SystemUI {
         Helpers.findAndHookMethod("miui.systemui.controlcenter.windowview.MainPanelHeaderController", pluginLoader, "onCreate", initHideDateView);
     }
     public static void initCCClockStyle(ClassLoader pluginLoader) {
-        Helpers.findAndHookMethod("miui.systemui.controlcenter.windowview.MainPanelHeaderController", pluginLoader, "updateClocksAppearance", new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                TextView clock = (TextView)XposedHelpers.getObjectField(param.thisObject, "clockView");
-                int ccClockFontSize = MainModule.mPrefs.getInt("system_cc_clock_fontsize", 9);
-                clock.setTextSize(TypedValue.COMPLEX_UNIT_DIP, ccClockFontSize);
-                clock.setLineSpacing(0, 1);
-            }
-        });
+        int ccClockFontSize = MainModule.mPrefs.getInt("system_cc_clock_fontsize", 9);
+        if (ccClockFontSize > 9) {
+            Helpers.findAndHookMethod("miui.systemui.controlcenter.windowview.MainPanelHeaderController", pluginLoader, "updateClocksAppearance", new MethodHook() {
+                @Override
+                protected void after(MethodHookParam param) throws Throwable {
+                    TextView clock = (TextView) XposedHelpers.getObjectField(param.thisObject, "clockView");
+                    clock.setTextSize(TypedValue.COMPLEX_UNIT_DIP, ccClockFontSize);
+                    clock.setLineSpacing(0, 1);
+                }
+            });
+        }
     }
 }
