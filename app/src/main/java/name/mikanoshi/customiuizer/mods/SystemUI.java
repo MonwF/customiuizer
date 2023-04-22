@@ -147,9 +147,6 @@ public class SystemUI {
             notifVolumeOnResId = MainModule.resHooks.addResource("ic_miui_volume_notification", R.drawable.ic_miui_volume_notification);
             notifVolumeOffResId = MainModule.resHooks.addResource("ic_miui_volume_notification_mute", R.drawable.ic_miui_volume_notification_mute);
         }
-        if (MainModule.mPrefs.getBoolean("system_nosafevolume")) {
-            MainModule.resHooks.setObjectReplacement(lpparam.packageName, "bool", "enable_safety_warning", false);
-        }
         if (MainModule.mPrefs.getBoolean("system_volumetimer")) {
             MainModule.resHooks.setResReplacement("miui.systemui.plugin", "array", "miui_volume_timer_segments", R.array.miui_volume_timer_segments);
         }
@@ -3986,5 +3983,15 @@ public class SystemUI {
                 }
             });
         }
+    }
+    public static void HideSafeVolumeDlgHook(LoadPackageParam lpparam) {
+        Helpers.findAndHookMethod("com.android.systemui.volume.VolumeDialogControllerImpl", lpparam.classLoader, "onShowSafetyWarningW", int.class, new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                Object mAudio = XposedHelpers.getObjectField(param.thisObject, "mAudio");
+                XposedHelpers.callMethod(mAudio, "disableSafeMediaVolume");
+                param.setResult(null);
+            }
+        });
     }
 }

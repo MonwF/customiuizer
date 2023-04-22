@@ -426,6 +426,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             ) {
                 SystemUI.FixOpenNotifyInFreeFormHook(lpparam);
             }
+            if (mPrefs.getBoolean("system_nosafevolume")) {
+                SystemUI.HideSafeVolumeDlgHook(lpparam);
+            }
         }
 
         if (pkg.equals(Helpers.modulePkg)) {
