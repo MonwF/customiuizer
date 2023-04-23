@@ -23,7 +23,7 @@ android {
             storePassword sPassword
             keyAlias kAlias
             keyPassword kPassword
-            v1SigningEnabled true
+            v1SigningEnabled false
             v2SigningEnabled true
         }
     }
