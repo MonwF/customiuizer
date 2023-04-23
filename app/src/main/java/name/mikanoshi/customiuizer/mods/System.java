@@ -1187,7 +1187,6 @@ public class System {
                     if (getShowSeconds()) {
                         XposedHelpers.setAdditionalInstanceField(clock, "showSeconds", true);
                     }
-                    initClockStyle(clock);
                 }
                 else if (bigClockId == thisClockId && ccClockTweak) {
                     XposedHelpers.setAdditionalInstanceField(clock, "clockName", "ccClock");
@@ -1273,6 +1272,15 @@ public class System {
                         clock.setVisibility(View.GONE);
                         param.setResult(null);
                     }
+                }
+            });
+        }
+        if (statusbarClockTweak) {
+            Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView", lpparam.classLoader, "onAttachedToWindow", new MethodHook() {
+                @Override
+                protected void after(MethodHookParam param) throws Throwable {
+                    TextView clock = (TextView) XposedHelpers.getObjectField(param.thisObject, "mMiuiClock");
+                    initClockStyle(clock);
                 }
             });
         }
