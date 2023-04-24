@@ -61,6 +61,7 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 import miui.app.MiuiFreeFormManager;
+import miui.os.Build;
 import miui.process.ForegroundInfo;
 import miui.process.ProcessManager;
 import name.mikanoshi.customiuizer.GateWaySettings;
@@ -763,7 +764,7 @@ public class GlobalActions {
     }
 
     public static void miuizerSettingsHook(LoadPackageParam lpparam) {
-        int settingsIconResId = MainModule.resHooks.addResource("ic_miuizer_settings", Helpers.isTPlus() ? R.drawable.ic_miuizer_settings11 : R.drawable.ic_miuizer_settings_legacy);
+        int settingsIconResId = MainModule.resHooks.addResource("ic_miuizer_settings", Helpers.isMIUI14 ? R.drawable.ic_miuizer_settings11 : R.drawable.ic_miuizer_settings_legacy);
         Helpers.findAndHookMethod("com.android.settings.MiuiSettings", lpparam.classLoader, "updateHeaderList", List.class, new MethodHook() {
             @Override
             @SuppressWarnings("unchecked")

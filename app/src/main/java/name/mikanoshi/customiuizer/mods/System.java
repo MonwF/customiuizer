@@ -1910,8 +1910,8 @@ public class System {
                     }
                     List<Integer> accent1 = (List<Integer>) XposedHelpers.callMethod(cs, "getAccent1");
 //                    List<Integer> accent2 = (List<Integer>) XposedHelpers.callMethod(cs, "getAccent2");
-                    List<Integer> n1 = (List<Integer>) XposedHelpers.callMethod(cs, "getNeutral1");
-                    List<Integer> n2 = (List<Integer>) XposedHelpers.callMethod(cs, "getNeutral2");
+                    List<Integer> n1 = (List<Integer>) XposedHelpers.getObjectField(cs, "neutral1");
+                    List<Integer> n2 = (List<Integer>) XposedHelpers.getObjectField(cs, "neutral2");
 
                     int bgColor = accent1.get(dark ? 5 : 6);
                     Object mParams = XposedHelpers.getObjectField(builder, "mParams");
