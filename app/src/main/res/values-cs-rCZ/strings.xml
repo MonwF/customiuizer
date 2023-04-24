@@ -61,6 +61,7 @@
     <string name="system_batteryindicator_test_title">Test</string>
     <string name="system_batteryindicator_test_summ" formatted="false">Animace pruhu ze 100 % na 0 % ve stavu vybíjení</string>
     <string name="system_statusbarheight_title">Výška stavového řádku</string>
+    <string name="system_statusbar_iconsize_title">Velikost ikony ve stavovém řádku</string>
     <string name="system_statusbarcolor_title">Barva pozadí stavového řádku</string>
     <string name="system_statusbarcolor_summ">Pokud je to možné, barvy pozadí stavového řádku a akčního řádku aplikace jsou stejné</string>
     <string name="system_statusbarcolor_apps_title">Černá listina</string>
@@ -71,6 +72,7 @@
     <string name="system_calendar_app_title">Kalendář</string>
     <string name="system_calendar_app_summ">Otevřít vybranou aplikaci po klepnutí na datum v záhlaví oznámení</string>
     <string name="system_clockseconds_title">Zobrazit vteřiny</string>
+    <string name="system_cc_hidedate_title">Skrýt datum</string>
     <string name="system_clock_show_ampm_title">Zobrazit AM|PM</string>
     <string name="system_clock_time_format_title">24-hodinový formát</string>
     <string name="system_clock_leadingzero_title">Zobrazit nulu před hodinami</string>
@@ -139,6 +141,7 @@
     <string name="system_compactnotif_summ">Zmenšení svislých výplní oznámení</string>
     <string name="system_colorizenotiftitle_title">Vybarvení názvu oznámení</string>
     <string name="system_colorizenotiftitle_summ">Použití barvy ikony na text nadpisu (pouze styl oznámení pro Android)</string>
+    <string name="system_notify_openinfw_title">Otevřít oznámení v plovoucím okně</string>
     <string name="system_minimalnotifview_title">Vrátit minimalistické zobrazení ve složeném stavu</string>
     <string name="system_minimalnotifview_summ">Oznámení s minimální důležitostí by mohla být opět sbalena do jednořádkového zobrazení</string>
     <string name="system_notifchannelsettings_title">Nastavení otevřeného kanálu</string>
@@ -887,6 +890,9 @@
     <string name="array_turn_off_disable">Vypnout a zakázat</string>
     <string name="array_current">Pouze aktuální</string>
     <string name="array_power">Pouze výkon</string>
+    <string name="array_temp_current">Teplota a proud</string>
+    <string name="array_temp_power">Teplota a výkon</string>
+    <string name="array_power_current">Výkon a proud</string>
     <string name="array_dualsimin2rows_style_thick">Silné</string>
     <string name="array_dualsimin2rows_style_theme">Podle motivu systému</string>
     <string name="unlimited">Neomezené</string>
@@ -1137,5 +1143,6 @@
     <string name="system_cc_tile_roundedrect_title">Zaoblený obdélník</string>
     <string name="system_cc_enable_style_switch_title">Vynutit povolení CC stylu</string>
     <string name="system_cc_disable_bluetooth_restrict_title">Zakázat odpojování bluetooth do zítřka</string>
+    <string name="system_cc_volume_showpct_title">Zobrazit procenta hlasitosti</string>
     <string name="system_cc_collapse_after_clicked_title">Sbalit po dotyku</string>
 </resources>
