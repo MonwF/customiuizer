@@ -136,6 +136,9 @@ public class Helpers {
 	public static final int REQUEST_PERMISSIONS_REPORT = 4;
 	public static final int REQUEST_PERMISSIONS_BLUETOOTH = 5;
 	public static final int REQUEST_PERMISSIONS_SECURITY_CENTER = 6;
+
+	public static final boolean isMIUI14 = Integer.parseInt(miui.os.Build.getMiUiVersionCode()) > 13;
+	
 	public static LruCache<String, Bitmap> memoryCache = new LruCache<String, Bitmap>((int)(Runtime.getRuntime().maxMemory() / 1024) / 2) {
 		@Override
 		protected int sizeOf(String key, Bitmap icon) {

@@ -509,7 +509,7 @@ public class SystemUI {
         }
         float fontSize = MainModule.mPrefs.getInt("system_statusbar_" + subKey + "_fontsize", 16) * 0.5f;
         int opt = MainModule.mPrefs.getStringAsInt("system_statusbar_" + subKey + "_content", 1);
-        if ((opt == 1 || opt == 4) && !MainModule.mPrefs.getBoolean("system_statusbar_" + subKey + "_singlerow")) {
+        if ((opt == 1 || opt == 4 || opt == 5) && !MainModule.mPrefs.getBoolean("system_statusbar_" + subKey + "_singlerow")) {
             batteryView.setSingleLine(false);
             batteryView.setMaxLines(2);
             batteryView.setLineSpacing(0, fontSize > 8.5f ? 0.85f : 0.9f);
