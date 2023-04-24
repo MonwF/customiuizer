@@ -19,7 +19,7 @@
     <string name="system_mods_audio">オーディオ</string>
     <string name="system_mods_vibration">バイブレーション</string>
     <string name="system_mods_toasts">トースト通知</string>
-    <string name="system_statusbaricons_title">アイコンを隠す</string>
+    <string name="system_statusbaricons_title">アイコンを非表示</string>
     <string name="system_statusbaricons_summ">ステータスバーアイコン表示の管理</string>
     <string name="system_statusbaricons_wifistandard_title">Wi-Fi標準規格を表示する</string>
     <string name="system_statusbaricons_battery1_title">バッテリー画像</string>
@@ -60,6 +60,7 @@
     <string name="system_batteryindicator_test_title">テスト</string>
     <string name="system_batteryindicator_test_summ" formatted="false">放電状態での100%から0%へのアニメーションバー</string>
     <string name="system_statusbarheight_title">ステータスバーの高さ</string>
+    <string name="system_statusbar_iconsize_title">ステータスバーアイコンの大きさ</string>
     <string name="system_statusbarcolor_title">ステータスバーの背景色</string>
     <string name="system_statusbarcolor_summ">ステータスバーとアプリアクションバーの背景色を可能な限り同期します</string>
     <string name="system_statusbarcolor_apps_title">ブラックリスト</string>
@@ -70,6 +71,7 @@
     <string name="system_calendar_app_title">カレンダーアプリ</string>
     <string name="system_calendar_app_summ">通知シェードのヘッダー上の日付をタップで選択をしたアプリを開くことができます</string>
     <string name="system_clockseconds_title">秒を表示</string>
+    <string name="system_cc_hidedate_title">日付を非表示</string>
     <string name="system_clock_show_ampm_title">AM|PMを表示</string>
     <string name="system_clock_time_format_title">24時間形式で表示</string>
     <string name="system_clock_leadingzero_title">ゼロから始まる時刻で表示</string>
@@ -109,6 +111,7 @@
     <string name="system_statusbar_mobile_showname_title">モバイルネットワークタイプを変更</string>
     <string name="system_hidemoreicon_title">通知アイコンのインジケーターを表示しない</string>
     <string name="system_hidemoreicon_summ">通知アイコンが非表示の場合にドットのアイコンを非表示にします</string>
+    <string name="system_hidestatusbar_whenscreenshot_title">スクリーンショット時にステータスバーを非表示</string>
     <string name="system_nonetspeedseparator_title">ネットワーク速度のセパレーター</string>
     <string name="system_nonetspeedseparator_summ">水滴ノッチのデバイスで時刻とネットワーク速度の間に縦線を表示しない</string>
     <string name="system_netspeedinterval_title">ネットワーク速度の更新間隔</string>
@@ -137,6 +140,7 @@
     <string name="system_compactnotif_summ">通知の縦方向の余白を減らします</string>
     <string name="system_colorizenotiftitle_title">通知のタイトルをカラー化する</string>
     <string name="system_colorizenotiftitle_summ">タイトルテキストにアイコンカラーを適用します (Android通知スタイルのみ)</string>
+    <string name="system_notify_openinfw_title">通知をフローティングウィンドウで開く</string>
     <string name="system_minimalnotifview_title">最小限の折りたたみ表示を復活させる</string>
     <string name="system_minimalnotifview_summ">重要度が低い通知は再度一行のみの表示に折りたためるようになります</string>
     <string name="system_notifchannelsettings_title">通知チャネルの設定を開く</string>
@@ -350,7 +354,7 @@
     <string name="system_remove_startactconfirm_title">開いているアプリの確認を無効化</string>
     <string name="system_removesecure_summ">あらゆるアプリのスクリーンショットやスクリーンレコードを可能にします</string>
     <string name="system_hidelowbatwarn_title">バッテリー残量低下の警告を非表示</string>
-    <string name="system_hidelowbatwarn_summ">バッテリーセーバーをオンにするように求める警告ダイアログ表示しないようにします</string>
+    <string name="system_hidelowbatwarn_summ">バッテリーセーバーをオンにするように求める警告ダイアログを表示しないようにします</string>
     <string name="system_hideproxywarn_title">タッチ操作不可の警告を非表示</string>
     <string name="system_hideproxywarn_summ">イヤホン部分が覆われている事を示す警告を非表示</string>
     <string name="system_resizablewidgets_title">ウィジェットのリサイズを無制限にする</string>
@@ -423,7 +427,7 @@
     <string name="system_recents_disable_wallpaperscale_title">壁紙のスケールを無効化</string>
     <string name="system_clearalltasks_title">タスクをすべて終了</string>
     <string name="system_clearalltasks_summ">クリーナーボタンで実行中のタスクをすべて終了させます</string>
-    <string name="system_hidefromrecents_title">履歴上から隠す</string>
+    <string name="system_hidefromrecents_title">履歴上から非表示にする</string>
     <string name="system_hidefromrecents_summ">最近のタスクで選択をしたアプリを非表示にします</string>
     <string name="system_recommended_first_title">1つ目のショートカットアイコン</string>
     <string name="system_recommended_first_summ">1つ目の提案のショートカットアイコンのアクション</string>
@@ -666,11 +670,11 @@
     <string name="various_hiddenfeatures_summ">簡単にアクセスできないアクティビティを開きます</string>
     <string name="various_hiddenfeatures_not_found">このデバイスでは使用できません</string>
     <string name="various_runningservices_title">実行中のサービス</string>
-    <string name="various_batteryoptimization_title">バッテリーの最適化</string>
+    <string name="various_batteryoptimization_title">電池の最適化</string>
     <string name="various_memorystats_title">メモリの使用状況</string>
     <string name="various_appusagestats_title">使用統計情報</string>
     <string name="various_aospsearch_title">検索</string>
-    <string name="various_aospnotif_title">アプリと通知</string>
+    <string name="various_aospnotif_title">通知</string>
     <string name="various_aospnotiflog_title">通知ログ</string>
     <string name="various_unlockfps_title">フレームレートの制限を解除</string>
     <string name="various_unlockfps_summ">スクリーンレコーダーアプリでフレームレートを90まで使用可能にします。実際に高フレームレートで動作するかは、デバイスの性能とビデオドライバに依存します。</string>
@@ -751,6 +755,7 @@
     <string name="array_global_actions_scrolltotop">トップへスクロール</string>
     <string name="array_global_actions_expandsidebar">サイドバーを表示</string>
     <string name="array_global_actions_floatingwindow">フローティングウィンドウ</string>
+    <string name="array_global_actions_pinningwindow">ウィンドウをピン留め</string>
     <string name="array_global_actions_clearmemory">メモリを解放</string>
     <string name="array_global_actions_invertcolors">色の反転</string>
     <string name="array_global_actions_switchkeyboard">キーボードの切り替え</string>
@@ -876,6 +881,10 @@
     <string name="array_turn_off">電源オフ</string>
     <string name="array_turn_off_disable">電源オフと無効</string>
     <string name="array_current">現在のみ</string>
+    <string name="array_power">電力のみ</string>
+    <string name="array_temp_current">温度と電流</string>
+    <string name="array_temp_power">温度と電力</string>
+    <string name="array_power_current">電力と電流</string>
     <string name="array_dualsimin2rows_style_thick">Thick</string>
     <string name="array_dualsimin2rows_style_theme">システムのテーマ</string>
     <string name="unlimited">無制限</string>
@@ -1062,6 +1071,7 @@
     <string name="auto_color">ステータスバーの色</string>
     <string name="type_file">ファイル</string>
     <string name="type_res">リソース</string>
+    <string name="system_statusbar_batterytempandcurrent_title">バッテリー情報を表示</string>
     <string name="system_statusbar_batterytempandcurrent_content_title">表示をする内容</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">右側の表示</string>
     <string name="system_statusbar_batterytempandcurrent_positive_title">電流値を常に正の値にする</string>
@@ -1069,6 +1079,7 @@
     <string name="system_statusbar_batterytempandcurrent_hideunit_title">単位を非表示</string>
     <string name="system_statusbar_batterytempandcurrent_singlerow_title">一列に並べて表示</string>
     <string name="system_statusbar_batterytempandcurrent_reverseorder_title">逆順</string>
+    <string name="system_statusbar_showdevicetemperature_title">デバイスの温度を表示</string>
     <string name="system_statusbar_batterystyle_title">バッテリーアイコンのスタイル</string>
     <string name="system_statusbar_batterystyle_digit_title">バッテリーの数値</string>
     <string name="system_statusbar_batterystyle_mark_fontsize_title">パーセントマークのフォントの大きさ</string>
@@ -1108,12 +1119,14 @@
     <string name="various_show_battery_temperature_title">バッテリーの温度を表示</string>
     <string name="various_enable_sc_ai_clipboard_blur_location_title">AIクリップボードと位置のぼかしを有効にする</string>
     <string name="various_disable_freeform_suggest_blacklist_title">サイドバーのサジェストのブラックリストを無効化</string>
-    <string name="various_enable_expand_sidebar_title">サイドバーを隠す</string>
+    <string name="various_enable_expand_sidebar_title">サイドバーを非表示</string>
     <string name="various_disable_dock_suggest_title">ピン留めをしたアプリのみサイドバーに表示</string>
     <string name="various_swipe_expand_sidebar_title">スワイプでサイドバーを展開可能にする</string>
     <string name="system_lockscreenshortcuts_left_tapaction_title">左側のショートカットをタップで懐中電灯の切り替え</string>
     <string name="system_cc_tile_roundedrect_title">丸みを帯びた長方形のタイル</string>
     <string name="system_cc_enable_style_switch_title">強制的にCCスタイルの切り替えを有効化</string>
     <string name="system_cc_disable_bluetooth_restrict_title">明日までBluetoothの切断を無効化</string>
+    <string name="system_cc_volume_showpct_title">音量のパーセンテージを表示</string>
     <string name="system_cc_collapse_after_clicked_title">タッチ後に折りたたむ</string>
+    <string name="system_cc_clock_topmargin_indrawer_title">通知ドロワーの時計上端の余白</string>
 </resources>
