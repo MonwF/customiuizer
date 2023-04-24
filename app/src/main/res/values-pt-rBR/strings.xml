@@ -70,6 +70,7 @@
     <string name="system_calendar_app_title">aplicativo de calendário</string>
     <string name="system_calendar_app_summ">Abrir aplicativo selecionado quando a data no cabeçalho da gaveta de notificações for tocada</string>
     <string name="system_clockseconds_title">Mostrar segundos</string>
+    <string name="system_cc_hidedate_title">Ocultar data</string>
     <string name="system_clock_show_ampm_title">Mostrar AM|PM</string>
     <string name="system_clock_time_format_title">formato de 24 horas</string>
     <string name="system_clock_leadingzero_title">Mostrar zero à esquerda para horas</string>
@@ -94,6 +95,7 @@
     <string name="system_statusbar_mobile_showname_title">Tipo de rede móvel personalizado</string>
     <string name="system_hidemoreicon_title">Nenhum indicador para ícones ocultos</string>
     <string name="system_hidemoreicon_summ">Não mostrar o ícone com 3 pontos quando os ícones de notificação estiverem ocultos</string>
+    <string name="system_hidestatusbar_whenscreenshot_title">Ocultar barra de status ao capturar tela</string>
     <string name="system_nonetspeedseparator_title">Separador de velocidade de rede</string>
     <string name="system_nonetspeedseparator_summ">Não mostra a linha vertical entre o tempo e a velocidade da rede em dispositivos com entalhes em forma de gota dagua</string>
     <string name="system_netspeedinterval_title">Intervalo de atualização da velocidade da rede</string>
@@ -122,6 +124,7 @@
     <string name="system_compactnotif_summ">Reduzir os preenchimentos verticais das notificações</string>
     <string name="system_colorizenotiftitle_title">Colorir cartão de notificação</string>
     <string name="system_colorizenotiftitle_summ">Aplicar a cor do ícone ao cartão (somente estilo de notificação do Android)</string>
+    <string name="system_notify_openinfw_title">Abrir notificação em janela flutuante</string>
     <string name="system_minimalnotifview_title">Trazer de volta a visualização recolhida minimalista</string>
     <string name="system_minimalnotifview_summ">Notificações de importância mínima podem ser recolhidas em exibição de uma linha novamente</string>
     <string name="system_notifchannelsettings_title">Abrir configurações do canal</string>
@@ -392,6 +395,7 @@
     <string name="system_charginginfo_voltage_title">Voltagem da bateria</string>
     <string name="system_charginginfo_wattage_title">Consumo de energia</string>
     <string name="system_charginginfo_temp_title">Temperatura da bateria</string>
+    <string name="array_cpu_temp">Temperatura da CPU</string>
     <string name="system_lsalarm_title">Exibir próximo alarme</string>
     <string name="system_lsalarm_summ">Mostrar a hora do alarme mais próxima ao lado da data atual</string>
     <string name="system_lsalarm_format_title">Formato de apresentação</string>
@@ -468,6 +472,7 @@
     <string name="system_animationscale_window_title">janelas</string>
     <string name="system_animationscale_transition_title">Transições</string>
     <string name="system_animationscale_animator_title">Animadores de valor</string>
+    <string name="poco_mods">POCO Launcher</string>
     <string name="launcher_mods">Iniciador MIUI</string>
     <string name="launcher_gestures">gestos</string>
     <string name="launcher_gestures_action">Ação</string>
@@ -475,6 +480,7 @@
     <string name="launcher_gestures_launch">Aplicativo para lançar</string>
     <string name="launcher_gestures_shortcut">Atalho para iniciar</string>
     <string name="launcher_gestures_activity">Atividade para lançar</string>
+    <string name="launcher_title">Launcher</string>
     <string name="launcher_summ">Mods de exibição para o iniciador selecionado. Apenas para auxílio visual, não tem nenhum efeito nos mods.</string>
     <string name="launcher_compat_title">Modo de desempenho</string>
     <string name="launcher_compat_summ">Método alternativo de aplicar todos os mods do iniciador</string>
@@ -616,6 +622,7 @@
     <string name="controls_volumemedia_vibrate_summ">Vibrar quando a ação de pressão longa é executada</string>
     <string name="controls_mods_navbar">Barra de navegação</string>
     <string name="controls_nonavbar_title">Ocultar barra de navegação e indicador de tela cheia</string>
+    <string name="controls_nonavbar_fix_inputmethod_title">Corrigir otimização de teclado em tela cheia</string>
     <string name="controls_imebackalticon_title">Botão Voltar Reativo</string>
     <string name="controls_imebackalticon_summ">Mude o ícone do botão Voltar para um alternativo no modo de entrada</string>
     <string name="controls_navbarheight_title">Altura da barra de navegação</string>
@@ -640,6 +647,7 @@
     <string name="controls_fsg_horiz_summ">Ative os gestos horizontais e a barra de navegação</string>
     <string name="controls_fsg_assist_title">Ação de deslizar de canto</string>
     <string name="controls_fsg_swipeandstop_title">Deslize pela tela a partir da borda e pare a ação</string>
+    <string name="controls_fsg_swipeandstop_disablevibrate_title">Não vibrar</string>
     <string name="various_mods">Vários</string>
     <string name="various_hiddenfeatures_title">Recursos ocultos</string>
     <string name="various_hiddenfeatures_summ">Atividades que nem sempre são facilmente acessíveis</string>
@@ -662,6 +670,7 @@
     <string name="various_installappinfo_vername">Nome da versão</string>
     <string name="various_installappinfo_vercode">Código da versão</string>
     <string name="various_installappinfo_sdk">SDK compatível</string>
+    <string name="various_installappinfo_current">corrente</string>
     <string name="various_alarmcompat_title">Compatibilidade com despertador</string>
     <string name="various_alarmcompat_summ">Faça com que os aplicativos selecionados sejam exibidos corretamente na próxima hora do alarme definida pelo aplicativo MIUI Clock padrão</string>
     <string name="various_gboardpadding_port_title">Preenchimento inferior em retrato</string>
@@ -729,11 +738,13 @@
     <string name="array_global_actions_scrolltotop">Role para cima</string>
     <string name="array_global_actions_expandsidebar">Mostrar barra lateral</string>
     <string name="array_global_actions_floatingwindow">janela flutuante</string>
+    <string name="array_global_actions_pinningwindow">Fixar janela</string>
     <string name="array_global_actions_clearmemory">Limpar memória</string>
     <string name="array_global_actions_invertcolors">Cores invertidas</string>
     <string name="array_global_actions_switchkeyboard">Alternar teclado</string>
     <string name="array_global_actions_goback">Volte</string>
     <string name="array_global_actions_onehanded_left">Modo de uma mão</string>
+    <string name="array_global_toggle_bt">Bluetooth</string>
     <string name="array_global_toggle_sound">perfil de som</string>
     <string name="array_global_toggle_brightness">Brilho automático</string>
     <string name="array_global_toggle_rotation">Auto rotação</string>
@@ -775,6 +786,7 @@
     <string name="array_bottom">Perto do fundo</string>
     <string name="array_max">Máximo</string>
     <string name="array_large">Grande</string>
+    <string name="array_normal">Normal</string>
     <string name="array_small">Pequeno</string>
     <string name="array_low">Baixo</string>
     <string name="array_average">Média</string>
@@ -786,6 +798,7 @@
     <string name="array_rainbow">Arco-íris</string>
     <string name="array_dynamic">cor dinâmica</string>
     <string name="array_discrete">Discreto</string>
+    <string name="array_gradual">Gradual</string>
     <string name="array_bars_solid">Barras sólidas</string>
     <string name="array_bars_solid_rounded">Barras arredondadas sólidas</string>
     <string name="array_bars_dashed">Barras tracejadas</string>
@@ -801,6 +814,7 @@
     <string name="array_video">Vídeo</string>
     <string name="array_doc">Documento</string>
     <string name="array_archive">Arquivo</string>
+    <string name="array_link">Link</string>
     <string name="array_any">Qualquer</string>
     <string name="array_others">Outros</string>
     <string name="array_nofs">Quando não estiver no modo de tela cheia</string>
@@ -814,6 +828,7 @@
     <string name="array_ticktock">Tique-taque</string>
     <string name="array_heartbeat">Batimento cardiaco</string>
     <string name="array_waltz">Valsa</string>
+    <string name="array_zig">Zig-zig-zig</string>
     <string name="array_own">Padrão próprio</string>
     <string name="array_scale_fit">Ajustar a tela</string>
     <string name="array_scale_cover">Cobrir a tela inteira</string>
@@ -849,6 +864,9 @@
     <string name="array_turn_off">Desligar</string>
     <string name="array_turn_off_disable">Desligue e desative</string>
     <string name="array_current">Somente Atual</string>
+    <string name="array_temp_current">Temperatura e Corrente</string>
+    <string name="array_temp_power">Temperatura e Energia</string>
+    <string name="array_power_current">Energia e Corrente</string>
     <string name="array_dualsimin2rows_style_thick">Espesso</string>
     <string name="array_dualsimin2rows_style_theme">Siga o tema</string>
     <string name="unlimited">Ilimitado</string>
@@ -922,6 +940,7 @@
     <string name="support_donate_other_title">Moedas desatualizadas</string>
     <string name="donate_level1">Obrigado pela sua doação!</string>
     <string name="donate_level2">Obrigado por sua generosa doação!</string>
+    <string name="donate_level3">Obrigado por sua doação insanamente generosa! 😮</string>
     <string name="billing_error">Falha ao obter informações de cobrança, verifique sua conexão com a Internet</string>
     <string name="billing_canceled">Mudou sua mente? ;)</string>
     <string name="crash_dialog">O CustoMIUIzer acabou de travar!</string>
@@ -1010,7 +1029,14 @@
     <string name="guide_marknew">Novos mods desde a atualização anterior podem ser marcados para melhor visibilidade</string>
     <string name="permission_scan">Deseja obter uma lista de redes/dispositivos ou não?</string>
     <string name="permission_permanent">Você terá que ativar manualmente a permissão para esta opção agora. Bom trabalho!</string>
+    <string name="format_d_ms">%d ms</string>
     <string name="format_d_s">%ds</string>
+    <string name="format_d_m">%d m</string>
+    <string name="format_KBs">%d KB/s</string>
+    <string name="oneKBs">1 KB/s</string>
+    <string name="Bs">B/s</string>
+    <string name="speedunits">KMG</string>
+    <string name="lux">%s lux</string>
     <string name="off">Desligado</string>
     <string name="time_30m">30 minutos</string>
     <string name="time_1h">1 hora</string>
@@ -1025,6 +1051,7 @@
     <string name="white_color">Branco</string>
     <string name="black_color">Preto</string>
     <string name="auto_color">cor da barra de status</string>
+    <string name="type_file">arquivo</string>
     <string name="type_res">recurso</string>
     <string name="system_statusbar_batterytempandcurrent_title">Exibir temperatura e corrente da bateria</string>
     <string name="system_statusbar_batterytempandcurrent_content_title">Exibir conteúdo</string>
@@ -1034,6 +1061,7 @@
     <string name="system_statusbar_batterytempandcurrent_hideunit_title">Ocultar unidade</string>
     <string name="system_statusbar_batterytempandcurrent_singlerow_title">Exibição em linha única</string>
     <string name="system_statusbar_batterytempandcurrent_reverseorder_title">Ordem reversa</string>
+    <string name="system_statusbar_showdevicetemperature_title">Exibir temperatura do dispositivo</string>
     <string name="system_statusbar_batterystyle_title">estilize o ícone da bateria</string>
     <string name="system_statusbar_batterystyle_digit_title">dígito da bateria</string>
     <string name="system_statusbar_batterystyle_mark_fontsize_title">Tamanho da fonte da marca percentual</string>
@@ -1080,5 +1108,6 @@
     <string name="system_cc_tile_roundedrect_title">Azulejo retângulo arredondado</string>
     <string name="system_cc_enable_style_switch_title">Forçar a ativação do interruptor de estilo CC</string>
     <string name="system_cc_disable_bluetooth_restrict_title">Desativar desconectar o bluetooth até amanhã</string>
+    <string name="system_cc_volume_showpct_title">Mostrar porcentagem de volume</string>
     <string name="system_cc_collapse_after_clicked_title">Recolher após o toque</string>
 </resources>

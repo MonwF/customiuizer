@@ -60,6 +60,7 @@
     <string name="system_batteryindicator_test_title">Thử nghiệm</string>
     <string name="system_batteryindicator_test_summ" formatted="false">Hiển thị vạch pin khi không sạc</string>
     <string name="system_statusbarheight_title">Chiều cao thanh trạng thái</string>
+    <string name="system_statusbar_iconsize_title">Kích thước biểu tượng thanh trạng thái</string>
     <string name="system_statusbarcolor_title">Màu nền thanh trạng thái</string>
     <string name="system_statusbarcolor_summ">Làm cho màu nền của thanh trạng thái và thanh hành động của ứng dụng giống nhau nếu có thể</string>
     <string name="system_statusbarcolor_apps_title">Danh sách đen</string>
@@ -70,6 +71,7 @@
     <string name="system_calendar_app_title">Ứng dụng lịch</string>
     <string name="system_calendar_app_summ">Mở ứng dụng đã chọn khi nhấn vào ngày phía trên ngăn thông báo</string>
     <string name="system_clockseconds_title">Hiện giây</string>
+    <string name="system_cc_hidedate_title">Ẩn ngày</string>
     <string name="system_clock_show_ampm_title">Hiện Sáng|Chiều</string>
     <string name="system_clock_time_format_title">Sử dụng định dạng 24 giờ</string>
     <string name="system_clock_leadingzero_title">Hiển thị dưới dạng thời gian bắt đầu từ số không</string>
@@ -1126,4 +1128,5 @@
     <string name="system_cc_disable_bluetooth_restrict_title">Vô hiệu hóa ngắt kết nối bluetooth cho đến ngày mai</string>
     <string name="system_cc_volume_showpct_title">Hiện phần trăm âm lượng</string>
     <string name="system_cc_collapse_after_clicked_title">Thu gọn sau khi chạm</string>
+    <string name="system_cc_clock_topmargin_indrawer_title">Lề trên đồng hồ trong ngăn thông báo</string>
 </resources>

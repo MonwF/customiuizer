@@ -46,7 +46,7 @@
     <string name="system_statusbaricons_record_title">Звонок: запись разговора</string>
     <string name="system_batteryindicator_title">Индикатор батареи полоской</string>
     <string name="system_batteryindicator_summ">Отображает уровень заряда батареи цветной полоской</string>
-    <string name="system_batteryindicator_limitvis_title">Ограниченнная видимость</string>
+    <string name="system_batteryindicator_limitvis_title">Ограниченная видимость</string>
     <string name="system_batteryindicator_limitvis_summ">Показывать только в панели уведомлений и на экране блокировки</string>
     <string name="system_batteryindicator_rounded_title">Скруглённые концы</string>
     <string name="system_batteryindicator_centered_title">По центру</string>
@@ -60,6 +60,7 @@
     <string name="system_batteryindicator_test_title">Тест</string>
     <string name="system_batteryindicator_test_summ" formatted="false">Анимировать полоску от 100% до 0% в режиме разрядки</string>
     <string name="system_statusbarheight_title">Высота строки состояния</string>
+    <string name="system_statusbar_iconsize_title">Размер иконок в строке состояния</string>
     <string name="system_statusbarcolor_title">Фоновый цвет строки состояния</string>
     <string name="system_statusbarcolor_summ">Делает одинаковыми цвета фона строки состояния и панели действий приложения, где это возможно</string>
     <string name="system_statusbarcolor_apps_title">Чёрный список</string>
@@ -70,27 +71,27 @@
     <string name="system_calendar_app_title">Приложение Календаря</string>
     <string name="system_calendar_app_summ">Открывает выбранное приложение при клике по дате в панели уведомлений</string>
     <string name="system_clockseconds_title">Показывать секунды</string>
+    <string name="system_cc_hidedate_title">Скрыть дату</string>
     <string name="system_clock_show_ampm_title">Показать AM|PM</string>
     <string name="system_clock_time_format_title">24-часовой формат</string>
-    <string name="system_clock_leadingzero_title">Показать начало от нуля до часо</string>
+    <string name="system_clock_leadingzero_title">Показать начало от нуля до часов</string>
     <string name="system_clock_customformat_enable_title">Включить собственный формат</string>
     <string name="system_clock_customformat_setting_title">Задать формат</string>
-    <string name="system_clock_customformat_help_summ">        Можно ввести новую строку, содержимое после 2 строк будет обрезано
-        \nyyyy - четырех-значный год(2023)
-        \nyy - двух-значный год(23)
-        \nMM - двух-значный месяц(02、12)
-        \nM - одно-значный месяц(2、12)
-        \ndd - двух-значный день(02、23)
-        \nd - одно-значный день(2、23)
-        \nE - короткая неделя(Вс)
-        \na - AM、PM
-        \nHH - 24-час. двух-значный час(09、14)
-        \nH - 24-час. одно-значный час(9、14)
-        \nhh - 12-час. двух-значный час(09、02)
-        \nh - 12-час. одно-значный час(9、2)
-        \nmm - двух-значный минуты(09)
-        \nss - двух-значный секунды(09)
-    </string>
+    <string name="system_clock_customformat_help_summ">Можно ввести символ переноса строки, содержимое после 2 строк будет усечено.
+\nyyyy - год в четырехзначном формате (2023).
+\nyy - год в двухзначном формате (23).
+\nMM - двухзначный месяц (02, 12).
+\nM - однозначный месяц (2, 12).
+\ndd - двухзначный день (02, 23).
+\nd - однозначный день (2, 23).
+\nE - короткое название дня недели (Вс).
+\na - AM, PM.
+\nHH - двухзначный формат времени в 24-часовом формате (09, 14).
+\nH - однозначный формат времени в 24-часовом формате (9, 14).
+\nhh - двухзначный формат времени в 12-часовом формате (09, 02).
+\nh - однозначный формат времени в 12-часовом формате (9, 2).
+\nmm - двухзначные минуты (09).
+\nss - двухзначные секунды (09).    </string>
     <string name="system_clock_dualrow_title">Показать в двойных строках</string>
     <string name="system_clock_show_week_title">Показать неделю</string>
     <string name="system_clock_show_date_title">Показать дату</string>
@@ -326,7 +327,7 @@
     <string name="system_fivegtile_title">Плитка 5G</string>
     <string name="system_fivegtile_summ">Добавить плитку 5G на панель быстрых настроек</string>
     <string name="system_cc_fpstile_title">Показать плитку частоты обновления</string>
-    <string name="system_cc_fpstile_summ">показать текущую частоту обновления экрана</string>
+    <string name="system_cc_fpstile_summ">Показать текущую частоту обновления экрана</string>
     <string name="system_qs_force_systemfonts_title">Заставить часы использовать системные шрифты</string>
     <string name="system_cc_dateformat_title">Другой формат даты</string>
     <string name="system_wifipassword_title">Показывать пароль сохранённой сети Wi-Fi</string>
@@ -1126,4 +1127,5 @@
     <string name="system_cc_disable_bluetooth_restrict_title">Выключить отключение Bluetooth до завтра</string>
     <string name="system_cc_volume_showpct_title">Показывать проценты громкости</string>
     <string name="system_cc_collapse_after_clicked_title">Свернуть после касания</string>
+    <string name="system_cc_clock_topmargin_indrawer_title">Верхнее поле часов в панели уведомлений</string>
 </resources>
