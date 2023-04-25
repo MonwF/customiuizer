@@ -3959,17 +3959,21 @@ public class SystemUI {
                 }
             }
         };
-        MethodHook initHideDateView = new MethodHook() {
+        MethodHook fixClockView = new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
                 TextView clockView = (TextView) XposedHelpers.getObjectField(param.thisObject, "clockView");
-                ViewGroup.LayoutParams lp = clockView.getLayoutParams();
-                lp.width = 0;
-                clockView.setLayoutParams(lp);
+                Class<?> ConstraintSetClass = pluginLoader.loadClass("androidx.constraintlayout.widget.ConstraintSet");
+                Object constraintSet = XposedHelpers.newInstance(ConstraintSetClass);
+                Object headerView = XposedHelpers.getObjectField(param.thisObject, "view");
+                XposedHelpers.callMethod(constraintSet, "clone", headerView);
+                int clockId = clockView.getId();
+                XposedHelpers.callMethod(constraintSet, "clear", clockId, 7);
+                XposedHelpers.callMethod(constraintSet, "applyTo", headerView);
             }
         };
         Helpers.findAndHookMethod("miui.systemui.controlcenter.windowview.MainPanelHeaderController", pluginLoader, "updateVisibility", hideDateView);
-        Helpers.findAndHookMethod("miui.systemui.controlcenter.windowview.MainPanelHeaderController", pluginLoader, "onCreate", initHideDateView);
+        Helpers.findAndHookMethod("miui.systemui.controlcenter.windowview.MainPanelHeaderController", pluginLoader, "updateConstraint", fixClockView);
     }
     public static void initCCClockStyle(ClassLoader pluginLoader) {
         int ccClockFontSize = MainModule.mPrefs.getInt("system_cc_clock_fontsize", 9);
