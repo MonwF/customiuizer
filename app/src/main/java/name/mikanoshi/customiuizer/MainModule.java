@@ -470,6 +470,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
 
         if (pkg.equals("com.miui.powerkeeper")) {
             if (mPrefs.getBoolean("various_restrictapp")) Various.AppsRestrictPowerHook(lpparam);
+            if (mPrefs.getBoolean("various_persist_batteryoptimization")) Various.PersistBatteryOptimizationHook(lpparam);
         }
 
         if (pkg.equals("com.android.settings") && lpparam.processName.equals("com.android.settings")) {

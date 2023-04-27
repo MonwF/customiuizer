@@ -36,6 +36,11 @@
 		android:title="@string/various_allow_untrusted_touch_title"
 		android:defaultValue="false" />
 
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_various_persist_batteryoptimization"
+		android:title="@string/various_persist_batteryoptimization_settings_title"
+		android:defaultValue="false" />
+
 	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_various_clipboard_defaultaction"
 		android:title="@string/various_clipboard_defaultaction_title"
