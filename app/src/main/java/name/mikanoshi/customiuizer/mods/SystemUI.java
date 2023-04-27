@@ -1014,9 +1014,7 @@ public class SystemUI {
                 if (iconStates.size() == 2) {
                     Object mainIconState = iconStates.get(0);
                     Object subIconState = iconStates.get(1);
-                    boolean mainDataConnected = (boolean) XposedHelpers.getObjectField(mainIconState, "dataConnected");
                     boolean subDataConnected = (boolean) XposedHelpers.getObjectField(subIconState, "dataConnected");
-                    XposedHelpers.setObjectField(mainIconState, "dataConnected", mainDataConnected || subDataConnected);
                     XposedHelpers.setObjectField(subIconState, "visible", false);
                     int mainSignalResId = (int) XposedHelpers.getObjectField(mainIconState, "strengthId");
                     int subSignalResId = (int) XposedHelpers.getObjectField(subIconState, "strengthId");
@@ -1025,8 +1023,11 @@ public class SystemUI {
                     int level;
                     if (subDataConnected) {
                         level = subLevel * 10 + mainLevel;
-                        String showName = (String) XposedHelpers.getObjectField(subIconState, "showName");
-                        XposedHelpers.setObjectField(mainIconState, "showName", showName);
+                        String[] syncFields = { "showName", "activityIn", "activityOut" };
+                        for (String field : syncFields) {
+                            XposedHelpers.setObjectField(mainIconState, field, XposedHelpers.getObjectField(subIconState, field));
+                        }
+                        XposedHelpers.setObjectField(mainIconState, "dataConnected", true);
                     }
                     else {
                         level = mainLevel * 10 + subLevel;
