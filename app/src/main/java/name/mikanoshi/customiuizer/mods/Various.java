@@ -411,6 +411,10 @@ public class Various {
 		Helpers.hookAllMethods("com.miui.powerkeeper.utils.Utils", lpparam.classLoader, "pkgHasIcon", XC_MethodReplacement.returnConstant(true));
 	}
 
+	public static void PersistBatteryOptimizationHook(LoadPackageParam lpparam) {
+		Helpers.hookAllMethods("com.miui.powerkeeper.utils.CommonAdapter", lpparam.classLoader, "addPowerSaveWhitelistApps", XC_MethodReplacement.DO_NOTHING);
+	}
+
 	private static void showSideBar(View view, int dockLocation) {
 		int[] location = new int[2];
 		view.getLocationOnScreen(location);
