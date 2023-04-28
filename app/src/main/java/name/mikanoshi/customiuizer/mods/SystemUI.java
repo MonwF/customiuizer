@@ -3712,6 +3712,28 @@ public class SystemUI {
             }
         });
     }
+    public static void HideNavBarBeforeScreenshotHook(LoadPackageParam lpparam) {
+        Helpers.findAndHookMethod("com.android.systemui.navigationbar.NavigationBar", lpparam.classLoader, "onInit", new MethodHook() {
+            int visibleState = 0;
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                View view = (View) XposedHelpers.getObjectField(param.thisObject, "mView");
+                BroadcastReceiver br = new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        if ("miui.intent.TAKE_SCREENSHOT".equals(intent.getAction())) {
+                            boolean finished = intent.getBooleanExtra("IsFinished", true);
+                            if (!finished) {
+                                visibleState = view.getVisibility();
+                            }
+                            view.setVisibility(finished ? visibleState : View.INVISIBLE);
+                        }
+                    }
+                };
+                view.getContext().registerReceiver(br, new IntentFilter("miui.intent.TAKE_SCREENSHOT"));
+            }
+        });
+    }
 
     public static void OpenNotifyInFloatingWindowHook(LoadPackageParam lpparam) {
         Helpers.hookAllMethods("com.android.systemui.statusbar.phone.MiuiStatusBarNotificationActivityStarter", lpparam.classLoader, "startNotificationIntent", new MethodHook() {
