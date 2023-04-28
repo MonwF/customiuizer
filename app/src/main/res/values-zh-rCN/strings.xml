@@ -628,6 +628,7 @@
     <string name="controls_volumemedia_vibrate_summ">执行长按动作时振动</string>
     <string name="controls_mods_navbar">导航栏</string>
     <string name="controls_nonavbar_title">隐藏导航栏或手势提示线</string>
+    <string name="controls_hidenavbar_whenscreenshot_title">截图时隐藏导航栏或手势提示线</string>
     <string name="controls_nonavbar_fix_inputmethod_title">修复输入法全面屏优化</string>
     <string name="controls_nonavbar_fix_inputmethod_summ">手势线隐藏后，键盘底部边距优化(请将输入法App加入作用域)</string>
     <string name="controls_imebackalticon_title">反应性返回键</string>

@@ -241,6 +241,13 @@
 			/>
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_controls_hidenavbar_whenscreenshot"
+			android:defaultValue="false"
+			android:dependency="pref_key_controls_nonavbar"
+			android:title="@string/controls_hidenavbar_whenscreenshot_title"
+			/>
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_imebackalticon"
 			android:title="@string/controls_imebackalticon_title"
 			android:summary="@string/controls_imebackalticon_summ"

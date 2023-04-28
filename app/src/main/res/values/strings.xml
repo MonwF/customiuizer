@@ -653,6 +653,7 @@
     <string name="controls_volumemedia_vibrate_summ">Vibrate when long press action is executed</string>
     <string name="controls_mods_navbar">Navigation bar</string>
     <string name="controls_nonavbar_title">Hide navbar and fullscreen indicator</string>
+    <string name="controls_hidenavbar_whenscreenshot_title">Hide navbar and fullscreen indicator when screenshotting</string>
     <string name="controls_nonavbar_fix_inputmethod_title">Fix full-screen keyboard optimization</string>
     <string name="controls_nonavbar_fix_inputmethod_summ">Add InputMethod apps to LSPosed scope first</string>
     <string name="controls_imebackalticon_title">Reactive Back button</string>
