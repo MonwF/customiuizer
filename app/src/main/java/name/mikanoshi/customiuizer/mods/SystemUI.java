@@ -1290,9 +1290,9 @@ public class SystemUI {
             ArrayList<String> signalSlots = new ArrayList<String>();
             signalSlots.add("slave_wifi");
             signalSlots.add("hotspot");
-            Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiStatusBarSignalPolicy", lpparam.classLoader, "initMiuiSlot", new MethodHook() {
+            Helpers.hookAllConstructors("com.android.systemui.statusbar.phone.StatusBarSignalPolicy", lpparam.classLoader, new MethodHook() {
                 @Override
-                protected void before(MethodHookParam param) throws Throwable {
+                protected void after(MethodHookParam param) throws Throwable {
                     Object dripLeftController = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", lpparam.classLoader), "get", findClass("com.android.systemui.statusbar.phone.MiuiDripLeftStatusBarIconControllerImpl", lpparam.classLoader));
                     XposedHelpers.setObjectField(param.thisObject, "mIconController", dripLeftController);
                 }
