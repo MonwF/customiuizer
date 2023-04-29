@@ -1085,6 +1085,7 @@
     <string name="system_statusbar_batterytempandcurrent_title">显示电池信息</string>
     <string name="system_statusbar_batterytempandcurrent_content_title">显示内容</string>
     <string name="system_statusbar_batterytempandcurrent_incharge_title">仅在充电时显示</string>
+    <string name="system_statusbar_batterytempandcurrent_fixcurrentratio_title">修复某些设备的电流值比例</string>
     <string name="system_statusbar_batterytempandcurrent_hideunit_title">隐藏单位</string>
     <string name="system_statusbar_batterytempandcurrent_singlerow_title">单排显示</string>
     <string name="system_statusbar_batterytempandcurrent_reverseorder_title">反序</string>

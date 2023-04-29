@@ -1125,11 +1125,12 @@
     <string name="system_statusbar_batterytempandcurrentatright_title">Display on the right</string>
     <string name="system_statusbar_batterytempandcurrent_positive_title">Current value is always positive</string>
     <string name="system_statusbar_batterytempandcurrent_incharge_title">Show when charging only</string>
+    <string name="system_statusbar_batterytempandcurrent_fixcurrentratio_title">Fix Current value ratio on some devices</string>
     <string name="system_statusbar_batterytempandcurrent_hideunit_title">Hide unit</string>
     <string name="system_statusbar_batterytempandcurrent_singlerow_title">Display in single row</string>
     <string name="system_statusbar_batterytempandcurrent_reverseorder_title">Reverse order</string>
     <string name="system_statusbar_showdevicetemperature_title">Display device temperature</string>
-    <string name="system_statusbar_batterystyle_title">style the battery icon</string>
+    <string name="system_statusbar_batterystyle_title">Style the battery icon</string>
     <string name="system_statusbar_batterystyle_digit_title">Battery digit</string>
     <string name="system_statusbar_batterystyle_mark_fontsize_title">Percentage mark\'s font size</string>
     <string name="system_statusbar_batterystyle_mark_verticaloffset_title">Percentage mark\'s vertical offset</string>

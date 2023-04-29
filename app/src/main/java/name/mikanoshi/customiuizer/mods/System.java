@@ -4667,7 +4667,6 @@ public class System {
                     boolean showTemp = MainModule.mPrefs.getBoolean("system_charginginfo_temp");
 
                     ArrayList<String> values = new ArrayList<>();
-                    BatteryManager btrMgr = (BatteryManager)context.getSystemService(Context.BATTERY_SERVICE);
                     Properties props = null;
                     FileInputStream fis = null;
                     try {

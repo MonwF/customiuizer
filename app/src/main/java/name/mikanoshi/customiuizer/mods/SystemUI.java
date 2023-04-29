@@ -5,7 +5,6 @@ import static java.lang.System.nanoTime;
 import static de.robv.android.xposed.XposedHelpers.findClass;
 import static de.robv.android.xposed.XposedHelpers.findClassIfExists;
 import static name.mikanoshi.customiuizer.mods.GlobalActions.ACTION_PREFIX;
-import static name.mikanoshi.customiuizer.mods.GlobalActions.EVENT_PREFIX;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -397,7 +396,11 @@ public class SystemUI {
                                     }
                                     String currVal = "";
                                     String preferred = "mA";
-                                    int rawCurr = -1 * Math.round(Integer.parseInt(props.getProperty("POWER_SUPPLY_CURRENT_NOW")) / 1000f);
+                                    float currentRatio = 1000f;
+                                    if (MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_fixcurrentratio")) {
+                                        currentRatio = 1f;
+                                    }
+                                    int rawCurr = -1 * Math.round(Integer.parseInt(props.getProperty("POWER_SUPPLY_CURRENT_NOW")) / currentRatio);
                                     if (opt == 1 || opt == 3 || opt == 5) {
                                         if (MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_positive")) {
                                             rawCurr = Math.abs(rawCurr);
