@@ -41,6 +41,11 @@
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbar_batterytempandcurrent_fixcurrentratio"
+		android:title="@string/system_statusbar_batterytempandcurrent_fixcurrentratio_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_batterytempandcurrent_singlerow"
 		android:title="@string/system_statusbar_batterytempandcurrent_singlerow_title"
 		android:defaultValue="false" />
