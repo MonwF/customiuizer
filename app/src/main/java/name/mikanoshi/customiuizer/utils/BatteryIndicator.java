@@ -299,20 +299,20 @@ public class BatteryIndicator extends androidx.appcompat.widget.AppCompatImageVi
 			paint.setShader(null);
 
 			if (color == Color.TRANSPARENT && mStatusBar != null)
-			try {
-				if (mExpanded) {
-					color = Color.WHITE;
-				} else {
-					if (mOnKeyguard) {
-						boolean isLightWallpaperStatusBar = (boolean)XposedHelpers.callMethod(XposedHelpers.getObjectField(mStatusBar, "mUpdateMonitor"), "isLightWallpaperStatusBar");
-						color = (isLightWallpaperStatusBar ? Color.argb(153, 0, 0, 0) : Color.WHITE);
+				try {
+					if (mExpanded) {
+						color = Color.WHITE;
 					} else {
-						color = mTintColor;
+						if (mOnKeyguard) {
+							boolean isLightWallpaperStatusBar = XposedHelpers.getBooleanField(XposedHelpers.getObjectField(mStatusBar, "mKeyguardIndicationController"), "mDarkStyle");
+							color = isLightWallpaperStatusBar ? Color.argb(153, 0, 0, 0) : Color.WHITE;
+						} else {
+							color = mTintColor;
+						}
 					}
+				} catch (Throwable t) {
+					Helpers.log(t);
 				}
-			} catch (Throwable t) {
-				XposedBridge.log(t);
-			}
 
 			int mDisplayPadding = Math.round(mPadding / 100f * this.mDisplayWidth);
 
