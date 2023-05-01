@@ -1179,5 +1179,6 @@
     <string name="system_cc_disable_bluetooth_restrict_title">Disable disconnect bluetooth until tomorrow</string>
     <string name="system_cc_volume_showpct_title">Show volume percentage</string>
     <string name="system_cc_collapse_after_clicked_title">Collapse after touch</string>
+    <string name="system_cc_switch_ccandnotification_title">Switch control center and notification drawer</string>
     <string name="system_cc_clock_topmargin_indrawer_title">Top margin of clock in notification drawer</string>
 </resources>

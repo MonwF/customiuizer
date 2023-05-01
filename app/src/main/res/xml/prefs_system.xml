@@ -758,6 +758,11 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_cc_switch_qsandnotification"
+			android:title="@string/system_cc_switch_ccandnotification_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_cc_enable_style_switch"
 			android:title="@string/system_cc_enable_style_switch_title"
 			android:defaultValue="false" />
