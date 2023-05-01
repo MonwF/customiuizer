@@ -21,10 +21,10 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
+import name.mikanoshi.customiuizer.MainModule;
 
 public class BatteryIndicator extends androidx.appcompat.widget.AppCompatImageView {
 	protected int mDisplayWidth;
@@ -50,6 +50,8 @@ public class BatteryIndicator extends androidx.appcompat.widget.AppCompatImageVi
 	private boolean mCentered = false;
 	private boolean mExpanded = false;
 	private boolean mOnKeyguard = false;
+
+	private boolean mScreenshot = false;
 	private boolean mBottom = false;
 	private boolean mLimited = false;
 	private int mTintColor = Color.argb(153, 0, 0, 0);
@@ -98,13 +100,25 @@ public class BatteryIndicator extends androidx.appcompat.widget.AppCompatImageVi
 				}
 			}
 		};
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("name.mikanoshi.customiuizer.mods.BatteryIndicatorTest");
+		if (MainModule.mPrefs.getBoolean("system_hidestatusbar_whenscreenshot")) {
+			intentFilter.addAction("miui.intent.TAKE_SCREENSHOT");
+		}
 		getContext().registerReceiver(new BroadcastReceiver() {
 			@Override
 			public void onReceive(Context context, Intent intent) {
-				removeCallbacks(step);
-				startTest();
+				if ("miui.intent.TAKE_SCREENSHOT".equals(intent.getAction())) {
+					boolean finished = intent.getBooleanExtra("IsFinished", true);
+					BatteryIndicator bi = BatteryIndicator.this;
+					bi.updateScreenShotState(!finished);
+				}
+				else {
+					removeCallbacks(step);
+					startTest();
+				}
 			}
-		}, new IntentFilter("name.mikanoshi.customiuizer.mods.BatteryIndicatorTest"));
+		}, intentFilter);
 	}
 
 	Runnable step = new Runnable() {
@@ -181,6 +195,15 @@ public class BatteryIndicator extends androidx.appcompat.widget.AppCompatImageVi
 		post(BatteryIndicator.this::update);
 	}
 
+	public void updateScreenShotState(boolean screenshot) {
+		if (mScreenshot == screenshot) return;
+		mScreenshot = screenshot;
+		if (!mScreenshot && !mLimited) {
+			this.setVisibility(mVisibility);
+		}
+		update();
+	}
+
 	public void onExpandingChanged(boolean expanded) {
 		if (mExpanded == expanded) return;
 		mExpanded = expanded;
@@ -243,7 +266,12 @@ public class BatteryIndicator extends androidx.appcompat.widget.AppCompatImageVi
 	}
 
 	public void update() {
-		if (mLimited) this.setVisibility(mExpanded || mOnKeyguard ? mVisibility : View.GONE);
+		if (mScreenshot) {
+			this.setVisibility(View.GONE);
+		}
+		else {
+			if (mLimited) this.setVisibility(mExpanded || mOnKeyguard ? mVisibility : View.GONE);
+		}
 		clearAnimation();
 		updateDrawable();
 	}
