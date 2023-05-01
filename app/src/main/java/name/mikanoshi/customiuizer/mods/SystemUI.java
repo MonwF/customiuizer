@@ -4024,4 +4024,44 @@ public class SystemUI {
             }
         });
     }
+
+    public static void SwitchCCAndNotificationHook(LoadPackageParam lpparam) {
+        Helpers.findAndHookMethod("com.android.systemui.controlcenter.phone.ControlPanelWindowManager", lpparam.classLoader, "dispatchToControlPanel", MotionEvent.class, float.class, new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                boolean added = XposedHelpers.getBooleanField(param.thisObject, "added");
+                if (added) {
+                    boolean useCC;
+                    if (Helpers.isTPlus()) {
+                        useCC = XposedHelpers.getBooleanField(XposedHelpers.getObjectField(param.thisObject, "mControlCenterController"), "useControlCenter");
+                    }
+                    else {
+                        useCC = (boolean) XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mControlCenterController"), "isExpandable");
+                    }
+                    if (useCC) {
+                        MotionEvent motionEvent = (MotionEvent) param.args[0];
+                        if (motionEvent.getActionMasked() == 0) {
+                            XposedHelpers.setObjectField(param.thisObject, "mDownX", motionEvent.getRawX());
+                        }
+                        Object controlCenterWindowView = XposedHelpers.getObjectField(param.thisObject, "mControlPanel");
+                        if (controlCenterWindowView == null) {
+                            param.setResult(false);
+                        }
+                        else {
+                            float mDownX = XposedHelpers.getFloatField(param.thisObject, "mDownX");
+                            float width = (float) param.args[1];
+                            if (mDownX < width / 2.0f) {
+                                param.setResult(XposedHelpers.callMethod(controlCenterWindowView, "handleMotionEvent", motionEvent, true));
+                            }
+                            else {
+                                param.setResult(false);
+                            }
+                        }
+                        return;
+                    }
+                }
+                param.setResult(false);
+            }
+        });
+    }
 }

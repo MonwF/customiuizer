@@ -367,6 +367,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_qs_hideoperator")) System.HideCCOperatorHook(lpparam);
             if (mPrefs.getBoolean("system_cc_disable_bluetooth_restrict")) System.DisableBluetoothRestrictHook(lpparam);
             if (mPrefs.getBoolean("system_cc_collapse_after_clicked")) System.CollapseCCAfterClickHook(lpparam);
+            if (mPrefs.getBoolean("system_cc_switch_qsandnotification")) SystemUI.SwitchCCAndNotificationHook(lpparam);
             if (mPrefs.getStringAsInt("system_expandnotifs", 1) > 1) System.ExpandNotificationsHook(lpparam);
             if (mPrefs.getStringAsInt("system_inactivebrightness", 1) > 1) System.InactiveBrightnessSliderHook(lpparam);
             if (mPrefs.getStringAsInt("system_mobiletypeicon", 1) > 1
