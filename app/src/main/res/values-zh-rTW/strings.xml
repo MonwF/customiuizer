@@ -1052,7 +1052,6 @@
     <string name="system_statusbar_batterytempandcurrent_hideunit_title">隱藏單位</string>
     <string name="system_statusbar_batterytempandcurrent_singlerow_title">單排顯示</string>
     <string name="system_statusbar_batterytempandcurrent_reverseorder_title">反序</string>
-    <string name="system_statusbar_batterystyle_title">電量圖示樣式</string>
     <string name="system_statusbar_batterystyle_digit_title">電量數字樣式</string>
     <string name="system_statusbar_batterystyle_mark_fontsize_title">百分比符號字體大小</string>
     <string name="system_statusbar_batterystyle_mark_verticaloffset_title">百分比符號上下偏移量</string>

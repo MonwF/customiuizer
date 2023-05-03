@@ -111,7 +111,7 @@
     <string name="system_statusbar_mobile_showname_title">モバイルネットワークタイプを変更</string>
     <string name="system_hidemoreicon_title">通知アイコンのインジケーターを表示しない</string>
     <string name="system_hidemoreicon_summ">通知アイコンが非表示の場合にドットのアイコンを非表示にします</string>
-    <string name="system_hidestatusbar_whenscreenshot_title">スクリーンショット時にステータスバーを非表示</string>
+    <string name="system_hidestatusbar_whenscreenshot_title">スクリーンショット時にステータスバーを非表示にする</string>
     <string name="system_nonetspeedseparator_title">ネットワーク速度のセパレーター</string>
     <string name="system_nonetspeedseparator_summ">水滴ノッチのデバイスで時刻とネットワーク速度の間に縦線を表示しない</string>
     <string name="system_netspeedinterval_title">ネットワーク速度の更新間隔</string>
@@ -332,7 +332,7 @@
     <string name="system_qs_force_systemfonts_title">システムフォントを時計に強制使用する</string>
     <string name="system_cc_dateformat_title">日付フォーマットのカスタム</string>
     <string name="system_wifipassword_title">保存されたWi-Fiパスワードを表示する</string>
-    <string name="system_wifipassword_summ">設定 → Wi-Fi → 追加設定 → 保存したネットワークを管理から表示ができます</string>
+    <string name="system_wifipassword_summ">「設定 → Wi-Fi → 追加設定 → 保存したネットワークを管理」から表示ができます</string>
     <string name="system_wifipassword_btn_title">表示</string>
     <string name="system_wifi_password_label">パスワード</string>
     <string name="system_wifi_password_dlgtitle">Wi-Fiの詳細情報</string>
@@ -638,6 +638,7 @@
     <string name="controls_volumemedia_vibrate_summ">長押しのアクションを実行時にバイブレーションをさせるようにします</string>
     <string name="controls_mods_navbar">ナビゲーションバー</string>
     <string name="controls_nonavbar_title">ナビゲーションバーを非表示</string>
+    <string name="controls_hidenavbar_whenscreenshot_title">スクリーンショット時にナビゲーションバー、フルスクリーンインジケーターを非表示にする</string>
     <string name="controls_nonavbar_fix_inputmethod_title">フルスクリーンキーボードの最適化を修正</string>
     <string name="controls_nonavbar_fix_inputmethod_summ">始めに文字入力アプリをLSPosedのスコープに追加してください</string>
     <string name="controls_imebackalticon_title">反応型の戻るボタン</string>
@@ -879,7 +880,7 @@
     <string name="array_cellular_mobile">セルラーネットワークとモバイルデータ</string>
     <string name="array_keep">そのままにする</string>
     <string name="array_turn_off">電源オフ</string>
-    <string name="array_turn_off_disable">電源オフと無効</string>
+    <string name="array_turn_off_disable">電源オフと無効化</string>
     <string name="array_current">現在のみ</string>
     <string name="array_power">電力のみ</string>
     <string name="array_temp_current">温度と電流</string>
@@ -1076,6 +1077,7 @@
     <string name="system_statusbar_batterytempandcurrentatright_title">右側の表示</string>
     <string name="system_statusbar_batterytempandcurrent_positive_title">電流値を常に正の値にする</string>
     <string name="system_statusbar_batterytempandcurrent_incharge_title">充電時のみ表示</string>
+    <string name="system_statusbar_batterytempandcurrent_fixcurrentratio_title">一部のデバイスの比率の現在値を修正</string>
     <string name="system_statusbar_batterytempandcurrent_hideunit_title">単位を非表示</string>
     <string name="system_statusbar_batterytempandcurrent_singlerow_title">一列に並べて表示</string>
     <string name="system_statusbar_batterytempandcurrent_reverseorder_title">逆順</string>
@@ -1112,10 +1114,11 @@
     <string name="system_statusbaricons_netspeed_title">ネットワーク速度のインジケーター</string>
     <string name="system_statusbaricons_clock_title">時計</string>
     <string name="various_allow_untrusted_touch_title">信頼されていないタッチ操作を許可</string>
+    <string name="various_persist_batteryoptimization_settings_title">バッテリーの最適化設定を永続化させる</string>
     <string name="various_clipboard_defaultaction_title">AIクリップボードの動作</string>
     <string name="various_disable_access_devicelogs_title">アクセスデバイスログの要求ダイアログを解除</string>
     <string name="various_skip_interceptperm_title">パーミッション許可の待機時間をスキップ</string>
-    <string name="various_skip_securityscan_title">セキュリティスキャンをスキップする</string>
+    <string name="various_skip_securityscan_title">セキュリティスキャンをスキップ</string>
     <string name="various_show_battery_temperature_title">バッテリーの温度を表示</string>
     <string name="various_enable_sc_ai_clipboard_blur_location_title">AIクリップボードと位置のぼかしを有効にする</string>
     <string name="various_disable_freeform_suggest_blacklist_title">サイドバーのサジェストのブラックリストを無効化</string>
@@ -1128,5 +1131,6 @@
     <string name="system_cc_disable_bluetooth_restrict_title">明日までBluetoothの切断を無効化</string>
     <string name="system_cc_volume_showpct_title">音量のパーセンテージを表示</string>
     <string name="system_cc_collapse_after_clicked_title">タッチ後に折りたたむ</string>
+    <string name="system_cc_switch_ccandnotification_title">コントロールセンターと通知ドロワーを切り替え</string>
     <string name="system_cc_clock_topmargin_indrawer_title">通知ドロワーの時計上端の余白</string>
 </resources>

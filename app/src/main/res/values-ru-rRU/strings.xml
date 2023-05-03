@@ -637,6 +637,7 @@
     <string name="controls_volumemedia_vibrate_summ">Вибрировать при выполнении действия на долгое нажатие</string>
     <string name="controls_mods_navbar">Панель навигации</string>
     <string name="controls_nonavbar_title">Скрыть панель</string>
+    <string name="controls_hidenavbar_whenscreenshot_title">Скрыть панель навигации и полноэкранный индикатор при скриншоте</string>
     <string name="controls_nonavbar_fix_inputmethod_title">Исправление оптимизации полноэкранной клавиатуры</string>
     <string name="controls_nonavbar_fix_inputmethod_summ">Сначала добавьте приложение клавиатуры в LSPosed</string>
     <string name="controls_imebackalticon_title">Динамическая кнопка Назад</string>
@@ -1079,7 +1080,6 @@
     <string name="system_statusbar_batterytempandcurrent_singlerow_title">Отображать в одной строке</string>
     <string name="system_statusbar_batterytempandcurrent_reverseorder_title">Обратный порядок</string>
     <string name="system_statusbar_showdevicetemperature_title">Отображать температуру устройства</string>
-    <string name="system_statusbar_batterystyle_title">Стиль значка батареи</string>
     <string name="system_statusbar_batterystyle_digit_title">Цифра батареи</string>
     <string name="system_statusbar_batterystyle_mark_fontsize_title">Размер шрифта знака в процентах</string>
     <string name="system_statusbar_batterystyle_mark_verticaloffset_title">Смещение знака в процентах по вертикали</string>
@@ -1111,6 +1111,7 @@
     <string name="system_statusbaricons_netspeed_title">Индикатор скорости сети</string>
     <string name="system_statusbaricons_clock_title">Часы</string>
     <string name="various_allow_untrusted_touch_title">Разрешить нежелательные касания</string>
+    <string name="various_persist_batteryoptimization_settings_title">Сохранить настройки оптимизации батареи</string>
     <string name="various_clipboard_defaultaction_title">Действие по умолчанию для буфера обмена ai</string>
     <string name="various_disable_access_devicelogs_title">Отключить диалог запроса журнала доступа устройства</string>
     <string name="various_skip_interceptperm_title">Пропустить таймер перехвата разрешений</string>
