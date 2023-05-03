@@ -4026,6 +4026,21 @@ public class SystemUI {
     }
 
     public static void SwitchCCAndNotificationHook(LoadPackageParam lpparam) {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView", lpparam.classLoader, "handleEvent", MotionEvent.class, new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                boolean useCC = (boolean) XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mPanelController"), "isExpandable");
+                if (useCC) {
+                    FrameLayout bar = (FrameLayout) param.thisObject;
+                    Object mControlPanelWindowManager = XposedHelpers.getObjectField(param.thisObject, "mControlPanelWindowManager");
+                    boolean dispatchToControlPanel = (boolean) XposedHelpers.callMethod(mControlPanelWindowManager, "dispatchToControlPanel", param.args[0], bar.getWidth());
+                    XposedHelpers.callMethod(mControlPanelWindowManager, "setTransToControlPanel", dispatchToControlPanel);
+                    param.setResult(dispatchToControlPanel);
+                    return;
+                }
+                param.setResult(false);
+            }
+        });
         Helpers.findAndHookMethod("com.android.systemui.controlcenter.phone.ControlPanelWindowManager", lpparam.classLoader, "dispatchToControlPanel", MotionEvent.class, float.class, new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {

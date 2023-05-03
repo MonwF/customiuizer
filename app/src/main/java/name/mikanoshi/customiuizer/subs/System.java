@@ -21,6 +21,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import java.util.Objects;
 
+import miui.os.Build;
 import name.mikanoshi.customiuizer.CredentialsLauncher;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SharedPrefsProvider;
@@ -320,6 +321,9 @@ public class System extends SubFragment {
 				});
 				break;
 			case "pref_key_system_cat_qs":
+				if (Build.IS_INTERNATIONAL_BUILD) {
+					findPreference("pref_key_system_cc_switch_qsandnotification").setVisible(false);
+				}
 				findPreference("pref_key_system_qshaptics_ignore").setEnabled(!Objects.equals(Helpers.prefs.getString("pref_key_system_qshaptics", "1"), "1"));
 				findPreference("pref_key_system_qshaptics").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
 					@Override
