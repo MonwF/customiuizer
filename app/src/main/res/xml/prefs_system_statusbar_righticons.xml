@@ -84,6 +84,11 @@
 		android:title="@string/system_statusbaricons_dnd_title"
 		android:defaultValue="false" />
 
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbar_gps_atleft"
+		android:title="@string/system_statusbaricons_gps_title"
+		android:defaultValue="false" />
+
 	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/system_statusbaricons_atsecondrow_title">
 
