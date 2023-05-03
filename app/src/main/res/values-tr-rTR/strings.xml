@@ -639,6 +639,7 @@ ss - iki basamaklı saniye(09)</string>
     <string name="controls_volumemedia_vibrate_summ">Uzun basma eyleminde titreştir</string>
     <string name="controls_mods_navbar">Gezinti çubuğu</string>
     <string name="controls_nonavbar_title">Gezinme çubuğunu ve tam ekran göstergesini gizle</string>
+    <string name="controls_hidenavbar_whenscreenshot_title">Ekran görüntüsü alırken gezinme çubuğunu ve tam ekran göstergesini gizle</string>
     <string name="controls_nonavbar_fix_inputmethod_title">Tam ekran klavye optimizasyonunu düzeltin</string>
     <string name="controls_nonavbar_fix_inputmethod_summ">Önce LSPosed kapsamına InputMethod uygulamalarını ekleyin</string>
     <string name="controls_imebackalticon_title">Yeniden aktif Geri düğmesi</string>
@@ -1093,11 +1094,12 @@ daha iyi görünürlük için işaretlenebilir</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">Sağda görüntüle</string>
     <string name="system_statusbar_batterytempandcurrent_positive_title">Mevcut değer her zaman pozitiftir</string>
     <string name="system_statusbar_batterytempandcurrent_incharge_title">Yalnızca şarj olurken göster</string>
+    <string name="system_statusbar_batterytempandcurrent_fixcurrentratio_title">Bazı cihazlarda Geçerli değer oranını düzeltin</string>
     <string name="system_statusbar_batterytempandcurrent_hideunit_title">Birimi gizle</string>
     <string name="system_statusbar_batterytempandcurrent_singlerow_title">Tek sırada görüntüle</string>
     <string name="system_statusbar_batterytempandcurrent_reverseorder_title">Ters sıra</string>
     <string name="system_statusbar_showdevicetemperature_title">Cihaz sıcaklığını göster</string>
-    <string name="system_statusbar_batterystyle_title">pil simgesinin stilini değiştir</string>
+    <string name="system_statusbar_batterystyle_title">Pil simgesinin stilini değiştir</string>
     <string name="system_statusbar_batterystyle_digit_title">Pil basamağı</string>
     <string name="system_statusbar_batterystyle_mark_fontsize_title">Yüzde işaretinin yazı tipi boyutu</string>
     <string name="system_statusbar_batterystyle_mark_verticaloffset_title">Yüzde işaretinin dikey uzaklığı</string>
@@ -1129,6 +1131,7 @@ daha iyi görünürlük için işaretlenebilir</string>
     <string name="system_statusbaricons_netspeed_title">Ağ hızı göstergesi</string>
     <string name="system_statusbaricons_clock_title">Saat</string>
     <string name="various_allow_untrusted_touch_title">Güvenilmeyen dokunmaya izin ver</string>
+    <string name="various_persist_batteryoptimization_settings_title">Kalıcı pil optimizasyon ayarları</string>
     <string name="various_clipboard_defaultaction_title">Ai panosunun varsayılan eylemi</string>
     <string name="various_disable_access_devicelogs_title">Erişim cihazı günlükleri isteği iletişim kutusunu kapat</string>
     <string name="various_skip_interceptperm_title">İzin engelleme zamanlayıcısını atla</string>
@@ -1145,5 +1148,6 @@ daha iyi görünürlük için işaretlenebilir</string>
     <string name="system_cc_disable_bluetooth_restrict_title">Yarına kadar bluetooth bağlantısını kes i devre dışı bırak</string>
     <string name="system_cc_volume_showpct_title">Ses yüzdesini göster</string>
     <string name="system_cc_collapse_after_clicked_title">Dokunduktan sonra daralt</string>
+    <string name="system_cc_switch_ccandnotification_title">Anahtar kontrol merkezi ve bildirim çekmecesi</string>
     <string name="system_cc_clock_topmargin_indrawer_title">Bildirim çubuğundaki üst saat alanı</string>
 </resources>

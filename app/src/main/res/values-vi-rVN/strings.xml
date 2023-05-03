@@ -638,6 +638,7 @@
     <string name="controls_volumemedia_vibrate_summ">Rung khi nhấn lâu</string>
     <string name="controls_mods_navbar">Thanh điều hướng</string>
     <string name="controls_nonavbar_title">Ẩn thanh điều hướng và chỉ báo toàn màn hình</string>
+    <string name="controls_hidenavbar_whenscreenshot_title">Ẩn thanh điều hướng hoặc dòng nhắc cử chỉ khi chụp ảnh màn hình</string>
     <string name="controls_nonavbar_fix_inputmethod_title">Sửa lỗi tối ưu hóa bàn phím toàn màn hình</string>
     <string name="controls_nonavbar_fix_inputmethod_summ">Trước tiên, thêm ứng dụng InputMethod vào phạm vi LSPosed</string>
     <string name="controls_imebackalticon_title">Phản ứng phím quay lại</string>
@@ -1076,6 +1077,7 @@
     <string name="system_statusbar_batterytempandcurrentatright_title">Hiển thị bên phải</string>
     <string name="system_statusbar_batterytempandcurrent_positive_title">Làm cho giá trị dòng điện luôn dương</string>
     <string name="system_statusbar_batterytempandcurrent_incharge_title">Chỉ hiển thị khi sạc</string>
+    <string name="system_statusbar_batterytempandcurrent_fixcurrentratio_title">Khắc phục tỷ lệ giá trị dòng điện cho một số thiết bị</string>
     <string name="system_statusbar_batterytempandcurrent_hideunit_title">Ẩn đơn vị</string>
     <string name="system_statusbar_batterytempandcurrent_singlerow_title">Hiển thị trong một dòng</string>
     <string name="system_statusbar_batterytempandcurrent_reverseorder_title">Đảo ngược thứ tự</string>
@@ -1112,6 +1114,7 @@
     <string name="system_statusbaricons_netspeed_title">Chỉ số tốc độ mạng</string>
     <string name="system_statusbaricons_clock_title">Đồng hồ</string>
     <string name="various_allow_untrusted_touch_title">Cho phép chạm không đáng tin cậy</string>
+    <string name="various_persist_batteryoptimization_settings_title">Cài đặt tối ưu hóa pin liên tục</string>
     <string name="various_clipboard_defaultaction_title">Hành động mặc định của ai clipboard</string>
     <string name="various_disable_access_devicelogs_title">Bỏ qua hộp thoại yêu cầu nhật ký thiết bị truy cập</string>
     <string name="various_skip_interceptperm_title">Bỏ qua đếm ngược để bật các quyền đặc biệt</string>
@@ -1128,5 +1131,6 @@
     <string name="system_cc_disable_bluetooth_restrict_title">Vô hiệu hóa ngắt kết nối bluetooth cho đến ngày mai</string>
     <string name="system_cc_volume_showpct_title">Hiện phần trăm âm lượng</string>
     <string name="system_cc_collapse_after_clicked_title">Thu gọn sau khi chạm</string>
+    <string name="system_cc_switch_ccandnotification_title">Hoán đổi trung tâm điều khiển và ngăn thông báo</string>
     <string name="system_cc_clock_topmargin_indrawer_title">Lề trên đồng hồ trong ngăn thông báo</string>
 </resources>

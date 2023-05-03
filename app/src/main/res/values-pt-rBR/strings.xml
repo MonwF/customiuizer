@@ -1062,7 +1062,6 @@
     <string name="system_statusbar_batterytempandcurrent_singlerow_title">Exibição em linha única</string>
     <string name="system_statusbar_batterytempandcurrent_reverseorder_title">Ordem reversa</string>
     <string name="system_statusbar_showdevicetemperature_title">Exibir temperatura do dispositivo</string>
-    <string name="system_statusbar_batterystyle_title">estilize o ícone da bateria</string>
     <string name="system_statusbar_batterystyle_digit_title">dígito da bateria</string>
     <string name="system_statusbar_batterystyle_mark_fontsize_title">Tamanho da fonte da marca percentual</string>
     <string name="system_statusbar_batterystyle_mark_verticaloffset_title">Deslocamento vertical da marca percentual</string>
