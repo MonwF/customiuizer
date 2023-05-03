@@ -288,7 +288,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 || mPrefs.getBoolean("system_statusbar_headset_atright");
             boolean moveLeft = mPrefs.getBoolean("system_statusbar_alarm_atleft")
                 || mPrefs.getBoolean("system_statusbar_sound_atleft")
-                || mPrefs.getBoolean("system_statusbar_dnd_atleft");
+                || mPrefs.getBoolean("system_statusbar_dnd_atleft")
+                || mPrefs.getBoolean("system_statusbar_gps_atleft");
             if (moveRight || moveLeft
                 || mPrefs.getBoolean("system_statusbar_netspeed_atleft")
                 || (mPrefs.getBoolean("system_statusbar_dualrows") && mPrefs.getBoolean("system_statusbar_netspeed_atsecondrow"))

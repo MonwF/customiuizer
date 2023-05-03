@@ -1167,6 +1167,11 @@ public class SystemUI {
         boolean netspeedRight = !netspeedAtRow2 && MainModule.mPrefs.getBoolean("system_statusbar_netspeed_atright");
         boolean netspeedLeft = !netspeedAtRow2 && MainModule.mPrefs.getBoolean("system_statusbar_netspeed_atleft");
 
+        ArrayList<String> rightOnly2LeftIcons = new ArrayList<String>();
+        if (MainModule.mPrefs.getBoolean("system_statusbar_gps_atleft")) {
+            rightOnly2LeftIcons.add("location");
+        }
+
         String[] signalIcons;
         if (!swapWifiSignal) {
             signalIcons = new String[]{"no_sim", "mobile", "demo_mobile", "airplane", "hotspot", "slave_wifi", "wifi", "demo_wifi"};
@@ -1279,6 +1284,7 @@ public class SystemUI {
                         param.args[0] = allStatusIcons.toArray(new String[0]);
                     }
                     else if (moveSignalLeft || moveLeft) {
+                        allStatusIcons.addAll(rightOnly2LeftIcons);
                         dripLeftIcons.addAll(allStatusIcons);
                         if (moveSignalLeft) {
                             allStatusIcons.addAll(0, signalRelatedIcons);
@@ -1289,10 +1295,10 @@ public class SystemUI {
             });
         }
 
+        ArrayList<String> rightOnly2LeftWithSignal = new ArrayList<String>(rightOnly2LeftIcons);
         if (moveSignalLeft) {
-            ArrayList<String> signalSlots = new ArrayList<String>();
-            signalSlots.add("slave_wifi");
-            signalSlots.add("hotspot");
+            rightOnly2LeftWithSignal.add("slave_wifi");
+            rightOnly2LeftWithSignal.add("hotspot");
             Helpers.hookAllConstructors("com.android.systemui.statusbar.phone.StatusBarSignalPolicy", lpparam.classLoader, new MethodHook() {
                 @Override
                 protected void after(MethodHookParam param) throws Throwable {
@@ -1300,11 +1306,13 @@ public class SystemUI {
                     XposedHelpers.setObjectField(param.thisObject, "mIconController", dripLeftController);
                 }
             });
+        }
+        if (!rightOnly2LeftWithSignal.isEmpty()) {
             Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBarIconControllerImpl", lpparam.classLoader, "setIcon", String.class, int.class, CharSequence.class, new MethodHook(MethodHook.PRIORITY_HIGHEST) {
                 @Override
                 protected void before(MethodHookParam param) throws Throwable {
                     String slot = (String) param.args[0];
-                    if (signalSlots.contains(slot)) {
+                    if (rightOnly2LeftWithSignal.contains(slot)) {
                         Object dripLeftController = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", lpparam.classLoader), "get", findClass("com.android.systemui.statusbar.phone.MiuiDripLeftStatusBarIconControllerImpl", lpparam.classLoader));
                         XposedHelpers.callMethod(dripLeftController, "setIcon", param.args[0], param.args[1], param.args[2]);
                         param.setResult(null);
@@ -1315,7 +1323,7 @@ public class SystemUI {
                 @Override
                 protected void before(MethodHookParam param) throws Throwable {
                     String slot = (String) param.args[0];
-                    if (signalSlots.contains(slot)) {
+                    if (rightOnly2LeftWithSignal.contains(slot)) {
                         Object dripLeftController = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", lpparam.classLoader), "get", findClass("com.android.systemui.statusbar.phone.MiuiDripLeftStatusBarIconControllerImpl", lpparam.classLoader));
                         XposedHelpers.callMethod(dripLeftController, "setIconVisibility", param.args[0], param.args[1]);
                         param.setResult(null);
@@ -1327,12 +1335,11 @@ public class SystemUI {
             Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiCollapsedStatusBarFragment", lpparam.classLoader, "initMiuiViewsOnViewCreated", View.class, new MethodHook() {
                 @Override
                 protected void after(MethodHookParam param) throws Throwable {
-                    Object dripLeftController = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", lpparam.classLoader), "get", findClass("com.android.systemui.statusbar.phone.MiuiDripLeftStatusBarIconControllerImpl", lpparam.classLoader));
-                    Object mDripIconManager = XposedHelpers.getObjectField(param.thisObject, "mDripLeftDarkIconManager");
-                    ArrayList<String> blockList = new ArrayList<String>();
-                    int mCurrentStatusBarType = (int) XposedHelpers.getAdditionalInstanceField(dripLeftController, "mCurrentStatusBarType");
+                    Object mStatusBar = XposedHelpers.getObjectField(param.thisObject, "mStatusBar");
+                    int mCurrentStatusBarType = XposedHelpers.getIntField(mStatusBar, "mCurrentStatusBarType");
                     if (mCurrentStatusBarType != 1) {
-                        blockList.addAll(dripLeftIcons);
+                        Object mDripIconManager = XposedHelpers.getObjectField(param.thisObject, "mDripLeftDarkIconManager");
+                        ArrayList<String> blockList = new ArrayList<String>(dripLeftIcons);
                         if (MainModule.mPrefs.getBoolean("system_statusbar_alarm_atleft")) {
                             blockList.remove("alarm_clock");
                         }
@@ -1342,17 +1349,11 @@ public class SystemUI {
                         if (MainModule.mPrefs.getBoolean("system_statusbar_dnd_atleft")) {
                             blockList.remove("zen");
                         }
+                        if (MainModule.mPrefs.getBoolean("system_statusbar_gps_atleft")) {
+                            blockList.remove("location");
+                        }
                         XposedHelpers.callMethod(mDripIconManager, "setBlockList", blockList);
-                        XposedHelpers.callMethod(dripLeftController, "refreshIconGroup", mDripIconManager);
                     }
-                }
-            });
-            Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView", lpparam.classLoader, "setStatusBarType", int.class, new MethodHook() {
-                @Override
-                protected void before(MethodHookParam param) throws Throwable {
-                    int mCurrentStatusBarType = XposedHelpers.getIntField(param.thisObject, "mCurrentStatusBarType");
-                    Object dripLeftController = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", lpparam.classLoader), "get", findClass("com.android.systemui.statusbar.phone.MiuiDripLeftStatusBarIconControllerImpl", lpparam.classLoader));
-                    XposedHelpers.setAdditionalInstanceField(dripLeftController, "mCurrentStatusBarType", mCurrentStatusBarType);
                 }
             });
         }
