@@ -60,6 +60,7 @@
     <string name="system_batteryindicator_test_title">Probar</string>
     <string name="system_batteryindicator_test_summ" formatted="false">Anima la barra en estado de descarga desde 100% a 0%</string>
     <string name="system_statusbarheight_title">Altura de la barra de estado</string>
+    <string name="system_statusbar_iconsize_title">Tamaño de iconos en barra de estado</string>
     <string name="system_statusbarcolor_title">Color de fondo de la barra de estado</string>
     <string name="system_statusbarcolor_summ">Hacer que los colores de fondo de la barra de estado y la barra de acción de la aplicación sean iguales cuando sea posible</string>
     <string name="system_statusbarcolor_apps_title">Lista negra</string>
@@ -70,6 +71,7 @@
     <string name="system_calendar_app_title">Aplicación de calendario</string>
     <string name="system_calendar_app_summ">Abrir la aplicación seleccionada cuando se presiona la fecha en el panel de ajustes rápidos</string>
     <string name="system_clockseconds_title">Mostrar segundos</string>
+    <string name="system_cc_hidedate_title">Ocultar fecha</string>
     <string name="system_clock_show_ampm_title">Mostrar AM/PM</string>
     <string name="system_clock_time_format_title">Formato de 24 horas</string>
     <string name="system_clock_leadingzero_title">Mostrar cero inicial a las horas</string>
@@ -95,6 +97,7 @@
     <string name="system_clock_show_date_title">Mostrar fecha</string>
     <string name="system_clock_show_year_title">Mostrar año</string>
     <string name="system_clock_fixedwidth_title">Ancho fijo para evitar irregularidades horizontales</string>
+    <string name="system_clock_fixedwidth_summ">Ajustar el ancho cuando se muestren los segundos</string>
     <string name="system_statusbar_clock_align_title">Alineación horizontal</string>
     <string name="system_clockseconds_summ">Mostrar segundos en el reloj de la barra de estado</string>
     <string name="system_maxsbicons_title">Límite de iconos de notificación</string>
@@ -106,6 +109,24 @@
     <string name="system_4gtolte_title">Mostrar icono LTE envés de 4G</string>
     <string name="system_statusbar_mobile_showname_title">Tipo de red móvil personalizada</string>
     <string name="system_hidemoreicon_title">Sin indicador de iconos ocultos</string>
+    <string name="system_hidemoreicon_summ">No mostrar el icono con 3 puntos cuando los iconos de notificación estén ocultos</string>
+    <string name="system_hidestatusbar_whenscreenshot_title">Ocultar la barra de estado al capturar pantalla</string>
+    <string name="system_nonetspeedseparator_title">Separador de velocidad de red</string>
+    <string name="system_nonetspeedseparator_summ">No mostrar la línea vertical entre la hora y el indicador de red en dispositivos con notch de gota</string>
+    <string name="system_netspeedinterval_title">Intervalo de actualización de velocidad de red</string>
+    <string name="system_detailednetspeed_title">La velocidad de bajada y subida se muestran en doble fila</string>
+    <string name="system_detailednetspeed_fakedualrow_title">Valor y unidad se muestran en doble fila</string>
+    <string name="system_netspeed_cat_title">Mods de velocidad de red</string>
+    <string name="system_detailednetspeed_summ">Mostrar velocidad entrante y saliente separadas</string>
+    <string name="system_detailednetspeed_icon_title">Iconos de indicación</string>
+    <string name="system_detailednetspeed_icon_summ">Íconos de tráfico de entrada/salida se muestran al lado del valor de la velocidad (no todas las fuentes personalizadas tienen todos los iconos)</string>
+    <string name="system_detailednetspeed_low_title">Ocultar con velocidad baja</string>
+    <string name="system_detailednetspeed_low_summ">No mostrar el indicador si la velocidad es baja</string>
+    <string name="system_detailednetspeed_lowlevel_title">Nivel de velocidad baja</string>
+    <string name="system_detailednetspeed_lowlevel_summ">Valores de velocidad debajo de este nivel se considerarán bajos y tendrán un icono indicador diferente</string>
+    <string name="system_detailednetspeed_secunit_title">Ocultar sufijo Byte por segundo (B/s)</string>
+    <string name="system_netspeed_fontsize_title">Tamaño de la fuente de velocidad de red</string>
+    <string name="system_statusbarcontrols_title">Control de gestos</string>
     <string name="system_notifrowmenu_forceclose">Forzar cierre</string>
     <string name="system_disableanynotif_title">Desactivar cualquier notificación</string>
     <string name="system_disableanynotif_summ">Permitir desactivar notificaciones de sistema</string>
@@ -115,4 +136,5 @@
     <string name="array_system_default">Sistema</string>
     <string name="array_mobiletypeicon_hide">Ocultar por completo</string>
     <string name="array_audio">Sonido</string>
+    <string name="soft_reboot">Reinicio rápido</string>
 </resources>
