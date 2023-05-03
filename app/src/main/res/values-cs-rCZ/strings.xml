@@ -639,6 +639,7 @@
     <string name="controls_volumemedia_vibrate_summ">Vibrace při provedení akce dlouhého stisknutí</string>
     <string name="controls_mods_navbar">Navigační panel</string>
     <string name="controls_nonavbar_title">Skrýt navigační panel</string>
+    <string name="controls_hidenavbar_whenscreenshot_title">Skrýt navigační lištu a celou obrazovku při snímání obrazovky</string>
     <string name="controls_nonavbar_fix_inputmethod_title">Opravit optimalizaci klávesnice na celou obrazovku</string>
     <string name="controls_nonavbar_fix_inputmethod_summ">Přidat aplikace InputMethod do LSPosed rozsahu</string>
     <string name="controls_imebackalticon_title">Reaktivní tlačítko Zpět</string>
@@ -1093,6 +1094,7 @@
     <string name="system_statusbar_batterytempandcurrentatright_title">Zobrazit na pravé straně</string>
     <string name="system_statusbar_batterytempandcurrent_positive_title">Aktuální hodnota je vždy kladná</string>
     <string name="system_statusbar_batterytempandcurrent_incharge_title">Zobrazit pouze při nabíjení</string>
+    <string name="system_statusbar_batterytempandcurrent_fixcurrentratio_title">Oprava poměru proudů na některých zařízeních</string>
     <string name="system_statusbar_batterytempandcurrent_hideunit_title">Skrýt jednotku</string>
     <string name="system_statusbar_batterytempandcurrent_singlerow_title">Zobrazit v jednom řádku</string>
     <string name="system_statusbar_batterytempandcurrent_reverseorder_title">Obrátit pořadí</string>
@@ -1129,6 +1131,7 @@
     <string name="system_statusbaricons_netspeed_title">Indikátor rychlosti sítě</string>
     <string name="system_statusbaricons_clock_title">Hodiny</string>
     <string name="various_allow_untrusted_touch_title">Povolit nedůvěryhodné dotyky</string>
+    <string name="various_persist_batteryoptimization_settings_title">Zachovat nastavení optimalizace baterie</string>
     <string name="various_clipboard_defaultaction_title">Výchozí akce ai schránky</string>
     <string name="various_disable_access_devicelogs_title">Odmítnout přístup k záznamům zařízení</string>
     <string name="various_skip_interceptperm_title">Přeskočit časovač oprávnění</string>
@@ -1145,4 +1148,5 @@
     <string name="system_cc_disable_bluetooth_restrict_title">Zakázat odpojování bluetooth do zítřka</string>
     <string name="system_cc_volume_showpct_title">Zobrazit procenta hlasitosti</string>
     <string name="system_cc_collapse_after_clicked_title">Sbalit po dotyku</string>
+    <string name="system_cc_clock_topmargin_indrawer_title">Horní okraj hodin v oznamovací liště</string>
 </resources>
