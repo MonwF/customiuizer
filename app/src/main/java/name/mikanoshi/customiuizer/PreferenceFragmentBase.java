@@ -155,7 +155,9 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
                 alert.setMessage(R.string.soft_reboot_ask);
                 alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        getValidContext().sendBroadcast(new Intent(GlobalActions.ACTION_PREFIX + "FastReboot"));
+                        Intent intent = new Intent(GlobalActions.ACTION_PREFIX + "FastReboot");
+                        intent.setPackage("com.android.systemui");
+                        getValidContext().sendBroadcast(intent);
                     }
                 });
                 alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {

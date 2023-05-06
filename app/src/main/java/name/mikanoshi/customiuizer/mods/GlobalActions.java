@@ -31,6 +31,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.PowerManager;
 import android.os.Process;
 import android.os.SystemClock;
 import android.os.UserHandle;
@@ -164,6 +165,11 @@ public class GlobalActions {
 
                 if (action.equals(ACTION_PREFIX + "RestartSystemUI")) {
                     Process.sendSignal(Process.myPid(), Process.SIGNAL_KILL);
+                }
+                else if (action.equals(ACTION_PREFIX + "FastReboot")) {
+                    PowerManager pm = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
+                    Object mService = XposedHelpers.getObjectField(pm, "mService");
+                    XposedHelpers.callMethod(mService, "reboot", false, null, false);
                 }
 //				else if (action.equals(ACTION_PREFIX + "CopyToExternal")) {
 //					try {
@@ -462,10 +468,6 @@ public class GlobalActions {
             String action = intent.getAction();
             if (action == null) return;
             // Actions
-            if (action.equals(ACTION_PREFIX + "FastReboot")) {
-                Helpers.proxySystemProperties("set", "ctl.restart", "surfaceflinger", null);
-                Helpers.proxySystemProperties("set", "ctl.restart", "zygote", null);
-            }
             if (action.equals(ACTION_PREFIX + "RunParasitic")) {
                 Intent intent2 = new Intent();
                 intent2.setAction("android.intent.action.MAIN");
@@ -921,7 +923,6 @@ public class GlobalActions {
                 intentfilter.addAction(ACTION_PREFIX + "ToggleMobileData");
 
                 // Tools
-                intentfilter.addAction(ACTION_PREFIX + "FastReboot");
 //				intentfilter.addAction(ACTION_PREFIX + "RunParasitic");
                 //intentfilter.addAction(ACTION_PREFIX + "QueryXposedService");
 
@@ -1013,6 +1014,7 @@ public class GlobalActions {
                 intentfilter.addAction(ACTION_PREFIX + "PinningWindow");
                 intentfilter.addAction(ACTION_PREFIX + "SwitchOneHanded");
 //				intentfilter.addAction(ACTION_PREFIX + "CopyToExternal");
+                intentfilter.addAction(ACTION_PREFIX + "FastReboot");
 
                 intentfilter.addAction(ACTION_PREFIX + "ScrollToTop");
 
