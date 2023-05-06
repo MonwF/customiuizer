@@ -4026,6 +4026,10 @@ public class SystemUI {
         });
     }
 
+    public static void HideLockscreenZenModeHook(LoadPackageParam lpparam) {
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.notification.zen.ZenModeViewController", lpparam.classLoader, "shouldBeVisible", XC_MethodReplacement.returnConstant(false));
+    }
+
     public static void SwitchCCAndNotificationHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView", lpparam.classLoader, "handleEvent", MotionEvent.class, new MethodHook() {
             @Override

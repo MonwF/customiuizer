@@ -70,7 +70,6 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (mPrefs.getBoolean("system_allownotiffloat")) System.AllowAllFloatSysHook();
         if (mPrefs.getBoolean("system_resizablewidgets")) System.ResizableWidgetsHook();
         if (mPrefs.getBoolean("system_audiosilencer")) System.AudioSilencerHook();
-//        if (mPrefs.getStringAsInt("system_iconlabletoasts", 1) > 1) System.IconLabelToastsHook();
 
         if (mPrefs.getStringAsInt("controls_volumemedia_up", 0) > 0 ||
             mPrefs.getStringAsInt("controls_volumemedia_down", 0) > 0) {
@@ -431,6 +430,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             }
             if (mPrefs.getBoolean("system_nosafevolume")) {
                 SystemUI.HideSafeVolumeDlgHook(lpparam);
+            }
+            if (mPrefs.getBoolean("system_lockscreen_hidezenmode")) {
+                SystemUI.HideLockscreenZenModeHook(lpparam);
             }
         }
 

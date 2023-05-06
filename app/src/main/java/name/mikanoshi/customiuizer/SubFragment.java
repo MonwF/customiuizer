@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceScreen;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,10 +17,14 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearSmoothScroller;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
 import name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx;
+import name.mikanoshi.customiuizer.prefs.PreferenceEx;
+import name.mikanoshi.customiuizer.prefs.PreferenceState;
 import name.mikanoshi.customiuizer.prefs.SpinnerEx;
 import name.mikanoshi.customiuizer.prefs.SpinnerExFake;
 import name.mikanoshi.customiuizer.subs.AppSelector;
@@ -36,6 +41,7 @@ public class SubFragment extends PreferenceFragmentBase {
     protected Bundle catInfo = null;
     protected boolean isStandalone = false;
     private float order = 100.0f;
+    private String highlightKey = null;
     public boolean padded = true;
     Helpers.SettingsType settingsType = Helpers.SettingsType.Preference;
     Helpers.ActionBarType abType = Helpers.ActionBarType.Edit;
@@ -50,6 +56,7 @@ public class SubFragment extends PreferenceFragmentBase {
         catInfo = getArguments().getBundle("catInfo");
         sub = getArguments().getString("sub");
         isStandalone = getArguments().getBoolean("isStandalone");
+        highlightKey = getArguments().getString("mod");
         if (abType == Helpers.ActionBarType.Edit) {
             isCustomActionBar = true;
         }
@@ -95,6 +102,13 @@ public class SubFragment extends PreferenceFragmentBase {
         if (settingsType == Helpers.SettingsType.Preference) {
             super.onCreatePreferences(savedInstanceState, rootKey);
             setPreferencesFromResource(contentResId, rootKey);
+            PreferenceState highlightPref;
+            if (highlightKey != null && (highlightPref = findPreference(highlightKey)) != null) {
+                highlightPref.applyHighlight();
+            }
+            else {
+                highlightKey = null;
+            }
         }
     }
 
@@ -115,6 +129,30 @@ public class SubFragment extends PreferenceFragmentBase {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         view.setTranslationZ(order);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (highlightKey != null) {
+            RecyclerView mList = getListView();
+            int position = ((PreferenceGroup.PreferencePositionCallback) mList.getAdapter())
+                .getPreferenceAdapterPosition(highlightKey);
+            highlightKey = null;
+            if (position < 9) return;
+            RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(mList.getContext()) {
+                @Override protected int getVerticalSnapPreference() {
+                    return LinearSmoothScroller.SNAP_TO_START;
+                }
+            };
+            smoothScroller.setTargetPosition(position);
+            getView().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mList.getLayoutManager().startSmoothScroll(smoothScroller);
+                }
+            }, 380);
+        }
     }
 
     public void saveSharedPrefs() {

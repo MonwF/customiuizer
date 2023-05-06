@@ -20,6 +20,7 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 
 	private boolean dynamic;
 	private boolean newmod = false;
+    private boolean highlight = false;
 	private boolean unsupported = false;
 	private final int childpadding = getContext().getResources().getDimensionPixelSize(R.dimen.preference_item_child_padding);
 
@@ -108,6 +109,9 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 		mTitle.setText(getTitle() + (unsupported ? " ⨯" : (dynamic ? " ⟲" : "")));
 		mSeekBar.setAlpha(isEnabled() ? 1.0f : 0.75f);
 		if (newmod) Helpers.applyNewMod(mTitle);
+		if (highlight) {
+			Helpers.applySearchItemHighlight(finalView);
+		}
 
 		int hrzPadding = (indentLevel + 1) * childpadding;
 		finalView.setPadding(hrzPadding, 0, childpadding, 0);
@@ -293,5 +297,9 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 		newmod = true;
 	}
 
+	@Override
+	public void applyHighlight() {
+		highlight = true;
+	}
 }
 

@@ -319,8 +319,6 @@ ss - iki basamaklı saniye(09)</string>
     <string name="system_mods_lockscreen">Kilit ekranı</string>
     <string name="system_mods_lockscreen_functionality">Ek işlevsellik</string>
     <string name="system_mods_lockscreen_security">Güvenlik</string>
-    <string name="system_iconlabletoasts_title">Ek öğeler</string>
-    <string name="system_iconlabletoasts_summ">Uygulamanın simgesini ve etiketini tostlarına ekleyin (Önce LSPosed kapsamına tost gönderen uygulamaları ekleyin)</string>
     <string name="system_blocktoasts_title">Tostları engelle</string>
     <string name="system_blocktoasts_summ">Seçili uygulamaların tost göstermesini engelle</string>
     <string name="system_airplanemodeconfig_title">Uçak modu yapılandırması</string>

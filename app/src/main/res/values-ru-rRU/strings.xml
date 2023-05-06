@@ -317,8 +317,6 @@
     <string name="system_mods_lockscreen">Экран блокировки</string>
     <string name="system_mods_lockscreen_functionality">Дополнительная функциональность</string>
     <string name="system_mods_lockscreen_security">Безопасность</string>
-    <string name="system_iconlabletoasts_title">Дополнительные элементы</string>
-    <string name="system_iconlabletoasts_summ">Добавляет иконку и название приложения во всплывающие сообщения</string>
     <string name="system_blocktoasts_title">Блокировка</string>
     <string name="system_blocktoasts_summ">Запретить выбранным приложениям показ всплывающих сообщений</string>
     <string name="system_airplanemodeconfig_title">Конфигурация режима полёта</string>

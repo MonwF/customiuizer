@@ -328,8 +328,6 @@
     <string name="system_mods_lockscreen">Lock screen</string>
     <string name="system_mods_lockscreen_functionality">Additional functionality</string>
     <string name="system_mods_lockscreen_security">Security</string>
-    <string name="system_iconlabletoasts_title">Additional elements</string>
-    <string name="system_iconlabletoasts_summ">Add application\'s icon and label to its toasts(Add apps that send toasts to LSPosed scope first)</string>
     <string name="system_blocktoasts_title">Block toasts</string>
     <string name="system_blocktoasts_summ">Prevent selected apps from showing toasts</string>
     <string name="system_airplanemodeconfig_title">Airplane mode configuration</string>
@@ -404,6 +402,7 @@
     <string name="system_hidelsstatusbar_title">Hide status bar</string>
     <string name="system_hidelsstatusbar_summ">Remove status bar from lock screen</string>
     <string name="system_hidelsclock_title">Hide top block</string>
+    <string name="system_lockscreen_hidezenmode_title">Hide zen mode notification</string>
     <string name="system_hidelsclock_summ">Remove top block containing clock, date and other data</string>
     <string name="system_hidelshint_title">Hide unlock hint</string>
     <string name="system_hidelshint_summ">Remove "Swipe up to unlock" hint</string>
