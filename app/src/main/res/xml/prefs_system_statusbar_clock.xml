@@ -99,6 +99,13 @@
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_clock_leadingzero"
 		android:title="@string/system_clock_leadingzero_title"
+		android:disableDependentsState="true"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbar_clock_leadingspace"
+		android:title="@string/system_clock_leadingspace_title"
+		android:dependency="pref_key_system_statusbar_clock_leadingzero"
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
@@ -109,7 +116,6 @@
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_system_statusbar_clock_customformat"
 		android:title="@string/system_clock_customformat_setting_title"
-		android:dependency="pref_key_system_statusbar_clock_customformat_enable"
 		miuizer:indentLevel="1"
 		miuizer:customSummary="true" />
 
