@@ -3697,6 +3697,13 @@ public class SystemUI {
                 mTimeText.setTypeface(Typeface.DEFAULT);
             }
         });
+        Helpers.findAndHookMethod("com.miui.clock.MiuiLeftTopLargeClock", lpparam.classLoader, "onLanguageChanged", String.class, new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                TextView mTimeText = (TextView) XposedHelpers.getObjectField(param.thisObject, "mCurrentDateLarge");
+                mTimeText.setTypeface(Typeface.DEFAULT);
+            }
+        });
     }
     public static void HideStatusBarBeforeScreenshotHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiCollapsedStatusBarFragment", lpparam.classLoader, "initMiuiViewsOnViewCreated", View.class, new MethodHook() {
