@@ -84,6 +84,7 @@
     <string name="system_clock_show_ampm_title">Show AM|PM</string>
     <string name="system_clock_time_format_title">24-hour time format</string>
     <string name="system_clock_leadingzero_title">Show leading zero to hours</string>
+    <string name="system_clock_leadingspace_title">Add space character to hours</string>
     <string name="system_clock_customformat_enable_title">Enable custom format</string>
     <string name="system_clock_customformat_setting_title">Set format</string>
     <string name="system_clock_customformat_help_summ">
