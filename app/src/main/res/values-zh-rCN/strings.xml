@@ -324,8 +324,6 @@
     <string name="system_mods_lockscreen">锁屏</string>
     <string name="system_mods_lockscreen_functionality">附加功能</string>
     <string name="system_mods_lockscreen_security">安全</string>
-    <string name="system_iconlabletoasts_title">其他元素</string>
-    <string name="system_iconlabletoasts_summ">将应用程序的图标和文字添加到其toast(请将发送Toast的App加入作用域)</string>
     <string name="system_blocktoasts_title">阻止toast</string>
     <string name="system_blocktoasts_summ">阻止所选应用显示toast</string>
     <string name="system_fivegtile_title">5G开关</string>
@@ -394,6 +392,7 @@
     <string name="system_hidelsstatusbar_title">隐藏状态栏</string>
     <string name="system_hidelsstatusbar_summ">锁屏时隐藏状态栏</string>
     <string name="system_hidelsclock_title">隐藏顶部区域</string>
+    <string name="system_lockscreen_hidezenmode_title">隐藏勿扰模式通知</string>
     <string name="system_hidelsclock_summ">移除包含时钟、数据和其他数据的顶部区域</string>
     <string name="system_hidelshint_title">隐藏解锁提示</string>
     <string name="system_hidelshint_summ">隐藏“上滑解锁”提示</string>

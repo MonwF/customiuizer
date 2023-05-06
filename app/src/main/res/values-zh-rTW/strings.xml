@@ -317,8 +317,6 @@
     <string name="system_mods_lockscreen">鎖屏</string>
     <string name="system_mods_lockscreen_functionality">附加功能</string>
     <string name="system_mods_lockscreen_security">安全</string>
-    <string name="system_iconlabletoasts_title">其他元素</string>
-    <string name="system_iconlabletoasts_summ">將應用程式的圖示和文字添加到其toast</string>
     <string name="system_blocktoasts_title">阻止toast</string>
     <string name="system_blocktoasts_summ">阻止所選應用顯示toast</string>
     <string name="system_airplanemodeconfig_title">飛行模式配置</string>

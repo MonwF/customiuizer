@@ -302,8 +302,6 @@
     <string name="system_mods_lockscreen">Tela de bloqueio</string>
     <string name="system_mods_lockscreen_functionality">Funcionalidade adicional</string>
     <string name="system_mods_lockscreen_security">Segurança</string>
-    <string name="system_iconlabletoasts_title">Elementos adicionais</string>
-    <string name="system_iconlabletoasts_summ">Adicione o ícone e o rótulo do aplicativo aos seus toasts (Adicione aplicativos que enviam toasts para o escopo LSPosed primeiro)</string>
     <string name="system_blocktoasts_title">Bloquear brindes</string>
     <string name="system_blocktoasts_summ">Impedir que aplicativos selecionados mostrem brindes</string>
     <string name="system_airplanemodeconfig_title">Configuração do modo avião</string>

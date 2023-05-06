@@ -4,18 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Paint;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Layout;
-import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.style.AlignmentSpan;
-import android.text.style.LineHeightSpan;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -126,34 +119,6 @@ public class MainFragment extends PreferenceFragmentBase {
 	public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
 		super.onCreatePreferences(savedInstanceState, rootKey);
 		setPreferencesFromResource(R.xml.prefs_main, rootKey);
-	}
-
-	private static class SetLineOverlap implements LineHeightSpan {
-		private int originalBottom = 15;
-		private int originalDescent = 13;
-		private final Boolean overlap;
-		private Boolean overlapSaved = false;
-
-		SetLineOverlap(Boolean overlap) {
-			this.overlap = overlap;
-		}
-
-		@Override
-		public void chooseHeight(CharSequence text, int start, int end, int spanstartv, int v, Paint.FontMetricsInt fm) {
-			if (overlap) {
-				if (!overlapSaved) {
-					originalBottom = fm.bottom;
-					originalDescent = fm.descent;
-					overlapSaved = true;
-				}
-				fm.bottom += fm.top;
-				fm.descent += fm.top;
-			} else {
-				fm.bottom = originalBottom;
-				fm.descent = originalDescent;
-				overlapSaved = false;
-			}
-		}
 	}
 
 	@Override

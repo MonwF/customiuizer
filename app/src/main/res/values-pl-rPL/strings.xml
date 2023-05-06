@@ -259,8 +259,6 @@
     <string name="system_mods_lockscreen">Ekran blokady</string>
     <string name="system_mods_lockscreen_functionality">Dodatkowa funkcjonalność</string>
     <string name="system_mods_lockscreen_security">Bezpieczeństwo</string>
-    <string name="system_iconlabletoasts_title">Dodatkowe elementy</string>
-    <string name="system_iconlabletoasts_summ">Dodaj ikonę i etykietę aplikacji do jej toastów</string>
     <string name="system_blocktoasts_title">Zablokuj toasty</string>
     <string name="system_blocktoasts_summ">Zapobiegaj wyświetlaniu toastów przez wybrane aplikacje</string>
     <string name="system_airplanemodeconfig_title">Konfiguracja trybu samolotowego</string>

@@ -1,6 +1,8 @@
 package name.mikanoshi.customiuizer.utils;
 
 import android.Manifest;
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.Application;
@@ -13,7 +15,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
@@ -40,7 +41,6 @@ import android.os.PowerManager.WakeLock;
 import android.os.UserHandle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import androidx.preference.PreferenceScreen;
 import android.provider.Settings;
 import android.text.InputType;
 import android.text.Spannable;
@@ -66,6 +66,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceScreen;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -84,7 +85,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -513,6 +513,16 @@ public class Helpers {
 		title.setText(ssb);
 	}
 
+	public static void applySearchItemHighlight(View finalView) {
+		int highColor = finalView.getResources().getColor(R.color.color_popup_background, finalView.getContext().getTheme());
+		ObjectAnimator colorAnim = ObjectAnimator.ofInt(finalView, "backgroundColor", highColor, Color.TRANSPARENT);
+		colorAnim.setDuration(1200);
+		colorAnim.setEvaluator(new ArgbEvaluator());
+		colorAnim.setRepeatCount(1);
+		colorAnim.setStartDelay(300);
+		colorAnim.start();
+	}
+
 	public static void openURL(Context context, String url) {
 		if (context == null) return;
 		Intent uriIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -636,15 +646,6 @@ public class Helpers {
 		} catch (Throwable t) {
 			t.printStackTrace();
 			return null;
-		}
-	}
-
-	public static int getMIUILauncherVersion(Context context) {
-		try {
-			PackageInfo packageInfo = context.getPackageManager().getPackageInfo("com.miui.home", 0);
-    		return packageInfo.versionCode;
-		} catch (Throwable t) {
-			return 0;
 		}
 	}
 

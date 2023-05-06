@@ -31,6 +31,7 @@ public class PreferenceEx extends Preference implements PreferenceState {
 	private final boolean longClickable;
 	private String customSummary = null;
 	private boolean newmod = false;
+    private boolean highlight = false;
 	private boolean unsupported = false;
 	View.OnLongClickListener longPressListener;
 
@@ -68,6 +69,9 @@ public class PreferenceEx extends Preference implements PreferenceState {
 		}
 		title.setText(getTitle() +  (unsupported ? " ⨯" : (dynamic ? " ⟲" : "")));
 		if (newmod) Helpers.applyNewMod(title);
+		if (highlight) {
+			Helpers.applySearchItemHighlight(finalView);
+		}
 
 		int hrzPadding = (indentLevel + 1) * childpadding;
 		finalView.setPadding(hrzPadding, 0, childpadding, 0);
@@ -116,6 +120,11 @@ public class PreferenceEx extends Preference implements PreferenceState {
 	@Override
 	public void markAsNew() {
 		newmod = true;
+	}
+
+	@Override
+	public void applyHighlight() {
+		highlight = true;
 	}
 
 //	public void setNotice(boolean value) {

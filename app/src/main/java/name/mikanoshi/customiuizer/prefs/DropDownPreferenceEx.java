@@ -26,6 +26,7 @@ public class DropDownPreferenceEx extends DropDownPreference implements Preferen
 	private final int indentLevel;
 	private final boolean dynamic;
 	private boolean newmod = false;
+    private boolean highlight = false;
 	private boolean unsupported = false;
 	private final boolean valueAsSummary;
 
@@ -64,7 +65,9 @@ public class DropDownPreferenceEx extends DropDownPreference implements Preferen
 		title.setTextColor(isEnabled() ? primary : secondary);
 		title.setText(getTitle() + (unsupported ? " ⨯" : (dynamic ? " ⟲" : "")));
 		if (newmod) Helpers.applyNewMod(title);
-
+		if (highlight) {
+			Helpers.applySearchItemHighlight(finalView);
+		}
 		int hrzPadding = (indentLevel + 1) * childpadding;
 		finalView.setPadding(hrzPadding, 0, childpadding, 0);
 	}
@@ -96,4 +99,8 @@ public class DropDownPreferenceEx extends DropDownPreference implements Preferen
 		newmod = true;
 	}
 
+	@Override
+	public void applyHighlight() {
+		highlight = true;
+	}
 }

@@ -21,6 +21,7 @@ public class CheckBoxPreferenceEx extends SwitchPreference implements Preference
 	private final int indentLevel;
 	private final boolean dynamic;
 	private boolean newmod = false;
+    private boolean highlight = false;
 	private boolean unsupported = false;
 
 	public CheckBoxPreferenceEx(Context context, AttributeSet attrs) {
@@ -36,7 +37,9 @@ public class CheckBoxPreferenceEx extends SwitchPreference implements Preference
 		TextView title = finalView.findViewById(android.R.id.title);
 		title.setText(getTitle() + (unsupported ? " ⨯" : (dynamic ? " ⟲" : "")));
 		if (newmod) Helpers.applyNewMod(title);
-
+		if (highlight) {
+			Helpers.applySearchItemHighlight(finalView);
+		}
 		int hrzPadding = (indentLevel + 1) * childpadding;
 		finalView.setPadding(hrzPadding, 0, childpadding, 0);
 	}
@@ -60,4 +63,8 @@ public class CheckBoxPreferenceEx extends SwitchPreference implements Preference
 		newmod = true;
 	}
 
+	@Override
+	public void applyHighlight() {
+		highlight = true;
+	}
 }

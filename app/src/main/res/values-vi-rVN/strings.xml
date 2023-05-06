@@ -318,8 +318,6 @@
     <string name="system_mods_lockscreen">Màn hình khóa</string>
     <string name="system_mods_lockscreen_functionality">Tính năng bổ sung</string>
     <string name="system_mods_lockscreen_security">Bảo mật</string>
-    <string name="system_iconlabletoasts_title">Các yếu tố khác</string>
-    <string name="system_iconlabletoasts_summ">Thêm biểu tượng và văn bản của ứng dụng vào thông báo của nó (Trước tiên, hãy thêm các ứng dụng gửi thông báo ở LSPosed)</string>
     <string name="system_blocktoasts_title">Chặn thông báo</string>
     <string name="system_blocktoasts_summ">Ngăn các ứng dụng đã chọn hiển thị thông báo</string>
     <string name="system_airplanemodeconfig_title">Cấu hình chế độ máy bay</string>

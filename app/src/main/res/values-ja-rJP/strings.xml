@@ -318,9 +318,7 @@
     <string name="system_mods_lockscreen">ロック画面</string>
     <string name="system_mods_lockscreen_functionality">追加機能</string>
     <string name="system_mods_lockscreen_security">セキュリティ</string>
-    <string name="system_iconlabletoasts_title">追加要素</string>
-    <string name="system_iconlabletoasts_summ">トースト通知にアプリのアイコンとラベルを追加する (表示をするアプリにLSPosedのスコープを追加する必要があります)</string>
-    <string name="system_blocktoasts_title">トースト通知をブロック</string>
+  <string name="system_blocktoasts_title">トースト通知をブロック</string>
     <string name="system_blocktoasts_summ">選択をしたアプリでトースト通知を表示しないようにします</string>
     <string name="system_airplanemodeconfig_title">機内モードの設定</string>
     <string name="system_airplanemodeconfig_summ">機内モード時の通信を許可する定義を設定します。再起動の必要はありません。</string>

@@ -258,14 +258,6 @@
 		android:title="@string/system_mods_toasts"
 		miuizer:dynamic="true">
 
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
-			android:key="pref_key_system_iconlabletoasts"
-			android:summary="@string/system_iconlabletoasts_summ"
-			android:title="@string/system_iconlabletoasts_title"
-			android:entries="@array/iconlabletoasts"
-			android:entryValues="@array/iconlabletoasts_val"
-			android:defaultValue="1" />
-
 		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_system_toasttime"
 			android:title="@string/system_toasttime_title"
@@ -1107,6 +1099,11 @@
 			android:key="pref_key_system_hidelsclock"
 			android:title="@string/system_hidelsclock_title"
 			android:summary="@string/system_hidelsclock_summ"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_lockscreen_hidezenmode"
+			android:title="@string/system_lockscreen_hidezenmode_title"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx

@@ -319,8 +319,6 @@
     <string name="system_mods_lockscreen">Zámek obrazovky</string>
     <string name="system_mods_lockscreen_functionality">Další funkce</string>
     <string name="system_mods_lockscreen_security">Zabezpečení</string>
-    <string name="system_iconlabletoasts_title">Dodatečné prvky</string>
-    <string name="system_iconlabletoasts_summ">Přidat ikonu a popisek aplikace k rychlému oznámení</string>
     <string name="system_blocktoasts_title">Blokovat rychlá oznámení</string>
     <string name="system_blocktoasts_summ">Zabránit vybraným aplikacím v zobrazování rychlých oznámení</string>
     <string name="system_airplanemodeconfig_title">Konfigurace režimu Letadlo</string>
