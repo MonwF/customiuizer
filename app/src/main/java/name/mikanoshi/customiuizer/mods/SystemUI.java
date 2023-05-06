@@ -3521,7 +3521,7 @@ public class SystemUI {
                     XposedHelpers.callMethod(mService, "reboot", false, "bootloader", false);
                     custom = true;
                 } else if ("softreboot".equals(cmd)) {
-                    mContext.sendBroadcast(new Intent(ACTION_PREFIX + "FastReboot"));
+                    XposedHelpers.callMethod(mService, "reboot", false, null, false);
                     custom = true;
                 }
 
