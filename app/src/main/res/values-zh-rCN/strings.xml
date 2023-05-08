@@ -77,6 +77,11 @@
     <string name="system_cc_hidedate_title">隐藏日期</string>
     <string name="system_cc_clock_topmargin_indrawer_title">通知抽屉中时钟上边距</string>
     <string name="system_clock_show_ampm_title">显示时段</string>
+    <string name="system_statusbar_clock_chip_title">显示彩色背景</string>
+    <string name="system_statusbar_clock_chip_radius_title">圆角半径</string>
+    <string name="system_statusbar_clock_chip_verticalpadding_title">垂直边距</string>
+    <string name="system_statusbar_clock_chip_startcolor_title">开始颜色</string>
+    <string name="system_statusbar_clock_chip_endcolor_title">结束颜色</string>
     <string name="system_clock_time_format_title">24小时制</string>
     <string name="system_clock_fixedwidth_title">固定宽度以防相邻元素左右防抖</string>
     <string name="system_clock_fixedwidth_summ">建议显示秒时才调整宽度</string>

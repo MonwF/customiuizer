@@ -45,6 +45,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.Icon;
 import android.hardware.usb.UsbManager;
 import android.media.AudioManager;
@@ -879,8 +880,9 @@ public class System {
         boolean enableCustomFormat = !statusBarClock || MainModule.mPrefs.getBoolean("system_" + subKey + "_clock_customformat_enable");
         String customFormat = MainModule.mPrefs.getString("system_" + subKey + "_clock_customformat", "");
         boolean dualRows = enableCustomFormat && customFormat.contains("\n");
+        int defaultVerticalOffset;
+        float dimStep = 0.5f;
         if (statusBarClock) {
-            float dimStep = 0.5f;
             int fontSize = MainModule.mPrefs.getInt("system_statusbar_clock_fontsize", 13);
             if (fontSize > 13) {
                 mClock.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize * 0.5f);
@@ -913,36 +915,76 @@ public class System {
                 rightMargin * dimStep,
                 res.getDisplayMetrics()
             );
-            mClock.setPadding(leftMargin, 0, rightMargin, 0);
-            int verticalOffset = MainModule.mPrefs.getInt("system_" + subKey + "_clock_verticaloffset", 8);
-            if (verticalOffset != 8) {
+            defaultVerticalOffset = 8;
+
+            if (MainModule.mPrefs.getBoolean("system_statusbar_clock_chip")) {
                 LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mClock.getLayoutParams();
-                float marginTop = TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_DIP,
-                    (verticalOffset - 8) * dimStep,
-                    res.getDisplayMetrics()
-                );
-                lp.topMargin = (int) (marginTop);
+                lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                lp.gravity = Gravity.CENTER_VERTICAL | Gravity.START;
+                if (leftMargin > 0) {
+                    lp.leftMargin = leftMargin;
+                }
+                if (rightMargin > 0) {
+                    lp.rightMargin = rightMargin;
+                }
                 mClock.setLayoutParams(lp);
+
+                int startColor = MainModule.mPrefs.getInt("system_statusbar_clock_chip_startcolor", 0x8F7C4DFF);
+                int endColor = MainModule.mPrefs.getInt("system_statusbar_clock_chip_endcolor", 0x2FA7FFEB);
+                GradientDrawable chipDrawable = new GradientDrawable();
+                chipDrawable.setOrientation(GradientDrawable.Orientation.LEFT_RIGHT);
+                chipDrawable.setColors(new int[]{startColor, endColor});
+                chipDrawable.setShape(GradientDrawable.RECTANGLE);
+                int horizPadding = MainModule.mPrefs.getInt("system_statusbar_clock_chip_horizpadding", 0);
+                int vertPadding = MainModule.mPrefs.getInt("system_statusbar_clock_chip_verticalpadding", 0);
+                if (horizPadding > 0) {
+                    horizPadding = (int)TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        horizPadding,
+                        res.getDisplayMetrics()
+                    );
+                }
+                if (vertPadding > 0 || horizPadding > 0) {
+                    chipDrawable.setPadding(horizPadding, vertPadding, horizPadding, vertPadding);
+                }
+                int radiusPx = MainModule.mPrefs.getInt("system_statusbar_clock_chip_radius", 0);
+                if (radiusPx > 0) {
+                    radiusPx = (int)TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        radiusPx,
+                        res.getDisplayMetrics()
+                    );
+                    chipDrawable.setCornerRadius(radiusPx);
+                }
+                mClock.setBackground(chipDrawable);
+            }
+            else {
+                if (leftMargin > 0 || rightMargin > 0) {
+                    LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mClock.getLayoutParams();
+                    lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    lp.gravity = Gravity.CENTER_VERTICAL | Gravity.START;
+                    if (leftMargin > 0) {
+                        lp.leftMargin = leftMargin;
+                    }
+                    if (rightMargin > 0) {
+                        lp.rightMargin = rightMargin;
+                    }
+                    mClock.setLayoutParams(lp);
+                }
             }
         }
         else {
-            int defaultVerticalOffset = 10;
-            int verticalOffset = MainModule.mPrefs.getInt("system_" + subKey + "_clock_verticaloffset", defaultVerticalOffset);
-            if (verticalOffset != defaultVerticalOffset) {
-                float marginTop = TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_DIP,
-                    verticalOffset - defaultVerticalOffset,
-                    res.getDisplayMetrics()
-                );
-                if (marginTop > 0) {
-                    mClock.setPadding(0, (int)marginTop, 0, 0);
-                }
-                else {
-                    marginTop = marginTop * -1;
-                    mClock.setPadding(0, 0, 0, (int)marginTop);
-                }
-            }
+            defaultVerticalOffset = 10;
+            dimStep = 1;
+        }
+        int verticalOffset = MainModule.mPrefs.getInt("system_" + subKey + "_clock_verticaloffset", defaultVerticalOffset);
+        if (verticalOffset != defaultVerticalOffset) {
+            float marginTop = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                (verticalOffset - defaultVerticalOffset) * dimStep,
+                res.getDisplayMetrics()
+            );
+            mClock.setTranslationY(marginTop);
         }
         if (dualRows) {
             mClock.setSingleLine(false);
