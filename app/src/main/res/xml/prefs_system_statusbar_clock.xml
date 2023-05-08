@@ -38,6 +38,56 @@
 		android:title="@string/system_statusbar_mobiletype_single_bold_title"
 		android:defaultValue="false" />
 
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbar_clock_chip"
+		android:title="@string/system_statusbar_clock_chip_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:key="pref_key_system_statusbar_clock_chip_startcolor"
+		android:title="@string/system_statusbar_clock_chip_startcolor_title"
+		android:dependency="pref_key_system_statusbar_clock_chip"
+		miuizer:indentLevel="1" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:key="pref_key_system_statusbar_clock_chip_endcolor"
+		android:title="@string/system_statusbar_clock_chip_endcolor_title"
+		android:dependency="pref_key_system_statusbar_clock_chip"
+		miuizer:indentLevel="1" />
+
+	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		android:key="pref_key_system_statusbar_clock_chip_horizpadding"
+		android:title="@string/system_batteryindicator_padding_title"
+		android:dependency="pref_key_system_statusbar_clock_chip"
+		android:defaultValue="0"
+		miuizer:minValue="0"
+		miuizer:maxValue="10"
+		miuizer:stepValue="1"
+		miuizer:indentLevel="1"
+		miuizer:format="%s dip" />
+
+	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		android:key="pref_key_system_statusbar_clock_chip_verticalpadding"
+		android:title="@string/system_statusbar_clock_chip_verticalpadding_title"
+		android:dependency="pref_key_system_statusbar_clock_chip"
+		android:defaultValue="0"
+		miuizer:minValue="0"
+		miuizer:maxValue="16"
+		miuizer:stepValue="1"
+		miuizer:indentLevel="1"
+		miuizer:format="%s dip" />
+
+	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		android:key="pref_key_system_statusbar_clock_chip_radius"
+		android:title="@string/system_statusbar_clock_chip_radius_title"
+		android:dependency="pref_key_system_statusbar_clock_chip"
+		android:defaultValue="0"
+		miuizer:minValue="0"
+		miuizer:maxValue="30"
+		miuizer:stepValue="1"
+		miuizer:indentLevel="1"
+		miuizer:format="%s dip" />
+
 	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_statusbar_clock_leftmargin"
 		android:title="@string/system_statusbar_mobiletype_single_leftmargin_title"

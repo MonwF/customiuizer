@@ -82,6 +82,11 @@
     <string name="system_clockseconds_title">Show seconds</string>
     <string name="system_cc_hidedate_title">Hide date</string>
     <string name="system_clock_show_ampm_title">Show AM|PM</string>
+    <string name="system_statusbar_clock_chip_title">Show colorful bubble behind the time</string>
+    <string name="system_statusbar_clock_chip_radius_title">Corner radius</string>
+    <string name="system_statusbar_clock_chip_startcolor_title">Start color</string>
+    <string name="system_statusbar_clock_chip_endcolor_title">End color</string>
+    <string name="system_statusbar_clock_chip_verticalpadding_title">Vertical padding</string>
     <string name="system_clock_time_format_title">24-hour time format</string>
     <string name="system_clock_leadingzero_title">Show leading zero to hours</string>
     <string name="system_clock_leadingspace_title">Add space character to hours</string>
