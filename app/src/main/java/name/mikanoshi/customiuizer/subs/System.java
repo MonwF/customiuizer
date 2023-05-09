@@ -658,18 +658,6 @@ public class System extends SubFragment {
 					}
 				});
 
-				boolean enableChip = Helpers.prefs.getBoolean("pref_key_system_statusbar_clock_chip", false);
-				findPreference("pref_key_system_statusbar_clock_chip_startcolor").setEnabled(enableChip);
-				findPreference("pref_key_system_statusbar_clock_chip_endcolor").setEnabled(enableChip);
-				findPreference("pref_key_system_statusbar_clock_chip").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-					@Override
-					public boolean onPreferenceChange(Preference preference, Object newValue) {
-						findPreference("pref_key_system_statusbar_clock_chip_startcolor").setEnabled(enableChip);
-						findPreference("pref_key_system_statusbar_clock_chip_endcolor").setEnabled(enableChip);
-						return true;
-					}
-				});
-
 				findPreference("pref_key_system_statusbar_clock_chip_startcolor").setOnPreferenceClickListener(openColorSelector);
 				findPreference("pref_key_system_statusbar_clock_chip_endcolor").setOnPreferenceClickListener(openColorSelector);
 				break;

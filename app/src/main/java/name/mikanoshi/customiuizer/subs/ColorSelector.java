@@ -3,6 +3,7 @@ package name.mikanoshi.customiuizer.subs;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -10,6 +11,7 @@ import android.widget.SeekBar;
 import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.SubFragment;
 import name.mikanoshi.customiuizer.utils.ColorCircle;
+import name.mikanoshi.customiuizer.utils.Helpers;
 
 public class ColorSelector extends SubFragment {
 
@@ -18,7 +20,8 @@ public class ColorSelector extends SubFragment {
 	TextView white;
 	TextView black;
 	TextView auto;
-	View selColor;
+	TextView selectedColorHint;
+	View selectedColorView;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -27,7 +30,8 @@ public class ColorSelector extends SubFragment {
 	}
 
 	void updateSelColor(int color) {
-		((GradientDrawable)selColor.getBackground()).setColors(color == Color.TRANSPARENT ? new int[]{ Color.WHITE, Color.BLACK } : new int[]{ color, color });
+		((GradientDrawable) selectedColorView.getBackground()).setColors(color == Color.TRANSPARENT ? new int[]{ Color.WHITE, Color.BLACK } : new int[]{ color, color });
+		selectedColorHint.setText(String.format("#%08X", color));
 	}
 
 	@Override
@@ -38,18 +42,23 @@ public class ColorSelector extends SubFragment {
 		key = args.getString("key");
 
 		if (getView() == null) return;
-		selColor = getView().findViewById(R.id.selected_color);
-		selColor.setBackgroundResource(R.drawable.rounded_corners);
+		selectedColorView = getView().findViewById(R.id.selected_color);
+		selectedColorView.setBackgroundResource(R.drawable.rounded_corners);
+		selectedColorHint = getView().findViewById(R.id.selected_color_hint);
 		colorCircle = getView().findViewById(R.id.color_circle);
 		colorCircle.setTag(key);
-		colorCircle.init();
+		int prefColor = Helpers.prefs.getInt(key, Color.WHITE);
+		colorCircle.init(prefColor);
 		colorCircle.setListener(this::updateSelColor);
-		if (savedInstanceState != null) colorCircle.setColor(savedInstanceState.getInt("colorCircleColor"));
+		if (savedInstanceState != null) {
+			int savedColor = savedInstanceState.getInt("colorCircleColor");
+			colorCircle.setColor(savedColor, true);
+		}
 		int currentColor = colorCircle.getColor();
 		updateSelColor(currentColor);
 
-		SeekBar value = getView().findViewById(R.id.hsv_value);
-		value.setOnSeekBarChangeListener(new android.widget.SeekBar.OnSeekBarChangeListener() {
+		SeekBar hsvBar = getView().findViewById(R.id.hsv_value);
+		hsvBar.setOnSeekBarChangeListener(new android.widget.SeekBar.OnSeekBarChangeListener() {
 			@Override
 			public void onProgressChanged(android.widget.SeekBar seekBar, int progress, boolean fromUser) {
 				if (!fromUser) return;
@@ -64,7 +73,23 @@ public class ColorSelector extends SubFragment {
 		});
 		float[] hsv = new float[3];
 		Color.RGBToHSV(Color.red(currentColor), Color.green(currentColor), Color.blue(currentColor), hsv);
-		value.setProgress((int)(hsv[2] * 100), false);
+		hsvBar.setProgress((int)(hsv[2] * 100), false);
+
+		SeekBar alphaBar = getView().findViewById(R.id.alpha_value);
+		alphaBar.setOnSeekBarChangeListener(new android.widget.SeekBar.OnSeekBarChangeListener() {
+			@Override
+			public void onProgressChanged(android.widget.SeekBar seekBar, int progress, boolean fromUser) {
+				if (!fromUser) return;
+				colorCircle.setAlphaVal(progress);
+			}
+
+			@Override
+			public void onStartTrackingTouch(android.widget.SeekBar seekBar) {}
+
+			@Override
+			public void onStopTrackingTouch(android.widget.SeekBar seekBar) {}
+		});
+		alphaBar.setProgress(Color.alpha(currentColor), false);
 
 		white = getView().findViewById(R.id.white_color);
 		black = getView().findViewById(R.id.black_color);
@@ -77,7 +102,7 @@ public class ColorSelector extends SubFragment {
 			public void onClick(View v) {
 				setSelected(1);
 				colorCircle.setColor(Color.WHITE);
-				value.setProgress(100, false);
+				hsvBar.setProgress(100, false);
 			}
 		});
 
@@ -88,7 +113,7 @@ public class ColorSelector extends SubFragment {
 			public void onClick(View v) {
 				setSelected(2);
 				colorCircle.setColor(Color.BLACK);
-				value.setProgress(0, false);
+				hsvBar.setProgress(0, false);
 			}
 		});
 
@@ -100,7 +125,25 @@ public class ColorSelector extends SubFragment {
 			public void onClick(View v) {
 				setSelected(3);
 				colorCircle.setColor(Color.TRANSPARENT);
-				value.setProgress(0, false);
+				hsvBar.setProgress(0, false);
+			}
+		});
+
+		selectedColorHint.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Helpers.showInputDialog(getActivity(), selectedColorHint.getText().toString(), R.string.array_static, 0, 1, new Helpers.InputCallback() {
+					@Override
+					public void onInputFinished(String key, String text){
+						if (key != null && !TextUtils.isEmpty(text.trim())) {
+							try {
+								colorCircle.setColor(Color.parseColor(text), true);
+							}
+							catch (IllegalArgumentException e) {
+							}
+						}
+					}
+				}, false);
 			}
 		});
 	}

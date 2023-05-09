@@ -19,25 +19,74 @@
 		android:layout_below="@id/color_circle"
 		android:layout_centerHorizontal="true"
 		android:gravity="center_horizontal"
+		android:layout_marginTop="30dp"
 		android:orientation="vertical">
 
-		<FrameLayout
+		<View
 			android:id="@+id/selected_color"
-			android:layout_width="200dp"
-			android:layout_height="100dp"
-			android:layout_marginTop="50dp" />
+			android:layout_width="220dp"
+			android:layout_height="100dp" />
 
-		<android.widget.SeekBar
-			android:id="@+id/hsv_value"
-			android:layout_height="wrap_content"
-			android:layout_width="200dp"
-			android:layout_marginTop="15dp"
-			android:max="100" />
+		<TextView
+			android:id="@+id/selected_color_hint"
+			android:textColor="@color/preference_primary_text_color"
+			android:layout_width="wrap_content"
+			android:textIsSelectable="true"
+			android:layout_marginTop="10dp"
+			android:layout_height="wrap_content" />
+
+		<LinearLayout
+			android:layout_height="match_parent"
+			android:layout_width="220dp"
+			android:layout_marginTop="30dp"
+			android:gravity="center_vertical"
+			android:orientation="horizontal">
+
+			<android.widget.SeekBar
+				android:id="@+id/hsv_value"
+				android:layout_height="wrap_content"
+				android:layout_width="180dp"
+				android:min="0"
+				android:max="100" />
+
+			<TextView
+				android:textSize="12sp"
+				android:textColor="@color/preference_primary_text_color"
+				android:focusable="false"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:text="HSV"
+				android:singleLine="true" />
+		</LinearLayout>
+
+		<LinearLayout
+			android:layout_height="match_parent"
+			android:layout_width="220dp"
+			android:layout_marginTop="20dp"
+			android:gravity="center_vertical"
+			android:orientation="horizontal">
+
+			<android.widget.SeekBar
+				android:id="@+id/alpha_value"
+				android:layout_height="wrap_content"
+				android:layout_width="180dp"
+				android:min="0"
+				android:max="255" />
+
+			<TextView
+				android:textSize="12sp"
+				android:textColor="@color/preference_primary_text_color"
+				android:focusable="false"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:text="@string/system_visualizer_transp_title"
+				android:singleLine="true" />
+		</LinearLayout>
 
 		<LinearLayout
 			android:layout_height="match_parent"
 			android:layout_width="wrap_content"
-			android:layout_marginTop="15dp"
+			android:layout_marginTop="30dp"
 			android:orientation="horizontal">
 
 			<TextView
@@ -52,8 +101,8 @@
 				android:text="@string/white_color"
 				android:textAlignment="center"
 				android:singleLine="true"
-				android:paddingStart="20dp"
-				android:paddingEnd="20dp" />
+				android:paddingStart="15dp"
+				android:paddingEnd="15dp" />
 
 			<TextView
 				android:textSize="12sp"
@@ -68,8 +117,8 @@
 				android:text="@string/black_color"
 				android:textAlignment="center"
 				android:singleLine="true"
-				android:paddingStart="20dp"
-				android:paddingEnd="20dp"
+				android:paddingStart="15dp"
+				android:paddingEnd="15dp"
 				tools:ignore="RtlHardcoded" />
 
 			<TextView
@@ -86,8 +135,8 @@
 				android:text="@string/auto_color"
 				android:textAlignment="center"
 				android:singleLine="true"
-				android:paddingStart="20dp"
-				android:paddingEnd="20dp"
+				android:paddingStart="15dp"
+				android:paddingEnd="15dp"
 				tools:ignore="RtlHardcoded" />
 
 		</LinearLayout>

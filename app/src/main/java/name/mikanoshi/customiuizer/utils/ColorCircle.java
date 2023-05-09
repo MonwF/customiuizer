@@ -21,6 +21,7 @@ public class ColorCircle extends View {
 	private float radius;
 	private float innerRadius;
 	private int offset;
+	private int alphaVal;
 	private final Paint paint1 = new Paint();
 	private final Paint paint1a = new Paint();
 	private final Paint paint2 = new Paint();
@@ -43,16 +44,32 @@ public class ColorCircle extends View {
 	}
 
 	public int getColor() {
-		return this.mTransparent ? Color.TRANSPARENT : Color.HSVToColor(this.mColor);
+		if (this.mTransparent) {
+			return Color.TRANSPARENT;
+		}
+		int resColor = Color.HSVToColor(this.mColor);
+		return (this.alphaVal << 24) | (resColor & 0x00FFFFFF);
 	}
 
 	public void setColor(int color) {
+		this.setColor(color, false);
+	}
+
+	public void setColor(int color, boolean setAlpha) {
 		this.mTransparent = color == Color.TRANSPARENT;
 		Color.RGBToHSV(Color.red(color), Color.green(color), Color.blue(color), this.mColor);
-		if (this.listener != null) this.listener.onColorSelected(mTransparent ? Color.TRANSPARENT : Color.HSVToColor(this.mColor));
+		if (setAlpha) {
+			this.alphaVal = Color.alpha(color);
+		}
+		if (this.listener != null) this.listener.onColorSelected(getColor());
 		PointF coords = getPointForColor();
 		updatePickerPos(coords.x, coords.y);
 		postInvalidate();
+	}
+
+	public void setAlphaVal(int alphaV) {
+		this.alphaVal = alphaV;
+		if (this.listener != null) this.listener.onColorSelected(getColor());
 	}
 
 	private void update() {
@@ -100,7 +117,7 @@ public class ColorCircle extends View {
 		postInvalidate();
 	}
 
-	public void init() {
+	public void init(int prefColor) {
 		this.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 		this.paint1.setAntiAlias(true);
 		this.paint1a.setAntiAlias(true);
@@ -112,8 +129,8 @@ public class ColorCircle extends View {
 		this.paint3.setColor(Color.WHITE);
 		this.paint3.setStyle(Paint.Style.FILL_AND_STROKE);
 		this.offset = (int)getResources().getDimension(R.dimen.screen_color_preview_offset);
-		int prefColor = Helpers.prefs.getInt((String)getTag(), Color.WHITE);
 		this.mTransparent = prefColor == Color.TRANSPARENT;
+		this.alphaVal = Color.alpha(prefColor);
 		Color.RGBToHSV(Color.red(prefColor), Color.green(prefColor), Color.blue(prefColor), this.mColor);
 		update();
 		PointF coords = getPointForColor();
@@ -125,7 +142,7 @@ public class ColorCircle extends View {
 	public void setValue(float value) {
 		this.mTransparent = false;
 		this.mColor[2] = value;
-		if (this.listener != null) this.listener.onColorSelected(Color.HSVToColor(this.mColor));
+		if (this.listener != null) this.listener.onColorSelected(getColor());
 		postInvalidate();
 	}
 
@@ -170,7 +187,7 @@ public class ColorCircle extends View {
 		float y = motionEvent.getY();
 		updatePickerPos(x, y);
 		getColorForPoint((int)x, (int)y);
-		if (this.listener != null) this.listener.onColorSelected(Color.HSVToColor(this.mColor));
+		if (this.listener != null) this.listener.onColorSelected(getColor());
 		postInvalidate();
 
 		return true;
