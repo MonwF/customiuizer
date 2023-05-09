@@ -144,6 +144,11 @@
 			miuizer:indentLevel="1" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_cc_volume_showpct"
+			android:title="@string/system_cc_volume_showpct_title"
+			android:defaultValue="false" />
+		
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_volumetimer"
 			android:title="@string/system_volumetimer_title"
 			android:summary="@string/system_volumetimer_summ"
@@ -762,11 +767,6 @@
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_cc_disable_bluetooth_restrict"
 			android:title="@string/system_cc_disable_bluetooth_restrict_title"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_cc_volume_showpct"
-			android:title="@string/system_cc_volume_showpct_title"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
