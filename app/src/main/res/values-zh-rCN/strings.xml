@@ -184,6 +184,7 @@
     <string name="system_toasttime_note">显示时长始终大于 1 秒</string>
     <string name="system_autogroupnotif_title">自动分组通知</string>
     <string name="system_autogroupnotif_summ">触发自动分组的应用的通知数量</string>
+    <string name="system_betterpopups_disablewhenmute_title">静音时禁止浮动通知</string>
     <string name="system_mutevisiblenotif_title">亮屏时静音</string>
     <string name="system_mutevisiblenotif_summ">亮屏时弹出通知不播放提示音</string>
     <string name="system_notifmediaseekbar_title">媒体位置滑块</string>

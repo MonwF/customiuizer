@@ -981,6 +981,11 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_betterpopups_disablewhenmute"
+			android:title="@string/system_betterpopups_disablewhenmute_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_betterpopups_nohide"
 			android:summary="@string/system_betterpopups_nohide_summ"
 			android:title="@string/system_betterpopups_nohide_title"
