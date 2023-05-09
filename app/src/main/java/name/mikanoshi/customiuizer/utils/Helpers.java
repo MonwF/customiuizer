@@ -348,10 +348,20 @@ public class Helpers {
 	}
 
 	public static void showInputDialog(Context context, final String key, int titleRes, int summRes, int maxLines, InputCallback callback) {
+		showInputDialog(context, key, titleRes, summRes, maxLines, callback, true);
+	}
+
+	public static void showInputDialog(Context context, final String key, int titleRes, int summRes, int maxLines, InputCallback callback, boolean prefDefault) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setTitle(titleRes);
 		final EditText input = new EditText(context);
-		input.setText(prefs.getString(key, ""));
+		if (prefDefault) {
+			input.setText(prefs.getString(key, ""));
+		}
+		else {
+			input.setText(key);
+		}
+
 		if (maxLines > 1) {
 			input.setSingleLine(false);
 			input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
