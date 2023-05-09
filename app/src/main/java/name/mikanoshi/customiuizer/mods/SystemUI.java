@@ -4032,6 +4032,26 @@ public class SystemUI {
             }
         });
     }
+    public static void DisableHeadsUpWhenMuteHook(LoadPackageParam lpparam) {
+        final boolean[] mMuteVisible = {false};
+        MethodHook disableHeadsUpHook = new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                if (param.args.length != 2) return;
+                boolean canPopup = (boolean) param.getResult();
+                if (canPopup && mMuteVisible[0]) {
+                    param.setResult(false);
+                }
+            }
+        };
+        Helpers.hookAllMethods("com.android.systemui.statusbar.notification.interruption.MiuiNotificationInterruptStateProviderImpl", lpparam.classLoader, "shouldPeek", disableHeadsUpHook);
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarPolicy", lpparam.classLoader, "updateVolumeZen", new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                mMuteVisible[0] = XposedHelpers.getBooleanField(param.thisObject, "mMuteVisible");
+            }
+        });
+    }
 
     public static void HideLockscreenZenModeHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethod("com.android.systemui.statusbar.notification.zen.ZenModeViewController", lpparam.classLoader, "shouldBeVisible", XC_MethodReplacement.returnConstant(false));

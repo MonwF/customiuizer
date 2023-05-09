@@ -188,6 +188,7 @@
     <string name="system_toasttime_note">Resulting duration won\'t fall below 1 second</string>
     <string name="system_autogroupnotif_title">Auto group notifications</string>
     <string name="system_autogroupnotif_summ">Number of notifications from one app that triggers auto grouping</string>
+    <string name="system_betterpopups_disablewhenmute_title">Disable heads up notifications if volume is set to mute</string>
     <string name="system_mutevisiblenotif_title">Mute if visible</string>
     <string name="system_mutevisiblenotif_summ">Do not play notification sound if screen is on</string>
     <string name="system_notifmediaseekbar_title">Media position slider</string>
