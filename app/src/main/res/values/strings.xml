@@ -102,6 +102,7 @@
         \nd - one-digit day(2、23)
         \nE - short week(Sun)
         \na - AM、PM
+        \naa - Morning, Afternoon, Evening
         \nHH - 24-hour two-digit hour(09、14)
         \nH - 24-hour one-digit hour(9、14)
         \nhh - 12-hour two-digit hour(09、02)
