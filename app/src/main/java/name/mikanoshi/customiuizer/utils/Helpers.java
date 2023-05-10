@@ -122,6 +122,7 @@ public class Helpers {
 	public static final String MIUIZER_NS = "http://schemas.android.com/apk/res-auto";
 	public static final String ACCESS_SECURITY_CENTER = "com.miui.securitycenter.permission.ACCESS_SECURITY_CENTER_PROVIDER";
 	public static final String NEW_MODS_SEARCH_QUERY = "\uD83C\uDD95";
+	public static final String NOT_EXIST_SYMBOL = "ObjectFieldNotExist";
 	public static SharedPreferences prefs = null;
 	public static String prefsPathCurrent = null;
 	public static String prefsFileCurrent = null;
@@ -1750,6 +1751,14 @@ public class Helpers {
 			return XposedHelpers.getStaticObjectField(clazz, fieldName);
 		} catch (Throwable t) {
 			return null;
+		}
+	}
+
+	public static Object getObjectFieldSilently(Object obj, String fieldName) {
+		try {
+			return XposedHelpers.getObjectField(obj, fieldName);
+		} catch (Throwable t) {
+			return NOT_EXIST_SYMBOL;
 		}
 	}
 
