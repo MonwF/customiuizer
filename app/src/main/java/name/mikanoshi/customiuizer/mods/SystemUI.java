@@ -2138,8 +2138,17 @@ public class SystemUI {
                 Object timer = XposedHelpers.getObjectField(param.thisObject, "mTimerTime");
                 float halfTimerWidth = ((int) XposedHelpers.callMethod(timer, "getWidth")) / 2.0f;
                 Context mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
-                float seekWidth = mContext.getResources().getDimension(mContext.getResources().getIdentifier("miui_volume_timer_seelbar_width", "dimen", "miui.systemui.plugin"));
-                int marginLeft = mContext.getResources().getDimensionPixelSize(mContext.getResources().getIdentifier("miui_volume_timer_seekbar_margin_left", "dimen", "miui.systemui.plugin"));
+                Object mTimerSeekbarWidth = Helpers.getObjectFieldSilently(param.thisObject, "mTimerSeekbarWidth");
+                int seekbarWidthResId;
+                if (Helpers.NOT_EXIST_SYMBOL.equals(mTimerSeekbarWidth)) {
+                    seekbarWidthResId = mContext.getResources().getIdentifier("miui_volume_timer_seelbar_width", "dimen", "miui.systemui.plugin");
+                }
+                else {
+                    seekbarWidthResId = (int) mTimerSeekbarWidth;
+                }
+                int mTimerSeekbarMarginLeft = mContext.getResources().getIdentifier("miui_volume_timer_seekbar_margin_left", "dimen", "miui.systemui.plugin");
+                float seekWidth = mContext.getResources().getDimension(seekbarWidthResId);
+                int marginLeft = mContext.getResources().getDimensionPixelSize(mTimerSeekbarMarginLeft);
                 int seg = (int) XposedHelpers.getObjectField(param.thisObject, "mDeterminedSegment");
                 param.setResult(seekWidth / 10 * seg + marginLeft - halfTimerWidth);
             }
