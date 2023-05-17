@@ -660,6 +660,7 @@ public class System extends SubFragment {
 
 				findPreference("pref_key_system_statusbar_clock_chip_startcolor").setOnPreferenceClickListener(openColorSelector);
 				findPreference("pref_key_system_statusbar_clock_chip_endcolor").setOnPreferenceClickListener(openColorSelector);
+				findPreference("pref_key_system_statusbar_clock_chip_textcolor").setOnPreferenceClickListener(openColorSelector);
 				break;
 		}
 	}
