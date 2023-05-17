@@ -498,6 +498,7 @@
     <string name="system_qqsgridcolumns_note">Landscape orientation will have one additional column.</string>
     <string name="system_qsnolabels_title">Remove labels completely</string>
     <string name="system_qs_hideoperator_title">Hide carrier name</string>
+    <string name="system_qs_hideoperator_delimiter_title">Hide delimiter between carrier name</string>
     <string name="system_qshaptic_title">Quick settings haptic feedback</string>
     <string name="system_qshaptic_summ">Vibrate on Quick settings tile tap</string>
     <string name="system_mods_other">Other</string>

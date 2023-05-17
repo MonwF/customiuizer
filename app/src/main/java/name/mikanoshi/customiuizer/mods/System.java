@@ -654,16 +654,13 @@ public class System {
                     public boolean onTouch(View v, MotionEvent event) {
                         if (event.getAction() != MotionEvent.ACTION_DOWN) return false;
 
-                        long currentTouchTime = (long)XposedHelpers.getAdditionalInstanceField(view, "currentTouchTime");
-                        float currentTouchX = (float)XposedHelpers.getAdditionalInstanceField(view, "currentTouchX");
-                        float currentTouchY = (float)XposedHelpers.getAdditionalInstanceField(view, "currentTouchY");
+                        long lastTouchTime = (long)XposedHelpers.getAdditionalInstanceField(view, "currentTouchTime");
+                        float lastTouchX = (float)XposedHelpers.getAdditionalInstanceField(view, "currentTouchX");
+                        float lastTouchY = (float)XposedHelpers.getAdditionalInstanceField(view, "currentTouchY");
 
-                        long lastTouchTime = currentTouchTime;
-                        float lastTouchX = currentTouchX;
-                        float lastTouchY = currentTouchY;
-                        currentTouchTime = currentTimeMillis();
-                        currentTouchX = event.getX();
-                        currentTouchY = event.getY();
+                        long currentTouchTime = java.lang.System.currentTimeMillis();
+                        float currentTouchX = event.getX();
+                        float currentTouchY = event.getY();
 
                         if (currentTouchTime - lastTouchTime < 250L && Math.abs(currentTouchX - lastTouchX) < 100F && Math.abs(currentTouchY - lastTouchY) < 100F) {
                             KeyguardManager keyguardMgr = (KeyguardManager)v.getContext().getSystemService(Context.KEYGUARD_SERVICE);
@@ -1975,33 +1972,20 @@ public class System {
     }
 
     public static void HideCCOperatorHook(LoadPackageParam lpparam) {
-        MethodHook hideOperatorHook = new MethodHook() {
+        boolean hideOperator = MainModule.mPrefs.getBoolean("system_qs_hideoperator");
+        boolean hideDelimiter = MainModule.mPrefs.getBoolean("system_cc_hideoperator_delimiter");
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.MiuiCarrierTextController", lpparam.classLoader, "fireCarrierTextChanged", String.class, new MethodHook() {
             @Override
-            protected void after(MethodHookParam param) throws Throwable {
-                Object carrierView;
-                TextView mCarrierText;
-                try {
-                    carrierView = XposedHelpers.getObjectField(param.thisObject, "carrierText");
+            protected void before(MethodHookParam param) throws Throwable {
+                if (hideOperator) {
+                    param.args[0] = "";
                 }
-                catch (Throwable e) {
-                    carrierView = XposedHelpers.getObjectField(param.thisObject, "mCarrierText");
+                else if (hideDelimiter) {
+                    String mCurrentCarrier = (String) param.args[0];
+                    param.args[0] = mCurrentCarrier.replace(" | ", "");
                 }
-                mCarrierText = (TextView) carrierView;
-                mCarrierText.setVisibility(View.GONE);
             }
-        };
-
-        boolean hookedFlaresInfo = Helpers.hookAllMethodsSilently("com.android.systemui.controlcenter.phone.widget.ControlCenterStatusBar", lpparam.classLoader, "updateFlaresInfo", hideOperatorHook);
-        if (!hookedFlaresInfo) {
-            Helpers.findAndHookMethod("com.android.systemui.controlcenter.phone.widget.ControlCenterStatusBar", lpparam.classLoader, "onFinishInflate", hideOperatorHook);
-        }
-
-        Helpers.findAndHookMethod("com.android.systemui.qs.MiuiNotificationHeaderView", lpparam.classLoader, "updateCarrierTextVisibility", hideOperatorHook);
-
-        hookedFlaresInfo = Helpers.hookAllMethodsSilently("com.android.systemui.qs.MiuiQSHeaderView", lpparam.classLoader, "updateFlaresInfo", hideOperatorHook);
-        if (!hookedFlaresInfo) {
-            Helpers.findAndHookMethod("com.android.systemui.qs.MiuiQSHeaderView", lpparam.classLoader, "onFinishInflate", hideOperatorHook);
-        }
+        });
     }
 
     public static void CollapseCCAfterClickHook(LoadPackageParam lpparam) {
