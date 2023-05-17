@@ -483,6 +483,7 @@
     <string name="system_qqsgridcolumns_note">横屏时将会额外增加一列。</string>
     <string name="system_qsnolabels_title">移除磁贴标签</string>
     <string name="system_qs_hideoperator_title">隐藏运营商名称</string>
+    <string name="system_qs_hideoperator_delimiter_title">隐藏运营商名称之间的分隔线</string>
     <string name="system_qshaptic_title">快速设置触觉反馈</string>
     <string name="system_qshaptic_summ">点击快速设置磁贴时振动</string>
     <string name="system_mods_other">其他</string>
