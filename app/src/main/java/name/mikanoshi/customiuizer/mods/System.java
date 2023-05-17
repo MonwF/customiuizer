@@ -926,8 +926,23 @@ public class System {
                 }
                 mClock.setLayoutParams(lp);
 
+                boolean useMonet = MainModule.mPrefs.getBoolean("system_statusbar_clock_chip_usemonet");
+                boolean enableCustomText = MainModule.mPrefs.getBoolean("system_statusbar_clock_chip_customtextcolor");
+                if (useMonet || enableCustomText) {
+                    XposedHelpers.setObjectField(mClock, "mUseWallpaperTextColor", true);
+                }
+
                 int startColor = MainModule.mPrefs.getInt("system_statusbar_clock_chip_startcolor", 0x8F7C4DFF);
                 int endColor = MainModule.mPrefs.getInt("system_statusbar_clock_chip_endcolor", 0x2FA7FFEB);
+                if (useMonet) {
+                    mClock.setTextColor(Resources.getSystem().getColor(android.R.color.system_accent2_0, null));
+                    startColor = Resources.getSystem().getColor(android.R.color.system_accent2_600, null);
+                    endColor = startColor;
+                }
+                else if (enableCustomText) {
+                    int textcolor = MainModule.mPrefs.getInt("system_statusbar_clock_chip_textcolor", 0xFFFFFFFF);
+                    mClock.setTextColor(textcolor);
+                }
                 GradientDrawable chipDrawable = new GradientDrawable();
                 chipDrawable.setOrientation(GradientDrawable.Orientation.LEFT_RIGHT);
                 chipDrawable.setColors(new int[]{startColor, endColor});

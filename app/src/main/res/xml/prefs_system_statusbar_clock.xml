@@ -43,6 +43,13 @@
 		android:title="@string/system_statusbar_clock_chip_title"
 		android:defaultValue="false" />
 
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbar_clock_chip_usemonet"
+		android:title="@string/array_dynamic"
+		android:dependency="pref_key_system_statusbar_clock_chip"
+		android:disableDependentsState="true"
+		miuizer:indentLevel="1" />
+
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_system_statusbar_clock_chip_startcolor"
 		android:title="@string/system_statusbar_clock_chip_startcolor_title"
@@ -54,6 +61,18 @@
 		android:title="@string/system_statusbar_clock_chip_endcolor_title"
 		android:dependency="pref_key_system_statusbar_clock_chip"
 		miuizer:indentLevel="1" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbar_clock_chip_customtextcolor"
+		android:title="@string/system_statusbar_clock_chip_customtextcolor_title"
+		android:dependency="pref_key_system_statusbar_clock_chip_usemonet"
+		miuizer:indentLevel="1" />
+
+	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		android:key="pref_key_system_statusbar_clock_chip_textcolor"
+		android:title="@string/array_static"
+		android:dependency="pref_key_system_statusbar_clock_chip_customtextcolor"
+		miuizer:indentLevel="2" />
 
 	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_statusbar_clock_chip_horizpadding"
