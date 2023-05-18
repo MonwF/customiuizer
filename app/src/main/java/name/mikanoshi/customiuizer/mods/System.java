@@ -935,8 +935,8 @@ public class System {
                 int startColor = MainModule.mPrefs.getInt("system_statusbar_clock_chip_startcolor", 0x8F7C4DFF);
                 int endColor = MainModule.mPrefs.getInt("system_statusbar_clock_chip_endcolor", 0x2FA7FFEB);
                 if (useMonet) {
-                    mClock.setTextColor(Resources.getSystem().getColor(android.R.color.system_accent2_0, null));
-                    startColor = Resources.getSystem().getColor(android.R.color.system_accent2_600, null);
+                    mClock.setTextColor(mClock.getResources().getColor(android.R.color.system_accent1_0, null));
+                    startColor = mClock.getResources().getColor(android.R.color.system_accent1_600, null);
                     endColor = startColor;
                 }
                 else if (enableCustomText) {
