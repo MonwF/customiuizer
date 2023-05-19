@@ -73,8 +73,14 @@
     <string name="system_clockseconds_title">秒を表示</string>
     <string name="system_cc_hidedate_title">日付を非表示</string>
     <string name="system_clock_show_ampm_title">AM|PMを表示</string>
+    <string name="system_statusbar_clock_chip_title">時刻の後部にカラフルなバブルを表示</string>
+    <string name="system_statusbar_clock_chip_radius_title">コーナーの丸み</string>
+    <string name="system_statusbar_clock_chip_startcolor_title">開始の色</string>
+    <string name="system_statusbar_clock_chip_endcolor_title">終了の色</string>
+    <string name="system_statusbar_clock_chip_verticalpadding_title">垂直方向のパディング</string>
     <string name="system_clock_time_format_title">24時間形式で表示</string>
     <string name="system_clock_leadingzero_title">ゼロから始まる時刻で表示</string>
+    <string name="system_clock_leadingspace_title">時間にスペースの文字を追加</string>
     <string name="system_clock_customformat_enable_title">カスタムをした形式を有効化</string>
     <string name="system_clock_customformat_setting_title">形式を設定</string>
     <string name="system_clock_customformat_help_summ">        改行が可能です、2行目以降は切り捨てとなります
@@ -172,6 +178,7 @@
     <string name="system_toasttime_note">1秒以下に下回らせる事はできません</string>
     <string name="system_autogroupnotif_title">自動グループ通知</string>
     <string name="system_autogroupnotif_summ">自動グループ化のトリガーにするアプリの通知数</string>
+    <string name="system_betterpopups_disablewhenmute_title">音量がミュートに設定されている場合のヘッドアップ通知を無効化</string>
     <string name="system_mutevisiblenotif_title">表示中はミュートにする</string>
     <string name="system_mutevisiblenotif_summ">画面の表示中は通知音を鳴らさないようにします</string>
     <string name="system_notifmediaseekbar_title">シーク可能なメディア通知スライダー</string>
@@ -318,7 +325,7 @@
     <string name="system_mods_lockscreen">ロック画面</string>
     <string name="system_mods_lockscreen_functionality">追加機能</string>
     <string name="system_mods_lockscreen_security">セキュリティ</string>
-  <string name="system_blocktoasts_title">トースト通知をブロック</string>
+    <string name="system_blocktoasts_title">トースト通知をブロック</string>
     <string name="system_blocktoasts_summ">選択をしたアプリでトースト通知を表示しないようにします</string>
     <string name="system_airplanemodeconfig_title">機内モードの設定</string>
     <string name="system_airplanemodeconfig_summ">機内モード時の通信を許可する定義を設定します。再起動の必要はありません。</string>
@@ -389,6 +396,7 @@
     <string name="system_hidelsstatusbar_title">ステータスバーを非表示</string>
     <string name="system_hidelsstatusbar_summ">ロック画面からステータスバーを非表示</string>
     <string name="system_hidelsclock_title">トップブロック部分を非表示</string>
+    <string name="system_lockscreen_hidezenmode_title">Zenモードの通知を非表示</string>
     <string name="system_hidelsclock_summ">時計や日付などの情報が表示されるトップブロック部分を非表示にします</string>
     <string name="system_hidelshint_title">ロック解除のヒントを非表示</string>
     <string name="system_hidelshint_summ">「上にスワイプしてロックを解除」のヒントを非表示にします</string>
