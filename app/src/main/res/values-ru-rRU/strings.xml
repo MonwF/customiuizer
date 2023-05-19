@@ -73,8 +73,14 @@
     <string name="system_clockseconds_title">Показывать секунды</string>
     <string name="system_cc_hidedate_title">Скрыть дату</string>
     <string name="system_clock_show_ampm_title">Показать AM|PM</string>
+    <string name="system_statusbar_clock_chip_title">Показать пузырь под часами</string>
+    <string name="system_statusbar_clock_chip_radius_title">Радиус скругления</string>
+    <string name="system_statusbar_clock_chip_startcolor_title">Начальный цвет</string>
+    <string name="system_statusbar_clock_chip_endcolor_title">Конечный цвет</string>
+    <string name="system_statusbar_clock_chip_verticalpadding_title">Вертикальный отступ</string>
     <string name="system_clock_time_format_title">24-часовой формат</string>
     <string name="system_clock_leadingzero_title">Показать начало от нуля до часов</string>
+    <string name="system_clock_leadingspace_title">Добавить пробел в часы</string>
     <string name="system_clock_customformat_enable_title">Включить собственный формат</string>
     <string name="system_clock_customformat_setting_title">Задать формат</string>
     <string name="system_clock_customformat_help_summ">Можно ввести символ переноса строки, содержимое после 2 строк будет усечено.
@@ -171,6 +177,7 @@
     <string name="system_toasttime_note">Итоговая продолжительность не опустится ниже 1 секунды</string>
     <string name="system_autogroupnotif_title">Автогруппировка уведомлений</string>
     <string name="system_autogroupnotif_summ">Число уведомлений от одного приложения при котором срабатывает их автоматическая группировка</string>
+    <string name="system_betterpopups_disablewhenmute_title">Отключить всплывающие уведомления, если звук выключен</string>
     <string name="system_mutevisiblenotif_title">Заглушить видимые</string>
     <string name="system_mutevisiblenotif_summ">Не проигрывать звук уведомления при включенном экране</string>
     <string name="system_notifmediaseekbar_title">Слайдер медиа позиции</string>
@@ -388,6 +395,7 @@
     <string name="system_hidelsstatusbar_title">Скрыть строку состояния</string>
     <string name="system_hidelsstatusbar_summ">Удаляет строку состояния с экрана блокировки</string>
     <string name="system_hidelsclock_title">Скрыть верхний блок</string>
+    <string name="system_lockscreen_hidezenmode_title">Скрыть злые уведомления</string>
     <string name="system_hidelsclock_summ">Удаляет верхний блок, содержащий часы, дату и другие данные</string>
     <string name="system_hidelshint_title">Скрыть подсказку разблокировки</string>
     <string name="system_hidelshint_summ">Удаляет надпись \"Проведите вверх для разблокировки\"</string>
@@ -1074,10 +1082,12 @@
     <string name="system_statusbar_batterytempandcurrentatright_title">Отображать справа</string>
     <string name="system_statusbar_batterytempandcurrent_positive_title">Текущее значение всегда положительно</string>
     <string name="system_statusbar_batterytempandcurrent_incharge_title">Показывать только при зарядке</string>
+    <string name="system_statusbar_batterytempandcurrent_fixcurrentratio_title">Исправь текущее значение на некоторых устройствах</string>
     <string name="system_statusbar_batterytempandcurrent_hideunit_title">Скрыть единицу</string>
     <string name="system_statusbar_batterytempandcurrent_singlerow_title">Отображать в одной строке</string>
     <string name="system_statusbar_batterytempandcurrent_reverseorder_title">Обратный порядок</string>
     <string name="system_statusbar_showdevicetemperature_title">Отображать температуру устройства</string>
+    <string name="system_statusbar_batterystyle_title">Стиль иконки батареи</string>
     <string name="system_statusbar_batterystyle_digit_title">Цифра батареи</string>
     <string name="system_statusbar_batterystyle_mark_fontsize_title">Размер шрифта знака в процентах</string>
     <string name="system_statusbar_batterystyle_mark_verticaloffset_title">Смещение знака в процентах по вертикали</string>
@@ -1126,5 +1136,6 @@
     <string name="system_cc_disable_bluetooth_restrict_title">Выключить отключение Bluetooth до завтра</string>
     <string name="system_cc_volume_showpct_title">Показывать проценты громкости</string>
     <string name="system_cc_collapse_after_clicked_title">Свернуть после касания</string>
+    <string name="system_cc_switch_ccandnotification_title">Сменить центр управления и панель уведомлений</string>
     <string name="system_cc_clock_topmargin_indrawer_title">Верхнее поле часов в панели уведомлений</string>
 </resources>
