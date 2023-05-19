@@ -74,8 +74,14 @@
     <string name="system_clockseconds_title">Zobrazit vteřiny</string>
     <string name="system_cc_hidedate_title">Skrýt datum</string>
     <string name="system_clock_show_ampm_title">Zobrazit AM|PM</string>
+    <string name="system_statusbar_clock_chip_title">Zobrazit barevnou bublinu za časem</string>
+    <string name="system_statusbar_clock_chip_radius_title">Zaoblení rohů</string>
+    <string name="system_statusbar_clock_chip_startcolor_title">Počáteční barva</string>
+    <string name="system_statusbar_clock_chip_endcolor_title">Konečná barva</string>
+    <string name="system_statusbar_clock_chip_verticalpadding_title">Svislá výplň</string>
     <string name="system_clock_time_format_title">24-hodinový formát</string>
     <string name="system_clock_leadingzero_title">Zobrazit nulu před hodinami</string>
+    <string name="system_clock_leadingspace_title">Přidat znak mezery do hodin</string>
     <string name="system_clock_customformat_enable_title">Povolit vlastní formát</string>
     <string name="system_clock_customformat_setting_title">Nastavit formát</string>
     <string name="system_clock_customformat_help_summ">        Lze zadat nový řádek, obsah po 2 řádcích bude zkrácen.
@@ -173,6 +179,7 @@
     <string name="system_toasttime_note">Výsledná doba trvání neklesne pod 1 sekundu</string>
     <string name="system_autogroupnotif_title">Automatická skupinová oznámení</string>
     <string name="system_autogroupnotif_summ">Počet oznámení z jedné aplikace, která spustí automatické seskupování</string>
+    <string name="system_betterpopups_disablewhenmute_title">Zakázat plovoucí oznámení, pokud je hlasitost ztlumena</string>
     <string name="system_mutevisiblenotif_title">Ztlumení, je-li viditelné</string>
     <string name="system_mutevisiblenotif_summ">Nepřehrávat zvuk oznámení, pokud je obrazovka zapnutá</string>
     <string name="system_notifmediaseekbar_title">Posuvník pozice médií</string>
@@ -390,6 +397,7 @@
     <string name="system_hidelsstatusbar_title">Skrýt stavový řádek</string>
     <string name="system_hidelsstatusbar_summ">Skrýt stavový řádek na uzamčené obrazovce</string>
     <string name="system_hidelsclock_title">Skrýt horní blok</string>
+    <string name="system_lockscreen_hidezenmode_title">Skrýt upozornění zen módu</string>
     <string name="system_hidelsclock_summ">Odstranit horní blok obsahující hodiny, datum a další údaje</string>
     <string name="system_hidelshint_title">Skrýt nápovědu k odemknutí</string>
     <string name="system_hidelshint_summ">Odstranit nápovědy k odemknutí přejetím nahoru</string>
@@ -1146,5 +1154,6 @@
     <string name="system_cc_disable_bluetooth_restrict_title">Zakázat odpojování bluetooth do zítřka</string>
     <string name="system_cc_volume_showpct_title">Zobrazit procenta hlasitosti</string>
     <string name="system_cc_collapse_after_clicked_title">Sbalit po dotyku</string>
+    <string name="system_cc_switch_ccandnotification_title">Přepnout ovládací centrum a oznamovací lištu</string>
     <string name="system_cc_clock_topmargin_indrawer_title">Horní okraj hodin v oznamovací liště</string>
 </resources>
