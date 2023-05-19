@@ -127,7 +127,7 @@
     <string name="system_statusbar_mobile_showname_title">自定义移动网络类型</string>
     <string name="system_hidemoreicon_title">不显示隐藏图标指示器</string>
     <string name="system_hidemoreicon_summ">隐藏通知图标时不显示3点图标</string>
-    <string name="system_hidestatusbar_whenscreenshot_title">截屏时隐藏状态栏</string>
+    <string name="system_hidestatusbar_whenscreenshot_title">截图时隐藏状态栏</string>
     <string name="system_nonetspeedseparator_title">网速分隔符</string>
     <string name="system_nonetspeedseparator_summ">于水滴屏的设备上不显示时间和网速间的竖线</string>
     <string name="system_netspeedinterval_title">网速更新间隔</string>
