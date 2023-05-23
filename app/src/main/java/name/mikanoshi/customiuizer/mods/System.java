@@ -4274,16 +4274,20 @@ public class System {
                 @Override
                 protected void after(MethodHookParam param) throws Throwable {
                     Context mContext = (Context) param.args[0];
-                    String versionName = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName;
-                    if (versionName.contains("1.4.34")) {
-                        Helpers.hookAllMethods("com.miui.screenshot.x0.e$a", lpparam.classLoader, "a", new MethodHook() {
-                            @Override
-                            protected void before(MethodHookParam param) throws Throwable {
-                                if (param.args.length != 7) return;
-                                Bitmap.CompressFormat compress = format <= 2 ? Bitmap.CompressFormat.JPEG : (format == 3 ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.WEBP);
-                                param.args[4] = compress;
-                            }
-                        });
+                    long versionCode = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionCode;
+                    MethodHook changeFormatHook = new MethodHook() {
+                        @Override
+                        protected void before(MethodHookParam param) throws Throwable {
+                            if (param.args.length != 7) return;
+                            Bitmap.CompressFormat compress = format <= 2 ? Bitmap.CompressFormat.JPEG : (format == 3 ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.WEBP);
+                            param.args[4] = compress;
+                        }
+                    };
+                    if (versionCode >= 10400056) {
+                        Helpers.hookAllMethods("com.miui.screenshot.u0.f$a", lpparam.classLoader, "a", changeFormatHook);
+                    }
+                    else if (versionCode >= 10400034) {
+                        Helpers.hookAllMethods("com.miui.screenshot.x0.e$a", lpparam.classLoader, "a", changeFormatHook);
                     }
                 }
             });
