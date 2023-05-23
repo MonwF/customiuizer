@@ -295,6 +295,7 @@
     <string name="system_secureqs_airplane_title">Airplane mode</string>
     <string name="system_secureqs_location_title">Location</string>
     <string name="system_secureqs_sync_title">Synchronization</string>
+    <string name="system_lockscreen_strongauth_72h_title">Disable forced primary authentication every 72 hours</string>
     <string name="system_nopassword_title">No password after boot</string>
     <string name="system_nopassword_summ">Do not require password instead of a fingerprint first time after boot. Unlikely to work on encrypted devices.</string>
     <string name="system_albumartonlock_title">Album art as wallpaper</string>

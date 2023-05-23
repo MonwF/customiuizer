@@ -290,6 +290,7 @@
     <string name="system_secureqs_airplane_title">飞行模式</string>
     <string name="system_secureqs_location_title">位置</string>
     <string name="system_secureqs_sync_title">同步</string>
+    <string name="system_lockscreen_strongauth_72h_title">取消每72小时需执行一次强认证</string>
     <string name="system_nopassword_title">开机免密</string>
     <string name="system_nopassword_summ">开机后首次解锁不需要密码。此项对加密的设备无效。</string>
     <string name="system_albumartonlock_title">专辑封面设为壁纸</string>
