@@ -1987,18 +1987,41 @@ public class System {
     }
 
     public static void HideCCOperatorHook(LoadPackageParam lpparam) {
-        boolean hideOperator = MainModule.mPrefs.getBoolean("system_qs_hideoperator");
-        boolean hideDelimiter = MainModule.mPrefs.getBoolean("system_cc_hideoperator_delimiter");
+        MethodHook hideOperatorHook = new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                Object carrierView;
+                TextView mCarrierText;
+                try {
+                    carrierView = XposedHelpers.getObjectField(param.thisObject, "carrierText");
+                }
+                catch (Throwable e) {
+                    carrierView = XposedHelpers.getObjectField(param.thisObject, "mCarrierText");
+                }
+                mCarrierText = (TextView) carrierView;
+                mCarrierText.setVisibility(View.GONE);
+            }
+        };
+
+        boolean hookedFlaresInfo = Helpers.hookAllMethodsSilently("com.android.systemui.controlcenter.phone.widget.ControlCenterStatusBar", lpparam.classLoader, "updateFlaresInfo", hideOperatorHook);
+        if (!hookedFlaresInfo) {
+            Helpers.findAndHookMethod("com.android.systemui.controlcenter.phone.widget.ControlCenterStatusBar", lpparam.classLoader, "onFinishInflate", hideOperatorHook);
+        }
+
+        Helpers.findAndHookMethod("com.android.systemui.qs.MiuiNotificationHeaderView", lpparam.classLoader, "updateCarrierTextVisibility", hideOperatorHook);
+
+        hookedFlaresInfo = Helpers.findAndHookMethodSilently("com.android.systemui.qs.MiuiQSHeaderView", lpparam.classLoader, "updateCarrierVisibility", hideOperatorHook);
+        if (!hookedFlaresInfo) {
+            Helpers.findAndHookMethod("com.android.systemui.qs.MiuiQSHeaderView", lpparam.classLoader, "onFinishInflate", hideOperatorHook);
+        }
+    }
+
+    public static void HideCCOperatorDelimiterHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.MiuiCarrierTextController", lpparam.classLoader, "fireCarrierTextChanged", String.class, new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
-                if (hideOperator) {
-                    param.args[0] = "";
-                }
-                else if (hideDelimiter) {
-                    String mCurrentCarrier = (String) param.args[0];
-                    param.args[0] = mCurrentCarrier.replace(" | ", "");
-                }
+                String mCurrentCarrier = (String) param.args[0];
+                param.args[0] = mCurrentCarrier.replace(" | ", "");
             }
         });
     }
