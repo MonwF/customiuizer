@@ -5728,4 +5728,8 @@ public class System {
             }
         });
     }
+
+    public static void Disable72hStrongAuthHook(LoadPackageParam lpparam) {
+        Helpers.findAndHookMethod("com.android.server.locksettings.LockSettingsStrongAuth", lpparam.classLoader, "rescheduleStrongAuthTimeoutAlarm", long.class, int.class, XC_MethodReplacement.DO_NOTHING);
+    }
 }

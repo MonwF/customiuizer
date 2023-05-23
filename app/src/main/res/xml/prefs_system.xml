@@ -1207,6 +1207,11 @@
 			android:title="@string/system_nopassword_title"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_lockscreen_disable_strongauth_72h"
+			android:title="@string/system_lockscreen_strongauth_72h_title"
+			android:defaultValue="false" />
+
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_noscreenlock_cat"
 			android:summary="@string/system_noscreenlock_summ"
