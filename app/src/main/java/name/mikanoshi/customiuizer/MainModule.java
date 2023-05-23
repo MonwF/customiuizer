@@ -147,6 +147,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_cleanshare")) System.CleanShareMenuServiceHook(lpparam);
             if (mPrefs.getBoolean("system_cleanopenwith")) System.CleanOpenWithMenuServiceHook(lpparam);
             if (mPrefs.getBoolean("system_autobrightness")) System.AutoBrightnessRangeHook(lpparam);
+            if (mPrefs.getBoolean("system_lockscreen_disable_strongauth_72h")) System.Disable72hStrongAuthHook(lpparam);
             if (mPrefs.getBoolean("system_applock")) System.AppLockHook(lpparam);
             if (mPrefs.getBoolean("system_applock_skip")) System.SkipAppLockHook(lpparam);
             if (mPrefs.getBoolean("various_alarmcompat")) Various.AlarmCompatServiceHook(lpparam);
