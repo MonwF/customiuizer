@@ -77,6 +77,7 @@
     <string name="system_statusbar_clock_chip_radius_title">コーナーの丸み</string>
     <string name="system_statusbar_clock_chip_startcolor_title">開始の色</string>
     <string name="system_statusbar_clock_chip_endcolor_title">終了の色</string>
+    <string name="system_statusbar_clock_chip_customtextcolor_title">カスタムテキストの色</string>
     <string name="system_statusbar_clock_chip_verticalpadding_title">垂直方向のパディング</string>
     <string name="system_clock_time_format_title">24時間形式で表示</string>
     <string name="system_clock_leadingzero_title">ゼロから始まる時刻で表示</string>
@@ -283,6 +284,7 @@
     <string name="system_secureqs_airplane_title">機内モード</string>
     <string name="system_secureqs_location_title">位置情報</string>
     <string name="system_secureqs_sync_title">同期</string>
+    <string name="system_lockscreen_strongauth_72h_title">72時間毎の強制的なプライマリ認証を無効化</string>
     <string name="system_nopassword_title">起動時にパスワードを要求しない</string>
     <string name="system_nopassword_summ">起動時に指紋認証の代わりにパスワードを要求しないようにします。暗号化されたデバイスでは動作しない可能性があります。</string>
     <string name="system_albumartonlock_title">アルバムアートをロック画面に表示する</string>
@@ -483,7 +485,8 @@
     <string name="system_qqsgridcolumns_title">折りたたまれたパネルの行数</string>
     <string name="system_qqsgridcolumns_note">横方向の場合は1列が追加されます</string>
     <string name="system_qsnolabels_title">ラベルを完全に非表示</string>
-    <string name="system_qs_hideoperator_title">通信事業者名を非表示にする</string>
+    <string name="system_qs_hideoperator_title">通信事業者名を非表示</string>
+    <string name="system_qs_hideoperator_delimiter_title">通信事業者名の区切り文字を非表示</string>
     <string name="system_qshaptic_title">クイック設定の触覚フィードバック</string>
     <string name="system_qshaptic_summ">クイック設定のバイブレーションのタイルをタップ時の触覚フィードバック</string>
     <string name="system_mods_other">その他</string>
