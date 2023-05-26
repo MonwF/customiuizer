@@ -78,6 +78,7 @@
     <string name="system_statusbar_clock_chip_radius_title">Zaoblení rohů</string>
     <string name="system_statusbar_clock_chip_startcolor_title">Počáteční barva</string>
     <string name="system_statusbar_clock_chip_endcolor_title">Konečná barva</string>
+    <string name="system_statusbar_clock_chip_customtextcolor_title">Vlastní barva textu</string>
     <string name="system_statusbar_clock_chip_verticalpadding_title">Svislá výplň</string>
     <string name="system_clock_time_format_title">24-hodinový formát</string>
     <string name="system_clock_leadingzero_title">Zobrazit nulu před hodinami</string>
@@ -485,6 +486,7 @@
     <string name="system_qqsgridcolumns_note">V orientaci na šířku bude jeden sloupec navíc.</string>
     <string name="system_qsnolabels_title">Úplné odstranění štítků</string>
     <string name="system_qs_hideoperator_title">Skrýt název operátora</string>
+    <string name="system_qs_hideoperator_delimiter_title">Skrýt oddělovač názvu operátora</string>
     <string name="system_qshaptic_title">Rychlé nastavení hmatové zpětné vazby</string>
     <string name="system_qshaptic_summ">Vibrace u dlaždice Rychlá nastavení ťuknutím na položku</string>
     <string name="system_mods_other">Jiné</string>
