@@ -77,6 +77,7 @@
     <string name="system_statusbar_clock_chip_radius_title">Góc bo tròn</string>
     <string name="system_statusbar_clock_chip_startcolor_title">Màu bắt đầu</string>
     <string name="system_statusbar_clock_chip_endcolor_title">Màu kết thúc</string>
+    <string name="system_statusbar_clock_chip_customtextcolor_title">Tùy chỉnh màu sắc văn bản</string>
     <string name="system_statusbar_clock_chip_verticalpadding_title">Lề dọc</string>
     <string name="system_clock_time_format_title">Sử dụng định dạng 24 giờ</string>
     <string name="system_clock_leadingzero_title">Hiển thị dưới dạng thời gian bắt đầu từ số không</string>
@@ -484,6 +485,7 @@
     <string name="system_qqsgridcolumns_note">Một cột bổ sung sẽ được thêm vào theo hướng ngang.</string>
     <string name="system_qsnolabels_title">Xóa thẻ hoàn toàn</string>
     <string name="system_qs_hideoperator_title">Ẩn tên nhà mạng</string>
+    <string name="system_qs_hideoperator_delimiter_title">Ẩn dấu phân cách giữa tên nhà mạng</string>
     <string name="system_qshaptic_title">Phản hồi xúc giác trong cài đặt nhanh</string>
     <string name="system_qshaptic_summ">Phản hồi xúc giác khi chạm vào ô rung trong cài đặt nhanh</string>
     <string name="system_mods_other">Khác</string>
