@@ -507,6 +507,11 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_drawer_removeshortcut"
+			android:title="@string/system_drawer_removeshortcut_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_showpct"
 			android:title="@string/system_showpct_title"
 			android:summary="@string/system_showpct_summ"
