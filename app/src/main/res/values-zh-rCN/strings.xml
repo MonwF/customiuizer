@@ -164,6 +164,7 @@
     <string name="system_notifchannelsettings_summ">打开通知菜单的设置会导航至频道设置而不是应用通用通知设置</string>
     <string name="system_messagingstylelines_title">消息样式的最大行数</string>
     <string name="system_messagingstylelines_summ">限制消息样式通知中显示的行数</string>
+    <string name="system_drawer_removeshortcut_title">隐藏通知设置图标</string>
     <string name="system_removedismiss_title">隐藏清除按钮</string>
     <string name="system_removedismiss_summ">移除清除所有通知的按钮</string>
     <string name="system_showlux_title">显示照度级别</string>

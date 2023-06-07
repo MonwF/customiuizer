@@ -166,6 +166,7 @@
     <string name="system_notifchannelsettings_summ">Opening settings from notification menu leads to channel settings instead of app\'s common notification settings</string>
     <string name="system_messagingstylelines_title">Maximum line count in messaging style</string>
     <string name="system_messagingstylelines_summ">Limit number of displayed lines in messaging style notifications</string>
+    <string name="system_drawer_removeshortcut_title">Hide notification shade shortcut</string>
     <string name="system_removedismiss_title">Hide clear button</string>
     <string name="system_removedismiss_summ">Remove button that clears all notifications</string>
     <string name="system_showlux_title">Show illuminance level</string>

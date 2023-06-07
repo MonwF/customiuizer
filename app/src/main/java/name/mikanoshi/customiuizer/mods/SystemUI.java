@@ -3578,6 +3578,21 @@ public class SystemUI {
         });
     }
 
+    public static void HideNoficationAccessIconHook(LoadPackageParam lpparam) {
+        MethodHook hideViewHook = new MethodHook() {
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                View mShortCut = (View) XposedHelpers.getObjectField(param.thisObject, "mShortCut");
+                if (mShortCut != null) {
+                    mShortCut.setVisibility(View.GONE);
+                    param.setResult(null);
+                }
+            }
+        };
+        Helpers.findAndHookMethod("com.android.systemui.qs.MiuiQSHeaderView", lpparam.classLoader, "updateShortCutVisibility", hideViewHook);
+        Helpers.findAndHookMethod("com.android.systemui.qs.MiuiNotificationHeaderView", lpparam.classLoader, "updateShortCutVisibility", hideViewHook);
+    }
+
     public static void ReplaceShortcutAppHook(LoadPackageParam lpparam) {
         MethodHook openAppHook = new MethodHook() {
             @Override
