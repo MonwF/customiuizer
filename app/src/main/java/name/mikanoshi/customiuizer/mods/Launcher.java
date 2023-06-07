@@ -1471,9 +1471,12 @@ public class Launcher {
 					};
 				}
 				else {
-					List<String> sRecentsBlacklist = (List<String>) Helpers.getStaticObjectFieldSilently(ActiviyManagerWrapper, "sRecentsBlacklist");
-					Set<String> selectedApps = MainModule.mPrefs.getStringSet("system_hidefromrecents_apps");
-					sRecentsBlacklist.addAll(selectedApps);
+					Object rbList = Helpers.getStaticObjectFieldSilently(ActiviyManagerWrapper, "sRecentsBlacklist");
+					if (!Helpers.NOT_EXIST_SYMBOL.equals(rbList)) {
+						List<String> sRecentsBlacklist = (List<String>) rbList;
+						Set<String> selectedApps = MainModule.mPrefs.getStringSet("system_hidefromrecents_apps");
+						sRecentsBlacklist.addAll(selectedApps);
+					}
 				}
 			}
 		});

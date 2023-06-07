@@ -1750,7 +1750,7 @@ public class Helpers {
 		try {
 			return XposedHelpers.getStaticObjectField(clazz, fieldName);
 		} catch (Throwable t) {
-			return null;
+			return NOT_EXIST_SYMBOL;
 		}
 	}
 

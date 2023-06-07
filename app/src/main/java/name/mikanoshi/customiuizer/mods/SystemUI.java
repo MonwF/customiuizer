@@ -138,14 +138,6 @@ public class SystemUI {
         if (MainModule.mPrefs.getBoolean("system_detailednetspeed_fakedualrow")) {
             MainModule.resHooks.setObjectReplacement(lpparam.packageName, "string", "network_speed_suffix", "%1$s\n%2$s");
         }
-        if (MainModule.mPrefs.getBoolean("system_separatevolume") && MainModule.mPrefs.getBoolean("system_separatevolume_slider")) {
-            MainModule.resHooks.setResReplacement("miui.systemui.plugin", "dimen", "miui_volume_content_width_expanded", R.dimen.miui_volume_content_width_expanded);
-            MainModule.resHooks.setResReplacement("miui.systemui.plugin", "dimen", "miui_volume_ringer_layout_width_expanded", R.dimen.miui_volume_ringer_layout_width_expanded);
-            MainModule.resHooks.setResReplacement("miui.systemui.plugin", "dimen", "miui_volume_column_width_expanded", R.dimen.miui_volume_column_width_expanded);
-            MainModule.resHooks.setResReplacement("miui.systemui.plugin", "dimen", "miui_volume_column_margin_horizontal_expanded", R.dimen.miui_volume_column_margin_horizontal_expanded);
-            notifVolumeOnResId = MainModule.resHooks.addResource("ic_miui_volume_notification", R.drawable.ic_miui_volume_notification);
-            notifVolumeOffResId = MainModule.resHooks.addResource("ic_miui_volume_notification_mute", R.drawable.ic_miui_volume_notification_mute);
-        }
         if (MainModule.mPrefs.getBoolean("system_volumetimer")) {
             MainModule.resHooks.setResReplacement("miui.systemui.plugin", "array", "miui_volume_timer_segments", R.array.miui_volume_timer_segments);
         }
@@ -352,7 +344,7 @@ public class SystemUI {
                             boolean showBatteryInfo = showBatteryDetail;
                             if (showBatteryInfo && MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_incharge") && finalChargeUtilsClass != null) {
                                 Object batteryStatus = Helpers.getStaticObjectFieldSilently(finalChargeUtilsClass, "sBatteryStatus");
-                                if (batteryStatus == null) {
+                                if (Helpers.NOT_EXIST_SYMBOL.equals(batteryStatus)) {
                                     showBatteryInfo = false;
                                 } else {
                                     showBatteryInfo = (boolean) XposedHelpers.callMethod(batteryStatus, "isCharging");
@@ -1225,7 +1217,7 @@ public class SystemUI {
                         Object blockList = Helpers.getStaticObjectFieldSilently(MiuiEndIconManager, "RIGHT_BLOCK_LIST");
                         ArrayList<String> rightBlockList;
                         Resources res = mContext.getResources();
-                        if (blockList != null) {
+                        if (!Helpers.NOT_EXIST_SYMBOL.equals(blockList)) {
                             rightBlockList = (ArrayList<String>) blockList;
                         }
                         else {
@@ -1797,6 +1789,36 @@ public class SystemUI {
         Helpers.findAndHookMethod("com.android.systemui.miui.volume.Util", classLoader, "isSupportBlurS", XC_MethodReplacement.returnConstant(true));
     }
 
+    public static void SingleNotificationSliderHook(ClassLoader classLoader) {
+        boolean newSingleSlider = false;
+        Class<?> UtilCls = findClassIfExists("com.android.systemui.miui.volume.Util", classLoader);
+        if (UtilCls != null) {
+            Object hasFeature = Helpers.getStaticObjectFieldSilently(UtilCls, "sIsNotificationSingle");
+            newSingleSlider = !Helpers.NOT_EXIST_SYMBOL.equals(hasFeature);
+        }
+        if (newSingleSlider) {
+            Helpers.findAndHookMethod("com.android.systemui.miui.volume.Util", classLoader, "isNotificationSingle", Context.class, int.class, XC_MethodReplacement.returnConstant(true));
+        }
+        else {
+            MainModule.resHooks.setResReplacement("miui.systemui.plugin", "dimen", "miui_volume_content_width_expanded", R.dimen.miui_volume_content_width_expanded);
+            MainModule.resHooks.setResReplacement("miui.systemui.plugin", "dimen", "miui_volume_ringer_layout_width_expanded", R.dimen.miui_volume_ringer_layout_width_expanded);
+            MainModule.resHooks.setResReplacement("miui.systemui.plugin", "dimen", "miui_volume_column_width_expanded", R.dimen.miui_volume_column_width_expanded);
+            MainModule.resHooks.setResReplacement("miui.systemui.plugin", "dimen", "miui_volume_column_margin_horizontal_expanded", R.dimen.miui_volume_column_margin_horizontal_expanded);
+            notifVolumeOnResId = MainModule.resHooks.addResource("ic_miui_volume_notification", R.drawable.ic_miui_volume_notification);
+            notifVolumeOffResId = MainModule.resHooks.addResource("ic_miui_volume_notification_mute", R.drawable.ic_miui_volume_notification_mute);
+            Helpers.hookAllMethods("com.android.systemui.miui.volume.MiuiVolumeDialogImpl", classLoader, "addColumn", new MethodHook() {
+                @Override
+                protected void before(MethodHookParam param) throws Throwable {
+                    if (param.args.length != 4) return;
+                    int streamType = (int) param.args[0];
+                    if (streamType == 4) {
+                        XposedHelpers.callMethod(param.thisObject, "addColumn", 5, notifVolumeOnResId, notifVolumeOffResId, true, false);
+                    }
+                }
+            });
+        }
+    }
+
     public static void MIUIVolumeDialogHook(LoadPackageParam lpparam) {
         String pluginLoaderClass = Helpers.isTPlus() ? "com.android.systemui.shared.plugins.PluginInstance$Factory" : "com.android.systemui.shared.plugins.PluginManagerImpl";
         Helpers.hookAllMethods(pluginLoaderClass, lpparam.classLoader, "getClassLoader", new MethodHook() {
@@ -1809,21 +1831,11 @@ public class SystemUI {
                     if (pluginLoader == null) {
                         pluginLoader = (ClassLoader) param.getResult();
                     }
-                    Class<?> MiuiVolumeDialogImpl = XposedHelpers.findClassIfExists("com.android.systemui.miui.volume.MiuiVolumeDialogImpl", pluginLoader);
                     if (MainModule.mPrefs.getBoolean("system_separatevolume") && MainModule.mPrefs.getBoolean("system_separatevolume_slider")) {
-                        Helpers.hookAllMethods(MiuiVolumeDialogImpl, "addColumn", new MethodHook() {
-                            @Override
-                            protected void before(MethodHookParam param) throws Throwable {
-                                if (param.args.length != 4) return;
-                                int streamType = (int) param.args[0];
-                                if (streamType == 4) {
-                                    XposedHelpers.callMethod(param.thisObject, "addColumn", 5, notifVolumeOnResId, notifVolumeOffResId, true, false);
-                                }
-                            }
-                        });
+                        SingleNotificationSliderHook(pluginLoader);
                     }
                     if (MainModule.mPrefs.getBoolean("system_nosilentvibrate")) {
-                        Helpers.hookAllMethods(MiuiVolumeDialogImpl, "vibrateH", XC_MethodReplacement.DO_NOTHING);
+                        Helpers.hookAllMethods("com.android.systemui.miui.volume.MiuiVolumeDialogImpl", pluginLoader, "vibrateH", XC_MethodReplacement.DO_NOTHING);
                     }
                     if (MainModule.mPrefs.getInt("system_volumedialogdelay_collapsed", 0) > 0 || MainModule.mPrefs.getInt("system_volumedialogdelay_expanded", 0) > 0) {
                         VolumeDialogAutohideDelayHook(pluginLoader);

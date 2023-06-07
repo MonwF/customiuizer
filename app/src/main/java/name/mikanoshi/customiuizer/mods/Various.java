@@ -731,7 +731,7 @@ public class Various {
 				Class<?> utilCls = findClassIfExists("com.miui.permcenter.utils.h", lpparam.classLoader);
 				if (utilCls != null) {
 					Object fm = Helpers.getStaticObjectFieldSilently(utilCls, "b");
-					if (fm != null) {
+					if (!Helpers.NOT_EXIST_SYMBOL.equals(fm)) {
 						try {
 							Map<String, Integer> featMap = (Map<String, Integer>) fm;
 							featMap.put("mi_lab_ai_clipboard_enable", 0);
