@@ -63,6 +63,11 @@
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_ble_unlock"
+		android:title="@string/system_statusbaricons_ble_unlock_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbaricons_signal"
 		android:title="@string/system_statusbaricons_signal_title"
 		android:disableDependentsState="true"

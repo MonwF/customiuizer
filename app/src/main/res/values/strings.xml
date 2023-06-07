@@ -35,6 +35,7 @@
     <string name="system_statusbaricons_alarmn_title">Selective alarm icon visibility</string>
     <string name="system_statusbaricons_alarmn_summ">Show alarm icon only during the defined number of hours before next alarm</string>
     <string name="system_statusbaricons_btbattery_title">Bluetooth battery</string>
+    <string name="system_statusbaricons_ble_unlock_title">Unlock with Bluetooth device</string>
     <string name="system_statusbaricons_signal_title">Mobile network signal</string>
     <string name="system_statusbaricons_nosims_title">No SIM card</string>
     <string name="system_statusbaricons_volte_title">VoLTE</string>
