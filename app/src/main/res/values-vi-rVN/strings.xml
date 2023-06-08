@@ -284,6 +284,7 @@
     <string name="system_secureqs_airplane_title">Chế độ máy bay</string>
     <string name="system_secureqs_location_title">Vị trí</string>
     <string name="system_secureqs_sync_title">Đồng bộ hóa</string>
+    <string name="system_lockscreen_strongauth_72h_title">Vô hiệu hóa bắt buộc xác thực mỗi 72 giờ</string>
     <string name="system_nopassword_title">Không cần nhập mật khẩu sau khi khởi động</string>
     <string name="system_nopassword_summ">Mở khóa lần đầu tiên sau khi khởi động không cần mật khẩu. Mục nhập này không có hiệu lực trên các thiết bị được mã hóa.</string>
     <string name="system_albumartonlock_title">Đặt bìa album làm hình nền</string>
