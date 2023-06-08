@@ -350,33 +350,34 @@ public class SystemUI {
                                     showBatteryInfo = (boolean) XposedHelpers.callMethod(batteryStatus, "isCharging");
                                 }
                             }
+                            boolean isScreenOn = false;
                             if (showBatteryInfo || showDeviceTemp) {
+                                PowerManager powerMgr = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
+                                isScreenOn = powerMgr.isInteractive();
+                            }
+                            if (isScreenOn) {
                                 Properties props = null;
                                 String cpuProps = null;
-                                PowerManager powerMgr = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
-                                boolean isScreenOn = powerMgr.isInteractive();
-                                if (isScreenOn) {
-                                    FileInputStream fis = null;
-                                    RandomAccessFile cpuReader = null;
+                                FileInputStream fis = null;
+                                RandomAccessFile cpuReader = null;
+                                try {
+                                    fis = new FileInputStream("/sys/class/power_supply/battery/uevent");
+                                    props = new Properties();
+                                    props.load(fis);
+                                    if (showDeviceTemp) {
+                                        cpuReader = new RandomAccessFile("/sys/devices/virtual/thermal/thermal_zone0/temp", "r");
+                                        cpuProps = cpuReader.readLine();
+                                    }
+                                } catch (Throwable ign) {
+                                } finally {
                                     try {
-                                        fis = new FileInputStream("/sys/class/power_supply/battery/uevent");
-                                        props = new Properties();
-                                        props.load(fis);
-                                        if (showDeviceTemp) {
-                                            cpuReader = new RandomAccessFile("/sys/devices/virtual/thermal/thermal_zone0/temp", "r");
-                                            cpuProps = cpuReader.readLine();
+                                        if (fis != null) {
+                                            fis.close();
+                                        }
+                                        if (cpuReader != null) {
+                                            cpuReader.close();
                                         }
                                     } catch (Throwable ign) {
-                                    } finally {
-                                        try {
-                                            if (fis != null) {
-                                                fis.close();
-                                            }
-                                            if (cpuReader != null) {
-                                                cpuReader.close();
-                                            }
-                                        } catch (Throwable ign) {
-                                        }
                                     }
                                 }
                                 if (showBatteryInfo && props != null) {
@@ -461,20 +462,20 @@ public class SystemUI {
                                         deviceInfo = simpleCpuTemp + tempUnit;
                                     }
                                 }
-                            }
-                            if (showBatteryDetail) {
-                                TextIconInfo tii = new TextIconInfo();
-                                tii.iconShow = showBatteryInfo;
-                                tii.iconText = batteryInfo;
-                                tii.iconType = 91;
-                                mHandler.obtainMessage(100021, tii).sendToTarget();
-                            }
-                            if (showDeviceTemp) {
-                                TextIconInfo tii = new TextIconInfo();
-                                tii.iconShow = showDeviceTemp;
-                                tii.iconText = deviceInfo;
-                                tii.iconType = 92;
-                                mHandler.obtainMessage(100021, tii).sendToTarget();
+                                if (showBatteryDetail) {
+                                    TextIconInfo tii = new TextIconInfo();
+                                    tii.iconShow = showBatteryInfo;
+                                    tii.iconText = batteryInfo;
+                                    tii.iconType = 91;
+                                    mHandler.obtainMessage(100021, tii).sendToTarget();
+                                }
+                                if (showDeviceTemp) {
+                                    TextIconInfo tii = new TextIconInfo();
+                                    tii.iconShow = showDeviceTemp;
+                                    tii.iconText = deviceInfo;
+                                    tii.iconType = 92;
+                                    mHandler.obtainMessage(100021, tii).sendToTarget();
+                                }
                             }
                         }
                         mBgHandler.removeMessages(200021);
