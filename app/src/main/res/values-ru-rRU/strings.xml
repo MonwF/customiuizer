@@ -30,6 +30,7 @@
     <string name="system_statusbaricons_alarmn_title">Избирательное отображение будильника</string>
     <string name="system_statusbaricons_alarmn_summ">Начинает показывать иконку будильника только за указанное количество часов до его срабатывания</string>
     <string name="system_statusbaricons_btbattery_title">Батарея Bluetooth</string>
+    <string name="system_statusbaricons_ble_unlock_title">Разблокировать с помощью Bluetooth устройства</string>
     <string name="system_statusbaricons_signal_title">Сигнал мобильной сети</string>
     <string name="system_statusbaricons_nosims_title">Нет SIM карты</string>
     <string name="system_statusbaricons_volte_title">VoLTE</string>
@@ -153,6 +154,7 @@
     <string name="system_notifchannelsettings_summ">Открытие настроек из меню уведомления ведёт к настройкам канала, а не к общим настройкам уведомлений приложения</string>
     <string name="system_messagingstylelines_title">Максимальное число строк в стиле сообщений</string>
     <string name="system_messagingstylelines_summ">Ограничивает число отображаемых строк в уведомлениях, содержащих сообщения</string>
+    <string name="system_drawer_removeshortcut_title">Скрыть ярлык панели уведомлений</string>
     <string name="system_removedismiss_title">Скрыть кнопку удаления</string>
     <string name="system_removedismiss_summ">Убирает из шторки кнопку для удаления всех уведомлений</string>
     <string name="system_showlux_title">Показать уровень освещённости</string>
