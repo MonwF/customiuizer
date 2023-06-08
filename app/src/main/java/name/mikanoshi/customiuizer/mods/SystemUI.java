@@ -2473,8 +2473,10 @@ public class SystemUI {
             protected void before(final MethodHookParam param) throws Throwable {
                 Object mobileIconState = param.args[0];
                 if (MainModule.mPrefs.getBoolean("system_statusbaricons_signal")) {
-                    XposedHelpers.setObjectField(mobileIconState, "visible", false);
-                    return;
+                    if (!MainModule.mPrefs.getBoolean("system_statusbaricons_signal_wificonnected") || XposedHelpers.getBooleanField(mobileIconState, "wifiAvailable")) {
+                        XposedHelpers.setObjectField(mobileIconState, "visible", false);
+                        return;
+                    }
                 }
                 int subId = (int) XposedHelpers.getObjectField(mobileIconState, "subId");
                 if ((MainModule.mPrefs.getBoolean("system_statusbaricons_sim1") && subId == 1)

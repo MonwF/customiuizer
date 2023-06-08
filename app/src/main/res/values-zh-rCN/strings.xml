@@ -35,6 +35,7 @@
     <string name="system_statusbaricons_btbattery_title">蓝牙电量</string>
     <string name="system_statusbaricons_ble_unlock_title">蓝牙设备解锁</string>
     <string name="system_statusbaricons_signal_title">移动网络信号</string>
+    <string name="system_statusbaricons_hidesignal_wificonnected_title">仅连接至Wi-Fi时</string>
     <string name="system_statusbaricons_nosims_title">无SIM卡</string>
     <string name="system_statusbaricons_hotspot_title">热点</string>
     <string name="system_statusbaricons_profile_title">工作配置</string>

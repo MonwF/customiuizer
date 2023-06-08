@@ -399,13 +399,6 @@ public class System {
         return false;
     }
 
-    private static void checkBTConnections(Context mContext) {
-        if (mContext == null)
-            Helpers.log("checkBTConnections", "mContext is NULL!");
-        else
-            mContext.sendBroadcast(new Intent(ACTION_PREFIX + "UnlockBTConnection"));
-    }
-
     private static boolean isUnlockedInnerCall = false;
     private static boolean isUnlockedWithFingerprint = false;
     private static boolean isUnlockedWithStrong = false;
@@ -626,15 +619,10 @@ public class System {
         Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BluetoothControllerImpl", lpparam.classLoader, "updateConnected", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) {
-                checkBTConnections((Context)XposedHelpers.getObjectField(param.thisObject, "mContext"));
-            }
-        });
-
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.policy.BluetoothControllerImpl", lpparam.classLoader, "onBluetoothStateChanged", int.class, new MethodHook() {
-            @Override
-            protected void after(MethodHookParam param) {
-                int state = (int)param.args[0];
-                if (state != 10) checkBTConnections((Context)XposedHelpers.getObjectField(param.thisObject, "mContext"));
+                Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+                if (mContext != null) {
+                    mContext.sendBroadcast(new Intent(ACTION_PREFIX + "UnlockBTConnection"));
+                }
             }
         });
     }
