@@ -82,7 +82,7 @@
     <string name="system_clock_time_format_title">24時間形式で表示</string>
     <string name="system_clock_leadingzero_title">ゼロから始まる時刻で表示</string>
     <string name="system_clock_leadingspace_title">時間にスペースの文字を追加</string>
-    <string name="system_clock_customformat_enable_title">カスタムをした形式を有効化</string>
+    <string name="system_clock_customformat_enable_title">カスタム形式を有効化</string>
     <string name="system_clock_customformat_setting_title">形式を設定</string>
     <string name="system_clock_customformat_help_summ">        改行が可能です、2行目以降は切り捨てとなります
         \nyyyy - 4桁の年(2023)
@@ -284,7 +284,7 @@
     <string name="system_secureqs_airplane_title">機内モード</string>
     <string name="system_secureqs_location_title">位置情報</string>
     <string name="system_secureqs_sync_title">同期</string>
-    <string name="system_lockscreen_strongauth_72h_title">72時間毎の強制的なプライマリ認証を無効化</string>
+    <string name="system_lockscreen_strongauth_72h_title">生体認証以外の認証を72時間毎に要求する仕様を無効化</string>
     <string name="system_nopassword_title">起動時にパスワードを要求しない</string>
     <string name="system_nopassword_summ">起動時に指紋認証の代わりにパスワードを要求しないようにします。暗号化されたデバイスでは動作しない可能性があります。</string>
     <string name="system_albumartonlock_title">アルバムアートをロック画面に表示する</string>
@@ -890,7 +890,7 @@
     <string name="array_keep">そのままにする</string>
     <string name="array_turn_off">電源オフ</string>
     <string name="array_turn_off_disable">電源オフと無効化</string>
-    <string name="array_current">現在のみ</string>
+    <string name="array_current">電流のみ</string>
     <string name="array_power">電力のみ</string>
     <string name="array_temp_current">温度と電流</string>
     <string name="array_temp_power">温度と電力</string>
@@ -1086,7 +1086,7 @@
     <string name="system_statusbar_batterytempandcurrentatright_title">右側の表示</string>
     <string name="system_statusbar_batterytempandcurrent_positive_title">電流値を常に正の値にする</string>
     <string name="system_statusbar_batterytempandcurrent_incharge_title">充電時のみ表示</string>
-    <string name="system_statusbar_batterytempandcurrent_fixcurrentratio_title">一部のデバイスの比率の現在値を修正</string>
+    <string name="system_statusbar_batterytempandcurrent_fixcurrentratio_title">一部のデバイスでの電流値比率を修正</string>
     <string name="system_statusbar_batterytempandcurrent_hideunit_title">単位を非表示</string>
     <string name="system_statusbar_batterytempandcurrent_singlerow_title">一列に並べて表示</string>
     <string name="system_statusbar_batterytempandcurrent_reverseorder_title">逆順</string>
