@@ -285,6 +285,7 @@
     <string name="system_secureqs_airplane_title">Režim letadlo</string>
     <string name="system_secureqs_location_title">Poloha</string>
     <string name="system_secureqs_sync_title">Synchronizace</string>
+    <string name="system_lockscreen_strongauth_72h_title">Zakázat vynucené primární ověření každých 72 hodin</string>
     <string name="system_nopassword_title">Nevyžadovat heslo po spuštění systému</string>
     <string name="system_nopassword_summ">Nevyžadovat heslo místo otisku prstu při prvním spuštění. Na zašifrovaných zařízeních pravděpodobně nefunguje.</string>
     <string name="system_albumartonlock_title">Obrázek alba jako tapeta</string>
