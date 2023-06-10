@@ -112,6 +112,7 @@ import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.BatteryIndicator;
 import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.Helpers.MethodHook;
+import name.mikanoshi.customiuizer.utils.StepCounterController;
 
 public class SystemUI {
     private final static String StatusBarCls = Helpers.isTPlus() ? "com.android.systemui.statusbar.phone.CentralSurfacesImpl" : "com.android.systemui.statusbar.phone.StatusBar";
@@ -157,6 +158,20 @@ public class SystemUI {
             float iconHeight = 20.5f * iconSize / 13;
             MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "status_bar_icon_height", iconHeight);
         }
+
+        Helpers.findAndHookMethod("com.android.systemui.SystemUIApplication", lpparam.classLoader, "onCreate", new MethodHook() {
+            private boolean isHooked = false;
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                if (!isHooked) {
+                    isHooked = true;
+                    Context mContext = (Context) XposedHelpers.callMethod(param.thisObject, "getApplicationContext");
+                    if (MainModule.mPrefs.getBoolean("system_cc_show_stepcount")) {
+                        StepCounterController.initContext(mContext);
+                    }
+                }
+            }
+        });
     }
 
     private static String getSlotNameByType(int mIconType) {
@@ -4155,5 +4170,47 @@ public class SystemUI {
                 param.setResult(false);
             }
         });
+    }
+    public static void ShowCCStepCountHook(LoadPackageParam lpparam) {
+        MethodHook updateStyleHook = new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                View headView = (View) param.thisObject;
+                String carrierId;
+                String tag;
+                if (headView.getClass().getSimpleName().contains("ControlCenterStatusBar")) {
+                    carrierId = "carrierText";
+                    tag = "StepInControlCenter";
+                }
+                else {
+                    carrierId = "mCarrierText";
+                    tag = "StepInNotification";
+                }
+                TextView mCarrierText = (TextView) XposedHelpers.getObjectField(param.thisObject, carrierId);
+                LinearLayout mSystemIconContainer = (LinearLayout) mCarrierText.getParent();
+                TextView stepView = mSystemIconContainer.findViewWithTag(tag);
+                if (stepView == null) {
+                    StepCounterController.removeStepViewByTag(tag);
+                    stepView = new TextView(headView.getContext());
+                    Resources res = headView.getResources();
+//                    int styleId = res.getIdentifier("TextAppearance.StatusBar.Clock", "style", "com.android.systemui");
+//                    stepView.setTextAppearance(styleId);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                    float horizMargin = TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        3,
+                        res.getDisplayMetrics()
+                    );
+                    lp.rightMargin = (int) horizMargin;
+                    lp.gravity = Gravity.CENTER_VERTICAL;
+                    mSystemIconContainer.addView(stepView, mSystemIconContainer.indexOfChild(mCarrierText), lp);
+                    stepView.setTag(tag);
+                    StepCounterController.addStepView(stepView);
+                }
+                stepView.setTextColor(mCarrierText.getTextColors());
+            }
+        };
+        Helpers.findAndHookMethod("com.android.systemui.qs.MiuiNotificationHeaderView", lpparam.classLoader, "themeChanged", updateStyleHook);
+        Helpers.findAndHookMethod("com.android.systemui.controlcenter.phone.widget.ControlCenterStatusBar", lpparam.classLoader, "updateHeaderColor", updateStyleHook);
     }
 }
