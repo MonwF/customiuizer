@@ -4063,6 +4063,16 @@ public class SystemUI {
                 XposedHelpers.callMethod(constraintSet, "clone", headerView);
                 int clockId = clockView.getId();
                 XposedHelpers.callMethod(constraintSet, "clear", clockId, 7);
+                int defaultVerticalOffset = 10;
+                int topMargin = MainModule.mPrefs.getInt("system_cc_clock_verticaloffset", defaultVerticalOffset);
+                if (topMargin != defaultVerticalOffset) {
+                    topMargin = (int)TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        topMargin - defaultVerticalOffset,
+                        clockView.getResources().getDisplayMetrics()
+                    );
+                    XposedHelpers.callMethod(constraintSet, "setMargin", clockId, 4, -topMargin);
+                }
                 XposedHelpers.callMethod(constraintSet, "applyTo", headerView);
             }
         };
