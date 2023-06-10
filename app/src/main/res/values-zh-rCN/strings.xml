@@ -1152,4 +1152,5 @@
     <string name="system_cc_volume_showpct_title">显示声音百分比</string>
     <string name="system_cc_switch_ccandnotification_title">对调控制中心与通知抽屉</string>
     <string name="system_cc_collapse_after_clicked_title">单击开关后自动收起</string>
+    <string name="system_show_step_count_title">显示步数</string>
 </resources>
