@@ -117,9 +117,6 @@
         \nI - 时辰(卯、亥)
     </string>
     <string name="system_clock_dualrow_title">双排显示</string>
-    <string name="system_clock_show_week_title">显示星期</string>
-    <string name="system_clock_show_date_title">显示日期</string>
-    <string name="system_clock_show_year_title">显示年份</string>
     <string name="system_clockseconds_summ">状态栏显示秒钟</string>
     <string name="system_maxsbicons_title">通知图标限制</string>
     <string name="system_maxsbicons_summ">变成点前显示的通知图标的数目</string>

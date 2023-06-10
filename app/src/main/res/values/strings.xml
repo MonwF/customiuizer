@@ -114,9 +114,6 @@
         \nss - two-digit second(09)
     </string>
     <string name="system_clock_dualrow_title">Show in dual rows</string>
-    <string name="system_clock_show_week_title">Show week</string>
-    <string name="system_clock_show_date_title">Show date</string>
-    <string name="system_clock_show_year_title">Show year</string>
     <string name="system_clock_fixedwidth_title">Fix content width to prevent horizontal jitter</string>
     <string name="system_clock_fixedwidth_summ">Adjust width when seconds is displayed</string>
     <string name="system_statusbar_clock_align_title">Horizontal alignment</string>

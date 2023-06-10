@@ -1094,7 +1094,6 @@ public class Launcher {
 						public void onReceive(Context context, Intent intent) {
 							try {
 								if (intent.getAction() == null) return;
-								Helpers.log(intent.getAction());
 								if (startAction.equals(intent.getAction())) {
 									XposedHelpers.setAdditionalInstanceField(param.thisObject, "fromSecretCode", true);
 									XposedHelpers.callMethod(param.thisObject, "startSecurityHide");

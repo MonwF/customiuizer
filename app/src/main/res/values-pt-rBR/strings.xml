@@ -103,9 +103,6 @@
         \nss - segundo de dois dígito (09)
     </string>
     <string name="system_clock_dualrow_title">Mostrar em linhas duplas</string>
-    <string name="system_clock_show_week_title">Mostrar semana</string>
-    <string name="system_clock_show_date_title">Mostrar data</string>
-    <string name="system_clock_show_year_title">Mostrar ano</string>
     <string name="system_clock_fixedwidth_title">Corrija a largura do conteúdo para evitar instabilidade horizontal</string>
     <string name="system_clock_fixedwidth_summ">Ajustar a largura quando os segundos são exibidos</string>
     <string name="system_statusbar_clock_align_title">Alinhamento horizontal</string>
