@@ -101,9 +101,6 @@
         \nmm - minutos en dos dígitos (09)
         \nss - segundos en dos dígitos (09)    </string>
     <string name="system_clock_dualrow_title">Mostrar en filas dobles</string>
-    <string name="system_clock_show_week_title">Mostrar semana</string>
-    <string name="system_clock_show_date_title">Mostrar fecha</string>
-    <string name="system_clock_show_year_title">Mostrar año</string>
     <string name="system_clock_fixedwidth_title">Ancho fijo para evitar irregularidades horizontales</string>
     <string name="system_clock_fixedwidth_summ">Ajustar el ancho cuando se muestren los segundos</string>
     <string name="system_statusbar_clock_align_title">Alineación horizontal</string>

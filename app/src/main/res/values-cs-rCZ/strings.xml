@@ -102,9 +102,6 @@
         \nss - dvouciferná sekunda (09)
     </string>
     <string name="system_clock_dualrow_title">Zobrazit v dvojím řádku</string>
-    <string name="system_clock_show_week_title">Zobrazit týden</string>
-    <string name="system_clock_show_date_title">Zobrazit datum</string>
-    <string name="system_clock_show_year_title">Zobrazit rok</string>
     <string name="system_clock_fixedwidth_title">Opravit šířku obsahu pro zabránění horizontálnímu přesahu</string>
     <string name="system_clock_fixedwidth_summ">Upravit šířku, když jsou zobrazeny sekundy</string>
     <string name="system_statusbar_clock_align_title">Horizontální zarovnání</string>

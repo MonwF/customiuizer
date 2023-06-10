@@ -101,9 +101,6 @@
 \nmm - двухзначные минуты (09).
 \nss - двухзначные секунды (09).    </string>
     <string name="system_clock_dualrow_title">Показать в двойных строках</string>
-    <string name="system_clock_show_week_title">Показать неделю</string>
-    <string name="system_clock_show_date_title">Показать дату</string>
-    <string name="system_clock_show_year_title">Показать год</string>
     <string name="system_clock_fixedwidth_title">Исправить ширину содержимого, чтобы предотвратить горизонтальное дрожание</string>
     <string name="system_clock_fixedwidth_summ">Отрегулировать ширину, когда отображаются секунды</string>
     <string name="system_statusbar_clock_align_title">Выравнивание по горизонтали</string>

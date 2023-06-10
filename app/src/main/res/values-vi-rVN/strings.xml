@@ -101,9 +101,6 @@
         \nss - giây có hai chữ số(09)
     </string>
     <string name="system_clock_dualrow_title">Hiển thị trong hàng kép</string>
-    <string name="system_clock_show_week_title">Hiện tuần</string>
-    <string name="system_clock_show_date_title">Hiện ngày</string>
-    <string name="system_clock_show_year_title">Hiện năm</string>
     <string name="system_clock_fixedwidth_title">Cố định chiều rộng để tránh bất thường theo chiều ngang</string>
     <string name="system_clock_fixedwidth_summ">Điều chỉnh độ rộng khi hiển thị giây</string>
     <string name="system_statusbar_clock_align_title">Căn chỉnh theo chiều ngang</string>

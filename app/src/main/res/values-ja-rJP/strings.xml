@@ -101,10 +101,7 @@
         \nss - 2桁の秒(09)
   </string>
     <string name="system_clock_dualrow_title">2段表示</string>
-    <string name="system_clock_show_week_title">曜日を表示</string>
-    <string name="system_clock_show_date_title">日付を表示</string>
-    <string name="system_clock_show_year_title">年を表示</string>
-    <string name="system_clock_fixedwidth_title">水平方向のジッターを防ぐために幅を固定</string>
+  <string name="system_clock_fixedwidth_title">水平方向のジッターを防ぐために幅を固定</string>
     <string name="system_clock_fixedwidth_summ">秒表示時の幅を調整します</string>
     <string name="system_statusbar_clock_align_title">水平方向の整列</string>
     <string name="system_clockseconds_summ">ステータスバーの時計に秒を表示します</string>

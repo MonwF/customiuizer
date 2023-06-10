@@ -95,9 +95,6 @@ h - 12 saatlik tek basamaklı saat(9、2)
 mm - iki basamaklı dakika(09) 
 ss - iki basamaklı saniye(09)</string>
     <string name="system_clock_dualrow_title">Çift sıra halinde göster</string>
-    <string name="system_clock_show_week_title">Haftayı göster</string>
-    <string name="system_clock_show_date_title">Tarihi göster</string>
-    <string name="system_clock_show_year_title">Yılı göster</string>
     <string name="system_clock_fixedwidth_title">Yatay titremeyi önlemek için içerik genişliğini düzeltin</string>
     <string name="system_clock_fixedwidth_summ">Saniye görüntülendiğinde genişliği ayarlayın</string>
     <string name="system_statusbar_clock_align_title">Yatay hizalama</string>

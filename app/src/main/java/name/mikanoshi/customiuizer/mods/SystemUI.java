@@ -188,7 +188,7 @@ public class SystemUI {
         boolean showDeviceTemp = MainModule.mPrefs.getBoolean("system_statusbar_showdevicetemperature");
         Class <?> ChargeUtilsClass = null;
         if (showBatteryDetail) {
-            ChargeUtilsClass = findClass("com.android.keyguard.charge.ChargeUtils", lpparam.classLoader);
+            ChargeUtilsClass = findClassIfExists("com.android.keyguard.charge.ChargeUtils", lpparam.classLoader);
         }
         Class<?> finalChargeUtilsClass = ChargeUtilsClass;
         Class <?> DarkIconDispatcherClass = XposedHelpers.findClass("com.android.systemui.plugins.DarkIconDispatcher", lpparam.classLoader);
@@ -330,7 +330,9 @@ public class SystemUI {
                             for (TextView tv : mBatteryDetailViews) {
                                 if (slotName.equals(XposedHelpers.getAdditionalInstanceField(tv, "mCustomSlot"))) {
                                     XposedHelpers.callMethod(tv, "setBlocked", !tii.iconShow);
-                                    XposedHelpers.callMethod(tv, "setNetworkSpeed", tii.iconText);
+                                    if (tii.iconShow) {
+                                        XposedHelpers.callMethod(tv, "setNetworkSpeed", tii.iconText);
+                                    }
                                 }
                             }
                         }
@@ -350,11 +352,8 @@ public class SystemUI {
                                     showBatteryInfo = (boolean) XposedHelpers.callMethod(batteryStatus, "isCharging");
                                 }
                             }
-                            boolean isScreenOn = false;
-                            if (showBatteryInfo || showDeviceTemp) {
-                                PowerManager powerMgr = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
-                                isScreenOn = powerMgr.isInteractive();
-                            }
+                            PowerManager powerMgr = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
+                            boolean isScreenOn = powerMgr.isInteractive();
                             if (isScreenOn) {
                                 Properties props = null;
                                 String cpuProps = null;
@@ -471,7 +470,7 @@ public class SystemUI {
                                 }
                                 if (showDeviceTemp) {
                                     TextIconInfo tii = new TextIconInfo();
-                                    tii.iconShow = showDeviceTemp;
+                                    tii.iconShow = true;
                                     tii.iconText = deviceInfo;
                                     tii.iconType = 92;
                                     mHandler.obtainMessage(100021, tii).sendToTarget();
