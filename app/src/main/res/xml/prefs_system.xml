@@ -639,6 +639,13 @@
 			android:summary="@string/array_expandnotifs_allbutblack"
 			android:defaultValue="false" />
 
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_notify_openinfw_in_whitelist"
+			android:title="@string/white_lists"
+			android:dependency="pref_key_system_notify_openinfw"
+			miuizer:indentLevel="1"
+			android:defaultValue="false" />
+
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_notify_openinfw_apps"
 			android:title="@string/system_popupnotif_apps_title"
@@ -1047,6 +1054,13 @@
 			android:key="pref_key_system_fw_forcein_actionsend"
 			android:title="@string/system_fw_forcein_actionsend_title"
 			android:summary="@string/array_expandnotifs_allbutblack"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_fw_forcein_actionsend_in_whitelist"
+			android:title="@string/white_lists"
+			android:dependency="pref_key_system_fw_forcein_actionsend"
+			miuizer:indentLevel="1"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx

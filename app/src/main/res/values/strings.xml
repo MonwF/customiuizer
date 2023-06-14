@@ -17,6 +17,7 @@
     <string name="clear_value">Clear</string>
 
     <string name="enable_mod">Enable mod</string>
+    <string name="white_lists">Turn on whitelisting</string>
     <string name="system_mods">System</string>
     <string name="system_mods_screen">Screen</string>
     <string name="system_mods_screen_rotation">Rotation</string>
