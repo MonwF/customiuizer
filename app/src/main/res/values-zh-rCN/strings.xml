@@ -15,6 +15,7 @@
     <string name="mods">模块</string>
     <string name="mods_actions">动作</string>
     <string name="enable_mod">启用模块</string>
+    <string name="white_lists">启用白名单</string>
     <string name="system_mods">系统</string>
     <string name="system_mods_screen">屏幕</string>
     <string name="system_mods_screen_rotation">旋转</string>

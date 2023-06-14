@@ -5039,7 +5039,11 @@ public class System {
         boolean openInFw = false;
         final boolean openFwWhenShare = MainModule.mPrefs.getBoolean("system_fw_forcein_actionsend");
         if (openFwWhenShare) {
-            if (MainModule.mPrefs.getStringSet("system_fw_forcein_actionsend_apps").contains(pkgName)) return false;
+            boolean whitelist = MainModule.mPrefs.getBoolean("system_fw_forcein_actionsend_in_whitelist");
+            boolean appInList = MainModule.mPrefs.getStringSet("system_fw_forcein_actionsend_apps").contains(pkgName);
+            if (whitelist ^ appInList) {
+                return false;
+            }
             if ("com.miui.packageinstaller".equals(pkgName) && intent.getComponent().getClassName().contains("com.miui.packageInstaller.NewPackageInstallerActivity")) {
                 return true;
             }

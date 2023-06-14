@@ -3827,7 +3827,9 @@ public class SystemUI {
                         return;
                     }
                 }
-                if (MainModule.mPrefs.getStringSet("system_notify_openinfw_apps").contains(pkgName)) {
+                boolean whitelist = MainModule.mPrefs.getBoolean("system_notify_openinfw_in_whitelist");
+                boolean appInList = MainModule.mPrefs.getStringSet("system_notify_openinfw_apps").contains(pkgName);
+                if (whitelist ^ appInList) {
                     return;
                 }
                 Class<?> Dependency = findClass("com.android.systemui.Dependency", lpparam.classLoader);
