@@ -4065,16 +4065,6 @@ public class SystemUI {
                 XposedHelpers.callMethod(constraintSet, "clone", headerView);
                 int clockId = clockView.getId();
                 XposedHelpers.callMethod(constraintSet, "clear", clockId, 7);
-                int defaultVerticalOffset = 10;
-                int topMargin = MainModule.mPrefs.getInt("system_cc_clock_verticaloffset", defaultVerticalOffset);
-                if (topMargin != defaultVerticalOffset) {
-                    topMargin = (int)TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        topMargin - defaultVerticalOffset,
-                        clockView.getResources().getDisplayMetrics()
-                    );
-                    XposedHelpers.callMethod(constraintSet, "setMargin", clockId, 4, -topMargin);
-                }
                 XposedHelpers.callMethod(constraintSet, "applyTo", headerView);
             }
         };
@@ -4082,8 +4072,9 @@ public class SystemUI {
         Helpers.findAndHookMethod("miui.systemui.controlcenter.windowview.MainPanelHeaderController", pluginLoader, "updateConstraint", fixClockView);
     }
     public static void initCCClockStyle(ClassLoader pluginLoader) {
-        int ccClockFontSize = MainModule.mPrefs.getInt("system_cc_clock_fontsize", 9);
-        if (ccClockFontSize > 9) {
+        int defaultClockSize = 9;
+        int ccClockFontSize = MainModule.mPrefs.getInt("system_cc_clock_fontsize", defaultClockSize);
+        if (ccClockFontSize > defaultClockSize) {
             Helpers.findAndHookMethod("miui.systemui.controlcenter.windowview.MainPanelHeaderController", pluginLoader, "updateClocksAppearance", new MethodHook() {
                 @Override
                 protected void after(MethodHookParam param) throws Throwable {
@@ -4093,6 +4084,30 @@ public class SystemUI {
                 }
             });
         }
+        int defaultVerticalOffset = 10;
+        int verticalOffset = MainModule.mPrefs.getInt("system_cc_clock_verticaloffset", defaultVerticalOffset);
+        if (verticalOffset != defaultVerticalOffset) {
+            int topMargin = (int)TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                verticalOffset - defaultVerticalOffset,
+                Resources.getSystem().getDisplayMetrics()
+            );
+            MethodHook verticalOffsetHook = new MethodHook() {
+                @Override
+                protected void after(final MethodHookParam param) throws Throwable {
+                    TextView clock = (TextView) XposedHelpers.getObjectField(param.thisObject, "clockView");
+                    Class<?> ConstraintSetClass = pluginLoader.loadClass("androidx.constraintlayout.widget.ConstraintSet");
+                    Object constraintSet = XposedHelpers.newInstance(ConstraintSetClass);
+                    Object headerView = XposedHelpers.getObjectField(param.thisObject, "view");
+                    XposedHelpers.callMethod(constraintSet, "clone", headerView);
+                    int clockId = clock.getId();
+                    XposedHelpers.callMethod(constraintSet, "setMargin", clockId, 4, -topMargin);
+                    XposedHelpers.callMethod(constraintSet, "applyTo", headerView);
+                }
+            };
+            Helpers.findAndHookMethod("miui.systemui.controlcenter.windowview.MainPanelHeaderController", pluginLoader, "updateConstraint", verticalOffsetHook);
+        }
+
     }
     public static void HideSafeVolumeDlgHook(LoadPackageParam lpparam) {
         Helpers.findAndHookMethod("com.android.systemui.volume.VolumeDialogControllerImpl", lpparam.classLoader, "onShowSafetyWarningW", int.class, new MethodHook() {
