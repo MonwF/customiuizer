@@ -13,6 +13,7 @@
     <string name="value_is_set">Hodnota nastavena</string>
     <string name="clear_value">Smazat</string>
     <string name="enable_mod">Povolit modifikace</string>
+    <string name="white_lists">Zapnout seznam povolených</string>
     <string name="system_mods">Systém</string>
     <string name="system_mods_screen">Zobrazení</string>
     <string name="system_mods_screen_rotation">Otáčení obrazovky</string>
@@ -31,7 +32,9 @@
     <string name="system_statusbaricons_alarmn_title">Výběrová viditelnost ikony budíku</string>
     <string name="system_statusbaricons_alarmn_summ">Zobrazení ikony budíku pouze během definovaného počtu hodin před dalším budíkem</string>
     <string name="system_statusbaricons_btbattery_title">Stav baterie Bluetooth zařízení</string>
+    <string name="system_statusbaricons_ble_unlock_title">Odemknout pomocí zařízení Bluetooth</string>
     <string name="system_statusbaricons_signal_title">Signál mobilní sítě</string>
+    <string name="system_statusbaricons_hidesignal_wificonnected_title">Pouze při připojení k Wi-Fi</string>
     <string name="system_statusbaricons_nosims_title">Žádná SIM</string>
     <string name="system_statusbaricons_volte_title">VoLTE</string>
     <string name="system_statusbaricons_roaming_title">Roaming</string>
@@ -152,6 +155,7 @@
     <string name="system_notifchannelsettings_summ">Otevření nastavení z nabídky oznámení vede k nastavení kanálu místo běžného nastavení oznámení aplikace</string>
     <string name="system_messagingstylelines_title">Maximální počet řádků ve stylu psaní zpráv</string>
     <string name="system_messagingstylelines_summ">Omezení počtu zobrazených řádků v oznámeních ve stylu psaní zpráv</string>
+    <string name="system_drawer_removeshortcut_title">Skrýt stín oznámení</string>
     <string name="system_removedismiss_title">Skrýt tlačítko vymazání</string>
     <string name="system_removedismiss_summ">Odstranění tlačítka, které vymaže všechna oznámení</string>
     <string name="system_showlux_title">Zobrazit úroveň osvětlení</string>
@@ -1154,6 +1158,7 @@
     <string name="system_cc_disable_bluetooth_restrict_title">Zakázat odpojování bluetooth do zítřka</string>
     <string name="system_cc_volume_showpct_title">Zobrazit procenta hlasitosti</string>
     <string name="system_cc_collapse_after_clicked_title">Sbalit po dotyku</string>
+    <string name="system_show_step_count_title">Zobrazit počet kroků</string>
     <string name="system_cc_switch_ccandnotification_title">Přepnout ovládací centrum a oznamovací lištu</string>
     <string name="system_cc_clock_topmargin_indrawer_title">Horní okraj hodin v oznamovací liště</string>
 </resources>

@@ -12,6 +12,7 @@
     <string name="value_is_set">値は設定されています</string>
     <string name="clear_value">クリア</string>
     <string name="enable_mod">Modを有効化</string>
+    <string name="white_lists">ホワイトリストをオンにする</string>
     <string name="system_mods">システム</string>
     <string name="system_mods_screen">画面</string>
     <string name="system_mods_screen_rotation">画面の方向</string>
@@ -30,11 +31,13 @@
     <string name="system_statusbaricons_alarmn_title">アラームアイコンの可視性</string>
     <string name="system_statusbaricons_alarmn_summ">次のアラームが鳴るまでの規定時間のみアラームアイコンを表示します</string>
     <string name="system_statusbaricons_btbattery_title">Bluetoothデバイスのバッテリー残量表示</string>
+    <string name="system_statusbaricons_ble_unlock_title">Bluetoothデバイスでロックを解除</string>
     <string name="system_statusbaricons_signal_title">モバイルネットワーク信号の表示</string>
+    <string name="system_statusbaricons_hidesignal_wificonnected_title">Wi-Fiの接続時のみ</string>
     <string name="system_statusbaricons_nosims_title">SIMカード未挿入</string>
     <string name="system_statusbaricons_volte_title">VoLTE</string>
     <string name="system_statusbaricons_roaming_title">ローミング</string>
-    <string name="system_statusbaricons_dualwifi_title">デュアルWi-Fi</string>
+    <string name="system_statusbaricons_dualwifi_title">デュアルバンドWi-Fi</string>
     <string name="system_statusbaricons_hotspot_title">ホットスポット</string>
     <string name="system_statusbaricons_profile_title">仕事用プロファイル</string>
     <string name="system_statusbaricons_sound_title">サウンドプロファイル</string>
@@ -101,7 +104,7 @@
         \nss - 2桁の秒(09)
   </string>
     <string name="system_clock_dualrow_title">2段表示</string>
-  <string name="system_clock_fixedwidth_title">水平方向のジッターを防ぐために幅を固定</string>
+    <string name="system_clock_fixedwidth_title">水平方向のジッターを防ぐために幅を固定</string>
     <string name="system_clock_fixedwidth_summ">秒表示時の幅を調整します</string>
     <string name="system_statusbar_clock_align_title">水平方向の整列</string>
     <string name="system_clockseconds_summ">ステータスバーの時計に秒を表示します</string>
@@ -151,6 +154,7 @@
     <string name="system_notifchannelsettings_summ">通知メニューから設定を開くとアプリ共通の通知設定ではなく通知チャネルの設定を表示します</string>
     <string name="system_messagingstylelines_title">メッセージングスタイルの最大行数</string>
     <string name="system_messagingstylelines_summ">メッセージング表示通知の表示行数の制限を設定します</string>
+    <string name="system_drawer_removeshortcut_title">通知シェードのショートカットを非表示にする</string>
     <string name="system_removedismiss_title">消去ボタンを非表示</string>
     <string name="system_removedismiss_summ">すべての通知を消去するボタンを非表示にします</string>
     <string name="system_showlux_title">照度レベルの表示</string>
@@ -344,7 +348,7 @@
     <string name="system_nodarkforce_title">強制ダークモードを無効化</string>
     <string name="system_nodarkforce_summ">ダークモード時に一部の色を反転させないようにします</string>
     <string name="system_epm_title">拡張された電源メニュー</string>
-    <string name="system_epm_summ">電源メニューに拡張された再起動オプションを追加します (Fastboot、Recovery、ソフトリブート)</string>
+    <string name="system_epm_summ">電源メニューに拡張された再起動オプションを追加します (Fastboot、リカバリー、ソフトリブート)</string>
     <string name="system_downgrade_title">ダウングレードを許可</string>
     <string name="system_downgrade_summ">新しいバージョンのアプリから古いバージョンのアプリのインストールが可能になります</string>
     <string name="system_apksign_title">署名の検証を無効化</string>
@@ -1137,6 +1141,7 @@
     <string name="system_cc_disable_bluetooth_restrict_title">明日までBluetoothの切断を無効化</string>
     <string name="system_cc_volume_showpct_title">音量のパーセンテージを表示</string>
     <string name="system_cc_collapse_after_clicked_title">タッチ後に折りたたむ</string>
+    <string name="system_show_step_count_title">歩数を表示する</string>
     <string name="system_cc_switch_ccandnotification_title">コントロールセンターと通知ドロワーを切り替え</string>
     <string name="system_cc_clock_topmargin_indrawer_title">通知ドロワーの時計上端の余白</string>
 </resources>

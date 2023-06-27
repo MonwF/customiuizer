@@ -12,6 +12,7 @@
     <string name="value_is_set">Giá trị đã chỉnh</string>
     <string name="clear_value">Xóa</string>
     <string name="enable_mod">Kích hoạt mod</string>
+    <string name="white_lists">Bật tự động cho phép</string>
     <string name="system_mods">Hệ thống</string>
     <string name="system_mods_screen">Màn hình</string>
     <string name="system_mods_screen_rotation">Xoay</string>
@@ -30,7 +31,9 @@
     <string name="system_statusbaricons_alarmn_title">Tùy chọn hiển thị biểu tượng báo thức</string>
     <string name="system_statusbaricons_alarmn_summ">Chỉ hiển thị biểu tượng báo thức trong số giờ đã xác định trước báo thức tiếp theo</string>
     <string name="system_statusbaricons_btbattery_title">Pin bluetooth</string>
+    <string name="system_statusbaricons_ble_unlock_title">Mở khóa bằng thiết bị Bluetooth</string>
     <string name="system_statusbaricons_signal_title">Tín hiệu mạng di động</string>
+    <string name="system_statusbaricons_hidesignal_wificonnected_title">Chỉ khi kết nối với Wi-Fi</string>
     <string name="system_statusbaricons_nosims_title">Không có thẻ SIM</string>
     <string name="system_statusbaricons_volte_title">VoLTE</string>
     <string name="system_statusbaricons_roaming_title">Chuyển vùng</string>
@@ -72,6 +75,9 @@
     <string name="system_calendar_app_summ">Mở ứng dụng đã chọn khi nhấn vào ngày phía trên ngăn thông báo</string>
     <string name="system_clockseconds_title">Hiện giây</string>
     <string name="system_cc_hidedate_title">Ẩn ngày</string>
+    <string name="system_cc_hide_shortcuticons_title">Ẩn cài đặt và biểu tượng chỉnh sửa ô xếp</string>
+    <string name="system_cc_custom_clock_action_title">Hành động bấm và giữ tuỳ chỉnh đồng hồ</string>
+    <string name="system_cc_custom_clock_action_summ">Nhấp để mở ứng dụng Cài đặt, nhấn và giữ để mở trình chỉnh sửa ô xếp</string>
     <string name="system_clock_show_ampm_title">Hiện Sáng|Chiều</string>
     <string name="system_statusbar_clock_chip_title">Hiển thị nền màu</string>
     <string name="system_statusbar_clock_chip_radius_title">Góc bo tròn</string>
@@ -151,6 +157,7 @@
     <string name="system_notifchannelsettings_summ">Bật cài đặt menu thông báo sẽ điều hướng đến cài đặt kênh thay vì áp dụng cài đặt thông báo chung</string>
     <string name="system_messagingstylelines_title">Số dòng tối đa trong kiểu nhắn tin</string>
     <string name="system_messagingstylelines_summ">Giới hạn số dòng hiển thị trong thông báo kiểu tin nhắn</string>
+    <string name="system_drawer_removeshortcut_title">Ẩn lối tắt bóng thông báo</string>
     <string name="system_removedismiss_title">Ẩn nút xóa</string>
     <string name="system_removedismiss_summ">Xóa nút xóa tất cả thông báo</string>
     <string name="system_showlux_title">Hiển thị mức độ sáng</string>
@@ -1137,6 +1144,7 @@
     <string name="system_cc_disable_bluetooth_restrict_title">Vô hiệu hóa ngắt kết nối bluetooth cho đến ngày mai</string>
     <string name="system_cc_volume_showpct_title">Hiện phần trăm âm lượng</string>
     <string name="system_cc_collapse_after_clicked_title">Thu gọn sau khi chạm</string>
+    <string name="system_show_step_count_title">Hiển thị số bước chân</string>
     <string name="system_cc_switch_ccandnotification_title">Hoán đổi trung tâm điều khiển và ngăn thông báo</string>
     <string name="system_cc_clock_topmargin_indrawer_title">Lề trên đồng hồ trong ngăn thông báo</string>
 </resources>
