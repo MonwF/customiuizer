@@ -12,6 +12,7 @@
     <string name="value_is_set">Valor configurado</string>
     <string name="clear_value">Claro</string>
     <string name="enable_mod">Ativar mod</string>
+    <string name="white_lists">Ativar lista de permissões</string>
     <string name="system_mods">Sistema</string>
     <string name="system_mods_screen">Tela</string>
     <string name="system_mods_screen_rotation">Rotação</string>
@@ -32,6 +33,7 @@
     <string name="system_statusbaricons_btbattery_title">Bateria bluetooth</string>
     <string name="system_statusbaricons_ble_unlock_title">Desbloquear com dispositivo Bluetooth</string>
     <string name="system_statusbaricons_signal_title">Sinal de rede móvel</string>
+    <string name="system_statusbaricons_hidesignal_wificonnected_title">Somente quando conectado ao Wi-Fi</string>
     <string name="system_statusbaricons_nosims_title">Sem cartão SIM</string>
     <string name="system_statusbaricons_volte_title">VoLTE</string>
     <string name="system_statusbaricons_roaming_title">Roaming</string>
@@ -46,7 +48,7 @@
     <string name="system_statusbaricons_speaker_title">Chamada: viva-voz</string>
     <string name="system_statusbaricons_record_title">Chamada: gravador</string>
     <string name="system_batteryindicator_title">Indicador da barra de bateria</string>
-    <string name="system_batteryindicator_summ">Exibir o nível de carga da bateria como uma barra colorida</string>
+    <string name="system_batteryindicator_summ">Exibir o nível da bateria como uma barra colorida</string>
     <string name="system_batteryindicator_limitvis_title">Visibilidade limitada</string>
     <string name="system_batteryindicator_limitvis_summ">Mostrar apenas na gaveta de notificação e na tela de bloqueio</string>
     <string name="system_batteryindicator_rounded_title">Cantos arredondados</string>
@@ -102,7 +104,7 @@
         \nmm - hora de dois dígito (09)
         \nss - segundo de dois dígito (09)
     </string>
-    <string name="system_clock_dualrow_title">Mostrar em linhas duplas</string>
+    <string name="system_clock_dualrow_title">Mostrar em duas linhas</string>
     <string name="system_clock_fixedwidth_title">Corrija a largura do conteúdo para evitar instabilidade horizontal</string>
     <string name="system_clock_fixedwidth_summ">Ajustar a largura quando os segundos são exibidos</string>
     <string name="system_statusbar_clock_align_title">Alinhamento horizontal</string>
@@ -110,7 +112,7 @@
     <string name="system_maxsbicons_title">Limite de ícones de notificação</string>
     <string name="system_maxsbicons_summ">Número de ícones de notificação a serem exibidos antes de transformá-los em pontos</string>
     <string name="system_mobiletypeicon_title">Ocultar tipo de rede móvel</string>
-    <string name="system_mobiletypeicon_summ">Remova o ícone do tipo de rede móvel da barra de status</string>
+    <string name="system_mobiletypeicon_summ">Remover ícone do tipo de rede móvel da barra de status</string>
     <string name="system_networkindicator_wifi_title">Ocultar indicadores de atividade de rede WiFi</string>
     <string name="system_networkindicator_mobile_title">Ocultar indicadores de atividade da rede móvel</string>
     <string name="system_4gtolte_title">Mostrar ícone LTE para 4G</string>
@@ -121,10 +123,10 @@
     <string name="system_nonetspeedseparator_title">Separador de velocidade de rede</string>
     <string name="system_nonetspeedseparator_summ">Não mostrar linha vertical entre o tempo e a velocidade da rede em dispositivos com entalhes em forma de gota d\'água</string>
     <string name="system_netspeedinterval_title">Intervalo de atualização da velocidade da rede</string>
-    <string name="system_detailednetspeed_title">A velocidade de upload/download é exibida em linhas duplas</string>
-    <string name="system_detailednetspeed_fakedualrow_title">O valor e a unidade são exibidos em linhas duplas</string>
+    <string name="system_detailednetspeed_title">A velocidade de upload/download é exibida em duas linhas</string>
+    <string name="system_detailednetspeed_fakedualrow_title">Valor e unidade serão exibidos em duas linhas</string>
     <string name="system_netspeed_cat_title">Mods de velocidade de rede</string>
-    <string name="system_detailednetspeed_summ">Exibir velocidade da rede de entrada e saída separadamente</string>
+    <string name="system_detailednetspeed_summ">Mostrar velocidade da rede de entrada e saída separadamente</string>
     <string name="system_detailednetspeed_icon_title">Ícones indicadores</string>
     <string name="system_detailednetspeed_icon_summ">Ícones de tráfego de download/upload exibidos ao lado da velocidade (nem todas as fontes personalizadas tem todos os ícones)</string>
     <string name="system_detailednetspeed_low_title">Ocultar baixa velocidade</string>
@@ -138,14 +140,14 @@
     <string name="system_statusbarcontrols_sens_title">Sensibilidade de ajuste</string>
     <string name="system_statusbarcontrols_sens_bright_title">Brilho</string>
     <string name="system_statusbarcontrols_sens_vol_title">Volume</string>
-    <string name="system_statusbarcontrols_single_title">Slide horizontal com um dedo</string>
-    <string name="system_statusbarcontrols_dual_title">Slide horizontal com dois dedos</string>
+    <string name="system_statusbarcontrols_single_title">Deslize horizontalmente com um dedo</string>
+    <string name="system_statusbarcontrols_dual_title">Deslize horizontalmente com dois dedos</string>
     <string name="system_statusbarcontrols_dt_title">Ação de toque duplo</string>
     <string name="system_notifimportance_title">Mostrar importância da notificação</string>
     <string name="system_compactnotif_title">Notificações compactas</string>
     <string name="system_compactnotif_summ">Reduzir os preenchimentos verticais das notificações</string>
     <string name="system_colorizenotiftitle_title">Colorir cartão de notificação</string>
-    <string name="system_colorizenotiftitle_summ">Aplicar a cor do ícone ao cartão (somente estilo de notificação do Android)</string>
+    <string name="system_colorizenotiftitle_summ">Aplicar a cor do ícone ao cartão (somente estilo de notificação Android)</string>
     <string name="system_notify_openinfw_title">Abrir notificação em janela flutuante</string>
     <string name="system_minimalnotifview_title">Trazer de volta a visualização recolhida minimalista</string>
     <string name="system_minimalnotifview_summ">Notificações de importância mínima podem ser recolhidas em exibição de uma linha novamente</string>
@@ -229,7 +231,7 @@
     <string name="system_separatevolume_slider_summ">Adicionar controle deslizante de notificação à caixa de diálogo de volume expandido</string>
     <string name="system_volumetimer_title">Temporizadores estendidos</string>
     <string name="system_volumetimer_summ">Adicione mais intervalos aos temporizadores para os modos Silencioso e Não perturbe</string>
-    <string name="system_volumebar_blur_mtk_title">Ativar o blur da barra de volume para dispositivos MTK</string>
+    <string name="system_volumebar_blur_mtk_title">Ative o blur da barra de volume para dispositivos MTK</string>
     <string name="system_volumedialogdelay_collapsed_title">Atraso de ocultar automaticamente a caixa de diálogo do volume</string>
     <string name="system_volumedialogdelay_collapsed_summ">Recolhido</string>
     <string name="system_volumedialogdelay_expanded_summ">Expandido</string>
@@ -287,12 +289,12 @@
     <string name="system_lockscreen_strongauth_72h_title">Desativar autenticação primária forçada a cada 72 horas</string>
     <string name="system_nopassword_title">Sem senha após a inicialização</string>
     <string name="system_nopassword_summ">Não exija senha em vez de uma impressão digital na primeira vez após a inicialização. É improvável que funcione em dispositivos criptografados.</string>
-    <string name="system_albumartonlock_title">Arte do álbum como papel de parede</string>
-    <string name="system_albumartonlock_summ">Exibir a arte do álbum da faixa atualmente sendo reproduzida como papel de parede na tela de bloqueio</string>
+    <string name="system_albumartonlock_title">Capa do álbum como papel de parede</string>
+    <string name="system_albumartonlock_summ">Exibir a capa do álbum da faixa atualmente reproduzida como papel de parede da tela de bloqueio</string>
     <string name="system_albumartonlock_gray_title">Escala de cinza</string>
-    <string name="system_albumartonlock_gray_summ">Converter a arte do álbum em imagem em preto e branco</string>
-    <string name="system_albumartonlock_blur_title">Blur da arte do álbum</string>
-    <string name="system_albumartonlock_scale_title">Escala de arte do álbum</string>
+    <string name="system_albumartonlock_gray_summ">Converter capa do álbum em imagem preto e branco</string>
+    <string name="system_albumartonlock_blur_title">Blur da capa do álbum</string>
+    <string name="system_albumartonlock_scale_title">Escala da capa do álbum</string>
     <string name="system_credentials_title">Desbloquear credenciais</string>
     <string name="system_credentials_summ">A autenticação em alguns apps requer acesso às credenciais, mas elas permanecem bloqueadas se o PIN/Senha/Padrão for ignorado após a inicialização. A opção atual adiciona o ícone do iniciador que permite desbloquear as credenciais.</string>
     <string name="system_lockscreenshortcuts_title">Ações personalizadas</string>
@@ -335,7 +337,7 @@
     <string name="system_fivegtile_title">Bloco 5G</string>
     <string name="system_fivegtile_summ">Adicionar bloco 5G ao centro de controle</string>
     <string name="system_cc_fpstile_title">Mostrar bloco de taxa de atualização</string>
-    <string name="system_cc_fpstile_summ">Exibir a taxa da atualização de tela atual</string>
+    <string name="system_cc_fpstile_summ">Mostrar a taxa da atualização de tela atual</string>
     <string name="system_qs_force_systemfonts_title">Forçar o relógio a usar fontes do sistema</string>
     <string name="system_cc_dateformat_title">Formato de data personalizado</string>
     <string name="system_wifipassword_title">Ver senha da rede Wi-Fi salva</string>
@@ -355,8 +357,8 @@
     <string name="system_apksign_summ">Permitir a atualização de apps mesmo quando a assinatura do APK for diferente da instalada</string>
     <string name="system_magnifier_title">Lupa de texto</string>
     <string name="system_magnifier_summ">Exibir texto ampliado ao mover um cursor de entrada ou fazer uma seleção (Adicionar apps no método de entrada ao escopo LSPosed primeiro)</string>
-    <string name="system_nooverscroll_title">Desativar overscroll</string>
-    <string name="system_nooverscroll_summ">Impedir que as exibições de lista rolem demais</string>
+    <string name="system_nooverscroll_title">Desativar rolagem além do limite</string>
+    <string name="system_nooverscroll_summ">Evitar a rolagem além do limite nas visualizações de lista</string>
     <string name="system_removesecure_title">Desativar proteção de conteúdo seguro</string>
     <string name="system_remove_startactconfirm_title">Remover confirmação de app aberto</string>
     <string name="system_removesecure_summ">Permitir captura de tela e gravar vídeo de qualquer app</string>
@@ -386,9 +388,9 @@
     <string name="system_orientationlock_title">Bloqueio de orientação</string>
     <string name="system_orientationlock_summ">Adicione o bloco de Configurações Rápidas que pode bloquear a orientação no modo retrato ou paisagem</string>
     <string name="system_notifafterunlock_title">Manter notificações</string>
-    <string name="system_notifafterunlock_summ">Manter notificações na tela de bloqueio mesmo após ser desbloqueado e bloqueado novamente</string>
+    <string name="system_notifafterunlock_summ">Mostrar notificações na tela de bloqueio mesmo após ser desbloqueado e bloqueado novamente</string>
     <string name="system_morenotif_title">Mais notificações</string>
-    <string name="system_morenotif_summ">Aumentar o limite de notificações ativas para um único app de 10 para 24</string>
+    <string name="system_morenotif_summ">Aumente o limite de notificações ativas para um único app de 10 para 24</string>
     <string name="system_allowdirectreply_title">Resposta direta sem desbloqueio</string>
     <string name="system_allowdirectreply_summ">Não requer desbloqueio do dispositivo para usar a resposta direta na tela de bloqueio</string>
     <string name="system_allownotifonkeyguard_title">Permitir na tela de bloqueio</string>
@@ -398,14 +400,14 @@
     <string name="system_hidelsstatusbar_title">Ocultar barra de status</string>
     <string name="system_hidelsstatusbar_summ">Remova a barra de status na tela de bloqueio</string>
     <string name="system_hidelsclock_title">Ocultar bloco superior</string>
-    <string name="system_lockscreen_hidezenmode_title">Ocultar notificação do modo zen</string>
+    <string name="system_lockscreen_hidezenmode_title">Ocultar notificação do modo foco</string>
     <string name="system_hidelsclock_summ">Remova o bloco superior contendo relógio, data e outros dados</string>
     <string name="system_hidelshint_title">Ocultar dica de desbloqueio</string>
     <string name="system_hidelshint_summ">Remover \"Deslize para cima para desbloquear\" na tela de bloqueio</string>
     <string name="system_nosos_title">Ocultar chamada de emergência</string>
     <string name="system_nosos_summ">Desative o botão de chamada de emergência na tela de bloqueio</string>
     <string name="system_lswallpaper_title">Aplicar papel de parede usando qualquer app</string>
-    <string name="system_lswallpaper_summ">Faça com que apps de terceiros possam definir o papel de parede da tela de bloqueio. O app de temas deve ser instalado e ter permissão de acesso ao armazenamento.</string>
+    <string name="system_lswallpaper_summ">Faça com que apps de terceiros possam definir o papel de parede da tela de bloqueio. O app Temas deve ser instalado e ter permissão de acesso ao armazenamento.</string>
     <string name="system_hideqs_title">Limpar modo expandido</string>
     <string name="system_hideqs_summ">Ocultar configurações rápidas e controle deslizante de brilho no modo de notificações expandidas na tela de bloqueio</string>
     <string name="system_taptounlock_title">Toque para desbloquear</string>
@@ -434,7 +436,7 @@
     <string name="system_removecleaner_summ">Ocultar botão que limpa os apps recentes e a memória</string>
     <string name="system_recents_disable_wallpaperscale_title">Desativar escala do papel de parede</string>
     <string name="system_clearalltasks_title">Limpar tudo</string>
-    <string name="system_clearalltasks_summ">Faça o botão de limpeza matar todas as tarefas em execução</string>
+    <string name="system_clearalltasks_summ">Faça com que o botão de limpeza mate todas as tarefas em execução</string>
     <string name="system_hidefromrecents_title">Ocultar dos recentes</string>
     <string name="system_hidefromrecents_summ">Ocultar apps selecionados da lista de tarefas recentes</string>
     <string name="system_recommended_first_title">Primeira ação de atalho</string>
@@ -511,8 +513,8 @@
     <string name="launcher_compat_summ">Método alternativo para aplicar todos os mods na launcher</string>
     <string name="launcher_infinitescroll_title">Rolagem infinita</string>
     <string name="launcher_infinitescroll_summ">Pule da última página para a primeira e vice-versa</string>
-    <string name="launcher_noclockhide_title">Não esconder relógio</string>
-    <string name="launcher_noclockhide_summ">Não esconder o relógio da barra de status em páginas com widgets de relógio</string>
+    <string name="launcher_noclockhide_title">Não ocultar relógio</string>
+    <string name="launcher_noclockhide_summ">Não ocultar o relógio da barra de status em páginas com widgets de relógio</string>
     <string name="launcher_googleminus_title">Ativar a troca de tela -1</string>
     <string name="launcher_googleminus_summ">Exibir uma alternância entre o App Vault e o Google Discover nas configurações da tela inicial</string>
     <string name="launcher_googleminus_note">Requer ROM global (internacional)</string>
@@ -788,7 +790,7 @@
     <string name="array_media_prev">Faixa anterior</string>
     <string name="array_all">Todos os eventos de carregamento</string>
     <string name="array_allbutanim">Apenas eventos sem animação</string>
-    <string name="array_screenlock_no">Sistema padrão</string>
+    <string name="array_screenlock_no">Padrão do sistema</string>
     <string name="array_screenlock_none">Desativar completamente</string>
     <string name="array_screenlock_bootonly">Exigir autenticação após a inicialização</string>
     <string name="array_screenlock_trusted">Desativar em redes/dispositivos confiáveis</string>
@@ -818,7 +820,7 @@
     <string name="array_low">Baixo</string>
     <string name="array_average">Média</string>
     <string name="array_high">Alto</string>
-    <string name="array_match">Combine a arte do álbum ou o papel de parede</string>
+    <string name="array_match">Combine a capa do álbum ou o papel de parede</string>
     <string name="array_static">Cor customizada</string>
     <string name="array_rainbowh">Cores do arco-íris (horizontal)</string>
     <string name="array_rainbowv">Cores do arco-íris (vertical)</string>
@@ -859,13 +861,13 @@
     <string name="array_own">Padrão próprio</string>
     <string name="array_scale_fit">Ajustar a tela</string>
     <string name="array_scale_cover">Cobrir a tela inteira</string>
-    <string name="array_align_top">Principal</string>
+    <string name="array_align_top">Topo</string>
     <string name="array_align_bottom">Fundo</string>
     <string name="array_align_left">Esquerda</string>
-    <string name="array_align_right">Certo</string>
+    <string name="array_align_right">Direita</string>
     <string name="array_align_center">Centro</string>
-    <string name="array_adjust_brightness">Ajustar o brilho</string>
-    <string name="array_adjust_volume">Ajustar o volume</string>
+    <string name="array_adjust_brightness">Ajustar brilho</string>
+    <string name="array_adjust_volume">Ajustar volume</string>
     <string name="array_alarm_absolute">Horário regular</string>
     <string name="array_alarm_relative">Tempo relativo</string>
     <string name="array_alarm_both">Tempo regular e relativo</string>
@@ -875,8 +877,8 @@
     <string name="array_newyear">Ano Novo</string>
     <string name="array_lunarnewyear">Ano Novo Chinês</string>
     <string name="array_covid">Feriado anti-coronavírus</string>
-    <string name="array_displayonly">Somente para exposição</string>
-    <string name="array_hide">Esconder</string>
+    <string name="array_displayonly">Somente exibição</string>
+    <string name="array_hide">Ocultar</string>
     <string name="array_render_auto">Detectar automaticamente</string>
     <string name="array_append">Acrescentar</string>
     <string name="array_prepend">Anteceder</string>
@@ -1093,8 +1095,8 @@
     <string name="system_statusbar_showdevicetemperature_title">Exibir temperatura do dispositivo</string>
     <string name="system_statusbar_batterystyle_title">Estilo do ícone da bateria</string>
     <string name="system_statusbar_batterystyle_digit_title">Dígito da bateria</string>
-    <string name="system_statusbar_batterystyle_mark_fontsize_title">Tamanho da fonte da marca percentual</string>
-    <string name="system_statusbar_batterystyle_mark_verticaloffset_title">Deslocamento vertical do marcador de porcentagem</string>
+    <string name="system_statusbar_batterystyle_mark_fontsize_title">Tamanho da fonte da marca de porcentagem</string>
+    <string name="system_statusbar_batterystyle_mark_verticaloffset_title">Deslocamento vertical da marca de porcentagem</string>
     <string name="system_statusbar_dualsimin2rows_title">Barras de sinal para dois SIMs em duas linhas</string>
     <string name="system_statusbar_dualrows_title">Duas linhas na barra de status</string>
     <string name="system_statusbar_dualrows_summ">Precisa aumentar a altura da barra de status em alguns dispositivos</string>
@@ -1140,6 +1142,7 @@
     <string name="system_cc_disable_bluetooth_restrict_title">Desativar a desconexão do bluetooth até amanhã</string>
     <string name="system_cc_volume_showpct_title">Mostrar porcentagem de volume</string>
     <string name="system_cc_collapse_after_clicked_title">Fechar após tocar</string>
+    <string name="system_show_step_count_title">Mostrar contador de passos</string>
     <string name="system_cc_switch_ccandnotification_title">Alternar entre o centro de controle e a gaveta de notificações</string>
     <string name="system_cc_clock_topmargin_indrawer_title">Margem superior do relógio na gaveta de notificações</string>
 </resources>
