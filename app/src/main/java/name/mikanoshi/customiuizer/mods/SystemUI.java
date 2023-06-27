@@ -2342,8 +2342,10 @@ public class SystemUI {
                             GlobalActions.handleAction(mContext, "pref_key_system_statusbarcontrols_dt");
                         }
                         if ((mTouchTime - currentDownTime > 600 && mTouchTime - currentDownTime < 4000)
-                            && Math.abs(mTouchX - currentDownX) < 100F)
-                        {
+                            && Math.abs(mTouchX - currentDownX) < 100F) {
+                            if (MainModule.mPrefs.getBoolean("system_statusbarcontrols_longpress_vibrate")) {
+                                Helpers.performStrongVibration(mContext);
+                            }
                             GlobalActions.handleAction(mContext, "pref_key_system_statusbarcontrols_longpress");
                         }
                         currentDownTime = 0L;

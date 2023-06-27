@@ -61,6 +61,13 @@
 		android:title="@string/controls_fingerprintlong_title"
 		android:defaultValue="false" />
 
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbarcontrols_longpress_vibrate"
+		android:summary="@string/controls_volumemedia_vibrate_summ"
+		android:title="@string/controls_volumemedia_vibrate_title"
+		miuizer:indentLevel="1"
+		android:defaultValue="false" />
+
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>
