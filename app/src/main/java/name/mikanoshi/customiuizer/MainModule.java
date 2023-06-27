@@ -265,6 +265,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 || mPrefs.getBoolean("system_cc_volume_showpct")
                 || mPrefs.getBoolean("system_volumebar_blur_mtk")
                 || mPrefs.getBoolean("system_cc_hidedate")
+                || mPrefs.getBoolean("system_cc_hide_shortcuticons")
                 || mPrefs.getBoolean("system_cc_clocktweak")
                 || mPrefs.getBoolean("system_cc_tile_roundedrect")
                 || (mPrefs.getBoolean("system_separatevolume") && mPrefs.getBoolean("system_separatevolume_slider"))

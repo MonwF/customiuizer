@@ -1890,6 +1890,9 @@ public class SystemUI {
                     if (MainModule.mPrefs.getBoolean("system_cc_clocktweak")) {
                         initCCClockStyle(pluginLoader);
                     }
+                    if (MainModule.mPrefs.getBoolean("system_cc_hide_shortcuticons")) {
+                        hideCCSettingsTilesEdit(pluginLoader);
+                    }
                 }
             }
         });
@@ -4070,6 +4073,53 @@ public class SystemUI {
         };
         Helpers.findAndHookMethod("miui.systemui.controlcenter.windowview.MainPanelHeaderController", pluginLoader, "updateVisibility", hideDateView);
         Helpers.findAndHookMethod("miui.systemui.controlcenter.windowview.MainPanelHeaderController", pluginLoader, "updateConstraint", fixClockView);
+    }
+    public static void hideCCSettingsTilesEdit(ClassLoader pluginLoader) {
+        MethodHook hideIcons = new MethodHook() {
+            @Override
+            protected void after(final MethodHookParam param) throws Throwable {
+                ViewGroup headerView = (ViewGroup) XposedHelpers.callMethod(param.thisObject, "getView");
+                int iconId = headerView.getResources().getIdentifier("settings_shortcut", "id", "miui.systemui.plugin");
+                ImageView iconView = headerView.findViewById(iconId);
+                if (iconView != null) {
+                    iconView.setVisibility(View.GONE);
+                }
+                iconId = headerView.getResources().getIdentifier("tiles_edit", "id", "miui.systemui.plugin");
+                iconView = headerView.findViewById(iconId);
+                if (iconView != null) {
+                    iconView.setVisibility(View.GONE);
+                }
+            }
+        };
+        Helpers.findAndHookMethod("miui.systemui.controlcenter.windowview.MainPanelHeaderController", pluginLoader, "updateVisibility", hideIcons);
+
+        if (MainModule.mPrefs.getBoolean("system_cc_custom_clock_action")) {
+            Helpers.findAndHookMethod("miui.systemui.controlcenter.windowview.MainPanelHeaderController", pluginLoader, "addClockViews", new MethodHook() {
+                @Override
+                protected void after(MethodHookParam param) throws Throwable {
+                    TextView clockView = (TextView) XposedHelpers.getObjectField(param.thisObject, "clockView");
+                    clockView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Object activityStarter = XposedHelpers.getObjectField(param.thisObject, "activityStarter");
+                            Intent addFlags = new Intent("android.settings.SETTINGS").addFlags(268435456);
+                            XposedHelpers.callMethod(activityStarter, "postStartActivityDismissingKeyguard", addFlags, 350);
+                        }
+                    });
+                    clockView.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            Object lazyQsCustomizer = XposedHelpers.getObjectField(param.thisObject, "qsCustomizer");
+                            Object qsCustomizer = XposedHelpers.callMethod(lazyQsCustomizer, "get");
+                            XposedHelpers.callMethod(qsCustomizer, "show");
+                            Object hapticFeedback = XposedHelpers.getObjectField(param.thisObject, "hapticFeedback");
+                            XposedHelpers.callMethod(hapticFeedback, "postLongClick");
+                            return true;
+                        }
+                    });
+                }
+            });
+        }
     }
     public static void initCCClockStyle(ClassLoader pluginLoader) {
         int defaultClockSize = 9;
