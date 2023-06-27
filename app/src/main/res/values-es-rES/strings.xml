@@ -12,6 +12,7 @@
     <string name="value_is_set">Valor configurado</string>
     <string name="clear_value">Limpiar</string>
     <string name="enable_mod">Habilitar mod</string>
+    <string name="white_lists">Activar lista blanca</string>
     <string name="system_mods">Sistema</string>
     <string name="system_mods_screen">Pantalla</string>
     <string name="system_mods_screen_rotation">Rotación</string>
@@ -32,6 +33,7 @@
     <string name="system_statusbaricons_btbattery_title">Batería de Bluetooth</string>
     <string name="system_statusbaricons_ble_unlock_title">Desbloquear con dispositivo Bluetooth</string>
     <string name="system_statusbaricons_signal_title">Señal de red móvil</string>
+    <string name="system_statusbaricons_hidesignal_wificonnected_title">Solo cuando se esté conectado al Wi-Fi</string>
     <string name="system_statusbaricons_nosims_title">Sin tarjeta SIM</string>
     <string name="system_statusbaricons_volte_title">VoLTE</string>
     <string name="system_statusbaricons_roaming_title">Itinerancia</string>
@@ -1138,6 +1140,7 @@
     <string name="system_cc_disable_bluetooth_restrict_title">Desactivar desconectar Bluetooth hasta mañana</string>
     <string name="system_cc_volume_showpct_title">Mostrar el porcentaje del volumen</string>
     <string name="system_cc_collapse_after_clicked_title">Cerrar después de tocar</string>
+    <string name="system_show_step_count_title">Mostrar el número de pasos</string>
     <string name="system_cc_switch_ccandnotification_title">Cambiar el lado del centro de control y panel de notificaciones</string>
     <string name="system_cc_clock_topmargin_indrawer_title">Margen superior del reloj en el panel de notificaciones</string>
 </resources>
