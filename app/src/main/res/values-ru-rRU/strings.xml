@@ -12,6 +12,7 @@
     <string name="value_is_set">Значение настроено</string>
     <string name="clear_value">Очистить</string>
     <string name="enable_mod">Активировать мод</string>
+    <string name="white_lists">Включить белый список</string>
     <string name="system_mods">Система</string>
     <string name="system_mods_screen">Экран</string>
     <string name="system_mods_screen_rotation">Поворот</string>
@@ -32,6 +33,7 @@
     <string name="system_statusbaricons_btbattery_title">Батарея Bluetooth</string>
     <string name="system_statusbaricons_ble_unlock_title">Разблокировать с помощью Bluetooth устройства</string>
     <string name="system_statusbaricons_signal_title">Сигнал мобильной сети</string>
+    <string name="system_statusbaricons_hidesignal_wificonnected_title">Прятать значки сигала сети при подключении к Wi-Fi</string>
     <string name="system_statusbaricons_nosims_title">Нет SIM карты</string>
     <string name="system_statusbaricons_volte_title">VoLTE</string>
     <string name="system_statusbaricons_roaming_title">Роуминг</string>
@@ -73,6 +75,9 @@
     <string name="system_calendar_app_summ">Открывает выбранное приложение при клике по дате в панели уведомлений</string>
     <string name="system_clockseconds_title">Показывать секунды</string>
     <string name="system_cc_hidedate_title">Скрыть дату</string>
+    <string name="system_cc_hide_shortcuticons_title">Скрыть иконку настройки и иконку редактирования плиток</string>
+    <string name="system_cc_custom_clock_action_title">Настройка действия часов</string>
+    <string name="system_cc_custom_clock_action_summ">Открывать настройки при нажатии на плитки и редактировании ее длительным нажатием</string>
     <string name="system_clock_show_ampm_title">Показать AM|PM</string>
     <string name="system_statusbar_clock_chip_title">Показать пузырь под часами</string>
     <string name="system_statusbar_clock_chip_radius_title">Радиус скругления</string>
@@ -1138,6 +1143,7 @@
     <string name="system_cc_disable_bluetooth_restrict_title">Выключить отключение Bluetooth до завтра</string>
     <string name="system_cc_volume_showpct_title">Показывать проценты громкости</string>
     <string name="system_cc_collapse_after_clicked_title">Свернуть после касания</string>
+    <string name="system_show_step_count_title">Показать счетчик</string>
     <string name="system_cc_switch_ccandnotification_title">Сменить центр управления и панель уведомлений</string>
     <string name="system_cc_clock_topmargin_indrawer_title">Верхнее поле часов в панели уведомлений</string>
 </resources>
