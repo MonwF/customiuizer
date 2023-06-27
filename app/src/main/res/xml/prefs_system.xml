@@ -752,6 +752,19 @@
 			android:defaultValue="" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_cc_hide_shortcuticons"
+			android:title="@string/system_cc_hide_shortcuticons_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_cc_custom_clock_action"
+			android:title="@string/system_cc_custom_clock_action_title"
+			android:summary="@string/system_cc_custom_clock_action_summ"
+			miuizer:indentLevel="1"
+			android:dependency="pref_key_system_cc_hide_shortcuticons"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_qsnolabels"
 			android:title="@string/system_qsnolabels_title"
 			android:defaultValue="false" />

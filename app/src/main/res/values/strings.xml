@@ -84,6 +84,9 @@
     <string name="system_calendar_app_summ">Open selected app when date in notification drawer\'s header is tapped</string>
     <string name="system_clockseconds_title">Show seconds</string>
     <string name="system_cc_hidedate_title">Hide date</string>
+    <string name="system_cc_hide_shortcuticons_title">Hide settings and tile edit icons</string>
+    <string name="system_cc_custom_clock_action_title">Customize clock actions</string>
+    <string name="system_cc_custom_clock_action_summ">Open settings app with click and edit tiles with long click</string>
     <string name="system_clock_show_ampm_title">Show AM|PM</string>
     <string name="system_statusbar_clock_chip_title">Show colorful bubble behind the time</string>
     <string name="system_statusbar_clock_chip_radius_title">Corner radius</string>
