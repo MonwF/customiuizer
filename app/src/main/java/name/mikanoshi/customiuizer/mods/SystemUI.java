@@ -1812,6 +1812,7 @@ public class SystemUI {
             newSingleSlider = !Helpers.NOT_EXIST_SYMBOL.equals(hasFeature);
         }
         if (newSingleSlider) {
+            XposedHelpers.setStaticBooleanField(UtilCls, "sIsNotificationSingle", true);
             Helpers.findAndHookMethod("com.android.systemui.miui.volume.Util", classLoader, "isNotificationSingle", Context.class, int.class, XC_MethodReplacement.returnConstant(true));
         }
         else {
