@@ -981,7 +981,7 @@ public class Controls {
 			protected void before(MethodHookParam param) throws Throwable {
 				XposedHelpers.setObjectField(param.thisObject, "mNavMode", param.args[0]);
 				if (XposedHelpers.getObjectField(param.thisObject, "mNavigationBarView") != null) {
-					XposedHelpers.callMethod(param.thisObject, "setNavigationBarView", null);
+					XposedHelpers.callMethod(param.thisObject, "setNavigationBarView", (Object) null);
 				}
 				else {
 					XposedHelpers.callMethod(param.thisObject, "checkAndApplyNavigationMode");

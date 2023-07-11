@@ -50,6 +50,12 @@
 		android:disableDependentsState="true"
 		miuizer:indentLevel="1" />
 
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbar_clock_chip_orientation_vertical"
+		android:title="@string/system_statusbar_clock_chip_orientation_vertical_title"
+		android:dependency="pref_key_system_statusbar_clock_chip"
+		miuizer:indentLevel="1" />
+
 	<name.mikanoshi.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_system_statusbar_clock_chip_startcolor"
 		android:title="@string/system_statusbar_clock_chip_startcolor_title"
