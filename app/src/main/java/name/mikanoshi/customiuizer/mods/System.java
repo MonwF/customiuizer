@@ -940,7 +940,8 @@ public class System {
                     mClock.setTextColor(textcolor);
                 }
                 GradientDrawable chipDrawable = new GradientDrawable();
-                chipDrawable.setOrientation(GradientDrawable.Orientation.LEFT_RIGHT);
+                boolean verticalOrientation = MainModule.mPrefs.getBoolean("system_statusbar_clock_chip_orientation_vertical");
+                chipDrawable.setOrientation(verticalOrientation ? GradientDrawable.Orientation.TOP_BOTTOM : GradientDrawable.Orientation.LEFT_RIGHT);
                 chipDrawable.setColors(new int[]{startColor, endColor});
                 chipDrawable.setShape(GradientDrawable.RECTANGLE);
                 int horizPadding = MainModule.mPrefs.getInt("system_statusbar_clock_chip_horizpadding", 0);

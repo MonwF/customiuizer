@@ -93,6 +93,7 @@
     <string name="system_statusbar_clock_chip_startcolor_title">Start color</string>
     <string name="system_statusbar_clock_chip_endcolor_title">End color</string>
     <string name="system_statusbar_clock_chip_customtextcolor_title">Custom text color</string>
+    <string name="system_statusbar_clock_chip_orientation_vertical_title">Draw the gradient from the top to the bottom</string>
     <string name="system_statusbar_clock_chip_verticalpadding_title">Vertical padding</string>
     <string name="system_clock_time_format_title">24-hour time format</string>
     <string name="system_clock_leadingzero_title">Show leading zero to hours</string>
