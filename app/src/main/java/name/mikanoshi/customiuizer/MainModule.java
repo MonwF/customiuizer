@@ -268,6 +268,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 || mPrefs.getBoolean("system_cc_hide_shortcuticons")
                 || mPrefs.getBoolean("system_cc_clocktweak")
                 || mPrefs.getBoolean("system_cc_tile_roundedrect")
+                || mPrefs.getStringAsInt("system_cc_bluetooth_tile_style", 1) > 1
                 || (mPrefs.getBoolean("system_separatevolume") && mPrefs.getBoolean("system_separatevolume_slider"))
                 || (mPrefs.getInt("system_volumedialogdelay_collapsed", 0) > 0 || mPrefs.getInt("system_volumedialogdelay_expanded", 0) > 0)
                 || (mPrefs.getInt("system_volumeblur_collapsed", 0) > 0 || mPrefs.getInt("system_volumeblur_expanded", 0) > 0)

@@ -112,6 +112,7 @@ import name.mikanoshi.customiuizer.R;
 import name.mikanoshi.customiuizer.utils.BatteryIndicator;
 import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.Helpers.MethodHook;
+import name.mikanoshi.customiuizer.utils.ResourceHooks;
 import name.mikanoshi.customiuizer.utils.StepCounterController;
 
 public class SystemUI {
@@ -1060,7 +1061,6 @@ public class SystemUI {
                 }
                 else {
                     XposedHelpers.setAdditionalInstanceField(param.thisObject, "subStrengthId", level % 10);
-                    XposedHelpers.setObjectField(mobileIconState, "fiveGDrawableId", 0);
                 }
             }
         };
@@ -1650,7 +1650,6 @@ public class SystemUI {
             protected void before(final MethodHookParam param) throws Throwable {
                 Object mobileIconState = param.args[0];
                 XposedHelpers.setObjectField(mobileIconState, "showMobileDataTypeSingle", true);
-                XposedHelpers.setObjectField(mobileIconState, "fiveGDrawableId", 0);
             }
         };
         Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyMobileState", showSingleMobileType);
@@ -1893,6 +1892,9 @@ public class SystemUI {
                     }
                     if (MainModule.mPrefs.getBoolean("system_cc_hide_shortcuticons")) {
                         hideCCSettingsTilesEdit(pluginLoader);
+                    }
+                    if (MainModule.mPrefs.getStringAsInt("system_cc_bluetooth_tile_style", 1) > 1) {
+                        BluetoothTileStyleHook(pluginLoader);
                     }
                 }
             }
@@ -4292,5 +4294,112 @@ public class SystemUI {
         };
         Helpers.findAndHookMethod("com.android.systemui.qs.MiuiNotificationHeaderView", lpparam.classLoader, "themeChanged", updateStyleHook);
         Helpers.findAndHookMethod("com.android.systemui.controlcenter.phone.widget.ControlCenterStatusBar", lpparam.classLoader, "updateHeaderColor", updateStyleHook);
+    }
+
+    public static void BluetoothTileStyleHook(ClassLoader pluginLoader) {
+        final int[] tileResIds = {0};
+        Helpers.findAndHookMethod("miui.systemui.dagger.PluginComponentFactory", pluginLoader, "create", Context.class, Context.class, new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                Context pluginContext = (Context) param.args[1];
+                tileResIds[0] = pluginContext.getResources().getIdentifier("big_tile", "layout", "miui.systemui.plugin");
+            }
+        });
+        Helpers.hookAllMethods("miui.systemui.controlcenter.dagger.ControlCenterViewModule", pluginLoader, "createBigTileGroup", new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                ViewGroup mView = (ViewGroup) param.getResult();
+                LayoutInflater li = (LayoutInflater) XposedHelpers.callMethod(param.args[0], "injectable", param.args[1]);
+                View btTileView = li.inflate(tileResIds[0], null);
+                mView.addView(btTileView, 2);
+                btTileView.setTag("big_tile_bt");
+            }
+        });
+        int styleId = MainModule.mPrefs.getStringAsInt("system_cc_bluetooth_tile_style", 1);
+        MethodHook updateStyleHook = new MethodHook() {
+            boolean inited = false;
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                ViewGroup mView = (ViewGroup) XposedHelpers.callMethod(param.thisObject, "getView");
+                View bigTileB = (View) XposedHelpers.getObjectField(param.thisObject, "bigTileB");
+                if (!inited) {
+                    inited = true;
+                    Object factory = XposedHelpers.getObjectField(param.thisObject, "tileViewFactory");
+                    View btTileView = mView.findViewWithTag("big_tile_bt");
+                    int btTileId = ResourceHooks.getFakeResId("bt_big_tile");
+                    btTileView.setId(btTileId);
+                    Object btController = XposedHelpers.callMethod(factory, "create", btTileView, "bt");
+                    XposedHelpers.setAdditionalInstanceField(param.thisObject, "btTileView", btTileView);
+                    XposedHelpers.setAdditionalInstanceField(param.thisObject, "btController", btController);
+
+                    Class<?> ConstraintSetClass = pluginLoader.loadClass("androidx.constraintlayout.widget.ConstraintSet");
+                    Object constraintSet = XposedHelpers.newInstance(ConstraintSetClass);
+                    XposedHelpers.callMethod(constraintSet, "clone", mView);
+                    View bigTileA = (View) XposedHelpers.getObjectField(param.thisObject, "bigTileA");
+                    if (styleId == 2) {
+                        XposedHelpers.callMethod(constraintSet, "connect", bigTileB.getId(), 7, btTileId, 6);
+                        XposedHelpers.callMethod(constraintSet, "connect", btTileId, 6, bigTileB.getId(), 7);
+                        XposedHelpers.callMethod(constraintSet, "connect", btTileId, 7, bigTileA.getId(), 7);
+                        XposedHelpers.callMethod(constraintSet, "connect", btTileId, 3, bigTileB.getId(), 3);
+                        XposedHelpers.callMethod(constraintSet, "connect", btTileId, 4, 0, 4);
+                        XposedHelpers.callMethod(constraintSet, "setMargin", btTileId, 6, (int)Helpers.dp2px(10));
+                        int labelResId = mView.getResources().getIdentifier("label_container", "id", "miui.systemui.plugin");
+                        bigTileB.findViewById(labelResId).setVisibility(View.GONE);
+                        btTileView.findViewById(labelResId).setVisibility(View.GONE);
+//                        ((ViewGroup)bigTileB.findViewById(labelResId)).getChildAt(0).setVisibility(View.GONE);
+//                        ((ViewGroup)btTileView.findViewById(labelResId)).getChildAt(0).setVisibility(View.GONE);
+//                        ViewGroup.LayoutParams layoutParams = bigTileB.findViewById(labelResId).getLayoutParams();
+//                        ((ViewGroup.MarginLayoutParams) layoutParams).leftMargin = 0;
+//                        layoutParams = btTileView.findViewById(labelResId).getLayoutParams();
+//                        ((ViewGroup.MarginLayoutParams) layoutParams).leftMargin = 0;
+                    }
+                    else {
+                        XposedHelpers.callMethod(constraintSet, "connect", bigTileB.getId(), 4, btTileId, 3);
+                        XposedHelpers.callMethod(constraintSet, "connect", btTileId, 6, bigTileA.getId(), 6);
+                        XposedHelpers.callMethod(constraintSet, "connect", btTileId, 7, bigTileA.getId(), 7);
+                        XposedHelpers.callMethod(constraintSet, "connect", btTileId, 3, bigTileB.getId(), 4);
+                        XposedHelpers.callMethod(constraintSet, "connect", btTileId, 4, 0, 4);
+                    }
+                    XposedHelpers.callMethod(constraintSet, "constrainWidth", btTileId, 0);
+                    XposedHelpers.callMethod(constraintSet, "constrainHeight", btTileId, 0);
+                    XposedHelpers.callMethod(constraintSet, "applyTo", mView);
+                }
+                if (styleId == 3) {
+                    ViewGroup.LayoutParams layoutParams = bigTileB.getLayoutParams();
+                    int verticalMargin = (int)Helpers.dp2px(4);
+                    ((ViewGroup.MarginLayoutParams) layoutParams).topMargin = verticalMargin;
+                    ((ViewGroup.MarginLayoutParams) layoutParams).bottomMargin = verticalMargin;
+                }
+            }
+        };
+        Helpers.findAndHookMethod("miui.systemui.controlcenter.qs.tileview.BigTileGroupController", pluginLoader, "updateResources", updateStyleHook);
+        Helpers.findAndHookMethod("miui.systemui.controlcenter.qs.tileview.BigTileGroupController", pluginLoader, "setListening", boolean.class, new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                Object btController = XposedHelpers.getAdditionalInstanceField(param.thisObject, "btController");
+                if (btController != null) {
+                    XposedHelpers.callMethod(btController, "setListening", param.args[0]);
+                }
+            }
+        });
+        Helpers.findAndHookMethod("miui.systemui.controlcenter.qs.tileview.BigTileGroupController", pluginLoader, "getRowViews", int.class, new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                int row = (int) param.args[0];
+                Object btTileView;
+                if (row == 1 && (btTileView = XposedHelpers.getAdditionalInstanceField(param.thisObject, "btTileView")) != null) {
+                    ((ArrayList<Object>)param.getResult()).add(btTileView);
+                }
+            }
+        });
+        Helpers.findAndHookMethod("miui.systemui.controlcenter.qs.tileview.BigTileGroupController", pluginLoader, "getChildControllers", new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                Object btController = XposedHelpers.getAdditionalInstanceField(param.thisObject, "btController");
+                if (btController != null) {
+                    ((ArrayList<Object>)param.getResult()).add(btController);
+                }
+            }
+        });
     }
 }
