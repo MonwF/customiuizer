@@ -153,12 +153,14 @@ public class ResourceHooks {
 			else if (replacements.containsKey(resAnyPkgName))
 				replacement = replacements.get(resAnyPkgName);
 
-			if (replacement != null)
-			if (replacement.first == ReplacementType.OBJECT) return replacement.second;
-			else if (replacement.first == ReplacementType.DENSITY) {
-				return (Float)replacement.second * res.getDisplayMetrics().density;
+			if (replacement != null) {
+				if (replacement.first == ReplacementType.OBJECT) {return replacement.second;}
+				else if (replacement.first == ReplacementType.DENSITY) {
+					return (Float)replacement.second * res.getDisplayMetrics().density;
+				}
+				else if (replacement.first == ReplacementType.ID) modResId = (Integer)replacement.second;
 			}
-			else if (replacement.first == ReplacementType.ID) modResId = (Integer)replacement.second;
+
 			if (modResId == null) return null;
 
 			Resources modRes = Helpers.getModuleRes(context);

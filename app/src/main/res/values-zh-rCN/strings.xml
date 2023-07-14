@@ -1154,6 +1154,10 @@
     <string name="system_cc_tile_roundedrect_title">圆角矩形磁贴</string>
     <string name="system_cc_enable_style_switch_title">强制开启控制中心样式切换</string>
     <string name="system_cc_disable_bluetooth_restrict_title">禁用蓝牙临时关闭态</string>
+    <string name="system_cc_bluetooth_tile_style_title">蓝牙磁贴样式</string>
+    <string name="system_cc_bluetooth_tile_style_summ">蓝牙磁贴移至网络磁贴区域</string>
+    <string name="system_cc_bluetooth_tile_style_3rows">三排大磁贴</string>
+    <string name="system_cc_bluetooth_tile_style_2rows2cols"> 一大和二小磁贴</string>
     <string name="system_cc_volume_showpct_title">显示声音百分比</string>
     <string name="system_cc_switch_ccandnotification_title">对调控制中心与通知抽屉</string>
     <string name="system_cc_collapse_after_clicked_title">单击开关后自动收起</string>

@@ -1192,6 +1192,10 @@
     <string name="system_cc_tile_roundedrect_title">Rounded rectangle tile</string>
     <string name="system_cc_enable_style_switch_title">Force Enable CC style switch</string>
     <string name="system_cc_disable_bluetooth_restrict_title">Disable disconnect bluetooth until tomorrow</string>
+    <string name="system_cc_bluetooth_tile_style_title">Bluetooth tile style</string>
+    <string name="system_cc_bluetooth_tile_style_3rows">Three big tiles</string>
+    <string name="system_cc_bluetooth_tile_style_2rows2cols">One big and two small tiles</string>
+    <string name="system_cc_bluetooth_tile_style_summ">Move the bluetooth tile near the network tile</string>
     <string name="system_cc_volume_showpct_title">Show volume percentage</string>
     <string name="system_cc_collapse_after_clicked_title">Collapse after touch</string>
     <string name="system_show_step_count_title">Show step count</string>

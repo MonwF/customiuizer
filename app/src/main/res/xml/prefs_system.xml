@@ -805,6 +805,14 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_cc_bluetooth_tile_style"
+			android:title="@string/system_cc_bluetooth_tile_style_title"
+			android:summary="@string/system_cc_bluetooth_tile_style_summ"
+			android:entries="@array/system_cc_bluetooth_tile_style_list"
+			android:entryValues="@array/onoff_val"
+			android:defaultValue="1" />
+
+		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_system_qshaptics"
 			android:summary="@string/system_qshaptic_summ"
 			android:title="@string/system_qshaptic_title"

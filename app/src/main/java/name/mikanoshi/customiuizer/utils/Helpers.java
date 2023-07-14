@@ -540,6 +540,14 @@ public class Helpers {
 		context.startActivity(uriIntent);
 	}
 
+	public static float dp2px(float dp) {
+		return TypedValue.applyDimension(
+			TypedValue.COMPLEX_UNIT_DIP,
+			dp,
+			Resources.getSystem().getDisplayMetrics()
+		);
+	}
+
 	public static void openAppInfo(Context context, String pkg, int user) {
 		try {
 			Intent intent = new Intent("miui.intent.action.APP_MANAGER_APPLICATION_DETAIL");
