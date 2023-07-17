@@ -370,7 +370,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getStringAsInt("system_qshaptics", 1) > 1) System.QSHapticHook(lpparam);
             if (mPrefs.getBoolean("system_qs_hideoperator")) System.HideCCOperatorHook(lpparam);
             if (mPrefs.getBoolean("system_cc_hideoperator_delimiter")) System.HideCCOperatorDelimiterHook(lpparam);
-            if (mPrefs.getBoolean("system_cc_show_stepcount")) SystemUI.ShowCCStepCountHook(lpparam);
+            if (mPrefs.getBoolean("system_cc_show_stepcount")
+                || mPrefs.getBoolean("system_drawer_show_stepcount")
+            ) SystemUI.ShowCCStepCountHook(lpparam);
             if (mPrefs.getBoolean("system_cc_disable_bluetooth_restrict")) System.DisableBluetoothRestrictHook(lpparam);
             if (mPrefs.getBoolean("system_cc_collapse_after_clicked")) System.CollapseCCAfterClickHook(lpparam);
             if (mPrefs.getBoolean("system_cc_switch_qsandnotification")) SystemUI.SwitchCCAndNotificationHook(lpparam);

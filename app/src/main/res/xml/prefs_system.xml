@@ -512,6 +512,11 @@
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_drawer_show_stepcount"
+			android:title="@string/system_show_step_count_title"
+			android:defaultValue="false" />
+
+		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_showpct"
 			android:title="@string/system_showpct_title"
 			android:summary="@string/system_showpct_summ"
