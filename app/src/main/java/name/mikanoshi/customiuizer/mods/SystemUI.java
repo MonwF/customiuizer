@@ -4275,8 +4275,8 @@ public class SystemUI {
                     StepCounterController.removeStepViewByTag(tag);
                     stepView = new TextView(headView.getContext());
                     Resources res = headView.getResources();
-//                    int styleId = res.getIdentifier("TextAppearance.StatusBar.Clock", "style", "com.android.systemui");
-//                    stepView.setTextAppearance(styleId);
+                    int styleId = res.getIdentifier("TextAppearance.StatusBar.Clock", "style", "com.android.systemui");
+                    stepView.setTextAppearance(styleId);
                     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
                     float horizMargin = TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP,
@@ -4286,14 +4286,19 @@ public class SystemUI {
                     lp.rightMargin = (int) horizMargin;
                     lp.gravity = Gravity.CENTER_VERTICAL;
                     mSystemIconContainer.addView(stepView, mSystemIconContainer.indexOfChild(mCarrierText), lp);
+                    stepView.setGravity(Gravity.CENTER_VERTICAL);
                     stepView.setTag(tag);
                     StepCounterController.addStepView(stepView);
                 }
                 stepView.setTextColor(mCarrierText.getTextColors());
             }
         };
-        Helpers.findAndHookMethod("com.android.systemui.qs.MiuiNotificationHeaderView", lpparam.classLoader, "themeChanged", updateStyleHook);
-        Helpers.findAndHookMethod("com.android.systemui.controlcenter.phone.widget.ControlCenterStatusBar", lpparam.classLoader, "updateHeaderColor", updateStyleHook);
+        if (MainModule.mPrefs.getBoolean("system_drawer_show_stepcount")) {
+            Helpers.findAndHookMethod("com.android.systemui.qs.MiuiNotificationHeaderView", lpparam.classLoader, "themeChanged", updateStyleHook);
+        }
+        if (MainModule.mPrefs.getBoolean("system_cc_show_stepcount")) {
+            Helpers.findAndHookMethod("com.android.systemui.controlcenter.phone.widget.ControlCenterStatusBar", lpparam.classLoader, "updateHeaderColor", updateStyleHook);
+        }
     }
 
     public static void BluetoothTileStyleHook(ClassLoader pluginLoader) {
