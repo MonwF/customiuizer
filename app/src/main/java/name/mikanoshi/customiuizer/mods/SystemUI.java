@@ -2186,6 +2186,23 @@ public class SystemUI {
                 param.setResult(seekWidth / 10 * seg + marginLeft - halfTimerWidth);
             }
         });
+
+        MethodHook segHook = new MethodHook() {
+            int prevSeg = 0;
+            @Override
+            protected void before(MethodHookParam param) throws Throwable {
+                prevSeg = XposedHelpers.getIntField(param.thisObject, "mCurrentSegment");
+                if (prevSeg < 3 || (prevSeg == 3 && XposedHelpers.getIntField(param.thisObject, "mDeterminedSegment") == 3)) {
+                    XposedHelpers.setIntField(param.thisObject, "mCurrentSegment", 0);
+                }
+            }
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                XposedHelpers.setIntField(param.thisObject, "mCurrentSegment", prevSeg);
+            }
+        };
+
+        Helpers.findAndHookMethod("com.android.systemui.miui.volume.MiuiVolumeTimerDrawableHelper", pluginLoader, "updateDrawables", segHook);
     }
 
     public static void CCTileCornerHook(ClassLoader pluginLoader) {
