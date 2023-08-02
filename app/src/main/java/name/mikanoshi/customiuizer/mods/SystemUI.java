@@ -4368,12 +4368,11 @@ public class SystemUI {
                         int labelResId = mView.getResources().getIdentifier("label_container", "id", "miui.systemui.plugin");
                         bigTileB.findViewById(labelResId).setVisibility(View.GONE);
                         btTileView.findViewById(labelResId).setVisibility(View.GONE);
-//                        ((ViewGroup)bigTileB.findViewById(labelResId)).getChildAt(0).setVisibility(View.GONE);
-//                        ((ViewGroup)btTileView.findViewById(labelResId)).getChildAt(0).setVisibility(View.GONE);
-//                        ViewGroup.LayoutParams layoutParams = bigTileB.findViewById(labelResId).getLayoutParams();
-//                        ((ViewGroup.MarginLayoutParams) layoutParams).leftMargin = 0;
-//                        layoutParams = btTileView.findViewById(labelResId).getLayoutParams();
-//                        ((ViewGroup.MarginLayoutParams) layoutParams).leftMargin = 0;
+                        int iconResId = mView.getResources().getIdentifier("status_icon", "id", "miui.systemui.plugin");
+                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) bigTileB.findViewById(iconResId).getLayoutParams();
+                        layoutParams.leftMargin = (int)Helpers.dp2px(3);
+                        layoutParams = (LinearLayout.LayoutParams) btTileView.findViewById(iconResId).getLayoutParams();
+                        layoutParams.leftMargin = (int)Helpers.dp2px(3);
                     }
                     else {
                         XposedHelpers.callMethod(constraintSet, "connect", bigTileB.getId(), 4, btTileId, 3);
@@ -4423,5 +4422,59 @@ public class SystemUI {
                 }
             }
         });
+    }
+    public static void HideMobileNetworkIndicatorHook(LoadPackageParam lpparam) {
+        boolean singleMobileType = MainModule.mPrefs.getBoolean("system_statusbar_mobiletype_single");
+        boolean showOnWifi = MainModule.mPrefs.getBoolean("system_statusbar_mobiletype_show_wificonnected");
+        MethodHook hideMobileActivity = new MethodHook() {
+            @Override
+            protected void after(final MethodHookParam param) throws Throwable {
+                int opt = MainModule.mPrefs.getStringAsInt("system_mobiletypeicon", 1);
+                boolean hideIndicator = MainModule.mPrefs.getBoolean("system_networkindicator_mobile");
+                View mMobileType = (View) XposedHelpers.getObjectField(param.thisObject, "mMobileType");
+                boolean dataConnected = (boolean) XposedHelpers.getObjectField(param.args[0], "dataConnected");
+                boolean wifiAvailable = (boolean) XposedHelpers.getObjectField(param.args[0], "wifiAvailable");
+                if (opt == 3) {
+                    if (singleMobileType) {
+                        TextView mMobileTypeSingle = (TextView) XposedHelpers.getObjectField(param.thisObject, "mMobileTypeSingle");
+                        mMobileTypeSingle.setVisibility(View.GONE);
+                    }
+                    else {
+                        mMobileType.setVisibility(View.GONE);
+                    }
+                }
+                else if (opt == 1) {
+                    int viz = (dataConnected && (!wifiAvailable || showOnWifi)) ? View.VISIBLE : View.GONE;
+                    if (singleMobileType) {
+                        TextView mMobileTypeSingle = (TextView) XposedHelpers.getObjectField(param.thisObject, "mMobileTypeSingle");
+                        mMobileTypeSingle.setVisibility(viz);
+                    }
+                    else {
+                        mMobileType.setVisibility(viz);
+                    }
+                }
+                else if (opt == 2) {
+                    int viz = (!wifiAvailable || showOnWifi) ? View.VISIBLE : View.GONE;
+                    if (singleMobileType) {
+                        TextView mMobileTypeSingle = (TextView) XposedHelpers.getObjectField(param.thisObject, "mMobileTypeSingle");
+                        mMobileTypeSingle.setVisibility(viz);
+                    }
+                    else {
+                        mMobileType.setVisibility(viz);
+                    }
+                }
+                View mLeftInOut = (View) XposedHelpers.getObjectField(param.thisObject, "mLeftInOut");
+                if (hideIndicator) {
+                    View mRightInOut = (View) XposedHelpers.getObjectField(param.thisObject, "mRightInOut");
+                    mLeftInOut.setVisibility(View.GONE);
+                    mRightInOut.setVisibility(View.GONE);
+                }
+                if (!singleMobileType) {
+                    View mMobileLeftContainer = (View) XposedHelpers.getObjectField(param.thisObject, "mMobileLeftContainer");
+                    mMobileLeftContainer.setVisibility((mMobileType.getVisibility() == View.GONE && mLeftInOut.getVisibility() == View.GONE) ? View.GONE : View.VISIBLE);
+                }
+            }
+        };
+        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyMobileState", hideMobileActivity);
     }
 }

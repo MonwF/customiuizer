@@ -833,6 +833,8 @@
     <string name="array_expandnotifs_allbutblack">For all apps except the listed ones</string>
     <string name="array_expandnotifs_whiteonly">For listed apps only</string>
     <string name="array_mobiletypeicon_connected">Hide only when not connected</string>
+    <string name="array_mobiletypeicon_show_disconnected">Show when not connected</string>
+    <string name="system_statusbar_mobiletype_show_wificonnected_title">Show when Wi-Fi is connected</string>
     <string name="array_mobiletypeicon_hide">Hide completely</string>
     <string name="array_autogroupnotif_no">Do not group</string>
     <string name="array_qshaptic_light">Light vibration</string>

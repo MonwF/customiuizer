@@ -783,6 +783,7 @@
     <string name="array_expandnotifs_allbutblack">排除已加入列表中的应用</string>
     <string name="array_expandnotifs_whiteonly">仅已加入列表中的应用</string>
     <string name="array_mobiletypeicon_connected">仅在未连接时隐藏</string>
+    <string name="array_mobiletypeicon_show_disconnected">未连接时显示</string>
     <string name="array_mobiletypeicon_hide">完全隐藏</string>
     <string name="array_autogroupnotif_no">不分组</string>
     <string name="array_qshaptic_light">轻微振动</string>
@@ -1120,6 +1121,7 @@
     <string name="system_statusbar_dualrows_summ">状态栏高度建议值34–40，上边距建议值2</string>
     <string name="system_statusbar_dualsimin2rows_style_title">图标样式</string>
     <string name="system_statusbar_dualsimin2rows_rightmargin_title">右侧间距</string>
+    <string name="system_statusbar_mobiletype_show_wificonnected_title">Wi-Fi连接时也显示</string>
     <string name="system_statusbar_mobiletype_single_title">移动网络类型单独显示</string>
     <string name="system_statusbar_mobiletype_single_atleft_title">显示在信号左侧</string>
     <string name="system_statusbar_mobiletype_single_leftmargin_title">左侧间距</string>
