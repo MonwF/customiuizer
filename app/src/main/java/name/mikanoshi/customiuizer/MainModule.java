@@ -380,8 +380,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getStringAsInt("system_inactivebrightness", 1) > 1) System.InactiveBrightnessSliderHook(lpparam);
             if (mPrefs.getStringAsInt("system_mobiletypeicon", 1) > 1
                 || mPrefs.getBoolean("system_networkindicator_mobile")
+                || mPrefs.getBoolean("system_statusbar_mobiletype_show_wificonnected")
             ) {
-                System.HideNetworkIndicatorHook(lpparam);
+                SystemUI.HideMobileNetworkIndicatorHook(lpparam);
             }
             if (mPrefs.getStringAsInt("system_statusbaricons_bluetooth", 1) > 1) System.HideIconsBluetoothHook(lpparam);
             if (mPrefs.getBoolean("system_epm")) SystemUI.ExtendedPowerMenuHook(lpparam);

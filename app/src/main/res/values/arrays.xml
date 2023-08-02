@@ -454,13 +454,13 @@
 
 	<string-array name="mobiletypeicon">
 		<item>@string/array_default</item>
-		<item>@string/array_mobiletypeicon_connected</item>
 		<item>@string/array_mobiletypeicon_hide</item>
+		<item>@string/array_mobiletypeicon_show_disconnected</item>
 	</string-array>
 	<string-array name="mobiletypeicon_val">
 		<item>1</item>
-		<item>2</item>
 		<item>3</item>
+		<item>2</item>
 	</string-array>
 
 	<string-array name="dualsimin2rows_style">

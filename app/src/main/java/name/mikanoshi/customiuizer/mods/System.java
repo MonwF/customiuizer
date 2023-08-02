@@ -1348,39 +1348,6 @@ public class System {
         });
     }
 
-    public static void HideNetworkIndicatorHook(LoadPackageParam lpparam) {
-        MethodHook hideMobileActivity = new MethodHook() {
-            @Override
-            protected void after(final MethodHookParam param) throws Throwable {
-                int opt = MainModule.mPrefs.getStringAsInt("system_mobiletypeicon", 1);
-                boolean hideIndicator = MainModule.mPrefs.getBoolean("system_networkindicator_mobile");
-                View mMobileType = (View) XposedHelpers.getObjectField(param.thisObject, "mMobileType");
-                if (opt > 1) {
-                    boolean isMobileConnected = false;
-                    TextView mMobileTypeSingle = (TextView) XposedHelpers.getObjectField(param.thisObject, "mMobileTypeSingle");
-                    if (opt == 2) {
-                        isMobileConnected = (boolean) XposedHelpers.getObjectField(param.args[0], "dataConnected");
-                    }
-                    if (opt == 3 || (opt == 2 && !isMobileConnected)) {
-                        mMobileTypeSingle.setVisibility(View.GONE);
-                        mMobileType.setVisibility(View.GONE);
-                    }
-                }
-                View mLeftInOut = (View) XposedHelpers.getObjectField(param.thisObject, "mLeftInOut");
-                if (hideIndicator) {
-                    View mRightInOut = (View) XposedHelpers.getObjectField(param.thisObject, "mRightInOut");
-                    mLeftInOut.setVisibility(View.GONE);
-                    mRightInOut.setVisibility(View.GONE);
-                }
-                if (mMobileType.getVisibility() == View.GONE && mLeftInOut.getVisibility() == View.GONE) {
-                    View mMobileLeftContainer = (View) XposedHelpers.getObjectField(param.thisObject, "mMobileLeftContainer");
-                    mMobileLeftContainer.setVisibility(View.GONE);
-                }
-            }
-        };
-        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyMobileState", hideMobileActivity);
-    }
-
     public static void ChargeAnimationHook(LoadPackageParam lpparam) {
         Class<?> ccCls;
         try {
