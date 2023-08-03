@@ -98,6 +98,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import miui.os.Build;
 
 import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedBridge;
@@ -4468,6 +4469,10 @@ public class SystemUI {
                     View mRightInOut = (View) XposedHelpers.getObjectField(param.thisObject, "mRightInOut");
                     mLeftInOut.setVisibility(View.GONE);
                     mRightInOut.setVisibility(View.GONE);
+                }
+                if (wifiAvailable && showOnWifi && !Build.IS_INTERNATIONAL_BUILD && (dataConnected || opt == 2)) {
+                    View mSmallHd = (View) XposedHelpers.getObjectField(param.thisObject, "mSmallHd");
+                    mSmallHd.setVisibility(View.GONE);
                 }
                 if (!singleMobileType) {
                     View mMobileLeftContainer = (View) XposedHelpers.getObjectField(param.thisObject, "mMobileLeftContainer");
