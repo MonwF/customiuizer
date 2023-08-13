@@ -75,12 +75,16 @@
     <string name="system_calendar_app_summ">Abrir app selecionado quando tocar na data na tela de notificações</string>
     <string name="system_clockseconds_title">Mostrar segundos</string>
     <string name="system_cc_hidedate_title">Ocultar data</string>
+    <string name="system_cc_hide_shortcuticons_title">Ocultar configurações e ícones de edição de bloco</string>
+    <string name="system_cc_custom_clock_action_title">Personalizar ações do relógio</string>
+    <string name="system_cc_custom_clock_action_summ">Abra o app de configurações com um clique e edite os blocos com um clique longo</string>
     <string name="system_clock_show_ampm_title">Mostrar AM|PM</string>
     <string name="system_statusbar_clock_chip_title">Mostrar bolha colorida atrás do tempo</string>
     <string name="system_statusbar_clock_chip_radius_title">Raio das bordas</string>
     <string name="system_statusbar_clock_chip_startcolor_title">Cor inicial</string>
     <string name="system_statusbar_clock_chip_endcolor_title">Cor final</string>
     <string name="system_statusbar_clock_chip_customtextcolor_title">Cor de texto personalizado</string>
+    <string name="system_statusbar_clock_chip_orientation_vertical_title">Desenhe o gradiente de cima para baixo</string>
     <string name="system_statusbar_clock_chip_verticalpadding_title">Preenchimento vertical</string>
     <string name="system_clock_time_format_title">Formato 24 horas</string>
     <string name="system_clock_leadingzero_title">Mostrar zero à esquerda para horas</string>
@@ -155,7 +159,7 @@
     <string name="system_notifchannelsettings_summ">Abrir configurações do menu de notificação leva para configurações de canal em vez de configurações de notificação comuns do app</string>
     <string name="system_messagingstylelines_title">Contagem máxima de linhas no estilo de mensagem</string>
     <string name="system_messagingstylelines_summ">Limitar número de linhas exibidas nas notificações do estilo de mensagens</string>
-    <string name="system_drawer_removeshortcut_title">Ocultar atalho de sombra de notificação</string>
+    <string name="system_drawer_removeshortcut_title">Ocultar atalho de configurações de notificação</string>
     <string name="system_removedismiss_title">Ocultar botão limpar</string>
     <string name="system_removedismiss_summ">Remover botão que limpa todas as notificações</string>
     <string name="system_showlux_title">Mostrar nível de iluminação</string>
@@ -344,7 +348,7 @@
     <string name="system_wifipassword_summ">Ver em Configurações - Wi-Fi - Configurações adicionais - Gerenciar redes salvas</string>
     <string name="system_wifipassword_btn_title">Visualizar</string>
     <string name="system_wifi_password_label">Senha</string>
-    <string name="system_wifi_password_dlgtitle">Detalhes do wi-fi</string>
+    <string name="system_wifi_password_dlgtitle">Detalhes do Wi-Fi</string>
     <string name="system_other_wallpaper_scale_title">Nível de zoom do papel de parede</string>
     <string name="system_nodarkforce_title">Desative o modo escuro forçado</string>
     <string name="system_nodarkforce_summ">Não inverta algumas cores no modo escuro</string>
@@ -486,7 +490,7 @@
     <string name="system_qsgridcolumns_note">A orientação de paisagem terá uma coluna adicional. Se a sua ROM tiver uma opção compacta de layout de Configurações rápidas, ela adicionará outra coluna em ambas as orientações.</string>
     <string name="system_qqsgridcolumns_title">Número de colunas no painel recolhido</string>
     <string name="system_qqsgridcolumns_note">A orientação de paisagem terá uma coluna adicional.</string>
-    <string name="system_qsnolabels_title">Remova os nomes completamente</string>
+    <string name="system_qsnolabels_title">Ocultar nomes completamente</string>
     <string name="system_qs_hideoperator_title">Ocultar nome da operadora</string>
     <string name="system_qs_hideoperator_delimiter_title">Ocultar delimitador entre o nome da operadora</string>
     <string name="system_qshaptic_title">Feedback tátil de configurações rápidas</string>
@@ -720,7 +724,7 @@
     <string name="various_disableapp_summ">Permite desativar quase qualquer app a partir de sua página de informações</string>
     <string name="various_securitycenter_unlock_title">Desbloquear recursos da central de segurança</string>
     <string name="various_apps_title">Mostrar detalhes adicionais do app</string>
-    <string name="various_apps_summ">Adicionar novos campos à página de informações do app: - código da versão - caminho completo para o apk - caminho dos dados - ID do usuário - versão do SDK - link para a página da Play Store - iniciar um app</string>
+    <string name="various_apps_summ">Adicione novos campos à página de informações do app: - Código da versão - Nome do arquivo APK - Caminho dos dados - ID do usuário - Versão do SDK - Abrir na Play Store - Iniciar o app</string>
     <string name="various_appsort_title">Ordem de classificação inicial dos apps instalados</string>
     <string name="disable_app_title">Desativar app?</string>
     <string name="disable_app_text">Se este for um app essencial do sistema, desativá-lo pode quebrar as coisas</string>
@@ -804,6 +808,8 @@
     <string name="array_expandnotifs_allbutblack">Para todos os apps, exceto os listados</string>
     <string name="array_expandnotifs_whiteonly">Somente para apps listados</string>
     <string name="array_mobiletypeicon_connected">Ocultar apenas quando não estiver conectado</string>
+    <string name="array_mobiletypeicon_show_disconnected">Exibir quando não estiver conectado</string>
+    <string name="system_statusbar_mobiletype_show_wificonnected_title">Exibir quando o Wi-Fi estiver conectado</string>
     <string name="array_mobiletypeicon_hide">Ocultar completamente</string>
     <string name="array_autogroupnotif_no">Não agrupar</string>
     <string name="array_qshaptic_light">Vibração leve</string>
@@ -818,7 +824,7 @@
     <string name="array_normal">Normal</string>
     <string name="array_small">Pequeno</string>
     <string name="array_low">Baixo</string>
-    <string name="array_average">Média</string>
+    <string name="array_average">Médio</string>
     <string name="array_high">Alto</string>
     <string name="array_match">Combine a capa do álbum ou o papel de parede</string>
     <string name="array_static">Cor customizada</string>
@@ -1097,7 +1103,7 @@
     <string name="system_statusbar_batterystyle_digit_title">Dígito da bateria</string>
     <string name="system_statusbar_batterystyle_mark_fontsize_title">Tamanho da fonte da marca de porcentagem</string>
     <string name="system_statusbar_batterystyle_mark_verticaloffset_title">Deslocamento vertical da marca de porcentagem</string>
-    <string name="system_statusbar_dualsimin2rows_title">Barras de sinal para dois SIMs em duas linhas</string>
+    <string name="system_statusbar_dualsimin2rows_title">Barras de sinal para dois SIM em duas linhas</string>
     <string name="system_statusbar_dualrows_title">Duas linhas na barra de status</string>
     <string name="system_statusbar_dualrows_summ">Precisa aumentar a altura da barra de status em alguns dispositivos</string>
     <string name="system_statusbar_dualsimin2rows_style_title">Estilo do ícone</string>
@@ -1126,7 +1132,7 @@
     <string name="system_statusbaricons_clock_title">Relógio</string>
     <string name="various_allow_untrusted_touch_title">Permitir toque não confiável</string>
     <string name="various_persist_batteryoptimization_settings_title">Manter configurações de otimização da bateria</string>
-    <string name="various_clipboard_defaultaction_title">Ação padrão da área de transferência AI</string>
+    <string name="various_clipboard_defaultaction_title">Ação padrão da área de transferência IA</string>
     <string name="various_disable_access_devicelogs_title">Ignorar caixa de diálogo de solicitação de acesso a logs do dispositivo</string>
     <string name="various_skip_interceptperm_title">Ignorar limite de contagem regressiva</string>
     <string name="various_skip_securityscan_title">Ignorar verificação de segurança</string>
@@ -1140,6 +1146,10 @@
     <string name="system_cc_tile_roundedrect_title">Retângulo arredondado</string>
     <string name="system_cc_enable_style_switch_title">Forçar a ativação do interruptor de estilo CC</string>
     <string name="system_cc_disable_bluetooth_restrict_title">Desativar a desconexão do bluetooth até amanhã</string>
+    <string name="system_cc_bluetooth_tile_style_title">Estilo do bloco Bluetooth</string>
+    <string name="system_cc_bluetooth_tile_style_3rows">Três blocos grandes</string>
+    <string name="system_cc_bluetooth_tile_style_2rows2cols">Um bloco grande e dois pequenos</string>
+    <string name="system_cc_bluetooth_tile_style_summ">Mova o bloco do bluetooth para perto do bloco da rede</string>
     <string name="system_cc_volume_showpct_title">Mostrar porcentagem de volume</string>
     <string name="system_cc_collapse_after_clicked_title">Fechar após tocar</string>
     <string name="system_show_step_count_title">Mostrar contador de passos</string>
