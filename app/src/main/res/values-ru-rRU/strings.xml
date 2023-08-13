@@ -77,13 +77,14 @@
     <string name="system_cc_hidedate_title">Скрыть дату</string>
     <string name="system_cc_hide_shortcuticons_title">Скрыть иконку настройки и иконку редактирования плиток</string>
     <string name="system_cc_custom_clock_action_title">Настройка действия часов</string>
-    <string name="system_cc_custom_clock_action_summ">Открывать настройки при нажатии на плитки и редактировании ее длительным нажатием</string>
+    <string name="system_cc_custom_clock_action_summ">Открывать настройки при нажатии на часы и редактирование плиток при длительном нажатии</string>
     <string name="system_clock_show_ampm_title">Показать AM|PM</string>
     <string name="system_statusbar_clock_chip_title">Показать пузырь под часами</string>
     <string name="system_statusbar_clock_chip_radius_title">Радиус скругления</string>
     <string name="system_statusbar_clock_chip_startcolor_title">Начальный цвет</string>
     <string name="system_statusbar_clock_chip_endcolor_title">Конечный цвет</string>
     <string name="system_statusbar_clock_chip_customtextcolor_title">Пользовательский цвет текста</string>
+    <string name="system_statusbar_clock_chip_orientation_vertical_title">Настроить градиент сверху вниз</string>
     <string name="system_statusbar_clock_chip_verticalpadding_title">Вертикальный отступ</string>
     <string name="system_clock_time_format_title">24-часовой формат</string>
     <string name="system_clock_leadingzero_title">Показать начало от нуля до часов</string>
@@ -126,7 +127,7 @@
     <string name="system_netspeedinterval_title">Частота обновления индикатора скорости</string>
     <string name="system_detailednetspeed_title">Подробный индикатор скорости соединения</string>
     <string name="system_detailednetspeed_fakedualrow_title">Значение и единица измерения отображаются в двух рядах</string>
-    <string name="system_netspeed_cat_title">Режим ускорения сети</string>
+    <string name="system_netspeed_cat_title">Настройка индикатора скорости сети</string>
     <string name="system_detailednetspeed_summ">Показыает входящую и исходящую скорости передачи данных</string>
     <string name="system_detailednetspeed_icon_title">Иконки индикатора</string>
     <string name="system_detailednetspeed_icon_summ">Набор иконок входящего/исходящего трафика для отображения рядом со значением скорости (есть не во всех кастомных шрифтах)</string>
@@ -805,6 +806,8 @@
     <string name="array_expandnotifs_allbutblack">Кроме тех приложений, что в списке</string>
     <string name="array_expandnotifs_whiteonly">Только для приложений в списке</string>
     <string name="array_mobiletypeicon_connected">Скрывать только при отсутствии подключения</string>
+    <string name="array_mobiletypeicon_show_disconnected">Показывать когда не подключен</string>
+    <string name="system_statusbar_mobiletype_show_wificonnected_title">Показывать при подключении Wi-Fi</string>
     <string name="array_mobiletypeicon_hide">Скрыть полностью</string>
     <string name="array_autogroupnotif_no">Не группировать</string>
     <string name="array_qshaptic_light">Лёгкая вибрация</string>
@@ -851,7 +854,7 @@
     <string name="array_home">На главном экране</string>
     <string name="array_incoming">Входящие</string>
     <string name="array_outgoing">Исходящие</string>
-    <string name="array_both">Любые</string>
+    <string name="array_both">Оба</string>
     <string name="array_no_vibration">Без вибрации</string>
     <string name="array_single_short">Одиночная (короткая)</string>
     <string name="array_single_long">Одиночная (длинная)</string>
@@ -1090,11 +1093,11 @@
     <string name="system_statusbar_batterytempandcurrent_positive_title">Текущее значение всегда положительно</string>
     <string name="system_statusbar_batterytempandcurrent_incharge_title">Показывать только при зарядке</string>
     <string name="system_statusbar_batterytempandcurrent_fixcurrentratio_title">Исправь текущее значение на некоторых устройствах</string>
-    <string name="system_statusbar_batterytempandcurrent_hideunit_title">Скрыть единицу</string>
+    <string name="system_statusbar_batterytempandcurrent_hideunit_title">Скрыть единицу измерения</string>
     <string name="system_statusbar_batterytempandcurrent_singlerow_title">Отображать в одной строке</string>
     <string name="system_statusbar_batterytempandcurrent_reverseorder_title">Обратный порядок</string>
     <string name="system_statusbar_showdevicetemperature_title">Отображать температуру устройства</string>
-    <string name="system_statusbar_batterystyle_title">Стиль иконки батареи</string>
+    <string name="system_statusbar_batterystyle_title">Настройка иконки батареи</string>
     <string name="system_statusbar_batterystyle_digit_title">Цифра батареи</string>
     <string name="system_statusbar_batterystyle_mark_fontsize_title">Размер шрифта знака в процентах</string>
     <string name="system_statusbar_batterystyle_mark_verticaloffset_title">Смещение знака в процентах по вертикали</string>
@@ -1141,6 +1144,10 @@
     <string name="system_cc_tile_roundedrect_title">Скруглённые прямоугольные плитки</string>
     <string name="system_cc_enable_style_switch_title">Принудительно включить переключатель стиля CC</string>
     <string name="system_cc_disable_bluetooth_restrict_title">Выключить отключение Bluetooth до завтра</string>
+    <string name="system_cc_bluetooth_tile_style_title">Стиль плитки Bluetooth</string>
+    <string name="system_cc_bluetooth_tile_style_3rows">Три большие плитки</string>
+    <string name="system_cc_bluetooth_tile_style_2rows2cols">Одна большая и две маленькие плитки</string>
+    <string name="system_cc_bluetooth_tile_style_summ">Переместить Bluetooth-плитку рядом с сетевой плиткой</string>
     <string name="system_cc_volume_showpct_title">Показывать проценты громкости</string>
     <string name="system_cc_collapse_after_clicked_title">Свернуть после касания</string>
     <string name="system_show_step_count_title">Показать счетчик</string>

@@ -84,6 +84,7 @@
     <string name="system_statusbar_clock_chip_startcolor_title">Màu bắt đầu</string>
     <string name="system_statusbar_clock_chip_endcolor_title">Màu kết thúc</string>
     <string name="system_statusbar_clock_chip_customtextcolor_title">Tùy chỉnh màu sắc văn bản</string>
+    <string name="system_statusbar_clock_chip_orientation_vertical_title">Độ dốc dọc</string>
     <string name="system_statusbar_clock_chip_verticalpadding_title">Lề dọc</string>
     <string name="system_clock_time_format_title">Sử dụng định dạng 24 giờ</string>
     <string name="system_clock_leadingzero_title">Hiển thị dưới dạng thời gian bắt đầu từ số không</string>
@@ -806,6 +807,8 @@
     <string name="array_expandnotifs_allbutblack">Loại trừ ứng dụng khỏi danh sách</string>
     <string name="array_expandnotifs_whiteonly">Chỉ các ứng dụng được liệt kê</string>
     <string name="array_mobiletypeicon_connected">Chỉ ẩn khi không kết nối</string>
+    <string name="array_mobiletypeicon_show_disconnected">Hiện khi không kết nối</string>
+    <string name="system_statusbar_mobiletype_show_wificonnected_title">Hiện khi Wi-Fi được kết nối</string>
     <string name="array_mobiletypeicon_hide">Ẩn toàn bộ</string>
     <string name="array_autogroupnotif_no">Không gom nhóm</string>
     <string name="array_qshaptic_light">Rung nhẹ</string>
@@ -1142,6 +1145,10 @@
     <string name="system_cc_tile_roundedrect_title">Ô hình chữ nhật bo tròn</string>
     <string name="system_cc_enable_style_switch_title">Bật chuyển đổi kiểu CC</string>
     <string name="system_cc_disable_bluetooth_restrict_title">Vô hiệu hóa ngắt kết nối bluetooth cho đến ngày mai</string>
+    <string name="system_cc_bluetooth_tile_style_title">Kiểu ô Bluetooth</string>
+    <string name="system_cc_bluetooth_tile_style_3rows">Ba hàng ô lớn</string>
+    <string name="system_cc_bluetooth_tile_style_2rows2cols">Một ô lớn và hai ô nhỏ</string>
+    <string name="system_cc_bluetooth_tile_style_summ">Ô Bluetooth được di chuyển đến khu vực ô mạng</string>
     <string name="system_cc_volume_showpct_title">Hiện phần trăm âm lượng</string>
     <string name="system_cc_collapse_after_clicked_title">Thu gọn sau khi chạm</string>
     <string name="system_show_step_count_title">Hiển thị số bước chân</string>

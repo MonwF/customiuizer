@@ -76,12 +76,16 @@
     <string name="system_calendar_app_summ">Otevřít vybranou aplikaci po klepnutí na datum v záhlaví oznámení</string>
     <string name="system_clockseconds_title">Zobrazit vteřiny</string>
     <string name="system_cc_hidedate_title">Skrýt datum</string>
+    <string name="system_cc_hide_shortcuticons_title">Skrýt ikony nastavení a editace dlaždic</string>
+    <string name="system_cc_custom_clock_action_title">Přizpůsobit akce hodin</string>
+    <string name="system_cc_custom_clock_action_summ">Otevřít nastavení aplikací kliknutím a upravte dlaždice dlouhým kliknutím</string>
     <string name="system_clock_show_ampm_title">Zobrazit AM|PM</string>
     <string name="system_statusbar_clock_chip_title">Zobrazit barevnou bublinu za časem</string>
     <string name="system_statusbar_clock_chip_radius_title">Zaoblení rohů</string>
     <string name="system_statusbar_clock_chip_startcolor_title">Počáteční barva</string>
     <string name="system_statusbar_clock_chip_endcolor_title">Konečná barva</string>
     <string name="system_statusbar_clock_chip_customtextcolor_title">Vlastní barva textu</string>
+    <string name="system_statusbar_clock_chip_orientation_vertical_title">Překreslit sklon shora dolů</string>
     <string name="system_statusbar_clock_chip_verticalpadding_title">Svislá výplň</string>
     <string name="system_clock_time_format_title">24-hodinový formát</string>
     <string name="system_clock_leadingzero_title">Zobrazit nulu před hodinami</string>
@@ -811,6 +815,8 @@
     <string name="array_expandnotifs_allbutblack">Pro všechny aplikace, kromě uvedených</string>
     <string name="array_expandnotifs_whiteonly">Pouze pro aplikace uvedené v seznamu</string>
     <string name="array_mobiletypeicon_connected">Skrýt pouze v případě, že není připojení</string>
+    <string name="array_mobiletypeicon_show_disconnected">Zobrazit pokud není připojeno</string>
+    <string name="system_statusbar_mobiletype_show_wificonnected_title">Zobrazit při připojení Wi-Fi</string>
     <string name="array_mobiletypeicon_hide">Kompletně skrýt</string>
     <string name="array_autogroupnotif_no">Neseskupovat</string>
     <string name="array_qshaptic_light">Lehké vibrace</string>
@@ -1156,6 +1162,10 @@
     <string name="system_cc_tile_roundedrect_title">Zaoblený obdélník</string>
     <string name="system_cc_enable_style_switch_title">Vynutit povolení CC stylu</string>
     <string name="system_cc_disable_bluetooth_restrict_title">Zakázat odpojování bluetooth do zítřka</string>
+    <string name="system_cc_bluetooth_tile_style_title">Styl dlaždice Bluetooth</string>
+    <string name="system_cc_bluetooth_tile_style_3rows">Tři velké dlaždice</string>
+    <string name="system_cc_bluetooth_tile_style_2rows2cols">Jedna velká a dvě malé dlaždice</string>
+    <string name="system_cc_bluetooth_tile_style_summ">Přesunout dlaždici Bluetooth poblíž síťové dlaždice</string>
     <string name="system_cc_volume_showpct_title">Zobrazit procenta hlasitosti</string>
     <string name="system_cc_collapse_after_clicked_title">Sbalit po dotyku</string>
     <string name="system_show_step_count_title">Zobrazit počet kroků</string>
