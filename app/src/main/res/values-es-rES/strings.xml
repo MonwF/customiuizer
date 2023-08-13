@@ -75,12 +75,16 @@
     <string name="system_calendar_app_summ">Abrir la aplicación seleccionada cuando se presiona la fecha en el panel de ajustes rápidos</string>
     <string name="system_clockseconds_title">Mostrar segundos</string>
     <string name="system_cc_hidedate_title">Ocultar fecha</string>
+    <string name="system_cc_hide_shortcuticons_title">Ocultar iconos de edición y ajustes</string>
+    <string name="system_cc_custom_clock_action_title">Personalizar acciones del reloj</string>
+    <string name="system_cc_custom_clock_action_summ">Abrir ajustes de la app al tocar y edición de ajustes rápidos con pulsación larga</string>
     <string name="system_clock_show_ampm_title">Mostrar AM/PM</string>
     <string name="system_statusbar_clock_chip_title">Mostrar burbuja colorida en la parte de atrás del reloj</string>
     <string name="system_statusbar_clock_chip_radius_title">Radio de la esquina</string>
     <string name="system_statusbar_clock_chip_startcolor_title">Color de inicio</string>
     <string name="system_statusbar_clock_chip_endcolor_title">Color final</string>
     <string name="system_statusbar_clock_chip_customtextcolor_title">Color de texto personalizado</string>
+    <string name="system_statusbar_clock_chip_orientation_vertical_title">Dibujar el gradiente desde arriba hacia abajo</string>
     <string name="system_statusbar_clock_chip_verticalpadding_title">Distancia vertical</string>
     <string name="system_clock_time_format_title">Formato de 24 horas</string>
     <string name="system_clock_leadingzero_title">Mostrar cero inicial a las horas</string>
@@ -1138,6 +1142,10 @@
     <string name="system_cc_tile_roundedrect_title">Interruptor rectángulo redondeado</string>
     <string name="system_cc_enable_style_switch_title">Forzar el interruptor de estilo CC</string>
     <string name="system_cc_disable_bluetooth_restrict_title">Desactivar desconectar Bluetooth hasta mañana</string>
+    <string name="system_cc_bluetooth_tile_style_title">Estilo de mosaico Bluetooth</string>
+    <string name="system_cc_bluetooth_tile_style_3rows">Tres mosaicos grandes</string>
+    <string name="system_cc_bluetooth_tile_style_2rows2cols">Uno mosaico grande y dos pequeños</string>
+    <string name="system_cc_bluetooth_tile_style_summ">Mueve el mosaico bluetooth cerca del de red</string>
     <string name="system_cc_volume_showpct_title">Mostrar el porcentaje del volumen</string>
     <string name="system_cc_collapse_after_clicked_title">Cerrar después de tocar</string>
     <string name="system_show_step_count_title">Mostrar el número de pasos</string>
