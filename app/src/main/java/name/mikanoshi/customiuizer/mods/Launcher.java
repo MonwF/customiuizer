@@ -1730,7 +1730,7 @@ public class Launcher {
 
 		final int[] inDirection = {0};
 
-		Helpers.findAndHookMethod("com.miui.home.recents.FsGestureAssistHelper", lpparam.classLoader, "handleTouchEvent", MotionEvent.class, new MethodHook() {
+		Helpers.hookAllMethods(FsGestureHelper, "handleTouchEvent", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
 				MotionEvent motionEvent = (MotionEvent) param.args[0];

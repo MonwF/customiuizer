@@ -87,7 +87,8 @@ public class Controls extends SubFragment {
 				break;
 			case "pref_key_controls_cat_fsg":
 				findPreference("pref_key_controls_fsg_horiz_apps").setOnPreferenceClickListener(openAppsEdit);
-				findPreference("pref_key_controls_fsg_assist").setOnPreferenceClickListener(openNavbarActions);
+				findPreference("pref_key_controls_fsg_assist_left").setOnPreferenceClickListener(openNavbarActions);
+				findPreference("pref_key_controls_fsg_assist_right").setOnPreferenceClickListener(openNavbarActions);
 				findPreference("pref_key_controls_fsg_swipeandstop").setOnPreferenceClickListener(openNavbarActions);
 				boolean enableSwipeAndStop = Helpers.prefs.getInt("pref_key_controls_fsg_swipeandstop_action", 1) > 1;
 				findPreference("pref_key_controls_fsg_swipeandstop_disablevibrate").setEnabled(enableSwipeAndStop);

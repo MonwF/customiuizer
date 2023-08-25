@@ -354,8 +354,13 @@
 			miuizer:offtext="@string/array_default" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx
-			android:key="pref_key_controls_fsg_assist"
-			android:title="@string/controls_fsg_assist_title"
+			android:key="pref_key_controls_fsg_assist_left"
+			android:title="@string/controls_fsg_assist_left_title"
+			miuizer:dynamic="true" />
+
+		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_controls_fsg_assist_right"
+			android:title="@string/controls_fsg_assist_right_title"
 			miuizer:dynamic="true" />
 
 		<name.mikanoshi.customiuizer.prefs.PreferenceEx

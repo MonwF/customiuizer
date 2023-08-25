@@ -222,7 +222,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getInt("system_netspeedinterval", 4) != 4) SystemUI.NetSpeedIntervalHook(lpparam);
             if (mPrefs.getInt("system_qsgridrows", 1) > 1 || mPrefs.getBoolean("system_qsnolabels")) SystemUI.QSGridLabelsHook(lpparam);
             if (mPrefs.getInt("system_lstimeout", 3) > 3) System.LockScreenTimeoutHook(lpparam);
-            if (mPrefs.getInt("controls_fsg_assist_action", 1) > 1) Controls.AssistGestureActionHook(lpparam);
+            if (mPrefs.getInt("controls_fsg_assist_left_action", 1) > 1
+                || mPrefs.getInt("controls_fsg_assist_right_action", 1) > 1
+            ) Controls.AssistGestureActionHook(lpparam);
             if (mPrefs.getInt("controls_navbarleft_action", 1) > 1 ||
                     mPrefs.getInt("controls_navbarleftlong_action", 1) > 1 ||
                     mPrefs.getInt("controls_navbarright_action", 1) > 1 ||
@@ -634,7 +636,9 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("launcher_closedrawer")) { Launcher.CloseDrawerOnLaunchHook(lpparam); closeOnLaunch = true; }
             if (mPrefs.getInt("launcher_bottommargin", 0) > 0) Launcher.BottomSpacingHook(lpparam);
             if (mPrefs.getInt("launcher_horizwidgetmargin", 0) > 0) Launcher.HorizontalWidgetSpacingHook(lpparam);
-            if (mPrefs.getInt("controls_fsg_assist_action", 1) > 1) Launcher.AssistGestureActionHook(lpparam);
+            if (mPrefs.getInt("controls_fsg_assist_left_action", 1) > 1
+                || mPrefs.getInt("controls_fsg_assist_right_action", 1) > 1
+            )  Launcher.AssistGestureActionHook(lpparam);
             if (mPrefs.getInt("controls_fsg_swipeandstop_action", 1) > 1) Launcher.SwipeAndStopActionHook(lpparam);
         }
         if (closeOnLaunch) Launcher.CloseFolderOrDrawerOnLaunchShortcutMenuHook(lpparam);

@@ -678,7 +678,6 @@
     <string name="controls_fsg_width_title">Šířka oblasti gesta Zpět</string>
     <string name="controls_fsg_horiz_title">Horizontální gesta</string>
     <string name="controls_fsg_horiz_summ">Povolit horizontální gesta i navigační panel</string>
-    <string name="controls_fsg_assist_title">Akce přejetí po rohu</string>
     <string name="controls_fsg_swipeandstop_title">Potáhnutím prstu z jednoho okraje displeje na druhý pro návrat k předchozí aplikaci</string>
     <string name="controls_fsg_swipeandstop_disablevibrate_title">Nevibrovat</string>
     <string name="various_mods">Různé</string>

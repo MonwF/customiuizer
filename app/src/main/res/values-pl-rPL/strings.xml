@@ -575,7 +575,6 @@
     <string name="controls_fsg_width_title">Szerokość obszaru gestów wstecz</string>
     <string name="controls_fsg_horiz_title">Gesty poziome</string>
     <string name="controls_fsg_horiz_summ">Włącz gesty poziome i pasek nawigacyjny</string>
-    <string name="controls_fsg_assist_title">Akcja przesuwania rogu</string>
     <string name="various_mods">Różne</string>
     <string name="various_hiddenfeatures_title">Ukryte funkcje</string>
     <string name="various_hiddenfeatures_summ">Działania, które nie zawsze są łatwo dostępne</string>
