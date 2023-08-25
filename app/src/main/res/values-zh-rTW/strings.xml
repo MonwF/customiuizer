@@ -650,7 +650,6 @@
     <string name="controls_fsg_width_title">返回手勢區域寬度</string>
     <string name="controls_fsg_horiz_title">水平手勢</string>
     <string name="controls_fsg_horiz_summ">啟用水平手勢和導航欄</string>
-    <string name="controls_fsg_assist_title">螢幕角落滑動動作</string>
     <string name="controls_fsg_swipeandstop_title">螢幕兩側向內滑動並停頓</string>
     <string name="various_mods">雜項</string>
     <string name="various_hiddenfeatures_title">隱藏特性</string>

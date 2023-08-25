@@ -693,7 +693,8 @@
     <string name="controls_fsg_width_title">Back gesture area width</string>
     <string name="controls_fsg_horiz_title">Horizontal gestures</string>
     <string name="controls_fsg_horiz_summ">Enable both horizontal gestures and navigation bar</string>
-    <string name="controls_fsg_assist_title">Corner swipe action</string>
+    <string name="controls_fsg_assist_left_title">Left corner swipe action</string>
+    <string name="controls_fsg_assist_right_title">Right corner swipe action</string>
     <string name="controls_fsg_swipeandstop_title">Swipe across the screen starting from the edge and stop action</string>
     <string name="controls_fsg_swipeandstop_disablevibrate_title">Do not vibrate</string>
 

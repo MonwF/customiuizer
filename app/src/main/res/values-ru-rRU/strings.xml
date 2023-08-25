@@ -676,7 +676,6 @@
     <string name="controls_fsg_width_title">Ширина области срабатывания жеста Назад</string>
     <string name="controls_fsg_horiz_title">Горизонтальные жесты</string>
     <string name="controls_fsg_horiz_summ">Активировать вместе горизонтальные жесты и панель навигации</string>
-    <string name="controls_fsg_assist_title">Действие на свайп вверх в углу</string>
     <string name="controls_fsg_swipeandstop_title">Проведите по экрану, начиная от края и заканчивая действием</string>
     <string name="controls_fsg_swipeandstop_disablevibrate_title">Не вибрировать</string>
     <string name="various_mods">Различное</string>

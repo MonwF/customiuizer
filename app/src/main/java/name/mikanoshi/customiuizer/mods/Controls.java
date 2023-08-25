@@ -1044,7 +1044,8 @@ public class Controls {
 				Bundle bundle = (Bundle)param.args[0];
 				if (bundle == null || bundle.getInt("triggered_by", 0) != 83 || bundle.getInt("invocation_type", 0) != 1) return;
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-				if (GlobalActions.handleAction(mContext, "pref_key_controls_fsg_assist", false, bundle)) {
+				String pos = bundle.getInt("inDirection", 0) == 1 ? "right" : "left";
+				if (GlobalActions.handleAction(mContext, "pref_key_controls_fsg_assist_" + pos, false, bundle)) {
 					Helpers.performLightVibration(mContext);
 					param.setResult(null);
 				}

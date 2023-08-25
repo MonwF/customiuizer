@@ -659,7 +659,6 @@ ss - iki basamaklı saniye(09)</string>
     <string name="controls_fsg_width_title">Geri hareket alanı genişliği</string>
     <string name="controls_fsg_horiz_title">Yatay hareketler</string>
     <string name="controls_fsg_horiz_summ">Hem yatay hareketleri hem de gezinme çubuğunu etkinleştirin</string>
-    <string name="controls_fsg_assist_title">Köşe kaydırma eylemi</string>
     <string name="controls_fsg_swipeandstop_title">Kenardan başlayarak ekranı kaydırın ve eylemi durdurun</string>
     <string name="controls_fsg_swipeandstop_disablevibrate_title">Titretme</string>
     <string name="various_mods">Çeşitli</string>

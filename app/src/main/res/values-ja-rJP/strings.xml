@@ -677,7 +677,6 @@
     <string name="controls_fsg_width_title">背面ジェスチャー領域の幅</string>
     <string name="controls_fsg_horiz_title">水平方向のジェスチャー</string>
     <string name="controls_fsg_horiz_summ">水平方向のジェスチャーとナビゲーションバーの両方を有効にします</string>
-    <string name="controls_fsg_assist_title">コーナースワイプのアクション</string>
     <string name="controls_fsg_swipeandstop_title">画面の端から順にスワイプをしてアクションを停止</string>
     <string name="controls_fsg_swipeandstop_disablevibrate_title">バイブレーションをさせない</string>
     <string name="various_mods">各種のMod</string>

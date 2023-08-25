@@ -667,7 +667,8 @@
     <string name="controls_fsg_width_title">返回手势区域宽度</string>
     <string name="controls_fsg_horiz_title">水平手势</string>
     <string name="controls_fsg_horiz_summ">同时启用水平手势和导航栏</string>
-    <string name="controls_fsg_assist_title">屏幕左下角或右下角上划动作</string>
+    <string name="controls_fsg_assist_left_title">屏幕左下角上划动作</string>
+    <string name="controls_fsg_assist_right_title">屏幕右下角上划动作</string>
     <string name="controls_fsg_swipeandstop_title">屏幕两侧向内滑动并停顿</string>
     <string name="controls_fsg_swipeandstop_disablevibrate_title">禁止振动</string>
     <string name="various_mods">杂项</string>
