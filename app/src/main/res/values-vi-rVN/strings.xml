@@ -677,6 +677,8 @@
     <string name="controls_fsg_width_title">Độ rộng cử chỉ quay lại</string>
     <string name="controls_fsg_horiz_title">Cử chỉ ngang</string>
     <string name="controls_fsg_horiz_summ">Bật cử chỉ ngang và thanh điều hướng</string>
+    <string name="controls_fsg_assist_left_title">Thao tác vuốt góc trái màn hình</string>
+    <string name="controls_fsg_assist_right_title">Thao tác vuốt góc phải màn hình</string>
     <string name="controls_fsg_swipeandstop_title">Vuốt trên màn hình bắt đầu từ cạnh và dừng hành động</string>
     <string name="controls_fsg_swipeandstop_disablevibrate_title">Không rung</string>
     <string name="various_mods">Các mod khác</string>
