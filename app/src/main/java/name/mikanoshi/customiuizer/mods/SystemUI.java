@@ -1073,7 +1073,8 @@ public class SystemUI {
             }
         };
         Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyMobileState", beforeUpdate);
-        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "applyMobileState", afterUpdate);
+        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "initViewState", afterUpdate);
+        Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.classLoader, "updateState", afterUpdate);
 
         MethodHook resetImageDrawable = new MethodHook() {
             @Override
@@ -1201,7 +1202,7 @@ public class SystemUI {
             });
         }
         if (moveRight) {
-            Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiDripLeftStatusBarIconControllerImpl", lpparam.classLoader, "setIconVisibility", String.class, boolean.class, new MethodHook() {
+            Helpers.findAndHookMethodSilently("com.android.systemui.statusbar.phone.MiuiDripLeftStatusBarIconControllerImpl", lpparam.classLoader, "setIconVisibility", String.class, boolean.class, new MethodHook() {
                 @Override
                 protected void before(MethodHookParam param) throws Throwable {
                     String slot = (String) param.args[0];
@@ -2561,7 +2562,7 @@ public class SystemUI {
             }
         };
         Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBarIconControllerImpl", lpparam.classLoader, "setIconVisibility", String.class, boolean.class, iconHook);
-        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiDripLeftStatusBarIconControllerImpl", lpparam.classLoader, "setIconVisibility", String.class, boolean.class, iconHook);
+        Helpers.findAndHookMethodSilently("com.android.systemui.statusbar.phone.MiuiDripLeftStatusBarIconControllerImpl", lpparam.classLoader, "setIconVisibility", String.class, boolean.class, iconHook);
     }
 
 
