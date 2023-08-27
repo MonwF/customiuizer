@@ -678,6 +678,8 @@
     <string name="controls_fsg_width_title">Largura da área de gestos de retorno</string>
     <string name="controls_fsg_horiz_title">Gestos horizontais</string>
     <string name="controls_fsg_horiz_summ">Ative os gestos horizontais e a barra de navegação</string>
+    <string name="controls_fsg_assist_left_title">Ação de deslizar no canto esquerdo</string>
+    <string name="controls_fsg_assist_right_title">Ação de deslizar no canto direito</string>
     <string name="controls_fsg_swipeandstop_title">Deslize pela tela a partir da borda e pare a ação</string>
     <string name="controls_fsg_swipeandstop_disablevibrate_title">Não vibrar</string>
     <string name="various_mods">Vários</string>
@@ -813,7 +815,7 @@
     <string name="array_autogroupnotif_no">Não agrupar</string>
     <string name="array_qshaptic_light">Vibração leve</string>
     <string name="array_qshaptic_strong">Vibração forte</string>
-    <string name="array_enable">Habilitado</string>
+    <string name="array_enable">Ativado</string>
     <string name="array_disable">Desativado</string>
     <string name="array_top">Mais perto do topo</string>
     <string name="array_middle">No meio</string>
