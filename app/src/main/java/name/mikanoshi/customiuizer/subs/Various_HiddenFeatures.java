@@ -55,37 +55,7 @@ public class Various_HiddenFeatures extends SubFragment {
 			}
 		});
 
-
-		aosp = findPreference("pref_key_various_memorystats");
-		if (Helpers.isTPlus()) {
-			aosp.setUnsupported(true);
-		}
-		else {
-			aosp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-				@Override
-				public boolean onPreferenceClick(Preference preference) {
-					Helpers.launchActivity(act, "com.android.settings", "com.android.settings.Settings$MemorySettingsActivity");
-					return true;
-				}
-			});
-		}
-
-		aosp = (PreferenceEx)findPreference("pref_key_various_appusagestats");
-		aosp.setCustomSummary("AOSP");
-		if (Helpers.isTPlus()) {
-			aosp.setUnsupported(true);
-		}
-		else {
-			aosp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-				@Override
-				public boolean onPreferenceClick(Preference preference) {
-					Helpers.launchActivity(act, "com.android.settings", "com.android.settings.UsageStatsActivity");
-					return true;
-				}
-			});
-		}
-
-		aosp = (PreferenceEx)findPreference("pref_key_various_aospnotif");
+		aosp = findPreference("pref_key_various_aospnotif");
 		aosp.setCustomSummary("AOSP");
 		aosp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
@@ -95,20 +65,6 @@ public class Various_HiddenFeatures extends SubFragment {
 				return true;
 			}
 		});
-
-		aosp = (PreferenceEx)findPreference("pref_key_various_aospnotiflog");
-		if (Helpers.isTPlus()) {
-			aosp.setUnsupported(true);
-		}
-		else {
-			aosp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-				@Override
-				public boolean onPreferenceClick(Preference preference) {
-					Helpers.launchActivity(act, "com.android.settings", "com.android.settings.Settings$NotificationStationActivity");
-					return true;
-				}
-			});
-		}
 	}
 
 }

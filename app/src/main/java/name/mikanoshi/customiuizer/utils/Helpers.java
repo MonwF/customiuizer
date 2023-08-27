@@ -228,8 +228,8 @@ public class Helpers {
 		return (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
 	}
 
-	public static boolean isTPlus() {
-		return Build.VERSION.SDK_INT >= 33;
+	public static boolean isUPlus() {
+		return Build.VERSION.SDK_INT >= 34;
 	}
 
 	public static boolean isDeviceEncrypted(Context context) {

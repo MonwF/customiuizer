@@ -117,7 +117,7 @@ import name.mikanoshi.customiuizer.utils.ResourceHooks;
 import name.mikanoshi.customiuizer.utils.StepCounterController;
 
 public class SystemUI {
-    private final static String StatusBarCls = Helpers.isTPlus() ? "com.android.systemui.statusbar.phone.CentralSurfacesImpl" : "com.android.systemui.statusbar.phone.StatusBar";
+    private final static String StatusBarCls = "com.android.systemui.statusbar.phone.CentralSurfacesImpl";
 
     private static int statusbarTextIconLayoutResId = 0;
     private static int notifVolumeOnResId;
@@ -597,14 +597,14 @@ public class SystemUI {
                 }
             }
         });
-        String QSFactoryCls = Helpers.isTPlus() ? "com.android.systemui.qs.tileimpl.MiuiQSFactory" : "com.android.systemui.qs.tileimpl.QSFactoryImpl";
+        String QSFactoryCls = "com.android.systemui.qs.tileimpl.MiuiQSFactory";
         Class<?> ResourceIconClass = findClass("com.android.systemui.qs.tileimpl.QSTileImpl$ResourceIcon", lpparam.classLoader);
         Helpers.findAndHookMethod(QSFactoryCls, lpparam.classLoader, "createTileInternal", String.class, new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
                 String tileName = (String) param.args[0];
                 if (tileName.startsWith("custom_")) {
-                    String nfcField = Helpers.isTPlus() ? "nfcTileProvider" : "mNfcTileProvider";
+                    String nfcField = "nfcTileProvider";
                     Object provider = XposedHelpers.getObjectField(param.thisObject, nfcField);
                     Object tile = XposedHelpers.callMethod(provider, "get");
                     XposedHelpers.setAdditionalInstanceField(tile, "customName", tileName);
@@ -612,7 +612,7 @@ public class SystemUI {
                 }
             }
         });
-        String NfcTileCls = Helpers.isTPlus() ? "com.android.systemui.qs.tiles.MiuiNfcTile" : "com.android.systemui.qs.tiles.NfcTile";
+        String NfcTileCls = "com.android.systemui.qs.tiles.MiuiNfcTile";
         Helpers.findAndHookMethod(NfcTileCls, lpparam.classLoader, "isAvailable", new MethodHook() {
             @Override
             protected void before(MethodHookParam param) throws Throwable {
@@ -794,11 +794,9 @@ public class SystemUI {
                 LinearLayout leftContainer = (LinearLayout) XposedHelpers.getObjectField(param.thisObject, "mStatusBarLeftContainer");
                 ViewGroup rightContainer = (ViewGroup) XposedHelpers.getObjectField(param.thisObject, "mSystemIconArea");
                 View switchUserView = null;
-                if (Helpers.isTPlus()) {
-                    int userViewId = sbView.getResources().getIdentifier("user_switcher_container", "id", lpparam.packageName);
-                    switchUserView = sbView.findViewById(userViewId);
-                    ((ViewGroup) switchUserView.getParent()).removeView(switchUserView);
-                }
+                int userViewId = sbView.getResources().getIdentifier("user_switcher_container", "id", lpparam.packageName);
+                switchUserView = sbView.findViewById(userViewId);
+                ((ViewGroup) switchUserView.getParent()).removeView(switchUserView);
                 int firstRowLeftPadding = 0;
                 int firstRowRightPadding = 0;
                 if (MainModule.mPrefs.getBoolean("system_statusbar_dualrows_firstrow_horizmargin")) {
@@ -852,10 +850,8 @@ public class SystemUI {
                     }
                 }
 
-                if (Helpers.isTPlus()) {
-                    if (switchUserView != null) {
-                        secondRight.addView(switchUserView);
-                    }
+                if (switchUserView != null) {
+                    secondRight.addView(switchUserView);
                 }
                 if (MainModule.mPrefs.getBoolean("system_statusbar_netspeed_atsecondrow")) {
                     View mDripNetworkSpeedView = (View) XposedHelpers.getObjectField(param.thisObject, "mDripNetworkSpeedView");
@@ -1836,7 +1832,7 @@ public class SystemUI {
     }
 
     public static void MIUIVolumeDialogHook(LoadPackageParam lpparam) {
-        String pluginLoaderClass = Helpers.isTPlus() ? "com.android.systemui.shared.plugins.PluginInstance$Factory" : "com.android.systemui.shared.plugins.PluginManagerImpl";
+        String pluginLoaderClass = "com.android.systemui.shared.plugins.PluginInstance$Factory";
         Helpers.hookAllMethods(pluginLoaderClass, lpparam.classLoader, "getClassLoader", new MethodHook() {
             private boolean isHooked = false;
             @Override
@@ -1934,7 +1930,7 @@ public class SystemUI {
             }
         });
 
-        String pluginLoaderClass = Helpers.isTPlus() ? "com.android.systemui.shared.plugins.PluginInstance$Factory" : "com.android.systemui.shared.plugins.PluginManagerImpl";
+        String pluginLoaderClass = "com.android.systemui.shared.plugins.PluginInstance$Factory";
         Helpers.hookAllMethods(pluginLoaderClass, lpparam.classLoader, "getClassLoader", new MethodHook() {
             private boolean isHooked = false;
             @Override
@@ -2301,7 +2297,7 @@ public class SystemUI {
             protected void before(final MethodHookParam param) throws Throwable {
                 String clsName = param.thisObject.getClass().getSimpleName();
                 boolean isInControlCenter = "ControlPanelWindowView".equals(clsName) || "ControlCenterWindowViewImpl".equals(clsName);
-                if (Helpers.isTPlus() && isInControlCenter) {
+                if (isInControlCenter) {
                     if (param.args.length == 2 && (boolean) param.args[1]) {
                         return ;
                     }
@@ -2325,7 +2321,7 @@ public class SystemUI {
                         tapStartPointers = 1;
                         if (mBrightnessController == null) {
                             Object mControlCenterController;
-                            if (Helpers.isTPlus() && isInControlCenter) {
+                            if (isInControlCenter) {
                                 mControlCenterController = XposedHelpers.getObjectField(param.thisObject, "controlCenterController");
                             }
                             else {
@@ -2406,28 +2402,23 @@ public class SystemUI {
                 }
             }
         };
-        String eventMethod = Helpers.isTPlus() ? "onTouchEvent" : "interceptTouchEvent";
+        String eventMethod = "onTouchEvent";
         Helpers.findAndHookMethod(StatusBarCls, lpparam.classLoader, eventMethod, MotionEvent.class, hook);
-        if (Helpers.isTPlus()) {
-            String pluginLoaderClass = "com.android.systemui.shared.plugins.PluginInstance$Factory";
-            Helpers.hookAllMethods(pluginLoaderClass, lpparam.classLoader, "getClassLoader", new MethodHook() {
-                private boolean isHooked = false;
-                @Override
-                protected void after(MethodHookParam param) throws Throwable {
-                    ApplicationInfo appInfo = (ApplicationInfo) param.args[0];
-                    if ("miui.systemui.plugin".equals(appInfo.packageName) && !isHooked) {
-                        isHooked = true;
-                        if (pluginLoader == null) {
-                            pluginLoader = (ClassLoader) param.getResult();
-                        }
-                        Helpers.findAndHookMethod("miui.systemui.controlcenter.windowview.ControlCenterWindowViewImpl", pluginLoader, "handleMotionEvent", MotionEvent.class, boolean.class, hook);
+        String pluginLoaderClass = "com.android.systemui.shared.plugins.PluginInstance$Factory";
+        Helpers.hookAllMethods(pluginLoaderClass, lpparam.classLoader, "getClassLoader", new MethodHook() {
+            private boolean isHooked = false;
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                ApplicationInfo appInfo = (ApplicationInfo) param.args[0];
+                if ("miui.systemui.plugin".equals(appInfo.packageName) && !isHooked) {
+                    isHooked = true;
+                    if (pluginLoader == null) {
+                        pluginLoader = (ClassLoader) param.getResult();
                     }
+                    Helpers.findAndHookMethod("miui.systemui.controlcenter.windowview.ControlCenterWindowViewImpl", pluginLoader, "handleMotionEvent", MotionEvent.class, boolean.class, hook);
                 }
-            });
-        }
-        else {
-            Helpers.findAndHookMethod("com.android.systemui.controlcenter.phone.ControlPanelWindowView", lpparam.classLoader, "onTouchEvent", MotionEvent.class, hook);
-        }
+            }
+        });
     }
 
     public static void HorizMarginHook(LoadPackageParam lpparam) {
@@ -2458,11 +2449,9 @@ public class SystemUI {
                 param.setResult(new Pair<Integer, Integer>(Integer.valueOf(leftMargin), Integer.valueOf(rightMargin)));
             }
         };
-        String StatusBarWindowViewCls = Helpers.isTPlus() ? "com.android.systemui.statusbar.window.StatusBarWindowView" : "com.android.systemui.statusbar.phone.StatusBarWindowView";
+        String StatusBarWindowViewCls = "com.android.systemui.statusbar.window.StatusBarWindowView";
         Helpers.hookAllMethods(StatusBarWindowViewCls, lpparam.classLoader, "paddingNeededForCutoutAndRoundedCorner", horizHook);
-        if (Helpers.isTPlus()) {
-            Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBarContentInsetsProvider", lpparam.classLoader, "getStatusBarContentInsetsForCurrentRotation", horizHook);
-        }
+        Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBarContentInsetsProvider", lpparam.classLoader, "getStatusBarContentInsetsForCurrentRotation", horizHook);
     }
 
     public static void LockScreenTopMarginHook(LoadPackageParam lpparam) {
@@ -2598,14 +2587,8 @@ public class SystemUI {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
                 Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
-                ViewGroup mStatusBarWindow;
-                if (Helpers.isTPlus()) {
-                    Object sbWindowController = XposedHelpers.getObjectField(param.thisObject, "mStatusBarWindowController");
-                    mStatusBarWindow = (ViewGroup) XposedHelpers.getObjectField(sbWindowController, "mStatusBarWindowView");
-                }
-                else {
-                    mStatusBarWindow = (ViewGroup) XposedHelpers.getObjectField(param.thisObject, "mPhoneStatusBarWindow");
-                }
+                Object sbWindowController = XposedHelpers.getObjectField(param.thisObject, "mStatusBarWindowController");
+                ViewGroup mStatusBarWindow = (ViewGroup) XposedHelpers.getObjectField(sbWindowController, "mStatusBarWindowView");
 
                 BatteryIndicator indicator = new BatteryIndicator(mContext);
                 View panel = mStatusBarWindow.findViewById(mContext.getResources().getIdentifier("notification_panel", "id", lpparam.packageName));
@@ -2694,13 +2677,7 @@ public class SystemUI {
                             if (action == null) return;
                             if (action.equals("miui.intent.TAKE_SCREENSHOT")) {
                                 boolean state = intent.getBooleanExtra("IsFinished", true);
-                                Object mState;
-                                if (Helpers.isTPlus()) {
-                                    mState = XposedHelpers.getObjectField(param.thisObject, "mPipTransitionState");
-                                }
-                                else {
-                                    mState = XposedHelpers.getObjectField(param.thisObject, "mState");
-                                }
+                                Object mState = XposedHelpers.getObjectField(param.thisObject, "mPipTransitionState");
                                 boolean isPip = (boolean) XposedHelpers.callMethod(mState, "isInPip");
                                 if (isPip) {
                                     Object mSurfaceControlTransactionFactory = XposedHelpers.getObjectField(param.thisObject, "mSurfaceControlTransactionFactory");
@@ -2960,10 +2937,7 @@ public class SystemUI {
             }
         };
         Helpers.findAndHookMethodSilently("com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController", lpparam.classLoader, "updateThemeBackground", updateLockscreenHook);
-
-        if (Helpers.isTPlus()) {
-            Helpers.findAndHookMethodSilently("com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController", lpparam.classLoader, "updateThemeBackgroundVisibility", updateLockscreenHook);
-        }
+        Helpers.findAndHookMethodSilently("com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController", lpparam.classLoader, "updateThemeBackgroundVisibility", updateLockscreenHook);
         Helpers.findAndHookMethod("com.android.systemui.statusbar.NotificationMediaManager", lpparam.classLoader, "updateMediaMetaData", boolean.class, boolean.class, new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
@@ -3441,7 +3415,7 @@ public class SystemUI {
 
         Helpers.hookAllConstructors(tileHostCls, hook);
 
-        String FactoryImpl = Helpers.isTPlus() ? "com.android.systemui.qs.tileimpl.MiuiQSFactory" : "com.android.systemui.qs.tileimpl.QSFactoryImpl";
+        String FactoryImpl = "com.android.systemui.qs.tileimpl.MiuiQSFactory";
         Helpers.findAndHookMethod(FactoryImpl, lpparam.classLoader, "createTileInternal", String.class, new MethodHook() {
             @Override
             protected void after(final MethodHookParam param) throws Throwable {
@@ -3487,7 +3461,7 @@ public class SystemUI {
                                 public void run() {
                                     try {
                                         Class<?> DependencyClass = findClass("com.android.systemui.Dependency", lpparam.classLoader);
-                                        String StatusbarClsForDep = Helpers.isTPlus() ? "com.android.systemui.statusbar.phone.CentralSurfaces" : "com.android.systemui.statusbar.phone.StatusBar";
+                                        String StatusbarClsForDep = "com.android.systemui.statusbar.phone.CentralSurfaces";
                                         Object mStatusBar = XposedHelpers.callStaticMethod(DependencyClass, "get", findClassIfExists(StatusbarClsForDep, lpparam.classLoader));
                                         boolean usingControlCenter;
                                         Object mController = XposedHelpers.callStaticMethod(DependencyClass, "get", findClassIfExists("com.android.systemui.controlcenter.policy.ControlCenterControllerImpl", lpparam.classLoader));
@@ -3667,7 +3641,7 @@ public class SystemUI {
                     if (user != 0) {
                         try {
                             Class<?> Dependency = findClass("com.android.systemui.Dependency", lpparam.classLoader);
-                            String StatusbarClsForDep = Helpers.isTPlus() ? "com.android.systemui.statusbar.phone.CentralSurfaces" : "com.android.systemui.statusbar.phone.StatusBar";
+                            String StatusbarClsForDep = "com.android.systemui.statusbar.phone.CentralSurfaces";
                             Object mStatusBar = XposedHelpers.callStaticMethod(Dependency, "get", findClass(StatusbarClsForDep, lpparam.classLoader));
                             XposedHelpers.callMethod(mStatusBar, "collapsePanels");
                             XposedHelpers.callMethod(mContext, "startActivityAsUser", intent, XposedHelpers.newInstance(UserHandle.class, user));
@@ -3824,12 +3798,7 @@ public class SystemUI {
                 view.getContext().registerReceiver(br, new IntentFilter("miui.intent.TAKE_SCREENSHOT"));
             }
         };
-        if (Helpers.isTPlus()) {
-            Helpers.findAndHookMethod("com.android.systemui.navigationbar.NavigationBar", lpparam.classLoader, "onInit", hideNavHook);
-        }
-        else {
-            Helpers.findAndHookMethod("com.android.systemui.navigationbar.NavigationBar", lpparam.classLoader, "createView", Bundle.class, hideNavHook);
-        }
+        Helpers.findAndHookMethod("com.android.systemui.navigationbar.NavigationBar", lpparam.classLoader, "onInit", hideNavHook);
     }
 
     public static void OpenNotifyInFloatingWindowHook(LoadPackageParam lpparam) {
@@ -4238,13 +4207,7 @@ public class SystemUI {
             protected void before(MethodHookParam param) throws Throwable {
                 boolean added = XposedHelpers.getBooleanField(param.thisObject, "added");
                 if (added) {
-                    boolean useCC;
-                    if (Helpers.isTPlus()) {
-                        useCC = XposedHelpers.getBooleanField(XposedHelpers.getObjectField(param.thisObject, "mControlCenterController"), "useControlCenter");
-                    }
-                    else {
-                        useCC = (boolean) XposedHelpers.callMethod(XposedHelpers.getObjectField(param.thisObject, "mControlCenterController"), "isExpandable");
-                    }
+                    boolean useCC = XposedHelpers.getBooleanField(XposedHelpers.getObjectField(param.thisObject, "mControlCenterController"), "useControlCenter");
                     if (useCC) {
                         MotionEvent motionEvent = (MotionEvent) param.args[0];
                         if (motionEvent.getActionMasked() == 0) {

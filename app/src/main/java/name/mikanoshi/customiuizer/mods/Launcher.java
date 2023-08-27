@@ -1460,50 +1460,38 @@ public class Launcher {
 			@Override
 			protected void after(final MethodHookParam param) throws Throwable {
 				final Activity act = (Activity)param.thisObject;
-				if (Helpers.isTPlus()) {
-					Handler mHandler = (Handler)XposedHelpers.getObjectField(act, "mHandler");
-					new Helpers.SharedPrefObserver(act, mHandler, "pref_key_system_hidefromrecents_apps") {
-						@Override
-						public void onChange(String name) {
-							MainModule.mPrefs.put(name, Helpers.getSharedStringSetPref(act, name));
-						}
-					};
-				}
-				else {
-					Object rbList = Helpers.getStaticObjectFieldSilently(ActiviyManagerWrapper, "sRecentsBlacklist");
-					if (!Helpers.NOT_EXIST_SYMBOL.equals(rbList)) {
-						List<String> sRecentsBlacklist = (List<String>) rbList;
-						Set<String> selectedApps = MainModule.mPrefs.getStringSet("system_hidefromrecents_apps");
-						sRecentsBlacklist.addAll(selectedApps);
+				Handler mHandler = (Handler)XposedHelpers.getObjectField(act, "mHandler");
+				new Helpers.SharedPrefObserver(act, mHandler, "pref_key_system_hidefromrecents_apps") {
+					@Override
+					public void onChange(String name) {
+						MainModule.mPrefs.put(name, Helpers.getSharedStringSetPref(act, name));
 					}
-				}
+				};
 			}
 		});
-		if (Helpers.isTPlus()) {
-			Class<?> TaskInfoCompat = findClassIfExists("com.android.systemui.shared.recents.model.GroupedRecentTaskInfoCompat", lpparam.classLoader);
-			if (TaskInfoCompat == null) {
-				Helpers.log("HideFromRecentsHook", "hook failed");
-				return;
-			}
-			Helpers.findAndHookMethod(ActiviyManagerWrapper, "needRemoveTask", TaskInfoCompat, new MethodHook() {
-				@Override
-				protected void after(final MethodHookParam param) throws Throwable {
-					if (param.args[0] != null) {
-						Object mainTask = XposedHelpers.getObjectField(param.args[0], "mMainTaskInfo");
-						if (mainTask != null) {
-							ComponentName componentName = (ComponentName) XposedHelpers.getObjectField(mainTask, "topActivity");
-							if (componentName != null) {
-								String pkgName = componentName.getPackageName();
-								Set<String> selectedApps = MainModule.mPrefs.getStringSet("system_hidefromrecents_apps");
-								if (selectedApps.contains(pkgName)) {
-									param.setResult(true);
-								}
+		Class<?> TaskInfoCompat = findClassIfExists("com.android.systemui.shared.recents.model.GroupedRecentTaskInfoCompat", lpparam.classLoader);
+		if (TaskInfoCompat == null) {
+			Helpers.log("HideFromRecentsHook", "hook failed");
+			return;
+		}
+		Helpers.findAndHookMethod(ActiviyManagerWrapper, "needRemoveTask", TaskInfoCompat, new MethodHook() {
+			@Override
+			protected void after(final MethodHookParam param) throws Throwable {
+				if (param.args[0] != null) {
+					Object mainTask = XposedHelpers.getObjectField(param.args[0], "mMainTaskInfo");
+					if (mainTask != null) {
+						ComponentName componentName = (ComponentName) XposedHelpers.getObjectField(mainTask, "topActivity");
+						if (componentName != null) {
+							String pkgName = componentName.getPackageName();
+							Set<String> selectedApps = MainModule.mPrefs.getStringSet("system_hidefromrecents_apps");
+							if (selectedApps.contains(pkgName)) {
+								param.setResult(true);
 							}
 						}
 					}
 				}
-			});
-		}
+			}
+		});
 	}
 
 	public static void MaxHotseatIconsCountHook(LoadPackageParam lpparam) {

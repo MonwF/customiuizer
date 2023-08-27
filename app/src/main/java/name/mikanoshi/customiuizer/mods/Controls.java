@@ -860,41 +860,21 @@ public class Controls {
 	}
 
 	public static void FingerprintHapticSuccessHook(LoadPackageParam lpparam) {
-		if (Helpers.isTPlus()) {
-			Helpers.hookAllMethods("com.android.server.biometrics.sensors.AuthenticationClient", lpparam.classLoader, "onAuthenticated", new MethodHook() {
-				@Override
-				protected void after(MethodHookParam param) throws Throwable {
-					boolean mAuthSuccess = XposedHelpers.getBooleanField(param.thisObject, "mAuthSuccess");
-					if (!mAuthSuccess) return;
-					Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+		Helpers.hookAllMethods("com.android.server.biometrics.sensors.AuthenticationClient", lpparam.classLoader, "onAuthenticated", new MethodHook() {
+			@Override
+			protected void after(MethodHookParam param) throws Throwable {
+				boolean mAuthSuccess = XposedHelpers.getBooleanField(param.thisObject, "mAuthSuccess");
+				if (!mAuthSuccess) return;
+				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 
-					boolean ignoreSystem = MainModule.mPrefs.getBoolean("controls_fingerprintsuccess_ignore");
-					int opt = Integer.parseInt(MainModule.mPrefs.getString("controls_fingerprintsuccess", "1"));
-					if (opt == 2)
-						Helpers.performLightVibration(mContext, ignoreSystem);
-					else if (opt == 3)
-						Helpers.performStrongVibration(mContext, ignoreSystem);
-				}
-			});
-		}
-		else {
-			Helpers.hookAllMethods("com.android.server.biometrics.sensors.CoexCoordinator", lpparam.classLoader, "onAuthenticationSucceeded", new MethodHook() {
-				@Override
-				protected void after(MethodHookParam param) throws Throwable {
-					boolean isBiometricPrompt = (boolean) XposedHelpers.callMethod(param.args[1], "isBiometricPrompt");
-					if (!isBiometricPrompt) {
-						Context mContext = Helpers.findContext();
-
-						boolean ignoreSystem = MainModule.mPrefs.getBoolean("controls_fingerprintsuccess_ignore");
-						int opt = Integer.parseInt(MainModule.mPrefs.getString("controls_fingerprintsuccess", "1"));
-						if (opt == 2)
-							Helpers.performLightVibration(mContext, ignoreSystem);
-						else if (opt == 3)
-							Helpers.performStrongVibration(mContext, ignoreSystem);
-					}
-				}
-			});
-		}
+				boolean ignoreSystem = MainModule.mPrefs.getBoolean("controls_fingerprintsuccess_ignore");
+				int opt = Integer.parseInt(MainModule.mPrefs.getString("controls_fingerprintsuccess", "1"));
+				if (opt == 2)
+					Helpers.performLightVibration(mContext, ignoreSystem);
+				else if (opt == 3)
+					Helpers.performStrongVibration(mContext, ignoreSystem);
+			}
+		});
 	}
 
 	public static void FingerprintHapticFailureHook(LoadPackageParam lpparam) {
@@ -911,13 +891,7 @@ public class Controls {
 		Helpers.hookAllMethods(authClient, lpparam.classLoader, "onAuthenticated", new MethodHook() {
 			@Override
 			protected void after(MethodHookParam param) throws Throwable {
-				boolean mAuthSuccess;
-				if (Helpers.isTPlus()) {
-					mAuthSuccess = XposedHelpers.getBooleanField(param.thisObject, "mAuthSuccess");
-				}
-				else {
-					mAuthSuccess = (boolean)param.getResult();
-				}
+				boolean mAuthSuccess = XposedHelpers.getBooleanField(param.thisObject, "mAuthSuccess");
 				if (mAuthSuccess) return;
 				Context mContext = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 				PowerManager mPowerManager = (PowerManager)mContext.getSystemService(Context.POWER_SERVICE);
@@ -1007,7 +981,7 @@ public class Controls {
 		doubleTapResons.add("double_click_power");
 		doubleTapResons.add("power_double_tap");
 		doubleTapResons.add("double_click_power_key");
-		String className = Helpers.isTPlus() ? "com.miui.server.input.util.ShortCutActionsUtils" : "com.miui.server.util.ShortCutActionsUtils";
+		String className = "com.miui.server.input.util.ShortCutActionsUtils";
 		Helpers.findAndHookMethod(className, lpparam.classLoader, "triggerFunction", String.class, String.class, Bundle.class, boolean.class, new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {

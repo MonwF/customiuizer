@@ -44,13 +44,6 @@
 			android:summary="@string/system_autobrightness_summ"
 			android:title="@string/system_autobrightness_title" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_nolightuponheadset"
-			android:summary="@string/system_nolightuponheadset_summ"
-			android:title="@string/system_nolightuponheadset_title"
-			app:isPreferenceVisible="false"
-			android:defaultValue="false" />
-
 		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_system_nolightuponcharges"
 			android:summary="@string/system_nolightuponcharges_summ"
@@ -1318,7 +1311,6 @@
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_disableintegrity"
 			android:title="@string/system_disableintegrity_title"
-			app:isPreferenceVisible="false"
 			android:defaultValue="false" />
 
 		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx

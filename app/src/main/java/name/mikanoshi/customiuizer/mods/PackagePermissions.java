@@ -49,7 +49,7 @@ public class PackagePermissions {
 		//systemPackages.add("com.miui.packageinstaller");
 
 		// Allow signature level permissions for module
-		String PMSCls = Helpers.isTPlus() ? "com.android.server.pm.permission.PermissionManagerServiceImpl" : "com.android.server.pm.permission.PermissionManagerService";
+		String PMSCls = "com.android.server.pm.permission.PermissionManagerServiceImpl";
 		Helpers.hookAllMethods(PMSCls, lpparam.classLoader, "shouldGrantPermissionBySignature",
 			new MethodHook() {
 				@Override
@@ -110,7 +110,7 @@ public class PackagePermissions {
 //		);
 
 		// Make module appear as system app
-		String ActQueryService = Helpers.isTPlus() ? "com.android.server.pm.ComputerEngine" : "com.android.server.pm.PackageManagerService";
+		String ActQueryService = "com.android.server.pm.ComputerEngine";
 		Helpers.hookAllMethods(ActQueryService, lpparam.classLoader, "queryIntentActivitiesInternal", new MethodHook() {
 			@Override
 			@SuppressWarnings("unchecked")
