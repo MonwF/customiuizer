@@ -809,19 +809,17 @@ public class GlobalActions {
                     headers.add(header);
             }
         });
-        if (Helpers.isTPlus()) {
-            Helpers.hookAllMethods("com.android.settings.MiuiSettings$HeaderAdapter", lpparam.classLoader, "setIcon", new MethodHook() {
-                @Override
-                protected void after(MethodHookParam param) throws Throwable {
-                    int iconRes = XposedHelpers.getIntField(param.args[1], "iconRes");
-                    if (iconRes == settingsIconResId) {
-                        ImageView icon = (ImageView) XposedHelpers.getObjectField(param.args[0], "icon");
-                        int iconSize = XposedHelpers.getIntField(XposedHelpers.getSurroundingThis(param.thisObject), "mNormalIconSize");
-                        icon.getLayoutParams().height = iconSize;
-                    }
+        Helpers.hookAllMethods("com.android.settings.MiuiSettings$HeaderAdapter", lpparam.classLoader, "setIcon", new MethodHook() {
+            @Override
+            protected void after(MethodHookParam param) throws Throwable {
+                int iconRes = XposedHelpers.getIntField(param.args[1], "iconRes");
+                if (iconRes == settingsIconResId) {
+                    ImageView icon = (ImageView) XposedHelpers.getObjectField(param.args[0], "icon");
+                    int iconSize = XposedHelpers.getIntField(XposedHelpers.getSurroundingThis(param.thisObject), "mNormalIconSize");
+                    icon.getLayoutParams().height = iconSize;
                 }
-            });
-        }
+            }
+        });
     }
 
     public static void setupSystemHelpers() {
@@ -867,8 +865,7 @@ public class GlobalActions {
                     });
                 }
                 else {
-                    final String methodSystemuiChange = Helpers.isTPlus() ? "setSystemBarAttributes" : "setFullscreenState";
-                    Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarStateControllerImpl", lpparam.classLoader, methodSystemuiChange, new MethodHook() {
+                    Helpers.hookAllMethods("com.android.systemui.statusbar.StatusBarStateControllerImpl", lpparam.classLoader, "setSystemBarAttributes", new MethodHook() {
                         private boolean fullScreen = false;
                         @Override
                         protected void after(MethodHookParam param) throws Throwable {
@@ -981,13 +978,7 @@ public class GlobalActions {
     }
 
     public static void setupStatusBar(LoadPackageParam lpparam) {
-        Class<?> StatusBarClass;
-        if (Helpers.isTPlus()) {
-            StatusBarClass = findClassIfExists("com.android.systemui.statusbar.phone.CentralSurfacesImpl", lpparam.classLoader);
-        }
-        else {
-            StatusBarClass = findClassIfExists("com.android.systemui.statusbar.phone.StatusBar", lpparam.classLoader);
-        }
+        Class<?> StatusBarClass = findClassIfExists("com.android.systemui.statusbar.phone.CentralSurfacesImpl", lpparam.classLoader);
         if (StatusBarClass == null) return;
         Helpers.findAndHookMethod(StatusBarClass, "start", new MethodHook() {
             @Override

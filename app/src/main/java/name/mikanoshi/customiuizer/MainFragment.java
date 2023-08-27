@@ -246,7 +246,7 @@ public class MainFragment extends PreferenceFragmentBase {
 			}
 		});
 
-		String[] locales = new String[] { "zh-CN", "zh-TW", "ru-RU", "pl-PL", "ja-JP", "vi-VN", "cs-CZ", "pt-BR", "tr-TR", "es-ES" };
+		String[] locales = new String[] { "zh-CN", "zh-TW", "ru-RU", "ja-JP", "vi-VN", "cs-CZ", "pt-BR", "tr-TR", "es-ES" };
 
 		ArrayList<String> localesArr = new ArrayList<String>(Arrays.asList(locales));
 		ArrayList<SpannableString> localeNames = new ArrayList<SpannableString>();

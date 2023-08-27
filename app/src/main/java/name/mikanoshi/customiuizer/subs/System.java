@@ -85,10 +85,6 @@ public class System extends SubFragment {
 					}
 				});
 
-				if (!Helpers.isTPlus()) {
-					findPreference("pref_key_system_nolightuponheadset").setVisible(true);
-				}
-
 				break;
 			case "pref_key_system_cat_audio":
 				findPreference("pref_key_system_ignorecalls_apps").setOnPreferenceClickListener(openAppsEdit);
@@ -292,10 +288,6 @@ public class System extends SubFragment {
 						return true;
 					}
 				});
-
-				if (!Helpers.isTPlus()) {
-					findPreference("pref_key_system_drawer_blur").setVisible(false);
-				}
 
 				break;
 			case "pref_key_system_cat_notifications":
@@ -539,10 +531,6 @@ public class System extends SubFragment {
 						return true;
 					}
 				});
-
-				if (Helpers.isTPlus()) {
-					findPreference("pref_key_system_disableintegrity").setVisible(true);
-				}
 
 				Helpers.prefs.edit().putInt("pref_key_system_animationscale_window", Math.round(Helpers.getAnimationScale(0) * 10)).apply();
 				((SeekBarPreference)findPreference("pref_key_system_animationscale_window")).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
