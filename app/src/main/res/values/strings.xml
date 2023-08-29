@@ -1142,6 +1142,7 @@
     <string name="system_statusbar_batterytempandcurrent_content_title">Display Content</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">Display on the right</string>
     <string name="system_statusbar_batterytempandcurrent_positive_title">Current value is always positive</string>
+    <string name="system_statusbar_batterytempandcurrent_temp_decimal_title">Temperature is always displayed as a decimal</string>
     <string name="system_statusbar_batterytempandcurrent_incharge_title">Show when charging only</string>
     <string name="system_statusbar_batterytempandcurrent_fixcurrentratio_title">Fix Current value ratio on some devices</string>
     <string name="system_statusbar_batterytempandcurrent_hideunit_title">Hide unit</string>

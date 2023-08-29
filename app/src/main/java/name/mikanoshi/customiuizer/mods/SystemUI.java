@@ -400,8 +400,14 @@ public class SystemUI {
                                     int opt = MainModule.mPrefs.getStringAsInt("system_statusbar_batterytempandcurrent_content", 1);
                                     String simpleTempVal = "";
                                     if (opt == 1 || opt == 4) {
+                                        boolean decimal = MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_temp_decimal");
                                         int tempVal = Integer.parseInt(props.getProperty("POWER_SUPPLY_TEMP"));
-                                        simpleTempVal = tempVal % 10 == 0 ? (tempVal / 10 + "") : (tempVal / 10f + "");
+                                        if (decimal) {
+                                            simpleTempVal = tempVal / 10f + "";
+                                        }
+                                        else {
+                                            simpleTempVal = tempVal % 10 == 0 ? (tempVal / 10 + "") : (tempVal / 10f + "");
+                                        }
                                     }
                                     String currVal = "";
                                     String preferred = "mA";

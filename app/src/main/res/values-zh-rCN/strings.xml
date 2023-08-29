@@ -1117,6 +1117,7 @@
     <string name="array_power_current">电流与功率</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">右侧显示</string>
     <string name="system_statusbar_batterytempandcurrent_positive_title">电流总显示正值</string>
+    <string name="system_statusbar_batterytempandcurrent_temp_decimal_title">温度总显示成小数</string>
     <string name="system_statusbar_dualsimin2rows_title">双排信号栏</string>
     <string name="system_statusbar_dualrows_title">双排状态栏</string>
     <string name="system_statusbar_dualrows_summ">状态栏高度建议值34–40，上边距建议值2</string>
