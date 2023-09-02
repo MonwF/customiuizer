@@ -1261,7 +1261,7 @@ public class SystemUI {
                         if (MainModule.mPrefs.getBoolean("system_statusbar_headset_atright")) {
                             rightBlockList.remove("headset");
                         }
-                        if (blockList != null) {
+                        if (!Helpers.NOT_EXIST_SYMBOL.equals(blockList)) {
                             XposedHelpers.setStaticObjectField(MiuiEndIconManager, "RIGHT_BLOCK_LIST", rightBlockList);
                         }
                         else {
