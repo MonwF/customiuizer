@@ -29,6 +29,7 @@
     <string name="system_statusbaricons_battery1_title">电池图片</string>
     <string name="system_statusbaricons_battery4_title">电池百分比符号</string>
     <string name="system_statusbaricons_battery3_title">充电指示器</string>
+    <string name="system_statusbaricons_battery2_title">隐藏电量文字但显示在控制中心</string>
     <string name="system_statusbaricons_alarm_title">闹钟</string>
     <string name="system_statusbaricons_alarm_summ">完全隐藏</string>
     <string name="system_statusbaricons_alarmn_title">选择闹钟图标的可见性</string>

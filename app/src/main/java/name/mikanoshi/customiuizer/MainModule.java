@@ -287,7 +287,8 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 || mPrefs.getBoolean("system_statusbar_dnd_atright")
                 || mPrefs.getBoolean("system_statusbar_nfc_atright")
                 || mPrefs.getBoolean("system_statusbar_btbattery_atright")
-                || mPrefs.getBoolean("system_statusbar_headset_atright");
+                || mPrefs.getBoolean("system_statusbar_headset_atright")
+                || mPrefs.getBoolean("system_statusbar_vpn_atright");
             boolean moveLeft = mPrefs.getBoolean("system_statusbar_alarm_atleft")
                 || mPrefs.getBoolean("system_statusbar_sound_atleft")
                 || mPrefs.getBoolean("system_statusbar_dnd_atleft")
@@ -353,7 +354,10 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
             if (mPrefs.getBoolean("system_secureqs")) SystemUI.SecureQSTilesHook(lpparam);
             if (mPrefs.getBoolean("system_mutevisiblenotif")) System.MuteVisibleNotificationsHook(lpparam);
             if (mPrefs.getBoolean("system_statusbaricons_battery1")) System.HideIconsBattery1Hook(lpparam);
-            if (mPrefs.getBoolean("system_statusbaricons_battery3") || mPrefs.getBoolean("system_statusbaricons_battery4")) System.HideIconsBattery2Hook(lpparam);
+            if (mPrefs.getBoolean("system_statusbaricons_battery3")
+                || mPrefs.getBoolean("system_statusbaricons_battery4")
+                || mPrefs.getBoolean("system_statusbaricons_battery2")
+            ) System.HideIconsBattery2Hook(lpparam);
             if (mPrefs.getStringAsInt("system_statusbaricons_wifistandard", 1) > 1) System.DisplayWifiStandardHook(lpparam);
             if (mPrefs.getBoolean("system_statusbaricons_signal")
                 || mPrefs.getBoolean("system_statusbaricons_sim1")

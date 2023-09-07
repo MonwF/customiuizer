@@ -157,6 +157,7 @@ import name.mikanoshi.customiuizer.utils.AudioVisualizer;
 import name.mikanoshi.customiuizer.utils.Helpers;
 import name.mikanoshi.customiuizer.utils.Helpers.MethodHook;
 import name.mikanoshi.customiuizer.utils.Helpers.MimeType;
+import name.mikanoshi.customiuizer.utils.ResourceHooks;
 import name.mikanoshi.customiuizer.utils.SoundData;
 
 public class System {
@@ -3184,6 +3185,24 @@ public class System {
     }
 
     public static void HideIconsBattery2Hook(LoadPackageParam lpparam) {
+        boolean hideNormalPercentage = MainModule.mPrefs.getBoolean("system_statusbaricons_battery2");
+        int batteryId = ResourceHooks.getFakeResId("batterview_in_statusbar");
+        if (hideNormalPercentage) {
+            Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView", lpparam.classLoader, "onFinishInflate", new MethodHook() {
+                @Override
+                protected void after(MethodHookParam param) throws Throwable {
+                    View mBatteryView = (View) XposedHelpers.getObjectField(param.thisObject, "mBattery");
+                    mBatteryView.setTag(batteryId, true);
+                }
+            });
+            Helpers.findAndHookMethod("com.android.systemui.statusbar.phone.KeyguardStatusBarView", lpparam.classLoader, "onFinishInflate", new MethodHook() {
+                @Override
+                protected void after(MethodHookParam param) throws Throwable {
+                    View mBatteryView = (View) XposedHelpers.getObjectField(param.thisObject, "mBatteryView");
+                    mBatteryView.setTag(batteryId, true);
+                }
+            });
+        }
         Helpers.findAndHookMethod("com.android.systemui.statusbar.views.MiuiBatteryMeterView", lpparam.classLoader, "updateChargeAndText", new MethodHook() {
             @Override
             protected void after(MethodHookParam param) throws Throwable {
@@ -3198,6 +3217,15 @@ public class System {
                         ImageView mBatteryChargingInView = (ImageView)XposedHelpers.getObjectField(param.thisObject, "mBatteryChargingInView");
                         mBatteryChargingInView.setVisibility(View.GONE);
                     } catch (Throwable ignore) {}
+                }
+                if (hideNormalPercentage) {
+                    View mBatteryView = (View) param.thisObject;
+                    if (mBatteryView.getTag(batteryId) != null) {
+                        View percentView = (View)XposedHelpers.getObjectField(param.thisObject, "mBatteryPercentMarkView");
+                        percentView.setVisibility(View.GONE);
+                        percentView = (View)XposedHelpers.getObjectField(param.thisObject, "mBatteryPercentView");
+                        percentView.setVisibility(View.GONE);
+                    }
                 }
             }
         });

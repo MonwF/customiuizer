@@ -31,6 +31,7 @@
     <string name="system_statusbaricons_battery1_title">Battery image</string>
     <string name="system_statusbaricons_battery4_title">Battery percentage mark</string>
     <string name="system_statusbaricons_battery3_title">Charging indicator</string>
+    <string name="system_statusbaricons_battery2_title">Battery percentage hides in statusbar but appears in control center</string>
     <string name="system_statusbaricons_alarm_title">Alarm</string>
     <string name="system_statusbaricons_alarm_summ">Hide completely</string>
     <string name="system_statusbaricons_alarmn_title">Selective alarm icon visibility</string>
