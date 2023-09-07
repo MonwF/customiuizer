@@ -15,6 +15,11 @@
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_battery2"
+		android:title="@string/system_statusbaricons_battery2_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbaricons_battery3"
 		android:title="@string/system_statusbaricons_battery3_title"
 		android:defaultValue="false" />
