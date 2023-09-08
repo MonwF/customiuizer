@@ -160,6 +160,11 @@
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_secondspace"
+		android:title="@string/system_statusbaricons_secondspace_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbaricons_privacy"
 		android:title="@string/system_statusbaricons_privacy_title"
 		android:defaultValue="false" />

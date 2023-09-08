@@ -397,6 +397,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 mPrefs.getBoolean("system_statusbaricons_profile") ||
                 mPrefs.getBoolean("system_statusbaricons_sound") ||
                 mPrefs.getBoolean("system_statusbaricons_dnd") ||
+                mPrefs.getBoolean("system_statusbaricons_secondspace") ||
                 mPrefs.getBoolean("system_statusbaricons_headset") ||
                 mPrefs.getBoolean("system_statusbaricons_nfc") ||
                 mPrefs.getBoolean("system_statusbaricons_vpn") ||
