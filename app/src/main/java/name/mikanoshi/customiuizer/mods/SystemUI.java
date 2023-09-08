@@ -2540,6 +2540,7 @@ public class SystemUI {
                 "managed_profile".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_profile") ||
                 "vpn".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_vpn") ||
                 "nfc".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_nfc") ||
+                "second_space".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_secondspace") ||
                 "location".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_gps") ||
                 "wifi".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_wifi") ||
                 "slave_wifi".equals(slotName) && MainModule.mPrefs.getBoolean("system_statusbaricons_dualwifi") ||
