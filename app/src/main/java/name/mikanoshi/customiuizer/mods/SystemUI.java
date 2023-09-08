@@ -2365,7 +2365,8 @@ public class SystemUI {
                         if ((mTouchTime - currentDownTime > 600 && mTouchTime - currentDownTime < 4000)
                             && Math.abs(mTouchX - currentDownX) < 100F) {
                             if (MainModule.mPrefs.getBoolean("system_statusbarcontrols_longpress_vibrate")) {
-                                Helpers.performStrongVibration(mContext);
+                                boolean ignoreOff = MainModule.mPrefs.getBoolean("system_statusbarcontrols_longpress_vibrate_ignoreoff");
+                                Helpers.performStrongVibration(mContext, ignoreOff);
                             }
                             GlobalActions.handleAction(mContext, "pref_key_system_statusbarcontrols_longpress");
                         }
