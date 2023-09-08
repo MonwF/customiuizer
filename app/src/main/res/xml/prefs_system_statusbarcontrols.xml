@@ -68,6 +68,13 @@
 		miuizer:indentLevel="1"
 		android:defaultValue="false" />
 
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbarcontrols_longpress_vibrate_ignoreoff"
+		android:title="@string/controls_fingerprintsuccess_ignore_summ"
+		android:dependency="pref_key_system_statusbarcontrols_longpress_vibrate"
+		miuizer:indentLevel="2"
+		android:defaultValue="false" />
+
 	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

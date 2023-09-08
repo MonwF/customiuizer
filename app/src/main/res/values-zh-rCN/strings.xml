@@ -626,7 +626,7 @@
     <string name="controls_fingerprintsuccess_title">成功时振动</string>
     <string name="controls_fingerprintsuccess_summ">触觉反馈成功验证</string>
     <string name="controls_fingerprintsuccess_ignore_title">忽略系统设置</string>
-    <string name="controls_fingerprintsuccess_ignore_summ">点击振动被禁用时不禁用触觉反馈</string>
+    <string name="controls_fingerprintsuccess_ignore_summ">系统触感关闭时依然振动</string>
     <string name="controls_fingerprintfailure_title">失败时不振动</string>
     <string name="controls_fingerprintfailure_summ">移除触觉反馈失败验证</string>
     <string name="controls_mods_power">电源键</string>
