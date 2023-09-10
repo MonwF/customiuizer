@@ -450,7 +450,6 @@
     <string name="launcher_iconscale_title">Skalowanie ikon</string>
     <string name="launcher_horizmargin_title">Poziome marginesy siatki</string>
     <string name="launcher_topmargin_title">Górny margines siatki</string>
-    <string name="launcher_bottommargin_title">Dolny margines dokowania</string>
     <string name="launcher_horizwidgetmargin_title">Poziomy margines widżetu</string>
     <string name="launcher_indicatorheight_title">Wysokość wskaźnika strony</string>
     <string name="launcher_folders">Foldery</string>

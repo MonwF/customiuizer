@@ -544,7 +544,6 @@
     <string name="launcher_iconscale_title">Escalado de iconos</string>
     <string name="launcher_horizmargin_title">Márgenes de cuadrícula horizontales</string>
     <string name="launcher_topmargin_title">Margen de cuadrícula superior</string>
-    <string name="launcher_bottommargin_title">Margen inferior del dock</string>
     <string name="launcher_horizwidgetmargin_title">Margen horizontal del widget</string>
     <string name="launcher_indicatorheight_title">Altura del indicador de página</string>
     <string name="launcher_folders">Carpetas</string>

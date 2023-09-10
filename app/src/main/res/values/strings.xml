@@ -562,9 +562,11 @@
     <string name="launcher_iconscale_title">Icons scaling</string>
     <string name="launcher_horizmargin_title">Horizontal grid margins</string>
     <string name="launcher_topmargin_title">Top grid margin</string>
-    <string name="launcher_bottommargin_title">Bottom dock margin</string>
+    <string name="launcher_dock_topmargin_title">Dock top margin</string>
+    <string name="launcher_dock_bottommargin_title">Dock bottom margin</string>
     <string name="launcher_horizwidgetmargin_title">Horizontal widget margin</string>
     <string name="launcher_indicatorheight_title">Page indicator height</string>
+    <string name="launcher_indicator_topmargin_title">Page indicator top margin</string>
     <string name="launcher_folders">Folders</string>
     <string name="launcher_folder_cols_title">Number of columns in folders</string>
     <string name="launcher_folderwidth_title">Use entire folder\'s width</string>
