@@ -544,7 +544,6 @@
     <string name="launcher_iconscale_title">Масштаб значков</string>
     <string name="launcher_horizmargin_title">Горизонтальные отступы сетки</string>
     <string name="launcher_topmargin_title">Отступ сетки сверху</string>
-    <string name="launcher_bottommargin_title">Отступ дока снизу</string>
     <string name="launcher_horizwidgetmargin_title">Горизонтальные отступы виджетов</string>
     <string name="launcher_indicatorheight_title">Высота индикатора страниц</string>
     <string name="launcher_folders">Папки</string>

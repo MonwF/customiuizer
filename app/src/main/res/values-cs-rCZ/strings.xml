@@ -546,7 +546,6 @@
     <string name="launcher_iconscale_title">Měřítko ikon</string>
     <string name="launcher_horizmargin_title">Horizontální okraje mřížky</string>
     <string name="launcher_topmargin_title">Horní okraj mřížky</string>
-    <string name="launcher_bottommargin_title">Spodní okraj doku</string>
     <string name="launcher_horizwidgetmargin_title">Horizontální okraj widgetu</string>
     <string name="launcher_indicatorheight_title">Výška ukazatele stránky</string>
     <string name="launcher_folders">Složky</string>

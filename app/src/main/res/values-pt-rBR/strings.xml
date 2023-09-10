@@ -546,7 +546,6 @@
     <string name="launcher_iconscale_title">Tamanho dos ícones</string>
     <string name="launcher_horizmargin_title">Margens horizontais da grade</string>
     <string name="launcher_topmargin_title">Margem superior da grade</string>
-    <string name="launcher_bottommargin_title">Margem inferior da doca</string>
     <string name="launcher_horizwidgetmargin_title">Margem horizontal do widget</string>
     <string name="launcher_indicatorheight_title">Altura do indicador de página</string>
     <string name="launcher_folders">Pastas</string>

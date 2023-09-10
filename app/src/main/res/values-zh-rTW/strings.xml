@@ -521,7 +521,6 @@
     <string name="launcher_iconscale_title">圖示縮放</string>
     <string name="launcher_horizmargin_title">水平網格邊距</string>
     <string name="launcher_topmargin_title">頂部網格邊距</string>
-    <string name="launcher_bottommargin_title">底欄邊距</string>
     <string name="launcher_horizwidgetmargin_title">水平小部件邊緣</string>
     <string name="launcher_indicatorheight_title">頁面指示器高度</string>
     <string name="launcher_folders">資料夾</string>

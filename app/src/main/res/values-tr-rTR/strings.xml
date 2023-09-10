@@ -527,7 +527,6 @@ ss - iki basamaklı saniye(09)</string>
     <string name="launcher_iconscale_title">Simgeleri ölçekle</string>
     <string name="launcher_horizmargin_title">Yatay ızgara kenar boşlukları</string>
     <string name="launcher_topmargin_title">Üst ızgara boşluğu</string>
-    <string name="launcher_bottommargin_title">Alt yuva boşluğu</string>
     <string name="launcher_horizwidgetmargin_title">Yatay widget kenar boşluğu</string>
     <string name="launcher_indicatorheight_title">Sayfa göstergesi yüksekliği</string>
     <string name="launcher_folders">Klasörler</string>

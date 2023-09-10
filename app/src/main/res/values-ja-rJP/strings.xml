@@ -545,7 +545,6 @@
     <string name="launcher_iconscale_title">アイコンスケール</string>
     <string name="launcher_horizmargin_title">水平方向のグリッドの余白</string>
     <string name="launcher_topmargin_title">上部のグリッドの余白</string>
-    <string name="launcher_bottommargin_title">ドック下部の余白</string>
     <string name="launcher_horizwidgetmargin_title">ウィジェットの水平方向の余白</string>
     <string name="launcher_indicatorheight_title">ページインジケーターの高さ</string>
     <string name="launcher_folders">フォルダ</string>

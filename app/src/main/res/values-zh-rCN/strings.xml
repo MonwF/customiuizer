@@ -540,10 +540,12 @@
     <string name="launcher_unlockhotseat_title">增加底栏图标</string>
     <string name="launcher_unlockhotseat_summ">解除底栏图标数量的限制</string>
     <string name="launcher_iconscale_title">图标缩放</string>
-    <string name="launcher_horizmargin_title">水平网格边距</string>
-    <string name="launcher_topmargin_title">顶部网格边距</string>
-    <string name="launcher_bottommargin_title">底栏边距</string>
+    <string name="launcher_horizmargin_title">桌面网格水平边距</string>
+    <string name="launcher_topmargin_title">桌面网格顶部边距</string>
+    <string name="launcher_dock_topmargin_title">Dock栏顶部边距</string>
+    <string name="launcher_dock_bottommargin_title">Dock栏底部边距</string>
     <string name="launcher_indicatorheight_title">页面指示器高度</string>
+    <string name="launcher_indicator_topmargin_title">页面指标器顶部边距</string>
     <string name="launcher_folders">文件夹</string>
     <string name="launcher_folder_cols_title">文件夹排列数量</string>
     <string name="launcher_folderwidth_title">使用整个文件夹的宽度</string>

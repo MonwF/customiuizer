@@ -545,7 +545,6 @@
     <string name="launcher_iconscale_title">Thu phóng biểu tượng</string>
     <string name="launcher_horizmargin_title">Lề lưới ngang</string>
     <string name="launcher_topmargin_title">Lề lưới trên cùng</string>
-    <string name="launcher_bottommargin_title">Lề thanh dưới cùng</string>
     <string name="launcher_horizwidgetmargin_title">Lề tiện ích nằm ngang</string>
     <string name="launcher_indicatorheight_title">Chiều cao chỉ báo trang</string>
     <string name="launcher_folders">Thư mục</string>
