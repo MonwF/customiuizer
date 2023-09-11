@@ -908,7 +908,7 @@
     <string name="miuizer_new_mod">新！</string>
     <string name="miuizer_show_launchericon_title">启动器图标</string>
     <string name="miuizer_show_launchericon_summ">在启动器中显示图标</string>
-    <string name="miuizer_show_settingsicon_title">快速访问图标</string>
+    <string name="miuizer_show_settingsicon_title">快速访问图标位置</string>
     <string name="miuizer_show_settingsicon_summ">在设置中显示图标</string>
     <string name="miuizer_locale_title">界面语言</string>
     <string name="miuizer_locale_summ">始终以所选语言显示模块界面</string>

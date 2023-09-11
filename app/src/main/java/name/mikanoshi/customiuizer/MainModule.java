@@ -555,7 +555,7 @@ public class MainModule implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (isLauncherPkg) {
             if (mPrefs.getInt("launcher_horizmargin", 0) > 0) Launcher.HorizontalSpacingRes();
             if (mPrefs.getInt("launcher_indicatorheight", 9) > 9) Launcher.IndicatorHeightRes();
-            if (mPrefs.getInt("launcher_indicator_topmargin", 0) > 0) Launcher.IndicatorMarginTopHook();
+            if (mPrefs.getInt("launcher_indicator_topmargin", 0) > 0) Launcher.IndicatorMarginTopHook(lpparam);
             if (mPrefs.getBoolean("launcher_unlockgrids")) {
                 Launcher.UnlockGridsRes();
                 Launcher.UnlockGridsHook(lpparam);
