@@ -1147,11 +1147,6 @@ public class Launcher {
 		MainModule.resHooks.setDensityReplacement("com.miui.home", "dimen", "slide_bar_height", opt);
 		MainModule.resHooks.setDensityReplacement("com.mi.android.globallauncher", "dimen", "slide_bar_height", opt);
 	}
-	public static void IndicatorMarginTopHook() {
-		int opt = MainModule.mPrefs.getInt("launcher_indicator_topmargin", 0);
-		MainModule.resHooks.setDensityReplacement("com.miui.home", "dimen", "slide_bar_margin_top", opt);
-		MainModule.resHooks.setDensityReplacement("com.mi.android.globallauncher", "dimen", "slide_bar_margin_top", opt);
-	}
 
 	public static void GoogleDiscoverHook(final LoadPackageParam lpparam) {
 		try {
@@ -1325,29 +1320,44 @@ public class Launcher {
 	}
 
 	public static void DockMarginTopHook(LoadPackageParam lpparam) {
+		int opt = MainModule.mPrefs.getInt("launcher_dock_topmargin", 0);
 		Helpers.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "calcHotSeatsMarginTop", Context.class, boolean.class, new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
-				int opt = MainModule.mPrefs.getInt("launcher_dock_topmargin", 0);
 				param.setResult(Math.round(Helpers.dp2px(opt)));
 			}
 		});
 	}
 	public static void DockMarginBottomHook(LoadPackageParam lpparam) {
+		int opt = MainModule.mPrefs.getInt("launcher_dock_bottommargin", 0);
 		Helpers.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "calcHotSeatsMarginBottom", Context.class, boolean.class, boolean.class, new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
-				int opt = MainModule.mPrefs.getInt("launcher_dock_bottommargin", 0);
 				param.setResult(Math.round(Helpers.dp2px(opt)));
 			}
 		});
 	}
 	public static void WorkspaceCellPaddingTopHook(LoadPackageParam lpparam) {
+		int opt = MainModule.mPrefs.getInt("launcher_topmargin", 0) - 21;
 		Helpers.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.classLoader, "getWorkspaceCellPaddingTop", Context.class, new MethodHook() {
 			@Override
 			protected void before(MethodHookParam param) throws Throwable {
-				int opt = MainModule.mPrefs.getInt("launcher_topmargin", 0);
 				param.setResult(Math.round(Helpers.dp2px(opt)));
+			}
+		});
+	}
+
+	public static void IndicatorMarginTopHook(LoadPackageParam lpparam) {
+		int opt = MainModule.mPrefs.getInt("launcher_indicator_topmargin", 0) - 21;
+		MainModule.resHooks.setDensityReplacement("com.miui.home", "dimen", "slide_bar_margin_top", opt);
+		MainModule.resHooks.setDensityReplacement("com.mi.android.globallauncher", "dimen", "slide_bar_margin_top", opt);
+		Helpers.findAndHookMethodSilently("com.miui.home.launcher.util.x.DimenUtils1X", lpparam.classLoader, "getDimensionPixelSize", Context.class, String.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				String resKey = (String) param.args[1];
+				if ("slide_bar_margin_top".equals(resKey)) {
+					param.setResult(Math.round(Helpers.dp2px(opt)));
+				}
 			}
 		});
 	}

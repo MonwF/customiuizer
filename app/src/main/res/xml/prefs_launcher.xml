@@ -33,7 +33,6 @@
 			miuizer:indentLevel="1"
 			miuizer:minValue="0"
 			miuizer:maxValue="100"
-			miuizer:stepValue="1"
 			miuizer:format="%d%%"
 			miuizer:dynamic="true" />
 
@@ -43,7 +42,6 @@
 			android:defaultValue="0"
 			miuizer:minValue="0"
 			miuizer:maxValue="100"
-			miuizer:stepValue="1"
 			miuizer:format="%d%%"
 			miuizer:offtext="@string/array_default" />
 
@@ -53,7 +51,6 @@
 			android:defaultValue="1"
 			miuizer:minValue="1"
 			miuizer:maxValue="6"
-			miuizer:stepValue="1"
 			miuizer:format="%d"
 			miuizer:offtext="@string/array_default" />
 
@@ -94,7 +91,6 @@
 			android:dependency="pref_key_launcher_hidetitles"
 			miuizer:minValue="5"
 			miuizer:maxValue="20"
-			miuizer:stepValue="1"
 			miuizer:format="%d sp"
 			miuizer:offtext="@string/array_default" />
 
@@ -106,7 +102,6 @@
 			miuizer:minValue="0"
 			miuizer:maxValue="21"
 			miuizer:negativeShift="11"
-			miuizer:stepValue="1"
 			miuizer:format="%d dp"
 			miuizer:offtext="@string/array_default" />
 
@@ -306,7 +301,6 @@
 			android:defaultValue="9"
 			miuizer:minValue="9"
 			miuizer:maxValue="30"
-			miuizer:stepValue="1"
 			miuizer:format="%d dp"
 			miuizer:offtext="@string/array_default" />
 
@@ -315,8 +309,8 @@
 			android:title="@string/launcher_indicator_topmargin_title"
 			android:defaultValue="0"
 			miuizer:minValue="0"
-			miuizer:maxValue="40"
-			miuizer:stepValue="1"
+			miuizer:maxValue="61"
+			miuizer:negativeShift="21"
 			miuizer:format="%d dp"
 			miuizer:offtext="@string/array_default" />
 
@@ -345,7 +339,6 @@
 			miuizer:minValue="0"
 			miuizer:maxValue="41"
 			miuizer:negativeShift="21"
-			miuizer:stepValue="1"
 			miuizer:format="%d dp"
 			miuizer:offtext="@string/array_default" />
 
@@ -356,7 +349,6 @@
 			miuizer:minValue="0"
 			miuizer:maxValue="81"
 			miuizer:negativeShift="21"
-			miuizer:stepValue="1"
 			miuizer:format="%d dp"
 			miuizer:offtext="@string/array_default" />
 
@@ -366,7 +358,6 @@
 			android:defaultValue="0"
 			miuizer:minValue="0"
 			miuizer:maxValue="40"
-			miuizer:stepValue="1"
 			miuizer:format="%d dp"
 			miuizer:offtext="@string/array_default" />
 
@@ -376,7 +367,6 @@
 			android:defaultValue="0"
 			miuizer:minValue="0"
 			miuizer:maxValue="40"
-			miuizer:stepValue="1"
 			miuizer:format="%d dp"
 			miuizer:offtext="@string/array_default" />
 
@@ -387,7 +377,6 @@
 			miuizer:minValue="0"
 			miuizer:maxValue="41"
 			miuizer:negativeShift="21"
-			miuizer:stepValue="1"
 			miuizer:format="%d dp"
 			miuizer:offtext="@string/array_default" />
 
