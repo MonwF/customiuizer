@@ -841,7 +841,7 @@
 			android:defaultValue="4"
 			miuizer:offtext="@string/array_default"
 			miuizer:minValue="3"
-			miuizer:maxValue="8"
+			miuizer:maxValue="10"
 			miuizer:stepValue="1"
 			miuizer:format="%d" />
 
