@@ -569,6 +569,35 @@ public class Various {
 			}
 		}
 	}
+
+	public static void OpenByDefaultHook(LoadPackageParam lpparam) {
+		final int[] defaultViewId = {-1};
+		Helpers.findAndHookMethod("com.miui.appmanager.ApplicationsDetailsActivity", lpparam.classLoader, "initView", new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				if (defaultViewId[0] == -1) {
+					Activity act = (Activity) param.thisObject;
+					defaultViewId[0] = act.getResources().getIdentifier("am_detail_default", "id", "com.miui.securitycenter");
+					MainModule.resHooks.setResReplacement("com.miui.securitycenter", "string", "app_manager_default_open_title", R.string.various_open_by_default_title);
+				}
+			}
+		});
+
+		Helpers.findAndHookMethod("com.miui.appmanager.ApplicationsDetailsActivity", lpparam.classLoader, "onClick", View.class, new MethodHook() {
+			@Override
+			protected void before(MethodHookParam param) throws Throwable {
+				View view = (View) param.args[0];
+				if (view.getId() == defaultViewId[0] && defaultViewId[0] != -1) {
+					Activity act = (Activity) param.thisObject;
+					Intent intent = new Intent("android.settings.APP_OPEN_BY_DEFAULT_SETTINGS");
+					String pkgName = act.getIntent().getStringExtra("package_name");
+					intent.setData(Uri.parse("package:".concat(pkgName)));
+					act.startActivity(intent);
+					param.setResult(null);
+				}
+			}
+		});
+	}
 	public static void SkipSecurityScanHook(LoadPackageParam lpparam) {
 		MethodHook skipScan = new MethodHook() {
 			@Override

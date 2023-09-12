@@ -1151,6 +1151,8 @@
     <string name="launcher_nozoomanim_title">去除启动动画</string>
     <string name="launcher_nozoomanim_summ">App启动、关闭时不缩放图标</string>
     <string name="various_skip_interceptperm_title">跳过开启特殊权限的倒计时</string>
+    <string name="various_replace_defaultopen_with_openbydefault_title">消除默认操作 替换为 默认打开</string>
+    <string name="various_open_by_default_title">默认打开</string>
     <string name="various_skip_securityscan_title">跳过安全体检</string>
     <string name="various_show_battery_temperature_title">电池页面显示温度值</string>
     <string name="various_enable_sc_ai_clipboard_blur_location_title">剪切板隐私保护及模糊定位</string>

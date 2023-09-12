@@ -72,6 +72,11 @@
 		android:defaultValue="false" />
 
 	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_various_replace_defaultopen_with_openbydefault"
+		android:title="@string/various_replace_defaultopen_with_openbydefault_title"
+		android:defaultValue="false" />
+
+	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_various_skip_securityscan"
 		android:title="@string/various_skip_securityscan_title"
 		android:defaultValue="false" />
