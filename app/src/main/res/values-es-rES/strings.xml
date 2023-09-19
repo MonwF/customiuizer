@@ -186,10 +186,6 @@
     <string name="system_betterpopups_disablewhenmute_title">Deshabilitar notificaciones flotantes si el volumen está silenciado</string>
     <string name="system_mutevisiblenotif_title">Silenciar si es visible</string>
     <string name="system_mutevisiblenotif_summ">No reproducir sonido de notificación si la pantalla está encendida</string>
-    <string name="system_notifmediaseekbar_title">Posición de control deslizante de media</string>
-    <string name="system_notifmediaseekbar_summ">Añadir control deslizante de notificación multimedia que indica la posición actual y permite cambiarlo</string>
-    <string name="system_notifmediaseekbar_full_title">Usar estilo del sistema</string>
-    <string name="system_notifmediaseekbar_full_summ">No aplicar estilo delgado personalizado al control deslizante</string>
     <string name="system_popupnotif_apps_title">Aplicaciones seleccionadas</string>
     <string name="system_mods_screenshots">Capturas de pantalla</string>
     <string name="system_screenshot_title">Configuración de captura de pantalla</string>
@@ -215,12 +211,6 @@
     <string name="system_autobrightness_summ">Define los valores máximos y mínimos del brillo automático</string>
     <string name="system_minbrightness_title">Brillo automático mínimo</string>
     <string name="system_maxbrightness_title">Máximo brillo automático</string>
-    <string name="system_audiosilencer_title">Silenciador de audio</string>
-    <string name="system_audiosilencer_summ">Silenciar cualquier sonido que se pueda identificar particularmente</string>
-    <string name="system_audiosilencer_last_title">Actualizar lista</string>
-    <string name="system_audiosilencer_last_summ">Recuperar una lista de los sonidos reproducidos recientemente</string>
-    <string name="system_audiosilencer_silenced">Sonidos silenciados</string>
-    <string name="system_audiosilencer_played">Sonidos reproducidos</string>
     <string name="system_nosafevolume_title">Desactivar el aviso de volumen alto</string>
     <string name="system_nosafevolume_summ">Ocultar la ventana de diálogo cuando el volumen alcance niveles no recomendados</string>
     <string name="system_noducking_title">Desactivar atenuación de sonido</string>
@@ -357,8 +347,6 @@
     <string name="system_apksign_title">Desactivar verificación de firmas</string>
     <string name="system_disableintegrity_title">Desactivar verificación de integridad del sistema</string>
     <string name="system_apksign_summ">Permitir actualizar apps aun cuando la firma del APK sea diferente a la instalada</string>
-    <string name="system_magnifier_title">Lupa de texto</string>
-    <string name="system_magnifier_summ">Mostrar texto ampliado cuando se mueva un cursor de entrada o al hacer una selección (añade el teclado al scope de LSPosed primero)</string>
     <string name="system_nooverscroll_title">Desactivar desplazamiento excesivo</string>
     <string name="system_nooverscroll_summ">Evitar que las listas tengan sobre desplazamiento</string>
     <string name="system_removesecure_title">Desactivar protección de contenido seguro</string>
@@ -368,8 +356,6 @@
     <string name="system_hidelowbatwarn_summ">No mostrar el cuadro de diálogo que pide encender ahorro de batería</string>
     <string name="system_hideproxywarn_title">Ocultar el aviso sobre toques deshabilitados</string>
     <string name="system_hideproxywarn_summ">No mostrar el aviso que el área de los auriculares está cubierta</string>
-    <string name="system_resizablewidgets_title">Redimensionar widget</string>
-    <string name="system_resizablewidgets_summ">Remover cualquier limitación de tamaño de los widget</string>
     <string name="system_cleanshare_title">Modificar menú de compartir</string>
     <string name="system_cleanshare_summ">Remover apps seleccionadas del menú de compartir</string>
     <string name="system_clean_test">Probar menú</string>
@@ -441,14 +427,6 @@
     <string name="system_clearalltasks_summ">Hacer que el botón de cierre mate todas las apps en ejecución</string>
     <string name="system_hidefromrecents_title">Ocultar de recientes</string>
     <string name="system_hidefromrecents_summ">Ocultar las apps seccionadas de la lista de tareas recientes</string>
-    <string name="system_recommended_first_title">Acción de primer acceso directo</string>
-    <string name="system_recommended_first_summ">Acción para el primer acceso directo de sugerencia</string>
-    <string name="system_recommended_second_title">Acción de segundo acceso directo</string>
-    <string name="system_recommended_second_summ">Acción para el segundo acceso directo de sugerencia</string>
-    <string name="system_recommended_third_title">Acción del tercer acceso directo</string>
-    <string name="system_recommended_third_summ">Acción para el tercer acceso directo de sugerencia</string>
-    <string name="system_recommended_fourth_title">Acción para el cuarto acceso directo</string>
-    <string name="system_recommended_fourth_summ">Acción para el cuarto acceso de sugerencia</string>
     <string name="system_mods_betterpopups">Notificaciones emergentes</string>
     <string name="system_betterpopups_delay_title">Retraso de auto esconder</string>
     <string name="system_betterpopups_nohide_title">No ocultar automáticamente</string>
@@ -517,11 +495,6 @@
     <string name="launcher_infinitescroll_summ">Saltar de la última página a la primera, y viceversa</string>
     <string name="launcher_noclockhide_title">No ocultar reloj</string>
     <string name="launcher_noclockhide_summ">No ocultar el reloj de la barra de estado en las páginas con widgets de reloj</string>
-    <string name="launcher_googleminus_title">Activar interruptor pantalla -1</string>
-    <string name="launcher_googleminus_summ">Mostrar un interruptor entre la bóveda de aplicaciones y Google Discover en ajustes de pantalla de inicio</string>
-    <string name="launcher_googleminus_note">Requiere ROM global (internacional)</string>
-    <string name="launcher_googlediscover_title">Forzar Google Discover</string>
-    <string name="launcher_googlediscover_summ">Reemplaza bóveda de aplicaciones con Google Discover (se requiere la app de Google instalada)</string>
     <string name="launcher_nowidgetonly_title">Deshabilitar pantalla de solo widgets</string>
     <string name="launcher_nowidgetonly_summ">Hacer que todas las pantallas puedan usar widgets y apps en tablets</string>
     <string name="launcher_nounlockanim_title">Eliminar animación de desbloqueo</string>
@@ -555,9 +528,6 @@
     <string name="launcher_fixanim_summ">Aplicar valores de duración de escala de animador a algunas animaciones de pantalla de inicio</string>
     <string name="launcher_fixlaunch_title">Corregir info de la app</string>
     <string name="launcher_fixlaunch_summ">Siempre abrir estilo MIUI de información de la app al mantener presionado</string>
-    <string name="launcher_foldershade_title">Superposición de colores</string>
-    <string name="launcher_foldershade_summ">Aclarar u obscurecer fondo de pantalla</string>
-    <string name="launcher_foldershade_level_title">Intensidad de color</string>
     <string name="launcher_folderblur">Desenfoque de fondo</string>
     <string name="launcher_closefolder_title">Autocerrar carpetas</string>
     <string name="launcher_closefolder_summ">Cerrar las carpetas después de abrir la app</string>
@@ -688,8 +658,6 @@
     <string name="various_aospsearch_title">Buscar</string>
     <string name="various_aospnotif_title">Apps &amp; notificaciones</string>
     <string name="various_aospnotiflog_title">Registro de notificaciones</string>
-    <string name="various_unlockfps_title">Desbloquear tasa de refresco</string>
-    <string name="various_unlockfps_summ">Aumenta la tasa de refresco disponible hasta 90 Fps, en la app de Grabación de Pantalla. Aunque se pueda seleccionar la opción, el funcionamiento depende del dispositivo y el controlador de vídeo.</string>
     <string name="various_miuiinstaller_title">Usar el instalador de paquetes de MIUI</string>
     <string name="various_miuiinstaller_summ">Permitir que actualice las apps del sistema</string>
     <string name="various_miuiinstaller_error">La app requerida no está instalada o está deshabilitada</string>
@@ -799,8 +767,6 @@
     <string name="array_screenlock_strong">Fuerte (PIN/contraseña/patrón)</string>
     <string name="array_noblur">Sin desenfoque</string>
     <string name="array_netspeedicons_no">Sin iconos</string>
-    <string name="array_foldershade_solid">Fondo completo</string>
-    <string name="array_foldershade_gradient">Solo en el medio</string>
     <string name="array_expandnotifs_allbutblack">Para todas las apps excepto las listadas</string>
     <string name="array_expandnotifs_whiteonly">Solo para las aplicaciones listadas</string>
     <string name="array_mobiletypeicon_connected">Ocultar solo cuando no esté conectado</string>

@@ -5,47 +5,47 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_lockscreenshortcuts"
 		android:title="@string/enable_mod"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/settings"
 		miuizer:dynamic="true">
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_lockscreenshortcuts_right_off"
 			android:title="@string/system_lockscreenshortcuts_right_off_title"
 			android:dependency="pref_key_system_lockscreenshortcuts"
 			android:disableDependentsState="true"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_lockscreenshortcuts_right"
 			android:title="@string/system_lockscreenshortcuts_right_title"
 			android:dependency="pref_key_system_lockscreenshortcuts_right_off"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_lockscreenshortcuts_right_image"
 			android:title="@string/system_lockscreenshortcuts_right_image_title"
 			android:summary="@string/system_lockscreenshortcuts_right_image_summ"
 			android:dependency="pref_key_system_lockscreenshortcuts_right_off"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_lockscreenshortcuts_left_tapaction"
 			android:title="@string/system_lockscreenshortcuts_left_tapaction_title"
 			android:dependency="pref_key_system_lockscreenshortcuts"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_lockscreenshortcuts_left_off"
 			android:title="@string/system_lockscreenshortcuts_left_off_title"
 			android:dependency="pref_key_system_lockscreenshortcuts"
 			android:defaultValue="false" />
 
-	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

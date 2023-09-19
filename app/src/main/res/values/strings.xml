@@ -200,10 +200,6 @@
     <string name="system_betterpopups_disablewhenmute_title">Disable heads up notifications if volume is set to mute</string>
     <string name="system_mutevisiblenotif_title">Mute if visible</string>
     <string name="system_mutevisiblenotif_summ">Do not play notification sound if screen is on</string>
-    <string name="system_notifmediaseekbar_title">Media position slider</string>
-    <string name="system_notifmediaseekbar_summ">Add media notification slider that indicates current position and allows to change it</string>
-    <string name="system_notifmediaseekbar_full_title">Use system style</string>
-    <string name="system_notifmediaseekbar_full_summ">Do not apply custom thin style to slider</string>
     <string name="system_popupnotif_apps_title">Selected apps</string>
     <string name="system_mods_screenshots">Screenshots</string>
     <string name="system_screenshot_title">Screenshot configuration</string>
@@ -229,12 +225,6 @@
     <string name="system_autobrightness_summ">Define minimum and maximum auto brightness values</string>
     <string name="system_minbrightness_title">Minimum auto brightness</string>
     <string name="system_maxbrightness_title">Maximum auto brightness</string>
-    <string name="system_audiosilencer_title">Audio silencer</string>
-    <string name="system_audiosilencer_summ">Mute any sound that can be uniquely identified</string>
-    <string name="system_audiosilencer_last_title">Refresh list</string>
-    <string name="system_audiosilencer_last_summ">Retrieve a list of recently played sounds</string>
-    <string name="system_audiosilencer_silenced">Silenced sounds</string>
-    <string name="system_audiosilencer_played">Played sounds</string>
     <string name="system_nosafevolume_title">Disable high volume warning</string>
     <string name="system_nosafevolume_summ">Do not show dialog when volume reaches unsafe level</string>
     <string name="system_noducking_title">Disable ducking</string>
@@ -371,8 +361,6 @@
     <string name="system_apksign_title">Disable signature verification</string>
     <string name="system_disableintegrity_title">Disable system integrity verification</string>
     <string name="system_apksign_summ">Allow app updating even when APK signature differs from installed one</string>
-    <string name="system_magnifier_title">Text magnifier</string>
-    <string name="system_magnifier_summ">Display magnified text when moving an input cursor or making a selection(Add InputMethod apps to LSPosed scope first)</string>
     <string name="system_nooverscroll_title">Disable overscroll</string>
     <string name="system_nooverscroll_summ">Prevent list views from overscrolling</string>
     <string name="system_removesecure_title">Disable secure content protection</string>
@@ -382,8 +370,6 @@
     <string name="system_hidelowbatwarn_summ">Do not display a warning dialog that asks to turn on Battery saver</string>
     <string name="system_hideproxywarn_title">Hide warning about disabled touches</string>
     <string name="system_hideproxywarn_summ">Do not display a warning that earphone area is covered</string>
-    <string name="system_resizablewidgets_title">Free widget resize</string>
-    <string name="system_resizablewidgets_summ">Remove any widget size limitations</string>
     <string name="system_cleanshare_title">Clean share menu</string>
     <string name="system_cleanshare_summ">Remove selected apps from share menu</string>
     <string name="system_clean_test">Test menu</string>
@@ -458,14 +444,6 @@
     <string name="system_clearalltasks_summ">Make cleaner button kill all running tasks</string>
     <string name="system_hidefromrecents_title">Hide from recents</string>
     <string name="system_hidefromrecents_summ">Hide selected apps from recent tasks list</string>
-    <string name="system_recommended_first_title">First shortcut action</string>
-    <string name="system_recommended_first_summ">Action for the first suggestion shortcut</string>
-    <string name="system_recommended_second_title">Second shortcut action</string>
-    <string name="system_recommended_second_summ">Action for the second suggestion shortcut</string>
-    <string name="system_recommended_third_title">Third shortcut action</string>
-    <string name="system_recommended_third_summ">Action for the third suggestion shortcut</string>
-    <string name="system_recommended_fourth_title">Fourth shortcut action</string>
-    <string name="system_recommended_fourth_summ">Action for the fourth suggestion shortcut</string>
     <string name="system_mods_betterpopups">Popup notifications</string>
     <string name="system_betterpopups_delay_title">Auto hide delay</string>
     <string name="system_betterpopups_nohide_title">No auto hide</string>
@@ -535,11 +513,6 @@
     <string name="launcher_infinitescroll_summ">Jump from the last page to the first one and vice versa</string>
     <string name="launcher_noclockhide_title">No clock hide</string>
     <string name="launcher_noclockhide_summ">Do not hide status bar clock on pages with clock widgets</string>
-    <string name="launcher_googleminus_title">Enable -1 screen switch</string>
-    <string name="launcher_googleminus_summ">Display a switch between App Vault and Google Discover in Home screen settings</string>
-    <string name="launcher_googleminus_note">Requires global (international) ROM</string>
-    <string name="launcher_googlediscover_title">Force Google Discover</string>
-    <string name="launcher_googlediscover_summ">Replace App Vault with Google Discover (requires Google app to be installed)</string>
     <string name="launcher_nowidgetonly_title">Disable widget only screen</string>
     <string name="launcher_nowidgetonly_summ">Make all screens support both widgets and apps on tablets</string>
     <string name="launcher_nounlockanim_title">Remove unlock animation</string>
@@ -576,9 +549,6 @@
     <string name="launcher_fixanim_summ">Apply value animators\' duration scaling to some launcher animations</string>
     <string name="launcher_fixlaunch_title">Fix app info</string>
     <string name="launcher_fixlaunch_summ">Always open MIUI-styled app info from long press menu</string>
-    <string name="launcher_foldershade_title">Color overlay</string>
-    <string name="launcher_foldershade_summ">Darken or lighten background</string>
-    <string name="launcher_foldershade_level_title">Color intensity</string>
     <string name="launcher_folderblur">Background blur</string>
     <string name="launcher_closefolder_title">Auto close folders</string>
     <string name="launcher_closefolder_summ">Close app\'s folder after launch</string>
@@ -664,6 +634,7 @@
     <string name="controls_volumecursor_reverse_title">Change directions</string>
     <string name="controls_volumecursor_reverse_summ">Swap directions of cursor movements</string>
     <string name="controls_volumedowndt_turnon_torch_title">Double tap volume down to turn on torch</string>
+    <string name="controls_mediaplayer_apps_title">Media player apps(Add to LSPosed scope first)</string>
     <string name="controls_volumemedia_up_title">Volume Up long press action</string>
     <string name="controls_volumemedia_up_summ">Action for Volume Up long press when screen is off</string>
     <string name="controls_volumemedia_down_title">Volume Down long press action</string>
@@ -713,8 +684,6 @@
     <string name="various_aospsearch_title">Search</string>
     <string name="various_aospnotif_title">Apps &amp; notifications</string>
     <string name="various_aospnotiflog_title">Notification log</string>
-    <string name="various_unlockfps_title">Unlock frame rate</string>
-    <string name="various_unlockfps_summ">Make fps up to 90 available in Screen Recorder app. Whether higher fps will actually work depends on device and video driver.</string>
     <string name="various_miuiinstaller_title">Use MIUI package installer</string>
     <string name="various_miuiinstaller_summ">allow it to update system apps</string>
     <string name="various_miuiinstaller_error">Required app is not installed or disabled</string>
@@ -833,8 +802,6 @@
     <string name="array_netspeedicons_no">No icons</string>
     <string name="array_netspeedicons_arrows" translatable="false">△▲▽▼</string>
     <string name="array_netspeedicons_bullets" translatable="false">☖ ☗ ⛉ ⛊</string>
-    <string name="array_foldershade_solid">Entire background</string>
-    <string name="array_foldershade_gradient">Only in the middle</string>
     <string name="array_expandnotifs_allbutblack">For all apps except the listed ones</string>
     <string name="array_expandnotifs_whiteonly">For listed apps only</string>
     <string name="array_mobiletypeicon_connected">Hide only when not connected</string>

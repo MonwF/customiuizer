@@ -4,19 +4,19 @@
 	android:layout_height="match_parent"
 	android:key="pref_key_cat">
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:title="@string/controls_mods_fingerprint"
 		android:key="pref_key_controls_cat_fingerprint" />
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:title="@string/controls_mods_power"
 		android:key="pref_key_controls_cat_power" />
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:title="@string/controls_mods_volume"
 		android:key="pref_key_controls_cat_volume" />
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:title="@string/controls_mods_navbar"
 		android:key="pref_key_controls_cat_navbar" />
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:title="@string/controls_mods_fsg"
 		android:key="pref_key_controls_cat_fsg" />
 

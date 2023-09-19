@@ -51,7 +51,7 @@
     java.lang.Object readResolve();
 }
 
--keep class name.mikanoshi.** { *; }
+-keep class name.monwf.** { *; }
 
 -dontwarn **
 -dontnote **

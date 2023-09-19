@@ -3,7 +3,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+	<name.monwf.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_airplanemodeconfig_cell"
 		android:title="@string/array_cellular_mobile"
 		android:entries="@array/airplanemodeconfigs"
@@ -11,7 +11,7 @@
 		android:defaultValue="2"
 		app:valueAsSummary="true" />
 
-	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+	<name.monwf.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_airplanemodeconfig_bt"
 		android:title="@string/array_global_toggle_bt"
 		android:entries="@array/airplanemodeconfigs"
@@ -19,7 +19,7 @@
 		android:defaultValue="1"
 		app:valueAsSummary="true" />
 
-	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+	<name.monwf.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_airplanemodeconfig_wifi"
 		android:title="@string/array_global_toggle_wifi"
 		android:entries="@array/airplanemodeconfigs"
@@ -27,7 +27,7 @@
 		android:defaultValue="1"
 		app:valueAsSummary="true" />
 
-	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+	<name.monwf.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_airplanemodeconfig_nfc"
 		android:title="@string/array_global_toggle_nfc"
 		android:entries="@array/airplanemodeconfigs"
@@ -35,7 +35,7 @@
 		android:defaultValue="1"
 		app:valueAsSummary="true" />
 
-	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+	<name.monwf.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_airplanemodeconfig_wimax"
 		android:title="@string/array_global_toggle_wimax"
 		android:entries="@array/airplanemodeconfigs"
@@ -43,7 +43,7 @@
 		android:defaultValue="2"
 		app:valueAsSummary="true" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_system_airplanemodeconfig_note"
 		android:summary="@string/system_airplanemodeconfig_note"
 		app:notice="true" />

@@ -4,17 +4,17 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_batteryindicator"
 		android:title="@string/enable_mod"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/settings"
 		android:dependency="pref_key_system_batteryindicator"
 		miuizer:dynamic="true">
 
-	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+	<name.monwf.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_batteryindicator_align"
 		android:title="@string/system_lockscreenshortcuts_left_align_title"
 		android:entries="@array/verticalalign"
@@ -22,23 +22,23 @@
 		android:defaultValue="1"
 		miuizer:valueAsSummary="true" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_batteryindicator_limitvis"
 		android:title="@string/system_batteryindicator_limitvis_title"
 		android:summary="@string/system_batteryindicator_limitvis_summ"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_batteryindicator_rounded"
 		android:title="@string/system_batteryindicator_rounded_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_batteryindicator_centered"
 		android:title="@string/system_batteryindicator_centered_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_batteryindicator_height"
 		android:title="@string/system_batteryindicator_height_title"
 		android:defaultValue="5"
@@ -47,7 +47,7 @@
 		miuizer:stepValue="1"
 		miuizer:format="%d px" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_batteryindicator_padding"
 		android:title="@string/system_batteryindicator_padding_title"
 		android:defaultValue="0"
@@ -56,7 +56,7 @@
 		miuizer:stepValue="1"
 		miuizer:format="%d%%" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_batteryindicator_transp"
 		android:title="@string/system_visualizer_transp_title"
 		android:defaultValue="0"
@@ -65,7 +65,7 @@
 		miuizer:stepValue="5"
 		miuizer:format="%d%%" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_batteryindicator_glow"
 		android:title="@string/system_visualizer_glowlevel_title"
 		android:defaultValue="0"
@@ -74,7 +74,7 @@
 		miuizer:stepValue="5"
 		miuizer:format="%d%%" />
 
-	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+	<name.monwf.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_batteryindicator_color"
 		android:title="@string/system_visualizer_color_title"
 		android:entries="@array/indicatorcolor"
@@ -82,27 +82,27 @@
 		android:defaultValue="1"
 		miuizer:valueAsSummary="true" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_system_batteryindicator_colorval1"
 		android:title="@string/system_batteryindicator_colorval1_title"
 		miuizer:indentLevel="1" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_system_batteryindicator_colorval2"
 		android:title="@string/system_batteryindicator_colorval2_title"
 		miuizer:indentLevel="1" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_system_batteryindicator_colorval3"
 		android:title="@string/system_batteryindicator_colorval3_title"
 		miuizer:indentLevel="1" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_system_batteryindicator_colorval4"
 		android:title="@string/system_batteryindicator_colorval4_title"
 		miuizer:indentLevel="1" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_batteryindicator_lowlevel"
 		android:title="@string/system_batteryindicator_lowlevel_title"
 		android:defaultValue="15"
@@ -111,11 +111,11 @@
 		miuizer:stepValue="5"
 		miuizer:format="%d%%" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_system_batteryindicator_test"
 		android:title="@string/system_batteryindicator_test_title"
 		android:summary="@string/system_batteryindicator_test_summ" />
 
-	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

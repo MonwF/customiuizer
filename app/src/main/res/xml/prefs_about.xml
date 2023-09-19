@@ -4,26 +4,26 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/support"
 		android:key="pref_key_support">
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:title="@string/support_repo_title"
 			android:summary="@string/support_repo_summ"
 			android:key="pref_key_website" />
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:title="@string/support_donate_title"
 			android:summary="@string/support_donate_other_summ"
 			android:key="pref_key_payother" />
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:title="@string/support_xda_title"
 			android:summary="@string/support_xda_summ"
 			android:key="pref_key_xda" />
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:title="@string/support_4pda_title"
 			android:summary="@string/support_4pda_summ"
 			app:isPreferenceVisible="false"
 			android:key="pref_key_4pda" />
-	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

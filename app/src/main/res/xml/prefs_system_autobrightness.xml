@@ -4,21 +4,21 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_autobrightness"
 		android:title="@string/enable_mod"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/settings"
 		android:dependency="pref_key_system_autobrightness">
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_autobrightness_limitmin"
 			android:title="@string/system_minbrightness_title"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		<name.monwf.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_system_autobrightness_min"
 			android:defaultValue="25"
 			android:dependency="pref_key_system_autobrightness_limitmin"
@@ -27,12 +27,12 @@
 			miuizer:stepValue="1"
 			miuizer:format="%d%%" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_autobrightness_limitmax"
 			android:title="@string/system_maxbrightness_title"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		<name.monwf.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_system_autobrightness_max"
 			android:defaultValue="75"
 			android:dependency="pref_key_system_autobrightness_limitmax"
@@ -41,6 +41,6 @@
 			miuizer:stepValue="1"
 			miuizer:format="%d%%" />
 
-	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

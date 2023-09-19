@@ -5,17 +5,17 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbaricons_wifi_mobile_atleft"
 		android:title="@string/system_statusbaricons_wifi_mobile_atleft_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbaricons_swap_wifi_mobile"
 		android:title="@string/system_statusbaricons_swap_wifi_mobile_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+	<name.monwf.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_statusbar_clock_position"
 		android:title="@string/system_statusbaricons_clock_title"
 		android:entries="@array/statusbar_clock_position"
@@ -23,86 +23,86 @@
 		miuizer:valueAsSummary="true"
 		android:defaultValue="1" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/system_statusbaricons_atright_title"
 		/>
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_netspeed_atright"
 		android:title="@string/system_statusbaricons_netspeed_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_alarm_atright"
 		android:title="@string/system_statusbaricons_alarm_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_sound_atright"
 		android:title="@string/system_statusbaricons_sound_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_dnd_atright"
 		android:title="@string/system_statusbaricons_dnd_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_btbattery_atright"
 		android:title="@string/system_statusbaricons_btbattery_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_nfc_atright"
 		android:title="@string/system_statusbaricons_nfc_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_headset_atright"
 		android:title="@string/system_statusbaricons_headset_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_vpn_atright"
 		android:title="@string/system_statusbaricons_vpn_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/system_statusbaricons_atleft_title" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_netspeed_atleft"
 		android:title="@string/system_statusbaricons_netspeed_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_alarm_atleft"
 		android:title="@string/system_statusbaricons_alarm_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_sound_atleft"
 		android:title="@string/system_statusbaricons_sound_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_dnd_atleft"
 		android:title="@string/system_statusbaricons_dnd_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_gps_atleft"
 		android:title="@string/system_statusbaricons_gps_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/system_statusbaricons_atsecondrow_title">
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_netspeed_atsecondrow"
 		android:title="@string/system_statusbaricons_netspeed_title"
 		android:defaultValue="false" />
 
-	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>
