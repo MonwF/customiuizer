@@ -5,22 +5,22 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_qs_force_systemfonts"
 		android:title="@string/system_qs_force_systemfonts_title"
 		android:defaultValue="false"
 		/>
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_cc_clocktweak"
 		android:title="@string/enable_mod"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/settings"
 		android:dependency="pref_key_system_cc_clocktweak">
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_cc_clock_fontsize"
 		android:title="@string/launcher_titlefontsize_title"
 		android:defaultValue="9"
@@ -30,7 +30,7 @@
 		miuizer:offtext="@string/array_default"
 		miuizer:format="%d dip" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_cc_clock_topmargin_indrawer"
 		android:title="@string/system_cc_clock_topmargin_indrawer_title"
 		android:defaultValue="0"
@@ -39,7 +39,7 @@
 		miuizer:stepValue="1"
 		miuizer:format="%d dip" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_cc_clock_verticaloffset"
 		android:title="@string/system_statusbar_mobiletype_single_verticaloffset"
 		android:defaultValue="10"
@@ -49,7 +49,7 @@
 		miuizer:negativeShift="10"
 		miuizer:format="%d dip" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_cc_clock_fixedcontent_width"
 		android:title="@string/system_clock_fixedwidth_title"
 		android:summary="@string/system_clock_fixedwidth_summ"
@@ -60,13 +60,13 @@
 		miuizer:offtext="@string/array_default"
 		miuizer:format="%s dp" />
 
-	<name.mikanoshi.customiuizer.prefs.EditTextPreferenceEx
+	<name.monwf.customiuizer.prefs.EditTextPreferenceEx
 		android:key="pref_key_system_cc_clock_customformat"
 		android:title="@string/system_clock_customformat_setting_title"
 		android:dialogMessage="@string/system_clock_customformat_help_summ"
 		app:useSimpleSummaryProvider="true"
 		android:defaultValue="" />
 
-	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

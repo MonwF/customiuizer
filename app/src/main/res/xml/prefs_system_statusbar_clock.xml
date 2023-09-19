@@ -5,16 +5,16 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_clocktweak"
 		android:title="@string/enable_mod"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/settings"
 		android:dependency="pref_key_system_statusbar_clocktweak">
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_statusbar_clock_fontsize"
 		android:title="@string/launcher_titlefontsize_title"
 		android:defaultValue="13"
@@ -25,7 +25,7 @@
 		miuizer:offtext="@string/array_default"
 		miuizer:format="%s dip" />
 
-	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+	<name.monwf.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_statusbar_clock_align"
 		android:title="@string/system_statusbar_clock_align_title"
 		android:entries="@array/horizontalalign"
@@ -33,54 +33,54 @@
 		miuizer:valueAsSummary="true"
 		android:defaultValue="1" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_clock_bold"
 		android:title="@string/system_statusbar_mobiletype_single_bold_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_clock_chip"
 		android:title="@string/system_statusbar_clock_chip_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_clock_chip_usemonet"
 		android:title="@string/array_dynamic"
 		android:dependency="pref_key_system_statusbar_clock_chip"
 		android:disableDependentsState="true"
 		miuizer:indentLevel="1" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_clock_chip_orientation_vertical"
 		android:title="@string/system_statusbar_clock_chip_orientation_vertical_title"
 		android:dependency="pref_key_system_statusbar_clock_chip"
 		miuizer:indentLevel="1" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_system_statusbar_clock_chip_startcolor"
 		android:title="@string/system_statusbar_clock_chip_startcolor_title"
 		android:dependency="pref_key_system_statusbar_clock_chip"
 		miuizer:indentLevel="1" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_system_statusbar_clock_chip_endcolor"
 		android:title="@string/system_statusbar_clock_chip_endcolor_title"
 		android:dependency="pref_key_system_statusbar_clock_chip"
 		miuizer:indentLevel="1" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_clock_chip_customtextcolor"
 		android:title="@string/system_statusbar_clock_chip_customtextcolor_title"
 		android:dependency="pref_key_system_statusbar_clock_chip_usemonet"
 		miuizer:indentLevel="1" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_system_statusbar_clock_chip_textcolor"
 		android:title="@string/array_static"
 		android:dependency="pref_key_system_statusbar_clock_chip_customtextcolor"
 		miuizer:indentLevel="2" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_statusbar_clock_chip_horizpadding"
 		android:title="@string/system_batteryindicator_padding_title"
 		android:dependency="pref_key_system_statusbar_clock_chip"
@@ -91,7 +91,7 @@
 		miuizer:indentLevel="1"
 		miuizer:format="%s dip" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_statusbar_clock_chip_verticalpadding"
 		android:title="@string/system_statusbar_clock_chip_verticalpadding_title"
 		android:dependency="pref_key_system_statusbar_clock_chip"
@@ -102,7 +102,7 @@
 		miuizer:indentLevel="1"
 		miuizer:format="%s dip" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_statusbar_clock_chip_radius"
 		android:title="@string/system_statusbar_clock_chip_radius_title"
 		android:dependency="pref_key_system_statusbar_clock_chip"
@@ -113,7 +113,7 @@
 		miuizer:indentLevel="1"
 		miuizer:format="%s dip" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_statusbar_clock_leftmargin"
 		android:title="@string/system_statusbar_mobiletype_single_leftmargin_title"
 		android:defaultValue="0"
@@ -123,7 +123,7 @@
 		miuizer:displayDividerValue="2"
 		miuizer:format="%s dip" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_statusbar_clock_rightmargin"
 		android:title="@string/system_statusbar_dualsimin2rows_rightmargin_title"
 		android:defaultValue="0"
@@ -133,7 +133,7 @@
 		miuizer:displayDividerValue="2"
 		miuizer:format="%s dip" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_statusbar_clock_verticaloffset"
 		android:title="@string/system_statusbar_mobiletype_single_verticaloffset"
 		android:defaultValue="8"
@@ -144,13 +144,13 @@
 		miuizer:displayDividerValue="2"
 		miuizer:format="%s dip" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_clock_show_seconds"
 		android:summary="@string/system_clockseconds_summ"
 		android:title="@string/system_clockseconds_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_statusbar_clock_fixedcontent_width"
 		android:title="@string/system_clock_fixedwidth_title"
 		android:summary="@string/system_clock_fixedwidth_summ"
@@ -161,39 +161,39 @@
 		miuizer:offtext="@string/array_default"
 		miuizer:format="%s dp" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_clock_24hour_format"
 		android:title="@string/system_clock_time_format_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_clock_show_ampm"
 		android:title="@string/system_clock_show_ampm_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_clock_leadingzero"
 		android:title="@string/system_clock_leadingzero_title"
 		android:disableDependentsState="true"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_clock_leadingspace"
 		android:title="@string/system_clock_leadingspace_title"
 		android:dependency="pref_key_system_statusbar_clock_leadingzero"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_clock_customformat_enable"
 		android:title="@string/system_clock_customformat_enable_title"
 		/>
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_system_statusbar_clock_customformat"
 		android:title="@string/system_clock_customformat_setting_title"
 		miuizer:indentLevel="1"
 		miuizer:customSummary="true" />
 
-	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

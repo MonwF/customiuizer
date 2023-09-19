@@ -187,10 +187,6 @@
     <string name="system_betterpopups_disablewhenmute_title">Chặn thông báo nổi khi tắt tiếng</string>
     <string name="system_mutevisiblenotif_title">Tắt tiếng khi màn hình bật</string>
     <string name="system_mutevisiblenotif_summ">Không phát âm thanh thông báo nếu màn hình đang bật</string>
-    <string name="system_notifmediaseekbar_title">Thanh trượt vị trí phương tiện</string>
-    <string name="system_notifmediaseekbar_summ">Thêm thanh trượt thông báo phương tiện cho biết vị trí hiện tại và cho phép thay đổi vị trí đó</string>
-    <string name="system_notifmediaseekbar_full_title">Dùng kiểu của hệ thống</string>
-    <string name="system_notifmediaseekbar_full_summ">Không áp dụng tùy chỉnh kiểu mỏng cho thanh trượt</string>
     <string name="system_popupnotif_apps_title">Ứng dụng đã chọn</string>
     <string name="system_mods_screenshots">Ảnh chụp màn hình</string>
     <string name="system_screenshot_title">Cấu hình ảnh chụp màn hình</string>
@@ -216,12 +212,6 @@
     <string name="system_autobrightness_summ">Xác định giá trị tối thiểu và tối đa cho độ sáng tự động</string>
     <string name="system_minbrightness_title">Độ sáng tự động tối thiểu</string>
     <string name="system_maxbrightness_title">Độ sáng tự động tối đa</string>
-    <string name="system_audiosilencer_title">Giảm âm thanh</string>
-    <string name="system_audiosilencer_summ">Tắt âm thanh nhận dạng duy nhất</string>
-    <string name="system_audiosilencer_last_title">Làm mới danh sách</string>
-    <string name="system_audiosilencer_last_summ">Truy xuất danh sách các âm thanh được phát gần đây</string>
-    <string name="system_audiosilencer_silenced">Tắt tiếng</string>
-    <string name="system_audiosilencer_played">Âm thanh đã phát</string>
     <string name="system_nosafevolume_title">Tắt cảnh báo âm lượng lớn</string>
     <string name="system_nosafevolume_summ">Không hiển thị hộp thoại khi âm lượng đạt đến mức không an toàn</string>
     <string name="system_noducking_title">Tắt tự giảm âm lượng</string>
@@ -358,8 +348,6 @@
     <string name="system_apksign_title">Vô hiệu hóa xác thực chữ ký</string>
     <string name="system_disableintegrity_title">Vô hiệu hóa xác minh tính toàn vẹn của hệ thống</string>
     <string name="system_apksign_summ">Cho phép cập nhật APK khi chữ ký của APK khác với ứng dụng đã cài đặt</string>
-    <string name="system_magnifier_title">Phóng to văn bản</string>
-    <string name="system_magnifier_summ">Hiển thị kính lúp văn bản khi di chuyển con trỏ hoặc thực hiện lựa chọn (Trước tiên hãy thêm ứng dụng InputMethod vào LSPosed)</string>
     <string name="system_nooverscroll_title">Vô hiệu hóa cuộn đàn hồi</string>
     <string name="system_nooverscroll_summ">Ngăn chế độ xem danh sách khỏi cuộn đàn hồi</string>
     <string name="system_removesecure_title">Vô hiệu hóa bảo vệ nội dung an toàn</string>
@@ -369,8 +357,6 @@
     <string name="system_hidelowbatwarn_summ">Không hiện hộp thoại cảnh báo bật chế độ tiết kiệm pin</string>
     <string name="system_hideproxywarn_title">Ẩn cảnh báo cho cảm ứng bị vô hiệu hóa</string>
     <string name="system_hideproxywarn_summ">Không hiển thị cảnh báo vùng tai nghe bị che</string>
-    <string name="system_resizablewidgets_title">Mở khóa chỉnh sửa các tiện ích</string>
-    <string name="system_resizablewidgets_summ">Xóa giới hạn kích thước tiện ích</string>
     <string name="system_cleanshare_title">Dọn dẹp trình đơn chia sẻ</string>
     <string name="system_cleanshare_summ">Xóa các ứng dụng đã chọn khỏi menu chia sẻ</string>
     <string name="system_clean_test">Menu kiểm tra</string>
@@ -442,14 +428,6 @@
     <string name="system_clearalltasks_summ">Làm cho nút dọn dẹp kết thúc tất cả các tác vụ đang chạy</string>
     <string name="system_hidefromrecents_title">Ẩn gần đây</string>
     <string name="system_hidefromrecents_summ">Ẩn các ứng dụng đã chọn khỏi danh sách tác vụ gần đây</string>
-    <string name="system_recommended_first_title">Hành động phím tắt đầu tiên</string>
-    <string name="system_recommended_first_summ">Hành động gợi ý cho phím tắt đầu tiên</string>
-    <string name="system_recommended_second_title">Hành động phím tắt thứ hai</string>
-    <string name="system_recommended_second_summ">Hành động gợi ý cho phím tắt thứ hai</string>
-    <string name="system_recommended_third_title">Hành động phím tắt thứ ba</string>
-    <string name="system_recommended_third_summ">Hành động gợi ý cho phím tắt thứ ba</string>
-    <string name="system_recommended_fourth_title">Hành động phím tắt thứ tư</string>
-    <string name="system_recommended_fourth_summ">Hành động gợi ý cho phím tắt thứ tư</string>
     <string name="system_mods_betterpopups">Thông báo nổi</string>
     <string name="system_betterpopups_delay_title">Độ trễ tự động ẩn</string>
     <string name="system_betterpopups_nohide_title">Không tự động ẩn</string>
@@ -518,11 +496,6 @@
     <string name="launcher_infinitescroll_summ">Nhảy từ trang cuối lên trang đầu và ngược lại</string>
     <string name="launcher_noclockhide_title">Không ẩn đồng hồ</string>
     <string name="launcher_noclockhide_summ">Trang chứa tiện ích đồng hồ không ẩn đồng hồ trên thanh trạng thái</string>
-    <string name="launcher_googleminus_title">Bật công tắc màn hình -1</string>
-    <string name="launcher_googleminus_summ">Hiển thị chuyển đổi giữa App Vault và Google Discover trong cài đặt màn hình chính</string>
-    <string name="launcher_googleminus_note">Yêu cầu ROM phiên bản toàn cầu (phiên bản quốc tế)</string>
-    <string name="launcher_googlediscover_title">Buộc Google khám phá</string>
-    <string name="launcher_googlediscover_summ">Thay thế App Vault bằng Google khám phá (yêu cầu phải cài đặt ứng dụng Google)</string>
     <string name="launcher_nowidgetonly_title">Vô hiệu hóa widget, chỉ màn hình</string>
     <string name="launcher_nowidgetonly_summ">Tạo các tiện ích và ứng dụng hỗ trợ trên tất cả các màn hình máy tính bảng</string>
     <string name="launcher_nounlockanim_title">Xóa hoạt ảnh mở khóa</string>
@@ -556,9 +529,6 @@
     <string name="launcher_fixanim_summ">Áp dụng tỷ lệ thời lượng giá trị hoạt ảnh cho một số hoạt ảnh của trình khởi chạy</string>
     <string name="launcher_fixlaunch_title">Sửa thông tin ứng dụng</string>
     <string name="launcher_fixlaunch_summ">Nhấn và giữ menu để luôn mở thông báo ứng dụng kiểu MIUI</string>
-    <string name="launcher_foldershade_title">Lớp phủ màu</string>
-    <string name="launcher_foldershade_summ">Nền tối hoặc sáng</string>
-    <string name="launcher_foldershade_level_title">Cường độ màu</string>
     <string name="launcher_folderblur">Làm mờ nền</string>
     <string name="launcher_closefolder_title">Tự động đóng thư mục</string>
     <string name="launcher_closefolder_summ">Đóng thư mục của ứng dụng sau khi khởi động</string>
@@ -691,8 +661,6 @@
     <string name="various_aospsearch_title">Tìm kiếm</string>
     <string name="various_aospnotif_title">Thông báo ứng dụng</string>
     <string name="various_aospnotiflog_title">Nhật ký thông báo</string>
-    <string name="various_unlockfps_title">Mở khóa tốc độ khung hình</string>
-    <string name="various_unlockfps_summ">Tăng fps trong ứng dụng ghi màn hình lên 90. Việc fps cao hơn có hiệu quả hay không hoạt động tùy thuộc vào thiết bị và trình điều khiển video.</string>
     <string name="various_miuiinstaller_title">Sử dụng trình cài đặt gói ứng dụng MIUI</string>
     <string name="various_miuiinstaller_summ">Cho phép nó cập nhật ứng dụng hệ thống</string>
     <string name="various_miuiinstaller_error">Ứng dụng được yêu cầu chưa được cài đặt hoặc bị tắt</string>
@@ -802,8 +770,6 @@
     <string name="array_screenlock_strong">Mạnh (PIN/mật khẩu/mẫu)</string>
     <string name="array_noblur">Không làm mờ</string>
     <string name="array_netspeedicons_no">Không biểu tượng</string>
-    <string name="array_foldershade_solid">Nền tổng thể</string>
-    <string name="array_foldershade_gradient">Chỉ ở giữa</string>
     <string name="array_expandnotifs_allbutblack">Loại trừ ứng dụng khỏi danh sách</string>
     <string name="array_expandnotifs_whiteonly">Chỉ các ứng dụng được liệt kê</string>
     <string name="array_mobiletypeicon_connected">Chỉ ẩn khi không kết nối</string>

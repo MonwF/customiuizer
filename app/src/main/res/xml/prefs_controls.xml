@@ -5,32 +5,32 @@
 	android:layout_height="match_parent"
 	android:key="pref_key_controls">
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_controls_cat_fingerprint"
 		android:title="@string/controls_mods_fingerprint">
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_fingerprintscreen"
 			android:title="@string/controls_fingerprintscreen_title"
 			android:summary="@string/controls_fingerprintscreen_summ"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_fingerprintwake"
 			android:title="@string/controls_fingerprintwake_title"
 			android:summary="@string/controls_fingerprintwake_summ"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 			android:title="@string/system_mods_vibration" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_fingerprintfailure"
 			android:title="@string/controls_fingerprintfailure_title"
 			android:summary="@string/controls_fingerprintfailure_summ"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		<name.monwf.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_controls_fingerprintsuccess"
 			android:title="@string/controls_fingerprintsuccess_title"
 			android:summary="@string/controls_fingerprintsuccess_summ"
@@ -38,29 +38,29 @@
 			android:entryValues="@array/qshaptic_val"
 			android:defaultValue="1" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_fingerprintsuccess_ignore"
 			android:title="@string/controls_fingerprintsuccess_ignore_title"
 			android:summary="@string/controls_fingerprintsuccess_ignore_summ"
 			android:defaultValue="false"
 			miuizer:indentLevel="1" />
 
-		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 			android:title="@string/mods_actions"
 			android:enabled="false"
 			miuizer:dynamic="true" >
 
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_fingerprint1"
 			android:summary="@string/controls_fingerprint1_summ"
 			android:title="@string/controls_fingerprint1_title" />
 
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_fingerprint2"
 			android:summary="@string/controls_fingerprint2_summ"
 			android:title="@string/controls_fingerprint2_title" />
 
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		<name.monwf.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_controls_fingerprint2_delay"
 			android:title="@string/controls_fingerprint2_delay_title"
 			android:defaultValue="150"
@@ -71,12 +71,12 @@
 			miuizer:note="@string/controls_fingerprint2_delay_note"
 			miuizer:offtext="@string/array_system_default" />
 
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_fingerprintlong"
 			android:summary="@string/controls_fingerprintlong_summ"
 			android:title="@string/controls_fingerprintlong_title" />
 
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		<name.monwf.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_controls_fingerprintlong_delay"
 			android:title="@string/controls_fingerprintlong_delay_title"
 			android:defaultValue="100"
@@ -86,68 +86,68 @@
 			miuizer:format="@string/format_d_ms"
 			miuizer:offtext="@string/array_system_default" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_fingerprintskip"
 			android:title="@string/controls_fingerprintskip_title"
 			android:summary="@string/controls_fingerprintskip_summ"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_fingerprintskip2"
 			android:title="@string/controls_fingerprintskip2_title"
 			android:summary="@string/controls_fingerprintskip2_summ"
 			android:disableDependentsState="true"
 			android:defaultValue="false" />
 
-		</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+		</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
-		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 			android:title="@string/calls"
 			android:enabled="false"
 			miuizer:dynamic="true" >
 
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		<name.monwf.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_controls_fingerprint_accept"
 			android:title="@string/controls_fingerprint_accept_title"
 			android:entries="@array/callactions"
 			android:entryValues="@array/callactions_val"
 			android:defaultValue="1" />
 
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		<name.monwf.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_controls_fingerprint_reject"
 			android:title="@string/controls_fingerprint_reject_title"
 			android:entries="@array/callactions"
 			android:entryValues="@array/callactions_val"
 			android:defaultValue="1" />
 
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		<name.monwf.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_controls_fingerprint_hangup"
 			android:title="@string/controls_fingerprint_hangup_title"
 			android:entries="@array/callactions"
 			android:entryValues="@array/callactions_val"
 			android:defaultValue="1" />
 
-		</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+		</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
-	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_controls_cat_power"
 		android:title="@string/controls_mods_power">
 
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_powerdt"
 			android:title="@string/controls_powerdt_title"
 			android:summary="@string/controls_powerdt_summ"
 			miuizer:dynamic="true" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_powerflash"
 			android:summary="@string/controls_powerflash_summ"
 			android:title="@string/controls_powerflash_title"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_powerflash_delay"
 			android:summary="@string/controls_powerflash_delay_summ"
 			android:title="@string/controls_powerflash_delay_title"
@@ -156,19 +156,19 @@
 			miuizer:dynamic="true"
 			miuizer:indentLevel="1" />
 
-	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_controls_cat_volume"
 		android:title="@string/controls_mods_volume">
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_volumecursor"
 			android:summary="@string/controls_volumecursor_summ"
 			android:title="@string/controls_volumecursor_title"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_volumecursor_reverse"
 			android:summary="@string/controls_volumecursor_reverse_summ"
 			android:title="@string/controls_volumecursor_reverse_title"
@@ -176,23 +176,29 @@
 			android:dependency="pref_key_controls_volumecursor"
 			miuizer:indentLevel="1" />
 
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:title="@string/system_statusbarcolor_apps_title"
 			android:key="pref_key_controls_volumecursor_apps"
 			android:dependency="pref_key_controls_volumecursor"
 			miuizer:indentLevel="1"
 			miuizer:countAsSummary="true" />
 
-		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 			android:title="@string/mods_actions"
 			miuizer:dynamic="true" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_volumedowndt_torch"
 			android:title="@string/controls_volumedowndt_turnon_torch_title"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_controls_mediaplayer_apps"
+			android:title="@string/controls_mediaplayer_apps_title"
+			miuizer:dynamic="true"
+			miuizer:countAsSummary="true" />
+
+		<name.monwf.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_controls_volumemedia_up"
 			android:summary="@string/controls_volumemedia_up_summ"
 			android:title="@string/controls_volumemedia_up_title"
@@ -200,7 +206,7 @@
 			android:entryValues="@array/media_action_val"
 			android:defaultValue="0" />
 
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		<name.monwf.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_controls_volumemedia_down"
 			android:summary="@string/controls_volumemedia_down_summ"
 			android:title="@string/controls_volumemedia_down_title"
@@ -208,13 +214,13 @@
 			android:entryValues="@array/media_action_val"
 			android:defaultValue="0" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_volumemedia_vibrate"
 			android:summary="@string/controls_volumemedia_vibrate_summ"
 			android:title="@string/controls_volumemedia_vibrate_title"
 			android:defaultValue="true" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_volumemedia_vibrate_ignore"
 			android:title="@string/controls_fingerprintsuccess_ignore_title"
 			android:summary="@string/controls_fingerprintsuccess_ignore_summ"
@@ -222,39 +228,39 @@
 			android:defaultValue="false"
 			miuizer:indentLevel="1" />
 
-	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_controls_cat_navbar"
 		android:title="@string/controls_mods_navbar">
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_nonavbar"
 			android:title="@string/controls_nonavbar_title"
 			android:defaultValue="false"
 			android:disableDependentsState="true" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_nonavbar_fix_inputmethod"
 			android:title="@string/controls_nonavbar_fix_inputmethod_title"
 			android:summary="@string/controls_nonavbar_fix_inputmethod_summ"
 			/>
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_hidenavbar_whenscreenshot"
 			android:defaultValue="false"
 			android:dependency="pref_key_controls_nonavbar"
 			android:title="@string/controls_hidenavbar_whenscreenshot_title"
 			/>
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_imebackalticon"
 			android:title="@string/controls_imebackalticon_title"
 			android:summary="@string/controls_imebackalticon_summ"
 			android:defaultValue="false"
 			android:dependency="pref_key_controls_nonavbar"/>
 
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		<name.monwf.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_controls_navbarheight"
 			android:title="@string/controls_navbarheight_title"
 			android:defaultValue="19"
@@ -265,7 +271,7 @@
 			miuizer:format="%d dip"
 			android:dependency="pref_key_controls_nonavbar" />
 
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		<name.monwf.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_controls_navbarmargin"
 			android:title="@string/controls_navbarmargin_title"
 			android:summary="@string/controls_navbarmargin_summ"
@@ -276,64 +282,64 @@
 			miuizer:format="%d dp"
 			android:dependency="pref_key_controls_nonavbar" />
 
-		<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+		<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 			android:title="@string/mods_actions"
 			miuizer:dynamic="true" />
 
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_backlong"
 			android:title="@string/controls_backlong_title"
 			android:dependency="pref_key_controls_nonavbar" />
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_homelong"
 			android:title="@string/controls_homelong_title"
 			android:dependency="pref_key_controls_nonavbar" />
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_menulong"
 			android:title="@string/controls_menulong_title"
 			android:dependency="pref_key_controls_nonavbar" />
 
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_navbarleft"
 			android:summary="@string/controls_navbarleft_summ"
 			android:title="@string/controls_navbarleft_title"
 			android:dependency="pref_key_controls_nonavbar" />
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_navbarleftlong"
 			android:summary="@string/controls_navbarleftlong_summ"
 			android:title="@string/controls_navbarleftlong_title"
 			android:dependency="pref_key_controls_nonavbar" />
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_navbarright"
 			android:summary="@string/controls_navbarright_summ"
 			android:title="@string/controls_navbarright_title"
 			android:dependency="pref_key_controls_nonavbar" />
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_navbarrightlong"
 			android:summary="@string/controls_navbarrightlong_summ"
 			android:title="@string/controls_navbarrightlong_title"
 			android:dependency="pref_key_controls_nonavbar" />
 
-	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_controls_cat_fsg"
 		android:title="@string/controls_mods_fsg">
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_fsg_horiz"
 			android:summary="@string/controls_fsg_horiz_summ"
 			android:title="@string/controls_fsg_horiz_title"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:title="@string/system_statusbarcolor_apps_title"
 			android:key="pref_key_controls_fsg_horiz_apps"
 			android:dependency="pref_key_controls_fsg_horiz"
 			miuizer:indentLevel="1"
 			miuizer:countAsSummary="true" />
 
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		<name.monwf.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_controls_fsg_coverage"
 			android:title="@string/controls_fsg_coverage_title"
 			android:defaultValue="60"
@@ -343,7 +349,7 @@
 			miuizer:format="%d%%"
 			miuizer:offtext="@string/array_default" />
 
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		<name.monwf.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_controls_fsg_width"
 			android:title="@string/controls_fsg_width_title"
 			android:defaultValue="100"
@@ -353,26 +359,26 @@
 			miuizer:format="%d%%"
 			miuizer:offtext="@string/array_default" />
 
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_fsg_assist_left"
 			android:title="@string/controls_fsg_assist_left_title"
 			miuizer:dynamic="true" />
 
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_fsg_assist_right"
 			android:title="@string/controls_fsg_assist_right_title"
 			miuizer:dynamic="true" />
 
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_controls_fsg_swipeandstop"
 			android:title="@string/controls_fsg_swipeandstop_title"
 			miuizer:dynamic="true" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_controls_fsg_swipeandstop_disablevibrate"
 			android:title="@string/controls_fsg_swipeandstop_disablevibrate_title"
 			miuizer:indentLevel="1" />
 
-	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

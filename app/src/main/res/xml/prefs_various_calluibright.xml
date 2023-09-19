@@ -4,24 +4,24 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_various_calluibright"
 		android:title="@string/enable_mod"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/settings"
 		android:dependency="pref_key_various_calluibright"
 		miuizer:dynamic="true">
 
-	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+	<name.monwf.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_various_calluibright_type"
 		android:title="@string/various_calluibright_type_title"
 		android:entries="@array/calluibright"
 		android:entryValues="@array/calluibright_val"
 		android:defaultValue="1" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_various_calluibright_val"
 		android:title="@string/various_calluibright_val_title"
 		android:defaultValue="0"
@@ -31,24 +31,24 @@
 		miuizer:offtext="@string/array_default"
 		miuizer:format="%d%%" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_various_calluibright_night"
 		android:title="@string/various_calluibright_night_title"
 		android:summary="@string/various_calluibright_night_summ"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_various_calluibright_night_start"
 		android:title="@string/various_calluibright_night_start_title"
 		android:dependency="pref_key_various_calluibright_night"
 		miuizer:indentLevel="1" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_various_calluibright_night_end"
 		android:title="@string/various_calluibright_night_end_title"
 		android:dependency="pref_key_various_calluibright_night"
 		miuizer:indentLevel="1" />
 
-	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

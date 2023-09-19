@@ -5,11 +5,11 @@
 	android:layout_height="match_parent"
 	android:key="pref_key_launcher">
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_launcher_cat_folders"
 		android:title="@string/launcher_folders">
 
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		<name.monwf.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_launcher_closefolders"
 			android:title="@string/launcher_closefolder_title"
 			android:summary="@string/launcher_closefolder_summ"
@@ -17,26 +17,7 @@
 			android:entryValues="@array/onoff_val"
 			android:defaultValue="1" />
 
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
-			android:key="pref_key_launcher_foldershade"
-			android:title="@string/launcher_foldershade_title"
-			android:summary="@string/launcher_foldershade_summ"
-			android:entries="@array/foldershade"
-			android:entryValues="@array/foldershade_val"
-			android:defaultValue="1"
-			miuizer:dynamic="true" />
-
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_launcher_foldershade_level"
-			android:title="@string/launcher_foldershade_level_title"
-			android:defaultValue="40"
-			miuizer:indentLevel="1"
-			miuizer:minValue="0"
-			miuizer:maxValue="100"
-			miuizer:format="%d%%"
-			miuizer:dynamic="true" />
-
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		<name.monwf.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_launcher_folderblur_opacity"
 			android:title="@string/launcher_folderblur"
 			android:defaultValue="0"
@@ -45,7 +26,7 @@
 			miuizer:format="%d%%"
 			miuizer:offtext="@string/array_default" />
 
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		<name.monwf.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_launcher_folder_cols"
 			android:title="@string/launcher_folder_cols_title"
 			android:defaultValue="1"
@@ -54,37 +35,37 @@
 			miuizer:format="%d"
 			miuizer:offtext="@string/array_default" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_folderwidth"
 			android:title="@string/launcher_folderwidth_title"
 			android:defaultValue="false"
 			miuizer:indentLevel="1" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_folderspace"
 			android:title="@string/launcher_folderspace_title"
 			android:defaultValue="false"
 			miuizer:indentLevel="1" />
 
-	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_launcher_cat_titles"
 		android:title="@string/launcher_titles">
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_hidetitles"
 			android:title="@string/launcher_hidetitles_title"
 			android:defaultValue="false"
 			android:disableDependentsState="true" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_docktitles"
 			android:title="@string/launcher_docktitles_title"
 			android:defaultValue="false"
 			android:dependency="pref_key_launcher_hidetitles" />
 
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		<name.monwf.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_launcher_titlefontsize"
 			android:title="@string/launcher_titlefontsize_title"
 			android:defaultValue="5"
@@ -94,7 +75,7 @@
 			miuizer:format="%d sp"
 			miuizer:offtext="@string/array_default" />
 
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		<name.monwf.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_launcher_titletopmargin"
 			android:title="@string/launcher_titletopmargin_title"
 			android:defaultValue="0"
@@ -105,197 +86,181 @@
 			miuizer:format="%d dp"
 			miuizer:offtext="@string/array_default" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_darkershadow"
 			android:title="@string/launcher_darkershadow_title"
 			android:summary="@string/launcher_darkershadow_summ"
 			android:defaultValue="false"
 			android:dependency="pref_key_launcher_hidetitles" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_renameapps"
 			android:title="@string/launcher_renameapps_title"
 			android:defaultValue="false"
 			android:dependency="pref_key_launcher_hidetitles" />
 
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_launcher_renameapps_list"
 			android:title="@string/launcher_renameapps_list_title"
 			android:dependency="pref_key_launcher_renameapps"
 			miuizer:dynamic="true"
 			miuizer:indentLevel="1" />
 
-	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_launcher_cat_privacyapps"
 		android:title="@string/launcher_privacyapps">
 
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_launcher_privacyapps_list"
 			android:title="@string/launcher_privacyapps_list_title"
 			android:summary="@string/launcher_privacyapps_list_summ" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_privacyapps_gest"
 			android:title="@string/launcher_privacyapps_gest_title"
 			android:summary="@string/launcher_privacyapps_gest_summ"
 			android:defaultValue="false"
 			miuizer:dynamic="true" />
 
-	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_launcher_cat_gestures"
 		android:title="@string/launcher_gestures"
 		miuizer:dynamic="true">
 
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_launcher_swipedown"
 			android:summary="@string/launcher_swipedownaction_summ"
 			android:title="@string/launcher_swipedownaction_title" />
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_launcher_swipedown2"
 			android:summary="@string/launcher_swipedownaction2_summ"
 			android:title="@string/launcher_swipedownaction2_title" />
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_launcher_swipeup"
 			android:summary="@string/launcher_swipeupaction_summ"
 			android:title="@string/launcher_swipeupaction_title" />
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_launcher_swipeup2"
 			android:summary="@string/launcher_swipeupaction2_summ"
 			android:title="@string/launcher_swipeupaction2_title" />
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_launcher_swiperight"
 			android:summary="@string/launcher_swiperightaction_summ"
 			android:title="@string/launcher_swiperightaction_title" />
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_launcher_swipeleft"
 			android:summary="@string/launcher_swipeleftaction_summ"
 			android:title="@string/launcher_swipeleftaction_title" />
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_launcher_shake"
 			android:summary="@string/launcher_shakeaction_summ"
 			android:title="@string/launcher_shakeaction_title" />
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_launcher_doubletap"
 			android:summary="@string/launcher_doubletap_summ"
 			android:title="@string/launcher_doubletap_title" />
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_launcher_pinch"
 			android:summary="@string/launcher_pinch_summ"
 			android:title="@string/launcher_pinch_title" />
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_launcher_spread"
 			android:summary="@string/launcher_spread_summ"
 			android:title="@string/launcher_spread_title" />
 
-	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 	
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_launcher_cat_bugfixes"
 		android:title="@string/launcher_bugfixes">
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_disable_log"
 			android:title="@string/launcher_disable_log_title"
 			android:defaultValue="true" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_fixanim"
 			android:title="@string/launcher_fixanim_title"
 			android:summary="@string/launcher_fixanim_summ"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_fixlaunch"
 			android:title="@string/launcher_fixlaunch_title"
 			android:summary="@string/launcher_fixlaunch_summ"
 			android:defaultValue="false" />
 
-	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_launcher_cat_other"
 		android:title="@string/system_mods_other">
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_infinitescroll"
 			android:title="@string/launcher_infinitescroll_title"
 			android:summary="@string/launcher_infinitescroll_summ"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_noclockhide"
 			android:title="@string/launcher_noclockhide_title"
 			android:summary="@string/launcher_noclockhide_summ"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_launcher_googleminus"
-			android:title="@string/launcher_googleminus_title"
-			android:summary="@string/launcher_googleminus_summ"
-			app:isPreferenceVisible="false"
-			android:disableDependentsState="true"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_launcher_googlediscover"
-			android:title="@string/launcher_googlediscover_title"
-			app:isPreferenceVisible="false"
-			android:summary="@string/launcher_googlediscover_summ"
-			android:dependency="pref_key_launcher_googleminus"
-			android:defaultValue="false" />
-
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_nowidgetonly"
 			android:title="@string/launcher_nowidgetonly_title"
 			android:summary="@string/launcher_nowidgetonly_summ"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_nounlockanim"
 			android:title="@string/launcher_nounlockanim_title"
 			android:summary="@string/launcher_nounlockanim_summ"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_disable_wallpaperscale"
 			android:title="@string/system_recents_disable_wallpaperscale_title"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_nozoomanim"
 			android:title="@string/launcher_nozoomanim_title"
 			android:summary="@string/launcher_nozoomanim_summ"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_oldlaunchanim"
 			android:title="@string/launcher_oldlaunchanim_title"
 			android:summary="@string/launcher_oldlaunchanim_summ"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_sensorportrait"
 			android:title="@string/launcher_sensorportrait_title"
 			android:summary="@string/launcher_sensorportrait_summ"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_hideseekpoints"
 			android:title="@string/launcher_hideseekpoints_title"
 			android:summary="@string/launcher_hideseekpoints_summ"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_hideseekpoints_edit"
 			android:title="@string/launcher_hideseekpoints_edit_title"
 			android:defaultValue="false"
 			android:dependency="pref_key_launcher_hideseekpoints"
 			miuizer:indentLevel="1" />
 
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		<name.monwf.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_launcher_indicatorheight"
 			android:title="@string/launcher_indicatorheight_title"
 			android:defaultValue="9"
@@ -304,7 +269,7 @@
 			miuizer:format="%d dp"
 			miuizer:offtext="@string/array_default" />
 
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		<name.monwf.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_launcher_indicator_topmargin"
 			android:title="@string/launcher_indicator_topmargin_title"
 			android:defaultValue="0"
@@ -314,25 +279,25 @@
 			miuizer:format="%d dp"
 			miuizer:offtext="@string/array_default" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_unlockgrids"
 			android:title="@string/launcher_unlockgrids_title"
 			android:summary="@string/launcher_unlockgrids_summ"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_unlockhotseat"
 			android:title="@string/launcher_unlockhotseat_title"
 			android:summary="@string/launcher_unlockhotseat_summ"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_closedrawer"
 			android:title="@string/launcher_closedrawer_title"
 			android:summary="@string/launcher_closedrawer_summ"
 			android:defaultValue="false" />
 
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		<name.monwf.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_launcher_horizmargin"
 			android:title="@string/launcher_horizmargin_title"
 			android:defaultValue="0"
@@ -342,7 +307,7 @@
 			miuizer:format="%d dp"
 			miuizer:offtext="@string/array_default" />
 
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		<name.monwf.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_launcher_topmargin"
 			android:title="@string/launcher_topmargin_title"
 			android:defaultValue="0"
@@ -352,7 +317,7 @@
 			miuizer:format="%d dp"
 			miuizer:offtext="@string/array_default" />
 
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		<name.monwf.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_launcher_dock_topmargin"
 			android:title="@string/launcher_dock_topmargin_title"
 			android:defaultValue="0"
@@ -361,7 +326,7 @@
 			miuizer:format="%d dp"
 			miuizer:offtext="@string/array_default" />
 
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		<name.monwf.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_launcher_dock_bottommargin"
 			android:title="@string/launcher_dock_bottommargin_title"
 			android:defaultValue="0"
@@ -370,7 +335,7 @@
 			miuizer:format="%d dp"
 			miuizer:offtext="@string/array_default" />
 
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		<name.monwf.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_launcher_horizwidgetmargin"
 			android:title="@string/launcher_horizwidgetmargin_title"
 			android:defaultValue="0"
@@ -380,7 +345,7 @@
 			miuizer:format="%d dp"
 			miuizer:offtext="@string/array_default" />
 
-		<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+		<name.monwf.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_launcher_iconscale"
 			android:title="@string/launcher_iconscale_title"
 			android:defaultValue="45"
@@ -391,6 +356,6 @@
 			miuizer:format="x%s"
 			miuizer:offtext="@string/array_default" />
 
-	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

@@ -4,17 +4,17 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_noscreenlock_act"
 		android:title="@string/enable_mod"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/settings"
 		android:dependency="pref_key_system_noscreenlock_act"
 		miuizer:dynamic="true">
 
-	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+	<name.monwf.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_noscreenlock"
 		android:summary="@string/system_noscreenlock_summ"
 		android:title="@string/system_noscreenlock_title"
@@ -22,7 +22,7 @@
 		android:entryValues="@array/noscreenlock_val"
 		android:defaultValue="1" />
 
-	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+	<name.monwf.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_noscreenlock_req"
 		android:summary="@string/system_noscreenlock_req_summ"
 		android:title="@string/array_screenlock_bootonly"
@@ -30,28 +30,28 @@
 		android:entryValues="@array/noscreenlockreq_val"
 		android:defaultValue="1" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_noscreenlock_skip"
 		android:summary="@string/system_noscreenlock_scr_summ"
 		android:title="@string/system_noscreenlock_scr_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_noscreenlock_nofaceunlock"
 		android:summary="@string/system_noscreenlock_nofaceunlock_summ"
 		android:title="@string/system_noscreenlock_nofaceunlock_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:title="@string/system_noscreenlock_wifi_title"
 		android:summary="@string/system_noscreenlock_wifi_summ"
 		android:key="pref_key_system_noscreenlock_wifi" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:title="@string/system_noscreenlock_bt_title"
 		android:summary="@string/system_noscreenlock_bt_summ"
 		android:key="pref_key_system_noscreenlock_bt" />
 
-	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

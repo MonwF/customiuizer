@@ -1,197 +1,174 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools" >
+    xmlns:tools="http://schemas.android.com/tools" >
 
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS"
-		tools:ignore="ProtectedPermissions" />
-	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.BLUETOOTH" />
-	<uses-permission android:name="android.permission.INTERACT_ACROSS_USERS"
-		tools:ignore="ProtectedPermissions" />
-	<uses-permission android:name="android.permission.VIBRATE" />
-	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
-		tools:ignore="QueryAllPackagesPermission" />
-	<uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS"
-		tools:ignore="ProtectedPermissions" />
-	<uses-permission android:name="android.permission.CHANGE_COMPONENT_ENABLED_STATE"
-		tools:ignore="ProtectedPermissions" />
-	<uses-permission android:name="android.permission.MANAGE_USB"
-		tools:ignore="ProtectedPermissions" />
-	<uses-permission android:name="android.permission.SET_ANIMATION_SCALE"
-		tools:ignore="ProtectedPermissions" />
-	<uses-permission android:name="android.permission.MODIFY_DAY_NIGHT_MODE"
-		tools:ignore="ProtectedPermissions" />
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.CHANGE_COMPONENT_ENABLED_STATE"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.MANAGE_USB"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.SET_ANIMATION_SCALE"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.MODIFY_DAY_NIGHT_MODE"
+        tools:ignore="ProtectedPermissions" />
 
-	<uses-permission android:name="miui.permission.READ_LOGS" />
-	<uses-permission android:name="miui.permission.DUMP_CACHED_LOG" />
-	<uses-permission android:name="com.miui.securitycenter.permission.ACCESS_SECURITY_CENTER_PROVIDER" />
+    <uses-permission android:name="miui.permission.READ_LOGS" />
+    <uses-permission android:name="miui.permission.DUMP_CACHED_LOG" />
+    <uses-permission android:name="com.miui.securitycenter.permission.ACCESS_SECURITY_CENTER_PROVIDER" />
 
-	<application
-		android:allowBackup="false"
-		android:backupAgent="name.mikanoshi.customiuizer.utils.PrefBackupAgent"
-		android:hasFragileUserData="true"
-		android:hardwareAccelerated="true"
-		android:icon="@mipmap/ic_launcher"
-		android:roundIcon="@mipmap/ic_launcher"
-		android:label="@string/app_name"
-		android:supportsRtl="true"
-		android:name=".MainApplication"
-		android:usesCleartextTraffic="true"
-		android:requestLegacyExternalStorage="true"
-		tools:ignore="GoogleAppIndexingWarning">
+    <application
+        android:hasFragileUserData="true"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:description="@string/app_slogan"
+        android:supportsRtl="true"
+        android:name=".MainApplication"
+        android:usesCleartextTraffic="true"
+        android:requestLegacyExternalStorage="true"
+        tools:ignore="GoogleAppIndexingWarning">
 
-		<uses-library android:name="com.miui.system" android:required="false" />
-		<uses-library android:name="com.miui.core" android:required="false" />
-		<uses-library android:name="com.miui.rom" android:required="false" />
+        <uses-library android:name="com.miui.system" android:required="false" />
+        <uses-library android:name="com.miui.core" android:required="false" />
+        <uses-library android:name="com.miui.rom" android:required="false" />
 
-		<activity
-			android:name=".MainActivity"
-			android:label="@string/title_activity_main"
-			android:theme="@style/AppTheme"
-			android:launchMode="singleTop"
-			android:exported="true"
-			android:alwaysRetainTaskState="true">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN"/>
-				<action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES"/>
-				<category android:name="de.robv.android.xposed.category.MODULE_SETTINGS"/>
-			</intent-filter>
-		</activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme"
+            android:launchMode="singleTop"
+            android:exported="true"
+            android:alwaysRetainTaskState="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES"/>
+                <category android:name="de.robv.android.xposed.category.MODULE_SETTINGS"/>
+            </intent-filter>
+        </activity>
 
-		<activity-alias
-			android:exported="true"
-			android:label="@string/title_activity_main"
-			android:name=".GateWayLauncher"
-			android:targetActivity=".MainActivity"
-			android:taskAffinity="com.android.settings.customiuizer"
-			android:allowTaskReparenting="true"
-			android:clearTaskOnLaunch="true"
-			android:enabled="true"
-			android:excludeFromRecents="true">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
-			<meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts" />
-		</activity-alias>
+        <activity-alias
+            android:exported="true"
+            android:label="@string/title_activity_main"
+            android:name=".GateWayLauncher"
+            android:targetActivity=".MainActivity"
+            android:taskAffinity="com.android.settings.customiuizer"
+            android:allowTaskReparenting="true"
+            android:clearTaskOnLaunch="true"
+            android:enabled="true"
+            android:excludeFromRecents="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts" />
+        </activity-alias>
 
-		<activity-alias
-			android:label="@string/title_activity_main"
-			android:name=".GateWaySettings"
-			android:targetActivity=".MainActivity"
-			android:enabled="true"
-			android:excludeFromRecents="true">
-			<meta-data android:name="from.settings" android:value="true" />
-		</activity-alias>
+        <activity-alias
+            android:label="@string/title_activity_main"
+            android:name=".GateWaySettings"
+            android:targetActivity=".MainActivity"
+            android:enabled="true"
+            android:excludeFromRecents="true">
+            <meta-data android:name="from.settings" android:value="true" />
+        </activity-alias>
 
-		<activity
-			android:name=".Credentials"
-			android:label="@string/credentials_unlock"
-			android:theme="@style/Invisible"
-			android:icon="@drawable/ic_credentials"
-			android:launchMode="singleInstance"
-			android:excludeFromRecents="true"
-			android:exported="true"
-			android:finishOnTaskLaunch="true"
-			android:configChanges="keyboardHidden|orientation|screenSize">
-		</activity>
+        <activity
+            android:name=".Credentials"
+            android:label="@string/credentials_unlock"
+            android:theme="@style/Invisible"
+            android:icon="@drawable/ic_credentials"
+            android:launchMode="singleInstance"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:finishOnTaskLaunch="true"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+        </activity>
 
-		<activity-alias
-			android:name=".CredentialsLauncher"
-			android:targetActivity=".Credentials"
-			android:enabled="false"
-			android:exported="true">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
-		</activity-alias>
+        <activity-alias
+            android:name=".CredentialsLauncher"
+            android:targetActivity=".Credentials"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
 
-		<activity
-			android:name=".CredentialsShortcut"
-			android:label="@string/credentials_unlock"
-			android:theme="@style/Invisible"
-			android:icon="@drawable/ic_credentials"
-			android:launchMode="singleInstance"
-			android:finishOnTaskLaunch="true"
-			android:taskAffinity=""
-			android:excludeFromRecents="true"
-			android:exported="true">
-			<intent-filter android:label="@string/credentials_unlock">
-				<action android:name="android.intent.action.CREATE_SHORTCUT"/>
-				<category android:name="android.intent.category.DEFAULT"/>
-			</intent-filter>
-		</activity>
+        <activity
+            android:name=".CredentialsShortcut"
+            android:label="@string/credentials_unlock"
+            android:theme="@style/Invisible"
+            android:icon="@drawable/ic_credentials"
+            android:launchMode="singleInstance"
+            android:finishOnTaskLaunch="true"
+            android:taskAffinity=""
+            android:excludeFromRecents="true"
+            android:exported="true">
+            <intent-filter android:label="@string/credentials_unlock">
+                <action android:name="android.intent.action.CREATE_SHORTCUT"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
 
-		<activity
-			android:name=".tasker.UnlockSettings"
-			android:theme="@style/AppTheme"
-			android:exported="true"
-			android:icon="@mipmap/ic_launcher"
-			android:label="@string/system_noscreenlock_scr_title">
-			<intent-filter>
-				<action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING"/>
-			</intent-filter>
-		</activity>
+        <activity
+            android:name=".tasker.UnlockSettings"
+            android:theme="@style/AppTheme"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/system_noscreenlock_scr_title">
+            <intent-filter>
+                <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING"/>
+            </intent-filter>
+        </activity>
 
-		<service
-			android:exported="true"
-			android:name=".qs.AutoRotateService"
-			android:icon="@drawable/ic_qs_autorotate_disabled"
-			android:label="@string/qs_toggle_autorotate"
-			android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
-			android:enabled="false">
-			<intent-filter>
-				<action android:name="android.service.quicksettings.action.QS_TILE" />
-			</intent-filter>
-		</service>
+        <provider
+            android:name=".PrefsProvider"
+            android:authorities="${applicationId}.provider.sharedprefs"
+            android:grantUriPermissions="true"
+            android:exported="true"
+            tools:ignore="ExportedContentProvider" />
 
-		<provider
-			android:name=".SharedPrefsProvider"
-			android:authorities="name.monwf.customiuizer.provider.sharedprefs"
-			android:grantUriPermissions="true"
-			android:exported="true"
-			android:directBootAware="true"
-			tools:ignore="ExportedContentProvider" />
+        <service
+            android:exported="true"
+            android:name=".qs.AutoRotateService"
+            android:icon="@drawable/ic_qs_autorotate_disabled"
+            android:label="@string/qs_toggle_autorotate"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
 
-		<receiver
-			android:name=".utils.HelperReceiver"
-			android:exported="true"
-			android:enabled="true"
-			android:directBootAware="true">
-			<intent-filter>
-				<action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
-				<action android:name="name.mikanoshi.customiuizer.SAVEEXCEPTION" />
-			</intent-filter>
-			<intent-filter>
-				<action android:name="android.telephony.action.SECRET_CODE"/>
-				<data android:scheme="android_secret_code" android:host="233233"/>
-			</intent-filter>
-		</receiver>
+        <receiver
+            android:name=".tasker.UnlockReceiver"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name="com.twofortyfouram.locale.intent.action.FIRE_SETTING"/>
+            </intent-filter>
+        </receiver>
 
-		<receiver
-			android:name=".tasker.UnlockReceiver"
-			android:exported="true"
-			tools:ignore="ExportedReceiver">
-			<intent-filter>
-				<action android:name="com.twofortyfouram.locale.intent.action.FIRE_SETTING"/>
-			</intent-filter>
-		</receiver>
-
-		<meta-data android:name="xposedmodule" android:value="true" />
-		<meta-data android:name="xposedminversion" android:value="93" />
-		<meta-data android:name="xposeddescription" android:value="@string/app_slogan" />
-		<meta-data android:name="xposedsharedprefs" android:value="true" />
-		<meta-data android:name="xposedscope" android:resource="@array/xposed_scope" />
-		<meta-data android:name="com.google.android.backup.api_key" android:value="AEdPqrEAAAAIRIa0lKCzoQ_qe_xfqaQCC4EQhwk3CWeRwzFrww" />
-	</application>
+    </application>
 
 </manifest>

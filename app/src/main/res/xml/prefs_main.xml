@@ -5,32 +5,32 @@
 	android:layout_height="match_parent"
 	android:key="prefs">
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_warning"
 		app:isPreferenceVisible="false"
 		miuizer:warning="true" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/mods"
 		android:key="prefs_cat">
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:title="@string/system_mods"
 			android:key="pref_key_system" />
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:title="@string/launcher_title"
 			android:key="pref_key_launcher" />
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:title="@string/controls_mods"
 			android:key="pref_key_controls" />
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:title="@string/various_mods"
 			android:key="pref_key_various" />
-	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/miuizer"
 		android:key="pref_key_miuizer">
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		<name.monwf.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_miuizer_settingsiconpos"
 			android:title="@string/miuizer_show_settingsicon_title"
 			android:summary="@string/miuizer_show_settingsicon_summ"
@@ -38,39 +38,39 @@
 			android:entryValues="@array/settingsicon_val"
 			miuizer:valueAsSummary="true"
 			android:defaultValue="1" />
-		<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_miuizer_launchericon"
 			android:summary="@string/miuizer_show_launchericon_summ"
 			android:title="@string/miuizer_show_launchericon_title"
 			android:defaultValue="true" />
-		<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+		<name.monwf.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_miuizer_locale"
 			android:title="@string/miuizer_locale_title"
 			android:summary="@string/miuizer_locale_summ"
 			android:entries="@array/placeholder_array"
 			android:entryValues="@array/placeholder_array_strval"
 			android:defaultValue="auto" />
-	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/support">
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:title="@string/support_contact_title"
 			app:isPreferenceVisible="false"
 			android:key="pref_key_contact" />
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:title="@string/support_releases_title"
 			android:summary="@string/support_releases_summ"
 			app:isPreferenceVisible="false"
 			miuizer:longClickable="true"
 			android:key="pref_key_releases" />
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:title="@string/support_github"
 			android:summary="@string/support_github_summ"
 			android:key="pref_key_github" />
-		<name.mikanoshi.customiuizer.prefs.PreferenceEx
+		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:title="@string/support_donate_me_title"
 			android:key="pref_key_donate" />
-	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

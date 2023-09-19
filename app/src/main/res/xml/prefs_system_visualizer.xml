@@ -4,36 +4,36 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_visualizer"
 		android:title="@string/enable_mod"
 		android:summary="@string/system_visualizer_lockscreen_summ"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/settings"
 		android:dependency="pref_key_system_visualizer"
 		miuizer:dynamic="true">
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_visualizer_custom"
 		android:title="@string/system_visualizer_custom_title"
 		android:summary="@string/system_visualizer_custom_summ"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_visualizer_drawer"
 		android:title="@string/system_visualizer_drawer_title"
 		android:summary="@string/system_visualizer_drawer_summ"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_visualizer_controller"
 		android:title="@string/system_visualizer_controller_title"
 		android:summary="@string/system_visualizer_controller_summ"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_visualizer_animdur"
 		android:title="@string/system_visualizer_animdur_title"
 		android:defaultValue="65"
@@ -42,7 +42,7 @@
 		miuizer:stepValue="5"
 		miuizer:format="@string/format_d_ms" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_visualizer_transp"
 		android:title="@string/system_visualizer_transp_title"
 		android:defaultValue="40"
@@ -51,7 +51,7 @@
 		miuizer:stepValue="5"
 		miuizer:format="%d%%" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_visualizer_glowlevel"
 		android:title="@string/system_visualizer_glowlevel_title"
 		android:defaultValue="50"
@@ -60,7 +60,7 @@
 		miuizer:stepValue="1"
 		miuizer:format="%d%%" />
 
-	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+	<name.monwf.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_visualizer_render"
 		android:title="@string/system_visualizer_render_title"
 		android:entries="@array/visualizerrender"
@@ -68,7 +68,7 @@
 		android:defaultValue="0"
 		miuizer:valueAsSummary="true" />
 
-	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+	<name.monwf.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_visualizer_style"
 		android:title="@string/system_visualizer_style_title"
 		android:entries="@array/visualizerstyle"
@@ -76,7 +76,7 @@
 		android:defaultValue="1"
 		miuizer:valueAsSummary="true" />
 
-	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+	<name.monwf.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_visualizer_color"
 		android:title="@string/system_visualizer_color_title"
 		android:entries="@array/visualizercolor"
@@ -84,7 +84,7 @@
 		android:defaultValue="1"
 		miuizer:valueAsSummary="true" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_visualizer_dyntime"
 		android:title="@string/system_visualizer_dyntime_title"
 		android:defaultValue="10"
@@ -93,10 +93,10 @@
 		miuizer:stepValue="1"
 		miuizer:format="@string/format_d_s" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_system_visualizer_colorval"
 		android:title="@string/system_visualizer_colorval_title" />
 
-	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

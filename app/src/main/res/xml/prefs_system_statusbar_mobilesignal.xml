@@ -5,7 +5,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+	<name.monwf.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_mobiletypeicon"
 		android:summary="@string/system_mobiletypeicon_summ"
 		android:title="@string/system_mobiletypeicon_title"
@@ -13,34 +13,34 @@
 		android:entryValues="@array/mobiletypeicon_val"
 		android:defaultValue="1" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_mobiletype_show_wificonnected"
 		android:title="@string/system_statusbar_mobiletype_show_wificonnected_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_networkindicator_mobile"
 		android:title="@string/system_networkindicator_mobile_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_4gtolte"
 		android:title="@string/system_4gtolte_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_mobiletype_single"
 		android:title="@string/system_statusbar_mobiletype_single_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_mobiletype_single_atleft"
 		android:title="@string/system_statusbar_mobiletype_single_atleft_title"
 		android:dependency="pref_key_system_statusbar_mobiletype_single"
 		miuizer:indentLevel="1"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.EditTextPreferenceEx
+	<name.monwf.customiuizer.prefs.EditTextPreferenceEx
 		android:key="pref_key_system_statusbar_mobile_showname"
 		android:title="@string/system_statusbar_mobile_showname_title"
 		android:dependency="pref_key_system_statusbar_mobiletype_single"
@@ -49,7 +49,7 @@
 		android:defaultValue="" />
 	/>
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_statusbar_mobiletype_single_fontsize"
 		android:title="@string/launcher_titlefontsize_title"
 		android:dependency="pref_key_system_statusbar_mobiletype_single"
@@ -61,14 +61,14 @@
 		miuizer:displayDividerValue="2"
 		miuizer:format="%s dip" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_mobiletype_single_bold"
 		android:title="@string/system_statusbar_mobiletype_single_bold_title"
 		android:dependency="pref_key_system_statusbar_mobiletype_single"
 		miuizer:indentLevel="1"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_statusbar_mobiletype_single_leftmargin"
 		android:title="@string/system_statusbar_mobiletype_single_leftmargin_title"
 		android:dependency="pref_key_system_statusbar_mobiletype_single"
@@ -80,7 +80,7 @@
 		miuizer:displayDividerValue="2"
 		miuizer:format="%s dip" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_statusbar_mobiletype_single_rightmargin"
 		android:title="@string/system_statusbar_dualsimin2rows_rightmargin_title"
 		android:dependency="pref_key_system_statusbar_mobiletype_single"
@@ -92,7 +92,7 @@
 		miuizer:displayDividerValue="2"
 		miuizer:format="%s dip" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_statusbar_mobiletype_single_verticaloffset"
 		android:title="@string/system_statusbar_mobiletype_single_verticaloffset"
 		android:dependency="pref_key_system_statusbar_mobiletype_single"
@@ -105,12 +105,12 @@
 		miuizer:displayDividerValue="2"
 		miuizer:format="%s dip" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_dualsimin2rows"
 		android:title="@string/system_statusbar_dualsimin2rows_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+	<name.monwf.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_statusbar_dualsimin2rows_style"
 		android:dependency="pref_key_system_statusbar_dualsimin2rows"
 		android:title="@string/system_statusbar_dualsimin2rows_style_title"
@@ -120,7 +120,7 @@
 		miuizer:valueAsSummary="true"
 		android:defaultValue="" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_statusbar_dualsimin2rows_scale"
 		android:title="@string/launcher_iconscale_title"
 		android:dependency="pref_key_system_statusbar_dualsimin2rows"
@@ -133,7 +133,7 @@
 		miuizer:displayDividerValue="10"
 		miuizer:offtext="@string/array_default" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_statusbar_dualsimin2rows_leftmargin"
 		android:title="@string/system_statusbar_mobiletype_single_leftmargin_title"
 		android:dependency="pref_key_system_statusbar_dualsimin2rows"
@@ -145,7 +145,7 @@
 		miuizer:displayDividerValue="2"
 		miuizer:format="%s dip" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_statusbar_dualsimin2rows_rightmargin"
 		android:title="@string/system_statusbar_dualsimin2rows_rightmargin_title"
 		android:dependency="pref_key_system_statusbar_dualsimin2rows"
@@ -157,7 +157,7 @@
 		miuizer:displayDividerValue="2"
 		miuizer:format="%s dip" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_statusbar_dualsimin2rows_verticaloffset"
 		android:title="@string/system_statusbar_mobiletype_single_verticaloffset"
 		android:dependency="pref_key_system_statusbar_dualsimin2rows"
