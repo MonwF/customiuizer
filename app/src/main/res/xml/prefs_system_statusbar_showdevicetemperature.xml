@@ -4,17 +4,17 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_showdevicetemperature"
 		android:title="@string/enable_mod"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/settings"
 		android:dependency="pref_key_system_statusbar_showdevicetemperature"
 		>
 
-	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+	<name.monwf.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_statusbar_showdevicetemperature_content"
 		android:title="@string/system_statusbar_batterytempandcurrent_content_title"
 		android:entries="@array/devicetempdetails"
@@ -22,27 +22,27 @@
 		miuizer:valueAsSummary="true"
 		android:defaultValue="1" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_showdevicetemperature_hideunit"
 		android:title="@string/system_statusbar_batterytempandcurrent_hideunit_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_showdevicetemperature_atright"
 		android:title="@string/system_statusbar_batterytempandcurrentatright_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_showdevicetemperature_singlerow"
 		android:title="@string/system_statusbar_batterytempandcurrent_singlerow_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_showdevicetemperature_reverseorder"
 		android:title="@string/system_statusbar_batterytempandcurrent_reverseorder_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_statusbar_showdevicetemperature_fontsize"
 		android:title="@string/launcher_titlefontsize_title"
 		android:defaultValue="16"
@@ -52,12 +52,12 @@
 		miuizer:displayDividerValue="2"
 		miuizer:format="%s dip" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_showdevicetemperature_bold"
 		android:title="@string/system_statusbar_mobiletype_single_bold_title"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+	<name.monwf.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_statusbar_showdevicetemperature_align"
 		android:title="@string/system_statusbar_clock_align_title"
 		android:entries="@array/horizontalalign"
@@ -65,7 +65,7 @@
 		miuizer:valueAsSummary="true"
 		android:defaultValue="1" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_statusbar_showdevicetemperature_fixedcontent_width"
 		android:title="@string/system_clock_fixedwidth_title"
 		android:defaultValue="10"
@@ -75,7 +75,7 @@
 		miuizer:offtext="@string/array_default"
 		miuizer:format="%s dp" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_statusbar_showdevicetemperature_leftmargin"
 		android:title="@string/system_statusbar_mobiletype_single_leftmargin_title"
 		android:defaultValue="8"
@@ -85,7 +85,7 @@
 		miuizer:displayDividerValue="2"
 		miuizer:format="%s dip" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_statusbar_showdevicetemperature_rightmargin"
 		android:title="@string/system_statusbar_dualsimin2rows_rightmargin_title"
 		android:defaultValue="8"
@@ -95,7 +95,7 @@
 		miuizer:displayDividerValue="2"
 		miuizer:format="%s dip" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_statusbar_showdevicetemperature_verticaloffset"
 		android:title="@string/system_statusbar_mobiletype_single_verticaloffset"
 		android:defaultValue="8"
@@ -106,5 +106,5 @@
 		miuizer:displayDividerValue="2"
 		miuizer:format="%s dip" />
 
-	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 </PreferenceScreen>

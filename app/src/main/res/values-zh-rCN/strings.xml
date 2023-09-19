@@ -195,10 +195,6 @@
     <string name="system_betterpopups_disablewhenmute_title">静音时禁止浮动通知</string>
     <string name="system_mutevisiblenotif_title">亮屏时静音</string>
     <string name="system_mutevisiblenotif_summ">亮屏时弹出通知不播放提示音</string>
-    <string name="system_notifmediaseekbar_title">媒体位置滑块</string>
-    <string name="system_notifmediaseekbar_summ">添加指示当前位置的媒体通知滑块并允许对其进行更改</string>
-    <string name="system_notifmediaseekbar_full_title">使用系统风格</string>
-    <string name="system_notifmediaseekbar_full_summ">不应用自定义薄式风格到滑条</string>
     <string name="system_popupnotif_apps_title">已选应用</string>
     <string name="system_mods_screenshots">截图</string>
     <string name="system_screenshot_title">截图配置</string>
@@ -224,12 +220,6 @@
     <string name="system_autobrightness_summ">定义自动亮度的最小值和最大值</string>
     <string name="system_minbrightness_title">自动亮度最小值</string>
     <string name="system_maxbrightness_title">最大自动亮度</string>
-    <string name="system_audiosilencer_title">消音器</string>
-    <string name="system_audiosilencer_summ">静音可被唯一识别的声音</string>
-    <string name="system_audiosilencer_last_title">刷新列表</string>
-    <string name="system_audiosilencer_last_summ">检索最近播放的声音列表</string>
-    <string name="system_audiosilencer_silenced">已消去的声音</string>
-    <string name="system_audiosilencer_played">已播放的声音</string>
     <string name="system_nosafevolume_title">禁用高音量警告</string>
     <string name="system_nosafevolume_summ">音量达到不安全级别时不显示对话框</string>
     <string name="system_noducking_title">禁用闪避</string>
@@ -363,8 +353,6 @@
     <string name="system_apksign_title">禁用签名认证</string>
     <string name="system_disableintegrity_title">禁用系统完整性检查</string>
     <string name="system_apksign_summ">APK的签名与已安装的不相同时，也允许对其进行更新。APK须含V2或以上版本的签名</string>
-    <string name="system_magnifier_title">文本放大镜</string>
-    <string name="system_magnifier_summ">移动光标或进行选择时显示文本放大镜</string>
     <string name="system_nooverscroll_title">禁用弹性滚动</string>
     <string name="system_nooverscroll_summ">阻止列表视图越界回弹</string>
     <string name="system_removesecure_title">禁用安全内容保护</string>
@@ -374,8 +362,6 @@
     <string name="system_hidelowbatwarn_summ">不显示打开省电模式的警告对话框</string>
     <string name="system_hideproxywarn_title">隐藏禁用触摸的警告</string>
     <string name="system_hideproxywarn_summ">不显示耳机区域被覆盖的警告</string>
-    <string name="system_resizablewidgets_title">解禁小部件调整</string>
-    <string name="system_resizablewidgets_summ">解除小部件大小的限制</string>
     <string name="system_cleanshare_title">清理共享菜单</string>
     <string name="system_cleanshare_summ">从共享菜单移除所选应用</string>
     <string name="system_clean_test">测试菜单</string>
@@ -445,14 +431,6 @@
     <string name="system_clearalltasks_summ">使清理按钮结束所有正在运行中的任务</string>
     <string name="system_hidefromrecents_title">隐藏最近</string>
     <string name="system_hidefromrecents_summ">隐藏最近任务列表中的所选应用</string>
-    <string name="system_recommended_first_title">第一个快捷方式动作</string>
-    <string name="system_recommended_first_summ">第一个快捷方式方案的动作</string>
-    <string name="system_recommended_second_title">第二个快捷方式动作</string>
-    <string name="system_recommended_second_summ">第二个快捷方式方案的动作</string>
-    <string name="system_recommended_third_title">第三个快捷方式动作</string>
-    <string name="system_recommended_third_summ">第三个快捷方式方案的动作</string>
-    <string name="system_recommended_fourth_title">第四个快捷方式动作</string>
-    <string name="system_recommended_fourth_summ">第四个快捷方式方案的动作</string>
     <string name="system_mods_betterpopups">浮动通知</string>
     <string name="system_betterpopups_delay_title">自动隐藏延迟</string>
     <string name="system_betterpopups_nohide_title">不自动隐藏</string>
@@ -517,13 +495,8 @@
     <string name="launcher_compat_summ">应用所有启动器模块的替代方法</string>
     <string name="launcher_infinitescroll_title">无限滚动</string>
     <string name="launcher_infinitescroll_summ">从末页跳到首页，反之亦然</string>
-    <string name="launcher_noclockhide_title">不隐藏时钟</string>
+    <string name="launcher_noclockhide_title">状态栏时钟始终显示</string>
     <string name="launcher_noclockhide_summ">时钟小部件所在页面不隐藏状态栏时钟</string>
-    <string name="launcher_googleminus_title">启用 -1 屏幕开关</string>
-    <string name="launcher_googleminus_summ">在主屏幕设置中的App Vault和Google Discover间显示一个开关</string>
-    <string name="launcher_googleminus_note">需要全球版(国际版)ROM</string>
-    <string name="launcher_googlediscover_title">强制Google探索</string>
-    <string name="launcher_googlediscover_summ">将App Vault替换为Google探索(需要安装Google应用)</string>
     <string name="launcher_nowidgetonly_title">禁用仅小部件页面</string>
     <string name="launcher_nowidgetonly_summ">使平板上的所有页面都支持小部件和应用</string>
     <string name="launcher_nounlockanim_title">去除解锁动画</string>
@@ -555,9 +528,6 @@
     <string name="launcher_fixanim_summ">将动画值时长比例应用到某些启动器动画</string>
     <string name="launcher_fixlaunch_title">修复应用信息</string>
     <string name="launcher_fixlaunch_summ">长按菜单始终打开MIUI样式应用信息</string>
-    <string name="launcher_foldershade_title">颜色覆盖</string>
-    <string name="launcher_foldershade_summ">增强或减弱背景</string>
-    <string name="launcher_foldershade_level_title">色彩强度</string>
     <string name="launcher_folderblur">背景模糊</string>
     <string name="launcher_closefolder_title">自动关闭文件夹</string>
     <string name="launcher_closefolder_summ">启动后关闭应用的文件夹</string>
@@ -574,7 +544,7 @@
     <string name="launcher_privacyapps">隐藏应用</string>
     <string name="launcher_privacyapps_fail">未授予所需权限</string>
     <string name="launcher_privacyapps_gest_title">禁止通过手势进入隐藏应用文件夹</string>
-    <string name="launcher_privacyapps_gest_summ">可通过暗码233233进入</string>
+    <string name="launcher_privacyapps_gest_summ">可通过拨号*#*#233233#*#*进入</string>
     <string name="launcher_privacyapps_list_title">隐藏应用列表</string>
     <string name="launcher_privacyapps_list_summ">隐藏应用选项的增强版，可以隐藏任何已安装的应用。无需重启。</string>
     <string name="launcher_swipedownaction_title">下滑动作(单指)</string>
@@ -638,6 +608,7 @@
     <string name="controls_volumecursor_reverse_title">改变方向</string>
     <string name="controls_volumecursor_reverse_summ">交换光标移动的方向</string>
     <string name="controls_volumedowndt_turnon_torch_title">双击音量下键开启手电筒</string>
+    <string name="controls_mediaplayer_apps_title">媒体播放器应用(需加入作用域)</string>
     <string name="controls_volumemedia_up_title">长按音量上键动作</string>
     <string name="controls_volumemedia_up_summ">屏幕关闭时长按音量上键的动作</string>
     <string name="controls_volumemedia_down_title">长按音量下键动作</string>
@@ -783,8 +754,6 @@
     <string name="array_screenlock_strong">强（PIN/密码/图案）</string>
     <string name="array_noblur">不模糊</string>
     <string name="array_netspeedicons_no">无图标</string>
-    <string name="array_foldershade_solid">整个背景</string>
-    <string name="array_foldershade_gradient">仅中间</string>
     <string name="array_expandnotifs_allbutblack">排除已加入列表中的应用</string>
     <string name="array_expandnotifs_whiteonly">仅已加入列表中的应用</string>
     <string name="array_mobiletypeicon_connected">仅在未连接时隐藏</string>
@@ -1054,8 +1023,6 @@
     <string name="type_res">资源</string>
     <string name="launcher_closedrawer_title">自动关闭应用抽屉</string>
     <string name="launcher_closedrawer_summ">启动后关闭应用抽屉</string>
-    <string name="various_unlockfps_title">解锁帧率</string>
-    <string name="various_unlockfps_summ">将屏幕录制应用中的fps提高到90。更高的fps是否有效是否工作取决于设备和视频驱动。</string>
     <string name="array_second_beginning">开始秒</string>
     <string name="array_second_end">结束秒</string>
     <string name="array_alarm_both">定时和相对时间</string>

@@ -4,23 +4,23 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_albumartonlock"
 		android:title="@string/enable_mod"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/settings"
 		android:dependency="pref_key_system_albumartonlock"
 		miuizer:dynamic="true">
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_albumartonlock_gray"
 		android:title="@string/system_albumartonlock_gray_title"
 		android:summary="@string/system_albumartonlock_gray_summ"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.SeekBarPreference
+	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_albumartonlock_blur"
 		android:title="@string/system_albumartonlock_blur_title"
 		android:defaultValue="0"
@@ -30,13 +30,13 @@
 		miuizer:format="%d"
 		miuizer:offtext="@string/array_noblur" />
 
-	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+	<name.monwf.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_albumartonlock_scale"
 		android:title="@string/system_albumartonlock_scale_title"
 		android:entries="@array/albumartscale"
 		android:entryValues="@array/albumartscale_val"
 		android:defaultValue="1" />
 
-	</name.mikanoshi.customiuizer.prefs.PreferenceCategoryEx>
+	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

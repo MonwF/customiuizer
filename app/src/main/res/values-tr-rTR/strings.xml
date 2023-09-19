@@ -172,10 +172,6 @@ ss - iki basamaklı saniye(09)</string>
     <string name="system_autogroupnotif_summ">Otomatik gruplamayı tetikleyen bir uygulamadan gelen bildirimlerin sayısı</string>
     <string name="system_mutevisiblenotif_title">Görünürse sessize al</string>
     <string name="system_mutevisiblenotif_summ">Ekran açıksa bildirim sesi çalmayın</string>
-    <string name="system_notifmediaseekbar_title">Medya konumu kaydırıcısı</string>
-    <string name="system_notifmediaseekbar_summ">Geçerli konumu gösteren ve değiştirilmesine izin veren medya bildirim kaydırıcısı ekleyin</string>
-    <string name="system_notifmediaseekbar_full_title">Sistem stilini kullan</string>
-    <string name="system_notifmediaseekbar_full_summ">Kaydırıcıya özel ince stil uygulamayın</string>
     <string name="system_popupnotif_apps_title">Seçili uygulamalar</string>
     <string name="system_mods_screenshots">Ekran görüntüleri</string>
     <string name="system_screenshot_title">Ekran görüntüsü yapılandırması</string>
@@ -201,12 +197,6 @@ ss - iki basamaklı saniye(09)</string>
     <string name="system_autobrightness_summ">Minimum ve maksimum otomatik parlaklık değerlerini tanımlayın</string>
     <string name="system_minbrightness_title">Minimum oto parlaklık</string>
     <string name="system_maxbrightness_title">Maksimum oto parlaklık</string>
-    <string name="system_audiosilencer_title">Ses susturucusu</string>
-    <string name="system_audiosilencer_summ">Benzersiz olarak tanımlanabilecek herhangi bir sesi kapatın</string>
-    <string name="system_audiosilencer_last_title">Listeyi yenile</string>
-    <string name="system_audiosilencer_last_summ">Son çalınan seslerin bir listesini alın</string>
-    <string name="system_audiosilencer_silenced">Susturulmuş sesler</string>
-    <string name="system_audiosilencer_played">Çalınan sesler</string>
     <string name="system_nosafevolume_title">Yüksek ses uyarısını devre dışı bırak</string>
     <string name="system_nosafevolume_summ">Ses güvenli olmayan düzeye ulaştığında iletişim kutusunu gösterme</string>
     <string name="system_noducking_title">Eğilmeyi devre dışı bırak</string>
@@ -342,8 +332,6 @@ ss - iki basamaklı saniye(09)</string>
     <string name="system_apksign_title">İmza doğrulamasını devre dışı bırak</string>
     <string name="system_disableintegrity_title">Sistem bütünlüğü doğrulamasını devre dışı bırak</string>
     <string name="system_apksign_summ">APK imzası yüklü olandan farklı olsa bile uygulama güncellemesine izin ver</string>
-    <string name="system_magnifier_title">Metin büyüteci</string>
-    <string name="system_magnifier_summ">Bir giriş imlecini hareket ettirirken veya bir seçim yaparken büyütülmüş metni görüntüleyin (Önce LSPosed kapsamına Giriş Metodu uygulamalarını ekleyin)</string>
     <string name="system_nooverscroll_title">Fazla kaydırmayı devre dışı bırak</string>
     <string name="system_nooverscroll_summ">Liste görünümlerinin fazla kaydırılmasını önleyin</string>
     <string name="system_removesecure_title">Güvenli içerik korumasını devre dışı bırakın</string>
@@ -353,8 +341,6 @@ ss - iki basamaklı saniye(09)</string>
     <string name="system_hidelowbatwarn_summ">Pil tasarrufunu açmanızı isteyen bir uyarı iletişim kutusu görüntüleme</string>
     <string name="system_hideproxywarn_title">Devre dışı bırakılmış dokunuşlarla ilgili uyarıyı gizle</string>
     <string name="system_hideproxywarn_summ">Kulaklık alanının kapalı olduğuna dair bir uyarı gösterme</string>
-    <string name="system_resizablewidgets_title">Ücretsiz widget yeniden boyutlandırma</string>
-    <string name="system_resizablewidgets_summ">Widget boyut sınırlamalarını kaldırın</string>
     <string name="system_cleanshare_title">Paylaşım menüsünü temizle</string>
     <string name="system_cleanshare_summ">Seçili uygulamaları paylaşım menüsünden kaldır</string>
     <string name="system_clean_test">Test menü</string>
@@ -425,14 +411,6 @@ ss - iki basamaklı saniye(09)</string>
     <string name="system_clearalltasks_summ">Temizleyici düğmesinin çalışan tüm görevleri sonlandırmasını sağlayın</string>
     <string name="system_hidefromrecents_title">Son kullanılanlardan gizle</string>
     <string name="system_hidefromrecents_summ">Seçili uygulamaları son kullanılanlar listesinden gizle</string>
-    <string name="system_recommended_first_title">İlk kısayol eylemi</string>
-    <string name="system_recommended_first_summ">İlk öneri kısayolu için eylem</string>
-    <string name="system_recommended_second_title">İkinci kısayol eylemi</string>
-    <string name="system_recommended_second_summ">İkinci öneri kısayolu için eylem</string>
-    <string name="system_recommended_third_title">Üçüncü kısayol eylemi</string>
-    <string name="system_recommended_third_summ">Üçüncü öneri kısayolu için eylem</string>
-    <string name="system_recommended_fourth_title">Dördüncü kısayol eylemi</string>
-    <string name="system_recommended_fourth_summ">Dördüncü öneri kısayolu için eylem</string>
     <string name="system_mods_betterpopups">Açılır bildirimler</string>
     <string name="system_betterpopups_delay_title">Gecikmeyi otomatik gizle</string>
     <string name="system_betterpopups_nohide_title">Otomatik gizleme</string>
@@ -500,11 +478,6 @@ ss - iki basamaklı saniye(09)</string>
     <string name="launcher_infinitescroll_summ">Son sayfadan birinciye atlayın veya bunun tersine</string>
     <string name="launcher_noclockhide_title">Saati gizleme</string>
     <string name="launcher_noclockhide_summ">Saat widgetları olan sayfalarda durum çubuğu saatini gizleme</string>
-    <string name="launcher_googleminus_title">-1 Ekran anahtarını etkinleştir</string>
-    <string name="launcher_googleminus_summ">Ana ekran ayarlarında Uygulama Kasası ve Google Discover arasında bir geçiş görüntüle</string>
-    <string name="launcher_googleminus_note">Global (uluslararası) ROM gerektirir</string>
-    <string name="launcher_googlediscover_title">Google Discovere Zorla</string>
-    <string name="launcher_googlediscover_summ">Uygulama Kasasını Google Discover ile değiştirin (Google uygulamasının yüklenmesi gerekir)</string>
     <string name="launcher_nowidgetonly_title">Yalnızca widget ekranını devre dışı bırak</string>
     <string name="launcher_nowidgetonly_summ">Tüm ekranların tabletlerdeki hem widgetları hem de uygulamaları desteklemesini sağlayın</string>
     <string name="launcher_nounlockanim_title">Kilit açma animasyonunu kaldır</string>
@@ -538,9 +511,6 @@ ss - iki basamaklı saniye(09)</string>
     <string name="launcher_fixanim_summ">Değer animatörlerinin süre ölçeklemesini bazı başlatıcı animasyonlarına uygula</string>
     <string name="launcher_fixlaunch_title">Uygulama bilgilerini düzelt</string>
     <string name="launcher_fixlaunch_summ">Her zaman MIUI tarzındaki uygulama bilgilerini uzun basma menüsünden aç</string>
-    <string name="launcher_foldershade_title">Renk yerleşimi</string>
-    <string name="launcher_foldershade_summ">Arkaplanı koyulaştır veya aydınlat</string>
-    <string name="launcher_foldershade_level_title">Renk yoğunluğu</string>
     <string name="launcher_folderblur">Arkaplan bulanıklığı</string>
     <string name="launcher_closefolder_title">Klasörleri otomatik kapat</string>
     <string name="launcher_closefolder_summ">Başlattıktan sonra uygulamanın klasörünü kapat</string>
@@ -671,8 +641,6 @@ ss - iki basamaklı saniye(09)</string>
     <string name="various_aospsearch_title">Arama</string>
     <string name="various_aospnotif_title">Uygulamalar &amp; bildirimler</string>
     <string name="various_aospnotiflog_title">Bildirim günlüğü</string>
-    <string name="various_unlockfps_title">Kare hızının kilidini aç</string>
-    <string name="various_unlockfps_summ">Ekran Kaydedici uygulamasında fpsyi 90a kadar kullanılabilir hale getirin. Daha yüksek fpsnin gerçekten çalışıp çalışmayacağı cihaza ve video sürücüsüne bağlıdır.</string>
     <string name="various_miuiinstaller_title">MIUI paket yükleyicisini kullanın</string>
     <string name="various_miuiinstaller_summ">sistem uygulamalarını güncellemesine izin ver</string>
     <string name="various_miuiinstaller_error">Gerekli uygulama yüklü veya devre dışı değil</string>
@@ -789,8 +757,6 @@ ss - iki basamaklı saniye(09)</string>
     <string name="array_screenlock_strong">Güçlü (PIN/şifre/desen)</string>
     <string name="array_noblur">Bulanıklık yok</string>
     <string name="array_netspeedicons_no">Simge yok</string>
-    <string name="array_foldershade_solid">Tüm arka plan</string>
-    <string name="array_foldershade_gradient">Sadece ortada</string>
     <string name="array_expandnotifs_allbutblack">Listelenenler dışındaki tüm uygulamalar için</string>
     <string name="array_expandnotifs_whiteonly">Yalnızca listelenen uygulamalar için</string>
     <string name="array_mobiletypeicon_connected">Yalnızca bağlı değilken gizle</string>

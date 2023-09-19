@@ -186,10 +186,6 @@
     <string name="system_betterpopups_disablewhenmute_title">Отключить всплывающие уведомления, если звук выключен</string>
     <string name="system_mutevisiblenotif_title">Заглушить видимые</string>
     <string name="system_mutevisiblenotif_summ">Не проигрывать звук уведомления при включенном экране</string>
-    <string name="system_notifmediaseekbar_title">Слайдер медиа позиции</string>
-    <string name="system_notifmediaseekbar_summ">Добавляет слайдер в медиа уведомление для отображения и изменения текущей позиции</string>
-    <string name="system_notifmediaseekbar_full_title">Использовать системный стиль</string>
-    <string name="system_notifmediaseekbar_full_summ">Не применять специальный тонкий стиль к слайдеру</string>
     <string name="system_popupnotif_apps_title">Выбранные приложения</string>
     <string name="system_mods_screenshots">Снимки экрана</string>
     <string name="system_screenshot_title">Конфигурация снимков экрана</string>
@@ -215,12 +211,6 @@
     <string name="system_autobrightness_summ">Задаёт минимальное и максимальное значение яркости в автоматическом режиме</string>
     <string name="system_minbrightness_title">Минимальная автояркость</string>
     <string name="system_maxbrightness_title">Максимальная автояркость</string>
-    <string name="system_audiosilencer_title">Аудио глушитель</string>
-    <string name="system_audiosilencer_summ">Позволяет заглушить любой уникально опознаваемый звук</string>
-    <string name="system_audiosilencer_last_title">Обновить список</string>
-    <string name="system_audiosilencer_last_summ">Получить список последних воспроизведённых звуков</string>
-    <string name="system_audiosilencer_silenced">Заглушённые звуки</string>
-    <string name="system_audiosilencer_played">Воспроизведённые звуки</string>
     <string name="system_nosafevolume_title">Отключить предупреждение о высокой громкости</string>
     <string name="system_nosafevolume_summ">Не показывать диалог при достижении небезопасного уровня громкости</string>
     <string name="system_noducking_title">Отключить заглушение</string>
@@ -357,8 +347,6 @@
     <string name="system_apksign_title">Отключить проверку подписи</string>
     <string name="system_disableintegrity_title">Отключить проверку целостности системы</string>
     <string name="system_apksign_summ">Разрешает обновление приложений, даже если подпись в APK не совпадает с установленной</string>
-    <string name="system_magnifier_title">Лупа для текста</string>
-    <string name="system_magnifier_summ">Отображать увеличенный текст при перемещении курсора или создании выделения (сначала добавляйте приложение клавиатуры в LSPosed)</string>
     <string name="system_nooverscroll_title">Отключить избыточную прокрутку</string>
     <string name="system_nooverscroll_summ">Предотвращает чрезмерную прокрутку в списках</string>
     <string name="system_removesecure_title">Отключить защиту контента</string>
@@ -368,8 +356,6 @@
     <string name="system_hidelowbatwarn_summ">Не показывать диалог, предлагающий переключиться в режим экономии энергии</string>
     <string name="system_hideproxywarn_title">Скрыть предупреждение об отключенных касаниях</string>
     <string name="system_hideproxywarn_summ">Не показывать предупреждение о закрытой области динамика</string>
-    <string name="system_resizablewidgets_title">Свободный размер виджетов</string>
-    <string name="system_resizablewidgets_summ">Убирает все ограничения на размер виджетов</string>
     <string name="system_cleanshare_title">Очистка меню \"Поделиться\"</string>
     <string name="system_cleanshare_summ">Скрыть выбранные приложения в списке отправки данных</string>
     <string name="system_clean_test">Проверка меню</string>
@@ -441,14 +427,6 @@
     <string name="system_clearalltasks_summ">Закрывает все запущенные приложения при нажатиии на кнопку очистки</string>
     <string name="system_hidefromrecents_title">Скрыть в недавних</string>
     <string name="system_hidefromrecents_summ">Убирает выбранные приложения из списка недавно использованных</string>
-    <string name="system_recommended_first_title">Первое действие</string>
-    <string name="system_recommended_first_summ">Действие на первый ярлык виджета безопасности</string>
-    <string name="system_recommended_second_title">Второе действие</string>
-    <string name="system_recommended_second_summ">Действие на второй ярлык виджета безопасности</string>
-    <string name="system_recommended_third_title">Третье действие</string>
-    <string name="system_recommended_third_summ">Действие на третий ярлык виджета безопасности</string>
-    <string name="system_recommended_fourth_title">Четвёртое действие</string>
-    <string name="system_recommended_fourth_summ">Действие на четвёртый ярлык виджета безопасности</string>
     <string name="system_mods_betterpopups">Всплывающие уведомления</string>
     <string name="system_betterpopups_delay_title">Задержка перед скрытием</string>
     <string name="system_betterpopups_nohide_title">Не прятать автоматом</string>
@@ -517,11 +495,6 @@
     <string name="launcher_infinitescroll_summ">Позволяет переходить с последнего экрана на первый и обратно</string>
     <string name="launcher_noclockhide_title">Не прятать часы</string>
     <string name="launcher_noclockhide_summ">Отключает скрытие часов в статус баре на домашних экранах с виджетами часов</string>
-    <string name="launcher_googleminus_title">Включить выбор -1 экрана</string>
-    <string name="launcher_googleminus_summ">Показывает переключатель между лентой виджетов и Google Discover в настройках Рабочего стола</string>
-    <string name="launcher_googleminus_note">Требуется глобальная (международная) прошивка</string>
-    <string name="launcher_googlediscover_title">Google Discover принудительно</string>
-    <string name="launcher_googlediscover_summ">Заменяет ленту виджетов на Google Discover (требуется установленное приложение Google)</string>
     <string name="launcher_nowidgetonly_title">Отключить экран с одними виджетами</string>
     <string name="launcher_nowidgetonly_summ">Позволяет добавлять виджеты и приложения на любой экран на планшетах</string>
     <string name="launcher_nounlockanim_title">Убрать анимацию разблокировки</string>
@@ -555,9 +528,6 @@
     <string name="launcher_fixanim_summ">Применяет масштабирование продолжительности аниматоров значений к некоторым анимациям ланчера</string>
     <string name="launcher_fixlaunch_title">Исправить данные о приложении</string>
     <string name="launcher_fixlaunch_summ">Всегда открывать данные о приложении в стиле MIUI из меню по долгому нажатию</string>
-    <string name="launcher_foldershade_title">Наложение цвета</string>
-    <string name="launcher_foldershade_summ">Затемняет или осветляет фон</string>
-    <string name="launcher_foldershade_level_title">Интенсивность цвета</string>
     <string name="launcher_folderblur">Размытие фона</string>
     <string name="launcher_closefolder_title">Закрывать папки автоматом</string>
     <string name="launcher_closefolder_summ">Закрывает папку приложения после его запуска</string>
@@ -690,8 +660,6 @@
     <string name="various_aospsearch_title">Поиск</string>
     <string name="various_aospnotif_title">Приложения и уведомления</string>
     <string name="various_aospnotiflog_title">Журнал уведомлений</string>
-    <string name="various_unlockfps_title">Разблокировать частоту кадров</string>
-    <string name="various_unlockfps_summ">Делает доступным fps вплоть до 90 в приложении Запись экрана. Будет ли более высокий fps работать, зависит от устройства и видео драйвера.</string>
     <string name="various_miuiinstaller_title">Использовать установщик пакетов MIUI</string>
     <string name="various_miuiinstaller_summ">Делает дефолтным установщик пакетов от Xiaomi и разрешает ему обновление системных приложений</string>
     <string name="various_miuiinstaller_error">Не установлено необходимое приложение. Сделайте долгое нажатие для скачивания.</string>
@@ -801,8 +769,6 @@
     <string name="array_screenlock_strong">Сильную (ПИН-код/пароль/графический ключ)</string>
     <string name="array_noblur">Без размытия</string>
     <string name="array_netspeedicons_no">Без иконок</string>
-    <string name="array_foldershade_solid">Весь фон</string>
-    <string name="array_foldershade_gradient">Только в центре</string>
     <string name="array_expandnotifs_allbutblack">Кроме тех приложений, что в списке</string>
     <string name="array_expandnotifs_whiteonly">Только для приложений в списке</string>
     <string name="array_mobiletypeicon_connected">Скрывать только при отсутствии подключения</string>

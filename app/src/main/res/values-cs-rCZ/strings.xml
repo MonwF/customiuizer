@@ -188,10 +188,6 @@
     <string name="system_betterpopups_disablewhenmute_title">Zakázat plovoucí oznámení, pokud je hlasitost ztlumena</string>
     <string name="system_mutevisiblenotif_title">Ztlumení, je-li viditelné</string>
     <string name="system_mutevisiblenotif_summ">Nepřehrávat zvuk oznámení, pokud je obrazovka zapnutá</string>
-    <string name="system_notifmediaseekbar_title">Posuvník pozice médií</string>
-    <string name="system_notifmediaseekbar_summ">Přidání posuvníku pro oznámení médií, který označuje aktuální pozici a umožňuje ji změnit</string>
-    <string name="system_notifmediaseekbar_full_title">Použití systémového stylu</string>
-    <string name="system_notifmediaseekbar_full_summ">Nepoužívat vlastní tenký styl na posuvník</string>
     <string name="system_popupnotif_apps_title">Vybrané aplikace</string>
     <string name="system_mods_screenshots">Snímky obrazovky</string>
     <string name="system_screenshot_title">Konfigurace snímku obrazovky</string>
@@ -217,12 +213,6 @@
     <string name="system_autobrightness_summ">Nastavit minimální a maximální hodnoty automatického jasu</string>
     <string name="system_minbrightness_title">Minimální jas automatické regulace</string>
     <string name="system_maxbrightness_title">Maximální jas automatického režimu</string>
-    <string name="system_audiosilencer_title">Tlumič zvuku</string>
-    <string name="system_audiosilencer_summ">Ztlumení jakéhokoli zvuku, který lze jednoznačně identifikovat</string>
-    <string name="system_audiosilencer_last_title">Obnovit seznam</string>
-    <string name="system_audiosilencer_last_summ">Získat seznam naposledy přehrávaných zvuků</string>
-    <string name="system_audiosilencer_silenced">Ztlumené zvuky</string>
-    <string name="system_audiosilencer_played">Přehrané zvuky</string>
     <string name="system_nosafevolume_title">Vypnout upozornění na vysokou hlasitost</string>
     <string name="system_nosafevolume_summ">Nezobrazovat dialog, pokud hlasitost dosáhne nebezpečné úrovně</string>
     <string name="system_noducking_title">Zakázat skrývání</string>
@@ -359,8 +349,6 @@
     <string name="system_apksign_title">Zakázat ověřování podpisů</string>
     <string name="system_disableintegrity_title">Zakázat ověřování integrity systému</string>
     <string name="system_apksign_summ">Povolit aktualizace aplikací, i když se podpis APK liší od nainstalovaného</string>
-    <string name="system_magnifier_title">Lupa pro zvětšení textu</string>
-    <string name="system_magnifier_summ">Zobrazit zvětšený text při pohybu vstupního kurzoru nebo výběru</string>
     <string name="system_nooverscroll_title">Zakázat přetažení</string>
     <string name="system_nooverscroll_summ">Zabránit přejetí zobrazeného seznamu</string>
     <string name="system_removesecure_title">Vypnout ochranu zabezpečení obsahu</string>
@@ -370,8 +358,6 @@
     <string name="system_hidelowbatwarn_summ">Nezobrazovat dialogové okno s výstrahou pro zapnutí spořiče baterie</string>
     <string name="system_hideproxywarn_title">Skrýt upozornění na zakázané dotyky</string>
     <string name="system_hideproxywarn_summ">Nezobrazovat upozornění, že oblast sluchátek je zakrytá</string>
-    <string name="system_resizablewidgets_title">Volná změna velikosti widgetu</string>
-    <string name="system_resizablewidgets_summ">Odstranit všechna omezení velikosti widgetů</string>
     <string name="system_cleanshare_title">Čistá nabídka sdílení</string>
     <string name="system_cleanshare_summ">Odstranit vybrané aplikace z nabídky sdílení</string>
     <string name="system_clean_test">Testovací menu</string>
@@ -443,14 +429,6 @@
     <string name="system_clearalltasks_summ">Tlačítko Smazat zabije všechny spuštěné úlohy</string>
     <string name="system_hidefromrecents_title">Skrýt z posledních spuštěných</string>
     <string name="system_hidefromrecents_summ">Skrytí vybraných aplikací ze seznamu posledních úloh</string>
-    <string name="system_recommended_first_title">První akce zkratky</string>
-    <string name="system_recommended_first_summ">Akce pro první návrh zkratky</string>
-    <string name="system_recommended_second_title">Druhá akce zkratky</string>
-    <string name="system_recommended_second_summ">Akce pro druhý návrh zkratky</string>
-    <string name="system_recommended_third_title">Třetí akce zkratky</string>
-    <string name="system_recommended_third_summ">Akce pro třetí návrh zkratky</string>
-    <string name="system_recommended_fourth_title">Čtvrtá akce zkratky</string>
-    <string name="system_recommended_fourth_summ">Akce pro čtvrtý návrh zkratky</string>
     <string name="system_mods_betterpopups">Vyskakující oznámení</string>
     <string name="system_betterpopups_delay_title">Zpoždění automatického skrývání</string>
     <string name="system_betterpopups_nohide_title">Žádné automatické skrytí</string>
@@ -519,11 +497,6 @@
     <string name="launcher_infinitescroll_summ">Skok z poslední stránky na první a naopak</string>
     <string name="launcher_noclockhide_title">Neskrývat hodiny</string>
     <string name="launcher_noclockhide_summ">Neskrývat hodiny na stavovém řádku na stránkách s widgety s hodinami</string>
-    <string name="launcher_googleminus_title">Povolit přepínač obrazovky -1</string>
-    <string name="launcher_googleminus_summ">Zobrazit přepínač mezi aplikacemi App Vault a Google Discover v nastavení domovské obrazovky</string>
-    <string name="launcher_googleminus_note">Vyžaduje globální (mezinárodní) ROM</string>
-    <string name="launcher_googlediscover_title">Vynutit službu Google Discover</string>
-    <string name="launcher_googlediscover_summ">Nahrazení služby App Vault službou Google Discover (vyžaduje instalaci aplikace Google)</string>
     <string name="launcher_nowidgetonly_title">Zakázat obrazovku pouze pro widgety</string>
     <string name="launcher_nowidgetonly_summ">Podpora widgetů i aplikací u tabletů na všech obrazovkách</string>
     <string name="launcher_nounlockanim_title">Odstranit animaci odemknutí</string>
@@ -557,9 +530,6 @@
     <string name="launcher_fixanim_summ">Použít škálování doby trvání animátorů hodnot na některé animace spouštěče</string>
     <string name="launcher_fixlaunch_title">Opravit informace o aplikaci</string>
     <string name="launcher_fixlaunch_summ">Vždy otevřít informace o aplikaci ve stylu MIUI z nabídky dlouhého stisknutí tlačítka</string>
-    <string name="launcher_foldershade_title">Barevné překrytí</string>
-    <string name="launcher_foldershade_summ">Ztmavit nebo zesvětlit pozadí</string>
-    <string name="launcher_foldershade_level_title">Intenzita barev</string>
     <string name="launcher_folderblur">Rozmazání pozadí</string>
     <string name="launcher_closefolder_title">Automatické zavírání složek</string>
     <string name="launcher_closefolder_summ">Zavřít složku aplikace po spuštění</string>
@@ -690,8 +660,6 @@
     <string name="various_aospsearch_title">Hledat</string>
     <string name="various_aospnotif_title">Aplikace a oznámení</string>
     <string name="various_aospnotiflog_title">Protokol o oznámeních</string>
-    <string name="various_unlockfps_title">Odemknutí snímkové frekvence</string>
-    <string name="various_unlockfps_summ">Zpřístupnit v aplikaci Záznam obrazovky frekvenci až 90 fps. Zda bude vyšší fps skutečně fungovat, závisí na zařízení a ovladači videa.</string>
     <string name="various_miuiinstaller_title">Použít MIUI instalátor aplikací</string>
     <string name="various_miuiinstaller_summ">Vytvořit z instalátoru balíčků od Xiaomi výchozí instalátor a umožnit mu aktualizovat systémové aplikace</string>
     <string name="various_miuiinstaller_error">Požadovaná aplikace není nainstalována. Dlouhým stisknutím ji stáhnete.</string>
@@ -808,8 +776,6 @@
     <string name="array_screenlock_strong">Silné (PIN/heslo/vzor)</string>
     <string name="array_noblur">Bez rozmazání</string>
     <string name="array_netspeedicons_no">Bez ikon</string>
-    <string name="array_foldershade_solid">Celé pozadí</string>
-    <string name="array_foldershade_gradient">Pouze uprostřed</string>
     <string name="array_expandnotifs_allbutblack">Pro všechny aplikace, kromě uvedených</string>
     <string name="array_expandnotifs_whiteonly">Pouze pro aplikace uvedené v seznamu</string>
     <string name="array_mobiletypeicon_connected">Skrýt pouze v případě, že není připojení</string>

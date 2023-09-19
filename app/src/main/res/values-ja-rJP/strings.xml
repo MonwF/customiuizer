@@ -187,10 +187,6 @@
     <string name="system_betterpopups_disablewhenmute_title">音量がミュートに設定されている場合のヘッドアップ通知を無効化</string>
     <string name="system_mutevisiblenotif_title">表示中はミュートにする</string>
     <string name="system_mutevisiblenotif_summ">画面の表示中は通知音を鳴らさないようにします</string>
-    <string name="system_notifmediaseekbar_title">シーク可能なメディア通知スライダー</string>
-    <string name="system_notifmediaseekbar_summ">メディア通知にシーク操作が行なえるスライダーを追加します</string>
-    <string name="system_notifmediaseekbar_full_title">システムのスタイルを使用する</string>
-    <string name="system_notifmediaseekbar_full_summ">細いデザインのスライダーではなく標準のデザインのスライダーを使用するようにします</string>
     <string name="system_popupnotif_apps_title">選択されたアプリ</string>
     <string name="system_mods_screenshots">スクリーンショット</string>
     <string name="system_screenshot_title">スクリーンショットの設定</string>
@@ -216,12 +212,6 @@
     <string name="system_autobrightness_summ">画面の明るさの最小値と最大値を定義します</string>
     <string name="system_minbrightness_title">自動時の最小の明るさ</string>
     <string name="system_maxbrightness_title">自動時の最高の明るさ</string>
-    <string name="system_audiosilencer_title">オーディオサイレンサー</string>
-    <string name="system_audiosilencer_summ">一意に識別可能な音をミュートにします</string>
-    <string name="system_audiosilencer_last_title">リストを更新</string>
-    <string name="system_audiosilencer_last_summ">最近再生をしたサウンドの一覧を取得します</string>
-    <string name="system_audiosilencer_silenced">消音</string>
-    <string name="system_audiosilencer_played">再生音</string>
     <string name="system_nosafevolume_title">音量の警告を無効化</string>
     <string name="system_nosafevolume_summ">音量を最大で使用時に表示される警告ダイアログを非表示にします</string>
     <string name="system_noducking_title">ダッキングを無効化</string>
@@ -358,8 +348,6 @@
     <string name="system_apksign_title">署名の検証を無効化</string>
     <string name="system_disableintegrity_title">システムの整合性の検証を無効化</string>
     <string name="system_apksign_summ">APKの署名がインストールされているアプリと異なる場合でもアップデートが可能になります</string>
-    <string name="system_magnifier_title">テキストの拡大</string>
-    <string name="system_magnifier_summ">入力カーソルの移動時や選択時にテキストを拡大表示します (LSPosedのスコープに文字入力アプリを追加する必要があります)</string>
     <string name="system_nooverscroll_title">オーバースクロールを無効化</string>
     <string name="system_nooverscroll_summ">リストビューをオーバースクロールしないようにします</string>
     <string name="system_removesecure_title">セキュアコンテンツ保護を無効化</string>
@@ -369,8 +357,6 @@
     <string name="system_hidelowbatwarn_summ">バッテリーセーバーをオンにするように求める警告ダイアログを表示しないようにします</string>
     <string name="system_hideproxywarn_title">タッチ操作不可の警告を非表示</string>
     <string name="system_hideproxywarn_summ">イヤホン部分が覆われている事を示す警告を非表示</string>
-    <string name="system_resizablewidgets_title">ウィジェットのリサイズを無制限にする</string>
-    <string name="system_resizablewidgets_summ">ウィジェットのリサイズ制限を無効化します</string>
     <string name="system_cleanshare_title">クリーンな共有メニュー</string>
     <string name="system_cleanshare_summ">選択したアプリを共有メニューから削除します</string>
     <string name="system_clean_test">メニューをテスト</string>
@@ -442,14 +428,6 @@
     <string name="system_clearalltasks_summ">クリーナーボタンで実行中のタスクをすべて終了させます</string>
     <string name="system_hidefromrecents_title">履歴上から非表示にする</string>
     <string name="system_hidefromrecents_summ">最近のタスクで選択をしたアプリを非表示にします</string>
-    <string name="system_recommended_first_title">1つ目のショートカットアイコン</string>
-    <string name="system_recommended_first_summ">1つ目の提案のショートカットアイコンのアクション</string>
-    <string name="system_recommended_second_title">2つ目のショートカットアイコン</string>
-    <string name="system_recommended_second_summ">2つ目の提案のショートカットアイコンのアクション</string>
-    <string name="system_recommended_third_title">3つ目のショートカットアイコン</string>
-    <string name="system_recommended_third_summ">3つ目の提案のショートカットアイコンのアクション</string>
-    <string name="system_recommended_fourth_title">4つ目のショートカットアイコン</string>
-    <string name="system_recommended_fourth_summ">4つ目の提案のショートカットアイコンのアクション</string>
     <string name="system_mods_betterpopups">ポップアップ通知</string>
     <string name="system_betterpopups_delay_title">自動消去の遅延</string>
     <string name="system_betterpopups_nohide_title">自動で消去しない</string>
@@ -518,11 +496,6 @@
     <string name="launcher_infinitescroll_summ">最後のページから最初のページにジャンプまたはその逆を行ないます</string>
     <string name="launcher_noclockhide_title">時計を非表示にしない</string>
     <string name="launcher_noclockhide_summ">時計ウィジェットがあるページでステータスバーの時計を非表示にしないようにします</string>
-    <string name="launcher_googleminus_title">有効 -1スクリーンスイッチ</string>
-    <string name="launcher_googleminus_summ">ホーム画面の設定にApp VaultとGoogle Discoverの切り替えを表示します</string>
-    <string name="launcher_googleminus_note">グローバル版のMIUI ROMが必要です。</string>
-    <string name="launcher_googlediscover_title">Google Discoverを強制</string>
-    <string name="launcher_googlediscover_summ">App VaultをGoogle Discoverに置き換えます (Googleアプリのインストールが必要です)</string>
     <string name="launcher_nowidgetonly_title">ウィジェット専用画面を無効化</string>
     <string name="launcher_nowidgetonly_summ">すべての画面でタブレットのウィジェットとアプリのウィジェットの両方をサポートするようにします</string>
     <string name="launcher_nounlockanim_title">ロック解除時のアニメーションを無効化</string>
@@ -556,9 +529,6 @@
     <string name="launcher_fixanim_summ">一部のランチャーのアニメーションにValue AnimatorsとDuration Scalingを適用します</string>
     <string name="launcher_fixlaunch_title">アプリ情報を修正</string>
     <string name="launcher_fixlaunch_summ">長押しのメニュー上でMIUIスタイルのアプリ情報を常に表示します</string>
-    <string name="launcher_foldershade_title">カラーオーバーレイ</string>
-    <string name="launcher_foldershade_summ">背景を明るくまたは暗くします</string>
-    <string name="launcher_foldershade_level_title">色の濃度</string>
     <string name="launcher_folderblur">背景をぼかす</string>
     <string name="launcher_closefolder_title">フォルダを自動で閉じる</string>
     <string name="launcher_closefolder_summ">アプリの起動後にフォルダを自動で閉じるようにします</string>
@@ -689,8 +659,6 @@
     <string name="various_aospsearch_title">検索</string>
     <string name="various_aospnotif_title">通知</string>
     <string name="various_aospnotiflog_title">通知ログ</string>
-    <string name="various_unlockfps_title">フレームレートの制限を解除</string>
-    <string name="various_unlockfps_summ">スクリーンレコーダーアプリでフレームレートを90まで使用可能にします。実際に高フレームレートで動作するかは、デバイスの性能とビデオドライバに依存します。</string>
     <string name="various_miuiinstaller_title">MIUIパッケージインストーラーを使用する</string>
     <string name="various_miuiinstaller_summ">システムアプリのアップデートを可能にします</string>
     <string name="various_miuiinstaller_error">必要なアプリが未インストールまたは無効化されています</string>
@@ -800,8 +768,6 @@
     <string name="array_screenlock_strong">強力 (PIN/パスワード/パターン)</string>
     <string name="array_noblur">ぼかしなし</string>
     <string name="array_netspeedicons_no">アイコンなし</string>
-    <string name="array_foldershade_solid">背景全体</string>
-    <string name="array_foldershade_gradient">中央のみ</string>
     <string name="array_expandnotifs_allbutblack">リストアップしたものを除くすべてのアプリ</string>
     <string name="array_expandnotifs_whiteonly">リスト上のアプリのみ</string>
     <string name="array_mobiletypeicon_connected">未接続時のみ非表示</string>

@@ -5,7 +5,7 @@
 	android:layout_height="match_parent"
 	android:key="pref_key_cat">
 
-	<name.mikanoshi.customiuizer.prefs.ListPreferenceEx
+	<name.monwf.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_launcher_mods"
 		android:title="@string/launcher_title"
 		android:summary="@string/launcher_summ"
@@ -13,28 +13,28 @@
 		android:entryValues="@array/launchers_val"
 		android:defaultValue="1" />
 
-	<name.mikanoshi.customiuizer.prefs.CheckBoxPreferenceEx
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_launcher_compat"
 		android:title="@string/launcher_compat_title"
 		android:summary="@string/launcher_compat_summ"
 		android:defaultValue="false" />
 
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:title="@string/launcher_folders"
 		android:key="pref_key_launcher_cat_folders" />
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:title="@string/launcher_titles"
 		android:key="pref_key_launcher_cat_titles" />
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:title="@string/launcher_privacyapps"
 		android:key="pref_key_launcher_cat_privacyapps" />
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:title="@string/launcher_gestures"
 		android:key="pref_key_launcher_cat_gestures" />
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:title="@string/launcher_bugfixes"
 		android:key="pref_key_launcher_cat_bugfixes" />
-	<name.mikanoshi.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:title="@string/system_mods_other"
 		android:key="pref_key_launcher_cat_other" />
 

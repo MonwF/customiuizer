@@ -9,8 +9,8 @@
 		android:shortcutDisabledMessage="@string/credentials_unlock">
 		<intent
 			android:action="android.intent.action.VIEW"
-			android:targetPackage="name.mikanoshi.customiuizer"
-			android:targetClass="name.mikanoshi.customiuizer.Credentials" />
+			android:targetPackage="name.monwf.customiuizer"
+			android:targetClass="name.monwf.customiuizer.Credentials" />
 		<categories android:name="android.shortcut.conversation" />
 	</shortcut>
 </shortcuts>

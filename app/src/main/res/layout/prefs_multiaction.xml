@@ -13,7 +13,7 @@
 		android:text="@string/launcher_gestures_action"
 		style="@style/Widget.InputField.Category.First" />
 
-	<name.mikanoshi.customiuizer.prefs.SpinnerEx
+	<name.monwf.customiuizer.prefs.SpinnerEx
 		android:id="@+id/action"
 		android:layout_width="240dp"
 		android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
 			android:text="@string/launcher_gestures_launch"
 			style="@style/Widget.InputField.Category.Middle" />
 
-		<name.mikanoshi.customiuizer.prefs.SpinnerExFake
+		<name.monwf.customiuizer.prefs.SpinnerExFake
 			android:id="@+id/app_to_launch"
 			android:layout_width="240dp"
 			android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
 			android:text="@string/launcher_gestures_shortcut"
 			style="@style/Widget.InputField.Category.Middle" />
 
-		<name.mikanoshi.customiuizer.prefs.SpinnerExFake
+		<name.monwf.customiuizer.prefs.SpinnerExFake
 			android:id="@+id/shortcut_to_launch"
 			android:layout_width="240dp"
 			android:layout_height="wrap_content"
@@ -90,7 +90,7 @@
 			android:text="@string/launcher_gestures_activity"
 			style="@style/Widget.InputField.Category.Middle" />
 
-		<name.mikanoshi.customiuizer.prefs.SpinnerExFake
+		<name.monwf.customiuizer.prefs.SpinnerExFake
 			android:id="@+id/activity_to_launch"
 			android:layout_width="240dp"
 			android:layout_height="wrap_content"
@@ -123,7 +123,7 @@
 			android:text="@string/launcher_gestures_setting"
 			style="@style/Widget.InputField.Category.Middle" />
 
-		<name.mikanoshi.customiuizer.prefs.SpinnerEx
+		<name.monwf.customiuizer.prefs.SpinnerEx
 			android:id="@+id/toggle"
 			android:layout_width="240dp"
 			android:layout_height="wrap_content"
