@@ -3606,7 +3606,7 @@ public class System {
                     MethodHook changeFormatHook = new MethodHook() {
                         @Override
                         protected void before(final BeforeHookCallback param) throws Throwable {
-                            if (param.getArgs().length != 7) return;
+                            if (param.getArgs().length < 7) return;
                             Bitmap.CompressFormat compress = format <= 2 ? Bitmap.CompressFormat.JPEG : (format == 3 ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.WEBP);
                             param.getArgs()[4] = compress;
                         }
