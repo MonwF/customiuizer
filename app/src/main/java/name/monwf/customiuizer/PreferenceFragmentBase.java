@@ -55,6 +55,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
         put(R.id.edit_confirm, "edit");
         put(R.id.softreboot, "reboot");
         put(R.id.backuprestore, "settings");
+        put(R.id.resetsettings, "reset");
         put(R.id.about, "about");
         put(R.id.openinweb, "openinweb");
     }};
@@ -108,7 +109,6 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
     public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
         getPreferenceManager().setSharedPreferencesName(AppHelper.prefsName);
         getPreferenceManager().setSharedPreferencesMode(Context.MODE_PRIVATE);
-        getPreferenceManager().setStorageDeviceProtected();
     }
 
     @Override
@@ -176,19 +176,15 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
     }
 
     public void showXposedDialog(AppCompatActivity act) {
-        try {
-            AlertDialog.Builder builder = new AlertDialog.Builder(act);
-            builder.setTitle(R.string.warning);
-            builder.setMessage(R.string.module_not_active);
-            builder.setCancelable(true);
-            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton){}
-            });
-            AlertDialog dlg = builder.create();
-            dlg.show();
-        } catch (Throwable t) {
-            t.printStackTrace();
-        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(act);
+        builder.setTitle(R.string.warning);
+        builder.setMessage(R.string.module_not_active);
+        builder.setCancelable(true);
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton){}
+        });
+        AlertDialog dlg = builder.create();
+        dlg.show();
     }
 
     public void showBackupRestoreDialog() {
@@ -214,16 +210,10 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
         setHasOptionsMenu(toolbarMenu);
         ActionBar actionBar = getActionBar();
 
-        boolean showBack = false;
+        boolean showBack;
         if (this instanceof MainFragment) {
-            ActivityInfo appInfo;
-            try {
-                AppCompatActivity act = (AppCompatActivity) getActivity();
-                appInfo = act.getPackageManager().getActivityInfo(act.getComponentName(), PackageManager.GET_META_DATA);
-                showBack = appInfo.metaData != null && appInfo.metaData.containsKey("from.settings");
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            }
+            AppCompatActivity act = (AppCompatActivity) getActivity();
+            showBack = act.getIntent().getBooleanExtra("from.settings", false);
         } else showBack = true;
 
         actionBar.setDisplayHomeAsUpEnabled(showBack);
@@ -233,7 +223,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
     public void onCreate(Bundle savedInstanceState, int pref_defaults) {
         super.onCreate(savedInstanceState);
         try {
-            PreferenceManager.setDefaultValues(AppHelper.getProtectedContext(getValidContext()), pref_defaults, false);
+            PreferenceManager.setDefaultValues(getValidContext(), pref_defaults, false);
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
@@ -443,15 +433,15 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
         try {
             input = new ObjectInputStream(act.getContentResolver().openInputStream(uri));
             Map<String, ?> entries = (Map<String, ?>)input.readObject();
-            AppHelper.syncPrefsToAnother(entries, AppHelper.appPrefs, true, null);
+            AppHelper.syncPrefsToAnother(entries, AppHelper.appPrefs, 1, null, true);
             AlertDialog.Builder alert = new AlertDialog.Builder(act);
             alert.setTitle(R.string.do_restore);
             alert.setMessage(R.string.restore_ok);
             alert.setCancelable(false);
             alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
-                    act.finish();
-                    act.startActivity(act.getIntent());
+                    int pid = android.os.Process.myPid();
+                    android.os.Process.killProcess(pid);
                 }
             });
             alert.show();

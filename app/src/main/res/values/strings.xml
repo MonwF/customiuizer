@@ -1022,6 +1022,8 @@
     <string name="restart_systemui">Restart systemui</string>
     <string name="restart_securitycenter">Restart security center</string>
     <string name="backup_restore">Settings management</string>
+    <string name="reset_settings">Reset settings</string>
+    <string name="reset_settings_done">Reset done. Please reboot</string>
     <string name="backup_restore_choose">Backups are stored in /sdcard/Documents/CustoMIUIzer/</string>
     <string name="do_backup">Backup</string>
     <string name="do_restore">Restore</string>

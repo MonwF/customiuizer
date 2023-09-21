@@ -1038,6 +1038,7 @@ public class System {
                 int clockId = clock.getResources().getIdentifier("clock", "id", "com.android.systemui");
                 int bigClockId = clock.getResources().getIdentifier("big_time", "id", "com.android.systemui");
                 int dateClockId = clock.getResources().getIdentifier("date_time", "id", "com.android.systemui");
+                int horizDateClockId = clock.getResources().getIdentifier("horizontal_date_time", "id", "com.android.systemui");
                 int thisClockId = clock.getId();
                 if (clockId == thisClockId && statusbarClockTweak) {
                     XposedHelpers.setAdditionalInstanceField(clock, "clockName", "clock");
@@ -1052,7 +1053,7 @@ public class System {
                     }
                     initClockStyle(clock);
                 }
-                else if (dateClockId == thisClockId && (ccDateCustom || hideDateView)) {
+                else if ((dateClockId == thisClockId || thisClockId == horizDateClockId) && (ccDateCustom || hideDateView)) {
                     XposedHelpers.setAdditionalInstanceField(clock, "clockName", "ccDate");
                 }
             }

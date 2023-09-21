@@ -43,7 +43,7 @@ public class AutoRotateService extends TileService {
 
 	private void switchTileState() {
 		try {
-			SharedPreferences prefs = AppHelper.getSharedPrefs(this, true);
+			SharedPreferences prefs = AppHelper.getSharedPrefs(this, false);
 			int state = prefs.getInt("pref_key_qs_autorotate_state", 0);
 			state++;
 			if (state > 2) state = 0;
@@ -55,7 +55,7 @@ public class AutoRotateService extends TileService {
 
 	private int getTileState() {
 		try {
-			SharedPreferences prefs = AppHelper.getSharedPrefs(this, true);
+			SharedPreferences prefs = AppHelper.getSharedPrefs(this, false);
 			return prefs.getInt("pref_key_qs_autorotate_state", 0);
 		} catch (Throwable t) {
 			t.printStackTrace();
