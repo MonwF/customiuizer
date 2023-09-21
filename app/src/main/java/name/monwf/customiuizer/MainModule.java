@@ -34,14 +34,20 @@ public class MainModule extends XposedModule {
     public static ResourceHooks resHooks = new ResourceHooks();
     private String processName;
 
+    SharedPreferences remotePrefs;
+
     private OnSharedPreferenceChangeListener mListener;
 
     public MainModule(@NonNull XposedInterface base, @NonNull XposedModuleInterface.ModuleLoadedParam param) {
         super(base, param);
-        processName = param.getProcessName();
         XposedHelpers.moduleInst = this;
-        SharedPreferences remotePrefs = getRemotePreferences(ModuleHelper.prefsName + "_remote");
-        Map<String, ?> allPrefs = remotePrefs == null ? null : remotePrefs.getAll();
+        processName = param.getProcessName();
+        initPrefs();
+    }
+
+    private void initPrefs() {
+        remotePrefs = getRemotePreferences(ModuleHelper.prefsName + "_remote");
+        Map<String, ?> allPrefs = remotePrefs.getAll();
         if (allPrefs == null || allPrefs.size() == 0)
             XposedHelpers.log("[UID " + android.os.Process.myUid() +"] Cannot read module's SharedPreferences, some mods might not work!");
         else
@@ -49,8 +55,6 @@ public class MainModule extends XposedModule {
     }
 
     private void listenPreferencesChange() {
-        SharedPreferences remotePrefs = getRemotePreferences(ModuleHelper.prefsName + "_remote");
-        if (remotePrefs == null) return;
         HashSet<String> ignoreKeys = new HashSet<>();
         ignoreKeys.add("pref_key_systemui_restart_time");
 
@@ -59,9 +63,11 @@ public class MainModule extends XposedModule {
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @Nullable String key) {
                 Object val = sharedPreferences.getAll().get(key);
                 if (val == null) {
+                    XposedHelpers.log(processName + " key removed: " + key);
                     mPrefs.remove(key);
                 }
                 else {
+                    XposedHelpers.log(processName + " key changed: " + key);
                     mPrefs.put(key, val);
                 }
                 if (!ignoreKeys.contains(key)) {
@@ -74,10 +80,9 @@ public class MainModule extends XposedModule {
 
     @Override
     public void onSystemServerLoaded(final SystemServerLoadedParam lpparam) {
-        super.onSystemServerLoaded((lpparam));
+//        listenPreferencesChange();
         PackagePermissions.hook(lpparam);
         GlobalActions.setupGlobalActions(lpparam);
-        listenPreferencesChange();
 
         if (mPrefs.getBoolean("system_screenshot_overlay")) {
             System.TempHideOverlayAppHook(lpparam);
@@ -162,17 +167,11 @@ public class MainModule extends XposedModule {
         if (!lpparam.isFirstPackage()) return;
 
         String pkg = lpparam.getPackageName();
-        if (pkg.equals("com.android.systemui")
-            || pkg.equals("com.miui.home")
-            || pkg.equals("android")
-        ) {
-            listenPreferencesChange();
-        }
-
         if (mPrefs.getInt("system_statusbarheight", 19) > 19) System.StatusBarHeightRes();
         if (mPrefs.getInt("controls_navbarheight", 19) > 19) Controls.NavbarHeightRes();
 
         if (pkg.equals("android")) {
+            listenPreferencesChange();
             if (mPrefs.getBoolean("system_cleanshare")) System.CleanShareMenuHook(lpparam);
             if (mPrefs.getBoolean("system_cleanopenwith")) System.CleanOpenWithMenuHook(lpparam);
             if (mPrefs.getStringAsInt("system_allrotations2", 1) > 1) {
@@ -209,7 +208,18 @@ public class MainModule extends XposedModule {
             Context mContext = ModuleHelper.findContext(lpparam);
             long restartTime = Settings.System.getLong(mContext.getContentResolver(), "systemui_restart_time", 0L);
             long currentTime = java.lang.System.currentTimeMillis();
-            SystemUI.setupStatusBar(lpparam);
+            ModuleHelper.findAndHookMethod("com.android.systemui.SystemUIApplication", lpparam.getClassLoader(), "onCreate", new MethodHook() {
+                private boolean isHooked = false;
+                @Override
+                protected void after(final AfterHookCallback param) throws Throwable {
+                    if (!isHooked) {
+                        isHooked = true;
+                        listenPreferencesChange();
+                        Context mContext = (Context) XposedHelpers.callMethod(param.getThisObject(), "getApplicationContext");
+                        SystemUI.setupStatusBar(mContext);
+                    }
+                }
+            });
             GlobalActions.setupStatusBar(lpparam);
 
             if (currentTime - restartTime < 10000) {
@@ -586,11 +596,14 @@ public class MainModule extends XposedModule {
         final boolean isNoOverscroll = mPrefs.getBoolean("system_nooverscroll") && mPrefs.getStringSet("system_nooverscroll_apps").contains(pkg);
         final boolean controlMedia = (mPrefs.getStringAsInt("controls_volumemedia_up", 0) > 0
             || mPrefs.getStringAsInt("controls_volumemedia_down", 0) > 0) && mPrefs.getStringSet("controls_mediaplayer_apps").contains(pkg);
-        if ((isLauncherPkg && !isLauncherPerf) || isStatusBarColor || isNoOverscroll || controlMedia) {
+        if (isLauncherPkg || isStatusBarColor || isNoOverscroll || controlMedia) {
             ModuleHelper.findAndHookMethod(Application.class, "attach", Context.class, new MethodHook() {
                 @Override
                 protected void after(AfterHookCallback param) throws Throwable {
                     if (isLauncherPkg && !isLauncherPerf) handleLoadLauncher(lpparam);
+                    if (isLauncherPkg) {
+                        listenPreferencesChange();
+                    }
                     if (isStatusBarColor) {
                         System.StatusBarBackgroundCompatHook(lpparam);
                         System.StatusBarBackgroundHook(lpparam);

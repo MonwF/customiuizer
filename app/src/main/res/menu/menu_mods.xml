@@ -32,6 +32,10 @@
 		android:title="@string/backup_restore"
 		app:showAsAction="never" />
 	<item
+		android:id="@+id/resetsettings"
+		android:title="@string/reset_settings"
+		app:showAsAction="never" />
+	<item
 		android:id="@+id/about"
 		android:title="@string/app_about"
 		app:showAsAction="never" />

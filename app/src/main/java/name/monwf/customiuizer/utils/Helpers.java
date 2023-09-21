@@ -683,7 +683,7 @@ public class Helpers {
 
     public static Drawable getShortcutIcon(Context context, String key) {
         Drawable shortcutIcon = null;
-        String shortcutIconPath = AppHelper.getProtectedContext(context).getFilesDir() + "/shortcuts/" + key + "_shortcut.png";
+        String shortcutIconPath = context.getFilesDir() + "/shortcuts/" + key + "_shortcut.png";
         File shortcutIconFile = new File(shortcutIconPath);
         if (shortcutIconFile.exists())
             shortcutIcon = new BitmapDrawable(context.getResources(), BitmapFactory.decodeFile(shortcutIconFile.getAbsolutePath()));

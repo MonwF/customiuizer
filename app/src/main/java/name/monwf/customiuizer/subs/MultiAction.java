@@ -155,7 +155,7 @@ public class MultiAction extends SubFragment {
 		shortcutLaunch.addValue(key + "_shortcut_intent", shortcutIntent);
 		shortcutLaunch.addValue(key + "_shortcut_name", shortcutName);
 
-		shortcutIconPath = AppHelper.getProtectedContext(getContext()).getFilesDir() + "/shortcuts/" + key + "_shortcut.png";
+		shortcutIconPath = getContext().getFilesDir() + "/shortcuts/" + key + "_shortcut.png";
 		File shortcutIconFile;
 		if (shortcutIcon != null)
 			shortcutIconFile = new File(shortcutIcon);
@@ -298,7 +298,7 @@ public class MultiAction extends SubFragment {
 
 	@Override
 	public void saveSharedPrefs() {
-		File tmpIconFile = new File(AppHelper.getProtectedContext(getContext()).getFilesDir() + "/shortcuts/tmp.png");
+		File tmpIconFile = new File(getContext().getFilesDir() + "/shortcuts/tmp.png");
 		if (tmpIconFile.exists()) {
 			File prefIconFile = new File(shortcutIconPath);
 			prefIconFile.delete();
@@ -311,7 +311,7 @@ public class MultiAction extends SubFragment {
 
 	@Override
 	public void onDestroy() {
-		File tmpIconFile = new File(AppHelper.getProtectedContext(getContext()).getFilesDir() + "/shortcuts/tmp.png");
+		File tmpIconFile = new File(getContext().getFilesDir() + "/shortcuts/tmp.png");
 		if (tmpIconFile.exists()) tmpIconFile.delete();
 		super.onDestroy();
 	}

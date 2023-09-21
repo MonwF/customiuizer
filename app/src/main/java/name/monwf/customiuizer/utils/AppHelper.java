@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 
-import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -29,6 +28,8 @@ public class AppHelper {
     public static SharedPreferences appPrefs = null;
     public static boolean moduleActive = false;
     private static final String TAG = "LSPosed-Bridge";
+    public static boolean silentSync = false;
+    public static String RESTORED_FROM_BACKUP = "restored_from_backup";
 
     public static void log(String line) {
         Log.i(TAG, "[CustoMIUIzer] " + line);
@@ -220,11 +221,18 @@ public class AppHelper {
             return null;
         }
     }
-    public static void syncPrefsToAnother(Map<String, ?> entries, SharedPreferences prefs, boolean clear, HashSet<String> ignoreKeys) {
+    public static void syncPrefsToAnother(Map<String, ?> entries, SharedPreferences prefs, int clearType, Set<String> ignoreKeys, boolean commitAction) {
         if (entries == null || entries.isEmpty()) return;
         SharedPreferences.Editor prefEdit = prefs.edit();
-        if (clear) {
+        if (clearType == 1) {
             prefEdit.clear();
+        }
+        else if (clearType == 2) {
+            for (String key:prefs.getAll().keySet()) {
+                if (!entries.containsKey(key)) {
+                    prefEdit.remove(key);
+                }
+            }
         }
         for (Map.Entry<String, ?> entry: entries.entrySet()) {
             String key = entry.getKey();
@@ -244,6 +252,11 @@ public class AppHelper {
             else if (val instanceof Set<?>)
                 prefEdit.putStringSet(key, ((Set<String>)val));
         }
-        prefEdit.apply();
+        if (commitAction) {
+            prefEdit.commit();
+        }
+        else {
+            prefEdit.apply();
+        }
     }
 }

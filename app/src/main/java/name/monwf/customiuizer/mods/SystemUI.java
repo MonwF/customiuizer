@@ -124,7 +124,7 @@ public class SystemUI {
     private static int statusbarTextIconLayoutResId = 0;
     private static int notifVolumeOnResId;
     private static int notifVolumeOffResId;
-    public static void setupStatusBar(PackageLoadedParam lpparam) {
+    public static void setupStatusBar(Context mContext) {
         statusbarTextIconLayoutResId = MainModule.resHooks.addResource("statusbar_text_icon", R.layout.statusbar_text_icon);
         if (MainModule.mPrefs.getBoolean("system_statusbar_topmargin")) {
             int topMargin = MainModule.mPrefs.getInt("system_statusbar_topmargin_val", 1);
@@ -165,21 +165,10 @@ public class SystemUI {
             float iconHeight = 20.5f * iconSize / 13;
             MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "status_bar_icon_height", iconHeight);
         }
-
-        ModuleHelper.findAndHookMethod("com.android.systemui.SystemUIApplication", lpparam.getClassLoader(), "onCreate", new MethodHook() {
-            private boolean isHooked = false;
-            @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                if (!isHooked) {
-                    isHooked = true;
-                    Context mContext = (Context) XposedHelpers.callMethod(param.getThisObject(), "getApplicationContext");
-                    if (MainModule.mPrefs.getBoolean("system_cc_show_stepcount")) {
-                        StepCounterController.initContext(mContext);
-                    }
-                    Settings.System.putLong(mContext.getContentResolver(), "systemui_restart_time", java.lang.System.currentTimeMillis());
-                }
-            }
-        });
+        if (MainModule.mPrefs.getBoolean("system_cc_show_stepcount")) {
+            StepCounterController.initContext(mContext);
+        }
+        Settings.System.putLong(mContext.getContentResolver(), "systemui_restart_time", java.lang.System.currentTimeMillis());
     }
 
     private static String getSlotNameByType(int mIconType) {

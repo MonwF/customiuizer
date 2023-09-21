@@ -56,7 +56,7 @@ import io.github.libxposed.api.XposedModuleInterface.PackageLoadedParam;
 import miui.app.MiuiFreeFormManager;
 import miui.process.ForegroundInfo;
 import miui.process.ProcessManager;
-import name.monwf.customiuizer.GateWaySettings;
+import name.monwf.customiuizer.GateWayLauncher;
 import name.monwf.customiuizer.MainModule;
 import name.monwf.customiuizer.R;
 import name.monwf.customiuizer.mods.utils.HookerClassHelper.MethodHook;
@@ -738,13 +738,16 @@ public class GlobalActions {
                 Context mContext = ((Activity)param.getThisObject()).getBaseContext();
                 int opt = MainModule.mPrefs.getStringAsInt("miuizer_settingsiconpos", 1);
 
-                Resources modRes = ModuleHelper.getModuleRes(mContext);
                 Class<?> headerCls = findClassIfExists("com.android.settingslib.miuisettings.preference.PreferenceActivity$Header", lpparam.getClassLoader());
                 if (headerCls == null) return;
 
+                Resources modRes = ModuleHelper.getModuleRes(mContext);
                 Object header = XposedHelpers.newInstance(headerCls);
                 XposedHelpers.setLongField(header, "id", 666);
-                XposedHelpers.setObjectField(header, "intent", new Intent().setClassName(Helpers.modulePkg, GateWaySettings.class.getCanonicalName()));
+                Intent intent = new Intent();
+                intent.setClassName(Helpers.modulePkg, GateWayLauncher.class.getCanonicalName());
+                intent.putExtra("from.settings", true);
+                XposedHelpers.setObjectField(header, "intent", intent);
                 XposedHelpers.setIntField(header, "iconRes", settingsIconResId);
                 XposedHelpers.setObjectField(header, "title", modRes.getString(R.string.app_name));
                 Bundle bundle = new Bundle();

@@ -52,11 +52,11 @@
         <uses-library android:name="com.miui.rom" android:required="false" />
 
         <activity
+            android:exported="true"
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme"
             android:launchMode="singleTop"
-            android:exported="true"
             android:alwaysRetainTaskState="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -67,8 +67,8 @@
 
         <activity-alias
             android:exported="true"
-            android:label="@string/title_activity_main"
             android:name=".GateWayLauncher"
+            android:label="@string/title_activity_main"
             android:targetActivity=".MainActivity"
             android:taskAffinity="com.android.settings.customiuizer"
             android:allowTaskReparenting="true"
@@ -80,15 +80,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts" />
-        </activity-alias>
-
-        <activity-alias
-            android:label="@string/title_activity_main"
-            android:name=".GateWaySettings"
-            android:targetActivity=".MainActivity"
-            android:enabled="true"
-            android:excludeFromRecents="true">
-            <meta-data android:name="from.settings" android:value="true" />
         </activity-alias>
 
         <activity

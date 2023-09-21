@@ -944,6 +944,8 @@
     <string name="restart_launcher">重启桌面</string>
     <string name="open_inweb">在浏览器中打开</string>
     <string name="backup_restore">备份与恢复</string>
+    <string name="reset_settings">重置模块设置</string>
+    <string name="reset_settings_done">重置成功，请重启设备</string>
     <string name="backup_restore_choose">请选择所需操作</string>
     <string name="do_backup">备份</string>
     <string name="do_restore">恢复</string>
