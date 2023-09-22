@@ -20,6 +20,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import io.github.libxposed.service.RemotePreferences;
 import name.monwf.customiuizer.R;
 import name.monwf.customiuizer.mods.GlobalActions;
 
@@ -27,6 +28,8 @@ public class AppHelper {
     public static final String prefsName = "customiuizer_prefs";
     public static SharedPreferences appPrefs = null;
     public static boolean moduleActive = false;
+
+    public static RemotePreferences remotePrefs = null;
     private static final String TAG = "LSPosed-Bridge";
     public static boolean silentSync = false;
     public static String RESTORED_FROM_BACKUP = "restored_from_backup";
