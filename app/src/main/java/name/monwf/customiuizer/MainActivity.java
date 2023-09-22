@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
 
     MainFragment mainFrag = null;
     SharedPreferences.OnSharedPreferenceChangeListener prefsChanged;
-    RemotePreferences remotePrefs;
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -48,16 +47,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        XposedServiceHelper.registerListener(new XposedServiceHelper.OnServiceListener() {
-            public void onServiceBind(XposedService service) {
-                AppHelper.moduleActive = true;
-                remotePrefs = (RemotePreferences) service.getRemotePreferences(AppHelper.prefsName + "_remote");
-            }
-            public void onServiceDied(XposedService service) {
-                AppHelper.moduleActive = false;
-                remotePrefs = null;
-            }
-        });
+        if (AppHelper.remotePrefs == null) {
+            XposedServiceHelper.registerListener(new XposedServiceHelper.OnServiceListener() {
+                public void onServiceBind(XposedService service) {
+                    AppHelper.moduleActive = true;
+                    AppHelper.remotePrefs = (RemotePreferences) service.getRemotePreferences(AppHelper.prefsName + "_remote");
+                }
+                public void onServiceDied(XposedService service) {
+                    AppHelper.moduleActive = false;
+                    AppHelper.remotePrefs = null;
+                }
+            });
+        }
 
 //		Helpers.updateNewModsMarking(this);
 
@@ -80,8 +81,8 @@ public class MainActivity extends AppCompatActivity {
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 //                AppHelper.log("app changed key: " + key);
                 if (key == null) {
-                    RemotePreferences.Editor prefEdit = remotePrefs.edit();
-                    for (String remoteKey:remotePrefs.getAll().keySet()) {
+                    RemotePreferences.Editor prefEdit = AppHelper.remotePrefs.edit();
+                    for (String remoteKey:AppHelper.remotePrefs.getAll().keySet()) {
                         prefEdit.remove(remoteKey);
                     }
                     prefEdit.apply();
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (ignoreKeys.contains(key)) return;
                 Object val = sharedPreferences.getAll().get(key);
-                RemotePreferences.Editor prefEdit = remotePrefs.edit();
+                RemotePreferences.Editor prefEdit = AppHelper.remotePrefs.edit();
                 if (val == null) {
                     prefEdit.remove(key);
                 }
@@ -126,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("ApplySharedPref")
     protected void onDestroy() {
-        AppHelper.moduleActive = false;
         try {
             if (prefsChanged != null) AppHelper.appPrefs.unregisterOnSharedPreferenceChangeListener(prefsChanged);
         } catch (Throwable t) {

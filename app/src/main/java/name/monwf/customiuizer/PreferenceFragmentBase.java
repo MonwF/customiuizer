@@ -433,15 +433,15 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
         try {
             input = new ObjectInputStream(act.getContentResolver().openInputStream(uri));
             Map<String, ?> entries = (Map<String, ?>)input.readObject();
-            AppHelper.syncPrefsToAnother(entries, AppHelper.appPrefs, 1, null, true);
+            AppHelper.syncPrefsToAnother(entries, AppHelper.appPrefs, 1, null, false);
             AlertDialog.Builder alert = new AlertDialog.Builder(act);
             alert.setTitle(R.string.do_restore);
             alert.setMessage(R.string.restore_ok);
             alert.setCancelable(false);
             alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
-                    int pid = android.os.Process.myPid();
-                    android.os.Process.killProcess(pid);
+                    act.finish();
+                    act.startActivity(act.getIntent());
                 }
             });
             alert.show();

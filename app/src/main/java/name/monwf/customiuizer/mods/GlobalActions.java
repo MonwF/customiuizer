@@ -56,7 +56,7 @@ import io.github.libxposed.api.XposedModuleInterface.PackageLoadedParam;
 import miui.app.MiuiFreeFormManager;
 import miui.process.ForegroundInfo;
 import miui.process.ProcessManager;
-import name.monwf.customiuizer.GateWayLauncher;
+import name.monwf.customiuizer.MainActivity;
 import name.monwf.customiuizer.MainModule;
 import name.monwf.customiuizer.R;
 import name.monwf.customiuizer.mods.utils.HookerClassHelper.MethodHook;
@@ -745,7 +745,7 @@ public class GlobalActions {
                 Object header = XposedHelpers.newInstance(headerCls);
                 XposedHelpers.setLongField(header, "id", 666);
                 Intent intent = new Intent();
-                intent.setClassName(Helpers.modulePkg, GateWayLauncher.class.getCanonicalName());
+                intent.setClassName(Helpers.modulePkg, MainActivity.class.getCanonicalName());
                 intent.putExtra("from.settings", true);
                 XposedHelpers.setObjectField(header, "intent", intent);
                 XposedHelpers.setIntField(header, "iconRes", settingsIconResId);
