@@ -937,7 +937,6 @@
     <string name="donate_level1">¡Gracias por su donación!</string>
     <string name="donate_level2">¡Gracias por su generosa donación!</string>
     <string name="donate_level3">¡Gracias por su súpergenerosa donación! 😮</string>
-    <string name="billing_error">Error al cargar información de pago, verifique su conexión</string>
     <string name="billing_canceled">¿Has cambiado de opinión? ;)</string>
     <string name="crash_dialog">¡CustoMIUIzer ha fallado!</string>
     <string name="crash_dialog_manual">Toda la información requerida ha sido recolectada</string>

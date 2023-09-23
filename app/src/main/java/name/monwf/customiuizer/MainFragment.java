@@ -297,6 +297,9 @@ public class MainFragment extends PreferenceFragmentBase {
 				else if ("ja".equals(lang)) {
 					Helpers.openURL(act, "https://github.com/MonwF/customiuizer/blob/main/README_jp.md");
 				}
+				else if ("pt".equals(lang)) {
+					Helpers.openURL(act, "https://github.com/MonwF/customiuizer/blob/main/README_pt-BR.md");
+				}
 				else {
 					Helpers.openURL(act, "https://github.com/MonwF/customiuizer");
 				}
@@ -308,7 +311,7 @@ public class MainFragment extends PreferenceFragmentBase {
 		if (config.getLocales().get(0).getCountry().equals("CN")) {
 			PreferenceEx releasesEntry = findPreference("pref_key_releases");
 			releasesEntry.setVisible(true);
-			String releasesUrl = "https://tpsx.lanzouv.com/b021ly4gj";
+			String releasesUrl = "https://rz3kv5wa4g.jiandaoyun.com/dash/650e43a383027ec3225083e9";
 			releasesEntry.setLongPressListener(new View.OnLongClickListener() {
 				@Override
 				public boolean onLongClick(View v) {

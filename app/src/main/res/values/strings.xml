@@ -984,7 +984,6 @@
     <string name="donate_level1">Thanks for your donation!</string>
     <string name="donate_level2">Thanks for your generous donation!</string>
     <string name="donate_level3">Thanks for your insanely generous donation! 😮</string>
-    <string name="billing_error">Failed to get billing information, check your internet connection</string>
     <string name="billing_canceled">Changed your mind? ;)</string>
 
     <string name="crash_dialog">CustoMIUIzer has just crashed!</string>

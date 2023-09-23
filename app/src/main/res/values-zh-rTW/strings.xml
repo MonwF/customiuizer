@@ -899,7 +899,6 @@
     <string name="donate_level1">感謝您的捐款！</string>
     <string name="donate_level2">感謝您的慷慨解囊！</string>
     <string name="donate_level3">您真是太慷慨了，非常感謝！ 😮</string>
-    <string name="billing_error">獲取帳單訊息失敗，請檢查您的網路連接</string>
     <string name="billing_canceled">改變了主意？ ;)</string>
     <string name="crash_dialog">CustoMIUIzer已崩潰！</string>
     <string name="crash_dialog_manual">所有的必要數據已經收集</string>

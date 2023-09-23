@@ -941,7 +941,6 @@
     <string name="donate_level1">Спасибо за пожертвование!</string>
     <string name="donate_level2">Спасибо за щедрое пожертвование!</string>
     <string name="donate_level3">Спасибо за безумно щедрое пожертвование! 😮</string>
-    <string name="billing_error">Не удалось получить данные биллинга, проверьте доступен ли интернет</string>
     <string name="billing_canceled">Передумали? ;)</string>
     <string name="crash_dialog">В CustoMIUIzer произошла ошибка!</string>
     <string name="crash_dialog_manual">Собраны все необходимые данные</string>

@@ -942,7 +942,6 @@
     <string name="donate_level1">Cảm ơn sự đóng góp của bạn!</string>
     <string name="donate_level2">Cám ơn vì sự hào phóng của bạn!</string>
     <string name="donate_level3">Bạn thật hào phóng, cảm ơn bạn rất nhiều! 😮</string>
-    <string name="billing_error">Không thể tìm nạp thông tin thanh toán, vui lòng kiểm tra kết nối mạng của bạn</string>
     <string name="billing_canceled">Đổi ý chưa? ;)</string>
     <string name="crash_dialog">CustoMIUIzer đã bị lỗi!</string>
     <string name="crash_dialog_manual">Tất cả các dữ liệu cần thiết đã được thu thập</string>

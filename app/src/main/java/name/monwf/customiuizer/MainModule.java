@@ -63,11 +63,11 @@ public class MainModule extends XposedModule {
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @Nullable String key) {
                 Object val = sharedPreferences.getAll().get(key);
                 if (val == null) {
-                    XposedHelpers.log(processName + " key removed: " + key);
+//                    XposedHelpers.log(processName + " key removed: " + key);
                     mPrefs.remove(key);
                 }
                 else {
-                    XposedHelpers.log(processName + " key changed: " + key);
+//                    XposedHelpers.log(processName + " key changed: " + key);
                     mPrefs.put(key, val);
                 }
                 if (!ignoreKeys.contains(key)) {

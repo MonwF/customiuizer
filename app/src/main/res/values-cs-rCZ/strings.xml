@@ -949,7 +949,6 @@
     <string name="donate_level1">Děkujeme vám za váš dar!</string>
     <string name="donate_level2">Děkujeme za váš velkorysý dar!</string>
     <string name="donate_level3">Děkujeme za váš nesmírně štědrý dar! 😮</string>
-    <string name="billing_error">Nepodařilo se získat fakturační údaje, zkontrolujte připojení k internetu</string>
     <string name="billing_canceled">Změnil jsi názor\? ;)</string>
     <string name="crash_dialog">CustoMIUIzer právě spadl!</string>
     <string name="crash_dialog_manual">Byly shromážděny všechny potřebné údaje</string>
