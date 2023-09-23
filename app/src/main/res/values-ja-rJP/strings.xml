@@ -940,7 +940,6 @@
     <string name="donate_level1">寄付をして頂き激しく感謝します!</string>
     <string name="donate_level2">寛大な寄付をして頂き激しく感謝します!</string>
     <string name="donate_level3">凄まじい寛大な寄付をして頂き激しく感謝します! 😮</string>
-    <string name="billing_error">課金情報の取得に失敗しました。インターネット接続を確認してください。</string>
     <string name="billing_canceled">気が変りましたか? ;)</string>
     <string name="crash_dialog">CustoMIUIzerがクラッシュしました!</string>
     <string name="crash_dialog_manual">必要なデータはすべて収集されています</string>

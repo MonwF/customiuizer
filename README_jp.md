@@ -8,7 +8,7 @@ Android 12/13ベースなMIUI 13/14に対応しています。
 ### ダウンロード
 * [リリース](https://github.com/MonwF/customiuizer/releases)
 * LSPosedのリポジトリ
-* [テスト版リリース](https://tpsx.lanzouv.com/b021ly4gj) パスワード: `miui`
+* [テスト版リリース](https://rz3kv5wa4g.jiandaoyun.com/dash/650e43a383027ec3225083e9)
 
 ### バックアップ機能
 バックアップは「/sdcard/Documents/CustoMIUIzer/」に保存されます。

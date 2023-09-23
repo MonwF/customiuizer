@@ -13,7 +13,7 @@ For MIUI 13 & 14 based on android 12 and 13
 ### Dowload
 * [Releases](https://github.com/MonwF/customiuizer/releases)
 * LSPosed Repo
-* [Test Releases](https://tpsx.lanzouv.com/b021ly4gj) password: `miui`
+* [Test Releases](https://rz3kv5wa4g.jiandaoyun.com/dash/650e43a383027ec3225083e9)
 
 ### Backup functionality
 Backups are stored in /sdcard/Documents/CustoMIUIzer/

@@ -802,7 +802,6 @@
     <string name="donate_level1">Dziękujemy za darowiznę!</string>
     <string name="donate_level2">Dziękujemy za hojną darowiznę!</string>
     <string name="donate_level3">Dziękujemy za niesamowicie hojną darowiznę! 😮</string>
-    <string name="billing_error">Pobranie informacji rozliczeniowych nie powiodło się. Sprawdź połączenie internetowe</string>
     <string name="billing_canceled">Zmieniłeś zdanie?</string>
     <string name="crash_dialog">CustoMIUIzer właśnie uległ awarii!</string>
     <string name="crash_dialog_manual">Wszystkie niezbędne dane zostały zebrane</string>

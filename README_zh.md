@@ -33,8 +33,7 @@
 * 允许限制系统app使用网络
 
 ### 下载
-* [lanzou下载](https://tpsx.lanzouv.com/b021ly4gj)
-密码: `miui`
+* [lanzou下载](https://rz3kv5wa4g.jiandaoyun.com/dash/650e43a383027ec3225083e9)
 * [Releases](https://github.com/MonwF/customiuizer/releases)
 * LSPosed 仓库
 

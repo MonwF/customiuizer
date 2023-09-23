@@ -943,7 +943,6 @@
     <string name="donate_level1">Obrigado pela sua doação!</string>
     <string name="donate_level2">Obrigado por sua generosa doação!</string>
     <string name="donate_level3">Obrigado por sua doação insanamente generosa! 😮</string>
-    <string name="billing_error">Falha ao obter informações de cobrança, verifique sua conexão com a Internet</string>
     <string name="billing_canceled">Mudou sua mente? ;)</string>
     <string name="crash_dialog">O CustoMIUIzer acabou de travar!</string>
     <string name="crash_dialog_manual">Todos os dados necessários foram coletados</string>

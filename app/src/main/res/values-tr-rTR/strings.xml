@@ -928,7 +928,6 @@ ss - iki basamaklı saniye(09)</string>
     <string name="donate_level1">Bağışınız için teşekkürler!</string>
     <string name="donate_level2">Cömert bağışınız için teşekkürler!</string>
     <string name="donate_level3">Delicesine cömert bağışınız için teşekkürler! Çeviri:H.KÜPELİ andheartman@gmail.com 😮</string>
-    <string name="billing_error">Fatura bilgileri alınamadı, internet bağlantınızı kontrol edin</string>
     <string name="billing_canceled">Fikrini mi değiştirdin LANN? ;)</string>
     <string name="crash_dialog">CustoMIUIzer az önce çöktü aq!</string>
     <string name="crash_dialog_manual">Gerekli tüm veriler toplandı</string>
