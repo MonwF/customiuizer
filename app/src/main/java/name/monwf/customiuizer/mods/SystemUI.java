@@ -53,6 +53,7 @@ import android.os.Parcel;
 import android.os.PowerManager;
 import android.os.UserHandle;
 import android.provider.Settings;
+import android.telephony.SubscriptionManager;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.AttributeSet;
@@ -2468,8 +2469,11 @@ public class SystemUI {
                     }
                 }
                 int subId = (int) XposedHelpers.getObjectField(mobileIconState, "subId");
-                if ((MainModule.mPrefs.getBoolean("system_statusbaricons_sim1") && subId == 1)
-                    || (MainModule.mPrefs.getBoolean("system_statusbaricons_sim2") && subId == 2)
+                int dataSubId = SubscriptionManager.getDefaultDataSubscriptionId();
+                int slotId = SubscriptionManager.getSlotIndex(subId);
+                if ((MainModule.mPrefs.getBoolean("system_statusbaricons_sim1") && slotId == 0)
+                    || (MainModule.mPrefs.getBoolean("system_statusbaricons_sim2") && slotId == 1)
+                    || (MainModule.mPrefs.getBoolean("system_statusbaricons_sim_nodata") && subId != dataSubId)
                 ) {
                     XposedHelpers.setObjectField(mobileIconState, "visible", false);
                     return;
