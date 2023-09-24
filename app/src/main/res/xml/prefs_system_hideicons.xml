@@ -95,6 +95,11 @@
 		android:defaultValue="false" />
 
 	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_sim_nodata"
+		android:title="@string/system_statusbaricons_sim_nodata_title"
+		android:defaultValue="false" />
+
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbaricons_nosims"
 		android:title="@string/system_statusbaricons_nosims_title"
 		android:defaultValue="false" />

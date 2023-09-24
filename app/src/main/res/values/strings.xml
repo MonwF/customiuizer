@@ -41,6 +41,7 @@
     <string name="system_statusbaricons_signal_title">Mobile network signal</string>
     <string name="system_statusbaricons_hidesignal_wificonnected_title">Only when connected to Wi-Fi</string>
     <string name="system_statusbaricons_nosims_title">No SIM card</string>
+    <string name="system_statusbaricons_sim_nodata_title">None Data SIM card</string>
     <string name="system_statusbaricons_volte_title">VoLTE</string>
     <string name="system_statusbaricons_vowifi_title" translatable="false">VoWiFi</string>
     <string name="system_statusbaricons_roaming_title">Roaming</string>

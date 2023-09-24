@@ -394,6 +394,7 @@ public class MainModule extends XposedModule {
             if (mPrefs.getBoolean("system_statusbaricons_signal")
                 || mPrefs.getBoolean("system_statusbaricons_sim1")
                 || mPrefs.getBoolean("system_statusbaricons_sim2")
+                || mPrefs.getBoolean("system_statusbaricons_sim_nodata")
                 || mPrefs.getBoolean("system_statusbaricons_roaming")
                 || mPrefs.getBoolean("system_statusbaricons_volte")
             ) SystemUI.HideIconsSignalHook(lpparam);
