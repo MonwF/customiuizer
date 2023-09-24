@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         prefsChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                if (AppHelper.remotePrefs == null) return;
 //                AppHelper.log("app changed key: " + key);
                 if (key == null) {
                     RemotePreferences.Editor prefEdit = AppHelper.remotePrefs.edit();

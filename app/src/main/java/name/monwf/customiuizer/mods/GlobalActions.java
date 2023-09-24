@@ -157,7 +157,7 @@ public class GlobalActions {
                 if (action == null) return;
 
                 if (action.equals(ACTION_PREFIX + "RestartSystemUI")) {
-                    Process.sendSignal(Process.myPid(), Process.SIGNAL_KILL);
+                    Process.killProcess(Process.myPid());
                 }
                 else if (action.equals(ACTION_PREFIX + "FastReboot")) {
                     PowerManager pm = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
