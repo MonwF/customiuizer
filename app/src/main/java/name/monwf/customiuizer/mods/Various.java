@@ -410,6 +410,16 @@ public class Various {
 
 	public static void PersistBatteryOptimizationHook(PackageLoadedParam lpparam) {
 		ModuleHelper.hookAllMethods("com.miui.powerkeeper.utils.CommonAdapter", lpparam.getClassLoader(), "addPowerSaveWhitelistApps", HookerClassHelper.DO_NOTHING);
+		ModuleHelper.hookAllMethods("com.miui.powerkeeper.millet.MilletPolicy", lpparam.getClassLoader(), "dealSleepModeWhiteList", new MethodHook() {
+			@Override
+			protected void before(final BeforeHookCallback param) throws Throwable {
+				boolean addWhiteList = (boolean) param.getArgs()[1];
+				if (addWhiteList) {
+					param.returnAndSkip(null);
+				}
+			}
+		});
+		ModuleHelper.findAndHookMethod("com.miui.powerkeeper.statemachine.ForceDozeController", lpparam.getClassLoader(), "restoreWhiteListAppsIfQuitForceIdle", HookerClassHelper.DO_NOTHING);
 	}
 
 	private static void showSideBar(View view, int dockLocation) {
