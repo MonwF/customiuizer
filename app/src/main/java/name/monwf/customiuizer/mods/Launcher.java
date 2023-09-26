@@ -34,6 +34,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -149,6 +150,25 @@ public class Launcher {
     }
 
     public static void HotSeatSwipesHook(final PackageLoadedParam lpparam) {
+        ModuleHelper.findAndHookMethod("com.miui.home.launcher.overlay.assistant.AssistantOverlaySwipeController", lpparam.getClassLoader(), "canInterceptTouch", MotionEvent.class, new MethodHook() {
+            private Rect mHotHeatTouchRect = null;
+            @Override
+            protected void after(final AfterHookCallback param) throws Throwable {
+                boolean canInterceptTouch = (boolean) param.getResult();
+                if (canInterceptTouch) {
+                    if (mHotHeatTouchRect == null) {
+                        Object mLauncher = XposedHelpers.getObjectField(param.getThisObject(), "mLauncher");
+                        FrameLayout mHotSeats = (FrameLayout) XposedHelpers.callMethod(mLauncher, "getHotSeats");
+                        mHotHeatTouchRect = new Rect();
+                        mHotSeats.getHitRect(mHotHeatTouchRect);
+                    }
+                    MotionEvent motionEvent = (MotionEvent) param.getArgs()[0];
+                    if (mHotHeatTouchRect.contains((int) motionEvent.getX(), (int) motionEvent.getY())) {
+                        param.setResult(false);
+                    }
+                }
+            }
+        });
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.hotseats.HotSeats", lpparam.getClassLoader(), "dispatchTouchEvent", MotionEvent.class, new MethodHook() {
             @Override
             protected void before(final BeforeHookCallback param) throws Throwable {
