@@ -1048,7 +1048,7 @@ public class SystemUI {
             }
         });
 
-        MethodHook beforeUpdate = new MethodHook() {
+        MethodHook stateUpdateHook = new MethodHook() {
             @Override
             protected void before(final BeforeHookCallback param) throws Throwable {
                 Object mobileIconState = param.getArgs()[0];
@@ -1062,8 +1062,6 @@ public class SystemUI {
                     XposedHelpers.setAdditionalInstanceField(param.getThisObject(), "subStrengthId", level % 10);
                 }
             }
-        };
-        MethodHook afterUpdate = new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
                 int subStrengthId = (int) XposedHelpers.getAdditionalInstanceField(param.getThisObject(), "subStrengthId");
@@ -1074,9 +1072,8 @@ public class SystemUI {
                 XposedHelpers.callMethod(mSmallRoaming, "setVisibility", 0);
             }
         };
-        ModuleHelper.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.getClassLoader(), "applyMobileState", beforeUpdate);
-        ModuleHelper.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.getClassLoader(), "initViewState", afterUpdate);
-        ModuleHelper.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.getClassLoader(), "updateState", afterUpdate);
+        ModuleHelper.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.getClassLoader(), "initViewState", stateUpdateHook);
+        ModuleHelper.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.getClassLoader(), "updateState", stateUpdateHook);
 
         MethodHook resetImageDrawable = new MethodHook() {
             @Override
@@ -1642,23 +1639,20 @@ public class SystemUI {
         });
     }
     public static void MobileTypeSingleHook(PackageLoadedParam lpparam) {
-        MethodHook showSingleMobileType = new MethodHook(XposedInterface.PRIORITY_HIGHEST) {
+        MethodHook singleTypeHook = new MethodHook(XposedInterface.PRIORITY_HIGHEST) {
             @Override
             protected void before(final BeforeHookCallback param) throws Throwable {
                 Object mobileIconState = param.getArgs()[0];
                 XposedHelpers.setObjectField(mobileIconState, "showMobileDataTypeSingle", true);
             }
-        };
-        ModuleHelper.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.getClassLoader(), "applyMobileState", showSingleMobileType);
-
-        MethodHook afterUpdate = new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
                 Object mMobileLeftContainer = XposedHelpers.getObjectField(param.getThisObject(), "mMobileLeftContainer");
                 XposedHelpers.callMethod(mMobileLeftContainer, "setVisibility", 8);
             }
         };
-        ModuleHelper.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.getClassLoader(), "applyMobileState", afterUpdate);
+        ModuleHelper.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.getClassLoader(), "initViewState", singleTypeHook);
+        ModuleHelper.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.getClassLoader(), "updateState", singleTypeHook);
 
         ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.StatusBarMobileView", lpparam.getClassLoader(), "init", new MethodHook() {
             @Override
@@ -2487,7 +2481,8 @@ public class SystemUI {
                 }
             }
         };
-        ModuleHelper.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.getClassLoader(), "applyMobileState", beforeUpdate);
+        ModuleHelper.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.getClassLoader(), "initViewState", beforeUpdate);
+        ModuleHelper.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.getClassLoader(), "updateState", beforeUpdate);
     }
 
     private static boolean checkSlot(String slotName) {
