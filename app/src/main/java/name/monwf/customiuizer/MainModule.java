@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.provider.Settings;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -208,6 +209,10 @@ public class MainModule extends XposedModule {
             Context mContext = ModuleHelper.findContext(lpparam);
             long restartTime = Settings.System.getLong(mContext.getContentResolver(), "systemui_restart_time", 0L);
             long currentTime = java.lang.System.currentTimeMillis();
+            Class<?> NetworkSpeedViewCls = XposedHelpers.findClassIfExists("com.android.systemui.statusbar.views.NetworkSpeedView", lpparam.getClassLoader());
+            if (NetworkSpeedViewCls != null) {
+                SystemUI.newStyle = LinearLayout.class.isAssignableFrom(NetworkSpeedViewCls);
+            }
             ModuleHelper.findAndHookMethod("com.android.systemui.SystemUIApplication", lpparam.getClassLoader(), "onCreate", new MethodHook() {
                 private boolean isHooked = false;
                 @Override
