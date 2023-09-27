@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.statusbar.views.NetworkSpeedView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:tag="slot_text_icon"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    tools:ignore="MissingClass">
+    <TextView
+        android:id="@+id/network_speed_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:singleLine="false"/>
+    <TextView
+        android:id="@+id/network_speed_unit"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="start"
+        android:layout_weight="1"
+        android:maxLines="1"
+        android:visibility="gone"
+        android:singleLine="true"/>
+</com.android.systemui.statusbar.views.NetworkSpeedView>
