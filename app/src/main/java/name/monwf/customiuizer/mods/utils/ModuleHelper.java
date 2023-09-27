@@ -28,7 +28,6 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import io.github.libxposed.api.XposedModuleInterface;
-import name.monwf.customiuizer.BuildConfig;
 import name.monwf.customiuizer.MainModule;
 import name.monwf.customiuizer.R;
 import name.monwf.customiuizer.mods.GlobalActions;
