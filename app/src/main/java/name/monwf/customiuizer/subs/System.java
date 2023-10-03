@@ -598,7 +598,7 @@ public class System extends SubFragment {
 							netspeedFontSizePref.setValue(16, true);
 						}
 						else {
-							netspeedFontSizePref.setValue(14, true);
+							netspeedFontSizePref.setValue(13, true);
 						}
 						return true;
 					}

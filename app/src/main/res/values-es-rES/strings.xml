@@ -935,14 +935,10 @@
     <string name="support_donate_inapp_summ">Deja que Google se encargue de todo</string>
     <string name="support_donate_other_title">Monedas obsoletas</string>
     <string name="donate_level1">¡Gracias por su donación!</string>
-    <string name="donate_level2">¡Gracias por su generosa donación!</string>
-    <string name="donate_level3">¡Gracias por su súpergenerosa donación! 😮</string>
-    <string name="billing_canceled">¿Has cambiado de opinión? ;)</string>
     <string name="crash_dialog">¡CustoMIUIzer ha fallado!</string>
     <string name="crash_dialog_manual">Toda la información requerida ha sido recolectada</string>
     <string name="crash_dialog_manual_size">Tamaño del reporte</string>
     <string name="crash_dialog_manual_desc">Describa su problema (en Inglés si es posible):</string>
-    <string name="crash_dialog_manual_desc2">Describa las acciones que causaron la falla\n(En inglés si es posible):</string>
     <string name="crash_dialog_note">Sin información de contacto, ¡no recibirás respuesta de este reporte!</string>
     <string name="crash_needs_inet">Se requiere conexión a internet</string>
     <string name="crash_needs_desc">La descripción no puede estar vacía</string>
@@ -959,8 +955,6 @@
     <string name="array_color_light">Claro</string>
     <string name="notselected">No seleccionado</string>
     <string name="warning">¡Atención!</string>
-    <string name="warning_blacklist">La opción de lista negra/blanca está activa en el framework de Xposed, los mods no funcionarán de manera adecuada.</string>
-    <string name="warning_blacklist_sdk">Además, la versión instalada de Google Play tiene más limitaciones. Considere reinstalarlo desde otra fuente.</string>
     <string name="warning_scope">El scope se encuentra activo para este módulo, puede hacer que algunos mods no funcionen de manera correcta.</string>
     <string name="warning_unsupported_os">Android %1$s no es soportado, los mods pueden no funcionar de manera correcta.</string>
     <string name="open_xposed">Administrar módulos Xposed</string>
@@ -976,12 +970,10 @@
     <string name="do_restore">Restaurar</string>
     <string name="storage_read_only">Su almacenamiento externo es de solo lectura</string>
     <string name="storage_unavailable">No se tiene acceso a ningún almacenamiento</string>
-    <string name="storage_cannot_mkdir">Error al crear directorio de copia de seguridad</string>
     <string name="storage_cannot_backup">Error al crear copia de seguridad</string>
     <string name="storage_cannot_restore">No se encontró copia de seguridad</string>
     <string name="backup_ok">¡Copia de seguridad creada correctamente!</string>
     <string name="restore_ok">¡Los ajustes se restauraron correctamente!</string>
-    <string name="backup_restore_info">Sus ajustes han sido restaurados mediante Google Cloud Backup. Por favor realice un reinicio rápido después de activar el módulo Xposed.</string>
     <string name="prefs_migration_success">Los ajustes del módulo fueron migrados de manera exitosa a la nueva versión de LSPosed/EdXposed. Reinicie para aplicar cambios.</string>
     <string name="prefs_migration_failure">Error al migrar los ajustes del módulo a la versión nueva de LSPosed/EdXposed. Deberá de usar la función de restauración o configurar desde cero los mods.</string>
     <string name="update_available">Actualización disponible ⚠</string>
@@ -1020,7 +1012,6 @@
     <string name="delete_item_info">Mantenga presionado para borrar</string>
     <string name="change_icon">Cambiar icono</string>
     <string name="guide_search">Buscar mods por nombre.\nMántenga presionado para ver los nuevos mods.</string>
-    <string name="guide_softreboot">No olvide aplicar los mods usando reinicio rápido.\nMods ⟲ dinámicos solo lo requieren una vez.\nMás información en la sección A cerca de.</string>
     <string name="guide_marknew">Nuevos mods desde la actualización anterior\nse puede marcar para una mejor identificación</string>
     <string name="permission_scan">¿Desea obtener una lista de las redes/dispositivo o no?</string>
     <string name="permission_permanent">Deberá de habilitar manualmente el permiso para esta opción. ¡Bien hecho!</string>

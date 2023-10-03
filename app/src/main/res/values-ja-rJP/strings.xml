@@ -938,14 +938,10 @@
     <string name="support_donate_inapp_summ">Google上ですべて任せます</string>
     <string name="support_donate_other_title">旧通貨</string>
     <string name="donate_level1">寄付をして頂き激しく感謝します!</string>
-    <string name="donate_level2">寛大な寄付をして頂き激しく感謝します!</string>
-    <string name="donate_level3">凄まじい寛大な寄付をして頂き激しく感謝します! 😮</string>
-    <string name="billing_canceled">気が変りましたか? ;)</string>
     <string name="crash_dialog">CustoMIUIzerがクラッシュしました!</string>
     <string name="crash_dialog_manual">必要なデータはすべて収集されています</string>
     <string name="crash_dialog_manual_size">生成されるレポートのサイズ</string>
     <string name="crash_dialog_manual_desc">発生した問題を説明してください (できれば英語でお願いします):</string>
-    <string name="crash_dialog_manual_desc2">クラッシュをした経緯を説明してください\n(できれば英語でお願いします):</string>
     <string name="crash_dialog_note">連絡先が記載されていません。このレポートに対する回答は得られません!</string>
     <string name="crash_needs_inet">インターネット接続が必要です</string>
     <string name="crash_needs_desc">説明文を空白にすることはできません</string>
@@ -962,8 +958,6 @@
     <string name="array_color_light">ライト</string>
     <string name="notselected">未選択</string>
     <string name="warning">警告!</string>
-    <string name="warning_blacklist">Xposed Framework上で「ブラック/ホワイトリスト オプション」が有効化されているため、Modが正常に動作しない可能性があります。</string>
-    <string name="warning_blacklist_sdk">インストールされたモジュールはGoogle Play版です。このバージョンは多くの制限事項があります。他のソースからインストールを検討してください。</string>
     <string name="warning_scope">このモジュールはアクティベーションスコープが有効になっているため、一部のModが正常に動作しない可能性があります。</string>
     <string name="warning_unsupported_os">Android %1$sは非対応です。Modが正しく動作しない可能性があります。</string>
     <string name="open_xposed">Xposedモジュールの管理</string>
@@ -979,12 +973,10 @@
     <string name="do_restore">復元</string>
     <string name="storage_read_only">外部ストレージが読み取り専用です</string>
     <string name="storage_unavailable">適切なストレージが確保できません</string>
-    <string name="storage_cannot_mkdir">バックアップのディレクトリの作成に失敗しました</string>
     <string name="storage_cannot_backup">バックアップファイルの作成に失敗しました</string>
     <string name="storage_cannot_restore">設定のバックアップがありません</string>
     <string name="backup_ok">設定のバックアップが完了しました!</string>
     <string name="restore_ok">設定の復元が完了しました!</string>
-    <string name="backup_restore_info">Googleクラウドバックアップ経由で設定が復元されました。Xposedモジュールの有効後にソフトリブートを行なってください。</string>
     <string name="prefs_migration_success">LSPosed、EdXposedの新しいバージョンで動作するようにモジュールの設定を移行させる作業に成功しました。再起動後に変更が適用されます。</string>
     <string name="prefs_migration_failure">LSPosed、EdXposedの新しいバージョンで動作するようにモジュールの設定を移行させる作業に失敗しました。復元機能を使用するか、再度Modの設定をし直す必要があります。</string>
     <string name="update_available">アップデートが可能です ⚠</string>
@@ -1023,7 +1015,6 @@
     <string name="delete_item_info">削除する項目を長押しします</string>
     <string name="change_icon">アイコンの変更</string>
     <string name="guide_search">Modを名前で検索します。\n長押しで新しいModの一覧を表示します。</string>
-    <string name="guide_softreboot">ソフトリブートでModの適用を忘れないでください。\n動的な⟲のModは1度だけソフトリブートが必要です。\n詳細はアプリについての項目にあります。</string>
     <string name="guide_marknew">前回のアップデート以降のModは\nマークをする事でよりわかりやすくなります。</string>
     <string name="permission_scan">ネットワークまたはデバイスのリストを取得しますか?</string>
     <string name="permission_permanent">このオプションは手動で許可する必要があります。グッジョブ!!</string>

@@ -296,18 +296,7 @@
 		<item>4</item>
 	</string-array>
 
-	<string-array name="collapsetitles">
-		<item>@string/array_default</item>
-		<item>@string/array_collapse_initial</item>
-		<item>@string/array_collapse_permanent</item>
-	</string-array>
-	<string-array name="collapsetitles_val">
-		<item>1</item>
-		<item>2</item>
-		<item>3</item>
-	</string-array>
-
-	<string-array name="defaultactions">
+    <string-array name="defaultactions">
 		<item>@string/array_default</item>
 		<item>@string/array_allow</item>
 		<item>@string/array_deny</item>
@@ -353,20 +342,7 @@
 		<item>3</item>
 	</string-array>
 
-	<string-array name="iconlabletoasts">
-		<item>@string/array_default</item>
-		<item>@string/array_toasts_icon</item>
-		<item>@string/array_toasts_label</item>
-		<item>@string/array_toasts_both</item>
-	</string-array>
-	<string-array name="iconlabletoasts_val">
-		<item>1</item>
-		<item>2</item>
-		<item>3</item>
-		<item>4</item>
-	</string-array>
-
-	<string-array name="lightups">
+    <string-array name="lightups">
 		<item>@string/array_default</item>
 		<item>@string/array_all</item>
 		<item>@string/array_allbutanim</item>
@@ -532,22 +508,7 @@
 		<item>3</item>
 	</string-array>
 
-	<string-array name="marknewmods">
-		<item>@string/array_never</item>
-		<item>@string/array_1day</item>
-		<item>@string/array_3days</item>
-		<item>@string/array_week</item>
-		<item>@string/array_always</item>
-	</string-array>
-	<string-array name="marknewmods_val">
-		<item>0</item>
-		<item>1</item>
-		<item>2</item>
-		<item>3</item>
-		<item>4</item>
-	</string-array>
-
-	<string-array name="visualizercolor">
+    <string-array name="visualizercolor">
 		<item>@string/array_match</item>
 		<item>@string/array_dynamic</item>
 		<item>@string/array_static</item>
@@ -614,18 +575,7 @@
 		<item>midi</item>
 	</string-array>
 
-	<string-array name="uimode">
-		<item>@string/array_color_auto</item>
-		<item>@string/array_color_light</item>
-		<item>@string/array_color_dark</item>
-	</string-array>
-	<string-array name="uimode_val">
-		<item>0</item>
-		<item>1</item>
-		<item>2</item>
-	</string-array>
-
-	<string-array name="openwithtest">
+    <string-array name="openwithtest">
 		<item>@string/array_image</item>
 		<item>@string/array_audio</item>
 		<item>@string/array_video</item>
@@ -645,28 +595,7 @@
 		<item>3</item>
 	</string-array>
 
-	<string-array name="vibration">
-		<item>@string/array_no_vibration</item>
-		<item>@string/array_single_short</item>
-		<item>@string/array_single_long</item>
-		<item>@string/array_ticktock</item>
-		<item>@string/array_waltz</item>
-		<item>@string/array_heartbeat</item>
-		<item>@string/array_zig</item>
-		<item>@string/array_own</item>
-	</string-array>
-	<string-array name="vibration_val">
-		<item>0</item>
-		<item>1</item>
-		<item>2</item>
-		<item>3</item>
-		<item>4</item>
-		<item>5</item>
-		<item>6</item>
-		<item>7</item>
-	</string-array>
-
-	<string-array name="albumartscale">
+    <string-array name="albumartscale">
 		<item>@string/array_default</item>
 		<item>@string/array_scale_fit</item>
 		<item>@string/array_scale_cover</item>
@@ -779,12 +708,8 @@
 		<item>3</item>
 <!--		<item>4</item>-->
 	</string-array>
-	<array name="config_forbidenLongScreenshot">
-		<item>com.tencent.map</item>
-		<item>com.miui.calculator</item>
-	</array>
 
-	<string-array name="inactivebrightness">
+    <string-array name="inactivebrightness">
 		<item>@string/array_default</item>
 		<item>@string/array_displayonly</item>
 		<item>@string/array_hide</item>
@@ -825,16 +750,7 @@
 		<item>-1</item>
 	</string-array>
 
-	<string-array name="secondsync">
-		<item>@string/array_second_beginning</item>
-		<item>@string/array_second_end</item>
-	</string-array>
-	<string-array name="secondsync_val">
-		<item>0</item>
-		<item>1</item>
-	</string-array>
-
-	<string-array name="airplanemodeconfigs">
+    <string-array name="airplanemodeconfigs">
 		<item>@string/array_keep</item>
 		<item>@string/array_turn_off</item>
 		<item>@string/array_turn_off_disable</item>
@@ -863,7 +779,7 @@
 		<item>4</item>
 	</string-array>
 
-	<string-array name="five_state_val">
+    <string-array name="five_state_val">
 		<item>1</item>
 		<item>2</item>
 		<item>3</item>

@@ -912,14 +912,10 @@
     <string name="support_donate_inapp_summ">由Google处理</string>
     <string name="support_donate_other_title">过时货币</string>
     <string name="donate_level1">感谢您的捐款！</string>
-    <string name="donate_level2">感谢您的慷慨解囊！</string>
-    <string name="donate_level3">您真是太慷慨了，非常感谢！ 😮</string>
-    <string name="billing_canceled">改变了主意？ ;)</string>
     <string name="crash_dialog">CustoMIUIzer已崩溃！</string>
     <string name="crash_dialog_manual">所有的必要数据已经收集</string>
     <string name="crash_dialog_manual_size">已生成的报告大小</string>
     <string name="crash_dialog_manual_desc">请描述您的问题(尽量使用英语)：</string>
-    <string name="crash_dialog_manual_desc2">请描述导致此次崩溃的动作\n(尽量使用英语)：</string>
     <string name="crash_dialog_note">如果您没有提供联系信息，您不会得到该报告的回复！</string>
     <string name="crash_needs_inet">需要互联网连接</string>
     <string name="crash_needs_desc">描述不能为空</string>
@@ -936,8 +932,6 @@
     <string name="array_color_light">亮</string>
     <string name="notselected">未选择</string>
     <string name="warning">警告！</string>
-    <string name="warning_blacklist">Xposed框架中的黑/白名单选项已激活，可能会阻止模块正常工作。</string>
-    <string name="warning_blacklist_sdk">此外，从Google Play安装的模块版本限制比较多，请从其他来源重新安装。</string>
     <string name="open_xposed">管理Xposed模块</string>
     <string name="soft_reboot">软重启</string>
     <string name="soft_reboot_ask">现在执行软重启吗？</string>
@@ -951,12 +945,10 @@
     <string name="do_restore">恢复</string>
     <string name="storage_read_only">您的外部存储是只读的</string>
     <string name="storage_unavailable">无法访问任何合适的存储空间</string>
-    <string name="storage_cannot_mkdir">创建备份目录失败</string>
     <string name="storage_cannot_backup">创建备份文件失败</string>
     <string name="storage_cannot_restore">没有找到设置备份</string>
     <string name="backup_ok">设置备份成功！</string>
     <string name="restore_ok">设置恢复成功！</string>
-    <string name="backup_restore_info">您的设置已通过Google Cloud Backup恢复。请在启用Xposed模块后进行软重启。</string>
     <string name="prefs_migration_success">模块设置已经成功迁移到EdXposed新版本。请重新启动应用更改。</string>
     <string name="prefs_migration_failure">模块设置无法迁移到EdXposed新版本。您必须使用恢复功能或从头开始配置模块。</string>
     <string name="update_available">更新可用⚠</string>
@@ -995,7 +987,6 @@
     <string name="delete_item_info">长按要删除的项目</string>
     <string name="change_icon">更改图标</string>
     <string name="guide_search">按名称搜索模块。\n长按显示新模块的列表。</string>
-    <string name="guide_softreboot">别忘了使用软重启应用模块。\n动态⟲模块仅需执行一次。\n更多信息请查看关于页面。</string>
     <string name="guide_marknew">醒目显示新模块</string>
     <string name="permission_scan">您是否要获取网络/设备列表?</string>
     <string name="permission_permanent">现在您必须手动启用此选项的权限。很好！</string>
