@@ -493,8 +493,6 @@
     <string name="launcher_gestures_activity">Hoạt động để khởi động</string>
     <string name="launcher_title">Trình khởi chạy</string>
     <string name="launcher_summ">Hiển thị các mod cho trình khởi chạy đã chọn. Chỉ là một công cụ hỗ trợ trực quan và không có tác dụng nào khác đối với mod.</string>
-    <string name="launcher_compat_title">Chế độ hiệu năng</string>
-    <string name="launcher_compat_summ">Một cách khác để áp dụng tất cả các trình khởi chạy đã mod</string>
     <string name="launcher_infinitescroll_title">Cuộn vô hạn</string>
     <string name="launcher_infinitescroll_summ">Nhảy từ trang cuối lên trang đầu và ngược lại</string>
     <string name="launcher_noclockhide_title">Không ẩn đồng hồ</string>

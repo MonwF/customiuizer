@@ -472,8 +472,6 @@ ss - iki basamaklı saniye(09)</string>
     <string name="launcher_gestures_activity">Başlatma etkinliği</string>
     <string name="launcher_title">Başlatıcı</string>
     <string name="launcher_summ">Seçilen başlatıcı için modları görüntüleyin. Yalnızca görsel yardım amaçlıdır, modlar üzerinde herhangi bir etkisi yoktur.</string>
-    <string name="launcher_compat_title">Performans modu</string>
-    <string name="launcher_compat_summ">Tüm başlatıcı modlarını uygulamanın alternatif yöntemi</string>
     <string name="launcher_infinitescroll_title">Sonsuz kaydırma</string>
     <string name="launcher_infinitescroll_summ">Son sayfadan birinciye atlayın veya bunun tersine</string>
     <string name="launcher_noclockhide_title">Saati gizleme</string>

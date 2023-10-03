@@ -466,8 +466,6 @@
     <string name="launcher_gestures_activity">要啟動的活動</string>
     <string name="launcher_title">啟動器</string>
     <string name="launcher_summ">顯示所選啟動器的模組。只是視覺輔助，不會對模組有其他影響。</string>
-    <string name="launcher_compat_title">性能模式</string>
-    <string name="launcher_compat_summ">應用所有啟動器模組的替代方法</string>
     <string name="launcher_infinitescroll_title">無限滾動</string>
     <string name="launcher_infinitescroll_summ">從末頁跳到首頁，反之亦然</string>
     <string name="launcher_noclockhide_title">不隱藏時鐘</string>

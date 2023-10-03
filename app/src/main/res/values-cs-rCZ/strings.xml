@@ -494,8 +494,6 @@
     <string name="launcher_gestures_activity">Aktivita k zahájení</string>
     <string name="launcher_title">Launcher (spouštěč)</string>
     <string name="launcher_summ">Zobrazit mody pro vybraný launcher. Pouze pro vizuální podporu, nemá žádný vliv na mody.</string>
-    <string name="launcher_compat_title">Režim výkonu</string>
-    <string name="launcher_compat_summ">Alternativní metoda použití všech modů spouštěče</string>
     <string name="launcher_infinitescroll_title">Nekonečné posouvání</string>
     <string name="launcher_infinitescroll_summ">Skok z poslední stránky na první a naopak</string>
     <string name="launcher_noclockhide_title">Neskrývat hodiny</string>

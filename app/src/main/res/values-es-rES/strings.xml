@@ -489,8 +489,6 @@
     <string name="launcher_gestures_activity">Actividad para lanzar</string>
     <string name="launcher_title">Lanzador</string>
     <string name="launcher_summ">Mostrar mods para el lanzador seleccionado. Sólo para ayuda visual, no tiene ningún efecto en los mods.</string>
-    <string name="launcher_compat_title">Modo rendimiento</string>
-    <string name="launcher_compat_summ">Método alternativo para aplicar todos los mods del lanzador</string>
     <string name="launcher_infinitescroll_title">Desplazamiento infinito</string>
     <string name="launcher_infinitescroll_summ">Saltar de la última página a la primera, y viceversa</string>
     <string name="launcher_noclockhide_title">No ocultar reloj</string>

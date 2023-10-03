@@ -578,7 +578,6 @@ public class MainModule extends XposedModule {
 
         final boolean isMIUILauncherPkg = pkg.equals("com.miui.home");
         final boolean isLauncherPkg = isMIUILauncherPkg || pkg.equals("com.mi.android.globallauncher");
-        final boolean isLauncherPerf = mPrefs.getBoolean("launcher_compat");
 
         if (isLauncherPkg) {
             if (mPrefs.getInt("launcher_horizmargin", 0) > 0) Launcher.HorizontalSpacingRes();
@@ -595,7 +594,6 @@ public class MainModule extends XposedModule {
             if (mPrefs.getInt("launcher_topmargin", 0) > 0) Launcher.WorkspaceCellPaddingTopHook(lpparam);
             if (mPrefs.getInt("launcher_dock_topmargin", 0) > 0) Launcher.DockMarginTopHook(lpparam);
             if (mPrefs.getInt("launcher_dock_bottommargin", 0) > 0) Launcher.DockMarginBottomHook(lpparam);
-            if (isLauncherPerf) handleLoadLauncher(lpparam);
         }
 
         final boolean isStatusBarColor = mPrefs.getBoolean("system_statusbarcolor") && mPrefs.getStringSet("system_statusbarcolor_apps").contains(pkg);
@@ -606,7 +604,7 @@ public class MainModule extends XposedModule {
             ModuleHelper.findAndHookMethod(Application.class, "attach", Context.class, new MethodHook() {
                 @Override
                 protected void after(AfterHookCallback param) throws Throwable {
-                    if (isLauncherPkg && !isLauncherPerf) handleLoadLauncher(lpparam);
+                    if (isLauncherPkg) handleLoadLauncher(lpparam);
                     if (isLauncherPkg) {
                         listenPreferencesChange();
                     }

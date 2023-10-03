@@ -460,8 +460,6 @@
     <string name="launcher_gestures_shortcut">Skrót do uruchomienia</string>
     <string name="launcher_gestures_activity">Działanie do uruchomienia</string>
     <string name="launcher_summ">Wyświetl modyfikacje dla wybranego launchera. Tylko dla pomocy wizualnej, nie ma żadnego wpływu na modyfikacje.</string>
-    <string name="launcher_compat_title">Tryb wydajności</string>
-    <string name="launcher_compat_summ">Alternatywna metoda zastosowania wszystkich modyfikacji launchera</string>
     <string name="launcher_infinitescroll_title">Nieskończone przewijanie</string>
     <string name="launcher_infinitescroll_summ">Przeskakuj z ostatniej strony na pierwszą i odwrotnie</string>
     <string name="launcher_noclockhide_title">Nie ukrywaj zegara</string>

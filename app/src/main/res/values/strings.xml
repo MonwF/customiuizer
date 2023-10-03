@@ -508,8 +508,6 @@
     <string name="launcher_gestures_activity">Activity to launch</string>
     <string name="launcher_title">Launcher</string>
     <string name="launcher_summ">Display mods for selected launcher. For visual aid only, does not have any effect on mods.</string>
-    <string name="launcher_compat_title">Performance mode</string>
-    <string name="launcher_compat_summ">Alternative method of applying all launcher mods</string>
     <string name="launcher_infinitescroll_title">Infinite scrolling</string>
     <string name="launcher_infinitescroll_summ">Jump from the last page to the first one and vice versa</string>
     <string name="launcher_noclockhide_title">No clock hide</string>

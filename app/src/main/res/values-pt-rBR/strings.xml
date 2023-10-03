@@ -493,8 +493,6 @@
     <string name="launcher_gestures_activity">Atividade para lançar</string>
     <string name="launcher_title">Launcher</string>
     <string name="launcher_summ">Mods de exibição para a launcher selecionada. Apenas para auxílio visual, não tem nenhum efeito nos mods.</string>
-    <string name="launcher_compat_title">Modo de desempenho</string>
-    <string name="launcher_compat_summ">Método alternativo para aplicar todos os mods na launcher</string>
     <string name="launcher_infinitescroll_title">Rolagem infinita</string>
     <string name="launcher_infinitescroll_summ">Pule da última página para a primeira e vice-versa</string>
     <string name="launcher_noclockhide_title">Não ocultar relógio</string>

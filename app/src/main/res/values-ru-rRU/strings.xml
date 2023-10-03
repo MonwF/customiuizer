@@ -492,8 +492,6 @@
     <string name="launcher_gestures_activity">Компонент для запуска</string>
     <string name="launcher_title">Рабочий стол</string>
     <string name="launcher_summ">Отображать моды для выбранного ланчера. Только для наглядности, никак не влияет на сами моды.</string>
-    <string name="launcher_compat_title">Режим производительности</string>
-    <string name="launcher_compat_summ">Альтернативный метод применения всех модов ланчера</string>
     <string name="launcher_infinitescroll_title">Бесконечная прокрутка</string>
     <string name="launcher_infinitescroll_summ">Позволяет переходить с последнего экрана на первый и обратно</string>
     <string name="launcher_noclockhide_title">Не прятать часы</string>
