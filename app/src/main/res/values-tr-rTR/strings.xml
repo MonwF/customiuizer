@@ -926,15 +926,10 @@ ss - iki basamaklı saniye(09)</string>
     <string name="support_donate_inapp_summ">Google ın her şeyi halletmesine izin verin</string>
     <string name="support_donate_other_title">Eski para birimleri</string>
     <string name="donate_level1">Bağışınız için teşekkürler!</string>
-    <string name="donate_level2">Cömert bağışınız için teşekkürler!</string>
-    <string name="donate_level3">Delicesine cömert bağışınız için teşekkürler! Çeviri:H.KÜPELİ andheartman@gmail.com 😮</string>
-    <string name="billing_canceled">Fikrini mi değiştirdin LANN? ;)</string>
     <string name="crash_dialog">CustoMIUIzer az önce çöktü aq!</string>
     <string name="crash_dialog_manual">Gerekli tüm veriler toplandı</string>
     <string name="crash_dialog_manual_size">Oluşturulan rapor boyutu</string>
     <string name="crash_dialog_manual_desc">Sorununuzu açıklayın (mümkünse İngilizce olarak):</string>
-    <string name="crash_dialog_manual_desc2">Bu çökmeye neden olan eylemleri açıklayın
-(mümkünse İngilizce olarak):</string>
     <string name="crash_dialog_note">İletişim bilgileri sağlanmadı, bu bildirime yanıt alamayacaksınız!</string>
     <string name="crash_needs_inet">İnternet bağlantısı gereklidir</string>
     <string name="crash_needs_desc">Açıklama boş olamaz</string>
@@ -951,8 +946,6 @@ ss - iki basamaklı saniye(09)</string>
     <string name="array_color_light">Işık</string>
     <string name="notselected">Seçilmemiş</string>
     <string name="warning">Uyarı!</string>
-    <string name="warning_blacklist">Xposed Framework de Kara/Beyaz liste seçeneği etkindir, modların düzgün çalışmasını engelleyebilir.</string>
-    <string name="warning_blacklist_sdk">Ek olarak, yüklü modül sürümü Google Play den alınmıştır ve daha fazla sınırlaması vardır. Başka bir kaynaktan yeniden yüklemeyi düşünün.</string>
     <string name="warning_scope">Aktivasyon kapsamı bu modül için aktif, bazı modların düzgün çalışmasını engelleyebilir.</string>
     <string name="warning_unsupported_os">Android %1$s desteklemiyor, modlar düzgün çalışmayabilir.</string>
     <string name="open_xposed">Xposed modüllerini yönetin</string>
@@ -968,12 +961,10 @@ ss - iki basamaklı saniye(09)</string>
     <string name="do_restore">Eski haline getir</string>
     <string name="storage_read_only">Harici depolama alanınız salt okunur</string>
     <string name="storage_unavailable">Uygun herhangi bir depolamaya erişim sağlanamıyor</string>
-    <string name="storage_cannot_mkdir">Yedekleme dizini oluşturulamadı</string>
     <string name="storage_cannot_backup">Yedekleme dosyası oluşturulamadı</string>
     <string name="storage_cannot_restore">Ayarlar yedeği bulunamadı</string>
     <string name="backup_ok">Ayarlar başarıyla yedeklendi!</string>
     <string name="restore_ok">Ayarlar başarıyla geri yüklendi!</string>
-    <string name="backup_restore_info">Ayarlarınız Google Cloud Backup aracılığıyla geri yüklendi. Lütfen Xposed modülünü etkinleştirdikten sonra arayüz yeniden başlatma yapın.</string>
     <string name="prefs_migration_success">Modül ayarı, yeni LSPosed/EdXposed sürümüyle çalışmak üzere başarıyla taşındı. Değişiklikleri uygulamak için yeniden başlatın.</string>
     <string name="prefs_migration_failure">Yeni LSPosed/EdXposed sürümüyle çalışmak için modülün ayarları taşınamadı. Geri yükleme işlevini kullanmanız veya modları sıfırdan yapılandırmanız gerekecek.</string>
     <string name="update_available">Güncelleme mevcut ⚠</string>
@@ -1016,9 +1007,6 @@ LSPosed uygulamasını açın, modülü etkinleştirin ve yeniden başlatın. Bu
     <string name="change_icon">Simgeyi değiştir</string>
     <string name="guide_search">Modları ada göre arayın.
 Yeni modların listesini görüntülemek için uzun basın.</string>
-    <string name="guide_softreboot">Arayüz yeniden başlatmayı kullanarak modları uygulamayı unutmayın.
-Dinamik ⟲ modları bunu yalnızca bir kez gerektirir.
-Daha fazla bilgi Hakkında sayfasındadır.</string>
     <string name="guide_marknew">Önceki güncellemeden bu yana yeni modlar
 daha iyi görünürlük için işaretlenebilir</string>
     <string name="permission_scan">Ağların/cihazların bir listesini almak istiyor musunuz, istemiyor musunuz?</string>

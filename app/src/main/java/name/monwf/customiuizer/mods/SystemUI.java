@@ -128,6 +128,7 @@ public class SystemUI {
 
     public static boolean newStyle = false;
     private final static int textIconTagId = ResourceHooks.getFakeResId("text_icon_tag");
+    private final static int viewInitedTag = ResourceHooks.getFakeResId("view_inited_tag");
     public static void setupStatusBar(Context mContext) {
         if (newStyle) {
             statusbarTextIconLayoutResId = MainModule.resHooks.addResource("statusbar_text_icon", R.layout.statusbar_text_icon_new);
@@ -236,7 +237,7 @@ public class SystemUI {
             }
         }
         if (hasRightIcon && !MainModule.mPrefs.getBoolean("system_statusbar_dualrows")) {
-            ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiCollapsedStatusBarFragment", lpparam.getClassLoader(), "initMiuiViewsOnViewCreated", View.class, new MethodHook() {
+            ModuleHelper.hookAllConstructors("com.android.systemui.statusbar.policy.NetworkSpeedController", lpparam.getClassLoader(), new MethodHook() {
                 @Override
                 protected void after(final AfterHookCallback param) throws Throwable {
                     Object iconController = XposedHelpers.getObjectField(param.getThisObject(), "mStatusBarIconController");
@@ -537,12 +538,9 @@ public class SystemUI {
         return (TextView) iconView;
     }
 
-    private static View createStatusbarTextIcon(Context mContext, LinearLayout.LayoutParams lp, TextIcon ti) {
-        View iconView = LayoutInflater.from(mContext).inflate(statusbarTextIconLayoutResId, null);
-        XposedHelpers.setObjectField(iconView, "mVisibilityByDisableInfo", 0);
+    private static void initStatusbarTextIcon(Context mContext, LinearLayout.LayoutParams lp, TextIcon ti, View iconView) {
         XposedHelpers.setObjectField(iconView, "mVisibleByController", true);
         XposedHelpers.setObjectField(iconView, "mShown", true);
-        iconView.setTag(textIconTagId, ti);
         TextView iconTextView = getIconTextView(iconView);
         Resources res = mContext.getResources();
         int styleId = res.getIdentifier("TextAppearance.StatusBar.Clock", "style", "com.android.systemui");
@@ -557,7 +555,6 @@ public class SystemUI {
         float fontSize = MainModule.mPrefs.getInt("system_statusbar_" + subKey + "_fontsize", 16) * 0.5f;
         int opt = MainModule.mPrefs.getStringAsInt("system_statusbar_" + subKey + "_content", 1);
         if ((opt == 1 || opt == 4 || opt == 5) && !MainModule.mPrefs.getBoolean("system_statusbar_" + subKey + "_singlerow")) {
-            iconTextView.setSingleLine(false);
             iconTextView.setMaxLines(2);
             iconTextView.setLineSpacing(0, fontSize > 8.5f ? 0.85f : 0.9f);
         }
@@ -568,16 +565,16 @@ public class SystemUI {
         int leftMargin = MainModule.mPrefs.getInt("system_statusbar_" + subKey + "_leftmargin", 8);
         leftMargin = (int)Helpers.dp2px(leftMargin * 0.5f);
         int rightMargin = MainModule.mPrefs.getInt("system_statusbar_" + subKey + "_rightmargin", 8);
-        rightMargin = (int) Helpers.dp2px(rightMargin * 0.5f);
+        rightMargin = (int)Helpers.dp2px(rightMargin * 0.5f);
         int topMargin = 0;
         int verticalOffset = MainModule.mPrefs.getInt("system_statusbar_" + subKey + "_verticaloffset", 8);
         if (verticalOffset != 8) {
-            topMargin = (int) Helpers.dp2px((verticalOffset - 8) * 0.5f);
+            topMargin = (int)Helpers.dp2px((verticalOffset - 8) * 0.5f);
         }
         iconTextView.setPaddingRelative(leftMargin, topMargin, rightMargin, 0);
         int fixedWidth = MainModule.mPrefs.getInt("system_statusbar_" + subKey + "_fixedcontent_width", 10);
         if (fixedWidth > 10) {
-            lp.width = (int)(iconTextView.getResources().getDisplayMetrics().density * fixedWidth);
+            lp.width = (int)Helpers.dp2px(fixedWidth);
         }
         iconTextView.setLayoutParams(lp);
 
@@ -591,6 +588,21 @@ public class SystemUI {
         else if (align == 4) {
             iconTextView.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
         }
+    }
+
+    private static View createStatusbarTextIcon(Context mContext, LinearLayout.LayoutParams lp, TextIcon ti) {
+        View iconView = LayoutInflater.from(mContext).inflate(statusbarTextIconLayoutResId, null);
+        iconView.setTag(textIconTagId, ti);
+        if (!newStyle) {
+            XposedHelpers.setObjectField(iconView, "mVisibilityByDisableInfo", 0);
+        }
+        else {
+            View mNumber = iconView.findViewWithTag("network_speed_number");
+            XposedHelpers.setObjectField(iconView, "mNetworkSpeedNumberText", mNumber);
+            View mUnit = iconView.findViewWithTag("network_speed_unit");
+            XposedHelpers.setObjectField(iconView, "mNetworkSpeedUnitText", mUnit);
+        }
+        initStatusbarTextIcon(mContext, lp, ti, iconView);
         return iconView;
     }
     static final ArrayList<View> mStatusbarTextIcons = new ArrayList<View>();
@@ -1564,89 +1576,85 @@ public class SystemUI {
         });
     }
 
-    public static void NetSpeedStyleHook(PackageLoadedParam lpparam) {
-        if (MainModule.mPrefs.getInt("system_netspeed_fixedcontent_width", 10) > 10) {
-            ModuleHelper.hookAllMethods("com.android.systemui.statusbar.views.NetworkSpeedView", lpparam.getClassLoader(), "applyNetworkSpeedState", new MethodHook() {
-                @Override
-                protected void before(final BeforeHookCallback param) throws Throwable {
-                    View meter = (View) param.getThisObject();
-                    if ((meter.getTag() == null || !"slot_text_icon".equals(meter.getTag()))
-                        && XposedHelpers.getAdditionalInstanceField(param.getThisObject(), "inited") == null) {
-                        XposedHelpers.setAdditionalInstanceField(param.getThisObject(), "inited", true);
-                        int fixedWidth = MainModule.mPrefs.getInt("system_netspeed_fixedcontent_width", 10);
-                        if (fixedWidth > 10) {
-                            ViewGroup.LayoutParams lp = meter.getLayoutParams();
-                            int viewWidth = (int)(meter.getResources().getDisplayMetrics().density * fixedWidth);
-                            if (lp == null) {
-                                lp = new ViewGroup.LayoutParams(viewWidth, -1);
-                            }
-                            else {
-                                lp.width = viewWidth;
-                            }
-                            meter.setLayoutParams(lp);
-                        }
-                    }
-                }
-            });
+    private static void initNetSpeedStyle(View meter) {
+        boolean dualRow = MainModule.mPrefs.getBoolean("system_detailednetspeed")
+            || MainModule.mPrefs.getBoolean("system_detailednetspeed_fakedualrow");
+        TextView iconTextView = getIconTextView(meter);
+        int fontSize = MainModule.mPrefs.getInt("system_netspeed_fontsize", 13);
+        if (dualRow) {
+            if (newStyle) {
+                View unitView = (View)XposedHelpers.getObjectField(meter, "mNetworkSpeedUnitText");
+                unitView.setVisibility(View.GONE);
+            }
+            if (fontSize > 23 || fontSize == 13) fontSize = 16;
         }
+        else {
+            if (fontSize < 20 && fontSize != 13) fontSize = 27;
+        }
+        if (dualRow || fontSize != 13) {
+            iconTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize * 0.5f);
+        }
+        if (MainModule.mPrefs.getBoolean("system_netspeed_bold")) {
+            iconTextView.setTypeface(Typeface.DEFAULT_BOLD);
+        }
+
+        int leftMargin = MainModule.mPrefs.getInt("system_netspeed_leftmargin", 0);
+        leftMargin = (int)Helpers.dp2px(leftMargin * 0.5f);
+        int rightMargin = MainModule.mPrefs.getInt("system_netspeed_rightmargin", 0);
+        rightMargin = (int)Helpers.dp2px(rightMargin * 0.5f);
+        int topMargin = 0;
+        int verticalOffset = MainModule.mPrefs.getInt("system_netspeed_verticaloffset", 8);
+        if (verticalOffset != 8) {
+            topMargin = (int)Helpers.dp2px((verticalOffset - 8) * 0.5f);
+        }
+        iconTextView.setPaddingRelative(leftMargin, topMargin, rightMargin, 0);
+
+        int align = MainModule.mPrefs.getStringAsInt("system_detailednetspeed_align", 1);
+        if (align == 2) {
+            iconTextView.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+        }
+        else if (align == 3) {
+            iconTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        }
+        else if (align == 4) {
+            iconTextView.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+        }
+
+        if (dualRow) {
+            float spacing = 0.9f;
+            iconTextView.setSingleLine(false);
+            iconTextView.setMaxLines(2);
+            if (0.5 * fontSize > 8.5f) {
+                spacing = 0.85f;
+            }
+            iconTextView.setLineSpacing(0, spacing);
+        }
+    }
+
+    public static void NetSpeedStyleHook(PackageLoadedParam lpparam) {
         ModuleHelper.hookAllConstructors("com.android.systemui.statusbar.views.NetworkSpeedView", lpparam.getClassLoader(), new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
-                View meter = (View)param.getThisObject();
+                View meter = (View) param.getThisObject();
                 if (meter == null) return;
-                boolean dualRow = MainModule.mPrefs.getBoolean("system_detailednetspeed")
-                    || MainModule.mPrefs.getBoolean("system_detailednetspeed_fakedualrow");
-                if (meter.getTag() == null || !"slot_text_icon".equals(meter.getTag())) {
-                    TextView iconTextView = getIconTextView(meter);
-                    int fontSize = MainModule.mPrefs.getInt("system_netspeed_fontsize", 13);
-                    if (dualRow) {
-                        if (newStyle) {
-                            View unitView = (View)XposedHelpers.getObjectField(meter, "mNetworkSpeedUnitText");
-                            unitView.setVisibility(View.GONE);
+                Object inited = meter.getTag(viewInitedTag);
+                if (inited == null && !"slot_text_icon".equals(meter.getTag())) {
+                    meter.setTag(viewInitedTag, true);
+                    int fixedWidth = MainModule.mPrefs.getInt("system_netspeed_fixedcontent_width", 10);
+                    if (fixedWidth > 10) {
+                        ViewGroup.LayoutParams lp = meter.getLayoutParams();
+                        int viewWidth = (int)(meter.getResources().getDisplayMetrics().density * fixedWidth);
+                        if (lp == null) {
+                            lp = new ViewGroup.LayoutParams(viewWidth, -1);
                         }
-                        if (fontSize > 23 || fontSize == 13) fontSize = 16;
-                    }
-                    else {
-                        if (fontSize < 20 && fontSize != 13) fontSize = 27;
-                    }
-                    if (dualRow || fontSize != 13) {
-                        iconTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize * 0.5f);
-                    }
-                    if (MainModule.mPrefs.getBoolean("system_netspeed_bold")) {
-                        iconTextView.setTypeface(Typeface.DEFAULT_BOLD);
-                    }
-
-                    int leftMargin = MainModule.mPrefs.getInt("system_netspeed_leftmargin", 0);
-                    leftMargin = (int)Helpers.dp2px(leftMargin * 0.5f);
-                    int rightMargin = MainModule.mPrefs.getInt("system_netspeed_rightmargin", 0);
-                    rightMargin = (int)Helpers.dp2px(rightMargin * 0.5f);
-                    int topMargin = 0;
-                    int verticalOffset = MainModule.mPrefs.getInt("system_netspeed_verticaloffset", 8);
-                    if (verticalOffset != 8) {
-                        topMargin = (int)Helpers.dp2px((verticalOffset - 8) * 0.5f);
-                    }
-                    iconTextView.setPaddingRelative(leftMargin, topMargin, rightMargin, 0);
-
-                    int align = MainModule.mPrefs.getStringAsInt("system_detailednetspeed_align", 1);
-                    if (align == 2) {
-                        iconTextView.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
-                    }
-                    else if (align == 3) {
-                        iconTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    }
-                    else if (align == 4) {
-                        iconTextView.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
-                    }
-
-                    if (dualRow) {
-                        float spacing = 0.9f;
-                        iconTextView.setSingleLine(false);
-                        iconTextView.setMaxLines(2);
-                        if (0.5 * fontSize > 8.5f) {
-                            spacing = 0.85f;
+                        else {
+                            lp.width = viewWidth;
                         }
-                        iconTextView.setLineSpacing(0, spacing);
+                        meter.setLayoutParams(lp);
                     }
+                    meter.postDelayed(() -> {
+                        initNetSpeedStyle(meter);
+                    }, 200);
                 }
             }
         });

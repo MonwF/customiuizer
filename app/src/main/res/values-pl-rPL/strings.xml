@@ -800,14 +800,10 @@
     <string name="support_donate_inapp_summ">Pozwól Google zająć się wszystkim</string>
     <string name="support_donate_other_title">Przestarzałe waluty</string>
     <string name="donate_level1">Dziękujemy za darowiznę!</string>
-    <string name="donate_level2">Dziękujemy za hojną darowiznę!</string>
-    <string name="donate_level3">Dziękujemy za niesamowicie hojną darowiznę! 😮</string>
-    <string name="billing_canceled">Zmieniłeś zdanie?</string>
     <string name="crash_dialog">CustoMIUIzer właśnie uległ awarii!</string>
     <string name="crash_dialog_manual">Wszystkie niezbędne dane zostały zebrane</string>
     <string name="crash_dialog_manual_size">Wygenerowano rozmiar zgłoszenia</string>
     <string name="crash_dialog_manual_desc">Opisz swój problem (w miarę możliwości po angielsku):</string>
-    <string name="crash_dialog_manual_desc2">Opisz działania, które doprowadziły do tej awarii\n(w miarę możliwości w języku angielskim):</string>
     <string name="crash_dialog_note">Nie podano danych kontaktowych, nie otrzymasz odpowiedzi na to zgłoszenie!</string>
     <string name="crash_needs_inet">Połączenie z Internetem jest wymagane</string>
     <string name="crash_needs_desc">Opis nie może być pusty</string>
@@ -824,8 +820,6 @@
     <string name="array_color_light">Jasny</string>
     <string name="notselected">Nie wybrano</string>
     <string name="warning">Ostrzeżenie!</string>
-    <string name="warning_blacklist">Opcja czarnej/białej listy jest aktywna w Xposed Framework, może uniemożliwić prawidłowe działanie modyfikacji.</string>
-    <string name="warning_blacklist_sdk">Dodatkowo, zainstalowana wersja modułu pochodzi z Google Play i posiada więcej ograniczeń. Rozważ ponowną instalację z innego źródła.</string>
     <string name="warning_scope">Zakres aktywacji jest aktywny dla tego modułu, może uniemożliwić prawidłowe działanie niektórych modyfikacji.</string>
     <string name="warning_unsupported_os">Android %1$s nie jest obsługiwany, modyfikacje mogą nie działać poprawnie.</string>
     <string name="open_xposed">Zarządzaj modułami Xposed</string>
@@ -839,12 +833,10 @@
     <string name="do_restore">Przywróć</string>
     <string name="storage_read_only">Twoja pamięć zewnętrzna jest tylko do odczytu</string>
     <string name="storage_unavailable">Nie można uzyskać dostępu do odpowiedniej pamięci</string>
-    <string name="storage_cannot_mkdir">Nie udało się utworzyć katalogu kopii zapasowej</string>
     <string name="storage_cannot_backup">Nie udało się utworzyć pliku kopii zapasowej</string>
     <string name="storage_cannot_restore">Nie znaleziono kopii zapasowej ustawień</string>
     <string name="backup_ok">Kopia zapasowa ustawień została pomyślnie utworzona!</string>
     <string name="restore_ok">Ustawienia zostały pomyślnie przywrócone!</string>
-    <string name="backup_restore_info">Twoje ustawienia zostały przywrócone przez Google Cloud Backup. Wykonaj miękki restart po włączeniu modułu Xposed.</string>
     <string name="prefs_migration_success">Ustawienia modułu zostały pomyślnie przeniesione do działania z nową wersją LSposed/EdXposed. Uruchom ponownie, aby zastosować zmiany.</string>
     <string name="prefs_migration_failure">Nie udało się przenieść ustawień do działa z nową wersją LSPosed/EdXposed. Będziesz musiał użyć funkcji przywracania lub skonfigurować od nowa.</string>
     <string name="update_available">Dostępna jest aktualizacja ⚠</string>
@@ -883,7 +875,6 @@
     <string name="delete_item_info">Przytrymaj, aby usunąć</string>
     <string name="change_icon">Zmień ikonę</string>
     <string name="guide_search">Szukaj modyfikacji według nazwy.\nPrzytrzymaj, aby wyświetlić listę nowych modów.</string>
-    <string name="guide_softreboot">Nie, że aby zastosować modyfikacje musisz zrobić miękki restart.\nDynamiczne ⟲ modyfikacje wymagają tego tylko raz.\nWięcej informacji znajduje się na stronie \"Informacje\".</string>
     <string name="guide_marknew">Nowe modyfikacje od poprzedniej aktualizacji \ncan be marked for better visibility</string>
     <string name="permission_scan">Czy chcesz otrzymać listę sieci/urządzeń, czy nie?</string>
     <string name="permission_permanent">Będziesz musiał teraz ręcznie włączyć uprawnienia dla tej opcji. Dobra robota!</string>

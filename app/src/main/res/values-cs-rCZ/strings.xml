@@ -947,15 +947,10 @@
     <string name="support_donate_inapp_summ">Nechte vše na Googlu</string>
     <string name="support_donate_other_title">Zastaralé měny</string>
     <string name="donate_level1">Děkujeme vám za váš dar!</string>
-    <string name="donate_level2">Děkujeme za váš velkorysý dar!</string>
-    <string name="donate_level3">Děkujeme za váš nesmírně štědrý dar! 😮</string>
-    <string name="billing_canceled">Změnil jsi názor\? ;)</string>
     <string name="crash_dialog">CustoMIUIzer právě spadl!</string>
     <string name="crash_dialog_manual">Byly shromážděny všechny potřebné údaje</string>
     <string name="crash_dialog_manual_size">Velikost generované zprávy</string>
     <string name="crash_dialog_manual_desc">Popište svůj problém (pokud možno v angličtině):</string>
-    <string name="crash_dialog_manual_desc2">Popište činnosti, které vedly k této havárii
-\n(pokud možno v angličtině):</string>
     <string name="crash_dialog_note">Kontaktní údaje nejsou uvedeny, na tuto zprávu nedostanete odpověď!</string>
     <string name="crash_needs_inet">Je vyžadováno připojení k internetu</string>
     <string name="crash_needs_desc">Popis nemůže být prázdný</string>
@@ -972,8 +967,6 @@
     <string name="array_color_light">Světlý</string>
     <string name="notselected">Není vybráno</string>
     <string name="warning">Upozornění!</string>
-    <string name="warning_blacklist">V Xposed Framework je aktivní možnost Black/White list, která může zabránit správné funkci modů.</string>
-    <string name="warning_blacklist_sdk">Nainstalovaná verze modulu je navíc z Google Play a má více omezení. Zvažte jeho přeinstalování z jiného zdroje.</string>
     <string name="warning_scope">Aktivační rozsah je u tohoto modulu aktivní, může zabránit správné funkci některých modů.</string>
     <string name="warning_unsupported_os">Systém Android %1$s není podporován, mody nemusí fungovat správně.</string>
     <string name="open_xposed">Správa modulů Xposed</string>
@@ -989,12 +982,10 @@
     <string name="do_restore">Obnova</string>
     <string name="storage_read_only">Vaše externí úložiště je určeno pouze pro čtení</string>
     <string name="storage_unavailable">Nelze získat přístup k žádnému vhodnému úložišti</string>
-    <string name="storage_cannot_mkdir">Nepodařilo se vytvořit složku zálohy</string>
     <string name="storage_cannot_backup">Nepodařilo se vytvořit soubor zálohy</string>
     <string name="storage_cannot_restore">Nebyla nalezena žádná záloha nastavení</string>
     <string name="backup_ok">Nastavení byla úspěšně zálohována!</string>
     <string name="restore_ok">Nastavení byla úspěšně obnovena!</string>
-    <string name="backup_restore_info">Vaše nastavení bylo obnoveno prostřednictvím služby Google Cloud Backup. Po povolení modulu Xposed proveďte měkký restart.</string>
     <string name="prefs_migration_success">Nastavení modulu byla úspěšně převedena na novou verzi LSPosed/EdXposed. Restartujte zařízení, aby se změny použily.</string>
     <string name="prefs_migration_failure">Nepodařilo se přenést nastavení modulu tak, aby fungovalo s novou verzí LSPosed/EdXposed. Budete muset použít funkci obnovení nebo nakonfigurovat mody od začátku.</string>
     <string name="update_available">Je k dispozici aktualizace ⚠</string>
@@ -1037,9 +1028,6 @@
     <string name="change_icon">Ikona nabíjení</string>
     <string name="guide_search">Vyhledávání modů podle jména.
 \nDlouhým stisknutím zobrazíte seznam nových modů.</string>
-    <string name="guide_softreboot">Nezapomeňte použít modifikace pomocí softwarového restartu.
-\nDynamické ⟲ mody to vyžadují pouze jednou.
-\nVíce informací najdete na stránce O aplikaci.</string>
     <string name="guide_marknew">Nové mody od předchozí aktualizace
 \nmohou být označeny pro lepší viditelnost</string>
     <string name="permission_scan">Chcete získat seznam sítí/zařízení, nebo ne\?</string>

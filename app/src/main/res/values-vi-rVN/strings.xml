@@ -940,14 +940,10 @@
     <string name="support_donate_inapp_summ">Do Google xử lý</string>
     <string name="support_donate_other_title">Tiền tệ lỗi thời</string>
     <string name="donate_level1">Cảm ơn sự đóng góp của bạn!</string>
-    <string name="donate_level2">Cám ơn vì sự hào phóng của bạn!</string>
-    <string name="donate_level3">Bạn thật hào phóng, cảm ơn bạn rất nhiều! 😮</string>
-    <string name="billing_canceled">Đổi ý chưa? ;)</string>
     <string name="crash_dialog">CustoMIUIzer đã bị lỗi!</string>
     <string name="crash_dialog_manual">Tất cả các dữ liệu cần thiết đã được thu thập</string>
     <string name="crash_dialog_manual_size">Kích thước báo cáo đã tạo</string>
     <string name="crash_dialog_manual_desc">Vui lòng mô tả vấn đề của bạn (bằng tiếng Anh càng nhiều càng tốt):</string>
-    <string name="crash_dialog_manual_desc2">Vui lòng mô tả (các) hành động gây ra sự cố này\n(sử dụng tiếng Anh càng nhiều càng tốt):</string>
     <string name="crash_dialog_note">Nếu bạn không cung cấp thông tin liên hệ, bạn sẽ không nhận được phản hồi cho báo cáo này!</string>
     <string name="crash_needs_inet">Yêu cầu kết nối mạng</string>
     <string name="crash_needs_desc">Mô tả không được để trống</string>
@@ -964,8 +960,6 @@
     <string name="array_color_light">Sáng</string>
     <string name="notselected">Chưa được chọn</string>
     <string name="warning">Cảnh báo!</string>
-    <string name="warning_blacklist">Tùy chọn danh sách đen/trắng trong khung Xposed được bật và có thể ngăn các mod hoạt động bình thường.</string>
-    <string name="warning_blacklist_sdk">Ngoài ra, phiên bản mod được cài đặt từ Google Play bị hạn chế hơn, vui lòng cài đặt lại từ các nguồn khác.</string>
     <string name="warning_scope">Phạm vi kích hoạt cho mod này được bật, điều này có thể ngăn một số mod thực thi đúng cách.</string>
     <string name="warning_unsupported_os">Android %1$s không được hỗ trợ. Mod có thể không hoạt động bình thường.</string>
     <string name="open_xposed">Quản lý các mô-đun Xposed</string>
@@ -981,12 +975,10 @@
     <string name="do_restore">Khôi phục</string>
     <string name="storage_read_only">Bộ nhớ ngoài của bạn ở chế độ chỉ đọc</string>
     <string name="storage_unavailable">Không thể truy cập bất kỳ bộ nhớ phù hợp nào</string>
-    <string name="storage_cannot_mkdir">Không thể tạo thư mục sao lưu</string>
     <string name="storage_cannot_backup">Không thể tạo tệp sao lưu</string>
     <string name="storage_cannot_restore">Không tìm thấy bản sao lưu cài đặt nào</string>
     <string name="backup_ok">Sao lưu cài đặt thành công!</string>
     <string name="restore_ok">Khôi phục cài đặt thành công!</string>
-    <string name="backup_restore_info">Cài đặt của bạn đã được khôi phục qua Google sao lưu đám mây. Vui lòng khởi động lại mềm sau khi bật chế độ Xposed.</string>
     <string name="prefs_migration_success">Cài đặt mod đã được di chuyển thành công sang phiên bản mới của LSPosed/EdXposed. Vui lòng khởi động lại để áp dụng các thay đổi.</string>
     <string name="prefs_migration_failure">Không thể di chuyển cài đặt mod sang phiên bản mới của EdXposed. Bạn phải sử dụng chức năng khôi phục hoặc định cấu hình mod từ đầu.</string>
     <string name="update_available">Cập nhật khả dụng ⚠</string>
@@ -1025,7 +1017,6 @@
     <string name="delete_item_info">Nhấn và giữ để xóa</string>
     <string name="change_icon">Thay đổi biểu tượng</string>
     <string name="guide_search">Tìm kiếm mod theo tên.\nNhấn và giữ để hiển thị danh sách các mod mới.</string>
-    <string name="guide_softreboot">Đừng quên áp dụng mod bằng cách khởi động lại mềm.\nDynamic ⟲ module chỉ cần được thực thi một lần.\nXem trang Giới thiệu để biết thêm thông tin.</string>
     <string name="guide_marknew">Làm nổi bật các mod mới</string>
     <string name="permission_scan">Bạn có muốn nhận danh sách mạng/thiết bị không?</string>
     <string name="permission_permanent">Bây giờ bạn phải bật quyền cho tùy chọn này theo cách thủ công. Tốt lắm!</string>

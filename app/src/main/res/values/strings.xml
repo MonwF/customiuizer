@@ -983,15 +983,11 @@
     <string name="support_donate_other_summ" translatable="false">Paypal, Webmoney, QIWI</string>
 
     <string name="donate_level1">Thanks for your donation!</string>
-    <string name="donate_level2">Thanks for your generous donation!</string>
-    <string name="donate_level3">Thanks for your insanely generous donation! 😮</string>
-    <string name="billing_canceled">Changed your mind? ;)</string>
 
     <string name="crash_dialog">CustoMIUIzer has just crashed!</string>
     <string name="crash_dialog_manual">All necessary data has beed collected</string>
     <string name="crash_dialog_manual_size">Generated report size</string>
     <string name="crash_dialog_manual_desc">Describe your problem (in English if possible):</string>
-    <string name="crash_dialog_manual_desc2">Describe actions that led to this crash\n(in English if possible):</string>
     <string name="crash_dialog_note">Contact information is not provided, you won\'t get a response to this report!</string>
     <string name="crash_needs_inet">Internet connection is required</string>
     <string name="crash_needs_desc">Description cannot be blank</string>
@@ -1010,8 +1006,6 @@
 
     <string name="notselected">Not selected</string>
     <string name="warning">Warning!</string>
-    <string name="warning_blacklist">Black/White list option is active in Xposed Framework, it can prevent mods from working properly.</string>
-    <string name="warning_blacklist_sdk">Additionally, installed module version is from Google Play and has more limitations. Consider reinstalling it from any other source.</string>
     <string name="warning_scope">Activation scope is active for this module, it can prevent some mods from working properly.</string>
     <string name="warning_unsupported_os">Android %1$s is not supported, mods might not work properly.</string>
     <string name="open_xposed">Manage Xposed modules</string>
@@ -1029,12 +1023,10 @@
     <string name="do_restore">Restore</string>
     <string name="storage_read_only">Your external storage is read-only</string>
     <string name="storage_unavailable">Unable to get access to any suitable storage</string>
-    <string name="storage_cannot_mkdir">Failed to create backup directory</string>
     <string name="storage_cannot_backup">Failed to create backup file</string>
     <string name="storage_cannot_restore">No settings backup found</string>
     <string name="backup_ok">Settings were backed up successfully!</string>
     <string name="restore_ok">Settings were successfully restored!</string>
-    <string name="backup_restore_info">Your settings have been restored via Google Cloud Backup. Please do a soft reboot after enabling the Xposed module.</string>
     <string name="prefs_migration_success">Module\'s setting were successfully migrated to work with new LSPosed/EdXposed version. Reboot to apply changes.</string>
     <string name="prefs_migration_failure">Failed to migrate module\'s settings to work with new LSPosed/EdXposed version. You\'ll have to use restore function or configure mods from scratch.</string>
     <string name="update_available">Update is available ⚠</string>
@@ -1075,7 +1067,6 @@
     <string name="change_icon">Change icon</string>
 
     <string name="guide_search">Search mods by name.\nLong press to display a list of new mods.</string>
-    <string name="guide_softreboot">Don\'t forget to apply mods by using soft reboot.\nDynamic ⟲ mods require it only once.\nMore information is on About page.</string>
     <string name="guide_marknew">New mods since previous update\ncan be marked for better visibility</string>
 
     <string name="permission_scan">Do you want to get a list of networks/devices or not?</string>

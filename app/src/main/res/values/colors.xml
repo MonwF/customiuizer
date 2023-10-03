@@ -19,9 +19,8 @@
 	<color name="preference_secondary_text_color_checked">#260091dc</color>
 
 	<color name="hint_edit_text_color">#4c000000</color>
-	<color name="guide_popup_text">#7fffffff</color>
 
-	<color name="list_item_bg_color_pressed">#0d000000</color>
+    <color name="list_item_bg_color_pressed">#0d000000</color>
 	<color name="list_item_bg_color">@android:color/transparent</color>
 
 	<color name="svg_stroke_color">#80000000</color>
@@ -32,7 +31,7 @@
 	<color name="dark_mode_icon_transparent_color_single_tone">#4c000000</color>
 
 	<color name="qs_unavailable_color">#26ffffff</color>
-	<color name="qs_disabled_color">#26ffffff</color>
+    <color name="qs_disabled_color">#26ffffff</color>
 	<color name="qs_enabled_color">#ff3d84ff</color>
 	<color name="qs_warning_color">#ffffa133</color>
 </resources>

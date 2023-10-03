@@ -897,14 +897,10 @@
     <string name="support_donate_inapp_summ">由Google處理</string>
     <string name="support_donate_other_title">過時貨幣</string>
     <string name="donate_level1">感謝您的捐款！</string>
-    <string name="donate_level2">感謝您的慷慨解囊！</string>
-    <string name="donate_level3">您真是太慷慨了，非常感謝！ 😮</string>
-    <string name="billing_canceled">改變了主意？ ;)</string>
     <string name="crash_dialog">CustoMIUIzer已崩潰！</string>
     <string name="crash_dialog_manual">所有的必要數據已經收集</string>
     <string name="crash_dialog_manual_size">已生成的報告大小</string>
     <string name="crash_dialog_manual_desc">請描述您的問題(盡量使用英語)：</string>
-    <string name="crash_dialog_manual_desc2">請描述導致此次崩潰的動作\n(盡量使用英語)：</string>
     <string name="crash_dialog_note">如果您沒有提供聯繫訊息，您不會得到該報告的回覆！</string>
     <string name="crash_needs_inet">需要網際網路連接</string>
     <string name="crash_needs_desc">描述不能為空</string>
@@ -921,8 +917,6 @@
     <string name="array_color_light">亮</string>
     <string name="notselected">未選擇</string>
     <string name="warning">警告！</string>
-    <string name="warning_blacklist">Xposed框架中的黑/白名單選項已啟用，可能會阻止模組正常工作。</string>
-    <string name="warning_blacklist_sdk">此外，從Google Play安裝的模組版本限制比較多，請從其他來源重新安裝。</string>
     <string name="warning_scope">此模組的啟用範圍已啟用，可能會阻止某些模組正常執行。</string>
     <string name="open_xposed">管理Xposed模組</string>
     <string name="soft_reboot">軟重啟</string>
@@ -937,12 +931,10 @@
     <string name="do_restore">恢復</string>
     <string name="storage_read_only">您的外部儲存是唯讀的</string>
     <string name="storage_unavailable">無法訪問任何合適的儲存空間</string>
-    <string name="storage_cannot_mkdir">建立備份目錄失敗</string>
     <string name="storage_cannot_backup">建立備份檔案失敗</string>
     <string name="storage_cannot_restore">沒有找到設置備份</string>
     <string name="backup_ok">設置備份成功！</string>
     <string name="restore_ok">設置恢復成功！</string>
-    <string name="backup_restore_info">您的設置已通過Google Cloud Backup恢復。請在啟用Xposed模組後進行軟重啟。</string>
     <string name="prefs_migration_success">模組設置已經成功遷移到EdXposed新版本。請重新啟動應用更改。</string>
     <string name="prefs_migration_failure">模組設置無法遷移到EdXposed新版本。您必須使用恢復功能或從頭開始配置模組。</string>
     <string name="update_available">更新可用⚠</string>
@@ -981,7 +973,6 @@
     <string name="delete_item_info">長按要刪除的項目</string>
     <string name="change_icon">更改圖示</string>
     <string name="guide_search">按名稱搜索模組。\n長按顯示新模組的列表。</string>
-    <string name="guide_softreboot">別忘了使用軟重啟應用模組。\n動態⟲模組僅需執行一次。\n更多訊息請檢視關於頁面。</string>
     <string name="guide_marknew">醒目顯示新模組</string>
     <string name="permission_scan">您是否要獲取網路/設備列表?</string>
     <string name="permission_permanent">現在您必須手動啟用此選項的權限。很好！</string>

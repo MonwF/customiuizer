@@ -941,14 +941,10 @@
     <string name="support_donate_inapp_summ">Deixe o Google cuidar de tudo</string>
     <string name="support_donate_other_title">Moedas desatualizadas</string>
     <string name="donate_level1">Obrigado pela sua doação!</string>
-    <string name="donate_level2">Obrigado por sua generosa doação!</string>
-    <string name="donate_level3">Obrigado por sua doação insanamente generosa! 😮</string>
-    <string name="billing_canceled">Mudou sua mente? ;)</string>
     <string name="crash_dialog">O CustoMIUIzer acabou de travar!</string>
     <string name="crash_dialog_manual">Todos os dados necessários foram coletados</string>
     <string name="crash_dialog_manual_size">Tamanho do relatório gerado</string>
     <string name="crash_dialog_manual_desc">Descreva seu problema (em inglês, se possível):</string>
-    <string name="crash_dialog_manual_desc2">Descreva as ações que levaram a esta falha (em inglês, se possível):</string>
     <string name="crash_dialog_note">As informações de contato não foram fornecidas, você não receberá uma resposta a este relatório!</string>
     <string name="crash_needs_inet">Conexão com a Internet é necessária</string>
     <string name="crash_needs_desc">A descrição não pode ficar em branco</string>
@@ -965,8 +961,6 @@
     <string name="array_color_light">Luz</string>
     <string name="notselected">Não selecionado</string>
     <string name="warning">Aviso!</string>
-    <string name="warning_blacklist">A opção de lista negra/branca está ativa no Xposed Framework, pode impedir que os mods funcionem corretamente.</string>
-    <string name="warning_blacklist_sdk">Além disso, a versão do módulo instalado é da Play Store e tem mais limitações. Considere reinstalá-lo de qualquer outra fonte.</string>
     <string name="warning_scope">O método de entrada está ativo para este módulo, pode impedir que alguns mods funcionem corretamente.</string>
     <string name="warning_unsupported_os">O Android %1$s não é compatível, os mods podem não funcionar corretamente.</string>
     <string name="open_xposed">Gerenciar módulos Xposed</string>
@@ -982,12 +976,10 @@
     <string name="do_restore">Restaurar</string>
     <string name="storage_read_only">Seu armazenamento externo é somente leitura</string>
     <string name="storage_unavailable">Incapaz de obter acesso a qualquer armazenamento adequado</string>
-    <string name="storage_cannot_mkdir">Falha ao criar o diretório de backup</string>
     <string name="storage_cannot_backup">Falha ao criar arquivo de backup</string>
     <string name="storage_cannot_restore">Nenhum backup de configurações encontrado</string>
     <string name="backup_ok">As configurações foram copiadas com sucesso!</string>
     <string name="restore_ok">As configurações foram restauradas com sucesso!</string>
-    <string name="backup_restore_info">Suas configurações foram restauradas por meio do Google Cloud Backup. Faça uma reinicialização suave após habilitar o módulo Xposed.</string>
     <string name="prefs_migration_success">A configuração do módulo foi migrada com sucesso para funcionar com a nova versão LSPosed/EdXposed. Reinicie para aplicar as alterações.</string>
     <string name="prefs_migration_failure">Falha ao migrar as configurações do módulo para funcionar com a nova versão LSPosed/EdXposed. Você terá que usar a função de restauração ou configurar os mods do zero.</string>
     <string name="update_available">A atualização está disponível ⚠</string>
@@ -1026,7 +1018,6 @@
     <string name="delete_item_info">Pressione e segure o item para excluir</string>
     <string name="change_icon">Alterar ícone</string>
     <string name="guide_search">Pesquisar mods por nome. Pressione e segure para exibir uma lista de novos mods.</string>
-    <string name="guide_softreboot">Não se esqueça de aplicar os mods usando a reinicialização suave. Os mods ⟲ dinâmicos exigem apenas uma vez. Mais informações estão na página Sobre.</string>
     <string name="guide_marknew">Novos mods desde a atualização anterior podem ser marcados para melhor visibilidade</string>
     <string name="permission_scan">Deseja obter uma lista de redes/dispositivos ou não?</string>
     <string name="permission_permanent">Agora você precisará habilitar manualmente a permissão para esta opção. Bom trabalho!</string>
