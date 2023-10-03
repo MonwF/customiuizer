@@ -492,8 +492,6 @@
     <string name="launcher_gestures_activity">要启动的活动</string>
     <string name="launcher_title">启动器</string>
     <string name="launcher_summ">显示所选启动器的模块。只是视觉辅助，不会对模块有其他影响。</string>
-    <string name="launcher_compat_title">性能模式</string>
-    <string name="launcher_compat_summ">应用所有启动器模块的替代方法</string>
     <string name="launcher_infinitescroll_title">无限滚动</string>
     <string name="launcher_infinitescroll_summ">从末页跳到首页，反之亦然</string>
     <string name="launcher_noclockhide_title">状态栏时钟始终显示</string>

@@ -493,8 +493,6 @@
     <string name="launcher_gestures_activity">起動をするアクティビティ</string>
     <string name="launcher_title">ランチャー</string>
     <string name="launcher_summ">選択をしたランチャーのModを表示します。視覚的な補助のみでModには影響しません。</string>
-    <string name="launcher_compat_title">パフォーマンスモード</string>
-    <string name="launcher_compat_summ">すべてのランチャーModを適用する別の方法です</string>
     <string name="launcher_infinitescroll_title">無制限スクロール</string>
     <string name="launcher_infinitescroll_summ">最後のページから最初のページにジャンプまたはその逆を行ないます</string>
     <string name="launcher_noclockhide_title">時計を非表示にしない</string>

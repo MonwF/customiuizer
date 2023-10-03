@@ -13,12 +13,6 @@
 		android:entryValues="@array/launchers_val"
 		android:defaultValue="1" />
 
-	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_launcher_compat"
-		android:title="@string/launcher_compat_title"
-		android:summary="@string/launcher_compat_summ"
-		android:defaultValue="false" />
-
 	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:title="@string/launcher_folders"
 		android:key="pref_key_launcher_cat_folders" />
