@@ -645,6 +645,8 @@
     <string name="controls_fsg_width_title">Ancho para el gesto de atrás</string>
     <string name="controls_fsg_horiz_title">Gestos horizontales</string>
     <string name="controls_fsg_horiz_summ">Habilitar gestos horizontales y barra de navegación</string>
+    <string name="controls_fsg_assist_left_title">Acción al deslizar la esquina izquierda</string>
+    <string name="controls_fsg_assist_right_title">Acción al deslizar la esquina derecha</string>
     <string name="controls_fsg_swipeandstop_title">Deslizar a través de la pantalla empezando de la esquina y detenerse</string>
     <string name="controls_fsg_swipeandstop_disablevibrate_title">No vibrar</string>
     <string name="various_mods">Varios</string>
@@ -770,6 +772,8 @@
     <string name="array_expandnotifs_allbutblack">Para todas las apps excepto las listadas</string>
     <string name="array_expandnotifs_whiteonly">Solo para las aplicaciones listadas</string>
     <string name="array_mobiletypeicon_connected">Ocultar solo cuando no esté conectado</string>
+    <string name="array_mobiletypeicon_show_disconnected">Mostrar cuando no esté conectado</string>
+    <string name="system_statusbar_mobiletype_show_wificonnected_title">Mostrar cuando el Wi-Fi esté conectado</string>
     <string name="array_mobiletypeicon_hide">Ocultar por completo</string>
     <string name="array_autogroupnotif_no">No agrupar</string>
     <string name="array_qshaptic_light">Vibración ligera</string>
