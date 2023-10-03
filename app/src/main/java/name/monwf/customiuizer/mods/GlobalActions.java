@@ -462,20 +462,6 @@ public class GlobalActions {
             if (action.equals(ACTION_PREFIX + "TakeScreenshot")) {
                 context.sendBroadcast(new Intent("android.intent.action.CAPTURE_SCREENSHOT"));
             }
-			/*
-			if (action.equals(ACTION_PREFIX + "KillForegroundAppShedule")) {
-				if (mHandler == null) return;
-				mHandler.postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						removeTask(context, true);
-					}
-				}, 1000);
-			}
-			*/
-//			if (action.equals(ACTION_PREFIX + "KillForegroundApp")) {
-//				removeTask(context);
-//			}
 
             if (action.equals(ACTION_PREFIX + "GoBack")) {
                 new Thread(new Runnable() {
@@ -674,59 +660,6 @@ public class GlobalActions {
         }
         }
     };
-//
-//	private static void removeTask(Context context) {
-//		try {
-//			final ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
-//			@SuppressWarnings("deprecation")
-//			final List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
-//			final Method removeTask;
-//			if (Helpers.isLP2())
-//				removeTask = am.getClass().getMethod("removeTask", new Class[] { int.class });
-//			else
-//				removeTask = am.getClass().getMethod("removeTask", new Class[] { int.class, int.class });
-//			final Method forceStopPackage = am.getClass().getMethod("forceStopPackage", new Class[] { String.class });
-//			removeTask.setAccessible(true);
-//			forceStopPackage.setAccessible(true);
-//			String thisPkg = taskInfo.get(0).topActivity.getPackageName();
-//
-//			boolean isLauncher = false;
-//			boolean isAllowed = true;
-//			PackageManager pm = context.getPackageManager();
-//			Intent intent_home = new Intent(Intent.ACTION_MAIN);
-//			intent_home.addCategory(Intent.CATEGORY_HOME);
-//			intent_home.addCategory(Intent.CATEGORY_DEFAULT);
-//			List<ResolveInfo> launcherList = pm.queryIntentActivities(intent_home, 0);
-//
-//			for (ResolveInfo launcher: launcherList)
-//			if (launcher.activityInfo.packageName.equals(thisPkg)) isLauncher = true;
-//			if (thisPkg.equalsIgnoreCase("com.htc.android.worldclock")) isAllowed = false;
-//
-//			if (isLauncher) {
-//				XposedHelpers.callMethod(((PowerManager)context.getSystemService(Context.POWER_SERVICE)), "goToSleep", SystemClock.uptimeMillis());
-//			} else if (isAllowed) {
-//				// Removes from recents also
-//				if (Helpers.isLP2())
-//					removeTask.invoke(am, Integer.valueOf(taskInfo.get(0).id));
-//				else
-//					removeTask.invoke(am, Integer.valueOf(taskInfo.get(0).id), Integer.valueOf(1));
-//				// Force closes all package parts
-//				forceStopPackage.invoke(am, thisPkg);
-//			}
-//
-//			if (isLauncher || isAllowed) {
-//				if (Helpers.getHtcHaptic(context)) {
-//					Vibrator vibe = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
-//					if (XMain.pref.getBoolean("pref_key_controls_longpresshaptic_enable", false))
-//						vibe.vibrate(XMain.pref.getInt("pref_key_controls_longpresshaptic", 30));
-//					else
-//						vibe.vibrate(30);
-//				}
-//			}
-//		} catch (Throwable t) {
-//			XposedHelpers.log(t);
-//		}
-//	}
 
     public static void miuizerSettingsHook(PackageLoadedParam lpparam) {
         int settingsIconResId = MainModule.resHooks.addResource("ic_miuizer_settings", Helpers.isMIUI14 ? R.drawable.ic_miuizer_settings11 : R.drawable.ic_miuizer_settings_legacy);
@@ -830,6 +763,7 @@ public class GlobalActions {
 
     public static void setupGlobalActions(XposedModuleInterface.SystemServerLoadedParam lpparam) {
         ModuleHelper.hookAllConstructors("com.android.server.accessibility.AccessibilityManagerService", lpparam.getClassLoader(), new MethodHook() {
+            @SuppressLint("UnspecifiedRegisterReceiverFlag")
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
                 Context mGlobalContext = (Context)param.getArgs()[0];
@@ -841,7 +775,6 @@ public class GlobalActions {
                 intentfilter.addAction(ACTION_PREFIX + "GoToSleep");
                 intentfilter.addAction(ACTION_PREFIX + "LockDevice");
                 intentfilter.addAction(ACTION_PREFIX + "TakeScreenshot");
-                intentfilter.addAction(ACTION_PREFIX + "KillForegroundApp");
                 intentfilter.addAction(ACTION_PREFIX + "SwitchToPrevApp");
                 intentfilter.addAction(ACTION_PREFIX + "GoBack");
                 intentfilter.addAction(ACTION_PREFIX + "OpenPowerMenu");
@@ -850,7 +783,6 @@ public class GlobalActions {
                 intentfilter.addAction(ACTION_PREFIX + "VolumeUp");
                 intentfilter.addAction(ACTION_PREFIX + "VolumeDown");
                 intentfilter.addAction(ACTION_PREFIX + "LaunchIntent");
-                //intentfilter.addAction(ACTION_PREFIX + "KillForegroundAppShedule");
 
                 // Toggles
                 intentfilter.addAction(ACTION_PREFIX + "ToggleWiFi");
@@ -870,6 +802,7 @@ public class GlobalActions {
         });
 
         ModuleHelper.hookAllMethods("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.getClassLoader(), "initInternal", new MethodHook() {
+            @SuppressLint("UnspecifiedRegisterReceiverFlag")
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
                 Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
@@ -923,6 +856,7 @@ public class GlobalActions {
         Class<?> StatusBarClass = findClassIfExists("com.android.systemui.statusbar.phone.CentralSurfacesImpl", lpparam.getClassLoader());
         if (StatusBarClass == null) return;
         ModuleHelper.findAndHookMethod(StatusBarClass, "start", new MethodHook() {
+            @SuppressLint("UnspecifiedRegisterReceiverFlag")
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
                 mStatusBar = param.getThisObject();
@@ -1059,16 +993,6 @@ public class GlobalActions {
             return false;
         }
     }
-
-//	public static boolean killForegroundApp(Context context) {
-//		try {
-//			context.sendBroadcast(new Intent(ACTION_PREFIX + "KillForegroundApp"));
-//			return true;
-//		} catch (Throwable t) {
-//			XposedHelpers.log(t);
-//			return false;
-//		}
-//	}
 
     public static boolean simulateMenu(Context context) {
         try {
