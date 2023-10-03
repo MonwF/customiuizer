@@ -27,6 +27,7 @@
     <string name="system_statusbaricons_battery1_title">Zobrazení baterie</string>
     <string name="system_statusbaricons_battery4_title">Značka baterie v procentech</string>
     <string name="system_statusbaricons_battery3_title">Ukazatel nabíjení</string>
+    <string name="system_statusbaricons_battery2_title">Procento baterie se skryje ve stavové liště, ale zobrazí se v ovládacím centru</string>
     <string name="system_statusbaricons_alarm_title">Budík</string>
     <string name="system_statusbaricons_alarm_summ">Kompletně skrýt</string>
     <string name="system_statusbaricons_alarmn_title">Výběrová viditelnost ikony budíku</string>
@@ -36,6 +37,7 @@
     <string name="system_statusbaricons_signal_title">Signál mobilní sítě</string>
     <string name="system_statusbaricons_hidesignal_wificonnected_title">Pouze při připojení k Wi-Fi</string>
     <string name="system_statusbaricons_nosims_title">Žádná SIM</string>
+    <string name="system_statusbaricons_sim_nodata_title">Žádná datová SIM karta</string>
     <string name="system_statusbaricons_volte_title">VoLTE</string>
     <string name="system_statusbaricons_roaming_title">Roaming</string>
     <string name="system_statusbaricons_dualwifi_title">Duální Wi-Fi</string>
@@ -43,6 +45,7 @@
     <string name="system_statusbaricons_profile_title">Pracovní profil</string>
     <string name="system_statusbaricons_sound_title">Zvukové profily</string>
     <string name="system_statusbaricons_dnd_title">Režim Nerušit</string>
+    <string name="system_statusbaricons_secondspace_title">Druhý prostor</string>
     <string name="system_statusbaricons_privacy_title">Anonymní režim</string>
     <string name="system_statusbaricons_headset_title">Náhlavní souprava</string>
     <string name="system_statusbaricons_mute_title">Volání: ztlumený mikrofon</string>
@@ -519,8 +522,11 @@
     <string name="launcher_iconscale_title">Měřítko ikon</string>
     <string name="launcher_horizmargin_title">Horizontální okraje mřížky</string>
     <string name="launcher_topmargin_title">Horní okraj mřížky</string>
+    <string name="launcher_dock_topmargin_title">Okraj doku</string>
+    <string name="launcher_dock_bottommargin_title">Dolní okraj doku</string>
     <string name="launcher_horizwidgetmargin_title">Horizontální okraj widgetu</string>
     <string name="launcher_indicatorheight_title">Výška ukazatele stránky</string>
+    <string name="launcher_indicator_topmargin_title">Indikátor stránky na horní okraji</string>
     <string name="launcher_folders">Složky</string>
     <string name="launcher_folder_cols_title">Počet sloupců ve složkách</string>
     <string name="launcher_folderwidth_title">Využití celé šířky složky</string>
@@ -614,6 +620,7 @@
     <string name="controls_volumecursor_reverse_title">Změna směru</string>
     <string name="controls_volumecursor_reverse_summ">Prohodit směry pohybu kurzoru</string>
     <string name="controls_volumedowndt_turnon_torch_title">Dvojitým stiskem tlačítka hlasitosti dolů zapnout svítilnu</string>
+    <string name="controls_mediaplayer_apps_title">Aplikace přehrávače médií (nejdříve přidat do rozsahu LSPosed)</string>
     <string name="controls_volumemedia_up_title">Akce dlouhého stisknutí tlačítka Zvýšit hlasitost</string>
     <string name="controls_volumemedia_up_summ">Akce pro dlouhé stisknutí tlačítka Zvýšení hlasitosti, když je obrazovka vypnutá</string>
     <string name="controls_volumemedia_down_title">Akce dlouhého stisknutí tlačítka Snížení hlasitosti</string>
@@ -647,6 +654,8 @@
     <string name="controls_fsg_width_title">Šířka oblasti gesta Zpět</string>
     <string name="controls_fsg_horiz_title">Horizontální gesta</string>
     <string name="controls_fsg_horiz_summ">Povolit horizontální gesta i navigační panel</string>
+    <string name="controls_fsg_assist_left_title">Akce přejetím levého rohu</string>
+    <string name="controls_fsg_assist_right_title">Akce přejetím pravého rohu</string>
     <string name="controls_fsg_swipeandstop_title">Potáhnutím prstu z jednoho okraje displeje na druhý pro návrat k předchozí aplikaci</string>
     <string name="controls_fsg_swipeandstop_disablevibrate_title">Nevibrovat</string>
     <string name="various_mods">Různé</string>
@@ -977,6 +986,8 @@
     <string name="restart_systemui">Restartovat SystemUI</string>
     <string name="restart_securitycenter">Restartovat bezpečnostní centrum</string>
     <string name="backup_restore">Správa nastavení</string>
+    <string name="reset_settings">Obnovit nastavení</string>
+    <string name="reset_settings_done">Obnovení dokončeno. Restartujte prosím</string>
     <string name="backup_restore_choose">Zvolte požadovanou rutinu</string>
     <string name="do_backup">Záloha</string>
     <string name="do_restore">Obnova</string>
@@ -1060,6 +1071,7 @@
     <string name="system_statusbar_batterytempandcurrent_content_title">Zobrazit obsah</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">Zobrazit na pravé straně</string>
     <string name="system_statusbar_batterytempandcurrent_positive_title">Aktuální hodnota je vždy kladná</string>
+    <string name="system_statusbar_batterytempandcurrent_temp_decimal_title">Teplota je vždy zobrazena jako desetinné číslo</string>
     <string name="system_statusbar_batterytempandcurrent_incharge_title">Zobrazit pouze při nabíjení</string>
     <string name="system_statusbar_batterytempandcurrent_fixcurrentratio_title">Oprava poměru proudů na některých zařízeních</string>
     <string name="system_statusbar_batterytempandcurrent_hideunit_title">Skrýt jednotku</string>
@@ -1102,6 +1114,8 @@
     <string name="various_clipboard_defaultaction_title">Výchozí akce ai schránky</string>
     <string name="various_disable_access_devicelogs_title">Odmítnout přístup k záznamům zařízení</string>
     <string name="various_skip_interceptperm_title">Přeskočit časovač oprávnění</string>
+    <string name="various_replace_defaultopen_with_openbydefault_title">Nahradit \"Vymazat výchozí nastavení\" \"Otevřít ve výchozím nastavení\"</string>
+    <string name="various_open_by_default_title">Otevřít ve výchozím nastavení</string>
     <string name="various_skip_securityscan_title">Přeskočit bezpečnostní skenování</string>
     <string name="various_show_battery_temperature_title">Zobrazit teplotu v baterii</string>
     <string name="various_enable_sc_ai_clipboard_blur_location_title">Povolit AI schránku a polohu rozostření</string>

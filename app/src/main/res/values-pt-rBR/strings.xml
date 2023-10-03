@@ -3,7 +3,7 @@
     <string name="app_about">Sobre</string>
     <string name="about_version">Versão %1$s</string>
     <string name="about_dev">por Mikanoshi &amp; MonwF</string>
-    <string name="about_dynamic">Geralmente, os mods exigem reinicialização suave para serem ativados ou desativados, mas aqueles marcados com ⟲ requerem apenas uma reinicialização suave depois que seu valor foi alterado de padrão para personalizado, as alterações subsequentes são aplicadas imediatamente.</string>
+    <string name="about_dynamic">Geralmente, os mods exigem reinicialização suave para serem ativados ou desativados, mas aqueles marcados com ⟲ requerem apenas uma reinicialização suave depois que seu valor for alterado de padrão para personalizado, as alterações subsequentes são aplicadas imediatamente.</string>
     <string name="about_unsupported">Mods marcados com ⨯ não são suportados neste dispositivo.</string>
     <string name="menu_update">Atualizar</string>
     <string name="mods">Mods</string>
@@ -26,15 +26,17 @@
     <string name="system_statusbaricons_battery1_title">Imagem da bateria</string>
     <string name="system_statusbaricons_battery4_title">Marca de porcentagem da bateria</string>
     <string name="system_statusbaricons_battery3_title">Indicador de carga</string>
+    <string name="system_statusbaricons_battery2_title">A porcentagem da bateria fica oculta na barra de status, mas aparece no centro de controle</string>
     <string name="system_statusbaricons_alarm_title">Alarme</string>
     <string name="system_statusbaricons_alarm_summ">Ocultar completamente</string>
     <string name="system_statusbaricons_alarmn_title">Visibilidade seletiva do ícone de alarme</string>
-    <string name="system_statusbaricons_alarmn_summ">Mostrar ícone de alarme apenas durante o número definido de horas antes do próximo alarme</string>
+    <string name="system_statusbaricons_alarmn_summ">Exibir ícone de alarme apenas durante o número definido de horas antes do próximo alarme</string>
     <string name="system_statusbaricons_btbattery_title">Bateria bluetooth</string>
     <string name="system_statusbaricons_ble_unlock_title">Desbloquear com dispositivo Bluetooth</string>
     <string name="system_statusbaricons_signal_title">Sinal de rede móvel</string>
     <string name="system_statusbaricons_hidesignal_wificonnected_title">Somente quando conectado ao Wi-Fi</string>
     <string name="system_statusbaricons_nosims_title">Sem cartão SIM</string>
+    <string name="system_statusbaricons_sim_nodata_title">Nenhum cartão SIM de dados</string>
     <string name="system_statusbaricons_volte_title">VoLTE</string>
     <string name="system_statusbaricons_roaming_title">Roaming</string>
     <string name="system_statusbaricons_dualwifi_title">Wi-Fi Duplo</string>
@@ -42,6 +44,7 @@
     <string name="system_statusbaricons_profile_title">Perfil de trabalho</string>
     <string name="system_statusbaricons_sound_title">Perfis de som</string>
     <string name="system_statusbaricons_dnd_title">Modo não perturbe</string>
+    <string name="system_statusbaricons_secondspace_title">Segundo espaço</string>
     <string name="system_statusbaricons_privacy_title">Modo incógnito</string>
     <string name="system_statusbaricons_headset_title">Fone de ouvido</string>
     <string name="system_statusbaricons_mute_title">Chamada: microfone mudo</string>
@@ -65,7 +68,7 @@
     <string name="system_statusbarheight_title">Altura da barra de status</string>
     <string name="system_statusbar_iconsize_title">Tamanho dos ícones da barra de status</string>
     <string name="system_statusbarcolor_title">Cor de fundo da barra de status</string>
-    <string name="system_statusbarcolor_summ">Fazer com que as cores de fundo da barra de status e da barra de ações do app sejam as mesmas sempre que possível</string>
+    <string name="system_statusbarcolor_summ">Torne as cores de fundo da barra de status e da barra de ação do app iguais sempre que possível</string>
     <string name="system_statusbarcolor_apps_title">Lista negra</string>
     <string name="system_shortcut_app_title">App de atalho</string>
     <string name="system_shortcut_app_summ">Abrir app selecionado quando tocar no ícone de atalho na tela de notificações</string>
@@ -75,11 +78,11 @@
     <string name="system_calendar_app_summ">Abrir app selecionado quando tocar na data na tela de notificações</string>
     <string name="system_clockseconds_title">Mostrar segundos</string>
     <string name="system_cc_hidedate_title">Ocultar data</string>
-    <string name="system_cc_hide_shortcuticons_title">Ocultar configurações e ícones de edição de bloco</string>
+    <string name="system_cc_hide_shortcuticons_title">Ocultar botão de configurações e edição de blocos</string>
     <string name="system_cc_custom_clock_action_title">Personalizar ações do relógio</string>
     <string name="system_cc_custom_clock_action_summ">Abra o app de configurações com um clique e edite os blocos com um clique longo</string>
     <string name="system_clock_show_ampm_title">Mostrar AM|PM</string>
-    <string name="system_statusbar_clock_chip_title">Mostrar bolha colorida atrás do tempo</string>
+    <string name="system_statusbar_clock_chip_title">Mostrar bolha colorida atrás da hora</string>
     <string name="system_statusbar_clock_chip_radius_title">Raio das bordas</string>
     <string name="system_statusbar_clock_chip_startcolor_title">Cor inicial</string>
     <string name="system_statusbar_clock_chip_endcolor_title">Cor final</string>
@@ -92,13 +95,13 @@
     <string name="system_clock_customformat_enable_title">Ativar formato personalizado</string>
     <string name="system_clock_customformat_setting_title">Definir formato</string>
     <string name="system_clock_customformat_help_summ">        Pode inserir nova linha, o conteúdo após 2 linhas será cortado
-        \naaaa - ano de quatro dígitos (2023)
-        \naa - ano de dois dígitos (23)
+        \nyyyy - ano de quatro dígitos (2023)
+        \nyy - ano de dois dígitos (23)
         \nMM - mês de dois dígitos (02, 12)
         \nM - mês de um dígitos (2, 12)
         \ndd - dia de dois dígitos (02, 23)
         \nd - dia de um dígitos (2, 23)
-        \ns -  semana curta (Dom)
+        \nE -  semana curta (Dom)
         \na - AM, PM
         \naa - manhã, tarde, noite
         \nHH - hora de dois dígitos de 24 horas (09, 14)
@@ -106,8 +109,7 @@
         \nhh - hora de dois dígito de 12 horas (09, 02)
         \nh - hora de um dígito de 12 horas (9, 2)
         \nmm - hora de dois dígito (09)
-        \nss - segundo de dois dígito (09)
-    </string>
+        \nss - segundo de dois dígito (09)</string>
     <string name="system_clock_dualrow_title">Mostrar em duas linhas</string>
     <string name="system_clock_fixedwidth_title">Corrija a largura do conteúdo para evitar instabilidade horizontal</string>
     <string name="system_clock_fixedwidth_summ">Ajustar a largura quando os segundos são exibidos</string>
@@ -117,7 +119,7 @@
     <string name="system_maxsbicons_summ">Número de ícones de notificação a serem exibidos antes de transformá-los em pontos</string>
     <string name="system_mobiletypeicon_title">Ocultar tipo de rede móvel</string>
     <string name="system_mobiletypeicon_summ">Remover ícone do tipo de rede móvel da barra de status</string>
-    <string name="system_networkindicator_wifi_title">Ocultar indicadores de atividade de rede WiFi</string>
+    <string name="system_networkindicator_wifi_title">Ocultar indicadores de atividade da rede Wi-Fi</string>
     <string name="system_networkindicator_mobile_title">Ocultar indicadores de atividade da rede móvel</string>
     <string name="system_4gtolte_title">Mostrar ícone LTE para 4G</string>
     <string name="system_statusbar_mobile_showname_title">Tipo de rede móvel personalizado</string>
@@ -137,7 +139,7 @@
     <string name="system_detailednetspeed_low_summ">Não mostrar indicador se a velocidade for baixa</string>
     <string name="system_detailednetspeed_lowlevel_title">Nível de baixa velocidade</string>
     <string name="system_detailednetspeed_lowlevel_summ">Valores de velocidade abaixo deste nível serão considerados baixos e terão um ícone de indicação diferente</string>
-    <string name="system_detailednetspeed_secunit_title">Ocultar byte por segundo sufixo (B/s)</string>
+    <string name="system_detailednetspeed_secunit_title">Ocultar sufixo de byte por segundo (B/s)</string>
     <string name="system_netspeed_fontsize_title">Tamanho da fonte da velocidade da rede</string>
     <string name="system_statusbarcontrols_title">Controles de gestos</string>
     <string name="system_statusbarcontrols_summ">Execute ações selecionadas no slide e toque duas vezes</string>
@@ -156,7 +158,7 @@
     <string name="system_minimalnotifview_title">Trazer de volta a visualização recolhida minimalista</string>
     <string name="system_minimalnotifview_summ">Notificações de importância mínima podem ser recolhidas em exibição de uma linha novamente</string>
     <string name="system_notifchannelsettings_title">Abrir configurações do canal</string>
-    <string name="system_notifchannelsettings_summ">Abrir configurações do menu de notificação leva para configurações de canal em vez de configurações de notificação comuns do app</string>
+    <string name="system_notifchannelsettings_summ">Abrir as configurações do menu de notificação leva às configurações do canal, em vez das configurações de notificação comuns do app</string>
     <string name="system_messagingstylelines_title">Contagem máxima de linhas no estilo de mensagem</string>
     <string name="system_messagingstylelines_summ">Limitar número de linhas exibidas nas notificações do estilo de mensagens</string>
     <string name="system_drawer_removeshortcut_title">Ocultar atalho de configurações de notificação</string>
@@ -171,7 +173,7 @@
     <string name="system_showpct_top_title">Margem superior do painel de porcentagens</string>
     <string name="system_inactivebrightness_title">Desativar controle deslizante de brilho</string>
     <string name="system_notifrowmenu_title">Menu de notificação estendido</string>
-    <string name="system_notifrowmenu_summ">Abrir informações do app, forçar a fechamento do app e abrir em janela flutuante a partir do menu de notificação (limpar notificação à esquerda para abri-lo)</string>
+    <string name="system_notifrowmenu_summ">Abra as informações do app, force o fechamento do app e abra em uma janela flutuante no menu de notificação (deslize a notificação para a esquerda para abri-la)</string>
     <string name="system_notifrowmenu_appinfo">Informações do app</string>
     <string name="system_notifrowmenu_openinfw">Janela flutuante</string>
     <string name="system_notifrowmenu_forceclose">Forçar fechamento</string>
@@ -200,9 +202,9 @@
     <string name="system_screenshot_overlay_summ">Ocultar sobreposições temporariamente ao fazer uma captura de tela</string>
     <string name="system_screenshot_floattime_title">Tempo de exibição flutuante da captura de tela</string>
     <string name="system_screenshot_floattime_summ">Atraso antes que uma janela flutuante com captura de tela recém-criada desapareça</string>
-    <string name="system_chargeanimtime_title">Tempo limite da tela de animação de carga</string>
+    <string name="system_chargeanimtime_title">Tempo limite da animação de carregamento</string>
     <string name="system_chargeanimtime_summ">Por quanto tempo a tela deve ser mantida após o início da animação de carregamento</string>
-    <string name="system_nolightuponcharges_title">Nenhuma tela acende na carga</string>
+    <string name="system_nolightuponcharges_title">Não acender a tela ao carregar</string>
     <string name="system_nolightuponcharges_summ">Não ligue a tela ao conectar ou desconectar um carregador</string>
     <string name="system_nolightuponheadset_title">Nenhuma tela acende na conexão do fone de ouvido</string>
     <string name="system_nolightuponheadset_summ">Não ligue a tela ao conectar um fone de ouvido</string>
@@ -220,19 +222,19 @@
     <string name="system_firstpress_title">Ajuste de volume imediato</string>
     <string name="system_firstpress_summ">Ajustar o volume do fluxo de mídia ao pressionar a primeira tecla</string>
     <string name="system_separatevolume_title">Controles de volume separados</string>
-    <string name="system_separatevolume_summ">Permitir configurar o volume separado para toques/notificações/sons do sistema em Configurações</string>
+    <string name="system_separatevolume_summ">Permite configurar o volume separado para toques/notificações/sons do sistema em Configurações</string>
     <string name="system_separatevolume_slider_title">Controle deslizante de volume de notificação</string>
     <string name="system_separatevolume_slider_summ">Adicionar controle deslizante de notificação à caixa de diálogo de volume expandido</string>
     <string name="system_volumetimer_title">Temporizadores estendidos</string>
     <string name="system_volumetimer_summ">Adicione mais intervalos aos temporizadores para os modos Silencioso e Não perturbe</string>
     <string name="system_volumebar_blur_mtk_title">Ative o blur da barra de volume para dispositivos MTK</string>
-    <string name="system_volumedialogdelay_collapsed_title">Atraso de ocultar automaticamente a caixa de diálogo do volume</string>
+    <string name="system_volumedialogdelay_collapsed_title">Atraso de ocultação automática do diálogo de volume</string>
     <string name="system_volumedialogdelay_collapsed_summ">Recolhido</string>
     <string name="system_volumedialogdelay_expanded_summ">Expandido</string>
     <string name="system_volumesteps_title">Multiplicador de passos de volume</string>
     <string name="system_volumesteps_summ">Altere o número de etapas de volume para cada tipo de fluxo</string>
     <string name="system_visualizer_title">Visualizador de música</string>
-    <string name="system_visualizer_summ">Exibir densidade fantasma de faixas de frequência de áudio discreta</string>
+    <string name="system_visualizer_summ">Exibir densidade espectral de faixas de frequência de áudio discretas</string>
     <string name="system_visualizer_lockscreen_summ">O visualizador é desenhado sobre o papel de parede da tela de bloqueio</string>
     <string name="system_visualizer_custom_title">Mostrar na tela de bloqueio personalizada</string>
     <string name="system_visualizer_custom_summ">Desenhe o visualizador no topo da tela de bloqueio personalizada</string>
@@ -286,7 +288,7 @@
     <string name="system_albumartonlock_title">Capa do álbum como papel de parede</string>
     <string name="system_albumartonlock_summ">Exibir a capa do álbum da faixa atualmente reproduzida como papel de parede da tela de bloqueio</string>
     <string name="system_albumartonlock_gray_title">Escala de cinza</string>
-    <string name="system_albumartonlock_gray_summ">Converter capa do álbum em imagem preto e branco</string>
+    <string name="system_albumartonlock_gray_summ">Converter a capa do álbum em imagem preto e branco</string>
     <string name="system_albumartonlock_blur_title">Blur da capa do álbum</string>
     <string name="system_albumartonlock_scale_title">Escala da capa do álbum</string>
     <string name="system_credentials_title">Desbloquear credenciais</string>
@@ -296,7 +298,7 @@
     <string name="system_lockscreenshortcuts_right_off_title">Desativar o gesto de deslizar para a esquerda</string>
     <string name="system_lockscreenshortcuts_right_title">Deslize para a esquerda</string>
     <string name="system_lockscreenshortcuts_right_image_title">Alterar ícone direito</string>
-    <string name="system_lockscreenshortcuts_right_image_summ">Substitua o ícone da câmera pelo ícone CustoMIUIzer</string>
+    <string name="system_lockscreenshortcuts_right_image_summ">Substitua o ícone da câmera pelo ícone do CustoMIUIzer</string>
     <string name="system_lockscreenshortcuts_right_image_hint">Arraste o ícone para executar uma ação personalizada</string>
     <string name="system_lockscreenshortcuts_left_off_title">Desativar o gesto de deslizar para a direita</string>
     <string name="system_lockscreenshortcuts_left_align_title">Alinhamento vertical</string>
@@ -345,7 +347,7 @@
     <string name="system_epm_title">Menu de energia estendido</string>
     <string name="system_epm_summ">Adicione novas opções de reinicialização ao menu de energia (Fastboot, Recovery e reinicialização suave)</string>
     <string name="system_downgrade_title">Permitir downgrade</string>
-    <string name="system_downgrade_summ">Tornar possível a instalação de uma versão mais antiga do app em cima de uma mais recente</string>
+    <string name="system_downgrade_summ">Torne possível a instalação de uma versão mais antiga do app em cima de uma mais recente</string>
     <string name="system_apksign_title">Desativar verificação de assinatura</string>
     <string name="system_disableintegrity_title">Desativar verificação de integridade do sistema</string>
     <string name="system_apksign_summ">Permitir a atualização de apps mesmo quando a assinatura do APK for diferente da instalada</string>
@@ -361,8 +363,8 @@
     <string name="system_cleanshare_title">Menu de compartilhamento limpo</string>
     <string name="system_cleanshare_summ">Remova os apps selecionados do menu de compartilhamento</string>
     <string name="system_clean_test">Menu de teste</string>
-    <string name="system_cleanopenwith_title">Limpar menu \"Abrir com\"</string>
-    <string name="system_cleanopenwith_summ">Remover apps selecionados do menu \"Abrir com\"</string>
+    <string name="system_cleanopenwith_title">Limpar menu Abrir com</string>
+    <string name="system_cleanopenwith_summ">Remover apps selecionados do menu Abrir com</string>
     <string name="system_cleanopenwith_testdata">Selecione o tipo de dados de teste</string>
     <string name="system_cleanopenwith_datatype">Selecione o tipo de dados para ocultar</string>
     <string name="system_defaultusb_title">Configuração USB padrão</string>
@@ -375,7 +377,7 @@
     <string name="system_rotateanim_title">Animação de rotação</string>
     <string name="system_allrotations_title">Todas as rotações</string>
     <string name="system_allrotations_summ">Permitir todas as rotações de tela, incluindo retrato reverso</string>
-    <string name="system_orientationlock_title">Bloqueio de orientação</string>
+    <string name="system_orientationlock_title">Bloquear orientação</string>
     <string name="system_orientationlock_summ">Adicione o bloco de Configurações Rápidas que pode bloquear a orientação no modo retrato ou paisagem</string>
     <string name="system_notifafterunlock_title">Manter notificações</string>
     <string name="system_notifafterunlock_summ">Mostrar notificações na tela de bloqueio mesmo após ser desbloqueado e bloqueado novamente</string>
@@ -451,12 +453,12 @@
     <string name="system_mods_applock">Bloqueio de apps</string>
     <string name="system_applock_title">Bloqueio de app menos rígido</string>
     <string name="system_applock_summ">Não bloquear apps quando o dispositivo estiver bloqueado se a opção com o bloqueio de apps após a saída for selecionada</string>
-    <string name="system_applock_timeout_title">Tempo limite de bloqueio do app</string>
+    <string name="system_applock_timeout_title">Tempo limite do bloqueio de apps</string>
     <string name="system_applock_timeout_summ">Intervalo de tempo durante o qual o app permanece desbloqueado após a saída</string>
     <string name="system_applock_list_title">Lista de apps para bloquear</string>
     <string name="system_applock_list_summ">Versão aprimorada da opção apps ocultos que permite ocultar qualquer app instalado. Nenhuma reinicialização é necessária.</string>
-    <string name="system_applock_skip_title">Ignorar o bloqueio do app</string>
-    <string name="system_applock_skip_summ">Permitir que as atividades selecionadas ignorem o bloqueio do app</string>
+    <string name="system_applock_skip_title">Ignorar bloqueio de apps</string>
+    <string name="system_applock_skip_summ">Permitir que as atividades selecionadas ignorem o bloqueio de apps</string>
     <string name="system_applock_activities">Atividades selecionadas</string>
     <string name="system_mods_qs">Configurações rápidas</string>
     <string name="system_mods_cc">Centro de controle</string>
@@ -498,9 +500,9 @@
     <string name="launcher_noclockhide_title">Não ocultar relógio</string>
     <string name="launcher_noclockhide_summ">Não ocultar o relógio da barra de status em páginas com widgets de relógio</string>
     <string name="launcher_nowidgetonly_title">Desativar tela somente no widget</string>
-    <string name="launcher_nowidgetonly_summ">Fazer com que todas as telas sejam compatíveis com widgets e apps em tablets</string>
+    <string name="launcher_nowidgetonly_summ">Faça com que todas as telas sejam compatíveis com widgets e apps em tablets</string>
     <string name="launcher_nounlockanim_title">Remover animação de desbloqueio</string>
-    <string name="launcher_nounlockanim_summ">Não anime ícones quando o dispositivo estiver desbloqueado</string>
+    <string name="launcher_nounlockanim_summ">Não anime ícones quando o dispositivo for desbloqueado</string>
     <string name="launcher_nozoomanim_title">Remover animação de inicialização</string>
     <string name="launcher_nozoomanim_summ">Não amplie/diminua os ícones quando o app for fechado/aberto</string>
     <string name="launcher_oldlaunchanim_title">Usar animação da launcher antiga</string>
@@ -519,8 +521,11 @@
     <string name="launcher_iconscale_title">Tamanho dos ícones</string>
     <string name="launcher_horizmargin_title">Margens horizontais da grade</string>
     <string name="launcher_topmargin_title">Margem superior da grade</string>
+    <string name="launcher_dock_topmargin_title">Margem superior da dock</string>
+    <string name="launcher_dock_bottommargin_title">Margem inferior da dock</string>
     <string name="launcher_horizwidgetmargin_title">Margem horizontal do widget</string>
     <string name="launcher_indicatorheight_title">Altura do indicador de página</string>
+    <string name="launcher_indicator_topmargin_title">Margem superior do indicador de página</string>
     <string name="launcher_folders">Pastas</string>
     <string name="launcher_folder_cols_title">Número de colunas nas pastas</string>
     <string name="launcher_folderwidth_title">Usar toda a largura da pasta</string>
@@ -561,7 +566,7 @@
     <string name="launcher_swiperightaction_summ">Ação para gesto de deslizar para a direita na dock da launcher</string>
     <string name="launcher_swipeleftaction_title">Deslize para esquerda</string>
     <string name="launcher_swipeleftaction_summ">Ação para deslizar para a esquerda na dock da launcher</string>
-    <string name="launcher_shakeaction_title">Agite a ação</string>
+    <string name="launcher_shakeaction_title">Ação ao agitar</string>
     <string name="launcher_shakeaction_summ">Ação para agitar o dispositivo em qualquer tela inicial</string>
     <string name="launcher_doubletap_title">Ação de toque duplo</string>
     <string name="launcher_doubletap_summ">Ação para tocar duas vezes no espaço vazio de qualquer tela inicial</string>
@@ -572,12 +577,12 @@
     <string name="launcher_bugfixes">Correções de bugs</string>
     <string name="controls_mods">Controles</string>
     <string name="controls_powerdt_title">Ação de pressão dupla</string>
-    <string name="controls_powerdt_summ">Substitua a inicialização da câmera ao pressionar duas vezes a tecla liga/desliga. Requer que o atalho do botão de estoque esteja ativado.</string>
+    <string name="controls_powerdt_summ">Substitua a inicialização da câmera ao pressionar duas vezes a botão liga/desliga. Requer que o atalho do botão de estoque esteja ativado.</string>
     <string name="controls_powerflash_title">Lanterna rápida</string>
     <string name="controls_powerflash_summ">Pressione e segure o botão liga/desliga enquanto a tela estiver desligada para ligar a lanterna</string>
     <string name="controls_powerflash_delay_title">Atraso mais longo da lanterna rápida</string>
     <string name="controls_powerflash_delay_summ">Aumente o atraso do pressionamento longo do botão liga/desliga</string>
-    <string name="controls_mods_fingerprint">Scanner de impressão digital</string>
+    <string name="controls_mods_fingerprint">Leitor de impressão digital</string>
     <string name="controls_fingerprint1_title">Ação de toque único</string>
     <string name="controls_fingerprint1_summ">Ação para um único toque quando a tela está ligada</string>
     <string name="controls_fingerprint2_title">Ação de toque duplo</string>
@@ -597,34 +602,35 @@
     <string name="controls_fingerprint_conflict">As ações de aceitação e rejeição não podem ter a mesma combinação.</string>
     <string name="controls_fingerprint_conflict_reset_accept">A ação de aceitação foi desativada.</string>
     <string name="controls_fingerprint_conflict_reset_reject">A ação de rejeição foi desativada.</string>
-    <string name="controls_fingerprintscreen_title">Ligar tela após falha</string>
+    <string name="controls_fingerprintscreen_title">Ligar a tela após falha</string>
     <string name="controls_fingerprintscreen_summ">Ligar a tela na autenticação com falha</string>
     <string name="controls_fingerprintwake_title">Exigir impressões digitais reais</string>
-    <string name="controls_fingerprintwake_summ">Não ligue a tela quando não haver impressões digitais registradas</string>
+    <string name="controls_fingerprintwake_summ">Não ligue a tela quando não houver impressões digitais registradas</string>
     <string name="controls_fingerprintsuccess_title">Vibrar no sucesso</string>
     <string name="controls_fingerprintsuccess_summ">Feedback tátil na autenticação bem-sucedida</string>
     <string name="controls_fingerprintsuccess_ignore_title">Ignorar configurações do sistema</string>
     <string name="controls_fingerprintsuccess_ignore_summ">Não desative o feedback tátil quando a vibração ao tocar estiver desativada</string>
     <string name="controls_fingerprintfailure_title">Sem vibração em caso de falha</string>
     <string name="controls_fingerprintfailure_summ">Remova o feedback tátil na falha de autenticação</string>
-    <string name="controls_mods_power">Tecla liga/desliga</string>
+    <string name="controls_mods_power">Botão liga/desliga</string>
     <string name="controls_mods_volume">Teclas de volume</string>
     <string name="controls_volumecursor_title">Controlar o cursor de entrada</string>
     <string name="controls_volumecursor_summ">Mova o cursor da entrada de texto usando os botões de volume</string>
     <string name="controls_volumecursor_reverse_title">Alterar direções</string>
     <string name="controls_volumecursor_reverse_summ">Troque as direções de movimentos do cursor</string>
     <string name="controls_volumedowndt_turnon_torch_title">Toque duplo no volume para baixo para ligar a lanterna</string>
-    <string name="controls_volumemedia_up_title">Ação de pressão longa para aumentar o volume</string>
-    <string name="controls_volumemedia_up_summ">Ação para aumentar o volume quando a tela estiver desligada</string>
-    <string name="controls_volumemedia_down_title">Ação de pressão longa para diminuir o volume</string>
-    <string name="controls_volumemedia_down_summ">Ação para diminuir o volume quando a tela estiver desligada</string>
+    <string name="controls_mediaplayer_apps_title">Apps de reprodutor de mídia (adicione primeiro ao escopo LSPosed)</string>
+    <string name="controls_volumemedia_up_title">Ação ao pressionar o botão de aumentar volume</string>
+    <string name="controls_volumemedia_up_summ">Ação de aumentar o volume quando a tela estiver desligada</string>
+    <string name="controls_volumemedia_down_title">Ação ao pressionar o botão de diminuir volume</string>
+    <string name="controls_volumemedia_down_summ">Ação de diminuir o volume quando a tela estiver desligada</string>
     <string name="controls_volumemedia_vibrate_title">Vibração de pressão longa</string>
     <string name="controls_volumemedia_vibrate_summ">Vibrar quando a ação de pressão longa é executada</string>
     <string name="controls_mods_navbar">Barra de navegação</string>
     <string name="controls_nonavbar_title">Ocultar barra de navegação e indicador de tela cheia</string>
     <string name="controls_hidenavbar_whenscreenshot_title">Ocultar barra de navegação e indicador de tela cheia ao capturar uma tela</string>
     <string name="controls_nonavbar_fix_inputmethod_title">Corrigir otimização de teclado em tela cheia</string>
-    <string name="controls_nonavbar_fix_inputmethod_summ">Adicionar apps no método de entrada ao escopo do LSPosed primeiro</string>
+    <string name="controls_nonavbar_fix_inputmethod_summ">Adicione apps no método de entrada ao escopo do LSPosed primeiro</string>
     <string name="controls_imebackalticon_title">Botão voltar reativo</string>
     <string name="controls_imebackalticon_summ">Alternar ícone do botão voltar para outro no modo de entrada</string>
     <string name="controls_navbarheight_title">Altura da barra de navegação</string>
@@ -656,14 +662,14 @@
     <string name="various_hiddenfeatures_summ">Atividades que nem sempre são facilmente acessíveis</string>
     <string name="various_hiddenfeatures_not_found">Não disponível neste dispositivo</string>
     <string name="various_runningservices_title">Serviços em execução</string>
-    <string name="various_batteryoptimization_title">Otimização da bateria</string>
+    <string name="various_batteryoptimization_title">Otimização de bateria</string>
     <string name="various_memorystats_title">Estatísticas de memória</string>
     <string name="various_appusagestats_title">Estatísticas de utilização</string>
     <string name="various_aospsearch_title">Procurar</string>
     <string name="various_aospnotif_title">Apps e notificações</string>
     <string name="various_aospnotiflog_title">Registro de notificação</string>
-    <string name="various_miuiinstaller_title">Use o instalador de pacotes da MIUI</string>
-    <string name="various_miuiinstaller_summ">Permitir que ele atualize os apps de sistema</string>
+    <string name="various_miuiinstaller_title">Usar o instalador de pacotes da MIUI</string>
+    <string name="various_miuiinstaller_summ">Permita que ele atualize os apps de sistema</string>
     <string name="various_miuiinstaller_error">O app necessário não está instalado ou desativado</string>
     <string name="various_installappinfo_title">Informações do app no instalador</string>
     <string name="various_installappinfo_summ">Exibir informações sobre o app que está sendo instalado</string>
@@ -673,26 +679,26 @@
     <string name="various_installappinfo_sdk">SDK compatível</string>
     <string name="various_installappinfo_current">Corrente</string>
     <string name="various_alarmcompat_title">Compatibilidade do relógio</string>
-    <string name="various_alarmcompat_summ">Fazer com que os apps selecionados exibam corretamente a próxima hora do alarme definida pelo Relógio MIUI</string>
+    <string name="various_alarmcompat_summ">Faça com que os apps selecionados exibam corretamente a próxima hora do alarme definida pelo Relógio MIUI</string>
     <string name="various_gboardpadding_port_title">Preenchimento inferior em retrato</string>
     <string name="various_gboardpadding_land_title">Preenchimento inferior em paisagem</string>
-    <string name="various_answerinheadup_title">Manter as chamadas na notificação ao atender uma ligação</string>
+    <string name="various_answerinheadup_title">Manter chamadas na notificação ao atender uma ligação</string>
     <string name="various_showcallui_title">Mostrar IU de chamada</string>
     <string name="various_showcallui_summ">Definir quando a interface do usuário para chamada recebida deve ser exibida ao invés da notificação pop-up</string>
-    <string name="various_calluibright_title">Brilho da tela durante a chamada</string>
+    <string name="various_calluibright_title">Brilho da tela durante chamada</string>
     <string name="various_calluibright_type_title">Tipos de chamada</string>
     <string name="various_calluibright_val_title">Valor do brilho</string>
     <string name="various_calluibright_night_title">Modo noturno</string>
-    <string name="various_calluibright_night_summ">Não alterar brilho durante a noite</string>
-    <string name="various_calluibright_night_start_title">Começar</string>
+    <string name="various_calluibright_night_summ">Não alterar o brilho durante a noite</string>
+    <string name="various_calluibright_night_start_title">Começo</string>
     <string name="various_calluibright_night_end_title">Fim</string>
     <string name="various_restrictapp_title">Restrições completas</string>
-    <string name="various_restrictapp_summ">Permitir configurar a economia de bateria e acesso Wi-Fi para apps do sistema</string>
+    <string name="various_restrictapp_summ">Permite configurar a economia de bateria e acesso Wi-Fi para apps do sistema</string>
     <string name="various_disableapp_title">Controle de estado do app</string>
     <string name="various_disableapp_summ">Permite desativar quase qualquer app a partir de sua página de informações</string>
     <string name="various_securitycenter_unlock_title">Desbloquear recursos da central de segurança</string>
     <string name="various_apps_title">Mostrar detalhes adicionais do app</string>
-    <string name="various_apps_summ">Adicione novos campos à página de informações do app: - Código da versão - Nome do arquivo APK - Caminho dos dados - ID do usuário - Versão do SDK - Abrir na Play Store - Iniciar o app</string>
+    <string name="various_apps_summ">Adicione novos campos à página de informações do app:\n- Código da versão do APK\n- Nome do arquivo APK\n- Caminho dos dados\n- ID do usuário\n- Versão do SDK de destino\n- Abrir na Play Store\n- Iniciar</string>
     <string name="various_appsort_title">Ordem de classificação inicial dos apps instalados</string>
     <string name="disable_app_title">Desativar app?</string>
     <string name="disable_app_text">Se este for um app essencial do sistema, desativá-lo pode quebrar as coisas</string>
@@ -733,8 +739,8 @@
     <string name="array_global_actions_activity">Iniciar atividade</string>
     <string name="array_global_actions_toggle">Alternar recurso</string>
     <string name="array_global_actions_back">Voltar para o app anterior</string>
-    <string name="array_global_actions_forceclose">Forçar fechamento do app atual</string>
-    <string name="array_global_actions_powermenu">Abra o menu de energia</string>
+    <string name="array_global_actions_forceclose">Forçar parada do app atual</string>
+    <string name="array_global_actions_powermenu">Abrir o menu de energia</string>
     <string name="array_global_actions_powermenu_short">Menu de energia</string>
     <string name="array_global_actions_scrolltotop">Role para cima</string>
     <string name="array_global_actions_expandsidebar">Mostrar barra lateral</string>
@@ -841,8 +847,8 @@
     <string name="array_adjust_brightness">Ajustar brilho</string>
     <string name="array_adjust_volume">Ajustar volume</string>
     <string name="array_alarm_absolute">Horário regular</string>
-    <string name="array_alarm_relative">Tempo relativo</string>
-    <string name="array_alarm_both">Tempo regular e relativo</string>
+    <string name="array_alarm_relative">Horário relativo</string>
+    <string name="array_alarm_both">Horário regular e relativo</string>
     <string name="array_singletap">Toque único</string>
     <string name="array_doubletap">Toque duplo</string>
     <string name="array_longpress">Toque longo</string>
@@ -864,7 +870,7 @@
     <string name="array_keep">Manter como está</string>
     <string name="array_turn_off">Desligar</string>
     <string name="array_turn_off_disable">Desligar e desativar</string>
-    <string name="array_current">Somente Atual</string>
+    <string name="array_current">Corrente atual</string>
     <string name="array_power">Apenas energia</string>
     <string name="array_temp_current">Temperatura e Corrente</string>
     <string name="array_temp_power">Temperatura e Energia</string>
@@ -891,8 +897,8 @@
     <string name="toggle_autorotate_off">Rotação automática desativada</string>
     <string name="toggle_flash_off">Lanterna: desligada</string>
     <string name="toggle_flash_on">Lanterna: ligada</string>
-    <string name="toggle_mobiledata_on">Dados móveis ativados</string>
-    <string name="toggle_mobiledata_off">Dados móveis desativados</string>
+    <string name="toggle_mobiledata_on">Dados móveis ativado</string>
+    <string name="toggle_mobiledata_off">Dados móveis desativado</string>
     <string name="qs_toggle_autorotate">Bloqueio de rotação</string>
     <string name="qs_toggle_autorotate_off">Irrestrito</string>
     <string name="qs_toggle_autorotate_portrait">Retrato</string>
@@ -915,7 +921,7 @@
     <string name="miuizer_holiday_summ">Decore a interface do módulo de acordo com a ocasião</string>
     <string name="troubleshoot">Solução de problemas</string>
     <string name="miuizer_acrasend_title">Enviar relatório detalhado</string>
-    <string name="miuizer_acrasend_summ">Colete informações do dispositivo e do ambiente, logcat e log Xposed e envie-os ao desenvolvedor. É necessária uma conexão com a Internet</string>
+    <string name="miuizer_acrasend_summ">Colete informações do dispositivo e do ambiente, logcat e log do Xposed e envie-os ao desenvolvedor.\nÉ necessária conexão com a Internet</string>
     <string name="miuizer_acramail_summ">Insira suas informações de contato e elas serão incluídas em relatórios detalhados e de falhas</string>
     <string name="miuizer_acramail_title">Informações de contato</string>
     <string name="miuizer_acramail_tip">É absolutamente necessário preencher isto se você espera receber respostas aos seus relatórios de travamento. Use e-mail, ICQ, XDA ou apelido 4PDA.</string>
@@ -971,6 +977,8 @@
     <string name="restart_systemui">Reiniciar systemui</string>
     <string name="restart_securitycenter">Reiniciar centro de segurança</string>
     <string name="backup_restore">Gerenciamento de configurações</string>
+    <string name="reset_settings">Redefinir configurações</string>
+    <string name="reset_settings_done">Redefinição concluída. Por favor, reinicie</string>
     <string name="backup_restore_choose">Os backups são armazenados em /sdcard/Documents/CustoMIUIzer/</string>
     <string name="do_backup">Cópia de segurança</string>
     <string name="do_restore">Restaurar</string>
@@ -1008,7 +1016,7 @@
     <string name="credentials_unlock">Desbloquear credenciais</string>
     <string name="credentials_success">Credenciais desbloqueadas!</string>
     <string name="xposed_not_found">App Xposed não encontrado</string>
-    <string name="xposed_not_found_explain">Parece que você não tem o Xposed Framework instalado. Observe que os mods só funcionarão com o Xposed!</string>
+    <string name="xposed_not_found_explain">Parece que você não tem o Xposed Framework instalado.\n\nPor favor, observe que os mods só funcionarão com o Xposed!</string>
     <string name="module_not_active">O módulo CustoMIUIzer não está ativo!\n Abra o LSPosed, ative o módulo e reinicie.</string>
     <string name="no_browser">O app do navegador é necessário para abrir URLs</string>
     <string name="okay">OK</string>
@@ -1017,8 +1025,8 @@
     <string name="delete">Excluir</string>
     <string name="delete_item_info">Pressione e segure o item para excluir</string>
     <string name="change_icon">Alterar ícone</string>
-    <string name="guide_search">Pesquisar mods por nome. Pressione e segure para exibir uma lista de novos mods.</string>
-    <string name="guide_marknew">Novos mods desde a atualização anterior podem ser marcados para melhor visibilidade</string>
+    <string name="guide_search">Pesquisar mods por nome.\nPressione e segure para exibir uma lista de novos mods.</string>
+    <string name="guide_marknew">Novos mods desde a atualização anterior\npodem ser marcados para melhor visibilidade</string>
     <string name="permission_scan">Deseja obter uma lista de redes/dispositivos ou não?</string>
     <string name="permission_permanent">Agora você precisará habilitar manualmente a permissão para esta opção. Bom trabalho!</string>
     <string name="format_d_ms">%d ms</string>
@@ -1049,6 +1057,7 @@
     <string name="system_statusbar_batterytempandcurrent_content_title">Exibir conteúdo</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">Exibir à direita</string>
     <string name="system_statusbar_batterytempandcurrent_positive_title">O valor atual é sempre positivo</string>
+    <string name="system_statusbar_batterytempandcurrent_temp_decimal_title">A temperatura é sempre exibida como decimal</string>
     <string name="system_statusbar_batterytempandcurrent_incharge_title">Mostrar apenas ao carregar</string>
     <string name="system_statusbar_batterytempandcurrent_fixcurrentratio_title">Corrigir a proporção do valor atual em alguns dispositivos</string>
     <string name="system_statusbar_batterytempandcurrent_hideunit_title">Ocultar unidade</string>
@@ -1079,7 +1088,7 @@
     <string name="system_statusbaricons_atleft_title">Mova alguns ícones para a esquerda</string>
     <string name="system_statusbaricons_atsecondrow_title">Mova alguns ícones para a segunda linha</string>
     <string name="system_statusbaricons_wifi_mobile_atleft_title">Mover o sinal móvel e Wi-Fi para a esquerda</string>
-    <string name="system_statusbaricons_swap_wifi_mobile_title">Mover sinal móvel e Wi-Fi</string>
+    <string name="system_statusbaricons_swap_wifi_mobile_title">Trocar sinal móvel e Wi-Fi</string>
     <string name="system_statusbaricons_swap_batteryicon_percentage_title">Trocar ícone e porcentagem da bateria</string>
     <string name="system_statusbaricons_change_position_title">Mudar posição dos ícones</string>
     <string name="system_statusbar_mobile_signal_cat_title">Exibir configuração do ícone de rede móvel</string>
@@ -1089,8 +1098,10 @@
     <string name="various_allow_untrusted_touch_title">Permitir toque não confiável</string>
     <string name="various_persist_batteryoptimization_settings_title">Manter configurações de otimização da bateria</string>
     <string name="various_clipboard_defaultaction_title">Ação padrão da área de transferência IA</string>
-    <string name="various_disable_access_devicelogs_title">Ignorar caixa de diálogo de solicitação de acesso a logs do dispositivo</string>
+    <string name="various_disable_access_devicelogs_title">Ignorar diálogo de solicitação de acesso a logs do dispositivo</string>
     <string name="various_skip_interceptperm_title">Ignorar limite de contagem regressiva</string>
+    <string name="various_replace_defaultopen_with_openbydefault_title">Substitua “Limpar padrões” por “Abrir por padrão”</string>
+    <string name="various_open_by_default_title">Abrir por padrão</string>
     <string name="various_skip_securityscan_title">Ignorar verificação de segurança</string>
     <string name="various_show_battery_temperature_title">Mostrar temperatura da bateria</string>
     <string name="various_enable_sc_ai_clipboard_blur_location_title">Ativar área de transferência IA e ocultar localização</string>
@@ -1101,12 +1112,12 @@
     <string name="system_lockscreenshortcuts_left_tapaction_title">Pressione o atalho esquerdo para alternar a lanterna</string>
     <string name="system_cc_tile_roundedrect_title">Retângulo arredondado</string>
     <string name="system_cc_enable_style_switch_title">Forçar a ativação do interruptor de estilo CC</string>
-    <string name="system_cc_disable_bluetooth_restrict_title">Desativar a desconexão do bluetooth até amanhã</string>
+    <string name="system_cc_disable_bluetooth_restrict_title">Desative a desconexão do bluetooth até amanhã</string>
     <string name="system_cc_bluetooth_tile_style_title">Estilo do bloco Bluetooth</string>
     <string name="system_cc_bluetooth_tile_style_3rows">Três blocos grandes</string>
     <string name="system_cc_bluetooth_tile_style_2rows2cols">Um bloco grande e dois pequenos</string>
     <string name="system_cc_bluetooth_tile_style_summ">Mova o bloco do bluetooth para perto do bloco da rede</string>
-    <string name="system_cc_volume_showpct_title">Mostrar porcentagem de volume</string>
+    <string name="system_cc_volume_showpct_title">Mostrar porcentagem do volume</string>
     <string name="system_cc_collapse_after_clicked_title">Fechar após tocar</string>
     <string name="system_show_step_count_title">Mostrar contador de passos</string>
     <string name="system_cc_switch_ccandnotification_title">Alternar entre o centro de controle e a gaveta de notificações</string>

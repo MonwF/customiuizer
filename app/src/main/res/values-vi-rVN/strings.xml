@@ -26,6 +26,7 @@
     <string name="system_statusbaricons_battery1_title">Hình ảnh pin</string>
     <string name="system_statusbaricons_battery4_title">Biểu tượng phần trăm pin</string>
     <string name="system_statusbaricons_battery3_title">Chỉ số sạc pin</string>
+    <string name="system_statusbaricons_battery2_title">Phần trăm pin ẩn trên thanh trạng thái nhưng xuất hiện trong trung tâm điều khiển</string>
     <string name="system_statusbaricons_alarm_title">Báo thức</string>
     <string name="system_statusbaricons_alarm_summ">Ẩn toàn bộ</string>
     <string name="system_statusbaricons_alarmn_title">Tùy chọn hiển thị biểu tượng báo thức</string>
@@ -35,6 +36,7 @@
     <string name="system_statusbaricons_signal_title">Tín hiệu mạng di động</string>
     <string name="system_statusbaricons_hidesignal_wificonnected_title">Chỉ khi kết nối với Wi-Fi</string>
     <string name="system_statusbaricons_nosims_title">Không có thẻ SIM</string>
+    <string name="system_statusbaricons_sim_nodata_title">SIM không có dữ liệu</string>
     <string name="system_statusbaricons_volte_title">VoLTE</string>
     <string name="system_statusbaricons_roaming_title">Chuyển vùng</string>
     <string name="system_statusbaricons_dualwifi_title">Wi-Fi kép</string>
@@ -42,6 +44,7 @@
     <string name="system_statusbaricons_profile_title">Cấu hình công việc</string>
     <string name="system_statusbaricons_sound_title">Cấu hình âm thanh</string>
     <string name="system_statusbaricons_dnd_title">Chế độ không làm phiền</string>
+    <string name="system_statusbaricons_secondspace_title">Không gian thứ hai</string>
     <string name="system_statusbaricons_privacy_title">Chế độ ẩn danh</string>
     <string name="system_statusbaricons_headset_title">Tai nghe</string>
     <string name="system_statusbaricons_mute_title">Gọi: tắt mic</string>
@@ -518,8 +521,11 @@
     <string name="launcher_iconscale_title">Thu phóng biểu tượng</string>
     <string name="launcher_horizmargin_title">Lề lưới ngang</string>
     <string name="launcher_topmargin_title">Lề lưới trên cùng</string>
+    <string name="launcher_dock_topmargin_title">Lề trên cùng của thanh dock</string>
+    <string name="launcher_dock_bottommargin_title">Lề dưới cùng của thanh dock</string>
     <string name="launcher_horizwidgetmargin_title">Lề tiện ích nằm ngang</string>
     <string name="launcher_indicatorheight_title">Chiều cao chỉ báo trang</string>
+    <string name="launcher_indicator_topmargin_title">Lề trên của chỉ báo trang</string>
     <string name="launcher_folders">Thư mục</string>
     <string name="launcher_folder_cols_title">Số cột trong thư mục</string>
     <string name="launcher_folderwidth_title">Sử dụng toàn bộ chiều rộng của thư mục</string>
@@ -613,6 +619,7 @@
     <string name="controls_volumecursor_reverse_title">Chuyển hướng</string>
     <string name="controls_volumecursor_reverse_summ">Hoán đổi hướng di chuyển của con trỏ</string>
     <string name="controls_volumedowndt_turnon_torch_title">Nhấn đúp để giảm âm lượng để bật đèn pin</string>
+    <string name="controls_mediaplayer_apps_title">Ứng dụng trình phát đa phương tiện (Thêm vào phạm vi LSPosed trước)</string>
     <string name="controls_volumemedia_up_title">Nhấn và giữ hành động nút tăng âm lượng</string>
     <string name="controls_volumemedia_up_summ">Nhấn và giữ nút tăng âm lượng khi màn hình tắt</string>
     <string name="controls_volumemedia_down_title">Nhấn và giữ hành động nút giảm âm lượng</string>
@@ -970,6 +977,8 @@
     <string name="restart_systemui">Khởi động lại giao diện hệ thống</string>
     <string name="restart_securitycenter">Khởi động lại trung tâm bảo mật</string>
     <string name="backup_restore">Quản lý cài đặt</string>
+    <string name="reset_settings">Đặt lại cài đặt</string>
+    <string name="reset_settings_done">Đặt lại thành công. Vui lòng khởi động lại</string>
     <string name="backup_restore_choose">Vui lòng chọn hành động mong muốn</string>
     <string name="do_backup">Sao lưu</string>
     <string name="do_restore">Khôi phục</string>
@@ -1048,6 +1057,7 @@
     <string name="system_statusbar_batterytempandcurrent_content_title">Hiển thị nội dung</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">Hiển thị bên phải</string>
     <string name="system_statusbar_batterytempandcurrent_positive_title">Làm cho giá trị dòng điện luôn dương</string>
+    <string name="system_statusbar_batterytempandcurrent_temp_decimal_title">Nhiệt độ luôn được hiển thị dưới dạng số thập phân</string>
     <string name="system_statusbar_batterytempandcurrent_incharge_title">Chỉ hiển thị khi sạc</string>
     <string name="system_statusbar_batterytempandcurrent_fixcurrentratio_title">Khắc phục tỷ lệ giá trị dòng điện cho một số thiết bị</string>
     <string name="system_statusbar_batterytempandcurrent_hideunit_title">Ẩn đơn vị</string>
@@ -1090,6 +1100,8 @@
     <string name="various_clipboard_defaultaction_title">Hành động mặc định của ai clipboard</string>
     <string name="various_disable_access_devicelogs_title">Bỏ qua hộp thoại yêu cầu nhật ký thiết bị truy cập</string>
     <string name="various_skip_interceptperm_title">Bỏ qua đếm ngược để bật các quyền đặc biệt</string>
+    <string name="various_replace_defaultopen_with_openbydefault_title">Thay thế \"Xóa mặc định\" bằng \"Mở theo mặc định\"</string>
+    <string name="various_open_by_default_title">Mở theo mặc định</string>
     <string name="various_skip_securityscan_title">Bỏ qua quét bảo mật</string>
     <string name="various_show_battery_temperature_title">Hiển thị nhiệt độ pin</string>
     <string name="various_enable_sc_ai_clipboard_blur_location_title">Bật khay nhớ tạm AI và làm mờ vị trí</string>

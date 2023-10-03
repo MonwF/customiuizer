@@ -26,6 +26,7 @@
     <string name="system_statusbaricons_battery1_title">Изображение батареи</string>
     <string name="system_statusbaricons_battery4_title">Процентная отметка батареи</string>
     <string name="system_statusbaricons_battery3_title">Индикатор зарядки</string>
+    <string name="system_statusbaricons_battery2_title">Процент батареи скрыт в строке состояния, но отображается в центре управления</string>
     <string name="system_statusbaricons_alarm_title">Будильник</string>
     <string name="system_statusbaricons_alarm_summ">Скрыть полностью</string>
     <string name="system_statusbaricons_alarmn_title">Избирательное отображение будильника</string>
@@ -35,6 +36,7 @@
     <string name="system_statusbaricons_signal_title">Сигнал мобильной сети</string>
     <string name="system_statusbaricons_hidesignal_wificonnected_title">Прятать значки сигала сети при подключении к Wi-Fi</string>
     <string name="system_statusbaricons_nosims_title">Нет SIM карты</string>
+    <string name="system_statusbaricons_sim_nodata_title">Спрятать данные SIM-карты</string>
     <string name="system_statusbaricons_volte_title">VoLTE</string>
     <string name="system_statusbaricons_roaming_title">Роуминг</string>
     <string name="system_statusbaricons_dualwifi_title">Парные Wi-Fi</string>
@@ -42,6 +44,7 @@
     <string name="system_statusbaricons_profile_title">Рабочий профиль</string>
     <string name="system_statusbaricons_sound_title">Профили звука</string>
     <string name="system_statusbaricons_dnd_title">Режим Не беспокоить</string>
+    <string name="system_statusbaricons_secondspace_title">Второе пространство</string>
     <string name="system_statusbaricons_privacy_title">Режим Инкогнито</string>
     <string name="system_statusbaricons_headset_title">Наушники</string>
     <string name="system_statusbaricons_mute_title">Звонок: отключенный микрофон</string>
@@ -517,8 +520,11 @@
     <string name="launcher_iconscale_title">Масштаб значков</string>
     <string name="launcher_horizmargin_title">Горизонтальные отступы сетки</string>
     <string name="launcher_topmargin_title">Отступ сетки сверху</string>
+    <string name="launcher_dock_topmargin_title">Закрепить вверху</string>
+    <string name="launcher_dock_bottommargin_title">Закрепить внизу</string>
     <string name="launcher_horizwidgetmargin_title">Горизонтальные отступы виджетов</string>
     <string name="launcher_indicatorheight_title">Высота индикатора страниц</string>
+    <string name="launcher_indicator_topmargin_title">Верхнее поле индикатора</string>
     <string name="launcher_folders">Папки</string>
     <string name="launcher_folder_cols_title">Число колонок в папках</string>
     <string name="launcher_folderwidth_title">Использовать всю ширину папки</string>
@@ -612,6 +618,7 @@
     <string name="controls_volumecursor_reverse_title">Сменить направления</string>
     <string name="controls_volumecursor_reverse_summ">Поменять местами направления движения курсора</string>
     <string name="controls_volumedowndt_turnon_torch_title">Двойное нажатие на громкость вниз для включения фонарика</string>
+    <string name="controls_mediaplayer_apps_title">Приложение медиаплеера (сначала добавить в LSPosed)</string>
     <string name="controls_volumemedia_up_title">Долгое нажатие на Повышение громкости</string>
     <string name="controls_volumemedia_up_summ">Действие на долгое нажатие клавиши повышения громкости при выключенном экране</string>
     <string name="controls_volumemedia_down_title">Долгое нажатие на Понижение громкости</string>
@@ -969,6 +976,8 @@
     <string name="restart_systemui">Перезапуск интерфейса</string>
     <string name="restart_securitycenter">Перезапустить центр безопасности</string>
     <string name="backup_restore">Управление настройками</string>
+    <string name="reset_settings">Сброс настроек</string>
+    <string name="reset_settings_done">Сброс завершен. Пожалуйста, перезагрузитесь</string>
     <string name="backup_restore_choose">Выберите желаемое дейстие</string>
     <string name="do_backup">Сохранить</string>
     <string name="do_restore">Восстановить</string>
@@ -1047,6 +1056,7 @@
     <string name="system_statusbar_batterytempandcurrent_content_title">Показать содержимое</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">Отображать справа</string>
     <string name="system_statusbar_batterytempandcurrent_positive_title">Текущее значение всегда положительно</string>
+    <string name="system_statusbar_batterytempandcurrent_temp_decimal_title">Температура всегда отображается в виде десятичных</string>
     <string name="system_statusbar_batterytempandcurrent_incharge_title">Показывать только при зарядке</string>
     <string name="system_statusbar_batterytempandcurrent_fixcurrentratio_title">Исправь текущее значение на некоторых устройствах</string>
     <string name="system_statusbar_batterytempandcurrent_hideunit_title">Скрыть единицу измерения</string>
@@ -1058,7 +1068,7 @@
     <string name="system_statusbar_batterystyle_mark_fontsize_title">Размер шрифта знака в процентах</string>
     <string name="system_statusbar_batterystyle_mark_verticaloffset_title">Смещение знака в процентах по вертикали</string>
     <string name="system_statusbar_dualsimin2rows_title">Двойной сигнал SIM-карты в двух рядах</string>
-    <string name="system_statusbar_dualrows_title">Двойные строки в строке состояния</string>
+    <string name="system_statusbar_dualrows_title">Двойная строка состояния</string>
     <string name="system_statusbar_dualrows_summ">Нужно увеличить высоту строки состояния на некоторых устройствах</string>
     <string name="system_statusbar_dualsimin2rows_style_title">Стиль значка</string>
     <string name="system_statusbar_dualsimin2rows_rightmargin_title">Отступ справа</string>
@@ -1089,6 +1099,8 @@
     <string name="various_clipboard_defaultaction_title">Действие по умолчанию для буфера обмена ai</string>
     <string name="various_disable_access_devicelogs_title">Отключить диалог запроса журнала доступа устройства</string>
     <string name="various_skip_interceptperm_title">Пропустить таймер перехвата разрешений</string>
+    <string name="various_replace_defaultopen_with_openbydefault_title">Заменить «Очистить значения по умолчанию» на «Открыть по умолчанию»</string>
+    <string name="various_open_by_default_title">Открыть по умолчанию</string>
     <string name="various_skip_securityscan_title">Пропустить сканирование безопасности</string>
     <string name="various_show_battery_temperature_title">Показывать температуру в батарее</string>
     <string name="various_enable_sc_ai_clipboard_blur_location_title">Включить буфер обмена ИИ и размытие местоположения</string>

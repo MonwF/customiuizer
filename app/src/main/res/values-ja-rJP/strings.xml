@@ -26,6 +26,7 @@
     <string name="system_statusbaricons_battery1_title">バッテリー画像</string>
     <string name="system_statusbaricons_battery4_title">バッテリーのパーセント表示</string>
     <string name="system_statusbaricons_battery3_title">充電中のインジケーター</string>
+    <string name="system_statusbaricons_battery2_title">バッテリーのパーセンテージをコントロールセンターのみで表示する</string>
     <string name="system_statusbaricons_alarm_title">アラーム</string>
     <string name="system_statusbaricons_alarm_summ">完全に非表示にする</string>
     <string name="system_statusbaricons_alarmn_title">アラームアイコンの可視性</string>
@@ -35,6 +36,7 @@
     <string name="system_statusbaricons_signal_title">モバイルネットワーク信号の表示</string>
     <string name="system_statusbaricons_hidesignal_wificonnected_title">Wi-Fiの接続時のみ</string>
     <string name="system_statusbaricons_nosims_title">SIMカード未挿入</string>
+    <string name="system_statusbaricons_sim_nodata_title">データSIMなし</string>
     <string name="system_statusbaricons_volte_title">VoLTE</string>
     <string name="system_statusbaricons_roaming_title">ローミング</string>
     <string name="system_statusbaricons_dualwifi_title">デュアルバンドWi-Fi</string>
@@ -42,6 +44,7 @@
     <string name="system_statusbaricons_profile_title">仕事用プロファイル</string>
     <string name="system_statusbaricons_sound_title">サウンドプロファイル</string>
     <string name="system_statusbaricons_dnd_title">Do Not Disturbモード</string>
+    <string name="system_statusbaricons_secondspace_title">セカンドスペース</string>
     <string name="system_statusbaricons_privacy_title">シークレットモード</string>
     <string name="system_statusbaricons_headset_title">ヘッドセット</string>
     <string name="system_statusbaricons_mute_title">通話: マイクミュート</string>
@@ -351,7 +354,7 @@
     <string name="system_nooverscroll_title">オーバースクロールを無効化</string>
     <string name="system_nooverscroll_summ">リストビューをオーバースクロールしないようにします</string>
     <string name="system_removesecure_title">セキュアコンテンツ保護を無効化</string>
-    <string name="system_remove_startactconfirm_title">開いているアプリの確認を無効化</string>
+    <string name="system_remove_startactconfirm_title">アプリを開く確認を無効化</string>
     <string name="system_removesecure_summ">あらゆるアプリのスクリーンショットやスクリーンレコードを可能にします</string>
     <string name="system_hidelowbatwarn_title">バッテリー残量低下の警告を非表示</string>
     <string name="system_hidelowbatwarn_summ">バッテリーセーバーをオンにするように求める警告ダイアログを表示しないようにします</string>
@@ -518,8 +521,11 @@
     <string name="launcher_iconscale_title">アイコンスケール</string>
     <string name="launcher_horizmargin_title">水平方向のグリッドの余白</string>
     <string name="launcher_topmargin_title">上部のグリッドの余白</string>
+    <string name="launcher_dock_topmargin_title">ドック上部の余白</string>
+    <string name="launcher_dock_bottommargin_title">ドック下部の余白</string>
     <string name="launcher_horizwidgetmargin_title">ウィジェットの水平方向の余白</string>
     <string name="launcher_indicatorheight_title">ページインジケーターの高さ</string>
+    <string name="launcher_indicator_topmargin_title">ページインジケーター上部の余白</string>
     <string name="launcher_folders">フォルダ</string>
     <string name="launcher_folder_cols_title">フォルダのカラム数</string>
     <string name="launcher_folderwidth_title">フォルダ全体の幅を使用する</string>
@@ -613,6 +619,7 @@
     <string name="controls_volumecursor_reverse_title">入力カーソルの方向を変更</string>
     <string name="controls_volumecursor_reverse_summ">文字入力カーソルの移動方向を入れ替えます</string>
     <string name="controls_volumedowndt_turnon_torch_title">音量ダウンボタン2回押しで懐中電灯を点灯</string>
+    <string name="controls_mediaplayer_apps_title">メディアプレーヤーアプリ (始めにLSPosedのスコープにアプリを追加してください)</string>
     <string name="controls_volumemedia_up_title">音量アップボタン長押しのアクション</string>
     <string name="controls_volumemedia_up_summ">画面消灯時の音量アップボタン長押しのアクションを設定します</string>
     <string name="controls_volumemedia_down_title">音量ダウンボタン長押しのアクション</string>
@@ -646,6 +653,8 @@
     <string name="controls_fsg_width_title">背面ジェスチャー領域の幅</string>
     <string name="controls_fsg_horiz_title">水平方向のジェスチャー</string>
     <string name="controls_fsg_horiz_summ">水平方向のジェスチャーとナビゲーションバーの両方を有効にします</string>
+    <string name="controls_fsg_assist_left_title">左端スワイプ時のアクション</string>
+    <string name="controls_fsg_assist_right_title">右端スワイプ時のアクション</string>
     <string name="controls_fsg_swipeandstop_title">画面の端から順にスワイプをしてアクションを停止</string>
     <string name="controls_fsg_swipeandstop_disablevibrate_title">バイブレーションをさせない</string>
     <string name="various_mods">各種のMod</string>
@@ -968,6 +977,8 @@
     <string name="restart_systemui">SystemUIを再起動</string>
     <string name="restart_securitycenter">セキュリティセンターを再起動</string>
     <string name="backup_restore">設定の管理</string>
+    <string name="reset_settings">設定をリセット</string>
+    <string name="reset_settings_done">リセットが完了しました。再起動をしてください</string>
     <string name="backup_restore_choose">バックアップは「/sdcard/Documents/CustoMIUIzer/」に保存されます</string>
     <string name="do_backup">バックアップ</string>
     <string name="do_restore">復元</string>
@@ -1046,6 +1057,7 @@
     <string name="system_statusbar_batterytempandcurrent_content_title">表示をする内容</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">右側の表示</string>
     <string name="system_statusbar_batterytempandcurrent_positive_title">電流値を常に正の値にする</string>
+    <string name="system_statusbar_batterytempandcurrent_temp_decimal_title">温度を常に小数点で表示する</string>
     <string name="system_statusbar_batterytempandcurrent_incharge_title">充電時のみ表示</string>
     <string name="system_statusbar_batterytempandcurrent_fixcurrentratio_title">一部のデバイスでの電流値比率を修正</string>
     <string name="system_statusbar_batterytempandcurrent_hideunit_title">単位を非表示</string>
@@ -1088,9 +1100,11 @@
     <string name="various_clipboard_defaultaction_title">AIクリップボードの動作</string>
     <string name="various_disable_access_devicelogs_title">デバイスログへのアクセス要求ダイアログを無効化</string>
     <string name="various_skip_interceptperm_title">パーミッション許可の待機時間をスキップ</string>
+    <string name="various_replace_defaultopen_with_openbydefault_title">「デフォルトの操作を消去」を「デフォルトで開く」に置き換える</string>
+    <string name="various_open_by_default_title">デフォルトで開く</string>
     <string name="various_skip_securityscan_title">セキュリティスキャンをスキップ</string>
     <string name="various_show_battery_temperature_title">バッテリーの温度を表示</string>
-    <string name="various_enable_sc_ai_clipboard_blur_location_title">AIクリップボードと位置のぼかしを有効にする</string>
+    <string name="various_enable_sc_ai_clipboard_blur_location_title">AIクリップボードと位置のぼかしを有効化する</string>
     <string name="various_disable_freeform_suggest_blacklist_title">サイドバーのサジェストのブラックリストを無効化</string>
     <string name="various_enable_expand_sidebar_title">サイドバーを非表示</string>
     <string name="various_disable_dock_suggest_title">ピン留めをしたアプリのみサイドバーに表示</string>
