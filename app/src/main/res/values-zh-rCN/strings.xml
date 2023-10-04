@@ -517,7 +517,7 @@
     <string name="launcher_dock_topmargin_title">Dock栏顶部边距</string>
     <string name="launcher_dock_bottommargin_title">Dock栏底部边距</string>
     <string name="launcher_indicatorheight_title">页面指示器高度</string>
-    <string name="launcher_indicator_topmargin_title">页面指标器顶部边距</string>
+    <string name="launcher_indicator_topmargin_title">页面指示器顶部边距</string>
     <string name="launcher_folders">文件夹</string>
     <string name="launcher_folder_cols_title">文件夹排列数量</string>
     <string name="launcher_folderwidth_title">使用整个文件夹的宽度</string>
