@@ -1,15 +1,21 @@
 package name.monwf.customiuizer;
 
 import android.app.Application;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
 
@@ -33,55 +39,115 @@ public class MainModule extends XposedModule {
 
     public static PrefMap<String, Object> mPrefs = new PrefMap<String, Object>();
     public static ResourceHooks resHooks = new ResourceHooks();
-    private String processName;
+    String processName;
 
     SharedPreferences remotePrefs;
 
-    private OnSharedPreferenceChangeListener mListener;
+    OnSharedPreferenceChangeListener mListener;
 
     public MainModule(@NonNull XposedInterface base, @NonNull XposedModuleInterface.ModuleLoadedParam param) {
         super(base, param);
-        XposedHelpers.moduleInst = this;
         processName = param.getProcessName();
-        initPrefs();
     }
 
     private void initPrefs() {
-        remotePrefs = getRemotePreferences(ModuleHelper.prefsName + "_remote");
-        Map<String, ?> allPrefs = remotePrefs.getAll();
+        XposedHelpers.moduleInst = this;
+        SharedPreferences readPrefs = getRemotePreferences(ModuleHelper.prefsName + "_remote");
+        Map<String, ?> allPrefs = readPrefs.getAll();
         if (allPrefs == null || allPrefs.size() == 0)
             XposedHelpers.log("[UID " + android.os.Process.myUid() +"] Cannot read module's SharedPreferences, some mods might not work!");
         else
             mPrefs.putAll(allPrefs);
     }
 
-    private void listenPreferencesChange() {
+    private void watchPreferenceChange() {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            HashSet<String> ignoreKeys = new HashSet<>();
+            ignoreKeys.add("pref_key_systemui_restart_time");
+
+            mListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+                @Override
+                public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @Nullable String key) {
+                    Object val = sharedPreferences.getAll().get(key);
+                    if (val == null) {
+//                      XposedHelpers.log(processName + " key removed: " + key);
+                        mPrefs.remove(key);
+                    }
+                    else {
+//                      XposedHelpers.log(processName + " key changed: " + key);
+                        mPrefs.put(key, val);
+                    }
+                    if (!ignoreKeys.contains(key)) {
+                        ModuleHelper.handlePreferenceChanged(key);
+                    }
+                }
+            };
+            remotePrefs = getRemotePreferences(ModuleHelper.prefsName + "_remote");
+            remotePrefs.registerOnSharedPreferenceChangeListener(mListener);
+        }, 3000);
+    }
+
+    private void watchPreferenceChange(Context mContext) {
         HashSet<String> ignoreKeys = new HashSet<>();
         ignoreKeys.add("pref_key_systemui_restart_time");
-
-        mListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        IntentFilter intentFilter = new IntentFilter();
+        String changeKey = GlobalActions.EVENT_PREFIX + "CHANGE_PREFERENCE";
+        intentFilter.addAction(changeKey);
+        mContext.registerReceiver(new BroadcastReceiver() {
             @Override
-            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @Nullable String key) {
-                Object val = sharedPreferences.getAll().get(key);
-                if (val == null) {
-//                    XposedHelpers.log(processName + " key removed: " + key);
-                    mPrefs.remove(key);
-                }
-                else {
-//                    XposedHelpers.log(processName + " key changed: " + key);
-                    mPrefs.put(key, val);
-                }
-                if (!ignoreKeys.contains(key)) {
-                    ModuleHelper.handlePreferenceChanged(sharedPreferences,  key);
+            public void onReceive(Context context, Intent intent) {
+                if (changeKey.equals(intent.getAction())) {
+                    String key = intent.getStringExtra("pref_key");
+                    String type = intent.getStringExtra("pref_type");
+                    if (type == null) {
+                        type = "other";
+                    }
+                    Object val = null;
+                    switch (type) {
+                        case "remove" -> {
+//                            XposedHelpers.log(processName + " context key removed: " + key);
+                            mPrefs.remove(key);
+                        }
+                        case "boolean" -> val = intent.getBooleanExtra("pref_val", false);
+                        case "float" -> val = intent.getFloatExtra("pref_val", 0f);
+                        case "int" -> val = intent.getIntExtra("pref_val", 0);
+                        case "long" -> val = intent.getLongExtra("pref_val", 0L);
+                        case "string" -> val = intent.getStringExtra("pref_val");
+                        case "set" -> {
+                            val = intent.getStringArrayListExtra("pref_val");
+                            if (val == null) {
+                                val = new HashSet<String>();
+                            }
+                            else {
+                                val = new HashSet<String>((ArrayList<String>) val);
+                            }
+                        }
+                        default -> {
+                            return;
+                        }
+                    }
+                    if (!"remove".equals(type)) {
+//                        XposedHelpers.log(processName + " context key changed: " + key + " | " + val);
+                        mPrefs.put(key, val);
+                    }
+                    if (!ignoreKeys.contains(key)) {
+                        ModuleHelper.handlePreferenceChanged(key);
+                    }
                 }
             }
-        };
-        remotePrefs.registerOnSharedPreferenceChangeListener(mListener);
+        }, intentFilter, Context.RECEIVER_EXPORTED);
     }
 
     @Override
     public void onSystemServerLoaded(final SystemServerLoadedParam lpparam) {
-//        listenPreferencesChange();
+        initPrefs();
+        ModuleHelper.findAndHookMethod("com.android.server.policy.PhoneWindowManager", lpparam.getClassLoader(), "onSystemUiStarted", new MethodHook() {
+            @Override
+            protected void after(AfterHookCallback param) throws Throwable {
+                Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
+                watchPreferenceChange(mContext);
+            }
+        });
         PackagePermissions.hook(lpparam);
         GlobalActions.setupGlobalActions(lpparam);
 
@@ -168,11 +234,21 @@ public class MainModule extends XposedModule {
         if (!lpparam.isFirstPackage()) return;
 
         String pkg = lpparam.getPackageName();
+        if (
+            pkg.equals("com.android.settings") && !"com.android.settings".equals(processName)
+            || pkg.equals("com.miui.securitycenter") && "com.miui.securitycenter.bootaware".equals(processName)
+            || pkg.equals("com.android.location.fused")
+            || pkg.startsWith("com.android.networkstack")
+        ) {
+            return;
+        }
+        initPrefs();
+
         if (mPrefs.getInt("system_statusbarheight", 19) > 19) System.StatusBarHeightRes();
         if (mPrefs.getInt("controls_navbarheight", 19) > 19) Controls.NavbarHeightRes();
 
         if (pkg.equals("android")) {
-            listenPreferencesChange();
+            watchPreferenceChange();
             if (mPrefs.getBoolean("system_cleanshare")) System.CleanShareMenuHook(lpparam);
             if (mPrefs.getBoolean("system_cleanopenwith")) System.CleanOpenWithMenuHook(lpparam);
             if (mPrefs.getStringAsInt("system_allrotations2", 1) > 1) {
@@ -196,6 +272,7 @@ public class MainModule extends XposedModule {
                 && mPrefs.getBoolean("controls_nonavbar")) {
                 Various.FixInputMethodBottomMarginHook(lpparam);
             }
+            return;
         }
 
         if (mPrefs.getBoolean("various_alarmcompat") && mPrefs.getStringSet("various_alarmcompat_apps").contains(pkg)) {
@@ -219,9 +296,9 @@ public class MainModule extends XposedModule {
                 protected void after(final AfterHookCallback param) throws Throwable {
                     if (!isHooked) {
                         isHooked = true;
-                        listenPreferencesChange();
-                        Context mContext = (Context) XposedHelpers.callMethod(param.getThisObject(), "getApplicationContext");
-                        SystemUI.setupStatusBar(mContext);
+                        watchPreferenceChange();
+                        Context context = (Context) XposedHelpers.callMethod(param.getThisObject(), "getApplicationContext");
+                        SystemUI.setupStatusBar(context);
                     }
                 }
             });
@@ -501,7 +578,7 @@ public class MainModule extends XposedModule {
             if (mPrefs.getBoolean("various_answerinheadup")) Various.AnswerCallInHeadUpHook(lpparam);
         }
 
-        if (pkg.equals("com.miui.securitycenter") && !"com.miui.securitycenter.bootaware".equals(processName)) {
+        if (pkg.equals("com.miui.securitycenter")) {
             if (mPrefs.getBoolean("various_appdetails")) Various.AppInfoHook(lpparam);
             if (mPrefs.getBoolean("various_disableapp")) Various.AppsDisableHook(lpparam);
             if (mPrefs.getBoolean("various_restrictapp")) Various.AppsRestrictHook(lpparam);
@@ -528,7 +605,7 @@ public class MainModule extends XposedModule {
             if (mPrefs.getBoolean("various_persist_batteryoptimization")) Various.PersistBatteryOptimizationHook(lpparam);
         }
 
-        if (pkg.equals("com.android.settings") && "com.android.settings".equals(processName)) {
+        if (pkg.equals("com.android.settings")) {
             if (mPrefs.getStringAsInt("miuizer_settingsiconpos", 1) > 0) {
                 GlobalActions.miuizerSettingsHook(lpparam);
             }
@@ -547,10 +624,6 @@ public class MainModule extends XposedModule {
             if (mPrefs.getBoolean("system_wifipassword")) {
                 System.ViewWifiPasswordHook(lpparam);
             }
-        }
-
-        if (pkg.equals("com.google.android.packageinstaller") || pkg.equals("com.android.packageinstaller")) {
-            if (mPrefs.getBoolean("various_installappinfo")) Various.AppInfoDuringInstallHook(lpparam);
         }
 
         if (pkg.startsWith("com.google.android.inputmethod")) {
@@ -594,6 +667,8 @@ public class MainModule extends XposedModule {
             if (mPrefs.getInt("launcher_topmargin", 0) > 0) Launcher.WorkspaceCellPaddingTopHook(lpparam);
             if (mPrefs.getInt("launcher_dock_topmargin", 0) > 0) Launcher.DockMarginTopHook(lpparam);
             if (mPrefs.getInt("launcher_dock_bottommargin", 0) > 0) Launcher.DockMarginBottomHook(lpparam);
+
+            watchPreferenceChange();
         }
 
         final boolean isStatusBarColor = mPrefs.getBoolean("system_statusbarcolor") && mPrefs.getStringSet("system_statusbarcolor_apps").contains(pkg);
@@ -605,9 +680,6 @@ public class MainModule extends XposedModule {
                 @Override
                 protected void after(AfterHookCallback param) throws Throwable {
                     if (isLauncherPkg) handleLoadLauncher(lpparam);
-                    if (isLauncherPkg) {
-                        listenPreferencesChange();
-                    }
                     if (isStatusBarColor) {
                         System.StatusBarBackgroundCompatHook(lpparam);
                         System.StatusBarBackgroundHook(lpparam);

@@ -26,7 +26,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -170,7 +169,7 @@ public class System {
                 }
                 ModuleHelper.observePreferenceChange( new ModuleHelper.PreferenceObserver() {
                     @Override
-                    public void onChange(SharedPreferences sharedPreferences, String key) {
+                    public void onChange(String key) {
                         if (key.contains("system_screenanim_duration")) {
                             if (mColorFadeOffAnimator == null) return;
                             int val = MainModule.mPrefs.getInt("system_screenanim_duration", 0);
@@ -1247,7 +1246,7 @@ public class System {
                 XposedHelpers.setAdditionalInstanceField(notificationShadeDepthController, "mCustomBlurModifier", initBlurRatio);
                 XposedHelpers.setAdditionalInstanceField(mControlPanelWindowManager, "mCustomBlurModifier", initBlurRatio);
                 ModuleHelper.observePreferenceChange(new ModuleHelper.PreferenceObserver() {
-                    public void onChange(SharedPreferences sharedPreferences, String key) {
+                    public void onChange(String key) {
                         if (key.contains("system_drawer_blur")) {
                             int opt = MainModule.mPrefs.getInt("system_drawer_blur", 100);
                             XposedHelpers.setAdditionalInstanceField(notificationShadeDepthController, "mCustomBlurModifier", opt);
@@ -1461,7 +1460,7 @@ public class System {
                 XposedHelpers.setIntField(param.getThisObject(), "mMinimumDisplayTime", delay);
                 XposedHelpers.setIntField(param.getThisObject(), "mHeadsUpNotificationDecay", delay);
                 ModuleHelper.observePreferenceChange(new ModuleHelper.PreferenceObserver() {
-                    public void onChange(SharedPreferences sharedPreferences, String key) {
+                    public void onChange(String key) {
                         if (key.contains("system_betterpopups_delay")) {
                             int delay = MainModule.mPrefs.getInt("system_betterpopups_delay", 0) * 1000;
                             if (delay == 0) delay = 5000;
@@ -2090,7 +2089,7 @@ public class System {
             protected void after(final AfterHookCallback param) throws Throwable {
                 XposedHelpers.setAdditionalInstanceField(param.getThisObject(), "mVibrationMode", Integer.parseInt(MainModule.mPrefs.getString("system_vibration", "1")));
                 ModuleHelper.observePreferenceChange(new ModuleHelper.PreferenceObserver() {
-                    public void onChange(SharedPreferences sharedPreferences, String key) {
+                    public void onChange(String key) {
                         if (key.endsWith("system_vibration")) {
                             XposedHelpers.setAdditionalInstanceField(param.getThisObject(), "mVibrationMode", MainModule.mPrefs.getStringAsInt("system_vibration", 1));
                         }
@@ -2099,7 +2098,7 @@ public class System {
 
                 XposedHelpers.setAdditionalInstanceField(param.getThisObject(), "mVibrationApps", MainModule.mPrefs.getStringSet("system_vibration_apps"));
                 ModuleHelper.observePreferenceChange(new ModuleHelper.PreferenceObserver() {
-                    public void onChange(SharedPreferences sharedPreferences, String key) {
+                    public void onChange(String key) {
                         if (key.contains("system_vibration_apps")) {
                             XposedHelpers.setAdditionalInstanceField(param.getThisObject(), "mVibrationApps", MainModule.mPrefs.getStringSet("system_vibration_apps"));
                         }
@@ -4766,7 +4765,7 @@ public class System {
                 float scale = MainModule.mPrefs.getInt("system_other_wallpaper_scale", 6) / 10.0f;
                 XposedHelpers.setObjectField(param.getThisObject(), "mMaxWallpaperScale", scale);
                 ModuleHelper.observePreferenceChange(new ModuleHelper.PreferenceObserver() {
-                    public void onChange(SharedPreferences sp, String key) {
+                    public void onChange(String key) {
                         if (key.contains("system_other_wallpaper_scale")) {
                             int val = MainModule.mPrefs.getInt("system_other_wallpaper_scale", 6);
                             XposedHelpers.setObjectField(param.getThisObject(), "mMaxWallpaperScale", val / 10.0f);

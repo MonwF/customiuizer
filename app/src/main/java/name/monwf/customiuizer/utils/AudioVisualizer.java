@@ -3,7 +3,6 @@ package name.monwf.customiuizer.utils;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -250,7 +249,7 @@ public class AudioVisualizer extends View {
 
 		mHandler = new Handler(context.getMainLooper());
 		ModuleHelper.observePreferenceChange(new ModuleHelper.PreferenceObserver() {
-			public void onChange(SharedPreferences sharedPreferences, String key) {
+			public void onChange(String key) {
 				try {
 					switch (key) {
 						case "pref_key_system_visualizer_animdur":

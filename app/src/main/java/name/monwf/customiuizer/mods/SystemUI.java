@@ -21,7 +21,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -1794,7 +1793,7 @@ public class SystemUI {
                 blurExpanded = MainModule.mPrefs.getInt("system_volumeblur_expanded", 0) / 100f;
                 ModuleHelper.observePreferenceChange(new ModuleHelper.PreferenceObserver() {
                     @Override
-                    public void onChange(SharedPreferences sharedPreferences, String key) {
+                    public void onChange(String key) {
                         try {
                             if (key.equals("system_volumeblur_collapsed")) blurCollapsed = MainModule.mPrefs.getInt(key, 0) / 100f;
                             if (key.equals("system_volumeblur_expanded")) blurExpanded = MainModule.mPrefs.getInt(key, 0) / 100f;
