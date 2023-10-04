@@ -3769,19 +3769,6 @@ public class System {
         });
     }
 
-    public static void NoLowBatteryWarningHook() {
-        MethodHook settingHook = new MethodHook() {
-            @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                String key = (String)param.getArgs()[1];
-                if ("low_battery_dialog_disabled".equals(key)) param.returnAndSkip(1);
-                else if ("low_battery_sound".equals(key)) param.returnAndSkip(null);
-            }
-        };
-        ModuleHelper.hookAllMethods(Settings.System.class, "getInt", settingHook);
-        ModuleHelper.hookAllMethods(Settings.Global.class, "getString", settingHook);
-    }
-
     public static void TempHideOverlayAppHook(XposedModuleInterface.SystemServerLoadedParam lpparam) {
         final int flagIndex = 2;
         ModuleHelper.hookAllConstructors("com.android.server.wm.WindowSurfaceController", lpparam.getClassLoader(), new MethodHook() {

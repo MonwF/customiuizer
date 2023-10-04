@@ -48,6 +48,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -575,6 +576,35 @@ public class Various {
 				});
 			}
 		}
+	}
+
+	public static void PrivacyAppsLayoutHook(PackageLoadedParam lpparam) {
+		ModuleHelper.findAndHookMethod("com.miui.privacyapps.ui.PrivacyAppsActivity", lpparam.getClassLoader(), "onCreate", Bundle.class, new MethodHook() {
+			@Override
+			protected void after(AfterHookCallback param) throws Throwable {
+				Activity act = (Activity) param.getThisObject();
+				int gridViewId = act.getResources().getIdentifier("privacy_apps_gridview", "id", "com.miui.securitycenter");
+				GridView gridView = act.findViewById(gridViewId);
+				gridView.setNumColumns(4);
+				LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) gridView.getLayoutParams();
+				params.rightMargin = (int) Helpers.dp2px(16);
+				params.leftMargin = params.rightMargin;
+				gridView.setLayoutParams(params);
+			}
+		});
+	}
+
+	public static void NoLowBatteryWarningHook() {
+		MethodHook settingHook = new MethodHook() {
+			@Override
+			protected void before(final BeforeHookCallback param) throws Throwable {
+				String key = (String)param.getArgs()[1];
+				if ("low_battery_dialog_disabled".equals(key)) param.returnAndSkip(1);
+				else if ("low_battery_sound".equals(key)) param.returnAndSkip(null);
+			}
+		};
+		ModuleHelper.hookAllMethods(Settings.System.class, "getInt", settingHook);
+		ModuleHelper.hookAllMethods(Settings.Global.class, "getString", settingHook);
 	}
 
 	public static void OpenByDefaultHook(PackageLoadedParam lpparam) {

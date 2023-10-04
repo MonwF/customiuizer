@@ -71,7 +71,6 @@ import java.util.Set;
 
 import miui.util.HapticFeedbackUtil;
 import name.monwf.customiuizer.BuildConfig;
-import name.monwf.customiuizer.PrefsProvider;
 import name.monwf.customiuizer.R;
 import name.monwf.customiuizer.prefs.PreferenceCategoryEx;
 
@@ -83,7 +82,6 @@ public class Helpers {
     public static final String modulePkg = BuildConfig.APPLICATION_ID;
     //	public static final String versionFile = "xposed_version";
 //	public static final String wallpaperFile = "lockscreen_wallpaper";
-    //public static final String xposedRepo = "https://code.highspec.ru/repo/full.xml.gz";
     public static final String ANDROID_NS = "http://schemas.android.com/apk/res/android";
     public static final String MIUIZER_NS = "http://schemas.android.com/apk/res-auto";
     public static final String ACCESS_SECURITY_CENTER = "com.miui.securitycenter.permission.ACCESS_SECURITY_CENTER_PROVIDER";

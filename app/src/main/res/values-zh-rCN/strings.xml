@@ -676,6 +676,7 @@
     <string name="various_apps_title">显示附加应用详情</string>
     <string name="various_apps_summ">添加新字段到应用信息页面:\n- 版本代码\n- apk完整路径\n- 数据路径\n- 用户标识符\n- 目标SDK版本\n- 连结到Play商店页面\n- 启动应用</string>
     <string name="various_appsort_title">已安装应用的初始排列顺序</string>
+    <string name="various_privacyapps_column_nums4_title">隐藏应用视图调整为4列</string>
     <string name="disable_app_title">禁用应用？</string>
     <string name="disable_app_text">如果这是一个必要的系统应用，将其禁用可能会造成损坏:)</string>
     <string name="disable_app_settings">这是一个坏主意！:)</string>

@@ -121,8 +121,12 @@
 			android:key="pref_key_launcher_privacyapps_gest"
 			android:title="@string/launcher_privacyapps_gest_title"
 			android:summary="@string/launcher_privacyapps_gest_summ"
-			android:defaultValue="false"
-			miuizer:dynamic="true" />
+			android:defaultValue="false" />
+
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_various_privacyapps_column_nums4"
+			android:title="@string/various_privacyapps_column_nums4_title"
+			android:defaultValue="false" />
 
 	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
