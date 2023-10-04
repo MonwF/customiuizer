@@ -11,7 +11,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -267,7 +266,7 @@ public class Launcher {
             protected void after(final AfterHookCallback param) throws Throwable {
                 ModuleHelper.observePreferenceChange(new ModuleHelper.PreferenceObserver() {
                     @Override
-                    public void onChange(SharedPreferences sharedPreferences, String key) {
+                    public void onChange(String key) {
                         try {
                             if (!key.contains("pref_key_launcher_renameapps_list")) return;
                             CharSequence newTitle = MainModule.mPrefs.getString(key, "");

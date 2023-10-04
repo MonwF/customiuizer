@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
@@ -88,7 +87,7 @@ public class BatteryIndicator extends androidx.appcompat.widget.AppCompatImageVi
 
         updateParameters();
         ModuleHelper.observePreferenceChange(new ModuleHelper.PreferenceObserver() {
-            public void onChange(SharedPreferences sharedPreferences, String key) {
+            public void onChange(String key) {
                 try {
                     if (!mTesting && key.contains("pref_key_system_batteryindicator")) {
                         var mHandler = new Handler(Looper.getMainLooper());

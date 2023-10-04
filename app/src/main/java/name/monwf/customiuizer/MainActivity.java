@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -11,20 +12,19 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentResultListener;
 
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import io.github.libxposed.service.RemotePreferences;
 import io.github.libxposed.service.XposedService;
 import io.github.libxposed.service.XposedServiceHelper;
+import name.monwf.customiuizer.mods.GlobalActions;
 import name.monwf.customiuizer.utils.AppHelper;
 import name.monwf.customiuizer.utils.Helpers;
 
@@ -92,28 +92,45 @@ public class MainActivity extends AppCompatActivity {
                 if (ignoreKeys.contains(key)) return;
                 Object val = sharedPreferences.getAll().get(key);
                 RemotePreferences.Editor prefEdit = AppHelper.remotePrefs.edit();
+                Intent intent = new Intent(GlobalActions.EVENT_PREFIX + "CHANGE_PREFERENCE");
+                intent.putExtra("pref_key", key);
+                intent.setPackage("android");
                 if (val == null) {
                     prefEdit.remove(key);
+                    intent.putExtra("pref_type", "remove");
                 }
                 else if (val instanceof Boolean) {
                     prefEdit.putBoolean(key, (Boolean) val);
+                    intent.putExtra("pref_val", (boolean) val);
+                    intent.putExtra("pref_type", "boolean");
                 }
                 else if (val instanceof Float) {
                     prefEdit.putFloat(key, (Float)val);
+                    intent.putExtra("pref_val", (float) val);
+                    intent.putExtra("pref_type", "float");
                 }
                 else if (val instanceof Integer) {
-                    prefEdit.putInt(key, (Integer)val);
+                    prefEdit.putInt(key, (Integer) val);
+                    intent.putExtra("pref_val", (int) val);
+                    intent.putExtra("pref_type", "int");
                 }
                 else if (val instanceof Long) {
-                    prefEdit.putLong(key, (Long)val);
+                    prefEdit.putLong(key, (Long) val);
+                    intent.putExtra("pref_val", (long) val);
+                    intent.putExtra("pref_type", "long");
                 }
                 else if (val instanceof String) {
-                    prefEdit.putString(key, ((String)val));
+                    prefEdit.putString(key, (String) val);
+                    intent.putExtra("pref_val", (String) val);
+                    intent.putExtra("pref_type", "string");
                 }
                 else if (val instanceof Set<?>) {
-                    prefEdit.putStringSet(key, ((Set<String>)val));
+                    prefEdit.putStringSet(key, (Set<String>) val);
+                    intent.putStringArrayListExtra("pref_val", new ArrayList<String>((Set<String>) val));
+                    intent.putExtra("pref_type", "set");
                 }
                 prefEdit.apply();
+                sendBroadcast(intent);
             }
         };
 

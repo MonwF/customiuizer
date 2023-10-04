@@ -7,7 +7,6 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -286,16 +285,16 @@ public class ModuleHelper {
     }
 
     public interface PreferenceObserver {
-        void onChange(SharedPreferences sharedPreferences, String key);
+        void onChange(String key);
     }
 
     public static void observePreferenceChange(PreferenceObserver prefObserver) {
         prefObservers.add(prefObserver);
     }
 
-    public static void handlePreferenceChanged(SharedPreferences sharedPreferences, @Nullable String key) {
+    public static void handlePreferenceChanged(@Nullable String key) {
         for (PreferenceObserver prefObserver:prefObservers) {
-            prefObserver.onChange(sharedPreferences, key);
+            prefObserver.onChange(key);
         }
     }
 
