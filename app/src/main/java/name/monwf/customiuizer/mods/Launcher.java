@@ -1141,7 +1141,7 @@ public class Launcher {
         int opt = MainModule.mPrefs.getInt("launcher_indicator_topmargin", 0) - 21;
         MainModule.resHooks.setDensityReplacement("com.miui.home", "dimen", "slide_bar_margin_top", opt);
         MainModule.resHooks.setDensityReplacement("com.mi.android.globallauncher", "dimen", "slide_bar_margin_top", opt);
-        ModuleHelper.findAndHookMethodSilently("com.miui.home.launcher.util.x.DimenUtils1X", lpparam.getClassLoader(), "getDimensionPixelSize", Context.class, String.class, new MethodHook() {
+        ModuleHelper.findAndHookMethod("com.miui.home.launcher.util.DimenUtils1X", lpparam.getClassLoader(), "getDimensionPixelSize", Context.class, String.class, new MethodHook() {
             @Override
             protected void before(final BeforeHookCallback param) throws Throwable {
                 String resKey = (String) param.getArgs()[1];
