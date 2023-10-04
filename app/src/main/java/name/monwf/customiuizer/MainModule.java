@@ -596,7 +596,10 @@ public class MainModule extends XposedModule {
                 Various.AddSideBarExpandReceiverHook(lpparam);
             }
             if (mPrefs.getBoolean("system_hidelowbatwarn")) {
-                System.NoLowBatteryWarningHook();
+                Various.NoLowBatteryWarningHook();
+            }
+            if (mPrefs.getBoolean("various_privacyapps_column_nums4")) {
+                Various.PrivacyAppsLayoutHook(lpparam);
             }
         }
 
