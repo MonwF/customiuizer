@@ -5,6 +5,7 @@ import static name.monwf.customiuizer.mods.utils.XposedHelpers.findClassIfExists
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.appwidget.AppWidgetProviderInfo;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentResolver;
@@ -1603,6 +1604,21 @@ public class Launcher {
 
                         param.returnAndSkip(null);
                     }
+            }
+        });
+    }
+    public static void ResizableWidgetsHook(PackageLoadedParam lpparam) {
+        ModuleHelper.findAndHookMethod("android.appwidget.AppWidgetHostView", lpparam.getClassLoader(), "getAppWidgetInfo", new MethodHook() {
+            @Override
+            protected void after(AfterHookCallback param) throws Throwable {
+                AppWidgetProviderInfo widgetInfo = (AppWidgetProviderInfo) param.getResult();
+                if (widgetInfo == null) return;
+                widgetInfo.resizeMode = AppWidgetProviderInfo.RESIZE_VERTICAL | AppWidgetProviderInfo.RESIZE_HORIZONTAL;
+                widgetInfo.minHeight = 0;
+                widgetInfo.minWidth = 0;
+                widgetInfo.minResizeHeight = 0;
+                widgetInfo.minResizeWidth = 0;
+                param.setResult(widgetInfo);
             }
         });
     }
