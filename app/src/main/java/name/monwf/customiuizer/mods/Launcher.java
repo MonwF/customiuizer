@@ -1130,12 +1130,17 @@ public class Launcher {
     }
     public static void WorkspaceCellPaddingTopHook(PackageLoadedParam lpparam) {
         int opt = MainModule.mPrefs.getInt("launcher_topmargin", 0) - 21;
-        ModuleHelper.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.getClassLoader(), "getWorkspaceCellPaddingTop", Context.class, new MethodHook() {
+        MethodHook hook = new MethodHook() {
             @Override
             protected void before(final BeforeHookCallback param) throws Throwable {
                 param.returnAndSkip(Math.round(Helpers.dp2px(opt)));
             }
-        });
+        };
+
+        boolean newLauncher = ModuleHelper.findAndHookMethodSilently("com.miui.home.launcher.DeviceConfig", lpparam.getClassLoader(), "getWorkspaceCellPaddingTop", Context.class, hook);
+        if (!newLauncher) {
+            ModuleHelper.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.getClassLoader(), "getWorkspaceCellPaddingTop", hook);
+        }
     }
 
     public static void IndicatorMarginTopHook(PackageLoadedParam lpparam) {
