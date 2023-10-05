@@ -747,9 +747,7 @@ public class MainModule extends XposedModule {
             if (mPrefs.getInt("controls_fsg_swipeandstop_action", 1) > 1) Launcher.SwipeAndStopActionHook(lpparam);
         }
         if (closeOnLaunch) Launcher.CloseFolderOrDrawerOnLaunchShortcutMenuHook(lpparam);
-        //if (!mPrefs.getString("system_clock_app", "").equals("")) Launcher.ReplaceClockAppHook(lpparam);
-        //if (!mPrefs.getString("system_calendar_app", "").equals("")) Launcher.ReplaceCalendarAppHook(lpparam);
-        //Launcher.NoInternationalBuildHook(lpparam);
+        if (mPrefs.getBoolean("system_resizablewidgets")) Launcher.ResizableWidgetsHook(lpparam);
     }
 
 }

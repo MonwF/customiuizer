@@ -588,6 +588,8 @@
     <string name="launcher_spread_title">Spread action</string>
     <string name="launcher_spread_summ">Action for moving 2 fingers away from each other on any home screen</string>
     <string name="launcher_bugfixes">Bug fixes</string>
+    <string name="system_resizablewidgets_title">Free widget resize</string>
+    <string name="system_resizablewidgets_summ">Remove any widget size limitations</string>
 
     <string name="controls_mods">Controls</string>
     <string name="controls_powerdt_title">Double press action</string>

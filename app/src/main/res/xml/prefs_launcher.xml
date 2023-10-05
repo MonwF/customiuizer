@@ -223,6 +223,12 @@
 			android:defaultValue="false" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_resizablewidgets"
+			android:title="@string/system_resizablewidgets_title"
+			android:summary="@string/system_resizablewidgets_summ"
+			android:defaultValue="false" />
+
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_nounlockanim"
 			android:title="@string/launcher_nounlockanim_title"
 			android:summary="@string/launcher_nounlockanim_summ"
@@ -290,12 +296,6 @@
 			android:defaultValue="false" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_launcher_unlockhotseat"
-			android:title="@string/launcher_unlockhotseat_title"
-			android:summary="@string/launcher_unlockhotseat_summ"
-			android:defaultValue="false" />
-
-		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_closedrawer"
 			android:title="@string/launcher_closedrawer_title"
 			android:summary="@string/launcher_closedrawer_summ"
@@ -320,6 +320,12 @@
 			miuizer:negativeShift="21"
 			miuizer:format="%d dp"
 			miuizer:offtext="@string/array_default" />
+
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_launcher_unlockhotseat"
+			android:title="@string/launcher_unlockhotseat_title"
+			android:summary="@string/launcher_unlockhotseat_summ"
+			android:defaultValue="false" />
 
 		<name.monwf.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_launcher_dock_topmargin"
