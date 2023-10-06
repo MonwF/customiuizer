@@ -28,21 +28,6 @@
 			android:clipToPadding="false">
 
 			<ImageView
-				android:id="@+id/santa_hat"
-				android:layout_width="80dp"
-				android:layout_height="80dp"
-				android:contentDescription="@null"
-				android:scaleX="1.0"
-				android:scaleY="1.0"
-				android:visibility="gone"
-				android:layout_alignParentTop="true"
-				android:layout_alignParentRight="true"
-				android:layout_marginTop="-32dp"
-				android:layout_marginRight="-23dp"
-				android:translationZ="10dp"
-				app:srcCompat="@drawable/santa_hat" />
-
-			<ImageView
 				android:id="@+id/miuizer_icon"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"

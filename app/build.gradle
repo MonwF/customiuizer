@@ -62,7 +62,8 @@ android {
     }
     packagingOptions {
         resources {
-            excludes += ['META-INF/*.kotlin_module', '**.kotlin_builtins', '**.kotlin_metadata']
+            merges += 'META-INF/xposed/*'
+            excludes += ['META-INF/*.kotlin_module', 'META-INF/androidx.*.version', '**.kotlin_builtins', '**.kotlin_metadata']
         }
     }
     androidResources {
