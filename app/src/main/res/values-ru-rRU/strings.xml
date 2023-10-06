@@ -91,7 +91,6 @@
     <string name="system_statusbar_clock_chip_verticalpadding_title">Вертикальный отступ</string>
     <string name="system_clock_time_format_title">24-часовой формат</string>
     <string name="system_clock_leadingzero_title">Показать начало от нуля до часов</string>
-    <string name="system_clock_leadingspace_title">Добавить пробел в часы</string>
     <string name="system_clock_customformat_enable_title">Включить собственный формат</string>
     <string name="system_clock_customformat_setting_title">Задать формат</string>
     <string name="system_clock_customformat_help_summ">Можно ввести символ переноса строки, содержимое после 2 строк будет усечено.

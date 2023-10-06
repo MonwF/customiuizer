@@ -88,7 +88,6 @@
     <string name="system_statusbar_clock_chip_verticalpadding_title">Distancia vertical</string>
     <string name="system_clock_time_format_title">Formato de 24 horas</string>
     <string name="system_clock_leadingzero_title">Mostrar cero inicial a las horas</string>
-    <string name="system_clock_leadingspace_title">Añadir carácter de espacio a la hora</string>
     <string name="system_clock_customformat_enable_title">Habilitar formato personalizado</string>
     <string name="system_clock_customformat_setting_title">Establecer formato</string>
     <string name="system_clock_customformat_help_summ">        Puede ingresar una línea nueva, el contenido despues de 2 líneas será truncado

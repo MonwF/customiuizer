@@ -178,12 +178,6 @@
 		android:defaultValue="false" />
 
 	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_statusbar_clock_leadingspace"
-		android:title="@string/system_clock_leadingspace_title"
-		android:dependency="pref_key_system_statusbar_clock_leadingzero"
-		android:defaultValue="false" />
-
-	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_clock_customformat_enable"
 		android:title="@string/system_clock_customformat_enable_title"
 		/>
