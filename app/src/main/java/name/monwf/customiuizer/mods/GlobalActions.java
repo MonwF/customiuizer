@@ -56,7 +56,6 @@ import io.github.libxposed.api.XposedModuleInterface.PackageLoadedParam;
 import miui.app.MiuiFreeFormManager;
 import miui.process.ForegroundInfo;
 import miui.process.ProcessManager;
-import name.monwf.customiuizer.MainActivity;
 import name.monwf.customiuizer.MainModule;
 import name.monwf.customiuizer.R;
 import name.monwf.customiuizer.mods.utils.HookerClassHelper.MethodHook;
@@ -662,7 +661,7 @@ public class GlobalActions {
     };
 
     public static void miuizerSettingsHook(PackageLoadedParam lpparam) {
-        int settingsIconResId = MainModule.resHooks.addResource("ic_miuizer_settings", Helpers.isMIUI14 ? R.drawable.ic_miuizer_settings11 : R.drawable.ic_miuizer_settings_legacy);
+        int settingsIconResId = MainModule.resHooks.addResource("ic_miuizer_settings", R.drawable.ic_miuizer_settings);
         ModuleHelper.findAndHookMethod("com.android.settings.MiuiSettings", lpparam.getClassLoader(), "updateHeaderList", List.class, new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
@@ -678,7 +677,7 @@ public class GlobalActions {
                 Object header = XposedHelpers.newInstance(headerCls);
                 XposedHelpers.setLongField(header, "id", 666);
                 Intent intent = new Intent();
-                intent.setClassName(Helpers.modulePkg, MainActivity.class.getCanonicalName());
+                intent.setClassName(Helpers.modulePkg, "name.monwf.customiuizer.MainActivity");
                 intent.putExtra("from.settings", true);
                 XposedHelpers.setObjectField(header, "intent", intent);
                 XposedHelpers.setIntField(header, "iconRes", settingsIconResId);

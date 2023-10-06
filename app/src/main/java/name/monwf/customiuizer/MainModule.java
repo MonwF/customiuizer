@@ -55,7 +55,7 @@ public class MainModule extends XposedModule {
         SharedPreferences readPrefs = getRemotePreferences(ModuleHelper.prefsName + "_remote");
         Map<String, ?> allPrefs = readPrefs.getAll();
         if (allPrefs == null || allPrefs.size() == 0)
-            XposedHelpers.log("[UID " + android.os.Process.myUid() +"] Cannot read module's SharedPreferences, some mods might not work!");
+            XposedHelpers.log("Empty preferences!");
         else
             mPrefs.putAll(allPrefs);
     }

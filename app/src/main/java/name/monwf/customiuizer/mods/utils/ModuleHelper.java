@@ -44,12 +44,6 @@ public class ModuleHelper {
     public static Context mModuleContext = null;
 
     static HashSet<PreferenceObserver> prefObservers = new HashSet<PreferenceObserver>();
-    private static String getCallerMethod() {
-        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-        for (StackTraceElement el: stackTrace)
-            if (el != null && el.getClassName().startsWith(Helpers.modulePkg + ".mods")) return el.getMethodName();
-        return stackTrace[4].getMethodName();
-    }
 
     public static void printCallStack() {
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
@@ -63,7 +57,7 @@ public class ModuleHelper {
         try {
             XposedHelpers.doHookMethod(method, callback);
         } catch (Throwable t) {
-            log(getCallerMethod(), "Failed to hook " + method.getName() + " method");
+            log("Failed to hook " + method.getName() + " method");
         }
     }
 
@@ -71,7 +65,7 @@ public class ModuleHelper {
         try {
             return XposedHelpers.findAndHookMethod(className, classLoader, methodName, parameterTypesAndCallback);
         } catch (Throwable t) {
-            log(getCallerMethod(), "Failed to hook " + methodName + " method in " + className);
+            log("Failed to hook " + methodName + " method in " + className);
             return null;
         }
     }
@@ -80,7 +74,7 @@ public class ModuleHelper {
         try {
             return XposedHelpers.findAndHookMethod(clazz, methodName, parameterTypesAndCallback);
         } catch (Throwable t) {
-            log(getCallerMethod(), "Failed to hook " + methodName + " method in " + clazz.getCanonicalName());
+            log("Failed to hook " + methodName + " method in " + clazz.getCanonicalName());
             return null;
         }
     }
@@ -109,7 +103,7 @@ public class ModuleHelper {
         try {
             XposedHelpers.findAndHookConstructor(className, classLoader, parameterTypesAndCallback);
         } catch (Throwable t) {
-            log(getCallerMethod(), "Failed to hook constructor in " + className);
+            log("Failed to hook constructor in " + className);
         }
     }
 
@@ -117,7 +111,7 @@ public class ModuleHelper {
         try {
             Class<?> hookClass = XposedHelpers.findClassIfExists(className, classLoader);
             if (hookClass == null || XposedHelpers.hookAllConstructors(hookClass, callback).size() == 0)
-                log(getCallerMethod(), "Failed to hook " + className + " constructor");
+                log("Failed to hook " + className + " constructor");
         } catch (Throwable t) {
             log(t);
         }
@@ -126,7 +120,7 @@ public class ModuleHelper {
     public static void hookAllConstructors(Class<?> hookClass, MethodHook callback) {
         try {
             if (XposedHelpers.hookAllConstructors(hookClass, callback).size() == 0)
-                log(getCallerMethod(), "Failed to hook " + hookClass.getCanonicalName() + " constructor");
+                log("Failed to hook " + hookClass.getCanonicalName() + " constructor");
         } catch (Throwable t) {
             log(t);
         }
@@ -136,7 +130,7 @@ public class ModuleHelper {
         try {
             Class<?> hookClass = XposedHelpers.findClassIfExists(className, classLoader);
             if (hookClass == null || XposedHelpers.hookAllMethods(hookClass, methodName, callback).size() == 0)
-                log(getCallerMethod(), "Failed to hook " + methodName + " method in " + className);
+                log("Failed to hook " + methodName + " method in " + className);
         } catch (Throwable t) {
             log(t);
         }
@@ -145,7 +139,7 @@ public class ModuleHelper {
     public static void hookAllMethods(Class<?> hookClass, String methodName, MethodHook callback) {
         try {
             if (XposedHelpers.hookAllMethods(hookClass, methodName, callback).size() == 0)
-                log(getCallerMethod(), "Failed to hook " + methodName + " method in " + hookClass.getCanonicalName());
+                log("Failed to hook " + methodName + " method in " + hookClass.getCanonicalName());
         } catch (Throwable t) {
             log(t);
         }
