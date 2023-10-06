@@ -1064,7 +1064,7 @@ public class System {
                 String clockName = (String) XposedHelpers.getAdditionalInstanceField(clock, "clockName");
                 Context mContext = clock.getContext();
                 Object mMiuiStatusBarClockController = XposedHelpers.getObjectField(clock, "mMiuiStatusBarClockController");
-                Object mCalendar = XposedHelpers.callMethod(mMiuiStatusBarClockController, "getCalendar");
+                Object mCalendar = XposedHelpers.getObjectField(mMiuiStatusBarClockController, "mCalendar");
                 String timeFmt = null;
                 if ("ccClock".equals(clockName) && ccClockTweak) {
                     String customFormat = MainModule.mPrefs.getString("system_cc_clock_customformat", "");
