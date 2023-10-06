@@ -91,7 +91,6 @@
     <string name="system_statusbar_clock_chip_verticalpadding_title">垂直方向のパディング</string>
     <string name="system_clock_time_format_title">24時間形式で表示</string>
     <string name="system_clock_leadingzero_title">ゼロから始まる時刻で表示</string>
-    <string name="system_clock_leadingspace_title">時間にスペースの文字を追加</string>
     <string name="system_clock_customformat_enable_title">カスタム形式を有効化</string>
     <string name="system_clock_customformat_setting_title">形式を設定</string>
     <string name="system_clock_customformat_help_summ">        改行が可能です、2行目以降は切り捨てとなります

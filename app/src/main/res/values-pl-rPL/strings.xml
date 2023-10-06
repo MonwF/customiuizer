@@ -88,7 +88,6 @@
     <string name="system_statusbar_clock_chip_verticalpadding_title">Pionowe wypełnienie</string>
     <string name="system_clock_time_format_title">24-godzinny format czasu</string>
     <string name="system_clock_leadingzero_title">Pokaż prowadzące zera do godzin</string>
-    <string name="system_clock_leadingspace_title">Dodaj spację do godzin</string>
     <string name="system_clock_customformat_enable_title">Włącz niestandardowy format</string>
     <string name="system_clock_customformat_setting_title">Ustaw format</string>
     <string name="system_clock_customformat_help_summ">Customowy wygląd czasu</string>

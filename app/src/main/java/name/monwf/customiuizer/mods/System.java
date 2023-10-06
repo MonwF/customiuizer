@@ -1087,7 +1087,6 @@ public class System {
                         boolean is24 = MainModule.mPrefs.getBoolean("system_statusbar_clock_24hour_format");
                         boolean showAmpm = MainModule.mPrefs.getBoolean("system_statusbar_clock_show_ampm");
                         boolean hourIn2d = MainModule.mPrefs.getBoolean("system_statusbar_clock_leadingzero");
-                        boolean addSpaceInHour = MainModule.mPrefs.getBoolean("system_statusbar_clock_leadingspace");
                         String fmt;
                         if (showAmpm) {
                             fmt = "fmt_time_12hour_minute_pm";
@@ -1106,12 +1105,6 @@ public class System {
                         }
                         if (hourIn2d) {
                             hourStr = hourStr + hourStr;
-                        }
-                        else if (addSpaceInHour) {
-                            int h = (int) XposedHelpers.callMethod(mCalendar, "get", 18);
-                            if (h < 10 || (!is24 && (h > 12 && h < 22))) {
-                                hourStr = " " + hourStr;
-                            }
                         }
                         timeFmt = timeFmt.replaceFirst("h+:", hourStr + ":");
                     }
