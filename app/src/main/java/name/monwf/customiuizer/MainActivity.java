@@ -92,45 +92,28 @@ public class MainActivity extends AppCompatActivity {
                 if (ignoreKeys.contains(key)) return;
                 Object val = sharedPreferences.getAll().get(key);
                 RemotePreferences.Editor prefEdit = AppHelper.remotePrefs.edit();
-                Intent intent = new Intent(GlobalActions.EVENT_PREFIX + "CHANGE_PREFERENCE");
-                intent.putExtra("pref_key", key);
-                intent.setPackage("android");
                 if (val == null) {
                     prefEdit.remove(key);
-                    intent.putExtra("pref_type", "remove");
                 }
                 else if (val instanceof Boolean) {
                     prefEdit.putBoolean(key, (Boolean) val);
-                    intent.putExtra("pref_val", (boolean) val);
-                    intent.putExtra("pref_type", "boolean");
                 }
                 else if (val instanceof Float) {
                     prefEdit.putFloat(key, (Float)val);
-                    intent.putExtra("pref_val", (float) val);
-                    intent.putExtra("pref_type", "float");
                 }
                 else if (val instanceof Integer) {
                     prefEdit.putInt(key, (Integer) val);
-                    intent.putExtra("pref_val", (int) val);
-                    intent.putExtra("pref_type", "int");
                 }
                 else if (val instanceof Long) {
                     prefEdit.putLong(key, (Long) val);
-                    intent.putExtra("pref_val", (long) val);
-                    intent.putExtra("pref_type", "long");
                 }
                 else if (val instanceof String) {
                     prefEdit.putString(key, (String) val);
-                    intent.putExtra("pref_val", (String) val);
-                    intent.putExtra("pref_type", "string");
                 }
                 else if (val instanceof Set<?>) {
                     prefEdit.putStringSet(key, (Set<String>) val);
-                    intent.putStringArrayListExtra("pref_val", new ArrayList<String>((Set<String>) val));
-                    intent.putExtra("pref_type", "set");
                 }
                 prefEdit.apply();
-                sendBroadcast(intent);
             }
         };
 

@@ -53,11 +53,12 @@ public class ModuleHelper {
             }
     }
 
-    public static void hookMethod(Method method, MethodHook callback) {
+    public static CustomMethodUnhooker hookMethod(Method method, MethodHook callback) {
         try {
-            XposedHelpers.doHookMethod(method, callback);
+            return XposedHelpers.doHookMethod(method, callback);
         } catch (Throwable t) {
             log("Failed to hook " + method.getName() + " method");
+            return null;
         }
     }
 
@@ -99,11 +100,12 @@ public class ModuleHelper {
         }
     }
 
-    public static void findAndHookConstructor(String className, ClassLoader classLoader, Object... parameterTypesAndCallback) {
+    public static CustomMethodUnhooker findAndHookConstructor(String className, ClassLoader classLoader, Object... parameterTypesAndCallback) {
         try {
-            XposedHelpers.findAndHookConstructor(className, classLoader, parameterTypesAndCallback);
+            return XposedHelpers.findAndHookConstructor(className, classLoader, parameterTypesAndCallback);
         } catch (Throwable t) {
             log("Failed to hook constructor in " + className);
+            return null;
         }
     }
 
