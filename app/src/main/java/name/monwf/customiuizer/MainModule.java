@@ -87,67 +87,10 @@ public class MainModule extends XposedModule {
         }, 3000);
     }
 
-    private void watchPreferenceChange(Context mContext) {
-        HashSet<String> ignoreKeys = new HashSet<>();
-        ignoreKeys.add("pref_key_systemui_restart_time");
-        IntentFilter intentFilter = new IntentFilter();
-        String changeKey = GlobalActions.EVENT_PREFIX + "CHANGE_PREFERENCE";
-        intentFilter.addAction(changeKey);
-        mContext.registerReceiver(new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (changeKey.equals(intent.getAction())) {
-                    String key = intent.getStringExtra("pref_key");
-                    String type = intent.getStringExtra("pref_type");
-                    if (type == null) {
-                        type = "other";
-                    }
-                    Object val = null;
-                    switch (type) {
-                        case "remove" -> {
-//                            XposedHelpers.log(processName + " context key removed: " + key);
-                            mPrefs.remove(key);
-                        }
-                        case "boolean" -> val = intent.getBooleanExtra("pref_val", false);
-                        case "float" -> val = intent.getFloatExtra("pref_val", 0f);
-                        case "int" -> val = intent.getIntExtra("pref_val", 0);
-                        case "long" -> val = intent.getLongExtra("pref_val", 0L);
-                        case "string" -> val = intent.getStringExtra("pref_val");
-                        case "set" -> {
-                            val = intent.getStringArrayListExtra("pref_val");
-                            if (val == null) {
-                                val = new HashSet<String>();
-                            }
-                            else {
-                                val = new HashSet<String>((ArrayList<String>) val);
-                            }
-                        }
-                        default -> {
-                            return;
-                        }
-                    }
-                    if (!"remove".equals(type)) {
-//                        XposedHelpers.log(processName + " context key changed: " + key + " | " + val);
-                        mPrefs.put(key, val);
-                    }
-                    if (!ignoreKeys.contains(key)) {
-                        ModuleHelper.handlePreferenceChanged(key);
-                    }
-                }
-            }
-        }, intentFilter, Context.RECEIVER_EXPORTED);
-    }
-
     @Override
     public void onSystemServerLoaded(final SystemServerLoadedParam lpparam) {
         initPrefs();
-        ModuleHelper.findAndHookMethod("com.android.server.policy.PhoneWindowManager", lpparam.getClassLoader(), "onSystemUiStarted", new MethodHook() {
-            @Override
-            protected void after(AfterHookCallback param) throws Throwable {
-                Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-                watchPreferenceChange(mContext);
-            }
-        });
+        watchPreferenceChange();
         PackagePermissions.hook(lpparam);
         GlobalActions.setupGlobalActions(lpparam);
 
