@@ -61,36 +61,33 @@ public class MainModule extends XposedModule {
     }
 
     private void watchPreferenceChange() {
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            HashSet<String> ignoreKeys = new HashSet<>();
-            ignoreKeys.add("pref_key_systemui_restart_time");
+        HashSet<String> ignoreKeys = new HashSet<>();
+        ignoreKeys.add("pref_key_systemui_restart_time");
 
-            mListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-                @Override
-                public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @Nullable String key) {
-                    Object val = sharedPreferences.getAll().get(key);
-                    if (val == null) {
-//                      XposedHelpers.log(processName + " key removed: " + key);
-                        mPrefs.remove(key);
-                    }
-                    else {
-//                      XposedHelpers.log(processName + " key changed: " + key);
-                        mPrefs.put(key, val);
-                    }
-                    if (!ignoreKeys.contains(key)) {
-                        ModuleHelper.handlePreferenceChanged(key);
-                    }
+        mListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @Nullable String key) {
+                Object val = sharedPreferences.getAll().get(key);
+                if (val == null) {
+//                    XposedHelpers.log(processName + " key removed: " + key);
+                    mPrefs.remove(key);
                 }
-            };
-            remotePrefs = getRemotePreferences(ModuleHelper.prefsName + "_remote");
-            remotePrefs.registerOnSharedPreferenceChangeListener(mListener);
-        }, 3000);
+                else {
+//                    XposedHelpers.log(processName + " key changed: " + key);
+                    mPrefs.put(key, val);
+                }
+                if (!ignoreKeys.contains(key)) {
+                    ModuleHelper.handlePreferenceChanged(key);
+                }
+            }
+        };
+        remotePrefs = getRemotePreferences(ModuleHelper.prefsName + "_remote");
+        remotePrefs.registerOnSharedPreferenceChangeListener(mListener);
     }
 
     @Override
     public void onSystemServerLoaded(final SystemServerLoadedParam lpparam) {
         initPrefs();
-        watchPreferenceChange();
         PackagePermissions.hook(lpparam);
         GlobalActions.setupGlobalActions(lpparam);
 
@@ -169,6 +166,8 @@ public class MainModule extends XposedModule {
         }
         if (mPrefs.getInt("system_other_wallpaper_scale", 6) > 6) System.WallpaperScaleLevelHook(lpparam);
         if (mPrefs.getBoolean("system_nopassword")) System.NoPasswordHook(lpparam);
+
+        watchPreferenceChange();
     }
 
     @Override
@@ -191,13 +190,13 @@ public class MainModule extends XposedModule {
         if (mPrefs.getInt("controls_navbarheight", 19) > 19) Controls.NavbarHeightRes();
 
         if (pkg.equals("android")) {
-            watchPreferenceChange();
             if (mPrefs.getBoolean("system_cleanshare")) System.CleanShareMenuHook(lpparam);
             if (mPrefs.getBoolean("system_cleanopenwith")) System.CleanOpenWithMenuHook(lpparam);
             if (mPrefs.getStringAsInt("system_allrotations2", 1) > 1) {
                 MainModule.resHooks.setObjectReplacement("android", "bool", "config_allowAllRotations", MainModule.mPrefs.getStringAsInt("system_allrotations2", 1) == 2);
             }
             if (mPrefs.getStringAsInt("system_rotateanim", 1) > 1) System.RotationAnimationRes();
+            watchPreferenceChange();
         }
 
         if (pkg.equals("com.baidu.input")
@@ -239,9 +238,9 @@ public class MainModule extends XposedModule {
                 protected void after(final AfterHookCallback param) throws Throwable {
                     if (!isHooked) {
                         isHooked = true;
-                        watchPreferenceChange();
                         Context context = (Context) XposedHelpers.callMethod(param.getThisObject(), "getApplicationContext");
                         SystemUI.setupStatusBar(context);
+                        watchPreferenceChange();
                     }
                 }
             });
