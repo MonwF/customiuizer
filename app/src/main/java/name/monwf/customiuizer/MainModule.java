@@ -458,6 +458,7 @@ public class MainModule extends XposedModule {
                 mPrefs.getBoolean("system_statusbaricons_headset") ||
                 mPrefs.getBoolean("system_statusbaricons_nfc") ||
                 mPrefs.getBoolean("system_statusbaricons_vpn") ||
+                mPrefs.getBoolean("system_statusbaricons_airplane") ||
                 mPrefs.getBoolean("system_statusbaricons_hotspot") ||
                 mPrefs.getBoolean("system_statusbaricons_nosims") ||
                 mPrefs.getBoolean("system_statusbaricons_gps") ||
