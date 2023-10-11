@@ -125,6 +125,11 @@
 		android:defaultValue="false" />
 
 	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_airplane"
+		android:title="@string/system_secureqs_airplane_title"
+		android:defaultValue="false" />
+
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbaricons_volte"
 		android:title="@string/system_statusbaricons_volte_title"
 		android:defaultValue="false" />
