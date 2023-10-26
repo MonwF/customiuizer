@@ -2153,7 +2153,21 @@ public class System {
         MainModule.resHooks.setDensityReplacement("*", "dimen", "status_bar_height_landscape", heightDpi);
     }
 
-    @SuppressWarnings("ConstantConditions")
+//    public static void StatusBarHeightHook(SystemServerLoadedParam lpparam) {
+//        int opt = MainModule.mPrefs.getInt("system_statusbarheight", 19);
+//        int heightDpi = opt == 19 ? 27 : opt;
+//
+//        MethodHook hook = new MethodHook() {
+//            @Override
+//            protected void before(final BeforeHookCallback param) throws Throwable {
+//                int barHeight = (int)Helpers.dp2px(heightDpi);
+//                param.returnAndSkip(barHeight);
+//            }
+//        };
+//        ModuleHelper.hookAllMethods("com.android.internal.policy.SystemBarUtils", lpparam.getClassLoader(), "getStatusBarHeight", hook);
+//        ModuleHelper.hookAllMethods("com.android.internal.policy.SystemBarUtils", lpparam.getClassLoader(), "getStatusBarHeightForRotation", hook);
+//    }
+
     public static void HideMemoryCleanHook(PackageLoadedParam lpparam, boolean isInLauncher) {
         String raClass = isInLauncher ? "com.miui.home.recents.views.RecentsContainer" : "com.android.systemui.recents.RecentsActivity";
         if (isInLauncher && findClassIfExists(raClass, lpparam.getClassLoader()) == null) return;
