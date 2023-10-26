@@ -293,13 +293,13 @@ public class SystemUI {
                     else {
                         baseAnchor = (View)XposedHelpers.getObjectField(param.getThisObject(), "mDripNetworkSpeedSplitter");
                     }
-                    ViewGroup mStatusBarLeftContainer = (ViewGroup) baseAnchor.getParent();
-                    int bvIndex = mStatusBarLeftContainer.indexOfChild(baseAnchor);
+                    ViewGroup leftIconsContainer = (ViewGroup) baseAnchor.getParent();
+                    int bvIndex = leftIconsContainer.indexOfChild(baseAnchor);
                     LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) baseAnchor.getLayoutParams();
                     for (TextIcon ti:textIcons) {
                         if (!ti.atRight) {
                             View iconView = createStatusbarTextIcon(mContext, lp, ti);
-                            mStatusBarLeftContainer.addView(iconView, bvIndex + 1);
+                            leftIconsContainer.addView(iconView, bvIndex + 1);
                             mStatusbarTextIcons.add(iconView);
                             XposedHelpers.callMethod(DarkIconDispatcher, "addDarkReceiver", iconView);
                         }
@@ -820,45 +820,97 @@ public class SystemUI {
         ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView", lpparam.getClassLoader(), "onFinishInflate", new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
-                FrameLayout sbView = (FrameLayout) param.getThisObject();
-                Context mContext = sbView.getContext();
-                LinearLayout leftLayout = new LinearLayout(mContext);
-                LinearLayout rightLayout = new LinearLayout(mContext);
-                LinearLayout leftContainer = (LinearLayout) XposedHelpers.getObjectField(param.getThisObject(), "mStatusBarLeftContainer");
-                ViewGroup rightContainer = (ViewGroup) XposedHelpers.getObjectField(param.getThisObject(), "mSystemIconArea");
-                int userViewId = sbView.getResources().getIdentifier("user_switcher_container", "id", lpparam.getPackageName());
-                View switchUserView = sbView.findViewById(userViewId);
-                ((ViewGroup) switchUserView.getParent()).removeView(switchUserView);
                 int firstRowLeftPadding = 0;
                 int firstRowRightPadding = 0;
                 if (MainModule.mPrefs.getBoolean("system_statusbar_dualrows_firstrow_horizmargin")) {
                     firstRowLeftPadding = MainModule.mPrefs.getInt("system_statusbar_dualrows_firstrow_horizmargin_left", 0);
                     firstRowRightPadding = MainModule.mPrefs.getInt("system_statusbar_dualrows_firstrow_horizmargin_right", 0);
                 }
-                LinearLayout statusBarcontents = (LinearLayout) rightContainer.getParent();
-                statusBarcontents.removeView(leftContainer);
-                statusBarcontents.removeView(rightContainer);
+                boolean clock2Rows = MainModule.mPrefs.getBoolean("system_statusbar_dualrows_clock_span2rows");
+                FrameLayout sbView = (FrameLayout) param.getThisObject();
+                Context mContext = sbView.getContext();
+                LinearLayout leftContainer = (LinearLayout) XposedHelpers.getObjectField(sbView, "mStatusBarLeftContainer");
+                LinearLayout statusBarcontents = (LinearLayout) leftContainer.getParent();
+                LinearLayout leftLayout = new LinearLayout(mContext);
+                LinearLayout rightLayout = new LinearLayout(mContext);
                 statusBarcontents.addView(leftLayout, 0);
                 statusBarcontents.addView(rightLayout);
-                XposedHelpers.setObjectField(param.getThisObject(), "mSystemIconArea", rightLayout);
-                leftLayout.addView(leftContainer);
-                if (firstRowLeftPadding > 0) {
-                    leftContainer.setPaddingRelative(firstRowLeftPadding, 0, 0, 0);
+                LinearLayout leftGroup;
+
+                if (clock2Rows) {
+                    TextView mMiuiClock = (TextView) XposedHelpers.getObjectField(sbView, "mMiuiClock");
+                    leftContainer.removeView(mMiuiClock);
+                    leftGroup = new LinearLayout(mContext);
+                    leftLayout.addView(mMiuiClock);
+                    leftLayout.addView(leftGroup);
+                    leftLayout.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+                    LinearLayout.LayoutParams groupLp = new LinearLayout.LayoutParams(0, -1, 1);
+                    leftGroup.setLayoutParams(groupLp);
                 }
+                else {
+                    leftGroup = leftLayout;
+                    if (firstRowLeftPadding > 0) {
+                        leftContainer.setPaddingRelative(firstRowLeftPadding, 0, 0, 0);
+                    }
+                }
+                statusBarcontents.removeView(leftContainer);
+                leftGroup.addView(leftContainer);
                 LinearLayout secondLeft = new LinearLayout(mContext);
-                leftLayout.addView(secondLeft);
+                leftGroup.addView(secondLeft);
+                leftLayout.setId(leftContainer.getId());
+                leftContainer.setId(View.NO_ID);
+                XposedHelpers.setObjectField(sbView, "mStatusBarLeftContainer", leftLayout);
+
+                ViewGroup rightContainer = (ViewGroup) XposedHelpers.getObjectField(param.getThisObject(), "mSystemIconArea");
+                View mFullscreenStatusBarNotificationIconArea = (View) XposedHelpers.getObjectField(param.getThisObject(), "mFullscreenStatusBarNotificationIconArea");
+                rightContainer.removeView(mFullscreenStatusBarNotificationIconArea);
+                secondLeft.addView(mFullscreenStatusBarNotificationIconArea);
+                View mDripStatusBarNotificationIconArea = (View) XposedHelpers.getObjectField(param.getThisObject(), "mDripStatusBarNotificationIconArea");
+                leftContainer.removeView(mDripStatusBarNotificationIconArea);
+                secondLeft.addView(mDripStatusBarNotificationIconArea);
+
+                leftGroup.setOrientation(LinearLayout.VERTICAL);
+                LinearLayout.LayoutParams leftLp = new LinearLayout.LayoutParams(-1, 0, 1);
+                leftContainer.setLayoutParams(leftLp);
+                secondLeft.setLayoutParams(leftLp);
+                secondLeft.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+
+                rightLayout.setId(rightContainer.getId());
+                XposedHelpers.setObjectField(param.getThisObject(), "mSystemIconArea", rightLayout);
                 LinearLayout firstRight = new LinearLayout(mContext);
                 rightLayout.addView(firstRight);
-                firstRight.setGravity(Gravity.END);
+                firstRight.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
                 if (firstRowRightPadding > 0) {
                     firstRight.setPaddingRelative(0, 0, firstRowRightPadding, 0);
                 }
                 LinearLayout secondRight = new LinearLayout(mContext);
                 rightLayout.addView(secondRight);
-                secondRight.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
+                secondRight.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
+
+                rightLayout.setOrientation(LinearLayout.VERTICAL);
+                LinearLayout.LayoutParams rightLp = new LinearLayout.LayoutParams(-1, 0, 1);
+                firstRight.setLayoutParams(rightLp);
+                secondRight.setLayoutParams(rightLp);
+
+                int resSystemIconsId = sbView.getResources().getIdentifier("system_icons", "id", lpparam.getPackageName());
+                int rightChildCount = rightContainer.getChildCount();
+                for (int i = rightChildCount - 1; i >= 0; i--) {
+                    View child = rightContainer.getChildAt(i);
+                    if (child.getId() != resSystemIconsId) {
+                        rightContainer.removeView(child);
+                        firstRight.addView(child, 0);
+                    }
+                }
+
+                View mStatusBarStatusIcons = (View) XposedHelpers.getObjectField(param.getThisObject(), "mStatusBarStatusIcons");
+                ((ViewGroup) mStatusBarStatusIcons.getParent()).removeView(mStatusBarStatusIcons);
+                firstRight.addView(mStatusBarStatusIcons, 0);
+                firstRight.setId(resSystemIconsId);
+
                 View mBattery = (View) XposedHelpers.getObjectField(param.getThisObject(), "mBattery");
                 ((ViewGroup) mBattery.getParent()).removeView(mBattery);
                 secondRight.addView(mBattery);
+
                 boolean showBatteryDetail = MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent");
                 boolean showDeviceTemp = MainModule.mPrefs.getBoolean("system_statusbar_showdevicetemperature");
                 boolean batteryAtRight = showBatteryDetail && MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent_atright");
@@ -882,31 +934,16 @@ public class SystemUI {
                     }
                 }
 
-                if (switchUserView != null) {
-                    secondRight.addView(switchUserView);
-                }
                 if (MainModule.mPrefs.getBoolean("system_statusbar_netspeed_atsecondrow") && !newStyle) {
                     View mDripNetworkSpeedView = (View) XposedHelpers.getObjectField(param.getThisObject(), "mDripNetworkSpeedView");
                     leftContainer.removeView(mDripNetworkSpeedView);
                     secondRight.addView(mDripNetworkSpeedView, 0);
                 }
 
+                statusBarcontents.removeView(rightContainer);
+
                 XposedHelpers.setAdditionalInstanceField(param.getThisObject(), "leftLayout", leftLayout);
                 XposedHelpers.setAdditionalInstanceField(param.getThisObject(), "rightLayout", rightLayout);
-                XposedHelpers.setAdditionalInstanceField(param.getThisObject(), "firstRight", firstRight);
-                XposedHelpers.setAdditionalInstanceField(param.getThisObject(), "secondLeft", secondLeft);
-
-                View mFullscreenStatusBarNotificationIconArea = (View) XposedHelpers.getObjectField(param.getThisObject(), "mFullscreenStatusBarNotificationIconArea");
-                ((ViewGroup) mFullscreenStatusBarNotificationIconArea.getParent()).removeView(mFullscreenStatusBarNotificationIconArea);
-                secondLeft.addView(mFullscreenStatusBarNotificationIconArea);
-                View mDripStatusBarNotificationIconArea = (View) XposedHelpers.getObjectField(param.getThisObject(), "mDripStatusBarNotificationIconArea");
-                ((ViewGroup) mDripStatusBarNotificationIconArea.getParent()).removeView(mDripStatusBarNotificationIconArea);
-                secondLeft.addView(mDripStatusBarNotificationIconArea);
-                View mStatusBarStatusIcons = (View) XposedHelpers.getObjectField(param.getThisObject(), "mStatusBarStatusIcons");
-                ((ViewGroup) mStatusBarStatusIcons.getParent()).removeView(mStatusBarStatusIcons);
-                firstRight.addView(mStatusBarStatusIcons);
-                int resSystemIconsId = sbView.getResources().getIdentifier("system_icons", "id", lpparam.getPackageName());
-                firstRight.setId(resSystemIconsId);
             }
         });
 
@@ -914,61 +951,22 @@ public class SystemUI {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
                 int mCurrentStatusBarType = (int) XposedHelpers.getObjectField(param.getThisObject(), "mCurrentStatusBarType");
-                LinearLayout leftContainer = (LinearLayout) XposedHelpers.getObjectField(param.getThisObject(), "mStatusBarLeftContainer");
-                LinearLayout leftLayout = (LinearLayout) leftContainer.getParent();
+                LinearLayout leftLayout = (LinearLayout) XposedHelpers.getAdditionalInstanceField(param.getThisObject(), "leftLayout");
                 LinearLayout rightLayout = (LinearLayout) XposedHelpers.getAdditionalInstanceField(param.getThisObject(), "rightLayout");
-                LinearLayout rightContainer = (LinearLayout) XposedHelpers.getAdditionalInstanceField(param.getThisObject(), "firstRight");
-                LinearLayout secondLeft = (LinearLayout) XposedHelpers.getAdditionalInstanceField(param.getThisObject(), "secondLeft");
-                LinearLayout secondRight = (LinearLayout) rightLayout.getChildAt(1);
-                LinearLayout statusBarcontents = (LinearLayout) leftLayout.getParent();
 
-                statusBarcontents.setOrientation(mCurrentStatusBarType == 0 ? LinearLayout.VERTICAL : LinearLayout.HORIZONTAL);
                 if (mCurrentStatusBarType == 0) {
-                    if (leftLayout.getChildAt(1) != rightContainer) {
-                        leftLayout.removeViewAt(1);
-                        rightLayout.removeViewAt(0);
-                        leftLayout.addView(rightContainer);
-                        rightLayout.addView(secondLeft, 0);
-                    }
-                    leftLayout.setOrientation(LinearLayout.HORIZONTAL);
-                    rightLayout.setOrientation(LinearLayout.HORIZONTAL);
-                    LinearLayout.LayoutParams leftLayoutLp = new LinearLayout.LayoutParams(-1, 0, 1);
+                    LinearLayout.LayoutParams leftLayoutLp = new LinearLayout.LayoutParams(0, -1, 4);
                     leftLayout.setLayoutParams(leftLayoutLp);
-                    LinearLayout.LayoutParams rightLayoutLp = new LinearLayout.LayoutParams(-1, 0, 1);
+                    LinearLayout.LayoutParams rightLayoutLp = new LinearLayout.LayoutParams(0, -1, 6);
                     rightLayout.setLayoutParams(rightLayoutLp);
-
-                    LinearLayout.LayoutParams firstRowlp = new LinearLayout.LayoutParams(-2, -1, 0);
-                    leftContainer.setLayoutParams(firstRowlp);
-                    firstRowlp = new LinearLayout.LayoutParams(0, -1, 1);
-                    rightContainer.setLayoutParams(firstRowlp);
-
-                    LinearLayout.LayoutParams secondRowLp = new LinearLayout.LayoutParams(0, -1, 1);
-                    secondLeft.setLayoutParams(secondRowLp);
-                    secondRight.setLayoutParams(secondRowLp);
                 }
                 else {
-                    if (leftLayout.getChildAt(1) != secondLeft) {
-                        leftLayout.removeViewAt(1);
-                        rightLayout.removeViewAt(0);
-                        leftLayout.addView(secondLeft);
-                        rightLayout.addView(rightContainer, 0);
-                    }
-                    leftLayout.setOrientation(LinearLayout.VERTICAL);
-                    rightLayout.setOrientation(LinearLayout.VERTICAL);
                     LinearLayout.LayoutParams leftLayoutLp = new LinearLayout.LayoutParams(0, -1, 1);
                     leftLayout.setLayoutParams(leftLayoutLp);
                     LinearLayout.LayoutParams rightLayoutLp = new LinearLayout.LayoutParams(0, -1, 1);
                     rightLayout.setLayoutParams(rightLayoutLp);
-
-                    LinearLayout.LayoutParams leftLp = new LinearLayout.LayoutParams(-1, 0, 1);
-                    leftContainer.setLayoutParams(leftLp);
-                    secondLeft.setLayoutParams(leftLp);
-
-                    LinearLayout.LayoutParams rightLp = new LinearLayout.LayoutParams(-1, 0, 1);
-                    rightContainer.setLayoutParams(rightLp);
-                    secondRight.setLayoutParams(rightLp);
                 }
-                secondLeft.setGravity(Gravity.CENTER_VERTICAL | Gravity.START);
+
             }
         });
 
@@ -1447,9 +1445,9 @@ public class SystemUI {
                 Context mContext = sbView.getContext();
                 Resources res = mContext.getResources();
                 TextView mClockView = (TextView) XposedHelpers.getObjectField(param.getThisObject(), "mMiuiClock");
-                LinearLayout mStatusBarLeftContainer = (LinearLayout) mClockView.getParent();
-                int clockIndex = mStatusBarLeftContainer.indexOfChild(mClockView);
-                mStatusBarLeftContainer.removeView(mClockView);
+                LinearLayout leftIconsContainer = (LinearLayout) mClockView.getParent();
+                int clockIndex = leftIconsContainer.indexOfChild(mClockView);
+                leftIconsContainer.removeView(mClockView);
                 int contentId = res.getIdentifier("status_bar_contents", "id", lpparam.getPackageName());
                 LinearLayout mContentsContainer = sbView.findViewById(contentId);
                 View spaceView = (View) XposedHelpers.getObjectField(param.getThisObject(), "mCutoutSpace");
@@ -1461,8 +1459,8 @@ public class SystemUI {
                 mContentsContainer.addView(rightContainer, spaceIndex + 1, rightLp);
                 rightContainer.addView(mSystemIconArea);
                 View mDripStatusBarLeftStatusIconArea = (View) XposedHelpers.getObjectField(param.getThisObject(), "mDripStatusBarLeftStatusIconArea");
-                mStatusBarLeftContainer.removeView(mDripStatusBarLeftStatusIconArea);
-                mStatusBarLeftContainer.addView(mDripStatusBarLeftStatusIconArea, clockIndex);
+                leftIconsContainer.removeView(mDripStatusBarLeftStatusIconArea);
+                leftIconsContainer.addView(mDripStatusBarLeftStatusIconArea, clockIndex);
 
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
                 if (pos == 2) {

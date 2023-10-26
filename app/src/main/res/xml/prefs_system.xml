@@ -339,6 +339,12 @@
 			android:summary="@string/system_statusbar_dualrows_summ" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_statusbar_dualrows_clock_span2rows"
+			android:dependency="pref_key_system_statusbar_dualrows"
+			miuizer:indentLevel="1"
+			android:title="@string/system_statusbar_clock_spread2rows_title" />
+
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_statusbar_dualrows_firstrow_horizmargin"
 			android:dependency="pref_key_system_statusbar_dualrows"
 			miuizer:indentLevel="1"
