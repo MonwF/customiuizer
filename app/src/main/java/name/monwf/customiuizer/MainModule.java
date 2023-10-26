@@ -91,6 +91,9 @@ public class MainModule extends XposedModule {
         PackagePermissions.hook(lpparam);
         GlobalActions.setupGlobalActions(lpparam);
 
+        if (mPrefs.getInt("system_statusbarheight", 19) > 19) {
+            System.StatusBarHeightRes();
+        }
         if (mPrefs.getBoolean("system_screenshot_overlay")) {
             System.TempHideOverlayAppHook(lpparam);
         }

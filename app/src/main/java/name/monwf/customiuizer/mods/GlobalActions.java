@@ -11,6 +11,7 @@ import android.app.ActivityManager;
 import android.app.ActivityManager.RecentTaskInfo;
 import android.app.ActivityOptions;
 import android.app.Instrumentation;
+import android.app.NotificationManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -87,32 +88,33 @@ public class GlobalActions {
             return true;
         }
         switch (action) {
-            case 2: return expandNotifications(context);
-            case 3: return expandEQS(context);
-            case 4: return lockDevice(context);
-            case 5: return goToSleep(context);
-            case 6: return takeScreenshot(context);
-            case 7: return openRecents(context);
+            case 2: return commonSendAction(context, "ExpandNotifications");
+            case 3: return commonSendAction(context, "ExpandSettings");
+            case 4: return commonSendAction(context, "LockDevice");
+            case 5: return commonSendAction(context, "GoToSleep");
+            case 6: return commonSendAction(context, "TakeScreenshot");
+            case 7: return commonSendAction(context, "OpenRecents");
             case 8: return launchAppIntent(context, key, skipLock);
             case 9: return launchShortcutIntent(context, key, skipLock);
             case 10: return toggleThis(context, MainModule.mPrefs.getInt(key + "_toggle", 0));
-            case 11: return switchToPrevApp(context);
-            case 12: return openPowerMenu(context);
-            case 13: return clearMemory(context);
-            case 14: return toggleColorInversion(context);
-            case 15: return goBack(context);
-            case 16: return simulateMenu(context);
-            case 17: return openVolumeDialog(context);
-            case 18: return volumeUp(context);
-            case 19: return volumeDown(context);
+            case 11: return commonSendAction(context, "SwitchToPrevApp");
+            case 12: return commonSendAction(context, "OpenPowerMenu");
+            case 13: return commonSendAction(context, "ClearMemory");
+            case 14: return commonSendAction(context, "ToggleColorInversion");
+            case 15: return commonSendAction(context, "GoBack");
+            case 16: return commonSendAction(context, "SimulateMenu");
+            case 17: return commonSendAction(context, "OpenVolumeDialog");
+            case 18: return commonSendAction(context, "VolumeUp");
+            case 19: return commonSendAction(context, "VolumeDown");
             case 20: return launchActivityIntent(context, key, skipLock);
-            case 21: return switchKeyboard(context);
-            case 22: return switchOneHanded(context);
-            case 24: return forceClose(context);
-            case 25: return scrollToTop(context);
+            case 21: return commonSendAction(context, "SwitchKeyboard");
+            case 22: return commonSendAction(context, "SwitchOneHanded");
+            case 23: return commonSendAction(context, "ClearNotifications");
+            case 24: return commonSendAction(context, "ForceClose");
+            case 25: return commonSendAction(context, "ScrollToTop");
             case 26: return showSidebar(context, bundle);
-            case 27: return floatingWindow(context);
-            case 28: return pinWindow(context);
+            case 27: return commonSendAction(context, "FloatingWindow");
+            case 28: return commonSendAction(context, "PinningWindow");
             default: return false;
         }
     }
@@ -138,6 +140,7 @@ public class GlobalActions {
             case 19: return R.string.array_global_actions_volume_down;
             case 21: return R.string.array_global_actions_switchkeyboard;
             case 22: return R.string.array_global_actions_onehanded_left;
+            case 23: return R.string.array_global_actions_clear_notifs;
             case 24: return R.string.array_global_actions_forceclose;
             case 25: return R.string.array_global_actions_scrolltotop;
             case 26: return R.string.array_global_actions_expandsidebar;
@@ -163,29 +166,10 @@ public class GlobalActions {
                     Object mService = XposedHelpers.getObjectField(pm, "mService");
                     XposedHelpers.callMethod(mService, "reboot", false, null, false);
                 }
-//				else if (action.equals(ACTION_PREFIX + "CopyToExternal")) {
-//					try {
-//						String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + Helpers.externalFolder;
-//						new File(dir).mkdirs();
-//
-//						int copyAction = intent.getIntExtra("action", 0);
-//						if (copyAction == 1) {
-//							Helpers.copyFile(intent.getStringExtra("from"), dir + Helpers.wallpaperFile);
-//							Intent lockIntent = new Intent("miui.intent.action.SET_LOCK_WALLPAPER");
-//							lockIntent.setPackage("com.android.thememanager");
-//							lockIntent.putExtra("lockWallpaperPath", dir + Helpers.wallpaperFile);
-//							context.sendBroadcast(lockIntent);
-//						} else if (copyAction == 2) {
-//							File xposedVersion = new File(dir + Helpers.versionFile);
-//							xposedVersion.createNewFile();
-//							try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(xposedVersion, false))) {
-//								out.write(intent.getStringExtra("data"));
-//							}
-//						}
-//					} catch (Throwable t) {
-//						XposedHelpers.log(t);
-//					}
-//				}
+                else if (action.equals(ACTION_PREFIX + "ClearNotifications")) {
+                    Object nms =  XposedHelpers.callStaticMethod(NotificationManager.class, "getService");
+                    XposedHelpers.callMethod(nms, "cancelAllNotifications", (String)null, 0);
+                }
                 else if (action.equals(ACTION_PREFIX + "ClearMemory")) {
                     Intent clearIntent = new Intent("com.android.systemui.taskmanager.Clear");
                     clearIntent.putExtra("show_toast", true);
@@ -872,6 +856,7 @@ public class GlobalActions {
                 intentfilter.addAction(ACTION_PREFIX + "ToggleFlashlight");
 
                 intentfilter.addAction(ACTION_PREFIX + "ClearMemory");
+                intentfilter.addAction(ACTION_PREFIX + "ClearNotifications");
                 intentfilter.addAction(ACTION_PREFIX + "RestartSystemUI");
                 intentfilter.addAction(ACTION_PREFIX + "RestartLauncher");
                 intentfilter.addAction(ACTION_PREFIX + "RestartSecurityCenter");
@@ -886,57 +871,6 @@ public class GlobalActions {
                 mStatusBarContext.registerReceiver(mSBReceiver, intentfilter);
             }
         });
-    }
-
-    // Actions
-    public static boolean expandNotifications(Context context) {
-        try {
-            context.sendBroadcast(new Intent(ACTION_PREFIX + "ExpandNotifications"));
-            return true;
-        } catch (Throwable t) {
-            XposedHelpers.log(t);
-            return false;
-        }
-    }
-
-    public static boolean expandEQS(Context context) {
-        try {
-            context.sendBroadcast(new Intent(ACTION_PREFIX + "ExpandSettings"));
-            return true;
-        } catch (Throwable t) {
-            XposedHelpers.log(t);
-            return false;
-        }
-    }
-
-    public static boolean lockDevice(Context context) {
-        try {
-            context.sendBroadcast(new Intent(ACTION_PREFIX + "LockDevice"));
-            return true;
-        } catch (Throwable t) {
-            XposedHelpers.log(t);
-            return false;
-        }
-    }
-
-    public static boolean wakeUp(Context context) {
-        try {
-            context.sendBroadcast(new Intent(ACTION_PREFIX + "WakeUp"));
-            return true;
-        } catch (Throwable t) {
-            XposedHelpers.log(t);
-            return false;
-        }
-    }
-
-    public static boolean goToSleep(Context context) {
-        try {
-            context.sendBroadcast(new Intent(ACTION_PREFIX + "GoToSleep"));
-            return true;
-        } catch (Throwable t) {
-            XposedHelpers.log(t);
-            return false;
-        }
     }
 
     enum IntentType {
@@ -983,46 +917,6 @@ public class GlobalActions {
         }
     }
 
-    public static boolean takeScreenshot(Context context) {
-        try {
-            context.sendBroadcast(new Intent(ACTION_PREFIX + "TakeScreenshot"));
-            return true;
-        } catch (Throwable t) {
-            XposedHelpers.log(t);
-            return false;
-        }
-    }
-
-    public static boolean simulateMenu(Context context) {
-        try {
-            context.sendBroadcast(new Intent(ACTION_PREFIX + "SimulateMenu"));
-            return true;
-        } catch (Throwable t) {
-            XposedHelpers.log(t);
-            return false;
-        }
-    }
-
-    public static boolean forceClose(Context context) {
-        try {
-            context.sendBroadcast(new Intent(ACTION_PREFIX + "ForceClose"));
-            return true;
-        } catch (Throwable t) {
-            XposedHelpers.log(t);
-            return false;
-        }
-    }
-
-    public static boolean openRecents(Context context) {
-        try {
-            context.sendBroadcast(new Intent(ACTION_PREFIX + "OpenRecents"));
-            return true;
-        } catch (Throwable t) {
-            XposedHelpers.log(t);
-            return false;
-        }
-    }
-
     public static boolean launchAppIntent(Context context, String key, boolean skipLock) {
         return launchIntent(context, getIntent(context, key, IntentType.APP, skipLock));
     }
@@ -1043,85 +937,6 @@ public class GlobalActions {
         return true;
     }
 
-    public static boolean openVolumeDialog(Context context) {
-        try {
-            context.sendBroadcast(new Intent(ACTION_PREFIX + "OpenVolumeDialog"));
-            return true;
-        } catch (Throwable t) {
-            XposedHelpers.log(t);
-            return false;
-        }
-    }
-
-    public static boolean volumeUp(Context context) {
-        try {
-            context.sendBroadcast(new Intent(ACTION_PREFIX + "VolumeUp"));
-            return true;
-        } catch (Throwable t) {
-            XposedHelpers.log(t);
-            return false;
-        }
-    }
-
-    public static boolean volumeDown(Context context) {
-        try {
-            context.sendBroadcast(new Intent(ACTION_PREFIX + "VolumeDown"));
-            return true;
-        } catch (Throwable t) {
-            XposedHelpers.log(t);
-            return false;
-        }
-    }
-
-    public static boolean goBack(Context context) {
-        try {
-            context.sendBroadcast(new Intent(ACTION_PREFIX + "GoBack"));
-            return true;
-        } catch (Throwable t) {
-            XposedHelpers.log(t);
-            return false;
-        }
-    }
-
-    public static boolean switchToPrevApp(Context context) {
-        try {
-            context.sendBroadcast(new Intent(ACTION_PREFIX + "SwitchToPrevApp"));
-            return true;
-        } catch (Throwable t) {
-            XposedHelpers.log(t);
-            return false;
-        }
-    }
-
-    public static boolean scrollToTop(Context context) {
-        try {
-            context.sendBroadcast(new Intent(ACTION_PREFIX + "ScrollToTop"));
-            return true;
-        } catch (Throwable t) {
-            XposedHelpers.log(t);
-            return false;
-        }
-    }
-
-    public static boolean floatingWindow(Context context) {
-        try {
-            context.sendBroadcast(new Intent(ACTION_PREFIX + "FloatingWindow"));
-            return true;
-        } catch (Throwable t) {
-            XposedHelpers.log(t);
-            return false;
-        }
-    }
-    public static boolean pinWindow(Context context) {
-        try {
-            context.sendBroadcast(new Intent(ACTION_PREFIX + "PinningWindow"));
-            return true;
-        } catch (Throwable t) {
-            XposedHelpers.log(t);
-            return false;
-        }
-    }
-
     public static boolean showSidebar(Context context, Bundle bundle) {
         try {
             Intent showIntent = new Intent(ACTION_PREFIX + "ShowSideBar");
@@ -1137,49 +952,9 @@ public class GlobalActions {
         }
     }
 
-    public static boolean openPowerMenu(Context context) {
+    public static boolean commonSendAction(Context context, String action) {
         try {
-            context.sendBroadcast(new Intent(ACTION_PREFIX + "OpenPowerMenu"));
-            return true;
-        } catch (Throwable t) {
-            XposedHelpers.log(t);
-            return false;
-        }
-    }
-
-    public static boolean switchKeyboard(Context context) {
-        try {
-            context.sendBroadcast(new Intent(ACTION_PREFIX + "SwitchKeyboard"));
-            return true;
-        } catch (Throwable t) {
-            XposedHelpers.log(t);
-            return false;
-        }
-    }
-
-    public static boolean switchOneHanded(Context context) {
-        try {
-            context.sendBroadcast(new Intent(ACTION_PREFIX + "SwitchOneHanded"));
-            return true;
-        } catch (Throwable t) {
-            XposedHelpers.log(t);
-            return false;
-        }
-    }
-
-    public static boolean toggleColorInversion(Context context) {
-        try {
-            context.sendBroadcast(new Intent(ACTION_PREFIX + "ToggleColorInversion"));
-            return true;
-        } catch (Throwable t) {
-            XposedHelpers.log(t);
-            return false;
-        }
-    }
-
-    public static boolean clearMemory(Context context) {
-        try {
-            context.sendBroadcast(new Intent(ACTION_PREFIX + "ClearMemory"));
+            context.sendBroadcast(new Intent(ACTION_PREFIX + action));
             return true;
         } catch (Throwable t) {
             XposedHelpers.log(t);

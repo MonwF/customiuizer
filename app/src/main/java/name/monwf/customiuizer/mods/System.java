@@ -596,7 +596,7 @@ public class System {
 
                         if (currentTouchTime - lastTouchTime < 250L && Math.abs(currentTouchX - lastTouchX) < 100F && Math.abs(currentTouchY - lastTouchY) < 100F) {
                             KeyguardManager keyguardMgr = (KeyguardManager)v.getContext().getSystemService(Context.KEYGUARD_SERVICE);
-                            if (keyguardMgr.isKeyguardLocked()) GlobalActions.goToSleep(v.getContext());
+                            if (keyguardMgr.isKeyguardLocked()) GlobalActions.commonSendAction(v.getContext(), "GoToSleep");
                             currentTouchTime = 0L;
                             currentTouchX = 0F;
                             currentTouchY = 0F;

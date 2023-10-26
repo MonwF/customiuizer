@@ -241,14 +241,6 @@ public class SubFragment extends PreferenceFragmentBase {
         }
     };
 
-    public Preference.OnPreferenceClickListener openRecentsActions = new Preference.OnPreferenceClickListener() {
-        @Override
-        public boolean onPreferenceClick(Preference preference) {
-            openMultiAction(preference, MultiAction.Actions.RECENTS);
-            return true;
-        }
-    };
-
     public Preference.OnPreferenceClickListener openStatusbarActions = new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {

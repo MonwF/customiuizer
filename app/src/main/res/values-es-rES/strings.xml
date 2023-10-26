@@ -843,7 +843,6 @@
     <string name="array_longpress">Pulsación larga</string>
     <string name="array_newyear">Año Nuevo</string>
     <string name="array_lunarnewyear">Año Nuevo chino</string>
-    <string name="array_covid">Dia festivo Covid</string>
     <string name="array_displayonly">Sólo mostrar</string>
     <string name="array_hide">Ocultar</string>
     <string name="array_render_auto">Detectar automáticamente</string>

@@ -830,7 +830,6 @@ ss - iki basamaklı saniye(09)</string>
     <string name="array_longpress">Uzun basma</string>
     <string name="array_newyear">Yılbaşı</string>
     <string name="array_lunarnewyear">Çin Yeni Yılı</string>
-    <string name="array_covid">Koronavirüs tatil karşıtı</string>
     <string name="array_displayonly">Yalnızca görüntüleme</string>
     <string name="array_hide">Gizle</string>
     <string name="array_render_auto">Otomatik olarak algıla</string>

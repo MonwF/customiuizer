@@ -850,7 +850,6 @@
     <string name="array_longpress">Долгое нажатие</string>
     <string name="array_newyear">Новый Год</string>
     <string name="array_lunarnewyear">Китайский Новый Год</string>
-    <string name="array_covid">Коронавирусный анти-праздник</string>
     <string name="array_displayonly">Только отображение</string>
     <string name="array_hide">Скрыть</string>
     <string name="array_render_auto">Определять автоматически</string>

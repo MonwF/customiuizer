@@ -128,6 +128,9 @@ public class SystemUI {
     public static boolean newStyle = false;
     private final static int textIconTagId = ResourceHooks.getFakeResId("text_icon_tag");
     private final static int viewInitedTag = ResourceHooks.getFakeResId("view_inited_tag");
+
+    private static List<String> statusbarIconList;
+
     public static void setupStatusBar(Context mContext) {
         if (newStyle) {
             statusbarTextIconLayoutResId = MainModule.resHooks.addResource("statusbar_text_icon", R.layout.statusbar_text_icon_new);
@@ -178,6 +181,13 @@ public class SystemUI {
             StepCounterController.initContext(mContext);
         }
         Settings.System.putLong(mContext.getContentResolver(), "systemui_restart_time", java.lang.System.currentTimeMillis());
+
+        boolean swapWifiSignal = MainModule.mPrefs.getBoolean("system_statusbaricons_swap_wifi_mobile");
+        boolean moveSignalLeft = MainModule.mPrefs.getBoolean("system_statusbaricons_wifi_mobile_atleft");
+        if (swapWifiSignal || moveSignalLeft) {
+            int resIconsId = mContext.getResources().getIdentifier("config_statusBarIcons", "array", "com.android.systemui");
+            statusbarIconList = Arrays.asList(mContext.getResources().getStringArray(resIconsId));
+        }
     }
 
     private static String getSlotNameByType(int mIconType) {
@@ -1205,14 +1215,13 @@ public class SystemUI {
             rightOnly2LeftIcons.add("location");
         }
 
-        String[] signalIcons;
+        List<String> signalRelatedIcons;
         if (!swapWifiSignal) {
-            signalIcons = new String[]{"no_sim", "mobile", "demo_mobile", "airplane", "hotspot", "slave_wifi", "wifi", "demo_wifi"};
+            signalRelatedIcons = List.of("no_sim", "hd", "mobile", "demo_mobile", "airplane", "hotspot", "slave_wifi", "wifi", "demo_wifi");
         }
         else {
-            signalIcons = new String[]{"hotspot", "slave_wifi", "wifi", "demo_wifi", "no_sim", "mobile", "demo_mobile", "airplane"};
+            signalRelatedIcons = List.of("hotspot", "slave_wifi", "wifi", "demo_wifi", "no_sim", "hd", "mobile", "demo_mobile", "airplane");
         }
-        ArrayList<String> signalRelatedIcons = new ArrayList<String>(Arrays.asList(signalIcons));
         if (moveLeft) {
             ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.phone.StatusBarIconControllerImpl", lpparam.getClassLoader(), "setIconVisibility", String.class, boolean.class, new MethodHook() {
                 @Override
@@ -1297,25 +1306,31 @@ public class SystemUI {
                 @Override
                 protected void before(final BeforeHookCallback param) throws Throwable {
                     boolean isRightController = "StatusBarIconControllerImpl".equals(param.getThisObject().getClass().getSimpleName());
-                    ArrayList<String> allStatusIcons = new ArrayList<String>(Arrays.asList((String[]) param.getArgs()[0]));
                     if (isRightController) {
-                        int startIndex = allStatusIcons.indexOf("no_sim");
-                        int endIndex = allStatusIcons.indexOf("demo_wifi") + 1;
                         if (swapWifiSignal || moveSignalLeft) {
-                            List<String> removedIcons = allStatusIcons.subList(startIndex, endIndex);
-                            removedIcons.clear();
+                            ArrayList<String> allStatusIcons = new ArrayList<String>(Arrays.asList((String[]) param.getArgs()[0]));
+                            allStatusIcons.removeAll(signalRelatedIcons);
                             if (swapWifiSignal) {
-                                startIndex = allStatusIcons.indexOf("ethernet");
-                                allStatusIcons.addAll(startIndex + 1, signalRelatedIcons);
+                                for (String slotName : signalRelatedIcons) {
+                                    if (statusbarIconList.contains(slotName)) {
+                                        allStatusIcons.add(slotName);
+                                    }
+                                }
                             }
+                            param.getArgs()[0] = allStatusIcons.toArray(new String[0]);
                         }
-                        param.getArgs()[0] = allStatusIcons.toArray(new String[0]);
                     }
                     else if (moveSignalLeft || moveLeft) {
+                        ArrayList<String> allStatusIcons = new ArrayList<String>(Arrays.asList((String[]) param.getArgs()[0]));
                         allStatusIcons.addAll(rightOnly2LeftIcons);
                         dripLeftIcons.addAll(allStatusIcons);
                         if (moveSignalLeft) {
-                            allStatusIcons.addAll(0, signalRelatedIcons);
+                            for (int i = signalRelatedIcons.size() - 1; i >= 0; i--) {
+                                String slotName = signalRelatedIcons.get(i);
+                                if (statusbarIconList.contains(slotName)) {
+                                    allStatusIcons.add(0, slotName);
+                                }
+                            }
                         }
                         param.getArgs()[0] = allStatusIcons.toArray(new String[0]);
                     }

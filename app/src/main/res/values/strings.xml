@@ -771,6 +771,7 @@
     <string name="array_global_actions_switchkeyboard">Switch keyboard</string>
     <string name="array_global_actions_goback">Go back</string>
     <string name="array_global_actions_onehanded_left">One-handed mode</string>
+    <string name="array_global_actions_clear_notifs">clear notifications</string>
     <string name="array_global_toggle_wifi" translatable="false">Wi-Fi</string>
     <string name="array_global_toggle_bt">Bluetooth</string>
     <string name="array_global_toggle_gps" translatable="false">GPS</string>
@@ -880,7 +881,6 @@
     <string name="array_longpress">Long press</string>
     <string name="array_newyear">New Year</string>
     <string name="array_lunarnewyear">Chinese New Year</string>
-    <string name="array_covid">Coronavirus anti-holiday</string>
     <string name="array_displayonly">Display only</string>
     <string name="array_hide">Hide</string>
     <string name="array_render_auto">Detect automatically</string>
