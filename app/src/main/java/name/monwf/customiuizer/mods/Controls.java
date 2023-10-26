@@ -841,7 +841,7 @@ public class Controls {
 				Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
 				PowerManager mPowerManager = (PowerManager)mContext.getSystemService(Context.POWER_SERVICE);
 				if (mPowerManager.isInteractive()) return;
-				if (!GlobalActions.wakeUp(mContext)) XposedHelpers.log("FingerprintScreenOnHook", "Failed to wake up device");
+				if (!GlobalActions.commonSendAction(mContext, "WakeUp")) XposedHelpers.log("FingerprintScreenOnHook", "Failed to wake up device");
 			}
 		});
 	}

@@ -851,7 +851,6 @@
     <string name="array_longpress">長押し</string>
     <string name="array_newyear">新春</string>
     <string name="array_lunarnewyear">春節</string>
-    <string name="array_covid">コロナウイルス対策ホリデー</string>
     <string name="array_displayonly">表示のみ</string>
     <string name="array_hide">非表示</string>
     <string name="array_render_auto">自動的に検出</string>

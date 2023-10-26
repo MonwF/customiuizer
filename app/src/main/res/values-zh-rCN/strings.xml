@@ -730,6 +730,7 @@
     <string name="array_global_actions_switchkeyboard">切换键盘</string>
     <string name="array_global_actions_goback">返回</string>
     <string name="array_global_actions_onehanded_left">单手模式</string>
+    <string name="array_global_actions_clear_notifs">清理通知</string>
     <string name="array_global_toggle_bt">蓝牙</string>
     <string name="array_global_toggle_sound">声音情景</string>
     <string name="array_global_toggle_brightness">自动亮度</string>
@@ -832,7 +833,6 @@
     <string name="array_longpress">长按</string>
     <string name="array_newyear">新年</string>
     <string name="array_lunarnewyear">中国新年</string>
-    <string name="array_covid">冠状病毒反假期</string>
     <string name="array_displayonly">仅显示</string>
     <string name="array_hide">隐藏</string>
     <string name="array_render_auto">自动侦测</string>

@@ -17,6 +17,7 @@
 		<item>@string/array_global_actions_clearmemory</item>
 		<item>@string/array_global_actions_invertcolors</item>
 		<item>@string/array_global_actions_onehanded_left</item>
+		<item>@string/array_global_actions_clear_notifs</item>
 	</string-array>
 	<integer-array name="global_actions_launcher_val">
 		<item>1</item>
@@ -36,6 +37,7 @@
 		<item>13</item>
 		<item>14</item>
 		<item>22</item>
+		<item>23</item>
 	</integer-array>
 
 	<string-array name="global_actions_navbar">
@@ -68,6 +70,7 @@
 		<item>@string/array_media_playpause</item>
 		<item>@string/array_media_next</item>
 		<item>@string/array_media_prev</item>
+		<item>@string/array_global_actions_clear_notifs</item>
 	</string-array>
 	<integer-array name="global_actions_navbar_val">
 		<item>1</item>
@@ -99,6 +102,7 @@
 		<item>85</item>
 		<item>87</item>
 		<item>88</item>
+		<item>23</item>
 	</integer-array>
 
 	<string-array name="global_actions_controls">
@@ -123,6 +127,7 @@
 		<item>@string/array_global_actions_activity</item>
 		<item>@string/array_global_actions_toggle</item>
 		<item>@string/array_global_actions_onehanded_left</item>
+		<item>@string/array_global_actions_clear_notifs</item>
 	</string-array>
 	<integer-array name="global_actions_controls_val">
 		<item>1</item>
@@ -146,31 +151,7 @@
 		<item>20</item>
 		<item>10</item>
 		<item>22</item>
-	</integer-array>
-
-	<string-array name="global_actions_recents">
-		<item>@string/array_global_actions_none</item>
-		<item>@string/array_global_actions_lock</item>
-		<item>@string/array_global_actions_sleep</item>
-		<item>@string/array_global_actions_powermenu</item>
-		<item>@string/array_global_actions_invertcolors</item>
-		<item>@string/array_global_actions_launch</item>
-		<item>@string/array_global_actions_shortcut</item>
-		<item>@string/array_global_actions_activity</item>
-		<item>@string/array_global_actions_toggle</item>
-		<item>@string/array_global_actions_onehanded_left</item>
-	</string-array>
-	<integer-array name="global_actions_recents_val">
-		<item>1</item>
-		<item>4</item>
-		<item>5</item>
-		<item>12</item>
-		<item>14</item>
-		<item>8</item>
-		<item>9</item>
-		<item>20</item>
-		<item>10</item>
-		<item>22</item>
+		<item>23</item>
 	</integer-array>
 
 	<string-array name="global_actions_statusbar">
@@ -199,6 +180,7 @@
 		<item>@string/array_media_playpause</item>
 		<item>@string/array_media_next</item>
 		<item>@string/array_media_prev</item>
+		<item>@string/array_global_actions_clear_notifs</item>
 	</string-array>
 	<integer-array name="global_actions_statusbar_val">
 		<item>1</item>
@@ -226,6 +208,7 @@
 		<item>85</item>
 		<item>87</item>
 		<item>88</item>
+		<item>23</item>
 	</integer-array>
 
 	<string-array name="global_lockscreen_actions">
