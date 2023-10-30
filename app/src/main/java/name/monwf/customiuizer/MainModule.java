@@ -168,7 +168,6 @@ public class MainModule extends XposedModule {
             System.NoAccessDeviceLogsRequest(lpparam);
         }
         if (mPrefs.getInt("system_other_wallpaper_scale", 6) > 6) System.WallpaperScaleLevelHook(lpparam);
-        if (mPrefs.getBoolean("system_nopassword")) System.NoPasswordHook(lpparam);
 
         watchPreferenceChange();
     }
@@ -510,6 +509,7 @@ public class MainModule extends XposedModule {
             if (mPrefs.getBoolean("system_lockscreen_hidezenmode")) {
                 SystemUI.HideLockscreenZenModeHook(lpparam);
             }
+            if (mPrefs.getBoolean("system_nopassword")) System.NoPasswordHook(lpparam);
         }
 
         if (pkg.equals("com.lbe.security.miui")) {
