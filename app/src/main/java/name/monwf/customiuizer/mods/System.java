@@ -262,7 +262,7 @@ public class System {
         });
     }
 
-    public static void NoPasswordHook(SystemServerLoadedParam lpparam) {
+    public static void NoPasswordHook(PackageLoadedParam lpparam) {
         String isAllowed = "isBiometricAllowedForUser";
         ModuleHelper.findAndHookMethod("com.android.internal.widget.LockPatternUtils$StrongAuthTracker", lpparam.getClassLoader(), isAllowed, boolean.class, int.class, HookerClassHelper.returnConstant(true));
         ModuleHelper.findAndHookMethod("com.android.internal.widget.LockPatternUtils", lpparam.getClassLoader(), isAllowed, int.class, HookerClassHelper.returnConstant(true));
