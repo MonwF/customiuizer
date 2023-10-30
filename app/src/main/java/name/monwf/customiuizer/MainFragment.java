@@ -135,7 +135,7 @@ public class MainFragment extends PreferenceFragmentBase {
 		MenuItemCompat.setOnActionExpandListener(searchMenuItem, new MenuItemCompat.OnActionExpandListener() {
 			@Override
 			public boolean onMenuItemActionCollapse(MenuItem searchItem) {
-				MenuItem item = null;
+				MenuItem item;
 				for (int i = 0; i < mActionMenu.size(); i++) {
 					item = mActionMenu.getItem(i);
 					item.setVisible(item.getItemId() != R.id.edit_confirm && item.getItemId() != R.id.openinweb);

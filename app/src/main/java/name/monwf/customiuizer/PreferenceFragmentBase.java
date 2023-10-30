@@ -75,11 +75,6 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
                 item = menu.getItem(i);
                 item.setVisible(item.getItemId() == R.id.edit_confirm);
             }
-            MenuItem confirmMenu = menu.findItem(R.id.edit_confirm);
-            int applyResId = getResources().getIdentifier(Helpers.isNightMode(getValidContext()) ? "action_mode_title_button_confirm_dark" : "action_mode_title_button_confirm_light", "drawable", "miui");
-            if (applyResId == 0)
-                applyResId = getResources().getIdentifier(Helpers.isNightMode(getValidContext()) ? "action_mode_immersion_done_dark" : "action_mode_immersion_done_light", "drawable", "miui");
-            confirmMenu.setIcon(applyResId);
         }
         else {
             MenuItem item;

@@ -10,7 +10,8 @@
 		android:id="@+id/edit_confirm"
 		android:visible="false"
 		android:title=""
-		app:showAsAction="always"/>
+		android:icon="@drawable/ic_actionbar_done"
+		app:showAsAction="ifRoom"/>
 	<item
 		android:id="@+id/restartlauncher"
 		app:showAsAction="never"
