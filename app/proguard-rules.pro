@@ -18,6 +18,8 @@
     <methods>;
 }
 
+-keepnames class name.monwf.customiuizer.GateWayLauncher
+
 # Obfuscation
 -repackageclasses
 -allowaccessmodification
