@@ -709,20 +709,18 @@ public class GlobalActions {
             protected void after(final AfterHookCallback param) throws Throwable {
                 final Context mContext = (Context) param.getArgs()[0];
                 final Handler mBgHandler = (Handler) XposedHelpers.getObjectField(param.getThisObject(), "mBgHandler");
-                if (MainModule.mPrefs.getBoolean("controls_volumecursor")) {
-                    ModuleHelper.hookAllMethods("com.miui.systemui.util.MiuiActivityUtil", lpparam.getClassLoader(), "updateTopActivity", new MethodHook() {
-                        private String pkgName = "";
-                        @Override
-                        protected void after(final AfterHookCallback param) throws Throwable {
-                            ComponentName mTopActivity = (ComponentName) XposedHelpers.getObjectField(param.getThisObject(), "mTopActivity");
-                            if (mTopActivity != null && !pkgName.equals(mTopActivity.getPackageName())) {
-                                pkgName = mTopActivity.getPackageName();
-                                Settings.Global.putString(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.package", pkgName);
-                            }
+                ModuleHelper.hookAllMethods("com.miui.systemui.util.MiuiActivityUtil", lpparam.getClassLoader(), "updateTopActivity", new MethodHook() {
+                    private String pkgName = "";
+                    @Override
+                    protected void after(final AfterHookCallback param) throws Throwable {
+                        ComponentName mTopActivity = (ComponentName) XposedHelpers.getObjectField(param.getThisObject(), "mTopActivity");
+                        if (mTopActivity != null && !pkgName.equals(mTopActivity.getPackageName())) {
+                            pkgName = mTopActivity.getPackageName();
+                            Settings.Global.putString(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.package", pkgName);
                         }
-                    });
-                }
-                else {
+                    }
+                });
+                if (MainModule.mPrefs.getBoolean("various_showcallui")) {
                     ModuleHelper.hookAllMethods("com.android.systemui.statusbar.StatusBarStateControllerImpl", lpparam.getClassLoader(), "setSystemBarAttributes", new MethodHook() {
                         private boolean fullScreen = false;
                         @Override
