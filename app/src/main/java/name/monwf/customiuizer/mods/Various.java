@@ -882,12 +882,6 @@ public class Various {
 			@Override
 			protected void after(final AfterHookCallback param) throws Throwable {
 				if (!(boolean)param.getResult() || !"INCOMING".equals(param.getArgs()[0].toString())) return;
-				try {
-					boolean isCarMode = (boolean)XposedHelpers.callStaticMethod(XposedHelpers.findClass("com.android.incallui.carmode.CarModeUtils", lpparam.getClassLoader()), "isCarMode");
-					if (isCarMode) return;
-				} catch (Throwable t) {
-					XposedHelpers.log(t);
-				}
 				Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
 				if (MainModule.mPrefs.getStringAsInt("various_showcallui", 0) == 3) {
 					String topPackage = Settings.Global.getString(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.package");
