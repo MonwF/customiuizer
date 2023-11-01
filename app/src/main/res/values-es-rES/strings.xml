@@ -26,6 +26,7 @@
     <string name="system_statusbaricons_battery1_title">Imagen de la batería</string>
     <string name="system_statusbaricons_battery4_title">Porcentaje de la batería</string>
     <string name="system_statusbaricons_battery3_title">Indicador de carga</string>
+    <string name="system_statusbaricons_battery2_title">El porcentaje de batería se oculta en la barra de estado, pero se muestra en el centro de control</string>
     <string name="system_statusbaricons_alarm_title">Alarma</string>
     <string name="system_statusbaricons_alarm_summ">Ocultar por completo</string>
     <string name="system_statusbaricons_alarmn_title">Visibilidad personalizada del icono de alarma</string>
@@ -35,6 +36,7 @@
     <string name="system_statusbaricons_signal_title">Señal de red móvil</string>
     <string name="system_statusbaricons_hidesignal_wificonnected_title">Solo cuando se esté conectado al Wi-Fi</string>
     <string name="system_statusbaricons_nosims_title">Sin tarjeta SIM</string>
+    <string name="system_statusbaricons_sim_nodata_title">Tarjeta SIM sin datos</string>
     <string name="system_statusbaricons_volte_title">VoLTE</string>
     <string name="system_statusbaricons_roaming_title">Itinerancia</string>
     <string name="system_statusbaricons_dualwifi_title">Wi-Fi dual</string>
@@ -42,6 +44,7 @@
     <string name="system_statusbaricons_profile_title">Perfil de trabajo</string>
     <string name="system_statusbaricons_sound_title">Perfil de sonido</string>
     <string name="system_statusbaricons_dnd_title">Modo No molestar</string>
+    <string name="system_statusbaricons_secondspace_title">Segundo espacio</string>
     <string name="system_statusbaricons_privacy_title">Modo incógnito</string>
     <string name="system_statusbaricons_headset_title">Auriculares</string>
     <string name="system_statusbaricons_mute_title">Llamada: micrófono silenciado</string>
@@ -514,8 +517,11 @@
     <string name="launcher_iconscale_title">Escalado de iconos</string>
     <string name="launcher_horizmargin_title">Márgenes de cuadrícula horizontales</string>
     <string name="launcher_topmargin_title">Margen de cuadrícula superior</string>
+    <string name="launcher_dock_topmargin_title">Margen superior del dock</string>
+    <string name="launcher_dock_bottommargin_title">Margen inferior del dock</string>
     <string name="launcher_horizwidgetmargin_title">Margen horizontal del widget</string>
     <string name="launcher_indicatorheight_title">Altura del indicador de página</string>
+    <string name="launcher_indicator_topmargin_title">Margen superior del indicador de página</string>
     <string name="launcher_folders">Carpetas</string>
     <string name="launcher_folder_cols_title">Número de columnas en carpetas</string>
     <string name="launcher_folderwidth_title">Usar todo el ancho de la carpeta</string>
@@ -565,6 +571,8 @@
     <string name="launcher_spread_title">Acción al separar</string>
     <string name="launcher_spread_summ">Acción al mover 2 dedos lejos uno de otro en cualquier pantalla de inicio</string>
     <string name="launcher_bugfixes">Corrección de errores</string>
+    <string name="system_resizablewidgets_title">Tamaño de widget libre</string>
+    <string name="system_resizablewidgets_summ">Remover cualquier limitación de tamaño de cualquier widget</string>
     <string name="controls_mods">Controles</string>
     <string name="controls_powerdt_title">Acción al presionar dos veces</string>
     <string name="controls_powerdt_summ">Cambiar el lanzamiento de la cámara al presionar el botón de encendido dos veces. Requiere que el acceso directo del botón stock esté activado.</string>
@@ -609,6 +617,7 @@
     <string name="controls_volumecursor_reverse_title">Cambiar dirección</string>
     <string name="controls_volumecursor_reverse_summ">Cambiar dirección del movimiento del cursor</string>
     <string name="controls_volumedowndt_turnon_torch_title">Presionar dos veces volumen abajo para encender la linterna</string>
+    <string name="controls_mediaplayer_apps_title">Apps de reproducción de medios (añade al scope de LSPosed primero)</string>
     <string name="controls_volumemedia_up_title">Acción de pulsación larga de volumen arriba</string>
     <string name="controls_volumemedia_up_summ">Acción para pulsación larga de volumen arriba con pantalla apagada</string>
     <string name="controls_volumemedia_down_title">Acción de pulsación larga de volumen abajo</string>
@@ -689,6 +698,7 @@
     <string name="various_apps_title">Mostrar detalles adicionales de las apps</string>
     <string name="various_apps_summ">Agrega nuevos campos a la página de información:\n- código de versión\n- ruta completa del apk\n- ruta de datos\n- ID de usuario\n- versión destino SDK\n- Enlace a Play Store\n- lanzar una aplicación</string>
     <string name="various_appsort_title">Orden inicial de apps instaladas</string>
+    <string name="various_privacyapps_column_nums4_title">Establecer el número de columnas a 4 en vista de apps de privacidad</string>
     <string name="disable_app_title">¿Desactivar app?</string>
     <string name="disable_app_text">Si es una app de sistema esencial, deshabilitarla puede ocasionar mal funcionamiento :)</string>
     <string name="disable_app_settings">¡Es una mala idea! :)</string>
@@ -740,6 +750,7 @@
     <string name="array_global_actions_switchkeyboard">Cambiar teclado</string>
     <string name="array_global_actions_goback">Retroceder</string>
     <string name="array_global_actions_onehanded_left">Modo una sola mano</string>
+    <string name="array_global_actions_clear_notifs">limpiar notificaciones</string>
     <string name="array_global_toggle_bt">Bluetooth</string>
     <string name="array_global_toggle_sound">Perfil de sonido</string>
     <string name="array_global_toggle_brightness">Brillo automático</string>
@@ -965,6 +976,8 @@
     <string name="restart_systemui">Reiniciar SystemUI</string>
     <string name="restart_securitycenter">Reiniciar centro de seguridad</string>
     <string name="backup_restore">Administrar ajustes</string>
+    <string name="reset_settings">Ajustes de reseteo</string>
+    <string name="reset_settings_done">Reseteo finalizado. Por favor reinicie</string>
     <string name="backup_restore_choose">Los respaldos se almacenan en /sdcard/Documents/CustoMIUIzer/</string>
     <string name="do_backup">Copia de seguridad</string>
     <string name="do_restore">Restaurar</string>
@@ -1043,6 +1056,7 @@
     <string name="system_statusbar_batterytempandcurrent_content_title">Mostar contenido</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">Mostrar a la derecha</string>
     <string name="system_statusbar_batterytempandcurrent_positive_title">El valor de la corriente siempre es positivo</string>
+    <string name="system_statusbar_batterytempandcurrent_temp_decimal_title">La temperatura se muestra siempre como decimal</string>
     <string name="system_statusbar_batterytempandcurrent_incharge_title">Mostrar únicamente al cargar</string>
     <string name="system_statusbar_batterytempandcurrent_fixcurrentratio_title">Corregir la relación de corriente en algunos dispositivos</string>
     <string name="system_statusbar_batterytempandcurrent_hideunit_title">Ocultar unidad</string>
@@ -1065,7 +1079,7 @@
     <string name="system_statusbar_mobiletype_single_bold_title">Estilo negrita</string>
     <string name="system_statusbar_horizmargin_title">Desplazamiento horizontal de la barra de estado</string>
     <string name="system_statusbar_dualrows_firstrow_horizmargin_title">Desplazamiento horizontal de la primera fila</string>
-    <string name="system_statusbar_clock_spread2rows_title">Distribuir el reloj en 2 filas</string>
+    <string name="system_statusbar_clock_spread2rows_title">Hacer que el intervalo del reloj sea de dos filas</string>
     <string name="system_statusbar_topmargin_title">Margen superior de la barra de estado</string>
     <string name="system_statusbar_topmargin_val_title">Margen superior</string>
     <string name="system_statusbar_topmargin_unset_lockscreen_title">Desactivar barra de estado al bloquear teclado</string>
@@ -1085,6 +1099,8 @@
     <string name="various_clipboard_defaultaction_title">Acción por defecto del portapales IA</string>
     <string name="various_disable_access_devicelogs_title">Descartar diálogo de solicitud de acceso a los registros del dispositivo</string>
     <string name="various_skip_interceptperm_title">Saltar el contador de tiempo</string>
+    <string name="various_replace_defaultopen_with_openbydefault_title">Reemplazar \"Limpiar valores predeterminados\" con \"Abrir por defecto\"</string>
+    <string name="various_open_by_default_title">Abrir por defecto</string>
     <string name="various_skip_securityscan_title">Saltar escaneo de seguridad</string>
     <string name="various_show_battery_temperature_title">Mostrar temperatura de la batería</string>
     <string name="various_enable_sc_ai_clipboard_blur_location_title">Habilitar portapapeles IA y desenfoque de ubicación</string>

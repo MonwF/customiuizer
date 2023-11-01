@@ -19,7 +19,7 @@
     <string name="system_mods_screen_backlight">Luz de fundo</string>
     <string name="system_mods_audio">Áudio</string>
     <string name="system_mods_vibration">Vibração</string>
-    <string name="system_mods_toasts">Brindes</string>
+    <string name="system_mods_toasts">Dicas</string>
     <string name="system_statusbaricons_title">Ocultar ícones</string>
     <string name="system_statusbaricons_summ">Gerencie a visibilidade dos ícones da barra de status</string>
     <string name="system_statusbaricons_wifistandard_title">Mostrar padrão Wi-Fi</string>
@@ -193,7 +193,7 @@
     <string name="system_mods_screenshots">Capturas de tela</string>
     <string name="system_screenshot_title">Configuração da captura de tela</string>
     <string name="system_screenshot_summ">Personalize o formato, a qualidade e salve a pasta para capturas de tela</string>
-    <string name="system_screenshot_format_title">Formatar</string>
+    <string name="system_screenshot_format_title">Formato</string>
     <string name="system_screenshot_quality_title">Qualidade</string>
     <string name="system_screenshot_path_title">Salvar pasta</string>
     <string name="system_gallery_screenshots_path_title">Pasta de capturas de tela da galeria</string>
@@ -324,8 +324,8 @@
     <string name="system_mods_lockscreen">Tela de bloqueio</string>
     <string name="system_mods_lockscreen_functionality">Funcionalidade adicional</string>
     <string name="system_mods_lockscreen_security">Segurança</string>
-    <string name="system_blocktoasts_title">Bloquear brindes</string>
-    <string name="system_blocktoasts_summ">Impedir que aplicativos selecionados mostrem brindes</string>
+    <string name="system_blocktoasts_title">Bloquear dicas</string>
+    <string name="system_blocktoasts_summ">Impedir que apps selecionados mostrem dicas</string>
     <string name="system_airplanemodeconfig_title">Configuração do modo avião</string>
     <string name="system_airplanemodeconfig_summ">Defina as comunicações permitidas no modo avião. Não é necessário reiniciar.</string>
     <string name="system_airplanemodeconfig_note">O mod altera apenas a configuração do sistema existente, algumas opções podem não funcionar</string>
@@ -359,11 +359,11 @@
     <string name="system_hidelowbatwarn_summ">Não exibir uma caixa de diálogo de aviso que solicita ativar a economia de bateria</string>
     <string name="system_hideproxywarn_title">Ocultar aviso sobre toques desativados</string>
     <string name="system_hideproxywarn_summ">Não exibir um aviso de que a área do fone de ouvido está coberta</string>
-    <string name="system_cleanshare_title">Menu de compartilhamento limpo</string>
+    <string name="system_cleanshare_title">Limpar menu de compartilhamento</string>
     <string name="system_cleanshare_summ">Remova os apps selecionados do menu de compartilhamento</string>
     <string name="system_clean_test">Menu de teste</string>
     <string name="system_cleanopenwith_title">Limpar menu Abrir com</string>
-    <string name="system_cleanopenwith_summ">Remover apps selecionados do menu Abrir com</string>
+    <string name="system_cleanopenwith_summ">Remova os apps selecionados do menu Abrir com</string>
     <string name="system_cleanopenwith_testdata">Selecione o tipo de dados de teste</string>
     <string name="system_cleanopenwith_datatype">Selecione o tipo de dados para ocultar</string>
     <string name="system_defaultusb_title">Configuração USB padrão</string>
@@ -483,7 +483,7 @@
     <string name="system_animationscale_transition_title">Transições</string>
     <string name="system_animationscale_animator_title">Valor da animação</string>
     <string name="poco_mods">POCO Launcher</string>
-    <string name="launcher_mods">Mi Launcher</string>
+    <string name="launcher_mods">Launcher do sistema</string>
     <string name="launcher_gestures">Gestos</string>
     <string name="launcher_gestures_action">Ação</string>
     <string name="launcher_gestures_setting">Configuração para alternar</string>
@@ -572,6 +572,8 @@
     <string name="launcher_spread_title">Espalhe a ação</string>
     <string name="launcher_spread_summ">Ação para afastar 2 dedos um do outro em qualquer tela inicial</string>
     <string name="launcher_bugfixes">Correções de bugs</string>
+    <string name="system_resizablewidgets_title">Redimensionamento livre de widgets</string>
+    <string name="system_resizablewidgets_summ">Remova quaisquer limitações de tamanho do widget</string>
     <string name="controls_mods">Controles</string>
     <string name="controls_powerdt_title">Ação de pressão dupla</string>
     <string name="controls_powerdt_summ">Substitua a inicialização da câmera ao pressionar duas vezes a botão liga/desliga. Requer que o atalho do botão de estoque esteja ativado.</string>
@@ -697,6 +699,7 @@
     <string name="various_apps_title">Mostrar detalhes adicionais do app</string>
     <string name="various_apps_summ">Adicione novos campos à página de informações do app:\n- Código da versão do APK\n- Nome do arquivo APK\n- Caminho dos dados\n- ID do usuário\n- Versão do SDK de destino\n- Abrir na Play Store\n- Iniciar</string>
     <string name="various_appsort_title">Ordem de classificação inicial dos apps instalados</string>
+    <string name="various_privacyapps_column_nums4_title">Defina os números das colunas como 4 na visualização de apps de privacidade</string>
     <string name="disable_app_title">Desativar app?</string>
     <string name="disable_app_text">Se este for um app essencial do sistema, desativá-lo pode quebrar as coisas</string>
     <string name="disable_app_settings">Essa é uma má ideia! :)</string>
@@ -710,8 +713,8 @@
     <string name="appdetails_app_uid">ID do usuário</string>
     <string name="appdetails_sdk">Versão do SDK de destino</string>
     <string name="appsort_name">Nome do app (Padrão)</string>
-    <string name="appsort_frequency">Frequência de uso</string>
-    <string name="appsort_storage">Uso do armazenamento</string>
+    <string name="appsort_frequency">Recentemente usado</string>
+    <string name="appsort_storage">Armazenamento usado</string>
     <string name="appsort_install">Data de instalação</string>
     <string name="gboard">Teclado do Google</string>
     <string name="calls">Chamadas</string>
@@ -748,6 +751,7 @@
     <string name="array_global_actions_switchkeyboard">Alternar teclado</string>
     <string name="array_global_actions_goback">Voltar</string>
     <string name="array_global_actions_onehanded_left">Modo de uma mão</string>
+    <string name="array_global_actions_clear_notifs">Limpar notificações</string>
     <string name="array_global_toggle_bt">Bluetooth</string>
     <string name="array_global_toggle_sound">Perfil de som</string>
     <string name="array_global_toggle_brightness">Brilho automático</string>
@@ -785,7 +789,7 @@
     <string name="array_qshaptic_strong">Vibração forte</string>
     <string name="array_enable">Ativado</string>
     <string name="array_disable">Desativado</string>
-    <string name="array_top">Mais perto do topo</string>
+    <string name="array_top">Perto do topo</string>
     <string name="array_middle">No meio</string>
     <string name="array_bottom">Perto do fundo</string>
     <string name="array_max">Máximo</string>
@@ -1076,7 +1080,7 @@
     <string name="system_statusbar_mobiletype_single_bold_title">Estilo em negrito</string>
     <string name="system_statusbar_horizmargin_title">Espaçamento horizontal da barra de status</string>
     <string name="system_statusbar_dualrows_firstrow_horizmargin_title">Espaçamento horizontal da primeira linha</string>
-    <string name="system_statusbar_clock_spread2rows_title">Dividir o relógio em duas linhas</string>
+    <string name="system_statusbar_clock_spread2rows_title">Faça o relógio abranger duas linhas</string>
     <string name="system_statusbar_topmargin_title">Preenchimento superior da barra de status</string>
     <string name="system_statusbar_topmargin_val_title">Preenchimento superior</string>
     <string name="system_statusbar_topmargin_unset_lockscreen_title">Desativar barra de status com protetor de teclado</string>

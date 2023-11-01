@@ -573,6 +573,8 @@
     <string name="launcher_spread_title">Rozšiřující akce</string>
     <string name="launcher_spread_summ">Akce pro oddálení dvou prstů od sebe na libovolné domovské obrazovce</string>
     <string name="launcher_bugfixes">Opravy chyb</string>
+    <string name="system_resizablewidgets_title">Volná změna velikosti widgetu</string>
+    <string name="system_resizablewidgets_summ">Odstranit všechna omezení velikosti widgetů</string>
     <string name="controls_mods">Ovládací prvky</string>
     <string name="controls_powerdt_title">Dvojité stisknutí</string>
     <string name="controls_powerdt_summ">Vyměňte spuštění fotoaparátu při dvojitém stisknutí tlačítka napájení. Vyžaduje zapnutí výchozí klávesové zkratky.</string>
@@ -705,6 +707,7 @@
 \n- odkaz na stránku Obchodu Play
 \n- spustit aplikaci</string>
     <string name="various_appsort_title">Počáteční pořadí instalovaných aplikací</string>
+    <string name="various_privacyapps_column_nums4_title">Nastavit počet sloupců na 4 v zobrazení aplikace pro soukromí</string>
     <string name="disable_app_title">Zakázat aplikaci\?</string>
     <string name="disable_app_text">Pokud se jedná o nezbytnou systémovou aplikaci, její zakázání může způsobit problémy :)</string>
     <string name="disable_app_settings">To je špatný nápad! :)</string>
@@ -756,6 +759,7 @@
     <string name="array_global_actions_switchkeyboard">Přepnout klávesnici</string>
     <string name="array_global_actions_goback">Vrátit se zpět</string>
     <string name="array_global_actions_onehanded_left">Režim ovládání jednou rukou</string>
+    <string name="array_global_actions_clear_notifs">vymazat oznámení</string>
     <string name="array_global_toggle_bt">Bluetooth</string>
     <string name="array_global_toggle_sound">Zvukový profil</string>
     <string name="array_global_toggle_brightness">Automatický jas</string>
@@ -1090,7 +1094,7 @@
     <string name="system_statusbar_mobiletype_single_bold_title">Styl tučně</string>
     <string name="system_statusbar_horizmargin_title">Horizontální výplň stavové lišty</string>
     <string name="system_statusbar_dualrows_firstrow_horizmargin_title">Horizontální odsazení prvního řádku</string>
-    <string name="system_statusbar_clock_spread2rows_title">Rozšířit hodiny přes dva řádky</string>
+    <string name="system_statusbar_clock_spread2rows_title">Vytvořit rozpětí hodin na dvou řádcích</string>
     <string name="system_statusbar_topmargin_title">Dodatečné odsazení obsahu stavového řádku</string>
     <string name="system_statusbar_topmargin_val_title">Horní odsazení</string>
     <string name="system_statusbar_topmargin_unset_lockscreen_title">Zrušit nastavení stavové lišty v zamykací obrazovce</string>
