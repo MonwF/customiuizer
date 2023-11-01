@@ -572,6 +572,8 @@
     <string name="launcher_spread_title">Hành động mở rộng</string>
     <string name="launcher_spread_summ">Di chuyển hai ngón tay ra xa nhau trên bất kỳ màn hình chính nào</string>
     <string name="launcher_bugfixes">Sửa lỗi</string>
+    <string name="system_resizablewidgets_title">Tự do điều chỉnh tiện ích</string>
+    <string name="system_resizablewidgets_summ">Mở khóa giới hạn kích thước tiện ích</string>
     <string name="controls_mods">Điều khiển</string>
     <string name="controls_powerdt_title">Hành động nhấn đúp</string>
     <string name="controls_powerdt_summ">Nhấn nút nguồn hai lần để khởi động máy ảnh. Yêu cầu bật các phím tắt tích hợp.</string>
@@ -697,6 +699,7 @@
     <string name="various_apps_title">Hiển thị chi tiết ứng dụng bổ sung</string>
     <string name="various_apps_summ">Đã thêm thông tin chi tiết vào trang thông tin ứng dụng:\n- mã phiên bản\n- đường dẫn đầy đủ của apk\n- đường dẫn dữ liệu\n- ID người dùng\n- phiên bản SDK mục tiêu\n- mở trang Cửa hàng Play của ứng dụng\n- khởi chạy ứng dụng</string>
     <string name="various_appsort_title">Thứ tự sắp xếp ban đầu của các ứng dụng đã cài đặt</string>
+    <string name="various_privacyapps_column_nums4_title">Ẩn chế độ xem ứng dụng đã đổi kích thước thành 4 cột</string>
     <string name="disable_app_title">Tắt ứng dụng?</string>
     <string name="disable_app_text">Nếu đây là một ứng dụng hệ thống cần thiết, việc tắt nó có thể gây hại :)</string>
     <string name="disable_app_settings">Đây là một ý tưởng tệ! :)</string>
@@ -748,6 +751,7 @@
     <string name="array_global_actions_switchkeyboard">Chuyển đổi bàn phím</string>
     <string name="array_global_actions_goback">Quay lại</string>
     <string name="array_global_actions_onehanded_left">Chế độ một tay</string>
+    <string name="array_global_actions_clear_notifs">Xóa thông báo</string>
     <string name="array_global_toggle_bt">Bluetooth</string>
     <string name="array_global_toggle_sound">Cấu hình âm thanh</string>
     <string name="array_global_toggle_brightness">Độ sáng tự động</string>
@@ -1076,7 +1080,7 @@
     <string name="system_statusbar_mobiletype_single_bold_title">Kiểu đậm</string>
     <string name="system_statusbar_horizmargin_title">Khoảng cách thanh trạng thái ngang</string>
     <string name="system_statusbar_dualrows_firstrow_horizmargin_title">Khoảng cách hàng ngang đầu tiên</string>
-    <string name="system_statusbar_clock_spread2rows_title">Dàn trải đồng hồ trên hai hàng</string>
+    <string name="system_statusbar_clock_spread2rows_title">Làm cho đồng hồ trải dài hai hàng</string>
     <string name="system_statusbar_topmargin_title">Khoảng cách trên thanh trạng thái</string>
     <string name="system_statusbar_topmargin_val_title">Khoảng cách trên cùng</string>
     <string name="system_statusbar_topmargin_unset_lockscreen_title">Bỏ đặt thanh trạng thái bằng Keyguard</string>

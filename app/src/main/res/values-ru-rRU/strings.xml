@@ -571,6 +571,8 @@
     <string name="launcher_spread_title">Действие на разведение пальцев</string>
     <string name="launcher_spread_summ">Присвоить действие жесту разведения 2 пальцев на любом домашнем экране</string>
     <string name="launcher_bugfixes">Исправление багов</string>
+    <string name="system_resizablewidgets_title">Свободный размер виджетов</string>
+    <string name="system_resizablewidgets_summ">Удалить ограничения размера виджетов</string>
     <string name="controls_mods">Управление</string>
     <string name="controls_powerdt_title">Действие на двойное нажатие</string>
     <string name="controls_powerdt_summ">Заменяет запуск камеры по двойному нажатию кнопки питания. Родное действие должно быть активно.</string>
@@ -696,6 +698,7 @@
     <string name="various_apps_title">Доп. сведения о приложении</string>
     <string name="various_apps_summ">Добавляет новые элементы на страницу с данными о приложении:\n- код версии\n- имя и путь до apk\n- путь до данных\n- ID пользователя\n- версию SDK\n- ссылку на страницу приложения в маркете\n- запуск приложения</string>
     <string name="various_appsort_title">Порядок сортировки Всех приложений</string>
+    <string name="various_privacyapps_column_nums4_title">Установить число столбцов на 4 при просмотре приложений приватности</string>
     <string name="disable_app_title">Отключить приложение?</string>
     <string name="disable_app_text">Если данное приложение является важным системным, то его отключение может что-нибудь поломать :)</string>
     <string name="disable_app_settings">Это плохая идея! :)</string>
@@ -747,6 +750,7 @@
     <string name="array_global_actions_switchkeyboard">Выбор клавиатуры</string>
     <string name="array_global_actions_goback">Вернуться назад</string>
     <string name="array_global_actions_onehanded_left">Управление одной рукой</string>
+    <string name="array_global_actions_clear_notifs">Очистить уведомления</string>
     <string name="array_global_toggle_bt">Bluetooth</string>
     <string name="array_global_toggle_sound">Профиль звука</string>
     <string name="array_global_toggle_brightness">Автояркость</string>
@@ -1075,7 +1079,7 @@
     <string name="system_statusbar_mobiletype_single_bold_title">Жирный шрифт</string>
     <string name="system_statusbar_horizmargin_title">Горизонтальное заполнение строки состояния</string>
     <string name="system_statusbar_dualrows_firstrow_horizmargin_title">Горизонтальное заполнение первого ряда</string>
-    <string name="system_statusbar_clock_spread2rows_title">Распределить часы по двум рядам</string>
+    <string name="system_statusbar_clock_spread2rows_title">Сделать часы в две строки</string>
     <string name="system_statusbar_topmargin_title">Верхнее заполнение строки состояния</string>
     <string name="system_statusbar_topmargin_val_title">Верхний отступ</string>
     <string name="system_statusbar_topmargin_unset_lockscreen_title">Сбросить строку состояния на экране блокировки</string>
