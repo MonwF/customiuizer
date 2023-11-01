@@ -412,7 +412,7 @@
     <string name="system_charginginfo_voltage_title">バッテリー電圧</string>
     <string name="system_charginginfo_wattage_title">消費電力</string>
     <string name="system_charginginfo_temp_title">バッテリー温度</string>
-    <string name="array_cpu_temp">CPU 温度</string>
+    <string name="array_cpu_temp">CPU温度</string>
     <string name="system_lsalarm_title">次のアラーム時刻を表示</string>
     <string name="system_lsalarm_summ">現在の日付の横に次のアラーム時刻を表示</string>
     <string name="system_lsalarm_format_title">表示のフォーマット</string>
@@ -572,6 +572,8 @@
     <string name="launcher_spread_title">ピンチズームのアクション</string>
     <string name="launcher_spread_summ">任意のホーム画面上でピンチズーム時のアクションを設定します</string>
     <string name="launcher_bugfixes">バグ修正</string>
+    <string name="system_resizablewidgets_title">ウィジェットのリサイズを自由にする</string>
+    <string name="system_resizablewidgets_summ">ウィジェットのリサイズの制限を削除します</string>
     <string name="controls_mods">コントロール</string>
     <string name="controls_powerdt_title">電源ボタンを2回押しのアクション</string>
     <string name="controls_powerdt_summ">電源ボタンを2回押しでカメラの起動を置き換えます。純正ボタンのショートカットを有効化する必要があります。</string>
@@ -697,6 +699,7 @@
     <string name="various_apps_title">アプリの詳細を表示</string>
     <string name="various_apps_summ">アプリ情報に以下の項目を追加します:\n- バージョンコード\n- APKのフルパス\n- データのパス\n- ユーザーID\n- ターゲットSDKのバージョン\n- Google Play ストアを開く\n- アプリの起動</string>
     <string name="various_appsort_title">インストール済みアプリのソート順</string>
+    <string name="various_privacyapps_column_nums4_title">プライバシーアプリの表示でカラム数を4つに設定</string>
     <string name="disable_app_title">アプリを無効化しますか?</string>
     <string name="disable_app_text">これが重要なシステムアプリである場合、無効化する事でMIUIが起動しなくなる可能性があります :)</string>
     <string name="disable_app_settings">それはマズいですよ! :)</string>
@@ -748,6 +751,7 @@
     <string name="array_global_actions_switchkeyboard">キーボードの切り替え</string>
     <string name="array_global_actions_goback">戻る</string>
     <string name="array_global_actions_onehanded_left">片手操作モード</string>
+    <string name="array_global_actions_clear_notifs">通知を消去</string>
     <string name="array_global_toggle_bt">Bluetooth</string>
     <string name="array_global_toggle_sound">サウンドプロファイル</string>
     <string name="array_global_toggle_brightness">自動明るさ調整</string>
@@ -1076,7 +1080,7 @@
     <string name="system_statusbar_mobiletype_single_bold_title">太字のスタイル</string>
     <string name="system_statusbar_horizmargin_title">ステータスバーの水平パディング</string>
     <string name="system_statusbar_dualrows_firstrow_horizmargin_title">1行目の水平パディング</string>
-    <string name="system_statusbar_clock_spread2rows_title">2段表示で時計を広げる</string>
+    <string name="system_statusbar_clock_spread2rows_title">時計の長さを2段表示</string>
     <string name="system_statusbar_topmargin_title">ステータスバー上部のパディング</string>
     <string name="system_statusbar_topmargin_val_title">上部のパディング</string>
     <string name="system_statusbar_topmargin_unset_lockscreen_title">キーガードでステータスバーを非設定にする</string>
