@@ -1002,7 +1002,6 @@
     <string name="system_statusbar_mobiletype_single_bold_title">Pogrubiony styl</string>
     <string name="system_statusbar_horizmargin_title">Poziome wypełnienie paska stanu</string>
     <string name="system_statusbar_dualrows_firstrow_horizmargin_title">Wypełnienie poziome pierwszego rzędu</string>
-    <string name="system_statusbar_clock_spread2rows_title">Rozwiń zegar na dwa rzędy</string>
     <string name="system_statusbar_topmargin_title">Dodatkowy odstęp paska stanu</string>
     <string name="system_statusbar_topmargin_val_title">Górne wypełnienie</string>
     <string name="system_statusbar_topmargin_unset_lockscreen_title">Wyłącz pasek stanu na ekranie blokady</string>
