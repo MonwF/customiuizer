@@ -1058,7 +1058,6 @@ daha iyi görünürlük için işaretlenebilir</string>
     <string name="system_statusbar_mobiletype_single_bold_title">Kalın stil</string>
     <string name="system_statusbar_horizmargin_title">Durum çubuğu yatay dolgusu</string>
     <string name="system_statusbar_dualrows_firstrow_horizmargin_title">İlk sıra yatay dolgu</string>
-    <string name="system_statusbar_clock_spread2rows_title">Saati iki sıraya yay</string>
     <string name="system_statusbar_topmargin_title">Durum çubuğu üst dolgusu</string>
     <string name="system_statusbar_topmargin_val_title">Üst dolgu</string>
     <string name="system_statusbar_topmargin_unset_lockscreen_title">Keyguardda ayarlanmamış durum çubuğu</string>
