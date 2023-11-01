@@ -1012,7 +1012,6 @@
     <string name="system_statusbar_mobiletype_single_bold_title">加粗</string>
     <string name="system_statusbar_horizmargin_title">狀態欄水平邊距</string>
     <string name="system_statusbar_dualrows_firstrow_horizmargin_title">第一排水平邊距</string>
-    <string name="system_statusbar_clock_spread2rows_title">時鐘跨雙排顯示</string>
     <string name="system_statusbar_topmargin_title">狀態欄上邊距</string>
     <string name="system_statusbar_topmargin_val_title">上邊距大小</string>
     <string name="system_statusbar_topmargin_unset_lockscreen_title">不修改鎖屏狀態欄</string>
