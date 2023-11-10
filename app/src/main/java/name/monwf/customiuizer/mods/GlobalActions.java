@@ -720,7 +720,7 @@ public class GlobalActions {
                         }
                     }
                 });
-                if (MainModule.mPrefs.getBoolean("various_showcallui")) {
+                if (MainModule.mPrefs.getStringAsInt("various_showcallui", 0) > 0) {
                     ModuleHelper.hookAllMethods("com.android.systemui.statusbar.StatusBarStateControllerImpl", lpparam.getClassLoader(), "setSystemBarAttributes", new MethodHook() {
                         private boolean fullScreen = false;
                         @Override
