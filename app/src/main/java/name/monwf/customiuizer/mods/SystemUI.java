@@ -4145,7 +4145,24 @@ public class SystemUI {
     }
 
     public static void HideLockscreenZenModeHook(PackageLoadedParam lpparam) {
-        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.notification.zen.ZenModeViewController", lpparam.getClassLoader(), "shouldBeVisible", HookerClassHelper.returnConstant(false));
+        Class classZenModeViewController = XposedHelpers.findClass("com.android.systemui.statusbar.notification.zen.ZenModeViewController", lpparam.getClassLoader());
+        Method methodShouldBeVisible = XposedHelpers.findMethodExactIfExists(classZenModeViewController, "shouldBeVisible");
+        if (methodShouldBeVisible != null) {
+            ModuleHelper.hookMethod(methodShouldBeVisible, HookerClassHelper.returnConstant(false));
+            return;
+        }
+
+        Method methodUpdateVisibility = XposedHelpers.findMethodExactIfExists(classZenModeViewController, "updateVisibility");
+        if (methodUpdateVisibility != null) {
+            ModuleHelper.hookMethod(methodUpdateVisibility, new MethodHook() {
+                @Override
+                protected void before(final BeforeHookCallback param) throws Throwable {
+                    Object o = param.getThisObject();
+                    if (o != null) XposedHelpers.setBooleanField(o, "manuallyDismissed", true);
+                }
+            });
+            return;
+        }
     }
 
     public static void SwitchCCAndNotificationHook(PackageLoadedParam lpparam) {
