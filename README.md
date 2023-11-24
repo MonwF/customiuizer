@@ -13,7 +13,7 @@ For MIUI 13 & 14 based on android 12 and 13
 ### Translations
 [![Crowdin](https://badges.crowdin.net/customiuizer14/localized.svg)](https://crowdin.com/project/customiuizer14)
 
-### Dowload
+### Download
 * [Releases](https://github.com/MonwF/customiuizer/releases)
 * [Test Releases](https://rz3kv5wa4g.jiandaoyun.com/dash/650e43a383027ec3225083e9)
 
