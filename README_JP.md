@@ -1,17 +1,19 @@
 ![logo](https://code.highspec.ru/customiuizer_promo.png)
 
-## CustoMIUIzer14 ([中国語](./README_zh.md))
+## CustoMIUIzer14
+
+[English](README.md) | **日本語** | [Português (Brasil)](README_PT-BR.md) | [中文](README_ZH.md)
+
 MIUIを自分好みにカスタマイズ
 
 Android 12/13ベースなMIUI 13/14に対応しています。
 
 ### ダウンロード
 * [リリース](https://github.com/MonwF/customiuizer/releases)
-* LSPosedのリポジトリ
 * [テスト版リリース](https://rz3kv5wa4g.jiandaoyun.com/dash/650e43a383027ec3225083e9)
 
 ### バックアップ機能
-バックアップは「/sdcard/Documents/CustoMIUIzer/」に保存されます。
+バックアップは `/sdcard/Documents/CustoMIUIzer/` に保存されます。
 
 ### 寄付
 PayPalから行えます

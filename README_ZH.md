@@ -1,4 +1,7 @@
 ## 米客
+
+[English](README.md) | [日本語](README_JP.md) | [Português (Brasil)](README_PT-BR.md) | **中文**
+
 客制化你的MIUI
 
 > 由于`Mikanoshi`的 [CustoMIUIzer](code.highspec.ru/Mikanoshi/CustoMIUIzer) 一直不支持 Android 12，只好自行修改。感谢原作者带来的无限可能。
@@ -35,7 +38,6 @@
 ### 下载
 * [lanzou下载](https://rz3kv5wa4g.jiandaoyun.com/dash/650e43a383027ec3225083e9)
 * [Releases](https://github.com/MonwF/customiuizer/releases)
-* LSPosed 仓库
 
 ### 备份功能
 设置备份存储在 `/sdcard/Documents/CustoMIUIzer/`

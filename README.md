@@ -1,6 +1,9 @@
 ![logo](https://code.highspec.ru/customiuizer_promo.png)
 
-## CustoMIUIzer14 ([中文](./README_zh.md))
+## CustoMIUIzer14
+
+**English** | [日本語](README_JP.md) | [Português (Brasil)](README_PT-BR.md) | [中文](README_ZH.md)
+
 Customize MIUI to your liking
 
 For MIUI 13 & 14 based on android 12 and 13
@@ -10,13 +13,12 @@ For MIUI 13 & 14 based on android 12 and 13
 ### Translations
 [![Crowdin](https://badges.crowdin.net/customiuizer14/localized.svg)](https://crowdin.com/project/customiuizer14)
 
-### Dowload
+### Download
 * [Releases](https://github.com/MonwF/customiuizer/releases)
-* LSPosed Repo
 * [Test Releases](https://rz3kv5wa4g.jiandaoyun.com/dash/650e43a383027ec3225083e9)
 
 ### Backup functionality
-Backups are stored in /sdcard/Documents/CustoMIUIzer/
+Backups are stored in `/sdcard/Documents/CustoMIUIzer/`
 
 ### Donate
 Via paypal
@@ -40,7 +42,7 @@ APK installation is limited to Android 7+.
 First you must have (Ed)Xposed Framework installed. After that enable CustoMIUIzer module in (Ed)Xposed Installer, set up mods you like and select 'Soft Reboot' from menu.
 
 ### Backup functionality ###
-CustoMIUIzer supports settings backup and restore using local backup on SDCard/internal storage (find it in main window's menu).<br>
+CustoMIUIzer supports settings backup and restore using local backup on `/sdcard` (find it in main window's menu).<br>
 It also supports automatic Google cloud backups (Android Backup Service).
 
 ### Troubleshooting ###
