@@ -2184,7 +2184,7 @@ public class System {
     private static int actionBarColor = NOCOLOR;
 
     private static boolean isIgnored(Context context) {
-        return MainModule.mPrefs.getStringSet("system_statusbarcolor_apps").contains(context.getPackageName());
+        return !MainModule.mPrefs.getStringSet("system_statusbarcolor_apps").contains(context.getPackageName());
     }
 
     private static int getActionBarColor(Window window, int oldColor) {

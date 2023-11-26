@@ -8,8 +8,8 @@ def sFile = file(keystoreProperties['storeFile'])
 def sPassword = keystoreProperties['storePassword']
 def kAlias = keystoreProperties['keyAlias']
 def kPassword = keystoreProperties['keyPassword']
-def lastVersion = 65
-def lastVersionName = "23.10.30"
+def lastVersion = 66
+def lastVersionName = "23.11.26"
 
 if (gradle.startParameter.taskNames.contains(":app:assembleDevelop")) {
     lastVersion += 1
