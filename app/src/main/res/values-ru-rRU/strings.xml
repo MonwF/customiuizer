@@ -1052,7 +1052,7 @@
     <string name="auto_color">Цвет статус бара</string>
     <string name="type_file">файл</string>
     <string name="type_res">ресурс</string>
-    <string name="system_statusbar_batterytempandcurrent_title">Показать информацию о батареи</string>
+    <string name="system_statusbar_batterytempandcurrent_title">Информация о батарее</string>
     <string name="system_statusbar_batterytempandcurrent_content_title">Показать содержимое</string>
     <string name="system_statusbar_batterytempandcurrentatright_title">Отображать справа</string>
     <string name="system_statusbar_batterytempandcurrent_positive_title">Текущее значение всегда положительно</string>
