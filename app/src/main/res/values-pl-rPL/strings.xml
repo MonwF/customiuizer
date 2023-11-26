@@ -1021,4 +1021,15 @@
     <string name="various_skip_interceptperm_title">Pomiń licznik czasu przechwycenia uprawnień</string>
     <string name="system_lockscreenshortcuts_left_tapaction_title">Dotknij lewego skrótu, aby przełączyć latarkę</string>
     <string name="system_cc_tile_roundedrect_title">Zaokrąglony prostokątny kafelek</string>
+    <string name="system_cc_enable_style_switch_title">Wymuś przełączanie stylu centrum sterowania</string>
+    <string name="system_cc_disable_bluetooth_restrict_title">Wyłącz rozłączanie Bluetooth do jutra</string>
+    <string name="system_cc_bluetooth_tile_style_title">Styl kafelka</string>
+    <string name="system_cc_bluetooth_tile_style_3rows">Trzy duże kafelki</string>
+    <string name="system_cc_bluetooth_tile_style_2rows2cols">Jeden duży i dwie małe kafelki</string>
+    <string name="system_cc_bluetooth_tile_style_summ">Przesuń kafelek Bluetooth w pobliżu kafelka sieci</string>
+    <string name="system_cc_volume_showpct_title">Pokaż procent głośności</string>
+    <string name="system_cc_collapse_after_clicked_title">Zwiń po dotknięciu</string>
+    <string name="system_show_step_count_title">Pokaż liczbę kroków</string>
+    <string name="system_cc_switch_ccandnotification_title">Przełącz centrum sterowania i panel powiadomień</string>
+    <string name="system_cc_clock_topmargin_indrawer_title">Górny margines zegara w panelu powiadomień</string>
 </resources>
