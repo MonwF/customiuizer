@@ -1099,7 +1099,7 @@
     <string name="various_persist_batteryoptimization_settings_title">バッテリーの最適化設定を永続化させる</string>
     <string name="various_clipboard_defaultaction_title">AIクリップボードの動作</string>
     <string name="various_disable_access_devicelogs_title">デバイスログへのアクセス要求ダイアログを無効化</string>
-    <string name="various_skip_interceptperm_title">パーミッション許可の待機時間をスキップ</string>
+    <string name="various_skip_interceptperm_title">権限許可の待機時間をスキップ</string>
     <string name="various_replace_defaultopen_with_openbydefault_title">「デフォルトの操作を消去」を「デフォルトで開く」に置き換える</string>
     <string name="various_open_by_default_title">デフォルトで開く</string>
     <string name="various_skip_securityscan_title">セキュリティスキャンをスキップ</string>
