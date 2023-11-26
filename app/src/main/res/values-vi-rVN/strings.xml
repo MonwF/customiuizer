@@ -50,7 +50,7 @@
     <string name="system_statusbaricons_mute_title">Gọi: tắt mic</string>
     <string name="system_statusbaricons_speaker_title">Gọi: loa ngoài</string>
     <string name="system_statusbaricons_record_title">Gọi: ghi âm</string>
-    <string name="system_batteryindicator_title">Chỉ số pin</string>
+    <string name="system_batteryindicator_title">Thanh báo pin</string>
     <string name="system_batteryindicator_summ">Hiển thị mức sạc pin dưới dạng thanh màu</string>
     <string name="system_batteryindicator_limitvis_title">Giới hạn hiển thị</string>
     <string name="system_batteryindicator_limitvis_summ">Chỉ hiển thị trong ngăn thông báo và trên màn hình khóa</string>
