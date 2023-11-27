@@ -1,6 +1,6 @@
 ## 米客
 
-[English](README.md) | [日本語](README_JP.md) | [Português (Brasil)](README_PT-BR.md) | **中文**
+[English](README.md) | [日本語](README_jp.md) | [Português (Brasil)](README_PT-BR.md) | **中文**
 
 客制化你的MIUI
 

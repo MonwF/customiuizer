@@ -2,7 +2,7 @@
 
 ## CustoMIUIzer14
 
-**English** | [日本語](README_JP.md) | [Português (Brasil)](README_PT-BR.md) | [中文](README_ZH.md)
+**English** | [日本語](README_jp.md) | [Português (Brasil)](README_PT-BR.md) | [中文](README_zh.md)
 
 Customize MIUI to your liking
 
