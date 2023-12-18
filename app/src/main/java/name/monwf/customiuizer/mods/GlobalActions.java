@@ -12,6 +12,7 @@ import android.app.ActivityManager.RecentTaskInfo;
 import android.app.ActivityOptions;
 import android.app.Instrumentation;
 import android.app.NotificationManager;
+import android.app.UiModeManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -393,6 +394,22 @@ public class GlobalActions {
                         else
                             Toast.makeText(context, modRes.getString(R.string.toggle_hotspot_on), Toast.LENGTH_SHORT).show();
                         XposedHelpers.callMethod(mHotspotController, "setHotspotEnabled", !mHotspotEnabled);
+                    }
+                    else if (action.equals(ACTION_PREFIX + "ToggleZenMode")) {
+                        Object zenModeController = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", context.getClassLoader()), "get", findClassIfExists("com.android.systemui.statusbar.policy.ZenModeController", context.getClassLoader()));
+                        boolean zenModeEnabled = (boolean)XposedHelpers.callMethod(zenModeController, "isZenModeOn");
+                        if (zenModeEnabled) {
+                            XposedHelpers.callMethod(zenModeController, "setZen", 0, null, "DNDTile");
+                        }
+                        else {
+                            XposedHelpers.callMethod(zenModeController, "setZen", 1, null, "DNDTile");
+                        }
+                    }
+                    else if (action.equals(ACTION_PREFIX + "ToggleNightMode")) {
+                        Settings.System.putInt(context.getContentResolver(), "dark_mode_enable_by_setting", 1);
+                        UiModeManager mUiModeManager = (UiModeManager) context.getSystemService("uimode");
+                        boolean nightMode = mUiModeManager.getNightMode() == 2;
+                        XposedHelpers.callMethod(mUiModeManager, "setNightModeActivated", !nightMode);
                     }
 
                     if (action.equals(ACTION_PREFIX + "ToggleFlashlight")) {
@@ -851,7 +868,9 @@ public class GlobalActions {
 
                 intentfilter.addAction(ACTION_PREFIX + "ToggleGPS");
                 intentfilter.addAction(ACTION_PREFIX + "ToggleHotspot");
+                intentfilter.addAction(ACTION_PREFIX + "ToggleZenMode");
                 intentfilter.addAction(ACTION_PREFIX + "ToggleFlashlight");
+                intentfilter.addAction(ACTION_PREFIX + "ToggleNightMode");
 
                 intentfilter.addAction(ACTION_PREFIX + "ClearMemory");
                 intentfilter.addAction(ACTION_PREFIX + "ClearNotifications");
@@ -974,6 +993,8 @@ public class GlobalActions {
                 case 8: whatStr = "Flashlight"; break;
                 case 9: whatStr = "MobileData"; break;
                 case 10: whatStr = "Hotspot"; break;
+                case 11: whatStr = "ZenMode";break;
+                case 12: whatStr = "NightMode";break;
                 default: return false;
             }
             context.sendBroadcast(new Intent(ACTION_PREFIX + "Toggle" + whatStr));

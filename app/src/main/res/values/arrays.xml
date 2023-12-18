@@ -233,12 +233,14 @@
 		<item>@string/array_global_actions_launch</item>
 		<item>@string/array_global_actions_shortcut</item>
 		<item>@string/array_global_actions_activity</item>
+		<item>@string/array_global_actions_toggle</item>
 	</string-array>
 	<integer-array name="global_launch_actions_val">
 		<item>1</item>
 		<item>8</item>
 		<item>9</item>
 		<item>20</item>
+		<item>10</item>
 	</integer-array>
 
 	<string-array name="global_toggles">
@@ -252,6 +254,8 @@
 		<item>@string/array_global_toggle_torch</item>
 		<item>@string/array_global_toggle_mobiledata</item>
 		<item>@string/system_statusbaricons_hotspot_title</item>
+		<item>@string/system_statusbaricons_dnd_title</item>
+		<item>@string/various_calluibright_night_title</item>
 	</string-array>
 	<integer-array name="global_toggles_val">
 		<item>1</item>
@@ -264,6 +268,8 @@
 		<item>8</item>
 		<item>9</item>
 		<item>10</item>
+		<item>11</item>
+		<item>12</item>
 	</integer-array>
 
 	<string-array name="appsort">
