@@ -2,11 +2,20 @@
 
 [English](README.md) | [日本語](README_jp.md) | [Português (Brasil)](README_PT-BR.md) | **中文**
 
-客制化你的MIUI
+客制化你的HyperOS
 
-> 由于`Mikanoshi`的 [CustoMIUIzer](code.highspec.ru/Mikanoshi/CustoMIUIzer) 一直不支持 Android 12，只好自行修改。感谢原作者带来的无限可能。
+> 感谢`Mikanoshi`的 [CustoMIUIzer](code.highspec.ru/Mikanoshi/CustoMIUIzer) 
 
-支持基于`android 12`以上的 MIUI 13和14
+支持基于`android 14`以上的`HyperOS`
+
+过时版本
+
+* [MIUI14 下载](https://github.com/MonwF/customiuizer/releases/tag/v23.11.26)
+* [MIUI13 下载](https://github.com/MonwF/customiuizer/releases/tag/v23.08.26)
+
+### 测试版下载
+* [网盘](https://rz3kv5wa4g.jiandaoyun.com/dash/650e43a383027ec3225083e9)
+* [Telegram channel](https://t.me/pengeek)
 
 ### 主要功能
 * 双排状态栏
@@ -34,13 +43,6 @@
 * 导航栏手势与自定义按钮
 * 安装或升级app时显示更多信息
 * 允许限制系统app使用网络
-
-### 下载
-* [lanzou下载](https://rz3kv5wa4g.jiandaoyun.com/dash/650e43a383027ec3225083e9)
-* [Releases](https://github.com/MonwF/customiuizer/releases)
-
-### 备份功能
-设置备份存储在 `/sdcard/Documents/CustoMIUIzer/`
 
 ------
 #### 佛系开发，随缘打赏
