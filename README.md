@@ -1,4 +1,5 @@
 ## Pengeek
+
 **English** | [日本語](README_jp.md) | [Português (Brasil)](README_PT-BR.md) | [中文](README_zh.md)
 
 Customize your HyperOS to your liking.
@@ -9,9 +10,9 @@ For HyperOS based on android 14.
 
 Legacy releases:
 
-* [MIUI14 release](https://github.com/MonwF/customiuizer/releases/tag/v23.11.26)
+* [MIUI 14 release](https://github.com/MonwF/customiuizer/releases/tag/v23.11.26)
 
-* [MIUI13 release](https://github.com/MonwF/customiuizer/releases/tag/v23.08.26)
+* [MIUI 13 release](https://github.com/MonwF/customiuizer/releases/tag/v23.08.26)
 
 ## Translations
 [![Crowdin](https://badges.crowdin.net/customiuizer14/localized.svg)](https://crowdin.com/project/customiuizer14)
@@ -27,30 +28,30 @@ Via paypal
 * [Other](https://paypal.me/tpsxj)
 
 ## Here are the main working features:
-* keep phone unlocked in trusted env (both bluetooth and wifi)
-* autobrightness range limit
-* extended timers for silent and dnd mode
-* music visualizer
-* set album art as wallpaper
-* statusbar
-  * hide icons
-  * clock tweak
-  * gesture (double tap to sleep、slice to adjust volume or brightness)
-  * battery bar indicator
-* notifications
-  * notification importance
-  * auto expand
-  * extended menu
-  * remove limit per package
-  * open in floating window
-  * open channel settings
-* disable blacklist for floating windows
-* extended power menu
-* allow downgrade
-* disable app signature verification
-* use back gesture with navbar mode
-* custom left/right buttons on the navbar
-* skip permission intercept warning countdown
-* control system apps to connect with wifi and battery saver
-* show more detail on app installer or info activity
-* powerful gesture with multi actions
+* Keep phone unlocked in a trusted environment (Bluetooth and Wi-Fi)
+* Autobrightness range limit
+* Extended timers for silent and dnd mode
+* Music visualizer
+* Set album art as wallpaper
+* Statusbar
+  * Hide icons
+  * Clock tweak
+  * Gesture (double tap to sleep, slice to adjust volume or brightness)
+  * Battery bar indicator
+* Notifications
+  * Notification importance
+  * Auto expand
+  * Extended menu
+  * Remove limit per package
+  * Open in floating window
+  * Open channel settings
+* Disable blacklist for floating windows
+* Extended power menu
+* Allow downgrade
+* Disable app signature verification
+* Use back gesture with navbar mode
+* Custom left/right buttons on the navbar
+* Skip permission intercept warning countdown
+* Control system apps to connect with Wi-Fi and battery saver
+* Show more detail on app installer or info activity
+* Powerful gesture with multi actions
