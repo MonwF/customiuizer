@@ -4,14 +4,13 @@
 
 Customize your HyperOS to your liking.
 
-For HyperOS based on android 14. 
+For `HyperOS` based on `Android 14`.
 
-> Thanks for the awesome module from [Mikanoshi](https://code.highspec.ru/Mikanoshi/CustoMIUIzer)
+> Thanks for the awesome module [CustoMIUIzer](https://code.highspec.ru/Mikanoshi/CustoMIUIzer) from `Mikanoshi`
 
-Legacy releases:
+### Legacy releases
 
 * [MIUI 14 release](https://github.com/MonwF/customiuizer/releases/tag/v23.11.26)
-
 * [MIUI 13 release](https://github.com/MonwF/customiuizer/releases/tag/v23.08.26)
 
 ## Translations
