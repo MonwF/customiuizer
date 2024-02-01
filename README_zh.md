@@ -4,14 +4,13 @@
 
 客制化你的HyperOS
 
-> 感谢`Mikanoshi`的 [CustoMIUIzer](code.highspec.ru/Mikanoshi/CustoMIUIzer) 
+支持基于`Android 14`以上的`HyperOS`。
 
-支持基于`android 14`以上的`HyperOS`
+> 感谢`Mikanoshi`的 [CustoMIUIzer](https://code.highspec.ru/Mikanoshi/CustoMIUIzer) 模块
 
-过时版本
-
-* [MIUI14 下载](https://github.com/MonwF/customiuizer/releases/tag/v23.11.26)
-* [MIUI13 下载](https://github.com/MonwF/customiuizer/releases/tag/v23.08.26)
+### 过时版本
+* [MIUI 14 下载](https://github.com/MonwF/customiuizer/releases/tag/v23.11.26)
+* [MIUI 13 下载](https://github.com/MonwF/customiuizer/releases/tag/v23.08.26)
 
 ### 测试版下载
 * [网盘](https://rz3kv5wa4g.jiandaoyun.com/dash/650e43a383027ec3225083e9)
@@ -37,7 +36,7 @@
   * 自动展开
   * 小窗打开通知
   * 直接打开频道设置
-* 浮窗记住打开状态和位置、移除黑名单（含分屏)
+* 浮窗记住打开状态和位置、移除黑名单（含分屏）
 * 扩展电源菜单
 * 允许直接更新系统应用
 * 导航栏手势与自定义按钮

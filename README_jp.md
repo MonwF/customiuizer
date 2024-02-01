@@ -4,13 +4,19 @@
 
 [English](README.md) | **日本語** | [Português (Brasil)](README_PT-BR.md) | [中文](README_zh.md)
 
-MIUIを自分好みにカスタマイズ
+HyperOSを自分好みにカスタマイズ
 
-Android 12/13ベースなMIUI 13/14に対応しています。
+`Android 14`ベースな`HyperOS`に対応しています。
 
-### ダウンロード
-* [リリース](https://github.com/MonwF/customiuizer/releases)
-* [テスト版リリース](https://rz3kv5wa4g.jiandaoyun.com/dash/650e43a383027ec3225083e9)
+> `Mikanoshi`の素晴らしいモジュール [CustoMIUIzer](https://code.highspec.ru/Mikanoshi/CustoMIUIzer) をありがとう
+
+### レガシーリリース
+* [MIUI 14 release](https://github.com/MonwF/customiuizer/releases/tag/v23.11.26)
+* [MIUI 13 release](https://github.com/MonwF/customiuizer/releases/tag/v23.08.26)
+
+### テストビルド
+* [Telegram channel](https://t.me/pengeek)
+* [jiandaoyun](https://rz3kv5wa4g.jiandaoyun.com/dash/650e43a383027ec3225083e9)
 
 ### バックアップ機能
 バックアップは `/sdcard/Documents/CustoMIUIzer/` に保存されます。
