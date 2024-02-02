@@ -151,6 +151,7 @@ public class MainModule extends XposedModule {
         if (mPrefs.getBoolean("controls_fingerprintscreen")) Controls.FingerprintScreenOnHook(lpparam);
         if (mPrefs.getBoolean("controls_fingerprintwake")) Controls.NoFingerprintWakeHook(lpparam);
         if (mPrefs.getBoolean("various_disableapp")) Various.AppsDisableServiceHook(lpparam);
+        if (mPrefs.getBoolean("various_remove_installer_restriction")) Various.RemoveInstallerRestrictionHook(lpparam);
         if (mPrefs.getBoolean("system_disableanynotif")) System.DisableAnyNotificationBlockHook(lpparam);
         if (mPrefs.getStringAsInt("system_allrotations2", 1) > 1) System.AllRotationsHook(lpparam);
         if (mPrefs.getStringAsInt("system_nolightuponcharges", 1) > 1) System.NoLightUpOnChargeHook(lpparam);

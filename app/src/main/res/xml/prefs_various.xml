@@ -21,6 +21,12 @@
 		android:defaultValue="false" />
 
 	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_various_remove_installer_restriction"
+		android:title="@string/various_remove_apk_handler_restriction_title"
+		android:summary="@string/various_remove_apk_handler_restriction_summ"
+		android:defaultValue="false" />
+
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_various_disable_access_devicelogs"
 		android:title="@string/various_disable_access_devicelogs_title"
 		android:defaultValue="false" />
