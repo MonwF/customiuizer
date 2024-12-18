@@ -27,17 +27,12 @@
 			android:summary="@string/system_orientationlock_summ"
 			android:defaultValue="false" />
 
-		<name.monwf.customiuizer.prefs.ListPreferenceEx
-			android:key="pref_key_system_rotateanim"
-			android:summary=""
-			android:title="@string/system_rotateanim_title"
-			android:entries="@array/screenrotate"
-			android:entryValues="@array/screenrotate_val"
-			android:defaultValue="1"
-			miuizer:valueAsSummary="true" />
-
 		<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 			android:title="@string/system_mods_screen_backlight" />
+
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_autobrightness_reset_when_screenoff"
+			android:title="@string/system_autobrightness_reset_when_screenoff_title" />
 
 		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_autobrightness_cat"
@@ -123,20 +118,6 @@
 			android:defaultValue="false" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_separatevolume"
-			android:title="@string/system_separatevolume_title"
-			android:summary="@string/system_separatevolume_summ"
-			android:defaultValue="false" />
-
-		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_separatevolume_slider"
-			android:title="@string/system_separatevolume_slider_title"
-			android:summary="@string/system_separatevolume_slider_summ"
-			android:defaultValue="false"
-			android:dependency="pref_key_system_separatevolume"
-			miuizer:indentLevel="1" />
-
-		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_cc_volume_showpct"
 			android:title="@string/system_cc_volume_showpct_title"
 			android:defaultValue="false" />
@@ -171,19 +152,6 @@
 			miuizer:maxValue="30000"
 			miuizer:stepValue="500"
 			miuizer:format="@string/format_d_ms"
-			miuizer:offtext="@string/array_default" />
-
-		<name.monwf.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_volumesteps"
-			android:title="@string/system_volumesteps_title"
-			android:summary="@string/system_volumesteps_summ"
-			android:defaultValue="0"
-			miuizer:minValue="0"
-			miuizer:maxValue="500"
-			miuizer:stepValue="25"
-			miuizer:displayDividerValue="100"
-			miuizer:format="x%s"
-			app:isPreferenceVisible="false"
 			miuizer:offtext="@string/array_default" />
 
 		<name.monwf.customiuizer.prefs.PreferenceEx
@@ -233,6 +201,7 @@
 		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:title="@string/system_expandnotifs_apps_title"
 			android:key="pref_key_system_vibration_apps"
+			android:dependency="pref_key_system_vibration"
 			miuizer:indentLevel="1"
 			miuizer:countAsSummary="true" />
 
@@ -268,6 +237,7 @@
 		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:title="@string/system_expandnotifs_apps_title"
 			android:key="pref_key_system_blocktoasts_apps"
+			android:dependency="pref_key_system_blocktoasts"
 			miuizer:indentLevel="1"
 			miuizer:countAsSummary="true" />
 
@@ -344,6 +314,18 @@
 			miuizer:indentLevel="1"
 			android:title="@string/system_statusbar_clock_spread2rows_title" />
 
+		<name.monwf.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_system_statusbar_dualrows_left_ratio"
+			android:dependency="pref_key_system_statusbar_dualrows"
+			miuizer:indentLevel="1"
+			android:defaultValue="4"
+			miuizer:minValue="3"
+			miuizer:maxValue="7"
+			miuizer:stepValue="1"
+			miuizer:format="%s"
+			miuizer:displayDividerValue="10"
+			android:title="@string/system_statusbar_dualrows_left_ratio_title" />
+
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_statusbar_dualrows_firstrow_horizmargin"
 			android:dependency="pref_key_system_statusbar_dualrows"
@@ -375,9 +357,9 @@
 		<name.monwf.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_system_statusbarheight"
 			android:title="@string/system_statusbarheight_title"
-			android:defaultValue="19"
+			android:defaultValue="11"
 			miuizer:offtext="@string/array_default"
-			miuizer:minValue="19"
+			miuizer:minValue="11"
 			miuizer:maxValue="80"
 			miuizer:stepValue="1"
 			miuizer:format="%d dip" />
@@ -442,8 +424,13 @@
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_hidestatusbar_whenscreenshot"
-			android:title="@string/system_hidestatusbar_whenscreenshot_title"
-			android:defaultValue="false" />
+			android:title="@string/system_hidestatusbar_whenscreenshot_title" />
+
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_hidestatusbar_whenscreenrecord"
+			android:title="@string/system_hidestatusbar_whenscreenrecord_title"
+			app:isPreferenceVisible="false" />
+			/>
 
 		<name.monwf.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_system_maxsbicons"
@@ -467,24 +454,11 @@
 			miuizer:indentLevel="1"
 			miuizer:countAsSummary="true" />
 
-		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_hidemoreicon"
-			android:summary="@string/system_hidemoreicon_summ"
-			app:isPreferenceVisible="false"
-			android:title="@string/system_hidemoreicon_title"
-			android:defaultValue="false" />
-
 	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
 	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:key="pref_key_system_cat_drawer"
 		android:title="@string/system_mods_statusbar_drawer">
-
-		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_hideqs"
-			android:summary="@string/system_hideqs_summ"
-			android:title="@string/system_hideqs_title"
-			android:defaultValue="false" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_removedismiss"
@@ -494,38 +468,49 @@
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_drawer_removeshortcut"
-			android:title="@string/system_drawer_removeshortcut_title"
-			android:defaultValue="false" />
+			android:title="@string/system_drawer_removeshortcut_title" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_drawer_show_stepcount"
-			android:title="@string/system_show_step_count_title"
-			android:defaultValue="false" />
+			android:key="pref_key_system_drawer_remove_emptynotify"
+			android:title="@string/system_drawer_remove_emptynotify_title" />
+
+		<name.monwf.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_cc_clocktweak_cat"
+			android:persistent="false"
+			android:title="@string/system_statusbar_clocktweak_title" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_showpct"
-			android:title="@string/system_showpct_title"
-			android:summary="@string/system_showpct_summ"
+			android:key="pref_key_system_drawer_hidedate"
+			android:title="@string/system_cc_hidedate_title"
+			android:disableDependentsState="true"
 			android:defaultValue="false" />
+
+		<name.monwf.customiuizer.prefs.EditTextPreferenceEx
+			android:dialogMessage="@string/system_clock_customformat_help_summ"
+			android:key="pref_key_system_drawer_dateformat"
+			android:title="@string/system_cc_dateformat_title"
+			android:dependency="pref_key_system_drawer_hidedate"
+			app:useSimpleSummaryProvider="true"
+			miuizer:indentLevel="1"
+			android:defaultValue="" />
+
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_drawer_date_centeralign"
+			android:title="@string/system_betterpopups_center_title"
+			android:dependency="pref_key_system_drawer_hidedate"
+			miuizer:indentLevel="1" />
 
 		<name.monwf.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_showpct_top"
-			android:title="@string/system_showpct_top_title"
-			android:dependency="pref_key_system_showpct"
-			android:defaultValue="26"
-			miuizer:minValue="0"
-			miuizer:indentLevel="1"
-			miuizer:maxValue="50"
+			android:key="pref_key_system_drawer_date_fontsize"
+			android:title="@string/launcher_titlefontsize_title"
+			android:defaultValue="12"
+			miuizer:minValue="12"
+			miuizer:maxValue="80"
 			miuizer:stepValue="1"
-			miuizer:format="%d dp" />
-
-		<name.monwf.customiuizer.prefs.ListPreferenceEx
-			android:key="pref_key_system_inactivebrightness"
-			android:title="@string/system_inactivebrightness_title"
-			android:entries="@array/inactivebrightness"
-			android:entryValues="@array/inactivebrightness_val"
-			android:defaultValue="1"
-			miuizer:valueAsSummary="true" />
+			miuizer:offtext="@string/array_default"
+			miuizer:format="%d dip"
+			android:dependency="pref_key_system_drawer_hidedate"
+			miuizer:indentLevel="1" />
 
 		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_shortcut_app"
@@ -570,34 +555,19 @@
 			android:defaultValue="false" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_morenotif"
-			android:title="@string/system_morenotif_title"
-			android:summary="@string/system_morenotif_summ"
-			android:defaultValue="false" />
-
-		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_allowdirectreply"
-			android:summary="@string/system_allowdirectreply_summ"
-			android:title="@string/system_allowdirectreply_title"
-			android:defaultValue="false" />
-
-		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_allownotifonkeyguard"
 			android:summary="@string/system_allownotifonkeyguard_summ"
-			android:title="@string/system_allownotifonkeyguard_title"
-			android:defaultValue="false" />
+			android:title="@string/system_allownotifonkeyguard_title" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_allownotiffloat"
 			android:summary="@string/system_allownotiffloat_summ"
-			android:title="@string/system_allownotiffloat_title"
-			android:defaultValue="false" />
+			android:title="@string/system_allownotiffloat_title" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_disableanynotif"
 			android:summary="@string/system_disableanynotif_summ"
-			android:title="@string/system_disableanynotif_title"
-			android:defaultValue="false" />
+			android:title="@string/system_disableanynotif_title" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_notifimportance"
@@ -605,10 +575,39 @@
 			android:defaultValue="true" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_compactnotif"
-			android:summary="@string/system_compactnotif_summ"
-			android:title="@string/system_compactnotif_title"
-			android:defaultValue="false" />
+			android:key="pref_key_system_notif_disable_fold"
+			android:title="@string/system_notif_disable_fold_title" />
+
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_notif_disable_strong_toast"
+			android:title="@string/system_notif_disable_strong_toast_title"
+			android:summary="@string/system_notif_disable_strong_toast_summ" />
+
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_notif_disable_strong_toast_always"
+			android:defaultValue="true"
+			miuizer:indentLevel="1"
+			android:title="@string/array_always" />
+
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_notif_disable_strong_toast_dnd"
+			miuizer:indentLevel="1"
+			android:title="@string/system_statusbaricons_dnd_title" />
+
+<!--		<name.monwf.customiuizer.prefs.SeekBarPreference-->
+<!--			android:key="pref_key_system_notif_strong_toast_width"-->
+<!--			android:title="@string/system_notif_strong_toast_width_title"-->
+<!--			android:defaultValue="100"-->
+<!--			miuizer:minValue="70"-->
+<!--			miuizer:maxValue="100"-->
+<!--			miuizer:stepValue="5"-->
+<!--			miuizer:format="%d%%"-->
+<!--			android:dependency="pref_key_system_notif_disable_strong_toast"-->
+<!--			miuizer:offtext="@string/array_default" />-->
+
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_morenotif"
+			android:title="@string/system_morenotif_title" />
 
 		<name.monwf.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_system_colorizenotifs"
@@ -621,6 +620,7 @@
 		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:title="@string/system_expandnotifs_apps_title"
 			android:key="pref_key_system_colorizenotifs_apps"
+			android:dependency="pref_key_system_colorizenotifs"
 			miuizer:indentLevel="1"
 			miuizer:countAsSummary="true" />
 
@@ -667,27 +667,9 @@
 		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:title="@string/system_expandnotifs_apps_title"
 			android:key="pref_key_system_expandnotifs_apps"
+			android:dependency="pref_key_system_expandnotifs"
 			miuizer:indentLevel="1"
 			miuizer:countAsSummary="true" />
-
-		<name.monwf.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_messagingstylelines"
-			android:title="@string/system_messagingstylelines_title"
-			android:summary="@string/system_messagingstylelines_summ"
-			android:defaultValue="0"
-			miuizer:offtext="@string/unlimited"
-			miuizer:minValue="0"
-			miuizer:maxValue="8"
-			miuizer:stepValue="1"
-			miuizer:format="%d" />
-
-		<name.monwf.customiuizer.prefs.ListPreferenceEx
-			android:key="pref_key_system_autogroupnotif"
-			android:summary="@string/system_autogroupnotif_summ"
-			android:title="@string/system_autogroupnotif_title"
-			android:entries="@array/autogroupnotif"
-			android:entryValues="@array/autogroupnotif_val"
-			android:defaultValue="1" />
 
 		<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 			android:title="@string/launcher_bugfixes" />
@@ -710,11 +692,22 @@
 		android:key="pref_key_system_cat_qs"
 		android:title="@string/system_mods_cc">
 
+		<name.monwf.customiuizer.prefs.PreferenceEx
+			android:key="pref_key_system_cc_tile_style_cat"
+			android:persistent="false"
+			android:title="@string/system_cc_tile_style_cat_tile" />
+
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_fivegtile"
 			android:title="@string/system_fivegtile_title"
 			android:summary="@string/system_fivegtile_summ"
 			android:defaultValue="false"
+			/>
+
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_cc_floatingtimetile"
+			android:title="@string/system_floatingtime_tile_title"
+			android:summary="@string/system_floatingtime_tile_summ"
 			/>
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
@@ -724,41 +717,19 @@
 			android:defaultValue="false"
 			/>
 
-		<name.monwf.customiuizer.prefs.PreferenceEx
-			android:key="pref_key_system_cc_clocktweak_cat"
-			android:title="@string/system_statusbar_clocktweak_title" />
-
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_cc_hidedate"
 			android:title="@string/system_cc_hidedate_title"
-			android:disableDependentsState="true"
-			android:defaultValue="false" />
+			android:disableDependentsState="true" />
 
 		<name.monwf.customiuizer.prefs.EditTextPreferenceEx
 			android:dialogMessage="@string/system_clock_customformat_help_summ"
 			android:key="pref_key_system_cc_dateformat"
 			android:title="@string/system_cc_dateformat_title"
+			miuizer:indentLevel="1"
 			android:dependency="pref_key_system_cc_hidedate"
 			app:useSimpleSummaryProvider="true"
 			android:defaultValue="" />
-
-		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_cc_hide_shortcuticons"
-			android:title="@string/system_cc_hide_shortcuticons_title"
-			android:defaultValue="false" />
-
-		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_cc_custom_clock_action"
-			android:title="@string/system_cc_custom_clock_action_title"
-			android:summary="@string/system_cc_custom_clock_action_summ"
-			miuizer:indentLevel="1"
-			android:dependency="pref_key_system_cc_hide_shortcuticons"
-			android:defaultValue="false" />
-
-		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_qsnolabels"
-			android:title="@string/system_qsnolabels_title"
-			android:defaultValue="false" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_qs_hideoperator"
@@ -781,62 +752,26 @@
 			android:defaultValue="false" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_cc_switch_qsandnotification"
-			android:title="@string/system_cc_switch_ccandnotification_title"
+			android:key="pref_key_system_cc_freeform_when_longclick"
+			android:title="@string/system_cc_freeform_when_longclick_title"
 			android:defaultValue="false" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_cc_enable_style_switch"
-			android:title="@string/system_cc_enable_style_switch_title"
+			android:key="pref_key_system_cc_hide_edit"
+			android:title="@string/system_cc_hide_edit_title"
 			android:defaultValue="false" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_cc_disable_bluetooth_restrict"
-			android:title="@string/system_cc_disable_bluetooth_restrict_title"
+			android:key="pref_key_system_cc_hide_profile_monitoring"
+			android:title="@string/system_cc_hide_profile_monitoring_title"
 			android:defaultValue="false" />
 
-		<name.monwf.customiuizer.prefs.ListPreferenceEx
-			android:key="pref_key_system_cc_bluetooth_tile_style"
-			android:title="@string/system_cc_bluetooth_tile_style_title"
-			android:summary="@string/system_cc_bluetooth_tile_style_summ"
-			android:entries="@array/system_cc_bluetooth_tile_style_list"
-			android:entryValues="@array/onoff_val"
-			android:defaultValue="1" />
-
-		<name.monwf.customiuizer.prefs.ListPreferenceEx
-			android:key="pref_key_system_qshaptics"
-			android:summary="@string/system_qshaptic_summ"
-			android:title="@string/system_qshaptic_title"
-			android:entries="@array/qshaptic"
-			android:entryValues="@array/qshaptic_val"
-			android:defaultValue="1"
-			miuizer:dynamic="true" />
-
-		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_qshaptics_ignore"
-			android:title="@string/controls_fingerprintsuccess_ignore_title"
-			android:summary="@string/controls_fingerprintsuccess_ignore_summ"
-			android:defaultValue="false"
-			miuizer:dynamic="true"
-			miuizer:indentLevel="1" />
-
-		<name.monwf.customiuizer.prefs.PreferenceCategoryEx
-			android:title="@string/system_mods_cc_new" />
-
-		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_cc_tile_roundedrect"
-			android:title="@string/system_cc_tile_roundedrect_title"
-			android:defaultValue="false" />
-
-		<name.monwf.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_ccgridrows"
-			android:title="@string/system_qsgridrows_title"
-			android:defaultValue="4"
-			miuizer:offtext="@string/array_default"
-			miuizer:minValue="3"
-			miuizer:maxValue="10"
-			miuizer:stepValue="1"
-			miuizer:format="%d" />
+<!--		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx-->
+<!--			android:key="pref_key_system_cc_tile_roundedrect_inlinetext"-->
+<!--			android:title="@string/system_cc_tile_roundedrect_inlinetext_title"-->
+<!--			android:dependency="pref_key_system_cc_tile_roundedrect"-->
+<!--			miuizer:indentLevel="1"-->
+<!--			android:defaultValue="false" />-->
 
 		<name.monwf.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_system_ccgridcolumns"
@@ -848,41 +783,51 @@
 			miuizer:stepValue="1"
 			miuizer:format="%d" />
 
-		<name.monwf.customiuizer.prefs.PreferenceCategoryEx
-			android:title="@string/system_mods_cc_legacy" />
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_showpct"
+			android:title="@string/system_showpct_title"
+			android:summary="@string/system_showpct_summ"
+			android:defaultValue="false" />
 
 		<name.monwf.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_qsgridrows"
-			android:title="@string/system_qsgridrows_title"
+			android:key="pref_key_system_showpct_top"
+			android:title="@string/system_showpct_top_title"
+			android:dependency="pref_key_system_showpct"
+			android:defaultValue="26"
+			miuizer:minValue="0"
+			miuizer:indentLevel="1"
+			miuizer:maxValue="50"
+			miuizer:stepValue="1"
+			miuizer:format="%d dp" />
+
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_cc_enable_style_switch"
+			android:title="@string/system_cc_enable_style_switch_title"
+			android:defaultValue="false" />
+
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_cc_switch_qsandnotification"
+			android:title="@string/system_cc_switch_ccandnotification_title"
+			android:defaultValue="false" />
+
+		<name.monwf.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_system_qshaptics"
+			android:summary="@string/system_qshaptic_summ"
+			android:title="@string/system_qshaptic_title"
+			android:entries="@array/qshaptic"
+			android:entryValues="@array/qshaptic_val"
 			android:defaultValue="1"
-			miuizer:note="@string/system_qsgridrows_note"
-			miuizer:offtext="@string/array_default"
-			miuizer:minValue="1"
-			miuizer:maxValue="5"
-			miuizer:stepValue="1"
-			miuizer:format="%d" />
+			miuizer:valueAsSummary="true"
+			miuizer:dynamic="true" />
 
-		<name.monwf.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_qsgridcolumns"
-			android:title="@string/system_qsgridcolumns_title"
-			android:defaultValue="2"
-			miuizer:note="@string/system_qsgridcolumns_note"
-			miuizer:offtext="@string/array_default"
-			miuizer:minValue="2"
-			miuizer:maxValue="7"
-			miuizer:stepValue="1"
-			miuizer:format="%d" />
-
-		<name.monwf.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_qqsgridcolumns"
-			android:title="@string/system_qqsgridcolumns_title"
-			android:defaultValue="2"
-			miuizer:note="@string/system_qqsgridcolumns_note"
-			miuizer:offtext="@string/array_default"
-			miuizer:minValue="2"
-			miuizer:maxValue="7"
-			miuizer:stepValue="1"
-			miuizer:format="%d" />
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_system_qshaptics_ignore"
+			android:title="@string/controls_fingerprintsuccess_ignore_title"
+			android:summary="@string/controls_fingerprintsuccess_ignore_summ"
+			android:dependency="pref_key_system_qshaptics"
+			android:defaultValue="false"
+			miuizer:dynamic="true"
+			miuizer:indentLevel="1" />
 
 	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
@@ -962,6 +907,7 @@
 		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:title="@string/system_expandnotifs_apps_title"
 			android:key="pref_key_system_expandheadups_apps"
+			android:dependency="pref_key_system_expandheadups"
 			miuizer:indentLevel="1"
 			miuizer:countAsSummary="true" />
 
@@ -983,12 +929,6 @@
 			miuizer:dynamic="true"
 			miuizer:indentLevel="1"
 			miuizer:countAsSummary="true" />
-
-		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_betterpopups_swipedown"
-			android:summary="@string/system_betterpopups_swipedown_summ"
-			android:title="@string/system_betterpopups_swipedown_title"
-			android:defaultValue="false" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_betterpopups_disablewhenmute"
@@ -1024,12 +964,6 @@
 			android:key="pref_key_system_fw_noblacklist"
 			android:title="@string/system_fw_noblacklist_title"
 			android:summary="@string/system_fw_noblacklist_summ"
-			android:defaultValue="false" />
-
-		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_fw_sticky"
-			android:title="@string/system_fw_sticky_title"
-			android:summary="@string/system_fw_sticky_summ"
 			android:defaultValue="false" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
@@ -1129,9 +1063,8 @@
 			android:defaultValue="false" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_ls_force_systemfonts"
-			android:title="@string/system_qs_force_systemfonts_title"
-			android:defaultValue="false"
+			android:key="pref_key_system_lockscreen_disable_edit"
+			android:title="@string/system_lockscreen_disable_edit_title"
 			/>
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
@@ -1196,12 +1129,6 @@
 			android:title="@string/system_securelock_title"
 			android:defaultValue="false" />
 
-		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_securecontrolcenter"
-			android:summary="@string/system_securecontrolcenter_summ"
-			android:title="@string/system_securecontrolcenter_title"
-			android:defaultValue="false" />
-
 		<name.monwf.customiuizer.prefs.PreferenceEx
 			android:key="pref_key_system_secureqs_cat"
 			android:title="@string/system_secureqs_title"
@@ -1241,17 +1168,10 @@
 		android:key="pref_key_system_cat_other"
 		android:title="@string/system_mods_other">
 
-		<name.monwf.customiuizer.prefs.PreferenceEx
-			android:key="pref_key_system_airplanemodeconfig"
-			android:title="@string/system_airplanemodeconfig_title"
-			android:summary="@string/system_airplanemodeconfig_summ" />
-
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_nodarkforce"
-			android:title="@string/system_nodarkforce_title"
-			android:summary="@string/system_nodarkforce_summ"
-			app:isPreferenceVisible="false"
-			android:defaultValue="false" />
+			android:key="pref_key_system_force_darken_allapps"
+			android:title="@string/system_force_darken_allapps_title"
+			/>
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_wifipassword"
@@ -1369,22 +1289,6 @@
 			android:dependency="pref_key_system_cleanopenwith"
 			miuizer:indentLevel="1" />
 
-		<name.monwf.customiuizer.prefs.ListPreferenceEx
-			android:key="pref_key_system_defaultusb"
-			android:title="@string/system_defaultusb_title"
-			android:summary="@string/system_defaultusb_summ"
-			android:entries="@array/usbconfigs"
-			android:entryValues="@array/usbconfigs_val"
-			android:defaultValue="none" />
-
-		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-			android:key="pref_key_system_defaultusb_unsecure"
-			android:title="@string/system_defaultusb_unsecure_title"
-			android:summary="@string/system_defaultusb_unsecure_summ"
-			android:defaultValue="false"
-			android:dependency="pref_key_system_defaultusb"
-			miuizer:indentLevel="1" />
-
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_forceclose"
 			android:title="@string/system_forceclose_title"
@@ -1419,17 +1323,6 @@
 			android:entryValues="@array/screenshotpath_val"
 			android:defaultValue="1"
 			miuizer:valueAsSummary="true" />
-
-		<name.monwf.customiuizer.prefs.SeekBarPreference
-			android:key="pref_key_system_screenshot_floattime"
-			android:title="@string/system_screenshot_floattime_title"
-			android:summary="@string/system_screenshot_floattime_summ"
-			android:defaultValue="0"
-			miuizer:offtext="@string/array_default"
-			miuizer:minValue="0"
-			miuizer:maxValue="60"
-			miuizer:stepValue="5"
-			miuizer:format="@string/format_d_s" />
 
 		<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 			android:title="@string/system_mods_volumeblur"

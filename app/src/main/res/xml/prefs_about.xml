@@ -15,15 +15,18 @@
 			android:title="@string/support_donate_title"
 			android:summary="@string/support_donate_other_summ"
 			android:key="pref_key_payother" />
-		<name.monwf.customiuizer.prefs.PreferenceEx
-			android:title="@string/support_xda_title"
-			android:summary="@string/support_xda_summ"
-			android:key="pref_key_xda" />
-		<name.monwf.customiuizer.prefs.PreferenceEx
-			android:title="@string/support_4pda_title"
-			android:summary="@string/support_4pda_summ"
-			app:isPreferenceVisible="false"
-			android:key="pref_key_4pda" />
+	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
+
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
+		android:title="@string/miuizer"
+		android:key="pref_key_miuizer_settings">
+		<name.monwf.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_miuizer_locale"
+			android:title="@string/miuizer_locale_title"
+			android:summary="@string/miuizer_locale_summ"
+			android:entries="@array/placeholder_array"
+			android:entryValues="@array/placeholder_array_strval"
+			android:defaultValue="auto" />
 	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

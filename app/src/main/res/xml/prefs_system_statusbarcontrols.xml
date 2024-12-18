@@ -53,7 +53,16 @@
 
 	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_system_statusbarcontrols_dt"
-		android:title="@string/system_statusbarcontrols_dt_title"
+		android:title="@string/launcher_doubletap_title" />
+
+	<name.monwf.customiuizer.prefs.PreferenceEx
+		android:key="pref_key_system_statusbarcontrols_dt_left"
+		android:title="@string/system_statusbarcontrols_dt_left_title"
+		android:defaultValue="false" />
+
+	<name.monwf.customiuizer.prefs.PreferenceEx
+		android:key="pref_key_system_statusbarcontrols_dt_right"
+		android:title="@string/system_statusbarcontrols_dt_right_title"
 		android:defaultValue="false" />
 
 	<name.monwf.customiuizer.prefs.PreferenceEx

@@ -51,6 +51,7 @@
 		<item>@string/array_global_actions_expandsidebar</item>
 		<item>@string/array_global_actions_floatingwindow</item>
 		<item>@string/array_global_actions_pinningwindow</item>
+		<item>@string/array_global_actions_splitscreen</item>
 		<item>@string/array_global_actions_volume</item>
 		<item>@string/array_global_actions_volume_up</item>
 		<item>@string/array_global_actions_volume_down</item>
@@ -61,7 +62,6 @@
 		<item>@string/array_global_actions_powermenu</item>
 		<item>@string/array_global_actions_clearmemory</item>
 		<item>@string/array_global_actions_invertcolors</item>
-		<item>@string/array_global_actions_switchkeyboard</item>
 		<item>@string/array_global_actions_launch</item>
 		<item>@string/array_global_actions_shortcut</item>
 		<item>@string/array_global_actions_activity</item>
@@ -83,6 +83,7 @@
 		<item>26</item>
 		<item>27</item>
 		<item>28</item>
+		<item>29</item>
 		<item>17</item>
 		<item>18</item>
 		<item>19</item>
@@ -93,7 +94,6 @@
 		<item>12</item>
 		<item>13</item>
 		<item>14</item>
-		<item>21</item>
 		<item>8</item>
 		<item>9</item>
 		<item>20</item>
@@ -121,7 +121,6 @@
 		<item>@string/array_global_actions_powermenu</item>
 		<item>@string/array_global_actions_clearmemory</item>
 		<item>@string/array_global_actions_invertcolors</item>
-		<item>@string/array_global_actions_switchkeyboard</item>
 		<item>@string/array_global_actions_launch</item>
 		<item>@string/array_global_actions_shortcut</item>
 		<item>@string/array_global_actions_activity</item>
@@ -145,7 +144,6 @@
 		<item>12</item>
 		<item>13</item>
 		<item>14</item>
-		<item>21</item>
 		<item>8</item>
 		<item>9</item>
 		<item>20</item>
@@ -171,7 +169,6 @@
 		<item>@string/array_global_actions_scrolltotop</item>
 		<item>@string/array_global_actions_clearmemory</item>
 		<item>@string/array_global_actions_invertcolors</item>
-		<item>@string/array_global_actions_switchkeyboard</item>
 		<item>@string/array_global_actions_launch</item>
 		<item>@string/array_global_actions_shortcut</item>
 		<item>@string/array_global_actions_activity</item>
@@ -199,7 +196,6 @@
 		<item>25</item>
 		<item>13</item>
 		<item>14</item>
-		<item>21</item>
 		<item>8</item>
 		<item>9</item>
 		<item>20</item>
@@ -217,7 +213,6 @@
 		<item>@string/array_global_actions_launch</item>
 		<item>@string/array_global_actions_shortcut</item>
 		<item>@string/array_global_actions_activity</item>
-		<item>@string/array_global_actions_toggle</item>
 	</string-array>
 	<integer-array name="global_lockscreen_actions_val">
 		<item>1</item>
@@ -285,17 +280,6 @@
 		<item>4</item>
 	</string-array>
 
-    <string-array name="defaultactions">
-		<item>@string/array_default</item>
-		<item>@string/array_allow</item>
-		<item>@string/array_deny</item>
-	</string-array>
-	<string-array name="defaultactions_val">
-		<item>1</item>
-		<item>2</item>
-		<item>3</item>
-	</string-array>
-
 	<string-array name="incallui">
 		<item>@string/array_default</item>
 		<item>@string/array_home</item>
@@ -320,21 +304,10 @@
 		<item>3</item>
 	</string-array>
 
-	<string-array name="screenrotate">
-		<item>@string/array_default</item>
-		<item>@string/array_screen_anim_none</item>
-		<item>@string/array_screen_anim_fade</item>
-	</string-array>
-	<string-array name="screenrotate_val">
-		<item>1</item>
-		<item>2</item>
-		<item>3</item>
-	</string-array>
-
     <string-array name="lightups">
 		<item>@string/array_default</item>
-		<item>@string/array_all</item>
-		<item>@string/array_allbutanim</item>
+		<item>@string/array_enable</item>
+		<item>@string/array_lightupwithouanim</item>
 	</string-array>
 	<string-array name="lightups_val">
 		<item>1</item>
@@ -364,6 +337,12 @@
 		<item>3</item>
 	</string-array>
 
+	<string-array name="netspeedstyle">
+		<item>@string/array_default</item>
+		<item>@string/system_detailednetspeed_title</item>
+		<item>@string/system_statusbar_batterytempandcurrent_singlerow_title</item>
+	</string-array>
+
 	<string-array name="netspeedicons">
 		<item>@string/array_netspeedicons_no</item>
 		<item>@string/array_netspeedicons_arrows</item>
@@ -373,15 +352,6 @@
 		<item>1</item>
 		<item>2</item>
 		<item>3</item>
-	</string-array>
-
-	<string-array name="launchers">
-		<item>@string/launcher_mods</item>
-		<item>@string/poco_mods</item>
-	</string-array>
-	<string-array name="launchers_val">
-		<item>1</item>
-		<item>2</item>
 	</string-array>
 
 	<string-array name="expandnotifs">
@@ -428,31 +398,6 @@
 		<item>theme</item>
 	</string-array>
 
-	<string-array name="autogroupnotif">
-		<item>@string/array_system_default</item>
-		<item>@string/array_autogroupnotif_no</item>
-		<item>3</item>
-		<item>4</item>
-		<item>5</item>
-		<item>6</item>
-		<item>7</item>
-		<item>8</item>
-		<item>9</item>
-		<item>10</item>
-	</string-array>
-	<string-array name="autogroupnotif_val">
-		<item>1</item>
-		<item>2</item>
-		<item>3</item>
-		<item>4</item>
-		<item>5</item>
-		<item>6</item>
-		<item>7</item>
-		<item>8</item>
-		<item>9</item>
-		<item>10</item>
-	</string-array>
-
 	<string-array name="media_action">
 		<item>@string/array_media_none</item>
 		<item>@string/array_media_playpause</item>
@@ -465,24 +410,6 @@
 		<item>87</item>
 		<item>88</item>
 	</string-array>
-
-	<array name="miui_volume_timer_segments">
-		<item>@null</item>
-		<item>1800</item>
-		<item>3600</item>
-		<item>7200</item>
-		<item>10800</item>
-		<item>14400</item>
-		<item>18000</item>
-		<item>21600</item>
-		<item>28800</item>
-		<item>36000</item>
-		<item>43200</item>
-	</array>
-
-	<array name="miui_resize_black_list">
-		<item>ab.cd.xyz</item>
-	</array>
 
 	<string-array name="settingsicon">
 		<item>@string/array_disable</item>
@@ -549,21 +476,6 @@
 		<item>5</item>
 	</string-array>
 
-	<string-array name="usbconfigs">
-		<item>@string/array_default</item>
-		<item>@string/system_defaultusb_config_mtp</item>
-		<item>@string/system_defaultusb_config_ptp</item>
-		<item>@string/system_defaultusb_config_rndis</item>
-		<item>@string/system_defaultusb_config_midi</item>
-	</string-array>
-	<string-array name="usbconfigs_val">
-		<item>none</item>
-		<item>mtp</item>
-		<item>ptp</item>
-		<item>rndis</item>
-		<item>midi</item>
-	</string-array>
-
     <string-array name="openwithtest">
 		<item>@string/array_image</item>
 		<item>@string/array_audio</item>
@@ -571,17 +483,6 @@
 		<item>@string/array_doc</item>
 		<item>@string/array_archive</item>
 		<item>@string/array_any</item>
-	</string-array>
-
-	<string-array name="selectivebt">
-		<item>@string/array_default</item>
-		<item>@string/array_mobiletypeicon_connected</item>
-		<item>@string/array_always</item>
-	</string-array>
-	<string-array name="selectivebt_val">
-		<item>1</item>
-		<item>2</item>
-		<item>3</item>
 	</string-array>
 
     <string-array name="albumartscale">
@@ -661,19 +562,6 @@
 		<item>3</item>
 	</string-array>
 
-	<string-array name="callactions">
-		<item>@string/array_default</item>
-		<item>@string/array_singletap</item>
-		<item>@string/array_doubletap</item>
-		<item>@string/array_longpress</item>
-	</string-array>
-	<string-array name="callactions_val">
-		<item>1</item>
-		<item>2</item>
-		<item>3</item>
-		<item>4</item>
-	</string-array>
-
 	<string-array name="screenshotformat">
 		<item>JPEG</item>
 		<item>PNG</item>
@@ -696,17 +584,6 @@
 		<item>2</item>
 		<item>3</item>
 <!--		<item>4</item>-->
-	</string-array>
-
-    <string-array name="inactivebrightness">
-		<item>@string/array_default</item>
-		<item>@string/array_displayonly</item>
-		<item>@string/array_hide</item>
-	</string-array>
-	<string-array name="inactivebrightness_val">
-		<item>1</item>
-		<item>2</item>
-		<item>3</item>
 	</string-array>
 
 	<string-array name="charginginfo">
@@ -737,17 +614,6 @@
 		<item>10</item>
 		<item>15</item>
 		<item>-1</item>
-	</string-array>
-
-    <string-array name="airplanemodeconfigs">
-		<item>@string/array_keep</item>
-		<item>@string/array_turn_off</item>
-		<item>@string/array_turn_off_disable</item>
-	</string-array>
-	<string-array name="airplanemodeconfigs_val">
-		<item>0</item>
-		<item>1</item>
-		<item>2</item>
 	</string-array>
 
 	<string-array name="onoff">
@@ -782,12 +648,6 @@
 		<item>@string/array_current</item>
 		<item>@string/array_temp_power</item>
 		<item>@string/array_power_current</item>
-	</string-array>
-
-	<string-array name="system_cc_bluetooth_tile_style_list">
-		<item>@string/array_default</item>
-		<item>@string/system_cc_bluetooth_tile_style_2rows2cols</item>
-		<item>@string/system_cc_bluetooth_tile_style_3rows</item>
 	</string-array>
 
 	<string-array name="devicetempdetails">
@@ -827,5 +687,11 @@
 	</integer-array>
 	<string-array name="placeholder_array_strval">
 		<item>1</item>
+	</string-array>
+
+	<string-array name="launcher_wallpaper_colormodes">
+		<item>@string/array_default</item>
+		<item>@string/various_calluibright_day_title</item>
+		<item>@string/various_calluibright_night_title</item>
 	</string-array>
 </resources>

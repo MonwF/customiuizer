@@ -4,7 +4,6 @@ import static name.monwf.customiuizer.mods.GlobalActions.ACTION_PREFIX;
 import static name.monwf.customiuizer.mods.utils.XposedHelpers.findClass;
 import static name.monwf.customiuizer.mods.utils.XposedHelpers.findClassIfExists;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -21,7 +20,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.database.ContentObserver;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -34,12 +32,8 @@ import android.os.Message;
 import android.os.SystemClock;
 import android.os.UserHandle;
 import android.provider.Settings;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
-import android.text.style.RelativeSizeSpan;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,30 +41,33 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.luckypray.dexkit.query.FindMethod;
+import org.luckypray.dexkit.query.matchers.MethodMatcher;
+import org.luckypray.dexkit.result.MethodData;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 
 import io.github.libxposed.api.XposedInterface.AfterHookCallback;
 import io.github.libxposed.api.XposedInterface.BeforeHookCallback;
 import io.github.libxposed.api.XposedModuleInterface.PackageLoadedParam;
 import io.github.libxposed.api.XposedModuleInterface.SystemServerLoadedParam;
+import miui.os.Build;
 import miui.process.ForegroundInfo;
 import miui.process.ProcessManager;
 import name.monwf.customiuizer.MainModule;
@@ -286,16 +283,15 @@ public class Various {
 			XposedHelpers.log(t);
 		}
 	}
-	static ArrayList<String> MIUI_CORE_APPS = new ArrayList<String>(Arrays.asList(
-		"com.lbe.security.miui", "com.miui.securitycenter", "com.miui.packageinstaller"
-	));
+	static Set<String> MIUI_CORE_APPS = Set.of(
+		"com.lbe.security.miui", "com.miui.securitycenter", "com.miui.packageinstaller", "com.miui.home"
+	);
 	public static void AppsDisableServiceHook(SystemServerLoadedParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.android.server.pm.PackageManagerServiceImpl", lpparam.getClassLoader(), "canBeDisabled", String.class, int.class, new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
-				boolean canBeDisabled = (boolean) param.getResult();
-				if (!canBeDisabled && !MIUI_CORE_APPS.contains(param.getArgs()[0])) {
-					param.setResult(true);
+			protected void before(final BeforeHookCallback param) throws Throwable {
+				if (!MIUI_CORE_APPS.contains(param.getArgs()[0])) {
+					param.returnAndSkip(null);
 				}
 			}
 		});
@@ -361,6 +357,19 @@ public class Various {
 					} else setAppState(act, mPackageInfo.packageName, item, false);
 				} else setAppState(act, mPackageInfo.packageName, item, true);
 				param.setResult(true);
+			}
+		});
+	}
+	public static void HideReportButtonHook(PackageLoadedParam lpparam) {
+		ModuleHelper.findAndHookMethod("com.miui.appmanager.ApplicationsDetailsActivity", lpparam.getClassLoader(), "onCreateOptionsMenu", Menu.class, new MethodHook() {
+			@Override
+			protected void after(final AfterHookCallback param) throws Throwable {
+				Activity act = (Activity)param.getThisObject();
+				Menu menu = (Menu)param.getArgs()[0];
+				MenuItem reportMenu = menu.findItem(4);
+				if (reportMenu != null) {
+					reportMenu.setVisible(false);
+				}
 			}
 		});
 	}
@@ -455,8 +464,8 @@ public class Various {
 		final boolean[] isHooked = {false, false};
 		boolean enableSideBar = MainModule.mPrefs.getBoolean("various_swipe_expand_sidebar");
 		if (!enableSideBar) {
-			MainModule.resHooks.setDensityReplacement("com.miui.securitycenter", "dimen", "sidebar_height_default", 8);
-			MainModule.resHooks.setDensityReplacement("com.miui.securitycenter", "dimen", "sidebar_height_vertical", 8);
+			MainModule.resHooks.setThemeValueReplacement("com.miui.securitycenter", "dimen", "sidebar_height_default", 8);
+			MainModule.resHooks.setThemeValueReplacement("com.miui.securitycenter", "dimen", "sidebar_height_vertical", 8);
 		}
 		Class <?> RegionSamplingHelper = findClassIfExists("com.android.systemui.navigationbar.gestural.RegionSamplingHelper", lpparam.getClassLoader());
 		if (RegionSamplingHelper == null) {
@@ -594,6 +603,33 @@ public class Various {
 		});
 	}
 
+	public static void PersistPrivacyThumbnailBlur(PackageLoadedParam lpparam) {
+		ModuleHelper.findAndHookMethod(ContentResolver.class, "call", Uri.class, String.class, String.class, Bundle.class, new MethodHook() {
+			@Override
+			protected void before(final BeforeHookCallback param) throws Throwable {
+				if ("callPreference".equals(param.getArgs()[1]) && "GET".equals(param.getArgs()[2])) {
+					Bundle extras = (Bundle) param.getArgs()[3];
+					if (extras != null && "pref_key_last_upload_privacy_thumbnail_blur_time".equals(extras.getString("key"))) {
+						Bundle res = new Bundle();
+						res.putLong("pref_key_last_upload_privacy_thumbnail_blur_time", java.lang.System.currentTimeMillis() - 10000);
+						param.returnAndSkip(res);
+					}
+				}
+			}
+		});
+		if (!Build.IS_INTERNATIONAL_BUILD) {
+			ModuleHelper.findAndHookMethod(URLConnection.class, "setUseCaches", boolean.class, new MethodHook() {
+				@Override
+				protected void before(final BeforeHookCallback param) throws Throwable {
+					URLConnection httpURLConnection = (URLConnection) param.getThisObject();
+					if ("/user/cat".equals(httpURLConnection.getURL().getPath())) {
+						((HttpURLConnection) httpURLConnection).setRequestMethod("HEAD");
+					}
+				}
+			});
+		}
+	}
+
 	public static void NoLowBatteryWarningHook() {
 		MethodHook settingHook = new MethodHook() {
 			@Override
@@ -608,29 +644,38 @@ public class Various {
 	}
 
 	public static void OpenByDefaultHook(PackageLoadedParam lpparam) {
-		final int[] defaultViewId = {-1};
+		final int defaultOpenTitleId = MainModule.resHooks.addFakeResource("various_open_by_default_title", R.string.various_open_by_default_title, "string");
 		ModuleHelper.findAndHookMethod("com.miui.appmanager.ApplicationsDetailsActivity", lpparam.getClassLoader(), "initView", new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				if (defaultViewId[0] == -1) {
-					Activity act = (Activity) param.getThisObject();
-					defaultViewId[0] = act.getResources().getIdentifier("am_detail_default", "id", "com.miui.securitycenter");
-					MainModule.resHooks.setResReplacement("com.miui.securitycenter", "string", "app_manager_default_open_title", R.string.various_open_by_default_title);
-				}
-			}
-		});
+			protected void after(final AfterHookCallback param) throws Throwable {
+				Activity act = (Activity) param.getThisObject();
+				int anchorViewId= act.getResources().getIdentifier("am_storage_view", "id", "com.miui.securitycenter");
+				View anchorView = act.findViewById(anchorViewId);
+				LinearLayout actionContainer = (LinearLayout) anchorView.getParent();
+				Class<?> BannerItem = findClass("com.miui.appmanager.widget.AppDetailBannerItemView", lpparam.getClassLoader());
+				if (BannerItem != null) {
+					int childCount = actionContainer.getChildCount();
+					LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
+					LinearLayout defaultView = (LinearLayout) XposedHelpers.newInstance(BannerItem, actionContainer.getContext(), null);
+					XposedHelpers.callMethod(defaultView, "setTitle", defaultOpenTitleId);
+					actionContainer.addView(defaultView, childCount - 2, lp);
+					int paddingStart = anchorView.getPaddingStart();
+					int paddingEnd = anchorView.getPaddingEnd();
+					defaultView.setPaddingRelative(paddingStart, 0, paddingEnd, 0);
+					defaultView.setMinimumHeight(anchorView.getMinimumHeight());
+					int itemBackgroundId = act.getResources().getIdentifier("am_card_bg_selector", "drawable", "com.miui.securitycenter");
+					defaultView.setBackgroundResource(itemBackgroundId);
+					defaultView.setGravity(Gravity.CENTER_VERTICAL);
 
-		ModuleHelper.findAndHookMethod("com.miui.appmanager.ApplicationsDetailsActivity", lpparam.getClassLoader(), "onClick", View.class, new MethodHook() {
-			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				View view = (View) param.getArgs()[0];
-				if (view.getId() == defaultViewId[0] && defaultViewId[0] != -1) {
-					Activity act = (Activity) param.getThisObject();
-					Intent intent = new Intent("android.settings.APP_OPEN_BY_DEFAULT_SETTINGS");
-					String pkgName = act.getIntent().getStringExtra("package_name");
-					intent.setData(Uri.parse("package:".concat(pkgName)));
-					act.startActivity(intent);
-					param.returnAndSkip(null);
+					defaultView.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							Intent intent = new Intent("android.settings.APP_OPEN_BY_DEFAULT_SETTINGS");
+							String pkgName = act.getIntent().getStringExtra("package_name");
+							intent.setData(Uri.parse("package:".concat(pkgName)));
+							act.startActivity(intent);
+						}
+					});
 				}
 			}
 		});
@@ -664,60 +709,32 @@ public class Various {
 			}
 		});
 		ModuleHelper.findAndHookMethod("com.miui.securityscan.ui.main.MainContentFrame", lpparam.getClassLoader(), "onClick", View.class, HookerClassHelper.DO_NOTHING);
-//		ModuleHelper.findAndHookMethod("com.miui.securityscan.ui.main.MainContentFrame", lpparam.getClassLoader(), "setActionButtonText", java.lang.String.class, new MethodHook() {
-//			int btnId = 0;
-//			@Override
-//			protected void after(final AfterHookCallback param) throws Throwable {
-//				View mainFrame = (View) param.getThisObject();
-//				if (btnId == 0) {
-//					btnId = mainFrame.getResources().getIdentifier("btn_action", "id", lpparam.getPackageName());
-//				}
-//				View btn = mainFrame.findViewById(btnId);
-//				if (btn != null) {
-//					btn.setVisibility(View.GONE);
-//					btn.setOnClickListener(null);
-//				}
-//				XposedHelpers.callMethod(param.getThisObject(), "setContentMainClickable", false);
-//			}
-//		});
 	}
 
-	public static void SmartClipboardActionHook(PackageLoadedParam lpparam) {
-		int opt = MainModule.mPrefs.getStringAsInt("various_clipboard_defaultaction", 1);
-		if (opt == 3) {
-			ModuleHelper.findAndHookMethod("com.lbe.security.ui.ClipboardTipDialog", lpparam.getClassLoader(), "customReadClipboardDialog", Context.class, String.class, HookerClassHelper.returnConstant(false));
-		}
-		else {
-			ModuleHelper.findAndHookMethod("com.lbe.security.ui.ClipboardTipDialog", lpparam.getClassLoader(), "customReadClipboardDialog", Context.class, String.class, HookerClassHelper.returnConstant(true));
+	public static void DisableDefraudAppsCheck(PackageLoadedParam lpparam) {
+		MethodData methodData = XposedHelpers.bridge.findMethod(FindMethod.create()
+			.excludePackages("tmsdk", "tmsdkobf", "xcrash", "com.tencent", "com.xiaomi")
+			.matcher(MethodMatcher.create().usingStrings("getUnSystemAppList error", "AntiDefraudAppManager"))
+		).singleOrNull();
 
-			Class<?> SecurityPromptHandler = findClass("com.lbe.security.ui.SecurityPromptHandler", lpparam.getClassLoader());
-			ModuleHelper.hookAllMethods(SecurityPromptHandler, "handleNewRequest", new MethodHook() {
+		if (methodData != null) {
+			MethodHook fakeUserAppsHook = new MethodHook() {
 				@Override
 				protected void before(final BeforeHookCallback param) throws Throwable {
-					Object permissionRequest = param.getArgs()[0];
-					long permId = (long) XposedHelpers.callMethod(permissionRequest, "getPermission");
-					if (permId == 274877906944L) {
-						XposedHelpers.setAdditionalInstanceField(param.getThisObject(), "currentStopped", XposedHelpers.getBooleanField(param.getThisObject(), "mStopped"));
-					}
+					param.returnAndSkip(new ArrayList());
 				}
-				@Override
-				protected void after(final AfterHookCallback param) throws Throwable {
-					Object permissionRequest = param.getArgs()[0];
-					long permId = (long) XposedHelpers.callMethod(permissionRequest, "getPermission");
-					if (permId == 274877906944L) {
-						boolean mStopped = (boolean) XposedHelpers.getAdditionalInstanceField(param.getThisObject(), "currentStopped");
-						if (mStopped) {
-							XposedHelpers.callMethod(param.getThisObject(), "gotChoice", 3, true, true);
-						}
-						XposedHelpers.removeAdditionalInstanceField(param.getThisObject(), "currentStopped");
-					}
-				}
-			});
+			};
+			try {
+				Method method = methodData.getMethodInstance(lpparam.getClassLoader());
+				ModuleHelper.hookMethod(method, fakeUserAppsHook);
+			}
+			catch (Throwable ign) {
+			}
 		}
 	}
 
 	public static void ShowTempInBatteryHook(PackageLoadedParam lpparam) {
-		Class<?> InterceptBaseFragmentClass = XposedHelpers.findClass("com.miui.powercenter.BatteryFragment", lpparam.getClassLoader());
+		Class<?> InterceptBaseFragmentClass = XposedHelpers.findClass("com.miui.powercenter.nightcharge.SmartChargeFragment", lpparam.getClassLoader());
 		Class<?>[] innerClasses = InterceptBaseFragmentClass.getDeclaredClasses();
 		Class<?> HandlerClass = null;
 		for (Class<?> innerClass : innerClasses) {
@@ -749,21 +766,8 @@ public class Various {
 						Object frag = XposedHelpers.callMethod(wk, "get");
 						Activity batteryView = (Activity) XposedHelpers.callMethod(frag, "getActivity");
 						int temp = batteryView.registerReceiver(null, new IntentFilter("android.intent.action.BATTERY_CHANGED")).getIntExtra("temperature", 0) / 10;
-						int symbolResId = batteryView.getResources().getIdentifier("temp_symbol", "id", lpparam.getPackageName());
-						int stateResId = batteryView.getResources().getIdentifier("current_temperature_state", "id", lpparam.getPackageName());
-						TextView stateTv = batteryView.findViewById(stateResId);
-						if (symbolResId > 0) {
-							stateTv.setVisibility(View.GONE);
-							TextView symbolTv = batteryView.findViewById(symbolResId);
-							symbolTv.setVisibility(View.VISIBLE);
-							int digitResId = batteryView.getResources().getIdentifier("current_temperature_value", "id", lpparam.getPackageName());
-							TextView digitTv = batteryView.findViewById(digitResId);
-							digitTv.setText(temp + "");
-							digitTv.setVisibility(View.VISIBLE);
-						}
-						else {
-							stateTv.setText(temp + "℃");
-						}
+						Object tempPreference = XposedHelpers.callMethod(frag, "findPreference", "reference_current_temp");
+						XposedHelpers.callMethod(tempPreference, "setText", temp + "℃");
 					}
 				}
 			});
@@ -775,40 +779,20 @@ public class Various {
 			protected void before(final BeforeHookCallback param) throws Throwable {
 				ArrayList<String> blackList = new ArrayList<String>();
 				blackList.add("xx.yy.zz");
-				int topMethod = 10;
 				StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-				for (StackTraceElement el: stackTrace) {
-					if (el != null && topMethod < 20
-						&& (el.getClassName().contains("edit.DockAppEditActivity") || el.getClassName().contains("BubblesSettings"))
+				int length = Math.min(stackTrace.length - 1, 15);
+				for (int i = 8; i < length;i++) {
+					StackTraceElement el = stackTrace[i];
+					if (el.getClassName().contains("DockAppEditActivity")
+						|| el.getClassName().contains("BubblesSettings")
 					) {
 						return;
 					}
-					topMethod++;
 				}
 				param.returnAndSkip(blackList);
 			}
 		};
 		ModuleHelper.hookAllMethodsSilently("android.util.MiuiMultiWindowUtils", lpparam.getClassLoader(), "getFreeformSuggestionList", clearHook);
-	}
-	public static void UnlockClipboardAndLocationHook(PackageLoadedParam lpparam) {
-		ModuleHelper.findAndHookMethod("com.miui.permcenter.settings.PrivacyLabActivity", lpparam.getClassLoader(), "onCreateFragment", new MethodHook() {
-			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				Class<?> utilCls = findClassIfExists("com.miui.permcenter.utils.h", lpparam.getClassLoader());
-				if (utilCls != null) {
-					Object fm = ModuleHelper.getStaticObjectFieldSilently(utilCls, "b");
-					if (!ModuleHelper.NOT_EXIST_SYMBOL.equals(fm)) {
-						try {
-							Map<String, Integer> featMap = (Map<String, Integer>) fm;
-							featMap.put("mi_lab_ai_clipboard_enable", 0);
-							featMap.put("mi_lab_blur_location_enable", 0);
-						}
-						catch (Throwable ignore) {
-						}
-					}
-				}
-			}
-		});
 	}
 
 	public static void AlarmCompatHook() {
@@ -1033,77 +1017,61 @@ public class Various {
 				}
 			});
 		}
-		else {
-			Class<?> InstallActivity = findClassIfExists("com.android.packageinstaller.PackageInstallerActivity", lpparam.getClassLoader());
-			if (InstallActivity == null) {
-				XposedHelpers.log("AppInfoDuringMiuiInstallHook", "Cannot find appropriate activity");
-				return;
-			}
-			Method[] methods = XposedHelpers.findMethodsByExactParameters(InstallActivity, void.class, String.class);
-			if (methods.length == 0) {
-				XposedHelpers.log("AppInfoDuringMiuiInstallHook", "Cannot find appropriate method");
-				return;
-			}
-			for (Method method: methods)
-				ModuleHelper.hookMethod(method, new MethodHook() {
-					@Override
-					protected void after(final AfterHookCallback param) throws Throwable {
-						Activity act = (Activity)param.getThisObject();
-						TextView version = act.findViewById(act.getResources().getIdentifier("install_version", "id", lpparam.getPackageName()));
-						Field fPkgInfo = XposedHelpers.findFirstFieldByExactType(param.getThisObject().getClass(), PackageInfo.class);
-						PackageInfo mPkgInfo = (PackageInfo)fPkgInfo.get(param.getThisObject());
-						if (version == null || mPkgInfo == null) return;
-
-						TextView source = act.findViewById(act.getResources().getIdentifier("install_source", "id", lpparam.getPackageName()));
-						source.setGravity(Gravity.CENTER_HORIZONTAL);
-						source.setText(mPkgInfo.packageName);
-
-						PackageInfo mAppInfo = null;
-						try {
-							mAppInfo = act.getPackageManager().getPackageInfo(mPkgInfo.packageName, 0);
-						} catch (Throwable ignore) {}
-
-						//String size = "";
-						//String[] texts = version.getText().toString().split("\\|");
-						//if (texts.length >= 2) size = texts[1].trim();
-
-						Resources modRes = ModuleHelper.getModuleRes(act);
-
-						SpannableStringBuilder builder = new SpannableStringBuilder();
-						//if (!TextUtils.isEmpty(size)) builder.append(size).append("\n");
-						builder.append(modRes.getString(R.string.various_installappinfo_vername)).append(":\t\t");
-						if (mAppInfo != null) builder.append(mAppInfo.versionName).append("  ➟  ");
-						builder.append(mPkgInfo.versionName).append("\n");
-						builder.append(modRes.getString(R.string.various_installappinfo_vercode)).append(":\t\t");
-						if (mAppInfo != null) builder.append(String.valueOf(mAppInfo.versionCode)).append("  ➟  ");
-						builder.append(String.valueOf(mPkgInfo.versionCode)).append("\n");
-						builder.append(modRes.getString(R.string.various_installappinfo_sdk)).append(":\t\t");
-						if (mAppInfo != null) builder.append(String.valueOf(mAppInfo.applicationInfo.minSdkVersion)).append("-").append(String.valueOf(mAppInfo.applicationInfo.targetSdkVersion)).append("  ➟  ");
-						builder.append(String.valueOf(mPkgInfo.applicationInfo.minSdkVersion)).append("-").append(String.valueOf(mPkgInfo.applicationInfo.targetSdkVersion));
-
-						version.setGravity(Gravity.CENTER_HORIZONTAL);
-						version.setSingleLine(false);
-						version.setMaxLines(10);
-						version.setText(builder);
-						version.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13.09f);
-					}
-				});
-		}
 	}
 
 	public static void MiuiPackageInstallerHook(PackageLoadedParam lpparam) {
-		ModuleHelper.findAndHookMethod("android.os.SystemProperties", lpparam.getClassLoader(), "getBoolean", String.class, boolean.class, new MethodHook() {
-			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				if ("persist.sys.allow_sys_app_update".equals(param.getArgs()[0])) {
-					param.returnAndSkip(true);
-				}
-			}
-		});
 		ModuleHelper.findAndHookMethodSilently("com.miui.packageInstaller.InstallStart", lpparam.getClassLoader(), "getCallingPackage", new MethodHook() {
 			@Override
 			protected void before(final BeforeHookCallback param) throws Throwable {
 				param.returnAndSkip("com.android.fileexplorer");
+			}
+		});
+	}
+	public static void PurePackageInstallerHook(PackageLoadedParam lpparam) {
+		ModuleHelper.findAndHookMethod("android.app.SharedPreferencesImpl", lpparam.getClassLoader(), "getBoolean", String.class, boolean.class, new MethodHook() {
+			@Override
+			protected void before(BeforeHookCallback param) throws Throwable {
+				String prefKey = (String) param.getArgs()[0];
+				if ("ads_enable".equals(prefKey)
+					|| "app_store_recommend".equals(prefKey)
+					|| "secure_verify_enable".equals(prefKey)
+				) {
+					param.returnAndSkip(false);
+				}
+				else if ("secure_verify_cloud_once".equals(prefKey)) {
+					param.returnAndSkip(true);
+				}
+			}
+		});
+		ModuleHelper.findAndHookMethod(Settings.System.class, "getInt", ContentResolver.class, String.class, int.class, new MethodHook() {
+			@Override
+			protected void before(BeforeHookCallback param) throws Throwable {
+				String prefKey = (String) param.getArgs()[1];
+				if ("virus_scan_install".equals(prefKey)
+				) {
+					param.returnAndSkip(0);
+				}
+			}
+		});
+		ModuleHelper.findAndHookMethod(Settings.Secure.class, "getInt", ContentResolver.class, String.class, int.class, new MethodHook() {
+			@Override
+			protected void before(BeforeHookCallback param) throws Throwable {
+				String prefKey = (String) param.getArgs()[1];
+				if ("miui_safe_mode".equals(prefKey)) {
+					param.returnAndSkip(0);
+				}
+			}
+		});
+		ModuleHelper.findAndHookMethod("com.miui.packageInstaller.ui.listcomponets.SafeModeTipViewObject$ViewHolder", lpparam.getClassLoader(), "updateSuggestionMsgState", Context.class, boolean.class, new MethodHook() {
+			@Override
+			protected void after(AfterHookCallback param) throws Throwable {
+				View itemView = (View) XposedHelpers.getObjectField(param.getThisObject(), "itemView");
+				itemView.setVisibility(View.GONE);
+				ViewGroup.LayoutParams layoutParams2 = itemView.getLayoutParams();
+				if (layoutParams2 == null) {
+					return;
+				}
+				layoutParams2.height = 0;
 			}
 		});
 	}

@@ -3,8 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools" >
 
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-    <uses-permission android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS"
-        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -16,23 +14,14 @@
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
-    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS"
-        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.CHANGE_COMPONENT_ENABLED_STATE"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.MANAGE_USB"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.SET_ANIMATION_SCALE"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.MODIFY_DAY_NIGHT_MODE"
         tools:ignore="ProtectedPermissions" />
-
-    <uses-permission android:name="miui.permission.READ_LOGS" />
-    <uses-permission android:name="miui.permission.DUMP_CACHED_LOG" />
-    <uses-permission android:name="com.miui.securitycenter.permission.ACCESS_SECURITY_CENTER_PROVIDER" />
 
     <application
         android:hasFragileUserData="true"
@@ -43,7 +32,6 @@
         android:description="@string/app_slogan"
         android:supportsRtl="true"
         android:name=".MainApplication"
-        android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
         tools:ignore="GoogleAppIndexingWarning">
 

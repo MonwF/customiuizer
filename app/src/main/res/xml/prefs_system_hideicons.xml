@@ -25,14 +25,12 @@
 		android:defaultValue="false" />
 
 	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_statusbaricons_clock"
-		android:title="@string/system_statusbaricons_clock_title"
-		android:defaultValue="false" />
+		android:key="pref_key_system_statusbaricons_privacy_prompt"
+		android:title="@string/system_statusbaricons_privacy_prompt_title" />
 
 	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_nonetspeedseparator"
-		android:title="@string/system_nonetspeedseparator_title"
-		android:summary="@string/system_nonetspeedseparator_summ"
+		android:key="pref_key_system_statusbaricons_clock"
+		android:title="@string/system_statusbaricons_clock_title"
 		android:defaultValue="false" />
 
 	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
@@ -55,12 +53,10 @@
 		miuizer:indentLevel="1"
 		miuizer:format="%d" />
 
-	<name.monwf.customiuizer.prefs.ListPreferenceEx
-		android:key="pref_key_system_statusbaricons_bluetooth"
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_bluetoothicn"
 		android:title="@string/array_global_toggle_bt"
-		android:entries="@array/selectivebt"
-		android:entryValues="@array/selectivebt_val"
-		android:defaultValue="1" />
+		android:defaultValue="false" />
 
 	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbaricons_btbattery"
@@ -182,6 +178,11 @@
 	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbaricons_headset"
 		android:title="@string/system_statusbaricons_headset_title"
+		android:defaultValue="false" />
+
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbaricons_wireless_headset"
+		android:title="@string/system_statusbaricons_wireless_headset_title"
 		android:defaultValue="false" />
 
 	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx

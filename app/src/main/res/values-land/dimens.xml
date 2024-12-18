@@ -1,5 +1,0 @@
-<resources>
-    <dimen name="miui_volume_content_width_expanded">302dp</dimen>
-	<dimen name="miui_volume_ringer_layout_width_expanded">-2px</dimen>
-	<dimen name="miui_volume_column_width_expanded">60dp</dimen>
-</resources>

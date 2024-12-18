@@ -29,11 +29,6 @@ public class System_BatteryIndicator extends SubFragment {
 			}
 		});
 
-		findPreference("pref_key_system_batteryindicator_colorval1").setOnPreferenceClickListener(openColorSelector);
-		findPreference("pref_key_system_batteryindicator_colorval2").setOnPreferenceClickListener(openColorSelector);
-		findPreference("pref_key_system_batteryindicator_colorval3").setOnPreferenceClickListener(openColorSelector);
-		findPreference("pref_key_system_batteryindicator_colorval4").setOnPreferenceClickListener(openColorSelector);
-
 		findPreference("pref_key_system_batteryindicator_test").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {

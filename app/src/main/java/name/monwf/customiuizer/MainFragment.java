@@ -8,7 +8,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.SpannableString;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,11 +30,6 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Locale;
-
-import name.monwf.customiuizer.prefs.ListPreferenceEx;
 import name.monwf.customiuizer.prefs.PreferenceEx;
 import name.monwf.customiuizer.subs.CategorySelector;
 import name.monwf.customiuizer.subs.Controls;
@@ -247,45 +241,6 @@ public class MainFragment extends PreferenceFragmentBase {
 			}
 		});
 
-		String[] locales = new String[] { "zh-CN", "zh-TW", "ru-RU", "ja-JP", "vi-VN", "cs-CZ", "pt-BR", "tr-TR", "es-ES" };
-
-		ArrayList<String> localesArr = new ArrayList<String>(Arrays.asList(locales));
-		ArrayList<SpannableString> localeNames = new ArrayList<SpannableString>();
-		localesArr.add(0, "en");
-		for (String locale: localesArr) try {
-			Locale loc = Locale.forLanguageTag(locale);
-			StringBuilder locStr;
-			SpannableString locSpanString;
-			if (locale.equals("zh-TW")) {
-				locStr = new StringBuilder("繁體中文 (台灣)");
-			}
-			else {
-				locStr = new StringBuilder(loc.getDisplayLanguage(loc));
-				locStr.setCharAt(0, Character.toUpperCase(locStr.charAt(0)));
-				if (locale.equals("pt-BR")) {
-					locStr.append(" (Brasil)");
-				}
-			}
-			locSpanString = new SpannableString(locStr.toString());
-			localeNames.add(locSpanString);
-		} catch (Throwable t) {
-			localeNames.add(new SpannableString(Locale.getDefault().getDisplayLanguage(Locale.getDefault())));
-		}
-
-		localesArr.add(0, "auto");
-		localeNames.add(0, new SpannableString(getString(R.string.array_system_default)));
-
-		ListPreferenceEx locale = findPreference("pref_key_miuizer_locale");
-		locale.setEntries(localeNames.toArray(new CharSequence[0]));
-		locale.setEntryValues(localesArr.toArray(new CharSequence[0]));
-		locale.setOnPreferenceChangeListener(new CheckBoxPreference.OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				getActivity().recreate();
-				return true;
-			}
-		});
-
 		findPreference("pref_key_github").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference pref) {
@@ -348,7 +303,7 @@ public class MainFragment extends PreferenceFragmentBase {
 					Helpers.openURL(act, "https://www.paypal.com/paypalme/tpsxj");
 				}
 				else {
-					openSubFragment(new SubFragment(), null, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, pref.getTitle().toString(), R.layout.fragment_donate);
+					openSubFragment(new SubFragment(), null, AppHelper.SettingsType.Edit, AppHelper.ActionBarType.HomeUp, pref.getTitle().toString(), R.layout.fragment_donate);
 				}
 				return true;
 			}
@@ -376,24 +331,24 @@ public class MainFragment extends PreferenceFragmentBase {
 		switch (cat) {
 			case "pref_key_system":
 				if (sub == null)
-					openSubFragment(catSelector, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_mods, R.xml.prefs_system_cat);
+					openSubFragment(catSelector, bundle, AppHelper.SettingsType.Preference, AppHelper.ActionBarType.HomeUp, R.string.system_mods, R.xml.prefs_system_cat);
 				else
-					openSubFragment(prefSystem, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_mods, R.xml.prefs_system);
+					openSubFragment(prefSystem, bundle, AppHelper.SettingsType.Preference, AppHelper.ActionBarType.HomeUp, R.string.system_mods, R.xml.prefs_system);
 				return false;
 			case "pref_key_launcher":
 				if (sub == null)
-					openSubFragment(catSelector, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.launcher_title, R.xml.prefs_launcher_cat);
+					openSubFragment(catSelector, bundle, AppHelper.SettingsType.Preference, AppHelper.ActionBarType.HomeUp, R.string.launcher_title, R.xml.prefs_launcher_cat);
 				else
-					openSubFragment(prefLauncher, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.launcher_title, R.xml.prefs_launcher);
+					openSubFragment(prefLauncher, bundle, AppHelper.SettingsType.Preference, AppHelper.ActionBarType.HomeUp, R.string.launcher_title, R.xml.prefs_launcher);
 				return true;
 			case "pref_key_controls":
 				if (sub == null)
-					openSubFragment(catSelector, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.controls_mods, R.xml.prefs_controls_cat);
+					openSubFragment(catSelector, bundle, AppHelper.SettingsType.Preference, AppHelper.ActionBarType.HomeUp, R.string.controls_mods, R.xml.prefs_controls_cat);
 				else
-					openSubFragment(prefControls, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.controls_mods, R.xml.prefs_controls);
+					openSubFragment(prefControls, bundle, AppHelper.SettingsType.Preference, AppHelper.ActionBarType.HomeUp, R.string.controls_mods, R.xml.prefs_controls);
 				return false;
 			case "pref_key_various":
-				openSubFragment(prefVarious, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.various_mods, R.xml.prefs_various);
+				openSubFragment(prefVarious, bundle, AppHelper.SettingsType.Preference, AppHelper.ActionBarType.HomeUp, R.string.various_mods, R.xml.prefs_various);
 				return false;
 			default:
 				return false;

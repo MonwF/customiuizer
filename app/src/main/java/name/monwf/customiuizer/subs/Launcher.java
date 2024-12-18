@@ -28,7 +28,6 @@ public class Launcher extends SubFragment {
 		Preference.OnPreferenceClickListener openPrivacyAppEdit = new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				if (!Helpers.checkPermAndRequest((AppCompatActivity) getActivity(), Helpers.ACCESS_SECURITY_CENTER, Helpers.REQUEST_PERMISSIONS_SECURITY_CENTER)) return false;
 				openPrivacyAppEdit(Launcher.this, 0);
 				return true;
 			}
@@ -41,8 +40,6 @@ public class Launcher extends SubFragment {
 				return true;
 			}
 		};
-
-		int opt = AppHelper.getStringAsIntOfAppPrefs("pref_key_launcher_mods", 1);
 
 		switch (sub) {
 			case "pref_key_launcher_cat_folders":
@@ -74,24 +71,12 @@ public class Launcher extends SubFragment {
 				findPreference("pref_key_launcher_doubletap").setOnPreferenceClickListener(openLauncherActions);
 				findPreference("pref_key_launcher_pinch").setOnPreferenceClickListener(openLauncherActions);
 				findPreference("pref_key_launcher_spread").setOnPreferenceClickListener(openLauncherActions);
-				findPreference("pref_key_launcher_swipeup").setEnabled(opt == 1);
 				break;
 			case "pref_key_launcher_cat_privacyapps":
-				findPreference("pref_key_launcher_cat_privacyapps").setEnabled(opt == 1);
 				findPreference("pref_key_launcher_privacyapps_list").setOnPreferenceClickListener(openPrivacyAppEdit);
 				break;
 			case "pref_key_launcher_cat_titles":
 				findPreference("pref_key_launcher_renameapps_list").setOnPreferenceClickListener(openLaunchableList);
-				break;
-			case "pref_key_launcher_cat_bugfixes":
-				findPreference("pref_key_launcher_fixanim").setEnabled(opt == 1);
-				break;
-			case "pref_key_launcher_cat_other":
-				findPreference("pref_key_launcher_unlockgrids").setEnabled(opt == 1);
-				findPreference("pref_key_launcher_hideseekpoints").setEnabled(opt == 1);
-				findPreference("pref_key_launcher_nounlockanim").setEnabled(opt == 1);
-				findPreference("pref_key_launcher_oldlaunchanim").setEnabled(opt == 1);
-				findPreference("pref_key_launcher_closedrawer").setEnabled(opt == 1);
 				break;
 		}
 	}

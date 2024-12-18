@@ -42,13 +42,13 @@ public class SubFragment extends PreferenceFragmentBase {
     private float order = 100.0f;
     private String highlightKey = null;
     public boolean padded = true;
-    Helpers.SettingsType settingsType = Helpers.SettingsType.Preference;
-    Helpers.ActionBarType abType = Helpers.ActionBarType.Edit;
+    AppHelper.SettingsType settingsType = AppHelper.SettingsType.Preference;
+    AppHelper.ActionBarType abType = AppHelper.ActionBarType.Edit;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        settingsType = Helpers.SettingsType.values()[getArguments().getInt("settingsType")];
-        abType = Helpers.ActionBarType.values()[getArguments().getInt("abType")];
+        settingsType = AppHelper.SettingsType.values()[getArguments().getInt("settingsType")];
+        abType = AppHelper.ActionBarType.values()[getArguments().getInt("abType")];
         contentResId = getArguments().getInt("contentResId");
         settingTitle = getArguments().getString("titleResId");
         order = getArguments().getFloat("order") + 10.0f;
@@ -56,7 +56,7 @@ public class SubFragment extends PreferenceFragmentBase {
         sub = getArguments().getString("sub");
         isStandalone = getArguments().getBoolean("isStandalone");
         highlightKey = getArguments().getString("mod");
-        if (abType == Helpers.ActionBarType.Edit) {
+        if (abType == AppHelper.ActionBarType.Edit) {
             isCustomActionBar = true;
         }
         toolbarMenu = toolbarMenu || isCustomActionBar;
@@ -66,7 +66,7 @@ public class SubFragment extends PreferenceFragmentBase {
             return;
         }
 
-        if (settingsType == Helpers.SettingsType.Preference) {
+        if (settingsType == AppHelper.SettingsType.Preference) {
             super.onCreate(savedInstanceState, contentResId);
         } else {
             super.onCreate(savedInstanceState);
@@ -76,7 +76,9 @@ public class SubFragment extends PreferenceFragmentBase {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        loadSharedPrefs();
+        if (settingsType == AppHelper.SettingsType.Edit) {
+            loadSharedPrefs();
+        }
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             if (isStandalone && catInfo != null && catInfo.getBoolean("isDynamic")) {
@@ -98,7 +100,7 @@ public class SubFragment extends PreferenceFragmentBase {
 
     @Override
     public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
-        if (settingsType == Helpers.SettingsType.Preference) {
+        if (settingsType == AppHelper.SettingsType.Preference) {
             super.onCreatePreferences(savedInstanceState, rootKey);
             setPreferencesFromResource(contentResId, rootKey);
             PreferenceState highlightPref;
@@ -116,7 +118,7 @@ public class SubFragment extends PreferenceFragmentBase {
                              ViewGroup container,
                              Bundle savedInstanceState) {
         LayoutInflater crtInflator = inflater.cloneInContext(requireContext());
-        if (settingsType == Helpers.SettingsType.Preference) {
+        if (settingsType == AppHelper.SettingsType.Preference) {
             return super.onCreateView(crtInflator, container, savedInstanceState);
         }
         View view = crtInflator.inflate(padded ? R.layout.prefs_common_padded : R.layout.prefs_common, container, false);
@@ -164,8 +166,6 @@ public class SubFragment extends PreferenceFragmentBase {
                         ((SpinnerExFake)nView).applyOthers();
                     } else if (nView instanceof SpinnerEx)
                         AppHelper.appPrefs.edit().putInt((String)nView.getTag(), ((SpinnerEx)nView).getSelectedArrayValue()).apply();
-                    else if (nView instanceof ColorCircle)
-                        AppHelper.appPrefs.edit().putInt((String)nView.getTag(), ((ColorCircle)nView).getColor()).apply();
             } catch (Throwable e) {
                 Log.e("miuizer", "Cannot save sub preference!");
             }
@@ -225,14 +225,6 @@ public class SubFragment extends PreferenceFragmentBase {
         }
     };
 
-    public Preference.OnPreferenceClickListener openControlsActions = new Preference.OnPreferenceClickListener() {
-        @Override
-        public boolean onPreferenceClick(Preference preference) {
-            openMultiAction(preference, MultiAction.Actions.CONTROLS);
-            return true;
-        }
-    };
-
     public Preference.OnPreferenceClickListener openNavbarActions = new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
@@ -274,21 +266,13 @@ public class SubFragment extends PreferenceFragmentBase {
         }
     };
 
-    public Preference.OnPreferenceClickListener openColorSelector = new Preference.OnPreferenceClickListener() {
-        @Override
-        public boolean onPreferenceClick(Preference preference) {
-            openColorSelector(preference);
-            return true;
-        }
-    };
-
     void openApps(String key) {
         Bundle args = new Bundle();
         args.putString("key", key);
         args.putBoolean("multi", true);
         AppSelector appSelector = new AppSelector();
         appSelector.setTargetFragment(this, 0);
-        openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_apps, R.layout.prefs_app_selector);
+        openSubFragment(appSelector, args, AppHelper.SettingsType.Edit, AppHelper.ActionBarType.HomeUp, R.string.select_apps, R.layout.prefs_app_selector);
     }
 
     void openAppsBW(String key) {
@@ -298,7 +282,7 @@ public class SubFragment extends PreferenceFragmentBase {
         args.putBoolean("bw", true);
         AppSelector appSelector = new AppSelector();
         appSelector.setTargetFragment(this, 0);
-        openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_apps, R.layout.prefs_app_selector);
+        openSubFragment(appSelector, args, AppHelper.SettingsType.Edit, AppHelper.ActionBarType.HomeUp, R.string.select_apps, R.layout.prefs_app_selector);
     }
 
     void openShare(String key) {
@@ -308,7 +292,7 @@ public class SubFragment extends PreferenceFragmentBase {
         args.putBoolean("share", true);
         AppSelector appSelector = new AppSelector();
         appSelector.setTargetFragment(this, 0);
-        openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_apps, R.layout.prefs_app_selector);
+        openSubFragment(appSelector, args, AppHelper.SettingsType.Edit, AppHelper.ActionBarType.HomeUp, R.string.select_apps, R.layout.prefs_app_selector);
     }
 
     void openOpenWith(String key) {
@@ -318,14 +302,14 @@ public class SubFragment extends PreferenceFragmentBase {
         args.putBoolean("openwith", true);
         AppSelector appSelector = new AppSelector();
         appSelector.setTargetFragment(this, 0);
-        openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_apps, R.layout.prefs_app_selector);
+        openSubFragment(appSelector, args, AppHelper.SettingsType.Edit, AppHelper.ActionBarType.HomeUp, R.string.select_apps, R.layout.prefs_app_selector);
     }
 
     void openMultiAction(Preference pref, MultiAction.Actions actions) {
         Bundle args = new Bundle();
         args.putString("key", pref.getKey());
         args.putInt("actions", actions.ordinal());
-        openSubFragment(new MultiAction(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.Edit, pref.getTitle().toString(), R.layout.prefs_multiaction);
+        openSubFragment(new MultiAction(), args, AppHelper.SettingsType.Edit, AppHelper.ActionBarType.Edit, pref.getTitle().toString(), R.layout.prefs_multiaction);
     }
 
     public void openStandaloneApp(Preference pref, Fragment targetFrag, int resultId) {
@@ -334,7 +318,7 @@ public class SubFragment extends PreferenceFragmentBase {
         args.putBoolean("standalone", true);
         AppSelector appSelector = new AppSelector();
         appSelector.setTargetFragment(targetFrag, resultId);
-        openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_app, R.layout.prefs_app_selector);
+        openSubFragment(appSelector, args, AppHelper.SettingsType.Edit, AppHelper.ActionBarType.HomeUp, R.string.select_app, R.layout.prefs_app_selector);
     }
 
     public void openPrivacyAppEdit(Fragment targetFrag, int resultId) {
@@ -342,7 +326,7 @@ public class SubFragment extends PreferenceFragmentBase {
         args.putBoolean("privacy", true);
         AppSelector appSelector = new AppSelector();
         appSelector.setTargetFragment(targetFrag, resultId);
-        openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_apps, R.layout.prefs_app_selector);
+        openSubFragment(appSelector, args, AppHelper.SettingsType.Edit, AppHelper.ActionBarType.HomeUp, R.string.select_apps, R.layout.prefs_app_selector);
     }
 
     public void openLockedAppEdit(Fragment targetFrag, int resultId) {
@@ -350,7 +334,7 @@ public class SubFragment extends PreferenceFragmentBase {
         args.putBoolean("applock", true);
         AppSelector appSelector = new AppSelector();
         appSelector.setTargetFragment(targetFrag, resultId);
-        openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_apps, R.layout.prefs_app_selector);
+        openSubFragment(appSelector, args, AppHelper.SettingsType.Edit, AppHelper.ActionBarType.HomeUp, R.string.select_apps, R.layout.prefs_app_selector);
     }
 
     public void openLaunchableList(Preference pref, Fragment targetFrag, int resultId) {
@@ -359,13 +343,7 @@ public class SubFragment extends PreferenceFragmentBase {
         args.putBoolean("custom_titles", true);
         AppSelector appSelector = new AppSelector();
         appSelector.setTargetFragment(targetFrag, resultId);
-        openSubFragment(appSelector, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.launcher_renameapps_list_title, R.layout.prefs_app_selector);
-    }
-
-    public void openColorSelector(Preference pref) {
-        Bundle args = new Bundle();
-        args.putString("key", pref.getKey());
-        openSubFragment(new ColorSelector(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.Edit, pref.getTitle().toString(), R.layout.fragment_selectcolor);
+        openSubFragment(appSelector, args, AppHelper.SettingsType.Edit, AppHelper.ActionBarType.HomeUp, R.string.launcher_renameapps_list_title, R.layout.prefs_app_selector);
     }
 
     public void openActivitiesItemList(Preference pref) {
@@ -373,7 +351,7 @@ public class SubFragment extends PreferenceFragmentBase {
         args.putBoolean("activities", true);
         args.putString("key", pref.getKey());
         args.putString("titleResId", pref.getTitle().toString());
-        openSubFragment(new SortableList(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, pref.getTitle().toString(), R.layout.prefs_sortable_list);
+        openSubFragment(new SortableList(), args, AppHelper.SettingsType.Edit, AppHelper.ActionBarType.HomeUp, pref.getTitle().toString(), R.layout.prefs_sortable_list);
     }
 
     public void selectSub() {

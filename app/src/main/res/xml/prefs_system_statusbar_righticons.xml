@@ -28,23 +28,8 @@
 		/>
 
 	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_statusbar_netspeed_atright"
-		android:title="@string/system_statusbaricons_netspeed_title"
-		android:defaultValue="false" />
-
-	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_alarm_atright"
 		android:title="@string/system_statusbaricons_alarm_title"
-		android:defaultValue="false" />
-
-	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_statusbar_sound_atright"
-		android:title="@string/system_statusbaricons_sound_title"
-		android:defaultValue="false" />
-
-	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_statusbar_dnd_atright"
-		android:title="@string/system_statusbaricons_dnd_title"
 		android:defaultValue="false" />
 
 	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
@@ -69,6 +54,11 @@
 
 	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/system_statusbaricons_atleft_title" />
+
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbar_icons_atleft_onkeyguard"
+		app:isPreferenceVisible="false"
+		android:title="@string/system_statusbar_icons_atleft_onkeyguard" />
 
 	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_netspeed_atleft"

@@ -43,7 +43,7 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 	private int selectedUser = 0;
 	private Set<String> selectedApps = new LinkedHashSet<String>();
 	private Set<String> selectedAppsBlack = new LinkedHashSet<String>();
-	private Helpers.AppAdapterType aType = Helpers.AppAdapterType.Default;
+	private AppHelper.AppAdapterType aType = AppHelper.AppAdapterType.Default;
 	private boolean multiUserSupport = false;
 
 	public AppDataAdapter(Context context, ArrayList<AppData> arr) {
@@ -55,17 +55,17 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 		pool = new ThreadPoolExecutor(cpuCount + 1, cpuCount * 2 + 1, 2, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
 	}
 
-	public AppDataAdapter(Context context, ArrayList<AppData> arr, Helpers.AppAdapterType adapterType, String prefKey) {
+	public AppDataAdapter(Context context, ArrayList<AppData> arr, AppHelper.AppAdapterType adapterType, String prefKey) {
 		this(context, arr, adapterType, prefKey, false);
 	}
 
-	public AppDataAdapter(Context context, ArrayList<AppData> arr, Helpers.AppAdapterType adapterType, String prefKey, boolean isBW) {
+	public AppDataAdapter(Context context, ArrayList<AppData> arr, AppHelper.AppAdapterType adapterType, String prefKey, boolean isBW) {
 		this(context, arr);
 		key = prefKey;
 		aType = adapterType;
 		bwlist = isBW;
 		boolean removeDual = false;
-		if (aType == Helpers.AppAdapterType.Mutli) {
+		if (aType == AppHelper.AppAdapterType.Mutli) {
 			selectedApps = AppHelper.getStringSetOfAppPrefs(key, new LinkedHashSet<String>());
 			if (bwlist) selectedAppsBlack = AppHelper.getStringSetOfAppPrefs(key + "_black", new LinkedHashSet<String>());
 			ArrayList<String> multiUserMods = new ArrayList<String>();
@@ -84,7 +84,7 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 				}
 				if (selectedAppsAdd.size() > 0) selectedApps.addAll(selectedAppsAdd);
 			} else removeDual = true;
-		} else if (aType == Helpers.AppAdapterType.Standalone) {
+		} else if (aType == AppHelper.AppAdapterType.Standalone) {
 			selectedApp = AppHelper.getStringOfAppPrefs(key, "");
 			selectedUser = AppHelper.getIntOfAppPrefs(key + "_user", 0);
 			AppData noApp = new AppData();
@@ -94,7 +94,7 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 			noApp.enabled = true;
 			originalAppList.add(0, noApp);
 			filteredAppList.add(0, noApp);
-		} else if (aType == Helpers.AppAdapterType.Default) {
+		} else if (aType == AppHelper.AppAdapterType.Default) {
 			removeDual = key != null && key.contains("pref_key_system_applock_skip_activities");
 		}
 		if (removeDual) {
@@ -106,10 +106,10 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 	}
 
 	public void updateSelectedApps() {
-		if (aType == Helpers.AppAdapterType.Mutli) {
+		if (aType == AppHelper.AppAdapterType.Mutli) {
 			selectedApps = AppHelper.getStringSetOfAppPrefs(key, new LinkedHashSet<String>());
 			if (bwlist) selectedAppsBlack = AppHelper.getStringSetOfAppPrefs(key + "_black", new LinkedHashSet<String>());
-		} else if (aType == Helpers.AppAdapterType.Standalone) {
+		} else if (aType == AppHelper.AppAdapterType.Standalone) {
 			selectedApp = AppHelper.getStringOfAppPrefs(key, "");
 			selectedUser = AppHelper.getIntOfAppPrefs(key + "_user", 0);
 		}
@@ -127,7 +127,7 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 	private void sortList() {
 		filteredAppList.sort(new Comparator<AppData>() {
 			public int compare(AppData app1, AppData app2) {
-				if (aType == Helpers.AppAdapterType.Mutli) {
+				if (aType == AppHelper.AppAdapterType.Mutli) {
 					if (selectedApps.size() == 0 && selectedAppsBlack.size() == 0) return 0;
 					boolean app1checked = bwlist ? shouldSelectBW(app1.pkgName) : shouldSelect(app1.pkgName, app1.user);
 					boolean app2checked = bwlist ? shouldSelectBW(app2.pkgName) : shouldSelect(app2.pkgName, app2.user);
@@ -138,7 +138,7 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 					else if (app2checked)
 						return 1;
 					return 0;
-				} else if (aType == Helpers.AppAdapterType.Standalone) {
+				} else if (aType == AppHelper.AppAdapterType.Standalone) {
 					if (app1.pkgName.equals("") && app1.actName.equals("")) return -1;
 					if (app2.pkgName.equals("") && app2.actName.equals("")) return 1;
 					boolean app1checked = selectedApp.equals(app1.pkgName + "|" + app1.actName) && selectedUser == app1.user;
@@ -150,7 +150,7 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 					else if (app2checked)
 						return 1;
 					return 0;
-				} else if (aType == Helpers.AppAdapterType.Activities) {
+				} else if (aType == AppHelper.AppAdapterType.Activities) {
 					return app1.actName.toLowerCase().compareTo(app2.actName.toLowerCase());
 				} else return 0;
 			}
@@ -181,7 +181,6 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 		CheckBox itemChecked = row.findViewById(android.R.id.checkbox);
 		if (!bwlist && (itemChecked.getTag() == null || !(boolean)itemChecked.getTag())) {
 			itemChecked.setTag(true);
-			Helpers.setMiuiCheckbox(itemChecked);
 		}
 		ImageView itemStateIcon = row.findViewById(android.R.id.selectedIcon);
 		TextView itemTitle = row.findViewById(android.R.id.title);
@@ -192,7 +191,7 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 		itemTitle.setText(ad.label);
 		itemIsDis.setVisibility(ad.enabled ? View.GONE : View.VISIBLE);
 
-		if (aType == Helpers.AppAdapterType.Activities) {
+		if (aType == AppHelper.AppAdapterType.Activities) {
 			itemIcon.setVisibility(View.GONE);
 			View container = row.findViewById(R.id.container);
 			LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)container.getLayoutParams();
@@ -214,7 +213,7 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 			}
 		}
 
-		if (aType == Helpers.AppAdapterType.Mutli) {
+		if (aType == AppHelper.AppAdapterType.Mutli) {
 			itemSummary.setVisibility(View.GONE);
 			if (bwlist) {
 				itemStateIcon.setVisibility(View.VISIBLE);
@@ -224,15 +223,15 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 				itemChecked.setChecked(shouldSelect(ad.pkgName, ad.user));
 			}
 			itemIsDual.setVisibility(ad.user != 0 ? View.VISIBLE : View.GONE);
-		} else if (aType == Helpers.AppAdapterType.CustomTitles) {
+		} else if (aType == AppHelper.AppAdapterType.CustomTitles) {
 			itemSummary.setText(AppHelper.getStringOfAppPrefs(key + ":" + ad.pkgName + "|" + ad.actName + "|" + ad.user, ""));
 			itemSummary.setVisibility(TextUtils.isEmpty(itemSummary.getText()) ? View.GONE : View.VISIBLE);
 			itemIsDual.setVisibility(ad.user != 0 ? View.VISIBLE : View.GONE);
-		} else if (aType == Helpers.AppAdapterType.Standalone) {
+		} else if (aType == AppHelper.AppAdapterType.Standalone) {
 			itemChecked.setVisibility(View.VISIBLE);
 			itemChecked.setChecked((selectedApp.equals("") && ad.pkgName.equals("") && ad.actName.equals("")) || ((ad.pkgName + "|" + ad.actName).equals(selectedApp) && ad.user == selectedUser));
 			itemIsDual.setVisibility(ad.user != 0 ? View.VISIBLE : View.GONE);
-		} else if (aType == Helpers.AppAdapterType.Activities) {
+		} else if (aType == AppHelper.AppAdapterType.Activities) {
 			itemSummary.setText(ad.actName.replace(".", ".\u200B"));
 			itemSummary.setVisibility(TextUtils.isEmpty(itemSummary.getText()) ? View.GONE : View.VISIBLE);
 			itemSummary.setSingleLine(false);
@@ -260,8 +259,8 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 
 			for (int i = 0; i < count; i++) {
 				filterableData = originalAppList.get(i);
-				if (aType == Helpers.AppAdapterType.Activities && filterableData.actName.toLowerCase().contains(filterString)) nlist.add(filterableData);
-				else if ((aType == Helpers.AppAdapterType.Standalone && filterableData.pkgName.equals("") && filterableData.actName.equals("")) || filterableData.label.toLowerCase().contains(filterString)) nlist.add(filterableData);
+				if (aType == AppHelper.AppAdapterType.Activities && filterableData.actName.toLowerCase().contains(filterString)) nlist.add(filterableData);
+				else if ((aType == AppHelper.AppAdapterType.Standalone && filterableData.pkgName.equals("") && filterableData.actName.equals("")) || filterableData.label.toLowerCase().contains(filterString)) nlist.add(filterableData);
 			}
 
 			results.values = nlist;

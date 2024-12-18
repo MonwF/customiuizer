@@ -11,6 +11,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityOptions;
+import android.app.AlarmManager;
 import android.app.KeyguardManager;
 import android.app.MiuiNotification;
 import android.app.Notification;
@@ -21,7 +22,6 @@ import android.app.WallpaperManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -29,18 +29,16 @@ import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.hardware.usb.UsbManager;
 import android.media.AudioManager;
 import android.media.MediaMetadata;
 import android.media.session.MediaController;
@@ -49,28 +47,20 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.BadParcelableException;
-import android.os.BatteryManager;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
-import android.os.PowerManager.WakeLock;
 import android.os.UserHandle;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.telephony.PhoneStateListener;
-import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
-import android.text.style.AbsoluteSizeSpan;
-import android.text.style.TypefaceSpan;
 import android.util.ArrayMap;
-import android.util.MiuiMultiWindowUtils;
 import android.util.Pair;
-import android.util.SparseIntArray;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -80,31 +70,30 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.Interpolator;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RemoteViews;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.graphics.ColorUtils;
 
 import org.json.JSONObject;
+import org.luckypray.dexkit.query.FindMethod;
+import org.luckypray.dexkit.query.matchers.MethodMatcher;
+import org.luckypray.dexkit.result.MethodData;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -114,7 +103,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -123,10 +111,7 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import io.github.libxposed.api.XposedInterface;
 import io.github.libxposed.api.XposedInterface.AfterHookCallback;
@@ -134,21 +119,20 @@ import io.github.libxposed.api.XposedInterface.BeforeHookCallback;
 import io.github.libxposed.api.XposedModuleInterface;
 import io.github.libxposed.api.XposedModuleInterface.PackageLoadedParam;
 import io.github.libxposed.api.XposedModuleInterface.SystemServerLoadedParam;
-import miui.app.MiuiFreeFormManager;
 import name.monwf.customiuizer.MainModule;
 import name.monwf.customiuizer.R;
 import name.monwf.customiuizer.mods.utils.HookerClassHelper;
 import name.monwf.customiuizer.mods.utils.HookerClassHelper.MethodHook;
 import name.monwf.customiuizer.mods.utils.ModuleHelper;
+import name.monwf.customiuizer.mods.utils.ResourceConstants;
 import name.monwf.customiuizer.mods.utils.ResourceHooks;
+import name.monwf.customiuizer.mods.utils.WeatherDataController;
 import name.monwf.customiuizer.mods.utils.XposedHelpers;
 import name.monwf.customiuizer.utils.AudioVisualizer;
 import name.monwf.customiuizer.utils.Helpers;
 import name.monwf.customiuizer.utils.Helpers.MimeType;
 
 public class System {
-    private final static String StatusBarCls = "com.android.systemui.statusbar.phone.CentralSurfacesImpl";
-
     public static void ScreenAnimHook(SystemServerLoadedParam lpparam) {
         ModuleHelper.findAndHookMethod("com.android.server.display.DisplayPowerController", lpparam.getClassLoader(), "initialize", new MethodHook() {
             @Override
@@ -192,25 +176,17 @@ public class System {
         });
     }
     public static void NoLightUpOnChargeHook(SystemServerLoadedParam lpparam) {
-        String methodName = "wakePowerGroupLocked";
-        ModuleHelper.hookAllMethods("com.android.server.power.PowerManagerService", lpparam.getClassLoader(), methodName, new MethodHook() {
+        ModuleHelper.hookAllMethods("com.android.server.power.PowerManagerService", lpparam.getClassLoader(), "wakePowerGroupLocked", new MethodHook() {
             @Override
             protected void before(final BeforeHookCallback param) throws Throwable {
                 String reason = (String)param.getArgs()[3];
                 if (reason == null) return;
-
-                if (Integer.parseInt(MainModule.mPrefs.getString("system_nolightuponcharges", "1")) == 3 &&
-                        (reason.equals("android.server.power:POWER") || reason.startsWith("android.server.power:PLUGGED"))) {
-                    param.returnAndSkip(false);
-                    return;
-                }
-                if (Integer.parseInt(MainModule.mPrefs.getString("system_nolightuponcharges", "1")) == 2 && (
-                        reason.equals("android.server.power:POWER") ||
-                                reason.startsWith("android.server.power:PLUGGED") ||
-                                reason.equals("com.android.systemui:RAPID_CHARGE") ||
-                                reason.equals("com.android.systemui:WIRELESS_CHARGE") ||
-                                reason.equals("com.android.systemui:WIRELESS_RAPID_CHARGE")
-                )) param.returnAndSkip(false);
+                if (
+                    reason.startsWith("android.server.power:PLUGGED")
+                    || reason.equals("com.android.systemui:RAPID_CHARGE")
+                    || reason.equals("com.android.systemui:WIRELESS_CHARGE")
+                    || reason.equals("com.android.systemui:WIRELESS_RAPID_CHARGE")
+                ) param.returnAndSkip(null);
             }
         });
     }
@@ -284,35 +260,20 @@ public class System {
             }
         });
 
-        ModuleHelper.findAndHookMethod("com.android.server.policy.PhoneWindowManager", lpparam.getClassLoader(), "powerLongPress", new MethodHook() {
+        MethodHook preventPowerHook = new MethodHook() {
             @Override
             protected void before(final BeforeHookCallback param) throws Throwable {
                 Context mPWMContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
                 KeyguardManager kgMgr = (KeyguardManager)mPWMContext.getSystemService(Context.KEYGUARD_SERVICE);
                 if (kgMgr.isKeyguardLocked() && kgMgr.isKeyguardSecure()) param.returnAndSkip(null);
             }
-        });
+        };
 
-        ModuleHelper.findAndHookMethodSilently("com.android.server.policy.PhoneWindowManager", lpparam.getClassLoader(), "showGlobalActions", new MethodHook() {
-            @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                Context mPWMContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-                KeyguardManager kgMgr = (KeyguardManager)mPWMContext.getSystemService(Context.KEYGUARD_SERVICE);
-                if (kgMgr.isKeyguardLocked() && kgMgr.isKeyguardSecure()) param.returnAndSkip(null);
-            }
-        });
-
-        ModuleHelper.findAndHookMethodSilently("com.android.server.policy.PhoneWindowManager", lpparam.getClassLoader(), "showGlobalActionsInternal", new MethodHook() {
-            @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                Context mPWMContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-                KeyguardManager kgMgr = (KeyguardManager)mPWMContext.getSystemService(Context.KEYGUARD_SERVICE);
-                if (kgMgr.isKeyguardLocked() && kgMgr.isKeyguardSecure()) param.returnAndSkip(null);
-            }
-        });
+        ModuleHelper.findAndHookMethod("com.android.server.policy.PhoneWindowManager", lpparam.getClassLoader(), "powerLongPress", long.class, preventPowerHook);
+        ModuleHelper.findAndHookMethod("com.android.server.policy.PhoneWindowManager", lpparam.getClassLoader(), "showGlobalActions", preventPowerHook);
+        ModuleHelper.findAndHookMethod("com.android.server.policy.PhoneWindowManager", lpparam.getClassLoader(), "showGlobalActionsInternal", preventPowerHook);
     }
 
-    @SuppressWarnings("RedundantIfStatement")
     private static boolean isAuthOnce() {
         int req = MainModule.mPrefs.getStringAsInt("system_noscreenlock_req", 1);
         if (req <= 1) return true;
@@ -339,7 +300,7 @@ public class System {
             BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             if (!mBluetoothAdapter.isEnabled()) return false;
             Set<String> trustedDevices = MainModule.mPrefs.getStringSet("system_noscreenlock_bt");
-            Object mController = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", classLoader), "get", findClass("com.android.systemui.statusbar.policy.BluetoothController", classLoader));
+            Object mController = ModuleHelper.getDepInstance(classLoader, "com.android.systemui.statusbar.policy.BluetoothController");
             Collection<?> cachedDevices = (Collection<?>)XposedHelpers.callMethod(mController, "getDevices");
             if (cachedDevices != null)
                 for (Object device: cachedDevices) {
@@ -356,18 +317,15 @@ public class System {
     }
 
     private static boolean isUnlocked(Context mContext, ClassLoader classLoader) {
-        Class<?> kmvClas = findClass("com.android.systemui.keyguard.KeyguardViewMediator", classLoader);
-        XposedHelpers.setAdditionalStaticField(kmvClas, "isScreenLockDisabled", false);
         if (!isAuthOnce()) return false;
         int opt = MainModule.mPrefs.getStringAsInt("system_noscreenlock", 1);
         if (forcedOption == 1) opt = 2;
+        if (opt == 2) return true;
         boolean isTrusted = false;
-        if (opt == 3) isTrusted = isTrusted(mContext, classLoader);
-        if (opt == 2 || opt == 3 && isTrusted) {
-            XposedHelpers.setAdditionalStaticField(kmvClas, "isScreenLockDisabled", true);
-            return true;
+        if (opt == 3) {
+            isTrusted = isTrusted(mContext, classLoader);
         }
-        return false;
+        return isTrusted;
     }
 
     private static boolean isUnlockedInnerCall = false;
@@ -393,7 +351,7 @@ public class System {
             }
         });
 
-        ModuleHelper.hookAllConstructors("com.android.keyguard.KeyguardSecurityContainerController", lpparam.getClassLoader(), new MethodHook() {
+        ModuleHelper.findAndHookMethod("com.android.keyguard.KeyguardSecurityContainerController", lpparam.getClassLoader(), "onInit", new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
                 Context mContext = (Context)XposedHelpers.callMethod(param.getThisObject(), "getContext");
@@ -402,12 +360,12 @@ public class System {
                     public void onReceive(Context context, Intent intent) {
                         try {
                             Object mCallback = XposedHelpers.getObjectField(param.getThisObject(), "mKeyguardSecurityCallback");
-                            XposedHelpers.callMethod(mCallback, "reportUnlockAttempt", 0, true, 0, 0);
+                            XposedHelpers.callMethod(mCallback, "reportUnlockAttempt", 0, 0, 0, true);
                         } catch (Throwable t) {
                             XposedHelpers.log(t);
                         }
                     }
-                }, new IntentFilter(ACTION_PREFIX + "UnlockStrongAuth"));
+                }, new IntentFilter(ACTION_PREFIX + "UnlockStrongAuth"), Context.RECEIVER_NOT_EXPORTED);
             }
         });
 
@@ -420,11 +378,12 @@ public class System {
 
                 boolean skip = MainModule.mPrefs.getBoolean("system_noscreenlock_skip");
                 if (skip) {
-                    param.returnAndSkip(null);
                     XposedHelpers.callMethod(param.getThisObject(), "keyguardDone");
+                    param.returnAndSkip(null);
                 }
                 isUnlockedInnerCall = true;
                 Intent unlockIntent = new Intent(ACTION_PREFIX + "UnlockStrongAuth");
+                unlockIntent.setPackage("com.android.systemui");
                 mContext.sendBroadcast(unlockIntent);
             }
         });
@@ -436,7 +395,7 @@ public class System {
                 IntentFilter filter = new IntentFilter();
                 filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
                 filter.addAction(ACTION_PREFIX + "UnlockSetForced");
-                filter.addAction(ACTION_PREFIX + "UnlockBTConnection");
+                filter.addAction(ACTION_PREFIX + "BTConnectionChanged");
                 mContext.registerReceiver(new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
@@ -445,42 +404,40 @@ public class System {
                         if (action.equals(ACTION_PREFIX + "UnlockSetForced"))
                             forcedOption = intent.getIntExtra("system_noscreenlock_force", -1);
 
-                        boolean isShowing = (boolean) XposedHelpers.callMethod(param.getThisObject(), "isShowing");
+                        boolean isShowing = XposedHelpers.getBooleanField(param.getThisObject(), "mShowing");
                         if (!isShowing) return;
                         if (!isAuthOnce()) return;
 
                         boolean isTrusted = false;
-                        if (forcedOption == 0) isTrusted = false;
-                        else if (forcedOption == 1) isTrusted = true;
-                        else if (MainModule.mPrefs.getStringAsInt("system_noscreenlock", 1) == 3)
+                        if (forcedOption == 1) isTrusted = true;
+                        else if (forcedOption != 0 && MainModule.mPrefs.getStringAsInt("system_noscreenlock", 1) == 3) {
                             if (action.equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
                                 NetworkInfo netInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
                                 if (netInfo.getState() != NetworkInfo.State.CONNECTED && netInfo.getState() != NetworkInfo.State.DISCONNECTED)
                                     return;
                                 if (netInfo.isConnected()) isTrusted = isTrustedWiFi(mContext);
-                            } else if (action.equals(ACTION_PREFIX + "UnlockBTConnection")) {
+                            } else if (action.equals(ACTION_PREFIX + "BTConnectionChanged")) {
                                 isTrusted = isTrustedBt(lpparam.getClassLoader());
                             }
+                        }
 
-                        XposedHelpers.setAdditionalStaticField(param.getThisObject(), "isScreenLockDisabled", isTrusted);
                         if (isTrusted) {
                             boolean skip = MainModule.mPrefs.getBoolean("system_noscreenlock_skip");
                             if (skip)
                                 XposedHelpers.callMethod(param.getThisObject(), "keyguardDone");
                             else
-                                XposedHelpers.callMethod(param.getThisObject(), "resetStateLocked");
+                                XposedHelpers.callMethod(param.getThisObject(), "resetStateLocked", false);
                             isUnlockedInnerCall = true;
-//                            XposedHelpers.callMethod(XposedHelpers.getObjectField(param.getThisObject(), "mUpdateMonitor"), "reportSuccessfulStrongAuthUnlockAttempt");
                             Intent unlockIntent = new Intent(ACTION_PREFIX + "UnlockStrongAuth");
+                            unlockIntent.setPackage("com.android.systemui");
                             mContext.sendBroadcast(unlockIntent);
                         } else try {
-                            Object mLockUserManager = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", lpparam.getClassLoader()), "get", findClassIfExists("com.android.systemui.statusbar.NotificationLockscreenUserManager", lpparam.getClassLoader()));
-                            XposedHelpers.callMethod(mLockUserManager, "updatePublicMode");
+                            XposedHelpers.callMethod(param.getThisObject(), "resetStateLocked", true);
                         } catch (Throwable t) {
                             XposedHelpers.log(t);
                         }
                     }
-                }, filter);
+                }, filter, Context.RECEIVER_EXPORTED);
             }
         });
 
@@ -490,7 +447,8 @@ public class System {
                 if (forcedOption == 0) return;
                 boolean skip = MainModule.mPrefs.getBoolean("system_noscreenlock_skip");
                 if (skip) return;
-                Context mContext = ModuleHelper.findContext(lpparam);
+                Object mKeyguardUpdateMonitor = XposedHelpers.getObjectField(param.getThisObject(), "mKeyguardUpdateMonitor");
+                Context mContext = (Context) XposedHelpers.getObjectField(mKeyguardUpdateMonitor, "mContext");
                 if (!isUnlocked(mContext, lpparam.getClassLoader())) return;
 
                 Class<?> securityModeEnum = findClass("com.android.keyguard.KeyguardSecurityModel$SecurityMode", lpparam.getClassLoader());
@@ -506,37 +464,6 @@ public class System {
                     param.setResult(securityModeNone);
             }
         });
-
-        Class<?> startClass = findClassIfExists("com.android.keyguard.faceunlock.FaceUnlockManager", lpparam.getClassLoader());
-        if (startClass != null) {
-            ModuleHelper.hookAllMethods(startClass, "startFaceUnlock", new MethodHook() {
-                @Override
-                protected void before(final BeforeHookCallback param) throws Throwable {
-                    boolean skip = MainModule.mPrefs.getBoolean("system_noscreenlock_nofaceunlock");
-                    if (!skip) return;
-                    if (param.getArgs().length == 0) return;
-                    Boolean isScreenLockDisabled = (Boolean)XposedHelpers.getAdditionalStaticField(findClass("com.android.systemui.keyguard.KeyguardViewMediator", lpparam.getClassLoader()), "isScreenLockDisabled");
-                    isScreenLockDisabled = isScreenLockDisabled != null && isScreenLockDisabled;
-                    if (isScreenLockDisabled) param.returnAndSkip(null);
-                }
-            });
-
-            Method showMsgMethod = findMethodExactIfExists(startClass, "isShowMessageWhenFaceUnlockSuccess");
-            if (showMsgMethod == null) findMethodExactIfExists(startClass, "isFaceUnlockSuccessAndShowMessage");
-            if (showMsgMethod == null) {
-                XposedHelpers.log("NoScreenLockHook", "Show notification message method not found");
-            } else {
-                ModuleHelper.hookAllMethods(startClass, showMsgMethod.getName(), new MethodHook() {
-                    @Override
-                    protected void after(final AfterHookCallback param) throws Throwable {
-                        boolean skip = MainModule.mPrefs.getBoolean("system_noscreenlock_nofaceunlock");
-                        if (!skip || !(boolean)param.getResult()) return;
-                        boolean isScreenLockDisabled = (boolean)XposedHelpers.getAdditionalStaticField(findClass("com.android.systemui.keyguard.KeyguardViewMediator", lpparam.getClassLoader()), "isScreenLockDisabled");
-                        if (isScreenLockDisabled) param.setResult(false);
-                    }
-                });
-            }
-        }
 
         ModuleHelper.hookAllConstructors("com.android.systemui.statusbar.policy.BluetoothControllerImpl", lpparam.getClassLoader(), new MethodHook() {
             @Override
@@ -556,7 +483,7 @@ public class System {
                         updateIntent.setPackage(Helpers.modulePkg);
                         mContext.sendBroadcast(updateIntent);
                     }
-                }, new IntentFilter(ACTION_PREFIX + "FetchCachedDevices"));
+                }, new IntentFilter(ACTION_PREFIX + "FetchCachedDevices"), Context.RECEIVER_EXPORTED);
             }
         });
 
@@ -565,20 +492,20 @@ public class System {
             protected void after(final AfterHookCallback param) {
                 Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
                 if (mContext != null) {
-                    mContext.sendBroadcast(new Intent(ACTION_PREFIX + "UnlockBTConnection"));
+                    mContext.sendBroadcast(new Intent(ACTION_PREFIX + "BTConnectionChanged"));
                 }
             }
         });
     }
 
     public static void DoubleTapToSleepHook(PackageLoadedParam lpparam) {
-        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.phone.NotificationsQuickSettingsContainer", lpparam.getClassLoader(), "onFinishInflate", new MethodHook() {
+        ModuleHelper.findAndHookMethod("com.android.systemui.shade.NotificationsQuickSettingsContainer", lpparam.getClassLoader(), "onFinishInflate", new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
                 View view = (View)param.getThisObject();
-                XposedHelpers.setAdditionalInstanceField(view, "currentTouchTime", 0L);
-                XposedHelpers.setAdditionalInstanceField(view, "currentTouchX", 0F);
-                XposedHelpers.setAdditionalInstanceField(view, "currentTouchY", 0F);
+                ModuleHelper.setViewInfo(view, "currentTouchTime", 0L);
+                ModuleHelper.setViewInfo(view, "currentTouchX", 0F);
+                ModuleHelper.setViewInfo(view, "currentTouchY", 0F);
 
                 view.setOnTouchListener(new View.OnTouchListener() {
                     @Override
@@ -586,9 +513,9 @@ public class System {
                     public boolean onTouch(View v, MotionEvent event) {
                         if (event.getAction() != MotionEvent.ACTION_DOWN) return false;
 
-                        long lastTouchTime = (long)XposedHelpers.getAdditionalInstanceField(view, "currentTouchTime");
-                        float lastTouchX = (float)XposedHelpers.getAdditionalInstanceField(view, "currentTouchX");
-                        float lastTouchY = (float)XposedHelpers.getAdditionalInstanceField(view, "currentTouchY");
+                        long lastTouchTime = (long)ModuleHelper.getViewInfo(view, "currentTouchTime");
+                        float lastTouchX = (float)ModuleHelper.getViewInfo(view, "currentTouchX");
+                        float lastTouchY = (float)ModuleHelper.getViewInfo(view, "currentTouchY");
 
                         long currentTouchTime = java.lang.System.currentTimeMillis();
                         float currentTouchX = event.getX();
@@ -602,9 +529,9 @@ public class System {
                             currentTouchY = 0F;
                         }
 
-                        XposedHelpers.setAdditionalInstanceField(view, "currentTouchTime", currentTouchTime);
-                        XposedHelpers.setAdditionalInstanceField(view, "currentTouchX", currentTouchX);
-                        XposedHelpers.setAdditionalInstanceField(view, "currentTouchY", currentTouchY);
+                        ModuleHelper.setViewInfo(view, "currentTouchTime", currentTouchTime);
+                        ModuleHelper.setViewInfo(view, "currentTouchX", currentTouchX);
+                        ModuleHelper.setViewInfo(view, "currentTouchY", currentTouchY);
 
                         return false;
                     }
@@ -613,122 +540,9 @@ public class System {
         });
     }
 
-    private static int callsResId;
-    public static void NotificationVolumeSettingsRes() {
-        callsResId = MainModule.resHooks.addResource("ring_volume_option_newtitle", R.string.calls);
-    }
-
-    public static void NotificationVolumeServiceHook(SystemServerLoadedParam lpparam) {
-        ModuleHelper.findAndHookMethod("com.android.server.audio.AudioService", lpparam.getClassLoader(), "updateStreamVolumeAlias", boolean.class, String.class, new MethodHook() {
-            protected void after(final AfterHookCallback param) throws Throwable {
-                int[] mStreamVolumeAlias = (int[])XposedHelpers.getObjectField(param.getThisObject(), "mStreamVolumeAlias");
-                mStreamVolumeAlias[1] = 1;
-                mStreamVolumeAlias[5] = 5;
-                XposedHelpers.setObjectField(param.getThisObject(), "mStreamVolumeAlias", mStreamVolumeAlias);
-            }
-        });
-
-        ModuleHelper.findAndHookMethod("com.android.server.audio.AudioService$VolumeStreamState", lpparam.getClassLoader(), "readSettings", new MethodHook() {
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                int mStreamType = XposedHelpers.getIntField(param.getThisObject(), "mStreamType");
-                if (mStreamType != 1) return;
-                synchronized (param.getMember().getDeclaringClass()) {
-                    Class<?> audioSystem = findClass("android.media.AudioSystem", lpparam.getClassLoader());
-                    Set<Integer> DEVICE_OUT_ALL = (Set<Integer>) XposedHelpers.getStaticObjectField(audioSystem, "DEVICE_OUT_ALL_SET");
-                    int DEVICE_OUT_DEFAULT = XposedHelpers.getStaticIntField(audioSystem, "DEVICE_OUT_DEFAULT");
-                    int[] DEFAULT_STREAM_VOLUME = (int[])XposedHelpers.getStaticObjectField(audioSystem, "DEFAULT_STREAM_VOLUME");
-                    Set<Integer> remainingDevices = DEVICE_OUT_ALL;
-                    Object mContentResolver = XposedHelpers.getObjectField(XposedHelpers.getSurroundingThis(param.getThisObject()), "mContentResolver");
-                    SparseIntArray mIndexMap = (SparseIntArray)XposedHelpers.getObjectField(param.getThisObject(), "mIndexMap");
-                    for (Integer deviceType : remainingDevices) {
-                        int device = deviceType;
-                        String name = (String)XposedHelpers.callMethod(param.getThisObject(), "getSettingNameForDevice", device);
-                        int index = (int)XposedHelpers.callStaticMethod(Settings.System.class, "getIntForUser", mContentResolver, name, device == DEVICE_OUT_DEFAULT ? DEFAULT_STREAM_VOLUME[mStreamType] : -1, -2);
-                        if (index != -1) {
-                            mIndexMap.put(device, (int)XposedHelpers.callMethod(param.getThisObject(), "getValidIndex", 10 * index, true));
-                        }
-                    }
-                    XposedHelpers.setObjectField(param.getThisObject(), "mIndexMap", mIndexMap);
-                }
-                param.returnAndSkip(null);
-            }
-        });
-
-        //noinspection ResultOfMethodCallIgnored
-        ModuleHelper.findAndHookMethodSilently("com.android.server.audio.AudioService", lpparam.getClassLoader(), "shouldZenMuteStream", int.class, new MethodHook() {
-            protected void after(final AfterHookCallback param) throws Throwable {
-                int mStreamType = (int)param.getArgs()[0];
-                if (mStreamType == 5 && !(boolean)param.getResult()) {
-                    int mZenMode = (int)XposedHelpers.callMethod(XposedHelpers.getObjectField(param.getThisObject(), "mNm"), "getZenMode");
-                    if (mZenMode == 1) param.setResult(true);
-                }
-            }
-        });
-    }
-
-    public static void NotificationVolumeSettingsHook(PackageLoadedParam lpparam) {
-        ModuleHelper.findAndHookMethod("com.android.settings.MiuiSoundSettings", lpparam.getClassLoader(), "onCreate", Bundle.class, new MethodHook() {
-            @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                Object fragment = param.getThisObject();
-                Context context = (Context)XposedHelpers.callMethod(fragment, "getActivity");
-                Resources modRes = ModuleHelper.getModuleRes(context);
-                int order = 6;
-
-                Class<?> vsbCls;
-                Method[] initSeekBar;
-                String addPreference = "addPreference";
-                try {
-                    vsbCls = findClassIfExists("com.android.settings.sound.VolumeSeekBarPreference", lpparam.getClassLoader());
-                    initSeekBar = XposedHelpers.findMethodsByExactParameters(fragment.getClass(), void.class, String.class, int.class, int.class);
-                    if (vsbCls == null || initSeekBar.length == 0) {
-                        XposedHelpers.log("NotificationVolumeSettingsHook", "Unable to find class/method in Settings to hook");
-                        return;
-                    } else {
-                        initSeekBar[0].setAccessible(true);
-                    }
-                    Class<?> pgCls = findClassIfExists("androidx.preference.PreferenceGroup", lpparam.getClassLoader());
-                    Class<?> pCls = findClassIfExists("androidx.preference.Preference", lpparam.getClassLoader());
-                    Method[] methods = XposedHelpers.findMethodsByExactParameters(pgCls, void.class, pCls);
-                    for (Method method: methods)
-                        if (Modifier.isPublic(method.getModifiers())) {
-                            addPreference = method.getName();
-                            break;
-                        }
-                } catch (Throwable t) {
-                    XposedHelpers.log("NotificationVolumeSettingsHook", "Unable to find class/method in Settings to hook");
-                    return;
-                }
-
-                Object media = XposedHelpers.callMethod(fragment, "findPreference", "media_volume");
-                if (media != null) order = (int)XposedHelpers.callMethod(media, "getOrder");
-
-                Object prefScreen = XposedHelpers.callMethod(fragment, "getPreferenceScreen");
-                Object pref = XposedHelpers.newInstance(vsbCls, context);
-                XposedHelpers.callMethod(pref, "setKey", "notification_volume");
-                XposedHelpers.callMethod(pref, "setTitle", modRes.getString(R.string.system_mods_notifications));
-                XposedHelpers.callMethod(pref, "setPersistent", true);
-                XposedHelpers.callMethod(prefScreen, addPreference, pref);
-                initSeekBar[0].invoke(fragment, "notification_volume", 5, context.getResources().getIdentifier("ic_audio_notification", "drawable", context.getPackageName()));
-                XposedHelpers.callMethod(pref, "setOrder", order);
-
-                pref = XposedHelpers.newInstance(vsbCls, context);
-                XposedHelpers.callMethod(pref, "setKey", "system_volume");
-                XposedHelpers.callMethod(pref, "setTitle", modRes.getString(R.string.system_volume));
-                XposedHelpers.callMethod(pref, "setPersistent", true);
-                XposedHelpers.callMethod(prefScreen, addPreference, pref);
-                initSeekBar[0].invoke(fragment, "system_volume", 1, context.getResources().getIdentifier("ic_audio_vol", "drawable", context.getPackageName()));
-                XposedHelpers.callMethod(pref, "setOrder", order);
-
-                Object mRingVolume = XposedHelpers.callMethod(param.getThisObject(), "findPreference", "ring_volume");
-                XposedHelpers.callMethod(mRingVolume, "setTitle", callsResId);
-            }
-        });
-    }
-
     public static void ViewWifiPasswordHook(PackageLoadedParam lpparam) {
-        int titleId = MainModule.resHooks.addResource("system_wifipassword_btn_title", R.string.system_wifipassword_btn_title);
-        int dlgTitleId = MainModule.resHooks.addResource("system_wifi_password_dlgtitle", R.string.system_wifi_password_dlgtitle);
+        int titleId = MainModule.resHooks.addFakeResource("system_wifipassword_btn_title", R.string.system_wifipassword_btn_title, "string");
+        int dlgTitleId = MainModule.resHooks.addFakeResource("system_wifi_password_dlgtitle", R.string.system_wifi_password_dlgtitle, "string");
         ModuleHelper.hookAllMethods("com.android.settings.wifi.SavedAccessPointPreference", lpparam.getClassLoader(), "onBindViewHolder", new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
@@ -798,9 +612,8 @@ public class System {
         });
     }
 
-    private static void initClockStyle(TextView mClock) {
+    private static void initClockStyle(TextView mClock, String clockName) {
         Resources res = mClock.getResources();
-        String clockName = (String) XposedHelpers.getAdditionalInstanceField(mClock, "clockName");
         String subKey = "statusbar";
         boolean statusBarClock = clockName.equals("clock");
         if (!statusBarClock) {
@@ -818,7 +631,7 @@ public class System {
             if (dualRows) {
                 mClock.setLineSpacing(0, 0.5 * fontSize > 8.5f ? 0.85f : 0.9f);
             }
-            int align = MainModule.mPrefs.getStringAsInt("system_" + subKey + "_clock_align", 1);
+            int align = MainModule.mPrefs.getStringAsInt("system_statusbar_clock_align", 1);
             if (align == 2) {
                 mClock.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
             }
@@ -828,29 +641,17 @@ public class System {
             else if (align == 4) {
                 mClock.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
             }
-            if (MainModule.mPrefs.getBoolean("system_" + subKey + "_clock_bold")) {
+            if (MainModule.mPrefs.getBoolean("system_statusbar_clock_bold")) {
                 mClock.setTypeface(Typeface.DEFAULT_BOLD);
             }
             int leftMargin = MainModule.mPrefs.getInt("system_statusbar_clock_leftmargin", 0);
-            leftMargin = (int)TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                leftMargin * dimStep,
-                res.getDisplayMetrics()
-            );
+            leftMargin = (int) Helpers.dp2px(leftMargin * dimStep);
             int rightMargin = MainModule.mPrefs.getInt("system_statusbar_clock_rightmargin", 0);
-            rightMargin = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                rightMargin * dimStep,
-                res.getDisplayMetrics()
-            );
+            rightMargin = (int) Helpers.dp2px(rightMargin * dimStep);
             int defaultVerticalOffset = 8;
             int verticalOffset = MainModule.mPrefs.getInt("system_statusbar_clock_verticaloffset", defaultVerticalOffset);
             if (verticalOffset != defaultVerticalOffset) {
-                float marginTop = TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_DIP,
-                    (verticalOffset - defaultVerticalOffset) * dimStep,
-                    res.getDisplayMetrics()
-                );
+                float marginTop = Helpers.dp2px((verticalOffset - defaultVerticalOffset) * dimStep);
                 mClock.setTranslationY(marginTop);
             }
 
@@ -867,10 +668,7 @@ public class System {
                 mClock.setLayoutParams(lp);
 
                 boolean useMonet = MainModule.mPrefs.getBoolean("system_statusbar_clock_chip_usemonet");
-                boolean enableCustomText = MainModule.mPrefs.getBoolean("system_statusbar_clock_chip_customtextcolor");
-                if (useMonet || enableCustomText) {
-                    XposedHelpers.setObjectField(mClock, "mUseWallpaperTextColor", true);
-                }
+                boolean customTextColor = MainModule.mPrefs.getBoolean("system_statusbar_clock_chip_customtextcolor");
 
                 int startColor = MainModule.mPrefs.getInt("system_statusbar_clock_chip_startcolor", 0x8F7C4DFF);
                 int endColor = MainModule.mPrefs.getInt("system_statusbar_clock_chip_endcolor", 0x2FA7FFEB);
@@ -879,7 +677,7 @@ public class System {
                     startColor = mClock.getResources().getColor(android.R.color.system_accent1_600, null);
                     endColor = startColor;
                 }
-                else if (enableCustomText) {
+                else if (customTextColor) {
                     int textcolor = MainModule.mPrefs.getInt("system_statusbar_clock_chip_textcolor", 0xFFFFFFFF);
                     mClock.setTextColor(textcolor);
                 }
@@ -925,17 +723,16 @@ public class System {
                     mClock.setLayoutParams(lp);
                 }
             }
+            int fixedWidth = MainModule.mPrefs.getInt("system_statusbar_clock_fixedcontent_width", 10);
+            if (fixedWidth > 10) {
+                ViewGroup.LayoutParams lp = mClock.getLayoutParams();
+                lp.width = (int)(mClock.getResources().getDisplayMetrics().density * fixedWidth);
+                mClock.setLayoutParams(lp);
+            }
         }
         if (dualRows) {
             mClock.setSingleLine(false);
             mClock.setMaxLines(2);
-        }
-
-        int fixedWidth = MainModule.mPrefs.getInt("system_" + subKey + "_clock_fixedcontent_width", 10);
-        if (fixedWidth > 10) {
-            ViewGroup.LayoutParams lp = mClock.getLayoutParams();
-            lp.width = (int)(mClock.getResources().getDisplayMetrics().density * fixedWidth);
-            mClock.setLayoutParams(lp);
         }
     }
 
@@ -975,10 +772,10 @@ public class System {
                             ArrayList<Object> mClockListeners = (ArrayList<Object>) XposedHelpers.getObjectField(clockController, "mClockListeners");
                             Iterator<Object> it = mClockListeners.iterator();
                             while (it.hasNext()) {
-                                Object clock = it.next();
-                                Object showSeconds = XposedHelpers.getAdditionalInstanceField(clock, "showSeconds");
+                                View clock = (View) it.next();
+                                Object showSeconds = ModuleHelper.getViewInfo(clock, "showSeconds");
                                 if (showSeconds != null) {
-                                    XposedHelpers.callMethod(clock, "onTimeChange");
+                                    XposedHelpers.callMethod(clock, "updateTime");
                                 }
                             }
                         }
@@ -988,8 +785,29 @@ public class System {
             XposedHelpers.setAdditionalInstanceField(clockController, "scheduleTimer", timer);
         }
     }
+    private static void initWeatherInfoHook(PackageLoadedParam lpparam) {
+        ModuleHelper.hookAllConstructors("com.android.systemui.statusbar.policy.MiuiStatusBarClockController", lpparam.getClassLoader(), new MethodHook() {
+            @Override
+            protected void after(AfterHookCallback param) throws Throwable {
+                Context mContext = (Context) XposedHelpers.getObjectField(param.getThisObject(), "mContext");
+                Runnable mWeatherRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        XposedHelpers.callMethod(param.getThisObject(), "updateTime");
+                    }
+                };
+                WeatherDataController.initContext(mContext, mWeatherRunnable);
+            }
+        });
+
+    }
     public static void StatusBarClockTweakHook(PackageLoadedParam lpparam) {
-        boolean statusbarClockTweak = MainModule.mPrefs.getBoolean("system_statusbar_clocktweak");
+        boolean enableWeatherParam = MainModule.mPrefs.getBoolean("system_statusbar_enable_weather_param");
+        if (enableWeatherParam) {
+            initWeatherInfoHook(lpparam);
+        }
+        boolean hideStatusbarClock = MainModule.mPrefs.getBoolean("system_statusbaricons_clock");
+        boolean statusbarClockTweak = !hideStatusbarClock && MainModule.mPrefs.getBoolean("system_statusbar_clocktweak");
         boolean ccClockTweak = MainModule.mPrefs.getBoolean("system_cc_clocktweak");
         MethodHook ScheduleHook = new MethodHook() {
             @Override
@@ -1009,26 +827,9 @@ public class System {
         };
         if (ccClockTweak || statusbarClockTweak) {
             ModuleHelper.hookAllConstructors("com.android.systemui.statusbar.policy.MiuiStatusBarClockController", lpparam.getClassLoader(), ScheduleHook);
-            ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.policy.MiuiStatusBarClockController", lpparam.getClassLoader(), "fireTimeChange", new MethodHook() {
-                @Override
-                protected void before(final BeforeHookCallback param) throws Throwable {
-                    Object clockController = param.getThisObject();
-                    ArrayList<Object> mClockListeners = (ArrayList<Object>) XposedHelpers.getObjectField(clockController, "mClockListeners");
-                    Iterator<Object> it = mClockListeners.iterator();
-                    while (it.hasNext()) {
-                        Object clock = it.next();
-                        Object showSeconds = XposedHelpers.getAdditionalInstanceField(clock, "showSeconds");
-                        if (showSeconds == null) {
-                            XposedHelpers.callMethod(clock, "onTimeChange");
-                        }
-                    }
-                    param.returnAndSkip(null);
-                }
-            });
         }
-        String ccDateFormat = MainModule.mPrefs.getString("system_cc_dateformat", "");
-        boolean ccDateCustom = ccDateFormat.length() > 0;
         boolean hideDateView = MainModule.mPrefs.getBoolean("system_cc_hidedate");
+        boolean hideDrawerDate = MainModule.mPrefs.getBoolean("system_drawer_hidedate");
         ModuleHelper.hookAllConstructors("com.android.systemui.statusbar.views.MiuiClock", lpparam.getClassLoader(), new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) {
@@ -1039,41 +840,72 @@ public class System {
                 int dateClockId = clock.getResources().getIdentifier("date_time", "id", "com.android.systemui");
                 int horizDateClockId = clock.getResources().getIdentifier("horizontal_date_time", "id", "com.android.systemui");
                 int thisClockId = clock.getId();
-                if (clockId == thisClockId && statusbarClockTweak) {
-                    XposedHelpers.setAdditionalInstanceField(clock, "clockName", "clock");
-                    if (getShowSeconds()) {
-                        XposedHelpers.setAdditionalInstanceField(clock, "showSeconds", true);
+                if (clockId == thisClockId) {
+                    ModuleHelper.setViewInfo(clock, "clockName", "clock");
+                    if (statusbarClockTweak && getShowSeconds()) {
+                        ModuleHelper.setViewInfo(clock, "showSeconds", true);
                     }
                 }
-                else if (bigClockId == thisClockId && ccClockTweak) {
-                    XposedHelpers.setAdditionalInstanceField(clock, "clockName", "ccClock");
-                    if (getCCShowSeconds()) {
-                        XposedHelpers.setAdditionalInstanceField(clock, "showSeconds", true);
+                else if (bigClockId == thisClockId) {
+                    ModuleHelper.setViewInfo(clock, "clockName", "ccClock");
+                    if (ccClockTweak) {
+                        if (getCCShowSeconds()) {
+                            ModuleHelper.setViewInfo(clock, "showSeconds", true);
+                        }
+                        initClockStyle(clock, "ccClock");
                     }
-                    initClockStyle(clock);
                 }
-                else if ((dateClockId == thisClockId || thisClockId == horizDateClockId) && (ccDateCustom || hideDateView)) {
-                    XposedHelpers.setAdditionalInstanceField(clock, "clockName", "ccDate");
+                else if (thisClockId == horizDateClockId) {
+                    ModuleHelper.setViewInfo(clock, "clockName", "drawerDate");
+                }
+                else if (dateClockId == thisClockId) {
+                    boolean ccDate = clock.getClass().getCanonicalName().contains("ControlCenterDateView");
+                    if (ccDate) {
+                        ModuleHelper.setViewInfo(clock, "clockName", "ccDate");
+                    }
+                    if (!ccDate) {
+                        ModuleHelper.setViewInfo(clock, "clockName", "drawerDate");
+                    }
                 }
             }
         });
-        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.views.MiuiClock", lpparam.getClassLoader(), "updateTime", new MethodHook(XposedInterface.PRIORITY_HIGHEST) {
+        MethodHook updateTimeHook = new MethodHook(XposedInterface.PRIORITY_HIGHEST) {
             @Override
             protected void before(final BeforeHookCallback param) throws Throwable {
                 TextView clock = (TextView)param.getThisObject();
-                String clockName = (String) XposedHelpers.getAdditionalInstanceField(clock, "clockName");
+                String clockName = (String) ModuleHelper.getViewInfo(clock, "clockName");
                 Context mContext = clock.getContext();
+                if (("ccDate".equals(clockName) && hideDateView)
+                    || ("drawerDate".equals(clockName) && hideDrawerDate)
+                    || ("clock".equals(clockName) && hideStatusbarClock)
+                ) {
+                    clock.setText("");
+                    param.returnAndSkip(null);
+                    return;
+                }
+
                 Object mMiuiStatusBarClockController = XposedHelpers.getObjectField(clock, "mMiuiStatusBarClockController");
                 Object mCalendar = XposedHelpers.getObjectField(mMiuiStatusBarClockController, "mCalendar");
                 String timeFmt = null;
-                if ("ccClock".equals(clockName) && ccClockTweak) {
-                    String customFormat = MainModule.mPrefs.getString("system_cc_clock_customformat", "");
-                    if (customFormat.length() > 0) {
-                        timeFmt = customFormat;
+                if ("ccClock".equals(clockName)) {
+                    if (ccClockTweak) {
+                        String customFormat = MainModule.mPrefs.getString("system_cc_clock_customformat", "");
+                        if (customFormat.length() > 0) {
+                            timeFmt = customFormat;
+                        }
                     }
                 }
-                else if ("ccDate".equals(clockName) && (!hideDateView && ccDateCustom)) {
-                    timeFmt = ccDateFormat;
+                else if ("ccDate".equals(clockName)) {
+                    String ccDateFormat = MainModule.mPrefs.getString("system_cc_dateformat", "");
+                    if (ccDateFormat.length() > 0) {
+                        timeFmt = ccDateFormat;
+                    }
+                }
+                else if ("drawerDate".equals(clockName)) {
+                    String drawerDateFormat = MainModule.mPrefs.getString("system_drawer_dateformat", "");
+                    if (drawerDateFormat.length() > 0) {
+                        timeFmt = drawerDateFormat;
+                    }
                 }
                 else if ("clock".equals(clockName) && statusbarClockTweak) {
                     String customFormat = MainModule.mPrefs.getString("system_statusbar_clock_customformat", "");
@@ -1110,6 +942,10 @@ public class System {
                     }
                 }
                 if (timeFmt != null) {
+                    if (enableWeatherParam) {
+                        String weatherInfo = WeatherDataController.weatherInfo;
+                        timeFmt = timeFmt.replace("tq", weatherInfo);
+                    }
                     StringBuilder formatSb = new StringBuilder(timeFmt);
                     StringBuilder textSb = new StringBuilder();
                     XposedHelpers.callMethod(mCalendar, "format", mContext, textSb, formatSb);
@@ -1117,17 +953,20 @@ public class System {
                     param.returnAndSkip(null);
                 }
             }
-        });
-        if (hideDateView) {
-            ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.views.MiuiClock", lpparam.getClassLoader(), "setClockVisibility", int.class, new MethodHook() {
+        };
+        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.views.MiuiClock", lpparam.getClassLoader(), "updateTime", updateTimeHook);
+        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.views.MiuiStatusBarClock", lpparam.getClassLoader(), "updateTime", updateTimeHook);
+        if (hideDateView || hideDrawerDate || hideStatusbarClock) {
+            ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.views.MiuiClock", lpparam.getClassLoader(), "onAttachedToWindow", new MethodHook() {
                 @Override
                 protected void before(final BeforeHookCallback param) throws Throwable {
                     TextView clock = (TextView)param.getThisObject();
-                    String clockName = (String) XposedHelpers.getAdditionalInstanceField(param.getThisObject(), "clockName");
-                    if ("ccDate".equals(clockName)) {
-                        XposedHelpers.setObjectField(param.getThisObject(), "mVisibility", 8);
-                        clock.setVisibility(View.GONE);
-                        param.returnAndSkip(null);
+                    String clockName = (String) ModuleHelper.getViewInfo(clock, "clockName");
+                    if (("ccDate".equals(clockName) && hideDateView)
+                        || ("drawerDate".equals(clockName) && hideDrawerDate)
+                        || ("clock".equals(clockName) && hideStatusbarClock)
+                    ) {
+                        XposedHelpers.setObjectField(param.getThisObject(), "mAttached", true);
                     }
                 }
             });
@@ -1136,49 +975,106 @@ public class System {
             ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView", lpparam.getClassLoader(), "onAttachedToWindow", new MethodHook() {
                 @Override
                 protected void after(final AfterHookCallback param) throws Throwable {
-                    TextView clock = (TextView) XposedHelpers.getObjectField(param.getThisObject(), "mMiuiClock");
-                    initClockStyle(clock);
+                    TextView clock = (TextView) XposedHelpers.getObjectField(param.getThisObject(), "mClock");
+                    initClockStyle(clock, "clock");
+                }
+            });
+            boolean customTextColor = MainModule.mPrefs.getBoolean("system_statusbar_clock_chip_customtextcolor");
+            boolean useMonet = MainModule.mPrefs.getBoolean("system_statusbar_clock_chip_usemonet");
+            if (MainModule.mPrefs.getBoolean("system_statusbar_clock_chip") && (customTextColor || useMonet)) {
+                ModuleHelper.hookAllMethods("com.android.systemui.statusbar.views.MiuiClock", lpparam.getClassLoader(), "onDarkChanged", new MethodHook() {
+                    @Override
+                    protected void before(BeforeHookCallback param) throws Throwable {
+                        TextView clock = (TextView)param.getThisObject();
+                        String clockName = (String) ModuleHelper.getViewInfo(clock, "clockName");
+                        if ("clock".equals(clockName)) {
+                            param.returnAndSkip(null);
+                        }
+                    }
+                });
+            }
+            ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.policy.FakeStatusBarClockController", lpparam.getClassLoader(), "initState", new MethodHook() {
+                @Override
+                protected void before(BeforeHookCallback param) throws Throwable {
+                    boolean useLeft = XposedHelpers.getBooleanField(param.getThisObject(), "useLeft");
+                    if (!useLeft) {
+                        Object mFakeClock = XposedHelpers.getObjectField(param.getThisObject(), "fakeStatusBarClock");
+                        if (mFakeClock == null) param.returnAndSkip(null);
+                    }
                 }
             });
         }
-        if (ccClockTweak) {
-            int ccClockFontSize = MainModule.mPrefs.getInt("system_cc_clock_fontsize", 9);
-            int clockMarginTop = MainModule.mPrefs.getInt("system_cc_clock_topmargin_indrawer", 0);
-            int defaultVerticalOffset = 10;
-            int verticalOffset = MainModule.mPrefs.getInt("system_cc_clock_verticaloffset", defaultVerticalOffset);
-            if (ccClockFontSize > 9 || clockMarginTop > 0 || verticalOffset != defaultVerticalOffset) {
-                MethodHook setSizeHook = new MethodHook() {
-                    @Override
-                    protected void after(final AfterHookCallback param) throws Throwable {
-                        TextView clock = (TextView)XposedHelpers.getObjectField(param.getThisObject(), "mBigTime");
-                        if (ccClockFontSize > 9) {
-                            clock.setTextSize(TypedValue.COMPLEX_UNIT_DIP, ccClockFontSize);
-                        }
-                        String clsName = param.getThisObject().getClass().getSimpleName();
-                        if (clockMarginTop > 0 && "MiuiNotificationHeaderView".equals(clsName)) {
-                            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) clock.getLayoutParams();
-                            float marginTop = TypedValue.applyDimension(
-                                TypedValue.COMPLEX_UNIT_DIP,
-                                clockMarginTop,
-                                clock.getResources().getDisplayMetrics()
-                            );
-                            lp.topMargin = (int)marginTop;
-                            clock.setLayoutParams(lp);
-                        }
-                        if (verticalOffset != defaultVerticalOffset) {
-                            float marginTop = TypedValue.applyDimension(
-                                TypedValue.COMPLEX_UNIT_DIP,
-                                verticalOffset - defaultVerticalOffset,
-                                clock.getResources().getDisplayMetrics()
-                            );
-                            clock.setTranslationY(marginTop);
-                        }
-                    }
-                };
-                ModuleHelper.findAndHookMethod("com.android.systemui.qs.MiuiNotificationHeaderView", lpparam.getClassLoader(), "updateResources", setSizeHook);
-                ModuleHelper.findAndHookMethod("com.android.systemui.qs.MiuiQSHeaderView", lpparam.getClassLoader(), "updateResources", setSizeHook);
-            }
+    }
+
+    public static void CCClockTweakHook(PackageLoadedParam lpparam) {
+        int ccClockSize = MainModule.mPrefs.getInt("system_cc_clock_fontsize", 9);
+        if (ccClockSize > 9) {
+            MainModule.resHooks.setThemeValueReplacement("com.android.systemui", "dimen", "qs_control_header_clock_size", ccClockSize);
         }
+        MethodHook ccClockHook = new MethodHook() {
+            @Override
+            protected void after(final AfterHookCallback param) throws Throwable {
+                TextView clock = (TextView)XposedHelpers.getObjectField(param.getThisObject(), "mBigTime");
+                boolean ccClockTweak = MainModule.mPrefs.getBoolean("system_cc_clocktweak");
+                boolean useSystemFonts = MainModule.mPrefs.getBoolean("system_qs_force_systemfonts");
+                if (ccClockTweak) {
+                    int defaultVerticalOffset = 10;
+                    int verticalOffset = MainModule.mPrefs.getInt("system_cc_clock_verticaloffset", defaultVerticalOffset);
+                    if (verticalOffset != defaultVerticalOffset) {
+                        float marginTop = Helpers.dp2px(verticalOffset - defaultVerticalOffset);
+                        clock.setTranslationY(marginTop);
+                    }
+                }
+                if (useSystemFonts) {
+                    clock.setTypeface(Typeface.DEFAULT);
+                }
+            }
+        };
+        ModuleHelper.findAndHookMethod("com.android.systemui.qs.MiuiNotificationHeaderView", lpparam.getClassLoader(), "updateResources", ccClockHook);
+    }
+    public static void CCClockCenterAlignHook(PackageLoadedParam lpparam) {
+        boolean centerClock = MainModule.mPrefs.getBoolean("system_cc_clock_centeralign");
+        boolean centerDate = !MainModule.mPrefs.getBoolean("system_drawer_hidedate") && MainModule.mPrefs.getBoolean("system_drawer_date_centeralign");
+        MethodHook ccClockHook = new MethodHook() {
+            @Override
+            protected void after(final AfterHookCallback param) throws Throwable {
+                TextView clock = (TextView)XposedHelpers.getObjectField(param.getThisObject(), "mBigTime");
+                int mPolicyVisibility = XposedHelpers.getIntField(clock, "mPolicyVisibility");
+                LinearLayout clockContainer = (LinearLayout) XposedHelpers.getObjectField(param.getThisObject(), "mNotificationHeaderClockContainer");
+                if (mPolicyVisibility == 0 || mPolicyVisibility == 4) {
+                    clockContainer.setGravity(Gravity.CENTER_HORIZONTAL);
+                }
+                else {
+                    clockContainer.setGravity(Gravity.START);
+                }
+            }
+        };
+        if (centerClock) {
+            ModuleHelper.findAndHookMethod("com.android.systemui.qs.MiuiNotificationHeaderView", lpparam.getClassLoader(), "updateLayout", ccClockHook);
+        }
+        MethodHook clockMarginHook = new MethodHook() {
+            @Override
+            protected void after(final AfterHookCallback param) throws Throwable {
+                if (centerClock) {
+                    TextView clock = (TextView)XposedHelpers.getObjectField(param.getThisObject(), "mBigTime");
+                    LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) clock.getLayoutParams();
+                    lp.leftMargin = 0;
+                    clock.setLayoutParams(lp);
+
+                    Object mWeatherCity = ModuleHelper.getObjectFieldSilently(param.getThisObject(), "mWeatherCity");
+                    if (!ModuleHelper.NOT_EXIST_SYMBOL.equals(mWeatherCity)) {
+                        ViewGroup weatherContainer = (ViewGroup) ((View) mWeatherCity).getParent();
+                        weatherContainer.setVisibility(View.GONE);
+                    }
+                }
+                if (centerDate) {
+                    TextView dateView = (TextView)XposedHelpers.getObjectField(param.getThisObject(), "mDateView");
+                    LinearLayout dateContainer = (LinearLayout) dateView.getParent();
+                    dateContainer.setGravity(Gravity.CENTER_HORIZONTAL);
+                }
+            }
+        };
+        ModuleHelper.findAndHookMethod("com.android.systemui.qs.MiuiNotificationHeaderView", lpparam.getClassLoader(), "onFinishInflate", clockMarginHook);
     }
 
     public static void ExpandNotificationsHook(PackageLoadedParam lpparam) {
@@ -1186,7 +1082,7 @@ public class System {
         ModuleHelper.hookAllMethods("com.android.systemui.statusbar.notification.row.ExpandableNotificationRow", lpparam.getClassLoader(), feedbackMethod, new MethodHook() {
             @Override
             protected void before(final BeforeHookCallback param) throws Throwable {
-                boolean mOnKeyguard = (boolean) XposedHelpers.callMethod(param.getThisObject(), "isOnKeyguard");
+                boolean mOnKeyguard = XposedHelpers.getBooleanField(param.getThisObject(), "mOnKeyguard");
                 if (!mOnKeyguard) {
                     Object notification = XposedHelpers.getObjectField(XposedHelpers.callMethod(param.getThisObject(), "getEntry"), "mSbn");
                     String pkgName = (String)XposedHelpers.callMethod(notification, "getPackageName");
@@ -1203,19 +1099,20 @@ public class System {
         ModuleHelper.hookAllMethods("com.android.systemui.statusbar.notification.row.ExpandableNotificationRow", lpparam.getClassLoader(), "setHeadsUp", new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
-                boolean mOnKeyguard = (boolean) XposedHelpers.callMethod(param.getThisObject(), "isOnKeyguard");
+                boolean mOnKeyguard = XposedHelpers.getBooleanField(param.getThisObject(), "mOnKeyguard");
                 boolean showHeadsUp = (boolean) param.getArgs()[0];
                 if (!mOnKeyguard && showHeadsUp) {
                     View notifyRow = (View) param.getThisObject();
                     Object notification = XposedHelpers.getObjectField(XposedHelpers.callMethod(param.getThisObject(), "getEntry"), "mSbn");
                     String pkgName = (String)XposedHelpers.callMethod(notification, "getPackageName");
-                    int opt = Integer.parseInt(MainModule.mPrefs.getString("system_expandheadups", "1"));
+                    int opt = MainModule.mPrefs.getStringAsInt("system_expandheadups", 1);
                     boolean isSelected = MainModule.mPrefs.getStringSet("system_expandheadups_apps").contains(pkgName);
                     if (opt == 2 && !isSelected || opt == 3 && isSelected) {
                         Runnable expandNotify = new Runnable() {
                             @Override
                             public void run() {
-                                XposedHelpers.callMethod(param.getThisObject(), "expandNotification");
+                                View.OnClickListener mExpandClickListener = (View.OnClickListener) XposedHelpers.getObjectField(param.getThisObject(), "mExpandClickListener");
+                                mExpandClickListener.onClick(notifyRow);
                             }
                         };
                         notifyRow.postDelayed(expandNotify, 60);
@@ -1226,24 +1123,15 @@ public class System {
     }
 
     public static void DrawerBlurRatioHook(PackageLoadedParam lpparam) {
-        ModuleHelper.hookAllConstructors("com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController", lpparam.getClassLoader(), new MethodHook() {
+        final int[] mCustomBlurModifier = {0};
+        ModuleHelper.hookAllConstructors("com.android.systemui.shade.MiuiNotificationPanelViewController", lpparam.getClassLoader(), new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
-                View mView = (View) param.getArgs()[0];
-                Context mContext = mView.getContext();
-                Handler mHandler = new Handler(mContext.getMainLooper());
-
-                Object mControlPanelWindowManager = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", lpparam.getClassLoader()), "get", findClass("com.android.systemui.controlcenter.phone.ControlPanelWindowManager", lpparam.getClassLoader()));
-                Object notificationShadeDepthController = XposedHelpers.getObjectField(param.getThisObject(), "notificationShadeDepthController");
-                int initBlurRatio = MainModule.mPrefs.getInt("system_drawer_blur", 100);
-                XposedHelpers.setAdditionalInstanceField(notificationShadeDepthController, "mCustomBlurModifier", initBlurRatio);
-                XposedHelpers.setAdditionalInstanceField(mControlPanelWindowManager, "mCustomBlurModifier", initBlurRatio);
+                mCustomBlurModifier[0] = MainModule.mPrefs.getInt("system_drawer_blur", 100);
                 ModuleHelper.observePreferenceChange(new ModuleHelper.PreferenceObserver() {
                     public void onChange(String key) {
                         if (key.contains("system_drawer_blur")) {
-                            int opt = MainModule.mPrefs.getInt("system_drawer_blur", 100);
-                            XposedHelpers.setAdditionalInstanceField(notificationShadeDepthController, "mCustomBlurModifier", opt);
-                            XposedHelpers.setAdditionalInstanceField(mControlPanelWindowManager, "mCustomBlurModifier", opt);
+                            mCustomBlurModifier[0] = MainModule.mPrefs.getInt("system_drawer_blur", 100);
                         }
                     }
                 });
@@ -1254,9 +1142,8 @@ public class System {
             @Override
             protected void before(final BeforeHookCallback param) throws Throwable {
                 Object parentCtrl = XposedHelpers.getSurroundingThis(param.getThisObject());
-                Object blurRatio = XposedHelpers.getAdditionalInstanceField(parentCtrl, "mCustomBlurModifier");
                 Object mBlurUtils = XposedHelpers.getObjectField(parentCtrl, "blurUtilsExt");
-                XposedHelpers.setAdditionalInstanceField(mBlurUtils, "mCustomBlurModifier", blurRatio);
+                XposedHelpers.setAdditionalInstanceField(mBlurUtils, "mCustomBlurModifier", mCustomBlurModifier[0]);
             }
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
@@ -1266,15 +1153,14 @@ public class System {
             }
         });
 
-        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.policy.BlurUtilsExt", lpparam.getClassLoader(), "applyBlurByRadius", View.class, int.class, new MethodHook() {
+        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.policy.BlurUtilsExt", lpparam.getClassLoader(), "applyBlur", View.class, float.class, boolean.class, new MethodHook() {
             @Override
             protected void before(final BeforeHookCallback param) throws Throwable {
                 Object multiplier = XposedHelpers.getAdditionalInstanceField(param.getThisObject(), "mCustomBlurModifier");
                 if (multiplier != null) {
-                    Object blurUtils = XposedHelpers.getObjectField(param.getThisObject(), "blurUtils");
-                    float ratio = (float) XposedHelpers.callMethod(blurUtils, "ratioOfBlurRadius", 1.0f * (int)param.getArgs()[1]);
+                    float ratio = (float) param.getArgs()[1];
                     float newRatio = ratio * (int)multiplier / 100f;
-                    param.getArgs()[1] = Math.round((float)XposedHelpers.callMethod(blurUtils, "blurRadiusOfRatio", newRatio));
+                    param.getArgs()[1] = newRatio;
                 }
             }
         });
@@ -1282,99 +1168,14 @@ public class System {
         ModuleHelper.findAndHookMethod("com.android.systemui.controlcenter.phone.ControlPanelWindowManager", lpparam.getClassLoader(), "setBlurRatio", float.class, boolean.class, new MethodHook() {
             @Override
             protected void before(final BeforeHookCallback param) throws Throwable {
-                param.getArgs()[0] = (float)param.getArgs()[0] * (int)XposedHelpers.getAdditionalInstanceField(param.getThisObject(), "mCustomBlurModifier") / 100f;
+                param.getArgs()[0] = (float)param.getArgs()[0] * mCustomBlurModifier[0] / 100f;
             }
         });
     }
 
     public static void ChargeAnimationHook(PackageLoadedParam lpparam) {
-        Class<?> ccCls;
-        try {
-            ccCls = findClass("com.android.keyguard.charge.MiuiWirelessChargeController", lpparam.getClassLoader());
-        } catch (Throwable t1) {
-            try {
-                ccCls = findClass("com.android.keyguard.charge.MiuiChargeController", lpparam.getClassLoader());
-            } catch (Throwable t2) {
-                XposedHelpers.log(t1);
-                XposedHelpers.log(t2);
-                return;
-            }
-        }
-
-        //noinspection ResultOfMethodCallIgnored
-        ModuleHelper.findAndHookMethodSilently(ccCls, "showWirelessChargeAnimation", new MethodHook() {
-            @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-                Handler mHandler = (Handler)XposedHelpers.getObjectField(param.getThisObject(), "mHandler");
-                Runnable mScreenOffRunnable = (Runnable)XposedHelpers.getObjectField(param.getThisObject(), "mScreenOffRunnable");
-                WakeLock mScreenOnWakeLock = (WakeLock)XposedHelpers.getObjectField(param.getThisObject(), "mScreenOnWakeLock");
-
-                if (mContext != null && mHandler != null && mScreenOffRunnable != null && mScreenOnWakeLock != null) {
-                    if (mScreenOnWakeLock.isHeld()) {
-                        int timeout = MainModule.mPrefs.getInt("system_chargeanimtime", 20) * 1000;
-                        mHandler.postDelayed(mScreenOnWakeLock::release, timeout);
-                        mHandler.removeCallbacks(mScreenOffRunnable);
-                        mHandler.postDelayed(mScreenOffRunnable, timeout);
-                    }
-                } else XposedHelpers.log("ChargeAnimationHook1", "Something is NULL! :)");
-            }
-        });
-
-        //noinspection ResultOfMethodCallIgnored
-        ModuleHelper.findAndHookMethodSilently(ccCls, "showRapidChargeAnimation", new MethodHook() {
-            @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-                Handler mHandler = (Handler)XposedHelpers.getObjectField(param.getThisObject(), "mHandler");
-                Runnable mScreenOffRunnable = (Runnable)XposedHelpers.getObjectField(param.getThisObject(), "mScreenOffRunnable");
-                WakeLock mScreenOnWakeLock = (WakeLock)XposedHelpers.getObjectField(param.getThisObject(), "mScreenOnWakeLock");
-
-                if (mContext != null && mHandler != null && mScreenOffRunnable != null && mScreenOnWakeLock != null) {
-                    if (mScreenOnWakeLock.isHeld()) {
-                        int timeout = MainModule.mPrefs.getInt("system_chargeanimtime", 20) * 1000;
-                        mHandler.postDelayed(mScreenOnWakeLock::release, timeout);
-                        mHandler.removeCallbacks(mScreenOffRunnable);
-                        mHandler.postDelayed(mScreenOffRunnable, timeout);
-                    }
-                } else XposedHelpers.log("ChargeAnimationHook2", "Something is NULL! :)");
-            }
-        });
-
-        //noinspection ResultOfMethodCallIgnored
-        ModuleHelper.findAndHookMethodSilently(ccCls, "showWirelessRapidChargeAnimation", new MethodHook() {
-            @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-                Handler mHandler = (Handler)XposedHelpers.getObjectField(param.getThisObject(), "mHandler");
-                Runnable mScreenOffRunnable = (Runnable)XposedHelpers.getObjectField(param.getThisObject(), "mScreenOffRunnable");
-                WakeLock mScreenOnWakeLock = (WakeLock)XposedHelpers.getObjectField(param.getThisObject(), "mScreenOnWakeLock");
-
-                if (mContext != null && mHandler != null && mScreenOffRunnable != null && mScreenOnWakeLock != null) {
-                    if (mScreenOnWakeLock.isHeld()) {
-                        int timeout = MainModule.mPrefs.getInt("system_chargeanimtime", 20) * 1000;
-                        mHandler.postDelayed(mScreenOnWakeLock::release, timeout);
-                        mHandler.removeCallbacks(mScreenOffRunnable);
-                        mHandler.postDelayed(mScreenOffRunnable, timeout);
-                    }
-                } else XposedHelpers.log("ChargeAnimationHook3", "Something is NULL! :)");
-            }
-        });
-    }
-
-    public static void VolumeStepsHook(SystemServerLoadedParam lpparam) {
-        ModuleHelper.findAndHookMethod("com.android.server.audio.AudioService", lpparam.getClassLoader(), "createStreamStates", new MethodHook() {
-            @Override
-            protected void before(final BeforeHookCallback param) {
-                Class<?> audioCls = findClass("com.android.server.audio.AudioService", lpparam.getClassLoader());
-                int[] maxStreamVolume = (int[])XposedHelpers.getStaticObjectField(audioCls, "MAX_STREAM_VOLUME");
-                int mult = MainModule.mPrefs.getInt("system_volumesteps", 0);
-                if (mult <= 0) return;
-                for (int i = 0; i < maxStreamVolume.length; i++)
-                    maxStreamVolume[i] = Math.round(maxStreamVolume[i] * mult / 100.0f);
-                XposedHelpers.setStaticObjectField(audioCls, "MAX_STREAM_VOLUME", maxStreamVolume);
-            }
-        });
+        int timeout = MainModule.mPrefs.getInt("system_chargeanimtime", 20) * 1000;
+        ModuleHelper.findAndHookMethod("com.miui.charge.container.MiuiChargeAnimationView", lpparam.getClassLoader(), "getAnimationDuration", HookerClassHelper.returnConstant(timeout));
     }
 
     private static float mMaximumBacklight;
@@ -1413,8 +1214,8 @@ public class System {
         ModuleHelper.hookAllConstructors("com.android.server.display.AutomaticBrightnessController", lpparam.getClassLoader(), new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
-            XposedHelpers.setLongField(param.getThisObject(), "mBrighteningLightDebounceConfig", 1000L);
-            XposedHelpers.setLongField(param.getThisObject(), "mDarkeningLightDebounceConfig", 1200L);
+                XposedHelpers.setLongField(param.getThisObject(), "mBrighteningLightDebounceConfig", 1000L);
+                XposedHelpers.setLongField(param.getThisObject(), "mDarkeningLightDebounceConfig", 1200L);
             }
         });
 
@@ -1439,6 +1240,38 @@ public class System {
                 backlightMaxLevel = (1 << backlightBit) - 1;
                 mMinimumBacklight = (minBrightnessLevel - 1) * 1.0f / (backlightMaxLevel - 1);
                 mMaximumBacklight = (maxBrightnessLevel - 1) * 1.0f / (backlightMaxLevel - 1);
+            }
+        });
+    }
+
+    public static void AutoBrightnessAfterScreenOffHook(SystemServerLoadedParam lpparam) {
+        ModuleHelper.findAndHookMethod("com.android.server.display.DisplayPowerController", lpparam.getClassLoader(), "setScreenState", int.class, boolean.class, new MethodHook() {
+            boolean stateChanged = false;
+            @Override
+            protected void before(BeforeHookCallback param) throws Throwable {
+                int state = (int) param.getArgs()[0];
+                boolean reportOnly = (boolean) param.getArgs()[1];
+                boolean mUseAutoBrightness = XposedHelpers.getBooleanField(param.getThisObject(), "mUseAutoBrightness");
+                if (state == 1  && mUseAutoBrightness && !reportOnly) {
+                    Object mPowerState = XposedHelpers.getObjectField(param.getThisObject(), "mPowerState");
+                    int mScreenState = XposedHelpers.getIntField(mPowerState, "mScreenState");
+                    stateChanged = state != mScreenState;
+                }
+                else {
+                    stateChanged = false;
+                }
+            }
+
+            @Override
+            protected void after(final AfterHookCallback param) throws Throwable {
+                if (stateChanged) {
+                    boolean readyToUpdateDisplayState = (boolean) XposedHelpers.callMethod(param.getThisObject(), "readyToUpdateDisplayState");
+                    if (readyToUpdateDisplayState) {
+                        Handler mHandler = (Handler) XposedHelpers.getObjectField(param.getThisObject(), "mHandler");
+                        Message msg = mHandler.obtainMessage(255);
+                        mHandler.sendMessage(msg);
+                    }
+                }
             }
         });
     }
@@ -1495,82 +1328,8 @@ public class System {
 //		});
     }
 
-    public static void BetterPopupsSwipeDownHook(PackageLoadedParam lpparam) {
-        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.notification.policy.AppMiniWindowManager", lpparam.getClassLoader(), "canNotificationSlide", String.class, PendingIntent.class, HookerClassHelper.returnConstant(false));
-    }
-
-    public static void RotationAnimationRes() {
-        int opt = Integer.parseInt(MainModule.mPrefs.getString("system_rotateanim", "1"));
-        int enter = 0;
-        int exit = 0;
-        if (opt == 2) {
-            enter = R.anim.no_enter;
-            exit = R.anim.no_exit;
-        } else if (opt == 3) {
-            enter = R.anim.xfade_enter;
-            exit = R.anim.xfade_exit;
-        }
-
-        MainModule.resHooks.setResReplacement("android", "anim", "screen_rotate_0_enter", enter);
-        MainModule.resHooks.setResReplacement("android", "anim", "screen_rotate_0_exit", exit);
-        MainModule.resHooks.setResReplacement("android", "anim", "screen_rotate_180_enter", enter);
-        MainModule.resHooks.setResReplacement("android", "anim", "screen_rotate_180_exit", exit);
-        MainModule.resHooks.setResReplacement("android", "anim", "screen_rotate_minus_90_enter", enter);
-        MainModule.resHooks.setResReplacement("android", "anim", "screen_rotate_minus_90_exit", exit);
-        MainModule.resHooks.setResReplacement("android", "anim", "screen_rotate_plus_90_enter", enter);
-        MainModule.resHooks.setResReplacement("android", "anim", "screen_rotate_plus_90_exit", exit);
-    }
-
-    public static void RotationAnimationHook(SystemServerLoadedParam lpparam) {
-        MethodHook animEnter = new MethodHook() {
-            @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                int opt = Integer.parseInt(MainModule.mPrefs.getString("system_rotateanim", "1"));
-                Animation anim = (Animation)param.getResult();
-                if (opt == 2) {
-                    anim.setDuration(0);
-                    param.setResult(anim);
-                } else if (opt == 3) {
-                    Animation alphaAnim = new AlphaAnimation(1.0f, 1.0f);
-                    alphaAnim.setInterpolator((Interpolator)XposedHelpers.getStaticObjectField(findClass("com.android.server.wm.AppTransitionInjector", lpparam.getClassLoader()), "QUART_EASE_OUT_INTERPOLATOR"));
-                    alphaAnim.setDuration(300);
-                    alphaAnim.setFillAfter(true);
-                    alphaAnim.setFillBefore(true);
-                    alphaAnim.setFillEnabled(true);
-                    param.setResult(alphaAnim);
-                }
-            }
-        };
-
-        MethodHook animExit = new MethodHook() {
-            @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                int opt = Integer.parseInt(MainModule.mPrefs.getString("system_rotateanim", "1"));
-                Animation anim = (Animation)param.getResult();
-                if (opt == 2) {
-                    anim.setDuration(0);
-                } else if (opt == 3) {
-                    AlphaAnimation alphaAnim = new AlphaAnimation(1.0f, 0.0f);
-                    alphaAnim.setInterpolator((Interpolator)XposedHelpers.getStaticObjectField(findClass("com.android.server.wm.AppTransitionInjector", lpparam.getClassLoader()), "QUART_EASE_OUT_INTERPOLATOR"));
-                    alphaAnim.setDuration(300);
-                    alphaAnim.setFillAfter(true);
-                    alphaAnim.setFillBefore(true);
-                    alphaAnim.setFillEnabled(true);
-                    param.setResult(alphaAnim);
-                }
-            }
-        };
-
-        ModuleHelper.findAndHookMethod("com.android.server.wm.ScreenRotationAnimationImpl", lpparam.getClassLoader(), "createRotation180Enter", animEnter);
-        ModuleHelper.findAndHookMethod("com.android.server.wm.ScreenRotationAnimationImpl", lpparam.getClassLoader(), "createRotation180Exit", animExit);
-        ModuleHelper.hookAllMethods("com.android.server.wm.ScreenRotationAnimationImpl", lpparam.getClassLoader(), "createRotationEnter", animEnter);
-        ModuleHelper.hookAllMethods("com.android.server.wm.ScreenRotationAnimationImpl", lpparam.getClassLoader(), "createRotationEnterWithBackColor", animEnter);
-        ModuleHelper.hookAllMethods("com.android.server.wm.ScreenRotationAnimationImpl", lpparam.getClassLoader(), "createRotationExit", animExit);
-    }
-
     public static void NoVersionCheckHook(SystemServerLoadedParam lpparam) {
-        String PMSCls = "com.android.server.pm.PackageManagerServiceUtils";
-        ModuleHelper.hookAllMethods(PMSCls, lpparam.getClassLoader(), "checkDowngrade", HookerClassHelper.DO_NOTHING);
+        ModuleHelper.hookAllMethods("com.android.server.pm.PackageManagerServiceUtils", lpparam.getClassLoader(), "checkDowngrade", HookerClassHelper.DO_NOTHING);
     }
 
     public static void ColorizeNotificationCardHook(PackageLoadedParam lpparam) {
@@ -1606,17 +1365,10 @@ public class System {
             }
         });
 
-        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.notification.row.ExpandableNotificationRow", lpparam.getClassLoader(), "updateNotificationColor", new MethodHook() {
+        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.notification.row.MiuiExpandableNotificationRow", lpparam.getClassLoader(), "updateBlurBg", int.class, int.class, boolean.class, new MethodHook() {
             @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                Object mEntry = XposedHelpers.getObjectField(param.getThisObject(), "mEntry");
-                Object mSbn = XposedHelpers.getObjectField(mEntry, "mSbn");
-                Notification notify = (Notification) XposedHelpers.callMethod(mSbn, "getNotification");
-                Object overflowColor = XposedHelpers.getAdditionalInstanceField(notify, "mSecondaryTextColor");
-                if (overflowColor != null) {
-                    XposedHelpers.setObjectField(param.getThisObject(), "mNotificationColor", overflowColor);
-                    param.returnAndSkip(null);
-                }
+            protected void before(BeforeHookCallback param) throws Throwable {
+                param.getArgs()[2] = false;
             }
         });
 
@@ -1627,6 +1379,10 @@ public class System {
                 if (mEntry != null) {
                     Object mSbn = XposedHelpers.getObjectField(mEntry, "mSbn");
                     Notification notify = (Notification) XposedHelpers.callMethod(mSbn, "getNotification");
+                    Object overflowColor = XposedHelpers.getAdditionalInstanceField(notify, "mSecondaryTextColor");
+                    if (overflowColor != null) {
+                        XposedHelpers.setObjectField(param.getThisObject(), "mNotificationColor", overflowColor);
+                    }
                     Object mNotifyBackgroundColor = XposedHelpers.getAdditionalInstanceField(notify, "mNotifyBackgroundColor");
                     if (mNotifyBackgroundColor != null) {
                         int bgColor = (int) mNotifyBackgroundColor;
@@ -1656,25 +1412,30 @@ public class System {
             }
         });
 
-        ModuleHelper.hookAllMethods("com.android.systemui.statusbar.notification.row.HybridGroupManager", lpparam.getClassLoader(), "bindFromNotificationWithStyle", new MethodHook() {
+        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.notification.row.NotificationContentView", lpparam.getClassLoader(), "updateAllSingleLineViews", new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
-                Notification mN = (Notification) XposedHelpers.callMethod(param.getArgs()[2], "getNotification");
-                if (XposedHelpers.getAdditionalInstanceField(mN, "mSecondaryTextColor") != null) {
-                    LinearLayout hybridNotificationView = (LinearLayout) param.getResult();
-                    TextView mTitleView = (TextView) XposedHelpers.getObjectField(hybridNotificationView, "mTitleView");
-                    TextView mTextView = (TextView) XposedHelpers.getObjectField(hybridNotificationView, "mTextView");
-                    mTitleView.setTextColor((int)XposedHelpers.getAdditionalInstanceField(mN, "mPrimaryTextColor"));
-                    mTextView.setTextColor((int)XposedHelpers.getAdditionalInstanceField(mN, "mSecondaryTextColor"));
+                Object mEntry = XposedHelpers.getObjectField(param.getThisObject(), "mNotificationEntry");
+                Object singleLineView = XposedHelpers.getObjectField(param.getThisObject(), "mSingleLineView");
+                if (mEntry != null && singleLineView != null) {
+                    Object mSbn = XposedHelpers.getObjectField(mEntry, "mSbn");
+                    Notification mN = (Notification) XposedHelpers.callMethod(mSbn, "getNotification");
+                    if (XposedHelpers.getAdditionalInstanceField(mN, "mSecondaryTextColor") != null) {
+                        LinearLayout hybridNotificationView = (LinearLayout) singleLineView;
+                        TextView mTitleView = (TextView) XposedHelpers.getObjectField(hybridNotificationView, "mTitleView");
+                        TextView mTextView = (TextView) XposedHelpers.getObjectField(hybridNotificationView, "mTextView");
+                        mTitleView.setTextColor((int)XposedHelpers.getAdditionalInstanceField(mN, "mPrimaryTextColor"));
+                        mTextView.setTextColor((int)XposedHelpers.getAdditionalInstanceField(mN, "mSecondaryTextColor"));
+                    }
                 }
-            }
+                }
         });
 
         ModuleHelper.hookAllMethods("com.android.systemui.statusbar.notification.row.NotificationContentInflaterInjector", lpparam.getClassLoader(), "handle3thThemeColor", new MethodHook() {
             private Object sAppIconManager = null;
             @Override
             protected void before(final BeforeHookCallback param) throws Throwable {
-                Notification.Builder builder = (Notification.Builder) param.getArgs()[1];
+                Notification.Builder builder = (Notification.Builder) param.getArgs()[0];
                 Notification mN = (Notification) XposedHelpers.getObjectField(builder, "mN");
                 if ((boolean)XposedHelpers.callMethod(mN, "isColorized")) return;
                 if ((boolean)XposedHelpers.callMethod(mN, "isMediaNotification")) return;
@@ -1682,18 +1443,17 @@ public class System {
                 if (applicationInfo == null) {
                     return;
                 }
-                Context mContext = (Context) param.getArgs()[0];
+                Context mContext = (Context) param.getArgs()[1];
                 String pkgName = applicationInfo.packageName;
-                int opt = Integer.parseInt(MainModule.mPrefs.getString("system_colorizenotifs", "1"));
+                int opt = MainModule.mPrefs.getStringAsInt("system_colorizenotifs", 1);
                 boolean isSelected = MainModule.mPrefs.getStringSet("system_colorizenotifs_apps").contains(pkgName);
                 if (opt == 2 && !isSelected || opt == 3 && isSelected) {
                     XposedHelpers.callMethod(builder, "makeNotificationGroupHeader");
                     if (sAppIconManager == null) {
-                        Class<?> Dependency = findClassIfExists("com.android.systemui.Dependency", lpparam.getClassLoader());
-                        Class<?> AppIconManager = findClassIfExists("com.miui.systemui.graphics.AppIconsManager", lpparam.getClassLoader());
-                        sAppIconManager = XposedHelpers.callStaticMethod(Dependency, "get", AppIconManager);
+                        sAppIconManager = ModuleHelper.getDepInstance(lpparam.getClassLoader(), "com.miui.systemui.graphics.AppIconsManager");
                     }
-                    Bitmap notifyIcon = (Bitmap) XposedHelpers.callMethod(sAppIconManager, "getAppIconBitmap", pkgName);
+                    int userId = ModuleHelper.getUserId();
+                    Bitmap notifyIcon = (Bitmap) XposedHelpers.callMethod(sAppIconManager, "getAppIconBitmap", userId, pkgName);
                     WallpaperColors wc = WallpaperColors.fromBitmap(notifyIcon);
                     int primaryColor = wc.getPrimaryColor().toArgb();
                     float lux = Color.luminance(primaryColor);
@@ -1706,10 +1466,12 @@ public class System {
                     Object cs;
                     boolean dark = mContext.getResources().getConfiguration().isNightModeActive();
                     cs = XposedHelpers.newInstance(ColorScheme, primaryColor, dark, finalContentStyle);
-                    List<Integer> accent1 = (List<Integer>) XposedHelpers.callMethod(cs, "getAccent1");
-//                    List<Integer> accent2 = (List<Integer>) XposedHelpers.callMethod(cs, "getAccent2");
-                    List<Integer> n1 = (List<Integer>) XposedHelpers.getObjectField(cs, "neutral1");
-                    List<Integer> n2 = (List<Integer>) XposedHelpers.getObjectField(cs, "neutral2");
+                    Object paletteAccent1 = XposedHelpers.getObjectField(cs, "accent1");
+                    List<Integer> accent1 = (List<Integer>) XposedHelpers.getObjectField(paletteAccent1, "allShades");
+                    Object paletteN1 = XposedHelpers.getObjectField(cs, "neutral1");
+                    List<Integer> n1 = (List<Integer>) XposedHelpers.getObjectField(paletteN1, "allShades");
+                    Object paletteN2 = XposedHelpers.getObjectField(cs, "neutral2");
+                    List<Integer> n2 = (List<Integer>) XposedHelpers.getObjectField(paletteN2, "allShades");
 
                     int bgColor = accent1.get(dark ? 5 : 6);
                     Object mParams = XposedHelpers.getObjectField(builder, "mParams");
@@ -1731,243 +1493,84 @@ public class System {
             }
         });
 
-        MethodHook textColorHook = new MethodHook() {
+        ModuleHelper.hookAllMethods("com.android.systemui.statusbar.notification.row.NotificationContentInflaterInjector", lpparam.getClassLoader(), "createRemoteViews", new MethodHook() {
             private int titleResId = 0;
             private int subTextResId = 0;
             @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                RemoteViews baseContent = (RemoteViews) param.getResult();
-                if (baseContent != null) {
+            protected void after(AfterHookCallback param) throws Throwable {
+                Class<?> NotificationHelper = findClass("com.android.systemui.statusbar.notification.NotificationSettingsHelper", lpparam.getClassLoader());
+                boolean miuiStyle = false;
+                Notification.Builder builder = (Notification.Builder) param.getArgs()[1];
+                Notification notification = builder.getNotification();
+                if ((boolean)XposedHelpers.callMethod(notification, "isMediaNotification")) return;
+                boolean isFoldEntrance = notification.extras.getBoolean("miui_unimportant", false);
+                boolean showMiuiStyle = (boolean) XposedHelpers.callStaticMethod(NotificationHelper, "showMiuiStyle");
+                if (showMiuiStyle || isFoldEntrance) {
+                    Notification.Style style = builder.getStyle();
+                    miuiStyle = style == null || (style instanceof Notification.BigPictureStyle) || (style instanceof Notification.BigTextStyle) || (style instanceof Notification.InboxStyle);
+                }
+                if (miuiStyle) {
+                    Object inflationProgress = param.getResult();
                     Context mContext = (Context) param.getArgs()[param.getArgs().length - 1];
                     if (titleResId == 0) {
                         titleResId = mContext.getResources().getIdentifier("title", "id", "com.android.systemui");
                         subTextResId = mContext.getResources().getIdentifier("text", "id", "com.android.systemui");
                     }
-                    Notification.Builder builder = (Notification.Builder) param.getArgs()[0];
-                    Notification mN = (Notification) XposedHelpers.getObjectField(builder, "mN");
-                    if ((boolean)XposedHelpers.callMethod(mN, "isMediaNotification")) return;
-                    if (XposedHelpers.getAdditionalInstanceField(mN, "mPrimaryTextColor") != null) {
-                        baseContent.setTextColor(titleResId, (int)XposedHelpers.getAdditionalInstanceField(mN, "mPrimaryTextColor"));
-                        baseContent.setTextColor(subTextResId, (int)XposedHelpers.getAdditionalInstanceField(mN, "mSecondaryTextColor"));
+                    List<String> contents = List.of("newPublicView", "newContentView", "newExpandedView");
+                    for (String contentType:contents) {
+                        RemoteViews baseContent = (RemoteViews) XposedHelpers.getObjectField(inflationProgress, contentType);
+                        if (baseContent != null && XposedHelpers.getAdditionalInstanceField(notification, "mPrimaryTextColor") != null) {
+                            baseContent.setTextColor(titleResId, (int)XposedHelpers.getAdditionalInstanceField(notification, "mPrimaryTextColor"));
+                            baseContent.setTextColor(subTextResId, (int)XposedHelpers.getAdditionalInstanceField(notification, "mSecondaryTextColor"));
+                        }
                     }
                 }
             }
-        };
-
-        ModuleHelper.hookAllMethods("com.android.systemui.statusbar.notification.row.NotificationContentInflaterInjector", lpparam.getClassLoader(), "createMiuiContentView", textColorHook);
-        ModuleHelper.hookAllMethods("com.android.systemui.statusbar.notification.row.NotificationContentInflaterInjector", lpparam.getClassLoader(), "createMiuiExpandedView", textColorHook);
-        ModuleHelper.hookAllMethods("com.android.systemui.statusbar.notification.row.NotificationContentInflaterInjector", lpparam.getClassLoader(), "createMiuiPublicView", textColorHook);
-    }
-
-    public static int abHeight = 39;
-
-    public static void CompactNotificationsHook(PackageLoadedParam lpparam) {
-        ModuleHelper.hookAllMethods("com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper", lpparam.getClassLoader(), "wrap", new MethodHook() {
-            @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                if (param.getArgs().length > 3) return;
-                Object res = param.getResult();
-                if (res == null) return;
-                View mView = (View)XposedHelpers.getObjectField(res, "mView");
-                if (mView == null) return;
-                //if (mView.getId() != mView.getResources().getIdentifier("status_bar_latest_event_content", "id", "android")) return;
-                FrameLayout container = mView.findViewById(mView.getResources().getIdentifier("actions_container", "id", "android"));
-                if (container == null) return;
-                float density = mView.getResources().getDisplayMetrics().density;
-                int height = Math.round(density * abHeight);
-                ViewGroup actions = (ViewGroup)container.getChildAt(0);
-                FrameLayout.LayoutParams lp1 = (FrameLayout.LayoutParams)actions.getLayoutParams();
-                lp1.height = height;
-                actions.setLayoutParams(lp1);
-                actions.setPadding(0, 0, 0, 0);
-                for (int c = 0; c < actions.getChildCount(); c++) {
-                    View button = actions.getChildAt(c);
-                    ViewGroup.MarginLayoutParams lp2 = (ViewGroup.MarginLayoutParams)button.getLayoutParams();
-                    lp2.height = height;
-                    lp2.bottomMargin = 0;
-                    lp2.topMargin = 0;
-                }
-            }
         });
-
-//        MethodHook hook = new MethodHook() {
-//            @Override
-//            protected void after(final AfterHookCallback param) throws Throwable {
-//                View view = (View)param.getArgs()[0];
-//                FrameLayout container = view.findViewById(view.getResources().getIdentifier("actions_container", "id", "android"));
-//                if (container == null || container.getVisibility() != View.VISIBLE) return;
-//                ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams)view.getLayoutParams();
-//                if ("MiuiStyleProcessor".equals(param.getThisObject().getClass().getSimpleName())) {
-//                    float density = container.getResources().getDisplayMetrics().density;
-//                    lp.bottomMargin = Math.round(lp.bottomMargin * 0.666f);
-//                    ViewGroup.LayoutParams lpc = container.getLayoutParams();
-//                    lpc.height = Math.round(density * abHeight);
-//                    container.setLayoutParams(lpc);
-//                } else {
-//                    lp.bottomMargin = 0;
-//                }
-//                view.setLayoutParams(lp);
-//            }
-//        };
-//        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.notification.row.wrapper.NotificationTemplateViewWrapper$GoogleStyleProcessor", lpparam.getClassLoader(), "setGoogleContentMargins", View.class, hook);
-//        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.notification.row.wrapper.NotificationTemplateViewWrapper$MiuiStyleProcessor", lpparam.getClassLoader(), "setMiuiContentMargins", View.class, hook);
     }
 
-    private static final List<String> hookedTiles = new ArrayList<String>();
-
-    @SuppressLint("MissingPermission")
     public static void QSHapticHook(PackageLoadedParam lpparam) {
-        ModuleHelper.findAndHookMethod("com.android.systemui.qs.tileimpl.QSFactoryImpl", lpparam.getClassLoader(), "createTileInternal", String.class, new MethodHook() {
-            @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                Object tile = param.getResult();
-                if (tile == null) return;
-                String tileClass = tile.getClass().getCanonicalName();
-                if (!hookedTiles.contains(tileClass)) {
-                    ModuleHelper.hookAllMethods(tileClass, lpparam.getClassLoader(), "handleClick", new MethodHook() {
-                        @Override
-                        protected void after(final AfterHookCallback param) throws Throwable {
-                            Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-                            boolean ignoreSystem = MainModule.mPrefs.getBoolean("system_qshaptics_ignore");
-                            int opt = MainModule.mPrefs.getStringAsInt("system_qshaptics", 1);
-                            if (opt == 2)
-                                Helpers.performLightVibration(mContext, ignoreSystem);
-                            else if (opt == 3)
-                                Helpers.performStrongVibration(mContext, ignoreSystem);
-                        }
-                    });
-                    hookedTiles.add(tileClass);
-                }
-            }
-        });
-    }
-
-    public static void HideCCOperatorHook(PackageLoadedParam lpparam) {
-        MethodHook hideOperatorHook = new MethodHook() {
-            @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                Object carrierView;
-                TextView mCarrierText;
-                try {
-                    carrierView = XposedHelpers.getObjectField(param.getThisObject(), "carrierText");
-                }
-                catch (Throwable e) {
-                    carrierView = XposedHelpers.getObjectField(param.getThisObject(), "mCarrierText");
-                }
-                mCarrierText = (TextView) carrierView;
-                mCarrierText.setVisibility(View.GONE);
-            }
-        };
-
-        boolean hookedFlaresInfo = ModuleHelper.hookAllMethodsSilently("com.android.systemui.controlcenter.phone.widget.ControlCenterStatusBar", lpparam.getClassLoader(), "updateFlaresInfo", hideOperatorHook);
-        if (!hookedFlaresInfo) {
-            ModuleHelper.findAndHookMethod("com.android.systemui.controlcenter.phone.widget.ControlCenterStatusBar", lpparam.getClassLoader(), "onFinishInflate", hideOperatorHook);
-        }
-
-        ModuleHelper.findAndHookMethod("com.android.systemui.qs.MiuiNotificationHeaderView", lpparam.getClassLoader(), "updateCarrierTextVisibility", hideOperatorHook);
-
-        hookedFlaresInfo = ModuleHelper.findAndHookMethodSilently("com.android.systemui.qs.MiuiQSHeaderView", lpparam.getClassLoader(), "updateCarrierVisibility", hideOperatorHook);
-        if (!hookedFlaresInfo) {
-            ModuleHelper.findAndHookMethod("com.android.systemui.qs.MiuiQSHeaderView", lpparam.getClassLoader(), "onFinishInflate", hideOperatorHook);
-        }
-    }
-
-    public static void HideCCOperatorDelimiterHook(PackageLoadedParam lpparam) {
-        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.policy.MiuiCarrierTextController", lpparam.getClassLoader(), "fireCarrierTextChanged", String.class, new MethodHook() {
-            @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                String mCurrentCarrier = (String) param.getArgs()[0];
-                param.getArgs()[0] = mCurrentCarrier.replace(" | ", "");
-            }
-        });
-    }
-
-    public static void CollapseCCAfterClickHook(PackageLoadedParam lpparam) {
         ModuleHelper.findAndHookMethod("com.android.systemui.qs.tileimpl.QSTileImpl", lpparam.getClassLoader(), "click", View.class, new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
                 Object mState = XposedHelpers.callMethod(param.getThisObject(), "getState");
                 int state = XposedHelpers.getIntField(mState, "state");
                 if (state != 0) {
-                    String tileSpec = (String) XposedHelpers.callMethod(param.getThisObject(), "getTileSpec");
-                    if (!"edit".equals(tileSpec)) {
-                        Object mHost = XposedHelpers.getObjectField(param.getThisObject(), "mHost");
-                        XposedHelpers.callMethod(mHost, "collapsePanels");
-                    }
+                    Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
+                    boolean ignoreSystem = MainModule.mPrefs.getBoolean("system_qshaptics_ignore");
+                    int opt = MainModule.mPrefs.getStringAsInt("system_qshaptics", 1);
+                    if (opt == 2)
+                        Helpers.performLightVibration(mContext, ignoreSystem);
+                    else if (opt == 3)
+                        Helpers.performStrongVibration(mContext, ignoreSystem);
                 }
             }
         });
     }
 
-    public static void DisableBluetoothRestrictHook(PackageLoadedParam lpparam) {
-        ModuleHelper.findAndHookMethod("com.android.settingslib.bluetooth.LocalBluetoothAdapter", lpparam.getClassLoader(), "isSupportBluetoothRestrict", Context.class, HookerClassHelper.returnConstant(false));
-    }
-
-    public static void AutoGroupNotificationsHook(SystemServerLoadedParam lpparam) {
-        ModuleHelper.findAndHookMethod("com.android.server.notification.GroupHelper", lpparam.getClassLoader(), "adjustAutogroupingSummary", int.class, String.class, String.class, boolean.class, new MethodHook() {
-            @Override
-            @SuppressWarnings({"unchecked", "SuspiciousMethodCalls"})
-            protected void before(final BeforeHookCallback param) throws Throwable {
-            int opt = Integer.parseInt(MainModule.mPrefs.getString("system_autogroupnotif", "1"));
-            if (opt == 2) {
-                param.returnAndSkip(null);
-                return;
-            }
-            Map<Integer, Map<String, LinkedHashSet<String>>> mUngroupedNotifications = (Map<Integer, Map<String, LinkedHashSet<String>>>)XposedHelpers.getObjectField(param.getThisObject(), "mUngroupedNotifications");
-            Map<String, LinkedHashSet<String>> obj = mUngroupedNotifications.get(param.getArgs()[0]);
-            if (obj != null) {
-                LinkedHashSet<String> list = obj.get(param.getArgs()[1]);
-                if (list != null && list.size() < opt) param.returnAndSkip(null);
-            }
-            }
-        });
-
-        ModuleHelper.findAndHookMethod("com.android.server.notification.GroupHelper", lpparam.getClassLoader(), "adjustNotificationBundling", List.class, boolean.class, new MethodHook() {
-            @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
-            List<?> list = (List<?>)param.getArgs()[0];
-            int opt = Integer.parseInt(MainModule.mPrefs.getString("system_autogroupnotif", "1"));
-            if (opt == 2 || (list != null && list.size() < opt)) param.returnAndSkip(null);
-            }
-        });
-    }
-
-    public static void NoMoreIconHook(PackageLoadedParam lpparam) {
-        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.phone.NotificationIconAreaController", lpparam.getClassLoader(), "setIconsVisibility", new MethodHook() {
-            @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                Object mMoreIcon = XposedHelpers.getObjectField(param.getThisObject(), "mMoreIcon");
-                if (mMoreIcon != null) XposedHelpers.setBooleanField(param.getThisObject(), "mForceHideMoreIcon", true);
-            }
-        });
-    }
-
     public static void ShowNotificationsAfterUnlockHook(PackageLoadedParam lpparam) {
-        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.notification.ExpandedNotification", lpparam.getClassLoader(), "hasShownAfterUnlock", HookerClassHelper.returnConstant(false));
-        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.notification.ExpandedNotification", lpparam.getClassLoader(), "setHasShownAfterUnlock", boolean.class, new MethodHook() {
+        ModuleHelper.hookAllMethods("com.android.systemui.statusbar.notification.interruption.KeyguardNotificationVisibilityProviderImpl", lpparam.getClassLoader(), "shouldHideNotification", new MethodHook() {
             @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                XposedHelpers.setBooleanField(param.getThisObject(), "mHasShownAfterUnlock", false);
+            protected void before(BeforeHookCallback param) throws Throwable {
+                Object notification = XposedHelpers.getObjectField(param.getArgs()[0], "mSbn");
+                XposedHelpers.setObjectField(notification, "mHasShownAfterUnlock", false);
             }
         });
-        //noinspection ResultOfMethodCallIgnored
-        ModuleHelper.findAndHookMethodSilently("com.android.systemui.statusbar.notification.MiuiNotificationCompat", lpparam.getClassLoader(), "isKeptOnKeyguard", Notification.class, HookerClassHelper.returnConstant(true));
     }
 
     public static void NotificationRowMenuHook(PackageLoadedParam lpparam) {
-        int appInfoIconResId = MainModule.resHooks.addResource("ic_appinfo", R.drawable.ic_appinfo12);
-        int forceCloseIconResId = MainModule.resHooks.addResource("ic_forceclose", R.drawable.ic_forceclose12);
-        int openInFwIconResId = MainModule.resHooks.addResource("ic_openinfw", R.drawable.ic_openinfw);
-        int appInfoDescId = MainModule.resHooks.addResource("miui_notification_menu_appinfo_title", R.string.system_notifrowmenu_appinfo);
-        int forceCloseDescId = MainModule.resHooks.addResource("miui_notification_menu_forceclose_title", R.string.system_notifrowmenu_forceclose);
-        int openInFwDescId = MainModule.resHooks.addResource("miui_notification_menu_openinfw_title", R.string.system_notifrowmenu_openinfw);
-        MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "notification_menu_icon_padding", 0);
-        MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "miui_notification_modal_menu_margin_left_right", 3);
-        MainModule.resHooks.setResReplacement("com.android.systemui", "drawable", "miui_notification_menu_ic_bg_active", R.drawable.miui_notification_menu_ic_bg_active);
-        MainModule.resHooks.setResReplacement("com.android.systemui", "drawable", "miui_notification_menu_ic_bg_inactive", R.drawable.miui_notification_menu_ic_bg_inactive);
+        int appInfoIconResId = MainModule.resHooks.addFakeResource("ic_appinfo", R.drawable.ic_appinfo12, "drawable");
+        int forceCloseIconResId = MainModule.resHooks.addFakeResource("ic_forceclose", R.drawable.ic_forceclose12, "drawable");
+        int openInFwIconResId = MainModule.resHooks.addFakeResource("ic_openinfw", R.drawable.ic_openinfw, "drawable");
+        int appInfoDescId = MainModule.resHooks.addFakeResource("miui_notification_menu_appinfo_title", R.string.system_notifrowmenu_appinfo, "string");
+        int forceCloseDescId = MainModule.resHooks.addFakeResource("miui_notification_menu_forceclose_title", R.string.system_notifrowmenu_forceclose, "string");
+        int openInFwDescId = MainModule.resHooks.addFakeResource("miui_notification_menu_openinfw_title", R.string.system_notifrowmenu_openinfw, "string");
+        MainModule.resHooks.setThemeValueReplacement("com.android.systemui", "dimen", "notification_menu_icon_padding", 0);
+        MainModule.resHooks.setThemeValueReplacement("com.android.systemui", "dimen", "miui_notification_modal_menu_margin_left_right", 3);
+        MainModule.resHooks.setThemeValueReplacement("com.android.systemui", "dimen", "miui_notification_modal_menu_icon_bg_size", 50);
 
         Class<?> MiuiNotificationMenuItem = findClass("com.android.systemui.statusbar.notification.row.MiuiNotificationMenuRow.MiuiNotificationMenuItem", lpparam.getClassLoader());
-        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.notification.row.MiuiNotificationMenuRow", lpparam.getClassLoader(), "createMenuViews", boolean.class, boolean.class, new MethodHook() {
+        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.notification.row.MiuiNotificationMenuRow", lpparam.getClassLoader(), "createMenuViews", boolean.class, new MethodHook() {
             @Override
             @SuppressWarnings("unchecked")
             protected void after(final AfterHookCallback param) throws Throwable {
@@ -1979,31 +1582,33 @@ public class System {
                 Object openFwBtn = null;
                 Constructor MenuItem = MiuiNotificationMenuItem.getConstructors()[0];
                 try {
-                    infoBtn = MenuItem.newInstance(param.getThisObject(), mContext, appInfoDescId, null, appInfoIconResId);
-                    forceCloseBtn = MenuItem.newInstance(param.getThisObject(), mContext, forceCloseDescId, null, forceCloseIconResId);
-                    openFwBtn = MenuItem.newInstance(param.getThisObject(), mContext, openInFwDescId, null, openInFwIconResId);
+                    infoBtn = MenuItem.newInstance(mContext, appInfoDescId, null, appInfoIconResId);
+                    forceCloseBtn = MenuItem.newInstance(mContext, forceCloseDescId, null, forceCloseIconResId);
+                    openFwBtn = MenuItem.newInstance(mContext, openInFwDescId, null, openInFwIconResId);
                 } catch (Throwable t1) {
                     XposedHelpers.log(t1);
                 }
                 if (infoBtn == null || forceCloseBtn == null || openFwBtn == null) return;
                 Object notification = XposedHelpers.getObjectField(param.getThisObject(), "mSbn");
-                Object expandNotifyRow = XposedHelpers.getObjectField(param.getThisObject(), "mParent");
                 mMenuItems.add(infoBtn);
                 mMenuItems.add(forceCloseBtn);
                 mMenuItems.add(openFwBtn);
-                XposedHelpers.setObjectField(param.getThisObject(), "mMenuItems", mMenuItems);
                 int menuMargin = (int) XposedHelpers.getObjectField(param.getThisObject(), "mMenuMargin");
                 LinearLayout mMenuContainer = (LinearLayout)XposedHelpers.getObjectField(param.getThisObject(), "mMenuContainer");
+                String pkgName = (String)XposedHelpers.callMethod(notification, "getPackageName");
                 View mInfoBtn = (View) XposedHelpers.callMethod(infoBtn, "getMenuView");
-                View mForceCloseBtn = (View) XposedHelpers.callMethod(forceCloseBtn, "getMenuView");
+                View mForceCloseBtn = null;
+                if (!"android".equals(pkgName)) {
+                    mForceCloseBtn = (View) XposedHelpers.callMethod(forceCloseBtn, "getMenuView");
+                }
                 View mOpenFwBtn = (View) XposedHelpers.callMethod(openFwBtn, "getMenuView");
-
+                Object expandNotifyRow = XposedHelpers.getObjectField(param.getThisObject(), "mParent");
+                View finalMForceCloseBtn = mForceCloseBtn;
                 View.OnClickListener itemClick = new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if (view == null) return;
-                        String pkgName = (String)XposedHelpers.callMethod(notification, "getPackageName");
-                        int uid = (int)XposedHelpers.callMethod(notification, "getAppUid");
+                        int uid = XposedHelpers.getIntField(notification, "mAppUid");
                         int user = 0;
                         try {
                             user = (int)XposedHelpers.callStaticMethod(UserHandle.class, "getUserId", uid);
@@ -2013,8 +1618,7 @@ public class System {
 
                         if (view == mInfoBtn) {
                             ModuleHelper.openAppInfo(mContext, pkgName, user);
-                            mContext.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
-                        } else if (view == mForceCloseBtn) {
+                        } else if (view == finalMForceCloseBtn) {
                             ActivityManager am = (ActivityManager)mContext.getSystemService(Context.ACTIVITY_SERVICE);
                             if (user != 0)
                                 XposedHelpers.callMethod(am, "forceStopPackageAsUser", pkgName, user);
@@ -2026,36 +1630,41 @@ public class System {
                             } catch (Throwable ignore) {}
                         }
                         else if (view == mOpenFwBtn) {
-                            Class<?> Dependency = findClass("com.android.systemui.Dependency", lpparam.getClassLoader());
-                            Object AppMiniWindowManager = XposedHelpers.callStaticMethod(Dependency, "get", findClassIfExists("com.android.systemui.statusbar.notification.policy.AppMiniWindowManager", lpparam.getClassLoader()));
                             String miniWindowPkg = (String) XposedHelpers.callMethod(expandNotifyRow, "getMiniWindowTargetPkg");
                             PendingIntent notifyIntent = (PendingIntent) XposedHelpers.callMethod(expandNotifyRow, "getPendingIntent");
-                            String ModalControllerForDep = "com.android.systemui.statusbar.notification.modal.ModalController";
-                            Object ModalController = XposedHelpers.callStaticMethod(Dependency, "get", findClass(ModalControllerForDep, lpparam.getClassLoader()));
-                            XposedHelpers.callMethod(ModalController, "animExitModelCollapsePanels");
-                            XposedHelpers.callMethod(AppMiniWindowManager, "launchMiniWindowActivity", miniWindowPkg, notifyIntent);
+                            try {
+                                Bundle options = ModuleHelper.getFreeformOptions(mContext, miniWindowPkg, notifyIntent, true);
+                                notifyIntent.send(mContext, 0, ModuleHelper.getFreeformIntent(miniWindowPkg), null, null, null, options);
+                            } catch (PendingIntent.CanceledException e) {
+                                throw new RuntimeException(e);
+                            }
                         }
+                        String ModalControllerForDep = "com.android.systemui.statusbar.notification.modal.ModalController";
+                        Object ModalController = ModuleHelper.getDepInstance(lpparam.getClassLoader(), ModalControllerForDep);
+                        XposedHelpers.callMethod(ModalController, "animExitModal", "OTHER");
+                        Object mCommandQueue = ModuleHelper.getDepInstance(lpparam.getClassLoader(), "com.android.systemui.statusbar.CommandQueue");
+                        XposedHelpers.callMethod(mCommandQueue, "animateCollapsePanels", 0, false);
                     }
                 };
                 mInfoBtn.setOnClickListener(itemClick);
-                mForceCloseBtn.setOnClickListener(itemClick);
                 mOpenFwBtn.setOnClickListener(itemClick);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-2, -2);
-                layoutParams.leftMargin = menuMargin;
-                layoutParams.rightMargin = menuMargin;
-                mMenuContainer.addView(mInfoBtn, layoutParams);
-                mMenuContainer.addView(mForceCloseBtn, layoutParams);
-                mMenuContainer.addView(mOpenFwBtn, layoutParams);
-                int menuWidth = (int) TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_DIP,
-                    52,
-                    mContext.getResources().getDisplayMetrics()
-                );
-                int titleId = mContext.getResources().getIdentifier("modal_menu_title", "id", lpparam.getPackageName());
+                layoutParams.leftMargin = menuMargin * 2;
+                layoutParams.rightMargin = menuMargin * 2;
+                mMenuContainer.addView(mInfoBtn);
+                if (finalMForceCloseBtn != null) {
+                    finalMForceCloseBtn.setOnClickListener(itemClick);
+                    mMenuContainer.addView(finalMForceCloseBtn);
+                }
+                mMenuContainer.addView(mOpenFwBtn);
+                int titleId = mContext.getResources().getIdentifier("modal_menu_title", "id", "com.android.systemui");
+                int panelWidth = mContext.getResources().getDisplayMetrics().widthPixels;
+                int menuWidth = (panelWidth / mMenuItems.size()) - (menuMargin * 2);
                 mMenuItems.forEach(new Consumer() {
                     @Override
                     public void accept(Object obj) {
                         View menuView = (View) XposedHelpers.callMethod(obj, "getMenuView");
+                        menuView.setLayoutParams(layoutParams);
                         ((TextView) menuView.findViewById(titleId)).setMaxWidth(menuWidth);
                     }
                 });
@@ -2144,18 +1753,19 @@ public class System {
         });
     }
 
-    public static void StatusBarHeightRes() {
-        int opt = MainModule.mPrefs.getInt("system_statusbarheight", 19);
-        int heightDpi = opt == 19 ? 27 : opt;
-        MainModule.resHooks.setDensityReplacement("*", "dimen", "status_bar_height_default", heightDpi);
-        MainModule.resHooks.setDensityReplacement("*", "dimen", "status_bar_height", heightDpi);
-        MainModule.resHooks.setDensityReplacement("*", "dimen", "status_bar_height_portrait", heightDpi);
-        MainModule.resHooks.setDensityReplacement("*", "dimen", "status_bar_height_landscape", heightDpi);
+    public static void StatusBarHeightHook(PackageLoadedParam lpparam) {
+        int opt = MainModule.mPrefs.getInt("system_statusbarheight", 11);
+        int heightDpi = opt == 11 ? 27 : opt;
+        String pkgName = lpparam.getPackageName();
+        ModuleHelper.replacePkgAndFrameworkValue(pkgName, "dimen", "status_bar_height_default", heightDpi);
+        ModuleHelper.replacePkgAndFrameworkValue(pkgName, "dimen", "status_bar_height", heightDpi);
+        ModuleHelper.replacePkgAndFrameworkValue(pkgName, "dimen", "status_bar_height_portrait", heightDpi);
+        ModuleHelper.replacePkgAndFrameworkValue(pkgName, "dimen", "status_bar_height_landscape", heightDpi);
     }
 
 //    public static void StatusBarHeightHook(SystemServerLoadedParam lpparam) {
-//        int opt = MainModule.mPrefs.getInt("system_statusbarheight", 19);
-//        int heightDpi = opt == 19 ? 27 : opt;
+//        int opt = MainModule.mPrefs.getInt("system_statusbarheight", 11);
+//        int heightDpi = opt == 11 ? 27 : opt;
 //
 //        MethodHook hook = new MethodHook() {
 //            @Override
@@ -2183,10 +1793,6 @@ public class System {
     private static final int NOCOLOR = 0x01010101;
     private static int actionBarColor = NOCOLOR;
 
-    private static boolean isIgnored(Context context) {
-        return !MainModule.mPrefs.getStringSet("system_statusbarcolor_apps").contains(context.getPackageName());
-    }
-
     private static int getActionBarColor(Window window, int oldColor) {
         if (actionBarColor != NOCOLOR) return actionBarColor;
 
@@ -2212,7 +1818,7 @@ public class System {
         if (mDecorContext != null) {
             WeakReference<Context> mActivityContext = (WeakReference<Context>)XposedHelpers.getObjectField(mDecorContext, "mActivityContext");
             Context mContext = mActivityContext.get();
-            if (mContext != null && !isIgnored(mContext))
+            if (mContext != null)
                 ((Activity)mContext).getWindow().setStatusBarColor(actionBarColor);
         }
     }
@@ -2221,7 +1827,7 @@ public class System {
         if (!(bg instanceof ColorDrawable)) return;
         actionBarColor = ((ColorDrawable)bg).getColor();
         Activity mActivity = (Activity)XposedHelpers.getObjectField(thisObject, "mActivity");
-        if (mActivity != null && !isIgnored(mActivity))
+        if (mActivity != null)
             mActivity.getWindow().setStatusBarColor(actionBarColor);
     }
 
@@ -2230,7 +1836,6 @@ public class System {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
                 Window wnd = (Window)param.getThisObject();
-                if (isIgnored(wnd.getContext())) return;
                 int mStatusBarColor = XposedHelpers.getIntField(param.getThisObject(), "mStatusBarColor");
                 if (mStatusBarColor == -16777216) return;
                 int newColor = getActionBarColor(wnd, mStatusBarColor);
@@ -2242,8 +1847,6 @@ public class System {
         ModuleHelper.findAndHookMethod("com.android.internal.policy.PhoneWindow", lpparam.getClassLoader(), "setStatusBarColor", int.class, new MethodHook() {
             @Override
             protected void before(final BeforeHookCallback param) throws Throwable {
-                Window wnd = (Window)param.getThisObject();
-                if (isIgnored(wnd.getContext())) return;
                 if (actionBarColor != NOCOLOR) param.getArgs()[0] = actionBarColor;
                 else if (Color.alpha((int)param.getArgs()[0]) < 255) param.getArgs()[0] = Color.TRANSPARENT;
             }
@@ -2646,17 +2249,17 @@ public class System {
         audioViz.updateViewState(isPlaying, isKeyguardShowing, isNotificationPanelExpanded);
     }
     public static void AudioVisualizerHook(PackageLoadedParam lpparam) {
-        ModuleHelper.hookAllMethods(StatusBarCls, lpparam.getClassLoader(), "makeStatusBarView", new MethodHook() {
+        final boolean[] screenAndDoze = {false, false};
+        ModuleHelper.findAndHookMethod("com.android.systemui.shade.MiuiNotificationPanelViewController", lpparam.getClassLoader(), "onViewAttachedToWindow", View.class, new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
-                Object viewController = XposedHelpers.getObjectField(param.getThisObject(), "mNotificationPanelViewController");
-                FrameLayout mNotificationPanel = (FrameLayout) XposedHelpers.getObjectField(viewController, "mView");
+                FrameLayout mNotificationPanel = (FrameLayout) XposedHelpers.getObjectField(param.getThisObject(), "panelView");
                 if (mNotificationPanel == null) {
                     XposedHelpers.log("AudioVisualizerHook", "Cannot find mNotificationPanel");
                     return;
                 }
 
-                Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
+                Context mContext = mNotificationPanel.getContext();
                 ViewGroup visFrame = new FrameLayout(mContext);
                 visFrame.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 audioViz = new AudioVisualizer(mContext);
@@ -2664,29 +2267,42 @@ public class System {
                 audioViz.setClickable(false);
                 visFrame.addView(audioViz);
                 visFrame.setClickable(false);
-                View wallpaper = mNotificationPanel.findViewById(mContext.getResources().getIdentifier("wallpaper", "id", lpparam.getPackageName()));
-                View themebkg = mNotificationPanel.findViewById(mContext.getResources().getIdentifier("theme_background", "id", lpparam.getPackageName()));
-                View awesome = mNotificationPanel.findViewById(mContext.getResources().getIdentifier("awesome_lock_screen_container", "id", lpparam.getPackageName()));
+                View themebkg = mNotificationPanel.findViewById(mContext.getResources().getIdentifier("keyguard_background_layer", "id", lpparam.getPackageName()));
 
                 int order = 0;
-                if (awesome != null) order = Math.max(order, mNotificationPanel.indexOfChild(awesome));
                 if (themebkg != null) order = Math.max(order, mNotificationPanel.indexOfChild(themebkg));
-                if (wallpaper != null) order = Math.max(order, mNotificationPanel.indexOfChild(wallpaper));
                 mNotificationPanel.addView(visFrame, order + 1);
             }
         });
 
-        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.phone.ScrimController", lpparam.getClassLoader(), "onScreenTurnedOff", new MethodHook() {
+        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.phone.CentralSurfacesImpl", lpparam.getClassLoader(), "start", new MethodHook() {
             @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                if (audioViz != null) audioViz.updateScreenOn(false);
+            protected void after(AfterHookCallback param) throws Throwable {
+                Object mScreenObserver = XposedHelpers.getObjectField(param.getThisObject(), "mScreenObserver");
+                Class<?> ScreenObserverCls = mScreenObserver.getClass();
+                ModuleHelper.findAndHookMethod(ScreenObserverCls, "onScreenTurnedOff", new MethodHook() {
+                    @Override
+                    protected void after(final AfterHookCallback param) throws Throwable {
+                        screenAndDoze[0] = false;
+                        if (audioViz != null) audioViz.updateScreenOn(false);
+                    }
+                });
+
+                ModuleHelper.findAndHookMethod(ScreenObserverCls, "onScreenTurnedOn", new MethodHook() {
+                    @Override
+                    protected void after(final AfterHookCallback param) throws Throwable {
+                        screenAndDoze[0] = true;
+                        if (audioViz != null) audioViz.updateScreenOn(!screenAndDoze[1]);
+                    }
+                });
             }
         });
-
-        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.phone.ScrimController", lpparam.getClassLoader(), "onScreenTurnedOn", new MethodHook() {
+        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.phone.CentralSurfacesImpl", lpparam.getClassLoader(), "updateDozingState", new MethodHook() {
             @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                if (audioViz != null) audioViz.updateScreenOn(true);
+            protected void after(AfterHookCallback param) throws Throwable {
+                boolean mDozing = XposedHelpers.getBooleanField(param.getThisObject(), "mDozing");
+                screenAndDoze[1] = mDozing;
+                if (audioViz != null) audioViz.updateScreenOn(!mDozing && screenAndDoze[0]);
             }
         });
         ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.policy.KeyguardStateControllerImpl", lpparam.getClassLoader(), "notifyKeyguardState", boolean.class, boolean.class, new MethodHook() {
@@ -2701,13 +2317,14 @@ public class System {
             }
         });
 
-        ModuleHelper.hookAllMethods(StatusBarCls, lpparam.getClassLoader(), "setPanelExpanded", new MethodHook() {
+        ModuleHelper.findAndHookMethod("com.android.systemui.shade.MiuiNotificationPanelViewController", lpparam.getClassLoader(), "updatePanelExpanded", new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
                 boolean isNotificationPanelExpandedNew = XposedHelpers.getBooleanField(param.getThisObject(), "mPanelExpanded");
                 if (isNotificationPanelExpanded != isNotificationPanelExpandedNew) {
                     isNotificationPanelExpanded = isNotificationPanelExpandedNew;
-                    updateAudioVisualizerState((Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext"));
+                    FrameLayout mNotificationPanel = (FrameLayout) XposedHelpers.getObjectField(param.getThisObject(), "panelView");
+                    updateAudioVisualizerState(mNotificationPanel.getContext());
                 }
             }
         });
@@ -2717,9 +2334,7 @@ public class System {
             protected void before(final BeforeHookCallback param) throws Throwable {
                 if (audioViz == null) return;
                 Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-                PowerManager powerMgr = (PowerManager)mContext.getSystemService(Context.POWER_SERVICE);
-                boolean isScreenOn = powerMgr.isInteractive();
-                if (!isScreenOn) {
+                if (!screenAndDoze[0] || screenAndDoze[1]) {
                     audioViz.updateScreenOn(false);
                     return;
                 } else audioViz.isScreenOn = true;
@@ -2748,7 +2363,6 @@ public class System {
 
     private static String audioFocusPkg = null;
 
-    @SuppressWarnings("unchecked")
     private static void removeListener(Object thisObject) {
         ArrayList<Object> mRecords = (ArrayList<Object>)XposedHelpers.getObjectField(thisObject, "mRecords");
         if (mRecords == null) return;
@@ -2803,73 +2417,8 @@ public class System {
         });
     }
 
-    private static boolean mUSBConnected = false;
-    public static void USBConfigHook(SystemServerLoadedParam lpparam) {
-        ModuleHelper.hookAllMethods("com.android.server.power.PowerManagerService", lpparam.getClassLoader(), "systemReady", new MethodHook() {
-            @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-                if (mContext != null)
-                    mContext.registerReceiver(new BroadcastReceiver() {
-                        @Override
-                        public void onReceive(Context context, Intent intent) {
-                            try {
-                                boolean mConnected = intent.getBooleanExtra("connected", false);
-                                if (mConnected && mConnected != mUSBConnected) try {
-                                    int mPlugType = XposedHelpers.getIntField(param.getThisObject(), "mPlugType");
-                                    if (mPlugType != BatteryManager.BATTERY_PLUGGED_USB) return;
-                                    String func = MainModule.mPrefs.getString("system_defaultusb", "none");
-                                    if ("none".equals(func) || "1".equals(func)) return;
-                                    UsbManager usbMgr = (UsbManager)mContext.getSystemService(Context.USB_SERVICE);
-                                    if ((boolean)XposedHelpers.callMethod(usbMgr, "isFunctionEnabled", func))
-                                        return;
-                                    XposedHelpers.callMethod(usbMgr, "setCurrentFunction", func, MainModule.mPrefs.getBoolean("system_defaultusb_unsecure"));
-                                } catch (Throwable t) {
-                                    XposedHelpers.log(t);
-                                }
-                                mUSBConnected = mConnected;
-                            } catch (Throwable t) {
-                                XposedHelpers.log(t);
-                            }
-                        }
-                    }, new IntentFilter("android.hardware.usb.action.USB_STATE"));
-            }
-        });
-
-        if (MainModule.mPrefs.getBoolean("system_defaultusb_unsecure")) {
-            if (!ModuleHelper.findAndHookMethodSilently("com.android.server.usb.UsbDeviceManager$UsbHandler", lpparam.getClassLoader(), "isUsbDataTransferActive", long.class, HookerClassHelper.returnConstant(true)))
-                ModuleHelper.findAndHookMethod("com.android.server.usb.UsbDeviceManager$UsbHandler", lpparam.getClassLoader(), "isUsbDataTransferActive", HookerClassHelper.returnConstant(true));
-            ModuleHelper.findAndHookMethod("com.android.server.usb.UsbDeviceManager$UsbHandler", lpparam.getClassLoader(), "handleMessage", Message.class, new MethodHook() {
-                @Override
-                protected void before(final BeforeHookCallback param) throws Throwable {
-                    Message msg = (Message)param.getArgs()[0];
-                    int setUnlockedFunc = 12;
-                    try {
-                        setUnlockedFunc = XposedHelpers.getStaticIntField(findClass("com.android.server.usb.UsbDeviceManager", lpparam.getClassLoader()), "MSG_SET_SCREEN_UNLOCKED_FUNCTIONS");
-                    } catch (Throwable t) {
-                    }
-                    if (msg.what == setUnlockedFunc) {
-                        msg.obj = 0L;
-                        param.getArgs()[0] = msg;
-                    }
-                }
-            });
-        }
-    }
-
-    public static void USBConfigSettingsHook(PackageLoadedParam lpparam) {
-        //noinspection ResultOfMethodCallIgnored
-        ModuleHelper.findAndHookMethodSilently("com.android.settings.connecteddevice.usb.UsbModeChooserReceiver", lpparam.getClassLoader(), "onReceive", Context.class, Intent.class, new MethodHook() {
-            @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                String func = MainModule.mPrefs.getString("system_defaultusb", "none");
-                if (!"none".equals(func) && !"1".equals(func)) param.returnAndSkip(null);
-            }
-        });
-    }
-
     public static void HideIconsBattery1Hook(PackageLoadedParam lpparam) {
-        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.views.MiuiBatteryMeterView", lpparam.getClassLoader(), "initMiuiView", new MethodHook() {
+        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.views.MiuiBatteryMeterView", lpparam.getClassLoader(), "updateAll", new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
                 ImageView mBatteryIconView = (ImageView)XposedHelpers.getObjectField(param.getThisObject(), "mBatteryIconView");
@@ -2892,7 +2441,9 @@ public class System {
             ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.phone.KeyguardStatusBarView", lpparam.getClassLoader(), "onFinishInflate", new MethodHook() {
                 @Override
                 protected void after(final AfterHookCallback param) throws Throwable {
-                    View mBatteryView = (View) XposedHelpers.getObjectField(param.getThisObject(), "mBatteryView");
+                    ViewGroup mSystemIconsContainer = (ViewGroup) XposedHelpers.getObjectField(param.getThisObject(), "mSystemIconsContainer");
+                    int batteryResId = mSystemIconsContainer.getResources().getIdentifier("battery", "id", "com.android.systemui");
+                    View mBatteryView = mSystemIconsContainer.findViewById(batteryResId);
                     mBatteryView.setTag(batteryId, true);
                 }
             });
@@ -2926,20 +2477,19 @@ public class System {
     }
 
     private static boolean lastState = false;
-    private static void updateAlarmVisibility(Object thisObject, boolean state) {
+    private static long mNextAlarmTime = 0L;
+    private static void updateAlarmVisibility(Object thisObject) {
         try {
             Object mIconController = XposedHelpers.getObjectField(thisObject, "mIconController");
-            if (!state) {
+            if (!lastState) {
                 XposedHelpers.callMethod(mIconController, "setIconVisibility", "alarm_clock", false);
                 return;
             }
 
             Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
             long nowTime = java.lang.System.currentTimeMillis();
-            long nextTime;
-            try {
-                nextTime = (long)XposedHelpers.getAdditionalInstanceField(thisObject, "mNextAlarmTime");
-            } catch (Throwable t) {
+            long nextTime = mNextAlarmTime;
+            if (nextTime == 0) {
                 nextTime = ModuleHelper.getNextMIUIAlarmTime(mContext);
             }
             if (nextTime == 0) nextTime = Helpers.getNextStockAlarmTime(mContext);
@@ -2948,8 +2498,6 @@ public class System {
             if (diffMSec < 0) diffMSec += 7 * 24 * 60 *60 * 1000;
             float diffHours = (diffMSec - 59 * 1000) / (1000f * 60f * 60f);
             boolean vis = diffHours <= MainModule.mPrefs.getInt("system_statusbaricons_alarmn", 0);
-            XposedHelpers.callMethod(mIconController, "setIconVisibility", "alarm_clock", vis);
-            mIconController = XposedHelpers.getObjectField(thisObject, "miuiDripLeftStatusBarIconController");
             XposedHelpers.callMethod(mIconController, "setIconVisibility", "alarm_clock", vis);
         } catch (Throwable t) {
             XposedHelpers.log(t);
@@ -2960,62 +2508,41 @@ public class System {
         ModuleHelper.hookAllConstructors("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarPolicy", lpparam.getClassLoader(), new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
+                final Object thisObject = param.getThisObject();
                 Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-                XposedHelpers.setAdditionalInstanceField(param.getThisObject(), "mNextAlarmTime", ModuleHelper.getNextMIUIAlarmTime(mContext));
-                ContentResolver resolver = mContext.getContentResolver();
-                ContentObserver alarmObserver = new ContentObserver(new Handler()) {
-                    @Override
-                    public void onChange(boolean selfChange) {
-                        if (selfChange) return;
-                        XposedHelpers.setAdditionalInstanceField(param.getThisObject(), "mNextAlarmTime", ModuleHelper.getNextMIUIAlarmTime(mContext));
-                        updateAlarmVisibility(param.getThisObject(), lastState);
-                    }
-                };
-                resolver.registerContentObserver(Settings.System.getUriFor("next_alarm_clock_formatted"), false, alarmObserver);
-
                 IntentFilter filter = new IntentFilter();
                 filter.addAction("android.intent.action.TIME_TICK");
                 filter.addAction("android.intent.action.TIME_SET");
                 filter.addAction("android.intent.action.TIMEZONE_CHANGED");
                 filter.addAction("android.intent.action.LOCALE_CHANGED");
-                final Object thisObject = param.getThisObject();
                 mContext.registerReceiver(new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
-                        updateAlarmVisibility(thisObject, lastState);
+                        updateAlarmVisibility(thisObject);
                     }
                 }, filter);
-            }
-        });
 
-        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.phone.PhoneStatusBarPolicy", lpparam.getClassLoader(), "updateAlarm", new MethodHook() {
-            @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                lastState = (boolean)XposedHelpers.getObjectField(param.getThisObject(), "mHasAlarm");
-                updateAlarmVisibility(param.getThisObject(), lastState);
-            }
-        });
-
-        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarPolicy", lpparam.getClassLoader(), "onMiuiAlarmChanged", new MethodHook() {
-            @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                lastState = (boolean)XposedHelpers.getObjectField(param.getThisObject(), "mHasAlarm");
-                updateAlarmVisibility(param.getThisObject(), lastState);
-                param.returnAndSkip(null);
-            }
-        });
-    }
-
-    public static void HideIconsBluetoothHook(PackageLoadedParam lpparam) {
-        ModuleHelper.hookAllMethods("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarPolicy", lpparam.getClassLoader(), "updateBluetooth", new MethodHook() {
-            @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                int opt = Integer.parseInt(MainModule.mPrefs.getString("system_statusbaricons_bluetooth", "1"));
-                boolean isBluetoothConnected = (boolean)XposedHelpers.callMethod(XposedHelpers.getObjectField(param.getThisObject(), "mBluetooth"), "isBluetoothConnected");
-                if (opt == 3 || (opt == 2 && !isBluetoothConnected)) {
-                    Object mIconController = XposedHelpers.getObjectField(param.getThisObject(), "mIconController");
-                    XposedHelpers.callMethod(mIconController, "setIconVisibility", "bluetooth", false);
-                }
+                Object mNextAlarmCallback = XposedHelpers.getObjectField(thisObject, "mNextAlarmCallback");
+                ModuleHelper.findAndHookMethod(mNextAlarmCallback.getClass(), "onAlarmChanged", boolean.class, new MethodHook() {
+                    @Override
+                    protected void before(final BeforeHookCallback param) throws Throwable {
+                        lastState = (boolean) param.getArgs()[0];
+                        mNextAlarmTime = ModuleHelper.getNextMIUIAlarmTime(mContext);
+                        updateAlarmVisibility(thisObject);
+                        param.returnAndSkip(null);
+                    }
+                });
+                ModuleHelper.findAndHookMethod(mNextAlarmCallback.getClass(), "onNextAlarmChanged", AlarmManager.AlarmClockInfo.class, new MethodHook() {
+                    @Override
+                    protected void before(final BeforeHookCallback param) throws Throwable {
+                        if (param.getArgs()[0] == null) {
+                            lastState = false;
+                        }
+                        mNextAlarmTime = ModuleHelper.getNextMIUIAlarmTime(mContext);
+                        updateAlarmVisibility(thisObject);
+                        param.returnAndSkip(null);
+                    }
+                });
             }
         });
     }
@@ -3078,12 +2605,6 @@ public class System {
         if (lpparam.getPackageName().contains("systemui")) {
             Class<?> NotifyManagerCls = findClass("com.android.systemui.statusbar.notification.NotificationSettingsManager", lpparam.getClassLoader());
             XposedHelpers.setStaticBooleanField(NotifyManagerCls, "USE_WHITE_LISTS", false);
-            ModuleHelper.findAndHookMethod("com.miui.systemui.NotificationCloudData$Companion", lpparam.getClassLoader(), "getFloatBlacklist", Context.class, new MethodHook() {
-                @Override
-                protected void before(final BeforeHookCallback param) throws Throwable {
-                    param.returnAndSkip(new ArrayList<String>());
-                }
-            });
         }
         ModuleHelper.hookAllMethods("miui.util.NotificationFilterHelper", lpparam.getClassLoader(), "isNotificationForcedEnabled", HookerClassHelper.returnConstant(false));
         ModuleHelper.findAndHookMethod("miui.util.NotificationFilterHelper", lpparam.getClassLoader(), "isNotificationForcedFor", Context.class, String.class, HookerClassHelper.returnConstant(false));
@@ -3151,41 +2672,45 @@ public class System {
         });
     }
 
-    public static void MobileNetworkTypeHook(PackageLoadedParam lpparam) {
-        String MobileController = "com.android.systemui.statusbar.connectivity.MobileSignalController";
-        ModuleHelper.findAndHookMethod(MobileController, lpparam.getClassLoader(), "getMobileTypeName", int.class, new MethodHook() {
-            @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                String net = (String)param.getResult();
-                if (MainModule.mPrefs.getBoolean("system_4gtolte")) {
-                    if ("4G".equals(net)) param.setResult("LTE");
-                    else if ("4G+".equals(net)) param.setResult("LTE+");
-                }
-                else {
-                    String mobileType = MainModule.mPrefs.getString("system_statusbar_mobile_showname", "");
-                    param.setResult(mobileType);
-                }
-            }
-        });
-    }
-
     public static void HideProximityWarningHook(SystemServerLoadedParam lpparam) {
         ModuleHelper.findAndHookMethod("com.android.server.policy.MiuiScreenOnProximityLock", lpparam.getClassLoader(), "showHint", HookerClassHelper.DO_NOTHING);
         ModuleHelper.findAndHookMethod("com.android.server.policy.MiuiScreenOnProximityLock", lpparam.getClassLoader(), "prepareHintWindow", HookerClassHelper.DO_NOTHING);
     }
 
     public static void HideLockScreenClockHook(PackageLoadedParam lpparam) {
+        final boolean[] mToAod = {false};
         MethodHook hideClockHook = new MethodHook() {
             @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                View mClockFrame = (View) XposedHelpers.getObjectField(param.getThisObject(), "mClockFrame");
-                mClockFrame.setVisibility(View.INVISIBLE);
-                mClockFrame = (View) XposedHelpers.getObjectField(param.getThisObject(), "mLargeClockFrame");
-                mClockFrame.setVisibility(View.INVISIBLE);
+            protected void before(final BeforeHookCallback param) throws Throwable {
+                int visibility = (int)param.getArgs()[0];
+                if (visibility == View.VISIBLE && !mToAod[0]) {
+                    param.returnAndSkip(null);
+                }
             }
         };
-        ModuleHelper.hookAllMethods("com.android.keyguard.KeyguardClockSwitch", lpparam.getClassLoader(), "setClockPlugin", hideClockHook);
-        ModuleHelper.findAndHookMethod("com.android.keyguard.KeyguardClockSwitch", lpparam.getClassLoader(), "updateClockViews", boolean.class, boolean.class, hideClockHook);
+        XposedHelpers.findAndHookMethod("com.android.keyguard.clock.KeyguardClockContainer", lpparam.getClassLoader(), "setVisibility", int.class, hideClockHook);
+        XposedHelpers.findAndHookMethod("com.android.keyguard.clock.KeyguardClockContainer", lpparam.getClassLoader(), "onFinishInflate", new MethodHook() {
+            @Override
+            protected void after(AfterHookCallback param) throws Throwable {
+                XposedHelpers.callMethod(param.getThisObject(), "setVisibility", View.GONE);
+            }
+        });
+        XposedHelpers.findAndHookMethod("com.android.keyguard.clock.KeyguardClockContainer", lpparam.getClassLoader(), "doAnimationToAod", boolean.class, boolean.class, new MethodHook() {
+            @Override
+            protected void before(BeforeHookCallback param) throws Throwable {
+                mToAod[0] = (boolean)param.getArgs()[0];
+                if (mToAod[0]) {
+                    XposedHelpers.callMethod(param.getThisObject(), "setVisibility", View.VISIBLE);
+                }
+            }
+            @Override
+            protected void after(AfterHookCallback param) throws Throwable {
+                boolean mToAod = (boolean)param.getArgs()[0];
+                if (!mToAod) {
+                    XposedHelpers.callMethod(param.getThisObject(), "setVisibility", View.GONE);
+                }
+            }
+        });
     }
 
     public static void FirstVolumePressHook(SystemServerLoadedParam lpparam) {
@@ -3251,6 +2776,16 @@ public class System {
                 }
             }
         });
+        ModuleHelper.findAndHookMethod("android.content.pm.ApplicationInfo", lpparam.getClassLoader(), "isSignedWithPlatformKey", new MethodHook() {
+            @Override
+            protected void after(AfterHookCallback param) throws Throwable {
+                boolean isSystemSign = (boolean) param.getResult();
+                if (!isSystemSign) {
+                    int flags = XposedHelpers.getIntField(param.getThisObject(), "flags");
+                    param.setResult((flags & 1) != 0 || (flags & 128) != 0);
+                }
+            }
+        });
     }
 
     public static void ScreenDimTimeHook(SystemServerLoadedParam lpparam) {
@@ -3260,27 +2795,8 @@ public class System {
                 float opt = MainModule.mPrefs.getInt("system_dimtime", 0) / 100f;
                 XposedHelpers.setIntField(param.getThisObject(), "mMaximumScreenDimDurationConfig", 600000);
                 XposedHelpers.setFloatField(param.getThisObject(), "mMaximumScreenDimRatioConfig", opt);
-//				Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-//				int minScreenOffTimeout = mContext.getResources().getInteger(mContext.getResources().getIdentifier("config_minimumScreenOffTimeout", "integer", "android"));
             }
         });
-
-//		ModuleHelper.hookAllMethods("com.android.server.power.PowerManagerService", lpparam.getClassLoader(), "getScreenOffTimeoutLocked", new MethodHook() {
-//			@Override
-//			protected void after(final AfterHookCallback param) throws Throwable {
-//				//XposedHelpers.log("getScreenOffTimeoutLocked (mSleepTimeoutSetting): " + param.getArgs()[0]);
-//				//XposedHelpers.log("mMaximumScreenOffTimeoutFromDeviceAdmin: " + XposedHelpers.getLongField(param.getThisObject(), "mMaximumScreenOffTimeoutFromDeviceAdmin"));
-//				XposedHelpers.log("mUserActivityTimeoutOverrideFromWindowManager: " + XposedHelpers.getLongField(param.getThisObject(), "mUserActivityTimeoutOverrideFromWindowManager"));
-//			}
-//		});
-//
-//		ModuleHelper.hookAllMethods("com.android.server.power.PowerManagerService", lpparam.getClassLoader(), "updateUserActivitySummaryLocked", new MethodHook() {
-//			@Override
-//			protected void after(final AfterHookCallback param) throws Throwable {
-//				if ((int)param.getArgs()[1] == 1) return;
-//				XposedHelpers.log("updateUserActivitySummaryLocked: " + param.getArgs()[0] + ", " + param.getArgs()[1]);
-//			}
-//		});
     }
 
     public static void NoOverscrollAppHook(PackageLoadedParam lpparam) {
@@ -3303,7 +2819,6 @@ public class System {
                     }
                 }
             });
-            //noinspection ResultOfMethodCallIgnored
             ModuleHelper.findAndHookMethodSilently(sblCls, "setSpringBackEnable", boolean.class, hookParam);
         }
 
@@ -3320,7 +2835,6 @@ public class System {
                     }
                 }
             });
-            //noinspection ResultOfMethodCallIgnored
             ModuleHelper.findAndHookMethodSilently(rrvCls, "setSpringEnabled", boolean.class, hookParam);
         }
 
@@ -3349,75 +2863,26 @@ public class System {
                 param.getArgs()[2] = flags;
             }
         });
+        ModuleHelper.hookAllMethods("com.android.server.wm.WindowManagerServiceImpl", lpparam.getClassLoader(), "notAllowCaptureDisplay", new MethodHook() {
+            @Override
+            protected void before(BeforeHookCallback param) throws Throwable {
+                param.returnAndSkip(false);
+            }
+        });
     }
 
     public static void RemoveActStartConfirmHook(SystemServerLoadedParam lpparam) {
-        ModuleHelper.hookAllMethodsSilently("com.miui.server.SecurityManagerService", lpparam.getClassLoader(), "checkAllowStartActivity", HookerClassHelper.returnConstant(true));
+        ModuleHelper.hookAllMethods("com.miui.server.SecurityManagerService$LocalService", lpparam.getClassLoader(), "checkAllowStartActivity", HookerClassHelper.returnConstant(true));
     }
 
     public static void AllowAllKeyguardHook(PackageLoadedParam lpparam) {
-        ModuleHelper.findAndHookMethod(MiuiNotification.class, "setEnableKeyguard", boolean.class, new MethodHook() {
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                param.getArgs()[0] = true;
-            }
-        });
-
-        ModuleHelper.findAndHookMethod(MiuiNotification.class, "isEnableKeyguard", HookerClassHelper.returnConstant(true));
-        //noinspection ResultOfMethodCallIgnored
-        ModuleHelper.findAndHookMethodSilently("com.android.systemui.statusbar.notification.MiuiNotificationCompat", lpparam.getClassLoader(), "isEnableKeyguard", Notification.class, HookerClassHelper.returnConstant(true));
+        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.notification.ExpandedNotification", lpparam.getClassLoader(), "isEnableKeyguard", HookerClassHelper.returnConstant(true));
+        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.notification.NotificationSettingsManager", lpparam.getClassLoader(), "canShowOnKeyguard", Context.class, String.class, String.class, HookerClassHelper.returnConstant(true));
     }
 
     public static void AllowAllFloatHook(PackageLoadedParam lpparam) {
-        ModuleHelper.findAndHookMethod(MiuiNotification.class, "setEnableFloat", boolean.class, new MethodHook() {
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                param.getArgs()[0] = true;
-            }
-        });
-
-        ModuleHelper.findAndHookMethod(MiuiNotification.class, "isEnableFloat", HookerClassHelper.returnConstant(true));
-
-        //noinspection ResultOfMethodCallIgnored
-        ModuleHelper.findAndHookMethodSilently("com.android.systemui.statusbar.notification.MiuiNotificationCompat", lpparam.getClassLoader(), "isEnableFloat", Notification.class, HookerClassHelper.returnConstant(true));
-    }
-
-    public static void AllowDirectReplyHook(PackageLoadedParam lpparam) {
-        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl", lpparam.getClassLoader(), "shouldAllowLockscreenRemoteInput", HookerClassHelper.returnConstant(true));
-        if (!ModuleHelper.findAndHookMethodSilently("com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl", lpparam.getClassLoader(), "setLockscreenAllowRemoteInput", boolean.class, HookerClassHelper.returnConstant(true))) {
-            ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl", lpparam.getClassLoader(), "setLockScreenAllowRemoteInput", boolean.class, HookerClassHelper.returnConstant(true));
-        }
-    }
-
-    public static void HideQSHook(PackageLoadedParam lpparam) {
-        ModuleHelper.findAndHookMethod(StatusBarCls, lpparam.getClassLoader(), "onStateChanged", int.class, new MethodHook() {
-            @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                Object mNotificationPanel = XposedHelpers.getObjectField(param.getThisObject(), "mQSContainer");
-                if ((int)param.getArgs()[0] == 1) {
-                    XposedHelpers.callMethod(mNotificationPanel, "setShowQSPanel", false);
-                } else {
-                    Handler mHandler = (Handler)XposedHelpers.getObjectField(param.getThisObject(), "mHandler");
-                    mHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            XposedHelpers.callMethod(mNotificationPanel, "setShowQSPanel", true);
-                        }
-                    }, 300);
-                }
-            }
-        });
-    }
-
-    public static void LockScreenTimeoutHook(PackageLoadedParam lpparam) {
-        ModuleHelper.hookAllMethods("com.android.systemui.statusbar.phone.NotificationShadeWindowControllerImpl", lpparam.getClassLoader(), "applyUserActivityTimeout", new MethodHook() {
-            @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                Object mLpChanged = XposedHelpers.getObjectField(param.getThisObject(), "mLpChanged");
-                if (mLpChanged == null) return;
-                long userActivityTimeout = XposedHelpers.getLongField(mLpChanged, "userActivityTimeout");
-                if (userActivityTimeout > 0)
-                    XposedHelpers.setLongField(mLpChanged, "userActivityTimeout", MainModule.mPrefs.getInt("system_lstimeout", 3) * 1000L);
-            }
-        });
+        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.notification.ExpandedNotification", lpparam.getClassLoader(), "isEnableFloat", HookerClassHelper.returnConstant(true));
+        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.notification.NotificationSettingsManager", lpparam.getClassLoader(), "canFloat", Context.class, String.class, String.class, HookerClassHelper.returnConstant(true));
     }
 
     private static final SimpleDateFormat formatter = new SimpleDateFormat("H:m", Locale.ENGLISH);
@@ -3472,37 +2937,21 @@ public class System {
                     param.getArgs()[0] = Math.max(3, (long)Math.round((long)param.getArgs()[0] * ratio));
             }
         });
-
-//		if (Helpers.isNougat())
-//		ModuleHelper.hookAllMethods("com.android.server.VibratorService", lpparam.getClassLoader(), "vibratePattern", new MethodHook() {
-//			@Override
-//			protected void before(final BeforeHookCallback param) throws Throwable {
-//
-//			}
-//		});
     }
 
-    private static void hookUpdateTime(Object thisObject, boolean isSingle) {
+    private static void hookUpdateTime(TextView alarmTime) {
         try {
-            TextView mCurrentDate = null;
-            TextView mCurrentDateLarge = null;
-            if (isSingle) {
-                try { mCurrentDate = (TextView)XposedHelpers.getObjectField(thisObject, "mCurrentDate"); } catch (Throwable ignore) {}
-                try { mCurrentDateLarge = (TextView)XposedHelpers.getObjectField(thisObject, "mCurrentDateLarge"); } catch (Throwable ignore) {}
-            }
-            else {
-                try { mCurrentDate = (TextView)XposedHelpers.getObjectField(thisObject, "mLocalDate"); } catch (Throwable ignore) {}
-            }
-            if (mCurrentDate == null && mCurrentDateLarge == null) return;
-            Context mContext = mCurrentDate != null ? mCurrentDate.getContext() : mCurrentDateLarge.getContext();
-
+            Context mContext = alarmTime.getContext();
             long timestamp = ModuleHelper.getNextMIUIAlarmTime(mContext);
             if (timestamp == 0 && MainModule.mPrefs.getBoolean("system_lsalarm_all"))
                 timestamp = Helpers.getNextStockAlarmTime(mContext);
-            if (timestamp == 0) return;
+            if (timestamp == 0) {
+                alarmTime.setText("");
+                return;
+            }
 
             StringBuilder alarmStr = new StringBuilder();
-            alarmStr.append("\n").append(ModuleHelper.getModuleRes(mContext).getString(R.string.system_statusbaricons_alarm_title)).append(" ");
+            alarmStr.append(ModuleHelper.getModuleRes(mContext).getString(R.string.system_statusbaricons_alarm_title)).append(": ");
             int format = MainModule.mPrefs.getStringAsInt("system_lsalarm_format", 1);
             if (format == 1 || format == 3) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat(DateFormat.getBestDateTimePattern(Locale.getDefault(), DateFormat.is24HourFormat(mContext) ? "EHmm" : "EHmma"), Locale.getDefault());
@@ -3516,42 +2965,52 @@ public class System {
                 timeStr.setCharAt(0, Character.toLowerCase(timeStr.charAt(0)));
                 alarmStr.append(format == 3 ? " (" + timeStr + ")" : timeStr);
             }
-            if (mCurrentDate != null) {
-                mCurrentDate.setTextAlignment(View.TEXT_ALIGNMENT_INHERIT);
-                mCurrentDate.setLineSpacing(0, 1.5f);
-                mCurrentDate.append(alarmStr);
-                if (isSingle) {
-                    int pos = Settings.System.getInt(mContext.getContentResolver(), "selected_keyguard_clock_position", 0);
-                    if (pos != 2 && pos != 4) mCurrentDate.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                }
-            }
-            if (mCurrentDateLarge != null) {
-                int resId = mCurrentDateLarge.getResources().getIdentifier("miui_clock_date_text_size", "dimen", "com.android.systemui");
-                int fontSize = resId == 0 ? Math.round(mCurrentDateLarge.getResources().getDisplayMetrics().density * 14.0f) : mCurrentDateLarge.getResources().getDimensionPixelSize(resId);
-                alarmStr.insert(1, "\n\n ");
-                SpannableString span = new SpannableString(alarmStr);
-                span.setSpan(new AbsoluteSizeSpan(fontSize, false), 0, alarmStr.length(), 0);
-                span.setSpan(new TypefaceSpan("sans-serif"), 0, alarmStr.length(), 0);
-                mCurrentDateLarge.append(span);
-            }
+            alarmTime.setText(alarmStr);
         } catch (Throwable t) {
             XposedHelpers.log(t);
         }
     }
 
     public static void LockScreenAlarmHook(PackageLoadedParam lpparam) {
-        ModuleHelper.findAndHookMethod("com.android.keyguard.clock.MiuiKeyguardSingleClock", lpparam.getClassLoader(), "updateTime", new MethodHook() {
+        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.KeyguardIndicationController", lpparam.getClassLoader(), "setIndicationArea", ViewGroup.class, new MethodHook() {
             @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                Object mMiuiBaseClock = XposedHelpers.getObjectField(param.getThisObject(), "mMiuiBaseClock");
-                if (mMiuiBaseClock != null) hookUpdateTime(mMiuiBaseClock, true);
+            protected void after(AfterHookCallback param) throws Throwable {
+                TextView mTopIndicationView = (TextView) XposedHelpers.getObjectField(param.getThisObject(), "mTopIndicationView");
+                mTopIndicationView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                mTopIndicationView.setVisibility(View.VISIBLE);
+                Class<?> MiuiGxzwUtils = findClassIfExists("com.miui.keyguard.biometrics.fod.MiuiGxzwUtils", lpparam.getClassLoader());
+                boolean hasUdfs = true;
+                if (MiuiGxzwUtils != null) {
+                    boolean isGxzwLowPosition = (boolean) XposedHelpers.callStaticMethod(MiuiGxzwUtils, "isGxzwLowPosition");
+                    hasUdfs = isGxzwLowPosition;
+                }
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mTopIndicationView.getLayoutParams();
+                layoutParams.bottomMargin = (int) Helpers.dp2px(hasUdfs ? 80 : 20);
+                mTopIndicationView.setLayoutParams(layoutParams);
+                ColorStateList mInitialTextColorState = (ColorStateList) XposedHelpers.getObjectField(param.getThisObject(), "mInitialTextColorState");
+                mTopIndicationView.setTextColor(mInitialTextColorState);
             }
         });
-        ModuleHelper.findAndHookMethod("com.android.keyguard.clock.MiuiKeyguardDualClock", lpparam.getClassLoader(), "updateTime", new MethodHook() {
+        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.KeyguardIndicationController", lpparam.getClassLoader(), "updateDeviceEntryIndication", boolean.class, new MethodHook() {
             @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                Object mMiuiDualClock = XposedHelpers.getObjectField(param.getThisObject(), "mMiuiDualClock");
-                if (mMiuiDualClock != null) hookUpdateTime(mMiuiDualClock, false);
+            protected void after(AfterHookCallback param) throws Throwable {
+                TextView mTopIndicationView = (TextView) XposedHelpers.getObjectField(param.getThisObject(), "mTopIndicationView");
+                hookUpdateTime(mTopIndicationView);
+                ColorStateList mInitialTextColorState = (ColorStateList) XposedHelpers.getObjectField(param.getThisObject(), "mInitialTextColorState");
+                mTopIndicationView.setTextColor(mInitialTextColorState);
+            }
+        });
+        ModuleHelper.findAndHookMethod("com.android.keyguard.injector.KeyguardBottomAreaInjector", lpparam.getClassLoader(), "handleBottomButtonClickedAnimation", boolean.class, new MethodHook() {
+            @Override
+            protected void after(AfterHookCallback param) throws Throwable {
+                TextView mTopIndicationView = (TextView) ModuleHelper.getObjectFieldByPath(param.getThisObject(), "mKeyguardIndicationInjector.mKeyguardIndicationController.mTopIndicationView");
+                boolean showTips = (boolean) param.getArgs()[0];
+                if (showTips) {
+                    mTopIndicationView.setVisibility(View.GONE);
+                }
+                else {
+                    mTopIndicationView.setVisibility(View.VISIBLE);
+                }
             }
         });
     }
@@ -3605,27 +3064,25 @@ public class System {
 
         int format = MainModule.mPrefs.getStringAsInt("system_screenshot_format", 2);
         if (format > 2) {
-            ModuleHelper.findAndHookMethod("com.miui.screenshot.MiuiScreenshotApplication", lpparam.getClassLoader(), "attachBaseContext", Context.class, new MethodHook() {
+            MethodData methodData = XposedHelpers.bridge.findMethod(FindMethod.create()
+                .excludePackages("android", "androidx", "com.xiaomi", "com.google.json", "kotlin", "kotlinx.coroutines", "miuix")
+                .matcher(MethodMatcher.create().usingStrings("saveBitmapToUri: external storage"))
+            ).firstOrThrow(() -> new RuntimeException("Method not found"));
+
+            MethodHook changeFormatHook = new MethodHook() {
                 @Override
-                protected void after(final AfterHookCallback param) throws Throwable {
-                    Context mContext = (Context) param.getArgs()[0];
-                    long versionCode = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionCode;
-                    MethodHook changeFormatHook = new MethodHook() {
-                        @Override
-                        protected void before(final BeforeHookCallback param) throws Throwable {
-                            if (param.getArgs().length < 7) return;
-                            Bitmap.CompressFormat compress = format <= 2 ? Bitmap.CompressFormat.JPEG : (format == 3 ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.WEBP);
-                            param.getArgs()[4] = compress;
-                        }
-                    };
-                    if (versionCode >= 10400056) {
-                        ModuleHelper.hookAllMethods("com.miui.screenshot.u0.f$a", lpparam.getClassLoader(), "a", changeFormatHook);
-                    }
-                    else if (versionCode >= 10400034) {
-                        ModuleHelper.hookAllMethods("com.miui.screenshot.x0.e$a", lpparam.getClassLoader(), "a", changeFormatHook);
-                    }
+                protected void before(final BeforeHookCallback param) throws Throwable {
+                    if (param.getArgs().length < 7) return;
+                    Bitmap.CompressFormat compress = format <= 2 ? Bitmap.CompressFormat.JPEG : (format == 3 ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.WEBP);
+                    param.getArgs()[4] = compress;
                 }
-            });
+            };
+            try {
+                Method method = methodData.getMethodInstance(lpparam.getClassLoader());
+                ModuleHelper.hookMethod(method, changeFormatHook);
+            }
+            catch (Throwable ign) {
+            }
         }
 
         ModuleHelper.hookAllMethods("android.graphics.Bitmap", lpparam.getClassLoader(), "compress", new MethodHook() {
@@ -3698,80 +3155,44 @@ public class System {
         });
     }
 
-    public static void InactiveBrightnessSliderHook(PackageLoadedParam lpparam) {
-        MethodHook hook = new MethodHook() {
-            @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                int opt = MainModule.mPrefs.getStringAsInt("system_inactivebrightness", 1);
-                if (opt == 2) {
-                    SeekBar mSlider = (SeekBar)XposedHelpers.getObjectField(param.getThisObject(), "mSlider");
-                    if (mSlider != null)
-                        mSlider.setOnTouchListener(new View.OnTouchListener(){
-                            @Override
-                            public boolean onTouch(View v, MotionEvent event) {
-                                return true;
-                            }
-                        });
-                } else if (opt == 3) try {
-                    View sliderView = (View)param.getThisObject();
-                    ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams)sliderView.getLayoutParams();
-                    lp.height = 0;
-                    lp.topMargin = Math.round(2 * sliderView.getResources().getDisplayMetrics().density);
-                    lp.bottomMargin = 0;
-                    sliderView.setLayoutParams(lp);
-                } catch (Throwable t) {
-                    XposedHelpers.log(t);
-                }
-            }
-        };
-        ModuleHelper.findAndHookMethod("com.android.systemui.settings.brightness.BrightnessSliderView", lpparam.getClassLoader(), "onFinishInflate", hook);
-    }
-
-    private static final float[] startPos = new float[2];
-    private static void processLSEvent(AfterHookCallback param) {
-        MotionEvent event = (MotionEvent)param.getArgs()[0];
-        if (event.getPointerCount() > 1) return;
-        int action = event.getActionMasked();
-        if (action != MotionEvent.ACTION_DOWN && action != MotionEvent.ACTION_UP) return;
-
-        ViewGroup mKeyguardBottomArea = (ViewGroup)XposedHelpers.getObjectField(param.getThisObject(), "mBottomAreaView");
-        if (mKeyguardBottomArea == null) return;
-        ViewGroup mIndicationArea = (ViewGroup)XposedHelpers.getObjectField(mKeyguardBottomArea, "mIndicationArea");
-        if (!Helpers.isReallyVisible(mIndicationArea)) return;
-
-        int[] coord = new int[2];
-        mIndicationArea.getLocationOnScreen(coord);
-        Rect rect = new Rect(coord[0], coord[1], coord[0] + mIndicationArea.getWidth(), coord[1] + mIndicationArea.getHeight());
-        if (!rect.contains((int)event.getX(), (int)event.getY())) return;
-
-        if (action == MotionEvent.ACTION_DOWN) {
-            startPos[0] = event.getX();
-            startPos[1] = event.getY();
-        } else if (action == MotionEvent.ACTION_UP) try {
-            Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-            int slop = ViewConfiguration.get(mContext).getScaledTouchSlop();
-            if (Math.abs(event.getX() - startPos[0]) > slop || Math.abs(event.getY() - startPos[1]) > slop) return;
-            Object mPanelViewController = XposedHelpers.getObjectField(param.getThisObject(), "mPanelViewController");
-            Object statusBarKeyguardViewManager = XposedHelpers.getObjectField(mPanelViewController, "statusBarKeyguardViewManager");
-
-            XposedHelpers.callMethod(statusBarKeyguardViewManager, "showGenericBouncer", true);
-        } catch (Throwable t) {
-            XposedHelpers.log(t);
-        }
-    }
-
     public static void TapToUnlockHook(PackageLoadedParam lpparam) {
-        ModuleHelper.hookAllMethods("com.android.keyguard.injector.KeyguardPanelViewInjector", lpparam.getClassLoader(), "onTouchEvent", new MethodHook() {
-            @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                processLSEvent(param);
-            }
-        });
+        Class<?> NotificationPanelController = findClassIfExists("com.android.systemui.shade.NotificationPanelViewController", lpparam.getClassLoader());
+        if (NotificationPanelController == null) {
+            XposedHelpers.log("NotificationPanelController not found");
+            return;
+        }
 
-        ModuleHelper.hookAllMethods("com.android.keyguard.injector.KeyguardPanelViewInjector", lpparam.getClassLoader(), "onInterceptTouchEvent", new MethodHook() {
+        Field mTouchHandlerField = XposedHelpers.findField(NotificationPanelController, "mTouchHandler");
+        XposedHelpers.findAndHookMethod(mTouchHandlerField.getType(), "handleMiuiTouch", MotionEvent.class, new MethodHook() {
             @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                processLSEvent(param);
+            protected void after(AfterHookCallback param) throws Throwable {
+                MotionEvent event = (MotionEvent)param.getArgs()[0];
+                if (event.getPointerCount() > 1) return;
+                int action = event.getActionMasked();
+                if (action != MotionEvent.ACTION_DOWN && action != MotionEvent.ACTION_UP) return;
+                Object thisObect = XposedHelpers.getSurroundingThis(param.getThisObject());
+                boolean isOnKeyguard = (boolean) XposedHelpers.callMethod(thisObect, "isOnKeyguard");
+                Object mQsController = XposedHelpers.getObjectField(thisObect, "mQsController");
+                boolean mExpanded = XposedHelpers.getBooleanField(mQsController, "mExpanded");
+                if (isOnKeyguard && !mExpanded) {
+                    if (action == MotionEvent.ACTION_UP) {
+                        Object mKeyguardPanelViewInjector = XposedHelpers.getObjectField(thisObect, "mKeyguardPanelViewInjector");
+                        Object mKeyguardMoveHelper = XposedHelpers.getObjectField(mKeyguardPanelViewInjector, "mKeyguardMoveHelper");
+                        int mCurrentScreen = XposedHelpers.getIntField(mKeyguardMoveHelper, "mCurrentScreen");
+                        if (mCurrentScreen == 0) return;
+                        Object keyguardBottomAreaInjector = ModuleHelper.getDepInstance(lpparam.getClassLoader(), "com.android.keyguard.injector.KeyguardBottomAreaInjector");
+                        if (!XposedHelpers.getBooleanField(keyguardBottomAreaInjector, "mTouchAtKeyguardBottomArea")) return;
+                        Context mContext = (Context) XposedHelpers.getObjectField(keyguardBottomAreaInjector, "mContext");
+                        float mTouchDownX = XposedHelpers.getFloatField(keyguardBottomAreaInjector, "mTouchDownX");
+                        float mTouchDownY = XposedHelpers.getFloatField(keyguardBottomAreaInjector, "mTouchDownY");
+                        int slop = ViewConfiguration.get(mContext).getScaledTouchSlop();
+                        if (Math.abs(event.getX() - mTouchDownX) > slop || Math.abs(event.getY() - mTouchDownY) > slop)
+                            return;
+                        Object statusBarKeyguardViewManager = XposedHelpers.getObjectField(thisObect, "statusBarKeyguardViewManager");
+                        XposedHelpers.callMethod(statusBarKeyguardViewManager, "showBouncer", true);
+                        param.setResult(true);
+                    }
+                }
             }
         });
     }
@@ -3807,26 +3228,6 @@ public class System {
         if (folder > 1) {
             XposedHelpers.setStaticObjectField(MIUIStorageConstants, "DIRECTORY_SCREENSHOT_PATH", ssPath);
         }
-    }
-
-    public static void ScreenshotFloatTimeHook(PackageLoadedParam lpparam) {
-        ModuleHelper.findAndHookMethod("com.miui.screenshot.GlobalScreenshot", lpparam.getClassLoader(), "startGotoThumbnailAnimation", Runnable.class, new MethodHook() {
-            @Override
-            @SuppressWarnings("ConstantConditions")
-            protected void after(final AfterHookCallback param) throws Throwable {
-                boolean mIsShowLongScreenShotGuide = false;
-                try {
-                    mIsShowLongScreenShotGuide = XposedHelpers.getBooleanField(param.getThisObject(), "mIsShowLongScreenShotGuide");
-                } catch (Throwable ignore) {}
-                if (mIsShowLongScreenShotGuide) return;
-                int opt = MainModule.mPrefs.getInt("system_screenshot_floattime", 0);
-                if (opt <= 0) return;
-                Handler mHandler = (Handler)XposedHelpers.getObjectField(param.getThisObject(), "mHandler");
-                Runnable mQuitThumbnailRunnable = (Runnable)XposedHelpers.getObjectField(param.getThisObject(), "mQuitThumbnailRunnable");
-                mHandler.removeCallbacks(mQuitThumbnailRunnable);
-                mHandler.postDelayed(mQuitThumbnailRunnable, opt * 1000L);
-            }
-        });
     }
 
     public static void ScrambleAppLockPINHook(PackageLoadedParam lpparam) {
@@ -3874,13 +3275,13 @@ public class System {
     }
 
     public static void ChargingInfoHook(PackageLoadedParam lpparam) {
-        ModuleHelper.hookAllMethods("com.android.keyguard.charge.ChargeUtils", lpparam.getClassLoader(), "getChargingHintText", new MethodHook() {
+        ModuleHelper.findAndHookMethod("com.miui.charge.ChargeUtils", lpparam.getClassLoader(), "getChargingHintText", int.class, boolean.class, Context.class, new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
-                int charge = (int)param.getArgs()[2];
+                int charge = (int)param.getArgs()[0];
                 String hint = (String)param.getResult();
 
-                if (charge < 100) {
+                if (charge <= 100) {
                     boolean showCurr = MainModule.mPrefs.getBoolean("system_charginginfo_current");
                     boolean showVolt = MainModule.mPrefs.getBoolean("system_charginginfo_voltage");
                     boolean showWatt = MainModule.mPrefs.getBoolean("system_charginginfo_wattage");
@@ -3928,7 +3329,7 @@ public class System {
             }
         });
 
-        ModuleHelper.hookAllConstructors("com.android.systemui.statusbar.phone.KeyguardIndicationTextView", lpparam.getClassLoader(), new MethodHook() {
+        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.phone.KeyguardIndicationTextView", lpparam.getClassLoader(), "onFinishInflate", new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
                 int opt = MainModule.mPrefs.getStringAsInt("system_charginginfo_view", 1);
@@ -3940,114 +3341,123 @@ public class System {
     }
 
     public static void NoSOSHook(PackageLoadedParam lpparam) {
-        ModuleHelper.hookAllMethods("com.android.keyguard.EmergencyButton", lpparam.getClassLoader(), "updateEmergencyCallButton", new MethodHook() {
+        ModuleHelper.findAndHookMethod("com.android.keyguard.EmergencyButtonController", lpparam.getClassLoader(), "updateEmergencyCallButton", new MethodHook() {
             @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                Button mSOS = (Button)param.getThisObject();
+            protected void before(final BeforeHookCallback param) throws Throwable {
+                Button mSOS = (Button) XposedHelpers.getObjectField(param.getThisObject(), "mView");
                 if (mSOS.getVisibility() == View.VISIBLE) {
                     mSOS.setVisibility(View.INVISIBLE);
                 }
+                param.returnAndSkip(null);
             }
         });
     }
 
-    public static void NoDarkForceHook(SystemServerLoadedParam lpparam) {
-        MethodHook hook = new MethodHook() {
+    public static void ForceDarkAllAppsHook(SystemServerLoadedParam lpparam) {
+        ModuleHelper.hookAllMethods("com.android.server.ForceDarkAppListProvider", lpparam.getClassLoader(), "fillDarkModeAppSettingsInfo", new MethodHook() {
             @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                ContentResolver contentResolver = ((Context)XposedHelpers.callMethod(param.getThisObject(), "getContext")).getContentResolver();
-                XposedHelpers.callStaticMethod(Settings.System.class, "putIntForUser", contentResolver, "smart_dark_enable", 0, XposedHelpers.callStaticMethod(UserHandle.class, "getCallingUserId"));
-                XposedHelpers.callStaticMethod(findClassIfExists("android.os.SystemProperties", lpparam.getClassLoader()), "set", "debug.hwui.force_dark", "false");
-            }
-        };
-        ModuleHelper.findAndHookMethodSilently("com.android.server.UiModeManagerService", lpparam.getClassLoader(), "setForceDark", Context.class, hook);
-        ModuleHelper.findAndHookMethod("com.miui.server.SecurityManagerService", lpparam.getClassLoader(), "getAppDarkModeForUser", String.class, int.class, new MethodHook() {
-            @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                param.returnAndSkip(false);
+            protected void after(AfterHookCallback param) throws Throwable {
+                XposedHelpers.callMethod(param.getArgs()[0], "setShowInSettings", true);
             }
         });
-        ModuleHelper.findAndHookMethod("com.android.server.DarkModeAppSettingsInfo", lpparam.getClassLoader(), "getOverrideEnableValue", new MethodHook() {
+        if (!miui.os.Build.IS_INTERNATIONAL_BUILD) {
+            ModuleHelper.findAndHookMethod("com.android.server.ForceDarkAppListManager", lpparam.getClassLoader(), "getDarkModeAppList", long.class, int.class, new MethodHook() {
+                @Override
+                protected void before(BeforeHookCallback param) throws Throwable {
+                    XposedHelpers.setStaticBooleanField(miui.os.Build.class, "IS_INTERNATIONAL_BUILD", true);
+                }
+                @Override
+                protected void after(AfterHookCallback param) throws Throwable {
+                    XposedHelpers.setStaticBooleanField(miui.os.Build.class, "IS_INTERNATIONAL_BUILD", false);
+                }
+            });
+        }
+        ModuleHelper.findAndHookMethod("com.android.server.ForceDarkAppListManager", lpparam.getClassLoader(), "shouldShowInSettings", ApplicationInfo.class, new MethodHook() {
             @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                param.returnAndSkip(2);
+            protected void before(BeforeHookCallback param) throws Throwable {
+                if (param.getArgs()[0] == null) {
+                    param.returnAndSkip(false);
+                    return;
+                }
+                ApplicationInfo applicationInfo = (ApplicationInfo) param.getArgs()[0];
+                int flags = applicationInfo.flags;
+                boolean systemApp = (flags & 1) != 0 || (flags & 128) != 0 || applicationInfo.uid < 10000;
+                param.returnAndSkip(!systemApp);
             }
         });
     }
 
     public static void MaxNotificationIconsHook(PackageLoadedParam lpparam) {
-        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.phone.NotificationIconContainer", lpparam.getClassLoader(), "miuiShowNotificationIcons", boolean.class, new MethodHook() {
+        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.phone.NotificationIconContainer", lpparam.getClassLoader(), "resetViewStates", new MethodHook() {
             @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                boolean isShow = (boolean) param.getArgs()[0];
-                if (isShow) {
-                    int opt = MainModule.mPrefs.getStringAsInt("system_maxsbicons", 0);
-                    opt = opt == -1 ? 999 : opt;
-                    XposedHelpers.setObjectField(param.getThisObject(), "MAX_DOTS", 3);
-                    XposedHelpers.setObjectField(param.getThisObject(), "MAX_STATIC_ICONS", opt);
-                    String fieldLockVisible = "MAX_ICONS_ON_LOCKSCREEN";
-                    XposedHelpers.setObjectField(param.getThisObject(), fieldLockVisible, opt);
-                    XposedHelpers.callMethod(param.getThisObject(), "updateState");
-                    param.returnAndSkip(null);
+            protected void before(BeforeHookCallback param) throws Throwable {
+                int opt = MainModule.mPrefs.getStringAsInt("system_maxsbicons", 0);
+                int maxIcons = XposedHelpers.getIntField(param.getThisObject(), "mMaxStaticIcons");
+                opt = opt == -1 ? 999 : opt;
+                if (opt != maxIcons && maxIcons != 0) {
+                    XposedHelpers.setObjectField(param.getThisObject(), "mMaxStaticIcons", opt);
+                    XposedHelpers.setObjectField(param.getThisObject(), "mMaxIconsOnLockscreen", opt);
                 }
-            }
-        });
-    }
-
-    public static void MoreNotificationsHook(PackageLoadedParam lpparam) {
-        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.notification.policy.NotificationCountLimitPolicy", lpparam.getClassLoader(), "checkNotificationCountLimit", String.class, new MethodHook() {
-            @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
-            String pkgName = (String) param.getArgs()[0];
-            Collection<Object> mNotifications = (Collection<Object>) XposedHelpers.callMethod(XposedHelpers.getObjectField(param.getThisObject(), "mEntryManager"), "getAllNotifs");
-            List list = (List) mNotifications.stream().filter(new Predicate() {
-                @Override
-                public boolean test(Object obj) {
-                    String notifyPkgName = (String) XposedHelpers.callMethod(XposedHelpers.callMethod(obj, "getSbn"), "getPackageName");
-                    return pkgName.equals(notifyPkgName);
-                }
-            }).collect(Collectors.toList());
-            if (list.size() < 24) param.returnAndSkip(null);
             }
         });
     }
 
     public static void AutoDismissExpandedPopupsHook(PackageLoadedParam lpparam) {
-        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.phone.HeadsUpManagerPhone$HeadsUpEntryPhone", lpparam.getClassLoader(), "setExpanded", boolean.class, new MethodHook() {
+        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.phone.HeadsUpManagerPhone$HeadsUpEntryPhone", lpparam.getClassLoader(), "updateEntry", boolean.class, new MethodHook() {
             @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                boolean newValue = (boolean) param.getArgs()[0];
-                if (newValue) {
-                    boolean expanded = XposedHelpers.getBooleanField(param.getThisObject(), "expanded");
-                    if (expanded != newValue) {
-                        XposedHelpers.callMethod(param.getThisObject(), "removeAutoRemovalCallbacks");
-                        Object nm = XposedHelpers.getSurroundingThis(param.getThisObject());
-                        Handler mHandler = (Handler) XposedHelpers.getObjectField(nm, "mHandler");
-                        Runnable mRemoveAlertRunnable = (Runnable) XposedHelpers.getObjectField(param.getThisObject(), "mRemoveAlertRunnable");
-                        mHandler.postDelayed(mRemoveAlertRunnable, 5000);
+            protected void after(AfterHookCallback param) throws Throwable {
+                Object headsUpEntry = param.getThisObject();
+                boolean expanded = XposedHelpers.getBooleanField(headsUpEntry, "expanded");
+                boolean remoteInputActive = XposedHelpers.getBooleanField(headsUpEntry, "remoteInputActive");
+                Object mEntry = XposedHelpers.getObjectField(headsUpEntry, "mEntry");
+                boolean rowPinned = (boolean) XposedHelpers.callMethod(mEntry, "isRowPinned");
+                if (expanded && rowPinned && !remoteInputActive) {
+                    Object headsUpManagerPhone = XposedHelpers.getSurroundingThis(headsUpEntry);
+                    Handler mHandler = (Handler) XposedHelpers.getObjectField(headsUpManagerPhone, "mHandler");
+                    Runnable mRemoveAlertRunnable = (Runnable) XposedHelpers.getObjectField(headsUpEntry, "mRemoveAlertRunnable");
+                    boolean extended = XposedHelpers.getBooleanField(headsUpEntry, "extended");
+                    mHandler.postDelayed(mRemoveAlertRunnable, extended ? 10000 : 4500);
+                }
+            }
+        });
+        ModuleHelper.hookAllMethods("com.android.systemui.statusbar.phone.StatusBarNotificationPresenter", lpparam.getClassLoader(), "onExpandClicked",  new MethodHook() {
+            @Override
+            protected void after(final AfterHookCallback param) throws Throwable {
+                boolean expanded = (boolean) param.getArgs()[1];
+                Object mKeyguardStateController = XposedHelpers.getObjectField(param.getThisObject(), "mKeyguardStateController");
+                boolean mShowing = XposedHelpers.getBooleanField(mKeyguardStateController, "mShowing");
+                if (expanded && !mShowing) {
+                    Object headsUpManagerPhone = XposedHelpers.getObjectField(param.getThisObject(), "mHeadsUpManager");
+                    Object headsUpEntry = XposedHelpers.callMethod(headsUpManagerPhone, "getHeadsUpEntry", XposedHelpers.getObjectField(param.getArgs()[0], "mKey"));
+                    if (headsUpEntry != null) {
+                        boolean isRowPinned = (boolean) XposedHelpers.callMethod(param.getArgs()[0], "isRowPinned");
+                        if (isRowPinned) {
+                            Handler mHandler = (Handler) XposedHelpers.getObjectField(headsUpManagerPhone, "mHandler");
+                            Runnable mRemoveAlertRunnable = (Runnable) XposedHelpers.getObjectField(headsUpEntry, "mRemoveAlertRunnable");
+                            mHandler.postDelayed(mRemoveAlertRunnable, 4500);
+                        }
                     }
-                    param.returnAndSkip(null);
                 }
             }
         });
     }
 
     public static void BetterPopupsAllowFloatHook(PackageLoadedParam lpparam) {
-        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.notification.NotificationSettingsManager", lpparam.getClassLoader(), "canSlide", String.class, new MethodHook() {
+        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.notification.row.MiuiExpandableNotificationRow", lpparam.getClassLoader(), "updateMiniWindowBar", new MethodHook() {
             @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                String pkgName = (String) param.getArgs()[0];
+            protected void before(BeforeHookCallback param) throws Throwable {
+                String pkgName = (String) XposedHelpers.callMethod(param.getThisObject(), "getMiniWindowTargetPkg");
                 Set<String> selectedApps = MainModule.mPrefs.getStringSet("system_betterpopups_allowfloat_apps");
                 Set<String> selectedAppsBlack = MainModule.mPrefs.getStringSet("system_betterpopups_allowfloat_apps_black");
-                if (selectedApps.contains(pkgName)) param.setResult(true);
-                else if (selectedAppsBlack.contains(pkgName)) param.setResult(false);
-            }
-        });
-
-        ModuleHelper.hookAllMethods("com.android.systemui.statusbar.notification.policy.MiniWindowPolicy", lpparam.getClassLoader(), "canSlidePackage", new MethodHook() {
-            @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                param.returnAndSkip(true);
+                Object mAppMiniWindowManager = XposedHelpers.callMethod(param.getThisObject(), "getMAppMiniWindowManager");
+                Object notificationSettingsManager = XposedHelpers.getObjectField(mAppMiniWindowManager, "notificationSettingsManager");
+                List<String> mAllowNotificationSlide = (List<String>) XposedHelpers.getObjectField(notificationSettingsManager, "mAllowNotificationSlide");
+                if (selectedApps.contains(pkgName)) {
+                    mAllowNotificationSlide.add(pkgName);
+                }
+                else if (selectedAppsBlack.contains(pkgName)) {
+                    mAllowNotificationSlide.remove(pkgName);
+                }
             }
         });
     }
@@ -4083,94 +3493,14 @@ public class System {
     }
 
     public static void NoFloatingWindowBlacklistHook(SystemServerLoadedParam lpparam) {
-        MainModule.resHooks.setResReplacement("android", "array", "freeform_black_list", R.array.miui_resize_black_list);
-        MainModule.resHooks.setResReplacement("com.miui.rom", "array", "freeform_black_list", R.array.miui_resize_black_list);
+        MainModule.resHooks.setThemeValueReplacement("android", "string-array", "freeform_black_list", ResourceConstants.module_resize_black_list);
         DisableFloatingWindowBlacklistHook(lpparam.getClassLoader());
-        ModuleHelper.findAndHookMethod("com.android.server.wm.MiuiFreeformServicesUtils", lpparam.getClassLoader(), "supportsFreeform", new MethodHook() {
-            @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                param.returnAndSkip(true);
-            }
-        });
+        ModuleHelper.findAndHookMethod("com.android.server.wm.MiuiFreeformUtilImpl", lpparam.getClassLoader(), "supportsFreeform", HookerClassHelper.returnConstant(true));
     }
 
-    public static ConcurrentHashMap<String, Pair<Float, Rect>> fwApps = new ConcurrentHashMap<String, Pair<Float, Rect>>();
+    private static String freeformCallingPackage = "SkipCheck";
 
-    public static String getTaskPackageName(Object thisObject, int taskId) {
-        return getTaskPackageName(thisObject, taskId, false, null);
-    }
-
-    public static String getTaskPackageName(Object thisObject, int taskId, ActivityOptions options) {
-        return getTaskPackageName(thisObject, taskId, options != null, options);
-    }
-
-    public static String getTaskPackageName(Object thisObject, int taskId, boolean withOptions, ActivityOptions options) {
-        Object mRootWindowContainer = XposedHelpers.getObjectField(thisObject, "mRootWindowContainer");
-        if (mRootWindowContainer == null) return null;
-        Object task = withOptions ?
-                XposedHelpers.callMethod(mRootWindowContainer, "anyTaskForId", taskId, 2, options, true) :
-                XposedHelpers.callMethod(mRootWindowContainer, "anyTaskForId", taskId, 0);
-        if (task == null) return null;
-        Intent intent = (Intent)XposedHelpers.getObjectField(task, "intent");
-        return intent == null ? null : intent.getComponent().getPackageName();
-    }
-
-    public static String serializeFwApps() {
-        StringBuilder data = new StringBuilder();
-        for (Map.Entry<String, Pair<Float, Rect>> entry: fwApps.entrySet()) {
-            Pair<Float, Rect> val = entry.getValue();
-            data.append(entry.getKey());
-            data.append(":");
-            data.append(val.first);
-            data.append(":");
-            data.append(val.second == null ? "-" : val.second.flattenToString());
-            data.append("|");
-        }
-        return data.toString().replaceFirst("\\|$", "");
-    }
-
-    public static void unserializeFwApps(String data) {
-        fwApps.clear();
-        if (data == null || "".equals(data)) return;
-        String[] dataArr = data.split("\\|");
-        for (String appData: dataArr) {
-            if ("".equals(appData)) continue;
-            String[] appDataArr = appData.split(":");
-            fwApps.put(appDataArr[0], new Pair<Float, Rect>(Float.parseFloat(appDataArr[1]), "-".equals(appDataArr[2]) ? null : Rect.unflattenFromString(appDataArr[2])));
-        }
-    }
-
-    public static void storeFwAppsInSetting(Context context) {
-        Settings.Global.putString(context.getContentResolver(), Helpers.modulePkg + ".fw.apps", serializeFwApps());
-    }
-
-    public static void restoreFwAppsInSetting(Context context) {
-        unserializeFwApps(Settings.Global.getString(context.getContentResolver(), Helpers.modulePkg + ".fw.apps"));
-    }
-    private static ActivityOptions patchActivityOptions(Context mContext, ActivityOptions options, String pkgName) {
-        if (options == null) options = ActivityOptions.makeBasic();
-        XposedHelpers.callMethod(options, "setLaunchWindowingMode", 5);
-        XposedHelpers.callMethod(options, "setMiuiConfigFlag", 2);
-
-        Float scale;
-        Rect rect;
-        Pair<Float, Rect> values = fwApps.get(pkgName);
-        if (values == null || values.first == 0f || values.second == null) {
-            scale = 0.7f;
-            rect = MiuiMultiWindowUtils.getFreeformRect(mContext);
-        } else {
-            scale = values.first;
-            rect = values.second;
-        }
-        options.setLaunchBounds(rect);
-        try {
-            Object injector = XposedHelpers.callMethod(options, "getActivityOptionsInjector");
-            XposedHelpers.callMethod(injector, "setFreeformScale", scale);
-        } catch (Throwable ignore) {
-            XposedHelpers.log(ignore);
-        }
-        return options;
-    }
+    private static String nextFreeformPackage = ModuleHelper.NOT_EXIST_SYMBOL;
 
     private static boolean shouldOpenInFreeForm(Intent intent, String callingPackage) {
         if (intent == null || intent.getComponent() == null) return false;
@@ -4182,28 +3512,40 @@ public class System {
         if (fwBlackList.contains(pkgName)) return false;
         boolean openInFw = false;
         final boolean openFwWhenShare = MainModule.mPrefs.getBoolean("system_fw_forcein_actionsend");
+        String compClassName = intent.getComponent().getClassName();
         if (openFwWhenShare) {
             boolean whitelist = MainModule.mPrefs.getBoolean("system_fw_forcein_actionsend_in_whitelist");
             boolean appInList = MainModule.mPrefs.getStringSet("system_fw_forcein_actionsend_apps").contains(pkgName);
             if (whitelist ^ appInList) {
                 return false;
             }
-            if ("com.miui.packageinstaller".equals(pkgName) && intent.getComponent().getClassName().contains("com.miui.packageInstaller.NewPackageInstallerActivity")) {
-                return true;
-            }
+            if ("com.miui.packageinstaller".equals(pkgName) && compClassName.contains("InstallPrepareAlertActivity")) {
+                    return true;
+                }
             if (Intent.ACTION_SEND.equals(intent.getAction()) && !pkgName.equals(callingPackage)) {
                 openInFw = true;
             }
-            else if ("com.tencent.mm".equals(pkgName) && intent.getComponent().getClassName().contains(".plugin.base.stub.WXEntryActivity")) {
+            else if ("com.tencent.mm".equals(pkgName) && compClassName.contains(".plugin.base.stub.WXEntryActivity")) {
+                openInFw = true;
+            }
+            else if ("com.tencent.mobileqq".equals(pkgName) && (
+                compClassName.contains(".activity.JumpActivity")
+                || compClassName.contains(".activity.LoginActivity")
+                || compClassName.contains(".agent.AgentActivity")
+            )) {
                 openInFw = true;
             }
         }
+        boolean openSettingFromSystemUI = MainModule.mPrefs.getBoolean("system_cc_freeform_when_longclick");
+        if (openSettingFromSystemUI && "com.android.systemui".equals(callingPackage)
+            && ("com.android.settings".equals(pkgName)
+                || ("com.android.phone".equals(pkgName) && compClassName.contains(".settings.MobileNetworkSettings"))
+            )
+        ) {
+            openInFw = true;
+        }
         if (!openInFw) {
-            Object pkg = XposedHelpers.getAdditionalStaticField(MiuiFreeFormManager.class, "nextFreeformPackage");
-            openInFw = pkgName.equals(pkg);
-            if (openInFw) {
-                XposedHelpers.removeAdditionalStaticField(MiuiFreeFormManager.class, "nextFreeformPackage");
-            }
+            openInFw = pkgName.equals(nextFreeformPackage);
         }
         return openInFw;
     }
@@ -4222,29 +3564,49 @@ public class System {
                         if (action == null) return;
 
                         if (action.equals(ACTION_PREFIX + "SetFreeFormPackage")) {
-                            String pkg = intent.getStringExtra("package");
-                            XposedHelpers.setAdditionalStaticField(MiuiFreeFormManager.class, "nextFreeformPackage", pkg);
+                            nextFreeformPackage = intent.getStringExtra("package");
                         }
                     }
                 };
-                mContext.registerReceiver(mReceiver, intentFilter);
+                mContext.registerReceiver(mReceiver, intentFilter, Context.RECEIVER_EXPORTED);
             }
         });
-        ModuleHelper.hookAllMethods("com.android.server.wm.ActivityStarter", lpparam.getClassLoader(), "executeRequest", new MethodHook() {
-            @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                Object request = param.getArgs()[0];
-                Intent intent = (Intent) XposedHelpers.getObjectField(request, "intent");
-                Object safeOptions = XposedHelpers.getObjectField(request, "activityOptions");
-                if (safeOptions != null) {
-                    ActivityOptions ao = (ActivityOptions) XposedHelpers.getObjectField(safeOptions, "mOriginalOptions");
-                    if (ao != null && XposedHelpers.getIntField(ao, "mLaunchWindowingMode") == 5) {
-                        return;
-                    }
-                }
-                String callingPackage = (String) XposedHelpers.getObjectField(request, "callingPackage");
-                boolean openInFw = shouldOpenInFreeForm(intent, callingPackage);
 
+        ModuleHelper.findAndHookMethod("com.miui.server.SecurityManagerService$LocalService", lpparam.getClassLoader(), "checkGameBoosterPayPassAsUser", String.class, Intent.class, int.class, new MethodHook() {
+            @Override
+            protected void after(AfterHookCallback param) throws Throwable {
+                if (freeformCallingPackage == null || "SkipCheck".equals(freeformCallingPackage)) {
+                    return;
+                }
+                if (!"com.miui.packageinstaller".equals(freeformCallingPackage) && freeformCallingPackage.equals(param.getArgs()[0])) {
+                    return;
+                }
+                boolean openInFw = (boolean) param.getResult();
+                if (!openInFw) {
+                    Intent intent = (Intent) param.getArgs()[1];
+                    openInFw = shouldOpenInFreeForm(intent, freeformCallingPackage);
+                }
+//                XposedHelpers.log("actInfo: " + openInFw + " - " + param.getArgs()[0] +  " - " + freeformCallingPackage + " | " + param.getArgs()[1]);
+                if (openInFw) {
+                    nextFreeformPackage = ModuleHelper.NOT_EXIST_SYMBOL;
+                }
+                param.setResult(openInFw);
+            }
+        });
+
+        ModuleHelper.hookAllMethods("com.android.server.wm.ActivityStarterImpl", lpparam.getClassLoader(), "checkStartActivityByFreeForm", new MethodHook() {
+            @Override
+            protected void before(BeforeHookCallback param) throws Throwable {
+                if (param.getArgs()[1] != null) {
+                    Object safeOptions = param.getArgs()[7];
+                    if (safeOptions != null) {
+                        ActivityOptions ao = (ActivityOptions) XposedHelpers.getObjectField(safeOptions, "mOriginalOptions");
+                        if (ao != null && XposedHelpers.getIntField(ao, "mLaunchWindowingMode") == 5) {
+                            freeformCallingPackage = "SkipCheck";
+                            return;
+                        }
+                    }
+                    freeformCallingPackage = (String) param.getArgs()[6];
 //                Bundle ao = safeOptions != null ? (Bundle) XposedHelpers.callMethod(safeOptions, "getActivityOptionsBundle") : null;
 //                String reason = (String) XposedHelpers.getObjectField(request, "reason");
 //                XposedHelpers.log("startAct: " + callingPackage
@@ -4254,11 +3616,6 @@ public class System {
 //                    + " activityOptions| " + Helpers.stringifyBundle(ao)
 //                    + " intentExtra| " + Helpers.stringifyBundle(intent.getExtras())
 //                );
-
-                if (openInFw) {
-                    Context mContext = (Context) XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.getThisObject(), "mService"), "mContext");
-                    ActivityOptions options = MiuiMultiWindowUtils.getActivityOptions(mContext, intent.getComponent().getPackageName(), true, false);
-                    XposedHelpers.callMethod(param.getThisObject(), "setActivityOptions", options.toBundle());
                 }
             }
         });
@@ -4283,204 +3640,8 @@ public class System {
 //        });
     }
 
-    public static void StickyFloatingWindowsHook(SystemServerLoadedParam lpparam) {
-        final List<String> fwBlackList = new ArrayList<String>();
-        fwBlackList.add("com.miui.securitycenter");
-        fwBlackList.add("com.miui.home");
-        fwBlackList.add("com.android.camera");
-
-        ModuleHelper.hookAllMethods("com.android.server.wm.ActivityStarterInjector", lpparam.getClassLoader(), "modifyLaunchActivityOptionIfNeed", new MethodHook() {
-            @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                if (!Modifier.isPublic(param.getMember().getModifiers())) {
-                    return;
-                }
-                Intent intent = (Intent)param.getArgs()[5];
-                if (intent == null || intent.getComponent() == null) return;
-                String pkgName = intent.getComponent().getPackageName();
-                Context mContext;
-                try {
-                    mContext = (Context)XposedHelpers.getObjectField(param.getArgs()[0], "mContext");
-                } catch (Throwable ignore) {
-                    mContext = (Context)XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.getArgs()[0], "mService"), "mContext");
-                }
-                if (fwBlackList.contains(pkgName)) return;
-                ActivityOptions options = (ActivityOptions)param.getResult();
-                int windowingMode = options == null ? -1 : (int)XposedHelpers.callMethod(options, "getLaunchWindowingMode");
-
-                if (windowingMode != 5 && fwApps.containsKey(pkgName)) {
-                    try {
-                        options = patchActivityOptions(mContext, options, pkgName);
-                        param.setResult(options);
-                    } catch (Throwable t) {
-                        XposedHelpers.log(t);
-                    }
-                }
-                else if (windowingMode == 5 && !fwApps.containsKey(pkgName)) {
-                    fwApps.put(pkgName, new Pair<Float, Rect>(0f, null));
-                    storeFwAppsInSetting(mContext);
-                }
-            }
-        });
-
-        ModuleHelper.hookAllMethods("com.android.server.wm.ActivityTaskSupervisor", lpparam.getClassLoader(), "startActivityFromRecents", new MethodHook() {
-            @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                Object safeOptions = param.getArgs()[3];
-                ActivityOptions options = (ActivityOptions)XposedHelpers.callMethod(safeOptions, "getOptions", param.getThisObject());
-                if (options != null) {
-                    Object windowToken = XposedHelpers.callMethod(options, "getLaunchRootTask");
-                    if (windowToken != null) return;
-                }
-                String pkgName = (String) XposedHelpers.getAdditionalInstanceField(param.getThisObject(), "startPackageName");
-                XposedHelpers.removeAdditionalInstanceField(param.getThisObject(), "startPackageName");
-                if (fwBlackList.contains(pkgName)) return;
-                int windowingMode = options == null ? -1 : (int)XposedHelpers.callMethod(options, "getLaunchWindowingMode");
-                if (windowingMode == 5 && pkgName != null) {
-                    fwApps.put(pkgName, new Pair<Float, Rect>(0f, null));
-                    Context mContext = (Context)XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.getThisObject(), "mService"), "mContext");
-                    storeFwAppsInSetting(mContext);
-                }
-            }
-            @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                Object safeOptions = param.getArgs()[3];
-                ActivityOptions options = (ActivityOptions)XposedHelpers.callMethod(safeOptions, "getOptions", param.getThisObject());
-                if (options != null) {
-                    Object windowToken = XposedHelpers.callMethod(options, "getLaunchRootTask");
-                    if (windowToken != null) return;
-                }
-                String pkgName = getTaskPackageName(param.getThisObject(), (int)param.getArgs()[2], options);
-                XposedHelpers.setAdditionalInstanceField(param.getThisObject(), "startPackageName",  pkgName);
-                if (!fwBlackList.contains(pkgName)) {
-                    int windowingMode = options == null ? -1 : (int)XposedHelpers.callMethod(options, "getLaunchWindowingMode");
-                    if (windowingMode != 5 && fwApps.containsKey(pkgName)) {
-                        Object mService = XposedHelpers.getObjectField(param.getThisObject(), "mService");
-                        Context mContext = (Context)XposedHelpers.getObjectField(mService, "mContext");
-                        options = patchActivityOptions(mContext, options, pkgName);
-                        XposedHelpers.setObjectField(safeOptions, "mOriginalOptions", options);
-                        param.getArgs()[3] = safeOptions;
-                        Intent intent = new Intent(ACTION_PREFIX + "dismissRecentsWhenFreeWindowOpen");
-                        intent.putExtra("package", pkgName);
-                        mContext.sendBroadcast(intent);
-                    }
-                }
-            }
-        });
-
-        ModuleHelper.findAndHookMethod("com.android.server.wm.MiuiFreeFormGestureController$FreeFormReceiver", lpparam.getClassLoader(), "onReceive", Context.class, Intent.class, new MethodHook() {
-            @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                Intent intent = (Intent) param.getArgs()[1];
-                String action = intent.getAction();
-                if ("miui.intent.action_launch_fullscreen_from_freeform".equals(action)) {
-                    Object parentThis = XposedHelpers.getSurroundingThis(param.getThisObject());
-                    XposedHelpers.setAdditionalInstanceField(parentThis, "skipFreeFormStateClear", true);
-                }
-            }
-        });
-
-        ModuleHelper.hookAllMethods("com.android.server.wm.MiuiFreeFormGestureController", lpparam.getClassLoader(), "notifyFullScreenWidnowModeStart", new MethodHook() {
-            @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                if (param.getArgs().length != 3) return;
-                String pkgName = (String)XposedHelpers.callMethod(param.getArgs()[1], "getStackPackageName");
-                Object skipClear = XposedHelpers.getAdditionalInstanceField(param.getThisObject(), "skipFreeFormStateClear");
-                boolean skipFreeFormStateClear = false;
-                if (skipClear != null) {
-                    skipFreeFormStateClear = (boolean) skipClear;
-                }
-                if (!skipFreeFormStateClear) {
-                    if (fwBlackList.contains(pkgName)) return;
-                    if (fwApps.remove(pkgName) != null) {
-                        storeFwAppsInSetting((Context)XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.getThisObject(), "mService"), "mContext"));
-                    }
-                }
-                else {
-                    XposedHelpers.setAdditionalInstanceField(param.getThisObject(), "skipFreeFormStateClear", false);
-                }
-            }
-        });
-
-        ModuleHelper.hookAllMethods("com.android.server.wm.ActivityTaskManagerService", lpparam.getClassLoader(), "launchSmallFreeFormWindow", new MethodHook() {
-            @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                Object taskId = XposedHelpers.getObjectField(param.getArgs()[0], "taskId");
-                Object mMiuiFreeFormManagerService = XposedHelpers.getObjectField(param.getThisObject(), "mMiuiFreeFormManagerService");
-                Object miuiFreeFormActivityStack = XposedHelpers.callMethod(mMiuiFreeFormManagerService, "getMiuiFreeFormActivityStack", taskId);
-                String pkgName = (String) XposedHelpers.callMethod(miuiFreeFormActivityStack, "getStackPackageName");
-                if (fwBlackList.contains(pkgName)) return;
-                if (!fwApps.containsKey(pkgName)) {
-                    fwApps.put(pkgName, new Pair<Float, Rect>(0f, null));
-                    Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-                    storeFwAppsInSetting(mContext);
-                }
-            }
-        });
-
-        ModuleHelper.findAndHookMethod("com.android.server.wm.ActivityTaskManagerService", lpparam.getClassLoader(), "onSystemReady", new MethodHook() {
-            @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-                restoreFwAppsInSetting(mContext);
-                Class<?> MiuiMultiWindowAdapter = findClass("android.util.MiuiMultiWindowAdapter", lpparam.getClassLoader());
-                List<String> blackList = (List<String>) XposedHelpers.getStaticObjectField(MiuiMultiWindowAdapter, "FREEFORM_BLACK_LIST");
-                blackList.clear();
-                mContext.registerReceiver(new BroadcastReceiver() {
-                    @Override
-                    public void onReceive(Context context, Intent intent) {
-                        String action = intent.getAction();
-                        if ("miui.intent.action_launch_fullscreen_from_freeform".equals(action)) {
-                            XposedHelpers.setAdditionalInstanceField(param.getThisObject(), "skipFreeFormStateClear", true);
-                        }
-                    }
-                }, new IntentFilter("miui.intent.action_launch_fullscreen_from_freeform"));
-            }
-        });
-
-        ModuleHelper.hookAllMethods("com.android.server.wm.ActivityTaskManagerService", lpparam.getClassLoader(), "resizeTask", new MethodHook() {
-            @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                String pkgName = getTaskPackageName(param.getThisObject(), (int)param.getArgs()[0]);
-                if (pkgName != null) {
-                    Object skipClear = XposedHelpers.getAdditionalInstanceField(param.getThisObject(), "skipFreeFormStateClear");
-                    boolean skipFreeFormStateClear = false;
-                    if (skipClear != null) {
-                        skipFreeFormStateClear = (boolean) skipClear;
-                    }
-                    if (skipFreeFormStateClear) {
-                        XposedHelpers.setAdditionalInstanceField(param.getThisObject(), "skipFreeFormStateClear", false);
-                    }
-                    else {
-                        if (fwBlackList.contains(pkgName)) return;
-                        Object mMiuiFreeFormManagerService = XposedHelpers.getObjectField(param.getThisObject(), "mMiuiFreeFormManagerService");
-                        Object miuiFreeFormActivityStack = XposedHelpers.callMethod(mMiuiFreeFormManagerService, "getMiuiFreeFormActivityStack", param.getArgs()[0]);
-                        if (fwApps.containsKey(pkgName)) {
-                            Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-                            float sScale = (float) XposedHelpers.callMethod(miuiFreeFormActivityStack, "getFreeFormScale");
-                            fwApps.put(pkgName, new Pair<Float, Rect>(sScale, new Rect((Rect)param.getArgs()[1])));
-                            storeFwAppsInSetting(mContext);
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    public static void MessagingStyleLinesHook(PackageLoadedParam lpparam) {
-        ModuleHelper.hookAllConstructors("com.android.systemui.statusbar.notification.NotificationMessagingTemplateViewWrapper", lpparam.getClassLoader(), new MethodHook() {
-            @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                Object mMessagingLinearLayout = XposedHelpers.getObjectField(param.getThisObject(), "mMessagingLinearLayout");
-                int mMaxDisplayedLines = XposedHelpers.getIntField(mMessagingLinearLayout, "mMaxDisplayedLines");
-                if (mMaxDisplayedLines == Integer.MAX_VALUE) XposedHelpers.callMethod(mMessagingLinearLayout, "setMaxDisplayedLines", MainModule.mPrefs.getInt("system_messagingstylelines", Integer.MAX_VALUE));
-            }
-        });
-    }
-
     public static void MultiWindowPlusHook(SystemServerLoadedParam lpparam) {
-        MainModule.resHooks.setResReplacement("android", "array", "miui_resize_black_list", R.array.miui_resize_black_list);
-        MainModule.resHooks.setResReplacement("com.miui.rom", "array", "miui_resize_black_list", R.array.miui_resize_black_list);
+        MainModule.resHooks.setThemeValueReplacement("android", "string-array", "miui_resize_black_list", ResourceConstants.module_resize_black_list);
         Class <?> AtmClass = findClassIfExists("com.android.server.wm.ActivityTaskManagerServiceImpl", lpparam.getClassLoader());
         if (AtmClass != null) {
             ModuleHelper.findAndHookMethod(AtmClass, "updateResizeBlackList", Context.class, HookerClassHelper.DO_NOTHING);
@@ -4512,19 +3673,6 @@ public class System {
         }
     }
 
-    public static void SecureControlCenterHook(PackageLoadedParam lpparam) {
-        ModuleHelper.findAndHookMethodSilently("com.android.keyguard.utils.MiuiKeyguardUtils", lpparam.getClassLoader(), "supportExpandableStatusbarUnderKeyguard", HookerClassHelper.returnConstant(false));
-        ModuleHelper.hookAllMethods("com.android.systemui.controlcenter.policy.ControlCenterControllerImpl", lpparam.getClassLoader(), "onContentChanged", new MethodHook() {
-            @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                String key = (String) param.getArgs()[0];
-                if ("expandable_under_lock_screen".equals(key)) {
-                    param.getArgs()[1] = "0";
-                }
-            }
-        });
-    }
-
     public static void MinimalNotificationViewHook(PackageLoadedParam lpparam) {
         ModuleHelper.hookAllMethods("com.android.systemui.statusbar.phone.StatusBar", lpparam.getClassLoader(), "updateNotification", new MethodHook() {
             @Override
@@ -4544,41 +3692,46 @@ public class System {
     }
 
     public static void NotificationChannelSettingsHook(PackageLoadedParam lpparam) {
-        ModuleHelper.hookAllMethods("com.android.systemui.statusbar.notification.row.MiuiNotificationMenuRow", lpparam.getClassLoader(), "onClickInfoItem", new MethodHook() {
+        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.notification.row.MiuiNotificationMenuRow", lpparam.getClassLoader(), "createMenuViews", boolean.class, new MethodHook() {
             @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                Context mContext = (Context)param.getArgs()[0];
+            protected void after(final AfterHookCallback param) throws Throwable {
                 Object entry = XposedHelpers.callMethod(XposedHelpers.getObjectField(param.getThisObject(), "mParent"), "getEntry");
-                String id = (String)XposedHelpers.callMethod(XposedHelpers.callMethod(entry, "getChannel"), "getId");
-                if ("miscellaneous".equals(id)) return;
-                Object notification = XposedHelpers.callMethod(entry, "getSbn");
-                Class<?> nuCls = findClassIfExists("com.android.systemui.miui.statusbar.notification.NotificationUtil", lpparam.getClassLoader());
-                if (nuCls != null) {
-                    boolean isHybrid = (boolean)XposedHelpers.callStaticMethod(nuCls, "isHybrid", notification);
-                    if (isHybrid) return;
-                }
-                String pkgName = (String)XposedHelpers.callMethod(notification, "getPackageName");
-                int user = (int)XposedHelpers.callMethod(notification, "getAppUid");
-
-                Bundle bundle = new Bundle();
-                bundle.putString("android.provider.extra.CHANNEL_ID", id);
-                bundle.putString("package", pkgName);
-                bundle.putInt("uid", user);
-                bundle.putString("miui.targetPkg", pkgName);
-                Intent intent = new Intent("android.intent.action.MAIN");
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra(":android:show_fragment", "com.android.settings.notification.ChannelNotificationSettings");
-                intent.putExtra(":android:show_fragment_args", bundle);
-                intent.setClassName("com.android.settings", "com.android.settings.SubSettings");
-                try {
-                    XposedHelpers.callMethod(mContext, "startActivityAsUser", intent, android.os.Process.myUserHandle());
-                    param.returnAndSkip(null);
-                    Object ModalController = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", mContext.getClassLoader()), "get", findClass("com.android.systemui.statusbar.notification.modal.ModalController", mContext.getClassLoader()));
-                    XposedHelpers.callMethod(ModalController, "animExitModelCollapsePanels");
-                } catch (Throwable ignore) {
-                    XposedHelpers.log(ignore);
-                }
+                String channelId = (String)XposedHelpers.callMethod(XposedHelpers.callMethod(entry, "getChannel"), "getId");
+                if ("miscellaneous".equals(channelId)) return;
+                Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
+                Object notification = XposedHelpers.getObjectField(entry, "mSbn");
+                Class<?> nuCls = findClassIfExists("com.android.systemui.statusbar.notification.NotificationUtil", lpparam.getClassLoader());
+                boolean isHybrid = (boolean)XposedHelpers.callStaticMethod(nuCls, "isHybrid", notification);
+                if (isHybrid) return;
+                Object mInfoItem = XposedHelpers.getObjectField(param.getThisObject(), "mInfoItem");
+                ImageView mIcon = (ImageView) XposedHelpers.getObjectField(mInfoItem, "mIcon");
+                mIcon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("android.provider.extra.CHANNEL_ID", channelId);
+                        String pkgName = (String)XposedHelpers.callMethod(notification, "getPackageName");
+                        bundle.putString("package", pkgName);
+                        int appUid = XposedHelpers.getIntField(notification, "mAppUid");
+                        bundle.putInt("uid", appUid);
+                        bundle.putString("miui.targetPkg", pkgName);
+                        Intent intent = new Intent("android.intent.action.MAIN");
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra(":android:show_fragment", "com.android.settings.notification.ChannelNotificationSettings");
+                        intent.putExtra(":android:show_fragment_args", bundle);
+                        intent.setClassName("com.android.settings", "com.android.settings.SubSettings");
+                        try {
+                            XposedHelpers.callMethod(mContext, "startActivityAsUser", intent, XposedHelpers.getStaticObjectField(UserHandle.class, "CURRENT"));
+                            Object modalController = ModuleHelper.getDepInstance(lpparam.getClassLoader(), "com.android.systemui.statusbar.notification.modal.ModalController");
+                            XposedHelpers.callMethod(modalController, "animExitModal", 50L, true, "MORE", false);
+                            Object statusBar = ModuleHelper.getDepInstance(lpparam.getClassLoader(), "com.android.systemui.statusbar.CommandQueue");
+                            XposedHelpers.callMethod(statusBar, "animateCollapsePanels", 0, false);
+                        } catch (Throwable ignore) {
+                            XposedHelpers.log(ignore);
+                        }
+                    }
+                });
             }
         });
     }
@@ -4604,21 +3757,27 @@ public class System {
     }
 
     public static void HideLockScreenHintHook(PackageLoadedParam lpparam) {
-        ModuleHelper.findAndHookMethod("com.android.systemui.keyguard.KeyguardIndicationRotateTextViewController", lpparam.getClassLoader(), "hasIndicationsExceptResting", HookerClassHelper.returnConstant(true));
+        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.KeyguardIndicationController", lpparam.getClassLoader(), "updateDeviceEntryIndication", boolean.class, new MethodHook() {
+            @Override
+            protected void before(BeforeHookCallback param) throws Throwable {
+                XposedHelpers.setObjectField(param.getThisObject(), "mPersistentUnlockMessage", "");
+            }
+        });
     }
 
     public static void HideLockScreenStatusBarHook(PackageLoadedParam lpparam) {
-        ModuleHelper.hookAllMethods(StatusBarCls, lpparam.getClassLoader(), "makeStatusBarView", new MethodHook() {
+        ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiKeyguardStatusBarView", lpparam.getClassLoader(), "onFinishInflate", new MethodHook() {
             @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-            View mKeyguardStatusBar = (View) XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.getThisObject(), "mNotificationPanelViewController"), "mKeyguardStatusBar");
-            mKeyguardStatusBar.setTranslationY(-999f);
+            protected void after(AfterHookCallback param) throws Throwable {
+                View mKeyguardStatusBar = (View) param.getThisObject();
+                mKeyguardStatusBar.setVisibility(View.GONE);
+                mKeyguardStatusBar.setTranslationY(-499f);
             }
         });
     }
 
     public static void MuteVisibleNotificationsHook(PackageLoadedParam lpparam) {
-        ModuleHelper.hookAllMethods("com.android.systemui.statusbar.notification.policy.NotificationAlertController", lpparam.getClassLoader(), "buzzBeepBlink", new MethodHook() {
+        ModuleHelper.hookAllMethods("com.android.systemui.statusbar.notification.policy.MiuiAlertManager", lpparam.getClassLoader(), "buzzBeepBlink", new MethodHook() {
             @Override
             protected void before(final BeforeHookCallback param) throws Throwable {
                 Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
@@ -4772,5 +3931,20 @@ public class System {
 
     public static void Disable72hStrongAuthHook(SystemServerLoadedParam lpparam) {
         ModuleHelper.findAndHookMethod("com.android.server.locksettings.LockSettingsStrongAuth", lpparam.getClassLoader(), "rescheduleStrongAuthTimeoutAlarm", long.class, int.class, HookerClassHelper.DO_NOTHING);
+    }
+    public static void AllowUntrustedTouchHook(SystemServerLoadedParam lpparam) {
+        ModuleHelper.findAndHookMethod("com.android.server.wm.WindowState", lpparam.getClassLoader(), "getTouchOcclusionMode", new MethodHook() {
+            @Override
+            protected void after(AfterHookCallback param) throws Throwable {
+                int mode = (int) param.getResult();
+                if (mode == 1) param.setResult(2);
+                else {
+                    WindowManager.LayoutParams mAttrs = (WindowManager.LayoutParams) XposedHelpers.getObjectField(param.getThisObject(), "mAttrs");
+                    if (mAttrs.type == 2005) {
+                        param.setResult(2);
+                    }
+                }
+            }
+        });
     }
 }

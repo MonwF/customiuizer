@@ -59,13 +59,13 @@ public class System_NoScreenLock extends SubFragment {
 	public void openWifiNetworks() {
 		Bundle args = new Bundle();
 		args.putString("key", "pref_key_system_noscreenlock_wifi");
-		openSubFragment(new WiFiList(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.wifi_networks, R.layout.prefs_wifi_networks);
+		openSubFragment(new WiFiList(), args, AppHelper.SettingsType.Edit, AppHelper.ActionBarType.HomeUp, R.string.wifi_networks, R.layout.prefs_wifi_networks);
 	}
 
 	public void openBtNetworks() {
 		Bundle args = new Bundle();
 		args.putString("key", "pref_key_system_noscreenlock_bt");
-		openSubFragment(new BTList(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.bt_devices, R.layout.prefs_bt_networks);
+		openSubFragment(new BTList(), args, AppHelper.SettingsType.Edit, AppHelper.ActionBarType.HomeUp, R.string.bt_devices, R.layout.prefs_bt_networks);
 	}
 
 }

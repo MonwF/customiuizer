@@ -9,7 +9,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RecentTaskInfo;
-import android.app.ActivityOptions;
 import android.app.Instrumentation;
 import android.app.NotificationManager;
 import android.app.UiModeManager;
@@ -20,13 +19,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.hardware.input.InputManager;
 import android.media.AudioManager;
 import android.net.wifi.WifiManager;
 import android.nfc.NfcAdapter;
-import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -68,7 +65,6 @@ import name.monwf.customiuizer.utils.Helpers;
 @SuppressWarnings("WeakerAccess")
 public class GlobalActions {
 
-    public static Object mStatusBar = null;
     public static final String ACTION_PREFIX = "name.monwf.customiuizer.mods.action.";
     public static final String EVENT_PREFIX = "name.monwf.customiuizer.mods.event.";
 
@@ -88,71 +84,70 @@ public class GlobalActions {
                 GlobalActions.sendDownUpKeyEvent(context, action, false);
             return true;
         }
-        switch (action) {
-            case 2: return commonSendAction(context, "ExpandNotifications");
-            case 3: return commonSendAction(context, "ExpandSettings");
-            case 4: return commonSendAction(context, "LockDevice");
-            case 5: return commonSendAction(context, "GoToSleep");
-            case 6: return commonSendAction(context, "TakeScreenshot");
-            case 7: return commonSendAction(context, "OpenRecents");
-            case 8: return launchAppIntent(context, key, skipLock);
-            case 9: return launchShortcutIntent(context, key, skipLock);
-            case 10: return toggleThis(context, MainModule.mPrefs.getInt(key + "_toggle", 0));
-            case 11: return commonSendAction(context, "SwitchToPrevApp");
-            case 12: return commonSendAction(context, "OpenPowerMenu");
-            case 13: return commonSendAction(context, "ClearMemory");
-            case 14: return commonSendAction(context, "ToggleColorInversion");
-            case 15: return commonSendAction(context, "GoBack");
-            case 16: return commonSendAction(context, "SimulateMenu");
-            case 17: return commonSendAction(context, "OpenVolumeDialog");
-            case 18: return commonSendAction(context, "VolumeUp");
-            case 19: return commonSendAction(context, "VolumeDown");
-            case 20: return launchActivityIntent(context, key, skipLock);
-            case 21: return commonSendAction(context, "SwitchKeyboard");
-            case 22: return commonSendAction(context, "SwitchOneHanded");
-            case 23: return commonSendAction(context, "ClearNotifications");
-            case 24: return commonSendAction(context, "ForceClose");
-            case 25: return commonSendAction(context, "ScrollToTop");
-            case 26: return showSidebar(context, bundle);
-            case 27: return commonSendAction(context, "FloatingWindow");
-            case 28: return commonSendAction(context, "PinningWindow");
-            default: return false;
-        }
+        return switch (action) {
+            case 2 -> commonSendAction(context, "ExpandNotifications");
+            case 3 -> commonSendAction(context, "ExpandSettings");
+            case 4 -> commonSendAction(context, "LockDevice");
+            case 5 -> commonSendAction(context, "GoToSleep");
+            case 6 -> commonSendAction(context, "TakeScreenshot");
+            case 7 -> commonSendAction(context, "OpenRecents");
+            case 8 -> launchAppIntent(context, key, skipLock);
+            case 9 -> launchShortcutIntent(context, key, skipLock);
+            case 10 -> toggleThis(context, MainModule.mPrefs.getInt(key + "_toggle", 0));
+            case 11 -> commonSendAction(context, "SwitchToPrevApp");
+            case 12 -> commonSendAction(context, "OpenPowerMenu");
+            case 13 -> commonSendAction(context, "ClearMemory");
+            case 14 -> commonSendAction(context, "ToggleColorInversion");
+            case 15 -> commonSendAction(context, "GoBack");
+            case 16 -> commonSendAction(context, "SimulateMenu");
+            case 17 -> commonSendAction(context, "OpenVolumeDialog");
+            case 18 -> commonSendAction(context, "VolumeUp");
+            case 19 -> commonSendAction(context, "VolumeDown");
+            case 20 -> launchActivityIntent(context, key, skipLock);
+            case 22 -> commonSendAction(context, "SwitchOneHanded");
+            case 23 -> commonSendAction(context, "ClearNotifications");
+            case 24 -> commonSendAction(context, "ForceClose");
+            case 25 -> commonSendAction(context, "ScrollToTop");
+            case 26 -> showSidebar(context, bundle);
+            case 27 -> commonSendAction(context, "FloatingWindow");
+            case 28 -> commonSendAction(context, "PinningWindow");
+            case 29 -> commonSendAction(context, "SplitScreen");
+            default -> false;
+        };
     }
 
     public static int getActionResId(int action) {
-        switch (action) {
-            case 0:
-            case 1: return R.string.notselected;
-            case 2: return R.string.array_global_actions_notif;
-            case 3: return R.string.array_global_actions_eqs;
-            case 4: return R.string.array_global_actions_lock;
-            case 5: return R.string.array_global_actions_sleep;
-            case 6: return R.string.array_global_actions_screenshot;
-            case 7: return R.string.array_global_actions_recents;
-            case 11: return R.string.array_global_actions_back;
-            case 12: return R.string.array_global_actions_powermenu_short;
-            case 13: return R.string.array_global_actions_clearmemory;
-            case 14: return R.string.array_global_actions_invertcolors;
-            case 15: return R.string.array_global_actions_goback;
-            case 16: return R.string.array_global_actions_menu;
-            case 17: return R.string.array_global_actions_volume;
-            case 18: return R.string.array_global_actions_volume_up;
-            case 19: return R.string.array_global_actions_volume_down;
-            case 21: return R.string.array_global_actions_switchkeyboard;
-            case 22: return R.string.array_global_actions_onehanded_left;
-            case 23: return R.string.array_global_actions_clear_notifs;
-            case 24: return R.string.array_global_actions_forceclose;
-            case 25: return R.string.array_global_actions_scrolltotop;
-            case 26: return R.string.array_global_actions_expandsidebar;
-            case 27: return R.string.array_global_actions_floatingwindow;
-            case 28: return R.string.array_global_actions_pinningwindow;
-            default: return 0;
-        }
+        return switch (action) {
+            case 0, 1 -> R.string.notselected;
+            case 2 -> R.string.array_global_actions_notif;
+            case 3 -> R.string.array_global_actions_eqs;
+            case 4 -> R.string.array_global_actions_lock;
+            case 5 -> R.string.array_global_actions_sleep;
+            case 6 -> R.string.array_global_actions_screenshot;
+            case 7 -> R.string.array_global_actions_recents;
+            case 11 -> R.string.array_global_actions_back;
+            case 12 -> R.string.array_global_actions_powermenu_short;
+            case 13 -> R.string.array_global_actions_clearmemory;
+            case 14 -> R.string.array_global_actions_invertcolors;
+            case 15 -> R.string.array_global_actions_goback;
+            case 16 -> R.string.array_global_actions_menu;
+            case 17 -> R.string.array_global_actions_volume;
+            case 18 -> R.string.array_global_actions_volume_up;
+            case 19 -> R.string.array_global_actions_volume_down;
+            case 22 -> R.string.array_global_actions_onehanded_left;
+            case 23 -> R.string.array_global_actions_clear_notifs;
+            case 24 -> R.string.array_global_actions_forceclose;
+            case 25 -> R.string.array_global_actions_scrolltotop;
+            case 26 -> R.string.array_global_actions_expandsidebar;
+            case 27 -> R.string.array_global_actions_floatingwindow;
+            case 28 -> R.string.array_global_actions_pinningwindow;
+            case 29 -> R.string.array_global_actions_splitscreen;
+            default -> 0;
+        };
     }
 
     private static final BroadcastReceiver mSBReceiver = new BroadcastReceiver() {
-        @SuppressLint("WrongConstant")
+        @SuppressLint({"WrongConstant", "MissingPermission"})
         public void onReceive(final Context context, Intent intent) {
             try {
                 Resources modRes = ModuleHelper.getModuleRes(context);
@@ -187,63 +182,7 @@ public class GlobalActions {
                 }
                 else if (action.equals(ACTION_PREFIX + "FloatingWindow")) {
                     try {
-                        MiuiMultiWindowUtils.startSmallFreeform(context);
-                    } catch (Throwable err) {
-                        XposedHelpers.log(err);
-                    }
-                }
-                else if (action.equals(ACTION_PREFIX + "PinningWindow")) {
-                    try {
-                        ForegroundInfo foregroundInfo = ProcessManager.getForegroundInfo();
-                        if (foregroundInfo != null) {
-                            String topPackage = foregroundInfo.mForegroundPackageName;
-                            if ("com.miui.home".equals(topPackage)) {
-                                return;
-                            }
-                        }
-                        else {
-                            return;
-                        }
-                        Class <?> ActivityTaskManagerCls = findClassIfExists("android.app.ActivityTaskManager", context.getClassLoader());
-                        Object activityTaskManager = XposedHelpers.callStaticMethod(ActivityTaskManagerCls, "getService");
-                        List<Object> rootTaskInfos = (List<Object>) XposedHelpers.callMethod(activityTaskManager, "getAllRootTaskInfosOnDisplay", 0);
-                        List<MiuiFreeFormManager.MiuiFreeFormStackInfo> freeFormStackInfoList = MiuiFreeFormManager.getAllFreeFormStackInfosOnDisplay(context.getDisplay() != null ? context.getDisplay().getDisplayId() : 0);
-                        int freeFormCount = 0;
-                        if (freeFormStackInfoList != null) {
-                            freeFormCount = freeFormStackInfoList.size();
-                        }
-                        if (freeFormCount == 2) return;
-                        ActivityOptions ao = MiuiMultiWindowUtils.getActivityOptions(context, "com.android.mms", true, false);
-                        for (Object rootTaskInfo : rootTaskInfos) {
-                            Object conf = XposedHelpers.getObjectField(rootTaskInfo, "configuration");
-                            Object windowConfiguration = XposedHelpers.getObjectField(conf, "windowConfiguration");
-                            int wmode = XposedHelpers.getIntField(windowConfiguration, "mWindowingMode");
-                            int mActivityType = XposedHelpers.getIntField(windowConfiguration, "mActivityType");
-                            if (wmode < 2 && mActivityType < 2) {
-                                int taskId = XposedHelpers.getIntField(rootTaskInfo, "taskId");
-                                XposedHelpers.callMethod(activityTaskManager, "startActivityFromRecents", taskId, ao.toBundle());
-                                Handler myhandler = new Handler(Looper.myLooper());
-                                Runnable removeBg = new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        myhandler.removeCallbacks(this);
-                                        try {
-                                            Method injectInputEventMethod = InputManager.class.getDeclaredMethod("injectInputEvent", InputEvent.class, int.class);
-                                            Method instanceMethod = InputManager.class.getDeclaredMethod("getInstance");
-                                            InputManager im = (InputManager) instanceMethod.invoke(InputManager.class);
-                                            long now = SystemClock.uptimeMillis();
-                                            KeyEvent homeDown = new KeyEvent(now, now, 0, 3, 0, 0, -1, 0);
-                                            KeyEvent homeUp = new KeyEvent(now, now, 1, 3, 0, 0, -1, 0);
-                                            injectInputEventMethod.invoke(im, homeDown, 0);
-                                            injectInputEventMethod.invoke(im, homeUp, 0);
-                                        }
-                                        catch (Throwable err) {}
-                                    }
-                                };
-                                myhandler.postDelayed(removeBg, 120);
-                                return;
-                            }
-                        }
+                        MiuiMultiWindowUtils.startSmallFreeformForControlCenter(context);
                     } catch (Throwable err) {
                         XposedHelpers.log(err);
                     }
@@ -281,119 +220,45 @@ public class GlobalActions {
                     }, 100L);
                 }
 
-                if (mStatusBar != null) {
-                    if (action.equals(ACTION_PREFIX + "ExpandNotifications")) try {
-                        Object mNotificationPanel = XposedHelpers.getObjectField(mStatusBar, "mNotificationPanel");
-                        boolean mPanelExpanded = (boolean)XposedHelpers.getObjectField(mNotificationPanel, "mPanelExpanded");
-                        boolean mQsExpanded = (boolean)XposedHelpers.getObjectField(mNotificationPanel, "mQsExpanded");
-                        boolean expandOnly = intent.getBooleanExtra("expand_only", false);
-                        if (mPanelExpanded) {
-                            if (!expandOnly)
-                                if (mQsExpanded)
-                                    XposedHelpers.callMethod(mStatusBar, "closeQs");
-                                else
-                                    XposedHelpers.callMethod(mStatusBar, "animateCollapsePanels");
-                        } else {
-                            XposedHelpers.callMethod(mStatusBar, "animateExpandNotificationsPanel");
+                else if (action.equals(ACTION_PREFIX + "ExpandNotifications")) {
+                    Object mStatusBar = ModuleHelper.getDepInstance(context.getClassLoader(), "com.android.systemui.statusbar.phone.CentralSurfaces");
+                    Object callbacks = XposedHelpers.getObjectField(mStatusBar, "mCommandQueueCallbacks");
+                    XposedHelpers.callMethod(callbacks, "animateExpandNotificationsPanel");
+                }
+
+                else if (action.equals(ACTION_PREFIX + "ExpandSettings")) {
+                    boolean forceExpand = intent.getBooleanExtra("forceExpand", false);
+                    Object mStatusBar = ModuleHelper.getDepInstance(context.getClassLoader(), "com.android.systemui.statusbar.phone.CentralSurfaces");
+                    Object mControlCenterController = XposedHelpers.getObjectField(mStatusBar, "mControlCenterController");
+                    boolean isUseControlCenter = (boolean)XposedHelpers.callMethod(mControlCenterController, "isUseControlCenter");
+                    if (isUseControlCenter) {
+                        if (forceExpand || (boolean)XposedHelpers.callMethod(mControlCenterController, "isCollapsed")) {
+                            Object lazyControlCenter = XposedHelpers.getObjectField(mControlCenterController, "controlCenter");
+                            Object controlCenter = XposedHelpers.callMethod(lazyControlCenter, "get");
+                            XposedHelpers.callMethod(controlCenter, "animateExpandSettingsPanel", "");
                         }
-                    } catch (Throwable t) {
-                        // Expand only
-                        long token = Binder.clearCallingIdentity();
-                        XposedHelpers.callMethod(context.getSystemService("statusbar"), "expandNotificationsPanel");
-                        Binder.restoreCallingIdentity(token);
-                    }
-
-                    if (action.equals(ACTION_PREFIX + "ExpandSettings")) try {
-                        boolean forceExpand = intent.getBooleanExtra("forceExpand", false);
-                        Object mControlCenterController = XposedHelpers.getObjectField(mStatusBar, "mControlCenterController");
-                        boolean isUseControlCenter = (boolean)XposedHelpers.callMethod(mControlCenterController, "isUseControlCenter");
-                        if (isUseControlCenter) {
-                            if (forceExpand || (boolean)XposedHelpers.callMethod(mControlCenterController, "isCollapsed"))
-                                XposedHelpers.callMethod(mControlCenterController, "openPanel");
-                            else
-                                XposedHelpers.callMethod(mControlCenterController, "collapseControlCenter", true);
-                            return;
-                        }
-
-                        Object mNotificationPanel = XposedHelpers.getObjectField(mStatusBar, "mNotificationPanelViewController");
-                        boolean mPanelExpanded = (boolean)XposedHelpers.getObjectField(mNotificationPanel, "mPanelExpanded");
-                        boolean mQsExpanded = (boolean)XposedHelpers.getObjectField(mNotificationPanel, "mQsExpanded");
-                        if (!forceExpand && mPanelExpanded) {
-                            if (mQsExpanded)
-                                XposedHelpers.callMethod(mStatusBar, "animateCollapsePanels", 0, false);
-                            else
-                                XposedHelpers.callMethod(mNotificationPanel, "setQsExpanded", true);
-                        } else {
-                            XposedHelpers.callMethod(mStatusBar, "animateExpandSettingsPanel", (Object)null);
-                        }
-                    } catch (Throwable t) {
-                        // Expand only
-                        long token = Binder.clearCallingIdentity();
-                        XposedHelpers.callMethod(context.getSystemService("statusbar"), "expandSettingsPanel");
-                        Binder.restoreCallingIdentity(token);
-                    }
-
-                    if (action.equals(ACTION_PREFIX + "OpenRecents")) {
-                        Intent recentIntent = new Intent("SYSTEM_ACTION_RECENTS");
-                        recentIntent.setPackage("com.android.systemui");
-                        context.sendBroadcast(recentIntent);
-                    }
-
-                    if (action.equals(ACTION_PREFIX + "OpenVolumeDialog")) try {
-                        Object mVolumeComponent = XposedHelpers.getObjectField(mStatusBar, "mVolumeComponent");
-                        Object mVolumeDialogPlugin = XposedHelpers.getObjectField(mVolumeComponent, "mDialog");
-                        Object miuiVolumeDialog = XposedHelpers.getObjectField(mVolumeDialogPlugin, "mVolumeDialogImpl");
-                        if (miuiVolumeDialog == null) {
-                            XposedHelpers.log("OpenVolumeDialog", "MIUI volume dialog is NULL!");
-                            return;
-                        }
-
-                        Handler mHandler = (Handler)XposedHelpers.getObjectField(miuiVolumeDialog, "mHandler");
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                boolean mShowing = XposedHelpers.getBooleanField(miuiVolumeDialog, "mShowing");
-                                boolean mExpanded = XposedHelpers.getBooleanField(miuiVolumeDialog, "mExpanded");
-
-                                AudioManager am = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
-                                boolean isInCall = am.getMode() == AudioManager.MODE_IN_CALL || am.getMode() == AudioManager.MODE_IN_COMMUNICATION;
-                                if (mShowing) {
-                                    if (mExpanded || isInCall)
-                                        XposedHelpers.callMethod(miuiVolumeDialog, "dismissH", 1);
-                                    else {
-                                        Object mDialogView = XposedHelpers.getObjectField(miuiVolumeDialog, "mDialogView");
-                                        View mExpandButton = (View)XposedHelpers.getObjectField(mDialogView, "mExpandButton");
-                                        View.OnClickListener mClickExpand = (View.OnClickListener)XposedHelpers.getObjectField(mDialogView, "expandListener");
-                                        mClickExpand.onClick(mExpandButton);
-                                    }
-                                } else {
-                                    Object mController = XposedHelpers.getObjectField(mVolumeDialogPlugin, "mController");
-                                    if (isInCall) {
-                                        XposedHelpers.callMethod(mController, "setActiveStream", 0);
-                                        XposedHelpers.setBooleanField(miuiVolumeDialog, "mNeedReInit", true);
-                                    } else if (am.isMusicActive()) {
-                                        XposedHelpers.callMethod(mController, "setActiveStream", 3);
-                                        XposedHelpers.setBooleanField(miuiVolumeDialog, "mNeedReInit", true);
-                                    }
-                                    XposedHelpers.callMethod(miuiVolumeDialog, "showH", 1);
-                                }
-                            }
-                        });
-                    } catch (Throwable t) {
-                        XposedHelpers.log(t);
-                    }
-
-                    if (action.equals(ACTION_PREFIX + "ToggleHotspot")) {
-                        Object mHotspotController = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", context.getClassLoader()), "get", findClassIfExists("com.android.systemui.statusbar.policy.HotspotController", context.getClassLoader()));
-                        if (mHotspotController == null) return;
-                        boolean mHotspotSupported = (boolean)XposedHelpers.callMethod(mHotspotController, "isHotspotSupported");
-                        if (!mHotspotSupported) return;
-                        boolean mHotspotEnabled = (boolean)XposedHelpers.callMethod(mHotspotController, "isHotspotEnabled");
-                        if (mHotspotEnabled)
-                            Toast.makeText(context, modRes.getString(R.string.toggle_hotspot_off), Toast.LENGTH_SHORT).show();
                         else
-                            Toast.makeText(context, modRes.getString(R.string.toggle_hotspot_on), Toast.LENGTH_SHORT).show();
-                        XposedHelpers.callMethod(mHotspotController, "setHotspotEnabled", !mHotspotEnabled);
+                            XposedHelpers.callMethod(mControlCenterController, "collapseControlCenter", true, true);
+                        return;
+                    }
+                    Object callbacks = XposedHelpers.getObjectField(mStatusBar, "mCommandQueueCallbacks");
+                    XposedHelpers.callMethod(callbacks, "animateExpandSettingsPanel", "");
+                }
+
+                else if (action.equals(ACTION_PREFIX + "OpenRecents")) {
+                    Intent recentIntent = new Intent("SYSTEM_ACTION_RECENTS");
+                    recentIntent.setPackage("com.android.systemui");
+                    context.sendBroadcast(recentIntent);
+                }
+
+                else if (action.equals(ACTION_PREFIX + "OpenVolumeDialog")) {
+                    Object mStatusBar = ModuleHelper.getDepInstance(context.getClassLoader(), "com.android.systemui.statusbar.phone.CentralSurfaces");
+                    Object mVolumeComponent = XposedHelpers.getObjectField(mStatusBar, "mVolumeComponent");
+                    Object mVolumeDialogPlugin = XposedHelpers.getObjectField(mVolumeComponent, "mDialog");
+                    Object miuiVolumeDialog = XposedHelpers.getObjectField(mVolumeDialogPlugin, "mVolumeDialogImpl");
+                    if (miuiVolumeDialog == null) {
+                        XposedHelpers.log("OpenVolumeDialog", "MIUI volume dialog is NULL!");
+                        return;
                     }
                     else if (action.equals(ACTION_PREFIX + "ToggleZenMode")) {
                         Object zenModeController = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", context.getClassLoader()), "get", findClassIfExists("com.android.systemui.statusbar.policy.ZenModeController", context.getClassLoader()));
@@ -412,20 +277,201 @@ public class GlobalActions {
                         XposedHelpers.callMethod(mUiModeManager, "setNightModeActivated", !nightMode);
                     }
 
-                    if (action.equals(ACTION_PREFIX + "ToggleFlashlight")) {
-                        XposedHelpers.callStaticMethod(findClass("com.miui.systemui.util.CommonUtil", context.getClassLoader()), "toggleTorch");
+                    Handler mHandler = (Handler)XposedHelpers.getObjectField(miuiVolumeDialog, "mHandler");
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            boolean mShowing = XposedHelpers.getBooleanField(miuiVolumeDialog, "mShowing");
+                            boolean mExpanded = XposedHelpers.getBooleanField(miuiVolumeDialog, "mExpanded");
+
+                            AudioManager am = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+                            boolean isInCall = am.getMode() == AudioManager.MODE_IN_CALL || am.getMode() == AudioManager.MODE_IN_COMMUNICATION;
+                            if (mShowing) {
+                                if (mExpanded || isInCall)
+                                    XposedHelpers.callMethod(miuiVolumeDialog, "dismissH", 1);
+                                else {
+                                    Object mDialogView = XposedHelpers.getObjectField(miuiVolumeDialog, "mDialogView");
+                                    View mExpandButton = (View)XposedHelpers.getObjectField(mDialogView, "mExpandButton");
+                                    View.OnClickListener mClickExpand = (View.OnClickListener)XposedHelpers.getObjectField(mDialogView, "expandListener");
+                                    mClickExpand.onClick(mExpandButton);
+                                }
+                            } else {
+                                Object mController = XposedHelpers.getObjectField(mVolumeDialogPlugin, "mController");
+                                if (isInCall) {
+                                    XposedHelpers.callMethod(mController, "setActiveStream", 0);
+                                    XposedHelpers.setBooleanField(miuiVolumeDialog, "mNeedReInit", true);
+                                } else if (am.isMusicActive()) {
+                                    XposedHelpers.callMethod(mController, "setActiveStream", 3);
+                                    XposedHelpers.setBooleanField(miuiVolumeDialog, "mNeedReInit", true);
+                                }
+                                XposedHelpers.callMethod(miuiVolumeDialog, "showH", 1);
+                            }
+                        }
+                    });
+                }
+
+                else if (action.equals(ACTION_PREFIX + "ToggleHotspot")) {
+                    Object mHotspotController = ModuleHelper.getDepInstance(context.getClassLoader(), "com.android.systemui.statusbar.policy.HotspotController");
+                    if (mHotspotController == null) return;
+                    boolean mHotspotSupported = (boolean)XposedHelpers.callMethod(mHotspotController, "isHotspotSupported");
+                    if (!mHotspotSupported) return;
+                    boolean mHotspotEnabled = (boolean)XposedHelpers.callMethod(mHotspotController, "isHotspotEnabled");
+                    if (mHotspotEnabled)
+                        Toast.makeText(context, modRes.getString(R.string.toggle_hotspot_off), Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(context, modRes.getString(R.string.toggle_hotspot_on), Toast.LENGTH_SHORT).show();
+                    XposedHelpers.callMethod(mHotspotController, "setHotspotEnabled", !mHotspotEnabled);
+                }
+
+                else if (action.equals(ACTION_PREFIX + "ToggleZenMode")) {
+                    Object zenModeController = ModuleHelper.getDepInstance(context.getClassLoader(), "com.android.systemui.statusbar.policy.ZenModeController");
+                    boolean zenModeEnabled = (boolean)XposedHelpers.callMethod(zenModeController, "isZenModeOn");
+                    if (zenModeEnabled) {
+                        XposedHelpers.callMethod(zenModeController, "setZen", 0, "DNDTile");
                     }
-                    // @todo fix gps toggle
-//					Object mToggleManager = XposedHelpers.getObjectField(mStatusBar, "mToggleManager");
-//					if (mToggleManager == null) return;
-//					if (action.equals(ACTION_PREFIX + "ToggleGPS")) {
-//						boolean mGpsEnable = (boolean)XposedHelpers.getObjectField(mToggleManager, "mGpsEnable");
-//						if (mGpsEnable)
-//							Toast.makeText(context, modRes.getString(R.string.toggle_gps_off), Toast.LENGTH_SHORT).show();
-//						else
-//							Toast.makeText(context, modRes.getString(R.string.toggle_gps_on), Toast.LENGTH_SHORT).show();
-//						XposedHelpers.callMethod(mToggleManager, "toggleGps");
-//					}
+                    else {
+                        XposedHelpers.callMethod(zenModeController, "setZen", 1, "DNDTile");
+                    }
+                }
+
+                else if (action.equals(ACTION_PREFIX + "ToggleFlashlight")) {
+                    XposedHelpers.callStaticMethod(findClass("com.miui.systemui.util.CommonUtil", context.getClassLoader()), "toggleTorch");
+                }
+                else if (action.equals(ACTION_PREFIX + "ToggleGPS")) {
+                    Object locationController = ModuleHelper.getDepInstance(context.getClassLoader(), "com.android.systemui.statusbar.policy.LocationController");
+                    boolean mGpsEnable = (boolean)XposedHelpers.callMethod(locationController, "isLocationEnabled");
+                    if (mGpsEnable)
+                        Toast.makeText(context, modRes.getString(R.string.toggle_gps_off), Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(context, modRes.getString(R.string.toggle_gps_on), Toast.LENGTH_SHORT).show();
+                    XposedHelpers.callMethod(locationController, "setLocationEnabled", !mGpsEnable);
+                }
+                else if (action.equals(ACTION_PREFIX + "ToggleNightMode")) {
+                    Settings.System.putInt(context.getContentResolver(), "dark_mode_enable_by_setting", 1);
+                    UiModeManager mUiModeManager = (UiModeManager) context.getSystemService("uimode");
+                    boolean nightMode = mUiModeManager.getNightMode() == 2;
+                    XposedHelpers.callMethod(mUiModeManager, "setNightModeActivated", !nightMode);
+                }
+                else if (action.equals(ACTION_PREFIX + "ToggleWiFi")) {
+                    WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+                    if (wifiManager.isWifiEnabled()) {
+                        wifiManager.setWifiEnabled(false);
+                        Toast.makeText(context, modRes.getString(R.string.toggle_wifi_off), Toast.LENGTH_SHORT).show();
+                    } else {
+                        wifiManager.setWifiEnabled(true);
+                        Toast.makeText(context, modRes.getString(R.string.toggle_wifi_on), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else if (action.equals(ACTION_PREFIX + "ToggleBluetooth")) {
+                    BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                    if (mBluetoothAdapter.isEnabled()) {
+                        mBluetoothAdapter.disable();
+                        Toast.makeText(context, modRes.getString(R.string.toggle_bt_off), Toast.LENGTH_SHORT).show();
+                    } else {
+                        mBluetoothAdapter.enable();
+                        Toast.makeText(context, modRes.getString(R.string.toggle_bt_on), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else if (action.equals(ACTION_PREFIX + "ToggleNFC")) {
+                    Class<?> clsNfcAdapter = XposedHelpers.findClass("android.nfc.NfcAdapter", null);
+                    NfcAdapter mNfcAdapter = (NfcAdapter)XposedHelpers.callStaticMethod(clsNfcAdapter, "getNfcAdapter", context);
+                    if (mNfcAdapter == null) return;
+
+                    Method enableNFC = clsNfcAdapter.getDeclaredMethod("enable");
+                    Method disableNFC = clsNfcAdapter.getDeclaredMethod("disable");
+                    enableNFC.setAccessible(true);
+                    disableNFC.setAccessible(true);
+
+                    if (mNfcAdapter.isEnabled()) {
+                        disableNFC.invoke(mNfcAdapter);
+                        Toast.makeText(context, modRes.getString(R.string.toggle_nfc_off), Toast.LENGTH_SHORT).show();
+                    } else {
+                        enableNFC.invoke(mNfcAdapter);
+                        Toast.makeText(context, modRes.getString(R.string.toggle_nfc_on), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else if (action.equals(ACTION_PREFIX + "ToggleSoundProfile")) {
+                    AudioManager am = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+                    int currentMode = am.getRingerMode();
+                    if (currentMode == 0) {
+                        am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                        Toast.makeText(context, modRes.getString(R.string.toggle_sound_vibrate), Toast.LENGTH_SHORT).show();
+                    } else if (currentMode == 1) {
+                        am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                        Toast.makeText(context, modRes.getString(R.string.toggle_sound_normal), Toast.LENGTH_SHORT).show();
+                    } else if (currentMode == 2) {
+                        am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                        Toast.makeText(context, modRes.getString(R.string.toggle_sound_silent), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else if (action.equals(ACTION_PREFIX + "ToggleAutoRotation")) {
+                    if (Settings.System.getInt(context.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0) == 0) {
+                        Settings.System.putInt(context.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 1);
+                        Toast.makeText(context, modRes.getString(R.string.toggle_autorotate_on), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Settings.System.putInt(context.getContentResolver(), Settings.System.USER_ROTATION, ((WindowManager)context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation());
+                        Settings.System.putInt(context.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0);
+                        Toast.makeText(context, modRes.getString(R.string.toggle_autorotate_off), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else if (action.equals(ACTION_PREFIX + "ToggleMobileData")) {
+                    TelephonyManager telManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+                    if (telManager.isDataEnabled()) {
+                        telManager.setDataEnabledForReason(0, false);
+                        Toast.makeText(context, modRes.getString(R.string.toggle_mobiledata_off), Toast.LENGTH_SHORT).show();
+                    } else {
+                        telManager.setDataEnabledForReason(0, true);
+                        Toast.makeText(context, modRes.getString(R.string.toggle_mobiledata_on), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else if (action.equals(ACTION_PREFIX + "WakeUp")) {
+                    XposedHelpers.callMethod(context.getSystemService(Context.POWER_SERVICE), "wakeUp", SystemClock.uptimeMillis());
+                }
+                else if (action.equals(ACTION_PREFIX + "GoToSleep")) {
+                    XposedHelpers.callMethod(context.getSystemService(Context.POWER_SERVICE), "goToSleep", SystemClock.uptimeMillis(), 4, 0);
+                }
+                else if (action.equals(ACTION_PREFIX + "LockDevice")) {
+                    XposedHelpers.callMethod(context.getSystemService(Context.POWER_SERVICE), "goToSleep", SystemClock.uptimeMillis(), 7, 0);
+                }
+                else if (action.equals(ACTION_PREFIX + "TakeScreenshot")) {
+                    context.sendBroadcast(new Intent("android.intent.action.CAPTURE_SCREENSHOT"));
+                }
+                else if (action.equals(ACTION_PREFIX + "GoBack")) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            new Instrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_BACK);
+                        }
+                    }).start();
+                }
+                else if (action.equals(ACTION_PREFIX + "VolumeUp")) {
+                    AudioManager audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+                    audioManager.adjustVolume(AudioManager.ADJUST_RAISE, 1 << 12 /* FLAG_FROM_KEY */ | AudioManager.FLAG_SHOW_UI | AudioManager.FLAG_ALLOW_RINGER_MODES | AudioManager.FLAG_PLAY_SOUND | AudioManager.FLAG_VIBRATE);
+                }
+                else if (action.equals(ACTION_PREFIX + "VolumeDown")) {
+                    AudioManager audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+                    audioManager.adjustVolume(AudioManager.ADJUST_LOWER, 1 << 12 /* FLAG_FROM_KEY */ | AudioManager.FLAG_SHOW_UI | AudioManager.FLAG_ALLOW_RINGER_MODES | AudioManager.FLAG_PLAY_SOUND | AudioManager.FLAG_VIBRATE);
+                }
+                else if (action.equals(ACTION_PREFIX + "OpenPowerMenu")) {
+                    Object mCommandQueue = ModuleHelper.getDepInstance(context.getClassLoader(), "com.android.systemui.statusbar.CommandQueue");
+                    XposedHelpers.callMethod(mCommandQueue, "showGlobalActionsMenu");
+                }
+                else if (action.equals(ACTION_PREFIX + "LaunchIntent")) {
+                    Intent launchIntent = intent.getParcelableExtra("intent");
+                    if (launchIntent != null) {
+                        int user = 0;
+                        if (launchIntent.hasExtra("user")) {
+                            user = launchIntent.getIntExtra("user", 0);
+                            launchIntent.removeExtra("user");
+                        }
+                        if (user != 0)
+                            XposedHelpers.callMethod(context, "startActivityAsUser", launchIntent, XposedHelpers.newInstance(UserHandle.class, user));
+                        else
+                            context.startActivity(launchIntent);
+                    }
+                }
+                else if (action.equals(ACTION_PREFIX + "SaveLastMusicPausedTime")) {
+                    Settings.System.putLong(context.getContentResolver(), "last_music_paused_time", currentTimeMillis());
                 }
             } catch (Throwable t) {
                 XposedHelpers.log(t);
@@ -433,236 +479,8 @@ public class GlobalActions {
         }
     };
 
-    private static final BroadcastReceiver mGlobalReceiver = new BroadcastReceiver() {
-        @SuppressWarnings("ConstantConditions")
-        @SuppressLint({"MissingPermission", "WrongConstant", "NewApi"})
-        public void onReceive(final Context context, Intent intent) {
-        try {
-            Resources modRes = ModuleHelper.getModuleRes(context);
-            String action = intent.getAction();
-            if (action == null) return;
-            // Actions
-            if (action.equals(ACTION_PREFIX + "RunParasitic")) {
-                Intent intent2 = new Intent();
-                intent2.setAction("android.intent.action.MAIN");
-                intent2.addCategory("org.lsposed.manager.LAUNCH_MANAGER");
-                intent2.setClassName("com.android.shell", "com.android.shell.BugreportWarningActivity");
-                intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-                context.startActivity(intent2);
-            }
-            if (action.equals(ACTION_PREFIX + "WakeUp")) {
-                XposedHelpers.callMethod(context.getSystemService(Context.POWER_SERVICE), "wakeUp", SystemClock.uptimeMillis());
-            }
-            if (action.equals(ACTION_PREFIX + "GoToSleep")) {
-                XposedHelpers.callMethod(context.getSystemService(Context.POWER_SERVICE), "goToSleep", SystemClock.uptimeMillis(), 4, 0);
-            }
-            if (action.equals(ACTION_PREFIX + "LockDevice")) {
-                XposedHelpers.callMethod(context.getSystemService(Context.POWER_SERVICE), "goToSleep", SystemClock.uptimeMillis(), 7, 0);
-            }
-            if (action.equals(ACTION_PREFIX + "TakeScreenshot")) {
-                context.sendBroadcast(new Intent("android.intent.action.CAPTURE_SCREENSHOT"));
-            }
-
-            if (action.equals(ACTION_PREFIX + "GoBack")) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        new Instrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_BACK);
-                    }
-                }).start();
-            }
-
-            if (action.equals(ACTION_PREFIX + "SwitchToPrevApp")) {
-                PackageManager pm = context.getPackageManager();
-                Intent intent_home = new Intent(Intent.ACTION_MAIN);
-                intent_home.addCategory(Intent.CATEGORY_HOME);
-                intent_home.addCategory(Intent.CATEGORY_DEFAULT);
-                List<ResolveInfo> launcherList = pm.queryIntentActivities(intent_home, 0);
-
-                ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
-                @SuppressWarnings("deprecation")
-                List<RecentTaskInfo> rti = am.getRecentTasks(Integer.MAX_VALUE, 0);
-
-                Intent recentIntent;
-                for (RecentTaskInfo rtitem: rti) try {
-                    //noinspection deprecation
-                    if (am.getRunningTasks(1).get(0).topActivity == rtitem.topActivity) continue;
-
-                    boolean isLauncher = false;
-                    recentIntent = new Intent(rtitem.baseIntent);
-                    if (rtitem.origActivity != null) recentIntent.setComponent(rtitem.origActivity);
-                    ComponentName resolvedAct = recentIntent.resolveActivity(pm);
-
-                    if (resolvedAct != null)
-                        for (ResolveInfo launcher: launcherList)
-                            if (!launcher.activityInfo.packageName.equals("com.android.settings") && launcher.activityInfo.packageName.equals(resolvedAct.getPackageName())) {
-                                isLauncher = true;
-                                break;
-                            }
-
-                    if (!isLauncher) {
-//						if (Helpers.getHtcHaptic(context)) {
-//							Vibrator vibe = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
-//							if (XMain.pref.getBoolean("pref_key_controls_longpresshaptic_enable", false))
-//								vibe.vibrate(XMain.pref.getInt("pref_key_controls_longpresshaptic", 21));
-//							else
-//								vibe.vibrate(21);
-//						}
-                        if (rtitem.id >= 0)
-                            am.moveTaskToFront(rtitem.id, 0);
-                        else
-                            context.startActivity(recentIntent);
-                        break;
-                    }
-                } catch (Throwable t) {
-                    XposedHelpers.log(t);
-                }
-            }
-
-            if (action.equals(ACTION_PREFIX + "LaunchIntent")) {
-                Intent launchIntent = intent.getParcelableExtra("intent");
-                if (launchIntent != null) {
-                    int user = 0;
-                    if (launchIntent.hasExtra("user")) {
-                        user = launchIntent.getIntExtra("user", 0);
-                        launchIntent.removeExtra("user");
-                    }
-                    if (user != 0)
-                        XposedHelpers.callMethod(context, "startActivityAsUser", launchIntent, XposedHelpers.newInstance(UserHandle.class, user));
-                    else
-                        context.startActivity(launchIntent);
-                }
-            }
-
-            if (action.equals(ACTION_PREFIX + "VolumeUp")) {
-                AudioManager audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
-                audioManager.adjustVolume(AudioManager.ADJUST_RAISE, 1 << 12 /* FLAG_FROM_KEY */ | AudioManager.FLAG_SHOW_UI | AudioManager.FLAG_ALLOW_RINGER_MODES | AudioManager.FLAG_PLAY_SOUND | AudioManager.FLAG_VIBRATE);
-            }
-
-            if (action.equals(ACTION_PREFIX + "VolumeDown")) {
-                AudioManager audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
-                audioManager.adjustVolume(AudioManager.ADJUST_LOWER, 1 << 12 /* FLAG_FROM_KEY */ | AudioManager.FLAG_SHOW_UI | AudioManager.FLAG_ALLOW_RINGER_MODES | AudioManager.FLAG_PLAY_SOUND | AudioManager.FLAG_VIBRATE);
-            }
-
-            if (action.equals(ACTION_PREFIX + "OpenPowerMenu")) {
-                Class<?> clsWMG = XposedHelpers.findClass("android.view.WindowManagerGlobal", null);
-                Object wms = XposedHelpers.callStaticMethod(clsWMG, "getWindowManagerService");
-                XposedHelpers.callMethod(wms, "showGlobalActions");
-            }
-
-            if (action.equals(ACTION_PREFIX + "SwitchKeyboard")) {
-                context.sendBroadcast(
-                    new Intent("com.android.server.InputMethodManagerService.SHOW_INPUT_METHOD_PICKER").setPackage("android")
-                );
-            }
-
-            if (action.equals(ACTION_PREFIX + "ToggleColorInversion")) {
-                int opt = Settings.Secure.getInt(context.getContentResolver(), "accessibility_display_inversion_enabled");
-                int conflictProp = (int) ModuleHelper.proxySystemProperties("getInt", "ro.df.effect.conflict", 0, null);
-                int conflictProp2 = (int) ModuleHelper.proxySystemProperties("getInt", "ro.vendor.df.effect.conflict", 0, null);
-                boolean hasConflict = conflictProp == 1 || conflictProp2 == 1;
-                Object dfMgr = XposedHelpers.callStaticMethod(XposedHelpers.findClass("miui.hardware.display.DisplayFeatureManager", null), "getInstance");
-                if (hasConflict && opt == 0) XposedHelpers.callMethod(dfMgr, "setScreenEffect", 15, 1);
-                Settings.Secure.putInt(context.getContentResolver(), "accessibility_display_inversion_enabled", opt == 0 ? 1 : 0);
-                if (hasConflict && opt != 0) XposedHelpers.callMethod(dfMgr, "setScreenEffect", 15, 0);
-            }
-
-            // Toggles
-            if (action.equals(ACTION_PREFIX + "ToggleWiFi")) {
-                WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
-                if (wifiManager.isWifiEnabled()) {
-                    wifiManager.setWifiEnabled(false);
-                    Toast.makeText(context, modRes.getString(R.string.toggle_wifi_off), Toast.LENGTH_SHORT).show();
-                } else {
-                    wifiManager.setWifiEnabled(true);
-                    Toast.makeText(context, modRes.getString(R.string.toggle_wifi_on), Toast.LENGTH_SHORT).show();
-                }
-            }
-            if (action.equals(ACTION_PREFIX + "ToggleBluetooth")) {
-                BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-                if (mBluetoothAdapter.isEnabled()) {
-                    mBluetoothAdapter.disable();
-                    Toast.makeText(context, modRes.getString(R.string.toggle_bt_off), Toast.LENGTH_SHORT).show();
-                } else {
-                    mBluetoothAdapter.enable();
-                    Toast.makeText(context, modRes.getString(R.string.toggle_bt_on), Toast.LENGTH_SHORT).show();
-                }
-            }
-            if (action.equals(ACTION_PREFIX + "ToggleNFC")) {
-                Class<?> clsNfcAdapter = XposedHelpers.findClass("android.nfc.NfcAdapter", null);
-                NfcAdapter mNfcAdapter = (NfcAdapter)XposedHelpers.callStaticMethod(clsNfcAdapter, "getNfcAdapter", context);
-                if (mNfcAdapter == null) return;
-
-                Method enableNFC = clsNfcAdapter.getDeclaredMethod("enable");
-                Method disableNFC = clsNfcAdapter.getDeclaredMethod("disable");
-                enableNFC.setAccessible(true);
-                disableNFC.setAccessible(true);
-
-                if (mNfcAdapter.isEnabled()) {
-                    disableNFC.invoke(mNfcAdapter);
-                    Toast.makeText(context, modRes.getString(R.string.toggle_nfc_off), Toast.LENGTH_SHORT).show();
-                } else {
-                    enableNFC.invoke(mNfcAdapter);
-                    Toast.makeText(context, modRes.getString(R.string.toggle_nfc_on), Toast.LENGTH_SHORT).show();
-                }
-            }
-            if (action.equals(ACTION_PREFIX + "ToggleSoundProfile")) {
-                AudioManager am = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
-                int currentMode = am.getRingerMode();
-                if (currentMode == 0) {
-                    am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-                    Toast.makeText(context, modRes.getString(R.string.toggle_sound_vibrate), Toast.LENGTH_SHORT).show();
-                } else if (currentMode == 1) {
-                    am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-                    Toast.makeText(context, modRes.getString(R.string.toggle_sound_normal), Toast.LENGTH_SHORT).show();
-                } else if (currentMode == 2) {
-                    am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                    Toast.makeText(context, modRes.getString(R.string.toggle_sound_silent), Toast.LENGTH_SHORT).show();
-                }
-            }
-            if (action.equals(ACTION_PREFIX + "ToggleAutoBrightness")) {
-                if (Settings.System.getInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, 0) == 0) {
-                    Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, 1);
-                    Toast.makeText(context, modRes.getString(R.string.toggle_autobright_on), Toast.LENGTH_SHORT).show();
-                } else {
-                    Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, 0);
-                    Toast.makeText(context, modRes.getString(R.string.toggle_autobright_off), Toast.LENGTH_SHORT).show();
-                }
-            }
-            if (action.equals(ACTION_PREFIX + "ToggleAutoRotation")) {
-                if (Settings.System.getInt(context.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0) == 0) {
-                    Settings.System.putInt(context.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 1);
-                    Toast.makeText(context, modRes.getString(R.string.toggle_autorotate_on), Toast.LENGTH_SHORT).show();
-                } else {
-                    Settings.System.putInt(context.getContentResolver(), Settings.System.USER_ROTATION, ((WindowManager)context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation());
-                    Settings.System.putInt(context.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0);
-                    Toast.makeText(context, modRes.getString(R.string.toggle_autorotate_off), Toast.LENGTH_SHORT).show();
-                }
-            }
-            if (action.equals(ACTION_PREFIX + "ToggleMobileData")) {
-                TelephonyManager telManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
-                Method setMTE = TelephonyManager.class.getDeclaredMethod("setDataEnabled", boolean.class);
-                @SuppressWarnings("ALL")
-                Method getMTE = TelephonyManager.class.getDeclaredMethod("getDataEnabled");
-                setMTE.setAccessible(true);
-                getMTE.setAccessible(true);
-
-                if ((Boolean)getMTE.invoke(telManager)) {
-                    setMTE.invoke(telManager, false);
-                    Toast.makeText(context, modRes.getString(R.string.toggle_mobiledata_off), Toast.LENGTH_SHORT).show();
-                } else {
-                    setMTE.invoke(telManager, true);
-                    Toast.makeText(context, modRes.getString(R.string.toggle_mobiledata_on), Toast.LENGTH_SHORT).show();
-                }
-            }
-        } catch(Throwable t) {
-            XposedHelpers.log(t);
-        }
-        }
-    };
-
     public static void miuizerSettingsHook(PackageLoadedParam lpparam) {
-        int settingsIconResId = MainModule.resHooks.addResource("ic_miuizer_settings", R.drawable.ic_miuizer_settings);
+        int settingsIconResId = MainModule.resHooks.addFakeResource("ic_miuizer_settings", R.drawable.ic_miuizer_settings, "drawable");
         ModuleHelper.findAndHookMethod("com.android.settings.MiuiSettings", lpparam.getClassLoader(), "updateHeaderList", List.class, new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
@@ -726,7 +544,7 @@ public class GlobalActions {
             protected void after(final AfterHookCallback param) throws Throwable {
                 final Context mContext = (Context) param.getArgs()[0];
                 final Handler mBgHandler = (Handler) XposedHelpers.getObjectField(param.getThisObject(), "mBgHandler");
-                ModuleHelper.hookAllMethods("com.miui.systemui.util.MiuiActivityUtil", lpparam.getClassLoader(), "updateTopActivity", new MethodHook() {
+                ModuleHelper.findAndHookMethod("com.miui.systemui.functions.MiuiTopActivityObserver", lpparam.getClassLoader(), "updateTopActivity", new MethodHook() {
                     private String pkgName = "";
                     @Override
                     protected void after(final AfterHookCallback param) throws Throwable {
@@ -738,11 +556,12 @@ public class GlobalActions {
                     }
                 });
                 if (MainModule.mPrefs.getStringAsInt("various_showcallui", 0) > 0) {
-                    ModuleHelper.hookAllMethods("com.android.systemui.statusbar.StatusBarStateControllerImpl", lpparam.getClassLoader(), "setSystemBarAttributes", new MethodHook() {
+                    ModuleHelper.hookAllMethods("com.android.systemui.statusbar.phone.SystemBarAttributesListener", lpparam.getClassLoader(), "onSystemBarAttributesChanged", new MethodHook() {
                         private boolean fullScreen = false;
                         @Override
                         protected void after(final AfterHookCallback param) throws Throwable {
-                            boolean isFullScreen = XposedHelpers.getBooleanField(param.getThisObject(), "mIsFullscreen");
+                            Object statusBarStateController = XposedHelpers.getObjectField(param.getThisObject(), "statusBarStateController");
+                            boolean isFullScreen = XposedHelpers.getBooleanField(statusBarStateController, "mIsFullscreen");
                             if (fullScreen != isFullScreen) {
                                 mBgHandler.post(new Runnable() {
                                     @Override
@@ -760,45 +579,6 @@ public class GlobalActions {
     }
 
     public static void setupGlobalActions(XposedModuleInterface.SystemServerLoadedParam lpparam) {
-        ModuleHelper.hookAllConstructors("com.android.server.accessibility.AccessibilityManagerService", lpparam.getClassLoader(), new MethodHook() {
-            @SuppressLint("UnspecifiedRegisterReceiverFlag")
-            @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                Context mGlobalContext = (Context)param.getArgs()[0];
-
-                IntentFilter intentfilter = new IntentFilter();
-
-                // Actions
-                intentfilter.addAction(ACTION_PREFIX + "WakeUp");
-                intentfilter.addAction(ACTION_PREFIX + "GoToSleep");
-                intentfilter.addAction(ACTION_PREFIX + "LockDevice");
-                intentfilter.addAction(ACTION_PREFIX + "TakeScreenshot");
-                intentfilter.addAction(ACTION_PREFIX + "SwitchToPrevApp");
-                intentfilter.addAction(ACTION_PREFIX + "GoBack");
-                intentfilter.addAction(ACTION_PREFIX + "OpenPowerMenu");
-                intentfilter.addAction(ACTION_PREFIX + "SwitchKeyboard");
-                intentfilter.addAction(ACTION_PREFIX + "ToggleColorInversion");
-                intentfilter.addAction(ACTION_PREFIX + "VolumeUp");
-                intentfilter.addAction(ACTION_PREFIX + "VolumeDown");
-                intentfilter.addAction(ACTION_PREFIX + "LaunchIntent");
-
-                // Toggles
-                intentfilter.addAction(ACTION_PREFIX + "ToggleWiFi");
-                intentfilter.addAction(ACTION_PREFIX + "ToggleBluetooth");
-                intentfilter.addAction(ACTION_PREFIX + "ToggleNFC");
-                intentfilter.addAction(ACTION_PREFIX + "ToggleSoundProfile");
-                intentfilter.addAction(ACTION_PREFIX + "ToggleAutoBrightness");
-                intentfilter.addAction(ACTION_PREFIX + "ToggleAutoRotation");
-                intentfilter.addAction(ACTION_PREFIX + "ToggleMobileData");
-
-                // Tools
-//				intentfilter.addAction(ACTION_PREFIX + "RunParasitic");
-                //intentfilter.addAction(ACTION_PREFIX + "QueryXposedService");
-
-                mGlobalContext.registerReceiver(mGlobalReceiver, intentfilter);
-            }
-        });
-
         ModuleHelper.hookAllMethods("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.getClassLoader(), "initInternal", new MethodHook() {
             @SuppressLint("UnspecifiedRegisterReceiverFlag")
             @Override
@@ -807,42 +587,92 @@ public class GlobalActions {
                 IntentFilter intentfilter = new IntentFilter();
                 intentfilter.addAction(ACTION_PREFIX + "SimulateMenu");
                 intentfilter.addAction(ACTION_PREFIX + "ForceClose");
-                intentfilter.addAction(ACTION_PREFIX + "SaveLastMusicPausedTime");
+                intentfilter.addAction(ACTION_PREFIX + "ToggleColorInversion");
+                intentfilter.addAction(ACTION_PREFIX + "SwitchToPrevApp");
                 final Object thisObject = param.getThisObject();
                 mContext.registerReceiver(new BroadcastReceiver() {
+                    @SuppressLint("MissingPermission")
                     public void onReceive(final Context context, Intent intent) {
                         String action = intent.getAction();
                         if (action == null) return;
 
-                        if (action.equals(ACTION_PREFIX + "SimulateMenu")) try {
-                            Field fRequestShowMenu = XposedHelpers.findField(thisObject.getClass().getSuperclass(), "mRequestShowMenu");
-                            fRequestShowMenu.setAccessible(true);
-                            fRequestShowMenu.set(thisObject, true);
-                            Method markShortcutTriggered = findMethodExact(thisObject.getClass().getSuperclass(), "markShortcutTriggered");
-                            markShortcutTriggered.setAccessible(true);
-                            markShortcutTriggered.invoke(thisObject);
-                            Method injectEvent = findMethodExact(thisObject.getClass().getSuperclass(), "injectEvent", int.class);
-                            injectEvent.setAccessible(true);
-                            injectEvent.invoke(thisObject, 82);
-                        } catch (Throwable t1) {
+                        if (action.equals(ACTION_PREFIX + "SimulateMenu")) {
                             try {
-                                Handler mHandler = (Handler)XposedHelpers.getObjectField(thisObject, "mHandler");
-                                mHandler.sendMessageDelayed(mHandler.obtainMessage(1, "show_menu"), ViewConfiguration.getLongPressTimeout());
-                            } catch (Throwable t2) {
-                                XposedHelpers.log(t2);
+                                Field fRequestShowMenu = XposedHelpers.findField(thisObject.getClass().getSuperclass(), "mRequestShowMenu");
+                                fRequestShowMenu.setAccessible(true);
+                                fRequestShowMenu.set(thisObject, true);
+                                Method markShortcutTriggered = findMethodExact(thisObject.getClass().getSuperclass(), "markShortcutTriggered");
+                                markShortcutTriggered.setAccessible(true);
+                                markShortcutTriggered.invoke(thisObject);
+                                Method injectEvent = findMethodExact(thisObject.getClass().getSuperclass(), "injectEvent", int.class);
+                                injectEvent.setAccessible(true);
+                                injectEvent.invoke(thisObject, 82);
+                            } catch (Throwable t1) {
+                                try {
+                                    Handler mHandler = (Handler)XposedHelpers.getObjectField(thisObject, "mHandler");
+                                    mHandler.sendMessageDelayed(mHandler.obtainMessage(1, "show_menu"), ViewConfiguration.getLongPressTimeout());
+                                } catch (Throwable t2) {
+                                    XposedHelpers.log(t2);
+                                }
                             }
                         }
-
-                        if (action.equals(ACTION_PREFIX + "ForceClose")) try {
-                            Method closeApp = findMethodExact(thisObject.getClass().getSuperclass(), "closeApp", boolean.class);
-                            closeApp.setAccessible(true);
-                            closeApp.invoke(thisObject, false);
-                        } catch (Throwable t) {
-                            XposedHelpers.log(t);
+                        else if (action.equals(ACTION_PREFIX + "ForceClose")) {
+                            try {
+                                Method closeApp = findMethodExact(thisObject.getClass().getSuperclass(), "closeApp");
+                                closeApp.setAccessible(true);
+                                closeApp.invoke(thisObject);
+                            } catch (Throwable t) {
+                                XposedHelpers.log(t);
+                            }
                         }
+                        else if (action.equals(ACTION_PREFIX + "ToggleColorInversion")) {
+                            int opt = 0;
+                            try {
+                                opt = Settings.Secure.getInt(context.getContentResolver(), "accessibility_display_inversion_enabled");
+                                int conflictProp = (int) ModuleHelper.proxySystemProperties("getInt", "ro.df.effect.conflict", 0, null);
+                                int conflictProp2 = (int) ModuleHelper.proxySystemProperties("getInt", "ro.vendor.df.effect.conflict", 0, null);
+                                boolean hasConflict = conflictProp == 1 || conflictProp2 == 1;
+                                Object dfMgr = XposedHelpers.callStaticMethod(XposedHelpers.findClass("miui.hardware.display.DisplayFeatureManager", null), "getInstance");
+                                if (hasConflict && opt == 0) XposedHelpers.callMethod(dfMgr, "setScreenEffect", 15, 1);
+                                Settings.Secure.putInt(context.getContentResolver(), "accessibility_display_inversion_enabled", opt == 0 ? 1 : 0);
+                                if (hasConflict && opt != 0) XposedHelpers.callMethod(dfMgr, "setScreenEffect", 15, 0);
+                            } catch (Settings.SettingNotFoundException e) {
+                                XposedHelpers.log(e);
+                            }
+                        }
+                        else if (action.equals(ACTION_PREFIX + "SwitchToPrevApp")) {
+                            PackageManager pm = context.getPackageManager();
+                            ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+                            List<RecentTaskInfo> rti = am.getRecentTasks(15, 0);
 
-                        if (action.equals(ACTION_PREFIX + "SaveLastMusicPausedTime")) {
-                            Settings.System.putLong(context.getContentResolver(), "last_music_paused_time", currentTimeMillis());
+                            Intent recentIntent;
+                            ActivityManager.RunningTaskInfo topAct = am.getRunningTasks(1).get(0);
+                            for (RecentTaskInfo rtitem: rti) {
+                                if (topAct.topActivity == rtitem.topActivity)
+                                    continue;
+
+                                boolean isLauncher = false;
+                                recentIntent = new Intent(rtitem.baseIntent);
+                                if (rtitem.origActivity != null)
+                                    recentIntent.setComponent(rtitem.origActivity);
+                                ComponentName resolvedAct = recentIntent.resolveActivity(pm);
+                                if (resolvedAct != null && "com.miui.home".equals(resolvedAct.getPackageName())) {
+                                    isLauncher = true;
+                                }
+
+                                if (!isLauncher) {
+                                    try {
+                                        if (rtitem.taskId >= 0)
+                                            am.moveTaskToFront(rtitem.taskId, 0);
+                                        else
+                                            context.startActivity(recentIntent);
+                                        break;
+                                    }
+                                    catch (Throwable e) {
+                                        XposedHelpers.log(e);
+                                    }
+                                }
+                            }
                         }
                     }
                 }, intentfilter);
@@ -857,8 +687,7 @@ public class GlobalActions {
             @SuppressLint("UnspecifiedRegisterReceiverFlag")
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
-                mStatusBar = param.getThisObject();
-                Context mStatusBarContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
+                Context mContext = (Context) XposedHelpers.getObjectField(param.getThisObject(), "mContext");
                 IntentFilter intentfilter = new IntentFilter();
 
                 intentfilter.addAction(ACTION_PREFIX + "ExpandNotifications");
@@ -871,6 +700,12 @@ public class GlobalActions {
                 intentfilter.addAction(ACTION_PREFIX + "ToggleZenMode");
                 intentfilter.addAction(ACTION_PREFIX + "ToggleFlashlight");
                 intentfilter.addAction(ACTION_PREFIX + "ToggleNightMode");
+                intentfilter.addAction(ACTION_PREFIX + "ToggleWiFi");
+                intentfilter.addAction(ACTION_PREFIX + "ToggleBluetooth");
+                intentfilter.addAction(ACTION_PREFIX + "ToggleNFC");
+                intentfilter.addAction(ACTION_PREFIX + "ToggleSoundProfile");
+                intentfilter.addAction(ACTION_PREFIX + "ToggleAutoRotation");
+                intentfilter.addAction(ACTION_PREFIX + "ToggleMobileData");
 
                 intentfilter.addAction(ACTION_PREFIX + "ClearMemory");
                 intentfilter.addAction(ACTION_PREFIX + "ClearNotifications");
@@ -878,14 +713,165 @@ public class GlobalActions {
                 intentfilter.addAction(ACTION_PREFIX + "RestartLauncher");
                 intentfilter.addAction(ACTION_PREFIX + "RestartSecurityCenter");
                 intentfilter.addAction(ACTION_PREFIX + "FloatingWindow");
-                intentfilter.addAction(ACTION_PREFIX + "PinningWindow");
                 intentfilter.addAction(ACTION_PREFIX + "SwitchOneHanded");
 //				intentfilter.addAction(ACTION_PREFIX + "CopyToExternal");
                 intentfilter.addAction(ACTION_PREFIX + "FastReboot");
 
                 intentfilter.addAction(ACTION_PREFIX + "ScrollToTop");
 
-                mStatusBarContext.registerReceiver(mSBReceiver, intentfilter);
+                intentfilter.addAction(ACTION_PREFIX + "WakeUp");
+                intentfilter.addAction(ACTION_PREFIX + "GoToSleep");
+                intentfilter.addAction(ACTION_PREFIX + "LockDevice");
+                intentfilter.addAction(ACTION_PREFIX + "TakeScreenshot");
+                intentfilter.addAction(ACTION_PREFIX + "OpenPowerMenu");
+                intentfilter.addAction(ACTION_PREFIX + "VolumeUp");
+                intentfilter.addAction(ACTION_PREFIX + "VolumeDown");
+                intentfilter.addAction(ACTION_PREFIX + "GoBack");
+                intentfilter.addAction(ACTION_PREFIX + "LaunchIntent");
+                intentfilter.addAction(ACTION_PREFIX + "SaveLastMusicPausedTime");
+
+                mContext.registerReceiver(mSBReceiver, intentfilter);
+            }
+        });
+
+        ModuleHelper.findAndHookMethod("com.android.wm.shell.miuifreeform.MiuiFreeformModeController", lpparam.getClassLoader(), "onInit", new MethodHook() {
+            @Override
+            protected void after(final AfterHookCallback param) throws Throwable {
+                Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
+                IntentFilter intentfilter = new IntentFilter();
+                intentfilter.addAction(ACTION_PREFIX + "PinningWindow");
+                BroadcastReceiver mFreeFormReceiver = new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        if (intent.getAction() == null) return;
+                        String action = intent.getAction();
+                        if (action.equals(ACTION_PREFIX + "PinningWindow")) {
+                            try {
+                                ForegroundInfo foregroundInfo = ProcessManager.getForegroundInfo();
+                                if (foregroundInfo != null) {
+                                    String topPackage = foregroundInfo.mForegroundPackageName;
+                                    if ("com.miui.home".equals(topPackage)) {
+                                        return;
+                                    }
+                                }
+                                else {
+                                    return;
+                                }
+                                Class <?> ActivityTaskManagerCls = findClassIfExists("android.app.ActivityTaskManager", context.getClassLoader());
+                                Object activityTaskManager = XposedHelpers.callStaticMethod(ActivityTaskManagerCls, "getService");
+                                List<MiuiFreeFormManager.MiuiFreeFormStackInfo> freeFormStackInfoList = MiuiFreeFormManager.getAllFreeFormStackInfosOnDisplay(0);
+                                int freeFormCount = 0;
+                                if (freeFormStackInfoList != null) {
+                                    freeFormCount = freeFormStackInfoList.size();
+                                }
+                                if (freeFormCount == 2) return;
+                                List<Object> rootTaskInfos = (List<Object>) XposedHelpers.callMethod(activityTaskManager, "getAllRootTaskInfosOnDisplay", 0);
+                                Object freeformController = param.getThisObject();
+                                for (Object rootTaskInfo : rootTaskInfos) {
+                                    Object conf = XposedHelpers.getObjectField(rootTaskInfo, "configuration");
+                                    Object windowConfiguration = XposedHelpers.getObjectField(conf, "windowConfiguration");
+                                    int wmode = XposedHelpers.getIntField(windowConfiguration, "mWindowingMode");
+                                    int mActivityType = XposedHelpers.getIntField(windowConfiguration, "mActivityType");
+                                    if (wmode < 2 && mActivityType < 2) {
+                                        int taskId = XposedHelpers.getIntField(rootTaskInfo, "taskId");
+                                        XposedHelpers.callMethod(freeformController, "freeformFullscreenTask", taskId);
+                                        Handler myhandler = new Handler(Looper.myLooper());
+                                        Runnable removeBg = new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                myhandler.removeCallbacks(this);
+                                                XposedHelpers.callMethod(freeformController, "pinAllFreeForm");
+                                            }
+                                        };
+                                        myhandler.postDelayed(removeBg, 200);
+                                        return;
+                                    }
+                                }
+                            } catch (Throwable err) {
+                                XposedHelpers.log(err);
+                            }
+                        }
+                    }
+                };
+                mContext.registerReceiver(mFreeFormReceiver, intentfilter, Context.RECEIVER_EXPORTED);
+            }
+        });
+        ModuleHelper.findAndHookMethod("com.android.wm.shell.sosc.SoScSplitScreenController", lpparam.getClassLoader(), "onInit", new MethodHook() {
+            @Override
+            protected void after(final AfterHookCallback param) throws Throwable {
+                Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
+                IntentFilter intentfilter = new IntentFilter();
+                intentfilter.addAction(ACTION_PREFIX + "SplitScreen");
+                BroadcastReceiver mFreeFormReceiver = new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        if (intent.getAction() == null) return;
+                        String action = intent.getAction();
+                        if (action.equals(ACTION_PREFIX + "SplitScreen")) {
+                            try {
+                                ForegroundInfo foregroundInfo = ProcessManager.getForegroundInfo();
+                                if (foregroundInfo != null) {
+                                    String topPackage = foregroundInfo.mForegroundPackageName;
+                                    if ("com.miui.home".equals(topPackage)) {
+                                        return;
+                                    }
+                                }
+                                else {
+                                    return;
+                                }
+                                Class <?> ActivityTaskManagerCls = findClassIfExists("android.app.ActivityTaskManager", context.getClassLoader());
+                                Object activityTaskManager = XposedHelpers.callStaticMethod(ActivityTaskManagerCls, "getService");
+                                List<Object> rootTaskInfos = (List<Object>) XposedHelpers.callMethod(activityTaskManager, "getAllRootTaskInfosOnDisplay", 0);
+                                Object freeformController = param.getThisObject();
+                                for (Object rootTaskInfo : rootTaskInfos) {
+                                    Object conf = XposedHelpers.getObjectField(rootTaskInfo, "configuration");
+                                    Object windowConfiguration = XposedHelpers.getObjectField(conf, "windowConfiguration");
+                                    int wmode = XposedHelpers.getIntField(windowConfiguration, "mWindowingMode");
+                                    int mActivityType = XposedHelpers.getIntField(windowConfiguration, "mActivityType");
+                                    if (wmode < 2 && mActivityType < 2) {
+                                        int taskId = XposedHelpers.getIntField(rootTaskInfo, "taskId");
+                                        XposedHelpers.callMethod(freeformController, "startTask", taskId, 0, null);
+                                        return;
+                                    }
+                                }
+                            } catch (Throwable err) {
+                                XposedHelpers.log(err);
+                            }
+                        }
+                    }
+                };
+                mContext.registerReceiver(mFreeFormReceiver, intentfilter, Context.RECEIVER_EXPORTED);
+            }
+        });
+        ModuleHelper.hookAllConstructors("com.android.systemui.controlcenter.policy.AutoBrightnessController", lpparam.getClassLoader(),  new MethodHook() {
+            @Override
+            protected void after(final AfterHookCallback param) throws Throwable {
+                Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "context");
+                IntentFilter intentfilter = new IntentFilter();
+                intentfilter.addAction(ACTION_PREFIX + "ToggleAutoBrightness");
+                BroadcastReceiver mFreeFormReceiver = new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        if (intent.getAction() == null) return;
+                        String action = intent.getAction();
+                        if (action.equals(ACTION_PREFIX + "ToggleAutoBrightness")) {
+                            Resources modRes = null;
+                            try {
+                                modRes = ModuleHelper.getModuleRes(mContext);
+                                boolean enabled = XposedHelpers.getBooleanField(param.getThisObject(), "enabled");
+                                XposedHelpers.callMethod(param.getThisObject(), "toggleAutoBrightness");
+                                if (enabled) {
+                                    Toast.makeText(context, modRes.getString(R.string.toggle_autobright_off), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(context, modRes.getString(R.string.toggle_autobright_on), Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (Throwable t) {
+                                XposedHelpers.log(t);
+                            }
+                        }
+                    }
+                };
+                mContext.registerReceiver(mFreeFormReceiver, intentfilter, Context.RECEIVER_EXPORTED);
             }
         });
     }
@@ -954,7 +940,7 @@ public class GlobalActions {
         return true;
     }
 
-    public static boolean showSidebar(Context context, Bundle bundle) {
+    private static boolean showSidebar(Context context, Bundle bundle) {
         try {
             Intent showIntent = new Intent(ACTION_PREFIX + "ShowSideBar");
             showIntent.setPackage("com.miui.securitycenter");
@@ -979,23 +965,25 @@ public class GlobalActions {
         }
     }
 
-    public static boolean toggleThis(Context context, int what) {
+    private static boolean toggleThis(Context context, int what) {
         try {
             String whatStr;
             switch (what) {
-                case 1: whatStr = "WiFi"; break;
-                case 2: whatStr = "Bluetooth"; break;
-                case 3: whatStr = "GPS"; break;
-                case 4: whatStr = "NFC"; break;
-                case 5: whatStr = "SoundProfile"; break;
-                case 6: whatStr = "AutoBrightness"; break;
-                case 7: whatStr = "AutoRotation"; break;
-                case 8: whatStr = "Flashlight"; break;
-                case 9: whatStr = "MobileData"; break;
-                case 10: whatStr = "Hotspot"; break;
-                case 11: whatStr = "ZenMode";break;
-                case 12: whatStr = "NightMode";break;
-                default: return false;
+                case 1 -> whatStr = "WiFi";
+                case 2 -> whatStr = "Bluetooth";
+                case 3 -> whatStr = "GPS";
+                case 4 -> whatStr = "NFC";
+                case 5 -> whatStr = "SoundProfile";
+                case 6 -> whatStr = "AutoBrightness";
+                case 7 -> whatStr = "AutoRotation";
+                case 8 -> whatStr = "Flashlight";
+                case 9 -> whatStr = "MobileData";
+                case 10 -> whatStr = "Hotspot";
+                case 11 -> whatStr = "ZenMode";
+                case 12 -> whatStr = "NightMode";
+                default -> {
+                    return false;
+                }
             }
             context.sendBroadcast(new Intent(ACTION_PREFIX + "Toggle" + whatStr));
             return true;

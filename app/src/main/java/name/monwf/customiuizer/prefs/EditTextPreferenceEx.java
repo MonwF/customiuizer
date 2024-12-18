@@ -14,10 +14,6 @@ import name.monwf.customiuizer.R;
 import name.monwf.customiuizer.utils.Helpers;
 
 public class EditTextPreferenceEx extends EditTextPreference implements PreferenceState {
-	private final Resources res = getContext().getResources();
-
-	private final int childpadding = res.getDimensionPixelSize(R.dimen.preference_item_child_padding);
-
 	private final int indentLevel;
 	private final boolean dynamic;
 	private boolean newmod = false;
@@ -40,6 +36,7 @@ public class EditTextPreferenceEx extends EditTextPreference implements Preferen
 		if (highlight) {
 			Helpers.applySearchItemHighlight(finalView);
 		}
+		int childpadding = getContext().getResources().getDimensionPixelSize(R.dimen.preference_item_child_padding);
 		int hrzPadding = (indentLevel + 1) * childpadding;
 		finalView.setPadding(hrzPadding, 0, childpadding, 0);
 	}

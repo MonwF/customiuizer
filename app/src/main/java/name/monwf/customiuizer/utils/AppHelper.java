@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -32,24 +33,36 @@ public class AppHelper {
     public static RemotePreferences remotePrefs = null;
     private static final String TAG = "LSPosed-Bridge";
     public static boolean silentSync = false;
-    public static String RESTORED_FROM_BACKUP = "restored_from_backup";
+    public static ArrayList<AppData> installedAppsList = null;
+
+    public enum SettingsType {
+        Preference, Edit
+    }
+
+    public enum AppAdapterType {
+        Default, Standalone, Mutli, CustomTitles, Activities
+    }
+
+    public enum ActionBarType {
+        HomeUp, Edit
+    }
 
     public static void log(String line) {
-        Log.i(TAG, "[CustoMIUIzer] " + line);
+        Log.i(TAG, "[Pengeek] " + line);
     }
 
     public static void log(Throwable t) {
         String logStr = Log.getStackTraceString(t);
-        Log.e(TAG, "[CustoMIUIzer] " + logStr);
+        Log.e(TAG, "[Pengeek] " + logStr);
     }
 
     public static void log(String mod, String line) {
-        Log.i(TAG, "[CustoMIUIzer][" + mod + "] " + line);
+        Log.i(TAG, "[Pengeek][" + mod + "] " + line);
     }
 
     public static void log(String mod, Throwable t) {
         String logStr = Log.getStackTraceString(t);
-        Log.e(TAG, "[CustoMIUIzer][" + mod + "] " + logStr);
+        Log.e(TAG, "[Pengeek][" + mod + "] " + logStr);
     }
 
     public static SharedPreferences getSharedPrefs(Context context, boolean protectedStorage) {

@@ -8,12 +8,8 @@ def sFile = file(keystoreProperties['storeFile'])
 def sPassword = keystoreProperties['storePassword']
 def kAlias = keystoreProperties['keyAlias']
 def kPassword = keystoreProperties['keyPassword']
-def lastVersion = 90
-def lastVersionName = "23.12.30"
-
-if (gradle.startParameter.taskNames.contains(":app:assembleDevelop")) {
-    lastVersion += 1
-}
+def lastVersion = 73
+def lastVersionName = "24.10.12"
 
 android {
     namespace "name.monwf.customiuizer"
@@ -27,16 +23,15 @@ android {
             v2SigningEnabled true
         }
     }
-    compileSdk 34
     defaultConfig {
         applicationId "name.monwf.customiuizer"
-        minSdkVersion 33
+        minSdkVersion 34
         //noinspection OldTargetApi,ExpiredTargetSdkVersion
         targetSdkVersion 34
+        compileSdk 35
         versionCode lastVersion
         versionName lastVersionName
-        buildConfigField "long", "BUILD_TIME", System.currentTimeMillis() + "L"
-        resConfigs 'ru-rRU', 'zh-rCN', 'zh-rTW', 'ja-rJP', 'vi-rVN', 'cs-rCZ', 'pt-rBR', 'tr-rTR', 'es-rES'
+        resConfigs 'ru-rRU', 'zh-rCN', 'ja-rJP', 'vi-rVN', 'cs-rCZ', 'pt-rBR', 'tr-rTR', 'es-rES'
         ndk { abiFilters "arm64-v8a" }
     }
     buildTypes {
@@ -66,10 +61,19 @@ android {
             excludes += ['META-INF/*.kotlin_module', 'META-INF/androidx.*.version', '**.kotlin_builtins', '**.kotlin_metadata']
         }
     }
-    androidResources {
-        noCompress 'zip'
+    applicationVariants.configureEach { variant ->
+        variant.outputs.configureEach {
+            if (variant.buildType.name == 'develop') {
+                setVersionCodeOverride(variant.versionCode + 1)
+                def finalVersionName = new Date().format('yy.MM.dd') + '-test'
+                setVersionNameOverride(finalVersionName)
+                setProperty("outputFileName", "Pengeek-" + finalVersionName + ".apk")
+            }
+            else {
+                setProperty("outputFileName", "Pengeek-" + lastVersionName + ".apk")
+            }
+        }
     }
-    buildToolsVersion '34.0.0'
 //    gradle.projectsEvaluated {
 //        tasks.withType(JavaCompile) {
 //            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
@@ -79,20 +83,30 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+    buildFeatures {
+        buildConfig = true
+    }
+    dependenciesInfo {
+        // Disables dependency metadata when building APKs.
+        includeInApk = false
+        // Disables dependency metadata when building Android App Bundles.
+        includeInBundle = false
+    }
 }
 
 dependencies {
     //    implementation "ch.acra:acra-core:$acraVersion"
 //    noinspection DifferentStdlibGradleVersion
     compileOnly files('lib/api-100.aar')
-    compileOnly files('lib/miuisystem.jar')
     compileOnly files('lib/framework.jar')
 
     implementation "io.github.libxposed:service:100-1.0.0"
-    implementation "org.apache.commons:commons-lang3:3.13.0"
+    implementation "org.apache.commons:commons-lang3:3.15.0"
     implementation "androidx.preference:preference:1.2.1"
     implementation 'androidx.palette:palette:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'org.luckypray:dexkit:2.0.2'
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:2.0.0"))
 //    implementation "androidx.recyclerview:recyclerview:1.2.1"
 //    implementation 'com.google.android.flexbox:flexbox:3.0.0'
 //    implementation 'com.google.android.material:material:1.6.1'

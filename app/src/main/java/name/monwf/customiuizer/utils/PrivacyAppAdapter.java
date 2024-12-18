@@ -18,6 +18,7 @@ import android.widget.TextView;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -32,26 +33,18 @@ public class PrivacyAppAdapter extends BaseAdapter implements Filterable {
 	private final ItemFilter mFilter = new ItemFilter();
 	private final ArrayList<AppData> originalAppList;
 	private final CopyOnWriteArrayList<AppData> filteredAppList = new CopyOnWriteArrayList<AppData>();
-	private Object mSecurityManager;
-	private Method isPrivacyApp;
+
+	private HashMap<Integer, ArrayList<String>> mPrivacyAppsMap;
 
 	@SuppressLint("WrongConstant")
-	public PrivacyAppAdapter(Context context, ArrayList<AppData> arr) {
+	public PrivacyAppAdapter(Context context, ArrayList<AppData> arr, HashMap<Integer, ArrayList<String>> privacyAppsMap) {
 		ctx = context;
 		mInflater = LayoutInflater.from(context);
 		originalAppList = arr;
 		filteredAppList.addAll(arr);
 		int cpuCount = Runtime.getRuntime().availableProcessors();
 		pool = new ThreadPoolExecutor(cpuCount + 1, cpuCount * 2 + 1, 2, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
-
-		try {
-			mSecurityManager = context.getSystemService("security");
-			isPrivacyApp = mSecurityManager.getClass().getDeclaredMethod("isPrivacyApp", String.class, int.class);
-			isPrivacyApp.setAccessible(true);
-		} catch (Throwable t) {
-			t.printStackTrace();
-		}
-
+		mPrivacyAppsMap = privacyAppsMap;
 		sortList();
 	}
 
@@ -59,8 +52,8 @@ public class PrivacyAppAdapter extends BaseAdapter implements Filterable {
 		filteredAppList.sort(new Comparator<AppData>() {
 			public int compare(AppData app1, AppData app2) {
 				try {
-					boolean app1checked = (boolean)isPrivacyApp.invoke(mSecurityManager, app1.pkgName, app1.user);
-					boolean app2checked = (boolean)isPrivacyApp.invoke(mSecurityManager, app2.pkgName, app2.user);
+					boolean app1checked = isPrivacyApp(app1.pkgName, app1.user);
+					boolean app2checked = isPrivacyApp(app2.pkgName, app2.user);
 					if (app1checked && app2checked)
 						return 0;
 					else if (app1checked)
@@ -87,6 +80,14 @@ public class PrivacyAppAdapter extends BaseAdapter implements Filterable {
 		return position;
 	}
 
+	private boolean isPrivacyApp(String pkgName, int user) {
+		if (mPrivacyAppsMap != null && mPrivacyAppsMap.containsKey(user)) {
+			ArrayList<String> privacyApps = mPrivacyAppsMap.get(user);
+			return privacyApps.contains(pkgName);
+		}
+		return false;
+	}
+
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		View row;
 		if (convertView != null)
@@ -97,7 +98,6 @@ public class PrivacyAppAdapter extends BaseAdapter implements Filterable {
 		ImageView itemIsDis = row.findViewById(R.id.icon_disable);
 		ImageView itemIsDual = row.findViewById(R.id.icon_dual);
 		CheckBox itemChecked = row.findViewById(android.R.id.checkbox);
-		Helpers.setMiuiCheckbox(itemChecked);
 		TextView itemTitle = row.findViewById(android.R.id.title);
 		ImageView itemIcon = row.findViewById(android.R.id.icon);
 
@@ -107,7 +107,6 @@ public class PrivacyAppAdapter extends BaseAdapter implements Filterable {
 		itemIsDis.setVisibility(ad.enabled ? View.GONE : View.VISIBLE);
 		itemIsDual.setVisibility(ad.user != 0 ? View.VISIBLE : View.GONE);
 		Bitmap icon = Helpers.memoryCache.get(ad.pkgName + "|" + ad.actName);
-		//int iconSize = getResources().getDimensionPixelSize(android.R.dimen.app_icon_size);
 
 		if (icon == null) {
 			Drawable[] dualIcon = new Drawable[1];
@@ -122,7 +121,7 @@ public class PrivacyAppAdapter extends BaseAdapter implements Filterable {
 
 		try {
 			itemChecked.setVisibility(View.VISIBLE);
-			itemChecked.setChecked((boolean)isPrivacyApp.invoke(mSecurityManager, ad.pkgName, ad.user));
+			itemChecked.setChecked(isPrivacyApp(ad.pkgName, ad.user));
 		} catch (Throwable t) {
 			itemChecked.setVisibility(View.GONE);
 		}

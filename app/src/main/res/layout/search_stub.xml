@@ -15,7 +15,8 @@
 		android:layout_height="40dp">
 
 		<ImageView
-			android:id="@+id/inputIcon"
+			android:layout_marginStart="10dp"
+			android:src="@drawable/abc_ic_search_api_material"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center_vertical" />

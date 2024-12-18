@@ -36,12 +36,6 @@
 		android:title="@string/system_noscreenlock_scr_title"
 		android:defaultValue="false" />
 
-	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_noscreenlock_nofaceunlock"
-		android:summary="@string/system_noscreenlock_nofaceunlock_summ"
-		android:title="@string/system_noscreenlock_nofaceunlock_title"
-		android:defaultValue="false" />
-
 	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:title="@string/system_noscreenlock_wifi_title"
 		android:summary="@string/system_noscreenlock_wifi_summ"

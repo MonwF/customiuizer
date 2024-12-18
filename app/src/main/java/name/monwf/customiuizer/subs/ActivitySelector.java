@@ -18,7 +18,7 @@ import name.monwf.customiuizer.SubFragmentWithSearch;
 import name.monwf.customiuizer.mods.GlobalActions;
 import name.monwf.customiuizer.utils.AppData;
 import name.monwf.customiuizer.utils.AppDataAdapter;
-import name.monwf.customiuizer.utils.Helpers;
+import name.monwf.customiuizer.utils.AppHelper;
 
 public class ActivitySelector extends SubFragmentWithSearch {
 
@@ -50,7 +50,7 @@ public class ActivitySelector extends SubFragmentWithSearch {
 					finish();
 					return;
 				}
-				listView.setAdapter(new AppDataAdapter(getActivity().getApplicationContext(), activities, Helpers.AppAdapterType.Activities, null));
+				listView.setAdapter(new AppDataAdapter(getActivity().getApplicationContext(), activities, AppHelper.AppAdapterType.Activities, null));
 				listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

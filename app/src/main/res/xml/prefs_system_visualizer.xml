@@ -93,7 +93,7 @@
 		miuizer:stepValue="1"
 		miuizer:format="@string/format_d_s" />
 
-	<name.monwf.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.ColorPreferenceEx
 		android:key="pref_key_system_visualizer_colorval"
 		android:title="@string/system_visualizer_colorval_title" />
 

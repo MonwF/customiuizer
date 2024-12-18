@@ -9,7 +9,7 @@ import name.monwf.customiuizer.MainFragment;
 import name.monwf.customiuizer.R;
 import name.monwf.customiuizer.SubFragment;
 import name.monwf.customiuizer.prefs.PreferenceEx;
-import name.monwf.customiuizer.utils.Helpers;
+import name.monwf.customiuizer.utils.AppHelper;
 
 public class CategorySelector extends SubFragment {
 
@@ -49,13 +49,13 @@ public class CategorySelector extends SubFragment {
 					MainFragment mainFrag = ((MainFragment)getTargetFragment());
 					switch (cat) {
 						case "pref_key_system":
-							openSubFragment(mainFrag.prefSystem, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.system_mods, R.xml.prefs_system);
+							openSubFragment(mainFrag.prefSystem, bundle, AppHelper.SettingsType.Preference, AppHelper.ActionBarType.HomeUp, R.string.system_mods, R.xml.prefs_system);
 							break;
 						case "pref_key_launcher":
-							openSubFragment(mainFrag.prefLauncher, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.launcher_title, R.xml.prefs_launcher);
+							openSubFragment(mainFrag.prefLauncher, bundle, AppHelper.SettingsType.Preference, AppHelper.ActionBarType.HomeUp, R.string.launcher_title, R.xml.prefs_launcher);
 							break;
 						case "pref_key_controls":
-							openSubFragment(mainFrag.prefControls, bundle, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.controls_mods, R.xml.prefs_controls);
+							openSubFragment(mainFrag.prefControls, bundle, AppHelper.SettingsType.Preference, AppHelper.ActionBarType.HomeUp, R.string.controls_mods, R.xml.prefs_controls);
 							break;
 					}
 					return true;

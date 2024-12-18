@@ -3,7 +3,6 @@
 	xmlns:miuizer="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
-
 	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_netspeedinterval"
 		android:title="@string/system_netspeedinterval_title"
@@ -13,6 +12,58 @@
 		miuizer:stepValue="1"
 		miuizer:offtext="@string/array_default"
 		miuizer:format="@string/format_d_s" />
+
+	<name.monwf.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_system_detailednetspeed_style"
+		android:entries="@array/netspeedstyle"
+		android:title="@string/system_visualizer_style_title"
+		android:entryValues="@array/onoff_val"
+		miuizer:valueAsSummary="true"
+		android:defaultValue="1" />
+
+	<name.monwf.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_system_detailednetspeed_icon"
+		android:summary="@string/system_detailednetspeed_icon_summ"
+		android:title="@string/system_detailednetspeed_icon_title"
+		android:entries="@array/netspeedicons"
+		android:entryValues="@array/netspeedicons_val"
+		android:defaultValue="2"
+		miuizer:indentLevel="1" />
+
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_detailednetspeed_secunit"
+		android:title="@string/system_detailednetspeed_secunit_title"
+		miuizer:indentLevel="1"
+		android:defaultValue="false" />
+
+	<name.monwf.customiuizer.prefs.SeekBarPreference
+		android:key="pref_key_system_detailednetspeed_lowlevel"
+		android:title="@string/system_detailednetspeed_lowlevel_title"
+		android:summary="@string/system_detailednetspeed_lowlevel_summ"
+		android:defaultValue="1"
+		miuizer:minValue="1"
+		miuizer:maxValue="1024"
+		miuizer:stepValue="1"
+		miuizer:indentLevel="1"
+		miuizer:format="@string/format_KBs"
+		miuizer:offtext="@string/oneKBs" />
+
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_detailednetspeed_low"
+		android:summary="@string/system_detailednetspeed_low_summ"
+		android:title="@string/system_detailednetspeed_low_title"
+		miuizer:indentLevel="1"
+		android:defaultValue="false" />
+
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_netspeed_use_clock_style"
+		android:title="@string/system_netspeed_use_clock_style_title"
+		android:defaultValue="false" />
+
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_netspeed_boldfont"
+		android:title="@string/system_statusbar_mobiletype_single_bold_title"
+		android:defaultValue="false" />
 
 	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_netspeed_fontsize"
@@ -24,11 +75,6 @@
 		miuizer:offtext="@string/array_default"
 		miuizer:displayDividerValue="2"
 		miuizer:format="%s dip" />
-
-	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_netspeed_bold"
-		android:title="@string/system_statusbar_mobiletype_single_bold_title"
-		android:defaultValue="false" />
 
 	<name.monwf.customiuizer.prefs.SeekBarPreference
 		android:key="pref_key_system_netspeed_fixedcontent_width"
@@ -65,34 +111,12 @@
 		android:title="@string/system_statusbar_mobiletype_single_verticaloffset"
 		android:defaultValue="8"
 		miuizer:minValue="0"
-		miuizer:maxValue="16"
+		miuizer:maxValue="20"
 		miuizer:stepValue="1"
 		miuizer:negativeShift="8"
 		miuizer:offtext="@string/array_default"
 		miuizer:displayDividerValue="2"
 		miuizer:format="%s dip" />
-
-	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_detailednetspeed_secunit"
-		android:title="@string/system_detailednetspeed_secunit_title"
-		android:defaultValue="false" />
-
-	<name.monwf.customiuizer.prefs.SeekBarPreference
-		android:key="pref_key_system_detailednetspeed_lowlevel"
-		android:title="@string/system_detailednetspeed_lowlevel_title"
-		android:summary="@string/system_detailednetspeed_lowlevel_summ"
-		android:defaultValue="1"
-		miuizer:minValue="1"
-		miuizer:maxValue="1024"
-		miuizer:stepValue="1"
-		miuizer:format="@string/format_KBs"
-		miuizer:offtext="@string/oneKBs" />
-
-	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_detailednetspeed_low"
-		android:summary="@string/system_detailednetspeed_low_summ"
-		android:title="@string/system_detailednetspeed_low_title"
-		android:defaultValue="false" />
 
 	<name.monwf.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_detailednetspeed_align"
@@ -101,28 +125,5 @@
 		android:entryValues="@array/horizontalalign_val"
 		miuizer:valueAsSummary="true"
 		android:defaultValue="1" />
-
-	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_detailednetspeed_fakedualrow"
-		android:title="@string/system_detailednetspeed_fakedualrow_title"
-		android:disableDependentsState="true"
-		android:defaultValue="false" />
-
-	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_detailednetspeed"
-		android:title="@string/system_detailednetspeed_title"
-		android:dependency="pref_key_system_detailednetspeed_fakedualrow"
-		android:summary="@string/system_detailednetspeed_summ"
-		android:defaultValue="false" />
-
-	<name.monwf.customiuizer.prefs.ListPreferenceEx
-		android:key="pref_key_system_detailednetspeed_icon"
-		android:summary="@string/system_detailednetspeed_icon_summ"
-		android:title="@string/system_detailednetspeed_icon_title"
-		android:entries="@array/netspeedicons"
-		android:entryValues="@array/netspeedicons_val"
-		android:defaultValue="2"
-		miuizer:indentLevel="1"
-		android:dependency="pref_key_system_detailednetspeed" />
 
 </PreferenceScreen>

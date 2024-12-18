@@ -19,11 +19,6 @@ import name.monwf.customiuizer.utils.AppHelper;
 import name.monwf.customiuizer.utils.Helpers;
 
 public class PreferenceEx extends Preference implements PreferenceState {
-	private final Resources res = getContext().getResources();
-	private final int secondary = res.getColor(R.color.preference_secondary_text, getContext().getTheme());
-	private final int disableColor = res.getColor(R.color.preference_primary_text_disable, getContext().getTheme());
-	private final int childpadding = res.getDimensionPixelSize(R.dimen.preference_item_child_padding);
-
 	private final int indentLevel;
 	private final boolean dynamic;
 	private final boolean warning;
@@ -51,10 +46,13 @@ public class PreferenceEx extends Preference implements PreferenceState {
 		TextView title = finalView.findViewById(android.R.id.title);
 		TextView summary = finalView.findViewById(android.R.id.summary);
 		TextView valSummary = finalView.findViewById(android.R.id.hint);
+		Resources res = getContext().getResources();
 
 		summary.setVisibility(customSummary != null || countAsSummary || getSummary() == null || getSummary().equals("") ? View.GONE : View.VISIBLE);
 		valSummary.setVisibility(customSummary != null || countAsSummary ? View.VISIBLE : View.GONE);
 		if (customSummary != null || countAsSummary) {
+			int secondary = res.getColor(R.color.preference_secondary_text, getContext().getTheme());
+			int disableColor = res.getColor(R.color.preference_primary_text_disable, getContext().getTheme());
 			valSummary.setTextColor(isEnabled() ? secondary : disableColor);
 		}
 		if (customSummary != null)
@@ -73,6 +71,7 @@ public class PreferenceEx extends Preference implements PreferenceState {
 			Helpers.applySearchItemHighlight(finalView);
 		}
 
+		int childpadding = res.getDimensionPixelSize(R.dimen.preference_item_child_padding);
 		int hrzPadding = (indentLevel + 1) * childpadding;
 		finalView.setPadding(hrzPadding, 0, childpadding, 0);
 		if (longClickable) {
@@ -110,7 +109,7 @@ public class PreferenceEx extends Preference implements PreferenceState {
 		if (valSummary == null) {
 			valSummary = new TextView(getContext());
 			valSummary.setTextSize(TypedValue.COMPLEX_UNIT_PX, summary.getTextSize());
-			valSummary.setPadding(summary.getPaddingLeft(), summary.getPaddingTop(), res.getDimensionPixelSize(R.dimen.preference_summary_padding_right), summary.getPaddingBottom());
+			valSummary.setPadding(summary.getPaddingLeft(), summary.getPaddingTop(), getContext().getResources().getDimensionPixelSize(R.dimen.preference_summary_padding_right), summary.getPaddingBottom());
 			valSummary.setId(android.R.id.hint);
 			((ViewGroup) view.itemView).addView(valSummary, 2);
 		}

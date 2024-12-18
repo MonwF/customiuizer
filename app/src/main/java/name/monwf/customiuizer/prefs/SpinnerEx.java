@@ -19,8 +19,6 @@ public class SpinnerEx extends AppCompatSpinner {
 	public CharSequence[] entries;
 	public int[] entryValues;
 	private final ArrayList<Integer> disabledItems = new ArrayList<Integer>();
-	private final Resources res = getContext().getResources();
-	private final int childpadding = res.getDimensionPixelSize(R.dimen.preference_item_child_padding);
 
 	public SpinnerEx(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -29,6 +27,7 @@ public class SpinnerEx extends AppCompatSpinner {
 		entries = xmlAttrs.getTextArray(0);
 		if (xmlAttrs.getResourceId(1, 0) != 0) entryValues = getResources().getIntArray(xmlAttrs.getResourceId(1, 0));
 		xmlAttrs.recycle();
+		int childpadding = getContext().getResources().getDimensionPixelSize(R.dimen.preference_item_child_padding);
 		this.setPadding(childpadding, 0, childpadding, 0);
 		try {
 			Field mPopup = AppCompatSpinner.class.getDeclaredField("mPopup");

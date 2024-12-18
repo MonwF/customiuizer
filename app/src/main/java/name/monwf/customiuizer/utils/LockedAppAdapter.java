@@ -102,7 +102,6 @@ public class LockedAppAdapter extends BaseAdapter implements Filterable {
 		ImageView itemIsDis = row.findViewById(R.id.icon_disable);
 		ImageView itemIsDual = row.findViewById(R.id.icon_dual);
 		CheckBox itemChecked = row.findViewById(android.R.id.checkbox);
-		Helpers.setMiuiCheckbox(itemChecked);
 		TextView itemTitle = row.findViewById(android.R.id.title);
 		ImageView itemIcon = row.findViewById(android.R.id.icon);
 

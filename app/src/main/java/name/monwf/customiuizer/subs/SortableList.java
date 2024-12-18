@@ -86,7 +86,7 @@ public class SortableList extends SubFragment {
 					Bundle args = new Bundle();
 					args.putString("key", key + "_" + uuid);
 					args.putInt("actions", MultiAction.Actions.LOCKSCREEN.ordinal());
-					openSubFragment(new MultiAction(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.Edit, titleResId, R.layout.prefs_multiaction);
+					openSubFragment(new MultiAction(), args, AppHelper.SettingsType.Edit, AppHelper.ActionBarType.Edit, titleResId, R.layout.prefs_multiaction);
 				}
 			});
 		}
@@ -175,7 +175,7 @@ public class SortableList extends SubFragment {
 				args.putString("key", key);
 				AppSelector activitySelect = new AppSelector();
 				activitySelect.setTargetFragment(SortableList.this, 2);
-				openSubFragment(activitySelect, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_app, R.layout.prefs_app_selector);
+				openSubFragment(activitySelect, args, AppHelper.SettingsType.Edit, AppHelper.ActionBarType.HomeUp, R.string.select_app, R.layout.prefs_app_selector);
 			} else {
 				//if (listView.getChildCount() >= 10) return true;
 				createNewItem(createNewUUID());

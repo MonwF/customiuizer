@@ -1,12 +1,11 @@
 package name.monwf.customiuizer.mods;
 
-import static java.lang.System.currentTimeMillis;
-
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.inputmethodservice.InputMethodService;
@@ -18,7 +17,6 @@ import android.os.PowerManager.WakeLock;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.telecom.TelecomManager;
-import android.telephony.TelephonyManager;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Surface;
@@ -264,7 +262,7 @@ public class Controls {
 				int mStreamType = (int)XposedHelpers.findMethodExact(MediaPlayerCls, "getAudioStreamType").invoke(param.getThisObject());
 				if (mContext != null && (mStreamType == AudioManager.STREAM_MUSIC || mStreamType == 0x80000000)) {
 					Intent intent = new Intent(GlobalActions.ACTION_PREFIX + "SaveLastMusicPausedTime");
-					intent.setPackage("android");
+					intent.setPackage("com.android.systemui");
 					mContext.sendBroadcast(intent);
 				}
 			}
@@ -478,7 +476,7 @@ public class Controls {
 	}
 
 	public static void NavBarButtonsHook(PackageLoadedParam lpparam) {
-		ModuleHelper.hookAllMethods("com.android.systemui.navigationbar.NavigationBarView", lpparam.getClassLoader(), "updateOrientationViews", new MethodHook() {
+		ModuleHelper.findAndHookMethod("com.android.systemui.navigationbar.NavigationBarView", lpparam.getClassLoader(), "onFinishInflate", new MethodHook() {
 			@Override
 			protected void after(final AfterHookCallback param) throws Throwable {
 				FrameLayout navBar = (FrameLayout) param.getThisObject();
@@ -496,7 +494,7 @@ public class Controls {
 			}
 		});
 
-		ModuleHelper.hookAllMethods("com.android.systemui.navigationbar.NavigationBarTransitions", lpparam.getClassLoader(), "applyDarkIntensity", new MethodHook() {
+		ModuleHelper.findAndHookMethod("com.android.systemui.navigationbar.NavigationBarTransitions", lpparam.getClassLoader(), "applyDarkIntensity", float.class, new MethodHook() {
 			@Override
 			protected void after(final AfterHookCallback param) throws Throwable {
 				FrameLayout navbar = (FrameLayout)XposedHelpers.getObjectField(param.getThisObject(), "mView");
@@ -525,190 +523,12 @@ public class Controls {
 				}
 			}
 		});
-		ModuleHelper.hookAllMethods("com.android.systemui.navigationbar.NavigationBarView", lpparam.getClassLoader(), "onConfigurationChanged", new MethodHook() {
+		ModuleHelper.findAndHookMethod("com.android.systemui.navigationbar.NavigationBarView", lpparam.getClassLoader(), "onConfigurationChanged", Configuration.class,
+		new MethodHook() {
 			@Override
 			protected void after(final AfterHookCallback param) throws Throwable {
 				FrameLayout navbar = (FrameLayout) param.getThisObject();
-//				int displayRotation = navbar.getContext().getDisplay().getRotation();
-//				int mCurrentRotation = XposedHelpers.getIntField(param.getThisObject(), "mCurrentRotation");
-//				if (mCurrentRotation != displayRotation) {
-					reposNavBarButtons(navbar);
-//				}
-			}
-		});
-	}
-
-	@SuppressLint("MissingPermission")
-	private static boolean handleCallAction(int action) {
-		TelecomManager tm = (TelecomManager)miuiPWMContext.getSystemService(Context.TELECOM_SERVICE);
-		if (tm == null) return false;
-		if (!tm.isInCall()) return false;
-		int callState = (int)XposedHelpers.callMethod(tm, "getCallState");
-		if (callState == TelephonyManager.CALL_STATE_RINGING) {
-			int accept = MainModule.mPrefs.getStringAsInt("controls_fingerprint_accept", 1);
-			int reject = MainModule.mPrefs.getStringAsInt("controls_fingerprint_reject", 1);
-			if (action == accept) {
-				XposedHelpers.callMethod(tm, "acceptRingingCall");
-				return true;
-			} else if (action == reject) {
-				XposedHelpers.callMethod(tm, "endCall");
-				return true;
-			}
-		} else if (callState == TelephonyManager.CALL_STATE_OFFHOOK) {
-			int hangup = MainModule.mPrefs.getStringAsInt("controls_fingerprint_hangup", 1);
-			if (action == hangup) {
-				XposedHelpers.callMethod(tm, "endCall");
-				return true;
-			}
-		}
-		return MainModule.mPrefs.getBoolean("controls_fingerprintskip2");
-	}
-
-	@SuppressLint("StaticFieldLeak")
-	private static Context miuiPWMContext;
-	private static Handler miuiPWMHandler;
-	private static boolean hasDoubleTap = false;
-	private static boolean wasScreenOn = false;
-	private static boolean wasFingerprintUsed = false;
-	private static boolean isFingerprintPressed = false;
-	private static boolean isFingerprintLongPressed = false;
-	private static boolean isFingerprintLongPressHandled = false;
-	private static final Runnable singlePressFingerprint = new Runnable() {
-		@Override
-		public void run() {
-			if (miuiPWMContext == null || miuiPWMHandler == null) return;
-			miuiPWMHandler.removeCallbacks(longPressFingerprint);
-			if (!handleCallAction(2)) GlobalActions.handleAction(miuiPWMContext, "controls_fingerprint1");
-		}
-	};
-	private static final Runnable longPressFingerprint = new Runnable() {
-		@Override
-		public void run() {
-			if (isFingerprintPressed) {
-				isFingerprintLongPressed = true;
-				isFingerprintLongPressHandled = handleCallAction(4);
-				Helpers.performStrongVibration(miuiPWMContext, true);
-			}
-		}
-	};
-
-	public static void FingerprintEventsHook(PackageLoadedParam lpparam) {
-		ModuleHelper.findAndHookMethod("com.android.server.policy.MiuiPhoneWindowManager", lpparam.getClassLoader(), "processFingerprintNavigationEvent", KeyEvent.class, boolean.class, new MethodHook() {
-			@Override
-			@SuppressLint("MissingPermission")
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				if (MainModule.mPrefs.getBoolean("controls_fingerprintskip")) {
-					Object mFocusedWindow = XposedHelpers.getObjectField(param.getThisObject(), "mFocusedWindow");
-					if ((boolean)param.getArgs()[1] && mFocusedWindow != null) {
-						String ownPkg = (String)XposedHelpers.callMethod(mFocusedWindow, "getOwningPackage");
-						if ("com.android.camera".equals(ownPkg)) return;
-					}
-				}
-
-				miuiPWMContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-				miuiPWMHandler = (Handler)XposedHelpers.getObjectField(param.getThisObject(), "mHandler");
-				if (miuiPWMContext == null || miuiPWMHandler == null) return;
-
-				boolean isInCall = false;
-				if (miuiPWMContext != null) {
-					TelecomManager tm = (TelecomManager)miuiPWMContext.getSystemService(Context.TELECOM_SERVICE);
-					isInCall = tm != null && tm.isInCall();
-				}
-
-				KeyEvent keyEvent = (KeyEvent)param.getArgs()[0];
-				if (keyEvent.getKeyCode() != KeyEvent.KEYCODE_DPAD_CENTER || keyEvent.getAction() != KeyEvent.ACTION_DOWN) return;
-
-				isFingerprintPressed = true;
-				wasScreenOn = (boolean)XposedHelpers.callMethod(param.getThisObject(), "isScreenOnInternal");
-				wasFingerprintUsed = Settings.System.getInt(miuiPWMContext.getContentResolver(), "is_fingerprint_active", 0) == 1;
-
-				hasDoubleTap = false;
-				if (wasScreenOn && !wasFingerprintUsed) {
-					int delay = MainModule.mPrefs.getInt("controls_fingerprintlong_delay", 0);
-					if (isInCall) {
-						int accept = MainModule.mPrefs.getStringAsInt("controls_fingerprint_accept", 1);
-						int reject = MainModule.mPrefs.getStringAsInt("controls_fingerprint_reject", 1);
-						int hangup = MainModule.mPrefs.getStringAsInt("controls_fingerprint_hangup", 1);
-						hasDoubleTap = accept == 3 || reject == 3 || hangup == 3;
-						if (accept == 4 || reject == 4 || hangup == 4) {
-							miuiPWMHandler.postDelayed(longPressFingerprint, delay < 200 ? ViewConfiguration.getLongPressTimeout() : delay);
-						}
-					} else {
-						int dtaction = MainModule.mPrefs.getInt("controls_fingerprint2_action", 1);
-						hasDoubleTap = dtaction > 1;
-						if (MainModule.mPrefs.getInt("controls_fingerprintlong_action", 1) > 1) {
-							miuiPWMHandler.postDelayed(longPressFingerprint, delay < 200 ? ViewConfiguration.getLongPressTimeout() : delay);
-						}
-					}
-				}
-
-				if (XposedHelpers.getAdditionalInstanceField(param.getThisObject(), "touchTime") == null) {
-					XposedHelpers.setAdditionalInstanceField(param.getThisObject(), "touchTime", 0L);
-				}
-			}
-
-			@Override
-			@SuppressLint("MissingPermission")
-			protected void after(final AfterHookCallback param) throws Throwable {
-				if (MainModule.mPrefs.getBoolean("controls_fingerprintskip")) {
-					Object mFocusedWindow = XposedHelpers.getObjectField(param.getThisObject(), "mFocusedWindow");
-					if ((boolean)param.getArgs()[1] && mFocusedWindow != null) {
-						String ownPkg = (String)XposedHelpers.callMethod(mFocusedWindow, "getOwningPackage");
-						if ("com.android.camera".equals(ownPkg)) return;
-					}
-				}
-
-				KeyEvent keyEvent = (KeyEvent)param.getArgs()[0];
-				if (keyEvent.getKeyCode() != KeyEvent.KEYCODE_DPAD_CENTER || keyEvent.getAction() != KeyEvent.ACTION_UP) return;
-
-				Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-				Handler mHandler = (Handler)XposedHelpers.getObjectField(param.getThisObject(), "mHandler");
-
-				long lastTouchTime = (long)XposedHelpers.getAdditionalInstanceField(param.getThisObject(), "touchTime");
-				long currentTouchTime = currentTimeMillis();
-				XposedHelpers.setAdditionalInstanceField(param.getThisObject(), "touchTime", currentTouchTime);
-
-				int delay = MainModule.mPrefs.getInt("controls_fingerprint2_delay", 50);
-				int dttimeout = delay < 200 ? ViewConfiguration.getDoubleTapTimeout() : delay;
-				if (wasScreenOn && !wasFingerprintUsed) {
-					if (hasDoubleTap && currentTouchTime - lastTouchTime < dttimeout) {
-						mHandler.removeCallbacks(singlePressFingerprint);
-						mHandler.removeCallbacks(longPressFingerprint);
-						if (!handleCallAction(3)) GlobalActions.handleAction(mContext, "controls_fingerprint2");
-						wasScreenOn = false;
-					} else if (isFingerprintLongPressed) {
-						if (!isFingerprintLongPressHandled) GlobalActions.handleAction(mContext, "controls_fingerprintlong");
-						isFingerprintLongPressHandled = false;
-						wasScreenOn = false;
-					} else {
-						mHandler.removeCallbacks(longPressFingerprint);
-						mHandler.removeCallbacks(singlePressFingerprint);
-						if (hasDoubleTap)
-							mHandler.postDelayed(singlePressFingerprint, dttimeout);
-						else
-							mHandler.post(singlePressFingerprint);
-					}
-				}
-
-				isFingerprintLongPressed = false;
-				isFingerprintPressed = false;
-			}
-		});
-
-		String fpService = "com.android.server.biometrics.BiometricServiceBase";
-		ModuleHelper.hookAllMethods(fpService, lpparam.getClassLoader(), "startClient", new MethodHook() {
-			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-			Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-			Settings.System.putInt(mContext.getContentResolver(), "is_fingerprint_active", 1);
-			}
-		});
-
-		ModuleHelper.hookAllMethods(fpService, lpparam.getClassLoader(), "removeClient", new MethodHook() {
-			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
-			Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-			Settings.System.putInt(mContext.getContentResolver(), "is_fingerprint_active", 0);
+				reposNavBarButtons(navbar);
 			}
 		});
 	}
@@ -791,19 +611,6 @@ public class Controls {
 		});
 	}
 
-	public static void NavbarHeightRes() {
-		int opt = MainModule.mPrefs.getInt("controls_navbarheight", 19);
-		int heightDpi = opt == 19 ? 47 : opt;
-		MainModule.resHooks.setDensityReplacement("*", "dimen", "navigation_bar_height", heightDpi);
-		MainModule.resHooks.setDensityReplacement("*", "dimen", "navigation_bar_height_landscape", heightDpi);
-		MainModule.resHooks.setDensityReplacement("*", "dimen", "navigation_bar_frame_height", heightDpi);
-		MainModule.resHooks.setDensityReplacement("*", "dimen", "navigation_bar_frame_height_landscape", heightDpi);
-		MainModule.resHooks.setDensityReplacement("*", "dimen", "navigation_bar_gesture_height", heightDpi);
-		MainModule.resHooks.setDensityReplacement("*", "dimen", "navigation_bar_width", heightDpi);
-		MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "navigation_bar_size", heightDpi);
-		//MainModule.resHooks.setDensityReplacement("com.android.systemui", "dimen", "navigation_extra_key_width", heightDpi);
-	}
-
 	public static void FingerprintHapticSuccessHook(SystemServerLoadedParam lpparam) {
 		ModuleHelper.hookAllMethods("com.android.server.biometrics.sensors.AuthenticationClient", lpparam.getClassLoader(), "onAuthenticated", new MethodHook() {
 			@Override
@@ -847,7 +654,7 @@ public class Controls {
 	}
 
 	public static void BackGestureAreaHeightHook(PackageLoadedParam lpparam) {
-		ModuleHelper.findAndHookMethodSilently("com.miui.home.recents.GestureStubView", lpparam.getClassLoader(), "getGestureStubWindowParam", new MethodHook() {
+		ModuleHelper.findAndHookMethod("com.miui.home.recents.GestureStubView", lpparam.getClassLoader(), "getGestureStubWindowParam", new MethodHook() {
 			@Override
 			protected void after(final AfterHookCallback param) throws Throwable {
 				WindowManager.LayoutParams lp = (WindowManager.LayoutParams)param.getResult();
@@ -859,7 +666,7 @@ public class Controls {
 	}
 
 	public static void BackGestureAreaWidthHook(PackageLoadedParam lpparam) {
-		ModuleHelper.findAndHookMethodSilently("com.miui.home.recents.GestureStubView", lpparam.getClassLoader(), "initScreenSizeAndDensity", int.class, new MethodHook() {
+		ModuleHelper.findAndHookMethod("com.miui.home.recents.GestureStubView", lpparam.getClassLoader(), "initScreenSizeAndDensity", int.class, new MethodHook() {
 			@Override
 			protected void after(final AfterHookCallback param) throws Throwable {
 				int pct = MainModule.mPrefs.getInt("controls_fsg_width", 100);
@@ -873,7 +680,7 @@ public class Controls {
 			}
 		});
 
-		ModuleHelper.findAndHookMethodSilently("com.miui.home.recents.GestureStubView", lpparam.getClassLoader(), "setSize", int.class, new MethodHook() {
+		ModuleHelper.findAndHookMethod("com.miui.home.recents.GestureStubView", lpparam.getClassLoader(), "setSize", int.class, new MethodHook() {
 			@Override
 			protected void before(final BeforeHookCallback param) throws Throwable {
 				int pct = MainModule.mPrefs.getInt("controls_fsg_width", 100);
@@ -886,36 +693,26 @@ public class Controls {
 	}
 
 	public static void HideNavBarHook(PackageLoadedParam lpparam) {
-		ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.phone.NavigationModeControllerExt", lpparam.getClassLoader(), "hideNavigationBar", HookerClassHelper.returnConstant(true));
+		ModuleHelper.hookAllConstructors("com.android.systemui.recents.OverviewProxyService", lpparam.getClassLoader(), new MethodHook() {
+			@Override
+			protected void after(AfterHookCallback param) throws Throwable {
+				ArrayList mCallbacks = (ArrayList) ModuleHelper.getObjectFieldByPath(param.getThisObject(), "mCommandQueue.mCallbacks");
+				Object callback = mCallbacks.get(mCallbacks.size() - 1);
+				ModuleHelper.findAndHookMethod(callback.getClass(), "setWindowState", int.class, int.class, int.class, new MethodHook() {
+					@Override
+					protected void before(final BeforeHookCallback param) throws Throwable {
+						Object GestureObserver = ModuleHelper.getDepInstance(lpparam.getClassLoader(), "com.miui.systemui.controller.GestureObserver");
+						XposedHelpers.setObjectField(GestureObserver, "mGestureLineEnable", true);
+					}
+				});
+			}
+		});
 		ModuleHelper.hookAllMethods("com.android.systemui.navigationbar.NavigationBarController", lpparam.getClassLoader(), "createNavigationBar", new MethodHook() {
 			@Override
 			protected void before(final BeforeHookCallback param) throws Throwable {
 				if (param.getArgs().length >= 3) {
 					param.returnAndSkip(null);
 				}
-			}
-		});
-		ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.phone.MiuiDockIndicatorService", lpparam.getClassLoader(), "onNavigationModeChanged", int.class, new MethodHook() {
-			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				XposedHelpers.setObjectField(param.getThisObject(), "mNavMode", param.getArgs()[0]);
-				if (XposedHelpers.getObjectField(param.getThisObject(), "mNavigationBarView") != null) {
-					XposedHelpers.callMethod(param.getThisObject(), "setNavigationBarView", (Object) null);
-				}
-				else {
-					XposedHelpers.callMethod(param.getThisObject(), "checkAndApplyNavigationMode");
-				}
-				param.returnAndSkip(null);
-			}
-		});
-	}
-
-	public static void ImeBackAltIconHook(PackageLoadedParam lpparam) {
-		ModuleHelper.hookAllMethods("com.android.systemui.statusbar.phone.StatusBar", lpparam.getClassLoader(), "setImeWindowStatus", new MethodHook() {
-			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				Object mNavigationBarView = XposedHelpers.getObjectField(param.getThisObject(), "mNavigationBarView");
-				if (mNavigationBarView != null) XposedHelpers.callMethod(mNavigationBarView, "setNavigationIconHints", param.getArgs()[1], false);
 			}
 		});
 	}
@@ -926,14 +723,14 @@ public class Controls {
 		doubleTapResons.add("double_click_power");
 		doubleTapResons.add("power_double_tap");
 		doubleTapResons.add("double_click_power_key");
-		String className = "com.miui.server.input.util.ShortCutActionsUtils";
-		ModuleHelper.findAndHookMethod(className, lpparam.getClassLoader(), "triggerFunction", String.class, String.class, Bundle.class, boolean.class, new MethodHook() {
+		ModuleHelper.findAndHookMethod("com.miui.server.input.util.ShortCutActionsUtils", lpparam.getClassLoader(), "triggerFunction", String.class, String.class, Bundle.class, boolean.class, new MethodHook() {
 			@Override
 			protected void before(final BeforeHookCallback param) throws Throwable {
-				if (dtFromVolumeDown && "double_click_volume_down".equals(param.getArgs()[1])) {
+				boolean dtFromVolumeDownNow = MainModule.mPrefs.getBoolean("controls_volumedowndt_torch");
+				if (dtFromVolumeDownNow && "double_click_volume_down".equals(param.getArgs()[1])) {
 					param.getArgs()[0] = "turn_on_torch";
 				}
-				else if (!dtFromVolumeDown && doubleTapResons.contains(param.getArgs()[1])) {
+				else if (MainModule.mPrefs.getInt("controls_powerdt_action", 1) > 1 && doubleTapResons.contains(param.getArgs()[1])) {
 					Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
 					GlobalActions.handleAction(mContext, "controls_powerdt", true);
 					param.returnAndSkip(true);
@@ -942,7 +739,8 @@ public class Controls {
 		});
 
 		if (dtFromVolumeDown) {
-			ModuleHelper.findAndHookMethod("com.android.server.policy.MiuiKeyShortcutManager", lpparam.getClassLoader(), "getVolumeKeyLaunchCamera", HookerClassHelper.returnConstant(true));
+			ModuleHelper.findAndHookMethod("com.android.server.policy.MiuiShortcutTriggerHelper", lpparam.getClassLoader(), "getDoubleVolumeDownKeyFunction", String.class, HookerClassHelper.returnConstant("launch_camera"));
+			ModuleHelper.findAndHookMethod("com.android.server.input.shortcut.singlekeyrule.VolumeDownKeyRule", lpparam.getClassLoader(), "isEnableLaunchCamera", HookerClassHelper.returnConstant(true));
 		}
 	}
 
@@ -971,7 +769,7 @@ public class Controls {
 			}
 		});
 
-		ModuleHelper.findAndHookMethod("com.android.systemui.assist.ui.DefaultUiController", lpparam.getClassLoader(), "logInvocationProgressMetrics", int.class, float.class, boolean.class, HookerClassHelper.DO_NOTHING);
+		ModuleHelper.findAndHookMethod("com.android.systemui.assist.ui.DefaultUiController", lpparam.getClassLoader(), "logInvocationProgressMetrics", float.class, boolean.class, HookerClassHelper.DO_NOTHING);
 	}
 
 //	public static void AIButtonHook(PackageLoadedParam lpparam) {

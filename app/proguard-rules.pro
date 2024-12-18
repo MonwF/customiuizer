@@ -24,5 +24,9 @@
 -repackageclasses
 -allowaccessmodification
 
--dontwarn android.app.ActivityTaskManager$RootTaskInfo, android.util.Singleton
+#-dontwarn android.app.ActivityTaskManager$RootTaskInfo, android.util.Singleton
+-dontwarn kotlin.jvm.internal.SourceDebugExtension
+-dontwarn android.**
+-dontwarn android.view.**
+-dontwarn miui.**
 # -dontnote **

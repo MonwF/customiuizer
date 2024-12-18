@@ -20,7 +20,7 @@ public class PrefsProvider extends ContentProvider {
     SharedPreferences prefs;
 
     static {
-        uriMatcher.addURI(AUTHORITY, "test/*", 1);
+        uriMatcher.addURI(AUTHORITY, "test/*", 5);
     }
 
     @Override

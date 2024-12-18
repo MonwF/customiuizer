@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import android.widget.SeekBar;
+
 import name.monwf.customiuizer.R;
 import name.monwf.customiuizer.SubFragment;
 import name.monwf.customiuizer.utils.AppHelper;
@@ -30,6 +31,15 @@ public class ColorSelector extends SubFragment {
 		super.onCreate(savedInstanceState);
 	}
 
+	@Override
+	public void saveSharedPrefs() {
+		AppHelper.appPrefs.edit().putInt(key, colorCircle.getColor()).apply();
+	}
+
+	@Override
+	public void loadSharedPrefs() {
+	}
+
 	void updateSelColor(int color) {
 		((GradientDrawable) selectedColorView.getBackground()).setColors(color == Color.TRANSPARENT ? new int[]{ Color.WHITE, Color.BLACK } : new int[]{ color, color });
 		selectedColorHint.setText(String.format("#%08X", color));
@@ -47,7 +57,6 @@ public class ColorSelector extends SubFragment {
 		selectedColorView.setBackgroundResource(R.drawable.rounded_corners);
 		selectedColorHint = getView().findViewById(R.id.selected_color_hint);
 		colorCircle = getView().findViewById(R.id.color_circle);
-		colorCircle.setTag(key);
 		int prefColor = AppHelper.getIntOfAppPrefs(key, Color.WHITE);
 		colorCircle.init(prefColor);
 		colorCircle.setListener(this::updateSelColor);

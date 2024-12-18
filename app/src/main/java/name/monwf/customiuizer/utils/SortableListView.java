@@ -1,5 +1,6 @@
 package name.monwf.customiuizer.utils;
 
+import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.widget.ListView;
 
@@ -14,7 +15,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import com.miui.system.internal.R;
 
 public class SortableListView extends ListView {
     private static final int ANIMATION_DURATION = 200;
@@ -61,7 +61,7 @@ public class SortableListView extends ListView {
         this.mDraggingTo = -1;
         this.mItemUpperBound = -1;
         this.mTmpLocation = new int[2];
-        Drawable drawable = context.getResources().getDrawable(R.drawable.sortable_list_dragging_item_shadow);
+        Drawable drawable = new ColorDrawable();
         this.mSnapshotShadow = drawable;
         drawable.setAlpha(SNAPSHOT_ALPHA);
         Rect rect = new Rect();

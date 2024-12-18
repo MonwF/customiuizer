@@ -119,7 +119,7 @@ public class BatteryIndicator extends androidx.appcompat.widget.AppCompatImageVi
                     startTest();
                 }
             }
-        }, intentFilter);
+        }, intentFilter, Context.RECEIVER_EXPORTED);
     }
 
     Runnable step = new Runnable() {

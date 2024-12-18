@@ -100,7 +100,7 @@
 		android:title="@string/system_statusbar_mobiletype_single_verticaloffset"
 		android:defaultValue="8"
 		miuizer:minValue="0"
-		miuizer:maxValue="16"
+		miuizer:maxValue="20"
 		miuizer:stepValue="1"
 		miuizer:negativeShift="8"
 		miuizer:displayDividerValue="2"

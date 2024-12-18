@@ -21,7 +21,6 @@ import android.content.res.XmlResourceParser;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -71,7 +70,9 @@ import java.util.Set;
 
 import miui.util.HapticFeedbackUtil;
 import name.monwf.customiuizer.BuildConfig;
+import name.monwf.customiuizer.PrefsProvider;
 import name.monwf.customiuizer.R;
+import name.monwf.customiuizer.mods.utils.XposedHelpers;
 import name.monwf.customiuizer.prefs.PreferenceCategoryEx;
 
 @SuppressWarnings("WeakerAccess")
@@ -88,7 +89,6 @@ public class Helpers {
     public static final String NEW_MODS_SEARCH_QUERY = "\uD83C\uDD95";
     public static ArrayList<AppData> shareAppsList = null;
     public static ArrayList<AppData> openWithAppsList = null;
-    public static ArrayList<AppData> installedAppsList = null;
     public static ArrayList<AppData> launchableAppsList = null;
     public static ArrayList<ModData> allModsList = new ArrayList<ModData>();
     public static final int markColor = Color.rgb(205, 73, 97);
@@ -98,8 +98,6 @@ public class Helpers {
     public static final int REQUEST_PERMISSIONS_BLUETOOTH = 5;
     public static final int REQUEST_PERMISSIONS_SECURITY_CENTER = 6;
     public static boolean withinAppContext = false;
-
-    public static final boolean isMIUI14 = Integer.parseInt(miui.os.Build.getMiUiVersionCode()) > 13;
 
     public static LruCache<String, Bitmap> memoryCache = new LruCache<String, Bitmap>((int)(Runtime.getRuntime().maxMemory() / 1024) / 2) {
         @Override
@@ -116,18 +114,6 @@ public class Helpers {
         "pref_key_launcher_nozoomanim"
     ));
 
-    public enum SettingsType {
-        Preference, Edit
-    }
-
-    public enum AppAdapterType {
-        Default, Standalone, Mutli, CustomTitles, Activities
-    }
-
-    public enum ActionBarType {
-        HomeUp, Edit
-    }
-
     public static class MimeType {
         public static int IMAGE = 1;
         public static int AUDIO = 2;
@@ -137,16 +123,6 @@ public class Helpers {
         public static int LINK = 32;
         public static int OTHERS = 64;
         public static int ALL = IMAGE | AUDIO | VIDEO | DOCUMENT | ARCHIVE | LINK | OTHERS;
-    }
-
-    public static void setMiuiCheckbox(CheckBox checkbox) {
-        checkbox.setBackground(null);
-        int btnResID = checkbox.getResources().getIdentifier(isNightMode(checkbox.getContext()) ? "btn_checkbox_dark" : "btn_checkbox_light", "drawable", "miui");
-        try {
-            checkbox.setButtonDrawable(btnResID == 0 ? R.drawable.btn_checkbox : btnResID);
-        } catch (Throwable t) {
-            checkbox.setButtonDrawable(R.drawable.btn_checkbox);
-        }
     }
 
     public static void setMiuiPrefItem(View item) {
@@ -188,7 +164,7 @@ public class Helpers {
         return (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
     }
 
-    public static boolean isUPlus() {
+    public static boolean nextRelease() {
         return Build.VERSION.SDK_INT >= 34;
     }
 
@@ -283,17 +259,6 @@ public class Helpers {
         return true;
     }
 
-    public static void emptyFile(String pathToFile, boolean forceClear) {
-        File f = new File(pathToFile);
-        if (f.exists() && (f.length() > 150 * 1024 || forceClear)) {
-            try (FileOutputStream fOut = new FileOutputStream(f, false)) {
-                try (OutputStreamWriter output = new OutputStreamWriter(fOut)) {
-                    output.write("");
-                } catch (Throwable ignore) {}
-            } catch (Throwable ignore) {}
-        }
-    }
-
     public static long getNextStockAlarmTime(Context context) {
         AlarmManager alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         if (alarmMgr == null) return 0;
@@ -351,13 +316,6 @@ public class Helpers {
             dp,
             Resources.getSystem().getDisplayMetrics()
         );
-    }
-
-    public static boolean isReallyVisible(final View view) {
-        if (view == null || !view.isShown() || view.getAlpha() == 0) return false;
-        final Rect actualPosition = new Rect();
-        view.getGlobalVisibleRect(actualPosition);
-        return actualPosition.intersect(new Rect(0, 0, view.getResources().getDisplayMetrics().widthPixels, view.getResources().getDisplayMetrics().heightPixels));
     }
 
     public static ArrayList<View> getChildViewsRecursive(View view) {
@@ -442,11 +400,11 @@ public class Helpers {
     }
 
     @SuppressLint("DiscouragedPrivateApi")
-    private static Method getPackageInfoAsUser(Context context) {
+    private static Method getPackageInfoAsUser() {
         try {
-            return context.getPackageManager().getClass().getDeclaredMethod("getPackageInfoAsUser", String.class, int.class, int.class);
+            return PackageManager.class.getMethod("getPackageInfoAsUser", String.class, Integer.TYPE, Integer.TYPE);
         } catch (Throwable t) {
-            t.printStackTrace();
+            XposedHelpers.log(t);
             return null;
         }
     }
@@ -454,11 +412,11 @@ public class Helpers {
     public static void getInstalledApps(Context context) {
         final PackageManager pm = context.getPackageManager();
         boolean includeDualApps = checkMultiUserPermission(context);
-        Method getPackageInfoAsUser = getPackageInfoAsUser(context);
+        Method getPackageInfoAsUser = getPackageInfoAsUser();
         if (getPackageInfoAsUser == null) includeDualApps = false;
 
         List<ApplicationInfo> packs = pm.getInstalledApplications(PackageManager.GET_META_DATA | PackageManager.MATCH_DISABLED_COMPONENTS);
-        installedAppsList = new ArrayList<AppData>();
+        AppHelper.installedAppsList = new ArrayList<AppData>();
         AppData app;
         for (ApplicationInfo pack: packs) try {
             app = new AppData();
@@ -466,7 +424,7 @@ public class Helpers {
             app.label = pack.loadLabel(pm).toString();
             app.pkgName = pack.packageName;
             app.actName = "-";
-            installedAppsList.add(app);
+            AppHelper.installedAppsList.add(app);
             if (includeDualApps) try {
                 if (getPackageInfoAsUser.invoke(pm, app.pkgName, 0, 999) != null) {
                     AppData appDual = new AppData();
@@ -475,13 +433,13 @@ public class Helpers {
                     appDual.pkgName = pack.packageName;
                     appDual.actName = "-";
                     appDual.user = 999;
-                    installedAppsList.add(appDual);
+                    AppHelper.installedAppsList.add(appDual);
                 }
             } catch (Throwable ignore) {}
         } catch (Throwable e) {
-            e.printStackTrace();
+            XposedHelpers.log(e);
         }
-        installedAppsList.sort(new Comparator<AppData>() {
+        AppHelper.installedAppsList.sort(new Comparator<AppData>() {
             public int compare(AppData app1, AppData app2) {
                 return app1.label.compareToIgnoreCase(app2.label);
             }
@@ -492,7 +450,7 @@ public class Helpers {
     public static void getLaunchableApps(Context context) {
         final PackageManager pm = context.getPackageManager();
         boolean includeDualApps = checkMultiUserPermission(context);
-        Method getPackageInfoAsUser = getPackageInfoAsUser(context);
+        Method getPackageInfoAsUser = getPackageInfoAsUser();
         if (getPackageInfoAsUser == null) includeDualApps = false;
 
         final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
@@ -531,7 +489,7 @@ public class Helpers {
     public static void getShareApps(Context context) {
         PackageManager pm = context.getPackageManager();
         boolean includeDualApps = checkMultiUserPermission(context);
-        Method getPackageInfoAsUser = getPackageInfoAsUser(context);
+        Method getPackageInfoAsUser = getPackageInfoAsUser();
         if (getPackageInfoAsUser == null) includeDualApps = false;
 
         final Intent mainIntent = new Intent();
@@ -579,13 +537,12 @@ public class Helpers {
     public static void getOpenWithApps(Context context) {
         PackageManager pm = context.getPackageManager();
         boolean includeDualApps = checkMultiUserPermission(context);
-        Method getPackageInfoAsUser = getPackageInfoAsUser(context);
+        Method getPackageInfoAsUser = getPackageInfoAsUser();
         if (getPackageInfoAsUser == null) includeDualApps = false;
 
         Intent mainIntent = new Intent();
         mainIntent.setAction(Intent.ACTION_VIEW);
-        mainIntent.setDataAndType(null, "*/*");
-//        mainIntent.setDataAndType(Uri.parse("content://" + PrefsProvider.AUTHORITY + "/test/5"), "*/*");
+        mainIntent.setDataAndType(Uri.parse("content://" + PrefsProvider.AUTHORITY + "/test/5"), "*/*");
         mainIntent.putExtra("CustoMIUIzer", true);
         List<ResolveInfo> packs = pm.queryIntentActivities(mainIntent, PackageManager.MATCH_ALL | PackageManager.MATCH_DISABLED_COMPONENTS);
 
@@ -717,23 +674,18 @@ public class Helpers {
         int catResId = 0;
         ModData.ModCat catPrefKey = null;
 
-        switch(xmlResId) {
-            case R.xml.prefs_system:
-                catResId = R.string.system_mods;
-                catPrefKey = ModData.ModCat.pref_key_system;
-                break;
-            case R.xml.prefs_launcher:
-                catResId = R.string.launcher_title;
-                catPrefKey = ModData.ModCat.pref_key_launcher;
-                break;
-            case R.xml.prefs_controls:
-                catResId = R.string.controls_mods;
-                catPrefKey = ModData.ModCat.pref_key_controls;
-                break;
-            case R.xml.prefs_various:
-                catResId = R.string.various_mods;
-                catPrefKey = ModData.ModCat.pref_key_various;
-                break;
+        if (xmlResId == R.xml.prefs_system) {
+            catResId = R.string.system_mods;
+            catPrefKey = ModData.ModCat.pref_key_system;
+        } else if (xmlResId == R.xml.prefs_launcher) {
+            catResId = R.string.launcher_title;
+            catPrefKey = ModData.ModCat.pref_key_launcher;
+        } else if (xmlResId == R.xml.prefs_controls) {
+            catResId = R.string.controls_mods;
+            catPrefKey = ModData.ModCat.pref_key_controls;
+        } else if (xmlResId == R.xml.prefs_various) {
+            catResId = R.string.various_mods;
+            catPrefKey = ModData.ModCat.pref_key_various;
         }
 
         try (XmlResourceParser xml = res.getXml(xmlResId)) {

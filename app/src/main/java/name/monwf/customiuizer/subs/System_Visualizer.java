@@ -22,8 +22,6 @@ public class System_Visualizer extends SubFragment {
 				return true;
 			}
 		});
-
-		findPreference("pref_key_system_visualizer_colorval").setOnPreferenceClickListener(openColorSelector);
 	}
 
 }

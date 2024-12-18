@@ -139,7 +139,7 @@ public class MultiAction extends SubFragment {
 				if (event.getAction() == MotionEvent.ACTION_UP) {
 					AppSelector appSelect = new AppSelector();
 					appSelect.setTargetFragment(MultiAction.this, 0);
-					openSubFragment(appSelect, null, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_app, R.layout.prefs_app_selector);
+					openSubFragment(appSelect, null, AppHelper.SettingsType.Edit, AppHelper.ActionBarType.HomeUp, R.string.select_app, R.layout.prefs_app_selector);
 				}
 				return false;
 			}
@@ -195,7 +195,7 @@ public class MultiAction extends SubFragment {
 					shortcutSelect.setTargetFragment(MultiAction.this, 1);
 					Bundle args = new Bundle();
 					args.putString("key", key + "_shortcut");
-					openSubFragment(shortcutSelect, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_shortcut, R.layout.prefs_app_selector);
+					openSubFragment(shortcutSelect, args, AppHelper.SettingsType.Edit, AppHelper.ActionBarType.HomeUp, R.string.select_shortcut, R.layout.prefs_app_selector);
 				}
 				return false;
 			}
@@ -243,7 +243,7 @@ public class MultiAction extends SubFragment {
 					args.putBoolean("activity", true);
 					AppSelector activitySelect = new AppSelector();
 					activitySelect.setTargetFragment(MultiAction.this, 2);
-					openSubFragment(activitySelect, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_app, R.layout.prefs_app_selector);
+					openSubFragment(activitySelect, args, AppHelper.SettingsType.Edit, AppHelper.ActionBarType.HomeUp, R.string.select_app, R.layout.prefs_app_selector);
 				}
 				return false;
 			}

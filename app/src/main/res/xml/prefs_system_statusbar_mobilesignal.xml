@@ -15,30 +15,107 @@
 
 	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_mobiletype_show_wificonnected"
-		android:title="@string/system_statusbar_mobiletype_show_wificonnected_title"
-		android:defaultValue="false" />
+		android:title="@string/system_statusbar_mobiletype_show_wificonnected_title" />
 
 	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_networkindicator_mobile"
-		android:title="@string/system_networkindicator_mobile_title"
-		android:defaultValue="false" />
+		android:title="@string/system_networkindicator_mobile_title" />
 
 	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_4gtolte"
-		android:title="@string/system_4gtolte_title"
-		android:defaultValue="false" />
+		android:title="@string/system_4gtolte_title" />
+
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbar_mobile_digital_signal"
+		android:title="@string/system_statusbar_mobile_digital_signal_title" />
+
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbar_mobile_digital_signal_in2rows"
+		android:title="@string/system_statusbar_mobile_digital_signal_in2rows_title"
+		android:dependency="pref_key_system_statusbar_mobile_digital_signal"
+		miuizer:indentLevel="1" />
+
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbar_mobile_digital_signal_hideunit"
+		android:title="@string/system_statusbar_batterytempandcurrent_hideunit_title"
+		android:dependency="pref_key_system_statusbar_mobile_digital_signal"
+		miuizer:indentLevel="1" />
+
+	<name.monwf.customiuizer.prefs.SeekBarPreference
+		android:key="pref_key_system_statusbar_mobile_digital_signal_fontsize"
+		android:title="@string/launcher_titlefontsize_title"
+		android:dependency="pref_key_system_statusbar_mobile_digital_signal"
+		android:defaultValue="26"
+		miuizer:minValue="14"
+		miuizer:maxValue="40"
+		miuizer:stepValue="1"
+		miuizer:displayDividerValue="2"
+		miuizer:format="%s dip"
+		miuizer:indentLevel="1" />
+
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbar_mobile_digital_signal_bold"
+		android:title="@string/system_statusbar_mobiletype_single_bold_title"
+		android:dependency="pref_key_system_statusbar_mobile_digital_signal"
+		android:defaultValue="false"
+		miuizer:indentLevel="1" />
+
+	<name.monwf.customiuizer.prefs.ListPreferenceEx
+		android:key="pref_key_system_statusbar_mobile_digital_signal_align"
+		android:title="@string/system_statusbar_clock_align_title"
+		android:dependency="pref_key_system_statusbar_mobile_digital_signal"
+		android:entries="@array/horizontalalign"
+		android:entryValues="@array/horizontalalign_val"
+		miuizer:valueAsSummary="true"
+		android:defaultValue="1"
+		miuizer:indentLevel="1" />
+
+	<name.monwf.customiuizer.prefs.SeekBarPreference
+		android:key="pref_key_system_statusbar_mobile_digital_signal_leftmargin"
+		android:title="@string/system_statusbar_mobiletype_single_leftmargin_title"
+		android:dependency="pref_key_system_statusbar_mobile_digital_signal"
+		android:defaultValue="8"
+		miuizer:minValue="0"
+		miuizer:maxValue="16"
+		miuizer:stepValue="1"
+		miuizer:displayDividerValue="2"
+		miuizer:format="%s dip"
+		miuizer:indentLevel="1" />
+
+	<name.monwf.customiuizer.prefs.SeekBarPreference
+		android:key="pref_key_system_statusbar_mobile_digital_signal_rightmargin"
+		android:title="@string/system_statusbar_dualsimin2rows_rightmargin_title"
+		android:dependency="pref_key_system_statusbar_mobile_digital_signal"
+		android:defaultValue="8"
+		miuizer:minValue="0"
+		miuizer:maxValue="16"
+		miuizer:stepValue="1"
+		miuizer:displayDividerValue="2"
+		miuizer:format="%s dip"
+		miuizer:indentLevel="1" />
+
+	<name.monwf.customiuizer.prefs.SeekBarPreference
+		android:key="pref_key_system_statusbar_mobile_digital_signal_verticaloffset"
+		android:title="@string/system_statusbar_mobiletype_single_verticaloffset"
+		android:dependency="pref_key_system_statusbar_mobile_digital_signal"
+		android:defaultValue="8"
+		miuizer:minValue="0"
+		miuizer:maxValue="20"
+		miuizer:stepValue="1"
+		miuizer:negativeShift="8"
+		miuizer:displayDividerValue="2"
+		miuizer:format="%s dip"
+		miuizer:indentLevel="1" />
 
 	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_mobiletype_single"
-		android:title="@string/system_statusbar_mobiletype_single_title"
-		android:defaultValue="false" />
+		android:title="@string/system_statusbar_mobiletype_single_title" />
 
 	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_mobiletype_single_atleft"
 		android:title="@string/system_statusbar_mobiletype_single_atleft_title"
 		android:dependency="pref_key_system_statusbar_mobiletype_single"
-		miuizer:indentLevel="1"
-		android:defaultValue="false" />
+		miuizer:indentLevel="1" />
 
 	<name.monwf.customiuizer.prefs.EditTextPreferenceEx
 		android:key="pref_key_system_statusbar_mobile_showname"

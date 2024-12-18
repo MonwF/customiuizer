@@ -2,10 +2,11 @@ package name.monwf.customiuizer.subs;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -14,11 +15,14 @@ import android.widget.AdapterView;
 import androidx.appcompat.app.AlertDialog;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import name.monwf.customiuizer.R;
 import name.monwf.customiuizer.SubFragmentWithSearch;
+import name.monwf.customiuizer.mods.GlobalActions;
 import name.monwf.customiuizer.utils.AppData;
 import name.monwf.customiuizer.utils.AppDataAdapter;
 import name.monwf.customiuizer.utils.AppHelper;
@@ -39,8 +43,25 @@ public class AppSelector extends SubFragmentWithSearch {
 	boolean share = false;
 	boolean openwith = false;
 	boolean activity = false;
+	boolean configFetched = false;
 	String key = null;
 	Runnable process = null;
+	HashMap<Integer, ArrayList<String>> mPrivacyAppsMap = null;
+
+	BroadcastReceiver configReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (intent.getAction().equals(GlobalActions.EVENT_PREFIX + "PUSHAPPCONFIG")) {
+				String datatype = intent.getStringExtra("DATATYPE");
+				if ("privacy".equals(datatype)) {
+					configFetched = true;
+					initialized = true;
+					mPrivacyAppsMap = (HashMap<Integer, ArrayList<String>>) intent.getSerializableExtra("privacyAppsMap");
+					getActivity().runOnUiThread(process);
+				}
+			}
+		}
+	};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -66,29 +87,29 @@ public class AppSelector extends SubFragmentWithSearch {
 				if (multi && key != null) {
 					if (openwith) {
 						if (Helpers.openWithAppsList == null) return;
-						listView.setAdapter(new AppDataAdapter(context, Helpers.openWithAppsList, Helpers.AppAdapterType.Mutli, key));
+						listView.setAdapter(new AppDataAdapter(context, Helpers.openWithAppsList, AppHelper.AppAdapterType.Mutli, key));
 					} else if (share) {
 						if (Helpers.shareAppsList == null) return;
-						listView.setAdapter(new AppDataAdapter(context, Helpers.shareAppsList, Helpers.AppAdapterType.Mutli, key));
+						listView.setAdapter(new AppDataAdapter(context, Helpers.shareAppsList, AppHelper.AppAdapterType.Mutli, key));
 					} else {
-						if (Helpers.installedAppsList == null) return;
-						listView.setAdapter(new AppDataAdapter(context, Helpers.installedAppsList, Helpers.AppAdapterType.Mutli, key, bwlist));
+						if (AppHelper.installedAppsList == null) return;
+						listView.setAdapter(new AppDataAdapter(context, AppHelper.installedAppsList, AppHelper.AppAdapterType.Mutli, key, bwlist));
 					}
 				} else if (privacy) {
-					if (Helpers.installedAppsList == null) return;
-					listView.setAdapter(new PrivacyAppAdapter(context, Helpers.installedAppsList));
+					if (AppHelper.installedAppsList == null) return;
+					listView.setAdapter(new PrivacyAppAdapter(context, AppHelper.installedAppsList, mPrivacyAppsMap));
 				} else if (applock) {
-					if (Helpers.installedAppsList == null) return;
-					listView.setAdapter(new LockedAppAdapter(context, Helpers.installedAppsList));
+					if (AppHelper.installedAppsList == null) return;
+					listView.setAdapter(new LockedAppAdapter(context, AppHelper.installedAppsList));
 				} else if (customTitles) {
 					if (Helpers.launchableAppsList == null) return;
-					listView.setAdapter(new AppDataAdapter(context, Helpers.launchableAppsList, Helpers.AppAdapterType.CustomTitles, key));
+					listView.setAdapter(new AppDataAdapter(context, Helpers.launchableAppsList, AppHelper.AppAdapterType.CustomTitles, key));
 				} else if (standalone && key != null) {
 					if (Helpers.launchableAppsList == null) return;
-					listView.setAdapter(new AppDataAdapter(context, Helpers.launchableAppsList, Helpers.AppAdapterType.Standalone, key));
+					listView.setAdapter(new AppDataAdapter(context, Helpers.launchableAppsList, AppHelper.AppAdapterType.Standalone, key));
 				} else if (activity) {
-					if (Helpers.installedAppsList == null) return;
-					listView.setAdapter(new AppDataAdapter(context, Helpers.installedAppsList, Helpers.AppAdapterType.Default, key));
+					if (AppHelper.installedAppsList == null) return;
+					listView.setAdapter(new AppDataAdapter(context, AppHelper.installedAppsList, AppHelper.AppAdapterType.Default, key));
 				} else {
 					if (Helpers.launchableAppsList == null) return;
 					listView.setAdapter(new AppDataAdapter(context, Helpers.launchableAppsList));
@@ -162,22 +183,12 @@ public class AppSelector extends SubFragmentWithSearch {
 							args.putInt("user", app.user);
 							ActivitySelector activitySelect = new ActivitySelector();
 							activitySelect.setTargetFragment(AppSelector.this, getTargetRequestCode());
-							openSubFragment(activitySelect, args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, R.string.select_activity, R.layout.prefs_app_selector);
+							openSubFragment(activitySelect, args, AppHelper.SettingsType.Edit, AppHelper.ActionBarType.HomeUp, R.string.select_activity, R.layout.prefs_app_selector);
 						} else if (privacy) {
 							AppData app = (AppData)parent.getAdapter().getItem(position);
-							try {
-								@SuppressLint("WrongConstant") Object mSecurityManager = getActivity().getSystemService("security");
-								Method isPrivacyApp = mSecurityManager.getClass().getDeclaredMethod("isPrivacyApp", String.class, int.class);
-								isPrivacyApp.setAccessible(true);
-								Method setPrivacyApp = mSecurityManager.getClass().getDeclaredMethod("setPrivacyApp", String.class, int.class, boolean.class);
-								setPrivacyApp.setAccessible(true);
-								setPrivacyApp.invoke(mSecurityManager, app.pkgName, app.user, !(boolean)isPrivacyApp.invoke(mSecurityManager, app.pkgName, app.user));
-								PrivacyAppAdapter adapter = (PrivacyAppAdapter)parent.getAdapter();
-								adapter.notifyDataSetChanged();
-								getActivity().getContentResolver().notifyChange(Uri.parse("content://com.miui.securitycenter.provider/update_privacyapps_icon"), null);
-							} catch (Throwable t) {
-								t.printStackTrace();
-							}
+							AppSelector.this.toggleAppPrivacy(app);
+							PrivacyAppAdapter adapter = (PrivacyAppAdapter)parent.getAdapter();
+							adapter.notifyDataSetChanged();
 						} else if (applock) {
 							AppData app = (AppData)parent.getAdapter().getItem(position);
 							try {
@@ -229,34 +240,65 @@ public class AppSelector extends SubFragmentWithSearch {
 		if (initialized) {
 			process.run();
 		} else {
-			new Thread() {
-				@Override
-				public void run() {
-					try {
-						sleep(animDur);
-					} catch (Throwable e) {
-					}
-					if (act != null) try {
-						if (activity || privacy || applock || (multi && key != null)) {
-							if (openwith) {
-								if (Helpers.openWithAppsList == null) Helpers.getOpenWithApps(act);
-							} else if (share) {
-								if (Helpers.shareAppsList == null) Helpers.getShareApps(act);
-							} else {
-								if (Helpers.installedAppsList == null)
-									Helpers.getInstalledApps(act);
+			new Thread(() -> {
+				try {
+					Thread.sleep(animDur);
+				} catch (Throwable e) {
+				}
+				if (act != null) try {
+					if (activity || privacy || applock || (multi && key != null)) {
+						if (openwith) {
+							if (Helpers.openWithAppsList == null) {
+								Helpers.getOpenWithApps(act);
+							}
+						} else if (share) {
+							if (Helpers.shareAppsList == null) {
+								Helpers.getShareApps(act);
 							}
 						} else {
-							if (Helpers.launchableAppsList == null) Helpers.getLaunchableApps(act);
+							if (AppHelper.installedAppsList == null) {
+								Helpers.getInstalledApps(act);
+							}
 						}
-						initialized = true;
-						act.runOnUiThread(process);
-					} catch (Throwable e) {
-						e.printStackTrace();
+					} else {
+						if (Helpers.launchableAppsList == null) {
+							Helpers.getLaunchableApps(act);
+						}
 					}
+					if (privacy && !configFetched) {
+						return;
+					}
+					initialized = true;
+					act.runOnUiThread(process);
+				} catch (Throwable e) {
+					e.printStackTrace();
 				}
-			}.start();
+			}).start();
+
+			registerReceivers();
 		}
+	}
+
+	void registerReceivers() {
+		if (privacy) {
+			getValidContext().registerReceiver(configReceiver, new IntentFilter(GlobalActions.EVENT_PREFIX + "PUSHAPPCONFIG"), Context.RECEIVER_EXPORTED);
+			Intent intent = new Intent(GlobalActions.EVENT_PREFIX + "FETCHAPPCONFIG");
+			intent.putExtra("DATATYPE", "privacy");
+			intent.setPackage("com.miui.home");
+			getValidContext().sendBroadcast(intent);
+		}
+	}
+
+	void unregisterReceivers() {
+		try {
+			getValidContext().unregisterReceiver(configReceiver);
+		} catch (Throwable t) {}
+	}
+
+	@Override
+	public void onDestroy() {
+		unregisterReceivers();
+		super.onDestroy();
 	}
 
 	@Override
@@ -268,4 +310,26 @@ public class AppSelector extends SubFragmentWithSearch {
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
+	private void toggleAppPrivacy(AppData app) {
+		if (mPrivacyAppsMap == null) return;
+		int user = app.user;
+		ArrayList<String> privacyApps = mPrivacyAppsMap.get(user);
+		if (privacyApps == null) {
+			privacyApps = new ArrayList<String>();
+			mPrivacyAppsMap.put(user, privacyApps);
+		}
+		boolean privacy = !privacyApps.contains(app.pkgName);
+		if (privacyApps.contains(app.pkgName)) {
+			privacyApps.remove(app.pkgName);
+		} else {
+			privacyApps.add(app.pkgName);
+		}
+		Intent intent = new Intent(GlobalActions.EVENT_PREFIX + "FETCHAPPCONFIG");
+		intent.putExtra("DATATYPE", "privacy_change");
+		intent.putExtra("app", app.pkgName);
+		intent.putExtra("userId", app.user);
+		intent.putExtra("privacy", privacy);
+		intent.setPackage("com.miui.home");
+		getValidContext().sendBroadcast(intent);
+	}
 }

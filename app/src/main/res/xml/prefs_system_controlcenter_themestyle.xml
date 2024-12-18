@@ -1,0 +1,86 @@
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:miuizer="http://schemas.android.com/apk/res-auto"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_cc_tile_roundedrect"
+		android:title="@string/system_cc_tile_roundedrect_title"
+		android:defaultValue="false" />
+
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_cc_btandtorch_ascard"
+		android:title="@string/system_cc_btandtorch_ascard_title"
+		android:defaultValue="false" />
+
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_cc_tile_enabled_color"
+		android:title="@string/system_cc_tile_enabled_color_title" />
+
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_cc_tile_enabled_color_usemonet"
+		android:title="@string/array_dynamic"
+		android:dependency="pref_key_system_cc_tile_enabled_color"
+		android:disableDependentsState="true"
+		app:isPreferenceVisible="false"
+		miuizer:indentLevel="1" />
+
+	<name.monwf.customiuizer.prefs.ColorPreferenceEx
+		android:key="pref_key_system_cc_tile_enabled_color_custom"
+		android:title="@string/common_background_color"
+		android:dependency="pref_key_system_cc_tile_enabled_color_usemonet"
+		miuizer:indentLevel="1" />
+
+	<name.monwf.customiuizer.prefs.ColorPreferenceEx
+		android:key="pref_key_system_cc_tile_enabled_iconcolor_custom"
+		android:title="@string/common_icon_color"
+		android:dependency="pref_key_system_cc_tile_enabled_color"
+		miuizer:indentLevel="1" />
+
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_cc_card_enabled_color"
+		android:title="@string/system_cc_card_enabled_color_title" />
+
+	<name.monwf.customiuizer.prefs.ColorPreferenceEx
+		android:key="pref_key_system_cc_card_enabled_color_custom"
+		android:title="@string/common_background_color"
+		android:dependency="pref_key_system_cc_card_enabled_color"
+		miuizer:indentLevel="1" />
+
+	<name.monwf.customiuizer.prefs.ColorPreferenceEx
+		android:key="pref_key_system_cc_card_enabled_iconcolor_custom"
+		android:title="@string/common_icon_color"
+		android:dependency="pref_key_system_cc_card_enabled_color"
+		miuizer:indentLevel="1" />
+
+	<name.monwf.customiuizer.prefs.ColorPreferenceEx
+		android:key="pref_key_system_cc_card_enabled_primary_textcolor"
+		android:title="@string/system_cc_card_enabled_primary_textcolor_title"
+		android:dependency="pref_key_system_cc_card_enabled_color"
+		miuizer:indentLevel="1" />
+
+	<name.monwf.customiuizer.prefs.ColorPreferenceEx
+		android:key="pref_key_system_cc_card_enabled_secondary_textcolor"
+		android:title="@string/system_cc_card_enabled_secondary_textcolor_title"
+		android:dependency="pref_key_system_cc_card_enabled_color"
+		miuizer:indentLevel="1" />
+
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_cc_slider_color_enable"
+		android:title="@string/system_cc_slider_color_enable_title" />
+
+	<name.monwf.customiuizer.prefs.ColorPreferenceEx
+		android:key="pref_key_system_cc_slider_progress_color"
+		android:title="@string/system_cc_slider_progress_color_title"
+		android:dependency="pref_key_system_cc_slider_color_enable"
+		miuizer:indentLevel="1" />
+
+	<name.monwf.customiuizer.prefs.ColorPreferenceEx
+		android:key="pref_key_system_cc_slider_icon_color"
+		android:title="@string/common_icon_color"
+		android:dependency="pref_key_system_cc_slider_color_enable"
+		miuizer:indentLevel="1" />
+
+</PreferenceScreen>

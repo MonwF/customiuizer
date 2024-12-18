@@ -207,61 +207,58 @@
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_infinitescroll"
 			android:title="@string/launcher_infinitescroll_title"
-			android:summary="@string/launcher_infinitescroll_summ"
-			android:defaultValue="false" />
+			android:summary="@string/launcher_infinitescroll_summ" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_noclockhide"
 			android:title="@string/launcher_noclockhide_title"
-			android:summary="@string/launcher_noclockhide_summ"
-			android:defaultValue="false" />
+			android:summary="@string/launcher_noclockhide_summ" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_nowidgetonly"
 			android:title="@string/launcher_nowidgetonly_title"
-			android:summary="@string/launcher_nowidgetonly_summ"
-			android:defaultValue="false" />
+			android:summary="@string/launcher_nowidgetonly_summ" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_system_resizablewidgets"
 			android:title="@string/system_resizablewidgets_title"
-			android:summary="@string/system_resizablewidgets_summ"
-			android:defaultValue="false" />
+			android:summary="@string/system_resizablewidgets_summ" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_nounlockanim"
 			android:title="@string/launcher_nounlockanim_title"
-			android:summary="@string/launcher_nounlockanim_summ"
-			android:defaultValue="false" />
+			android:summary="@string/launcher_nounlockanim_summ" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_disable_wallpaperscale"
-			android:title="@string/system_recents_disable_wallpaperscale_title"
-			android:defaultValue="false" />
+			android:title="@string/system_recents_disable_wallpaperscale_title" />
+
+		<name.monwf.customiuizer.prefs.ListPreferenceEx
+			android:key="pref_key_launcher_wallpaper_colormode"
+			android:title="@string/launcher_wallpaper_colormode_title"
+			android:entries="@array/launcher_wallpaper_colormodes"
+			android:entryValues="@array/onoff_val"
+			android:defaultValue="1" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_nozoomanim"
 			android:title="@string/launcher_nozoomanim_title"
-			android:summary="@string/launcher_nozoomanim_summ"
-			android:defaultValue="false" />
+			android:summary="@string/launcher_nozoomanim_summ" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_oldlaunchanim"
 			android:title="@string/launcher_oldlaunchanim_title"
-			android:summary="@string/launcher_oldlaunchanim_summ"
-			android:defaultValue="false" />
+			android:summary="@string/launcher_oldlaunchanim_summ" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_sensorportrait"
 			android:title="@string/launcher_sensorportrait_title"
-			android:summary="@string/launcher_sensorportrait_summ"
-			android:defaultValue="false" />
+			android:summary="@string/launcher_sensorportrait_summ" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_hideseekpoints"
 			android:title="@string/launcher_hideseekpoints_title"
-			android:summary="@string/launcher_hideseekpoints_summ"
-			android:defaultValue="false" />
+			android:summary="@string/launcher_hideseekpoints_summ" />
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_hideseekpoints_edit"
@@ -324,8 +321,17 @@
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_unlockhotseat"
 			android:title="@string/launcher_unlockhotseat_title"
-			android:summary="@string/launcher_unlockhotseat_summ"
-			android:defaultValue="false" />
+			android:summary="@string/launcher_unlockhotseat_summ" />
+
+		<name.monwf.customiuizer.prefs.SeekBarPreference
+			android:key="pref_key_launcher_dock_height"
+			android:title="@string/launcher_dock_height_title"
+			android:defaultValue="60"
+			miuizer:minValue="60"
+			miuizer:maxValue="120"
+			miuizer:stepValue="2"
+			miuizer:format="%d dp"
+			miuizer:offtext="@string/array_default" />
 
 		<name.monwf.customiuizer.prefs.SeekBarPreference
 			android:key="pref_key_launcher_dock_topmargin"

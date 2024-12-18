@@ -162,7 +162,6 @@ public class WiFiList extends SubFragment {
 			return;
 		}
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
 		if (!isLocationServicesEnabled())
 		Toast.makeText(getActivity(), R.string.request_location, Toast.LENGTH_LONG).show();
 	}

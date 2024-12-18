@@ -29,12 +29,8 @@ public class SubFragmentWithSearch extends SubFragment {
 	TextView textInput = null;
 
 	public void setActionModeStyle(View searchView) {
-		boolean isNight = Helpers.isNightMode(getValidContext());
 		if (searchView != null) try {
 			searchView.setSaveFromParentEnabled(false);
-			ImageView inputIcon = searchView.findViewById(R.id.inputIcon);
-			inputIcon.setImageResource(getResources().getIdentifier(isNight ? "edit_text_search_dark" : "edit_text_search", "drawable", "miui"));
-			inputIcon.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_on_surface_variant, getValidContext().getTheme())));
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}

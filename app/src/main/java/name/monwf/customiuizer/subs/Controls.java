@@ -43,43 +43,11 @@ public class Controls extends SubFragment {
 				findPreference("pref_key_controls_navbarrightlong").setOnPreferenceClickListener(openNavbarActions);
 				break;
 			case "pref_key_controls_cat_fingerprint":
-				findPreference("pref_key_controls_fingerprint1").setOnPreferenceClickListener(openControlsActions);
-				findPreference("pref_key_controls_fingerprint2").setOnPreferenceClickListener(openControlsActions);
-				findPreference("pref_key_controls_fingerprintlong").setOnPreferenceClickListener(openControlsActions);
-
 				findPreference("pref_key_controls_fingerprintsuccess_ignore").setEnabled(!Objects.equals(AppHelper.getStringOfAppPrefs("pref_key_controls_fingerprintsuccess", "1"), "1"));
 				findPreference("pref_key_controls_fingerprintsuccess").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
 					@Override
 					public boolean onPreferenceChange(Preference preference, Object newValue) {
 						findPreference("pref_key_controls_fingerprintsuccess_ignore").setEnabled(!newValue.equals("1"));
-						return true;
-					}
-				});
-
-				findPreference("pref_key_controls_fingerprint_accept").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-					@Override
-					public boolean onPreferenceChange(Preference preference, Object newValue) {
-						String other = AppHelper.getStringOfAppPrefs("pref_key_controls_fingerprint_reject", "1");
-						if (newValue.equals(other)) {
-							AppHelper.appPrefs.edit().putString("pref_key_controls_fingerprint_reject", "1").apply();
-							String msg = getResources().getString(R.string.controls_fingerprint_conflict) + " " + getResources().getString(R.string.controls_fingerprint_conflict_reset_reject);
-							Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
-							getActivity().recreate();
-						}
-						return true;
-					}
-				});
-
-				findPreference("pref_key_controls_fingerprint_reject").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-					@Override
-					public boolean onPreferenceChange(Preference preference, Object newValue) {
-						String other = AppHelper.getStringOfAppPrefs("pref_key_controls_fingerprint_accept", "1");
-						if (newValue.equals(other)) {
-							AppHelper.appPrefs.edit().putString("pref_key_controls_fingerprint_accept", "1").apply();
-							String msg = getResources().getString(R.string.controls_fingerprint_conflict) + " " + getResources().getString(R.string.controls_fingerprint_conflict_reset_accept);
-							Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
-							getActivity().recreate();
-						}
 						return true;
 					}
 				});

@@ -4,14 +4,13 @@ import android.app.Activity;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.provider.Settings;
 
 import androidx.preference.Preference;
 
 import name.monwf.customiuizer.R;
 import name.monwf.customiuizer.SubFragment;
 import name.monwf.customiuizer.prefs.CheckBoxPreferenceEx;
-import name.monwf.customiuizer.utils.Helpers;
+import name.monwf.customiuizer.utils.AppHelper;
 
 public class Various extends SubFragment {
 
@@ -24,7 +23,7 @@ public class Various extends SubFragment {
 		findPreference("pref_key_various_calluibright_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				openSubFragment(new Various_CallUIBright(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.various_calluibright_title, R.xml.prefs_various_calluibright);
+				openSubFragment(new Various_CallUIBright(), null, AppHelper.SettingsType.Preference, AppHelper.ActionBarType.HomeUp, R.string.various_calluibright_title, R.xml.prefs_various_calluibright);
 				return true;
 			}
 		});
@@ -32,21 +31,7 @@ public class Various extends SubFragment {
 		findPreference("pref_key_various_hiddenfeatures_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				openSubFragment(new Various_HiddenFeatures(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.various_hiddenfeatures_title, R.xml.prefs_various_hiddenfeatures);
-				return true;
-			}
-		});
-
-		CheckBoxPreferenceEx untrustedTouchPref = findPreference("pref_key_various_allow_untrusted_touch");
-		untrustedTouchPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				if (untrustedTouchPref.isChecked()) {
-					Settings.Global.putInt(getContext().getContentResolver(), "block_untrusted_touches", 0);
-				}
-				else {
-					Settings.Global.putInt(getContext().getContentResolver(), "block_untrusted_touches", 2);
-				}
+				openSubFragment(new Various_HiddenFeatures(), null, AppHelper.SettingsType.Preference, AppHelper.ActionBarType.HomeUp, R.string.various_hiddenfeatures_title, R.xml.prefs_various_hiddenfeatures);
 				return true;
 			}
 		});

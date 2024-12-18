@@ -186,7 +186,7 @@ public class HookerClassHelper {
      * @param result The value that should be returned to callers of the hooked method.
      */
     public static MethodHook returnConstant(final Object result) {
-        return returnConstant(XposedInterface.PRIORITY_DEFAULT, result);
+        return returnConstant(XposedInterface.PRIORITY_HIGHEST, result);
     }
 
     /**

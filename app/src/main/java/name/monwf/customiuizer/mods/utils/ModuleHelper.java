@@ -1,35 +1,38 @@
 package name.monwf.customiuizer.mods.utils;
 
+import static name.monwf.customiuizer.mods.GlobalActions.ACTION_PREFIX;
+import static name.monwf.customiuizer.mods.utils.XposedHelpers.findClass;
 import static name.monwf.customiuizer.mods.utils.XposedHelpers.log;
-import static name.monwf.customiuizer.utils.Helpers.getAppName;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityOptions;
 import android.app.Application;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Process;
 import android.os.UserHandle;
 import android.provider.Settings;
-import android.text.TextUtils;
-import android.text.format.DateFormat;
+import android.util.MiuiMultiWindowUtils;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import java.io.RandomAccessFile;
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.List;
 
 import io.github.libxposed.api.XposedModuleInterface;
+import miui.app.MiuiFreeFormManager;
+import miui.process.ForegroundInfo;
+import miui.process.ProcessManager;
 import name.monwf.customiuizer.MainModule;
-import name.monwf.customiuizer.R;
-import name.monwf.customiuizer.mods.GlobalActions;
 import name.monwf.customiuizer.mods.utils.HookerClassHelper.CustomMethodUnhooker;
 import name.monwf.customiuizer.mods.utils.HookerClassHelper.MethodHook;
 import name.monwf.customiuizer.utils.Helpers;
@@ -40,10 +43,20 @@ public class ModuleHelper {
 
     public static final String prefsName = "customiuizer_prefs";
 
+    public static String currentPackageName;
+
     @SuppressLint("StaticFieldLeak")
-    public static Context mModuleContext = null;
+    private static Context mModuleContext = null;
+
+    private final static int viewInfoTag = ResourceHooks.getFakeResId("view_info_tag");
 
     static HashSet<PreferenceObserver> prefObservers = new HashSet<PreferenceObserver>();
+
+    static Class<?> ActivityThreadClass;
+
+    static {
+        ActivityThreadClass = null;
+    }
 
     public static void printCallStack() {
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
@@ -68,6 +81,22 @@ public class ModuleHelper {
         } catch (Throwable t) {
             log("Failed to hook " + methodName + " method in " + className);
             return null;
+        }
+    }
+
+    /**
+     * Calls an instance or static method of the given object silently.
+     *
+     * @param obj        The object instance. A class reference is not sufficient!
+     * @param methodName The method name.
+     * @param args       The arguments for the method call.
+     */
+    public static Object callMethodSilently(Object obj, String methodName, Object... args) {
+        try {
+            return XposedHelpers.callMethod(obj, methodName, args);
+        } catch (Throwable e) {
+            XposedHelpers.log(e);
+            return NOT_EXIST_SYMBOL;
         }
     }
 
@@ -190,12 +219,20 @@ public class ModuleHelper {
         }
     }
 
+    public static int getUserId() {
+        return (int)XposedHelpers.callStaticMethod(UserHandle.class, "getUserId", Process.myUid());
+    }
+
+
     public static Context findContext() {
         Context context = null;
         try {
-            context = (Application)XposedHelpers.callStaticMethod(XposedHelpers.findClass("android.app.ActivityThread", null), "currentApplication");
+            if (ActivityThreadClass == null) {
+                ActivityThreadClass = XposedHelpers.findClass("android.app.ActivityThread", null);
+            }
+            context = (Application)XposedHelpers.callStaticMethod(ActivityThreadClass, "currentApplication");
             if (context == null) {
-                Object currentActivityThread = XposedHelpers.callStaticMethod(XposedHelpers.findClass("android.app.ActivityThread", null), "currentActivityThread");
+                Object currentActivityThread = XposedHelpers.callStaticMethod(ActivityThreadClass, "currentActivityThread");
                 if (currentActivityThread != null) context = (Context)XposedHelpers.callMethod(currentActivityThread, "getSystemContext");
             }
         } catch (Throwable ignore) {}
@@ -218,50 +255,26 @@ public class ModuleHelper {
         if (bundle == null) {
             return null;
         }
-        String string = "Bundle{";
+        StringBuilder string = new StringBuilder("Bundle{");
         for (String key : bundle.keySet()) {
-            string = string + " " + key + " -> " + bundle.get(key) + ";";
+            string.append(" ").append(key).append(" -> ").append(bundle.get(key)).append(";");
         }
-        string += " }Bundle";
-        return string;
+        string.append(" }Bundle");
+        return string.toString();
     }
 
     public static long getNextMIUIAlarmTime(Context context) {
-        String nextAlarm = Settings.System.getString(context.getContentResolver(), "next_alarm_clock_formatted");
         long nextTime = 0;
-        if (!TextUtils.isEmpty(nextAlarm)) try {
-            TimeZone timeZone = TimeZone.getTimeZone("UTC");
-            SimpleDateFormat dateFormat = new SimpleDateFormat(DateFormat.getBestDateTimePattern(Locale.getDefault(), DateFormat.is24HourFormat(context) ? "EHm" : "Ehma"), Locale.getDefault());
-            dateFormat.setTimeZone(timeZone);
-            long nextTimePart = dateFormat.parse(nextAlarm).getTime();
-
-            Calendar cal = Calendar.getInstance(timeZone);
-            cal.setFirstDayOfWeek(Calendar.MONDAY);
-            cal.setTimeInMillis(nextTimePart);
-            int targetDay = cal.get(Calendar.DAY_OF_WEEK);
-            int targetHour = cal.get(Calendar.HOUR_OF_DAY);
-            int targetMinute = cal.get(Calendar.MINUTE);
-
-            cal = Calendar.getInstance();
-            int diff = targetDay - cal.get(Calendar.DAY_OF_WEEK);
-            if (diff < 0) diff += 7;
-
-            cal.add(Calendar.DAY_OF_MONTH, diff);
-            cal.set(Calendar.HOUR_OF_DAY, targetHour);
-            cal.set(Calendar.MINUTE, targetMinute);
-            cal.clear(Calendar.SECOND);
-            cal.clear(Calendar.MILLISECOND);
-
-            nextTime = cal.getTimeInMillis();
-        } catch (Throwable t) {
-            log(t);
-        }
+        try {
+            nextTime = Settings.Global.getLong(context.getContentResolver(), "next_alarm_clock_long");
+        } catch (Settings.SettingNotFoundException e) {}
         return nextTime;
     }
     public static void openAppInfo(Context context, String pkg, int user) {
         try {
             Intent intent = new Intent("miui.intent.action.APP_MANAGER_APPLICATION_DETAIL");
             intent.setPackage("com.miui.securitycenter");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
             intent.putExtra("package_name", pkg);
             if (user != 0) intent.putExtra("miui.intent.extra.USER_ID", user);
             context.startActivity(intent);
@@ -300,66 +313,115 @@ public class ModuleHelper {
 
     public static synchronized Context getModuleContext(Context context, Configuration config) throws Throwable {
         if (mModuleContext == null) {
-            mModuleContext = context.createPackageContext(Helpers.modulePkg, Context.CONTEXT_IGNORE_SECURITY).createDeviceProtectedStorageContext();
+            mModuleContext = context.createPackageContext(Helpers.modulePkg, Context.CONTEXT_IGNORE_SECURITY);
         }
         return config == null ? mModuleContext : mModuleContext.createConfigurationContext(config);
     }
 
     public static synchronized Resources getModuleRes(Context context) throws Throwable {
         Configuration config = context.getResources().getConfiguration();
-        Context moduleContext = getModuleContext(context);
-        return (config == null ? moduleContext.getResources() : moduleContext.createConfigurationContext(config).getResources());
+        Context moduleContext = getModuleContext(context, config);
+        return moduleContext.getResources();
     }
 
-    public static Drawable getActionImage(Context context, String key) {
-        try {
-            int action = MainModule.mPrefs.getInt(key + "_action", 1);
-            Context modCtx = getModuleContext(context);
-            if (action == 8)
-                return Helpers.getAppIcon(modCtx, MainModule.mPrefs.getString(key + "_app", ""));
-            else if (action == 20)
-                return Helpers.getAppIcon(modCtx, MainModule.mPrefs.getString(key + "_activity", ""), true);
-            else
-                return null;
-        } catch (Throwable t) {
-            return null;
-        }
+    public static Object getDepInstance(ClassLoader classLoader, String className) {
+        Class<?> DependencyClass = findClass("com.android.systemui.Dependency", classLoader);
+        return XposedHelpers.callStaticMethod(DependencyClass, "get", findClass(className, classLoader));
     }
-    public static String getActionName(Context context, String key) {
-        try {
-            int action = MainModule.mPrefs.getInt(key + "_action", 1);
-            Resources modRes = getModuleRes(context);
-            int resId = GlobalActions.getActionResId(action);
-            if (resId != 0)
-                return modRes.getString(resId);
-            else if (action == 8)
-                return (String)getAppName(getModuleContext(context), MainModule.mPrefs.getString(key + "_app", ""), true);
-            else if (action == 9)
-                return MainModule.mPrefs.getString(key + "_shortcut_name", "");
-            else if (action == 10) {
-                int what = MainModule.mPrefs.getInt(key + "_toggle", 0);
-                switch (what) {
-                    case 1: return modRes.getString(R.string.array_global_toggle_wifi);
-                    case 2: return modRes.getString(R.string.array_global_toggle_bt);
-                    case 3: return modRes.getString(R.string.array_global_toggle_gps);
-                    case 4: return modRes.getString(R.string.array_global_toggle_nfc);
-                    case 5: return modRes.getString(R.string.array_global_toggle_sound);
-                    case 6: return modRes.getString(R.string.array_global_toggle_brightness);
-                    case 7: return modRes.getString(R.string.array_global_toggle_rotation);
-                    case 8: return modRes.getString(R.string.array_global_toggle_torch);
-                    case 9: return modRes.getString(R.string.array_global_toggle_mobiledata);
-                    default: return null;
-                }
-            } else if (action == 20) {
-                Context ctx = getModuleContext(context);
-                String pref = MainModule.mPrefs.getString(key + "_activity", "");
-                String name = (String)getAppName(ctx, pref);
-                if (name == null || name.isEmpty()) name = (String)getAppName(ctx, pref, true);
-                return name;
-            } else
-                return null;
-        } catch (Throwable t) {
+
+    public static Object getViewInfo(View view, String key) {
+        Object info = view.getTag(viewInfoTag);
+        if (info == null) {
             return null;
         }
+        HashMap<String, Object> viewInfo;
+        viewInfo = (HashMap<String, Object>) info;
+        return viewInfo.get(key);
+    }
+    public static void setViewInfo(View view, String key, Object value) {
+        Object info = view.getTag(viewInfoTag);
+        HashMap<String, Object> viewInfo;
+        if (info == null) {
+            viewInfo = new HashMap<String, Object>();
+            view.setTag(viewInfoTag, viewInfo);
+        }
+        else {
+            viewInfo = (HashMap<String, Object>) info;
+        }
+        viewInfo.put(key, value);
+    }
+    public static Bundle getFreeformOptions(Context mContext, String pkgName, PendingIntent pendingIntent, boolean ignoreCheck) throws PendingIntent.CanceledException {
+        if (!ignoreCheck) {
+            ForegroundInfo foregroundInfo = ProcessManager.getForegroundInfo();
+            if (foregroundInfo != null) {
+                String topPackage = foregroundInfo.mForegroundPackageName;
+                if (pkgName.equals(topPackage)) {
+                    return null;
+                }
+            }
+            List<MiuiFreeFormManager.MiuiFreeFormStackInfo> freeFormStackInfoList = MiuiFreeFormManager.getAllFreeFormStackInfosOnDisplay(mContext.getDisplay() != null ? mContext.getDisplay().getDisplayId() : 0);
+            int freeFormCount = 0;
+            if (freeFormStackInfoList != null) {
+                freeFormCount = freeFormStackInfoList.size();
+            }
+            if (freeFormCount == 2) return null;
+            for (MiuiFreeFormManager.MiuiFreeFormStackInfo rootTaskInfo : freeFormStackInfoList) {
+                if (pkgName.equals(rootTaskInfo.packageName)) return null;
+            }
+        }
+        if (!pendingIntent.isActivity()) {
+            Intent bIntent = new Intent(ACTION_PREFIX + "SetFreeFormPackage");
+            bIntent.putExtra("package", pkgName);
+            bIntent.setPackage("android");
+            mContext.sendBroadcast(bIntent);
+        }
+        ActivityOptions options = MiuiMultiWindowUtils.getActivityOptions(mContext, pkgName, true, false);
+        if (options != null) {
+            XposedHelpers.callMethod(options, "setFreeformAnimation", false);
+        }
+        return options != null ? options.toBundle() : null;
+    }
+    public static Intent getFreeformIntent(String pkgName) {
+        Intent intent = new Intent();
+        if (!"com.tencent.tim".equals(pkgName)) {
+            XposedHelpers.callMethod(intent, "addFlags", 134217728);
+            XposedHelpers.callMethod(intent, "addFlags", 268435456);
+            XposedHelpers.callMethod(intent, "addMiuiFlags", 256);
+        }
+        return intent;
+    }
+    private static int thermalId = -1;
+    public static int getCPUThermalId() {
+        if (thermalId != -1) return thermalId;
+        for (var i = 2;i < 40;i = i + 2) {
+            try {
+                RandomAccessFile cpuReader = new RandomAccessFile("/sys/devices/virtual/thermal/thermal_zone" + i + "/type", "r");
+                String sensorType = cpuReader.readLine();
+                cpuReader.close();
+                if (sensorType.startsWith("cpu-") || sensorType.startsWith("cpu_big")) {
+                    thermalId = i;
+                    break;
+                }
+            } catch (Throwable ign) {}
+        }
+        return thermalId;
+    }
+
+    public static void replacePkgAndFrameworkValue(String pkg, String type, String name, Object resValue) {
+        if (!"android".equals(pkg)) {
+            MainModule.resHooks.setThemeValueReplacement("android", type, name, resValue);
+        }
+        MainModule.resHooks.setThemeValueReplacement(pkg, type, name, resValue);
+    }
+    public static Object getObjectFieldByPath(Object target, String path) {
+        if (target == null) return null;
+        String[] pathes = path.split("\\.");
+        for (String field:pathes) {
+            target = getObjectFieldSilently(target, field);
+            if (NOT_EXIST_SYMBOL.equals(target)) {
+                return NOT_EXIST_SYMBOL;
+            }
+        }
+        return target;
     }
 }

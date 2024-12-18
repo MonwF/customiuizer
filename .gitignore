@@ -16,3 +16,4 @@ app/standalone/*
 /.idea/misc.xml
 app/develop/
 .idea/.name
+.idea/copilot/

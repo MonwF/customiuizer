@@ -9,18 +9,6 @@
 		android:summary="@string/various_hiddenfeatures_summ" />
 
 	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_various_miuiinstaller"
-		android:title="@string/various_miuiinstaller_title"
-		android:summary="@string/various_miuiinstaller_summ"
-		android:defaultValue="false" />
-
-	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_various_installappinfo"
-		android:title="@string/various_installappinfo_title"
-		android:summary="@string/various_installappinfo_summ"
-		android:defaultValue="false" />
-
-	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_various_disable_access_devicelogs"
 		android:title="@string/various_disable_access_devicelogs_title"
 		android:defaultValue="false" />
@@ -35,14 +23,10 @@
 		android:title="@string/various_persist_batteryoptimization_settings_title"
 		android:defaultValue="false" />
 
-	<name.monwf.customiuizer.prefs.ListPreferenceEx
-		android:key="pref_key_various_clipboard_defaultaction"
-		android:title="@string/various_clipboard_defaultaction_title"
-		android:entries="@array/defaultactions"
-		android:entryValues="@array/defaultactions_val"
-		android:defaultValue="1"
-		android:summary=""
-		miuizer:valueAsSummary="true" />
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_various_disable_defraud_apps_detect"
+		android:title="@string/various_disable_defraud_apps_detect_title"
+		android:defaultValue="false" />
 
 	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_various_alarmcompat"
@@ -58,6 +42,25 @@
 		miuizer:countAsSummary="true" />
 
 	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
+		android:title="@string/various_package_installer_cat_title"/>
+
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_various_miuiinstaller"
+		android:title="@string/various_miuiinstaller_summ"
+		android:defaultValue="false" />
+
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_various_installappinfo"
+		android:title="@string/various_installappinfo_title"
+		android:summary="@string/various_installappinfo_summ"
+		android:defaultValue="false" />
+
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_various_installer_purify"
+		android:title="@string/various_installer_purify_title"
+		android:defaultValue="false" />
+
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/various_securitycenter_unlock_title"/>
 
 	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
@@ -67,7 +70,7 @@
 
 	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_various_replace_defaultopen_with_openbydefault"
-		android:title="@string/various_replace_defaultopen_with_openbydefault_title"
+		android:title="@string/various_open_by_default_title"
 		android:defaultValue="false" />
 
 	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
@@ -81,11 +84,6 @@
 		android:defaultValue="false" />
 
 	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_various_enable_sc_ai_clipboard_location"
-		android:title="@string/various_enable_sc_ai_clipboard_blur_location_title"
-		android:defaultValue="false" />
-
-	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_various_disable_freeform_suggest_blacklist"
 		android:title="@string/various_disable_freeform_suggest_blacklist_title"
 		android:defaultValue="false" />
@@ -94,6 +92,10 @@
 		android:key="pref_key_various_disable_dock_suggest"
 		android:title="@string/various_disable_dock_suggest_title"
 		android:defaultValue="false" />
+
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_various_disable_reset_recents_privacy_blur"
+		android:title="@string/various_disable_reset_recents_privacy_blur_title" />
 
 	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_various_enable_expand_sidebar"
@@ -140,6 +142,11 @@
 		android:key="pref_key_various_disableapp"
 		android:summary="@string/various_disableapp_summ"
 		android:title="@string/various_disableapp_title"
+		android:defaultValue="false" />
+
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_various_hide_report_ondetails"
+		android:title="@string/various_hide_report_ondetails_title"
 		android:defaultValue="false" />
 
 	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx

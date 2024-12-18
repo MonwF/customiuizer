@@ -43,13 +43,6 @@
 			android:summary="@string/miuizer_show_launchericon_summ"
 			android:title="@string/miuizer_show_launchericon_title"
 			android:defaultValue="true" />
-		<name.monwf.customiuizer.prefs.ListPreferenceEx
-			android:key="pref_key_miuizer_locale"
-			android:title="@string/miuizer_locale_title"
-			android:summary="@string/miuizer_locale_summ"
-			android:entries="@array/placeholder_array"
-			android:entryValues="@array/placeholder_array_strval"
-			android:defaultValue="auto" />
 	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
 	<name.monwf.customiuizer.prefs.PreferenceCategoryEx

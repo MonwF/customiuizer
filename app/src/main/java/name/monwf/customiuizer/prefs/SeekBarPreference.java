@@ -23,7 +23,6 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 	private boolean newmod = false;
     private boolean highlight = false;
 	private boolean unsupported = false;
-	private final int childpadding = getContext().getResources().getDimensionPixelSize(R.dimen.preference_item_child_padding);
 
 	private int mDefaultValue;
 	private int mMinValue;
@@ -114,6 +113,7 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 			Helpers.applySearchItemHighlight(finalView);
 		}
 
+		int childpadding = getContext().getResources().getDimensionPixelSize(R.dimen.preference_item_child_padding);
 		int hrzPadding = (indentLevel + 1) * childpadding;
 		finalView.setPadding(hrzPadding, 0, childpadding, 0);
 	}

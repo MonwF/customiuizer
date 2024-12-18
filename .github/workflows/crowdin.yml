@@ -1,0 +1,36 @@
+name: Crowdin Action
+
+on:
+  workflow_dispatch
+  
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  synchronize-with-crowdin:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: crowdin action
+        uses: crowdin/github-action@v1
+        with:
+          upload_sources: true
+          upload_sources_args: '--preserve-hierarchy -s app/src/main/res/values/strings.xml -t app/src/main/res/values-%android_code%/%original_file_name%' 
+          upload_translations: false
+          download_translations: true
+          skip_untranslated_strings: true
+          localization_branch_name: l10n_crowdin
+          create_pull_request: true
+          pull_request_title: 'New Crowdin Translations'
+          pull_request_body: 'New Crowdin translations by [Crowdin GH Action](https://github.com/crowdin/github-action)'
+          pull_request_base_branch_name: 'feat-a14'
+          project_id: ${{ secrets.CROWDIN_PROJECT_ID }}
+          token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}

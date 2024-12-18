@@ -29,9 +29,4 @@
 	<color name="light_mode_icon_transparent_color_single_tone">#5cffffff</color>
 	<color name="dark_mode_icon_color_single_tone">#bf000000</color>
 	<color name="dark_mode_icon_transparent_color_single_tone">#4c000000</color>
-
-	<color name="qs_unavailable_color">#26ffffff</color>
-    <color name="qs_disabled_color">#26ffffff</color>
-	<color name="qs_enabled_color">#ff3d84ff</color>
-	<color name="qs_warning_color">#ffffa133</color>
 </resources>

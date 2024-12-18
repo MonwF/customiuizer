@@ -2,14 +2,18 @@
 
 buildscript {
     repositories {
-        maven { url 'https://maven.aliyun.com/repository/public/' }
+        maven { url 'https://mirrors.huaweicloud.com/repository/maven/' }
         maven { url 'https://maven.aliyun.com/repository/google/' }
         mavenCentral()
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.2.0'
+        classpath 'com.android.tools.build:gradle:8.7.2'
     }
+}
+
+plugins {
+    id "com.github.ben-manes.versions" version "0.51.0"
 }
 
 allprojects {
@@ -19,7 +23,7 @@ allprojects {
                 includeGroup("io.github.libxposed")
             }
         }
-        maven { url 'https://maven.aliyun.com/repository/public/' }
+        maven { url 'https://mirrors.huaweicloud.com/repository/maven/' }
         maven { url "https://jitpack.io" }
         maven { url 'https://maven.aliyun.com/repository/google/' }
         mavenCentral()
@@ -28,5 +32,5 @@ allprojects {
 }
 
 tasks.register('clean', Delete) {
-    delete rootProject.buildDir
+    delete rootProject.getLayout().buildDirectory
 }

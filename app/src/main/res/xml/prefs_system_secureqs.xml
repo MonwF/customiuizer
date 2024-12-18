@@ -65,12 +65,6 @@
 		android:defaultValue="true"/>
 
 	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_secureqs_edit"
-		android:title="@string/system_secureqs_edit_title"
-		android:summary="@string/system_secureqs_edit_summ"
-		android:defaultValue="true" />
-
-	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_secureqs_custom"
 		android:title="@string/system_secureqs_custom_title"
 		android:defaultValue="true"/>

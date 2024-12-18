@@ -6,6 +6,10 @@
 	android:layout_height="match_parent">
 
 	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+		android:key="pref_key_system_statusbar_enable_weather_param"
+		android:title="@string/system_statusbar_enable_weather_param_title" />
+
+	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 		android:key="pref_key_system_statusbar_clocktweak"
 		android:title="@string/enable_mod"
 		android:defaultValue="false" />
@@ -56,13 +60,13 @@
 		android:dependency="pref_key_system_statusbar_clock_chip"
 		miuizer:indentLevel="1" />
 
-	<name.monwf.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.ColorPreferenceEx
 		android:key="pref_key_system_statusbar_clock_chip_startcolor"
 		android:title="@string/system_statusbar_clock_chip_startcolor_title"
 		android:dependency="pref_key_system_statusbar_clock_chip"
 		miuizer:indentLevel="1" />
 
-	<name.monwf.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.ColorPreferenceEx
 		android:key="pref_key_system_statusbar_clock_chip_endcolor"
 		android:title="@string/system_statusbar_clock_chip_endcolor_title"
 		android:dependency="pref_key_system_statusbar_clock_chip"
@@ -74,7 +78,7 @@
 		android:dependency="pref_key_system_statusbar_clock_chip_usemonet"
 		miuizer:indentLevel="1" />
 
-	<name.monwf.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.ColorPreferenceEx
 		android:key="pref_key_system_statusbar_clock_chip_textcolor"
 		android:title="@string/array_static"
 		android:dependency="pref_key_system_statusbar_clock_chip_customtextcolor"
@@ -182,11 +186,14 @@
 		android:title="@string/system_clock_customformat_enable_title"
 		/>
 
-	<name.monwf.customiuizer.prefs.PreferenceEx
+	<name.monwf.customiuizer.prefs.EditTextPreferenceEx
 		android:key="pref_key_system_statusbar_clock_customformat"
 		android:title="@string/system_clock_customformat_setting_title"
+		android:dialogMessage="@string/system_clock_customformat_help_summ"
+		android:dependency="pref_key_system_statusbar_clock_customformat_enable"
+		app:useSimpleSummaryProvider="true"
 		miuizer:indentLevel="1"
-		miuizer:customSummary="true" />
+		android:defaultValue="" />
 
 	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 

@@ -28,6 +28,7 @@ import androidx.annotation.Nullable;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.MemberUtilsX;
+import org.luckypray.dexkit.DexKitBridge;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -63,6 +64,7 @@ import name.monwf.customiuizer.mods.utils.HookerClassHelper.MethodHook;
  */
 public final class XposedHelpers {
     public static XposedInterface moduleInst;
+    public static DexKitBridge bridge;
     private static final String TAG = "LSPosed-Bridge";
     private XposedHelpers() {
     }
@@ -190,21 +192,21 @@ public final class XposedHelpers {
     }
 
     public static void log(String line) {
-        Log.i(TAG, "[CustoMIUIzer] " + line);
+        Log.i(TAG, "[Pengeek] " + line);
     }
 
     public static void log(Throwable t) {
         String logStr = Log.getStackTraceString(t);
-        Log.e(TAG, "[CustoMIUIzer] " + logStr);
+        Log.e(TAG, "[Pengeek] " + logStr);
     }
 
     public static void log(String mod, String line) {
-        Log.i(TAG, "[CustoMIUIzer][" + mod + "] " + line);
+        Log.i(TAG, "[Pengeek][" + mod + "] " + line);
     }
 
     public static void log(String mod, Throwable t) {
         String logStr = Log.getStackTraceString(t);
-        Log.e(TAG, "[CustoMIUIzer][" + mod + "] " + logStr);
+        Log.e(TAG, "[Pengeek][" + mod + "] " + logStr);
     }
 
     /**
@@ -1856,6 +1858,15 @@ public final class XposedHelpers {
             }
             return counter;
         }
+    }
+
+    public static void createBridge(String apkPath) {
+        bridge = DexKitBridge.create(apkPath);
+    }
+
+    public static void closeBridge() {
+        bridge.close();
+        bridge = null;
     }
 
 }

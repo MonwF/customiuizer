@@ -17,8 +17,6 @@ public class PreferenceCategoryEx extends PreferenceCategory {
 	private final boolean dynamic;
 	private int state; // 0-正常 1-纯区块 2-顶层隐藏
 	private boolean unsupported = false;
-	private final Resources res = getContext().getResources();
-	private final int childpadding = res.getDimensionPixelSize(R.dimen.preference_item_child_padding);
 
 	public PreferenceCategoryEx(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -42,6 +40,7 @@ public class PreferenceCategoryEx extends PreferenceCategory {
 		title.setText(getTitle() + (unsupported ? " ⨯" : (dynamic ? " ⟲" : "")));
 		title.setVisibility((state == 2 || state == 1) ? View.GONE : View.VISIBLE);
 		View finalView = view.itemView;
+		int childpadding = getContext().getResources().getDimensionPixelSize(R.dimen.preference_item_child_padding);
 		if (state == 2) {
 			finalView.setPadding(childpadding, 0, childpadding, 0);
 		}

@@ -5,8 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -109,63 +107,63 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent actionIntent;
-        switch (item.getItemId()) {
-            case R.id.edit_confirm:
-                confirmEdit();
+        int itemId = item.getItemId();
+        if (itemId == R.id.edit_confirm) {
+            confirmEdit();
+            return true;
+        } else if (itemId == R.id.restartlauncher) {
+            if (!AppHelper.moduleActive) {
+                showXposedDialog((AppCompatActivity) getActivity());
                 return true;
-            case R.id.restartlauncher:
-                if (!AppHelper.moduleActive) {
-                    showXposedDialog((AppCompatActivity) getActivity());
-                    return true;
+            }
+            actionIntent = new Intent(GlobalActions.ACTION_PREFIX + "RestartLauncher");
+            actionIntent.setPackage("com.android.systemui");
+            getValidContext().sendBroadcast(actionIntent);
+            return true;
+        } else if (itemId == R.id.restartsystemui) {
+            if (!AppHelper.moduleActive) {
+                showXposedDialog((AppCompatActivity) getActivity());
+                return true;
+            }
+            actionIntent = new Intent(GlobalActions.ACTION_PREFIX + "RestartSystemUI");
+            actionIntent.setPackage("com.android.systemui");
+            getValidContext().sendBroadcast(actionIntent);
+            return true;
+        } else if (itemId == R.id.restartsecuritycenter) {
+            actionIntent = new Intent(GlobalActions.ACTION_PREFIX + "RestartSecurityCenter");
+            actionIntent.setPackage("com.android.systemui");
+            getValidContext().sendBroadcast(actionIntent);
+            return true;
+        } else if (itemId == R.id.backuprestore) {
+            showBackupRestoreDialog();
+            return true;
+        } else if (itemId == R.id.openinweb) {
+            Helpers.openURL(getValidContext(), pageUrl);
+            return true;
+        } else if (itemId == R.id.softreboot) {
+            if (!AppHelper.moduleActive) {
+                showXposedDialog((AppCompatActivity) getActivity());
+                return true;
+            }
+            AlertDialog.Builder alert = new AlertDialog.Builder(getValidContext());
+            alert.setTitle(R.string.soft_reboot);
+            alert.setMessage(R.string.soft_reboot_ask);
+            alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    Intent intent = new Intent(GlobalActions.ACTION_PREFIX + "FastReboot");
+                    intent.setPackage("com.android.systemui");
+                    getValidContext().sendBroadcast(intent);
                 }
-                actionIntent = new Intent(GlobalActions.ACTION_PREFIX + "RestartLauncher");
-                actionIntent.setPackage("com.android.systemui");
-                getValidContext().sendBroadcast(actionIntent);
-                return true;
-            case R.id.restartsystemui:
-                if (!AppHelper.moduleActive) {
-                    showXposedDialog((AppCompatActivity) getActivity());
-                    return true;
+            });
+            alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
                 }
-                actionIntent = new Intent(GlobalActions.ACTION_PREFIX + "RestartSystemUI");
-                actionIntent.setPackage("com.android.systemui");
-                getValidContext().sendBroadcast(actionIntent);
-                return true;
-            case R.id.restartsecuritycenter:
-                actionIntent = new Intent(GlobalActions.ACTION_PREFIX + "RestartSecurityCenter");
-                actionIntent.setPackage("com.android.systemui");
-                getValidContext().sendBroadcast(actionIntent);
-                return true;
-            case R.id.backuprestore:
-                showBackupRestoreDialog();
-                return true;
-            case R.id.openinweb:
-                Helpers.openURL(getValidContext(), pageUrl);
-                return true;
-            case R.id.softreboot:
-                if (!AppHelper.moduleActive) {
-                    showXposedDialog((AppCompatActivity) getActivity());
-                    return true;
-                }
-
-                AlertDialog.Builder alert = new AlertDialog.Builder(getValidContext());
-                alert.setTitle(R.string.soft_reboot);
-                alert.setMessage(R.string.soft_reboot_ask);
-                alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        Intent intent = new Intent(GlobalActions.ACTION_PREFIX + "FastReboot");
-                        intent.setPackage("com.android.systemui");
-                        getValidContext().sendBroadcast(intent);
-                    }
-                });
-                alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {}
-                });
-                alert.show();
-                return true;
-            case R.id.about:
-                openSubFragment(new AboutFragment(), null, Helpers.SettingsType.Preference, Helpers.ActionBarType.HomeUp, R.string.app_about, R.xml.prefs_about);
-                return true;
+            });
+            alert.show();
+            return true;
+        } else if (itemId == R.id.about) {
+            openSubFragment(new AboutFragment(), null, AppHelper.SettingsType.Preference, AppHelper.ActionBarType.HomeUp, R.string.app_about, R.xml.prefs_about);
+            return true;
         }
         return false;
     }
@@ -249,14 +247,14 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
     public void openWebPage(String url) {
         Bundle args = new Bundle();
         args.putString("pageUrl", url);
-        openSubFragment(new WebPage(), args, Helpers.SettingsType.Edit, Helpers.ActionBarType.HomeUp, "", R.layout.fragment_webpage);
+        openSubFragment(new WebPage(), args, AppHelper.SettingsType.Edit, AppHelper.ActionBarType.HomeUp, "", R.layout.fragment_webpage);
     }
 
-    public void openSubFragment(Fragment fragment, Bundle args, Helpers.SettingsType settingsType, Helpers.ActionBarType abType, int titleResId, int contentResId) {
+    public void openSubFragment(Fragment fragment, Bundle args, AppHelper.SettingsType settingsType, AppHelper.ActionBarType abType, int titleResId, int contentResId) {
         openSubFragment(fragment, args, settingsType, abType, getResources().getString(titleResId), contentResId);
     }
 
-    public void openSubFragment(Fragment fragment, Bundle args, Helpers.SettingsType settingsType, Helpers.ActionBarType abType, String title, int contentResId) {
+    public void openSubFragment(Fragment fragment, Bundle args, AppHelper.SettingsType settingsType, AppHelper.ActionBarType abType, String title, int contentResId) {
         if (args == null) args = new Bundle();
         args.putInt("settingsType", settingsType.ordinal());
         args.putInt("abType", abType.ordinal());
@@ -363,7 +361,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
         Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("application/octet-stream");
-        intent.putExtra(Intent.EXTRA_TITLE, "customiuizer_backup_" + new SimpleDateFormat("MMddHHmmss").format(new java.util.Date()));
+        intent.putExtra(Intent.EXTRA_TITLE, "pengeek_backup_" + new SimpleDateFormat("MMddHHmmss").format(new java.util.Date()));
         startActivityForResult(intent, SAVE_BACKFILE);
     }
 

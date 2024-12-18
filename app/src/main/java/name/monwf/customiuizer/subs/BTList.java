@@ -141,7 +141,7 @@ public class BTList extends SubFragment {
 	void fetchCachedDevices() {
 		Intent intent = new Intent(GlobalActions.ACTION_PREFIX + "FetchCachedDevices");
 		intent.setPackage("com.android.systemui");
-		getActivity().sendBroadcast(intent);
+		getValidContext().sendBroadcast(intent);
 	}
 
 	void updateProgressBar() {
@@ -150,14 +150,14 @@ public class BTList extends SubFragment {
 
 	void registerReceivers() {
 		unregisterReceivers();
-		getActivity().registerReceiver(devicesReceiver, new IntentFilter(GlobalActions.EVENT_PREFIX + "CACHEDDEVICESUPDATE"));
+		getValidContext().registerReceiver(devicesReceiver, new IntentFilter(GlobalActions.EVENT_PREFIX + "CACHEDDEVICESUPDATE"), Context.RECEIVER_EXPORTED);
 		handler.postDelayed(getCachedDevices, 1000);
 	}
 
 	void unregisterReceivers() {
 		try {
 			handler.removeCallbacks(getCachedDevices);
-			getActivity().unregisterReceiver(devicesReceiver);
+			getValidContext().unregisterReceiver(devicesReceiver);
 		} catch (Throwable t) {}
 	}
 
@@ -234,8 +234,9 @@ public class BTList extends SubFragment {
 				boolean isBonded = false;
 				@SuppressLint("MissingPermission")
 				Set<BluetoothDevice> bonded = BluetoothAdapter.getDefaultAdapter().getBondedDevices();
-				for (BluetoothDevice device: bonded)
-				if (device.getAddress().equals(sr.first)) isBonded = true;
+				for (BluetoothDevice device: bonded) {
+					if (device.getAddress().equals(sr.first)) isBonded = true;
+				}
 
 				if (isBonded)
 					itemTitle.setTextColor(getResources().getColor(R.color.highlight_normal_light, getActivity().getTheme()));
