@@ -1,0 +1,1 @@
+<p><i>CustoMIUIzer</i> contains a variety of Xposed mods that extend functionality of MIUI devices.</p><br><p><b>List of mods</b></p><p>A list is available <a href='https://github.com/MonwF/customiuizer#here-are-the-main-working-features' target='_blank' rel='nofollow noopener'>here</a>.</p>
