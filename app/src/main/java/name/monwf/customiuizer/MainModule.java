@@ -638,6 +638,7 @@ public class MainModule extends XposedModule {
         if (mPrefs.getBoolean("launcher_renameapps")) Launcher.RenameShortcutsHook(lpparam);
         if (mPrefs.getBoolean("launcher_darkershadow")) Launcher.TitleShadowHook(lpparam);
         if (mPrefs.getBoolean("controls_nonavbar")) Launcher.HideNavBarHook(lpparam);
+        if (mPrefs.getBoolean("launcher_disableprestart")) Launcher.DisablePrestartHook(lpparam);
         if (mPrefs.getBoolean("launcher_infinitescroll")) Launcher.InfiniteScrollHook(lpparam);
         if (mPrefs.getBoolean("launcher_hidetitles")) Launcher.HideTitlesHook(lpparam);
         if (mPrefs.getBoolean("launcher_fixlaunch")) Launcher.FixAppInfoLaunchHook(lpparam);
