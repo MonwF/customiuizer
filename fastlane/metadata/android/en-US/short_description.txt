@@ -1,0 +1,1 @@
+Xposed module that provides additional functionality for your HyperOS device.
