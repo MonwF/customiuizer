@@ -27,6 +27,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import io.github.libxposed.api.XposedModuleInterface;
 import miui.app.MiuiFreeFormManager;
@@ -53,6 +54,9 @@ public class ModuleHelper {
     static HashSet<PreferenceObserver> prefObservers = new HashSet<PreferenceObserver>();
 
     static Class<?> ActivityThreadClass;
+
+    static Class<?> StateFlowKtClass = null;
+    static Class<?> ReadonlyStateFlowClass = null;
 
     static {
         ActivityThreadClass = null;
@@ -326,7 +330,8 @@ public class ModuleHelper {
 
     public static Object getDepInstance(ClassLoader classLoader, String className) {
         Class<?> DependencyClass = findClass("com.android.systemui.Dependency", classLoader);
-        return XposedHelpers.callStaticMethod(DependencyClass, "get", findClass(className, classLoader));
+        Object sDependency = XposedHelpers.getStaticObjectField(DependencyClass, "sDependency");
+        return XposedHelpers.callMethod(sDependency, "getDependencyInner", findClass(className, classLoader));
     }
 
     public static Object getViewInfo(View view, String key) {
@@ -379,7 +384,14 @@ public class ModuleHelper {
         if (options != null) {
             XposedHelpers.callMethod(options, "setFreeformAnimation", false);
         }
-        return options != null ? options.toBundle() : null;
+        if (!"com.tencent.mobileqq".equals(pkgName) && options != null) {
+            XposedHelpers.callMethod(options, "setPendingIntentLaunchFlags", 402653440);
+        }
+        Bundle bundle = options != null ? options.toBundle() : null;
+        if (bundle != null) {
+            bundle.putInt("android.pendingIntent.backgroundActivityAllowed", 1);
+        }
+        return bundle;
     }
     public static Intent getFreeformIntent(String pkgName) {
         Intent intent = new Intent();
@@ -423,5 +435,44 @@ public class ModuleHelper {
             }
         }
         return target;
+    }
+
+    static Object sysUIProvider = null;
+    public static Object getFlashlightController(ClassLoader classLoader, String controller) {
+        if (sysUIProvider == null) {
+            Class<?> InterfacesImplManager = findClass("com.miui.systemui.interfacesmanager.InterfacesImplManager", classLoader);
+            Class<?> CommonStub$registerCentralSurfacesClass = findClass("miui.stub.CommonStub$registerCentralSurfaces$1", classLoader);
+            Map sClassContainer = (Map)XposedHelpers.getStaticObjectField(InterfacesImplManager, "sClassContainer");
+            sysUIProvider = XposedHelpers.getObjectField(sClassContainer.get(CommonStub$registerCentralSurfacesClass), "$sysUIProvider");
+        }
+        Object LazyController = XposedHelpers.getObjectField(sysUIProvider, controller);
+        return XposedHelpers.callMethod(LazyController, "get");
+    }
+    public static Method findFirstMethodByName(Class<?> clazz, String methodName) {
+        for (Method method : clazz.getDeclaredMethods()) {
+            if (method.getName().contains(methodName)) {
+                method.setAccessible(true);
+                return method;
+            }
+        }
+        return null;
+    }
+    public static Object getMutableFlowOfReadonlyFlow(Object flow) {
+        return XposedHelpers.getObjectField(flow, "$$delegate_0");
+    }
+    public static Object createReadonlyFlowWithInitValue(Object initVal, ClassLoader classLoader) {
+        if (StateFlowKtClass == null) {
+            StateFlowKtClass = findClass("kotlinx.coroutines.flow.StateFlowKt", classLoader);
+            ReadonlyStateFlowClass = findClass("kotlinx.coroutines.flow.ReadonlyStateFlow", classLoader);
+        }
+        Object stateFlow = XposedHelpers.callStaticMethod(StateFlowKtClass, "MutableStateFlow", initVal);
+        return XposedHelpers.newInstance(ReadonlyStateFlowClass, stateFlow);
+    }
+    public static Object createReadonlyFlowFromMutableFlow(Object stateFlow, ClassLoader classLoader) {
+        if (StateFlowKtClass == null) {
+            StateFlowKtClass = findClass("kotlinx.coroutines.flow.StateFlowKt", classLoader);
+            ReadonlyStateFlowClass = findClass("kotlinx.coroutines.flow.ReadonlyStateFlow", classLoader);
+        }
+        return XposedHelpers.newInstance(ReadonlyStateFlowClass, stateFlow);
     }
 }

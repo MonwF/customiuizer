@@ -47,11 +47,6 @@
 		android:title="@string/system_statusbaricons_headset_title"
 		android:defaultValue="false" />
 
-	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_statusbar_vpn_atright"
-		android:title="@string/system_statusbaricons_vpn_title"
-		android:defaultValue="false" />
-
 	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/system_statusbaricons_atleft_title" />
 

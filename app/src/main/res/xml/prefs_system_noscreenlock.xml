@@ -30,12 +30,6 @@
 		android:entryValues="@array/noscreenlockreq_val"
 		android:defaultValue="1" />
 
-	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_system_noscreenlock_skip"
-		android:summary="@string/system_noscreenlock_scr_summ"
-		android:title="@string/system_noscreenlock_scr_title"
-		android:defaultValue="false" />
-
 	<name.monwf.customiuizer.prefs.PreferenceEx
 		android:title="@string/system_noscreenlock_wifi_title"
 		android:summary="@string/system_noscreenlock_wifi_summ"

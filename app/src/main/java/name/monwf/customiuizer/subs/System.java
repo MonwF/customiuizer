@@ -7,14 +7,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.widget.SeekBar;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.Preference;
-
-import java.util.Objects;
 
 import miui.os.Build;
 import name.monwf.customiuizer.CredentialsLauncher;
@@ -22,9 +18,6 @@ import name.monwf.customiuizer.PrefsProvider;
 import name.monwf.customiuizer.R;
 import name.monwf.customiuizer.SubFragment;
 import name.monwf.customiuizer.prefs.CheckBoxPreferenceEx;
-import name.monwf.customiuizer.prefs.ListPreferenceEx;
-import name.monwf.customiuizer.prefs.PreferenceEx;
-import name.monwf.customiuizer.prefs.SeekBarPreference;
 import name.monwf.customiuizer.qs.AutoRotateService;
 import name.monwf.customiuizer.utils.AppHelper;
 import name.monwf.customiuizer.utils.Helpers;
@@ -94,13 +87,6 @@ public class System extends SubFragment {
 				break;
 			case "pref_key_system_cat_vibration":
 				findPreference("pref_key_system_vibration_apps").setOnPreferenceClickListener(openAppsEdit);
-				findPreference("pref_key_system_vibration_amp_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-					@Override
-					public boolean onPreferenceClick(Preference preference) {
-						openSubFragment(new System_VibrationAmp(), null, AppHelper.SettingsType.Preference, AppHelper.ActionBarType.HomeUp, R.string.system_vibration_amp_title, R.xml.prefs_system_vibration_amp);
-						return true;
-					}
-				});
 				break;
 			case "pref_key_system_cat_toasts":
 				findPreference("pref_key_system_blocktoasts_apps").setOnPreferenceClickListener(openAppsEdit);
@@ -468,60 +454,6 @@ public class System extends SubFragment {
 					}
 				});
 
-				AppHelper.appPrefs.edit().putInt("pref_key_system_animationscale_window", Math.round(Helpers.getAnimationScale(0) * 10)).apply();
-				((SeekBarPreference)findPreference("pref_key_system_animationscale_window")).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-					@Override
-					public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {}
-
-					@Override
-					public void onStartTrackingTouch(SeekBar seekBar) {}
-
-					@Override
-					public void onStopTrackingTouch(SeekBar seekBar) {
-						Helpers.setAnimationScale(0, seekBar.getProgress() / 10f);
-					}
-				});
-
-				AppHelper.appPrefs.edit().putInt("pref_key_system_animationscale_transition", Math.round(Helpers.getAnimationScale(1) * 10)).apply();
-				((SeekBarPreference)findPreference("pref_key_system_animationscale_transition")).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-					@Override
-					public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {}
-
-					@Override
-					public void onStartTrackingTouch(SeekBar seekBar) {}
-
-					@Override
-					public void onStopTrackingTouch(SeekBar seekBar) {
-						Helpers.setAnimationScale(1, seekBar.getProgress() / 10f);
-					}
-				});
-
-				AppHelper.appPrefs.edit().putInt("pref_key_system_animationscale_animator", Math.round(Helpers.getAnimationScale(2) * 10)).apply();
-				((SeekBarPreference)findPreference("pref_key_system_animationscale_animator")).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-					@Override
-					public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {}
-
-					@Override
-					public void onStartTrackingTouch(SeekBar seekBar) {}
-
-					@Override
-					public void onStopTrackingTouch(SeekBar seekBar) {
-						Helpers.setAnimationScale(2, seekBar.getProgress() / 10f);
-					}
-				});
-
-				if (!checkAnimationPermission()) {
-					Preference pref = findPreference("pref_key_system_animationscale_window");
-					pref.setEnabled(false);
-					pref.setSummary(R.string.launcher_privacyapps_fail);
-					pref = findPreference("pref_key_system_animationscale_transition");
-					pref.setEnabled(false);
-					pref.setSummary(R.string.launcher_privacyapps_fail);
-					pref = findPreference("pref_key_system_animationscale_animator");
-					pref.setEnabled(false);
-					pref.setSummary(R.string.launcher_privacyapps_fail);
-				}
-
 				break;
 			case "pref_key_system_detailednetspeed_cat":
 				break;
@@ -545,10 +477,4 @@ public class System extends SubFragment {
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-
-	private boolean checkAnimationPermission() {
-		PackageManager pm = getActivity().getPackageManager();
-		return pm.checkPermission("android.permission.SET_ANIMATION_SCALE", Helpers.modulePkg) == PackageManager.PERMISSION_GRANTED;
-	}
-
 }

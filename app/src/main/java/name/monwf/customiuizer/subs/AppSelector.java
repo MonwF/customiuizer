@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
@@ -259,6 +260,11 @@ public class AppSelector extends SubFragmentWithSearch {
 							if (AppHelper.installedAppsList == null) {
 								Helpers.getInstalledApps(act);
 							}
+							if (AppHelper.installedAppsList.size() < 5) {
+								act.runOnUiThread(() -> {
+									Toast.makeText(act, R.string.module_grant_queryapps_permission, Toast.LENGTH_LONG).show();
+								});
+							}
 						}
 					} else {
 						if (Helpers.launchableAppsList == null) {
@@ -271,7 +277,7 @@ public class AppSelector extends SubFragmentWithSearch {
 					initialized = true;
 					act.runOnUiThread(process);
 				} catch (Throwable e) {
-					e.printStackTrace();
+					AppHelper.log("loadApps", e);
 				}
 			}).start();
 

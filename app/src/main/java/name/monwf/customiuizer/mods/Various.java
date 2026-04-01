@@ -5,8 +5,8 @@ import static name.monwf.customiuizer.mods.utils.XposedHelpers.findClass;
 import static name.monwf.customiuizer.mods.utils.XposedHelpers.findClassIfExists;
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
@@ -20,11 +20,9 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.database.ContentObserver;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.net.Uri;
-import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -41,7 +39,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -284,10 +282,10 @@ public class Various {
 		}
 	}
 	static Set<String> MIUI_CORE_APPS = Set.of(
-		"com.lbe.security.miui", "com.miui.securitycenter", "com.miui.packageinstaller", "com.miui.home"
+		"com.lbe.security.miui", "com.miui.securitycenter", "com.miui.packageinstaller", "com.miui.home", "com.android.settings"
 	);
 	public static void AppsDisableServiceHook(SystemServerLoadedParam lpparam) {
-		ModuleHelper.findAndHookMethod("com.android.server.pm.PackageManagerServiceImpl", lpparam.getClassLoader(), "canBeDisabled", String.class, int.class, new MethodHook() {
+		ModuleHelper.findAndHookMethod("com.android.server.pm.PackageManagerServiceImpl", lpparam.getClassLoader(), "shouldRestrictEnabledSettingsChange", String.class, int.class, new MethodHook() {
 			@Override
 			protected void before(final BeforeHookCallback param) throws Throwable {
 				if (!MIUI_CORE_APPS.contains(param.getArgs()[0])) {
@@ -307,11 +305,13 @@ public class Various {
 				dis.setIcon(act.getResources().getIdentifier("action_button_stop", "drawable", lpparam.getPackageName()));
 				dis.setEnabled(true);
 				dis.setShowAsAction(1);
-				//XposedHelpers.setAdditionalInstanceField(param.getThisObject(), "mDisableButton", dis);
 
 				PackageManager pm = act.getPackageManager();
-				Field piField = XposedHelpers.findFirstFieldByExactType(act.getClass(), PackageInfo.class);
-				PackageInfo mPackageInfo = (PackageInfo)piField.get(act);
+				Class<?> FragmentClass = findClass("com.miui.appmanager.fragment.ApplicationsDetailsFragment", lpparam.getClassLoader());
+				Field fragmentField = XposedHelpers.findFirstFieldByExactType(act.getClass(), FragmentClass);
+				Object prefFragment = fragmentField.get(act);
+				Field piField = XposedHelpers.findFirstFieldByExactType(FragmentClass, PackageInfo.class);
+				PackageInfo mPackageInfo = (PackageInfo)piField.get(prefFragment);
 				ApplicationInfo appInfo = pm.getApplicationInfo(mPackageInfo.packageName, PackageManager.GET_META_DATA);
 				boolean isSystem = (appInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
 				boolean isUpdatedSystem = (appInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0;
@@ -333,8 +333,11 @@ public class Various {
 
 				Activity act = (Activity)param.getThisObject();
 				Resources modRes = ModuleHelper.getModuleRes(act);
-				Field piField = XposedHelpers.findFirstFieldByExactType(act.getClass(), PackageInfo.class);
-				PackageInfo mPackageInfo = (PackageInfo)piField.get(act);
+				Class<?> FragmentClass = findClass("com.miui.appmanager.fragment.ApplicationsDetailsFragment", lpparam.getClassLoader());
+				Field fragmentField = XposedHelpers.findFirstFieldByExactType(act.getClass(), FragmentClass);
+				Object prefFragment = fragmentField.get(act);
+				Field piField = XposedHelpers.findFirstFieldByExactType(FragmentClass, PackageInfo.class);
+				PackageInfo mPackageInfo = (PackageInfo)piField.get(prefFragment);
 				if (MIUI_CORE_APPS.contains(mPackageInfo.packageName)) {
 					Toast.makeText(act, modRes.getString(R.string.disable_app_settings), Toast.LENGTH_SHORT).show();
 					return;
@@ -364,7 +367,6 @@ public class Various {
 		ModuleHelper.findAndHookMethod("com.miui.appmanager.ApplicationsDetailsActivity", lpparam.getClassLoader(), "onCreateOptionsMenu", Menu.class, new MethodHook() {
 			@Override
 			protected void after(final AfterHookCallback param) throws Throwable {
-				Activity act = (Activity)param.getThisObject();
 				Menu menu = (Menu)param.getArgs()[0];
 				MenuItem reportMenu = menu.findItem(4);
 				if (reportMenu != null) {
@@ -432,6 +434,38 @@ public class Various {
 		ModuleHelper.findAndHookMethod("com.miui.powerkeeper.statemachine.ForceDozeController", lpparam.getClassLoader(), "restoreWhiteListAppsIfQuitForceIdle", HookerClassHelper.DO_NOTHING);
 	}
 
+	private static void moveSideBar(View view, int newLocation) {
+		int[] location = new int[2];
+		view.getLocationOnScreen(location);
+		int x = location[0];
+		int y = location[1];
+		long uptimeMillis = SystemClock.uptimeMillis();
+		MotionEvent downEvent, moveEvent, upEvent;
+		if (newLocation == 0) { // right -> left
+			downEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis, MotionEvent.ACTION_DOWN,  x + 4, y + 15, 0);
+			moveEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis + 320, MotionEvent.ACTION_MOVE, 6, y + 15, 0);
+			upEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis + 325, MotionEvent.ACTION_UP, 6, y + 15, 0);
+		}
+		else {
+			WindowManager windowManager = (WindowManager) view.getContext().getSystemService(Context.WINDOW_SERVICE);
+			int screenWidth = windowManager.getCurrentWindowMetrics().getBounds().width();
+			downEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis, MotionEvent.ACTION_DOWN, 6, y + 15, 0);
+			moveEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis + 320, MotionEvent.ACTION_MOVE, screenWidth - 6, y + 15, 0);
+			upEvent = MotionEvent.obtain(uptimeMillis, uptimeMillis + 325, MotionEvent.ACTION_UP, screenWidth - 6, y + 15, 0);
+		}
+		downEvent.setSource(9999);
+		moveEvent.setSource(9999);
+		upEvent.setSource(9999);
+		new Handler(view.getContext().getMainLooper()).postDelayed(() -> {
+			view.dispatchTouchEvent(moveEvent);
+			view.dispatchTouchEvent(upEvent);
+			downEvent.recycle();
+			moveEvent.recycle();
+		}, 315);
+		view.dispatchTouchEvent(downEvent);
+		upEvent.recycle();
+	}
+
 	private static void showSideBar(View view, int dockLocation) {
 		int[] location = new int[2];
 		view.getLocationOnScreen(location);
@@ -461,97 +495,108 @@ public class Various {
 	}
 
 	public static void AddSideBarExpandReceiverHook(PackageLoadedParam lpparam) {
-		final boolean[] isHooked = {false, false};
+		final Object[] sidebarImages = {null};
+		final boolean[] isHooked = {false, false}; // drawHooked
 		boolean enableSideBar = MainModule.mPrefs.getBoolean("various_swipe_expand_sidebar");
 		if (!enableSideBar) {
 			MainModule.resHooks.setThemeValueReplacement("com.miui.securitycenter", "dimen", "sidebar_height_default", 8);
 			MainModule.resHooks.setThemeValueReplacement("com.miui.securitycenter", "dimen", "sidebar_height_vertical", 8);
 		}
+
 		Class <?> RegionSamplingHelper = findClassIfExists("com.android.systemui.navigationbar.gestural.RegionSamplingHelper", lpparam.getClassLoader());
 		if (RegionSamplingHelper == null) {
 			XposedHelpers.log("AddSideBarExpandReceiverHook", "failed to find RegionSamplingHelper");
+			return;
 		}
-        ModuleHelper.hookAllConstructors(RegionSamplingHelper, new MethodHook() {
-			private int originDockLocation = -1;
+		ModuleHelper.hookAllConstructors(RegionSamplingHelper, new MethodHook() {
 			@Override
 			protected void after(final AfterHookCallback param) throws Throwable {
-				if (!isHooked[0]) {
-					isHooked[0] = true;
-					View view = (View) param.getArgs()[0];
-					if (originDockLocation == -1) {
-						originDockLocation = view.getContext().getSharedPreferences("sp_video_box", 0).getInt("dock_line_location", 0);;
-					}
-					BroadcastReceiver showReceiver = new BroadcastReceiver() {
-						@Override
-						public void onReceive(Context context, Intent intent) {
-							Bundle bundle = intent.getBundleExtra("actionInfo");
-							int pos = originDockLocation;
-							if (bundle != null) {
-								pos = bundle.getInt("inDirection", 0);
-								view.getContext().getSharedPreferences("sp_video_box", 0).edit().putInt("dock_line_location", pos).commit();
-							}
-							showSideBar(view, pos);
-						}
-					};
-					view.getContext().registerReceiver(showReceiver, new IntentFilter(ACTION_PREFIX + "ShowSideBar"));
-					XposedHelpers.setAdditionalInstanceField(param.getThisObject(), "showReceiver", showReceiver);
-
-					if (!isHooked[1]) {
-						isHooked[1] = true;
-						Handler myhandler = new Handler(Looper.myLooper());
-						Runnable removeBg = new Runnable() {
-							@Override
-							public void run() {
-								myhandler.removeCallbacks(this);
-								if (!enableSideBar) {
-									Object li = XposedHelpers.getObjectField(view, "mListenerInfo");
-									Object mOnTouchListener = XposedHelpers.getObjectField(li, "mOnTouchListener");
-									ModuleHelper.findAndHookMethod(mOnTouchListener.getClass(), "onTouch", View.class, MotionEvent.class, new MethodHook() {
-										@Override
-										protected void before(final BeforeHookCallback param) throws Throwable {
-											MotionEvent me = (MotionEvent) param.getArgs()[1];
-											if (me.getSource() != 9999) {
-												param.returnAndSkip(false);
-											}
-										}
-									});
-								}
-								Class <?> bgDrawable = view.getBackground().getClass();
-								ModuleHelper.findAndHookMethod(bgDrawable, "draw", Canvas.class, new MethodHook() {
+				ImageView samplingImageView = (ImageView) param.getArgs()[0];
+				if (sidebarImages[0] == null) { // main
+					sidebarImages[0] = new WeakReference<Object>(samplingImageView);
+				}
+				Handler myhandler = new Handler(Looper.myLooper());
+				Runnable removeBg = new Runnable() {
+					@Override
+					public void run() {
+						myhandler.removeCallbacks(this);
+						samplingImageView.setImageDrawable(null);
+						if (isHooked[0]) {
+							isHooked[0] = true;
+							Class <?> bgDrawable = samplingImageView.getDrawable().getClass();
+							ModuleHelper.findAndHookMethod(bgDrawable, "draw", Canvas.class, HookerClassHelper.DO_NOTHING);
+							if (!enableSideBar) {
+								Object li = XposedHelpers.getObjectField(samplingImageView, "mListenerInfo");
+								Object mOnTouchListener = XposedHelpers.getObjectField(li, "mOnTouchListener");
+								ModuleHelper.findAndHookMethod(mOnTouchListener.getClass(), "onTouch", View.class, MotionEvent.class, new MethodHook() {
 									@Override
 									protected void before(final BeforeHookCallback param) throws Throwable {
-										param.returnAndSkip(null);
+										MotionEvent me = (MotionEvent) param.getArgs()[1];
+										if (me.getSource() != 9999) {
+											param.returnAndSkip(false);
+										}
 									}
 								});
-								view.setBackground(null);
 							}
-						};
-						myhandler.postDelayed(removeBg, 150);
+						}
 					}
-				}
+				};
+				myhandler.postDelayed(removeBg, 120);
 			}
 		});
-		ModuleHelper.findAndHookMethod(RegionSamplingHelper, "onViewDetachedFromWindow", android.view.View.class, new MethodHook() {
-			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
-				isHooked[0] = false;
-				BroadcastReceiver showReceiver = (BroadcastReceiver) XposedHelpers.getAdditionalInstanceField(param.getThisObject(), "showReceiver");
-				if (showReceiver != null) {
-					View view = (View) param.getArgs()[0];
-					view.getContext().unregisterReceiver(showReceiver);
-					XposedHelpers.removeAdditionalInstanceField(param.getThisObject(), "showReceiver");
-				}
-			}
-		});
+
 		Method[] methods = XposedHelpers.findMethodsByExactParameters(RegionSamplingHelper, void.class, Rect.class);
 		if (methods.length == 0) {
 			XposedHelpers.log("AddSideBarExpandReceiverHook", "Cannot find appropriate start method");
 			return;
 		}
-		ModuleHelper.hookMethod(methods[0], new MethodHook() {
+		ModuleHelper.hookMethod(methods[0], HookerClassHelper.DO_NOTHING);
+		ModuleHelper.findAndHookMethod(RegionSamplingHelper, "onViewDetachedFromWindow", View.class, new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				param.returnAndSkip(null);
+			protected void after(final AfterHookCallback param) throws Throwable {
+				sidebarImages[0] = null;
+			}
+		});
+		ModuleHelper.findAndHookMethod("com.miui.securitycenter.Application", lpparam.getClassLoader(), "onCreate", new MethodHook() {
+			@Override
+			protected void after(AfterHookCallback param) throws Throwable {
+				Application mApp = (Application) param.getThisObject();
+				BroadcastReceiver showReceiver = new BroadcastReceiver() {
+					@Override
+					public void onReceive(Context context, Intent intent) {
+						if (sidebarImages[0] == null) return;
+						WeakReference<View> viewRef = (WeakReference<View>) sidebarImages[0];
+						if (viewRef.get() == null) return;
+						View sidebar = viewRef.get();
+						Bundle bundle = intent.getBundleExtra("actionInfo");
+						int pos = mApp.getSharedPreferences("sp_video_box", 0).getInt("dock_line_location", 0);
+						boolean posChanged = false;
+						if (bundle != null) {
+							int newLocation = bundle.getInt("inDirection", 0);
+							if (newLocation != pos) {
+								Resources resources = sidebar.getResources();
+								if (resources.getConfiguration().orientation != 2) {
+									moveSideBar(sidebar, newLocation);
+									posChanged = true;
+								}
+								else {
+									sidebar.getContext().getSharedPreferences("sp_video_box", 0).edit().putInt("dock_line_location", newLocation).commit();
+								}
+								pos = newLocation;
+							}
+						}
+						int finalPos = pos;
+						if (posChanged) {
+							new Handler(mApp.getMainLooper()).postDelayed(() -> {
+								showSideBar(sidebar, finalPos);
+							}, 360);
+						}
+						else {
+							showSideBar(sidebar, finalPos);
+						}
+					}
+				};
+				mApp.registerReceiver(showReceiver, new IntentFilter(ACTION_PREFIX + "ShowSideBar"), Context.RECEIVER_EXPORTED);
 			}
 		});
 	}
@@ -585,22 +630,6 @@ public class Various {
 				});
 			}
 		}
-	}
-
-	public static void PrivacyAppsLayoutHook(PackageLoadedParam lpparam) {
-		ModuleHelper.findAndHookMethod("com.miui.privacyapps.ui.PrivacyAppsActivity", lpparam.getClassLoader(), "onCreate", Bundle.class, new MethodHook() {
-			@Override
-			protected void after(AfterHookCallback param) throws Throwable {
-				Activity act = (Activity) param.getThisObject();
-				int gridViewId = act.getResources().getIdentifier("privacy_apps_gridview", "id", "com.miui.securitycenter");
-				GridView gridView = act.findViewById(gridViewId);
-				gridView.setNumColumns(4);
-				LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) gridView.getLayoutParams();
-				params.rightMargin = (int) Helpers.dp2px(16);
-				params.leftMargin = params.rightMargin;
-				gridView.setLayoutParams(params);
-			}
-		});
 	}
 
 	public static void PersistPrivacyThumbnailBlur(PackageLoadedParam lpparam) {
@@ -645,37 +674,33 @@ public class Various {
 
 	public static void OpenByDefaultHook(PackageLoadedParam lpparam) {
 		final int defaultOpenTitleId = MainModule.resHooks.addFakeResource("various_open_by_default_title", R.string.various_open_by_default_title, "string");
-		ModuleHelper.findAndHookMethod("com.miui.appmanager.ApplicationsDetailsActivity", lpparam.getClassLoader(), "initView", new MethodHook() {
+		ModuleHelper.findAndHookMethod("com.miui.appmanager.fragment.ApplicationsDetailsFragment", lpparam.getClassLoader(), "initView", new MethodHook() {
 			@Override
 			protected void after(final AfterHookCallback param) throws Throwable {
-				Activity act = (Activity) param.getThisObject();
-				int anchorViewId= act.getResources().getIdentifier("am_storage_view", "id", "com.miui.securitycenter");
-				View anchorView = act.findViewById(anchorViewId);
-				LinearLayout actionContainer = (LinearLayout) anchorView.getParent();
-				Class<?> BannerItem = findClass("com.miui.appmanager.widget.AppDetailBannerItemView", lpparam.getClassLoader());
-				if (BannerItem != null) {
-					int childCount = actionContainer.getChildCount();
-					LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
-					LinearLayout defaultView = (LinearLayout) XposedHelpers.newInstance(BannerItem, actionContainer.getContext(), null);
+				Class<?> TextPreferencePref = findClass("miuix.preference.TextPreference", lpparam.getClassLoader());
+				if (TextPreferencePref != null) {
+					Context ctx = (Context) XposedHelpers.callMethod(param.getThisObject(), "getContext");
+					Object prefCat = XposedHelpers.callMethod(param.getThisObject(), "findPreference", "app_advanced_category");
+					Object defaultView = XposedHelpers.newInstance(TextPreferencePref, ctx);
 					XposedHelpers.callMethod(defaultView, "setTitle", defaultOpenTitleId);
-					actionContainer.addView(defaultView, childCount - 2, lp);
-					int paddingStart = anchorView.getPaddingStart();
-					int paddingEnd = anchorView.getPaddingEnd();
-					defaultView.setPaddingRelative(paddingStart, 0, paddingEnd, 0);
-					defaultView.setMinimumHeight(anchorView.getMinimumHeight());
-					int itemBackgroundId = act.getResources().getIdentifier("am_card_bg_selector", "drawable", "com.miui.securitycenter");
-					defaultView.setBackgroundResource(itemBackgroundId);
-					defaultView.setGravity(Gravity.CENTER_VERTICAL);
-
-					defaultView.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							Intent intent = new Intent("android.settings.APP_OPEN_BY_DEFAULT_SETTINGS");
-							String pkgName = act.getIntent().getStringExtra("package_name");
-							intent.setData(Uri.parse("package:".concat(pkgName)));
-							act.startActivity(intent);
-						}
-					});
+					XposedHelpers.callMethod(defaultView, "setOnPreferenceClickListener", param.getThisObject());
+					XposedHelpers.callMethod(defaultView, "setKey", "pk_default_open");
+					XposedHelpers.callMethod(prefCat, "addPreference", defaultView);
+				}
+			}
+		});
+		ModuleHelper.hookAllMethods("com.miui.appmanager.fragment.ApplicationsDetailsFragment", lpparam.getClassLoader(), "onPreferenceClick", new MethodHook() {
+			@Override
+			protected void before(BeforeHookCallback param) throws Throwable {
+				String key = (String) XposedHelpers.callMethod(param.getArgs()[0], "getKey");
+				if ("pk_default_open".equals(key)) {
+					Activity act = (Activity) XposedHelpers.callMethod(param.getThisObject(), "getActivity");
+					Intent intent = new Intent("android.settings.APP_OPEN_BY_DEFAULT_SETTINGS");
+					intent.addCategory(Intent.CATEGORY_DEFAULT);
+					String pkgName = act.getIntent().getStringExtra("package_name");
+					intent.setData(Uri.parse("package:".concat(pkgName)));
+					act.startActivity(intent);
+					param.returnAndSkip(true);
 				}
 			}
 		});
@@ -734,7 +759,7 @@ public class Various {
 	}
 
 	public static void ShowTempInBatteryHook(PackageLoadedParam lpparam) {
-		Class<?> InterceptBaseFragmentClass = XposedHelpers.findClass("com.miui.powercenter.nightcharge.SmartChargeFragment", lpparam.getClassLoader());
+		Class<?> InterceptBaseFragmentClass = XposedHelpers.findClass("com.miui.powercenter.nightcharge.ChargeProtectFragment", lpparam.getClassLoader());
 		Class<?>[] innerClasses = InterceptBaseFragmentClass.getDeclaredClasses();
 		Class<?> HandlerClass = null;
 		for (Class<?> innerClass : innerClasses) {
@@ -765,7 +790,7 @@ public class Various {
 						Object wk = XposedHelpers.getObjectField(param.getThisObject(), finalFieldName);
 						Object frag = XposedHelpers.callMethod(wk, "get");
 						Activity batteryView = (Activity) XposedHelpers.callMethod(frag, "getActivity");
-						int temp = batteryView.registerReceiver(null, new IntentFilter("android.intent.action.BATTERY_CHANGED")).getIntExtra("temperature", 0) / 10;
+						int temp = batteryView.registerReceiver(null, new IntentFilter("android.intent.action.BATTERY_CHANGED"), Context.RECEIVER_NOT_EXPORTED).getIntExtra("temperature", 0) / 10;
 						Object tempPreference = XposedHelpers.callMethod(frag, "findPreference", "reference_current_temp");
 						XposedHelpers.callMethod(tempPreference, "setText", temp + "℃");
 					}
@@ -793,54 +818,6 @@ public class Various {
 			}
 		};
 		ModuleHelper.hookAllMethodsSilently("android.util.MiuiMultiWindowUtils", lpparam.getClassLoader(), "getFreeformSuggestionList", clearHook);
-	}
-
-	public static void AlarmCompatHook() {
-		ModuleHelper.findAndHookMethod(Settings.System.class, "getStringForUser", ContentResolver.class, String.class, int.class, new MethodHook() {
-			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				String key = (String)param.getArgs()[1];
-				if ("next_alarm_formatted".equals(key)) {
-					param.getArgs()[1] = "next_alarm_clock_formatted";
-				}
-			}
-		});
-	}
-
-	public static void AlarmCompatServiceHook(SystemServerLoadedParam lpparam) {
-		ModuleHelper.findAndHookMethod("com.android.server.alarm.AlarmManagerService", lpparam.getClassLoader(), "onBootPhase", int.class, new MethodHook() {
-			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
-				if ((int)param.getArgs()[0] != 500 /*PHASE_SYSTEM_SERVICES_READY*/) return;
-
-				Context mContext = (Context)XposedHelpers.callMethod(param.getThisObject(), "getContext");
-				if (mContext == null) {
-					XposedHelpers.log("AlarmCompatServiceHook", "Context is NULL");
-					return;
-				}
-				ContentResolver resolver = mContext.getContentResolver();
-				ContentObserver alarmObserver = new ContentObserver(new Handler()) {
-					@Override
-					public void onChange(boolean selfChange) {
-						if (selfChange) return;
-						XposedHelpers.setAdditionalInstanceField(param.getThisObject(), "mNextAlarmTime", ModuleHelper.getNextMIUIAlarmTime(mContext));
-					}
-				};
-				alarmObserver.onChange(false);
-				resolver.registerContentObserver(Settings.System.getUriFor("next_alarm_clock_formatted"), false, alarmObserver);
-			}
-		});
-
-		ModuleHelper.findAndHookMethod("com.android.server.alarm.AlarmManagerService", lpparam.getClassLoader(), "getNextAlarmClockImpl", int.class, new MethodHook() {
-			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
-				Context mContext = (Context)XposedHelpers.callMethod(param.getThisObject(), "getContext");
-				String pkgName = mContext.getPackageManager().getNameForUid(Binder.getCallingUid());
-				Object mNextAlarmTime = XposedHelpers.getAdditionalInstanceField(param.getThisObject(), "mNextAlarmTime");
-				if (mNextAlarmTime != null && MainModule.mPrefs.getStringSet("various_alarmcompat_apps").contains(pkgName))
-					param.setResult((long)mNextAlarmTime == 0 ? null : new AlarmManager.AlarmClockInfo((long)mNextAlarmTime, null));
-			}
-		});
 	}
 
 	public static void AnswerCallInHeadUpHook(PackageLoadedParam lpparam) {
@@ -1020,14 +997,28 @@ public class Various {
 	}
 
 	public static void MiuiPackageInstallerHook(PackageLoadedParam lpparam) {
-		ModuleHelper.findAndHookMethodSilently("com.miui.packageInstaller.InstallStart", lpparam.getClassLoader(), "getCallingPackage", new MethodHook() {
+		ModuleHelper.findAndHookMethod("com.miui.packageInstaller.InstallStart", lpparam.getClassLoader(), "getCallingPackage", new MethodHook() {
 			@Override
 			protected void before(final BeforeHookCallback param) throws Throwable {
 				param.returnAndSkip("com.android.fileexplorer");
 			}
 		});
+		ModuleHelper.findAndHookMethod("android.os.SystemProperties", lpparam.getClassLoader(), "getBoolean", String.class, boolean.class, new MethodHook() {
+			@Override
+			protected void before(BeforeHookCallback param) throws Throwable {
+				if ("persist.sys.allow_update_systemapp".equals(param.getArgs()[0])) {
+					param.returnAndSkip(true);
+				}
+			}
+		});
 	}
 	public static void PurePackageInstallerHook(PackageLoadedParam lpparam) {
+		ModuleHelper.findAndHookMethod("com.miui.packageInstaller.model.ApkInfo", lpparam.getClassLoader(), "getCloudParams", new MethodHook() {
+			@Override
+			protected void before(BeforeHookCallback param) throws Throwable {
+				param.returnAndSkip(null);
+			}
+		});
 		ModuleHelper.findAndHookMethod("android.app.SharedPreferencesImpl", lpparam.getClassLoader(), "getBoolean", String.class, boolean.class, new MethodHook() {
 			@Override
 			protected void before(BeforeHookCallback param) throws Throwable {
@@ -1072,6 +1063,16 @@ public class Various {
 					return;
 				}
 				layoutParams2.height = 0;
+			}
+		});
+		ModuleHelper.findAndHookMethod("com.miui.packageInstaller.model.ApkInfo", lpparam.getClassLoader(), "getSystemApp", HookerClassHelper.returnConstant(true));
+		ModuleHelper.findAndHookMethod(Uri.class, "parse", String.class, new MethodHook() {
+			@Override
+			protected void before(BeforeHookCallback param) throws Throwable {
+				String uri = (String) param.getArgs()[0];
+				if (uri != null && uri.startsWith("content://guard/")) {
+					param.returnAndSkip(null);
+				}
 			}
 		});
 	}

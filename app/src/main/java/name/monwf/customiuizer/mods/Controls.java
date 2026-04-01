@@ -1,5 +1,7 @@
 package name.monwf.customiuizer.mods;
 
+import static name.monwf.customiuizer.mods.utils.XposedHelpers.findClassIfExists;
+
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -31,6 +33,7 @@ import android.widget.Toast;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import io.github.libxposed.api.XposedInterface.AfterHookCallback;
 import io.github.libxposed.api.XposedInterface.BeforeHookCallback;
@@ -225,8 +228,7 @@ public class Controls {
 					isWaitingForVolumeLongPressed = true;
 					param.returnAndSkip(0);
 				}
-
-				if (action == KeyEvent.ACTION_UP) {
+				else if (action == KeyEvent.ACTION_UP) {
 					isVolumePressed = false;
 					// Kill all callbacks (removing only posted Runnable is not working... no idea)
 					if (mHandler != null) mHandler.removeCallbacksAndMessages(null);
@@ -487,7 +489,7 @@ public class Controls {
 				FrameLayout navButtons0 = mHorizontal.findViewById(navButtonsId);
 				FrameLayout navButtons90 = mVertical.findViewById(navButtonsId);
 
-				Class<?> kbrCls = XposedHelpers.findClassIfExists("com.android.systemui.statusbar.phone.MiuiKeyButtonRipple", lpparam.getClassLoader());
+				Class<?> kbrCls = findClassIfExists("com.android.systemui.statusbar.phone.MiuiKeyButtonRipple", lpparam.getClassLoader());
 				addCustomNavBarKeys(false, mContext, navButtons0, kbrCls);
 				addCustomNavBarKeys(true, mContext, navButtons90, kbrCls);
 				reposNavBarButtons(navBar);
@@ -533,80 +535,35 @@ public class Controls {
 		});
 	}
 
-	@SuppressLint("StaticFieldLeak")
-	private static Context basePWMContext;
-	private static Object basePWMObject;
-	private static Method markShortcutTriggered;
-
-	private static final Runnable mBackLongPressAction = new Runnable() {
-		@Override
-		public void run() {
-			try {
-				if (basePWMContext == null || basePWMObject == null) return;
-				if (GlobalActions.handleAction(basePWMContext, "controls_backlong")) Helpers.performStrongVibration(basePWMContext);
-				if (MainModule.mPrefs.getInt("controls_backlong_action", 1) != 1) markShortcutTriggered.invoke(basePWMObject);
-			} catch (Throwable t) {
-				XposedHelpers.log(t);
-			}
-		}
-	};
-	private static final Runnable mHomeLongPressAction = new Runnable() {
-		@Override
-		public void run() {
-			try {
-				if (basePWMContext == null || basePWMObject == null) return;
-				if (GlobalActions.handleAction(basePWMContext, "controls_homelong")) Helpers.performStrongVibration(basePWMContext);
-				if (MainModule.mPrefs.getInt("controls_homelong_action", 1) != 1) markShortcutTriggered.invoke(basePWMObject);
-			} catch (Throwable t) {
-				XposedHelpers.log(t);
-			}
-		}
-	};
-	private static final Runnable mMenuLongPressAction = new Runnable() {
-		@Override
-		public void run() {
-			try {
-				if (basePWMContext == null || basePWMObject == null) return;
-				if (GlobalActions.handleAction(basePWMContext, "controls_menulong")) Helpers.performStrongVibration(basePWMContext);
-				if (MainModule.mPrefs.getInt("controls_menulong_action", 1) != 1) markShortcutTriggered.invoke(basePWMObject);
-			} catch (Throwable t) {
-				XposedHelpers.log(t);
-			}
-		}
-	};
-
 	public static void NavBarActionsHook(SystemServerLoadedParam lpparam) {
-		ModuleHelper.hookAllMethods("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.getClassLoader(), "postKeyLongPress", new MethodHook() {
+		final HashMap<String, String> mKeyMap = new HashMap();
+		mKeyMap.put("long_press_back_key", "controls_backlong_action");
+		mKeyMap.put("long_press_home_key", "controls_homelong_action");
+		mKeyMap.put("long_press_menu_key", "controls_menulong_action");
+		ModuleHelper.findAndHookMethod("com.android.server.policy.MiuiSingleKeyRule", lpparam.getClassLoader(), "getFunction", String.class, new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				if (basePWMObject == null) basePWMObject = param.getThisObject();
-				if (basePWMContext == null) basePWMContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-				if (markShortcutTriggered == null) markShortcutTriggered = XposedHelpers.findMethodExact("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.getClassLoader(), "markShortcutTriggered");
-
-				int key = (int)param.getArgs()[0];
-				if (key == KeyEvent.KEYCODE_BACK && MainModule.mPrefs.getInt("controls_backlong_action", 1) > 1) {
-					((Handler)XposedHelpers.getObjectField(param.getThisObject(), "mHandler")).postDelayed(mBackLongPressAction, ViewConfiguration.getLongPressTimeout());
-					param.returnAndSkip(null);
-				} else if (key == KeyEvent.KEYCODE_HOME && MainModule.mPrefs.getInt("controls_homelong_action", 1) > 1) {
-					((Handler)XposedHelpers.getObjectField(param.getThisObject(), "mHandler")).postDelayed(mHomeLongPressAction, ViewConfiguration.getLongPressTimeout());
-					param.returnAndSkip(null);
-				} else if (key == KeyEvent.KEYCODE_APP_SWITCH && MainModule.mPrefs.getInt("controls_menulong_action", 1) > 1) {
-					((Handler)XposedHelpers.getObjectField(param.getThisObject(), "mHandler")).postDelayed(mMenuLongPressAction, ViewConfiguration.getLongPressTimeout());
-					param.returnAndSkip(null);
+			protected void before(BeforeHookCallback param) throws Throwable {
+				String action = (String)param.getArgs()[0];
+				if (mKeyMap.containsKey(action)) {
+					int opt = MainModule.mPrefs.getInt(mKeyMap.get(action), 1);
+					if (opt > 1) {
+						param.returnAndSkip(mKeyMap.get(action));
+					}
 				}
 			}
 		});
-
-		ModuleHelper.hookAllMethods("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.getClassLoader(), "removeKeyLongPress", new MethodHook() {
+		ModuleHelper.findAndHookMethod("com.miui.server.input.util.ShortCutActionsUtils", lpparam.getClassLoader(), "triggerFunction", String.class, String.class, Bundle.class, boolean.class, new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				int key = (int)param.getArgs()[0];
-				if (key == KeyEvent.KEYCODE_BACK)
-					((Handler)XposedHelpers.getObjectField(param.getThisObject(), "mHandler")).removeCallbacks(mBackLongPressAction);
-				else if (key == KeyEvent.KEYCODE_HOME)
-					((Handler)XposedHelpers.getObjectField(param.getThisObject(), "mHandler")).removeCallbacks(mHomeLongPressAction);
-				else if (key == KeyEvent.KEYCODE_APP_SWITCH)
-					((Handler)XposedHelpers.getObjectField(param.getThisObject(), "mHandler")).removeCallbacks(mMenuLongPressAction);
+			protected void before(BeforeHookCallback param) throws Throwable {
+				String function = (String)param.getArgs()[0];
+				if (mKeyMap.containsValue(function)) {
+					int opt = MainModule.mPrefs.getInt(function, 1);
+					if (opt > 1) {
+						Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
+						GlobalActions.handleAction(mContext, function.replace("_action", ""), true);
+						param.returnAndSkip(true);
+					}
+				}
 			}
 		});
 	}
@@ -654,15 +611,39 @@ public class Controls {
 	}
 
 	public static void BackGestureAreaHeightHook(PackageLoadedParam lpparam) {
-		ModuleHelper.findAndHookMethod("com.miui.home.recents.GestureStubView", lpparam.getClassLoader(), "getGestureStubWindowParam", new MethodHook() {
-			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
-				WindowManager.LayoutParams lp = (WindowManager.LayoutParams)param.getResult();
-				int pct = MainModule.mPrefs.getInt("controls_fsg_coverage", 60);
-				lp.height = Math.round(lp.height / 60.0f * pct);
-				param.setResult(lp);
-			}
-		});
+		Class<?> GestureStubView = findClassIfExists("com.miui.home.recents.GestureStubView", lpparam.getClassLoader());
+		if (GestureStubView == null) return;
+		Method updateGestureTouchHeight = ModuleHelper.findFirstMethodByName(GestureStubView, "updateGestureTouchHeight");
+		if (updateGestureTouchHeight != null) {
+			ModuleHelper.hookMethod(updateGestureTouchHeight, new MethodHook() {
+				@Override
+				protected void before(final BeforeHookCallback param) throws Throwable {
+					int pct = MainModule.mPrefs.getInt("controls_fsg_coverage", 60);
+					int i = XposedHelpers.getIntField(param.getThisObject(), "mRotation");
+					float f = pct / 100f;
+					if (i == 0 || i == 2) {
+						int mScreenHeight = XposedHelpers.getIntField(param.getThisObject(), "mScreenHeight");
+						XposedHelpers.setObjectField(param.getThisObject(), "mGestureTouchHeight", (int) (mScreenHeight * f));
+					}
+					else {
+						int mScreenWidth = XposedHelpers.getIntField(param.getThisObject(), "mScreenWidth");
+						XposedHelpers.setObjectField(param.getThisObject(), "mGestureTouchHeight", (int) (mScreenWidth * f));
+					}
+					param.returnAndSkip(null);
+				}
+			});
+		}
+		else {
+			ModuleHelper.findAndHookMethod(GestureStubView, "getGestureStubWindowParam", new MethodHook() {
+				@Override
+				protected void after(final AfterHookCallback param) throws Throwable {
+					WindowManager.LayoutParams lp = (WindowManager.LayoutParams)param.getResult();
+					int pct = MainModule.mPrefs.getInt("controls_fsg_coverage", 60);
+					lp.height = Math.round(lp.height / 60.0f * pct);
+					param.setResult(lp);
+				}
+			});
+		}
 	}
 
 	public static void BackGestureAreaWidthHook(PackageLoadedParam lpparam) {
@@ -693,21 +674,21 @@ public class Controls {
 	}
 
 	public static void HideNavBarHook(PackageLoadedParam lpparam) {
-		ModuleHelper.hookAllConstructors("com.android.systemui.recents.OverviewProxyService", lpparam.getClassLoader(), new MethodHook() {
-			@Override
-			protected void after(AfterHookCallback param) throws Throwable {
-				ArrayList mCallbacks = (ArrayList) ModuleHelper.getObjectFieldByPath(param.getThisObject(), "mCommandQueue.mCallbacks");
-				Object callback = mCallbacks.get(mCallbacks.size() - 1);
-				ModuleHelper.findAndHookMethod(callback.getClass(), "setWindowState", int.class, int.class, int.class, new MethodHook() {
-					@Override
-					protected void before(final BeforeHookCallback param) throws Throwable {
-						Object GestureObserver = ModuleHelper.getDepInstance(lpparam.getClassLoader(), "com.miui.systemui.controller.GestureObserver");
-						XposedHelpers.setObjectField(GestureObserver, "mGestureLineEnable", true);
-					}
-				});
-			}
-		});
-		ModuleHelper.hookAllMethods("com.android.systemui.navigationbar.NavigationBarController", lpparam.getClassLoader(), "createNavigationBar", new MethodHook() {
+//		ModuleHelper.hookAllConstructors("com.android.systemui.recents.OverviewProxyService", lpparam.getClassLoader(), new MethodHook() {
+//			@Override
+//			protected void after(AfterHookCallback param) throws Throwable {
+//				ArrayList mCallbacks = (ArrayList) ModuleHelper.getObjectFieldByPath(param.getThisObject(), "mCommandQueue.mCallbacks");
+//				Object callback = mCallbacks.get(mCallbacks.size() - 1);
+//				ModuleHelper.findAndHookMethod(callback.getClass(), "setWindowState", int.class, int.class, int.class, new MethodHook() {
+//					@Override
+//					protected void before(final BeforeHookCallback param) throws Throwable {
+//						Object GestureObserver = ModuleHelper.getDepInstance(lpparam.getClassLoader(), "com.miui.systemui.controller.GestureObserver");
+//						XposedHelpers.setObjectField(GestureObserver, "mGestureLineEnable", true);
+//					}
+//				});
+//			}
+//		});
+		ModuleHelper.hookAllMethods("com.android.systemui.navigationbar.NavigationBarControllerImpl", lpparam.getClassLoader(), "createNavigationBar", new MethodHook() {
 			@Override
 			protected void before(final BeforeHookCallback param) throws Throwable {
 				if (param.getArgs().length >= 3) {
@@ -742,16 +723,6 @@ public class Controls {
 			ModuleHelper.findAndHookMethod("com.android.server.policy.MiuiShortcutTriggerHelper", lpparam.getClassLoader(), "getDoubleVolumeDownKeyFunction", String.class, HookerClassHelper.returnConstant("launch_camera"));
 			ModuleHelper.findAndHookMethod("com.android.server.input.shortcut.singlekeyrule.VolumeDownKeyRule", lpparam.getClassLoader(), "isEnableLaunchCamera", HookerClassHelper.returnConstant(true));
 		}
-	}
-
-	public static void NoFingerprintWakeHook(SystemServerLoadedParam lpparam) {
-		ModuleHelper.findAndHookMethod("com.android.server.policy.MiuiPhoneWindowManager", lpparam.getClassLoader(), "processBackFingerprintDpcenterEvent", KeyEvent.class, boolean.class, new MethodHook() {
-			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				boolean isScreenOn = (boolean)param.getArgs()[1];
-				if (!isScreenOn) param.returnAndSkip(null);
-			}
-		});
 	}
 
 	public static void AssistGestureActionHook(PackageLoadedParam lpparam) {

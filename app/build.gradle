@@ -8,8 +8,8 @@ def sFile = file(keystoreProperties['storeFile'])
 def sPassword = keystoreProperties['storePassword']
 def kAlias = keystoreProperties['keyAlias']
 def kPassword = keystoreProperties['keyPassword']
-def lastVersion = 73
-def lastVersionName = "24.10.12"
+def lastVersion = 75
+def lastVersionName = "25.09.25"
 
 android {
     namespace "name.monwf.customiuizer"
@@ -25,9 +25,9 @@ android {
     }
     defaultConfig {
         applicationId "name.monwf.customiuizer"
-        minSdkVersion 34
+        minSdkVersion 35
         //noinspection OldTargetApi,ExpiredTargetSdkVersion
-        targetSdkVersion 34
+        targetSdkVersion 35
         compileSdk 35
         versionCode lastVersion
         versionName lastVersionName
@@ -101,11 +101,11 @@ dependencies {
     compileOnly files('lib/framework.jar')
 
     implementation "io.github.libxposed:service:100-1.0.0"
-    implementation "org.apache.commons:commons-lang3:3.15.0"
+    implementation "org.apache.commons:commons-lang3:3.18.0"
     implementation "androidx.preference:preference:1.2.1"
     implementation 'androidx.palette:palette:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'org.luckypray:dexkit:2.0.2'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'org.luckypray:dexkit:2.0.7'
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:2.0.0"))
 //    implementation "androidx.recyclerview:recyclerview:1.2.1"
 //    implementation 'com.google.android.flexbox:flexbox:3.0.0'

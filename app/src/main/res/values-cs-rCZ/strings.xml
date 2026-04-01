@@ -119,7 +119,6 @@ Překlad S11V3R 🇨🇿</string>
     <string name="system_maxsbicons_title">Omezení počtu ikon oznámení</string>
     <string name="system_maxsbicons_summ">Počet ikon oznámení, které se mají zobrazit, než se změní na tečky</string>
     <string name="system_mobiletypeicon_title">Skrýt typ mobilní sítě</string>
-    <string name="system_mobiletypeicon_summ">Odstranění ikony typu mobilní sítě ze stavového řádku</string>
     <string name="system_networkindicator_wifi_title">Skrýt indikátory aktivity WiFi sítě</string>
     <string name="system_networkindicator_mobile_title">Skrýt indikátory aktivity mobilní sítě</string>
     <string name="system_4gtolte_title">Zobrazení ikony LTE pro 4G</string>
@@ -187,8 +186,6 @@ Překlad S11V3R 🇨🇿</string>
     <string name="system_mods_screenshots">Snímky obrazovky</string>
     <string name="system_screenshot_title">Konfigurace snímku obrazovky</string>
     <string name="system_screenshot_summ">Přizpůsobení formátu, kvality a složky pro ukládání snímků obrazovky</string>
-    <string name="system_screenshot_format_title">Formát</string>
-    <string name="system_screenshot_quality_title">Kvalita</string>
     <string name="system_screenshot_path_title">Umístění složky</string>
     <string name="system_gallery_screenshots_path_title">Složka snímků obrazovky galerie</string>
     <string name="system_screenshot_overlay_title">Skrytí překryvných prvků na snímcích obrazovky</string>
@@ -214,10 +211,6 @@ Překlad S11V3R 🇨🇿</string>
     <string name="system_firstpress_summ">Nastavení hlasitosti mediálního toku při prvním stisknutí tlačítka</string>
     <string name="system_volumetimer_title">Prodloužit časovač</string>
     <string name="system_volumetimer_summ">Přidat další intervaly do časovačů pro režimy Tichý a Nerušit</string>
-    <string name="system_volumebar_blur_mtk_title">Povolit podporu rozostření panelu hlasitosti pro zařízení MTK</string>
-    <string name="system_volumedialogdelay_collapsed_title">Zpoždění automatického skrytí dialogu hlasitosti</string>
-    <string name="system_volumedialogdelay_collapsed_summ">Složený</string>
-    <string name="system_volumedialogdelay_expanded_summ">Rozšířený</string>
     <string name="system_visualizer_title">Vizualizace hudby</string>
     <string name="system_visualizer_summ">Zobrazení spektrální hustoty jednotlivých frekvenčních pásem zvuku</string>
     <string name="system_visualizer_lockscreen_summ">Vizualizér je nakreslen v horní části tapety zamčené obrazovky</string>
@@ -239,14 +232,6 @@ Překlad S11V3R 🇨🇿</string>
     <string name="system_ignorecalls_summ">Zabránit příchozím hovorům převzít řízení zvuku, když je ve vybraných aplikacích, a přestat je informovat o změnách stavu hovoru</string>
     <string name="system_nosilentvibrate_title">Žádné zkušební vibrace</string>
     <string name="system_nosilentvibrate_summ">Nevibrovat při přepnutí režimu vyzvánění na tichý režim nebo při zapnutí vibrací</string>
-    <string name="system_vibration_amp_title">Tlumené vibrace</string>
-    <string name="system_vibration_amp_summ">Snížení intenzity vibrací ve vybraných hodinách</string>
-    <string name="system_vibration_amp_val_title">Intenzita vibrací</string>
-    <string name="system_vibration_amp_val_summ">Mění délku trvání nebo sílu vibrací v závislosti na podpoře regulace amplitudy zařízením</string>
-    <string name="system_vibration_amp_ringer_title">Hovory</string>
-    <string name="system_vibration_amp_notif_title">Oznámení</string>
-    <string name="system_vibration_amp_other_title">Vše ostatní</string>
-    <string name="system_vibration_amp_period_title">Časové rozmezí</string>
     <string name="system_vibration_title">Blokovat vibrace</string>
     <string name="system_vibration_summ">Zabránění vybraným aplikacím používat vibrace</string>
     <string name="system_volume">Systémové zvuky</string>
@@ -276,15 +261,12 @@ Překlad S11V3R 🇨🇿</string>
     <string name="system_credentials_summ">Ověřování v některých aplikacích vyžaduje přístup k pověřením, ale ta zůstanou uzamčena, pokud je kód PIN/heslo/vzor po spuštění přeskočen. Aktuální možnost přidává ikonu spouštěče, která umožňuje odemknout pověření.</string>
     <string name="system_lockscreenshortcuts_title">Vlastní akce</string>
     <string name="system_lockscreenshortcuts_summ">Přizpůsobitelné akce pro zkratky a tahy prstem</string>
-    <string name="system_lockscreenshortcuts_right_off_title">Zakázat gesto přejetí vlevo</string>
     <string name="system_lockscreenshortcuts_right_title">Akce při dlouhém stisku kamery</string>
-    <string name="system_lockscreenshortcuts_left_off_title">Zakázat gesto přejetí prstem doprava</string>
     <string name="system_lockscreenshortcuts_left_align_title">Svislé zarovnání</string>
     <string name="system_noscreenlock_title">Zakázat zámek obrazovky</string>
     <string name="system_noscreenlock_req_summ">Některá zařízení nemusí fungovat bez odemknutí po spuštění</string>
     <string name="system_noscreenlock_summ">Selektivní vypnutí zámku obrazovky (nemění zabezpečení žádných aplikací a neodstraňuje údaje o otiscích prstů)</string>
     <string name="system_noscreenlock_scr_title">Přeskočit zamykací obrazovku</string>
-    <string name="system_noscreenlock_scr_summ">Vůbec nezobrazovat zamykací obrazovku, když je vypnut zámek obrazovky</string>
     <string name="system_noscreenlock_wifi_title">Důvěryhodné Wi-Fi sítě</string>
     <string name="system_noscreenlock_wifi_summ">Dočasné vypnutí zámku obrazovky při připojení k těmto sítím</string>
     <string name="system_noscreenlock_bt_title">Důvěryhodná zařízení Bluetooth</string>
@@ -347,8 +329,6 @@ Překlad S11V3R 🇨🇿</string>
     <string name="system_cleanopenwith_datatype">Vyberte typ dat, která chcete skrýt</string>
     <string name="system_forceclose_title">Zabránit vynucenému ukončení aplikace</string>
     <string name="system_forceclose_summ">Zakázat výchozí akci HyperOS pro zavření vybraných aplikací</string>
-    <string name="system_allrotations_title">Všechny stupně otočení</string>
-    <string name="system_allrotations_summ">Povolit všechny rotace obrazovky včetně obráceného zobrazení na výšku</string>
     <string name="system_orientationlock_title">Zámek orientace</string>
     <string name="system_orientationlock_summ">Přidat dlaždici rychlého nastavení, která může uzamknout orientaci na výšku nebo na šířku</string>
     <string name="system_notifafterunlock_title">Udržovat oznámení</string>
@@ -361,14 +341,9 @@ Překlad S11V3R 🇨🇿</string>
     <string name="system_hidelsstatusbar_summ">Skrýt stavový řádek na uzamčené obrazovce</string>
     <string name="system_hidelsclock_title">Skrýt horní blok</string>
     <string name="system_lockscreen_hidezenmode_title">Skrýt upozornění zen módu</string>
-    <string name="system_lockscreen_disable_edit_title">Zakázat dlouhý stisk pro zahájení úprav</string>
     <string name="system_hidelsclock_summ">Odstranit horní blok obsahující hodiny, datum a další údaje</string>
-    <string name="system_hidelshint_title">Skrýt nápovědu k odemknutí</string>
-    <string name="system_hidelshint_summ">Odstranit nápovědy k odemknutí přejetím nahoru</string>
     <string name="system_nosos_title">Žádná tísňová volání</string>
     <string name="system_nosos_summ">Zakázat tlačítko tísňového volání na uzamčené obrazovce</string>
-    <string name="system_lswallpaper_title">Použít tapetu pomocí libovolné aplikace</string>
-    <string name="system_lswallpaper_summ">Umožnit aplikacím třetích stran nastavit tapetu zamčené obrazovky. Aplikace Motivy musí být nainstalována a musí mít oprávnění k přístupu do úložiště.</string>
     <string name="system_taptounlock_title">Klepnutím odemknout</string>
     <string name="system_taptounlock_summ">Odemykání zařízení zahájíte klepnutím na spodní část uzamčené obrazovky</string>
     <string name="system_dttosleep_title">Dvojitým klepnutí uspat</string>
@@ -398,9 +373,6 @@ Překlad S11V3R 🇨🇿</string>
     <string name="system_hidefromrecents_title">Skrýt z posledních spuštěných</string>
     <string name="system_hidefromrecents_summ">Skrytí vybraných aplikací ze seznamu posledních úloh</string>
     <string name="system_mods_betterpopups">Vyskakující oznámení</string>
-    <string name="system_betterpopups_delay_title">Zpoždění automatického skrývání</string>
-    <string name="system_betterpopups_nohide_title">Žádné automatické skrytí</string>
-    <string name="system_betterpopups_nohide_summ">Automaticky neodmítat vyskakovací okna</string>
     <string name="system_betterpopups_autoclose_expanded_title">Automaticky zrušit rozšířená vyskakovací okna</string>
     <string name="system_betterpopups_allowfloat_title">Povolit plovoucí okno</string>
     <string name="system_betterpopups_allowfloat_summ">Otevřít aplikaci v plovoucím okně gestem přejetí prstem dolů, pokud je pro oznámení definována příslušná akce kliknutí</string>
@@ -433,10 +405,6 @@ Překlad S11V3R 🇨🇿</string>
     <string name="system_mods_volumeblur">Rozmazat pozadí dialogového okna hlasitosti</string>
     <string name="system_volumeblur_collapsed_title">Sbalený dialog</string>
     <string name="system_volumeblur_expanded_title">Rozšířený dialog</string>
-    <string name="system_mods_animationscale">Měřítko animace</string>
-    <string name="system_animationscale_window_title">Okna</string>
-    <string name="system_animationscale_transition_title">Přechody</string>
-    <string name="system_animationscale_animator_title">Hodnota animátorů</string>
     <string name="launcher_gestures">Gesta</string>
     <string name="launcher_gestures_action">Akce</string>
     <string name="launcher_gestures_setting">Nastavení přepínání</string>
@@ -454,8 +422,6 @@ Překlad S11V3R 🇨🇿</string>
     <string name="launcher_nounlockanim_summ">Neanimovat ikony, když je zařízení odemčené</string>
     <string name="launcher_nozoomanim_title">Odstranit animaci spuštění</string>
     <string name="launcher_nozoomanim_summ">Nepřibližovat/oddalovat ikony při zavření/otevření aplikace</string>
-    <string name="launcher_oldlaunchanim_title">Použít starší animaci spuštění</string>
-    <string name="launcher_oldlaunchanim_summ">Vrátit přechod otevření aplikace na předchozí</string>
     <string name="launcher_sensorportrait_title">Podpora obráceného portrétu</string>
     <string name="launcher_sensorportrait_summ">Otočit orientaci spouštěče na výšku</string>
     <string name="launcher_hideseekpoints_title">Dynamický ukazatel stránky</string>
@@ -470,7 +436,6 @@ Překlad S11V3R 🇨🇿</string>
     <string name="launcher_iconscale_title">Měřítko ikon</string>
     <string name="launcher_horizmargin_title">Horizontální okraje mřížky</string>
     <string name="launcher_topmargin_title">Horní okraj mřížky</string>
-    <string name="launcher_dock_topmargin_title">Okraj doku</string>
     <string name="launcher_dock_bottommargin_title">Dolní okraj doku</string>
     <string name="launcher_horizwidgetmargin_title">Horizontální okraj widgetu</string>
     <string name="launcher_indicatorheight_title">Výška ukazatele stránky</string>
@@ -478,22 +443,15 @@ Překlad S11V3R 🇨🇿</string>
     <string name="launcher_folders">Složky</string>
     <string name="launcher_folder_cols_title">Počet sloupců ve složkách</string>
     <string name="launcher_folderwidth_title">Využití celé šířky složky</string>
-    <string name="launcher_folderspace_title">Snížit boční polstrování</string>
     <string name="launcher_disable_log_title">Zakázat analytiku</string>
-    <string name="launcher_fixanim_title">Opravit animace</string>
-    <string name="launcher_fixanim_summ">Použít škálování doby trvání animátorů hodnot na některé animace spouštěče</string>
     <string name="launcher_fixlaunch_title">Opravit informace o aplikaci</string>
     <string name="launcher_fixlaunch_summ">Vždy otevřít informace o aplikaci ve stylu MIUI z nabídky dlouhého stisknutí tlačítka</string>
-    <string name="launcher_folderblur">Rozmazání pozadí</string>
     <string name="launcher_closefolder_title">Automatické zavírání složek</string>
     <string name="launcher_closefolder_summ">Zavřít složku aplikace po spuštění</string>
     <string name="launcher_titles">Názvy aplikací</string>
-    <string name="launcher_hidetitles_title">Skrýt názvy</string>
     <string name="launcher_docktitles_title">Zobrazit názvy v doku</string>
     <string name="launcher_titlefontsize_title">Velikost písma</string>
     <string name="launcher_titletopmargin_title">Dodatečný horní okraj</string>
-    <string name="launcher_darkershadow_title">Tmavší stín</string>
-    <string name="launcher_darkershadow_summ">Zmenšuje průhlednost stínu nadpisu</string>
     <string name="launcher_renameapps_title">Vlastní názvy aplikací</string>
     <string name="launcher_renameapps_list_title">Upravené názvy</string>
     <string name="launcher_renameapps_modified">Změněný název</string>
@@ -536,8 +494,6 @@ Překlad S11V3R 🇨🇿</string>
     <string name="controls_fingerprintlong_title">Akce dlouhého stisku</string>
     <string name="controls_fingerprintscreen_title">Zapnout obrazovku po selhání</string>
     <string name="controls_fingerprintscreen_summ">Rozsvícení obrazovky při neúspěšném ověření</string>
-    <string name="controls_fingerprintwake_title">Vyžadovat skutečné otisky prstů</string>
-    <string name="controls_fingerprintwake_summ">Nezapínat obrazovku, pokud nejsou zaregistrovány otisky prstů</string>
     <string name="controls_fingerprintsuccess_title">Vibrovat při úspěchu</string>
     <string name="controls_fingerprintsuccess_summ">Haptická zpětná vazba při úspěšném ověření</string>
     <string name="controls_fingerprintsuccess_ignore_title">Ignorovat nastavení systému</string>
@@ -607,8 +563,6 @@ Překlad S11V3R 🇨🇿</string>
     <string name="various_installappinfo_vercode">Verze kódu</string>
     <string name="various_installappinfo_sdk">Podporavné SDK</string>
     <string name="various_installappinfo_current">Aktuální</string>
-    <string name="various_alarmcompat_title">Kompatibilita budíku</string>
-    <string name="various_alarmcompat_summ">Umožnit, aby vybrané aplikace zobrazovaly správný čas příštího budíku nastavený výchozí aplikací HyperOS Hodiny</string>
     <string name="various_gboardpadding_port_title">Spodní výplň na výšku</string>
     <string name="various_gboardpadding_land_title">Spodní výplň na šířku</string>
     <string name="various_answerinheadup_title">Udržet hovory v oznámení při odpovědi na hovor</string>
@@ -638,7 +592,6 @@ Překlad S11V3R 🇨🇿</string>
 \n- odkaz na stránku Obchodu Play
 \n- spustit aplikaci</string>
     <string name="various_appsort_title">Počáteční pořadí instalovaných aplikací</string>
-    <string name="various_privacyapps_column_nums4_title">Nastavit počet sloupců na 4 v zobrazení aplikace pro soukromí</string>
     <string name="disable_app_title">Zakázat aplikaci\?</string>
     <string name="disable_app_text">Pokud se jedná o nezbytnou systémovou aplikaci, její zakázání může způsobit problémy :)</string>
     <string name="disable_app_settings">To je špatný nápad! :)</string>
@@ -670,7 +623,6 @@ Překlad S11V3R 🇨🇿</string>
     <string name="array_global_actions_screenshot">Vytvořit snímek obrazovky</string>
     <string name="array_global_actions_menu">Otevřít menu</string>
     <string name="array_global_actions_recents">Otevřít nedávné aplikace</string>
-    <string name="array_global_actions_volume">Otevřít dialogové okno hlasitosti</string>
     <string name="array_global_actions_volume_up">Zvýšit hlasitost</string>
     <string name="array_global_actions_volume_down">Nižší hlasitost</string>
     <string name="array_global_actions_launch">Spustit aplikaci</string>
@@ -687,7 +639,6 @@ Překlad S11V3R 🇨🇿</string>
     <string name="array_global_actions_pinningwindow">Připnutí okna</string>
     <string name="array_global_actions_splitscreen">Rozdělená obrazovka</string>
     <string name="array_global_actions_clearmemory">Vyčistit paměť</string>
-    <string name="array_global_actions_invertcolors">Invertovat barvy</string>
     <string name="array_global_actions_goback">Vrátit se zpět</string>
     <string name="array_global_actions_onehanded_left">Režim ovládání jednou rukou</string>
     <string name="array_global_actions_clear_notifs">vymazat oznámení</string>
@@ -718,8 +669,6 @@ Překlad S11V3R 🇨🇿</string>
     <string name="array_netspeedicons_no">Bez ikon</string>
     <string name="array_expandnotifs_allbutblack">Pro všechny aplikace, kromě uvedených</string>
     <string name="array_expandnotifs_whiteonly">Pouze pro aplikace uvedené v seznamu</string>
-    <string name="array_mobiletypeicon_connected">Skrýt pouze v případě, že není připojení</string>
-    <string name="array_mobiletypeicon_show_disconnected">Zobrazit pokud není připojeno</string>
     <string name="system_statusbar_mobiletype_show_wificonnected_title">Zobrazit při připojení Wi-Fi</string>
     <string name="array_mobiletypeicon_hide">Kompletně skrýt</string>
     <string name="array_qshaptic_light">Lehké vibrace</string>
@@ -798,7 +747,6 @@ Překlad S11V3R 🇨🇿</string>
     <string name="array_append">Přidat</string>
     <string name="array_prepend">Připsat</string>
     <string name="array_newline">Vložit jako nový řádek</string>
-    <string name="array_path">Zvolená cesta</string>
     <string name="array_collapse_initial">Původně</string>
     <string name="array_collapse_permanent">Trvale</string>
     <string name="array_second_beginning">Začátek sekund</string>

@@ -15,7 +15,6 @@ import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -25,10 +24,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 import android.os.UserHandle;
-import android.provider.Settings;
+import android.provider.MiuiSettings;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -37,7 +37,6 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -362,38 +361,28 @@ public class Launcher {
 
     public static void FSGesturesHook(PackageLoadedParam lpparam) {
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.getClassLoader(), "usingFsGesture", HookerClassHelper.returnConstant(true));
-
-        ModuleHelper.findAndHookMethodSilently("com.miui.home.recents.BaseRecentsImpl", lpparam.getClassLoader(), "createAndAddNavStubView", new MethodHook() {
-            @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                boolean fsg = (boolean)XposedHelpers.getAdditionalStaticField(XposedHelpers.findClass("com.miui.home.recents.BaseRecentsImpl", lpparam.getClassLoader()), "REAL_FORCE_FSG_NAV_BAR");
-                if (!fsg) param.returnAndSkip(null);
-            }
-        });
-
-        ModuleHelper.findAndHookMethodSilently("com.miui.home.recents.BaseRecentsImpl", lpparam.getClassLoader(), "updateFsgWindowState", new MethodHook() {
+        ModuleHelper.findAndHookMethod("com.miui.home.recents.BaseRecentsImpl", lpparam.getClassLoader(), "updateFsgWindowState", new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
-                boolean fsg = (boolean)XposedHelpers.getAdditionalStaticField(XposedHelpers.findClass("com.miui.home.recents.BaseRecentsImpl", lpparam.getClassLoader()), "REAL_FORCE_FSG_NAV_BAR");
+                Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
+                boolean fsg = MiuiSettings.Global.getBoolean(mContext.getContentResolver(), "force_fsg_nav_bar");
                 if (fsg) return;
 
                 Object mNavStubView = XposedHelpers.getObjectField(param.getThisObject(), "mNavStubView");
-                Object mWindowManager = XposedHelpers.getObjectField(param.getThisObject(), "mWindowManager");
-                if (mWindowManager != null && mNavStubView != null) {
-                    XposedHelpers.callMethod(mWindowManager, "removeView", mNavStubView);
-                    XposedHelpers.setObjectField(param.getThisObject(), "mNavStubView", null);
+                if (mNavStubView != null) {
+                    XposedHelpers.callMethod(param.getThisObject(), "removeNavStubView");
+                    XposedHelpers.callMethod(param.getThisObject(), "clearBackStubWindow");
                 }
             }
         });
 
-        ModuleHelper.findAndHookMethodSilently("com.miui.launcher.utils.MiuiSettingsUtils", lpparam.getClassLoader(), "getGlobalBoolean", ContentResolver.class, String.class, new MethodHook() {
+        ModuleHelper.findAndHookMethod("com.miui.launcher.utils.MiuiSettingsUtils", lpparam.getClassLoader(), "getGlobalBoolean", ContentResolver.class, String.class, new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
                 if (!"force_fsg_nav_bar".equals(param.getArgs()[1])) return;
 
                 for (StackTraceElement el: Thread.currentThread().getStackTrace()) {
                     if ("com.miui.home.recents.BaseRecentsImpl".equals(el.getClassName())) {
-                        XposedHelpers.setAdditionalStaticField(XposedHelpers.findClass("com.miui.home.recents.BaseRecentsImpl", lpparam.getClassLoader()), "REAL_FORCE_FSG_NAV_BAR", param.getResult());
                         param.setResult(true);
                         return;
                     }
@@ -495,26 +484,6 @@ public class Launcher {
                 mDoubleTapControllerEx.onDoubleTapEvent();
             }
         });
-    }
-
-    public static void TitleShadowHook(PackageLoadedParam lpparam) {
-        if (lpparam.getPackageName().equals("com.miui.home"))
-            ModuleHelper.findAndHookMethod("com.miui.home.launcher.WallpaperUtils", lpparam.getClassLoader(), "getIconTitleShadowColor", new MethodHook() {
-                @Override
-                protected void after(final AfterHookCallback param) throws Throwable {
-                    int color = (int)param.getResult();
-                    if (color == Color.TRANSPARENT) return;
-                    param.setResult(Color.argb(Math.round(Color.alpha(color) + (255 - Color.alpha(color)) / 1.9f), Color.red(color), Color.green(color), Color.blue(color)));
-                }
-            }); else
-            ModuleHelper.findAndHookMethod("com.miui.home.launcher.WallpaperUtils", lpparam.getClassLoader(), "getTitleShadowColor", int.class, new MethodHook() {
-                @Override
-                protected void after(final AfterHookCallback param) throws Throwable {
-                    int color = (int)param.getResult();
-                    if (color == Color.TRANSPARENT) return;
-                    param.setResult(Color.argb(Math.round(Color.alpha(color) + (255 - Color.alpha(color)) / 1.9f), Color.red(color), Color.green(color), Color.blue(color)));
-                }
-            });
     }
 
     public static void HideNavBarHook(PackageLoadedParam lpparam) {
@@ -631,18 +600,7 @@ public class Launcher {
         });
     }
 
-    public static void UnlockGridsRes() {
-        MainModule.resHooks.setThemeValueReplacement("com.miui.home", "integer", "config_cell_count_x", 3);
-        MainModule.resHooks.setThemeValueReplacement("com.miui.home", "integer", "config_cell_count_y", 4);
-        MainModule.resHooks.setThemeValueReplacement("com.miui.home", "integer", "config_cell_count_x_min", 3);
-        MainModule.resHooks.setThemeValueReplacement("com.miui.home", "integer", "config_cell_count_y_min", 4);
-        MainModule.resHooks.setThemeValueReplacement("com.miui.home", "integer", "config_cell_count_x_max", 8);
-        MainModule.resHooks.setThemeValueReplacement("com.miui.home", "integer", "config_cell_count_y_max", 10);
-    }
-
     public static void UnlockGridsHook(PackageLoadedParam lpparam) {
-        ModuleHelper.hookAllMethodsSilently("com.miui.home.launcher.compat.LauncherCellCountCompatDevice", lpparam.getClassLoader(), "shouldUseDeviceValue", HookerClassHelper.returnConstant(false));
-        ModuleHelper.findAndHookMethodSilently("com.miui.home.launcher.compat.LauncherCellCountCompatDeviceFold", lpparam.getClassLoader(), "shouldUseDeviceValue", Context.class, int.class, HookerClassHelper.returnConstant(false));
         ModuleHelper.findAndHookMethod("com.miui.home.settings.MiuiHomeSettings", lpparam.getClassLoader(), "onCreatePreferences", Bundle.class, String.class, new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
@@ -699,55 +657,81 @@ public class Launcher {
         });
     }
 
-    public static void FolderColumnsRes(int folderCols) {
-        MainModule.resHooks.setThemeValueReplacement("com.miui.home", "integer", "config_folder_columns_count", folderCols);
-    }
-
-
-    private static void setFolderWidth(Object thisObject) {
-        if (MainModule.mPrefs.getBoolean("launcher_folderwidth")) {
-            GridView mContent = (GridView)XposedHelpers.getObjectField(thisObject, "mContent");
-            ViewGroup.LayoutParams lp = mContent.getLayoutParams();
-            lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
-            mContent.setLayoutParams(lp);
-        }
-    }
-
     public static void FolderColumnsHook(PackageLoadedParam lpparam) {
+        int cols = MainModule.mPrefs.getInt("launcher_folder_cols", 3);
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.Folder", lpparam.getClassLoader(), "onFinishInflate", new MethodHook() {
             @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                setFolderWidth(param.getThisObject());
-                int cols = MainModule.mPrefs.getInt("launcher_folder_cols", 1);
-                if (cols > 3 && MainModule.mPrefs.getBoolean("launcher_folderspace")) {
-                    ViewGroup mBackgroundView = (ViewGroup)XposedHelpers.getObjectField(param.getThisObject(), "mBackgroundView");
-                    if (mBackgroundView != null)
-                        mBackgroundView.setPadding(
-                            mBackgroundView.getPaddingLeft() / 3,
-                            mBackgroundView.getPaddingTop(),
-                            mBackgroundView.getPaddingRight() / 3,
-                            mBackgroundView.getPaddingBottom()
-                        );
+            protected void after(AfterHookCallback param) throws Throwable {
+                GridView mContent = (GridView) XposedHelpers.getObjectField(param.getThisObject(), "mContent");
+                mContent.setNumColumns(cols);
+                if (MainModule.mPrefs.getBoolean("launcher_folderwidth")) {
+                    List containers = List.of(
+                        XposedHelpers.getObjectField(param.getThisObject(), "mHeader")
+                    );
+                    for (Object containerObj: containers) {
+                        ViewGroup container = (ViewGroup) containerObj;
+                        ViewGroup.LayoutParams lp = container.getLayoutParams();
+                        lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                        container.setLayoutParams(lp);
+                    }
+                    ViewGroup folder = (ViewGroup) param.getThisObject();
+                    FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) folder.getLayoutParams();
+                    int horizMargin = (int) Helpers.dp2px(10);
+                    layoutParams.leftMargin = horizMargin;
+                    layoutParams.rightMargin = horizMargin;
                 }
             }
         });
-
-        ModuleHelper.findAndHookMethod("com.miui.home.launcher.Folder", lpparam.getClassLoader(), "resetViewsLayoutParams", new MethodHook() {
+        ModuleHelper.findAndHookConstructor("com.miui.home.launcher.FolderGridView", lpparam.getClassLoader(), Context.class, AttributeSet.class, new MethodHook() {
             @Override
             protected void after(AfterHookCallback param) throws Throwable {
-                setFolderWidth(param.getThisObject());
+                GridView mContent = (GridView)param.getThisObject();
+                mContent.setNumColumns(cols);
             }
         });
-
-        ModuleHelper.hookAllMethods("com.miui.home.launcher.Folder", lpparam.getClassLoader(), "onLayout", new MethodHook() {
+        Class<?> FolderIconClass = findClass("com.miui.home.launcher.FolderIcon", lpparam.getClassLoader());
+        ModuleHelper.findAndHookMethod("com.miui.home.launcher.folder.FolderAnimController", lpparam.getClassLoader(), "setupView", boolean.class, FolderIconClass, new MethodHook() {
             @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                if (!MainModule.mPrefs.getBoolean("launcher_folderwidth")) return;
-                GridView mContent = (GridView)XposedHelpers.getObjectField(param.getThisObject(), "mContent");
-                ImageView mFakeIcon = (ImageView)XposedHelpers.getObjectField(param.getThisObject(), "mFakeIcon");
-                mFakeIcon.layout(mContent.getLeft(), mContent.getTop(), mContent.getRight(), mContent.getTop() + mContent.getWidth());
+            protected void after(AfterHookCallback param) throws Throwable {
+                int maxRow = (int)ModuleHelper.getObjectFieldByPath(param.getThisObject(), "mAnimaFolderGridView.mMaxRow");
+                XposedHelpers.setObjectField(param.getThisObject(), "DISPLAY_COUNT_MAX", maxRow * cols);
+                XposedHelpers.setObjectField(param.getThisObject(), "mFolderColumnCount", cols);
             }
         });
+        ModuleHelper.findAndHookMethod("com.miui.home.launcher.folder.FolderAnimController", lpparam.getClassLoader(), "getGridItemTranslationY", int.class, int.class, new MethodHook() {
+            @Override
+            protected void before(BeforeHookCallback param) throws Throwable {
+                int startY = (int)param.getArgs()[0];
+                int itemIndex = (int)param.getArgs()[1];
+                HashMap<Integer, Integer> mEndLocY = (HashMap<Integer, Integer>)XposedHelpers.getObjectField(param.getThisObject(), "mEndLocY");
+                int intValue = startY - mEndLocY.get(Integer.valueOf((itemIndex / cols) * cols)).intValue();
+                int mNormalEditModeCloseState = XposedHelpers.getIntField(param.getThisObject(), "mNormalEditModeCloseState");
+                if (mNormalEditModeCloseState != 0) {
+                    int[] iArr = (int[]) XposedHelpers.getObjectField(param.getThisObject(), "mGridEndLoc");
+                    if (iArr[1] != 0) {
+                        intValue = startY - iArr[1];
+                    }
+                }
+                param.returnAndSkip((double) intValue);
+            }
+        });
+        if (MainModule.mPrefs.getBoolean("launcher_folderwidth")) {
+            ModuleHelper.findAndHookMethod("com.miui.home.launcher.common.Utilities", lpparam.getClassLoader(), "getFolderGridViewWidth", Context.class, new MethodHook() {
+                @Override
+                protected void before(BeforeHookCallback param) throws Throwable {
+                    param.returnAndSkip(-1);
+                }
+            });
+            ModuleHelper.findAndHookMethod("com.miui.home.launcher.Folder", lpparam.getClassLoader(), "showOrHideFolderBorderLine", boolean.class, new MethodHook() {
+                @Override
+                protected void after(AfterHookCallback param) throws Throwable {
+                    View gridBackground = (ViewGroup) XposedHelpers.getObjectField(param.getThisObject(), "mBackgroundView");
+                    ViewGroup.LayoutParams layoutParams = gridBackground.getLayoutParams();
+                    View mContent = (View) XposedHelpers.getObjectField(param.getThisObject(), "mContent");
+                    layoutParams.width = mContent.getMeasuredWidth() - (int)Helpers.dp2px(4);
+                }
+            });
+        }
     }
 
     public static void IconScaleHook(PackageLoadedParam lpparam) {
@@ -978,16 +962,6 @@ public class Launcher {
         });
     }
 
-    public static void HideTitlesHook(PackageLoadedParam lpparam) {
-        ModuleHelper.findAndHookMethod("com.miui.home.launcher.ItemIcon", lpparam.getClassLoader(), "onFinishInflate", new MethodHook() {
-            @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                View mTitleContainer = (View)XposedHelpers.getObjectField(param.getThisObject(), "mTitleContainer");
-                if (mTitleContainer != null) mTitleContainer.setVisibility(View.GONE);
-            }
-        });
-    }
-
     public static void HorizontalSpacingRes() {
         int opt = MainModule.mPrefs.getInt("launcher_horizmargin", 0) - 21;
         MainModule.resHooks.setThemeValueReplacement("com.miui.home", "dimen", "workspace_cell_padding_side", opt);
@@ -997,7 +971,7 @@ public class Launcher {
 
     public static void IndicatorHeightRes() {
         int opt = MainModule.mPrefs.getInt("launcher_indicatorheight", 9);
-        MainModule.resHooks.setThemeValueReplacement("com.miui.home", "dimen", "slide_bar_height", opt);
+        MainModule.resHooks.setThemeValueReplacement("com.miui.home", "dimen", "stable_indicator_height", opt);
     }
 
     public static void ShowHotseatTitlesHook(PackageLoadedParam lpparam) {
@@ -1010,116 +984,9 @@ public class Launcher {
         });
     }
 
-    public static void FolderBlurHook(PackageLoadedParam lpparam) {
-        Class<?> BlurUtils = findClassIfExists("com.miui.home.launcher.common.BlurUtils", lpparam.getClassLoader());
-        if (BlurUtils != null) {
-            ModuleHelper.hookAllMethods(BlurUtils, "getLauncherBlur", new MethodHook() {
-                @Override
-                protected void before(final BeforeHookCallback param) throws Throwable {
-                    boolean isFolderShowing = (boolean) XposedHelpers.callMethod(param.getArgs()[0], "isFolderShowing");
-                    if (isFolderShowing) {
-                        int blurPct = MainModule.mPrefs.getInt("launcher_folderblur_opacity", 0);
-                        float blurRatio = blurPct / 100f;
-                        param.returnAndSkip(blurRatio);
-                    }
-                }
-            });
-
-            ModuleHelper.findAndHookMethod("com.miui.home.launcher.FolderCling", lpparam.getClassLoader(), "open", new MethodHook() {
-                @Override
-                protected void after(final AfterHookCallback param) throws Throwable {
-                    Activity launcher = (Activity) XposedHelpers.getObjectField(param.getThisObject(), "mLauncher");
-
-                    int blurPct = MainModule.mPrefs.getInt("launcher_folderblur_opacity", 0);
-                    float blurRatio = blurPct / 100f;
-                    XposedHelpers.callStaticMethod(BlurUtils, "fastBlur", blurRatio, launcher.getWindow(), true);
-                }
-            });
-
-            ModuleHelper.findAndHookMethod("com.miui.home.launcher.FolderCling", lpparam.getClassLoader(), "close", boolean.class, new MethodHook() {
-                @Override
-                protected void after(final AfterHookCallback param) throws Throwable {
-                    Activity launcher = (Activity) XposedHelpers.getObjectField(param.getThisObject(), "mLauncher");
-                    XposedHelpers.callStaticMethod(BlurUtils, "fastBlur", 0f, launcher.getWindow(), param.getArgs()[0]);
-                }
-            });
-
-            ModuleHelper.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.getClassLoader(), "cancelShortcutMenu", int.class, "com.miui.home.launcher.shortcuts.CancelShortcutMenuReason", new MethodHook() {
-                @Override
-                protected void after(final AfterHookCallback param) throws Throwable {
-                    boolean isFolderShowing = (boolean) XposedHelpers.callMethod(param.getThisObject(), "isFolderShowing");
-                    if (isFolderShowing) {
-                        int blurPct = MainModule.mPrefs.getInt("launcher_folderblur_opacity", 0);
-                        float blurRatio = blurPct / 100f;
-                        Activity launcher = (Activity) param.getThisObject();
-                        XposedHelpers.callStaticMethod(BlurUtils, "fastBlur", blurRatio, launcher.getWindow(), true);
-                    }
-                }
-            });
-        }
-    }
-
-    private static float scaleStiffness(float val, float scale) {
-        return (scale < 1.0f ? 2f / scale : 1.0f / scale) * val;
-    }
-
-    public static void FixAnimHook(PackageLoadedParam lpparam) {
-        ModuleHelper.hookAllMethods("com.miui.home.launcher.animate.SpringAnimator", lpparam.getClassLoader(), "getSpringForce", new MethodHook() {
-            @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                float scale = Helpers.getAnimationScale(2);
-                if (scale == 1.0f) return;
-                if (scale == 0) scale = 0.01f;
-                param.getArgs()[2] = scaleStiffness((float)param.getArgs()[2], scale);
-            }
-        });
-
-        MethodHook hook = new MethodHook() {
-            @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                float scale = Helpers.getAnimationScale(2);
-                if (scale == 1.0f) return;
-                if (scale == 0) scale = 0.01f;
-                XposedHelpers.setFloatField(param.getThisObject(), "mCenterXStiffness", scaleStiffness(XposedHelpers.getFloatField(param.getThisObject(), "mCenterXStiffness"), scale));
-                XposedHelpers.setFloatField(param.getThisObject(), "mCenterYStiffness", scaleStiffness(XposedHelpers.getFloatField(param.getThisObject(), "mCenterYStiffness"), scale));
-                XposedHelpers.setFloatField(param.getThisObject(), "mWidthStiffness", scaleStiffness(XposedHelpers.getFloatField(param.getThisObject(), "mWidthStiffness"), scale));
-                XposedHelpers.setFloatField(param.getThisObject(), "mRadiusStiffness", scaleStiffness(XposedHelpers.getFloatField(param.getThisObject(), "mRadiusStiffness"), scale));
-                XposedHelpers.setFloatField(param.getThisObject(), "mAlphaStiffness", scaleStiffness(XposedHelpers.getFloatField(param.getThisObject(), "mAlphaStiffness"), scale));
-                try {
-                    XposedHelpers.setFloatField(param.getThisObject(), "mRatioStiffness", scaleStiffness(XposedHelpers.getFloatField(param.getThisObject(), "mRatioStiffness"), scale));
-                } catch (Throwable t) {
-                    XposedHelpers.setFloatField(param.getThisObject(), "mRadioStiffness", scaleStiffness(XposedHelpers.getFloatField(param.getThisObject(), "mRadioStiffness"), scale));
-                }
-            }
-        };
-
-        if (!ModuleHelper.hookAllMethodsSilently("com.miui.home.recents.util.RectFSpringAnim", lpparam.getClassLoader(), "start", hook))
-            ModuleHelper.hookAllMethods("com.miui.home.recents.util.RectFSpringAnim", lpparam.getClassLoader(), "initAllAnimations", hook);
-
-//		if (XposedHelpers.findClassIfExists("com.android.systemui.shared.recents.system.RemoteAnimationAdapterCompat", lpparam.getClassLoader()) != null)
-//		Helpers.hookAllConstructors("com.android.systemui.shared.recents.system.RemoteAnimationAdapterCompat", lpparam.getClassLoader(), new MethodHook() {
-//			@Override
-//			protected void before(final BeforeHookCallback param) throws Throwable {
-//				float scale = Helpers.getAnimationScale(2);
-//				if (scale == 1.0f) return;
-//				param.getArgs()[1] = (long)((long)param.getArgs()[1] * scale);
-//				param.getArgs()[2] = (long)((long)param.getArgs()[2] * scale);
-//			}
-//		});
-    }
-
-    public static void DockMarginTopHook(PackageLoadedParam lpparam) {
-        int opt = MainModule.mPrefs.getInt("launcher_dock_topmargin", 0);
-        ModuleHelper.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.getClassLoader(), "calcHotSeatsMarginTop", Context.class, boolean.class, new MethodHook() {
-            @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
-                param.returnAndSkip(Math.round(Helpers.dp2px(opt)));
-            }
-        });
-    }
     public static void DockMarginBottomHook(PackageLoadedParam lpparam) {
         int opt = MainModule.mPrefs.getInt("launcher_dock_bottommargin", 0);
-        ModuleHelper.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.getClassLoader(), "calcHotSeatsMarginBottom", Context.class, boolean.class, boolean.class, new MethodHook() {
+        ModuleHelper.findAndHookMethod("com.miui.home.launcher.compat.PhoneDeviceRules", lpparam.getClassLoader(), "calHotseatMarginBottom", int.class, new MethodHook() {
             @Override
             protected void before(final BeforeHookCallback param) throws Throwable {
                 param.returnAndSkip(Math.round(Helpers.dp2px(opt)));
@@ -1217,10 +1084,6 @@ public class Launcher {
     public static void NoZoomAnimationHook(PackageLoadedParam lpparam) {
         ModuleHelper.hookAllMethods("com.miui.home.recents.util.SpringAnimationUtils", lpparam.getClassLoader(), "startShortcutMenuLayerFadeOutAnim", HookerClassHelper.DO_NOTHING);
         ModuleHelper.hookAllMethods("com.miui.home.recents.util.SpringAnimationUtils", lpparam.getClassLoader(), "startShortcutMenuLayerFadeInAnim", HookerClassHelper.DO_NOTHING);
-    }
-
-    public static void UseOldLaunchAnimationHook(PackageLoadedParam lpparam) {
-        ModuleHelper.hookAllMethods("com.miui.home.recents.QuickstepAppTransitionManagerImpl", lpparam.getClassLoader(), "hasControlRemoteAppTransitionPermission", HookerClassHelper.returnConstant(false));
     }
 
     public static void ReverseLauncherPortraitHook(PackageLoadedParam lpparam) {
@@ -1349,8 +1212,8 @@ public class Launcher {
         ModuleHelper.findAndHookMethod(FsGestureHelper, "canTriggerAssistantAction", float.class, float.class, int.class, new MethodHook() {
             @Override
             protected void before(final BeforeHookCallback param) throws Throwable {
-                boolean isDisabled = (boolean) XposedHelpers.callStaticMethod(FsGestureHelper, "isAssistantGestureDisabled", param.getArgs()[2]);
-                if (!isDisabled) {
+                int i = (int) param.getArgs()[2];
+                if ((i & 1024) == 0) {
                     int mAssistantWidth = XposedHelpers.getIntField(param.getThisObject(), "mAssistantWidth");
                     float f = (float) param.getArgs()[0];
                     float f2 = (float) param.getArgs()[1];

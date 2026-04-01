@@ -29,6 +29,17 @@
 		miuizer:offtext="@string/array_default"
 		miuizer:format="%s dip" />
 
+	<name.monwf.customiuizer.prefs.SeekBarPreference
+		android:key="pref_key_system_statusbar_clock_line_spacing_multiplier"
+		android:title="@string/system_statusbar_line_spacing_multiplier_title"
+		android:defaultValue="65"
+		miuizer:minValue="65"
+		miuizer:maxValue="120"
+		miuizer:stepValue="5"
+		miuizer:offtext="@string/array_default"
+		miuizer:displayDividerValue="100"
+		miuizer:format="x%s" />
+
 	<name.monwf.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_statusbar_clock_align"
 		android:title="@string/system_statusbar_clock_align_title"

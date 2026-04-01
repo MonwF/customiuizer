@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name" translatable="false">Pengeek</string>
-    <string name="app_slogan" translatable="false">Customize HyperOS to your liking</string>
+    <string name="app_slogan">Customize HyperOS to your liking</string>
     <string name="app_about">About</string>
     <string name="about_version">Version %1$s</string>
     <string name="about_dev">by Mikanoshi &amp; MonwF</string>
@@ -18,6 +18,7 @@
     <string name="common_background_color">Background color</string>
     <string name="common_text_color">Text color</string>
     <string name="common_icon_color">Icon color</string>
+    <string name="module_grant_queryapps_permission">Please grant "get installed apps" permission</string>
 
     <string name="enable_mod">Enable mod</string>
     <string name="white_lists">Turn on whitelisting</string>
@@ -129,8 +130,7 @@
     <string name="system_clockseconds_summ">Display seconds in the status bar clock</string>
     <string name="system_maxsbicons_title">Notification icons limit</string>
     <string name="system_maxsbicons_summ">Number of notification icons to display before turning them into dots</string>
-    <string name="system_mobiletypeicon_title">Hide mobile network type</string>
-    <string name="system_mobiletypeicon_summ">Remove mobile network type icon from status bar</string>
+    <string name="system_mobiletypeicon_title">Mobile network type</string>
     <string name="system_networkindicator_wifi_title">Hide WiFi network activity indicators</string>
     <string name="system_networkindicator_mobile_title">Hide mobile network activity indicators</string>
     <string name="system_4gtolte_title">Show LTE icon for 4G</string>
@@ -202,8 +202,6 @@
     <string name="system_mods_screenshots">Screenshots</string>
     <string name="system_screenshot_title">Screenshot configuration</string>
     <string name="system_screenshot_summ">Customize format, quality and save folder for screenshots</string>
-    <string name="system_screenshot_format_title">Format</string>
-    <string name="system_screenshot_quality_title">Quality</string>
     <string name="system_screenshot_path_title">Save folder</string>
     <string name="system_gallery_screenshots_path_title">Gallery screenshots folder</string>
     <string name="system_screenshot_overlay_title">Hide overlays on screenshots</string>
@@ -228,12 +226,9 @@
     <string name="system_noducking_summ">Do not lower volume of currently playing music to play notification sound</string>
     <string name="system_firstpress_title">Immediate volume adjustment</string>
     <string name="system_firstpress_summ">Adjust media stream volume on first key press</string>
+    <string name="system_volume_hide_ringermode_title">Hide ringer mode buttons when collapsed</string>
     <string name="system_volumetimer_title">Extended timers</string>
     <string name="system_volumetimer_summ">Add more intervals to timers for Silent and Do Not Disturb modes</string>
-    <string name="system_volumebar_blur_mtk_title">Enable volume bar blur support for MTK devices</string>
-    <string name="system_volumedialogdelay_collapsed_title">Volume dialog autohide delay</string>
-    <string name="system_volumedialogdelay_collapsed_summ">Collapsed</string>
-    <string name="system_volumedialogdelay_expanded_summ">Expanded</string>
     <string name="system_visualizer_title">Music visualizer</string>
     <string name="system_visualizer_summ">Display spectral density of discreet audio frequency bands</string>
     <string name="system_visualizer_lockscreen_summ">Visualizer is drawn on top of lock screen wallpaper</string>
@@ -255,14 +250,6 @@
     <string name="system_ignorecalls_summ">Prevent incoming calls from stealing audio focus when it\'s on selected apps and stop notifying them about call state changes</string>
     <string name="system_nosilentvibrate_title">No test vibration</string>
     <string name="system_nosilentvibrate_summ">Do not vibrate when switching ringer mode to silent or turning on vibration in this mode</string>
-    <string name="system_vibration_amp_title">Muffled vibration</string>
-    <string name="system_vibration_amp_summ">Reduce vibration intensity during selected hours</string>
-    <string name="system_vibration_amp_val_title">Vibration intensity</string>
-    <string name="system_vibration_amp_val_summ">Changes either duration or strength of the vibration depending on amplitude control support by device</string>
-    <string name="system_vibration_amp_ringer_title">Calls</string>
-    <string name="system_vibration_amp_notif_title">Notifications</string>
-    <string name="system_vibration_amp_other_title">Everything else</string>
-    <string name="system_vibration_amp_period_title">Time period</string>
     <string name="system_vibration_title">Block vibration</string>
     <string name="system_vibration_summ">Prevent selected apps from using vibration</string>
     <string name="system_volume">System sounds</string>
@@ -292,15 +279,13 @@
     <string name="system_credentials_summ">Authentication in some apps requires access to credentials, but they remain locked if PIN/password/pattern is skipped after boot. Current option adds launcher icon that allows to unlock credentials.</string>
     <string name="system_lockscreenshortcuts_title">Custom actions</string>
     <string name="system_lockscreenshortcuts_summ">Customizable actions for shortcuts and swipes</string>
-    <string name="system_lockscreenshortcuts_right_off_title">Disable swipe left gesture</string>
     <string name="system_lockscreenshortcuts_right_title">Long press camera action</string>
-    <string name="system_lockscreenshortcuts_left_off_title">Disable swipe right gesture</string>
+    <string name="system_lockscreenshortcuts_left_tapaction_title">Long press left shortcut to toggle flashlight</string>
     <string name="system_lockscreenshortcuts_left_align_title">Vertical alignment</string>
     <string name="system_noscreenlock_title">Disable screen lock</string>
     <string name="system_noscreenlock_req_summ">Some devices might not work without unlocking once after boot</string>
     <string name="system_noscreenlock_summ">Selectively disable screen lock (does not change security for any apps and does not remove fingerprint data)</string>
     <string name="system_noscreenlock_scr_title">Skip lock screen</string>
-    <string name="system_noscreenlock_scr_summ">Do not show lock screen at all when screen lock is disabled</string>
     <string name="system_noscreenlock_wifi_title">Trusted Wi-Fi networks</string>
     <string name="system_noscreenlock_wifi_summ">Temporarily disable screen lock while connected to these networks</string>
     <string name="system_noscreenlock_bt_title">Trusted Bluetooth devices</string>
@@ -364,8 +349,6 @@
     <string name="system_cleanopenwith_datatype">Select data type to hide</string>
     <string name="system_forceclose_title">Prevent app force close</string>
     <string name="system_forceclose_summ">Do not allow stock HyperOS action to close selected apps</string>
-    <string name="system_allrotations_title">All rotations</string>
-    <string name="system_allrotations_summ">Allow all screen rotations including reverse portrait</string>
     <string name="system_orientationlock_title">Orientation lock</string>
     <string name="system_orientationlock_summ">Add Quick Settings tile that can lock orientation in portrait or landscape mode</string>
     <string name="system_notifafterunlock_title">Keep notifications</string>
@@ -378,14 +361,9 @@
     <string name="system_hidelsstatusbar_summ">Remove status bar from lock screen</string>
     <string name="system_hidelsclock_title">Hide top block</string>
     <string name="system_lockscreen_hidezenmode_title">Hide zen mode notification</string>
-    <string name="system_lockscreen_disable_edit_title">Disable long press to start editing</string>
     <string name="system_hidelsclock_summ">Remove top block containing clock, date and other data</string>
-    <string name="system_hidelshint_title">Hide unlock hint</string>
-    <string name="system_hidelshint_summ">Remove "Swipe up to unlock" hint</string>
     <string name="system_nosos_title">No emergency calls</string>
     <string name="system_nosos_summ">Disable emergency call button on lock screen</string>
-    <string name="system_lswallpaper_title">Apply wallpaper using any app</string>
-    <string name="system_lswallpaper_summ">Make third-party apps be able to set lock screen wallpaper. Themes app must be installed and given storage access permission.</string>
     <string name="system_taptounlock_title">Tap to unlock</string>
     <string name="system_taptounlock_summ">Start device unlocking by tapping on bottom lock screen area</string>
     <string name="system_dttosleep_title">Double tap to sleep</string>
@@ -415,14 +393,12 @@
     <string name="system_hidefromrecents_title">Hide from recents</string>
     <string name="system_hidefromrecents_summ">Hide selected apps from recent tasks list</string>
     <string name="system_mods_betterpopups">Popup notifications</string>
-    <string name="system_betterpopups_delay_title">Auto hide delay</string>
-    <string name="system_betterpopups_nohide_title">No auto hide</string>
-    <string name="system_betterpopups_nohide_summ">Do not dismiss popups automatically</string>
     <string name="system_betterpopups_autoclose_expanded_title">Dismiss expanded popups automatically</string>
     <string name="system_betterpopups_allowfloat_title">Allow floating window</string>
     <string name="system_betterpopups_allowfloat_summ">Open app in a floating window on swipe down gesture if notification has an appropriate click action defined</string>
     <string name="system_betterpopups_center_title">Show centered</string>
-    <string name="system_betterpopups_center_summ">Display popups in the middle of the screen</string>
+    <string name="system_betterpopups_center_summ">Display popups at the middle of the screen</string>
+    <string name="system_betterpopups_position_at_top_title">Display popups at the top</string>
     <string name="system_mods_floatingwindows">Floating windows and Splitscreen</string>
     <string name="system_fw_noblacklist_title">Disable blacklisting</string>
     <string name="system_fw_noblacklist_summ">Allow any app to be opened in a floating window</string>
@@ -450,10 +426,6 @@
     <string name="system_mods_volumeblur">Volume dialog background blur</string>
     <string name="system_volumeblur_collapsed_title">Collapsed dialog</string>
     <string name="system_volumeblur_expanded_title">Expanded dialog</string>
-    <string name="system_mods_animationscale">Animation scale</string>
-    <string name="system_animationscale_window_title">Windows</string>
-    <string name="system_animationscale_transition_title">Transitions</string>
-    <string name="system_animationscale_animator_title">Value animators</string>
 
     <string name="launcher_gestures">Gestures</string>
     <string name="launcher_gestures_action">Action</string>
@@ -472,8 +444,6 @@
     <string name="launcher_nounlockanim_summ">Do not animate icons when device is unlocked</string>
     <string name="launcher_nozoomanim_title">Remove launch animation</string>
     <string name="launcher_nozoomanim_summ">Do not zoom in/out icons when app is closed/opened</string>
-    <string name="launcher_oldlaunchanim_title">Use old launch animation</string>
-    <string name="launcher_oldlaunchanim_summ">Revert app opening transition to a previous one</string>
     <string name="launcher_sensorportrait_title">Reverse portrait support</string>
     <string name="launcher_sensorportrait_summ">Rotate launcher\'s portrait orientation</string>
     <string name="launcher_hideseekpoints_title">Dynamic page indicator</string>
@@ -489,7 +459,6 @@
     <string name="launcher_horizmargin_title">Horizontal grid margins</string>
     <string name="launcher_topmargin_title">Top grid margin</string>
     <string name="launcher_dock_height_title">Dock height</string>
-    <string name="launcher_dock_topmargin_title">Dock top margin</string>
     <string name="launcher_dock_bottommargin_title">Dock bottom margin</string>
     <string name="launcher_horizwidgetmargin_title">Horizontal widget margin</string>
     <string name="launcher_indicatorheight_title">Page indicator height</string>
@@ -497,22 +466,15 @@
     <string name="launcher_folders">Folders</string>
     <string name="launcher_folder_cols_title">Number of columns in folders</string>
     <string name="launcher_folderwidth_title">Use entire folder\'s width</string>
-    <string name="launcher_folderspace_title">Reduce side padding</string>
     <string name="launcher_disable_log_title">Disable analytics</string>
-    <string name="launcher_fixanim_title">Fix animation</string>
-    <string name="launcher_fixanim_summ">Apply value animators\' duration scaling to some launcher animations</string>
     <string name="launcher_fixlaunch_title">Fix app info</string>
     <string name="launcher_fixlaunch_summ">Always open MIUI-styled app info from long press menu</string>
-    <string name="launcher_folderblur">Background blur</string>
     <string name="launcher_closefolder_title">Auto close folders</string>
     <string name="launcher_closefolder_summ">Close app\'s folder after launch</string>
     <string name="launcher_titles">App titles</string>
-    <string name="launcher_hidetitles_title">Hide titles</string>
     <string name="launcher_docktitles_title">Show titles in dock</string>
     <string name="launcher_titlefontsize_title">Font size</string>
     <string name="launcher_titletopmargin_title">Additional top margin</string>
-    <string name="launcher_darkershadow_title">Darker shadow</string>
-    <string name="launcher_darkershadow_summ">Makes title shadow less transparent</string>
     <string name="launcher_renameapps_title">Custom app titles</string>
     <string name="launcher_renameapps_list_title">Modified titles</string>
     <string name="launcher_renameapps_modified">Modified title</string>
@@ -557,8 +519,6 @@
     <string name="controls_fingerprintlong_title">Long press action</string>
     <string name="controls_fingerprintscreen_title">Turn screen on after failure</string>
     <string name="controls_fingerprintscreen_summ">Light screen up on failed authentication</string>
-    <string name="controls_fingerprintwake_title">Require actual fingerprints</string>
-    <string name="controls_fingerprintwake_summ">Don\'t turn screen on when no fingerprints are enrolled</string>
     <string name="controls_fingerprintsuccess_title">Vibrate on success</string>
     <string name="controls_fingerprintsuccess_summ">Haptic feedback on successful authentication</string>
     <string name="controls_fingerprintsuccess_ignore_title">Ignore system settings</string>
@@ -629,8 +589,6 @@
     <string name="various_installappinfo_vercode">Version code</string>
     <string name="various_installappinfo_sdk">Supported SDK</string>
     <string name="various_installappinfo_current">current</string>
-    <string name="various_alarmcompat_title">Alarm clock compatibility</string>
-    <string name="various_alarmcompat_summ">Make selected apps display correct next alarm time set by stock HyperOS Clock app</string>
     <string name="various_gboardpadding_port_title">Bottom padding in portrait</string>
     <string name="various_gboardpadding_land_title">Bottom padding in landscape</string>
     <string name="various_answerinheadup_title">Keep calls in notification when answer a call</string>
@@ -654,7 +612,6 @@
     <string name="various_apps_title">Show additional app details</string>
     <string name="various_apps_summ">Add new fields to app info page:\n- version code\n- full path to apk\n- data path\n- user ID\n- target SDK version\n- link to Play Store page\n- launch an app</string>
     <string name="various_appsort_title">Installed apps initial sort order</string>
-    <string name="various_privacyapps_column_nums4_title">Set column nums to 4 on privacy apps view</string>
     <string name="disable_app_title">Disable app?</string>
     <string name="disable_app_text">If this is an essential system app, disabling it can break things :)</string>
     <string name="disable_app_settings">That\'s a bad idea! :)</string>
@@ -689,7 +646,6 @@
     <string name="array_global_actions_screenshot">Take screenshot</string>
     <string name="array_global_actions_menu">Open menu</string>
     <string name="array_global_actions_recents">Open recents</string>
-    <string name="array_global_actions_volume">Open volume dialog</string>
     <string name="array_global_actions_volume_up">Raise volume</string>
     <string name="array_global_actions_volume_down">Lower volume</string>
     <string name="array_global_actions_launch">Launch app</string>
@@ -706,7 +662,6 @@
     <string name="array_global_actions_pinningwindow">Pinning window</string>
     <string name="array_global_actions_splitscreen">Split screen</string>
     <string name="array_global_actions_clearmemory">Clear memory</string>
-    <string name="array_global_actions_invertcolors">Invert colors</string>
     <string name="array_global_actions_goback">Go back</string>
     <string name="array_global_actions_onehanded_left">One-handed mode</string>
     <string name="array_global_actions_clear_notifs">clear notifications</string>
@@ -742,8 +697,6 @@
     <string name="array_netspeedicons_bullets" translatable="false">☖ ☗ ⛉ ⛊</string>
     <string name="array_expandnotifs_allbutblack">For all apps except the listed ones</string>
     <string name="array_expandnotifs_whiteonly">For listed apps only</string>
-    <string name="array_mobiletypeicon_connected">Hide only when not connected</string>
-    <string name="array_mobiletypeicon_show_disconnected">Show when not connected</string>
     <string name="system_statusbar_mobile_digital_signal_title">Display the signal strength in numeric dBm format</string>
     <string name="system_statusbar_mobile_digital_signal_in2rows_title">Display as dual rows when phone has dual SIM cards</string>
     <string name="system_statusbar_mobiletype_show_wificonnected_title">Show when Wi-Fi is connected</string>
@@ -826,7 +779,6 @@
     <string name="array_append">Append</string>
     <string name="array_prepend">Prepend</string>
     <string name="array_newline">Insert as new line</string>
-    <string name="array_path">Selected path</string>
     <string name="array_collapse_initial">Initially</string>
     <string name="array_collapse_permanent">Permanently</string>
     <string name="array_second_beginning">Beginning of a second</string>
@@ -1039,6 +991,7 @@
     <string name="system_statusbar_mobile_signal_cat_title">Mobile signal icon display settings</string>
     <string name="system_statusbar_clocktweak_title">Clock settings</string>
     <string name="system_statusbar_enable_weather_param_title">Use tq to display weather when formatting</string>
+    <string name="system_statusbar_line_spacing_multiplier_title">Line spacing multiplier between text lines</string>
     <string name="system_statusbaricons_netspeed_title">Network speed indicator</string>
     <string name="system_statusbaricons_clock_title">Clock</string>
     <string name="various_allow_untrusted_touch_title">Allow untrusted touch</string>
@@ -1054,7 +1007,6 @@
     <string name="various_disable_dock_suggest_title">Show pinned apps only on sidebar</string>
     <string name="various_disable_reset_recents_privacy_blur_title">Disable resetting of the list of privacy blur in recents</string>
     <string name="various_swipe_expand_sidebar_title">Allow swipe to expand sidebar</string>
-    <string name="system_lockscreenshortcuts_left_tapaction_title">Long click left shortcut to toggle flashlight</string>
     <string name="system_cc_tile_roundedrect_title">Rounded rectangle tile</string>
     <string name="system_cc_tile_style_cat_tile">Theme style settings</string>
     <string name="system_cc_tile_enabled_color_title">Enabled tile</string>

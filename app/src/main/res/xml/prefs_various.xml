@@ -28,19 +28,6 @@
 		android:title="@string/various_disable_defraud_apps_detect_title"
 		android:defaultValue="false" />
 
-	<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
-		android:key="pref_key_various_alarmcompat"
-		android:title="@string/various_alarmcompat_title"
-		android:summary="@string/various_alarmcompat_summ"
-		android:defaultValue="false" />
-
-	<name.monwf.customiuizer.prefs.PreferenceEx
-		android:title="@string/system_popupnotif_apps_title"
-		android:key="pref_key_various_alarmcompat_apps"
-		android:dependency="pref_key_various_alarmcompat"
-		miuizer:indentLevel="1"
-		miuizer:countAsSummary="true" />
-
 	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/various_package_installer_cat_title"/>
 

@@ -18,8 +18,6 @@ public class Various extends SubFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		findPreference("pref_key_various_alarmcompat_apps").setOnPreferenceClickListener(openAppsEdit);
-
 		findPreference("pref_key_various_calluibright_cat").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {

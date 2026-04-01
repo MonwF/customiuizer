@@ -44,8 +44,8 @@ public class Launcher extends SubFragment {
 		switch (sub) {
 			case "pref_key_launcher_cat_folders":
 				SeekBarPreference folderCols = findPreference("pref_key_launcher_folder_cols");
-				findPreference("pref_key_launcher_folderwidth").setEnabled(AppHelper.getIntOfAppPrefs("pref_key_launcher_folder_cols", 1) > 1);
-				findPreference("pref_key_launcher_folderspace").setEnabled(AppHelper.getIntOfAppPrefs("pref_key_launcher_folder_cols", 1) > 3);
+				boolean folderTweakable = AppHelper.getIntOfAppPrefs("pref_key_launcher_folder_cols", 3) > 3;
+				findPreference("pref_key_launcher_folderwidth").setEnabled(folderTweakable);
 				folderCols.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 					@Override
 					public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {}
@@ -55,8 +55,8 @@ public class Launcher extends SubFragment {
 
 					@Override
 					public void onStopTrackingTouch(SeekBar seekBar) {
-						findPreference("pref_key_launcher_folderwidth").setEnabled(seekBar.getProgress() > 0);
-						findPreference("pref_key_launcher_folderspace").setEnabled(seekBar.getProgress() > 2);
+						boolean folderTweakable = seekBar.getProgress() > 0;
+						findPreference("pref_key_launcher_folderwidth").setEnabled(folderTweakable);
 					}
 				});
 				break;

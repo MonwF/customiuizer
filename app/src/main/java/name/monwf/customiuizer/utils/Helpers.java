@@ -44,7 +44,6 @@ import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,8 +54,6 @@ import androidx.preference.PreferenceScreen;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -354,51 +351,6 @@ public class Helpers {
         return context.getPackageManager().checkPermission("android.permission.INTERACT_ACROSS_USERS", modulePkg) == PackageManager.PERMISSION_GRANTED;
     }
 
-    @SuppressWarnings({"JavaReflectionInvocation", "ConstantConditions"})
-    @SuppressLint({"PrivateApi", "DiscouragedPrivateApi"})
-    public static float getAnimationScale(int type) {
-        try {
-            Class<?> smClass = Class.forName("android.os.ServiceManager");
-            Method getService = smClass.getDeclaredMethod("getService", String.class);
-            getService.setAccessible(true);
-            Object manager = getService.invoke(smClass, "window");
-
-            Class<?> wmsClass = Class.forName("android.view.IWindowManager$Stub");
-            Method asInterface = wmsClass.getDeclaredMethod("asInterface", IBinder.class);
-            asInterface.setAccessible(true);
-            Object wm = asInterface.invoke(wmsClass, manager);
-
-            Method getAnimationScale = wm.getClass().getDeclaredMethod("getAnimationScale", int.class);
-            getAnimationScale.setAccessible(true);
-            return (float)getAnimationScale.invoke(wm, type);
-        } catch (Throwable t) {
-            t.printStackTrace();
-            return 1.0f;
-        }
-    }
-
-    @SuppressWarnings({"JavaReflectionInvocation", "ConstantConditions"})
-    @SuppressLint({"PrivateApi", "DiscouragedPrivateApi"})
-    public static void setAnimationScale(int type, float value) {
-        try {
-            Class<?> smClass = Class.forName("android.os.ServiceManager");
-            Method getService = smClass.getDeclaredMethod("getService", String.class);
-            getService.setAccessible(true);
-            Object manager = getService.invoke(smClass, "window");
-
-            Class<?> wmsClass = Class.forName("android.view.IWindowManager$Stub");
-            Method asInterface = wmsClass.getDeclaredMethod("asInterface", IBinder.class);
-            asInterface.setAccessible(true);
-            Object wm = asInterface.invoke(wmsClass, manager);
-
-            Method setAnimationScale = wm.getClass().getDeclaredMethod("setAnimationScale", int.class, float.class);
-            setAnimationScale.setAccessible(true);
-            setAnimationScale.invoke(wm, type, value);
-        } catch (Throwable t) {
-            t.printStackTrace();
-        }
-    }
-
     @SuppressLint("DiscouragedPrivateApi")
     private static Method getPackageInfoAsUser() {
         try {
@@ -415,29 +367,32 @@ public class Helpers {
         Method getPackageInfoAsUser = getPackageInfoAsUser();
         if (getPackageInfoAsUser == null) includeDualApps = false;
 
-        List<ApplicationInfo> packs = pm.getInstalledApplications(PackageManager.GET_META_DATA | PackageManager.MATCH_DISABLED_COMPONENTS);
+        List<ApplicationInfo> packs = pm.getInstalledApplications(PackageManager.MATCH_DISABLED_COMPONENTS);
         AppHelper.installedAppsList = new ArrayList<AppData>();
         AppData app;
-        for (ApplicationInfo pack: packs) try {
-            app = new AppData();
-            app.enabled = pack.enabled;
-            app.label = pack.loadLabel(pm).toString();
-            app.pkgName = pack.packageName;
-            app.actName = "-";
-            AppHelper.installedAppsList.add(app);
-            if (includeDualApps) try {
-                if (getPackageInfoAsUser.invoke(pm, app.pkgName, 0, 999) != null) {
-                    AppData appDual = new AppData();
-                    appDual.enabled = pack.enabled;
-                    appDual.label = pack.loadLabel(pm).toString();
-                    appDual.pkgName = pack.packageName;
-                    appDual.actName = "-";
-                    appDual.user = 999;
-                    AppHelper.installedAppsList.add(appDual);
-                }
-            } catch (Throwable ignore) {}
-        } catch (Throwable e) {
-            XposedHelpers.log(e);
+        for (ApplicationInfo pack: packs) {
+            if (pack.icon == 0) continue;
+            try {
+                app = new AppData();
+                app.enabled = pack.enabled;
+                app.label = pack.loadLabel(pm).toString();
+                app.pkgName = pack.packageName;
+                app.actName = "-";
+                AppHelper.installedAppsList.add(app);
+                if (includeDualApps) try {
+                    if (getPackageInfoAsUser.invoke(pm, app.pkgName, 0, 999) != null) {
+                        AppData appDual = new AppData();
+                        appDual.enabled = pack.enabled;
+                        appDual.label = pack.loadLabel(pm).toString();
+                        appDual.pkgName = pack.packageName;
+                        appDual.actName = "-";
+                        appDual.user = 999;
+                        AppHelper.installedAppsList.add(appDual);
+                    }
+                } catch (Throwable ignore) {}
+            } catch (Throwable e) {
+                XposedHelpers.log(e);
+            }
         }
         AppHelper.installedAppsList.sort(new Comparator<AppData>() {
             public int compare(AppData app1, AppData app2) {
@@ -1049,54 +1004,4 @@ public class Helpers {
 
         return bitmap;
     }
-
-    public static int constrain(int amount, int low, int high) {
-        return amount < low ? low : (amount > high ? high : amount);
-    }
-    public static float constrain(float amount, float low, float high) {
-        return amount < low ? low : (amount > high ? high : amount);
-    }
-    public static float lerp(float start, float stop, float amount) {
-        return start + (stop - start) * amount;
-    }
-    public static float lerp(int start, int stop, float amount) {
-        return lerp((float) start, (float) stop, amount);
-    }
-
-    /**
-     * Returns the interpolation scalar (s) that satisfies the equation: {@code value = }{@link
-     * #lerp}{@code (a, b, s)}
-     *
-     * <p>If {@code a == b}, then this function will return 0.
-     */
-    public static float lerpInv(float a, float b, float value) {
-        return a != b ? ((value - a) / (b - a)) : 0.0f;
-    }
-    /** Returns the single argument constrained between [0.0, 1.0]. */
-    public static float saturate(float value) {
-        return constrain(value, 0.0f, 1.0f);
-    }
-    /** Returns the saturated (constrained between [0, 1]) result of {@link #lerpInv}. */
-    public static float lerpInvSat(float a, float b, float value) {
-        return saturate(lerpInv(a, b, value));
-    }
-    public static float norm(float start, float stop, float value) {
-        return (value - start) / (stop - start);
-    }
-    private static float sq(float f) {
-        return f * f;
-    }
-    public static float exp(float f) {
-        return (float)Math.exp(f);
-    }
-
-    public static final float convertGammaToLinearFloat(float i, int max, float f, float f2) {
-        float norm = norm(0.0f, max, i);
-        float R = 0.4f;
-        float A = 0.2146f;
-        float B = 0.2847f;
-        float C = 0.4719f;
-        return lerp(f, f2, constrain(norm <= R ? sq(norm / R) : exp((norm - C) / A) + B, 0.0f, 12.0f) / 12.0f);
-    }
-
 }

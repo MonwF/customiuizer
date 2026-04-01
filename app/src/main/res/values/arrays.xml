@@ -7,7 +7,6 @@
 		<item>@string/array_global_actions_sleep</item>
 		<item>@string/array_global_actions_screenshot</item>
 		<item>@string/array_global_actions_recents</item>
-		<item>@string/array_global_actions_volume</item>
 		<item>@string/array_global_actions_powermenu</item>
 		<item>@string/array_global_actions_expandsidebar</item>
 		<item>@string/array_global_actions_launch</item>
@@ -15,7 +14,6 @@
 		<item>@string/array_global_actions_activity</item>
 		<item>@string/array_global_actions_toggle</item>
 		<item>@string/array_global_actions_clearmemory</item>
-		<item>@string/array_global_actions_invertcolors</item>
 		<item>@string/array_global_actions_onehanded_left</item>
 		<item>@string/array_global_actions_clear_notifs</item>
 	</string-array>
@@ -27,7 +25,6 @@
 		<item>5</item>
 		<item>6</item>
 		<item>7</item>
-		<item>17</item>
 		<item>12</item>
 		<item>26</item>
 		<item>8</item>
@@ -35,7 +32,6 @@
 		<item>20</item>
 		<item>10</item>
 		<item>13</item>
-		<item>14</item>
 		<item>22</item>
 		<item>23</item>
 	</integer-array>
@@ -52,7 +48,6 @@
 		<item>@string/array_global_actions_floatingwindow</item>
 		<item>@string/array_global_actions_pinningwindow</item>
 		<item>@string/array_global_actions_splitscreen</item>
-		<item>@string/array_global_actions_volume</item>
 		<item>@string/array_global_actions_volume_up</item>
 		<item>@string/array_global_actions_volume_down</item>
 		<item>@string/array_global_actions_menu</item>
@@ -61,7 +56,6 @@
 		<item>@string/array_global_actions_forceclose</item>
 		<item>@string/array_global_actions_powermenu</item>
 		<item>@string/array_global_actions_clearmemory</item>
-		<item>@string/array_global_actions_invertcolors</item>
 		<item>@string/array_global_actions_launch</item>
 		<item>@string/array_global_actions_shortcut</item>
 		<item>@string/array_global_actions_activity</item>
@@ -84,7 +78,6 @@
 		<item>27</item>
 		<item>28</item>
 		<item>29</item>
-		<item>17</item>
 		<item>18</item>
 		<item>19</item>
 		<item>16</item>
@@ -93,7 +86,6 @@
 		<item>24</item>
 		<item>12</item>
 		<item>13</item>
-		<item>14</item>
 		<item>8</item>
 		<item>9</item>
 		<item>20</item>
@@ -113,14 +105,12 @@
 		<item>@string/array_global_actions_sleep</item>
 		<item>@string/array_global_actions_screenshot</item>
 		<item>@string/array_global_actions_recents</item>
-		<item>@string/array_global_actions_volume</item>
 		<item>@string/array_global_actions_menu</item>
 		<item>@string/array_global_actions_goback</item>
 		<item>@string/array_global_actions_back</item>
 		<item>@string/array_global_actions_forceclose</item>
 		<item>@string/array_global_actions_powermenu</item>
 		<item>@string/array_global_actions_clearmemory</item>
-		<item>@string/array_global_actions_invertcolors</item>
 		<item>@string/array_global_actions_launch</item>
 		<item>@string/array_global_actions_shortcut</item>
 		<item>@string/array_global_actions_activity</item>
@@ -136,14 +126,12 @@
 		<item>5</item>
 		<item>6</item>
 		<item>7</item>
-		<item>17</item>
 		<item>16</item>
 		<item>15</item>
 		<item>11</item>
 		<item>24</item>
 		<item>12</item>
 		<item>13</item>
-		<item>14</item>
 		<item>8</item>
 		<item>9</item>
 		<item>20</item>
@@ -158,7 +146,6 @@
 		<item>@string/array_global_actions_sleep</item>
 		<item>@string/array_global_actions_screenshot</item>
 		<item>@string/array_global_actions_recents</item>
-		<item>@string/array_global_actions_volume</item>
 		<item>@string/array_global_actions_volume_up</item>
 		<item>@string/array_global_actions_volume_down</item>
 		<item>@string/array_global_actions_menu</item>
@@ -168,7 +155,6 @@
 		<item>@string/array_global_actions_powermenu</item>
 		<item>@string/array_global_actions_scrolltotop</item>
 		<item>@string/array_global_actions_clearmemory</item>
-		<item>@string/array_global_actions_invertcolors</item>
 		<item>@string/array_global_actions_launch</item>
 		<item>@string/array_global_actions_shortcut</item>
 		<item>@string/array_global_actions_activity</item>
@@ -185,7 +171,6 @@
 		<item>5</item>
 		<item>6</item>
 		<item>7</item>
-		<item>17</item>
 		<item>18</item>
 		<item>19</item>
 		<item>16</item>
@@ -195,7 +180,6 @@
 		<item>12</item>
 		<item>25</item>
 		<item>13</item>
-		<item>14</item>
 		<item>8</item>
 		<item>9</item>
 		<item>20</item>
@@ -376,17 +360,6 @@
 		<item>3</item>
 	</string-array>
 
-	<string-array name="mobiletypeicon">
-		<item>@string/array_default</item>
-		<item>@string/array_mobiletypeicon_hide</item>
-		<item>@string/array_mobiletypeicon_show_disconnected</item>
-	</string-array>
-	<string-array name="mobiletypeicon_val">
-		<item>1</item>
-		<item>3</item>
-		<item>2</item>
-	</string-array>
-
 	<string-array name="dualsimin2rows_style">
 		<item>@string/array_default</item>
 		<item>@string/array_dualsimin2rows_style_thick</item>
@@ -562,28 +535,15 @@
 		<item>3</item>
 	</string-array>
 
-	<string-array name="screenshotformat">
-		<item>JPEG</item>
-		<item>PNG</item>
-		<item>WEBP</item>
-	</string-array>
-	<string-array name="screenshotformat_val">
-		<item>2</item>
-		<item>3</item>
-		<item>4</item>
-	</string-array>
-
 	<string-array name="screenshotpath">
 		<item>@string/array_default</item>
 		<item>Pictures</item>
 		<item>DCIM</item>
-<!--		<item>@string/array_path</item>-->
 	</string-array>
 	<string-array name="screenshotpath_val">
 		<item>1</item>
 		<item>2</item>
 		<item>3</item>
-<!--		<item>4</item>-->
 	</string-array>
 
 	<string-array name="charginginfo">

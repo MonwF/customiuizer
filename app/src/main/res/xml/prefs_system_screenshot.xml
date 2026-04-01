@@ -15,33 +15,12 @@
 		miuizer:dynamic="true">
 
 	<name.monwf.customiuizer.prefs.ListPreferenceEx
-		android:key="pref_key_system_screenshot_format"
-		android:title="@string/system_screenshot_format_title"
-		android:entries="@array/screenshotformat"
-		android:entryValues="@array/screenshotformat_val"
-		android:defaultValue="2"
-		miuizer:valueAsSummary="true" />
-
-	<name.monwf.customiuizer.prefs.SeekBarPreference
-		android:key="pref_key_system_screenshot_quality"
-		android:title="@string/system_screenshot_quality_title"
-		android:defaultValue="100"
-		miuizer:minValue="0"
-		miuizer:maxValue="100"
-		miuizer:stepValue="1"
-		miuizer:format="%d" />
-
-	<name.monwf.customiuizer.prefs.ListPreferenceEx
 		android:key="pref_key_system_screenshot_path"
 		android:title="@string/system_screenshot_path_title"
 		android:entries="@array/screenshotpath"
 		android:entryValues="@array/screenshotpath_val"
 		android:defaultValue="1"
 		miuizer:valueAsSummary="true" />
-
-	<name.monwf.customiuizer.prefs.PreferenceEx
-		android:key="pref_key_system_screenshot_mypath"
-		android:title="@string/array_path" />
 
 	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 

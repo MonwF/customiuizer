@@ -23,10 +23,18 @@
 		android:layout_toRightOf="@id/color_circle"
 		tools:ignore="RtlHardcoded">
 
-		<FrameLayout
+		<View
 			android:id="@+id/selected_color"
 			android:layout_width="200dp"
 			android:layout_height="100dp" />
+
+		<TextView
+			android:id="@+id/selected_color_hint"
+			android:textColor="@color/preference_primary_text_color"
+			android:layout_width="wrap_content"
+			android:textIsSelectable="true"
+			android:layout_marginTop="10dp"
+			android:layout_height="wrap_content" />
 
 		<android.widget.SeekBar
 			android:id="@+id/hsv_value"
@@ -35,6 +43,14 @@
 			android:layout_marginTop="15dp"
 			android:max="100">
 		</android.widget.SeekBar>
+
+		<android.widget.SeekBar
+			android:id="@+id/alpha_value"
+			android:layout_height="wrap_content"
+			android:layout_width="200dp"
+			android:layout_marginTop="15dp"
+			android:min="0"
+			android:max="255" />
 
 		<LinearLayout
 			android:layout_height="match_parent"

@@ -1083,6 +1083,9 @@ public final class XposedHelpers {
      */
     public static Object getObjectField(Object obj, String fieldName) {
         try {
+            if (obj == null) {
+                XposedHelpers.log("getField", fieldName + " is null");
+            }
             return findField(obj.getClass(), fieldName).get(obj);
         } catch (IllegalAccessException e) {
             // should not happen
@@ -1099,6 +1102,12 @@ public final class XposedHelpers {
     public static Object getSurroundingThis(Object obj) {
         return getObjectField(obj, "this$0");
     }
+    /**
+     * For inner classes, returns the surrounding instance, i.e. the {@code this} reference of the surrounding class.
+     */
+    public static Object getOuterThis(Object obj) {
+        return getObjectField(obj, "f$0");
+    }
 
     /**
      * Returns the value of a {@code boolean} field in the given object instance. A class reference is not sufficient! See also {@link #findField}.
@@ -1106,52 +1115,10 @@ public final class XposedHelpers {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean getBooleanField(Object obj, String fieldName) {
         try {
+            if (obj == null) {
+                XposedHelpers.log("getField", fieldName + " is null");
+            }
             return findField(obj.getClass(), fieldName).getBoolean(obj);
-        } catch (IllegalAccessException e) {
-            // should not happen
-            XposedHelpers.log(e);
-            throw new IllegalAccessError(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            throw e;
-        }
-    }
-
-    /**
-     * Returns the value of a {@code byte} field in the given object instance. A class reference is not sufficient! See also {@link #findField}.
-     */
-    public static byte getByteField(Object obj, String fieldName) {
-        try {
-            return findField(obj.getClass(), fieldName).getByte(obj);
-        } catch (IllegalAccessException e) {
-            // should not happen
-            XposedHelpers.log(e);
-            throw new IllegalAccessError(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            throw e;
-        }
-    }
-
-    /**
-     * Returns the value of a {@code char} field in the given object instance. A class reference is not sufficient! See also {@link #findField}.
-     */
-    public static char getCharField(Object obj, String fieldName) {
-        try {
-            return findField(obj.getClass(), fieldName).getChar(obj);
-        } catch (IllegalAccessException e) {
-            // should not happen
-            XposedHelpers.log(e);
-            throw new IllegalAccessError(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            throw e;
-        }
-    }
-
-    /**
-     * Returns the value of a {@code double} field in the given object instance. A class reference is not sufficient! See also {@link #findField}.
-     */
-    public static double getDoubleField(Object obj, String fieldName) {
-        try {
-            return findField(obj.getClass(), fieldName).getDouble(obj);
         } catch (IllegalAccessException e) {
             // should not happen
             XposedHelpers.log(e);
@@ -1166,6 +1133,9 @@ public final class XposedHelpers {
      */
     public static float getFloatField(Object obj, String fieldName) {
         try {
+            if (obj == null) {
+                XposedHelpers.log("getField", fieldName + " is null");
+            }
             return findField(obj.getClass(), fieldName).getFloat(obj);
         } catch (IllegalAccessException e) {
             // should not happen
@@ -1181,6 +1151,9 @@ public final class XposedHelpers {
      */
     public static int getIntField(Object obj, String fieldName) {
         try {
+            if (obj == null) {
+                XposedHelpers.log("getField", fieldName + " is null");
+            }
             return findField(obj.getClass(), fieldName).getInt(obj);
         } catch (IllegalAccessException e) {
             // should not happen
@@ -1196,22 +1169,10 @@ public final class XposedHelpers {
      */
     public static long getLongField(Object obj, String fieldName) {
         try {
+            if (obj == null) {
+                XposedHelpers.log("getField", fieldName + " is null");
+            }
             return findField(obj.getClass(), fieldName).getLong(obj);
-        } catch (IllegalAccessException e) {
-            // should not happen
-            XposedHelpers.log(e);
-            throw new IllegalAccessError(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            throw e;
-        }
-    }
-
-    /**
-     * Returns the value of a {@code short} field in the given object instance. A class reference is not sufficient! See also {@link #findField}.
-     */
-    public static short getShortField(Object obj, String fieldName) {
-        try {
-            return findField(obj.getClass(), fieldName).getShort(obj);
         } catch (IllegalAccessException e) {
             // should not happen
             XposedHelpers.log(e);
@@ -1244,51 +1205,6 @@ public final class XposedHelpers {
     public static void setStaticBooleanField(Class<?> clazz, String fieldName, boolean value) {
         try {
             findField(clazz, fieldName).setBoolean(null, value);
-        } catch (IllegalAccessException e) {
-            // should not happen
-            XposedHelpers.log(e);
-            throw new IllegalAccessError(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            throw e;
-        }
-    }
-
-    /**
-     * Sets the value of a static {@code byte} field in the given class. See also {@link #findField}.
-     */
-    public static void setStaticByteField(Class<?> clazz, String fieldName, byte value) {
-        try {
-            findField(clazz, fieldName).setByte(null, value);
-        } catch (IllegalAccessException e) {
-            // should not happen
-            XposedHelpers.log(e);
-            throw new IllegalAccessError(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            throw e;
-        }
-    }
-
-    /**
-     * Sets the value of a static {@code char} field in the given class. See also {@link #findField}.
-     */
-    public static void setStaticCharField(Class<?> clazz, String fieldName, char value) {
-        try {
-            findField(clazz, fieldName).setChar(null, value);
-        } catch (IllegalAccessException e) {
-            // should not happen
-            XposedHelpers.log(e);
-            throw new IllegalAccessError(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            throw e;
-        }
-    }
-
-    /**
-     * Sets the value of a static {@code double} field in the given class. See also {@link #findField}.
-     */
-    public static void setStaticDoubleField(Class<?> clazz, String fieldName, double value) {
-        try {
-            findField(clazz, fieldName).setDouble(null, value);
         } catch (IllegalAccessException e) {
             // should not happen
             XposedHelpers.log(e);
@@ -1343,21 +1259,6 @@ public final class XposedHelpers {
         }
     }
 
-    /**
-     * Sets the value of a static {@code short} field in the given class. See also {@link #findField}.
-     */
-    public static void setStaticShortField(Class<?> clazz, String fieldName, short value) {
-        try {
-            findField(clazz, fieldName).setShort(null, value);
-        } catch (IllegalAccessException e) {
-            // should not happen
-            XposedHelpers.log(e);
-            throw new IllegalAccessError(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            throw e;
-        }
-    }
-
     //#################################################################################################
 
     /**
@@ -1381,51 +1282,6 @@ public final class XposedHelpers {
     public static boolean getStaticBooleanField(Class<?> clazz, String fieldName) {
         try {
             return findField(clazz, fieldName).getBoolean(null);
-        } catch (IllegalAccessException e) {
-            // should not happen
-            XposedHelpers.log(e);
-            throw new IllegalAccessError(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            throw e;
-        }
-    }
-
-    /**
-     * Sets the value of a static {@code byte} field in the given class. See also {@link #findField}.
-     */
-    public static byte getStaticByteField(Class<?> clazz, String fieldName) {
-        try {
-            return findField(clazz, fieldName).getByte(null);
-        } catch (IllegalAccessException e) {
-            // should not happen
-            XposedHelpers.log(e);
-            throw new IllegalAccessError(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            throw e;
-        }
-    }
-
-    /**
-     * Sets the value of a static {@code char} field in the given class. See also {@link #findField}.
-     */
-    public static char getStaticCharField(Class<?> clazz, String fieldName) {
-        try {
-            return findField(clazz, fieldName).getChar(null);
-        } catch (IllegalAccessException e) {
-            // should not happen
-            XposedHelpers.log(e);
-            throw new IllegalAccessError(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            throw e;
-        }
-    }
-
-    /**
-     * Sets the value of a static {@code double} field in the given class. See also {@link #findField}.
-     */
-    public static double getStaticDoubleField(Class<?> clazz, String fieldName) {
-        try {
-            return findField(clazz, fieldName).getDouble(null);
         } catch (IllegalAccessException e) {
             // should not happen
             XposedHelpers.log(e);
@@ -1480,21 +1336,6 @@ public final class XposedHelpers {
         }
     }
 
-    /**
-     * Sets the value of a static {@code short} field in the given class. See also {@link #findField}.
-     */
-    public static short getStaticShortField(Class<?> clazz, String fieldName) {
-        try {
-            return findField(clazz, fieldName).getShort(null);
-        } catch (IllegalAccessException e) {
-            // should not happen
-            XposedHelpers.log(e);
-            throw new IllegalAccessError(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            throw e;
-        }
-    }
-
     //#################################################################################################
 
     /**
@@ -1509,6 +1350,9 @@ public final class XposedHelpers {
      */
     public static Object callMethod(Object obj, String methodName, Object... args) {
         try {
+            if (obj == null) {
+                XposedHelpers.log("callMethod", methodName + " is null");
+            }
             return findMethodBestMatch(obj.getClass(), methodName, args).invoke(obj, args);
         } catch (IllegalAccessException e) {
             // should not happen
@@ -1865,8 +1709,10 @@ public final class XposedHelpers {
     }
 
     public static void closeBridge() {
-        bridge.close();
-        bridge = null;
+        if (bridge != null) {
+            bridge.close();
+            bridge = null;
+        }
     }
 
 }

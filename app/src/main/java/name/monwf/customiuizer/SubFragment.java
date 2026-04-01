@@ -26,11 +26,9 @@ import name.monwf.customiuizer.prefs.PreferenceState;
 import name.monwf.customiuizer.prefs.SpinnerEx;
 import name.monwf.customiuizer.prefs.SpinnerExFake;
 import name.monwf.customiuizer.subs.AppSelector;
-import name.monwf.customiuizer.subs.ColorSelector;
 import name.monwf.customiuizer.subs.MultiAction;
 import name.monwf.customiuizer.subs.SortableList;
 import name.monwf.customiuizer.utils.AppHelper;
-import name.monwf.customiuizer.utils.ColorCircle;
 import name.monwf.customiuizer.utils.Helpers;
 
 public class SubFragment extends PreferenceFragmentBase {

@@ -16,7 +16,15 @@ public class StepCounterController {
     private static ArrayList<TextView> stepViewList = new ArrayList<TextView>();
     private static Handler mHandler;
     private static Runnable updateStepsRunnable;
-    private static String stepsWithGoal;
+    private static String stepsWithGoal = "0/0";
+
+    public static String  getStepsShowValue(TextView tv) {
+        Object tplInfo = ModuleHelper.getViewInfo(tv, "stepsTpl");
+        if (tplInfo == null) {
+            return stepsWithGoal;
+        }
+        return ((String) tplInfo).replace("%s", stepsWithGoal);
+    }
 
     public static void updateSteps(Context mContext) {
         if (stepViewList.size() == 0) return;
@@ -33,7 +41,7 @@ public class StepCounterController {
                 }
                 stepsWithGoal = newText;
                 for (TextView tv:stepViewList) {
-                    tv.setText(newText);
+                    tv.setText(getStepsShowValue(tv));
                 }
             }
         } catch (Throwable t) {
@@ -61,8 +69,8 @@ public class StepCounterController {
             }
         }
     }
-    public static void addStepView(TextView sv) {
-        stepViewList.add(sv);
+    public static void addStepView(TextView tv) {
+        stepViewList.add(tv);
         if (mHandler.hasCallbacks(updateStepsRunnable)) {
             mHandler.removeCallbacks(updateStepsRunnable);
         }
