@@ -434,6 +434,8 @@
     <string name="launcher_gestures_shortcut">Shortcut to launch</string>
     <string name="launcher_gestures_activity">Activity to launch</string>
     <string name="launcher_title">Launcher</string>
+    <string name="launcher_disableprestart_title">Disable prestart</string>
+    <string name="launcher_disableprestart_summ">Disable prestart</string>
     <string name="launcher_infinitescroll_title">Infinite scrolling</string>
     <string name="launcher_infinitescroll_summ">Jump from the last page to the first one and vice versa</string>
     <string name="launcher_noclockhide_title">No clock hide</string>
