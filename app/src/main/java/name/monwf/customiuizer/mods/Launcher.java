@@ -41,6 +41,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -573,6 +574,33 @@ public class Launcher {
         });
     }
 
+
+    public static void DisablePrestartHook(PackageLoadedParam lpparam) {
+        final Set<String> prop = new HashSet<>(Arrays.asList(
+                "persist.sys.usap_pool_enabled",
+                "persist.sys.dynamic_usap_enabled",
+                "persist.sys.prestart.proc",
+                "persist.sys.prestart.feedback.enable",
+                "persist.sys.launch_response_optimization.enable"
+        ));
+
+        ModuleHelper.findAndHookMethod(
+                "com.miui.launcher.utils.SystemProperties",
+                lpparam.getClassLoader(),
+                "getBoolean",
+                String.class,
+                boolean.class,
+                new HookerClassHelper.MethodHook() {
+                    @Override
+                    protected void before(final io.github.libxposed.api.XposedInterface.BeforeHookCallback param) throws Throwable {
+                        String key = (String) param.getArgs()[0];
+                        if (key != null && prop.contains(key)) {
+                            param.returnAndSkip(false);
+                        }
+                    }
+                }
+        );
+    }
     public static void InfiniteScrollHook(PackageLoadedParam lpparam) {
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.ScreenView", lpparam.getClassLoader(), "getSnapToScreenIndex", int.class, int.class, int.class, new MethodHook() {
             @Override

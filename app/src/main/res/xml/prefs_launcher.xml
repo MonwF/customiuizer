@@ -161,6 +161,11 @@
 		android:title="@string/system_mods_other">
 
 		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+			android:key="pref_key_launcher_disableprestart"
+			android:title="@string/launcher_disableprestart_title"
+			android:summary="@string/launcher_disableprestart_summ" />
+			
+		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_launcher_infinitescroll"
 			android:title="@string/launcher_infinitescroll_title"
 			android:summary="@string/launcher_infinitescroll_summ" />
