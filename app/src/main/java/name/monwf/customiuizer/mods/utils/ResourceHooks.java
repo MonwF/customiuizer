@@ -10,8 +10,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import io.github.libxposed.api.XposedInterface.BeforeHookCallback;
-import io.github.libxposed.api.XposedInterface.AfterHookCallback;
+import name.monwf.customiuizer.mods.utils.HookerClassHelper.MethodHookParam;
 import name.monwf.customiuizer.mods.utils.HookerClassHelper.MethodHook;
 
 public class ResourceHooks {
@@ -59,7 +58,7 @@ public class ResourceHooks {
 
 	private final MethodHook mReplaceHook = new MethodHook() {
 		@Override
-		protected void before(final BeforeHookCallback param) {
+		protected void before(final MethodHookParam param) {
 			Context mContext = ModuleHelper.findContext();
 			if (mContext == null) return;
 			String method = param.getMember().getName();
@@ -78,7 +77,7 @@ public class ResourceHooks {
 	private void initThemeHook() {
 		ModuleHelper.findAndHookMethod(miui.content.res.ThemeResources.class, "mergeThemeValues", String.class, miui.content.res.ThemeValues.class, new MethodHook() {
 			@Override
-			protected void after(AfterHookCallback param) throws Throwable {
+			protected void after(MethodHookParam param) throws Throwable {
 				String mPackageName = (String) XposedHelpers.getObjectField(param.getThisObject(), "mPackageName");
 				if (mPackageName == null || "miui".equals(mPackageName)) return;
 				if ((mPackageName.equals(ModuleHelper.currentPackageName)
@@ -148,7 +147,7 @@ public class ResourceHooks {
 //			replaceResourcesHooked = true;
 //			ModuleHelper.findAndHookMethod(android.content.res.MiuiResources.class, "init", String.class, new MethodHook() {
 //				@Override
-//				protected void after(AfterHookCallback param) throws Throwable {
+//				protected void after(MethodHookParam param) throws Throwable {
 //
 //				}
 //			});

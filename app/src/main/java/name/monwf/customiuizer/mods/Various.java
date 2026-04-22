@@ -61,10 +61,9 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 
-import io.github.libxposed.api.XposedInterface.AfterHookCallback;
-import io.github.libxposed.api.XposedInterface.BeforeHookCallback;
-import io.github.libxposed.api.XposedModuleInterface.PackageLoadedParam;
-import io.github.libxposed.api.XposedModuleInterface.SystemServerLoadedParam;
+import name.monwf.customiuizer.mods.utils.HookerClassHelper.MethodHookParam;
+import io.github.libxposed.api.XposedModuleInterface.PackageReadyParam;
+import io.github.libxposed.api.XposedModuleInterface.SystemServerStartingParam;
 import miui.os.Build;
 import miui.process.ForegroundInfo;
 import miui.process.ProcessManager;
@@ -80,7 +79,7 @@ public class Various {
 
 	public static PackageInfo mLastPackageInfo;
 	public static Object mSupportFragment = null;
-	public static void AppInfoHook(PackageLoadedParam lpparam) {
+	public static void AppInfoHook(PackageReadyParam lpparam) {
 		Class<?> amaCls = XposedHelpers.findClassIfExists("com.miui.appmanager.AMAppInfomationActivity", lpparam.getClassLoader());
 		if (amaCls == null) {
 			XposedHelpers.log("AppInfoHook", "Cannot find activity class!");
@@ -90,7 +89,7 @@ public class Various {
 		if (findClassIfExists("androidx.fragment.app.Fragment", lpparam.getClassLoader()) != null) {
 			ModuleHelper.findAndHookConstructor("androidx.fragment.app.Fragment", lpparam.getClassLoader(), new MethodHook() {
 				@Override
-				protected void before(final BeforeHookCallback param) throws Throwable {
+				protected void before(final MethodHookParam param) throws Throwable {
 					try {
 						Field piField = XposedHelpers.findFirstFieldByExactType(param.getThisObject().getClass(), PackageInfo.class);
 						if (piField != null) mSupportFragment = param.getThisObject();
@@ -101,7 +100,7 @@ public class Various {
 
 		ModuleHelper.findAndHookMethod(amaCls, "onCreate", Bundle.class, new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
+			protected void after(final MethodHookParam param) throws Throwable {
 				Handler handler = new Handler(Looper.getMainLooper());
 				handler.post(new Runnable() {
 					@Override
@@ -149,7 +148,7 @@ public class Various {
 
 						ModuleHelper.hookAllMethods(frag.getClass(), "onPreferenceTreeClick", new MethodHook() {
 							@Override
-							protected void before(final BeforeHookCallback param) throws Throwable {
+							protected void before(final MethodHookParam param) throws Throwable {
 								String key = (String)XposedHelpers.callMethod(param.getArgs()[0], "getKey");
 								String title = (String)XposedHelpers.callMethod(param.getArgs()[0], "getTitle");
 								switch (key) {
@@ -221,10 +220,10 @@ public class Various {
 		return bundle;
 	}
 
-	public static void AppsDefaultSortHook(PackageLoadedParam lpparam) {
+	public static void AppsDefaultSortHook(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.miui.appmanager.AppManagerMainActivity", lpparam.getClassLoader(), "onCreate", Bundle.class, new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
+			protected void before(final MethodHookParam param) throws Throwable {
 				param.getArgs()[0] = checkBundle((Context)param.getThisObject(), (Bundle)param.getArgs()[0]);
 
 				// Bruteforce class on MIUI 12.5
@@ -241,7 +240,7 @@ public class Various {
 				if (fragCls != null)
 					ModuleHelper.hookAllMethods(fragCls, lpparam.getClassLoader(), "onActivityCreated", new MethodHook() {
 						@Override
-						protected void before(final BeforeHookCallback param) throws Throwable {
+						protected void before(final MethodHookParam param) throws Throwable {
 							try {
 								param.getArgs()[0] = checkBundle((Context)XposedHelpers.callMethod(param.getThisObject(), "getContext"), (Bundle)param.getArgs()[0]);
 							} catch (Throwable t) {
@@ -254,7 +253,7 @@ public class Various {
 
 //		ModuleHelper.findAndHookMethod("com.miui.appmanager.AppManagerMainActivity", lpparam.getClassLoader(), "onSaveInstanceState", Bundle.class, new MethodHook() {
 //			@Override
-//			protected void after(final AfterHookCallback param) throws Throwable {
+//			protected void after(final MethodHookParam param) throws Throwable {
 //				Bundle bundle = (Bundle)param.getArgs()[0];
 //				if (bundle == null) bundle = new Bundle();
 //				bundle.putInt("current_sory_type", 1); // Xiaomi noob typos :)
@@ -284,10 +283,10 @@ public class Various {
 	static Set<String> MIUI_CORE_APPS = Set.of(
 		"com.lbe.security.miui", "com.miui.securitycenter", "com.miui.packageinstaller", "com.miui.home", "com.android.settings"
 	);
-	public static void AppsDisableServiceHook(SystemServerLoadedParam lpparam) {
+	public static void AppsDisableServiceHook(SystemServerStartingParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.android.server.pm.PackageManagerServiceImpl", lpparam.getClassLoader(), "shouldRestrictEnabledSettingsChange", String.class, int.class, new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
+			protected void before(final MethodHookParam param) throws Throwable {
 				if (!MIUI_CORE_APPS.contains(param.getArgs()[0])) {
 					param.returnAndSkip(null);
 				}
@@ -295,10 +294,10 @@ public class Various {
 		});
 	}
 
-	public static void AppsDisableHook(PackageLoadedParam lpparam) {
+	public static void AppsDisableHook(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.miui.appmanager.ApplicationsDetailsActivity", lpparam.getClassLoader(), "onCreateOptionsMenu", Menu.class, new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
+			protected void after(final MethodHookParam param) throws Throwable {
 				Activity act = (Activity)param.getThisObject();
 				Menu menu = (Menu)param.getArgs()[0];
 				MenuItem dis = menu.add(0, 666, 1, act.getResources().getIdentifier("app_manager_disable_text", "string", lpparam.getPackageName()));
@@ -327,7 +326,7 @@ public class Various {
 
 		ModuleHelper.findAndHookMethod("com.miui.appmanager.ApplicationsDetailsActivity", lpparam.getClassLoader(), "onOptionsItemSelected", MenuItem.class, new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
+			protected void after(final MethodHookParam param) throws Throwable {
 				MenuItem item = (MenuItem)param.getArgs()[0];
 				if (item == null || item.getItemId() != 666) return;
 
@@ -363,10 +362,10 @@ public class Various {
 			}
 		});
 	}
-	public static void HideReportButtonHook(PackageLoadedParam lpparam) {
+	public static void HideReportButtonHook(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.miui.appmanager.ApplicationsDetailsActivity", lpparam.getClassLoader(), "onCreateOptionsMenu", Menu.class, new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
+			protected void after(final MethodHookParam param) throws Throwable {
 				Menu menu = (Menu)param.getArgs()[0];
 				MenuItem reportMenu = menu.findItem(4);
 				if (reportMenu != null) {
@@ -376,14 +375,14 @@ public class Various {
 		});
 	}
 
-	public static void AppsRestrictHook(PackageLoadedParam lpparam) {
+	public static void AppsRestrictHook(PackageReadyParam lpparam) {
 		Method[] mGetAppInfo = XposedHelpers.findMethodsByExactParameters(findClass("com.miui.appmanager.AppManageUtils", lpparam.getClassLoader()), ApplicationInfo.class, Object.class, PackageManager.class, String.class, int.class, int.class);
 		if (mGetAppInfo.length == 0)
 			XposedHelpers.log("AppsRestrictHook", "Cannot find getAppInfo method!");
 		else
 			ModuleHelper.hookMethod(mGetAppInfo[0], new MethodHook() {
 				@Override
-				protected void after(final AfterHookCallback param) throws Throwable {
+				protected void after(final MethodHookParam param) throws Throwable {
 					if ((int)param.getArgs()[3] == 128 && (int)param.getArgs()[4] == 0) {
 						ApplicationInfo appInfo = (ApplicationInfo)param.getResult();
 						appInfo.flags &= ~ApplicationInfo.FLAG_SYSTEM;
@@ -394,7 +393,7 @@ public class Various {
 
 		ModuleHelper.findAndHookMethod("com.miui.networkassistant.ui.fragment.ShowAppDetailFragment", lpparam.getClassLoader(), "initFirewallData", new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
+			protected void before(final MethodHookParam param) throws Throwable {
 				Object mAppInfo = XposedHelpers.getObjectField(param.getThisObject(), "mAppInfo");
 				if (mAppInfo != null) XposedHelpers.setBooleanField(mAppInfo, "isSystemApp", false);
 			}
@@ -404,13 +403,13 @@ public class Various {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static void AppsRestrictPowerHook(PackageLoadedParam lpparam) {
+	public static void AppsRestrictPowerHook(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.miui.powerkeeper.provider.PowerKeeperConfigureManager", lpparam.getClassLoader(), "pkgHasIcon", String.class, HookerClassHelper.returnConstant(true));
 		//ModuleHelper.hookAllMethods("com.miui.powerkeeper.provider.PowerKeeperConfigureManager", lpparam.getClassLoader(), "isControlApp", HookerClassHelper.returnConstant(true));
 
 		ModuleHelper.findAndHookMethod("com.miui.powerkeeper.provider.PreSetGroup", lpparam.getClassLoader(), "initGroup", new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
+			protected void after(final MethodHookParam param) throws Throwable {
 				HashMap<String, Integer> mGroupHeadUidMap = (HashMap<String, Integer>)XposedHelpers.getStaticObjectField(findClass("com.miui.powerkeeper.provider.PreSetGroup", lpparam.getClassLoader()), "mGroupHeadUidMap");
 				mGroupHeadUidMap.clear();
 			}
@@ -420,11 +419,11 @@ public class Various {
 		ModuleHelper.hookAllMethods("com.miui.powerkeeper.utils.Utils", lpparam.getClassLoader(), "pkgHasIcon", HookerClassHelper.returnConstant(true));
 	}
 
-	public static void PersistBatteryOptimizationHook(PackageLoadedParam lpparam) {
+	public static void PersistBatteryOptimizationHook(PackageReadyParam lpparam) {
 		ModuleHelper.hookAllMethods("com.miui.powerkeeper.utils.CommonAdapter", lpparam.getClassLoader(), "addPowerSaveWhitelistApps", HookerClassHelper.DO_NOTHING);
 		ModuleHelper.hookAllMethods("com.miui.powerkeeper.millet.MilletPolicy", lpparam.getClassLoader(), "dealSleepModeWhiteList", new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
+			protected void before(final MethodHookParam param) throws Throwable {
 				boolean addWhiteList = (boolean) param.getArgs()[1];
 				if (addWhiteList) {
 					param.returnAndSkip(null);
@@ -494,7 +493,7 @@ public class Various {
 		upEvent.recycle();
 	}
 
-	public static void AddSideBarExpandReceiverHook(PackageLoadedParam lpparam) {
+	public static void AddSideBarExpandReceiverHook(PackageReadyParam lpparam) {
 		final Object[] sidebarImages = {null};
 		final boolean[] isHooked = {false, false}; // drawHooked
 		boolean enableSideBar = MainModule.mPrefs.getBoolean("various_swipe_expand_sidebar");
@@ -510,7 +509,7 @@ public class Various {
 		}
 		ModuleHelper.hookAllConstructors(RegionSamplingHelper, new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
+			protected void after(final MethodHookParam param) throws Throwable {
 				ImageView samplingImageView = (ImageView) param.getArgs()[0];
 				if (sidebarImages[0] == null) { // main
 					sidebarImages[0] = new WeakReference<Object>(samplingImageView);
@@ -530,7 +529,7 @@ public class Various {
 								Object mOnTouchListener = XposedHelpers.getObjectField(li, "mOnTouchListener");
 								ModuleHelper.findAndHookMethod(mOnTouchListener.getClass(), "onTouch", View.class, MotionEvent.class, new MethodHook() {
 									@Override
-									protected void before(final BeforeHookCallback param) throws Throwable {
+									protected void before(final MethodHookParam param) throws Throwable {
 										MotionEvent me = (MotionEvent) param.getArgs()[1];
 										if (me.getSource() != 9999) {
 											param.returnAndSkip(false);
@@ -553,13 +552,13 @@ public class Various {
 		ModuleHelper.hookMethod(methods[0], HookerClassHelper.DO_NOTHING);
 		ModuleHelper.findAndHookMethod(RegionSamplingHelper, "onViewDetachedFromWindow", View.class, new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
+			protected void after(final MethodHookParam param) throws Throwable {
 				sidebarImages[0] = null;
 			}
 		});
 		ModuleHelper.findAndHookMethod("com.miui.securitycenter.Application", lpparam.getClassLoader(), "onCreate", new MethodHook() {
 			@Override
-			protected void after(AfterHookCallback param) throws Throwable {
+			protected void after(MethodHookParam param) throws Throwable {
 				Application mApp = (Application) param.getThisObject();
 				BroadcastReceiver showReceiver = new BroadcastReceiver() {
 					@Override
@@ -601,7 +600,7 @@ public class Various {
 		});
 	}
 
-	public static void InterceptPermHook(PackageLoadedParam lpparam) {
+	public static void InterceptPermHook(PackageReadyParam lpparam) {
 		Class<?> InterceptBaseFragmentClass = XposedHelpers.findClass("com.miui.permcenter.privacymanager.InterceptBaseFragment", lpparam.getClassLoader());
 		Class<?>[] innerClasses = InterceptBaseFragmentClass.getDeclaredClasses();
 		Class<?> HandlerClass = null;
@@ -614,7 +613,7 @@ public class Various {
 		if (HandlerClass != null) {
             ModuleHelper.hookAllConstructors(HandlerClass, new MethodHook() {
 				@Override
-				protected void before(final BeforeHookCallback param) throws Throwable {
+				protected void before(final MethodHookParam param) throws Throwable {
 					if (param.getArgs().length == 2) {
 						param.getArgs()[1] = 0;
 					}
@@ -624,7 +623,7 @@ public class Various {
 			if (methods.length > 0) {
                 ModuleHelper.hookMethod(methods[0], new MethodHook() {
 					@Override
-					protected void before(final BeforeHookCallback param) throws Throwable {
+					protected void before(final MethodHookParam param) throws Throwable {
 						param.getArgs()[0] = 0;
 					}
 				});
@@ -632,10 +631,10 @@ public class Various {
 		}
 	}
 
-	public static void PersistPrivacyThumbnailBlur(PackageLoadedParam lpparam) {
+	public static void PersistPrivacyThumbnailBlur(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod(ContentResolver.class, "call", Uri.class, String.class, String.class, Bundle.class, new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
+			protected void before(final MethodHookParam param) throws Throwable {
 				if ("callPreference".equals(param.getArgs()[1]) && "GET".equals(param.getArgs()[2])) {
 					Bundle extras = (Bundle) param.getArgs()[3];
 					if (extras != null && "pref_key_last_upload_privacy_thumbnail_blur_time".equals(extras.getString("key"))) {
@@ -649,7 +648,7 @@ public class Various {
 		if (!Build.IS_INTERNATIONAL_BUILD) {
 			ModuleHelper.findAndHookMethod(URLConnection.class, "setUseCaches", boolean.class, new MethodHook() {
 				@Override
-				protected void before(final BeforeHookCallback param) throws Throwable {
+				protected void before(final MethodHookParam param) throws Throwable {
 					URLConnection httpURLConnection = (URLConnection) param.getThisObject();
 					if ("/user/cat".equals(httpURLConnection.getURL().getPath())) {
 						((HttpURLConnection) httpURLConnection).setRequestMethod("HEAD");
@@ -662,7 +661,7 @@ public class Various {
 	public static void NoLowBatteryWarningHook() {
 		MethodHook settingHook = new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
+			protected void before(final MethodHookParam param) throws Throwable {
 				String key = (String)param.getArgs()[1];
 				if ("low_battery_dialog_disabled".equals(key)) param.returnAndSkip(1);
 				else if ("low_battery_sound".equals(key)) param.returnAndSkip(null);
@@ -672,11 +671,11 @@ public class Various {
 		ModuleHelper.hookAllMethods(Settings.Global.class, "getString", settingHook);
 	}
 
-	public static void OpenByDefaultHook(PackageLoadedParam lpparam) {
+	public static void OpenByDefaultHook(PackageReadyParam lpparam) {
 		final int defaultOpenTitleId = MainModule.resHooks.addFakeResource("various_open_by_default_title", R.string.various_open_by_default_title, "string");
 		ModuleHelper.findAndHookMethod("com.miui.appmanager.fragment.ApplicationsDetailsFragment", lpparam.getClassLoader(), "initView", new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
+			protected void after(final MethodHookParam param) throws Throwable {
 				Class<?> TextPreferencePref = findClass("miuix.preference.TextPreference", lpparam.getClassLoader());
 				if (TextPreferencePref != null) {
 					Context ctx = (Context) XposedHelpers.callMethod(param.getThisObject(), "getContext");
@@ -691,7 +690,7 @@ public class Various {
 		});
 		ModuleHelper.hookAllMethods("com.miui.appmanager.fragment.ApplicationsDetailsFragment", lpparam.getClassLoader(), "onPreferenceClick", new MethodHook() {
 			@Override
-			protected void before(BeforeHookCallback param) throws Throwable {
+			protected void before(MethodHookParam param) throws Throwable {
 				String key = (String) XposedHelpers.callMethod(param.getArgs()[0], "getKey");
 				if ("pk_default_open".equals(key)) {
 					Activity act = (Activity) XposedHelpers.callMethod(param.getThisObject(), "getActivity");
@@ -705,10 +704,10 @@ public class Various {
 			}
 		});
 	}
-	public static void SkipSecurityScanHook(PackageLoadedParam lpparam) {
+	public static void SkipSecurityScanHook(PackageReadyParam lpparam) {
 		MethodHook skipScan = new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
+			protected void before(final MethodHookParam param) throws Throwable {
 				param.returnAndSkip(new ArrayList<>());
 			}
 		};
@@ -716,13 +715,13 @@ public class Various {
 		ModuleHelper.findAndHookMethod("com.miui.securityscan.model.ModelFactory", lpparam.getClassLoader(), "produceManualGroupModel", Context.class, skipScan);
 		ModuleHelper.findAndHookMethod("com.miui.common.customview.ScoreTextView", lpparam.getClassLoader(), "setScore", int.class, new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
+			protected void before(final MethodHookParam param) throws Throwable {
 				param.getArgs()[0] = 100;
 			}
 		});
 		ModuleHelper.findAndHookMethod(ContentResolver.class, "call", Uri.class, String.class, String.class, Bundle.class, new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
+			protected void before(final MethodHookParam param) throws Throwable {
 				if ("callPreference".equals(param.getArgs()[1]) && "GET".equals(param.getArgs()[2])) {
 					Bundle extras = (Bundle) param.getArgs()[3];
 					if (extras != null && "latest_optimize_date".equals(extras.getString("key"))) {
@@ -736,7 +735,7 @@ public class Various {
 		ModuleHelper.findAndHookMethod("com.miui.securityscan.ui.main.MainContentFrame", lpparam.getClassLoader(), "onClick", View.class, HookerClassHelper.DO_NOTHING);
 	}
 
-	public static void DisableDefraudAppsCheck(PackageLoadedParam lpparam) {
+	public static void DisableDefraudAppsCheck(PackageReadyParam lpparam) {
 		MethodData methodData = XposedHelpers.bridge.findMethod(FindMethod.create()
 			.excludePackages("tmsdk", "tmsdkobf", "xcrash", "com.tencent", "com.xiaomi")
 			.matcher(MethodMatcher.create().usingStrings("getUnSystemAppList error", "AntiDefraudAppManager"))
@@ -745,7 +744,7 @@ public class Various {
 		if (methodData != null) {
 			MethodHook fakeUserAppsHook = new MethodHook() {
 				@Override
-				protected void before(final BeforeHookCallback param) throws Throwable {
+				protected void before(final MethodHookParam param) throws Throwable {
 					param.returnAndSkip(new ArrayList());
 				}
 			};
@@ -758,7 +757,7 @@ public class Various {
 		}
 	}
 
-	public static void ShowTempInBatteryHook(PackageLoadedParam lpparam) {
+	public static void ShowTempInBatteryHook(PackageReadyParam lpparam) {
 		Class<?> InterceptBaseFragmentClass = XposedHelpers.findClass("com.miui.powercenter.nightcharge.ChargeProtectFragment", lpparam.getClassLoader());
 		Class<?>[] innerClasses = InterceptBaseFragmentClass.getDeclaredClasses();
 		Class<?> HandlerClass = null;
@@ -783,7 +782,7 @@ public class Various {
 			String finalFieldName = fieldName;
 			ModuleHelper.findAndHookMethod(HandlerClass, "handleMessage", Message.class, new MethodHook() {
 				@Override
-				protected void after(final AfterHookCallback param) throws Throwable {
+				protected void after(final MethodHookParam param) throws Throwable {
 					Message msg = (Message) param.getArgs()[0];
 					int i = msg.what;
 					if (i == 1) {
@@ -798,10 +797,10 @@ public class Various {
 			});
 		}
 	}
-	public static void DisableDockSuggestHook(PackageLoadedParam lpparam) {
+	public static void DisableDockSuggestHook(PackageReadyParam lpparam) {
 		MethodHook clearHook = new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
+			protected void before(final MethodHookParam param) throws Throwable {
 				ArrayList<String> blackList = new ArrayList<String>();
 				blackList.add("xx.yy.zz");
 				StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
@@ -820,10 +819,10 @@ public class Various {
 		ModuleHelper.hookAllMethodsSilently("android.util.MiuiMultiWindowUtils", lpparam.getClassLoader(), "getFreeformSuggestionList", clearHook);
 	}
 
-	public static void AnswerCallInHeadUpHook(PackageLoadedParam lpparam) {
+	public static void AnswerCallInHeadUpHook(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.android.incallui.InCallPresenter", lpparam.getClassLoader(), "answerIncomingCall", Context.class, String.class, int.class, boolean.class, new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
+			protected void before(final MethodHookParam param) throws Throwable {
 				boolean showUi = (boolean) param.getArgs()[3];
 				if (showUi) {
 					ForegroundInfo foregroundInfo = ProcessManager.getForegroundInfo();
@@ -838,10 +837,10 @@ public class Various {
 		});
 	}
 
-	public static void ShowCallUIHook(PackageLoadedParam lpparam) {
+	public static void ShowCallUIHook(PackageReadyParam lpparam) {
 		ModuleHelper.hookAllMethods("com.android.incallui.InCallPresenter", lpparam.getClassLoader(), "startUi", new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
+			protected void after(final MethodHookParam param) throws Throwable {
 				if (!(boolean)param.getResult() || !"INCOMING".equals(param.getArgs()[0].toString())) return;
 				Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
 				if (MainModule.mPrefs.getStringAsInt("various_showcallui", 0) == 3) {
@@ -864,10 +863,10 @@ public class Various {
 		});
 	}
 
-	public static void InCallBrightnessHook(PackageLoadedParam lpparam) {
+	public static void InCallBrightnessHook(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.android.incallui.InCallActivity", lpparam.getClassLoader(), "onCreate", Bundle.class, new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
+			protected void after(final MethodHookParam param) throws Throwable {
 				Activity act = (Activity)param.getThisObject();
 
 				int opt = MainModule.mPrefs.getStringAsInt("various_calluibright_type", 0);
@@ -932,7 +931,7 @@ public class Various {
 		return tv;
 	}
 
-	public static void AppInfoDuringMiuiInstallHook(PackageLoadedParam lpparam) {
+	public static void AppInfoDuringMiuiInstallHook(PackageReadyParam lpparam) {
 		Class<?> AppInfoViewObjectClass = findClassIfExists("com.miui.packageInstaller.ui.listcomponets.AppInfoViewObject", lpparam.getClassLoader());
 		if (AppInfoViewObjectClass != null) {
 			Class<?> ViewHolderClass = findClassIfExists("com.miui.packageInstaller.ui.listcomponets.AppInfoViewObject$ViewHolder", lpparam.getClassLoader());
@@ -954,7 +953,7 @@ public class Various {
 			String finalApkInfoFieldName = apkInfoFieldName;
 			ModuleHelper.hookMethod(methods[0], new MethodHook() {
 				@Override
-				protected void after(final AfterHookCallback param) throws Throwable {
+				protected void after(final MethodHookParam param) throws Throwable {
 					Object viewHolder = param.getArgs()[0];
 					if (viewHolder == null) return;
 					TextView tvAppVersion = (TextView) XposedHelpers.callMethod(viewHolder, "getTvDes");
@@ -996,32 +995,32 @@ public class Various {
 		}
 	}
 
-	public static void MiuiPackageInstallerHook(PackageLoadedParam lpparam) {
+	public static void MiuiPackageInstallerHook(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.miui.packageInstaller.InstallStart", lpparam.getClassLoader(), "getCallingPackage", new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
+			protected void before(final MethodHookParam param) throws Throwable {
 				param.returnAndSkip("com.android.fileexplorer");
 			}
 		});
 		ModuleHelper.findAndHookMethod("android.os.SystemProperties", lpparam.getClassLoader(), "getBoolean", String.class, boolean.class, new MethodHook() {
 			@Override
-			protected void before(BeforeHookCallback param) throws Throwable {
+			protected void before(MethodHookParam param) throws Throwable {
 				if ("persist.sys.allow_update_systemapp".equals(param.getArgs()[0])) {
 					param.returnAndSkip(true);
 				}
 			}
 		});
 	}
-	public static void PurePackageInstallerHook(PackageLoadedParam lpparam) {
+	public static void PurePackageInstallerHook(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.miui.packageInstaller.model.ApkInfo", lpparam.getClassLoader(), "getCloudParams", new MethodHook() {
 			@Override
-			protected void before(BeforeHookCallback param) throws Throwable {
+			protected void before(MethodHookParam param) throws Throwable {
 				param.returnAndSkip(null);
 			}
 		});
 		ModuleHelper.findAndHookMethod("android.app.SharedPreferencesImpl", lpparam.getClassLoader(), "getBoolean", String.class, boolean.class, new MethodHook() {
 			@Override
-			protected void before(BeforeHookCallback param) throws Throwable {
+			protected void before(MethodHookParam param) throws Throwable {
 				String prefKey = (String) param.getArgs()[0];
 				if ("ads_enable".equals(prefKey)
 					|| "app_store_recommend".equals(prefKey)
@@ -1036,7 +1035,7 @@ public class Various {
 		});
 		ModuleHelper.findAndHookMethod(Settings.System.class, "getInt", ContentResolver.class, String.class, int.class, new MethodHook() {
 			@Override
-			protected void before(BeforeHookCallback param) throws Throwable {
+			protected void before(MethodHookParam param) throws Throwable {
 				String prefKey = (String) param.getArgs()[1];
 				if ("virus_scan_install".equals(prefKey)
 				) {
@@ -1046,7 +1045,7 @@ public class Various {
 		});
 		ModuleHelper.findAndHookMethod(Settings.Secure.class, "getInt", ContentResolver.class, String.class, int.class, new MethodHook() {
 			@Override
-			protected void before(BeforeHookCallback param) throws Throwable {
+			protected void before(MethodHookParam param) throws Throwable {
 				String prefKey = (String) param.getArgs()[1];
 				if ("miui_safe_mode".equals(prefKey)) {
 					param.returnAndSkip(0);
@@ -1055,7 +1054,7 @@ public class Various {
 		});
 		ModuleHelper.findAndHookMethod("com.miui.packageInstaller.ui.listcomponets.SafeModeTipViewObject$ViewHolder", lpparam.getClassLoader(), "updateSuggestionMsgState", Context.class, boolean.class, new MethodHook() {
 			@Override
-			protected void after(AfterHookCallback param) throws Throwable {
+			protected void after(MethodHookParam param) throws Throwable {
 				View itemView = (View) XposedHelpers.getObjectField(param.getThisObject(), "itemView");
 				itemView.setVisibility(View.GONE);
 				ViewGroup.LayoutParams layoutParams2 = itemView.getLayoutParams();
@@ -1068,7 +1067,7 @@ public class Various {
 		ModuleHelper.findAndHookMethod("com.miui.packageInstaller.model.ApkInfo", lpparam.getClassLoader(), "getSystemApp", HookerClassHelper.returnConstant(true));
 		ModuleHelper.findAndHookMethod(Uri.class, "parse", String.class, new MethodHook() {
 			@Override
-			protected void before(BeforeHookCallback param) throws Throwable {
+			protected void before(MethodHookParam param) throws Throwable {
 				String uri = (String) param.getArgs()[0];
 				if (uri != null && uri.startsWith("content://guard/")) {
 					param.returnAndSkip(null);
@@ -1077,10 +1076,10 @@ public class Various {
 		});
 	}
 
-	public static void GboardPaddingHook(PackageLoadedParam lpparam) {
+	public static void GboardPaddingHook(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod(findClass("android.os.SystemProperties", lpparam.getClassLoader()), "get", String.class, new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
+			protected void before(final MethodHookParam param) throws Throwable {
 				String key = (String)param.getArgs()[0];
 				if (key.equals("ro.com.google.ime.kb_pad_port_b")) {
 					int opt = MainModule.mPrefs.getInt("various_gboardpadding_port", 0);
@@ -1093,12 +1092,12 @@ public class Various {
 		});
 	}
 
-	public static void FixInputMethodBottomMarginHook(PackageLoadedParam lpparam) {
+	public static void FixInputMethodBottomMarginHook(PackageReadyParam lpparam) {
 		Class<?> InputMethodServiceInjectorClass = findClassIfExists("android.inputmethodservice.InputMethodServiceInjector", lpparam.getClassLoader());
 		ModuleHelper.hookAllMethods(InputMethodServiceInjectorClass, "addMiuiBottomView", new MethodHook() {
 			private boolean isHooked = false;
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
+			protected void after(final MethodHookParam param) throws Throwable {
 				if (isHooked) return;
 				ClassLoader sClassLoader = (ClassLoader) XposedHelpers.getStaticObjectField(InputMethodServiceInjectorClass, "sClassLoader");
 				if (sClassLoader != null) {
@@ -1107,7 +1106,7 @@ public class Various {
 					XposedHelpers.setStaticBooleanField(InputMethodUtil, "sIsGestureLineEnable", false);
 					ModuleHelper.findAndHookMethod(InputMethodUtil, "updateGestureLineEnable", Context.class, new MethodHook() {
 						@Override
-						protected void before(final BeforeHookCallback param) throws Throwable {
+						protected void before(final MethodHookParam param) throws Throwable {
 							XposedHelpers.setStaticBooleanField(InputMethodUtil, "sIsGestureLineEnable", false);
 							param.returnAndSkip(null);
 						}
@@ -1117,17 +1116,17 @@ public class Various {
 		});
 	}
 
-//	public static void LargeCallerPhotoHook(PackageLoadedParam lpparam) {
+//	public static void LargeCallerPhotoHook(PackageReadyParam lpparam) {
 //		ModuleHelper.findAndHookMethod("com.android.incallui.CallCardFragment", lpparam.getClassLoader(), "setCallCardImage", Drawable.class, boolean.class, new MethodHook() {
 //			@Override
-//			protected void before(final BeforeHookCallback param) throws Throwable {
+//			protected void before(final MethodHookParam param) throws Throwable {
 //				param.getArgs()[1] = true;
 //			}
 //		});
 //
 //		ModuleHelper.findAndHookMethod("com.android.incallui.CallCardFragment", lpparam.getClassLoader(), "showBigAvatar", boolean.class, Drawable.class, new MethodHook() {
 //			@Override
-//			protected void before(final BeforeHookCallback param) throws Throwable {
+//			protected void before(final MethodHookParam param) throws Throwable {
 //				//XposedHelpers.log("showBigAvatar: " + String.valueOf(param.getArgs()[0]) + " | " + String.valueOf(param.getArgs()[1]));
 //				if (param.getArgs()[1] == null)
 //					param.returnAndSkip(null);

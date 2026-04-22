@@ -8,12 +8,12 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.7.2'
+        classpath("com.android.tools.build:gradle:8.13.2")
     }
 }
 
 plugins {
-    id "com.github.ben-manes.versions" version "0.51.0"
+    id "com.github.ben-manes.versions" version "0.53.0"
 }
 
 allprojects {

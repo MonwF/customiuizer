@@ -31,7 +31,7 @@ public class AppHelper {
     public static boolean moduleActive = false;
 
     public static RemotePreferences remotePrefs = null;
-    private static final String TAG = "LSPosed-Bridge";
+    private static final String TAG = "LSPosedFramework";
     public static boolean silentSync = false;
     public static ArrayList<AppData> installedAppsList = null;
 

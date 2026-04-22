@@ -1,27 +1,73 @@
 package name.monwf.customiuizer.mods.utils;
 
-import org.apache.commons.lang3.RandomStringUtils;
-
 import java.lang.reflect.Member;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.concurrent.ConcurrentHashMap;
 
 import io.github.libxposed.api.XposedInterface;
-import io.github.libxposed.api.annotations.AfterInvocation;
-import io.github.libxposed.api.annotations.BeforeInvocation;
-import io.github.libxposed.api.annotations.XposedHooker;
 
 public class HookerClassHelper {
-    interface BeforeMethodCallback {
-        void beforeHook(XposedInterface.BeforeHookCallback callback);
+    public static class MethodHookParam {
+        private enum Phase {
+            BEFORE,
+            AFTER
+        }
+
+        private final Member member;
+        private final Object thisObject;
+        private final Object[] args;
+        private Object result;
+        private boolean returnEarly;
+        private Phase phase;
+
+        MethodHookParam(Member member, Object thisObject, Object[] args) {
+            this.member = member;
+            this.thisObject = thisObject;
+            this.args = args;
+            this.phase = Phase.BEFORE;
+        }
+
+        public Member getMember() {
+            return member;
+        }
+
+        public Object getThisObject() {
+            return thisObject;
+        }
+
+        public Object[] getArgs() {
+            return args;
+        }
+
+        public int getArgsCount() {
+            return args.length;
+        }
+
+        public Object getResult() {
+            return result;
+        }
+
+        public void setResult(Object result) {
+            this.result = result;
+        }
+
+        public void returnAndSkip(Object result) {
+            if (phase != Phase.BEFORE) {
+                throw new IllegalStateException("returnAndSkip can only be called from beforeHookedMethod");
+            }
+            this.result = result;
+            this.returnEarly = true;
+        }
+
+        boolean isReturnEarly() {
+            return returnEarly;
+        }
+
+        void enterAfterPhase(Object result) {
+            this.result = result;
+            this.phase = Phase.AFTER;
+        }
     }
 
-    interface AfterMethodCallback {
-        void afterHook(XposedInterface.AfterHookCallback callback);
-    }
-
-    public static class MethodHook implements BeforeMethodCallback, AfterMethodCallback {
+    public static class MethodHook {
         public int mPriority;
 
         public MethodHook() {
@@ -30,152 +76,48 @@ public class HookerClassHelper {
         public MethodHook(int priority) {
             mPriority = priority;
         }
-        public final void beforeHook(XposedInterface.BeforeHookCallback callback) {
-            try {
-                this.before(callback);
-            } catch (Throwable t) {
-                XposedHelpers.log(t);
+        public final void beforeHook(MethodHookParam callback) throws Throwable {
+            this.before(callback);
+        }
+        public final void afterHook(MethodHookParam callback) throws Throwable {
+            this.after(callback);
+        }
+        protected void before(MethodHookParam callback) throws Throwable {
+
+        }
+        protected void after(MethodHookParam callback) throws Throwable {
+
+        }
+    }
+
+    public static XposedInterface.Hooker newHooker(MethodHook hook) {
+        return chain -> {
+            Member member = chain.getExecutable();
+            Object[] args = chain.getArgs().toArray(new Object[0]);
+
+            MethodHookParam callback = new MethodHookParam(member, chain.getThisObject(), args);
+            hook.beforeHook(callback);
+
+            Object result;
+            if (callback.isReturnEarly()) {
+                result = callback.getResult();
+            } else {
+                result = chain.proceed(callback.args);
             }
-        }
-        public final void afterHook(XposedInterface.AfterHookCallback callback) {
-            try {
-                this.after(callback);
-            } catch (Throwable t) {
-                XposedHelpers.log(t);
-            }
-        }
-        protected void before(XposedInterface.BeforeHookCallback callback) throws Throwable {
 
-        }
-        protected void after(XposedInterface.AfterHookCallback callback) throws Throwable {
+            callback.enterAfterPhase(result);
+            hook.afterHook(callback);
 
-        }
-    }
-
-    static class BeforeHookerInfo {
-        public String mHookerId;
-        public BeforeMethodCallback mCallback;
-        BeforeHookerInfo(String hkId, BeforeMethodCallback callback) {
-            mHookerId = hkId;
-            mCallback = callback;
-        }
-    }
-
-    static class AfterHookerInfo {
-        public String mHookerId;
-        public AfterMethodCallback mCallback;
-        AfterHookerInfo(String hkId, AfterMethodCallback callback) {
-            mHookerId = hkId;
-            mCallback = callback;
-        }
-    }
-
-    public interface CustomMethodUnhooker {
-
-        void unhook();
-    }
-
-    @XposedHooker
-    public static class CustomHooker implements XposedInterface.Hooker {
-        static ConcurrentHashMap<Member, ArrayList<BeforeHookerInfo>> beforeCallbacks = new ConcurrentHashMap<>();
-        static ConcurrentHashMap<Member, ArrayList<AfterHookerInfo>> afterCallbacks = new ConcurrentHashMap<>();
-
-        public static CustomMethodUnhooker addCallback(Member m, MethodHook hook) {
-            String hookerId = RandomStringUtils.randomAlphanumeric(12);
-            for (Method method : hook.getClass().getDeclaredMethods()) {
-                if (method.getName().equals("before")) {
-                    ArrayList<BeforeHookerInfo> hookers = beforeCallbacks.get(m);
-                    boolean firstHook = hookers == null;
-                    if (firstHook) hookers = new ArrayList<BeforeHookerInfo>();
-                    hookers.add(new BeforeHookerInfo(hookerId, hook));
-                    if (firstHook) beforeCallbacks.put(m, hookers);
-                }
-                else if (method.getName().equals("after")) {
-                    ArrayList<AfterHookerInfo> hookers = afterCallbacks.get(m);
-                    boolean firstHook = hookers == null;
-                    if (firstHook) hookers = new ArrayList<AfterHookerInfo>();
-                    hookers.add(new AfterHookerInfo(hookerId, hook));
-                    if (firstHook) afterCallbacks.put(m, hookers);
-                }
-            }
-            return new CustomMethodUnhooker() {
-              public void unhook() {
-                  ArrayList<BeforeHookerInfo> beforeHookers = beforeCallbacks.get(m);
-                  if (beforeHookers != null) {
-                    for (BeforeHookerInfo hookerInfo: beforeHookers) {
-                        if (hookerInfo.mHookerId.equals(hookerId)) {
-                            beforeHookers.remove(hookerInfo);
-                            break;
-                        }
-                    }
-                  }
-                  ArrayList<AfterHookerInfo> afterHookers = afterCallbacks.get(m);
-                  if (afterHookers != null) {
-                      for (AfterHookerInfo hookerInfo: afterHookers) {
-                          if (hookerInfo.mHookerId.equals(hookerId)) {
-                              afterHookers.remove(hookerInfo);
-                              break;
-                          }
-                      }
-                  }
-              }
-            };
-        }
-
-        public static boolean memberIsRegistered(Member m) {
-            return beforeCallbacks.get(m) != null || afterCallbacks.get(m) != null;
-        }
-
-        @BeforeInvocation
-        public static void before(XposedInterface.BeforeHookCallback callback) {
-            ArrayList<BeforeHookerInfo> hookers = beforeCallbacks.get(callback.getMember());
-            if (hookers != null) {
-                for (BeforeHookerInfo hookerInfo: hookers) {
-                    hookerInfo.mCallback.beforeHook(callback);
-                }
-            }
-        }
-        @AfterInvocation
-        public static void after(XposedInterface.AfterHookCallback callback) {
-            ArrayList<AfterHookerInfo> hookers = afterCallbacks.get(callback.getMember());
-            if (hookers != null) {
-                for (AfterHookerInfo hookerInfo: hookers) {
-                    hookerInfo.mCallback.afterHook(callback);
-                }
-            }
-        }
-    }
-
-    @XposedHooker
-    public static class HighestPriorityHooker extends CustomHooker {
-        @BeforeInvocation
-        public static void before(XposedInterface.BeforeHookCallback callback) {
-            CustomHooker.before(callback);
-        }
-        @AfterInvocation
-        public static void after(XposedInterface.AfterHookCallback callback) {
-            CustomHooker.after(callback);
-        }
-    }
-
-    @XposedHooker
-    public static class LowestPriorityHooker extends CustomHooker {
-        @BeforeInvocation
-        public static void before(XposedInterface.BeforeHookCallback callback) {
-            CustomHooker.before(callback);
-        }
-        @AfterInvocation
-        public static void after(XposedInterface.AfterHookCallback callback) {
-            CustomHooker.after(callback);
-        }
+            return callback.getResult();
+        };
     }
 
     /**
      * Predefined callback that skips the method without replacements.
      */
-    public static final MethodHook DO_NOTHING = new MethodHook(XposedInterface.PRIORITY_HIGHEST * 2) {
+    public static final MethodHook DO_NOTHING = new MethodHook(XposedInterface.PRIORITY_HIGHEST) {
         @Override
-        protected void before(XposedInterface.BeforeHookCallback param) throws Throwable {
+        protected void before(MethodHookParam param) {
             param.returnAndSkip(null);
         }
     };
@@ -198,7 +140,7 @@ public class HookerClassHelper {
     public static MethodHook returnConstant(int priority, final Object result) {
         return new MethodHook(priority) {
             @Override
-            protected void before(XposedInterface.BeforeHookCallback param) throws Throwable {
+            protected void before(MethodHookParam param) {
                 param.returnAndSkip(result);
             }
         };
