@@ -13,7 +13,7 @@ import name.monwf.customiuizer.utils.Helpers;
 public class PackagePermissions {
 
 
-	public static void hook(XposedModuleInterface.SystemServerLoadedParam lpparam) {
+	public static void hook(XposedModuleInterface.SystemServerStartingParam lpparam) {
 		ArrayList<String> systemPackages = new ArrayList<String>();
 		systemPackages.add(Helpers.modulePkg);
 

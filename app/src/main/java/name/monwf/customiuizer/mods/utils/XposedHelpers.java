@@ -49,13 +49,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.libxposed.api.XposedInterface;
-import name.monwf.customiuizer.mods.utils.HookerClassHelper.CustomHooker;
-import name.monwf.customiuizer.mods.utils.HookerClassHelper.CustomMethodUnhooker;
-import name.monwf.customiuizer.mods.utils.HookerClassHelper.HighestPriorityHooker;
-import name.monwf.customiuizer.mods.utils.HookerClassHelper.LowestPriorityHooker;
 import name.monwf.customiuizer.mods.utils.HookerClassHelper.MethodHook;
 
 
@@ -65,7 +60,7 @@ import name.monwf.customiuizer.mods.utils.HookerClassHelper.MethodHook;
 public final class XposedHelpers {
     public static XposedInterface moduleInst;
     public static DexKitBridge bridge;
-    private static final String TAG = "LSPosed-Bridge";
+    private static final String TAG = "LSPosedFramework";
     private XposedHelpers() {
     }
 
@@ -73,7 +68,6 @@ public final class XposedHelpers {
     private static final ConcurrentHashMap<MemberCacheKey.Method, Optional<Method>> methodCache = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<MemberCacheKey.Constructor, Optional<Constructor<?>>> constructorCache = new ConcurrentHashMap<>();
     private static final WeakHashMap<Object, HashMap<String, Object>> additionalFields = new WeakHashMap<>();
-    private static final HashMap<String, ThreadLocal<AtomicInteger>> sMethodDepth = new HashMap<>();
 
     /**
      * Note that we use object key instead of string here, because string calculation will lose all
@@ -191,22 +185,37 @@ public final class XposedHelpers {
         }
     }
 
+    private static void xposedLog(int priority, String msg, Throwable tr) {
+        if (moduleInst != null) {
+            if (tr != null) {
+                moduleInst.log(priority, null, msg, tr);
+            } else {
+                moduleInst.log(priority, null, msg);
+            }
+            return;
+        }
+        // Fallback for very early init before moduleInst is assigned.
+        if (tr != null) {
+            Log.println(priority, TAG,  msg + "\n" + Log.getStackTraceString(tr));
+        } else {
+            Log.println(priority, TAG, msg);
+        }
+    }
+
     public static void log(String line) {
-        Log.i(TAG, "[Pengeek] " + line);
+        xposedLog(Log.INFO, line, null);
     }
 
     public static void log(Throwable t) {
-        String logStr = Log.getStackTraceString(t);
-        Log.e(TAG, "[Pengeek] " + logStr);
+        xposedLog(Log.ERROR, "", t);
     }
 
     public static void log(String mod, String line) {
-        Log.i(TAG, "[Pengeek][" + mod + "] " + line);
+        xposedLog(Log.INFO, "[" + mod + "] " + line, null);
     }
 
     public static void log(String mod, Throwable t) {
-        String logStr = Log.getStackTraceString(t);
-        Log.e(TAG, "[Pengeek][" + mod + "] " + logStr);
+        xposedLog(Log.ERROR, "[" + mod + "]", t);
     }
 
     /**
@@ -336,7 +345,7 @@ public final class XposedHelpers {
      * Look up a method and hook it. See {@link #findAndHookMethod(String, ClassLoader, String, Object...)}
      * for details.
      */
-    public static CustomMethodUnhooker findAndHookMethod(Class<?> clazz, String methodName, Object... parameterTypesAndCallback) {
+    public static XposedInterface.HookHandle findAndHookMethod(Class<?> clazz, String methodName, Object... parameterTypesAndCallback) {
         if (parameterTypesAndCallback.length == 0 || !(parameterTypesAndCallback[parameterTypesAndCallback.length - 1] instanceof MethodHook))
             throw new IllegalArgumentException("no callback defined");
 
@@ -356,7 +365,7 @@ public final class XposedHelpers {
      * @throws NoSuchMethodError  In case the method was not found.
      * @throws ClassNotFoundError In case the target class or one of the parameter types couldn't be resolved.
      */
-    public static CustomMethodUnhooker findAndHookMethod(String className, ClassLoader classLoader, String methodName, Object... parameterTypesAndCallback) {
+    public static XposedInterface.HookHandle findAndHookMethod(String className, ClassLoader classLoader, String methodName, Object... parameterTypesAndCallback) {
         return findAndHookMethod(findClass(className, classLoader), methodName, parameterTypesAndCallback);
     }
 
@@ -571,8 +580,8 @@ public final class XposedHelpers {
      * @param callback  The callback to be executed when the hooked constructors are called.
      * @return A set containing one object for each found constructor which can be used to unhook it.
      */
-    public static Set<CustomMethodUnhooker> hookAllConstructors(Class<?> hookClass, MethodHook callback) {
-        Set<CustomMethodUnhooker> unhooks = new HashSet<>();
+    public static Set<XposedInterface.HookHandle> hookAllConstructors(Class<?> hookClass, MethodHook callback) {
+        Set<XposedInterface.HookHandle> unhooks = new HashSet<>();
         for (Constructor<?> constructor : hookClass.getDeclaredConstructors())
             unhooks.add(doHookConstructor(constructor, callback));
         return unhooks;
@@ -588,8 +597,8 @@ public final class XposedHelpers {
      * @param callback   The callback to be executed when the hooked methods are called.
      * @return A set containing one object for each found method which can be used to unhook it.
      */
-    public static Set<CustomMethodUnhooker> hookAllMethods(Class<?> hookClass, String methodName, MethodHook callback) {
-        Set<CustomMethodUnhooker> unhooks = new HashSet<>();
+    public static Set<XposedInterface.HookHandle> hookAllMethods(Class<?> hookClass, String methodName, MethodHook callback) {
+        Set<XposedInterface.HookHandle> unhooks = new HashSet<>();
         for (Method method : hookClass.getDeclaredMethods())
             if (method.getName().equals(methodName))
                 unhooks.add(doHookMethod(method, callback));
@@ -727,7 +736,7 @@ public final class XposedHelpers {
      * Look up a constructor and hook it. See {@link #findAndHookMethod(String, ClassLoader, String, Object...)}
      * for details.
      */
-    public static CustomMethodUnhooker findAndHookConstructor(Class<?> clazz, Object... parameterTypesAndCallback) {
+    public static XposedInterface.HookHandle findAndHookConstructor(Class<?> clazz, Object... parameterTypesAndCallback) {
         if (parameterTypesAndCallback.length == 0 || !(parameterTypesAndCallback[parameterTypesAndCallback.length - 1] instanceof MethodHook))
             throw new IllegalArgumentException("no callback defined");
 
@@ -736,60 +745,18 @@ public final class XposedHelpers {
         return doHookConstructor(m, callback);
     }
 
-    public static CustomMethodUnhooker doHookMethod(Method m, MethodHook hook) {
-        CustomMethodUnhooker unhooker;
-        boolean hooked;
-        if (hook.mPriority > XposedInterface.PRIORITY_DEFAULT) {
-            hooked = HighestPriorityHooker.memberIsRegistered(m);
-            unhooker = HighestPriorityHooker.addCallback(m, hook);
-            if (!hooked) {
-                moduleInst.hook(m, HighestPriorityHooker.class);
-            }
-        }
-        else if (hook.mPriority < XposedInterface.PRIORITY_DEFAULT) {
-            hooked = LowestPriorityHooker.memberIsRegistered(m);
-            unhooker = LowestPriorityHooker.addCallback(m, hook);
-            if (!hooked) {
-                moduleInst.hook(m, LowestPriorityHooker.class);
-            }
-        }
-        else {
-            hooked = CustomHooker.memberIsRegistered(m);
-            unhooker = CustomHooker.addCallback(m, hook);
-            if (!hooked) {
-                moduleInst.hook(m, CustomHooker.class);
-            }
-        }
-
-        return unhooker;
+    public static XposedInterface.HookHandle doHookMethod(Method m, MethodHook hook) {
+        XposedInterface.HookHandle handle = moduleInst.hook(m)
+            .setPriority(hook.mPriority)
+            .intercept(HookerClassHelper.newHooker(hook));
+        return handle;
     }
 
-    private static CustomMethodUnhooker doHookConstructor(Constructor<?> m, MethodHook hook) {
-        CustomMethodUnhooker unhooker;
-        boolean hooked;
-        if (hook.mPriority > XposedInterface.PRIORITY_DEFAULT) {
-            hooked = HighestPriorityHooker.memberIsRegistered(m);
-            unhooker = HighestPriorityHooker.addCallback(m, hook);
-            if (!hooked) {
-                moduleInst.hook(m, HighestPriorityHooker.class);
-            }
-        }
-        else if (hook.mPriority < XposedInterface.PRIORITY_DEFAULT) {
-            hooked = LowestPriorityHooker.memberIsRegistered(m);
-            unhooker = LowestPriorityHooker.addCallback(m, hook);
-            if (!hooked) {
-                moduleInst.hook(m, LowestPriorityHooker.class);
-            }
-        }
-        else {
-            hooked = CustomHooker.memberIsRegistered(m);
-            unhooker = CustomHooker.addCallback(m, hook);
-            if (!hooked) {
-                moduleInst.hook(m, CustomHooker.class);
-            }
-        }
-
-        return unhooker;
+    private static XposedInterface.HookHandle doHookConstructor(Constructor<?> m, MethodHook hook) {
+        XposedInterface.HookHandle handle = moduleInst.hook(m)
+            .setPriority(hook.mPriority)
+            .intercept(HookerClassHelper.newHooker(hook));
+        return handle;
     }
 
 
@@ -797,7 +764,7 @@ public final class XposedHelpers {
      * Look up a constructor and hook it. See {@link #findAndHookMethod(String, ClassLoader, String, Object...)}
      * for details.
      */
-    public static CustomMethodUnhooker findAndHookConstructor(String className, ClassLoader classLoader, Object... parameterTypesAndCallback) {
+    public static XposedInterface.HookHandle findAndHookConstructor(String className, ClassLoader classLoader, Object... parameterTypesAndCallback) {
         return findAndHookConstructor(findClass(className, classLoader), parameterTypesAndCallback);
     }
 
@@ -972,51 +939,6 @@ public final class XposedHelpers {
     }
 
     /**
-     * Sets the value of a {@code byte} field in the given object instance. A class reference is not sufficient! See also {@link #findField}.
-     */
-    public static void setByteField(Object obj, String fieldName, byte value) {
-        try {
-            findField(obj.getClass(), fieldName).setByte(obj, value);
-        } catch (IllegalAccessException e) {
-            // should not happen
-            XposedHelpers.log(e);
-            throw new IllegalAccessError(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            throw e;
-        }
-    }
-
-    /**
-     * Sets the value of a {@code char} field in the given object instance. A class reference is not sufficient! See also {@link #findField}.
-     */
-    public static void setCharField(Object obj, String fieldName, char value) {
-        try {
-            findField(obj.getClass(), fieldName).setChar(obj, value);
-        } catch (IllegalAccessException e) {
-            // should not happen
-            XposedHelpers.log(e);
-            throw new IllegalAccessError(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            throw e;
-        }
-    }
-
-    /**
-     * Sets the value of a {@code double} field in the given object instance. A class reference is not sufficient! See also {@link #findField}.
-     */
-    public static void setDoubleField(Object obj, String fieldName, double value) {
-        try {
-            findField(obj.getClass(), fieldName).setDouble(obj, value);
-        } catch (IllegalAccessException e) {
-            // should not happen
-            XposedHelpers.log(e);
-            throw new IllegalAccessError(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            throw e;
-        }
-    }
-
-    /**
      * Sets the value of a {@code float} field in the given object instance. A class reference is not sufficient! See also {@link #findField}.
      */
     public static void setFloatField(Object obj, String fieldName, float value) {
@@ -1052,21 +974,6 @@ public final class XposedHelpers {
     public static void setLongField(Object obj, String fieldName, long value) {
         try {
             findField(obj.getClass(), fieldName).setLong(obj, value);
-        } catch (IllegalAccessException e) {
-            // should not happen
-            XposedHelpers.log(e);
-            throw new IllegalAccessError(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            throw e;
-        }
-    }
-
-    /**
-     * Sets the value of a {@code short} field in the given object instance. A class reference is not sufficient! See also {@link #findField}.
-     */
-    public static void setShortField(Object obj, String fieldName, short value) {
-        try {
-            findField(obj.getClass(), fieldName).setShort(obj, value);
         } catch (IllegalAccessException e) {
             // should not happen
             XposedHelpers.log(e);
@@ -1214,51 +1121,6 @@ public final class XposedHelpers {
         }
     }
 
-    /**
-     * Sets the value of a static {@code float} field in the given class. See also {@link #findField}.
-     */
-    public static void setStaticFloatField(Class<?> clazz, String fieldName, float value) {
-        try {
-            findField(clazz, fieldName).setFloat(null, value);
-        } catch (IllegalAccessException e) {
-            // should not happen
-            XposedHelpers.log(e);
-            throw new IllegalAccessError(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            throw e;
-        }
-    }
-
-    /**
-     * Sets the value of a static {@code int} field in the given class. See also {@link #findField}.
-     */
-    public static void setStaticIntField(Class<?> clazz, String fieldName, int value) {
-        try {
-            findField(clazz, fieldName).setInt(null, value);
-        } catch (IllegalAccessException e) {
-            // should not happen
-            XposedHelpers.log(e);
-            throw new IllegalAccessError(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            throw e;
-        }
-    }
-
-    /**
-     * Sets the value of a static {@code long} field in the given class. See also {@link #findField}.
-     */
-    public static void setStaticLongField(Class<?> clazz, String fieldName, long value) {
-        try {
-            findField(clazz, fieldName).setLong(null, value);
-        } catch (IllegalAccessException e) {
-            // should not happen
-            XposedHelpers.log(e);
-            throw new IllegalAccessError(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            throw e;
-        }
-    }
-
     //#################################################################################################
 
     /**
@@ -1351,7 +1213,7 @@ public final class XposedHelpers {
     public static Object callMethod(Object obj, String methodName, Object... args) {
         try {
             if (obj == null) {
-                XposedHelpers.log("callMethod", methodName + " is null");
+                XposedHelpers.log("callMethod", methodName + " is null: " + Arrays.toString(args));
             }
             return findMethodBestMatch(obj.getClass(), methodName, args).invoke(obj, args);
         } catch (IllegalAccessException e) {
@@ -1582,27 +1444,6 @@ public final class XposedHelpers {
     }
 
     /**
-     * Like {@link #setAdditionalInstanceField}, but the value is stored for the class of {@code obj}.
-     */
-    public static Object setAdditionalStaticField(Object obj, String key, Object value) {
-        return setAdditionalInstanceField(obj.getClass(), key, value);
-    }
-
-    /**
-     * Like {@link #getAdditionalInstanceField}, but the value is returned for the class of {@code obj}.
-     */
-    public static Object getAdditionalStaticField(Object obj, String key) {
-        return getAdditionalInstanceField(obj.getClass(), key);
-    }
-
-    /**
-     * Like {@link #removeAdditionalInstanceField}, but the value is removed and returned for the class of {@code obj}.
-     */
-    public static Object removeAdditionalStaticField(Object obj, String key) {
-        return removeAdditionalInstanceField(obj.getClass(), key);
-    }
-
-    /**
      * Like {@link #setAdditionalInstanceField}, but the value is stored for {@code clazz}.
      */
     public static Object setAdditionalStaticField(Class<?> clazz, String key, Object value) {
@@ -1624,85 +1465,6 @@ public final class XposedHelpers {
     }
 
     //#################################################################################################
-
-    /**
-     * Loads an asset from a resource object and returns the content as {@code byte} array.
-     *
-     * @param res  The resources from which the asset should be loaded.
-     * @param path The path to the asset, as in {@link AssetManager#open}.
-     * @return The content of the asset.
-     */
-    public static byte[] assetAsByteArray(Resources res, String path) throws IOException {
-        return inputStreamToByteArray(res.getAssets().open(path));
-    }
-
-    /*package*/
-    static byte[] inputStreamToByteArray(InputStream is) throws IOException {
-        ByteArrayOutputStream buf = new ByteArrayOutputStream();
-        byte[] temp = new byte[1024];
-        int read;
-
-        while ((read = is.read(temp)) > 0) {
-            buf.write(temp, 0, read);
-        }
-        is.close();
-        return buf.toByteArray();
-    }
-
-    //#################################################################################################
-
-    /**
-     * Increments the depth counter for the given method.
-     *
-     * <p>The intention of the method depth counter is to keep track of the call depth for recursive
-     * methods, e.g. to override parameters only for the outer call. The Xposed framework uses this
-     * to load drawable replacements only once per call, even when multiple
-     * {@link Resources#getDrawable} variants call each other.
-     *
-     * @param method The method name. Should be prefixed with a unique, module-specific string.
-     * @return The updated depth.
-     */
-    public static int incrementMethodDepth(String method) {
-        return getMethodDepthCounter(method).get().incrementAndGet();
-    }
-
-    /**
-     * Decrements the depth counter for the given method.
-     * See {@link #incrementMethodDepth} for details.
-     *
-     * @param method The method name. Should be prefixed with a unique, module-specific string.
-     * @return The updated depth.
-     */
-    public static int decrementMethodDepth(String method) {
-        return getMethodDepthCounter(method).get().decrementAndGet();
-    }
-
-    /**
-     * Returns the current depth counter for the given method.
-     * See {@link #incrementMethodDepth} for details.
-     *
-     * @param method The method name. Should be prefixed with a unique, module-specific string.
-     * @return The updated depth.
-     */
-    public static int getMethodDepth(String method) {
-        return getMethodDepthCounter(method).get().get();
-    }
-
-    private static ThreadLocal<AtomicInteger> getMethodDepthCounter(String method) {
-        synchronized (sMethodDepth) {
-            ThreadLocal<AtomicInteger> counter = sMethodDepth.get(method);
-            if (counter == null) {
-                counter = new ThreadLocal<AtomicInteger>() {
-                    @Override
-                    protected AtomicInteger initialValue() {
-                        return new AtomicInteger();
-                    }
-                };
-                sMethodDepth.put(method, counter);
-            }
-            return counter;
-        }
-    }
 
     public static void createBridge(String apkPath) {
         bridge = DexKitBridge.create(apkPath);

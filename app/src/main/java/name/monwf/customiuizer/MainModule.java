@@ -12,9 +12,10 @@ import androidx.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Map;
 
-import io.github.libxposed.api.XposedInterface;
 import io.github.libxposed.api.XposedModule;
 import io.github.libxposed.api.XposedModuleInterface;
+import io.github.libxposed.api.XposedModuleInterface.PackageReadyParam;
+import io.github.libxposed.api.XposedModuleInterface.SystemServerStartingParam;
 import name.monwf.customiuizer.mods.Controls;
 import name.monwf.customiuizer.mods.GlobalActions;
 import name.monwf.customiuizer.mods.Launcher;
@@ -23,6 +24,7 @@ import name.monwf.customiuizer.mods.System;
 import name.monwf.customiuizer.mods.SystemUI;
 import name.monwf.customiuizer.mods.Various;
 import name.monwf.customiuizer.mods.utils.HookerClassHelper.MethodHook;
+import name.monwf.customiuizer.mods.utils.HookerClassHelper.MethodHookParam;
 import name.monwf.customiuizer.mods.utils.ModuleHelper;
 import name.monwf.customiuizer.mods.utils.ResourceHooks;
 import name.monwf.customiuizer.mods.utils.XposedHelpers;
@@ -38,8 +40,8 @@ public class MainModule extends XposedModule {
 
     OnSharedPreferenceChangeListener mListener;
 
-    public MainModule(@NonNull XposedInterface base, @NonNull XposedModuleInterface.ModuleLoadedParam param) {
-        super(base, param);
+    @Override
+    public void onModuleLoaded(@NonNull XposedModuleInterface.ModuleLoadedParam param) {
         processName = param.getProcessName();
     }
 
@@ -53,7 +55,7 @@ public class MainModule extends XposedModule {
             mPrefs.putAll(allPrefs);
     }
 
-    private void loadDexKit(PackageLoadedParam lpparam) {
+    private void loadDexKit(PackageReadyParam lpparam) {
         java.lang.System.loadLibrary("dexkit");
         XposedHelpers.createBridge(lpparam.getApplicationInfo().sourceDir);
     }
@@ -84,7 +86,7 @@ public class MainModule extends XposedModule {
     }
 
     @Override
-    public void onSystemServerLoaded(final SystemServerLoadedParam lpparam) {
+    public void onSystemServerStarting(final SystemServerStartingParam lpparam) {
         ModuleHelper.currentPackageName = "android";
         initPrefs();
         PackagePermissions.hook(lpparam);
@@ -159,8 +161,7 @@ public class MainModule extends XposedModule {
     }
 
     @Override
-    public void onPackageLoaded(final PackageLoadedParam lpparam) {
-        super.onPackageLoaded(lpparam);
+    public void onPackageReady(final PackageReadyParam lpparam) {
         if (!lpparam.isFirstPackage()) return;
 
         String pkg = lpparam.getPackageName();
@@ -211,7 +212,7 @@ public class MainModule extends XposedModule {
             MethodHook initStatusBarHook = new MethodHook() {
                 private boolean isHooked = false;
                 @Override
-                protected void before(final BeforeHookCallback param) throws Throwable {
+                protected void before(final MethodHookParam param) throws Throwable {
                     if (!isHooked && param.getThisObject() != null) {
                         isHooked = true;
                         Context context = (Context) XposedHelpers.getObjectField(param.getThisObject(), "mContext");
@@ -593,7 +594,7 @@ public class MainModule extends XposedModule {
         if (isLauncherPkg || isStatusBarColor || isNoOverscroll || controlMedia) {
             ModuleHelper.findAndHookMethod(Application.class, "attach", Context.class, new MethodHook() {
                 @Override
-                protected void after(AfterHookCallback param) throws Throwable {
+                protected void after(MethodHookParam param) throws Throwable {
                     if (isLauncherPkg) handleLoadLauncher(lpparam);
                     if (isStatusBarColor) {
                         System.StatusBarBackgroundCompatHook(lpparam);
@@ -606,7 +607,7 @@ public class MainModule extends XposedModule {
         }
     }
 
-    private void handleLoadLauncher(final PackageLoadedParam lpparam) {
+    private void handleLoadLauncher(final PackageReadyParam lpparam) {
         boolean closeOnLaunch = false;
         if (mPrefs.getInt("launcher_swipedown_action", 1) != 1 ||
                 mPrefs.getInt("launcher_swipeup_action", 1) != 1 ||

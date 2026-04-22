@@ -28,7 +28,7 @@ android {
         minSdkVersion 35
         //noinspection OldTargetApi,ExpiredTargetSdkVersion
         targetSdkVersion 35
-        compileSdk 35
+        compileSdk 36
         versionCode lastVersion
         versionName lastVersionName
         resConfigs 'ru-rRU', 'zh-rCN', 'ja-rJP', 'vi-rVN', 'cs-rCZ', 'pt-rBR', 'tr-rTR', 'es-rES'
@@ -97,16 +97,15 @@ android {
 dependencies {
     //    implementation "ch.acra:acra-core:$acraVersion"
 //    noinspection DifferentStdlibGradleVersion
-    compileOnly files('lib/api-100.aar')
     compileOnly files('lib/framework.jar')
-
-    implementation "io.github.libxposed:service:100-1.0.0"
-    implementation "org.apache.commons:commons-lang3:3.18.0"
+    compileOnly "io.github.libxposed:api:101.0.1"
+    implementation "io.github.libxposed:service:101.0.0"
+    implementation "org.apache.commons:commons-lang3:3.20.0"
     implementation "androidx.preference:preference:1.2.1"
     implementation 'androidx.palette:palette:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.7.1'
-    implementation 'org.luckypray:dexkit:2.0.7'
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom:2.0.0"))
+    implementation 'org.luckypray:dexkit:2.2.0'
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:2.2.10"))
 //    implementation "androidx.recyclerview:recyclerview:1.2.1"
 //    implementation 'com.google.android.flexbox:flexbox:3.0.0'
 //    implementation 'com.google.android.material:material:1.6.1'

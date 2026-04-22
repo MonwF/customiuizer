@@ -5,17 +5,9 @@
 -keepattributes RuntimeVisibleAnnotations
 -keep,allowoptimization,allowobfuscation public class * extends io.github.libxposed.api.XposedModule {
     public <init>(...);
-    public void onPackageLoaded(...);
-    public void onSystemServerLoaded(...);
-}
-
--keep,allowoptimization,allowobfuscation @io.github.libxposed.api.annotations.* class * {
-    @io.github.libxposed.api.annotations.BeforeInvocation <methods>;
-    @io.github.libxposed.api.annotations.AfterInvocation <methods>;
-}
-
--keep,allowoptimization class name.monwf.customiuizer.mods.utils.HookerClassHelper$MethodHook {
-    <methods>;
+    public void onModuleLoaded(...);
+    public void onPackageReady(...);
+    public void onSystemServerStarting(...);
 }
 
 -keepnames class name.monwf.customiuizer.GateWayLauncher
