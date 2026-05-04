@@ -4,11 +4,12 @@
 
 客制化你的HyperOS
 
-支持基于`Android 14`以上的`HyperOS`。
+支持基于`Android 15`以上的`HyperOS 2`。Lsposed 2.0用户请下载带A101的版本
 
 > 感谢`Mikanoshi`的 [CustoMIUIzer](https://code.highspec.ru/Mikanoshi/CustoMIUIzer) 模块
 
 ### 过时版本
+* [HyperOS 1.0 下载](https://github.com/MonwF/customiuizer/releases/tag/v24.10.12)
 * [MIUI 14 下载](https://github.com/MonwF/customiuizer/releases/tag/v23.11.26)
 * [MIUI 13 下载](https://github.com/MonwF/customiuizer/releases/tag/v23.08.26)
 

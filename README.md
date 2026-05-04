@@ -4,12 +4,13 @@
 
 Customize your HyperOS to your liking.
 
-For `HyperOS` based on `Android 14`.
+For `HyperOS 2` based on `Android 15`. LSPosed 2.0 users, please download the version with "A101".
 
 > Thanks for the awesome module [CustoMIUIzer](https://code.highspec.ru/Mikanoshi/CustoMIUIzer) from `Mikanoshi`
 
 ### Legacy releases
 
+* [HyperOS 1.0 release](https://github.com/MonwF/customiuizer/releases/tag/v24.10.12)
 * [MIUI 14 release](https://github.com/MonwF/customiuizer/releases/tag/v23.11.26)
 * [MIUI 13 release](https://github.com/MonwF/customiuizer/releases/tag/v23.08.26)
 
