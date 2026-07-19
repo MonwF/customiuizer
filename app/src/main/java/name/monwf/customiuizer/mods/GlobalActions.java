@@ -49,9 +49,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.libxposed.api.XposedInterface.AfterHookCallback;
+import name.monwf.customiuizer.mods.utils.HookerClassHelper.AfterHookCallback;
 import io.github.libxposed.api.XposedModuleInterface;
-import io.github.libxposed.api.XposedModuleInterface.PackageLoadedParam;
+import io.github.libxposed.api.XposedModuleInterface.PackageReadyParam;
 import miui.app.MiuiFreeFormManager;
 import miui.process.ForegroundInfo;
 import miui.process.ProcessManager;
@@ -479,7 +479,7 @@ public class GlobalActions {
         }
     };
 
-    public static void miuizerSettingsHook(PackageLoadedParam lpparam) {
+    public static void miuizerSettingsHook(PackageReadyParam lpparam) {
         int settingsIconResId = MainModule.resHooks.addFakeResource("ic_miuizer_settings", R.drawable.ic_miuizer_settings, "drawable");
         ModuleHelper.findAndHookMethod("com.android.settings.MiuiSettings", lpparam.getClassLoader(), "updateHeaderList", List.class, new MethodHook() {
             @Override
@@ -538,7 +538,7 @@ public class GlobalActions {
         });
     }
 
-    public static void setupForegroundMonitor(PackageLoadedParam lpparam) {
+    public static void setupForegroundMonitor(PackageReadyParam lpparam) {
         ModuleHelper.hookAllConstructors("com.android.systemui.statusbar.policy.NetworkSpeedController", lpparam.getClassLoader(), new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
@@ -578,7 +578,7 @@ public class GlobalActions {
         });
     }
 
-    public static void setupGlobalActions(XposedModuleInterface.SystemServerLoadedParam lpparam) {
+    public static void setupGlobalActions(XposedModuleInterface.SystemServerStartingParam lpparam) {
         ModuleHelper.hookAllMethods("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.getClassLoader(), "initInternal", new MethodHook() {
             @SuppressLint("UnspecifiedRegisterReceiverFlag")
             @Override
@@ -680,7 +680,7 @@ public class GlobalActions {
         });
     }
 
-    public static void setupStatusBar(PackageLoadedParam lpparam) {
+    public static void setupStatusBar(PackageReadyParam lpparam) {
         Class<?> StatusBarClass = findClassIfExists("com.android.systemui.statusbar.phone.CentralSurfacesImpl", lpparam.getClassLoader());
         if (StatusBarClass == null) return;
         ModuleHelper.findAndHookMethod(StatusBarClass, "start", new MethodHook() {

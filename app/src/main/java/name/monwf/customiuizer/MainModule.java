@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.os.Build;
 import android.provider.Settings;
 
 import androidx.annotation.NonNull;
@@ -12,9 +13,10 @@ import androidx.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Map;
 
-import io.github.libxposed.api.XposedInterface;
 import io.github.libxposed.api.XposedModule;
 import io.github.libxposed.api.XposedModuleInterface;
+import io.github.libxposed.api.XposedModuleInterface.PackageReadyParam;
+import io.github.libxposed.api.XposedModuleInterface.SystemServerStartingParam;
 import name.monwf.customiuizer.mods.Controls;
 import name.monwf.customiuizer.mods.GlobalActions;
 import name.monwf.customiuizer.mods.Launcher;
@@ -22,6 +24,8 @@ import name.monwf.customiuizer.mods.PackagePermissions;
 import name.monwf.customiuizer.mods.System;
 import name.monwf.customiuizer.mods.SystemUI;
 import name.monwf.customiuizer.mods.Various;
+import name.monwf.customiuizer.mods.utils.HookerClassHelper.AfterHookCallback;
+import name.monwf.customiuizer.mods.utils.HookerClassHelper.BeforeHookCallback;
 import name.monwf.customiuizer.mods.utils.HookerClassHelper.MethodHook;
 import name.monwf.customiuizer.mods.utils.ModuleHelper;
 import name.monwf.customiuizer.mods.utils.ResourceHooks;
@@ -38,19 +42,32 @@ public class MainModule extends XposedModule {
 
     OnSharedPreferenceChangeListener mListener;
 
-    public MainModule(@NonNull XposedInterface base, @NonNull XposedModuleInterface.ModuleLoadedParam param) {
-        super(base, param);
+    private static boolean mPrefsLoaded = false;
+    private static boolean mPrefsWatcherRegistered = false;
+
+    @Override
+    public void onModuleLoaded(@NonNull XposedModuleInterface.ModuleLoadedParam param) {
         processName = param.getProcessName();
+        XposedHelpers.moduleInst = this;
+    }
+
+    private boolean isSupportedAndroidVersion() {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            return true;
+        }
+        XposedHelpers.log("HyperOS 1 A14 build disabled on Android API " + Build.VERSION.SDK_INT);
+        return false;
     }
 
     private void initPrefs() {
-        XposedHelpers.moduleInst = this;
+        if (mPrefsLoaded) return;
         SharedPreferences readPrefs = getRemotePreferences(ModuleHelper.prefsName + "_remote");
         Map<String, ?> allPrefs = readPrefs.getAll();
         if (allPrefs == null || allPrefs.size() == 0)
             XposedHelpers.log("Empty preferences!");
         else
             mPrefs.putAll(allPrefs);
+        mPrefsLoaded = true;
     }
 
     private void loadDexKit() {
@@ -58,6 +75,8 @@ public class MainModule extends XposedModule {
     }
 
     private void watchPreferenceChange() {
+        if (mPrefsWatcherRegistered) return;
+        mPrefsWatcherRegistered = true;
         HashSet<String> ignoreKeys = new HashSet<>();
         ignoreKeys.add("pref_key_systemui_restart_time");
 
@@ -83,15 +102,13 @@ public class MainModule extends XposedModule {
     }
 
     @Override
-    public void onSystemServerLoaded(final SystemServerLoadedParam lpparam) {
+    public void onSystemServerStarting(final SystemServerStartingParam lpparam) {
+        if (!isSupportedAndroidVersion()) return;
         ModuleHelper.currentPackageName = "android";
         initPrefs();
         PackagePermissions.hook(lpparam);
         GlobalActions.setupGlobalActions(lpparam);
 
-//        if (mPrefs.getInt("system_statusbarheight", 11) > 11) {
-//            System.StatusBarHeightHook(lpparam);
-//        }
         if (mPrefs.getBoolean("system_screenshot_overlay")) {
             System.TempHideOverlayAppHook(lpparam);
         }
@@ -162,8 +179,8 @@ public class MainModule extends XposedModule {
     }
 
     @Override
-    public void onPackageLoaded(final PackageLoadedParam lpparam) {
-        super.onPackageLoaded(lpparam);
+    public void onPackageReady(final PackageReadyParam lpparam) {
+        if (!isSupportedAndroidVersion()) return;
         if (!lpparam.isFirstPackage()) return;
 
         String pkg = lpparam.getPackageName();
@@ -511,14 +528,14 @@ public class MainModule extends XposedModule {
             if (mPrefs.getBoolean("various_hide_report_ondetails")) Various.HideReportButtonHook(lpparam);
             if (mPrefs.getBoolean("system_applock_scramblepin")) System.ScrambleAppLockPINHook(lpparam);
             if (mPrefs.getStringAsInt("various_appsort", 1) > 1) Various.AppsDefaultSortHook(lpparam);
-            if (mPrefs.getStringAsInt("various_skip", 0) > 0) Various.AppsDefaultSortHook(lpparam);
             if (mPrefs.getBoolean("various_skip_interceptperm")) Various.InterceptPermHook(lpparam);
             if (mPrefs.getBoolean("various_replace_defaultopen_with_openbydefault")) Various.OpenByDefaultHook(lpparam);
             if (mPrefs.getBoolean("various_skip_securityscan")) Various.SkipSecurityScanHook(lpparam);
             if (mPrefs.getBoolean("various_show_battery_temperature")) Various.ShowTempInBatteryHook(lpparam);
             if (mPrefs.getBoolean("various_disable_freeform_suggest_blacklist")) System.DisableSideBarSuggestionHook(lpparam);
             if (mPrefs.getBoolean("various_disable_dock_suggest")) Various.DisableDockSuggestHook(lpparam);
-            if (mPrefs.getBoolean("various_enable_expand_sidebar")) {
+            if ("com.miui.securitycenter:ui".equals(processName)
+                && mPrefs.getBoolean("various_enable_expand_sidebar")) {
                 Various.AddSideBarExpandReceiverHook(lpparam);
             }
             if (mPrefs.getBoolean("system_hidelowbatwarn")) {
@@ -619,7 +636,7 @@ public class MainModule extends XposedModule {
         }
     }
 
-    private void handleLoadLauncher(final PackageLoadedParam lpparam) {
+    private void handleLoadLauncher(final PackageReadyParam lpparam) {
         boolean closeOnLaunch = false;
         if (mPrefs.getInt("launcher_swipedown_action", 1) != 1 ||
                 mPrefs.getInt("launcher_swipeup_action", 1) != 1 ||

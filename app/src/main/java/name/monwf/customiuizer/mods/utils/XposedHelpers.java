@@ -54,8 +54,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import io.github.libxposed.api.XposedInterface;
 import name.monwf.customiuizer.mods.utils.HookerClassHelper.CustomHooker;
 import name.monwf.customiuizer.mods.utils.HookerClassHelper.CustomMethodUnhooker;
-import name.monwf.customiuizer.mods.utils.HookerClassHelper.HighestPriorityHooker;
-import name.monwf.customiuizer.mods.utils.HookerClassHelper.LowestPriorityHooker;
 import name.monwf.customiuizer.mods.utils.HookerClassHelper.MethodHook;
 
 
@@ -72,6 +70,10 @@ public final class XposedHelpers {
     private static final ConcurrentHashMap<MemberCacheKey.Field, Optional<Field>> fieldCache = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<MemberCacheKey.Method, Optional<Method>> methodCache = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<MemberCacheKey.Constructor, Optional<Constructor<?>>> constructorCache = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<ClassCacheKey, Optional<Class<?>>> classCache = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, Class<?>[]> parameterClassesCache = new ConcurrentHashMap<>();
+    private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
+    private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
     private static final WeakHashMap<Object, HashMap<String, Object>> additionalFields = new WeakHashMap<>();
     private static final HashMap<String, ThreadLocal<AtomicInteger>> sMethodDepth = new HashMap<>();
 
@@ -191,6 +193,36 @@ public final class XposedHelpers {
         }
     }
 
+    private static final class ClassCacheKey {
+        private final ClassLoader classLoader;
+        private final String className;
+        private final int hash;
+
+        ClassCacheKey(ClassLoader classLoader, String className) {
+            this.classLoader = classLoader;
+            this.className = className;
+            this.hash = Objects.hash(System.identityHashCode(classLoader), className);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof ClassCacheKey)) return false;
+            ClassCacheKey that = (ClassCacheKey) o;
+            return classLoader == that.classLoader && Objects.equals(className, that.className);
+        }
+
+        @Override
+        public int hashCode() {
+            return hash;
+        }
+
+        @Override
+        public String toString() {
+            return className + "@" + System.identityHashCode(classLoader);
+        }
+    }
+
     public static void log(String line) {
         Log.i(TAG, "[Pengeek] " + line);
     }
@@ -227,14 +259,7 @@ public final class XposedHelpers {
      * @throws ClassNotFoundError In case the class was not found.
      */
     public static Class<?> findClass(String className, ClassLoader classLoader) {
-        if (classLoader == null) {
-            classLoader = moduleInst.getClass().getClassLoader();
-        }
-        try {
-            return ClassUtils.getClass(classLoader, className, false);
-        } catch (ClassNotFoundException e) {
-            throw new ClassNotFoundError(e);
-        }
+        return findClassOptional(className, classLoader).orElseThrow(() -> new ClassNotFoundError(new ClassNotFoundException(className)));
     }
 
     /**
@@ -246,10 +271,25 @@ public final class XposedHelpers {
      * @return A reference to the class, or {@code null} if it doesn't exist.
      */
     public static Class<?> findClassIfExists(String className, ClassLoader classLoader) {
+        return findClassOptional(className, classLoader).orElse(null);
+    }
+
+    private static Optional<Class<?>> findClassOptional(String className, ClassLoader classLoader) {
+        ClassLoader effectiveLoader = classLoader != null ? classLoader : moduleInst.getClass().getClassLoader();
+        ClassCacheKey key = new ClassCacheKey(effectiveLoader, className);
+        Optional<Class<?>> cached = classCache.get(key);
+        if (cached != null) {
+            return cached;
+        }
         try {
-            return findClass(className, classLoader);
-        } catch (ClassNotFoundError e) {
-            return null;
+            Class<?> c = ClassUtils.getClass(effectiveLoader, className, false);
+            Optional<Class<?>> result = Optional.of(c);
+            classCache.put(key, result);
+            return result;
+        } catch (ClassNotFoundException e) {
+            Optional<Class<?>> result = Optional.empty();
+            classCache.put(key, result);
+            return result;
         }
     }
 
@@ -489,6 +529,10 @@ public final class XposedHelpers {
      * @return A reference to the best-matching method.
      * @throws NoSuchMethodError In case no suitable method was found.
      */
+    public static Method findMethodBestMatch(Class<?> clazz, String methodName) {
+        return findMethodBestMatch(clazz, methodName, EMPTY_CLASS_ARRAY);
+    }
+
     public static Method findMethodBestMatch(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
         // find the exact matching method first
         try {
@@ -600,6 +644,7 @@ public final class XposedHelpers {
      * Returns an array with the classes of the given objects.
      */
     public static Class<?>[] getParameterTypes(Object... args) {
+        if (args.length == 0) return EMPTY_CLASS_ARRAY;
         Class<?>[] clazzes = new Class<?>[args.length];
         for (int i = 0; i < args.length; i++) {
             clazzes[i] = (args[i] != null) ? args[i].getClass() : null;
@@ -612,6 +657,10 @@ public final class XposedHelpers {
      * already, or a String with the full class name.
      */
     private static Class<?>[] getParameterClasses(ClassLoader classLoader, Object[] parameterTypesAndCallback) {
+        String key = buildParameterClassesKey(classLoader, parameterTypesAndCallback);
+        Class<?>[] cached = parameterClassesCache.get(key);
+        if (cached != null) return cached;
+
         Class<?>[] parameterClasses = null;
         for (int i = parameterTypesAndCallback.length - 1; i >= 0; i--) {
             Object type = parameterTypesAndCallback[i];
@@ -635,9 +684,32 @@ public final class XposedHelpers {
 
         // if there are no arguments for the method
         if (parameterClasses == null)
-            parameterClasses = new Class<?>[0];
+            parameterClasses = EMPTY_CLASS_ARRAY;
 
+        parameterClassesCache.put(key, parameterClasses);
         return parameterClasses;
+    }
+
+    private static String buildParameterClassesKey(ClassLoader classLoader, Object[] parameterTypesAndCallback) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(classLoader == null ? 0 : System.identityHashCode(classLoader)).append('|');
+        boolean first = true;
+        for (Object type : parameterTypesAndCallback) {
+            if (type instanceof MethodHook)
+                continue;
+            if (!first)
+                sb.append('\u0000');
+            first = false;
+            if (type instanceof Class)
+                sb.append(((Class<?>) type).getName());
+            else if (type instanceof String)
+                sb.append((String) type);
+            else if (type == null)
+                sb.append("\u0000null");
+            else
+                sb.append(type.toString());
+        }
+        return sb.toString();
     }
 
     /**
@@ -737,59 +809,20 @@ public final class XposedHelpers {
     }
 
     public static CustomMethodUnhooker doHookMethod(Method m, MethodHook hook) {
-        CustomMethodUnhooker unhooker;
-        boolean hooked;
-        if (hook.mPriority > XposedInterface.PRIORITY_DEFAULT) {
-            hooked = HighestPriorityHooker.memberIsRegistered(m);
-            unhooker = HighestPriorityHooker.addCallback(m, hook);
-            if (!hooked) {
-                moduleInst.hook(m, HighestPriorityHooker.class);
-            }
-        }
-        else if (hook.mPriority < XposedInterface.PRIORITY_DEFAULT) {
-            hooked = LowestPriorityHooker.memberIsRegistered(m);
-            unhooker = LowestPriorityHooker.addCallback(m, hook);
-            if (!hooked) {
-                moduleInst.hook(m, LowestPriorityHooker.class);
-            }
-        }
-        else {
-            hooked = CustomHooker.memberIsRegistered(m);
-            unhooker = CustomHooker.addCallback(m, hook);
-            if (!hooked) {
-                moduleInst.hook(m, CustomHooker.class);
-            }
-        }
-
-        return unhooker;
+        XposedInterface.Hooker hooker = hook.mIsReturnConstant
+            ? new HookerClassHelper.ConstantHooker(hook.mReturnConstantValue)
+            : new CustomHooker(hook);
+        XposedInterface.HookHandle handle = moduleInst.hook(m)
+            .setPriority(hook.mPriority)
+            .intercept(hooker);
+        return handle::unhook;
     }
 
     private static CustomMethodUnhooker doHookConstructor(Constructor<?> m, MethodHook hook) {
-        CustomMethodUnhooker unhooker;
-        boolean hooked;
-        if (hook.mPriority > XposedInterface.PRIORITY_DEFAULT) {
-            hooked = HighestPriorityHooker.memberIsRegistered(m);
-            unhooker = HighestPriorityHooker.addCallback(m, hook);
-            if (!hooked) {
-                moduleInst.hook(m, HighestPriorityHooker.class);
-            }
-        }
-        else if (hook.mPriority < XposedInterface.PRIORITY_DEFAULT) {
-            hooked = LowestPriorityHooker.memberIsRegistered(m);
-            unhooker = LowestPriorityHooker.addCallback(m, hook);
-            if (!hooked) {
-                moduleInst.hook(m, LowestPriorityHooker.class);
-            }
-        }
-        else {
-            hooked = CustomHooker.memberIsRegistered(m);
-            unhooker = CustomHooker.addCallback(m, hook);
-            if (!hooked) {
-                moduleInst.hook(m, CustomHooker.class);
-            }
-        }
-
-        return unhooker;
+        XposedInterface.HookHandle handle = moduleInst.hook(m)
+            .setPriority(hook.mPriority)
+            .intercept(new CustomHooker(hook));
+        return handle::unhook;
     }
 
 
@@ -806,6 +839,10 @@ public final class XposedHelpers {
      *
      * <p>See {@link #findMethodBestMatch(Class, String, Class...)} for details.
      */
+    public static Constructor<?> findConstructorBestMatch(Class<?> clazz) {
+        return findConstructorBestMatch(clazz, EMPTY_CLASS_ARRAY);
+    }
+
     public static Constructor<?> findConstructorBestMatch(Class<?> clazz, Class<?>... parameterTypes) {
         // find the exact matching constructor first
         try {
@@ -1507,6 +1544,20 @@ public final class XposedHelpers {
      * @throws NoSuchMethodError     In case no suitable method was found.
      * @throws InvocationTargetError In case an exception was thrown by the invoked method.
      */
+    public static Object callMethod(Object obj, String methodName) {
+        try {
+            return findMethodBestMatch(obj.getClass(), methodName).invoke(obj, EMPTY_OBJECT_ARRAY);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        } catch (InvocationTargetException e) {
+            throw new InvocationTargetError(e.getCause());
+        }
+    }
+
     public static Object callMethod(Object obj, String methodName, Object... args) {
         try {
             return findMethodBestMatch(obj.getClass(), methodName, args).invoke(obj, args);
@@ -1552,6 +1603,20 @@ public final class XposedHelpers {
      * @throws NoSuchMethodError     In case no suitable method was found.
      * @throws InvocationTargetError In case an exception was thrown by the invoked method.
      */
+    public static Object callStaticMethod(Class<?> clazz, String methodName) {
+        try {
+            return findMethodBestMatch(clazz, methodName).invoke(null, EMPTY_OBJECT_ARRAY);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        } catch (InvocationTargetException e) {
+            throw new InvocationTargetError(e.getCause());
+        }
+    }
+
     public static Object callStaticMethod(Class<?> clazz, String methodName, Object... args) {
         try {
             return findMethodBestMatch(clazz, methodName, args).invoke(null, args);
@@ -1617,6 +1682,22 @@ public final class XposedHelpers {
      * @throws InvocationTargetError In case an exception was thrown by the invoked method.
      * @throws InstantiationError    In case the class cannot be instantiated.
      */
+    public static Object newInstance(Class<?> clazz) {
+        try {
+            return findConstructorBestMatch(clazz).newInstance(EMPTY_OBJECT_ARRAY);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        } catch (InvocationTargetException e) {
+            throw new InvocationTargetError(e.getCause());
+        } catch (InstantiationException e) {
+            throw new InstantiationError(e.getMessage());
+        }
+    }
+
     public static Object newInstance(Class<?> clazz, Object... args) {
         try {
             return findConstructorBestMatch(clazz, args).newInstance(args);

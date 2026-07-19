@@ -1,37 +1,36 @@
 apply plugin: 'com.android.application'
-
-//def acraVersion = '5.7.0'
 def keystorePropertiesFile = rootProject.file("../keystore.properties")
 def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-def sFile = file(keystoreProperties['storeFile'])
-def sPassword = keystoreProperties['storePassword']
-def kAlias = keystoreProperties['keyAlias']
-def kPassword = keystoreProperties['keyPassword']
-def lastVersion = 73
-def lastVersionName = "24.10.12"
+def hasReleaseSigning = keystorePropertiesFile.isFile()
+if (hasReleaseSigning) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+def lastVersion = 107
+def lastVersionName = "24.10.12-hos1-a14-api101-r14"
 
 android {
     namespace "name.monwf.customiuizer"
     signingConfigs {
-        v2 {
-            storeFile sFile
-            storePassword sPassword
-            keyAlias kAlias
-            keyPassword kPassword
-            v1SigningEnabled false
-            v2SigningEnabled true
+        if (hasReleaseSigning) {
+            v2 {
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+                v1SigningEnabled false
+                v2SigningEnabled true
+            }
         }
     }
+    compileSdk 36
     defaultConfig {
         applicationId "name.monwf.customiuizer"
         minSdkVersion 34
         //noinspection OldTargetApi,ExpiredTargetSdkVersion
         targetSdkVersion 34
-        compileSdk 35
         versionCode lastVersion
         versionName lastVersionName
-        resConfigs 'ru-rRU', 'zh-rCN', 'ja-rJP', 'vi-rVN', 'cs-rCZ', 'pt-rBR', 'tr-rTR', 'es-rES'
+        resConfigs 'ru-rRU', 'zh-rCN', 'zh-rTW', 'ja-rJP', 'vi-rVN', 'cs-rCZ', 'pt-rBR', 'tr-rTR', 'es-rES'
         ndk { abiFilters "arm64-v8a" }
     }
     buildTypes {
@@ -39,13 +38,15 @@ android {
             debuggable false
             minifyEnabled true
             shrinkResources true
-            crunchPngs false
+            zipAlignEnabled true
+            crunchPngs true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         release {
             debuggable false
             minifyEnabled true
             shrinkResources true
+            zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
@@ -63,22 +64,9 @@ android {
     }
     applicationVariants.configureEach { variant ->
         variant.outputs.configureEach {
-            if (variant.buildType.name == 'develop') {
-                setVersionCodeOverride(variant.versionCode + 1)
-                def finalVersionName = new Date().format('yy.MM.dd') + '-test'
-                setVersionNameOverride(finalVersionName)
-                setProperty("outputFileName", "Pengeek-" + finalVersionName + ".apk")
-            }
-            else {
-                setProperty("outputFileName", "Pengeek-" + lastVersionName + ".apk")
-            }
+            setProperty("outputFileName", "Pengeek-HyperOS1-A14-API101-r14.apk")
         }
     }
-//    gradle.projectsEvaluated {
-//        tasks.withType(JavaCompile) {
-//            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
-//        }
-//    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -95,19 +83,14 @@ android {
 }
 
 dependencies {
-    //    implementation "ch.acra:acra-core:$acraVersion"
-//    noinspection DifferentStdlibGradleVersion
-    compileOnly files('lib/api-100.aar')
     compileOnly files('lib/framework.jar')
+    compileOnly "io.github.libxposed:api:101.0.1"
 
-    implementation "io.github.libxposed:service:100-1.0.0"
-    implementation "org.apache.commons:commons-lang3:3.15.0"
+    implementation "io.github.libxposed:service:101.0.0"
+    implementation "org.apache.commons:commons-lang3:3.20.0"
     implementation "androidx.preference:preference:1.2.1"
     implementation 'androidx.palette:palette:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'org.luckypray:dexkit:2.0.2'
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom:2.0.0"))
-//    implementation "androidx.recyclerview:recyclerview:1.2.1"
-//    implementation 'com.google.android.flexbox:flexbox:3.0.0'
-//    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'org.luckypray:dexkit:2.2.0'
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:2.2.10"))
 }

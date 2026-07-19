@@ -164,10 +164,6 @@ public class Helpers {
         return (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
     }
 
-    public static boolean nextRelease() {
-        return Build.VERSION.SDK_INT >= 34;
-    }
-
     public static boolean isDeviceEncrypted(Context context) {
         DevicePolicyManager policyMgr = (DevicePolicyManager)context.getSystemService(Context.DEVICE_POLICY_SERVICE);
         int encryption = policyMgr.getStorageEncryptionStatus();
@@ -176,11 +172,6 @@ public class Helpers {
                 encryption == DevicePolicyManager.ENCRYPTION_STATUS_ACTIVATING ||
                 encryption == DevicePolicyManager.ENCRYPTION_STATUS_ACTIVE_PER_USER;
     }
-
-//	public static boolean isLauncherIconVisible(Context context) {
-//		return context.getPackageManager().getComponentEnabledSetting(new ComponentName(context, GateWayLauncher.class)) != PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
-//	}
-
     public static void launchActivity(AppCompatActivity act, String pkg, String cmp) {
         launchActivity(act, pkg, cmp, false);
     }
@@ -200,13 +191,6 @@ public class Helpers {
             return false;
         }
     }
-//	public static boolean isScreenOn(Context context) {
-//		DisplayManager dispMgr = (DisplayManager)context.getSystemService(Context.DISPLAY_SERVICE);
-//		for (Display display: dispMgr.getDisplays())
-//		if (display.getState() != Display.STATE_OFF) return true;
-//		return false;
-//	}
-
     public static void hideKeyboard(AppCompatActivity act, View view) {
         try {
             Context context = act == null ? view.getContext() : act;

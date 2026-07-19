@@ -1,4 +1,10 @@
-## Pengeek
+## Pengeek (r14 optimized / unofficial fork)
+
+> [!NOTE]
+> This is an **unofficial optimized fork** based on [MonwF/customiuizer](https://github.com/MonwF/customiuizer) under the **GPL-3.0** license.
+> It is intended for personal study and performance optimization. Original credit goes to **MonwF** and **Mikanoshi**.
+> Primary compatibility: **HyperOS 1 / Android 14 / libxposed API 101**.
+> See [CHANGELOG.md](CHANGELOG.md) for the full optimization history and release notes.
 
 **English** | [日本語](README_jp.md) | [Português (Brasil)](README_PT-BR.md) | [中文](README_zh.md)
 
@@ -16,15 +22,20 @@ For `HyperOS` based on `Android 14`.
 ## Translations
 [![Crowdin](https://badges.crowdin.net/customiuizer14/localized.svg)](https://crowdin.com/project/customiuizer14)
 
-## Test builds
-* [Telegram channel](https://t.me/pengeek)
-* [jiandaoyun](https://rz3kv5wa4g.jiandaoyun.com/dash/650e43a383027ec3225083e9)
+## Upstream & release
 
-### Donate
-Via paypal
-* [$5](https://paypal.me/tpsxj/5)
-* [$10](https://paypal.me/tpsxj/10)
-* [Other](https://paypal.me/tpsxj)
+* Original repository: [MonwF/customiuizer](https://github.com/MonwF/customiuizer)
+* This fork release: see [CHANGELOG.md](CHANGELOG.md)
+* License: GPL-3.0 (same as upstream)
+
+## Tested devices
+
+| Device | HyperOS | Android | SoC | RAM | Notes |
+|--------|---------|---------|-----|-----|-------|
+| Xiaomi 13 (2211133G) | 1.0.7.0.UMCTWXM | 14 (UKQ1.230804.001) | Snapdragon 8 Gen 2 (up to 3.19 GHz) | 12 GB | Primary test device; r3–r14 rebooted and loaded normally. |
+
+* Baseband: `MPSS.DE.3.0.c1-GLB-Oct 17 2024-04:43:46`
+* Kernel: `5.15.123-android13-8-00008-g3ca6a2912c7e-ab11087001`
 
 ## Here are the main working features:
 * Keep phone unlocked in a trusted environment (Bluetooth and Wi-Fi)

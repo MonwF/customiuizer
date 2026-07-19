@@ -10,8 +10,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import io.github.libxposed.api.XposedInterface.BeforeHookCallback;
-import io.github.libxposed.api.XposedInterface.AfterHookCallback;
+import name.monwf.customiuizer.mods.utils.HookerClassHelper.BeforeHookCallback;
+import name.monwf.customiuizer.mods.utils.HookerClassHelper.AfterHookCallback;
 import name.monwf.customiuizer.mods.utils.HookerClassHelper.MethodHook;
 
 public class ResourceHooks {
@@ -28,6 +28,10 @@ public class ResourceHooks {
 		public Object mNightValue;
 		public Object mValue;
 		public int resId = -1;
+		public String pkg;
+		public String name;
+		public String themeValueType;
+		public String resourceType;
 
 		public ThemeValue(Object value) {
 			mValue = value;
@@ -46,11 +50,8 @@ public class ResourceHooks {
 		ID,
 		OBJECT
 	}
-//	boolean replaceResourcesHooked = false;
-
 	private final SparseIntArray fakes = new SparseIntArray();
 	private final ConcurrentHashMap<String, ThemeValue> themeValueReplacements = new ConcurrentHashMap<String, ThemeValue>();
-//	private final ConcurrentHashMap<String, ResourceValue> resourceReplacements = new ConcurrentHashMap<String, ResourceValue>();
 	private final ConcurrentHashMap<Integer, ResourceValue> resourceIdReplacements = new ConcurrentHashMap<Integer, ResourceValue>();
 
 	public static int getFakeResId(String resourceName) {
@@ -60,16 +61,57 @@ public class ResourceHooks {
 	private final MethodHook mReplaceHook = new MethodHook() {
 		@Override
 		protected void before(final BeforeHookCallback param) {
-			Context mContext = ModuleHelper.findContext();
-			if (mContext == null) return;
-			String method = param.getMember().getName();
-			Object value = getFakeResource(mContext, method, param.getArgs());
-			if (value == null) {
+			Object[] args = param.getArgs();
+			Object resIdObj = args[0];
+			int resId = (Integer) resIdObj;
+
+			ResourceValue replacement = resourceIdReplacements.get(resIdObj);
+			if (replacement != null) {
+				if (replacement.mType == ReplacementType.OBJECT) {
+					param.returnAndSkip(replacement.mValue);
+					return;
+				}
+				String method = param.getMember().getName();
 				if ("getLayout".equals(method)) return;
-				value = getResourceReplacement(mContext, method, param.getArgs());
-				if (value == null) return;
+				Context mContext = ModuleHelper.findContext();
+				if (mContext == null) return;
+				Resources modRes;
+				try {
+					modRes = ModuleHelper.getModuleRes(mContext);
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
+					return;
+				}
+				if (modRes == null) return;
+				try {
+					Object value = getModuleResValue(modRes, method, (int) replacement.mValue, args);
+					if (value != null) param.returnAndSkip(value);
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
+				}
+				return;
 			}
-			param.returnAndSkip(value);
+
+			int modResId = fakes.get(resId);
+			if (modResId != 0) {
+				String method = param.getMember().getName();
+				Context mContext = ModuleHelper.findContext();
+				if (mContext == null) return;
+				Resources modRes;
+				try {
+					modRes = ModuleHelper.getModuleRes(mContext);
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
+					return;
+				}
+				if (modRes == null) return;
+				try {
+					Object value = getModuleResValue(modRes, method, modResId, args);
+					if (value != null) param.returnAndSkip(value);
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
+				}
+			}
 		}
 	};
 
@@ -100,21 +142,16 @@ public class ResourceHooks {
 					HashMap<Integer, String[]> mStringArrays = (HashMap<Integer, String[]>)XposedHelpers.getObjectField(mThemeValues, "mStringArrays");
 					for (Map.Entry<String, ThemeValue> entry : themeValueReplacements.entrySet()) {
 						ThemeValue tv = entry.getValue();
-						String resFullName = entry.getKey();
-						String[] resMetas = resFullName.split(":|\\/");
-						String themeValueType = resMetas[1];
 						if (tv.resId == -1) {
-							String resourceType = ("string-array".equals(themeValueType) || "integer-array".equals(themeValueType)) ? "array" : themeValueType;
-							if (resMetas[0].equals(mPackageName) || "android".equals(resMetas[0])) {
-								int resId = mResources.getIdentifier(resMetas[2], resourceType, resMetas[0]);
-								tv.resId = resId;
+							if (tv.pkg.equals(mPackageName) || "android".equals(tv.pkg)) {
+								tv.resId = mResources.getIdentifier(tv.name, tv.resourceType, tv.pkg);
 							}
 						}
 						if (tv.resId > 0) {
-							if ("string-array".equals(themeValueType)) {
+							if ("string-array".equals(tv.themeValueType)) {
 								themeStringArrays.put(tv.resId, (String[]) (nightMode ? tv.mNightValue : tv.mValue));
 							}
-							else if ("integer-array".equals(themeValueType)) {
+							else if ("integer-array".equals(tv.themeValueType)) {
 								themeIntegerArrays.put(tv.resId, (int[]) (nightMode ? tv.mNightValue : tv.mValue));
 							}
 							else {
@@ -142,17 +179,7 @@ public class ResourceHooks {
 		}
 		else {
 			XposedHelpers.log("Context not found: " + pkg + ":" + type + "/" + name);
-//			resourceReplacements.put(pkg + ":" + type + "/" + name, rv);
 		}
-//		if (!replaceResourcesHooked) {
-//			replaceResourcesHooked = true;
-//			ModuleHelper.findAndHookMethod(android.content.res.MiuiResources.class, "init", String.class, new MethodHook() {
-//				@Override
-//				protected void after(AfterHookCallback param) throws Throwable {
-//
-//				}
-//			});
-//		}
 	}
 
 	private void applyHooks(String type) {
@@ -239,7 +266,12 @@ public class ResourceHooks {
 			String valInDimen = resValue + "dp";
 			nightResValue = resValue = MiuiThemeHelper.parseDimension(valInDimen);
 		}
-		themeValueReplacements.put(pkg + ":" + type + "/" + name, new ThemeValue(resValue, nightResValue));
+		ThemeValue tv = new ThemeValue(resValue, nightResValue);
+		tv.pkg = pkg;
+		tv.name = name;
+		tv.themeValueType = type;
+		tv.resourceType = ("string-array".equals(type) || "integer-array".equals(type)) ? "array" : type;
+		themeValueReplacements.put(pkg + ":" + type + "/" + name, tv);
 		valueUpdated = true;
 		if (!themeResourcesHooked) {
 			themeResourcesHooked = true;
@@ -248,19 +280,24 @@ public class ResourceHooks {
 	}
 
 	private Object getModuleResValue(Resources modRes, String method, int modResId, Object[] args) {
-		Object value;
-		if ("getDrawableForDensity".equals(method))
-			value = XposedHelpers.callMethod(modRes, method, modResId, args[1], args[2]);
-		else
-			value = XposedHelpers.callMethod(modRes, method, modResId);
-		return value;
+		switch (method) {
+			case "getText":
+				return modRes.getText(modResId);
+			case "getString":
+				return modRes.getString(modResId);
+			case "getLayout":
+				return modRes.getLayout(modResId);
+			case "getDrawableForDensity":
+				return modRes.getDrawableForDensity(modResId, (int) args[1], (Resources.Theme) args[2]);
+			default:
+				return null;
+		}
 	}
 
-	private Object getFakeResource(Context context, String method, Object[] args) {
+	private Object getFakeResource(Resources modRes, String method, Object[] args) {
 		try {
 			int modResId = fakes.get((int)args[0]);
 			if (modResId == 0) return null;
-			Resources modRes = ModuleHelper.getModuleRes(context);
 			return getModuleResValue(modRes, method, modResId, args);
 		} catch (Throwable t) {
 			XposedHelpers.log(t);
@@ -268,21 +305,19 @@ public class ResourceHooks {
 		}
 	}
 
-	private Object getResourceReplacement(Context context, String method, Object[] args) {
+	private Object getResourceReplacement(Resources modRes, String method, Object[] args) {
 		int resId = (int)args[0];
-		if (resourceIdReplacements.containsKey(resId)) {
-			ResourceValue replacement = resourceIdReplacements.get(resId);
-			if (replacement.mType == ReplacementType.OBJECT) {
-				return replacement.mValue;
-			}
-			if (replacement.mType == ReplacementType.ID) {
-				int modResId = (int)replacement.mValue;
-				try {
-					Resources modRes = ModuleHelper.getModuleRes(context);
-					return getModuleResValue(modRes, method, modResId, args);
-				} catch (Throwable t) {
-					XposedHelpers.log(t);
-				}
+		ResourceValue replacement = resourceIdReplacements.get(resId);
+		if (replacement == null) return null;
+		if (replacement.mType == ReplacementType.OBJECT) {
+			return replacement.mValue;
+		}
+		if (replacement.mType == ReplacementType.ID) {
+			int modResId = (int)replacement.mValue;
+			try {
+				return getModuleResValue(modRes, method, modResId, args);
+			} catch (Throwable t) {
+				XposedHelpers.log(t);
 			}
 		}
 		return null;

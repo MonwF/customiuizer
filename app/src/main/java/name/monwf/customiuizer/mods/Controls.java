@@ -32,10 +32,10 @@ import android.widget.Toast;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-import io.github.libxposed.api.XposedInterface.AfterHookCallback;
-import io.github.libxposed.api.XposedInterface.BeforeHookCallback;
-import io.github.libxposed.api.XposedModuleInterface.PackageLoadedParam;
-import io.github.libxposed.api.XposedModuleInterface.SystemServerLoadedParam;
+import name.monwf.customiuizer.mods.utils.HookerClassHelper.AfterHookCallback;
+import name.monwf.customiuizer.mods.utils.HookerClassHelper.BeforeHookCallback;
+import io.github.libxposed.api.XposedModuleInterface.PackageReadyParam;
+import io.github.libxposed.api.XposedModuleInterface.SystemServerStartingParam;
 import name.monwf.customiuizer.MainModule;
 import name.monwf.customiuizer.R;
 import name.monwf.customiuizer.mods.utils.HookerClassHelper;
@@ -81,7 +81,7 @@ public class Controls {
 		}
 	};
 
-	public static void PowerKeyHook(SystemServerLoadedParam lpparam) {
+	public static void PowerKeyHook(SystemServerStartingParam lpparam) {
 		ModuleHelper.hookAllMethods("com.android.server.policy.PhoneWindowManager", lpparam.getClassLoader(), "init", new MethodHook() {
 			@Override
 			protected void after(AfterHookCallback param) throws Throwable {
@@ -167,7 +167,7 @@ public class Controls {
 		});
 	}
 
-	public static void VolumeMediaButtonsHook(SystemServerLoadedParam lpparam) {
+	public static void VolumeMediaButtonsHook(SystemServerStartingParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.android.server.policy.MiuiPhoneWindowManager", lpparam.getClassLoader(), "interceptKeyBeforeQueueing", KeyEvent.class, int.class, new MethodHook() {
 			@Override
 			@SuppressLint("MissingPermission")
@@ -253,7 +253,7 @@ public class Controls {
 		});
 	}
 
-	public static void VolumeMediaPlayerHook(PackageLoadedParam lpparam) {
+	public static void VolumeMediaPlayerHook(PackageReadyParam lpparam) {
 		Class<?> MediaPlayerCls = XposedHelpers.findClass("android.media.MediaPlayer", lpparam.getClassLoader());
 		ModuleHelper.findAndHookMethod(MediaPlayerCls, "pause", new MethodHook() {
 			@Override
@@ -269,7 +269,7 @@ public class Controls {
 		});
 	}
 
-	public static void VolumeCursorHook(PackageLoadedParam lpparam) {
+	public static void VolumeCursorHook(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod("android.inputmethodservice.InputMethodService", lpparam.getClassLoader(), "onKeyDown", int.class, KeyEvent.class, new MethodHook() {
 			@Override
 			protected void before(final BeforeHookCallback param) throws Throwable {
@@ -475,7 +475,7 @@ public class Controls {
 		}
 	}
 
-	public static void NavBarButtonsHook(PackageLoadedParam lpparam) {
+	public static void NavBarButtonsHook(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.android.systemui.navigationbar.NavigationBarView", lpparam.getClassLoader(), "onFinishInflate", new MethodHook() {
 			@Override
 			protected void after(final AfterHookCallback param) throws Throwable {
@@ -575,7 +575,7 @@ public class Controls {
 		}
 	};
 
-	public static void NavBarActionsHook(SystemServerLoadedParam lpparam) {
+	public static void NavBarActionsHook(SystemServerStartingParam lpparam) {
 		ModuleHelper.hookAllMethods("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.getClassLoader(), "postKeyLongPress", new MethodHook() {
 			@Override
 			protected void before(final BeforeHookCallback param) throws Throwable {
@@ -611,7 +611,7 @@ public class Controls {
 		});
 	}
 
-	public static void FingerprintHapticSuccessHook(SystemServerLoadedParam lpparam) {
+	public static void FingerprintHapticSuccessHook(SystemServerStartingParam lpparam) {
 		ModuleHelper.hookAllMethods("com.android.server.biometrics.sensors.AuthenticationClient", lpparam.getClassLoader(), "onAuthenticated", new MethodHook() {
 			@Override
 			protected void after(final AfterHookCallback param) throws Throwable {
@@ -629,7 +629,7 @@ public class Controls {
 		});
 	}
 
-	public static void FingerprintHapticFailureHook(SystemServerLoadedParam lpparam) {
+	public static void FingerprintHapticFailureHook(SystemServerStartingParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.android.server.biometrics.sensors.AcquisitionClient", lpparam.getClassLoader(), "vibrateError", new MethodHook() {
 			@Override
 			protected void before(final BeforeHookCallback param) throws Throwable {
@@ -638,7 +638,7 @@ public class Controls {
 		});
 	}
 
-	public static void FingerprintScreenOnHook(SystemServerLoadedParam lpparam) {
+	public static void FingerprintScreenOnHook(SystemServerStartingParam lpparam) {
 		String authClient = "com.android.server.biometrics.sensors.AuthenticationClient";
 		ModuleHelper.hookAllMethods(authClient, lpparam.getClassLoader(), "onAuthenticated", new MethodHook() {
 			@Override
@@ -653,7 +653,7 @@ public class Controls {
 		});
 	}
 
-	public static void BackGestureAreaHeightHook(PackageLoadedParam lpparam) {
+	public static void BackGestureAreaHeightHook(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.miui.home.recents.GestureStubView", lpparam.getClassLoader(), "getGestureStubWindowParam", new MethodHook() {
 			@Override
 			protected void after(final AfterHookCallback param) throws Throwable {
@@ -665,7 +665,7 @@ public class Controls {
 		});
 	}
 
-	public static void BackGestureAreaWidthHook(PackageLoadedParam lpparam) {
+	public static void BackGestureAreaWidthHook(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.miui.home.recents.GestureStubView", lpparam.getClassLoader(), "initScreenSizeAndDensity", int.class, new MethodHook() {
 			@Override
 			protected void after(final AfterHookCallback param) throws Throwable {
@@ -692,7 +692,7 @@ public class Controls {
 		});
 	}
 
-	public static void HideNavBarHook(PackageLoadedParam lpparam) {
+	public static void HideNavBarHook(PackageReadyParam lpparam) {
 		ModuleHelper.hookAllConstructors("com.android.systemui.recents.OverviewProxyService", lpparam.getClassLoader(), new MethodHook() {
 			@Override
 			protected void after(AfterHookCallback param) throws Throwable {
@@ -717,7 +717,7 @@ public class Controls {
 		});
 	}
 
-	public static void PowerDoubleTapActionHook(SystemServerLoadedParam lpparam) {
+	public static void PowerDoubleTapActionHook(SystemServerStartingParam lpparam) {
 		boolean dtFromVolumeDown = MainModule.mPrefs.getBoolean("controls_volumedowndt_torch");
 		final ArrayList<String> doubleTapResons = new ArrayList<String>();
 		doubleTapResons.add("double_click_power");
@@ -744,7 +744,7 @@ public class Controls {
 		}
 	}
 
-	public static void NoFingerprintWakeHook(SystemServerLoadedParam lpparam) {
+	public static void NoFingerprintWakeHook(SystemServerStartingParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.android.server.policy.MiuiPhoneWindowManager", lpparam.getClassLoader(), "processBackFingerprintDpcenterEvent", KeyEvent.class, boolean.class, new MethodHook() {
 			@Override
 			protected void before(final BeforeHookCallback param) throws Throwable {
@@ -754,7 +754,7 @@ public class Controls {
 		});
 	}
 
-	public static void AssistGestureActionHook(PackageLoadedParam lpparam) {
+	public static void AssistGestureActionHook(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.android.systemui.assist.AssistManager", lpparam.getClassLoader(), "startAssist", Bundle.class, new MethodHook() {
 			@Override
 			protected void before(final BeforeHookCallback param) throws Throwable {
@@ -772,7 +772,7 @@ public class Controls {
 		ModuleHelper.findAndHookMethod("com.android.systemui.assist.ui.DefaultUiController", lpparam.getClassLoader(), "logInvocationProgressMetrics", float.class, boolean.class, HookerClassHelper.DO_NOTHING);
 	}
 
-//	public static void AIButtonHook(PackageLoadedParam lpparam) {
+//	public static void AIButtonHook(PackageReadyParam lpparam) {
 //		ModuleHelper.findAndHookMethod("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.getClassLoader(), "startAiKeyService", String.class, new MethodHook() {
 //			@Override
 //			protected void before(final BeforeHookCallback param) throws Throwable {
@@ -781,7 +781,7 @@ public class Controls {
 //		});
 //	}
 
-//	public static void SwapVolumeKeysHook(PackageLoadedParam lpparam) {
+//	public static void SwapVolumeKeysHook(PackageReadyParam lpparam) {
 //		ModuleHelper.findAndHookMethod("com.android.server.audio.AudioService", lpparam.getClassLoader(), "adjustSuggestedStreamVolume", int.class, int.class, int.class, String.class, String.class, int.class, new MethodHook() {
 //			@Override
 //			protected void before(final BeforeHookCallback param) throws Throwable {

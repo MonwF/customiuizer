@@ -27,6 +27,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import io.github.libxposed.api.XposedModuleInterface;
 import miui.app.MiuiFreeFormManager;
@@ -47,6 +48,11 @@ public class ModuleHelper {
 
     @SuppressLint("StaticFieldLeak")
     private static Context mModuleContext = null;
+    @SuppressLint("StaticFieldLeak")
+    private static Context mCachedContext;
+
+    private static Resources cachedModuleRes;
+    private static Configuration cachedModuleConfig;
 
     private final static int viewInfoTag = ResourceHooks.getFakeResId("view_info_tag");
 
@@ -57,6 +63,10 @@ public class ModuleHelper {
     static {
         ActivityThreadClass = null;
     }
+
+    private static final ConcurrentHashMap<String, Object> depInstanceCache = new ConcurrentHashMap<>();
+    private static Class<?> DependencyClass;
+    private static java.lang.reflect.Method DependencyGetMethod;
 
     public static void printCallStack() {
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
@@ -220,11 +230,13 @@ public class ModuleHelper {
     }
 
     public static int getUserId() {
-        return (int)XposedHelpers.callStaticMethod(UserHandle.class, "getUserId", Process.myUid());
+        // UserHandle.getUserId(uid) == uid / PER_USER_RANGE (100000)
+        return Process.myUid() / 100000;
     }
 
 
     public static Context findContext() {
+        if (mCachedContext != null) return mCachedContext;
         Context context = null;
         try {
             if (ActivityThreadClass == null) {
@@ -236,10 +248,11 @@ public class ModuleHelper {
                 if (currentActivityThread != null) context = (Context)XposedHelpers.callMethod(currentActivityThread, "getSystemContext");
             }
         } catch (Throwable ignore) {}
+        if (context != null) mCachedContext = context;
         return context;
     }
 
-    public static Context findContext(XposedModuleInterface.PackageLoadedParam lpparam) {
+    public static Context findContext(XposedModuleInterface.PackageReadyParam lpparam) {
         Context context = null;
         try {
             context = (Application)XposedHelpers.callStaticMethod(XposedHelpers.findClass("android.app.ActivityThread", lpparam.getClassLoader()), "currentApplication");
@@ -319,14 +332,34 @@ public class ModuleHelper {
     }
 
     public static synchronized Resources getModuleRes(Context context) throws Throwable {
-        Configuration config = context.getResources().getConfiguration();
+        Configuration newConfig = context.getResources().getConfiguration();
+        if (cachedModuleRes != null && cachedModuleConfig != null && cachedModuleConfig.equals(newConfig)) {
+            return cachedModuleRes;
+        }
+        Configuration config = new Configuration(newConfig);
         Context moduleContext = getModuleContext(context, config);
-        return moduleContext.getResources();
+        cachedModuleRes = moduleContext.getResources();
+        cachedModuleConfig = config;
+        return cachedModuleRes;
     }
 
     public static Object getDepInstance(ClassLoader classLoader, String className) {
-        Class<?> DependencyClass = findClass("com.android.systemui.Dependency", classLoader);
-        return XposedHelpers.callStaticMethod(DependencyClass, "get", findClass(className, classLoader));
+        String key = className + "@" + System.identityHashCode(classLoader);
+        Object cached = depInstanceCache.get(key);
+        if (cached != null) return cached;
+        try {
+            if (DependencyClass == null || DependencyClass.getClassLoader() != classLoader) {
+                DependencyClass = findClass("com.android.systemui.Dependency", classLoader);
+                DependencyGetMethod = DependencyClass.getDeclaredMethod("get", Class.class);
+                DependencyGetMethod.setAccessible(true);
+            }
+            Object instance = DependencyGetMethod.invoke(null, findClass(className, classLoader));
+            if (instance != null) depInstanceCache.put(key, instance);
+            return instance;
+        } catch (Throwable t) {
+            log(t);
+            return null;
+        }
     }
 
     public static Object getViewInfo(View view, String key) {

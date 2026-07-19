@@ -47,9 +47,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import io.github.libxposed.api.XposedInterface.AfterHookCallback;
-import io.github.libxposed.api.XposedInterface.BeforeHookCallback;
-import io.github.libxposed.api.XposedModuleInterface.PackageLoadedParam;
+import name.monwf.customiuizer.mods.utils.HookerClassHelper.AfterHookCallback;
+import name.monwf.customiuizer.mods.utils.HookerClassHelper.BeforeHookCallback;
+import io.github.libxposed.api.XposedModuleInterface.PackageReadyParam;
 import miui.process.ForegroundInfo;
 import miui.process.ProcessManager;
 import miui.security.SecurityManager;
@@ -65,7 +65,7 @@ public class Launcher {
 
     private static GestureDetector mDetectorHorizontal;
 
-    public static void HomescreenSwipesHook(final PackageLoadedParam lpparam) {
+    public static void HomescreenSwipesHook(final PackageReadyParam lpparam) {
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.Workspace", lpparam.getClassLoader(), "onVerticalGesture", int.class, MotionEvent.class, new MethodHook() {
             @Override
             protected void before(final BeforeHookCallback param) throws Throwable {
@@ -152,7 +152,7 @@ public class Launcher {
         })) if (lpparam.getPackageName().equals("com.miui.home")) XposedHelpers.log("HomescreenSwipesHook", "Cannot disable swipe up search");
     }
 
-    public static void HotSeatSwipesHook(final PackageLoadedParam lpparam) {
+    public static void HotSeatSwipesHook(final PackageReadyParam lpparam) {
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.overlay.assistant.AssistantOverlaySwipeController", lpparam.getClassLoader(), "canInterceptTouch", MotionEvent.class, new MethodHook() {
             private Rect mHotHeatTouchRect = null;
             @Override
@@ -221,7 +221,7 @@ public class Launcher {
         }
     }
 
-    public static void ShakeHook(final PackageLoadedParam lpparam) {
+    public static void ShakeHook(final PackageReadyParam lpparam) {
         final String shakeMgrKey = "MIUIZER_SHAKE_MGR";
 
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.getClassLoader(), "onResume", new MethodHook() {
@@ -250,7 +250,7 @@ public class Launcher {
         });
     }
 
-    public static void NoClockHideHook(final PackageLoadedParam lpparam) {
+    public static void NoClockHideHook(final PackageReadyParam lpparam) {
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.getClassLoader(), "updateStatusBarClock", long.class, HookerClassHelper.DO_NOTHING);
     }
 
@@ -264,7 +264,7 @@ public class Launcher {
         if (!TextUtils.isEmpty(newTitle)) XposedHelpers.setObjectField(thisObject, "mLabel", newTitle);
     }
 
-    public static void RenameShortcutsHook(final PackageLoadedParam lpparam) {
+    public static void RenameShortcutsHook(final PackageReadyParam lpparam) {
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.getClassLoader(), "onCreate", Bundle.class, new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
@@ -349,7 +349,7 @@ public class Launcher {
         });
     }
 
-    public static void CloseFolderOnLaunchHook(PackageLoadedParam lpparam) {
+    public static void CloseFolderOnLaunchHook(PackageReadyParam lpparam) {
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.getClassLoader(), "launch", "com.miui.home.launcher.ShortcutInfo", View.class, new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
@@ -360,7 +360,7 @@ public class Launcher {
         });
     }
 
-    public static void FSGesturesHook(PackageLoadedParam lpparam) {
+    public static void FSGesturesHook(PackageReadyParam lpparam) {
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.getClassLoader(), "usingFsGesture", HookerClassHelper.returnConstant(true));
 
         ModuleHelper.findAndHookMethodSilently("com.miui.home.recents.BaseRecentsImpl", lpparam.getClassLoader(), "createAndAddNavStubView", new MethodHook() {
@@ -470,7 +470,7 @@ public class Launcher {
         }
     }
 
-    public static void LauncherDoubleTapHook(PackageLoadedParam lpparam) {
+    public static void LauncherDoubleTapHook(PackageReadyParam lpparam) {
         ModuleHelper.hookAllConstructors("com.miui.home.launcher.Workspace", lpparam.getClassLoader(), new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
@@ -497,7 +497,7 @@ public class Launcher {
         });
     }
 
-    public static void TitleShadowHook(PackageLoadedParam lpparam) {
+    public static void TitleShadowHook(PackageReadyParam lpparam) {
         if (lpparam.getPackageName().equals("com.miui.home"))
             ModuleHelper.findAndHookMethod("com.miui.home.launcher.WallpaperUtils", lpparam.getClassLoader(), "getIconTitleShadowColor", new MethodHook() {
                 @Override
@@ -517,7 +517,7 @@ public class Launcher {
             });
     }
 
-    public static void HideNavBarHook(PackageLoadedParam lpparam) {
+    public static void HideNavBarHook(PackageReadyParam lpparam) {
         final boolean[] showNavBar = {true};
         ModuleHelper.findAndHookMethod("com.miui.home.recents.NavStubView", lpparam.getClassLoader(), "onSystemUiFlagsChanged", int.class, new MethodHook() {
             @Override
@@ -557,7 +557,7 @@ public class Launcher {
         });
     }
 
-    public static void HideSeekPointsHook(PackageLoadedParam lpparam) {
+    public static void HideSeekPointsHook(PackageReadyParam lpparam) {
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.pageindicators.AllAppsIndicator", lpparam.getClassLoader(), "shouldHide", HookerClassHelper.returnConstant(true));
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.pageindicators.AllAppsIndicator", lpparam.getClassLoader(), "hideAllAppsArrow", new MethodHook() {
             @Override
@@ -604,7 +604,7 @@ public class Launcher {
         });
     }
 
-    public static void InfiniteScrollHook(PackageLoadedParam lpparam) {
+    public static void InfiniteScrollHook(PackageReadyParam lpparam) {
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.ScreenView", lpparam.getClassLoader(), "getSnapToScreenIndex", int.class, int.class, int.class, new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
@@ -640,7 +640,7 @@ public class Launcher {
         MainModule.resHooks.setThemeValueReplacement("com.miui.home", "integer", "config_cell_count_y_max", 10);
     }
 
-    public static void UnlockGridsHook(PackageLoadedParam lpparam) {
+    public static void UnlockGridsHook(PackageReadyParam lpparam) {
         ModuleHelper.hookAllMethodsSilently("com.miui.home.launcher.compat.LauncherCellCountCompatDevice", lpparam.getClassLoader(), "shouldUseDeviceValue", HookerClassHelper.returnConstant(false));
         ModuleHelper.findAndHookMethodSilently("com.miui.home.launcher.compat.LauncherCellCountCompatDeviceFold", lpparam.getClassLoader(), "shouldUseDeviceValue", Context.class, int.class, HookerClassHelper.returnConstant(false));
         ModuleHelper.findAndHookMethod("com.miui.home.settings.MiuiHomeSettings", lpparam.getClassLoader(), "onCreatePreferences", Bundle.class, String.class, new MethodHook() {
@@ -713,7 +713,7 @@ public class Launcher {
         }
     }
 
-    public static void FolderColumnsHook(PackageLoadedParam lpparam) {
+    public static void FolderColumnsHook(PackageReadyParam lpparam) {
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.Folder", lpparam.getClassLoader(), "onFinishInflate", new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
@@ -750,7 +750,7 @@ public class Launcher {
         });
     }
 
-    public static void IconScaleHook(PackageLoadedParam lpparam) {
+    public static void IconScaleHook(PackageReadyParam lpparam) {
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.ShortcutIcon", lpparam.getClassLoader(), "restoreToInitState", new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
@@ -872,7 +872,7 @@ public class Launcher {
 //		});
     }
 
-    public static void TitleFontSizeHook(PackageLoadedParam lpparam) {
+    public static void TitleFontSizeHook(PackageReadyParam lpparam) {
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.ItemIcon", lpparam.getClassLoader(), "onFinishInflate", new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
@@ -911,7 +911,7 @@ public class Launcher {
         });
     }
 
-    public static void TitleTopMarginHook(PackageLoadedParam lpparam) {
+    public static void TitleTopMarginHook(PackageReadyParam lpparam) {
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.ItemIcon", lpparam.getClassLoader(), "onFinishInflate", new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
@@ -933,7 +933,7 @@ public class Launcher {
         });
     }
 
-    public static void PrivacyFolderHook(PackageLoadedParam lpparam) {
+    public static void PrivacyFolderHook(PackageReadyParam lpparam) {
         if (MainModule.mPrefs.getBoolean("launcher_privacyapps_gest")) {
             ModuleHelper.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.getClassLoader(), "registerBroadcastReceivers", new MethodHook() {
                 @Override
@@ -978,7 +978,7 @@ public class Launcher {
         });
     }
 
-    public static void HideTitlesHook(PackageLoadedParam lpparam) {
+    public static void HideTitlesHook(PackageReadyParam lpparam) {
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.ItemIcon", lpparam.getClassLoader(), "onFinishInflate", new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
@@ -1000,7 +1000,7 @@ public class Launcher {
         MainModule.resHooks.setThemeValueReplacement("com.miui.home", "dimen", "slide_bar_height", opt);
     }
 
-    public static void ShowHotseatTitlesHook(PackageLoadedParam lpparam) {
+    public static void ShowHotseatTitlesHook(PackageReadyParam lpparam) {
         MainModule.resHooks.setThemeValueReplacement("com.miui.home", "bool", "config_hide_hotseats_app_title", false);
         ModuleHelper.findAndHookMethodSilently("com.miui.home.launcher.Launcher", lpparam.getClassLoader(), "createItemIcon", ViewGroup.class, "com.miui.home.launcher.ItemInfo", boolean.class, new MethodHook() {
             @Override
@@ -1010,7 +1010,7 @@ public class Launcher {
         });
     }
 
-    public static void FolderBlurHook(PackageLoadedParam lpparam) {
+    public static void FolderBlurHook(PackageReadyParam lpparam) {
         Class<?> BlurUtils = findClassIfExists("com.miui.home.launcher.common.BlurUtils", lpparam.getClassLoader());
         if (BlurUtils != null) {
             ModuleHelper.hookAllMethods(BlurUtils, "getLauncherBlur", new MethodHook() {
@@ -1063,7 +1063,7 @@ public class Launcher {
         return (scale < 1.0f ? 2f / scale : 1.0f / scale) * val;
     }
 
-    public static void FixAnimHook(PackageLoadedParam lpparam) {
+    public static void FixAnimHook(PackageReadyParam lpparam) {
         ModuleHelper.hookAllMethods("com.miui.home.launcher.animate.SpringAnimator", lpparam.getClassLoader(), "getSpringForce", new MethodHook() {
             @Override
             protected void before(final BeforeHookCallback param) throws Throwable {
@@ -1108,7 +1108,7 @@ public class Launcher {
 //		});
     }
 
-    public static void DockMarginTopHook(PackageLoadedParam lpparam) {
+    public static void DockMarginTopHook(PackageReadyParam lpparam) {
         int opt = MainModule.mPrefs.getInt("launcher_dock_topmargin", 0);
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.getClassLoader(), "calcHotSeatsMarginTop", Context.class, boolean.class, new MethodHook() {
             @Override
@@ -1117,7 +1117,7 @@ public class Launcher {
             }
         });
     }
-    public static void DockMarginBottomHook(PackageLoadedParam lpparam) {
+    public static void DockMarginBottomHook(PackageReadyParam lpparam) {
         int opt = MainModule.mPrefs.getInt("launcher_dock_bottommargin", 0);
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.getClassLoader(), "calcHotSeatsMarginBottom", Context.class, boolean.class, boolean.class, new MethodHook() {
             @Override
@@ -1126,7 +1126,7 @@ public class Launcher {
             }
         });
     }
-    public static void DockHeightHook(PackageLoadedParam lpparam) {
+    public static void DockHeightHook(PackageReadyParam lpparam) {
         int dockHeight = MainModule.mPrefs.getInt("launcher_dock_height", 60);
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.getClassLoader(), "calcHotSeatsHeight", Context.class, boolean.class, new MethodHook() {
             @Override
@@ -1135,7 +1135,7 @@ public class Launcher {
             }
         });
     }
-    public static void WorkspaceCellPaddingTopHook(PackageLoadedParam lpparam) {
+    public static void WorkspaceCellPaddingTopHook(PackageReadyParam lpparam) {
         int opt = MainModule.mPrefs.getInt("launcher_topmargin", 0) - 21;
         MethodHook hook = new MethodHook() {
             @Override
@@ -1150,7 +1150,7 @@ public class Launcher {
         }
     }
 
-    public static void IndicatorMarginTopHook(PackageLoadedParam lpparam) {
+    public static void IndicatorMarginTopHook(PackageReadyParam lpparam) {
         int opt = MainModule.mPrefs.getInt("launcher_indicator_topmargin", 0) - 21;
         MainModule.resHooks.setThemeValueReplacement("com.miui.home", "dimen", "slide_bar_margin_top", opt);
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.util.DimenUtils1X", lpparam.getClassLoader(), "getDimensionPixelSize", Context.class, String.class, new MethodHook() {
@@ -1164,7 +1164,7 @@ public class Launcher {
         });
     }
 
-    public static void HorizontalWidgetSpacingHook(PackageLoadedParam lpparam) {
+    public static void HorizontalWidgetSpacingHook(PackageReadyParam lpparam) {
         ModuleHelper.hookAllMethods("com.miui.home.launcher.DeviceConfig", lpparam.getClassLoader(), "getMiuiWidgetSizeSpec", new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
@@ -1186,7 +1186,7 @@ public class Launcher {
         });
     }
 
-    public static void FixAppInfoLaunchHook(PackageLoadedParam lpparam) {
+    public static void FixAppInfoLaunchHook(PackageReadyParam lpparam) {
         ModuleHelper.hookAllMethods("com.miui.home.launcher.shortcuts.ShortcutMenuManager", lpparam.getClassLoader(), "startAppDetailsActivity", new MethodHook() {
             @Override
             protected void before(final BeforeHookCallback param) throws Throwable {
@@ -1201,7 +1201,7 @@ public class Launcher {
         });
     }
 
-    public static void NoWidgetOnlyHook(PackageLoadedParam lpparam) {
+    public static void NoWidgetOnlyHook(PackageReadyParam lpparam) {
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.CellLayout", lpparam.getClassLoader(), "setScreenType", int.class, new MethodHook() {
             @Override
             protected void before(BeforeHookCallback param) throws Throwable {
@@ -1210,20 +1210,20 @@ public class Launcher {
         });
     }
 
-    public static void NoUnlockAnimationHook(PackageLoadedParam lpparam) {
+    public static void NoUnlockAnimationHook(PackageReadyParam lpparam) {
         ModuleHelper.hookAllMethods("com.miui.launcher.utils.MiuiSettingsUtils", lpparam.getClassLoader(), "isSystemAnimationOpen", HookerClassHelper.returnConstant(false));
     }
 
-    public static void NoZoomAnimationHook(PackageLoadedParam lpparam) {
+    public static void NoZoomAnimationHook(PackageReadyParam lpparam) {
         ModuleHelper.hookAllMethods("com.miui.home.recents.util.SpringAnimationUtils", lpparam.getClassLoader(), "startShortcutMenuLayerFadeOutAnim", HookerClassHelper.DO_NOTHING);
         ModuleHelper.hookAllMethods("com.miui.home.recents.util.SpringAnimationUtils", lpparam.getClassLoader(), "startShortcutMenuLayerFadeInAnim", HookerClassHelper.DO_NOTHING);
     }
 
-    public static void UseOldLaunchAnimationHook(PackageLoadedParam lpparam) {
+    public static void UseOldLaunchAnimationHook(PackageReadyParam lpparam) {
         ModuleHelper.hookAllMethods("com.miui.home.recents.QuickstepAppTransitionManagerImpl", lpparam.getClassLoader(), "hasControlRemoteAppTransitionPermission", HookerClassHelper.returnConstant(false));
     }
 
-    public static void ReverseLauncherPortraitHook(PackageLoadedParam lpparam) {
+    public static void ReverseLauncherPortraitHook(PackageReadyParam lpparam) {
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.getClassLoader(), "onCreate", Bundle.class, new MethodHook() {
             @Override
             @SuppressLint("SourceLockedOrientationActivity")
@@ -1234,7 +1234,7 @@ public class Launcher {
         });
     }
 
-    public static void HideFromRecentsHook(PackageLoadedParam lpparam) {
+    public static void HideFromRecentsHook(PackageReadyParam lpparam) {
         Class<?> ActiviyManagerWrapper = findClassIfExists("com.android.systemui.shared.recents.system.ActivityManagerWrapper", lpparam.getClassLoader());
         Class<?> TaskInfoCompat = findClassIfExists("com.android.systemui.shared.recents.model.GroupedRecentTaskInfoCompat", lpparam.getClassLoader());
         if (TaskInfoCompat == null) {
@@ -1268,11 +1268,11 @@ public class Launcher {
         });
     }
 
-    public static void MaxHotseatIconsCountHook(PackageLoadedParam lpparam) {
+    public static void MaxHotseatIconsCountHook(PackageReadyParam lpparam) {
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.getClassLoader(), "getHotseatMaxCount", HookerClassHelper.returnConstant(666));
     }
 
-    public static void RecentsBlurRatioHook(PackageLoadedParam lpparam) {
+    public static void RecentsBlurRatioHook(PackageReadyParam lpparam) {
         Class<?> utilsClass = findClassIfExists("com.miui.home.launcher.common.BlurUtils", lpparam.getClassLoader());
         if (utilsClass == null) {
             XposedHelpers.log("RecentsBlurRatioHook", "Cannot find blur utility class");
@@ -1312,7 +1312,7 @@ public class Launcher {
         });
     }
 
-    public static void CloseFolderOrDrawerOnLaunchShortcutMenuHook(PackageLoadedParam lpparam) {
+    public static void CloseFolderOrDrawerOnLaunchShortcutMenuHook(PackageReadyParam lpparam) {
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.shortcuts.AppShortcutMenuItem", lpparam.getClassLoader(), "getOnClickListener", new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
@@ -1332,7 +1332,7 @@ public class Launcher {
         });
     }
 
-    public static void CloseDrawerOnLaunchHook(PackageLoadedParam lpparam) {
+    public static void CloseDrawerOnLaunchHook(PackageReadyParam lpparam) {
         MethodHook hook = new MethodHook() {
             @Override
             protected void before(final BeforeHookCallback param) throws Throwable {
@@ -1343,7 +1343,7 @@ public class Launcher {
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.allapps.category.fragment.RecommendCategoryAppListFragment", lpparam.getClassLoader(), "onClick", View.class, hook);
     }
 
-    public static void AssistGestureActionHook(PackageLoadedParam lpparam) {
+    public static void AssistGestureActionHook(PackageReadyParam lpparam) {
         ModuleHelper.findAndHookMethod("com.android.systemui.shared.recents.system.AssistManager", lpparam.getClassLoader(), "isSupportGoogleAssist", int.class, HookerClassHelper.returnConstant(true));
         final Class<?> FsGestureHelper = findClassIfExists("com.miui.home.recents.FsGestureAssistHelper", lpparam.getClassLoader());
         ModuleHelper.findAndHookMethod(FsGestureHelper, "canTriggerAssistantAction", float.class, float.class, int.class, new MethodHook() {
@@ -1386,7 +1386,7 @@ public class Launcher {
         });
     }
 
-    public static void SwipeAndStopActionHook(PackageLoadedParam lpparam) {
+    public static void SwipeAndStopActionHook(PackageReadyParam lpparam) {
         Class<?> ReadyStateEnum = findClassIfExists("com.miui.home.recents.GestureBackArrowView$ReadyState", lpparam.getClassLoader());
         if (ReadyStateEnum == null) return;
         Object[] states = ReadyStateEnum.getEnumConstants();
@@ -1468,13 +1468,13 @@ public class Launcher {
         });
     }
 
-    public static void DisableUnlockWallpaperScale(PackageLoadedParam lpparam) {
+    public static void DisableUnlockWallpaperScale(PackageReadyParam lpparam) {
         ModuleHelper.findAndHookMethod("com.miui.miwallpaper.manager.WallpaperServiceController", lpparam.getClassLoader(), "noNeedDesktopWallpaperScaleAnim",
             HookerClassHelper.returnConstant(true)
         );
     }
 
-    public static void DisableLauncherWallpaperScale(PackageLoadedParam lpparam) {
+    public static void DisableLauncherWallpaperScale(PackageReadyParam lpparam) {
         Class<?> WallpaperZoomManagerKtClass = findClassIfExists("com.miui.home.launcher.wallpaper.WallpaperZoomManagerKt", lpparam.getClassLoader());
         if (MainModule.mPrefs.getBoolean("launcher_disable_wallpaperscale")) {
             XposedHelpers.setStaticBooleanField(WallpaperZoomManagerKtClass, "ZOOM_ENABLED", false);
@@ -1497,12 +1497,12 @@ public class Launcher {
         });
     }
 
-    public static void HideStatusBarInRecentsHook(PackageLoadedParam lpparam) {
+    public static void HideStatusBarInRecentsHook(PackageReadyParam lpparam) {
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.common.DeviceLevelUtils", lpparam.getClassLoader(), "isHideStatusBarWhenEnterRecents", HookerClassHelper.returnConstant(true));
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.DeviceConfig", lpparam.getClassLoader(), "keepStatusBarShowingForBetterPerformance", HookerClassHelper.returnConstant(false));
     }
 
-    public static void DisableLauncherLogHook(PackageLoadedParam lpparam) {
+    public static void DisableLauncherLogHook(PackageReadyParam lpparam) {
         ModuleHelper.hookAllMethods("com.miui.home.launcher.AnalyticalDataCollectorJobService", lpparam.getClassLoader(), "onStartJob", HookerClassHelper.returnConstant(false));
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.AnalyticalDataCollector", lpparam.getClassLoader(), "canTrackLaunchAppEvent", HookerClassHelper.returnConstant(false));
         Class <?> OneTrackInterfaceUtils = findClassIfExists("com.miui.home.launcher.common.OneTrackInterfaceUtils", lpparam.getClassLoader());
@@ -1511,7 +1511,7 @@ public class Launcher {
         }
     }
 
-    public static void LauncherPinchHook(PackageLoadedParam lpparam) {
+    public static void LauncherPinchHook(PackageReadyParam lpparam) {
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.Workspace", lpparam.getClassLoader(), "onPinching", float.class, new MethodHook() {
             @Override
             protected void before(final BeforeHookCallback param) throws Throwable {
@@ -1546,7 +1546,7 @@ public class Launcher {
             }
         });
     }
-    public static void ResizableWidgetsHook(PackageLoadedParam lpparam) {
+    public static void ResizableWidgetsHook(PackageReadyParam lpparam) {
         ModuleHelper.findAndHookMethod("android.appwidget.AppWidgetHostView", lpparam.getClassLoader(), "getAppWidgetInfo", new MethodHook() {
             @Override
             protected void after(AfterHookCallback param) throws Throwable {
@@ -1561,7 +1561,7 @@ public class Launcher {
             }
         });
     }
-    public static void WallpaperColorModeHook(PackageLoadedParam lpparam) {
+    public static void WallpaperColorModeHook(PackageReadyParam lpparam) {
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.WallpaperUtils", lpparam.getClassLoader(), "setCurrentStatusBarAreaColorMode", int.class, new MethodHook() {
             @Override
             protected void before(BeforeHookCallback param) throws Throwable {
@@ -1581,7 +1581,7 @@ public class Launcher {
             }
         });
     }
-    public static void setupLauncher(PackageLoadedParam lpparam) {
+    public static void setupLauncher(PackageReadyParam lpparam) {
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.getClassLoader(), "registerBroadcastReceivers", new MethodHook() {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {

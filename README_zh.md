@@ -1,8 +1,14 @@
-## 米客
+## 米客（r14 优化版 / 非官方 fork）
+
+> [!注意]
+> 本项目是基于 [MonwF/customiuizer](https://github.com/MonwF/customiuizer) 的**非官方优化 fork**，沿用 **GPL-3.0** 协议。
+> 仅供个人学习交流与性能优化参考，原始作品版权归 **MonwF** 与 **Mikanoshi** 所有。
+> 主要兼容：**HyperOS 1 / Android 14 / libxposed API 101**。
+> 完整优化记录与发布说明见 [CHANGELOG.md](CHANGELOG.md)。
 
 [English](README.md) | [日本語](README_jp.md) | [Português (Brasil)](README_PT-BR.md) | **中文**
 
-客制化你的HyperOS
+客制化你的 HyperOS
 
 支持基于`Android 14`以上的`HyperOS`。
 
@@ -12,9 +18,20 @@
 * [MIUI 14 下载](https://github.com/MonwF/customiuizer/releases/tag/v23.11.26)
 * [MIUI 13 下载](https://github.com/MonwF/customiuizer/releases/tag/v23.08.26)
 
-### 测试版下载
-* [网盘](https://rz3kv5wa4g.jiandaoyun.com/dash/650e43a383027ec3225083e9)
-* [Telegram channel](https://t.me/pengeek)
+### 上游与发布
+
+* 上游项目：[MonwF/customiuizer](https://github.com/MonwF/customiuizer)
+* 本 fork 发布说明：[CHANGELOG.md](CHANGELOG.md)
+* 协议：GPL-3.0（与上游一致）
+
+### 测试设备
+
+| 设备 | HyperOS | Android | SoC | 内存 | 说明 |
+|------|---------|---------|-----|------|------|
+| 小米 13 (2211133G) | 1.0.7.0.UMCTWXM | 14 (UKQ1.230804.001) | Snapdragon 8 Gen 2（最高 3.19 GHz） | 12 GB | 主要测试机；r3–r14 均正常重启并加载。 |
+
+* 基带版本：`MPSS.DE.3.0.c1-GLB-Oct 17 2024-04:43:46`
+* 内核版本：`5.15.123-android13-8-00008-g3ca6a2912c7e-ab11087001`
 
 ### 主要功能
 * 双排状态栏
@@ -44,6 +61,5 @@
 * 允许限制系统app使用网络
 
 ------
-#### 佛系开发，随缘打赏
 
-<img src="https://user-images.githubusercontent.com/1267050/193435662-74af0ec4-80c1-4c38-99ef-ed43e1862db6.JPG" alt="Donate" width="400"/>
+> 本 fork 仅供学习交流，原始项目打赏通道请参见 [MonwF/customiuizer](https://github.com/MonwF/customiuizer)。
