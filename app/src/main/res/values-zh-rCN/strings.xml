@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">米客</string>
-    <string name="app_slogan" translatable="false">米客 - 客制化你的小米澎湃OS</string>
+    <string name="app_name" translatable="false">米客-r14</string>
+    <string name="app_slogan" translatable="false">米客 r14 优化版 - 客制化你的小米澎湃OS（非官方 fork）</string>
     <string name="app_about">关于</string>
     <string name="about_version">版本：%1$s</string>
-    <string name="about_dev">作者：Mikanoshi &amp; MonwF</string>
+    <string name="about_dev">作者：Mikanoshi &amp; MonwF，r14 优化 fork</string>
     <string name="about_dynamic">标记有⟲的模块由默认值修改为其他值后只需软重启一次，之后的更改将立即应用；其他选项始终需要软重启。</string>
     <string name="about_unsupported">标记⨯的模块不支持此设备。</string>
     <string name="menu_update">更新</string>

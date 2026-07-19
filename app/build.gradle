@@ -24,7 +24,7 @@ android {
     }
     compileSdk 36
     defaultConfig {
-        applicationId "name.monwf.customiuizer"
+        applicationId "name.monwf.customiuizer.r14"
         minSdkVersion 34
         //noinspection OldTargetApi,ExpiredTargetSdkVersion
         targetSdkVersion 34

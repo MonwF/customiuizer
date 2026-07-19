@@ -31,7 +31,7 @@
         android:label="@string/app_name"
         android:description="@string/app_slogan"
         android:supportsRtl="true"
-        android:name=".MainApplication"
+        android:name="name.monwf.customiuizer.MainApplication"
         android:requestLegacyExternalStorage="true"
         tools:ignore="GoogleAppIndexingWarning">
 
@@ -41,7 +41,7 @@
 
         <activity
             android:exported="true"
-            android:name=".MainActivity"
+            android:name="name.monwf.customiuizer.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme"
             android:launchMode="singleTop"
@@ -55,9 +55,9 @@
 
         <activity-alias
             android:exported="true"
-            android:name=".GateWayLauncher"
+            android:name="name.monwf.customiuizer.GateWayLauncher"
             android:label="@string/title_activity_main"
-            android:targetActivity=".MainActivity"
+            android:targetActivity="name.monwf.customiuizer.MainActivity"
             android:taskAffinity="com.android.settings.customiuizer"
             android:allowTaskReparenting="true"
             android:clearTaskOnLaunch="true"
@@ -71,7 +71,7 @@
         </activity-alias>
 
         <activity
-            android:name=".Credentials"
+            android:name="name.monwf.customiuizer.Credentials"
             android:label="@string/credentials_unlock"
             android:theme="@style/Invisible"
             android:icon="@drawable/ic_credentials"
@@ -83,8 +83,8 @@
         </activity>
 
         <activity-alias
-            android:name=".CredentialsLauncher"
-            android:targetActivity=".Credentials"
+            android:name="name.monwf.customiuizer.CredentialsLauncher"
+            android:targetActivity="name.monwf.customiuizer.Credentials"
             android:enabled="false"
             android:exported="true">
             <intent-filter>
@@ -94,7 +94,7 @@
         </activity-alias>
 
         <activity
-            android:name=".CredentialsShortcut"
+            android:name="name.monwf.customiuizer.CredentialsShortcut"
             android:label="@string/credentials_unlock"
             android:theme="@style/Invisible"
             android:icon="@drawable/ic_credentials"
@@ -110,7 +110,7 @@
         </activity>
 
         <activity
-            android:name=".tasker.UnlockSettings"
+            android:name="name.monwf.customiuizer.tasker.UnlockSettings"
             android:theme="@style/AppTheme"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
@@ -121,7 +121,7 @@
         </activity>
 
         <provider
-            android:name=".PrefsProvider"
+            android:name="name.monwf.customiuizer.PrefsProvider"
             android:authorities="${applicationId}.provider.sharedprefs"
             android:grantUriPermissions="true"
             android:exported="true"
@@ -129,7 +129,7 @@
 
         <service
             android:exported="true"
-            android:name=".qs.AutoRotateService"
+            android:name="name.monwf.customiuizer.qs.AutoRotateService"
             android:icon="@drawable/ic_qs_autorotate_disabled"
             android:label="@string/qs_toggle_autorotate"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
@@ -140,7 +140,7 @@
         </service>
 
         <receiver
-            android:name=".tasker.UnlockReceiver"
+            android:name="name.monwf.customiuizer.tasker.UnlockReceiver"
             android:exported="true"
             tools:ignore="ExportedReceiver">
             <intent-filter>
