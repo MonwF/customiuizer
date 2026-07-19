@@ -77,8 +77,9 @@
 ### r14 正式版（release-signed）
 
 - APK：`Pengeek-HyperOS1-A14-API101-r14-release.apk`
-- 包名：`name.monwf.customiuizer.r14`（已改为与官方 MonwF 版不同，可直接安装，无需卸载原版）
+- 包名：`name.monwf.customiuizer.r14`（已改为与官方 MonwF 版不同，避免签名/包名冲突）
 - 应用名：`Pengeek-r14` / `米客-r14`
+- **安装前请先在 LSPosed 中备份原版设置，然后卸载官方原版，再安装本 fork。请勿与官方版或其他分支同时启用，否则会出现重复 hook 冲突。**
 - `versionCode`：`107`
 - `versionName`：`24.10.12-hos1-a14-api101-r14`
 - 使用 release 密钥库（`pengeek-release.keystore`）签名，v3 签名。

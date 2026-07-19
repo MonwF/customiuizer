@@ -4,7 +4,8 @@
 > 本项目是基于 [MonwF/customiuizer](https://github.com/MonwF/customiuizer) 的**非官方优化 fork**，沿用 **GPL-3.0** 协议。
 > 仅供个人学习交流与性能优化参考，原始作品版权归 **MonwF** 与 **Mikanoshi** 所有。
 > 仅兼容：**HyperOS 1 / Android 14 / libxposed API 101**。
-> 包名已改为 `name.monwf.customiuizer.r14`，应用名为 **米客-r14 / Pengeek-r14**，无需卸载原版即可安装。
+> 包名已改为 `name.monwf.customiuizer.r14`，应用名为 **米客-r14 / Pengeek-r14**。
+> **重要：安装本 fork 前请先在 LSPosed 中备份原版设置，然后卸载官方原版并安装本 fork；两个模块不能同时启用，否则会导致冲突。**
 > 完整优化记录与发布说明见 [CHANGELOG.md](CHANGELOG.md)。
 
 [English](README_en.md) | [日本語](README_jp.md) | [Português (Brasil)](README_PT-BR.md) | **中文**
