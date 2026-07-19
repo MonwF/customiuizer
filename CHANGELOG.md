@@ -1,82 +1,92 @@
-# Changelog
+# 更新日志
 
-> This is an **unofficial optimized fork** of [MonwF/customiuizer](https://github.com/MonwF/customiuizer), released under the same **GPL-3.0** license.  
-> The original module is by `MonwF`; the upstream source is by `Mikanoshi` (CustoMIUIzer).
-> Primary target: **HyperOS 1 / Android 14 (API 34) / libxposed API 101**.
+> 本项目是基于 [MonwF/customiuizer](https://github.com/MonwF/customiuizer) 的**非官方优化 fork**，沿用 **GPL-3.0** 协议。  
+> 原始模块作者为 `MonwF`，上游源码由 `Mikanoshi`（CustoMIUIzer）提供。  
+> 仅兼容：**HyperOS 1 / Android 14（API 34）/ libxposed API 101**。
 
-## Base
+## 基础版本
 
-- Forked from `MonwF/customiuizer` `a14` branch (`open source for a14`).
-- Migrated lifecycle and hook registration to **libxposed API 101**.
-- Preserved API-100-style callback behavior (mutable arguments, early return/throw, result replacement and throwable recovery).
-- Restricted initialization to Android 14 (`UPSIDE_DOWN_CAKE`) to avoid applying HyperOS 1 hooks to incompatible Android 15/16 components.
+- 从 `MonwF/customiuizer` 的 `a14` 分支 fork（`open source for a14`）。
+- 将生命周期与 hook 注册迁移到 **libxposed API 101**。
+- 保留 API-100 风格的回调行为（可变参数、提前返回/抛出、结果替换与异常恢复）。
+- 初始化限制为 Android 14（`UPSIDE_DOWN_CAKE`），避免将 HyperOS 1 的 hook 应用到不兼容的 Android 15/16 组件。
 
-## r3 — class cache
+## r3 — Class 缓存
 
-- Added class-level cache in `XposedHelpers` to avoid repeated `Class.forName` lookups.
+- 在 `XposedHelpers` 增加类级缓存，减少重复的 `Class.forName` 查找。
 
-## r4 — context cache + resource map lookup reduction
+## r4 — Context 缓存 + 资源 Map 查询削减
 
-- Cached `ModuleHelper.findContext()` result.
-- Reduced duplicate map lookups in `ResourceHooks.getResourceReplacement()`.
+- 缓存 `ModuleHelper.findContext()` 结果。
+- 减少 `ResourceHooks.getResourceReplacement()` 中重复的 map 查询。
 
-## r5 — resource handle reuse
+## r5 — 资源句柄复用
 
-- Cached the module `Resources` object once per replacement call and passed it down to `getFakeResource` / `getResourceReplacement`.
+- 单次资源替换调用中缓存模块 `Resources`，并向下传给 `getFakeResource` / `getResourceReplacement`。
 
-## r6 — theme value pre-parsing
+## r6 — 主题值预解析
 
-- Extended `ResourceHooks.ThemeValue` with pre-parsed fields (`pkg`, `name`, `themeValueType`, `resourceType`) so `setThemeValueReplacement` and `initThemeHook` no longer re-split strings.
+- 扩展 `ResourceHooks.ThemeValue` 的预解析字段（`pkg`、`name`、`themeValueType`、`resourceType`），使 `setThemeValueReplacement` 与 `initThemeHook` 不再重复拆分字符串。
 
-## r7 — direct resource value dispatch
+## r7 — 资源值直接分发
 
-- Replaced reflection-based resource value retrieval with a direct `switch` dispatch in `ResourceHooks.getModuleResValue()`.
+- 在 `ResourceHooks.getModuleResValue()` 中用直接 `switch` 替换基于反射的资源取值。
 
-## r8 — direct user id + Dependency instance cache
+## r8 — 直接计算 UserId + Dependency 实例缓存
 
-- Replaced `UserHandle.getUserId(Process.myUid())` reflection with direct arithmetic (`Process.myUid() / 100000`).
-- Added `ConcurrentHashMap` instance cache and cached `Dependency.get` `Method` in `ModuleHelper.getDepInstance()`.
+- 用直接算术 `Process.myUid() / 100000` 替换 `UserHandle.getUserId(Process.myUid())` 的反射调用。
+- 在 `ModuleHelper.getDepInstance()` 中使用 `ConcurrentHashMap` 实例缓存，并缓存 `Dependency.get` 的 `Method`。
 
-## r9 — zero-argument call overloads
+## r9 — 零参数调用重载
 
-- Added zero-argument overloads for `XposedHelpers.callMethod`, `callStaticMethod`, `newInstance`, `findMethodBestMatch` and `findConstructorBestMatch`.
-- Shared `EMPTY_OBJECT_ARRAY` / `EMPTY_CLASS_ARRAY` singletons and reused an empty `Object[]` in `HookerClassHelper.BeforeHookCallback` for argument-less hooks.
+- 为 `XposedHelpers.callMethod`、`callStaticMethod`、`newInstance`、`findMethodBestMatch`、`findConstructorBestMatch` 增加零参数重载。
+- 共享 `EMPTY_OBJECT_ARRAY` / `EMPTY_CLASS_ARRAY` 单例，并在 `HookerClassHelper.BeforeHookCallback` 中复用空 `Object[]`。
 
-## r10 — constant hook fast path
+## r10 — 常量 Hook 快速路径
 
-- Added `ConstantHooker` for `DO_NOTHING` / `returnConstant` callbacks; these bypass `BeforeHookCallback`/`AfterHookCallback` creation and return the value directly.
+- 为 `DO_NOTHING` / `returnConstant` 回调增加 `ConstantHooker`，直接返回值，跳过 `BeforeHookCallback` / `AfterHookCallback` 的创建。
 
-## r11 — parameter class cache
+## r11 — 参数类缓存
 
-- Cached resolved `Class<?>[]` results of `XposedHelpers.getParameterClasses()` by `(ClassLoader, parameter signature)` key to reduce repeated `findClass` work during hook registration.
+- 以 `(ClassLoader, 参数签名)` 为 key 缓存 `XposedHelpers.getParameterClasses()` 解析后的 `Class<?>[]`，减少 hook 注册阶段重复的 `findClass` 工作。
 
-## r12 — module resource configuration cache
+## r12 — 模块资源配置缓存
 
-- Cached the module `Resources` object in `ModuleHelper.getModuleRes()` and reused it while the device `Configuration` is unchanged; recreated on configuration changes.
+- 在 `ModuleHelper.getModuleRes()` 中缓存模块 `Resources`，设备 `Configuration` 未变化时直接复用；配置变化后自动重建。
 
-## r13 — skip empty after-callbacks
+## r13 — 跳过空的 after 回调
 
-- `CustomHooker` now detects whether a `MethodHook` overrides `after()`; if not, it skips `AfterHookCallback` creation and invocation.
+- `CustomHooker` 检测 `MethodHook` 是否覆写了 `after()`；未覆写时跳过 `AfterHookCallback` 的创建与调用。
 
-## r14 — resource hook early-exit
+## r14 — 资源 Hook 早退
 
-- `ResourceHooks.mReplaceHook.before` now checks `fakes` / `resourceIdReplacements` before fetching the module context or resources.
-- `OBJECT`-type replacements return immediately without touching module resources.
-- Reused the `Integer` object already present in `param.getArgs()[0]` as the `ConcurrentHashMap` key to avoid extra boxing.
+- `ResourceHooks.mReplaceHook.before` 在获取模块上下文与资源前先检查 `fakes` / `resourceIdReplacements`。
+- `OBJECT` 类型替换直接返回对象，不再触碰模块资源。
+- 复用 `param.getArgs()[0]` 中已有的 `Integer` 对象作为 `ConcurrentHashMap` key，避免额外装箱。
 
-## Build / verification
+## 构建 / 校验
 
-- APK: `Pengeek-HyperOS1-A14-API101-r14.apk`
-- `versionCode`: `107`
-- `versionName`: `24.10.12-hos1-a14-api101-r14`
-- Signed with debug keystore for local/test use.
-- Verified with `zipalign` and `apksigner` (v3 signature).
+### r14 测试版
 
-## Tested devices
+- APK：`Pengeek-HyperOS1-A14-API101-r14.apk`
+- `versionCode`：`107`
+- `versionName`：`24.10.12-hos1-a14-api101-r14`
+- 使用 debug 密钥库签名，仅用于本地/测试。
+- 已通过 `zipalign` 与 `apksigner`（v3 签名）验证。
 
-| Device | HyperOS | Android | SoC | RAM | Notes |
-|--------|---------|---------|-----|-----|-------|
-| Xiaomi 13 (2211133G) | 1.0.7.0.UMCTWXM | 14 (UKQ1.230804.001) | Snapdragon 8 Gen 2 (up to 3.19 GHz) | 12 GB | Primary test device; r3–r14 rebooted and loaded normally. |
+### r14 正式版（release-signed）
 
-- Baseband: `MPSS.DE.3.0.c1-GLB-Oct 17 2024-04:43:46`
-- Kernel: `5.15.123-android13-8-00008-g3ca6a2912c7e-ab11087001`
+- APK：`Pengeek-HyperOS1-A14-API101-r14-release.apk`
+- `versionCode`：`107`
+- `versionName`：`24.10.12-hos1-a14-api101-r14`
+- 使用 release 密钥库（`pengeek-release.keystore`）签名，v3 签名。
+- 已通过 `zipalign` 与 `apksigner` 验证。
+
+## 测试设备
+
+| 设备 | HyperOS | Android | SoC | 内存 | 说明 |
+|------|---------|---------|-----|------|------|
+| 小米 13 (2211133G) | 1.0.7.0.UMCTWXM | 14 (UKQ1.230804.001) | Snapdragon 8 Gen 2（最高 3.19 GHz）| 12 GB | 主要测试机；r3–r14 均正常重启并加载。 |
+
+- 基带版本：`MPSS.DE.3.0.c1-GLB-Oct 17 2024-04:43:46`
+- 内核版本：`5.15.123-android13-8-00008-g3ca6a2912c7e-ab11087001`

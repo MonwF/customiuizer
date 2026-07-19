@@ -1,6 +1,6 @@
 ## Pengeek
 
-[English](README.md) | [日本語](README_jp.md) | **Português (Brasil)** | [中文](README_zh.md)
+[English](README_en.md) | [日本語](README_jp.md) | **Português (Brasil)** | [中文](README.md)
 
 Personalize o HyperOS ao seu gosto
 

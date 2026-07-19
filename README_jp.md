@@ -2,7 +2,7 @@
 
 ## CustoMIUIzer14
 
-[English](README.md) | **日本語** | [Português (Brasil)](README_PT-BR.md) | [中文](README_zh.md)
+[English](README_en.md) | **日本語** | [Português (Brasil)](README_PT-BR.md) | [中文](README.md)
 
 HyperOSを自分好みにカスタマイズ
 
