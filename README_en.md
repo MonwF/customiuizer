@@ -4,6 +4,7 @@
 > This is an **unofficial optimized fork** based on [MonwF/customiuizer](https://github.com/MonwF/customiuizer) under the **GPL-3.0** license.
 > It is intended for personal study and performance optimization. Original credit goes to **MonwF** and **Mikanoshi**.
 > Compatible only with: **HyperOS 1 / Android 14 / libxposed API 101**.
+> Package changed to `name.monwf.customiuizer.r14`, app name is **Pengeek-r14 / 米客-r14**; can be installed alongside the official build.
 > See [CHANGELOG.md](CHANGELOG.md) for the full optimization history and release notes.
 
 **English** | [日本語](README_jp.md) | [Português (Brasil)](README_PT-BR.md) | [中文](README.md)
