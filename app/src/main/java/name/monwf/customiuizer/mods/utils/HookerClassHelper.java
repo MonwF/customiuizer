@@ -114,10 +114,11 @@ public class HookerClassHelper {
         }
     }
 
-    public static class MethodHook implements BeforeMethodCallback, AfterMethodCallback {
+    public static class MethodHook implements BeforeMethodCallback, AfterMethodCallback, XposedInterface.Hooker {
         public final int mPriority;
         boolean mIsReturnConstant;
         Object mReturnConstantValue;
+        private final boolean hasAfter;
 
         public MethodHook() {
             this(XposedInterface.PRIORITY_DEFAULT);
@@ -125,6 +126,48 @@ public class HookerClassHelper {
 
         public MethodHook(int priority) {
             mPriority = priority;
+            boolean ha = false;
+            if (getClass() != MethodHook.class) {
+                try {
+                    getClass().getDeclaredMethod("after", AfterHookCallback.class);
+                    ha = true;
+                } catch (NoSuchMethodException ignored) {}
+            }
+            this.hasAfter = ha;
+        }
+
+        @Override
+        public Object intercept(XposedInterface.Chain chain) throws Throwable {
+            if (mIsReturnConstant) {
+                return mReturnConstantValue;
+            }
+
+            BeforeHookCallback before = new BeforeHookCallback(chain);
+            beforeHook(before);
+
+            Object result = before.result;
+            Throwable throwable = before.throwable;
+            if (!before.skipped) {
+                try {
+                    result = chain.proceed(before.args);
+                } catch (Throwable t) {
+                    throwable = t;
+                }
+            }
+
+            if (hasAfter) {
+                AfterHookCallback after = new AfterHookCallback(before, result, throwable);
+                afterHook(after);
+                if (after.throwable != null) {
+                    throw after.throwable;
+                }
+                return after.result;
+            }
+
+            if (throwable != null) {
+                throw throwable;
+            }
+            return result;
         }
 
         public final void beforeHook(BeforeHookCallback callback) {
@@ -152,67 +195,6 @@ public class HookerClassHelper {
 
     public interface CustomMethodUnhooker {
         void unhook();
-    }
-
-    public static class CustomHooker implements XposedInterface.Hooker {
-        private final MethodHook callback;
-        private final boolean hasAfter;
-
-        public CustomHooker(MethodHook callback) {
-            this.callback = callback;
-            boolean ha = false;
-            if (callback.getClass() != MethodHook.class) {
-                try {
-                    callback.getClass().getDeclaredMethod("after", AfterHookCallback.class);
-                    ha = true;
-                } catch (NoSuchMethodException ignored) {}
-            }
-            this.hasAfter = ha;
-        }
-
-        @Override
-        public Object intercept(XposedInterface.Chain chain) throws Throwable {
-            BeforeHookCallback before = new BeforeHookCallback(chain);
-            callback.beforeHook(before);
-
-            Object result = before.result;
-            Throwable throwable = before.throwable;
-            if (!before.skipped) {
-                try {
-                    result = chain.proceed(before.args);
-                } catch (Throwable t) {
-                    throwable = t;
-                }
-            }
-
-            if (hasAfter) {
-                AfterHookCallback after = new AfterHookCallback(before, result, throwable);
-                callback.afterHook(after);
-                if (after.throwable != null) {
-                    throw after.throwable;
-                }
-                return after.result;
-            }
-
-            if (throwable != null) {
-                throw throwable;
-            }
-            return result;
-        }
-    }
-
-    /** A hooker that simply returns a constant value, skipping the original method. */
-    public static class ConstantHooker implements XposedInterface.Hooker {
-        private final Object result;
-
-        public ConstantHooker(Object result) {
-            this.result = result;
-        }
-
-        @Override
-        public Object intercept(XposedInterface.Chain chain) throws Throwable {
-            return result;
-        }
     }
 
     /** Skips the hooked method and returns {@code null}. */

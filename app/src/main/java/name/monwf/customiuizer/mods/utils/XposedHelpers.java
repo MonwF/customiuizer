@@ -52,7 +52,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.libxposed.api.XposedInterface;
-import name.monwf.customiuizer.mods.utils.HookerClassHelper.CustomHooker;
 import name.monwf.customiuizer.mods.utils.HookerClassHelper.CustomMethodUnhooker;
 import name.monwf.customiuizer.mods.utils.HookerClassHelper.MethodHook;
 
@@ -809,19 +808,16 @@ public final class XposedHelpers {
     }
 
     public static CustomMethodUnhooker doHookMethod(Method m, MethodHook hook) {
-        XposedInterface.Hooker hooker = hook.mIsReturnConstant
-            ? new HookerClassHelper.ConstantHooker(hook.mReturnConstantValue)
-            : new CustomHooker(hook);
         XposedInterface.HookHandle handle = moduleInst.hook(m)
             .setPriority(hook.mPriority)
-            .intercept(hooker);
+            .intercept(hook);
         return handle::unhook;
     }
 
     private static CustomMethodUnhooker doHookConstructor(Constructor<?> m, MethodHook hook) {
         XposedInterface.HookHandle handle = moduleInst.hook(m)
             .setPriority(hook.mPriority)
-            .intercept(new CustomHooker(hook));
+            .intercept(hook);
         return handle::unhook;
     }
 
