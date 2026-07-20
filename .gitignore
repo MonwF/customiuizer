@@ -3,6 +3,10 @@
 app/release/*
 app/standalone/*
 /local.properties
+keystore.properties
+*.keystore
+*.jks
+*.p12
 /.idea/caches
 /.idea/libraries
 /.idea/modules.xml
