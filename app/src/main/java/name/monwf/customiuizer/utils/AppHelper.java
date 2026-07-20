@@ -17,11 +17,14 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
 import io.github.libxposed.service.RemotePreferences;
+import io.github.libxposed.service.XposedService;
+import io.github.libxposed.service.XposedServiceHelper;
 import name.monwf.customiuizer.R;
 import name.monwf.customiuizer.mods.GlobalActions;
 
@@ -63,6 +66,32 @@ public class AppHelper {
     public static void log(String mod, Throwable t) {
         String logStr = Log.getStackTraceString(t);
         Log.e(TAG, "[Pengeek][" + mod + "] " + logStr);
+    }
+
+    public static void syncAppPrefsToRemote() {
+        if (remotePrefs == null || appPrefs == null) return;
+        try {
+            HashSet<String> ignoreKeys = new HashSet<>();
+            ignoreKeys.add("pref_key_miuizer_locale");
+            ignoreKeys.add("pref_key_miuizer_launchericon");
+            ignoreKeys.add("pref_key_miuizer_synced_from_lsposed");
+            syncPrefsToAnother(appPrefs.getAll(), remotePrefs, 1, ignoreKeys, true);
+        } catch (Throwable t) {
+            log(t);
+        }
+    }
+
+    public static void registerRemotePrefsSync() {
+        if (remotePrefs != null) return;
+        XposedServiceHelper.registerListener(new XposedServiceHelper.OnServiceListener() {
+            public void onServiceBind(XposedService service) {
+                remotePrefs = (RemotePreferences) service.getRemotePreferences(prefsName + "_remote");
+                syncAppPrefsToRemote();
+            }
+            public void onServiceDied(XposedService service) {
+                remotePrefs = null;
+            }
+        });
     }
 
     public static SharedPreferences getSharedPrefs(Context context, boolean protectedStorage) {

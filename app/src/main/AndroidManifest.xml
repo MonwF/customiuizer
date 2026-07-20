@@ -148,6 +148,18 @@
             </intent-filter>
         </receiver>
 
+        <receiver
+            android:name="name.monwf.customiuizer.BootReceiver"
+            android:exported="true"
+            android:directBootAware="true"
+            tools:ignore="ExportedReceiver,DirectBootAware">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

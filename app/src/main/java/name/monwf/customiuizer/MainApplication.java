@@ -19,5 +19,6 @@ public class MainApplication extends Application {
 		String locale = sp.getString("pref_key_miuizer_locale", "auto");
 		if (!"auto".equals(locale) && !"1".equals(locale)) Locale.setDefault(Locale.forLanguageTag(locale));
 		super.attachBaseContext(base);
+		AppHelper.registerRemotePrefsSync();
 	}
 }
