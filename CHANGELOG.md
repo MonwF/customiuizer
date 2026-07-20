@@ -74,3 +74,68 @@
 - r14.1.1 当前代码：`GlobalActions.java`、`Controls.java`、`Launcher.java`、`System.java`、`SystemUI.java`、`Various.java` 均已完成 `intercept(Chain)` 迁移，无活跃 `BeforeHookCallback` / `AfterHookCallback` 遗留。
 - 已在真机测试通过（小米 13，HyperOS 1 A14）。
 - 后续 r14.1.x 主要方向：代码精简、性能回归测试、减少 `chain.getArgs().toArray` 等临时分配。
+
+## r14.1.1 性能评估报告
+
+> 以下评估基于代码路径、编译结果与静态统计，非真机跑分，供横向参考。
+
+### 重构完成度
+
+- **所有目标模块的 `before` / `after` 回调已迁移为 `Chain.intercept`（API-101）**：
+  - `Launcher.java`、`System.java`、`SystemUI.java`、`Various.java` 中活跃 `before` / `after` 方法剩余：**0**。
+  - `GlobalActions.java`、`Controls.java` 在 r14.1.0 已迁移；至此全部 Java hook 模块统一为原生 `intercept(Chain)` 调度。
+
+### 编译检查
+
+- `gradlew :app:assembleRelease --rerun-tasks`：**成功**。
+- 因 Devin IDE 占用 `app/build/intermediates/lint-cache`，直接 `clean` 无法删除；通过临时指定 `-PcleanBuildDir` 到全新目录完成了真正的 clean build，结果一致。
+- APK 通过 `apksigner verify -v`：v2 签名通过，1 个 signer。
+
+### 版本与签名
+
+- 版本：`r14.1.1`（`versionCode 110`）。
+- APK：`Pengeek-HyperOS1-A14-API101-r14.1.1.apk`，大小 2,934,624 字节。
+- 使用自动生成的 release keystore 签名（`keystore.properties` + `.tools/pengeek-release-auto.keystore`）。
+
+### 代码质量统计
+
+| 文件 | `intercept` 数量 | 平均方法行数 | 最大方法行数 | `thisObject` 声明 | `thisObject` 赋值 | `args` 声明 | `new` 匿名类 |
+|---|---|---|---|---|---|---|---|
+| Launcher.java | 93 | 26.5 | 76 | 93 | 0 | 93 | 101 |
+| System.java | 162 | 32.0 | 114 | 162 | 0 | 162 | 179 |
+| SystemUI.java | 141 | 37.6 | 202 | 141 | 1* | 141 | 144 |
+| Various.java | 46 | 33.4 | 138 | 46 | 0 | 46 | 53 |
+
+> \* `SystemUI.java` 中 1 处 `thisObject = XposedHelpers.getSurroundingThis(thisObject);` 位于嵌套 `intercept` 内，编译通过，不影响外层 effectively final 检查。
+
+### 运行时性能评估
+
+- **Hook 调用开销：理论上轻微变好**
+  - 旧风格每个 hook 可能触发 `before` + `after` 两次回调并构造两个 callback 对象。
+  - 新风格合并为一次 `intercept` 调用，减少了第二次方法调用和 `BeforeHookCallback` / `AfterHookCallback` 的对象分配。
+- **关键模块**：`SystemUI.java` 最大 `intercept` 方法 202 行，`System.java` 最大 114 行，尚未超过 JVM 64K 字节码限制，但 `SystemUI` 中个别方法已偏大，建议后续拆分复杂逻辑。
+
+### 内存与 GC 影响
+
+- 每个 `intercept` 调用都会新增：
+  - `Object[] args = chain.getArgs().toArray(new Object[0]);`
+  - `Object thisObject`、`Object result`、`Throwable throwable`（`before` 还有 `boolean skipped`）
+- `args` 数组是每次 hook 的主要新增分配；`thisObject` / `args` 被匿名内部类捕获时会生成合成字段，数量与原写法基本持平。
+- 如果 hook 触发频率极高，`chain.getArgs().toArray(new Object[0])` 是一次额外的数组拷贝分配。
+
+### 潜在风险
+
+- **内部类捕获**：`BroadcastReceiver`、`MethodHook` 等匿名类继续使用 `thisObject` / `args`，已确保 `thisObject` 不再在内部类作用域内重新赋值。
+- **线程安全**：`intercept` 内 `result`、`throwable`、`skipped` 均为局部变量，线程安全；但跨 hook 共享的静态字段（如 `lastState`、`mNextAlarmTime`）仍与原逻辑一致，未引入新的竞态。
+- **方法体积**：合并后单个体积增大，目前无编译问题，但长期维护性下降。
+
+### 总结
+
+- **整体成功率**：100%（目标四个模块全部迁移，`javalang` 解析通过，`assembleRelease` 编译通过，APK 已签名为 v2 Release。）
+- **性能变化**：**持平 / 轻微变好**。单次调用路径更短，但 `toArray` 分配抵消了部分收益。
+- **进一步优化建议**：
+  1. 若 hook 内部不访问 `args`，可在生成时省略 `Object[] args` 前缀。
+  2. 仅在需要数组索引时再做 `chain.getArgs().toArray(...)`，否则尝试用 `List` 直接遍历以减少数组分配。
+  3. 对 `SystemUI.java` 中 200+ 行的 `intercept` 方法按职责拆分。
+  4. 如需真实帧率/耗时数据，可在 `MainModule` 或 `SystemUI` 的热点 hook 中加入 `System.nanoTime()` 日志并在真机测试。
+  5. 正式发布前建议保留好 `pengeek-release-auto.keystore`，或替换为你自己的 release 密钥。
