@@ -64,7 +64,7 @@ android {
     }
     applicationVariants.configureEach { variant ->
         variant.outputs.configureEach {
-            setProperty("outputFileName", "Pengeek(r14)-HyperOS1-A14-API101-r14.0.0.apk")
+            setProperty("outputFileName", "Pengeek-HyperOS1-A14-API101-r14.0.0.apk")
         }
     }
     compileOptions {

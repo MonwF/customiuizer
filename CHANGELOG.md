@@ -73,13 +73,13 @@
 - 模块名称统一为 **米客(r14) / Pengeek(r14)**，模块简介标注为“仅适用于 A14 的 HyperOS 1”。
 - `versionCode`：`108`
 - `versionName`：`r14.0.0`
-- 输出 APK：`Pengeek(r14)-HyperOS1-A14-API101-r14.0.0.apk`
+- 输出 APK：`Pengeek-HyperOS1-A14-API101-r14.0.0.apk`
 
 ## 构建 / 校验
 
 ### r14.0.0 测试版
 
-- APK：`Pengeek(r14)-HyperOS1-A14-API101-r14.0.0.apk`
+- APK：`Pengeek-HyperOS1-A14-API101-r14.0.0.apk`
 - `versionCode`：`108`
 - `versionName`：`r14.0.0`
 - 使用 debug 密钥库签名，仅用于本地/测试。
@@ -87,7 +87,7 @@
 
 ### r14.0.0 正式版（release-signed）
 
-- APK：`Pengeek(r14)-HyperOS1-A14-API101-r14.0.0.apk`
+- APK：`Pengeek-HyperOS1-A14-API101-r14.0.0.apk`
 - 包名：`name.monwf.customiuizer.r14`（已改为与官方 MonwF 版不同，避免签名/包名冲突）
 - 应用名：`Pengeek(r14)` / `米客(r14)`
 - **安装本 fork 前请先在米客（Pengeek）应用内备份设置，然后卸载官方原版并安装本 fork。请勿与官方版或其他分支同时启用，否则会出现重复 hook 冲突。**
