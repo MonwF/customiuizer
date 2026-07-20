@@ -8,10 +8,10 @@ import android.util.SparseIntArray;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-import name.monwf.customiuizer.mods.utils.HookerClassHelper.BeforeHookCallback;
-import name.monwf.customiuizer.mods.utils.HookerClassHelper.AfterHookCallback;
+import io.github.libxposed.api.XposedInterface;
 import name.monwf.customiuizer.mods.utils.HookerClassHelper.MethodHook;
 
 public class ResourceHooks {
@@ -60,58 +60,60 @@ public class ResourceHooks {
 
 	private final MethodHook mReplaceHook = new MethodHook() {
 		@Override
-		protected void before(final BeforeHookCallback param) {
-			Object[] args = param.getArgs();
-			Object resIdObj = args[0];
-			int resId = (Integer) resIdObj;
-
-			ResourceValue replacement = resourceIdReplacements.get(resIdObj);
-			if (replacement != null) {
-				if (replacement.mType == ReplacementType.OBJECT) {
-					param.returnAndSkip(replacement.mValue);
-					return;
+		public Object intercept(XposedInterface.Chain chain) throws Throwable {
+			Object skipValue = null;
+			boolean shouldSkip = false;
+			boolean replacementHandled = false;
+			try {
+				List<Object> args = chain.getArgs();
+				Object resIdObj = args.get(0);
+				int resId = (Integer) resIdObj;
+				String method = chain.getExecutable().getName();
+				ResourceValue replacement = resourceIdReplacements.get(resIdObj);
+				if (replacement != null) {
+					replacementHandled = true;
+					if (replacement.mType == ReplacementType.OBJECT) {
+						skipValue = replacement.mValue;
+						shouldSkip = true;
+					} else if ("getLayout".equals(method)) {
+						// proceed original, do not check fakes
+					} else {
+						Context mContext = ModuleHelper.findContext();
+						if (mContext != null) {
+							Resources modRes = ModuleHelper.getModuleRes(mContext);
+							if (modRes != null) {
+								Object[] argsArr = args.toArray(new Object[0]);
+								Object value = getModuleResValue(modRes, method, (int) replacement.mValue, argsArr);
+								if (value != null) {
+									skipValue = value;
+									shouldSkip = true;
+								}
+							}
+						}
+					}
 				}
-				String method = param.getMember().getName();
-				if ("getLayout".equals(method)) return;
-				Context mContext = ModuleHelper.findContext();
-				if (mContext == null) return;
-				Resources modRes;
-				try {
-					modRes = ModuleHelper.getModuleRes(mContext);
-				} catch (Throwable t) {
-					XposedHelpers.log(t);
-					return;
+				if (!shouldSkip && !replacementHandled) {
+					int modResId = fakes.get(resId);
+					if (modResId != 0) {
+						Context mContext = ModuleHelper.findContext();
+						if (mContext != null) {
+							Resources modRes = ModuleHelper.getModuleRes(mContext);
+							if (modRes != null) {
+								Object[] argsArr = args.toArray(new Object[0]);
+								Object value = getModuleResValue(modRes, method, modResId, argsArr);
+								if (value != null) {
+									skipValue = value;
+									shouldSkip = true;
+								}
+							}
+						}
+					}
 				}
-				if (modRes == null) return;
-				try {
-					Object value = getModuleResValue(modRes, method, (int) replacement.mValue, args);
-					if (value != null) param.returnAndSkip(value);
-				} catch (Throwable t) {
-					XposedHelpers.log(t);
-				}
-				return;
+			} catch (Throwable t) {
+				XposedHelpers.log(t);
 			}
-
-			int modResId = fakes.get(resId);
-			if (modResId != 0) {
-				String method = param.getMember().getName();
-				Context mContext = ModuleHelper.findContext();
-				if (mContext == null) return;
-				Resources modRes;
-				try {
-					modRes = ModuleHelper.getModuleRes(mContext);
-				} catch (Throwable t) {
-					XposedHelpers.log(t);
-					return;
-				}
-				if (modRes == null) return;
-				try {
-					Object value = getModuleResValue(modRes, method, modResId, args);
-					if (value != null) param.returnAndSkip(value);
-				} catch (Throwable t) {
-					XposedHelpers.log(t);
-				}
-			}
+			if (shouldSkip) return skipValue;
+			return chain.proceed();
 		}
 	};
 
@@ -120,49 +122,63 @@ public class ResourceHooks {
 	private void initThemeHook() {
 		ModuleHelper.findAndHookMethod(miui.content.res.ThemeResources.class, "mergeThemeValues", String.class, miui.content.res.ThemeValues.class, new MethodHook() {
 			@Override
-			protected void after(AfterHookCallback param) throws Throwable {
-				String mPackageName = (String) XposedHelpers.getObjectField(param.getThisObject(), "mPackageName");
-				if (mPackageName == null || "miui".equals(mPackageName)) return;
-				if ((mPackageName.equals(ModuleHelper.currentPackageName)
-					|| "miui.systemui.plugin".equals(mPackageName)
-				) && (
-					ModuleHelper.currentPackageName.equals(param.getArgs()[0])
-					|| "miui.systemui.plugin".equals(param.getArgs()[0])
-					)
-				) {
-					HashMap<Integer, Integer> themeIntValues = new HashMap<>();
-					HashMap<Integer, int[]> themeIntegerArrays = new HashMap<>();
-					HashMap<Integer, String[]> themeStringArrays = new HashMap<>();
-					Object mThemeResources = param.getThisObject();
-					Resources mResources = (Resources) XposedHelpers.getObjectField(mThemeResources, "mResources");
-					boolean nightMode = XposedHelpers.getBooleanField(mThemeResources, "mNightMode");
-					Object mThemeValues = param.getArgs()[1];
-					HashMap<Integer, Integer> mIntegers = (HashMap<Integer, Integer>) XposedHelpers.getObjectField(mThemeValues, "mIntegers");
-					HashMap<Integer, int[]> mIntegerArrays = (HashMap<Integer, int[]>)XposedHelpers.getObjectField(mThemeValues, "mIntegerArrays");
-					HashMap<Integer, String[]> mStringArrays = (HashMap<Integer, String[]>)XposedHelpers.getObjectField(mThemeValues, "mStringArrays");
-					for (Map.Entry<String, ThemeValue> entry : themeValueReplacements.entrySet()) {
-						ThemeValue tv = entry.getValue();
-						if (tv.resId == -1) {
-							if (tv.pkg.equals(mPackageName) || "android".equals(tv.pkg)) {
-								tv.resId = mResources.getIdentifier(tv.name, tv.resourceType, tv.pkg);
+			public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				Object result;
+				Throwable throwable = null;
+				try {
+					result = chain.proceed();
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
+				}
+				try {
+					Object mThemeResources = chain.getThisObject();
+					String mPackageName = (String) XposedHelpers.getObjectField(mThemeResources, "mPackageName");
+					if (mPackageName != null && !"miui".equals(mPackageName) && (
+						mPackageName.equals(ModuleHelper.currentPackageName)
+						|| "miui.systemui.plugin".equals(mPackageName)
+					)) {
+						List<Object> args = chain.getArgs();
+						if (args.size() > 1 && (
+							ModuleHelper.currentPackageName.equals(args.get(0))
+							|| "miui.systemui.plugin".equals(args.get(0))
+						)) {
+							HashMap<Integer, Integer> themeIntValues = new HashMap<>();
+							HashMap<Integer, int[]> themeIntegerArrays = new HashMap<>();
+							HashMap<Integer, String[]> themeStringArrays = new HashMap<>();
+							Resources mResources = (Resources) XposedHelpers.getObjectField(mThemeResources, "mResources");
+							boolean nightMode = XposedHelpers.getBooleanField(mThemeResources, "mNightMode");
+							Object mThemeValues = args.get(1);
+							HashMap<Integer, Integer> mIntegers = (HashMap<Integer, Integer>) XposedHelpers.getObjectField(mThemeValues, "mIntegers");
+							HashMap<Integer, int[]> mIntegerArrays = (HashMap<Integer, int[]>) XposedHelpers.getObjectField(mThemeValues, "mIntegerArrays");
+							HashMap<Integer, String[]> mStringArrays = (HashMap<Integer, String[]>) XposedHelpers.getObjectField(mThemeValues, "mStringArrays");
+							for (Map.Entry<String, ThemeValue> entry : themeValueReplacements.entrySet()) {
+								ThemeValue tv = entry.getValue();
+								if (tv.resId == -1) {
+									if (tv.pkg.equals(mPackageName) || "android".equals(tv.pkg)) {
+										tv.resId = mResources.getIdentifier(tv.name, tv.resourceType, tv.pkg);
+									}
+								}
+								if (tv.resId > 0) {
+									if ("string-array".equals(tv.themeValueType)) {
+										themeStringArrays.put(tv.resId, (String[]) (nightMode ? tv.mNightValue : tv.mValue));
+									} else if ("integer-array".equals(tv.themeValueType)) {
+										themeIntegerArrays.put(tv.resId, (int[]) (nightMode ? tv.mNightValue : tv.mValue));
+									} else {
+										themeIntValues.put(tv.resId, (Integer) (nightMode ? tv.mNightValue : tv.mValue));
+									}
+								}
 							}
-						}
-						if (tv.resId > 0) {
-							if ("string-array".equals(tv.themeValueType)) {
-								themeStringArrays.put(tv.resId, (String[]) (nightMode ? tv.mNightValue : tv.mValue));
-							}
-							else if ("integer-array".equals(tv.themeValueType)) {
-								themeIntegerArrays.put(tv.resId, (int[]) (nightMode ? tv.mNightValue : tv.mValue));
-							}
-							else {
-								themeIntValues.put(tv.resId, (Integer) (nightMode ? tv.mNightValue : tv.mValue));
-							}
+							mIntegers.putAll(themeIntValues);
+							mIntegerArrays.putAll(themeIntegerArrays);
+							mStringArrays.putAll(themeStringArrays);
 						}
 					}
-					mIntegers.putAll(themeIntValues);
-					mIntegerArrays.putAll(themeIntegerArrays);
-					mStringArrays.putAll(themeStringArrays);
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
 				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
