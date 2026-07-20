@@ -75,24 +75,35 @@
 - `versionName`：`r14.0.0`
 - 输出 APK：`Pengeek-HyperOS1-A14-API101-r14.0.0.apk`
 
+## r14.1.0
+
+- `MethodHook` 直接实现 `XposedInterface.Hooker`，使用原生 `intercept(Chain)` 调度。
+- 移除 `HookerClassHelper.CustomHooker` / `ConstantHooker` 适配器层。
+- `XposedHelpers.doHookMethod` / `doHookConstructor` 直接通过 `HookBuilder.setPriority(priority).intercept(hook)` 注册，无需额外包装。
+- 保留 `MethodHook` 的 `before` / `after` 语义（可变参数、提前返回/抛出、结果替换、异常恢复）。
+- 对应分支：`a14-api101`。
+- `versionCode`：`109`
+- `versionName`：`r14.1.0`
+- 输出 APK：`Pengeek-HyperOS1-A14-API101-r14.1.0.apk`
+
 ## 构建 / 校验
 
-### r14.0.0 测试版
+### r14.1.0 测试版
 
-- APK：`Pengeek-HyperOS1-A14-API101-r14.0.0.apk`
-- `versionCode`：`108`
-- `versionName`：`r14.0.0`
+- APK：`Pengeek-HyperOS1-A14-API101-r14.1.0.apk`
+- `versionCode`：`109`
+- `versionName`：`r14.1.0`
 - 使用 debug 密钥库签名，仅用于本地/测试。
 - 已通过 `zipalign` 与 `apksigner`（v3 签名）验证。
 
-### r14.0.0 正式版（release-signed）
+### r14.1.0 正式版（release-signed）
 
-- APK：`Pengeek-HyperOS1-A14-API101-r14.0.0.apk`
+- APK：`Pengeek-HyperOS1-A14-API101-r14.1.0.apk`
 - 包名：`name.monwf.customiuizer.r14`（已改为与官方 MonwF 版不同，避免签名/包名冲突）
 - 应用名：`Pengeek(r14)` / `米客(r14)`
 - **安装本 fork 前请先在米客（Pengeek）应用内备份设置，然后卸载官方原版并安装本 fork。请勿与官方版或其他分支同时启用，否则会出现重复 hook 冲突。**
-- `versionCode`：`108`
-- `versionName`：`r14.0.0`
+- `versionCode`：`109`
+- `versionName`：`r14.1.0`
 - 使用 release 密钥库（`pengeek-release.keystore`）签名，v3 签名。
 - 已通过 `zipalign` 与 `apksigner` 验证。
 

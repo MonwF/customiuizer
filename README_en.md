@@ -7,7 +7,7 @@
 > This fork uses the native **libxposed API 101 `XposedInterface.Hooker.intercept(Chain)`** dispatch, so it should work with frameworks that support API 101 such as **LSPosed 2.0** and **Vector**. So far it has only been tested on LSPosed + HyperOS 1 A14.
 > Package changed to `name.monwf.customiuizer.r14`, app name is **Pengeek(r14) / 米客(r14)**。
 > **Before installing this fork, please back up your settings inside the 米客/Pengeek app first, then uninstall the official MonwF build before installing this fork, and enable only this module. Two Xposed modules hooking the same system cannot be enabled at the same time.**
-> Version plan: **r14.0.\*** keeps the API-100 style callback adapter; **r14.1.\*** will be a native API-101 rewrite.
+> Version plan: **r14.0.\*** is the API-100 callback adapter on the `a14` branch; **r14.1.\*** is the native API-101 `XposedInterface.Hooker.intercept(Chain)` rewrite on the `a14-api101` branch. The `CustomHooker` / `ConstantHooker` adapter layer has been removed.
 > See [CHANGELOG.md](CHANGELOG.md) for the full optimization history and release notes.
 
 **English** | [日本語](README_jp.md) | [Português (Brasil)](README_PT-BR.md) | [中文](README.md)

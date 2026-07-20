@@ -7,7 +7,7 @@
 > 本 fork 使用 **libxposed API 101 原生 `XposedInterface.Hooker.intercept(Chain)`** 调度，应可配合 **LSPosed 2.0** 与 **Vector** 等支持 API 101 的框架使用；目前仅在 LSPosed + HyperOS 1 A14 实机测试。
 > 包名已改为 `name.monwf.customiuizer.r14`，应用名为 **米客(r14) / Pengeek(r14)**。
 > **安装本 fork 前请先在米客中备份设置，然后卸载官方原版并安装本 fork；两个模块不能同时启用，否则会导致冲突。**
-> 版本规划：**r14.0.\*** 维持 API-100 风格回调；**r14.1.\*** 将重写为 API-101 风格。
+> 版本规划：**r14.0.\*** 为 API-100 风格回调，在 `a14` 分支维护；**r14.1.\*** 为原生 API-101 `Hooker.intercept(Chain)` 重写，在 `a14-api101` 分支维护，已移除 `CustomHooker` / `ConstantHooker` 适配层。
 > 完整优化记录与发布说明见 [CHANGELOG.md](CHANGELOG.md)。
 
 [English](README_en.md) | [日本語](README_jp.md) | [Português (Brasil)](README_PT-BR.md) | **中文**
