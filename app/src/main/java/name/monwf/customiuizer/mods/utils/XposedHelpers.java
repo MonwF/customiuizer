@@ -810,6 +810,7 @@ public final class XposedHelpers {
     public static CustomMethodUnhooker doHookMethod(Method m, MethodHook hook) {
         XposedInterface.HookHandle handle = moduleInst.hook(m)
             .setPriority(hook.mPriority)
+            .setExceptionMode(XposedInterface.ExceptionMode.PASSTHROUGH)
             .intercept(hook);
         return handle::unhook;
     }
@@ -817,6 +818,7 @@ public final class XposedHelpers {
     private static CustomMethodUnhooker doHookConstructor(Constructor<?> m, MethodHook hook) {
         XposedInterface.HookHandle handle = moduleInst.hook(m)
             .setPriority(hook.mPriority)
+            .setExceptionMode(XposedInterface.ExceptionMode.PASSTHROUGH)
             .intercept(hook);
         return handle::unhook;
     }
