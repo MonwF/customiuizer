@@ -49,6 +49,13 @@ public class MainActivity extends AppCompatActivity {
                 public void onServiceBind(XposedService service) {
                     AppHelper.moduleActive = true;
                     AppHelper.remotePrefs = (RemotePreferences) service.getRemotePreferences(AppHelper.prefsName + "_remote");
+                    if (AppHelper.remotePrefs != null && AppHelper.appPrefs != null) {
+                        HashSet<String> ignoreKeys = new HashSet<>();
+                        ignoreKeys.add("pref_key_miuizer_locale");
+                        ignoreKeys.add("pref_key_miuizer_launchericon");
+                        ignoreKeys.add("pref_key_miuizer_synced_from_lsposed");
+                        AppHelper.syncPrefsToAnother(AppHelper.appPrefs.getAll(), AppHelper.remotePrefs, 2, ignoreKeys, false);
+                    }
                 }
                 public void onServiceDied(XposedService service) {
                     AppHelper.moduleActive = false;

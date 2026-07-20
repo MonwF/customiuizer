@@ -63,6 +63,22 @@ public class MainModule extends XposedModule {
         if (mPrefsLoaded) return;
         SharedPreferences readPrefs = getRemotePreferences(ModuleHelper.prefsName + "_remote");
         Map<String, ?> allPrefs = readPrefs.getAll();
+        if (allPrefs == null || allPrefs.isEmpty()) {
+            XposedHelpers.log("Remote preferences empty, trying local fallback");
+            try {
+                Context ctx = ModuleHelper.findContext();
+                if (ctx != null) {
+                    Context moduleCtx = ctx.createPackageContext(BuildConfig.APPLICATION_ID, Context.CONTEXT_IGNORE_SECURITY);
+                    SharedPreferences localPrefs = moduleCtx.getSharedPreferences(ModuleHelper.prefsName, Context.MODE_PRIVATE);
+                    allPrefs = localPrefs.getAll();
+                    if (allPrefs != null && !allPrefs.isEmpty()) {
+                        XposedHelpers.log("Loaded " + allPrefs.size() + " entries from local SharedPreferences");
+                    }
+                }
+            } catch (Throwable t) {
+                XposedHelpers.log(t);
+            }
+        }
         if (allPrefs == null || allPrefs.size() == 0)
             XposedHelpers.log("Empty preferences!");
         else

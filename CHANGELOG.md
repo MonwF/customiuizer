@@ -8,9 +8,19 @@
 
 | 版本 | 分支 | 核心变更 | versionCode |
 |---|---|---|---|
+| r14.1.2 | `a14-api101` | 修复重启后 RemotePreferences 未同步导致 hook 失效的问题 | 111 |
 | r14.1.1 | `a14-api101` | 全部模块完成原生 API-101 `intercept(Chain)` 迁移 | 110 |
 | r14.1.0 | `a14-api101` | `GlobalActions` / `Controls` 完成迁移，其余模块仍走适配层 | 109 |
 | r14.0.0 | `a14` | 生命周期与 hook 注册迁移到 libxposed API 101，保留 API-100 兼容 | 108 |
+
+## r14.1.2
+
+- 分支：`a14-api101`
+- 修复重启后部分 hook 不生效的问题：
+  - `MainActivity` 在 LSPosed 服务绑定时把应用本地设置完整同步到 `RemotePreferences`，避免 `customiuizer_prefs_remote` 只在设置变动时写入、导致重启后缺失大量键。
+  - `MainModule.initPrefs()` 在 `RemotePreferences` 为空时回退到直接读取模块自身的 `SharedPreferences`（`customiuizer_prefs`），确保首次启动或远程 prefs 尚未就绪时也能正确加载用户设置。
+- `versionCode`：`111`；`versionName`：`r14.1.2`
+- 输出 APK：`Pengeek-HyperOS1-A14-API101-r14.1.2.apk`
 
 ## 安装说明
 
