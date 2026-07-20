@@ -49,8 +49,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import name.monwf.customiuizer.mods.utils.HookerClassHelper.AfterHookCallback;
 import io.github.libxposed.api.XposedModuleInterface;
+import io.github.libxposed.api.XposedInterface;
 import io.github.libxposed.api.XposedModuleInterface.PackageReadyParam;
 import miui.app.MiuiFreeFormManager;
 import miui.process.ForegroundInfo;
@@ -483,97 +483,177 @@ public class GlobalActions {
         int settingsIconResId = MainModule.resHooks.addFakeResource("ic_miuizer_settings", R.drawable.ic_miuizer_settings, "drawable");
         ModuleHelper.findAndHookMethod("com.android.settings.MiuiSettings", lpparam.getClassLoader(), "updateHeaderList", List.class, new MethodHook() {
             @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                if (param.getArgs()[0] == null) return;
+            public Object intercept(XposedInterface.Chain chain) throws Throwable {
+        Object result;
+        Throwable throwable = null;
+        try {
+            result = chain.proceed();
+        } catch (Throwable t) {
+            throwable = t;
+            result = null;
+        }
+        try {
+            if (chain.getArgs().get(0) == null) { if (throwable != null) throw throwable; return result; }
 
-                Context mContext = ((Activity)param.getThisObject()).getBaseContext();
-                int opt = MainModule.mPrefs.getStringAsInt("miuizer_settingsiconpos", 1);
+            Context mContext = ((Activity)chain.getThisObject()).getBaseContext();
+            int opt = MainModule.mPrefs.getStringAsInt("miuizer_settingsiconpos", 1);
 
-                Class<?> headerCls = findClassIfExists("com.android.settingslib.miuisettings.preference.PreferenceActivity$Header", lpparam.getClassLoader());
-                if (headerCls == null) return;
+            Class<?> headerCls = findClassIfExists("com.android.settingslib.miuisettings.preference.PreferenceActivity$Header", lpparam.getClassLoader());
+            if (headerCls == null) { if (throwable != null) throw throwable; return result; }
 
-                Resources modRes = ModuleHelper.getModuleRes(mContext);
-                Object header = XposedHelpers.newInstance(headerCls);
-                XposedHelpers.setLongField(header, "id", 666);
-                Intent intent = new Intent();
-                intent.setClassName(Helpers.modulePkg, "name.monwf.customiuizer.MainActivity");
-                intent.putExtra("from.settings", true);
-                XposedHelpers.setObjectField(header, "intent", intent);
-                XposedHelpers.setIntField(header, "iconRes", settingsIconResId);
-                XposedHelpers.setObjectField(header, "title", modRes.getString(R.string.app_name));
-                Bundle bundle = new Bundle();
-                ArrayList<UserHandle> users = new ArrayList<UserHandle>();
-                users.add((UserHandle)XposedHelpers.newInstance(UserHandle.class, 0));
-                bundle.putParcelableArrayList("header_user", users);
-                XposedHelpers.setObjectField(header, "extras", bundle);
+            Resources modRes = ModuleHelper.getModuleRes(mContext);
+            Object header = XposedHelpers.newInstance(headerCls);
+            XposedHelpers.setLongField(header, "id", 666);
+            Intent intent = new Intent();
+            intent.setClassName(Helpers.modulePkg, "name.monwf.customiuizer.MainActivity");
+            intent.putExtra("from.settings", true);
+            XposedHelpers.setObjectField(header, "intent", intent);
+            XposedHelpers.setIntField(header, "iconRes", settingsIconResId);
+            XposedHelpers.setObjectField(header, "title", modRes.getString(R.string.app_name));
+            Bundle bundle = new Bundle();
+            ArrayList<UserHandle> users = new ArrayList<UserHandle>();
+            users.add((UserHandle)XposedHelpers.newInstance(UserHandle.class, 0));
+            bundle.putParcelableArrayList("header_user", users);
+            XposedHelpers.setObjectField(header, "extras", bundle);
 
-                int themes = mContext.getResources().getIdentifier("launcher_settings", "id", mContext.getPackageName());
-                int special = mContext.getResources().getIdentifier("other_special_feature_settings", "id", mContext.getPackageName());
+            int themes = mContext.getResources().getIdentifier("launcher_settings", "id", mContext.getPackageName());
+            int special = mContext.getResources().getIdentifier("other_special_feature_settings", "id", mContext.getPackageName());
 
-                List<Object> headers = (List<Object>)param.getArgs()[0];
-                int position = 0;
-                for (Object head: headers) {
-                    position++;
-                    long id = XposedHelpers.getLongField(head, "id");
-                    if (opt == 1 && id == -1) { headers.add(position - 1, header); return; }
-                    if (opt == 2 && id == themes) { headers.add(position, header); return; }
-                    if (opt == 3 && id == special) { headers.add(position, header); return; }
-                }
-                if (headers.size() > 25)
-                    headers.add(25, header);
-                else
-                    headers.add(header);
+            List<Object> headers = (List<Object>)chain.getArgs().get(0);
+            int position = 0;
+            for (Object head: headers) {
+                position++;
+                long id = XposedHelpers.getLongField(head, "id");
+                if (opt == 1 && id == -1) { headers.add(position - 1, header); if (throwable != null) throw throwable; return result; }
+                if (opt == 2 && id == themes) { headers.add(position, header); if (throwable != null) throw throwable; return result; }
+                if (opt == 3 && id == special) { headers.add(position, header); if (throwable != null) throw throwable; return result; }
             }
+            if (headers.size() > 25)
+                headers.add(25, header);
+            else
+                headers.add(header);
+        } catch (Throwable t) {
+            XposedHelpers.log(t);
+        }
+        if (throwable != null) throw throwable;
+        return result;
+    }
         });
         ModuleHelper.hookAllMethods("com.android.settings.MiuiSettings$HeaderAdapter", lpparam.getClassLoader(), "setIcon", new MethodHook() {
             @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                int iconRes = XposedHelpers.getIntField(param.getArgs()[1], "iconRes");
-                if (iconRes == settingsIconResId) {
-                    ImageView icon = (ImageView) XposedHelpers.getObjectField(param.getArgs()[0], "icon");
-                    int iconSize = XposedHelpers.getIntField(XposedHelpers.getSurroundingThis(param.getThisObject()), "mNormalIconSize");
-                    icon.getLayoutParams().height = iconSize;
-                }
+            public Object intercept(XposedInterface.Chain chain) throws Throwable {
+        Object result;
+        Throwable throwable = null;
+        try {
+            result = chain.proceed();
+        } catch (Throwable t) {
+            throwable = t;
+            result = null;
+        }
+        try {
+            List<Object> args = chain.getArgs();
+            int iconRes = XposedHelpers.getIntField(args.get(1), "iconRes");
+            if (iconRes == settingsIconResId) {
+                ImageView icon = (ImageView) XposedHelpers.getObjectField(args.get(0), "icon");
+                int iconSize = XposedHelpers.getIntField(XposedHelpers.getSurroundingThis(chain.getThisObject()), "mNormalIconSize");
+                icon.getLayoutParams().height = iconSize;
             }
+        } catch (Throwable t) {
+            XposedHelpers.log(t);
+        }
+        if (throwable != null) throw throwable;
+        return result;
+    }
         });
     }
 
     public static void setupForegroundMonitor(PackageReadyParam lpparam) {
         ModuleHelper.hookAllConstructors("com.android.systemui.statusbar.policy.NetworkSpeedController", lpparam.getClassLoader(), new MethodHook() {
             @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                final Context mContext = (Context) param.getArgs()[0];
-                final Handler mBgHandler = (Handler) XposedHelpers.getObjectField(param.getThisObject(), "mBgHandler");
-                ModuleHelper.findAndHookMethod("com.miui.systemui.functions.MiuiTopActivityObserver", lpparam.getClassLoader(), "updateTopActivity", new MethodHook() {
-                    private String pkgName = "";
-                    @Override
-                    protected void after(final AfterHookCallback param) throws Throwable {
-                        ComponentName mTopActivity = (ComponentName) XposedHelpers.getObjectField(param.getThisObject(), "mTopActivity");
-                        if (mTopActivity != null && !pkgName.equals(mTopActivity.getPackageName())) {
-                            pkgName = mTopActivity.getPackageName();
-                            Settings.Global.putString(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.package", pkgName);
-                        }
-                    }
-                });
-                if (MainModule.mPrefs.getStringAsInt("various_showcallui", 0) > 0) {
-                    ModuleHelper.hookAllMethods("com.android.systemui.statusbar.phone.SystemBarAttributesListener", lpparam.getClassLoader(), "onSystemBarAttributesChanged", new MethodHook() {
-                        private boolean fullScreen = false;
-                        @Override
-                        protected void after(final AfterHookCallback param) throws Throwable {
-                            Object statusBarStateController = XposedHelpers.getObjectField(param.getThisObject(), "statusBarStateController");
-                            boolean isFullScreen = XposedHelpers.getBooleanField(statusBarStateController, "mIsFullscreen");
-                            if (fullScreen != isFullScreen) {
-                                mBgHandler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Settings.Global.putInt(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.fullscreen", fullScreen ? 1 : 0);
-                                    }
-                                });
-                            }
-                            fullScreen = isFullScreen;
-                        }
-                    });
+                        public Object intercept(XposedInterface.Chain chain) throws Throwable {
+                Object result;
+                Throwable throwable = null;
+                try {
+                    result = chain.proceed();
+                } catch (Throwable t) {
+                    throwable = t;
+                    result = null;
                 }
+                try {
+                    final Object thisObject = chain.getThisObject();
+
+                                    final Context mContext = (Context) chain.getArgs().get(0);
+                                    final Handler mBgHandler = (Handler) XposedHelpers.getObjectField(thisObject, "mBgHandler");
+                                    ModuleHelper.findAndHookMethod("com.miui.systemui.functions.MiuiTopActivityObserver", lpparam.getClassLoader(), "updateTopActivity", new MethodHook() {
+                                        private String pkgName = "";
+                                        @Override
+                                                            public Object intercept(XposedInterface.Chain chain) throws Throwable {
+                                            Object result;
+                                            Throwable throwable = null;
+                                            try {
+                                                result = chain.proceed();
+                                            } catch (Throwable t) {
+                                                throwable = t;
+                                                result = null;
+                                            }
+                                            try {
+                                                final Object thisObject = chain.getThisObject();
+
+                                                                        ComponentName mTopActivity = (ComponentName) XposedHelpers.getObjectField(thisObject, "mTopActivity");
+                                                                        if (mTopActivity != null && !pkgName.equals(mTopActivity.getPackageName())) {
+                                                                            pkgName = mTopActivity.getPackageName();
+                                                                            Settings.Global.putString(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.package", pkgName);
+                                                                        }
+                    
+                                            } catch (Throwable t) {
+                                                XposedHelpers.log(t);
+                                            }
+                                            if (throwable != null) throw throwable;
+                                            return result;
+                                        }
+                                    });
+                                    if (MainModule.mPrefs.getStringAsInt("various_showcallui", 0) > 0) {
+                                        ModuleHelper.hookAllMethods("com.android.systemui.statusbar.phone.SystemBarAttributesListener", lpparam.getClassLoader(), "onSystemBarAttributesChanged", new MethodHook() {
+                                            private boolean fullScreen = false;
+                                            @Override
+                                                                    public Object intercept(XposedInterface.Chain chain) throws Throwable {
+                                                Object result;
+                                                Throwable throwable = null;
+                                                try {
+                                                    result = chain.proceed();
+                                                } catch (Throwable t) {
+                                                    throwable = t;
+                                                    result = null;
+                                                }
+                                                try {
+                                                    final Object thisObject = chain.getThisObject();
+
+                                                                                Object statusBarStateController = XposedHelpers.getObjectField(thisObject, "statusBarStateController");
+                                                                                boolean isFullScreen = XposedHelpers.getBooleanField(statusBarStateController, "mIsFullscreen");
+                                                                                if (fullScreen != isFullScreen) {
+                                                                                    mBgHandler.post(new Runnable() {
+                                                                                        @Override
+                                                                                        public void run() {
+                                                                                            Settings.Global.putInt(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.fullscreen", fullScreen ? 1 : 0);
+                                                                                        }
+                                                                                    });
+                                                                                }
+                                                                                fullScreen = isFullScreen;
+                        
+                                                } catch (Throwable t) {
+                                                    XposedHelpers.log(t);
+                                                }
+                                                if (throwable != null) throw throwable;
+                                                return result;
+                                            }
+                                        });
+                                    }
+            
+                } catch (Throwable t) {
+                    XposedHelpers.log(t);
+                }
+                if (throwable != null) throw throwable;
+                return result;
             }
         });
     }
@@ -582,100 +662,116 @@ public class GlobalActions {
         ModuleHelper.hookAllMethods("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.getClassLoader(), "initInternal", new MethodHook() {
             @SuppressLint("UnspecifiedRegisterReceiverFlag")
             @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-                IntentFilter intentfilter = new IntentFilter();
-                intentfilter.addAction(ACTION_PREFIX + "SimulateMenu");
-                intentfilter.addAction(ACTION_PREFIX + "ForceClose");
-                intentfilter.addAction(ACTION_PREFIX + "ToggleColorInversion");
-                intentfilter.addAction(ACTION_PREFIX + "SwitchToPrevApp");
-                final Object thisObject = param.getThisObject();
-                mContext.registerReceiver(new BroadcastReceiver() {
-                    @SuppressLint("MissingPermission")
-                    public void onReceive(final Context context, Intent intent) {
-                        String action = intent.getAction();
-                        if (action == null) return;
+                        public Object intercept(XposedInterface.Chain chain) throws Throwable {
+                Object result;
+                Throwable throwable = null;
+                try {
+                    result = chain.proceed();
+                } catch (Throwable t) {
+                    throwable = t;
+                    result = null;
+                }
+                try {
 
-                        if (action.equals(ACTION_PREFIX + "SimulateMenu")) {
-                            try {
-                                Field fRequestShowMenu = XposedHelpers.findField(thisObject.getClass().getSuperclass(), "mRequestShowMenu");
-                                fRequestShowMenu.setAccessible(true);
-                                fRequestShowMenu.set(thisObject, true);
-                                Method markShortcutTriggered = findMethodExact(thisObject.getClass().getSuperclass(), "markShortcutTriggered");
-                                markShortcutTriggered.setAccessible(true);
-                                markShortcutTriggered.invoke(thisObject);
-                                Method injectEvent = findMethodExact(thisObject.getClass().getSuperclass(), "injectEvent", int.class);
-                                injectEvent.setAccessible(true);
-                                injectEvent.invoke(thisObject, 82);
-                            } catch (Throwable t1) {
-                                try {
-                                    Handler mHandler = (Handler)XposedHelpers.getObjectField(thisObject, "mHandler");
-                                    mHandler.sendMessageDelayed(mHandler.obtainMessage(1, "show_menu"), ViewConfiguration.getLongPressTimeout());
-                                } catch (Throwable t2) {
-                                    XposedHelpers.log(t2);
-                                }
-                            }
-                        }
-                        else if (action.equals(ACTION_PREFIX + "ForceClose")) {
-                            try {
-                                Method closeApp = findMethodExact(thisObject.getClass().getSuperclass(), "closeApp");
-                                closeApp.setAccessible(true);
-                                closeApp.invoke(thisObject);
-                            } catch (Throwable t) {
-                                XposedHelpers.log(t);
-                            }
-                        }
-                        else if (action.equals(ACTION_PREFIX + "ToggleColorInversion")) {
-                            int opt = 0;
-                            try {
-                                opt = Settings.Secure.getInt(context.getContentResolver(), "accessibility_display_inversion_enabled");
-                                int conflictProp = (int) ModuleHelper.proxySystemProperties("getInt", "ro.df.effect.conflict", 0, null);
-                                int conflictProp2 = (int) ModuleHelper.proxySystemProperties("getInt", "ro.vendor.df.effect.conflict", 0, null);
-                                boolean hasConflict = conflictProp == 1 || conflictProp2 == 1;
-                                Object dfMgr = XposedHelpers.callStaticMethod(XposedHelpers.findClass("miui.hardware.display.DisplayFeatureManager", null), "getInstance");
-                                if (hasConflict && opt == 0) XposedHelpers.callMethod(dfMgr, "setScreenEffect", 15, 1);
-                                Settings.Secure.putInt(context.getContentResolver(), "accessibility_display_inversion_enabled", opt == 0 ? 1 : 0);
-                                if (hasConflict && opt != 0) XposedHelpers.callMethod(dfMgr, "setScreenEffect", 15, 0);
-                            } catch (Settings.SettingNotFoundException e) {
-                                XposedHelpers.log(e);
-                            }
-                        }
-                        else if (action.equals(ACTION_PREFIX + "SwitchToPrevApp")) {
-                            PackageManager pm = context.getPackageManager();
-                            ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
-                            List<RecentTaskInfo> rti = am.getRecentTasks(15, 0);
+                                    final Object thisObject = chain.getThisObject();
+                                    Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
+                                    IntentFilter intentfilter = new IntentFilter();
+                                    intentfilter.addAction(ACTION_PREFIX + "SimulateMenu");
+                                    intentfilter.addAction(ACTION_PREFIX + "ForceClose");
+                                    intentfilter.addAction(ACTION_PREFIX + "ToggleColorInversion");
+                                    intentfilter.addAction(ACTION_PREFIX + "SwitchToPrevApp");
+                                    mContext.registerReceiver(new BroadcastReceiver() {
+                                        @SuppressLint("MissingPermission")
+                                        public void onReceive(final Context context, Intent intent) {
+                                            String action = intent.getAction();
+                                            if (action == null) return;
 
-                            Intent recentIntent;
-                            ActivityManager.RunningTaskInfo topAct = am.getRunningTasks(1).get(0);
-                            for (RecentTaskInfo rtitem: rti) {
-                                if (topAct.topActivity == rtitem.topActivity)
-                                    continue;
+                                            if (action.equals(ACTION_PREFIX + "SimulateMenu")) {
+                                                try {
+                                                    Field fRequestShowMenu = XposedHelpers.findField(thisObject.getClass().getSuperclass(), "mRequestShowMenu");
+                                                    fRequestShowMenu.setAccessible(true);
+                                                    fRequestShowMenu.set(thisObject, true);
+                                                    Method markShortcutTriggered = findMethodExact(thisObject.getClass().getSuperclass(), "markShortcutTriggered");
+                                                    markShortcutTriggered.setAccessible(true);
+                                                    markShortcutTriggered.invoke(thisObject);
+                                                    Method injectEvent = findMethodExact(thisObject.getClass().getSuperclass(), "injectEvent", int.class);
+                                                    injectEvent.setAccessible(true);
+                                                    injectEvent.invoke(thisObject, 82);
+                                                } catch (Throwable t1) {
+                                                    try {
+                                                        Handler mHandler = (Handler)XposedHelpers.getObjectField(thisObject, "mHandler");
+                                                        mHandler.sendMessageDelayed(mHandler.obtainMessage(1, "show_menu"), ViewConfiguration.getLongPressTimeout());
+                                                    } catch (Throwable t2) {
+                                                        XposedHelpers.log(t2);
+                                                    }
+                                                }
+                                            }
+                                            else if (action.equals(ACTION_PREFIX + "ForceClose")) {
+                                                try {
+                                                    Method closeApp = findMethodExact(thisObject.getClass().getSuperclass(), "closeApp");
+                                                    closeApp.setAccessible(true);
+                                                    closeApp.invoke(thisObject);
+                                                } catch (Throwable t) {
+                                                    XposedHelpers.log(t);
+                                                }
+                                            }
+                                            else if (action.equals(ACTION_PREFIX + "ToggleColorInversion")) {
+                                                int opt = 0;
+                                                try {
+                                                    opt = Settings.Secure.getInt(context.getContentResolver(), "accessibility_display_inversion_enabled");
+                                                    int conflictProp = (int) ModuleHelper.proxySystemProperties("getInt", "ro.df.effect.conflict", 0, null);
+                                                    int conflictProp2 = (int) ModuleHelper.proxySystemProperties("getInt", "ro.vendor.df.effect.conflict", 0, null);
+                                                    boolean hasConflict = conflictProp == 1 || conflictProp2 == 1;
+                                                    Object dfMgr = XposedHelpers.callStaticMethod(XposedHelpers.findClass("miui.hardware.display.DisplayFeatureManager", null), "getInstance");
+                                                    if (hasConflict && opt == 0) XposedHelpers.callMethod(dfMgr, "setScreenEffect", 15, 1);
+                                                    Settings.Secure.putInt(context.getContentResolver(), "accessibility_display_inversion_enabled", opt == 0 ? 1 : 0);
+                                                    if (hasConflict && opt != 0) XposedHelpers.callMethod(dfMgr, "setScreenEffect", 15, 0);
+                                                } catch (Settings.SettingNotFoundException e) {
+                                                    XposedHelpers.log(e);
+                                                }
+                                            }
+                                            else if (action.equals(ACTION_PREFIX + "SwitchToPrevApp")) {
+                                                PackageManager pm = context.getPackageManager();
+                                                ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+                                                List<RecentTaskInfo> rti = am.getRecentTasks(15, 0);
 
-                                boolean isLauncher = false;
-                                recentIntent = new Intent(rtitem.baseIntent);
-                                if (rtitem.origActivity != null)
-                                    recentIntent.setComponent(rtitem.origActivity);
-                                ComponentName resolvedAct = recentIntent.resolveActivity(pm);
-                                if (resolvedAct != null && "com.miui.home".equals(resolvedAct.getPackageName())) {
-                                    isLauncher = true;
-                                }
+                                                Intent recentIntent;
+                                                ActivityManager.RunningTaskInfo topAct = am.getRunningTasks(1).get(0);
+                                                for (RecentTaskInfo rtitem: rti) {
+                                                    if (topAct.topActivity == rtitem.topActivity)
+                                                        continue;
 
-                                if (!isLauncher) {
-                                    try {
-                                        if (rtitem.taskId >= 0)
-                                            am.moveTaskToFront(rtitem.taskId, 0);
-                                        else
-                                            context.startActivity(recentIntent);
-                                        break;
-                                    }
-                                    catch (Throwable e) {
-                                        XposedHelpers.log(e);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }, intentfilter);
+                                                    boolean isLauncher = false;
+                                                    recentIntent = new Intent(rtitem.baseIntent);
+                                                    if (rtitem.origActivity != null)
+                                                        recentIntent.setComponent(rtitem.origActivity);
+                                                    ComponentName resolvedAct = recentIntent.resolveActivity(pm);
+                                                    if (resolvedAct != null && "com.miui.home".equals(resolvedAct.getPackageName())) {
+                                                        isLauncher = true;
+                                                    }
+
+                                                    if (!isLauncher) {
+                                                        try {
+                                                            if (rtitem.taskId >= 0)
+                                                                am.moveTaskToFront(rtitem.taskId, 0);
+                                                            else
+                                                                context.startActivity(recentIntent);
+                                                            break;
+                                                        }
+                                                        catch (Throwable e) {
+                                                            XposedHelpers.log(e);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }, intentfilter);
+            
+                } catch (Throwable t) {
+                    XposedHelpers.log(t);
+                }
+                if (throwable != null) throw throwable;
+                return result;
             }
         });
     }
@@ -686,192 +782,260 @@ public class GlobalActions {
         ModuleHelper.findAndHookMethod(StatusBarClass, "start", new MethodHook() {
             @SuppressLint("UnspecifiedRegisterReceiverFlag")
             @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                Context mContext = (Context) XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-                IntentFilter intentfilter = new IntentFilter();
+                        public Object intercept(XposedInterface.Chain chain) throws Throwable {
+                Object result;
+                Throwable throwable = null;
+                try {
+                    result = chain.proceed();
+                } catch (Throwable t) {
+                    throwable = t;
+                    result = null;
+                }
+                try {
+                    final Object thisObject = chain.getThisObject();
 
-                intentfilter.addAction(ACTION_PREFIX + "ExpandNotifications");
-                intentfilter.addAction(ACTION_PREFIX + "ExpandSettings");
-                intentfilter.addAction(ACTION_PREFIX + "OpenRecents");
-                intentfilter.addAction(ACTION_PREFIX + "OpenVolumeDialog");
+                                    Context mContext = (Context) XposedHelpers.getObjectField(thisObject, "mContext");
+                                    IntentFilter intentfilter = new IntentFilter();
 
-                intentfilter.addAction(ACTION_PREFIX + "ToggleGPS");
-                intentfilter.addAction(ACTION_PREFIX + "ToggleHotspot");
-                intentfilter.addAction(ACTION_PREFIX + "ToggleZenMode");
-                intentfilter.addAction(ACTION_PREFIX + "ToggleFlashlight");
-                intentfilter.addAction(ACTION_PREFIX + "ToggleNightMode");
-                intentfilter.addAction(ACTION_PREFIX + "ToggleWiFi");
-                intentfilter.addAction(ACTION_PREFIX + "ToggleBluetooth");
-                intentfilter.addAction(ACTION_PREFIX + "ToggleNFC");
-                intentfilter.addAction(ACTION_PREFIX + "ToggleSoundProfile");
-                intentfilter.addAction(ACTION_PREFIX + "ToggleAutoRotation");
-                intentfilter.addAction(ACTION_PREFIX + "ToggleMobileData");
+                                    intentfilter.addAction(ACTION_PREFIX + "ExpandNotifications");
+                                    intentfilter.addAction(ACTION_PREFIX + "ExpandSettings");
+                                    intentfilter.addAction(ACTION_PREFIX + "OpenRecents");
+                                    intentfilter.addAction(ACTION_PREFIX + "OpenVolumeDialog");
 
-                intentfilter.addAction(ACTION_PREFIX + "ClearMemory");
-                intentfilter.addAction(ACTION_PREFIX + "ClearNotifications");
-                intentfilter.addAction(ACTION_PREFIX + "RestartSystemUI");
-                intentfilter.addAction(ACTION_PREFIX + "RestartLauncher");
-                intentfilter.addAction(ACTION_PREFIX + "RestartSecurityCenter");
-                intentfilter.addAction(ACTION_PREFIX + "FloatingWindow");
-                intentfilter.addAction(ACTION_PREFIX + "SwitchOneHanded");
-//				intentfilter.addAction(ACTION_PREFIX + "CopyToExternal");
-                intentfilter.addAction(ACTION_PREFIX + "FastReboot");
+                                    intentfilter.addAction(ACTION_PREFIX + "ToggleGPS");
+                                    intentfilter.addAction(ACTION_PREFIX + "ToggleHotspot");
+                                    intentfilter.addAction(ACTION_PREFIX + "ToggleZenMode");
+                                    intentfilter.addAction(ACTION_PREFIX + "ToggleFlashlight");
+                                    intentfilter.addAction(ACTION_PREFIX + "ToggleNightMode");
+                                    intentfilter.addAction(ACTION_PREFIX + "ToggleWiFi");
+                                    intentfilter.addAction(ACTION_PREFIX + "ToggleBluetooth");
+                                    intentfilter.addAction(ACTION_PREFIX + "ToggleNFC");
+                                    intentfilter.addAction(ACTION_PREFIX + "ToggleSoundProfile");
+                                    intentfilter.addAction(ACTION_PREFIX + "ToggleAutoRotation");
+                                    intentfilter.addAction(ACTION_PREFIX + "ToggleMobileData");
 
-                intentfilter.addAction(ACTION_PREFIX + "ScrollToTop");
+                                    intentfilter.addAction(ACTION_PREFIX + "ClearMemory");
+                                    intentfilter.addAction(ACTION_PREFIX + "ClearNotifications");
+                                    intentfilter.addAction(ACTION_PREFIX + "RestartSystemUI");
+                                    intentfilter.addAction(ACTION_PREFIX + "RestartLauncher");
+                                    intentfilter.addAction(ACTION_PREFIX + "RestartSecurityCenter");
+                                    intentfilter.addAction(ACTION_PREFIX + "FloatingWindow");
+                                    intentfilter.addAction(ACTION_PREFIX + "SwitchOneHanded");
+                    //				intentfilter.addAction(ACTION_PREFIX + "CopyToExternal");
+                                    intentfilter.addAction(ACTION_PREFIX + "FastReboot");
 
-                intentfilter.addAction(ACTION_PREFIX + "WakeUp");
-                intentfilter.addAction(ACTION_PREFIX + "GoToSleep");
-                intentfilter.addAction(ACTION_PREFIX + "LockDevice");
-                intentfilter.addAction(ACTION_PREFIX + "TakeScreenshot");
-                intentfilter.addAction(ACTION_PREFIX + "OpenPowerMenu");
-                intentfilter.addAction(ACTION_PREFIX + "VolumeUp");
-                intentfilter.addAction(ACTION_PREFIX + "VolumeDown");
-                intentfilter.addAction(ACTION_PREFIX + "GoBack");
-                intentfilter.addAction(ACTION_PREFIX + "LaunchIntent");
-                intentfilter.addAction(ACTION_PREFIX + "SaveLastMusicPausedTime");
+                                    intentfilter.addAction(ACTION_PREFIX + "ScrollToTop");
 
-                mContext.registerReceiver(mSBReceiver, intentfilter);
+                                    intentfilter.addAction(ACTION_PREFIX + "WakeUp");
+                                    intentfilter.addAction(ACTION_PREFIX + "GoToSleep");
+                                    intentfilter.addAction(ACTION_PREFIX + "LockDevice");
+                                    intentfilter.addAction(ACTION_PREFIX + "TakeScreenshot");
+                                    intentfilter.addAction(ACTION_PREFIX + "OpenPowerMenu");
+                                    intentfilter.addAction(ACTION_PREFIX + "VolumeUp");
+                                    intentfilter.addAction(ACTION_PREFIX + "VolumeDown");
+                                    intentfilter.addAction(ACTION_PREFIX + "GoBack");
+                                    intentfilter.addAction(ACTION_PREFIX + "LaunchIntent");
+                                    intentfilter.addAction(ACTION_PREFIX + "SaveLastMusicPausedTime");
+
+                                    mContext.registerReceiver(mSBReceiver, intentfilter);
+            
+                } catch (Throwable t) {
+                    XposedHelpers.log(t);
+                }
+                if (throwable != null) throw throwable;
+                return result;
             }
         });
 
         ModuleHelper.findAndHookMethod("com.android.wm.shell.miuifreeform.MiuiFreeformModeController", lpparam.getClassLoader(), "onInit", new MethodHook() {
             @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-                IntentFilter intentfilter = new IntentFilter();
-                intentfilter.addAction(ACTION_PREFIX + "PinningWindow");
-                BroadcastReceiver mFreeFormReceiver = new BroadcastReceiver() {
-                    @Override
-                    public void onReceive(Context context, Intent intent) {
-                        if (intent.getAction() == null) return;
-                        String action = intent.getAction();
-                        if (action.equals(ACTION_PREFIX + "PinningWindow")) {
-                            try {
-                                ForegroundInfo foregroundInfo = ProcessManager.getForegroundInfo();
-                                if (foregroundInfo != null) {
-                                    String topPackage = foregroundInfo.mForegroundPackageName;
-                                    if ("com.miui.home".equals(topPackage)) {
-                                        return;
-                                    }
-                                }
-                                else {
-                                    return;
-                                }
-                                Class <?> ActivityTaskManagerCls = findClassIfExists("android.app.ActivityTaskManager", context.getClassLoader());
-                                Object activityTaskManager = XposedHelpers.callStaticMethod(ActivityTaskManagerCls, "getService");
-                                List<MiuiFreeFormManager.MiuiFreeFormStackInfo> freeFormStackInfoList = MiuiFreeFormManager.getAllFreeFormStackInfosOnDisplay(0);
-                                int freeFormCount = 0;
-                                if (freeFormStackInfoList != null) {
-                                    freeFormCount = freeFormStackInfoList.size();
-                                }
-                                if (freeFormCount == 2) return;
-                                List<Object> rootTaskInfos = (List<Object>) XposedHelpers.callMethod(activityTaskManager, "getAllRootTaskInfosOnDisplay", 0);
-                                Object freeformController = param.getThisObject();
-                                for (Object rootTaskInfo : rootTaskInfos) {
-                                    Object conf = XposedHelpers.getObjectField(rootTaskInfo, "configuration");
-                                    Object windowConfiguration = XposedHelpers.getObjectField(conf, "windowConfiguration");
-                                    int wmode = XposedHelpers.getIntField(windowConfiguration, "mWindowingMode");
-                                    int mActivityType = XposedHelpers.getIntField(windowConfiguration, "mActivityType");
-                                    if (wmode < 2 && mActivityType < 2) {
-                                        int taskId = XposedHelpers.getIntField(rootTaskInfo, "taskId");
-                                        XposedHelpers.callMethod(freeformController, "freeformFullscreenTask", taskId);
-                                        Handler myhandler = new Handler(Looper.myLooper());
-                                        Runnable removeBg = new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                myhandler.removeCallbacks(this);
-                                                XposedHelpers.callMethod(freeformController, "pinAllFreeForm");
+                        public Object intercept(XposedInterface.Chain chain) throws Throwable {
+                Object result;
+                Throwable throwable = null;
+                try {
+                    result = chain.proceed();
+                } catch (Throwable t) {
+                    throwable = t;
+                    result = null;
+                }
+                try {
+                    final Object thisObject = chain.getThisObject();
+
+                                    Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
+                                    IntentFilter intentfilter = new IntentFilter();
+                                    intentfilter.addAction(ACTION_PREFIX + "PinningWindow");
+                                    BroadcastReceiver mFreeFormReceiver = new BroadcastReceiver() {
+                                        @Override
+                                        public void onReceive(Context context, Intent intent) {
+                                            if (intent.getAction() == null) return;
+                                            String action = intent.getAction();
+                                            if (action.equals(ACTION_PREFIX + "PinningWindow")) {
+                                                try {
+                                                    ForegroundInfo foregroundInfo = ProcessManager.getForegroundInfo();
+                                                    if (foregroundInfo != null) {
+                                                        String topPackage = foregroundInfo.mForegroundPackageName;
+                                                        if ("com.miui.home".equals(topPackage)) {
+                                                            return;
+                                                        }
+                                                    }
+                                                    else {
+                                                        return;
+                                                    }
+                                                    Class <?> ActivityTaskManagerCls = findClassIfExists("android.app.ActivityTaskManager", context.getClassLoader());
+                                                    Object activityTaskManager = XposedHelpers.callStaticMethod(ActivityTaskManagerCls, "getService");
+                                                    List<MiuiFreeFormManager.MiuiFreeFormStackInfo> freeFormStackInfoList = MiuiFreeFormManager.getAllFreeFormStackInfosOnDisplay(0);
+                                                    int freeFormCount = 0;
+                                                    if (freeFormStackInfoList != null) {
+                                                        freeFormCount = freeFormStackInfoList.size();
+                                                    }
+                                                    if (freeFormCount == 2) return;
+                                                    List<Object> rootTaskInfos = (List<Object>) XposedHelpers.callMethod(activityTaskManager, "getAllRootTaskInfosOnDisplay", 0);
+                                                    Object freeformController = thisObject;
+                                                    for (Object rootTaskInfo : rootTaskInfos) {
+                                                        Object conf = XposedHelpers.getObjectField(rootTaskInfo, "configuration");
+                                                        Object windowConfiguration = XposedHelpers.getObjectField(conf, "windowConfiguration");
+                                                        int wmode = XposedHelpers.getIntField(windowConfiguration, "mWindowingMode");
+                                                        int mActivityType = XposedHelpers.getIntField(windowConfiguration, "mActivityType");
+                                                        if (wmode < 2 && mActivityType < 2) {
+                                                            int taskId = XposedHelpers.getIntField(rootTaskInfo, "taskId");
+                                                            XposedHelpers.callMethod(freeformController, "freeformFullscreenTask", taskId);
+                                                            Handler myhandler = new Handler(Looper.myLooper());
+                                                            Runnable removeBg = new Runnable() {
+                                                                @Override
+                                                                public void run() {
+                                                                    myhandler.removeCallbacks(this);
+                                                                    XposedHelpers.callMethod(freeformController, "pinAllFreeForm");
+                                                                }
+                                                            };
+                                                            myhandler.postDelayed(removeBg, 200);
+                                                            return;
+                                                        }
+                                                    }
+                                                } catch (Throwable err) {
+                                                    XposedHelpers.log(err);
+                                                }
                                             }
-                                        };
-                                        myhandler.postDelayed(removeBg, 200);
-                                        return;
-                                    }
-                                }
-                            } catch (Throwable err) {
-                                XposedHelpers.log(err);
-                            }
-                        }
-                    }
-                };
-                mContext.registerReceiver(mFreeFormReceiver, intentfilter, Context.RECEIVER_EXPORTED);
+                                        }
+                                    };
+                                    mContext.registerReceiver(mFreeFormReceiver, intentfilter, Context.RECEIVER_EXPORTED);
+            
+                } catch (Throwable t) {
+                    XposedHelpers.log(t);
+                }
+                if (throwable != null) throw throwable;
+                return result;
             }
         });
         ModuleHelper.findAndHookMethod("com.android.wm.shell.sosc.SoScSplitScreenController", lpparam.getClassLoader(), "onInit", new MethodHook() {
             @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-                IntentFilter intentfilter = new IntentFilter();
-                intentfilter.addAction(ACTION_PREFIX + "SplitScreen");
-                BroadcastReceiver mFreeFormReceiver = new BroadcastReceiver() {
-                    @Override
-                    public void onReceive(Context context, Intent intent) {
-                        if (intent.getAction() == null) return;
-                        String action = intent.getAction();
-                        if (action.equals(ACTION_PREFIX + "SplitScreen")) {
-                            try {
-                                ForegroundInfo foregroundInfo = ProcessManager.getForegroundInfo();
-                                if (foregroundInfo != null) {
-                                    String topPackage = foregroundInfo.mForegroundPackageName;
-                                    if ("com.miui.home".equals(topPackage)) {
-                                        return;
-                                    }
-                                }
-                                else {
-                                    return;
-                                }
-                                Class <?> ActivityTaskManagerCls = findClassIfExists("android.app.ActivityTaskManager", context.getClassLoader());
-                                Object activityTaskManager = XposedHelpers.callStaticMethod(ActivityTaskManagerCls, "getService");
-                                List<Object> rootTaskInfos = (List<Object>) XposedHelpers.callMethod(activityTaskManager, "getAllRootTaskInfosOnDisplay", 0);
-                                Object freeformController = param.getThisObject();
-                                for (Object rootTaskInfo : rootTaskInfos) {
-                                    Object conf = XposedHelpers.getObjectField(rootTaskInfo, "configuration");
-                                    Object windowConfiguration = XposedHelpers.getObjectField(conf, "windowConfiguration");
-                                    int wmode = XposedHelpers.getIntField(windowConfiguration, "mWindowingMode");
-                                    int mActivityType = XposedHelpers.getIntField(windowConfiguration, "mActivityType");
-                                    if (wmode < 2 && mActivityType < 2) {
-                                        int taskId = XposedHelpers.getIntField(rootTaskInfo, "taskId");
-                                        XposedHelpers.callMethod(freeformController, "startTask", taskId, 0, null);
-                                        return;
-                                    }
-                                }
-                            } catch (Throwable err) {
-                                XposedHelpers.log(err);
-                            }
-                        }
-                    }
-                };
-                mContext.registerReceiver(mFreeFormReceiver, intentfilter, Context.RECEIVER_EXPORTED);
+                        public Object intercept(XposedInterface.Chain chain) throws Throwable {
+                Object result;
+                Throwable throwable = null;
+                try {
+                    result = chain.proceed();
+                } catch (Throwable t) {
+                    throwable = t;
+                    result = null;
+                }
+                try {
+                    final Object thisObject = chain.getThisObject();
+
+                                    Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
+                                    IntentFilter intentfilter = new IntentFilter();
+                                    intentfilter.addAction(ACTION_PREFIX + "SplitScreen");
+                                    BroadcastReceiver mFreeFormReceiver = new BroadcastReceiver() {
+                                        @Override
+                                        public void onReceive(Context context, Intent intent) {
+                                            if (intent.getAction() == null) return;
+                                            String action = intent.getAction();
+                                            if (action.equals(ACTION_PREFIX + "SplitScreen")) {
+                                                try {
+                                                    ForegroundInfo foregroundInfo = ProcessManager.getForegroundInfo();
+                                                    if (foregroundInfo != null) {
+                                                        String topPackage = foregroundInfo.mForegroundPackageName;
+                                                        if ("com.miui.home".equals(topPackage)) {
+                                                            return;
+                                                        }
+                                                    }
+                                                    else {
+                                                        return;
+                                                    }
+                                                    Class <?> ActivityTaskManagerCls = findClassIfExists("android.app.ActivityTaskManager", context.getClassLoader());
+                                                    Object activityTaskManager = XposedHelpers.callStaticMethod(ActivityTaskManagerCls, "getService");
+                                                    List<Object> rootTaskInfos = (List<Object>) XposedHelpers.callMethod(activityTaskManager, "getAllRootTaskInfosOnDisplay", 0);
+                                                    Object freeformController = thisObject;
+                                                    for (Object rootTaskInfo : rootTaskInfos) {
+                                                        Object conf = XposedHelpers.getObjectField(rootTaskInfo, "configuration");
+                                                        Object windowConfiguration = XposedHelpers.getObjectField(conf, "windowConfiguration");
+                                                        int wmode = XposedHelpers.getIntField(windowConfiguration, "mWindowingMode");
+                                                        int mActivityType = XposedHelpers.getIntField(windowConfiguration, "mActivityType");
+                                                        if (wmode < 2 && mActivityType < 2) {
+                                                            int taskId = XposedHelpers.getIntField(rootTaskInfo, "taskId");
+                                                            XposedHelpers.callMethod(freeformController, "startTask", taskId, 0, null);
+                                                            return;
+                                                        }
+                                                    }
+                                                } catch (Throwable err) {
+                                                    XposedHelpers.log(err);
+                                                }
+                                            }
+                                        }
+                                    };
+                                    mContext.registerReceiver(mFreeFormReceiver, intentfilter, Context.RECEIVER_EXPORTED);
+            
+                } catch (Throwable t) {
+                    XposedHelpers.log(t);
+                }
+                if (throwable != null) throw throwable;
+                return result;
             }
         });
         ModuleHelper.hookAllConstructors("com.android.systemui.controlcenter.policy.AutoBrightnessController", lpparam.getClassLoader(),  new MethodHook() {
             @Override
-            protected void after(final AfterHookCallback param) throws Throwable {
-                Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "context");
-                IntentFilter intentfilter = new IntentFilter();
-                intentfilter.addAction(ACTION_PREFIX + "ToggleAutoBrightness");
-                BroadcastReceiver mFreeFormReceiver = new BroadcastReceiver() {
-                    @Override
-                    public void onReceive(Context context, Intent intent) {
-                        if (intent.getAction() == null) return;
-                        String action = intent.getAction();
-                        if (action.equals(ACTION_PREFIX + "ToggleAutoBrightness")) {
-                            Resources modRes = null;
-                            try {
-                                modRes = ModuleHelper.getModuleRes(mContext);
-                                boolean enabled = XposedHelpers.getBooleanField(param.getThisObject(), "enabled");
-                                XposedHelpers.callMethod(param.getThisObject(), "toggleAutoBrightness");
-                                if (enabled) {
-                                    Toast.makeText(context, modRes.getString(R.string.toggle_autobright_off), Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(context, modRes.getString(R.string.toggle_autobright_on), Toast.LENGTH_SHORT).show();
-                                }
-                            } catch (Throwable t) {
-                                XposedHelpers.log(t);
-                            }
-                        }
-                    }
-                };
-                mContext.registerReceiver(mFreeFormReceiver, intentfilter, Context.RECEIVER_EXPORTED);
+                        public Object intercept(XposedInterface.Chain chain) throws Throwable {
+                Object result;
+                Throwable throwable = null;
+                try {
+                    result = chain.proceed();
+                } catch (Throwable t) {
+                    throwable = t;
+                    result = null;
+                }
+                try {
+                    final Object thisObject = chain.getThisObject();
+
+                                    Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "context");
+                                    IntentFilter intentfilter = new IntentFilter();
+                                    intentfilter.addAction(ACTION_PREFIX + "ToggleAutoBrightness");
+                                    BroadcastReceiver mFreeFormReceiver = new BroadcastReceiver() {
+                                        @Override
+                                        public void onReceive(Context context, Intent intent) {
+                                            if (intent.getAction() == null) return;
+                                            String action = intent.getAction();
+                                            if (action.equals(ACTION_PREFIX + "ToggleAutoBrightness")) {
+                                                Resources modRes = null;
+                                                try {
+                                                    modRes = ModuleHelper.getModuleRes(mContext);
+                                                    boolean enabled = XposedHelpers.getBooleanField(thisObject, "enabled");
+                                                    XposedHelpers.callMethod(thisObject, "toggleAutoBrightness");
+                                                    if (enabled) {
+                                                        Toast.makeText(context, modRes.getString(R.string.toggle_autobright_off), Toast.LENGTH_SHORT).show();
+                                                    } else {
+                                                        Toast.makeText(context, modRes.getString(R.string.toggle_autobright_on), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                } catch (Throwable t) {
+                                                    XposedHelpers.log(t);
+                                                }
+                                            }
+                                        }
+                                    };
+                                    mContext.registerReceiver(mFreeFormReceiver, intentfilter, Context.RECEIVER_EXPORTED);
+            
+                } catch (Throwable t) {
+                    XposedHelpers.log(t);
+                }
+                if (throwable != null) throw throwable;
+                return result;
             }
         });
     }

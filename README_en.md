@@ -1,13 +1,13 @@
-## Pengeek(r14)
+## Pengeek_forA14
 
 > [!NOTE]
-> This is an **unofficial optimized fork** based on [MonwF/customiuizer](https://github.com/MonwF/customiuizer) under the **GPL-3.0** license.
-> It is intended for personal study and performance optimization. Original credit goes to **MonwF** and **Mikanoshi**.
-> Compatible only with: **HyperOS 1 / Android 14 / libxposed API 101**.
-> This fork uses the native **libxposed API 101 `XposedInterface.Hooker.intercept(Chain)`** dispatch, so it should work with frameworks that support API 101 such as **LSPosed 2.0** and **Vector**. So far it has only been tested on LSPosed + HyperOS 1 A14.
-> Package changed to `name.monwf.customiuizer.r14`, app name is **Pengeek(r14) / 米客(r14)**。
-> **Before installing this fork, please back up your settings inside the 米客/Pengeek app first, then uninstall the official MonwF build before installing this fork, and enable only this module. Two Xposed modules hooking the same system cannot be enabled at the same time.**
-> Version plan: **r14.0.\*** is the API-100 callback adapter on the `a14` branch; **r14.1.\*** is the native API-101 `XposedInterface.Hooker.intercept(Chain)` rewrite on the `a14-api101` branch. The `CustomHooker` / `ConstantHooker` adapter layer has been removed.
+> This is an **unofficial optimized fork** based on [MonwF/customiuizer](https://github.com/MonwF/customiuizer) under the **GPL-3.0** license.  
+> It is intended for personal study and performance optimization. Original credit goes to **MonwF** and **Mikanoshi**.  
+> Compatible only with: **HyperOS 1 / Android 14 / libxposed API 101**.  
+> This fork uses the native **libxposed API 101 `XposedInterface.Hooker.intercept(Chain)`** dispatch, so it should work with frameworks that support API 101 such as **LSPosed 2.0** and **Vector**. So far it has only been tested on LSPosed + HyperOS 1 A14.  
+> Package changed to `name.monwf.customiuizer.r14`, app name is **Pengeek_forA14** / **米客_forA14**.  
+> **Before installing this fork, please back up your settings inside the Pengeek/米客_forA14 app first, then uninstall the official MonwF build before installing this fork. Do not enable both at the same time, or you will get duplicate hook conflicts.**  
+> Version plan: **r14.0.*** on the `a14` branch is the API-100 compatibility implementation; **r14.1.*** on the `a14-api101` branch is the native API-101 implementation. The `CustomHooker` / `ConstantHooker` adapter layer has been removed in the r14.1 line.  
 > See [CHANGELOG.md](CHANGELOG.md) for the full optimization history and release notes.
 
 **English** | [日本語](README_jp.md) | [Português (Brasil)](README_PT-BR.md) | [中文](README.md)
@@ -19,7 +19,6 @@ For `HyperOS` based on `Android 14`.
 > Thanks for the awesome module [CustoMIUIzer](https://code.highspec.ru/Mikanoshi/CustoMIUIzer) from `Mikanoshi`
 
 ### Legacy releases
-
 * [MIUI 14 release](https://github.com/MonwF/customiuizer/releases/tag/v23.11.26)
 * [MIUI 13 release](https://github.com/MonwF/customiuizer/releases/tag/v23.08.26)
 
@@ -41,7 +40,7 @@ For `HyperOS` based on `Android 14`.
 * Baseband: `MPSS.DE.3.0.c1-GLB-Oct 17 2024-04:43:46`
 * Kernel: `5.15.123-android13-8-00008-g3ca6a2912c7e-ab11087001`
 
-## Here are the main working features:
+## Main features
 * Keep phone unlocked in a trusted environment (Bluetooth and Wi-Fi)
 * Autobrightness range limit
 * Extended timers for silent and dnd mode

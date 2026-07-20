@@ -32,9 +32,9 @@ import android.widget.Toast;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-import name.monwf.customiuizer.mods.utils.HookerClassHelper.AfterHookCallback;
 import name.monwf.customiuizer.mods.utils.HookerClassHelper.BeforeHookCallback;
 import io.github.libxposed.api.XposedModuleInterface.PackageReadyParam;
+import io.github.libxposed.api.XposedInterface;
 import io.github.libxposed.api.XposedModuleInterface.SystemServerStartingParam;
 import name.monwf.customiuizer.MainModule;
 import name.monwf.customiuizer.R;
@@ -84,85 +84,118 @@ public class Controls {
 	public static void PowerKeyHook(SystemServerStartingParam lpparam) {
 		ModuleHelper.hookAllMethods("com.android.server.policy.PhoneWindowManager", lpparam.getClassLoader(), "init", new MethodHook() {
 			@Override
-			protected void after(AfterHookCallback param) throws Throwable {
-				Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-				mContext.registerReceiver(mScreenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				Object result;
+				Throwable throwable = null;
+				try {
+					result = chain.proceed();
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
+				}
+				try {
+					final Object thisObject = chain.getThisObject();
+
+									Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
+									mContext.registerReceiver(mScreenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
+			
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 
 		ModuleHelper.findAndHookMethod("com.android.server.policy.MiuiPhoneWindowManager", lpparam.getClassLoader(), "interceptKeyBeforeQueueing", KeyEvent.class, int.class, new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				// Power and volkeys are pressed at the same time
-				if (isVolumePressed) return;
-				KeyEvent keyEvent = (KeyEvent)param.getArgs()[0];
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				try {
+					final Object thisObject = chain.getThisObject();
 
-				int keycode = keyEvent.getKeyCode();
-				int action = keyEvent.getAction();
-				int flags = keyEvent.getFlags();
+									// Power and volkeys are pressed at the same time
+									if (isVolumePressed) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+									KeyEvent keyEvent = (KeyEvent)args[0];
 
-				// Ignore repeated KeyEvents simulated on Power Key Up
-				if ((flags & KeyEvent.FLAG_VIRTUAL_HARD_KEY) == KeyEvent.FLAG_VIRTUAL_HARD_KEY) return;
-				if ((flags & KeyEvent.FLAG_FROM_SYSTEM) != KeyEvent.FLAG_FROM_SYSTEM || keycode != KeyEvent.KEYCODE_POWER) return;
+									int keycode = keyEvent.getKeyCode();
+									int action = keyEvent.getAction();
+									int flags = keyEvent.getFlags();
 
-				// Power long press
-				final Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-				final PowerManager mPowerManager = (PowerManager)XposedHelpers.getObjectField(param.getThisObject(), "mPowerManager");
-				if (mPowerManager.isInteractive()) return;
-				//XposedHelpers.log("PowerKeyHook", "interceptKeyBeforeQueueing: " + param.getArgs()[1] + ", isTracking: " + keyEvent.isTracking() + " | Source: " + keyEvent.getSource() + " | KeyCode: " + keyEvent.getKeyCode() + " | Action: " + keyEvent.getAction() + " | RepeatCount: " + keyEvent.getRepeatCount()+ " | Flags: " + keyEvent.getFlags());
-				if (action == KeyEvent.ACTION_DOWN) {
-					isPowerPressed = true;
-					isPowerLongPressed = false;
+									// Ignore repeated KeyEvents simulated on Power Key Up
+									if ((flags & KeyEvent.FLAG_VIRTUAL_HARD_KEY) == KeyEvent.FLAG_VIRTUAL_HARD_KEY) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+									if ((flags & KeyEvent.FLAG_FROM_SYSTEM) != KeyEvent.FLAG_FROM_SYSTEM || keycode != KeyEvent.KEYCODE_POWER) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
 
-					mHandler = (Handler)XposedHelpers.getObjectField(param.getThisObject(), "mHandler");
+									// Power long press
+									final Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
+									final PowerManager mPowerManager = (PowerManager)XposedHelpers.getObjectField(thisObject, "mPowerManager");
+									if (mPowerManager.isInteractive()) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+									//XposedHelpers.log("PowerKeyHook", "interceptKeyBeforeQueueing: " + args[1] + ", isTracking: " + keyEvent.isTracking() + " | Source: " + keyEvent.getSource() + " | KeyCode: " + keyEvent.getKeyCode() + " | Action: " + keyEvent.getAction() + " | RepeatCount: " + keyEvent.getRepeatCount()+ " | Flags: " + keyEvent.getFlags());
+									if (action == KeyEvent.ACTION_DOWN) {
+										isPowerPressed = true;
+										isPowerLongPressed = false;
 
-					int longPressDelay = (MainModule.mPrefs.getBoolean("controls_powerflash_delay") ? ViewConfiguration.getLongPressTimeout() * 3 : ViewConfiguration.getLongPressTimeout()) + 500;
-					// Post only one delayed runnable that waits for long press timeout
-					if (!isWaitingForPowerLongPressed) {
-						mHandler.postDelayed(new Runnable() {
-							@Override
-							@SuppressLint("Wakelock")
-							public void run() {
-								if (isPowerPressed) {
-									isPowerLongPressed = true;
+										mHandler = (Handler)XposedHelpers.getObjectField(thisObject, "mHandler");
 
-									if (Helpers.mWakeLock == null) {
-										Helpers.mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "miuizer:flashlight");
+										int longPressDelay = (MainModule.mPrefs.getBoolean("controls_powerflash_delay") ? ViewConfiguration.getLongPressTimeout() * 3 : ViewConfiguration.getLongPressTimeout()) + 500;
+										// Post only one delayed runnable that waits for long press timeout
+										if (!isWaitingForPowerLongPressed) {
+											mHandler.postDelayed(new Runnable() {
+												@Override
+												@SuppressLint("Wakelock")
+												public void run() {
+													if (isPowerPressed) {
+														isPowerLongPressed = true;
+
+														if (Helpers.mWakeLock == null) {
+															Helpers.mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "miuizer:flashlight");
+														}
+
+														if (!isTorchEnabled(mContext) || !Helpers.mWakeLock.isHeld()) {
+															setTorch(mContext, true);
+															if (!Helpers.mWakeLock.isHeld()) Helpers.mWakeLock.acquire(600000);
+														} else {
+															setTorch(mContext, true);
+															if (Helpers.mWakeLock.isHeld()) Helpers.mWakeLock.release();
+														}
+													}
+													isPowerPressed = false;
+													isWaitingForPowerLongPressed = false;
+												}
+											}, longPressDelay);
+										}
+
+										isWaitingForPowerLongPressed = true;
+										{ skipped = true; result = 0; throwable = null; }
 									}
 
-									if (!isTorchEnabled(mContext) || !Helpers.mWakeLock.isHeld()) {
-										setTorch(mContext, true);
-										if (!Helpers.mWakeLock.isHeld()) Helpers.mWakeLock.acquire(600000);
-									} else {
-										setTorch(mContext, true);
-										if (Helpers.mWakeLock.isHeld()) Helpers.mWakeLock.release();
+									if (action == KeyEvent.ACTION_UP) {
+										if (isPowerPressed && !isPowerLongPressed) try {
+											if (isTorchEnabled(mContext)) setTorch(mContext, false);
+											if (Helpers.mWakeLock != null && Helpers.mWakeLock.isHeld()) Helpers.mWakeLock.release();
+											XposedHelpers.callMethod(mPowerManager, "wakeUp", SystemClock.uptimeMillis());
+											{ skipped = true; result = 0; throwable = null; }
+										} catch (Throwable t) {
+											XposedHelpers.log(t);
+										} else if (wasRaise2WakeEnabled && !isTorchEnabled(mContext)) {
+											wasRaise2WakeEnabled = false;
+											Settings.System.putInt(mContext.getContentResolver(), "pick_up_gesture_wakeup_mode", 1);
+										}
+										isPowerPressed = false;
+										isWaitingForPowerLongPressed = false;
 									}
-								}
-								isPowerPressed = false;
-								isWaitingForPowerLongPressed = false;
-							}
-						}, longPressDelay);
-					}
-
-					isWaitingForPowerLongPressed = true;
-					param.returnAndSkip(0);
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
-
-				if (action == KeyEvent.ACTION_UP) {
-					if (isPowerPressed && !isPowerLongPressed) try {
-						if (isTorchEnabled(mContext)) setTorch(mContext, false);
-						if (Helpers.mWakeLock != null && Helpers.mWakeLock.isHeld()) Helpers.mWakeLock.release();
-						XposedHelpers.callMethod(mPowerManager, "wakeUp", SystemClock.uptimeMillis());
-						param.returnAndSkip(0);
-					} catch (Throwable t) {
-						XposedHelpers.log(t);
-					} else if (wasRaise2WakeEnabled && !isTorchEnabled(mContext)) {
-						wasRaise2WakeEnabled = false;
-						Settings.System.putInt(mContext.getContentResolver(), "pick_up_gesture_wakeup_mode", 1);
-					}
-					isPowerPressed = false;
-					isWaitingForPowerLongPressed = false;
-				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
@@ -171,84 +204,100 @@ public class Controls {
 		ModuleHelper.findAndHookMethod("com.android.server.policy.MiuiPhoneWindowManager", lpparam.getClassLoader(), "interceptKeyBeforeQueueing", KeyEvent.class, int.class, new MethodHook() {
 			@Override
 			@SuppressLint("MissingPermission")
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				// Power and volkeys are pressed at the same time
-				if (isPowerPressed) return;
-				final KeyEvent keyEvent = (KeyEvent)param.getArgs()[0];
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				try {
+					final Object thisObject = chain.getThisObject();
 
-				int keycode = keyEvent.getKeyCode();
-				int action = keyEvent.getAction();
-				int flags = keyEvent.getFlags();
+									// Power and volkeys are pressed at the same time
+									if (isPowerPressed) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+									final KeyEvent keyEvent = (KeyEvent)args[0];
 
-				// Ignore repeated KeyEvents simulated on volume Key Up
-				if ((flags & KeyEvent.FLAG_VIRTUAL_HARD_KEY) == KeyEvent.FLAG_VIRTUAL_HARD_KEY) return;
-				if ((flags & KeyEvent.FLAG_FROM_SYSTEM) != KeyEvent.FLAG_FROM_SYSTEM || (keycode != KeyEvent.KEYCODE_VOLUME_UP && keycode != KeyEvent.KEYCODE_VOLUME_DOWN)) return;
+									int keycode = keyEvent.getKeyCode();
+									int action = keyEvent.getAction();
+									int flags = keyEvent.getFlags();
 
-				// Volume long press
-				final Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-				final PowerManager mPowerManager = (PowerManager)XposedHelpers.getObjectField(param.getThisObject(), "mPowerManager");
-				if (mPowerManager.isInteractive()) return;
-				//XposedHelpers.log("VolumeMediaButtonsHook", "interceptKeyBeforeQueueing: KeyCode: " + keyEvent.getKeyCode() + " | Action: " + keyEvent.getAction() + " | RepeatCount: " + keyEvent.getRepeatCount()+ " | Flags: " + keyEvent.getFlags() + " | " + mPowerManager.isInteractive());
-				if (action == KeyEvent.ACTION_DOWN) {
-					isVolumePressed = true;
-					isVolumeLongPressed = false;
+									// Ignore repeated KeyEvents simulated on volume Key Up
+									if ((flags & KeyEvent.FLAG_VIRTUAL_HARD_KEY) == KeyEvent.FLAG_VIRTUAL_HARD_KEY) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+									if ((flags & KeyEvent.FLAG_FROM_SYSTEM) != KeyEvent.FLAG_FROM_SYSTEM || (keycode != KeyEvent.KEYCODE_VOLUME_UP && keycode != KeyEvent.KEYCODE_VOLUME_DOWN)) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
 
-					mHandler = (Handler)XposedHelpers.getObjectField(param.getThisObject(), "mHandler");
+									// Volume long press
+									final Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
+									final PowerManager mPowerManager = (PowerManager)XposedHelpers.getObjectField(thisObject, "mPowerManager");
+									if (mPowerManager.isInteractive()) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+									//XposedHelpers.log("VolumeMediaButtonsHook", "interceptKeyBeforeQueueing: KeyCode: " + keyEvent.getKeyCode() + " | Action: " + keyEvent.getAction() + " | RepeatCount: " + keyEvent.getRepeatCount()+ " | Flags: " + keyEvent.getFlags() + " | " + mPowerManager.isInteractive());
+									if (action == KeyEvent.ACTION_DOWN) {
+										isVolumePressed = true;
+										isVolumeLongPressed = false;
 
-					// Post only one delayed runnable that waits for long press timeout
-					if (mHandler != null && !isWaitingForVolumeLongPressed) {
-						mHandler.postDelayed(new Runnable() {
-							public void run() {
-								if (isVolumePressed && GlobalActions.isMediaActionsAllowed(mContext)) {
-									isVolumeLongPressed = true;
-									switch (keyEvent.getKeyCode()) {
-										case KeyEvent.KEYCODE_VOLUME_UP:
-											int pref_mediaUp = MainModule.mPrefs.getStringAsInt("controls_volumemedia_up", 0);
-											if (pref_mediaUp == 0) break;
-											GlobalActions.sendDownUpKeyEvent(mContext, pref_mediaUp, true);
-											break;
-										case KeyEvent.KEYCODE_VOLUME_DOWN:
-											int pref_mediaDown = MainModule.mPrefs.getStringAsInt("controls_volumemedia_down", 0);
-											if (pref_mediaDown == 0) break;
-											GlobalActions.sendDownUpKeyEvent(mContext, pref_mediaDown, true);
-											break;
-										default:
-											break;
+										mHandler = (Handler)XposedHelpers.getObjectField(thisObject, "mHandler");
+
+										// Post only one delayed runnable that waits for long press timeout
+										if (mHandler != null && !isWaitingForVolumeLongPressed) {
+											mHandler.postDelayed(new Runnable() {
+												public void run() {
+													if (isVolumePressed && GlobalActions.isMediaActionsAllowed(mContext)) {
+														isVolumeLongPressed = true;
+														switch (keyEvent.getKeyCode()) {
+															case KeyEvent.KEYCODE_VOLUME_UP:
+																int pref_mediaUp = MainModule.mPrefs.getStringAsInt("controls_volumemedia_up", 0);
+																if (pref_mediaUp == 0) break;
+																GlobalActions.sendDownUpKeyEvent(mContext, pref_mediaUp, true);
+																break;
+															case KeyEvent.KEYCODE_VOLUME_DOWN:
+																int pref_mediaDown = MainModule.mPrefs.getStringAsInt("controls_volumemedia_down", 0);
+																if (pref_mediaDown == 0) break;
+																GlobalActions.sendDownUpKeyEvent(mContext, pref_mediaDown, true);
+																break;
+															default:
+																break;
+														}
+													}
+													isVolumePressed = false;
+													isWaitingForVolumeLongPressed = false;
+												}
+											}, ViewConfiguration.getLongPressTimeout());
+										}
+
+										isWaitingForVolumeLongPressed = true;
+										{ skipped = true; result = 0; throwable = null; }
 									}
-								}
-								isVolumePressed = false;
-								isWaitingForVolumeLongPressed = false;
-							}
-						}, ViewConfiguration.getLongPressTimeout());
-					}
 
-					isWaitingForVolumeLongPressed = true;
-					param.returnAndSkip(0);
+									if (action == KeyEvent.ACTION_UP) {
+										isVolumePressed = false;
+										// Kill all callbacks (removing only posted Runnable is not working... no idea)
+										if (mHandler != null) mHandler.removeCallbacksAndMessages(null);
+										if (!isVolumeLongPressed) {
+											AudioManager am = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
+											TelecomManager tm = (TelecomManager)mContext.getSystemService(Context.TELECOM_SERVICE);
+											WakeLock mBroadcastWakeLock = (WakeLock)XposedHelpers.getObjectField(thisObject, "mBroadcastWakeLock");
+											int k = AudioManager.ADJUST_RAISE;
+											if (keycode != KeyEvent.KEYCODE_VOLUME_UP) k = AudioManager.ADJUST_LOWER;
+											mBroadcastWakeLock.acquire(5000);
+											// If music stream is playing, adjust its volume
+											if (am.isMusicActive()) am.adjustStreamVolume(AudioManager.STREAM_MUSIC, k, 0);
+											// If voice call is active while screen off by proximity sensor, adjust its volume
+											else if (tm.isInCall()) am.adjustStreamVolume(AudioManager.STREAM_VOICE_CALL, k, 0);
+											// If volume keys to wake option active, wake the device
+											else if (Settings.System.getInt(mContext.getContentResolver(), "volumekey_wake_screen", 0) == 1)
+											XposedHelpers.callMethod(mPowerManager, "wakeUp", SystemClock.uptimeMillis());
+											if (mBroadcastWakeLock.isHeld()) mBroadcastWakeLock.release();
+										}
+										{ skipped = true; result = 0; throwable = null; }
+										isWaitingForVolumeLongPressed = false;
+									}
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
-
-				if (action == KeyEvent.ACTION_UP) {
-					isVolumePressed = false;
-					// Kill all callbacks (removing only posted Runnable is not working... no idea)
-					if (mHandler != null) mHandler.removeCallbacksAndMessages(null);
-					if (!isVolumeLongPressed) {
-						AudioManager am = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
-						TelecomManager tm = (TelecomManager)mContext.getSystemService(Context.TELECOM_SERVICE);
-						WakeLock mBroadcastWakeLock = (WakeLock)XposedHelpers.getObjectField(param.getThisObject(), "mBroadcastWakeLock");
-						int k = AudioManager.ADJUST_RAISE;
-						if (keycode != KeyEvent.KEYCODE_VOLUME_UP) k = AudioManager.ADJUST_LOWER;
-						mBroadcastWakeLock.acquire(5000);
-						// If music stream is playing, adjust its volume
-						if (am.isMusicActive()) am.adjustStreamVolume(AudioManager.STREAM_MUSIC, k, 0);
-						// If voice call is active while screen off by proximity sensor, adjust its volume
-						else if (tm.isInCall()) am.adjustStreamVolume(AudioManager.STREAM_VOICE_CALL, k, 0);
-						// If volume keys to wake option active, wake the device
-						else if (Settings.System.getInt(mContext.getContentResolver(), "volumekey_wake_screen", 0) == 1)
-						XposedHelpers.callMethod(mPowerManager, "wakeUp", SystemClock.uptimeMillis());
-						if (mBroadcastWakeLock.isHeld()) mBroadcastWakeLock.release();
-					}
-					param.returnAndSkip(0);
-					isWaitingForVolumeLongPressed = false;
-				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
@@ -257,14 +306,30 @@ public class Controls {
 		Class<?> MediaPlayerCls = XposedHelpers.findClass("android.media.MediaPlayer", lpparam.getClassLoader());
 		ModuleHelper.findAndHookMethod(MediaPlayerCls, "pause", new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				Context mContext = ModuleHelper.findContext(lpparam);
-				int mStreamType = (int)XposedHelpers.findMethodExact(MediaPlayerCls, "getAudioStreamType").invoke(param.getThisObject());
-				if (mContext != null && (mStreamType == AudioManager.STREAM_MUSIC || mStreamType == 0x80000000)) {
-					Intent intent = new Intent(GlobalActions.ACTION_PREFIX + "SaveLastMusicPausedTime");
-					intent.setPackage("com.android.systemui");
-					mContext.sendBroadcast(intent);
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				try {
+					final Object thisObject = chain.getThisObject();
+
+									Context mContext = ModuleHelper.findContext(lpparam);
+									int mStreamType = (int)XposedHelpers.findMethodExact(MediaPlayerCls, "getAudioStreamType").invoke(thisObject);
+									if (mContext != null && (mStreamType == AudioManager.STREAM_MUSIC || mStreamType == 0x80000000)) {
+										Intent intent = new Intent(GlobalActions.ACTION_PREFIX + "SaveLastMusicPausedTime");
+										intent.setPackage("com.android.systemui");
+										mContext.sendBroadcast(intent);
+									}
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
@@ -272,29 +337,61 @@ public class Controls {
 	public static void VolumeCursorHook(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod("android.inputmethodservice.InputMethodService", lpparam.getClassLoader(), "onKeyDown", int.class, KeyEvent.class, new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				InputMethodService ims = (InputMethodService)param.getThisObject();
-				int code = (int)param.getArgs()[0];
-				if ((code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN) && ims.isInputViewShown()) {
-					String pkgName = Settings.Global.getString(ims.getContentResolver(), Helpers.modulePkg + ".foreground.package");
-					if (MainModule.mPrefs.getStringSet("controls_volumecursor_apps").contains(pkgName)) return;
-					boolean swapDir = MainModule.mPrefs.getBoolean("controls_volumecursor_reverse");
-					ims.sendDownUpKeyEvents(code == (swapDir ? KeyEvent.KEYCODE_VOLUME_DOWN : KeyEvent.KEYCODE_VOLUME_UP) ? KeyEvent.KEYCODE_DPAD_LEFT : KeyEvent.KEYCODE_DPAD_RIGHT);
-					param.returnAndSkip(true);
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				try {
+					final Object thisObject = chain.getThisObject();
+
+									InputMethodService ims = (InputMethodService)thisObject;
+									int code = (int)args[0];
+									if ((code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN) && ims.isInputViewShown()) {
+										String pkgName = Settings.Global.getString(ims.getContentResolver(), Helpers.modulePkg + ".foreground.package");
+										if (MainModule.mPrefs.getStringSet("controls_volumecursor_apps").contains(pkgName)) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+										boolean swapDir = MainModule.mPrefs.getBoolean("controls_volumecursor_reverse");
+										ims.sendDownUpKeyEvents(code == (swapDir ? KeyEvent.KEYCODE_VOLUME_DOWN : KeyEvent.KEYCODE_VOLUME_UP) ? KeyEvent.KEYCODE_DPAD_LEFT : KeyEvent.KEYCODE_DPAD_RIGHT);
+										{ skipped = true; result = true; throwable = null; }
+									}
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 
 		ModuleHelper.findAndHookMethod("android.inputmethodservice.InputMethodService", lpparam.getClassLoader(), "onKeyUp", int.class, KeyEvent.class, new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				InputMethodService ims = (InputMethodService)param.getThisObject();
-				int code = (int)param.getArgs()[0];
-				if ((code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN) && ims.isInputViewShown()) {
-					String pkgName = Settings.Global.getString(ims.getContentResolver(), Helpers.modulePkg + ".foreground.package");
-					if (!MainModule.mPrefs.getStringSet("controls_volumecursor_apps").contains(pkgName))
-						param.returnAndSkip(true);
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				try {
+					final Object thisObject = chain.getThisObject();
+
+									InputMethodService ims = (InputMethodService)thisObject;
+									int code = (int)args[0];
+									if ((code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN) && ims.isInputViewShown()) {
+										String pkgName = Settings.Global.getString(ims.getContentResolver(), Helpers.modulePkg + ".foreground.package");
+										if (!MainModule.mPrefs.getStringSet("controls_volumecursor_apps").contains(pkgName))
+											{ skipped = true; result = true; throwable = null; }
+									}
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
@@ -478,57 +575,108 @@ public class Controls {
 	public static void NavBarButtonsHook(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.android.systemui.navigationbar.NavigationBarView", lpparam.getClassLoader(), "onFinishInflate", new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
-				FrameLayout navBar = (FrameLayout) param.getThisObject();
-				Context mContext = navBar.getContext();
-				ViewGroup mHorizontal = (ViewGroup) XposedHelpers.getObjectField(param.getThisObject(), "mHorizontal");
-				ViewGroup mVertical = (ViewGroup) XposedHelpers.getObjectField(param.getThisObject(), "mVertical");
-				int navButtonsId = navBar.getResources().getIdentifier("nav_buttons", "id", lpparam.getPackageName());
-				FrameLayout navButtons0 = mHorizontal.findViewById(navButtonsId);
-				FrameLayout navButtons90 = mVertical.findViewById(navButtonsId);
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				Object result;
+				Throwable throwable = null;
+				try {
+					result = chain.proceed();
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
+				}
+				try {
+					final Object thisObject = chain.getThisObject();
 
-				Class<?> kbrCls = XposedHelpers.findClassIfExists("com.android.systemui.statusbar.phone.MiuiKeyButtonRipple", lpparam.getClassLoader());
-				addCustomNavBarKeys(false, mContext, navButtons0, kbrCls);
-				addCustomNavBarKeys(true, mContext, navButtons90, kbrCls);
-				reposNavBarButtons(navBar);
+									FrameLayout navBar = (FrameLayout) thisObject;
+									Context mContext = navBar.getContext();
+									ViewGroup mHorizontal = (ViewGroup) XposedHelpers.getObjectField(thisObject, "mHorizontal");
+									ViewGroup mVertical = (ViewGroup) XposedHelpers.getObjectField(thisObject, "mVertical");
+									int navButtonsId = navBar.getResources().getIdentifier("nav_buttons", "id", lpparam.getPackageName());
+									FrameLayout navButtons0 = mHorizontal.findViewById(navButtonsId);
+									FrameLayout navButtons90 = mVertical.findViewById(navButtonsId);
+
+									Class<?> kbrCls = XposedHelpers.findClassIfExists("com.android.systemui.statusbar.phone.MiuiKeyButtonRipple", lpparam.getClassLoader());
+									addCustomNavBarKeys(false, mContext, navButtons0, kbrCls);
+									addCustomNavBarKeys(true, mContext, navButtons90, kbrCls);
+									reposNavBarButtons(navBar);
+			
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 
 		ModuleHelper.findAndHookMethod("com.android.systemui.navigationbar.NavigationBarTransitions", lpparam.getClassLoader(), "applyDarkIntensity", float.class, new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
-				FrameLayout navbar = (FrameLayout)XposedHelpers.getObjectField(param.getThisObject(), "mView");
-				boolean isDark = (float)param.getArgs()[0] > 0.5f;
-				ImageView hleft = navbar.findViewWithTag("custom_left_horiz");
-				ImageView vleft = navbar.findViewWithTag("custom_left_vert");
-				ImageView hright = navbar.findViewWithTag("custom_right_horiz");
-				ImageView vright = navbar.findViewWithTag("custom_right_vert");
-
-				Context modCtx = ModuleHelper.getModuleContext(navbar.getContext());
-				Resources modRes = ModuleHelper.getModuleRes(navbar.getContext());
-				if (isDark) {
-					Drawable darkImg1 = modRes.getDrawable(R.drawable.ic_sysbar_dot_bottomleft_dark, modCtx.getTheme());
-					Drawable darkImg2 = modRes.getDrawable(R.drawable.ic_sysbar_dot_topright_dark, modCtx.getTheme());
-					if (hleft != null) hleft.setImageDrawable(darkImg1);
-					if (vleft != null) vleft.setImageDrawable(darkImg1);
-					if (hright != null) hright.setImageDrawable(darkImg2);
-					if (vright != null) vright.setImageDrawable(darkImg2);
-				} else {
-					Drawable lightImg1 = modRes.getDrawable(R.drawable.ic_sysbar_dot_bottomleft, modCtx.getTheme());
-					Drawable lightImg2 = modRes.getDrawable(R.drawable.ic_sysbar_dot_topright, modCtx.getTheme());
-					if (hleft != null) hleft.setImageDrawable(lightImg1);
-					if (vleft != null) vleft.setImageDrawable(lightImg1);
-					if (hright != null) hright.setImageDrawable(lightImg2);
-					if (vright != null) vright.setImageDrawable(lightImg2);
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				Object result;
+				Throwable throwable = null;
+				try {
+					result = chain.proceed();
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
+				try {
+					final Object thisObject = chain.getThisObject();
+
+									FrameLayout navbar = (FrameLayout)XposedHelpers.getObjectField(thisObject, "mView");
+									boolean isDark = (float)chain.getArgs().get(0) > 0.5f;
+									ImageView hleft = navbar.findViewWithTag("custom_left_horiz");
+									ImageView vleft = navbar.findViewWithTag("custom_left_vert");
+									ImageView hright = navbar.findViewWithTag("custom_right_horiz");
+									ImageView vright = navbar.findViewWithTag("custom_right_vert");
+
+									Context modCtx = ModuleHelper.getModuleContext(navbar.getContext());
+									Resources modRes = ModuleHelper.getModuleRes(navbar.getContext());
+									if (isDark) {
+										Drawable darkImg1 = modRes.getDrawable(R.drawable.ic_sysbar_dot_bottomleft_dark, modCtx.getTheme());
+										Drawable darkImg2 = modRes.getDrawable(R.drawable.ic_sysbar_dot_topright_dark, modCtx.getTheme());
+										if (hleft != null) hleft.setImageDrawable(darkImg1);
+										if (vleft != null) vleft.setImageDrawable(darkImg1);
+										if (hright != null) hright.setImageDrawable(darkImg2);
+										if (vright != null) vright.setImageDrawable(darkImg2);
+									} else {
+										Drawable lightImg1 = modRes.getDrawable(R.drawable.ic_sysbar_dot_bottomleft, modCtx.getTheme());
+										Drawable lightImg2 = modRes.getDrawable(R.drawable.ic_sysbar_dot_topright, modCtx.getTheme());
+										if (hleft != null) hleft.setImageDrawable(lightImg1);
+										if (vleft != null) vleft.setImageDrawable(lightImg1);
+										if (hright != null) hright.setImageDrawable(lightImg2);
+										if (vright != null) vright.setImageDrawable(lightImg2);
+									}
+			
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 		ModuleHelper.findAndHookMethod("com.android.systemui.navigationbar.NavigationBarView", lpparam.getClassLoader(), "onConfigurationChanged", Configuration.class,
 		new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
-				FrameLayout navbar = (FrameLayout) param.getThisObject();
-				reposNavBarButtons(navbar);
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				Object result;
+				Throwable throwable = null;
+				try {
+					result = chain.proceed();
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
+				}
+				try {
+					final Object thisObject = chain.getThisObject();
+
+									FrameLayout navbar = (FrameLayout) thisObject;
+									reposNavBarButtons(navbar);
+			
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
@@ -578,35 +726,67 @@ public class Controls {
 	public static void NavBarActionsHook(SystemServerStartingParam lpparam) {
 		ModuleHelper.hookAllMethods("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.getClassLoader(), "postKeyLongPress", new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				if (basePWMObject == null) basePWMObject = param.getThisObject();
-				if (basePWMContext == null) basePWMContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-				if (markShortcutTriggered == null) markShortcutTriggered = XposedHelpers.findMethodExact("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.getClassLoader(), "markShortcutTriggered");
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				try {
+					final Object thisObject = chain.getThisObject();
 
-				int key = (int)param.getArgs()[0];
-				if (key == KeyEvent.KEYCODE_BACK && MainModule.mPrefs.getInt("controls_backlong_action", 1) > 1) {
-					((Handler)XposedHelpers.getObjectField(param.getThisObject(), "mHandler")).postDelayed(mBackLongPressAction, ViewConfiguration.getLongPressTimeout());
-					param.returnAndSkip(null);
-				} else if (key == KeyEvent.KEYCODE_HOME && MainModule.mPrefs.getInt("controls_homelong_action", 1) > 1) {
-					((Handler)XposedHelpers.getObjectField(param.getThisObject(), "mHandler")).postDelayed(mHomeLongPressAction, ViewConfiguration.getLongPressTimeout());
-					param.returnAndSkip(null);
-				} else if (key == KeyEvent.KEYCODE_APP_SWITCH && MainModule.mPrefs.getInt("controls_menulong_action", 1) > 1) {
-					((Handler)XposedHelpers.getObjectField(param.getThisObject(), "mHandler")).postDelayed(mMenuLongPressAction, ViewConfiguration.getLongPressTimeout());
-					param.returnAndSkip(null);
+									if (basePWMObject == null) basePWMObject = thisObject;
+									if (basePWMContext == null) basePWMContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
+									if (markShortcutTriggered == null) markShortcutTriggered = XposedHelpers.findMethodExact("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.getClassLoader(), "markShortcutTriggered");
+
+									int key = (int)args[0];
+									if (key == KeyEvent.KEYCODE_BACK && MainModule.mPrefs.getInt("controls_backlong_action", 1) > 1) {
+										((Handler)XposedHelpers.getObjectField(thisObject, "mHandler")).postDelayed(mBackLongPressAction, ViewConfiguration.getLongPressTimeout());
+										{ skipped = true; result = null; throwable = null; }
+									} else if (key == KeyEvent.KEYCODE_HOME && MainModule.mPrefs.getInt("controls_homelong_action", 1) > 1) {
+										((Handler)XposedHelpers.getObjectField(thisObject, "mHandler")).postDelayed(mHomeLongPressAction, ViewConfiguration.getLongPressTimeout());
+										{ skipped = true; result = null; throwable = null; }
+									} else if (key == KeyEvent.KEYCODE_APP_SWITCH && MainModule.mPrefs.getInt("controls_menulong_action", 1) > 1) {
+										((Handler)XposedHelpers.getObjectField(thisObject, "mHandler")).postDelayed(mMenuLongPressAction, ViewConfiguration.getLongPressTimeout());
+										{ skipped = true; result = null; throwable = null; }
+									}
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 
 		ModuleHelper.hookAllMethods("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.getClassLoader(), "removeKeyLongPress", new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				int key = (int)param.getArgs()[0];
-				if (key == KeyEvent.KEYCODE_BACK)
-					((Handler)XposedHelpers.getObjectField(param.getThisObject(), "mHandler")).removeCallbacks(mBackLongPressAction);
-				else if (key == KeyEvent.KEYCODE_HOME)
-					((Handler)XposedHelpers.getObjectField(param.getThisObject(), "mHandler")).removeCallbacks(mHomeLongPressAction);
-				else if (key == KeyEvent.KEYCODE_APP_SWITCH)
-					((Handler)XposedHelpers.getObjectField(param.getThisObject(), "mHandler")).removeCallbacks(mMenuLongPressAction);
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				try {
+					final Object thisObject = chain.getThisObject();
+
+									int key = (int)args[0];
+									if (key == KeyEvent.KEYCODE_BACK)
+										((Handler)XposedHelpers.getObjectField(thisObject, "mHandler")).removeCallbacks(mBackLongPressAction);
+									else if (key == KeyEvent.KEYCODE_HOME)
+										((Handler)XposedHelpers.getObjectField(thisObject, "mHandler")).removeCallbacks(mHomeLongPressAction);
+									else if (key == KeyEvent.KEYCODE_APP_SWITCH)
+										((Handler)XposedHelpers.getObjectField(thisObject, "mHandler")).removeCallbacks(mMenuLongPressAction);
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
@@ -614,17 +794,34 @@ public class Controls {
 	public static void FingerprintHapticSuccessHook(SystemServerStartingParam lpparam) {
 		ModuleHelper.hookAllMethods("com.android.server.biometrics.sensors.AuthenticationClient", lpparam.getClassLoader(), "onAuthenticated", new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
-				boolean mAuthSuccess = XposedHelpers.getBooleanField(param.getThisObject(), "mAuthSuccess");
-				if (!mAuthSuccess) return;
-				Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				Object result;
+				Throwable throwable = null;
+				try {
+					result = chain.proceed();
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
+				}
+				try {
+					final Object thisObject = chain.getThisObject();
 
-				boolean ignoreSystem = MainModule.mPrefs.getBoolean("controls_fingerprintsuccess_ignore");
-				int opt = Integer.parseInt(MainModule.mPrefs.getString("controls_fingerprintsuccess", "1"));
-				if (opt == 2)
-					Helpers.performLightVibration(mContext, ignoreSystem);
-				else if (opt == 3)
-					Helpers.performStrongVibration(mContext, ignoreSystem);
+									boolean mAuthSuccess = XposedHelpers.getBooleanField(thisObject, "mAuthSuccess");
+									if (!mAuthSuccess) { if (throwable != null) throw throwable; return result; }
+									Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
+
+									boolean ignoreSystem = MainModule.mPrefs.getBoolean("controls_fingerprintsuccess_ignore");
+									int opt = Integer.parseInt(MainModule.mPrefs.getString("controls_fingerprintsuccess", "1"));
+									if (opt == 2)
+										Helpers.performLightVibration(mContext, ignoreSystem);
+									else if (opt == 3)
+										Helpers.performStrongVibration(mContext, ignoreSystem);
+			
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
@@ -632,8 +829,23 @@ public class Controls {
 	public static void FingerprintHapticFailureHook(SystemServerStartingParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.android.server.biometrics.sensors.AcquisitionClient", lpparam.getClassLoader(), "vibrateError", new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				param.returnAndSkip(null);
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				try {
+
+									{ skipped = true; result = null; throwable = null; }
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
@@ -642,13 +854,30 @@ public class Controls {
 		String authClient = "com.android.server.biometrics.sensors.AuthenticationClient";
 		ModuleHelper.hookAllMethods(authClient, lpparam.getClassLoader(), "onAuthenticated", new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
-				boolean mAuthSuccess = XposedHelpers.getBooleanField(param.getThisObject(), "mAuthSuccess");
-				if (mAuthSuccess) return;
-				Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-				PowerManager mPowerManager = (PowerManager)mContext.getSystemService(Context.POWER_SERVICE);
-				if (mPowerManager.isInteractive()) return;
-				if (!GlobalActions.commonSendAction(mContext, "WakeUp")) XposedHelpers.log("FingerprintScreenOnHook", "Failed to wake up device");
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				Object result;
+				Throwable throwable = null;
+				try {
+					result = chain.proceed();
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
+				}
+				try {
+					final Object thisObject = chain.getThisObject();
+
+									boolean mAuthSuccess = XposedHelpers.getBooleanField(thisObject, "mAuthSuccess");
+									if (mAuthSuccess) { if (throwable != null) throw throwable; return result; }
+									Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
+									PowerManager mPowerManager = (PowerManager)mContext.getSystemService(Context.POWER_SERVICE);
+									if (mPowerManager.isInteractive()) { if (throwable != null) throw throwable; return result; }
+									if (!GlobalActions.commonSendAction(mContext, "WakeUp")) XposedHelpers.log("FingerprintScreenOnHook", "Failed to wake up device");
+			
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
@@ -656,11 +885,27 @@ public class Controls {
 	public static void BackGestureAreaHeightHook(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.miui.home.recents.GestureStubView", lpparam.getClassLoader(), "getGestureStubWindowParam", new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
-				WindowManager.LayoutParams lp = (WindowManager.LayoutParams)param.getResult();
-				int pct = MainModule.mPrefs.getInt("controls_fsg_coverage", 60);
-				lp.height = Math.round(lp.height / 60.0f * pct);
-				param.setResult(lp);
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				Object result;
+				Throwable throwable = null;
+				try {
+					result = chain.proceed();
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
+				}
+				try {
+
+									WindowManager.LayoutParams lp = (WindowManager.LayoutParams)result;
+									int pct = MainModule.mPrefs.getInt("controls_fsg_coverage", 60);
+									lp.height = Math.round(lp.height / 60.0f * pct);
+									result = lp; throwable = null;
+			
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
@@ -668,26 +913,59 @@ public class Controls {
 	public static void BackGestureAreaWidthHook(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.miui.home.recents.GestureStubView", lpparam.getClassLoader(), "initScreenSizeAndDensity", int.class, new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
-				int pct = MainModule.mPrefs.getInt("controls_fsg_width", 100);
-				if (pct == 100) return;
-				int mGestureStubDefaultSize = XposedHelpers.getIntField(param.getThisObject(), "mGestureStubDefaultSize");
-				int mGestureStubSize  = XposedHelpers.getIntField(param.getThisObject(), "mGestureStubSize");
-				mGestureStubDefaultSize = Math.round(mGestureStubDefaultSize * pct / 100f);
-				mGestureStubSize = Math.round(mGestureStubSize * pct / 100f);
-				XposedHelpers.setIntField(param.getThisObject(), "mGestureStubDefaultSize", mGestureStubDefaultSize);
-				XposedHelpers.setIntField(param.getThisObject(), "mGestureStubSize", mGestureStubSize);
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				Object result;
+				Throwable throwable = null;
+				try {
+					result = chain.proceed();
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
+				}
+				try {
+					final Object thisObject = chain.getThisObject();
+
+									int pct = MainModule.mPrefs.getInt("controls_fsg_width", 100);
+									if (pct == 100) { if (throwable != null) throw throwable; return result; }
+									int mGestureStubDefaultSize = XposedHelpers.getIntField(thisObject, "mGestureStubDefaultSize");
+									int mGestureStubSize  = XposedHelpers.getIntField(thisObject, "mGestureStubSize");
+									mGestureStubDefaultSize = Math.round(mGestureStubDefaultSize * pct / 100f);
+									mGestureStubSize = Math.round(mGestureStubSize * pct / 100f);
+									XposedHelpers.setIntField(thisObject, "mGestureStubDefaultSize", mGestureStubDefaultSize);
+									XposedHelpers.setIntField(thisObject, "mGestureStubSize", mGestureStubSize);
+			
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 
 		ModuleHelper.findAndHookMethod("com.miui.home.recents.GestureStubView", lpparam.getClassLoader(), "setSize", int.class, new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				int pct = MainModule.mPrefs.getInt("controls_fsg_width", 100);
-				if (pct == 100) return;
-				int mGestureStubDefaultSize = XposedHelpers.getIntField(param.getThisObject(), "mGestureStubDefaultSize");
-				if ((int)param.getArgs()[0] == mGestureStubDefaultSize) return;
-				param.getArgs()[0] = Math.round((int)param.getArgs()[0] * pct / 100f);
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				try {
+					final Object thisObject = chain.getThisObject();
+
+									int pct = MainModule.mPrefs.getInt("controls_fsg_width", 100);
+									if (pct == 100) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+									int mGestureStubDefaultSize = XposedHelpers.getIntField(thisObject, "mGestureStubDefaultSize");
+									if ((int)args[0] == mGestureStubDefaultSize) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+									args[0] = Math.round((int)args[0] * pct / 100f);
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
@@ -695,24 +973,71 @@ public class Controls {
 	public static void HideNavBarHook(PackageReadyParam lpparam) {
 		ModuleHelper.hookAllConstructors("com.android.systemui.recents.OverviewProxyService", lpparam.getClassLoader(), new MethodHook() {
 			@Override
-			protected void after(AfterHookCallback param) throws Throwable {
-				ArrayList mCallbacks = (ArrayList) ModuleHelper.getObjectFieldByPath(param.getThisObject(), "mCommandQueue.mCallbacks");
-				Object callback = mCallbacks.get(mCallbacks.size() - 1);
-				ModuleHelper.findAndHookMethod(callback.getClass(), "setWindowState", int.class, int.class, int.class, new MethodHook() {
-					@Override
-					protected void before(final BeforeHookCallback param) throws Throwable {
-						Object GestureObserver = ModuleHelper.getDepInstance(lpparam.getClassLoader(), "com.miui.systemui.controller.GestureObserver");
-						XposedHelpers.setObjectField(GestureObserver, "mGestureLineEnable", true);
-					}
-				});
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				Object result;
+				Throwable throwable = null;
+				try {
+					result = chain.proceed();
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
+				}
+				try {
+					final Object thisObject = chain.getThisObject();
+
+									ArrayList mCallbacks = (ArrayList) ModuleHelper.getObjectFieldByPath(thisObject, "mCommandQueue.mCallbacks");
+									Object callback = mCallbacks.get(mCallbacks.size() - 1);
+									ModuleHelper.findAndHookMethod(callback.getClass(), "setWindowState", int.class, int.class, int.class, new MethodHook() {
+										@Override
+																				public Object intercept(XposedInterface.Chain chain) throws Throwable {
+											boolean skipped = false;
+											Object result = null;
+											Throwable throwable = null;
+											Object[] args = chain.getArgs().toArray(new Object[0]);
+											try {
+
+																							Object GestureObserver = ModuleHelper.getDepInstance(lpparam.getClassLoader(), "com.miui.systemui.controller.GestureObserver");
+																							XposedHelpers.setObjectField(GestureObserver, "mGestureLineEnable", true);
+										
+												if (skipped) { if (throwable != null) throw throwable; return result; }
+												result = chain.proceed(args);
+											} catch (Throwable t) {
+												throwable = t;
+												result = null;
+											}
+											if (throwable != null) throw throwable;
+											return result;
+										}
+									});
+			
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 		ModuleHelper.hookAllMethods("com.android.systemui.navigationbar.NavigationBarController", lpparam.getClassLoader(), "createNavigationBar", new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				if (param.getArgs().length >= 3) {
-					param.returnAndSkip(null);
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				try {
+
+									if (args.length >= 3) {
+										{ skipped = true; result = null; throwable = null; }
+									}
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
@@ -725,16 +1050,32 @@ public class Controls {
 		doubleTapResons.add("double_click_power_key");
 		ModuleHelper.findAndHookMethod("com.miui.server.input.util.ShortCutActionsUtils", lpparam.getClassLoader(), "triggerFunction", String.class, String.class, Bundle.class, boolean.class, new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				boolean dtFromVolumeDownNow = MainModule.mPrefs.getBoolean("controls_volumedowndt_torch");
-				if (dtFromVolumeDownNow && "double_click_volume_down".equals(param.getArgs()[1])) {
-					param.getArgs()[0] = "turn_on_torch";
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				try {
+					final Object thisObject = chain.getThisObject();
+
+									boolean dtFromVolumeDownNow = MainModule.mPrefs.getBoolean("controls_volumedowndt_torch");
+									if (dtFromVolumeDownNow && "double_click_volume_down".equals(args[1])) {
+										args[0] = "turn_on_torch";
+									}
+									else if (MainModule.mPrefs.getInt("controls_powerdt_action", 1) > 1 && doubleTapResons.contains(args[1])) {
+										Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
+										GlobalActions.handleAction(mContext, "controls_powerdt", true);
+										{ skipped = true; result = true; throwable = null; }
+									}
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
-				else if (MainModule.mPrefs.getInt("controls_powerdt_action", 1) > 1 && doubleTapResons.contains(param.getArgs()[1])) {
-					Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-					GlobalActions.handleAction(mContext, "controls_powerdt", true);
-					param.returnAndSkip(true);
-				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 
@@ -747,9 +1088,24 @@ public class Controls {
 	public static void NoFingerprintWakeHook(SystemServerStartingParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.android.server.policy.MiuiPhoneWindowManager", lpparam.getClassLoader(), "processBackFingerprintDpcenterEvent", KeyEvent.class, boolean.class, new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				boolean isScreenOn = (boolean)param.getArgs()[1];
-				if (!isScreenOn) param.returnAndSkip(null);
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				try {
+
+									boolean isScreenOn = (boolean)args[1];
+									if (!isScreenOn) { skipped = true; result = null; throwable = null; }
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
@@ -757,15 +1113,31 @@ public class Controls {
 	public static void AssistGestureActionHook(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.android.systemui.assist.AssistManager", lpparam.getClassLoader(), "startAssist", Bundle.class, new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				Bundle bundle = (Bundle)param.getArgs()[0];
-				if (bundle == null || bundle.getInt("triggered_by", 0) != 83 || bundle.getInt("invocation_type", 0) != 1) return;
-				Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-				String pos = bundle.getInt("inDirection", 0) == 1 ? "right" : "left";
-				if (GlobalActions.handleAction(mContext, "controls_fsg_assist_" + pos, false, bundle)) {
-					Helpers.performLightVibration(mContext);
-					param.returnAndSkip(null);
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				try {
+					final Object thisObject = chain.getThisObject();
+
+									Bundle bundle = (Bundle)args[0];
+									if (bundle == null || bundle.getInt("triggered_by", 0) != 83 || bundle.getInt("invocation_type", 0) != 1) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+									Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
+									String pos = bundle.getInt("inDirection", 0) == 1 ? "right" : "left";
+									if (GlobalActions.handleAction(mContext, "controls_fsg_assist_" + pos, false, bundle)) {
+										Helpers.performLightVibration(mContext);
+										{ skipped = true; result = null; throwable = null; }
+									}
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 

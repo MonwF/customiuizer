@@ -1,13 +1,13 @@
-## 米客(r14)
+## 米客_forA14
 
 > [!注意]
-> 本项目是基于 [MonwF/customiuizer](https://github.com/MonwF/customiuizer) 的**非官方优化 fork**，沿用 **GPL-3.0** 协议。
-> 仅供个人学习交流与性能优化参考，原始作品版权归 **MonwF** 与 **Mikanoshi** 所有。
-> 仅兼容：**HyperOS 1 / Android 14 / libxposed API 101**。
-> 本 fork 使用 **libxposed API 101 原生 `XposedInterface.Hooker.intercept(Chain)`** 调度，应可配合 **LSPosed 2.0** 与 **Vector** 等支持 API 101 的框架使用；目前仅在 LSPosed + HyperOS 1 A14 实机测试。
-> 包名已改为 `name.monwf.customiuizer.r14`，应用名为 **米客(r14) / Pengeek(r14)**。
-> **安装本 fork 前请先在米客中备份设置，然后卸载官方原版并安装本 fork；两个模块不能同时启用，否则会导致冲突。**
-> 版本规划：**r14.0.\*** 为 API-100 风格回调，在 `a14` 分支维护；**r14.1.\*** 为原生 API-101 `Hooker.intercept(Chain)` 重写，在 `a14-api101` 分支维护，已移除 `CustomHooker` / `ConstantHooker` 适配层。
+> 本项目是基于 [MonwF/customiuizer](https://github.com/MonwF/customiuizer) 的**非官方优化 fork**，沿用 **GPL-3.0** 协议。  
+> 仅供个人学习交流与性能优化参考，原始作品版权归 **MonwF** 与 **Mikanoshi** 所有。  
+> 仅兼容：**HyperOS 1 / Android 14 / libxposed API 101**。  
+> 本 fork 使用 **libxposed API 101 原生 `XposedInterface.Hooker.intercept(Chain)`** 调度，应可配合 **LSPosed 2.0** 与 **Vector** 等支持 API 101 的框架使用；目前仅在 LSPosed + HyperOS 1 A14 实机测试。  
+> 包名已改为 `name.monwf.customiuizer.r14`，应用名为 **米客_forA14**。  
+> **安装本 fork 前请先在 米客_forA14 应用内备份设置，然后卸载官方原版并安装本 fork；请勿与官方版或其他 fork 同时启用，否则会出现重复 hook 冲突。**  
+> 版本规划：**r14.0.*** 在 `a14` 分支维护，为 API-100 兼容实现；**r14.1.*** 在 `a14-api101` 分支维护，为原生 API-101 实现。r14.1.0 已迁移 `GlobalActions` / `Controls`，其余模块 (`Launcher` / `System` / `SystemUI` / `Various`) 将在后续 r14.1.x 继续迁移。  
 > 完整优化记录与发布说明见 [CHANGELOG.md](CHANGELOG.md)。
 
 [English](README_en.md) | [日本語](README_jp.md) | [Português (Brasil)](README_PT-BR.md) | **中文**
@@ -32,7 +32,7 @@
 
 | 设备 | HyperOS | Android | SoC | 内存 | 说明 |
 |------|---------|---------|-----|------|------|
-| 小米 13 (2211133G) | 1.0.7.0.UMCTWXM | 14 (UKQ1.230804.001) | Snapdragon 8 Gen 2（最高 3.19 GHz） | 12 GB | 主要测试机；r3–r14 均正常重启并加载。 |
+| 小米 13 (2211133G) | 1.0.7.0.UMCTWXM | 14 (UKQ1.230804.001) | Snapdragon 8 Gen 2（最高 3.19 GHz）| 12 GB | 主要测试机；r3–r14 均正常重启并加载。 |
 
 * 基带版本：`MPSS.DE.3.0.c1-GLB-Oct 17 2024-04:43:46`
 * 内核版本：`5.15.123-android13-8-00008-g3ca6a2912c7e-ab11087001`
