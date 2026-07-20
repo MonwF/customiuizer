@@ -1,11 +1,13 @@
-## 米客（r14 优化版 / 非官方 fork）
+## 米客(r14)
 
 > [!注意]
 > 本项目是基于 [MonwF/customiuizer](https://github.com/MonwF/customiuizer) 的**非官方优化 fork**，沿用 **GPL-3.0** 协议。
 > 仅供个人学习交流与性能优化参考，原始作品版权归 **MonwF** 与 **Mikanoshi** 所有。
 > 仅兼容：**HyperOS 1 / Android 14 / libxposed API 101**。
-> 包名已改为 `name.monwf.customiuizer.r14`，应用名为 **米客-r14 / Pengeek-r14**。
-> **重要：安装本 fork 前请先在 LSPosed 中备份原版设置，然后卸载官方原版并安装本 fork；两个模块不能同时启用，否则会导致冲突。**
+> 本 fork 使用 **libxposed API 101 原生 `XposedInterface.Hooker.intercept(Chain)`** 调度，应可配合 **LSPosed 2.0** 与 **Vector** 等支持 API 101 的框架使用；目前仅在 LSPosed + HyperOS 1 A14 实机测试。
+> 包名已改为 `name.monwf.customiuizer.r14`，应用名为 **米客(r14) / Pengeek(r14)**。
+> **安装本 fork 前请先在米客中备份设置，然后卸载官方原版并安装本 fork；两个模块不能同时启用，否则会导致冲突。**
+> 版本规划：**r14.0.\*** 维持 API-100 风格回调；**r14.1.\*** 将重写为 API-101 风格。
 > 完整优化记录与发布说明见 [CHANGELOG.md](CHANGELOG.md)。
 
 [English](README_en.md) | [日本語](README_jp.md) | [Português (Brasil)](README_PT-BR.md) | **中文**
