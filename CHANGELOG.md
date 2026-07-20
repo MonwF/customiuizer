@@ -79,8 +79,9 @@
 
 - `MethodHook` 直接实现 `XposedInterface.Hooker`，使用原生 `intercept(Chain)` 调度。
 - 移除 `HookerClassHelper.CustomHooker` / `ConstantHooker` 适配器层。
-- `XposedHelpers.doHookMethod` / `doHookConstructor` 直接通过 `HookBuilder.setPriority(priority).intercept(hook)` 注册，无需额外包装。
+- `XposedHelpers.doHookMethod` / `doHookConstructor` 直接通过 `HookBuilder.setPriority(priority).setExceptionMode(PASSTHROUGH).intercept(hook)` 注册，无需额外包装。
 - 保留 `MethodHook` 的 `before` / `after` 语义（可变参数、提前返回/抛出、结果替换、异常恢复）。
+- `HookBuilder` 显式使用 `ExceptionMode.PASSTHROUGH`，确保被 hook 方法或构造器自身抛出的异常能够正常向上传播，而不是被框架的 `PROTECTIVE` 模式吞掉。
 - 对应分支：`a14-api101`。
 - `versionCode`：`109`
 - `versionName`：`r14.1.0`
