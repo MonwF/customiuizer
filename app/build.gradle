@@ -5,8 +5,8 @@ def hasReleaseSigning = keystorePropertiesFile.isFile()
 if (hasReleaseSigning) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
-def lastVersion = 109
-def lastVersionName = "r14.1.0"
+def lastVersion = 110
+def lastVersionName = "r14.1.1"
 
 android {
     namespace "name.monwf.customiuizer"
@@ -68,7 +68,7 @@ android {
     }
     applicationVariants.configureEach { variant ->
         variant.outputs.configureEach {
-            setProperty("outputFileName", "Pengeek-HyperOS1-A14-API101-r14.1.0.apk")
+            setProperty("outputFileName", "Pengeek-HyperOS1-A14-API101-r14.1.1.apk")
         }
     }
     compileOptions {
