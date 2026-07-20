@@ -69,8 +69,17 @@ public class MainModule extends XposedModule {
                 Context ctx = ModuleHelper.findContext();
                 if (ctx != null) {
                     Context moduleCtx = ctx.createPackageContext(BuildConfig.APPLICATION_ID, Context.CONTEXT_IGNORE_SECURITY);
+                    // Try credential-encrypted prefs first (when device is unlocked)
                     SharedPreferences localPrefs = moduleCtx.getSharedPreferences(ModuleHelper.prefsName, Context.MODE_PRIVATE);
                     allPrefs = localPrefs.getAll();
+                    if (allPrefs == null || allPrefs.isEmpty()) {
+                        // Fall back to device-protected prefs (available before unlock)
+                        Context deCtx = moduleCtx.createDeviceProtectedStorageContext();
+                        if (deCtx != null) {
+                            SharedPreferences dePrefs = deCtx.getSharedPreferences(ModuleHelper.prefsName, Context.MODE_PRIVATE);
+                            allPrefs = dePrefs.getAll();
+                        }
+                    }
                     if (allPrefs != null && !allPrefs.isEmpty()) {
                         XposedHelpers.log("Loaded " + allPrefs.size() + " entries from local SharedPreferences");
                     }

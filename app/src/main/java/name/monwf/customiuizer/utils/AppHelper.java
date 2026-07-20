@@ -81,6 +81,22 @@ public class AppHelper {
         }
     }
 
+    public static void syncToProtected(SharedPreferences source, Context context) {
+        if (source == null) return;
+        Map<String, ?> entries = source.getAll();
+        if (entries == null || entries.isEmpty()) return;
+        try {
+            SharedPreferences protectedPrefs = getSharedPrefs(context, true);
+            HashSet<String> ignoreKeys = new HashSet<>();
+            ignoreKeys.add("pref_key_miuizer_locale");
+            ignoreKeys.add("pref_key_miuizer_launchericon");
+            ignoreKeys.add("pref_key_miuizer_synced_from_lsposed");
+            syncPrefsToAnother(entries, protectedPrefs, 2, ignoreKeys, true);
+        } catch (Throwable t) {
+            log(t);
+        }
+    }
+
     public static void registerRemotePrefsSync() {
         if (remotePrefs != null) return;
         XposedServiceHelper.registerListener(new XposedServiceHelper.OnServiceListener() {

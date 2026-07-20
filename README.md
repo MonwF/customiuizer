@@ -16,7 +16,7 @@
 - **r14.0.***：`a14` 分支，API-100 兼容实现。
 - **r14.1.***：`a14-api101` 分支，原生 API-101 实现。
   - `r14.1.0`：完成 `GlobalActions` / `Controls` 迁移。
-  - `r14.1.3`：完成 `Launcher` / `System` / `SystemUI` / `Various` 迁移，修复重启后 `RemotePreferences` 未同步导致 hook 失效的问题。
+  - `r14.1.4`：完成 `Launcher` / `System` / `SystemUI` / `Various` 迁移，修复重启后 `RemotePreferences` 未同步导致 hook 失效的问题。
 
 完整记录见 [CHANGELOG.md](CHANGELOG.md)。
 
@@ -33,14 +33,14 @@
 ./gradlew :app:assembleRelease
 ```
 
-- 构建产物：`app/build/outputs/apk/release/Pengeek-HyperOS1-A14-API101-r14.1.3.apk`
+- 构建产物：`app/build/outputs/apk/release/Pengeek-HyperOS1-A14-API101-r14.1.4.apk`
 - 使用 release keystore 进行 v2 签名，可通过 `apksigner verify -v` 校验。
 
 ### 测试设备
 
 | 设备 | HyperOS | Android | SoC | 内存 | 说明 |
 |---|---|---|---|---|---|
-| 小米 13 (2211133G) | 1.0.7.0.UMCTWXM | 14 | Snapdragon 8 Gen 2 | 12 GB | 主要测试机；r3–r14.1.3 均正常重启并加载。 |
+| 小米 13 (2211133G) | 1.0.7.0.UMCTWXM | 14 | Snapdragon 8 Gen 2 | 12 GB | 主要测试机；r3–r14.1.4 均正常重启并加载。 |
 
 ### 主要功能
 

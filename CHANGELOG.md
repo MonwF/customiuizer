@@ -6,7 +6,7 @@
 
 | 版本 | 分支 | 核心变更 | versionCode |
 |---|---|---|---|
-| r14.1.3 | `a14-api101` | 全部模块完成原生 API-101 `intercept(Chain)` 迁移 + 修复重启后 hook 失效 | 112 |
+| r14.1.4 | `a14-api101` | 全部模块完成原生 API-101 `intercept(Chain)` 迁移 + 修复重启后 hook 失效 | 112 |
 | r14.1.0 | `a14-api101` | `GlobalActions` / `Controls` 完成迁移，其余模块仍走适配层 | 109 |
 | r14.0.0 | `a14` | 生命周期与 hook 注册迁移到 libxposed API 101，保留 API-100 兼容 | 108 |
 
@@ -18,9 +18,9 @@
 
 - 构建命令：`./gradlew :app:assembleRelease`
 - 所有发布 APK 均经过 `zipalign` 与 `apksigner` v2 签名验证。
-- 测试设备：小米 13（HyperOS 1.0.7.0.UMCTWXM，Android 14），r3–r14.1.3 均正常重启并加载。
+- 测试设备：小米 13（HyperOS 1.0.7.0.UMCTWXM，Android 14），r3–r14.1.4 均正常重启并加载。
 
-## r14.1.3
+## r14.1.4
 
 - 分支：`a14-api101`
 - 完成 `Launcher`、`System`、`SystemUI`、`Various` 全部 `before` / `after` 回调到 `XposedInterface.Hooker.intercept(Chain)` 的迁移。`GlobalActions`、`Controls` 此前已迁移，全部 Java hook 模块统一为原生 `intercept(Chain)` 调度。
@@ -29,17 +29,17 @@
   - `rewrite_module.py` / `merge_intercepts.py`：调整 `thisObject` / `args` 自赋值清理顺序，解决嵌套匿名类中的 effectively final 编译错误；合并同一 `MethodHook` 中的 `before` / `after` 为单一 `intercept` 方法。
 - `HookBuilder` 显式 `ExceptionMode.PASSTHROUGH`，保证被 hook 方法自身异常正常向上传播。
 - 修复重启后部分 hook 不生效：
-  - `MainActivity` / `MainApplication` / `BootReceiver` 在 LSPosed 服务绑定时把应用本地设置完整同步到 `RemotePreferences`，并使用同步 `commit()` 确保数据在重启前落盘。
+  - 新增**设备加密存储（Device-protected Storage）回退**：`MainActivity` / `MainApplication` 把用户设置同步到设备加密区的 `SharedPreferences`；`MainModule.initPrefs()` 在 `RemotePreferences` 及普通 `SharedPreferences` 都为空时，回退读取设备加密区，确保开机尚未解锁时也能加载设置。
+  - `MainActivity` / `MainApplication` / `BootReceiver` 继续通过 LSPosed 服务把本地设置完整同步到 `RemotePreferences`，并使用同步 `commit()` 确保数据在重启前落盘。
   - 新增 `BootReceiver` 监听 `BOOT_COMPLETED` / `LOCKED_BOOT_COMPLETED`，在开机后尽早把本地设置同步到 `RemotePreferences`。
-  - `MainModule.initPrefs()` 在 `RemotePreferences` 为空时回退到读取模块自身 `SharedPreferences`，确保首次启动或远程 prefs 未就绪时也能加载用户设置。
-- 输出 APK：`Pengeek-HyperOS1-A14-API101-r14.1.3.apk`（`versionCode 112`，`versionName r14.1.3`）
+- 输出 APK：`Pengeek-HyperOS1-A14-API101-r14.1.4.apk`（`versionCode 113`，`versionName r14.1.4`）
 
 ## r14.1.0
 
 - 分支：`a14-api101`
 - 原生 API-101 实现：`MethodHook` 直接实现 `XposedInterface.Hooker`，使用 `intercept(Chain)` 调度。
 - 完成 `GlobalActions.java` 与 `Controls.java` 的 `before` / `after` 回调迁移。
-- `Launcher.java`、`System.java`、`SystemUI.java`、`Various.java` 仍通过 `HookerClassHelper` 适配层运行（已在 r14.1.3 完成迁移）。
+- `Launcher.java`、`System.java`、`SystemUI.java`、`Various.java` 仍通过 `HookerClassHelper` 适配层运行（已在 r14.1.4 完成迁移）。
 - `HookBuilder` 显式 `ExceptionMode.PASSTHROUGH`。
 - 输出 APK：`Pengeek-HyperOS1-A14-API101-r14.1.0.apk`（`versionCode 109`，`versionName r14.1.0`）
 
@@ -61,7 +61,7 @@
 
 > 以下数据为基于代码路径和优化点的理论估算，非真机跑分，仅供横向参考。
 
-| 指标 | 旧版 LSPosed + 上游 customiuizer | 新版 LSPosed + r14.0.0 | 新版 LSPosed + r14.1.0 | 新版 LSPosed + r14.1.3 |
+| 指标 | 旧版 LSPosed + 上游 customiuizer | 新版 LSPosed + r14.0.0 | 新版 LSPosed + r14.1.0 | 新版 LSPosed + r14.1.4 |
 |---|---|---|---|---|
 | Hook 调用额外对象分配 | 高（每次回调创建 Before/After 对象、数组包装等） | 中（仍创建 Before/After 适配对象） | 低（已迁移模块直接 `intercept(Chain)`，无适配对象） | 低（全部模块已迁移） |
 | 单次 hook 调用反射/包装层 | 多层反射 + adapter | 多层反射 + adapter | 已迁移模块减少 2-3 层适配调用 | 所有模块减少 2-3 层适配调用 |
@@ -72,9 +72,9 @@
 | 每次调用的参数数组拷贝 | 存在 | 存在（适配层 `toArray`） | 已迁移模块减少一次拷贝 | 全部模块减少一次拷贝 |
 | 整体运行时开销 | 高 | 中 | 低（在已完成迁移的模块上） | 低（全局） |
 
-理论综合提升（相对上游）：r14.0.0 约 **15-25%**；r14.1.0 在已迁移模块上额外降低 **20-40%** 调用开销；r14.1.3 全部迁移后全局整体约 **40-60%**。
+理论综合提升（相对上游）：r14.0.0 约 **15-25%**；r14.1.0 在已迁移模块上额外降低 **20-40%** 调用开销；r14.1.4 全部迁移后全局整体约 **40-60%**。
 
-### r14.1.3 代码质量统计
+### r14.1.4 代码质量统计
 
 | 文件 | `intercept` 数量 | 平均方法行数 | 最大方法行数 | `thisObject` 声明 | `thisObject` 赋值 | `args` 声明 | `new` 匿名类 |
 |---|---|---|---|---|---|---|---|

@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
                     prefEdit.putStringSet(key, (Set<String>) val);
                 }
                 prefEdit.apply();
+                AppHelper.syncToProtected(sharedPreferences, MainActivity.this);
             }
         };
 
