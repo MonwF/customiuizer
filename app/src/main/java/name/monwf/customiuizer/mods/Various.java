@@ -66,6 +66,7 @@ import java.util.TimeZone;
 import name.monwf.customiuizer.mods.utils.HookerClassHelper.AfterHookCallback;
 import name.monwf.customiuizer.mods.utils.HookerClassHelper.BeforeHookCallback;
 import io.github.libxposed.api.XposedModuleInterface.PackageReadyParam;
+import io.github.libxposed.api.XposedInterface;
 import io.github.libxposed.api.XposedModuleInterface.SystemServerStartingParam;
 import miui.os.Build;
 import miui.process.ForegroundInfo;
@@ -92,120 +93,170 @@ public class Various {
 		if (findClassIfExists("androidx.fragment.app.Fragment", lpparam.getClassLoader()) != null) {
 			ModuleHelper.findAndHookConstructor("androidx.fragment.app.Fragment", lpparam.getClassLoader(), new MethodHook() {
 				@Override
-				protected void before(final BeforeHookCallback param) throws Throwable {
+								public Object intercept(XposedInterface.Chain chain) throws Throwable {
+					boolean skipped = false;
+					Object result = null;
+					Throwable throwable = null;
+					Object[] args = chain.getArgs().toArray(new Object[0]);
+					Object thisObject = chain.getThisObject();
 					try {
-						Field piField = XposedHelpers.findFirstFieldByExactType(param.getThisObject().getClass(), PackageInfo.class);
-						if (piField != null) mSupportFragment = param.getThisObject();
-					} catch (Throwable ignore) {}
+
+											try {
+												Field piField = XposedHelpers.findFirstFieldByExactType(thisObject.getClass(), PackageInfo.class);
+												if (piField != null) mSupportFragment = thisObject;
+											} catch (Throwable ignore) {}
+				
+						if (skipped) { if (throwable != null) throw throwable; return result; }
+						result = chain.proceed(args);
+					} catch (Throwable t) {
+						throwable = t;
+						result = null;
+					}
+					if (throwable != null) throw throwable;
+					return result;
 				}
 			});
 		}
 
 		ModuleHelper.findAndHookMethod(amaCls, "onCreate", Bundle.class, new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
-				Handler handler = new Handler(Looper.getMainLooper());
-				handler.post(new Runnable() {
-					@Override
-					public void run() {
-						final Activity act = (Activity)param.getThisObject();
-						Object contentFrag = act.getFragmentManager().findFragmentById(android.R.id.content);
-						Object frag = contentFrag != null ? contentFrag : mSupportFragment;
-						if (frag == null) {
-							XposedHelpers.log("AppInfoHook", "Unable to find fragment");
-							return;
-						}
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				Object result;
+				Throwable throwable = null;
+				try {
+					result = chain.proceed();
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
+				}
+				try {
+					Object thisObject = chain.getThisObject();
+					Object[] args = chain.getArgs().toArray(new Object[0]);
 
-						final Resources modRes;
-						try {
-							modRes = ModuleHelper.getModuleRes(act);
-							Field piField = XposedHelpers.findFirstFieldByExactType(frag.getClass(), PackageInfo.class);
-							mLastPackageInfo = (PackageInfo)piField.get(frag);
-							Method[] addPref = XposedHelpers.findMethodsByExactParameters(frag.getClass(), void.class, String.class, String.class, String.class);
-							if (mLastPackageInfo == null || addPref.length == 0) {
-								XposedHelpers.log("AppInfoHook", "Unable to find field/class/method in SecurityCenter to hook");
-								return;
-							} else {
-								addPref[0].setAccessible(true);
-							}
-							addPref[0].invoke(frag, "apk_versioncode", modRes.getString(R.string.appdetails_apk_version_code), String.valueOf(mLastPackageInfo.versionCode));
-							addPref[0].invoke(frag, "apk_filename", modRes.getString(R.string.appdetails_apk_file), mLastPackageInfo.applicationInfo.sourceDir);
-							addPref[0].invoke(frag, "data_path", modRes.getString(R.string.appdetails_data_path), mLastPackageInfo.applicationInfo.dataDir);
-							addPref[0].invoke(frag, "app_uid", modRes.getString(R.string.appdetails_app_uid), String.valueOf(mLastPackageInfo.applicationInfo.uid));
-							addPref[0].invoke(frag, "target_sdk", modRes.getString(R.string.appdetails_sdk), String.valueOf(mLastPackageInfo.applicationInfo.targetSdkVersion));
-							handler.post(new Runnable() {
-								@Override
-								public void run() {
-									try {
-										addPref[0].invoke(frag, "open_in_store", modRes.getString(R.string.appdetails_playstore), "");
-										addPref[0].invoke(frag, "launch_app", modRes.getString(R.string.appdetails_launch), "");
-									} catch (Throwable t) {
-										XposedHelpers.log(t);
-									}
-								}
-							});
-						} catch (Throwable t) {
-							XposedHelpers.log(t);
-							return;
-						}
+									Handler handler = new Handler(Looper.getMainLooper());
+									handler.post(new Runnable() {
+										@Override
+										public void run() {
+											final Activity act = (Activity)thisObject;
+											Object contentFrag = act.getFragmentManager().findFragmentById(android.R.id.content);
+											Object frag = contentFrag != null ? contentFrag : mSupportFragment;
+											if (frag == null) {
+												XposedHelpers.log("AppInfoHook", "Unable to find fragment");
+												return;
+											}
 
-						ModuleHelper.hookAllMethods(frag.getClass(), "onPreferenceTreeClick", new MethodHook() {
-							@Override
-							protected void before(final BeforeHookCallback param) throws Throwable {
-								String key = (String)XposedHelpers.callMethod(param.getArgs()[0], "getKey");
-								String title = (String)XposedHelpers.callMethod(param.getArgs()[0], "getTitle");
-								switch (key) {
-									case "apk_filename":
-										((ClipboardManager)act.getSystemService(Context.CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText(title, mLastPackageInfo.applicationInfo.sourceDir));
-										Toast.makeText(act, act.getResources().getIdentifier("app_manager_copy_pkg_to_clip", "string", act.getPackageName()), Toast.LENGTH_SHORT).show();
-										param.returnAndSkip(true);
-										break;
-									case "data_path":
-										((ClipboardManager)act.getSystemService(Context.CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText(title, mLastPackageInfo.applicationInfo.dataDir));
-										Toast.makeText(act, act.getResources().getIdentifier("app_manager_copy_pkg_to_clip", "string", act.getPackageName()), Toast.LENGTH_SHORT).show();
-										param.returnAndSkip(true);
-										break;
-									case "open_in_store":
-										try {
-											Intent launchIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + mLastPackageInfo.packageName));
-											launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-											act.startActivity(launchIntent);
-										} catch (android.content.ActivityNotFoundException anfe) {
-											Intent launchIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + mLastPackageInfo.packageName));
-											launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-											act.startActivity(launchIntent);
-										}
-										param.returnAndSkip(true);
-										break;
-									case "launch_app":
-										Intent launchIntent = act.getPackageManager().getLaunchIntentForPackage(mLastPackageInfo.packageName);
-										if (launchIntent == null) {
-											Toast.makeText(act, modRes.getString(R.string.appdetails_nolaunch), Toast.LENGTH_SHORT).show();
-										} else {
-											int user = 0;
+											final Resources modRes;
 											try {
-												int uid = act.getIntent().getIntExtra("am_app_uid", -1);
-												user = (int)XposedHelpers.callStaticMethod(UserHandle.class, "getUserId", uid);
+												modRes = ModuleHelper.getModuleRes(act);
+												Field piField = XposedHelpers.findFirstFieldByExactType(frag.getClass(), PackageInfo.class);
+												mLastPackageInfo = (PackageInfo)piField.get(frag);
+												Method[] addPref = XposedHelpers.findMethodsByExactParameters(frag.getClass(), void.class, String.class, String.class, String.class);
+												if (mLastPackageInfo == null || addPref.length == 0) {
+													XposedHelpers.log("AppInfoHook", "Unable to find field/class/method in SecurityCenter to hook");
+													return;
+												} else {
+													addPref[0].setAccessible(true);
+												}
+												addPref[0].invoke(frag, "apk_versioncode", modRes.getString(R.string.appdetails_apk_version_code), String.valueOf(mLastPackageInfo.versionCode));
+												addPref[0].invoke(frag, "apk_filename", modRes.getString(R.string.appdetails_apk_file), mLastPackageInfo.applicationInfo.sourceDir);
+												addPref[0].invoke(frag, "data_path", modRes.getString(R.string.appdetails_data_path), mLastPackageInfo.applicationInfo.dataDir);
+												addPref[0].invoke(frag, "app_uid", modRes.getString(R.string.appdetails_app_uid), String.valueOf(mLastPackageInfo.applicationInfo.uid));
+												addPref[0].invoke(frag, "target_sdk", modRes.getString(R.string.appdetails_sdk), String.valueOf(mLastPackageInfo.applicationInfo.targetSdkVersion));
+												handler.post(new Runnable() {
+													@Override
+													public void run() {
+														try {
+															addPref[0].invoke(frag, "open_in_store", modRes.getString(R.string.appdetails_playstore), "");
+															addPref[0].invoke(frag, "launch_app", modRes.getString(R.string.appdetails_launch), "");
+														} catch (Throwable t) {
+															XposedHelpers.log(t);
+														}
+													}
+												});
 											} catch (Throwable t) {
 												XposedHelpers.log(t);
+												return;
 											}
 
-											launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-											if (user != 0) try {
-												XposedHelpers.callMethod(act, "startActivityAsUser", launchIntent, XposedHelpers.newInstance(UserHandle.class, user));
-											} catch (Throwable t) {
-												XposedHelpers.log(t);
-											} else {
-												act.startActivity(launchIntent);
-											}
+											ModuleHelper.hookAllMethods(frag.getClass(), "onPreferenceTreeClick", new MethodHook() {
+												@Override
+																			public Object intercept(XposedInterface.Chain chain) throws Throwable {
+													boolean skipped = false;
+													Object result = null;
+													Throwable throwable = null;
+													Object[] args = chain.getArgs().toArray(new Object[0]);
+													Object thisObject = chain.getThisObject();
+													try {
+
+																						String key = (String)XposedHelpers.callMethod(args[0], "getKey");
+																						String title = (String)XposedHelpers.callMethod(args[0], "getTitle");
+																						switch (key) {
+																							case "apk_filename":
+																								((ClipboardManager)act.getSystemService(Context.CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText(title, mLastPackageInfo.applicationInfo.sourceDir));
+																								Toast.makeText(act, act.getResources().getIdentifier("app_manager_copy_pkg_to_clip", "string", act.getPackageName()), Toast.LENGTH_SHORT).show();
+																								{ skipped = true; result = true; throwable = null; }
+																								break;
+																							case "data_path":
+																								((ClipboardManager)act.getSystemService(Context.CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText(title, mLastPackageInfo.applicationInfo.dataDir));
+																								Toast.makeText(act, act.getResources().getIdentifier("app_manager_copy_pkg_to_clip", "string", act.getPackageName()), Toast.LENGTH_SHORT).show();
+																								{ skipped = true; result = true; throwable = null; }
+																								break;
+																							case "open_in_store":
+																								try {
+																									Intent launchIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + mLastPackageInfo.packageName));
+																									launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+																									act.startActivity(launchIntent);
+																								} catch (android.content.ActivityNotFoundException anfe) {
+																									Intent launchIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + mLastPackageInfo.packageName));
+																									launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+																									act.startActivity(launchIntent);
+																								}
+																								{ skipped = true; result = true; throwable = null; }
+																								break;
+																							case "launch_app":
+																								Intent launchIntent = act.getPackageManager().getLaunchIntentForPackage(mLastPackageInfo.packageName);
+																								if (launchIntent == null) {
+																									Toast.makeText(act, modRes.getString(R.string.appdetails_nolaunch), Toast.LENGTH_SHORT).show();
+																								} else {
+																									int user = 0;
+																									try {
+																										int uid = act.getIntent().getIntExtra("am_app_uid", -1);
+																										user = (int)XposedHelpers.callStaticMethod(UserHandle.class, "getUserId", uid);
+																									} catch (Throwable t) {
+																										XposedHelpers.log(t);
+																									}
+
+																									launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+																									if (user != 0) try {
+																										XposedHelpers.callMethod(act, "startActivityAsUser", launchIntent, XposedHelpers.newInstance(UserHandle.class, user));
+																									} catch (Throwable t) {
+																										XposedHelpers.log(t);
+																									} else {
+																										act.startActivity(launchIntent);
+																									}
+																								}
+																								{ skipped = true; result = true; throwable = null; }
+																								break;
+																						}
+							
+														if (skipped) { if (throwable != null) throw throwable; return result; }
+														result = chain.proceed(args);
+													} catch (Throwable t) {
+														throwable = t;
+														result = null;
+													}
+													if (throwable != null) throw throwable;
+													return result;
+												}
+											});
 										}
-										param.returnAndSkip(true);
-										break;
-								}
-							}
-						});
-					}
-				});
+									});
+			
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
@@ -226,31 +277,63 @@ public class Various {
 	public static void AppsDefaultSortHook(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.miui.appmanager.AppManagerMainActivity", lpparam.getClassLoader(), "onCreate", Bundle.class, new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				param.getArgs()[0] = checkBundle((Context)param.getThisObject(), (Bundle)param.getArgs()[0]);
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object thisObject = chain.getThisObject();
+				try {
 
-				// Bruteforce class on MIUI 12.5
-				String fragCls = null;
-				Class<?> xfragCls = findClassIfExists("androidx.fragment.app.Fragment", lpparam.getClassLoader());
-				Field[] fields = param.getThisObject().getClass().getDeclaredFields();
-				for (Field field: fields)
-					if (Fragment.class.isAssignableFrom(field.getType()) ||
-					   (xfragCls != null && xfragCls.isAssignableFrom(field.getType()))) {
-						fragCls = field.getType().getCanonicalName();
-						break;
-					}
+									args[0] = checkBundle((Context)thisObject, (Bundle)args[0]);
 
-				if (fragCls != null)
-					ModuleHelper.hookAllMethods(fragCls, lpparam.getClassLoader(), "onActivityCreated", new MethodHook() {
-						@Override
-						protected void before(final BeforeHookCallback param) throws Throwable {
-							try {
-								param.getArgs()[0] = checkBundle((Context)XposedHelpers.callMethod(param.getThisObject(), "getContext"), (Bundle)param.getArgs()[0]);
-							} catch (Throwable t) {
-								XposedHelpers.log("AppsDefaultSortHook", t.getMessage());
-							}
-						}
-					});
+									// Bruteforce class on MIUI 12.5
+									String fragCls = null;
+									Class<?> xfragCls = findClassIfExists("androidx.fragment.app.Fragment", lpparam.getClassLoader());
+									Field[] fields = thisObject.getClass().getDeclaredFields();
+									for (Field field: fields)
+										if (Fragment.class.isAssignableFrom(field.getType()) ||
+										   (xfragCls != null && xfragCls.isAssignableFrom(field.getType()))) {
+											fragCls = field.getType().getCanonicalName();
+											break;
+										}
+
+									if (fragCls != null)
+										ModuleHelper.hookAllMethods(fragCls, lpparam.getClassLoader(), "onActivityCreated", new MethodHook() {
+											@Override
+																	public Object intercept(XposedInterface.Chain chain) throws Throwable {
+												boolean skipped = false;
+												Object result = null;
+												Throwable throwable = null;
+												Object[] args = chain.getArgs().toArray(new Object[0]);
+												Object thisObject = chain.getThisObject();
+												try {
+
+																				try {
+																					args[0] = checkBundle((Context)XposedHelpers.callMethod(thisObject, "getContext"), (Bundle)args[0]);
+																				} catch (Throwable t) {
+																					XposedHelpers.log("AppsDefaultSortHook", t.getMessage());
+																				}
+						
+													if (skipped) { if (throwable != null) throw throwable; return result; }
+													result = chain.proceed(args);
+												} catch (Throwable t) {
+													throwable = t;
+													result = null;
+												}
+												if (throwable != null) throw throwable;
+												return result;
+											}
+										});
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 
@@ -289,10 +372,26 @@ public class Various {
 	public static void AppsDisableServiceHook(SystemServerStartingParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.android.server.pm.PackageManagerServiceImpl", lpparam.getClassLoader(), "canBeDisabled", String.class, int.class, new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				if (!MIUI_CORE_APPS.contains(param.getArgs()[0])) {
-					param.returnAndSkip(null);
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object thisObject = chain.getThisObject();
+				try {
+
+									if (!MIUI_CORE_APPS.contains(args[0])) {
+										{ skipped = true; result = null; throwable = null; }
+									}
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
@@ -300,76 +399,130 @@ public class Various {
 	public static void AppsDisableHook(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.miui.appmanager.ApplicationsDetailsActivity", lpparam.getClassLoader(), "onCreateOptionsMenu", Menu.class, new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
-				Activity act = (Activity)param.getThisObject();
-				Menu menu = (Menu)param.getArgs()[0];
-				MenuItem dis = menu.add(0, 666, 1, act.getResources().getIdentifier("app_manager_disable_text", "string", lpparam.getPackageName()));
-				dis.setIcon(act.getResources().getIdentifier("action_button_stop", "drawable", lpparam.getPackageName()));
-				dis.setEnabled(true);
-				dis.setShowAsAction(1);
-				//XposedHelpers.setAdditionalInstanceField(param.getThisObject(), "mDisableButton", dis);
-
-				PackageManager pm = act.getPackageManager();
-				Field piField = XposedHelpers.findFirstFieldByExactType(act.getClass(), PackageInfo.class);
-				PackageInfo mPackageInfo = (PackageInfo)piField.get(act);
-				ApplicationInfo appInfo = pm.getApplicationInfo(mPackageInfo.packageName, PackageManager.GET_META_DATA);
-				boolean isSystem = (appInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-				boolean isUpdatedSystem = (appInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0;
-
-				dis.setTitle(act.getResources().getIdentifier(appInfo.enabled ? "app_manager_disable_text" : "app_manager_enable_text", "string", lpparam.getPackageName()));
-
-				if (!appInfo.enabled || (isSystem && !isUpdatedSystem)) {
-					MenuItem item = menu.findItem(2);
-					if (item != null) item.setVisible(false);
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				Object result;
+				Throwable throwable = null;
+				try {
+					result = chain.proceed();
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
+				try {
+					Object thisObject = chain.getThisObject();
+					Object[] args = chain.getArgs().toArray(new Object[0]);
+
+									Activity act = (Activity)thisObject;
+									Menu menu = (Menu)args[0];
+									MenuItem dis = menu.add(0, 666, 1, act.getResources().getIdentifier("app_manager_disable_text", "string", lpparam.getPackageName()));
+									dis.setIcon(act.getResources().getIdentifier("action_button_stop", "drawable", lpparam.getPackageName()));
+									dis.setEnabled(true);
+									dis.setShowAsAction(1);
+									//XposedHelpers.setAdditionalInstanceField(thisObject, "mDisableButton", dis);
+
+									PackageManager pm = act.getPackageManager();
+									Field piField = XposedHelpers.findFirstFieldByExactType(act.getClass(), PackageInfo.class);
+									PackageInfo mPackageInfo = (PackageInfo)piField.get(act);
+									ApplicationInfo appInfo = pm.getApplicationInfo(mPackageInfo.packageName, PackageManager.GET_META_DATA);
+									boolean isSystem = (appInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+									boolean isUpdatedSystem = (appInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0;
+
+									dis.setTitle(act.getResources().getIdentifier(appInfo.enabled ? "app_manager_disable_text" : "app_manager_enable_text", "string", lpparam.getPackageName()));
+
+									if (!appInfo.enabled || (isSystem && !isUpdatedSystem)) {
+										MenuItem item = menu.findItem(2);
+										if (item != null) item.setVisible(false);
+									}
+			
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 
 		ModuleHelper.findAndHookMethod("com.miui.appmanager.ApplicationsDetailsActivity", lpparam.getClassLoader(), "onOptionsItemSelected", MenuItem.class, new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
-				MenuItem item = (MenuItem)param.getArgs()[0];
-				if (item == null || item.getItemId() != 666) return;
-
-				Activity act = (Activity)param.getThisObject();
-				Resources modRes = ModuleHelper.getModuleRes(act);
-				Field piField = XposedHelpers.findFirstFieldByExactType(act.getClass(), PackageInfo.class);
-				PackageInfo mPackageInfo = (PackageInfo)piField.get(act);
-				if (MIUI_CORE_APPS.contains(mPackageInfo.packageName)) {
-					Toast.makeText(act, modRes.getString(R.string.disable_app_settings), Toast.LENGTH_SHORT).show();
-					return;
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				Object result;
+				Throwable throwable = null;
+				try {
+					result = chain.proceed();
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
+				try {
+					Object thisObject = chain.getThisObject();
+					Object[] args = chain.getArgs().toArray(new Object[0]);
 
-				PackageManager pm = act.getPackageManager();
-				ApplicationInfo appInfo = pm.getApplicationInfo(mPackageInfo.packageName, PackageManager.GET_META_DATA);
-				boolean isSystem = (appInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-				int state = pm.getApplicationEnabledSetting(mPackageInfo.packageName);
-				boolean isEnabledOrDefault = (state == PackageManager.COMPONENT_ENABLED_STATE_ENABLED || state == PackageManager.COMPONENT_ENABLED_STATE_DEFAULT);
-				if (isEnabledOrDefault) {
-					if (isSystem) {
-						String title = modRes.getString(R.string.disable_app_title);
-						String text = modRes.getString(R.string.disable_app_text);
-						new AlertDialog.Builder(act).setTitle(title).setMessage(text).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int whichButton) {
-								setAppState(act, mPackageInfo.packageName, item, false);
-							}
-						}).setNegativeButton(android.R.string.cancel, null).show();
-					} else setAppState(act, mPackageInfo.packageName, item, false);
-				} else setAppState(act, mPackageInfo.packageName, item, true);
-				param.setResult(true);
+									MenuItem item = (MenuItem)args[0];
+									if (item == null || item.getItemId() != 666) { if (throwable != null) throw throwable; return result; }
+
+									Activity act = (Activity)thisObject;
+									Resources modRes = ModuleHelper.getModuleRes(act);
+									Field piField = XposedHelpers.findFirstFieldByExactType(act.getClass(), PackageInfo.class);
+									PackageInfo mPackageInfo = (PackageInfo)piField.get(act);
+									if (MIUI_CORE_APPS.contains(mPackageInfo.packageName)) {
+										Toast.makeText(act, modRes.getString(R.string.disable_app_settings), Toast.LENGTH_SHORT).show();
+										{ if (throwable != null) throw throwable; return result; }
+									}
+
+									PackageManager pm = act.getPackageManager();
+									ApplicationInfo appInfo = pm.getApplicationInfo(mPackageInfo.packageName, PackageManager.GET_META_DATA);
+									boolean isSystem = (appInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+									int state = pm.getApplicationEnabledSetting(mPackageInfo.packageName);
+									boolean isEnabledOrDefault = (state == PackageManager.COMPONENT_ENABLED_STATE_ENABLED || state == PackageManager.COMPONENT_ENABLED_STATE_DEFAULT);
+									if (isEnabledOrDefault) {
+										if (isSystem) {
+											String title = modRes.getString(R.string.disable_app_title);
+											String text = modRes.getString(R.string.disable_app_text);
+											new AlertDialog.Builder(act).setTitle(title).setMessage(text).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+												public void onClick(DialogInterface dialog, int whichButton) {
+													setAppState(act, mPackageInfo.packageName, item, false);
+												}
+											}).setNegativeButton(android.R.string.cancel, null).show();
+										} else setAppState(act, mPackageInfo.packageName, item, false);
+									} else setAppState(act, mPackageInfo.packageName, item, true);
+									{ result = true; throwable = null; }
+			
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
 	public static void HideReportButtonHook(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.miui.appmanager.ApplicationsDetailsActivity", lpparam.getClassLoader(), "onCreateOptionsMenu", Menu.class, new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
-				Activity act = (Activity)param.getThisObject();
-				Menu menu = (Menu)param.getArgs()[0];
-				MenuItem reportMenu = menu.findItem(4);
-				if (reportMenu != null) {
-					reportMenu.setVisible(false);
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				Object result;
+				Throwable throwable = null;
+				try {
+					result = chain.proceed();
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
+				try {
+					Object thisObject = chain.getThisObject();
+					Object[] args = chain.getArgs().toArray(new Object[0]);
+
+									Activity act = (Activity)thisObject;
+									Menu menu = (Menu)args[0];
+									MenuItem reportMenu = menu.findItem(4);
+									if (reportMenu != null) {
+										reportMenu.setVisible(false);
+									}
+			
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
@@ -381,20 +534,54 @@ public class Various {
 		else
 			ModuleHelper.hookMethod(mGetAppInfo[0], new MethodHook() {
 				@Override
-				protected void after(final AfterHookCallback param) throws Throwable {
-					if ((int)param.getArgs()[3] == 128 && (int)param.getArgs()[4] == 0) {
-						ApplicationInfo appInfo = (ApplicationInfo)param.getResult();
-						appInfo.flags &= ~ApplicationInfo.FLAG_SYSTEM;
-						param.setResult(appInfo);
+								public Object intercept(XposedInterface.Chain chain) throws Throwable {
+					Object result;
+					Throwable throwable = null;
+					try {
+						result = chain.proceed();
+					} catch (Throwable t) {
+						throwable = t;
+						result = null;
 					}
+					try {
+						Object thisObject = chain.getThisObject();
+						Object[] args = chain.getArgs().toArray(new Object[0]);
+
+											if ((int)args[3] == 128 && (int)args[4] == 0) {
+												ApplicationInfo appInfo = (ApplicationInfo)result;
+												appInfo.flags &= ~ApplicationInfo.FLAG_SYSTEM;
+												{ result = appInfo; throwable = null; }
+											}
+				
+					} catch (Throwable t) {
+						XposedHelpers.log(t);
+					}
+					if (throwable != null) throw throwable;
+					return result;
 				}
 			});
 
 		ModuleHelper.findAndHookMethod("com.miui.networkassistant.ui.fragment.ShowAppDetailFragment", lpparam.getClassLoader(), "initFirewallData", new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				Object mAppInfo = XposedHelpers.getObjectField(param.getThisObject(), "mAppInfo");
-				if (mAppInfo != null) XposedHelpers.setBooleanField(mAppInfo, "isSystemApp", false);
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object thisObject = chain.getThisObject();
+				try {
+
+									Object mAppInfo = XposedHelpers.getObjectField(thisObject, "mAppInfo");
+									if (mAppInfo != null) XposedHelpers.setBooleanField(mAppInfo, "isSystemApp", false);
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 
@@ -408,9 +595,27 @@ public class Various {
 
 		ModuleHelper.findAndHookMethod("com.miui.powerkeeper.provider.PreSetGroup", lpparam.getClassLoader(), "initGroup", new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
-				HashMap<String, Integer> mGroupHeadUidMap = (HashMap<String, Integer>)XposedHelpers.getStaticObjectField(findClass("com.miui.powerkeeper.provider.PreSetGroup", lpparam.getClassLoader()), "mGroupHeadUidMap");
-				mGroupHeadUidMap.clear();
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				Object result;
+				Throwable throwable = null;
+				try {
+					result = chain.proceed();
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
+				}
+				try {
+					Object thisObject = chain.getThisObject();
+					Object[] args = chain.getArgs().toArray(new Object[0]);
+
+									HashMap<String, Integer> mGroupHeadUidMap = (HashMap<String, Integer>)XposedHelpers.getStaticObjectField(findClass("com.miui.powerkeeper.provider.PreSetGroup", lpparam.getClassLoader()), "mGroupHeadUidMap");
+									mGroupHeadUidMap.clear();
+			
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 
@@ -422,11 +627,27 @@ public class Various {
 		ModuleHelper.hookAllMethods("com.miui.powerkeeper.utils.CommonAdapter", lpparam.getClassLoader(), "addPowerSaveWhitelistApps", HookerClassHelper.DO_NOTHING);
 		ModuleHelper.hookAllMethods("com.miui.powerkeeper.millet.MilletPolicy", lpparam.getClassLoader(), "dealSleepModeWhiteList", new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				boolean addWhiteList = (boolean) param.getArgs()[1];
-				if (addWhiteList) {
-					param.returnAndSkip(null);
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object thisObject = chain.getThisObject();
+				try {
+
+									boolean addWhiteList = (boolean) args[1];
+									if (addWhiteList) {
+										{ skipped = true; result = null; throwable = null; }
+									}
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 		ModuleHelper.findAndHookMethod("com.miui.powerkeeper.statemachine.ForceDozeController", lpparam.getClassLoader(), "restoreWhiteListAppsIfQuitForceIdle", HookerClassHelper.DO_NOTHING);
@@ -474,73 +695,141 @@ public class Various {
         ModuleHelper.hookAllConstructors(RegionSamplingHelper, new MethodHook() {
 			private int originDockLocation = -1;
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
-				if (!isHooked[0]) {
-					isHooked[0] = true;
-					View view = (View) param.getArgs()[0];
-					if (originDockLocation == -1) {
-						originDockLocation = view.getContext().getSharedPreferences("sp_video_box", 0).getInt("dock_line_location", 0);;
-					}
-					BroadcastReceiver showReceiver = new BroadcastReceiver() {
-						@Override
-						public void onReceive(Context context, Intent intent) {
-							Bundle bundle = intent.getBundleExtra("actionInfo");
-							int pos = originDockLocation;
-							if (bundle != null) {
-								pos = bundle.getInt("inDirection", 0);
-								view.getContext().getSharedPreferences("sp_video_box", 0).edit().putInt("dock_line_location", pos).commit();
-							}
-							showSideBar(view, pos);
-						}
-					};
-					view.getContext().registerReceiver(showReceiver, new IntentFilter(ACTION_PREFIX + "ShowSideBar"));
-					XposedHelpers.setAdditionalInstanceField(param.getThisObject(), "showReceiver", showReceiver);
-
-					if (!isHooked[1]) {
-						isHooked[1] = true;
-						Handler myhandler = new Handler(Looper.myLooper());
-						Runnable removeBg = new Runnable() {
-							@Override
-							public void run() {
-								myhandler.removeCallbacks(this);
-								if (!enableSideBar) {
-									Object li = XposedHelpers.getObjectField(view, "mListenerInfo");
-									Object mOnTouchListener = XposedHelpers.getObjectField(li, "mOnTouchListener");
-									ModuleHelper.findAndHookMethod(mOnTouchListener.getClass(), "onTouch", View.class, MotionEvent.class, new MethodHook() {
-										@Override
-										protected void before(final BeforeHookCallback param) throws Throwable {
-											MotionEvent me = (MotionEvent) param.getArgs()[1];
-											if (me.getSource() != 9999) {
-												param.returnAndSkip(false);
-											}
-										}
-									});
-								}
-								Class <?> bgDrawable = view.getBackground().getClass();
-								ModuleHelper.findAndHookMethod(bgDrawable, "draw", Canvas.class, new MethodHook() {
-									@Override
-									protected void before(final BeforeHookCallback param) throws Throwable {
-										param.returnAndSkip(null);
-									}
-								});
-								view.setBackground(null);
-							}
-						};
-						myhandler.postDelayed(removeBg, 150);
-					}
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				Object result;
+				Throwable throwable = null;
+				try {
+					result = chain.proceed();
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
+				try {
+					Object thisObject = chain.getThisObject();
+					Object[] args = chain.getArgs().toArray(new Object[0]);
+
+									if (!isHooked[0]) {
+										isHooked[0] = true;
+										View view = (View) args[0];
+										if (originDockLocation == -1) {
+											originDockLocation = view.getContext().getSharedPreferences("sp_video_box", 0).getInt("dock_line_location", 0);;
+										}
+										BroadcastReceiver showReceiver = new BroadcastReceiver() {
+											@Override
+											public void onReceive(Context context, Intent intent) {
+												Bundle bundle = intent.getBundleExtra("actionInfo");
+												int pos = originDockLocation;
+												if (bundle != null) {
+													pos = bundle.getInt("inDirection", 0);
+													view.getContext().getSharedPreferences("sp_video_box", 0).edit().putInt("dock_line_location", pos).commit();
+												}
+												showSideBar(view, pos);
+											}
+										};
+										view.getContext().registerReceiver(showReceiver, new IntentFilter(ACTION_PREFIX + "ShowSideBar"));
+										XposedHelpers.setAdditionalInstanceField(thisObject, "showReceiver", showReceiver);
+
+										if (!isHooked[1]) {
+											isHooked[1] = true;
+											Handler myhandler = new Handler(Looper.myLooper());
+											Runnable removeBg = new Runnable() {
+												@Override
+												public void run() {
+													myhandler.removeCallbacks(this);
+													if (!enableSideBar) {
+														Object li = XposedHelpers.getObjectField(view, "mListenerInfo");
+														Object mOnTouchListener = XposedHelpers.getObjectField(li, "mOnTouchListener");
+														ModuleHelper.findAndHookMethod(mOnTouchListener.getClass(), "onTouch", View.class, MotionEvent.class, new MethodHook() {
+															@Override
+																									public Object intercept(XposedInterface.Chain chain) throws Throwable {
+																boolean skipped = false;
+																Object result = null;
+																Throwable throwable = null;
+																Object[] args = chain.getArgs().toArray(new Object[0]);
+																Object thisObject = chain.getThisObject();
+																try {
+
+																												MotionEvent me = (MotionEvent) args[1];
+																												if (me.getSource() != 9999) {
+																													{ skipped = true; result = false; throwable = null; }
+																												}
+										
+																	if (skipped) { if (throwable != null) throw throwable; return result; }
+																	result = chain.proceed(args);
+																} catch (Throwable t) {
+																	throwable = t;
+																	result = null;
+																}
+																if (throwable != null) throw throwable;
+																return result;
+															}
+														});
+													}
+													Class <?> bgDrawable = view.getBackground().getClass();
+													ModuleHelper.findAndHookMethod(bgDrawable, "draw", Canvas.class, new MethodHook() {
+														@Override
+																							public Object intercept(XposedInterface.Chain chain) throws Throwable {
+															boolean skipped = false;
+															Object result = null;
+															Throwable throwable = null;
+															Object[] args = chain.getArgs().toArray(new Object[0]);
+															Object thisObject = chain.getThisObject();
+															try {
+
+																										{ skipped = true; result = null; throwable = null; }
+									
+																if (skipped) { if (throwable != null) throw throwable; return result; }
+																result = chain.proceed(args);
+															} catch (Throwable t) {
+																throwable = t;
+																result = null;
+															}
+															if (throwable != null) throw throwable;
+															return result;
+														}
+													});
+													view.setBackground(null);
+												}
+											};
+											myhandler.postDelayed(removeBg, 150);
+										}
+									}
+			
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 		ModuleHelper.findAndHookMethod(RegionSamplingHelper, "onViewDetachedFromWindow", android.view.View.class, new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
-				isHooked[0] = false;
-				BroadcastReceiver showReceiver = (BroadcastReceiver) XposedHelpers.getAdditionalInstanceField(param.getThisObject(), "showReceiver");
-				if (showReceiver != null) {
-					View view = (View) param.getArgs()[0];
-					view.getContext().unregisterReceiver(showReceiver);
-					XposedHelpers.removeAdditionalInstanceField(param.getThisObject(), "showReceiver");
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				Object result;
+				Throwable throwable = null;
+				try {
+					result = chain.proceed();
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
+				try {
+					Object thisObject = chain.getThisObject();
+					Object[] args = chain.getArgs().toArray(new Object[0]);
+
+									isHooked[0] = false;
+									BroadcastReceiver showReceiver = (BroadcastReceiver) XposedHelpers.getAdditionalInstanceField(thisObject, "showReceiver");
+									if (showReceiver != null) {
+										View view = (View) args[0];
+										view.getContext().unregisterReceiver(showReceiver);
+										XposedHelpers.removeAdditionalInstanceField(thisObject, "showReceiver");
+									}
+			
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 		Method[] methods = XposedHelpers.findMethodsByExactParameters(RegionSamplingHelper, void.class, Rect.class);
@@ -550,8 +839,24 @@ public class Various {
 		}
 		ModuleHelper.hookMethod(methods[0], new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				param.returnAndSkip(null);
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object thisObject = chain.getThisObject();
+				try {
+
+									{ skipped = true; result = null; throwable = null; }
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
@@ -569,18 +874,50 @@ public class Various {
 		if (HandlerClass != null) {
             ModuleHelper.hookAllConstructors(HandlerClass, new MethodHook() {
 				@Override
-				protected void before(final BeforeHookCallback param) throws Throwable {
-					if (param.getArgs().length == 2) {
-						param.getArgs()[1] = 0;
+								public Object intercept(XposedInterface.Chain chain) throws Throwable {
+					boolean skipped = false;
+					Object result = null;
+					Throwable throwable = null;
+					Object[] args = chain.getArgs().toArray(new Object[0]);
+					Object thisObject = chain.getThisObject();
+					try {
+
+											if (args.length == 2) {
+												args[1] = 0;
+											}
+				
+						if (skipped) { if (throwable != null) throw throwable; return result; }
+						result = chain.proceed(args);
+					} catch (Throwable t) {
+						throwable = t;
+						result = null;
 					}
+					if (throwable != null) throw throwable;
+					return result;
 				}
 			});
 			Method[] methods = XposedHelpers.findMethodsByExactParameters(HandlerClass, void.class, int.class);
 			if (methods.length > 0) {
                 ModuleHelper.hookMethod(methods[0], new MethodHook() {
 					@Override
-					protected void before(final BeforeHookCallback param) throws Throwable {
-						param.getArgs()[0] = 0;
+										public Object intercept(XposedInterface.Chain chain) throws Throwable {
+						boolean skipped = false;
+						Object result = null;
+						Throwable throwable = null;
+						Object[] args = chain.getArgs().toArray(new Object[0]);
+						Object thisObject = chain.getThisObject();
+						try {
+
+													args[0] = 0;
+					
+							if (skipped) { if (throwable != null) throw throwable; return result; }
+							result = chain.proceed(args);
+						} catch (Throwable t) {
+							throwable = t;
+							result = null;
+						}
+						if (throwable != null) throw throwable;
+						return result;
 					}
 				});
 			}
@@ -590,15 +927,33 @@ public class Various {
 	public static void PrivacyAppsLayoutHook(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.miui.privacyapps.ui.PrivacyAppsActivity", lpparam.getClassLoader(), "onCreate", Bundle.class, new MethodHook() {
 			@Override
-			protected void after(AfterHookCallback param) throws Throwable {
-				Activity act = (Activity) param.getThisObject();
-				int gridViewId = act.getResources().getIdentifier("privacy_apps_gridview", "id", "com.miui.securitycenter");
-				GridView gridView = act.findViewById(gridViewId);
-				gridView.setNumColumns(4);
-				LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) gridView.getLayoutParams();
-				params.rightMargin = (int) Helpers.dp2px(16);
-				params.leftMargin = params.rightMargin;
-				gridView.setLayoutParams(params);
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				Object result;
+				Throwable throwable = null;
+				try {
+					result = chain.proceed();
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
+				}
+				try {
+					Object thisObject = chain.getThisObject();
+					Object[] args = chain.getArgs().toArray(new Object[0]);
+
+									Activity act = (Activity) thisObject;
+									int gridViewId = act.getResources().getIdentifier("privacy_apps_gridview", "id", "com.miui.securitycenter");
+									GridView gridView = act.findViewById(gridViewId);
+									gridView.setNumColumns(4);
+									LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) gridView.getLayoutParams();
+									params.rightMargin = (int) Helpers.dp2px(16);
+									params.leftMargin = params.rightMargin;
+									gridView.setLayoutParams(params);
+			
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
@@ -606,25 +961,57 @@ public class Various {
 	public static void PersistPrivacyThumbnailBlur(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod(ContentResolver.class, "call", Uri.class, String.class, String.class, Bundle.class, new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				if ("callPreference".equals(param.getArgs()[1]) && "GET".equals(param.getArgs()[2])) {
-					Bundle extras = (Bundle) param.getArgs()[3];
-					if (extras != null && "pref_key_last_upload_privacy_thumbnail_blur_time".equals(extras.getString("key"))) {
-						Bundle res = new Bundle();
-						res.putLong("pref_key_last_upload_privacy_thumbnail_blur_time", java.lang.System.currentTimeMillis() - 10000);
-						param.returnAndSkip(res);
-					}
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object thisObject = chain.getThisObject();
+				try {
+
+									if ("callPreference".equals(args[1]) && "GET".equals(args[2])) {
+										Bundle extras = (Bundle) args[3];
+										if (extras != null && "pref_key_last_upload_privacy_thumbnail_blur_time".equals(extras.getString("key"))) {
+											Bundle res = new Bundle();
+											res.putLong("pref_key_last_upload_privacy_thumbnail_blur_time", java.lang.System.currentTimeMillis() - 10000);
+											{ skipped = true; result = res; throwable = null; }
+										}
+									}
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 		if (!Build.IS_INTERNATIONAL_BUILD) {
 			ModuleHelper.findAndHookMethod(URLConnection.class, "setUseCaches", boolean.class, new MethodHook() {
 				@Override
-				protected void before(final BeforeHookCallback param) throws Throwable {
-					URLConnection httpURLConnection = (URLConnection) param.getThisObject();
-					if ("/user/cat".equals(httpURLConnection.getURL().getPath())) {
-						((HttpURLConnection) httpURLConnection).setRequestMethod("HEAD");
+								public Object intercept(XposedInterface.Chain chain) throws Throwable {
+					boolean skipped = false;
+					Object result = null;
+					Throwable throwable = null;
+					Object[] args = chain.getArgs().toArray(new Object[0]);
+					Object thisObject = chain.getThisObject();
+					try {
+
+											URLConnection httpURLConnection = (URLConnection) thisObject;
+											if ("/user/cat".equals(httpURLConnection.getURL().getPath())) {
+												((HttpURLConnection) httpURLConnection).setRequestMethod("HEAD");
+											}
+				
+						if (skipped) { if (throwable != null) throw throwable; return result; }
+						result = chain.proceed(args);
+					} catch (Throwable t) {
+						throwable = t;
+						result = null;
 					}
+					if (throwable != null) throw throwable;
+					return result;
 				}
 			});
 		}
@@ -633,10 +1020,26 @@ public class Various {
 	public static void NoLowBatteryWarningHook() {
 		MethodHook settingHook = new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				String key = (String)param.getArgs()[1];
-				if ("low_battery_dialog_disabled".equals(key)) param.returnAndSkip(1);
-				else if ("low_battery_sound".equals(key)) param.returnAndSkip(null);
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object thisObject = chain.getThisObject();
+				try {
+
+									String key = (String)args[1];
+									if ("low_battery_dialog_disabled".equals(key)) { skipped = true; result = 1; throwable = null; }
+									else if ("low_battery_sound".equals(key)) { skipped = true; result = null; throwable = null; }
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		};
 		ModuleHelper.hookAllMethods(Settings.System.class, "getInt", settingHook);
@@ -647,65 +1050,131 @@ public class Various {
 		final int defaultOpenTitleId = MainModule.resHooks.addFakeResource("various_open_by_default_title", R.string.various_open_by_default_title, "string");
 		ModuleHelper.findAndHookMethod("com.miui.appmanager.ApplicationsDetailsActivity", lpparam.getClassLoader(), "initView", new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
-				Activity act = (Activity) param.getThisObject();
-				int anchorViewId= act.getResources().getIdentifier("am_storage_view", "id", "com.miui.securitycenter");
-				View anchorView = act.findViewById(anchorViewId);
-				LinearLayout actionContainer = (LinearLayout) anchorView.getParent();
-				Class<?> BannerItem = findClass("com.miui.appmanager.widget.AppDetailBannerItemView", lpparam.getClassLoader());
-				if (BannerItem != null) {
-					int childCount = actionContainer.getChildCount();
-					LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
-					LinearLayout defaultView = (LinearLayout) XposedHelpers.newInstance(BannerItem, actionContainer.getContext(), null);
-					XposedHelpers.callMethod(defaultView, "setTitle", defaultOpenTitleId);
-					actionContainer.addView(defaultView, childCount - 2, lp);
-					int paddingStart = anchorView.getPaddingStart();
-					int paddingEnd = anchorView.getPaddingEnd();
-					defaultView.setPaddingRelative(paddingStart, 0, paddingEnd, 0);
-					defaultView.setMinimumHeight(anchorView.getMinimumHeight());
-					int itemBackgroundId = act.getResources().getIdentifier("am_card_bg_selector", "drawable", "com.miui.securitycenter");
-					defaultView.setBackgroundResource(itemBackgroundId);
-					defaultView.setGravity(Gravity.CENTER_VERTICAL);
-
-					defaultView.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							Intent intent = new Intent("android.settings.APP_OPEN_BY_DEFAULT_SETTINGS");
-							String pkgName = act.getIntent().getStringExtra("package_name");
-							intent.setData(Uri.parse("package:".concat(pkgName)));
-							act.startActivity(intent);
-						}
-					});
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				Object result;
+				Throwable throwable = null;
+				try {
+					result = chain.proceed();
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
+				try {
+					Object thisObject = chain.getThisObject();
+					Object[] args = chain.getArgs().toArray(new Object[0]);
+
+									Activity act = (Activity) thisObject;
+									int anchorViewId= act.getResources().getIdentifier("am_storage_view", "id", "com.miui.securitycenter");
+									View anchorView = act.findViewById(anchorViewId);
+									LinearLayout actionContainer = (LinearLayout) anchorView.getParent();
+									Class<?> BannerItem = findClass("com.miui.appmanager.widget.AppDetailBannerItemView", lpparam.getClassLoader());
+									if (BannerItem != null) {
+										int childCount = actionContainer.getChildCount();
+										LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
+										LinearLayout defaultView = (LinearLayout) XposedHelpers.newInstance(BannerItem, actionContainer.getContext(), null);
+										XposedHelpers.callMethod(defaultView, "setTitle", defaultOpenTitleId);
+										actionContainer.addView(defaultView, childCount - 2, lp);
+										int paddingStart = anchorView.getPaddingStart();
+										int paddingEnd = anchorView.getPaddingEnd();
+										defaultView.setPaddingRelative(paddingStart, 0, paddingEnd, 0);
+										defaultView.setMinimumHeight(anchorView.getMinimumHeight());
+										int itemBackgroundId = act.getResources().getIdentifier("am_card_bg_selector", "drawable", "com.miui.securitycenter");
+										defaultView.setBackgroundResource(itemBackgroundId);
+										defaultView.setGravity(Gravity.CENTER_VERTICAL);
+
+										defaultView.setOnClickListener(new View.OnClickListener() {
+											@Override
+											public void onClick(View v) {
+												Intent intent = new Intent("android.settings.APP_OPEN_BY_DEFAULT_SETTINGS");
+												String pkgName = act.getIntent().getStringExtra("package_name");
+												intent.setData(Uri.parse("package:".concat(pkgName)));
+												act.startActivity(intent);
+											}
+										});
+									}
+			
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
 	public static void SkipSecurityScanHook(PackageReadyParam lpparam) {
 		MethodHook skipScan = new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				param.returnAndSkip(new ArrayList<>());
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object thisObject = chain.getThisObject();
+				try {
+
+									{ skipped = true; result = new ArrayList<>(); throwable = null; }
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		};
 		ModuleHelper.findAndHookMethod("com.miui.securityscan.model.ModelFactory", lpparam.getClassLoader(), "produceSystemGroupModel", Context.class, skipScan);
 		ModuleHelper.findAndHookMethod("com.miui.securityscan.model.ModelFactory", lpparam.getClassLoader(), "produceManualGroupModel", Context.class, skipScan);
 		ModuleHelper.findAndHookMethod("com.miui.common.customview.ScoreTextView", lpparam.getClassLoader(), "setScore", int.class, new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				param.getArgs()[0] = 100;
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object thisObject = chain.getThisObject();
+				try {
+
+									args[0] = 100;
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 		ModuleHelper.findAndHookMethod(ContentResolver.class, "call", Uri.class, String.class, String.class, Bundle.class, new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				if ("callPreference".equals(param.getArgs()[1]) && "GET".equals(param.getArgs()[2])) {
-					Bundle extras = (Bundle) param.getArgs()[3];
-					if (extras != null && "latest_optimize_date".equals(extras.getString("key"))) {
-						Bundle res = new Bundle();
-						res.putLong("latest_optimize_date", java.lang.System.currentTimeMillis() - 10000);
-						param.returnAndSkip(res);
-					}
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object thisObject = chain.getThisObject();
+				try {
+
+									if ("callPreference".equals(args[1]) && "GET".equals(args[2])) {
+										Bundle extras = (Bundle) args[3];
+										if (extras != null && "latest_optimize_date".equals(extras.getString("key"))) {
+											Bundle res = new Bundle();
+											res.putLong("latest_optimize_date", java.lang.System.currentTimeMillis() - 10000);
+											{ skipped = true; result = res; throwable = null; }
+										}
+									}
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 		ModuleHelper.findAndHookMethod("com.miui.securityscan.ui.main.MainContentFrame", lpparam.getClassLoader(), "onClick", View.class, HookerClassHelper.DO_NOTHING);
@@ -720,8 +1189,24 @@ public class Various {
 		if (methodData != null) {
 			MethodHook fakeUserAppsHook = new MethodHook() {
 				@Override
-				protected void before(final BeforeHookCallback param) throws Throwable {
-					param.returnAndSkip(new ArrayList());
+								public Object intercept(XposedInterface.Chain chain) throws Throwable {
+					boolean skipped = false;
+					Object result = null;
+					Throwable throwable = null;
+					Object[] args = chain.getArgs().toArray(new Object[0]);
+					Object thisObject = chain.getThisObject();
+					try {
+
+											{ skipped = true; result = new ArrayList(); throwable = null; }
+				
+						if (skipped) { if (throwable != null) throw throwable; return result; }
+						result = chain.proceed(args);
+					} catch (Throwable t) {
+						throwable = t;
+						result = null;
+					}
+					if (throwable != null) throw throwable;
+					return result;
 				}
 			};
 			try {
@@ -758,17 +1243,35 @@ public class Various {
 			String finalFieldName = fieldName;
 			ModuleHelper.findAndHookMethod(HandlerClass, "handleMessage", Message.class, new MethodHook() {
 				@Override
-				protected void after(final AfterHookCallback param) throws Throwable {
-					Message msg = (Message) param.getArgs()[0];
-					int i = msg.what;
-					if (i == 1) {
-						Object wk = XposedHelpers.getObjectField(param.getThisObject(), finalFieldName);
-						Object frag = XposedHelpers.callMethod(wk, "get");
-						Activity batteryView = (Activity) XposedHelpers.callMethod(frag, "getActivity");
-						int temp = batteryView.registerReceiver(null, new IntentFilter("android.intent.action.BATTERY_CHANGED")).getIntExtra("temperature", 0) / 10;
-						Object tempPreference = XposedHelpers.callMethod(frag, "findPreference", "reference_current_temp");
-						XposedHelpers.callMethod(tempPreference, "setText", temp + "℃");
+								public Object intercept(XposedInterface.Chain chain) throws Throwable {
+					Object result;
+					Throwable throwable = null;
+					try {
+						result = chain.proceed();
+					} catch (Throwable t) {
+						throwable = t;
+						result = null;
 					}
+					try {
+						Object thisObject = chain.getThisObject();
+						Object[] args = chain.getArgs().toArray(new Object[0]);
+
+											Message msg = (Message) args[0];
+											int i = msg.what;
+											if (i == 1) {
+												Object wk = XposedHelpers.getObjectField(thisObject, finalFieldName);
+												Object frag = XposedHelpers.callMethod(wk, "get");
+												Activity batteryView = (Activity) XposedHelpers.callMethod(frag, "getActivity");
+												int temp = batteryView.registerReceiver(null, new IntentFilter("android.intent.action.BATTERY_CHANGED")).getIntExtra("temperature", 0) / 10;
+												Object tempPreference = XposedHelpers.callMethod(frag, "findPreference", "reference_current_temp");
+												XposedHelpers.callMethod(tempPreference, "setText", temp + "℃");
+											}
+				
+					} catch (Throwable t) {
+						XposedHelpers.log(t);
+					}
+					if (throwable != null) throw throwable;
+					return result;
 				}
 			});
 		}
@@ -776,20 +1279,36 @@ public class Various {
 	public static void DisableDockSuggestHook(PackageReadyParam lpparam) {
 		MethodHook clearHook = new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				ArrayList<String> blackList = new ArrayList<String>();
-				blackList.add("xx.yy.zz");
-				StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-				int length = Math.min(stackTrace.length - 1, 15);
-				for (int i = 8; i < length;i++) {
-					StackTraceElement el = stackTrace[i];
-					if (el.getClassName().contains("DockAppEditActivity")
-						|| el.getClassName().contains("BubblesSettings")
-					) {
-						return;
-					}
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object thisObject = chain.getThisObject();
+				try {
+
+									ArrayList<String> blackList = new ArrayList<String>();
+									blackList.add("xx.yy.zz");
+									StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+									int length = Math.min(stackTrace.length - 1, 15);
+									for (int i = 8; i < length;i++) {
+										StackTraceElement el = stackTrace[i];
+										if (el.getClassName().contains("DockAppEditActivity")
+											|| el.getClassName().contains("BubblesSettings")
+										) {
+											{ if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+										}
+									}
+									{ skipped = true; result = blackList; throwable = null; }
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
-				param.returnAndSkip(blackList);
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		};
 		ModuleHelper.hookAllMethodsSilently("android.util.MiuiMultiWindowUtils", lpparam.getClassLoader(), "getFreeformSuggestionList", clearHook);
@@ -798,11 +1317,27 @@ public class Various {
 	public static void AlarmCompatHook() {
 		ModuleHelper.findAndHookMethod(Settings.System.class, "getStringForUser", ContentResolver.class, String.class, int.class, new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				String key = (String)param.getArgs()[1];
-				if ("next_alarm_formatted".equals(key)) {
-					param.getArgs()[1] = "next_alarm_clock_formatted";
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object thisObject = chain.getThisObject();
+				try {
+
+									String key = (String)args[1];
+									if ("next_alarm_formatted".equals(key)) {
+										args[1] = "next_alarm_clock_formatted";
+									}
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
@@ -810,35 +1345,71 @@ public class Various {
 	public static void AlarmCompatServiceHook(SystemServerStartingParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.android.server.alarm.AlarmManagerService", lpparam.getClassLoader(), "onBootPhase", int.class, new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
-				if ((int)param.getArgs()[0] != 500 /*PHASE_SYSTEM_SERVICES_READY*/) return;
-
-				Context mContext = (Context)XposedHelpers.callMethod(param.getThisObject(), "getContext");
-				if (mContext == null) {
-					XposedHelpers.log("AlarmCompatServiceHook", "Context is NULL");
-					return;
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				Object result;
+				Throwable throwable = null;
+				try {
+					result = chain.proceed();
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
-				ContentResolver resolver = mContext.getContentResolver();
-				ContentObserver alarmObserver = new ContentObserver(new Handler()) {
-					@Override
-					public void onChange(boolean selfChange) {
-						if (selfChange) return;
-						XposedHelpers.setAdditionalInstanceField(param.getThisObject(), "mNextAlarmTime", ModuleHelper.getNextMIUIAlarmTime(mContext));
-					}
-				};
-				alarmObserver.onChange(false);
-				resolver.registerContentObserver(Settings.System.getUriFor("next_alarm_clock_formatted"), false, alarmObserver);
+				try {
+					Object thisObject = chain.getThisObject();
+					Object[] args = chain.getArgs().toArray(new Object[0]);
+
+									if ((int)args[0] != 500 /*PHASE_SYSTEM_SERVICES_READY*/) { if (throwable != null) throw throwable; return result; }
+
+									Context mContext = (Context)XposedHelpers.callMethod(thisObject, "getContext");
+									if (mContext == null) {
+										XposedHelpers.log("AlarmCompatServiceHook", "Context is NULL");
+										{ if (throwable != null) throw throwable; return result; }
+									}
+									ContentResolver resolver = mContext.getContentResolver();
+									ContentObserver alarmObserver = new ContentObserver(new Handler()) {
+										@Override
+										public void onChange(boolean selfChange) {
+											if (selfChange) return;
+											XposedHelpers.setAdditionalInstanceField(thisObject, "mNextAlarmTime", ModuleHelper.getNextMIUIAlarmTime(mContext));
+										}
+									};
+									alarmObserver.onChange(false);
+									resolver.registerContentObserver(Settings.System.getUriFor("next_alarm_clock_formatted"), false, alarmObserver);
+			
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 
 		ModuleHelper.findAndHookMethod("com.android.server.alarm.AlarmManagerService", lpparam.getClassLoader(), "getNextAlarmClockImpl", int.class, new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
-				Context mContext = (Context)XposedHelpers.callMethod(param.getThisObject(), "getContext");
-				String pkgName = mContext.getPackageManager().getNameForUid(Binder.getCallingUid());
-				Object mNextAlarmTime = XposedHelpers.getAdditionalInstanceField(param.getThisObject(), "mNextAlarmTime");
-				if (mNextAlarmTime != null && MainModule.mPrefs.getStringSet("various_alarmcompat_apps").contains(pkgName))
-					param.setResult((long)mNextAlarmTime == 0 ? null : new AlarmManager.AlarmClockInfo((long)mNextAlarmTime, null));
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				Object result;
+				Throwable throwable = null;
+				try {
+					result = chain.proceed();
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
+				}
+				try {
+					Object thisObject = chain.getThisObject();
+					Object[] args = chain.getArgs().toArray(new Object[0]);
+
+									Context mContext = (Context)XposedHelpers.callMethod(thisObject, "getContext");
+									String pkgName = mContext.getPackageManager().getNameForUid(Binder.getCallingUid());
+									Object mNextAlarmTime = XposedHelpers.getAdditionalInstanceField(thisObject, "mNextAlarmTime");
+									if (mNextAlarmTime != null && MainModule.mPrefs.getStringSet("various_alarmcompat_apps").contains(pkgName))
+										{ result = (long)mNextAlarmTime == 0 ? null : new AlarmManager.AlarmClockInfo((long)mNextAlarmTime, null); throwable = null; }
+			
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
@@ -846,17 +1417,33 @@ public class Various {
 	public static void AnswerCallInHeadUpHook(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.android.incallui.InCallPresenter", lpparam.getClassLoader(), "answerIncomingCall", Context.class, String.class, int.class, boolean.class, new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				boolean showUi = (boolean) param.getArgs()[3];
-				if (showUi) {
-					ForegroundInfo foregroundInfo = ProcessManager.getForegroundInfo();
-					if (foregroundInfo != null) {
-						String topPackage = foregroundInfo.mForegroundPackageName;
-						if (!"com.miui.home".equals(topPackage)) {
-							param.getArgs()[3] = false;
-						}
-					}
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object thisObject = chain.getThisObject();
+				try {
+
+									boolean showUi = (boolean) args[3];
+									if (showUi) {
+										ForegroundInfo foregroundInfo = ProcessManager.getForegroundInfo();
+										if (foregroundInfo != null) {
+											String topPackage = foregroundInfo.mForegroundPackageName;
+											if (!"com.miui.home".equals(topPackage)) {
+												args[3] = false;
+											}
+										}
+									}
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
@@ -864,25 +1451,43 @@ public class Various {
 	public static void ShowCallUIHook(PackageReadyParam lpparam) {
 		ModuleHelper.hookAllMethods("com.android.incallui.InCallPresenter", lpparam.getClassLoader(), "startUi", new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
-				if (!(boolean)param.getResult() || !"INCOMING".equals(param.getArgs()[0].toString())) return;
-				Context mContext = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
-				if (MainModule.mPrefs.getStringAsInt("various_showcallui", 0) == 3) {
-					String topPackage = Settings.Global.getString(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.package");
-					if (topPackage != null && !topPackage.equals("com.miui.home")) {
-						return;
-					}
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				Object result;
+				Throwable throwable = null;
+				try {
+					result = chain.proceed();
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
+				try {
+					Object thisObject = chain.getThisObject();
+					Object[] args = chain.getArgs().toArray(new Object[0]);
 
-				if (MainModule.mPrefs.getStringAsInt("various_showcallui", 0) == 1) {
-					int fullScreen = Settings.Global.getInt(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.fullscreen", 0);
-					if (fullScreen == 1) return;
+									if (!(boolean)result || !"INCOMING".equals(args[0].toString())) { if (throwable != null) throw throwable; return result; }
+									Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
+									if (MainModule.mPrefs.getStringAsInt("various_showcallui", 0) == 3) {
+										String topPackage = Settings.Global.getString(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.package");
+										if (topPackage != null && !topPackage.equals("com.miui.home")) {
+											{ if (throwable != null) throw throwable; return result; }
+										}
+									}
+
+									if (MainModule.mPrefs.getStringAsInt("various_showcallui", 0) == 1) {
+										int fullScreen = Settings.Global.getInt(mContext.getContentResolver(), Helpers.modulePkg + ".foreground.fullscreen", 0);
+										if (fullScreen == 1) { if (throwable != null) throw throwable; return result; }
+									}
+
+									XposedHelpers.callMethod(thisObject, "showInCall", false, false);
+									Object mStatusBarNotifier = XposedHelpers.getObjectField(thisObject, "mStatusBarNotifier");
+									if (mStatusBarNotifier != null) XposedHelpers.callMethod(mStatusBarNotifier, "cancelInCall");
+									{ result = true; throwable = null; }
+			
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
 				}
-
-				XposedHelpers.callMethod(param.getThisObject(), "showInCall", false, false);
-				Object mStatusBarNotifier = XposedHelpers.getObjectField(param.getThisObject(), "mStatusBarNotifier");
-				if (mStatusBarNotifier != null) XposedHelpers.callMethod(mStatusBarNotifier, "cancelInCall");
-				param.setResult(true);
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
@@ -890,46 +1495,64 @@ public class Various {
 	public static void InCallBrightnessHook(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod("com.android.incallui.InCallActivity", lpparam.getClassLoader(), "onCreate", Bundle.class, new MethodHook() {
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
-				Activity act = (Activity)param.getThisObject();
-
-				int opt = MainModule.mPrefs.getStringAsInt("various_calluibright_type", 0);
-				if (opt == 1 || opt == 2) {
-					Object presenter = XposedHelpers.callStaticMethod(XposedHelpers.findClass("com.android.incallui.InCallPresenter", lpparam.getClassLoader()), "getInstance");
-					if (presenter == null) {
-						XposedHelpers.log("InCallBrightnessHook", "InCallPresenter is null");
-						return;
-					}
-
-					String state = String.valueOf(XposedHelpers.callMethod(presenter, "getInCallState"));
-					if (opt == 1 && !"INCOMING".equals(state)) return;
-					else if (opt == 2 && !"OUTGOING".equals(state) && !"PENDING_OUTGOING".equals(state)) return;
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				Object result;
+				Throwable throwable = null;
+				try {
+					result = chain.proceed();
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
+				try {
+					Object thisObject = chain.getThisObject();
+					Object[] args = chain.getArgs().toArray(new Object[0]);
 
-				String key = "various_calluibright_night";
-				boolean checkNight = MainModule.mPrefs.getBoolean(key);
-				if (checkNight) {
-					int start_hour = MainModule.mPrefs.getInt(key + "_start_hour", 0);
-					int start_minute = MainModule.mPrefs.getInt(key + "_start_minute", 0);
-					int end_hour = MainModule.mPrefs.getInt(key + "_end_hour", 0);
-					int end_minute = MainModule.mPrefs.getInt(key + "_end_minute", 0);
+									Activity act = (Activity)thisObject;
 
-					SimpleDateFormat formatter = new SimpleDateFormat("H:m", Locale.ENGLISH);
-					formatter.setTimeZone(TimeZone.getDefault());
-					Date start = formatter.parse(start_hour + ":" + start_minute);
-					Date end = formatter.parse(end_hour + ":" + end_minute);
-					Date now = formatter.parse(formatter.format(new Date()));
-					if (start == null || end == null || now == null) return;
+									int opt = MainModule.mPrefs.getStringAsInt("various_calluibright_type", 0);
+									if (opt == 1 || opt == 2) {
+										Object presenter = XposedHelpers.callStaticMethod(XposedHelpers.findClass("com.android.incallui.InCallPresenter", lpparam.getClassLoader()), "getInstance");
+										if (presenter == null) {
+											XposedHelpers.log("InCallBrightnessHook", "InCallPresenter is null");
+											{ if (throwable != null) throw throwable; return result; }
+										}
 
-					boolean isNight = start.before(end) ? now.after(start) && now.before(end) : now.before(end) || now.after(start);
-					if (isNight) return;
+										String state = String.valueOf(XposedHelpers.callMethod(presenter, "getInCallState"));
+										if (opt == 1 && !"INCOMING".equals(state)) { if (throwable != null) throw throwable; return result; }
+										else if (opt == 2 && !"OUTGOING".equals(state) && !"PENDING_OUTGOING".equals(state)) { if (throwable != null) throw throwable; return result; }
+									}
+
+									String key = "various_calluibright_night";
+									boolean checkNight = MainModule.mPrefs.getBoolean(key);
+									if (checkNight) {
+										int start_hour = MainModule.mPrefs.getInt(key + "_start_hour", 0);
+										int start_minute = MainModule.mPrefs.getInt(key + "_start_minute", 0);
+										int end_hour = MainModule.mPrefs.getInt(key + "_end_hour", 0);
+										int end_minute = MainModule.mPrefs.getInt(key + "_end_minute", 0);
+
+										SimpleDateFormat formatter = new SimpleDateFormat("H:m", Locale.ENGLISH);
+										formatter.setTimeZone(TimeZone.getDefault());
+										Date start = formatter.parse(start_hour + ":" + start_minute);
+										Date end = formatter.parse(end_hour + ":" + end_minute);
+										Date now = formatter.parse(formatter.format(new Date()));
+										if (start == null || end == null || now == null) { if (throwable != null) throw throwable; return result; }
+
+										boolean isNight = start.before(end) ? now.after(start) && now.before(end) : now.before(end) || now.after(start);
+										if (isNight) { if (throwable != null) throw throwable; return result; }
+									}
+
+									WindowManager.LayoutParams params = act.getWindow().getAttributes();
+									int val = MainModule.mPrefs.getInt("various_calluibright_val", 0);
+									if (val == 0) { if (throwable != null) throw throwable; return result; }
+									params.screenBrightness = val / 100f;
+									act.getWindow().setAttributes(params);
+			
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
 				}
-
-				WindowManager.LayoutParams params = act.getWindow().getAttributes();
-				int val = MainModule.mPrefs.getInt("various_calluibright_val", 0);
-				if (val == 0) return;
-				params.screenBrightness = val / 100f;
-				act.getWindow().setAttributes(params);
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
@@ -977,43 +1600,61 @@ public class Various {
 			String finalApkInfoFieldName = apkInfoFieldName;
 			ModuleHelper.hookMethod(methods[0], new MethodHook() {
 				@Override
-				protected void after(final AfterHookCallback param) throws Throwable {
-					Object viewHolder = param.getArgs()[0];
-					if (viewHolder == null) return;
-					TextView tvAppVersion = (TextView) XposedHelpers.callMethod(viewHolder, "getTvDes");
-					TextView tvAppSize = (TextView) XposedHelpers.callMethod(viewHolder, "getAppSize");
-					TextView tvAppName = (TextView) XposedHelpers.callMethod(viewHolder, "getTvAppName");
-					if (tvAppVersion == null) return;
+								public Object intercept(XposedInterface.Chain chain) throws Throwable {
+					Object result;
+					Throwable throwable = null;
+					try {
+						result = chain.proceed();
+					} catch (Throwable t) {
+						throwable = t;
+						result = null;
+					}
+					try {
+						Object thisObject = chain.getThisObject();
+						Object[] args = chain.getArgs().toArray(new Object[0]);
 
-					ViewGroup.MarginLayoutParams appNameLp = (ViewGroup.MarginLayoutParams) tvAppName.getLayoutParams();
-					appNameLp.topMargin = 0;
-					tvAppName.setLayoutParams(appNameLp);
+											Object viewHolder = args[0];
+											if (viewHolder == null) { if (throwable != null) throw throwable; return result; }
+											TextView tvAppVersion = (TextView) XposedHelpers.callMethod(viewHolder, "getTvDes");
+											TextView tvAppSize = (TextView) XposedHelpers.callMethod(viewHolder, "getAppSize");
+											TextView tvAppName = (TextView) XposedHelpers.callMethod(viewHolder, "getTvAppName");
+											if (tvAppVersion == null) { if (throwable != null) throw throwable; return result; }
 
-					Object apkInfo = XposedHelpers.getObjectField(param.getThisObject(), finalApkInfoFieldName);
-					ApplicationInfo mAppInfo = (ApplicationInfo) XposedHelpers.callMethod(apkInfo, "getInstalledPackageInfo");
-					PackageInfo mPkgInfo = (PackageInfo) XposedHelpers.callMethod(apkInfo, "getPackageInfo");
-					Resources modRes = ModuleHelper.getModuleRes(tvAppVersion.getContext());
-					SpannableStringBuilder builder = new SpannableStringBuilder();
-					builder.append(modRes.getString(R.string.various_installappinfo_vername)).append(": ");
-					if (mAppInfo != null) builder.append((String)XposedHelpers.callMethod(apkInfo, "getInstalledVersionName")).append(" ➟ ");
-					builder.append(mPkgInfo.versionName).append("\n");
-					builder.append(tvAppSize.getText()).append("\n");
-					builder.append(modRes.getString(R.string.various_installappinfo_vercode)).append(": ");
-					if (mAppInfo != null) builder.append(String.valueOf(XposedHelpers.callMethod(apkInfo, "getInstalledVersionCode"))).append(" ➟ ");
-					builder.append(String.valueOf(mPkgInfo.getLongVersionCode())).append("\n");
-					builder.append(modRes.getString(R.string.various_installappinfo_sdk)).append(": ");
-					if (mAppInfo != null) builder.append(String.valueOf(mAppInfo.minSdkVersion)).append("-").append(String.valueOf(mAppInfo.targetSdkVersion)).append(" ➟ ");
-					builder.append(String.valueOf(mPkgInfo.applicationInfo.minSdkVersion)).append("-").append(String.valueOf(mPkgInfo.applicationInfo.targetSdkVersion));
+											ViewGroup.MarginLayoutParams appNameLp = (ViewGroup.MarginLayoutParams) tvAppName.getLayoutParams();
+											appNameLp.topMargin = 0;
+											tvAppName.setLayoutParams(appNameLp);
 
-					tvAppVersion.setText(builder);
-					tvAppVersion.setSingleLine(false);
-					tvAppVersion.setMaxLines(10);
-					LinearLayout layout = (LinearLayout) tvAppVersion.getParent();
-					ViewGroup.MarginLayoutParams versionSizeLp = (ViewGroup.MarginLayoutParams) layout.getLayoutParams();
-					versionSizeLp.topMargin = 0;
-					layout.setLayoutParams(versionSizeLp);
-					layout.removeAllViews();
-					layout.addView(tvAppVersion);
+											Object apkInfo = XposedHelpers.getObjectField(thisObject, finalApkInfoFieldName);
+											ApplicationInfo mAppInfo = (ApplicationInfo) XposedHelpers.callMethod(apkInfo, "getInstalledPackageInfo");
+											PackageInfo mPkgInfo = (PackageInfo) XposedHelpers.callMethod(apkInfo, "getPackageInfo");
+											Resources modRes = ModuleHelper.getModuleRes(tvAppVersion.getContext());
+											SpannableStringBuilder builder = new SpannableStringBuilder();
+											builder.append(modRes.getString(R.string.various_installappinfo_vername)).append(": ");
+											if (mAppInfo != null) builder.append((String)XposedHelpers.callMethod(apkInfo, "getInstalledVersionName")).append(" ➟ ");
+											builder.append(mPkgInfo.versionName).append("\n");
+											builder.append(tvAppSize.getText()).append("\n");
+											builder.append(modRes.getString(R.string.various_installappinfo_vercode)).append(": ");
+											if (mAppInfo != null) builder.append(String.valueOf(XposedHelpers.callMethod(apkInfo, "getInstalledVersionCode"))).append(" ➟ ");
+											builder.append(String.valueOf(mPkgInfo.getLongVersionCode())).append("\n");
+											builder.append(modRes.getString(R.string.various_installappinfo_sdk)).append(": ");
+											if (mAppInfo != null) builder.append(String.valueOf(mAppInfo.minSdkVersion)).append("-").append(String.valueOf(mAppInfo.targetSdkVersion)).append(" ➟ ");
+											builder.append(String.valueOf(mPkgInfo.applicationInfo.minSdkVersion)).append("-").append(String.valueOf(mPkgInfo.applicationInfo.targetSdkVersion));
+
+											tvAppVersion.setText(builder);
+											tvAppVersion.setSingleLine(false);
+											tvAppVersion.setMaxLines(10);
+											LinearLayout layout = (LinearLayout) tvAppVersion.getParent();
+											ViewGroup.MarginLayoutParams versionSizeLp = (ViewGroup.MarginLayoutParams) layout.getLayoutParams();
+											versionSizeLp.topMargin = 0;
+											layout.setLayoutParams(versionSizeLp);
+											layout.removeAllViews();
+											layout.addView(tvAppVersion);
+				
+					} catch (Throwable t) {
+						XposedHelpers.log(t);
+					}
+					if (throwable != null) throw throwable;
+					return result;
 				}
 			});
 		}
@@ -1022,56 +1663,138 @@ public class Various {
 	public static void MiuiPackageInstallerHook(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethodSilently("com.miui.packageInstaller.InstallStart", lpparam.getClassLoader(), "getCallingPackage", new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				param.returnAndSkip("com.android.fileexplorer");
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object thisObject = chain.getThisObject();
+				try {
+
+									{ skipped = true; result = "com.android.fileexplorer"; throwable = null; }
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
 	public static void PurePackageInstallerHook(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod("android.app.SharedPreferencesImpl", lpparam.getClassLoader(), "getBoolean", String.class, boolean.class, new MethodHook() {
 			@Override
-			protected void before(BeforeHookCallback param) throws Throwable {
-				String prefKey = (String) param.getArgs()[0];
-				if ("ads_enable".equals(prefKey)
-					|| "app_store_recommend".equals(prefKey)
-					|| "secure_verify_enable".equals(prefKey)
-				) {
-					param.returnAndSkip(false);
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object thisObject = chain.getThisObject();
+				try {
+
+									String prefKey = (String) args[0];
+									if ("ads_enable".equals(prefKey)
+										|| "app_store_recommend".equals(prefKey)
+										|| "secure_verify_enable".equals(prefKey)
+									) {
+										{ skipped = true; result = false; throwable = null; }
+									}
+									else if ("secure_verify_cloud_once".equals(prefKey)) {
+										{ skipped = true; result = true; throwable = null; }
+									}
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
-				else if ("secure_verify_cloud_once".equals(prefKey)) {
-					param.returnAndSkip(true);
-				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 		ModuleHelper.findAndHookMethod(Settings.System.class, "getInt", ContentResolver.class, String.class, int.class, new MethodHook() {
 			@Override
-			protected void before(BeforeHookCallback param) throws Throwable {
-				String prefKey = (String) param.getArgs()[1];
-				if ("virus_scan_install".equals(prefKey)
-				) {
-					param.returnAndSkip(0);
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object thisObject = chain.getThisObject();
+				try {
+
+									String prefKey = (String) args[1];
+									if ("virus_scan_install".equals(prefKey)
+									) {
+										{ skipped = true; result = 0; throwable = null; }
+									}
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 		ModuleHelper.findAndHookMethod(Settings.Secure.class, "getInt", ContentResolver.class, String.class, int.class, new MethodHook() {
 			@Override
-			protected void before(BeforeHookCallback param) throws Throwable {
-				String prefKey = (String) param.getArgs()[1];
-				if ("miui_safe_mode".equals(prefKey)) {
-					param.returnAndSkip(0);
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object thisObject = chain.getThisObject();
+				try {
+
+									String prefKey = (String) args[1];
+									if ("miui_safe_mode".equals(prefKey)) {
+										{ skipped = true; result = 0; throwable = null; }
+									}
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 		ModuleHelper.findAndHookMethod("com.miui.packageInstaller.ui.listcomponets.SafeModeTipViewObject$ViewHolder", lpparam.getClassLoader(), "updateSuggestionMsgState", Context.class, boolean.class, new MethodHook() {
 			@Override
-			protected void after(AfterHookCallback param) throws Throwable {
-				View itemView = (View) XposedHelpers.getObjectField(param.getThisObject(), "itemView");
-				itemView.setVisibility(View.GONE);
-				ViewGroup.LayoutParams layoutParams2 = itemView.getLayoutParams();
-				if (layoutParams2 == null) {
-					return;
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				Object result;
+				Throwable throwable = null;
+				try {
+					result = chain.proceed();
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
-				layoutParams2.height = 0;
+				try {
+					Object thisObject = chain.getThisObject();
+					Object[] args = chain.getArgs().toArray(new Object[0]);
+
+									View itemView = (View) XposedHelpers.getObjectField(thisObject, "itemView");
+									itemView.setVisibility(View.GONE);
+									ViewGroup.LayoutParams layoutParams2 = itemView.getLayoutParams();
+									if (layoutParams2 == null) {
+										{ if (throwable != null) throw throwable; return result; }
+									}
+									layoutParams2.height = 0;
+			
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
@@ -1079,15 +1802,31 @@ public class Various {
 	public static void GboardPaddingHook(PackageReadyParam lpparam) {
 		ModuleHelper.findAndHookMethod(findClass("android.os.SystemProperties", lpparam.getClassLoader()), "get", String.class, new MethodHook() {
 			@Override
-			protected void before(final BeforeHookCallback param) throws Throwable {
-				String key = (String)param.getArgs()[0];
-				if (key.equals("ro.com.google.ime.kb_pad_port_b")) {
-					int opt = MainModule.mPrefs.getInt("various_gboardpadding_port", 0);
-					if (opt > 0) param.returnAndSkip(String.valueOf(opt));
-				} else if (key.equals("ro.com.google.ime.kb_pad_land_b")) {
-					int opt = MainModule.mPrefs.getInt("various_gboardpadding_land", 0);
-					if (opt > 0) param.returnAndSkip(String.valueOf(opt));
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				boolean skipped = false;
+				Object result = null;
+				Throwable throwable = null;
+				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object thisObject = chain.getThisObject();
+				try {
+
+									String key = (String)args[0];
+									if (key.equals("ro.com.google.ime.kb_pad_port_b")) {
+										int opt = MainModule.mPrefs.getInt("various_gboardpadding_port", 0);
+										if (opt > 0) { skipped = true; result = String.valueOf(opt); throwable = null; }
+									} else if (key.equals("ro.com.google.ime.kb_pad_land_b")) {
+										int opt = MainModule.mPrefs.getInt("various_gboardpadding_land", 0);
+										if (opt > 0) { skipped = true; result = String.valueOf(opt); throwable = null; }
+									}
+			
+					if (skipped) { if (throwable != null) throw throwable; return result; }
+					result = chain.proceed(args);
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
@@ -1097,21 +1836,55 @@ public class Various {
 		ModuleHelper.hookAllMethods(InputMethodServiceInjectorClass, "addMiuiBottomView", new MethodHook() {
 			private boolean isHooked = false;
 			@Override
-			protected void after(final AfterHookCallback param) throws Throwable {
-				if (isHooked) return;
-				ClassLoader sClassLoader = (ClassLoader) XposedHelpers.getStaticObjectField(InputMethodServiceInjectorClass, "sClassLoader");
-				if (sClassLoader != null) {
-					isHooked = true;
-					Class<?> InputMethodUtil = XposedHelpers.findClassIfExists("com.miui.inputmethod.InputMethodUtil", sClassLoader);
-					XposedHelpers.setStaticBooleanField(InputMethodUtil, "sIsGestureLineEnable", false);
-					ModuleHelper.findAndHookMethod(InputMethodUtil, "updateGestureLineEnable", Context.class, new MethodHook() {
-						@Override
-						protected void before(final BeforeHookCallback param) throws Throwable {
-							XposedHelpers.setStaticBooleanField(InputMethodUtil, "sIsGestureLineEnable", false);
-							param.returnAndSkip(null);
-						}
-					});
+						public Object intercept(XposedInterface.Chain chain) throws Throwable {
+				Object result;
+				Throwable throwable = null;
+				try {
+					result = chain.proceed();
+				} catch (Throwable t) {
+					throwable = t;
+					result = null;
 				}
+				try {
+					Object thisObject = chain.getThisObject();
+					Object[] args = chain.getArgs().toArray(new Object[0]);
+
+									if (isHooked) { if (throwable != null) throw throwable; return result; }
+									ClassLoader sClassLoader = (ClassLoader) XposedHelpers.getStaticObjectField(InputMethodServiceInjectorClass, "sClassLoader");
+									if (sClassLoader != null) {
+										isHooked = true;
+										Class<?> InputMethodUtil = XposedHelpers.findClassIfExists("com.miui.inputmethod.InputMethodUtil", sClassLoader);
+										XposedHelpers.setStaticBooleanField(InputMethodUtil, "sIsGestureLineEnable", false);
+										ModuleHelper.findAndHookMethod(InputMethodUtil, "updateGestureLineEnable", Context.class, new MethodHook() {
+											@Override
+																	public Object intercept(XposedInterface.Chain chain) throws Throwable {
+												boolean skipped = false;
+												Object result = null;
+												Throwable throwable = null;
+												Object[] args = chain.getArgs().toArray(new Object[0]);
+												Object thisObject = chain.getThisObject();
+												try {
+
+																				XposedHelpers.setStaticBooleanField(InputMethodUtil, "sIsGestureLineEnable", false);
+																				{ skipped = true; result = null; throwable = null; }
+						
+													if (skipped) { if (throwable != null) throw throwable; return result; }
+													result = chain.proceed(args);
+												} catch (Throwable t) {
+													throwable = t;
+													result = null;
+												}
+												if (throwable != null) throw throwable;
+												return result;
+											}
+										});
+									}
+			
+				} catch (Throwable t) {
+					XposedHelpers.log(t);
+				}
+				if (throwable != null) throw throwable;
+				return result;
 			}
 		});
 	}
