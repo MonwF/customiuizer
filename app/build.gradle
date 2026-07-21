@@ -5,8 +5,8 @@ def hasReleaseSigning = keystorePropertiesFile.isFile()
 if (hasReleaseSigning) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
-def lastVersion = 112
-def lastVersionName = "r14.1.1-systemui"
+def lastVersion = 113
+def lastVersionName = "r14.1.1-systemui-rollback"
 
 android {
     namespace "name.monwf.customiuizer"
