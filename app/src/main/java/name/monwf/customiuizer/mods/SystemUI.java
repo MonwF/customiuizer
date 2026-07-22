@@ -178,7 +178,7 @@ public class SystemUI {
         return slotName;
     }
 
-    public static void MonitorDeviceInfoHook(PackageReadyParam lpparam, PrefMap<String, Object> mPrefs) {
+    public static void MonitorDeviceInfoHook(PackageReadyParam lpparam, PrefMap mPrefs) {
         class TextIconInfo {
             public boolean iconShow;
             public int iconType;
@@ -1285,7 +1285,7 @@ public class SystemUI {
     }
 
     public static void StatusBarIconsPositionAdjustHook(PackageReadyParam lpparam, boolean moveLeft) {
-        PrefMap<String, Object> mPrefs = MainModule.mPrefs;
+        PrefMap mPrefs = MainModule.mPrefs;
         boolean dualRows = mPrefs.getBoolean("system_statusbar_dualrows");
         boolean swapWifiSignal = mPrefs.getBoolean("system_statusbaricons_swap_wifi_mobile");
         boolean moveSignalLeft = mPrefs.getBoolean("system_statusbaricons_wifi_mobile_atleft");
@@ -1998,8 +1998,12 @@ public class SystemUI {
                     @Override
                     public void onChange(String key) {
                         try {
-                            if (key.equals("system_volumeblur_collapsed")) blurCollapsed = MainModule.mPrefs.getInt(key, 0) / 100f;
-                            if (key.equals("system_volumeblur_expanded")) blurExpanded = MainModule.mPrefs.getInt(key, 0) / 100f;
+                            if (key.equals("pref_key_system_volumeblur_collapsed")) {
+                                blurCollapsed = MainModule.mPrefs.getInt(key, 0) / 100f;
+                            }
+                            if (key.equals("pref_key_system_volumeblur_expanded")) {
+                                blurExpanded = MainModule.mPrefs.getInt(key, 0) / 100f;
+                            }
                         } catch (Throwable t) {
                             XposedHelpers.log(t);
                         }

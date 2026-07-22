@@ -10,6 +10,7 @@
 ## 現在の状態
 
 - 安定版：r14.1.3
+- テスト候補：r14.2.0
 - パッケージ：`name.monwf.customiuizer.r14`
 - LSPosed 基準：[Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935)、commit `9350c7c`
 - リリース：[tomthenpc/customiuizer-a14](https://github.com/tomthenpc/customiuizer-a14/releases)

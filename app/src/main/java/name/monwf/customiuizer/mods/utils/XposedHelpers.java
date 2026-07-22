@@ -49,7 +49,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.libxposed.api.XposedInterface;
 import name.monwf.customiuizer.mods.utils.HookerClassHelper.CustomMethodUnhooker;
@@ -70,7 +69,6 @@ public final class XposedHelpers {
     private static final ConcurrentHashMap<MemberCacheKey.Method, Optional<Method>> methodCache = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<MemberCacheKey.Constructor, Optional<Constructor<?>>> constructorCache = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<ClassCacheKey, Optional<Class<?>>> classCache = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<String, Class<?>[]> parameterClassesCache = new ConcurrentHashMap<>();
     private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
     private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
 
@@ -96,8 +94,13 @@ public final class XposedHelpers {
         return chain.proceed(args);
     }
 
+    /** If {@code throwable} is set, throws it; otherwise proceeds with the current arguments. */
+    public static Object proceedOrThrow(XposedInterface.Chain chain, Throwable throwable) throws Throwable {
+        if (throwable != null) throw throwable;
+        return chain.proceed();
+    }
+
     private static final WeakHashMap<Object, HashMap<String, Object>> additionalFields = new WeakHashMap<>();
-    private static final HashMap<String, ThreadLocal<AtomicInteger>> sMethodDepth = new HashMap<>();
 
     /**
      * Note that we use object key instead of string here, because string calculation will lose all
@@ -679,13 +682,15 @@ public final class XposedHelpers {
      * already, or a String with the full class name.
      */
     private static Class<?>[] getParameterClasses(ClassLoader classLoader, Object[] parameterTypesAndCallback) {
-        String key = buildParameterClassesKey(classLoader, parameterTypesAndCallback);
-        Class<?>[] cached = parameterClassesCache.get(key);
-        if (cached != null) return cached;
+        int parameterCount = 0;
+        for (Object type : parameterTypesAndCallback) {
+            if (!(type instanceof MethodHook)) parameterCount++;
+        }
+        if (parameterCount == 0) return EMPTY_CLASS_ARRAY;
 
-        Class<?>[] parameterClasses = null;
-        for (int i = parameterTypesAndCallback.length - 1; i >= 0; i--) {
-            Object type = parameterTypesAndCallback[i];
+        Class<?>[] parameterClasses = new Class<?>[parameterCount];
+        int parameterIndex = 0;
+        for (Object type : parameterTypesAndCallback) {
             if (type == null)
                 throw new ClassNotFoundError("parameter type must not be null", null);
 
@@ -693,45 +698,14 @@ public final class XposedHelpers {
             if (type instanceof MethodHook)
                 continue;
 
-            if (parameterClasses == null)
-                parameterClasses = new Class<?>[i + 1];
-
             if (type instanceof Class)
-                parameterClasses[i] = (Class<?>) type;
+                parameterClasses[parameterIndex++] = (Class<?>) type;
             else if (type instanceof String)
-                parameterClasses[i] = findClass((String) type, classLoader);
+                parameterClasses[parameterIndex++] = findClass((String) type, classLoader);
             else
                 throw new ClassNotFoundError("parameter type must either be specified as Class or String", null);
         }
-
-        // if there are no arguments for the method
-        if (parameterClasses == null)
-            parameterClasses = EMPTY_CLASS_ARRAY;
-
-        parameterClassesCache.put(key, parameterClasses);
         return parameterClasses;
-    }
-
-    private static String buildParameterClassesKey(ClassLoader classLoader, Object[] parameterTypesAndCallback) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(classLoader == null ? 0 : System.identityHashCode(classLoader)).append('|');
-        boolean first = true;
-        for (Object type : parameterTypesAndCallback) {
-            if (type instanceof MethodHook)
-                continue;
-            if (!first)
-                sb.append('\u0000');
-            first = false;
-            if (type instanceof Class)
-                sb.append(((Class<?>) type).getName());
-            else if (type instanceof String)
-                sb.append((String) type);
-            else if (type == null)
-                sb.append("\u0000null");
-            else
-                sb.append(type.toString());
-        }
-        return sb.toString();
     }
 
     /**
@@ -1905,61 +1879,6 @@ public final class XposedHelpers {
         }
         is.close();
         return buf.toByteArray();
-    }
-
-    //#################################################################################################
-
-    /**
-     * Increments the depth counter for the given method.
-     *
-     * <p>The intention of the method depth counter is to keep track of the call depth for recursive
-     * methods, e.g. to override parameters only for the outer call. The Xposed framework uses this
-     * to load drawable replacements only once per call, even when multiple
-     * {@link Resources#getDrawable} variants call each other.
-     *
-     * @param method The method name. Should be prefixed with a unique, module-specific string.
-     * @return The updated depth.
-     */
-    public static int incrementMethodDepth(String method) {
-        return getMethodDepthCounter(method).get().incrementAndGet();
-    }
-
-    /**
-     * Decrements the depth counter for the given method.
-     * See {@link #incrementMethodDepth} for details.
-     *
-     * @param method The method name. Should be prefixed with a unique, module-specific string.
-     * @return The updated depth.
-     */
-    public static int decrementMethodDepth(String method) {
-        return getMethodDepthCounter(method).get().decrementAndGet();
-    }
-
-    /**
-     * Returns the current depth counter for the given method.
-     * See {@link #incrementMethodDepth} for details.
-     *
-     * @param method The method name. Should be prefixed with a unique, module-specific string.
-     * @return The updated depth.
-     */
-    public static int getMethodDepth(String method) {
-        return getMethodDepthCounter(method).get().get();
-    }
-
-    private static ThreadLocal<AtomicInteger> getMethodDepthCounter(String method) {
-        synchronized (sMethodDepth) {
-            ThreadLocal<AtomicInteger> counter = sMethodDepth.get(method);
-            if (counter == null) {
-                counter = new ThreadLocal<AtomicInteger>() {
-                    @Override
-                    protected AtomicInteger initialValue() {
-                        return new AtomicInteger();
-                    }
-                };
-                sMethodDepth.put(method, counter);
-            }
-            return counter;
-        }
     }
 
     public static void createBridge(String apkPath) {

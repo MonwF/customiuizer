@@ -24,30 +24,42 @@ public class HookerClassHelper {
     public static class BeforeHookCallback {
         private static final Object[] EMPTY_ARGS = new Object[0];
 
-        private final Member member;
-        private final Object thisObject;
-        private final Object[] args;
+        private final XposedInterface.Chain chain;
+        private Member member;
+        private Object thisObject;
+        private Object[] args;
+        private boolean thisObjectResolved;
         private boolean skipped;
         private Object result;
         private Throwable throwable;
 
         BeforeHookCallback(XposedInterface.Chain chain) {
-            member = chain.getExecutable();
-            thisObject = chain.getThisObject();
-            List<Object> argList = chain.getArgs();
-            args = argList.isEmpty() ? EMPTY_ARGS : argList.toArray();
+            this.chain = chain;
         }
 
         public Member getMember() {
+            if (member == null) member = chain.getExecutable();
             return member;
         }
 
         public Object getThisObject() {
+            if (!thisObjectResolved) {
+                thisObject = chain.getThisObject();
+                thisObjectResolved = true;
+            }
             return thisObject;
         }
 
         public Object[] getArgs() {
+            if (args == null) {
+                List<Object> argList = chain.getArgs();
+                args = argList.isEmpty() ? EMPTY_ARGS : argList.toArray();
+            }
             return args;
+        }
+
+        private boolean hasMaterializedArgs() {
+            return args != null;
         }
 
         public void returnAndSkip(Object returnValue) {
@@ -64,32 +76,28 @@ public class HookerClassHelper {
     }
 
     public static class AfterHookCallback {
-        private final Member member;
-        private final Object thisObject;
-        private final Object[] args;
+        private final BeforeHookCallback before;
         private final boolean skipped;
         private Object result;
         private Throwable throwable;
 
         AfterHookCallback(BeforeHookCallback before, Object result, Throwable throwable) {
-            member = before.member;
-            thisObject = before.thisObject;
-            args = before.args;
+            this.before = before;
             skipped = before.skipped;
             this.result = result;
             this.throwable = throwable;
         }
 
         public Member getMember() {
-            return member;
+            return before.getMember();
         }
 
         public Object getThisObject() {
-            return thisObject;
+            return before.getThisObject();
         }
 
         public Object[] getArgs() {
-            return args;
+            return before.getArgs();
         }
 
         public Object getResult() {
@@ -119,7 +127,7 @@ public class HookerClassHelper {
         public final int mPriority;
         boolean mIsReturnConstant;
         Object mReturnConstantValue;
-        private final boolean hasAfter;
+        private volatile byte afterCallbackState;
 
         public MethodHook() {
             this(XposedInterface.PRIORITY_DEFAULT);
@@ -127,7 +135,6 @@ public class HookerClassHelper {
 
         public MethodHook(int priority) {
             mPriority = priority;
-            hasAfter = declaresAfterCallback(getClass());
         }
 
         /**
@@ -154,6 +161,15 @@ public class HookerClassHelper {
             return false;
         }
 
+        private boolean hasAfterCallback() {
+            byte state = afterCallbackState;
+            if (state == 0) {
+                state = (byte) (declaresAfterCallback(getClass()) ? 2 : 1);
+                afterCallbackState = state;
+            }
+            return state == 2;
+        }
+
         @Override
         public Object intercept(XposedInterface.Chain chain) throws Throwable {
             if (mIsReturnConstant) {
@@ -167,13 +183,15 @@ public class HookerClassHelper {
             Throwable throwable = before.throwable;
             if (!before.skipped) {
                 try {
-                    result = chain.proceed(before.args);
+                    result = before.hasMaterializedArgs()
+                        ? chain.proceed(before.args)
+                        : chain.proceed();
                 } catch (Throwable t) {
                     throwable = t;
                 }
             }
 
-            if (hasAfter) {
+            if (hasAfterCallback()) {
                 AfterHookCallback after = new AfterHookCallback(before, result, throwable);
                 afterHook(after);
                 if (after.throwable != null) {

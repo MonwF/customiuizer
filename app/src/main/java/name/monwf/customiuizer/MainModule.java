@@ -10,7 +10,6 @@ import android.provider.Settings;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.HashSet;
 import java.util.Map;
 
 import io.github.libxposed.api.XposedModule;
@@ -34,7 +33,7 @@ import name.monwf.customiuizer.utils.PrefMap;
 
 public class MainModule extends XposedModule {
 
-    public static PrefMap<String, Object> mPrefs = new PrefMap<String, Object>();
+    public static final PrefMap mPrefs = new PrefMap();
     public static ResourceHooks resHooks = new ResourceHooks();
     String processName;
 
@@ -61,8 +60,10 @@ public class MainModule extends XposedModule {
 
     private void initPrefs() {
         if (mPrefsLoaded) return;
-        SharedPreferences readPrefs = getRemotePreferences(ModuleHelper.prefsName + "_remote");
-        Map<String, ?> allPrefs = readPrefs.getAll();
+        if (remotePrefs == null) {
+            remotePrefs = getRemotePreferences(ModuleHelper.prefsName + "_remote");
+        }
+        Map<String, ?> allPrefs = remotePrefs.getAll();
         if (allPrefs == null || allPrefs.size() == 0)
             XposedHelpers.log("Empty preferences!");
         else
@@ -77,12 +78,10 @@ public class MainModule extends XposedModule {
     private void watchPreferenceChange() {
         if (mPrefsWatcherRegistered) return;
         mPrefsWatcherRegistered = true;
-        HashSet<String> ignoreKeys = new HashSet<>();
-        ignoreKeys.add("pref_key_systemui_restart_time");
-
         mListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @Nullable String key) {
+                if (key == null) return;
                 Object val = sharedPreferences.getAll().get(key);
                 if (val == null) {
 //                    XposedHelpers.log(processName + " key removed: " + key);
@@ -92,12 +91,14 @@ public class MainModule extends XposedModule {
 //                    XposedHelpers.log(processName + " key changed: " + key);
                     mPrefs.put(key, val);
                 }
-                if (!ignoreKeys.contains(key)) {
+                if (!"pref_key_systemui_restart_time".equals(key)) {
                     ModuleHelper.handlePreferenceChanged(key);
                 }
             }
         };
-        remotePrefs = getRemotePreferences(ModuleHelper.prefsName + "_remote");
+        if (remotePrefs == null) {
+            remotePrefs = getRemotePreferences(ModuleHelper.prefsName + "_remote");
+        }
         remotePrefs.registerOnSharedPreferenceChangeListener(mListener);
     }
 

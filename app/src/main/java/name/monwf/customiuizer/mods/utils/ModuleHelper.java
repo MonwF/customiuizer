@@ -25,9 +25,9 @@ import androidx.annotation.Nullable;
 import java.io.RandomAccessFile;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import io.github.libxposed.api.XposedModuleInterface;
 import miui.app.MiuiFreeFormManager;
@@ -56,7 +56,8 @@ public class ModuleHelper {
 
     private final static int viewInfoTag = ResourceHooks.getFakeResId("view_info_tag");
 
-    static HashSet<PreferenceObserver> prefObservers = new HashSet<PreferenceObserver>();
+    private static final CopyOnWriteArraySet<PreferenceObserver> prefObservers =
+        new CopyOnWriteArraySet<>();
 
     static Class<?> ActivityThreadClass;
 

@@ -13,6 +13,7 @@ Its two defining differences are **libxposed API 101 integration** and ongoing *
 |---|---|
 | App name | 米客 A14 |
 | Stable release | r14.1.3 |
+| Development candidate | r14.2.0 |
 | Package | `name.monwf.customiuizer.r14` |
 | Hook API | libxposed API 101 |
 | LSPosed baseline | [Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935), commit `9350c7c` |
