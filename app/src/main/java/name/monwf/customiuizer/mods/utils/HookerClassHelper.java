@@ -1,7 +1,9 @@
 package name.monwf.customiuizer.mods.utils;
 
 import java.lang.reflect.Member;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.github.libxposed.api.XposedInterface;
 
@@ -136,6 +138,14 @@ public class HookerClassHelper {
             this.hasAfter = ha;
         }
 
+        /** Creates a hook that always returns the supplied constant value. */
+        public MethodHook(int priority, Object returnConstantValue) {
+            mPriority = priority;
+            mIsReturnConstant = true;
+            mReturnConstantValue = returnConstantValue;
+            this.hasAfter = false;
+        }
+
         @Override
         public Object intercept(XposedInterface.Chain chain) throws Throwable {
             if (mIsReturnConstant) {
@@ -198,10 +208,26 @@ public class HookerClassHelper {
     }
 
     /** Skips the hooked method and returns {@code null}. */
-    public static final MethodHook DO_NOTHING = new MethodHook(XposedInterface.PRIORITY_HIGHEST) {{
-        mIsReturnConstant = true;
-        mReturnConstantValue = null;
-    }};
+    public static final MethodHook DO_NOTHING = cachedReturnConstant(XposedInterface.PRIORITY_HIGHEST, null);
+
+    private static final Map<String, MethodHook> returnConstantCache = new HashMap<>();
+
+    private static MethodHook cachedReturnConstant(int priority, Object result) {
+        boolean cacheable = result == null || result instanceof Boolean || result instanceof Integer
+                || result instanceof Long || result instanceof String;
+        String key = priority + "|" + result;
+        if (cacheable) {
+            synchronized (returnConstantCache) {
+                MethodHook cached = returnConstantCache.get(key);
+                if (cached == null) {
+                    cached = new MethodHook(priority, result);
+                    returnConstantCache.put(key, cached);
+                }
+                return cached;
+            }
+        }
+        return new MethodHook(priority, result);
+    }
 
     /** Creates a highest-priority callback which always returns the supplied value. */
     public static MethodHook returnConstant(final Object result) {
@@ -210,9 +236,6 @@ public class HookerClassHelper {
 
     /** Creates a callback which always returns the supplied value at the requested priority. */
     public static MethodHook returnConstant(int priority, final Object result) {
-        return new MethodHook(priority) {{
-            mIsReturnConstant = true;
-            mReturnConstantValue = result;
-        }};
+        return cachedReturnConstant(priority, result);
     }
 }

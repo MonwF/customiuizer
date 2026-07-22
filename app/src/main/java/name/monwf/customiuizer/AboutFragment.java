@@ -1,4 +1,5 @@
 package name.monwf.customiuizer;
+import android.util.Log;
 
 import android.app.Activity;
 import android.content.res.Configuration;
@@ -108,7 +109,7 @@ public class AboutFragment extends SubFragment {
 			version.setText(String.format(getResources().getString(R.string.about_version), versionName));
 		} catch (Throwable e) {
 			//Shouldn't happen...
-			e.printStackTrace();
+			Log.e("Pengeek", "Error", e);
 		}
 	}
 

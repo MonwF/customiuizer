@@ -233,7 +233,7 @@ public class AppHelper {
             }
             return pair;
         } catch (Throwable t) {
-            t.printStackTrace();
+            Log.e("Pengeek", "Error", t);
             return null;
         }
     }

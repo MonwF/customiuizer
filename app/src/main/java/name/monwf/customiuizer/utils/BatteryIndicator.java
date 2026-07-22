@@ -149,48 +149,6 @@ public class BatteryIndicator extends androidx.appcompat.widget.AppCompatImageVi
         post(step);
     }
 
-//	int lightPos = 0;
-//	Runnable chargingAnim = new Runnable() {
-//		@Override
-//		public void run() {
-//			if (!mTesting) {
-//				lightPos += 3;
-//				if (lightPos > 180) lightPos = 0;
-//				int val = (int)(90 * Math.exp(-Math.pow(lightPos - 90, 2) / 180f));
-//				Paint p = ((ShapeDrawable)getDrawable()).getPaint();
-//				int color = p.getColor();
-//
-//				int runColor = Color.WHITE;
-//				if (mColorMode == ColorMode.LIGHTDARK)
-//					runColor = Color.argb(
-//						Color.alpha(color),
-//						Math.max(0, Math.min(255, Math.round(Color.red(color) + val / 180f  * (Color.red(~color) - Color.red(color))))),
-//						Math.max(0, Math.min(255, Math.round(Color.green(color) + val / 180f  * (Color.green(~color) - Color.green(color))))),
-//						Math.max(0, Math.min(255, Math.round(Color.blue(color) + val / 180f * (Color.blue(~color) - Color.blue(color)))))
-//					);
-//				else if (mColorMode != ColorMode.RAINBOW)
-//					runColor = Color.argb(
-//						Color.alpha(color),
-//						Math.max(0, Math.min(255, Color.red(color) + val)),
-//						Math.max(0, Math.min(255, Color.green(color) + val)),
-//						Math.max(0, Math.min(255, Color.blue(color) + val))
-//					);
-//				p.setColorFilter(new PorterDuffColorFilter(runColor, PorterDuff.Mode.SRC_ATOP));
-//				invalidate();
-//			}
-//			if (!mIsCharged) postDelayed(chargingAnim, 33);
-//		}
-//	};
-//
-//	private void startChargingAnim() {
-//		post(chargingAnim);
-//	}
-//
-//	private void stopChargingAnim() {
-//		removeCallbacks(chargingAnim);
-//		((ShapeDrawable)getDrawable()).getPaint().setColorFilter(null);
-//		invalidate();
-//	}
 
     private void postUpdate() {
         post(BatteryIndicator.this::update);
@@ -228,13 +186,6 @@ public class BatteryIndicator extends androidx.appcompat.widget.AppCompatImageVi
         if (this.mPowerLevel == powerLevel && this.mIsBeingCharged == isCharging && !isCharged) return;
         this.mPowerLevel = powerLevel;
         this.mIsBeingCharged = isCharging && !isCharged;
-//		if (isCharging != this.mIsCharged) {
-//			this.mIsCharged = isCharging;
-//			if (!this.mIsCharged)
-//				startChargingAnim();
-//			else
-//				stopChargingAnim();
-//		}
         update();
     }
 

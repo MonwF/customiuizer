@@ -69,6 +69,8 @@ public final class XposedHelpers {
     private static final ConcurrentHashMap<MemberCacheKey.Field, Optional<Field>> fieldCache = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<MemberCacheKey.Method, Optional<Method>> methodCache = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<MemberCacheKey.Constructor, Optional<Constructor<?>>> constructorCache = new ConcurrentHashMap<>();
+    private static final ThreadLocal<MemberCacheKey.Field> reusableFieldKey = ThreadLocal.withInitial(MemberCacheKey.Field::new);
+    private static final ThreadLocal<MemberCacheKey.Method> reusableMethodKey = ThreadLocal.withInitial(MemberCacheKey.Method::new);
     private static final ConcurrentHashMap<ClassCacheKey, Optional<Class<?>>> classCache = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<String, Class<?>[]> parameterClassesCache = new ConcurrentHashMap<>();
     private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
@@ -109,7 +111,7 @@ public final class XposedHelpers {
      * @see <a href="https://github.com/meowool-catnip/cloak/blob/main/api/src/benchmark/kotlin/com/meowool/cloak/ReflectionObjectAccessTests.kt#L37-L65">benchmarks for JVM</a>
      */
     private abstract static class MemberCacheKey {
-        private final int hash;
+        protected int hash;
 
         protected MemberCacheKey(int hash) {
             this.hash = hash;
@@ -156,13 +158,22 @@ public final class XposedHelpers {
         }
 
         static final class Field extends MemberCacheKey {
-            private final Class<?> clazz;
-            private final String name;
+            private Class<?> clazz;
+            private String name;
+
+            public Field() {
+                super(0);
+            }
 
             public Field(Class<?> clazz, String name) {
-                super(Objects.hash(clazz, name));
+                super(0);
+                set(clazz, name);
+            }
+
+            void set(Class<?> clazz, String name) {
                 this.clazz = clazz;
                 this.name = name;
+                this.hash = Objects.hash(clazz, name);
             }
 
             @Override
@@ -181,17 +192,26 @@ public final class XposedHelpers {
         }
 
         static final class Method extends MemberCacheKey {
-            private final Class<?> clazz;
-            private final String name;
-            private final Class<?>[] parameters;
-            private final boolean isExact;
+            private Class<?> clazz;
+            private String name;
+            private Class<?>[] parameters;
+            private boolean isExact;
+
+            public Method() {
+                super(0);
+            }
 
             public Method(Class<?> clazz, String name, Class<?>[] parameters, boolean isExact) {
-                super(31 * Objects.hash(clazz, name, isExact) + Arrays.hashCode(parameters));
+                super(0);
+                set(clazz, name, parameters, isExact);
+            }
+
+            void set(Class<?> clazz, String name, Class<?>[] parameters, boolean isExact) {
                 this.clazz = clazz;
                 this.name = name;
                 this.parameters = parameters;
                 this.isExact = isExact;
+                this.hash = 31 * Objects.hash(clazz, name, isExact) + Arrays.hashCode(parameters);
             }
 
             @Override
@@ -250,8 +270,7 @@ public final class XposedHelpers {
     }
 
     public static void log(Throwable t) {
-        String logStr = Log.getStackTraceString(t);
-        Log.e(TAG, "[Pengeek] " + logStr);
+        Log.e(TAG, "[Pengeek]", t);
     }
 
     public static void log(String mod, String line) {
@@ -259,8 +278,7 @@ public final class XposedHelpers {
     }
 
     public static void log(String mod, Throwable t) {
-        String logStr = Log.getStackTraceString(t);
-        Log.e(TAG, "[Pengeek][" + mod + "] " + logStr);
+        Log.e(TAG, "[Pengeek][" + mod + "]", t);
     }
 
     /**
@@ -324,9 +342,15 @@ public final class XposedHelpers {
      * @throws NoSuchFieldError In case the field was not found.
      */
     public static Field findField(Class<?> clazz, String fieldName) {
-        MemberCacheKey.Field key = new MemberCacheKey.Field(clazz, fieldName);
+        MemberCacheKey.Field key = reusableFieldKey.get();
+        key.set(clazz, fieldName);
+        Optional<Field> cached = fieldCache.get(key);
+        if (cached != null) {
+            return cached.orElseThrow(() -> new NoSuchFieldError(key.toString()));
+        }
 
-        return fieldCache.computeIfAbsent(key, k -> {
+        MemberCacheKey.Field newKey = new MemberCacheKey.Field(clazz, fieldName);
+        return fieldCache.computeIfAbsent(newKey, k -> {
             try {
                 Field newField = findFieldRecursiveImpl(k.clazz, k.name);
                 newField.setAccessible(true);
@@ -334,7 +358,7 @@ public final class XposedHelpers {
             } catch (NoSuchFieldException e) {
                 return Optional.empty();
             }
-        }).orElseThrow(() -> new NoSuchFieldError(key.toString()));
+        }).orElseThrow(() -> new NoSuchFieldError(newKey.toString()));
     }
 
     /**
@@ -487,9 +511,15 @@ public final class XposedHelpers {
      * <p>This variant requires that you already have reference to all the parameter types.
      */
     public static Method findMethodExact(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
-        MemberCacheKey.Method key = new MemberCacheKey.Method(clazz, methodName, parameterTypes, true);
+        MemberCacheKey.Method key = reusableMethodKey.get();
+        key.set(clazz, methodName, parameterTypes, true);
+        Optional<Method> cached = methodCache.get(key);
+        if (cached != null) {
+            return cached.orElseThrow(() -> new NoSuchMethodError(key.toString()));
+        }
 
-        return methodCache.computeIfAbsent(key, k -> {
+        MemberCacheKey.Method newKey = new MemberCacheKey.Method(clazz, methodName, parameterTypes, true);
+        return methodCache.computeIfAbsent(newKey, k -> {
             try {
                 Method method = k.clazz.getDeclaredMethod(k.name, k.parameters);
                 method.setAccessible(true);
@@ -497,7 +527,7 @@ public final class XposedHelpers {
             } catch (NoSuchMethodException e) {
                 return Optional.empty();
             }
-        }).orElseThrow(() -> new NoSuchMethodError(key.toString()));
+        }).orElseThrow(() -> new NoSuchMethodError(newKey.toString()));
     }
 
     /**
@@ -563,9 +593,15 @@ public final class XposedHelpers {
         }
 
         // then find the best match
-        MemberCacheKey.Method key = new MemberCacheKey.Method(clazz, methodName, parameterTypes, false);
+        MemberCacheKey.Method key = reusableMethodKey.get();
+        key.set(clazz, methodName, parameterTypes, false);
+        Optional<Method> cached = methodCache.get(key);
+        if (cached != null) {
+            return cached.orElseThrow(() -> new NoSuchMethodError(key.toString()));
+        }
 
-        return methodCache.computeIfAbsent(key, k -> {
+        MemberCacheKey.Method newKey = new MemberCacheKey.Method(clazz, methodName, parameterTypes, false);
+        return methodCache.computeIfAbsent(newKey, k -> {
             Method bestMatch = null;
             Class<?> clz = k.clazz;
             boolean considerPrivateMethods = true;
@@ -598,7 +634,7 @@ public final class XposedHelpers {
             } else {
                 return Optional.empty();
             }
-        }).orElseThrow(() -> new NoSuchMethodError(key.toString()));
+        }).orElseThrow(() -> new NoSuchMethodError(newKey.toString()));
     }
 
     /**

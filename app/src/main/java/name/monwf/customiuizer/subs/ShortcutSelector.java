@@ -1,4 +1,5 @@
 package name.monwf.customiuizer.subs;
+import android.util.Log;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -73,7 +74,7 @@ public class ShortcutSelector extends SubFragmentWithSearch {
 				Context mContext = getActivity().createPackageContext(iconResId.packageName, Context.CONTEXT_IGNORE_SECURITY);
 				icon = BitmapFactory.decodeResource(mContext.getResources(), mContext.getResources().getIdentifier(iconResId.resourceName, "drawable", iconResId.packageName));
 			} catch (Throwable t) {
-				t.printStackTrace();
+				Log.e("Pengeek", "Error", t);
 			}
 			if (icon == null) icon = data.getParcelableExtra(Intent.EXTRA_SHORTCUT_ICON);
 
@@ -91,7 +92,7 @@ public class ShortcutSelector extends SubFragmentWithSearch {
 					intent.putExtra("shortcut_icon", fileName);
 				}
 			} catch (Throwable t) {
-				t.printStackTrace();
+				Log.e("Pengeek", "Error", t);
 			}
 
 			intent.putExtra("shortcut_contents", keyContents);

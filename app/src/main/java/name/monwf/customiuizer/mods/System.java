@@ -2098,12 +2098,6 @@ public class System {
             }
         });
 
-//		ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.policy.HeadsUpManager", lpparam.getClassLoader(), "onReorderingAllowed", new MethodHook() {
-//			@Override
-//			protected void before(final BeforeHookCallback param) throws Throwable {
-//				XposedHelpers.log("BetterPopupsNoHideHook", "onReorderingAllowed");
-//			}
-//		});
     }
 
     public static void NoVersionCheckHook(SystemServerStartingParam lpparam) {
@@ -2116,8 +2110,6 @@ public class System {
         Class<?> MonetStyle = findClassIfExists("com.android.systemui.monet.Style", lpparam.getClassLoader());
         Object[] styles = MonetStyle.getEnumConstants();
         for (Object o:styles) {
-//                if (o.toString().contains("VIBRANT")) {
-//                if (o.toString().contains("TONAL_SPOT")) {
             if (o.toString().contains("CONTENT")) {
                 contentStyle = o;
                 break;
@@ -2707,8 +2699,6 @@ public class System {
     }
 
     public static void NoDuckingHook(SystemServerStartingParam lpparam) {
-        //ModuleHelper.hookAllMethods("com.android.server.audio.PlaybackActivityMonitor", lpparam.getClassLoader(), "duckPlayers", HookerClassHelper.returnConstant(true));
-        //ModuleHelper.hookAllMethods("com.android.server.audio.PlaybackActivityMonitor$DuckingManager", lpparam.getClassLoader(), "addDuck", HookerClassHelper.DO_NOTHING);
         ModuleHelper.hookAllMethods("com.android.server.audio.FocusRequester", lpparam.getClassLoader(), "handleFocusLoss", new MethodHook() {
             @Override
                         public Object intercept(XposedInterface.Chain chain) throws Throwable {
@@ -2750,8 +2740,6 @@ public class System {
             		Object thisObject = chain.getThisObject();
             		Object[] args = XposedHelpers.getArgsArray(chain);
 
-            		                //Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
-            		                //XposedHelpers.log("rotationForOrientationLw: " + args[0] + ", " + args[1] + " = " + result);
             		                if ((int)args[0] == -1) {
             		                    int opt = MainModule.mPrefs.getInt("qs_autorotate_state", 0);
             		                    int prevOrient = (int)args[1];
@@ -2782,20 +2770,6 @@ public class System {
         ModuleHelper.replacePkgAndFrameworkValue(pkgName, "dimen", "status_bar_height_landscape", heightDpi);
     }
 
-//    public static void StatusBarHeightHook(SystemServerStartingParam lpparam) {
-//        int opt = MainModule.mPrefs.getInt("system_statusbarheight", 11);
-//        int heightDpi = opt == 11 ? 27 : opt;
-//
-//        MethodHook hook = new MethodHook() {
-//            @Override
-//            protected void before(final BeforeHookCallback param) throws Throwable {
-//                int barHeight = (int)Helpers.dp2px(heightDpi);
-//                param.returnAndSkip(barHeight);
-//            }
-//        };
-//        ModuleHelper.hookAllMethods("com.android.internal.policy.SystemBarUtils", lpparam.getClassLoader(), "getStatusBarHeight", hook);
-//        ModuleHelper.hookAllMethods("com.android.internal.policy.SystemBarUtils", lpparam.getClassLoader(), "getStatusBarHeightForRotation", hook);
-//    }
 
     public static void HideMemoryCleanHook(PackageReadyParam lpparam, boolean isInLauncher) {
         String raClass = isInLauncher ? "com.miui.home.recents.views.RecentsContainer" : "com.android.systemui.recents.RecentsActivity";
@@ -3343,7 +3317,6 @@ public class System {
             		                    Intent origIntent = (Intent)args[0];
             		                    Intent intent = (Intent)origIntent.clone();
             		                    String action = intent.getAction();
-            		                    //XposedHelpers.log(action + ": " + intent.getType() + " | " + intent.getDataString());
             		                    if (!Intent.ACTION_VIEW.equals(action)) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                    if (intent.hasExtra("CustoMIUIzer") && intent.getBooleanExtra("CustoMIUIzer", false)) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                    String scheme = intent.getScheme();
@@ -3352,7 +3325,6 @@ public class System {
 
             		                    Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
             		                    String mimeType = getContentType(mContext, intent);
-            		                    //XposedHelpers.log("mimeType: " + mimeType);
 
             		                    String key = "system_cleanopenwith_apps";
             		                    Set<String> selectedApps = MainModule.mPrefs.getStringSet(key);
@@ -6114,7 +6086,6 @@ public class System {
             		                    Intent intent = (Intent) args[1];
             		                    openInFw = shouldOpenInFreeForm(intent, freeformCallingPackage);
             		                }
-            		//                XposedHelpers.log("actInfo: " + openInFw + " - " + args[0] +  " - " + freeformCallingPackage + " | " + args[1]);
             		                if (openInFw) {
             		                    nextFreeformPackage = ModuleHelper.NOT_EXIST_SYMBOL;
             		                }
@@ -6147,15 +6118,6 @@ public class System {
             		                        }
             		                    }
             		                    freeformCallingPackage = (String) args[6];
-            		//                Bundle ao = safeOptions != null ? (Bundle) XposedHelpers.callMethod(safeOptions, "getActivityOptionsBundle") : null;
-            		//                String reason = (String) XposedHelpers.getObjectField(request, "reason");
-            		//                XposedHelpers.log("startAct: " + callingPackage
-            		//                    + " reason| " + reason
-            		//                    + " intent| " + intent
-            		//                    + " openInFw| " + openInFw
-            		//                    + " activityOptions| " + Helpers.stringifyBundle(ao)
-            		//                    + " intentExtra| " + Helpers.stringifyBundle(intent.getExtras())
-            		//                );
             		                }
             
             		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
@@ -6167,25 +6129,6 @@ public class System {
             	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
-//        ModuleHelper.hookAllMethods("com.android.server.wm.ActivityStarterInjector", lpparam.getClassLoader(), "modifyLaunchActivityOptionIfNeed", new MethodHook() {
-//            @Override
-//            protected void after(final AfterHookCallback param) throws Throwable {
-//                if (!Modifier.isPrivate(param.getMember().getModifiers())) {
-//                    return;
-//                }
-//                Intent intent = (Intent)param.getArgs()[5];
-//                if (intent == null || intent.getComponent() == null) return;
-//                ActivityOptions ao = (ActivityOptions) param.getResult();
-//                String callingPackage = (String) param.getArgs()[1];
-//                ActivityOptions baseAO = (ActivityOptions) param.getArgs()[2];
-//                XposedHelpers.log("modifyOptions: " + callingPackage
-//                    + " baseOptions| " + Helpers.stringifyBundle(baseAO != null ? baseAO.toBundle() : null)
-//                    + " intent| " + intent
-//                    + " activityOptions| " + Helpers.stringifyBundle(ao != null ? ao.toBundle() : null)
-//                    + " intentExtra| " + Helpers.stringifyBundle(intent.getExtras())
-//                );
-//            }
-//        });
     }
 
     public static void MultiWindowPlusHook(SystemServerStartingParam lpparam) {

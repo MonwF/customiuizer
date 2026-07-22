@@ -1,4 +1,5 @@
 package name.monwf.customiuizer;
+import android.util.Log;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -51,7 +52,7 @@ public class PrefsProvider extends ContentProvider {
             if (filename != null) try {
                 afd = getContext().getAssets().openFd(filename);
             } catch (Throwable t) {
-                t.printStackTrace();
+                Log.e("Pengeek", "Error", t);
             }
             return afd;
         }

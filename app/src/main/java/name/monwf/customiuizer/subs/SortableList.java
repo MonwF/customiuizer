@@ -1,4 +1,5 @@
 package name.monwf.customiuizer.subs;
+import android.util.Log;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -57,7 +58,7 @@ public class SortableList extends SubFragment {
 			int darkShadow = getResources().getIdentifier("dynamic_listview_dragging_item_shadow_dark", "drawable", "miui");
 			ssField.set(listView, getResources().getDrawable(Helpers.isNightMode(getContext()) ? darkShadow : lightShadow, getContext().getTheme()));
 		} catch (Throwable e) {
-			e.printStackTrace();
+			Log.e("Pengeek", "Error", e);
 		}
 
 		listView.setAdapter(new PreferenceAdapter(getContext(), key, activities));
@@ -95,49 +96,6 @@ public class SortableList extends SubFragment {
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				deleteItem(position);
 
-//				PopupMenu popup = new PopupMenu(getContext(), view);
-//				popup.inflate(R.menu.menu_itemoptions);
-//				popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//					@Override
-//					public boolean onMenuItemClick(MenuItem menuItem) {
-//						switch (menuItem.getItemId()) {
-//							case R.id.changeicon:
-//								float density = getContext().getResources().getDisplayMetrics().density;
-//								GuidePopup iconsPopup = new GuidePopup(getContext());
-//								GridView grid = new GridView(getContext());
-//								grid.setNumColumns(4);
-//								grid.setAdapter(new IconGridAdapter(getContext()));
-//								grid.setBackgroundColor(Color.rgb(108, 108, 111));
-//								grid.setPadding(Math.round(7 * density), Math.round(5 * density), 0, Math.round(5 * density));
-//								grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//									@Override
-//									public void onItemClick(AdapterView<?> parent2, View view2, int position2, long id2) {
-//										String uuid = ((PreferenceAdapter)parent.getAdapter()).getItem(position);
-//										AppHelper.prefs.edit().putString(key + "_" + uuid + "_icon", ((IconGridAdapter)parent2.getAdapter()).getItem(position2)).apply();
-//										iconsPopup.dismiss(true);
-//										((PreferenceAdapter)parent.getAdapter()).notifyDataSetChanged();
-//									}
-//								});
-//								iconsPopup.setContentView(grid);
-//								iconsPopup.setArrowMode(parent.getChildAt(0) == view ? 1 : 0);
-//								iconsPopup.setWidth(Math.round(200 * density));
-//								iconsPopup.setContentWidth(Math.round(200 * density));
-//								iconsPopup.showAsDropDown(view);
-//								break;
-//							case R.id.deleteitem:
-//								PreferenceAdapter adapter = (PreferenceAdapter)listView.getAdapter();
-//								String uuid = adapter.getItem(position);
-//								String items = AppHelper.prefs.getString(key, "");
-//								AppHelper.prefs.edit().putString(key, items == null || items.isEmpty() ? "" : items.replace(uuid, "").replace("||", "|").replaceAll("^\\|", "").replaceAll("\\|$", "")).apply();
-//								adapter.updateItems();
-//								adapter.notifyDataSetChanged();
-//								invalidateOptionsMenu();
-//								break;
-//						}
-//						return true;
-//					}
-//				});
-//				popup.show();
 				return true;
 			}
 		});

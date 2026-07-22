@@ -1,4 +1,5 @@
 package name.monwf.customiuizer;
+import android.util.Log;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             super.attachBaseContext(AppHelper.getLocaleContext(base));
         } catch (Throwable t) {
-            t.printStackTrace();
+            Log.e("Pengeek", "Error", t);
         }
     }
 
@@ -139,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             if (prefsChanged != null) AppHelper.appPrefs.unregisterOnSharedPreferenceChangeListener(prefsChanged);
         } catch (Throwable t) {
-            t.printStackTrace();
+            Log.e("Pengeek", "Error", t);
         }
         super.onDestroy();
     }

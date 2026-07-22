@@ -1,4 +1,5 @@
 package name.monwf.customiuizer.utils;
+import android.util.Log;
 
 import java.lang.ref.WeakReference;
 
@@ -50,7 +51,7 @@ public class BitmapCachedLoader extends AsyncTask<Void, Void, Bitmap> {
 			if (ad.pkgName != null) cacheKey = ad.pkgName;
 			if (ad.actName != null) cacheKey += "|" + ad.actName;
 		} catch (Throwable t) {
-			t.printStackTrace();
+			Log.e("Pengeek", "Error", t);
 		}
 		if (icon == null) return null;
 

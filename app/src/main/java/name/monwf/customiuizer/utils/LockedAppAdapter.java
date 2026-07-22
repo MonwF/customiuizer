@@ -1,4 +1,5 @@
 package name.monwf.customiuizer.utils;
+import android.util.Log;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -49,7 +50,7 @@ public class LockedAppAdapter extends BaseAdapter implements Filterable {
 			getApplicationAccessControlEnabledAsUser = mSecurityManager.getClass().getDeclaredMethod("getApplicationAccessControlEnabledAsUser", String.class, int.class);
 			getApplicationAccessControlEnabledAsUser.setAccessible(true);
 		} catch (Throwable t) {
-			t.printStackTrace();
+			Log.e("Pengeek", "Error", t);
 		}
 
 		sortList();

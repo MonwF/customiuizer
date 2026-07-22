@@ -1,4 +1,5 @@
 package name.monwf.customiuizer.subs;
+import android.util.Log;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -99,7 +100,7 @@ public class ActivitySelector extends SubFragmentWithSearch {
 					}
 					getActivity().runOnUiThread(process);
 				} catch (Throwable e) {
-					e.printStackTrace();
+					Log.e("Pengeek", "Error", e);
 				}
 			}
 		}.start();

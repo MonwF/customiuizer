@@ -1,4 +1,5 @@
 package name.monwf.customiuizer;
+import android.util.Log;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -218,7 +219,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
         try {
             PreferenceManager.setDefaultValues(getValidContext(), pref_defaults, false);
         } catch (Throwable throwable) {
-            throwable.printStackTrace();
+            Log.e("Pengeek", "Error", throwable);
         }
     }
 
@@ -391,7 +392,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
                 });
                 alert.show();
             } catch (Throwable e) {
-                e.printStackTrace();
+                Log.e("Pengeek", "Error", e);
                 AlertDialog.Builder alert = new AlertDialog.Builder(getValidContext());
                 alert.setTitle(R.string.warning);
                 alert.setMessage(getString(R.string.storage_cannot_backup) + "\n" + e.getMessage());
@@ -406,7 +407,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
                         output.close();
                     }
                 } catch (Throwable ex) {
-                    ex.printStackTrace();
+                    Log.e("Pengeek", "Error", ex);
                 }
             }
         }
@@ -439,7 +440,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
             });
             alert.show();
         } catch (Throwable t) {
-            t.printStackTrace();
+            Log.e("Pengeek", "Error", t);
             AlertDialog.Builder alert = new AlertDialog.Builder(act);
             alert.setTitle(R.string.warning);
             alert.setMessage(R.string.storage_cannot_restore);
@@ -451,7 +452,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
             try {
                 if (input != null) input.close();
             } catch (Throwable ex) {
-                ex.printStackTrace();
+                Log.e("Pengeek", "Error", ex);
             }
         }
     }

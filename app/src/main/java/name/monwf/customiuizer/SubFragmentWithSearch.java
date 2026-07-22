@@ -1,4 +1,5 @@
 package name.monwf.customiuizer;
+import android.util.Log;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -30,7 +31,7 @@ public class SubFragmentWithSearch extends SubFragment {
 		if (searchView != null) try {
 			searchView.setSaveFromParentEnabled(false);
 		} catch (Throwable t) {
-			t.printStackTrace();
+			Log.e("Pengeek", "Error", t);
 		}
 	}
 

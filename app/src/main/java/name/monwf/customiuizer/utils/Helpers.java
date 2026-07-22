@@ -1,4 +1,5 @@
 package name.monwf.customiuizer.utils;
+import android.util.Log;
 
 import android.Manifest;
 import android.animation.ArgbEvaluator;
@@ -78,8 +79,6 @@ public class Helpers {
     @SuppressLint("StaticFieldLeak")
 
     public static final String modulePkg = BuildConfig.APPLICATION_ID;
-    //	public static final String versionFile = "xposed_version";
-//	public static final String wallpaperFile = "lockscreen_wallpaper";
     public static final String ANDROID_NS = "http://schemas.android.com/apk/res/android";
     public static final String MIUIZER_NS = "http://schemas.android.com/apk/res-auto";
     public static final String ACCESS_SECURITY_CENTER = "com.miui.securitycenter.permission.ACCESS_SECURITY_CENTER_PROVIDER";
@@ -200,7 +199,7 @@ public class Helpers {
             if (token != null)
                 inputManager.hideSoftInputFromWindow(token, InputMethodManager.HIDE_NOT_ALWAYS);
         } catch (Throwable t) {
-            t.printStackTrace();
+            Log.e("Pengeek", "Error", t);
         }
     }
 
@@ -259,7 +258,7 @@ public class Helpers {
             else
                 showNewMods = appInstalled < (opt == 1 ? 1 : (opt == 2 ? 3 : 7)) * 24 * 60 * 60 * 1000;
         } catch (Throwable t) {
-            t.printStackTrace();
+            Log.e("Pengeek", "Error", t);
         }
     }
 
@@ -353,7 +352,7 @@ public class Helpers {
             getAnimationScale.setAccessible(true);
             return (float)getAnimationScale.invoke(wm, type);
         } catch (Throwable t) {
-            t.printStackTrace();
+            Log.e("Pengeek", "Error", t);
             return 1.0f;
         }
     }
@@ -376,7 +375,7 @@ public class Helpers {
             setAnimationScale.setAccessible(true);
             setAnimationScale.invoke(wm, type, value);
         } catch (Throwable t) {
-            t.printStackTrace();
+            Log.e("Pengeek", "Error", t);
         }
     }
 
@@ -458,7 +457,7 @@ public class Helpers {
                 }
             } catch (Throwable ignore) {}
         } catch (Throwable t) {
-            t.printStackTrace();
+            Log.e("Pengeek", "Error", t);
         }
         launchableAppsList.sort(new Comparator<AppData>() {
             public int compare(AppData app1, AppData app2) {
@@ -506,7 +505,7 @@ public class Helpers {
                 }
             } catch (Throwable ignore) {}
         } catch (Throwable e) {
-            e.printStackTrace();
+            Log.e("Pengeek", "Error", e);
         }
         shareAppsList.sort(new Comparator<AppData>() {
             public int compare(AppData app1, AppData app2) {
@@ -563,7 +562,7 @@ public class Helpers {
                 }
             } catch (Throwable ignore) {}
         } catch (Throwable e) {
-            e.printStackTrace();
+            Log.e("Pengeek", "Error", e);
         }
         openWithAppsList.sort(new Comparator<AppData>() {
             public int compare(AppData app1, AppData app2) {
@@ -591,7 +590,7 @@ public class Helpers {
                     return pm.getApplicationLabel(ai);
                 }
             } catch (Throwable e) {
-                e.printStackTrace();
+                Log.e("Pengeek", "Error", e);
             }
         return null;
     }
@@ -612,7 +611,7 @@ public class Helpers {
                 else if (!pkgActArray[0].trim().equals(""))
                     return pm.getApplicationIcon(pkgActArray[0]);
             } catch (Throwable e) {
-                e.printStackTrace();
+                Log.e("Pengeek", "Error", e);
             }
         return null;
     }
@@ -705,12 +704,12 @@ public class Helpers {
                     }
                     order++;
                 } catch (Throwable t) {
-                    t.printStackTrace();
+                    Log.e("Pengeek", "Error", t);
                 }
                 eventType = xml.next();
             }
         } catch (Throwable t) {
-            t.printStackTrace();
+            Log.e("Pengeek", "Error", t);
         }
     }
 
@@ -783,21 +782,6 @@ public class Helpers {
         }
     }
 
-//	public static void removePref(PreferenceFragmentBase frag, String prefName, String catName) {
-//		if (frag.findPreference(prefName) != null) {
-//			Preference cat = frag.findPreference(catName);
-//			if (cat instanceof PreferenceScreen) ((PreferenceScreen)cat).removePreference(frag.findPreference(prefName));
-//			else if (cat instanceof PreferenceCategory) ((PreferenceCategory)cat).removePreference(frag.findPreference(prefName));
-//		}
-//	}
-//
-//	public static void disablePref(PreferenceFragmentBase frag, String prefName, String reasonText) {
-//		Preference pref = frag.findPreference(prefName);
-//		if (pref != null) {
-//			pref.setEnabled(false);
-//			pref.setSummary(reasonText);
-//		}
-//	}
 
     public static String getCacheFilePath(String filename) {
         if (new File("/cache").canWrite()) return "/cache/" + filename;
@@ -817,7 +801,7 @@ public class Helpers {
             Files.copy(Paths.get(from), Paths.get(to), StandardCopyOption.REPLACE_EXISTING);
             return true;
         } catch (Throwable t) {
-            t.printStackTrace();
+            Log.e("Pengeek", "Error", t);
             return false;
         }
     }

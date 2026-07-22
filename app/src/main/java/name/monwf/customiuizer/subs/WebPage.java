@@ -57,15 +57,6 @@ public class WebPage extends SubFragment {
                     ab.setTitle(view.getTitle());
                 }
             }
-//			@Override
-//			public WebResourceResponse shouldInterceptRequest(WebView webView, WebResourceRequest webResourceRequest) {
-//				String resUrl = webResourceRequest.getUrl().toString();
-//				if (resUrl.contains("https://statics.woozooo.com/img/bd.js")) {
-//					String customJs = "let pwdElem = document.getElementById('pwd');if (pwdElem) {pwdElem.value = 'miui';window.file();}";
-//					return new WebResourceResponse("text/javascript", "utf-8", new ByteArrayInputStream(customJs.getBytes(StandardCharsets.UTF_8)));
-//				}
-//				return super.shouldInterceptRequest(webView, webResourceRequest);
-//			}
         });
         mWebView.setDownloadListener(new DownloadListener() {
             @Override
