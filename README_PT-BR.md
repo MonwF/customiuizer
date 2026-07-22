@@ -1,19 +1,20 @@
 # CustoMIUIzer A14
 
-**米客 A14** é um módulo de personalização mantido de forma independente para **HyperOS 1 / Android 14**, baseado na API 101 do libxposed e focado em estabilidade, baixo consumo de recursos e reversão segura.
+**米客 A14** é um módulo de personalização mantido de forma independente para **HyperOS 1 / Android 14**. Ele usa o [MonwF/customiuizer v24.10.12](https://github.com/MonwF/customiuizer/releases/tag/v24.10.12) como referência funcional do A14, mas possui pacote, versões, compilação e validação próprios.
+
+Suas duas diferenças centrais são a integração com a **API 101 do libxposed** e a otimização contínua de **código e recursos**. Hooks frequentes, threads, caches, reflexão e limites de erro são refinados sem sacrificar a ativação confiável após reiniciar.
 
 > [!WARNING]
 > Compatível apenas com Android 14 (SDK 34) e `arm64-v8a`. Não ative no Android 15/16 nem junto com outro módulo derivado do CustoMIUIzer.
 
 ## Estado atual
 
-- Versão em desenvolvimento: r14.1.3, aguardando teste no aparelho
-- Versão estável para retorno: r14.1.2
+- Versão estável: r14.1.3
 - Pacote: `name.monwf.customiuizer.r14`
 - Base do LSPosed: [Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935), commit `9350c7c`
 - Lançamentos: [tomthenpc/customiuizer-a14](https://github.com/tomthenpc/customiuizer-a14/releases)
 
-O candidato corrigido do r14.1.3 não substituirá o pré-lançamento atual no GitHub antes da validação no dispositivo-alvo.
+O r14.1.3 passou nos testes de abertura do aplicativo, reinicialização completa e nas funções de Launcher/SystemUI antes afetadas. Os logs mais recentes não mostram crash, ANR ou encerramento do aplicativo ou do SystemUI.
 
 ## Destaques
 

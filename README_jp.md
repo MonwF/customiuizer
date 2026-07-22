@@ -1,19 +1,20 @@
 # CustoMIUIzer A14
 
-**米客 A14** は、**HyperOS 1 / Android 14** 専用に独立して保守されているシステムカスタマイズモジュールです。libxposed API 101 を使用し、安定性、低負荷、安全なロールバックを優先します。
+**米客 A14** は、**HyperOS 1 / Android 14** 専用に独立して保守されているシステムカスタマイズモジュールです。[MonwF/customiuizer v24.10.12](https://github.com/MonwF/customiuizer/releases/tag/v24.10.12) を A14 機能の参考にしつつ、独自のパッケージ、バージョン、ビルド、検証工程を持ちます。
+
+主な違いは **libxposed API 101 対応**と継続的な**コード／リソース最適化**です。再起動後の Hook の信頼性を優先しながら、ホットパス、スレッド、キャッシュ、リフレクション、例外境界を改善します。
 
 > [!WARNING]
 > Android 14（SDK 34）および `arm64-v8a` 専用です。Android 15/16 では有効にせず、同系統のモジュールを同時に有効化しないでください。
 
 ## 現在の状態
 
-- 開発版：r14.1.3（実機確認待ち）
-- 安定版：r14.1.2
+- 安定版：r14.1.3
 - パッケージ：`name.monwf.customiuizer.r14`
 - LSPosed 基準：[Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935)、commit `9350c7c`
 - リリース：[tomthenpc/customiuizer-a14](https://github.com/tomthenpc/customiuizer-a14/releases)
 
-修正版 r14.1.3 は、実機確認が完了するまで既存の GitHub プレリリースを置き換えません。
+r14.1.3 は、アプリ起動、完全再起動、以前問題があった Launcher/SystemUI 機能の実機確認を完了しています。最新ログに本アプリまたは SystemUI のクラッシュ、ANR、プロセス停止はありません。
 
 ## 主な変更
 
