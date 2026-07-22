@@ -2587,7 +2587,7 @@ public class SystemUI {
             Object mBrightnessController;
             private int sbHeight = -1;
             @Override
-            @SuppressLint({"SetTextI18n", "WrongConstant"})
+            @SuppressLint("SetTextI18n")
             protected void before(final BeforeHookCallback param) throws Throwable {
                 String clsName = param.getThisObject().getClass().getSimpleName();
                 boolean isInControlCenter = "ControlCenterWindowViewImpl".equals(clsName);
@@ -3492,6 +3492,15 @@ public class SystemUI {
         };
         ModuleHelper.findAndHookMethod("com.android.systemui.qs.MiuiQSHeaderView", lpparam.getClassLoader(), "updateShortCutVisibility", hideViewHook);
         ModuleHelper.findAndHookMethod("com.android.systemui.qs.MiuiNotificationHeaderView", lpparam.getClassLoader(), "updateShortCutVisibility", hideViewHook);
+//        ModuleHelper.findAndHookMethod("com.android.systemui.qs.MiuiNotificationHeaderView", lpparam.getClassLoader(), "updateLayout", new MethodHook() {
+//            @Override
+//            protected void after(final AfterHookCallback param) throws Throwable {
+//                View mShortCut = (View) XposedHelpers.getObjectField(param.getThisObject(), "mShortCut");
+//                if (mShortCut != null) {
+//                    mShortCut.setVisibility(View.GONE);
+//                }
+//            }
+//        });
     }
     public static void HideNoNotificationsHook(PackageReadyParam lpparam) {
         ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout", lpparam.getClassLoader(), "updateEmptyShadeView", int.class, int.class, int.class, new MethodHook() {

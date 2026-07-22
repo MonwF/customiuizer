@@ -26,6 +26,66 @@ public class PackagePermissions {
 		systemPackages.add(Helpers.modulePkg);
 		//systemPackages.add("com.miui.packageinstaller");
 
+		// Allow signature level permissions for module
+//		String PMSCls = "com.android.server.pm.permission.PermissionManagerServiceImpl";
+//		ModuleHelper.hookAllMethods(PMSCls, lpparam.getClassLoader(), "shouldGrantPermissionBySignature",
+//			new MethodHook() {
+//				@Override
+//				protected void before(final BeforeHookCallback param) throws Throwable {
+//					String pkgName = (String)XposedHelpers.callMethod(param.getArgs()[0], "getPackageName");
+//					if (systemPackages.contains(pkgName)) param.returnAndSkip(true);
+//				}
+//			}
+//		);
+//
+//		ModuleHelper.hookAllMethods("com.android.server.pm.PackageManagerServiceUtils", lpparam.getClassLoader(), "verifySignatures",
+//			new MethodHook() {
+//				@Override
+//				protected void before(final BeforeHookCallback param) throws Throwable {
+//					String pkgName = (String)XposedHelpers.callMethod(param.getArgs()[0], "getName");
+//					if (systemPackages.contains(pkgName)) param.returnAndSkip(true);
+//				}
+//			}
+//		);
+//
+//		// Make module appear as system app
+//		String ActQueryService = "com.android.server.pm.ComputerEngine";
+//		ModuleHelper.hookAllMethods(ActQueryService, lpparam.getClassLoader(), "queryIntentActivitiesInternal", new MethodHook() {
+//			@Override
+//			@SuppressWarnings("unchecked")
+//			protected void after(final AfterHookCallback param) throws Throwable {
+//				if (param.getArgs().length < 6) return;
+//				List<ResolveInfo> infos = (List<ResolveInfo>)param.getResult();
+//				if (infos != null) {
+//					for (ResolveInfo info: infos)
+//						if (info != null && info.activityInfo != null && systemPackages.contains(info.activityInfo.packageName))
+//							XposedHelpers.setObjectField(info, "system", true);
+//				}
+//			}
+//		});
+//
+//		ModuleHelper.findAndHookMethod("android.content.pm.ApplicationInfo", lpparam.getClassLoader(), "isSystemApp", new MethodHook() {
+//			@Override
+//			protected void after(final AfterHookCallback param) throws Throwable {
+//				ApplicationInfo ai = (ApplicationInfo)param.getThisObject();
+//				if (ai != null && systemPackages.contains(ai.packageName)) param.setResult(true);
+//			}
+//		});
+//
+//		ModuleHelper.findAndHookMethod("android.content.pm.ApplicationInfo", lpparam.getClassLoader(), "isSignedWithPlatformKey", new MethodHook() {
+//			@Override
+//			protected void after(final AfterHookCallback param) throws Throwable {
+//				ApplicationInfo ai = (ApplicationInfo)param.getThisObject();
+//				if (ai != null && systemPackages.contains(ai.packageName)) param.setResult(true);
+//			}
+//		});
+//
+//		ModuleHelper.hookAllMethods("com.android.server.wm.ActivityRecordInjector", lpparam.getClassLoader(), "canShowWhenLocked", new MethodHook() {
+//			@Override
+//			protected void before(final BeforeHookCallback param) throws Throwable {
+//				param.returnAndSkip(true);
+//			}
+//		});
 
 		try {
 			Class<?> dpgpiClass = findClass("com.android.server.pm.MiuiDefaultPermissionGrantPolicy", lpparam.getClassLoader());

@@ -1,5 +1,4 @@
 package name.monwf.customiuizer;
-import android.util.Log;
 
 import android.app.Activity;
 import android.app.KeyguardManager;
@@ -41,17 +40,15 @@ public class Credentials extends AppCompatActivity {
 				startActivity(intent);
 			}
 		} catch (Throwable t) {
-			Log.e("Pengeek", "Error", t);
+			t.printStackTrace();
 		}
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
 		finish();
-		if (resultCode == Activity.RESULT_OK) {
-			Toast.makeText(this, R.string.credentials_success, Toast.LENGTH_SHORT).show();
-		}
+		if (resultCode == Activity.RESULT_OK)
+		Toast.makeText(this, R.string.credentials_success, Toast.LENGTH_SHORT).show();
 	}
 
 }

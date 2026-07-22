@@ -809,6 +809,16 @@
     <string name="miuizer_locale_summ">Siempre mostrar la interfaz del módulo en el idioma seleccionado</string>
     <string name="troubleshoot">Solución de problemas</string>
     <string name="support">Soporte</string>
+    <string name="support_github">Código y problemas</string>
+    <string name="support_github_summ">Repositorio principal para mantener la app actualizada</string>
+    <string name="support_contact_title">Contactarme</string>
+    <string name="support_releases_title">Versiones</string>
+    <string name="support_releases_summ">Versiones de Github</string>
+    <string name="support_repo_title">Repositorio de CustoMIUIzer de Mikanoshi</string>
+    <string name="support_repo_summ">Repositorio Git con fuentes y distribuciones de módulos</string>
+    <string name="support_donate">Donar $%1$d</string>
+    <string name="support_donate_me_title">Donar vía PayPal</string>
+    <string name="support_donate_title">Donar a Mikanoshi</string>
     <string name="array_color_auto">Automático</string>
     <string name="array_color_dark">Obscuro</string>
     <string name="array_color_light">Claro</string>
@@ -818,6 +828,7 @@
     <string name="open_xposed">Administrar módulos Xposed</string>
     <string name="soft_reboot">Reinicio rápido</string>
     <string name="restart_launcher">Reiniciar navegador</string>
+    <string name="open_inweb">Abrir en el navegador</string>
     <string name="restart_systemui">Reiniciar SystemUI</string>
     <string name="restart_securitycenter">Reiniciar centro de seguridad</string>
     <string name="backup_restore">Administrar ajustes</string>

@@ -1,5 +1,4 @@
 package name.monwf.customiuizer.qs;
-import android.util.Log;
 
 import android.content.SharedPreferences;
 import android.graphics.drawable.Icon;
@@ -50,7 +49,7 @@ public class AutoRotateService extends TileService {
 			if (state > 2) state = 0;
 			prefs.edit().putInt("pref_key_qs_autorotate_state", state).apply();
 		} catch (Throwable t) {
-			Log.e("Pengeek", "Error", t);
+			t.printStackTrace();
 		}
 	}
 
@@ -59,7 +58,7 @@ public class AutoRotateService extends TileService {
 			SharedPreferences prefs = AppHelper.getSharedPrefs(this, false);
 			return prefs.getInt("pref_key_qs_autorotate_state", 0);
 		} catch (Throwable t) {
-			Log.e("Pengeek", "Error", t);
+			t.printStackTrace();
 			return 0;
 		}
 	}

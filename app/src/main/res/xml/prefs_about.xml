@@ -5,6 +5,19 @@
 	android:layout_height="match_parent">
 
 	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
+		android:title="@string/support"
+		android:key="pref_key_support">
+		<name.monwf.customiuizer.prefs.PreferenceEx
+			android:title="@string/support_repo_title"
+			android:summary="@string/support_repo_summ"
+			android:key="pref_key_website" />
+		<name.monwf.customiuizer.prefs.PreferenceEx
+			android:title="@string/support_donate_title"
+			android:summary="@string/support_donate_other_summ"
+			android:key="pref_key_payother" />
+	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
+
+	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/miuizer"
 		android:key="pref_key_miuizer_settings">
 		<name.monwf.customiuizer.prefs.ListPreferenceEx

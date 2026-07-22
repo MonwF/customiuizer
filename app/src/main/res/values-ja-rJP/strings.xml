@@ -858,6 +858,16 @@
     <string name="miuizer_locale_summ">選択された言語で常にモジュールのインターフェースを表示します</string>
     <string name="troubleshoot">トラブルシューティング</string>
     <string name="support">サポート</string>
+    <string name="support_github">コードと問題の報告</string>
+    <string name="support_github_summ">アプリを最新の状態に保つスターリポジトリです</string>
+    <string name="support_contact_title">お問い合わせ</string>
+    <string name="support_releases_title">リリース</string>
+    <string name="support_releases_summ">GitHubリリース</string>
+    <string name="support_repo_title">Mikanoshi氏のCustoMIUIzerリポジトリ</string>
+    <string name="support_repo_summ">モジュールのソースとディストリビューションを含むGitリポジトリです</string>
+    <string name="support_donate">寄付 $%1$d</string>
+    <string name="support_donate_me_title">PayPalで寄付をする</string>
+    <string name="support_donate_title">Mikanoshi氏に寄付</string>
     <string name="array_color_auto">自動</string>
     <string name="array_color_dark">ダーク</string>
     <string name="array_color_light">ライト</string>
@@ -868,6 +878,7 @@
     <string name="soft_reboot">ソフトリブート</string>
     <string name="soft_reboot_ask">今すぐ再起動をしますか?</string>
     <string name="restart_launcher">ランチャーを再起動</string>
+    <string name="open_inweb">ブラウザを開く</string>
     <string name="restart_systemui">SystemUIを再起動</string>
     <string name="restart_securitycenter">セキュリティセンターを再起動</string>
     <string name="backup_restore">設定の管理</string>

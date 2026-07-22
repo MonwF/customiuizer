@@ -1,5 +1,4 @@
 package name.monwf.customiuizer.subs;
-import android.util.Log;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -202,7 +201,7 @@ public class AppSelector extends SubFragmentWithSearch {
 								LockedAppAdapter adapter = (LockedAppAdapter)parent.getAdapter();
 								adapter.notifyDataSetChanged();
 							} catch (Throwable t) {
-								Log.e("Pengeek", "Error", t);
+								t.printStackTrace();
 							}
 						} else if (customTitles) {
 							AppData app = (AppData)parent.getAdapter().getItem(position);
@@ -272,7 +271,7 @@ public class AppSelector extends SubFragmentWithSearch {
 					initialized = true;
 					act.runOnUiThread(process);
 				} catch (Throwable e) {
-					Log.e("Pengeek", "Error", e);
+					e.printStackTrace();
 				}
 			}).start();
 

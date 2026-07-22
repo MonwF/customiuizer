@@ -827,6 +827,16 @@
     <string name="miuizer_locale_summ">始终以所选语言显示模块界面</string>
     <string name="troubleshoot">故障排除</string>
     <string name="support">支持</string>
+    <string name="support_github">代码仓库</string>
+    <string name="support_github_summ">Star仓库，关注App更新</string>
+    <string name="support_contact_title">酷安 @tpsxx</string>
+    <string name="support_releases_title">版本下载</string>
+    <string name="support_releases_summ">点击进入, 长按可复制链接</string>
+    <string name="support_repo_title">原始CustoMIUIzer仓库</string>
+    <string name="support_repo_summ">包含模块源码和分发的Git存储库</string>
+    <string name="support_donate">捐出$%1$d</string>
+    <string name="support_donate_me_title">微信赞赏</string>
+    <string name="support_donate_title">捐赠 Mikanoshi</string>
     <string name="array_color_auto">自动</string>
     <string name="array_color_dark">暗</string>
     <string name="array_color_light">亮</string>
@@ -836,6 +846,7 @@
     <string name="soft_reboot">重启系统</string>
     <string name="soft_reboot_ask">现在执行重启吗？</string>
     <string name="restart_launcher">重启桌面</string>
+    <string name="open_inweb">在浏览器中打开</string>
     <string name="backup_restore">备份与恢复</string>
     <string name="reset_settings">重置模块设置</string>
     <string name="reset_settings_done">重置成功，请重启设备</string>

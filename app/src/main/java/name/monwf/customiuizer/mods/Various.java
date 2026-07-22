@@ -332,6 +332,16 @@ public class Various {
 			}
 		});
 
+//		ModuleHelper.findAndHookMethod("com.miui.appmanager.AppManagerMainActivity", lpparam.getClassLoader(), "onSaveInstanceState", Bundle.class, new MethodHook() {
+//			@Override
+//			protected void after(final AfterHookCallback param) throws Throwable {
+//				Bundle bundle = (Bundle)param.getArgs()[0];
+//				if (bundle == null) bundle = new Bundle();
+//				bundle.putInt("current_sory_type", 1); // Xiaomi noob typos :)
+//				bundle.putInt("current_sort_type", 1); // Future proof, they may fix it someday :D
+//				XposedHelpers.log("onSaveInstanceState: " + String.valueOf(bundle));
+//			}
+//		});
 	}
 
 	private static void setAppState(final Activity act, String pkgName, MenuItem item, boolean enable) {
@@ -402,6 +412,7 @@ public class Various {
 									dis.setIcon(act.getResources().getIdentifier("action_button_stop", "drawable", lpparam.getPackageName()));
 									dis.setEnabled(true);
 									dis.setShowAsAction(1);
+									//XposedHelpers.setAdditionalInstanceField(thisObject, "mDisableButton", dis);
 
 									PackageManager pm = act.getPackageManager();
 									Field piField = XposedHelpers.findFirstFieldByExactType(act.getClass(), PackageInfo.class);
@@ -702,8 +713,7 @@ public class Various {
 												showSideBar(view, pos);
 											}
 										};
-										view.getContext().registerReceiver(showReceiver,
-											new IntentFilter(ACTION_PREFIX + "ShowSideBar"), Context.RECEIVER_EXPORTED);
+										view.getContext().registerReceiver(showReceiver, new IntentFilter(ACTION_PREFIX + "ShowSideBar"));
 										XposedHelpers.setAdditionalInstanceField(thisObject, "showReceiver", showReceiver);
 
 										if (!isHooked[1]) {
@@ -1833,5 +1843,24 @@ public class Various {
 		});
 	}
 
+//	public static void LargeCallerPhotoHook(PackageReadyParam lpparam) {
+//		ModuleHelper.findAndHookMethod("com.android.incallui.CallCardFragment", lpparam.getClassLoader(), "setCallCardImage", Drawable.class, boolean.class, new MethodHook() {
+//			@Override
+//			protected void before(final BeforeHookCallback param) throws Throwable {
+//				param.getArgs()[1] = true;
+//			}
+//		});
+//
+//		ModuleHelper.findAndHookMethod("com.android.incallui.CallCardFragment", lpparam.getClassLoader(), "showBigAvatar", boolean.class, Drawable.class, new MethodHook() {
+//			@Override
+//			protected void before(final BeforeHookCallback param) throws Throwable {
+//				//XposedHelpers.log("showBigAvatar: " + String.valueOf(param.getArgs()[0]) + " | " + String.valueOf(param.getArgs()[1]));
+//				if (param.getArgs()[1] == null)
+//					param.returnAndSkip(null);
+//				else
+//					param.getArgs()[0] = true;
+//			}
+//		});
+//	}
 
 }

@@ -126,6 +126,10 @@ public class PreferenceEx extends Preference implements PreferenceState {
 		highlight = true;
 	}
 
+//	public void setNotice(boolean value) {
+//		notice = value;
+//		setEnabled(!value);
+//	}
 
 	public void setUnsupported(boolean value) {
 		unsupported = value;

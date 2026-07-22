@@ -116,8 +116,8 @@ public class HookerClassHelper {
 
     public static class MethodHook implements BeforeMethodCallback, AfterMethodCallback, XposedInterface.Hooker {
         public final int mPriority;
-        private final boolean mIsReturnConstant;
-        private final Object mReturnConstantValue;
+        boolean mIsReturnConstant;
+        Object mReturnConstantValue;
         private final boolean hasAfter;
 
         public MethodHook() {
@@ -126,8 +126,6 @@ public class HookerClassHelper {
 
         public MethodHook(int priority) {
             mPriority = priority;
-            mIsReturnConstant = false;
-            mReturnConstantValue = null;
             boolean ha = false;
             if (getClass() != MethodHook.class) {
                 try {
@@ -136,14 +134,6 @@ public class HookerClassHelper {
                 } catch (NoSuchMethodException ignored) {}
             }
             this.hasAfter = ha;
-        }
-
-        /** Creates a hook that always returns the supplied constant value. */
-        public MethodHook(int priority, Object returnConstantValue) {
-            mPriority = priority;
-            mIsReturnConstant = true;
-            mReturnConstantValue = returnConstantValue;
-            this.hasAfter = false;
         }
 
         @Override
@@ -208,7 +198,10 @@ public class HookerClassHelper {
     }
 
     /** Skips the hooked method and returns {@code null}. */
-    public static final MethodHook DO_NOTHING = new MethodHook(XposedInterface.PRIORITY_HIGHEST, null);
+    public static final MethodHook DO_NOTHING = new MethodHook(XposedInterface.PRIORITY_HIGHEST) {{
+        mIsReturnConstant = true;
+        mReturnConstantValue = null;
+    }};
 
     /** Creates a highest-priority callback which always returns the supplied value. */
     public static MethodHook returnConstant(final Object result) {
@@ -217,6 +210,9 @@ public class HookerClassHelper {
 
     /** Creates a callback which always returns the supplied value at the requested priority. */
     public static MethodHook returnConstant(int priority, final Object result) {
-        return new MethodHook(priority, result);
+        return new MethodHook(priority) {{
+            mIsReturnConstant = true;
+            mReturnConstantValue = result;
+        }};
     }
 }

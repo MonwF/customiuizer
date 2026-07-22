@@ -132,6 +132,7 @@ public class Controls {
 									final Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
 									final PowerManager mPowerManager = (PowerManager)XposedHelpers.getObjectField(thisObject, "mPowerManager");
 									if (mPowerManager.isInteractive()) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
+									//XposedHelpers.log("PowerKeyHook", "interceptKeyBeforeQueueing: " + args[1] + ", isTracking: " + keyEvent.isTracking() + " | Source: " + keyEvent.getSource() + " | KeyCode: " + keyEvent.getKeyCode() + " | Action: " + keyEvent.getAction() + " | RepeatCount: " + keyEvent.getRepeatCount()+ " | Flags: " + keyEvent.getFlags());
 									if (action == KeyEvent.ACTION_DOWN) {
 										isPowerPressed = true;
 										isPowerLongPressed = false;
@@ -225,6 +226,7 @@ public class Controls {
 									final Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
 									final PowerManager mPowerManager = (PowerManager)XposedHelpers.getObjectField(thisObject, "mPowerManager");
 									if (mPowerManager.isInteractive()) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
+									//XposedHelpers.log("VolumeMediaButtonsHook", "interceptKeyBeforeQueueing: KeyCode: " + keyEvent.getKeyCode() + " | Action: " + keyEvent.getAction() + " | RepeatCount: " + keyEvent.getRepeatCount()+ " | Flags: " + keyEvent.getFlags() + " | " + mPowerManager.isInteractive());
 									if (action == KeyEvent.ACTION_DOWN) {
 										isVolumePressed = true;
 										isVolumeLongPressed = false;
@@ -1119,6 +1121,29 @@ public class Controls {
 		ModuleHelper.findAndHookMethod("com.android.systemui.assist.ui.DefaultUiController", lpparam.getClassLoader(), "logInvocationProgressMetrics", float.class, boolean.class, HookerClassHelper.DO_NOTHING);
 	}
 
+//	public static void AIButtonHook(PackageReadyParam lpparam) {
+//		ModuleHelper.findAndHookMethod("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.getClassLoader(), "startAiKeyService", String.class, new MethodHook() {
+//			@Override
+//			protected void before(final BeforeHookCallback param) throws Throwable {
+//				XposedHelpers.log("AIButtonHook", "startAiKeyService: " + param.getArgs()[0]);
+//			}
+//		});
+//	}
 
+//	public static void SwapVolumeKeysHook(PackageReadyParam lpparam) {
+//		ModuleHelper.findAndHookMethod("com.android.server.audio.AudioService", lpparam.getClassLoader(), "adjustSuggestedStreamVolume", int.class, int.class, int.class, String.class, String.class, int.class, new MethodHook() {
+//			@Override
+//			protected void before(final BeforeHookCallback param) throws Throwable {
+//				//XposedHelpers.log("adjustStreamVolume: " + String.valueOf(param.getArgs()[0]) + ", " + String.valueOf(param.getArgs()[1]) + ", " + String.valueOf(param.getArgs()[2]) + ", " + String.valueOf(param.getArgs()[3]) + ", " + String.valueOf(param.getArgs()[4]) + ", " + String.valueOf(param.getArgs()[5]));
+//				if ((Integer)param.getArgs()[0] != 0) try {
+//					Context context = (Context)XposedHelpers.getObjectField(param.getThisObject(), "mContext");
+//					int rotation = ((WindowManager)context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+//					if (rotation == Surface.ROTATION_90) param.getArgs()[0] = -1 * (Integer)param.getArgs()[0];
+//				} catch (Throwable t) {
+//					XposedHelpers.log(t);
+//				}
+//			}
+//		});
+//	}
 
 }

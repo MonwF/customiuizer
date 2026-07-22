@@ -2,6 +2,9 @@ package name.monwf.customiuizer.utils;
 
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -25,6 +28,7 @@ public class ResolveInfoAdapter extends BaseAdapter implements Filterable {
 	private final Context ctx;
 	private final PackageManager pm;
 	private final LayoutInflater mInflater;
+	private final ThreadPoolExecutor pool;
 	private final ItemFilter mFilter = new ItemFilter();
 	private final CopyOnWriteArrayList<ResolveInfo> originalAppList = new CopyOnWriteArrayList<ResolveInfo>();
 	private final CopyOnWriteArrayList<ResolveInfo> filteredAppList = new CopyOnWriteArrayList<ResolveInfo>();
@@ -35,6 +39,8 @@ public class ResolveInfoAdapter extends BaseAdapter implements Filterable {
 		mInflater = LayoutInflater.from(context);
 		originalAppList.addAll(arr);
 		filteredAppList.addAll(arr);
+		int cpuCount = Runtime.getRuntime().availableProcessors();
+		pool = new ThreadPoolExecutor(cpuCount + 1, cpuCount * 2 + 1, 2, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
 	}
 
 	public int getCount() {
@@ -79,7 +85,7 @@ public class ResolveInfoAdapter extends BaseAdapter implements Filterable {
 			TransitionDrawable crossfader = new TransitionDrawable(dualIcon);
 			crossfader.setCrossFadeEnabled(true);
 			itemIcon.setImageDrawable(crossfader);
-			new BitmapCachedLoader(itemIcon, ad, ctx).execute();
+			(new BitmapCachedLoader(itemIcon, ad, ctx)).executeOnExecutor(pool);
 		} else {
 			itemIcon.setImageBitmap(icon);
 		}
@@ -112,9 +118,8 @@ public class ResolveInfoAdapter extends BaseAdapter implements Filterable {
 		@SuppressWarnings("unchecked")
 		protected void publishResults(CharSequence constraint, FilterResults results) {
 			filteredAppList.clear();
-			if (results.count > 0 && results.values != null) {
-				filteredAppList.addAll((ArrayList<ResolveInfo>)results.values);
-			}
+			if (results.count > 0 && results.values != null)
+			filteredAppList.addAll((ArrayList<ResolveInfo>)results.values);
 			notifyDataSetChanged();
 		}
 	}

@@ -14,12 +14,6 @@
 
 -keepnames class name.monwf.customiuizer.GateWayLauncher
 
-# AndroidX Startup runs in the normal app process before LSPosed injects its API.
-# Keep Startup and every manifest-discovered initializer out of R8 class merging,
-# otherwise verifier dependencies from Xposed-only classes can leak into startup.
--keep class androidx.startup.** { *; }
--keep class * implements androidx.startup.Initializer { *; }
-
 # Obfuscation
 -repackageclasses
 -allowaccessmodification

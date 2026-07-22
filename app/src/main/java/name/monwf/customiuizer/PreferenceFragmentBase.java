@@ -1,5 +1,4 @@
 package name.monwf.customiuizer;
-import android.util.Log;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -29,6 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import name.monwf.customiuizer.mods.GlobalActions;
+import name.monwf.customiuizer.subs.WebPage;
 import name.monwf.customiuizer.utils.AppHelper;
 import name.monwf.customiuizer.utils.Helpers;
 
@@ -44,6 +44,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
     protected boolean isCustomActionBar = false;
     protected int headLayoutId = 0;
     protected int tailLayoutId = 0;
+    protected String pageUrl;
     protected HashMap<Integer, String> mapKeys = new HashMap<Integer, String>() {{
         put(R.id.search_btn, "search");
         put(R.id.restartlauncher, "launcher");
@@ -54,6 +55,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
         put(R.id.backuprestore, "settings");
         put(R.id.resetsettings, "reset");
         put(R.id.about, "about");
+        put(R.id.openinweb, "openinweb");
     }};
 
     protected ActionBar getActionBar() {
@@ -78,7 +80,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
                 item = menu.getItem(i);
                 int menuId = item.getItemId();
                 String menuKey = mapKeys.get(menuId);
-                if (activeMenus.equals("all") && menuId == R.id.edit_confirm) {
+                if (activeMenus.equals("all") && (menuId == R.id.edit_confirm || menuId == R.id.openinweb)) {
                     item.setVisible(false);
                 }
                 else if (activeMenus.equals("all")) {
@@ -134,6 +136,9 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
             return true;
         } else if (itemId == R.id.backuprestore) {
             showBackupRestoreDialog();
+            return true;
+        } else if (itemId == R.id.openinweb) {
+            Helpers.openURL(getValidContext(), pageUrl);
             return true;
         } else if (itemId == R.id.softreboot) {
             if (!AppHelper.moduleActive) {
@@ -213,7 +218,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
         try {
             PreferenceManager.setDefaultValues(getValidContext(), pref_defaults, false);
         } catch (Throwable throwable) {
-            Log.e("Pengeek", "Error", throwable);
+            throwable.printStackTrace();
         }
     }
 
@@ -237,6 +242,12 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
             fixStubLayout(renderView, 2);
         }
         initFragment();
+    }
+
+    public void openWebPage(String url) {
+        Bundle args = new Bundle();
+        args.putString("pageUrl", url);
+        openSubFragment(new WebPage(), args, AppHelper.SettingsType.Edit, AppHelper.ActionBarType.HomeUp, "", R.layout.fragment_webpage);
     }
 
     public void openSubFragment(Fragment fragment, Bundle args, AppHelper.SettingsType settingsType, AppHelper.ActionBarType abType, int titleResId, int contentResId) {
@@ -380,7 +391,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
                 });
                 alert.show();
             } catch (Throwable e) {
-                Log.e("Pengeek", "Error", e);
+                e.printStackTrace();
                 AlertDialog.Builder alert = new AlertDialog.Builder(getValidContext());
                 alert.setTitle(R.string.warning);
                 alert.setMessage(getString(R.string.storage_cannot_backup) + "\n" + e.getMessage());
@@ -395,7 +406,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
                         output.close();
                     }
                 } catch (Throwable ex) {
-                    Log.e("Pengeek", "Error", ex);
+                    ex.printStackTrace();
                 }
             }
         }
@@ -428,7 +439,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
             });
             alert.show();
         } catch (Throwable t) {
-            Log.e("Pengeek", "Error", t);
+            t.printStackTrace();
             AlertDialog.Builder alert = new AlertDialog.Builder(act);
             alert.setTitle(R.string.warning);
             alert.setMessage(R.string.storage_cannot_restore);
@@ -440,7 +451,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
             try {
                 if (input != null) input.close();
             } catch (Throwable ex) {
-                Log.e("Pengeek", "Error", ex);
+                ex.printStackTrace();
             }
         }
     }

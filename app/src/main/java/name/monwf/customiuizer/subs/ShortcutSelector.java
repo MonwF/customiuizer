@@ -1,5 +1,4 @@
 package name.monwf.customiuizer.subs;
-import android.util.Log;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -59,9 +58,8 @@ public class ShortcutSelector extends SubFragmentWithSearch {
 			}
 		});
 
-		if (getView() != null) {
-			getView().findViewById(R.id.am_progressBar).setVisibility(View.GONE);
-		}
+		if (getView() != null)
+		getView().findViewById(R.id.am_progressBar).setVisibility(View.GONE);
 	}
 
 	@Override
@@ -75,7 +73,7 @@ public class ShortcutSelector extends SubFragmentWithSearch {
 				Context mContext = getActivity().createPackageContext(iconResId.packageName, Context.CONTEXT_IGNORE_SECURITY);
 				icon = BitmapFactory.decodeResource(mContext.getResources(), mContext.getResources().getIdentifier(iconResId.resourceName, "drawable", iconResId.packageName));
 			} catch (Throwable t) {
-				Log.e("Pengeek", "Error", t);
+				t.printStackTrace();
 			}
 			if (icon == null) icon = data.getParcelableExtra(Intent.EXTRA_SHORTCUT_ICON);
 
@@ -89,12 +87,11 @@ public class ShortcutSelector extends SubFragmentWithSearch {
 				shortcutsDir.mkdirs();
 				File shortcutFileName = new File(fileName);
 				try (FileOutputStream shortcutOutStream = new FileOutputStream(shortcutFileName, false)) {
-					if (icon.compress(Bitmap.CompressFormat.PNG, 100, shortcutOutStream)) {
-						intent.putExtra("shortcut_icon", fileName);
-					}
+					if (icon.compress(Bitmap.CompressFormat.PNG, 100, shortcutOutStream))
+					intent.putExtra("shortcut_icon", fileName);
 				}
 			} catch (Throwable t) {
-				Log.e("Pengeek", "Error", t);
+				t.printStackTrace();
 			}
 
 			intent.putExtra("shortcut_contents", keyContents);

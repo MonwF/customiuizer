@@ -1,5 +1,4 @@
 package name.monwf.customiuizer;
-import android.util.Log;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -17,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import io.github.libxposed.service.RemotePreferences;
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             super.attachBaseContext(AppHelper.getLocaleContext(base));
         } catch (Throwable t) {
-            Log.e("Pengeek", "Error", t);
+            t.printStackTrace();
         }
     }
 
@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
                 public void onServiceBind(XposedService service) {
                     AppHelper.moduleActive = true;
                     AppHelper.remotePrefs = (RemotePreferences) service.getRemotePreferences(AppHelper.prefsName + "_remote");
-                    AppHelper.syncAppPrefsToRemote();
                 }
                 public void onServiceDied(XposedService service) {
                     AppHelper.moduleActive = false;
@@ -70,6 +69,10 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().setReorderingAllowed(true).replace(R.id.fragment_container, mainFrag).commit();
         }
 
+        HashSet<String> ignoreKeys = new HashSet<>();
+        ignoreKeys.add("pref_key_miuizer_locale");
+        ignoreKeys.add("pref_key_miuizer_launchericon");
+        ignoreKeys.add("pref_key_miuizer_synced_from_lsposed");
         prefsChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -83,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                     prefEdit.apply();
                     return ;
                 }
-                if (!AppHelper.isRemotePreferenceKey(key)) return;
+                if (ignoreKeys.contains(key)) return;
                 Object val = sharedPreferences.getAll().get(key);
                 RemotePreferences.Editor prefEdit = AppHelper.remotePrefs.edit();
                 if (val == null) {
@@ -136,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             if (prefsChanged != null) AppHelper.appPrefs.unregisterOnSharedPreferenceChangeListener(prefsChanged);
         } catch (Throwable t) {
-            Log.e("Pengeek", "Error", t);
+            t.printStackTrace();
         }
         super.onDestroy();
     }

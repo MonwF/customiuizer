@@ -858,6 +858,16 @@
     <string name="miuizer_locale_summ">Luôn hiển thị giao diện mod bằng ngôn ngữ đã chọn</string>
     <string name="troubleshoot">Xử lý sự cố</string>
     <string name="support">Ủng hộ</string>
+    <string name="support_github">Kho lưu trữ Github</string>
+    <string name="support_github_summ">Chọn dấu sao ở repository để cập nhật ứng dụng</string>
+    <string name="support_contact_title">Liên hệ tôi</string>
+    <string name="support_releases_title">Bản phát hành</string>
+    <string name="support_releases_summ">Các phiên bản trên GitHub</string>
+    <string name="support_repo_title">Repo CustoMIUIzer gốc</string>
+    <string name="support_repo_summ">Kho lưu trữ Git chứa mã nguồn mod và bản phân phối</string>
+    <string name="support_donate">Ủng hộ $%1$d</string>
+    <string name="support_donate_me_title">Ủng hộ qua PayPal</string>
+    <string name="support_donate_title">Ủng hộ Mikanoshi</string>
     <string name="array_color_auto">Tự động</string>
     <string name="array_color_dark">Tối</string>
     <string name="array_color_light">Sáng</string>
@@ -868,6 +878,7 @@
     <string name="soft_reboot">Khởi động lại mềm</string>
     <string name="soft_reboot_ask">Thực hiện khởi động lại ngay bây giờ?</string>
     <string name="restart_launcher">Khởi động lại trình khởi chạy</string>
+    <string name="open_inweb">Mở trong trình duyệt</string>
     <string name="restart_systemui">Khởi động lại giao diện hệ thống</string>
     <string name="restart_securitycenter">Khởi động lại trung tâm bảo mật</string>
     <string name="backup_restore">Quản lý cài đặt</string>

@@ -1,5 +1,4 @@
 package name.monwf.customiuizer.prefs;
-import android.util.Log;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -37,14 +36,13 @@ public class SpinnerEx extends AppCompatSpinner {
 			androidx.appcompat.widget.ListPopupWindow popupWindow = (androidx.appcompat.widget.ListPopupWindow) mPopup.get(this);
 			popupWindow.setHeight((int) (40 * 10 * scale));
 		} catch (Throwable e) {
-			Log.e("Pengeek", "Error", e);
+			e.printStackTrace();
 		}
 	}
 
 	private int findIndex(int val, int[] vals) {
-		for (int i = 0; i < vals.length; i++) {
-			if (vals[i] == val) return i;
-		}
+		for (int i = 0; i < vals.length; i++)
+		if (vals[i] == val) return i;
 		return -1;
 	}
 

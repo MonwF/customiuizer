@@ -1,5 +1,4 @@
 package name.monwf.customiuizer.utils;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -91,7 +90,7 @@ public class PreferenceAdapter extends BaseAdapter {
 			Drawable drawable = Helpers.getActionImageLocal(row.getContext(), key + "_" + uuid);
 			itemIcon.setImageDrawable(drawable != null ? drawable : row.getContext().getPackageManager().getApplicationIcon(Helpers.modulePkg));
 		} catch (Throwable t) {
-			Log.e("Pengeek", "Error", t);
+			t.printStackTrace();
 		}
 
 		row.setPadding(row.getPaddingLeft(), row.getPaddingTop(), 0, row.getPaddingBottom());

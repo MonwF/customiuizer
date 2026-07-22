@@ -105,6 +105,11 @@ public class AudioVisualizer extends View {
 		AUTO, LINES, PATH
 	}
 
+	public static boolean allZeros(byte[] array) {
+		for (byte item: array) if (item != 0) return false;
+		return true;
+	}
+
 	private final Visualizer.OnDataCaptureListener mVisualizerListener = new Visualizer.OnDataCaptureListener() {
 		byte real, imaginary;
 		int dbValue;
@@ -125,6 +130,7 @@ public class AudioVisualizer extends View {
 					//int n = 0;
 					magnitude = 0;
 
+					if (!allZeros(fft))
 					while (i < fft.length / 2 && (i * bandWidth <= mBands[band] * samplingRate / 44100f)) {
 						real = fft[i * 2];
 						imaginary = fft[i * 2 + 1];
@@ -345,12 +351,10 @@ public class AudioVisualizer extends View {
 		if (barStyle == BarStyle.LINE) {
 			mLinePath.reset();
 			mLinePath.moveTo(0, mFFTPoints[3]);
-			for (int i = 1; i < mBandsNum; i++) {
-				mLinePath.lineTo(i == mBandsNum - 1 ? mWidth : mFFTPoints[i * 4 + 2], mFFTPoints[i * 4 + 3]);
-			}
-			if (glowLevel > 0) {
-				canvas.drawPath(mLinePath, mGlowPaint);
-			}
+			for (int i = 1; i < mBandsNum; i++)
+			mLinePath.lineTo(i == mBandsNum - 1 ? mWidth : mFFTPoints[i * 4 + 2], mFFTPoints[i * 4 + 3]);
+			if (glowLevel > 0)
+			canvas.drawPath(mLinePath, mGlowPaint);
 			canvas.drawPath(mLinePath, mPaint);
 			return;
 		}
@@ -364,9 +368,8 @@ public class AudioVisualizer extends View {
 			drawAsLines = glowLevel == 0;
 
 		if (drawAsLines) {
-			if (glowLevel > 0) {
-				canvas.drawLines(mFFTPoints, mGlowPaint);
-			}
+			if (glowLevel > 0)
+			canvas.drawLines(mFFTPoints, mGlowPaint);
 			canvas.drawLines(mFFTPoints, mPaint);
 		} else {
 			mLinePath.reset();
@@ -374,9 +377,8 @@ public class AudioVisualizer extends View {
 				mLinePath.moveTo(mFFTPoints[i * 4], mFFTPoints[i * 4 + 1]);
 				mLinePath.lineTo(mFFTPoints[i * 4], mFFTPoints[i * 4 + 3]);
 			}
-			if (glowLevel > 0) {
-				canvas.drawPath(mLinePath, mGlowPaint);
-			}
+			if (glowLevel > 0)
+			canvas.drawPath(mLinePath, mGlowPaint);
 			canvas.drawPath(mLinePath, mPaint);
 		}
 	}
@@ -431,7 +433,7 @@ public class AudioVisualizer extends View {
 
 	public void setBitmap() {
 		try {
-			if (mProcessedArt == mArt && mArt != null) return;
+			if (mProcessedArt != null && mArt != null && !mProcessedArt.isRecycled() && !mArt.isRecycled() && mProcessedArt.sameAs(mArt)) return;
 			mProcessedArt = mArt;
 			if (mProcessedArt != null) {
 				new PaletteTask(paletteResult).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mProcessedArt);

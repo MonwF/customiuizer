@@ -1566,6 +1566,13 @@ public class Launcher {
             		                    }
             		                });
 
+            		//				if (mult <= 1) return;
+            		//				TextView mMessage = (TextView)XposedHelpers.getObjectField(thisObject, "mMessage");
+            		//				if (mMessage != null) {
+            		//					int width = mMessage.getResources().getDimensionPixelSize(mMessage.getResources().getIdentifier("icon_message_max_width", "dimen", lpparam.getPackageName()));
+            		//					mMessage.setTranslationX(-width/2f * (1f - 1f / mult));
+            		//					mMessage.setTranslationY(width/2f * (1f - 1f / mult));
+            		//				}
             
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
@@ -1631,6 +1638,29 @@ public class Launcher {
             }
         });
 
+//		ModuleHelper.findAndHookMethod("com.miui.home.launcher.Folder", lpparam.getClassLoader(), "onOpen", boolean.class, new MethodHook() {
+//			@Override
+//			protected void after(final AfterHookCallback param) throws Throwable {
+//				XposedHelpers.setFloatField(param.getThisObject(), "mItemIconToPreviewIconScale", -1.0f);
+//			}
+//		});
+//
+//		ModuleHelper.findAndHookMethod("com.miui.home.launcher.Folder", lpparam.getClassLoader(), "changeItemsInFolderDuringOpenAndCloseAnimation", float.class, new MethodHook() {
+//			@Override
+//			protected void after(final AfterHookCallback param) throws Throwable {
+//				float multx = (float)Math.sqrt(MainModule.mPrefs.getInt("launcher_iconscale", 100) / 100f);
+//				ViewGroup mContent = (ViewGroup)XposedHelpers.getObjectField(param.getThisObject(), "mContent");
+//				for (int i = 0; i < mContent.getChildCount(); i++) {
+//					String cls = mContent.getChildAt(i).getClass().getSimpleName();
+//					if ("ItemIcon".equals(cls) || "ShortcutIcon".equals(cls) || "FolderIcon".equals(cls)) {
+//						View iconContainer = (View)XposedHelpers.callMethod(mContent.getChildAt(i), "getIconContainer");
+//						float mult = (float)param.getArgs()[0] * multx;
+//						iconContainer.setScaleX(mult);
+//						iconContainer.setScaleY(mult);
+//					}
+//				}
+//			}
+//		});
     }
 
     public static void TitleFontSizeHook(PackageReadyParam lpparam) {
@@ -2102,6 +2132,16 @@ public class Launcher {
         if (!ModuleHelper.hookAllMethodsSilently("com.miui.home.recents.util.RectFSpringAnim", lpparam.getClassLoader(), "start", hook))
             ModuleHelper.hookAllMethods("com.miui.home.recents.util.RectFSpringAnim", lpparam.getClassLoader(), "initAllAnimations", hook);
 
+//		if (XposedHelpers.findClassIfExists("com.android.systemui.shared.recents.system.RemoteAnimationAdapterCompat", lpparam.getClassLoader()) != null)
+//		Helpers.hookAllConstructors("com.android.systemui.shared.recents.system.RemoteAnimationAdapterCompat", lpparam.getClassLoader(), new MethodHook() {
+//			@Override
+//			protected void before(final BeforeHookCallback param) throws Throwable {
+//				float scale = Helpers.getAnimationScale(2);
+//				if (scale == 1.0f) return;
+//				param.getArgs()[1] = (long)((long)param.getArgs()[1] * scale);
+//				param.getArgs()[2] = (long)((long)param.getArgs()[2] * scale);
+//			}
+//		});
     }
 
     public static void DockMarginTopHook(PackageReadyParam lpparam) {
@@ -3056,7 +3096,6 @@ public class Launcher {
             }
         });
     }
-    @SuppressLint("WrongConstant")
     public static void setupLauncher(PackageReadyParam lpparam) {
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.getClassLoader(), "registerBroadcastReceivers", new MethodHook() {
             @Override

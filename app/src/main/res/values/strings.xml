@@ -887,6 +887,18 @@
     <string name="troubleshoot">Troubleshooting</string>
 
     <string name="support">Support</string>
+    <string name="support_github">Code and Issues</string>
+    <string name="support_github_summ">Star repository to keep app updated</string>
+    <string name="support_contact_title">Contact me</string>
+    <string name="support_releases_title">Releases</string>
+    <string name="support_releases_summ">Github Releases</string>
+    <string name="support_repo_title">Mikanoshi\'s CustoMIUIzer repo</string>
+    <string name="support_repo_summ">Git repository with module sources and distributions</string>
+
+    <string name="support_donate">Donate $%1$d</string>
+    <string name="support_donate_me_title">Donate via PayPal</string>
+    <string name="support_donate_title">Donate Mikanoshi</string>
+    <string name="support_donate_other_summ" translatable="false">Paypal, Webmoney, QIWI</string>
 
     <string name="array_color_auto">Automatic</string>
     <string name="array_color_dark">Dark</string>
@@ -899,6 +911,7 @@
     <string name="soft_reboot">Soft reboot</string>
     <string name="soft_reboot_ask">Perform reboot now?</string>
     <string name="restart_launcher">Restart launcher</string>
+    <string name="open_inweb">Open in browser</string>
     <string name="restart_systemui">Restart systemui</string>
     <string name="restart_securitycenter">Restart security center</string>
     <string name="backup_restore">Settings management</string>

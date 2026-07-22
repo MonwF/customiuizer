@@ -788,6 +788,16 @@ ss - iki basamaklı saniye(09)</string>
     <string name="miuizer_locale_summ">Modülün arayüzünü her zaman seçilen dilde görüntüle</string>
     <string name="troubleshoot">Sorun giderme</string>
     <string name="support">Destek</string>
+    <string name="support_github">Kod ve Sorunlar</string>
+    <string name="support_github_summ">Uygulamayı güncel tutmak için yıldız deposu</string>
+    <string name="support_contact_title">Bana ulaşın</string>
+    <string name="support_releases_title">Sürümler</string>
+    <string name="support_releases_summ">Github Bültenleri</string>
+    <string name="support_repo_title">Mikanoshi\'nin CustoMIUIzer deposu</string>
+    <string name="support_repo_summ">Modül kaynakları ve dağıtımları ile Git deposu</string>
+    <string name="support_donate">Bağış yap $%1$d</string>
+    <string name="support_donate_me_title">PayPal ile bağış yap</string>
+    <string name="support_donate_title">Bağış yap Mikanoshi</string>
     <string name="array_color_auto">Otomatik</string>
     <string name="array_color_dark">Karanlık</string>
     <string name="array_color_light">Işık</string>
@@ -797,6 +807,7 @@ ss - iki basamaklı saniye(09)</string>
     <string name="open_xposed">Xposed modüllerini yönetin</string>
     <string name="soft_reboot">Sistemi yeniden başlat</string>
     <string name="restart_launcher">Başlatıcıyı yeniden başlat</string>
+    <string name="open_inweb">Tarayıcıda aç</string>
     <string name="restart_systemui">Arayüzü yeniden başlat</string>
     <string name="restart_securitycenter">Güvenlik merkezini yeniden başlat</string>
     <string name="backup_restore">Ayarlar yönetimi</string>

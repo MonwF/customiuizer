@@ -1,5 +1,4 @@
 package name.monwf.customiuizer.prefs;
-import android.util.Log;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -275,7 +274,7 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 					text = String.format(mFormat, value);
 				}
 			} catch (IllegalFormatException e) {
-				Log.e("Pengeek", "Error", e);
+				e.printStackTrace();
 				text = Integer.toString(value);
 			}
 			if (mShowPlus && value > 0) text = "+" + text;

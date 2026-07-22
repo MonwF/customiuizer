@@ -1,5 +1,4 @@
 package name.monwf.customiuizer.utils;
-import android.util.Log;
 
 import android.Manifest;
 import android.animation.ArgbEvaluator;
@@ -7,6 +6,8 @@ import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.admin.DevicePolicyManager;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -77,6 +78,8 @@ public class Helpers {
     @SuppressLint("StaticFieldLeak")
 
     public static final String modulePkg = BuildConfig.APPLICATION_ID;
+    //	public static final String versionFile = "xposed_version";
+//	public static final String wallpaperFile = "lockscreen_wallpaper";
     public static final String ANDROID_NS = "http://schemas.android.com/apk/res/android";
     public static final String MIUIZER_NS = "http://schemas.android.com/apk/res-auto";
     public static final String ACCESS_SECURITY_CENTER = "com.miui.securitycenter.permission.ACCESS_SECURITY_CENTER_PROVIDER";
@@ -93,9 +96,7 @@ public class Helpers {
     public static final int REQUEST_PERMISSIONS_SECURITY_CENTER = 6;
     public static boolean withinAppContext = false;
 
-    private static final int ICON_CACHE_KB = Math.max(1024, Math.min(16 * 1024,
-        (int) (Runtime.getRuntime().maxMemory() / 1024 / 8)));
-    public static final LruCache<String, Bitmap> memoryCache = new LruCache<String, Bitmap>(ICON_CACHE_KB) {
+    public static LruCache<String, Bitmap> memoryCache = new LruCache<String, Bitmap>((int)(Runtime.getRuntime().maxMemory() / 1024) / 2) {
         @Override
         protected int sizeOf(String key, Bitmap icon) {
             if (icon != null)
@@ -109,10 +110,6 @@ public class Helpers {
     public static final HashSet<String> newMods = new HashSet<String>(Arrays.asList(
         "pref_key_launcher_nozoomanim"
     ));
-
-    private static volatile Object windowManager;
-    private static volatile Method windowManagerGetAnimationScale;
-    private static volatile Method windowManagerSetAnimationScale;
 
     public static class MimeType {
         public static int IMAGE = 1;
@@ -203,7 +200,7 @@ public class Helpers {
             if (token != null)
                 inputManager.hideSoftInputFromWindow(token, InputMethodManager.HIDE_NOT_ALWAYS);
         } catch (Throwable t) {
-            Log.e("Pengeek", "Error", t);
+            t.printStackTrace();
         }
     }
 
@@ -262,7 +259,7 @@ public class Helpers {
             else
                 showNewMods = appInstalled < (opt == 1 ? 1 : (opt == 2 ? 3 : 7)) * 24 * 60 * 60 * 1000;
         } catch (Throwable t) {
-            Log.e("Pengeek", "Error", t);
+            t.printStackTrace();
         }
     }
 
@@ -286,6 +283,12 @@ public class Helpers {
         colorAnim.setRepeatCount(1);
         colorAnim.setStartDelay(300);
         colorAnim.start();
+    }
+
+    public static void openURL(Context context, String url) {
+        if (context == null) return;
+        Intent uriIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        context.startActivity(uriIntent);
     }
 
     public static float dp2px(float dp) {
@@ -334,37 +337,23 @@ public class Helpers {
 
     @SuppressWarnings({"JavaReflectionInvocation", "ConstantConditions"})
     @SuppressLint({"PrivateApi", "DiscouragedPrivateApi"})
-    private static Object getWindowManager() throws ReflectiveOperationException {
-        Object cached = windowManager;
-        if (cached != null) return cached;
-        synchronized (Helpers.class) {
-            if (windowManager == null) {
-                Class<?> serviceManagerClass = Class.forName("android.os.ServiceManager");
-                Method getService = serviceManagerClass.getDeclaredMethod("getService", String.class);
-                getService.setAccessible(true);
-                Object manager = getService.invoke(null, "window");
-
-                Class<?> windowManagerStubClass = Class.forName("android.view.IWindowManager$Stub");
-                Method asInterface = windowManagerStubClass.getDeclaredMethod("asInterface", IBinder.class);
-                asInterface.setAccessible(true);
-                windowManager = asInterface.invoke(null, manager);
-            }
-            return windowManager;
-        }
-    }
-
-    @SuppressWarnings({"JavaReflectionInvocation", "ConstantConditions"})
-    @SuppressLint({"PrivateApi", "DiscouragedPrivateApi"})
     public static float getAnimationScale(int type) {
         try {
-            Object wm = getWindowManager();
-            if (windowManagerGetAnimationScale == null) {
-                windowManagerGetAnimationScale = wm.getClass().getDeclaredMethod("getAnimationScale", int.class);
-                windowManagerGetAnimationScale.setAccessible(true);
-            }
-            return (float) windowManagerGetAnimationScale.invoke(wm, type);
+            Class<?> smClass = Class.forName("android.os.ServiceManager");
+            Method getService = smClass.getDeclaredMethod("getService", String.class);
+            getService.setAccessible(true);
+            Object manager = getService.invoke(smClass, "window");
+
+            Class<?> wmsClass = Class.forName("android.view.IWindowManager$Stub");
+            Method asInterface = wmsClass.getDeclaredMethod("asInterface", IBinder.class);
+            asInterface.setAccessible(true);
+            Object wm = asInterface.invoke(wmsClass, manager);
+
+            Method getAnimationScale = wm.getClass().getDeclaredMethod("getAnimationScale", int.class);
+            getAnimationScale.setAccessible(true);
+            return (float)getAnimationScale.invoke(wm, type);
         } catch (Throwable t) {
-            Log.e("Pengeek", "Error", t);
+            t.printStackTrace();
             return 1.0f;
         }
     }
@@ -373,14 +362,21 @@ public class Helpers {
     @SuppressLint({"PrivateApi", "DiscouragedPrivateApi"})
     public static void setAnimationScale(int type, float value) {
         try {
-            Object wm = getWindowManager();
-            if (windowManagerSetAnimationScale == null) {
-                windowManagerSetAnimationScale = wm.getClass().getDeclaredMethod("setAnimationScale", int.class, float.class);
-                windowManagerSetAnimationScale.setAccessible(true);
-            }
-            windowManagerSetAnimationScale.invoke(wm, type, value);
+            Class<?> smClass = Class.forName("android.os.ServiceManager");
+            Method getService = smClass.getDeclaredMethod("getService", String.class);
+            getService.setAccessible(true);
+            Object manager = getService.invoke(smClass, "window");
+
+            Class<?> wmsClass = Class.forName("android.view.IWindowManager$Stub");
+            Method asInterface = wmsClass.getDeclaredMethod("asInterface", IBinder.class);
+            asInterface.setAccessible(true);
+            Object wm = asInterface.invoke(wmsClass, manager);
+
+            Method setAnimationScale = wm.getClass().getDeclaredMethod("setAnimationScale", int.class, float.class);
+            setAnimationScale.setAccessible(true);
+            setAnimationScale.invoke(wm, type, value);
         } catch (Throwable t) {
-            Log.e("Pengeek", "Error", t);
+            t.printStackTrace();
         }
     }
 
@@ -462,7 +458,7 @@ public class Helpers {
                 }
             } catch (Throwable ignore) {}
         } catch (Throwable t) {
-            Log.e("Pengeek", "Error", t);
+            t.printStackTrace();
         }
         launchableAppsList.sort(new Comparator<AppData>() {
             public int compare(AppData app1, AppData app2) {
@@ -510,7 +506,7 @@ public class Helpers {
                 }
             } catch (Throwable ignore) {}
         } catch (Throwable e) {
-            Log.e("Pengeek", "Error", e);
+            e.printStackTrace();
         }
         shareAppsList.sort(new Comparator<AppData>() {
             public int compare(AppData app1, AppData app2) {
@@ -567,7 +563,7 @@ public class Helpers {
                 }
             } catch (Throwable ignore) {}
         } catch (Throwable e) {
-            Log.e("Pengeek", "Error", e);
+            e.printStackTrace();
         }
         openWithAppsList.sort(new Comparator<AppData>() {
             public int compare(AppData app1, AppData app2) {
@@ -595,7 +591,7 @@ public class Helpers {
                     return pm.getApplicationLabel(ai);
                 }
             } catch (Throwable e) {
-                Log.e("Pengeek", "Error", e);
+                e.printStackTrace();
             }
         return null;
     }
@@ -616,7 +612,7 @@ public class Helpers {
                 else if (!pkgActArray[0].trim().equals(""))
                     return pm.getApplicationIcon(pkgActArray[0]);
             } catch (Throwable e) {
-                Log.e("Pengeek", "Error", e);
+                e.printStackTrace();
             }
         return null;
     }
@@ -709,12 +705,12 @@ public class Helpers {
                     }
                     order++;
                 } catch (Throwable t) {
-                    Log.e("Pengeek", "Error", t);
+                    t.printStackTrace();
                 }
                 eventType = xml.next();
             }
         } catch (Throwable t) {
-            Log.e("Pengeek", "Error", t);
+            t.printStackTrace();
         }
     }
 
@@ -787,6 +783,21 @@ public class Helpers {
         }
     }
 
+//	public static void removePref(PreferenceFragmentBase frag, String prefName, String catName) {
+//		if (frag.findPreference(prefName) != null) {
+//			Preference cat = frag.findPreference(catName);
+//			if (cat instanceof PreferenceScreen) ((PreferenceScreen)cat).removePreference(frag.findPreference(prefName));
+//			else if (cat instanceof PreferenceCategory) ((PreferenceCategory)cat).removePreference(frag.findPreference(prefName));
+//		}
+//	}
+//
+//	public static void disablePref(PreferenceFragmentBase frag, String prefName, String reasonText) {
+//		Preference pref = frag.findPreference(prefName);
+//		if (pref != null) {
+//			pref.setEnabled(false);
+//			pref.setSummary(reasonText);
+//		}
+//	}
 
     public static String getCacheFilePath(String filename) {
         if (new File("/cache").canWrite()) return "/cache/" + filename;
@@ -795,12 +806,18 @@ public class Helpers {
         else return null;
     }
 
+    public static void copyToClipboard(Context context, String text) {
+        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData mClipData = ClipData.newPlainText("", text);
+        clipboard.setPrimaryClip(mClipData);
+    }
+
     public static boolean copyFile(String from, String to) {
         try {
             Files.copy(Paths.get(from), Paths.get(to), StandardCopyOption.REPLACE_EXISTING);
             return true;
         } catch (Throwable t) {
-            Log.e("Pengeek", "Error", t);
+            t.printStackTrace();
             return false;
         }
     }

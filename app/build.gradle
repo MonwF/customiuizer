@@ -96,4 +96,5 @@ dependencies {
     implementation 'androidx.palette:palette:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'org.luckypray:dexkit:2.2.0'
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:2.2.10"))
 }
