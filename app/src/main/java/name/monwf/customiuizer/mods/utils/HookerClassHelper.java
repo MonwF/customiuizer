@@ -1,6 +1,7 @@
 package name.monwf.customiuizer.mods.utils;
 
 import java.lang.reflect.Member;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import io.github.libxposed.api.XposedInterface;
@@ -126,14 +127,31 @@ public class HookerClassHelper {
 
         public MethodHook(int priority) {
             mPriority = priority;
-            boolean ha = false;
-            if (getClass() != MethodHook.class) {
-                try {
-                    getClass().getDeclaredMethod("after", AfterHookCallback.class);
-                    ha = true;
-                } catch (NoSuchMethodException ignored) {}
+            hasAfter = declaresAfterCallback(getClass());
+        }
+
+        /**
+         * Detects an after callback by signature instead of its source name.
+         *
+         * <p>R8 may rename {@code after(...)} in release builds. Looking it up with the literal
+         * name "after" therefore disables every after hook after obfuscation, even though the
+         * override is still present. The callback parameter type remains stable inside the same
+         * optimized DEX and is safe to use for detection.</p>
+         */
+        private static boolean declaresAfterCallback(Class<?> hookClass) {
+            Class<?> current = hookClass;
+            while (current != null && current != MethodHook.class) {
+                for (Method method : current.getDeclaredMethods()) {
+                    Class<?>[] parameterTypes = method.getParameterTypes();
+                    if (method.getReturnType() == Void.TYPE
+                        && parameterTypes.length == 1
+                        && parameterTypes[0] == AfterHookCallback.class) {
+                        return true;
+                    }
+                }
+                current = current.getSuperclass();
             }
-            this.hasAfter = ha;
+            return false;
         }
 
         @Override
