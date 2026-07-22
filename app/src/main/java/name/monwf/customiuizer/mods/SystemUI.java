@@ -1200,6 +1200,9 @@ public class SystemUI {
             @Override
             protected void before(final BeforeHookCallback param) throws Throwable {
                 Object mobileIconState = XposedHelpers.getObjectField(param.getThisObject(), "mState");
+                // SystemUI can apply tint before the first mobile state is assigned during boot.
+                // Let the original method handle that initialization pass instead of touching it.
+                if (mobileIconState == null) return;
                 boolean visible = XposedHelpers.getBooleanField(mobileIconState, "visible");
                 boolean airplane = XposedHelpers.getBooleanField(mobileIconState, "airplane");
                 int subId = XposedHelpers.getIntField(mobileIconState, "subId");
@@ -1228,8 +1231,10 @@ public class SystemUI {
                 }
                 String sim1IconId = "statusbar_signal_1_" + mainLevel + colorMode + iconStyle;
                 String sim2IconId = "statusbar_signal_2_" + subLevel + colorMode + iconStyle;
-                int sim1ResId = dualSignalResMap.get(sim1IconId);
-                int sim2ResId = dualSignalResMap.get(sim2IconId);
+                Integer sim1ResId = dualSignalResMap.get(sim1IconId);
+                Integer sim2ResId = dualSignalResMap.get(sim2IconId);
+                if (sim1ResId == null || sim1ResId == 0 || sim2ResId == null || sim2ResId == 0
+                    || mMobile == null || mSmallRoaming == null) return;
                 XposedHelpers.callMethod(mMobile, "setImageResource", sim1ResId);
                 XposedHelpers.callMethod(mSmallRoaming, "setImageResource", sim2ResId);
             }
