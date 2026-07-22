@@ -702,7 +702,8 @@ public class Various {
 												showSideBar(view, pos);
 											}
 										};
-										view.getContext().registerReceiver(showReceiver, new IntentFilter(ACTION_PREFIX + "ShowSideBar"));
+										view.getContext().registerReceiver(showReceiver,
+											new IntentFilter(ACTION_PREFIX + "ShowSideBar"), Context.RECEIVER_EXPORTED);
 										XposedHelpers.setAdditionalInstanceField(thisObject, "showReceiver", showReceiver);
 
 										if (!isHooked[1]) {

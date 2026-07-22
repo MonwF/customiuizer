@@ -858,16 +858,6 @@
     <string name="miuizer_locale_summ">Exibir a interface do módulo no idioma selecionado</string>
     <string name="troubleshoot">Solução de problemas</string>
     <string name="support">Apoiar</string>
-    <string name="support_github">Código e problemas</string>
-    <string name="support_github_summ">Repositório Star para manter o app atualizado</string>
-    <string name="support_contact_title">Contate-me</string>
-    <string name="support_releases_title">Lançamentos</string>
-    <string name="support_releases_summ">Lançamentos do Github</string>
-    <string name="support_repo_title">Repositório CustoMIUIzer de Mikanoshi</string>
-    <string name="support_repo_summ">Repositório Git com fontes e distribuições de módulos</string>
-    <string name="support_donate">Doe $%1$d</string>
-    <string name="support_donate_me_title">Doe pelo PayPal</string>
-    <string name="support_donate_title">Doe para Mikanoshi</string>
     <string name="array_color_auto">Automático</string>
     <string name="array_color_dark">Escuro</string>
     <string name="array_color_light">Luz</string>
@@ -878,7 +868,6 @@
     <string name="soft_reboot">Reinicialização suave</string>
     <string name="soft_reboot_ask">Deseja reiniciar agora?</string>
     <string name="restart_launcher">Reiniciar launcher</string>
-    <string name="open_inweb">Abra no navegador</string>
     <string name="restart_systemui">Reiniciar systemui</string>
     <string name="restart_securitycenter">Reiniciar centro de segurança</string>
     <string name="backup_restore">Gerenciar configurações</string>

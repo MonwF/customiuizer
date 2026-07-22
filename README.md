@@ -1,74 +1,52 @@
-## 米客_forA14
+# 米客_forA14
 
-> [!注意]
-> 本项目是基于 [MonwF/customiuizer](https://github.com/MonwF/customiuizer) 的**非官方优化 fork**，沿用 **GPL-3.0** 协议。  
-> 仅供个人学习交流与性能优化参考，原始作品版权归 **MonwF** 与 **Mikanoshi** 所有。  
-> 仅兼容：**HyperOS 1 / Android 14 / libxposed API 101**。  
-> 本 fork 使用 **libxposed API 101 原生 `XposedInterface.Hooker.intercept(Chain)`** 调度，应可配合 **LSPosed 2.0** 与 **Vector** 等支持 API 101 的框架使用；目前仅在 LSPosed + HyperOS 1 A14 实机测试。  
-> 包名已改为 `name.monwf.customiuizer.r14`，应用名为 **米客_forA14**。  
-> **安装本 fork 前请先在 米客_forA14 应用内备份设置，然后卸载官方原版并安装本 fork；请勿与官方版或其他 fork 同时启用，否则会出现重复 hook 冲突。**  
-> 版本规划：**r14.0.*** 在 `a14` 分支维护，为 API-100 兼容实现；**r14.1.*** 在 `a14-api101` 分支维护，为原生 API-101 实现。r14.1.2 已完成 `GlobalActions` / `Controls` / `Launcher` / `System` / `Various` 的 `intercept(Chain)` 迁移；`SystemUI` 保持 `HookerClassHelper` 适配层。  
-> 完整优化记录与发布说明见 [CHANGELOG.md](CHANGELOG.md)。
+基于 [MonwF/customiuizer](https://github.com/MonwF/customiuizer) 的非官方轻量优化版本，面向 **HyperOS 1 / Android 14 / libxposed API 101**。包名为 `name.monwf.customiuizer.r14`，不能与官方版或其他 fork 同时启用。
+
+当前稳定版：**r14.1.2**（versionCode 116） · [下载与发布说明](https://github.com/tomthenpc/customiuizer/releases/tag/r14.1.2)
 
 [English](README_en.md) | [日本語](README_jp.md) | [Português (Brasil)](README_PT-BR.md) | **中文**
 
-## 最新稳定版
+## 版本特点
 
-- **r14.1.2**（versionCode 116）  
-  [GitHub Release](https://github.com/tomthenpc/customiuizer/releases/tag/r14.1.2)
+- 原生使用 libxposed API 101 的 `XposedInterface.Hooker.intercept(Chain)`。
+- `GlobalActions`、`Controls`、`Launcher`、`System`、`Various` 已完成原生 API 101 迁移。
+- `SystemUI` 保留经 r14.1.1 实机验证的兼容适配层，避免完整迁移造成重启后 Hook 失效。
+- 设置变更同步至 LSPosed Remote Preferences；不增加后台服务、轮询或开机常驻任务。
+- r14.1.2 收敛图标加载线程与缓存，减少重复反射、临时对象和音频可视化计算。
+- 已移除应用内版本下载、代码仓库、赞赏入口及其网页/图片资源。
 
-客制化你的 HyperOS
+完整变更和实测 APK 对比见 [CHANGELOG.md](CHANGELOG.md)。
 
-仅兼容基于 `Android 14` 的 `HyperOS`。
+## 安装
 
-> 感谢`Mikanoshi`的 [CustoMIUIzer](https://code.highspec.ru/Mikanoshi/CustoMIUIzer) 模块
+1. 在现有模块中备份设置。
+2. 卸载官方版或其他同包冲突版本，再安装本 fork。
+3. 在支持 libxposed API 101 的框架中启用模块并选择作用域。
+4. 完整重启设备后检查常用 Hook；升级前建议保留上一版 APK 以便回退。
 
-### 过时版本
-* [MIUI 14 下载](https://github.com/MonwF/customiuizer/releases/tag/v23.11.26)
-* [MIUI 13 下载](https://github.com/MonwF/customiuizer/releases/tag/v23.08.26)
+## 兼容性
 
-### 上游与发布
+| 项目 | 支持范围 |
+|---|---|
+| 系统 | HyperOS 1 / Android 14（API 34） |
+| Hook API | libxposed API 101 |
+| 主要验证环境 | 小米 13（2211133G），HyperOS 1.0.7.0.UMCTWXM |
+| 不支持 | Android 15/16、MIUI 旧版本、与其他 customiuizer 分支同时启用 |
 
-* 上游项目：[MonwF/customiuizer](https://github.com/MonwF/customiuizer)
-* 本 fork 发布说明：[CHANGELOG.md](CHANGELOG.md)
-* 协议：GPL-3.0（与上游一致）
+模块涉及系统进程 Hook，不同地区 ROM 或系统应用版本可能存在差异。首次安装或修改关键设置后应重启验证。
 
-### 测试设备
+## 构建
 
-| 设备 | HyperOS | Android | SoC | 内存 | 说明 |
-|------|---------|---------|-----|------|------|
-| 小米 13 (2211133G) | 1.0.7.0.UMCTWXM | 14 (UKQ1.230804.001) | Snapdragon 8 Gen 2（最高 3.19 GHz）| 12 GB | 主要测试机；r3–r14 均正常重启并加载。 |
+```powershell
+./gradlew.bat clean assembleRelease
+```
 
-* 基带版本：`MPSS.DE.3.0.c1-GLB-Oct 17 2024-04:43:46`
-* 内核版本：`5.15.123-android13-8-00008-g3ca6a2912c7e-ab11087001`
+正式发布需在仓库上级目录提供 `keystore.properties`。未配置发布签名时，Gradle 会回退到调试签名，不能用于覆盖安装正式版。
 
-### 主要功能
-* 双排状态栏
-* 信任蓝牙和Wi-Fi禁止锁屏
-* 查看已保存Wi-Fi密码
-* 自动亮度范围限制
-* 双排信号
-* 状态栏显示电池温度和电池
-* 跳过10s安全警告
-* 音乐可视化
-* 独立通知音量
-* 专辑封面设置为壁纸
-* 状态栏显秒与图标隐藏
-* 彩色电池条
-* 使用导航栏同时启用返回手势
-* 锁屏打开手电筒
-* 通知
-  * 通知重要性设置
-  * 自动展开
-  * 小窗打开通知
-  * 直接打开频道设置
-* 浮窗记住打开状态和位置、移除黑名单（含分屏）
-* 扩展电源菜单
-* 允许直接更新系统应用
-* 导航栏手势与自定义按钮
-* 安装或升级app时显示更多信息
-* 允许限制系统app使用网络
+## 上游与协议
 
-------
+- 上游：[MonwF/customiuizer](https://github.com/MonwF/customiuizer)
+- 原始项目：[Mikanoshi/CustoMIUIzer](https://code.highspec.ru/Mikanoshi/CustoMIUIzer)
+- 许可证：[GPL-3.0](LICENSE)
 
-> 本 fork 仅供学习交流，原始项目打赏通道请参见 [MonwF/customiuizer](https://github.com/MonwF/customiuizer)。
+本项目仅供学习、适配与性能优化研究；原始作品版权归其作者所有。

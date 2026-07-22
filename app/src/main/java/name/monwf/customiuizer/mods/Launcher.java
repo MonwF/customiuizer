@@ -3056,6 +3056,7 @@ public class Launcher {
             }
         });
     }
+    @SuppressLint("WrongConstant")
     public static void setupLauncher(PackageReadyParam lpparam) {
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.getClassLoader(), "registerBroadcastReceivers", new MethodHook() {
             @Override

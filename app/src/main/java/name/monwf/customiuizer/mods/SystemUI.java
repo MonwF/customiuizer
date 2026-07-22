@@ -2587,7 +2587,7 @@ public class SystemUI {
             Object mBrightnessController;
             private int sbHeight = -1;
             @Override
-            @SuppressLint("SetTextI18n")
+            @SuppressLint({"SetTextI18n", "WrongConstant"})
             protected void before(final BeforeHookCallback param) throws Throwable {
                 String clsName = param.getThisObject().getClass().getSimpleName();
                 boolean isInControlCenter = "ControlCenterWindowViewImpl".equals(clsName);

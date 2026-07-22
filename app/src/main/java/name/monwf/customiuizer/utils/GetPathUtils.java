@@ -19,13 +19,19 @@ public class GetPathUtils {
      * @return file path of Uri
      */
     public static String getDirectoryPathFromUri(Context context, Uri uri) {
-    	if (uri == null) return null;
+		if (uri == null) {
+			return null;
+		}
 
-        if ("file".equals(uri.getScheme())) return uri.getPath();
+		if ("file".equals(uri.getScheme())) {
+			return uri.getPath();
+		}
 
         if (isTreeUri(uri)) {
             String treeId = getTreeDocumentId(uri);
-            if (treeId == null) return null;
+            if (treeId == null) {
+                return null;
+            }
 
 			String[] paths = treeId.split(":");
 			String type = paths[0];

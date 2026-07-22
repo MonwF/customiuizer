@@ -62,8 +62,10 @@ public class SortableList extends SubFragment {
 		}
 
 		listView.setAdapter(new PreferenceAdapter(getContext(), key, activities));
-		if (activities)	listView.setOnOrderChangedListener(null); else
-		listView.setOnOrderChangedListener(new SortableListView.OnOrderChangedListener() {
+		if (activities) {
+			listView.setOnOrderChangedListener(null);
+		} else {
+			listView.setOnOrderChangedListener(new SortableListView.OnOrderChangedListener() {
 			@Override
 			public void OnOrderChanged(int oldPos, int newPos) {
 				if (oldPos == newPos) return;
@@ -78,7 +80,8 @@ public class SortableList extends SubFragment {
 				((PreferenceAdapter)listView.getAdapter()).updateItems();
 				((PreferenceAdapter)listView.getAdapter()).notifyDataSetChanged();
 			}
-		});
+			});
+		}
 		if (!activities) {
 			listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override

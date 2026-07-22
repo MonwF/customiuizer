@@ -176,6 +176,12 @@ public final class XposedHelpers {
                 this.hash = Objects.hash(clazz, name);
             }
 
+            void clear() {
+                clazz = null;
+                name = null;
+                hash = 0;
+            }
+
             @Override
             public boolean equals(Object o) {
                 if (this == o) return true;
@@ -212,6 +218,14 @@ public final class XposedHelpers {
                 this.parameters = parameters;
                 this.isExact = isExact;
                 this.hash = 31 * Objects.hash(clazz, name, isExact) + Arrays.hashCode(parameters);
+            }
+
+            void clear() {
+                clazz = null;
+                name = null;
+                parameters = null;
+                isExact = false;
+                hash = 0;
             }
 
             @Override
@@ -344,9 +358,14 @@ public final class XposedHelpers {
     public static Field findField(Class<?> clazz, String fieldName) {
         MemberCacheKey.Field key = reusableFieldKey.get();
         key.set(clazz, fieldName);
-        Optional<Field> cached = fieldCache.get(key);
+        Optional<Field> cached;
+        try {
+            cached = fieldCache.get(key);
+        } finally {
+            key.clear();
+        }
         if (cached != null) {
-            return cached.orElseThrow(() -> new NoSuchFieldError(key.toString()));
+            return cached.orElseThrow(() -> new NoSuchFieldError(clazz.getName() + '#' + fieldName));
         }
 
         MemberCacheKey.Field newKey = new MemberCacheKey.Field(clazz, fieldName);
@@ -513,9 +532,14 @@ public final class XposedHelpers {
     public static Method findMethodExact(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
         MemberCacheKey.Method key = reusableMethodKey.get();
         key.set(clazz, methodName, parameterTypes, true);
-        Optional<Method> cached = methodCache.get(key);
+        Optional<Method> cached;
+        try {
+            cached = methodCache.get(key);
+        } finally {
+            key.clear();
+        }
         if (cached != null) {
-            return cached.orElseThrow(() -> new NoSuchMethodError(key.toString()));
+            return cached.orElseThrow(() -> new NoSuchMethodError(clazz.getName() + '#' + methodName));
         }
 
         MemberCacheKey.Method newKey = new MemberCacheKey.Method(clazz, methodName, parameterTypes, true);
@@ -595,9 +619,14 @@ public final class XposedHelpers {
         // then find the best match
         MemberCacheKey.Method key = reusableMethodKey.get();
         key.set(clazz, methodName, parameterTypes, false);
-        Optional<Method> cached = methodCache.get(key);
+        Optional<Method> cached;
+        try {
+            cached = methodCache.get(key);
+        } finally {
+            key.clear();
+        }
         if (cached != null) {
-            return cached.orElseThrow(() -> new NoSuchMethodError(key.toString()));
+            return cached.orElseThrow(() -> new NoSuchMethodError(clazz.getName() + '#' + methodName));
         }
 
         MemberCacheKey.Method newKey = new MemberCacheKey.Method(clazz, methodName, parameterTypes, false);

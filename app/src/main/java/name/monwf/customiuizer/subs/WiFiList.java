@@ -51,7 +51,11 @@ public class WiFiList extends SubFragment {
 			String action = intent.getAction();
 			if (action == null) return;
 			if (action.equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)) {
-				wifiList = wifiManager.getScanResults();
+				try {
+					wifiList = wifiManager.getScanResults();
+				} catch (SecurityException ignored) {
+					wifiList = new ArrayList<>();
+				}
 				wifiAdapter1.notifyDataSetChanged();
 				wifiAdapter2.notifyDataSetChanged();
 				updateProgressBar();
@@ -161,8 +165,9 @@ public class WiFiList extends SubFragment {
 			return;
 		}
 
-		if (!isLocationServicesEnabled())
-		Toast.makeText(getActivity(), R.string.request_location, Toast.LENGTH_LONG).show();
+		if (!isLocationServicesEnabled()) {
+			Toast.makeText(getActivity(), R.string.request_location, Toast.LENGTH_LONG).show();
+		}
 	}
 
 	void registerReceivers() {

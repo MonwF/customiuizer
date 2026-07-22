@@ -42,8 +42,9 @@ public class SpinnerEx extends AppCompatSpinner {
 	}
 
 	private int findIndex(int val, int[] vals) {
-		for (int i = 0; i < vals.length; i++)
-		if (vals[i] == val) return i;
+		for (int i = 0; i < vals.length; i++) {
+			if (vals[i] == val) return i;
+		}
 		return -1;
 	}
 

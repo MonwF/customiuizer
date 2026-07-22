@@ -17,6 +17,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -32,6 +34,11 @@ public class AppHelper {
 
     public static RemotePreferences remotePrefs = null;
     private static final String TAG = "LSPosed-Bridge";
+    private static final Set<String> LOCAL_ONLY_PREFS = new HashSet<>(Arrays.asList(
+        "pref_key_miuizer_locale",
+        "pref_key_miuizer_launchericon",
+        "pref_key_miuizer_synced_from_lsposed"
+    ));
     public static boolean silentSync = false;
     public static ArrayList<AppData> installedAppsList = null;
 
@@ -52,8 +59,7 @@ public class AppHelper {
     }
 
     public static void log(Throwable t) {
-        String logStr = Log.getStackTraceString(t);
-        Log.e(TAG, "[Pengeek] " + logStr);
+        Log.e(TAG, "[Pengeek]", t);
     }
 
     public static void log(String mod, String line) {
@@ -61,8 +67,21 @@ public class AppHelper {
     }
 
     public static void log(String mod, Throwable t) {
-        String logStr = Log.getStackTraceString(t);
-        Log.e(TAG, "[Pengeek][" + mod + "] " + logStr);
+        Log.e(TAG, "[Pengeek][" + mod + "]", t);
+    }
+
+    public static boolean isRemotePreferenceKey(String key) {
+        return key != null && !LOCAL_ONLY_PREFS.contains(key);
+    }
+
+    /** Ensures LSPosed's persistent preference database has a complete app-side snapshot. */
+    public static void syncAppPrefsToRemote() {
+        if (appPrefs == null || remotePrefs == null) return;
+        try {
+            syncPrefsToAnother(appPrefs.getAll(), remotePrefs, 2, LOCAL_ONLY_PREFS, true);
+        } catch (Throwable t) {
+            log("RemotePrefs", t);
+        }
     }
 
     public static SharedPreferences getSharedPrefs(Context context, boolean protectedStorage) {

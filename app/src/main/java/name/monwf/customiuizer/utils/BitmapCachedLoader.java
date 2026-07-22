@@ -1,9 +1,5 @@
 package name.monwf.customiuizer.utils;
-import android.util.Log;
 
-import java.lang.ref.WeakReference;
-
-import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -12,44 +8,72 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
-import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.widget.ImageView;
 
-@SuppressLint("StaticFieldLeak")
-public class BitmapCachedLoader extends AsyncTask<Void, Void, Bitmap> {
-	private final WeakReference<Object> targetRef;
-	private final WeakReference<Object> appInfo;
+
+import java.lang.ref.WeakReference;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+public class BitmapCachedLoader {
+	private static final Handler MAIN_HANDLER = new Handler(Looper.getMainLooper());
+	private static final ThreadPoolExecutor ICON_EXECUTOR = createExecutor();
+
+	private final WeakReference<ImageView> targetRef;
+	private final WeakReference<AppData> appInfo;
 	private final Context ctx;
 	private int theTag = -1;
-	
-	BitmapCachedLoader(Object target, Object info, Context context) {
-		targetRef = new WeakReference<Object>(target);
-		appInfo = new WeakReference<Object>(info);
-		ctx = context.getApplicationContext();
-		Object tag = ((ImageView)target).getTag();
-		if (tag != null) theTag = (Integer)tag;
+
+	private static ThreadPoolExecutor createExecutor() {
+		int threadCount = Math.max(2, Math.min(4, Runtime.getRuntime().availableProcessors()));
+		ThreadPoolExecutor executor = new ThreadPoolExecutor(
+			threadCount, threadCount, 15, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+		executor.allowCoreThreadTimeOut(true);
+		return executor;
 	}
 
-	@Override
-	protected Bitmap doInBackground(Void... params) {
+	BitmapCachedLoader(ImageView target, AppData info, Context context) {
+		targetRef = new WeakReference<>(target);
+		appInfo = new WeakReference<>(info);
+		ctx = context.getApplicationContext();
+		Object tag = target.getTag();
+		if (tag instanceof Integer) theTag = (Integer) tag;
+	}
+
+	void execute() {
+		ICON_EXECUTOR.execute(() -> {
+			Bitmap bitmap = loadBitmap();
+			if (bitmap != null) MAIN_HANDLER.post(() -> applyBitmap(bitmap));
+		});
+	}
+
+	private Bitmap loadBitmap() {
 		Drawable icon = null;
 		String cacheKey = null;
 
-		AppData ad = ((AppData)appInfo.get());
+		AppData ad = appInfo.get();
 		if (ad != null) try {
-			if ((ad.pkgName == null || ad.pkgName.equals("")) && (ad.actName == null || ad.actName.equals(""))) return null;
+			if ((ad.pkgName == null || ad.pkgName.isEmpty()) && (ad.actName == null || ad.actName.isEmpty())) return null;
 			PackageManager pkgMgr = ctx.getPackageManager();
-			if (ad.actName != null && !ad.actName.equals("-")) {
+			if (ad.pkgName != null && ad.actName != null && !ad.actName.equals("-")) {
 				ComponentName component = new ComponentName(ad.pkgName, ad.actName);
-				if (pkgMgr.getActivityInfo(component, PackageManager.MATCH_ALL).icon != 0)
-				icon = pkgMgr.getActivityIcon(component);
+				try {
+					if (pkgMgr.getActivityInfo(component, PackageManager.MATCH_ALL).icon != 0) {
+						icon = pkgMgr.getActivityIcon(component);
+					}
+				} catch (PackageManager.NameNotFoundException ignored) {}
 			}
-			if (icon == null)
-			if (pkgMgr.getApplicationInfo(ad.pkgName, PackageManager.MATCH_DISABLED_COMPONENTS).icon != 0)
-			icon = pkgMgr.getApplicationIcon(ad.pkgName);
+			if (icon == null && ad.pkgName != null
+				&& pkgMgr.getApplicationInfo(ad.pkgName, PackageManager.MATCH_DISABLED_COMPONENTS).icon != 0) {
+				icon = pkgMgr.getApplicationIcon(ad.pkgName);
+			}
 
 			if (ad.pkgName != null) cacheKey = ad.pkgName;
-			if (ad.actName != null) cacheKey += "|" + ad.actName;
+			if (cacheKey != null && ad.actName != null) cacheKey += "|" + ad.actName;
 		} catch (Throwable t) {
 			Log.e("Pengeek", "Error", t);
 		}
@@ -61,29 +85,20 @@ public class BitmapCachedLoader extends AsyncTask<Void, Void, Bitmap> {
 		icon.setBounds(0, 0, newIconSize, newIconSize);
 		icon.draw(canvas);
 
-		//Log.e("mem_left", String.valueOf(Runtime.getRuntime().maxMemory() - Runtime.getRuntime().totalMemory()));
-		if (cacheKey != null)
-		if (Runtime.getRuntime().maxMemory() - Runtime.getRuntime().totalMemory() > 8 * 1024 * 1024)
-			Helpers.memoryCache.put(cacheKey, bmp);
-		else
-			Runtime.getRuntime().gc();
+		if (cacheKey != null) Helpers.memoryCache.put(cacheKey, bmp);
 
 		return bmp;
 	}
-	
-	@Override
-	protected void onPostExecute(Bitmap bmp) {
-		if (targetRef != null && targetRef.get() != null && bmp != null) {
-			Object tag = ((ImageView)targetRef.get()).getTag();
-			if (tag != null && theTag == (Integer)tag) {
-				ImageView itemIcon = ((ImageView)targetRef.get());
-				if (itemIcon != null && itemIcon.getDrawable() instanceof TransitionDrawable) {
-					TransitionDrawable crossfader = (TransitionDrawable)itemIcon.getDrawable();
-					crossfader.addLayer(new BitmapDrawable(ctx.getResources(), bmp));
-					crossfader.startTransition(200);
-				}
-			}
+
+	private void applyBitmap(Bitmap bmp) {
+		ImageView itemIcon = targetRef.get();
+		if (itemIcon == null) return;
+		Object tag = itemIcon.getTag();
+		if (tag instanceof Integer && theTag == (Integer) tag
+			&& itemIcon.getDrawable() instanceof TransitionDrawable) {
+			TransitionDrawable crossfader = (TransitionDrawable) itemIcon.getDrawable();
+			crossfader.addLayer(new BitmapDrawable(ctx.getResources(), bmp));
+			crossfader.startTransition(200);
 		}
-		//Log.e("mem_used", String.valueOf(Helpers.memoryCache.size()) + " KB / " + String.valueOf(Runtime.getRuntime().totalMemory() / 1024) + " KB");
 	}
 }
