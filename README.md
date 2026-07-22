@@ -1,74 +1,60 @@
-## 米客_forA14
+# 米客_forA14
 
-> [!注意]
-> 本项目是基于 [MonwF/customiuizer](https://github.com/MonwF/customiuizer) 的**非官方优化 fork**，沿用 **GPL-3.0** 协议。  
-> 仅供个人学习交流与性能优化参考，原始作品版权归 **MonwF** 与 **Mikanoshi** 所有。  
-> 仅兼容：**HyperOS 1 / Android 14 / libxposed API 101**。  
-> 本 fork 使用 **libxposed API 101 原生 `XposedInterface.Hooker.intercept(Chain)`** 调度，应可配合 **LSPosed 2.0** 与 **Vector** 等支持 API 101 的框架使用；目前仅在 LSPosed + HyperOS 1 A14 实机测试。  
-> 包名已改为 `name.monwf.customiuizer.r14`，应用名为 **米客_forA14**。  
-> **安装本 fork 前请先在 米客_forA14 应用内备份设置，然后卸载官方原版并安装本 fork；请勿与官方版或其他 fork 同时启用，否则会出现重复 hook 冲突。**  
-> 版本规划：**r14.0.*** 在 `a14` 分支维护，为 API-100 兼容实现；**r14.1.*** 在 `a14-api101` 分支维护，为原生 API-101 实现。r14.1.2 已完成 `GlobalActions` / `Controls` / `Launcher` / `System` / `Various` 的 `intercept(Chain)` 迁移；`SystemUI` 保持 `HookerClassHelper` 适配层。  
-> 完整优化记录与发布说明见 [CHANGELOG.md](CHANGELOG.md)。
+基于 [MonwF/customiuizer](https://github.com/MonwF/customiuizer) 的非官方轻量化 fork，面向 **HyperOS 1 / Android 14 / libxposed API 101**。
+
+> [!IMPORTANT]
+> 安装前请在应用内备份设置，并卸载官方版或其他同类 fork。不要同时启用多个版本，以免重复 Hook。
+
+## 当前版本
+
+- 版本：**r14.1.3**（versionCode 117）
+- 包名：`name.monwf.customiuizer.r14`
+- 架构：`arm64-v8a`
+- 分支：`a14-api101`
+- 发布页：[GitHub Releases](https://github.com/tomthenpc/customiuizer/releases/tag/r14.1.3)
+
+r14.1.3 从已验证可用的 Devin r14.1.2 基线重新构建，保持原有 Hook 架构：`GlobalActions`、`Controls`、`Launcher`、`System`、`Various` 使用 API 101 原生 `intercept(Chain)`，`SystemUI` 保留兼容适配层。
+
+本版重点：
+
+- 移除“版本下载、代码仓库、微信/PayPal 赞赏”等支持入口及内置网页、图片和网络权限。
+- 隔离普通应用启动路径与 compileOnly libxposed Hook 回调，避免设置应用启动时解析 Xposed API。
+- 将 4 个应用列表的独立图标线程池合并为 1 个有界共享池，限制并发和积压任务。
+- 将图标缓存由“最多半个 Java 堆”限制为 1–16 MiB，并移除主动 GC。
+- 音频可视化每帧只进行一次静音 FFT 判断，并避免主线程逐像素比较专辑图。
+- 修复 Wi‑Fi 权限拒绝、Android 14 动态广播注册等运行时边界问题。
+- 完整 `lintRelease` 从基线 27 个错误降为 0。
+
+详细变更和与 r14.1.2 的评估见 [CHANGELOG.md](CHANGELOG.md)。
+
+## 安装与验证
+
+1. 在旧版本中备份设置。
+2. 卸载官方版或其他 fork，再安装本版 APK。
+3. 在 LSPosed 中启用模块并确认作用域。
+4. 重启设备后检查模块状态、SystemUI、桌面和常用功能。
+
+本项目只面向 Android 14。请勿在 Android 15/16 上启用。
+
+## 主要功能
+
+- 状态栏布局、图标、显秒、电池温度与彩色电池条
+- 通知展开、小窗、频道与通知音量控制
+- 锁屏、手电筒、蓝牙/Wi‑Fi 信任与自动亮度设置
+- 桌面、导航手势、浮窗与扩展电源菜单
+- 系统应用安装、网络限制及其他 HyperOS 调整
+
+## 构建信息
+
+- compileSdk 36；minSdk/targetSdk 34
+- libxposed API 101
+- Release 启用 R8、资源压缩和 zipalign
+- APK 使用 v2 签名
+
+## 项目说明
+
+- 上游：[MonwF/customiuizer](https://github.com/MonwF/customiuizer)
+- 原始项目：[Mikanoshi/CustoMIUIzer](https://code.highspec.ru/Mikanoshi/CustoMIUIzer)
+- 协议：[GPL-3.0](LICENSE)
 
 [English](README_en.md) | [日本語](README_jp.md) | [Português (Brasil)](README_PT-BR.md) | **中文**
-
-## 最新稳定版
-
-- **r14.1.2**（versionCode 116）  
-  [GitHub Release](https://github.com/tomthenpc/customiuizer/releases/tag/r14.1.2)
-
-客制化你的 HyperOS
-
-仅兼容基于 `Android 14` 的 `HyperOS`。
-
-> 感谢`Mikanoshi`的 [CustoMIUIzer](https://code.highspec.ru/Mikanoshi/CustoMIUIzer) 模块
-
-### 过时版本
-* [MIUI 14 下载](https://github.com/MonwF/customiuizer/releases/tag/v23.11.26)
-* [MIUI 13 下载](https://github.com/MonwF/customiuizer/releases/tag/v23.08.26)
-
-### 上游与发布
-
-* 上游项目：[MonwF/customiuizer](https://github.com/MonwF/customiuizer)
-* 本 fork 发布说明：[CHANGELOG.md](CHANGELOG.md)
-* 协议：GPL-3.0（与上游一致）
-
-### 测试设备
-
-| 设备 | HyperOS | Android | SoC | 内存 | 说明 |
-|------|---------|---------|-----|------|------|
-| 小米 13 (2211133G) | 1.0.7.0.UMCTWXM | 14 (UKQ1.230804.001) | Snapdragon 8 Gen 2（最高 3.19 GHz）| 12 GB | 主要测试机；r3–r14 均正常重启并加载。 |
-
-* 基带版本：`MPSS.DE.3.0.c1-GLB-Oct 17 2024-04:43:46`
-* 内核版本：`5.15.123-android13-8-00008-g3ca6a2912c7e-ab11087001`
-
-### 主要功能
-* 双排状态栏
-* 信任蓝牙和Wi-Fi禁止锁屏
-* 查看已保存Wi-Fi密码
-* 自动亮度范围限制
-* 双排信号
-* 状态栏显示电池温度和电池
-* 跳过10s安全警告
-* 音乐可视化
-* 独立通知音量
-* 专辑封面设置为壁纸
-* 状态栏显秒与图标隐藏
-* 彩色电池条
-* 使用导航栏同时启用返回手势
-* 锁屏打开手电筒
-* 通知
-  * 通知重要性设置
-  * 自动展开
-  * 小窗打开通知
-  * 直接打开频道设置
-* 浮窗记住打开状态和位置、移除黑名单（含分屏）
-* 扩展电源菜单
-* 允许直接更新系统应用
-* 导航栏手势与自定义按钮
-* 安装或升级app时显示更多信息
-* 允许限制系统app使用网络
-
-------
-
-> 本 fork 仅供学习交流，原始项目打赏通道请参见 [MonwF/customiuizer](https://github.com/MonwF/customiuizer)。

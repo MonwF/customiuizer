@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import name.monwf.customiuizer.mods.GlobalActions;
-import name.monwf.customiuizer.subs.WebPage;
 import name.monwf.customiuizer.utils.AppHelper;
 import name.monwf.customiuizer.utils.Helpers;
 
@@ -44,7 +43,6 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
     protected boolean isCustomActionBar = false;
     protected int headLayoutId = 0;
     protected int tailLayoutId = 0;
-    protected String pageUrl;
     protected HashMap<Integer, String> mapKeys = new HashMap<Integer, String>() {{
         put(R.id.search_btn, "search");
         put(R.id.restartlauncher, "launcher");
@@ -55,7 +53,6 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
         put(R.id.backuprestore, "settings");
         put(R.id.resetsettings, "reset");
         put(R.id.about, "about");
-        put(R.id.openinweb, "openinweb");
     }};
 
     protected ActionBar getActionBar() {
@@ -80,7 +77,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
                 item = menu.getItem(i);
                 int menuId = item.getItemId();
                 String menuKey = mapKeys.get(menuId);
-                if (activeMenus.equals("all") && (menuId == R.id.edit_confirm || menuId == R.id.openinweb)) {
+                if (activeMenus.equals("all") && menuId == R.id.edit_confirm) {
                     item.setVisible(false);
                 }
                 else if (activeMenus.equals("all")) {
@@ -136,9 +133,6 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
             return true;
         } else if (itemId == R.id.backuprestore) {
             showBackupRestoreDialog();
-            return true;
-        } else if (itemId == R.id.openinweb) {
-            Helpers.openURL(getValidContext(), pageUrl);
             return true;
         } else if (itemId == R.id.softreboot) {
             if (!AppHelper.moduleActive) {
@@ -242,12 +236,6 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
             fixStubLayout(renderView, 2);
         }
         initFragment();
-    }
-
-    public void openWebPage(String url) {
-        Bundle args = new Bundle();
-        args.putString("pageUrl", url);
-        openSubFragment(new WebPage(), args, AppHelper.SettingsType.Edit, AppHelper.ActionBarType.HomeUp, "", R.layout.fragment_webpage);
     }
 
     public void openSubFragment(Fragment fragment, Bundle args, AppHelper.SettingsType settingsType, AppHelper.ActionBarType abType, int titleResId, int contentResId) {

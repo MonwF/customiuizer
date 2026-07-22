@@ -61,23 +61,26 @@ public class SortableList extends SubFragment {
 		}
 
 		listView.setAdapter(new PreferenceAdapter(getContext(), key, activities));
-		if (activities)	listView.setOnOrderChangedListener(null); else
-		listView.setOnOrderChangedListener(new SortableListView.OnOrderChangedListener() {
-			@Override
-			public void OnOrderChanged(int oldPos, int newPos) {
-				if (oldPos == newPos) return;
-				String itemStr = AppHelper.getStringOfAppPrefs(key, "");
-				if (itemStr.isEmpty()) return;
-				String[] itemArr = itemStr.trim().split("\\|");
-				ArrayList<String> itemList = new ArrayList<String>(Arrays.asList(itemArr));
-				String uuid = itemList.get(oldPos);
-				itemList.remove(oldPos);
-				itemList.add(newPos, uuid);
-				AppHelper.appPrefs.edit().putString(key, TextUtils.join("|", itemList)).apply();
-				((PreferenceAdapter)listView.getAdapter()).updateItems();
-				((PreferenceAdapter)listView.getAdapter()).notifyDataSetChanged();
-			}
-		});
+		if (activities) {
+			listView.setOnOrderChangedListener(null);
+		} else {
+			listView.setOnOrderChangedListener(new SortableListView.OnOrderChangedListener() {
+				@Override
+				public void OnOrderChanged(int oldPos, int newPos) {
+					if (oldPos == newPos) return;
+					String itemStr = AppHelper.getStringOfAppPrefs(key, "");
+					if (itemStr.isEmpty()) return;
+					String[] itemArr = itemStr.trim().split("\\|");
+					ArrayList<String> itemList = new ArrayList<String>(Arrays.asList(itemArr));
+					String uuid = itemList.get(oldPos);
+					itemList.remove(oldPos);
+					itemList.add(newPos, uuid);
+					AppHelper.appPrefs.edit().putString(key, TextUtils.join("|", itemList)).apply();
+					((PreferenceAdapter)listView.getAdapter()).updateItems();
+					((PreferenceAdapter)listView.getAdapter()).notifyDataSetChanged();
+				}
+			});
+		}
 		if (!activities) {
 			listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override

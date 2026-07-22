@@ -96,7 +96,9 @@ public class Helpers {
     public static final int REQUEST_PERMISSIONS_SECURITY_CENTER = 6;
     public static boolean withinAppContext = false;
 
-    public static LruCache<String, Bitmap> memoryCache = new LruCache<String, Bitmap>((int)(Runtime.getRuntime().maxMemory() / 1024) / 2) {
+    private static final int ICON_CACHE_KB = Math.max(1024, Math.min(16 * 1024,
+        (int) (Runtime.getRuntime().maxMemory() / 1024 / 8)));
+    public static final LruCache<String, Bitmap> memoryCache = new LruCache<String, Bitmap>(ICON_CACHE_KB) {
         @Override
         protected int sizeOf(String key, Bitmap icon) {
             if (icon != null)

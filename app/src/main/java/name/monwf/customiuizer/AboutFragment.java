@@ -1,6 +1,5 @@
 package name.monwf.customiuizer;
 
-import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -16,7 +15,6 @@ import java.util.Arrays;
 import java.util.Locale;
 
 import name.monwf.customiuizer.prefs.ListPreferenceEx;
-import name.monwf.customiuizer.utils.Helpers;
 
 public class AboutFragment extends SubFragment {
 
@@ -39,27 +37,6 @@ public class AboutFragment extends SubFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		final Activity act = getActivity();
-
-		findPreference("pref_key_website").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference pref) {
-				Helpers.openURL(act, "https://code.highspec.ru/Mikanoshi/CustoMIUIzer");
-				return true;
-			}
-		});
-		boolean isLangRu = getResources().getConfiguration().locale.getISO3Language().contains("ru");
-		findPreference("pref_key_payother").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference pref) {
-				if (isLangRu)
-					Helpers.openURL(act, "https://mikanoshi.name/donate/");
-				else
-					Helpers.openURL(act, "https://en.mikanoshi.name/donate/");
-				return true;
-			}
-		});
-
 		String[] locales = new String[] { "zh-CN", "ru-RU", "ja-JP", "vi-VN", "cs-CZ", "pt-BR", "tr-TR", "es-ES" };
 
 		ArrayList<String> localesArr = new ArrayList<String>(Arrays.asList(locales));

@@ -853,17 +853,6 @@ Překlad S11V3R 🇨🇿</string>
     <string name="miuizer_locale_title">Jazyk uživatelského rozhraní</string>
     <string name="miuizer_locale_summ">Vždy zobrazit rozhraní modulu ve zvoleném jazyce</string>
     <string name="troubleshoot">Řešení problémů</string>
-    <string name="support">Podpora</string>
-    <string name="support_github">Kód a problémy</string>
-    <string name="support_github_summ">Hvězdička repozitáře pro zachování aktualizací aplikace</string>
-    <string name="support_contact_title">Kontaktovat mě</string>
-    <string name="support_releases_title">Vydání</string>
-    <string name="support_releases_summ">GitHub vydání</string>
-    <string name="support_repo_title">CustoMIUIzer repozitář</string>
-    <string name="support_repo_summ">Repozitář Git se zdrojovými kódy a distribucemi modulů</string>
-    <string name="support_donate">Podpořit $%1$d</string>
-    <string name="support_donate_me_title">Přispět přes PayPal</string>
-    <string name="support_donate_title">Podpořit vývoj</string>
     <string name="array_color_auto">Automaticky</string>
     <string name="array_color_dark">Tmavý</string>
     <string name="array_color_light">Světlý</string>
@@ -874,7 +863,6 @@ Překlad S11V3R 🇨🇿</string>
     <string name="soft_reboot">Měkký restart systému</string>
     <string name="soft_reboot_ask">Provést restart nyní?</string>
     <string name="restart_launcher">Restartovat spouštěč</string>
-    <string name="open_inweb">Otevřít v prohlížeči</string>
     <string name="restart_systemui">Restartovat SystemUI</string>
     <string name="restart_securitycenter">Restartovat bezpečnostní centrum</string>
     <string name="backup_restore">Správa nastavení</string>

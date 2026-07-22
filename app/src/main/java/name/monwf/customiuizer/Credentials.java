@@ -46,9 +46,11 @@ public class Credentials extends AppCompatActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
 		finish();
-		if (resultCode == Activity.RESULT_OK)
-		Toast.makeText(this, R.string.credentials_success, Toast.LENGTH_SHORT).show();
+		if (resultCode == Activity.RESULT_OK) {
+			Toast.makeText(this, R.string.credentials_success, Toast.LENGTH_SHORT).show();
+		}
 	}
 
 }

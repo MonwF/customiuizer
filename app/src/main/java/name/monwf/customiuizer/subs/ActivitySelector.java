@@ -88,14 +88,15 @@ public class ActivitySelector extends SubFragmentWithSearch {
 					activities.clear();
 					PackageManager pm = getActivity().getPackageManager();
 					PackageInfo pi = pm.getPackageInfo(pkg, PackageManager.GET_ACTIVITIES);
-					if (pi.activities != null)
-					for (ActivityInfo info: pi.activities) {
-						AppData appData = new AppData();
-						appData.pkgName = pkg;
-						appData.actName = info.name != null ? info.name : "";
-						appData.label = (String)info.loadLabel(pm);
-						appData.enabled = info.enabled;
-						activities.add(appData);
+					if (pi.activities != null) {
+						for (ActivityInfo info: pi.activities) {
+							AppData appData = new AppData();
+							appData.pkgName = pkg;
+							appData.actName = info.name != null ? info.name : "";
+							appData.label = (String)info.loadLabel(pm);
+							appData.enabled = info.enabled;
+							activities.add(appData);
+						}
 					}
 					getActivity().runOnUiThread(process);
 				} catch (Throwable e) {

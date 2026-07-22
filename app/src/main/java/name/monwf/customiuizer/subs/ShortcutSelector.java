@@ -58,8 +58,9 @@ public class ShortcutSelector extends SubFragmentWithSearch {
 			}
 		});
 
-		if (getView() != null)
-		getView().findViewById(R.id.am_progressBar).setVisibility(View.GONE);
+		if (getView() != null) {
+			getView().findViewById(R.id.am_progressBar).setVisibility(View.GONE);
+		}
 	}
 
 	@Override
@@ -87,8 +88,9 @@ public class ShortcutSelector extends SubFragmentWithSearch {
 				shortcutsDir.mkdirs();
 				File shortcutFileName = new File(fileName);
 				try (FileOutputStream shortcutOutStream = new FileOutputStream(shortcutFileName, false)) {
-					if (icon.compress(Bitmap.CompressFormat.PNG, 100, shortcutOutStream))
-					intent.putExtra("shortcut_icon", fileName);
+					if (icon.compress(Bitmap.CompressFormat.PNG, 100, shortcutOutStream)) {
+						intent.putExtra("shortcut_icon", fileName);
+					}
 				}
 			} catch (Throwable t) {
 				t.printStackTrace();

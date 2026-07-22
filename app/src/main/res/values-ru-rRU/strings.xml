@@ -837,17 +837,6 @@
     <string name="miuizer_locale_title">Язык интерфейса</string>
     <string name="miuizer_locale_summ">Всегда отображать интерфейс модуля на выбранном языке</string>
     <string name="troubleshoot">Решение проблем</string>
-    <string name="support">Поддержка</string>
-    <string name="support_github">Исходный код, пожелания</string>
-    <string name="support_github_summ">Поставьте звезду для поддержки приложения</string>
-    <string name="support_contact_title">Связаться со мной</string>
-    <string name="support_releases_title">Выпуски</string>
-    <string name="support_releases_summ">Выпуски на Github</string>
-    <string name="support_repo_title">Репозиторий CustoMIUIzer</string>
-    <string name="support_repo_summ">Git репозиторий с исходниками и дистрибутивами модуля</string>
-    <string name="support_donate">Задонатить $%1$d</string>
-    <string name="support_donate_me_title">Пожертвование через PayPal</string>
-    <string name="support_donate_title">Пожертвования Mikanoshi</string>
     <string name="array_color_auto">Автоматический</string>
     <string name="array_color_dark">Тёмный</string>
     <string name="array_color_light">Светлый</string>
@@ -858,7 +847,6 @@
     <string name="soft_reboot">Быстрая перезагрузка</string>
     <string name="soft_reboot_ask">Выполнить перезагрузку?</string>
     <string name="restart_launcher">Перезагрузить рабочий стол</string>
-    <string name="open_inweb">Открыть в браузере</string>
     <string name="restart_systemui">Перезапуск интерфейса</string>
     <string name="restart_securitycenter">Перезапустить центр безопасности</string>
     <string name="backup_restore">Управление настройками</string>

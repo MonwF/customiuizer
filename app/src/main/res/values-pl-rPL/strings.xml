@@ -738,17 +738,6 @@
     <string name="miuizer_locale_title">Język interfejsu</string>
     <string name="miuizer_locale_summ">Zawsze wyświetlaj interfejs modułu w wybranym języku</string>
     <string name="troubleshoot">Rozwiązywanie problemów</string>
-    <string name="support">Wsparcie</string>
-    <string name="support_github">Kod i problemy</string>
-    <string name="support_github_summ">Repozytorium gwiazdki, aby aktualizować aplikację</string>
-    <string name="support_contact_title">Skontaktuj się ze mną</string>
-    <string name="support_releases_title">Wydania</string>
-    <string name="support_releases_summ">Wydania na Github</string>
-    <string name="support_repo_title">Repozytorium Mikanoshi CustoMIUIzer</string>
-    <string name="support_repo_summ">Repozytorium Git ze źródłami modułów i dystrybucjami</string>
-    <string name="support_donate">Wesprzyj $%1$d</string>
-    <string name="support_donate_me_title">Wesprzyj przez PayPal</string>
-    <string name="support_donate_title">Wesprzyj Mikanoshi</string>
     <string name="array_color_auto">Automatyczny</string>
     <string name="array_color_dark">Ciemny</string>
     <string name="array_color_light">Jasny</string>
@@ -758,7 +747,6 @@
     <string name="open_xposed">Zarządzaj modułami Xposed</string>
     <string name="soft_reboot">Miękki restart</string>
     <string name="restart_launcher">Zrestartuj Launcher</string>
-    <string name="open_inweb">Otwórz w przeglądarce</string>
     <string name="restart_systemui">Restart systemUI</string>
     <string name="restart_securitycenter">Uruchom ponownie centrum bezpieczeństwa</string>
     <string name="backup_restore">Zarządzanie ustawieniami</string>

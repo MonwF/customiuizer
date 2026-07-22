@@ -102,8 +102,9 @@ public class ModSearchAdapter extends BaseAdapter implements Filterable {
 		@SuppressWarnings("unchecked")
 		protected void publishResults(CharSequence constraint, FilterResults results) {
 			modsList.clear();
-			if (results.count > 0 && results.values != null)
-			modsList.addAll((ArrayList<ModData>)results.values);
+			if (results.count > 0 && results.values != null) {
+				modsList.addAll((ArrayList<ModData>)results.values);
+			}
 			sortList();
 			notifyDataSetChanged();
 		}

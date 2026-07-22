@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -18,7 +17,6 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -30,7 +28,6 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.recyclerview.widget.RecyclerView;
 
-import name.monwf.customiuizer.prefs.PreferenceEx;
 import name.monwf.customiuizer.subs.CategorySelector;
 import name.monwf.customiuizer.subs.Controls;
 import name.monwf.customiuizer.subs.Launcher;
@@ -132,7 +129,7 @@ public class MainFragment extends PreferenceFragmentBase {
 				MenuItem item;
 				for (int i = 0; i < mActionMenu.size(); i++) {
 					item = mActionMenu.getItem(i);
-					item.setVisible(item.getItemId() != R.id.edit_confirm && item.getItemId() != R.id.openinweb);
+					item.setVisible(item.getItemId() != R.id.edit_confirm);
 				}
 				return true;
 			}
@@ -241,73 +238,6 @@ public class MainFragment extends PreferenceFragmentBase {
 			}
 		});
 
-		findPreference("pref_key_github").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference pref) {
-				Configuration config = act.getResources().getConfiguration();
-				String lang = config.getLocales().get(0).getLanguage();
-				if ("zh".equals(lang)) {
-					Helpers.openURL(act, "https://github.com/MonwF/customiuizer/blob/main/README_zh.md");
-				}
-				else if ("ja".equals(lang)) {
-					Helpers.openURL(act, "https://github.com/MonwF/customiuizer/blob/main/README_jp.md");
-				}
-				else if ("pt".equals(lang)) {
-					Helpers.openURL(act, "https://github.com/MonwF/customiuizer/blob/main/README_pt-BR.md");
-				}
-				else {
-					Helpers.openURL(act, "https://github.com/MonwF/customiuizer");
-				}
-				return true;
-			}
-		});
-
-		Configuration config = act.getResources().getConfiguration();
-		if (config.getLocales().get(0).getCountry().equals("CN")) {
-			PreferenceEx releasesEntry = findPreference("pref_key_releases");
-			releasesEntry.setVisible(true);
-			String releasesUrl = "https://rz3kv5wa4g.jiandaoyun.com/dash/650e43a383027ec3225083e9";
-			releasesEntry.setLongPressListener(new View.OnLongClickListener() {
-				@Override
-				public boolean onLongClick(View v) {
-					Helpers.copyToClipboard(getValidContext(), releasesUrl);
-					Toast.makeText(getValidContext(), "链接已复制", Toast.LENGTH_SHORT).show();
-					return true;
-				}
-			});
-			releasesEntry.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-				@Override
-				public boolean onPreferenceClick(Preference pref) {
-					openWebPage(releasesUrl);
-					return true;
-				}
-			});
-
-//			PreferenceEx contactEntry = findPreference("pref_key_contact");
-//			contactEntry.setVisible(true);
-//			contactEntry.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-//				@Override
-//				public boolean onPreferenceClick(Preference pref) {
-//					Intent schemeIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("coolmarket://u/217384"))
-//						.setPackage("com.coolapk.market");
-//					startActivity(schemeIntent);
-//					return true;
-//				}
-//			});
-		}
-		PreferenceEx donateEntry = findPreference("pref_key_donate");
-		donateEntry.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference pref) {
-				if (!config.getLocales().get(0).getCountry().equals("CN")) {
-					Helpers.openURL(act, "https://www.paypal.com/paypalme/tpsxj");
-				}
-				else {
-					openSubFragment(new SubFragment(), null, AppHelper.SettingsType.Edit, AppHelper.ActionBarType.HomeUp, pref.getTitle().toString(), R.layout.fragment_donate);
-				}
-				return true;
-			}
-		});
 	}
 
 	void findMod(String filter) {

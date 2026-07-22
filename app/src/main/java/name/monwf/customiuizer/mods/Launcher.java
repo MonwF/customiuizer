@@ -3126,19 +3126,21 @@ public class Launcher {
             		                                pushIntent.setPackage(Helpers.modulePkg);
             		                                String datatype = intent.getStringExtra("DATATYPE");
             		                                pushIntent.putExtra("DATATYPE", datatype);
-            		                                if ("privacy".equals(datatype)) {
-            		                                    SecurityManager mSecurityManager = (SecurityManager) context.getSystemService("security");
+														if ("privacy".equals(datatype)) {
+															//noinspection WrongConstant -- MIUI private service name
+															SecurityManager mSecurityManager = (SecurityManager) context.getSystemService("security");
             		                                    HashMap<Integer, List<String>> privacyAppsMap = new HashMap<>();
             		                                    privacyAppsMap.put(0, mSecurityManager.getAllPrivacyApps(0));
             		                                    privacyAppsMap.put(999, mSecurityManager.getAllPrivacyApps(999));
             		                                    pushIntent.putExtra("privacyAppsMap", privacyAppsMap);
             		                                    context.sendBroadcast(pushIntent);
             		                                }
-            		                                else if ("privacy_change".equals(datatype)) {
+														else if ("privacy_change".equals(datatype)) {
             		                                    int userId = intent.getIntExtra("userId", 0);
             		                                    String pkgName = intent.getStringExtra("app");
             		                                    boolean privacy = intent.getBooleanExtra("privacy", false);
-            		                                    SecurityManager mSecurityManager = (SecurityManager) context.getSystemService("security");
+															//noinspection WrongConstant -- MIUI private service name
+															SecurityManager mSecurityManager = (SecurityManager) context.getSystemService("security");
             		                                    mSecurityManager.setPrivacyApp(pkgName, userId, privacy);
             		                                    context.getContentResolver().notifyChange(Uri.parse("content://com.miui.securitycenter.provider/update_privacyapps_icon"), null);
             		                                }

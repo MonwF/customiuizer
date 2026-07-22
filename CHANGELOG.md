@@ -1,116 +1,99 @@
 # 更新日志
 
-> 非官方优化 fork，基于 [MonwF/customiuizer](https://github.com/MonwF/customiuizer)，沿用 **GPL-3.0** 协议。  
-> 仅兼容：**HyperOS 1 / Android 14 / libxposed API 101**。  
-> 应用名：**米客_forA14**
+非官方优化 fork，基于 [MonwF/customiuizer](https://github.com/MonwF/customiuizer)，沿用 GPL-3.0 协议。仅兼容 **HyperOS 1 / Android 14 / libxposed API 101**。
 
-## r14.1.2
+## r14.1.3 — 轻量化、启动隔离与资源治理
 
-- 分支：`a14-api101`
-- 在 `r14.1.1` 基础上进行代码审计与重复模式清理，**无功能变更**：
-  - 移除 17 个无效 import，涉及 8 个文件：
-    - `AboutFragment.java`、`SubFragment.java`、`SubFragmentWithSearch.java`
-    - `subs/Controls.java`、`subs/Launcher.java`、`subs/System.java`、`subs/WiFiList.java`
-    - `utils/Helpers.java`
-  - 在 `mods/utils/XposedHelpers.java` 新增 4 个静态辅助方法：
-    - `getArgsArray(XposedInterface.Chain chain)`
-    - `getArgsArray(List<Object> args)`
-    - `throwOrReturn(Throwable throwable, Object result)`
-    - `proceedOrThrow(XposedInterface.Chain chain, Object[] args, Throwable throwable)`
-  - 用上述辅助方法替换重复 boilerplate：
-    - `Controls.java` / `Launcher.java` / `System.java` / `Various.java`：`chain.getArgs().toArray(new Object[0])` → `XposedHelpers.getArgsArray(chain)`
-    - `ResourceHooks.java`：`args.toArray(new Object[0])` → `XposedHelpers.getArgsArray(args)`
-    - `GlobalActions.java` 等 6 个模块中的 `if (throwable != null) throw throwable; return result;` / `return chain.proceed(args);` 模式统一收敛到 `throwOrReturn` / `proceedOrThrow`
-    - 累计减少约 300 行生成代码，`git diff --stat` 约 988 insert / 1319 delete。
-- `SystemUI.java` 保持 `r14.1.0` 适配层不变，未引入新的迁移。
-- 已通过 `compileReleaseJavaWithJavac` 编译验证；clean build 后仍会走 zipalign 与 v2 签名。
-- 与 `r14.1.1` 的详细对比（性能、稳定性、省电性）：
+基线：用户确认可正常打开、重启后可 Hook 的 Devin r14.1.2 恢复版。此次新建 r14.1.3，不再覆盖 r14.1.2。
 
-  | 指标 | r14.1.1 | r14.1.2 | 说明 |
-  |---|---|---|---|
-  | 功能行为 | `GlobalActions` / `Controls` / `Launcher` / `System` / `Various` 原生 `intercept(Chain)`；`SystemUI` 适配层 | 与 r14.1.1 一致 | 无功能变更 |
-  | Hook 调用额外对象分配 | 5 个模块已迁移；`SystemUI` 保持原状 | 与 r14.1.1 持平 | helper 方法不引入新对象 |
-  | 单次 hook 调用反射/包装层 | 进一步减少 | 重复代码收敛，调用层数相同 | 仅是代码整理 |
-  | 参数数组拷贝 | 已迁移模块减少一次拷贝；`SystemUI` 保持原状 | 与 r14.1.1 持平 | `toArray` 仍在 helper 内执行 |
-  | 异常传播 | PASSTHROUGH；`SystemUI` 回退兼容 | PASSTHROUGH；无行为变更 | 语义不变 |
-  | 源码/DEX 体积 | 较大（生成代码重复） | 缩小约 300+ 行 | 更易维护，加载解析开销微降 |
-  | 编译产物体积 | - | 持平或略小 | `minifyEnabled`/`shrinkResources` 会进一步压缩 |
-  | 电池消耗 | 无额外后台任务 | 无新增后台任务 | 与 r14.1.1 持平 |
-  | 稳定性 | 只迁移已验证模块，`SystemUI` 不动 | 与 r14.1.1 一致 | 仅代码清理，未改动 hook 逻辑 |
-- `versionCode`：`116`；`versionName`：`r14.1.2`
-- 输出 APK：`Pengeek-HyperOS1-A14-API101-r14.1.2.apk`
+### 轻量化
 
-## r14.1.1
+- 移除主界面和关于页中的以下支持内容：
+  - 版本下载
+  - 代码仓库
+  - 微信与 PayPal 赞赏
+- 删除只为上述功能服务的代码和资源：
+  - 内置 `WebView` 页面及布局
+  - 赞赏图片及布局
+  - “在浏览器中打开”菜单
+  - 11 种语言中的废弃支持文案
+- 移除应用自身不再需要的 `INTERNET` 权限。
+- 保留 `RECEIVE_BOOT_COMPLETED`、蓝牙、Wi‑Fi、跨用户和模块运行所需权限。
 
-- 分支：`a14-api101`
-- 在 `r14.1.0` 基础上，逐步按模块迁移并逐个重启验证：
-  - `Launcher.java`：已完成 `intercept(Chain)` 迁移，重启测试通过。
-  - `System.java`：已完成 `intercept(Chain)` 迁移，重启测试通过。
-  - `SystemUI.java`：尝试迁移后重启失效，已回退到 `r14.1.0` 的 `HookerClassHelper` 适配层，**保持不动**。
-  - `Various.java`：已完成 `intercept(Chain)` 迁移，重启测试通过。
-- 最终稳定配置：`GlobalActions` / `Controls` / `Launcher` / `System` / `Various` 使用原生 `intercept(Chain)`；`SystemUI` 保持适配层；无 `BeforeHookCallback` / `AfterHookCallback` 遗留的模块已完成迁移。
-- `HookBuilder` 继续显式 `ExceptionMode.PASSTHROUGH`。
-- 已通过 clean build、zipalign、apksigner v2 签名验证。
-- 理论性能、稳定性、省电性评估见下文 `理论性能对比（估算）`。
-- `versionCode`：`115`；`versionName`：`r14.1.1`
-- 输出 APK：`Pengeek-HyperOS1-A14-API101-r14.1.1.apk`
+### 启动与 Hook 稳定性
 
-## r14.1.0
+- 保持 r14.1.2 的 Hook 模块边界和调用语义，不进行 Java→Kotlin 或 SystemUI 全量迁移。
+- 调整 R8 规则，禁止 `XposedModule` 与 `XposedInterface.Hooker` 实现被优化合并进普通应用或 AndroidX Startup 类。
+- 最终 DEX 已静态检查：`InitializationProvider` 启动路径不直接依赖 libxposed；Hooker 类型仍只在模块回调类中实现。
+- 修复 Android 14 动态广播注册标志，侧边栏广播明确使用 `RECEIVER_EXPORTED`。
 
-- 分支：`a14-api101`
-- 原生 API-101 实现：`MethodHook` 直接实现 `XposedInterface.Hooker`，使用 `intercept(Chain)` 调度。
-- 已完成 `GlobalActions.java` 与 `Controls.java` 的 `before` / `after` 回调迁移（两模块已无遗留 `BeforeHookCallback` / `AfterHookCallback`）。
-- `Launcher.java`、`System.java`、`SystemUI.java`、`Various.java` 仍通过 `HookerClassHelper` 适配层运行，将在后续 r14.1.x 小版本中继续迁移。
-- 保留 `before` / `after` 语义：可变参数、提前返回/抛出、结果替换、异常恢复。
-- `HookBuilder` 显式 `ExceptionMode.PASSTHROUGH`，确保被 hook 方法自身异常正常向上传播。
-- `versionCode`：`109`；`versionName`：`r14.1.0`
-- 输出 APK：`Pengeek-HyperOS1-A14-API101-r14.1.0.apk`
+### 性能与内存
 
-## r14.0.0
+- 图标加载：
+  - r14.1.2：4 类应用列表分别创建线程池；每个池的核心线程为 `CPU + 1`，最大线程为 `2 × CPU + 1`，队列无界。
+  - r14.1.3：统一为 1 个共享池，固定 2–4 个后台优先级线程，空闲 15 秒回收，等待队列上限 128。
+  - 收益方向：降低快速滚动或反复进入应用选择页时的线程竞争、任务积压和唤醒次数。
+- 图标缓存：
+  - 上限由“Java 最大堆的 1/2”改为 1–16 MiB 的有界 LRU。
+  - 删除内存不足分支中的主动 `Runtime.gc()`，避免人为触发停顿。
+- 音频可视化：
+  - 静音 FFT 判断由“每帧每频段扫描一次”改为“每帧扫描一次”。31 频段静音帧的判断扫描次数由最多 31 次降为 1 次。
+  - 专辑图重复检查由主线程逐像素 `Bitmap.sameAs()` 改为对象身份判断，避免 UI 线程大图比较。
 
-- 分支：`a14`
-- 生命周期与 hook 注册迁移到 **libxposed API 101**。
-- 保留 API-100 兼容实现（通过 `HookerClassHelper` 适配 `BeforeHookCallback` / `AfterHookCallback`）。
-- 限制 Android 14（`UPSIDE_DOWN_CAKE`），避免 hook 应用到不兼容的 Android 15/16 组件。
-- `versionCode`：`108`；`versionName`：`r14.0.0`
-- 输出 APK：`Pengeek-HyperOS1-A14-API101-r14.0.0.apk`
+### 可靠性与代码质量
 
-## 早期迭代（r3–r13）
+- Wi‑Fi 扫描结果读取增加 `SecurityException` 兜底，权限被拒时不再直接崩溃。
+- 补齐 Activity 回调父类调用。
+- 为条件、循环和分支补齐括号，清除歧义缩进。
+- MIUI 私有服务名与隐藏音量标志保留原值，并增加局部说明；不修改兼容行为。
+- `lintRelease`：由基线 27 个错误降为 0；现存 429 个警告主要为私有 API、旧版布局和未使用资源提示，不影响 Release 构建。
 
-类缓存、Context 缓存、资源句柄复用、主题值预解析、资源值直接分发、UserId 直接计算、依赖实例缓存、零参数调用重载、常量 Hook 快速路径、参数类缓存、模块资源配置缓存、跳过空 after 回调、资源 Hook 早退。
+### 与 r14.1.2 的评估
 
-## 安装说明
+| 指标 | r14.1.2 稳定恢复版 | r14.1.3 | 结论 |
+|---|---:|---:|---|
+| APK 大小 | 2,934,628 B | 2,885,842 B | 减少 48,786 B（1.66%） |
+| 支持/下载/赞赏界面 | 有 | 已移除 | UI 更精简，无内置网页 |
+| 应用 `INTERNET` 权限 | 有 | 无 | 减少普通应用网络能力 |
+| 图标加载线程池 | 每个 Adapter 独立 | 单个 2–4 线程共享池 | 降低并发与排队上限 |
+| 图标缓存上限 | 最大堆的 1/2 | 1–16 MiB | 降低内存峰值与 GC 压力 |
+| 主动 GC | 低内存时调用 | 已移除 | 减少卡顿风险 |
+| 静音 FFT 检查 | 每频段一次 | 每帧一次 | 降低可视化空闲计算 |
+| Lint 错误 | 27 | 0 | 运行时边界更明确 |
+| Hook 架构 | 已验证混合架构 | 保持不变 | 不扩大兼容风险 |
 
-安装本 fork 前请先在 **米客_forA14** 应用内备份设置，然后卸载官方原版并安装本 fork；请勿与官方版或其他 fork 同时启用，否则会导致冲突。
+> 性能与省电结论基于代码路径、线程上限和对象生命周期分析，不是实机功耗跑分。r14.1.3 没有新增服务、定时任务或持续轮询；预期收益主要出现在应用列表、音频可视化静音帧和内存压力场景。最终仍应以目标设备的冷启动、重启 Hook 和日常待机测试为准。
 
-## 构建 / 校验
+### 构建与产物
 
-- 已使用 `zipalign` 与 `apksigner` 验证签名。
-- 测试设备：小米 13（HyperOS 1.0.7.0.UMCTWXM，Android 14），r3–r14 均正常重启并加载。
+- `versionCode`：117
+- `versionName`：r14.1.3
+- APK：`Pengeek-HyperOS1-A14-API101-r14.1.3.apk`
+- Release：R8 + `shrinkResources` + zipalign + v2 签名
+- 已执行：`clean assembleRelease`、`lintVitalRelease`、`lintRelease`、签名/证书检查和 DEX 启动路径检查
 
-## 理论性能对比（估算）
+## r14.1.2 — 稳定恢复基线
 
-> 以下数据为基于代码路径和优化点的理论估算，非真机跑分，仅供横向参考。
+- `versionCode`：116；`versionName`：r14.1.2。
+- 保持 r14.1.1 的模块组合：
+  - `GlobalActions`、`Controls`、`Launcher`、`System`、`Various` 使用原生 `intercept(Chain)`。
+  - `SystemUI` 保留 `HookerClassHelper` 适配层。
+- 收敛重复的参数数组、异常传递和返回值处理代码，不改变 Hook 语义。
+- 用户确认的稳定恢复 APK：2,934,628 B；SHA-256：`a46acee41da42c618ee0f23468bb37574faedbfb4f9a5df6b26b678106dd32ea`。
 
-| 指标 | 旧版 LSPosed + 上游 customiuizer | 新版 LSPosed + r14.0.0 | 新版 LSPosed + r14.1.0 | 新版 LSPosed + **r14.1.1** |
-|---|---|---|---|---|
-| Hook 调用额外对象分配 | 高（每次回调创建 Before/After 对象、数组包装等） | 中（仍创建 Before/After 适配对象） | 低（2 个模块已迁移） | 更低（5 个模块已迁移；SystemUI 保持原状，无额外分配） |
-| 单次 hook 调用反射/包装层 | 多层反射 + adapter | 多层反射 + adapter | 已迁移模块减少 2-3 层 | 进一步减少；未迁移的 SystemUI 保持原状，不引入新包装 |
-| 异常传播方式 | 可能被框架 PROTECTIVE 模式吞掉 | PASSTHROUGH，正常向上传播 | PASSTHROUGH，正常向上传播 | PASSTHROUGH，正常向上传播；SystemUI 回退保持兼容 |
-| Hook 注册耗时 | 较高（重复 Class.forName、无缓存） | 降低约 20-30%（类/参数/资源缓存） | 进一步降低 10-20% | 与 r14.1.0 持平或略优；SystemUI 未改动，注册路径稳定 |
-| 模块启动内存峰值 | 高 | 中（缓存复用） | 中-低（已迁移模块减少临时对象） | 中-低；未强行迁移 SystemUI，避免不稳定风险 |
-| 资源 Hook 重复 Map 查询 | 高 | 低（预解析 + 直接 switch/缓存） | 低 | 低 |
-| 每次调用的参数数组拷贝 | 存在 | 存在（适配层 `toArray`） | 已迁移模块减少一次拷贝 | 已迁移模块减少一次拷贝；SystemUI 保持原状 |
-| 整体运行时开销 | 高 | 中 | 低（在已完成迁移的模块上） | **低且稳定**：迁移收益保留，SystemUI 不引入未知回归 |
-| 省电性 | 较差（额外对象/反射/回调包装） | 改善 | 改善 | 与 r14.1.0 相当或略优；无额外后台同步或轮询 |
-| 稳定性/可靠性 | 依赖旧版框架保护 | PASSTHROUGH 更透明；迁移范围小 | 迁移范围扩大 | **稳定**：只迁移已验证模块，SystemUI 保持 r14.1.1 旧版，避免重启失效 |
+## r14.1.1 — 分模块 API 101 迁移
 
-理论综合提升（相对上游）：r14.0.0 约 **15-25%**；r14.1.0 在已迁移模块上额外降低 **20-40%** 调用开销，全局整体约 **30-50%**（随迁移进度递增）。r14.1.1 在 r14.1.0 基础上进一步扩大原生 `intercept(Chain)` 覆盖范围（Launcher / System / Various），整体约 **35-55%**，且稳定性优于完整迁移 SystemUI 的方案。
+- `Launcher`、`System`、`Various` 逐模块迁移到 `intercept(Chain)` 并分别验证。
+- `SystemUI` 迁移后曾出现重启失效，因此回退并保留 r14.1.0 适配层。
+- 最终稳定组合沿用至 r14.1.2 和 r14.1.3。
+- `HookBuilder` 显式使用 `ExceptionMode.PASSTHROUGH`。
 
-## 全局检查
+## r14.1.0 — 原生 API 101 起点
 
-- r14.1.2 最终代码：在 `r14.1.1` 基础上清理 17 个无效 import，并把 `Controls.java` / `Launcher.java` / `System.java` / `Various.java` / `GlobalActions.java` / `ResourceHooks.java` 中的重复 `getArgs().toArray` 与 `throwable/return` 模式收敛到 `XposedHelpers` 的 4 个 helper；`SystemUI.java` 保留 `HookerClassHelper` 适配层不变。
-- 本次为纯代码清理版本，hook 行为与 `r14.1.1` 一致；已通过 `compileReleaseJavaWithJavac` 编译验证，clean build 后仍会走 zipalign 与 v2 签名。建议升级后仍做一次重启验证。
-- 无额外后台服务、无定时任务、无持续轮询，电池消耗与 `r14.1.1` 持平。
-- 最终 APK 使用 v2 签名，`versionCode 116`，`versionName r14.1.2`。
-- 建议后续若需继续迁移 `SystemUI`，必须单独按功能子模块拆分并逐个重启验证，避免一次性大改引入回归。
+- `MethodHook` 直接实现 `XposedInterface.Hooker`，使用 `intercept(Chain)` 调度。
+- 首批迁移 `GlobalActions` 与 `Controls`。
+- 保留参数修改、提前返回、异常传播与 after 回调语义。
+
+## 安装提示
+
+安装前请备份设置，并卸载官方版或其他 fork。启用模块和作用域后必须重启设备；请重点验证设置应用能否打开、SystemUI、桌面、锁屏和常用 Hook 功能。
