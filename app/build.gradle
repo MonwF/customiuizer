@@ -50,6 +50,10 @@ android {
             minifyEnabled true
             shrinkResources true
             zipAlignEnabled true
+            vcsInfo {
+                // Keep release APKs reproducible; the Git revision is represented by the tag.
+                include = false
+            }
             signingConfig releaseSigning ?: signingConfigs.debug
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

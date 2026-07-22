@@ -9,13 +9,13 @@
 
 ## 現在の状態
 
-- 安定版：r14.1.3
-- テスト候補：r14.2.0
+- 安定版：r14.2.0
+- 前の安定版：r14.1.3
 - パッケージ：`name.monwf.customiuizer.r14`
 - LSPosed 基準：[Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935)、commit `9350c7c`
 - リリース：[tomthenpc/customiuizer-a14](https://github.com/tomthenpc/customiuizer-a14/releases)
 
-r14.1.3 は、アプリ起動、完全再起動、以前問題があった Launcher/SystemUI 機能の実機確認を完了しています。最新ログに本アプリまたは SystemUI のクラッシュ、ANR、プロセス停止はありません。
+r14.2.0 は、インストール、完全再起動、Launcher/SystemUI の主要機能を実機で確認済みです。最終ログに本モジュール由来の例外、アプリ・SystemUI・ランチャーのクラッシュ、ANR、プロセス停止はありません。
 
 ## 主な変更
 

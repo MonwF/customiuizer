@@ -14,8 +14,8 @@
 
 | 项目 | 当前值 |
 |---|---|
-| 当前候选 | r14.2.0 |
-| 稳定回退 | r14.1.3 |
+| 当前稳定版 | r14.2.0 |
+| 上一稳定版 | r14.1.3 |
 | 应用名 | 米客 A14 |
 | 包名 | `name.monwf.customiuizer.r14` |
 | 目标系统 | HyperOS 1 / Android 14 |
@@ -23,7 +23,7 @@
 | LSPosed 基线 | [Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935)，commit `9350c7c` |
 | 发布页 | [tomthenpc/customiuizer-a14 Releases](https://github.com/tomthenpc/customiuizer-a14/releases) |
 
-r14.2.0 基于已完成实机闭环的 r14.1.3 构建，当前作为测试候选；在完成安装、重启和常用功能回归前，r14.1.3 继续作为稳定回退版本。
+r14.2.0 已完成安装、完整重启、常用功能与 LSPosed 日志验证。最终启动周期内没有本模块异常，也没有应用、SystemUI 或桌面的崩溃、ANR 与进程死亡。
 
 ## 与参考版本的区别
 

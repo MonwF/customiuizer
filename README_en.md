@@ -12,14 +12,14 @@ Its two defining differences are **libxposed API 101 integration** and ongoing *
 | Item | Value |
 |---|---|
 | App name | 米客 A14 |
-| Stable release | r14.1.3 |
-| Development candidate | r14.2.0 |
+| Stable release | r14.2.0 |
+| Previous stable release | r14.1.3 |
 | Package | `name.monwf.customiuizer.r14` |
 | Hook API | libxposed API 101 |
 | LSPosed baseline | [Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935), commit `9350c7c` |
 | Releases | [tomthenpc/customiuizer-a14](https://github.com/tomthenpc/customiuizer-a14/releases) |
 
-The target device passed app startup, full reboot, and the previously affected Launcher/SystemUI checks. The latest logs contain no app or SystemUI crash, ANR, or process death; the only module-owned warning was an early mobile-icon state access, now guarded.
+The target device passed installation, a full reboot, and the relevant Launcher/SystemUI checks. The final r14.2.0 logs contain no module-owned exception and no app, SystemUI, or launcher crash, ANR, or process death.
 
 ## Highlights
 
