@@ -2,7 +2,7 @@
 <resources>
     <string name="app_about">Hakkında</string>
     <string name="about_version">Versiyon %1$s</string>
-    <string name="about_dev">by Mikanoshi &amp; MonwF
+    <string name="about_dev">Bakım: tomthenpc · Mikanoshi ve MonwF çalışmalarını temel alır
 	Çeviri: H.KÜPELİ❤ 
 	andheartman@gmail.com</string>
     <string name="about_dynamic">Genel olarak, modların etkinleştirilmesi veya devre dışı bırakılması için arayüz yeniden başlatma gerekir, ancak ⟲ ile işaretlenmiş olanlar, değerleri varsayılandan özel olana değiştirildikten sonra yalnızca bir kez arayüz yeniden başlatma gerektirir, sonraki değişiklikler hemen uygulanır.</string>

@@ -1,55 +1,43 @@
-## Pengeek_forA14
+# CustoMIUIzer A14
 
-[English](README_en.md) | [日本語](README_jp.md) | **Português (Brasil)** | [中文](README.md)
+**米客 A14** é um módulo de personalização mantido de forma independente para **HyperOS 1 / Android 14**. Ele usa o [MonwF/customiuizer v24.10.12](https://github.com/MonwF/customiuizer/releases/tag/v24.10.12) como referência funcional do A14, mas possui pacote, versões, compilação e validação próprios.
 
-Personalize o HyperOS ao seu gosto
+Suas duas diferenças centrais são a integração com a **API 101 do libxposed** e a otimização contínua de **código e recursos**. Hooks frequentes, threads, caches, reflexão e limites de erro são refinados sem sacrificar a ativação confiável após reiniciar.
 
-Para HyperOS baseado em Android 14.
+> [!WARNING]
+> Compatível apenas com Android 14 (SDK 34) e `arm64-v8a`. Não ative no Android 15/16 nem junto com outro módulo derivado do CustoMIUIzer.
 
-> Obrigado pelo incrível módulo de [Mikanoshi](https://code.highspec.ru/Mikanoshi/CustoMIUIzer)
+## Estado atual
 
-### Lançamentos antigos
-* [MIUI 14](https://github.com/MonwF/customiuizer/releases/tag/v23.11.26)
-* [MIUI 13](https://github.com/MonwF/customiuizer/releases/tag/v23.08.26)
+- Versão estável: r14.1.3
+- Pacote: `name.monwf.customiuizer.r14`
+- Base do LSPosed: [Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935), commit `9350c7c`
+- Lançamentos: [tomthenpc/customiuizer-a14](https://github.com/tomthenpc/customiuizer-a14/releases)
 
-### Traduções
-[![Crowdin](https://badges.crowdin.net/customiuizer14/localized.svg)](https://crowdin.com/project/customiuizer14)
+O r14.1.3 passou nos testes de abertura do aplicativo, reinicialização completa e nas funções de Launcher/SystemUI antes afetadas. Os logs mais recentes não mostram crash, ANR ou encerramento do aplicativo ou do SystemUI.
 
-## Testar versões
-* [Canal do Telegram](https://t.me/pengeek)
-* [jiandaoyun](https://rz3kv5wa4g.jiandaoyun.com/dash/650e43a383027ec3225083e9)
+## Destaques
 
-### Doar
-Via paypal
-* [US$5](https://paypal.me/tpsxj/5)
-* [US$10](https://paypal.me/tpsxj/10)
-* [Outro](https://paypal.me/tpsxj)
+- Detecção de callbacks `after` compatível com ofuscação R8 para Launcher e SystemUI
+- Separação entre callbacks Xposed e a inicialização normal do aplicativo
+- Remoção de downloads, repositório, doações, páginas web internas e permissão de rede
+- Executor compartilhado e cache de ícones com limites definidos
+- Menos processamento no visualizador de áudio e menos comparação de bitmaps na thread principal
 
-## Aqui estão alguns dos principais recursos:
-* Mantenha o telefone desbloqueado em ambiente confiável (Bluetooth e Wi-Fi)
-* Limite da faixa de brilho automático
-* Temporizadores estendidos para o Modo silencioso e Não perturbe
-* Visualizador de música
-* Definir capa do álbum como papel de parede
-* Barra de status
-  * Ocultar ícones
-  * Ajuste do relógio
-  * Gestos (toque duas vezes para desligar, pressione para ajustar o volume ou brilho)
-  * Indicador da barra de bateria
-* Notificações
-  * Importância da notificação
-  * Expansão automática
-  * Menu estendido
-  * Remover limite por pacote
-  * Abrir em janela flutuante
-  * Abrir configurações do canal
-* Desabilitar lista negra para janelas flutuantes
-* Menu de energia estendido
-* Permitir downgrade
-* Desativar a verificação de assinatura do app
-* Use o gesto para trás com o modo navegação por gestos
-* Botões esquerdo/direito personalizados na barra de navegação
-* Ignorar limite de contagem regressiva para permissões perigosas
-* Controle apps do sistema para conectar-se com Wi-Fi e economia de bateria
-* Mostrar mais detalhes sobre o instalador do app ou atividade de informações
-* Gestos poderosos com múltiplas ações
+A compatibilidade depende das versões dos aplicativos de sistema Xiaomi e da ROM. Consulte [CHANGELOG.md](CHANGELOG.md) para o histórico completo.
+
+## Instalação
+
+1. Faça backup das configurações na versão instalada.
+2. Remova outras versões oficiais ou derivadas; não ative duas cópias ao mesmo tempo.
+3. Instale o APK, ative o módulo no LSPosed e confirme o escopo.
+4. Abra o aplicativo uma vez e reinicie completamente o aparelho.
+5. Teste o aplicativo, SystemUI, launcher, tela de bloqueio e as funções usadas no dia a dia.
+
+## Origem e licença
+
+Este é um projeto derivado com manutenção independente, sem afiliação ou endosso dos autores originais. Ele deriva de [Mikanoshi/CustoMIUIzer](https://code.highspec.ru/Mikanoshi/CustoMIUIzer) e do trabalho para Android 14 em [MonwF/customiuizer](https://github.com/MonwF/customiuizer).
+
+Distribuído sob a [GPL-3.0](LICENSE). Consulte [NOTICE.md](NOTICE.md).
+
+[English](README_en.md) | [日本語](README_jp.md) | **Português (Brasil)** | [简体中文](README.md)

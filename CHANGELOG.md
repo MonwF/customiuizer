@@ -1,99 +1,110 @@
 # 更新日志
 
-非官方优化 fork，基于 [MonwF/customiuizer](https://github.com/MonwF/customiuizer)，沿用 GPL-3.0 协议。仅兼容 **HyperOS 1 / Android 14 / libxposed API 101**。
+本文件只记录 **CustoMIUIzer A14** 的独立发布线。项目以 [MonwF/customiuizer v24.10.12](https://github.com/MonwF/customiuizer/releases/tag/v24.10.12) 为 Android 14 功能参考，后续版本围绕两条主线演进：
 
-## r14.1.3 — 轻量化、启动隔离与资源治理
+- 将 Hook 基础设施迁移并稳定在 **libxposed API 101**。
+- 在不扩大兼容风险的前提下优化代码、线程、缓存、资源与异常边界。
 
-基线：用户确认可正常打开、重启后可 Hook 的 Devin r14.1.2 恢复版。此次新建 r14.1.3，不再覆盖 r14.1.2。
+性能结论会区分静态分析与实机验证；未做同设备功耗采样时，不使用推测性续航或速度百分比。
+
+## r14.1.3 — 稳定性修复、轻量化与资源治理
+
+发布日期：2026-07-23。状态：**稳定版，已完成目标设备实机验证**。
+
+### API 101 与 Hook 稳定性
+
+- 修复 Release 混淆后全部 `after` Hook 被跳过的问题。旧适配层依赖会被 R8 改写的回调方法名；现在改为按返回类型和参数签名识别。
+- 恢复依赖后置回调的 Launcher 初始化、最近任务背景模糊与清理按钮、控制中心运营商隐藏、主题样式和图标颜色更新。
+- 保持 `GlobalActions`、`Controls`、`Launcher`、`System`、`Various` 使用原生 `intercept(Chain)`；SystemUI 继续使用已验证兼容层，避免再次扩大迁移风险。
+- 保持 Xposed 回调类型与 AndroidX 普通启动链隔离，修复“重启后 Hook 生效，但设置应用打不开”的回归。
+- 修复 SystemUI 开机创建移动网络图标时，`mState` 尚未赋值便被双卡信号 Hook 读取的问题；缺失状态、视图或资源时直接放行原方法。
+- Android 14 动态广播显式设置导出标志；Wi-Fi 扫描结果读取增加权限拒绝兜底。
+
+### 代码与资源优化
+
+- 将 4 类应用列表各自创建的无界线程池合并为一个共享有界池：2–4 个后台线程、15 秒空闲回收、最大等待队列 128。
+- 将图标 LRU 缓存由“最多占 Java 堆的一半”改为 1–16 MiB 的有界缓存，降低内存峰值和回收压力。
+- 移除低内存路径中的主动 `Runtime.gc()`，避免人为制造全局停顿。
+- 音频可视化的静音 FFT 判断由每个频段一次改为每帧一次；31 个频段的静音帧最多从 31 次扫描降为 1 次。
+- 专辑图重复检查不再在主线程逐像素调用 `Bitmap.sameAs()`。
+- 常量 Hook、反射和资源访问沿用已建立的缓存/快速路径，不新增后台服务、定时任务或持续轮询。
 
 ### 轻量化
 
-- 移除主界面和关于页中的以下支持内容：
-  - 版本下载
-  - 代码仓库
-  - 微信与 PayPal 赞赏
-- 删除只为上述功能服务的代码和资源：
-  - 内置 `WebView` 页面及布局
-  - 赞赏图片及布局
-  - “在浏览器中打开”菜单
-  - 11 种语言中的废弃支持文案
-- 移除应用自身不再需要的 `INTERNET` 权限。
-- 保留 `RECEIVE_BOOT_COMPLETED`、蓝牙、Wi‑Fi、跨用户和模块运行所需权限。
+- 移除“支持”区域中的版本下载、代码仓库、微信与 PayPal 赞赏入口。
+- 删除仅服务于这些入口的 WebView 页面、布局、图片、菜单和多语言文案。
+- 移除应用的 `INTERNET` 权限；保留开机广播、蓝牙、Wi-Fi、跨用户和 Hook 所需权限。
+- 删除上游赞助配置与失效的 Crowdin 工作流。
 
-### 启动与 Hook 稳定性
+### 实机与日志验证
 
-- 保持 r14.1.2 的 Hook 模块边界和调用语义，不进行 Java→Kotlin 或 SystemUI 全量迁移。
-- 调整 R8 规则，禁止 `XposedModule` 与 `XposedInterface.Hooker` 实现被优化合并进普通应用或 AndroidX Startup 类。
-- 最终 DEX 已静态检查：`InitializationProvider` 启动路径不直接依赖 libxposed；Hooker 类型仍只在模块回调类中实现。
-- 修复 Android 14 动态广播注册标志，侧边栏广播明确使用 `RECEIVER_EXPORTED`。
+- 用户已验证应用可打开、卸载重装后可用、完整重启后 Hook 正常。
+- 已验证最近任务背景模糊/清理按钮、控制中心运营商隐藏、控制中心主题和图标颜色等此前回归功能。
+- 2026-07-23 LSPosed 日志中未发现本应用或 SystemUI 的崩溃、ANR、进程死亡；模块在各作用域进程均加载成功。
+- 日志中唯一属于本模块的异常是双卡信号视图初始化期间 21 次同源空指针，已映射到 `SystemUI.java` 并修复。其余微信、钉钉、Brave 等异常与本项目无关。
 
-### 性能与内存
+### 相对 r14.1.2 的静态评估
 
-- 图标加载：
-  - r14.1.2：4 类应用列表分别创建线程池；每个池的核心线程为 `CPU + 1`，最大线程为 `2 × CPU + 1`，队列无界。
-  - r14.1.3：统一为 1 个共享池，固定 2–4 个后台优先级线程，空闲 15 秒回收，等待队列上限 128。
-  - 收益方向：降低快速滚动或反复进入应用选择页时的线程竞争、任务积压和唤醒次数。
-- 图标缓存：
-  - 上限由“Java 最大堆的 1/2”改为 1–16 MiB 的有界 LRU。
-  - 删除内存不足分支中的主动 `Runtime.gc()`，避免人为触发停顿。
-- 音频可视化：
-  - 静音 FFT 判断由“每帧每频段扫描一次”改为“每帧扫描一次”。31 频段静音帧的判断扫描次数由最多 31 次降为 1 次。
-  - 专辑图重复检查由主线程逐像素 `Bitmap.sameAs()` 改为对象身份判断，避免 UI 线程大图比较。
-
-### 可靠性与代码质量
-
-- Wi‑Fi 扫描结果读取增加 `SecurityException` 兜底，权限被拒时不再直接崩溃。
-- 补齐 Activity 回调父类调用。
-- 为条件、循环和分支补齐括号，清除歧义缩进。
-- MIUI 私有服务名与隐藏音量标志保留原值，并增加局部说明；不修改兼容行为。
-- `lintRelease`：由基线 27 个错误降为 0；现存 429 个警告主要为私有 API、旧版布局和未使用资源提示，不影响 Release 构建。
-
-### 与 r14.1.2 的评估
-
-| 指标 | r14.1.2 稳定恢复版 | r14.1.3 | 结论 |
+| 指标 | r14.1.2 | r14.1.3 | 结论 |
 |---|---:|---:|---|
-| APK 大小 | 2,934,628 B | 2,885,842 B | 减少 48,786 B（1.66%） |
-| 支持/下载/赞赏界面 | 有 | 已移除 | UI 更精简，无内置网页 |
-| 应用 `INTERNET` 权限 | 有 | 无 | 减少普通应用网络能力 |
-| 图标加载线程池 | 每个 Adapter 独立 | 单个 2–4 线程共享池 | 降低并发与排队上限 |
-| 图标缓存上限 | 最大堆的 1/2 | 1–16 MiB | 降低内存峰值与 GC 压力 |
-| 主动 GC | 低内存时调用 | 已移除 | 减少卡顿风险 |
-| 静音 FFT 检查 | 每频段一次 | 每帧一次 | 降低可视化空闲计算 |
-| Lint 错误 | 27 | 0 | 运行时边界更明确 |
-| Hook 架构 | 已验证混合架构 | 保持不变 | 不扩大兼容风险 |
+| APK 大小 | 2,934,628 B | 2,886,250 B | 减少 48,378 B（1.65%） |
+| 应用网络权限 | 有 | 无 | 删除模块自身联网能力 |
+| 图标执行器 | 每个 Adapter 独立、队列无界 | 单个共享有界池、队列 128 | 限制线程竞争与任务积压 |
+| 图标缓存 | 最大堆的 1/2 | 1–16 MiB | 限制内存峰值 |
+| 主动 GC | 低内存时调用 | 已移除 | 降低人为停顿风险 |
+| 静音 FFT 判断 | 每频段一次 | 每帧一次 | 减少空闲帧计算 |
+| Hook 架构 | 已验证的 API 101 混合架构 | 保持边界并修复 R8 回归 | 不扩大兼容面 |
 
-> 性能与省电结论基于代码路径、线程上限和对象生命周期分析，不是实机功耗跑分。r14.1.3 没有新增服务、定时任务或持续轮询；预期收益主要出现在应用列表、音频可视化静音帧和内存压力场景。最终仍应以目标设备的冷启动、重启 Hook 和日常待机测试为准。
+这是代码路径与构建产物对比，不等同于实机功耗跑分。实际耗电、启动耗时和兼容性仍应在同设备、同 ROM、同作用域下长期对照。
 
-### 构建与产物
+### 构建产物验证
 
-- `versionCode`：117
-- `versionName`：r14.1.3
-- APK：`Pengeek-HyperOS1-A14-API101-r14.1.3.apk`
-- Release：R8 + `shrinkResources` + zipalign + v2 签名
-- 已执行：`clean assembleRelease`、`lintVitalRelease`、`lintRelease`、签名/证书检查和 DEX 启动路径检查
+- 通过 `clean assembleRelease lintRelease lintVitalRelease`，无阻断性 Lint 错误。
+- 通过 R8、资源压缩、zipalign、APK v2 签名与证书一致性检查。
+- 版本：`versionCode 117` / `versionName r14.1.3`。
+- APK：`CustoMIUIzer-A14-r14.1.3.apk`，2,886,250 B。
+- SHA-256：`17d1f71607e06e5beb7939c17819932e558bd34c622f369ea87bebfe7b0eba57`。
 
-## r14.1.2 — 稳定恢复基线
+## r14.1.2 — 可回退的实机基线
 
-- `versionCode`：116；`versionName`：r14.1.2。
-- 保持 r14.1.1 的模块组合：
-  - `GlobalActions`、`Controls`、`Launcher`、`System`、`Various` 使用原生 `intercept(Chain)`。
-  - `SystemUI` 保留 `HookerClassHelper` 适配层。
-- 收敛重复的参数数组、异常传递和返回值处理代码，不改变 Hook 语义。
-- 用户确认的稳定恢复 APK：2,934,628 B；SHA-256：`a46acee41da42c618ee0f23468bb37574faedbfb4f9a5df6b26b678106dd32ea`。
+发布日期：2026-07-22。
 
-## r14.1.1 — 分模块 API 101 迁移
+- 恢复到用户确认可打开应用、重启后可正常 Hook 的 Devin 最终构建，作为 r14.1.3 开发的干净基线。
+- 固定 API 101 混合架构边界：`GlobalActions`、`Controls`、`Launcher`、`System`、`Various` 使用原生拦截器，SystemUI 保留兼容层。
+- 保持普通应用启动链与 Hook API 隔离，避免 AndroidX 初始化直接加载仅存在于注入环境的类型。
+- `versionCode 116`，APK 2,934,628 B。
+- SHA-256：`a46acee41da42c618ee0f23468bb37574faedbfb4f9a5df6b26b678106dd32ea`。
 
-- `Launcher`、`System`、`Various` 逐模块迁移到 `intercept(Chain)` 并分别验证。
-- `SystemUI` 迁移后曾出现重启失效，因此回退并保留 r14.1.0 适配层。
-- 最终稳定组合沿用至 r14.1.2 和 r14.1.3。
-- `HookBuilder` 显式使用 `ExceptionMode.PASSTHROUGH`。
+## r14.1.1 — API 101 分模块迁移与边界确认
 
-## r14.1.0 — 原生 API 101 起点
+发布日期：2026-07-21。
 
-- `MethodHook` 直接实现 `XposedInterface.Hooker`，使用 `intercept(Chain)` 调度。
-- 首批迁移 `GlobalActions` 与 `Controls`。
-- 保留参数修改、提前返回、异常传播与 after 回调语义。
+- 将 `Launcher`、`System`、`Various` 分模块迁移至 `intercept(Chain)`，每步执行重启验证。
+- `SystemUI` 全量迁移后出现重启失效，因此回退到兼容层；这一实机结论成为后续版本的稳定性边界。
+- `HookBuilder` 显式使用 `ExceptionMode.PASSTHROUGH`，保持被 Hook 方法的异常传播语义。
+- 完成 clean build、zipalign 与 APK v2 签名验证。
 
-## 安装提示
+## r14.1.0 — 原生 API 101 迁移起点
 
-安装前请备份设置，并卸载官方版或其他 fork。启用模块和作用域后必须重启设备；请重点验证设置应用能否打开、SystemUI、桌面、锁屏和常用 Hook 功能。
+发布日期：2026-07-20。
+
+- 让 `MethodHook` 直接实现 `XposedInterface.Hooker`，使用 `intercept(Chain)` 调度。
+- 首批迁移 `GlobalActions` 与 `Controls`；其他模块暂由兼容层承接。
+- 保留旧 Hook 的可变参数、提前返回、结果替换、异常传播与后置回调语义。
+- 建立逐模块迁移、构建、重启、回归验证流程，避免一次性重写整个 Hook 层。
+
+## r14.0.0 — Android 14 / API 101 独立版本线
+
+发布日期：2026-07-20。
+
+- 以 MonwF/customiuizer `v24.10.12` 为 Android 14 功能参考，建立独立维护、构建和发布版本线。
+- 将 Hook 接口更新到 libxposed API 101，并把初始化范围限制为 Android 14，避免向 Android 15/16 的未知系统组件注册。
+- applicationId 调整为 `name.monwf.customiuizer.r14`，与参考版本的安装身份区分。
+- 完成首轮性能整理：类与参数缓存、Context/资源复用、主题值预解析、常量 Hook 快速路径、依赖实例缓存和资源 Hook 早退。
+
+## 发布原则
+
+- 安装前备份设置，不同时启用两个同源模块。
+- 每次升级后先打开应用，再完整重启设备并验证常用 Hook。
+- 未经目标设备确认的构建只能作为预发布候选，不覆盖最近稳定产物。
+- Release 必须列出版本、包名、哈希、签名方案、验证范围和已知限制；发布标题只使用版本号。

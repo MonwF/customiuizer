@@ -1,28 +1,29 @@
-# HyperOS 1 / Android 14 / libxposed API 101 build
+# Android 14 / libxposed API 101 维护说明
 
-This branch is based on MonwF/customiuizer `a14` at commit
-`6ce3a146c424e353d5a477ece3cee27ff19eb385` (`open source for a14`).
+本版本线源自 MonwF/customiuizer 的 Android 14 工作，并以 `v24.10.12` 作为功能参考。当前项目独立维护，来源与许可见 [NOTICE.md](NOTICE.md)。
 
-Target environment:
+## 目标环境
 
-- Xiaomi HyperOS 1 based on Android 14 (SDK 34)
-- Xiaomi 13 / model 2211133G is the primary target
-- arm64-v8a
-- Vector/libxposed API 101
+- Xiaomi HyperOS 1 / Android 14（SDK 34）
+- 主要测试设备：Xiaomi 13（2211133G）
+- `arm64-v8a`
+- libxposed API 101
+- Vector v2.0-3046，Actions run `29805285935`，commit `9350c7c`
 
-Compatibility and stability changes:
+## 稳定性边界
 
-- Migrated module lifecycle and hook registration to libxposed API 101.
-- Preserved API 100 callback behavior for mutable arguments, early return/throw,
-  result replacement and throwable recovery.
-- Kept constant-return hooks at highest priority without the API 101 integer overflow.
-- Disabled hook initialization outside Android 14 to avoid applying HyperOS 1 hooks
-  to incompatible Android 15/16 system components.
-- Limited the Security Center sidebar receiver hook to its UI process.
-- Removed an obsolete preference path that incorrectly installed the app-sort hook.
-- Included the Traditional Chinese (`zh-rTW`) resources used by the Taiwan ROM.
-- Updated dependencies to the versions used by the upstream API 101 build where they
-  are independent of HyperOS 2 implementation details.
+- 仅在 Android 14 初始化 Hook，避免误用于 Android 15/16。
+- `GlobalActions`、`Controls`、`Launcher`、`System`、`Various` 使用原生 `intercept(Chain)`。
+- `SystemUI` 保留经验证的 `HookerClassHelper` 兼容层，不做全量 Kotlin 或 Hook 架构迁移。
+- Release 混淆必须保持普通应用启动链与 compileOnly libxposed 类型隔离。
+- 后置回调检测必须基于方法签名，不得依赖会被 R8 改写的方法名。
+- 任何 SystemUI 或 Launcher 改动都必须经过“打开应用 → 完整重启 → 再次打开应用 → 验证 Hook”的闭环。
 
-The package name remains `name.monwf.customiuizer`; this is an upgrade/test build, not
-a side-by-side application. The included release artifact is locally debug-signed.
+## 标识
+
+- 项目名：CustoMIUIzer A14
+- 应用名：米客 A14
+- applicationId：`name.monwf.customiuizer.r14`
+- Java namespace：`name.monwf.customiuizer`
+
+保留现有 applicationId 是为了兼容当前签名、覆盖安装、LSPosed 模块身份和用户设置。若未来迁移包名，应作为新的主版本单独处理。

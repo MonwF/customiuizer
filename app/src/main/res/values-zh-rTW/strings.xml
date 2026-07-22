@@ -2,7 +2,7 @@
 <resources>
     <string name="app_about">關於</string>
     <string name="about_version">版本：%1$s</string>
-    <string name="about_dev">作者：Mikanoshi &amp; MonwF，r14 优化 fork</string>
+    <string name="about_dev">維護：tomthenpc · 基於 Mikanoshi 與 MonwF 的開源工作</string>
     <string name="about_dynamic">標記有⟲的模組由預設值修改為其他值後只需軟重啟一次，之後的更改將立即應用；其他選項始終需要軟重啟。</string>
     <string name="about_unsupported">標記⨯的模組不支援此設備。</string>
     <string name="menu_update">更新</string>

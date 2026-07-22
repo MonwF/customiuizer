@@ -1,70 +1,57 @@
-## Pengeek_forA14
+# CustoMIUIzer A14
 
-> [!NOTE]
-> This is an **unofficial optimized fork** based on [MonwF/customiuizer](https://github.com/MonwF/customiuizer) under the **GPL-3.0** license.  
-> It is intended for personal study and performance optimization. Original credit goes to **MonwF** and **Mikanoshi**.  
-> Compatible only with: **HyperOS 1 / Android 14 / libxposed API 101**.  
-> This fork uses the native **libxposed API 101 `XposedInterface.Hooker.intercept(Chain)`** dispatch, so it should work with frameworks that support API 101 such as **LSPosed 2.0** and **Vector**. So far it has only been tested on LSPosed + HyperOS 1 A14.  
-> Package changed to `name.monwf.customiuizer.r14`, app name is **Pengeek_forA14** / **米客_forA14**.  
-> **Before installing this fork, please back up your settings inside the Pengeek/米客_forA14 app first, then uninstall the official MonwF build before installing this fork. Do not enable both at the same time, or you will get duplicate hook conflicts.**  
-> Version plan: **r14.0.*** on the `a14` branch is the API-100 compatibility implementation; **r14.1.*** on the `a14-api101` branch is the native API-101 implementation. The `CustomHooker` / `ConstantHooker` adapter layer has been removed in the r14.1 line.  
-> See [CHANGELOG.md](CHANGELOG.md) for the full optimization history and release notes.
+**米客 A14** is an independently maintained system customization module for **HyperOS 1 / Android 14**. It uses [MonwF/customiuizer v24.10.12](https://github.com/MonwF/customiuizer/releases/tag/v24.10.12) as its A14 functional reference while maintaining its own package, release line, build, and validation process.
 
-**English** | [日本語](README_jp.md) | [Português (Brasil)](README_PT-BR.md) | [中文](README.md)
+Its two defining differences are **libxposed API 101 integration** and ongoing **code/resource optimization**. Hook hot paths, executors, caches, reflection, and error boundaries are refined without sacrificing reliable post-reboot injection.
 
-Customize your HyperOS to your liking.
+> [!WARNING]
+> Android 14 (SDK 34) and `arm64-v8a` only. Do not enable it on Android 15/16 or alongside another CustoMIUIzer-derived module.
 
-For `HyperOS` based on `Android 14`.
+## Status
 
-> Thanks for the awesome module [CustoMIUIzer](https://code.highspec.ru/Mikanoshi/CustoMIUIzer) from `Mikanoshi`
+| Item | Value |
+|---|---|
+| App name | 米客 A14 |
+| Stable release | r14.1.3 |
+| Package | `name.monwf.customiuizer.r14` |
+| Hook API | libxposed API 101 |
+| LSPosed baseline | [Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935), commit `9350c7c` |
+| Releases | [tomthenpc/customiuizer-a14](https://github.com/tomthenpc/customiuizer-a14/releases) |
 
-### Legacy releases
-* [MIUI 14 release](https://github.com/MonwF/customiuizer/releases/tag/v23.11.26)
-* [MIUI 13 release](https://github.com/MonwF/customiuizer/releases/tag/v23.08.26)
+The target device passed app startup, full reboot, and the previously affected Launcher/SystemUI checks. The latest logs contain no app or SystemUI crash, ANR, or process death; the only module-owned warning was an early mobile-icon state access, now guarded.
 
-## Translations
-[![Crowdin](https://badges.crowdin.net/customiuizer14/localized.svg)](https://crowdin.com/project/customiuizer14)
+## Highlights
 
-## Upstream & release
+- Status bar, notifications, Control Center, lock screen, launcher, recents, navigation, and power-menu customizations.
+- R8-safe `after` callback detection for Launcher and SystemUI hooks.
+- Separation between Xposed callback types and the normal Android app startup path.
+- Removed download, repository, donation, embedded web content, and app network permission.
+- Bounded shared icon executor and cache, plus reduced audio visualizer work.
 
-* Original repository: [MonwF/customiuizer](https://github.com/MonwF/customiuizer)
-* This fork release: see [CHANGELOG.md](CHANGELOG.md)
-* License: GPL-3.0 (same as upstream)
+Feature compatibility depends on the exact Xiaomi system-app and ROM versions. See [CHANGELOG.md](CHANGELOG.md) for release history and measured/static comparisons.
 
-## Tested devices
+## Install
 
-| Device | HyperOS | Android | SoC | RAM | Notes |
-|--------|---------|---------|-----|-----|-------|
-| Xiaomi 13 (2211133G) | 1.0.7.0.UMCTWXM | 14 (UKQ1.230804.001) | Snapdragon 8 Gen 2 (up to 3.19 GHz) | 12 GB | Primary test device; r3–r14 rebooted and loaded normally. |
+1. Back up settings from the currently installed build.
+2. Remove other upstream or derivative builds; never enable two copies together.
+3. Install the APK, enable it in LSPosed, and verify the scope.
+4. Open the app once, then perform a full reboot.
+5. Test the settings app, SystemUI, launcher, lock screen, and your regular hooks.
 
-* Baseband: `MPSS.DE.3.0.c1-GLB-Oct 17 2024-04:43:46`
-* Kernel: `5.15.123-android13-8-00008-g3ca6a2912c7e-ab11087001`
+## Build
 
-## Main features
-* Keep phone unlocked in a trusted environment (Bluetooth and Wi-Fi)
-* Autobrightness range limit
-* Extended timers for silent and dnd mode
-* Music visualizer
-* Set album art as wallpaper
-* Statusbar
-  * Hide icons
-  * Clock tweak
-  * Gesture (double tap to sleep, slice to adjust volume or brightness)
-  * Battery bar indicator
-* Notifications
-  * Notification importance
-  * Auto expand
-  * Extended menu
-  * Remove limit per package
-  * Open in floating window
-  * Open channel settings
-* Disable blacklist for floating windows
-* Extended power menu
-* Allow downgrade
-* Disable app signature verification
-* Use back gesture with navbar mode
-* Custom left/right buttons on the navbar
-* Skip permission intercept warning countdown
-* Control system apps to connect with Wi-Fi and battery saver
-* Show more detail on app installer or info activity
-* Powerful gesture with multi actions
+JDK 17 and the Android SDK are required:
+
+```powershell
+.\gradlew.bat clean assembleRelease lintRelease lintVitalRelease
+```
+
+Release builds use R8, resource shrinking, zipalign, and APK Signature Scheme v2. Signing configuration is read from `../keystore.properties`; never commit keys or passwords.
+
+## Origin and license
+
+CustoMIUIzer A14 is an independent downstream derivative and is not affiliated with or endorsed by its upstream authors. It derives from [Mikanoshi/CustoMIUIzer](https://code.highspec.ru/Mikanoshi/CustoMIUIzer) and the Android 14 work in [MonwF/customiuizer](https://github.com/MonwF/customiuizer), with `v24.10.12` used as the functional A14 reference.
+
+Distributed under [GPL-3.0](LICENSE). Binary distributions must provide the corresponding source, retain license and copyright notices, and identify modifications. See [NOTICE.md](NOTICE.md).
+
+**English** | [日本語](README_jp.md) | [Português (Brasil)](README_PT-BR.md) | [简体中文](README.md)

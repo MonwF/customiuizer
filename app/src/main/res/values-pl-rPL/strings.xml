@@ -2,7 +2,7 @@
 <resources>
     <string name="app_about">O aplikacji</string>
     <string name="about_version">Wersja %1$s</string>
-    <string name="about_dev">O Developerze</string>
+    <string name="about_dev">Utrzymuje tomthenpc · Na podstawie prac Mikanoshi i MonwF</string>
     <string name="about_dynamic">Ogólnie rzecz biorąc, modyfikacje wymagają ponownego uruchomienia urządzenia, aby były aktywowane lub dezaktywowane, ale te oznaczone ⟲ wymagają tylko jednego ponownego uruchomienia, a po zmianie ich wartości z domyślnej na niestandardową, kolejne zmiany są stosowane natychmiast.</string>
     <string name="about_unsupported">Modyfikacje oznaczone ⨯ nie są obsługiwane na tym urządzeniu.</string>
     <string name="menu_update">Aktualizacja</string>

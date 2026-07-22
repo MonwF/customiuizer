@@ -1,68 +1,43 @@
-![logo](https://code.highspec.ru/customiuizer_promo.png)
+# CustoMIUIzer A14
 
-## CustoMIUIzer14
+**米客 A14** は、**HyperOS 1 / Android 14** 専用に独立して保守されているシステムカスタマイズモジュールです。[MonwF/customiuizer v24.10.12](https://github.com/MonwF/customiuizer/releases/tag/v24.10.12) を A14 機能の参考にしつつ、独自のパッケージ、バージョン、ビルド、検証工程を持ちます。
 
-[English](README_en.md) | **日本語** | [Português (Brasil)](README_PT-BR.md) | [中文](README.md)
+主な違いは **libxposed API 101 対応**と継続的な**コード／リソース最適化**です。再起動後の Hook の信頼性を優先しながら、ホットパス、スレッド、キャッシュ、リフレクション、例外境界を改善します。
 
-HyperOSを自分好みにカスタマイズ
+> [!WARNING]
+> Android 14（SDK 34）および `arm64-v8a` 専用です。Android 15/16 では有効にせず、同系統のモジュールを同時に有効化しないでください。
 
-`Android 14`ベースな`HyperOS`に対応しています。
+## 現在の状態
 
-> `Mikanoshi`の素晴らしいモジュール [CustoMIUIzer](https://code.highspec.ru/Mikanoshi/CustoMIUIzer) をありがとう
+- 安定版：r14.1.3
+- パッケージ：`name.monwf.customiuizer.r14`
+- LSPosed 基準：[Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935)、commit `9350c7c`
+- リリース：[tomthenpc/customiuizer-a14](https://github.com/tomthenpc/customiuizer-a14/releases)
 
-### レガシーリリース
-* [MIUI 14 release](https://github.com/MonwF/customiuizer/releases/tag/v23.11.26)
-* [MIUI 13 release](https://github.com/MonwF/customiuizer/releases/tag/v23.08.26)
+r14.1.3 は、アプリ起動、完全再起動、以前問題があった Launcher/SystemUI 機能の実機確認を完了しています。最新ログに本アプリまたは SystemUI のクラッシュ、ANR、プロセス停止はありません。
 
-### テストビルド
-* [Telegram channel](https://t.me/pengeek)
-* [jiandaoyun](https://rz3kv5wa4g.jiandaoyun.com/dash/650e43a383027ec3225083e9)
+## 主な変更
 
-### バックアップ機能
-バックアップは `/sdcard/Documents/CustoMIUIzer/` に保存されます。
+- Launcher と SystemUI の Hook に対する R8 安全な `after` コールバック検出
+- Xposed コールバックと通常のアプリ起動経路の分離
+- ダウンロード、リポジトリ、寄付、内蔵 Web ページ、ネットワーク権限の削除
+- アプリアイコン用スレッドプールとキャッシュの上限設定
+- オーディオビジュアライザー処理とメインスレッドの画像比較を削減
 
-### 寄付
-PayPalから行えます
-* [$5](https://paypal.me/tpsxj/5)
-* [$10](https://paypal.me/tpsxj/10)
-* [その他](https://paypal.me/tpsxj)
+対応状況は Xiaomi のシステムアプリおよび ROM のバージョンに依存します。詳細は [CHANGELOG.md](CHANGELOG.md) を参照してください。
 
-------
+## インストール
 
-## オリジナルのReadme
+1. 現在のバージョンで設定をバックアップします。
+2. 公式版や他の派生版を削除し、複数の同系モジュールを同時に有効化しないでください。
+3. APK をインストールし、LSPosed でモジュールとスコープを確認します。
+4. アプリを一度開いてから、端末を完全に再起動します。
+5. 設定画面、SystemUI、ランチャー、ロック画面、常用機能を確認します。
 
-### CustoMIUIzerとは? ###
-CustoMIUIzerモジュールは、あなたのMIUIデバイスに様々な追加機能を提供するMODが含まれています。これらのModを使用するには(Ed)Xposed Frameworkをインストールする必要があります。Xposedについては、<a href="http://forum.xda-developers.com/xposed/xposed-installer-versions-changelog-t2714053" target="_blank">オリジナル版のスレッド</a>または、EdXposedの<a href="https://github.com/ElderDrivers/EdXposed" target="_blank">EdXposedのGitHubリポジトリ</a>をご参照ください。(Android 8-10用)
+## 出典とライセンス
 
-### 互換性 ###
-このモジュールは、Android 9-10がベースのMIUI 10-12.5を対象に作成と動作確認をしています。<br>
-Modは、他のバージョンや下位バージョンのMIUIで完全に動作する事は保証していません。<br>
-APKのインストールはAndroid 7以降に限定されます。<br>
+本プロジェクトは独立して保守される派生版で、上流作者による公式版ではありません。[Mikanoshi/CustoMIUIzer](https://code.highspec.ru/Mikanoshi/CustoMIUIzer) と [MonwF/customiuizer](https://github.com/MonwF/customiuizer) の Android 14 向け作業を基にしています。
 
-### CustoMIUIzerを使用するには? ###
-始めに(Ed)Xposed Frameworkがインストールされている環境が必要になります。その後に(Ed)Xposed InstallerでCustoMIUIzerのモジュールを有効化し、好きなModを設定や選択を行なったら「ソフトリブート」を選択してください。
+[GPL-3.0](LICENSE) に基づいて配布します。詳細は [NOTICE.md](NOTICE.md) を参照してください。
 
-### バックアップ機能 ###
-CustoMIUIzerは、SDカードまたは内部ストレージにローカルでバックアップと復元が行えます。(メインウィンドウ上のメニューに項目があります)<br>
-その他にGoogleクラウドの自動バックアップ機能(Androidバックアップサービス)にも対応しています。
-
-### トラブルシューティング ###
-CustoMIUIzer上から問題の詳細を報告か、<a href="https://code.highspec.ru/Mikanoshi/CustoMIUIzer/issues">Issue Tracker</a>で新規のIssueを作成する事が可能です。
-<br><br>
-<u>よくある問題</u><br><br>
-
-<i>モジュールとModを起動したが、デバイスの再起動後にどのModも一切動作をしていない。</i>
-<hr>
-(Ed)Xposed Installer > ログを開き、情報を確認します。<br>
-"Loading modules from .../name.mikanoshi.customiuizer/..."と言う行を探します。<br>
-もし、次の行に「File does not exist」が含まれている場合はCustoMIUIzerを再インストールをしてみると良いかもしれません。<br>
-次の行が何か他の物(error, exceptionなど)を含んでいた場合は、CustoMIUIzerから詳細なレポートを送信してください。問題が解決されることを願っています:)
-<br><br>
-<i>CustoMIUIzerからレポートを送信し、返信を待っています。レポートは届いていますか?</i>
-<hr>
-連絡先を入力しないと絶対に返信は届きません。<br>
-CustoMIUIzerのメイン画面 > 連絡先の情報にメールアドレス、ICQ、XDAまたは4PDAのニックネームを入力してください。
-<br>
-<a href="https://repo.xposed.info/module/name.mikanoshi.customiuizer" target="_blank">Xposedモジュールのリポジトリ</a><br>
-<a href="https://play.google.com/store/apps/details?id=name.mikanoshi.customiuizer" target="_blank">Google Playストア</a><br>
-<a href="https://customiuizer.oneskyapp.com/admin/project/dashboard/project/335607" target="_blank">ローカライズ</a>
+[English](README_en.md) | **日本語** | [Português (Brasil)](README_PT-BR.md) | [简体中文](README.md)

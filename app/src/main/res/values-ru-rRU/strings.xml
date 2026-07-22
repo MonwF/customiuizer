@@ -2,7 +2,7 @@
 <resources>
     <string name="app_about">О приложении</string>
     <string name="about_version">Версия %1$s</string>
-    <string name="about_dev">от Mikanoshi &amp; MonwF</string>
+    <string name="about_dev">Поддержка: tomthenpc · На основе работ Mikanoshi и MonwF</string>
     <string name="about_dynamic">Для активации или деактивации большинства модов требуется быстрая перезагрузка устройства. Но для модов, помеченных ⟲, перезагрузка требуется только один раз — после смены значения со стандартного на модифицированное, а последующие изменения будут применяться сразу.</string>
     <string name="about_unsupported">Моды, помеченные ⨯, несовместимы с данным устройством.</string>
     <string name="menu_update">Обновить</string>
@@ -826,7 +826,7 @@
     <string name="qs_toggle_autorotate_landscape">Ландшафт</string>
     <string name="qs_toggle_5g">5G</string>
     <string name="qs_toggle_fps">Частота обновления</string>
-    <string name="miuizer">Настройки Pengeek</string>
+    <string name="miuizer">Настройки 米客 A14</string>
     <string name="miuizer_show_newmods_title">Отмечать новые моды</string>
     <string name="miuizer_show_newmods_summ">Делать пометку \"Новый!\" в заголовке модов, добавленных в текущей версии</string>
     <string name="miuizer_new_mod">Новый!</string>

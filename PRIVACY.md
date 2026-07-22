@@ -1,40 +1,18 @@
-**Privacy Policy**
+# 隐私说明
 
-CustoMIUIzer app as an Open Source app created by Mikanoshi. It is provided at no cost and is intended for use as is.
+生效日期：2026-07-23。
 
-This page is used to inform visitors regarding policies with the collection, use, and disclosure of personal information.
+CustoMIUIzer A14（米客 A14）是本地运行的开源 Xposed 模块。当前版本：
 
-If you choose to use this app, then you agree to the collection and use of information in relation to this policy. Collected information is used exclusively for improving the app, and it is not being shared with any third party.
+- 不声明 `android.permission.INTERNET`；
+- 不包含统计、广告、遥测或自动更新；
+- 不内置崩溃报告上传、版本下载、赞赏或网页浏览功能；
+- 不会由应用主动向维护者或第三方服务器发送数据。
 
-**Detailed reports and crash reports**
+为实现设置与 Hook 功能，应用会在设备本地保存偏好，并可能读取用户选择的应用、蓝牙设备、Wi-Fi 网络及必要的系统状态。LSPosed/Vector 会按照用户配置的作用域向系统进程提供模块代码和偏好；相关数据留在设备与框架环境中。
 
-The only time any personal information is collected is when you decide to send a report after app crash or manually by using "Send detailed report" function. Data that is being sent:
-- Unique installation ID (generated on first app install)
-- Crash time and stack trace
-- Device model, OS version, ROM name and build config, kernel version, MIUI version
-- Amount of total and free storage
-- Display configuration
-- Environment paths
-- Android system settings
-- Xposed framework version, launcher version
-- CustoMIUIzer preferences
-- Xposed log, last 500 lines of logcat
-- Contact information provided by the user
+备份文件只会在用户主动执行备份时写入用户选择或系统允许的位置。用户自行分享 APK、设置备份、LSPosed 日志或系统日志时，其中可能包含设备、应用和配置相关信息；分享前应自行检查和脱敏。
 
-**Links to other sites**
+本说明只适用于本仓库构建的应用，不涵盖 Android、HyperOS、LSPosed/Vector 或用户自行访问的第三方服务。
 
-This app contains links to other sites. If you click on a third-party link, you will be directed to that site. Note that these external sites are not operated by the author. Therefore, it is strongly advised to refer to the Privacy Policy of these websites. Author of this app has no control over and assume no responsibility for the content, privacy policies or practices of any third-party sites or services.
-
-**Children's privacy**
-
-CustoMIUIzer app does not collect personally identifiable information from children. All children are encouraged to never submit any personally identifiable information through the Application and/or Services. If you have a reason to believe that a child has provided personally identifiable information to us through the Application and/or Services, please contact us.
-
-**Changes to Privacy Policy**
-
-This Privacy Policy can be updated from time to time. Thus, you are advised to review this page periodically for any changes. I will notify you of any changes by posting the new Privacy Policy on this page.
-
-This policy is effective as of 2022-04-27
-
-**Contact us**
-
-If you have any questions or suggestions about this Privacy Policy, do not hesitate to contact me at iam@mikanoshi.name.
+项目来源与维护关系见 [NOTICE.md](NOTICE.md)。

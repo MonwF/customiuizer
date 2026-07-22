@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name" translatable="false">米客_forA14</string>
-    <string name="app_slogan" translatable="false">仅适用于A14的HyperOS 1，适配API101，性能优化与重构</string>
+    <string name="app_name" translatable="false">米客 A14</string>
+    <string name="app_slogan" translatable="false">适用于 HyperOS 1 / Android 14 的系统定制模块</string>
     <string name="app_about">About</string>
     <string name="about_version">Version %1$s</string>
-    <string name="about_dev">by Mikanoshi &amp; MonwF, Pengeek_forA14 fork</string>
+    <string name="about_dev">Maintained by tomthenpc · Based on open-source work by Mikanoshi and MonwF</string>
     <string name="about_dynamic">Generally, mods require soft reboot to be activated or deactivated, but those marked with ⟲ only require one soft reboot after their value was changed from default to custom one, subsequent changes are applied immediately.</string>
     <string name="about_unsupported">Mods marked with ⨯ are not supported on this device.</string>
     <string name="title_activity_main" translatable="false">@string/app_name</string>
@@ -873,7 +873,7 @@
     <string name="qs_toggle_fps">Refresh rate</string>
     <string name="qs_toggle_floatingtime">Floating time</string>
 
-    <string name="miuizer">Pengeek settings</string>
+    <string name="miuizer">米客 A14 settings</string>
     <string name="miuizer_show_newmods_title">Mark new mods</string>
     <string name="miuizer_show_newmods_summ">Display \"New!\" label in title for mods added in current version</string>
     <string name="miuizer_new_mod">New!</string>
