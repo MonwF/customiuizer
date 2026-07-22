@@ -2,7 +2,7 @@
 
 基于 [MonwF/customiuizer](https://github.com/MonwF/customiuizer) 的非官方轻量优化版本，面向 **HyperOS 1 / Android 14 / libxposed API 101**。包名为 `name.monwf.customiuizer.r14`，不能与官方版或其他 fork 同时启用。
 
-当前稳定版：**r14.1.2**（versionCode 116） · [下载与发布说明](https://github.com/tomthenpc/customiuizer/releases/tag/r14.1.2)
+当前稳定版：**r14.1.2 修复版**（versionCode 116） · [下载与发布说明](https://github.com/tomthenpc/customiuizer/releases/tag/r14.1.2)
 
 [English](README_en.md) | [日本語](README_jp.md) | [Português (Brasil)](README_PT-BR.md) | **中文**
 
@@ -12,6 +12,7 @@
 - `GlobalActions`、`Controls`、`Launcher`、`System`、`Various` 已完成原生 API 101 迁移。
 - `SystemUI` 保留经 r14.1.1 实机验证的兼容适配层，避免完整迁移造成重启后 Hook 失效。
 - 设置变更同步至 LSPosed Remote Preferences；不增加后台服务、轮询或开机常驻任务。
+- 已隔离 AndroidX Startup 与 Xposed 专用类的 R8 优化边界，修复重启后 Hook 生效但设置应用无法打开的问题。
 - r14.1.2 收敛图标加载线程与缓存，减少重复反射、临时对象和音频可视化计算。
 - 已移除应用内版本下载、代码仓库、赞赏入口及其网页/图片资源。
 
